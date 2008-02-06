@@ -2,49 +2,28 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
 /**
  * Regression test case for COR-1117
  */
 
-public class CallbackTestCase implements TestLifeCycle {
+public class CallbackTestCase extends AbstractDb4oTestCase {
 
     public static void main(String[] args) {
-        new TestRunner(CallbackTestCase.class).run();
-    }
-
-    ObjectServer _server;
-
-    ObjectContainer _client;
-
-    String dbfilename = "cor1117.yap"; //$NON-NLS-1$
-
-    public void setUp() throws Exception {
-        _server = Db4o.openServer(dbfilename, 0);
-        _client = _server.openClient();
-    }
-
-    public void tearDown() throws Exception {
-        _client.close();
-        _server.close();
-        File dbFile = new File(dbfilename);
-        if (dbFile.exists()) {
-            dbFile.delete();
-        }
+        new CallbackTestCase().runEmbeddedClientServer();
     }
 
     public void test() {
         Item item = new Item();
-        _client.store(item);
-        _client.commit();
+        store(item);
+        db().commit();
         Assert.isTrue(item.isStored());
-        Assert.isTrue(_client.ext().isStored(item));
+        Assert.isTrue(db().ext().isStored(item));
 
         ObjectSet result = retrieveItems();
         Assert.areEqual(1, result.size());
@@ -57,15 +36,15 @@ public class CallbackTestCase implements TestLifeCycle {
     }
 
     ObjectSet retrieveItems() {
-        Query q = _client.query();
+        Query q = newQuery();
         q.constrain(Item.class);
         return q.execute();
     }
 
     public static class Item {
-        String test;
+        public String test;
 
-        transient ObjectContainer _objectContainer;
+        public transient ObjectContainer _objectContainer;
 
         public void objectOnNew(ObjectContainer container) {
             _objectContainer = container;
