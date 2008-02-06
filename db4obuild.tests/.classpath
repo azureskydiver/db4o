@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>
 	<classpathentry kind="lib" path="/db4obuild/lib/ant.jar"/>
 	<classpathentry kind="lib" path="/db4obuild/lib/svnkit/svnkit.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wheel"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

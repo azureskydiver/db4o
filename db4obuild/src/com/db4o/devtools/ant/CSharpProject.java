@@ -70,9 +70,12 @@ public abstract class CSharpProject {
 
 	public void addFiles(String[] files) throws Exception {
 		for (int i=0; i<files.length; ++i) {
-			String file = files[i];
-			addFile(file);
+			addFile(files[i]);
 		}
+	}
+	
+	public void writeToFile(File file) {
+		writeToURI(file.toURI().normalize().toString());
 	}
 
 	public void writeToURI(String uri) {
@@ -84,16 +87,22 @@ public abstract class CSharpProject {
 
 	protected abstract Node createFileNode(String file);
 
-	protected Element selectElement(String xpath) throws XPathExpressionException {
+	public Element selectElement(String xpath) throws XPathExpressionException {
 		return (Element)newXPath().evaluate(xpath, _document, XPathConstants.NODE);
 	}
 	
-	protected NodeList selectNodes(String xpath) throws XPathExpressionException {
+	public NodeList selectNodes(String xpath) throws XPathExpressionException {
 		return (NodeList)newXPath().evaluate(xpath, _document, XPathConstants.NODESET);
 	}
 
 	private XPath newXPath() {
 		return XPathFactory.newInstance().newXPath();
+	}
+	
+	public Element createElement(String tagName, String value) {
+		final Element element = createElement(tagName);
+		element.setTextContent(value);
+		return element;
 	}
 	
 	protected Element createElement(String tagName) {
