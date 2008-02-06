@@ -446,6 +446,12 @@
 				<include name="**/AssemblyInfo.cs" />
 			</fileset>
 		</updateAssemblyInfo>
+		
+		<updateAssemblyKey keyfile="${dir.n.v6}/db4objects.snk">
+			<projectFiles dir="${dir.n.v6}">
+				<include name="**/*-2005.csproj" />
+			</projectFiles>
+		</updateAssemblyKey>
 	</target>
 	
 	<target name="prepare-conversion-workspace" depends="init">
