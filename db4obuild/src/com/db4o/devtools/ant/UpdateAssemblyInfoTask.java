@@ -12,12 +12,6 @@ public class UpdateAssemblyInfoTask extends AbstractAssemblyInfoTask {
 	
 	private String _configuration;
 	
-	private String _title;
-	
-	private String _product;
-	
-	private AssemblyInfo assemblyType = AssemblyInfo.DB4O();;
-	
 	public File getKeyFile() {
 		return _keyFile;
 	}
@@ -34,22 +28,10 @@ public class UpdateAssemblyInfoTask extends AbstractAssemblyInfoTask {
 		_configuration = configuration;
 	}
 	
-	public void setTitle(String title) {
-		_title = title;
-	}
-	
-	public void setProduct(String product) {
-	    _product = product;
-	}
-	
 	@Override
 	protected String updateAttributes(String contents) {
-	    if (_title != null) {
-	        assemblyType = new AssemblyInfo(_title, _product);
-	    }
-		contents = updateAttribute(contents, "AssemblyTitle", assemblyType.title());
 		contents = updateAttribute(contents, "AssemblyVersion", _version);
-		contents = updateAttribute(contents, "AssemblyProduct", assemblyType.product());
+		contents = updateAttribute(contents, "AssemblyProduct", AssemblyInfo.PRODUCT);
 		contents = updateAttribute(contents, "AssemblyCompany", AssemblyInfo.COMPANY);
 		contents = updateAttribute(contents, "AssemblyCopyright", AssemblyInfo.COPYRIGHT);
 		if (null != _keyFile) {
@@ -57,8 +39,15 @@ public class UpdateAssemblyInfoTask extends AbstractAssemblyInfoTask {
 		}
 		if (null != _configuration) {
 			contents = updateAttribute(contents, "AssemblyConfiguration", _configuration);
-			contents = updateAttribute(contents, "AssemblyDescription", assemblyType.title() + " " + _version + " (" + _configuration + ")");
+			contents = updateAttribute(contents, "AssemblyDescription", assemblyTitle() + " " + _version + " (" + _configuration + ")");
 		}
 		return contents;
+	}
+
+	private String assemblyTitle() {
+		// Directory structure is always like:
+		// <AssemblyName>/Properties/AssemblyInfo.cs
+		// _currentFile points to AssemblyInfo.cs
+		return _currentFile.getParentFile().getParentFile().getName();
 	}
 }

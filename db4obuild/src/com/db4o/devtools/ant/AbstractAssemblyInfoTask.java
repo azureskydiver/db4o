@@ -10,9 +10,16 @@ import org.apache.tools.ant.types.FileSet;
 
 public abstract class AbstractAssemblyInfoTask extends AbstractMultiFileSetTask {
 	
+	protected File _currentFile;
+
 	@Override
 	protected void workOn(File file) throws Exception {
-		IO.writeAll(file, updateAttributes(IO.readAll(file)));
+		_currentFile = file;
+		try {
+			IO.writeAll(file, updateAttributes(IO.readAll(file)));
+		} finally {
+			_currentFile = null;
+		}
 	}
 
 	protected abstract String updateAttributes(String contents);
