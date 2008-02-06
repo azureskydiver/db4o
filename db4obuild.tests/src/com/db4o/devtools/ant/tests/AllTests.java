@@ -7,7 +7,8 @@ public class AllTests extends ReflectionTestSuite {
 	@Override
 	protected Class[] testCases() {
 		return new Class[] {
-			FolderDiffTestCase.class
+			FolderDiffTestCase.class,
+			UpdateAssemblyKeyTestCase.class,
 		};
 	}
 	

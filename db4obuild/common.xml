@@ -68,7 +68,7 @@
 		</classpath>
 	</taskdef>
 	
-	<taskdef name="assemblykey" classname="com.db4o.devtools.ant.UpdateAssemblyKeyTask" classpath="${dir.build.lib}/exttools.jar">
+	<taskdef name="updateAssemblyKey" classname="com.db4o.devtools.ant.UpdateAssemblyKeyTask" classpath="${dir.build.lib}/exttools.jar">
 		<classpath>
 			<pathelement location="${dir.build.lib}/exttools.jar" />
 			<pathelement location="${dir.build.bin}" />

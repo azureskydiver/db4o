@@ -2,7 +2,9 @@ package com.db4o.devtools.ant;
 
 import java.io.File;
 
-public final class UpdateAssemblyKeyTask extends AbstractAssemblyInfoTask {
+import org.apache.tools.ant.types.*;
+
+public final class UpdateAssemblyKeyTask extends AbstractMultiFileSetTask {
 
 	private File _keyFile;
 	
@@ -13,11 +15,15 @@ public final class UpdateAssemblyKeyTask extends AbstractAssemblyInfoTask {
 	public void setKeyFile(File keyFile) {
 		this._keyFile = keyFile;
 	}
+	
+	public FileSet createProjectFiles() {
+		return newFileSet();
+	}
 
 	@Override
-	protected String updateAttributes(String contents) {
-		contents = updateAttribute(contents, "AssemblyKeyFile", getKeyFile().getAbsolutePath());
-		return contents;
+	protected void workOn(File file) throws Exception {
+		log("Updated keyfile on '" + file + "' to '" + _keyFile + "'.");
+		new UpdateAssemblyKey(_keyFile).update(file);
 	}
 	
 }
