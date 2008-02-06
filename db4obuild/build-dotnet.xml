@@ -53,20 +53,6 @@
 		</sequential>
 	</macrodef>
 	
-	<macrodef name="prepare-assemblyInfo">
-		<attribute name="configuration" />
-		<sequential>
-			<updateAssemblyInfo
-				keyfile="${filename.keyfile}"
-				version="${assembly.version}"
-				configuration="@{configuration} ${target.framework.version}">
-				<fileset dir="${dir.dist.net.compile}">
-					<include name="**/AssemblyInfo.cs" />
-				</fileset>
-			</updateAssemblyInfo>
-		</sequential>
-	</macrodef>
-	
 	<target name="check-dependencies">
 		<uptodate
 			property="skip.sharpen"
@@ -76,6 +62,11 @@
 				<exclude name="**/**/Db4oVersion.java" />
 			</srcfiles>
 		</uptodate>
+	</target>
+	
+	<target name="run-tests-net35"
+			depends="clean, configure-debug, configure-net35, run-tests-net, run-linq-tests"
+			description="Builds and runs all the .net 3.5 relevant test cases (including LINQ)">
 	</target>
 	
 	<target name="run-tests" depends="clean, configure, run-tests-mono, run-tests-net">
@@ -389,19 +380,15 @@
 			
 	</target>	
 	
+	<target name="run-linq-tests" depends="build-core">
+		<exec executable="${dir.dist.dll}/Db4objects.Db4o.Linq.Tests.exe" failonerror="true"/>
+	</target>
+	
 	<target name="run-msbuild-tests" depends="build-admin">
 		<exec executable="${dir.dist.dll}/Db4oTool.MSBuild.Tests.exe" failonerror="true"/>
 	</target>	
 	
 	<target name="build-admin" depends="build-core" unless="skip.admin">
-		<updateAssemblyInfo 
-			version="${assembly.version}"
-			title="Db4oTool"
-			product="Db4oTool">
-			<fileset dir="${dir.n.v6}/Db4oTool/Db4oTool">
-				<include name="**/AssemblyInfo.cs" />
-			</fileset>
-		</updateAssemblyInfo>
 		
 		<msb solution="${dir.n.v6}/Db4oTool/Db4oTool" />
 		
@@ -428,7 +415,7 @@
 		<updatecsharpproject 
 			projectfile="${dir.n.v6.instrumentation}/Db4objects.Db4o.Instrumentation-CF-2005.csproj">
 			<sources refid="instrumentation.net.files" />
-		</updatecsharpproject>		
+		</updatecsharpproject>
 	</target>
 	
 	<target name="sharpen-nq" depends="sharpen-core" unless="skip.sharpen">
@@ -453,6 +440,12 @@
 	<target name="sharpen"
 		depends="sharpen-core, sharpen-instrumentation, sharpen-nq, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests"
 		unless="skip.sharpen">
+		
+		<updateAssemblyInfo version="${assembly.version}">
+			<fileset dir="${dir.n.v6}">
+				<include name="**/AssemblyInfo.cs" />
+			</fileset>
+		</updateAssemblyInfo>
 	</target>
 	
 	<target name="prepare-conversion-workspace" depends="init">
@@ -563,14 +556,13 @@
 			<sources refid="core.net.files" />
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-CF-2008.csproj">
-			<sources refid="core.net.files" />
-		</updatecsharpproject>
-
 		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2008.csproj">
 			<sources refid="core.net.files" />
 		</updatecsharpproject>
-
+		
+		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-CF-2008.csproj">
+			<sources refid="core.net.files" />
+		</updatecsharpproject>
 	</target>
 	
 	<target name="sharpen-db4ounit" depends="prepare-conversion-workspace-db4ounit, install-javatocsharp-plugin"
@@ -608,12 +600,6 @@
 		<updatecsharpproject projectfile="${dir.n.db4ounit}/Db4oUnit-2008.csproj">
 			<sources refid="db4ounit.files" />
 		</updatecsharpproject>
-		
-		<updateAssemblyInfo version="${assembly.version}">
-			<fileset dir="${dir.n.db4ounit}">
-				<include name="**/AssemblyInfo.cs" />
-			</fileset>
-		</updateAssemblyInfo>
 	</target>
 	
 	<target name="prepare-conversion-workspace-db4ounit" depends="init">
