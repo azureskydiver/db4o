@@ -15,7 +15,7 @@ import db4ounit.extensions.*;
 public class CallbackTestCase extends AbstractDb4oTestCase {
 
     public static void main(String[] args) {
-        new CallbackTestCase().runEmbeddedClientServer();
+        new CallbackTestCase().runAll();
     }
 
     public void test() {
@@ -42,6 +42,7 @@ public class CallbackTestCase extends AbstractDb4oTestCase {
     }
 
     public static class Item {
+        
         public String test;
 
         public transient ObjectContainer _objectContainer;

@@ -531,13 +531,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	private void objectOnDeactivate(Transaction transaction, Object obj) {
 		ObjectContainerBase container = transaction.container();
 		container.callbacks().objectOnDeactivate(transaction, obj);
-		dispatchEvent(container, obj, EventDispatcher.DEACTIVATE);
+		dispatchEvent(transaction, obj, EventDispatcher.DEACTIVATE);
 	}
 
 	private boolean objectCanDeactivate(Transaction transaction, Object obj) {
 		ObjectContainerBase container = transaction.container();
 		return container.callbacks().objectCanDeactivate(transaction, obj)
-			&& dispatchEvent(container, obj, EventDispatcher.CAN_DEACTIVATE);
+			&& dispatchEvent(transaction, obj, EventDispatcher.CAN_DEACTIVATE);
 	}
 
     void deactivateFields(Transaction a_trans, Object a_object, ActivationDepth a_depth) {
@@ -620,19 +620,19 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return cascadeOnDeleteTernary() == TernaryBool.YES;
 	}
 
-    public final boolean dispatchEvent(ObjectContainerBase stream, Object obj, int message) {
-    	if(!dispatchingEvents(stream)){
+    public final boolean dispatchEvent(Transaction  trans, Object obj, int message) {
+    	if(!dispatchingEvents(trans)){
     		return true;
     	}
-        return _eventDispatcher.dispatch(stream, obj, message);
+        return _eventDispatcher.dispatch(trans, obj, message);
     }
 
-	private boolean dispatchingEvents(ObjectContainerBase stream) {
-		return _eventDispatcher != null && stream.dispatchsEvents();
+	private boolean dispatchingEvents(Transaction trans) {
+		return _eventDispatcher != null && trans.container().dispatchsEvents();
 	}
     
-    public boolean hasEventRegistered(ObjectContainerBase stream, int eventID) {
-    	if(!dispatchingEvents(stream)){
+    public final boolean hasEventRegistered(Transaction trans, int eventID) {
+    	if(!dispatchingEvents(trans)){
     		return true;
     	}
     	return _eventDispatcher.hasEventRegistered(eventID);
@@ -1142,13 +1142,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	private void objectOnActivate(Transaction transaction, Object obj) {
 		ObjectContainerBase container = transaction.container();
 		container.callbacks().objectOnActivate(transaction, obj);
-		dispatchEvent(container, obj, EventDispatcher.ACTIVATE);
+		dispatchEvent(transaction, obj, EventDispatcher.ACTIVATE);
 	}
 
 	private boolean objectCanActivate(Transaction transaction, Object obj) {
 		ObjectContainerBase container = transaction.container();
 		return container.callbacks().objectCanActivate(transaction, obj)
-			&& dispatchEvent(container, obj, EventDispatcher.CAN_ACTIVATE);
+			&& dispatchEvent(transaction, obj, EventDispatcher.CAN_ACTIVATE);
 	}
 
     void instantiateFields(UnmarshallingContext context) {

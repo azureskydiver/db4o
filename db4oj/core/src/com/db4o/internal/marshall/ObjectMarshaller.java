@@ -127,7 +127,7 @@ public abstract class ObjectMarshaller {
 	private void objectOnUpdate(Transaction transaction, ClassMetadata yc, Object obj) {
 		ObjectContainerBase container = transaction.container();
 		container.callbacks().objectOnUpdate(transaction, obj);
-		yc.dispatchEvent(container, obj, EventDispatcher.UPDATE);
+		yc.dispatchEvent(transaction, obj, EventDispatcher.UPDATE);
 	}
     
     public abstract Object readIndexEntry(

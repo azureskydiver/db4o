@@ -14,6 +14,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 			AliasesTestCase.class,
             BackupStressTestCase.class,
+            CallbackTestCase.class,
             CanUpdateFalseRefreshTestCase.class,
             CascadeDeleteDeletedTestCase.class,
             CascadedDeleteReadTestCase.class,
