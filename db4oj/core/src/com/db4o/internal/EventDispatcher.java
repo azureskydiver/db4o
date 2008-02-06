@@ -39,22 +39,23 @@ public final class EventDispatcher {
 		methods = methods_;
 	}
 	
-	boolean dispatch(ObjectContainerBase stream, Object obj, int eventID) {
+	boolean dispatch(Transaction trans, Object obj, int eventID) {
 		if (methods[eventID] == null) {
 			return true;
 		}
-		Object[] parameters = new Object[] { stream };
-		int stackDepth = stream.stackDepth();
-		int topLevelCallId = stream.topLevelCallId();
-		stream.stackDepth(0);
+		Object[] parameters = new Object[] { trans.objectContainer()};
+		ObjectContainerBase container = trans.container();
+		int stackDepth = container.stackDepth();
+		int topLevelCallId = container.topLevelCallId();
+		container.stackDepth(0);
 		try {
 			Object res = methods[eventID].invoke(obj, parameters);
 			if (res instanceof Boolean) {
 				return ((Boolean) res).booleanValue();
 			}
 		}  finally {
-			stream.stackDepth(stackDepth);
-			stream.topLevelCallId(topLevelCallId);
+			container.stackDepth(stackDepth);
+			container.topLevelCallId(topLevelCallId);
 		}
 		return true;
 	}

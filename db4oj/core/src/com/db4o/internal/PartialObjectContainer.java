@@ -579,22 +579,22 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     private boolean caresAboutDeleting(ClassMetadata yc) {
     	return this._callbacks.caresAboutDeleting()
-    		|| yc.hasEventRegistered(_this, EventDispatcher.CAN_DELETE);
+    		|| yc.hasEventRegistered(systemTransaction(), EventDispatcher.CAN_DELETE);
     }
     
     private boolean caresAboutDeleted(ClassMetadata yc) {
     	return this._callbacks.caresAboutDeleted()
-    		|| yc.hasEventRegistered(_this, EventDispatcher.DELETE);
+    		|| yc.hasEventRegistered(systemTransaction(), EventDispatcher.DELETE);
     }
     
 	private boolean objectCanDelete(Transaction transaction, ClassMetadata yc, Object obj) {
 		return _this.callbacks().objectCanDelete(transaction, obj)
-			&& yc.dispatchEvent(_this, obj, EventDispatcher.CAN_DELETE);
+			&& yc.dispatchEvent(transaction, obj, EventDispatcher.CAN_DELETE);
 	}
 	
 	private void objectOnDelete(Transaction transaction, ClassMetadata yc, Object obj) {
 		_this.callbacks().objectOnDelete(transaction, obj);
-		yc.dispatchEvent(_this, obj, EventDispatcher.DELETE);
+		yc.dispatchEvent(transaction, obj, EventDispatcher.DELETE);
 	}
 	
     public abstract boolean delete4(Transaction ta, ObjectReference yapObject, int a_cascade, boolean userCall);
@@ -1665,7 +1665,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
 	private boolean objectCanNew(Transaction transaction, ClassMetadata yc, Object obj) {
 		return callbacks().objectCanNew(transaction, obj)
-			&& yc.dispatchEvent(_this, obj, EventDispatcher.CAN_NEW);
+			&& yc.dispatchEvent(transaction, obj, EventDispatcher.CAN_NEW);
 	}
 
     public abstract void setDirtyInSystemTransaction(PersistentBase a_object);
