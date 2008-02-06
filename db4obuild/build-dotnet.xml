@@ -450,6 +450,9 @@
 		<updateAssemblyKey keyfile="${dir.n.v6}/db4objects.snk">
 			<projectFiles dir="${dir.n.v6}">
 				<include name="**/*-2005.csproj" />
+				<include name="**/*-2008.csproj" />
+				<exclude name="Db4oTutorial/**" />
+				<exclude name="**/*Tests*.csproj" />
 			</projectFiles>
 		</updateAssemblyKey>
 	</target>
