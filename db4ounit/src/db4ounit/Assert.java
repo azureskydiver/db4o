@@ -159,7 +159,7 @@ public final class Assert {
 	
 	public static void isGreaterOrEqual(long expected, long actual) {
 		if (actual >= expected) return;
-		fail(expected, actual, "greater than or equal to ");
+		fail(expected, actual, "greater than or equal to ", null);
 	}
 	
     public static void isSmaller(long expected, long actual) {
@@ -169,22 +169,20 @@ public final class Assert {
 
     public static void isSmallerOrEqual(long expected, long actual) {
         if (actual <= expected) return;
-        fail(expected, actual, "smaller than or equal to ");
+        fail(expected, actual, "smaller than or equal to ", null);
     }
     
-	private static void fail(long expected, long actual, final String operator) {
+	private static void fail(long expected, long actual, final String operator, String customMessage) {
 		fail(failureMessage(new Long(expected), new Long(actual), operator, null));
 	}
 
 	public static void areNotEqual(long expected, long actual) {
-	    areNotEqual(expected, actual, "not equal to ");
+		areNotEqual(expected, actual, null);
 	}
-	
-	public static void areNotEqual(long expected, long actual, String msg) {
-	    if (actual != expected){
-	        return;
-	    }
-	    fail(expected, actual, msg);
+
+	public static void areNotEqual(long expected, long actual, String customMessage) {
+		if (actual != expected) return;
+		fail(expected, actual, "not equal to ", customMessage);
 	}
 
 	public static void areNotEqual(Object notExpected, Object actual) {
