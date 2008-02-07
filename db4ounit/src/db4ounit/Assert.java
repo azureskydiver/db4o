@@ -177,8 +177,14 @@ public final class Assert {
 	}
 
 	public static void areNotEqual(long expected, long actual) {
-		if (actual != expected) return;
-		fail(expected, actual, "not equal to ");
+	    areNotEqual(expected, actual, "not equal to ");
+	}
+	
+	public static void areNotEqual(long expected, long actual, String msg) {
+	    if (actual != expected){
+	        return;
+	    }
+	    fail(expected, actual, msg);
 	}
 
 	public static void areNotEqual(Object notExpected, Object actual) {
