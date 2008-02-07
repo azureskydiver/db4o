@@ -46,6 +46,11 @@ public class UpdateCSharpProjectAntTask extends Task {
 			log("base source dir is '" + _baseDir + "'");
 			project.writeToFile(_projectFile);
 			
+			// HACK: try to ensure the file is always closed
+			project = null;
+			Runtime.getRuntime().gc();
+			// END HACK
+			
 		} catch (Exception x) {
 			throw new BuildException(x, getLocation());
 		}
