@@ -9,7 +9,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class HashMapUpdateFileSizeTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class HashMapUpdateFileSizeTestCase extends AbstractDb4oTestCase implements OptOutCS, OptOutDefragSolo {
 
 	public static void main(String[] args) {
 		new HashMapUpdateFileSizeTestCase().runAll();
