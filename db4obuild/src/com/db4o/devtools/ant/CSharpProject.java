@@ -74,11 +74,34 @@ public abstract class CSharpProject {
 		}
 	}
 	
-	public void writeToFile(File file) {
-		writeToURI(file.toURI().normalize().toString());
+	public void writeToFile(File file) throws IOException {
+		// write to temp file first to avoid problem with file
+		// being locked
+		final File tempFile = File.createTempFile("vsp", null);
+		writeToURI(tempFile.toURI().normalize().toString());
+		copyFile(tempFile, file);
 	}
 
-	public void writeToURI(String uri) {
+	private void copyFile(File fromFile, File toFile) throws IOException {
+		final FileInputStream in = new FileInputStream(fromFile);
+		try {
+			final FileOutputStream out = new FileOutputStream(toFile);
+			try {
+				byte[] buffer = new byte[32*1024];
+				while (true) {
+					int read = in.read(buffer);
+					if (read <= 0) break;
+					out.write(buffer, 0, read);
+				}
+			} finally {
+				out.close();
+			}
+		} finally {
+			in.close();
+		}
+	}
+
+	private void writeToURI(String uri) {
 		LSSerializer serializer = ((DOMImplementationLS)_document.getImplementation()).createLSSerializer();		
 		serializer.writeToURI(_document, uri);
 	}
