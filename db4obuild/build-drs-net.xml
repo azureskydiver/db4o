@@ -127,16 +127,12 @@
 			</fileset>
 		</copy>
         
-        <updateAssemblyInfo
-            title="dRS"
-        	product="dRS - db4o Replication System"
-            keyfile="${filename.keyfile}"
-			version="${drs.net.version}"
-			configuration=".NET 2.0">
+        <updateAssemblyInfo version="${drs.net.version}">
 			<fileset dir="${drs.net.src.dir}/Db4objects.Drs/Properties">
 				<include name="AssemblyInfo.cs" />
 			</fileset>
         </updateAssemblyInfo>
+    	
         <updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs.csproj">
         	<sources dir="${drs.net.src.dir}/Db4objects.Drs">
         		<include name="**/*.cs" />
@@ -154,12 +150,7 @@
 			</fileset>
 		</copy>
 		
-        <updateAssemblyInfo
-            title="Db4objects.Drs.Tests"
-        	product="dRS Tests"
-            keyfile="${filename.keyfile}"
-			version="${drs.net.version}"
-			configuration=".NET 2.0">
+        <updateAssemblyInfo version="${drs.net.version}">
 			<fileset dir="${drs.net.src.dir}/Db4objects.Drs.Tests/Properties">
 				<include name="AssemblyInfo.cs" />
 			</fileset>
@@ -171,12 +162,7 @@
         </updatecsharpproject>
 
         <!--.NET: QuickStart -->
-        <updateAssemblyInfo
-            title="Db4objects.Drs.QuickStart"
-        	product="dRS QuickStart"
-            keyfile="${filename.keyfile}"
-			version="${drs.net.version}"
-			configuration=".NET 2.0">
+        <updateAssemblyInfo	version="${drs.net.version}">
 			<fileset dir="${drs.net.src.dir}/QuickStart/Properties">
 				<include name="AssemblyInfo.cs" />
 			</fileset>
