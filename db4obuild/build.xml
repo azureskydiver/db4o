@@ -295,6 +295,11 @@
 		<ant antfile="build-java.xml" target="doctor"/>
 		<ant antfile="build-dotnet.xml" target="package" />
 	</target>	
+	
+	<target name="buildnet35" depends="clean, buildjava" description=".NET 3.5 (LINQ) full build">
+		<ant antfile="build-java.xml" target="doctor"/>
+		<ant antfile="build-dotnet.xml" target="package-net35" />
+	</target>
 
 	<target name="buildmono2" depends="compile.java.all">
 		<ant antfile="build-dotnet.xml" target="package" />
