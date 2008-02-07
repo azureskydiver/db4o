@@ -1193,4 +1193,7 @@
 	<target name="define-msbuild-task">
 		<taskdef resource="org/apache/ant/dotnet/antlib.xml" />
 	</target>
+	
+	<target name="cc-net35" depends="run-tests-net35, package-net35" />
+	
 </project>
