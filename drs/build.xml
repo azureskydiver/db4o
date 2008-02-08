@@ -4,13 +4,13 @@
 	<description>dRS build file</description>
 	<!--
 		To execute the "dist" target, which is to build the dRS release, 
-		you need to create a "drs.machine.properties" with this line:
+		you need to create a "machine.properties" with this line:
 		
 	    font.pdf.base=C:/WINDOWS/Fonts/VERDANA.TTF
 	    
 	    OR wherever the location of the font is if you are on Linux
 	-->	
-	<property file="drs.machine.properties" />
+	<property file="machine.properties" />
     	
 	<property file="ant.properties" />
 
