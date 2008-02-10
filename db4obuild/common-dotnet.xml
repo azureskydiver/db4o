@@ -91,6 +91,7 @@
 			
 			<echo>Building ${solution.file} (${msbuild.target.configuration})</echo>
 			<echo>OutputPath: @{outputPath}</echo>
+			<echo>msbuild exec: ${msbuild.executable}</echo>
 			<exec executable="${msbuild.executable}" failonerror="true">
 				<arg file="${solution.file}" />
 				<arg value="/t:Rebuild" />
