@@ -25,7 +25,7 @@ public class ByteArrayTestCase extends Db4oClientServerTestCase {
 	}
 	
 	/**
-     * @sharpen.if !CF_2_0
+     * @sharpen.if !CF
      */
 	protected void configure(Configuration config) {
 		config.objectClass(SerializableByteArrayHolder.class).translate(
