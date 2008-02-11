@@ -53,7 +53,7 @@ public class ByteArrayTestCase extends AbstractDb4oTestCase {
 	static final int ARRAY_LENGTH = 1024;
 	
 	/**
-	 * @sharpen.if !CF_2_0
+	 * @sharpen.if !CF
 	 */
 	protected void configure(Configuration config) {
 		config.objectClass(SerializableByteArrayHolder.class).translate(new TSerializable());		
@@ -67,14 +67,14 @@ public class ByteArrayTestCase extends AbstractDb4oTestCase {
 	}
 	
 	/**
-	 * @sharpen.if !CF_2_0
+	 * @sharpen.if !CF
 	 */
 	public void testByteArrayHolder() throws Exception {
 		timeQueryLoop("raw byte array", ByteArrayHolder.class);
 	}
 	
 	/**
-	 * @sharpen.if !CF_2_0
+	 * @sharpen.if !CF
 	 */
 	public void testSerializableByteArrayHolder() throws Exception {
 		timeQueryLoop("TSerializable", SerializableByteArrayHolder.class);

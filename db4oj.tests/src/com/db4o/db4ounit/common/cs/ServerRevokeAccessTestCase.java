@@ -21,7 +21,7 @@ public class ServerRevokeAccessTestCase
 	}
 
 	/**
-	 * @sharpen.if !CF_2_0
+	 * @sharpen.if !CF
 	 */
 	public void test() throws IOException {
 		final String user = "hohohi";

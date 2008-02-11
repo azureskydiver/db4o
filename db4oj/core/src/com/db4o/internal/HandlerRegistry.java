@@ -657,8 +657,9 @@ public final class HandlerRegistry {
     }
 
     public int fieldHandlerIdForFieldHandler(FieldHandler fieldHandler) {
-        Integer wrappedId = (Integer) _mapFieldHandlerToId.get(fieldHandler);
-        if(wrappedId != null){
+        Object wrappedIdObj = _mapFieldHandlerToId.get(fieldHandler);
+        if(wrappedIdObj != null){
+    		Integer wrappedId = (Integer) wrappedIdObj;
             return wrappedId.intValue();
         }
         return 0;
