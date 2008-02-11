@@ -392,9 +392,7 @@
 	</target>	
 	
 	<target name="build-admin" depends="build-core" unless="skip.admin">
-		
-		<msb solution="${dir.n.v6}/Db4oTool/Db4oTool" />
-		
+		<msb solution="${dir.n.v6}/Db4oTool/Db4oTool" />		
 	</target>
 
 	<target name="build-tutorial" >
@@ -419,6 +417,12 @@
 			projectfile="${dir.n.v6.instrumentation}/Db4objects.Db4o.Instrumentation-CF-2005.csproj">
 			<sources refid="instrumentation.net.files" />
 		</updatecsharpproject>
+		
+		<updatecsharpproject 
+			projectfile="${dir.n.v6.instrumentation}/Db4objects.Db4o.Instrumentation-CF-2008.csproj">
+			<sources refid="instrumentation.net.files" />
+		</updatecsharpproject>
+		
 	</target>
 	
 	<target name="sharpen-nq" depends="sharpen-core" unless="skip.sharpen">
@@ -436,6 +440,11 @@
 		
 		<updatecsharpproject 
 			projectfile="${dir.n.v6.nq}/Db4objects.Db4o.NativeQueries-CF-2005.csproj">
+			<sources refid="nativequeries.net.files" />
+		</updatecsharpproject>
+		
+		<updatecsharpproject 
+			projectfile="${dir.n.v6.nq}/Db4objects.Db4o.NativeQueries-CF-2008.csproj">
 			<sources refid="nativequeries.net.files" />
 		</updatecsharpproject>		
 	</target>
@@ -605,11 +614,15 @@
 			<sources refid="db4ounit.files" />
 		</updatecsharpproject>
 
+		<updatecsharpproject projectfile="${dir.n.db4ounit}/Db4oUnit-2008.csproj">
+			<sources refid="db4ounit.files" />
+		</updatecsharpproject>
+		
 		<updatecsharpproject projectfile="${dir.n.db4ounit}/Db4oUnit-CF-2005.csproj">
 			<sources refid="db4ounit.files" />
 		</updatecsharpproject>
-
-		<updatecsharpproject projectfile="${dir.n.db4ounit}/Db4oUnit-2008.csproj">
+		
+		<updatecsharpproject projectfile="${dir.n.db4ounit}/Db4oUnit-CF-2008.csproj">
 			<sources refid="db4ounit.files" />
 		</updatecsharpproject>
 	</target>
@@ -699,25 +712,26 @@
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
-		
-		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-2005.csproj">
-			<sources dir="${dir.n.v6.extensions}">
-				<include name="**/*.cs" />
-			</sources>
-		</updatecsharpproject>
 
+		<fileset id="db4ounit.extensions.files" dir="${dir.n.v6.extensions}">
+			<include name="**/*.cs" />
+		</fileset>
+				
 		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-CF-2005.csproj">
-			<sources dir="${dir.n.v6.extensions}">
-				<include name="**/*.cs" />
-			</sources>
+			<sources refid= "db4ounit.extensions.files" />
 		</updatecsharpproject>
+		
+		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-CF-2008.csproj">
+			<sources refid= "db4ounit.extensions.files" />
+		</updatecsharpproject>		
 
+		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-2005.csproj">
+			<sources refid= "db4ounit.extensions.files" />
+		</updatecsharpproject>
+				
 		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-2008.csproj">
-			<sources dir="${dir.n.v6.extensions}">
-				<include name="**/*.cs" />
-			</sources>
+			<sources refid= "db4ounit.extensions.files" />
 		</updatecsharpproject>
-
 	</target>		
 	
 	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions"
@@ -824,6 +838,10 @@
 		</fileset>
 		
 		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2005.csproj">
+			<sources refid="db4objects.test.net.files" />
+		</updatecsharpproject>
+	
+		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2008.csproj">
 			<sources refid="db4objects.test.net.files" />
 		</updatecsharpproject>
 		
@@ -1162,14 +1180,45 @@
 
 	</target>
 
+	<macrodef name="build-cf">
+		<sequential>
+			<var name="targetFolder" value="${dir.dist.dll}/cf${target.framework.version}" /> 
+			
+			<msb solution="${dir.n.v6}/Db4o-CF" outputPath="${targetFolder}" />
+		
+	        <delete dir="${emulator.sharefolder}" >
+	            <include name="*" />
+	        </delete>
+        	
+	        <copy todir="${emulator.sharefolder}">
+	            <fileset dir="${targetFolder}" >
+	                <include name="*.dll" />
+	                <include name="*.exe" />
+	            </fileset>
+	        </copy>
+        
+	        <echo message="Run test..." />
+	        <exec executable="${vdma_desktop.exe}" failonerror="true">
+	            <arg line="&quot;\Storage Card\Db4objects.Db4o.Tests.exe run&quot;" />
+	            <arg value="${emulator.sharefolder}/db4ounit.log" />
+	        </exec>
+	    	<loadfile property="cf.db4ounit.log" srcfile="${emulator.sharefolder}/db4ounit.log" />
+	    	<echo message="${cf.db4ounit.log}" />
+		</sequential>
+	</macrodef>
+		
+    <target name="build-cf35" depends="init, configure-debug, configure-net35, sharpen, define-msbuild-task">
+    	<build-cf />
+    </target>
+	
     <target name="build-cf20" depends="init, configure, sharpen, define-msbuild-task">
+    	<build-cf />
+    </target>
+	
+    <target name="build-cf20-old" depends="init, configure, sharpen, define-msbuild-task">
         <property name="dir.n.v6.tests" location="${dir.n.v6}/Db4objects.Db4o.Tests" />
         
-        <msbuild buildfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2005.sln">
-            <target name="rebuild" />
-            <property name="Configuration" value="Debug" />
-            <property name="OutputPath" value="${dir.dist.dll}/cf2.0" />
-        </msbuild>
+    	<msb solution="${dir.n.v6}/Db4o-CF" outputPath="${dir.dist.dll}/cf2.0" />
         
         <delete dir="${emulator.sharefolder}" >
             <include name="*" />
@@ -1193,6 +1242,4 @@
 	<target name="define-msbuild-task">
 		<taskdef resource="org/apache/ant/dotnet/antlib.xml" />
 	</target>
-	
-	
 </project>
