@@ -30,7 +30,7 @@ public class MCommittedInfo extends MsgD implements ClientSideMessage {
 	private void encodeObjectInfoCollection(ByteArrayOutputStream os, ObjectInfoCollection collection){
 		Iterator4 iter = collection.iterator();
 		while (iter.moveNext()) {
-			LazyObjectReference obj = (LazyObjectReference) iter.current();
+			ObjectInfo obj = (ObjectInfo) iter.current();
 			writeLong(os, obj.getInternalID());
 		}
 		writeLong(os, -1);
