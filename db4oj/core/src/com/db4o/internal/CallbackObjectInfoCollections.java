@@ -9,11 +9,11 @@ import com.db4o.ext.*;
  */
 public class CallbackObjectInfoCollections {
 	
-	public ObjectInfoCollection added;
+	public final ObjectInfoCollection added;
 	
-	public ObjectInfoCollection updated;
+	public final ObjectInfoCollection updated;
 	
-	public ObjectInfoCollection deleted;
+	public final ObjectInfoCollection deleted;
 
 	public static final CallbackObjectInfoCollections EMTPY = empty(); 
 		

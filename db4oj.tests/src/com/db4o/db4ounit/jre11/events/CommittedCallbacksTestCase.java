@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.jre11.events;
 
-import com.db4o.config.Configuration;
+import com.db4o.config.*;
 import com.db4o.events.*;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.foundation.ObjectByRef;
@@ -21,7 +21,7 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new CommittedCallbacksTestCase().runClientServer();
+		new CommittedCallbacksTestCase().runAll();
 	}
 	
 	private static final ObjectInfo[] NONE = new ObjectInfo[0];
@@ -44,6 +44,7 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	private EventRecorder _eventRecorder;	
 	
 	protected void configure(Configuration config) {
+		config.objectClass(Item.class).generateUUIDs(true);
 		indexField(config, Item.class, "id");
 	}
 	
@@ -166,8 +167,7 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	
 	private ObjectInfo getInfo(int itemId) {
 		Item item = getItem(itemId);
-		int internalId = (int) db().getID(item);
-		return new LazyObjectReference(trans(), internalId );
+		return new FrozenObjectInfo(trans().referenceForObject(item));
 	}
 
 	private void assertCommittedEvent(

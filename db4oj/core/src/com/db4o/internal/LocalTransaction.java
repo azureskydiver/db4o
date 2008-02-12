@@ -56,25 +56,37 @@ public class LocalTransaction extends Transaction {
     
     public void commit(CommittedCallbackDispatcher dispatcher) {
         synchronized (container()._lock) {
-        	if(doCommittingCallbacks()){
-        		callbacks().commitOnStarted(this, collectCallbackObjectInfos());
-        	}
-            commitImpl();
-            CallbackObjectInfoCollections committedInfo = committedInfoFor(dispatcher); 
-            commitClearAll();
-            if (null != committedInfo) {
-    	        dispatcher.dispatchCommitted(committedInfo);
-            } 
+        	
+        	dispatchCommittingCallback();   
+        	
+        	if (!doCommittedCallbacks(dispatcher)) {
+        		commitListeners();
+        		commitImpl();
+        		commitClearAll();
+    		} else {
+    			commitListeners();
+    			Collection4 deleted = collectCommittedCallbackDeletedInfo();
+                commitImpl();
+                final CallbackObjectInfoCollections committedInfo = collectCommittedCallbackInfo(deleted);
+        		commitClearAll();
+        		dispatcher.dispatchCommitted(
+        				CallbackObjectInfoCollections.EMTPY == committedInfo
+        				? committedInfo
+        				: new CallbackObjectInfoCollections(
+        						committedInfo.added,
+        						committedInfo.updated,
+        						new ObjectInfoCollectionImpl(deleted)));
+    		}
         }
-    }
+    }	
 
-	private CallbackObjectInfoCollections committedInfoFor(CommittedCallbackDispatcher dispatcher) {
-		return doCommittedCallbacks(dispatcher)
-			? collectCallbackObjectInfos()
-			: null;
+	private void dispatchCommittingCallback() {
+		if(doCommittingCallbacks()){
+			callbacks().commitOnStarted(this, collectCommittingCallbackInfo());
+		}
 	}
 
-    private boolean doCommittedCallbacks(CommittedCallbackDispatcher dispatcher) {
+	private boolean doCommittedCallbacks(CommittedCallbackDispatcher dispatcher) {
         if (isSystemTransaction()){
             return false;
         }
@@ -104,8 +116,6 @@ public class LocalTransaction extends Transaction {
             DTrace.TRANS_COMMIT.logInfo( "server == " + container().isServer() + ", systemtrans == " +  isSystemTransaction());
         }
         
-        commit2Listeners();
-        
         commit3Stream();
         
         commitParticipants();
@@ -115,7 +125,7 @@ public class LocalTransaction extends Transaction {
         Slot reservedSlot = allocateTransactionLogSlot(false);
         
         freeSlotChanges(false);
-        
+                
         freespaceBeginCommit();
         
         commitFreespace();
@@ -143,14 +153,14 @@ public class LocalTransaction extends Transaction {
         }
     }
 	
-	private void commit2Listeners(){
+	private void commitListeners(){
         commitParentListeners(); 
         commitTransactionListeners();
     }
 
 	private void commitParentListeners() {
 		if (_systemTransaction != null) {
-            parentLocalTransaction().commit2Listeners();
+            parentLocalTransaction().commitListeners();
         }
 	}
 	
@@ -721,28 +731,100 @@ public class LocalTransaction extends Transaction {
 	private Callbacks callbacks(){
 		return container().callbacks();
 	}
+	
+	private Collection4 collectCommittedCallbackDeletedInfo() {
+		final Collection4 deleted = new Collection4();
+		collectSlotChanges(new SlotChangeCollector() {
+			public void deleted(int id) {
+				deleted.add(frozenReferenceFor(id));
+			}
 
-	private CallbackObjectInfoCollections collectCallbackObjectInfos() {
+			public void updated(int id) {
+			}
+		
+			public void added(int id) {
+			}
+		});
+		return deleted;
+	}
+	
+	private CallbackObjectInfoCollections collectCommittedCallbackInfo(Collection4 deleted) {
 		if (null == _slotChanges) {
 			return CallbackObjectInfoCollections.EMTPY;
 		}
+		
+		final Collection4 added = new Collection4();
+		final Collection4 updated = new Collection4();		
+		collectSlotChanges(new SlotChangeCollector() {
+			public void added(int id) {
+				added.add(lazyReferenceFor(id));
+			}
+
+			public void updated(int id) {
+				updated.add(lazyReferenceFor(id));
+			}
+			
+			public void deleted(int id) {
+			}
+		});
+		return newCallbackObjectInfoCollections(added, updated, deleted);
+	}
+
+	private CallbackObjectInfoCollections collectCommittingCallbackInfo() {
+		if (null == _slotChanges) {
+			return CallbackObjectInfoCollections.EMTPY;
+		}
+		
 		final Collection4 added = new Collection4();
 		final Collection4 deleted = new Collection4();
-		final Collection4 updated = new Collection4();
+		final Collection4 updated = new Collection4();		
+		collectSlotChanges(new SlotChangeCollector() {
+			public void added(int id) {
+				added.add(lazyReferenceFor(id));
+			}
+
+			public void updated(int id) {
+				updated.add(lazyReferenceFor(id));
+			}
+			
+			public void deleted(int id){
+				deleted.add(frozenReferenceFor(id));
+			}
+		});
+		return newCallbackObjectInfoCollections(added, updated, deleted);
+	}
+
+	private CallbackObjectInfoCollections newCallbackObjectInfoCollections(
+			final Collection4 added,
+			final Collection4 updated,
+			final Collection4 deleted) {
+		return new CallbackObjectInfoCollections(
+				new ObjectInfoCollectionImpl(added),
+				new ObjectInfoCollectionImpl(updated),
+				new ObjectInfoCollectionImpl(deleted));
+	}
+
+	private void collectSlotChanges(final SlotChangeCollector collector) {
+		if (null == _slotChanges) {
+			return;
+		}
 		_slotChanges.traverseLocked(new Visitor4() {
 			public void visit(Object obj) {
-				SlotChange slotChange = ((SlotChange)obj);
-				LazyObjectReference lazyRef = new LazyObjectReference(LocalTransaction.this, slotChange._key);
-				if (slotChange.isDeleted()) {					
-					deleted.add(lazyRef);
+				final SlotChange slotChange = ((SlotChange)obj);
+				final int id = slotChange._key;
+				if (slotChange.isDeleted()) {
+					collector.deleted(id);
 				} else if (slotChange.isNew()) {
-					added.add(lazyRef);
+					collector.added(id);
 				} else {
-					updated.add(lazyRef);
+					collector.updated(id);
 				}
 			}
 		});
-		return new CallbackObjectInfoCollections (new ObjectInfoCollectionImpl(added), new ObjectInfoCollectionImpl(updated), new ObjectInfoCollectionImpl(deleted));
+	}
+	
+	private ObjectInfo frozenReferenceFor(final int id) {
+		return new FrozenObjectInfo(referenceForId(id));
 	}
 	
     private void setAddress(int a_address) {
@@ -784,5 +866,9 @@ public class LocalTransaction extends Transaction {
         }
         freespaceManager().commit();
     }
+
+	private LazyObjectReference lazyReferenceFor(final int id) {
+		return new LazyObjectReference(LocalTransaction.this, id);
+	}
     
 }

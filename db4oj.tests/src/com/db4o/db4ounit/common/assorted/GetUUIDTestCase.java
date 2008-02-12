@@ -10,14 +10,10 @@ import com.db4o.foundation.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-/**
- * 
- */
-
 public class GetUUIDTestCase extends AbstractDb4oTestCase {
 
     public static void main(String[] args) {
-        new GetUUIDTestCase().runSolo();
+        new GetUUIDTestCase().runAll();
     }
     
     protected void configure(Configuration config) throws Exception {
@@ -25,14 +21,16 @@ public class GetUUIDTestCase extends AbstractDb4oTestCase {
     }
     
     protected void store() throws Exception {
-        Item item = new Item("Item to be delete"); //$NON-NLS-1$
-        store(item);
+        store(new Item("Item to be deleted"));
     }
     
     /*
      * Regression test for COR-546
      */
     public void testGetUUIDInCommittedCallbacks() {
+    	
+    	final Db4oUUID itemUUID = getItemUUID();
+    	
         serverEventRegistry().committed().addListener(new EventListener4() {
             public void onEvent(Event4 e, EventArgs args) {
                 CommitEventArgs commitEventArgs = (CommitEventArgs) args;
@@ -40,7 +38,7 @@ public class GetUUIDTestCase extends AbstractDb4oTestCase {
                         .iterator();
                 while (deletedObjectInfoCollection.moveNext()) {
                     ObjectInfo objectInfo = (ObjectInfo) deletedObjectInfoCollection.current();
-                    Assert.isNotNull(objectInfo.getUUID());
+                    Assert.areEqual(itemUUID, objectInfo.getUUID());
                 }
             }
         });
@@ -48,6 +46,14 @@ public class GetUUIDTestCase extends AbstractDb4oTestCase {
         deleteAll(Item.class);
         db().commit();
     }
+
+	private Db4oUUID getItemUUID() {
+		return getItemInfo().getUUID();
+	}
+
+	private ObjectInfo getItemInfo() {
+		return db().ext().getObjectInfo(retrieveOnlyInstance(Item.class));
+	}
 
     public void testGetUUIDInCommittingCallbacks() {
         serverEventRegistry().committing().addListener(new EventListener4() {

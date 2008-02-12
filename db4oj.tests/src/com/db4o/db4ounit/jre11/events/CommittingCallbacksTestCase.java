@@ -167,8 +167,7 @@ public class CommittingCallbacksTestCase extends AbstractDb4oTestCase {
 	
 	private ObjectInfo getInfo(int itemId) {
 		Item item = getItem(itemId);
-		int internalId = (int) db().getID(item);
-		return new LazyObjectReference(trans(), internalId );
+		return new FrozenObjectInfo(trans().referenceForObject(item));
 	}
 
 	private void assertCommittingEvent(

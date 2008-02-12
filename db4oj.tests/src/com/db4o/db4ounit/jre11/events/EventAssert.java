@@ -53,6 +53,8 @@ public class EventAssert {
 		while (iterator.moveNext()) {
 			ObjectInfo info = (ObjectInfo)iterator.current();
 			if (expectedInfo.getInternalID() == info.getInternalID()) {
+				Assert.areEqual(expectedInfo.getUUID(), info.getUUID());
+				Assert.areEqual(expectedInfo.getVersion(), info.getVersion());
 				return;
 			}
 		}
