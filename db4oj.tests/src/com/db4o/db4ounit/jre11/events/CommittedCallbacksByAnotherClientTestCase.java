@@ -5,7 +5,7 @@ package com.db4o.db4ounit.jre11.events;
 import com.db4o.config.Configuration;
 import com.db4o.events.*;
 import com.db4o.ext.*;
-import com.db4o.internal.LazyObjectReference;
+import com.db4o.internal.*;
 import com.db4o.query.Query;
 
 import db4ounit.extensions.Db4oClientServerTestCase;
@@ -154,8 +154,7 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 	
 	private ObjectInfo getInfo(ExtObjectContainer oc, int itemId) {
 		Item item = getItem(oc, itemId);
-		int internalId = (int) oc.getID(item);
-		return new LazyObjectReference(null, internalId );
+		return new FrozenObjectInfo(oc.getObjectInfo(item));
 	}
 
 	private void assertCommittedEvent(
