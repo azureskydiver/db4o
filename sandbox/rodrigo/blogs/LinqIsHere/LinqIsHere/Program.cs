@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using Db4objects.Db4o;
-using Db4objects.Db4o.Linq;
-
-namespace LinqIsHere
+﻿namespace LinqIsHere
 {
+	using System;
+	using System.Linq;
+	using Db4objects.Db4o;
+	using Db4objects.Db4o.Linq;
+
 	class Issue
 	{	
 		public string Status
