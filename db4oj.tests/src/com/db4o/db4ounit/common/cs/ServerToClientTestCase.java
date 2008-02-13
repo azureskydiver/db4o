@@ -29,7 +29,7 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 	public void testDispatchPendingMessages() {
 		assertReplyBehavior(new ClientWaitLogic() {
 			public void wait(final ObjectContainer client1, final ObjectContainer client2) {
-				final int timeout = 500;				
+				final int timeout = 1000;				
 				Cool.loopWithTimeout(timeout, new ConditionalBlock() {
 					public boolean run() {
 						((ExtClient)client1).dispatchPendingMessages(timeout);
