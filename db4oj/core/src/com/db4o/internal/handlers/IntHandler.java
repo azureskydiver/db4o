@@ -34,6 +34,13 @@ public class IntHandler extends PrimitiveHandler {
     protected Class primitiveJavaClass() {
         return int.class;
     }
+    
+    protected Class javaClass() {
+        if(NullableArrayHandling.disabled()){
+            return super.javaClass();
+        }
+        return Platform4.nullableTypeFor(primitiveJavaClass());
+    }
 
     public int linkLength() {
         return Const4.INT_LENGTH;

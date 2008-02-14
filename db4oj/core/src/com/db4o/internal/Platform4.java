@@ -63,8 +63,7 @@ public final class Platform4 {
 		String.class,
 		java.util.Date.class
 	};
-
-
+    
     synchronized static final void addShutDownHook(PartialObjectContainer container) {
         if (!hasShutDownHook()) {
         	return;
@@ -674,6 +673,19 @@ public final class Platform4 {
         ReflectClass claxx = container.reflector().forClass(java.lang.Number.class);
         container.handlers().mapFieldHandler(claxx, container.handlers().untypedFieldHandler());
     }
-	
+
+    public static Class nullableTypeFor(Class primitiveJavaClass) {
+        
+        // FIXME: create a Hashtable for all types
+        
+        if(primitiveJavaClass == int.class){
+            return Integer.class;
+        }
+        if(primitiveJavaClass == boolean.class){
+            return Boolean.class;
+        }
+        
+        throw new NotImplementedException();
+    }
 	
 }

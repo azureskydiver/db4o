@@ -224,8 +224,8 @@ public final class HandlerRegistry {
         PrimitiveFieldHandler classMetadata = new PrimitiveFieldHandler(container(), typeHandler, id, classReflector);
         
         map(id, classMetadata, typeHandler, typeHandler, classReflector);
-
-        if (!Deploy.csharp) {
+        
+        if (NullableArrayHandling.useJavaHandling()) {
             if(typeHandler instanceof PrimitiveHandler){
                 ReflectClass primitiveClassReflector = 
                     ((PrimitiveHandler) typeHandler).primitiveClassReflector();

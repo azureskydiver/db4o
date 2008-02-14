@@ -52,9 +52,13 @@ public class QField implements Visitor4, Unversioned{
 	            claxx = reflector.forObject(a_object);
 	        }
 	    }else{
+	        
+	        // TODO: Review this line for NullableArrayHandling 
+	        
 			if(Deploy.csharp){
 				return a_object;
 			}
+			
 	    }
         if(i_yapField == null){
             return a_object;

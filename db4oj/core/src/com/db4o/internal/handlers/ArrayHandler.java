@@ -292,7 +292,12 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     	if(orig>=0||orig==Const4.IGNORE_ID) {
     		return orig;
     	}
-    	boolean primitive=!Deploy.csharp&&orig<Const4.PRIMITIVE;
+    	
+    	// TODO: We changed the following line in the NullableArrayHandling 
+    	//       refactoring. Behaviour may have to be different for older
+    	//       ArrayHandler versions.
+    	boolean primitive = NullableArrayHandling.useJavaHandling() && (orig < Const4.PRIMITIVE);
+    	
     	if(primitive) {
     		orig-=Const4.PRIMITIVE;
     	}
@@ -312,7 +317,8 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		
 		if(elements != Const4.IGNORE_ID){
 		    boolean primitive = false;
-		    if(!Deploy.csharp){
+		    
+		    if(NullableArrayHandling.useJavaHandling()){
 		        if(elements < Const4.PRIMITIVE){
 		            primitive = true;
 		            elements -= Const4.PRIMITIVE;
@@ -337,7 +343,9 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     
     protected final int classID(Object obj){
         ReflectClass claxx = componentType(obj);
-        boolean primitive = Deploy.csharp ? false : claxx.isPrimitive();
+        
+        boolean primitive = NullableArrayHandling.useOldNetHandling() ? false : claxx.isPrimitive();
+        
         if(primitive){
             claxx = container().produceClassMetadata(claxx).classReflector();
         }

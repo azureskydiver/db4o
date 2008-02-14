@@ -41,6 +41,10 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     
     protected abstract Class primitiveJavaClass();
     
+    protected Class javaClass(){
+        return defaultValue().getClass();
+    }
+    
     public abstract Object primitiveNull();
 
     /**
@@ -87,7 +91,7 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
         if(_classReflector != null){
             return;
         }
-        _classReflector = _stream.reflector().forClass(defaultValue().getClass());
+        _classReflector = _stream.reflector().forClass(javaClass());
         Class clazz = primitiveJavaClass();
         if(clazz != null){
             _primitiveClassReflector = _stream.reflector().forClass(clazz);
