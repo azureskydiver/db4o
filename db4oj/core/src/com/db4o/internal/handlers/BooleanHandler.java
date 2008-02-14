@@ -38,6 +38,10 @@ public final class BooleanHandler extends PrimitiveHandler {
 		return boolean.class;
 	}
 	
+    protected Class javaClass() {
+        return Platform4.nullableTypeFor(primitiveJavaClass());
+    }
+	
 	public Object primitiveNull(){
 		return i_primitive;
 	}

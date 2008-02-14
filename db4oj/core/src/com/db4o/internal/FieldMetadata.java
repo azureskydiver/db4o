@@ -381,6 +381,9 @@ public class FieldMetadata implements StoredField {
     }
 
     private boolean arraysUsePrimitiveClassReflector() {
+        if(NullableArrayHandling.useJavaHandling()){
+            return _isPrimitive;
+        }
         return Deploy.csharp ? false : _isPrimitive;
     }
 
