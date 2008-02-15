@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/db4o_OSGi_Edition_1.0.0.jar" id="db4o_OSGi_Edition" version="1.0.0">
-      <category name="db4o OSGi Edition"/>
+   <description url="https://source.db4o.com/db4o/trunk/db4o-update-site/">
+      Db4o Plugins
+   </description>
+   <feature url="features/OME_Plug_in_1.0.0.jar" id="OME_Plug_in" version="1.0.0">
+      <category name="Db4o"/>
    </feature>
-   <category-def name="db4o OSGi Edition" label="db4o OSGi Edition"/>
+   <category-def name="Db4o" label="Db4o"/>
 </site>
