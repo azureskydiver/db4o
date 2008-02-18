@@ -13,6 +13,9 @@ import com.db4o.test.util.*;
 
 import db4ounit.*;
 
+/**
+ * @sharpen.ignore
+ */
 public class DefragUnknownClassTestCase implements TestLifeCycle {
 
 	public static class Unknown {
