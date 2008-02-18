@@ -12,10 +12,11 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
+				COR775TestCase.class,
 				BlockSizeDefragTestCase.class,
 				SlotDefragmentTestCase.class,
-				COR775TestCase.class,
 				StoredClassFilterTestCase.class,
+				TranslatedDefragTestCase.class,
 		};
 	}
 }
