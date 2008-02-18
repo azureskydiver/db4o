@@ -192,6 +192,9 @@ optimized, except for the "Arbitrary Code" example - we are working on it.
 .s com.db4o.f1.chapter1.ArbitraryQuery ..
 ..?
 
+.? net .< Linq ..
+..?
+
 .n
 .a SODAQueryAPI ..
 .1 SODA Query API ..
