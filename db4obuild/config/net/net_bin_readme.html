@@ -14,10 +14,12 @@ H4 { font-size: 10pt; color: black; }
     <br />
     <ul>
         <li>compact-2.0 </li>
+        <li>compact-3.5</li>
         <li>net-2.0 </li>
+        <li>net-3.5</li>
     </ul>
     <br />
-    The compact-2.0 folder contains the following files:
+    The "compact" folders contain the following files:
     <br />
     <br />
     <table>
@@ -30,25 +32,13 @@ H4 { font-size: 10pt; color: black; }
             <td>db4o database engine</td>
         </tr>
         <tr>
-            <td>Db4objects.Db4o.xml</td>
-            <td>documentation for the db4o database engine</td>
-        </tr>
-        <tr>
             <td valign=top>Db4objects.Db4o.Instrumentation.dll</td>
             <td>bytecode instrumentation library, required for enhancements for Native Queries
             and Transparent Activation</td>
         </tr>
         <tr>
-            <td>Db4objects.Db4o.Instrumentation.xml</td>
-            <td>documentation for the bytecode instrumentation library</td>
-        </tr>
-        <tr>
             <td>Db4objects.Db4o.NativeQueries.dll</td>
             <td>Native Queries support library</td>
-        </tr>
-        <tr>
-            <td>Db4objects.Db4o.NativeQueries.xml</td>
-            <td>documentation for the Native Queries support library</td>
         </tr>
         <tr>
             <td valign=top>Mono.Cecil.dll</td>
@@ -59,22 +49,25 @@ H4 { font-size: 10pt; color: black; }
     </table>
     <br />
     <br />
-    The net-2.0 contains the following files in addition to the above:
+    The "net" folders contain the following files in addition to the above:
     <br />
     <br />
     <table>
         <tr>
-            <td style="width: 280px" valign=top>Db4oTool.exe</td>
+            <td style="width: 280px; height: 18px;" valign=top>
+                Db4objects.Db4o.Linq.dll</td>
+            <td style="height: 18px">
+                LINQ support for db4o (requires .NET version 3.5)</td>
+        </tr>
+        <tr>
+            <td valign=top>
+                Db4oTool.exe</td>
             <td>db4o commandline tool. For a list of options run it without parameters.</td>
         </tr>
         <tr>
             <td valign=top>Db4oTool.MSBuild.dll</td>
-            <td>MSBuild tasks for build-time enhancements for Transparent Activation and Native Queries</td>
-        </tr>
-        <tr>
-            <td valign=top>Db4oTool.MSBuild.dll</td>
             <td>
-                documentation for Db4oTool.MSBuild.dll</td>
+                MSBuild tasks for build-time enhancements for Transparent Activation and Native Queries</td>
         </tr>
         <tr>
             <td>Mono.Getoptions.dll</td>
