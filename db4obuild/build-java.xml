@@ -865,6 +865,9 @@
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="src/**" />
+				<include name="test/" />
+				<include name="IoBenchmark.properties" />
+				<include name="*.xml" />
 				<exclude name="**/CVS/**" />
 			</fileset>
 		</copy>
