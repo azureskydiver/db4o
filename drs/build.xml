@@ -170,7 +170,7 @@
         <antcall target="add-gplheader" />
         
 		<zip destfile="${file.drs.zip}">
-			<zipfileset dir="." prefix="${zipbasedir}" includes="drs.machine.properties, ant.properties, build.xml, compatibility.html, readme.html, drs.license.html" />
+			<zipfileset dir="." prefix="${zipbasedir}" includes="machine.properties, ant.properties, build.xml, compatibility.html, readme.html, drs.license.html" />
 
 			<zipfileset dir="lib" prefix="${zipbasedir}/lib" includes="*.jar, *.html" />
 			<zipfileset dir="src" prefix="${zipbasedir}/src" excludes="misc/, jira/" />
