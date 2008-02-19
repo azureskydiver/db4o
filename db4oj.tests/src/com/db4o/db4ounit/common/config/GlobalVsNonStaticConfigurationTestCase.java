@@ -13,10 +13,10 @@ import com.db4o.internal.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class NonStaticConfigurationTestCase implements Db4oTestCase {
+public class GlobalVsNonStaticConfigurationTestCase implements Db4oTestCase {
 
 	public static void main(String[] args) {
-		new TestRunner(NonStaticConfigurationTestCase.class).run();
+		new TestRunner(GlobalVsNonStaticConfigurationTestCase.class).run();
 	}
 	
 	public void setUp() throws Exception {
@@ -66,6 +66,23 @@ public class NonStaticConfigurationTestCase implements Db4oTestCase {
 		} finally {
 			db2.close();
 		}
+	}
+
+	public void testOpenWithStaticConfiguration() {
+		Db4o.configure().readOnly(true);
+		Assert.expect(DatabaseReadOnlyException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				Db4o.openFile(FILENAME);
+			}
+		});
+		Db4o.configure().readOnly(false);
+		ObjectContainer db = Db4o.openFile(FILENAME);
+		db.store(new Data(1));
+		db.close();
+
+		db = Db4o.openFile(FILENAME);
+		Assert.areEqual(1, db.query(Data.class).size());
+		db.close();
 	}
 
 	public void testIndependentObjectConfigs() {
