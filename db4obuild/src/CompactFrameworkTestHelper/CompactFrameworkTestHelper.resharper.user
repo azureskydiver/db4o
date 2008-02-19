@@ -1,0 +1,141 @@
+<Configuration>
+  <SharedSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </SharedSolutionDisabledTemplatesManager>
+  <UnitTestRunner>
+    <CustomStartDirectory>
+    </CustomStartDirectory>
+    <UseShadowCopy>True</UseShadowCopy>
+    <UseCustomFolder>False</UseCustomFolder>
+    <Providers />
+  </UnitTestRunner>
+  <UserSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </UserSolutionDisabledTemplatesManager>
+  <FileStructureView>
+    <AutoScrollToSource>False</AutoScrollToSource>
+    <TrackCaretLocation>False</TrackCaretLocation>
+  </FileStructureView>
+  <ReFormatCode>
+    <ReorderMembers>False</ReorderMembers>
+    <OptimizeUsings>False</OptimizeUsings>
+    <RemoveRedundantThis>False</RemoveRedundantThis>
+    <ShortenReferences>False</ShortenReferences>
+  </ReFormatCode>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <EditorManager>
+    <RecentFiles>
+      <File id="085D3FBF-8CD4-422B-8CB5-50F8D7BBC710/f:Program.cs" caret="544" scrollPosition="0|79" />
+      <File id="085D3FBF-8CD4-422B-8CB5-50F8D7BBC710/f:EmulatorHelper.cs" caret="803" scrollPosition="0|9" />
+    </RecentFiles>
+  </EditorManager>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Qualified:@System.IO.Path">
+      <Item value="Combine" priority="7" />
+      <Item value="GetFileName" priority="0" />
+      <Item value="PathSeparator" priority="1" />
+      <Item value="GetDirectoryName" priority="1" />
+      <Item value="GetPathRoot" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Console">
+      <Item value="WriteLine" priority="5" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@">
+      <Item value="GetExitCode" priority="0" />
+      <Item value="GetFileDeployer" priority="0" />
+      <Item value="GetRemoteProcess" priority="0" />
+      <Item value="Start" priority="0" />
+      <Item value="HasExited" priority="0" />
+      <Item value="GetRemoteAgent" priority="0" />
+      <Item value="Platform" priority="0" />
+      <Item value="ImageRuntimeVersion" priority="2" />
+      <Item value="Remove" priority="1" />
+      <Item value="Replace" priority="1" />
+      <Item value="IndexOf" priority="0" />
+      <Item value="Length" priority="2" />
+      <Item value="GetConfiguration" priority="1" />
+      <Item value="SelectSingleNode" priority="0" />
+      <Item value="Load" priority="0" />
+      <Item value="NameTable" priority="0" />
+      <Item value="AddNamespace" priority="0" />
+      <Item value="GetReferencedAssemblies" priority="0" />
+      <Item value="Name" priority="0" />
+      <Item value="Version" priority="1" />
+      <Item value="WaitForInputIdle" priority="0" />
+      <Item value="InnerText" priority="2" />
+      <Item value="SetConfiguration" priority="2" />
+      <Item value="FirstChild" priority="0" />
+      <Item value="InnerXml" priority="1" />
+      <Item value="Connect" priority="1" />
+      <Item value="Shutdown" priority="1" />
+      <Item value="IsConnected" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@CompactFrameworkTestHelper.EmulatorHelper">
+      <Item value="CopyFiles" priority="0" />
+      <Item value="DEVICE_ID" priority="1" />
+      <Item value="SetStorageCardPath" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Threading.Thread">
+      <Item value="Sleep" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Environment">
+      <Item value="GetFolderPath" priority="1" />
+      <Item value="GetEnvironmentVariable" priority="3" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Environment+SpecialFolder">
+      <Item value="ApplicationData" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Reflection.Assembly">
+      <Item value="ReflectionOnlyLoad" priority="1" />
+      <Item value="ReflectionOnlyLoadFrom" priority="1" />
+      <Item value="GetExecutingAssembly" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Reflection">
+      <Item value="ManifestResourceInfo" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.String">
+      <Item value="Format" priority="5" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.IntPtr">
+      <Item value="Zero" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.IO.File">
+      <Item value="Exists" priority="1" />
+      <Item value="Delete" priority="0" />
+      <Item value="Copy" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Win32">
+      <Item value="JunctionPoint" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Diagnostics.Debug">
+      <Item value="Assert" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Array">
+      <Item value="Find" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Version">
+      <Item value="Major" priority="0" />
+      <Item value="Minor" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Single">
+      <Item value="TryParse" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Globalization.NumberStyles">
+      <Item value="AllowDecimalPoint" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Globalization.NumberFormatInfo">
+      <Item value="InvariantInfo" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Diagnostics.Process">
+      <Item value="Start" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Microsoft.Win32.Registry">
+      <Item value="ClassesRoot" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Microsoft.Win32.Registry.ClassesRoot">
+      <Item value="OpenSubKey" priority="1" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+</Configuration>
