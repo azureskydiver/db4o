@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using Microsoft.SmartDevice.Connectivity;
 using Microsoft.DeviceEmulatorManager.Interop;
-using Microsoft.Win32;
+using Microsoft.SmartDevice.Connectivity;
 
 namespace CompactFrameworkTestHelper
 {
@@ -16,6 +15,20 @@ namespace CompactFrameworkTestHelper
 	 */
 	class Program
 	{
+		private struct FrameWorkInfo
+		{
+			public readonly ObjectId PackageId;
+			public readonly string packageFullPath;
+
+			public FrameWorkInfo(ObjectId id, string packageFullPath)
+			{
+				PackageId = id;
+				this.packageFullPath = packageFullPath;
+			}
+		}
+
+		private static readonly Dictionary<int, FrameWorkInfo> _deployment;
+
 		private const int DoNotSaveState = 0;
 		private static readonly string DeviceTestPath = "/Temp/";
 
@@ -24,11 +37,17 @@ namespace CompactFrameworkTestHelper
 		private static readonly int FAILED_LAUNCHING_TESTS = ERROR_BASE - 2;
 		private static readonly int INVALID_PROGRAM_PARAMETERS = ERROR_BASE - 3;
 
+		static Program()
+		{
+			_deployment = new Dictionary<int, FrameWorkInfo>();
+			_deployment.Add(20, new FrameWorkInfo(new ObjectId(new Guid("ABD785F0-CDA7-41c5-8375-2451A7CBFF26")), "NETCFv2.ppc.armv4.cab"));
+			_deployment.Add(35, new FrameWorkInfo(new ObjectId(new Guid("ABD785F0-CDA7-41c5-8375-2451A7CBFF37")), "NETCFv35.ppc.armv4.cab"));
+		}
+
 		static int Main(string[] args)
 		{
 			int targetFrameworkVersion;
-			string emulatorImagePath;
-			if (!ProcessArguments(args, out targetFrameworkVersion, out emulatorImagePath))
+			if (!ProcessArguments(args, out targetFrameworkVersion))
 			{
 				return INVALID_PROGRAM_PARAMETERS;
 			}
@@ -38,10 +57,10 @@ namespace CompactFrameworkTestHelper
 			{
 				Console.WriteLine("CompactFrameworkTestHelper - Copyright (C) 2004-2008  db4objects Inc.\r\n");
 
-				StartEmulator(targetFrameworkVersion, emulatorImagePath);
-
 				Device device = EmulatorHelper.GetDevice();
 				device.Connect();
+
+				DeployDotNetFramework(device, targetFrameworkVersion);
 
 				IDeviceEmulatorManagerVMID virtualDevice = EmulatorHelper.GetVirtualDevice();
 
@@ -63,6 +82,10 @@ namespace CompactFrameworkTestHelper
 						}
 
 						ret = process.GetExitCode();
+						if (ret != 0)
+						{
+							Console.WriteLine("{0} returned: {1}", db4oTests, ret);
+						}
 					}
 					else
 					{
@@ -84,11 +107,10 @@ namespace CompactFrameworkTestHelper
 			return ret;
 		}
 
-		private static bool ProcessArguments(string[] args, out int version, out string emulatorImagePath)
+		private static bool ProcessArguments(string[] args, out int version)
 		{
-			emulatorImagePath = String.Empty;
 			version = 0;
-			if (args.Length != 2)
+			if (args.Length != 1)
 			{
 				Console.WriteLine("Invalid program parameter count.\r\n" +
 				                  "Use: {0} <version> <emulator images path>\r\n\r\n" +
@@ -98,79 +120,28 @@ namespace CompactFrameworkTestHelper
 			}
 
 			float tmpVersion;
-			if (!Single.TryParse(args[0], NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo, out tmpVersion) && (tmpVersion == 2.0 || tmpVersion == 3.5)) 
+			if (Single.TryParse(args[0], NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo, out tmpVersion) && (tmpVersion == 2.0 || tmpVersion == 3.5)) 
 			{
-				return false;
-			}
-			
-			version = (int)(tmpVersion * 10);
-
-			emulatorImagePath = args[1];
-			if (!Directory.Exists(emulatorImagePath))
-			{
-				return false;
+				version = (int)(tmpVersion * 10);
+				return true;
 			}
 
-			return true;
+			return false;
 		}
 
-		private static void StartEmulator(int targetFrameworkVersion, string emulatorImagePath)
+		private static void DeployDotNetFramework(Device device, int version)
 		{
-			string deviceEmulatorPath = BuildDeviceEmulatorPath();
-			string imageFilePath = BuildSourceImageFile(targetFrameworkVersion, emulatorImagePath);
+			FileDeployer fd = device.GetFileDeployer();
 
-			if (!File.Exists(imageFilePath))
+			FrameWorkInfo info = _deployment[version];
+			fd.DownloadPackage(info.PackageId);
+
+			RemoteProcess installer = device.GetRemoteProcess();
+			installer.Start("wceload.exe", String.Format(@"/noui \windows\{0}", info.packageFullPath));
+			while (installer.HasExited() != true)
 			{
-				throw new FileNotFoundException("Device Emulator image.", imageFilePath);
+				Thread.Sleep(1000);
 			}
-
-			Process.Start(deviceEmulatorPath, String.Format("/s {0} /nosecurityprompt", imageFilePath));
-			Thread.Sleep(8000); // let's give the process some time to finish its startup...
-
-			/*string targetImageFile = BuildTargetImageFile();
-
-			if (File.Exists(targetImageFile))
-			{
-				File.Delete(targetImageFile);	
-			}
-
-			if (IsSameVolume(sourceImageFile, targetImageFile))
-			{
-				CreateHardLink(targetImageFile, sourceImageFile, IntPtr.Zero);
-			}
-			else
-			{
-				File.Copy(sourceImageFile, targetImageFile);
-			}*/
-		}
-
-		private static string BuildDeviceEmulatorPath()
-		{
-			string deviceEmulatorCLSID = (string) Registry.ClassesRoot.OpenSubKey(@"DEMComInterface.DeviceEmulatorManager\CLSID").GetValue("");
-			string deviceEmulatorManagerPath = (string) Registry.ClassesRoot.OpenSubKey(String.Format(@"CLSID\{0}\LocalServer32", deviceEmulatorCLSID)).GetValue("");
-
-			deviceEmulatorManagerPath = deviceEmulatorManagerPath.Replace("\"", "");
-
-			return Path.Combine(Path.GetDirectoryName(deviceEmulatorManagerPath), "DeviceEmulator.exe");
-		}
-
-		/*private static bool IsSameVolume(string file1, string file2)
-		{
-			return Path.GetPathRoot(file1) == Path.GetPathRoot(file2);
-		}
-
-		private static string BuildTargetImageFile()
-		{
-			string imageFilesFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-			imageFilesFolder = Path.Combine(imageFilesFolder, "Microsoft/Device Emulator");
-
-			return Path.Combine(imageFilesFolder, EmulatorHelper.DEVICE_ID + ".dess");
-		}*/
-
-		private static string BuildSourceImageFile(int targetFrameworkVersion, string emulatorImagePath)
-		{
-			String partialPath = String.Format(@"{0}\{1}.{2}.dess", emulatorImagePath, EmulatorHelper.DEVICE_ID, targetFrameworkVersion);
-			return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), partialPath);
 		}
 	}
 }
