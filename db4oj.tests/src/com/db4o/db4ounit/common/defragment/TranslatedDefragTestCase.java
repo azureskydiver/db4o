@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.defragment.*;
 import com.db4o.foundation.io.*;
+import com.db4o.internal.*;
 
 import db4ounit.*;
 
@@ -84,6 +85,7 @@ public class TranslatedDefragTestCase implements TestLifeCycle {
 	
 	private Configuration config(boolean registerTranslator) {
 		Configuration config = Db4o.newConfiguration();
+		config.reflectWith(Platform4.reflectorForType(Translated.class));
 		if(registerTranslator) {
 			config.objectClass(Translated.class).translate(new TranslatedTranslator());
 		}
