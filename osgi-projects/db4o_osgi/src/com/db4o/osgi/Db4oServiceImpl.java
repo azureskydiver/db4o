@@ -24,7 +24,7 @@ class Db4oServiceImpl implements Db4oService {
 	}
 
 	public ObjectContainer openClient(String hostName, int port, String user, String password) throws Db4oException {
-		return openClient(null, hostName, port, user, password);
+		return openClient(Db4o.cloneConfiguration(), hostName, port, user, password);
 	}
 
 	public ObjectContainer openClient(Configuration config, String hostName, int port, String user, String password) throws Db4oException {
@@ -32,7 +32,7 @@ class Db4oServiceImpl implements Db4oService {
 	}
 
 	public ObjectContainer openFile(String databaseFileName) throws Db4oException {
-		return openFile(null, databaseFileName);
+		return openFile(Db4o.cloneConfiguration(), databaseFileName);
 	}
 
 	public ObjectContainer openFile(Configuration config, String databaseFileName) throws Db4oException {
@@ -40,7 +40,7 @@ class Db4oServiceImpl implements Db4oService {
 	}
 
 	public ObjectServer openServer(String databaseFileName, int port) throws Db4oException {
-		return openServer(null, databaseFileName, port);
+		return openServer(Db4o.cloneConfiguration(), databaseFileName, port);
 	}
 
 	public ObjectServer openServer(Configuration config, String databaseFileName, int port) throws Db4oException {
@@ -51,15 +51,12 @@ class Db4oServiceImpl implements Db4oService {
 		if (config == null) {
 			config = Db4o.newConfiguration();
 		}
-		else {
-			configureReflector(config);
-		}
+		configureReflector(config);
 		return config;
 	}
 
 	private void configureReflector(Configuration config) {
 		config.reflectWith(new JdkReflector(new OSGiLoader(_bundle, new ClassLoaderJdkLoader(getClass().getClassLoader()))));
-		//config.reflectWith(new OSGiReflector(_bundle));
 	}
 
 }
