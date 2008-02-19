@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.InteropServices;
 using System.Xml;
 using Microsoft.DeviceEmulatorManager.Interop;
@@ -89,7 +88,7 @@ namespace CompactFrameworkTestHelper
 		public static IDeviceEmulatorManagerVMID GetVirtualDevice()
 		{
 			IDeviceEmulatorManager manager = new DeviceEmulatorManagerClass();
-			return EmulatorHelper.FindDevice(manager, DEVICE_ID);
+			return FindDevice(manager, DEVICE_ID);
 		}
 
 		public static Device GetDevice()
