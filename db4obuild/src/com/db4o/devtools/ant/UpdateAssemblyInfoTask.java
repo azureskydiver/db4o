@@ -37,10 +37,11 @@ public class UpdateAssemblyInfoTask extends AbstractAssemblyInfoTask {
 		if (null != _keyFile) {
 			contents = updateAttribute(contents, "AssemblyKeyFile", _keyFile.getAbsolutePath().replace('\\', '/'));
 		}
-		if (null != _configuration) {
-			contents = updateAttribute(contents, "AssemblyConfiguration", _configuration);
-			contents = updateAttribute(contents, "AssemblyDescription", assemblyTitle() + " " + _version + " (" + _configuration + ")");
+		if (null ==  _configuration) {
+		    _configuration = ".NET";
 		}
+		contents = updateAttribute(contents, "AssemblyConfiguration", _configuration);
+        contents = updateAttribute(contents, "AssemblyDescription", assemblyTitle() + " " + _version + " (" + _configuration + ")");
 		return contents;
 	}
 
