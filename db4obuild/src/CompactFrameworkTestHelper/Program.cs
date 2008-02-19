@@ -27,7 +27,8 @@ namespace CompactFrameworkTestHelper
 		static int Main(string[] args)
 		{
 			int targetFrameworkVersion;
-			if (!ValidateArguments(args, out targetFrameworkVersion))
+			string emulatorImagePath;
+			if (!ProcessArguments(args, out targetFrameworkVersion, out emulatorImagePath))
 			{
 				return INVALID_PROGRAM_PARAMETERS;
 			}
@@ -37,7 +38,7 @@ namespace CompactFrameworkTestHelper
 			{
 				Console.WriteLine("CompactFrameworkTestHelper - Copyright (C) 2004-2008  db4objects Inc.\r\n");
 
-				StartEmulator(targetFrameworkVersion);
+				StartEmulator(targetFrameworkVersion, emulatorImagePath);
 
 				Device device = EmulatorHelper.GetDevice();
 				device.Connect();
@@ -83,32 +84,40 @@ namespace CompactFrameworkTestHelper
 			return ret;
 		}
 
-		private static bool ValidateArguments(string[] args, out int version)
+		private static bool ProcessArguments(string[] args, out int version, out string emulatorImagePath)
 		{
+			emulatorImagePath = String.Empty;
 			version = 0;
-			if (args.Length != 1)
+			if (args.Length != 2)
 			{
 				Console.WriteLine("Invalid program parameter count.\r\n" +
-				                  "Use: {0} <version> (2.0 | 3.5)", Assembly.GetExecutingAssembly().GetName().Name);
+				                  "Use: {0} <version> <emulator images path>\r\n\r\n" +
+								  "Version must be either 2.0 or 3.5", Assembly.GetExecutingAssembly().GetName().Name);
 
 				return false;
 			}
 
 			float tmpVersion;
-			if (Single.TryParse(args[0], NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo, out tmpVersion) && (tmpVersion == 2.0 || tmpVersion == 3.5)) 
+			if (!Single.TryParse(args[0], NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo, out tmpVersion) && (tmpVersion == 2.0 || tmpVersion == 3.5)) 
 			{
-				version = (int) (tmpVersion*10);
-				return true;
+				return false;
+			}
+			
+			version = (int)(tmpVersion * 10);
+
+			emulatorImagePath = args[1];
+			if (!Directory.Exists(emulatorImagePath))
+			{
+				return false;
 			}
 
-			Console.WriteLine("Version must be either 2.0 or 3.5");
-			return false;
+			return true;
 		}
 
-		private static void StartEmulator(int targetFrameworkVersion)
+		private static void StartEmulator(int targetFrameworkVersion, string emulatorImagePath)
 		{
 			string deviceEmulatorPath = BuildDeviceEmulatorPath();
-			string imageFilePath = BuildSourceImageFile(targetFrameworkVersion);
+			string imageFilePath = BuildSourceImageFile(targetFrameworkVersion, emulatorImagePath);
 
 			if (!File.Exists(imageFilePath))
 			{
@@ -158,9 +167,9 @@ namespace CompactFrameworkTestHelper
 			return Path.Combine(imageFilesFolder, EmulatorHelper.DEVICE_ID + ".dess");
 		}*/
 
-		private static string BuildSourceImageFile(int targetFrameworkVersion)
+		private static string BuildSourceImageFile(int targetFrameworkVersion, string emulatorImagePath)
 		{
-			String partialPath = String.Format(@"Images\{0}.{1}.dess", EmulatorHelper.DEVICE_ID, targetFrameworkVersion);
+			String partialPath = String.Format(@"{0}\{1}.{2}.dess", emulatorImagePath, EmulatorHelper.DEVICE_ID, targetFrameworkVersion);
 			return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), partialPath);
 		}
 	}
