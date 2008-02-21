@@ -91,7 +91,7 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
 	
     private ReflectClass integerClassReflector() {
     	if(NullableArrayHandling.disabled()){
-    		return reflectorFor(int.class);
+    		return reflectorFor(Integer.class);
     	}else{    		
     		return reflectorFor(Platform4.nullableTypeFor(int.class));
     	}
