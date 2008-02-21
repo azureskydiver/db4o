@@ -824,7 +824,7 @@ public class LocalTransaction extends Transaction {
 	}
 	
 	private ObjectInfo frozenReferenceFor(final int id) {
-		return new FrozenObjectInfo(referenceForId(id));
+		return new FrozenObjectInfo(this, referenceForId(id));
 	}
 	
     private void setAddress(int a_address) {

@@ -4,7 +4,7 @@ package com.db4o.db4ounit.jre11.events;
 
 import com.db4o.config.*;
 import com.db4o.events.*;
-import com.db4o.ext.ObjectInfo;
+import com.db4o.ext.*;
 import com.db4o.foundation.ObjectByRef;
 import com.db4o.internal.*;
 import com.db4o.query.Query;
@@ -167,7 +167,7 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	
 	private ObjectInfo getInfo(int itemId) {
 		Item item = getItem(itemId);
-		return new FrozenObjectInfo(trans().referenceForObject(item));
+		return new FrozenObjectInfo(trans(), trans().referenceForObject(item));
 	}
 
 	private void assertCommittedEvent(

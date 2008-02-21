@@ -16,6 +16,7 @@ public class VirtualAttributes implements ShallowClone{
     
     public long i_version;
     
+    // FIXME: should be named "uuidLongPart" or even better "creationTime" 
     public long i_uuid;
     
     public Object shallowClone() {

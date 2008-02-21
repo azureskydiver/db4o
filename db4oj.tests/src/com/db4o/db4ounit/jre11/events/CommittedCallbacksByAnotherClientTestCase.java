@@ -154,7 +154,8 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 	
 	private ObjectInfo getInfo(ExtObjectContainer oc, int itemId) {
 		Item item = getItem(oc, itemId);
-		return new FrozenObjectInfo(oc.getObjectInfo(item));
+		Transaction trans = ((InternalObjectContainer)oc).transaction();
+		return new FrozenObjectInfo(trans, trans.referenceForObject(item));
 	}
 
 	private void assertCommittedEvent(

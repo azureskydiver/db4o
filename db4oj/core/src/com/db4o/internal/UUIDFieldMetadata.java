@@ -140,18 +140,18 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     	}
 	}
 
-    void instantiate1(Transaction a_trans, ObjectReference a_yapObject, ReadWriteBuffer a_bytes) {
-        int dbID = a_bytes.readInt();
-        ObjectContainerBase stream = a_trans.container();
+    void instantiate1(Transaction trans, ObjectReference ref, ReadWriteBuffer buffer) {
+        int dbID = buffer.readInt();
+        ObjectContainerBase stream = trans.container();
         stream.showInternalClasses(true);
         try {
-	        Db4oDatabase db = (Db4oDatabase)stream.getByID2(a_trans, dbID);
+	        Db4oDatabase db = (Db4oDatabase)stream.getByID2(trans, dbID);
 	        if(db != null && db.i_signature == null){
-	            stream.activate(a_trans, db, new FixedActivationDepth(2));
+	            stream.activate(trans, db, new FixedActivationDepth(2));
 	        }
-	        VirtualAttributes va = a_yapObject.virtualAttributes();
+	        VirtualAttributes va = ref.virtualAttributes();
 	        va.i_database = db; 
-	        va.i_uuid = a_bytes.readLong();
+	        va.i_uuid = buffer.readLong();
         } finally {
         	stream.showInternalClasses(false);
         }
