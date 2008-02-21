@@ -675,17 +675,26 @@ public final class Platform4 {
     }
 
     public static Class nullableTypeFor(Class primitiveJavaClass) {
-        
-        // FIXME: create a Hashtable for all types
-        
-        if(primitiveJavaClass == int.class){
-            return Integer.class;
-        }
-        if(primitiveJavaClass == boolean.class){
-            return Boolean.class;
-        }
-        
-        throw new NotImplementedException();
+    	if(_primitive2Wrapper == null)
+    		initPrimitive2Wrapper();
+    	Class wrapperClazz = (Class)_primitive2Wrapper.get(primitiveJavaClass);
+    	if(wrapperClazz==null)        
+    		throw new NotImplementedException();
+    	return wrapperClazz;
+    }
+    
+    private static void initPrimitive2Wrapper(){
+    	_primitive2Wrapper = new Hashtable4();
+    	_primitive2Wrapper.put(int.class, Integer.class);
+    	_primitive2Wrapper.put(byte.class, Byte.class);
+    	_primitive2Wrapper.put(short.class, Short.class);
+    	_primitive2Wrapper.put(float.class, Float.class);
+    	_primitive2Wrapper.put(double.class, Double.class);
+    	_primitive2Wrapper.put(long.class, Long.class);
+    	_primitive2Wrapper.put(boolean.class, Boolean.class);
+    	_primitive2Wrapper.put(char.class, Character.class);
+    	
     }
 	
+    private static Hashtable4 _primitive2Wrapper;
 }

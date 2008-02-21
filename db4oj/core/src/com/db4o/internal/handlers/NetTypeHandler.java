@@ -57,7 +57,11 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
 	}
 
     protected Class primitiveJavaClass(){
-        return null;
+    	if(!NullableArrayHandling.disabled()){
+    		return defaultValue().getClass();
+    	}else{
+    		return null;
+    	}
     }
     
     public Object primitiveNull() {
