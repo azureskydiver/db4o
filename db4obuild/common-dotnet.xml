@@ -93,7 +93,6 @@
 			<echo>OutputPath: @{outputPath}</echo>
 			<echo>msbuild exec: ${msbuild.executable}</echo>
 		    
-		    <reset-dir dir="@{outputPath}" />
 		    <delete >
 		        <fileset dir="${dir.n.v6}">
 		            <include name="**/obj/Debug/" />

@@ -377,7 +377,9 @@
 	</target>
 
 	<target name="build-core" depends="sharpen">
-		
+	    <reset-dir dir="${dir.dist.dll.net}" />
+	    <reset-dir dir="${dir.dist.dll.compact}" />
+	    
 		<msb solution="${dir.n.v6}/Db4o" />
 		<msb solution="${dir.n.v6}/Db4o-CF" outputPath="${dir.dist.dll.compact}" />
 			
