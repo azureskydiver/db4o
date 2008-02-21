@@ -65,7 +65,7 @@
 	</target>
 	
 	<target name="run-tests-net35"
-			depends="clean, configure-debug, configure-net35, run-tests-net, run-linq-tests"
+			depends="clean, configure-debug, configure-net35, run-linq-tests, run-tests-net"
 			description="Builds and runs all the .net 3.5 relevant test cases (including LINQ)">
 	</target>
 	
