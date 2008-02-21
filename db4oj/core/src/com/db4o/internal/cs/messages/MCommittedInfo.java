@@ -33,28 +33,26 @@ public class MCommittedInfo extends MsgD implements ClientSideMessage {
 	
 	private final class FrozenObjectInfoEncoder implements ObjectInfoEncoder {
 		public void encode(ByteArrayOutputStream os, ObjectInfo info) {
-			try {
-				writeLong(os, info.getInternalID());
-				writeUUID(os, info.getUUID());
-				writeLong(os, info.getVersion());
-			} catch (IOException x) {
-				throw new Db4oException(x);
-			}
+			writeLong(os, info.getInternalID());
+	        long sourceDatabaseId = ((FrozenObjectInfo)info).sourceDatabaseId(transaction());
+            writeLong(os, sourceDatabaseId);
+	        writeLong(os, ((FrozenObjectInfo)info).uuidLongPart());
+			writeLong(os, info.getVersion());
 		}
 
 		public ObjectInfo decode(ByteArrayInputStream is) {
-			try {
-				long id = readLong(is);
-				if (id == -1) {
-					return null;
-				}
-				
-				Db4oUUID uuid = readUUID(is);
-				long version = readLong(is);
-				return new FrozenObjectInfo(null, id, uuid, version);
-			} catch (IOException x) {
-				throw new Db4oException(x);
+			long id = readLong(is);
+			if (id == -1) {
+				return null;
 			}
+			long sourceDatabaseId = readLong(is);
+			Db4oDatabase sourceDatabase = null;
+			if (sourceDatabaseId > 0 ){
+			    sourceDatabase  = (Db4oDatabase) stream().getByID(transaction(), sourceDatabaseId);
+			}
+			long uuidLongPart = readLong(is);
+			long version = readLong(is);
+			return new FrozenObjectInfo(null, id, sourceDatabase, uuidLongPart, version);
 		}
 	}
 
@@ -134,33 +132,7 @@ public class MCommittedInfo extends MsgD implements ClientSideMessage {
 		}).start();
 		return true;
 	}
-
-	private void writeUUID(ByteArrayOutputStream os, final Db4oUUID uuid)
-			throws IOException {
-		if (uuid == null) {
-			writeLong(os, -1);
-			return;
-		}
-		writeLong(os, uuid.getLongPart());
-		writeByteArray(os, uuid.getSignaturePart());
-	}
 	
-	private Db4oUUID readUUID(ByteArrayInputStream is)	throws IOException {
-		long longPart = readLong(is);
-		if (-1 == longPart) {
-			return null;
-		}
-		byte[] signature = readByteArray(is);
-		return new Db4oUUID(longPart, signature);
-	}
-
-	private byte[] readByteArray(ByteArrayInputStream is) throws IOException {
-		long length = readLong(is);
-		byte[] array = new byte[(int)length];
-		is.read(array);
-		return array;
-	}
-
 	protected void writeByteArray(ByteArrayOutputStream os, byte[] signaturePart) throws IOException {
 		writeLong(os, signaturePart.length);
 		os.write(signaturePart);
