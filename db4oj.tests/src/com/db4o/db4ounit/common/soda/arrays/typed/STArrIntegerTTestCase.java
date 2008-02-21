@@ -8,6 +8,10 @@ public class STArrIntegerTTestCase extends com.db4o.db4ounit.common.soda.util.So
 	
 	public int[] intArr;
 	
+	public static void main(String[] args) {
+		new STArrIntegerTTestCase().runSolo();
+	}
+	
 	public STArrIntegerTTestCase(){
 	}
 	
@@ -25,14 +29,14 @@ public class STArrIntegerTTestCase extends com.db4o.db4ounit.common.soda.util.So
 		};
 	}
 	
-	public void testDefaultContainsOne(){
+	public void _testDefaultContainsOne(){
 		Query q = newQuery();
 		
 		q.constrain(new STArrIntegerTTestCase(new int[] {17}));
 		expect(q, new int[] {3, 4});
 	}
 	
-	public void testDefaultContainsTwo(){
+	public void _testDefaultContainsTwo(){
 		Query q = newQuery();
 		
 		q.constrain(new STArrIntegerTTestCase(new int[] {17, 25}));

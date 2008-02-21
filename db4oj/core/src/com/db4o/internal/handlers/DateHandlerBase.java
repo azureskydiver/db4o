@@ -33,6 +33,10 @@ public abstract class DateHandlerBase extends LongHandler {
 		return null;
 	}
 	
+	protected Class javaClass() {
+		return defaultValue().getClass();
+	}
+	
 	public Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect)
 			throws CorruptionException {
 		return mf._primitive.readDate(writer);
