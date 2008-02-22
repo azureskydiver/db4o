@@ -2,18 +2,17 @@
 
 package com.db4o.osgi.test;
 
-import org.osgi.framework.BundleContext;
+import org.osgi.framework.*;
 
-import com.db4o.test.nativequery.NQRegressionTestCase;
-import com.db4o.test.nativequery.analysis.BloatExprBuilderVisitorTestCase;
-import com.db4o.test.nativequery.analysis.BooleanReturnValueTestCase;
-import com.db4o.test.nativequery.cats.NQCatConsistencyTestCase;
-import com.db4o.test.nativequery.expr.ExpressionTestCase;
-import com.db4o.test.nativequery.expr.build.ExpressionBuilderTestCase;
+import com.db4o.foundation.*;
+import com.db4o.test.nativequery.*;
+import com.db4o.test.nativequery.analysis.*;
+import com.db4o.test.nativequery.cats.*;
+import com.db4o.test.nativequery.expr.*;
+import com.db4o.test.nativequery.expr.build.*;
 
-import db4ounit.TestRunner;
-import db4ounit.TestSuite;
-import db4ounit.extensions.Db4oTestSuiteBuilder;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 class Db4oTestServiceImpl implements Db4oTestService {
 	
@@ -25,7 +24,7 @@ class Db4oTestServiceImpl implements Db4oTestService {
 
 	public int runTests(String databaseFilePath) throws Exception {
 		Db4oOSGiBundleFixture fixture = new Db4oOSGiBundleFixture(_context, databaseFilePath);
-		TestSuite suite = new Db4oTestSuiteBuilder(fixture, 
+		Iterator4 suite = new Db4oTestSuiteBuilder(fixture, 
 				new Class[] {
 				ExpressionBuilderTestCase.class,
 				BloatExprBuilderVisitorTestCase.class,
