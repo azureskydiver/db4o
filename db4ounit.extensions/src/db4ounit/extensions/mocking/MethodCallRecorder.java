@@ -2,7 +2,7 @@ package db4ounit.extensions.mocking;
 
 import com.db4o.foundation.*;
 
-import db4ounit.extensions.foundation.*;
+import db4ounit.*;
 
 public class MethodCallRecorder implements Iterable4 {
 	

@@ -5,6 +5,8 @@ package com.db4o.db4ounit.common.migration;
 import java.io.*;
 
 import com.db4o.db4ounit.common.handlers.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
 
 import db4ounit.*;
 
@@ -36,23 +38,27 @@ public class Db4oMigrationSuiteBuilder extends ReflectionTestSuiteBuilder {
 		_specificLibraries = specificLibraries;
 	}
 	
-	protected TestSuite fromClass(Class clazz) {
+	protected Iterator4 fromClass(Class clazz) {
 		assertMigrationTestCase(clazz);
-		final TestSuite defaultTestSuite = super.fromClass(clazz);
+		final Iterator4 defaultTestSuite = super.fromClass(clazz);
 		try {
-			final TestSuite migrationTestSuite = migrationTestSuite(clazz, db4oLibraries());
-			return new TestSuite(new Test[] { migrationTestSuite, defaultTestSuite });
+			final Iterator4 migrationTestSuite = migrationTestSuite(clazz, db4oLibraries());
+			return Iterators.concat(migrationTestSuite, defaultTestSuite);
 		} catch (Exception e) {
-			return new TestSuite(new Test[] { new FailingTest(clazz.getName(), e), defaultTestSuite });
+			return Iterators.concat(Iterators.iterateSingle(new FailingTest(clazz.getName(), e)), defaultTestSuite);
 		}
 	}
 
-	private TestSuite migrationTestSuite(Class clazz, Db4oLibrary[] libraries) throws Exception {
-		Test[] migrationTests = new Test[libraries.length];
-		for (int i = 0; i < libraries.length; i++) {
-			migrationTests[i] = migrationTest(libraries[i], clazz);
-		}
-		return new TestSuite(migrationTests);
+	private Iterator4 migrationTestSuite(final Class clazz, Db4oLibrary[] libraries) throws Exception {
+		return Iterators.map(libraries, new Function4() {
+			public Object apply(Object library)  {
+				try {
+					return migrationTest((Db4oLibrary) library, clazz);
+				} catch (Exception e) {
+					throw new Db4oException(e);
+				}
+			}
+		});
 	}
 
 	private Db4oMigrationTest migrationTest(final Db4oLibrary library,

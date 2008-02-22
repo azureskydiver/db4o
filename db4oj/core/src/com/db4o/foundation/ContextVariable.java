@@ -13,15 +13,17 @@ public class ContextVariable {
 	private static class ThreadSlot {
 		public final Thread thread;
 		public final Object value;
+		public ThreadSlot next;
 		
-		public ThreadSlot(Object value_) {
+		public ThreadSlot(Object value_, ThreadSlot next_) {
 			thread = Thread.currentThread();
 			value = value_;
+			next = next_;
 		}
 	}
 	
 	private final Class _expectedType;
-	private final Collection4 _values = new Collection4();
+	private ThreadSlot _values = null;
 	
 	public ContextVariable() {
 		this(null);
@@ -37,9 +39,8 @@ public class ContextVariable {
 	public Object value() {
 		final Thread current = Thread.currentThread();
 		synchronized (this) {
-			final Iterator4 iterator = _values.iterator();
-			while (iterator.moveNext()) {
-				ThreadSlot slot = (ThreadSlot)iterator.current();
+			ThreadSlot slot = _values;
+			while (null != slot) {
 				if (slot.thread == current) {
 					return slot.value;
 				}
@@ -70,14 +71,24 @@ public class ContextVariable {
 	}
 
 	private synchronized void popValue(ThreadSlot slot) {
-		_values.remove(slot);
+		if (slot == _values) {
+			_values = _values.next;
+			return;
+		}
+		
+		ThreadSlot previous = _values;
+		ThreadSlot current = _values.next;
+		while (current != null) {
+			if (current == slot) {
+				previous.next = current.next;
+				return;
+			}
+		}
 	}
 
-	private ThreadSlot pushValue(Object value) {
-		ThreadSlot slot = new ThreadSlot(value);
-		synchronized (this) {
-			_values.prepend(slot);
-		}
+	private synchronized ThreadSlot pushValue(Object value) {
+		final ThreadSlot slot = new ThreadSlot(value, _values);
+		_values = slot;
 		return slot;
 	}
 }

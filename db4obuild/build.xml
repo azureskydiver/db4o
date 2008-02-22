@@ -303,6 +303,8 @@
 		<ant antfile="build-dotnet.xml" target="package-net35" />
 	</target>
 	
+	<target name="test-cc" depends="init, runtestsnet, cc-net35" />
+	
 	<target name="cc-net35" depends="clean">
 		<ant antfile="build-java.xml" target="init" /> 
 		<ant antfile="build-dotnet.xml" target="run-tests-net35" />

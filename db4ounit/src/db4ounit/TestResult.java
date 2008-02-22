@@ -75,11 +75,11 @@ public class TestResult extends Printable {
 	}
 	
 	private void print(String message) {
-			try {
-				_writer.write(message + TestPlatform.NEW_LINE);
-				_writer.flush();
-			} catch (IOException x) {
-				TestPlatform.printStackTrace(_writer, x);
-			}
+		try {
+			_writer.write(message + TestPlatform.NEW_LINE);
+			_writer.flush();
+		} catch (IOException x) {
+			TestPlatform.printStackTrace(_writer, x);
+		}
 	}
 }

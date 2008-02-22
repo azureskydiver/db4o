@@ -1,5 +1,7 @@
 package db4ounit.tests;
 
+import com.db4o.foundation.*;
+
 import db4ounit.*;
 
 public class ReflectionTestSuiteBuilderTestCase implements TestCase {
@@ -36,7 +38,7 @@ public class ReflectionTestSuiteBuilderTestCase implements TestCase {
 
 	public void testNotAcceptedFixture() {
 		ReflectionTestSuiteBuilder builder = new ExcludingReflectionTestSuiteBuilder(new Class[]{Accepted.class,NotAccepted.class});
-		Assert.areEqual(1,builder.build().getTests().length);
+		Assert.areEqual(1, Iterators.size(builder.build()));
 	}
 	
 	public static class ConstructorThrows implements TestCase {
@@ -63,7 +65,7 @@ public class ReflectionTestSuiteBuilderTestCase implements TestCase {
 
 	private Throwable assertFailingTestCase(final Class expectedError,
 			final ReflectionTestSuiteBuilder builder) {
-		final TestSuite suite = builder.build();
+		final TestSuite suite = new TestSuite(builder.build());
 		Assert.areEqual(1, suite.getTests().length);
 		
 		FailingTest test = (FailingTest) suite.getTests()[0];

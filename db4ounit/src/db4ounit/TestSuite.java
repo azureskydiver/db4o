@@ -1,5 +1,7 @@
 package db4ounit;
 
+import com.db4o.foundation.*;
+
 /**
  * A group of tests.
  * 
@@ -8,12 +10,22 @@ package db4ounit;
  *
  */
 public class TestSuite implements Test {
+	private static final class TestArrayFactory implements ArrayFactory {
+		public Object[] newArray(int size) {
+			return new Test[size];
+		}
+	}
+
 	private Test[] _tests;
 	private String _label;
 	
 	public TestSuite(String label, Test[] tests) {
 		this._label = label;
 		this._tests = tests;
+	}
+	
+	public TestSuite(Iterator4 tests) {
+		this((Test[]) Iterators.toArray(tests, new TestArrayFactory()));
 	}
 	
 	public TestSuite(Test[] tests) {

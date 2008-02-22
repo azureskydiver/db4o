@@ -1,9 +1,8 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
-package db4ounit.extensions.foundation;
+package db4ounit;
 
 import com.db4o.foundation.*;
 
-import db4ounit.Assert;
 
 public class Iterator4Assert {
 

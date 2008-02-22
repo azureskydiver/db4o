@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.migration;
 import com.db4o.db4ounit.common.freespace.*;
 import com.db4o.db4ounit.common.handlers.*;
 import com.db4o.db4ounit.util.*;
+import com.db4o.foundation.*;
 
 import db4ounit.*;
 
@@ -15,7 +16,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 		new TestRunner(Db4oMigrationTestSuite.class).run();
 	}
 
-	public TestSuite build() {
+	public Iterator4 build() {
 		return new Db4oMigrationSuiteBuilder(testCases(), libraries()).build();
 	}
 

@@ -1,12 +1,14 @@
 /* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
 package db4ounit.extensions;
 
+import com.db4o.foundation.*;
+
 import db4ounit.*;
 import db4ounit.extensions.concurrency.*;
 
 public abstract class Db4oConcurrenyTestSuite extends AbstractDb4oTestCase implements TestSuiteBuilder {
 
-	public TestSuite build() {
+	public Iterator4 build() {
 		return new Db4oConcurrencyTestSuiteBuilder(fixture(), testCases()).build();
 	}
 

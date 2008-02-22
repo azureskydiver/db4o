@@ -1,12 +1,13 @@
 package com.db4o.instrumentation.test;
 
+import com.db4o.foundation.*;
 import com.db4o.instrumentation.test.core.*;
 
 import db4ounit.*;
 
 public class AllTests implements TestSuiteBuilder {
 
-	public TestSuite build() {
+	public Iterator4 build() {
 		return new ReflectionTestSuiteBuilder(new Class[] {
 				DefaultFilePathRootTestCase.class,
 			}).build();	

@@ -3,6 +3,8 @@ package db4ounit;
 import java.lang.reflect.*;
 import java.util.*;
 
+import com.db4o.foundation.*;
+
 /**
  * @sharpen.ignore
  */
@@ -13,7 +15,7 @@ public class UnitTestMain {
 
 	public final void runTests(String[] args) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException {
-		TestSuite suite = build(args);
+		Iterator4 suite = build(args);
 		TestRunner runner=new TestRunner(suite, false);
 		runner.run();
 	}
@@ -22,7 +24,7 @@ public class UnitTestMain {
 		return new ReflectionTestSuiteBuilder(clazzes);
 	}
 
-	private TestSuite build(String[] args)
+	private Iterator4 build(String[] args)
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
 		Vector plainTestMethods=new Vector();
@@ -45,8 +47,8 @@ public class UnitTestMain {
 		Class[] plainTestClassesArray = new Class[plainTestClasses.size()];
 		vectorToArray(plainTestClasses, plainTestClassesArray);
 		TestSuiteBuilder classBuilder=builder(plainTestClassesArray);
-		Test[] plainTestMethodArray=new Test[plainTestMethods.size()];		vectorToArray(plainTestMethods, plainTestMethodArray);		TestSuite methodSuite=new TestSuite(plainTestMethodArray);
-		return new TestSuite(new Test[]{classBuilder.build(),methodSuite});
+		Test[] plainTestMethodArray=new Test[plainTestMethods.size()];		vectorToArray(plainTestMethods, plainTestMethodArray);		Iterator4 methodSuite=Iterators.iterate(plainTestMethodArray);
+		return Iterators.concat(new Iterator4[]{classBuilder.build(),methodSuite});
 	}
 	
 	private void vectorToArray(Vector vector, Object[] array){

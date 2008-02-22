@@ -5,12 +5,69 @@ package com.db4o.db4ounit.common.foundation;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
-import db4ounit.extensions.foundation.*;
 
 /**
  * @exclude
  */
 public class IteratorsTestCase implements TestCase {
+	
+	public static void main(String[] args) {
+		new TestRunner(IteratorsTestCase.class).run();
+	}
+	
+	public void testCrossProduct() {
+		Iterable4[] source = new Iterable4[] {
+			iterable(new Object[] { "1", "2" }),
+			iterable(new Object[] { "3", "4" }),
+			iterable(new Object[] { "5", "6" }),
+		};
+		String[] expected = {
+			"[1, 3, 5]",
+			"[1, 3, 6]",
+			"[1, 4, 5]",
+			"[1, 4, 6]",
+			"[2, 3, 5]",
+			"[2, 3, 6]",
+			"[2, 4, 5]",
+			"[2, 4, 6]",
+		};
+		final Iterator4 iterator = Iterators.crossProduct(source).iterator();
+		Iterator4Assert.areEqual(expected, Iterators.map(iterator, new Function4() {
+			public Object apply(Object arg) {
+				return Iterators.toString((Iterable4)arg);
+			}
+		}));
+	}
+	
+	private Iterable4 iterable(Object[] objects) {
+		return Iterators.iterable(objects);
+	}
+
+	public void testFlatten() {
+		Iterator4 iterator = iterate(new Object[] {
+			"1",
+			"2",
+			iterate(new Object[] {
+				iterate(new Object[] {
+					"3",
+					"4"
+				}),
+				Iterators.EMPTY_ITERATOR,
+				Iterators.EMPTY_ITERATOR,
+				"5"
+			}),
+			Iterators.EMPTY_ITERATOR,
+			"6"
+		});
+		
+		Iterator4Assert.areEqual(
+			new Object[] { "1", "2", "3", "4","5", "6" },
+			Iterators.flatten(iterator));
+	}
+	
+	Iterator4 iterate(Object[] values) {
+		return Iterators.iterate(values);
+	}
 	
 	public void testFilter() {
 		assertFilter(

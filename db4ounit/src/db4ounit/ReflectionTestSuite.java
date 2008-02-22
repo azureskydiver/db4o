@@ -1,5 +1,7 @@
 package db4ounit;
 
+import com.db4o.foundation.*;
+
 /**
  * Support for hierarchically chained test suites.
  * 
@@ -20,7 +22,7 @@ package db4ounit;
  */
 public abstract class ReflectionTestSuite implements TestSuiteBuilder {
 
-	public TestSuite build() {
+	public Iterator4 build() {
 		return new ReflectionTestSuiteBuilder(testCases()).build();
 	}
 
