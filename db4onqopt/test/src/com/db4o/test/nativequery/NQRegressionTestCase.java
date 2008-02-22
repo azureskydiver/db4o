@@ -6,6 +6,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.query.*;
 import com.db4o.nativequery.*;
@@ -88,7 +89,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 	}
 
 	public static void main(String[] args) {
-		TestSuite suite=new Db4oTestSuiteBuilder(new Db4oSolo(),NQRegressionTestCase.class).build();
+		Iterator4 suite=new Db4oTestSuiteBuilder(new Db4oSolo(),NQRegressionTestCase.class).build();
 		new TestRunner(suite).run();
 	}
 

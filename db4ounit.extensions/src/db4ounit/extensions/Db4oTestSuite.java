@@ -1,6 +1,7 @@
 package db4ounit.extensions;
 
-import db4ounit.TestSuite;
+import com.db4o.foundation.*;
+
 import db4ounit.TestSuiteBuilder;
 
 /**
@@ -8,7 +9,7 @@ import db4ounit.TestSuiteBuilder;
  */
 public abstract class Db4oTestSuite extends AbstractDb4oTestCase implements TestSuiteBuilder {
 
-	public TestSuite build() {
+	public Iterator4 build() {
 		return new Db4oTestSuiteBuilder(fixture(), testCases()).build();
 	}
 

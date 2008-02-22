@@ -8,6 +8,10 @@ import db4ounit.*;
 
 public class ContextVariableTestCase implements TestCase {
 	
+	public static void main(String[] args) {
+		new TestRunner(ContextVariableTestCase.class).run();
+	}
+	
 	public void testSingleThread() {
 		final ContextVariable variable = new ContextVariable();
 		Assert.isNull(variable.value());

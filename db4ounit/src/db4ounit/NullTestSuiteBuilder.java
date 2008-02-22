@@ -1,14 +1,16 @@
 package db4ounit;
 
+import com.db4o.foundation.*;
+
 public class NullTestSuiteBuilder implements TestSuiteBuilder {
 	
-	private TestSuite _suite;
+	private Iterator4 _suite;
 
-	public NullTestSuiteBuilder(TestSuite suite) {
+	public NullTestSuiteBuilder(Iterator4 suite) {
 		_suite = suite;
 	}
 
-	public TestSuite build() {
+	public Iterator4 build() {
 		return _suite;
 	}
 

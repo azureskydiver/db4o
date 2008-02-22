@@ -9,7 +9,6 @@ import com.db4o.internal.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.foundation.*;
 
 public class ObjectContainerEventsTestCase extends AbstractDb4oTestCase {
 	

@@ -1,7 +1,8 @@
 package db4ounit;
 
-import java.lang.reflect.Method;
-import java.util.Vector;
+import java.lang.reflect.*;
+
+import com.db4o.foundation.*;
 
 public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	
@@ -16,73 +17,69 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		_classes = classes;
 	}
 	
-	public TestSuite build() {
-		return (1 == _classes.length)
-			? fromClass(_classes[0])
-			: fromClasses(_classes);
+	public Iterator4 build() {
+		return Iterators.flatten(
+					Iterators.map(
+						_classes,
+						new Function4() {
+							public Object apply(Object arg) {
+								return fromClass((Class) arg);
+							}
+						})
+					);
 	}
 	
-	protected TestSuite fromClasses(Class[] classes) {		
-		Vector suites = new Vector(classes.length);
-		for (int i = 0; i < classes.length; i++) {
-			TestSuite suite = fromClass(classes[i]);
-			if (suite.getTests().length>0) {
-				suites.addElement(suite);
-			}
-		}
-		return new TestSuite(toTestArray(suites));
-	}
-	
-	protected TestSuite fromClass(Class clazz) {
+	protected Iterator4 fromClass(Class clazz) {
 		try {
 			return suiteFor(clazz);
 		} catch (Exception e) {
-			return new TestSuite(new FailingTest(clazz.getName(), e));
+			return Iterators.cons(new FailingTest(clazz.getName(), e)).iterator();
 		}
-		
 	}
 
-	private TestSuite suiteFor(Class clazz) {
+	private Iterator4 suiteFor(Class clazz) {
 		if(!isApplicable(clazz)) {
 			TestPlatform.emitWarning("DISABLED: " + clazz.getName());
-			return new TestSuite(new Test[0]);
+			return Iterators.EMPTY_ITERATOR;
 		}
 		if(TestSuiteBuilder.class.isAssignableFrom(clazz)) {
 			return ((TestSuiteBuilder)newInstance(clazz)).build();
 		}
 		if (Test.class.isAssignableFrom(clazz)) {
-			return new TestSuite(clazz.getName(), new Test[] { (Test)newInstance(clazz) });
+			return Iterators.iterateSingle(newInstance(clazz));
 		}
+		validateTestClass(clazz);
+		return fromMethods(clazz);
+	}
+
+	private void validateTestClass(Class clazz) {
 		if (!(TestCase.class.isAssignableFrom(clazz))) {
 			throw new IllegalArgumentException("" + clazz + " is not marked as " + TestCase.class);
 		}
-		return fromMethods(clazz);
 	}
 
 	protected boolean isApplicable(Class clazz) {
 		return clazz != null; // just removing the 'parameter not used' warning
 	}
 	
-	private TestSuite fromMethods(Class clazz) {
-		Vector tests = new Vector();
-		Method[] methods = clazz.getMethods();
-		for (int i = 0; i < methods.length; i++) {
-			Object instance=newInstance(clazz);
-			Method method = methods[i];
-			if (!isTestMethod(method)) {
-				emitWarningOnIgnoredTestMethod(instance, method);
-				continue;			
+	private Iterator4 fromMethods(final Class clazz) {
+		return Iterators.map(clazz.getMethods(), new Function4() {
+			public Object apply(Object arg) {
+				Method method = (Method)arg;
+				if (!isTestMethod(method)) {
+					emitWarningOnIgnoredTestMethod(clazz, method);
+					return MappingIterator.SKIP;			
+				}
+				return fromMethod(clazz, method);
 			}
-			tests.addElement(createTest(instance, method));
-		}		
-		return new TestSuite(clazz.getName(), toTestArray(tests));
+		});
 	}
 	
-	private void emitWarningOnIgnoredTestMethod(Object subject, Method method) {
+	private void emitWarningOnIgnoredTestMethod(Class clazz, Method method) {
 		if (!startsWithIgnoreCase(method.getName(), "_test")) {
 			return;
 		}
-		TestPlatform.emitWarning("IGNORED: " + createTest(subject, method).getLabel());
+		TestPlatform.emitWarning("IGNORED: " + createTest(newInstance(clazz), method).getLabel());
 	}
 
 	protected boolean isTestMethod(Method method) {
@@ -99,12 +96,6 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	protected boolean startsWithIgnoreCase(final String s, final String prefix) {
 		return s.toUpperCase().startsWith(prefix.toUpperCase());
 	}
-	
-	private static Test[] toTestArray(Vector tests) {
-		Test[] array = new Test[tests.size()];
-		tests.copyInto(array);
-		return array;
-	}
 
 	protected Object newInstance(Class clazz) {		
 		try {
@@ -116,5 +107,9 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	
 	protected Test createTest(Object instance, Method method) {
 		return new TestMethod(instance, method);
+	}
+
+	protected Test fromMethod(final Class clazz, Method method) {
+		return createTest(newInstance(clazz), method);
 	}	
 }

@@ -511,6 +511,29 @@
 
 	</target>
 	
+	<macrodef name="updateProjectFiles">
+		<attribute name="project" />
+		<attribute name="sources" />
+			
+		<sequential>
+			<updatecsharpproject projectFile="@{project}-2005.csproj">
+				<sources refid="@{sources}" />
+			</updatecsharpproject>
+
+			<updatecsharpproject projectFile="@{project}-CF-2005.csproj">
+				<sources refid="@{sources}" />
+			</updatecsharpproject>
+			
+			<updatecsharpproject projectFile="@{project}-2008.csproj">
+				<sources refid="@{sources}" />
+			</updatecsharpproject>
+			
+			<updatecsharpproject projectFile="@{project}-CF-2008.csproj">
+				<sources refid="@{sources}" />
+			</updatecsharpproject>
+		</sequential>
+	</macrodef>
+	
 	<target name="sharpen-core" depends="install-javatocsharp-plugin, prepare-conversion-workspace" unless="skip.sharpen">
 
 		<sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
@@ -571,29 +594,35 @@
 		<fileset id="core.net.files" dir="${dir.n.v6.core}">
 			<include name="**/*.cs" />
 		</fileset>
-			
-		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2005.csproj">
-			<sources refid="core.net.files" />
-		</updatecsharpproject>
-
-		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-CF-2005.csproj">
-			<sources refid="core.net.files" />
-		</updatecsharpproject>
 		
-		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2008.csproj">
-			<sources refid="core.net.files" />
-		</updatecsharpproject>
+		<updateProjectFiles project="${dir.n.v6.core}/Db4objects.Db4o" sources="core.net.files"  />
 		
-		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-CF-2008.csproj">
-			<sources refid="core.net.files" />
-		</updatecsharpproject>
+		
 	</target>
 	
-	<target name="sharpen-db4ounit" depends="prepare-conversion-workspace-db4ounit, install-javatocsharp-plugin"
+	<target name="sharpen-db4ounit" depends="init, install-javatocsharp-plugin"
 			unless="skip.sharpen">
+		
+		<reset-dir dir="${dir.sharpen}" />
+		
+		<copy todir="${dir.sharpen}/db4ounit/src">
+			<fileset dir="${dir.db4ounit.src}">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${dir.sharpen}/db4ounit/core">
+			<fileset dir="../db4oj/core/src">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		
 		<sharpen resource="db4ounit/src" workspace="${dir.sharpen}">
 			<args>
 				<arg value="@sharpen-new-db4ounit-mapping" />
+				
+				<arg value="-srcfolder" />
+				<arg value="core" />
 			</args>
 		</sharpen>
 		
@@ -605,7 +634,7 @@
 		<mkdir dir="${dir.n.db4ounit}/Db4oUnit" />
 		<copy todir="${dir.n.db4ounit}/Db4oUnit">
 			<fileset dir="${dir.sharpen}/db4ounit.net/src">
-				<include name="**/*.cs" />
+				<include name="Db4oUnit/**/*.cs" />
 			</fileset>
 		</copy>
 		
@@ -613,30 +642,7 @@
 			<include name="**/*.cs" />
 		</fileset>
 
-		<updatecsharpproject projectfile="${dir.n.db4ounit}/Db4oUnit-2005.csproj">
-			<sources refid="db4ounit.files" />
-		</updatecsharpproject>
-
-		<updatecsharpproject projectfile="${dir.n.db4ounit}/Db4oUnit-2008.csproj">
-			<sources refid="db4ounit.files" />
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.db4ounit}/Db4oUnit-CF-2005.csproj">
-			<sources refid="db4ounit.files" />
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.db4ounit}/Db4oUnit-CF-2008.csproj">
-			<sources refid="db4ounit.files" />
-		</updatecsharpproject>
-	</target>
-	
-	<target name="prepare-conversion-workspace-db4ounit" depends="init">
-		<reset-dir dir="${dir.sharpen}" />		
-		<copy todir="${dir.sharpen}/db4ounit/src">
-			<fileset dir="${dir.db4ounit.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
+		<updateProjectFiles project="${dir.n.db4ounit}/Db4oUnit" sources="db4ounit.files" />
 	</target>
 	
 	<property name="dependencies.jar" location="${dir.sharpen}/lib/dependencies.jar" />
@@ -720,22 +726,9 @@
 			<include name="**/*.cs" />
 		</fileset>
 				
-		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-CF-2005.csproj">
-			<sources refid= "db4ounit.extensions.files" />
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-CF-2008.csproj">
-			<sources refid= "db4ounit.extensions.files" />
-		</updatecsharpproject>		
-
-		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-2005.csproj">
-			<sources refid= "db4ounit.extensions.files" />
-		</updatecsharpproject>
-				
-		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-2008.csproj">
-			<sources refid= "db4ounit.extensions.files" />
-		</updatecsharpproject>
-	</target>		
+		<updateProjectFiles project="${dir.n.v6.extensions}/Db4oUnit.Extensions" sources="db4ounit.extensions.files" />
+	</target>
+	
 	
 	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions"
 			unless="skip.sharpen">
@@ -809,10 +802,8 @@
 		<sharpen workspace="${target.dir}" resource="db4oj.tests/src">
 			<args>
 				<arg value="-cp" />
-				<!--
-				<arg path="/home/rodrigob/workspaces/db4o/db4obuild/dist/sharpen/lib/dependencies.jar" />
-				-->
-				<arg path="${dependencies.jar}" />	
+				<arg path="${dependencies.jar}" />
+				
 				<arg value="@sharpen-tests-options" />
 				
 				<arg value="-srcfolder" />

@@ -3,8 +3,7 @@ package com.db4o.db4ounit.common.foundation;
 
 import com.db4o.foundation.*;
 
-import db4ounit.TestCase;
-import db4ounit.extensions.foundation.*;
+import db4ounit.*;
 
 public class CompositeIterator4TestCase implements TestCase {
 

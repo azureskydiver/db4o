@@ -18,7 +18,7 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
 	public void testInvalidSlotException() throws Exception {
 		Assert.expect(InvalidIDException.class, InvalidSlotException.class, new CodeBlock(){
 			public void run() throws Throwable {
-				Object byID = db().getByID(1);		
+				/*Object byID = */db().getByID(1);		
 			}
 		});
 		

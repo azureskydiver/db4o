@@ -31,7 +31,7 @@ import db4ounit.*;
 public abstract class DrsTestSuite extends DrsTestCase implements
 		TestSuiteBuilder {
 
-	public TestSuite build() {
+	public Iterator4 build() {
 		return new DrsTestSuiteBuilder(a(), b(), testCases()).build();
 	}
 

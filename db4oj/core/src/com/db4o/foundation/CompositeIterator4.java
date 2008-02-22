@@ -4,9 +4,9 @@ package com.db4o.foundation;
 
 public class CompositeIterator4 implements Iterator4 {
 
-	private final Iterator4 _iterators;	
+	protected final Iterator4 _iterators;	
 
-	private Iterator4 _currentIterator;
+	protected Iterator4 _currentIterator;
 	
 	public CompositeIterator4(Iterator4[] iterators) {
 		this(new ArrayIterator4(iterators));

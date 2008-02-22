@@ -29,19 +29,23 @@ public class FixtureTestCase implements TestCase {
 	
 	public void testMultipleTestsSingleFixture() {
 		MultipleDb4oTestCase.resetConfigureCalls();
-		FrameworkTestCase.runTestAndExpect(new Db4oTestSuiteBuilder(new Db4oInMemory(new IndependentConfigurationSource()), MultipleDb4oTestCase.class).build(), 2, false);
+		FrameworkTestCase.runTestAndExpect(suite(new Db4oTestSuiteBuilder(new Db4oInMemory(new IndependentConfigurationSource()), MultipleDb4oTestCase.class)), 2, false);
 		Assert.areEqual(2,MultipleDb4oTestCase.configureCalls());
 	}
 
 	public void testSelectiveFixture() {
 		Db4oFixture fixture=new ExcludingInMemoryFixture(new IndependentConfigurationSource());
-		TestSuite suite = new Db4oTestSuiteBuilder(fixture, new Class[]{AcceptedTestCase.class,NotAcceptedTestCase.class}).build();
+		TestSuite suite = suite(new Db4oTestSuiteBuilder(fixture, new Class[]{AcceptedTestCase.class,NotAcceptedTestCase.class}));
 		Assert.areEqual(1,suite.getTests().length);
 		FrameworkTestCase.runTestAndExpect(suite,0);
 	}
 	
+	private TestSuite suite(TestSuiteBuilder builder) {
+		return new TestSuite(builder.build());
+	}
+
 	private void assertSimpleDb4o(Db4oFixture fixture) {
-		TestSuite suite = new Db4oTestSuiteBuilder(fixture, SimpleDb4oTestCase.class).build();
+		TestSuite suite = new TestSuite(new Db4oTestSuiteBuilder(fixture, SimpleDb4oTestCase.class).build());
 		SimpleDb4oTestCase subject = getTestSubject(suite);
 		subject.expectedFixture(fixture);
 		FrameworkTestCase.runTestAndExpect(suite, 0);		

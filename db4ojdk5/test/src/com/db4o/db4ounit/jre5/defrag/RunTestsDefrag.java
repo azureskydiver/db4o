@@ -17,7 +17,7 @@ public class RunTestsDefrag extends AbstractDb4oDefragTestCase {
 		Db4oTestSuite suite=new Db4oTestSuite() {
 			protected Class[] testCases() {
 				return new Class[] {
-						RunTestsDefrag.class,
+					RunTestsDefrag.class,
 				};
 			}
 			

@@ -423,19 +423,18 @@ public abstract class QQueryBase implements Unversioned {
 		return checkDuplicates(resultingIDs);
     }
 
-	private MappingIterator checkDuplicates(CompositeIterator4 executeAllCandidates) {
-		return new MappingIterator(executeAllCandidates) {
+	private Iterator4 checkDuplicates(CompositeIterator4 executeAllCandidates) {
+		return Iterators.filter(executeAllCandidates, new Predicate4() {
         	private TreeInt ids = new TreeInt(0);
-			protected Object map(Object current) {
+			public boolean match(Object current) {
 				int id = ((Integer)current).intValue();
 				if(ids.find(id) != null){
-					return MappingIterator.SKIP;
+					return false;
 				}
 				ids = (TreeInt)ids.add(new TreeInt(id));
-				return current;
+				return true;
 			}
-
-		};
+		});
 	}
 
 	private Collection4 executionPath(final CreateCandidateCollectionResult r) {
