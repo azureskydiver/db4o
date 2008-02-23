@@ -125,10 +125,14 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     }
 
     private void seekSecondaryOffset(InternalReadContext context, TypeHandler4 classMetadata) {
-        if(classMetadata instanceof PrimitiveFieldHandler && ((PrimitiveFieldHandler)classMetadata).isArray()){
+        if(isPrimitiveArray(classMetadata)){
             // unnecessary secondary offset, consistent with old format
             context.seek(context.readInt());
         }
+    }
+
+    private boolean isPrimitiveArray(TypeHandler4 classMetadata) {
+        return classMetadata instanceof PrimitiveFieldHandler && ((PrimitiveFieldHandler)classMetadata).isArray();
     }
 
     public Object read(ReadContext readContext) {
@@ -164,7 +168,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         MarshallingContextState state = marshallingContext.currentState();
         marshallingContext.createChildBuffer(false, false);
         context.writeInt(id);
-        if(isArray(typeHandler)){
+        if(isPrimitiveArray(typeHandler)){
             // TODO: This indirection is unneccessary, but it is required by the 
             // current old reading format. 
             // Remove in the next version of UntypedFieldHandler  

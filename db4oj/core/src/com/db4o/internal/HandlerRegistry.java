@@ -565,6 +565,10 @@ public final class HandlerRegistry {
         return _untypedFieldHandler;
     }
     
+    public TypeHandler4 untypedObjectHandler(){
+        return (TypeHandler4) untypedFieldHandler();
+    }
+    
     public TypeHandler4 untypedArrayHandler(ReflectClass clazz){
         if (clazz.isArray()) {
             if (reflector().array().isNDimensional(clazz)) {
