@@ -75,6 +75,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     // used for Objects
     protected Transaction             _transaction;
 
+    // This is a hack for P2Collection
+    // Remove when P2Collection is no longer used.
     private boolean         _instantiating;
 
     // all the per-YapStream references that we don't

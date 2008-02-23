@@ -1094,7 +1094,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		transaction.container().callbacks().objectOnInstantiate(transaction, instance);
 	}
 
-	Object instantiateFromReflector(ObjectContainerBase stream) {
+	public final Object instantiateFromReflector(ObjectContainerBase stream) {
 		if (_classReflector == null) {
 		    return null;
 		}

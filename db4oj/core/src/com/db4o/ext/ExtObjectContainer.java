@@ -204,9 +204,9 @@ public interface ExtObjectContainer extends ObjectContainer {
     /**
      * tests if an object with this ID is currently cached.
      * <br><br>
-     * @param ID the internal ID
+     * @param id the internal id
      */
-    public boolean isCached(long ID);
+    public boolean isCached(long id);
 
     /**
      * tests if this <code>ObjectContainer</code> is closed.
