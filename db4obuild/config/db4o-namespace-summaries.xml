@@ -18,6 +18,7 @@
 	<namespace name="Db4objects.Db4o.Reflect.Net">.NET reflection support.</namespace>
 	<namespace name="Db4objects.Db4o.Replication">Replication support package</namespace>
 	<namespace name="Db4objects.Db4o.TA">Transparent Activation support.</namespace>
+	<namespace name="Db4objects.Db4o.Typehandlers">Typehandler package.</namespace>
 	<namespace name="Db4objects.Db4o.Types">Types package.</namespace>
 </namespaces>
 
