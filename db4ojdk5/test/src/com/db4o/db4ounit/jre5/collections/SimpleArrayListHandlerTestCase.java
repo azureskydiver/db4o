@@ -16,9 +16,10 @@ import com.db4o.typehandlers.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 
-public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase {
+public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
     
     private static final class ArrayListTypeHandler implements VariableLengthTypeHandler {
 
