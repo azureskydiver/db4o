@@ -120,11 +120,11 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 			_length = last;
 			return;
 		}
-
+		
 		int increment = _memoryFile.getIncrementSizeBy();
-		while (last > increment) {
-			increment <<= 1;
-		}
+        while (last > (increment + bytes.length)) {
+        	increment <<= 1;
+        }
 		
 		byte[] newBytes = new byte[bytes.length + increment];
 		System.arraycopy(bytes, 0, newBytes, 0, bytes.length);
