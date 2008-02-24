@@ -48,7 +48,7 @@ public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase {
         }
 
         private ObjectContainerBase container(Context context) {
-            return (ObjectContainerBase) context.objectContainer();
+            return ((InternalObjectContainer)context.objectContainer()).container();
         }
         
         private TypeHandler4 elementTypeHandler(Context context, List list){
@@ -106,4 +106,7 @@ public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase {
         Assert.areEqual("one", item._list.get(0));
     }
 
+    public static void main(String[] args) {
+		new SimpleArrayListHandlerTestCase().runAll();
+	}
 }
