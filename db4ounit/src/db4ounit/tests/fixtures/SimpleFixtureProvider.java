@@ -10,8 +10,15 @@ public class SimpleFixtureProvider implements FixtureProvider {
 
 	private final ContextVariable _variable;
 	private final Object[] _values;
+	private final String _label;
 
 	public SimpleFixtureProvider(ContextVariable variable, Object[] values) {
+		this("", variable, values);
+	}
+
+	public SimpleFixtureProvider(String label, ContextVariable variable,
+			Object[] values) {
+		_label = label;
 		_variable = variable;
 		_values = values;
 	}
@@ -22,6 +29,10 @@ public class SimpleFixtureProvider implements FixtureProvider {
 
 	public Iterator4 iterator() {
 		return Iterators.iterate(_values);
+	}
+
+	public String label() {
+		return _label;
 	}
 
 }

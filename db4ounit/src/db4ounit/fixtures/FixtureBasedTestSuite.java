@@ -7,8 +7,6 @@ import com.db4o.foundation.*;
 import db4ounit.*;
 
 /**
- * TODO: FixtureDecorator.getLabel should be something like (subject[0]) - (<fixture label>[index])
- * 
  * TODO: FixtureProviders must accept the index of a specific fixture to run with (to make it easy to reproduce a failure)
  * 
  * TODO: Iterator framework cleanup (composition should be based on Iterable4)
@@ -32,10 +30,10 @@ public abstract class FixtureBasedTestSuite implements TestSuiteBuilder {
 		final Iterable4 decorators = Iterators.map(Iterators.iterable(providers), new Function4() {
 			public Object apply(final Object arg) {
 				final FixtureProvider provider = (FixtureProvider)arg;
-				final ContextVariable variable = provider.variable();
-				return Iterators.map(provider, new Function4() {
-					public Object apply(final Object fixture) {
-						return new FixtureDecorator(variable, fixture);
+				return Iterators.map(Iterators.enumerate(provider), new Function4() {
+					public Object apply(final Object arg) {
+						EnumerateIterator.Tuple tuple = (EnumerateIterator.Tuple)arg;
+						return new FixtureDecorator(provider, tuple.value, tuple.index);
 					}
 				});
 			}

@@ -30,6 +30,19 @@ public class Iterators {
 	};
 	
 	static final Object NO_ELEMENT = new Object();
+
+	/**
+	 * Generates {@link EnumerateIterator.Tuple} items with indexes starting at 0.
+	 * 
+	 * @param iterable the iterable to be enumerated
+	 */
+	public static Iterable4 enumerate(final Iterable4 iterable) {
+		return new Iterable4() {
+			public Iterator4 iterator() {
+				return new EnumerateIterator(iterable.iterator());
+			}
+		};
+	}
 	
 	public static Iterator4 concat(Iterator4[] array) {
 		return concat(iterate(array));

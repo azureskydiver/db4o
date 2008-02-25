@@ -2,20 +2,20 @@
 
 package db4ounit.fixtures;
 
-import com.db4o.foundation.*;
-
 import db4ounit.*;
 
 final class FixtureDecorator implements TestDecorator {
 	private final Object _fixture;
-	private final ContextVariable _variable;
+	private final FixtureProvider _provider;
+	private final int _fixtureIndex;
 
-	FixtureDecorator(ContextVariable variable, Object fixture) {
+	FixtureDecorator(FixtureProvider provider, Object fixture, int fixtureIndex) {
 		_fixture = fixture;
-		_variable = variable;
+		_provider = provider;
+		_fixtureIndex = fixtureIndex;
 	}
 
 	public Test decorate(Test test) {
-		return new FixtureDecoration(test, _variable, _fixture);
+		return new FixtureDecoration(test, _provider.label() + "[" + _fixtureIndex + "]", _provider.variable(), _fixture);
 	}
 }
