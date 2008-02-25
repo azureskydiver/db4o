@@ -777,7 +777,7 @@ public class FieldMetadata implements StoredField {
             context.updateDepth(adjustUpdateDepth(obj, updateDepth));
         }
         if(useDedicatedSlot(context, _handler, obj)){
-            context.writeObjectToDedicatedSlot(_handler, obj);
+            context.writeObject(_handler, obj);
         }else {
             context.createIndirectionWithinSlot(_handler);
             _handler.write(context, obj);
