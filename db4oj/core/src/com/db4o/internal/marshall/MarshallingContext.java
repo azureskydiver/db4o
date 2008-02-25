@@ -269,14 +269,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         _currentIndexEntry = new Integer(id);
     }
     
-    public void writeObjectToDedicatedSlot(TypeHandler4 handler, Object obj) {
-        if( handler instanceof UntypedFieldHandler){
-            writeObject(handler, obj);
-        }else {
-            writeObject(obj);
-        }
-    }
-    
     public void writeObject(TypeHandler4 handler, Object obj){
         MarshallingContextState state = currentState();
         if(FieldMetadata.useDedicatedSlot(this, handler, obj)){

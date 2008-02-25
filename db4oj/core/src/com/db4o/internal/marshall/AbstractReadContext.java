@@ -21,21 +21,11 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
     	this(transaction, null);
     }
     
-    public Object read(TypeHandler4 handlerType) {
-        TypeHandler4 handler = correctHandlerVersion(handlerType);
-        if(! isIndirectedWithinSlot(handler)){
-            return readAtCurrentSeekPosition(handler);
-        }
-        int indirectedOffSet = readInt();
-        readInt(); // length, not needed
-        int offset = offset();
-        seek(indirectedOffSet);
-        Object obj = readAtCurrentSeekPosition(handler);
-        seek(offset);
-        return obj;
+    public final Object read(TypeHandler4 handlerType) {
+        return readObject(handlerType);
     }
     
-    public Object readObject(TypeHandler4 handlerType) {
+    public final Object readObject(TypeHandler4 handlerType) {
         TypeHandler4 handler = correctHandlerVersion(handlerType);
         if(! isIndirectedWithinSlot(handler)){
             return readAtCurrentSeekPosition(handler);
@@ -51,9 +41,6 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
         seek(savedOffset);
         return obj;
     }
-    
-
-    
     
     protected Object readAtCurrentSeekPosition(TypeHandler4 handler){
         if(FieldMetadata.useDedicatedSlot(this, handler, null)){
