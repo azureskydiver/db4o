@@ -20,7 +20,7 @@ import db4ounit.extensions.fixtures.OptOutNoFileSystemData;
 public class OldFormatExceptionTestCase implements TestCase, OptOutNoFileSystemData {
 
 	public static void main(String[] args) {
-		new TestRunner(OldFormatExceptionTestCase.class).run();
+		new ConsoleTestRunner(OldFormatExceptionTestCase.class).run();
 	}
 	
 	// It is also regression test for COR-634.

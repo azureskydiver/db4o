@@ -9,8 +9,8 @@ import db4ounit.TestSuiteBuilder;
  */
 public abstract class Db4oTestSuite extends AbstractDb4oTestCase implements TestSuiteBuilder {
 
-	public Iterator4 build() {
-		return new Db4oTestSuiteBuilder(fixture(), testCases()).build();
+	public Iterator4 iterator() {
+		return new Db4oTestSuiteBuilder(fixture(), testCases()).iterator();
 	}
 
 	protected abstract Class[] testCases();

@@ -12,7 +12,7 @@ import db4ounit.*;
 public class Iterator4JdkIteratorTestCase implements TestCase{
 
     public static void main(String[] arguments) {
-        new TestRunner(Iterator4JdkIteratorTestCase.class).run();
+        new ConsoleTestRunner(Iterator4JdkIteratorTestCase.class).run();
     }
     
     public void test(){

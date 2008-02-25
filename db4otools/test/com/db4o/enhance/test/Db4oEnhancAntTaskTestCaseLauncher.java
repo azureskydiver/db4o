@@ -11,7 +11,7 @@ public class Db4oEnhancAntTaskTestCaseLauncher implements TestCase {
 	private static final String BUILD_XML = "Db4oEnhancerAntTaskBuild.xml";
 
 	public static void main(String[] args) {
-		new TestRunner(Db4oEnhancAntTaskTestCaseLauncher.class).run();
+		new ConsoleTestRunner(Db4oEnhancAntTaskTestCaseLauncher.class).run();
 	}
 	
 	public void test() throws Exception {

@@ -13,7 +13,7 @@ import db4ounit.*;
 public class IoAdapterTest implements TestLifeCycle {
 	
 	public static void main(String[] args) {
-		new TestRunner(IoAdapterTest.class).run();
+		new ConsoleTestRunner(IoAdapterTest.class).run();
 	}
 	
 	private String _cachedIoAdapterFile = Path4.getTempFileName();

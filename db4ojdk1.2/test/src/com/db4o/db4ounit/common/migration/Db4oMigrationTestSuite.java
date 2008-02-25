@@ -13,11 +13,11 @@ import db4ounit.*;
 public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 	
 	public static void main(String[] args) {
-		new TestRunner(Db4oMigrationTestSuite.class).run();
+		new ConsoleTestRunner(Db4oMigrationTestSuite.class).run();
 	}
 
-	public Iterator4 build() {
-		return new Db4oMigrationSuiteBuilder(testCases(), libraries()).build();
+	public Iterator4 iterator() {
+		return new Db4oMigrationSuiteBuilder(testCases(), libraries()).iterator();
 	}
 
 	private String[] libraries() {

@@ -33,7 +33,7 @@ public class LongHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
             Long.MAX_VALUE, };
 
     public static void main(String[] args) {
-        new TestRunner(LongHandlerUpdateTestCase.class).run();
+        new ConsoleTestRunner(LongHandlerUpdateTestCase.class).run();
     }
     
     protected void assertArrays(Object obj) {

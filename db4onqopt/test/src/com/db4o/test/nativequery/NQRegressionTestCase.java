@@ -89,8 +89,8 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 	}
 
 	public static void main(String[] args) {
-		Iterator4 suite=new Db4oTestSuiteBuilder(new Db4oSolo(),NQRegressionTestCase.class).build();
-		new TestRunner(suite).run();
+		Iterator4 suite=new Db4oTestSuiteBuilder(new Db4oSolo(),NQRegressionTestCase.class).iterator();
+		new ConsoleTestRunner(suite).run();
 	}
 
 	public void store() {

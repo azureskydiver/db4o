@@ -53,6 +53,6 @@ public class GenericPrimitiveArrayTestCase implements TestCase {
 	}
 
 	public static void main(String[] args) {
-		new TestRunner(GenericPrimitiveArrayTestCase.class).run();
+		new ConsoleTestRunner(GenericPrimitiveArrayTestCase.class).run();
 	}
 }

@@ -11,7 +11,7 @@ public class Db4oEnhancerAntTaskTestCase implements TestCase {
 	private final static Class NOT_INSTRUMENTED_CLAZZ = NotToBeInstrumented.class;
 
 	public static void main(String[] args) {
-		new TestRunner(Db4oEnhancerAntTaskTestCase.class).run();
+		new ConsoleTestRunner(Db4oEnhancerAntTaskTestCase.class).run();
 	}
 
 	public void test() throws Exception {

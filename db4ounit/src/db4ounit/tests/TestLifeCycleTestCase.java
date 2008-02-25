@@ -1,20 +1,15 @@
 package db4ounit.tests;
 
-import db4ounit.Assert;
-import db4ounit.ReflectionTestSuiteBuilder;
-import db4ounit.TestCase;
-import db4ounit.TestMethod;
-import db4ounit.TestSuite;
+import com.db4o.foundation.*;
+
+import db4ounit.*;
 
 public class TestLifeCycleTestCase implements TestCase {
 	public void testLifeCycle() {
-		TestSuite suite = new TestSuite(new ReflectionTestSuiteBuilder(RunsLifeCycle.class).build());
-		final RunsLifeCycle testSubject = getTestSubject(suite);
-		FrameworkTestCase.runTestAndExpect(suite, 1);
+		final Iterator4 tests = new ReflectionTestSuiteBuilder(RunsLifeCycle.class).iterator();
+		final Test test = (Test)Iterators.next(tests);
+		final RunsLifeCycle testSubject = (RunsLifeCycle)ReflectionTestSuiteBuilder.getTestSubject(test);
+		FrameworkTestCase.runTestAndExpect(test, 1);
 		Assert.isTrue(testSubject.tearDownCalled());
-	}
-
-	private RunsLifeCycle getTestSubject(TestSuite suite) {
-		return ((RunsLifeCycle)((TestMethod)suite.getTests()[0]).getSubject());
 	}
 }

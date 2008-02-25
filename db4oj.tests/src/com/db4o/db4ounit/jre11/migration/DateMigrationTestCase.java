@@ -4,7 +4,7 @@ package com.db4o.db4ounit.jre11.migration;
 
 import java.util.Date;
 
-import db4ounit.TestRunner;
+import db4ounit.ConsoleTestRunner;
 
 public class DateMigrationTestCase extends MigrationTestCaseBase {
 	
@@ -57,6 +57,6 @@ public class DateMigrationTestCase extends MigrationTestCaseBase {
 		// if you ever need to regenerate the file
 		// new DateMigrationTestCase().generateFile();
 
-		new TestRunner(DateMigrationTestCase.class).run();
+		new ConsoleTestRunner(DateMigrationTestCase.class).run();
 	}
 }

@@ -20,7 +20,7 @@ import db4ounit.extensions.fixtures.*;
 public class UUIDMigrationTestCase implements TestCase, OptOutNoFileSystemData {
 	
 	public static void main(String[] args) {
-		new TestRunner(UUIDMigrationTestCase.class).run();
+		new ConsoleTestRunner(UUIDMigrationTestCase.class).run();
 	}
 	
 	public void test() throws Exception {

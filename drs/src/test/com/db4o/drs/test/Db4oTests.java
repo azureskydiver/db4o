@@ -32,24 +32,24 @@ public class Db4oTests extends DrsTestSuite {
 	}
 
 	public void runDb4oDb4o() {
-		new TestRunner(new DrsTestSuiteBuilder(new Db4oDrsFixture("db4o-a"),
+		new ConsoleTestRunner(new DrsTestSuiteBuilder(new Db4oDrsFixture("db4o-a"),
 				new Db4oDrsFixture("db4o-b"), getClass())).run();
 	}
 
 	public int runCSCS() {
-		return new TestRunner(new DrsTestSuiteBuilder(new Db4oClientServerDrsFixture(
+		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new Db4oClientServerDrsFixture(
 				"db4o-cs-a", 0xdb40), new Db4oClientServerDrsFixture(
 				"db4o-cs-b", 4455), getClass())).run();
 	}
 
 	public int rundb4oCS() {
-		return new TestRunner(new DrsTestSuiteBuilder(new Db4oDrsFixture("db4o-a"),
+		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new Db4oDrsFixture("db4o-a"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 4455), getClass()))
 				.run();
 	}
 
 	public void runCSdb4o() {
-		new TestRunner(new DrsTestSuiteBuilder(new Db4oClientServerDrsFixture(
+		new ConsoleTestRunner(new DrsTestSuiteBuilder(new Db4oClientServerDrsFixture(
 				"db4o-cs-a", 4455), new Db4oDrsFixture("db4o-b"), getClass()))
 				.run();
 	}

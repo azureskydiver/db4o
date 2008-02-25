@@ -1,13 +1,8 @@
 package db4ounit.tests;
 
-import java.util.Enumeration;
+import com.db4o.foundation.*;
 
-import db4ounit.Assert;
-import db4ounit.Test;
-import db4ounit.TestFailure;
-import db4ounit.TestCase;
-import db4ounit.TestResult;
-import db4ounit.TestSuite;
+import db4ounit.*;
 
 public class FrameworkTestCase implements TestCase {
 	public final static RuntimeException EXCEPTION = new RuntimeException();
@@ -24,28 +19,26 @@ public class FrameworkTestCase implements TestCase {
 		Assert.isTrue(result.failures().size() == 1, "not red");
 	}
 	
-	public void testTestSuite() {
-		runTestAndExpect(new TestSuite(new Test[]{new RunsGreen()}),0);
-		runTestAndExpect(new TestSuite(new Test[]{new RunsRed(EXCEPTION)}),1);
-		runTestAndExpect(new TestSuite(new Test[]{new RunsGreen(),new RunsRed(EXCEPTION)}),1);
-		runTestAndExpect(new TestSuite(new Test[]{new RunsRed(EXCEPTION),new RunsRed(EXCEPTION)}),2);
-		runTestAndExpect(new TestSuite(new Test[]{new RunsRed(EXCEPTION),new RunsGreen()}),1);
-		runTestAndExpect(new TestSuite(new Test[]{new RunsGreen(),new RunsGreen()}),0);
-	}
-	
 	public static void runTestAndExpect(Test test,int expFailures) {
 		runTestAndExpect(test,expFailures,true);
 	}
 	
 	public static void runTestAndExpect(Test test,int expFailures, boolean checkException) {
-		TestResult result = new TestResult();
-		test.run(result);
+		runTestAndExpect(Iterators.cons(test), expFailures, checkException);
+	}
+
+	public static void runTestAndExpect(final Iterable4 tests, int expFailures, boolean checkException) {
+		final TestResult result = new TestResult();
+		final Iterator4 iterator = tests.iterator();
+		while (iterator.moveNext()) {
+			((Test)iterator.current()).run(result);
+		}
 		if (expFailures != result.failures().size()) {
 			Assert.fail(result.failures().toString());
 		}
 		if (checkException) {
-			for(Enumeration iter=result.failures().iterator(); iter.hasMoreElements();) {
-				TestFailure failure = (TestFailure) iter.nextElement();
+			for(Iterator4 iter=result.failures().iterator(); iter.moveNext();) {
+				TestFailure failure = (TestFailure) iter.current();
 				Assert.isTrue(EXCEPTION.equals(failure.getFailure()));
 			}
 		}

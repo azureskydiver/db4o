@@ -11,6 +11,6 @@ public class AllTestsWithTAJdk5 {
 		TestSuiteBuilder builder = new Db4oTestSuiteBuilder(
 				new Db4oSolo(new TAFixtureConfiguration()),
 				AllTestsDb4oUnitJdk5.class);
-		System.exit(new TestRunner(builder).run());
+		System.exit(new ConsoleTestRunner(builder).run());
 	}
 }

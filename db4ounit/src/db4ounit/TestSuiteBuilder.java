@@ -5,6 +5,5 @@ import com.db4o.foundation.*;
 /**
  * Custom test suite builder interface.
  */
-public interface TestSuiteBuilder extends TestCase {
-	Iterator4 build();
+public interface TestSuiteBuilder extends TestCase, Iterable4 {
 }

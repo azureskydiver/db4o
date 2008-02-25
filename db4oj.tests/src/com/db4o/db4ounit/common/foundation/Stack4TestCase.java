@@ -10,7 +10,7 @@ import db4ounit.*;
 public class Stack4TestCase implements TestCase {
 
 	public static void main(String[] args) {
-		new TestRunner(Stack4TestCase.class).run(); 
+		new ConsoleTestRunner(Stack4TestCase.class).run(); 
 	}
 	
 	public void testPushPop(){

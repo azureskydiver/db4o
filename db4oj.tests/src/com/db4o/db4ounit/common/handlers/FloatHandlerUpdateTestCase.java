@@ -44,7 +44,7 @@ public class FloatHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     };
     
     public static void main(String[] args) {
-        new TestRunner(FloatHandlerUpdateTestCase.class).run();
+        new ConsoleTestRunner(FloatHandlerUpdateTestCase.class).run();
     }
     
     protected void assertArrays(Object obj) {

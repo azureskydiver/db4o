@@ -9,7 +9,7 @@ import db4ounit.*;
 public class Collection4TestCase implements TestCase {
 	
 	public static void main(String[] args) {
-		new TestRunner(Collection4TestCase.class).run();
+		new ConsoleTestRunner(Collection4TestCase.class).run();
 	}
 	
 	public void testRemoveAll() {

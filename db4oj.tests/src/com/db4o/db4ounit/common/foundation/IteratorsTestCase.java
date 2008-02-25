@@ -12,7 +12,7 @@ import db4ounit.*;
 public class IteratorsTestCase implements TestCase {
 	
 	public static void main(String[] args) {
-		new TestRunner(IteratorsTestCase.class).run();
+		new ConsoleTestRunner(IteratorsTestCase.class).run();
 	}
 	
 	public void testCrossProduct() {

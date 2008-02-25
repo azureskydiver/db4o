@@ -35,7 +35,7 @@ public class COR775TestCase implements TestLifeCycle {
 	}
 
     public static void main(String[] args) {
-        new TestRunner(COR775TestCase.class).run();
+        new ConsoleTestRunner(COR775TestCase.class).run();
     }
 
     public void testCOR775() throws Exception {

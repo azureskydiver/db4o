@@ -41,7 +41,7 @@ public class ShortHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     };
     
     public static void main(String[] args) {
-        new TestRunner(ShortHandlerUpdateTestCase.class).run();
+        new ConsoleTestRunner(ShortHandlerUpdateTestCase.class).run();
     }
     
     protected void assertArrays(Object obj) {

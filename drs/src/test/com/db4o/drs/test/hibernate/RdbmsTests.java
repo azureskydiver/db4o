@@ -28,7 +28,7 @@ import com.db4o.drs.test.Db4oClientServerDrsFixture;
 import com.db4o.drs.test.DrsTestSuite;
 import com.db4o.drs.test.DrsTestSuiteBuilder;
 
-import db4ounit.TestRunner;
+import db4ounit.ConsoleTestRunner;
 
 public class RdbmsTests extends DrsTestSuite {
 	public static void main(String[] args) {
@@ -49,48 +49,48 @@ public class RdbmsTests extends DrsTestSuite {
 	}
 
 	public void runHsqlHsql() {
-		new TestRunner(new DrsTestSuiteBuilder(new HsqlMemoryFixture("hsql-a"),
+		new ConsoleTestRunner(new DrsTestSuiteBuilder(new HsqlMemoryFixture("hsql-a"),
 				new HsqlMemoryFixture("hsql-b"), getClass())).run();
 	}
 
 	public void runHsqldb4oCS() {
-		new TestRunner(new DrsTestSuiteBuilder(new HsqlMemoryFixture("hsql-a"),
+		new ConsoleTestRunner(new DrsTestSuiteBuilder(new HsqlMemoryFixture("hsql-a"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
 				.run();
 	}
 
 	public void runOracledb4oCS() {
-		new TestRunner(new DrsTestSuiteBuilder(new OracleFixture("Oracle-a"),
+		new ConsoleTestRunner(new DrsTestSuiteBuilder(new OracleFixture("Oracle-a"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
 				.run();
 	}
 
 	public void runMySQLdb4oCS() {
-		new TestRunner(new DrsTestSuiteBuilder(new MySQLFixture("MySQL-a"),
+		new ConsoleTestRunner(new DrsTestSuiteBuilder(new MySQLFixture("MySQL-a"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
 				.run();
 	}
 
 	public void runPostgreSQLdb4oCS() {
-		new TestRunner(new DrsTestSuiteBuilder(new PostgreSQLFixture(
+		new ConsoleTestRunner(new DrsTestSuiteBuilder(new PostgreSQLFixture(
 				"PostgreSQL-a"), new Db4oClientServerDrsFixture("db4o-cs-b",
 				9587), getClass())).run();
 	}
 
 	public void runMsSqldb4oCS() {
-		new TestRunner(new DrsTestSuiteBuilder(new MsSqlFixture("MsSql"),
+		new ConsoleTestRunner(new DrsTestSuiteBuilder(new MsSqlFixture("MsSql"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
 				.run();
 	}
 	
 	public void runDb2db4oCS() {
-		new TestRunner(new DrsTestSuiteBuilder(new Db2Fixture("Db2"),
+		new ConsoleTestRunner(new DrsTestSuiteBuilder(new Db2Fixture("Db2"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
 				.run();
 	}
 	
 	public void runDerbydb4oCS() {
-		new TestRunner(new DrsTestSuiteBuilder(new DerbyFixture("Derby"),
+		new ConsoleTestRunner(new DrsTestSuiteBuilder(new DerbyFixture("Derby"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 9587), getClass()))
 				.run();
 	}

@@ -12,7 +12,7 @@ import db4ounit.*;
 public class TreeKeyIteratorTestCase implements TestCase {
 
 	public static void main(String[] args) {
-		new TestRunner(TreeKeyIteratorTestCase.class).run(); 
+		new ConsoleTestRunner(TreeKeyIteratorTestCase.class).run(); 
 	}
 	
 	private static int[] VALUES = new int[]{1, 3, 5, 7, 9, 10, 11, 13, 24, 76};

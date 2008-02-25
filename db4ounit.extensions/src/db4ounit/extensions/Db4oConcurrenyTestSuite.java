@@ -8,8 +8,8 @@ import db4ounit.extensions.concurrency.*;
 
 public abstract class Db4oConcurrenyTestSuite extends AbstractDb4oTestCase implements TestSuiteBuilder {
 
-	public Iterator4 build() {
-		return new Db4oConcurrencyTestSuiteBuilder(fixture(), testCases()).build();
+	public Iterator4 iterator() {
+		return new Db4oConcurrencyTestSuiteBuilder(fixture(), testCases()).iterator();
 	}
 
 	protected abstract Class[] testCases();
