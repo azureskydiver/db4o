@@ -45,7 +45,7 @@ public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
     protected Test fromMethod(Class clazz, Method method) {
     	final Test test = super.fromMethod(clazz, method);
 		if (AbstractDb4oTestCase.class.isAssignableFrom(clazz)) {
-			return new FixtureDecoration(test, AbstractDb4oTestCase.FIXTURE_VARIABLE, _fixture); 
+			return new FixtureDecoration(test, null, AbstractDb4oTestCase.FIXTURE_VARIABLE, _fixture); 
 		}
 		return test;
 	}

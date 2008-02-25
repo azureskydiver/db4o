@@ -26,4 +26,8 @@ public class MultiValueFixtureProvider implements FixtureProvider {
 		return Iterators.iterate(_values);
 	}
 
+	public String label() {
+		return "data";
+	}
+
 }

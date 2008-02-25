@@ -65,5 +65,40 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 			new MethodCall("testBar", new Object[] {"f12", "f22"})
 		});
 	}
+	
+	public void testLabel() {
+		final FixtureBasedTestSuite suite = new FixtureBasedTestSuite() {
+			public FixtureProvider[] fixtureProviders() {
+				return new FixtureProvider[] {
+					new SimpleFixtureProvider("f1", FIXTURE1, new Object[] { "f11", "f12" }),
+					new SimpleFixtureProvider("f2", FIXTURE2, new Object[] { "f21", "f22" }),
+				};
+			}
+
+			public Class[] testUnits() {
+				return new Class[] { TestUnit.class };
+			}
+		};
+		final Iterable4 labels = Iterators.map(suite, new Function4() {
+			public Object apply(Object arg) {
+				return ((Test)arg).getLabel();
+			}
+		});
+		Iterator4Assert.areEqual(new Object[] {
+			testLabel("testFoo", 0, 0),
+			testLabel("testFoo", 1, 0),
+			testLabel("testFoo", 0, 1),
+			testLabel("testFoo", 1, 1),
+			testLabel("testBar", 0, 0),
+			testLabel("testBar", 1, 0),
+			testLabel("testBar", 0, 1),
+			testLabel("testBar", 1, 1)
+		}, labels.iterator());
+	}
+
+	private String testLabel(final String testMethod, int fixture1Index, int fixture2Index) {
+		final String prefix = "(f2[" + fixture1Index + "]) (f1[" + fixture2Index + "]) ";
+		return prefix + TestUnit.class.getName() + "." + testMethod;
+	}
 
 }

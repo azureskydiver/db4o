@@ -8,18 +8,20 @@ public final class FixtureDecoration implements TestDecoration {
 	private final Test _test;
 	private final ContextVariable _variable;
 	private final Object _value;
+	private final String _fixtureLabel;
 
-	public FixtureDecoration(Test test, ContextVariable variable, Object value) {
+	public FixtureDecoration(Test test, String fixtureLabel, ContextVariable fixtureVariable, Object fixtureValue) {
 		_test = test;
-		_variable = variable;
-		_value = value;
+		_fixtureLabel = fixtureLabel;
+		_variable = fixtureVariable;
+		_value = fixtureValue;
 	}
 	
 	public String getLabel() {
 		final ObjectByRef label = new ObjectByRef(); 
 		runDecorated(new Runnable() {
 			public void run() {
-				label.value = "(" + _value + ") " + _test.getLabel();
+				label.value = "(" + fixtureLabel() + ") " + _test.getLabel();
 			}
 		});
 		return (String)label.value;
@@ -41,5 +43,9 @@ public final class FixtureDecoration implements TestDecoration {
 		return _value instanceof Deferred4
 			? ((Deferred4)_value).value()
 			: _value;
+	}
+
+	private Object fixtureLabel() {
+		return (_fixtureLabel == null ? _value : _fixtureLabel);
 	}
 }

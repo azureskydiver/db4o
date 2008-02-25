@@ -15,6 +15,20 @@ public class IteratorsTestCase implements TestCase {
 		new ConsoleTestRunner(IteratorsTestCase.class).run();
 	}
 	
+	public void testEnumerate() {
+		Iterable4 e = Iterators.enumerate(Iterators.iterable(new Object[] { "1", "2" }));
+		
+		Iterator4 iterator = e.iterator();
+		EnumerateIterator.Tuple first = (EnumerateIterator.Tuple)Iterators.next(iterator);
+		EnumerateIterator.Tuple second = (EnumerateIterator.Tuple)Iterators.next(iterator);
+		Assert.areEqual(0, first.index);
+		Assert.areEqual("1", first.value);
+		Assert.areEqual(1, second.index);
+		Assert.areEqual("2", second.value);
+		
+		Assert.isFalse(iterator.moveNext());
+	}
+	
 	public void testCrossProduct() {
 		Iterable4[] source = new Iterable4[] {
 			iterable(new Object[] { "1", "2" }),

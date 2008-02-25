@@ -28,4 +28,8 @@ public class SubjectFixtureProvider implements FixtureProvider {
 	public Iterator4 iterator() {
 		return _values.iterator();
 	}
+
+	public String label() {
+		return "subject";
+	}
 }
