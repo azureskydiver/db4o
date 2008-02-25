@@ -5,7 +5,7 @@ package db4ounit.fixtures.tests;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
-import db4ounit.fixtures.dynamic.*;
+import db4ounit.fixtures.*;
 
 public class Iterable4TestUnit implements TestCase {
 	
