@@ -9,9 +9,9 @@ public class FlatteningIterator extends CompositeIterator4 {
 		public final Iterator4 iterator;
 		public final IteratorStack next;
 		
-		public IteratorStack(Iterator4 iterator, IteratorStack next) {
-			this.iterator = iterator;
-			this.next = next;
+		public IteratorStack(Iterator4 iterator_, IteratorStack next_) {
+			iterator = iterator_;
+			next = next_;
 		}
 	}
 	
