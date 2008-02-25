@@ -89,12 +89,18 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
         return _handler.read(context);
     }
 
-    void instantiateFields(UnmarshallingContext context) {
+    Object instantiateFields(UnmarshallingContext context) {
         Object obj = context.read(_handler);
-        if (obj != null  &&  (_handler instanceof DateHandler)) {
-            final Object existing = context.persistentObject();
-			context.persistentObject(dateHandler().copyValue(obj, existing));
+        if (obj == null  ||  ! (_handler instanceof DateHandler)) {
+            return obj;
         }
+        final Object existing = context.persistentObject();
+		Object newValue = dateHandler().copyValue(obj, existing);
+		
+        // FIXME: It should not be necessary to set persistentObject here
+        context.persistentObject(newValue);
+        
+		return newValue;
     }
 
 	private DateHandler dateHandler() {

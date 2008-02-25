@@ -40,12 +40,14 @@ public class NewFirstClassObjectHandler  implements TypeHandler4 {
 
     public Object read(ReadContext context) {
         
-        // FIXME: .NET value types should get their own TypeHandler and it 
-        //        should do the following:
         
-        if(_classMetadata.isValueType()){
-            ActivationDepth activationDepth = ((UnmarshallingContext)context).activationDepth();
-            return _classMetadata.readValueType(context.transaction(), context.readInt(), activationDepth.descend(_classMetadata));
+        if(! ObjectHandlerRefactoring.enabled){
+            // FIXME: .NET value types should get their own TypeHandler and it 
+            //        should do the following:
+            if(_classMetadata.isValueType()){
+                ActivationDepth activationDepth = ((UnmarshallingContext)context).activationDepth();
+                return _classMetadata.readValueType(context.transaction(), context.readInt(), activationDepth.descend(_classMetadata));
+            }
         }
         
         UnmarshallingContext unmarshallingContext = (UnmarshallingContext) context;
@@ -189,6 +191,10 @@ public class NewFirstClassObjectHandler  implements TypeHandler4 {
     
     protected boolean isNull(FieldListInfo fieldList,int fieldIndex) {
         return fieldList.isNull(fieldIndex);
+    }
+
+    public ClassMetadata classMetadata() {
+        return _classMetadata;
     }
 
 }

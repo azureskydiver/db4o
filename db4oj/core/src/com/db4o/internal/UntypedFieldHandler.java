@@ -5,6 +5,7 @@ package com.db4o.internal;
 import com.db4o.ext.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.fieldhandlers.*;
+import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -145,6 +146,9 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     }
 
     private Object readObject(InternalReadContext context, TypeHandler4 typeHandler) {
+        if(ObjectHandlerRefactoring.enabled){
+            return context.readAtCurrentSeekPosition(typeHandler);
+        }
         if(FieldMetadata.useDedicatedSlot(context, typeHandler, null)){
             return context.readObject();
         } 

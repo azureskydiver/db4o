@@ -4,6 +4,7 @@ package com.db4o.internal.marshall;
 
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
+import com.db4o.internal.handlers.*;
 
 
 /**
@@ -42,7 +43,15 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
         return obj;
     }
     
-    protected Object readAtCurrentSeekPosition(TypeHandler4 handler){
+    public Object readAtCurrentSeekPosition(TypeHandler4 handler){
+        if(ObjectHandlerRefactoring.enabled){
+            if(handler instanceof ClassMetadata){
+                ClassMetadata classMetadata = (ClassMetadata) handler;
+                if(classMetadata.isValueType()){
+                    return classMetadata.readValueType(transaction(), readInt(), activationDepth().descend(classMetadata));
+                }
+            }
+        }
         if(FieldMetadata.useDedicatedSlot(this, handler, null)){
             return readObject();
         }
@@ -78,6 +87,10 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
     }
 
     private ClassMetadata classMetadataForId(int id) {
+        
+        // TODO: This method is *very* costly as is, since it reads
+        //       the whole slot once and doesn't reuse it. Optimize.
+        
     	HardObjectReference hardRef = container().getHardObjectReferenceById(transaction(), id);
     	if (null == hardRef || hardRef._reference == null) {
     		// com.db4o.db4ounit.common.querying.CascadeDeleteDeleted
