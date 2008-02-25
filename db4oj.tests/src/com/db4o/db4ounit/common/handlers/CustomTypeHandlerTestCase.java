@@ -65,8 +65,10 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
             }
         
             public void write(WriteContext context, Object obj) {
-                // TODO Auto-generated method stub
-        
+                
+                // need to write something, to prevent NPE
+                
+                context.writeInt(0);
             }
         
             public Object read(ReadContext context) {
