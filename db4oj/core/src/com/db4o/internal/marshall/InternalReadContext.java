@@ -21,6 +21,8 @@ public interface InternalReadContext extends ReadContext{
 
     public Object read(TypeHandler4 handler);
     
+    public Object readAtCurrentSeekPosition(TypeHandler4 handler);
+    
     public ReadWriteBuffer readIndirectedBuffer();
 
     public void seek(int offset);

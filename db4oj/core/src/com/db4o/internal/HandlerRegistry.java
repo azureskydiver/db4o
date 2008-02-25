@@ -289,6 +289,9 @@ public final class HandlerRegistry {
         if(replacement != null){
             return replacement;
         }
+        if(handler instanceof NewFirstClassObjectHandler  && (version == 0)){
+            handler = new NewFirstClassObjectHandler0(((NewFirstClassObjectHandler)handler).classMetadata());
+        }
         if(handler instanceof MultidimensionalArrayHandler && (version == 0)){
             return new MultidimensionalArrayHandler0((ArrayHandler)handler, this, version);
         }

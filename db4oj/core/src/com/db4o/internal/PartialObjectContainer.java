@@ -925,6 +925,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if(classMetadata == null){
             return null;
         }
+        // TODO: consider to return classMetadata
         return classMetadata.typeHandler();
     }
     
@@ -1193,6 +1194,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if(classMetadata == null){
             return null;
         }
+        // TODO: consider to return classMetadata
         return classMetadata.typeHandler();
     }
 

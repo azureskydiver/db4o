@@ -1034,7 +1034,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 context.reference().setStateDeactivated();
             } 
             else {
-                activate(context);
+                obj = activate(context);
             }
         } 
         else {
@@ -1044,7 +1044,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                     activateFields(context.transaction(), obj, child);
                 }
             } else {
-                activate(context);
+                obj = activate(context);
             }
         }
         return obj;
@@ -1062,7 +1062,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         context.container().peeked(context.objectID(), obj);
         
         if(context.activationDepth().requiresActivation()){
-            instantiateFields(context);
+            obj = instantiateFields(context);
         }
         return obj;
         
@@ -1072,16 +1072,18 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return !mode.isRefresh() && ref.isActive();
 	}
 
-   private void activate(UnmarshallingContext context) {
-        if(! objectCanActivate(context.transaction(), context.persistentObject())){
+   private Object activate(UnmarshallingContext context) {
+        Object obj = context.persistentObject();
+        if(! objectCanActivate(context.transaction(), obj)){
             context.reference().setStateDeactivated();
-            return;
+            return obj;
         }
         context.reference().setStateClean();
         if (context.activationDepth().requiresActivation()/* || cascadeOnActivate()*/) {
-            instantiateFields(context);
+            obj = instantiateFields(context);
         }
-        objectOnActivate(context.transaction(), context.persistentObject());
+        objectOnActivate(context.transaction(), obj);
+        return obj;
     }
 	
     private boolean configInstantiates(){
@@ -1155,12 +1157,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			&& dispatchEvent(transaction, obj, EventDispatcher.CAN_ACTIVATE);
 	}
 
-    void instantiateFields(UnmarshallingContext context) {
+    Object instantiateFields(UnmarshallingContext context) {
         if(ObjectHandlerRefactoring.enabled){
-            _typeHandler.read(context);
-        }else {
-            MarshallerFamily.version(context.handlerVersion())._object.instantiateFields(context);
+            return context.correctHandlerVersion(_typeHandler).read(context);
         }
+        MarshallerFamily.version(context.handlerVersion())._object.instantiateFields(context);
+        return context.persistentObject();
+        
     }
 
     public boolean isArray() {
