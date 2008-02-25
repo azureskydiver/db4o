@@ -14,13 +14,19 @@ public final class FixtureDecoration implements TestDecoration {
 		_variable = variable;
 		_value = value;
 	}
-
-	public void run() {
+	
+	public String getLabel() {
+		final ObjectByRef label = new ObjectByRef(); 
 		runDecorated(new Runnable() {
 			public void run() {
-				_test.run();
+				label.value = "(" + _value + ") " + _test.getLabel();
 			}
 		});
+		return (String)label.value;
+	}
+
+	public void run() {
+		runDecorated(_test);
 	}
 	
 	public Test test() {
@@ -35,15 +41,5 @@ public final class FixtureDecoration implements TestDecoration {
 		return _value instanceof Deferred4
 			? ((Deferred4)_value).value()
 			: _value;
-	}
-
-	public String getLabel() {
-		final ObjectByRef label = new ObjectByRef(); 
-		runDecorated(new Runnable() {
-			public void run() {
-				label.value = "(" + _value + ") " + _test.getLabel();
-			}
-		});
-		return (String)label.value;
 	}
 }
