@@ -11,7 +11,7 @@ import db4ounit.*;
 public class JdkCollectionIterator4TestCase implements TestCase{
     
     public static void main(String[] arguments) {
-        new TestRunner(JdkCollectionIterator4TestCase.class).run();
+        new ConsoleTestRunner(JdkCollectionIterator4TestCase.class).run();
     }
     
     public void test(){

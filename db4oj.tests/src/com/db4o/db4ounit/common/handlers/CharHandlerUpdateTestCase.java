@@ -51,7 +51,7 @@ public class CharHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     };
     
     public static void main(String[] args) {
-        new TestRunner(CharHandlerUpdateTestCase.class).run();
+        new ConsoleTestRunner(CharHandlerUpdateTestCase.class).run();
     }
     
     protected void assertArrays(Object obj) {

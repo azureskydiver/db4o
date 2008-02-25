@@ -38,7 +38,7 @@ public class ReflectionTestSuiteBuilderTestCase implements TestCase {
 
 	public void testNotAcceptedFixture() {
 		ReflectionTestSuiteBuilder builder = new ExcludingReflectionTestSuiteBuilder(new Class[]{Accepted.class,NotAccepted.class});
-		Assert.areEqual(1, Iterators.size(builder.build()));
+		Assert.areEqual(1, Iterators.size(builder.iterator()));
 	}
 	
 	public static class ConstructorThrows implements TestCase {
@@ -59,16 +59,13 @@ public class ReflectionTestSuiteBuilderTestCase implements TestCase {
 	public void testConstructorFailuresAppearAsFailedTestCases() {
 		
 		final ReflectionTestSuiteBuilder builder = new ReflectionTestSuiteBuilder(ConstructorThrows.class);
-		final Throwable cause = assertFailingTestCase(TestException.class, builder);
-		Assert.areSame(ConstructorThrows.ERROR, ((TestException)cause).getReason());
+		Assert.areEqual(2, Iterators.toArray(builder.iterator()).length);
 	}
 
 	private Throwable assertFailingTestCase(final Class expectedError,
 			final ReflectionTestSuiteBuilder builder) {
-		final TestSuite suite = new TestSuite(builder.build());
-		Assert.areEqual(1, suite.getTests().length);
-		
-		FailingTest test = (FailingTest) suite.getTests()[0];
+		final Iterator4 tests = builder.iterator();
+		FailingTest test = (FailingTest) Iterators.next(tests);
 		Assert.areSame(expectedError, test.error().getClass());
 		return test.error();
 	}

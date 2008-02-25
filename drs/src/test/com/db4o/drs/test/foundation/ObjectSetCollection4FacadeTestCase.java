@@ -10,7 +10,7 @@ import db4ounit.*;
 public class ObjectSetCollection4FacadeTestCase implements TestCase {
 	
 	public static void main(String[] args) {
-		new TestRunner(ObjectSetCollection4FacadeTestCase.class).run();
+		new ConsoleTestRunner(ObjectSetCollection4FacadeTestCase.class).run();
 	}
 	
 	public void testEmpty() {

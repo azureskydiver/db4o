@@ -19,7 +19,7 @@ import db4ounit.*;
 public class UpdatingDb4oVersionsTestCase extends FormatMigrationTestCaseBase {
 
 	public static void main(String[] args) {
-		new TestRunner(UpdatingDb4oVersionsTestCase.class).run();
+		new ConsoleTestRunner(UpdatingDb4oVersionsTestCase.class).run();
 	}
 
     protected void configureForTest(Configuration config){

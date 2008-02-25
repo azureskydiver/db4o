@@ -23,7 +23,7 @@ public class GenericObjectsTest extends AbstractDb4oTestCase {
 	private String PERSON_CLASSNAME = "com.acme.Person";
 
 	public static void main(String[] args) {
-		new TestRunner(new Db4oTestSuiteBuilder(new Db4oSolo(),
+		new ConsoleTestRunner(new Db4oTestSuiteBuilder(new Db4oSolo(),
 				GenericObjectsTest.class)).run();
 	}
 

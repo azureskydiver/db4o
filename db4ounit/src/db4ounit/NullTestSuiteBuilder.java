@@ -10,7 +10,7 @@ public class NullTestSuiteBuilder implements TestSuiteBuilder {
 		_suite = suite;
 	}
 
-	public Iterator4 build() {
+	public Iterator4 iterator() {
 		return _suite;
 	}
 

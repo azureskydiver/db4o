@@ -18,8 +18,8 @@ public abstract class AbstractDb4oDefragTestCase implements Test {
 	public void run(TestResult result) {
 		try {
 			final Iterator4 tests = new Db4oTestSuiteBuilder(
-				new Db4oDefragSolo(new IndependentConfigurationSource()), testSuite()).build();
-			TestRunner.runAll(result, tests);
+				new Db4oDefragSolo(new IndependentConfigurationSource()), testSuite()).iterator();
+			ConsoleTestRunner.runAll(result, tests);
 		} catch (Exception e) {
 			result.testFailed(this, e);
 		}

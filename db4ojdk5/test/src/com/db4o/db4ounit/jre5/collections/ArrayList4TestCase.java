@@ -13,7 +13,7 @@ import db4ounit.*;
 public class ArrayList4TestCase implements TestLifeCycle {
 
 	public static void main(String[] args) {
-		new TestRunner(ArrayList4TestCase.class).run();
+		new ConsoleTestRunner(ArrayList4TestCase.class).run();
 	}
 	
 	public List <Integer> _list;

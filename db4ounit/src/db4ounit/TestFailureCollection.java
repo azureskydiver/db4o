@@ -1,16 +1,15 @@
 package db4ounit;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.io.*;
 
-public class TestFailureCollection extends Printable {
+import com.db4o.foundation.*;
+
+public class TestFailureCollection extends Printable implements Iterable4 {
 	
-	Vector _failures = new Vector();
+	private final Collection4 _failures = new Collection4();
 	
-	public Enumeration iterator() {
-		return _failures.elements();
+	public Iterator4 iterator() {
+		return _failures.iterator();
 	}
 	
 	public int size() {
@@ -18,7 +17,7 @@ public class TestFailureCollection extends Printable {
 	}
 	
 	public void add(TestFailure failure) {
-		_failures.addElement(failure);
+		_failures.add(failure);
 	}
 	
 	public void print(Writer writer) throws IOException {
@@ -28,11 +27,11 @@ public class TestFailureCollection extends Printable {
 
 	private void printSummary(Writer writer) throws IOException {
 		int index = 1;
-		Enumeration e = iterator();
-		while (e.hasMoreElements()) {
+		Iterator4 e = iterator();
+		while (e.moveNext()) {
 			writer.write(String.valueOf(index));
 			writer.write(") ");
-			writer.write(((TestFailure)e.nextElement()).getTest().getLabel());
+			writer.write(((TestFailure)e.current()).getTest().getLabel());
 			writer.write(TestPlatform.NEW_LINE);
 			++index;
 		}
@@ -40,12 +39,12 @@ public class TestFailureCollection extends Printable {
 
 	private void printDetails(Writer writer) throws IOException {
 		int index = 1;
-		Enumeration e = iterator();
-		while (e.hasMoreElements()) {
+		Iterator4 e = iterator();
+		while (e.moveNext()) {
 			writer.write(TestPlatform.NEW_LINE);
 			writer.write(String.valueOf(index));
 			writer.write(") ");
-			((Printable)e.nextElement()).print(writer);
+			((Printable)e.current()).print(writer);
 			writer.write(TestPlatform.NEW_LINE);
 			++index;
 		}

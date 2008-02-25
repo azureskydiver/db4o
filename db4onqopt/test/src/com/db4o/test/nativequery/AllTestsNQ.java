@@ -24,20 +24,20 @@ public class AllTestsNQ {
 						BooleanReturnValueTestCase.class,
 						NQBuildTimeInstrumentationTestCase.class,
 				}
-		).build();
+		).iterator();
 		Iterator4 db4oTests=new Db4oTestSuiteBuilder(new Db4oSolo(),
 					new Class[] {
 						NativeQueryOptimizerDiagnosticsTestCase.class,
 						NQRegressionTestCase.class,
 						NQCatConsistencyTestCase.class,
 					}
-		).build();
+		).iterator();
 		Iterator4 allTests=Iterators.concat(
 				new Iterator4[] {
 					plainTests,
 					db4oTests,
 				}
 		);
-		System.exit(new TestRunner(allTests).run());
+		System.exit(new ConsoleTestRunner(allTests).run());
 	}
 }

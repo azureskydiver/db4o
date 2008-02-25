@@ -260,6 +260,6 @@ public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle 
 	}
 	
 	public static void main(String[] args) {
-		new TestRunner(TransparentPersistenceClassLoaderTestCase.class).run();
+		new ConsoleTestRunner(TransparentPersistenceClassLoaderTestCase.class).run();
 	}
 }

@@ -12,7 +12,7 @@ import db4ounit.*;
 public class IntArrayListTestCase implements TestCase {
 	
     public static void main(String[] args) {
-        new TestRunner(IntArrayListTestCase.class).run();
+        new ConsoleTestRunner(IntArrayListTestCase.class).run();
     }
     
 	public void testIteratorGoesForwards() {

@@ -16,7 +16,7 @@ import db4ounit.extensions.*;
 public class GlobalVsNonStaticConfigurationTestCase implements Db4oTestCase {
 
 	public static void main(String[] args) {
-		new TestRunner(GlobalVsNonStaticConfigurationTestCase.class).run();
+		new ConsoleTestRunner(GlobalVsNonStaticConfigurationTestCase.class).run();
 	}
 	
 	public void setUp() throws Exception {

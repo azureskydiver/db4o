@@ -13,7 +13,7 @@ import db4ounit.*;
 public class COR52TestCase implements TestCase {
 	
 	public static void main(String[] args) {
-		new TestRunner(COR52TestCase.class).run();
+		new ConsoleTestRunner(COR52TestCase.class).run();
 	}
 	
 	private static final String TEST_FILE = Path4.getTempFileName();

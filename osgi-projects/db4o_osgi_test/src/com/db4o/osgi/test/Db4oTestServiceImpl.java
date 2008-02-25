@@ -4,7 +4,6 @@ package com.db4o.osgi.test;
 
 import org.osgi.framework.*;
 
-import com.db4o.foundation.*;
 import com.db4o.test.nativequery.*;
 import com.db4o.test.nativequery.analysis.*;
 import com.db4o.test.nativequery.cats.*;
@@ -23,8 +22,8 @@ class Db4oTestServiceImpl implements Db4oTestService {
 	}
 
 	public int runTests(String databaseFilePath) throws Exception {
-		Db4oOSGiBundleFixture fixture = new Db4oOSGiBundleFixture(_context, databaseFilePath);
-		Iterator4 suite = new Db4oTestSuiteBuilder(fixture, 
+		final Db4oOSGiBundleFixture fixture = new Db4oOSGiBundleFixture(_context, databaseFilePath);
+		final Db4oTestSuiteBuilder suite = new Db4oTestSuiteBuilder(fixture, 
 				new Class[] {
 				ExpressionBuilderTestCase.class,
 				BloatExprBuilderVisitorTestCase.class,
@@ -33,8 +32,8 @@ class Db4oTestServiceImpl implements Db4oTestService {
 				NQRegressionTestCase.class,
 				NQCatConsistencyTestCase.class,
 				com.db4o.db4ounit.jre12.AllTestsJdk1_2.class
-			}).build();
-		return new TestRunner(suite).run();
+			});
+		return new ConsoleTestRunner(suite).run();
 	}
 
 }

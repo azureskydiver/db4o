@@ -19,7 +19,7 @@ public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     };
 
     public static void main(String[] args) {
-        new TestRunner(IntHandlerUpdateTestCase.class).run();
+        new ConsoleTestRunner(IntHandlerUpdateTestCase.class).run();
     }
     
     protected String typeName() {

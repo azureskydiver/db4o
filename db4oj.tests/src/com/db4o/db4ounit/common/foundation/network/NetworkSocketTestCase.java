@@ -25,7 +25,7 @@ public class NetworkSocketTestCase implements TestLifeCycle {
 	private PlainSocketFactory _plainSocketFactory = new PlainSocketFactory();
 
 	public static void main(String[] args) {
-		new TestRunner(NetworkSocketTestCase.class).run();
+		new ConsoleTestRunner(NetworkSocketTestCase.class).run();
 	}
 
 	public void setUp() throws Exception {

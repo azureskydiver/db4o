@@ -33,7 +33,7 @@ public class ByteHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
             Byte.MAX_VALUE - 1, Byte.MAX_VALUE, };
 
     public static void main(String[] args) {
-        new TestRunner(ByteHandlerUpdateTestCase.class).run();
+        new ConsoleTestRunner(ByteHandlerUpdateTestCase.class).run();
     }
 
     protected void assertArrays(Object obj) {

@@ -122,7 +122,7 @@ public class SelectiveActivationTestCase
     }
 
     public static void main(String[] args) {
-        new TestRunner(
+        new ConsoleTestRunner(
                 new Db4oTestSuiteBuilder(
                         new Db4oSolo(),
                         SelectiveActivationTestCase.class)).run();

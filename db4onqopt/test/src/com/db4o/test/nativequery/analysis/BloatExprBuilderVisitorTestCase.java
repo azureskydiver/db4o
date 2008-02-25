@@ -1420,6 +1420,6 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 //		};
 //		TestSuite suite=new TestSuite(tests);
 //		new TestRunner(suite).run();
-		new TestRunner(BloatExprBuilderVisitorTestCase.class).run();
+		new ConsoleTestRunner(BloatExprBuilderVisitorTestCase.class).run();
 	}
 }

@@ -5,19 +5,19 @@ package com.db4o.db4ounit.common.io;
 import com.db4o.foundation.*;
 
 import db4ounit.ReflectionTestSuiteBuilder;
-import db4ounit.TestRunner;
+import db4ounit.ConsoleTestRunner;
 import db4ounit.TestSuiteBuilder;
 
 public class AllTests implements TestSuiteBuilder {
 
-	public Iterator4 build() {
+	public Iterator4 iterator() {
 		return new ReflectionTestSuiteBuilder(new Class[] {
 				IoAdapterTest.class
-			}).build();	
+			}).iterator();	
 	}
 
 	public static void main(String[] args) {
-		new TestRunner(AllTests.class).run();
+		new ConsoleTestRunner(AllTests.class).run();
 	}
 
 }

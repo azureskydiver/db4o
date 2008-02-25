@@ -12,7 +12,7 @@ import db4ounit.extensions.*;
 public class IncompatibleFileFormatExceptionTestCase implements Db4oTestCase {
 	
 	public static void main(String[] args) throws Exception {
-		new TestRunner(IncompatibleFileFormatExceptionTestCase.class).run();
+		new ConsoleTestRunner(IncompatibleFileFormatExceptionTestCase.class).run();
 	}
 
 	private static final String INCOMPATIBLE_FILE_FORMAT = Path4.getTempFileName();

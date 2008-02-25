@@ -16,7 +16,7 @@ public class StringHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     };
 
     public static void main(String[] args) {
-        new TestRunner(StringHandlerUpdateTestCase.class).run();
+        new ConsoleTestRunner(StringHandlerUpdateTestCase.class).run();
     }
     
     protected String typeName() {

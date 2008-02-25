@@ -5,7 +5,7 @@ import db4ounit.*;
 public class AllTests extends ReflectionTestSuite {
 
 	public static void main(String[] args) {
-		new TestRunner(AllTests.class).run();
+		new ConsoleTestRunner(AllTests.class).run();
 	}
 
 	protected Class[] testCases() {

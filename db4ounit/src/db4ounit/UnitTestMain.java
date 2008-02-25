@@ -16,7 +16,7 @@ public class UnitTestMain {
 	public final void runTests(String[] args) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException {
 		Iterator4 suite = build(args);
-		TestRunner runner=new TestRunner(suite, false);
+		ConsoleTestRunner runner=new ConsoleTestRunner(suite, false);
 		runner.run();
 	}
 	
@@ -48,7 +48,7 @@ public class UnitTestMain {
 		vectorToArray(plainTestClasses, plainTestClassesArray);
 		TestSuiteBuilder classBuilder=builder(plainTestClassesArray);
 		Test[] plainTestMethodArray=new Test[plainTestMethods.size()];		vectorToArray(plainTestMethods, plainTestMethodArray);		Iterator4 methodSuite=Iterators.iterate(plainTestMethodArray);
-		return Iterators.concat(new Iterator4[]{classBuilder.build(),methodSuite});
+		return Iterators.concat(new Iterator4[]{classBuilder.iterator(),methodSuite});
 	}
 	
 	private void vectorToArray(Vector vector, Object[] array){

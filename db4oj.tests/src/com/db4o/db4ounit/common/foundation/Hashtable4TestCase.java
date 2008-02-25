@@ -6,12 +6,12 @@ import com.db4o.foundation.*;
 
 import db4ounit.Assert;
 import db4ounit.TestCase;
-import db4ounit.TestRunner;
+import db4ounit.ConsoleTestRunner;
 
 public class Hashtable4TestCase implements TestCase {
 	
 	public static void main(String[] args) {
-		new TestRunner(Hashtable4TestCase.class).run();
+		new ConsoleTestRunner(Hashtable4TestCase.class).run();
 	}
 	
 	public void testToString() {

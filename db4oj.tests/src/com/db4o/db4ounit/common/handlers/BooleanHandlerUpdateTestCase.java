@@ -31,7 +31,7 @@ public class BooleanHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     private static final boolean[] data = new boolean[] { true, false, };
 
     public static void main(String[] args) {
-        new TestRunner(BooleanHandlerUpdateTestCase.class).run();
+        new ConsoleTestRunner(BooleanHandlerUpdateTestCase.class).run();
     }
 
     protected void assertArrays(Object obj) {

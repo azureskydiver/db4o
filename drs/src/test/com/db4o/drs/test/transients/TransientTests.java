@@ -2,7 +2,7 @@ package com.db4o.drs.test.transients;
 
 import com.db4o.drs.test.*;
 
-import db4ounit.TestRunner;
+import db4ounit.ConsoleTestRunner;
 
 public class TransientTests {
 	public static void main(String[] args) {
@@ -10,7 +10,7 @@ public class TransientTests {
 	}
 	
 	public void runTransientdb4oCS() {
-		new TestRunner(new DrsTestSuiteBuilder(
+		new ConsoleTestRunner(new DrsTestSuiteBuilder(
 				new TransientFixture("Transient-a"),
 				new Db4oClientServerDrsFixture("db4o-cs-b", 1234), 
 				getClass()))

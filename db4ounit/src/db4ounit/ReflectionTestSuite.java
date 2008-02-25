@@ -22,14 +22,14 @@ import com.db4o.foundation.*;
  */
 public abstract class ReflectionTestSuite implements TestSuiteBuilder {
 
-	public Iterator4 build() {
-		return new ReflectionTestSuiteBuilder(testCases()).build();
+	public Iterator4 iterator() {
+		return new ReflectionTestSuiteBuilder(testCases()).iterator();
 	}
 
 	protected abstract Class[] testCases();
 	
 	public int run() {
-		return new TestRunner(build()).run();
+		return new ConsoleTestRunner(iterator()).run();
 	}
 
 }

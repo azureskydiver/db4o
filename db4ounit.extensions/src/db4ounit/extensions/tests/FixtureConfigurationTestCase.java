@@ -59,12 +59,12 @@ public class FixtureConfigurationTestCase implements TestCase {
 			fixture.getLabel().endsWith(" - " + configuration.getLabel()),
 			"FixtureConfiguration label must be part of Fixture label.");
 		
-		TestRunner.runAll(
+		ConsoleTestRunner.runAll(
 			new TestResult(),
 			new Db4oTestSuiteBuilder(fixture, new Class[] {
 				TestCase1.class,
 				TestCase2.class,
-			}).build());
+			}).iterator());
 		
 		configuration.verify(new MethodCall[] {
 			new MethodCall("configure", TestCase1.class, MethodCall.IGNORED_ARGUMENT),

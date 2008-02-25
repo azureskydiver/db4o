@@ -11,7 +11,7 @@ import db4ounit.*;
 public class PrimitiveMessageTestCase extends MessagingTestCaseBase {
 	
 	public static void main(String[] args) {
-		new TestRunner(PrimitiveMessageTestCase.class).run();
+		new ConsoleTestRunner(PrimitiveMessageTestCase.class).run();
 	}
 	
 	public void test() {

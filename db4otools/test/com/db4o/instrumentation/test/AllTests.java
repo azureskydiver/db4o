@@ -7,13 +7,13 @@ import db4ounit.*;
 
 public class AllTests implements TestSuiteBuilder {
 
-	public Iterator4 build() {
+	public Iterator4 iterator() {
 		return new ReflectionTestSuiteBuilder(new Class[] {
 				DefaultFilePathRootTestCase.class,
-			}).build();	
+			}).iterator();	
 	}
 
 	public static void main(String[] args) {
-		new TestRunner(AllTests.class).run();
+		new ConsoleTestRunner(AllTests.class).run();
 	}
 }

@@ -12,7 +12,7 @@ import db4ounit.*;
 public class ServerToClientTestCase extends MessagingTestCaseBase {
 	
 	public static void main(String[] args) {
-		new TestRunner(ServerToClientTestCase.class).run();
+		new ConsoleTestRunner(ServerToClientTestCase.class).run();
 	}
 	
 	static final class AutoReplyRecipient implements MessageRecipient {

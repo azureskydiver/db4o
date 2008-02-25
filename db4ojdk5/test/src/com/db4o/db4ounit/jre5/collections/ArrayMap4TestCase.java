@@ -8,14 +8,14 @@ import com.db4o.internal.*;
 
 import db4ounit.Assert;
 import db4ounit.TestLifeCycle;
-import db4ounit.TestRunner;
+import db4ounit.ConsoleTestRunner;
 
 public class ArrayMap4TestCase implements TestLifeCycle {
 
     private ArrayMap4<String, Integer> map;
 
     public static void main(String[] args) {
-        new TestRunner(ArrayMap4TestCase.class).run();
+        new ConsoleTestRunner(ArrayMap4TestCase.class).run();
     }
 
     public void setUp() throws Exception {

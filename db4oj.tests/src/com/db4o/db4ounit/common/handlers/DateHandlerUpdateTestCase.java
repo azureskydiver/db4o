@@ -37,7 +37,7 @@ public class DateHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     };
 
     public static void main(String[] args) {
-        new TestRunner(DateHandlerUpdateTestCase.class).run();
+        new ConsoleTestRunner(DateHandlerUpdateTestCase.class).run();
     }
 
     protected void assertArrays(Object obj) {

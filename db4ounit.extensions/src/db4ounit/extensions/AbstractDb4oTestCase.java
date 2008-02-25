@@ -106,10 +106,10 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 	
 	private int runAll(final boolean independentConfig) {
-		return new TestRunner(Iterators.concat(new Iterator4[] {
-				soloSuite(independentConfig).build(),
-				clientServerSuite(independentConfig).build(),
-				embeddedClientServerSuite(independentConfig).build(),
+		return new ConsoleTestRunner(Iterators.concat(new Iterator4[] {
+				soloSuite(independentConfig).iterator(),
+				clientServerSuite(independentConfig).iterator(),
+				embeddedClientServerSuite(independentConfig).iterator(),
 		})).run();
 	}
 	
@@ -118,9 +118,9 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 
 	private int runSoloAndClientServer(final boolean independentConfig) {
-		return new TestRunner(Iterators.concat(new Iterator4[] {
-				soloSuite(independentConfig).build(),
-				clientServerSuite(independentConfig).build(),				
+		return new ConsoleTestRunner(Iterators.concat(new Iterator4[] {
+				soloSuite(independentConfig).iterator(),
+				clientServerSuite(independentConfig).iterator(),				
 		})).run();
 	}
 
@@ -129,7 +129,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 
 	public int runSolo(boolean independentConfig) {
-		return new TestRunner(
+		return new ConsoleTestRunner(
 					soloSuite(independentConfig)).run();
 	}	
 
@@ -154,26 +154,26 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 	
     protected int runEmbeddedClientServer(boolean independentConfig) {
-		return new TestRunner(embeddedClientServerSuite(independentConfig)).run();
+		return new ConsoleTestRunner(embeddedClientServerSuite(independentConfig)).run();
 	}
 
 	public int runClientServer(boolean independentConfig) {
-        return new TestRunner(
+        return new ConsoleTestRunner(
                     clientServerSuite(independentConfig)).run();
     }
 
 	private int runConcurrency(boolean independentConfig) {
-    	return new TestRunner(concurrenyClientServerSuite(independentConfig, false, "CONC")).run();
+    	return new ConsoleTestRunner(concurrenyClientServerSuite(independentConfig, false, "CONC")).run();
 	}
 	
 	private int runEmbeddedConcurrency(boolean independentConfig) {
-    	return new TestRunner(concurrenyClientServerSuite(independentConfig, true, "CONC EMBEDDED")).run();
+    	return new ConsoleTestRunner(concurrenyClientServerSuite(independentConfig, true, "CONC EMBEDDED")).run();
 	}
 	
 	private int runConcurrencyAll(final boolean independentConfig) {
-		return new TestRunner(Iterators.concat(new Iterator4[] {
-				concurrenyClientServerSuite(independentConfig, false, "CONC").build(),
-				concurrenyClientServerSuite(independentConfig, true, "CONC EMBEDDED").build(),
+		return new ConsoleTestRunner(Iterators.concat(new Iterator4[] {
+				concurrenyClientServerSuite(independentConfig, false, "CONC").iterator(),
+				concurrenyClientServerSuite(independentConfig, true, "CONC EMBEDDED").iterator(),
 		})).run();
 	}
 	

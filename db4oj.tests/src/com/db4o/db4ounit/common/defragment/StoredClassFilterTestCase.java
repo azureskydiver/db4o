@@ -24,7 +24,7 @@ public class StoredClassFilterTestCase implements TestCase {
 	}
 	
 	public static void main(String[] args) {
-		new TestRunner(StoredClassFilterTestCase.class).run();
+		new ConsoleTestRunner(StoredClassFilterTestCase.class).run();
 	}
 	
 	private static String buildTempPath(String fname) {
