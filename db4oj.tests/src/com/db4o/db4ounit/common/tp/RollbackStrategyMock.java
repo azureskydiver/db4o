@@ -5,7 +5,7 @@ package com.db4o.db4ounit.common.tp;
 import com.db4o.*;
 import com.db4o.ta.*;
 
-import db4ounit.extensions.mocking.*;
+import db4ounit.mocking.*;
 
 public class RollbackStrategyMock implements RollbackStrategy {
 	

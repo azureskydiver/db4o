@@ -3,7 +3,7 @@ package com.db4o.db4ounit.common.activation;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 
-import db4ounit.extensions.mocking.*;
+import db4ounit.mocking.*;
 
 /**
  * An ActivationDepthProvider that records ActivationDepthProvider calls and

@@ -96,7 +96,7 @@ public class Db4oMigrationSuiteBuilder extends ReflectionTestSuiteBuilder {
 		}
 	}
 	
-	private static final class Db4oMigrationTest extends TestAdapter {
+	private static final class Db4oMigrationTest implements Test {
 
 		private final FormatMigrationTestCaseBase _test;
 		private final Db4oLibrary _library;
@@ -112,9 +112,15 @@ public class Db4oMigrationSuiteBuilder extends ReflectionTestSuiteBuilder {
 			return "[" + _version + "] " + _test.getClass().getName();
 		}
 
-		protected void runTest() throws Exception {
-			createDatabase();
-			test();
+		public void run() {
+			try {
+				createDatabase();
+				test();
+			} catch (TestException e) {
+				throw e;
+			} catch (Exception e) {
+				throw new TestException(e);
+			}
 		}
 
 		private void test() throws IOException {

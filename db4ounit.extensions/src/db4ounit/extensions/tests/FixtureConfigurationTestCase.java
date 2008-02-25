@@ -7,7 +7,7 @@ import com.db4o.config.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
-import db4ounit.extensions.mocking.*;
+import db4ounit.mocking.*;
 
 public class FixtureConfigurationTestCase implements TestCase {
 
@@ -59,12 +59,11 @@ public class FixtureConfigurationTestCase implements TestCase {
 			fixture.getLabel().endsWith(" - " + configuration.getLabel()),
 			"FixtureConfiguration label must be part of Fixture label.");
 		
-		ConsoleTestRunner.runAll(
-			new TestResult(),
-			new Db4oTestSuiteBuilder(fixture, new Class[] {
-				TestCase1.class,
-				TestCase2.class,
-			}).iterator());
+		new TestRunner(
+				new Db4oTestSuiteBuilder(fixture, new Class[] {
+					TestCase1.class,
+					TestCase2.class,
+				})).run(new TestResult());
 		
 		configuration.verify(new MethodCall[] {
 			new MethodCall("configure", TestCase1.class, MethodCall.IGNORED_ARGUMENT),

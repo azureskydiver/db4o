@@ -7,7 +7,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 
 import db4ounit.extensions.*;
-import db4ounit.extensions.mocking.*;
+import db4ounit.mocking.*;
 
 /**
  * Ensures the container uses the provided ActivationDepthProvider instance

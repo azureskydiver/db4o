@@ -6,6 +6,6 @@ import com.db4o.foundation.*;
 
 public interface FixtureProvider extends Iterable4 {
 	
-	public ContextVariable variable();
+	ContextVariable variable();
 	
 }

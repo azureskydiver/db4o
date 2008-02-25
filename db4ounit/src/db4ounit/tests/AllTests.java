@@ -1,21 +1,21 @@
 package db4ounit.tests;
 
-import com.db4o.foundation.*;
+import db4ounit.*;
 
-import db4ounit.ReflectionTestSuiteBuilder;
-import db4ounit.ConsoleTestRunner;
-import db4ounit.TestSuiteBuilder;
-
-public class AllTests implements TestSuiteBuilder {
+public class AllTests extends ReflectionTestSuite {
 	
-	public Iterator4 iterator() {
-		return new ReflectionTestSuiteBuilder(new Class[] {
-			FrameworkTestCase.class,
+	protected Class[] testCases() {
+		return new Class[] {
 			AssertTestCase.class,
-			TestLifeCycleTestCase.class,
+			CompositeTestListenerTestCase.class,
+			FrameworkTestCase.class,
 			ReflectionTestSuiteBuilderTestCase.class,
 			ReinstantiatePerMethodTest.class,
-		}).iterator();
+			TestLifeCycleTestCase.class,
+			TestRunnerTestCase.class,
+			
+			db4ounit.tests.fixtures.AllTests.class,
+		};
 	}
 		
 	public static void main(String[] args) {

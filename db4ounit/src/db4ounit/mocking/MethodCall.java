@@ -1,4 +1,4 @@
-package db4ounit.extensions.mocking;
+package db4ounit.mocking;
 
 import com.db4o.foundation.*;
 
@@ -18,6 +18,10 @@ public class MethodCall {
 	
 	public final String methodName;
 	public final Object[] args;
+	
+	public MethodCall(String methodName) {
+		this(methodName, new Object[0]);
+	}
 	
 	public MethodCall(String methodName, Object[] args) {
 		this.methodName = methodName;

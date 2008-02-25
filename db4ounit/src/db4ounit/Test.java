@@ -1,8 +1,6 @@
 package db4ounit;
 
-public interface Test {
+public interface Test extends Runnable {
 	
 	String getLabel();
-	
-	void run(TestResult result);
 }

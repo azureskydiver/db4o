@@ -63,4 +63,8 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 		if (null == _fixtureConfiguration) return;
 		_fixtureConfiguration.configure(testCaseClass, config);
 	}
+	
+	public String toString() {
+		return getLabel();
+	}
 }

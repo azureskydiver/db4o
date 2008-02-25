@@ -19,25 +19,18 @@ import db4ounit.extensions.fixtures.*;
  * @sharpen.partial
  */
 public class AbstractDb4oTestCase implements Db4oTestCase {
-    
-	private transient Db4oFixture _fixture;
 	
-	private static final int DEFAULT_CONCURRENCY_THREAD_COUNT = 10;
+	public static final ContextVariable FIXTURE_VARIABLE = new ContextVariable();
+    
+	private static final int DEFAULT_CONCURRENCY_THREAD_COUNT = 10;	
 	
 	private transient int _threadCount = DEFAULT_CONCURRENCY_THREAD_COUNT;
 	
 	/* (non-Javadoc)
-	 * @see db4ounit.extensions.Db4oTestCase#fixture(db4ounit.extensions.Db4oFixture)
-	 */
-	public void fixture(Db4oFixture fixture) {
-		_fixture = fixture;
-	}
-
-	/* (non-Javadoc)
 	 * @see db4ounit.extensions.Db4oTestCase#fixture()
 	 */
 	public Db4oFixture fixture() {
-		return _fixture;
+		return (Db4oFixture) FIXTURE_VARIABLE.value();
 	}
 	
 	public boolean isClientServer() {
@@ -56,10 +49,11 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
     
     protected void reopen() throws Exception{
-    	_fixture.reopen(getClass());
+    	fixture().reopen(getClass());
     }
 	
 	public final void setUp() throws Exception {
+		final Db4oFixture _fixture = fixture();
         _fixture.clean();
 		configure(_fixture.config());
 		_fixture.open(getClass());
@@ -75,8 +69,9 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		try {
 			db4oTearDownBeforeClean();
 		} finally {
-			_fixture.close();
-	        _fixture.clean();
+			final Db4oFixture fixture = fixture();
+			fixture.close();
+	        fixture.clean();
 		}
 		db4oTearDownAfterClean();
 	}

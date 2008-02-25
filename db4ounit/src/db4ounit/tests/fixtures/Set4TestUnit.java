@@ -1,4 +1,4 @@
-package db4ounit.fixtures.tests;
+package db4ounit.tests.fixtures;
 
 import db4ounit.*;
 import db4ounit.fixtures.*;

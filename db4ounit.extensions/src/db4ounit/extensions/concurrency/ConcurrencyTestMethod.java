@@ -16,7 +16,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 	private Exception[] failures;
 
 	public ConcurrencyTestMethod(Object instance, Method method) {
-		super(instance, method, Db4oFixtureLabelProvider.DEFAULT);
+		super(instance, method);
 	}
 
 	/*

@@ -4,10 +4,11 @@ package db4ounit.extensions.tests;
 
 import com.db4o.config.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 import db4ounit.extensions.*;
 
 public class SimpleDb4oTestCase extends AbstractDb4oTestCase {
+	
 	public static class Data {}
 	
 	private boolean[] _everythingCalled=new boolean[3];

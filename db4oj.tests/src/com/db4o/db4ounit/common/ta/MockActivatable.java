@@ -4,7 +4,7 @@ package com.db4o.db4ounit.common.ta;
 
 import com.db4o.activation.*;
 
-import db4ounit.extensions.mocking.*;
+import db4ounit.mocking.*;
 
 public class MockActivatable implements com.db4o.ta.Activatable {
 	

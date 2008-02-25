@@ -6,7 +6,6 @@ import com.db4o.foundation.*;
 
 import db4ounit.*;
 
-
 final class FixtureDecorator implements TestDecorator {
 	private final Object _fixture;
 	private final ContextVariable _variable;
