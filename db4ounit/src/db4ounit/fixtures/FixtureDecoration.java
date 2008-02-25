@@ -1,4 +1,4 @@
-package db4ounit.fixtures.dynamic;
+package db4ounit.fixtures;
 
 import com.db4o.foundation.*;
 

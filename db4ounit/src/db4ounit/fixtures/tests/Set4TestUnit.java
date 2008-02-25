@@ -1,7 +1,7 @@
 package db4ounit.fixtures.tests;
 
 import db4ounit.*;
-import db4ounit.fixtures.dynamic.*;
+import db4ounit.fixtures.*;
 
 public class Set4TestUnit implements TestLifeCycle {
 	
