@@ -9,13 +9,13 @@ public class FrameworkTestCase implements TestCase {
 	
 	public void testRunsGreen() {
 		TestResult result = new TestResult();
-		new RunsGreen().run(result);
+		new TestRunner(Iterators.cons(new RunsGreen())).run(result);
 		Assert.isTrue(result.failures().size() == 0, "not green");
 	}
 	
 	public void testRunsRed() {
 		TestResult result = new TestResult();
-		new RunsRed(EXCEPTION).run(result);
+		new TestRunner(Iterators.cons(new RunsRed(EXCEPTION))).run(result);
 		Assert.isTrue(result.failures().size() == 1, "not red");
 	}
 	
@@ -29,17 +29,14 @@ public class FrameworkTestCase implements TestCase {
 
 	public static void runTestAndExpect(final Iterable4 tests, int expFailures, boolean checkException) {
 		final TestResult result = new TestResult();
-		final Iterator4 iterator = tests.iterator();
-		while (iterator.moveNext()) {
-			((Test)iterator.current()).run(result);
-		}
+		new TestRunner(tests).run(result);
 		if (expFailures != result.failures().size()) {
 			Assert.fail(result.failures().toString());
 		}
 		if (checkException) {
 			for(Iterator4 iter=result.failures().iterator(); iter.moveNext();) {
 				TestFailure failure = (TestFailure) iter.current();
-				Assert.isTrue(EXCEPTION.equals(failure.getFailure()));
+				Assert.areEqual(EXCEPTION, failure.getFailure());
 			}
 		}
 	}

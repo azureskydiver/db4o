@@ -5,29 +5,16 @@ import java.lang.reflect.*;
 /**
  * Reflection based db4ounit.Test implementation.
  */
-public class TestMethod extends TestAdapter {
-	
-	public static LabelProvider DEFAULT_LABEL_PROVIDER = new LabelProvider() {
-		public String getLabel(TestMethod method) {
-			return method.getSubject().getClass().getName() + "." + method.getMethod().getName();
-		}
-	};
+public class TestMethod implements Test {
 	
 	private final Object _subject;
 	private final Method _method;
-	private final LabelProvider _labelProvider;
 	
 	public TestMethod(Object instance, Method method) {
-		this(instance, method, DEFAULT_LABEL_PROVIDER);
-	}
-
-	public TestMethod(Object instance, Method method, LabelProvider labelProvider) {
 		if (null == instance) throw new IllegalArgumentException("instance");
 		if (null == method) throw new IllegalArgumentException("method");	
-		if (null == labelProvider) throw new IllegalArgumentException("labelProvider");
 		_subject = instance;
 		_method = method;
-		_labelProvider = labelProvider;
 	}
 	
 	public Object getSubject() {
@@ -39,15 +26,26 @@ public class TestMethod extends TestAdapter {
 	}
 
 	public String getLabel() {
-		return _labelProvider.getLabel(this);
+		return _subject.getClass().getName() + "." + _method.getName();
 	}
 	
 	public String toString() {
 		return "TestMethod(" + _method + ")";
 	}
 
-	protected void runTest() throws Exception {
-		invoke();
+	public void run() {
+		try {
+			setUp();
+			try {
+				invoke();
+			} catch (InvocationTargetException x) {
+				throw new TestException(x.getTargetException());
+			} catch (Exception x) {
+				throw new TestException(x);
+			}
+		} finally {
+			tearDown();
+		}
 	}
 
 	protected void invoke() throws Exception {

@@ -7,9 +7,10 @@ package db4ounit.extensions;
 
 import java.lang.reflect.Method;
 
-import com.db4o.foundation.ArgumentNullException;
+import com.db4o.foundation.*;
 
 import db4ounit.*;
+import db4ounit.fixtures.*;
 
 public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 		
@@ -33,18 +34,23 @@ public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
     	return _fixture.accept(clazz);
     }
     
-	protected Object newInstance(Class clazz) {
-		Object instance = super.newInstance(clazz);
-		if (instance instanceof AbstractDb4oTestCase) {
-			((AbstractDb4oTestCase)instance).fixture(_fixture);
+    protected Iterator4 fromClass(final Class clazz) {
+    	return (Iterator4) AbstractDb4oTestCase.FIXTURE_VARIABLE.with(_fixture, new SafeClosure4() {
+    		public Object run() {
+    			return baseFromClass(clazz);
+    		}
+    	});
+    }
+    
+    protected Test fromMethod(Class clazz, Method method) {
+    	final Test test = super.fromMethod(clazz, method);
+		if (AbstractDb4oTestCase.class.isAssignableFrom(clazz)) {
+			return new FixtureDecoration(test, AbstractDb4oTestCase.FIXTURE_VARIABLE, _fixture); 
 		}
-		return instance;
+		return test;
 	}
-	
-	protected Test createTest(Object instance, Method method) {
-		if (instance instanceof AbstractDb4oTestCase) {
-			return new TestMethod(instance, method, Db4oFixtureLabelProvider.DEFAULT); 
-		}
-		return super.createTest(instance, method);
+
+	private Iterator4 baseFromClass(final Class clazz) {
+		return super.fromClass(clazz);
 	}
 }

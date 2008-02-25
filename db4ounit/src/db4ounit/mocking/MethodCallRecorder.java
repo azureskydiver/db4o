@@ -1,4 +1,4 @@
-package db4ounit.extensions.mocking;
+package db4ounit.mocking;
 
 import com.db4o.foundation.*;
 

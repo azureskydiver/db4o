@@ -3,7 +3,7 @@
 package db4ounit;
 
 
-public class DeferredTest implements Test {
+public class DeferredTest implements TestDecoration {
 	
 	private final TestFactory _factory;
 	private Test _test;
@@ -16,8 +16,8 @@ public class DeferredTest implements Test {
 		return test().getLabel();
 	}
 
-	public void run(TestResult result) {
-		test().run(result);
+	public void run() {
+		test().run();
 	}
 	
 	public Test test() {

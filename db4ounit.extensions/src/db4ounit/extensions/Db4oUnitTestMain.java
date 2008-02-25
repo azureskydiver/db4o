@@ -16,14 +16,4 @@ public class Db4oUnitTestMain extends UnitTestMain {
 	protected TestSuiteBuilder builder(Class[] clazzes) {
 		return new Db4oTestSuiteBuilder(_fixture,clazzes);
 	}
-
-	protected TestCase createTestInstance(String className)
-			throws ClassNotFoundException, InstantiationException,
-			IllegalAccessException {
-		TestCase testCase=super.createTestInstance(className);
-		if(testCase instanceof AbstractDb4oTestCase) {
-			((AbstractDb4oTestCase)testCase).fixture(_fixture);
-		}
-		return testCase;
-	}
 }

@@ -7,7 +7,14 @@ import com.db4o.foundation.*;
 public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	
 	public static Object getTestSubject(Test test) {
-		return ((TestMethod)((DeferredTest)test).test()).getSubject();
+		return ((TestMethod)undecorate(test)).getSubject();
+	}
+
+	private static Test undecorate(Test test) {
+		while (test instanceof TestDecoration) {
+			test = ((TestDecoration)test).test();
+		}
+		return test;
 	}
 	
 	private Class[] _classes;
@@ -46,7 +53,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 			TestPlatform.emitWarning("DISABLED: " + clazz.getName());
 			return Iterators.EMPTY_ITERATOR;
 		}
-		if(TestSuiteBuilder.class.isAssignableFrom(clazz)) {
+		if (TestSuiteBuilder.class.isAssignableFrom(clazz)) {
 			return ((TestSuiteBuilder)newInstance(clazz)).iterator();
 		}
 		if (Test.class.isAssignableFrom(clazz)) {
@@ -113,7 +120,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		return new TestMethod(instance, method);
 	}
 
-	private final Test fromMethod(final Class clazz, final Method method) {
+	protected Test fromMethod(final Class clazz, final Method method) {
 		return new DeferredTest(new TestFactory() {
 			public Test newInstance() {
 				return createTest(ReflectionTestSuiteBuilder.this.newInstance(clazz), method);

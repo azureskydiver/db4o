@@ -5,7 +5,7 @@ import java.io.Writer;
 
 import db4ounit.util.StopWatch;
 
-public class TestResult extends Printable {
+public class TestResult extends Printable implements TestListener {
 
 	private TestFailureCollection _failures = new TestFailureCollection();
 	
@@ -13,38 +13,34 @@ public class TestResult extends Printable {
 	
 	private final StopWatch _watch = new StopWatch();
 	
-	private final Writer _writer;
-	
-	public TestResult(Writer writer) {
-		_writer = writer;
-	}
-	
 	public TestResult() {
-		this(TestPlatform.getNullWriter());
 	}
 
 	public void testStarted(Test test) {		
 		++_testCount;
-		print(test.getLabel());
 	}	
 	
 	public void testFailed(Test test, Throwable failure) {
-		printFailure(failure);
 		_failures.add(new TestFailure(test, failure));
 	}
 	
-	private void printFailure(Throwable failure) {
-		if (failure == null) {
-			print("\t!");
-		} else {
-			print("\t! " + failure);
-		}
+	/**
+	 * @sharpen.property
+	 */
+	public int testCount() {
+		return _testCount;
 	}
 
+	/**
+	 * @sharpen.property
+	 */
 	public boolean green() {
 		return _failures.size() == 0;
 	}
 
+	/**
+	 * @sharpen.property
+	 */
 	public TestFailureCollection failures() {
 		return _failures;
 	}
@@ -62,24 +58,11 @@ public class TestResult extends Printable {
 		return _watch.toString();
 	}
 
-	public int assertions() {
-		return 0;
-	}
-
 	public void runStarted() {
 		_watch.start();
 	}
 
 	public void runFinished() {
 		_watch.stop();
-	}
-	
-	private void print(String message) {
-		try {
-			_writer.write(message + TestPlatform.NEW_LINE);
-			_writer.flush();
-		} catch (IOException x) {
-			TestPlatform.printStackTrace(_writer, x);
-		}
 	}
 }

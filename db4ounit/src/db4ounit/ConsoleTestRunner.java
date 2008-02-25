@@ -33,24 +33,13 @@ public class ConsoleTestRunner {
 		return run(TestPlatform.getStdErr());
 	}
 
-	public int run(Writer writer) {
-		Iterator4 suite = buildTestSuite();
-		TestResult result = new TestResult(writer);
-		result.runStarted();
-		runAll(result, suite);
-		result.runFinished();
+	public int run(Writer writer) {		
+		TestResult result = new TestResult();
+		
+		new TestRunner(_suite).run(new CompositeTestListener(new ConsoleListener(writer), result));
+		
 		reportResult(result, writer);
 		return result.failures().size();
-	}
-
-	public static void runAll(TestResult result, Iterator4 tests) {
-		while (tests.moveNext()) {
-			((Test)tests.current()).run(result);
-		}
-	}
-	
-	private Iterator4 buildTestSuite() {
-		return _suite.iterator();
 	}
 
 	private void report(Exception x) {

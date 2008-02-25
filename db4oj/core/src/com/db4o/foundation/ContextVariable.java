@@ -33,9 +33,6 @@ public class ContextVariable {
 		_expectedType = expectedType;
 	}
 	
-	/**
-	 * @sharpen.property
-	 */
 	public Object value() {
 		final Thread current = Thread.currentThread();
 		synchronized (this) {
@@ -49,15 +46,24 @@ public class ContextVariable {
 		return null;
 	}
 	
-	public void with(Object value, Runnable block) {
+	public Object with(Object value, SafeClosure4 block) {
 		validate(value);
 		
 		ThreadSlot slot = pushValue(value);
 		try {
-			block.run();
+			return block.run();
 		} finally {
 			popValue(slot);
 		}
+	}
+	
+	public void with(Object value, final Runnable block) {
+		with(value, new SafeClosure4() {
+			public Object run() {
+				block.run();
+				return null;
+			}
+		});
 	}
 
 	private void validate(Object value) {

@@ -6,7 +6,7 @@ import com.db4o.config.*;
 import com.db4o.ta.*;
 
 import db4ounit.extensions.*;
-import db4ounit.extensions.mocking.*;
+import db4ounit.mocking.*;
 
 public class RollbackStrategyTestCase extends AbstractDb4oTestCase {
 	

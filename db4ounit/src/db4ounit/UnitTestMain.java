@@ -15,9 +15,7 @@ public class UnitTestMain {
 
 	public final void runTests(String[] args) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException {
-		Iterator4 suite = build(args);
-		ConsoleTestRunner runner=new ConsoleTestRunner(suite, false);
-		runner.run();
+		new ConsoleTestRunner(build(args), false).run();
 	}
 	
 	protected TestSuiteBuilder builder(Class[] clazzes) {
@@ -78,7 +76,6 @@ public class UnitTestMain {
 	protected TestCase createTestInstance(String className) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException {
 		Class clazz=Class.forName(className);
-		TestCase test=(TestCase)clazz.newInstance();
-		return test;
+		return (TestCase)clazz.newInstance();
 	}
 }

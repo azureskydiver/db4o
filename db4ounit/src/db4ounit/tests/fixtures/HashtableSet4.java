@@ -1,4 +1,4 @@
-package db4ounit.fixtures.tests;
+package db4ounit.tests.fixtures;
 
 import java.util.*;
 
@@ -8,7 +8,6 @@ public class HashtableSet4 implements Set4 {
 
 	public void add(Object value) {
 		_table.put(value, value);
-		
 	}
 
 	public boolean contains(Object value) {

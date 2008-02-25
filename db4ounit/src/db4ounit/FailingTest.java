@@ -21,8 +21,8 @@ public class FailingTest implements Test {
 		return _error;
 	}
 
-	public void run(TestResult result) {
-		result.testFailed(this, _error);
+	public void run() {
+		throw new TestException(_error);
 	}
 
 }

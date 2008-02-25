@@ -3,8 +3,7 @@
  */
 package db4ounit.tests;
 
-import db4ounit.Test;
-import db4ounit.TestResult;
+import db4ounit.*;
 
 class RunsGreen implements Test {
 	
@@ -12,6 +11,6 @@ class RunsGreen implements Test {
 		return "RunsGreen";
 	}
 
-	public void run(TestResult result) {
+	public void run() {
 	}
 }
