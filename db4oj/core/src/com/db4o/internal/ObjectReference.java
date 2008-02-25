@@ -7,6 +7,7 @@ import com.db4o.activation.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
+import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.reflect.*;
@@ -166,7 +167,13 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		bitFalse(Const4.CONTINUE);
         
         MarshallingContext context = new MarshallingContext(trans, this, updateDepth, true);
-        MarshallerFamily.current()._object.marshall(getObject(), context);
+        
+        if(ObjectHandlerRefactoring.enabled){
+            classMetadata().write(context, getObject());
+        }else {
+            MarshallerFamily.current()._object.marshall(getObject(), context);
+        }
+        
         Pointer4 pointer = context.allocateSlot();
         ByteArrayBuffer buffer = context.ToWriteBuffer(pointer);
 

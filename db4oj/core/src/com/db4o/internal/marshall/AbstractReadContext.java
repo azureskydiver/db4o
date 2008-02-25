@@ -4,7 +4,6 @@ package com.db4o.internal.marshall;
 
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
-import com.db4o.marshall.*;
 
 
 /**
@@ -24,20 +23,46 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
     
     public Object read(TypeHandler4 handlerType) {
         TypeHandler4 handler = correctHandlerVersion(handlerType);
-        if(! isIndirected(handler)){
-            return handler.read(this);
+        if(! isIndirectedWithinSlot(handler)){
+            return readAtCurrentSeekPosition(handler);
         }
         int indirectedOffSet = readInt();
         readInt(); // length, not needed
         int offset = offset();
         seek(indirectedOffSet);
-        Object obj = handler.read(this);
+        Object obj = readAtCurrentSeekPosition(handler);
         seek(offset);
         return obj;
     }
+    
+    public Object readObject(TypeHandler4 handlerType) {
+        TypeHandler4 handler = correctHandlerVersion(handlerType);
+        if(! isIndirectedWithinSlot(handler)){
+            return readAtCurrentSeekPosition(handler);
+        }
+        int payLoadOffset = readInt();
+        readInt(); // length - never used
+        if(payLoadOffset == 0){
+            return null;
+        }
+        int savedOffset = offset();
+        seek(payLoadOffset);
+        Object obj = readAtCurrentSeekPosition(handler);
+        seek(savedOffset);
+        return obj;
+    }
+    
 
+    
+    
+    protected Object readAtCurrentSeekPosition(TypeHandler4 handler){
+        if(FieldMetadata.useDedicatedSlot(this, handler, null)){
+            return readObject();
+        }
+        return handler.read(this);
+    }
 
-    public Object readObject() {
+    public final Object readObject() {
         int id = readInt();
         if (id == 0) {
         	return null;
@@ -78,23 +103,6 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
         return false;
     }
     
-    public Object readObject(TypeHandler4 handlerType) {
-        TypeHandler4 handler = correctHandlerVersion(handlerType);
-        if(! isIndirected(handler)){
-            return handler.read(this);
-        }
-        int payLoadOffset = readInt();
-        readInt(); // length - never used
-        if(payLoadOffset == 0){
-            return null;
-        }
-        int savedOffset = offset();
-        seek(payLoadOffset);
-        Object obj = handler.read(this);
-        seek(savedOffset);
-        return obj;
-    }
-    
     public ActivationDepth activationDepth() {
         return _activationDepth;
     }
@@ -103,7 +111,7 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
         _activationDepth = depth;
     }
     
-    public boolean isIndirected(TypeHandler4 handler) {
+    public boolean isIndirectedWithinSlot(TypeHandler4 handler) {
         if(handlerVersion() == 0){
             return false;
         }

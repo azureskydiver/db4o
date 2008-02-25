@@ -5,7 +5,6 @@ package com.db4o.internal;
 import com.db4o.ext.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.fieldhandlers.*;
-import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -109,14 +108,6 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         context.seek(linkOffSet);
     }
 
-
-	private boolean isArray(TypeHandler4 handler){
-        if(handler instanceof ClassMetadata){
-            return ((ClassMetadata)handler).isArray();
-        }
-        return handler instanceof ArrayHandler;
-    }
-
     private TypeHandler4 readTypeHandler(InternalReadContext context, int payloadOffset) {
         context.seek(payloadOffset);
         TypeHandler4 typeHandler = container().typeHandlerForId(context.readInt());
@@ -148,9 +139,24 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
             return null;
         }
         seekSecondaryOffset(context, typeHandler);
-        Object obj = typeHandler.read(context);
+        Object obj = readObject(context, typeHandler);
         context.seek(savedOffSet);
         return obj;
+    }
+
+    private Object readObject(InternalReadContext context, TypeHandler4 typeHandler) {
+        if(FieldMetadata.useDedicatedSlot(context, typeHandler, null)){
+            return context.readObject();
+        } 
+        return typeHandler.read(context);
+    }
+    
+    public TypeHandler4 readTypeHandlerRestoreOffset(InternalReadContext context){
+        int savedOffset = context.offset();
+        int payloadOffset = context.readInt();
+        TypeHandler4 typeHandler = payloadOffset == 0 ? null : readTypeHandler(context, payloadOffset);  
+        context.seek(savedOffset);
+        return typeHandler;
     }
 
     public void write(WriteContext context, Object obj) {
@@ -176,11 +182,19 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         }else{
             marshallingContext.doNotIndirectWrites();
         }
-        typeHandler.write(context, obj);
+        writeObject(context, typeHandler, obj);
         marshallingContext.restoreState(state);
     }
 
-    private TypeHandler4 typeHandlerForObject(Object obj) {
+    private void writeObject(WriteContext context, TypeHandler4 typeHandler, Object obj) {
+        if(FieldMetadata.useDedicatedSlot(context, typeHandler, obj)){
+            context.writeObject(obj);
+        }else {
+            typeHandler.write(context, obj);
+        }
+    }
+
+    public TypeHandler4 typeHandlerForObject(Object obj) {
         ReflectClass claxx = reflector().forObject(obj);
         if(claxx.isArray()){
             return handlerRegistry().untypedArrayHandler(claxx);

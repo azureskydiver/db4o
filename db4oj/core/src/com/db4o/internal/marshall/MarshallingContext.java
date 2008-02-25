@@ -206,7 +206,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         _currentBuffer.writeLong(l);
         postWrite();
     }
-
     
 	private void preWrite() {
         _fieldWriteCount++;
@@ -264,35 +263,41 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     }
 
     public void writeObject(Object obj) {
-        
         int id = container().storeInternal(transaction(), obj, _updateDepth, true);
-        
         writeInt(id);
-        
         _currentMarshalledObject = obj;
         _currentIndexEntry = new Integer(id);
     }
     
-    public void writeObject(TypeHandler4 handler, Object obj){
-        
-        MarshallingContextState state = currentState();
-        
-        if(obj == null){
-            
-            // TODO: This should never happen. All handlers should take care
-            //       of nulls on a higher level, otherwise primitive wrappers
-            //       default to their primitive values.
-            
-            //       Consider to throw an IllegalArgumentException here to
-            //       prevent users from calling with null arguments.
-            
-            writeNullObject(handler);
-            
-        } else{
-            createIndirection(handler);
-            handler.write(this, obj);
+    public void writeObjectToDedicatedSlot(TypeHandler4 handler, Object obj) {
+        if( handler instanceof UntypedFieldHandler){
+            writeObject(handler, obj);
+        }else {
+            writeObject(obj);
         }
-        
+    }
+    
+    public void writeObject(TypeHandler4 handler, Object obj){
+        MarshallingContextState state = currentState();
+        if(FieldMetadata.useDedicatedSlot(this, handler, obj)){
+            writeObject(obj);
+        }else{
+            if(obj == null){
+                
+                // TODO: This should never happen. All handlers should take care
+                //       of nulls on a higher level, otherwise primitive wrappers
+                //       default to their primitive values.
+                
+                //       Consider to throw an IllegalArgumentException here to
+                //       prevent users from calling with null arguments.
+                
+                writeNullObject(handler);
+                
+            } else{
+                createIndirectionWithinSlot(handler);
+                handler.write(this, obj);
+            }
+        }
         restoreState(state);
     }
     
@@ -342,7 +347,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         return container().handlers();
     }
 
-    public void createIndirection(TypeHandler4 handler) {
+    public void createIndirectionWithinSlot(TypeHandler4 handler) {
         if(handlerRegistry().isVariableLength(handler)){
             createChildBuffer(false, true);
             doNotIndirectWrites();
@@ -363,6 +368,5 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         _currentBuffer = state._buffer;
         _fieldWriteCount = state._fieldWriteCount;
     }
-
 
 }

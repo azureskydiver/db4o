@@ -168,5 +168,9 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
     public TypeHandler4 typeHandler(){
         return _handler;
     }
+    
+    public TypeHandler4 delegateTypeHandler(){
+        return _handler;
+    }
 
 }

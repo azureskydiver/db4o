@@ -27,8 +27,6 @@ import com.db4o.reflect.generic.*;
  */
 public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass, FieldHandler , ReadsObjectIds{
     
-    // FIXME: remove this again. We solved more nicely by directly
-    //        passing out configured Field Handlers from HandlerRegistry. 
 	private TypeHandler4 _typeHandler;
     
 	public ClassMetadata i_ancestor;
@@ -93,11 +91,17 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
     public ClassMetadata(ObjectContainerBase container, ReflectClass claxx){
-    	_typeHandler = new FirstClassObjectHandler(this);
+    	_typeHandler =  createDefaultTypeHandler();
     	_container = container;
     	classReflector(claxx);
         _index = createIndexStrategy();
         _classIndexed = true;
+    }
+
+    private TypeHandler4 createDefaultTypeHandler() {
+        return ObjectHandlerRefactoring.enabled ? 
+    	    (TypeHandler4) new NewFirstClassObjectHandler(this)
+    	  : new FirstClassObjectHandler(this);
     }
     
     void activateFields(Transaction trans, Object obj, ActivationDepth depth) {
@@ -518,7 +522,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	    TypeHandler4 registeredTypeHandler4 =
 	        container().configImpl().typeHandlerForClass(claxx, HandlerRegistry.HANDLER_VERSION);
 	    _typeHandler = registeredTypeHandler4 != null ?
-	        registeredTypeHandler4 : new FirstClassObjectHandler(this);
+	        registeredTypeHandler4 : createDefaultTypeHandler();
     }
 
     public void deactivate(Transaction trans, Object obj, ActivationDepth depth) {
@@ -1152,7 +1156,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
     void instantiateFields(UnmarshallingContext context) {
-        MarshallerFamily.version(context.handlerVersion())._object.instantiateFields(context);
+        if(ObjectHandlerRefactoring.enabled){
+            _typeHandler.read(context);
+        }else {
+            MarshallerFamily.version(context.handlerVersion())._object.instantiateFields(context);
+        }
     }
 
     public boolean isArray() {
@@ -1888,8 +1896,25 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         _typeHandler.write(context, obj);
     }
     
+    /*
+     * FIXME: Nononono. Please fix this method by removing
+     *        it and handling in callers. Don't give out
+     *        the _typeHandler here. 
+     *        Note that this was done for the overridden
+     *        version in PrimitiveFieldHandler
+     */
     public TypeHandler4 typeHandler(){
         return this;
+    }
+    
+    /*
+     * TODO: Wrapping should eventually not be necessary.
+     *       Maybe moving all code to FirstClassObjectHandler  
+     *       can fix and ClassMetadata then only becomes what
+     *       it's name suggests.
+     */
+    public TypeHandler4 delegateTypeHandler(){
+        return _typeHandler;
     }
     
     public final static class PreparedComparisonImpl implements PreparedComparison {

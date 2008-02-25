@@ -3,9 +3,7 @@
 package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.*;
-import com.db4o.internal.*;
 import com.db4o.query.*;
-import com.db4o.reflect.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -29,20 +27,6 @@ public class ClassHandlerTestCase extends AbstractDb4oTestCase {
         }
     }
     
-    private ClassMetadata classHandler() {
-        ReflectClass claxx = reflector().forClass(Item.class);
-        return stream().container().produceClassMetadata(claxx);
-    }
-    
-    public void testReadWrite() {
-        MockWriteContext writeContext = new MockWriteContext(db());
-        Item expectedItem = new Item("parent", new Item("child", null));
-        classHandler().write(writeContext, expectedItem);
-        MockReadContext readContext = new MockReadContext(writeContext);
-        Item readItem = (Item) classHandler().read(readContext);
-        assertAreEqual(expectedItem, readItem);
-    }
-
     public void testStoreObject() throws Exception{
         Item expectedItem = new Item("parent", new Item("child", null));
         db().store(expectedItem);

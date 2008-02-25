@@ -15,6 +15,7 @@ import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
+import com.db4o.typehandlers.*;
 
 /**
  * @exclude
@@ -775,14 +776,36 @@ public class FieldMetadata implements StoredField {
         if (obj != null && cascadeOnUpdate(context.classConfiguration())) {
             context.updateDepth(adjustUpdateDepth(obj, updateDepth));
         }
-        context.createIndirection(_handler);
-        _handler.write(context, obj);
+        if(useDedicatedSlot(context, _handler, obj)){
+            context.writeObjectToDedicatedSlot(_handler, obj);
+        }else {
+            context.createIndirectionWithinSlot(_handler);
+            _handler.write(context, obj);
+        }
+        
         context.updateDepth(updateDepth);
+        
         if(hasIndex()){
             context.addIndexEntry(this, obj);
         }
     }
-
+    
+    public static boolean useDedicatedSlot(Context context, TypeHandler4 handler, Object obj) {
+        if (!ObjectHandlerRefactoring.enabled) {
+            return false;
+        }
+        if (handler instanceof EmbeddedTypeHandler) {
+            return false;
+        }
+        if (handler instanceof UntypedFieldHandler) {
+            return false;
+        }
+        if (handler instanceof ClassMetadata) {
+            return useDedicatedSlot(context, ((ClassMetadata) handler).delegateTypeHandler(), obj);
+        }
+        return true;
+    }
+    
     public boolean needsArrayAndPrimitiveInfo(){
         return true;
     }
