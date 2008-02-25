@@ -171,23 +171,6 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
     protected boolean peekPersisted() {
         return _addToIDTree == Const4.TRANSIENT;
     }
-    
-    public Object readObject(TypeHandler4 handlerType) {
-        TypeHandler4 handler = correctHandlerVersion(handlerType);
-        if(! isIndirected(handler)){
-            return handler.read(this);
-        }
-        int payLoadOffset = readInt();
-        readInt(); // length - never used
-        if(payLoadOffset == 0){
-            return null;
-        }
-        int savedOffset = offset();
-        seek(payLoadOffset);
-        Object obj = handler.read(this);
-        seek(savedOffset);
-        return obj;
-    }
 
     /*public void adjustInstantiationDepth() {
         Config4Class classConfig = classConfig();

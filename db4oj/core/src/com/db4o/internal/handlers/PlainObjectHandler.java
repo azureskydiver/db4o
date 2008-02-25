@@ -6,9 +6,10 @@ import com.db4o.foundation.PreparedComparison;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
+import com.db4o.typehandlers.*;
 
 
-public class PlainObjectHandler implements TypeHandler4, ReadsObjectIds{
+public class PlainObjectHandler implements TypeHandler4, ReadsObjectIds, EmbeddedTypeHandler{
 
     public void defragment(DefragmentContext context) {
         context.copySlotlessID();

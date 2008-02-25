@@ -52,6 +52,7 @@ public class AllTests extends Db4oTestSuite {
 			RollbackUpdateTestCase.class,
 			RollbackUpdateCascadeTestCase.class,
             SimplestPossibleTestCase.class,
+            SimplestPossibleParentChildTestCase.class,
             SystemInfoTestCase.class,
             UpdateDepthTestCase.class,
 		};

@@ -18,7 +18,7 @@ import db4ounit.extensions.fixtures.*;
 public class StringBufferTypeHandlerTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
     //TODO: quick for failure in "defrag-solo" mode
     
-	static final class StringBufferTypeHandler implements TypeHandler4, SecondClassTypeHandler, VariableLengthTypeHandler {
+	static final class StringBufferTypeHandler implements TypeHandler4, SecondClassTypeHandler, VariableLengthTypeHandler, EmbeddedTypeHandler{
 
 		public void defragment(DefragmentContext context) {
 			throw new NotImplementedException();
