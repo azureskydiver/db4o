@@ -15,11 +15,7 @@ public final class ByteHandler extends PrimitiveHandler {
 	
 	private static final Byte DEFAULT_BYTE_VALUE = new Byte((byte)0);
 	
-    public ByteHandler(ObjectContainerBase stream) {
-        super(stream);
-    }
-    
-    public Object coerce(ReflectClass claxx, Object obj) {
+    public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
     	return Coercion4.toSByte(obj);
     }
 

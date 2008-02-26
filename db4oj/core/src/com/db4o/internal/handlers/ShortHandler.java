@@ -8,7 +8,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.marshall.MarshallerFamily;
 import com.db4o.marshall.ReadContext;
 import com.db4o.marshall.WriteContext;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.*;
 
 public class ShortHandler extends PrimitiveHandler {
 	
@@ -16,11 +16,7 @@ public class ShortHandler extends PrimitiveHandler {
 	
 	private static final Short i_primitive = new Short((short)0);
 	
-    public ShortHandler(ObjectContainerBase stream) {
-        super(stream);
-    }
-    
-    public Object coerce(ReflectClass claxx, Object obj) {
+    public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
     	return Coercion4.toShort(obj);
     }
     public Object defaultValue(){

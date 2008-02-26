@@ -12,7 +12,7 @@ public class SharedIndexedFields {
     final UUIDFieldMetadata _uUID;
     
     public SharedIndexedFields(ObjectContainerBase stream){
-        _version = new VersionFieldMetadata(stream);
-        _uUID = new UUIDFieldMetadata(stream);
+        _version = new VersionFieldMetadata();
+        _uUID = new UUIDFieldMetadata();
     }
 }

@@ -14,9 +14,9 @@ public class MappedIDPairHandler implements Indexable4 {
 	private final IntHandler _origHandler;
 	private final IntHandler _mappedHandler;
 	
-	public MappedIDPairHandler(ObjectContainerBase stream) {
-		_origHandler=new IntHandler(stream);
-		_mappedHandler=new IntHandler(stream);
+	public MappedIDPairHandler() {
+		_origHandler=new IntHandler();
+		_mappedHandler=new IntHandler();
 	}
 
 	public void defragIndexEntry(DefragmentContextImpl context) {

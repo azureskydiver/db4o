@@ -103,9 +103,9 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return container().classMetadataForObject(obj);
     }
     
-    public ReflectClass classReflector(){
+    public ReflectClass classReflector(Reflector reflector){
         if(_handler instanceof BuiltinTypeHandler){
-            return ((BuiltinTypeHandler)_handler).classReflector();
+            return ((BuiltinTypeHandler)_handler).classReflector(reflector);
         }
         if(_handler instanceof ClassMetadata){
             return ((ClassMetadata)_handler).classReflector();
@@ -219,23 +219,23 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		return Const4.OBJECT_LENGTH + Const4.INT_LENGTH * 2;
 	}
     
-	public ReflectClass primitiveClassReflector() {
-		return Handlers4.primitiveClassReflector(_handler);
+	public ReflectClass primitiveClassReflector(Reflector reflector) {
+		return Handlers4.primitiveClassReflector(_handler, reflector);
 	}
 	
 	protected Object readCreate(Transaction trans, ReadBuffer buffer, IntByRef elements) {
 		ReflectClassByRef classByRef = new ReflectClassByRef();
 		elements.value = readElementsAndClass(trans, buffer, classByRef);
-		ReflectClass clazz = newInstanceReflectClass(classByRef);
+		ReflectClass clazz = newInstanceReflectClass(trans.reflector(), classByRef);
 		if(clazz == null){
 		    return null;
 		}
 		return arrayReflector().newInstance(clazz, elements.value);	
 	}
 	
-    protected ReflectClass newInstanceReflectClass(ReflectClassByRef byRef){
+    protected ReflectClass newInstanceReflectClass(Reflector reflector, ReflectClassByRef byRef){
         if(_usePrimitiveClassReflector){
-            return primitiveClassReflector(); 
+            return primitiveClassReflector(reflector); 
         }
         return byRef.value;
     }
@@ -277,7 +277,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             clazz.value = reflectClassFromElementsEntry(trans, elements);
             elements = buffer.readInt();
         } else {
-    		clazz.value = classReflector();
+    		clazz.value = classReflector(trans.reflector());
         }
         if(Debug.exceedsMaximumArrayEntries(elements, _usePrimitiveClassReflector)){
             return 0;
@@ -328,10 +328,10 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		    int classID = - elements;
 			ClassMetadata classMetadata = trans.container().classMetadataForId(classID);
 		    if (classMetadata != null) {
-		        return (primitive ?   Handlers4.primitiveClassReflector(classMetadata) : classMetadata.classReflector());
+		        return (primitive ?   Handlers4.primitiveClassReflector(classMetadata, trans.reflector()) : classMetadata.classReflector());
 		    }
 		}
-		return classReflector();
+		return classReflector(trans.reflector());
 	}
 
 	public static Iterator4 iterator(ReflectClass claxx, Object obj) {

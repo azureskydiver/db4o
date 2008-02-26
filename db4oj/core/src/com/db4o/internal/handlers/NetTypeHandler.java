@@ -12,10 +12,6 @@ import com.db4o.internal.*;
  */
 public abstract class NetTypeHandler extends PrimitiveHandler implements NetType{
     
-	public NetTypeHandler(ObjectContainerBase stream) {
-        super(stream);
-    }
-
 	private int i_linkLength;
 	
     public String dotNetClassName(){

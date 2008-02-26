@@ -18,8 +18,8 @@ import com.db4o.marshall.*;
  */
 public class UUIDFieldMetadata extends VirtualFieldMetadata {
     
-    UUIDFieldMetadata(ObjectContainerBase container) {
-        super(Handlers4.LONG_ID, new LongHandler(container));
+    UUIDFieldMetadata() {
+        super(Handlers4.LONG_ID, new LongHandler());
         setName(Const4.VIRTUAL_FIELD_PREFIX + "uuid");
     }
     

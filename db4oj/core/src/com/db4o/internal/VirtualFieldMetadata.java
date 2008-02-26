@@ -22,11 +22,11 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     
     private static final Object ANY_OBJECT = new Object();
     
-    private final ReflectClass _classReflector;
+    private ReflectClass _classReflector;
 
     VirtualFieldMetadata(int handlerID, BuiltinTypeHandler handler) {
         super(handlerID, handler);
-        _classReflector = handler.classReflector();
+        
     }
     
     public abstract void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer a_writer, Slot oldSlot) throws FieldIndexException;
@@ -43,7 +43,10 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         return false;
     }
     
-    public ReflectClass classReflector(){
+    public ReflectClass classReflector(Reflector reflector){
+        if (_classReflector == null) {
+            _classReflector = ((BuiltinTypeHandler)getHandler()).classReflector(reflector);
+        }
         return _classReflector;
     }
     

@@ -16,12 +16,8 @@ import com.db4o.reflect.*;
  */
 public abstract class DateHandlerBase extends LongHandler {
 	
-	public DateHandlerBase(ObjectContainerBase container) {
-        super(container);
-    }
-    
-    public Object coerce(ReflectClass claxx, Object obj) {
-        return Handlers4.handlerCanHold(this, claxx) ? obj : No4.INSTANCE;
+    public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
+        return Handlers4.handlerCanHold(this, reflector, claxx) ? obj : No4.INSTANCE;
     }
 
 	public abstract Object copyValue(Object from, Object to);	

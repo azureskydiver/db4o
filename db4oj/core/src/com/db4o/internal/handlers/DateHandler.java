@@ -4,8 +4,6 @@ package com.db4o.internal.handlers;
 
 import java.util.*;
 
-import com.db4o.internal.*;
-
 /**
  * @sharpen.ignore
  */
@@ -13,10 +11,6 @@ public class DateHandler extends DateHandlerBase {
 	
 	private static final Date PROTO = new Date(0);
 	
-	public DateHandler(ObjectContainerBase container) {
-        super(container);
-    }
-    
 	public Object defaultValue(){
 		return PROTO;
 	}

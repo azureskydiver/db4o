@@ -16,8 +16,8 @@ public class FieldIndexKeyHandler implements Indexable4{
     
     private final IntHandler _parentIdHandler;
     
-    public FieldIndexKeyHandler(ObjectContainerBase stream, Indexable4 delegate_) {
-        _parentIdHandler = new IDHandler(stream);
+    public FieldIndexKeyHandler(Indexable4 delegate_) {
+        _parentIdHandler = new IDHandler();
         _valueHandler = delegate_;
     }
 

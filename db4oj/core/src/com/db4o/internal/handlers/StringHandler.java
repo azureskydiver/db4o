@@ -29,8 +29,8 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
         this(((StringHandler)template).container());
     }
     
-    public ReflectClass classReflector(){
-    	return container()._handlers.ICLASS_STRING;
+    public ReflectClass classReflector(Reflector reflector){
+    	return reflector.forClass(String.class);
     }
     
     public ObjectContainerBase container(){

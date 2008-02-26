@@ -2,15 +2,12 @@
 
 package com.db4o.internal.handlers;
 
-import com.db4o.CorruptionException;
+import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.ByteArrayBuffer;
-import com.db4o.internal.ObjectContainerBase;
-import com.db4o.internal.StatefulBuffer;
-import com.db4o.internal.marshall.MarshallerFamily;
-import com.db4o.marshall.ReadContext;
-import com.db4o.marshall.WriteContext;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.internal.*;
+import com.db4o.internal.marshall.*;
+import com.db4o.marshall.*;
+import com.db4o.reflect.*;
 
 
 
@@ -18,11 +15,7 @@ public class FloatHandler extends IntHandler {
     
     private static final Float i_primitive = new Float(0);
     
-    public FloatHandler(ObjectContainerBase stream) {
-        super(stream);
-    }
-    
-    public Object coerce(ReflectClass claxx, Object obj) {
+    public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
     	return Coercion4.toFloat(obj);
     }
 

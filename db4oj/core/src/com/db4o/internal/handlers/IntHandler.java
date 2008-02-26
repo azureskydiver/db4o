@@ -2,14 +2,12 @@
 
 package com.db4o.internal.handlers;
 
-import com.db4o.CorruptionException;
-import com.db4o.Deploy;
+import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.marshall.MarshallerFamily;
-import com.db4o.marshall.ReadContext;
-import com.db4o.marshall.WriteContext;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.internal.marshall.*;
+import com.db4o.marshall.*;
+import com.db4o.reflect.*;
 
 /**
  * @exclude
@@ -19,11 +17,7 @@ public class IntHandler extends PrimitiveHandler {
 
 	private static final Integer i_primitive = new Integer(0);
     
-    public IntHandler(ObjectContainerBase container) {
-        super(container);
-    }
-    
-    public Object coerce(ReflectClass claxx, Object obj) {
+    public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
     	return Coercion4.toInt(obj);
     }
 

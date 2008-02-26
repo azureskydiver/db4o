@@ -7,7 +7,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.MarshallerFamily;
 import com.db4o.marshall.*;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.*;
 
 
 
@@ -18,11 +18,7 @@ public class LongHandler extends PrimitiveHandler {
 
     private static final Long i_primitive = new Long(0);
 
-    public LongHandler(ObjectContainerBase stream) {
-        super(stream);
-    }
-    
-    public Object coerce(ReflectClass claxx, Object obj) {
+    public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
     	return Coercion4.toLong(obj);
     }
     

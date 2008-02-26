@@ -82,7 +82,7 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
     protected Object readCreate(Transaction trans, ReadBuffer buffer, IntArrayByRef dimensions) {
 		ReflectClassByRef classByRef = new ReflectClassByRef();
 		dimensions.value = readDimensions(trans, buffer, classByRef);
-		ReflectClass clazz = newInstanceReflectClass(classByRef);
+		ReflectClass clazz = newInstanceReflectClass(trans.reflector(), classByRef);
 		if(clazz == null){
 		    return null;
 		}

@@ -38,16 +38,16 @@ public class Handlers4 {
     public static final int ANY_ARRAY_N_ID = 13;
 
     
-    public static boolean handlerCanHold(TypeHandler4 handler, ReflectClass claxx){
+    public static boolean handlerCanHold(TypeHandler4 handler, Reflector reflector, ReflectClass claxx){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler);
         if(handlesSimple(baseTypeHandler)){
         	if(!NullableArrayHandling.disabled()){
 	        	if(baseTypeHandler instanceof PrimitiveHandler){
-	        		return claxx.equals(((BuiltinTypeHandler)baseTypeHandler).classReflector())
-	        		|| claxx.equals(((PrimitiveHandler)baseTypeHandler).primitiveClassReflector());
+	        		return claxx.equals(((BuiltinTypeHandler)baseTypeHandler).classReflector(reflector))
+	        		|| claxx.equals(((PrimitiveHandler)baseTypeHandler).primitiveClassReflector(reflector));
 	        	}
         	}
-            return claxx.equals(((BuiltinTypeHandler)baseTypeHandler).classReflector());
+            return claxx.equals(((BuiltinTypeHandler)baseTypeHandler).classReflector(reflector));
         }
         
         if(baseTypeHandler instanceof UntypedFieldHandler){
@@ -73,10 +73,10 @@ public class Handlers4 {
         return baseTypeHandler(handler) instanceof ClassMetadata;
     }
     
-    public static ReflectClass primitiveClassReflector(TypeHandler4 handler){
+    public static ReflectClass primitiveClassReflector(TypeHandler4 handler, Reflector reflector){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler);
         if(baseTypeHandler instanceof PrimitiveHandler){
-            return ((PrimitiveHandler)baseTypeHandler).primitiveClassReflector();
+            return ((PrimitiveHandler)baseTypeHandler).primitiveClassReflector(reflector);
         }
         return null;
     }

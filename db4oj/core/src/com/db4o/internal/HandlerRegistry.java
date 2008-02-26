@@ -157,45 +157,45 @@ public final class HandlerRegistry {
     
     private void registerBuiltinHandlers(){
         
-        IntHandler intHandler = new IntHandler(container());
+        IntHandler intHandler = new IntHandler();
         registerBuiltinHandler(Handlers4.INT_ID, intHandler);
-        registerHandlerVersion(intHandler, 0, new IntHandler0(container()));
+        registerHandlerVersion(intHandler, 0, new IntHandler0());
         
-        LongHandler longHandler = new LongHandler(container());
+        LongHandler longHandler = new LongHandler();
         registerBuiltinHandler(Handlers4.LONG_ID, longHandler);
-        registerHandlerVersion(longHandler, 0, new LongHandler0(container()));
+        registerHandlerVersion(longHandler, 0, new LongHandler0());
         
-        FloatHandler floatHandler = new FloatHandler(container());
+        FloatHandler floatHandler = new FloatHandler();
         registerBuiltinHandler(Handlers4.FLOAT_ID, floatHandler);
-        registerHandlerVersion(floatHandler, 0, new FloatHandler0(container()));
+        registerHandlerVersion(floatHandler, 0, new FloatHandler0());
         
-        BooleanHandler booleanHandler = new BooleanHandler(container());
+        BooleanHandler booleanHandler = new BooleanHandler();
         registerBuiltinHandler(Handlers4.BOOLEAN_ID, booleanHandler);
         // TODO: Are we missing a boolean handler version?
         
-        DoubleHandler doubleHandler = new DoubleHandler(container());
+        DoubleHandler doubleHandler = new DoubleHandler();
         registerBuiltinHandler(Handlers4.DOUBLE_ID, doubleHandler);
-        registerHandlerVersion(doubleHandler, 0, new DoubleHandler0(container()));
+        registerHandlerVersion(doubleHandler, 0, new DoubleHandler0());
         
-        ByteHandler byteHandler = new ByteHandler(container());
+        ByteHandler byteHandler = new ByteHandler();
         registerBuiltinHandler(Handlers4.BYTE_ID, byteHandler);
         // TODO: Are we missing a byte handler version?
 
-        CharHandler charHandler = new CharHandler(container());
+        CharHandler charHandler = new CharHandler();
         registerBuiltinHandler(Handlers4.CHAR_ID, charHandler);
         // TODO: Are we missing a char handler version?
         
-        ShortHandler shortHandler = new ShortHandler(container());
+        ShortHandler shortHandler = new ShortHandler();
         registerBuiltinHandler(Handlers4.SHORT_ID, shortHandler);
-        registerHandlerVersion(shortHandler, 0, new ShortHandler0(container()));
+        registerHandlerVersion(shortHandler, 0, new ShortHandler0());
         
         _stringHandler = new StringHandler(container());
         registerBuiltinHandler(Handlers4.STRING_ID, _stringHandler);
         registerHandlerVersion(_stringHandler, 0, new StringHandler0(_stringHandler));
 
-        DateHandler dateHandler = new DateHandler(container());
+        DateHandler dateHandler = new DateHandler();
         registerBuiltinHandler(Handlers4.DATE_ID, dateHandler);
-        registerHandlerVersion(dateHandler, 0, new DateHandler0(container()));
+        registerHandlerVersion(dateHandler, 0, new DateHandler0());
         
         registerUntypedHandlers();
     }
@@ -209,7 +209,7 @@ public final class HandlerRegistry {
     }
     
     private void registerBuiltinHandler(int id, BuiltinTypeHandler handler) {
-        registerBuiltinHandler(id, handler, true, handler.classReflector().getName(), null);
+        registerBuiltinHandler(id, handler, true, handler.classReflector(_reflector).getName(), null);
     }
 
     private void registerBuiltinHandler(int id, BuiltinTypeHandler typeHandler, boolean registerPrimitiveClass, String primitiveName, GenericConverter converter) {
@@ -218,7 +218,7 @@ public final class HandlerRegistry {
             _reflector.registerPrimitiveClass(id, primitiveName, converter);
         }
         
-        ReflectClass classReflector = typeHandler.classReflector();
+        ReflectClass classReflector = typeHandler.classReflector(_reflector);
         
         PrimitiveFieldHandler classMetadata = new PrimitiveFieldHandler(container(), typeHandler, id, classReflector);
         
@@ -227,7 +227,7 @@ public final class HandlerRegistry {
         if (NullableArrayHandling.useJavaHandling()) {
             if(typeHandler instanceof PrimitiveHandler){
                 ReflectClass primitiveClassReflector = 
-                    ((PrimitiveHandler) typeHandler).primitiveClassReflector();
+                    ((PrimitiveHandler) typeHandler).primitiveClassReflector(_reflector);
                 if(primitiveClassReflector != null){
                     mapPrimitive(0, classMetadata, typeHandler, typeHandler, primitiveClassReflector);
                 }
@@ -373,7 +373,7 @@ public final class HandlerRegistry {
 	private Object nullValue(ReflectClass clazz) {
 		for (int k = 1; k <= PRIMITIVECOUNT; k++) {
 		    PrimitiveHandler handler = (PrimitiveHandler) typeHandlerForID(k); 
-			if (clazz.equals(handler.primitiveClassReflector())) {
+			if (clazz.equals(handler.primitiveClassReflector(_reflector))) {
 				return handler.primitiveNull();
 			}
 		}

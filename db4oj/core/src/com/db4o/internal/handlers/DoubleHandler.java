@@ -17,11 +17,7 @@ public class DoubleHandler extends LongHandler {
 	
     private static final Double DEFAULT_DOUBLE_VALUE = new Double(0);
     
-    public DoubleHandler(ObjectContainerBase stream) {
-        super(stream);
-    }
-    
-    public Object coerce(ReflectClass claxx, Object obj) {
+    public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
     	return Coercion4.toDouble(obj);
     }
 
