@@ -44,12 +44,10 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
     }
     
     public Object readAtCurrentSeekPosition(TypeHandler4 handler){
-        if(ObjectHandlerRefactoring.enabled){
-            if(handler instanceof ClassMetadata){
-                ClassMetadata classMetadata = (ClassMetadata) handler;
-                if(classMetadata.isValueType()){
-                    return classMetadata.readValueType(transaction(), readInt(), activationDepth().descend(classMetadata));
-                }
+        if(handler instanceof ClassMetadata){
+            ClassMetadata classMetadata = (ClassMetadata) handler;
+            if(classMetadata.isValueType()){
+                return classMetadata.readValueType(transaction(), readInt(), activationDepth().descend(classMetadata));
             }
         }
         if(FieldMetadata.useDedicatedSlot(this, handler, null)){

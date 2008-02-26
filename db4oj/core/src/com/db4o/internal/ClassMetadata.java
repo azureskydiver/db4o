@@ -99,9 +99,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     private TypeHandler4 createDefaultTypeHandler() {
-        return ObjectHandlerRefactoring.enabled ? 
-    	    (TypeHandler4) new NewFirstClassObjectHandler(this)
-    	  : new FirstClassObjectHandler(this);
+        return new NewFirstClassObjectHandler(this);
     }
     
     void activateFields(Transaction trans, Object obj, ActivationDepth depth) {
@@ -1158,12 +1156,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
     Object instantiateFields(UnmarshallingContext context) {
-        if(ObjectHandlerRefactoring.enabled){
-            return context.correctHandlerVersion(_typeHandler).read(context);
-        }
-        MarshallerFamily.version(context.handlerVersion())._object.instantiateFields(context);
-        return context.persistentObject();
-        
+        return context.correctHandlerVersion(_typeHandler).read(context);
     }
 
     public boolean isArray() {

@@ -146,13 +146,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     }
 
     private Object readObject(InternalReadContext context, TypeHandler4 typeHandler) {
-        if(ObjectHandlerRefactoring.enabled){
-            return context.readAtCurrentSeekPosition(typeHandler);
-        }
-        if(FieldMetadata.useDedicatedSlot(context, typeHandler, null)){
-            return context.readObject();
-        } 
-        return typeHandler.read(context);
+        return context.readAtCurrentSeekPosition(typeHandler);
     }
     
     public TypeHandler4 readTypeHandlerRestoreOffset(InternalReadContext context){
