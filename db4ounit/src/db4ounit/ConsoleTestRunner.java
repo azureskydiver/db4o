@@ -20,9 +20,13 @@ public class ConsoleTestRunner {
 	}
 
 	public ConsoleTestRunner(Iterable4 suite) {
+		this(suite, true);
+	}
+
+	public ConsoleTestRunner(Iterable4 suite, final boolean reportToFile) {
 		if (null == suite) throw new IllegalArgumentException("suite");
 		_suite = suite;
-		_reportToFile = true;
+		_reportToFile = reportToFile;
 	}
 	
 	public ConsoleTestRunner(Class clazz) {

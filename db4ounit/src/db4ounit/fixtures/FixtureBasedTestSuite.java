@@ -7,8 +7,6 @@ import com.db4o.foundation.*;
 import db4ounit.*;
 
 /**
- * TODO: Iterator framework cleanup (composition should be based on Iterable4)
- * 
  * TODO: experiment with ParallelTestRunner that uses a thread pool to run tests in parallel
  * 
  * TODO: FixtureProviders must accept the index of a specific fixture to run with (to make it easy to reproduce a failure)

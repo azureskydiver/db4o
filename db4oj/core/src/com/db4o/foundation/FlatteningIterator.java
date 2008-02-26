@@ -2,7 +2,6 @@
 
 package com.db4o.foundation;
 
-
 public class FlatteningIterator extends CompositeIterator4 {
 	
 	private static class IteratorStack {
@@ -38,12 +37,20 @@ public class FlatteningIterator extends CompositeIterator4 {
 		}
 		
 		final Object current = _currentIterator.current();
-		if (current instanceof Iterator4) {
+		if (current instanceof Iterator4
+			|| current instanceof Iterable4) {
 			push(_currentIterator);
-			_currentIterator = (Iterator4)current;
+			_currentIterator = nextIterator(current);
 			return moveNext();
 		}
 		return true;
+	}
+	
+	protected Iterator4 nextIterator(Object current) {
+		if (current instanceof Iterable4) {
+			return ((Iterable4)current).iterator();
+		}
+		return super.nextIterator(current);
 	}
 
 	private void push(Iterator4 currentIterator) {

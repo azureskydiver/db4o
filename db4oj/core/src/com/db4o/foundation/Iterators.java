@@ -52,6 +52,10 @@ public class Iterators {
 		return new CompositeIterator4(iterators);
 	}
 	
+	public static Iterable4 concat(Iterable4[] iterables) {
+		return concat(iterable(iterables));
+	}
+	
 	public static Iterable4 concat(final Iterable4 iterables) {
 		return new CompositeIterable4(iterables);
 	}
@@ -154,7 +158,25 @@ public class Iterators {
 		Collection4 elements = new Collection4(tests);
 		return elements.toArray(factory.newArray(elements.size()));
 	}
+	
+	/**
+	 * Yields a flat sequence of elements. Any {@link Iterable4} or {@link Iterator4}
+	 * found in the original sequence is recursively flattened.
+	 * 
+	 * @param iterable original sequence
+	 * @return
+	 */
+	public static Iterable4 flatten(final Iterable4 iterable) {
+		return new Iterable4() {
+			public Iterator4 iterator() {
+				return flatten(iterable.iterator());
+			}
+		};
+	}
 
+	/**
+	 * @see #flatten(Iterable4)
+	 */
 	public static Iterator4 flatten(Iterator4 iterator) {
 		return new FlatteningIterator(iterator);
 	}

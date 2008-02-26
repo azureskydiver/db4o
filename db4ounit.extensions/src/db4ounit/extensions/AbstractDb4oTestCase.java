@@ -101,10 +101,10 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 	
 	private int runAll(final boolean independentConfig) {
-		return new ConsoleTestRunner(Iterators.concat(new Iterator4[] {
-				soloSuite(independentConfig).iterator(),
-				clientServerSuite(independentConfig).iterator(),
-				embeddedClientServerSuite(independentConfig).iterator(),
+		return new ConsoleTestRunner(Iterators.concat(new Iterable4[] {
+				soloSuite(independentConfig),
+				clientServerSuite(independentConfig),
+				embeddedClientServerSuite(independentConfig),
 		})).run();
 	}
 	
@@ -113,9 +113,9 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 
 	private int runSoloAndClientServer(final boolean independentConfig) {
-		return new ConsoleTestRunner(Iterators.concat(new Iterator4[] {
-				soloSuite(independentConfig).iterator(),
-				clientServerSuite(independentConfig).iterator(),				
+		return new ConsoleTestRunner(Iterators.concat(new Iterable4[] {
+				soloSuite(independentConfig),
+				clientServerSuite(independentConfig),				
 		})).run();
 	}
 
@@ -166,9 +166,9 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 	
 	private int runConcurrencyAll(final boolean independentConfig) {
-		return new ConsoleTestRunner(Iterators.concat(new Iterator4[] {
-				concurrenyClientServerSuite(independentConfig, false, "CONC").iterator(),
-				concurrenyClientServerSuite(independentConfig, true, "CONC EMBEDDED").iterator(),
+		return new ConsoleTestRunner(Iterators.concat(new Iterable4[] {
+				concurrenyClientServerSuite(independentConfig, false, "CONC"),
+				concurrenyClientServerSuite(independentConfig, true, "CONC EMBEDDED"),
 		})).run();
 	}
 	

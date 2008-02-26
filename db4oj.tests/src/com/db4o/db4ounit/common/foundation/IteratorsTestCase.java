@@ -66,7 +66,7 @@ public class IteratorsTestCase implements TestCase {
 					"3",
 					"4"
 				}),
-				Iterators.EMPTY_ITERATOR,
+				Iterators.EMPTY_ITERABLE,
 				Iterators.EMPTY_ITERATOR,
 				"5"
 			}),
