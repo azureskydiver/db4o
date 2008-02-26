@@ -7,16 +7,12 @@ import com.db4o.foundation.*;
 import db4ounit.*;
 
 /**
- * TODO: FixtureProviders must accept the index of a specific fixture to run with (to make it easy to reproduce a failure)
- * 
  * TODO: Iterator framework cleanup (composition should be based on Iterable4)
  * 
  * TODO: experiment with ParallelTestRunner that uses a thread pool to run tests in parallel
  * 
- * TODO: single sharpen run during the build (so sharpen.property annotation are always available)
+ * TODO: FixtureProviders must accept the index of a specific fixture to run with (to make it easy to reproduce a failure)
  * 
- * TODO: ensure concurrency framework still working
- *
  */
 public abstract class FixtureBasedTestSuite implements TestSuiteBuilder {
 
