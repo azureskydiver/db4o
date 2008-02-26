@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.foundation.*;
+import com.db4o.marshall.*;
 
 
 /**
@@ -10,7 +11,7 @@ import com.db4o.foundation.*;
  */
 public interface Comparable4 {
 	
-	PreparedComparison prepareComparison(Object obj);
+	PreparedComparison prepareComparison(Context context, Object obj);
 	
 }
 

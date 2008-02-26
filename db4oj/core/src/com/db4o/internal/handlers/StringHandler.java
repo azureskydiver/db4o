@@ -107,14 +107,17 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
         }
     }
 
-    private ByteArrayBuffer val(Object obj) {
-    	return val(obj,container());
-    }
+    //private ByteArrayBuffer val(Object obj) {
+    //	return val(obj,container());
+    //}
 
-    public ByteArrayBuffer val(Object obj, ObjectContainerBase oc) {
+    ByteArrayBuffer val(Object obj, Context context) {
         if(obj instanceof ByteArrayBuffer) {
             return (ByteArrayBuffer)obj;
         }
+        
+        ObjectContainerBase oc = context.transaction().container();
+        
         if(obj instanceof String) {
             return writeToBuffer((InternalObjectContainer) oc, (String)obj);
         }
@@ -232,11 +235,11 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
     	context.incrementOffset(linkLength());
     }
     
-	public PreparedComparison prepareComparison(final Object obj) {
-	    final ByteArrayBuffer sourceBuffer = val(obj);
+	public PreparedComparison prepareComparison(final Context context, final Object obj) {
+	    final ByteArrayBuffer sourceBuffer = val(obj, context);
     	return new PreparedComparison() {
 			public int compareTo(Object target) {
-				ByteArrayBuffer targetBuffer = val(target);
+				ByteArrayBuffer targetBuffer = val(target, context);
 				
 				// FIXME: Fix the compare method to return the right result  
 				//        after it is no longer referenced elsewhere.

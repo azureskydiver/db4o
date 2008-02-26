@@ -5,6 +5,7 @@ package com.db4o.internal.btree;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.marshall.*;
 
 
 /**
@@ -60,9 +61,9 @@ public class FieldIndexKeyHandler implements Indexable4{
         _valueHandler.defragIndexEntry(context);
 	}
 
-	public PreparedComparison prepareComparison(Object fieldIndexKey) {
+	public PreparedComparison prepareComparison(Context context, Object fieldIndexKey) {
 		final FieldIndexKey source = (FieldIndexKey)fieldIndexKey;
-        final PreparedComparison preparedValueComparison = _valueHandler.prepareComparison(source.value());
+        final PreparedComparison preparedValueComparison = _valueHandler.prepareComparison(context, source.value());
         final PreparedComparison preparedParentIdComparison = _parentIdHandler.newPrepareCompare(source.parentID());
 		return new PreparedComparison() {
 			public int compareTo(Object obj) {

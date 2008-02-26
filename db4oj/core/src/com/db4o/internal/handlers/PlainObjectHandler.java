@@ -52,7 +52,7 @@ public class PlainObjectHandler implements TypeHandler4, ReadsObjectIds, Embedde
         transaction.addNewReference(ref);
     }
 
-    public PreparedComparison prepareComparison(Object obj) {
+    public PreparedComparison prepareComparison(Context context, Object obj) {
         throw new NotImplementedException();
     }
 

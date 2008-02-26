@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -164,11 +165,15 @@ public class QConObject extends QCon {
                     i_selfComparison = true;
                 }
                 Object transactionalObject = i_yapClass.wrapWithTransactionContext(transaction(), i_object);
-                _preparedComparison = i_yapClass.prepareComparison(transactionalObject);
+                _preparedComparison = i_yapClass.prepareComparison(context(), transactionalObject);
             }
         }
         super.evaluateSelf();
         i_selfComparison = false;
+    }
+
+    private Context context() {
+        return transaction().context();
     }
 
     void collect(QCandidates a_candidates) {
@@ -273,7 +278,7 @@ public class QConObject extends QCon {
         if (isNullConstraint() & !a_field.isArray()) {
             _preparedComparison = Null.INSTANCE;
         } else {
-            _preparedComparison = a_field.prepareComparison(i_object);
+            _preparedComparison = a_field.prepareComparison(context(), i_object);
         }
     }
 
@@ -355,7 +360,7 @@ public class QConObject extends QCon {
             Object cmp = qc.value();
             if (cmp != null && i_field != null) {
                 PreparedComparison preparedComparisonBackup = _preparedComparison;
-                _preparedComparison = i_field.prepareComparison(qc.value());
+                _preparedComparison = i_field.prepareComparison(context(), qc.value());
                 i_candidates.addOrder(new QOrder(this, qc));
                 _preparedComparison = preparedComparisonBackup;
             }

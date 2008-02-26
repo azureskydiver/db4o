@@ -483,8 +483,8 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         }
     }
 
-	public PreparedComparison prepareComparison(Object obj) {
-		return new PreparedArrayContainsComparison(this, _handler, obj);
+	public PreparedComparison prepareComparison(Context context, Object obj) {
+		return new PreparedArrayContainsComparison(context, this, _handler, obj);
 	}
 	
     public int linkLength() {

@@ -8,6 +8,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -459,11 +460,13 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 	
 	PreparedComparison prepareComparison(ObjectContainerBase container, Object constraint) {
+	    Context context = container.transaction().context();
+	    
 		if (_yapField != null) {
-			return _yapField.prepareComparison(constraint);
+			return _yapField.prepareComparison(context, constraint);
 		}
 		if (_yapClass != null) {
-			return _yapClass.prepareComparison(constraint);
+			return _yapClass.prepareComparison(context, constraint);
 		}
 		Reflector reflector = container.reflector();
 		ClassMetadata classMetadata = null;
@@ -480,12 +483,12 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				if (reflector.array().isNDimensional(memberClass())) {
 					MultidimensionalArrayHandler mah = 
 						new MultidimensionalArrayHandler(container, arrayElementTypehandler, false);
-					return mah.prepareComparison(_member);
+					return mah.prepareComparison(context, _member);
 				} 
 				ArrayHandler ya = new ArrayHandler(container, arrayElementTypehandler, false);
-				return ya.prepareComparison(_member);
+				return ya.prepareComparison(context, _member);
 			} 
-			return classMetadata.prepareComparison(constraint);
+			return classMetadata.prepareComparison(context, constraint);
 		}
 		return null;
 	}

@@ -243,7 +243,11 @@ public class FieldMetadata implements StoredField {
         if (claxx == null) {
             return !_isPrimitive;
         }
-        return Handlers4.handlerCanHold(_handler, container().reflector(), claxx);
+        return Handlers4.handlerCanHold(_handler, reflector(), claxx);
+    }
+
+    private GenericReflector reflector() {
+        return container().reflector();
     }
 
     public Object coerce(ReflectClass claxx, Object obj) {
@@ -254,7 +258,7 @@ public class FieldMetadata implements StoredField {
         }
         
         if(_handler instanceof PrimitiveHandler){
-            return ((PrimitiveHandler)_handler).coerce(container().reflector(), claxx, obj);
+            return ((PrimitiveHandler)_handler).coerce(reflector(), claxx, obj);
         }
 
         if(! canHold(claxx)){
@@ -359,7 +363,7 @@ public class FieldMetadata implements StoredField {
     void configure(ReflectClass clazz, boolean isPrimitive) {
         _isArray = clazz.isArray();
         if (_isArray) {
-            ReflectArray reflectArray = container().reflector().array();
+            ReflectArray reflectArray = reflector().array();
             _isNArray = reflectArray.isNDimensional(clazz);
             _isPrimitive = reflectArray.getComponentType(clazz).isPrimitive();
             _handler = wrapHandlerToArrays(container(), _handler);
@@ -757,7 +761,7 @@ public class FieldMetadata implements StoredField {
     private int adjustUpdateDepth(Object obj, int updateDepth) {
         int minimumUpdateDepth = 1;
         if (_containingClass.isCollection(obj)) {
-            GenericReflector reflector = _containingClass.reflector();
+            GenericReflector reflector = reflector();
             minimumUpdateDepth = reflector.collectionUpdateDepth(reflector.forObject(obj));
         }
         if (updateDepth < minimumUpdateDepth) {
@@ -811,11 +815,11 @@ public class FieldMetadata implements StoredField {
         return true;
     }
     
-    public PreparedComparison prepareComparison(Object obj) {
+    public PreparedComparison prepareComparison(Context context, Object obj) {
         if (!alive()) {
         	return null;
         }
-        return _handler.prepareComparison(obj);
+        return _handler.prepareComparison(context, obj);
     }
     
     public QField qField(Transaction a_trans) {

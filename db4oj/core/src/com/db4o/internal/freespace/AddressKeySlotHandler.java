@@ -4,6 +4,7 @@ package com.db4o.internal.freespace;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.slots.*;
+import com.db4o.marshall.*;
 
 
 /**
@@ -15,7 +16,7 @@ public class AddressKeySlotHandler extends SlotHandler{
 		return _current.compareByAddress((Slot)obj);
 	}
 	
-	public PreparedComparison prepareComparison(Object slot) {
+	public PreparedComparison prepareComparison(Context context, Object slot) {
 		final Slot sourceSlot = (Slot)slot;
 		return new PreparedComparison() {
 			public int compareTo(Object obj) {

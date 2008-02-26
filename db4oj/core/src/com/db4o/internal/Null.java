@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.foundation.*;
+import com.db4o.marshall.*;
 
 
 /**
@@ -35,7 +36,7 @@ public class Null implements Indexable4, PreparedComparison{
         // do nothing
 	}
 
-	public PreparedComparison prepareComparison(Object obj_) {
+	public PreparedComparison prepareComparison(Context context, Object obj_) {
 		return new PreparedComparison() {
 			public int compareTo(Object obj) {
 				if(obj == null){

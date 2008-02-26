@@ -117,7 +117,7 @@ public class FirstClassObjectHandler  implements TypeHandler4 {
     }
 
 
-    public PreparedComparison prepareComparison(Object source) {
+    public PreparedComparison prepareComparison(Context context, Object source) {
         if(source == null){
             return new PreparedComparison() {
                 public int compareTo(Object obj) {

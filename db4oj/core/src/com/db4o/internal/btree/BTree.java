@@ -2,12 +2,13 @@
 
 package com.db4o.internal.btree;
 
-import java.io.IOException;
+import java.io.*;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.mapping.*;
+import com.db4o.marshall.*;
 
 /**
  * @exclude
@@ -43,6 +44,8 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     
     private final int _cacheHeight;
     
+    private Context _context;
+    
     public BTree(Transaction trans, int id, Indexable4 keyHandler){
 		this(trans, id, keyHandler, config(trans).bTreeNodeSize(), config(trans).bTreeCacheHeight());
     }	
@@ -68,6 +71,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
             setID(id);
             setStateDeactivated();
         }
+        _context = trans.context();
 	}
     
 	public BTreeNode root() {
@@ -80,7 +84,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 
 	public void add(Transaction trans, Object key){	
     	keyCantBeNull(key);
-    	PreparedComparison preparedComparison = _keyHandler.prepareComparison(key);
+    	PreparedComparison preparedComparison = _keyHandler.prepareComparison(trans.context(), key);
         ensureDirty(trans);
         BTreeNode rootOrSplit = _root.add(trans, preparedComparison, key);
         if(rootOrSplit != null && rootOrSplit != _root){
@@ -94,7 +98,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 	public void remove(Transaction trans, Object key){
     	keyCantBeNull(key);
     	
-    	PreparedComparison preparedComparison = keyHandler().prepareComparison(key);
+    	PreparedComparison preparedComparison = keyHandler().prepareComparison(trans.context(), key);
     	
         final Iterator4 pointers = search(trans, preparedComparison).pointers();
         if (!pointers.moveNext()) {
@@ -108,7 +112,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     
     public BTreeRange search(Transaction trans, Object key) {
     	keyCantBeNull(key);
-    	return search(trans, keyHandler().prepareComparison(key));
+    	return search(trans, keyHandler().prepareComparison(trans.context(), key));
     }
     
     private BTreeRange search(Transaction trans, PreparedComparison preparedComparison) {
@@ -135,7 +139,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     }
 
 	public BTreeNodeSearchResult searchLeaf(Transaction trans, Object key, SearchTarget target) {
-	    return searchLeaf(trans, _keyHandler.prepareComparison(key), target);
+	    return searchLeaf(trans, _keyHandler.prepareComparison(trans.context(), key), target);
     }
 	
 	public BTreeNodeSearchResult searchLeaf(Transaction trans, PreparedComparison preparedComparison, SearchTarget target) {
@@ -434,7 +438,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 	}
 
 	public int compareKeys(Object key1, Object key2) {
-		PreparedComparison preparedComparison = _keyHandler.prepareComparison(key1);
+		PreparedComparison preparedComparison = _keyHandler.prepareComparison(_context, key1);
 		return preparedComparison.compareTo(key2);
 	}
 	

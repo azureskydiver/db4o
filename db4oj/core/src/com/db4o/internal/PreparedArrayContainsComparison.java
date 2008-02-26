@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.marshall.*;
 
 /**
  * @exclude
@@ -14,9 +15,9 @@ public class PreparedArrayContainsComparison implements PreparedComparison {
 	
 	private final PreparedComparison _preparedComparison; 
 	
-	public PreparedArrayContainsComparison(ArrayHandler arrayHandler, TypeHandler4 typeHandler, Object obj){
+	public PreparedArrayContainsComparison(Context context, ArrayHandler arrayHandler, TypeHandler4 typeHandler, Object obj){
 		_arrayHandler = arrayHandler;
-		_preparedComparison = typeHandler.prepareComparison(obj);
+		_preparedComparison = typeHandler.prepareComparison(context, obj);
 	}
 
 	public int compareTo(Object obj) {
