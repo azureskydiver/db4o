@@ -99,22 +99,28 @@ public class ConcurrencyTestMethod extends TestMethod {
 
 		private boolean showSeq;
 
-		RunnableTestMethod(AbstractDb4oTestCase toTest, Method method) {
-			this.toTest = toTest;
-			this.method = method;
-		}
+		private final Db4oClientServerFixture fixture;
 
 		RunnableTestMethod(AbstractDb4oTestCase toTest, Method method, int seq, boolean showSeq) {
 			this.toTest = toTest;
+			this.fixture = fixture(toTest);
 			this.method = method;
 			this.seq = seq;
 			this.showSeq = showSeq;
 		}
 
 		public void run() {
+			AbstractDb4oTestCase.FIXTURE_VARIABLE.with(fixture, new Runnable() {
+				public void run() {
+					runMethod();
+				}
+			});
+		}
+		
+		private void runMethod() {
 			ExtObjectContainer oc = null;
 			try {
-				oc = openNewClient(toTest);
+				oc = fixture.openNewClient();
 				Object[] args;
 				if (showSeq) {
 					args = new Object[2];
@@ -133,9 +139,9 @@ public class ConcurrencyTestMethod extends TestMethod {
 			}
 		}
 	}
-	
-	private ExtObjectContainer openNewClient(AbstractDb4oTestCase toTest) {
-		return ((Db4oClientServerFixture)toTest.fixture()).openNewClient();
+
+	private Db4oClientServerFixture fixture(AbstractDb4oTestCase toTest) {
+		return ((Db4oClientServerFixture)toTest.fixture());
 	}
 
 }
