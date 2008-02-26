@@ -41,6 +41,7 @@ public class ContextVariable {
 				if (slot.thread == current) {
 					return slot.value;
 				}
+				slot = slot.next;
 			}
 		}
 		return null;
@@ -89,6 +90,8 @@ public class ContextVariable {
 				previous.next = current.next;
 				return;
 			}
+			previous = current;
+			current = current.next;
 		}
 	}
 
