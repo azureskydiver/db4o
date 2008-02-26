@@ -9,9 +9,9 @@ import com.db4o.internal.marshall.*;
 /**
  * @exclude
  */
-public class NewFirstClassObjectHandler0 extends NewFirstClassObjectHandler{
+public class FirstClassObjectHandler0 extends FirstClassObjectHandler{
 
-    public NewFirstClassObjectHandler0(ClassMetadata classMetadata) {
+    public FirstClassObjectHandler0(ClassMetadata classMetadata) {
         super(classMetadata);
     }
     

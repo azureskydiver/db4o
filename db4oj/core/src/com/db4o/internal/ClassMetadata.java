@@ -99,7 +99,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     private TypeHandler4 createDefaultTypeHandler() {
-        return new NewFirstClassObjectHandler(this);
+        return new FirstClassObjectHandler(this);
     }
     
     void activateFields(Transaction trans, Object obj, ActivationDepth depth) {
