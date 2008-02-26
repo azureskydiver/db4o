@@ -23,7 +23,7 @@ public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase impleme
     
     private static final class ArrayListTypeHandler implements VariableLengthTypeHandler {
 
-        public PreparedComparison prepareComparison(Object obj) {
+        public PreparedComparison prepareComparison(Context context, Object obj) {
             // TODO Auto-generated method stub
             return null;
         }
