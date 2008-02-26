@@ -14,11 +14,11 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class NewFirstClassObjectHandler  implements TypeHandler4 {
+public class FirstClassObjectHandler  implements TypeHandler4 {
     
     private final ClassMetadata _classMetadata;
 
-    public NewFirstClassObjectHandler(ClassMetadata classMetadata) {
+    public FirstClassObjectHandler(ClassMetadata classMetadata) {
         _classMetadata = classMetadata;
     }
 
