@@ -39,17 +39,6 @@ public class NewFirstClassObjectHandler  implements TypeHandler4 {
     }
 
     public Object read(ReadContext context) {
-        
-        
-        if(! ObjectHandlerRefactoring.enabled){
-            // FIXME: .NET value types should get their own TypeHandler and it 
-            //        should do the following:
-            if(_classMetadata.isValueType()){
-                ActivationDepth activationDepth = ((UnmarshallingContext)context).activationDepth();
-                return _classMetadata.readValueType(context.transaction(), context.readInt(), activationDepth.descend(_classMetadata));
-            }
-        }
-        
         UnmarshallingContext unmarshallingContext = (UnmarshallingContext) context;
         instantiateFields(unmarshallingContext);
         return unmarshallingContext.persistentObject();

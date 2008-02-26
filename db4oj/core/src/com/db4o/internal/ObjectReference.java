@@ -168,11 +168,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
         
         MarshallingContext context = new MarshallingContext(trans, this, updateDepth, true);
         
-        if(ObjectHandlerRefactoring.enabled){
-            classMetadata().write(context, getObject());
-        }else {
-            MarshallerFamily.current()._object.marshall(getObject(), context);
-        }
+        classMetadata().write(context, getObject());
         
         Pointer4 pointer = context.allocateSlot();
         ByteArrayBuffer buffer = context.ToWriteBuffer(pointer);

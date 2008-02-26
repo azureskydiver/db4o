@@ -791,9 +791,6 @@ public class FieldMetadata implements StoredField {
     }
     
     public static boolean useDedicatedSlot(Context context, TypeHandler4 handler, Object obj) {
-        if (!ObjectHandlerRefactoring.enabled) {
-            return false;
-        }
         if (handler instanceof EmbeddedTypeHandler) {
             return false;
         }
