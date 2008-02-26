@@ -42,7 +42,7 @@ public class DoubleHandlerTestCase extends TypeHandlerTestCaseBase {
 	}
 
 	private void assertComparison(final int expected, final double prepareWith, final double compareTo) {
-		PreparedComparison preparedComparison = _handler.prepareComparison(new Double(prepareWith));
+		PreparedComparison preparedComparison = _handler.prepareComparison(stream().transaction().context(), new Double(prepareWith));
 		final Double doubleCompareTo = new Double(compareTo);
 		Assert.areEqual(expected, preparedComparison.compareTo(doubleCompareTo));
 	}

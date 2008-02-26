@@ -58,7 +58,7 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
     protected void configure(Configuration config) throws Exception {
         TypeHandler4 customTypeHandler = new TypeHandler4() {
         
-            public PreparedComparison prepareComparison(Object obj) {
+            public PreparedComparison prepareComparison(Context context, Object obj) {
                 prepareComparisonCalled = true;
                 // TODO Auto-generated method stub
                 return null;
@@ -106,7 +106,7 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
     public void testConfiguration(){
         ClassMetadata classMetadata = stream().classMetadataForReflectClass(itemClass());
         prepareComparisonCalled = false;
-        classMetadata.prepareComparison(null);
+        classMetadata.prepareComparison(stream().transaction().context(), null);
         Assert.isTrue(prepareComparisonCalled);
     }
     

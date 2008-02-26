@@ -7,6 +7,7 @@ import java.util.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 import db4ounit.*;
@@ -86,20 +87,24 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 	}
 
     private void assertHandlerComparison(TypeHandler4 handler, Object smaller, Object greater) {
-        PreparedComparison comparable = handler.prepareComparison(smaller);
+        PreparedComparison comparable = handler.prepareComparison(context(), smaller);
 		Assert.isNotNull(comparable);
 		Assert.areEqual(0, comparable.compareTo(smaller));
 		Assert.isSmaller(0, comparable.compareTo(greater));
 		
-		comparable = handler.prepareComparison(greater);
+		comparable = handler.prepareComparison(context(), greater);
 		Assert.isNotNull(comparable);
 		Assert.areEqual(0, comparable.compareTo(greater));
 		Assert.isGreater(0, comparable.compareTo(smaller));
 		
-		comparable = handler.prepareComparison(null);
+		comparable = handler.prepareComparison(context(), null);
 		Assert.isNotNull(comparable);
 		Assert.areEqual(0, comparable.compareTo(null));
 		Assert.isSmaller(0, comparable.compareTo(smaller));
+    }
+
+    private Context context() {
+        return stream().transaction().context();
     }
 	
 	private Object newInstance (Class clazz){
