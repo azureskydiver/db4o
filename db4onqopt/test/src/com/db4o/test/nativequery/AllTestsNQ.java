@@ -16,7 +16,7 @@ import db4ounit.extensions.fixtures.*;
 public class AllTestsNQ {
 	
 	public static void main(String[] args) {
-		Iterator4 plainTests=new ReflectionTestSuiteBuilder(
+		Iterable4 plainTests=new ReflectionTestSuiteBuilder(
 				new Class[] {
 						ExpressionBuilderTestCase.class,
 						BloatExprBuilderVisitorTestCase.class,
@@ -24,16 +24,16 @@ public class AllTestsNQ {
 						BooleanReturnValueTestCase.class,
 						NQBuildTimeInstrumentationTestCase.class,
 				}
-		).iterator();
-		Iterator4 db4oTests=new Db4oTestSuiteBuilder(new Db4oSolo(),
+		);
+		Iterable4 db4oTests=new Db4oTestSuiteBuilder(new Db4oSolo(),
 					new Class[] {
 						NativeQueryOptimizerDiagnosticsTestCase.class,
 						NQRegressionTestCase.class,
 						NQCatConsistencyTestCase.class,
 					}
-		).iterator();
-		Iterator4 allTests=Iterators.concat(
-				new Iterator4[] {
+		);
+		Iterable4 allTests=Iterators.concat(
+				new Iterable4[] {
 					plainTests,
 					db4oTests,
 				}
