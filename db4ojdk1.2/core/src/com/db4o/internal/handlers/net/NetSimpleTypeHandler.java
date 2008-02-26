@@ -17,11 +17,14 @@ public abstract class NetSimpleTypeHandler extends NetTypeHandler implements Gen
 	private final int _typeID;
 	private final int _byteCount;
 	
+	private ObjectContainerBase _stream;
+	
 	public NetSimpleTypeHandler(ObjectContainerBase stream, int typeID, int byteCount) {
-        super(stream);
+        super();
         _name = dotNetClassName();
         _typeID = typeID;
         _byteCount = byteCount;
+        _stream = stream;
     }
 	
     public ReflectClass classReflector(){
