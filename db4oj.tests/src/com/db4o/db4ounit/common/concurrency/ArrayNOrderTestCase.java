@@ -44,7 +44,7 @@ public class ArrayNOrderTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void conc(ExtObjectContainer oc) {
-		Item item = (Item) retrieveOnlyInstance(Item.class);
+		Item item = (Item) retrieveOnlyInstance(oc, Item.class);
 		assertItem(item);
 	}
 
