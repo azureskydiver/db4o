@@ -48,7 +48,7 @@ public class StringBufferTypeHandlerTestCase extends AbstractDb4oTestCase implem
 			return ((InternalObjectContainer) context.objectContainer()).handlers();
 		}
 
-		public PreparedComparison prepareComparison(Object obj) {
+		public PreparedComparison prepareComparison(Context context, Object obj) {
 			throw new NotImplementedException();
 		}
 	}
