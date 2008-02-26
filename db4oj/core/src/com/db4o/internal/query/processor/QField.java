@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.types.*;
 
@@ -101,9 +102,9 @@ public class QField implements Visitor4, Unversioned{
 		return i_yapField != null &&  Handlers4.handlesSimple(i_yapField.getHandler());
 	}
 	
-	PreparedComparison prepareComparison(Object obj){
+	PreparedComparison prepareComparison(Context context, Object obj){
 		if(i_yapField != null){
-			return i_yapField.prepareComparison(obj);
+			return i_yapField.prepareComparison(context, obj);
 		}
 		if(obj == null){
 			return Null.INSTANCE;
@@ -111,7 +112,7 @@ public class QField implements Visitor4, Unversioned{
 		ClassMetadata yc = i_trans.container().produceClassMetadata(i_trans.reflector().forObject(obj));
 		FieldMetadata yf = yc.fieldMetadataForName(i_name);
 		if(yf != null){
-			return yf.prepareComparison(obj);
+			return yf.prepareComparison(context, obj);
 		}
 		return null;
 	}

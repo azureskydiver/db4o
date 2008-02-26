@@ -5,6 +5,7 @@ package com.db4o.internal.mapping;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.marshall.*;
 
 /**
  * @exclude
@@ -43,7 +44,7 @@ public class MappedIDPairHandler implements Indexable4 {
 		return ((Integer)_origHandler.readIndexEntry(a_reader)).intValue();
 	}
 
-	public PreparedComparison prepareComparison(Object source) {
+	public PreparedComparison prepareComparison(Context context, Object source) {
 		MappedIDPair sourceIDPair = (MappedIDPair)source;
 		final int sourceID = sourceIDPair.orig();
 		return new PreparedComparison() {
