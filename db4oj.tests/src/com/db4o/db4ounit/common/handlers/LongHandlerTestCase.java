@@ -13,7 +13,7 @@ public class LongHandlerTestCase extends TypeHandlerTestCaseBase {
     }
     
     private LongHandler longHandler() {
-        return new LongHandler(stream());
+        return new LongHandler();
     }
     
     public void testReadWrite() {

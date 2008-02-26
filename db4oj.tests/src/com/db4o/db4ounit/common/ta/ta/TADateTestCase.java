@@ -29,7 +29,7 @@ public class TADateTestCase extends TAItemTestCaseBase {
     }
     
     private Object emptyValue() {
-        return new DateHandler(null).primitiveNull();
+        return new DateHandler().primitiveNull();
     }
 
     protected Object createItem() throws Exception {

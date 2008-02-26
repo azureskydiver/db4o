@@ -76,11 +76,11 @@ public class BTreeAssert {
 	}
 
 	public static BTree createIntKeyBTree(final ObjectContainerBase stream, int id, int nodeSize) {
-		return new BTree(stream.systemTransaction(), id, new IntHandler(stream), nodeSize, stream.configImpl().bTreeCacheHeight());
+		return new BTree(stream.systemTransaction(), id, new IntHandler(), nodeSize, stream.configImpl().bTreeCacheHeight());
 	}
 	
 	public static BTree createIntKeyBTree(final ObjectContainerBase stream, int id, int treeCacheHeight, int nodeSize) {
-		return new BTree(stream.systemTransaction(), id, new IntHandler(stream), nodeSize, treeCacheHeight);
+		return new BTree(stream.systemTransaction(), id, new IntHandler(), nodeSize, treeCacheHeight);
 	}
 
 	public static void assertSingleElement(Transaction trans, BTree btree, Object element) {

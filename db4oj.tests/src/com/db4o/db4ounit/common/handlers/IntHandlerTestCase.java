@@ -38,7 +38,7 @@ public class IntHandlerTestCase extends TypeHandlerTestCaseBase {
     }
     
     private IntHandler intHandler() {
-        return new IntHandler(stream());
+        return new IntHandler();
     }
     
     public void testReadWrite() {

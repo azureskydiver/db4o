@@ -37,7 +37,7 @@ public class BooleanHandlerTestCase extends TypeHandlerTestCaseBase {
     }
     
     private BooleanHandler booleanHandler() {
-        return new BooleanHandler(stream());
+        return new BooleanHandler();
     }
 
 	public void testReadWriteTrue(){
