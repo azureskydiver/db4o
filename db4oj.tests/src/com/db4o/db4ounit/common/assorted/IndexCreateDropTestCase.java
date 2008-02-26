@@ -41,7 +41,7 @@ public class IndexCreateDropTestCase extends AbstractDb4oTestCase implements Opt
          * current platform.
          */
 		private static Date nullDate() {
-			return (Date) new DateHandler(null).primitiveNull();
+			return (Date) new DateHandler().primitiveNull();
 		}
     }
     

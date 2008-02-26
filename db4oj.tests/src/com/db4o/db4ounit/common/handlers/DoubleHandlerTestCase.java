@@ -21,7 +21,7 @@ public class DoubleHandlerTestCase extends TypeHandlerTestCaseBase {
     }
 	
 	protected void db4oSetupBeforeStore() throws Exception {
-		_handler = new DoubleHandler(stream());
+		_handler = new DoubleHandler();
 	}
 	
 	public void testMarshalling() {

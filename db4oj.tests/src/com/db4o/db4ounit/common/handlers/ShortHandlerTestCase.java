@@ -37,7 +37,7 @@ public class ShortHandlerTestCase extends TypeHandlerTestCaseBase {
     }
     
     private ShortHandler shortHandler() {
-        return new ShortHandler(stream());
+        return new ShortHandler();
     }
     
     public void testReadWrite() {

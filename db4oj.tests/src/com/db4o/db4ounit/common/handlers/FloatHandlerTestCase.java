@@ -13,7 +13,7 @@ public class FloatHandlerTestCase extends TypeHandlerTestCaseBase {
     }
 
     private FloatHandler floatHandler() {
-        return new FloatHandler(stream());
+        return new FloatHandler();
     }
     
     public void testReadWrite() {

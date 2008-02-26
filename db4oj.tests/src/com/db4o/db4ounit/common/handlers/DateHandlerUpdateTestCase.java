@@ -72,7 +72,7 @@ public class DateHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
 
 	private Object emptyValue() {
-		return new DateHandler(null).primitiveNull();
+		return new DateHandler().primitiveNull();
 	}
 
     private void assertAreEqual(Date expected, Date actual) {

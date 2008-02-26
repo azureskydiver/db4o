@@ -38,7 +38,7 @@ public class CharHandlerTestCase extends TypeHandlerTestCaseBase {
     }
     
     private CharHandler charHandler() {
-        return new CharHandler(stream());
+        return new CharHandler();
     }
     
     public void testReadWrite() {

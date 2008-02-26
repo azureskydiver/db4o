@@ -43,7 +43,7 @@ public class ByteHandlerTestCase extends TypeHandlerTestCaseBase {
     }
     
     private ByteHandler byteHandler() {
-        return new ByteHandler(stream());
+        return new ByteHandler();
     }
     
     public void testReadWrite() {

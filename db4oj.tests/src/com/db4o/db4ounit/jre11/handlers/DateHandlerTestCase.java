@@ -16,7 +16,7 @@ public class DateHandlerTestCase extends TypeHandlerTestCaseBase {
     }
     
     private DateHandler dateHandler() {
-        return new DateHandler(stream());
+        return new DateHandler();
     }
     
     public void testReadWrite() {
