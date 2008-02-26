@@ -1,7 +1,6 @@
 package db4ounit;
 
 import java.lang.reflect.*;
-import java.util.*;
 
 import com.db4o.foundation.*;
 
@@ -9,6 +8,7 @@ import com.db4o.foundation.*;
  * @sharpen.ignore
  */
 public class UnitTestMain {
+	
 	public static void main(String[] args) throws Exception {
 		new UnitTestMain().runTests(args);
 	}
@@ -18,64 +18,50 @@ public class UnitTestMain {
 		new ConsoleTestRunner(build(args), false).run();
 	}
 	
-	protected TestSuiteBuilder builder(Class[] clazzes) {
-		return new ReflectionTestSuiteBuilder(clazzes);
+	protected TestSuiteBuilder builder(Class clazz) {
+		return new ReflectionTestSuiteBuilder(clazz);
 	}
 
-	private Iterator4 build(String[] args)
+	private Iterable4 build(String[] args)
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
-		Vector plainTestMethods=new Vector();
-		Vector plainTestClasses=new Vector();
-		for(int idx=0;idx<args.length;idx++) {
-			String testIdentifier = args[idx];
-			int methodSeparatorIndex = testIdentifier.indexOf('#');
-			if(methodSeparatorIndex>0) {
-				String className=testIdentifier.substring(0,methodSeparatorIndex);
-				String methodName=testIdentifier.substring(methodSeparatorIndex+1);
-				TestMethod testMethod = testMethod(className, methodName);
-				plainTestMethods.addElement(testMethod);
-				continue;
+		
+		final Iterable4 tests = Iterators.map(Iterators.iterable(args), new Function4() {
+			public Object apply(Object arg) {
+				String testIdentifier = (String)arg;
+				try {
+					int methodSeparatorIndex = testIdentifier.indexOf('#');
+					if (methodSeparatorIndex>0) {
+						String className=testIdentifier.substring(0,methodSeparatorIndex);
+						String methodName=testIdentifier.substring(methodSeparatorIndex+1);
+						return testMethod(className, methodName);
+					}
+					
+					return builder(Class.forName(testIdentifier));
+					
+				} catch (Exception x) {
+					return new FailingTest(testIdentifier, x);
+				}
 			}
-			Class curClazz=Class.forName(testIdentifier);
-			if(TestCase.class.isAssignableFrom(curClazz)) {
-				plainTestClasses.addElement(curClazz);
-			}
-		}
-		Class[] plainTestClassesArray = new Class[plainTestClasses.size()];
-		vectorToArray(plainTestClasses, plainTestClassesArray);
-		TestSuiteBuilder classBuilder=builder(plainTestClassesArray);
-		Test[] plainTestMethodArray=new Test[plainTestMethods.size()];		vectorToArray(plainTestMethods, plainTestMethodArray);		Iterator4 methodSuite=Iterators.iterate(plainTestMethodArray);
-		return Iterators.concat(new Iterator4[]{classBuilder.iterator(),methodSuite});
+		});
+		return Iterators.flatten(tests);
 	}
 	
-	private void vectorToArray(Vector vector, Object[] array){
-		int i = 0;		Enumeration enumer = vector.elements();
-		while(enumer.hasMoreElements()){
-			array[i++] = enumer.nextElement();
-		}
-	}
-	private TestMethod testMethod(String className, String methodName)
+	protected Test testMethod(String className, String methodName)
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
-		TestCase test = createTestInstance(className);
-		Method method=null;
-		Method[] methods = test.getClass().getMethods();
-		for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
-			Method curMethod = methods[methodIdx];
-			if(curMethod.getName().equals(methodName)) {
-				method=curMethod;
-			}
-		}
-		if(method==null) {
-			return null;
-		}
-		return new TestMethod(test,method);
+		Class clazz = Class.forName(className);
+		return new TestMethod(clazz.newInstance(), findMethod(clazz, methodName));
 	}
 
-	protected TestCase createTestInstance(String className) throws ClassNotFoundException,
-			InstantiationException, IllegalAccessException {
-		Class clazz=Class.forName(className);
-		return (TestCase)clazz.newInstance();
+	private Method findMethod(final Class clazz, String methodName) {
+		Method[] methods = clazz.getMethods();
+		for (int i = 0; i < methods.length; i++) {
+			Method method = methods[i];
+			if (method.getName().equals(methodName)) {
+				return method;
+			}
+		}
+		throw new IllegalArgumentException("Method '" + methodName + "' not found in class '" + clazz + "'.");
 	}
 }

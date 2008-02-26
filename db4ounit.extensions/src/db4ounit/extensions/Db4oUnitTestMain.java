@@ -2,6 +2,7 @@ package db4ounit.extensions;
 
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
+import db4ounit.fixtures.*;
 
 /**
  * @sharpen.ignore
@@ -11,9 +12,16 @@ public class Db4oUnitTestMain extends UnitTestMain {
 		new Db4oUnitTestMain().runTests(args);
 	}
 
-	private Db4oFixture _fixture=new Db4oSolo();
+	private final Db4oFixture _fixture=new Db4oSolo();
 	
-	protected TestSuiteBuilder builder(Class[] clazzes) {
-		return new Db4oTestSuiteBuilder(_fixture,clazzes);
+	protected TestSuiteBuilder builder(Class clazz) {
+		return new Db4oTestSuiteBuilder(_fixture,clazz);
+	}
+	
+	protected Test testMethod(String className, String methodName)
+			throws ClassNotFoundException, InstantiationException,
+			IllegalAccessException {
+		final Test test = super.testMethod(className, methodName);
+		return new FixtureDecoration(test, null, AbstractDb4oTestCase.FIXTURE_VARIABLE, _fixture);
 	}
 }
