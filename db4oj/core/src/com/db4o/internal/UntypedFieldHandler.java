@@ -206,4 +206,8 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         return container().typeHandlerForReflectClass(claxx);
     }
 
+    public ReflectClass classReflector(Reflector reflector) {
+        return super.classReflector();
+    }
+
 }

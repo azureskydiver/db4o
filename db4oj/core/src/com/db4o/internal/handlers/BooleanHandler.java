@@ -22,10 +22,6 @@ public final class BooleanHandler extends PrimitiveHandler {
 	
 	private static final Boolean i_primitive = new Boolean(false);
 	
-    public BooleanHandler(ObjectContainerBase stream) {
-        super(stream);
-    }
-    
 	public Object defaultValue(){
 		return i_primitive;
 	}

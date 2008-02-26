@@ -16,10 +16,6 @@ public final class CharHandler extends PrimitiveHandler {
 	
 	private static final Character i_primitive = new Character((char)0);
 	
-    public CharHandler(ObjectContainerBase stream) {
-        super(stream);
-    }
-    
 	public Object defaultValue(){
 		return i_primitive;
 	}

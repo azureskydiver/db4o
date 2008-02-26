@@ -316,7 +316,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
                     if(classMetadata == null){
                         return false;
                     }
-                    if(! Handlers4.handlerCanHold(classMetadata, a_candidates.i_yapClass.classReflector())){
+                    if(! Handlers4.handlerCanHold(classMetadata, container().reflector(), a_candidates.i_yapClass.classReflector())){
                         return false;
                     }
 				}

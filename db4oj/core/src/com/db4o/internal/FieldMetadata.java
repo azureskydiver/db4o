@@ -243,7 +243,7 @@ public class FieldMetadata implements StoredField {
         if (claxx == null) {
             return !_isPrimitive;
         }
-        return Handlers4.handlerCanHold(_handler, claxx);
+        return Handlers4.handlerCanHold(_handler, container().reflector(), claxx);
     }
 
     public Object coerce(ReflectClass claxx, Object obj) {
@@ -254,7 +254,7 @@ public class FieldMetadata implements StoredField {
         }
         
         if(_handler instanceof PrimitiveHandler){
-            return ((PrimitiveHandler)_handler).coerce(claxx, obj);
+            return ((PrimitiveHandler)_handler).coerce(container().reflector(), claxx, obj);
         }
 
         if(! canHold(claxx)){
@@ -959,7 +959,7 @@ public class FieldMetadata implements StoredField {
 			}
 			return null;
 		}
-		return new BTree(systemTrans, id, new FieldIndexKeyHandler(stream, indexHandler));
+		return new BTree(systemTrans, id, new FieldIndexKeyHandler(indexHandler));
 	}
 
 	protected Indexable4 indexHandler(ObjectContainerBase stream) {

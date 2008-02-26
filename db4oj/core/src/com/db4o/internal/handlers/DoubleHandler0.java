@@ -2,15 +2,10 @@
 
 package com.db4o.internal.handlers;
 
-import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
 public class DoubleHandler0 extends DoubleHandler {
 
-	public DoubleHandler0(ObjectContainerBase stream) {
-		super(stream);
-	}
-	
 	public Object read(ReadContext context) {
 		Double value = (Double)super.read(context);
 		if (value.isNaN()) {

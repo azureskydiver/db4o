@@ -10,10 +10,6 @@ import com.db4o.internal.handlers.*;
  */
 public class IDHandler extends IntHandler {
 
-	public IDHandler(ObjectContainerBase stream) {
-		super(stream);
-	}
-
     public void defragIndexEntry(DefragmentContextImpl context) {
     	context.copyID(true,false);
     }

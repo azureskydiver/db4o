@@ -170,16 +170,16 @@ public class KnownClassesRepository {
 			
 			RawFieldSpec fieldInfo=fieldMarshaller.readSpec(_stream, classreader);
 			String fieldName=fieldInfo.name();
-            ReflectClass fieldClass = reflectClassForFieldSpec(fieldInfo);
+            ReflectClass fieldClass = reflectClassForFieldSpec(fieldInfo, _stream.reflector());
 			fields[i]=_builder.createField(clazz, fieldName, fieldClass, fieldInfo.isVirtual(), fieldInfo.isPrimitive(), fieldInfo.isArray(), fieldInfo.isNArray());
 		}
 		_builder.initFields(clazz, fields);
 	}
 
-	private ReflectClass reflectClassForFieldSpec(RawFieldSpec fieldInfo) {
+	private ReflectClass reflectClassForFieldSpec(RawFieldSpec fieldInfo, Reflector reflector) {
 		
 		if (fieldInfo.isVirtual()) {
-			 return virtualFieldByName(fieldInfo.name()).classReflector();
+			 return virtualFieldByName(fieldInfo.name()).classReflector(reflector);
 		}
 		
 		final int handlerID = fieldInfo.handlerID();

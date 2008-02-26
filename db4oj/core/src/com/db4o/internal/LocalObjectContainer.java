@@ -124,7 +124,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
     
     public final BTree createBTreeClassIndex(int id){
-        return new BTree(_transaction, id, new IDHandler(this));
+        return new BTree(_transaction, id, new IDHandler());
     }
     
     public final AbstractQueryResult newQueryResult(Transaction trans) {

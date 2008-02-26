@@ -13,8 +13,8 @@ import com.db4o.marshall.*;
  */
 public class VersionFieldMetadata extends VirtualFieldMetadata {
 
-    VersionFieldMetadata(ObjectContainerBase stream) {
-        super(Handlers4.LONG_ID, new LongHandler(stream));
+    VersionFieldMetadata() {
+        super(Handlers4.LONG_ID, new LongHandler());
         setName(VirtualField.VERSION);
     }
     

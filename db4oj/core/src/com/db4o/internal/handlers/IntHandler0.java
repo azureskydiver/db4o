@@ -2,7 +2,6 @@
 
 package com.db4o.internal.handlers;
 
-import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
 
@@ -11,10 +10,6 @@ import com.db4o.marshall.*;
  */
 public class IntHandler0 extends IntHandler {
 
-    public IntHandler0(ObjectContainerBase container) {
-        super(container);
-    }
-    
     public Object read(ReadContext context) {
         int i = context.readInt();
         if (i == Integer.MAX_VALUE) {

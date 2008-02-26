@@ -16,18 +16,12 @@ import com.db4o.typehandlers.*;
  */
 public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinTypeHandler, EmbeddedTypeHandler {
     
-    protected final ObjectContainerBase _stream;
-    
     protected ReflectClass _classReflector;
     
     private ReflectClass _primitiveClassReflector;
     
-    public PrimitiveHandler(ObjectContainerBase stream) {
-        _stream = stream;
-    }
-
-    public Object coerce(ReflectClass claxx, Object obj) {
-        return Handlers4.handlerCanHold(this, claxx) ? obj : No4.INSTANCE;
+    public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
+        return Handlers4.handlerCanHold(this, reflector, claxx) ? obj : No4.INSTANCE;
     }
     
     public abstract Object defaultValue();
@@ -81,24 +75,24 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
         return read(mf, a_writer, true);
     }
     
-    public ReflectClass classReflector(){
-        ensureClassReflectorLoaded();
+    public ReflectClass classReflector(Reflector reflector){
+        ensureClassReflectorLoaded(reflector);
     	return _classReflector;  
     }
     
-    public ReflectClass primitiveClassReflector(){
-        ensureClassReflectorLoaded();
+    public ReflectClass primitiveClassReflector(Reflector reflector){
+        ensureClassReflectorLoaded(reflector);
     	return _primitiveClassReflector;  
     }
     
-    private void ensureClassReflectorLoaded(){
+    private void ensureClassReflectorLoaded(Reflector reflector){
         if(_classReflector != null){
             return;
         }
-        _classReflector = _stream.reflector().forClass(javaClass());
+        _classReflector = reflector.forClass(javaClass());
         Class clazz = primitiveJavaClass();
         if(clazz != null){
-            _primitiveClassReflector = _stream.reflector().forClass(clazz);
+            _primitiveClassReflector = reflector.forClass(clazz);
         }
     }
 
