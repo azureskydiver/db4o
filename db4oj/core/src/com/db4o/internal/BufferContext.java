@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.marshall.*;
 
 /**
@@ -73,5 +74,9 @@ public abstract class BufferContext implements ReadBuffer{
 	public boolean isLegacyHandlerVersion() {
 		return handlerVersion() == 0;
 	}
+	
+    public BitMap4 readBitMap(int bitCount){
+        return _buffer.readBitMap(bitCount);
+    }
 
 }

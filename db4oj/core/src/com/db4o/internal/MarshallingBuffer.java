@@ -60,7 +60,7 @@ public class MarshallingBuffer implements WriteBuffer{
         prepareWrite(SIZE_NEEDED);
     }
     
-    private void prepareWrite(int sizeNeeded){
+    public void prepareWrite(int sizeNeeded){
         if(_delegate == null){
             _delegate = new ByteArrayBuffer(sizeNeeded); 
         }
@@ -170,9 +170,19 @@ public class MarshallingBuffer implements WriteBuffer{
         _delegate.seek(offset);
     }
 
-    private void reserve(int length) {
+    public ReservedBuffer reserve(int length) {
         prepareWrite(length);
+        ReservedBuffer reservedBuffer = new ReservedBuffer() {
+            private final int reservedOffset = _delegate.offset();
+            public void writeBytes(byte[] bytes) {
+                int currentOffset = _delegate.offset();
+                _delegate.seek(reservedOffset);
+                _delegate.writeBytes(bytes);
+                _delegate.seek(currentOffset);
+            }
+        };
         _delegate.seek(_delegate.offset() + length );
+        return reservedBuffer;
     }
 
     private void writeLink(MarshallingBuffer child, int position, int length){
