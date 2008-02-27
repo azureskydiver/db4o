@@ -340,5 +340,8 @@
 	<target name="build-cf20" depends="init">
 		<ant antfile="build-dotnet.xml" target="build-cf20" />
 	</target>
-	
+    
+	<target name="build-cf35" depends="init">
+	    <ant antfile="build-dotnet.xml" target="build-cf35" />
+	</target>
 </project>
