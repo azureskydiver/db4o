@@ -97,5 +97,10 @@ public class StoreNumberTestCase extends AbstractDb4oTestCase {
         ObjectSet result=query.execute();
         Assert.areEqual(1,result.size());
     }
+    
+    public static void main(String[] arguments) {
+        new StoreNumberTestCase().runSolo();
+        
+    }
 
 }

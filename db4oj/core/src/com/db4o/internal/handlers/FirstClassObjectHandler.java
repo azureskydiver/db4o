@@ -5,7 +5,6 @@ package com.db4o.internal.handlers;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -38,12 +37,6 @@ public class FirstClassObjectHandler  implements TypeHandler4 {
                 context.transaction(), context.readInt(), context.cascadeDeleteDepth());
     }
 
-    public Object read(ReadContext context) {
-        UnmarshallingContext unmarshallingContext = (UnmarshallingContext) context;
-        instantiateFields(unmarshallingContext);
-        return unmarshallingContext.persistentObject();
-    }
-    
     public final void instantiateFields(final UnmarshallingContext context) {
         
         final BooleanByRef updateFieldFound = new BooleanByRef();
@@ -83,9 +76,33 @@ public class FirstClassObjectHandler  implements TypeHandler4 {
         }
         
     }
+    
+    public Object read(ReadContext context) {
+        UnmarshallingContext unmarshallingContext = (UnmarshallingContext) context;
+        
+// FIXME: Commented out code below is the implementation plan to let
+//        FirstClassObjectHandler take responsibility of fieldcount
+//        and null Bitmap.        
+       
+        
+//        BitMap4 nullBitMap = unmarshallingContext.readBitMap(fieldCount);
+//        int fieldCount = context.readInt();
 
-    public void write(WriteContext context, Object obj) {
+        instantiateFields(unmarshallingContext);
+        return unmarshallingContext.persistentObject();
+    }
+
+    public void write(final WriteContext context, Object obj) {
+
+//        int fieldCount = _classMetadata.fieldCount();
+//        context.writeInt(fieldCount);
+//        final BitMap4 nullBitMap = new BitMap4(fieldCount);
+//        ReservedBuffer bitMapBuffer = context.reserve(nullBitMap.marshalledLength());
+        
         marshall(obj, (MarshallingContext)context);
+        
+//        bitMapBuffer.writeBytes(nullBitMap.bytes());
+        
     }
     
     public void marshall(final Object obj, final MarshallingContext context) {

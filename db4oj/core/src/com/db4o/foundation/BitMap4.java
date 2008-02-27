@@ -71,4 +71,9 @@ public final class BitMap4 {
 	public byte getByte(int index) {
 		return _bits[index];
 	}
+	
+	public byte[] bytes(){
+	    return _bits;
+	}
+	
 }

@@ -9,6 +9,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -21,7 +22,7 @@ import db4ounit.extensions.fixtures.*;
 
 public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
     
-    private static final class ArrayListTypeHandler implements VariableLengthTypeHandler {
+    private static final class ArrayListTypeHandler implements TypeHandler4 {
 
         public PreparedComparison prepareComparison(Context context, Object obj) {
             // TODO Auto-generated method stub
@@ -61,10 +62,17 @@ public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase impleme
         }
 
         public Object read(ReadContext context) {
+            UnmarshallingContext unmarshallingContext = (UnmarshallingContext) context;
             int classID = context.readInt();
             ObjectContainerBase container = container(context);
             ClassMetadata classMetadata = container.classMetadataForId(classID);
-            List list = (List) classMetadata.instantiateFromReflector(container);
+            
+            List existing = (List) unmarshallingContext.persistentObject();
+            
+            List list = 
+                existing != null ? 
+                    existing : 
+                        (List) classMetadata.instantiateFromReflector(container);
             int elementCount = context.readInt();
             TypeHandler4 untypedObjectHandler = elementTypeHandler(context, list);
             for (int i = 0; i < elementCount; i++) {

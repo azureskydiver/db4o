@@ -245,7 +245,9 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
 
     public void readCandidates(int handlerVersion, ByteArrayBuffer reader, QCandidates candidates) throws Db4oIOException {
-        reader.seek(reader.readInt());
+        if(! MarshallingLogicSimplification.enabled){
+            reader.seek(reader.readInt());
+        }
         readSubCandidates(handlerVersion, reader, candidates);
     }
     

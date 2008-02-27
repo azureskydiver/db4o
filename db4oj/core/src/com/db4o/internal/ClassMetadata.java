@@ -120,7 +120,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     public final void addFieldIndices(StatefulBuffer a_writer, Slot oldSlot) {
         if(hasClassIndex() || hasVirtualAttributes()){
             ObjectHeader oh = new ObjectHeader(_container, this, a_writer);
-            oh._marshallerFamily._object.addFieldIndices(this, oh._headerAttributes, a_writer, oldSlot);
+            if(_typeHandler instanceof FirstClassObjectHandler){
+                oh._marshallerFamily._object.addFieldIndices(this, oh._headerAttributes, a_writer, oldSlot);
+            }
         }
     }
     

@@ -28,5 +28,13 @@ public interface WriteContext extends Context, WriteBuffer {
      * @param obj the object to write
      */
     void writeObject(TypeHandler4 handler, Object obj);
+
+    /**
+     * reserves a buffer with a specific length at the current
+     * position, to be written in a later step.
+     * @param length the length to be reserved. 
+     * @return the ReservedBuffer
+     */
+    ReservedBuffer reserve(int length);
     
 }

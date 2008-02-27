@@ -210,7 +210,9 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
 	private void preWrite() {
         _fieldWriteCount++;
         if(isSecondWriteToField()){
-            createChildBuffer(true, true);
+            if(! MarshallingLogicSimplification.enabled ){
+                createChildBuffer(true, true);
+            }
         }
         if(Deploy.debug){
             if(_debugPrepend != null){
@@ -359,6 +361,13 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     public void restoreState(MarshallingContextState state){
         _currentBuffer = state._buffer;
         _fieldWriteCount = state._fieldWriteCount;
+    }
+
+    public ReservedBuffer reserve(final int length) {
+        preWrite();
+        ReservedBuffer reservedBuffer = _currentBuffer.reserve(length);
+        postWrite();
+        return reservedBuffer;
     }
 
 }
