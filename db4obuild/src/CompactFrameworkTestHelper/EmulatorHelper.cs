@@ -16,11 +16,15 @@ namespace CompactFrameworkTestHelper
 		{
 			foreach (string file in Directory.GetFiles(Path.GetDirectoryName(desktoPath), Path.GetFileName(desktoPath)))
 			{
-				deployer.SendFile(file, devicePath + Path.GetFileName(file));
+                string extension = Path.GetExtension(file);
+                if (extension.Equals(".dll") || extension.Equals(".exe"))
+                {
+                    deployer.SendFile(file, devicePath + Path.GetFileName(file));
+                }
 			}
 		}
 
-        public static void publishTestLog(FileDeployer deployer, string path)
+        public static void PublishTestLog(FileDeployer deployer, string path)
         {
             string logFile = Path.Combine(path, "db4ounit.log");
             deployer.ReceiveFile(@"\db4ounit.log", logFile);

@@ -57,7 +57,7 @@ namespace CompactFrameworkTestHelper
             string db4oDistPath = arguments["dir.dll.compact"];
             if (db4oDistPath == null)
             {
-                help();
+                Help();
                 return INVALID_PROGRAM_PARAMETERS;
             }
             
@@ -85,7 +85,7 @@ namespace CompactFrameworkTestHelper
 							Thread.Sleep(2000);
 						}
 
-                        EmulatorHelper.publishTestLog(device.GetFileDeployer(), db4oDistPath);
+                        EmulatorHelper.PublishTestLog(device.GetFileDeployer(), db4oDistPath);
 
 						ret = process.GetExitCode();
 						if (ret != 0)
@@ -114,7 +114,7 @@ namespace CompactFrameworkTestHelper
 			return ret;
 		}
 
-		private static void help()
+		private static void Help()
 		{
 		    Console.WriteLine("Invalid program parameter count.\r\n" +
 		                        "Use: {0} [-version]=[2.0 | 3.5] <-dir.dll.compact>=<path to db4o .NET Compact Framework distribution> \r\n\r\n", 

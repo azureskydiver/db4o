@@ -1177,27 +1177,16 @@
 	<macrodef name="build-cf">
 		<sequential>
 			<var name="targetFolder" value="${dir.dist.dll}/cf${target.framework.version}" /> 
-			
+			<var name="db4o.tests.cf.launcher" 
+			    value="${dir.build}/src/CompactFrameworkTestHelper/Lib/CompactFrameworkTestHelper.exe" />
+		    
 			<msb solution="${dir.n.v6}/Db4o-CF" outputPath="${targetFolder}" />
-		
-	        <delete dir="${emulator.sharefolder}" >
-	            <include name="*" />
-	        </delete>
-        	
-	        <copy todir="${emulator.sharefolder}">
-	            <fileset dir="${targetFolder}" >
-	                <include name="*.dll" />
-	                <include name="*.exe" />
-	            </fileset>
-	        </copy>
-        
-	        <echo message="Run test..." />
-	        <exec executable="${vdma_desktop.exe}" failonerror="true">
-	            <arg line="&quot;\Storage Card\Db4objects.Db4o.Tests.exe run&quot;" />
-	            <arg value="${emulator.sharefolder}/db4ounit.log" />
+		    
+		    <echo message="Run db4o tests on .NET CompactFramework ${target.framework.version}" />
+	        <exec executable="${db4o.tests.cf.launcher}" failonerror="true">
+	            <arg line="-version=${target.framework.version}" />
+	            <arg value="-dir.dll.compact=${targetFolder}" />
 	        </exec>
-	    	<loadfile property="cf.db4ounit.log" srcfile="${emulator.sharefolder}/db4ounit.log" />
-	    	<echo message="${cf.db4ounit.log}" />
 		</sequential>
 	</macrodef>
 		
@@ -1207,30 +1196,6 @@
 	
     <target name="build-cf20" depends="init, configure, sharpen, define-msbuild-task">
     	<build-cf />
-    </target>
-	
-    <target name="build-cf20-old" depends="init, configure, sharpen, define-msbuild-task">
-        <property name="dir.n.v6.tests" location="${dir.n.v6}/Db4objects.Db4o.Tests" />
-        
-    	<msb solution="${dir.n.v6}/Db4o-CF" outputPath="${dir.dist.dll}/cf2.0" />
-        
-        <delete dir="${emulator.sharefolder}" >
-            <include name="*" />
-        </delete>
-        <copy todir="${emulator.sharefolder}">
-            <fileset dir="${dir.dist.dll}/cf2.0" >
-                <include name="*.dll" />
-                <include name="*.exe" />
-            </fileset>
-        </copy>
-        
-        <echo message="Run test..." />
-        <exec executable="${vdma_desktop.exe}" failonerror="true">
-            <arg line="&quot;\Storage Card\Db4objects.Db4o.Tests.exe run&quot;" />
-            <arg value="${emulator.sharefolder}/db4ounit.log" />
-        </exec>
-    	<loadfile property="cf.db4ounit.log" srcfile="${emulator.sharefolder}/db4ounit.log" />
-    	<echo message="${cf.db4ounit.log}" />
     </target>
 	
 	<target name="define-msbuild-task">
