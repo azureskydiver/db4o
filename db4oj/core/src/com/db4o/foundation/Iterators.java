@@ -166,17 +166,6 @@ public class Iterators {
 	 * @param iterable original sequence
 	 * @return
 	 */
-	public static Iterable4 flatten(final Iterable4 iterable) {
-		return new Iterable4() {
-			public Iterator4 iterator() {
-				return flatten(iterable.iterator());
-			}
-		};
-	}
-
-	/**
-	 * @see #flatten(Iterable4)
-	 */
 	public static Iterator4 flatten(Iterator4 iterator) {
 		return new FlatteningIterator(iterator);
 	}

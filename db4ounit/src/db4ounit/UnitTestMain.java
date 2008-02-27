@@ -26,7 +26,7 @@ public class UnitTestMain {
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
 		
-		final Iterable4 tests = Iterators.map(Iterators.iterable(args), new Function4() {
+		return Iterators.concatMap(Iterators.iterable(args), new Function4() {
 			public Object apply(Object arg) {
 				String testIdentifier = (String)arg;
 				try {
@@ -34,7 +34,7 @@ public class UnitTestMain {
 					if (methodSeparatorIndex>0) {
 						String className=testIdentifier.substring(0,methodSeparatorIndex);
 						String methodName=testIdentifier.substring(methodSeparatorIndex+1);
-						return testMethod(className, methodName);
+						return Iterators.cons(testMethod(className, methodName));
 					}
 					
 					return builder(Class.forName(testIdentifier));
@@ -44,7 +44,6 @@ public class UnitTestMain {
 				}
 			}
 		});
-		return Iterators.flatten(tests);
 	}
 	
 	protected Test testMethod(String className, String methodName)
