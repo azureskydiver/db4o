@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading;
 using Microsoft.DeviceEmulatorManager.Interop;
 using Microsoft.SmartDevice.Connectivity;
+using CommandLine.Utility;
 
 namespace CompactFrameworkTestHelper
 {
@@ -27,7 +27,7 @@ namespace CompactFrameworkTestHelper
 			}
 		}
 
-		private static readonly Dictionary<int, FrameWorkInfo> _deployment;
+		private static readonly Dictionary<string, FrameWorkInfo> _deployment;
 
 		private const int DoNotSaveState = 0;
 		private static readonly string DeviceTestPath = "/Temp/";
@@ -39,19 +39,28 @@ namespace CompactFrameworkTestHelper
 
 		static Program()
 		{
-			_deployment = new Dictionary<int, FrameWorkInfo>();
-			_deployment.Add(20, new FrameWorkInfo(new ObjectId(new Guid("ABD785F0-CDA7-41c5-8375-2451A7CBFF26")), "NETCFv2.ppc.armv4.cab"));
-			_deployment.Add(35, new FrameWorkInfo(new ObjectId(new Guid("ABD785F0-CDA7-41c5-8375-2451A7CBFF37")), "NETCFv35.ppc.armv4.cab"));
+			_deployment = new Dictionary<string, FrameWorkInfo>();
+			_deployment.Add("2.0", new FrameWorkInfo(new ObjectId(new Guid("ABD785F0-CDA7-41c5-8375-2451A7CBFF26")), "NETCFv2.ppc.armv4.cab"));
+			_deployment.Add("3.5", new FrameWorkInfo(new ObjectId(new Guid("ABD785F0-CDA7-41c5-8375-2451A7CBFF37")), "NETCFv35.ppc.armv4.cab"));
 		}
 
 		static int Main(string[] args)
 		{
-			int targetFrameworkVersion;
-			if (!ProcessArguments(args, out targetFrameworkVersion))
-			{
-				return INVALID_PROGRAM_PARAMETERS;
-			}
+            Arguments arguments = new Arguments(args);
 
+            string targetFrameworkVersion = arguments["version"];
+            if (targetFrameworkVersion == null)
+            {
+                targetFrameworkVersion = "2.0";
+            }
+
+            string db4oDistPath = arguments["dir.dll.compact"];
+            if (db4oDistPath == null)
+            {
+                help();
+                return INVALID_PROGRAM_PARAMETERS;
+            }
+            
 			int ret;
 			try
 			{
@@ -62,16 +71,11 @@ namespace CompactFrameworkTestHelper
 
 				DeployDotNetFramework(device, targetFrameworkVersion);
 
-				IDeviceEmulatorManagerVMID virtualDevice = EmulatorHelper.GetVirtualDevice();
-
-				string storageCardPath = Path.Combine(Environment.GetEnvironmentVariable("TEMP"), "StorageCard");
-				EmulatorHelper.SetStorageCardPath(virtualDevice, storageCardPath);
-
 				try
 				{
 					string db4oTests = "Db4objects.Db4o.Tests.exe";
 
-					EmulatorHelper.CopyFiles(device.GetFileDeployer(), Path.Combine(storageCardPath, "*"), DeviceTestPath);
+                    EmulatorHelper.CopyFiles(device.GetFileDeployer(), Path.Combine(db4oDistPath, "*"), DeviceTestPath);
 
 					RemoteProcess process = device.GetRemoteProcess();
 					if (process.Start(DeviceTestPath + db4oTests, "run"))
@@ -80,6 +84,8 @@ namespace CompactFrameworkTestHelper
 						{
 							Thread.Sleep(2000);
 						}
+
+                        EmulatorHelper.publishTestLog(device.GetFileDeployer(), db4oDistPath);
 
 						ret = process.GetExitCode();
 						if (ret != 0)
@@ -95,6 +101,7 @@ namespace CompactFrameworkTestHelper
 				finally
 				{
 					device.Disconnect();
+                    IDeviceEmulatorManagerVMID virtualDevice = EmulatorHelper.GetVirtualDevice();
 					virtualDevice.Shutdown(DoNotSaveState);
 				}
 			}
@@ -107,29 +114,14 @@ namespace CompactFrameworkTestHelper
 			return ret;
 		}
 
-		private static bool ProcessArguments(string[] args, out int version)
+		private static void help()
 		{
-			version = 0;
-			if (args.Length != 1)
-			{
-				Console.WriteLine("Invalid program parameter count.\r\n" +
-				                  "Use: {0} <version> <emulator images path>\r\n\r\n" +
-								  "Version must be either 2.0 or 3.5", Assembly.GetExecutingAssembly().GetName().Name);
-
-				return false;
-			}
-
-			float tmpVersion;
-			if (Single.TryParse(args[0], NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo, out tmpVersion) && (tmpVersion == 2.0 || tmpVersion == 3.5)) 
-			{
-				version = (int)(tmpVersion * 10);
-				return true;
-			}
-
-			return false;
+		    Console.WriteLine("Invalid program parameter count.\r\n" +
+		                        "Use: {0} [-version]=[2.0 | 3.5] <-dir.dll.compact>=<path to db4o .NET Compact Framework distribution> \r\n\r\n", 
+                                Assembly.GetExecutingAssembly().GetName().Name);
 		}
 
-		private static void DeployDotNetFramework(Device device, int version)
+		private static void DeployDotNetFramework(Device device, string version)
 		{
 			FileDeployer fd = device.GetFileDeployer();
 

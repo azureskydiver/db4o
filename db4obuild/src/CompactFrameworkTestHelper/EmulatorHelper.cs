@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
-using System.Xml;
 using Microsoft.DeviceEmulatorManager.Interop;
 using Microsoft.SmartDevice.Connectivity;
 
@@ -19,6 +19,25 @@ namespace CompactFrameworkTestHelper
 				deployer.SendFile(file, devicePath + Path.GetFileName(file));
 			}
 		}
+
+        public static void publishTestLog(FileDeployer deployer, string path)
+        {
+            string logFile = Path.Combine(path, "db4ounit.log");
+            deployer.ReceiveFile(@"\db4ounit.log", logFile);
+            try
+            {
+                StreamReader reader = File.OpenText(logFile);
+                string line = "";
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Console.Error.WriteLine(line);
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                Console.Error.WriteLine("Db4ounit.log has not been generated.");
+            }
+        }
 
 		public static IDeviceEmulatorManagerVMID FindDevice(IDeviceEmulatorManager manager, string id)
 		{
@@ -99,44 +118,6 @@ namespace CompactFrameworkTestHelper
 
 			ObjectId pocketPC2003VGA = new ObjectId("E282E6BE-C7C3-4ece-916A-88FB1CF8AF3C");
 			return platform.GetDevice(pocketPC2003VGA);
-		}
-
-		public static string GetStorageCardPath(IDeviceEmulatorManagerVMID device)
-		{
-			XmlDocument configuration = OpenConfiguration(device);
-			XmlNode storageCardNode = GetStorageCardNode(configuration);
-
-			return storageCardNode.InnerText;
-		}
-
-		private static XmlNode GetStorageCardNode(XmlDocument configuration)
-		{
-			return configuration.SelectSingleNode("//emulator:DeviceEmulator/emulator:Peripherals/emulator:SharedFolder", CreateNamespaceNamager(configuration));
-		}
-
-		private static XmlNamespaceManager CreateNamespaceNamager(XmlDocument doc)
-		{
-			XmlNamespaceManager namespaceNamager = new XmlNamespaceManager(doc.NameTable);
-			namespaceNamager.AddNamespace("emulator", "http://schemas.microsoft.com/DeviceEmulator/2006/01/DeCfg");
-			return namespaceNamager;
-		}
-
-		private static XmlDocument OpenConfiguration(IDeviceEmulatorManagerVMID device)
-		{
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(device.GetConfiguration());
-
-			return doc;
-		}
-
-		public static void SetStorageCardPath(IDeviceEmulatorManagerVMID device, string path)
-		{
-			XmlDocument configuration = OpenConfiguration(device);
-			XmlNode storageCardNode = GetStorageCardNode(configuration);
-
-			storageCardNode.InnerText = path;
-
-			device.SetConfiguration(configuration.InnerXml);
 		}
 	}
 }
