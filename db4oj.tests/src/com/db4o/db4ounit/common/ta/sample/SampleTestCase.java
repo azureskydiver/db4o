@@ -143,11 +143,11 @@ public class SampleTestCase extends AbstractDb4oTestCase implements OptOutTA, Op
     }
     
     public Iterator4 iterateGraphStringFields(Object obj){
-        return new CompositeIterator4(new MappingIterator(iterateGraph(obj)){
-            protected Object map(Object current) {
+        return Iterators.concat(Iterators.map(iterateGraph(obj), new Function4() {
+            public Object apply(Object current) {
                 return iterateStringFieldsOnObject(current);
             }
-        });
+        }));
     }
 
     Customer customerByID() {
@@ -233,20 +233,20 @@ public class SampleTestCase extends AbstractDb4oTestCase implements OptOutTA, Op
     
     Iterator4 iterateStringFieldsOnObject(final Object obj){
         final ReflectClass stringClass = reflector().forClass(String.class);
-        return new MappingIterator( iteratePersistentFields(obj)){
-            protected Object map(Object current) {
+        return mapPersistentFields(obj, new Function4(){
+            public Object apply(Object current) {
                 ReflectField field = (ReflectField) current;
                 if(field.getFieldType() != stringClass){
-                    return SKIP;
+                    return Iterators.SKIP;
                 }
                 return new FieldOnObject(field, obj);
             }
-        };
+        });
     }
-    
+
     private Iterator4 iterateFieldValues(final Object obj){
-        return new MappingIterator( iteratePersistentFields(obj)){
-            protected Object map(Object current) {
+        return mapPersistentFields(obj, new Function4() {
+            public Object apply(Object current) {
                 ReflectField field = (ReflectField) current;
                 try {
                     return field.get(obj);
@@ -254,22 +254,27 @@ public class SampleTestCase extends AbstractDb4oTestCase implements OptOutTA, Op
                     throw new Db4oException(e);
                 }
             }
-        };
+        });
     }
     
+	private Iterator4 mapPersistentFields(final Object obj,
+			final Function4 function) {
+		return Iterators.map(iteratePersistentFields(obj), function);
+	}
+    
     private Iterator4 iteratePersistentFields(final Object obj){
-        ReflectClass claxx = reflector().forObject(obj);
-        ReflectField[] fields = claxx.getDeclaredFields();
-        return new MappingIterator( new ArrayIterator4(fields)){
-            protected Object map(Object current) {
-                ReflectField field = (ReflectField) current;
-                if(field.isTransient() || field.isStatic()) {
-                    return SKIP;
-                }
-                return field;
-            }
-        };
+        return Iterators.filter(declaredFields(obj), new Predicate4() {
+        	public boolean match(Object candidate) {
+                ReflectField field = (ReflectField) candidate;
+                return !field.isTransient() && !field.isStatic();
+            }        
+        });
     }
+
+	private ReflectField[] declaredFields(final Object obj) {
+		ReflectClass claxx = reflector().forObject(obj);
+        return claxx.getDeclaredFields();
+	}
     
     private void assertIsNull(Object obj, String fieldName) throws Exception{
         Assert.isTrue(fieldIsNull(obj, fieldName));

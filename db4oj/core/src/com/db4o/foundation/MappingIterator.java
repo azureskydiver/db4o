@@ -11,8 +11,6 @@ public abstract class MappingIterator implements Iterator4 {
 
 	private Object _current;
 	
-	public static final Object SKIP = new Object(); 
-
 	public MappingIterator(Iterator4 iterator) {
 		if (null == iterator) {
 			throw new ArgumentNullException();
@@ -30,7 +28,7 @@ public abstract class MappingIterator implements Iterator4 {
 				return false;
 			}
 			_current = map(_iterator.current());
-		} while(_current == SKIP);
+		} while(_current == Iterators.SKIP);
 		return true;
 	}
 	

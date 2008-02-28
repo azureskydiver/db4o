@@ -14,7 +14,7 @@ public class FilteredIterator extends MappingIterator {
 	protected Object map(Object current) {
 		return _filter.match(current)
 			? current
-			: MappingIterator.SKIP;
+			: Iterators.SKIP;
 	}
 
 }

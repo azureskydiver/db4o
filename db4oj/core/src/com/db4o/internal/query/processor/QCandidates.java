@@ -243,18 +243,18 @@ public final class QCandidates implements Visitor4 {
     }
     
     private Iterator4 singleObjectSodaProcessor(Iterator4 indexIterator){
-    	return new MappingIterator(indexIterator) {
-			protected Object map(Object current) {
+    	return Iterators.map(indexIterator, new Function4() {
+			public Object apply(Object current) {
 				int id = ((Integer)current).intValue();
 				QCandidate candidate = new QCandidate(QCandidates.this, null, id, true); 
 				i_root = candidate; 
 				evaluate();
 				if(! candidate.include()){
-					return MappingIterator.SKIP;
+					return Iterators.SKIP;
 				}
 				return current;
 			}
-		};
+		});
     }
     
     public Iterator4 executeLazy(Collection4 executionPath){
@@ -289,13 +289,13 @@ public final class QCandidates implements Visitor4 {
 			
 			final String fieldName = (String) executionPathIterator.current();
 			
-			Iterator4 mapIdToFieldIdsIterator = new MappingIterator(res){
+			res = Iterators.concat(Iterators.map(res, new Function4() {
 				
-				protected Object map(Object current) {
+				public Object apply(Object current) {
 					int id = ((Integer)current).intValue();
                     StatefulBuffer reader = stream().readWriterByID(i_trans, id);
                     if (reader == null) {
-                    	return MappingIterator.SKIP;
+                    	return Iterators.SKIP;
                     }
                     	
                     ObjectHeader oh = new ObjectHeader(stream(), reader);
@@ -309,10 +309,7 @@ public final class QCandidates implements Visitor4 {
 
 					return new TreeKeyIterator(idTree);
 				}
-				
-			};
-			
-			res = new CompositeIterator4(mapIdToFieldIdsIterator);
+			}));
 			
 		}
 		return res;
