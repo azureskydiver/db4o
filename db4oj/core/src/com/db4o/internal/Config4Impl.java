@@ -615,7 +615,10 @@ public final class Config4Impl implements Configuration, DeepClone,
         _config.put(FREESPACE_SYSTEM_KEY,AbstractFreespaceManager.FM_RAM);
     }
 
-	public void useIndexSystem() {
+	/**
+	 * @deprecated
+	 */
+    public void useIndexSystem() {
 		throw new NotSupportedException();
 	}
     

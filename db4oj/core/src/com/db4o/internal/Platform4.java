@@ -506,6 +506,9 @@ public final class Platform4 {
         return callConstructorCheck.definiteYes();
     }
     
+    /**
+     * @deprecated
+     */
     private static final void netReadAsJava(Config4Impl config, String className){
         Config4Class classConfig = (Config4Class)config.objectClass(db4oClass(className) + DB4O_ASSEMBLY);
         if(classConfig == null){
