@@ -98,6 +98,9 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     	return config().reflector().forName(getName());
     }
 
+    /**
+     * @deprecated
+     */
     public void compare(ObjectAttribute comparator) {
         _config.put(QUERY_ATTRIBUTE_PROVIDER_KEY,comparator);
     }
@@ -240,6 +243,9 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
         return true;
     }
 
+    /**
+     * @deprecated
+     */
     public void readAs(Object clazz) {
 	   Config4Impl configRef=config();
        ReflectClass claxx = configRef.reflectorFor(clazz);
