@@ -104,7 +104,7 @@ public final class HandlerRegistry {
     	
     	initClassReflectors(reflector);
         
-        _indexes = new SharedIndexedFields(container);
+        _indexes = new SharedIndexedFields();
         
         _virtualFields[0] = _indexes._version;
         _virtualFields[1] = _indexes._uUID;

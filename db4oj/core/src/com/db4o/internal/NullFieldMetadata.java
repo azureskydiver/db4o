@@ -14,6 +14,9 @@ public class NullFieldMetadata extends FieldMetadata {
         super(null);
     }
     
+    /**
+     * @param obj
+     */
     public PreparedComparison prepareComparison(Object obj) {
     	return Null.INSTANCE;
     }
