@@ -56,12 +56,12 @@ public abstract class AbstractQueryResult implements QueryResult {
     	return new MappingIterator(iterateIDs()){
     		protected Object map(Object current) {
     			if(current == null){
-    				return MappingIterator.SKIP;
+    				return Iterators.SKIP;
     			}
     			synchronized (lock()) {
     				Object obj = activatedObject(((Integer)current).intValue());
     				if(obj == null){
-    					return MappingIterator.SKIP;
+    					return Iterators.SKIP;
     				}
     				return obj; 
     			}

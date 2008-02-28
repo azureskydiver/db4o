@@ -8,6 +8,12 @@ package com.db4o.foundation;
  * @exclude
  */
 public class Iterators {
+	
+	/**
+	 * Constant indicating that the current element in a {@link #map} operation
+	 * should be skipped.
+	 */
+	public static final Object SKIP = new Object();
 
 	public static final Iterator4 EMPTY_ITERATOR = new Iterator4() {
 		public Object current() {
@@ -68,6 +74,17 @@ public class Iterators {
 		return concat(map(iterable, function));
 	}
 	
+	/**
+	 * Returns a new iterator which yields the result of applying the function
+	 * to every element in the original iterator.
+	 * 
+	 * {@link Iterators#SKIP} can be returned from function to indicate the current
+	 * element should be skipped. 
+	 * 
+	 * @param iterator
+	 * @param function
+	 * @return
+	 */
 	public static Iterator4 map(Iterator4 iterator, Function4 function) {
 		return new FunctionApplicationIterator(iterator, function);
 	}
@@ -227,5 +244,5 @@ public class Iterators {
 				return iterator;
 			}
 		};
-	}
+	}	
 }

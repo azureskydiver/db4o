@@ -58,21 +58,15 @@ public abstract class AbstractLateQueryResult extends AbstractQueryResult {
 	}
 	
 	protected Iterable4 classIndexesIterable(final ClassMetadataIterator classCollectionIterator) {
-		return new Iterable4() {
-			public Iterator4 iterator() {
-				return new CompositeIterator4(
-					new MappingIterator(classCollectionIterator) {
-						protected Object map(Object current) {
-							final ClassMetadata yapClass = (ClassMetadata)current;
-							if(skipClass(yapClass)){
-								return MappingIterator.SKIP;
-							}
-							return classIndexIterator(yapClass);
-						}
-					}
-				);
+		return Iterators.concatMap(Iterators.iterable(classCollectionIterator), new Function4() {
+			public Object apply(Object current) {
+				final ClassMetadata yapClass = (ClassMetadata)current;
+				if(skipClass(yapClass)){
+					return Iterators.SKIP;
+				}
+				return classIndexIterable(yapClass);
 			}
-		};
+		});
 	}
 	
 	protected Iterable4 classIndexIterable(final ClassMetadata clazz) {

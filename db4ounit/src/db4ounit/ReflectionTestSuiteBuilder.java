@@ -79,7 +79,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 				Method method = (Method)arg;
 				if (!isTestMethod(method)) {
 					emitWarningOnIgnoredTestMethod(clazz, method);
-					return MappingIterator.SKIP;			
+					return Iterators.SKIP;			
 				}
 				return fromMethod(clazz, method);
 			}
