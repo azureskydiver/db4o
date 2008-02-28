@@ -252,7 +252,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 		return container().typeHandlerForId(id);
 	}
 	
-	private int handlerVersion(){
+	public int handlerVersion(){
 		return _handlerVersion;
 	}
 
@@ -314,5 +314,9 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
     public void writeBytes(byte[] bytes) {
         _target.writeBytes(bytes);
         _source.incrementOffset(bytes.length);
+    }
+
+    public void seekCurrentInt() {
+        seek(readInt());
     }
 }

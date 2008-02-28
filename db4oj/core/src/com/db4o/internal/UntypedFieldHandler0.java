@@ -14,7 +14,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class UntypedFieldHandler0 extends UntypedFieldHandler {
+public class UntypedFieldHandler0 extends UntypedFieldHandler2 {
 
     public UntypedFieldHandler0(ObjectContainerBase container) {
         super(container);

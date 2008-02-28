@@ -139,7 +139,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 				if (tempHandler != null) {
 				    
-	                final TypeHandler4 arrayHandler = tempHandler;
+	                final TypeHandler4 arrayElementHandler = tempHandler;
 
 
 					final int offset = arrayBytes[0]._offset;
@@ -166,21 +166,12 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 							qcon.setCandidates(candidates);
 							
-							if(arrayHandler instanceof FirstClassHandler){
-							    
-							    // FIXME: the code below depends upon handler versions.
-							    //        Handling should take place in handlers or in
-							    //        one intermediate class that is aware of handler
-							    //        versions and can correct state for different 
-							    //        ones.
-							    if(MarshallingLogicSimplification.enabled){
-    							    HandlerRegistry handlerRegistry = a_candidates.stream().handlers();
-    	                            if(handlerRegistry.isVariableLength(handler)){
-    							        arrayBytes[0].seek(arrayBytes[0].readInt());
-    							    }
+							if(arrayElementHandler instanceof FirstClassHandler){
+								if(MarshallingLogicSimplification.enabled){
+    							    SlotFormat slotFormat = SlotFormat.forHandlerVersion(_handlerVersion);
+    							    slotFormat.scrollToContent(a_candidates.stream().handlers(), handler, arrayElementHandler, arrayBytes[0]);
 							    }
-							    
-							    ((FirstClassHandler)arrayHandler).readCandidates(_handlerVersion,arrayBytes[0], candidates);
+							    ((FirstClassHandler)arrayElementHandler).readCandidates(_handlerVersion,arrayBytes[0], candidates);
 							}
 							
 							arrayBytes[0]._offset = offset;

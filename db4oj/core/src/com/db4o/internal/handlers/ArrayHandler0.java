@@ -16,7 +16,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class ArrayHandler0 extends ArrayHandler {
+public class ArrayHandler0 extends ArrayHandler2 {
 
     public ArrayHandler0(ArrayHandler template, HandlerRegistry registry, int version) {
         super(template, registry, version);

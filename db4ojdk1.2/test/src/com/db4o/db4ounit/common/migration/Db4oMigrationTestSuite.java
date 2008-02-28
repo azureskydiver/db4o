@@ -29,7 +29,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 			// run against specific libraries + the current one
 			return new String[] {
 				// WorkspaceServices.workspacePath("db4o.archives/java1.2/db4o-3.0.jar"),
-				WorkspaceServices.workspacePath("db4o.archives/java1.2/db4o-4.0-java1.1.jar"),
+				WorkspaceServices.workspacePath("db4o.archives/java1.2/db4o-7.2.31.10304-java1.2.jar"),
 			};
 		} 
 		return Db4oMigrationSuiteBuilder.CURRENT;

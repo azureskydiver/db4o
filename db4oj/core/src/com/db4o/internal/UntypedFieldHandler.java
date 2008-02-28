@@ -102,8 +102,8 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         int typeHandlerId = context.copyIDReturnOriginalID();
 		TypeHandler4 typeHandler = context.typeHandlerForId(typeHandlerId);
 		if(typeHandler != null){
-		    // TODO: correct handler version here.
-		    typeHandler.defragment(context);
+		    // seekSecondaryOffset(context, typeHandler);
+		    context.correctHandlerVersion(typeHandler).defragment(context);
 		}
         context.seek(linkOffSet);
     }
@@ -115,17 +115,25 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         return typeHandler;
     }
 
-    private void seekSecondaryOffset(InternalReadContext context, TypeHandler4 classMetadata) {
-        if(isPrimitiveArray(classMetadata)){
+    /**
+     * @param buffer
+     * @param typeHandler
+     */
+    protected void seekSecondaryOffset(ReadBuffer buffer, TypeHandler4 typeHandler) {
+        
+        // do nothing, no longer needed in current implementation.
+
+        if(isPrimitiveArray(typeHandler)){
             // unnecessary secondary offset, consistent with old format
             
             if(! MarshallingLogicSimplification.enabled ){
-                context.seek(context.readInt());
+                buffer.seekCurrentInt();
             }
         }
+        
     }
 
-    private boolean isPrimitiveArray(TypeHandler4 classMetadata) {
+    protected boolean isPrimitiveArray(TypeHandler4 classMetadata) {
         return classMetadata instanceof PrimitiveFieldHandler && ((PrimitiveFieldHandler)classMetadata).isArray();
     }
 

@@ -114,7 +114,15 @@ public class MarshallerFamily {
     }
 
     public static MarshallerFamily version(int n) {
+        n = noVersionGreaterThan2(n);
         return allVersions[n];
+    }
+
+    private static int noVersionGreaterThan2(int n) {
+        if(n > 2){
+            n = 2;
+        }
+        return n;
     }
 
     public static MarshallerFamily current() {
