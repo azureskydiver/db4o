@@ -107,10 +107,6 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
         }
     }
 
-    //private ByteArrayBuffer val(Object obj) {
-    //	return val(obj,container());
-    //}
-
     ByteArrayBuffer val(Object obj, Context context) {
         if(obj instanceof ByteArrayBuffer) {
             return (ByteArrayBuffer)obj;

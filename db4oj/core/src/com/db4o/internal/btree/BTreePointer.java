@@ -150,7 +150,7 @@ public class BTreePointer{
 		if (btree() != y.btree()) {
 			throw new IllegalArgumentException();
 		}		
-		return btree().compareKeys(key(), y.key());
+		return btree().compareKeys(transaction().context(), key(), y.key());
 	}
 
 	private BTree btree() {

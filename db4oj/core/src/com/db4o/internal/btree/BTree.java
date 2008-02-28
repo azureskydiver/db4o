@@ -44,8 +44,6 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     
     private final int _cacheHeight;
     
-    private Context _context;
-    
     public BTree(Transaction trans, int id, Indexable4 keyHandler){
 		this(trans, id, keyHandler, config(trans).bTreeNodeSize(), config(trans).bTreeCacheHeight());
     }	
@@ -71,7 +69,6 @@ public class BTree extends PersistentBase implements TransactionParticipant {
             setID(id);
             setStateDeactivated();
         }
-        _context = trans.context();
 	}
     
 	public BTreeNode root() {
@@ -437,8 +434,8 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 		}
 	}
 
-	public int compareKeys(Object key1, Object key2) {
-		PreparedComparison preparedComparison = _keyHandler.prepareComparison(_context, key1);
+	public int compareKeys(Context context, Object key1, Object key2) {
+		PreparedComparison preparedComparison = _keyHandler.prepareComparison(context, key1);
 		return preparedComparison.compareTo(key2);
 	}
 	
