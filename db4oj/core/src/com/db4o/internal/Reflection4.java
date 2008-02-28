@@ -87,8 +87,7 @@ public class Reflection4 {
 	}
 
 	public static Object invoke(final Object obj, String methodName,
-			Class signature, Object value) throws NoSuchMethodException,
-			IllegalAccessException, InvocationTargetException {
+			Class signature, Object value) throws ReflectException {
 		return invoke(obj, methodName, new Class[] { signature }, new Object[] { value });
 	}
 
@@ -110,4 +109,13 @@ public class Reflection4 {
 			throws IllegalAccessException {
 		return getField(obj.getClass(), fieldName).get(obj);
 	}
+
+    public static Object newInstance(Object template) {
+        try {
+            return template.getClass().newInstance();
+        } catch (Exception e) {
+            throw new ReflectException(e);
+        }
+    }
+    
 }

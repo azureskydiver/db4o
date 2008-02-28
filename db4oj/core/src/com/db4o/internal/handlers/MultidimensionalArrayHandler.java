@@ -20,10 +20,10 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         super(stream, a_handler, a_isPrimitive);
     }
     
-    protected MultidimensionalArrayHandler(ArrayHandler template, HandlerRegistry registry, int version) {
-        super(template, registry, version);
+    public MultidimensionalArrayHandler(){
+        // required for reflection cloning
     }
-
+    
     public final Iterator4 allElements(Object array) {
 		return allElements(arrayReflector(), array);
     }
@@ -109,7 +109,7 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         if(array != null){
             Object[] objects = new Object[elementCount(dimensions.value)];
             for (int i = 0; i < objects.length; i++) {
-                objects[i] = context.readObject(_handler);
+                objects[i] = context.readObject(delegateTypeHandler());
             }
             arrayReflector().shape(objects, 0, array, dimensions.value, 0);
         }
@@ -138,12 +138,16 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         
         Iterator4 objects = allElements(obj);
         while (objects.moveNext()) {
-            context.writeObject(_handler, objects.current());
+            context.writeObject(delegateTypeHandler(), objects.current());
         }
         
         if (Deploy.debug) {
             Debug.writeEnd(context);
         }
+    }
+    
+    public TypeHandler4 genericTemplate() {
+        return new MultidimensionalArrayHandler();
     }
     
 

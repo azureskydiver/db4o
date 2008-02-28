@@ -2,7 +2,6 @@
 
 package com.db4o.internal.handlers;
 
-import com.db4o.internal.*;
 
 
 /**
@@ -10,8 +9,5 @@ import com.db4o.internal.*;
  */
 public class ArrayHandler2 extends ArrayHandler {
 
-    protected ArrayHandler2(ArrayHandler template, HandlerRegistry registry, int version) {
-        super(template, registry, version);
-    }
 
 }

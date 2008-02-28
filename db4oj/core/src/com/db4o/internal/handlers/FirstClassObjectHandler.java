@@ -13,12 +13,18 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class FirstClassObjectHandler  implements TypeHandler4 {
+public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHandler {
     
-    private final ClassMetadata _classMetadata;
+    private static final int HASHCODE_FOR_NULL = 72483944; 
+    
+    private ClassMetadata _classMetadata;
 
     public FirstClassObjectHandler(ClassMetadata classMetadata) {
         _classMetadata = classMetadata;
+    }
+    
+    public FirstClassObjectHandler(){
+        // required for reflection cloning
     }
 
     public void defragment(DefragmentContext context) {
@@ -201,6 +207,36 @@ public class FirstClassObjectHandler  implements TypeHandler4 {
 
     public ClassMetadata classMetadata() {
         return _classMetadata;
+    }
+    
+    public boolean equals(Object obj) {
+        if(! (obj instanceof FirstClassObjectHandler)){
+            return false;
+        }
+        FirstClassObjectHandler other = (FirstClassObjectHandler) obj;
+        if(_classMetadata == null){
+            return other._classMetadata == null;
+        }
+        return _classMetadata.equals(other._classMetadata);
+    }
+    
+    public int hashCode() {
+        if(_classMetadata != null){
+            return _classMetadata.hashCode();
+        }
+        return HASHCODE_FOR_NULL;
+    }
+    
+    public TypeHandler4 genericTemplate() {
+        return new FirstClassObjectHandler(null);
+    }
+
+    public Object deepClone(Object context) {
+        TypeHandlerCloneContext typeHandlerCloneContext = (TypeHandlerCloneContext) context;
+        FirstClassObjectHandler cloned = (FirstClassObjectHandler) Reflection4.newInstance(this);
+        FirstClassObjectHandler original = (FirstClassObjectHandler) typeHandlerCloneContext.original;
+        cloned._classMetadata = original._classMetadata;
+        return cloned;
     }
 
 }

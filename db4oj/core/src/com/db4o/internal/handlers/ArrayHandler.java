@@ -16,33 +16,22 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler4, VariableLengthTypeHandler, EmbeddedTypeHandler{
-	
-    private static final class ReflectArrayIterator extends IndexedIterator {
-		private final Object _array;
-		private final ReflectArray _reflectArray;
-
-		public ReflectArrayIterator(ReflectArray reflectArray, Object array) {
-			super(reflectArray.getLength(array));
-			_reflectArray = reflectArray;
-			_array = array;
-		}
-
-		protected Object get(int index) {
-			return _reflectArray.get(_array, index);
-		}
-	}
-
-	public final TypeHandler4 _handler;
-	
-    public final boolean _usePrimitiveClassReflector;
+public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler4, VariableLengthTypeHandler, EmbeddedTypeHandler, CompositeTypeHandler{
     
-    private final ObjectContainerBase _container;
+	private TypeHandler4 _handler;
+	
+    private boolean _usePrimitiveClassReflector;
+    
+    private ObjectContainerBase _container;
     
     public ArrayHandler(ObjectContainerBase container, TypeHandler4 handler, boolean usePrimitiveClassReflector) {
         _container = container;
         _handler = handler;
         _usePrimitiveClassReflector = usePrimitiveClassReflector;
+    }
+    
+    public ArrayHandler(){
+        // required for reflection cloning
     }
     
     protected ArrayHandler(ArrayHandler template, HandlerRegistry registry, int version) {
@@ -188,13 +177,20 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         if (! (obj instanceof ArrayHandler)) {
             return false;
         }
-        if (((ArrayHandler) obj).identifier() != identifier()) {
+        ArrayHandler other = (ArrayHandler) obj;
+        if (other.identifier() != identifier()) {
             return false;
         }
-        return (_handler.equals(((ArrayHandler) obj)._handler));
+        if(_handler == null){
+            return other._handler == null;
+        }
+        return _handler.equals(other._handler)  && _usePrimitiveClassReflector == other._usePrimitiveClassReflector;
     }
     
     public int hashCode() {
+        if(_handler == null){
+            return HASHCODE_FOR_NULL; 
+        }
         int hc = _handler.hashCode() >> 7; 
         return _usePrimitiveClassReflector ? hc : - hc;
     }
@@ -491,6 +487,41 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 	
     public int linkLength() {
         return Const4.INDIRECTION_LENGTH;
+    }
+
+    public TypeHandler4 genericTemplate() {
+        return new ArrayHandler();
+    }
+    
+    public Object deepClone(Object context) {
+        TypeHandlerCloneContext typeHandlerCloneContext = (TypeHandlerCloneContext) context;
+        ArrayHandler original = (ArrayHandler) typeHandlerCloneContext.original;
+        ArrayHandler cloned = (ArrayHandler) Reflection4.newInstance(this);
+        cloned._container = original.container();
+        cloned._usePrimitiveClassReflector = original._usePrimitiveClassReflector;
+        cloned._handler = typeHandlerCloneContext.correctHandlerVersion(original.delegateTypeHandler());  
+        return cloned;
+    }
+
+    public TypeHandler4 delegateTypeHandler() {
+        return _handler;
+    }
+    
+    private static final int HASHCODE_FOR_NULL = 9141078; 
+    
+    private static final class ReflectArrayIterator extends IndexedIterator {
+        private final Object _array;
+        private final ReflectArray _reflectArray;
+
+        public ReflectArrayIterator(ReflectArray reflectArray, Object array) {
+            super(reflectArray.getLength(array));
+            _reflectArray = reflectArray;
+            _array = array;
+        }
+
+        protected Object get(int index) {
+            return _reflectArray.get(_array, index);
+        }
     }
 
     
