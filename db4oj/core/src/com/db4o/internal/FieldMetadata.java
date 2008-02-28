@@ -247,7 +247,11 @@ public class FieldMetadata implements StoredField {
     }
 
     private GenericReflector reflector() {
-        return container().reflector();
+        ObjectContainerBase container = container();
+        if (container == null) {
+            return null;
+        }
+        return container.reflector();
     }
 
     public Object coerce(ReflectClass claxx, Object obj) {
