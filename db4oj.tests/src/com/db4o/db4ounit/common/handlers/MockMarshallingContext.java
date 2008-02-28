@@ -94,5 +94,9 @@ public abstract class MockMarshallingContext {
 	public void seek(int offset) {
 		_current.seek(offset);
 	}
+	
+    public void seekCurrentInt() {
+        seek(readInt());
+    }
 
 }

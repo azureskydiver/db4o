@@ -252,5 +252,9 @@ public class ByteArrayBuffer implements ReadBuffer, ReadWriteBuffer, WriteBuffer
 	public int offset() {
 		return _offset;
 	}
+	
+	public void seekCurrentInt(){
+	    seek(readInt());
+	}
 
 }

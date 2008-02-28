@@ -25,7 +25,7 @@ import com.db4o.reflect.generic.*;
  */
 public final class HandlerRegistry {
     
-    public static final byte HANDLER_VERSION = (byte)2;
+    public static final byte HANDLER_VERSION = MarshallingLogicSimplification.enabled ? (byte)3 : (byte)2;
     
     private final ObjectContainerBase _container;  // this is the master container and not valid
 	                                   // for TransportObjectContainer
@@ -76,7 +76,7 @@ public final class HandlerRegistry {
     
     final GenericReflector                _reflector;
     
-    private final Hashtable4 _handlerVersions = newHashtable();
+    private final HandlerVersionRegistry _handlerVersions;
     
     private LatinStringIO _stringIO;
     
@@ -93,6 +93,8 @@ public final class HandlerRegistry {
 
 
     HandlerRegistry(final ObjectContainerBase container, byte stringEncoding, GenericReflector reflector) {
+        
+        _handlerVersions = new HandlerVersionRegistry(this);
         
         _stringIO = LatinStringIO.forEncoding(stringEncoding);
     	
@@ -206,6 +208,8 @@ public final class HandlerRegistry {
         PrimitiveFieldHandler classMetadata = new PrimitiveFieldHandler(container(), (TypeHandler4)_untypedFieldHandler, id, ICLASS_OBJECT);
         map(id, classMetadata, _untypedFieldHandler, new PlainObjectHandler(), ICLASS_OBJECT);
         registerHandlerVersion(_untypedFieldHandler, 0, new UntypedFieldHandler0(container()));
+        // registerHandlerVersion(_untypedFieldHandler, 2, new UntypedFieldHandler2(container()));
+
     }
     
     private void registerBuiltinHandler(int id, BuiltinTypeHandler handler) {
@@ -278,30 +282,11 @@ public final class HandlerRegistry {
     }
 
 	private void registerHandlerVersion(FieldHandler handler, int version, TypeHandler4 replacement) {
-	    _handlerVersions.put(new HandlerVersionKey(handler, version), replacement);
+	    _handlerVersions.put(handler, version, replacement);
     }
 
     public TypeHandler4 correctHandlerVersion(TypeHandler4 handler, int version){
-    	if(version == HandlerRegistry.HANDLER_VERSION){
-    		return handler;
-    	}
-        TypeHandler4 replacement = (TypeHandler4) _handlerVersions.get(new HandlerVersionKey(handler, version));
-        if(replacement != null){
-            return replacement;
-        }
-        if(handler instanceof FirstClassObjectHandler  && (version == 0)){
-            handler = new FirstClassObjectHandler0(((FirstClassObjectHandler)handler).classMetadata());
-        }
-        if(handler instanceof MultidimensionalArrayHandler && (version == 0)){
-            return new MultidimensionalArrayHandler0((ArrayHandler)handler, this, version);
-        }
-        if(handler instanceof ArrayHandler  && (version == 0)){
-            return new ArrayHandler0((ArrayHandler)handler, this, version);
-        }
-        if(handler instanceof PrimitiveFieldHandler  && (version == 0)){
-            return new PrimitiveFieldHandler((PrimitiveFieldHandler) handler, this, version);
-        }
-        return handler;
+        return _handlerVersions.correctHandlerVersion(handler, version);
     }
 
     int arrayType(Object obj) {

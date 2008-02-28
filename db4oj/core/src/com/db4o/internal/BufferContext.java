@@ -78,5 +78,10 @@ public abstract class BufferContext implements ReadBuffer{
     public BitMap4 readBitMap(int bitCount){
         return _buffer.readBitMap(bitCount);
     }
+    
+    public void seekCurrentInt() {
+        seek(readInt());
+    }
+
 
 }

@@ -27,4 +27,6 @@ public interface InternalReadContext extends ReadContext{
 
     public void seek(int offset);
     
+    public int handlerVersion();
+    
 }

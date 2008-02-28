@@ -18,6 +18,10 @@ public interface DefragmentContext extends Context, ReadBuffer {
 	public int copySlotlessID();
 
 	public int copyUnindexedID();
+	
+	public TypeHandler4 correctHandlerVersion(TypeHandler4 handler);
+	
+	public int handlerVersion();
 
 	public void incrementOffset(int length);
 
