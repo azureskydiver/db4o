@@ -200,6 +200,8 @@ public final class HandlerRegistry {
         registerHandlerVersion(dateHandler, 0, new DateHandler0());
         
         registerUntypedHandlers();
+        
+        registerCompositeHandlerVersions();
     }
 
     private void registerUntypedHandlers() {
@@ -210,6 +212,21 @@ public final class HandlerRegistry {
         registerHandlerVersion(_untypedFieldHandler, 0, new UntypedFieldHandler0(container()));
         // registerHandlerVersion(_untypedFieldHandler, 2, new UntypedFieldHandler2(container()));
 
+    }
+    
+    private void registerCompositeHandlerVersions(){
+        
+        FirstClassObjectHandler firstClassObjectHandler = new FirstClassObjectHandler();
+        registerHandlerVersion(firstClassObjectHandler, 0, new FirstClassObjectHandler0());
+        
+        ArrayHandler arrayHandler = new ArrayHandler();
+        registerHandlerVersion(arrayHandler, 0, new ArrayHandler0());
+        
+        MultidimensionalArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler();
+        registerHandlerVersion(multidimensionalArrayHandler, 0, new MultidimensionalArrayHandler0());
+        
+        PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler();
+        registerHandlerVersion(primitiveFieldHandler, 0, primitiveFieldHandler);  // same handler, but making sure versions get cascaded
     }
     
     private void registerBuiltinHandler(int id, BuiltinTypeHandler handler) {

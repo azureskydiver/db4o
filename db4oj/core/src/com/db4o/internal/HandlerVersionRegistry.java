@@ -4,7 +4,6 @@ package com.db4o.internal;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.fieldhandlers.*;
-import com.db4o.internal.handlers.*;
 
 
 /**
@@ -24,26 +23,23 @@ public class HandlerVersionRegistry {
         _versions.put(new HandlerVersionKey(handler, version), replacement);
     }
 
-    public TypeHandler4 correctHandlerVersion(TypeHandler4 handler, int version) {
-        if(version == HandlerRegistry.HANDLER_VERSION){
-            return handler;
+    public TypeHandler4 correctHandlerVersion(final TypeHandler4 originalHandler, final int version) {
+        if(version >= HandlerRegistry.HANDLER_VERSION){
+            return originalHandler;
         }
-        TypeHandler4 replacement = (TypeHandler4) _versions.get(new HandlerVersionKey(handler, version));
-        if(replacement != null){
-            return replacement;
+        TypeHandler4 replacement = (TypeHandler4) _versions.get(new HandlerVersionKey(genericTemplate(originalHandler), version));
+        if(replacement == null){
+            return correctHandlerVersion(originalHandler, version + 1);    
         }
-        
-        if(handler instanceof FirstClassObjectHandler  && (version == 0)){
-            handler = new FirstClassObjectHandler0(((FirstClassObjectHandler)handler).classMetadata());
-        }
-        if(handler instanceof MultidimensionalArrayHandler && (version == 0)){
-            return new MultidimensionalArrayHandler0((ArrayHandler)handler, _registry, version);
-        }
-        if(handler instanceof ArrayHandler  && (version == 0)){
-            return new ArrayHandler0((ArrayHandler)handler, _registry, version);
-        }
-        if(handler instanceof PrimitiveFieldHandler  && (version == 0)){
-            return new PrimitiveFieldHandler((PrimitiveFieldHandler) handler, _registry, version);
+        if(replacement instanceof CompositeTypeHandler){
+            return (TypeHandler4) ((CompositeTypeHandler)replacement).deepClone(new TypeHandlerCloneContext(_registry, originalHandler,  version));
+        };
+        return replacement;
+    }
+
+    private TypeHandler4 genericTemplate(final TypeHandler4 handler) {
+        if (handler instanceof CompositeTypeHandler){
+            return ((CompositeTypeHandler)handler).genericTemplate(); 
         }
         return handler;
     }

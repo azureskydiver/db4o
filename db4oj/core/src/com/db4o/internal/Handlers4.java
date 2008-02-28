@@ -83,7 +83,7 @@ public class Handlers4 {
     
     public static TypeHandler4 baseTypeHandler(TypeHandler4 handler){
         if(handler instanceof ArrayHandler){
-            return ((ArrayHandler)handler)._handler;
+            return ((ArrayHandler)handler).delegateTypeHandler();
         }
         if(handler instanceof PrimitiveFieldHandler){
             return ((PrimitiveFieldHandler)handler).typeHandler();

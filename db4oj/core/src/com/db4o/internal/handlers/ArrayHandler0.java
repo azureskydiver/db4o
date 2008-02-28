@@ -18,10 +18,6 @@ import com.db4o.marshall.*;
  */
 public class ArrayHandler0 extends ArrayHandler2 {
 
-    public ArrayHandler0(ArrayHandler template, HandlerRegistry registry, int version) {
-        super(template, registry, version);
-    }
-    
     public void delete(DeleteContext context) throws Db4oIOException {
     	context.readSlot();
     	context.defragmentRecommended();
@@ -94,7 +90,7 @@ public class ArrayHandler0 extends ArrayHandler2 {
     public void defrag2(DefragmentContext context) {
 		int elements = readElementsDefrag(context);
 		for (int i = 0; i < elements; i++) {
-			_handler.defragment(context);
+		    delegateTypeHandler().defragment(context);
 		}
     }
 }

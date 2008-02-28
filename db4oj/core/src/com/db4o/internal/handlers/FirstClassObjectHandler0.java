@@ -2,7 +2,6 @@
 
 package com.db4o.internal.handlers;
 
-import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 
 
@@ -11,10 +10,6 @@ import com.db4o.internal.marshall.*;
  */
 public class FirstClassObjectHandler0 extends FirstClassObjectHandler{
 
-    public FirstClassObjectHandler0(ClassMetadata classMetadata) {
-        super(classMetadata);
-    }
-    
     protected boolean isNull(FieldListInfo fieldList,int fieldIndex) {
         return false;
     }

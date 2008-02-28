@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2008  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.internal;
 
@@ -15,7 +15,9 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler{
+public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler, CompositeTypeHandler{
+    
+    private static final int HASHCODE_FOR_NULL = 283636383;
     
     private final TypeHandler4 _handler;
     
@@ -25,9 +27,10 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
         _handler = handler;
         _id = handlerID;
     }
-
-    PrimitiveFieldHandler(PrimitiveFieldHandler prototype, HandlerRegistry registry, int version) {
-    	this(prototype.container(), registry.correctHandlerVersion(prototype._handler, version), prototype._id, prototype.classReflector());
+    
+    public PrimitiveFieldHandler(){
+        super(null, null);
+        _handler = null;
     }
 
     void activateFields(Transaction trans, Object obj, ActivationDepth depth) {
@@ -177,6 +180,35 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
     
     public TypeHandler4 delegateTypeHandler(){
         return _handler;
+    }
+    
+    public TypeHandler4 genericTemplate() {
+        return new PrimitiveFieldHandler(null, null, 0, null);
+    }
+    
+    public boolean equals(Object obj) {
+        if(! (obj instanceof PrimitiveFieldHandler)){
+            return false;
+        }
+        PrimitiveFieldHandler other = (PrimitiveFieldHandler) obj;
+        if(_handler == null){
+            return other._handler == null;
+        }
+        return _handler.equals(other._handler);
+    }
+    
+    public int hashCode() {
+        if(_handler == null){
+            return HASHCODE_FOR_NULL;
+        }
+        return _handler.hashCode();
+    }
+    
+    public Object deepClone(Object context) {
+        TypeHandlerCloneContext typeHandlerCloneContext = (TypeHandlerCloneContext) context;
+        PrimitiveFieldHandler original = (PrimitiveFieldHandler) typeHandlerCloneContext.original;
+        TypeHandler4 delegateTypeHandler = typeHandlerCloneContext.correctHandlerVersion(original.delegateTypeHandler());
+        return new PrimitiveFieldHandler(original.container(), delegateTypeHandler, original._id, original.classReflector());
     }
 
 }
