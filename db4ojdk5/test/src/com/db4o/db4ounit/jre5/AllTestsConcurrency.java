@@ -15,9 +15,6 @@ public class AllTestsConcurrency extends Db4oConcurrenyTestSuite {
 	}
 
 	protected Class[] testCases() {
-		if (true) {
-			return new Class[] { ConcurrentQueryTestCase.class };
-		}
 		return new Class[] { 
 				ArrayNOrderTestCase.class, 
 				ByteArrayTestCase.class,
