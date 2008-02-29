@@ -62,20 +62,20 @@ public class ConcurrentQueryTestCase extends Db4oClientServerTestCase {
 	}
 
 	private void assertAllItems(final Iterator result) {
-		Collection4 found = collectItemIds(result);
-		for (int expected=0; expected<ITEM_COUNT; ++expected) {
-			found.remove(new Integer(expected));
-		}
-		Assert.areEqual("[]", found.toString());
-	}
-
-	private Collection4 collectItemIds(final Iterator result) {
-		Collection4 found = new Collection4();
+		Collection4 expected = range(ITEM_COUNT);
 		for (int i=0; i<ITEM_COUNT; ++i) {
 			final Item nextItem = (Item)result.next();
-			found.add(new Integer(nextItem.id));
+			expected.remove(new Integer(nextItem.id));
 		}
-		return found;
+		Assert.areEqual("[]", expected.toString());
+	}
+
+	private Collection4 range(int end) {
+		Collection4 range = new Collection4();
+		for (int i=0; i<end; ++i) {
+			range.add(new Integer(i));
+		}
+		return range;
 	}
 
 	private Iterator queryItems(Item parent, ExtObjectContainer container) {
