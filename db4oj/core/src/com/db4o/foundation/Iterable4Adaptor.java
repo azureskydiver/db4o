@@ -39,7 +39,7 @@ public class Iterable4Adaptor {
         return returnValue;
     }
 
-    private boolean moveNext() {
+    protected boolean moveNext() {
     	if (null == _iterator) {
     		_iterator = _delegate.iterator();
     	}
