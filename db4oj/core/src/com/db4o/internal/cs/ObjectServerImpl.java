@@ -267,6 +267,9 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		return _container;
 	}
 
+    /**
+     * @deprecated
+     */
 	public ObjectContainer openClient() {
 		return openClient(Db4o.cloneConfiguration());
 	}
