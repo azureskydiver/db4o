@@ -19,23 +19,15 @@ import com.db4o.typehandlers.*;
  */
 public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, VariableLengthTypeHandler, EmbeddedTypeHandler{
     
-    private final ObjectContainerBase _container;
-    
-    public StringHandler(ObjectContainerBase container) {
-        _container = container;
-    }
-    
-    protected StringHandler(TypeHandler4 template){
-        this(((StringHandler)template).container());
-    }
+    private ReflectClass _classReflector;
     
     public ReflectClass classReflector(Reflector reflector){
-    	return reflector.forClass(String.class);
+        if (_classReflector == null) {
+            _classReflector = reflector.forClass(String.class);
+        }
+    	return _classReflector;
     }
     
-    public ObjectContainerBase container(){
-        return _container;
-    }
     public void delete(DeleteContext context){
     	context.readSlot();
     }
@@ -47,7 +39,7 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
     public Object indexEntryToObject(Transaction trans, Object indexEntry){
         if(indexEntry instanceof Slot){
             Slot slot = (Slot)indexEntry;
-            indexEntry = container().bufferByAddress(slot.address(), slot.length());
+            indexEntry = trans.container().bufferByAddress(slot.address(), slot.length());
         }
         return readStringNoDebug(trans.context(), (ReadBuffer)indexEntry);
     }

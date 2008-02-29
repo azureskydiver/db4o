@@ -15,10 +15,6 @@ import com.db4o.marshall.*;
  */
 public class StringHandler0 extends StringHandler {
 
-    public StringHandler0(TypeHandler4 template) {
-        super(template);
-    }
-    
     public Object read(ReadContext context) {
         ByteArrayBuffer buffer = (ByteArrayBuffer) ((InternalReadContext)context).readIndirectedBuffer();
         if (buffer == null) {
