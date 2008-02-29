@@ -18,7 +18,7 @@ public class ObjectContainerFactory {
 			}
 		}		
 		ObjectContainer oc = new IoAdaptedObjectContainer(config, databaseFileName);	
-		Messages.logMsg(Db4o.configure(), 5, databaseFileName);
+		Messages.logMsg(config, 5, databaseFileName);
 		return oc;
 	}
 	
