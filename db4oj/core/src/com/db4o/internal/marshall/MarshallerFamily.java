@@ -74,16 +74,8 @@ public class MarshallerFamily {
             new StringMarshaller1(),
             new UntypedMarshaller1()),
     
-        new MarshallerFamily(
-            FieldIndexesToBTrees_5_7.VERSION,
-            2,
-            new ArrayMarshaller1(),
-            new ClassMarshaller2(),
-            new FieldMarshaller1(),
-            new ObjectMarshaller1(), 
-            new PrimitiveMarshaller1(),
-            new StringMarshaller1(),
-            new UntypedMarshaller1()),
+            latestFamily(2),
+            latestFamily(3),
         
         };
 
@@ -112,17 +104,22 @@ public class MarshallerFamily {
         _untyped = untypedMarshaller;
         _untyped._family = this;
     }
-
-    public static MarshallerFamily version(int n) {
-        n = noVersionGreaterThan2(n);
-        return allVersions[n];
+    
+    public static MarshallerFamily latestFamily(int version){
+        return new MarshallerFamily(
+            FieldIndexesToBTrees_5_7.VERSION,
+            version,
+            new ArrayMarshaller1(),
+            new ClassMarshaller2(),
+            new FieldMarshaller1(),
+            new ObjectMarshaller1(), 
+            new PrimitiveMarshaller1(),
+            new StringMarshaller1(),
+            new UntypedMarshaller1());
     }
 
-    private static int noVersionGreaterThan2(int n) {
-        if(n > 2){
-            n = 2;
-        }
-        return n;
+    public static MarshallerFamily version(int n) {
+        return allVersions[n];
     }
 
     public static MarshallerFamily current() {

@@ -21,7 +21,7 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
     
     private final TypeHandler4 _handler;
     
-    PrimitiveFieldHandler(ObjectContainerBase container, TypeHandler4 handler, int handlerID, ReflectClass classReflector) {
+    public PrimitiveFieldHandler(ObjectContainerBase container, TypeHandler4 handler, int handlerID, ReflectClass classReflector) {
     	super(container, classReflector);
         i_fields = FieldMetadata.EMPTY_ARRAY;
         _handler = handler;

@@ -12,6 +12,8 @@ import com.db4o.reflect.*;
 
 public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHandler, FieldHandler{
     
+    private static final int HASHCODE = 1003303143;
+    
 	public UntypedFieldHandler(ObjectContainerBase container){
 		super(container, container._handlers.ICLASS_OBJECT);
 	}
@@ -197,7 +199,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     }
 
     private void writeObject(WriteContext context, TypeHandler4 typeHandler, Object obj) {
-        if(FieldMetadata.useDedicatedSlot(context, typeHandler, obj)){
+        if(FieldMetadata.useDedicatedSlot(context, typeHandler)){
             context.writeObject(obj);
         }else {
             typeHandler.write(context, obj);
@@ -214,6 +216,14 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 
     public ReflectClass classReflector(Reflector reflector) {
         return super.classReflector();
+    }
+    
+    public boolean equals(Object obj) {
+        return obj instanceof UntypedFieldHandler;
+    }
+    
+    public int hashCode() {
+        return HASHCODE;
     }
 
 }

@@ -784,7 +784,7 @@ public class FieldMetadata implements StoredField {
         if (obj != null && cascadeOnUpdate(context.classConfiguration())) {
             context.updateDepth(adjustUpdateDepth(obj, updateDepth));
         }
-        if(useDedicatedSlot(context, _handler, obj)){
+        if(useDedicatedSlot(context, _handler)){
             context.writeObject(_handler, obj);
         }else {
             context.createIndirectionWithinSlot(_handler);
@@ -798,7 +798,7 @@ public class FieldMetadata implements StoredField {
         }
     }
     
-    public static boolean useDedicatedSlot(Context context, TypeHandler4 handler, Object obj) {
+    public static boolean useDedicatedSlot(Context context, TypeHandler4 handler) {
         if (handler instanceof EmbeddedTypeHandler) {
             return false;
         }
@@ -806,7 +806,7 @@ public class FieldMetadata implements StoredField {
             return false;
         }
         if (handler instanceof ClassMetadata) {
-            return useDedicatedSlot(context, ((ClassMetadata) handler).delegateTypeHandler(), obj);
+            return useDedicatedSlot(context, ((ClassMetadata) handler).delegateTypeHandler());
         }
         return true;
     }
@@ -1065,7 +1065,12 @@ public class FieldMetadata implements StoredField {
     
     public void defragField(MarshallerFamily mf,DefragmentContextImpl context) {
     	context.handlerVersion(mf.handlerVersion());
-    	context.correctHandlerVersion(getHandler()).defragment(context);
+    	TypeHandler4 typeHandler = context.correctHandlerVersion(getHandler());
+        typeHandler.defragment(context);
+    }
+    
+    public boolean isIndirectedWithinSlot(TypeHandler4 handler, int version) {
+        return SlotFormat.forHandlerVersion(version).isIndirectedWithinSlot(handler);
     }
     
 	public void createIndex() {

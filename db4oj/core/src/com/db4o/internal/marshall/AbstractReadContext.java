@@ -49,7 +49,7 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
                 return classMetadata.readValueType(transaction(), readInt(), activationDepth().descend(classMetadata));
             }
         }
-        if(FieldMetadata.useDedicatedSlot(this, handler, null)){
+        if(FieldMetadata.useDedicatedSlot(this, handler)){
             return readObject();
         }
         return handler.read(this);
@@ -109,14 +109,7 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
     }
     
     public boolean isIndirectedWithinSlot(TypeHandler4 handler) {
-        if(handlerVersion() == 0){
-            return false;
-        }
-        return handlerRegistry().isVariableLength(handler);
-    }
-    
-    private HandlerRegistry handlerRegistry(){
-        return container().handlers();
+        return SlotFormat.forHandlerVersion(handlerVersion()).isIndirectedWithinSlot(handler);
     }
     
     public ReadWriteBuffer readIndirectedBuffer() {

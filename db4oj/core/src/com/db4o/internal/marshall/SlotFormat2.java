@@ -10,10 +10,14 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class SlotFormat0 extends SlotFormat {
+public class SlotFormat2 extends SlotFormat {
 
     protected int handlerVersion() {
-        return 0;
+        return 2;
+    }
+
+    public boolean isIndirectedWithinSlot(TypeHandler4 handler) {
+        return isVariableLength(handler);
     }
 
     public int scrollToContentReturnLinkOffset(HandlerRegistry handlerRegistry, TypeHandler4 parentHandler, TypeHandler4 arrayElementHandler, ReadBuffer buffer) {
@@ -23,10 +27,6 @@ public class SlotFormat0 extends SlotFormat {
             return offset;
         }
         return buffer.offset();
-    }
-    
-    public boolean isIndirectedWithinSlot(TypeHandler4 handler){
-        return false;
     }
 
 }
