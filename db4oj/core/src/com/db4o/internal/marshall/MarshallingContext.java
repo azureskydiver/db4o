@@ -273,7 +273,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     
     public void writeObject(TypeHandler4 handler, Object obj){
         MarshallingContextState state = currentState();
-        if(FieldMetadata.useDedicatedSlot(this, handler, obj)){
+        if(FieldMetadata.useDedicatedSlot(this, handler)){
             writeObject(obj);
         }else{
             if(obj == null){
@@ -296,7 +296,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     }
     
     private void writeNullObject(TypeHandler4 handler){
-        if( handlerRegistry().isVariableLength(handler)){
+        if( isIndirectedWithinSlot(handler)){
             doNotIndirectWrites();
             writeNullLink();
             return;
@@ -337,15 +337,15 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         _fieldWriteCount = 0;
     }
     
-    private HandlerRegistry handlerRegistry(){
-        return container().handlers();
-    }
-
     public void createIndirectionWithinSlot(TypeHandler4 handler) {
-        if(handlerRegistry().isVariableLength(handler)){
+        if(isIndirectedWithinSlot(handler)){
             createChildBuffer(false, true);
             doNotIndirectWrites();
         }
+    }
+
+    private boolean isIndirectedWithinSlot(TypeHandler4 handler) {
+        return SlotFormat.current().isIndirectedWithinSlot(handler);
     }
 
     // FIXME: This method was just temporarily added to fulfill contract of MarshallingInfo

@@ -210,7 +210,7 @@ public final class HandlerRegistry {
         PrimitiveFieldHandler classMetadata = new PrimitiveFieldHandler(container(), (TypeHandler4)_untypedFieldHandler, id, ICLASS_OBJECT);
         map(id, classMetadata, _untypedFieldHandler, new PlainObjectHandler(), ICLASS_OBJECT);
         registerHandlerVersion(_untypedFieldHandler, 0, new UntypedFieldHandler0(container()));
-        // registerHandlerVersion(_untypedFieldHandler, 2, new UntypedFieldHandler2(container()));
+        registerHandlerVersion(_untypedFieldHandler, 2, new UntypedFieldHandler2(container()));
 
     }
     
@@ -221,12 +221,14 @@ public final class HandlerRegistry {
         
         ArrayHandler arrayHandler = new ArrayHandler();
         registerHandlerVersion(arrayHandler, 0, new ArrayHandler0());
+        registerHandlerVersion(arrayHandler, 2, new ArrayHandler2());
         
         MultidimensionalArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler();
         registerHandlerVersion(multidimensionalArrayHandler, 0, new MultidimensionalArrayHandler0());
         
         PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler();
         registerHandlerVersion(primitiveFieldHandler, 0, primitiveFieldHandler);  // same handler, but making sure versions get cascaded
+        registerHandlerVersion(primitiveFieldHandler, 2, primitiveFieldHandler);  // same handler, but making sure versions get cascaded
     }
     
     private void registerBuiltinHandler(int id, BuiltinTypeHandler handler) {

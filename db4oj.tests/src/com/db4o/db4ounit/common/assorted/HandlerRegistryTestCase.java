@@ -15,8 +15,75 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
 	
 	public interface FooInterface {
 	}
+	
+	public static class Item{
+	    
+	}
+	
+	protected void store() throws Exception {
+	    store(new Item());
+	}
+	
+	public void testCorrectHandlerVersion(){
+	    UntypedFieldHandler untypedFieldHandler = new UntypedFieldHandler(stream());
+	    
+        Class untypedFieldHandler2Class =
+            MarshallingLogicSimplification.enabled ?
+            UntypedFieldHandler2.class : UntypedFieldHandler.class;
+        Class arrayHandler2Class = 
+            MarshallingLogicSimplification.enabled ?
+            ArrayHandler2.class : ArrayHandler.class;
+	    
+        assertCorrectedHandlerVersion(UntypedFieldHandler0.class, untypedFieldHandler, -1);
+        assertCorrectedHandlerVersion(UntypedFieldHandler0.class, untypedFieldHandler, 0);
+        assertCorrectedHandlerVersion(untypedFieldHandler2Class, untypedFieldHandler, 1);
+        assertCorrectedHandlerVersion(untypedFieldHandler2Class, untypedFieldHandler, 2);
+        assertCorrectedHandlerVersion(UntypedFieldHandler.class, untypedFieldHandler, HandlerRegistry.HANDLER_VERSION);
+        assertCorrectedHandlerVersion(UntypedFieldHandler.class, untypedFieldHandler, HandlerRegistry.HANDLER_VERSION + 1);
+        
+        FirstClassObjectHandler firstClassObjectHandler = new FirstClassObjectHandler(itemClassMetadata());
+        assertCorrectedHandlerVersion(FirstClassObjectHandler0.class, firstClassObjectHandler, 0);
+        assertCorrectedHandlerVersion(FirstClassObjectHandler.class, firstClassObjectHandler, 2);
+        
+        PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler(null, untypedFieldHandler,0, null );
+        assertPrimitiveFieldHandlerDelegate(UntypedFieldHandler0.class, primitiveFieldHandler,0);
+        assertPrimitiveFieldHandlerDelegate(untypedFieldHandler2Class, primitiveFieldHandler,1);
+        assertPrimitiveFieldHandlerDelegate(untypedFieldHandler2Class, primitiveFieldHandler,2);
+        assertPrimitiveFieldHandlerDelegate(UntypedFieldHandler.class, primitiveFieldHandler,HandlerRegistry.HANDLER_VERSION);
+        
+        ArrayHandler arrayHandler = new ArrayHandler(null, untypedFieldHandler, false);
+        assertCorrectedHandlerVersion(ArrayHandler0.class, arrayHandler, 0);
+        assertCorrectedHandlerVersion(arrayHandler2Class, arrayHandler, 1);
+        assertCorrectedHandlerVersion(arrayHandler2Class, arrayHandler, 2);
+        assertCorrectedHandlerVersion(ArrayHandler.class, arrayHandler, HandlerRegistry.HANDLER_VERSION);
+        
+        ArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler(null, untypedFieldHandler, false);
+        assertCorrectedHandlerVersion(MultidimensionalArrayHandler0.class, multidimensionalArrayHandler, 0);
+        assertCorrectedHandlerVersion(MultidimensionalArrayHandler.class, multidimensionalArrayHandler, 1);
+        assertCorrectedHandlerVersion(MultidimensionalArrayHandler.class, multidimensionalArrayHandler, 2);
+        assertCorrectedHandlerVersion(MultidimensionalArrayHandler.class, multidimensionalArrayHandler, HandlerRegistry.HANDLER_VERSION);
+	    
+	}
 
-	public void _testInterfaceHandlerIsSameAsObjectHandler() {
+    private void assertPrimitiveFieldHandlerDelegate(Class fieldHandlerClass,
+        PrimitiveFieldHandler primitiveFieldHandler, int version) {
+        PrimitiveFieldHandler primitiveFieldHandler0 = (PrimitiveFieldHandler) correctHandlerVersion(primitiveFieldHandler, version);
+        Assert.areSame(fieldHandlerClass,primitiveFieldHandler0.delegateTypeHandler().getClass());
+    }
+
+    private ClassMetadata itemClassMetadata() {
+        return stream().classMetadataForObject(new Item());
+    }
+
+    private void assertCorrectedHandlerVersion(Class expectedClass, TypeHandler4 typeHandler, int version) {
+        Assert.areSame(expectedClass, correctHandlerVersion(typeHandler, version).getClass());
+    }
+
+    private TypeHandler4 correctHandlerVersion(TypeHandler4 typeHandler, int version) {
+        return handlers().correctHandlerVersion(typeHandler, version);
+    }
+
+	public void testInterfaceHandlerIsSameAsObjectHandler() {
 		Assert.areSame(
 				handlerForClass(Object.class),
 				handlerForClass(FooInterface.class));

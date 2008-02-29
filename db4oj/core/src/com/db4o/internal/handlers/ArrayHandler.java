@@ -384,7 +384,10 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         context.seek(offset);
     }
     
-    private int preparePayloadRead(DefragmentContext context) {
+    protected int preparePayloadRead(DefragmentContext context) {
+        if(MarshallingLogicSimplification.enabled){
+            return context.offset();
+        }
         int newPayLoadOffset = context.readInt();
         context.readInt();  // skip length, not needed
         int linkOffSet = context.offset();
