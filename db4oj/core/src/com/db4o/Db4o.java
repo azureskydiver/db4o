@@ -46,6 +46,8 @@ public class Db4o {
 	 * can be overriden in each
 	 * {@link com.db4o.ext.ExtObjectContainer#configure ObjectContainer}.<br><br>
 	 * @return the global {@link Configuration configuration} context
+	 * 
+	 * @deprecated use explicit configuration via {@link #newConfiguration()} instead
      */
 	public static Configuration configure(){
 		return i_config;
@@ -67,6 +69,8 @@ public class Db4o {
 	 * 
 	 * @return a fresh configuration with all option values set to the values
 	 * currently configured for the global db4o configuration context
+	 * 
+	 * @deprecated use explicit configuration via {@link #newConfiguration()} instead
 	 */
 	public static Configuration cloneConfiguration() {
 		return (Config4Impl) ((DeepClone) Db4o.configure()).deepClone(null);
