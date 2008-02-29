@@ -1588,6 +1588,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             && bitIsFalse(Const4.READING);
     }
 
+    /**
+     * @deprecated
+     */
     boolean storeField(ReflectField a_field) {
         if (a_field.isStatic()) {
             return false;
