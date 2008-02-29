@@ -52,7 +52,7 @@ public class StringHandlerTestCase extends TypeHandlerTestCaseBase {
 	}
 
     private StringHandler stringHandler() {
-        return new StringHandler(stream());
+        return new StringHandler();
     }
 	
 	public void testReadWrite(){
