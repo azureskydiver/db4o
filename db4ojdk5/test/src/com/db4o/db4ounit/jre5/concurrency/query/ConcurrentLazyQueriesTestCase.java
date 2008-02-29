@@ -12,7 +12,7 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class ConcurrentQueryTestCase extends Db4oClientServerTestCase {
+public class ConcurrentLazyQueriesTestCase extends Db4oClientServerTestCase {
 
 	private static final int ITEM_COUNT = 100;
 
@@ -64,7 +64,7 @@ public class ConcurrentQueryTestCase extends Db4oClientServerTestCase {
 	private void assertAllItems(final Iterator result) {
 		Collection4 expected = range(ITEM_COUNT);
 		for (int i=0; i<ITEM_COUNT; ++i) {
-			final Item nextItem = (Item)result.next();
+			final Item nextItem = (Item)IteratorPlatform.next(result);
 			expected.remove(new Integer(nextItem.id));
 		}
 		Assert.areEqual("[]", expected.toString());
@@ -81,7 +81,8 @@ public class ConcurrentQueryTestCase extends Db4oClientServerTestCase {
 	private Iterator queryItems(Item parent, ExtObjectContainer container) {
 		final Query q = itemQuery(container);
 		q.descend("parent").constrain(parent).identity();
-		return q.execute().iterator();
+		// the cast is necessary for sharpen
+		return ((Iterable)q.execute()).iterator();
 	}
 
 	private Query itemQuery(ExtObjectContainer container) {

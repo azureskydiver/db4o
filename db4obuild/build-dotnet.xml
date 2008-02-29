@@ -783,6 +783,7 @@
 				<include name="**/collections/Order.java" />
 				<include name="**/collections/OrderItem.java" />
 				<include name="**/collections/Product.java" />
+				<include name="**/concurrency/query/*.java" />
 			</fileset>
 		</copy>
 

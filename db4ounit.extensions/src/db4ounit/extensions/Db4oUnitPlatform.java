@@ -17,4 +17,8 @@ public class Db4oUnitPlatform {
 	            & !(a_field.getName().indexOf("$") > -1));
 	}
 
+	public static boolean isPascalCase() {
+		return false;
+	}
+
 }

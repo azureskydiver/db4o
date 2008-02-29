@@ -4,7 +4,7 @@ package com.db4o.db4ounit.common.concurrency;
 
 import db4ounit.extensions.*;
 
-public class AllTestsJdk5 extends Db4oConcurrenyTestSuite {
+public class AllTestsJdk5 extends Db4oConcurrencyTestSuite {
 
 	public static void main(String[] args) {
 		System.exit(new AllTestsJdk5().runConcurrency());

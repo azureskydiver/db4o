@@ -4,7 +4,7 @@ package com.db4o.db4ounit.jre11.concurrency.staging;
 
 import db4ounit.extensions.*;
 
-public class AllTests extends Db4oConcurrenyTestSuite {
+public class AllTests extends Db4oConcurrencyTestSuite {
 	
 	public static void main(String[] args) {
 		new AllTests().runConcurrency();

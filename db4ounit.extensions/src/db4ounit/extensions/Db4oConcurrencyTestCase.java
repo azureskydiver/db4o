@@ -7,7 +7,7 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-public class Db4oConcurrenyTestCase extends Db4oClientServerTestCase {
+public class Db4oConcurrencyTestCase extends Db4oClientServerTestCase {
 	
 	private boolean[] _done;
 	

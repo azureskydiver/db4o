@@ -10,9 +10,9 @@ import com.db4o.ext.ExtObjectContainer;
 import com.db4o.ta.TransparentActivationSupport;
 
 import db4ounit.Assert;
-import db4ounit.extensions.Db4oConcurrenyTestCase;
+import db4ounit.extensions.Db4oConcurrencyTestCase;
 
-public class ArrayMap4TestCase extends Db4oConcurrenyTestCase {
+public class ArrayMap4TestCase extends Db4oConcurrencyTestCase {
 
     public static void main(String[] args) {
         new ArrayMap4TestCase().runEmbeddedConcurrency();
