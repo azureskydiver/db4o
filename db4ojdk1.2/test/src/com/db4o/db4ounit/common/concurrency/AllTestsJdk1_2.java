@@ -4,7 +4,7 @@ import com.db4o.db4ounit.jre12.querying.*;
 
 import db4ounit.extensions.*;
 
-public class AllTestsJdk1_2 extends Db4oConcurrenyTestSuite {
+public class AllTestsJdk1_2 extends Db4oConcurrencyTestSuite {
 
 	public static void main(String[] args) {
 		System.exit(new AllTestsJdk1_2().runConcurrency());

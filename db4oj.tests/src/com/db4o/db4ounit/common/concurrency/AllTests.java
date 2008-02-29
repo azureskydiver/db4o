@@ -4,7 +4,7 @@ package com.db4o.db4ounit.common.concurrency;
 
 import db4ounit.extensions.*;
 
-public class AllTests extends Db4oConcurrenyTestSuite {
+public class AllTests extends Db4oConcurrencyTestSuite {
 	
 	public static void main(String[] args) {
 		new AllTests().runConcurrency();
@@ -39,7 +39,6 @@ public class AllTests extends Db4oConcurrenyTestSuite {
 				MultiDeleteTestCase.class,
 				MultiLevelIndexTestCase.class,
 				NestedArraysTestCase.class,
-				NullWrapperQueriesTestCase.class,
 				ObjectSetIDsTestCase.class,
 				ParameterizedEvaluationTestCase.class,
 				PeekPersistedTestCase.class,

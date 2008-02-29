@@ -2,13 +2,11 @@
 
 package com.db4o.db4ounit.jre5;
 
-import com.db4o.db4ounit.common.concurrency.*;
-import com.db4o.db4ounit.jre11.concurrency.*;
 import com.db4o.db4ounit.jre5.concurrency.query.*;
 
 import db4ounit.extensions.*;
 
-public class AllTestsConcurrency extends Db4oConcurrenyTestSuite {
+public class AllTestsConcurrency extends Db4oConcurrencyTestSuite {
 	
 	public static void main(String[] args) {
 		System.exit(new AllTestsConcurrency().runConcurrencyAll());
@@ -16,50 +14,9 @@ public class AllTestsConcurrency extends Db4oConcurrenyTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] { 
-				ArrayNOrderTestCase.class, 
-				ByteArrayTestCase.class,
-				CascadeDeleteDeletedTestCase.class,
-				CascadeDeleteFalseTestCase.class,
-				CascadeOnActivateTestCase.class,
-				CascadeOnUpdateTestCase.class,
-				CascadeOnUpdate2TestCase.class,
-				CascadeToExistingVectorMemberTestCase.class,
-				CascadeToVectorTestCase.class,
-				CaseInsensitiveTestCase.class,
-				Circular1TestCase.class,
-				Circular2TestCase.class,
-				ClientDisconnectTestCase.class,
-				ConcurrentQueryTestCase.class,
-				CreateIndexInheritedTestCase.class,
-				DeepSetTestCase.class,
-				DeleteDeepTestCase.class,
-				DifferentAccessPathsTestCase.class,
-				ExtMethodsTestCase.class,
-				GetAllTestCase.class,
-				GreaterOrEqualTestCase.class,
-				HashtableModifiedUpdateDepthTestCase.class,
-				IndexedByIdentityTestCase.class,
-				IndexedUpdatesWithNullTestCase.class,
-				InternStringsTestCase.class,
-				InvalidUUIDTestCase.class,
-				IsStoredTestCase.class,
-				MessagingTestCase.class,
-				MultiDeleteTestCase.class,
-				MultiLevelIndexTestCase.class,
-				NestedArraysTestCase.class,
-				NullWrapperQueriesTestCase.class,
-				ObjectSetIDsTestCase.class,
-				ParameterizedEvaluationTestCase.class,
-				PeekPersistedTestCase.class,
-				PersistStaticFieldValuesTestCase.class,
-				QueryForUnknownFieldTestCase.class,
-				QueryNonExistantTestCase.class,
-				ReadCollectionNQTestCase.class,
-				ReadObjectNQTestCase.class,
-				ReadObjectQBETestCase.class,
-				ReadObjectSODATestCase.class,
-				RefreshTestCase.class,
-				UpdateObjectTestCase.class,
+			com.db4o.db4ounit.jre11.concurrency.AllTests.class,
+			com.db4o.db4ounit.jre5.concurrency.collections.AllTests.class,
+			ConcurrentLazyQueriesTestCase.class,
 		};
 	}
 

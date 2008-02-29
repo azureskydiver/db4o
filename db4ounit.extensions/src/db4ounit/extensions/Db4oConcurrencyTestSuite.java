@@ -6,7 +6,7 @@ import com.db4o.foundation.*;
 import db4ounit.*;
 import db4ounit.extensions.concurrency.*;
 
-public abstract class Db4oConcurrenyTestSuite extends AbstractDb4oTestCase implements TestSuiteBuilder {
+public abstract class Db4oConcurrencyTestSuite extends AbstractDb4oTestCase implements TestSuiteBuilder {
 
 	public Iterator4 iterator() {
 		return new Db4oConcurrencyTestSuiteBuilder(fixture(), testCases()).iterator();

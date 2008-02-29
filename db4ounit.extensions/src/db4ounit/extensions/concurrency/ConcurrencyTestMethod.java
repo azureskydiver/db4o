@@ -65,28 +65,27 @@ public class ConcurrencyTestMethod extends TestMethod {
 		checkConcurrencyMethod(toTest, method.getName());
 	}
 
-	private void checkConcurrencyMethod(AbstractDb4oTestCase toTest,
-			String testMethodName) throws Exception {
-		int testPrefixLength = ConcurrenyConst.COCURRENCY_TEST_PREFIX.length();
-		String subMethodName = testMethodName.substring(testPrefixLength);
-		String checkMethodName = ConcurrenyConst.COCURRENCY_CHECK_PREFIX
-				+ subMethodName;
-		Method checkMethod = null;
-		try {
-			Class[] types = { ExtObjectContainer.class };
-			checkMethod = toTest.getClass().getDeclaredMethod(checkMethodName,
-					types);
-		} catch (Exception e) {
-			// if checkMethod is not availble, return as success
+	private void checkConcurrencyMethod(AbstractDb4oTestCase toTest, String testMethodName) throws Exception {
+		Method checkMethod = checkMethodFor(toTest.getClass(), testMethodName);
+		if (null == checkMethod) {
 			return;
 		}
 		// pass ExtObjectContainer as a param to check method
 		ExtObjectContainer oc = toTest.fixture().db();
-		Object[] args = { oc };
 		try {
-			checkMethod.invoke(toTest, args);
+			checkMethod.invoke(toTest, new Object[] { oc });
 		} finally {
 			oc.close();
+		}
+	}
+
+	private Method checkMethodFor(final Class testClass, String testMethodName) {
+		try {
+			Class[] types = { ExtObjectContainer.class };
+			return testClass.getDeclaredMethod(ConcurrencyConventions.checkMethodNameFor(testMethodName), types);
+		} catch (Exception e) {
+			// if checkMethod is not availble, return as success
+			return null;
 		}
 	}
 

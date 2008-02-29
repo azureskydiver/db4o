@@ -24,7 +24,7 @@ public class Db4oConcurrencyTestSuiteBuilder extends Db4oTestSuiteBuilder {
 
 	protected boolean isTestMethod(Method method) {
 		String name = method.getName();
-		return startsWithIgnoreCase(name, ConcurrenyConst.COCURRENCY_TEST_PREFIX)
+		return startsWithIgnoreCase(name, ConcurrencyConventions.testPrefix())
 				&& TestPlatform.isPublic(method)
 				&& !TestPlatform.isStatic(method) && hasValidParameter(method);
 	}
