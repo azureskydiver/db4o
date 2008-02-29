@@ -570,6 +570,9 @@ public final class Config4Impl implements Configuration, DeepClone,
     	_config.put(MESSAGE_RECIPIENT_KEY,messageRecipient);
     }
 
+    /**
+     * @deprecated
+     */
     public void setOut(PrintStream outStream) {
         _config.put(OUTSTREAM_KEY,outStream);
         if (i_stream != null) {
