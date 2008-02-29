@@ -169,7 +169,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 							if(arrayElementHandler instanceof FirstClassHandler){
 								if(MarshallingLogicSimplification.enabled){
     							    SlotFormat slotFormat = SlotFormat.forHandlerVersion(_handlerVersion);
-    							    slotFormat.scrollToContentReturnLinkOffset(a_candidates.stream().handlers(), handler, arrayElementHandler, arrayBytes[0]);
+    							    slotFormat.scrollToContent(handler, arrayElementHandler, arrayBytes[0]);
 							    }
 							    ((FirstClassHandler)arrayElementHandler).readCandidates(_handlerVersion,arrayBytes[0], candidates);
 							}

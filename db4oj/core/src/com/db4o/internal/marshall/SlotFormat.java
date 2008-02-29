@@ -55,7 +55,7 @@ public abstract class SlotFormat {
     
     protected abstract int handlerVersion();
 
-    public abstract int scrollToContentReturnLinkOffset(HandlerRegistry handlerRegistry, TypeHandler4 parentHandler, TypeHandler4 arrayElementHandler, ReadBuffer buffer);
+    public abstract int scrollToContent(TypeHandler4 parentHandler, TypeHandler4 arrayElementHandler, ReadBuffer buffer);
     
     public abstract boolean isIndirectedWithinSlot(TypeHandler4 handler);
     

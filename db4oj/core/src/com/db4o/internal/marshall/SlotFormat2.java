@@ -20,7 +20,7 @@ public class SlotFormat2 extends SlotFormat {
         return isVariableLength(handler);
     }
 
-    public int scrollToContentReturnLinkOffset(HandlerRegistry handlerRegistry, TypeHandler4 parentHandler, TypeHandler4 arrayElementHandler, ReadBuffer buffer) {
+    public int scrollToContent(TypeHandler4 parentHandler, TypeHandler4 arrayElementHandler, ReadBuffer buffer) {
         if(arrayElementHandler instanceof ArrayHandler){
             int offset = buffer.offset() + Const4.INT_LENGTH;
             buffer.seekCurrentInt();
