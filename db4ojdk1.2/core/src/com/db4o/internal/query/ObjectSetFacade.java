@@ -24,6 +24,12 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
 			public JDKIterator(Iterable4 delegate) {
 				super(delegate);
 			}
+			
+			protected boolean moveNext() {
+				synchronized (_delegate.lock()) {
+					return super.moveNext();
+				}
+			}
 
 			public void remove() {
 				throw new UnsupportedOperationException();

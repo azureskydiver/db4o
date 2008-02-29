@@ -4,6 +4,7 @@ package com.db4o.db4ounit.jre5;
 
 import com.db4o.db4ounit.common.concurrency.*;
 import com.db4o.db4ounit.jre11.concurrency.*;
+import com.db4o.db4ounit.jre5.concurrency.query.*;
 
 import db4ounit.extensions.*;
 
@@ -14,6 +15,9 @@ public class AllTestsConcurrency extends Db4oConcurrenyTestSuite {
 	}
 
 	protected Class[] testCases() {
+		if (true) {
+			return new Class[] { ConcurrentQueryTestCase.class };
+		}
 		return new Class[] { 
 				ArrayNOrderTestCase.class, 
 				ByteArrayTestCase.class,
@@ -28,6 +32,7 @@ public class AllTestsConcurrency extends Db4oConcurrenyTestSuite {
 				Circular1TestCase.class,
 				Circular2TestCase.class,
 				ClientDisconnectTestCase.class,
+				ConcurrentQueryTestCase.class,
 				CreateIndexInheritedTestCase.class,
 				DeepSetTestCase.class,
 				DeleteDeepTestCase.class,
