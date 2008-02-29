@@ -191,9 +191,9 @@ public final class HandlerRegistry {
         registerBuiltinHandler(Handlers4.SHORT_ID, shortHandler);
         registerHandlerVersion(shortHandler, 0, new ShortHandler0());
         
-        _stringHandler = new StringHandler(container());
+        _stringHandler = new StringHandler();
         registerBuiltinHandler(Handlers4.STRING_ID, _stringHandler);
-        registerHandlerVersion(_stringHandler, 0, new StringHandler0(_stringHandler));
+        registerHandlerVersion(_stringHandler, 0, new StringHandler0());
 
         DateHandler dateHandler = new DateHandler();
         registerBuiltinHandler(Handlers4.DATE_ID, dateHandler);
