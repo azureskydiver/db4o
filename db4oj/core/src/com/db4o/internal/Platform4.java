@@ -76,6 +76,9 @@ public final class Platform4 {
         shutDownRunnable.ensure(container);
     }
 
+    /**
+     * @deprecated
+     */
     public static final boolean canSetAccessible() {
         if (setAccessibleCheck.isUnspecified()) {
             if (jdk().ver() >= 2) {
