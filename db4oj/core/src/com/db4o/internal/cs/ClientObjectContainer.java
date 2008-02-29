@@ -606,7 +606,10 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		}
 	}
 
-	public void switchToFile(String fileName) {
+    /**
+     * @deprecated
+     */
+	 public void switchToFile(String fileName) {
 		synchronized (_lock) {
 			commit();
 			MsgD msg = Msg.SWITCH_TO_FILE.getWriterForString(_transaction, fileName);
@@ -618,7 +621,10 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		}
 	}
 
-	public void switchToMainFile() {
+    /**
+     * @deprecated
+     */
+	 public void switchToMainFile() {
 		synchronized (_lock) {
 			commit();
 			write(Msg.SWITCH_TO_MAIN_FILE);
