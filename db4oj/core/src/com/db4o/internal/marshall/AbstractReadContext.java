@@ -2,6 +2,7 @@
 
 package com.db4o.internal.marshall;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 
@@ -26,20 +27,13 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
     }
     
     public final Object readObject(TypeHandler4 handlerType) {
-        TypeHandler4 handler = correctHandlerVersion(handlerType);
-        if(! isIndirectedWithinSlot(handler)){
-            return readAtCurrentSeekPosition(handler);
-        }
-        int payLoadOffset = readInt();
-        readInt(); // length - never used
-        if(payLoadOffset == 0){
-            return null;
-        }
-        int savedOffset = offset();
-        seek(payLoadOffset);
-        Object obj = readAtCurrentSeekPosition(handler);
-        seek(savedOffset);
-        return obj;
+        final TypeHandler4 handler = correctHandlerVersion(handlerType);
+        return SlotFormat.forHandlerVersion(handlerVersion()).doWithSlotIndirection(this, handler, new Closure4() {
+            public Object run() {
+                return readAtCurrentSeekPosition(handler);
+            }
+        
+        });
     }
     
     public Object readAtCurrentSeekPosition(TypeHandler4 handler){

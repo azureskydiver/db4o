@@ -152,13 +152,9 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
             return null;
         }
         seekSecondaryOffset(context, typeHandler);
-        Object obj = readObject(context, typeHandler);
+        Object obj = context.readAtCurrentSeekPosition(typeHandler);
         context.seek(savedOffSet);
         return obj;
-    }
-
-    private Object readObject(InternalReadContext context, TypeHandler4 typeHandler) {
-        return context.readAtCurrentSeekPosition(typeHandler);
     }
     
     public TypeHandler4 readTypeHandlerRestoreOffset(InternalReadContext context){
