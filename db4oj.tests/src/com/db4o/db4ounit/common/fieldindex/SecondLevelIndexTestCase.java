@@ -54,7 +54,7 @@ public class SecondLevelIndexTestCase extends AbstractDb4oTestCase implements Di
 	}
 	
     protected void db4oTearDownBeforeClean() throws Exception {
-        Db4o.configure().diagnostic().removeAllListeners();
+        db().configure().diagnostic().removeAllListeners();
     }
 	
 	public void test() {
