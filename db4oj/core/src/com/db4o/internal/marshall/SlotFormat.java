@@ -74,8 +74,11 @@ public abstract class SlotFormat {
         int payLoadOffset = buffer.readInt();
         buffer.readInt(); // length, not used
         int savedOffset = buffer.offset();
-        buffer.seek(payLoadOffset);
-        Object res = closure.run();
+        Object res = null;
+        if(payLoadOffset != 0){
+            buffer.seek(payLoadOffset);
+            res = closure.run();
+        }
         buffer.seek(savedOffset);
         return res;
     }
