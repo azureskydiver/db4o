@@ -2,13 +2,14 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import java.io.*;
-
+import com.db4o.*;
 import com.db4o.ext.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.fixtures.AbstractFileBasedDb4oFixture;
+
+import java.io.File;
 
 
 public class SystemInfoTestCase extends AbstractDb4oTestCase{
@@ -21,6 +22,10 @@ public class SystemInfoTestCase extends AbstractDb4oTestCase{
         new SystemInfoTestCase().runSolo();
     }
 
+    protected void db4oTearDownBeforeClean() throws Exception {
+        Db4o.configure().freespace().useRamSystem();
+    }
+    
     public void testDefaultFreespaceInfo(){
         assertFreespaceInfo(fileSession().systemInfo());
     }
