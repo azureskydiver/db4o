@@ -3,8 +3,6 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.internal.*;
-import com.db4o.internal.handlers.*;
-import com.db4o.marshall.*;
 
 
 /**
@@ -19,16 +17,5 @@ public class SlotFormat2 extends SlotFormat {
     public boolean isIndirectedWithinSlot(TypeHandler4 handler) {
         return isVariableLength(handler);
     }
-
-    public int scrollToContent(TypeHandler4 parentHandler, TypeHandler4 arrayElementHandler, ReadBuffer buffer) {
-        if(arrayElementHandler instanceof ArrayHandler){
-            int offset = buffer.offset() + Const4.INT_LENGTH;
-            buffer.seekCurrentInt();
-            return offset;
-        }
-        return buffer.offset();
-    }
-    
-
 
 }

@@ -1067,7 +1067,6 @@ public class FieldMetadata implements StoredField {
     	int handlerVersion = mf.handlerVersion();
         context.handlerVersion(handlerVersion);
     	final TypeHandler4 typeHandler = context.correctHandlerVersion(getHandler());
-    	
     	if(MarshallingLogicSimplification.enabled){
         	SlotFormat.forHandlerVersion(handlerVersion).doWithSlotIndirection(context, typeHandler, new Closure4() {
                 public Object run() {
@@ -1077,23 +1076,7 @@ public class FieldMetadata implements StoredField {
             });
         	return;
     	}
-    	int nextOffset = 0;
-    	if(MarshallingLogicSimplification.enabled){
-        	if(isIndirectedWithinSlot(typeHandler, handlerVersion)){
-        	    int payLoadOffset = context.readInt();
-        	    context.readInt(); // length, not used
-        	    nextOffset = context.offset();
-        	    context.seek(payLoadOffset);
-        	}
-    	}
         typeHandler.defragment(context);
-        if(nextOffset != 0){
-            context.seek(nextOffset);
-        }
-    }
-    
-    public boolean isIndirectedWithinSlot(TypeHandler4 handler, int version) {
-        return SlotFormat.forHandlerVersion(version).isIndirectedWithinSlot(handler);
     }
     
 	public void createIndex() {

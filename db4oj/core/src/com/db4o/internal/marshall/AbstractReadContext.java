@@ -102,10 +102,6 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
         _activationDepth = depth;
     }
     
-    public boolean isIndirectedWithinSlot(TypeHandler4 handler) {
-        return SlotFormat.forHandlerVersion(handlerVersion()).isIndirectedWithinSlot(handler);
-    }
-    
     public ReadWriteBuffer readIndirectedBuffer() {
         int address = readInt();
         int length = readInt();
@@ -114,6 +110,5 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
         }
         return container().bufferByAddress(address, length);
     }
-
 
 }

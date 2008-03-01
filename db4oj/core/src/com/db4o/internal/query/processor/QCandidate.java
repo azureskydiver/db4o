@@ -169,9 +169,16 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 							if(arrayElementHandler instanceof FirstClassHandler){
 								if(MarshallingLogicSimplification.enabled){
     							    SlotFormat slotFormat = SlotFormat.forHandlerVersion(_handlerVersion);
-    							    slotFormat.scrollToContent(handler, arrayElementHandler, arrayBytes[0]);
+    							    slotFormat.doWithSlotIndirection(arrayBytes[0], handler, new Closure4() {
+                                        public Object run() {
+                                            ((FirstClassHandler)arrayElementHandler).readCandidates(_handlerVersion,arrayBytes[0], candidates);
+                                            return null;
+                                        }
+                                    
+                                    });
+							    }else {
+							        ((FirstClassHandler)arrayElementHandler).readCandidates(_handlerVersion,arrayBytes[0], candidates);
 							    }
-							    ((FirstClassHandler)arrayElementHandler).readCandidates(_handlerVersion,arrayBytes[0], candidates);
 							}
 							
 							arrayBytes[0]._offset = offset;
