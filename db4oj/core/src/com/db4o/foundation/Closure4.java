@@ -4,6 +4,6 @@ package com.db4o.foundation;
 
 public interface Closure4 {
 	
-	public Object run() throws Exception;
+	public Object run();
 
 }

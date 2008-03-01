@@ -1063,12 +1063,23 @@ public class FieldMetadata implements StoredField {
         _index = null;
     }    
     
-    public void defragField(MarshallerFamily mf,DefragmentContextImpl context) {
-    	context.handlerVersion(mf.handlerVersion());
-    	TypeHandler4 typeHandler = context.correctHandlerVersion(getHandler());
+    public void defragField(MarshallerFamily mf, final DefragmentContextImpl context) {
+    	int handlerVersion = mf.handlerVersion();
+        context.handlerVersion(handlerVersion);
+    	final TypeHandler4 typeHandler = context.correctHandlerVersion(getHandler());
+    	
+    	if(MarshallingLogicSimplification.enabled){
+        	SlotFormat.forHandlerVersion(handlerVersion).doWithSlotIndirection(context, typeHandler, new Closure4() {
+                public Object run() {
+                    typeHandler.defragment(context);
+                    return null;
+                }
+            });
+        	return;
+    	}
     	int nextOffset = 0;
     	if(MarshallingLogicSimplification.enabled){
-        	if(isIndirectedWithinSlot(typeHandler, mf.handlerVersion())){
+        	if(isIndirectedWithinSlot(typeHandler, handlerVersion)){
         	    int payLoadOffset = context.readInt();
         	    context.readInt(); // length, not used
         	    nextOffset = context.offset();

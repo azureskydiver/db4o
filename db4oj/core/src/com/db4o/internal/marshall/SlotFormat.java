@@ -67,5 +67,17 @@ public abstract class SlotFormat {
         return handler instanceof VariableLengthTypeHandler;
     }
 
-
+    public Object doWithSlotIndirection(ReadBuffer buffer, TypeHandler4 typeHandler, Closure4 closure){
+        if(! isIndirectedWithinSlot(typeHandler)){
+            return closure.run();
+        }
+        int payLoadOffset = buffer.readInt();
+        buffer.readInt(); // length, not used
+        int savedOffset = buffer.offset();
+        buffer.seek(payLoadOffset);
+        Object res = closure.run();
+        buffer.seek(savedOffset);
+        return res;
+    }
+    
 }
