@@ -36,7 +36,7 @@ class BlockingByteChannel {
     }
 
     void close() {
-        i_lock.run(new SafeClosure4() {
+        i_lock.run(new Closure4() {
             public Object run() {
             	i_closed = true;
             	i_lock.awake();
@@ -70,7 +70,7 @@ class BlockingByteChannel {
     }
 
     public int read() throws Db4oIOException {
-		Integer ret = (Integer) i_lock.run(new SafeClosure4() {
+		Integer ret = (Integer) i_lock.run(new Closure4() {
 			public Object run() {
 				waitForAvailable();
 				int retVal = i_cache[i_readOffset++];
@@ -84,7 +84,7 @@ class BlockingByteChannel {
 
     public int read(final byte[] bytes, final int offset, final int length)
 			throws Db4oIOException {
-		Integer ret = (Integer) i_lock.run(new SafeClosure4() {
+		Integer ret = (Integer) i_lock.run(new Closure4() {
 			public Object run() {
 				waitForAvailable();
 				int avail = available();
@@ -125,7 +125,7 @@ class BlockingByteChannel {
     }
     
 	public void write(final byte[] bytes, final int off, final int len) throws Db4oIOException {
-		i_lock.run(new SafeClosure4() {
+		i_lock.run(new Closure4() {
 			public Object run() {
 				checkClosed();
 				makefit(len);
@@ -138,7 +138,7 @@ class BlockingByteChannel {
 	}
 
     public void write(final int i) throws Db4oIOException {
-		i_lock.run(new SafeClosure4() {
+		i_lock.run(new Closure4() {
 			public Object run() {
 				checkClosed();
 				makefit(1);

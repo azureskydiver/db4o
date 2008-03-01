@@ -13,7 +13,7 @@ public class BlockingQueue implements Queue4 {
 	protected boolean _stopped;
 
 	public void add(final Object obj) {
-		_lock.run(new SafeClosure4() {
+		_lock.run(new Closure4() {
 			public Object run() {
 				_queue.add(obj);
 				_lock.awake();
@@ -23,7 +23,7 @@ public class BlockingQueue implements Queue4 {
 	}
 
 	public boolean hasNext() {
-		Boolean hasNext = (Boolean) _lock.run(new SafeClosure4() {
+		Boolean hasNext = (Boolean) _lock.run(new Closure4() {
 			public Object run() {
 				return new Boolean(_queue.hasNext());
 			}
@@ -32,7 +32,7 @@ public class BlockingQueue implements Queue4 {
 	}
 
 	public Iterator4 iterator() {
-		return (Iterator4) _lock.run(new SafeClosure4() {
+		return (Iterator4) _lock.run(new Closure4() {
 			public Object run() {
 				return _queue.iterator();
 			}
@@ -40,7 +40,7 @@ public class BlockingQueue implements Queue4 {
 	}
 
 	public Object next() throws BlockingQueueStoppedException {
-		return _lock.run(new SafeClosure4() {
+		return _lock.run(new Closure4() {
 			public Object run() {
 				if (_queue.hasNext()) {
 					return _queue.next();
@@ -59,7 +59,7 @@ public class BlockingQueue implements Queue4 {
 	}
 	
 	public void stop(){
-		_lock.run(new SafeClosure4() {
+		_lock.run(new Closure4() {
 			public Object run() {
 				_stopped = true;
 				_lock.awake();
@@ -69,7 +69,7 @@ public class BlockingQueue implements Queue4 {
 	}
 
 	public Object nextMatching(final Predicate4 condition) {
-		return _lock.run(new SafeClosure4() {
+		return _lock.run(new Closure4() {
 			public Object run() {
 				return _queue.nextMatching(condition);
 			}

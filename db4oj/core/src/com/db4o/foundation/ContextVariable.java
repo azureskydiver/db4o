@@ -47,7 +47,7 @@ public class ContextVariable {
 		return null;
 	}
 	
-	public Object with(Object value, SafeClosure4 block) {
+	public Object with(Object value, Closure4 block) {
 		validate(value);
 		
 		ThreadSlot slot = pushValue(value);
@@ -59,7 +59,7 @@ public class ContextVariable {
 	}
 	
 	public void with(Object value, final Runnable block) {
-		with(value, new SafeClosure4() {
+		with(value, new Closure4() {
 			public Object run() {
 				block.run();
 				return null;

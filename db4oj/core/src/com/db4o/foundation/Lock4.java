@@ -7,17 +7,12 @@ package com.db4o.foundation;
  */
 public class Lock4 {
 
-    public Object run(Closure4 closure) throws Exception{
+    public Object run(Closure4 closure) {
     	synchronized(this){
     		return closure.run();
     	}
     }
 
-    public Object run(SafeClosure4 closure) {
-    	synchronized(this){
-    		return closure.run();
-    	}
-	}
     public void snooze(long timeout) {
     	try {
             this.wait(timeout);

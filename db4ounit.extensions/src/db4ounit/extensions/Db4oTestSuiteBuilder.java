@@ -35,7 +35,7 @@ public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
     }
     
     protected Iterator4 fromClass(final Class clazz) {
-    	return (Iterator4) AbstractDb4oTestCase.FIXTURE_VARIABLE.with(_fixture, new SafeClosure4() {
+    	return (Iterator4) AbstractDb4oTestCase.FIXTURE_VARIABLE.with(_fixture, new Closure4() {
     		public Object run() {
     			return baseFromClass(clazz);
     		}

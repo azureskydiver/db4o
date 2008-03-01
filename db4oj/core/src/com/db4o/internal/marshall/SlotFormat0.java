@@ -28,5 +28,7 @@ public class SlotFormat0 extends SlotFormat {
     public boolean isIndirectedWithinSlot(TypeHandler4 handler){
         return false;
     }
+    
+
 
 }
