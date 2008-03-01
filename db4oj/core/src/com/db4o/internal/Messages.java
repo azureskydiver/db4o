@@ -156,9 +156,6 @@ public final class Messages {
     		}
     	}
     	Config4Impl c4i = (Config4Impl)config;
-    	if(c4i == null){
-    	    c4i = (Config4Impl)Db4o.configure();
-    	}
     	
     	if(c4i.messageLevel() > Const4.NONE){
     		new Message(msg,code,c4i.outStream());

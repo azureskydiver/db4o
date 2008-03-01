@@ -6,6 +6,7 @@ import java.io.*;
 import java.lang.reflect.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -32,16 +33,18 @@ public class Logger
 			if(! new File(args[0]).exists()){
 				System.out.println("A database file with the name '" + args[0] + "' does not exist.");
 			}else{
-				Db4o.configure().messageLevel(-1);
+				Configuration config = Db4o.newConfiguration();
+				config.messageLevel(-1);
 				ExtObjectContainer con = null;
 				try{
-					ObjectContainer c = Db4o.openFile(args[0]);
+					ObjectContainer c = Db4o.openFile(config, args[0]);
 					if(c == null){
 						throw new RuntimeException();
 					}
 					con = c.ext();
 				}catch(Exception e){
 					System.out.println("The database file '" + args[0] + "' could not be opened.");
+					e.printStackTrace();
 					return;
 				}
 				

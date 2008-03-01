@@ -264,7 +264,7 @@ public class Db4o {
 		}
 	    
 		ObjectContainer oc = new InMemoryObjectContainer(config,memoryFile);
-		Messages.logMsg(i_config, 5, "Memory File");
+		Messages.logMsg(config, 5, "Memory File");
 		return oc;
 	}
 	
