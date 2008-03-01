@@ -404,9 +404,7 @@ public class Regression {
 				Constructor[] constructors = a_class.getDeclaredConstructors();
 				for (int i = 0; i < constructors.length; i++) {
 					try {
-						if(Platform4.canSetAccessible()){
-							Platform4.setAccessible(constructors[i]);
-						}
+						Platform4.setAccessible(constructors[i]);
 						
 						Class[] pTypes = constructors[i].getParameterTypes();
 						Object[] parms = new Object[constructors[i].getParameterTypes().length];

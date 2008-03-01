@@ -578,7 +578,7 @@ public final class Config4Impl implements Configuration, DeepClone,
         if (i_stream != null) {
             i_stream.logMsg(19, Db4o.version());
         } else {
-            Messages.logMsg(Db4o.configure(), 19, Db4o.version());
+            Messages.logMsg(this, 19, Db4o.version());
         }
     }
 

@@ -4,6 +4,7 @@ package com.db4o.tools;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
+import com.db4o.config.*;
 import com.db4o.ext.StoredClass;
 import com.db4o.foundation.Tree;
 import com.db4o.foundation.Visitor4;
@@ -27,7 +28,6 @@ public class Statistics {
 	 * file as element 0.
 	 */
 	public static void main(String[] args) {
-		Db4o.configure().messageLevel(-1);
 		if (args == null || args.length != 1) {
 			System.out.println("Usage: java com.db4o.tools.Statistics <database filename>");
 		} else {
@@ -39,7 +39,9 @@ public class Statistics {
 		if (new java.io.File(filename).exists()) {
 			ObjectContainer con = null;
 			try {
-				con = Db4o.openFile(filename);
+				Configuration config = Db4o.newConfiguration();
+				config.messageLevel(-1);
+				con = Db4o.openFile(config, filename);
 				printHeader("STATISTICS");
 				System.out.println("File: " + filename);
 				printStats(con, filename);
