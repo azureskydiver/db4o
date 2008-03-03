@@ -23,7 +23,8 @@ public class TestRunner {
 			try {
 				test.run();
 			} catch (TestException x) {
-				listener.testFailed(test, x.getReason());
+			    Throwable reason = x.getReason();
+				listener.testFailed(test, reason == null ? x : reason);
 			} catch (Exception failure) {
 				listener.testFailed(test, failure);
 			}
