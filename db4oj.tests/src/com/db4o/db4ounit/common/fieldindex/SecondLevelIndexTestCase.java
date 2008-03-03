@@ -50,11 +50,14 @@ public class SecondLevelIndexTestCase extends AbstractDb4oTestCase implements Di
         config.objectClass(Item.class).objectField("name").indexed(true);
         config.objectClass(ItemPair.class).objectField("item1").indexed(true);
         config.objectClass(ItemPair.class).objectField("item2").indexed(true);
-	    super.configure(config);
 	}
 	
     protected void db4oTearDownBeforeClean() throws Exception {
-        Db4o.configure().diagnostic().removeAllListeners();
+        fixture().configureAtRuntime(new RuntimeConfigureAction() {
+			public void apply(Configuration config) {
+				config.diagnostic().removeAllListeners();
+			}
+        });
     }
 	
 	public void test() {
