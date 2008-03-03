@@ -2,9 +2,10 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import java.io.IOException;
+import java.io.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
@@ -54,8 +55,6 @@ public class BackupStressTestCase implements Db4oTestCase {
     
     public void setUp() throws Exception{
     	deleteFile(FILE);
-        Db4o.configure().objectClass(BackupStressItem.class).objectField("_iteration").indexed(true);
-        Db4o.configure().reflectWith(Platform4.reflectorForType(BackupStressItem.class));
     }
     
     public void tearDown() throws IOException {
@@ -75,7 +74,7 @@ public class BackupStressTestCase implements Db4oTestCase {
 	private void runTestIterations() throws Exception {
 		if(! runOnOldJDK && isOldJDK()) {
             System.out.println("BackupStressTest is too slow for regression testing on Java JDKs < 1.4");
-            return;
+//            return;
         }
         
         BackupStressIteration iteration = new BackupStressIteration();
@@ -118,7 +117,7 @@ public class BackupStressTestCase implements Db4oTestCase {
    
     private void openDatabase(){
         deleteFile(FILE);
-        _objectContainer = Db4o.openFile(FILE);
+        _objectContainer = Db4o.openFile(config(), FILE);
     }
     
     private void closeDatabase() throws InterruptedException{
@@ -134,7 +133,7 @@ public class BackupStressTestCase implements Db4oTestCase {
         
         for (int i = 1; i < _backups; i++) {
             stdout("Backup " + i);
-            ObjectContainer container = Db4o.openFile(backupFile(i));
+            ObjectContainer container = Db4o.openFile(config(), backupFile(i));
             try {
 	            stdout("Open successful");
 	            Query q = container.query();
@@ -186,5 +185,11 @@ public class BackupStressTestCase implements Db4oTestCase {
         }
     }
 
+	private Configuration config() {
+		Configuration config = Db4o.newConfiguration();
+        config.objectClass(BackupStressItem.class).objectField("_iteration").indexed(true);
+        config.reflectWith(Platform4.reflectorForType(BackupStressItem.class));
+        return config;
+	}
 
 }
