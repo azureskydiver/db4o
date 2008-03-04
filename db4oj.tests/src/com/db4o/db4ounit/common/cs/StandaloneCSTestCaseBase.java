@@ -19,12 +19,12 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 	}
 	
 	public void test() throws Throwable {
-		final Configuration config = Db4o.newConfiguration();
+		final Configuration config = Db4o.configure();
 		configure(config);
 		
 		String fileName = databaseFile();
 		File4.delete(fileName);
-		final ObjectServer server = Db4o.openServer(config, fileName, -1);
+		final ObjectServer server = Db4o.openServer(fileName, -1);
 		_port = server.ext().port();
 		try {
 			server.grantAccess("db4o", "db4o");
