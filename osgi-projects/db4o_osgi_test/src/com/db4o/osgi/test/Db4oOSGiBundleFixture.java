@@ -20,6 +20,8 @@ class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 	private final BundleContext _context;
 	private final String _fileName;
 	private Configuration _config;
+	private Configuration _origConfig;
+	
 	
 	public Db4oOSGiBundleFixture(BundleContext context, String fileName) {
 		super(new IndependentConfigurationSource());
@@ -30,7 +32,9 @@ class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 	protected ObjectContainer createDatabase(Configuration config) {
 		// hack around sticky stream reference, should actually be fixed in config API
 		_config = config;
+		_origConfig = null;
 		if(_config instanceof DeepClone) {
+			_origConfig = _config;
 			_config = (Configuration) ((DeepClone)_config).deepClone(null);
 		}
 	    ServiceReference sRef = _context.getServiceReference(Db4oService.class.getName());
@@ -57,6 +61,9 @@ class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 
 	public void configureAtRuntime(RuntimeConfigureAction action) {
 		action.apply(_config);
+		if(_origConfig != null) {
+			action.apply(_origConfig);
+		}
 	}
 
 }
