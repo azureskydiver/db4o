@@ -49,5 +49,28 @@ public class TestRunnerTestCase implements TestCase {
 			new MethodCall("runFinished"),
 		});
 	}
+	
+	public void testRunWithException() {
+	    Test test = new Test() {
+
+            public String getLabel() {
+                return "Test"; //$NON-NLS-1$
+            }
+
+            public void run() {
+                Assert.areEqual(0, 1);
+            }
+	        
+	    };
+	    
+	    Iterable4 tests = Iterators.iterable(new Object[] {
+	            test,
+	    });
+	    try {
+	        new ConsoleTestRunner(tests).run();
+	    } catch (AssertionException e) {
+	        //expected
+	    }
+	}
 
 }
