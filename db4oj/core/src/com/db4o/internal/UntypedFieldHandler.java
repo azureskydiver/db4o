@@ -104,7 +104,9 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         int typeHandlerId = context.copyIDReturnOriginalID();
 		TypeHandler4 typeHandler = context.typeHandlerForId(typeHandlerId);
 		if(typeHandler != null){
-		    // seekSecondaryOffset(context, typeHandler);
+			if(MarshallingLogicSimplification.enabled){
+				seekSecondaryOffset(context, typeHandler);
+			}
 		    context.correctHandlerVersion(typeHandler).defragment(context);
 		}
         context.seek(linkOffSet);

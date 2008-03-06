@@ -12,6 +12,9 @@ import com.db4o.internal.*;
 public class ArrayHandler2 extends ArrayHandler {
     
     protected int preparePayloadRead(DefragmentContext context) {
+    	if(MarshallingLogicSimplification.enabled){
+    		return context.offset();
+    	}
         int newPayLoadOffset = context.readInt();
         context.readInt();  // skip length, not needed
         int linkOffSet = context.offset();
