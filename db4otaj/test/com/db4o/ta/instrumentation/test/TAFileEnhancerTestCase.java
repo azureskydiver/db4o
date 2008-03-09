@@ -22,6 +22,8 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 	
 	private final static Class NOT_INSTRUMENTED_CLAZZ = NotToBeInstrumented.class;
 
+	private final static Class EXTERNAL_INSTRUMENTED_CLAZZ = ToBeInstrumentedWithExternalFieldAccess.class;
+
 	private String srcDir;
 	
 	private String targetDir;	
@@ -30,7 +32,7 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		srcDir = IO.mkTempDir("tafileinstr/source");
 		targetDir = IO.mkTempDir("tafileinstr/target");
 		copyClassFilesTo(
-			new Class[] { INSTRUMENTED_CLAZZ, NOT_INSTRUMENTED_CLAZZ },
+			new Class[] { INSTRUMENTED_CLAZZ, NOT_INSTRUMENTED_CLAZZ, EXTERNAL_INSTRUMENTED_CLAZZ },
 			srcDir);
 	}
 	
@@ -45,11 +47,11 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 
 	private AssertingClassLoader newAssertingClassLoader()
 			throws MalformedURLException {
-		return new AssertingClassLoader(new File(targetDir), new Class[] { INSTRUMENTED_CLAZZ, NOT_INSTRUMENTED_CLAZZ });
+		return new AssertingClassLoader(new File(targetDir), new Class[] { INSTRUMENTED_CLAZZ, NOT_INSTRUMENTED_CLAZZ, EXTERNAL_INSTRUMENTED_CLAZZ });
 	}
 
 	private void enhance() throws Exception {
-		ClassFilter filter = new ByNameClassFilter(new String[]{ INSTRUMENTED_CLAZZ.getName() });
+		ClassFilter filter = new ByNameClassFilter(new String[]{ INSTRUMENTED_CLAZZ.getName(), EXTERNAL_INSTRUMENTED_CLAZZ.getName() });
 		Db4oFileInstrumentor enhancer = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(filter));
 		enhancer.enhance(srcDir, targetDir, new String[]{});
 	}
@@ -65,6 +67,20 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		Assert.areEqual(1, activator.writeCount());
 		Assert.areEqual(0, activator.readCount());
 	}
+	
+	public void testExternalFieldAccessInstrumentation() throws Exception {
+		enhance();
+		
+		AssertingClassLoader loader = newAssertingClassLoader();
+		
+		Activatable server = (Activatable) loader.newInstance(INSTRUMENTED_CLAZZ);
+		Object client = loader.newInstance(EXTERNAL_INSTRUMENTED_CLAZZ);
+		MockActivator activator = MockActivator.activatorFor(server);
+		Reflection4.invoke(client, "accessExternalField", server.getClass(), server);
+		Assert.areEqual(1, activator.writeCount());
+		Assert.areEqual(0, activator.readCount());
+	}
+	
 	
 	public void testExceptionsAreBubbledUp() throws Exception {
 		

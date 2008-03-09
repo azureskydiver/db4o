@@ -2,6 +2,8 @@ package com.db4o.ta.instrumentation.test;
 
 public class ToBeInstrumentedWithFieldAccess {
 
+	public int _externallyAccessibleInt;
+	
 	private int _int;
 	
 	private int[] _intArray;
