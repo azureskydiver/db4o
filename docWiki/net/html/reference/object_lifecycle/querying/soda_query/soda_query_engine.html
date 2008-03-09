@@ -1,0 +1,82 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>SODA Query Engine</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>SODA Query Engine</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Inheritance">Inheritance</a></li></ul></li></ul></div></div></div><p>Query Processor operates in two stages:</p>
+
+<p>1. In&nbsp;a first stage it creates a tree of candidate object IDs using an
+index. The Best index is searched, which means a field index for field
+constraints (if available). Field index allows to create often smaller
+candidate tree, already filtered on some criteria. If the best index is not
+found, class index is used to create a candidate tree of all instances of
+matching class or classes.</p>
+
+<p>2. In a second stage, all candidates are run against the SODA processor to
+run all constraints against all objects, whether the field of a constraint is
+indexed or not.</p>
+
+<p>The first stage of the query processor operates directly on
+BTrees. BTrees are used for class indexes (always), and field indexes
+(configurable).</p>
+
+
+
+<p>BTree algebra may create unions and intersections (and, or,
+greater, smaller) between BTree ranges, working&nbsp;with pointers
+into&nbsp;BTrees without ever having to scan through all index entries. A BTree
+node points to the object's file positions through object ID.</p>
+
+
+
+<p>Query processing starts from evaluating leaf nodes of the
+query graph and then going on to the top level filtering or joining the
+results.</p>
+
+<p>For a simple query:</p>
+
+<p><code>query.constrain(Pilot.class);</code></p>
+
+<p>class index will be used to get ID's of all Pilot objects.</p>
+
+<p>For a more complex query:</p>
+
+<p><code>query.constrain(Pilot.class);</code></p>
+
+
+
+<p><code>Constraint constr = query.descend("name").constrain("Michael
+Schumacher");</code></p>
+
+<p><code>query.descend("points").constrain(new Integer(100)).and(constr);</code></p>
+
+<p>In case there are indexes on "name" and "points" fields, Pilot
+candidates will be created from "points" indexes having value of 100 and "name"
+indexes with value "Michael Schumacher". With BTree indexes this search will be
+really fast. If there is no index all Pilot IDs will be used as candidates.
+After the candidates are collected all existing constraints fill be tested
+against them to filter out results that do not match the criteria.</p><a name="Inheritance"></a><h2>Inheritance</h2>
+
+<p>In the case of inherited classes of interfaces:</p>
+
+<ul class="unIndentedList"><li>
+querying against parent class or interface will
+include results for all subclasses/implementations;</li><li>
+field indexes can be used and should be defined
+against the parent class fields</li></ul>
+
+
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2008-03-02T15:08:25 by Tetyana.
+				</div>
+  </body>
+</html>
