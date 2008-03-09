@@ -83,7 +83,7 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 					for (Iterator idxIter = fieldAccessIndexes.keySet().iterator(); idxIter.hasNext();) {
 						Integer idx = ((Integer) idxIter.next());
 						FieldAccess fieldAccess = (FieldAccess)fieldAccessIndexes.get(idx);
-						if (instrumentFieldAccess(loaderContext, ce, editor, idx, fieldAccess)) {
+						if (instrumentFieldAccess(loaderContext, editor, idx, fieldAccess)) {
 							modifiedCount++;
 						}
 					}
@@ -100,11 +100,12 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 
 			private boolean instrumentFieldAccess(
 					final BloatLoaderContext loaderContext,
-					final ClassEditor ce, MethodEditor editor, Integer idx,
+					MethodEditor editor, Integer idx,
 					FieldAccess fieldAccess) throws ClassNotFoundException {
 				
 				MemberRef fieldRef = fieldAccess.fieldRef;
-				if (!isPersistentField(loaderContext, ce, fieldRef)) {
+				ClassEditor fieldParentClassEditor = loaderContext.classEditor(fieldRef.declaringClass());
+				if (!isPersistentField(loaderContext, fieldParentClassEditor, fieldRef)) {
 					return false;
 				}
 				
