@@ -1,0 +1,40 @@
+@sharpen-exceptions-mapping
+@sharpen-collections-mapping
+@sharpen-io-mapping
+
+-pascalCase+
+-nativeTypeSystem
+-nativeInterfaces
+-organizeUsings
+
+-fullyQualify Buffer
+-fullyQualify File
+-fullyQualify Socket
+-fullyQualify ICloneable
+-fullyQualify AllTests
+
+-typeMapping com.db4o.events.EventArgs System.EventArgs
+-typeMapping com.db4o.Db4o Db4objects.Db4o.Db4oFactory
+-typeMapping com.db4o.ext.ExtDb4o Db4objects.Db4o.Ext.ExtDb4oFactory
+-typeMapping java.lang.Comparable System.IComparable
+-typeMapping java.io.InputStream Sharpen.IO.IInputStream
+-typeMapping java.io.OutputStream Sharpen.IO.IOutputStream
+
+-namespaceMapping com.db4o.nativequery Db4objects.Db4o.NativeQueries
+-namespaceMapping com.db4o.db4ounit Db4objects.Db4o.Tests
+-namespaceMapping com.db4o.test.nativequery Db4objects.Db4o.Tests.NativeQueries
+-namespaceMapping db4ounit.extensions.fixtures Db4oUnit.Extensions.Fixtures
+-namespaceMapping db4ounit.extensions Db4oUnit.Extensions
+-namespaceMapping db4ounit.util Db4oUnit.Util
+-namespaceMapping db4ounit Db4oUnit
+-namespaceMapping com.db4o Db4objects.Db4o
+-namespaceMapping java Sharpen
+
+
+-propertyMapping java.lang.System.out Sharpen.Runtime.Out
+-propertyMapping java.lang.System.err Sharpen.Runtime.Err
+-propertyMapping db4ounit.TestPlatform.getExceptionCause InnerException
+-propertyMapping java.util.Date.getTime Ticks
+
+-methodMapping java.util.Date.getTime Sharpen.Runtime.ToJavaMilliseconds
+-methodMapping com.db4o.db4ounit.util.Strings.replace Replace

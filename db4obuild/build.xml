@@ -295,20 +295,25 @@
 
 	<target name="buildnet" depends="init">
 		<ant antfile="build-java.xml" target="doctor"/>
-		<ant antfile="build-dotnet.xml" target="package" />
+		<ant antfile="build-dotnet.xml" target="package" >
+		    <property name="force.skip.sharpen" value="${force.skip.sharpen}" />
+		</ant>
 	</target>
 	
 	<target name="buildnet35" depends="init" description=".NET 3.5 (LINQ) full build">
 		<ant antfile="build-java.xml" target="doctor"/>
-		<ant antfile="build-dotnet.xml" target="package-net35" />
+		<ant antfile="build-dotnet.xml" target="package-net35" >
+		    <property name="force.skip.sharpen" value="${force.skip.sharpen}" />
+		</ant>
 	</target>
 	
 	<target name="test-cc" depends="init, runtestsnet, cc-net35" />
 	
-	<target name="cc-net35" depends="clean">
-		<ant antfile="build-java.xml" target="init" /> 
-		<ant antfile="build-dotnet.xml" target="run-tests-net35" />
-		<ant target="buildnet35" />
+	<target name="cc-net35" depends="init">
+		<ant antfile="build-dotnet.xml" target="run-tests-net35" >
+		    <property name="force.skip.sharpen" value="${force.skip.sharpen}" />
+		</ant>
+		<antcall target="buildnet35" />
 	</target>
 
 	<target name="buildmono2" depends="compile.java.all">
