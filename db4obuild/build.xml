@@ -313,7 +313,7 @@
 		<ant antfile="build-dotnet.xml" target="run-tests-net35" >
 		    <property name="force.skip.sharpen" value="${force.skip.sharpen}" />
 		</ant>
-		<antcall target="buildnet35" />
+		<ant target="buildnet35" />
 	</target>
 
 	<target name="buildmono2" depends="compile.java.all">
