@@ -66,6 +66,8 @@
 				<exclude name="**/**/Db4oVersion.java" />
 			</srcfiles>
 		</uptodate>
+	    
+	    <echo message="force.skip.sharpen = ${force.skip.sharpen}, skip.sharpen = ${skip.sharpen}" />
 	</target>
 	
 	<target name="run-tests-net35"
@@ -1078,7 +1080,7 @@
 		<taskdef resource="org/apache/ant/dotnet/antlib.xml" />
 	</target>
     
-    <target name="sharpen-all" depends="install-javatocsharp-plugin, prepare-conversion-workspace" unless="skip.sharpen">
+    <target name="sharpen-all" depends="check-dependencies, install-javatocsharp-plugin, prepare-conversion-workspace" unless="skip.sharpen">
         <sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
             <args>
                 <arg value="-xmldoc" />
