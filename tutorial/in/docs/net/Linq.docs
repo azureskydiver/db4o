@@ -4,8 +4,8 @@ db4o querying syntax has got even easier with the introduction of .NET LINQ quer
 LINQ allows you to write compile checked db4o queries, which can be refactored ._
 automatically when a field name changes and which are supported by code ._
 auto-completion tools.
-In order to use LINQ you will need to add references to System.Data.Linq.dll and ._
-Db4objects.Db4o.Linq.dll and usage to your program class:
+In order to use LINQ you will need to add reference to ._
+ Db4objects.Db4o.Linq.dll and usage to your program class:
 .c using System.Linq;
 using Db4objects.Db4o.Linq; ..  
 If you are already familiar with LINQ syntax, you can just start writing ._
