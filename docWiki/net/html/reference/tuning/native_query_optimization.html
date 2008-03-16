@@ -10,7 +10,7 @@
         <h1>Native Query Optimization</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Optimization Theory&nbsp;">Optimization Theory&nbsp;</a></li><li><a href ="#NQ Optimization for .NET">NQ Optimization for .NET</a></li></ul></li></ul></div></div></div>
 
 
-<p>Native Queries will run out of the box in any environment. If optimization is turned on (default) Native Queries will be converted to SODA where this is possible, allowing db4o to use indexes and optimized internal
+<p>Native Queries will run out of the box in any environment. If optimization is turned on (default) Native Queries will be converted to <a href="../object_lifecycle/querying/soda_query.html" class="wikiLink">SODA</a> where this is possible, allowing db4o to use indexes and optimized internal
 comparison algorithms.Otherwise Native Query may be executed by instantiating all objects,
 using <a href="../object_lifecycle/querying/soda_evaluations.html" class="wikiLink">SODA
 Evaluations</a>. Naturally performance will not be as good in this case.</p>
@@ -104,7 +104,7 @@ current implementation doesn't support polymorphism yet.</p>
 <p>For more information on NQ optimization see <a href="native_query_optimization/monitoring_optimization.html" class="wikiLink">Monitoring Optimization</a>.<br></p></div>
     </div>
     <div id="footer">
-					This revision (20) was last Modified 2008-03-02T15:42:53 by Tetyana.
+					This revision (21) was last Modified 2008-03-15T17:44:47 by Tetyana.
 				</div>
   </body>
 </html>
