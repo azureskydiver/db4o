@@ -24,7 +24,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		Expression array = node.getExpression();
 
 		VariableDeclarationStatement tempArrayVariable = null;
-		if (!(array instanceof Name)) {
+		if (!isName(array)) {
 			String tempArrayName = variable.getName() + "Array";
 			tempArrayVariable = newVariableDeclarationStatement(
 				tempArrayName,
@@ -58,6 +58,10 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			replace(node, newBlock(tempArrayVariable, stmt));
 		}
 		return false;
+	}
+
+	private boolean isName(Expression array) {
+		return array instanceof Name;
 	}
 
 	private ForStatement newForStatement(
