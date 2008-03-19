@@ -627,8 +627,8 @@ public final class Platform4 {
         translate(config, UTIL + className, "TNull");
     }
 
-    static final NetTypeHandler[] types(ObjectContainerBase container) {
-        return jdk().types(container);
+    static final NetTypeHandler[] types(Reflector reflector) {
+        return jdk().types(reflector);
     }
     
     public static byte[] updateClassName(byte[] bytes) {
