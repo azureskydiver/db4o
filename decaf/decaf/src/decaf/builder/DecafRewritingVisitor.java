@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.InfixExpression.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
+@SuppressWarnings("unchecked")
 public final class DecafRewritingVisitor extends ASTVisitor {
 	private final AST ast;
 	private final ASTRewrite rewrite;
@@ -30,7 +31,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 				tempArrayName,
 				newType(array.resolveTypeBinding()),
 				copy(array));
-			array = ast.newSimpleName(tempArrayName);
+			array = newSimpleName(tempArrayName);
 		}
 		
 		String indexVariableName = variable.getName() + "Index";
@@ -39,17 +40,22 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 				indexVariableName,
 				ast.newNumberLiteral("0"));
 		
-		InfixExpression cmp = newInfixExpression(InfixExpression.Operator.LESS, ast.newSimpleName(indexVariableName), newFieldAccess(copy(array), ast.newSimpleName("length")));
+		InfixExpression cmp = newInfixExpression(
+								InfixExpression.Operator.LESS,
+								newSimpleName(indexVariableName),
+								newFieldAccess(copy(array), "length"));
 			
 		Block body = ast.newBlock();
-		body.statements().add(newVariableDeclarationStatement(variable.getName().toString(), copy(variable.getType()), newArrayAccess(copy(array), ast.newSimpleName(indexVariableName))));
+		body.statements().add(newVariableDeclarationStatement(variable.getName().toString(), copy(variable.getType()), newArrayAccess(copy(array), newSimpleName(indexVariableName))));
 		if (node.getBody() instanceof Block) {
 			body.statements().addAll(copyAll(((Block)node.getBody()).statements()));
 		} else {
 			body.statements().add(copy(node.getBody()));
 		}
 		
-		PrefixExpression updater = newPrefixExpression(PrefixExpression.Operator.INCREMENT, ast.newSimpleName(indexVariableName));
+		PrefixExpression updater = newPrefixExpression(
+												PrefixExpression.Operator.INCREMENT,
+												newSimpleName(indexVariableName));
 		
 		ForStatement stmt = newForStatement(index, cmp, updater, body);
 		if (null == tempArrayVariable) {
@@ -60,10 +66,14 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		return false;
 	}
 
+	private Expression newFieldAccess(Expression e, String fieldName) {
+		return newFieldAccess(e, newSimpleName(fieldName));
+	}
+
 	private boolean isName(Expression array) {
 		return array instanceof Name;
 	}
-
+	
 	private ForStatement newForStatement(
 			Expression initializer,
 			Expression comparison,
@@ -143,6 +153,9 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		return ASTNode.copySubtrees(ast, nodes);
 	}
 	
+	private SimpleName newSimpleName(String name) {
+		return ast.newSimpleName(name);
+	}
 
 	VariableDeclarationExpression newVariableDeclaration(Type variableType, String variableName, Expression initializer) {
 		VariableDeclarationFragment indexFragment = newVariableFragment(variableName, initializer);
@@ -154,7 +167,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	VariableDeclarationFragment newVariableFragment(String variableName, Expression initializer) {
 		VariableDeclarationFragment indexFragment = ast.newVariableDeclarationFragment();
-		indexFragment.setName(ast.newSimpleName(variableName));
+		indexFragment.setName(newSimpleName(variableName));
 		indexFragment.setInitializer(initializer);
 		return indexFragment;
 	}
