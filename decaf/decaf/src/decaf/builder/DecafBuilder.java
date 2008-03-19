@@ -16,7 +16,7 @@ public class DecafBuilder extends IncrementalProjectBuilder {
 
 	private static final String MARKER_TYPE = "decaf.decafProblem";
 
-	private void addMarker(IFile file, String message, int lineNumber,
+	protected void addMarker(IFile file, String message, int lineNumber,
 			int severity) {
 		try {
 			IMarker marker = file.createMarker(MARKER_TYPE);
@@ -191,6 +191,7 @@ public class DecafBuilder extends IncrementalProjectBuilder {
 		});
 	}
 	
+	@SuppressWarnings("restriction")
 	private void rewriteDocument(final ASTRewrite rewrite,
 			final ICompilationUnit decaf) throws JavaModelException,
 			BadLocationException {
