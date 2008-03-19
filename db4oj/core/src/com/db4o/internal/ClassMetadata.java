@@ -1297,7 +1297,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if (isArray()) {
             if (Platform4.isCollectionTranslator(this.i_config)) {
                 a_bytes[0].incrementOffset(Const4.INT_LENGTH);
-                return new ArrayHandler(_container, null, false);
+                return new ArrayHandler(null, false);
             }
             incrementFieldsOffset1(a_bytes[0]);
             if (i_ancestor != null) {

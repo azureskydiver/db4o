@@ -64,9 +64,9 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
 
     void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, int a_type, boolean isUpdate) {
         if (a_type == Const4.TYPE_ARRAY) {
-            new ArrayHandler(a_bytes.getStream(),this, true).deletePrimitiveEmbedded(a_bytes, this);
+            new ArrayHandler(this, true).deletePrimitiveEmbedded(a_bytes, this);
         } else if (a_type == Const4.TYPE_NARRAY) {
-            new MultidimensionalArrayHandler(a_bytes.getStream(),this, true).deletePrimitiveEmbedded(a_bytes, this);
+            new MultidimensionalArrayHandler(this, true).deletePrimitiveEmbedded(a_bytes, this);
         }
     }
     

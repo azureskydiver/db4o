@@ -493,10 +493,10 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				TypeHandler4 arrayElementTypehandler = classMetadata.typeHandler(); 
 				if (reflector.array().isNDimensional(memberClass())) {
 					MultidimensionalArrayHandler mah = 
-						new MultidimensionalArrayHandler(container, arrayElementTypehandler, false);
+						new MultidimensionalArrayHandler(arrayElementTypehandler, false);
 					return mah.prepareComparison(context, _member);
 				} 
-				ArrayHandler ya = new ArrayHandler(container, arrayElementTypehandler, false);
+				ArrayHandler ya = new ArrayHandler(arrayElementTypehandler, false);
 				return ya.prepareComparison(context, _member);
 			} 
 			return classMetadata.prepareComparison(context, constraint);

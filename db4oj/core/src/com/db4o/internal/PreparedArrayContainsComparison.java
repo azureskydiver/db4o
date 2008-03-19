@@ -15,9 +15,12 @@ public class PreparedArrayContainsComparison implements PreparedComparison {
 	
 	private final PreparedComparison _preparedComparison; 
 	
+	private ObjectContainerBase _container;
+	
 	public PreparedArrayContainsComparison(Context context, ArrayHandler arrayHandler, TypeHandler4 typeHandler, Object obj){
 		_arrayHandler = arrayHandler;
 		_preparedComparison = typeHandler.prepareComparison(context, obj);
+		_container = context.transaction().container();
 	}
 
 	public int compareTo(Object obj) {
@@ -43,7 +46,7 @@ public class PreparedArrayContainsComparison implements PreparedComparison {
         if(array == null){
             return false;
         }
-        Iterator4 i = _arrayHandler.allElements(array);
+        Iterator4 i = _arrayHandler.allElements(_container, array);
         while (i.moveNext()) {
         	if(matcher.match(_preparedComparison.compareTo(i.current()))){
         		return true;

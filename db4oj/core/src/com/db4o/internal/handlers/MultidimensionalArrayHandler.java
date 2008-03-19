@@ -16,16 +16,16 @@ import com.db4o.reflect.*;
  */
 public class MultidimensionalArrayHandler extends ArrayHandler {
 	
-    public MultidimensionalArrayHandler(ObjectContainerBase stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
-        super(stream, a_handler, a_isPrimitive);
+    public MultidimensionalArrayHandler(TypeHandler4 a_handler, boolean a_isPrimitive) {
+        super(a_handler, a_isPrimitive);
     }
     
     public MultidimensionalArrayHandler(){
         // required for reflection cloning
     }
     
-    public final Iterator4 allElements(Object array) {
-		return allElements(arrayReflector(), array);
+    public final Iterator4 allElements(ObjectContainerBase container, Object array) {
+		return allElements(arrayReflector(container), array);
     }
 
 	public static Iterator4 allElements(final ReflectArray reflectArray, Object array) {
@@ -52,8 +52,8 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         return Const4.YAPARRAYN;
     }
 
-    public int ownLength(Object obj){
-        int[] dim = arrayReflector().dimensions(obj);
+    public int ownLength(ObjectContainerBase container, Object obj){
+        int[] dim = arrayReflector(container).dimensions(obj);
         return Const4.OBJECT_LENGTH
             + (Const4.INT_LENGTH * (2 + dim.length));
     }
@@ -86,7 +86,7 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
 		if(clazz == null){
 		    return null;
 		}
-		return arrayReflector().newInstance(clazz, dimensions.value);
+		return arrayReflector(container(trans)).newInstance(clazz, dimensions.value);
     }
     
     private final int[] readDimensions(Transaction trans, ReadBuffer buffer, ReflectClassByRef clazz) {
@@ -111,7 +111,7 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
             for (int i = 0; i < objects.length; i++) {
                 objects[i] = context.readObject(delegateTypeHandler());
             }
-            arrayReflector().shape(objects, 0, array, dimensions.value, 0);
+            arrayReflector(container(context)).shape(objects, 0, array, dimensions.value, 0);
         }
         
         if (Deploy.debug) {
@@ -127,16 +127,16 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
             Debug.writeBegin(context, Const4.YAPARRAYN);
         }
         
-        int classID = classID(obj);
+        int classID = classID(container(context), obj);
         context.writeInt(classID);
         
-        int[] dim = arrayReflector().dimensions(obj);
+        int[] dim = arrayReflector(container(context)).dimensions(obj);
         context.writeInt(dim.length);
         for (int i = 0; i < dim.length; i++) {
             context.writeInt(dim[i]);
         }
         
-        Iterator4 objects = allElements(obj);
+        Iterator4 objects = allElements(container(context), obj);
         while (objects.moveNext()) {
             context.writeObject(delegateTypeHandler(), objects.current());
         }

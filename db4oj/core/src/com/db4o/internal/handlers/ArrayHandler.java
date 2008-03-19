@@ -22,10 +22,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 	
     private boolean _usePrimitiveClassReflector;
     
-    private ObjectContainerBase _container;
-    
-    public ArrayHandler(ObjectContainerBase container, TypeHandler4 handler, boolean usePrimitiveClassReflector) {
-        _container = container;
+    public ArrayHandler(TypeHandler4 handler, boolean usePrimitiveClassReflector) {
         _handler = handler;
         _usePrimitiveClassReflector = usePrimitiveClassReflector;
     }
@@ -35,15 +32,15 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
     
     protected ArrayHandler(ArrayHandler template, HandlerRegistry registry, int version) {
-        this(template.container(), registry.correctHandlerVersion(template._handler, version), template._usePrimitiveClassReflector);
+        this(registry.correctHandlerVersion(template._handler, version), template._usePrimitiveClassReflector);
     }
 
-    protected ReflectArray arrayReflector(){
-        return container().reflector().array();
+    protected ReflectArray arrayReflector(ObjectContainerBase container){
+        return container.reflector().array();
     }
 
-    public Iterator4 allElements(Object a_object) {
-		return allElements(arrayReflector(), a_object);
+    public Iterator4 allElements(ObjectContainerBase container, Object a_object) {
+		return allElements(arrayReflector(container), a_object);
     }
 
 	public static Iterator4 allElements(final ReflectArray reflectArray, final Object array) {
@@ -59,47 +56,48 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             return;
         }
         
-        Iterator4 all = allElements(onObject);
+        ObjectContainerBase container = container(trans);
+        Iterator4 all = allElements(container, onObject);
         while (all.moveNext()) {
         	final Object current = all.current();
-            ActivationDepth elementDepth = descend(depth, current);
+            ActivationDepth elementDepth = descend(container, depth, current);
             if(elementDepth.requiresActivation()){
             	if (depth.mode().isDeactivate()) {
-            		container().stillToDeactivate(trans, current, elementDepth, false);
+            	    container.stillToDeactivate(trans, current, elementDepth, false);
             	} else {
-            		container().stillToActivate(trans, current, elementDepth);
+            	    container.stillToActivate(trans, current, elementDepth);
             	}
             }
         }
     }
-    
-    public ObjectContainerBase container(){
-        return _container;
+
+    ObjectContainerBase container(Transaction trans) {
+        return trans.container();
     }
     
-    private ActivationDepth descend(ActivationDepth depth, Object obj){
+    private ActivationDepth descend(ObjectContainerBase container, ActivationDepth depth, Object obj){
         if(obj == null){
             return new NonDescendingActivationDepth(depth.mode());
         }
-        ClassMetadata cm = classMetaDataForObject(obj);
+        ClassMetadata cm = classMetaDataForObject(container, obj);
         if(cm.isPrimitive()){
             return new NonDescendingActivationDepth(depth.mode());
         }
         return depth.descend(cm);
     }
     
-    private ClassMetadata classMetaDataForObject(Object obj){
-        return container().classMetadataForObject(obj);
+    private ClassMetadata classMetaDataForObject(ObjectContainerBase container, Object obj){
+        return container.classMetadataForObject(obj);
     }
     
-    public ReflectClass classReflector(Reflector reflector){
+    private ReflectClass classReflector(ObjectContainerBase container){
         if(_handler instanceof BuiltinTypeHandler){
-            return ((BuiltinTypeHandler)_handler).classReflector(reflector);
+            return ((BuiltinTypeHandler)_handler).classReflector(container.reflector());
         }
         if(_handler instanceof ClassMetadata){
             return ((ClassMetadata)_handler).classReflector();
         }
-        return container().handlers().classReflectorForHandler(_handler);
+        return container.handlers().classReflectorForHandler(_handler);
     }
 
     public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, StatefulBuffer reader) throws Db4oIOException{
@@ -226,7 +224,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		if(clazz == null){
 		    return null;
 		}
-		return arrayReflector().newInstance(clazz, elements.value);	
+		return arrayReflector(container(trans)).newInstance(clazz, elements.value);	
 	}
 	
     protected ReflectClass newInstanceReflectClass(Reflector reflector, ReflectClassByRef byRef){
@@ -275,7 +273,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             clazz.value = reflectClassFromElementsEntry(trans, elements);
             elements = buffer.readInt();
         } else {
-    		clazz.value = classReflector(trans.reflector());
+    		clazz.value = classReflector(container(trans));
         }
         if(Debug.exceedsMaximumArrayEntries(elements, _usePrimitiveClassReflector)){
             return 0;
@@ -324,12 +322,12 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		        }
 		    }
 		    int classID = - elements;
-			ClassMetadata classMetadata = trans.container().classMetadataForId(classID);
+			ClassMetadata classMetadata = container(trans).classMetadataForId(classID);
 		    if (classMetadata != null) {
 		        return (primitive ?   Handlers4.primitiveClassReflector(classMetadata, trans.reflector()) : classMetadata.classReflector());
 		    }
 		}
-		return classReflector(trans.reflector());
+		return classReflector(container(trans));
 	}
 
 	public static Iterator4 iterator(ReflectClass claxx, Object obj) {
@@ -340,15 +338,15 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		return ArrayHandler.allElements(reflectArray, obj);
 	}
     
-    protected final int classID(Object obj){
-        ReflectClass claxx = componentType(obj);
+    protected final int classID(ObjectContainerBase container, Object obj){
+        ReflectClass claxx = componentType(container, obj);
         
         boolean primitive = NullableArrayHandling.useOldNetHandling() ? false : claxx.isPrimitive();
         
         if(primitive){
-            claxx = container().produceClassMetadata(claxx).classReflector();
+            claxx = container.produceClassMetadata(claxx).classReflector();
         }
-        ClassMetadata classMetadata = container().produceClassMetadata(claxx);
+        ClassMetadata classMetadata = container.produceClassMetadata(claxx);
         if (classMetadata == null) {
             // TODO: This one is a terrible low-frequency blunder !!!
             // If YapClass-ID == 99999 then we will get IGNORE back.
@@ -362,12 +360,8 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return -classID;
     }
 
-	private ReflectClass componentType(Object obj){
-	    return arrayReflector().getComponentType(reflector().forObject(obj));
-	}
-	
-	private Reflector reflector(){
-	    return container().reflector();
+	private ReflectClass componentType(ObjectContainerBase container, Object obj){
+	    return arrayReflector(container).getComponentType(container.reflector().forObject(obj));
 	}
 	
     public void defragment(DefragmentContext context) {
@@ -454,7 +448,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
                 context.readBytes((byte[])array); // byte[] performance optimisation
             } else{
                 for (int i = 0; i < elements.value; i++) {
-                    arrayReflector().set(array, i, context.readObject(_handler));
+                    arrayReflector(container(context)).set(array, i, context.readObject(_handler));
                 }
             }
         }
@@ -468,20 +462,24 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         if (Deploy.debug) {
             Debug.writeBegin(context, Const4.YAPARRAY);
         }
-        int classID = classID(obj);
+        int classID = classID(container(context), obj);
         context.writeInt(classID);
-        int elementCount = arrayReflector().getLength(obj);
+        int elementCount = arrayReflector(container(context)).getLength(obj);
         context.writeInt(elementCount);
         if(handleAsByteArray(obj)){
             context.writeBytes((byte[])obj);  // byte[] performance optimisation
         }else{
             for (int i = 0; i < elementCount; i++) {
-                context.writeObject(_handler, arrayReflector().get(obj, i));
+                context.writeObject(_handler, arrayReflector(container(context)).get(obj, i));
             }
         }
         if (Deploy.debug) {
             Debug.writeEnd(context);
         }
+    }
+
+    ObjectContainerBase container(Context context) {
+        return context.transaction().container();
     }
 
 	public PreparedComparison prepareComparison(Context context, Object obj) {
@@ -500,7 +498,6 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         TypeHandlerCloneContext typeHandlerCloneContext = (TypeHandlerCloneContext) context;
         ArrayHandler original = (ArrayHandler) typeHandlerCloneContext.original;
         ArrayHandler cloned = (ArrayHandler) Reflection4.newInstance(this);
-        cloned._container = original.container();
         cloned._usePrimitiveClassReflector = original._usePrimitiveClassReflector;
         cloned._handler = typeHandlerCloneContext.correctHandlerVersion(original.delegateTypeHandler());  
         return cloned;
