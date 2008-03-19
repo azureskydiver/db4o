@@ -51,13 +51,13 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
         assertPrimitiveFieldHandlerDelegate(untypedFieldHandler2Class, primitiveFieldHandler,2);
         assertPrimitiveFieldHandlerDelegate(UntypedFieldHandler.class, primitiveFieldHandler,HandlerRegistry.HANDLER_VERSION);
         
-        ArrayHandler arrayHandler = new ArrayHandler(null, untypedFieldHandler, false);
+        ArrayHandler arrayHandler = new ArrayHandler(untypedFieldHandler, false);
         assertCorrectedHandlerVersion(ArrayHandler0.class, arrayHandler, 0);
         assertCorrectedHandlerVersion(arrayHandler2Class, arrayHandler, 1);
         assertCorrectedHandlerVersion(arrayHandler2Class, arrayHandler, 2);
         assertCorrectedHandlerVersion(ArrayHandler.class, arrayHandler, HandlerRegistry.HANDLER_VERSION);
         
-        ArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler(null, untypedFieldHandler, false);
+        ArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler(untypedFieldHandler, false);
         assertCorrectedHandlerVersion(MultidimensionalArrayHandler0.class, multidimensionalArrayHandler, 0);
         assertCorrectedHandlerVersion(MultidimensionalArrayHandler.class, multidimensionalArrayHandler, 1);
         assertCorrectedHandlerVersion(MultidimensionalArrayHandler.class, multidimensionalArrayHandler, 2);
