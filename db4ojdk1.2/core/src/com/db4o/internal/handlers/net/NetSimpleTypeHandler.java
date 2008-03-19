@@ -2,7 +2,6 @@
 
 package com.db4o.internal.handlers.net;
 
-import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -17,21 +16,15 @@ public abstract class NetSimpleTypeHandler extends NetTypeHandler implements Gen
 	private final int _typeID;
 	private final int _byteCount;
 	
-	private ObjectContainerBase _stream;
-	
-	public NetSimpleTypeHandler(ObjectContainerBase stream, int typeID, int byteCount) {
+	public NetSimpleTypeHandler(Reflector reflector, int typeID, int byteCount) {
         super();
         _name = dotNetClassName();
         _typeID = typeID;
         _byteCount = byteCount;
-        _stream = stream;
+        _classReflector = reflector.forName(_name);
     }
 	
     public ReflectClass classReflector(){
-        if(_classReflector != null){
-        	return _classReflector;
-        }
-        _classReflector = _stream.reflector().forName(_name);
     	return _classReflector;  
     }
 	
@@ -87,7 +80,7 @@ public abstract class NetSimpleTypeHandler extends NetTypeHandler implements Gen
 	
     /** @param bytes */
 	public String toString(byte[] bytes) {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 	
 	

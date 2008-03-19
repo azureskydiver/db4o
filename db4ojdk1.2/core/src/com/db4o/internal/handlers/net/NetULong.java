@@ -4,7 +4,7 @@ package com.db4o.internal.handlers.net;
 
 import java.math.*;
 
-import com.db4o.internal.*;
+import com.db4o.reflect.*;
 
 /**
  * @exclude
@@ -12,12 +12,12 @@ import com.db4o.internal.*;
  */
 public class NetULong extends NetSimpleTypeHandler{
     
-    private static final BigInteger ZERO = new BigInteger("0", 16);
+    private static final BigInteger ZERO = new BigInteger("0", 16); //$NON-NLS-1$
     
-	private final static BigInteger FACTOR=new BigInteger("100",16);
+	private final static BigInteger FACTOR=new BigInteger("100",16); //$NON-NLS-1$
 	
-	public NetULong(ObjectContainerBase stream) {
-		super(stream, 23, 8);
+	public NetULong(Reflector reflector) {
+		super(reflector, 23, 8);
 	}
 	
 	public String toString(byte[] bytes) {

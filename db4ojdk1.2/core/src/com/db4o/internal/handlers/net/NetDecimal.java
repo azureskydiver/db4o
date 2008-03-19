@@ -4,7 +4,7 @@ package com.db4o.internal.handlers.net;
 
 import java.math.*;
 
-import com.db4o.internal.*;
+import com.db4o.reflect.*;
 
 /**
  * .NET decimal layout is (bytewise)
@@ -16,14 +16,14 @@ import com.db4o.internal.*;
  */
 public class NetDecimal extends NetSimpleTypeHandler{
 	
-	private static final BigInteger BYTESHIFT_FACTOR=new BigInteger("100",16);
+	private static final BigInteger BYTESHIFT_FACTOR=new BigInteger("100",16); //$NON-NLS-1$
 	 
-	private static final BigInteger ZERO = new BigInteger("0", 16);
+	private static final BigInteger ZERO = new BigInteger("0", 16); //$NON-NLS-1$
     
-	private static final BigDecimal TEN = new BigDecimal("10"); 
+	private static final BigDecimal TEN = new BigDecimal("10");  //$NON-NLS-1$
 
-	public NetDecimal(ObjectContainerBase stream) {
-		super(stream, 21, 16);
+	public NetDecimal(Reflector reflector) {
+		super(reflector, 21, 16);
 	}
 	
 	public String toString(byte[] bytes) {
