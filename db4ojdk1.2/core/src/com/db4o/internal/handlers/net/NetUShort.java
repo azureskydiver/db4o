@@ -2,7 +2,7 @@
 
 package com.db4o.internal.handlers.net;
 
-import com.db4o.internal.*;
+import com.db4o.reflect.*;
 
 /**
  * @exclude
@@ -10,8 +10,8 @@ import com.db4o.internal.*;
  */
 public class NetUShort extends NetSimpleTypeHandler{
 
-	public NetUShort(ObjectContainerBase stream) {
-		super(stream, 24, 2);
+	public NetUShort(Reflector reflector) {
+		super(reflector, 24, 2);
 	}
 	
 	public String toString(byte[] bytes) {
@@ -19,6 +19,6 @@ public class NetUShort extends NetSimpleTypeHandler{
 		for (int i = 0; i < 2; i++){
 			val = (val << 8) + (bytes[i] & 0xff);
 		}
-		return "" + val ;
+		return "" + val ; //$NON-NLS-1$
 	}
 }

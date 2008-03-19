@@ -9,6 +9,7 @@ import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.net.*;
+import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.types.*;
 
@@ -123,14 +124,14 @@ class JDK_1_2 extends JDKReflect {
 		}
 	}
     
-    public NetTypeHandler[] types(ObjectContainerBase container) {
+    public NetTypeHandler[] types(Reflector reflector) {
         return new NetTypeHandler[] {
-            new NetDateTime(container),
-            new NetDecimal(container),
-            new NetSByte(container),
-            new NetUInt(container),
-            new NetULong(container),
-            new NetUShort(container)
+            new NetDateTime(reflector),
+            new NetDecimal(reflector),
+            new NetSByte(reflector),
+            new NetUInt(reflector),
+            new NetULong(reflector),
+            new NetUShort(reflector)
           };
     }
     
