@@ -149,7 +149,7 @@ public final class HandlerRegistry {
     }
     
     private void registerPlatformTypes() {
-        NetTypeHandler[] handlers = Platform4.types(container());
+        NetTypeHandler[] handlers = Platform4.types(container().reflector());
         for (int i = 0; i < handlers.length; i++) {
             handlers[i].initialize();
         	GenericConverter converter = (handlers[i] instanceof GenericConverter) ? (GenericConverter)handlers[i] : null;

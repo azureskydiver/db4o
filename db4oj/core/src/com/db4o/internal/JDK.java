@@ -211,7 +211,7 @@ public class JDK {
 	}
 
     /** @param container */
-    public NetTypeHandler[] types(ObjectContainerBase container) {
+    public NetTypeHandler[] types(Reflector reflector) {
         return new NetTypeHandler[]{};
     }
 
