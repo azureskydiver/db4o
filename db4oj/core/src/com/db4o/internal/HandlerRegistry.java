@@ -124,7 +124,7 @@ public final class HandlerRegistry {
         TypeHandler4 handler = (TypeHandler4) fieldHandlerForId(Handlers4.UNTYPED_ID);
         _untypedArrayHandler = new PrimitiveFieldHandler(
             container(), 
-            new ArrayHandler(container(),handler, false), 
+            new ArrayHandler(handler, false), 
             Handlers4.ANY_ARRAY_ID,
             ICLASS_OBJECT);
         mapTypeInfo(
@@ -136,7 +136,7 @@ public final class HandlerRegistry {
 
         _untypedMultiDimensionalArrayHandler = new PrimitiveFieldHandler(
             container(), 
-            new MultidimensionalArrayHandler(container(), handler, false), 
+            new MultidimensionalArrayHandler(handler, false), 
             Handlers4.ANY_ARRAY_N_ID,
             ICLASS_OBJECT);
         mapTypeInfo(

@@ -381,10 +381,10 @@ public class FieldMetadata implements StoredField {
             return null;
         }
         if (_isNArray) {
-            return new MultidimensionalArrayHandler(container, handler, arraysUsePrimitiveClassReflector());
+            return new MultidimensionalArrayHandler(handler, arraysUsePrimitiveClassReflector());
         } 
         if (_isArray) {
-            return new ArrayHandler(container, handler, arraysUsePrimitiveClassReflector());
+            return new ArrayHandler(handler, arraysUsePrimitiveClassReflector());
         }
         return handler;
     }
