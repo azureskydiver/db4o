@@ -1,6 +1,3 @@
-/**
- * 
- */
 package decaf.builder;
 
 import java.util.*;
@@ -45,25 +42,36 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 								newSimpleName(indexVariableName),
 								newFieldAccess(copy(array), "length"));
 			
-		Block body = ast.newBlock();
-		body.statements().add(newVariableDeclarationStatement(variable.getName().toString(), copy(variable.getType()), newArrayAccess(copy(array), newSimpleName(indexVariableName))));
-		if (node.getBody() instanceof Block) {
-			body.statements().addAll(copyAll(((Block)node.getBody()).statements()));
-		} else {
-			body.statements().add(copy(node.getBody()));
-		}
+		Block newBody = ast.newBlock();
+		newBody.statements().add(
+				newVariableDeclarationStatement(
+						variable.getName().toString(),
+						copy(variable.getType()),
+						newArrayAccess(
+								copy(array),
+								newSimpleName(indexVariableName))));
+		
+		copyTo(node.getBody(), newBody);
 		
 		PrefixExpression updater = newPrefixExpression(
 												PrefixExpression.Operator.INCREMENT,
 												newSimpleName(indexVariableName));
 		
-		ForStatement stmt = newForStatement(index, cmp, updater, body);
+		ForStatement stmt = newForStatement(index, cmp, updater, newBody);
 		if (null == tempArrayVariable) {
 			replace(node, stmt);	
 		} else {
 			replace(node, newBlock(tempArrayVariable, stmt));
 		}
 		return false;
+	}
+
+	private void copyTo(Statement statement, Block body) {
+		if (statement instanceof Block) {
+			body.statements().addAll(copyAll(((Block)statement).statements()));
+		} else {
+			body.statements().add(copy(statement));
+		}
 	}
 
 	private Expression newFieldAccess(Expression e, String fieldName) {
