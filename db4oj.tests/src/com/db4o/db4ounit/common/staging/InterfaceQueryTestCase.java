@@ -1,6 +1,6 @@
 /* Copyright (C) 2008   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.db4ounit.common.soda;
+package com.db4o.db4ounit.common.staging;
 
 import com.db4o.config.*;
 import com.db4o.query.*;

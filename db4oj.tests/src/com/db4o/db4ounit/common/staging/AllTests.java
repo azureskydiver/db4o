@@ -18,6 +18,8 @@ public class AllTests extends Db4oTestSuite {
 			 */
 		    ActivateDepthTestCase.class,
 		    ClientServerPingTestCase.class,
+		    // TODO is there a Jira for this one?
+		    InterfaceQueryTestCase.class,
 			LazyQueryDeleteTestCase.class,
             PingTestCase.class,
 			SODAClassTypeDescend.class,			
