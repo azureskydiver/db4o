@@ -72,6 +72,7 @@ public class QConPath extends QConClass {
     		return falseConstraint;
         }
         QConObject newConstraint = new QConObject(i_trans, i_parent, i_field, obj);
+        newConstraint.i_orderID = i_orderID;
         morph(removeExisting, newConstraint, reflectClassForObject(obj));
 		return newConstraint;
 	}
