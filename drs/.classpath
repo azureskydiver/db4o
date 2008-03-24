@@ -6,7 +6,6 @@
 	<classpathentry kind="src" path="src/misc"/>
 	<classpathentry kind="src" path="src/jira"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>
 	<classpathentry kind="lib" path="lib/oracle/ojdbc14.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-2.7.6.jar"/>
 	<classpathentry kind="lib" path="lib/asm.jar"/>
@@ -32,5 +31,6 @@
 	<classpathentry kind="lib" path="lib/db2/db2jcc_license_cu.jar"/>
 	<classpathentry kind="lib" path="lib/derby/derby.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk5"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

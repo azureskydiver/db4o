@@ -24,6 +24,8 @@ import db4ounit.*;
 
 public class Db4oTests extends DrsTestSuite {
 	public static int main(String[] args) {
+		if (true) return new Db4oTests().runDb4oDb4o();
+		
 		int failureCount = new Db4oTests().rundb4oCS();
 		//new Db4oTests().runCSdb4o();
 		failureCount = failureCount + new Db4oTests().runCSCS();
@@ -31,8 +33,8 @@ public class Db4oTests extends DrsTestSuite {
 		return failureCount;
 	}
 
-	public void runDb4oDb4o() {
-		new ConsoleTestRunner(new DrsTestSuiteBuilder(new Db4oDrsFixture("db4o-a"),
+	public int runDb4oDb4o() {
+		return new ConsoleTestRunner(new DrsTestSuiteBuilder(new Db4oDrsFixture("db4o-a"),
 				new Db4oDrsFixture("db4o-b"), getClass())).run();
 	}
 
