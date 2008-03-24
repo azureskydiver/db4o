@@ -5,8 +5,6 @@ package com.db4o.drs.inside;
 
 public interface SimpleObjectContainer {
 
-	public void activate(Object object);
-
 	public void commit();
 
 	public void delete(Object obj);

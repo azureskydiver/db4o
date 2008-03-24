@@ -2,46 +2,43 @@
 
 package com.db4o.drs.test;
 
-import com.db4o.ObjectSet;
-import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.inside.GenericReplicationSession;
+import java.util.*;
 
-import db4ounit.Assert;
+import com.db4o.*;
+import com.db4o.drs.inside.*;
+
+import db4ounit.*;
 
 
 public class SingleTypeCollectionReplicationTest extends DrsTestCase {
-
-	protected void actualTest() {
+	
+	/**
+	 * @sharpen.rename _Test
+	 */
+	public void test() {
 		CollectionHolder h1 = new CollectionHolder();
 		h1.map.put("1", "one");
 		h1.set.add("two");
 		h1.list.add("three");
-
-		a().provider().storeNew(h1);
-		a().provider().activate(h1);
-		a().provider().commit();
-
-		final ReplicationSession replication = new GenericReplicationSession(a().provider(), b().provider());
-
-		final ObjectSet objectSet = a().provider().objectsChangedSinceLastReplication();
-
-		while (objectSet.hasNext()) {
-			replication.replicate(objectSet.next());
-		}
-
-		replication.commit();
-
-		ObjectSet it = b().provider().getStoredObjects(CollectionHolder.class);
+		
+		storeNewAndCommit(a().provider(), h1);
+		
+		replicateAll(a().provider(), b().provider());
+		
+		Iterator it = b().provider().getStoredObjects(CollectionHolder.class).iterator();
 		Assert.isTrue(it.hasNext());
-
+		
 		CollectionHolder replica = (CollectionHolder) it.next();
 		Assert.areEqual("one", replica.map.get("1"));
 		Assert.isTrue(replica.set.contains("two"));
 		Assert.areEqual("three", replica.list.get(0));
 	}
-
-	public void test() {
-		actualTest();
+	
+	private void storeNewAndCommit(
+			final TestableReplicationProviderInside provider,
+			CollectionHolder h1) {
+		provider.storeNew(h1);
+		provider.activate(h1);
+		provider.commit();
 	}
-
 }

@@ -57,8 +57,8 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
 		Collection4 result = new Collection4();
-		for (ObjectSet iterator = getStoredObjects(clazz); iterator.hasNext();) {
-			Object candidate = iterator.next();
+		for (Iterator4 iterator = storedObjectsCollection(clazz).iterator(); iterator.moveNext();) {
+			Object candidate = iterator.current();
 			if (wasChangedSinceLastReplication(candidate))
 				result.add(candidate);
 		}
@@ -188,18 +188,22 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	public void deleteAllInstances(Class clazz) {
-		ObjectSet iterator = getStoredObjects(clazz);
-		while (iterator.hasNext()) delete(iterator.next());
+		Iterator4 iterator = storedObjectsCollection(clazz).iterator();
+		while (iterator.moveNext()) delete(iterator.current());
 	}
 
 	public ObjectSet getStoredObjects(Class clazz) {
+		return new ObjectSetCollection4Facade(storedObjectsCollection(clazz));
+	}
+
+	private Collection4 storedObjectsCollection(Class clazz) {
 		Collection4 result = new Collection4();
 		for (Iterator iterator = _storedObjects.keySet().iterator(); iterator.hasNext();) {
 			Object candidate = iterator.next();
 			if (clazz.isAssignableFrom(candidate.getClass()))
 				result.add(candidate);
 		}
-		return new ObjectSetCollection4Facade(result);
+		return result;
 	}
 
 	public void storeNew(Object o) {
@@ -253,9 +257,9 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	public Object getObject(Db4oUUID uuid) {
-		ObjectSet iter = getStoredObjects();
-		while (iter.hasNext()) {
-			Object candidate = iter.next();
+		Iterator4 iter = storedObjectsCollection(Object.class).iterator();
+		while (iter.moveNext()) {
+			Object candidate = iter.current();
 			if (getInfo(candidate)._uuid.equals(uuid)) return candidate;
 		}
 		return null;
@@ -383,8 +387,8 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	private static class ObjectInfo {
-		private final Db4oUUID _uuid;
-		private long _version;
+		public final Db4oUUID _uuid;
+		public long _version;
 
 		public ObjectInfo(Db4oUUID uuid, long version) {
 			_uuid = uuid;

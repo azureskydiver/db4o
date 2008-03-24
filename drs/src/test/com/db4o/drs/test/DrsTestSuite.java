@@ -65,13 +65,13 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 				ReplicationFeaturesMain.class,
 
 				// General
-				//.net works? CollectionHandlerImplTest.class,  
-				//.net works? ReplicationTraversalTest.class,
+				CollectionHandlerImplTest.class,  
+				ReplicationTraversalTest.class,
 		
 				//TODO Convert to .NET
 				//MapTest.class,
 				//ArrayReplicationTest.class,
-				//SingleTypeCollectionReplicationTest.class,
+				SingleTypeCollectionReplicationTest.class,
 				//MixedTypesCollectionReplicationTest.class
                 
                 //regression
