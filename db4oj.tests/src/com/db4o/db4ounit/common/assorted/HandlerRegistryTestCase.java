@@ -27,17 +27,10 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
 	public void testCorrectHandlerVersion(){
 	    UntypedFieldHandler untypedFieldHandler = new UntypedFieldHandler(stream());
 	    
-        Class untypedFieldHandler2Class =
-            MarshallingLogicSimplification.enabled ?
-            UntypedFieldHandler2.class : UntypedFieldHandler.class;
-        Class arrayHandler2Class = 
-            MarshallingLogicSimplification.enabled ?
-            ArrayHandler2.class : ArrayHandler.class;
-	    
         assertCorrectedHandlerVersion(UntypedFieldHandler0.class, untypedFieldHandler, -1);
         assertCorrectedHandlerVersion(UntypedFieldHandler0.class, untypedFieldHandler, 0);
-        assertCorrectedHandlerVersion(untypedFieldHandler2Class, untypedFieldHandler, 1);
-        assertCorrectedHandlerVersion(untypedFieldHandler2Class, untypedFieldHandler, 2);
+        assertCorrectedHandlerVersion(UntypedFieldHandler2.class, untypedFieldHandler, 1);
+        assertCorrectedHandlerVersion(UntypedFieldHandler2.class, untypedFieldHandler, 2);
         assertCorrectedHandlerVersion(UntypedFieldHandler.class, untypedFieldHandler, HandlerRegistry.HANDLER_VERSION);
         assertCorrectedHandlerVersion(UntypedFieldHandler.class, untypedFieldHandler, HandlerRegistry.HANDLER_VERSION + 1);
         
@@ -47,14 +40,14 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
         
         PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler(null, untypedFieldHandler,0, null );
         assertPrimitiveFieldHandlerDelegate(UntypedFieldHandler0.class, primitiveFieldHandler,0);
-        assertPrimitiveFieldHandlerDelegate(untypedFieldHandler2Class, primitiveFieldHandler,1);
-        assertPrimitiveFieldHandlerDelegate(untypedFieldHandler2Class, primitiveFieldHandler,2);
+        assertPrimitiveFieldHandlerDelegate(UntypedFieldHandler2.class, primitiveFieldHandler,1);
+        assertPrimitiveFieldHandlerDelegate(UntypedFieldHandler2.class, primitiveFieldHandler,2);
         assertPrimitiveFieldHandlerDelegate(UntypedFieldHandler.class, primitiveFieldHandler,HandlerRegistry.HANDLER_VERSION);
         
         ArrayHandler arrayHandler = new ArrayHandler(untypedFieldHandler, false);
         assertCorrectedHandlerVersion(ArrayHandler0.class, arrayHandler, 0);
-        assertCorrectedHandlerVersion(arrayHandler2Class, arrayHandler, 1);
-        assertCorrectedHandlerVersion(arrayHandler2Class, arrayHandler, 2);
+        assertCorrectedHandlerVersion(ArrayHandler2.class, arrayHandler, 1);
+        assertCorrectedHandlerVersion(ArrayHandler2.class, arrayHandler, 2);
         assertCorrectedHandlerVersion(ArrayHandler.class, arrayHandler, HandlerRegistry.HANDLER_VERSION);
         
         ArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler(untypedFieldHandler, false);

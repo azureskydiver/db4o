@@ -25,7 +25,7 @@ import com.db4o.reflect.generic.*;
  */
 public final class HandlerRegistry {
     
-    public static final byte HANDLER_VERSION = MarshallingLogicSimplification.enabled ? (byte)3 : (byte)2;
+    public static final byte HANDLER_VERSION = 3;
     
     private final ObjectContainerBase _container;  // this is the master container and not valid
 	                                   // for TransportObjectContainer

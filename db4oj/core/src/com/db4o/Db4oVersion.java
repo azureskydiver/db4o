@@ -6,9 +6,9 @@ package com.db4o;
 * @exclude
 */
 public class Db4oVersion {
-    public static final String NAME = "7.2.32.9285";
+    public static final String NAME = "7.2.36.10436";
     public static final int MAJOR = 7;
     public static final int MINOR = 2;
-    public static final int ITERATION = 32;
-    public static final int REVISION = 9285;
+    public static final int ITERATION = 36;
+    public static final int REVISION = 10436;
 }

@@ -104,9 +104,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         int typeHandlerId = context.copyIDReturnOriginalID();
 		TypeHandler4 typeHandler = context.typeHandlerForId(typeHandlerId);
 		if(typeHandler != null){
-			if(MarshallingLogicSimplification.enabled){
-				seekSecondaryOffset(context, typeHandler);
-			}
+			seekSecondaryOffset(context, typeHandler);
 		    context.correctHandlerVersion(typeHandler).defragment(context);
 		}
         context.seek(linkOffSet);
@@ -124,17 +122,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
      * @param typeHandler
      */
     protected void seekSecondaryOffset(ReadBuffer buffer, TypeHandler4 typeHandler) {
-        
         // do nothing, no longer needed in current implementation.
-
-        if(isPrimitiveArray(typeHandler)){
-            // unnecessary secondary offset, consistent with old format
-            
-            if(! MarshallingLogicSimplification.enabled ){
-                buffer.seekCurrentInt();
-            }
-        }
-        
     }
 
     protected boolean isPrimitiveArray(TypeHandler4 classMetadata) {
@@ -182,14 +170,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         MarshallingContextState state = marshallingContext.currentState();
         marshallingContext.createChildBuffer(false, false);
         context.writeInt(id);
-        if(isPrimitiveArray(typeHandler)){
-            // TODO: This indirection is unneccessary, but it is required by the 
-            // current old reading format. 
-            // Remove in the next version of UntypedFieldHandler
-            if(! MarshallingLogicSimplification.enabled ){
-                marshallingContext.prepareIndirectionOfSecondWrite();
-            }
-        }else{
+        if(!isPrimitiveArray(typeHandler)){
             marshallingContext.doNotIndirectWrites();
         }
         writeObject(context, typeHandler, obj);

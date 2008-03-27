@@ -209,11 +209,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     
 	private void preWrite() {
         _fieldWriteCount++;
-        if(isSecondWriteToField()){
-            if(! MarshallingLogicSimplification.enabled ){
-                createChildBuffer(true, true);
-            }
-        }
         if(Deploy.debug){
             if(_debugPrepend != null){
                 for (int i = 0; i < _debugPrepend.offset(); i++) {
