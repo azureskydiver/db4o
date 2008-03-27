@@ -239,9 +239,6 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
 
     public void readCandidates(int handlerVersion, ByteArrayBuffer reader, QCandidates candidates) throws Db4oIOException {
-        if(! MarshallingLogicSimplification.enabled){
-            reader.seek(reader.readInt());
-        }
         readSubCandidates(handlerVersion, reader, candidates);
     }
     
@@ -379,14 +376,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
     
     protected int preparePayloadRead(DefragmentContext context) {
-        if(MarshallingLogicSimplification.enabled){
-            return context.offset();
-        }
-        int newPayLoadOffset = context.readInt();
-        context.readInt();  // skip length, not needed
-        int linkOffSet = context.offset();
-        context.seek(newPayLoadOffset);
-        return linkOffSet;
+    	return context.offset();
     }
 
     public void defrag1(DefragmentContext context) {

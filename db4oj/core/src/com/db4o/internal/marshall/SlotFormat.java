@@ -15,9 +15,7 @@ public abstract class SlotFormat {
     
     private static final Hashtable4 _versions = new Hashtable4();
     
-    private static final SlotFormat CURRENT_SLOT_FORMAT = MarshallingLogicSimplification.enabled ?  
-            new SlotFormatCurrent() : 
-                (SlotFormat)new SlotFormat2();
+    private static final SlotFormat CURRENT_SLOT_FORMAT = new SlotFormatCurrent() ;
     
     static{
         new SlotFormat0();
