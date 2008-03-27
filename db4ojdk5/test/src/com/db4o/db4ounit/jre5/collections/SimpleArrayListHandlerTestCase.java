@@ -8,7 +8,6 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -21,6 +20,10 @@ import db4ounit.extensions.fixtures.*;
 
 
 public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
+	
+	public static void main(String[] args) {
+		new SimpleArrayListHandlerTestCase().runSolo();
+	}
     
     private static final class ArrayListTypeHandler implements TypeHandler4 {
 
@@ -31,15 +34,43 @@ public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase impleme
 
         public void write(WriteContext context, Object obj) {
             List list = (List)obj;
-            int classID = classID(context, list);
-            context.writeInt(classID);
-            int elementCount = list.size();
-            context.writeInt(elementCount);
-            TypeHandler4 untypedObjectHandler = elementTypeHandler(context, list);
-            for (int i = 0; i < elementCount; i++) {
-                context.writeObject(untypedObjectHandler, list.get(i));
-            }
+            writeClass(context, list);
+            writeElementCount(context, list);
+            writeElements(context, list);
         }
+        
+        @SuppressWarnings("unchecked")
+		public Object read(ReadContext context) {
+            ClassMetadata classMetadata = readClass(context);            
+            List existing = (List) ((UnmarshallingContext) context).persistentObject();
+            List list = 
+                existing != null ? 
+                    existing : 
+                        (List) classMetadata.instantiateFromReflector(container(context));
+            int elementCount = context.readInt();
+            TypeHandler4 elementHandler = elementTypeHandler(context, list);
+            for (int i = 0; i < elementCount; i++) {
+                list.add(context.readObject(elementHandler));
+            }
+            return list;
+        }
+        
+		private void writeElementCount(WriteContext context, List list) {
+			context.writeInt(list.size());
+		}
+
+		private void writeElements(WriteContext context, List list) {
+			TypeHandler4 elementHandler = elementTypeHandler(context, list);
+            final Iterator elements = list.iterator();
+            while (elements.hasNext()) {
+                context.writeObject(elementHandler, elements.next());
+            }
+		}
+
+		private void writeClass(WriteContext context, List list) {
+			int classID = classID(context, list);
+            context.writeInt(classID);
+		}
         
         private int classID(WriteContext context, Object obj) {
             ObjectContainerBase container = container(context);
@@ -59,27 +90,13 @@ public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase impleme
             //       it is possible to use a more specific handler
             
             return container(context).handlers().untypedObjectHandler();
-        }
+        }        
 
-        public Object read(ReadContext context) {
-            UnmarshallingContext unmarshallingContext = (UnmarshallingContext) context;
-            int classID = context.readInt();
-            ObjectContainerBase container = container(context);
-            ClassMetadata classMetadata = container.classMetadataForId(classID);
-            
-            List existing = (List) unmarshallingContext.persistentObject();
-            
-            List list = 
-                existing != null ? 
-                    existing : 
-                        (List) classMetadata.instantiateFromReflector(container);
-            int elementCount = context.readInt();
-            TypeHandler4 untypedObjectHandler = elementTypeHandler(context, list);
-            for (int i = 0; i < elementCount; i++) {
-                list.add(context.readObject(untypedObjectHandler));
-            }
-            return list;
-        }
+		private ClassMetadata readClass(ReadContext context) {
+			int classID = context.readInt();
+            ClassMetadata classMetadata = container(context).classMetadataForId(classID);
+			return classMetadata;
+		}
 
         public void delete(DeleteContext context) throws Db4oIOException {
             // TODO Auto-generated method stub
@@ -93,7 +110,7 @@ public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase impleme
     }
 
     public static class Item {
-        public List _list;
+        public List list;
     }
     
     protected void configure(Configuration config) throws Exception {
@@ -102,20 +119,17 @@ public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase impleme
             new ArrayListTypeHandler());
     }
     
-    protected void store() throws Exception {
+    @SuppressWarnings("unchecked")
+	protected void store() throws Exception {
         Item item = new Item();
-        item._list = new ArrayList();
-        item._list.add("one");
+        item.list = new ArrayList();
+        item.list.add("one");
         store(item);
     }
     
     public void test(){
         Item item = (Item) retrieveOnlyInstance(Item.class);
-        Assert.areEqual(item._list.size(), 1);
-        Assert.areEqual("one", item._list.get(0));
+        Assert.areEqual(item.list.size(), 1);
+        Assert.areEqual("one", item.list.get(0));
     }
-
-    public static void main(String[] args) {
-		new SimpleArrayListHandlerTestCase().runAll();
-	}
 }
