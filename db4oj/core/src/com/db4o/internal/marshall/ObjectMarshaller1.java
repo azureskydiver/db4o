@@ -3,6 +3,7 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
 
@@ -58,11 +59,11 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     }
 
     public boolean findOffset(ClassMetadata yc, FieldListInfo fieldListInfo, final ByteArrayBuffer reader, final FieldMetadata field) {
-        final boolean[] ret={false};
+        final BooleanByRef found = new BooleanByRef(false);
 		TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(FieldMetadata curField, boolean isNull, ClassMetadata containingClass) {
 		        if (curField == field) {
-		        	ret[0]=!isNull;
+		        	found.value = !isNull;
 		        	cancel();
 		        	return;
 		        }
@@ -72,7 +73,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 			}
 		};
 		traverseFields(yc, reader, fieldListInfo, command);
-		return ret[0];
+		return found.value;
     }
     
     public ObjectHeaderAttributes readHeaderAttributes(ByteArrayBuffer reader) {
