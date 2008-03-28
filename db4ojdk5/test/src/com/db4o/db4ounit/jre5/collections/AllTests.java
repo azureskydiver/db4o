@@ -23,7 +23,7 @@ public class AllTests extends Db4oTestSuite {
 			ArrayMap4TransparentUpdateTestCase.class,
 			ArrayMap4TestCase.class,
 			ArrayMap4TATestCase.class,
-			// SimpleArrayListHandlerTestCase.class,
+			SimpleArrayListHandlerTestCase.class,
 	        SubArrayList4TestCase.class,
 
 		};
