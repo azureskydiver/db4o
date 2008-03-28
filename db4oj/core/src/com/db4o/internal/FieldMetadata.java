@@ -287,7 +287,7 @@ public class FieldMetadata implements StoredField {
             return;
         }
         
-        if(! (_handler instanceof FirstClassHandler)){
+        if(! (_handler instanceof CascadingTypeHandler)){
             return;
         }
         
@@ -296,8 +296,8 @@ public class FieldMetadata implements StoredField {
         	return;
         }
         
-        FirstClassHandler firstClassHandler = (FirstClassHandler) _handler;
-        firstClassHandler.cascadeActivation(trans, cascadeTo, depth);
+        CascadingTypeHandler cascadingHandler = (CascadingTypeHandler) _handler;
+        cascadingHandler.cascadeActivation(trans, cascadeTo, depth);
     }
 
 	protected Object cascadingTarget(Transaction trans, ActivationDepth depth, Object onObject) {
