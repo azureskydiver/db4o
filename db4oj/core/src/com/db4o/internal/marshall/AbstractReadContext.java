@@ -57,6 +57,7 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
         
         final ClassMetadata classMetadata = classMetadataForId(id);
         if (null == classMetadata) {
+        	// TODO: throw here
         	return null;
         }
         
