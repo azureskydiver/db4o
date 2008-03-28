@@ -24,8 +24,8 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 		ActivationDepth depth) {
 	    
 	    TypeHandler4 typeHandler = typeHandlerForObject(onObject);
-        if (typeHandler instanceof FirstClassHandler) {
-            ((FirstClassHandler)typeHandler).cascadeActivation(trans, onObject, depth);
+        if (typeHandler instanceof CascadingTypeHandler) {
+            ((CascadingTypeHandler)typeHandler).cascadeActivation(trans, onObject, depth);
         }
 	}
 
