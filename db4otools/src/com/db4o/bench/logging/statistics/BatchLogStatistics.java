@@ -12,7 +12,7 @@ public class BatchLogStatistics {
 	public static void main(String[] args) {
 		if ( args.length < 1 ) {
 			System.out.println("[BATCH] No path given.");
-			System.exit(1);
+			throw new RuntimeException("[BATCH] No path given.");
 		}		
 		new BatchLogStatistics().run(args[0]);
 	}

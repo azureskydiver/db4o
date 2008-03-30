@@ -2,7 +2,11 @@
 
 package com.db4o.bench.util;
 
-
+/**
+ * 
+ * @sharpen.ignore
+ *
+ */
 public class IoBenchmarkArgumentParser {
 	
 	private String _resultsFile2;
@@ -17,9 +21,9 @@ public class IoBenchmarkArgumentParser {
 	private void validateArguments(String[] arguments) {
 		if (arguments.length != 1 && arguments.length != 3) {
 			System.out.println("Usage: IoBenchmark <object-count> [<results-file-1> <results-file-2>]");
-			System.exit(1);
+			throw new RuntimeException("Usage: IoBenchmark <object-count> [<results-file-1> <results-file-2>]");
 		}
-		_objectCount = Integer.parseInt(arguments[0]);
+		_objectCount = java.lang.Integer.parseInt(arguments[0]);
 		if (arguments.length > 1) {
 			_resultsFile1 = arguments[1];
 			_resultsFile2 = arguments[2];

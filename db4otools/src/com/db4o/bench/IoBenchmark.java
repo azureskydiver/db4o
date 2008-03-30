@@ -21,6 +21,7 @@ import com.db4o.io.*;
  * on a faster one.
  * 
  * For further information and usage instructions please refer to README.htm.
+ * @sharpen.ignore
  */
 
 public class IoBenchmark {
@@ -81,8 +82,8 @@ public class IoBenchmark {
 		deleteBenchmarkResultsFile(itemCount);
 		PrintStream out = new PrintStream(new FileOutputStream(resultsFileName(itemCount), true));
 		printRunHeader(itemCount, out);
-		for (int i = 0; i < LogConstants.ALL_ENTRIES.length; i++) {
-			String currentCommand = LogConstants.ALL_ENTRIES[i];
+		for (int i = 0; i < LogConstants.ALL_CONSTANTS.length; i++) {
+			String currentCommand = LogConstants.ALL_CONSTANTS[i];
 			benchmarkCommand(currentCommand, itemCount, _dbFileName, out);	
 		}
 		deleteFile(_dbFileName);
@@ -149,7 +150,7 @@ public class IoBenchmark {
 
 	private void exitWithError(String error) {
 		System.err.println(error + "\n Aborting execution!");
-		System.exit(1);
+		throw new RuntimeException(error + "\n Aborting execution!");
 	}
 	
 	private String resultsFileName(int itemCount){

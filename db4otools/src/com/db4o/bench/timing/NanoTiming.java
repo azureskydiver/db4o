@@ -4,7 +4,9 @@ package com.db4o.bench.timing;
 
 import com.db4o.internal.*;
 
-
+/**
+ * @sharpen.ignore
+ */
 public final class NanoTiming {
     
     private final JDK jdk = Platform4.jdk();
