@@ -353,7 +353,7 @@
 	<target name="build-net35" depends="init, configure-net35, build-all" description="Builds Db4o for the .net 3.5 framework including LINQ">
 	</target>
 
-	<target name="build-all" depends="check-dependencies, build-core, build-admin, build-tutorial">
+	<target name="build-all" depends="check-dependencies, build-core, build-admin, build-bench, build-tutorial">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
@@ -403,6 +403,10 @@
 		<msb solution="${dir.n.v6}/Db4oTool/Db4oTool" />		
 	</target>
 
+	<target name="build-bench" depends="prepare-csproject-db4obench">
+		<msb solution="${dir.n.db4obench}/Db4oBench" />
+	</target>
+	
 	<target name="build-tutorial" >
 		<ant antfile="build-dotnet-tutorial.xml">
 		</ant>
@@ -446,7 +450,8 @@
 	    prepare-csproject-instrumentation, 
 	    prepare-csproject-nq, 
 	    prepare-csproject-db4ounit, 
-	    prepare-csproject-db4ounit-extensions, 
+	    prepare-csproject-db4ounit-extensions,
+		prepare-csproject-db4obench,
 	    prepare-csproject-tests"
 		unless="skip.sharpen">
 		
@@ -501,14 +506,21 @@
             </fileset>
         </copy>
 
-	    <!--copy db4ounit.extension src-->
+		<!--copy db4ounit.extension src-->
         <copy todir="${dir.sharpen}/db4oj/core/src">
             <fileset dir="${dir.db4ounit.extensions.src}">
                 <include name="**/*.java" />
             </fileset>
         </copy>
 
-	    <!-- copy db4o tests src-->
+		<!--copy db4obench src-->
+        <copy todir="${dir.sharpen}/db4oj/core/src">
+            <fileset dir="${dir.j.db4otools.src}">
+                <include name="**/bench/**/*.java" />
+            </fileset>
+        </copy>
+
+		<!-- copy db4o tests src-->
         <copy todir="${dir.sharpen}/db4oj/core/src">
             <fileset dir="${dir.j.tests.src}">
                 <include name="**/db4ounit/common/**/*.java" />
@@ -598,6 +610,7 @@
 			<files>
 				<fileset dir="${dir.sharpened.src}/Db4objects/Db4o">
 					<include name="**/*.cs" />
+					<exclude name="Bench/**/*.*" />
 					<exclude name="Instrumentation/**/*.*" />
 					<exclude name="NativeQueries/**/*.*" />
 					<exclude name="**/Reflect/Jdk/**" />
@@ -646,6 +659,43 @@
 			<fileset dir="${dir.dist.classes.test.jdk1.1}" />
 		</jar>
 	</target>
+	
+	<target name="prepare-csproject-db4obench"
+			unless="skip.sharpen">
+		<delete dir="${dir.n.db4obench}/Bench">
+			<include name="**/*.cs" />
+			<exclude name="**/.svn/**" />
+			<exclude name="**/TicksTiming.cs" />
+			<exclude name="**/TicksStopWatch.cs" />
+			<!-- To be removed when sharpening can work for all cases -->
+			<exclude name="**/LoggingIoAdapter.cs" />
+			<exclude name="**/DelayCalculation.cs" />
+			<exclude name="**/Delays.cs" />
+			<exclude name="**/LogReplayer.cs" />
+			<exclude name="**/LogStatistics.cs" />
+			<exclude name="**/IoBenchmark.cs" />
+			<exclude name="**/IoBenchmarkArgumentParser.cs" />
+		</delete>
+		
+		<mkdir dir="${dir.n.db4obench}/Bench" />
+		<copy todir="${dir.n.db4obench}/Bench">
+			<fileset dir="${dir.sharpened.src}/Db4objects/Db4o/Bench">
+				<include name="**/*.cs" />
+            	<exclude name="**/NanoTiming.cs" />
+            	<exclude name="**/NanoStopWatch.cs" />
+			</fileset>
+		</copy>
+		<delete dir="${dir.sharpened.src}/Db4objects/Db4o/Bench">
+			<include name="**/*.cs" />
+		</delete>
+		
+		<fileset id="db4obench.files" dir="${dir.n.db4obench}">
+			<include name="**/*.cs" />
+		</fileset>
+
+		<updateProjectFiles project="${dir.n.db4obench}/Db4oBench" sources="db4obench.files" />
+	</target>
+
 	
 	<target name="update-admin-projects">
 		<property name="dir.n.admin" location="${dir.n.v6}/Db4oTool" />

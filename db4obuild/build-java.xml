@@ -13,6 +13,9 @@
 		<property name="java.src.tests.jdk1.1" value="${java.src.tests}/jdk1.1" />
 		<property name="java.src.tests.jdk1.2" value="${java.src.tests}/jdk1.2" />
 		<property name="java.src.tests.jdk5" value="${java.src.tests}/jdk5" />
+		
+		<property name="java.src.bench" value="${dir.dist.java}/src/bench"/>
+		<property name="java.src.tools" value="${dir.dist.java}/src/tools"/>
 	</target>
 	
 	<target name="init" depends="db4oj.properties">
@@ -158,9 +161,30 @@
 		</jar>
 	</target>
 
+	<path id="db4o.bench.path">
+		<pathelement path="${dir.j.db4otools.src}" />
+		<fileset dir=".">
+			<include name="**/*bench*.*"/>
+		</fileset>
+	</path>
+
 	<target name="build.db4otools" depends="build.db4ojdk1.2, build.instrumentation, build.nqopt, build.taj">
+		<mkdir dir="${java.src.tools}" />
+		<copy todir="${java.src.tools}">
+			<fileset dir="${dir.j.db4otools.src}">
+				<include name="**/*.java" />
+				<exclude name="**/bench/**/*.java"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${java.src.bench}" />
+		<copy todir="${java.src.bench}">
+			<fileset dir="${dir.j.db4otools.src}">
+				<include name="**/bench/**/*.java"/>
+				<exclude name="**/enhance/*.java" />
+			</fileset>
+		</copy>
 	    <mkdir dir="${dir.dist.classes.db4otools}" />
-		<javac srcdir="${dir.j.db4otools.src}" 
+		<javac srcdir="${java.src.tools}" 
 	        fork="true" 
 	        destdir="${dir.dist.classes.db4otools}" 
 	        debug="${javac.debug.mode}" 
@@ -176,19 +200,38 @@
 				<pathelement path="${file.taj.jar}"/>
 			</classpath>
 		</javac>
+		<mkdir dir="${dir.dist.classes.db4obench}" />
+		<javac srcdir="${java.src.bench}"
+			fork="true" 
+		    destdir="${dir.dist.classes.db4obench}" 
+		    debug="${javac.debug.mode}" 
+		    target="1.1" 
+		    source="1.3" 
+		    encoding="UTF-8">
+			<classpath>
+				<pathelement path="${file.ant.jar}"/>
+				<pathelement path="${file.java1.2.jar}"/>
+			</classpath>
+		</javac>
 		<copy todir="${dir.dist.classes.db4otools}">
 			<fileset dir="${dir.j.db4otools.src}">
 				<include name="**/*.properties" />
 			</fileset>
 		</copy>
-		<jar destfile="${file.db4otools.jar}">
+        <jar destfile="${file.db4otools.jar}">
 			<fileset dir="${dir.dist.classes.db4otools}" />
 			<manifest>
 				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.java1.2.jar} ${filename.instrumentation.jar} ${filename.nqopt.jar} ${filename.taj.jar}"/>
 			</manifest>
 		</jar>
+	    <jar destfile="${file.db4obench.jar}">
+				<fileset dir="${dir.dist.classes.db4obench}" />
+				<manifest>
+					<attribute name="Class-Path" value="${filename.ant.jar} ${filename.java1.2.jar}"/>
+				</manifest>
+			</jar>
 	</target>
-
+	
 	<target name="build.nqopt" depends="build.db4ojdk1.2, build.instrumentation">
         <mkdir dir="${dir.dist.classes.nqopt}" />
 		<javac srcdir="${dir.j.nqopt.src}" 
@@ -731,16 +774,20 @@
 		<ant antfile="run-doctor.xml" />
 	</target>
 	
-	<target name="build.jtutorial" depends="build.db4ojdk1.2">
+	<target name="build.jtutorial" depends="build.db4ojdk5, build.db4otools">
 		<mkdir dir="${dir.dist.classes.tutorial}" />
 		<javac fork="true" 
             srcdir="${dir.j.tutorial.src}" 
-            destdir="${dir.dist.classes.tutorial}" 
-            classpath="${file.java1.2.jar}" 
-            target="1.3" 
-            source="1.3" 
-            debug="on" 
-            encoding="UTF-8" />
+            destdir="${dir.dist.classes.tutorial}"
+			target="5" 
+			source="5" 
+			debug="on" 
+			encoding="UTF-8"> 
+            <classpath>
+				<pathelement path="${file.java5.jar}"/>
+				<pathelement path="${file.bench.jar}"/>
+			</classpath>
+        </javac>
 	</target>
 
 	<target name="build.javadoc" depends="build.javadoc.db4oj, build.javadoc.osgi" />

@@ -1,6 +1,7 @@
 @sharpen-exceptions-mapping
 @sharpen-collections-mapping
 @sharpen-io-mapping
+@sharpen-bench-mapping
 
 -pascalCase+
 -nativeTypeSystem
