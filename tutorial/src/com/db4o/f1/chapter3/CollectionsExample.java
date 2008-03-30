@@ -64,7 +64,7 @@ public class CollectionsExample extends Util {
 
     public static void retrieveAllSensorReadoutNative(
             ObjectContainer db) {
-    	ObjectSet results = db.query(new Predicate() {
+    	List<SensorReadout> results = db.query(new Predicate<SensorReadout>() {
     		public boolean match(SensorReadout candidate){
     			return true;
     		}
@@ -82,7 +82,7 @@ public class CollectionsExample extends Util {
 
     public static void retrieveSensorReadoutNative(
             ObjectContainer db) {
-    	ObjectSet results = db.query(new Predicate() {
+    	List<SensorReadout> results = db.query(new Predicate<SensorReadout>() {
     		public boolean match(SensorReadout candidate){
     			return Arrays.binarySearch(candidate.getValues(), 0.3) >= 0 
     				&& Arrays.binarySearch(candidate.getValues(), 1.0) >= 0;
@@ -103,7 +103,7 @@ public class CollectionsExample extends Util {
 
     public static void retrieveCarNative(
             ObjectContainer db) {
-    	ObjectSet results = db.query(new Predicate() {
+    	List<Car> results = db.query(new Predicate<Car>() {
     		public boolean match(Car candidate){
     			List history = candidate.getHistory();
     			for(int i = 0; i < history.size(); i++){
@@ -156,19 +156,19 @@ public class CollectionsExample extends Util {
     }
 
     public static void updateCarPart2(ObjectContainer db) {
-    	ObjectSet results = db.query(new Predicate() {
+    	List<Car> results = db.query(new Predicate<Car>() {
     		public boolean match(Car candidate){
     			return true;
     		}
     	});
-    	Car car=(Car)results.next();
+    	Car car=results.get(0);
         car.snapshot();
         db.store(car);
         retrieveAllSensorReadoutNative(db);
     }
     
     public static void updateCollection(ObjectContainer db) {
-    	ObjectSet results = db.query(new Predicate() {
+    	ObjectSet<Car> results = db.query(new Predicate<Car>() {
     		public boolean match(Car candidate){
     			return true;
     		}
@@ -176,13 +176,13 @@ public class CollectionsExample extends Util {
         Car car =(Car)results.next();
         car.getHistory().remove(0);
         db.store(car.getHistory());
-    	results = db.query(new Predicate() {
+    	results = db.query(new Predicate<Car>() {
     		public boolean match(Car candidate){
     			return true;
     		}
     	});
         while(results.hasNext()) {
-            car=(Car)results.next();
+            car=results.next();
             for (int idx=0;idx<car.getHistory().size();idx++) {
                 System.out.println(car.getHistory().get(idx));
             }
@@ -195,7 +195,7 @@ public class CollectionsExample extends Util {
     }
     
     public static void deleteAllPart2(ObjectContainer db) {
-    	ObjectSet cars = db.query(new Predicate() {
+    	ObjectSet<Car> cars = db.query(new Predicate<Car>() {
     		public boolean match(Car candidate){
     			return true;
     		}
@@ -203,7 +203,7 @@ public class CollectionsExample extends Util {
         while(cars.hasNext()) {
             db.delete(cars.next());
         }
-    	ObjectSet readouts = db.query(new Predicate() {
+    	ObjectSet<SensorReadout> readouts = db.query(new Predicate<SensorReadout>() {
     		public boolean match(SensorReadout candidate){
     			return true;
     		}

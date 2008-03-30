@@ -1,5 +1,7 @@
 package com.db4o.f1.chapter1;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.f1.*;
 import com.db4o.query.*;
@@ -37,7 +39,7 @@ public class NQExample extends Util {
     }
     
     public static void retrieveComplexNQ(ObjectContainer db) {
-        ObjectSet result=db.query(new Predicate() {
+        List<Pilot> result=db.query(new Predicate<Pilot>() {
         	public boolean match(Pilot pilot) {
         		return pilot.getPoints()>99
         			&& pilot.getPoints()<199
@@ -49,7 +51,7 @@ public class NQExample extends Util {
 
     public static void retrieveArbitraryCodeNQ(ObjectContainer db) {
     	final int[] points={1,100};
-        ObjectSet result=db.query(new Predicate() {
+        List<Pilot> result=db.query(new Predicate<Pilot>() {
         	public boolean match(Pilot pilot) {
         		for(int i=0;i<points.length;i++) {
         			if(pilot.getPoints()==points[i]) {
