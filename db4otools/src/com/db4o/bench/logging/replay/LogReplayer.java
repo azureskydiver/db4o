@@ -9,7 +9,10 @@ import com.db4o.bench.logging.*;
 import com.db4o.bench.logging.replay.commands.*;
 import com.db4o.foundation.*;
 import com.db4o.io.IoAdapter;
-
+/**
+ * 
+ * @sharpen.ignore
+ */
 
 public class LogReplayer {
 	

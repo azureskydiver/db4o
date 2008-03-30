@@ -7,7 +7,11 @@ import java.text.*;
 import java.util.*;
 
 import com.db4o.bench.logging.*;
-
+/**
+ * 
+ * @sharpen.ignore
+ *
+ */
 
 public class LogStatistics {
 
@@ -29,7 +33,7 @@ public class LogStatistics {
 	public static void main(String[] args) {
 		if ( args.length < 1 ) {
 			System.out.println("Usage: LogStatistics <log file path> [<statistics file path>]");
-			System.exit(1);
+			throw new RuntimeException("Usage: LogStatistics <log file path> [<statistics file path>]");
 		}
 		
 		if ( args.length > 1 ) {

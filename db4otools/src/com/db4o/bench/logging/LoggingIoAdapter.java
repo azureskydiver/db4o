@@ -6,7 +6,11 @@ import java.io.*;
 
 import com.db4o.ext.*;
 import com.db4o.io.*;
-
+/**
+ * 
+ * @sharpen.ignore
+ *
+ */
 public class LoggingIoAdapter extends VanillaIoAdapter {
 	
 	public final static int LOG_READ 	= 1;

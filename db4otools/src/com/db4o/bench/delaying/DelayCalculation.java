@@ -6,7 +6,11 @@ import java.io.*;
 
 import com.db4o.bench.logging.*;
 import com.db4o.bench.timing.*;
-
+/**
+ * 
+ * @sharpen.ignore
+ *
+ */
 
 public class DelayCalculation {
 
