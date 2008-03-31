@@ -216,7 +216,7 @@ public final class Platform4 {
         }
     }
 
-    static final void forEachCollectionElement(Object obj, Visitor4 visitor) {
+    public static final void forEachCollectionElement(Object obj, Visitor4 visitor) {
         jdk().forEachCollectionElement(obj, visitor);
     }
 

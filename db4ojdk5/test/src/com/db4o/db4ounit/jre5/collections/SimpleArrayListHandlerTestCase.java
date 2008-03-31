@@ -6,14 +6,7 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.internal.*;
-import com.db4o.internal.marshall.*;
-import com.db4o.marshall.*;
 import com.db4o.query.*;
-import com.db4o.reflect.*;
-import com.db4o.reflect.generic.*;
 import com.db4o.typehandlers.*;
 
 import db4ounit.*;
@@ -27,92 +20,8 @@ public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase impleme
 		new SimpleArrayListHandlerTestCase().runSolo();
 	}
     
-    private static final class ArrayListTypeHandler implements TypeHandler4 {
-
-        public PreparedComparison prepareComparison(Context context, Object obj) {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        public void write(WriteContext context, Object obj) {
-            List list = (List)obj;
-            writeClass(context, list);
-            writeElementCount(context, list);
-            writeElements(context, list);
-        }
-        
-        @SuppressWarnings("unchecked")
-		public Object read(ReadContext context) {
-            ClassMetadata classMetadata = readClass(context);            
-            List existing = (List) ((UnmarshallingContext) context).persistentObject();
-            List list = 
-                existing != null ? 
-                    existing : 
-                        (List) classMetadata.instantiateFromReflector(container(context));
-            int elementCount = context.readInt();
-            TypeHandler4 elementHandler = elementTypeHandler(context, list);
-            for (int i = 0; i < elementCount; i++) {
-                list.add(context.readObject(elementHandler));
-            }
-            return list;
-        }
-        
-		private void writeElementCount(WriteContext context, List list) {
-			context.writeInt(list.size());
-		}
-
-		private void writeElements(WriteContext context, List list) {
-			TypeHandler4 elementHandler = elementTypeHandler(context, list);
-            final Iterator elements = list.iterator();
-            while (elements.hasNext()) {
-                context.writeObject(elementHandler, elements.next());
-            }
-		}
-
-		private void writeClass(WriteContext context, List list) {
-			int classID = classID(context, list);
-            context.writeInt(classID);
-		}
-        
-        private int classID(WriteContext context, Object obj) {
-            ObjectContainerBase container = container(context);
-            GenericReflector reflector = container.reflector();
-            ReflectClass claxx = reflector.forObject(obj);
-            ClassMetadata classMetadata = container.produceClassMetadata(claxx);
-            return classMetadata.getID();
-        }
-
-        private ObjectContainerBase container(Context context) {
-            return ((InternalObjectContainer)context.objectContainer()).container();
-        }
-        
-        private TypeHandler4 elementTypeHandler(Context context, List list){
-            
-            // TODO: If all elements in the list are of one type,
-            //       it is possible to use a more specific handler
-            
-            return container(context).handlers().untypedObjectHandler();
-        }        
-
-		private ClassMetadata readClass(ReadContext context) {
-			int classID = context.readInt();
-            ClassMetadata classMetadata = container(context).classMetadataForId(classID);
-			return classMetadata;
-		}
-
-        public void delete(DeleteContext context) throws Db4oIOException {
-            // TODO Auto-generated method stub
-      
-        }
-
-        public void defragment(DefragmentContext context) {
-            // TODO Auto-generated method stub
-      
-        }
-    }
-
     public static class Item {
-        public List list;
+        public ArrayList list;
     }
     
     protected void configure(Configuration config) throws Exception {
@@ -129,7 +38,7 @@ public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase impleme
         store(item);
     }
     
-    public void _test(){
+    public void test(){
         Item item = (Item) retrieveOnlyInstance(Item.class);
         assertListContent(item);
     }

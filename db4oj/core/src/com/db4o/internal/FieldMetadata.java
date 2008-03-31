@@ -526,7 +526,10 @@ public class FieldMetadata implements StoredField {
         if(Handlers4.handlesSimple(handler)){
             return container._handlers.classMetadataForId(handlerID());
         }
-        return (ClassMetadata)handler;
+        if(handler instanceof ClassMetadata) {
+        	return (ClassMetadata)handler;
+        }
+        return container.classMetadataForReflectClass(_reflectField.getFieldType());
     }
 
     private TypeHandler4 baseTypeHandler() {
