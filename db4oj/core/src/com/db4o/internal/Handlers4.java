@@ -54,6 +54,10 @@ public class Handlers4 {
             return true;
         }
         
+        if(handler instanceof CanHoldAnythingHandler){
+        	return true;
+        }
+        
         ClassMetadata classMetadata = (ClassMetadata) baseTypeHandler;
         ReflectClass classReflector = classMetadata.classReflector();
         if(classReflector.isCollection()){
@@ -70,7 +74,7 @@ public class Handlers4 {
     }
     
     public static boolean handlesClass(TypeHandler4 handler){
-        return baseTypeHandler(handler) instanceof ClassMetadata;
+        return baseTypeHandler(handler) instanceof FirstClassHandler;
     }
     
     public static ReflectClass primitiveClassReflector(TypeHandler4 handler, Reflector reflector){
