@@ -32,7 +32,15 @@ public class DecafTestCase extends TestCase {
 	public void testForEachArrayMethod() throws Exception {
 		runResourceTestCase("ForEachArrayMethod");
 	}
-
+	
+	public void testVarArgsMethod() throws Exception {
+		runResourceTestCase("VarArgsMethod");
+	}
+	
+	public void testVarArgsGenericMethod() throws Exception {
+		runResourceTestCase("VarArgsGenericMethod");
+	}
+	
 	private void runResourceTestCase(String resourceName) throws Exception {
 		DecafTestResource resource = new DecafTestResource(resourceName);
 		ICompilationUnit cu = createCompilationUnit(resource);

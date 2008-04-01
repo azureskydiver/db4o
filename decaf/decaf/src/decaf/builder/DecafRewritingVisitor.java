@@ -16,6 +16,84 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		this.rewrite = rewrite;
 	}
 
+	public boolean visit(MethodInvocation methodCall) {
+		IMethodBinding methodBinding = methodCall.resolveMethodBinding();
+		if (methodBinding.isVarargs()) {
+			MethodInvocation explicityArrayInCall = copy(methodCall);			
+
+			List arguments = explicityArrayInCall.arguments();
+			
+			List newArguments = mapVarArgsToArray(arguments, methodBinding.getParameterTypes());
+			
+			arguments.clear();
+			arguments.addAll(newArguments);
+			
+			replace(methodCall, explicityArrayInCall);
+		}
+		
+		return true;
+	}
+
+	private List mapVarArgsToArray(List arguments, ITypeBinding[] parameterTypes) {
+		List newArguments = copyAllArgumentsButVarArgs(arguments, parameterTypes);					
+		ArrayCreation varArgsArray = varArgsToArray(arguments, parameterTypes);
+		newArguments.add(varArgsArray);
+		return newArguments;
+	}
+
+	private ArrayCreation varArgsToArray(List arguments, ITypeBinding[] parameterTypes) {
+		ArrayInitializer arrayInitializer = ast.newArrayInitializer();
+		for (int i = parameterTypes.length-1; i < arguments.size(); ++i) {
+			arrayInitializer.expressions().add(copy((ASTNode) arguments.get(i)));
+		}
+
+		ArrayCreation varArgsArray = ast.newArrayCreation();
+		varArgsArray.setInitializer(arrayInitializer);
+		
+		varArgsArray.setType((ArrayType) newType(parameterTypes[parameterTypes.length-1]));
+		return varArgsArray;
+	}
+
+	private List copyAllArgumentsButVarArgs(List arguments, ITypeBinding[] parameterTypes) {
+		List newArguments = new ArrayList();			
+		for (int i = 0; i < parameterTypes.length - 1; i++) {
+			ASTNode arg = (ASTNode) arguments.get(i);
+			newArguments.add(copy( (ASTNode) arg));
+		}
+		return newArguments;
+	}
+	
+	public boolean visit(MethodDeclaration method) {
+		if (method.isVarargs()) {
+			MethodDeclaration decafMethod = copy(method);
+			
+			List parameters = decafMethod.parameters();
+			SingleVariableDeclaration varArgsParameter = lastParameter(parameters);
+			
+			SingleVariableDeclaration expandedVarArgsParam = newSingleVariableDeclaration(
+																copy(varArgsParameter.getName()), 
+																ast.newArrayType(copy(varArgsParameter.getType())));
+			
+			parameters.remove(varArgsParameter);
+			parameters.add(expandedVarArgsParam);
+			
+			replace(method, decafMethod);
+		}
+		
+		return true;
+	}
+
+	private SingleVariableDeclaration newSingleVariableDeclaration(SimpleName paramName, Type paramType) {
+		SingleVariableDeclaration expandedVarArgsParam = ast.newSingleVariableDeclaration();
+		expandedVarArgsParam.setName(paramName);
+		expandedVarArgsParam.setType(paramType);
+		return expandedVarArgsParam;
+	}
+
+	private SingleVariableDeclaration lastParameter(List parameters) {
+		return (SingleVariableDeclaration) parameters.get(parameters.size()-1);
+	}	
+	
 	public boolean visit(EnhancedForStatement node) {
 		
 		SingleVariableDeclaration variable = node.getParameter();
@@ -179,6 +257,4 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		indexFragment.setInitializer(initializer);
 		return indexFragment;
 	}
-
-
 }

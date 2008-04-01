@@ -1,0 +1,16 @@
+public class VarArgsGenericMethod {
+	public <T> void testVarArgs(int value, T... args) {
+	}
+	
+	public void testVarArgsMethodInvocation() {
+		testVarArgs(1, "test", "Var", "Args", "Method", "Invocation");
+		testVarArgs(1, 2, 3, 4);
+		
+		int value = 5;
+		testVarArgs(1, 5, getValue(6));		
+	}
+	
+	private int getValue(int value) {
+		return value % 3 + 2;
+	}
+}

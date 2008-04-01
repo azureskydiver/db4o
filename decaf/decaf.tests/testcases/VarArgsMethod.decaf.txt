@@ -1,0 +1,28 @@
+public class VarArgsMethod {
+	public void testVarArgs(int value, String[] args) {
+	}
+	
+	public void testVarArgsMethodInvocation() {
+		testVarArgs(1, new String[] { "test", "Var", "Args", "Method",
+				"Invocation" });
+		testVarArgs(1, new String[] { "test" + "Var" + "Args",
+				"Method" + "Invocation" });
+		
+		String value = "test";
+		testVarArgs(1, new String[] { value, "Var", "Args",
+				getDescription("Method"),
+				getDescription(getDescription("Invocation")) });
+		testVarArgsMethodWithObjects(new Object[] { "Test", new Integer(42),
+				new VarArgsMethod() });
+	}
+	
+	public void testVarArgsMethodWithObjects(Object[] args) {
+		for (Object item : args) {
+			System.out.print(item);
+		}
+	}
+	
+	private String getDescription(String str) {
+		return str;
+	}
+}
