@@ -8,13 +8,15 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
+import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
+import com.db4o.typehandlers.*;
 
-public class ArrayListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler {
+public class ArrayListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler, EmbeddedTypeHandler {
 
     public PreparedComparison prepareComparison(Context context, Object obj) {
         // TODO Auto-generated method stub
@@ -32,7 +34,7 @@ public class ArrayListTypeHandler implements TypeHandler4 , FirstClassHandler, C
     @SuppressWarnings("unchecked")
 	public Object read(ReadContext context) {
         ClassMetadata classMetadata = readClass(context);            
-        List existing = (List) ((UnmarshallingContext) context).persistentObject();
+        List existing = null; //(List) ((UnmarshallingContext) context).persistentObject();
         List list = 
             existing != null ? 
                 existing : 
@@ -109,40 +111,22 @@ public class ArrayListTypeHandler implements TypeHandler4 , FirstClassHandler, C
 		return this;
 	}
 
-	public void readCandidates(int handlerVersion, ByteArrayBuffer buffer,
-			final QCandidates candidates) throws Db4oIOException {
-        int id = 0;
-
-        int offset = buffer._offset;
-        try {
-            id = buffer.readInt();
-        } catch (Exception e) {
-        }
-        buffer._offset = offset;
-
-        if (id > 0) {
-            final Transaction trans = candidates.i_trans;
-            
-            /*
-             * Experimenting with 
-             * 
-        	ByteArrayBuffer listBuffer = trans.container().readReaderByID(trans, id);
-            int elementCount = listBuffer.readInt();
-            trans.container().handlers().untypedObjectHandler().
-            for (int i = 0; i < elementCount; i++) {
-            	int elementId = listBuffer.readInt();
-            	candidates.addByIdentity(new QCandidate(candidates, null, elementId, true));
-            }
-            */
-            Object obj = trans.container().getByID(trans, id);
-            if (obj != null) {
-            	trans.container().activate(obj, 2);
-            	Platform4.forEachCollectionElement(obj, new Visitor4() {
-                    public void visit(Object elem) {
-                        candidates.addByIdentity(new QCandidate(candidates, elem, trans.container().getID(trans, elem), true));
-                    }
-                });
-            }
-        }
+	public void readCandidates(int handlerVersion, ByteArrayBuffer buffer, final QCandidates candidates) throws Db4oIOException {
+        final Transaction trans = candidates.i_trans;
+        buffer.readInt(); // skip class id
+        int elementCount = buffer.readInt();
+        TypeHandler4 elementHandler = trans.container().handlers().untypedObjectHandler();
+        readSubCandidates(handlerVersion, buffer, candidates, elementCount, elementHandler);
 	}
+
+    private void readSubCandidates(int handlerVersion, ByteArrayBuffer reader, QCandidates candidates, int count, TypeHandler4 elementHandler) {
+        QueryingReadContext context = new QueryingReadContext(candidates.transaction(), handlerVersion, reader);
+        for (int i = 0; i < count; i++) {
+            QCandidate qc = candidates.readSubCandidate(context, elementHandler);
+            if(qc != null){
+                candidates.addByIdentity(qc);
+            }
+        }
+    }
+
 }
