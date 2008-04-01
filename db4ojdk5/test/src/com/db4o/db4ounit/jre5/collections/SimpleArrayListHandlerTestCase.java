@@ -17,7 +17,7 @@ import db4ounit.extensions.fixtures.*;
 public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 	
 	public static void main(String[] args) {
-		new SimpleArrayListHandlerTestCase().runSolo();
+		new SimpleArrayListHandlerTestCase().runAll();
 	}
     
     public static class Item {
@@ -87,5 +87,4 @@ public class SimpleArrayListHandlerTestCase extends AbstractDb4oTestCase impleme
     	Item item = (Item)set.next();
         assertListContent(item);
 	}
-
 }
