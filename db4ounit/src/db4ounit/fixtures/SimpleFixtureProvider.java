@@ -1,10 +1,8 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 
-package db4ounit.tests.fixtures;
+package db4ounit.fixtures;
 
 import com.db4o.foundation.*;
-
-import db4ounit.fixtures.*;
 
 public class SimpleFixtureProvider implements FixtureProvider {
 
@@ -15,9 +13,16 @@ public class SimpleFixtureProvider implements FixtureProvider {
 	public SimpleFixtureProvider(ContextVariable variable, Object[] values) {
 		this("", variable, values);
 	}
+	
+	public SimpleFixtureProvider(ContextVariable variable, Object value) {
+		this(variable, new Object[] { value });
+	}
+	
+	public SimpleFixtureProvider(String label, ContextVariable variable, Object value) {
+		this(label, variable, new Object[] { value });
+	}
 
-	public SimpleFixtureProvider(String label, ContextVariable variable,
-			Object[] values) {
+	public SimpleFixtureProvider(String label, ContextVariable variable, Object[] values) {
 		_label = label;
 		_variable = variable;
 		_values = values;
