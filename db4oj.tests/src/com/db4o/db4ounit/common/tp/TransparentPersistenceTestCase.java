@@ -126,7 +126,7 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 	}
 	
 	private ExtObjectContainer openNewClient() {
-		return ((Db4oClientServerFixture)this.fixture()).openNewClient();
+		return ((Db4oClientServerFixture)fixture()).openNewClient();
 	}
 
 }
