@@ -13,7 +13,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 
 	private Thread[] threads;
 	
-	private Exception[] failures;
+	Exception[] failures;
 
 	public ConcurrencyTestMethod(Object instance, Method method) {
 		super(instance, method);
@@ -71,7 +71,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 			return;
 		}
 		// pass ExtObjectContainer as a param to check method
-		ExtObjectContainer oc = toTest.fixture().db();
+		ExtObjectContainer oc = AbstractDb4oTestCase.fixture().db();
 		try {
 			checkMethod.invoke(toTest, new Object[] { oc });
 		} finally {
@@ -102,7 +102,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 
 		RunnableTestMethod(AbstractDb4oTestCase toTest, Method method, int seq, boolean showSeq) {
 			this.toTest = toTest;
-			this.fixture = fixture(toTest);
+			this.fixture = fixture();
 			this.method = method;
 			this.seq = seq;
 			this.showSeq = showSeq;
@@ -116,7 +116,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 			});
 		}
 		
-		private void runMethod() {
+		void runMethod() {
 			ExtObjectContainer oc = null;
 			try {
 				oc = fixture.openNewClient();
@@ -129,7 +129,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 					args = new Object[1];
 					args[0] = oc;
 				}
-				method.invoke(toTest, (Object[]) args);
+				method.invoke(toTest, args);
 			} catch (Exception e) {
 				failures[seq] = e;
 			} finally {
@@ -139,8 +139,8 @@ public class ConcurrencyTestMethod extends TestMethod {
 		}
 	}
 
-	private Db4oClientServerFixture fixture(AbstractDb4oTestCase toTest) {
-		return ((Db4oClientServerFixture)toTest.fixture());
+	Db4oClientServerFixture fixture() {
+		return ((Db4oClientServerFixture)AbstractDb4oTestCase.fixture());
 	}
 
 }
