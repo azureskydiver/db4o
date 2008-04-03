@@ -4,7 +4,10 @@
 -pascalCase+
 -nativeTypeSystem
 -nativeInterfaces
-			
+-organizeUsings
+
+-fullyQualify ICollectionHandler
+	
 -typeMapping com.db4o.events.EventArgs System.EventArgs
 
 -namespaceMapping com.db4o.drs.test Db4objects.Drs.Tests
