@@ -41,8 +41,8 @@ public class ReplicationPlatform {
 	}
 
 	public static Collection emptyCollectionClone(Collection original) {
-		if (original instanceof List) return new ArrayList(original.size());
-		if (original instanceof Set) return new HashSet(original.size());
+		if (original instanceof ArrayList) return new ArrayList(original.size());
+		if (original instanceof HashSet) return new HashSet(original.size());
 		return null;
 	}
 	

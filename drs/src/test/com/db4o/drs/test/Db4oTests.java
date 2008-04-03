@@ -22,6 +22,9 @@ package com.db4o.drs.test;
 
 import db4ounit.*;
 
+/**
+ * @sharpen.partial
+ */
 public class Db4oTests extends DrsTestSuite {
 	public static int main(String[] args) {
 		if (true) return new Db4oTests().runDb4oDb4o();
@@ -56,6 +59,9 @@ public class Db4oTests extends DrsTestSuite {
 				.run();
 	}
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	protected Class[] specificTestCases() {
 		return new Class[] {
 			com.db4o.drs.test.dotnet.StructTestCase.class,
