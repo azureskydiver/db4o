@@ -14,13 +14,14 @@ import com.db4o.reflect.*;
 import db4ounit.*;
 import db4ounit.extensions.concurrency.*;
 import db4ounit.extensions.fixtures.*;
+import db4ounit.fixtures.*;
 
 /**
  * @sharpen.partial
  */
 public class AbstractDb4oTestCase implements Db4oTestCase {
 	
-	public static final ContextVariable FIXTURE_VARIABLE = new ContextVariable();
+	public static final Fixture FIXTURE_VARIABLE = new Fixture("db4o");
     
 	private static final int DEFAULT_CONCURRENCY_THREAD_COUNT = 10;	
 	

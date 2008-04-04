@@ -6,16 +6,16 @@ import db4ounit.*;
 
 final class FixtureDecorator implements TestDecorator {
 	private final Object _fixture;
-	private final FixtureProvider _provider;
+	private final Fixture _provider;
 	private final int _fixtureIndex;
 
-	FixtureDecorator(FixtureProvider provider, Object fixture, int fixtureIndex) {
+	FixtureDecorator(Fixture provider, Object fixture, int fixtureIndex) {
 		_fixture = fixture;
 		_provider = provider;
 		_fixtureIndex = fixtureIndex;
 	}
 
 	public Test decorate(Test test) {
-		return new FixtureDecoration(test, _provider.label() + "[" + _fixtureIndex + "]", _provider.variable(), _fixture);
+		return new FixtureDecoration(test, _provider.label() + "[" + _fixtureIndex + "]", _provider, _fixture);
 	}
 }
