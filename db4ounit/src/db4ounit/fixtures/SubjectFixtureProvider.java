@@ -10,7 +10,7 @@ public class SubjectFixtureProvider implements FixtureProvider {
 		return _variable.value();
 	}
 	
-	private static final ContextVariable _variable = new ContextVariable();
+	private static final Fixture _variable = new Fixture("subject");
 	private final Iterable4 _values;
 	
 	public SubjectFixtureProvider(Iterable4 values) {
@@ -21,15 +21,11 @@ public class SubjectFixtureProvider implements FixtureProvider {
 		_values = Iterators.iterable(values);
 	}
 
-	public ContextVariable variable() {
+	public Fixture fixture() {
 		return _variable;
 	}
 
 	public Iterator4 iterator() {
 		return _values.iterator();
-	}
-
-	public String label() {
-		return "subject";
 	}
 }

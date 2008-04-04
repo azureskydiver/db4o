@@ -4,6 +4,8 @@ import java.lang.reflect.*;
 
 import com.db4o.foundation.*;
 
+import db4ounit.fixtures.*;
+
 public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	
 	public static Object getTestSubject(Test test) {
@@ -42,7 +44,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	
 	protected Iterator4 fromClass(Class clazz) {
 		try {
-			return suiteFor(clazz);
+			return new ContextfulIterator(suiteFor(clazz));
 		} catch (Exception e) {
 			return Iterators.cons(new FailingTest(clazz.getName(), e)).iterator();
 		}

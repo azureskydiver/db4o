@@ -10,7 +10,7 @@ public class MultiValueFixtureProvider implements FixtureProvider {
 		return (Object[])_variable.value();
 	}
 	
-	private static final ContextVariable _variable = new ContextVariable();
+	private static final Fixture _variable = new Fixture("data");
 	
 	private final Object[][] _values;
 
@@ -18,16 +18,11 @@ public class MultiValueFixtureProvider implements FixtureProvider {
 		_values = values;
 	}
 
-	public ContextVariable variable() {
+	public Fixture fixture() {
 		return _variable;
 	}
 
 	public Iterator4 iterator() {
 		return Iterators.iterate(_values);
 	}
-
-	public String label() {
-		return "data";
-	}
-
 }

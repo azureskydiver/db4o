@@ -44,6 +44,10 @@ public class ContextVariable {
 				slot = slot.next;
 			}
 		}
+		return defaultValue();
+	}
+	
+	protected Object defaultValue() {
 		return null;
 	}
 	

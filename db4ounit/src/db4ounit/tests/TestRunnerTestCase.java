@@ -66,11 +66,9 @@ public class TestRunnerTestCase implements TestCase {
 	    Iterable4 tests = Iterators.iterable(new Object[] {
 	            test,
 	    });
-	    try {
-	        new ConsoleTestRunner(tests).run();
-	    } catch (AssertionException e) {
-	        //expected
-	    }
+	    final TestResult result = new TestResult();
+		new TestRunner(tests).run(result);
+		Assert.areEqual(1, result.failures().size());
 	}
 
 }

@@ -13,6 +13,7 @@ public class AllTests extends ReflectionTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 			FixtureBasedTestSuiteTestCase.class,
+			FixtureContextTestCase.class,
 			Set4TestSuite.class,
 		};
 	}

@@ -10,11 +10,11 @@ import db4ounit.mocking.*;
 
 public class FixtureBasedTestSuiteTestCase implements TestCase {
 	
-	static ContextVariable RECORDER_FIXTURE = new ContextVariable();
+	static Fixture RECORDER_FIXTURE = new Fixture("recorder");
 	
-	static ContextVariable FIXTURE1 = new ContextVariable();
+	static Fixture FIXTURE1 = new Fixture("f1");
 	
-	static ContextVariable FIXTURE2 = new ContextVariable();
+	static Fixture FIXTURE2 = new Fixture("f2");
 	
 	public static final class TestUnit implements TestCase {
 		public void testFoo() {
@@ -38,7 +38,7 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 		
 		final MethodCallRecorder recorder = new MethodCallRecorder();
 		
-		new TestRunner(new FixtureBasedTestSuite() {
+		run(new FixtureBasedTestSuite() {
 			public FixtureProvider[] fixtureProviders() {
 				return new FixtureProvider[] {
 					new SimpleFixtureProvider(RECORDER_FIXTURE, new Object[] { recorder }),
@@ -50,7 +50,8 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 			public Class[] testUnits() {
 				return new Class[] { TestUnit.class };
 			}
-		}).run(new TestResult());
+		});
+		
 		
 //		System.out.println(CodeGenerator.generateMethodCallArray(recorder));
 		
@@ -65,13 +66,21 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 			new MethodCall("testBar", new Object[] {"f12", "f22"})
 		});
 	}
+
+	private void run(final FixtureBasedTestSuite suite) {
+		final TestResult result = new TestResult();
+		new TestRunner(suite).run(result);
+		if (result.failures().size() > 0) {
+			Assert.fail(Iterators.toString(result.failures()));
+		}
+	}
 	
 	public void testLabel() {
 		final FixtureBasedTestSuite suite = new FixtureBasedTestSuite() {
 			public FixtureProvider[] fixtureProviders() {
 				return new FixtureProvider[] {
-					new SimpleFixtureProvider("f1", FIXTURE1, new Object[] { "f11", "f12" }),
-					new SimpleFixtureProvider("f2", FIXTURE2, new Object[] { "f21", "f22" }),
+					new SimpleFixtureProvider(FIXTURE1, new Object[] { "f11", "f12" }),
+					new SimpleFixtureProvider(FIXTURE2, new Object[] { "f21", "f22" }),
 				};
 			}
 

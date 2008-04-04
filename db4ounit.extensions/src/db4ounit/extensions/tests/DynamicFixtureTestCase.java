@@ -42,14 +42,6 @@ public class DynamicFixtureTestCase implements TestSuiteBuilder {
 
 		public FixtureProvider[] fixtureProviders() {
 			return new FixtureProvider[] {
-				
-				//
-				// IMPORTANT:
-				// Db4oFixtureProvider ensures the current db4o fixture is
-				// propagated to all generated test cases.
-				//
-				new Db4oFixtureProvider(),
-				
 				new MultiValueFixtureProvider(new Object[][] {
 					new Object[] { "foo", "bar" },
 					new Object[] { new Integer(1), new Integer(42) },

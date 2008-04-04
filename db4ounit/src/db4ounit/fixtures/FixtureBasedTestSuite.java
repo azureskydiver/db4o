@@ -27,7 +27,7 @@ public abstract class FixtureBasedTestSuite implements TestSuiteBuilder {
 				return Iterators.map(Iterators.enumerate(provider), new Function4() {
 					public Object apply(final Object arg) {
 						EnumerateIterator.Tuple tuple = (EnumerateIterator.Tuple)arg;
-						return new FixtureDecorator(provider, tuple.value, tuple.index);
+						return new FixtureDecorator(provider.fixture(), tuple.value, tuple.index);
 					}
 				});
 			}

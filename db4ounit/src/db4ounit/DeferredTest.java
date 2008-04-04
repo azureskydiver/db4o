@@ -2,8 +2,11 @@
 
 package db4ounit;
 
+import com.db4o.foundation.*;
 
-public class DeferredTest implements TestDecoration {
+import db4ounit.fixtures.*;
+
+public class DeferredTest extends Contextful implements TestDecoration {
 	
 	private final TestFactory _factory;
 	private Test _test;
@@ -13,11 +16,15 @@ public class DeferredTest implements TestDecoration {
 	}
 
 	public String getLabel() {
-		return test().getLabel();
+		return (String)run(new Closure4() {
+			public Object run() {
+				return test().getLabel();
+			}
+		});
 	}
 
 	public void run() {
-		test().run();
+		run(test());
 	}
 	
 	public Test test() {
