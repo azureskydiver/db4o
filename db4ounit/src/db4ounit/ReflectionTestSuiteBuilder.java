@@ -40,14 +40,29 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 							}
 						})
 					);
+	}	
+	
+	/**
+	 * Can be overriden in inherited classes to inject new fixtures into
+	 * the context.
+	 * 
+	 * @param closure
+	 * @return
+	 */
+	protected Object withContext(Closure4 closure) {
+		return closure.run();
 	}
 	
-	protected Iterator4 fromClass(Class clazz) {
-		try {
-			return new ContextfulIterator(suiteFor(clazz));
-		} catch (Exception e) {
-			return Iterators.cons(new FailingTest(clazz.getName(), e)).iterator();
-		}
+	protected Iterator4 fromClass(final Class clazz) {
+		return (Iterator4)withContext(new Closure4() {
+			public Object run() {
+				try {
+					return new ContextfulIterator(suiteFor(clazz));
+				} catch (Exception e) {
+					return Iterators.cons(new FailingTest(clazz.getName(), e)).iterator();
+				}
+			}
+		});
 	}
 
 	private Iterator4 suiteFor(Class clazz) {
@@ -122,8 +137,8 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		return new TestMethod(instance, method);
 	}
 
-	protected Test fromMethod(final Class clazz, final Method method) {
-		return new DeferredTest(new TestFactory() {
+	protected final Test fromMethod(final Class clazz, final Method method) {
+		return new ContextfulTest(new TestFactory() {
 			public Test newInstance() {
 				return createTest(ReflectionTestSuiteBuilder.this.newInstance(clazz), method);
 			}

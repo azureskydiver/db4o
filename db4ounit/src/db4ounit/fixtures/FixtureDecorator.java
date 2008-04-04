@@ -6,10 +6,10 @@ import db4ounit.*;
 
 final class FixtureDecorator implements TestDecorator {
 	private final Object _fixture;
-	private final Fixture _provider;
+	private final FixtureVariable _provider;
 	private final int _fixtureIndex;
 
-	FixtureDecorator(Fixture provider, Object fixture, int fixtureIndex) {
+	FixtureDecorator(FixtureVariable provider, Object fixture, int fixtureIndex) {
 		_fixture = fixture;
 		_provider = provider;
 		_fixtureIndex = fixtureIndex;

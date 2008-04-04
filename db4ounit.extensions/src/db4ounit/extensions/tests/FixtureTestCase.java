@@ -45,9 +45,14 @@ public class FixtureTestCase implements TestCase {
 	private void assertSimpleDb4o(Db4oFixture fixture) {
 		final Iterator4 tests = new Db4oTestSuiteBuilder(fixture, SimpleDb4oTestCase.class).iterator();
 		final Test test = nextTest(tests);
+		
+		SimpleDb4oTestCase.EXPECTED_FIXTURE_VARIABLE.with(fixture, new Runnable() {
+			public void run() {
+				FrameworkTestCase.runTestAndExpect(test, 0);
+			}
+		});
+
 		final SimpleDb4oTestCase subject = (SimpleDb4oTestCase)Db4oTestSuiteBuilder.getTestSubject(test);
-		subject.expectedFixture(fixture);
-		FrameworkTestCase.runTestAndExpect(test, 0);
 		Assert.isTrue(subject.everythingCalled());
 	}
 

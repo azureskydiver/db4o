@@ -10,11 +10,11 @@ import db4ounit.mocking.*;
 
 public class FixtureBasedTestSuiteTestCase implements TestCase {
 	
-	static Fixture RECORDER_FIXTURE = new Fixture("recorder");
+	static FixtureVariable RECORDER_FIXTURE = new FixtureVariable("recorder");
 	
-	static Fixture FIXTURE1 = new Fixture("f1");
+	static FixtureVariable FIXTURE1 = new FixtureVariable("f1");
 	
-	static Fixture FIXTURE2 = new Fixture("f2");
+	static FixtureVariable FIXTURE2 = new FixtureVariable("f2");
 	
 	public static final class TestUnit implements TestCase {
 		public void testFoo() {

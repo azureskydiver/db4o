@@ -6,19 +6,19 @@ import com.db4o.foundation.*;
 
 public class SimpleFixtureProvider implements FixtureProvider {
 
-	private final Fixture _variable;
+	private final FixtureVariable _variable;
 	private final Object[] _values;
 
-	public SimpleFixtureProvider(Fixture variable, Object value) {
+	public SimpleFixtureProvider(FixtureVariable variable, Object value) {
 		this(variable, new Object[] { value });
 	}
 
-	public SimpleFixtureProvider(Fixture variable, Object[] values) {
+	public SimpleFixtureProvider(FixtureVariable variable, Object[] values) {
 		_variable = variable;
 		_values = values;
 	}
 
-	public Fixture fixture() {
+	public FixtureVariable variable() {
 		return _variable;
 	}
 

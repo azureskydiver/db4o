@@ -12,8 +12,8 @@ public class FixtureContextTestCase implements TestCase {
 	}
 	
 	public void test() {
-		final Fixture f1 = new Fixture();
-		final Fixture f2 = new Fixture();
+		final FixtureVariable f1 = new FixtureVariable();
+		final FixtureVariable f2 = new FixtureVariable();
 		final ContextRef c1 = new ContextRef();
 		final ContextRef c2 = new ContextRef();
 		new FixtureContext().run(new Runnable() {
@@ -53,7 +53,7 @@ public class FixtureContextTestCase implements TestCase {
 		});
 	}
 
-	private void assertNoValue(final Fixture f1) {
+	private void assertNoValue(final FixtureVariable f1) {
 		Assert.expect(IllegalStateException.class, new CodeBlock() {
 			public void run() {
 				use(f1.value());
@@ -64,7 +64,7 @@ public class FixtureContextTestCase implements TestCase {
 		});
 	}
 
-	private void assertValue(final String expected, final Fixture fixture) {
+	private void assertValue(final String expected, final FixtureVariable fixture) {
 		Assert.areEqual(expected, fixture.value());
 	}
 

@@ -10,7 +10,7 @@ public class MultiValueFixtureProvider implements FixtureProvider {
 		return (Object[])_variable.value();
 	}
 	
-	private static final Fixture _variable = new Fixture("data");
+	private static final FixtureVariable _variable = new FixtureVariable("data");
 	
 	private final Object[][] _values;
 
@@ -18,7 +18,7 @@ public class MultiValueFixtureProvider implements FixtureProvider {
 		_values = values;
 	}
 
-	public Fixture fixture() {
+	public FixtureVariable variable() {
 		return _variable;
 	}
 
