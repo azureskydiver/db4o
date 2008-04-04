@@ -10,29 +10,18 @@ import com.db4o.foundation.*;
  */
 public class FixtureContext {
 	
-	private static final ContextVariable _current = new ContextVariable() {
+	private static final DynamicVariable _current = new DynamicVariable() {
 		private final FixtureContext EMPTY_CONTEXT = new FixtureContext();
 		protected Object defaultValue() {
 			return EMPTY_CONTEXT;
 		}
 	};
 	
+	/**
+	 * @sharpen.property
+	 */
 	public static FixtureContext current() {
 		return (FixtureContext)_current.value();
-	}
-	
-	public FixtureContext combine(final FixtureContext parent) {
-		return new FixtureContext() {
-			public Found get(Fixture fixture) {
-				Found found = FixtureContext.this.get(fixture);
-				if (null != found) return found;
-				return parent.get(fixture);
-			}
-		};
-	}
-
-	public Found get(Fixture fixture) {
-		return null;
 	}
 	
 	public Object run(Closure4 closure) {
@@ -43,17 +32,31 @@ public class FixtureContext {
 		_current.with(this, block);
 	}
 	
-	public static class Found {
+	static class Found {
 		public final Object value;
 		
 		public Found(Object value_) {
 			value = value_;
 		}
 	}
+	
+	Found get(Fixture fixture) {
+		return null;
+	}
+	
+	public FixtureContext combine(final FixtureContext parent) {
+		return new FixtureContext() {
+			Found get(Fixture fixture) {
+				Found found = FixtureContext.this.get(fixture);
+				if (null != found) return found;
+				return parent.get(fixture);
+			}
+		};
+	}
 
 	FixtureContext add(final Fixture fixture, final Object value) {
 		return new FixtureContext() {
-			public Found get(Fixture key) {
+			Found get(Fixture key) {
 				if (key == fixture) {
 					return new Found(value);
 				}

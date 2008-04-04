@@ -21,7 +21,7 @@ public class AllTests implements TestSuiteBuilder {
 			BlockingQueueTestCase.class,
 			Collection4TestCase.class,
 			CompositeIterator4TestCase.class,
-			ContextVariableTestCase.class,
+			DynamicVariableTestCase.class,
 			CoolTestCase.class,
 			Hashtable4TestCase.class,
 			IntArrayListTestCase.class,

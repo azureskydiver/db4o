@@ -6,19 +6,19 @@ import com.db4o.foundation.*;
 
 import db4ounit.*;
 
-public class ContextVariableTestCase implements TestCase {
+public class DynamicVariableTestCase implements TestCase {
 
 	public static void main(String[] args) {
-		new ConsoleTestRunner(ContextVariableTestCase.class).run();
+		new ConsoleTestRunner(DynamicVariableTestCase.class).run();
 	}
 
 	public void testSingleThread() {
-		final ContextVariable variable = new ContextVariable();
+		final DynamicVariable variable = new DynamicVariable();
 		checkVariableBehavior(variable);
 	}
 
 	public void testMultiThread() {
-		final ContextVariable variable = new ContextVariable();
+		final DynamicVariable variable = new DynamicVariable();
 		final Collection4 failures = new Collection4();
 		variable.with("mine", new Runnable() {
 			public void run() {
@@ -50,7 +50,7 @@ public class ContextVariableTestCase implements TestCase {
 		}
 	}
 
-	private Thread[] createThreads(final ContextVariable variable, final Collection4 failures) {
+	private Thread[] createThreads(final DynamicVariable variable, final Collection4 failures) {
 		final Thread[] threads = new Thread[5];
 		for (int i = 0; i < threads.length; i++) {
 			threads[i] = new Thread(new Runnable() {
@@ -77,7 +77,7 @@ public class ContextVariableTestCase implements TestCase {
 			}
 		};
 
-		final ContextVariable stringVar = new ContextVariable(String.class);
+		final DynamicVariable stringVar = new DynamicVariable(String.class);
 		stringVar.with("foo", emptyBlock);
 
 		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
@@ -88,7 +88,7 @@ public class ContextVariableTestCase implements TestCase {
 
 	}
 
-	private void checkVariableBehavior(final ContextVariable variable) {
+	private void checkVariableBehavior(final DynamicVariable variable) {
 		Assert.isNull(variable.value());
 		variable.with("foo", new Runnable() {
 			public void run() {

@@ -56,7 +56,10 @@ public class FixtureContextTestCase implements TestCase {
 	private void assertNoValue(final Fixture f1) {
 		Assert.expect(IllegalStateException.class, new CodeBlock() {
 			public void run() {
-				f1.value();
+				use(f1.value());
+			}
+
+			private void use(Object value) {
 			}
 		});
 	}
