@@ -8,6 +8,7 @@ import com.db4o.ext.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.fixtures.*;
 
 public class ConcurrencyTestMethod extends TestMethod {
 
@@ -25,9 +26,13 @@ public class ConcurrencyTestMethod extends TestMethod {
 	 * @see db4ounit.TestMethod#invoke()
 	 */
 	protected void invoke() throws Exception {
-		AbstractDb4oTestCase toTest = (AbstractDb4oTestCase) getSubject();
+		AbstractDb4oTestCase toTest = subject();
 		Method method = getMethod();
 		invokeConcurrencyMethod(toTest, method);
+	}
+
+	private AbstractDb4oTestCase subject() {
+		return (AbstractDb4oTestCase) getSubject();
 	}
 
 	private void invokeConcurrencyMethod(AbstractDb4oTestCase toTest, Method method)
@@ -89,7 +94,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 		}
 	}
 
-	class RunnableTestMethod implements Runnable {
+	class RunnableTestMethod extends Contextful implements Runnable {
 		private AbstractDb4oTestCase toTest;
 
 		private Method method;
@@ -98,18 +103,15 @@ public class ConcurrencyTestMethod extends TestMethod {
 
 		private boolean showSeq;
 
-		private final Db4oClientServerFixture fixture;
-
 		RunnableTestMethod(AbstractDb4oTestCase toTest, Method method, int seq, boolean showSeq) {
 			this.toTest = toTest;
-			this.fixture = fixture();
 			this.method = method;
 			this.seq = seq;
 			this.showSeq = showSeq;
 		}
 
 		public void run() {
-			AbstractDb4oTestCase.FIXTURE_VARIABLE.with(fixture, new Runnable() {
+			run(new Runnable() {
 				public void run() {
 					runMethod();
 				}
@@ -119,7 +121,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 		void runMethod() {
 			ExtObjectContainer oc = null;
 			try {
-				oc = fixture.openNewClient();
+				oc = fixture().openNewClient();
 				Object[] args;
 				if (showSeq) {
 					args = new Object[2];
@@ -140,7 +142,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 	}
 
 	Db4oClientServerFixture fixture() {
-		return ((Db4oClientServerFixture)fixture());
+		return ((Db4oClientServerFixture)AbstractDb4oTestCase.fixture());
 	}
 
 }

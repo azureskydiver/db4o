@@ -30,7 +30,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	/* (non-Javadoc)
 	 * @see db4ounit.extensions.Db4oTestCase#fixture()
 	 */
-	public Db4oFixture fixture() {
+	public static Db4oFixture fixture() {
 		return (Db4oFixture) FIXTURE_VARIABLE.value();
 	}
 	
