@@ -6,15 +6,15 @@ import com.db4o.foundation.*;
 
 import db4ounit.fixtures.FixtureContext.*;
 
-public class Fixture {
+public class FixtureVariable {
 	
 	private final String _label;
 	
-	public Fixture() {
+	public FixtureVariable() {
 		this("");
 	}
 
-	public Fixture(String label) {
+	public FixtureVariable(String label) {
 		_label = label;
 	}
 	

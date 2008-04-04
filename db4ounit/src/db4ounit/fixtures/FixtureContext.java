@@ -5,13 +5,14 @@ package db4ounit.fixtures;
 import com.db4o.foundation.*;
 
 /**
- * Set of live {@link Fixture}/value pairs.
+ * Set of live {@link FixtureVariable}/value pairs.
  * 
  */
 public class FixtureContext {
 	
 	private static final DynamicVariable _current = new DynamicVariable() {
 		private final FixtureContext EMPTY_CONTEXT = new FixtureContext();
+		
 		protected Object defaultValue() {
 			return EMPTY_CONTEXT;
 		}
@@ -40,13 +41,13 @@ public class FixtureContext {
 		}
 	}
 	
-	Found get(Fixture fixture) {
+	Found get(FixtureVariable fixture) {
 		return null;
 	}
 	
 	public FixtureContext combine(final FixtureContext parent) {
 		return new FixtureContext() {
-			Found get(Fixture fixture) {
+			Found get(FixtureVariable fixture) {
 				Found found = FixtureContext.this.get(fixture);
 				if (null != found) return found;
 				return parent.get(fixture);
@@ -54,9 +55,9 @@ public class FixtureContext {
 		};
 	}
 
-	FixtureContext add(final Fixture fixture, final Object value) {
+	FixtureContext add(final FixtureVariable fixture, final Object value) {
 		return new FixtureContext() {
-			Found get(Fixture key) {
+			Found get(FixtureVariable key) {
 				if (key == fixture) {
 					return new Found(value);
 				}

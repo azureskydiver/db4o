@@ -5,12 +5,9 @@
  */
 package db4ounit.extensions;
 
-import java.lang.reflect.Method;
-
 import com.db4o.foundation.*;
 
 import db4ounit.*;
-import db4ounit.fixtures.*;
 
 public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 		
@@ -34,23 +31,7 @@ public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
     	return _fixture.accept(clazz);
     }
     
-    protected Iterator4 fromClass(final Class clazz) {
-    	return (Iterator4) AbstractDb4oTestCase.FIXTURE_VARIABLE.with(_fixture, new Closure4() {
-    		public Object run() {
-    			return baseFromClass(clazz);
-    		}
-    	});
+    protected Object withContext(Closure4 closure) {
+    	return AbstractDb4oTestCase.FIXTURE_VARIABLE.with(_fixture, closure);
     }
-    
-    protected Test fromMethod(Class clazz, Method method) {
-    	final Test test = super.fromMethod(clazz, method);
-		if (AbstractDb4oTestCase.class.isAssignableFrom(clazz)) {
-			return new FixtureDecoration(test, null, AbstractDb4oTestCase.FIXTURE_VARIABLE, _fixture); 
-		}
-		return test;
-	}
-
-	private Iterator4 baseFromClass(final Class clazz) {
-		return super.fromClass(clazz);
-	}
 }

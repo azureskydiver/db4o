@@ -6,28 +6,33 @@ import com.db4o.foundation.*;
 
 import db4ounit.fixtures.*;
 
-public class DeferredTest extends Contextful implements TestDecoration {
+public class ContextfulTest extends Contextful implements TestDecoration {
 	
 	private final TestFactory _factory;
 	private Test _test;
 
-	public DeferredTest(TestFactory factory) {
+	public ContextfulTest(TestFactory factory) {
 		_factory = factory;
 	}
 
 	public String getLabel() {
 		return (String)run(new Closure4() {
 			public Object run() {
-				return test().getLabel();
+				return testInstance().getLabel();
 			}
 		});
 	}
 
 	public void run() {
-		run(test());
+		run(testInstance());
 	}
 	
 	public Test test() {
+		if (null == _test) throw new IllegalStateException();
+		return _test;
+	}
+
+	private Test testInstance() {
 		if (_test == null) {
 			_test = _factory.newInstance();
 		}

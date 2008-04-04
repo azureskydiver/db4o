@@ -3,21 +3,27 @@
 package db4ounit.extensions.tests;
 
 import com.db4o.config.*;
+import com.db4o.foundation.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
 
 public class SimpleDb4oTestCase extends AbstractDb4oTestCase {
 	
+	public static final DynamicVariable EXPECTED_FIXTURE_VARIABLE = new DynamicVariable();
+	
 	public static class Data {}
 	
 	private boolean[] _everythingCalled=new boolean[3];
-	private Db4oFixture _expectedFixture;
 	
 	protected void configure(Configuration config) {
-		Assert.areSame(_expectedFixture, fixture());
+		Assert.areSame(expectedFixture(), fixture());
 		Assert.isTrue(everythingCalledBefore(0));
 		_everythingCalled[0]=true;
+	}
+
+	private Db4oFixture expectedFixture() {
+		return (Db4oFixture) EXPECTED_FIXTURE_VARIABLE.value();
 	}
 	
 	protected void store() {
@@ -48,9 +54,5 @@ public class SimpleDb4oTestCase extends AbstractDb4oTestCase {
 			}
 		}
 		return true;
-	}
-
-	public void expectedFixture(Db4oFixture fixture) {
-		_expectedFixture = fixture;
 	}
 }

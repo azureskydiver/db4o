@@ -21,7 +21,7 @@ import db4ounit.fixtures.*;
  */
 public class AbstractDb4oTestCase implements Db4oTestCase {
 	
-	public static final Fixture FIXTURE_VARIABLE = new Fixture("db4o");
+	public static final FixtureVariable FIXTURE_VARIABLE = new FixtureVariable("db4o");
     
 	private static final int DEFAULT_CONCURRENCY_THREAD_COUNT = 10;	
 	
