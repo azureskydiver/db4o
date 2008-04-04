@@ -3,12 +3,12 @@
 package com.db4o.foundation;
 
 /**
- * A context variable is a value associated to a specific thread and scope.
+ * A dynamic variable is a value associated to a specific thread and scope.
  * 
  * The value is brought into scope with the {@link #with} method.
  * 
  */
-public class ContextVariable {
+public class DynamicVariable {
 	
 	private static class ThreadSlot {
 		public final Thread thread;
@@ -25,14 +25,17 @@ public class ContextVariable {
 	private final Class _expectedType;
 	private ThreadSlot _values = null;
 	
-	public ContextVariable() {
+	public DynamicVariable() {
 		this(null);
 	}
 	
-	public ContextVariable(Class expectedType) {
+	public DynamicVariable(Class expectedType) {
 		_expectedType = expectedType;
 	}
 	
+	/**
+	 * @sharpen.property
+	 */
 	public Object value() {
 		final Thread current = Thread.currentThread();
 		synchronized (this) {

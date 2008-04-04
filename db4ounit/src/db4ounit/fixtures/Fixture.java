@@ -18,6 +18,9 @@ public class Fixture {
 		_label = label;
 	}
 	
+	/**
+	 * @sharpen.property
+	 */
 	public String label() {
 		return _label;
 	}
@@ -38,6 +41,9 @@ public class Fixture {
 		return currentContext().add(this, value);
 	} 
 	
+	/**
+	 * @sharpen.property
+	 */
 	public Object value() {
 		final Found found = currentContext().get(this);
 		if (null == found) throw new IllegalStateException();
