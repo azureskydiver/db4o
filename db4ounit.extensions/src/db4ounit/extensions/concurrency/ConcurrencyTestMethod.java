@@ -71,7 +71,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 			return;
 		}
 		// pass ExtObjectContainer as a param to check method
-		ExtObjectContainer oc = AbstractDb4oTestCase.fixture().db();
+		ExtObjectContainer oc = fixture().db();
 		try {
 			checkMethod.invoke(toTest, new Object[] { oc });
 		} finally {
@@ -140,7 +140,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 	}
 
 	Db4oClientServerFixture fixture() {
-		return ((Db4oClientServerFixture)AbstractDb4oTestCase.fixture());
+		return ((Db4oClientServerFixture)fixture());
 	}
 
 }
