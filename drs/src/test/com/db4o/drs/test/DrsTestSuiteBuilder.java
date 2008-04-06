@@ -2,42 +2,25 @@
 
 package com.db4o.drs.test;
 
+import com.db4o.foundation.*;
+
 import db4ounit.ReflectionTestSuiteBuilder;
 
 public class DrsTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 	
-	private DrsFixture _a;
-	private DrsFixture _b;
-
+	private DrsFixturePair _fixtures;
+	
 	public DrsTestSuiteBuilder(DrsFixture a, DrsFixture b, Class clazz) {
-		super(clazz);
-		a(a);
-		b(b);
+		this(a, b, new Class[] { clazz });
 	}
 	
 	public DrsTestSuiteBuilder(DrsFixture a, DrsFixture b, Class[] classes) {
 		super(classes);
-		a(a);
-		b(b);
+		_fixtures = new DrsFixturePair(a, b);
 	}
 	
-	private void a(DrsFixture fixture) {
-		if (null == fixture) throw new IllegalArgumentException("fixture");
-		_a = fixture;
-	}
-
-	private void b(DrsFixture fixture) {
-		if (null == fixture) throw new IllegalArgumentException("fixture");
-		_b = fixture;
-	}
-
-	protected Object newInstance(Class clazz) {
-		Object instance = super.newInstance(clazz);
-		if (instance instanceof DrsTestCase) {
-			DrsTestCase testCase = (DrsTestCase) instance;
-			testCase.a(_a);
-			testCase.b(_b);
-		}
-		return instance;
+	@Override
+	protected Object withContext(Closure4 closure) {
+		return DrsFixtureVariable.with(_fixtures, closure);
 	}
 }

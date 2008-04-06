@@ -51,8 +51,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	}
 	
 
-	private DrsFixture _a;
-	private DrsFixture _b;
+	private final DrsFixturePair _fixtures = DrsFixtureVariable.value();
 	
 	public void setUp() throws Exception {
 		cleanBoth();
@@ -63,8 +62,8 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	}
 
 	private void cleanBoth() {
-		_a.clean();
-		_b.clean();
+		a().clean();
+		b().clean();
 	}
 
 	protected void clean() {
@@ -95,8 +94,8 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	}
 
 	private void openBoth() throws Exception {
-		_a.open();
-		_b.open();
+		a().open();
+		b().open();
 	}
 	
 	public void tearDown() throws Exception {
@@ -105,24 +104,16 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	}
 
 	private void closeBoth() throws Exception {
-		_a.close();
-		_b.close();
-	}
-	
-	public void a(DrsFixture fixture) {
-		_a = fixture;
-	}
-	
-	public void b(DrsFixture fixture) {
-		_b = fixture;
+		a().close();
+		b().close();
 	}
 	
 	public DrsFixture a() {
-		return _a;
+		return _fixtures.a;
 	}
 
 	public DrsFixture b() {
-		return _b;
+		return _fixtures.b;
 	}
 
 	protected void ensureOneInstance(DrsFixture fixture, Class clazz) {
@@ -150,12 +141,16 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 
 	protected void replicateAll(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo) {
 		//System.out.println("from = " + providerFrom + ", to = " + providerTo);
-		ReplicationSession replication = Replication.begin(providerFrom, providerTo);
-		Iterator allObjects = providerFrom.objectsChangedSinceLastReplication().iterator();
-
-		if (!allObjects.hasNext())
+		final ReplicationSession replication = Replication.begin(providerFrom, providerTo);
+		final ObjectSet changedSet = providerFrom.objectsChangedSinceLastReplication();
+		if (changedSet.size() == 0)
 			throw new RuntimeException("Can't find any objects to replicate");
+		
+		replicateAll(replication, changedSet.iterator());
+	}
 
+	private void replicateAll(final ReplicationSession replication,
+			final Iterator allObjects) {
 		while (allObjects.hasNext()) {
 			Object changed = allObjects.next();
 			//System.out.println("changed = " + changed);
@@ -168,14 +163,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 			TestableReplicationProviderInside from, TestableReplicationProviderInside to, ReplicationEventListener listener) {
 		ReplicationSession replication = Replication.begin(from, to, listener);
 
-		Iterator allObjects = from.objectsChangedSinceLastReplication().iterator();
-		while (allObjects.hasNext()) {
-			Object changed = allObjects.next();
-			//System.out.println("changed = " + changed);
-			replication.replicate(changed);
-		}
-
-		replication.commit();
+		replicateAll(replication, from.objectsChangedSinceLastReplication().iterator());
 	}
 
 	protected void delete(Class[] classes) {
@@ -192,12 +180,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		//System.out.println("ReplicationTestcase.replicateClass");
 		ReplicationSession replication = Replication.begin(providerA, providerB);
 		Iterator allObjects = providerA.objectsChangedSinceLastReplication(clazz).iterator();
-		while (allObjects.hasNext()) {
-			final Object obj = allObjects.next();
-			//System.out.println("obj = " + obj);
-			replication.replicate(obj);
-		}
-		replication.commit();
+		replicateAll(replication, allObjects);
 	}
 
 	protected static void sleep(int millis) {
