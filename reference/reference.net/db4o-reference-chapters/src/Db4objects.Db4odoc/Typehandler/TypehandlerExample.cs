@@ -25,7 +25,7 @@ namespace Db4objects.Db4odoc.Typehandler
         public static void Main(string[] args)
         {
             TestReadWriteDelete();
-            TestDefrag();
+            //TestDefrag();
             TestCompare();
         }
         // end Main
@@ -73,7 +73,7 @@ namespace Db4objects.Db4odoc.Typehandler
             {
                 try
                 {
-                    IObjectSet result = container.QueryByExample(new Car(null));
+                    IObjectSet result = container.Query(typeof(Car));
                     Car car = null;
                     if (result.HasNext())
                     {
@@ -96,7 +96,7 @@ namespace Db4objects.Db4odoc.Typehandler
             {
                 try
                 {
-                    IObjectSet result = container.QueryByExample(new Car(null));
+                    IObjectSet result = container.Query(typeof(Car));
                     Car car = null;
                     if (result.HasNext())
                     {
@@ -123,8 +123,7 @@ namespace Db4objects.Db4odoc.Typehandler
                 {
                     Car car = new Car("BMW");
                     container.Store(car);
-                    IObjectSet result = container.QueryByExample(new Car(null));
-                    car = (Car)container.QueryByExample(new Car(null)).Next();
+                    car = (Car)container.Query(typeof(Car)).Next();
                     System.Console.WriteLine("Stored: " + car);
 
                 }

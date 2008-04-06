@@ -5,11 +5,14 @@ namespace Db4objects.Db4odoc.Typehandler
 {
     public class Car
     {
+
         private StringBuilder model;
+        private StringBuilder modelCopy;
 
         public Car(string model)
         {
-            this.model = model == null ? null : new StringBuilder(model);
+            this.model = new StringBuilder(model);
+            this.modelCopy = new StringBuilder("Copy: " + model);
         }
 
 
@@ -20,7 +23,7 @@ namespace Db4objects.Db4odoc.Typehandler
 
         public override string ToString()
         {
-            return model == null ? null : model.ToString();
+            return model == null ? "null" : model.ToString() + " " + modelCopy.ToString();
         }
     }
 }
