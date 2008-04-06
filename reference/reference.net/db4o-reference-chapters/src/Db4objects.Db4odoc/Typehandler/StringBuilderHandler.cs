@@ -4,18 +4,31 @@ using System.Text;
 using Db4objects.Db4o.Foundation;
 using Db4objects.Db4o.Internal;
 using Db4objects.Db4o.Marshall;
+using Db4objects.Db4o.Typehandlers;
+using Db4objects.Db4o.Internal.Handlers;
+using Db4objects.Db4o.Reflect;
 
 namespace Db4objects.Db4odoc.Typehandler
 {
 
-    public class StringBuilderHandler : ITypeHandler4
+    public class StringBuilderHandler : ITypeHandler4, ISecondClassTypeHandler
+        , IVariableLengthTypeHandler, IEmbeddedTypeHandler
     {
+        private IReflectClass _classReflector;
 
         public StringBuilderHandler()
         {
 
         }
 
+        public IReflectClass ClassReflector(IReflector reflector)
+        {
+            if (_classReflector == null)
+            {
+                _classReflector = reflector.ForClass(typeof(StringBuilder));
+            }
+            return _classReflector;
+        }
 
         public void Delete(IDeleteContext context)
         {
@@ -100,8 +113,6 @@ namespace Db4objects.Db4odoc.Typehandler
         {
             IReadBuffer buffer = context;
             string str = "";
-            buffer.ReadInt();
-            buffer.ReadInt();
             int length = buffer.ReadInt();
             if (length > 0)
             {
@@ -114,13 +125,13 @@ namespace Db4objects.Db4odoc.Typehandler
         public void Defragment(IDefragmentContext context)
         {
             // To stay compatible with the old marshaller family
-            // In the marshaller family 0 number 4 represented
+            // In the marshaller family 0 number 8 represented
             // length reqiored to store ID and object length information
-            context.IncrementOffset(4);
+            context.IncrementOffset(8);
         }
         // end Defragment
 
-        public IPreparedComparison PrepareComparison(object obj)
+        public IPreparedComparison PrepareComparison(IContext con, object obj)
         {
             return new PreparedComparison(obj);
         }
