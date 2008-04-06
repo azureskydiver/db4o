@@ -4,15 +4,20 @@ package com.db4odoc.typehandler;
 import com.db4o.foundation.PreparedComparison;
 import com.db4o.internal.DefragmentContext;
 import com.db4o.internal.DeleteContext;
+import com.db4o.internal.SecondClassTypeHandler;
 import com.db4o.internal.TypeHandler4;
+import com.db4o.marshall.Context;
 import com.db4o.marshall.ReadBuffer;
 import com.db4o.marshall.ReadContext;
 import com.db4o.marshall.WriteBuffer;
 import com.db4o.marshall.WriteContext;
+import com.db4o.typehandlers.EmbeddedTypeHandler;
 
 
-public class StringBufferHandler implements TypeHandler4  {
+public class StringBufferHandler implements TypeHandler4, 
+SecondClassTypeHandler, EmbeddedTypeHandler   {
 
+	
 	public StringBufferHandler() {
 		
 	}
@@ -87,8 +92,6 @@ public class StringBufferHandler implements TypeHandler4  {
 	public Object read(ReadContext context) {
 		ReadBuffer buffer = context;
 		String str = "";
-		buffer.readInt();
-		buffer.readInt();
 		int length = buffer.readInt();
 		if (length > 0) {
 			str = readBuffer(buffer, length);
@@ -99,13 +102,13 @@ public class StringBufferHandler implements TypeHandler4  {
 
 	public void defragment(DefragmentContext context) {
 		// To stay compatible with the old marshaller family
-		// In the marshaller family 0 number 4 represented
+		// In the marshaller family 0 number 8 represented
 		// length required to store ID and object length information
-		context.incrementOffset(4);
+		context.incrementOffset(8);
 	}
 	// end defragment
 
-	public PreparedComparison prepareComparison(final Object obj) {
+	public PreparedComparison prepareComparison(Context ctx, final Object obj) {
 		return new PreparedComparison() {
 			public int compareTo(Object target) {
 				return compare((StringBuffer)obj, (StringBuffer)target);

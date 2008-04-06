@@ -23,7 +23,7 @@ public class TypehandlerExample {
 
 	public static void main(String[] args) throws IOException {
 		testReadWriteDelete();
-		testDefrag();
+		//testDefrag();
 		testCompare();
 	}
 	// end main
@@ -62,7 +62,7 @@ public class TypehandlerExample {
 		ObjectContainer container = database(configure());
 		if (container != null){
 			try {
-				ObjectSet result = container.queryByExample(new Car(null));
+				ObjectSet result = container.query(Car.class);
 				Car car = null;
 				if (result.hasNext()){
 					car = (Car)result.next();
@@ -79,7 +79,7 @@ public class TypehandlerExample {
 		ObjectContainer container = database(configure());
 		if (container != null){
 			try {
-				ObjectSet result = container.queryByExample(new Car(null));
+				ObjectSet result = container.query(Car.class);
 				Car car = null;
 				if (result.hasNext()){
 					car = (Car)result.next();
@@ -100,8 +100,7 @@ public class TypehandlerExample {
 			try {
 				Car car = new Car("BMW");
 				container.store(car);
-				ObjectSet result = container.queryByExample(new Car(null));
-				car = (Car)container.queryByExample(new Car(null)).next();
+				car = (Car)container.query(Car.class).next();
 				System.out.println("Stored: " + car);
 				
 			} finally {
