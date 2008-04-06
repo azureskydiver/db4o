@@ -28,12 +28,7 @@ import db4ounit.*;
 /**
  * @exclude
  */
-public abstract class DrsTestSuite extends DrsTestCase implements
-		TestSuiteBuilder {
-
-	public Iterator4 iterator() {
-		return new DrsTestSuiteBuilder(a(), b(), testCases()).iterator();
-	}
+public abstract class DrsTestSuite extends ReflectionTestSuite {
 
 	protected final Class[] testCases() {
 		return concat(shared(), specificTestCases());

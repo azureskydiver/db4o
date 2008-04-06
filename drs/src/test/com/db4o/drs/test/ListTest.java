@@ -7,6 +7,9 @@ import java.util.*;
 
 import db4ounit.Assert;
 
+/**
+ * @sharpen.ignore
+ */
 public class ListTest extends DrsTestCase {
 
 	public void test() {

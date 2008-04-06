@@ -6,6 +6,9 @@ import com.db4o.drs.test.DrsTestCase;
 
 import db4ounit.Assert;
 
+/**
+ * @sharpen.ignore
+ */
 public class DRS42Test extends DrsTestCase {
 
     NewPilot andrew = new NewPilot("Andrew", 100,

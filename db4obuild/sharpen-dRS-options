@@ -21,3 +21,5 @@
 
 -propertyMapping java.lang.System.out Sharpen.Runtime.Out
 -propertyMapping java.lang.System.err Sharpen.Runtime.Err
+
+-propertyMapping db4ounit.fixtures.FixtureVariable.value Value

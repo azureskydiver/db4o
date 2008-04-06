@@ -7,6 +7,9 @@ import com.db4o.foundation.Collection4;
 
 import db4ounit.*;
 
+/**
+ * @sharpen.ignore
+ */
 public class ObjectSetCollection4FacadeTestCase implements TestCase {
 	
 	public static void main(String[] args) {

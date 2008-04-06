@@ -142,10 +142,7 @@
         <!--.NET: drs.tests -->
         <copy todir="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests">
 			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src/Db4objects/Drs/Tests">
-				<exclude name="Foundation/ObjectSetCollection4FacadeTestCase.cs" />
-				<exclude name="Regression/DRS42Test.cs" />
-				<exclude name="DrsTestCase.cs" />
-				<exclude name="ListTest.cs" />
+				<include name="**/*.cs" />
 				<exclude name="ReplicationProviderTest.cs" />
 			</fileset>
 		</copy>
@@ -199,9 +196,11 @@
 				<include name="test/**/test/ByteArrayTest.java" />
 				<include name="test/**/test/ByteArrayHolder.java" />
 				<include name="test/**/test/Db4oClientServerDrsFixture.java" />
-				<include name="test/**/test/Db4oDrsFixture.java" />
+				<include name="test/**/test/Db4oDrsFixture.java" />				
 				<include name="test/**/test/Db4oTests.java" />
 				<include name="test/**/test/DrsFixture.java" />				
+				<include name="test/**/test/DrsFixturePair.java" />
+				<include name="test/**/test/DrsFixtureVariable.java" />
 				<include name="test/**/test/DrsTestCase.java" />
 				<include name="test/**/test/DrsTestSuite.java" />
 				<include name="test/**/test/DrsTestSuiteBuilder.java" />					
