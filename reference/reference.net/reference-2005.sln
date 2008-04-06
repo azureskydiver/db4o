@@ -1,12 +1,12 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-reference-chapters", "db4o-reference-chapters\db4o-reference-chapters.csproj", "{575B2796-1C95-4910-B698-D5E5B2906FCB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-reference-chapters-2005", "db4o-reference-chapters\db4o-reference-chapters-2005.csproj", "{575B2796-1C95-4910-B698-D5E5B2906FCB}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClient", "TestClient\TestClient.csproj", "{C135BD61-C8CA-4EEF-9F3F-52788EE9FA64}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClient-2005", "TestClient\TestClient-2005.csproj", "{C135BD61-C8CA-4EEF-9F3F-52788EE9FA64}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o-2005", "..\
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAExamples", "TAExamples\TAExamples\TAExamples.csproj", "{6A3A9721-EA3E-4C9B-ABF3-EC3865EB1A4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAExamples-2005", "TAExamples\TAExamples\TAExamples-2005.csproj", "{6A3A9721-EA3E-4C9B-ABF3-EC3865EB1A4E}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
@@ -42,7 +42,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oUnit.Extensions-2005", 
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAEnhance", "TAEnhance\TAEnhance\TAEnhance.csproj", "{5DFB390E-85AD-498F-BF96-F978431E2DC5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAEnhance-2005", "TAEnhance\TAEnhance\TAEnhance-2005.csproj", "{5DFB390E-85AD-498F-BF96-F978431E2DC5}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
@@ -54,7 +54,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oTool-2005", "..\db4o.ne
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPExamples", "TPExamples\TPExamples.csproj", "{49B2A1AE-62ED-4DC1-A8DC-F9FABD2357E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPExamples-2005", "TPExamples\TPExamples-2005.csproj", "{49B2A1AE-62ED-4DC1-A8DC-F9FABD2357E4}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
