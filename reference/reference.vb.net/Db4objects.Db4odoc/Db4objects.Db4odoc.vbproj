@@ -165,6 +165,10 @@
     <Compile Include="TPExample\Team.vb" />
     <Compile Include="TPExample\TPCollectionExample.vb" />
     <Compile Include="TPExample\TPExample.vb" />
+    <Compile Include="TP\Rollback\Car.vb" />
+    <Compile Include="TP\Rollback\Id.vb" />
+    <Compile Include="TP\Rollback\Pilot.vb" />
+    <Compile Include="TP\Rollback\TPRollback.vb" />
     <Compile Include="Transactions\Car.vb" />
     <Compile Include="Transactions\Pilot.vb" />
     <Compile Include="Transactions\PressureSensorReadout.vb" />
