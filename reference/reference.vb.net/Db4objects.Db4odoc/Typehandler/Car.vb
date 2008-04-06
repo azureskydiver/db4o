@@ -5,9 +5,11 @@ Imports System.Text
 Namespace Db4objects.Db4odoc.Typehandler
     Public Class Car
         Private model As StringBuilder
+        Private modelCopy As StringBuilder
 
         Public Sub New(ByVal model As String)
-            Me.model = IIf(model Is Nothing, Nothing, New StringBuilder(model))
+            Me.model = New StringBuilder(model)
+            Me.modelCopy = New StringBuilder("Copy: " + model)
         End Sub
 
 
@@ -16,7 +18,7 @@ Namespace Db4objects.Db4odoc.Typehandler
         End Function
 
         Public Overloads Overrides Function ToString() As String
-            Return IIf(model Is Nothing, Nothing, model.ToString())
+            Return IIf(model Is Nothing, Nothing, model.ToString() + " " + modelCopy.ToString())
         End Function
     End Class
 End Namespace
