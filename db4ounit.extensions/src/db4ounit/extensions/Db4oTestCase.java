@@ -3,6 +3,7 @@ package db4ounit.extensions;
 
 import db4ounit.*;
 
-public interface Db4oTestCase extends TestLifeCycle {
+
+public interface Db4oTestCase extends TestCase {
 	
 }

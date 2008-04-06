@@ -107,7 +107,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		if (!startsWithIgnoreCase(method.getName(), "_test")) {
 			return;
 		}
-		TestPlatform.emitWarning("IGNORED: " + createTest(newInstance(clazz), method).getLabel());
+		TestPlatform.emitWarning("IGNORED: " + createTest(newInstance(clazz), method).label());
 	}
 
 	protected boolean isTestMethod(Method method) {
@@ -136,7 +136,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	protected Test createTest(Object instance, Method method) {
 		return new TestMethod(instance, method);
 	}
-
+	
 	protected final Test fromMethod(final Class clazz, final Method method) {
 		return new ContextfulTest(new TestFactory() {
 			public Test newInstance() {

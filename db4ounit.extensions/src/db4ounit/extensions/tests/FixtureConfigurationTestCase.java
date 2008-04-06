@@ -56,7 +56,7 @@ public class FixtureConfigurationTestCase implements TestCase {
 		fixture.fixtureConfiguration(configuration);
 		
 		Assert.isTrue(
-			fixture.getLabel().endsWith(" - " + configuration.getLabel()),
+			fixture.label().endsWith(" - " + configuration.getLabel()),
 			"FixtureConfiguration label must be part of Fixture label.");
 		
 		new TestRunner(

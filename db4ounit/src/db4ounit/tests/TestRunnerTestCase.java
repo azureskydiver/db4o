@@ -53,7 +53,7 @@ public class TestRunnerTestCase implements TestCase {
 	public void testRunWithException() {
 	    Test test = new Test() {
 
-            public String getLabel() {
+            public String label() {
                 return "Test"; //$NON-NLS-1$
             }
 

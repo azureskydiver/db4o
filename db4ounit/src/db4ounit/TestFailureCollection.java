@@ -31,7 +31,7 @@ public class TestFailureCollection extends Printable implements Iterable4 {
 		while (e.moveNext()) {
 			writer.write(String.valueOf(index));
 			writer.write(") ");
-			writer.write(((TestFailure)e.current()).getTest().getLabel());
+			writer.write(((TestFailure)e.current()).getTest().label());
 			writer.write(TestPlatform.NEW_LINE);
 			++index;
 		}

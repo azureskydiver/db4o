@@ -14,7 +14,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 
-public class BackupStressTestCase implements Db4oTestCase {
+public class BackupStressTestCase implements Db4oTestCase, TestLifeCycle {
     
     private static boolean verbose = false;
     

@@ -22,6 +22,6 @@ public class Db4oUnitTestMain extends UnitTestMain {
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
 		final Test test = super.testMethod(className, methodName);
-		return new FixtureDecoration(test, AbstractDb4oTestCase.FIXTURE_VARIABLE, _fixture);
+		return new FixtureDecoration(test, Db4oFixtureVariable.FIXTURE_VARIABLE, _fixture);
 	}
 }

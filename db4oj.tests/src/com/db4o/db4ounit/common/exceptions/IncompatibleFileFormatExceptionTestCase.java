@@ -9,7 +9,7 @@ import com.db4o.io.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class IncompatibleFileFormatExceptionTestCase implements Db4oTestCase {
+public class IncompatibleFileFormatExceptionTestCase implements Db4oTestCase, TestLifeCycle {
 	
 	public static void main(String[] args) throws Exception {
 		new ConsoleTestRunner(IncompatibleFileFormatExceptionTestCase.class).run();

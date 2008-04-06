@@ -65,6 +65,6 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 	}
 	
 	public String toString() {
-		return getLabel();
+		return label();
 	}
 }
