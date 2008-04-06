@@ -13,7 +13,7 @@ import com.db4o.internal.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class GlobalVsNonStaticConfigurationTestCase implements Db4oTestCase {
+public class GlobalVsNonStaticConfigurationTestCase implements Db4oTestCase, TestLifeCycle {
 
 	public static void main(String[] args) {
 		new ConsoleTestRunner(GlobalVsNonStaticConfigurationTestCase.class).run();

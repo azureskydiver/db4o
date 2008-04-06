@@ -36,7 +36,7 @@ public class Db4oInMemory extends AbstractSoloDb4oFixture {
     	_memoryFile = null;
     }
 
-	public String getLabel() {
+	public String label() {
 		return buildLabel("IN-MEMORY");
 	}
 

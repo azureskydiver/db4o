@@ -90,7 +90,7 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 		};
 		final Iterable4 labels = Iterators.map(suite, new Function4() {
 			public Object apply(Object arg) {
-				return ((Test)arg).getLabel();
+				return ((Test)arg).label();
 			}
 		});
 		Iterator4Assert.areEqual(new Object[] {

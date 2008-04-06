@@ -13,7 +13,7 @@ public class FailingTest implements Test {
 		_error = error;
 	}
 
-	public String getLabel() {
+	public String label() {
 		return _label;
 	}
 	

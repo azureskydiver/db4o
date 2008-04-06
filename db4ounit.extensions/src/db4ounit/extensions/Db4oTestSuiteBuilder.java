@@ -5,9 +5,12 @@
  */
 package db4ounit.extensions;
 
+import java.lang.reflect.*;
+
 import com.db4o.foundation.*;
 
 import db4ounit.*;
+import db4ounit.fixtures.*;
 
 public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 		
@@ -31,7 +34,16 @@ public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
     	return _fixture.accept(clazz);
     }
     
+    protected Test createTest(Object instance, Method method) {
+    	final Test test = super.createTest(instance, method);
+    	return new TestDecorationAdapter(test) {
+			public String label() {
+				return "(" + Db4oFixtureVariable.fixture().label() + ") " + test.label();
+			}
+		};
+    }
+    
     protected Object withContext(Closure4 closure) {
-    	return AbstractDb4oTestCase.FIXTURE_VARIABLE.with(_fixture, closure);
+    	return Db4oFixtureVariable.FIXTURE_VARIABLE.with(_fixture, closure);
     }
 }

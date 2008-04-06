@@ -6,9 +6,9 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
 
-public interface Db4oFixture {
-	
-	String getLabel();
+import db4ounit.fixtures.*;
+
+public interface Db4oFixture extends Labeled {
     
 	void open(Class testCaseClass) throws Exception;
     

@@ -108,7 +108,7 @@ public class Db4oMigrationSuiteBuilder extends ReflectionTestSuiteBuilder {
 			_version = environment().version();
 		}
 
-		public String getLabel() {
+		public String label() {
 			return "[" + _version + "] " + _test.getClass().getName();
 		}
 

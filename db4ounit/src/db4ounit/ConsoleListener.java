@@ -23,7 +23,7 @@ public class ConsoleListener implements TestListener {
 	}
 
 	public void testStarted(Test test) {
-		print(test.getLabel());
+		print(test.label());
 	}
 	
 	private void printFailure(Throwable failure) {

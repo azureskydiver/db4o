@@ -29,7 +29,7 @@ public class Db4oSolo extends AbstractFileBasedDb4oFixture {
 		return Db4o.openFile(config, getAbsolutePath());
 	}
 	
-	public String getLabel() {
+	public String label() {
 		return buildLabel("SOLO");
 	}
 

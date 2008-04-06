@@ -16,6 +16,10 @@ final class FixtureDecorator implements TestDecorator {
 	}
 
 	public Test decorate(Test test) {
-		return new FixtureDecoration(test, _provider.label() + "[" + _fixtureIndex + "]", _provider, _fixture);
+		String label = _provider.label() + "[" + _fixtureIndex + "]";
+		if(_fixture instanceof Labeled) {
+			label += ":" + ((Labeled)_fixture).label();
+		}
+		return new FixtureDecoration(test, label, _provider, _fixture);
 	}
 }

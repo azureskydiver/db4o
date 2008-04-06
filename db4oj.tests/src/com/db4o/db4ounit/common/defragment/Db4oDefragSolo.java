@@ -49,7 +49,7 @@ public class Db4oDefragSolo extends Db4oSolo {
                 && !OptOutDefragSolo.class.isAssignableFrom(clazz);
     }
 
-    public String getLabel() {
-        return "Defrag-" + super.getLabel();
+    public String label() {
+        return "Defrag-" + super.label();
     }
 }

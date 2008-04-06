@@ -15,10 +15,10 @@ public class ContextfulTest extends Contextful implements TestDecoration {
 		_factory = factory;
 	}
 
-	public String getLabel() {
+	public String label() {
 		return (String)run(new Closure4() {
 			public Object run() {
-				return testInstance().getLabel();
+				return testInstance().label();
 			}
 		});
 	}

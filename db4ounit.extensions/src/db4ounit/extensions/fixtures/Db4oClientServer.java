@@ -110,7 +110,7 @@ public class Db4oClientServer extends
 	 *         assignable from Db4oTestCase. Otherwise, returns true.
 	 */
 	public boolean accept(Class clazz) {
-		if (!AbstractDb4oTestCase.class.isAssignableFrom(clazz)) {
+		if (!Db4oTestCase.class.isAssignableFrom(clazz)) {
 			return false;
 		}
 		if (OptOutCS.class.isAssignableFrom(clazz)) {
@@ -141,7 +141,7 @@ public class Db4oClientServer extends
 		return (Config4Impl) ((Config4Impl)config).deepClone(this);
 	}
 
-	public String getLabel() {
+	public String label() {
 		return buildLabel(_label);
 	}
 

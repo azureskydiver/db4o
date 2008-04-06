@@ -7,7 +7,7 @@ import db4ounit.*;
 
 class RunsGreen implements Test {
 	
-	public String getLabel() {
+	public String label() {
 		return "RunsGreen";
 	}
 

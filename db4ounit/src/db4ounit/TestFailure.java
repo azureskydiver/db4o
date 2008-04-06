@@ -22,7 +22,7 @@ public class TestFailure extends Printable {
 	}
 	
 	public void print(Writer writer) throws IOException {
-		writer.write(_test.getLabel());
+		writer.write(_test.label());
 		writer.write(": ");
 		// TODO: don't print the first stack trace elements
 		// which reference db4ounit.Assert methods

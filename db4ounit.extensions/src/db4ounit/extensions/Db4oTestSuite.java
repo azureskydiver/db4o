@@ -2,7 +2,7 @@ package db4ounit.extensions;
 
 import com.db4o.foundation.*;
 
-import db4ounit.TestSuiteBuilder;
+import db4ounit.*;
 
 /**
  * Base class for composable db4o test suites (AllTests classes inside each package, for instance).

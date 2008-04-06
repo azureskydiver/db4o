@@ -21,11 +21,11 @@ public final class FixtureDecoration implements TestDecoration {
 		_value = fixtureValue;
 	}
 	
-	public String getLabel() {
+	public String label() {
 		final ObjectByRef label = new ObjectByRef(); 
 		runDecorated(new Runnable() {
 			public void run() {
-				label.value = "(" + fixtureLabel() + ") " + _test.getLabel();
+				label.value = "(" + fixtureLabel() + ") " + _test.label();
 			}
 		});
 		return (String)label.value;

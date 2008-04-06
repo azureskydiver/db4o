@@ -14,15 +14,12 @@ import com.db4o.reflect.*;
 import db4ounit.*;
 import db4ounit.extensions.concurrency.*;
 import db4ounit.extensions.fixtures.*;
-import db4ounit.fixtures.*;
 
 /**
  * @sharpen.partial
  */
-public class AbstractDb4oTestCase implements Db4oTestCase {
+public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	
-	public static final FixtureVariable FIXTURE_VARIABLE = new FixtureVariable("db4o");
-    
 	private static final int DEFAULT_CONCURRENCY_THREAD_COUNT = 10;	
 	
 	private transient int _threadCount = DEFAULT_CONCURRENCY_THREAD_COUNT;
@@ -31,7 +28,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	 * @see db4ounit.extensions.Db4oTestCase#fixture()
 	 */
 	public static Db4oFixture fixture() {
-		return (Db4oFixture) FIXTURE_VARIABLE.value();
+		return Db4oFixtureVariable.fixture();
 	}
 	
 	public boolean isClientServer() {

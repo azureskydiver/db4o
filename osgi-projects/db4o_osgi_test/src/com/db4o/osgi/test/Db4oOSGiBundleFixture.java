@@ -51,7 +51,7 @@ class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 		defragment(_fileName);
 	}
 
-	public String getLabel() {
+	public String label() {
 		return "OSGi/bundle";
 	}
 
