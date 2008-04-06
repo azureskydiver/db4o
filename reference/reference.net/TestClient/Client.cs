@@ -27,7 +27,7 @@ namespace Db4objects.Db4odoc.NoClasses.Client
         private static void SavePilots()
         {
             Console.WriteLine("Saving Pilot objects without Pilot class on the server");
-            IObjectContainer oc = Db4oFactory.OpenClient("localhost", 8095, "db4o", "db4o");
+            IObjectContainer oc = Db4oFactory.OpenClient("localhost", 0xdb40, "db4o", "db4o");
             try
             {
                 for (int i = 0; i < COUNT; i++)
