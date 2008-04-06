@@ -23,7 +23,7 @@ Namespace Db4objects.Db4odoc.Typehandler
 
         Public Shared Sub Main(ByVal args As String())
             TestReadWriteDelete()
-            TestDefrag()
+            'TestDefrag()
             TestCompare()
         End Sub
         ' end Main
@@ -66,7 +66,9 @@ Namespace Db4objects.Db4odoc.Typehandler
             Dim container As IObjectContainer = Database(Configure())
             If container IsNot Nothing Then
                 Try
-                    Dim result As IObjectSet = container.QueryByExample(New Car(Nothing))
+                    Dim query As IQuery = container.Query()
+                    query.Constrain(GetType(Car))
+                    Dim result As IObjectSet = query.Execute()
                     Dim car As Car = Nothing
                     If result.HasNext() Then
                         car = DirectCast(result.[Next](), Car)
@@ -88,7 +90,7 @@ Namespace Db4objects.Db4odoc.Typehandler
             Dim container As IObjectContainer = Database(Configure())
             If container IsNot Nothing Then
                 Try
-                    Dim result As IObjectSet = container.QueryByExample(New Car(Nothing))
+                    Dim result As IObjectSet = container.Query(GetType(Car))
                     Dim car As Car = Nothing
                     If result.HasNext() Then
                         car = DirectCast(result.[Next](), Car)
@@ -109,8 +111,7 @@ Namespace Db4objects.Db4odoc.Typehandler
                 Try
                     Dim car As New Car("BMW")
                     container.Store(car)
-                    Dim result As IObjectSet = container.QueryByExample(New Car(Nothing))
-                    car = DirectCast(container.QueryByExample(New Car(Nothing)).[Next](), Car)
+                    car = DirectCast(container.Query(GetType(Car)).[Next](), Car)
 
                     System.Console.WriteLine("Stored: " + car.ToString())
                 Finally

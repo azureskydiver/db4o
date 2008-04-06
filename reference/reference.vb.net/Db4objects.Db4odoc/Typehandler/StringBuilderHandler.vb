@@ -5,15 +5,28 @@ Imports System.Text
 Imports Db4objects.Db4o.Foundation
 Imports Db4objects.Db4o.Internal
 Imports Db4objects.Db4o.Marshall
+Imports Db4objects.Db4o.Internal.Handlers
+Imports Db4objects.Db4o.Typehandlers
+Imports Db4objects.Db4o.Reflect
+
 
 Namespace Db4objects.Db4odoc.Typehandler
 
     Public Class StringBuilderHandler
-        Implements ITypeHandler4
+        Implements ITypeHandler4, ISecondClassTypeHandler, IVariableLengthTypeHandler, IEmbeddedTypeHandler
 
+        Private _classReflector As IReflectClass
 
         Public Sub New()
         End Sub
+
+        Public Function ClassReflector(ByVal Reflector As IReflector) As IReflectClass
+            If (_classReflector Is Nothing) Then
+                _classReflector = Reflector.ForClass(GetType(StringBuilder))
+            End If
+            Return _classReflector
+        End Function
+        ' end ClassReflector
 
 
         Public Sub Delete(ByVal context As IDeleteContext) Implements ITypeHandler4.Delete
@@ -66,8 +79,8 @@ Namespace Db4objects.Db4odoc.Typehandler
             Dim chars As Char() = New Char(length - 1) {}
             str.CopyTo(0, chars, 0, length)
             For i As Integer = 0 To length - 1
-                buffer.WriteByte(CByte(Val(chars(i)) And 255))
-                buffer.WriteByte(CByte(Val(chars(i)) >> 8))
+                buffer.WriteByte(CByte(AscW(chars(i)) And 255))
+                buffer.WriteByte(CByte(AscW(chars(i)) >> 8))
             Next
         End Sub
         ' end WriteToBuffer
@@ -85,8 +98,6 @@ Namespace Db4objects.Db4odoc.Typehandler
         Public Function Read(ByVal context As IReadContext) As Object Implements ITypeHandler4.Read
             Dim buffer As IReadBuffer = context
             Dim str As String = ""
-            buffer.ReadInt()
-            buffer.ReadInt()
             Dim length As Integer = buffer.ReadInt()
             If length > 0 Then
                 str = ReadBuffer(buffer, length)
@@ -103,7 +114,7 @@ Namespace Db4objects.Db4odoc.Typehandler
         End Sub
         ' end Defragment
 
-        Public Function PrepareComparison(ByVal obj As Object) As IPreparedComparison Implements ITypeHandler4.PrepareComparison
+        Public Function PrepareComparison(ByVal con As IContext, ByVal obj As Object) As IPreparedComparison Implements ITypeHandler4.PrepareComparison
             Return New PreparedComparison(obj)
         End Function
         ' end PrepareComparison
