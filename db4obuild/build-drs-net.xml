@@ -46,14 +46,14 @@
     	<antcall target="package-api" />    	
 		<copy file="${dir.config}/db4o.license.html" todir="${drs.net.bin.dir}"/>		
 		<copy file="${drs.net.dir}/compatibility.net.html" tofile="${drs.net.dir}/compatibility.html" >
-				        <filterchain>
-				           <striplinecomments>
-				              <comment value="!"/>
-				           </striplinecomments>
-				           <replacetokens>
-				                <token key="db4o.version.dotted" value="${db4o.version.dotted}"/>
-				            </replacetokens>
-				        </filterchain>
+	        <filterchain>
+	           <striplinecomments>
+	              <comment value="!"/>
+	           </striplinecomments>
+	           <replacetokens>
+	                <token key="db4o.version.dotted" value="${db4o.version.dotted}"/>
+	            </replacetokens>
+	        </filterchain>
 		</copy>
         
         <loadfile property="content.gplheader" srcfile="${file.gplheader}" encoding="iso-8859-1" />
