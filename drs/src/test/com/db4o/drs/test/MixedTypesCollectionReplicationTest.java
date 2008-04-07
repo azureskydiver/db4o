@@ -91,7 +91,7 @@ public class MixedTypesCollectionReplicationTest extends DrsTestCase {
 
 		Assert.isTrue(holder.set.remove("two"));
 		Assert.isTrue(holder.set.remove(holder));
-		CollectionHolder remaining = (CollectionHolder) holder.set.iterator().next();
+		CollectionHolder remaining = nextCollectionHolder(holder.set.iterator());
 		Assert.areEqual("h1", remaining.name);
 	}
 
