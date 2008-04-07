@@ -668,4 +668,16 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 				super.ObjectUpdated(obj, Util.castAsLong(id));
 		}
 	}
+
+	public boolean isProviderSpecific(Collection original) {
+		if (original instanceof org.hibernate.collection.PersistentSet) {
+			return true;
+		}
+		
+		if (original instanceof org.hibernate.collection.PersistentList) {
+			return true;
+		}
+		
+		return false;
+	}
 }

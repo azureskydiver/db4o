@@ -253,7 +253,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 	}
 	
 	private  Object collectionClone(Object original, ReflectClass claxx, final ReplicationProviderInside sourceProvider) {
-		return _collectionHandler.cloneWithCounterparts(original, claxx, new CounterpartFinder() {
+		return _collectionHandler.cloneWithCounterparts(sourceProvider, original, claxx, new CounterpartFinder() {
 			public Object findCounterpart(Object original) {
 				return GenericReplicationSession.this.findCounterpart(original, sourceProvider);
 			}

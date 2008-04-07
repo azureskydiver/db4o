@@ -38,13 +38,13 @@ public class CollectionHandlerImpl implements CollectionHandler {
 		return canHandle(_reflector.forClass(c));
 	}
 
-	public Object emptyClone(Object originalCollection, ReflectClass originalCollectionClass) {
+	public Object emptyClone(CollectionSource sourceProvider, Object originalCollection, ReflectClass originalCollectionClass) {
 		if (_mapHandler.canHandle(originalCollectionClass))
-			return _mapHandler.emptyClone(originalCollection, originalCollectionClass);
+			return _mapHandler.emptyClone(sourceProvider, originalCollection, originalCollectionClass);
 
 		Collection original = (Collection) originalCollection;
 
-		Collection clone = ReplicationPlatform.emptyCollectionClone(original);
+		Collection clone = ReplicationPlatform.emptyCollectionClone(sourceProvider, original);
 		if (null != clone) return clone;
 		
 		return _reflector.forClass(original.getClass()).newInstance();
@@ -72,12 +72,12 @@ public class CollectionHandlerImpl implements CollectionHandler {
 			ReplicationPlatform.copyCollectionState(original, destination, counterpartFinder);
 	}
 
-	public Object cloneWithCounterparts(Object originalCollection, ReflectClass claxx, CounterpartFinder counterpartFinder) {
+	public Object cloneWithCounterparts(CollectionSource sourceProvider, Object originalCollection, ReflectClass claxx, CounterpartFinder counterpartFinder) {
 		if (_mapHandler.canHandle(claxx))
-			return _mapHandler.cloneWithCounterparts(originalCollection, claxx, counterpartFinder);
+			return _mapHandler.cloneWithCounterparts(sourceProvider, originalCollection, claxx, counterpartFinder);
 
 		Collection original = (Collection) originalCollection;
-		Collection result = (Collection) emptyClone(originalCollection, claxx);
+		Collection result = (Collection) emptyClone(sourceProvider, originalCollection, claxx);
 
 		copyState(original, result, counterpartFinder);
 
