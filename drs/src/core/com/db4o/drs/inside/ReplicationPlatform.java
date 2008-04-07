@@ -25,6 +25,8 @@ import java.util.*;
 /**
  * Platform dependent code goes here to minimize manually
  * converted code.
+ * 
+ * @sharpen.ignore
  */
 public class ReplicationPlatform {
 
@@ -40,12 +42,20 @@ public class ReplicationPlatform {
 		}
 	}
 
-	public static Collection emptyCollectionClone(Collection original) {
-		if (original instanceof ArrayList) return new ArrayList(original.size());
-		if (original instanceof HashSet) return new HashSet(original.size());
+	public static Collection emptyCollectionClone(CollectionSource sourceProvider, Collection original) {
+		
+		boolean providerSpecific = sourceProvider.isProviderSpecific(original);
+		
+		if (original instanceof ArrayList || (providerSpecific && original instanceof List)) {
+			return new ArrayList(original.size());
+		}
+		if (original instanceof HashSet || (providerSpecific && original instanceof Set)) {
+			return new HashSet(original.size());
+		}
+		 
 		return null;
 	}
-	
+
 	public static boolean isValueType(Object o) {
 		return false;
 	}

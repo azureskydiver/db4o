@@ -2,7 +2,7 @@
 
 package com.db4o.drs.db4o;
 
-import java.util.Iterator;
+import java.util.*;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
@@ -24,6 +24,7 @@ import com.db4o.internal.replication.Db4oReplicationReference;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
+import com.db4o.types.*;
 
 // TODO: Add additional query methods (whereModified )
 
@@ -380,5 +381,9 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 
 	public ExtObjectContainer getObjectContainer() {
 		return _stream;
+	}
+
+	public boolean isProviderSpecific(Collection original) {
+		return original instanceof Db4oCollection;
 	}
 }

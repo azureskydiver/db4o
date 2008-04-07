@@ -327,7 +327,7 @@ class InstanceReplicationPreparer implements Visitor {
 //		if (claxx.isArray()) return arrayClone(obj, claxx, sourceProvider); //Copy arrayClone() from GenericReplicationSession if necessary.
 		if (claxx.isArray())  throw new RuntimeException("IllegalState"); //Copy arrayClone() from GenericReplicationSession if necessary.
 		if (_collectionHandler.canHandle(claxx)) {
-			return collectionClone(obj, claxx);
+			return collectionClone(sourceProvider, obj, claxx);
 		}
 		claxx.skipConstructor(true, true); // FIXME This is ridiculously slow to do every time. Should ALWAYS be done automatically in the reflector.
 		Object result = claxx.newInstance();
@@ -342,8 +342,8 @@ class InstanceReplicationPreparer implements Visitor {
 	}
 
 	
-	private Object collectionClone(Object original, ReflectClass claxx) {
-		return _collectionHandler.emptyClone(original, claxx);
+	private Object collectionClone(ReplicationProviderInside sourceProvider, Object original, ReflectClass claxx) {
+		return _collectionHandler.emptyClone(sourceProvider, original, claxx);
 	}
 	
 

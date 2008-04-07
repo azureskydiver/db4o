@@ -10,5 +10,5 @@ public interface TestableReplicationProviderInside extends ReplicationProviderIn
 
 	boolean supportsRollback();
 
-	boolean supportsCascadeDelete();
+	boolean supportsCascadeDelete(); 
 }

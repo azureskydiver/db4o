@@ -415,4 +415,8 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	public void replicateDeletion(Db4oUUID uuid) {
 		_storedObjects.remove(getObject(uuid));
 	}
+
+	public boolean isProviderSpecific(Collection original) {
+		return false;
+	}
 }

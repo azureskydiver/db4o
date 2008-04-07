@@ -4,6 +4,7 @@ package com.db4o.drs.test;
 
 import java.util.*;
 
+import com.db4o.drs.db4o.*;
 import com.db4o.drs.inside.*;
 
 import db4ounit.*;
@@ -25,19 +26,26 @@ public class SingleTypeCollectionReplicationTest extends DrsTestCase {
 		Assert.isTrue(it.hasNext());
 		
 		CollectionHolder replica = (CollectionHolder) it.next();
-		assertSameClass(h1.map, replica.map);
+		assertSameClassIfDb4o(h1.map, replica.map);
 		Assert.areEqual("one", replica.map.get("1"));
 		
-		assertSameClass(h1.set, replica.set);
+		assertSameClassIfDb4o(h1.set, replica.set);
 		Assert.isTrue(replica.set.contains("two"));
 		
-		assertSameClass(h1.list, replica.list);
+		assertSameClassIfDb4o(h1.list, replica.list);
 		Assert.areEqual("three", replica.list.get(0));
 	}
 
-	private void assertSameClass(final Object expectedInstance,
+	private void assertSameClassIfDb4o(final Object expectedInstance,
 			final Object actualInstance) {
+		if (!isDb4oProvider(a())) return;
+		if (!isDb4oProvider(b())) return;
+		
 		Assert.areSame(expectedInstance.getClass(), actualInstance.getClass());
+	}
+
+	private boolean isDb4oProvider(final DrsFixture fixture) {
+		return fixture.provider() instanceof Db4oReplicationProvider;
 	}
 	
 	private void storeNewAndCommit(

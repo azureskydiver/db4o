@@ -45,10 +45,9 @@ public class MapHandler implements CollectionHandler {
 		return result.iterator();
 	}
 
-	public Object emptyClone(Object original, ReflectClass originalCollectionClass) {
+	public Object emptyClone(CollectionSource sourceProvider, Object original, ReflectClass originalCollectionClass) {
 		return new HashMap(((Map) original).size());
 	}
-
 	
 	public void copyState(Object original, Object destination, CounterpartFinder counterpartFinder) {
 
@@ -67,10 +66,10 @@ public class MapHandler implements CollectionHandler {
 
 	}
 
-	public Object cloneWithCounterparts(Object originalMap, ReflectClass claxx, CounterpartFinder elementCloner) {
+	public Object cloneWithCounterparts(CollectionSource sourceProvider, Object originalMap, ReflectClass claxx, CounterpartFinder elementCloner) {
 		Map original = (Map) originalMap;
 
-		Map result = (Map) emptyClone(original, claxx);
+		Map result = (Map) emptyClone(sourceProvider, original, claxx);
 
 		copyState(original, result, elementCloner);
 
