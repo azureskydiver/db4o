@@ -62,13 +62,16 @@ public class Db4oTests extends DrsTestSuite {
 	/**
 	 * @sharpen.ignore
 	 */
-	protected Class[] specificTestCases() {
-		return new Class[] {
-			com.db4o.drs.test.dotnet.StructTestCase.class,
-		};
+	private Class[] platformSpecificTestCases() {
+		return new Class[0];
 	}
 	
-	protected Class[] one() {
-		return new Class[] { ByteArrayTest.class, };
+	protected Class[] specificTestCases() {
+		return concat(
+			platformSpecificTestCases(), 
+			new Class[] {
+				com.db4o.drs.test.dotnet.StructTestCase.class,
+				com.db4o.drs.test.DeepListGraphTestCase.class,
+			});
 	}
 }

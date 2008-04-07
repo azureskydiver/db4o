@@ -176,9 +176,8 @@ public class ReplicationProviderTest extends DrsTestCase {
 //		Assert.isTrue(pilots.contains(findPilot("John Cleese")));
 	//	Assert.isTrue(pilots.contains(findPilot("Terry Gilliam")));
 		
-		Iterator cars = a().provider().objectsChangedSinceLastReplication(Car.class).iterator();
-		Assert.isTrue(cars.hasNext());
-		Assert.areEqual(((Car) cars.next()).getModel(), "Volvo");
+		Iterator cars = a().provider().objectsChangedSinceLastReplication(Car.class).iterator();		
+		Assert.areEqual(((Car) next(cars)).getModel(), "Volvo");
 		Assert.isFalse(cars.hasNext());
 
 		commitReplication();
@@ -188,10 +187,10 @@ public class ReplicationProviderTest extends DrsTestCase {
 		Assert.isFalse(a().provider().objectsChangedSinceLastReplication().iterator().hasNext());
 		commitReplication();
 
-		Pilot pilot = (Pilot) a().provider().getStoredObjects(Pilot.class).iterator().next();
+		Pilot pilot = (Pilot) next(a().provider().getStoredObjects(Pilot.class).iterator());
 		pilot._name = "Terry Jones";
 
-		Car car = (Car) a().provider().getStoredObjects(Car.class).iterator().next();
+		Car car = (Car) next(a().provider().getStoredObjects(Car.class).iterator());
 		car.setModel("McLaren");
 
 		a().provider().update(pilot);
@@ -204,11 +203,11 @@ public class ReplicationProviderTest extends DrsTestCase {
 		Assert.areEqual(a().provider().objectsChangedSinceLastReplication().size(), 2);
 
 		pilots = a().provider().objectsChangedSinceLastReplication(Pilot.class).iterator();
-		Assert.areEqual(((Pilot) pilots.next())._name, "Terry Jones");
+		Assert.areEqual(((Pilot) next(pilots))._name, "Terry Jones");
 		Assert.isFalse(pilots.hasNext());
 
-		cars = a().provider().objectsChangedSinceLastReplication(Car.class).iterator();
-		Assert.areEqual(((Car) cars.next()).getModel(), "McLaren");
+		cars = a().provider().objectsChangedSinceLastReplication(Car.class).iterator();		
+		Assert.areEqual(((Car) next(cars)).getModel(), "McLaren");
 		Assert.isFalse(cars.hasNext());
 		commitReplication();
 
@@ -217,13 +216,19 @@ public class ReplicationProviderTest extends DrsTestCase {
 		a().provider().commit();
 	}
 
+
+	private Object next(Iterator iterator) {
+		Assert.isTrue(iterator.hasNext());
+		return iterator.next();
+	}
+
 	private void tstReferences() {
 		a().provider().storeNew(new Pilot("tst References", 42));
 		a().provider().commit();
 
 		startReplication();
 
-		Pilot object1 = (Pilot) a().provider().getStoredObjects(Pilot.class).iterator().next();
+		Pilot object1 = (Pilot) next(a().provider().getStoredObjects(Pilot.class).iterator());
 
 		ReplicationReference reference = a().provider().produceReference(object1, null, null);
 		Assert.areEqual(reference.object(), object1);
@@ -289,10 +294,8 @@ public class ReplicationProviderTest extends DrsTestCase {
 		commitReplication();
 		startReplication();
 
-		Iterator storedObjects = a().provider().getStoredObjects(Pilot.class).iterator();
-		Assert.isTrue(storedObjects.hasNext());
-		
-		Pilot reloaded = (Pilot)storedObjects.next();
+		Iterator storedObjects = a().provider().getStoredObjects(Pilot.class).iterator();		
+		Pilot reloaded = (Pilot)next(storedObjects);
 
 		Assert.isFalse(storedObjects.hasNext());
 		

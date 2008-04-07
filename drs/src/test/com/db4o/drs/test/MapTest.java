@@ -7,7 +7,9 @@ import java.util.Map;
 import com.db4o.ObjectSet;
 import db4ounit.Assert;
 
-
+/**
+ * @sharpen.ignore
+ */
 public class MapTest extends DrsTestCase {
 	
 	protected void actualTest() {
