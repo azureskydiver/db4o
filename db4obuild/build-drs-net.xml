@@ -183,11 +183,8 @@
 		<property name="dependencies.jar" location="${drs.sharpen.workspace.dir}/lib/dependencies.jar" />
 		
 		<jar destfile="${dependencies.jar}">
-            <fileset dir="${dir.dist.classes.java1.1}" />
-            <fileset dir="${dir.dist.classes.java1.2}" />
             <fileset dir="${dir.dist.classes.java5}" />
 			<fileset dir="${dir.dist.classes.db4ounit}" />
-			<fileset dir="${dir.dist.classes.test.jdk1.1}" />
 		</jar>
         
 		<copy todir="${drs.sharpen.workspace.dir}/drs">
@@ -251,6 +248,9 @@
 				
 				<exclude name="**/hibernate/**" />
 			</fileset>
+		    <fileset dir="${drs.dir}">
+		        <include name=".settings/" />
+		    </fileset>
 		</copy>
 	</target>
 
