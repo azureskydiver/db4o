@@ -5,7 +5,6 @@ package com.db4o.bench.crud;
 import java.io.*;
 
 import com.db4o.*;
-import com.db4o.bench.TargetApplication;
 import com.db4o.bench.logging.*;
 import com.db4o.config.*;
 import com.db4o.io.*;
@@ -14,31 +13,25 @@ import com.db4o.io.*;
  * Very simple CRUD (Create, Read, Update, Delete) application to 
  * produce log files as an input for I/O-benchmarking.
  */
-public class CrudApplication implements TargetApplication {
+public class CrudApplication {
+	
 	
 	private static final String DATABASE_FILE = "simplecrud.db4o";
 	
 	
-	public void run(String logFilePath, String[] args) {
-		deleteDbFile();
-		int itemCount = Integer.parseInt(args[0]);
-		Configuration config = prepare(logFilePath);
-		System.err.println("create");
+	public void run(int itemCount) {
+		Configuration config = prepare(itemCount);
 		create(itemCount, config);
-		System.err.println("read");
 		read(config);
-		System.err.println("update");
 		update(config);
-		System.err.println("delete");
 		delete(config);
-		System.err.println("done");
 		deleteDbFile();
 	}
 
 	private void create(int itemCount, Configuration config) {
 		ObjectContainer oc = open(config);
 		for (int i = 0; i < itemCount; i++) {
-			oc.set(Item.newItem(i));
+			oc.store(Item.newItem(i));
 			// preventing heap space problems by committing from time to time
 			if(i % 100000 == 0) {
 				oc.commit();
@@ -63,7 +56,7 @@ public class CrudApplication implements TargetApplication {
 		while(objectSet.hasNext()){
 			Item item = (Item) objectSet.next();
 			item.change();
-			oc.set(item);
+			oc.store(item);
 		}
 		oc.close();
 	}
@@ -80,10 +73,10 @@ public class CrudApplication implements TargetApplication {
 		oc.close();
 	}
 
-	private Configuration prepare(String logFilePath) {
+	private Configuration prepare(int itemCount) {
 		deleteDbFile();
 		RandomAccessFileAdapter rafAdapter = new RandomAccessFileAdapter();
-		IoAdapter ioAdapter = new LoggingIoAdapter(rafAdapter, logFilePath);
+		IoAdapter ioAdapter = new LoggingIoAdapter(rafAdapter, logFileName(itemCount));
 		Configuration config = Db4o.cloneConfiguration();
 		config.io(ioAdapter);
 		return config;
@@ -101,4 +94,8 @@ public class CrudApplication implements TargetApplication {
 		return Db4o.openFile(config, DATABASE_FILE);
 	}
 
+	public static String logFileName(int itemCount) {
+		return "simplecrud_" + itemCount + ".log";
+	}
+	
 }
