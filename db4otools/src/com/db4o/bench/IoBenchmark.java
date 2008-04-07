@@ -2,17 +2,19 @@
 
 package com.db4o.bench;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.HashSet;
 
-import com.db4o.bench.crud.*;
-import com.db4o.bench.delaying.*;
-import com.db4o.bench.logging.*;
-import com.db4o.bench.logging.replay.*;
-import com.db4o.bench.util.*;
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.io.*;
+import com.db4o.Db4oIOException;
+import com.db4o.bench.logging.LogConstants;
+import com.db4o.bench.logging.replay.LogReplayer;
+import com.db4o.foundation.List4;
+import com.db4o.foundation.StopWatch;
+import com.db4o.io.IoAdapter;
+import com.db4o.io.RandomAccessFileAdapter;
 
 
 /** 
@@ -33,40 +35,46 @@ public class IoBenchmark {
 	
 	private static final String _dbFileName = "IoBenchmark.db4o";
 	
-	private Delays _delays = null;
 	
+	private final static int REQUIRED_ARGS_COUNT = 3;
 	
-	public static void main(String[] args) throws IOException {
-		IoBenchmarkArgumentParser argumentParser = new IoBenchmarkArgumentParser(args);		
-		printBenchmarkHeader();
-		IoBenchmark ioBenchmark = new IoBenchmark();
-		if (argumentParser.delayed()) {
-			ioBenchmark.processResultsFiles(argumentParser.resultsFile1(), argumentParser.resultsFile2());
+	public static void main(String[] args) throws Exception {
+		if(args.length < 3) {
+			System.err.println("Usage: java IoBenchmark <target app class name> <log file path> <result file path> [<target app args>]");
 		}
-		ioBenchmark.run(argumentParser);
+		String targetAppClassName = args[0];
+		String logFilePath = args[1];
+		String resultFilePath = args[2];
+		String[] appArgs = new String[args.length - REQUIRED_ARGS_COUNT];
+		System.arraycopy(args, REQUIRED_ARGS_COUNT, appArgs, 0, appArgs.length);
+		TargetApplication targetApp = (TargetApplication) Class.forName(targetAppClassName).newInstance();
+		printBenchmarkHeader();
+		new IoBenchmark().run(targetApp, logFilePath, resultFilePath, appArgs);
 	}
 
 	
-	private void run(IoBenchmarkArgumentParser argumentParser) throws IOException {
-		runTargetApplication(argumentParser.objectCount());
-		prepareDbFile(argumentParser.objectCount());
-		runBenchmark(argumentParser.objectCount());
+	private void run(TargetApplication targetApp, String logFilePath, String resultFilePath, String[] appArgs) throws IOException {
+		deleteFile(logFilePath);
+		deleteFile(resultFilePath);
+		runTargetApplication(targetApp, logFilePath, appArgs);
+		prepareDbFile(logFilePath);
+		runBenchmark(logFilePath, resultFilePath);
 	}
 
 
 	
-	private void runTargetApplication(int itemCount) {
-		sysout("Running target application ...");
-		new CrudApplication().run(itemCount);
+	private void runTargetApplication(TargetApplication targetApp, String logFilePath, String[] appArgs) {
+		sysout("Running target application " + targetApp.getClass().getName() + " with log file " + logFilePath + "...");
+		targetApp.run(logFilePath, appArgs);
 	}
 
 
-	private void prepareDbFile(int itemCount) {
+	private void prepareDbFile(String logFilePath) {
 		sysout("Preparing DB file ...");
 		deleteFile(_dbFileName);
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
 		IoAdapter raf = rafFactory.open(_dbFileName, false, 0, false);
-		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), raf);
+		LogReplayer replayer = new LogReplayer(logFilePath, raf);
 		try {
 			replayer.replayLog();
 		} catch (IOException e) {
@@ -77,24 +85,24 @@ public class IoBenchmark {
 	}
 
 
-	private void runBenchmark(int itemCount) throws IOException {
+	private void runBenchmark(String logFilePath, String resultFilePath) throws IOException {
 		sysout("Running benchmark ...");
-		deleteBenchmarkResultsFile(itemCount);
-		PrintStream out = new PrintStream(new FileOutputStream(resultsFileName(itemCount), true));
-		printRunHeader(itemCount, out);
+		deleteFile(resultFilePath);
+		PrintStream out = new PrintStream(new FileOutputStream(resultFilePath, true));
+		printRunHeader(resultFilePath, out);
 		for (int i = 0; i < LogConstants.ALL_CONSTANTS.length; i++) {
 			String currentCommand = LogConstants.ALL_CONSTANTS[i];
-			benchmarkCommand(currentCommand, itemCount, _dbFileName, out);	
+			benchmarkCommand(currentCommand, logFilePath, _dbFileName, out);	
 		}
 		deleteFile(_dbFileName);
-		deleteCrudLogFile(itemCount);
+		deleteFile(logFilePath);
 	}
 
 		
-	private void benchmarkCommand(String command, int itemCount, String dbFileName, PrintStream out) throws IOException {
+	private void benchmarkCommand(String command, String logFilePath, String dbFileName, PrintStream out) throws IOException {
 		HashSet commands = commandSet(command);
 		IoAdapter io = ioAdapter(dbFileName);
-		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), io, commands);
+		LogReplayer replayer = new LogReplayer(logFilePath, io, commands);
 		List4 commandList = replayer.readCommandList();
 		
 		StopWatch watch = new StopWatch();
@@ -110,60 +118,14 @@ public class IoBenchmark {
 
 
 	private IoAdapter ioAdapter(String dbFileName) throws NumberFormatException, IOException, Db4oIOException {
-		if (delayed()) {
-			return delayingIoAdapter(dbFileName);
-		}
-		
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
 		return rafFactory.open(dbFileName, false, 0, false);
 	}
 	
 	
-	private IoAdapter delayingIoAdapter(String dbFileName) throws NumberFormatException{
-		IoAdapter rafFactory = new RandomAccessFileAdapter();
-		IoAdapter delFactory = new DelayingIoAdapter(rafFactory, _delays);
-		return delFactory.open(dbFileName, false, 0, false);
-	}
-
-
-	private void processResultsFiles(String resultsFile1, String resultsFile2) throws NumberFormatException {
-		sysout("Delaying:");
-		try {
-			DelayCalculation calculation = new DelayCalculation(resultsFile1, resultsFile2);
-			calculation.validateData();
-			if (!calculation.isValidData()) {
-				exitWithError("> Result files are invalid for delaying!");
-			}
-			_delays = calculation.calculatedDelays();
-			sysout("> Required delays:");
-			sysout("> " + _delays);
-            sysout("> Adjusting delay timer to match required delays...");
-			calculation.adjustDelays(_delays);
-			sysout("> Adjusted delays:");
-			sysout("> " + _delays);
-		} catch (IOException e) {
-			exitWithError("> Could not open results file(s)!\n" +
-						"> Please check the file name settings in IoBenchmark.properties.");
-		}
-	}
-
-
 	private void exitWithError(String error) {
 		System.err.println(error + "\n Aborting execution!");
 		throw new RuntimeException(error + "\n Aborting execution!");
-	}
-	
-	private String resultsFileName(int itemCount){
-		String fileName =  "db4o-IoBenchmark-results-" + itemCount;
-		if (delayed()) {
-			fileName += "-delayed";
-		}
-		fileName += ".log";
-		return fileName;
-	}
-
-	private boolean delayed() {
-		return _delays != null;
 	}
 	
 	private HashSet commandSet(String command) {
@@ -172,14 +134,6 @@ public class IoBenchmark {
 		return commands;
 	}
 	
-	private void deleteBenchmarkResultsFile(int itemCount) {
-		deleteFile(resultsFileName(itemCount));
-	}
-	
-	private void deleteCrudLogFile(int itemCount) {
-		deleteFile(CrudApplication.logFileName(itemCount));
-	}
-
 	private void deleteFile(String fileName) {
 		new File(fileName).delete();
 	}
@@ -190,10 +144,10 @@ public class IoBenchmark {
 		printDoubleLine();
 	}
 	
-	private void printRunHeader(int itemCount, PrintStream out) {
+	private void printRunHeader(String resultFilePath, PrintStream out) {
 		output(out, _singleLine);
-		output(out, "db4o IoBenchmark results with " + itemCount + " items");
-		sysout("Statistics written to " + resultsFileName(itemCount));
+		output(out, "db4o IoBenchmark results");
+		sysout("Statistics written to " + resultFilePath);
 		output(out, _singleLine);
 		output(out, "");
 	}
