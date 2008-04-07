@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project name="drs.net" default="package">
-	<import file="common.xml" />
+	<import file="common-dotnet.xml" />
     
     <property name="drs.dir" location="${dir.base}/drs" />
     <property name="drs.src.dir" location="${drs.dir}/src" />
@@ -117,6 +117,9 @@
     </target>
     
     <target name="prepare-dotnet-solution" depends="sharpen-drs, get-svn-revision">
+    	
+    	<reset-src-dir dir="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs" />
+    		
         <!-- .NET: drs -->
 		<copy todir="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs">
 			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src/Db4objects/Drs">
@@ -139,11 +142,12 @@
         	</sources>
         </updatecsharpproject>
         
+    	
         <!--.NET: drs.tests -->
+    	<reset-src-dir dir="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests" />
         <copy todir="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests">
 			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src/Db4objects/Drs/Tests">
 				<include name="**/*.cs" />
-				<exclude name="ReplicationProviderTest.cs" />
 			</fileset>
 		</copy>
 		
@@ -190,63 +194,11 @@
 		<copy todir="${drs.sharpen.workspace.dir}/drs">
 			<fileset dir="${drs.src.dir}">
 				<include name="core/**/*.java" />
-				<include name="test/**/test/ByteArrayTest.java" />
-				<include name="test/**/test/ByteArrayHolder.java" />
-				<include name="test/**/test/Db4oClientServerDrsFixture.java" />
-				<include name="test/**/test/Db4oDrsFixture.java" />				
-				<include name="test/**/test/Db4oTests.java" />
-				<include name="test/**/test/DrsFixture.java" />				
-				<include name="test/**/test/DrsFixturePair.java" />
-				<include name="test/**/test/DrsFixtureVariable.java" />
-				<include name="test/**/test/DrsTestCase.java" />
-				<include name="test/**/test/DrsTestSuite.java" />
-				<include name="test/**/test/DrsTestSuiteBuilder.java" />					
-				<include name="test/**/test/IByteArrayHolder.java" />
-				<include name="test/**/test/ReplicationProviderTest.java" />
-				<include name="test/**/test/GetByUUID.java" />
-				<include name="test/**/test/TheSimplest.java" />
-				<include name="test/**/test/SPCChild.java" />
-				<include name="test/**/test/SPCParent.java" />
-				<include name="test/**/test/Pilot.java" />
-				<include name="test/**/test/Car.java" />
-				<include name="test/**/test/ReplicationEventTest.java" />
-				<include name="test/**/test/ReplicationAfterDeletionTest.java" />
-				<include name="test/**/test/SimpleArrayHolder.java" />
-				<include name="test/**/test/SimpleArrayContent.java" />
-				<include name="test/**/test/SimpleArrayTest.java" />
-				<include name="test/**/test/SimpleParentChild.java" />
+				<include name="test/**/*.java" />
 				
-				<include name="test/**/test/CollectionHandlerImplTest.java" />
-				<include name="test/**/test/ReplicationTraversalTest.java" />				
-				<include name="test/**/test/SingleTypeCollectionReplicationTest.java" />
-				<include name="test/**/test/TransientReplicationProvider.java" />
-					
-				<include name="test/**/test/ListTest.java" />
-				<include name="test/**/test/ListHolder.java" />
-				<include name="test/**/test/ListContent.java" />					
-				<include name="test/**/test/Db4oListTest.java" />					
-				<include name="test/**/test/R0to4Runner.java" />
-				<include name="test/**/test/R0.java" />
-				<include name="test/**/test/R0Linker.java" />
-				<include name="test/**/test/R1.java" />
-				<include name="test/**/test/R2.java" />
-				<include name="test/**/test/R3.java" />
-				<include name="test/**/test/R4.java" />
-				<include name="test/**/test/ReplicationFeaturesMain.java" />
-				<include name="test/**/test/Replicated.java" />				
-				<include name="test/**/test/Person.java" />				
-				<include name="test/**/test/Student.java" />				
-		
-				<include name="test/**/test/CollectionHolder.java" />
-				<include name="test/**/test/MapHolder.java" />
-				<include name="test/**/test/MapContent.java" />				
-			
-				<include name="test/**/test/foundation/*.java" />
-                <include name="test/**/test/regression/*.java" />
-				
-				<include name="test/**/dotnet/*.java" />
-				
+				<exclude name="test/**/test/all/*.java" />				
 				<exclude name="**/hibernate/**" />
+				
 			</fileset>
 		    <fileset dir="${drs.dir}">
 		        <include name=".settings/" />

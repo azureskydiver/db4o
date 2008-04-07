@@ -54,13 +54,15 @@ public class CollectionHandlerImpl implements CollectionHandler {
 		if (_mapHandler.canHandle(_reflector.forObject(collection)))
 			return _mapHandler.iteratorFor(collection);
 
-		Collection subject = (Collection) collection;
-		Collection4 result = new Collection4();
+		Iterable subject = (Iterable) collection;
+		return copy(subject).iterator();
+	}
 
+	private Collection4 copy(Iterable subject) {
+		Collection4 result = new Collection4();
 		Iterator it = subject.iterator();
 		while (it.hasNext()) result.add(it.next());
-
-		return result.iterator();
+		return result;
 	}
 
 	public void copyState(Object original, Object destination, CounterpartFinder counterpartFinder) {

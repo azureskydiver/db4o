@@ -2,6 +2,8 @@
 
 package com.db4o.drs.test;
 
+import java.util.*;
+
 import com.db4o.ObjectSet;
 import com.db4o.drs.ReplicationSession;
 import com.db4o.drs.inside.GenericReplicationSession;
@@ -47,9 +49,14 @@ public class MixedTypesCollectionReplicationTest extends DrsTestCase {
 
 		replication.commit();
 
-		ObjectSet objects = a().provider().getStoredObjects(CollectionHolder.class);
-		check((CollectionHolder) objects.next(), h1, h2);
-		check((CollectionHolder) objects.next(), h1, h2);
+		Iterator objects = a().provider().getStoredObjects(CollectionHolder.class).iterator();
+		check(nextCollectionHolder(objects), h1, h2);
+		check(nextCollectionHolder(objects), h1, h2);
+	}
+
+	private CollectionHolder nextCollectionHolder(Iterator objects) {
+		Assert.isTrue(objects.hasNext());
+		return (CollectionHolder) objects.next();
 	}
 
 	private void check(CollectionHolder holder, CollectionHolder original1, CollectionHolder original2) {

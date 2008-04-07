@@ -2,6 +2,8 @@
 
 package com.db4o.drs.test;
 
+import java.util.*;
+
 import db4ounit.Assert;
 import com.db4o.ObjectSet;
 import com.db4o.drs.ReplicationSession;
@@ -33,8 +35,13 @@ public class ArrayReplicationTest extends DrsTestCase {
 
 		replication.commit();
 
-		ObjectSet objects = a().provider().getStoredObjects(ArrayHolder.class);
-		check((ArrayHolder) objects.next());
+		Iterator objects = a().provider().getStoredObjects(ArrayHolder.class).iterator();
+		checkNext(objects);
+		checkNext(objects);
+	}
+
+	private void checkNext(Iterator objects) {
+		Assert.isTrue(objects.hasNext());
 		check((ArrayHolder) objects.next());
 	}
 	

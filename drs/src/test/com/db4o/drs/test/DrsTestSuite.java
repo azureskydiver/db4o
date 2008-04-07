@@ -65,18 +65,18 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 		
 				//TODO Convert to .NET
 				//MapTest.class,
-				//ArrayReplicationTest.class,
+				ArrayReplicationTest.class,
 				SingleTypeCollectionReplicationTest.class,
-				//MixedTypesCollectionReplicationTest.class
+				MixedTypesCollectionReplicationTest.class,
                 
                 //regression
                 DRS42Test.class,
 		};
 	}
 	
-	private Class[] concat(Class[] shared, Class[] db4oSpecific) {
-		final Collection4 c = new Collection4(shared);
-		c.addAll(db4oSpecific);
+	protected Class[] concat(Class[] x, Class[] y) {
+		final Collection4 c = new Collection4(x);
+		c.addAll(y);
 		return (Class[]) c.toArray(new Class[c.size()]);
 	}
 }

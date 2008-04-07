@@ -5,6 +5,8 @@ import db4ounit.Assert;
 
 /**
  * Run on JDK 5 only. Run with db4o only, not with Hibernate
+ * 
+ * @sharpen.ignore
  */
 public class EnumTest extends DrsTestCase {
 	public void test() {
@@ -87,6 +89,9 @@ public class EnumTest extends DrsTestCase {
 	}
 }
 
+/**
+ * @sharpen.ignore
+ */
 class Teacher {
 	public String name;
 
@@ -102,6 +107,9 @@ class Teacher {
 	}
 }
 
+/**
+ * @sharpen.ignore
+ */
 enum Qualification {
 	WINNER("WINNER"), PROFESSIONAL("PROFESSIONAL"), TRAINEE("TRAINEE");
 
