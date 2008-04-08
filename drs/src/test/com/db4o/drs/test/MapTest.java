@@ -2,14 +2,10 @@
 
 package com.db4o.drs.test;
 
-import java.util.Map;
+import java.util.*;
 
-import com.db4o.ObjectSet;
-import db4ounit.Assert;
+import db4ounit.*;
 
-/**
- * @sharpen.ignore
- */
 public class MapTest extends DrsTestCase {
 	
 	protected void actualTest() {
@@ -105,7 +101,7 @@ public class MapTest extends DrsTestCase {
 		// ensureInstanceCount(provider, Map.class, holderCount);
 
 		int i = 0;
-		ObjectSet objectSet = fixture.provider().getStoredObjects(MapHolder.class);
+		Iterator objectSet = fixture.provider().getStoredObjects(MapHolder.class).iterator();
 		while (objectSet.hasNext()) {
 			MapHolder lh = (MapHolder) objectSet.next();
 			
