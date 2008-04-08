@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.db4o.drs.db4o.*;
 import com.db4o.drs.inside.*;
+import com.db4o.foundation.*;
 
 import db4ounit.*;
 import db4ounit.fixtures.*;
@@ -19,6 +20,7 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 			new SubjectFixtureProvider(new Object[] {
 				collection1(),
 				collection2(),
+				collection3(),
 			}),
 		};
 	}
@@ -38,9 +40,18 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 					new HashSet(),
 					new ArrayList<String>()));
 	}
+	
+	private Object collection3() {
+		return initialize(
+				new CollectionHolder(
+					new TreeMap<String, String>(),
+					new HashSet(),
+					new ArrayList()));
+	}
 
 	private CollectionHolder initialize(CollectionHolder h1) {
 		h1.map.put("1", "one");
+		h1.map.put("2", "two");
 		h1.set.add("two");
 		h1.list.add("three");
 		return h1;
@@ -65,13 +76,23 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 			
 			CollectionHolder replica = (CollectionHolder) it.next();
 			assertSameClassIfDb4o(h1.map, replica.map);
-			Assert.areEqual("one", replica.map.get("1"));
+			for (Object key : h1.map.keySet()) {
+				Assert.areEqual(h1.map.get(key), replica.map.get(key));
+			}
 			
 			assertSameClassIfDb4o(h1.set, replica.set);
-			Assert.isTrue(replica.set.contains("two"));
+			for (Object element : h1.set) {
+				Assert.isTrue(replica.set.contains(element));
+			}
 			
 			assertSameClassIfDb4o(h1.list, replica.list);
-			Assert.areEqual("three", replica.list.get(0));
+			Assert.areEqual(h1.list.size(), replica.list.size());
+			Iterator4Assert.areEqual(adapt(h1.list.iterator()), adapt(replica.list.iterator()));
+						
+		}
+
+		private Iterator4 adapt(Iterator iterator) {
+			return ReplicationTestPlatform.adapt(iterator);
 		}
 
 		private CollectionHolder subject() {
