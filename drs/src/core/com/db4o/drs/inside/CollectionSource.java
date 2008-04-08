@@ -2,11 +2,8 @@
 
 package com.db4o.drs.inside;
 
-import java.util.*;
-
-
 public interface CollectionSource {
 
-	boolean isProviderSpecific(Collection original);
+	boolean isProviderSpecific(Object original);
 
 }

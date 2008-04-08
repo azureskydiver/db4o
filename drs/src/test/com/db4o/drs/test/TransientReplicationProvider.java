@@ -416,7 +416,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		_storedObjects.remove(getObject(uuid));
 	}
 
-	public boolean isProviderSpecific(Collection original) {
+	public boolean isProviderSpecific(Object original) {
 		return false;
 	}
 }
