@@ -26,7 +26,7 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 	private Object collection1() {
 		return initialize(
 				new CollectionHolder(
-					new HashMap(),
+					new Hashtable(),
 					new HashSet(),
 					new LinkedList()));
 	}
@@ -34,9 +34,9 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 	private Object collection2() {
 		return initialize(
 				new CollectionHolder(
-					new Hashtable(),
+					new HashMap<String, String>(),
 					new HashSet(),
-					new LinkedList()));
+					new ArrayList<String>()));
 	}
 
 	private CollectionHolder initialize(CollectionHolder h1) {
