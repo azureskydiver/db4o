@@ -39,8 +39,7 @@ public class ArrayListTypeHandlerTestSuite extends FixtureBasedTestSuite impleme
 	public static class ArrayListTypeHandlerTestUnit extends ArrayListTypeHandlerTestUnitBase {
 		
 	    public void testRetrieveInstance(){
-	        Item item = (Item) retrieveOnlyInstance(Item.class);
-	        db().activate(item, Integer.MAX_VALUE);
+	        Object item = retrieveOnlyInstance(itemFactory().itemClass());
 	        assertListContent(item);
 	    }
 	    
@@ -62,16 +61,16 @@ public class ArrayListTypeHandlerTestSuite extends FixtureBasedTestSuite impleme
 
 		private void assertCompareItems(Object element, boolean successful) {
 			Query q = newQuery();
-	    	Item item = new Item();
-	    	item.list = new ArrayList();
-			item.list.add(element);
+	    	Object item = itemFactory().newItem();
+	    	List list = listFromItem(item);
+			list.add(element);
 	    	q.constrain(item);
 			assertQueryResult(q, successful);
 		}
 
 		private void assertQuery(boolean successful, Object element) {
-			Query q = newQuery(Item.class);
-			q.descend("list").constrain(element);
+			Query q = newQuery(itemFactory().itemClass());
+			q.descend(ItemFactory.LIST_FIELD_NAME).constrain(element);
 			assertQueryResult(q, successful);
 		}
 

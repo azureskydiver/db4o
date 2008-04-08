@@ -35,14 +35,14 @@ public class ArrayListTypeHandlerGreaterSmallerTestSuite extends FixtureBasedTes
 	public static class ArrayListTypeHandlerGreaterSmallerTestUnit extends ArrayListTypeHandlerTestUnitBase {
 		
 		public void testSuccessfulSmallerQuery() throws Exception {
-	    	Query q = newQuery(Item.class);
-	    	q.descend("list").constrain(largeElement()).smaller();
+	    	Query q = newQuery(itemFactory().itemClass());
+	    	q.descend(ItemFactory.LIST_FIELD_NAME).constrain(largeElement()).smaller();
 	    	assertQueryResult(q, true);
 		}
 		
 		public void testFailingGreaterQuery() throws Exception {
-	    	Query q = newQuery(Item.class);
-	    	q.descend("list").constrain(largeElement()).greater();
+	    	Query q = newQuery(itemFactory().itemClass());
+	    	q.descend(ItemFactory.LIST_FIELD_NAME).constrain(largeElement()).greater();
 	    	assertQueryResult(q, false);
 		}
 
