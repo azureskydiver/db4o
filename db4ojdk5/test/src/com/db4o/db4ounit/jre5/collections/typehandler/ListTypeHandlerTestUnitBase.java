@@ -15,12 +15,12 @@ import db4ounit.extensions.fixtures.*;
 
 
 @SuppressWarnings("unchecked")
-public abstract class ArrayListTypeHandlerTestUnitBase extends AbstractDb4oTestCase implements OptOutDefragSolo {
+public abstract class ListTypeHandlerTestUnitBase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 	
     protected void configure(Configuration config) throws Exception {
         config.registerTypeHandler(
             new SingleClassTypeHandlerPredicate(itemFactory().listClass()), 
-            new ArrayListTypeHandler());
+            new ListTypeHandler());
     }
     
 	protected void store() throws Exception {
@@ -35,7 +35,7 @@ public abstract class ArrayListTypeHandlerTestUnitBase extends AbstractDb4oTestC
     }
 
 	protected ItemFactory itemFactory() {
-		return (ItemFactory) ArrayListTypeHandlerTestVariables.LIST_IMPLEMENTATION.value();
+		return (ItemFactory) ListTypeHandlerTestVariables.LIST_IMPLEMENTATION.value();
 	}
 
 	protected Object[] elements() {
@@ -89,8 +89,8 @@ public abstract class ArrayListTypeHandlerTestUnitBase extends AbstractDb4oTestC
         assertListContent(item);
 	}
 
-	private ArrayListTypeHandlerTestElementsSpec elementsSpec() {
-		return (ArrayListTypeHandlerTestElementsSpec) ArrayListTypeHandlerTestVariables.ELEMENTS_SPEC.value();
+	private ListTypeHandlerTestElementsSpec elementsSpec() {
+		return (ListTypeHandlerTestElementsSpec) ListTypeHandlerTestVariables.ELEMENTS_SPEC.value();
 	}    
 
 }

@@ -7,28 +7,28 @@ import java.util.*;
 import db4ounit.fixtures.*;
 
 @SuppressWarnings("unchecked")
-public final class ArrayListTypeHandlerTestVariables {
+public final class ListTypeHandlerTestVariables {
 	
 	public final static FixtureVariable LIST_IMPLEMENTATION = new FixtureVariable("list");
 	public final static FixtureVariable ELEMENTS_SPEC = new FixtureVariable("elements");
 	
 	public final static FixtureProvider LIST_FIXTURE_PROVIDER = 
 			new SimpleFixtureProvider(
-				ArrayListTypeHandlerTestVariables.LIST_IMPLEMENTATION,
+				ListTypeHandlerTestVariables.LIST_IMPLEMENTATION,
 				new Object[] {
 						new ArrayListItemFactory(),
 						new LinkedListItemFactory(),
 				}
 			);
 
-	public final static ArrayListTypeHandlerTestElementsSpec STRING_ELEMENTS_SPEC = 
-		new ArrayListTypeHandlerTestElementsSpec(new Object[]{ "zero", "one" }, "two", "zzz");
-	public final static ArrayListTypeHandlerTestElementsSpec INT_ELEMENTS_SPEC =
-		new ArrayListTypeHandlerTestElementsSpec(new Object[]{ new Integer(0), new Integer(1) }, new Integer(2), new Integer(Integer.MAX_VALUE));
-	public final static ArrayListTypeHandlerTestElementsSpec OBJECT_ELEMENTS_SPEC =
-		new ArrayListTypeHandlerTestElementsSpec(new Object[]{ new FirstClassElement(0), new FirstClassElement(2) }, new FirstClassElement(2), null);
+	public final static ListTypeHandlerTestElementsSpec STRING_ELEMENTS_SPEC = 
+		new ListTypeHandlerTestElementsSpec(new Object[]{ "zero", "one" }, "two", "zzz");
+	public final static ListTypeHandlerTestElementsSpec INT_ELEMENTS_SPEC =
+		new ListTypeHandlerTestElementsSpec(new Object[]{ new Integer(0), new Integer(1) }, new Integer(2), new Integer(Integer.MAX_VALUE));
+	public final static ListTypeHandlerTestElementsSpec OBJECT_ELEMENTS_SPEC =
+		new ListTypeHandlerTestElementsSpec(new Object[]{ new FirstClassElement(0), new FirstClassElement(2) }, new FirstClassElement(2), null);
 	
-	private ArrayListTypeHandlerTestVariables() {
+	private ListTypeHandlerTestVariables() {
 	}
 
 	public static class FirstClassElement {

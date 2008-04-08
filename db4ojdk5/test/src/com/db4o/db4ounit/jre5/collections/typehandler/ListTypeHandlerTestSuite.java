@@ -11,20 +11,20 @@ import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
 @SuppressWarnings("unchecked")
-public class ArrayListTypeHandlerTestSuite extends FixtureBasedTestSuite implements Db4oTestCase {
+public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements Db4oTestCase {
 	
 	
 	public FixtureProvider[] fixtureProviders() {
-		ArrayListTypeHandlerTestElementsSpec[] elementSpecs = {
-				ArrayListTypeHandlerTestVariables.STRING_ELEMENTS_SPEC,
-				ArrayListTypeHandlerTestVariables.INT_ELEMENTS_SPEC,
-				ArrayListTypeHandlerTestVariables.OBJECT_ELEMENTS_SPEC,
+		ListTypeHandlerTestElementsSpec[] elementSpecs = {
+				ListTypeHandlerTestVariables.STRING_ELEMENTS_SPEC,
+				ListTypeHandlerTestVariables.INT_ELEMENTS_SPEC,
+				ListTypeHandlerTestVariables.OBJECT_ELEMENTS_SPEC,
 		};
 		return new FixtureProvider[] {
 			new Db4oFixtureProvider(),
-			ArrayListTypeHandlerTestVariables.LIST_FIXTURE_PROVIDER,
+			ListTypeHandlerTestVariables.LIST_FIXTURE_PROVIDER,
 			new SimpleFixtureProvider(
-				ArrayListTypeHandlerTestVariables.ELEMENTS_SPEC,
+				ListTypeHandlerTestVariables.ELEMENTS_SPEC,
 				elementSpecs
 			),
 		};
@@ -32,11 +32,11 @@ public class ArrayListTypeHandlerTestSuite extends FixtureBasedTestSuite impleme
 
 	public Class[] testUnits() { 
 		return new Class[] {
-			ArrayListTypeHandlerTestUnit.class,
+			ListTypeHandlerTestUnit.class,
 		};
 	}
 
-	public static class ArrayListTypeHandlerTestUnit extends ArrayListTypeHandlerTestUnitBase {
+	public static class ListTypeHandlerTestUnit extends ListTypeHandlerTestUnitBase {
 		
 	    public void testRetrieveInstance(){
 	        Object item = retrieveOnlyInstance(itemFactory().itemClass());

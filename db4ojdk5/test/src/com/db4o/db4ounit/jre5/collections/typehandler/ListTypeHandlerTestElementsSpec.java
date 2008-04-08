@@ -4,13 +4,13 @@ package com.db4o.db4ounit.jre5.collections.typehandler;
 
 import db4ounit.fixtures.*;
 
-public class ArrayListTypeHandlerTestElementsSpec implements Labeled {
+public class ListTypeHandlerTestElementsSpec implements Labeled {
 
 	public final Object[] _elements;
 	public final Object _notContained;
 	public final Object _largeElement;
 	
-	public ArrayListTypeHandlerTestElementsSpec(Object[] elements, Object notContained, Object largeElement) {
+	public ListTypeHandlerTestElementsSpec(Object[] elements, Object notContained, Object largeElement) {
 		_elements = elements;
 		_notContained = notContained;
 		_largeElement = largeElement;
