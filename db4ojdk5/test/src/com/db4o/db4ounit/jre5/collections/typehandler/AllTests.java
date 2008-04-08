@@ -13,6 +13,8 @@ public class AllTests extends Db4oTestSuite {
     protected Class[] testCases() {
 		return new Class[] {
 				ArrayListTypeHandlerTestSuite.class,
+				ArrayListTypeHandlerGreaterSmallerTestSuite.class,
+				ArrayListTypeHandlerStringElementTestSuite.class,
 		};
 	}
 
