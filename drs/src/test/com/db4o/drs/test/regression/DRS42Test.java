@@ -1,19 +1,17 @@
 package com.db4o.drs.test.regression;
 
-import com.db4o.ObjectSet;
-import com.db4o.drs.inside.TestableReplicationProviderInside;
-import com.db4o.drs.test.DrsTestCase;
+import java.util.*;
 
-import db4ounit.Assert;
+import com.db4o.*;
+import com.db4o.drs.inside.*;
+import com.db4o.drs.test.*;
 
-/**
- * @sharpen.ignore
- */
+import db4ounit.*;
+
 public class DRS42Test extends DrsTestCase {
 
-    NewPilot andrew = new NewPilot("Andrew", 100,
-            new int[] { 100, 200, 300 });
-    
+    NewPilot andrew = new NewPilot("Andrew", 100, new int[] { 100, 200, 300 });
+
     public void test() {
         storeToProviderA();
         replicateAllToProviderB();
@@ -33,10 +31,12 @@ public class DRS42Test extends DrsTestCase {
 
     private void ensureContent(NewPilot newPilot,
             TestableReplicationProviderInside provider) {
-        ObjectSet result = provider.getStoredObjects(NewPilot.class);
-        Assert.areEqual(1, result.size());
+        ObjectSet objectSet = provider.getStoredObjects(NewPilot.class);
+        Assert.areEqual(1, objectSet.size());
 
-        NewPilot p = (NewPilot) result.next();
+        Iterator iterator = objectSet.iterator();
+        Assert.isTrue(iterator.hasNext());
+        NewPilot p = (NewPilot) iterator.next();
         Assert.areEqual(newPilot.getName(), p.getName());
         Assert.areEqual(newPilot.getPoints(), p.getPoints());
         for (int j = 0; j < newPilot.getArr().length; j++) {
