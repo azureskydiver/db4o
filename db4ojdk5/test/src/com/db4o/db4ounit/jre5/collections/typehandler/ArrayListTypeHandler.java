@@ -100,14 +100,25 @@ public class ArrayListTypeHandler implements TypeHandler4 , FirstClassHandler, C
 
     }
 
-	public void cascadeActivation(Transaction trans, Object obj,
-			ActivationDepth depth) {
-		// TODO Auto-generated method stub
-		
+    public final void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth) {
+		ObjectContainerBase container = trans.container();
+		List list = (List) onObject;
+		Iterator all = list.iterator();
+		while (all.hasNext()) {
+			final Object current = all.next();
+			ActivationDepth elementDepth = descend(container, depth, current);
+			if (elementDepth.requiresActivation()) {
+				if (depth.mode().isDeactivate()) {
+					container.stillToDeactivate(trans, current, elementDepth, false);
+				}
+				else {
+					container.stillToActivate(trans, current, elementDepth);
+				}
+			}
+		}
 	}
 
-	public TypeHandler4 readArrayHandler(Transaction a_trans,
-			MarshallerFamily mf, ByteArrayBuffer[] a_bytes) {
+	public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes) {
 		return this;
 	}
 
@@ -127,6 +138,17 @@ public class ArrayListTypeHandler implements TypeHandler4 , FirstClassHandler, C
                 candidates.addByIdentity(qc);
             }
         }
+    }
+
+    private ActivationDepth descend(ObjectContainerBase container, ActivationDepth depth, Object obj){
+        if(obj == null){
+            return new NonDescendingActivationDepth(depth.mode());
+        }
+        ClassMetadata cm = container.classMetadataForObject(obj);
+        if(cm.isPrimitive()){
+            return new NonDescendingActivationDepth(depth.mode());
+        }
+        return depth.descend(cm);
     }
 
 }
