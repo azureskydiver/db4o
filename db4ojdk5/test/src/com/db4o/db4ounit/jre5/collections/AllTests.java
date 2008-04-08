@@ -2,8 +2,6 @@
 
 package com.db4o.db4ounit.jre5.collections;
 
-import com.db4o.db4ounit.jre5.collections.typehandler.*;
-
 import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {
@@ -25,9 +23,8 @@ public class AllTests extends Db4oTestSuite {
 			ArrayMap4TransparentUpdateTestCase.class,
 			ArrayMap4TestCase.class,
 			ArrayMap4TATestCase.class,
-			ArrayListTypeHandlerTestSuite.class,
 	        SubArrayList4TestCase.class,
-
+	        com.db4o.db4ounit.jre5.collections.typehandler.AllTests.class,
 		};
 	}
 

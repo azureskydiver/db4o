@@ -16,6 +16,7 @@ import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.typehandlers.*;
 
+@SuppressWarnings("unchecked")
 public class ArrayListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler, EmbeddedTypeHandler {
 
     public PreparedComparison prepareComparison(Context context, Object obj) {
@@ -31,7 +32,6 @@ public class ArrayListTypeHandler implements TypeHandler4 , FirstClassHandler, C
         return;
     }
     
-    @SuppressWarnings("unchecked")
 	public Object read(ReadContext context) {
         ClassMetadata classMetadata = readClass(context);            
         List existing = null; //(List) ((UnmarshallingContext) context).persistentObject();

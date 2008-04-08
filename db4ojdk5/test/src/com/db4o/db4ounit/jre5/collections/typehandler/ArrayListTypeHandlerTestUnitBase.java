@@ -1,0 +1,85 @@
+/* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
+
+package com.db4o.db4ounit.jre5.collections.typehandler;
+
+import java.util.*;
+
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.query.*;
+import com.db4o.typehandlers.*;
+
+import db4ounit.*;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
+
+
+@SuppressWarnings("unchecked")
+public abstract class ArrayListTypeHandlerTestUnitBase extends AbstractDb4oTestCase implements OptOutDefragSolo {
+	
+    public static class Item {
+        public ArrayList list;
+    }
+    
+    protected void configure(Configuration config) throws Exception {
+        config.registerTypeHandler(
+            new SingleClassTypeHandlerPredicate(ArrayList.class), 
+            new ArrayListTypeHandler());
+    }
+    
+	protected void store() throws Exception {
+        Item item = new Item();
+        item.list = (ArrayList) ArrayListTypeHandlerTestVariables.LIST_IMPLEMENTATION.value();
+        for (int eltIdx = 0; eltIdx < elements().length; eltIdx++) {
+			item.list.add(elements()[eltIdx]);
+		}
+        item.list.add(null);
+        store(item);
+    }
+
+	protected Object[] elements() {
+		return elementsSpec()._elements;
+	}
+
+	protected Object notContained() {
+		return elementsSpec()._notContained;
+	}
+
+	protected Object largeElement() {
+		return elementsSpec()._largeElement;
+	}
+
+	protected void assertQueryResult(Query q, boolean successful) {
+		if(successful) {
+			assertSuccessfulQueryResult(q);
+		}
+		else {
+			assertEmptyQueryResult(q);
+		}
+	}
+	
+	protected void assertListContent(Item item) {
+		Assert.areEqual(elements().length + 1, item.list.size());
+		for (int eltIdx = 0; eltIdx < elements().length; eltIdx++) {
+	        Assert.areEqual(elements()[eltIdx], item.list.get(eltIdx));
+		}
+		Assert.isNull(item.list.get(elements().length));
+	}
+
+	private void assertEmptyQueryResult(Query q) {
+		ObjectSet set = q.execute();
+		Assert.isTrue(set.isEmpty());
+	}
+
+	private void assertSuccessfulQueryResult(Query q) {
+		ObjectSet set = q.execute();
+    	Assert.areEqual(1, set.size());
+    	Item item = (Item)set.next();
+        assertListContent(item);
+	}
+	
+	private ArrayListTypeHandlerTestElementsSpec elementsSpec() {
+		return (ArrayListTypeHandlerTestElementsSpec) ArrayListTypeHandlerTestVariables.ELEMENTS_SPEC.value();
+	}    
+
+}
