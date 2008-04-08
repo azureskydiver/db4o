@@ -28,7 +28,6 @@ public class ArrayListTypeHandlerTestUnit extends AbstractDb4oTestCase implement
     }
     
 	protected void store() throws Exception {
-		System.err.println("==> " + db().getClass());
         Item item = new Item();
         item.list = new ArrayList();
         for (int eltIdx = 0; eltIdx < elements().length; eltIdx++) {
