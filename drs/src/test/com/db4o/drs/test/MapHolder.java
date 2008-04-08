@@ -3,9 +3,6 @@ package com.db4o.drs.test;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @sharpen.ignore
- */
 public class MapHolder {
 
 	private String name;

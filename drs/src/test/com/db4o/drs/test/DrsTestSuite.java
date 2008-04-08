@@ -64,8 +64,7 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 				CollectionHandlerImplTest.class,  
 				ReplicationTraversalTest.class,
 		
-				//TODO Convert to .NET
-				//MapTest.class,
+				MapTest.class,
 				ArrayReplicationTest.class,
 				SingleTypeCollectionReplicationTest.class,
 				MixedTypesCollectionReplicationTest.class,
