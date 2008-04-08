@@ -31,6 +31,7 @@ import db4ounit.*;
 public abstract class DrsTestSuite extends ReflectionTestSuite {
 
 	protected final Class[] testCases() {
+//		if (true) return new Class[] { SingleTypeCollectionReplicationTest.class };
 		return concat(shared(), specificTestCases());
 
 	}

@@ -383,7 +383,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		return _stream;
 	}
 
-	public boolean isProviderSpecific(Collection original) {
+	public boolean isProviderSpecific(Object original) {
 		return original instanceof Db4oCollection;
 	}
 }

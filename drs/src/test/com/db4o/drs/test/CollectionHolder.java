@@ -6,15 +6,23 @@ import java.util.*;
 
 public class CollectionHolder {
 	public String name;
-	public Map map = new HashMap();
-	public List list = new ArrayList();
-	public Set set = new HashSet();
-
+	public Map map;
+	public List list;
+	public Set set;
+	
 	public CollectionHolder() {
+		this(new HashMap(), new HashSet(), new ArrayList());
 	}
 
 	public CollectionHolder(String name) {
+		this();
 		this.name = name;
+	}
+
+	public CollectionHolder(Map theMap, Set theSet, List theList) {
+		map = theMap;
+		set = theSet;
+		list = theList;
 	}
 
 	public String toString() {

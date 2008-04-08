@@ -669,15 +669,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		}
 	}
 
-	public boolean isProviderSpecific(Collection original) {
-		if (original instanceof org.hibernate.collection.PersistentSet) {
-			return true;
-		}
-		
-		if (original instanceof org.hibernate.collection.PersistentList) {
-			return true;
-		}
-		
-		return false;
+	public boolean isProviderSpecific(Object original) {
+		return original.getClass().getName().startsWith("org.hibernate.collection.");
 	}
 }

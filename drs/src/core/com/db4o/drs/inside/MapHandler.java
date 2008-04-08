@@ -46,7 +46,12 @@ public class MapHandler implements CollectionHandler {
 	}
 
 	public Object emptyClone(CollectionSource sourceProvider, Object original, ReflectClass originalCollectionClass) {
-		return new HashMap(((Map) original).size());
+
+		if (sourceProvider.isProviderSpecific(original)
+			|| original instanceof HashMap) {
+			return new HashMap(((Map) original).size());
+		}
+		return _reflector.forObject(original).newInstance();
 	}
 	
 	public void copyState(Object original, Object destination, CounterpartFinder counterpartFinder) {
