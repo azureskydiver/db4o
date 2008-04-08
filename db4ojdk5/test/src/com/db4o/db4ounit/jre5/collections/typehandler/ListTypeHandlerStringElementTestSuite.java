@@ -9,18 +9,18 @@ import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
 @SuppressWarnings("unchecked")
-public class ArrayListTypeHandlerStringElementTestSuite extends FixtureBasedTestSuite implements Db4oTestCase {
+public class ListTypeHandlerStringElementTestSuite extends FixtureBasedTestSuite implements Db4oTestCase {
 	
 	
 	public FixtureProvider[] fixtureProviders() {
-		ArrayListTypeHandlerTestElementsSpec[] elementSpecs = {
-				ArrayListTypeHandlerTestVariables.STRING_ELEMENTS_SPEC,
+		ListTypeHandlerTestElementsSpec[] elementSpecs = {
+				ListTypeHandlerTestVariables.STRING_ELEMENTS_SPEC,
 		};
 		return new FixtureProvider[] {
 			new Db4oFixtureProvider(),
-			ArrayListTypeHandlerTestVariables.LIST_FIXTURE_PROVIDER,
+			ListTypeHandlerTestVariables.LIST_FIXTURE_PROVIDER,
 			new SimpleFixtureProvider(
-				ArrayListTypeHandlerTestVariables.ELEMENTS_SPEC,
+				ListTypeHandlerTestVariables.ELEMENTS_SPEC,
 				elementSpecs
 			),
 		};
@@ -28,11 +28,11 @@ public class ArrayListTypeHandlerStringElementTestSuite extends FixtureBasedTest
 
 	public Class[] testUnits() { 
 		return new Class[] {
-			ArrayListTypeHandlerStringElementTestUnit.class,
+			ListTypeHandlerStringElementTestUnit.class,
 		};
 	}
 
-	public static class ArrayListTypeHandlerStringElementTestUnit extends ArrayListTypeHandlerTestUnitBase {
+	public static class ListTypeHandlerStringElementTestUnit extends ListTypeHandlerTestUnitBase {
 		
 		public void testSuccessfulEndsWithQuery() throws Exception {
 	    	Query q = newQuery(itemFactory().itemClass());
