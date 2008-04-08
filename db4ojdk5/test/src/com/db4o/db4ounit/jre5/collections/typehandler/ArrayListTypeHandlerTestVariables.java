@@ -15,10 +15,9 @@ public final class ArrayListTypeHandlerTestVariables {
 	public final static FixtureProvider LIST_FIXTURE_PROVIDER = 
 			new SimpleFixtureProvider(
 				ArrayListTypeHandlerTestVariables.LIST_IMPLEMENTATION,
-				new Deferred4() {
-					public Object value() {
-						return new ArrayList();
-					}
+				new Object[] {
+						new ArrayListItemFactory(),
+						new LinkedListItemFactory(),
 				}
 			);
 
@@ -59,5 +58,49 @@ public final class ArrayListTypeHandlerTestVariables {
 			return "FCE#" + _id;
 		}
 
+	}
+	
+	private static class ArrayListItemFactory implements ItemFactory, Labeled {
+		private static class Item {
+			public ArrayList _list = new ArrayList();
+		}
+		
+		public Object newItem() {
+			return new Item();
+		}
+
+		public Class itemClass() {
+			return Item.class;
+		}
+
+		public Class listClass() {
+			return ArrayList.class;
+		}
+
+		public String label() {
+			return "ArrayList";
+		}
+	}
+
+	private static class LinkedListItemFactory implements ItemFactory, Labeled {
+		private static class Item {
+			public LinkedList _list = new LinkedList();
+		}
+		
+		public Object newItem() {
+			return new Item();
+		}
+
+		public Class itemClass() {
+			return Item.class;
+		}
+
+		public Class listClass() {
+			return LinkedList.class;
+		}
+
+		public String label() {
+			return "LinkedList";
+		}
 	}
 }

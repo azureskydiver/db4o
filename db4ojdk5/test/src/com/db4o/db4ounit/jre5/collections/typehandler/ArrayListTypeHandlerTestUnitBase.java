@@ -17,25 +17,26 @@ import db4ounit.extensions.fixtures.*;
 @SuppressWarnings("unchecked")
 public abstract class ArrayListTypeHandlerTestUnitBase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 	
-    public static class Item {
-        public ArrayList list;
-    }
-    
     protected void configure(Configuration config) throws Exception {
         config.registerTypeHandler(
-            new SingleClassTypeHandlerPredicate(ArrayList.class), 
+            new SingleClassTypeHandlerPredicate(itemFactory().listClass()), 
             new ArrayListTypeHandler());
     }
     
 	protected void store() throws Exception {
-        Item item = new Item();
-        item.list = (ArrayList) ArrayListTypeHandlerTestVariables.LIST_IMPLEMENTATION.value();
+		ItemFactory factory = itemFactory();
+        Object item = factory.newItem();
+        List list = listFromItem(item);
         for (int eltIdx = 0; eltIdx < elements().length; eltIdx++) {
-			item.list.add(elements()[eltIdx]);
+			list.add(elements()[eltIdx]);
 		}
-        item.list.add(null);
+        list.add(null);
         store(item);
     }
+
+	protected ItemFactory itemFactory() {
+		return (ItemFactory) ArrayListTypeHandlerTestVariables.LIST_IMPLEMENTATION.value();
+	}
 
 	protected Object[] elements() {
 		return elementsSpec()._elements;
@@ -58,12 +59,22 @@ public abstract class ArrayListTypeHandlerTestUnitBase extends AbstractDb4oTestC
 		}
 	}
 	
-	protected void assertListContent(Item item) {
-		Assert.areEqual(elements().length + 1, item.list.size());
+	protected void assertListContent(Object item) {
+		List list = listFromItem(item);
+		Assert.areEqual(elements().length + 1, list.size());
 		for (int eltIdx = 0; eltIdx < elements().length; eltIdx++) {
-	        Assert.areEqual(elements()[eltIdx], item.list.get(eltIdx));
+	        Assert.areEqual(elements()[eltIdx], list.get(eltIdx));
 		}
-		Assert.isNull(item.list.get(elements().length));
+		Assert.isNull(list.get(elements().length));
+	}
+
+	protected List listFromItem(Object item) {
+		try {
+			return (List) item.getClass().getField(ItemFactory.LIST_FIELD_NAME).get(item);
+		} 
+		catch (Exception exc) {
+			throw new RuntimeException(exc);
+		}
 	}
 
 	private void assertEmptyQueryResult(Query q) {
@@ -74,10 +85,10 @@ public abstract class ArrayListTypeHandlerTestUnitBase extends AbstractDb4oTestC
 	private void assertSuccessfulQueryResult(Query q) {
 		ObjectSet set = q.execute();
     	Assert.areEqual(1, set.size());
-    	Item item = (Item)set.next();
+    	Object item = set.next();
         assertListContent(item);
 	}
-	
+
 	private ArrayListTypeHandlerTestElementsSpec elementsSpec() {
 		return (ArrayListTypeHandlerTestElementsSpec) ArrayListTypeHandlerTestVariables.ELEMENTS_SPEC.value();
 	}    

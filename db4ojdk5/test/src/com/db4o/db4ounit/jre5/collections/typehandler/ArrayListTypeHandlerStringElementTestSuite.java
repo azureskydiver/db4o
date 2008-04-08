@@ -35,14 +35,14 @@ public class ArrayListTypeHandlerStringElementTestSuite extends FixtureBasedTest
 	public static class ArrayListTypeHandlerStringElementTestUnit extends ArrayListTypeHandlerTestUnitBase {
 		
 		public void testSuccessfulEndsWithQuery() throws Exception {
-	    	Query q = newQuery(Item.class);
-	    	q.descend("list").constrain(successfulEndChar()).endsWith(false);
+	    	Query q = newQuery(itemFactory().itemClass());
+	    	q.descend(ItemFactory.LIST_FIELD_NAME).constrain(successfulEndChar()).endsWith(false);
 	    	assertQueryResult(q, true);
 		}
 		
 		public void testFailingEndsWithQuery() throws Exception {
-	    	Query q = newQuery(Item.class);
-	    	q.descend("list").constrain(failingEndChar()).endsWith(false);
+	    	Query q = newQuery(itemFactory().itemClass());
+	    	q.descend(ItemFactory.LIST_FIELD_NAME).constrain(failingEndChar()).endsWith(false);
 	    	assertQueryResult(q, false);
 		}
 
