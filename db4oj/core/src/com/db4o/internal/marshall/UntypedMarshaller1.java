@@ -3,6 +3,7 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.internal.*;
+import com.db4o.internal.fieldhandlers.*;
 
 /**
  * @exclude
@@ -29,7 +30,14 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         ClassMetadata yc = trans.container().classMetadataForId(yapClassID);
         if(yc != null){
-            ret = yc.readArrayHandler(trans, _family, reader);
+	        TypeHandler4 configuredHandler =
+	            trans.container().configImpl().typeHandlerForClass(yc.classReflector(), HandlerRegistry.HANDLER_VERSION);
+	        if(configuredHandler != null && configuredHandler instanceof FirstClassHandler){
+	            ret = ((FirstClassHandler)configuredHandler).readArrayHandler(trans, _family, reader);
+	        }
+	        else {
+	        	ret = yc.readArrayHandler(trans, _family, reader);
+	        }
         }
         return ret;
     }

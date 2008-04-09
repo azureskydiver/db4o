@@ -18,6 +18,7 @@ public final class ListTypeHandlerTestVariables {
 				new Object[] {
 						new ArrayListItemFactory(),
 						new LinkedListItemFactory(),
+						new ListItemFactory(),
 				}
 			);
 
@@ -101,6 +102,28 @@ public final class ListTypeHandlerTestVariables {
 
 		public String label() {
 			return "LinkedList";
+		}
+	}
+
+	private static class ListItemFactory implements ItemFactory, Labeled {
+		private static class Item {
+			public List _list = new LinkedList();
+		}
+		
+		public Object newItem() {
+			return new Item();
+		}
+
+		public Class itemClass() {
+			return Item.class;
+		}
+
+		public Class listClass() {
+			return LinkedList.class;
+		}
+
+		public String label() {
+			return "[Linked]List";
 		}
 	}
 }
