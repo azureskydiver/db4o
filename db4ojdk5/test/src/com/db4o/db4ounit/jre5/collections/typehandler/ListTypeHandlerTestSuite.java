@@ -44,11 +44,19 @@ public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements D
 	    }
 	    
 	    public void testSuccessfulQuery() throws Exception {
-	    	assertQuery(true, elements()[0]);
+	    	assertQuery(true, elements()[0], false);
 		}
 
 	    public void testFailingQuery() throws Exception {
-	    	assertQuery(false, notContained());
+	    	assertQuery(false, notContained(), false);
+		}
+
+	    public void testSuccessfulContainsQuery() throws Exception {
+	    	assertQuery(true, elements()[0], true);
+		}
+
+	    public void testFailingContainsQuery() throws Exception {
+	    	assertQuery(false, notContained(), true);
 		}
 
 		public void testCompareItems() throws Exception {
@@ -68,9 +76,12 @@ public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements D
 			assertQueryResult(q, successful);
 		}
 
-		private void assertQuery(boolean successful, Object element) {
+		private void assertQuery(boolean successful, Object element, boolean withContains) {
 			Query q = newQuery(itemFactory().itemClass());
-			q.descend(ItemFactory.LIST_FIELD_NAME).constrain(element);
+			Constraint constraint = q.descend(ItemFactory.LIST_FIELD_NAME).constrain(element);
+			if(withContains) {
+				constraint.contains();
+			}
 			assertQueryResult(q, successful);
 		}
 
