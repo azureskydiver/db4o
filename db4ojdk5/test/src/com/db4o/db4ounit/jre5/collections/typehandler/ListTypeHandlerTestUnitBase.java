@@ -61,6 +61,7 @@ public abstract class ListTypeHandlerTestUnitBase extends AbstractDb4oTestCase i
 	
 	protected void assertListContent(Object item) {
 		List list = listFromItem(item);
+		Assert.areEqual(itemFactory().listClass(), list.getClass());
 		Assert.areEqual(elements().length + 1, list.size());
 		for (int eltIdx = 0; eltIdx < elements().length; eltIdx++) {
 	        Assert.areEqual(elements()[eltIdx], list.get(eltIdx));
