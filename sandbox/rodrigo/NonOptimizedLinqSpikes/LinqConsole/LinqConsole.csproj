@@ -45,17 +45,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleExtensions.cs" />
+    <Compile Include="PrettyPrintExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2008.csproj">
-      <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
-      <Name>Db4objects.Db4o-2008</Name>
+    <ProjectReference Include="..\..\..\..\db4o.net\Db4objects.Db4o.Linq\Db4objects.Db4o.Linq-2008.csproj">
+      <Project>{23531440-0922-43EB-A483-6592FFC2F093}</Project>
+      <Name>Db4objects.Db4o.Linq-2008</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Spikes\Spikes.csproj">
-      <Project>{459DA2AF-88DC-47CC-A2D0-1EC3330119F0}</Project>
-      <Name>Spikes</Name>
+    <ProjectReference Include="..\..\..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2008.csproj">
+      <Project>{600CD3BF-2ED2-4183-87F7-ADD78A968AE0}</Project>
+      <Name>Db4objects.Db4o-2008</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
