@@ -23,7 +23,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 		Object onObject,
 		ActivationDepth depth) {
 	    
-	    TypeHandler4 typeHandler = typeHandlerForObject(onObject);
+	    TypeHandler4 typeHandler = typeHandlerForObject(onObject, true);
         if (typeHandler instanceof CascadingTypeHandler) {
             ((CascadingTypeHandler)typeHandler).cascadeActivation(trans, onObject, depth);
         }
@@ -186,9 +186,20 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     }
 
     public TypeHandler4 typeHandlerForObject(Object obj) {
+    	return typeHandlerForObject(obj, false);
+    }
+
+    public TypeHandler4 typeHandlerForObject(Object obj, boolean lookupRegistered) {
         ReflectClass claxx = reflector().forObject(obj);
         if(claxx.isArray()){
             return handlerRegistry().untypedArrayHandler(claxx);
+        }
+        if(lookupRegistered) {
+	        TypeHandler4 configuredHandler =
+	            container().configImpl().typeHandlerForClass(claxx, HandlerRegistry.HANDLER_VERSION);
+	        if(configuredHandler != null){
+	            return configuredHandler;
+	        }
         }
         return container().typeHandlerForReflectClass(claxx);
     }
