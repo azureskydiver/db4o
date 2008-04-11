@@ -21,6 +21,7 @@ public abstract class ListTypeHandlerTestUnitBase extends AbstractDb4oTestCase i
         config.registerTypeHandler(
             new SingleClassTypeHandlerPredicate(itemFactory().listClass()), 
             new ListTypeHandler());
+        config.objectClass(itemFactory().itemClass()).cascadeOnDelete(true);
     }
     
 	protected void store() throws Exception {
@@ -48,6 +49,10 @@ public abstract class ListTypeHandlerTestUnitBase extends AbstractDb4oTestCase i
 
 	protected Object largeElement() {
 		return elementsSpec()._largeElement;
+	}
+
+	protected Class elementClass() {
+		return elementsSpec()._notContained.getClass();
 	}
 
 	protected void assertQueryResult(Query q, boolean successful) {

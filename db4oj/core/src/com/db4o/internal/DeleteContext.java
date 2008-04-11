@@ -18,6 +18,8 @@ public interface DeleteContext extends Context, ReadBuffer{
 
 	boolean isLegacyHandlerVersion();
 
+	int handlerVersion();
+	
 	void defragmentRecommended();
 
 	Slot readSlot();

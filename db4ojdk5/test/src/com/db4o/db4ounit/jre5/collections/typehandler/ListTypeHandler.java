@@ -90,9 +90,22 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
 		return classMetadata;
 	}
 
-    public void delete(DeleteContext context) throws Db4oIOException {
-        // TODO Auto-generated method stub
-
+	// TODO Works for ArrayList/LinkedList typed fields, but fails for List typed ones,
+	// because there is no indirection (respectively it already is resolved by untyped handler).
+    public void delete(final DeleteContext context) throws Db4oIOException {
+        SlotFormat.forHandlerVersion(context.handlerVersion()).doWithSlotIndirection(context, this, new Closure4() {
+            public Object run() {
+        		if (context.cascadeDeleteDepth() > 0) {
+                    TypeHandler4 handler = elementTypeHandler(context, null);
+                    context.readInt(); // class ID
+                    int elementCount = context.readInt();
+                    for (int i = elementCount; i > 0; i--) {
+        				handler.delete(context);
+                    }
+                }
+        		return null;
+            }        
+        });
     }
 
     public void defragment(DefragmentContext context) {
