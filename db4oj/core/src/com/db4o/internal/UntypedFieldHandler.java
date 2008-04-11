@@ -45,8 +45,10 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         int linkOffset = context.offset();
         context.seek(payLoadOffset);
         int classMetadataID = context.readInt();
-        TypeHandler4 typeHandler = 
-        	((ObjectContainerBase)context.objectContainer()).typeHandlerForId(classMetadataID);
+        TypeHandler4 typeHandler = configuredHandler(container().classMetadataForId(classMetadataID).classReflector());
+        if(typeHandler == null){
+        	typeHandler = ((ObjectContainerBase)context.objectContainer()).typeHandlerForId(classMetadataID);
+        }
         if(typeHandler != null){
             typeHandler.delete(context);
         }
@@ -195,14 +197,19 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
             return handlerRegistry().untypedArrayHandler(claxx);
         }
         if(lookupRegistered) {
-	        TypeHandler4 configuredHandler =
-	            container().configImpl().typeHandlerForClass(claxx, HandlerRegistry.HANDLER_VERSION);
+	        TypeHandler4 configuredHandler = configuredHandler(claxx);
 	        if(configuredHandler != null){
 	            return configuredHandler;
 	        }
         }
         return container().typeHandlerForReflectClass(claxx);
     }
+
+	private TypeHandler4 configuredHandler(ReflectClass claxx) {
+		TypeHandler4 configuredHandler =
+		    container().configImpl().typeHandlerForClass(claxx, HandlerRegistry.HANDLER_VERSION);
+		return configuredHandler;
+	}
 
     public ReflectClass classReflector(Reflector reflector) {
         return super.classReflector();
