@@ -9,12 +9,11 @@ public final class MReadObject extends MsgD implements ServerSideMessage {
 	
 	public final boolean processAtServer() {
 		StatefulBuffer bytes = null;
-
 		// readObjectByID may fail in certain cases, for instance if
 		// and object was deleted by another client
 		synchronized (streamLock()) {
 			try {
-				bytes = stream().readWriterByID(transaction(), _payLoad.readInt());
+				bytes = stream().readWriterByID(transaction(), _payLoad.readInt(), _payLoad.readInt()==1);
 			} catch (Db4oException e) {
 				writeException(e);
 				return true;

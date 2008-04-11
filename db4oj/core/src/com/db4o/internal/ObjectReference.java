@@ -369,8 +369,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	public VirtualAttributes virtualAttributes(){
 		return _virtualAttributes;
 	}
-	
-	public VirtualAttributes virtualAttributes(Transaction trans){
+	public VirtualAttributes virtualAttributes(Transaction trans, boolean lastCommitted){
         if(trans == null){
             return _virtualAttributes;
         }
@@ -378,17 +377,21 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
     	    if(_virtualAttributes == null){ 
                 if(_class.hasVirtualAttributes()){
                     _virtualAttributes = new VirtualAttributes();
-                    _class.readVirtualAttributes(trans, this);
+                    _class.readVirtualAttributes(trans, this, lastCommitted);
                 }
     	    }else{
                 if(! _virtualAttributes.suppliesUUID()){
                     if(_class.hasVirtualAttributes()){
-                        _class.readVirtualAttributes(trans, this);
+                        _class.readVirtualAttributes(trans, this, lastCommitted);
                     }
                 }
             }
     	    return _virtualAttributes;
         }
+	}
+	
+	public VirtualAttributes virtualAttributes(Transaction trans){
+		return virtualAttributes(trans, true);
 	}
     
     public void setVirtualAttributes(VirtualAttributes at){

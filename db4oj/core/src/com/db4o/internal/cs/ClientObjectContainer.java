@@ -492,9 +492,13 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		logMsg(58, null);
 		return false;
 	}
-
+	
 	public final StatefulBuffer readWriterByID(Transaction a_ta, int a_id) {
-		MsgD msg = Msg.READ_OBJECT.getWriterForInt(a_ta, a_id);
+		return readWriterByID(a_ta, a_id, false);
+	}
+	
+	public final StatefulBuffer readWriterByID(Transaction a_ta, int a_id, boolean lastCommitted) {
+		MsgD msg = Msg.READ_OBJECT.getWriterForInts(a_ta, new int[]{a_id, lastCommitted?1:0});
 		write(msg);
 		StatefulBuffer bytes = ((MsgObject) expectedResponse(Msg.OBJECT_TO_CLIENT))
 				.unmarshall();
@@ -523,9 +527,13 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return yapWriters;
 	}
 
-	public final ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id) {
+	public final ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id, boolean lastCommitted) {
 		// TODO: read lightweight reader instead
-		return readWriterByID(a_ta, a_id);
+		return readWriterByID(a_ta, a_id, lastCommitted);
+	}
+
+	public final ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id) {
+		return readReaderByID(a_ta, a_id, false); 
 	}
 
 	private AbstractQueryResult readQueryResult(Transaction trans) {

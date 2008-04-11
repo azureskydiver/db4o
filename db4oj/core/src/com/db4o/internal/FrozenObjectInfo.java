@@ -30,7 +30,7 @@ public class FrozenObjectInfo implements ObjectInfo {
     }
 
 	public FrozenObjectInfo(Transaction trans, ObjectReference ref) {
-	    this(ref, ref == null ? null : ref.virtualAttributes(trans));
+	    this(ref, ref == null ? null : ref.virtualAttributes(trans, true));
 	}
 	
 	public long getInternalID() {
