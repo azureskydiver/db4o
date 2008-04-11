@@ -411,8 +411,12 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         }
     }
 
+    public StatefulBuffer readWriterByID(Transaction a_ta, int a_id, boolean lastCommitted) {
+        return (StatefulBuffer)readReaderOrWriterByID(a_ta, a_id, false, lastCommitted);    
+    }
+    
     public StatefulBuffer readWriterByID(Transaction a_ta, int a_id) {
-        return (StatefulBuffer)readReaderOrWriterByID(a_ta, a_id, false);    
+        return readWriterByID(a_ta, a_id, false);
     }
     
     public StatefulBuffer[] readWritersByIDs(Transaction a_ta, int ids[]) {
@@ -428,12 +432,21 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		return yapWriters;
 	}
 
+    public ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id, boolean lastCommitted) {
+        return readReaderOrWriterByID(a_ta, a_id, true, lastCommitted);
+    }
+
     public ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id) {
-        return readReaderOrWriterByID(a_ta, a_id, true);
+        return readReaderByID(a_ta, a_id, false);
     }
     
     private final ByteArrayBuffer readReaderOrWriterByID(Transaction a_ta, int a_id,
 			boolean useReader) {
+    	return readReaderOrWriterByID(a_ta, a_id, useReader, false);
+    }
+    
+    private final ByteArrayBuffer readReaderOrWriterByID(Transaction a_ta, int a_id,
+			boolean useReader, boolean lastCommitted) {
 		if (a_id <= 0) {
 			throw new IllegalArgumentException();
 		}
@@ -442,7 +455,12 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			DTrace.READ_ID.log(a_id);
 		}
 
-		Slot slot = ((LocalTransaction) a_ta).getCurrentSlotOfID(a_id);
+		Slot slot = null;
+		if(!lastCommitted){
+			slot = ((LocalTransaction) a_ta).getCurrentSlotOfID(a_id);
+		}else{
+			slot = ((LocalTransaction) a_ta).getCommittedSlotOfID(a_id);
+		}
 		if (slot == null) {
 			return null;
 		}

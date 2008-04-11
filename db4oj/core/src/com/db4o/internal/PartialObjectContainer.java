@@ -1380,8 +1380,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public abstract StatefulBuffer readWriterByID(Transaction a_ta, int a_id);
+    
+    public abstract StatefulBuffer readWriterByID(Transaction a_ta, int a_id, boolean lastCommitted);
 
     public abstract ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id);
+    
+    public abstract ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id, boolean lastCommitted);
     
     public abstract StatefulBuffer[] readWritersByIDs(Transaction a_ta, int[] ids);
 

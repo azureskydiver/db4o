@@ -1399,12 +1399,16 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		}
 	}
     
-    void readVirtualAttributes(Transaction a_trans, ObjectReference a_yapObject) {
+	public void readVirtualAttributes(Transaction a_trans, ObjectReference a_yapObject, boolean lastCommitted) {
         int id = a_yapObject.getID();
         ObjectContainerBase stream = a_trans.container();
-        ByteArrayBuffer reader = stream.readReaderByID(a_trans, id);
+        ByteArrayBuffer reader = stream.readReaderByID(a_trans, id, lastCommitted);
         ObjectHeader oh = new ObjectHeader(stream, this, reader);
         oh.objectMarshaller().readVirtualAttributes(a_trans, this, a_yapObject, oh._headerAttributes, reader);
+	}
+
+    void readVirtualAttributes(Transaction a_trans, ObjectReference a_yapObject) {
+    	readVirtualAttributes(a_trans, a_yapObject, false);
     }
     
 	public GenericReflector reflector() {
