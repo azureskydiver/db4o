@@ -2,10 +2,16 @@
 
 package com.db4o.test;
 
+import com.db4o.*;
 import com.db4o.ext.*;
 
 public class ExtMethods {
 	
+    public void configure(){
+        Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
+        Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
+    }
+
 	public void test(){
 		
 		ExtMethods em = new ExtMethods();
