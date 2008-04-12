@@ -224,7 +224,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             }
             if (reflectorForObject(obj) == ref.classMetadata().classReflector()) {
                 ObjectReference newRef = bind2(trans, ref, obj);
-                newRef.virtualAttributes(trans);
+                newRef.virtualAttributes(trans, false);
             } else {
                 throw new RuntimeException(Messages.get(57));
             }
