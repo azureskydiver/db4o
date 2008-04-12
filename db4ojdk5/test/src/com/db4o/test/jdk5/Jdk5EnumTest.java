@@ -11,6 +11,11 @@ import com.db4o.test.*;
 public class Jdk5EnumTest {
 	private final static int NUMRUNS=1;
     
+    public void configure(){
+        Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
+        Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
+    }
+
     public void testSingleStoreRetrieve() {     	
         ObjectContainer db = reopen();
         
