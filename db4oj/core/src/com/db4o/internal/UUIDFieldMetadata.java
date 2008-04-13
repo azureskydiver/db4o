@@ -226,7 +226,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         if (hardRef._reference == null) {
         	return null;
         }
-        VirtualAttributes vad = hardRef._reference.virtualAttributes(transaction);
+        VirtualAttributes vad = hardRef._reference.virtualAttributes(transaction, false);
         if (!Arrays4.areEqual(signature, vad.i_database.i_signature)) {
             return null;
         }
