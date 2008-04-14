@@ -1,7 +1,7 @@
 .0 Download Contents ..
 
 The db4o .NET distribution comes as one MSI installer file, ._
-db4o-7.2-net.msi. After you run the installer, you get the following directory ._
+db4o-7.3-net.msi. After you run the installer, you get the following directory ._
 structure:
 
 .g directorynet.gif ..
@@ -9,23 +9,23 @@ structure:
 Please take a look at all the supplied documentation formats to choose ._
 the one that works best for you:
 .a APIDocumentation ..
-.b db4o-7.2/doc/api/db4o.chm ..
+.b db4o-7.3/doc/api/db4o.chm ..
 The API documentation for db4o is supplied as a compiled Help file. While you ._
 read through the rest of this tutorial, it may be helpful to look into the API ._
 documentation occasionally. 
 
-.b db4o-7.2/doc/reference/index.html ..
+.b db4o-7.3/doc/reference/index.html ..
 The reference documentation is a complete compilation for ._
 experienced db4o users. It is maintained ._
 .l http://developer.db4o.com/Resources/view.aspx/Reference online .. .
 
-.b db4o-7.2/doc/tutorial/Db4objects.Db4o.Tutorial.exe .. 
+.b db4o-7.3/doc/tutorial/Db4objects.Db4o.Tutorial.exe .. 
 This is the interactive tutorial application for .NET. Examples can ._
 be run "live" against a db4o database from within the application. If you experience ._
 problems using the interactive functionality, please ._
 refer to  .l Troubleshooting Tutorial Troubleshooting .. .
 
-.b db4o-7.2/doc/tutorial/db4o-7.2-tutorial.pdf .. 
+.b db4o-7.3/doc/tutorial/db4o-7.3-tutorial.pdf .. 
 The PDF version of the tutorial allows best fulltext ._
 search capabilities.
 
