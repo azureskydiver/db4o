@@ -2,10 +2,10 @@
 
 package com.db4odoc.blobs;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.ext.Status;
-import com.db4o.types.Blob;
+import com.db4o.ext.*;
+import com.db4o.types.*;
 
 public class CarImage {
 	Blob blob;

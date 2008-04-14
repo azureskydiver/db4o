@@ -2,19 +2,15 @@
 
 package com.db4odoc.uuids;
 
-import java.io.File;
-import java.util.Date;
+import java.io.*;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.ext.Db4oDatabase;
-import com.db4o.ext.Db4oUUID;
-import com.db4o.ext.ObjectInfo;
-import com.db4o.foundation.TimeStampIdGenerator;
-import com.db4o.internal.LocalObjectContainer;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
+import com.db4o.internal.*;
+import com.db4o.query.*;
 
 public class UUIDExample {
 	private final static String DB4O_FILE_NAME = "reference.db4o";

@@ -1,8 +1,10 @@
 package com.db4odoc.SemaphoreTest;
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
+/**
+ * @sharpen.ignore 
+ */
 public class MulticastClient {
 
     public static void main(String[] args) throws IOException {

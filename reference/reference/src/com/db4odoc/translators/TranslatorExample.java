@@ -1,10 +1,8 @@
 /* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.translators;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
+import com.db4o.*;
+import com.db4o.config.*;
 
 public class TranslatorExample {
 	private final static String DB4O_FILE_NAME = "reference.db4o";

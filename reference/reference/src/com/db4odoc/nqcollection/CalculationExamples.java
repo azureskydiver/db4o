@@ -2,17 +2,14 @@
 
 package com.db4odoc.nqcollection;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ext.Db4oException;
-import com.db4o.query.Predicate;
-import com.db4o.query.QueryComparator;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
+
+/**
+ * @sharpen.ignore
+ */
 
 public class CalculationExamples {
 
@@ -55,7 +52,7 @@ public class CalculationExamples {
 	// end closeDatabase
 
 	private static void storePilots() {
-		new File(DB4O_FILE_NAME).delete();
+		new java.io.File(DB4O_FILE_NAME).delete();
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
@@ -87,7 +84,7 @@ public class CalculationExamples {
 		if (container != null) {
 			try {
 				SumPredicate sumPredicate = new SumPredicate();
-				List<Pilot> result = container.query(sumPredicate);
+				java.util.List<Pilot> result = container.query(sumPredicate);
 				listResult(result);
 				System.out.println("Sum of pilots points: " + sumPredicate.sum);
 			} catch (Exception ex) {
@@ -100,7 +97,7 @@ public class CalculationExamples {
 
 	// end sumPilotPoints
 
-	private static class SumPredicate extends Predicate<Pilot> {
+	private static class SumPredicate extends com.db4o.query.Predicate<Pilot> {
 		private int sum = 0;
 
 		public boolean match(Pilot pilot) {
@@ -116,7 +113,7 @@ public class CalculationExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List<Pilot> result = container.query(new Predicate<Pilot>() {
+				java.util.List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 					public boolean match(Pilot pilot) {
 						// return all pilots
 						return true;
@@ -147,7 +144,7 @@ public class CalculationExamples {
 		if (container != null) {
 			try {
 				AveragePredicate averagePredicate = new AveragePredicate();
-				List<Pilot> result = container.query(averagePredicate);
+				java.util.List<Pilot> result = container.query(averagePredicate);
 				if (averagePredicate.count > 0) {
 					System.out
 							.println("Average points for professional pilots: "
@@ -166,7 +163,7 @@ public class CalculationExamples {
 
 	// end averagePilotPoints
 
-	private static class AveragePredicate extends Predicate<Pilot> {
+	private static class AveragePredicate extends com.db4o.query.Predicate<Pilot> {
 		private int sum = 0;
 
 		private int count = 0;
@@ -184,9 +181,9 @@ public class CalculationExamples {
 
 	// end AveragePredicate
 
-	private static class CountPredicate extends Predicate<Pilot> {
+	private static class CountPredicate extends com.db4o.query.Predicate<Pilot> {
 
-		private HashMap countMap = new HashMap();
+		private java.util.HashMap countMap = new java.util.HashMap();
 
 		public boolean match(Pilot pilot) {
 			// return all Professional and Test pilots and count in
@@ -214,9 +211,9 @@ public class CalculationExamples {
 		if (container != null) {
 			try {
 				CountPredicate predicate = new CountPredicate();
-				List<Pilot> result = container.query(predicate);
+				java.util.List<Pilot> result = container.query(predicate);
 				listResult(result);
-				Iterator keyIterator = predicate.countMap.keySet().iterator();
+				java.util.Iterator keyIterator = predicate.countMap.keySet().iterator();
 				while (keyIterator.hasNext()) {
 					String key = keyIterator.next().toString();
 					System.out
@@ -232,7 +229,7 @@ public class CalculationExamples {
 
 	// end countSubGroups
 
-	private static void listResult(List result) {
+	private static void listResult(java.util.List result) {
 		System.out.println(result.size());
 		for (int i = 0; i < result.size(); i++) {
 			System.out.println(result.get(i));

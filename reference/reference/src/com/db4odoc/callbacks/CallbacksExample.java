@@ -2,23 +2,16 @@
 
 package com.db4odoc.callbacks;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.events.CancellableObjectEventArgs;
-import com.db4o.events.Event4;
-import com.db4o.events.EventArgs;
-import com.db4o.events.EventListener4;
-import com.db4o.events.EventRegistry;
-import com.db4o.events.EventRegistryFactory;
-import com.db4o.events.ObjectEventArgs;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.events.*;
+import com.db4o.query.*;
 
-
+/**
+ * @sharpen.ignore
+ */
 public class CallbacksExample {
 
 	private final static String DB4O_FILE_NAME="reference.db4o";

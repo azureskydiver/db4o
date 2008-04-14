@@ -2,17 +2,13 @@
 
 package com.db4odoc.taexamples;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.diagnostic.Diagnostic;
-import com.db4o.diagnostic.DiagnosticListener;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ta.NotTransparentActivationEnabled;
-import com.db4o.ta.TransparentActivationSupport;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.diagnostic.*;
+import com.db4o.ext.*;
+import com.db4o.ta.*;
 
 public class TAExample {
 

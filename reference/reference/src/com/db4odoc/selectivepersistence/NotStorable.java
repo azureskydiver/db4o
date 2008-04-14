@@ -2,7 +2,7 @@
 
 package com.db4odoc.selectivepersistence;
 
-import com.db4o.types.TransientClass;
+import com.db4o.types.*;
 
 
 public class NotStorable implements TransientClass {

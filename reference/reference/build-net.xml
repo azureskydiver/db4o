@@ -1,0 +1,255 @@
+<?xml version="1.0"?>
+<project name="Db4objects.Db4odoc" default="sharpen-docs">
+	<property name="path.machine.properties" value="../db4obuild/machine.properties" />
+	<property file="${path.machine.properties}" />
+		
+
+<property name="dependencies.jar" location="sharpen/lib/dependencies.jar" />
+	<!--<target name="create-dependencies-jar">
+			<mkdir dir="sharpen/lib" />
+			<jar destfile="${dependencies.jar}">			
+				<fileset dir="${dir.dist.classes.java1.1}" />
+				<fileset dir="${dir.dist.classes.db4ounit}" />
+				<fileset dir="${dir.dist.classes.test.jdk1.1}" />
+			</jar>
+		</target> -->
+	
+	<taskdef name="updatecsharpproject" classname="com.db4o.devtools.ant.UpdateCSharpProjectAntTask">
+		<classpath>
+			<pathelement location="../db4obuild/bin" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+
+	<macrodef name="sharpen">
+			<attribute name="workspace" />
+			<attribute name="resource" />
+			
+			<element name="args" optional="yes" />
+			
+			<sequential>
+				<exec executable="${file.jvm.jdk1.5}" failonerror="true" timeout="1800000">
+					<arg value="-Xms256m" />
+					<arg value="-Xmx512m" />
+					<arg value="-cp" />
+					<arg value="${eclipse.startup.jar}" />
+					<arg value="org.eclipse.core.launcher.Main" />
+					<arg value="-data" />
+					<arg file="@{workspace}" />
+					<arg value="-application" />
+					<arg value="javatocsharp.core.application" />
+					<arg value="-header" />
+					<arg file="../db4obuild/config/copyright_comment.txt" />
+					<arg value="@{resource}" />
+					
+					<args />
+					
+				</exec>
+			</sequential>
+		</macrodef>
+		
+	<target name="install-javatocsharp-plugin">
+			
+		<property name="javatocsharp.core.dir" location="../javatocsharp.core" />
+		
+		<mkdir dir="${javatocsharp.core.dir}/bin" />
+		
+		<echo>${eclipse.home}/plugins</echo>
+		<javac fork="true" debug="true" source="1.5" destdir="${javatocsharp.core.dir}/bin" srcdir="${javatocsharp.core.dir}/src" encoding="UTF-8">
+			<classpath>
+				<fileset dir="${eclipse.home}/plugins">
+					<include name="org.eclipse.osgi_*/osgi.jar" />
+					<include name="org.eclipse.core.resources_*/resources.jar" />
+					<include name="org.eclipse.core.runtime_*/runtime.jar" />
+					<include name="org.eclipse.jdt.core_*/jdtcore.jar" />
+					<!-- redundant entries: in newer eclipse installs those reside in jars -->
+					<include name="org.eclipse.osgi_*.jar" />
+					<include name="org.eclipse.core.resources_*.jar" />
+					<include name="org.eclipse.core.runtime_*.jar" />
+					<include name="org.eclipse.jdt.core_*.jar" />
+					<include name="org.eclipse.jdt.launching_*.jar" />
+					<include name="org.eclipse.equinox.common_*.jar" />
+					<include name="org.eclipse.core.jobs_*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+		
+		<property name="plugin.dir" value="${eclipse.home}/plugins/javatocsharp.core_1.0.0" />
+		<delete dir="${plugin.dir}" />
+		<mkdir dir="${plugin.dir}" />
+		<jar destfile="${plugin.dir}/javatocsharp.jar" basedir="${javatocsharp.core.dir}/bin" />
+		<copy todir="${plugin.dir}" file="${javatocsharp.core.dir}/plugin.xml" />
+
+	</target>
+
+	
+<target name="sharpen-docs" depends="install-javatocsharp-plugin, clean">
+		
+		<property name="target.dir" location="sharpen" />
+		
+		<copy todir="${target.dir}/db4o-reference-chapters/src">
+			<fileset dir="src">
+				<include name="**/*.java" />
+				<exclude name="**/Comparable4.java" />
+				<exclude name="**/ReplicationExample.java" />
+				<exclude name="**/EnumExample.java" />
+				<exclude name="**/Qualification.java" />
+				<exclude name="**/QueryModesExample.java" />
+				<exclude name="**/TimeKeeper.java" />
+				<exclude name="**/Timestamp.java" />
+				<exclude name="**/TimestampExample.java" />
+				<exclude name="**/TimeTranslator.java" />
+				<exclude name="**/BigDecimalExample.java" />
+				<exclude name="**/SerializeExample.java" />
+				<exclude name="**/nqcollection/*" />
+				<exclude name="**/nqsyntax/*" />
+				<exclude name="**/nqoptimize/*" />
+				<exclude name="**/nqconcepts/*" />
+				<exclude name="**/activating/*" />
+				<exclude name="**/com/db4odoc/enums/*" />
+				<exclude name="**/com/db4odoc/ssl/*" />
+				<exclude name="**/com/db4odoc/taexamples/*" />
+				<exclude name="**/com/db4odoc/taexamples/instrumented/*" />
+				<exclude name="**/com/db4odoc/structured/*" />
+				<exclude name="**/com/db4odoc/typehandler/*" />
+				<exclude name="**/com/db4odoc/typehandler/db4o/*" />
+				<exclude name="**/com/db4odoc/clientserver/*" />
+				<exclude name="**/com/db4odoc/listdeleting/*" />
+				<exclude name="**/com/db4odoc/listoperations/*" />
+				<exclude name="**/com/db4odoc/queries/*" />
+				<exclude name="**/com/db4odoc/symbian/*" />
+				<exclude name="**/com/db4odoc/tpclone/*" />
+				<exclude name="**/com/db4odoc/diagnostics/*" />
+				<exclude name="**/com/db4odoc/equality/*" />
+				<exclude name="**/com/db4odoc/ios/*" />
+				<exclude name="**/com/db4odoc/lists/*" />
+				<exclude name="**/com/db4odoc/concurrency/*" />
+				<exclude name="**/com/db4odoc/tpexample/*" />
+				<exclude name="**/com/db4odoc/performance/*" />
+			</fileset>
+		</copy>
+		
+		
+		<sharpen workspace="${target.dir}" resource="db4o-reference-chapters/src">
+			<args>
+				<arg value="-cp" />
+			    <arg path="../bloat/bin/" />
+				<arg value="-cp" />
+				<arg path="lib/bloat-1.0.jar" />
+				<arg value="-cp" />
+				<arg path="lib/db4o-7.2.37.10417-db4ounit.jar" />
+				<arg value="-cp" />
+				<arg path="lib/db4o-7.2.37.10417-instrumentation.jar" />
+				<arg value="-cp" />
+				<arg path="lib/db4o-7.2.37.10417-nqopt.jar" />
+				<arg value="-cp" />
+				<arg path="lib/db4o-7.2.37.10417-taj.jar" />
+				<arg value="-cp" />
+				<arg path="lib/db4o-7.2.37.10417-tools.jar" />
+				<arg value="-cp" />
+				<arg path="lib/jsse.jar" />
+				<arg value="-cp" />
+				<arg path="lib/xstream-1.2.jar" />
+				<arg value="-cp" />
+				<arg path="lib/db4o-7.2.37.10417-java5.jar" />
+				<arg value="-cp" />
+				<arg path="lib/db4o-7.2.37.10417-java1.1.jar" />
+				<arg value="-cp" />
+				<arg path="../db4ojdk1.2/bin/" />
+				<arg value="-cp" />
+				<arg path="../db4oj/bin/" />
+				<arg value="-cp" />
+				<arg path="../db4onqopt/bin/" />
+				<arg value="-cp" />
+				<arg path="../db4otaj/bin/" />
+				<arg value="-cp" />
+				<arg path="../db4otools/bin/" />
+				<arg value="-cp" />
+				<arg path="../dRS/bin/" />
+				<arg value="@sharpen-all-options" />
+			</args>
+		</sharpen>
+		
+		<property name="dir.proj" location="../reference.cs.net/Db4objects.Db4odoc" />
+		<property name="dir.proj.src" location="../reference.cs.net/Db4objects.Db4odoc" />
+	<property name="dir.sharpen.src" location="sharpen/db4o-reference-chapters.net" />
+
+			
+			<macrodef name="copy-sharpened-sources">
+				<attribute name="dir" />
+				<element name="files" />
+				<sequential>
+					<copy todir="@{dir}">
+						<files />
+					</copy>
+				</sequential>
+			</macrodef>
+			
+			<copy-sharpened-sources dir="${dir.proj.src}">
+				<files>
+					<fileset dir="${dir.sharpen.src}/src">
+						<include name="**/*.cs" />
+					</fileset>
+				</files>
+			</copy-sharpened-sources>
+			
+			
+			<fileset id="core.net.files" dir="${dir.proj}">
+				<include name="**/*.cs" />
+			</fileset>
+				
+			<updatecsharpproject projectfile="${dir.proj}/db4o-reference-chapters-2005.csproj">
+				<sources refid="core.net.files" />
+			</updatecsharpproject>
+	
+	</target>
+	
+	<target name="clean" description="Delete all generated files">
+		<delete failonerror="false" includeemptydirs="true" description="Removing all generated files">
+			<fileset dir="../reference.cs.net">
+				<include name="**/*" />
+				<exclude name="**/*.csproj" />
+				<exclude name="**/*.sln" />
+				<exclude name="**/ReplicationExample.cs" />
+				<exclude name="**/EnumExample.cs" />
+				<exclude name="**/Qualification.cs" />
+				<exclude name="**/QueryModesExample.cs" />
+				<exclude name="**/TimeKeeper.cs" />
+				<exclude name="**/Timestamp.cs" />
+				<exclude name="**/TimestampExample.cs" />
+				<exclude name="**/TimeTranslator.cs" />
+				<exclude name="**/Db4objects/Db4odoc/Enums/*" />
+				<exclude name="**/Db4objects/Db4odoc/Diagnostics/*" />
+				<exclude name="**/Db4objects/Db4odoc/Equality/*" />
+				<exclude name="**/Db4objects/Db4odoc/Typehandler/*" />
+				<exclude name="**/Db4objects/Db4odoc/Activating/*" />
+				<exclude name="**/Db4objects/Db4odoc/Queries/*" />
+				<exclude name="**/Db4objects/Db4odoc/ClientServer/*" />
+				<exclude name="**/Db4objects/Db4odoc/ListDeleting/*" />
+				<exclude name="**/Db4objects/Db4odoc/ListOperations/*" />
+				<exclude name="**/Db4objects/Db4odoc/Structured/*" />
+				<exclude name="**/Db4objects/Db4odoc/Ios/*" />
+				<exclude name="**/Db4objects/Db4odoc/Lists/*" />
+				<exclude name="**/Db4objects/Db4odoc/Concurrency/*" />
+				<exclude name="**/Db4objects/Db4odoc/TPExample/*" />
+				<exclude name="**/Db4objects/Db4odoc/Performance/*" />
+				<exclude name="**/SerializeExample.cs" />
+				<exclude name="**/DebugExample.cs" />
+				<exclude name="**/SortingExampleExample.cs" />
+				<exclude name="**/ServerConfiguration.cs" />
+				<exclude name="**/NQCollection/*" />
+				<exclude name="**/NQSyntax/*" />
+				<exclude name="**/NQOptimize/*" />
+				<exclude name="**/EqualityExample.cs" />
+				<exclude name="**/LoggingArray.cs" />
+				<exclude name="**/Db4objects.Db4odoc.Tpclone/Car.cs" />
+			</fileset>
+		</delete>
+		<delete failonerror="false" includeemptydirs="true" description="Removing all generated files">
+			<fileset dir="sharpen">
+				<include name="**/*" />
+				<exclude name="**/lib/*" />
+			</fileset>
+		</delete> 
+	</target>
+	</project>

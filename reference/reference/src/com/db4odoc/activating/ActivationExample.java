@@ -2,15 +2,11 @@
 
 package com.db4odoc.activating;
 
-import java.io.File;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.ObjectSet;
-import com.db4o.P2LinkedList;
-import com.db4o.config.Configuration;
+import com.db4o.*;
+import com.db4o.config.*;
 
 
 

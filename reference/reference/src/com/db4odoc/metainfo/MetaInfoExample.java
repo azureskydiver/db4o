@@ -2,12 +2,10 @@
 
 package com.db4odoc.metainfo;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ext.StoredClass;
-import com.db4o.ext.StoredField;
+import com.db4o.*;
+import com.db4o.ext.*;
 
 public class MetaInfoExample {
 	private final static String DB4O_FILE_NAME = "reference.db4o";

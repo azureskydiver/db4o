@@ -1,17 +1,10 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 package com.db4odoc.typehandler;
 
-import com.db4o.foundation.PreparedComparison;
-import com.db4o.internal.DefragmentContext;
-import com.db4o.internal.DeleteContext;
-import com.db4o.internal.SecondClassTypeHandler;
-import com.db4o.internal.TypeHandler4;
-import com.db4o.marshall.Context;
-import com.db4o.marshall.ReadBuffer;
-import com.db4o.marshall.ReadContext;
-import com.db4o.marshall.WriteBuffer;
-import com.db4o.marshall.WriteContext;
-import com.db4o.typehandlers.EmbeddedTypeHandler;
+import com.db4o.foundation.*;
+import com.db4o.internal.*;
+import com.db4o.marshall.*;
+import com.db4o.typehandlers.*;
 
 
 public class StringBufferHandler implements TypeHandler4, 

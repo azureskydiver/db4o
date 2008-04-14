@@ -2,14 +2,12 @@
 
 package com.db4odoc.performance;
 
-import java.io.File;
-import java.util.ArrayList;
+import java.io.*;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.config.Configuration;
-import com.db4o.io.MemoryIoAdapter;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.io.*;
 
 
 public class InsertPerformanceBenchmark {

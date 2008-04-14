@@ -2,14 +2,11 @@
 
 package com.db4odoc.uniqueconstraint;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.config.Configuration;
-import com.db4o.constraints.UniqueFieldValueConstraint;
-import com.db4o.constraints.UniqueFieldValueConstraintViolationException;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.constraints.*;
 
 public class UniqueConstraintExample {
 	private static final String DB4O_FILE_NAME = "test.container";

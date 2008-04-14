@@ -1,0 +1,6 @@
+-typeMapping java.lang.InstantiationException System.TypeInitializationException
+-typeMapping com.db4o.foundation.ArgumentNullException System.ArgumentNullException
+-typeMapping com.db4o.foundation.NotImplementedException System.NotImplementedException
+-typeMapping com.db4o.foundation.NotSupportedException System.NotSupportedException
+-typeMapping java.lang.SecurityException System.Security.SecurityException
+-typeMapping com.db4o.foundation.ChainedRuntimeException System.Exception

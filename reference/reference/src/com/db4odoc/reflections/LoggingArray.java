@@ -2,13 +2,14 @@
 
 package com.db4odoc.reflections;
 
-import java.lang.reflect.Array;
+import java.lang.reflect.*;
 
-import com.db4o.reflect.ReflectArray;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.Reflector;
-import com.db4o.reflect.jdk.JdkReflector;
+import com.db4o.reflect.*;
+import com.db4o.reflect.jdk.*;
 
+/**
+ * @sharpen.ignore
+ */
 public class LoggingArray implements ReflectArray {
 
 	private final Reflector _reflector;

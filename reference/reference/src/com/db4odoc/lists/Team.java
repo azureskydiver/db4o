@@ -2,7 +2,7 @@
 
 package com.db4odoc.lists;
 
-import java.util.List;
+import java.util.*;
 
 
 public class Team {

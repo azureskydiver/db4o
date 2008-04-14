@@ -2,19 +2,12 @@
 
 package com.db4odoc.remote;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.messaging.MessageContext;
-import com.db4o.messaging.MessageRecipient;
-import com.db4o.messaging.MessageSender;
-import com.db4o.query.Candidate;
-import com.db4o.query.Evaluation;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.messaging.*;
+import com.db4o.query.*;
 
 public class RemoteExample {
 

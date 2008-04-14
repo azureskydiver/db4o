@@ -1,9 +1,10 @@
 package com.db4odoc.SemaphoreTest;
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.io.*;
+import java.net.*;
 
+/**
+ * @sharpen.ignore 
+ */
 public class QuoteClient {
     public static void main(String[] args) throws IOException {
 

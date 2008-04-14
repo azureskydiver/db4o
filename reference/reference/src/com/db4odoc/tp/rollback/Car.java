@@ -1,9 +1,8 @@
 /* Copyright (C) 2004 - 2008 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.tp.rollback;
 
-import com.db4o.activation.ActivationPurpose;
-import com.db4o.activation.Activator;
-import com.db4o.ta.Activatable;
+import com.db4o.activation.*;
+import com.db4o.ta.*;
 
 public class Car implements Activatable {
 	private String model;

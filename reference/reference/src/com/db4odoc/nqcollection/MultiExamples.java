@@ -2,14 +2,12 @@
 
 package com.db4odoc.nqcollection;
 
-import java.io.File;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ext.Db4oException;
-import com.db4o.query.Predicate;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
 public class MultiExamples {
 
@@ -108,7 +106,7 @@ public class MultiExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List<Person> result = container.query(new Predicate<Person>() {
+				List<Person> result = container.query(new com.db4o.query.Predicate<Person>() {
 					public boolean match(Person person) {
 						// all persons
 						return true;
@@ -134,7 +132,7 @@ public class MultiExamples {
 
 					private List getPilotsList() {
 						if (pilots == null) {
-							pilots = database().query(new Predicate<Pilot>() {
+							pilots = database().query(new com.db4o.query.Predicate<Pilot>() {
 								public boolean match(Pilot pilot) {
 									return pilot.getName().startsWith("Test");
 								}

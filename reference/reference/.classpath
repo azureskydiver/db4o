@@ -3,7 +3,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk5"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/xstream-1.2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/drs"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4oj.tests"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4otools"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4otaj"/>
@@ -11,5 +10,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/db4onqopt"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/bloat"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/drs"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

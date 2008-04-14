@@ -2,14 +2,12 @@
 
 package com.db4odoc.staticfields;
 
-import java.awt.Color;
-import java.io.File;
+import java.awt.*;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.ext.DatabaseFileLockedException;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.ext.*;
 
 public class StaticFieldExample {
 	private final static String DB4O_FILE_NAME = "reference.db4o";

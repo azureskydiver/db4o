@@ -3,8 +3,8 @@ package com.db4odoc.timestamp;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import com.db4o.ObjectContainer;
-import com.db4o.config.ObjectConstructor;
+import com.db4o.*;
+import com.db4o.config.*;
 
 
 public class TimeTranslator implements ObjectConstructor {

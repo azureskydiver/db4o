@@ -2,14 +2,15 @@
 
 package com.db4odoc.nqcollection;
 
-import java.io.File;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ext.Db4oException;
-import com.db4o.query.Predicate;
+import com.db4o.*;
+import com.db4o.ext.*;
+
+/**
+ * @sharpen.ignore
+ */
 
 public class ComplexParameterizedExample {
 
@@ -78,7 +79,7 @@ public class ComplexParameterizedExample {
 	// end storePersons
 
 	private static class PersonNamePredicate<T extends Person> extends
-			Predicate<T> {
+	com.db4o.query.Predicate<T> {
 		private String startsWith;
 
 		public PersonNamePredicate(String startsWith) {
@@ -123,7 +124,7 @@ public class ComplexParameterizedExample {
 	// end getTrainees
 
 	private static void testQuery(ObjectContainer container,
-			Predicate<Trainee> predicate) {
+			com.db4o.query.Predicate<Trainee> predicate) {
 		List<Trainee> result = container.query(predicate);
 		System.out.println(result.size());
 		try {
@@ -137,14 +138,14 @@ public class ComplexParameterizedExample {
 
 	// end testQuery
 
-	private static <T extends Person> Predicate<T> createPredicateWrong(
+	private static <T extends Person> com.db4o.query.Predicate<T> createPredicateWrong(
 			Class<T> clazz, String startsWith) {
 		return new PersonNamePredicate<T>(startsWith);
 	}
 
 	// end createPredicateWrong
 
-	private static <T extends Person> Predicate<T> createPredicateCorrect(
+	private static <T extends Person> com.db4o.query.Predicate<T> createPredicateCorrect(
 			Class<T> clazz, String startsWith) {
 		return new PersonNamePredicate<T>(clazz, startsWith);
 	}

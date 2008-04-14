@@ -1,20 +1,13 @@
 /* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
 package com.db4odoc.ssl;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.security.KeyStore;
+import java.io.*;
+import java.security.*;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
+import com.db4o.*;
+import com.db4o.config.*;
 
 public class SSLSocketsExample {
 

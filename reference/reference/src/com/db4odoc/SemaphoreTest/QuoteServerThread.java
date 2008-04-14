@@ -3,6 +3,9 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+/**
+ * @sharpen.ignore 
+ */
 public class QuoteServerThread extends Thread {
 
     protected DatagramSocket socket = null;

@@ -2,14 +2,10 @@
 
 package com.db4odoc.listdeleting;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.config.Configuration;
+import com.db4o.*;
+import com.db4o.config.*;
 
 public class ListDeletingExample {
 	private final static String DB4O_FILE_NAME = "reference.db4o";
@@ -30,7 +26,7 @@ public class ListDeletingExample {
 		configuration.objectClass(ListObject.class).updateDepth(1);
 		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			List<ListObject> result = container.<ListObject> query(ListObject.class);
+			java.util.List<ListObject> result = container.<ListObject> query(ListObject.class);
 			if (result.size() > 0) {
 				// retrieve a ListObject
 				ListObject lo1 = result.get(0);
@@ -45,13 +41,13 @@ public class ListDeletingExample {
 		// and DataObjects in the database
 		container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			List<ListObject> result = container.<ListObject> query(ListObject.class);
+			java.util.List<ListObject> result = container.<ListObject> query(ListObject.class);
 			if (result.size() > 0) {
 				ListObject lo1 = result.get(0);
 				System.out.println("DataObjects in the list:  "
 						+ lo1.getData().size());
 			}
-			List<DataObject> removedObjects = container
+			java.util.List<DataObject> removedObjects = container
 					.<DataObject> query(DataObject.class);
 			System.out.println("DataObjects in the database: "
 					+ removedObjects.size());
@@ -68,17 +64,17 @@ public class ListDeletingExample {
 			// set update depth to 1 as we only
 			// modify List field
 			container.ext().configure().objectClass(ListObject.class).updateDepth(1);
-			List<ListObject> result = container.<ListObject> query(ListObject.class);
+			java.util.List<ListObject> result = container.<ListObject> query(ListObject.class);
 			if (result.size() > 0) {
 				// retrieve a ListObject
 				ListObject lo1 = result.get(0);
 				// create a copy of the objects list
 				// to memorize the objects to be deleted
-				List tempList = new ArrayList(lo1.getData());
+				java.util.List tempList = new java.util.ArrayList(lo1.getData());
 				// remove all the objects from the list
 				lo1.getData().removeAll(lo1.getData());
 				// and delete them from the database
-				Iterator<DataObject> it = tempList.iterator();
+				java.util.Iterator<DataObject> it = tempList.iterator();
 				while (it.hasNext()) {
 					container.delete(it.next());
 				}
@@ -92,13 +88,13 @@ public class ListDeletingExample {
 		// and DataObjects in the database
 		container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			List<ListObject> result = container.<ListObject> query(ListObject.class);
+			java.util.List<ListObject> result = container.<ListObject> query(ListObject.class);
 			if (result.size() > 0) {
 				ListObject lo1 = result.get(0);
 				System.out.println("DataObjects in the list:  "
 						+ lo1.getData().size());
 			}
-			List<DataObject> removedObjects = container
+			java.util.List<DataObject> removedObjects = container
 					.<DataObject> query(DataObject.class);
 			System.out.println("DataObjects in the database: "
 					+ removedObjects.size());
@@ -115,7 +111,7 @@ public class ListDeletingExample {
 			// set cascadeOnDelete in order to delete member objects
 			container.ext().configure().objectClass(ListObject.class).cascadeOnDelete(
 					true);
-			List<ListObject> result = container.<ListObject> query(ListObject.class);
+			java.util.List<ListObject> result = container.<ListObject> query(ListObject.class);
 			if (result.size() > 0) {
 				// retrieve a ListObject
 				ListObject lo1 = result.get(0);
@@ -128,11 +124,11 @@ public class ListDeletingExample {
 		// check ListObjects and DataObjects in the database
 		container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			List<ListObject> listObjects = container
+			java.util.List<ListObject> listObjects = container
 					.<ListObject> query(ListObject.class);
 			System.out.println("ListObjects in the database:  "
 					+ listObjects.size());
-			List<DataObject> dataObjects = container
+			java.util.List<DataObject> dataObjects = container
 					.<DataObject> query(DataObject.class);
 			System.out.println("DataObjects in the database: "
 					+ dataObjects.size());

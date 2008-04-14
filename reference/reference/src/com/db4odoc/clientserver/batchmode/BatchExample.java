@@ -2,12 +2,10 @@
 
 package com.db4odoc.clientserver.batchmode;
 
-import java.io.IOException;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.config.Configuration;
+import com.db4o.*;
+import com.db4o.config.*;
 
 public class BatchExample {
 

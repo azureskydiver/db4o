@@ -2,15 +2,11 @@
 
 package com.db4odoc.serializing;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.db4o.*;
+import com.thoughtworks.xstream.*;
+import com.thoughtworks.xstream.io.xml.*;
 
 public class SerializeExample {
 	private final static String DB4O_FILE_NAME = "reference.db4o";

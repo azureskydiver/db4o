@@ -2,9 +2,8 @@
 
 package com.db4odoc.tp.rollback;
 
-import com.db4o.activation.ActivationPurpose;
-import com.db4o.activation.Activator;
-import com.db4o.ta.Activatable;
+import com.db4o.activation.*;
+import com.db4o.ta.*;
 
 public class Id implements Activatable {
 	int number = 0;

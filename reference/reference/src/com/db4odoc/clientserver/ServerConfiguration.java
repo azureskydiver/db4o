@@ -3,6 +3,8 @@ package com.db4odoc.clientserver;
 
 /**
  * Configuration used for {@link StartServer} and {@link StopServer}.
+ * 
+ * @sharpen.ignore
  */
 public interface ServerConfiguration {
   

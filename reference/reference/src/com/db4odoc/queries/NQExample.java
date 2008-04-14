@@ -1,14 +1,14 @@
 /* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.queries;
 
-import java.util.List;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.query.Predicate;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.query.*;
 
+/**
+ * @sharpen.ignore 
+ */
 public class NQExample {
 	private final static String DB4O_FILE_NAME = "reference.db4o";
 
@@ -27,7 +27,7 @@ public class NQExample {
 	// end main
 
 	private static void primitiveQuery(ObjectContainer container) {
-		List<Pilot> pilots = container.query(new Predicate<Pilot>() {
+		List<Pilot> pilots = container.query(new com.db4o.query.Predicate<Pilot>() {
 			public boolean match(Pilot pilot) {
 				return pilot.getPoints() == 100;
 			}
@@ -36,7 +36,7 @@ public class NQExample {
 	// end primitiveQuery
 
 	private static void advancedQuery(ObjectContainer container) {
-		List<Pilot> result = container.query(new Predicate<Pilot>() {
+		List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 			public boolean match(Pilot pilot) {
 				return pilot.getPoints() > 99
 						&& pilot.getPoints() < 199
@@ -67,7 +67,7 @@ public class NQExample {
 	// end retrieveComplexSODA
 
 	private static void retrieveComplexNQ(ObjectContainer container) {
-		ObjectSet result = container.query(new Predicate<Pilot>() {
+		ObjectSet result = container.query(new com.db4o.query.Predicate<Pilot>() {
 			public boolean match(Pilot pilot) {
 				return pilot.getPoints() > 99
 						&& pilot.getPoints() < 199
@@ -82,7 +82,7 @@ public class NQExample {
 	private static void retrieveArbitraryCodeNQ(
 			ObjectContainer container) {
 		final int[] points = { 1, 100 };
-		ObjectSet result = container.query(new Predicate<Pilot>() {
+		ObjectSet result = container.query(new com.db4o.query.Predicate<Pilot>() {
 			public boolean match(Pilot pilot) {
 				for (int i = 0; i < points.length; i++) {
 					if (pilot.getPoints() == points[i]) {

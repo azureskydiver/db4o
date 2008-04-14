@@ -2,10 +2,9 @@
 
 package com.db4odoc.aliases;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
+import com.db4o.*;
 
 
 public class InterLanguageExample {

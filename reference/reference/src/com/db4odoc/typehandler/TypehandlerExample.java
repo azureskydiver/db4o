@@ -1,20 +1,20 @@
 package com.db4odoc.typehandler;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.defragment.Defragment;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.query.Query;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.generic.GenericReflector;
-import com.db4o.reflect.jdk.JdkReflector;
-import com.db4o.typehandlers.TypeHandlerPredicate;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.defragment.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
+import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
+import com.db4o.reflect.jdk.*;
+import com.db4o.typehandlers.*;
 
+/**
+ * @sharpen.ignore 
+ */
 public class TypehandlerExample {
 
 	private final static String DB4O_FILE_NAME = "reference.db4o";

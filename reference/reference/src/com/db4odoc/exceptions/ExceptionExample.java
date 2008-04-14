@@ -1,13 +1,8 @@
 /* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.exceptions;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ext.Db4oException;
-import com.db4o.ext.Db4oIOException;
-import com.db4o.ext.InvalidPasswordException;
-import com.db4o.ext.OldFormatException;
+import com.db4o.*;
+import com.db4o.ext.*;
 
 
 public class ExceptionExample {

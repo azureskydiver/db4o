@@ -2,14 +2,11 @@
 
 package com.db4odoc.cachedIO;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.io.CachedIoAdapter;
-import com.db4o.io.RandomAccessFileAdapter;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.io.*;
 
 public class CachedIOExample  {
 	private final static String DB4O_FILE_NAME="reference.db4o";
