@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{575B2796-1C95-4910-B698-D5E5B2906FCB}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>Db4objects.Db4odoc</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Db4objects.Db4odoc</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>Db4objects.Db4odoc.Typehandler.TypehandlerExample</StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DocumentationFile>bin\Db4objects.Db4odoc.XML</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="drs, Version=6.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\install\db4o-net\dRS-net-6.3\bin\drs.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup><Compile Include="Db4objects\Db4odoc\Activating\ActivationExample.cs"/><Compile Include="Db4objects\Db4odoc\Activating\SensorPanel.cs"/><Compile Include="Db4objects\Db4odoc\Aliases\AliasExample.cs"/><Compile Include="Db4objects\Db4odoc\Aliases\Driver.cs"/><Compile Include="Db4objects\Db4odoc\Aliases\InterLanguageExample.cs"/><Compile Include="Db4objects\Db4odoc\Aliases\Newalias\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Aliases\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Annotations\Car.cs"/><Compile Include="Db4objects\Db4odoc\Arrays\ArrayExample.cs"/><Compile Include="Db4objects\Db4odoc\Autoinc\CountedObject.cs"/><Compile Include="Db4objects\Db4odoc\Autoinc\IncrementedId.cs"/><Compile Include="Db4objects\Db4odoc\Autoinc\TestObject.cs"/><Compile Include="Db4objects\Db4odoc\Blobs\BlobExample.cs"/><Compile Include="Db4objects\Db4odoc\Blobs\Car.cs"/><Compile Include="Db4objects\Db4odoc\Blobs\CarImage.cs"/><Compile Include="Db4objects\Db4odoc\CachedIO\CachedIOExample.cs"/><Compile Include="Db4objects\Db4odoc\CachedIO\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Callbacks\Car.cs"/><Compile Include="Db4objects\Db4odoc\Callbacks\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Classmapping\MappingExample.cs"/><Compile Include="Db4objects\Db4odoc\Classmapping\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Classmapping\PilotReplacement.cs"/><Compile Include="Db4objects\Db4odoc\ClientServer\BatchMode\BatchExample.cs"/><Compile Include="Db4objects\Db4odoc\ClientServer\BatchMode\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\ClientServer\Car.cs"/><Compile Include="Db4objects\Db4odoc\ClientServer\ClientServerExample.cs"/><Compile Include="Db4objects\Db4odoc\ClientServer\DeepExample.cs"/><Compile Include="Db4objects\Db4odoc\ClientServer\ExtClientExample.cs"/><Compile Include="Db4objects\Db4odoc\ClientServer\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\ClientServer\PressureSensorReadout.cs"/><Compile Include="Db4objects\Db4odoc\ClientServer\SensorReadout.cs"/><Compile Include="Db4objects\Db4odoc\ClientServer\ServerConfiguration.cs"/><Compile Include="Db4objects\Db4odoc\ClientServer\StartServer.cs"/><Compile Include="Db4objects\Db4odoc\ClientServer\StopServer.cs"/><Compile Include="Db4objects\Db4odoc\ClientServer\TemperatureSensorReadout.cs"/><Compile Include="Db4objects\Db4odoc\Commitcallbacks\Car.cs"/><Compile Include="Db4objects\Db4odoc\Commitcallbacks\Item.cs"/><Compile Include="Db4objects\Db4odoc\Commitcallbacks\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Comparing\CompareExample.cs"/><Compile Include="Db4objects\Db4odoc\Comparing\MyString.cs"/><Compile Include="Db4objects\Db4odoc\Comparing\Record.cs"/><Compile Include="Db4objects\Db4odoc\Concurrency\ConcurrencyExample.cs"/><Compile Include="Db4objects\Db4odoc\Concurrency\OptimisticThread.cs"/><Compile Include="Db4objects\Db4odoc\Concurrency\PessimisticThread.cs"/><Compile Include="Db4objects\Db4odoc\Concurrency\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Constructors\C1.cs"/><Compile Include="Db4objects\Db4odoc\Constructors\C2.cs"/><Compile Include="Db4objects\Db4odoc\Constructors\C3.cs"/><Compile Include="Db4objects\Db4odoc\Constructors\C4.cs"/><Compile Include="Db4objects\Db4odoc\Debugging\Car.cs"/><Compile Include="Db4objects\Db4odoc\Debugging\DebugExample.cs"/><Compile Include="Db4objects\Db4odoc\Defragmentation\DefragmentExample.cs"/><Compile Include="Db4objects\Db4odoc\Diagnostics\ArbitraryQuery.cs"/><Compile Include="Db4objects\Db4odoc\Diagnostics\Car.cs"/><Compile Include="Db4objects\Db4odoc\Diagnostics\CarEvaluation.cs"/><Compile Include="Db4objects\Db4odoc\Diagnostics\CarTranslator.cs"/><Compile Include="Db4objects\Db4odoc\Diagnostics\DiagnosticExample.cs"/><Compile Include="Db4objects\Db4odoc\Diagnostics\Empty.cs"/><Compile Include="Db4objects\Db4odoc\Diagnostics\IndexDiagListener.cs"/><Compile Include="Db4objects\Db4odoc\Diagnostics\NewCarModel.cs"/><Compile Include="Db4objects\Db4odoc\Diagnostics\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Diagnostics\SensorReadout.cs"/><Compile Include="Db4objects\Db4odoc\Diagnostics\TranslatorDiagListener.cs"/><Compile Include="Db4objects\Db4odoc\Enums\Door.cs"/><Compile Include="Db4objects\Db4odoc\Enums\DoorState.cs"/><Compile Include="Db4objects\Db4odoc\Enums\DoorStateInit.cs"/><Compile Include="Db4objects\Db4odoc\Enums\DoorStateReal.cs"/><Compile Include="Db4objects\Db4odoc\Enums\DoorStateUninit.cs"/><Compile Include="Db4objects\Db4odoc\Enums\EnumExample.cs"/><Compile Include="Db4objects\Db4odoc\Enums\EnumSODAExample.cs"/><Compile Include="Db4objects\Db4odoc\Equality\EqualityExample.cs"/><Compile Include="Db4objects\Db4odoc\Equality\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Evaluations\Car.cs"/><Compile Include="Db4objects\Db4odoc\Evaluations\EvaluationExample.cs"/><Compile Include="Db4objects\Db4odoc\Evaluations\EvenHistoryEvaluation.cs"/><Compile Include="Db4objects\Db4odoc\Evaluations\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Evaluations\SensorReadout.cs"/><Compile Include="Db4objects\Db4odoc\ExamplesRunner.cs"/><Compile Include="Db4objects\Db4odoc\Exceptions\ExceptionExample.cs"/><Compile Include="Db4objects\Db4odoc\Finalfields\FinalFieldTranslator.cs"/><Compile Include="Db4objects\Db4odoc\Finalfields\TestFinal.cs"/><Compile Include="Db4objects\Db4odoc\Identity\Car.cs"/><Compile Include="Db4objects\Db4odoc\Identity\IdentityExample.cs"/><Compile Include="Db4objects\Db4odoc\Identity\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Inconsistent\Car.cs"/><Compile Include="Db4objects\Db4odoc\Inconsistent\InconsistentGraphExample.cs"/><Compile Include="Db4objects\Db4odoc\Inconsistent\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Indexes\Car.cs"/><Compile Include="Db4objects\Db4odoc\Indexes\IndexedExample.cs"/><Compile Include="Db4objects\Db4odoc\Indexes\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Ios\IOExample.cs"/><Compile Include="Db4objects\Db4odoc\Ios\LoggingAdapter.cs"/><Compile Include="Db4objects\Db4odoc\Ios\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\ListDeleting\DataObject.cs"/><Compile Include="Db4objects\Db4odoc\ListDeleting\ListDeletingExample.cs"/><Compile Include="Db4objects\Db4odoc\ListDeleting\ListObject.cs"/><Compile Include="Db4objects\Db4odoc\ListOperations\DataObject.cs"/><Compile Include="Db4objects\Db4odoc\ListOperations\ListObject.cs"/><Compile Include="Db4objects\Db4odoc\ListOperations\ListOperationsExample.cs"/><Compile Include="Db4objects\Db4odoc\Lists\CollectionExample.cs"/><Compile Include="Db4objects\Db4odoc\Lists\CollectionFactory.cs"/><Compile Include="Db4objects\Db4odoc\Lists\MapExample.cs"/><Compile Include="Db4objects\Db4odoc\Lists\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Lists\Team.cs"/><Compile Include="Db4objects\Db4odoc\Lists\VerboseList.cs"/><Compile Include="Db4objects\Db4odoc\Messaging\MessagingExample.cs"/><Compile Include="Db4objects\Db4odoc\Messaging\MyClientServerMessage.cs"/><Compile Include="Db4objects\Db4odoc\Metainfo\Car.cs"/><Compile Include="Db4objects\Db4odoc\Metainfo\MetaInfoExample.cs"/><Compile Include="Db4objects\Db4odoc\Metainfo\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\NQCollection\CalculationExamples.cs"/><Compile Include="Db4objects\Db4odoc\NQCollection\Car.cs"/><Compile Include="Db4objects\Db4odoc\NQCollection\MultiExamples.cs"/><Compile Include="Db4objects\Db4odoc\NQCollection\ParameterizedExamples.cs"/><Compile Include="Db4objects\Db4odoc\NQCollection\Person.cs"/><Compile Include="Db4objects\Db4odoc\NQCollection\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\NQCollection\SimpleExamples.cs"/><Compile Include="Db4objects\Db4odoc\NQCollection\Trainee.cs"/><Compile Include="Db4objects\Db4odoc\NQSyntax\NQSyntaxExamples.cs"/><Compile Include="Db4objects\Db4odoc\NQSyntax\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Opening\Car.cs"/><Compile Include="Db4objects\Db4odoc\Opening\FileOpenExample.cs"/><Compile Include="Db4objects\Db4odoc\Opening\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Performance\InsertPerformanceBenchmark.cs"/><Compile Include="Db4objects\Db4odoc\Persist\Car.cs"/><Compile Include="Db4objects\Db4odoc\Persist\Change1.cs"/><Compile Include="Db4objects\Db4odoc\Persist\Change2.cs"/><Compile Include="Db4objects\Db4odoc\Persist\PeekPersistedExample.cs"/><Compile Include="Db4objects\Db4odoc\Qbe\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Qbe\Pilot1.cs"/><Compile Include="Db4objects\Db4odoc\Qbe\Pilot1Derived.cs"/><Compile Include="Db4objects\Db4odoc\Qbe\Pilot2.cs"/><Compile Include="Db4objects\Db4odoc\Qbe\Pilot2Derived.cs"/><Compile Include="Db4objects\Db4odoc\Qbe\QBEExample.cs"/><Compile Include="Db4objects\Db4odoc\Queries\ArbitraryQuery.cs"/><Compile Include="Db4objects\Db4odoc\Queries\ComplexQuery.cs"/><Compile Include="Db4objects\Db4odoc\Queries\NQExample.cs"/><Compile Include="Db4objects\Db4odoc\Queries\PersistentExample.cs"/><Compile Include="Db4objects\Db4odoc\Queries\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Queries\PilotHundredPoints.cs"/><Compile Include="Db4objects\Db4odoc\Queries\QueryExample.cs"/><Compile Include="Db4objects\Db4odoc\Querymode\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Querymode\QueryModesExample.cs"/><Compile Include="Db4objects\Db4odoc\Refactoring\Newclasses\Identity.cs"/><Compile Include="Db4objects\Db4odoc\Refactoring\Newclasses\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Refactoring\Newclasses\RefactoringExample.cs"/><Compile Include="Db4objects\Db4odoc\Refactoring\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Refactoring\PilotNew.cs"/><Compile Include="Db4objects\Db4odoc\Refactoring\RefactoringExample.cs"/><Compile Include="Db4objects\Db4odoc\Reflections\Car.cs"/><Compile Include="Db4objects\Db4odoc\Reflections\LoggingArray.cs"/><Compile Include="Db4objects\Db4odoc\Reflections\LoggingReflector.cs"/><Compile Include="Db4objects\Db4odoc\Reflections\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Reflections\ReflectorExample.cs"/><Compile Include="Db4objects\Db4odoc\Remote\Car.cs"/><Compile Include="Db4objects\Db4odoc\Remote\RemoteExample.cs"/><Compile Include="Db4objects\Db4odoc\Remote\UpdateServer.cs"/><Compile Include="Db4objects\Db4odoc\Replication\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Replication\ReplicationExample.cs"/><Compile Include="Db4objects\Db4odoc\Selectivepersistence\MarkTransientExample.cs"/><Compile Include="Db4objects\Db4odoc\Selectivepersistence\NotStorable.cs"/><Compile Include="Db4objects\Db4odoc\Selectivepersistence\Test.cs"/><Compile Include="Db4objects\Db4odoc\Selectivepersistence\Test1.cs"/><Compile Include="Db4objects\Db4odoc\Selectivepersistence\Test2.cs"/><Compile Include="Db4objects\Db4odoc\Selectivepersistence\TransientClassExample.cs"/><Compile Include="Db4objects\Db4odoc\SemaphoreEvent\Item.cs"/><Compile Include="Db4objects\Db4odoc\SemaphoreEvent\SemaphoreMessage.cs"/><Compile Include="Db4objects\Db4odoc\Semaphores\ConnectedUser.cs"/><Compile Include="Db4objects\Db4odoc\Semaphores\LimitLogins.cs"/><Compile Include="Db4objects\Db4odoc\Semaphores\LockManager.cs"/><Compile Include="Db4objects\Db4odoc\Semaphores\Singleton.cs"/><Compile Include="Db4objects\Db4odoc\Serializing\Car.cs"/><Compile Include="Db4objects\Db4odoc\Serializing\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Serializing\SerializeExample.cs"/><Compile Include="Db4objects\Db4odoc\Sorting\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Staticfields\Car.cs"/><Compile Include="Db4objects\Db4odoc\Staticfields\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Staticfields\PilotCategories.cs"/><Compile Include="Db4objects\Db4odoc\Staticfields\StaticFieldExample.cs"/><Compile Include="Db4objects\Db4odoc\Structured\Car.cs"/><Compile Include="Db4objects\Db4odoc\Structured\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Structured\StructuredExample.cs"/><Compile Include="Db4objects\Db4odoc\TP\Rollback\Car.cs"/><Compile Include="Db4objects\Db4odoc\TP\Rollback\Id.cs"/><Compile Include="Db4objects\Db4odoc\TP\Rollback\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\TP\Rollback\TPRollback.cs"/><Compile Include="Db4objects\Db4odoc\Tamigrate\SensorPanelTA.cs"/><Compile Include="Db4objects\Db4odoc\Tamigrate\TAExample.cs"/><Compile Include="Db4objects\Db4odoc\Transactions\Car.cs"/><Compile Include="Db4objects\Db4odoc\Transactions\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Transactions\PressureSensorReadout.cs"/><Compile Include="Db4objects\Db4odoc\Transactions\SensorReadout.cs"/><Compile Include="Db4objects\Db4odoc\Transactions\TemperatureSensorReadout.cs"/><Compile Include="Db4objects\Db4odoc\Transactions\TransactionExample.cs"/><Compile Include="Db4objects\Db4odoc\Translators\Car.cs"/><Compile Include="Db4objects\Db4odoc\Translators\CarTranslator.cs"/><Compile Include="Db4objects\Db4odoc\Translators\NotStorable.cs"/><Compile Include="Db4objects\Db4odoc\Translators\NotStorableTranslator.cs"/><Compile Include="Db4objects\Db4odoc\Translators\TranslatorExample.cs"/><Compile Include="Db4objects\Db4odoc\Typehandler\Car.cs"/><Compile Include="Db4objects\Db4odoc\Typehandler\StringBuilderHandler.cs"/><Compile Include="Db4objects\Db4odoc\Typehandler\TypehandlerExample.cs"/><Compile Include="Db4objects\Db4odoc\Uniqueconstraint\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Uniqueconstraint\UniqueConstraintExample.cs"/><Compile Include="Db4objects\Db4odoc\Util.cs"/><Compile Include="Db4objects\Db4odoc\Utility\SensorPanel.cs"/><Compile Include="Db4objects\Db4odoc\Utility\UtilityExample.cs"/><Compile Include="Db4objects\Db4odoc\Uuids\Car.cs"/><Compile Include="Db4objects\Db4odoc\Uuids\Pilot.cs"/><Compile Include="Db4objects\Db4odoc\Uuids\UUIDExample.cs"/><Compile Include="Db4objects\Db4odoc\Versionupdate\UpdateExample.cs"/></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o.Instrumentation\Db4objects.Db4o.Instrumentation-2005.csproj">
+      <Project>{A13714E1-678F-4C59-B550-A1637615D145}</Project>
+      <Name>Db4objects.Db4o.Instrumentation-2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o.NativeQueries\Db4objects.Db4o.NativeQueries-2005.csproj">
+      <Project>{B681E4AD-036E-4431-AF5C-C75E8578C063}</Project>
+      <Name>Db4objects.Db4o.NativeQueries-2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o.Tests\Db4objects.Db4o.Tests-2005.csproj">
+      <Project>{990A783E-B09D-4E44-B833-7D344EA64B85}</Project>
+      <Name>Db4objects.Db4o.Tests-2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
+      <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
+      <Name>Db4objects.Db4o-2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\db4o.net\Db4oTool\Db4oTool.MSBuild\Db4oTool.MSBuild.csproj">
+      <Project>{03E2AD50-7A21-4D03-8504-3E190AE5361F}</Project>
+      <Name>Db4oTool.MSBuild</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\db4o.net\Db4oTool\Db4oTool\Db4oTool-2005.csproj">
+      <Project>{6F3BE659-0653-4982-94D6-F1D9D8887E09}</Project>
+      <Name>Db4oTool-2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\db4o.net\Db4oUnit.Extensions\Db4oUnit.Extensions-2005.csproj">
+      <Project>{9ABAFC31-D29D-4000-B6A0-C24F0BB221F6}</Project>
+      <Name>Db4oUnit.Extensions-2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\db4o.net\Db4oUnit\Db4oUnit-2005.csproj">
+      <Project>{9ABAFC31-D29D-4000-B6A0-C24F0BB221F5}</Project>
+      <Name>Db4oUnit-2005</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets"/>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
