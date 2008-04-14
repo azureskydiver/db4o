@@ -1,6 +1,6 @@
 .0 Download Contents ..
 
-The db4o Java distribution comes as one zip file, db4o-7.2-java.zip. ._
+The db4o Java distribution comes as one zip file, db4o-7.3-java.zip. ._
 When you unzip this file, you get the following directory structure:
 
 .g directoryjava.gif ..
@@ -9,17 +9,17 @@ When you unzip this file, you get the following directory structure:
 Please take a look at all the supplied documentation formats to choose ._
 the one that works best for you:
 .a APIDocumentation ..
-.b db4o-7.2/doc/api/index.html ..
+.b db4o-7.3/doc/api/index.html ..
 The API documentation for db4o is supplied as JavaDocs HTML files. While ._
 you read through this tutorial it may be helpful to look into the API ._
 documentation occasionally.
 
-.b db4o-7.2/doc/reference/index.html ..
+.b db4o-7.3/doc/reference/index.html ..
 The reference documentation is a complete compilation for ._
 experienced db4o users. It is maintained ._
 .l http://developer.db4o.com/Resources/view.aspx/Reference online .. .
 
-.b db4o-7.2/doc/tutorial/index.html .. 
+.b db4o-7.3/doc/tutorial/index.html .. 
 This is the interactive HTML tutorial. Examples can be run "live" ._
 against a db4o database from within the browser. ._
 In order to use the interactive functionality ._
@@ -28,6 +28,6 @@ into the browser. Java security settings have to allow applets to be ._
 run. If you have problems using the interactive functionality, please ._
 refer to  .l Troubleshooting Tutorial Troubleshooting .. .
 
-.b db4o-7.2/doc/tutorial/db4o-7.2-tutorial.pdf .. 
+.b db4o-7.3/doc/tutorial/db4o-7.3-tutorial.pdf .. 
 The PDF version of the tutorial allows best fulltext search capabilities.
 
