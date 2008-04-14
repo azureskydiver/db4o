@@ -30,14 +30,17 @@ import db4ounit.*;
  */
 public abstract class DrsTestSuite extends ReflectionTestSuite {
 
+	@SuppressWarnings("unchecked")
 	protected final Class[] testCases() {
 //		if (true) return new Class[] { SingleTypeCollectionReplicationTest.class };
 		return concat(shared(), specificTestCases());
 
 	}
 
+	@SuppressWarnings("unchecked")
 	protected abstract Class[] specificTestCases();
 
+	@SuppressWarnings("unchecked")
 	private Class[] shared() {
 		return new Class[] {
 				
@@ -53,6 +56,7 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 				ByteArrayTest.class,
 				
 				// Collection
+				ComplexListTestCase.class,
 				ListTest.class, 
 				Db4oListTest.class, 
 
@@ -74,6 +78,7 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 		};
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected Class[] concat(Class[] x, Class[] y) {
 		final Collection4 c = new Collection4(x);
 		c.addAll(y);
