@@ -1,0 +1,12 @@
+<project name="docwiki" default="clean_all" basedir=".">
+	
+	<target name="clean_all">
+		<delete>
+			<fileset dir="..">
+				<include name="**/.svn/*.*"/>
+				<include name="**/.svn/**"/>
+			</fileset>
+		</delete>
+	</target>
+	
+</project>
