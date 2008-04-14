@@ -14,13 +14,23 @@
 		
 		<property name="pdf.filename.java" value="db4o-reference-java.pdf"/>
 		<property name="pdf.filename.net" value="db4o-reference-net.pdf"/>
-		<property name="pdf.title.page.java" value="db4o-reference-title-java.pdf"/>
-		<property name="pdf.title.page.net" value="db4o-reference-title-net.pdf"/>
+		<property name="pdf.title.page.java" value="db4o-reference-title-java.html"/>
+		<property name="pdf.title.page.net" value="db4o-reference-title-net.html"/>
 
 		<property name="lib" value="lib" />
 		<property name="scripts" value="${dir.build}/scripts" />
 		<property name="tidy.error.file" value="tidy.error" />
 		<property name="dir.pdf.doc" value="${dir.dist}/pdf.doc/${db4o.version.dotted}" />
+	    
+	    <copy todir="${dir.pdf.doc}">
+	        <fileset dir="${dir.pdf.titles}">
+	            <include name="*.html"/>
+	        </fileset>
+	        <filterset>
+	            <filter token="db4o.version.dotted" value="${db4o.version.dotted}"/>
+	        </filterset>
+	    </copy>
+	    <copy file="${dir.pdf.titles}/db4objects1.jpg" tofile="${dir.pdf.doc}/db4objects1.jpg" />
 	</target>
 
 	<target name="upload.pdf.doc" depends="generate.pdf.all" >
@@ -41,7 +51,7 @@
     	<convert working.dir="${dir.pdf.doc}"
     			 dir.reference="${dir.reference.java}"
     			 pdf.filename="${pdf.filename.java}"
-    			 pdf.title.page="${dir.pdf.titles}/${pdf.title.page.java}"
+    			 pdf.title.page="${dir.pdf.doc}/${pdf.title.page.java}"
     	/>
     </target>
 
