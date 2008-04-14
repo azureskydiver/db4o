@@ -185,13 +185,9 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 
 	private void copyFieldValuesAcross(Object src, Object dest, ReflectClass claxx, ReplicationProviderInside sourceProvider) {
-		ReflectField[] fields;
-
-		fields = claxx.getDeclaredFields();
-		for (int i = 0; i < fields.length; i++) {
-			ReflectField field = fields[i];
-			if (field.isStatic()) continue;
-			if (field.isTransient()) continue;
+		final Iterator4 fields = FieldIterators.persistentFields(claxx);
+		while (fields.moveNext()) {
+			ReflectField field = (ReflectField) fields.current();
 			field.setAccessible(); //TODO Optimization: Do this in the field constructor;
 			Object value = field.get(src);
 			field.set(dest, findCounterpart(value, sourceProvider));

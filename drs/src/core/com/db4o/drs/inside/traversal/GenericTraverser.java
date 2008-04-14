@@ -43,13 +43,10 @@ public class GenericTraverser implements Traverser {
 	}
 
 	private void traverseFields(Object object, ReflectClass claxx) {
-		final ReflectField[] fields = claxx.getDeclaredFields();
-		for (int i = 0; i < fields.length; i++) {
-			final ReflectField field = fields[i];
-			if (field.isStatic()) continue;
-			if (field.isTransient()) continue;
+		final Iterator4 fields = FieldIterators.persistentFields(claxx);
+		while (fields.moveNext()) {
+			final ReflectField field = (ReflectField) fields.current();
 			field.setAccessible(); //TODO Optimize: Change the reflector so I dont have to call setAcessible all the time.
-
 			Object value = field.get(object);
 			queueUpForTraversing(value);
 		}
