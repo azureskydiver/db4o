@@ -2,15 +2,15 @@
 
 package com.db4odoc.nqcollection;
 
-import java.io.File;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ext.Db4oException;
-import com.db4o.query.Predicate;
-
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
+/**
+ * @sharpen.ignore
+ */
 public class ParameterizedExamples {
 
 	private final static String DB4O_FILE_NAME = "reference.db4o";
@@ -76,7 +76,7 @@ public class ParameterizedExamples {
 
 	// end storePilots
 
-	private static class PilotNamePredicate extends Predicate<Pilot> {
+	private static class PilotNamePredicate extends com.db4o.query.Predicate<Pilot> {
 		private String startsWith;
 
 		public PilotNamePredicate(String startsWith) {
@@ -108,7 +108,7 @@ public class ParameterizedExamples {
 	// end getTestPilots
 
 	private static List<Pilot> byNameBeginning(final String startsWith) {
-		return database().query(new Predicate<Pilot>() {
+		return database().query(new com.db4o.query.Predicate<Pilot>() {
 			public boolean match(Pilot pilot) {
 				return pilot.getName().startsWith(startsWith);
 			}

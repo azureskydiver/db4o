@@ -2,7 +2,7 @@
 
 package com.db4odoc.timestamp;
 
-import java.util.Date;
+import java.util.*;
 
 public class Timestamp extends Date{
 	

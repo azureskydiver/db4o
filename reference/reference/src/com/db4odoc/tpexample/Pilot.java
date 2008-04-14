@@ -3,7 +3,7 @@
 package com.db4odoc.tpexample;
 
 import com.db4o.activation.*;
-import com.db4o.ta.Activatable;
+import com.db4o.ta.*;
 
 public class Pilot implements Activatable {
 

@@ -5,8 +5,7 @@
  */
 package com.db4odoc.autoinc;
 
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
+import com.db4o.*;
 
 public class IncrementedId {
 	private int no;

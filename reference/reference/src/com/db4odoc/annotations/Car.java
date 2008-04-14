@@ -2,7 +2,7 @@
 
 package com.db4odoc.annotations;
 
-import com.db4o.config.annotations.Indexed;
+import com.db4o.config.annotations.*;
 
 
 public class Car {

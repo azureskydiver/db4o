@@ -2,19 +2,18 @@
 
 package com.db4odoc.listoperations;
 
-import java.io.File;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.config.Configuration;
+import com.db4o.*;
+import com.db4o.config.*;
 
 public class ListOperationsExample {
         private final static String DB4O_FILE_NAME = "reference.db4o";
 
         public static void main(String[] args)
         {
-            //fillUpDb(2);
+            fillUpDb(2);
             removeInsert();
             checkResults();
             //updateObject();

@@ -1,15 +1,15 @@
 /* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.structured;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.query.Predicate;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.query.*;
 
+/**
+ * @sharpen.ignore 
+ */
 public class StructuredExample {
 	private final static String DB4O_FILE_NAME = "reference.db4o";
 
@@ -141,7 +141,7 @@ public class StructuredExample {
 
 	private static void retrieveAllPilotsNative(
 			ObjectContainer container) {
-		ObjectSet results = container.query(new Predicate<Pilot>() {
+		ObjectSet results = container.query(new com.db4o.query.Predicate<Pilot>() {
 			public boolean match(Pilot pilot) {
 				return true;
 			}
@@ -161,7 +161,7 @@ public class StructuredExample {
 	private static void retrieveCarsByPilotNameNative(
 			ObjectContainer container) {
 		final String pilotName = "Rubens Barrichello";
-		ObjectSet results = container.query(new Predicate<Car>() {
+		ObjectSet results = container.query(new com.db4o.query.Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getPilot().getName().equals(pilotName);
 			}
@@ -172,7 +172,7 @@ public class StructuredExample {
 	// end retrieveCarsByPilotNameNative
 
 	private static void updateCar(ObjectContainer container) {
-		ObjectSet result = container.query(new Predicate<Car>() {
+		ObjectSet result = container.query(new com.db4o.query.Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getModel().equals("Ferrari");
 			}
@@ -180,7 +180,7 @@ public class StructuredExample {
 		Car found = (Car) result.next();
 		found.setPilot(new Pilot("Somebody else", 0));
 		container.store(found);
-		result = container.query(new Predicate<Car>() {
+		result = container.query(new com.db4o.query.Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getModel().equals("Ferrari");
 			}
@@ -192,7 +192,7 @@ public class StructuredExample {
 
 	private static void updatePilotSingleSession(
 			ObjectContainer container) {
-		ObjectSet result = container.query(new Predicate<Car>() {
+		ObjectSet result = container.query(new com.db4o.query.Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getModel().equals("Ferrari");
 			}
@@ -200,7 +200,7 @@ public class StructuredExample {
 		Car found = (Car) result.next();
 		found.getPilot().addPoints(1);
 		container.store(found);
-		result = container.query(new Predicate<Car>() {
+		result = container.query(new com.db4o.query.Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getModel().equals("Ferrari");
 			}
@@ -212,7 +212,7 @@ public class StructuredExample {
 
 	private static void updatePilotSeparateSessionsPart1(
 			ObjectContainer container) {
-		ObjectSet result = container.query(new Predicate<Car>() {
+		ObjectSet result = container.query(new com.db4o.query.Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getModel().equals("Ferrari");
 			}
@@ -226,7 +226,7 @@ public class StructuredExample {
 
 	private static void updatePilotSeparateSessionsPart2(
 			ObjectContainer container) {
-		ObjectSet result = container.query(new Predicate<Car>() {
+		ObjectSet result = container.query(new com.db4o.query.Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getModel().equals("Ferrari");
 			}
@@ -247,7 +247,7 @@ public class StructuredExample {
 
 	private static void updatePilotSeparateSessionsImprovedPart2(
 			ObjectContainer container) {
-		ObjectSet result = container.query(new Predicate<Car>() {
+		ObjectSet result = container.query(new com.db4o.query.Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getModel().equals("Ferrari");
 			}
@@ -261,7 +261,7 @@ public class StructuredExample {
 
 	private static void updatePilotSeparateSessionsImprovedPart3(
 			ObjectContainer container) {
-		ObjectSet result = container.query(new Predicate<Car>() {
+		ObjectSet result = container.query(new com.db4o.query.Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getModel().equals("Ferrari");
 			}
@@ -272,7 +272,7 @@ public class StructuredExample {
 	// end updatePilotSeparateSessionsImprovedPart3
 
 	private static void deleteFlat(ObjectContainer container) {
-		ObjectSet result = container.query(new Predicate<Car>() {
+		ObjectSet result = container.query(new com.db4o.query.Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getModel().equals("Ferrari");
 			}
@@ -295,14 +295,14 @@ public class StructuredExample {
 	// end deleteDeepPart1
 
 	private static void deleteDeepPart2(ObjectContainer container) {
-		ObjectSet result = container.query(new Predicate<Car>() {
+		ObjectSet result = container.query(new com.db4o.query.Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getModel().equals("BMW");
 			}
 		});
 		Car found = (Car) result.next();
 		container.delete(found);
-		result = container.query(new Predicate<Car>() {
+		result = container.query(new com.db4o.query.Predicate<Car>() {
 			public boolean match(Car car) {
 				return true;
 			}
@@ -313,7 +313,7 @@ public class StructuredExample {
 	// end deleteDeepPart2
 
 	private static void deleteDeepRevisited(ObjectContainer container) {
-		ObjectSet result = container.query(new Predicate<Pilot>() {
+		ObjectSet result = container.query(new com.db4o.query.Predicate<Pilot>() {
 			public boolean match(Pilot pilot) {
 				return pilot.getName().equals("Michael Schumacher");
 			}
@@ -326,7 +326,7 @@ public class StructuredExample {
 		container.store(car1);
 		container.store(car2);
 		container.delete(car2);
-		result = container.query(new Predicate<Car>() {
+		result = container.query(new com.db4o.query.Predicate<Car>() {
 			public boolean match(Car car) {
 				return true;
 			}

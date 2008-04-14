@@ -2,14 +2,11 @@
 
 package com.db4odoc.replication;
 
-import java.io.IOException;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.ConfigScope;
-import com.db4o.drs.Replication;
-import com.db4o.drs.ReplicationSession;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.drs.*;
 
 
 public class ReplicationExample {

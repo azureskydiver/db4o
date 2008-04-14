@@ -2,15 +2,10 @@
 
 package com.db4odoc.defragmentation;
 
-import java.io.IOException;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.defragment.AvailableClassFilter;
-import com.db4o.defragment.Defragment;
-import com.db4o.defragment.DefragmentConfig;
-import com.db4o.defragment.DefragmentInfo;
-import com.db4o.defragment.DefragmentListener;
-import com.db4o.defragment.TreeIDMapping;
+import com.db4o.*;
+import com.db4o.defragment.*;
 
 
 public class DefragmentExample {

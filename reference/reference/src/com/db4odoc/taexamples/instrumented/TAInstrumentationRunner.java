@@ -2,16 +2,18 @@
 
 package com.db4odoc.taexamples.instrumented;
 
-import java.io.File;
-import java.net.URL;
+import java.io.*;
+import java.net.*;
 
-import com.db4o.instrumentation.classfilter.ByNameClassFilter;
-import com.db4o.instrumentation.core.BloatClassEdit;
-import com.db4o.instrumentation.core.ClassFilter;
-import com.db4o.instrumentation.main.Db4oInstrumentationLauncher;
-import com.db4o.ta.instrumentation.InjectTransparentActivationEdit;
+import com.db4o.instrumentation.classfilter.*;
+import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.main.*;
+import com.db4o.ta.instrumentation.*;
 
 
+/**
+ * @sharpen.ignore
+ */
 public class TAInstrumentationRunner {
 
 	public static void main(String[] args) throws Exception {

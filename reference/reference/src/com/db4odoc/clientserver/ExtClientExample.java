@@ -2,13 +2,10 @@
 
 package com.db4odoc.clientserver;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.ObjectSet;
-import com.db4o.ext.ExtClient;
+import com.db4o.*;
+import com.db4o.ext.*;
 
 
 public class ExtClientExample  {

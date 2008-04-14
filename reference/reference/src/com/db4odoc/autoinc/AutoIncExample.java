@@ -5,18 +5,14 @@
  */
 package com.db4odoc.autoinc;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.events.Event4;
-import com.db4o.events.EventArgs;
-import com.db4o.events.EventListener4;
-import com.db4o.events.EventRegistry;
-import com.db4o.events.EventRegistryFactory;
-import com.db4o.events.ObjectEventArgs;
+import com.db4o.*;
+import com.db4o.events.*;
 
+/**
+ * @sharpen.ignore
+ */
 
 public class AutoIncExample {
 

@@ -1,9 +1,7 @@
 /* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.concurrency;
 
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.ObjectSet;
+import com.db4o.*;
 
 class PessimisticThread extends Thread {
     private ObjectServer _server;

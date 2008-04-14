@@ -1,14 +1,12 @@
 /* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.diagnostics;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.diagnostic.DiagnosticToConsole;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.diagnostic.*;
+import com.db4o.query.*;
 
 
 public class DiagnosticExample{

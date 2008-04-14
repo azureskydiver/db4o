@@ -2,16 +2,12 @@
 
 package com.db4odoc.ios;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.RandomAccessFile;
+import java.io.*;
 
-import com.db4o.DTrace;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ext.Db4oIOException;
-import com.db4o.internal.Platform4;
-import com.db4o.io.IoAdapter;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.internal.*;
+import com.db4o.io.*;
 
 public class LoggingAdapter extends IoAdapter {
 

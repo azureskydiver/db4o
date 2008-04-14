@@ -2,22 +2,16 @@
 
 package com.db4odoc.sorting;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.diagnostic.DiagnosticToConsole;
-import com.db4o.query.Candidate;
-import com.db4o.query.Evaluation;
-import com.db4o.query.Predicate;
-import com.db4o.query.Query;
-import com.db4o.query.QueryComparator;
+import com.db4o.*;
+import com.db4o.query.*;
 
+/**
+ * 
+ * @sharpen.ignore
+ */
 public class SortingExample {
 	private final static String DB4O_FILE_NAME = "reference.db4o";
 
@@ -113,7 +107,7 @@ public class SortingExample {
 		try {
 			long t1 = System.currentTimeMillis();
 			ObjectSet result = container.query(
-					new Predicate<Pilot>() {
+					new com.db4o.query.Predicate<Pilot>() {
 						public boolean match(Pilot pilot) {
 							return true;
 						}

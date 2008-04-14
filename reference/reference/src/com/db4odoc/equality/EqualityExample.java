@@ -2,13 +2,13 @@
 
 package com.db4odoc.equality;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.query.Predicate;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
-
+/**
+ * @sharpen.ignore 
+ */
 public class EqualityExample {
 
 	private final static String DB4O_FILE_NAME = "reference.db4o";
@@ -63,7 +63,7 @@ public class EqualityExample {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				ObjectSet<Pilot> result = container.query(new Predicate<Pilot>(){
+				ObjectSet<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>(){
 					public boolean match(Pilot pilot){
 						return pilot.getName().equals("Kimi Raikkonnen") &&
 						   pilot.getPoints() == 100;

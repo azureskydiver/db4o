@@ -2,12 +2,9 @@
 
 package com.db4odoc.refactoring.newclasses;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.ext.StoredClass;
-import com.db4o.ext.StoredField;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
 
 public class RefactoringExample {

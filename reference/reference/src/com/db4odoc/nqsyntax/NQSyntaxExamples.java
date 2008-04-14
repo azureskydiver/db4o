@@ -2,18 +2,17 @@
 
 package com.db4odoc.nqsyntax;
 
-import java.io.File;
-import java.util.Comparator;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ext.Db4oException;
-import com.db4o.query.Predicate;
-import com.db4o.query.QueryComparator;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 import com.db4odoc.nqcollection.Pilot;
 
+/**
+ * @sharpen.ignore
+ */
 public class NQSyntaxExamples {
 
 	private final static String DB4O_FILE_NAME = "reference.db4o";
@@ -101,7 +100,7 @@ public class NQSyntaxExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List<Pilot> result = container.query(new Predicate<Pilot>() {
+				List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 					public boolean match(Pilot pilot) {
 						// each Pilot is included in the result
 						return true;
@@ -122,7 +121,7 @@ public class NQSyntaxExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List<Pilot> result = container.query(new Predicate<Pilot>() {
+				List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 					public boolean match(Pilot pilot) {
 						// each Pilot is included in the result
 						return true;
@@ -143,7 +142,7 @@ public class NQSyntaxExamples {
 
 	// end querySyntax3
 
-	private static class PilotPredicate extends Predicate<Pilot> {
+	private static class PilotPredicate extends com.db4o.query.Predicate<Pilot> {
 		public boolean match(Pilot pilot) {
 			// each Pilot is included in the result
 			return true;
@@ -177,7 +176,7 @@ public class NQSyntaxExamples {
 
 	// end querySyntax4
 
-	private static class PilotPredicateNotGeneric extends Predicate {
+	private static class PilotPredicateNotGeneric extends com.db4o.query.Predicate {
 		public boolean match(Object obj) {
 			// each Pilot is included in the result
 			if (obj instanceof Pilot) {
@@ -202,7 +201,7 @@ public class NQSyntaxExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List result = container.query(new Predicate() {
+				List result = container.query(new com.db4o.query.Predicate() {
 					public boolean match(Object obj) {
 						// each Pilot is included in the result
 						if (obj instanceof Pilot) {
@@ -233,7 +232,7 @@ public class NQSyntaxExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List result = container.query(new Predicate() {
+				List result = container.query(new com.db4o.query.Predicate() {
 					public boolean match(Object obj) {
 						// each Pilot is included in the result
 						if (obj instanceof Pilot) {

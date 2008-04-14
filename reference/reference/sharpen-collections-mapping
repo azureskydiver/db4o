@@ -1,0 +1,22 @@
+
+-methodMapping java.util.Iterator.hasNext HasNext
+-methodMapping java.util.Iterator.next Next
+
+-typeMapping com.db4o.ObjectSet Db4objects.Db4o.IObjectSet
+-methodMapping com.db4o.ObjectSet.hasNext Db4objects.Db4o.IObjectSet.HasNext
+-methodMapping com.db4o.ObjectSet.next Db4objects.Db4o.IObjectSet.Next
+
+-typeMapping java.util.Comparator System.Collections.IEnumerator
+
+-typeMapping com.db4o.foundation.Iterable4 System.Collections.IEnumerable
+-typeMapping com.db4o.foundation.Iterator4 System.Collections.IEnumerator
+
+
+-methodMapping com.db4o.foundation.Iterable4.iterator GetEnumerator
+-propertyMapping com.db4o.foundation.Iterator4.current Current
+
+-typeMapping java.util.ArrayList System.Collections.ArrayList
+-methodMapping java.util.List.addAll AddRange
+-methodMapping java.util.AbstractList.addAll AddRange
+-methodMapping java.util.ArrayList.addAll AddRange
+

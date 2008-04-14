@@ -1,9 +1,10 @@
 /* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.diagnostics;
 
-import com.db4o.query.Predicate;
-
-public class ArbitraryQuery extends Predicate<Pilot>{    
+/**
+ * @sharpen.ignore
+ */
+public class ArbitraryQuery extends com.db4o.query.Predicate<Pilot>{    
     public int[] points;
     
     public ArbitraryQuery(int[] points) {

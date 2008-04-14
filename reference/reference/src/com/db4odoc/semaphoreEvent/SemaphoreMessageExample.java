@@ -1,28 +1,17 @@
 package com.db4odoc.semaphoreEvent;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.config.Configuration;
-import com.db4o.events.CommitEventArgs;
-import com.db4o.events.Event4;
-import com.db4o.events.EventArgs;
-import com.db4o.events.EventListener4;
-import com.db4o.events.EventRegistry;
-import com.db4o.events.EventRegistryFactory;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ext.ObjectInfo;
-import com.db4o.ext.ObjectInfoCollection;
-import com.db4o.foundation.Iterator4;
-import com.db4o.messaging.MessageContext;
-import com.db4o.messaging.MessageRecipient;
-import com.db4o.messaging.MessageSender;
-
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.events.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
+import com.db4o.messaging.*;
+/**
+ * @sharpen.ignore
+ */
 public class SemaphoreMessageExample {
 
 	private static final String DB4O_FILE_NAME = "reference.db4o";

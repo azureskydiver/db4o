@@ -2,15 +2,12 @@
 
 package com.db4odoc.querymode;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.config.QueryEvaluationMode;
-import com.db4o.query.Query;
-import com.db4o.tools.QueryStats;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.query.*;
+import com.db4o.tools.*;
 
 public class QueryModesExample {
 	private final static String DB4O_FILE_NAME = "reference.db4o";

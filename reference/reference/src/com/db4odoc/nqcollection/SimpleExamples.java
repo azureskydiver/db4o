@@ -2,21 +2,16 @@
 
 package com.db4odoc.nqcollection;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ext.Db4oException;
-import com.db4o.query.Predicate;
-import com.db4o.query.QueryComparator;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
+/**
+ * @sharpen.ignore
+ */
 public class SimpleExamples {
 
 	private final static String DB4O_FILE_NAME = "reference.db4o";
@@ -126,7 +121,7 @@ public class SimpleExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List<Pilot> result = container.query(new Predicate<Pilot>() {
+				List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 					public boolean match(Pilot pilot) {
 						// each Pilot is included in the result
 						return true;
@@ -147,7 +142,7 @@ public class SimpleExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List<Pilot> result = container.query(new Predicate<Pilot>() {
+				List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 					public boolean match(Pilot pilot) {
 						// pilots with 5 points are included in the
 						// result
@@ -169,7 +164,7 @@ public class SimpleExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List result = container.query(new Predicate() {
+				List result = container.query(new com.db4o.query.Predicate() {
 					public boolean match(Object object) {
 						// each Pilot is included in the result
 						if (object instanceof Pilot) {
@@ -193,7 +188,7 @@ public class SimpleExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List<Pilot> result = container.query(new Predicate<Pilot>() {
+				List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 					public boolean match(Pilot pilot) {
 						// all Pilots containing "Test" in the name
 						// are included in the result
@@ -215,7 +210,7 @@ public class SimpleExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List<Pilot> result = container.query(new Predicate<Pilot>() {
+				List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 					public boolean match(Pilot pilot) {
 						// all Pilots with the name ending with 6 will
 						// be included
@@ -237,7 +232,7 @@ public class SimpleExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List<Pilot> result = container.query(new Predicate<Pilot>() {
+				List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 					public boolean match(Pilot pilot) {
 						// all Pilots containing "Test" in the name
 						// and 6 point are included in the result
@@ -261,7 +256,7 @@ public class SimpleExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List<Pilot> result = container.query(new Predicate<Pilot>() {
+				List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 					public boolean match(Pilot pilot) {
 						// all Pilots having 6 to 12 point are
 						// included in the result
@@ -283,7 +278,7 @@ public class SimpleExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List<Pilot> result = container.query(new Predicate<Pilot>() {
+				List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 					private ArrayList randomArray = null;
 
 					private List getRandomArray() {
@@ -318,7 +313,7 @@ public class SimpleExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List<Pilot> result = container.query(new Predicate<Pilot>() {
+				List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 					public boolean match(Pilot pilot) {
 						// all Pilots having even points
 						return pilot.getPoints() % 2 == 0;
@@ -339,7 +334,7 @@ public class SimpleExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List<Pilot> result = container.query(new Predicate<Pilot>() {
+				List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 					boolean selected = false;
 
 					public boolean match(Pilot pilot) {
@@ -367,7 +362,7 @@ public class SimpleExamples {
 	public static void getSortedPilots() {
 		ObjectContainer container = database();
 		try {
-			List result = container.query(new Predicate<Pilot>() {
+			List result = container.query(new com.db4o.query.Predicate<Pilot>() {
 				public boolean match(Pilot pilot) {
 					return true;
 				}
@@ -387,7 +382,7 @@ public class SimpleExamples {
 	public static void getPilotsSortByNameAndPoints() {
 		ObjectContainer container = database();
 		try {
-			List result = container.query(new Predicate<Pilot>() {
+			List result = container.query(new com.db4o.query.Predicate<Pilot>() {
 				public boolean match(Pilot pilot) {
 					return true;
 				}
@@ -413,7 +408,7 @@ public class SimpleExamples {
 	public static void getPilotsSortWithComparator() {
 		ObjectContainer container = database();
 		try {
-			List result = container.query(new Predicate<Pilot>() {
+			List result = container.query(new com.db4o.query.Predicate<Pilot>() {
 				public boolean match(Pilot pilot) {
 					return true;
 				}
@@ -441,7 +436,7 @@ public class SimpleExamples {
 
 	
 	
-	static class DistinctPilotsPredicate extends Predicate <Pilot>
+	static class DistinctPilotsPredicate extends com.db4o.query.Predicate <Pilot>
 	{
 		static HashSet<Pilot> uniqueResult = new HashSet<Pilot>();	
 		
@@ -474,7 +469,7 @@ public class SimpleExamples {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				List<Pilot> result = container.query(new Predicate<Pilot>() {
+				List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 					public boolean match(Pilot pilot) {
 						// Add ranking to the pilots during the query.
 						// Note: pilot records in the database won't

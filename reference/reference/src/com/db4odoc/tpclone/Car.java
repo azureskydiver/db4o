@@ -1,9 +1,8 @@
 /* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.tpclone;
 
-import com.db4o.activation.ActivationPurpose;
-import com.db4o.activation.Activator;
-import com.db4o.ta.Activatable;
+import com.db4o.activation.*;
+import com.db4o.ta.*;
 
 public class Car implements Activatable, Cloneable {
 	private String model;

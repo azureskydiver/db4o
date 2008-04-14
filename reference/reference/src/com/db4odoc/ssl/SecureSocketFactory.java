@@ -1,13 +1,12 @@
 /* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
 package com.db4odoc.ssl;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 
-import javax.net.ssl.SSLContext;
+import javax.net.ssl.*;
 
-import com.db4o.config.NativeSocketFactory;
+import com.db4o.config.*;
 
 public class SecureSocketFactory implements NativeSocketFactory {
 

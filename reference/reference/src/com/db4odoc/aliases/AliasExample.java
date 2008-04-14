@@ -2,15 +2,10 @@
 
 package com.db4odoc.aliases;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.config.TypeAlias;
-import com.db4o.config.WildcardAlias;
+import com.db4o.*;
+import com.db4o.config.*;
 
 public class AliasExample {
 	private static final String DB4O_FILE_NAME = "reference.db4o";

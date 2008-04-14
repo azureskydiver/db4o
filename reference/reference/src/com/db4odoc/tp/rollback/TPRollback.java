@@ -1,14 +1,12 @@
 /* Copyright (C) 2008 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.tp.rollback;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.config.Configuration;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ta.RollbackStrategy;
-import com.db4o.ta.TransparentPersistenceSupport;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.ext.*;
+import com.db4o.ta.*;
 
 public class TPRollback {
 

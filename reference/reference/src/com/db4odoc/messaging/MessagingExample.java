@@ -2,13 +2,9 @@
 
 package com.db4odoc.messaging;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.config.Configuration;
-import com.db4o.messaging.MessageContext;
-import com.db4o.messaging.MessageRecipient;
-import com.db4o.messaging.MessageSender;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.messaging.*;
 
 
 public class MessagingExample {

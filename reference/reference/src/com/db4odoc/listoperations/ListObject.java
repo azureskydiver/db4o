@@ -2,8 +2,7 @@
 
 package com.db4odoc.listoperations;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 public class ListObject {

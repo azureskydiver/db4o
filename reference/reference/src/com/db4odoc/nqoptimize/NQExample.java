@@ -2,20 +2,14 @@
 
 package com.db4odoc.nqoptimize;
 
-import java.io.File;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.config.Configuration;
-import com.db4o.diagnostic.Diagnostic;
-import com.db4o.diagnostic.DiagnosticListener;
-import com.db4o.diagnostic.NativeQueryNotOptimized;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ext.Db4oException;
-import com.db4o.query.Predicate;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.diagnostic.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
 public class NQExample {
 
@@ -87,7 +81,7 @@ public class NQExample {
 		ObjectContainer container = database(configureNQ());
 		if (container != null) {
 			try {
-				List<Pilot> result = container.query(new Predicate<Pilot>() {
+				List<Pilot> result = container.query(new com.db4o.query.Predicate<Pilot>() {
 					public boolean match(Pilot pilot) {
 						// pilots with 5 points are included in the
 						// result

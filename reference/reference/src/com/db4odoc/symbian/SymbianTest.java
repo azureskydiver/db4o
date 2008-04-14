@@ -2,12 +2,9 @@
 
 package com.db4odoc.symbian;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
+import com.db4o.*;
 
 public class SymbianTest {
 

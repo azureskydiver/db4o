@@ -2,13 +2,11 @@
 
 package com.db4odoc.lists;
 
-import java.io.File;
+import java.io.*;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.query.Query;
-import java.util.List;
+import com.db4o.*;
+import com.db4o.query.*;
 
 public class CollectionExample {
 	private final static String DB4O_FILE_NAME="reference.db4o";
