@@ -110,7 +110,7 @@
 			<delete dir="${temp.dir}" />
 			<mkdir dir="${temp.dir}" />
 
-			<javac srcdir="@{srcdir}" destdir="${temp.dir}">
+			<javac srcdir="@{srcdir}" destdir="${temp.dir}" target="1.5" source="1.5">
 				<classpath refid="@{classpathrefid}" />
 			</javac>
 			<copy todir="${temp.dir}">
