@@ -70,6 +70,7 @@ public class Db4oTests extends DrsTestSuite {
 		return concat(
 			platformSpecificTestCases(), 
 			new Class[] {
+				com.db4o.drs.test.ArrayTestSuite.class,
 				com.db4o.drs.test.dotnet.StructTestCase.class,
 				com.db4o.drs.test.DeepListGraphTestCase.class,
 			});
