@@ -153,7 +153,7 @@
 	</target>
 	
 	<target name="prepare-package-structure" depends="package-sources, package-binaries, package-docs">
-	
+		
 		<if>
 			<equals arg1="${mono}" arg2="true" />
 			<then>
@@ -333,7 +333,10 @@
 	<target name="build-zip" depends="prepare-package-structure">
 	
 		<zip destfile="${dir.dist}/${db4o.file}${installer.package.suffix}.zip">
-			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
+			<fileset dir="${dir.dist.net}">
+				<include name="${folder.build}/**" />
+				<exclude name="**/Db4objects.Db4o.Foundation/**" />
+			</fileset>
 		</zip>			
 		
 	</target>
