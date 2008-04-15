@@ -136,10 +136,16 @@
 			</fileset>
         </updateAssemblyInfo>
     	
+    	<fileset id="drs.sources" dir="${drs.net.src.dir}/Db4objects.Drs">
+    		<include name="**/*.cs" />
+    	</fileset>
+    	
         <updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs.csproj">
-        	<sources dir="${drs.net.src.dir}/Db4objects.Drs">
-        		<include name="**/*.cs" />
-        	</sources>
+        	<sources refid="drs.sources" />	
+        </updatecsharpproject>
+    	
+    	<updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs-2008.csproj">
+    		<sources refid="drs.sources" />
         </updatecsharpproject>
         
     	
