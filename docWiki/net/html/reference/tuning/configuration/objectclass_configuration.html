@@ -9,6 +9,7 @@
       <div class="CommonContentArea">
         <h1>ObjectClass Configuration</h1>
 
+
 <p>ObjectClass/IObjectClass provides an
 interface for class configuration. </p>
 
@@ -152,7 +153,7 @@ required for using replication. For more information see <a href="../../db4o_rep
 <p><code>public void GenerateUUIDs(bool
 setting);</code></p>
 
-<p>[/filter]&nbsp;&nbsp;&nbsp;&nbsp; </p>
+</span>
 
 <p>generate UUIDs for stored objects of
 this class. For more information see
@@ -160,13 +161,56 @@ this class. For more information see
 
 <p><br></p>
 
-<p></p>
 
-<p>registers a custom marshaller for
-this class. For more information see <a href="../../implementation_strategies/marshallers.html" class="wikiLink">Marshallers</a>.</p>
+
+<span name="cs_wiki_filter" csw_filters="net">
+
+<p>.NET:</p>
+
+<p><code>public void GenerateVersionNumbers(bool
+setting);</code></p>
+
+</span>
+
+<p>generate version numbers for stored
+objects of this class. For more information see <a href="../../db4o_replication_system_drs.html" class="wikiLink">db4o Replication System (dRS)</a> </p>
 
 <p><br></p>
 
+
+
+<span name="cs_wiki_filter" csw_filters="net">
+
+<p>.NET:</p>
+
+<p><code>public void Indexed(bool
+flag);</code></p>
+
+</span>
+
+<p>turns the class index on or off.</p>
+
+<p>db4o maintains an index for each
+class to be able to deliver all instances of a class in a query. If the class
+index is never needed, it can be turned off with this method to improve the
+performance on creation and deletion of the class objects.</p>
+
+<p>Common cases where a class index is
+not needed:</p>
+
+<ul>
+<li>The application always works with
+subclasses or superclasses.</li>
+
+<li>There are convenient field indexes
+that will always find instances of a class.</li>
+
+<li>The application always works with
+IDs. </li>
+</ul>
+
+
+<p>For more information see <a href="../performance_hints/no_class_index.html" class="wikiLink">No Class Index</a>.<br></p>
 
 
 <span name="cs_wiki_filter" csw_filters="net">
@@ -203,6 +247,15 @@ the desired value. For more information see
 
 
 
+<span name="cs_wiki_filter" csw_filters="net">
+
+<p>.NET:</p>
+
+<p><code>public IObjectField OjectField
+(string fieldName);</code></p>
+
+</span>
+
 <p>returns an ObjectField object to
 configure the specified field. For more information see
 <a href="objectfield_configuration.html" class="wikiLink">ObjectField Configuration</a>.</p>
@@ -210,6 +263,15 @@ configure the specified field. For more information see
 <p><br></p>
 
 
+
+<span name="cs_wiki_filter" csw_filters="net">
+
+<p>.NET:</p>
+
+<p><code>public void
+PersistStaticFieldValues();</code></p>
+
+</span>
 
 <p>turns on storing static field values
 for this class. For more information see
@@ -284,7 +346,8 @@ StoreTransientFields (bool flag);</code></p>
 </span>
 
 <p>allows to specify if transient fields
-are to be stored. The default for every class is <code>false</code>.</p><p>For more information see <a href="../selective_persistence/storing_transient_fields.html" class="wikiLink">Storing Transient Fields</a>.&nbsp;</p>
+are to be stored. The default for every class is <code>false</code>.</p>
+<p>For more information see <a href="../selective_persistence/storing_transient_fields.html" class="wikiLink">Storing Transient Fields</a>.&nbsp;</p>
 
 <p><br></p>
 
@@ -316,13 +379,10 @@ depth);</code></p>
 </span>
 
 <p>specifies the updateDepth for this
-class. For more information see <a href="../../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a>.</p>
-
-
-</div>
+class. For more information see <a href="../../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a>.</p></div>
     </div>
     <div id="footer">
-					This revision (9) was last Modified 2007-06-04T18:07:21 by Tetyana.
+					This revision (10) was last Modified 2008-04-14T16:32:18 by Tetyana.
 				</div>
   </body>
 </html>

@@ -9,6 +9,7 @@
       <div class="CommonContentArea">
         <h1>ObjectClass Configuration</h1>
 
+
 <p>ObjectClass/IObjectClass provides an
 interface for class configuration. </p>
 
@@ -154,6 +155,21 @@ generateUUIDs(boolean setting);</code></p>
 
 
 
+<p>generate UUIDs for stored objects of
+this class. For more information see
+<a href="../../implementation_strategies/ids_and_uuids/unique_universal_ids.html" class="wikiLink">Unique Universal IDs</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void
+generateVersionNumbers(boolean setting);</code></p>
+
+</span>
+
 
 
 <p>generate version numbers for stored
@@ -195,23 +211,6 @@ IDs. </li>
 
 
 <p>For more information see <a href="../performance_hints/no_class_index.html" class="wikiLink">No Class Index</a>.<br></p>
-
-<span name="cs_wiki_filter" csw_filters="java">
-
-<p>Java:</p>
-
-<p><code>public void
-marshallWith(ObjectMarshaller marshaller);</code></p>
-
-</span>
-
-<p></p>
-
-<p>registers a custom marshaller for
-this class. For more information see <a href="../../implementation_strategies/marshallers.html" class="wikiLink">Marshallers</a>.</p>
-
-<p><br></p>
-
 <span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
@@ -253,18 +252,26 @@ the desired value. For more information see
 <p><code>public ObjectField objectField
 (String fieldName);</code></p>
 
-<p>[/filter] </p>
+</span>
 
-<p> </p>
 
-<p>[filter=net]</p>
 
-<p>.NET:</p>
+<p>returns an ObjectField object to
+configure the specified field. For more information see
+<a href="objectfield_configuration.html" class="wikiLink">ObjectField Configuration</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
 
 <p><code>public void
-PersistStaticFieldValues();</code></p>
+persistStaticFieldValues();</code></p>
 
 </span>
+
+
 
 <p>turns on storing static field values
 for this class. For more information see
@@ -339,7 +346,8 @@ storeTransientFields (boolean flag);</code></p>
 
 
 <p>allows to specify if transient fields
-are to be stored. The default for every class is <code>false</code>.</p><p>For more information see <a href="../selective_persistence/storing_transient_fields.html" class="wikiLink">Storing Transient Fields</a>.&nbsp;</p>
+are to be stored. The default for every class is <code>false</code>.</p>
+<p>For more information see <a href="../selective_persistence/storing_transient_fields.html" class="wikiLink">Storing Transient Fields</a>.&nbsp;</p>
 
 <p><br></p>
 
@@ -362,6 +370,7 @@ class. For more information see <a href="../../implementation_strategies/transla
 <span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
+
 <p><code>public void updateDepth (int
 depth);</code></p>
 
@@ -370,13 +379,10 @@ depth);</code></p>
 
 
 <p>specifies the updateDepth for this
-class. For more information see <a href="../../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a>.</p>
-
-
-</div>
+class. For more information see <a href="../../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a>.</p></div>
     </div>
     <div id="footer">
-					This revision (9) was last Modified 2007-06-04T18:07:21 by Tetyana.
+					This revision (10) was last Modified 2008-04-14T16:32:18 by Tetyana.
 				</div>
   </body>
 </html>
