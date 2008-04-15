@@ -4,10 +4,10 @@ package com.db4o.drs.test;
 
 import java.util.*;
 
-import db4ounit.Assert;
-import com.db4o.ObjectSet;
-import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.inside.GenericReplicationSession;
+import com.db4o.drs.*;
+import com.db4o.drs.inside.*;
+
+import db4ounit.*;
 
 public class ArrayReplicationTest extends DrsTestCase {
 
