@@ -10,7 +10,7 @@ public class Link extends Command {
 
     private static final char[][] EXTERNALS = { "http:".toCharArray(),
         "mailto:".toCharArray(), "news:".toCharArray(), "ftp:".toCharArray(),
-        "callto:".toCharArray()};
+        "callto:".toCharArray(), "https:".toCharArray(),};
 
     public void resolve() {
         detectParameters();
