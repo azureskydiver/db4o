@@ -494,9 +494,9 @@ public final class Config4Impl implements Configuration, DeepClone,
 				configuredReflector=Platform4.createReflector(classLoader());
 				_config.put(CONFIGURED_REFLECTOR_KEY,configuredReflector);	
 			}
-			reflector=new GenericReflector(null, configuredReflector);
+			reflector=new GenericReflector(configuredReflector);
+            
             _config.put(REFLECTOR_KEY,reflector);
-            configuredReflector.setParent(reflector);
 		}
 // TODO: transaction assignment has been moved to YapStreamBase#initialize1().
 // implement better, more generic solution as described in COR-288

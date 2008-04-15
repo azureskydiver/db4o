@@ -62,6 +62,10 @@ public class GenericReflector implements Reflector, DeepClone {
         }
 	}
 	
+	public GenericReflector(Reflector delegateReflector) {
+		this(null, delegateReflector);
+	}
+	
 	/**
 	 * Creates a clone of provided object
 	 * @param obj object to copy
@@ -407,5 +411,4 @@ public class GenericReflector implements Reflector, DeepClone {
     public void setParent(Reflector reflector) {
         // do nothing, the generic reflector does not have a parant
     }
-
 }
