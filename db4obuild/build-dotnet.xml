@@ -333,10 +333,7 @@
 	<target name="build-zip" depends="prepare-package-structure">
 	
 		<zip destfile="${dir.dist}/${db4o.file}${installer.package.suffix}.zip">
-			<fileset dir="${dir.dist.net}">
-				<include name="${folder.build}/**" />
-				<exclude name="**/Db4objects.Db4o.Foundation/**" />
-			</fileset>
+			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
 		</zip>			
 		
 	</target>
