@@ -31,6 +31,7 @@ public class UpdateAssemblyInfoTask extends AbstractAssemblyInfoTask {
 	@Override
 	protected String updateAttributes(String contents) {
 		contents = updateAttribute(contents, "AssemblyVersion", _version);
+		contents = updateAttribute(contents, "AssemblyFileVersion", _version);
 		contents = updateAttribute(contents, "AssemblyProduct", AssemblyInfo.PRODUCT);
 		contents = updateAttribute(contents, "AssemblyCompany", AssemblyInfo.COMPANY);
 		contents = updateAttribute(contents, "AssemblyCopyright", AssemblyInfo.COPYRIGHT);
