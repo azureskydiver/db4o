@@ -346,7 +346,7 @@
 	<target name="build-net35" depends="init, configure-net35, build-all" description="Builds Db4o for the .net 3.5 framework including LINQ">
 	</target>
 
-	<target name="build-all" depends="check-dependencies, build-core, build-admin, build-bench, build-tutorial">
+	<target name="build-all" depends="check-dependencies, build-core, build-admin, build-tutorial">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
@@ -396,10 +396,6 @@
 		<msb solution="${dir.n.v6}/Db4oTool/Db4oTool" />		
 	</target>
 
-	<target name="build-bench" depends="prepare-csproject-db4obench">
-		<msb solution="${dir.n.db4obench}/Db4oBench" />
-	</target>
-	
 	<target name="build-tutorial" >
 		<ant antfile="build-dotnet-tutorial.xml">
 		</ant>
