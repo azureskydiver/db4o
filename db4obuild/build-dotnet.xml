@@ -247,15 +247,8 @@
 	</target>
 	
 	<target name="package-binaries">
-		<!--
-			
-			/bin/compact-2.0/
-			/bin/compact-2.0-legacy/
-			/bin/net-2.0/
-			/bin/net-2.0-legacy/
-			
-		-->
 		<property name="dir.bin" location="${dir.dist.net.build}/bin" />
+	    <reset-dir dir="${dir.bin}" />
 		<copy-bin-set suffix="" srcdir="${dir.dist.dll}"  />
 		
 	</target>
