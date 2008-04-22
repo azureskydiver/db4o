@@ -11,16 +11,16 @@
 	<property name="drs.xml" location="${drs.net.bin.dir}/Db4objects.Drs.xml" />
 	
     <property name="drs.sharpen.workspace.dir" location="${dir.dist}/drs.net/workspace" />
-	
-    <taskdef resource="org/apache/ant/dotnet/antlib.xml" />
     
     <target name="init" depends="properties">
-        <condition property="isUnix">
+        <!--
+    	<condition property="isUnix">
             <os family="unix"/>
         </condition>
         
         <fail message="The script should be used on Windows platform. For Mono build, please use build-drs-net.xml." 
             if="isUnix"/>
+    	-->
         
 		<mkdir dir="${drs.net.dir}" />
 		<mkdir dir="${drs.net.bin.dir}" />
@@ -162,11 +162,17 @@
 				<include name="AssemblyInfo.cs" />
 			</fileset>
         </updateAssemblyInfo>
+    	
+    	<fileset id="drs.tests.sources" dir="${drs.net.src.dir}/Db4objects.Drs.Tests">
+    		<include name="**/*.cs" />
+    	</fileset>
         <updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests.csproj">
-        	<sources dir="${drs.net.src.dir}/Db4objects.Drs.Tests">
-        		<include name="**/*.cs" />
-        	</sources>
+        	<sources refid="drs.tests.sources" />
         </updatecsharpproject>
+    	<updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests-2008.csproj">
+        	<sources refid="drs.tests.sources" />
+        </updatecsharpproject>
+
 
         <!--.NET: QuickStart -->
         <updateAssemblyInfo	version="${drs.net.version}">
@@ -188,7 +194,7 @@
 		</sharpen>
 	</target>
     
-    <target name="prepare-sharpen-workspace">
+    <target name="prepare-sharpen-workspace" depends="init">
         <mkdir dir="${drs.sharpen.workspace.dir}/lib" />
 		<property name="dependencies.jar" location="${drs.sharpen.workspace.dir}/lib/dependencies.jar" />
 		
