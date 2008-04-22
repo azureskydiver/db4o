@@ -20,13 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 
 import com.db4o.drs.inside.CollectionHandlerImpl;
 import com.db4o.drs.inside.ReplicationReflector;
@@ -41,36 +35,42 @@ public class CollectionHandlerImplTest extends DrsTestCase {
 	public void testVector() {
 		Vector vector = new Vector();
 		Assert.isTrue(_collectionHandler.canHandle(vector));
-		Assert.isTrue(_collectionHandler.canHandle(_reflector.forObject(vector)));
-		Assert.isTrue(_collectionHandler.canHandle(Vector.class));
+		Assert.isTrue(_collectionHandler.canHandleClass(_reflector.forObject(vector)));
+		Assert.isTrue(_collectionHandler.canHandleClass(Vector.class));
 	}
 
+	/**
+	 * @sharpen.ignore no AbstractList for you
+	 */
 	public void testList() {
 		List list = new LinkedList();
 		Assert.isTrue(_collectionHandler.canHandle(list));
-		Assert.isTrue(_collectionHandler.canHandle(_reflector.forObject(list)));
-		Assert.isTrue(_collectionHandler.canHandle(List.class));
+		Assert.isTrue(_collectionHandler.canHandleClass(_reflector.forObject(list)));
+		Assert.isTrue(_collectionHandler.canHandleClass(AbstractList.class));
 	}
 	
+	/**
+	 * @sharpen.ignore no AbstractSet for you
+	 */
 	public void testSet() {
 		Set set = new HashSet();
 		Assert.isTrue(_collectionHandler.canHandle(set));
-		Assert.isTrue(_collectionHandler.canHandle(_reflector.forObject(set)));
-		Assert.isTrue(_collectionHandler.canHandle(Set.class));
+		Assert.isTrue(_collectionHandler.canHandleClass(_reflector.forObject(set)));
+		Assert.isTrue(_collectionHandler.canHandleClass(AbstractSet.class));
 	}
 
 	public void testMap() {
 		Map map = new HashMap();
 		Assert.isTrue(_collectionHandler.canHandle(map));
-		Assert.isTrue(_collectionHandler.canHandle(_reflector.forObject(map)));
-		Assert.isTrue(_collectionHandler.canHandle(Map.class));
+		Assert.isTrue(_collectionHandler.canHandleClass(_reflector.forObject(map)));
+		Assert.isTrue(_collectionHandler.canHandleClass(Map.class));
 	}
 
 	public void testString() {
 		String str = "abc";
 		Assert.isTrue(!_collectionHandler.canHandle(str));
-		Assert.isTrue(!_collectionHandler.canHandle(_reflector.forObject(str)));
-		Assert.isTrue(!_collectionHandler.canHandle(String.class));
+		Assert.isTrue(!_collectionHandler.canHandleClass(_reflector.forObject(str)));
+		Assert.isTrue(!_collectionHandler.canHandleClass(String.class));
 	}
 
 }

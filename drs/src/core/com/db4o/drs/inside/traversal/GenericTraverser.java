@@ -26,10 +26,10 @@ import com.db4o.reflect.*;
 
 public class GenericTraverser implements Traverser {
 	protected final Reflector _reflector;
-	protected final CollectionHandler _collectionHandler;
+	protected final CollectionTraverser _collectionHandler;
 	protected final Queue4 _queue = new NonblockingQueue();
 
-	public GenericTraverser(Reflector reflector, CollectionHandler collectionHandler) {
+	public GenericTraverser(Reflector reflector, CollectionTraverser collectionHandler) {
 		_reflector = reflector;
 		_collectionHandler = collectionHandler;
 	}
@@ -98,7 +98,7 @@ public class GenericTraverser implements Traverser {
 			return;
 		}
 
-		if (_collectionHandler.canHandle(claxx)) {
+		if (_collectionHandler.canHandleClass(claxx)) {
 			traverseCollection(object);
 			return;
 		}

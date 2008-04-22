@@ -25,14 +25,11 @@ import com.db4o.foundation.Iterator4;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
 public class CollectionHandlerImpl implements CollectionHandler {
 
 	private final CollectionHandler _mapHandler;
-
-	private final ReflectClass _reflectCollectionClass;
 	private final Reflector _reflector;
 
 	public CollectionHandlerImpl() {
@@ -42,24 +39,23 @@ public class CollectionHandlerImpl implements CollectionHandler {
 	public CollectionHandlerImpl(Reflector reflector) {
 		_mapHandler = new MapHandler(reflector);
 		_reflector = reflector;
-		_reflectCollectionClass = reflector.forClass(Collection.class);
 	}
 
-	public boolean canHandle(ReflectClass claxx) {
-		if (_mapHandler.canHandle(claxx)) return true;
-		return _reflectCollectionClass.isAssignableFrom(claxx);
+	public boolean canHandleClass(ReflectClass claxx) {
+		if (_mapHandler.canHandleClass(claxx)) return true;
+		return ReplicationPlatform.isBuiltinCollectionClass(_reflector, claxx);
 	}
 
 	public boolean canHandle(Object obj) {
-		return canHandle(_reflector.forObject(obj));
+		return canHandleClass(_reflector.forObject(obj));
 	}
 
-	public boolean canHandle(Class c) {
-		return canHandle(_reflector.forClass(c));
+	public boolean canHandleClass(Class c) {
+		return canHandleClass(_reflector.forClass(c));
 	}
 
 	public Object emptyClone(CollectionSource sourceProvider, Object originalCollection, ReflectClass originalCollectionClass) {
-		if (_mapHandler.canHandle(originalCollectionClass))
+		if (_mapHandler.canHandleClass(originalCollectionClass))
 			return _mapHandler.emptyClone(sourceProvider, originalCollection, originalCollectionClass);
 
 		Collection original = (Collection) originalCollection;
@@ -71,7 +67,7 @@ public class CollectionHandlerImpl implements CollectionHandler {
 	}
 
 	public Iterator4 iteratorFor(Object collection) {
-		if (_mapHandler.canHandle(_reflector.forObject(collection)))
+		if (_mapHandler.canHandleClass(_reflector.forObject(collection)))
 			return _mapHandler.iteratorFor(collection);
 
 		Iterable subject = (Iterable) collection;
@@ -93,7 +89,7 @@ public class CollectionHandlerImpl implements CollectionHandler {
 	}
 
 	public Object cloneWithCounterparts(CollectionSource sourceProvider, Object originalCollection, ReflectClass claxx, CounterpartFinder counterpartFinder) {
-		if (_mapHandler.canHandle(claxx))
+		if (_mapHandler.canHandleClass(claxx))
 			return _mapHandler.cloneWithCounterparts(sourceProvider, originalCollection, claxx, counterpartFinder);
 
 		Collection original = (Collection) originalCollection;

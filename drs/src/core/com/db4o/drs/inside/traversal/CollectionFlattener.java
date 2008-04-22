@@ -20,9 +20,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside.traversal;
 
-public interface CollectionFlattener extends CollectionHandler {
+public interface CollectionFlattener extends CollectionTraverser {
 
 	boolean canHandle(Object obj);
 
-	boolean canHandle(Class c);	
+	boolean canHandleClass(Class c);	
 }

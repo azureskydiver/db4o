@@ -39,16 +39,16 @@ public class MapHandler implements CollectionHandler {
 		_reflectMapClass = reflector.forClass(Map.class);
 	}
 
-	public boolean canHandle(ReflectClass claxx) {
+	public boolean canHandleClass(ReflectClass claxx) {
 		return _reflectMapClass.isAssignableFrom(claxx);
 	}
 
 	public boolean canHandle(Object obj) {
-		return canHandle(_reflector.forObject(obj));
+		return canHandleClass(_reflector.forObject(obj));
 	}
 
-	public boolean canHandle(Class c) {
-		return canHandle(_reflector.forClass(c));
+	public boolean canHandleClass(Class c) {
+		return canHandleClass(_reflector.forClass(c));
 	}
 
 	public Iterator4 iteratorFor(final Object collection) {

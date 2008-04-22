@@ -23,9 +23,9 @@ package com.db4o.drs.inside.traversal;
 import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
-public interface CollectionHandler {
+public interface CollectionTraverser {
 	
-	boolean canHandle(ReflectClass claxx);
+	boolean canHandleClass(ReflectClass claxx);
 	
 	Iterator4 iteratorFor(Object collection);
 }
