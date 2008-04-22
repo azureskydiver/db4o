@@ -1568,10 +1568,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             _replicationCallState = Const4.NEW;
             _handlers._replicationReferenceProvider = referenceProvider;
             
-            store2(checkTransaction(), obj, 1, false);
-            
-            _replicationCallState = Const4.NONE;
-            _handlers._replicationReferenceProvider = null;
+            try {
+            	store2(checkTransaction(), obj, 1, false);
+            } finally {
+            	_replicationCallState = Const4.NONE;
+            	_handlers._replicationReferenceProvider = null;
+	        }
         }
     }
     
