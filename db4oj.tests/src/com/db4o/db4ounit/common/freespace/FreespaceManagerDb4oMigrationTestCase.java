@@ -8,6 +8,7 @@ import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
+import com.db4o.internal.slots.*;
 
 import db4ounit.*;
 
@@ -31,6 +32,7 @@ public class FreespaceManagerDb4oMigrationTestCase implements TestCase {
 	public void testMigrateFromRamToBTree() throws Exception {
 		createDatabaseUsingRamManager();
 		migrateToBTree();
+		reopen();
 		createFreeSpace();
 		List initialSlots = getSlots(_container.freespaceManager());
 		reopen();
@@ -71,7 +73,8 @@ public class FreespaceManagerDb4oMigrationTestCase implements TestCase {
 	}
 
 	private void createFreeSpace() {
-		_container.getSlot(SIZE);
+		Slot slot = _container.getSlot(SIZE);
+		_container.free(slot);
 	}
 
 	private void migrateToBTree() throws Exception {
