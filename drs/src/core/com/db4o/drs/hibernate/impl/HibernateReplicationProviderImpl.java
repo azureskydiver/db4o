@@ -251,7 +251,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	public final ObjectSet getStoredObjects(Class aClass) {
-		if (_collectionHandler.canHandle(aClass))
+		if (_collectionHandler.canHandleClass(aClass))
 			throw new IllegalArgumentException("Hibernate does not query by Collection");
 
 		getSession().flush();
@@ -317,7 +317,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		ReplicationReference exist = _objRefs.getByUUID(uuid);
 		if (exist != null) return exist;
 
-		if (_collectionHandler.canHandle(hint)) {
+		if (_collectionHandler.canHandleClass(hint)) {
 			return null;
 		} else {
 			return produceObjectReferenceByUUID(uuid);

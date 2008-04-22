@@ -105,12 +105,8 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 			
 			assertSameClassIfDb4o(h1.list, replica.list);
 			Assert.areEqual(h1.list.size(), replica.list.size());
-			Iterator4Assert.areEqual(adapt(h1.list.iterator()), adapt(replica.list.iterator()));
+			CollectionAssert.areEqual(h1.list, replica.list);
 						
-		}
-
-		private Iterator4 adapt(Iterator iterator) {
-			return ReplicationTestPlatform.adapt(iterator);
 		}
 
 		private CollectionHolder subject() {

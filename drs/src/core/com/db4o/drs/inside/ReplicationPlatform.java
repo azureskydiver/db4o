@@ -22,6 +22,8 @@ package com.db4o.drs.inside;
 
 import java.util.*;
 
+import com.db4o.reflect.*;
+
 /**
  * Platform dependent code goes here to minimize manually
  * converted code.
@@ -57,6 +59,21 @@ public class ReplicationPlatform {
 	}
 
 	public static boolean isValueType(Object o) {
+		return false;
+	}
+	
+	private static final Class[] _builtinCollectionClasses = new Class[] {
+		AbstractList.class,
+		AbstractSet.class,
+		AbstractQueue.class,
+	};
+
+	static boolean isBuiltinCollectionClass(Reflector reflector, ReflectClass claxx) {
+		for (Class c : _builtinCollectionClasses) {
+			if (reflector.forClass(c).isAssignableFrom(claxx)) {
+				return true;
+			}
+		}
 		return false;
 	}
 }
