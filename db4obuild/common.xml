@@ -95,7 +95,7 @@
 				<arg value="-data" />
 				<arg file="@{workspace}" />
 				<arg value="-application" />
-				<arg value="javatocsharp.core.application" />
+				<arg value="sharpen.core.application" />
 				<arg value="-header" />
 				<arg file="${dir.config}/copyright_comment.txt" />
 				<arg value="@{resource}" />
@@ -106,14 +106,14 @@
 		</sequential>
 	</macrodef>
 	
-	<target name="install-javatocsharp-plugin">
+	<target name="install-sharpen-plugin">
 			
-		<property name="javatocsharp.core.dir" location="../javatocsharp.core" />
+		<property name="sharpen.core.dir" location="../sharpen.core" />
 		
-		<mkdir dir="${javatocsharp.core.dir}/bin" />
+		<mkdir dir="${sharpen.core.dir}/bin" />
 		
 		<echo>${eclipse.home}/plugins</echo>
-		<javac fork="true" debug="true" source="1.5" destdir="${javatocsharp.core.dir}/bin" srcdir="${javatocsharp.core.dir}/src" encoding="UTF-8">
+		<javac fork="true" debug="true" source="1.5" destdir="${sharpen.core.dir}/bin" srcdir="${sharpen.core.dir}/src" encoding="UTF-8">
 			<classpath>
 				<fileset dir="${eclipse.home}/plugins">
 					<include name="org.eclipse.osgi_*/osgi.jar" />
@@ -132,11 +132,11 @@
 			</classpath>
 		</javac>
 		
-		<property name="plugin.dir" value="${plugins.home}/javatocsharp.core_1.0.0" />
+		<property name="plugin.dir" value="${plugins.home}/sharpen.core_1.0.0" />
 		<delete dir="${plugin.dir}" />
 		<mkdir dir="${plugin.dir}" />
-		<jar destfile="${plugin.dir}/javatocsharp.jar" basedir="${javatocsharp.core.dir}/bin" />
-		<copy todir="${plugin.dir}" file="${javatocsharp.core.dir}/plugin.xml" />
+		<jar destfile="${plugin.dir}/sharpen.jar" basedir="${sharpen.core.dir}/bin" />
+		<copy todir="${plugin.dir}" file="${sharpen.core.dir}/plugin.xml" />
 
 	</target>
 	

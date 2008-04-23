@@ -49,7 +49,7 @@
 		</csc>
 	</target>
 	
-	<target name="sharpen" depends="prepare-conversion-workspace, install-javatocsharp-plugin">
+	<target name="sharpen" depends="prepare-conversion-workspace, install-sharpen-plugin">
 		<sharpen resource="db4ounit/src" workspace="${conversion.workspace.dir}">
 			<args>
 				<arg value="@sharpen-db4ounit-options" />
