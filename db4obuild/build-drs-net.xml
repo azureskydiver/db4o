@@ -182,7 +182,7 @@
         </updateAssemblyInfo>
     </target>
     
-    <target name="sharpen-drs" depends="prepare-sharpen-workspace, install-javatocsharp-plugin">
+    <target name="sharpen-drs" depends="prepare-sharpen-workspace, install-sharpen-plugin">
 		<sharpen resource="drs/core" workspace="${drs.sharpen.workspace.dir}">
 			<args>
 				<arg value="-cp" />

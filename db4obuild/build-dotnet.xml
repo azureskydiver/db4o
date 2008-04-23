@@ -1119,7 +1119,7 @@
 		<taskdef resource="org/apache/ant/dotnet/antlib.xml" />
 	</target>
     
-    <target name="sharpen-all" depends="check-dependencies, install-javatocsharp-plugin, prepare-conversion-workspace" unless="skip.sharpen">
+    <target name="sharpen-all" depends="check-dependencies, install-sharpen-plugin, prepare-conversion-workspace" unless="skip.sharpen">
         <sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
             <args>
                 <arg value="-xmldoc" />
