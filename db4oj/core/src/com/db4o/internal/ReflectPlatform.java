@@ -46,4 +46,7 @@ public class ReflectPlatform {
 		return clazz.getName();
 	}
 
+	public static boolean isNamedClass(Class clazz) {
+		return !clazz.isPrimitive();
+	}
 }

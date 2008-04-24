@@ -193,7 +193,7 @@ public class GenericReflector implements Reflector, DeepClone {
         if(claxx != null){
             return claxx;
         }
-        if (!clazz.isArray()) {
+        if (!clazz.isArray() && ReflectPlatform.isNamedClass(clazz)) {
 	        claxx = forName(ReflectPlatform.fullyQualifiedName(clazz));
 	        if(claxx != null){
 	            _classByClass.put(clazz, claxx);
