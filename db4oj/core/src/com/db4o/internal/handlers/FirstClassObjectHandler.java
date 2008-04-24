@@ -58,15 +58,7 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
                     field.set(context.persistentObject(), null);
                     return;
                 } 
-                boolean ok = false;
-                try {
-                    field.instantiate(context);
-                    ok = true;
-                } finally {
-                    if(!ok) {
-                        cancel();
-                    }
-                }
+                field.instantiate(context);
             }
         };
         traverseFields(context, command);
