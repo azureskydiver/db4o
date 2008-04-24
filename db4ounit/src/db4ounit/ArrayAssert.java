@@ -32,6 +32,13 @@ public class ArrayAssert {
     }
 	
 	public static void areEqual(Object[] expected, Object[] actual) {
+		areEqualImpl(expected, actual);
+	}
+
+	/**
+	 * @sharpen.ignore
+	 */
+	private static void areEqualImpl(Object[] expected, Object[] actual) {
 		if (expected == actual) return;
 		if (expected == null || actual == null) Assert.areSame(expected, actual);
 		Assert.areEqual(expected.length, actual.length);
