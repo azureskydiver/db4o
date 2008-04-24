@@ -32,7 +32,7 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 
 	@SuppressWarnings("unchecked")
 	protected final Class[] testCases() {
-//		if (true) return new Class[] { CustomArrayListTestCase.class };
+//		if (true) return new Class[] { UntypedFieldTestCase.class };
 		return concat(shared(), specificTestCases());
 
 	}
