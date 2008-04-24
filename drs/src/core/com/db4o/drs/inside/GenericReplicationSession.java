@@ -171,7 +171,6 @@ public final class GenericReplicationSession implements ReplicationSession {
 		_traverser.traverseGraph(root, new InstanceReplicationPreparer(_providerA, _providerB, _directionTo, _listener, _isReplicatingOnlyDeletions, _lastReplicationVersion, _processedUuids, _traverser, _reflector, _collectionHandler));
 	}
 
-
 	private Object arrayClone(Object original, ReflectClass claxx, ReplicationProviderInside sourceProvider) {
 		ReflectClass componentType = _reflector.getComponentType(claxx);
 		int[] dimensions = _reflector.arrayDimensions(original);
@@ -265,13 +264,23 @@ public final class GenericReplicationSession implements ReplicationSession {
 			Object object = objects[i];
 			if (object == null) continue;
 
-			ReplicationReference replicationReference = sourceProvider.produceReference(object, null, null);
-
-			if (replicationReference == null)
-				throw new RuntimeException(sourceProvider + " cannot find ref for " + object);
-
-			objects[i] = replicationReference.counterpart();
+			if (isSecondClass(object)) {
+				
+				objects[i] = object;
+				
+			} else {
+				ReplicationReference replicationReference = sourceProvider.produceReference(object, null, null);
+	
+				if (replicationReference == null)
+					throw new RuntimeException(sourceProvider + " cannot find ref for " + object);
+	
+				objects[i] = replicationReference.counterpart();
+			}
 		}
+	}
+
+	private boolean isSecondClass(Object object) {
+		return _reflector.forObject(object).isSecondClass();
 	}
 
 
