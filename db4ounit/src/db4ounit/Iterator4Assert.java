@@ -16,8 +16,12 @@ public class Iterator4Assert {
 			assertNext(expected.current(), actual);
 		}
 		if (actual.moveNext()) {
-			Assert.fail("Unexpected element: " + actual.current());
+			unexpected(actual.current());
 		}
+	}
+
+	private static void unexpected(Object element) {
+		Assert.fail("Unexpected element: " + element);
 	}
 
 	public static void assertNext(final Object expected, Iterator4 iterator) {
@@ -27,6 +31,22 @@ public class Iterator4Assert {
 
 	public static void areEqual(Object[] expected, Iterator4 iterator) {
 		areEqual(new ArrayIterator4(expected), iterator);
+	}
+
+	public static void sameContent(Object[] expected, Iterator4 actual) {
+		sameContent(new ArrayIterator4(expected), actual);
+	}
+
+	public static void sameContent(Iterator4 expected, Iterator4 actual) {
+		Collection4 allExpected = new Collection4(expected);
+		while (actual.moveNext()) {
+			Object current = actual.current();
+			Object removed = allExpected.remove(current);
+			if (null == removed) {
+				unexpected(current);
+			}
+		}
+		Assert.isTrue(allExpected.isEmpty(), allExpected.toString());
 	}
 
 }

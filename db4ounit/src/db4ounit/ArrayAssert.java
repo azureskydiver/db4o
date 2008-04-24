@@ -2,7 +2,9 @@
 
 package db4ounit;
 
-
+/**
+ * @sharpen.partial
+ */
 public class ArrayAssert {
 	
 	public static void contains(long[] array, long expected) {
