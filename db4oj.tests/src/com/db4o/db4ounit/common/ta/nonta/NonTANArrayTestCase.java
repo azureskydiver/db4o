@@ -25,10 +25,10 @@ public class NonTANArrayTestCase extends NonTAItemTestCaseBase {
 
     protected void assertItemValue(Object obj) {
         NArrayItem item = (NArrayItem) obj;
-        ArrayAssert.areEqual(INTS1, item.value());
-        ArrayAssert.areEqual(INTS2, (int[][])item.object());
-        ArrayAssert.areEqual(LIST1, item.lists());
-        ArrayAssert.areEqual(LIST2, (LinkedList[][]) item.listsObject());
+        JaggedArrayAssert.areEqual(INTS1, item.value());
+        JaggedArrayAssert.areEqual(INTS2, (int[][])item.object());
+        JaggedArrayAssert.areEqual(LIST1, item.lists());
+        JaggedArrayAssert.areEqual(LIST2, (LinkedList[][]) item.listsObject());
     }
 
     protected Object createItem() {

@@ -35,10 +35,10 @@ public class TANArrayTestCase extends TAItemTestCaseBase {
 
 	protected void assertItemValue(Object obj) throws Exception {
 		TANArrayItem item = (TANArrayItem) obj;
-		ArrayAssert.areEqual(INTS1, item.value());
-		ArrayAssert.areEqual(INTS2, (int[][])item.object());
-		ArrayAssert.areEqual(LIST1, item.lists());
-		ArrayAssert.areEqual(LIST2, (LinkedList[][]) item.listsObject());
+		JaggedArrayAssert.areEqual(INTS1, item.value());
+		JaggedArrayAssert.areEqual(INTS2, (int[][])item.object());
+		JaggedArrayAssert.areEqual(LIST1, item.lists());
+		JaggedArrayAssert.areEqual(LIST2, (LinkedList[][]) item.listsObject());
 	}
 
 	protected void assertRetrievedItem(Object obj) throws Exception {
