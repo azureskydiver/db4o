@@ -44,10 +44,28 @@
             </fileset>
 		</ftp>
 	</target>
-	
+    
 	<target name="generate.pdf.all" depends="generate.pdf.java, generate.pdf.net" />
+
+    <taskdef name="checklinks" classname="com.wu.checklinks.LinkCheckTask">
+	    <classpath>
+	        <pathelement path="${dir.build.lib}/vlink.jar"/>
+	    </classpath>
+	</taskdef>
+
+	<target name="check-links-java">
+		<checklinks
+			 startURI="file:/${dir.reference.java}/html/_contents.html"
+		     ProtocolFilename="${dir.build}/link-check-java.xml"/>
+    </target>
+
+	<target name="check-links-net">
+			<checklinks
+				 startURI="file:/${dir.reference.net}/html/_contents.html"
+			     ProtocolFilename="${dir.build}/link-check-net.xml"/>
+	</target>
 	
-    <target name="generate.pdf.java" depends="init">
+    <target name="generate.pdf.java" depends="init, check-links-java">
     	<convert working.dir="${dir.pdf.doc}"
     			 dir.reference="${dir.reference.java}"
     			 pdf.filename="${pdf.filename.java}"
@@ -55,7 +73,7 @@
     	/>
     </target>
 
-    <target name="generate.pdf.net" depends="init">
+    <target name="generate.pdf.net" depends="init, check-links-net">
     	<convert working.dir="${dir.pdf.doc}"
     			 dir.reference="${dir.reference.net}"
     			 pdf.filename="${pdf.filename.net}"
