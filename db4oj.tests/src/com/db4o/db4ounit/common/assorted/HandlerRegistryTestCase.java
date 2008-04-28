@@ -25,7 +25,7 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testCorrectHandlerVersion(){
-	    UntypedFieldHandler untypedFieldHandler = new UntypedFieldHandler(stream());
+	    UntypedFieldHandler untypedFieldHandler = new UntypedFieldHandler(container());
 	    
         assertCorrectedHandlerVersion(UntypedFieldHandler0.class, untypedFieldHandler, -1);
         assertCorrectedHandlerVersion(UntypedFieldHandler0.class, untypedFieldHandler, 0);
@@ -65,7 +65,7 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
     }
 
     private ClassMetadata itemClassMetadata() {
-        return stream().classMetadataForObject(new Item());
+        return container().classMetadataForObject(new Item());
     }
 
     private void assertCorrectedHandlerVersion(Class expectedClass, TypeHandler4 typeHandler, int version) {
@@ -83,7 +83,7 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
 	}
 
 	private TypeHandler4 handlerForClass(Class clazz) {
-	    return (TypeHandler4) stream().fieldHandlerForClass(reflectClass(clazz));
+	    return (TypeHandler4) container().fieldHandlerForClass(reflectClass(clazz));
 	}
 
 	private HandlerRegistry handlers() {

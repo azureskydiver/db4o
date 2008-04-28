@@ -60,7 +60,7 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 		int id2 = storeItem();
 		int smallerID = Math.min(id1, id2);
 		int biggerID = Math.max(id1, id2);
-		ClassMetadata classMetadata = new ClassMetadata(stream(), reflector().forClass(Item.class));
+		ClassMetadata classMetadata = new ClassMetadata(container(), reflector().forClass(Item.class));
 		assertHandlerComparison(classMetadata, new Integer(smallerID), new Integer(biggerID));
 	}
 

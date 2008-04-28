@@ -38,7 +38,7 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
     }
     
     private ArrayHandler arrayHandler(Class clazz, boolean isPrimitive) {
-        ClassMetadata classMetadata = stream().produceClassMetadata(reflector().forClass(clazz));
+        ClassMetadata classMetadata = container().produceClassMetadata(reflector().forClass(clazz));
         return new ArrayHandler(classMetadata.typeHandler(), isPrimitive);
     }
     

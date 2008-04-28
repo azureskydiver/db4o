@@ -65,7 +65,7 @@ public class ObjectSetTestCase extends AbstractDb4oTestCase {
 	}
 
 	private void deleteItemAndCommit(Transaction trans, String name) {
-		stream().delete(trans, queryItem(trans, name));
+		container().delete(trans, queryItem(trans, name));
 		trans.commit();
 	}
 

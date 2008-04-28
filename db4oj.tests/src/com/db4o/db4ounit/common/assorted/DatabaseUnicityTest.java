@@ -15,7 +15,7 @@ public class DatabaseUnicityTest extends AbstractDb4oTestCase  {
 
 	public void test() {
         Hashtable4 ht = new Hashtable4();
-        ObjectContainerBase container = stream();
+        ObjectContainerBase container = container();
         container.showInternalClasses(true);
         Query q = db().query();
         q.constrain(Db4oDatabase.class);

@@ -79,7 +79,7 @@ public class BTreePointerTestCase extends BTreeTestCaseBase {
 	}
 
 	private BTree newBTreeWithNoNodeCaching() {
-		return BTreeAssert.createIntKeyBTree(stream(), 0, 0, BTREE_NODE_SIZE);
+		return BTreeAssert.createIntKeyBTree(container(), 0, 0, BTREE_NODE_SIZE);
 	}
 
 }

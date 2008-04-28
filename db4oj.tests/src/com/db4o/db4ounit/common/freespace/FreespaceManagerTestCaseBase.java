@@ -47,14 +47,14 @@ public abstract class FreespaceManagerTestCaseBase extends FileSizeTestCaseBase 
     protected void produceSomeFreeSpace() {
         FreespaceManager fm = currentFreespaceManager();
         int length = 300;
-        Slot slot = container().getSlot(length);
+        Slot slot = localContainer().getSlot(length);
         ByteArrayBuffer buffer = new ByteArrayBuffer(length);
-        container().writeBytes(buffer, slot.address(), 0);
+        localContainer().writeBytes(buffer, slot.address(), 0);
         fm.free(slot);
     }
 
     protected FreespaceManager currentFreespaceManager() {
-        return container().freespaceManager();
+        return localContainer().freespaceManager();
     }
     
     public static class Item{
@@ -68,7 +68,7 @@ public abstract class FreespaceManagerTestCaseBase extends FileSizeTestCaseBase 
         db().commit();
     }
     
-    protected LocalObjectContainer container() {
+    protected LocalObjectContainer localContainer() {
         return fixture().fileSession();
     }
 

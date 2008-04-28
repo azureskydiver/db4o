@@ -31,7 +31,7 @@ import com.db4o.types.*;
  * @exclude
  * @sharpen.partial
  */
-public abstract class PartialObjectContainer implements TransientClass, Internal4, ObjectContainerSpec {
+public abstract class PartialObjectContainer implements TransientClass, Internal4, ObjectContainerSpec, InternalObjectContainer {
 
     // Collection of all classes
     // if (i_classCollection == null) the engine is down.

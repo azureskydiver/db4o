@@ -1,10 +1,10 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.config;
 
-import com.db4o.StaticClass;
-import com.db4o.StaticField;
-import com.db4o.ext.Db4oDatabase;
+import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.handlers.*;
 
 /**
  * Adds the basic configuration settings required to access a
@@ -34,5 +34,10 @@ public class DotnetSupport implements ConfigurationItem {
 	}
 	
 	public void apply(InternalObjectContainer container) {
+		NetTypeHandler[] handlers = Platform4.jdk().netTypes(container.reflector());
+		for (int netTypeIdx = 0; netTypeIdx < handlers.length; netTypeIdx++) {
+			NetTypeHandler handler = handlers[netTypeIdx];
+			container.handlers().registerNetTypeHandler(handler);
+		}
 	}
 }

@@ -59,7 +59,7 @@ public class MultiDimensionalArrayHandlerTestCase extends TypeHandlerTestCaseBas
 //    }
     
     private ArrayHandler arrayHandler(Class clazz, boolean isPrimitive) {
-        TypeHandler4 typeHandler = (TypeHandler4) stream().fieldHandlerForClass(reflector().forClass(clazz));
+        TypeHandler4 typeHandler = (TypeHandler4) container().fieldHandlerForClass(reflector().forClass(clazz));
         return new MultidimensionalArrayHandler(typeHandler, isPrimitive);
     }
     

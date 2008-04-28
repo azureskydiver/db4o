@@ -149,13 +149,17 @@ public final class HandlerRegistry {
     }
     
     private void registerPlatformTypes() {
-        NetTypeHandler[] handlers = Platform4.types(container().reflector());
+        NetTypeHandler[] handlers = Platform4.types(_container.reflector());
         for (int i = 0; i < handlers.length; i++) {
-            handlers[i].initialize();
-        	GenericConverter converter = (handlers[i] instanceof GenericConverter) ? (GenericConverter)handlers[i] : null;
-            registerBuiltinHandler(handlers[i].getID(), handlers[i], true, handlers[i].getName(), converter);
+        	registerNetTypeHandler(handlers[i]);
         }
     }
+
+	public void registerNetTypeHandler(NetTypeHandler handler) {
+		handler.initialize();
+		GenericConverter converter = (handler instanceof GenericConverter) ? (GenericConverter)handler : null;
+		registerBuiltinHandler(handler.getID(), handler, true, handler.getName(), converter);
+	}
     
     private void registerBuiltinHandlers(){
         

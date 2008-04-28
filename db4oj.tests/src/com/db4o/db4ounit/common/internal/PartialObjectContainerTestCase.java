@@ -30,7 +30,7 @@ public class PartialObjectContainerTestCase
         int[] bytes  = new int[]{0, 8, 64, 72};
         
         for (int i = 0; i < blocks.length; i++) {
-            Assert.areEqual(bytes[i], container().blocksToBytes(blocks[i]));
+            Assert.areEqual(bytes[i], localContainer().blocksToBytes(blocks[i]));
         }
     }
     
@@ -39,11 +39,11 @@ public class PartialObjectContainerTestCase
         int[] blocks = new int[]{0, 1, 1, 1, 1, 2,  2,  3, 100, 100, 101};
         
         for (int i = 0; i < blocks.length; i++) {
-            Assert.areEqual(blocks[i], container().bytesToBlocks(bytes[i]));
+            Assert.areEqual(blocks[i], localContainer().bytesToBlocks(bytes[i]));
         }
     }
 
-    private ObjectContainerBase container() {
+    private ObjectContainerBase localContainer() {
         return stream().container();
     }
 }
