@@ -15,7 +15,7 @@ public class Doctor extends Task {
 
 	private static final PlatformConfiguration MAIN_PLATFORM = PlatformConfiguration.JAVA;
 	
-	private static final String MAIN_WORKSPACE = "I:/HEAD";
+	private static final String MAIN_WORKSPACE = "e:/db4o/trunk/";
 	
 	private static final String MAIN_FONT = "C:/WINDOWS/Fonts/VERDANA.TTF";
 
@@ -34,6 +34,7 @@ public class Doctor extends Task {
 		}
         Doctor doctor = new Doctor();
         String path = doctor.configure(args);
+        doctor.setPattern("version", "6.3");
         doctor.execute();
         try {
             BrowserLauncher.openURL(path);
@@ -108,6 +109,9 @@ public class Doctor extends Task {
     private Vector variables;
     private Hashtable variablesByName;
     
+    private Vector patterns;
+    private Hashtable patternsByName;
+    
     private Vector ignoreInputFolders;
     private Hashtable ignoreInputFoldersByName;
     
@@ -166,6 +170,20 @@ public class Doctor extends Task {
             while(i.hasNext()){
                 Variable variable = (Variable)i.next();
                 variablesByName.put(variable.getName().toLowerCase(), variable.getValue());
+            }
+        }
+        
+        if(patternsByName == null){
+            patternsByName = new Hashtable();
+        }
+        
+        if(patterns != null){
+        	System.out.println("Patterns not null");
+            Iterator i = patterns.iterator();
+            while(i.hasNext()){
+                Pattern pattern = (Pattern)i.next();
+                System.out.println(pattern.getName().toLowerCase()+ " " + pattern.getValue());
+                patternsByName.put(pattern.getName().toLowerCase(), pattern.getValue());
             }
         }
         
@@ -370,6 +388,14 @@ public class Doctor extends Task {
         return variable;
     }
     
+    public Pattern createPattern(){
+        if(patterns == null){
+        	patterns = new Vector();
+        }
+        Pattern pattern = new Pattern();
+        patterns.add(pattern);
+        return pattern;
+    }
     
     public class Variable{
         
@@ -400,11 +426,50 @@ public class Doctor extends Task {
         }
     }
     
+    public class Pattern{
+        
+        private String name;
+        private Object value;
+        
+        public Pattern(){
+        }
+        
+        public void setName(String name){
+            this.name = name.toLowerCase();
+        }
+        
+        public void setValue(String value){
+            this.value = value;
+        }
+        
+        public String getName(){
+            return name;
+        }
+        
+        public Object getValue(){
+            return value;
+        }
+    }
+    
     public void setVariable(String name, Object value){
         if(variablesByName == null){
             variablesByName = new Hashtable();
         }
         variablesByName.put(name.toLowerCase(), value);
+    }
+
+    public void setPattern(String name, Object value){
+        if(patternsByName == null){
+        	patternsByName = new Hashtable();
+        }
+        patternsByName.put(name.toLowerCase(), value);
+    }
+
+    public Object getPattern(String name){
+        if(patternsByName == null){
+            return null;
+        }
+        return patternsByName.get(name);
     }
 
     public void setVariable(String name, boolean value){

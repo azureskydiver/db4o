@@ -167,6 +167,10 @@ public abstract class AbstractWriter extends Configuration implements
         write(command.text);
     }
 
+    public void write(com.yetac.doctor.cmd.Pattern command) throws Exception {
+        write(command.text);
+    }
+
     abstract protected void writeToFile(String str);
 
     protected String extractSource(String src,String methodName,boolean full) throws UnsupportedEncodingException {
