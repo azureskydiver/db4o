@@ -5,9 +5,10 @@
 	
 	
 	-->
-
+	<import file="common.xml" />
 	<property file="machine.properties" />
 	<property file="ant.properties" />
+	
 	
 	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
 		<classpath>
@@ -29,11 +30,12 @@
 			outputfile="${db4o.file}tutorial" 
 			outputpath="${dir.j.tutorial.out.java}" 
 			pdfbasefont="${font.pdf.base}" 
-			archive="${filename.doctor.applets.jar}, ${filename.java1.4.jar}, ${filename.tutorial.jar}" 
+			archive="${filename.doctor.applets.jar}, ${filename.java5.jar}, ${filename.db4obench.jar}, ${filename.tutorial.jar}"
 			outlineimage="db4objects1.jpg" 
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="true" />
 			<variable name="net" boolean="false" />
+			<pattern name="version" value="6.2" />
 			<ignoreinputfolder name="net" />
 		</doctor>
 		<copy todir="${dir.j.tutorial.out.java}/docs" overwrite="true">
@@ -57,12 +59,13 @@
 			outputfile="db4o-${db4o.version.dotted}-tutorial" 
 			outputpath="${dir.j.tutorial.out.net}" 
 			pdfbasefont="${font.pdf.base}" 
-			archive="${filename.doctor.applets.jar}, ${filename.java1.2.jar}, ${filename.tutorial.jar}" 
+			archive="${filename.doctor.applets.jar}, ${filename.java5.jar}, ${filename.db4obench.jar}, ${filename.tutorial.jar}" 
 			outlineimage="db4objects1.jpg" 
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="false" />
 			<variable name="net" boolean="true" />
 			<variable name="mono" boolean="false" />
+			<pattern name="version" value="6.2" />
 			<ignoreinputfolder name="java" />
 			<ignoreinputfolder name="mono" />
 		</doctor>

@@ -70,6 +70,7 @@
 			<variable name="java" boolean="true" />
 			<variable name="net" boolean="false" />
 			<variable name="mono" boolean="false" />
+			<pattern name="version" value="${db4o.version.dotted}" />
 			<ignoreinputfolder name="net" />
 			<ignoreinputfolder name="mono" />
 		</doctor>
@@ -99,6 +100,7 @@
 			<variable name="java" boolean="false" />
 			<variable name="net" boolean="true" />
 			<variable name="mono" boolean="false" />
+			<pattern name="version" value="${db4o.version.dotted}" />
 			<ignoreinputfolder name="java" />
 			<ignoreinputfolder name="mono" />
 		</doctor>
@@ -121,6 +123,7 @@
 			<variable name="java" boolean="false" />
 			<variable name="net" boolean="false" />
 			<variable name="mono" boolean="true" />
+			<pattern name="version" value="${db4o.version.dotted}" />
 			<ignoreinputfolder name="java" />
 			<ignoreinputfolder name="net" />
 		</doctor>
@@ -143,6 +146,7 @@
 			<variable name="java" boolean="false" />
 			<variable name="net" boolean="true" />
 			<variable name="mono" boolean="false" />
+			<pattern name="version" value="${db4o.version.dotted}" />
 			<ignoreinputfolder name="java" />
 			<ignoreinputfolder name="mono" />
 		</doctor> 
