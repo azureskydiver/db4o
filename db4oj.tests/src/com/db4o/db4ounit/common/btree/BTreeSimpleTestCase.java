@@ -49,7 +49,7 @@ public class BTreeSimpleTestCase extends AbstractDb4oTestCase implements
 	}
 
 	public void testIntKeys() throws Exception {
-		BTree btree = BTreeAssert.createIntKeyBTree(stream(), 0,
+		BTree btree = BTreeAssert.createIntKeyBTree(container(), 0,
 				BTREE_NODE_SIZE);
 		for (int i = 0; i < 5; i++) {
 			btree = cycleIntKeys(btree);
@@ -76,7 +76,7 @@ public class BTreeSimpleTestCase extends AbstractDb4oTestCase implements
 
 		reopen();
 
-		btree = BTreeAssert.createIntKeyBTree(stream(), id, BTREE_NODE_SIZE);
+		btree = BTreeAssert.createIntKeyBTree(container(), id, BTREE_NODE_SIZE);
 
 		expectKeys(btree, _sortedKeys);
 

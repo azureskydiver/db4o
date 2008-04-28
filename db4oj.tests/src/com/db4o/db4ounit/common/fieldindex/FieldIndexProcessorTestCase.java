@@ -307,7 +307,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
     }
 
 	private void store(final Transaction trans, final FieldIndexItem item) {
-		stream().store(trans, item);
+		container().store(trans, item);
 	}
 	
 	private void fillTransactionWith(Transaction trans, final int bar) {
@@ -326,7 +326,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 		while (found.hasNext()) {
 			FieldIndexItem item = (FieldIndexItem)found.next();
 			if (item.foo == foo) {
-				stream().delete(trans, item);
+				container().delete(trans, item);
 			}
 		}
 	}

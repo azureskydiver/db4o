@@ -21,7 +21,7 @@ public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase implements
 	}
 
 	protected BTree newBTree() {
-		return BTreeAssert.createIntKeyBTree(stream(), 0, BTREE_NODE_SIZE);
+		return BTreeAssert.createIntKeyBTree(container(), 0, BTREE_NODE_SIZE);
 	}
 
 	protected BTreeRange range(int lower, int upper) {

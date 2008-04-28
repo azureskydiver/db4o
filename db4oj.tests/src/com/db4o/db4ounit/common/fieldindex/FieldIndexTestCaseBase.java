@@ -54,6 +54,6 @@ public abstract class FieldIndexTestCaseBase extends AbstractDb4oTestCase
 	}
 
 	private Query createQuery(Transaction trans) {
-		return stream().query(trans);
+		return container().query(trans);
 	}
 }

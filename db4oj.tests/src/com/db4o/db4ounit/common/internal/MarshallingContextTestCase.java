@@ -89,7 +89,7 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
     }
 
     private ClassMetadata classMetadataForObject(Object obj) {
-        return stream().produceClassMetadata(reflector().forObject(obj));
+        return container().produceClassMetadata(reflector().forObject(obj));
     }
 
 }

@@ -15,7 +15,7 @@ import com.db4o.types.*;
 /**
  * @exclude
  */
-public abstract class ExternalObjectContainer extends ObjectContainerBase implements InternalObjectContainer {
+public abstract class ExternalObjectContainer extends ObjectContainerBase {
     
     public ExternalObjectContainer(Configuration config,ObjectContainerBase parentContainer) {
         super(config, parentContainer);

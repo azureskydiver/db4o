@@ -124,7 +124,7 @@ class JDK_1_2 extends JDKReflect {
 		}
 	}
     
-    public NetTypeHandler[] types(Reflector reflector) {
+    public NetTypeHandler[] netTypes(Reflector reflector) {
         return new NetTypeHandler[] {
             new NetDateTime(reflector),
             new NetDecimal(reflector),

@@ -35,7 +35,7 @@ public abstract class QueryResultTestCase extends AbstractDb4oTestCase implement
 	
 	public void testGetAll(){
 		AbstractQueryResult queryResult = newQueryResult();
-		queryResult.loadFromClassIndexes(stream().classCollection().iterator());
+		queryResult.loadFromClassIndexes(container().classCollection().iterator());
 		int[] ids = IntArrays4.concat(itemIds, new int[] {idForGetAll});
 		assertIDs(queryResult, ids, true);
 	}

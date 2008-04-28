@@ -215,6 +215,11 @@ public class JDK {
         return new NetTypeHandler[]{};
     }
 
+    /** @param container */
+    public NetTypeHandler[] netTypes(Reflector reflector) {
+        return new NetTypeHandler[]{};
+    }
+
 	public boolean useNativeSerialization() {
 		return true;
 	}

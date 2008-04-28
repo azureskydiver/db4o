@@ -198,10 +198,14 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
         return (independentConfig ? (ConfigurationSource)new IndependentConfigurationSource() : new GlobalConfigurationSource());
     }
 
-    protected ObjectContainerBase stream() {
-        return ((InternalObjectContainer) db()).container();
+    protected InternalObjectContainer stream() {
+        return (InternalObjectContainer) db();
     }
-    
+
+    protected ObjectContainerBase container() {
+        return stream().container();
+    }
+
     public LocalObjectContainer fileSession() {
         return fixture().fileSession();
     }
@@ -221,7 +225,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	}
 	
 	protected Query newQuery(Transaction transaction) {
-		return stream().query(transaction);
+		return container().query(transaction);
 	}
     
     protected Query newQuery(){
@@ -251,7 +255,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	}
 
 	protected Transaction newTransaction() {
-		return stream().newUserTransaction();
+		return container().newUserTransaction();
 	}
 	
 	public Object retrieveOnlyInstance(Class clazz) {
