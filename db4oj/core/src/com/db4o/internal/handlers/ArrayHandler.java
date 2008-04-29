@@ -290,7 +290,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     	// TODO: We changed the following line in the NullableArrayHandling 
     	//       refactoring. Behaviour may have to be different for older
     	//       ArrayHandler versions.
-    	boolean primitive = NullableArrayHandling.useJavaHandling() && (orig < Const4.PRIMITIVE);
+    	boolean primitive = useJavaHandling() && (orig < Const4.PRIMITIVE);
     	
     	if(primitive) {
     		orig-=Const4.PRIMITIVE;
@@ -312,7 +312,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		if(elements != Const4.IGNORE_ID){
 		    boolean primitive = false;
 		    
-		    if(NullableArrayHandling.useJavaHandling()){
+		    if(useJavaHandling()){
 		        if(elements < Const4.PRIMITIVE){
 		            primitive = true;
 		            elements -= Const4.PRIMITIVE;
@@ -321,6 +321,9 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		    int classID = - elements;
 			ClassMetadata classMetadata = container(trans).classMetadataForId(classID);
 		    if (classMetadata != null) {
+		    	if(Deploy.csharp && !NullableArrayHandling.disabled()){
+		    		primitive = classMetadata.isValueType();
+		    	}
 		        return (primitive ?   Handlers4.primitiveClassReflector(classMetadata, trans.reflector()) : classMetadata.classReflector());
 		    }
 		}
@@ -334,11 +337,19 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		}
 		return ArrayHandler.allElements(reflectArray, obj);
 	}
+	
+	protected boolean useOldNetHandling() {
+		return NullableArrayHandling.useOldNetHandling();		
+	}
+	
+	protected boolean useJavaHandling() {
+		return NullableArrayHandling.useJavaHandling();		
+	}
     
     protected final int classID(ObjectContainerBase container, Object obj){
         ReflectClass claxx = componentType(container, obj);
         
-        boolean primitive = NullableArrayHandling.useOldNetHandling() ? false : claxx.isPrimitive();
+        boolean primitive = useOldNetHandling() ? false : claxx.isPrimitive();
         
         if(primitive){
             claxx = container.produceClassMetadata(claxx).classReflector();

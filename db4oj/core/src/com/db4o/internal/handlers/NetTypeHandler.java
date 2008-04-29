@@ -2,7 +2,7 @@
 
 package com.db4o.internal.handlers;
 
-import com.db4o.CorruptionException;
+import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
@@ -57,6 +57,18 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
     		return defaultValue().getClass();
     	}
     	return null;
+    }
+    
+    protected Class javaClass() {
+    	if(!NullableArrayHandling.disabled()){
+    		if(!Deploy.csharp){
+    			return primitiveJavaClass();
+    		}else{
+    			return super.javaClass();
+    		}
+    	}else{
+    		return super.javaClass();
+    	}
     }
     
     public Object primitiveNull() {

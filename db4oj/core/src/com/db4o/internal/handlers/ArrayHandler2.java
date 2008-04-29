@@ -9,7 +9,7 @@ import com.db4o.internal.*;
 /**
  * @exclude
  */
-public class ArrayHandler2 extends ArrayHandler {
+public class ArrayHandler2 extends ArrayHandler3 {
     
     protected int preparePayloadRead(DefragmentContext context) {
 		return context.offset();

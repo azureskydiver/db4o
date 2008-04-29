@@ -2,6 +2,7 @@
 
 package com.db4o.internal.marshall;
 
+import com.db4o.internal.*;
 import com.db4o.internal.convert.conversions.*;
 
 /**
@@ -48,36 +49,41 @@ public class MarshallerFamily {
     
     private final int _handlerVersion;
 
-    private final static MarshallerFamily[] allVersions = new MarshallerFamily[] {
-        
-        // LEGACY => before 5.4
-        
-        new MarshallerFamily(
-            0,
-            0,
-            new ArrayMarshaller0(),
-            new ClassMarshaller0(),
-            new FieldMarshaller0(),
-            new ObjectMarshaller0(), 
-            new PrimitiveMarshaller0(),
-            new StringMarshaller0(),
-            new UntypedMarshaller0()),
-        
-        new MarshallerFamily(
-            ClassIndexesToBTrees_5_5.VERSION,
-            1,
-            new ArrayMarshaller1(),
-            new ClassMarshaller1(),
-            new FieldMarshaller0(),
-            new ObjectMarshaller1(), 
-            new PrimitiveMarshaller1(),
-            new StringMarshaller1(),
-            new UntypedMarshaller1()),
-    
-            latestFamily(2),
-            latestFamily(3),
-        
-        };
+    private final static MarshallerFamily[] allVersions;
+    static {
+    	
+    	allVersions = new MarshallerFamily[NullableArrayHandling.disabled()?4:5];
+    	allVersions[0] =
+	        // LEGACY => before 5.4
+	        new MarshallerFamily(
+	            0,
+	            0,
+	            new ArrayMarshaller0(),
+	            new ClassMarshaller0(),
+	            new FieldMarshaller0(),
+	            new ObjectMarshaller0(), 
+	            new PrimitiveMarshaller0(),
+	            new StringMarshaller0(),
+	            new UntypedMarshaller0());
+    	
+    	allVersions[1] =
+	        new MarshallerFamily(
+	            ClassIndexesToBTrees_5_5.VERSION,
+	            1,
+	            new ArrayMarshaller1(),
+	            new ClassMarshaller1(),
+	            new FieldMarshaller0(),
+	            new ObjectMarshaller1(), 
+	            new PrimitiveMarshaller1(),
+	            new StringMarshaller1(),
+	            new UntypedMarshaller1());
+    	
+    	allVersions[2] = latestFamily(2);
+    	allVersions[3] = latestFamily(3);
+    	if(!NullableArrayHandling.disabled()){
+    		allVersions[4] = latestFamily(4);
+        }
+    }
 
     public MarshallerFamily(
             int converterVersion,
