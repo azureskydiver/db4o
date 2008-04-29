@@ -321,7 +321,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		    int classID = - elements;
 			ClassMetadata classMetadata = container(trans).classMetadataForId(classID);
 		    if (classMetadata != null) {
-		    	if(Deploy.csharp && !NullableArrayHandling.disabled()){
+		    	if(upgradingDotNetArray()){
 		    		primitive = classMetadata.isValueType();
 		    	}
 		        return (primitive ?   Handlers4.primitiveClassReflector(classMetadata, trans.reflector()) : classMetadata.classReflector());
@@ -344,6 +344,10 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 	
 	protected boolean useJavaHandling() {
 		return NullableArrayHandling.useJavaHandling();		
+	}
+	
+	protected boolean upgradingDotNetArray() {
+		return false;
 	}
     
     protected final int classID(ObjectContainerBase container, Object obj){
