@@ -12,7 +12,7 @@
 	
     <property name="drs.sharpen.workspace.dir" location="${dir.dist}/drs.net/workspace" />
     
-    <target name="init" depends="properties">
+    <target name="init" depends="properties, configure">
         <!--
     	<condition property="isUnix">
             <os family="unix"/>
@@ -88,6 +88,7 @@
     		targettype="library"
     		srcdir="${drs.net.src.dir}/Db4objects.Drs"
     		docfile="${drs.net.bin.dir}/Db4objects.Drs.xml"
+    		executable="${csc.executable.path.net2}/csc.exe"
     		>
 			<reference dir="${drs.net.bin.dir}">
 				<include name="Db4objects.Db4o.dll" />
@@ -97,7 +98,8 @@
     	<csc destfile="${drs.net.dir}/bin/Db4objects.Drs.Tests.exe"
     		targettype="exe"
     		mainclass="Db4objects.Drs.Tests.Db4oTests"
-    		srcdir="${drs.net.src.dir}/Db4objects.Drs.Tests">
+    		srcdir="${drs.net.src.dir}/Db4objects.Drs.Tests"
+    		executable="${csc.executable.path.net2}/csc.exe">
 			<reference dir="${drs.net.bin.dir}">
 				<include name="Db4objects.Db4o.dll" />
 				<include name="Db4oUnit.dll" />
@@ -108,7 +110,8 @@
     	<csc destfile="${drs.net.dir}/bin/QuickStart.exe"
     		targettype="exe"
     		mainclass="Db4objects.Drs.Quickstart.Simple.Simple"
-    		srcdir="${drs.net.src.dir}/QuickStart">
+    		srcdir="${drs.net.src.dir}/QuickStart"
+    		executable="${csc.executable.path.net2}/csc.exe">
 			<reference dir="${drs.net.bin.dir}">
 				<include name="Db4objects.Db4o.dll" />
 				<include name="Db4objects.Drs.dll" />
