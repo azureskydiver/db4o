@@ -685,7 +685,7 @@ public final class Platform4 {
     		initPrimitive2Wrapper();
     	Class wrapperClazz = (Class)_primitive2Wrapper.get(primitiveJavaClass);
     	if(wrapperClazz==null)        
-    		throw new NotImplementedException("No nullableTypeFor : " + primitiveJavaClass.getCanonicalName());
+    		throw new NotImplementedException("No nullableTypeFor : " + primitiveJavaClass.getName());
     	return wrapperClazz;
     }
     
