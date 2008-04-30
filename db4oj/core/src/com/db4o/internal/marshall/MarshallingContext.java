@@ -236,10 +236,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         _currentBuffer = childBuffer;
     }
 
-    private boolean isSecondWriteToField() {
-        return _fieldWriteCount == 2;
-    }
-    
     public void nextField(){
         _fieldWriteCount = 0;
         _currentBuffer = _writeBuffer;

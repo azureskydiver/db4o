@@ -9,6 +9,7 @@ import com.db4o.foundation.*;
  * @exclude
  */
 public abstract class Config4Abstract {
+    
 	protected KeySpecHashtable4 _config;
 
 	private final static KeySpec CASCADE_ON_ACTIVATE_KEY=new KeySpec(TernaryBool.UNSPECIFIED);

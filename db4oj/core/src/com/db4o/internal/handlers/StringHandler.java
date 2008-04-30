@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
@@ -29,7 +30,7 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
     }
     
     public void delete(DeleteContext context){
-    	context.readSlot();
+        // do nothing
     }
     
     byte getIdentifier() {

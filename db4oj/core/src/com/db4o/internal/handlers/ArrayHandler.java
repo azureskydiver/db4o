@@ -7,6 +7,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
+import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
@@ -120,16 +121,16 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 	}
     
     public void delete(DeleteContext context) throws Db4oIOException {
-        int address = context.readInt();
-        context.readInt();  // length, not needed
-        if (address <= 0) {
-            return;
-        }
+//        int address = context.readInt();
+//        context.readInt();  // length, not needed
+//        if (address <= 0) {
+//            return;
+//        }
         
-        int linkOffSet = context.offset(); 
+//        int linkOffSet = context.offset(); 
         
-        if (context.cascadeDeleteDepth() > 0 && _handler instanceof ClassMetadata) {
-            context.seek(address);
+        if (context.cascadeDelete() && _handler instanceof ClassMetadata) {
+//            context.seek(address);
             if (Deploy.debug) {
             	Debug.readBegin(context, Const4.YAPARRAY);
             }
@@ -138,9 +139,9 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             }
         }
         
-        if(linkOffSet > 0){
-        	context.seek(linkOffSet);
-        }
+//        if(linkOffSet > 0){
+//        	context.seek(linkOffSet);
+//        }
     }
 
     

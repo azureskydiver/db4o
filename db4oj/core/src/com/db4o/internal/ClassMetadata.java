@@ -10,6 +10,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.classindex.*;
+import com.db4o.internal.delete.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
@@ -554,9 +555,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
     }
 
-    final void delete(StatefulBuffer a_bytes, Object a_object) {
-        ObjectHeader oh = new ObjectHeader(_container, this, a_bytes);
-        delete1(oh._marshallerFamily, oh._headerAttributes, a_bytes, a_object);
+    final void delete(StatefulBuffer buffer, Object obj) {
+        ObjectHeader oh = new ObjectHeader(_container, this, buffer);
+        delete1(oh._marshallerFamily, oh._headerAttributes, buffer, obj);
     }
 
     private final void delete1(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, Object a_object) {

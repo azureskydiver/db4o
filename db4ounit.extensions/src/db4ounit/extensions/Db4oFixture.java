@@ -31,4 +31,5 @@ public interface Db4oFixture extends Labeled {
 	void configureAtRuntime(RuntimeConfigureAction action);
 
 	void fixtureConfiguration(FixtureConfiguration configuration);
+
 }
