@@ -19,13 +19,15 @@ public class JdkClass implements JavaReflectClass{
 	private final Class _clazz;
     private ReflectConstructor _constructor;
     private Object[] _constructorParams;
+    private ReflectorConfiguration _config;
 	
-	public JdkClass(Reflector reflector, Class clazz) {
+	public JdkClass(Reflector reflector, Class clazz, ReflectorConfiguration config) {
         if(reflector == null){
             throw new NullPointerException();
         }
 		_reflector = reflector;
 		_clazz = clazz;
+		_config = config;
 	}
     
 	public ReflectClass getComponentType() {

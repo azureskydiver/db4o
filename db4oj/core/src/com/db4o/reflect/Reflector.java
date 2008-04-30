@@ -15,6 +15,7 @@ import com.db4o.foundation.*;
  */
 public interface Reflector extends DeepClone{
 	
+	void configuration(ReflectorConfiguration config);
 	
 	/**
 	 * returns an ReflectArray object, the equivalent to java.lang.reflect.Array.

@@ -28,7 +28,7 @@ import com.db4o.typehandlers.*;
  */
 public final class Config4Impl implements Configuration, DeepClone,
 		MessageSender, FreespaceConfiguration, QueryConfiguration,
-		ClientServerConfiguration {
+		ClientServerConfiguration, ReflectorConfiguration {
     
 	private KeySpecHashtable4 _config=new KeySpecHashtable4(50);
 	
