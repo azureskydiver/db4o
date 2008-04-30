@@ -20,13 +20,11 @@ import com.db4o.types.*;
  */
 public class JDK {
 	
-    /** @param runnable */
 	Thread addShutdownHook(Runnable runnable){
 		return null;
 	}
 	
 	/**
-	 * @param transaction
 	 * @deprecated
 	 **/
 	Db4oCollections collections(Transaction transaction){
@@ -45,24 +43,14 @@ public class JDK {
         return obj;
     }
     
-    /**
-     * @param queue
-     * @param ref
-     * @param obj
-     */
 	Object createActivateObjectReference(Object queue, ObjectReference ref, Object obj) {
 		return null;
 	}
 	
-	/** @param bytes */
 	Object deserialize(byte[] bytes) {
     	throw new Db4oException(Messages.NOT_IMPLEMENTED);
     }
 
-	/**
-	 * @param clazz
-	 * @param config
-	 */
     public Config4Class extendConfiguration(ReflectClass clazz, Configuration config, Config4Class classConfig) {
     	return classConfig;
     }
@@ -81,7 +69,6 @@ public class JDK {
         }
 	}
 	
-    /** @param showTime */
     String format(Date date, boolean showTime) {
 		return date.toString();
 	}
@@ -90,7 +77,6 @@ public class JDK {
 		return null;
 	}
 
-	/** @param obj */
 	Object getYapRefObject(Object obj) {
 		return null;
 	}
@@ -113,33 +99,22 @@ public class JDK {
 	    return 1;
 	}
 	
-	/** @param obj */
 	void killYapRef(Object obj){
 		
 	}
 	
-	/**
-	 * @param classLoader
-	 */
 	public Class loadClass(String className, Object classLoader) throws ClassNotFoundException {
 	    // We can't use the ClassLoader here since JDK get's converted to .NET
 	    // Functionality is overridden in JDKReflect 
 		return Class.forName(className);
 	}
 	
-	/**
-	 * @param path
-	 * @param file
-	 */
 	synchronized void lockFile(String path,Object file){
 	}
 	
 	/**
      * use for system classes only, since not ClassLoader
      * or Reflector-aware
-	 * @param className
-	 * @param methodName
-	 * @param params
 	 */
 	boolean methodIsAvailable(String className, String methodName, Class[] params) {
     	return false;
@@ -149,50 +124,33 @@ public class JDK {
 		throw new NotImplementedException();
 	}
 	
-	/**
-	 * @param session
-	 * @param referenceQueue
-	 */
 	void pollReferenceQueue(ObjectContainerBase session, Object referenceQueue) {
 		
 	}
 	
-    /** @param reflector */
 	public void registerCollections(GenericReflector reflector) {
 		
 	}
 	
-    /** @param thread */
 	void removeShutdownHook(Thread thread){
 		
 	}
 	
-    /** @param clazz */
 	public Constructor serializableConstructor(Class clazz){
 	    return null;
 	}
 	
-    /** @param obj */
 	byte[] serialize(Object obj) throws Exception{
     	throw new Db4oException(Messages.NOT_IMPLEMENTED);
     }
 
-    /** @param accessibleObject */
 	void setAccessible(Object accessibleObject) {
 	}
     
-	/**
-	 * @param reflector
-	 * @param clazz
-	 */
     boolean isEnum(Reflector reflector, ReflectClass clazz) {
         return false;
     }
 	
-	/**
-	 * @param path
-	 * @param file
-	 */
     synchronized void unlockFile(String path,Object file) {
 	}
     
@@ -200,22 +158,18 @@ public class JDK {
         return weakRef;
     }
     
-    /** @param classLoader */
     public Reflector createReflector(Object classLoader) {
     	return null;
     }
 
-	/** @param clazz */
     public Reflector reflectorForType(Class clazz) {
 		return null;
 	}
 
-    /** @param container */
     public NetTypeHandler[] types(Reflector reflector) {
         return new NetTypeHandler[]{};
     }
 
-    /** @param container */
     public NetTypeHandler[] netTypes(Reflector reflector) {
         return new NetTypeHandler[]{};
     }
