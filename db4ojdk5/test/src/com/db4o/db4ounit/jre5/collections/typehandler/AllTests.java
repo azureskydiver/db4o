@@ -12,9 +12,10 @@ public class AllTests extends Db4oTestSuite {
     
     protected Class[] testCases() {
 		return new Class[] {
-				ListTypeHandlerTestSuite.class,
-				ListTypeHandlerGreaterSmallerTestSuite.class,
-				ListTypeHandlerStringElementTestSuite.class,
+	        ListTypeHandlerCascadedDeleteTestCase.class,
+			ListTypeHandlerTestSuite.class,
+			ListTypeHandlerGreaterSmallerTestSuite.class,
+			ListTypeHandlerStringElementTestSuite.class,
 		};
 	}
 

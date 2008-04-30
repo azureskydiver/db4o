@@ -7,7 +7,7 @@ import com.db4o.config.ObjectField;
 import com.db4o.foundation.*;
 
 
-class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
+public class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
     
     private final Config4Class _configClass;
     

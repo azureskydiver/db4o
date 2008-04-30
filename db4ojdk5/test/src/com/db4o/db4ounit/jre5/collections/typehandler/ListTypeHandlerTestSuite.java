@@ -7,7 +7,6 @@ import java.util.*;
 import com.db4o.db4ounit.jre5.collections.typehandler.ListTypeHandlerTestVariables.*;
 import com.db4o.query.*;
 
-import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
@@ -70,12 +69,12 @@ public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements D
 	    }
 
 		// TODO see ListTypeHandler#delete()
-		public void _testDeletion() throws Exception {
+		public void testDeletion() throws Exception {
 	        assertFirstClassElementCount(elements().length);
 	        Object item = retrieveOnlyInstance(itemFactory().itemClass());
 	        db().delete(item);
 	        db().purge();
-	        assertPersistedCount(0, itemFactory().itemClass());
+	        Db4oAssert.persistedCount(0, itemFactory().itemClass());
 	        assertFirstClassElementCount(0);
 		}
 
@@ -83,14 +82,9 @@ public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements D
 			if(!isFirstClass(elementClass())) {
 				return;
 			}
-			assertPersistedCount(expected, elementClass());
+			Db4oAssert.persistedCount(expected, elementClass());
 		}
 
-		private void assertPersistedCount(int expected, Class extent) {
-			Query q = newQuery(extent);
-	        Assert.areEqual(expected, q.execute().size());
-		}
-		
 		private boolean isFirstClass(Class elementClass) {
 			return FirstClassElement.class == elementClass;
 		}

@@ -8,6 +8,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
+import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
@@ -90,22 +91,16 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
 		return classMetadata;
 	}
 
-	// TODO Works for ArrayList/LinkedList typed fields, but fails for List typed ones,
-	// because there is no indirection (respectively it already is resolved by untyped handler).
     public void delete(final DeleteContext context) throws Db4oIOException {
-        SlotFormat.forHandlerVersion(context.handlerVersion()).doWithSlotIndirection(context, this, new Closure4() {
-            public Object run() {
-        		if (context.cascadeDeleteDepth() > 0) {
-                    TypeHandler4 handler = elementTypeHandler(context, null);
-                    context.readInt(); // class ID
-                    int elementCount = context.readInt();
-                    for (int i = elementCount; i > 0; i--) {
-        				handler.delete(context);
-                    }
-                }
-        		return null;
-            }        
-        });
+		if (! context.cascadeDelete()) {
+		    return;
+		}
+        TypeHandler4 handler = elementTypeHandler(context, null);
+        context.readInt(); // class ID
+        int elementCount = context.readInt();
+        for (int i = elementCount; i > 0; i--) {
+			handler.delete(context);
+        }
     }
 
     public void defragment(DefragmentContext context) {

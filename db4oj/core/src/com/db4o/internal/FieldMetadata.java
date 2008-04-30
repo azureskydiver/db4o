@@ -8,6 +8,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.btree.*;
+import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
@@ -194,7 +195,7 @@ public class FieldMetadata implements StoredField {
 
             // If a schema evolution changes an array to a different variable,
             // we are in trouble here.
-            _handler = wrapHandlerToArrays(container(), _handler);
+            _handler = wrapHandlerToArrays(_handler);
             
             if(_handler == null || _reflectField == null){
                 _state = FieldMetadataState.UNAVAILABLE;
@@ -370,13 +371,13 @@ public class FieldMetadata implements StoredField {
             ReflectArray reflectArray = reflector().array();
             _isNArray = reflectArray.isNDimensional(clazz);
             _isPrimitive = reflectArray.getComponentType(clazz).isPrimitive();
-            _handler = wrapHandlerToArrays(container(), _handler);
+            _handler = wrapHandlerToArrays(_handler);
         } else {
         	_isPrimitive = isPrimitive | clazz.isPrimitive();
         }
     }
     
-    private final TypeHandler4 wrapHandlerToArrays(ObjectContainerBase container, TypeHandler4 handler) {
+    private final TypeHandler4 wrapHandlerToArrays(TypeHandler4 handler) {
         if(handler == null){
             return null;
         }
@@ -424,43 +425,23 @@ public class FieldMetadata implements StoredField {
             return;
         }
         
-        DeleteContextImpl context = new DeleteContextImpl(buffer, mf.handlerVersion());
-        
         try {
 			removeIndexEntry(mf, buffer);
-			boolean dotnetValueType = false;
-			if (Deploy.csharp) {
-				dotnetValueType = Platform4.isValueType(getStoredType());
-			}
-			if ((_config != null && _config.cascadeOnDelete().definiteYes())
-					|| dotnetValueType) {
-				deleteWithCascadeDepth(context, 1);
-			} else if (_config != null
-					&& _config.cascadeOnDelete().definiteNo()) {
-				deleteWithCascadeDepth(context, 0);
-			} else {
-				context.correctHandlerVersion(_handler).delete(context);
-			}
+			DeleteContextImpl context = new DeleteContextImpl(getStoredType(), _handler, mf.handlerVersion(), _config,  buffer);
+			context.delete();
 		} catch (CorruptionException exc) {
 			throw new FieldIndexException(exc, this);
 		}
     }
 
-	private void deleteWithCascadeDepth(DeleteContextImpl context, int depth) {
-		int preservedCascadeDepth = context.cascadeDeleteDepth();
-		context.cascadeDeleteDepth(depth);
-		context.correctHandlerVersion(_handler).delete(context);
-		context.cascadeDeleteDepth(preservedCascadeDepth);
-	}
-
-    private final void removeIndexEntry(MarshallerFamily mf, StatefulBuffer a_bytes) throws CorruptionException, Db4oIOException {
+    private final void removeIndexEntry(MarshallerFamily mf, StatefulBuffer buffer) throws CorruptionException, Db4oIOException {
         if(! hasIndex()){
             return;
         }
-        int offset = a_bytes._offset;
-        Object obj = readIndexEntry(mf, a_bytes);
-        removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), obj);
-        a_bytes._offset = offset;
+        int offset = buffer._offset;
+        Object obj = readIndexEntry(mf, buffer);
+        removeIndexEntry(buffer.getTransaction(), buffer.getID(), obj);
+        buffer._offset = offset;
     }
 
     public boolean equals(Object obj) {
@@ -861,7 +842,7 @@ public class FieldMetadata implements StoredField {
     void refresh() {
         TypeHandler4 handler = detectHandlerForField();
         if (handler != null) {
-            handler = wrapHandlerToArrays(container(), handler);
+            handler = wrapHandlerToArrays(handler);
             if (handler.equals(_handler)) {
                 return;
             }

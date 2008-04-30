@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.ext.*;
 import com.db4o.internal.activation.*;
+import com.db4o.internal.delete.*;
 import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
@@ -115,7 +116,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     private TypeHandler4 readTypeHandler(InternalReadContext context, int payloadOffset) {
         context.seek(payloadOffset);
         TypeHandler4 typeHandler = container().typeHandlerForId(context.readInt());
-        // TODO: Correct handler version here?´
+        // TODO: Correct handler version here?ï¿½
         if(!NullableArrayHandling.disabled()){
         	typeHandler = container().handlers().correctHandlerVersion(typeHandler, context.handlerVersion());
         }
