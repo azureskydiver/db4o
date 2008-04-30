@@ -105,4 +105,8 @@ public class CustomReflector implements Reflector {
 	public Iterator4 customClasses() {
 		return _classRepository.iterator();
 	}
+
+	public void configuration(ReflectorConfiguration config) {
+		_delegate.configuration(config);
+	}
 }
