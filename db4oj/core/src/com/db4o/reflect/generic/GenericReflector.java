@@ -411,4 +411,9 @@ public class GenericReflector implements Reflector, DeepClone {
     public void setParent(Reflector reflector) {
         // do nothing, the generic reflector does not have a parant
     }
+    
+	public void configuration(ReflectorConfiguration config) {
+		_delegate.configuration(config);
+	}
+
 }

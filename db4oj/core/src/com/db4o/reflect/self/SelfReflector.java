@@ -53,4 +53,8 @@ public class SelfReflector implements Reflector {
 	public Object deepClone(Object context) {
 		return new SelfReflector(_registry);
 	}
+
+	public void configuration(ReflectorConfiguration config) {
+	}
+
 }

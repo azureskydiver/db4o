@@ -16,6 +16,7 @@ public class JdkReflector implements Reflector{
     private final JdkLoader _classLoader;
     private Reflector _parent;
     private ReflectArray _array;
+	private ReflectorConfiguration _config;
     
     /**
      * Constructor
@@ -67,7 +68,7 @@ public class JdkReflector implements Reflector{
      * @return ReflectClass for the specified class
      */
 	public ReflectClass forClass(Class clazz){
-        return new JdkClass(_parent, clazz);
+        return new JdkClass(_parent, clazz, _config);
 	}
 	
 	/**
@@ -80,7 +81,7 @@ public class JdkReflector implements Reflector{
 		if (clazz == null) {
 			return null;
 		}
-		return new JdkClass(_parent, clazz);
+		return new JdkClass(_parent, clazz, _config);
 	}
 	
 	/**
@@ -174,4 +175,9 @@ public class JdkReflector implements Reflector{
         return toNative(d);
     }
 
+	public void configuration(ReflectorConfiguration config) {
+		_config = config;
+	}
+
+	
 }
