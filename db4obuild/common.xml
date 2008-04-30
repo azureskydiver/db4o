@@ -132,7 +132,7 @@
 					<include name="org.eclipse.core.runtime_*.jar" />
 					<include name="org.eclipse.jdt.core_*.jar" />
 					<include name="org.eclipse.jdt.launching_*.jar" />
-					<include name="org.eclipse.equinox.common_*.jar" />
+					<include name="org.eclipse.equinox.*.jar" />
 					<include name="org.eclipse.core.jobs_*.jar" />
 				</fileset>
 			</classpath>
