@@ -135,12 +135,14 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             	Debug.readBegin(context, Const4.YAPARRAY);
             }
             
-            if (hasNullBitmap()) {
-            	//FIXME: Get the right length here
-            	context.seek(context.offset() + 8);
+            int elementCount = elementCount(context.transaction(), context);
+            
+            if (hasNullBitmap()) {            	
+            	int nullBitmapLength = context.readInt();
+				context.seek(context.offset() + nullBitmapLength);
             }
             
-            for (int i = elementCount(context.transaction(), context); i > 0; i--) {
+			for (int i = elementCount; i > 0; i--) {
 				_handler.delete(context);
             }
         }
@@ -435,10 +437,19 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 	}
 
 	private void defragElements(DefragmentContext context, int elements) {
+		defragmentNullBitmap(context, elements);
+		
 		for (int i = 0; i < elements; i++) {
 			_handler.defragment(context);
 		}
 	}
+	
+    private void defragmentNullBitmap(DefragmentContext context, int elements) {
+        if (hasNullBitmap()) {
+            BitMap4 nullBitmap = produceNullBitmap(context.sourceBuffer(), elements);
+            writeNullBitmap(context.targetBuffer(), nullBitmap);
+        }
+    }	
 
 	protected int readElementsDefrag(DefragmentContext context) {
         int elements = context.sourceBuffer().readInt();
@@ -465,7 +476,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 	                }
             	}
             	else {
-            		BitMap4 nullBitMap = produceNullBitmap(context);                	
+            		BitMap4 nullBitMap = produceNullBitmap(context, elements.value);                	
 	                for (int i = 0; i < elements.value; i++) {
 	                	Object obj = nullBitMap.isTrue(i) ? null :context.readObject(_handler);
 	                    arrayReflector(container(context)).set(array, i, obj);
@@ -479,16 +490,15 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return array;
     }
 
-	private BitMap4 produceNullBitmap(ReadContext context) {
-		byte[] bitMapBytes;		
+	private BitMap4 produceNullBitmap(ReadBuffer context, int length) {
 		if (hasNullBitmap()) {
-			bitMapBytes = new byte[context.readInt()];
+			byte[] bitMapBytes = new byte[context.readInt()];
 			context.readBytes(bitMapBytes);
-		} else {
-			bitMapBytes = new byte[] {0, 0, 0, 0};
-		}
+			
+			return new BitMap4(bitMapBytes, 0, length);
+		} 
 		
-		return new BitMap4(bitMapBytes, 0, 32);
+		return new BitMap4(length);
 	}
     
     protected boolean hasNullBitmap() {
@@ -528,7 +538,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         }
     }
 
-	private void writeNullBitmap(WriteContext context, BitMap4 nullItems) {
+	private void writeNullBitmap(WriteBuffer context, BitMap4 nullItems) {
 		byte[] nullMapBytes = nullItems.bytes();
 		
 		context.writeInt(nullMapBytes.length);
