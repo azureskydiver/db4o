@@ -7,6 +7,7 @@ import java.lang.reflect.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.platform.*;
 
 /**
  * Reflection implementation for Class to map to JDK reflection.
@@ -16,18 +17,18 @@ import com.db4o.reflect.*;
 public class JdkClass implements JavaReflectClass{
 	
 	private final Reflector _reflector;
+	private final JdkReflector _jdkReflector;
 	private final Class _clazz;
     private ReflectConstructor _constructor;
     private Object[] _constructorParams;
-    private ReflectorConfiguration _config;
 	
-	public JdkClass(Reflector reflector, Class clazz, ReflectorConfiguration config) {
-        if(reflector == null){
+	public JdkClass(Reflector reflector, JdkReflector jdkReflector, Class clazz) {
+        if(reflector == null || jdkReflector == null){
             throw new NullPointerException();
         }
 		_reflector = reflector;
 		_clazz = clazz;
-		_config = config;
+		_jdkReflector = jdkReflector;
 	}
     
 	public ReflectClass getComponentType() {
@@ -172,4 +173,13 @@ public class JdkClass implements JavaReflectClass{
 	public Object[] toArray(Object obj){
 		throw new NotImplementedException();
 	}
+	
+	public Object nullValue() {
+		return _jdkReflector.nullValue(this);
+	}
+	
+	public boolean createConstructor(boolean skipConstructor) {
+		return ConstructorSupport.createConstructor(this, _jdkReflector.configuration(), skipConstructor);
+	}
+
 }

@@ -132,4 +132,12 @@ public class CustomClass implements ReflectClass {
 			}
 		});
 	}
+	
+	public Object nullValue() {
+		return null;
+	}
+	
+	public boolean createConstructor(boolean skipConstructor) {
+		return true;
+	}
 }

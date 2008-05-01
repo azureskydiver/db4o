@@ -497,7 +497,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return false;
         }
         
-        if(container._handlers.createConstructor(claxx, ! callConstructor())){
+        if(claxx.createConstructor(! callConstructor())) {
             return true;
         }
         

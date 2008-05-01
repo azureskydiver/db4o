@@ -2,6 +2,7 @@
 
 package com.db4o.reflect.jdk;
 
+import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
 /**
@@ -13,7 +14,7 @@ import com.db4o.reflect.*;
  */
 public class JdkReflector implements Reflector{
 	
-    private final JdkLoader _classLoader;
+	private final JdkLoader _classLoader;
     private Reflector _parent;
     private ReflectArray _array;
 	private ReflectorConfiguration _config;
@@ -31,7 +32,12 @@ public class JdkReflector implements Reflector{
      * @param classLoader class loader
      */
 	public JdkReflector(JdkLoader classLoader){
+		this(classLoader, null);
+	}
+	
+	private JdkReflector(JdkLoader classLoader, ReflectorConfiguration config){
 		_classLoader = classLoader;
+		_config = config;
 	}
 	
 	/**
@@ -59,7 +65,7 @@ public class JdkReflector implements Reflector{
 	 * @return object copy
 	 */
     public Object deepClone(Object obj) {
-        return new JdkReflector(_classLoader);
+        return new JdkReflector(_classLoader, _config);
     }
 	
     /**
@@ -68,7 +74,7 @@ public class JdkReflector implements Reflector{
      * @return ReflectClass for the specified class
      */
 	public ReflectClass forClass(Class clazz){
-        return new JdkClass(_parent, clazz, _config);
+        return new JdkClass(_parent, this, clazz);
 	}
 	
 	/**
@@ -81,7 +87,7 @@ public class JdkReflector implements Reflector{
 		if (clazz == null) {
 			return null;
 		}
-		return new JdkClass(_parent, clazz, _config);
+		return new JdkClass(_parent, this, clazz);
 	}
 	
 	/**
@@ -178,6 +184,13 @@ public class JdkReflector implements Reflector{
 	public void configuration(ReflectorConfiguration config) {
 		_config = config;
 	}
-
+	
+	public ReflectorConfiguration configuration(){
+		return _config;
+	}
+	
+	Object nullValue(ReflectClass clazz) {
+		return Platform4.nullValue(toNative(clazz));
+	}
 	
 }
