@@ -19,5 +19,9 @@ public class ArrayHandler3 extends ArrayHandler {
 		}
 		return false;
 	}
+	
+	protected boolean hasNullBitmap() {
+		return false;
+	}
 
 }
