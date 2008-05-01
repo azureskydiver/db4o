@@ -134,6 +134,12 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             if (Deploy.debug) {
             	Debug.readBegin(context, Const4.YAPARRAY);
             }
+            
+            if (hasNullBitmap()) {
+            	//FIXME: Get the right length here
+            	context.seek(context.offset() + 8);
+            }
+            
             for (int i = elementCount(context.transaction(), context); i > 0; i--) {
 				_handler.delete(context);
             }
@@ -453,9 +459,18 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             if(handleAsByteArray(array)){
                 context.readBytes((byte[])array); // byte[] performance optimisation
             } else{
-                for (int i = 0; i < elements.value; i++) {
-                    arrayReflector(container(context)).set(array, i, context.readObject(_handler));
-                }
+				if (NullableArrayHandling.disabled()) {
+	                for (int i = 0; i < elements.value; i++) {
+	                    arrayReflector(container(context)).set(array, i, context.readObject(_handler));
+	                }
+            	}
+            	else {
+            		BitMap4 nullBitMap = produceNullBitmap(context);                	
+	                for (int i = 0; i < elements.value; i++) {
+	                	Object obj = nullBitMap.isTrue(i) ? null :context.readObject(_handler);
+	                    arrayReflector(container(context)).set(array, i, obj);
+	                }
+            	}
             }
         }
         if (Deploy.debug) {
@@ -463,8 +478,24 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         }
         return array;
     }
+
+	private BitMap4 produceNullBitmap(ReadContext context) {
+		byte[] bitMapBytes;		
+		if (hasNullBitmap()) {
+			bitMapBytes = new byte[context.readInt()];
+			context.readBytes(bitMapBytes);
+		} else {
+			bitMapBytes = new byte[] {0, 0, 0, 0};
+		}
+		
+		return new BitMap4(bitMapBytes, 0, 32);
+	}
     
-    public void write(WriteContext context, Object obj) {
+    protected boolean hasNullBitmap() {
+		return !NullableArrayHandling.disabled();
+	}
+
+	public void write(WriteContext context, Object obj) {
         if (Deploy.debug) {
             Debug.writeBegin(context, Const4.YAPARRAY);
         }
@@ -474,9 +505,22 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         context.writeInt(elementCount);
         if(handleAsByteArray(obj)){
             context.writeBytes((byte[])obj);  // byte[] performance optimisation
-        }else{
-            for (int i = 0; i < elementCount; i++) {
-                context.writeObject(_handler, arrayReflector(container(context)).get(obj, i));
+        }else{        	
+            if (NullableArrayHandling.disabled()) {
+	            for (int i = 0; i < elementCount; i++) {
+	                context.writeObject(_handler, arrayReflector(container(context)).get(obj, i));
+	            }
+            }
+            else {        	
+            	BitMap4 nullItems = nullItemsMap(arrayReflector(container(context)), obj);
+	            
+            	writeNullBitmap(context, nullItems);
+	            
+            	for (int i = 0; i < elementCount; i++) {
+	                if (!nullItems.isTrue(i)) {
+	                	context.writeObject(_handler, arrayReflector(container(context)).get(obj, i));
+	                }
+	            }
             }
         }
         if (Deploy.debug) {
@@ -484,7 +528,27 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         }
     }
 
-    ObjectContainerBase container(Context context) {
+	private void writeNullBitmap(WriteContext context, BitMap4 nullItems) {
+		byte[] nullMapBytes = nullItems.bytes();
+		
+		context.writeInt(nullMapBytes.length);
+		context.writeBytes(nullMapBytes);
+	}
+
+    private BitMap4 nullItemsMap(ReflectArray reflector, Object array) {
+		int arrayLength = reflector.getLength(array);
+		
+    	BitMap4 nullBitMap = new BitMap4(32);
+    	for (int i = 0; i < arrayLength; i++) {
+			if (reflector.get(array, i) == null) {
+				nullBitMap.set(i, true);
+			}
+		}
+    	
+    	return nullBitMap;
+	}
+
+	ObjectContainerBase container(Context context) {
         return context.transaction().container();
     }
 
