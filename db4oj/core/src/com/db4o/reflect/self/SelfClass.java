@@ -187,5 +187,13 @@ public class SelfClass implements ReflectClass {
 	public Object[] toArray(Object obj) {
 		return null;
 	}
+	
+	public Object nullValue() {
+		return null;
+	}
+	
+	public boolean createConstructor(boolean skipConstructor) {
+		return true;
+	}
 
 }

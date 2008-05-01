@@ -327,5 +327,19 @@ public class GenericClass implements ReflectClass, DeepClone {
 		}
 		return Platform4.collectionToArray(_reflector.getStream(), obj);
 	}
+	
+	public boolean createConstructor(boolean skipConstructor) {
+		if(_delegate == null) {
+			return true;
+		}
+		return _delegate.createConstructor(skipConstructor);
+	}
+	
+	public Object nullValue() {
+		if(_delegate == null) {
+			return null;
+		}
+		return _delegate.nullValue();
+	}
 
 }

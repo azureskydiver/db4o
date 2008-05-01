@@ -413,7 +413,9 @@ public class GenericReflector implements Reflector, DeepClone {
     }
     
 	public void configuration(ReflectorConfiguration config) {
-		_delegate.configuration(config);
+		if(_delegate != null) {
+			_delegate.configuration(config);
+		}
 	}
-
+	
 }

@@ -857,7 +857,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _config.getAsBoolean(SINGLE_THREADED_CLIENT_KEY);
 	}
 
-	boolean testConstructors() {
+	public boolean testConstructors() {
 		return _config.getAsBoolean(TEST_CONSTRUCTORS_KEY);
 	}
 

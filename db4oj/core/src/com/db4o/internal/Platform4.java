@@ -492,7 +492,7 @@ public final class Platform4 {
         // do nothing
     }
 
-    static boolean callConstructor() {
+    public static boolean callConstructor() {
         if (callConstructorCheck.isUnspecified()) {
             
             if(jdk().methodIsAvailable(
@@ -703,4 +703,28 @@ public final class Platform4 {
     }
 	
     private static Hashtable4 _primitive2Wrapper;
+    
+    public static Object nullValue(Class clazz)
+    {
+    	if(_nullValues == null) {
+    		initNullValues();
+    	}
+    	return _nullValues.get(clazz);
+    	
+    }
+    
+    private static void initNullValues() {
+    	_nullValues = new Hashtable4();
+    	_nullValues.put(boolean.class, Boolean.FALSE);
+    	_nullValues.put(byte.class, new Byte((byte)0));
+    	_nullValues.put(short.class, new Short((short)0));
+    	_nullValues.put(char.class, new Character((char)0));
+    	_nullValues.put(int.class, new Integer(0));
+    	_nullValues.put(float.class, new Float(0.0));
+    	_nullValues.put(long.class, new Long(0));
+    	_nullValues.put(double.class, new Double(0.0));    	
+	}
+
+	private static Hashtable4 _nullValues;
+
 }
