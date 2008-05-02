@@ -497,21 +497,22 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return false;
         }
         
-        if(claxx.createConstructor(! callConstructor())) {
-            return true;
+        try {
+	        claxx.createConstructor(! callConstructor());
+	        return true;
         }
-        
-        setStateDead();
-        if(errMessages){
-            container.logMsg(7, name);
-        }
-        
-        if (container.configImpl().exceptionsOnNotStorable()) {
-            throw new ObjectNotStorableException(claxx);
-        }
-
-        return false;
-        
+        catch(ObjectNotStorableException exc) {
+	        setStateDead();
+	        if(errMessages){
+	            container.logMsg(7, name);
+	        }
+	        
+	        if (container.configImpl().exceptionsOnNotStorable()) {
+	            throw exc;
+	        }
+	
+	        return false;
+        }   
     }
 
 	private void classReflector(ReflectClass claxx) {

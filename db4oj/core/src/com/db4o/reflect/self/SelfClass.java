@@ -178,11 +178,6 @@ public class SelfClass implements ReflectClass {
 		return false;
 	}
 
-	public void useConstructor(ReflectConstructor constructor, Object[] params) {
-		// ignore, there must be a public no-args constructor suitable for
-		// Class.newInstance()
-	}
-
 	// FIXME: remove. Reintroduced since OM depends on it - refactor OM.
 	public Object[] toArray(Object obj) {
 		return null;
@@ -192,8 +187,7 @@ public class SelfClass implements ReflectClass {
 		return null;
 	}
 	
-	public boolean createConstructor(boolean skipConstructor) {
-		return true;
+	public void createConstructor(boolean skipConstructor) {
 	}
 
 }

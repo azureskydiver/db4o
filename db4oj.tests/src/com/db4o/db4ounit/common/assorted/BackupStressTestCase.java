@@ -74,7 +74,7 @@ public class BackupStressTestCase implements Db4oTestCase, TestLifeCycle {
 	private void runTestIterations() throws Exception {
 		if(! runOnOldJDK && isOldJDK()) {
             System.out.println("BackupStressTest is too slow for regression testing on Java JDKs < 1.4");
-//            return;
+            return;
         }
         
         BackupStressIteration iteration = new BackupStressIteration();

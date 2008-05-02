@@ -1,5 +1,6 @@
-package com.db4o.reflect.platform;
+package com.db4o.reflect.core;
 
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
@@ -7,41 +8,38 @@ import com.db4o.reflect.*;
 public class ConstructorSupport {
 	
 	
-    public static boolean createConstructor(final ReflectClass claxx, ReflectorConfiguration config, boolean skipConstructor){
+    public static ReflectConstructorSpec createConstructor(final ReflectClass claxx, ReflectorConfiguration config, boolean skipConstructor){
         
         if (claxx == null) {
-            return false;
+			throw new ObjectNotStorableException(claxx);
         }
         
         if (claxx.isAbstract() || claxx.isInterface()) {
-            return true;
+            return null;
         }
         
         if(! Platform4.callConstructor()){
             if(claxx.skipConstructor(skipConstructor, config.testConstructors())){
-                return true;
+              return null;
             }
         }
         
         if (! config.testConstructors()) {
-            return true;
+          return null;
         }
         
         if (claxx.newInstance() != null) {
-            return true;
+          return null;
         }
         
-        if (claxx.reflector().constructorCallsSupported()) {
-			Tree sortedConstructors = sortConstructorsByParamsCount(claxx);
-			return findConstructor(claxx, sortedConstructors);
-		}
-		return false;
+		Tree sortedConstructors = sortConstructorsByParamsCount(claxx);
+		return findConstructor(claxx, sortedConstructors);
 	}
 
-	private static boolean findConstructor(final ReflectClass claxx,
+	private static ReflectConstructorSpec findConstructor(final ReflectClass claxx,
 			Tree sortedConstructors) {
 		if (sortedConstructors == null) {
-			return false;
+			throw new ObjectNotStorableException(claxx);
 		}
 		
 		Iterator4 iter = new TreeNodeIterator(sortedConstructors);
@@ -55,11 +53,10 @@ public class ConstructorSupport {
 			}
 			Object res = constructor.newInstance(params);
 			if (res != null) {
-				claxx.useConstructor(constructor, params);
-				return true;
+				return new ReflectConstructorSpec(constructor, params);
 			}
 		}
-		return false;
+		throw new ObjectNotStorableException(claxx);
 	}
 	
 	private static Tree sortConstructorsByParamsCount(final ReflectClass claxx) {

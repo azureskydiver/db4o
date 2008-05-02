@@ -121,10 +121,6 @@ public class CustomClass implements ReflectClass {
 		throw new NotImplementedException();
 	}
 
-	public void useConstructor(ReflectConstructor constructor, Object[] params) {
-		throw new NotImplementedException();
-	}
-
 	public Iterator4 customFields() {
 		return Iterators.filter(_fields, new Predicate4() {
 			public boolean match(Object candidate) {
@@ -137,7 +133,6 @@ public class CustomClass implements ReflectClass {
 		return null;
 	}
 	
-	public boolean createConstructor(boolean skipConstructor) {
-		return true;
+	public void createConstructor(boolean skipConstructor) {
 	}
 }

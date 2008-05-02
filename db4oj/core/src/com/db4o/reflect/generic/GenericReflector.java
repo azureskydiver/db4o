@@ -145,15 +145,6 @@ public class GenericReflector implements Reflector, DeepClone {
         //TODO: will need knowledge for .NET collections here
     }
 
-    /**
-     * Defines if constructor calls are supported.
-     * @return true if constructor calls are supported.
-     * @see com.db4o.config.Configuration#callbacks(boolean)
-     */
-    public boolean constructorCallsSupported() {
-        return _delegate.constructorCallsSupported();
-    }
-
     GenericClass ensureDelegate(ReflectClass clazz){
         if(clazz == null){
         	return null;

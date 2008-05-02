@@ -2,13 +2,9 @@
 
 package com.db4o.reflect.generic;
 
-import com.db4o.foundation.DeepClone;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectConstructor;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.ReflectMethod;
-import com.db4o.reflect.Reflector;
+import com.db4o.reflect.*;
 
 /**
  * @exclude
@@ -313,14 +309,6 @@ public class GenericClass implements ReflectClass, DeepClone {
     	return _converter.toString(obj);
     }
 
-    public void useConstructor(ReflectConstructor constructor, Object[] params){
-        if(_delegate != null){
-            _delegate.useConstructor(constructor, params);
-        }
-
-        // ignore, we always create a generic object
-    }
-    
 	public Object[] toArray(Object obj){
 		if(! isCollection()){
 			return new Object[]{obj};
@@ -328,11 +316,10 @@ public class GenericClass implements ReflectClass, DeepClone {
 		return Platform4.collectionToArray(_reflector.getStream(), obj);
 	}
 	
-	public boolean createConstructor(boolean skipConstructor) {
-		if(_delegate == null) {
-			return true;
+	public void createConstructor(boolean skipConstructor) {
+		if(_delegate != null) {
+			_delegate.createConstructor(skipConstructor);
 		}
-		return _delegate.createConstructor(skipConstructor);
 	}
 	
 	public Object nullValue() {
