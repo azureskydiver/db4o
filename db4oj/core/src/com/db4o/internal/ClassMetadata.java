@@ -20,6 +20,7 @@ import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.core.*;
 import com.db4o.reflect.generic.*;
 
 

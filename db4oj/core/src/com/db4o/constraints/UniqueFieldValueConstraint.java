@@ -9,6 +9,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.core.*;
 
 /**
  * configures a field of a class to allow unique values only.

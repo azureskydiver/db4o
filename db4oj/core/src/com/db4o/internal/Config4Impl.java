@@ -17,6 +17,7 @@ import com.db4o.internal.handlers.*;
 import com.db4o.io.*;
 import com.db4o.messaging.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.core.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.typehandlers.*;
 
