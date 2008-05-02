@@ -7,6 +7,7 @@ import java.lang.reflect.*;
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.core.*;
 
 /**
  * Reflection implementation for Constructor to map to JDK reflection.
@@ -21,14 +22,11 @@ public class JdkConstructor implements ReflectConstructor{
 	public JdkConstructor(Reflector reflector_, Constructor constructor_){
 		reflector = reflector_;
 		constructor = constructor_;
+		Platform4.setAccessible(constructor);
 	}
 	
 	public ReflectClass[] getParameterTypes(){
 		return JdkReflector.toMeta(reflector, constructor.getParameterTypes());
-	}
-	
-	public void setAccessible(){
-		Platform4.setAccessible(constructor);
 	}
 	
 	public Object newInstance(Object[] parameters) {

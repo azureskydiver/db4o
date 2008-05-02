@@ -33,10 +33,6 @@ public class CustomClass implements ReflectClass {
 		throw new NotImplementedException();
 	}
 
-	public ReflectConstructor[] getDeclaredConstructors() {
-		throw new NotImplementedException();
-	}
-	
 	public CustomField customField(String name) {
 		return (CustomField)getDeclaredField(name);
 	}

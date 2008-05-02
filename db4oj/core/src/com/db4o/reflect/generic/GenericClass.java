@@ -93,13 +93,6 @@ public class GenericClass implements ReflectClass, DeepClone {
         return null;
     }
 
-    public ReflectConstructor[] getDeclaredConstructors() {
-        if(_delegate != null){
-            return _delegate.getDeclaredConstructors();
-        }
-        return null;
-    }
-    
     // TODO: consider that classes may have two fields of
     // the same name after refactoring.
 
