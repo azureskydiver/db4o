@@ -51,8 +51,6 @@ public final class HandlerRegistry {
 
     private int                     _highestBuiltinTypeID     = Handlers4.ANY_ARRAY_N_ID + 1;
 
-    static private final int        PRIMITIVECOUNT  = 8;
-
     private final VirtualFieldMetadata[]         _virtualFields = new VirtualFieldMetadata[2]; 
 
     private final Hashtable4        _mapReflectorToFieldHandler  = newHashtable();

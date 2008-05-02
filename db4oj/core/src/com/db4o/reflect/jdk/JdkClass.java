@@ -158,17 +158,19 @@ public class JdkClass implements JavaReflectClass{
 				if (serializableIsOk) {
 					useSerializableConstructor = true;
 					constructor = jdkConstructor;
-					useConstructor(new ReflectConstructorSpec(constructor, null));
 				}
 			}
 		}
+		useConstructor(constructor, null);
 		return useSerializableConstructor;
 	}
-	
+
+    private void useConstructor(ReflectConstructor constructor, Object[] args){
+    	useConstructor(constructor == null ? null : new ReflectConstructorSpec(constructor, args));
+    }
+
     private void useConstructor(ReflectConstructorSpec constructorSpec){
-    	if(_constructorSpec == null) {
-    		_constructorSpec = constructorSpec;
-    	}
+    	_constructorSpec = constructorSpec;
     }
 
 	public Object[] toArray(Object obj){
@@ -180,7 +182,10 @@ public class JdkClass implements JavaReflectClass{
 	}
 	
 	public void createConstructor(boolean skipConstructor) throws ObjectNotStorableException {
-		useConstructor(ConstructorSupport.createConstructor(this, _jdkReflector.configuration(), skipConstructor));
+		ReflectConstructorSpec constructor = ConstructorSupport.createConstructor(this, _jdkReflector.configuration(), skipConstructor);
+		if(constructor != null) {
+			useConstructor(constructor);
+		}
 	}
 
 }
