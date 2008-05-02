@@ -26,5 +26,9 @@ public class NullableArrayHandling {
     public static boolean disabled() {
         return ! enabled;
     }
+    
+    public static boolean enabled(){
+        return enabled;
+    }
 
 }
