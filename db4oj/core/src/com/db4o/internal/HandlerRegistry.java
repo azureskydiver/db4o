@@ -25,7 +25,7 @@ import com.db4o.reflect.generic.*;
  */
 public final class HandlerRegistry {
     
-    public static final byte HANDLER_VERSION = NullableArrayHandling.disabled()?(byte)3:(byte)4;
+    public static final byte HANDLER_VERSION = NullableArrayHandling.enabled() ? (byte)4:(byte)3;
     
     private final ObjectContainerBase _container;  // this is the master container and not valid
 	                                   // for TransportObjectContainer
@@ -226,8 +226,8 @@ public final class HandlerRegistry {
         ArrayHandler arrayHandler = new ArrayHandler();
         registerHandlerVersion(arrayHandler, 0, new ArrayHandler0());
         registerHandlerVersion(arrayHandler, 2, new ArrayHandler2());
-        if(!NullableArrayHandling.disabled()){
-        	registerHandlerVersion(arrayHandler, 3, new ArrayHandler3());
+        if(NullableArrayHandling.enabled()){
+        	registerHandlerVersion(arrayHandler, 4, new ArrayHandler4());
         }
         
         MultidimensionalArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler();

@@ -2,15 +2,16 @@ package com.db4o.internal.handlers;
 
 import com.db4o.*;
 import com.db4o.internal.*;
+import com.db4o.reflect.*;
 
-public class ArrayHandler3 extends ArrayHandler {
+public class ArrayHandler4 extends ArrayHandler {
 	
-	protected boolean useOldNetHandling() {
-		return Deploy.csharp;		
-	}
+    protected boolean isPrimitive(ReflectClass claxx) {
+        return claxx.isPrimitive();
+    }
 	
 	protected boolean useJavaHandling() {
-		return !Deploy.csharp;
+		return true;
 	}
 	
 	protected boolean upgradingDotNetArray() {
@@ -21,7 +22,7 @@ public class ArrayHandler3 extends ArrayHandler {
 	}
 	
 	protected boolean hasNullBitmap() {
-		return false;
+	    return NullableArrayHandling.enabled();
 	}
 
 }

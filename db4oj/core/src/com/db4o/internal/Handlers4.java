@@ -41,7 +41,7 @@ public class Handlers4 {
     public static boolean handlerCanHold(TypeHandler4 handler, Reflector reflector, ReflectClass claxx){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler);
         if(handlesSimple(baseTypeHandler)){
-        	if(!NullableArrayHandling.disabled()){
+        	if(NullableArrayHandling.enabled()){
 	        	if(baseTypeHandler instanceof PrimitiveHandler){
 	        		return claxx.equals(((BuiltinTypeHandler)baseTypeHandler).classReflector(reflector))
 	        		|| claxx.equals(((PrimitiveHandler)baseTypeHandler).primitiveClassReflector(reflector));

@@ -121,16 +121,9 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 	}
     
     public void delete(DeleteContext context) throws Db4oIOException {
-//        int address = context.readInt();
-//        context.readInt();  // length, not needed
-//        if (address <= 0) {
-//            return;
-//        }
-        
-//        int linkOffSet = context.offset(); 
         
         if (context.cascadeDelete() && _handler instanceof ClassMetadata) {
-//            context.seek(address);
+            
             if (Deploy.debug) {
             	Debug.readBegin(context, Const4.YAPARRAY);
             }
@@ -147,9 +140,6 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             }
         }
         
-//        if(linkOffSet > 0){
-//        	context.seek(linkOffSet);
-//        }
     }
 
     
@@ -347,12 +337,8 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		return ArrayHandler.allElements(reflectArray, obj);
 	}
 	
-	protected boolean useOldNetHandling() {
-		return NullableArrayHandling.useOldNetHandling();		
-	}
-	
 	protected boolean useJavaHandling() {
-		return NullableArrayHandling.useJavaHandling();		
+		return ! Deploy.csharp;		
 	}
 	
 	protected boolean upgradingDotNetArray() {
@@ -362,7 +348,8 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     protected final int classID(ObjectContainerBase container, Object obj){
         ReflectClass claxx = componentType(container, obj);
         
-        boolean primitive = useOldNetHandling() ? false : claxx.isPrimitive();
+        boolean primitive = isPrimitive(claxx); 
+            // useOldNetHandling() ? false : claxx.isPrimitive();
         
         if(primitive){
             claxx = container.produceClassMetadata(claxx).classReflector();
@@ -381,7 +368,14 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return -classID;
     }
 
-	private ReflectClass componentType(ObjectContainerBase container, Object obj){
+	protected boolean isPrimitive(ReflectClass claxx) {
+	    if(Deploy.csharp){
+	        return false;
+	    }
+	    return claxx.isPrimitive();
+    }
+
+    private ReflectClass componentType(ObjectContainerBase container, Object obj){
 	    return arrayReflector(container).getComponentType(container.reflector().forObject(obj));
 	}
 	
@@ -446,7 +440,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 	
     private void defragmentNullBitmap(DefragmentContext context, int elements) {
         if (hasNullBitmap()) {
-            BitMap4 nullBitmap = produceNullBitmap(context.sourceBuffer(), elements);
+            BitMap4 nullBitmap = readNullBitmap(context.sourceBuffer(), elements);
             writeNullBitmap(context.targetBuffer(), nullBitmap);
         }
     }	
@@ -470,17 +464,16 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             if(handleAsByteArray(array)){
                 context.readBytes((byte[])array); // byte[] performance optimisation
             } else{
-				if (NullableArrayHandling.disabled()) {
-	                for (int i = 0; i < elements.value; i++) {
-	                    arrayReflector(container(context)).set(array, i, context.readObject(_handler));
-	                }
-            	}
-            	else {
-            		BitMap4 nullBitMap = produceNullBitmap(context, elements.value);                	
-	                for (int i = 0; i < elements.value; i++) {
-	                	Object obj = nullBitMap.isTrue(i) ? null :context.readObject(_handler);
-	                    arrayReflector(container(context)).set(array, i, obj);
-	                }
+				if (hasNullBitmap()) {
+                    BitMap4 nullBitMap = readNullBitmap(context, elements.value);                    
+                    for (int i = 0; i < elements.value; i++) {
+                        Object obj = nullBitMap.isTrue(i) ? null :context.readObject(_handler);
+                        arrayReflector(container(context)).set(array, i, obj);
+                    }
+            	} else {
+                    for (int i = 0; i < elements.value; i++) {
+                        arrayReflector(container(context)).set(array, i, context.readObject(_handler));
+                    }
             	}
             }
         }
@@ -490,19 +483,14 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return array;
     }
 
-	private BitMap4 produceNullBitmap(ReadBuffer context, int length) {
-		if (hasNullBitmap()) {
-			byte[] bitMapBytes = new byte[context.readInt()];
-			context.readBytes(bitMapBytes);
-			
-			return new BitMap4(bitMapBytes, 0, length);
-		} 
-		
-		return new BitMap4(length);
+	private BitMap4 readNullBitmap(ReadBuffer context, int length) {
+		byte[] bitMapBytes = new byte[context.readInt()];
+		context.readBytes(bitMapBytes);
+		return new BitMap4(bitMapBytes, 0, length);
 	}
     
     protected boolean hasNullBitmap() {
-		return !NullableArrayHandling.disabled();
+        return false;
 	}
 
 	public void write(WriteContext context, Object obj) {
@@ -516,21 +504,18 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         if(handleAsByteArray(obj)){
             context.writeBytes((byte[])obj);  // byte[] performance optimisation
         }else{        	
-            if (NullableArrayHandling.disabled()) {
-	            for (int i = 0; i < elementCount; i++) {
-	                context.writeObject(_handler, arrayReflector(container(context)).get(obj, i));
-	            }
-            }
-            else {        	
-            	BitMap4 nullItems = nullItemsMap(arrayReflector(container(context)), obj);
-	            
-            	writeNullBitmap(context, nullItems);
-	            
-            	for (int i = 0; i < elementCount; i++) {
-	                if (!nullItems.isTrue(i)) {
-	                	context.writeObject(_handler, arrayReflector(container(context)).get(obj, i));
-	                }
-	            }
+            if (hasNullBitmap()) {
+                BitMap4 nullItems = nullItemsMap(arrayReflector(container(context)), obj);
+                writeNullBitmap(context, nullItems);
+                for (int i = 0; i < elementCount; i++) {
+                    if (!nullItems.isTrue(i)) {
+                        context.writeObject(_handler, arrayReflector(container(context)).get(obj, i));
+                    }
+                }
+            } else {
+                for (int i = 0; i < elementCount; i++) {
+                    context.writeObject(_handler, arrayReflector(container(context)).get(obj, i));
+                }
             }
         }
         if (Deploy.debug) {
@@ -547,14 +532,12 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 
     private BitMap4 nullItemsMap(ReflectArray reflector, Object array) {
 		int arrayLength = reflector.getLength(array);
-		
-    	BitMap4 nullBitMap = new BitMap4(32);
+    	BitMap4 nullBitMap = new BitMap4(arrayLength);
     	for (int i = 0; i < arrayLength; i++) {
 			if (reflector.get(array, i) == null) {
 				nullBitMap.set(i, true);
 			}
 		}
-    	
     	return nullBitMap;
 	}
 

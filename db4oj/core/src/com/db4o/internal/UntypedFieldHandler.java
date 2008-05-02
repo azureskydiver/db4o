@@ -116,8 +116,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     private TypeHandler4 readTypeHandler(InternalReadContext context, int payloadOffset) {
         context.seek(payloadOffset);
         TypeHandler4 typeHandler = container().typeHandlerForId(context.readInt());
-        // TODO: Correct handler version here?�
-        if(!NullableArrayHandling.disabled()){
+        if(NullableArrayHandling.enabled()){
         	typeHandler = container().handlers().correctHandlerVersion(typeHandler, context.handlerVersion());
         }
         return typeHandler;

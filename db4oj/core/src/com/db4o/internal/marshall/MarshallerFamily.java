@@ -28,7 +28,7 @@ public class MarshallerFamily {
         public static final int BTREE_FIELD_INDEXES = 2; 
         
     }
-    
+   
     private static int CURRENT_VERSION = FamilyVersion.BTREE_FIELD_INDEXES;
     
     public final ArrayMarshaller _array;
@@ -52,7 +52,7 @@ public class MarshallerFamily {
     private final static MarshallerFamily[] allVersions;
     static {
     	
-    	allVersions = new MarshallerFamily[NullableArrayHandling.disabled()?4:5];
+    	allVersions = new MarshallerFamily[HandlerRegistry.HANDLER_VERSION + 1];
     	allVersions[0] =
 	        // LEGACY => before 5.4
 	        new MarshallerFamily(
@@ -77,11 +77,8 @@ public class MarshallerFamily {
 	            new PrimitiveMarshaller1(),
 	            new StringMarshaller1(),
 	            new UntypedMarshaller1());
-    	
-    	allVersions[2] = latestFamily(2);
-    	allVersions[3] = latestFamily(3);
-    	if(!NullableArrayHandling.disabled()){
-    		allVersions[4] = latestFamily(4);
+    	for (int i = 2; i < allVersions.length; i++) {
+    	    allVersions[i] = latestFamily(i);
         }
     }
 
