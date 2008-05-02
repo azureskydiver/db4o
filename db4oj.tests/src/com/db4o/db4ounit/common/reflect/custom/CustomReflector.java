@@ -22,10 +22,6 @@ public class CustomReflector implements Reflector {
 		return _delegate.array();
 	}
 
-	public boolean constructorCallsSupported() {
-		return false;
-	}
-
 	public ReflectClass forClass(Class clazz) {
 		return _delegate.forClass(clazz);
 	}

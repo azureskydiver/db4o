@@ -4,10 +4,11 @@ package com.db4o.reflect.jdk;
 
 import java.lang.reflect.*;
 
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
-import com.db4o.reflect.platform.*;
+import com.db4o.reflect.core.*;
 
 /**
  * Reflection implementation for Class to map to JDK reflection.
@@ -19,9 +20,8 @@ public class JdkClass implements JavaReflectClass{
 	private final Reflector _reflector;
 	private final JdkReflector _jdkReflector;
 	private final Class _clazz;
-    private ReflectConstructor _constructor;
-    private Object[] _constructorParams;
-	
+    private ReflectConstructorSpec _constructorSpec;
+    
 	public JdkClass(Reflector reflector, JdkReflector jdkReflector, Class clazz) {
         if(reflector == null || jdkReflector == null){
             throw new NullPointerException();
@@ -127,10 +127,10 @@ public class JdkClass implements JavaReflectClass{
     }
     
     public Object newInstance() {
-		if (_constructor == null) {
+		if (_constructorSpec == null) {
 			return ReflectPlatform.createInstance(_clazz);
 		}
-		return _constructor.newInstance(_constructorParams);
+		return _constructorSpec.newInstance();
 	}
 	
 	public Class getJavaClass(){
@@ -158,16 +158,17 @@ public class JdkClass implements JavaReflectClass{
 				if (serializableIsOk) {
 					useSerializableConstructor = true;
 					constructor = jdkConstructor;
+					useConstructor(new ReflectConstructorSpec(constructor, null));
 				}
 			}
 		}
-		useConstructor(constructor, null);
 		return useSerializableConstructor;
 	}
 	
-    public void useConstructor(ReflectConstructor constructor, Object[] params){
-        this._constructor = constructor;
-        _constructorParams = params;
+    private void useConstructor(ReflectConstructorSpec constructorSpec){
+    	if(_constructorSpec == null) {
+    		_constructorSpec = constructorSpec;
+    	}
     }
 
 	public Object[] toArray(Object obj){
@@ -178,8 +179,8 @@ public class JdkClass implements JavaReflectClass{
 		return _jdkReflector.nullValue(this);
 	}
 	
-	public boolean createConstructor(boolean skipConstructor) {
-		return ConstructorSupport.createConstructor(this, _jdkReflector.configuration(), skipConstructor);
+	public void createConstructor(boolean skipConstructor) throws ObjectNotStorableException {
+		useConstructor(ConstructorSupport.createConstructor(this, _jdkReflector.configuration(), skipConstructor));
 	}
 
 }

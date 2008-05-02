@@ -23,14 +23,6 @@ public interface Reflector extends DeepClone{
 	public ReflectArray array();
 	
 	/**
-	 * specifiy whether parameterized Constructors are supported.
-	 * <br><br>The support of Constructors is optional. If Constructors
-	 * are not supported, every persistent class needs a public default
-	 * constructor with zero parameters.
-	 */
-	public boolean constructorCallsSupported();
-	
-	/**
 	 * returns an ReflectClass for a Class
 	 */
 	public ReflectClass forClass(Class clazz);

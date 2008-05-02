@@ -22,10 +22,6 @@ public class SelfReflector implements Reflector {
 		return _arrayHandler;
 	}
 
-	public boolean constructorCallsSupported() {
-		return true;
-	}
-
 	public ReflectClass forClass(Class clazz) {
 		return new SelfClass(_parent, _registry, clazz);
 	}

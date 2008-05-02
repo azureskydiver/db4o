@@ -52,14 +52,6 @@ public class JdkReflector implements Reflector{
 	}
 	
 	/**
-	 * Method stub
-	 * @return true
-	 */
-	public boolean constructorCallsSupported(){
-		return true;
-	}
-    
-	/**
 	 * Creates a copy of the object
 	 * @param obj object to copy
 	 * @return object copy

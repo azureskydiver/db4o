@@ -2,6 +2,7 @@
 
 package com.db4o.reflect;
 
+
 /** 
  * representation for java.lang.Class.
  * <br><br>See the respective documentation in the JDK API.
@@ -63,13 +64,11 @@ public interface ReflectClass {
      */
     public boolean skipConstructor(boolean flag, boolean testConstructor);
 	
-    public void useConstructor(ReflectConstructor constructor, Object[] params);
-	
     // FIXME: remove. Reintroduced since OM depends on it - refactor OM.
 	public Object[] toArray(Object obj);
 
 	public Object nullValue();
 
-	public boolean createConstructor(boolean skipConstructor);
+	public void createConstructor(boolean skipConstructor);
 	
 }
