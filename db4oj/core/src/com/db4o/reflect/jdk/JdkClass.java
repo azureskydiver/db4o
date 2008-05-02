@@ -35,7 +35,7 @@ public class JdkClass implements JavaReflectClass{
 		return _reflector.forClass(_clazz.getComponentType());
 	}
 
-	public ReflectConstructor[] getDeclaredConstructors(){
+	private ReflectConstructor[] getDeclaredConstructors(){
 		Constructor[] constructors = _clazz.getDeclaredConstructors();
 		ReflectConstructor[] reflectors = new ReflectConstructor[constructors.length];
 		for (int i = 0; i < constructors.length; i++) {
@@ -182,7 +182,7 @@ public class JdkClass implements JavaReflectClass{
 	}
 	
 	public void createConstructor(boolean skipConstructor) throws ObjectNotStorableException {
-		ReflectConstructorSpec constructor = ConstructorSupport.createConstructor(this, _jdkReflector.configuration(), skipConstructor);
+		ReflectConstructorSpec constructor = ConstructorSupport.createConstructor(this, _jdkReflector.configuration(), getDeclaredConstructors(), skipConstructor);
 		if(constructor != null) {
 			useConstructor(constructor);
 		}

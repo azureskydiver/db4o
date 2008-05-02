@@ -1,6 +1,8 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.reflect;
+package com.db4o.reflect.core;
+
+import com.db4o.reflect.*;
 
 /** 
  * representation for java.lang.reflect.Constructor.
@@ -8,8 +10,6 @@ package com.db4o.reflect;
  * @see Reflector
  */
 public interface ReflectConstructor {
-	
-	public void setAccessible();
 	
 	public ReflectClass[] getParameterTypes();
 	

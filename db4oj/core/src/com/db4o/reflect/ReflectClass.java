@@ -12,8 +12,6 @@ public interface ReflectClass {
 	
     public ReflectClass getComponentType();
 	
-	public ReflectConstructor[] getDeclaredConstructors();
-	
 	public ReflectField[] getDeclaredFields();
 	
 	public ReflectField getDeclaredField(String name);

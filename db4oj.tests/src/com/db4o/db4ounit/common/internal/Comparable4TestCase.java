@@ -109,23 +109,11 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 	
 	private Object newInstance (Class clazz){
 		ReflectClass classReflector = reflector().forClass(clazz);
-		ReflectConstructor[] constructors = classReflector.getDeclaredConstructors();
-		for (int i = 0; i < constructors.length; i++) {
-			ReflectClass[] parameterTypes = constructors[i].getParameterTypes();
-			Object[] args = new Object[parameterTypes.length];
-			if(args.length > 0){
-				args[0] = db();
-			}
-			try {
-				Object result = constructors[i].newInstance(args);
-				if(result != null){
-					return result;
-				}
-			} catch (Exception e) {
-				
-			} 
+		Object obj = classReflector.newInstance();
+		if(obj == null) {
+			throw new IllegalArgumentException("No usable constructor for Class " + clazz);
 		}
-		throw new IllegalArgumentException("No usable constructor for Class " + clazz);
+		return obj;
 	}
 
 }

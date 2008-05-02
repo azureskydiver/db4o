@@ -8,7 +8,7 @@ import com.db4o.reflect.*;
 public class ConstructorSupport {
 	
 	
-    public static ReflectConstructorSpec createConstructor(final ReflectClass claxx, ReflectorConfiguration config, boolean skipConstructor){
+    public static ReflectConstructorSpec createConstructor(final ReflectClass claxx, ReflectorConfiguration config, ReflectConstructor[] constructors, boolean skipConstructor){
         
         if (claxx == null) {
 			throw new ObjectNotStorableException(claxx);
@@ -32,7 +32,7 @@ public class ConstructorSupport {
           return null;
         }
         
-		Tree sortedConstructors = sortConstructorsByParamsCount(claxx);
+		Tree sortedConstructors = sortConstructorsByParamsCount(constructors);
 		return findConstructor(claxx, sortedConstructors);
 	}
 
@@ -59,14 +59,11 @@ public class ConstructorSupport {
 		throw new ObjectNotStorableException(claxx);
 	}
 	
-	private static Tree sortConstructorsByParamsCount(final ReflectClass claxx) {
-		ReflectConstructor[] constructors = claxx.getDeclaredConstructors();
-
+	private static Tree sortConstructorsByParamsCount(final ReflectConstructor[] constructors) {
 		Tree sortedConstructors = null;
 
 		// sort constructors by parameter count
 		for (int i = 0; i < constructors.length; i++) {
-			constructors[i].setAccessible();
 			int parameterCount = constructors[i].getParameterTypes().length;
 			sortedConstructors = Tree.add(sortedConstructors,
 					new TreeIntObject(i + constructors.length * parameterCount,

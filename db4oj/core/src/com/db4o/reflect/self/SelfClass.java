@@ -46,13 +46,6 @@ public class SelfClass implements ReflectClass {
 		return _parentReflector.forClass(_registry.componentType(_class));
 	}
 
-	public ReflectConstructor[] getDeclaredConstructors() {
-		if (isInterface()) {
-			return new SelfConstructor[0];
-		}
-		return new SelfConstructor[] { new SelfConstructor(_class) };
-	}
-
 	public ReflectField[] getDeclaredFields() {
 		ensureClassInfoLoaded();
 		return _fields;
