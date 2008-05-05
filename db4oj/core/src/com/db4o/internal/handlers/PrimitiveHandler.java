@@ -21,6 +21,8 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     
     private ReflectClass _primitiveClassReflector;
     
+    private Object _primitiveNull;
+    
     public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
         return Handlers4.handlerCanHold(this, reflector, claxx) ? obj : No4.INSTANCE;
     }
@@ -45,8 +47,11 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     }
     
     protected Object primitiveNull() {
-    	ReflectClass claxx = (_primitiveClassReflector == null ? _classReflector : _primitiveClassReflector);
-    	return claxx.nullValue();
+    	if(_primitiveNull == null) {
+        	ReflectClass claxx = (_primitiveClassReflector == null ? _classReflector : _primitiveClassReflector);
+        	_primitiveNull = claxx.nullValue();
+    	}
+		return _primitiveNull;
     }
 
     /**
