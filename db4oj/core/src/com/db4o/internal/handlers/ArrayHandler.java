@@ -15,6 +15,7 @@ import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
 /**
+ * This is the latest version, the one that should be used.
  * @exclude
  */
 public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler4, VariableLengthTypeHandler, EmbeddedTypeHandler, CompositeTypeHandler{
@@ -320,7 +321,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		    int classID = - elements;
 			ClassMetadata classMetadata = container(trans).classMetadataForId(classID);
 		    if (classMetadata != null) {
-		    	if(upgradingDotNetArray()){
+		    	if(readingDotNetBeforeVersion4()){
 		    		primitive = classMetadata.isValueType();
 		    	}
 		        return (primitive ?   Handlers4.primitiveClassReflector(classMetadata, trans.reflector()) : classMetadata.classReflector());
@@ -337,12 +338,15 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		return ArrayHandler.allElements(reflectArray, obj);
 	}
 	
-	protected boolean useJavaHandling() {
-		return ! Deploy.csharp;		
-	}
-	
-	protected boolean upgradingDotNetArray() {
-		return false;
+    protected boolean useJavaHandling() {
+       if(NullableArrayHandling.enabled()){
+           return true;
+       }
+       return ! Deploy.csharp;
+    }
+    
+	protected boolean readingDotNetBeforeVersion4() {
+	    return false;
 	}
     
     protected final int classID(ObjectContainerBase container, Object obj){
@@ -369,10 +373,13 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
 
 	protected boolean isPrimitive(ReflectClass claxx) {
-	    if(Deploy.csharp){
-	        return false;
+	    if(NullableArrayHandling.enabled()){
+	        return claxx.isPrimitive();
 	    }
-	    return claxx.isPrimitive();
+        if(Deploy.csharp){
+            return false;
+        }
+        return claxx.isPrimitive();
     }
 
     private ReflectClass componentType(ObjectContainerBase container, Object obj){
@@ -490,7 +497,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 	}
     
     protected boolean hasNullBitmap() {
-        return false;
+        return NullableArrayHandling.enabled();
 	}
 
 	public void write(WriteContext context, Object obj) {
