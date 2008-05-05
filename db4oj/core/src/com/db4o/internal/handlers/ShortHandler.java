@@ -14,13 +14,13 @@ public class ShortHandler extends PrimitiveHandler {
 	
     static final int LENGTH = Const4.SHORT_BYTES + Const4.ADDED_LENGTH;
 	
-	private static final Short i_primitive = new Short((short)0);
+	private static final Short DEFAULTVALUE = new Short((short)0);
 	
     public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
     	return Coercion4.toShort(obj);
     }
     public Object defaultValue(){
-		return i_primitive;
+		return DEFAULTVALUE;
 	}
 	
 	public int linkLength(){
@@ -29,10 +29,6 @@ public class ShortHandler extends PrimitiveHandler {
 	
 	protected Class primitiveJavaClass(){
 		return short.class;
-	}
-	
-	public Object primitiveNull(){
-		return i_primitive;
 	}
 	
 	public Object read(MarshallerFamily mf, StatefulBuffer buffer,

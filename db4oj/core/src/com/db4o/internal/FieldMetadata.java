@@ -331,8 +331,8 @@ public class FieldMetadata implements StoredField {
                     
                     if (_isPrimitive) {
                         if (_handler instanceof PrimitiveHandler) {
-                            if (obj.equals(((PrimitiveHandler) _handler)
-                                .primitiveNull())) {
+                            Object nullValue = _reflectField.getFieldType().nullValue();
+							if (obj.equals(nullValue)) {
                                 return;
                             }
                         }
@@ -406,8 +406,8 @@ public class FieldMetadata implements StoredField {
         boolean isEnumClass = _containingClass.isEnum();
 		if (_isPrimitive && !_isArray) {
 			if (!isEnumClass) {
-				_reflectField.set(a_onObject, ((PrimitiveHandler) _handler)
-						.primitiveNull());
+				Object nullValue = _reflectField.getFieldType().nullValue();
+				_reflectField.set(a_onObject, nullValue);
 			}
 			return;
 		}

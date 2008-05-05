@@ -44,7 +44,10 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
         return Platform4.nullableTypeFor(primitiveJavaClass());
     }
     
-    public abstract Object primitiveNull();
+    protected Object primitiveNull() {
+    	ReflectClass claxx = (_primitiveClassReflector == null ? _classReflector : _primitiveClassReflector);
+    	return claxx.nullValue();
+    }
 
     /**
      * 
@@ -76,20 +79,15 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
         return read(mf, a_writer, true);
     }
     
-    public ReflectClass classReflector(Reflector reflector){
-        ensureClassReflectorLoaded(reflector);
+    public ReflectClass classReflector(){
     	return _classReflector;  
     }
     
-    public ReflectClass primitiveClassReflector(Reflector reflector){
-        ensureClassReflectorLoaded(reflector);
+    public ReflectClass primitiveClassReflector(){
     	return _primitiveClassReflector;  
     }
     
-    private void ensureClassReflectorLoaded(Reflector reflector){
-        if(_classReflector != null){
-            return;
-        }
+    public void registerReflector(Reflector reflector) {
         _classReflector = reflector.forClass(javaClass());
         Class clazz = primitiveJavaClass();
         if(clazz != null){

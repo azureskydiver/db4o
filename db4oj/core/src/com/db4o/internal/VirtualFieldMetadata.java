@@ -45,7 +45,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     
     public ReflectClass classReflector(Reflector reflector){
         if (_classReflector == null) {
-            _classReflector = ((BuiltinTypeHandler)getHandler()).classReflector(reflector);
+            _classReflector = ((BuiltinTypeHandler)getHandler()).classReflector();
         }
         return _classReflector;
     }

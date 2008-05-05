@@ -2,14 +2,13 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import java.util.Date;
+import java.util.*;
 
 import com.db4o.config.*;
-import com.db4o.internal.handlers.*;
-import com.db4o.query.Query;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.util.*;
 
@@ -29,20 +28,10 @@ public class IndexCreateDropTestCase extends AbstractDb4oTestCase implements Opt
             _date = date_;
         }
         
-        public IndexCreateDropItem(int int_) {
-            this(int_, int_ == 0 ? null : "" + int_, int_ == 0 ? nullDate() : new Date(int_));
+        public IndexCreateDropItem(int int_, Date nullDate) {
+            this(int_, int_ == 0 ? null : "" + int_, int_ == 0 ? nullDate : new Date(int_));
         }
 
-        /**
-         * java.util.Date gets translated to System.DateTime on .net which is
-         * a value type thus no null.
-         * 
-         * We ask the DateHandler the proper 'null' representation for the
-         * current platform.
-         */
-		private static Date nullDate() {
-			return (Date) new DateHandler().primitiveNull();
-		}
     }
     
     private final int[] VALUES = new int[]{4, 7, 6, 6, 5, 4, 0, 0};
@@ -58,7 +47,7 @@ public class IndexCreateDropTestCase extends AbstractDb4oTestCase implements Opt
     
     protected void store(){
         for (int i = 0; i < VALUES.length; i++) {
-            db().store(new IndexCreateDropItem(VALUES[i]));
+            db().store(new IndexCreateDropItem(VALUES[i], nullDate()));
         }
     }
     
@@ -150,5 +139,16 @@ public class IndexCreateDropTestCase extends AbstractDb4oTestCase implements Opt
     private void assertQuerySize(int size, Query q) {
         Assert.areEqual(size, q.execute().size());
     }
+
+    /**
+     * java.util.Date gets translated to System.DateTime on .net which is
+     * a value type thus no null.
+     * 
+     * We ask the DateHandler the proper 'null' representation for the
+     * current platform.
+     */
+	private Date nullDate() {
+		return (Date) db().reflector().forClass(Date.class).nullValue();
+	}
 
 }

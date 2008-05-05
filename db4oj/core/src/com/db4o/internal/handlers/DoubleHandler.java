@@ -15,22 +15,18 @@ import com.db4o.reflect.*;
  */
 public class DoubleHandler extends LongHandler {
 	
-    private static final Double DEFAULT_DOUBLE_VALUE = new Double(0);
+    private static final Double DEFAULTVALUE = new Double(0);
     
     public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
     	return Coercion4.toDouble(obj);
     }
 
 	public Object defaultValue(){
-		return DEFAULT_DOUBLE_VALUE;
+		return DEFAULTVALUE;
 	}
 	
 	protected Class primitiveJavaClass(){
 		return double.class;
-	}
-	
-	public Object primitiveNull(){
-		return DEFAULT_DOUBLE_VALUE;
 	}
 	
 	public Object read(MarshallerFamily mf, StatefulBuffer buffer,

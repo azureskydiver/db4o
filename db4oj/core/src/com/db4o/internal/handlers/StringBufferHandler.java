@@ -50,10 +50,11 @@ public final class StringBufferHandler implements TypeHandler4, BuiltinTypeHandl
     /*
      * @see com.db4o.internal.BuiltinTypeHandler#classReflector(com.db4o.reflect.Reflector)
      */
-    public ReflectClass classReflector(Reflector reflector) {
-        if (_classReflector == null) {
-            _classReflector = reflector.forClass(StringBuffer.class);
-        }
+    public ReflectClass classReflector() {
         return _classReflector;
     }
+
+	public void registerReflector(Reflector reflector) {
+        _classReflector = reflector.forClass(StringBuffer.class);
+	}
 }

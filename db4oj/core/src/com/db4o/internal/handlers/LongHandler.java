@@ -16,14 +16,14 @@ import com.db4o.reflect.*;
  */
 public class LongHandler extends PrimitiveHandler {
 
-    private static final Long i_primitive = new Long(0);
+    private static final Long DEFAULTVALUE = new Long(0);
 
     public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
     	return Coercion4.toLong(obj);
     }
     
     public Object defaultValue(){
-		return i_primitive;
+		return DEFAULTVALUE;
 	}
 	
 	protected Class primitiveJavaClass(){
@@ -32,10 +32,6 @@ public class LongHandler extends PrimitiveHandler {
 	
 	public int linkLength(){
 		return Const4.LONG_LENGTH;
-	}
-	
-	public Object primitiveNull(){
-		return i_primitive;
 	}
 	
 	public Object read(MarshallerFamily mf, StatefulBuffer buffer,

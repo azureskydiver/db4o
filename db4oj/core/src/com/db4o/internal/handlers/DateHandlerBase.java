@@ -22,7 +22,6 @@ public abstract class DateHandlerBase extends LongHandler {
 
 	public abstract Object copyValue(Object from, Object to);	
 	public abstract Object defaultValue();
-	public abstract Object primitiveNull();
 	public abstract Object nullRepresentationInUntypedArrays();
 	
 	protected Class primitiveJavaClass() {

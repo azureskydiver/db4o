@@ -4,7 +4,7 @@ package com.db4o.db4ounit.common.handlers;
 
 import java.util.*;
 
-import com.db4o.internal.handlers.*;
+import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 
 import db4ounit.*;
@@ -72,7 +72,7 @@ public class DateHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
 
 	private Object emptyValue() {
-		return new DateHandler().primitiveNull();
+		return Platform4.reflectorForType(Date.class).forClass(Date.class).nullValue();
 	}
 
     private void assertAreEqual(Date expected, Date actual) {

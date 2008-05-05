@@ -13,24 +13,20 @@ import com.db4o.reflect.*;
 
 public class FloatHandler extends IntHandler {
     
-    private static final Float i_primitive = new Float(0);
+    private static final Float DEFAULTVALUE = new Float(0);
     
     public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
     	return Coercion4.toFloat(obj);
     }
 
 	public Object defaultValue(){
-		return i_primitive;
+		return DEFAULTVALUE;
 	}
 	
 	protected Class primitiveJavaClass() {
 		return float.class;
 	}
 
-	public Object primitiveNull() {
-		return i_primitive;
-	}
-	
 	public Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException {
     	return mf._primitive.readFloat(writer);
     }

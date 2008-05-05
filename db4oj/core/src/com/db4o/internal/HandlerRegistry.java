@@ -154,7 +154,7 @@ public final class HandlerRegistry {
     }
 
 	public void registerNetTypeHandler(NetTypeHandler handler) {
-		handler.initialize();
+		handler.registerReflector(_reflector);
 		GenericConverter converter = (handler instanceof GenericConverter) ? (GenericConverter)handler : null;
 		registerBuiltinHandler(handler.getID(), handler, true, handler.getName(), converter);
 	}
@@ -237,16 +237,21 @@ public final class HandlerRegistry {
     }
     
     private void registerBuiltinHandler(int id, BuiltinTypeHandler handler) {
-        registerBuiltinHandler(id, handler, true, handler.classReflector(_reflector).getName(), null);
+        registerBuiltinHandler(id, handler, true, null, null);
     }
 
     private void registerBuiltinHandler(int id, BuiltinTypeHandler typeHandler, boolean registerPrimitiveClass, String primitiveName, GenericConverter converter) {
+
+        typeHandler.registerReflector(_reflector);
+        if(primitiveName == null) {
+        	primitiveName = typeHandler.classReflector().getName();
+        }
 
         if(registerPrimitiveClass){
             _reflector.registerPrimitiveClass(id, primitiveName, converter);
         }
         
-        ReflectClass classReflector = typeHandler.classReflector(_reflector);
+        ReflectClass classReflector = typeHandler.classReflector();
         
         PrimitiveFieldHandler classMetadata = new PrimitiveFieldHandler(container(), typeHandler, id, classReflector);
         
@@ -255,7 +260,7 @@ public final class HandlerRegistry {
         if (NullableArrayHandling.useJavaHandling()) {
             if(typeHandler instanceof PrimitiveHandler){
                 ReflectClass primitiveClassReflector = 
-                    ((PrimitiveHandler) typeHandler).primitiveClassReflector(_reflector);
+                    ((PrimitiveHandler) typeHandler).primitiveClassReflector();
                 if(primitiveClassReflector != null){
                     mapPrimitive(0, classMetadata, typeHandler, typeHandler, primitiveClassReflector);
                 }

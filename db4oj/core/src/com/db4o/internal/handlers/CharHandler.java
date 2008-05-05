@@ -14,10 +14,10 @@ public final class CharHandler extends PrimitiveHandler {
 
     static final int LENGTH = Const4.CHAR_BYTES + Const4.ADDED_LENGTH;
 	
-	private static final Character i_primitive = new Character((char)0);
+	private static final Character DEFAULTVALUE = new Character((char)0);
 	
 	public Object defaultValue(){
-		return i_primitive;
+		return DEFAULTVALUE;
 	}
 	
 	public int linkLength() {
@@ -26,10 +26,6 @@ public final class CharHandler extends PrimitiveHandler {
 
 	protected Class primitiveJavaClass() {
 		return char.class;
-	}
-
-	public Object primitiveNull() {
-		return i_primitive;
 	}
 
 	Object read1(ByteArrayBuffer a_bytes) {
