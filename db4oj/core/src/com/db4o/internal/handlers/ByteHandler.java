@@ -13,14 +13,14 @@ public final class ByteHandler extends PrimitiveHandler {
 
     static final int LENGTH = 1 + Const4.ADDED_LENGTH;
 	
-	private static final Byte DEFAULT_BYTE_VALUE = new Byte((byte)0);
+	private static final Byte DEFAULTVALUE = new Byte((byte)0);
 	
     public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
     	return Coercion4.toSByte(obj);
     }
 
 	public Object defaultValue(){
-		return DEFAULT_BYTE_VALUE;
+		return DEFAULTVALUE;
 	}
 	
 	public int linkLength(){
@@ -29,10 +29,6 @@ public final class ByteHandler extends PrimitiveHandler {
 
 	protected Class primitiveJavaClass(){
 		return byte.class;
-	}
-	
-	public Object primitiveNull(){
-		return DEFAULT_BYTE_VALUE;
 	}
 	
 	Object read1(ByteArrayBuffer a_bytes){

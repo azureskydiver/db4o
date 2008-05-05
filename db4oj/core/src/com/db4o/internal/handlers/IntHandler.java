@@ -15,14 +15,14 @@ import com.db4o.reflect.*;
 public class IntHandler extends PrimitiveHandler {
     
 
-	private static final Integer i_primitive = new Integer(0);
+	private static final Integer DEFAULTVALUE = new Integer(0);
     
     public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
     	return Coercion4.toInt(obj);
     }
 
     public Object defaultValue(){
-		return i_primitive;
+		return DEFAULTVALUE;
 	}
 	
     protected Class primitiveJavaClass() {
@@ -33,10 +33,6 @@ public class IntHandler extends PrimitiveHandler {
         return Const4.INT_LENGTH;
     }
 
-    public Object primitiveNull() {
-        return i_primitive;
-    }
-    
     public Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException {
         return mf._primitive.readInteger(writer);
     }

@@ -93,7 +93,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     
     private ReflectClass classReflector(ObjectContainerBase container){
         if(_handler instanceof BuiltinTypeHandler){
-            return ((BuiltinTypeHandler)_handler).classReflector(container.reflector());
+            return ((BuiltinTypeHandler)_handler).classReflector();
         }
         if(_handler instanceof ClassMetadata){
             return ((ClassMetadata)_handler).classReflector();

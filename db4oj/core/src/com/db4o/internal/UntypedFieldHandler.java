@@ -214,7 +214,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 		return configuredHandler;
 	}
 
-    public ReflectClass classReflector(Reflector reflector) {
+    public ReflectClass classReflector() {
         return super.classReflector();
     }
     
@@ -225,5 +225,9 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     public int hashCode() {
         return HASHCODE;
     }
+
+	public void registerReflector(Reflector reflector) {
+		// nothing to do
+	}
 
 }

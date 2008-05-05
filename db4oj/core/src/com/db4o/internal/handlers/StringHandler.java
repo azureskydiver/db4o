@@ -22,10 +22,7 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
     
     private ReflectClass _classReflector;
     
-    public ReflectClass classReflector(Reflector reflector){
-        if (_classReflector == null) {
-            _classReflector = reflector.forClass(String.class);
-        }
+    public ReflectClass classReflector(){
     	return _classReflector;
     }
     
@@ -241,5 +238,9 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
     public int linkLength() {
         return Const4.INDIRECTION_LENGTH;
     }
+
+	public void registerReflector(Reflector reflector) {
+        _classReflector = reflector.forClass(String.class);
+	}
 
 }

@@ -31,7 +31,11 @@ public abstract class NetSimpleTypeHandler extends NetTypeHandler implements Gen
 	public Object defaultValue() {
 		return new byte[_byteCount];
 	}
-	
+
+	public Object primitiveNull() {
+		return defaultValue();
+	}
+
 	public String getName() {
 		return _name;
 	}

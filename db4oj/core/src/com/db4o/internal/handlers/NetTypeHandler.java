@@ -5,6 +5,7 @@ package com.db4o.internal.handlers;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.reflect.*;
 
 
 /**
@@ -23,7 +24,9 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
         return defaultValue().getClass().getName();
     }
 	
-	public void initialize(){
+    public void registerReflector(Reflector reflector) {
+    	super.registerReflector(reflector);
+
 		byte[] bytes = new byte[65];
 		for (int i = 0; i < bytes.length; i++) {
 			bytes[i] = 55;  // TODO: Why 55? This is a '7'. Remove.
@@ -69,10 +72,6 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
     	}else{
     		return super.javaClass();
     	}
-    }
-    
-    public Object primitiveNull() {
-        return defaultValue();
     }
     
     public abstract Object read(byte[] bytes, int offset);

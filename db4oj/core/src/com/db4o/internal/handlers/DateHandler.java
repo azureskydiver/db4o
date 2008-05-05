@@ -9,16 +9,16 @@ import java.util.*;
  */
 public class DateHandler extends DateHandlerBase {
 	
-	private static final Date PROTO = new Date(0);
+	private static final Date DEFAULTVALUE = new Date(0);
 	
 	public Object defaultValue(){
-		return PROTO;
+		return DEFAULTVALUE;
 	}
-	
+
 	public Object primitiveNull(){
 		return null;
 	}
-	
+
 	public Object nullRepresentationInUntypedArrays() {
 	    return new Date(0);
 	}

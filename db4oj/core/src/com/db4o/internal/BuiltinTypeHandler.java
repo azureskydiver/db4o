@@ -10,6 +10,7 @@ import com.db4o.reflect.*;
  */
 public interface BuiltinTypeHandler extends TypeHandler4 {
     
-    ReflectClass classReflector(Reflector reflector);
+	void registerReflector(Reflector reflector);
+    ReflectClass classReflector();
 
 }

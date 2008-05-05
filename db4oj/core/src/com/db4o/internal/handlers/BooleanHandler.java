@@ -20,10 +20,10 @@ public final class BooleanHandler extends PrimitiveHandler {
 	private static final byte FALSE = (byte) 'F';
 	private static final byte NULL = (byte) 'N';
 	
-	private static final Boolean i_primitive = new Boolean(false);
+	private static final Boolean DEFAULTVALUE = new Boolean(false);
 	
 	public Object defaultValue(){
-		return i_primitive;
+		return DEFAULTVALUE;
 	}
 	
 	public int linkLength(){
@@ -34,10 +34,6 @@ public final class BooleanHandler extends PrimitiveHandler {
 		return boolean.class;
 	}
 	
-	public Object primitiveNull(){
-		return i_primitive;
-	}
-
 	Object read1(ByteArrayBuffer a_bytes){
 		if (Deploy.debug){
 			a_bytes.readBegin(Const4.YAPBOOLEAN);

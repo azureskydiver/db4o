@@ -43,11 +43,11 @@ public class Handlers4 {
         if(handlesSimple(baseTypeHandler)){
         	if(NullableArrayHandling.enabled()){
 	        	if(baseTypeHandler instanceof PrimitiveHandler){
-	        		return claxx.equals(((BuiltinTypeHandler)baseTypeHandler).classReflector(reflector))
-	        		|| claxx.equals(((PrimitiveHandler)baseTypeHandler).primitiveClassReflector(reflector));
+	        		return claxx.equals(((BuiltinTypeHandler)baseTypeHandler).classReflector())
+	        		|| claxx.equals(((PrimitiveHandler)baseTypeHandler).primitiveClassReflector());
 	        	}
         	}
-            return claxx.equals(((BuiltinTypeHandler)baseTypeHandler).classReflector(reflector));
+            return claxx.equals(((BuiltinTypeHandler)baseTypeHandler).classReflector());
         }
         
         if(baseTypeHandler instanceof UntypedFieldHandler){
@@ -80,7 +80,7 @@ public class Handlers4 {
     public static ReflectClass primitiveClassReflector(TypeHandler4 handler, Reflector reflector){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler);
         if(baseTypeHandler instanceof PrimitiveHandler){
-            return ((PrimitiveHandler)baseTypeHandler).primitiveClassReflector(reflector);
+            return ((PrimitiveHandler)baseTypeHandler).primitiveClassReflector();
         }
         return null;
     }
