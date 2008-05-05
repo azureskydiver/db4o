@@ -598,7 +598,7 @@
 		<java jvm="${file.jvm.jdk1.3}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
-			classname="com.db4o.db4ounit.common.migration.AllCommonTests" 
+			classname="com.db4o.db4ounit.jre12.RunAllCommonMigrationTests" 
 			failonerror="true" 
 			timeout="3600000">
 			<classpath refid="tests.java1.2.cp" />
@@ -749,7 +749,7 @@
 			<arg value="${dir.test.osgi}/db4o-osgi-test.jar" />
 		</java>
 	</target>
-	
+
 	<target name="run.tests.taj" depends="build.taj.tests">
 		<java classname="com.db4o.ta.instrumentation.test.AllTests"
 			jvmargs="${java.vmargs}"

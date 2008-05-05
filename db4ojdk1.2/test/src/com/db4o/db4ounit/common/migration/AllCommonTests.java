@@ -5,9 +5,10 @@ import db4ounit.extensions.*;
 public class AllCommonTests extends Db4oTestSuite {
     
     public static void main(String[] args) {
-        System.exit(new AllCommonTests().runSolo());
+        new AllCommonTests().runSolo();
     }
-	protected Class[] testCases() {
+
+    protected Class[] testCases() {
 		return new Class[]{
 			Db4oMigrationTestSuite.class,
 		};
