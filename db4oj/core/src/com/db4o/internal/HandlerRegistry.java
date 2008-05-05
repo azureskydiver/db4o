@@ -311,6 +311,9 @@ public final class HandlerRegistry {
     }
 
 	private void registerHandlerVersion(FieldHandler handler, int version, TypeHandler4 replacement) {
+		if(replacement instanceof BuiltinTypeHandler) {
+			((BuiltinTypeHandler)replacement).registerReflector(_reflector);
+		}
 	    _handlerVersions.put(handler, version, replacement);
     }
 

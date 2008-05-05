@@ -284,13 +284,6 @@ public class GenericClass implements ReflectClass, DeepClone {
         _isSecondClass = true;
     }
     
-    public boolean skipConstructor(boolean flag, boolean testConstructor){
-        if(_delegate != null){
-            return _delegate.skipConstructor(flag, testConstructor);
-        }
-        return false;
-    }
-	
     public String toString(){
         return "GenericClass " + _name; 
     }
@@ -309,9 +302,9 @@ public class GenericClass implements ReflectClass, DeepClone {
 		return Platform4.collectionToArray(_reflector.getStream(), obj);
 	}
 	
-	public void createConstructor(boolean skipConstructor) {
+	public void createConstructor() {
 		if(_delegate != null) {
-			_delegate.createConstructor(skipConstructor);
+			_delegate.createConstructor();
 		}
 	}
 	

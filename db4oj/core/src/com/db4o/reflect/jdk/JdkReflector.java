@@ -12,7 +12,7 @@ import com.db4o.reflect.*;
  * 
  * @sharpen.ignore
  */
-public class JdkReflector implements Reflector{
+public class JdkReflector implements Reflector {
 	
 	private final JdkLoader _classLoader;
     private Reflector _parent;

@@ -22,9 +22,12 @@ public class JdkClass implements JavaReflectClass{
 	private final Class _clazz;
     private ReflectConstructorSpec _constructorSpec;
     
-	public JdkClass(Reflector reflector, JdkReflector jdkReflector, Class clazz) {
-        if(reflector == null || jdkReflector == null){
+	public JdkClass(Reflector reflector, JdkReflector jdkReflector, Class clazz) {		
+        if(jdkReflector == null){
             throw new NullPointerException();
+        }
+        if(reflector == null){
+            reflector = jdkReflector;
         }
 		_reflector = reflector;
 		_clazz = clazz;
@@ -181,8 +184,8 @@ public class JdkClass implements JavaReflectClass{
 		return _jdkReflector.nullValue(this);
 	}
 	
-	public void createConstructor(boolean skipConstructor) throws ObjectNotStorableException {
-		ReflectConstructorSpec constructor = ConstructorSupport.createConstructor(this, _jdkReflector.configuration(), getDeclaredConstructors(), skipConstructor);
+	public void createConstructor() throws ObjectNotStorableException {
+		ReflectConstructorSpec constructor = ConstructorSupport.createConstructor(this, _jdkReflector.configuration(), getDeclaredConstructors());
 		if(constructor != null) {
 			useConstructor(constructor);
 		}

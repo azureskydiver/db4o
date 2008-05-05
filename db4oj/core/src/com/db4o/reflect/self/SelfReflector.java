@@ -2,7 +2,8 @@
 
 package com.db4o.reflect.self;
 
-import com.db4o.internal.ReflectPlatform;
+import com.db4o.config.*;
+import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
 public class SelfReflector implements Reflector {

@@ -499,7 +499,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
         
         try {
-	        claxx.createConstructor(! callConstructor());
+	        claxx.createConstructor();
 	        return true;
         }
         catch(ObjectNotStorableException exc) {

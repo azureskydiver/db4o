@@ -27,11 +27,12 @@ import db4ounit.*;
  */
 public class Db4oTests extends DrsTestSuite {
 	public static int main(String[] args) {
-//		if (true) return new Db4oTests().runDb4oDb4o();
+		//if (true) return new Db4oTests().runDb4oDb4o();
 		
-		int failureCount = new Db4oTests().rundb4oCS();
+		int failureCount = new Db4oTests().runDb4oDb4o();
+		failureCount += new Db4oTests().rundb4oCS();
 		//new Db4oTests().runCSdb4o();
-		failureCount = failureCount + new Db4oTests().runCSCS();
+		failureCount += new Db4oTests().runCSCS();
 		//new Db4oTests().runDb4oDb4o();
 		return failureCount;
 	}

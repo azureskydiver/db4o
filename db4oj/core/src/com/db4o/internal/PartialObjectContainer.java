@@ -1039,7 +1039,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 		Config4Impl impl=((Config4Impl)config);
 		impl.stream(_this);
 		impl.reflector().setTransaction(systemTransaction());
-		impl.reflector().configuration(impl);
+		impl.reflector().configuration(new ReflectorConfigurationImpl(impl));
 		return impl;
 	}
 
