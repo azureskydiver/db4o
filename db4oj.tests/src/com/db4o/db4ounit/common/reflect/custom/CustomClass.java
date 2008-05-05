@@ -109,10 +109,6 @@ public class CustomClass implements ReflectClass {
 		throw new NotImplementedException();
 	}
 
-	public boolean skipConstructor(boolean flag, boolean testConstructor) {
-		return false;
-	}
-
 	public Object[] toArray(Object obj) {
 		throw new NotImplementedException();
 	}
@@ -129,6 +125,6 @@ public class CustomClass implements ReflectClass {
 		return null;
 	}
 	
-	public void createConstructor(boolean skipConstructor) {
+	public void createConstructor() {
 	}
 }

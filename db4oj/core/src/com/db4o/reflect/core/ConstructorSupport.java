@@ -8,7 +8,7 @@ import com.db4o.reflect.*;
 public class ConstructorSupport {
 	
 	
-    public static ReflectConstructorSpec createConstructor(final ReflectClass claxx, ReflectorConfiguration config, ReflectConstructor[] constructors, boolean skipConstructor){
+    public static ReflectConstructorSpec createConstructor(final ConstructorAwareReflectClass claxx, ReflectorConfiguration config, ReflectConstructor[] constructors){
         
         if (claxx == null) {
 			throw new ObjectNotStorableException(claxx);
@@ -19,6 +19,8 @@ public class ConstructorSupport {
         }
         
         if(! Platform4.callConstructor()){
+    		boolean skipConstructor = !config.callConstructor(claxx);
+
             if(claxx.skipConstructor(skipConstructor, config.testConstructors())){
               return null;
             }
