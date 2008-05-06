@@ -2,8 +2,10 @@
 
 package com.db4o.db4ounit.common.handlers;
 
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.reflect.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -77,6 +79,27 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
         Assert.areNotSame(expectedItem, readItem);
         ArrayAssert.areEqual(expectedItem._strings, readItem._strings);
     }
+    
+    public void testHandlerVersion(){
+        IntArrayHolder intArrayHolder = new IntArrayHolder(new int[0]);
+        store(intArrayHolder);
+        ReflectClass claxx = reflector().forObject(intArrayHolder);
+        ClassMetadata classMetadata = (ClassMetadata) container().typeHandlerForReflectClass(claxx);
+        FieldMetadata fieldMetadata = classMetadata.fieldMetadataForName("_ints");
+        TypeHandler4 arrayHandler = fieldMetadata.getHandler();
+        Assert.isInstanceOf(ArrayHandler.class, arrayHandler);
+        assertCorrectedHandlerVersion(arrayHandler, 0, ArrayHandler0.class);
+        assertCorrectedHandlerVersion(arrayHandler, 1, ArrayHandler2.class);
+        assertCorrectedHandlerVersion(arrayHandler, 2, ArrayHandler2.class);
+        if(NullableArrayHandling.enabled()){
+            assertCorrectedHandlerVersion(arrayHandler, 3, ArrayHandler3.class);
+        }
+        assertCorrectedHandlerVersion(arrayHandler, HandlerRegistry.HANDLER_VERSION, ArrayHandler.class);
+    }
 
+    private void assertCorrectedHandlerVersion(TypeHandler4 arrayHandler, int version, Class handlerClass) {
+        TypeHandler4 correctedHandlerVersion = container().handlers().correctHandlerVersion(arrayHandler, version);
+        Assert.isInstanceOf(handlerClass, correctedHandlerVersion);
+    }
 
 }
