@@ -225,7 +225,7 @@ public final class HandlerRegistry {
         registerHandlerVersion(arrayHandler, 0, new ArrayHandler0());
         registerHandlerVersion(arrayHandler, 2, new ArrayHandler2());
         if(NullableArrayHandling.enabled()){
-        	registerHandlerVersion(arrayHandler, 4, new ArrayHandler3());
+        	registerHandlerVersion(arrayHandler, 3, new ArrayHandler3());
         }
         
         MultidimensionalArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler();
