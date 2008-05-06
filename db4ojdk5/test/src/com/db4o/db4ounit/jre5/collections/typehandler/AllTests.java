@@ -7,15 +7,16 @@ import db4ounit.extensions.*;
 public class AllTests extends Db4oTestSuite {
     
     public static void main(String[] arguments) {
-        new AllTests().runAll();
+        new AllTests().runSolo();
     }
     
     protected Class[] testCases() {
 		return new Class[] {
 	        ListTypeHandlerCascadedDeleteTestCase.class,
-			ListTypeHandlerTestSuite.class,
-			ListTypeHandlerGreaterSmallerTestSuite.class,
-			ListTypeHandlerStringElementTestSuite.class,
+	        ListTypeHandlerPersistedCountTestCase.class,
+//			ListTypeHandlerTestSuite.class,
+//			ListTypeHandlerGreaterSmallerTestSuite.class,
+//			ListTypeHandlerStringElementTestSuite.class,
 		};
 	}
 

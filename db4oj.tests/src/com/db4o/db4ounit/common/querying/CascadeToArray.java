@@ -89,4 +89,8 @@ public class CascadeToArray extends AbstractDb4oTestCase {
 
 		Assert.areEqual(1, countOccurences(Atom.class));
 	}
+	
+	public static void main(String[] arguments) {
+        new CascadeToArray().runSolo();
+    }
 }

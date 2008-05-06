@@ -6,7 +6,8 @@ import com.db4o.internal.*;
 
 
 /**
- * marker interface for variable length TypeHandlers
+ * marker interface for TypeHandlers where the slot
+ * length can change, depending on the object stored
  * 
  * @exclude
  */

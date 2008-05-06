@@ -40,8 +40,7 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
     }
 
     public void delete(DeleteContext context) throws Db4oIOException {
-        ((ObjectContainerBase)context.objectContainer()).deleteByID(
-                context.transaction(), context.readInt(), context.cascadeDeleteDepth());
+        context.deleteObject();
     }
 
     public final void instantiateFields(final UnmarshallingContext context) {

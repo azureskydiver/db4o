@@ -2,6 +2,7 @@
 
 package com.db4o.internal.delete;
 
+import com.db4o.internal.*;
 import com.db4o.internal.slots.Slot;
 import com.db4o.marshall.Context;
 import com.db4o.marshall.ReadBuffer;
@@ -15,6 +16,10 @@ public interface DeleteContext extends Context, ReadBuffer{
     public boolean cascadeDelete();
 
 	public int cascadeDeleteDepth();
+	
+	public void delete(TypeHandler4 handler);
+	
+	public void deleteObject();
 
 	boolean isLegacyHandlerVersion();
 

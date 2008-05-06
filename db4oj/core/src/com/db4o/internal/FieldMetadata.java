@@ -427,8 +427,8 @@ public class FieldMetadata implements StoredField {
         
         try {
 			removeIndexEntry(mf, buffer);
-			DeleteContextImpl context = new DeleteContextImpl(getStoredType(), _handler, mf.handlerVersion(), _config,  buffer);
-			context.delete();
+			DeleteContextImpl context = new DeleteContextImpl(getStoredType(), mf.handlerVersion(), _config,  buffer);
+			context.delete(_handler);
 		} catch (CorruptionException exc) {
 			throw new FieldIndexException(exc, this);
 		}

@@ -51,7 +51,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         	typeHandler = ((ObjectContainerBase)context.objectContainer()).typeHandlerForId(classMetadataID);
         }
         if(typeHandler != null){
-            typeHandler.delete(context);
+            context.delete(typeHandler);
         }
         context.seek(linkOffset);
 	}

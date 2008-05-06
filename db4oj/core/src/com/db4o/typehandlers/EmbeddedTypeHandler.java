@@ -2,10 +2,13 @@
 
 package com.db4o.typehandlers;
 
+import com.db4o.internal.*;
+
 
 /**
  * marker interface to mark TypeHandlers that marshall
- * objects to the parent slot. 
+ * objects to the parent slot and do not create objects
+ * with own identity.
  */
 public interface EmbeddedTypeHandler {
 

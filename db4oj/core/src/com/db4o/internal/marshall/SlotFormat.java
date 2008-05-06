@@ -6,6 +6,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.marshall.*;
+import com.db4o.typehandlers.*;
 
 
 /**
@@ -62,6 +63,10 @@ public abstract class SlotFormat {
     protected boolean isVariableLength(TypeHandler4 handler) {
         return handler instanceof VariableLengthTypeHandler;
     }
+    
+    public boolean isEmbedded(TypeHandler4 handler) {
+        return handler instanceof EmbeddedTypeHandler;
+    }
 
     public Object doWithSlotIndirection(ReadBuffer buffer, TypeHandler4 typeHandler, Closure4 closure){
         if(! isIndirectedWithinSlot(typeHandler)){
@@ -77,6 +82,16 @@ public abstract class SlotFormat {
         }
         buffer.seek(savedOffset);
         return res;
+    }
+    
+    public boolean handleAsObject(TypeHandler4 typeHandler){
+        if(isEmbedded(typeHandler)){
+            return false;
+        }
+        if(typeHandler instanceof UntypedFieldHandler){
+            return false;
+        }
+        return true;
     }
     
 }

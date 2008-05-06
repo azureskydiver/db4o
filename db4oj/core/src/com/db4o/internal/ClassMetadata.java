@@ -122,10 +122,14 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     public final void addFieldIndices(StatefulBuffer a_writer, Slot oldSlot) {
         if(hasClassIndex() || hasVirtualAttributes()){
             ObjectHeader oh = new ObjectHeader(_container, this, a_writer);
-            if(_typeHandler instanceof FirstClassObjectHandler){
+            if(defaultObjectHandlerIsUsed()){
                 oh._marshallerFamily._object.addFieldIndices(this, oh._headerAttributes, a_writer, oldSlot);
             }
         }
+    }
+    
+    private boolean defaultObjectHandlerIsUsed(){
+        return _typeHandler instanceof FirstClassObjectHandler;
     }
     
     void addMembers(ObjectContainerBase container) {
@@ -571,25 +575,24 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	_typeHandler.delete(context);
     }
 
-    void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, int a_type, boolean isUpdate) {
+    void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer, int a_type, boolean isUpdate) {
+        
+        DeleteContextImpl context = new DeleteContextImpl( classReflector(), mf.handlerVersion(), null,  buffer);
+        int preserveCascade = context.cascadeDeleteDepth();
         try{
 	        if (cascadeOnDelete()) {
-	            int preserveCascade = a_bytes.cascadeDeletes();
 	            if (classReflector().isCollection()) {
-	                int newCascade =
-	                    preserveCascade + reflector().collectionUpdateDepth(classReflector()) - 3;
-	                if (newCascade < 1) {
-	                    newCascade = 1;
-	                }
-	                a_bytes.setCascadeDeletes(newCascade);
+	                buffer.setCascadeDeletes(collectionDeleteDepth(context));
 	            } else {
-	                a_bytes.setCascadeDeletes(1);
+	                buffer.setCascadeDeletes(1);
 	            }
-                mf._object.deleteMembers(this, attributes, a_bytes, a_type, isUpdate);
-	            a_bytes.setCascadeDeletes(preserveCascade);
-	        } else {
-                mf._object.deleteMembers(this, attributes, a_bytes, a_type, isUpdate);
 	        }
+	        if(defaultObjectHandlerIsUsed()){
+	            mf._object.deleteMembers(this, attributes, buffer, a_type, isUpdate);
+	        }else{
+	            _typeHandler.delete(context);
+	        }
+
         }catch(Exception e){
             
             // This a catch for changed class hierarchies.
@@ -606,6 +609,17 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 e.printStackTrace();
             }
         }
+        buffer.setCascadeDeletes(preserveCascade);
+    }
+
+    private int collectionDeleteDepth(DeleteContextImpl context) {
+        int depth = context.cascadeDeleteDepth() 
+            + reflector().collectionUpdateDepth(classReflector()) 
+            - 3;  // Minus three ???  
+        if (depth < 1) {
+            depth = 1;
+        }
+        return depth;
     }
 
     /*

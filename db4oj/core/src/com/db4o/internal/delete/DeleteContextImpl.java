@@ -2,7 +2,6 @@
 
 package com.db4o.internal.delete;
 
-import com.db4o.*;
 import com.db4o.diagnostic.DefragmentRecommendation.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -18,29 +17,24 @@ public class DeleteContextImpl extends BufferContext implements DeleteContext {
     
     private final ReflectClass _fieldClass;
     
-    private final TypeHandler4 _fieldHandler;
-    
     private final int _handlerVersion;
 
     private final Config4Field _fieldConfig;
     
-    private int _deleteDepth;
-    
-	public DeleteContextImpl(ReflectClass fieldClass, TypeHandler4 fieldHandler, int handlerVersion, Config4Field fieldConfig, StatefulBuffer buffer){
+	public DeleteContextImpl(ReflectClass fieldClass, int handlerVersion, Config4Field fieldConfig, StatefulBuffer buffer){
 		super(buffer.getTransaction(), buffer);
-		_fieldHandler = fieldHandler;
 		_fieldClass = fieldClass;
 		_handlerVersion = handlerVersion;
 		_fieldConfig = fieldConfig;
-		_deleteDepth = ((StatefulBuffer)_buffer).cascadeDeletes(); 
+		 
 	}
 
 	public void cascadeDeleteDepth(int depth) {
-		_deleteDepth = depth;
+	    ((StatefulBuffer)_buffer).setCascadeDeletes(depth);
 	}
 
 	public int cascadeDeleteDepth() {
-		return _deleteDepth;
+	    return ((StatefulBuffer)_buffer).cascadeDeletes();
 	}
 	
     public boolean cascadeDelete() {
@@ -62,21 +56,31 @@ public class DeleteContextImpl extends BufferContext implements DeleteContext {
 		return _handlerVersion;
 	}
 	
-	public void delete(){
+	public void delete(TypeHandler4 handler){
+        final TypeHandler4 fieldHandler = correctHandlerVersion(handler);
 	    int preservedCascadeDepth = cascadeDeleteDepth();
 	    cascadeDeleteDepth(adjustedDepth());
-	    
-        // correctHandlerVersion(_fieldHandler).delete(DeleteContextImpl.this);
-
-	    
-	    SlotFormat.forHandlerVersion(handlerVersion()).doWithSlotIndirection(this, _fieldHandler, new Closure4() {
+	    final SlotFormat slotFormat = SlotFormat.forHandlerVersion(handlerVersion());
+        slotFormat.doWithSlotIndirection(this, fieldHandler, new Closure4() {
             public Object run() {
-                correctHandlerVersion(_fieldHandler).delete(DeleteContextImpl.this);
+                if(slotFormat.handleAsObject(fieldHandler)){
+                    deleteObject();
+                }else{
+                    fieldHandler.delete(DeleteContextImpl.this);    
+                }
                 return null;
             }
 	    });
         cascadeDeleteDepth(preservedCascadeDepth);
+
 	}
+
+    public void deleteObject() {
+        int id = _buffer.readInt();
+        if(cascadeDelete()){
+            container().deleteByID(transaction(), id, cascadeDeleteDepth());
+        }
+    }
 	
 	private int adjustedDepth(){
         if(Platform4.isValueType(_fieldClass)){
