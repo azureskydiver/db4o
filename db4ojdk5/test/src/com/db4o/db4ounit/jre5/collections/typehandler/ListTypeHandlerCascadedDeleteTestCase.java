@@ -5,10 +5,8 @@ package com.db4o.db4ounit.jre5.collections.typehandler;
 import java.util.*;
 
 import com.db4o.config.*;
-import com.db4o.query.*;
 import com.db4o.typehandlers.*;
 
-import db4ounit.*;
 import db4ounit.extensions.*;
 
 
@@ -21,7 +19,7 @@ public class ListTypeHandlerCascadedDeleteTestCase extends AbstractDb4oTestCase{
      * @param args
      */
     public static void main(String[] args) {
-        new ListTypeHandlerCascadedDeleteTestCase().runAll();
+        new ListTypeHandlerCascadedDeleteTestCase().runSolo();
     }
     
     public static class Item{
@@ -60,12 +58,13 @@ public class ListTypeHandlerCascadedDeleteTestCase extends AbstractDb4oTestCase{
         Db4oAssert.persistedCount(2, Element.class);
         db().delete(item);
         db().purge();
+        db().commit();
         Db4oAssert.persistedCount(0, Item.class);
         Db4oAssert.persistedCount(0, ArrayList.class);
         Db4oAssert.persistedCount(0, Element.class);
     }
     
-    public void _testArrayListCount(){
+    public void testArrayListCount(){
         Db4oAssert.persistedCount(2, ArrayList.class);
     }
 

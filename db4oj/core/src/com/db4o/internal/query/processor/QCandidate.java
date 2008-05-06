@@ -166,16 +166,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 							qcon.setCandidates(candidates);
 							
-							if(arrayElementHandler instanceof FirstClassHandler){
-							    SlotFormat slotFormat = SlotFormat.forHandlerVersion(_handlerVersion);
-							    slotFormat.doWithSlotIndirection(arrayBytes[0], handler, new Closure4() {
-                                    public Object run() {
-                                        ((FirstClassHandler)arrayElementHandler).readCandidates(_handlerVersion,arrayBytes[0], candidates);
-                                        return null;
-                                    }
-                                
-                                });
-							}
+							readArrayCandidates(handler, arrayBytes[0], arrayElementHandler,
+                                candidates);
 							
 							arrayBytes[0]._offset = offset;
 
@@ -334,6 +326,32 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		addDependant(a_candidates.addByIdentity(candidate));
 		return true;
 	}
+
+    private void readArrayCandidates(TypeHandler4 fieldHandler, final ByteArrayBuffer buffer,
+        final TypeHandler4 arrayElementHandler, final QCandidates candidates) {
+        if(! (arrayElementHandler instanceof FirstClassHandler)){
+            return;
+        }
+        final SlotFormat slotFormat = SlotFormat.forHandlerVersion(_handlerVersion);
+        slotFormat.doWithSlotIndirection(buffer, fieldHandler, new Closure4() {
+            public Object run() {
+                ByteArrayBuffer arrayElementBuffer = buffer;
+                
+                // FIXME: cr+acv work in progress
+                
+//                if(slotFormat.handleAsObject(arrayElementHandler)){
+//                    int id = buffer.readInt();
+//                    arrayElementBuffer = container().readReaderByID(transaction(), id);
+//                    // scrolls the buffer to the typeHandler 
+//                    new ObjectHeader(container(), buffer);  
+//                }
+                
+                ((FirstClassHandler)arrayElementHandler).readCandidates(_handlerVersion,arrayElementBuffer, candidates);
+                return null;
+            }
+        
+        });
+    }
 
 	void doNotInclude() {
 		_include = false;
