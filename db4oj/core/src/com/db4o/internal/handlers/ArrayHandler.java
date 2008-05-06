@@ -251,6 +251,10 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         if(arr == null){
             return;
         }
+        
+        if (hasNullBitmap()) {
+        	readNullBitmap(reader, elements.value);
+        }
         readSubCandidates(handlerVersion, reader, candidates, elements.value);
     }
 
