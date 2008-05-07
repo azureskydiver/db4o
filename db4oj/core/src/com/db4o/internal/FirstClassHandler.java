@@ -4,7 +4,6 @@ package com.db4o.internal;
 
 import com.db4o.ext.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.internal.query.processor.*;
 
 
 /**
@@ -12,7 +11,7 @@ import com.db4o.internal.query.processor.*;
  */
 public interface FirstClassHandler extends CascadingTypeHandler {
     
-    void readCandidates(int handlerVersion, ByteArrayBuffer buffer, QCandidates candidates) throws Db4oIOException;
+    void readCandidates(QueryingReadContext context) throws Db4oIOException;
     
     TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes);
 

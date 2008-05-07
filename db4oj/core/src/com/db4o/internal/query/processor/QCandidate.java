@@ -335,18 +335,20 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
         final SlotFormat slotFormat = SlotFormat.forHandlerVersion(_handlerVersion);
         slotFormat.doWithSlotIndirection(buffer, fieldHandler, new Closure4() {
             public Object run() {
-                ByteArrayBuffer arrayElementBuffer = buffer;
                 
-                // FIXME: cr+acv work in progress
+                QueryingReadContext context = null;
                 
-//                if(slotFormat.handleAsObject(arrayElementHandler)){
-//                    int id = buffer.readInt();
-//                    arrayElementBuffer = container().readReaderByID(transaction(), id);
-//                    // scrolls the buffer to the typeHandler 
-//                    new ObjectHeader(container(), buffer);  
-//                }
+                if(slotFormat.handleAsObject(arrayElementHandler)){
+                    int collectionID = buffer.readInt();
+                    ByteArrayBuffer arrayElementBuffer = container().readReaderByID(transaction(), collectionID);
+                    ObjectHeader.scrollBufferToContent(container(), arrayElementBuffer);
+                    context = new QueryingReadContext(transaction(), candidates, _handlerVersion, arrayElementBuffer, collectionID);
+                }else{
+                    context = new QueryingReadContext(transaction(), candidates, _handlerVersion, buffer, 0);                    
+                }
                 
-                ((FirstClassHandler)arrayElementHandler).readCandidates(_handlerVersion,arrayElementBuffer, candidates);
+                ((FirstClassHandler)arrayElementHandler).readCandidates(context);
+                
                 return null;
             }
         

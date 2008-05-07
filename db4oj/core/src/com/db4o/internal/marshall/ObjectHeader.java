@@ -104,5 +104,9 @@ public final class ObjectHeader {
     public int handlerVersion() {
         return _handlerVersion;
     }
+
+    public static void scrollBufferToContent(LocalObjectContainer container, ByteArrayBuffer buffer) {
+        new ObjectHeader(container, buffer);
+    }
     
 }

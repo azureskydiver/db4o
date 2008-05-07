@@ -129,24 +129,23 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
 	public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes) {
 		return this;
 	}
-
-	public void readCandidates(int handlerVersion, ByteArrayBuffer buffer, final QCandidates candidates) throws Db4oIOException {
-        final Transaction trans = candidates.i_trans;
-        buffer.readInt(); // skip class id
-        int elementCount = buffer.readInt();
-        TypeHandler4 elementHandler = trans.container().handlers().untypedObjectHandler();
-        readSubCandidates(handlerVersion, buffer, candidates, elementCount, elementHandler);
-	}
-
-    private void readSubCandidates(int handlerVersion, ByteArrayBuffer reader, QCandidates candidates, int count, TypeHandler4 elementHandler) {
-        QueryingReadContext context = new QueryingReadContext(candidates.transaction(), handlerVersion, reader);
-        for (int i = 0; i < count; i++) {
-            QCandidate qc = candidates.readSubCandidate(context, elementHandler);
-            if(qc != null){
-                candidates.addByIdentity(qc);
-            }
-        }
+	
+   public void readCandidates(QueryingReadContext context) throws Db4oIOException {
+        context.readInt(); // skip class id
+        int elementCount = context.readInt();
+        TypeHandler4 elementHandler = context.container().handlers().untypedObjectHandler();
+        readSubCandidates(context, elementCount, elementHandler);
     }
+   
+   private void readSubCandidates(QueryingReadContext context, int count, TypeHandler4 elementHandler) {
+       QCandidates candidates = context.candidates();
+       for (int i = 0; i < count; i++) {
+           QCandidate qc = candidates.readSubCandidate(context, elementHandler);
+           if(qc != null){
+               candidates.addByIdentity(qc);
+           }
+       }
+   }
 
     private ActivationDepth descend(ObjectContainerBase container, ActivationDepth depth, Object obj){
         if(obj == null){

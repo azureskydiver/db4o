@@ -238,28 +238,28 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return this;
     }
 
-    public void readCandidates(int handlerVersion, ByteArrayBuffer reader, QCandidates candidates) throws Db4oIOException {
-        readSubCandidates(handlerVersion, reader, candidates);
+    public void readCandidates(final QueryingReadContext context) {
+        readSubCandidates(context);
     }
     
-    public void readSubCandidates(int handlerVersion, ByteArrayBuffer reader, QCandidates candidates) {
+    public void readSubCandidates(final QueryingReadContext context) {
         if(Deploy.debug){
-            reader.readBegin(identifier());
+            Debug.readBegin(context, identifier());
         }
         IntByRef elements = new IntByRef();
-        Object arr = readCreate(candidates.i_trans, reader, elements);
+        Object arr = readCreate(context.transaction(), context, elements);
         if(arr == null){
             return;
         }
         
         if (hasNullBitmap()) {
-        	readNullBitmap(reader, elements.value);
+            readNullBitmap(context, elements.value);
         }
-        readSubCandidates(handlerVersion, reader, candidates, elements.value);
+        readSubCandidates(context, elements.value);
     }
-
-    protected void readSubCandidates(int handlerVersion, ByteArrayBuffer reader, QCandidates candidates, int count) {
-        QueryingReadContext context = new QueryingReadContext(candidates.transaction(), handlerVersion, reader);
+    
+    protected void readSubCandidates(final QueryingReadContext context, int count) {
+        QCandidates candidates = context.candidates();
         for (int i = 0; i < count; i++) {
             QCandidate qc = candidates.readSubCandidate(context, _handler);
             if(qc != null){
