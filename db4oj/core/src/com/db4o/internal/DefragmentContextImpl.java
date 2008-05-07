@@ -265,7 +265,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	}
 
 	public ObjectContainer objectContainer() {
-		return (ObjectContainer) container();
+		return container();
 	}
 
 	public void handlerVersion(int version) {

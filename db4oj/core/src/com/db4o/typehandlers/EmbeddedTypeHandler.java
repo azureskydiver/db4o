@@ -10,6 +10,6 @@ import com.db4o.internal.*;
  * objects to the parent slot and do not create objects
  * with own identity.
  */
-public interface EmbeddedTypeHandler {
+public interface EmbeddedTypeHandler extends TypeHandler4{
 
 }

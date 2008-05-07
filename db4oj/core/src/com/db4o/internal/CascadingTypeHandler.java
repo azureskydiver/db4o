@@ -4,7 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.internal.activation.*;
 
-public interface CascadingTypeHandler {
+public interface CascadingTypeHandler extends TypeHandler4{
 
 	void cascadeActivation(Transaction trans, Object obj, ActivationDepth depth);
 

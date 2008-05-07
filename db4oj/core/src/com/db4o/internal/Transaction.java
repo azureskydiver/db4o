@@ -327,7 +327,7 @@ public abstract class Transaction {
         if(_objectContainer != null){
             return _objectContainer;
         }
-        return (ObjectContainer)_container;
+        return _container;
     }
     
     public Context context(){

@@ -59,7 +59,7 @@ public abstract class BufferContext implements ReadBuffer{
 	}
 
 	public ObjectContainer objectContainer() {
-	    return (ObjectContainer) container();
+	    return container();
 	}
 
 	public Transaction transaction() {
