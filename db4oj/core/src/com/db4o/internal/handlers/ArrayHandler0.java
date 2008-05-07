@@ -24,9 +24,10 @@ public class ArrayHandler0 extends ArrayHandler2 {
     	context.defragmentRecommended();
     }
     
-    public void readCandidates(int handlerVersion, ByteArrayBuffer reader, QCandidates candidates) throws Db4oIOException {
-        Transaction transaction = candidates.transaction();
-        ByteArrayBuffer arrayBuffer = reader.readEmbeddedObject(transaction);
+    public void readCandidates(QueryingReadContext context) throws Db4oIOException {
+        Transaction transaction = context.transaction();
+        QCandidates candidates = context.candidates();
+        ByteArrayBuffer arrayBuffer = ((ByteArrayBuffer)context.buffer()).readEmbeddedObject(transaction);
         if(Deploy.debug){
             arrayBuffer.readBegin(identifier());
         }

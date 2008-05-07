@@ -1327,32 +1327,30 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     public ObjectID readObjectID(InternalReadContext context){
         return ObjectID.read(context);
     }
-    
-    public void readCandidates(int handlerVersion, final ByteArrayBuffer buffer, final QCandidates candidates) {
-        int id = 0;
 
-        int offset = buffer._offset;
-        try {
-            id = buffer.readInt();
-        } catch (Exception e) {
+    public void readCandidates(final QueryingReadContext context) {
+
+        int id = context.collectionID();
+        if (id == 0) {
+            return;
         }
-        buffer._offset = offset;
+        final Transaction trans = context.transaction();
+        Object obj = trans.container().getByID(trans, id);
+        if (obj == null) {
+            return;
+        }
+            
+        final QCandidates candidates = context.candidates();
 
-        if (id != 0) {
-            final Transaction trans = candidates.i_trans;
-            Object obj = trans.container().getByID(trans, id);
-            if (obj != null) {
-
-            	// FIXME: [TA] review activation depth 
-                candidates.i_trans.container().activate(trans, obj, activationDepthProvider().activationDepth(2, ActivationMode.ACTIVATE));
-                Platform4.forEachCollectionElement(obj, new Visitor4() {
-                    public void visit(Object elem) {
-                        candidates.addByIdentity(new QCandidate(candidates, elem, trans.container().getID(trans, elem), true));
-                    }
-                });
+        // FIXME: [TA] review activation depth
+        
+        context.container().activate(trans, obj, activationDepthProvider().activationDepth(2, ActivationMode.ACTIVATE));
+        Platform4.forEachCollectionElement(obj, new Visitor4() {
+            public void visit(Object elem) {
+                candidates.addByIdentity(new QCandidate(candidates, elem, context.container().getID(trans, elem), true));
             }
-
-        }
+        });
+        
     }
 
     private ActivationDepthProvider activationDepthProvider() {

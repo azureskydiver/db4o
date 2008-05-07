@@ -5,6 +5,7 @@ package com.db4o.internal.handlers;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -67,16 +68,16 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
 	    return elementCount(dimensions);
     }
     
-    public void readSubCandidates(int handlerVersion, ByteArrayBuffer reader, QCandidates candidates) {
+    public void readSubCandidates(QueryingReadContext context) {
         if(Deploy.debug){
-            reader.readBegin(identifier());
+            Debug.readBegin(context, identifier());
         }
         IntArrayByRef dimensions = new IntArrayByRef();
-        Object arr = readCreate(candidates.i_trans, reader, dimensions);
+        Object arr = readCreate(context.transaction(), context, dimensions);
         if(arr == null){
             return;
         }
-        readSubCandidates(handlerVersion, reader, candidates, elementCount(dimensions.value));
+        readSubCandidates(context, elementCount(dimensions.value));
     }
     
     protected Object readCreate(Transaction trans, ReadBuffer buffer, IntArrayByRef dimensions) {
