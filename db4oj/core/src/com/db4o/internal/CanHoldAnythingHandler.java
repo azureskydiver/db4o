@@ -7,6 +7,6 @@ package com.db4o.internal;
  * (Temporary) marker interface to indicate handlers 
  *  that can hold arbitrary types
  */
-public interface CanHoldAnythingHandler {
+public interface CanHoldAnythingHandler extends TypeHandler4{
 
 }

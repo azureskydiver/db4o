@@ -24,7 +24,7 @@ public class ReflectorConfigurationImpl implements ReflectorConfiguration {
     }
     
     private final TernaryBool callConstructorSpecialized(ReflectClass clazz){
-    	Config4Class clazzConfig = (Config4Class) _config.configClass(clazz.getName());
+    	Config4Class clazzConfig = _config.configClass(clazz.getName());
         if(clazzConfig!= null){
             TernaryBool res = clazzConfig.callConstructor();
             if(!res.isUnspecified()){
