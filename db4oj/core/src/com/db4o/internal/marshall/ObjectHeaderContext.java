@@ -11,27 +11,23 @@ import com.db4o.marshall.*;
  */
 public abstract class ObjectHeaderContext extends AbstractReadContext {
     
-    private final ObjectHeader _objectHeader;
+    protected ObjectHeader _objectHeader;
     
     protected ObjectHeaderContext(Transaction transaction, ReadBuffer buffer, ObjectHeader objectHeader) {
         super(transaction, buffer);
         _objectHeader = objectHeader;
     }
     
-    public ObjectHeaderAttributes headerAttributes(){
+    public final ObjectHeaderAttributes headerAttributes(){
         return _objectHeader._headerAttributes;
     }
 
-    public boolean isNull(int fieldIndex) {
+    public final boolean isNull(int fieldIndex) {
         return headerAttributes().isNull(fieldIndex);
     }
 
-    public int handlerVersion() {
+    public final int handlerVersion() {
         return _objectHeader.handlerVersion();
     }
-
-
-    
-
 
 }
