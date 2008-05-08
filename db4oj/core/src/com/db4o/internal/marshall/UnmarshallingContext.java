@@ -11,20 +11,18 @@ import com.db4o.internal.activation.*;
  * 
  * @exclude
  */
-public class UnmarshallingContext extends AbstractReadContext implements FieldListInfo, MarshallingInfo{
+public class UnmarshallingContext extends ObjectHeaderContext implements FieldListInfo, MarshallingInfo{
     
     private final ObjectReference _reference;
     
     private Object _object;
-    
-    private ObjectHeader _objectHeader;
     
     private int _addToIDTree;
     
     private boolean _checkIDTree;
     
     public UnmarshallingContext(Transaction transaction, ByteArrayBuffer buffer, ObjectReference ref, int addToIDTree, boolean checkIDTree) {
-        super(transaction, buffer);
+        super(transaction, buffer, null);
         _reference = ref;
         _addToIDTree = addToIDTree;
         _checkIDTree = checkIDTree;
@@ -198,18 +196,6 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
 
     public void persistentObject(Object obj) {
         _object = obj;
-    }
-
-    public ObjectHeaderAttributes headerAttributes(){
-        return _objectHeader._headerAttributes;
-    }
-
-    public boolean isNull(int fieldIndex) {
-        return headerAttributes().isNull(fieldIndex);
-    }
-
-    public int handlerVersion() {
-        return _objectHeader.handlerVersion();
     }
     
 }

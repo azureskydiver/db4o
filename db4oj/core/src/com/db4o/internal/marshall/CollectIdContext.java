@@ -10,18 +10,15 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class CollectIdContext extends AbstractReadContext implements MarshallingInfo{
+public class CollectIdContext extends ObjectHeaderContext implements MarshallingInfo{
     
     private final String _fieldName;
     
     private TreeInt _ids;
     
-    private final ObjectHeader _objectHeader;
-
     public CollectIdContext(Transaction transaction, ObjectHeader oh, ReadBuffer buffer, String fieldName) {
-        super(transaction, buffer);
+        super(transaction, buffer, oh);
         _fieldName = fieldName;
-        _objectHeader = oh;
     }
 
     public String fieldName() {
@@ -32,30 +29,12 @@ public class CollectIdContext extends AbstractReadContext implements Marshalling
         _ids = (TreeInt) Tree.add(_ids, new TreeInt(readInt()));
     }
     
-    
-    // The following three methods are similar to 
-    // the ones in UnmarshallingContext
-
     public ClassMetadata classMetadata() {
         return _objectHeader.classMetadata();
-    }
-
-    public int handlerVersion() {
-        return _objectHeader.handlerVersion();
-    }
-    
-    public ObjectHeaderAttributes headerAttributes(){
-        return _objectHeader._headerAttributes;
-    }
-
-    public boolean isNull(int fieldIndex) {
-        return headerAttributes().isNull(fieldIndex);
     }
 
     public Tree ids() {
         return _ids;
     }
-
-    
 
 }
