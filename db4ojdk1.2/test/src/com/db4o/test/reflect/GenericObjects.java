@@ -17,6 +17,7 @@ public class GenericObjects extends Test {
 	
 	public GenericObjects() throws ClassNotFoundException {
         _reflector = new GenericReflector(null, new JdkReflector(Thread.currentThread().getContextClassLoader()));
+        _reflector.configuration(new MockReflectorConfiguration());
         _objectIClass = (GenericClass)_reflector.forClass(Object.class);
 	}
 
