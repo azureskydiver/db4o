@@ -69,12 +69,23 @@ public final class TernaryBool implements Serializable {
 	
 	private Object readResolve() {
 		switch(_value) {
-		case NO_ID:
-			return NO;
-		case YES_ID:
-			return YES;
-		default:
-			return UNSPECIFIED;
+			case NO_ID:
+				return NO;
+			case YES_ID:
+				return YES;
+			default:
+				return UNSPECIFIED;
 		}
+	}
+	
+	public String toString() {
+		switch(_value) {
+		case NO_ID:
+			return "NO";
+		case YES_ID:
+			return "YES";
+		default:
+			return "UNSPECIFIED";
+	}
 	}
 }

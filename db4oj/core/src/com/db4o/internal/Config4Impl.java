@@ -287,12 +287,13 @@ public final class Config4Impl implements Configuration, DeepClone,
 
     public Object deepClone(Object param) {
         Config4Impl ret = new Config4Impl();
-        ret._config=(KeySpecHashtable4)_config.deepClone(this);
+        ConfigDeepCloneContext context = new ConfigDeepCloneContext(this, ret);
+        ret._config=(KeySpecHashtable4)_config.deepClone(context);
         ret._internStrings = _internStrings;
         ret._messageLevel = _messageLevel;
         ret._readOnly = _readOnly;
         if(_registeredTypeHandlers != null){
-            ret._registeredTypeHandlers = (Collection4) _registeredTypeHandlers.deepClone(this);
+            ret._registeredTypeHandlers = (Collection4) _registeredTypeHandlers.deepClone(context);
         }
         return ret;
     }
@@ -957,5 +958,13 @@ public final class Config4Impl implements Configuration, DeepClone,
 	    return null;
 	}
 	
-	
+	public static class ConfigDeepCloneContext {
+		public final Config4Impl _orig;
+		public final Config4Impl _cloned;
+		
+		public ConfigDeepCloneContext(Config4Impl orig, Config4Impl cloned) {
+			_orig = orig;
+			_cloned = cloned;
+		}
+	}
 }
