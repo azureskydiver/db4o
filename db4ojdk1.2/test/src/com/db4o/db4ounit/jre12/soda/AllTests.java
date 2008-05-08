@@ -40,6 +40,6 @@ public class AllTests  extends Db4oTestSuite {
 	}
 
 	public static void main(String[] args) {
-		new AllTests().runSolo();
+		new AllTests().runAll();
 	}
 }

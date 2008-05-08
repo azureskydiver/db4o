@@ -8,7 +8,7 @@ import com.db4o.reflect.*;
 public class ConstructorSupport {
 	
 	
-    public static ReflectConstructorSpec createConstructor(final ConstructorAwareReflectClass claxx, ReflectorConfiguration config, ReflectConstructor[] constructors){
+    public static ReflectConstructorSpec createConstructor(final ConstructorAwareReflectClass claxx, Class clazz, ReflectorConfiguration config, ReflectConstructor[] constructors){
         
         if (claxx == null) {
 			throw new ObjectNotStorableException(claxx);
@@ -29,11 +29,11 @@ public class ConstructorSupport {
         if (! config.testConstructors()) {
           return null;
         }
-        
-        if (claxx.newInstance() != null) {
-          return null;
-        }
-        
+
+		if(ReflectPlatform.createInstance(clazz) != null) {
+			return null;
+		}
+
 		Tree sortedConstructors = sortConstructorsByParamsCount(constructors);
 		return findConstructor(claxx, sortedConstructors);
 	}

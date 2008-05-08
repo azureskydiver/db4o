@@ -114,7 +114,8 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     }
     
     public Object deepClone(Object param){
-        return new Config4Class((Config4Impl)param,_config);
+    	Config4Impl parentConfig = ((Config4Impl.ConfigDeepCloneContext)param)._cloned;
+        return new Config4Class(parentConfig, _config);
     }
 
 	public void enableReplication(boolean setting) {

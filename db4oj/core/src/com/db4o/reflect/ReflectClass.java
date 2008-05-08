@@ -51,11 +51,13 @@ public interface ReflectClass {
     
     public Reflector reflector();
     	
-    // FIXME: remove. Reintroduced since OM depends on it - refactor OM.
-	public Object[] toArray(Object obj);
-
 	public Object nullValue();
 
-	public void createConstructor();
-	
+	/**
+	 * Calling this method may change the internal state of the class, even if a usable
+	 * constructor has been found on earlier invocations.
+	 * 
+	 * @return true, if instances of this class can be created, false otherwise
+	 */
+	public boolean ensureCanBeInstantiated();
 }

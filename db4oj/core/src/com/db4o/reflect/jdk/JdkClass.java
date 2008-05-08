@@ -21,6 +21,7 @@ public class JdkClass implements JavaReflectClass{
 	private final JdkReflector _jdkReflector;
 	private final Class _clazz;
     private ReflectConstructorSpec _constructorSpec;
+	private  TernaryBool _canBeInstantiated = TernaryBool.UNSPECIFIED;
     
 	public JdkClass(Reflector reflector, JdkReflector jdkReflector, Class clazz) {		
         if(jdkReflector == null){
@@ -130,6 +131,7 @@ public class JdkClass implements JavaReflectClass{
     }
     
     public Object newInstance() {
+		createConstructor(false);
 		if (_constructorSpec == null) {
 			return ReflectPlatform.createInstance(_clazz);
 		}
@@ -169,26 +171,31 @@ public class JdkClass implements JavaReflectClass{
 	}
 
     private void useConstructor(ReflectConstructor constructor, Object[] args){
-    	useConstructor(constructor == null ? null : new ReflectConstructorSpec(constructor, args));
+    	_constructorSpec = (constructor == null ? null : new ReflectConstructorSpec(constructor, args));
     }
 
-    private void useConstructor(ReflectConstructorSpec constructorSpec){
-    	_constructorSpec = constructorSpec;
-    }
-
-	public Object[] toArray(Object obj){
-		throw new NotImplementedException();
-	}
-	
 	public Object nullValue() {
 		return _jdkReflector.nullValue(this);
 	}
 	
-	public void createConstructor() throws ObjectNotStorableException {
-		ReflectConstructorSpec constructor = ConstructorSupport.createConstructor(this, _jdkReflector.configuration(), getDeclaredConstructors());
-		if(constructor != null) {
-			useConstructor(constructor);
+	private void createConstructor(boolean forceCheck) {
+		if(!forceCheck && !_canBeInstantiated.isUnspecified()) {
+			return;
+		}
+		try {
+			ReflectConstructorSpec constructor = ConstructorSupport.createConstructor(this, _clazz, _jdkReflector.configuration(), getDeclaredConstructors());
+			if(constructor != null) {
+				_constructorSpec = constructor;
+			}
+			_canBeInstantiated = TernaryBool.YES;
+		}
+		catch(ObjectNotStorableException exc) {
+			_canBeInstantiated = TernaryBool.NO;
 		}
 	}
 
+	public boolean ensureCanBeInstantiated() {
+		createConstructor(true);
+		return _canBeInstantiated.definiteYes();
+	}
 }

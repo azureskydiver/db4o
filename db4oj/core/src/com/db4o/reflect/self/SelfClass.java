@@ -166,16 +166,12 @@ public class SelfClass implements ReflectClass {
 		return null;
 	}
 
-	// FIXME: remove. Reintroduced since OM depends on it - refactor OM.
-	public Object[] toArray(Object obj) {
-		return null;
-	}
-	
 	public Object nullValue() {
 		return null;
 	}
 	
-	public void createConstructor() {
+	public boolean ensureCanBeInstantiated() {
+		return true;
 	}
-
+	
 }
