@@ -18,7 +18,7 @@ import com.db4o.typehandlers.*;
  * This is the latest version, the one that should be used.
  * @exclude
  */
-public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler4, VariableLengthTypeHandler, EmbeddedTypeHandler, CompositeTypeHandler{
+public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler4, VariableLengthTypeHandler, EmbeddedTypeHandler, CompositeTypeHandler, CollectIdHandler{
     
 	private TypeHandler4 _handler;
 	
@@ -101,25 +101,35 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         }
         return container.handlers().classReflectorForHandler(_handler);
     }
-
-    public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, StatefulBuffer reader) throws Db4oIOException{
-        return mf._array.collectIDs(this, tree, reader);
+    
+    public void collectIDs(final CollectIdContext context) {
+        collectIDsWith(context, new Closure4() {
+            public Object run() {
+                if (context.buffer() == null) {
+                    return null;
+                }
+                if (Deploy.debug) {
+                    Debug.readBegin(context, identifier());
+                }
+                int count = elementCount(context.transaction(), context);
+                if (hasNullBitmap()) {
+                    int nullBitmapLength = context.readInt();
+                    context.seek(context.offset() + nullBitmapLength);
+                }
+                // TODO:  count has to be adjusted so we don't do this
+                //        for the nulls.
+                for (int i = 0; i < count; i++) {
+                    context.addId();
+                }
+                return null;
+            }
+        });
     }
     
-    public final TreeInt collectIDs1(Transaction trans, TreeInt tree,
-			ByteArrayBuffer reader) {
-		if (reader == null) {
-			return tree;
-		}
-		if (Deploy.debug) {
-			reader.readBegin(identifier());
-		}
-		int count = elementCount(trans, reader);
-		for (int i = 0; i < count; i++) {
-			tree = (TreeInt) Tree.add(tree, new TreeInt(reader.readInt()));
-		}
-		return tree;
-	}
+    protected void collectIDsWith(final CollectIdContext context, Closure4 closure){
+        context.seek(context.readInt());
+        closure.run();
+    }
     
     public void delete(DeleteContext context) throws Db4oIOException {
         
@@ -131,7 +141,8 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             
             int elementCount = elementCount(context.transaction(), context);
             
-            if (hasNullBitmap()) {            	
+            if (hasNullBitmap()) {
+                
             	int nullBitmapLength = context.readInt();
 				context.seek(context.offset() + nullBitmapLength);
             }
@@ -597,6 +608,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             return _reflectArray.get(_array, index);
         }
     }
+
 
     
 }

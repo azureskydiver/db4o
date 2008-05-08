@@ -5,6 +5,7 @@ package com.db4o.internal.marshall;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
+import com.db4o.marshall.*;
 
 
 /**
@@ -14,7 +15,7 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
     
     protected ActivationDepth _activationDepth = UnknownActivationDepth.INSTANCE;
     
-    protected AbstractReadContext(Transaction transaction, ByteArrayBuffer buffer){
+    protected AbstractReadContext(Transaction transaction, ReadBuffer buffer){
     	super(transaction, buffer);
     }
     

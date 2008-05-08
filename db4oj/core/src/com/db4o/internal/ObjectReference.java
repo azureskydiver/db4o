@@ -43,13 +43,16 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
     public ObjectReference(){
     }
 	
-	public ObjectReference(int a_id) {
-		_id = a_id;
+	public ObjectReference(int id) {
+		_id = id;
+		if(DTrace.enabled){
+		    DTrace.OBJECT_REFERENCE_CREATED.log(id);
+		}
 	}
 
 	public ObjectReference(ClassMetadata classMetadata, int id) {
+	    this(id);
 		_class = classMetadata;
-		_id = id;
 	}
 	
 	public void activate(ActivationPurpose purpose) {

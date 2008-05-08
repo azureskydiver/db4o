@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
@@ -18,6 +19,19 @@ import com.db4o.marshall.*;
  * @exclude
  */
 public class ArrayHandler0 extends ArrayHandler2 {
+    
+    protected void collectIDsWith(CollectIdContext context, Closure4 closure){
+        int address = context.readInt();
+        int length = context.readInt();
+        if(address == 0){
+            return;
+        }
+        ReadBuffer temp = context.buffer();
+        ByteArrayBuffer indirectedBuffer = context.container().bufferByAddress(address, length);
+        context.buffer(indirectedBuffer);
+        closure.run();
+        context.buffer(temp);
+    }
 
     public void delete(DeleteContext context) throws Db4oIOException {
     	context.readSlot();
@@ -52,7 +66,7 @@ public class ArrayHandler0 extends ArrayHandler2 {
         // in the UnmarshallingContext.
         
         // The buffer has to be set back from the outside!  See below
-        ReadWriteBuffer contextBuffer = context.buffer(buffer);
+        ReadBuffer contextBuffer = context.buffer(buffer);
         
         Object array = super.read(context);
         

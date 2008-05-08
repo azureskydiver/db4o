@@ -443,10 +443,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
     }
     
-    public final TreeInt collectFieldIDs(MarshallerFamily mf, ObjectHeaderAttributes attributes, TreeInt tree, StatefulBuffer a_bytes, String name) {
-        return mf._object.collectFieldIDs(tree, this, attributes, a_bytes, name);
+    public final void collectIDs(CollectIdContext context) {
+        if(_typeHandler instanceof CollectIdHandler){
+            ((CollectIdHandler)_typeHandler).collectIDs(context);
+        }
     }
-
+    
     public boolean customizedNewInstance(){
         return configInstantiates();
     }
@@ -1354,7 +1356,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	return stream().activationDepthProvider();
 	}
 
-	public final int readFieldCount(ByteArrayBuffer buffer) {
+	public final int readFieldCount(ReadBuffer buffer) {
         int count = buffer.readInt();
         if (count > i_fields.length) {
             if (Debug.atHome) {

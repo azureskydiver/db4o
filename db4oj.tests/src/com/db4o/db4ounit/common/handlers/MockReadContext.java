@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
@@ -21,6 +22,10 @@ public class MockReadContext extends MockMarshallingContext implements ReadConte
     
     public Object readObject(TypeHandler4 handler) {
         return handler.read(this);
+    }
+
+    public BitMap4 readBitMap(int bitCount) {
+        throw new NotImplementedException();
     }
 
 }

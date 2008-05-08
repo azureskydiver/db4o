@@ -140,7 +140,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     	}
 	}
 
-    void instantiate1(Transaction trans, ObjectReference ref, ReadWriteBuffer buffer) {
+    void instantiate1(Transaction trans, ObjectReference ref, ReadBuffer buffer) {
         int dbID = buffer.readInt();
         ObjectContainerBase stream = trans.container();
         stream.showInternalClasses(true);

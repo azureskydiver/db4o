@@ -436,8 +436,8 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return readReaderOrWriterByID(a_ta, a_id, true, lastCommitted);
     }
 
-    public ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id) {
-        return readReaderByID(a_ta, a_id, false);
+    public ByteArrayBuffer readReaderByID(Transaction trans, int id) {
+        return readReaderByID(trans, id, false);
     }
     
     private final ByteArrayBuffer readReaderOrWriterByID(Transaction a_ta, int a_id,

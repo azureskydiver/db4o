@@ -31,8 +31,6 @@ public class MarshallerFamily {
    
     private static int CURRENT_VERSION = FamilyVersion.BTREE_FIELD_INDEXES;
     
-    public final ArrayMarshaller _array;
-    
     public final ClassMarshaller _class;
     
     public final FieldMarshaller _field;
@@ -58,7 +56,6 @@ public class MarshallerFamily {
 	        new MarshallerFamily(
 	            0,
 	            0,
-	            new ArrayMarshaller0(),
 	            new ClassMarshaller0(),
 	            new FieldMarshaller0(),
 	            new ObjectMarshaller0(), 
@@ -70,7 +67,6 @@ public class MarshallerFamily {
 	        new MarshallerFamily(
 	            ClassIndexesToBTrees_5_5.VERSION,
 	            1,
-	            new ArrayMarshaller1(),
 	            new ClassMarshaller1(),
 	            new FieldMarshaller0(),
 	            new ObjectMarshaller1(), 
@@ -85,7 +81,6 @@ public class MarshallerFamily {
     public MarshallerFamily(
             int converterVersion,
             int handlerVersion,
-            ArrayMarshaller arrayMarshaller,
             ClassMarshaller classMarshaller,
             FieldMarshaller fieldMarshaller,
             ObjectMarshaller objectMarshaller,
@@ -94,8 +89,6 @@ public class MarshallerFamily {
             UntypedMarshaller untypedMarshaller) {
         _converterVersion = converterVersion;
         _handlerVersion = handlerVersion;
-        _array = arrayMarshaller;
-        _array._family = this;
         _class = classMarshaller;
         _class._family = this;
         _field = fieldMarshaller;
@@ -112,7 +105,6 @@ public class MarshallerFamily {
         return new MarshallerFamily(
             FieldIndexesToBTrees_5_7.VERSION,
             version,
-            new ArrayMarshaller1(),
             new ClassMarshaller2(),
             new FieldMarshaller1(),
             new ObjectMarshaller1(), 

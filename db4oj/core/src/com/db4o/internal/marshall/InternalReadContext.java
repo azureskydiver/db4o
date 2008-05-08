@@ -11,9 +11,9 @@ import com.db4o.marshall.*;
  */
 public interface InternalReadContext extends ReadContext{
     
-    public ReadWriteBuffer buffer(ReadWriteBuffer buffer);
+    public ReadBuffer buffer(ReadBuffer buffer);
     
-    public ReadWriteBuffer buffer();
+    public ReadBuffer buffer();
     
     public ObjectContainerBase container();
 

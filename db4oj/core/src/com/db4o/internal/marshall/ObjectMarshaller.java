@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
+import com.db4o.marshall.*;
 
 public abstract class ObjectMarshaller {
     
@@ -14,7 +15,7 @@ public abstract class ObjectMarshaller {
 	protected abstract static class TraverseFieldCommand {
 		private boolean _cancelled=false;
 		
-		public int fieldCount(ClassMetadata classMetadata, ByteArrayBuffer reader) {
+		public int fieldCount(ClassMetadata classMetadata, ReadBuffer reader) {
 			return classMetadata.readFieldCount(reader);
 		}
 
@@ -52,12 +53,6 @@ public abstract class ObjectMarshaller {
             ObjectHeaderAttributes attributes, 
             StatefulBuffer writer, 
             Slot oldSlot) ;
-    
-    public abstract TreeInt collectFieldIDs(
-        TreeInt tree, 
-        ClassMetadata yc, 
-        ObjectHeaderAttributes attributes, 
-        StatefulBuffer reader, String name);
     
     protected StatefulBuffer createWriterForNew(
             Transaction trans, 
@@ -195,7 +190,7 @@ public abstract class ObjectMarshaller {
         final Transaction trans = context.transaction();
         TraverseFieldCommand command = new TraverseFieldCommand() {
             private int fieldIndex = -1; 
-            public int fieldCount(ClassMetadata classMetadata, ByteArrayBuffer buffer) {
+            public int fieldCount(ClassMetadata classMetadata, ReadBuffer buffer) {
                 int fieldCount = classMetadata.i_fields.length;
                 context.fieldCount(fieldCount);
                 return fieldCount;

@@ -26,7 +26,7 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
         a_bytes.incrementOffset(linkLength());
     }
 
-    void instantiate1(Transaction a_trans, ObjectReference a_yapObject, ReadWriteBuffer a_bytes) {
+    void instantiate1(Transaction a_trans, ObjectReference a_yapObject, ReadBuffer a_bytes) {
         a_yapObject.virtualAttributes().i_version = a_bytes.readLong();
     }
 

@@ -33,14 +33,18 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
     public UnmarshallingContext(Transaction transaction, ObjectReference ref, int addToIDTree, boolean checkIDTree) {
         this(transaction, null, ref, addToIDTree, checkIDTree);
     }
+    
+    private ByteArrayBuffer byteArrayBuffer(){
+        return (ByteArrayBuffer)buffer();
+    }
 
     public StatefulBuffer statefulBuffer() {
-        StatefulBuffer buffer = new StatefulBuffer(_transaction, _buffer.length());
-        buffer.setID(objectID());
-        buffer.setInstantiationDepth(activationDepth());
-        ((ByteArrayBuffer)_buffer).copyTo(buffer, 0, 0, _buffer.length());
-        buffer.seek(_buffer.offset());
-        return buffer;
+        StatefulBuffer statefulBuffer = new StatefulBuffer(_transaction, byteArrayBuffer().length());
+        statefulBuffer.setID(objectID());
+        statefulBuffer.setInstantiationDepth(activationDepth());
+        byteArrayBuffer().copyTo(statefulBuffer, 0, 0, byteArrayBuffer().length());
+        statefulBuffer.seek(byteArrayBuffer().offset());
+        return statefulBuffer;
     }
     
     public int objectID(){
@@ -62,7 +66,7 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         
         readBuffer(objectID());
         
-        if(_buffer == null){
+        if(buffer() == null){
             endProcessing();
             return _object;
         }
@@ -116,7 +120,7 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
 
 	public Object readFieldValue (FieldMetadata field){
         readBuffer(objectID());
-        if(_buffer == null){
+        if(buffer() == null){
             return null;
         }
         ClassMetadata classMetadata = readObjectHeader(); 
@@ -130,11 +134,11 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
     }
 
 	private boolean seekToField(ClassMetadata classMetadata, FieldMetadata field) {
-		return _objectHeader.objectMarshaller().findOffset(classMetadata, _objectHeader._headerAttributes, (ByteArrayBuffer)_buffer, field);
+		return _objectHeader.objectMarshaller().findOffset(classMetadata, _objectHeader._headerAttributes, byteArrayBuffer(), field);
 	}
 
     private ClassMetadata readObjectHeader() {
-        _objectHeader = new ObjectHeader(container(), _buffer);
+        _objectHeader = new ObjectHeader(container(), byteArrayBuffer());
         ClassMetadata classMetadata = _objectHeader.classMetadata();
         if(classMetadata == null){
             return null;
@@ -143,8 +147,8 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
     }
 
     private void readBuffer(int id) {
-        if (_buffer == null && id > 0) {
-            _buffer = container().readReaderByID(_transaction, id); 
+        if (buffer() == null && id > 0) {
+            buffer(container().readReaderByID(_transaction, id)); 
         }
     }
     
