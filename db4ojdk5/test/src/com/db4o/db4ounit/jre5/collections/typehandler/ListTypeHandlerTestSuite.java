@@ -28,6 +28,7 @@ public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements D
 				ListTypeHandlerTestVariables.ELEMENTS_SPEC,
 				elementSpecs
 			),
+			ListTypeHandlerTestVariables.TYPEHANDLER_FIXTURE_PROVIDER, 
 		};
 	}
 
@@ -40,7 +41,8 @@ public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements D
 	public static class ListTypeHandlerTestUnit extends ListTypeHandlerTestUnitBase {
 		
 	    public void testRetrieveInstance(){
-	        Object item = retrieveOnlyInstance(itemFactory().itemClass());
+	        Class itemClass = itemFactory().itemClass();
+            Object item = retrieveOnlyInstance(itemClass);
 	        assertListContent(item);
 	    }
 	    
@@ -68,7 +70,6 @@ public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements D
 	    	assertCompareItems(notContained(), false);
 	    }
 
-		// TODO see ListTypeHandler#delete()
 		public void testDeletion() throws Exception {
 	        assertFirstClassElementCount(elements().length);
 	        Object item = retrieveOnlyInstance(itemFactory().itemClass());

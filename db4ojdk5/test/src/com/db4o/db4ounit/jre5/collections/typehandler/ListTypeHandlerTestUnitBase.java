@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.internal.*;
 import com.db4o.query.*;
 import com.db4o.typehandlers.*;
 
@@ -19,8 +20,8 @@ public abstract class ListTypeHandlerTestUnitBase extends AbstractDb4oTestCase i
 	
     protected void configure(Configuration config) throws Exception {
         config.registerTypeHandler(
-            new SingleClassTypeHandlerPredicate(itemFactory().listClass()), 
-            new ListTypeHandler());
+            new SingleClassTypeHandlerPredicate(itemFactory().listClass()),
+            listTypeHandler());
         config.objectClass(itemFactory().itemClass()).cascadeOnDelete(true);
     }
     
@@ -37,6 +38,10 @@ public abstract class ListTypeHandlerTestUnitBase extends AbstractDb4oTestCase i
 
 	protected ItemFactory itemFactory() {
 		return (ItemFactory) ListTypeHandlerTestVariables.LIST_IMPLEMENTATION.value();
+	}
+	
+	protected TypeHandler4 listTypeHandler() {
+	    return (TypeHandler4) ListTypeHandlerTestVariables.LIST_TYPEHANDER.value();
 	}
 
 	protected Object[] elements() {

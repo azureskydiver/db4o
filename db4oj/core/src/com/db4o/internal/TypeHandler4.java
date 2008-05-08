@@ -10,8 +10,12 @@ import com.db4o.marshall.*;
 
 /**
  * @exclude
+ * TODO: Not all TypeHandlers can implement Comparable4.
+ * Consider to change the hierarchy, not to extend Comparable4
+ * and to have callers check, if Comparable4 is implemented by 
+ * a TypeHandler.
  */
-public interface TypeHandler4 extends Comparable4, FieldHandler {
+public interface TypeHandler4 extends FieldHandler, Comparable4 {
 	
 	void delete(DeleteContext context) throws Db4oIOException;
 	

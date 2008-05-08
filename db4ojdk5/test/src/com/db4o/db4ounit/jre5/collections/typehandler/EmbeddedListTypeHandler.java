@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.db4ounit.jre5.collections.typehandler;
 
@@ -13,9 +13,15 @@ import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
+import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
+import com.db4o.typehandlers.*;
 
-@SuppressWarnings("unchecked")
-public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler{
+
+/**
+ * @exclude
+ */
+public class EmbeddedListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler, EmbeddedTypeHandler{
 
     public PreparedComparison prepareComparison(Context context, Object obj) {
         // TODO Auto-generated method stub
@@ -24,13 +30,15 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
 
     public void write(WriteContext context, Object obj) {
         List list = (List)obj;
+        writeClass(context, list);
         writeElementCount(context, list);
         writeElements(context, list);
         return;
     }
     
-	public Object read(ReadContext context) {
-        List list = (List)((UnmarshallingContext) context).persistentObject();
+    public Object read(ReadContext context) {
+        ClassMetadata classMetadata = readClass(context);            
+        List list = (List) classMetadata.instantiateFromReflector(container(context));
         int elementCount = context.readInt();
         TypeHandler4 elementHandler = elementTypeHandler(context, list);
         for (int i = 0; i < elementCount; i++) {
@@ -39,17 +47,30 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
         return list;
     }
     
-	private void writeElementCount(WriteContext context, List list) {
-		context.writeInt(list.size());
-	}
+    private void writeElementCount(WriteContext context, List list) {
+        context.writeInt(list.size());
+    }
 
-	private void writeElements(WriteContext context, List list) {
-		TypeHandler4 elementHandler = elementTypeHandler(context, list);
+    private void writeElements(WriteContext context, List list) {
+        TypeHandler4 elementHandler = elementTypeHandler(context, list);
         final Iterator elements = list.iterator();
         while (elements.hasNext()) {
             context.writeObject(elementHandler, elements.next());
         }
-	}
+    }
+
+    private void writeClass(WriteContext context, List list) {
+        int classID = classID(context, list);
+        context.writeInt(classID);
+    }
+    
+    private int classID(WriteContext context, Object obj) {
+        ObjectContainerBase container = container(context);
+        GenericReflector reflector = container.reflector();
+        ReflectClass claxx = reflector.forObject(obj);
+        ClassMetadata classMetadata = container.produceClassMetadata(claxx);
+        return classMetadata.getID();
+    }
 
     private ObjectContainerBase container(Context context) {
         return ((InternalObjectContainer)context.objectContainer()).container();
@@ -63,14 +84,21 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
         return container(context).handlers().untypedObjectHandler();
     }        
 
+    private ClassMetadata readClass(ReadContext context) {
+        int classID = context.readInt();
+        ClassMetadata classMetadata = container(context).classMetadataForId(classID);
+        return classMetadata;
+    }
+
     public void delete(final DeleteContext context) throws Db4oIOException {
-		if (! context.cascadeDelete()) {
-		    return;
-		}
+        if (! context.cascadeDelete()) {
+            return;
+        }
         TypeHandler4 handler = elementTypeHandler(context, null);
+        context.readInt(); // class ID
         int elementCount = context.readInt();
         for (int i = elementCount; i > 0; i--) {
-			handler.delete(context);
+            handler.delete(context);
         }
     }
 
@@ -80,28 +108,29 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
     }
 
     public final void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth) {
-		ObjectContainerBase container = trans.container();
-		List list = (List) onObject;
-		Iterator all = list.iterator();
-		while (all.hasNext()) {
-			final Object current = all.next();
-			ActivationDepth elementDepth = descend(container, depth, current);
-			if (elementDepth.requiresActivation()) {
-				if (depth.mode().isDeactivate()) {
-					container.stillToDeactivate(trans, current, elementDepth, false);
-				}
-				else {
-					container.stillToActivate(trans, current, elementDepth);
-				}
-			}
-		}
-	}
+        ObjectContainerBase container = trans.container();
+        List list = (List) onObject;
+        Iterator all = list.iterator();
+        while (all.hasNext()) {
+            final Object current = all.next();
+            ActivationDepth elementDepth = descend(container, depth, current);
+            if (elementDepth.requiresActivation()) {
+                if (depth.mode().isDeactivate()) {
+                    container.stillToDeactivate(trans, current, elementDepth, false);
+                }
+                else {
+                    container.stillToActivate(trans, current, elementDepth);
+                }
+            }
+        }
+    }
 
-	public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes) {
-		return this;
-	}
-	
+    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes) {
+        return this;
+    }
+    
    public void readCandidates(QueryingReadContext context) throws Db4oIOException {
+        context.readInt(); // skip class id
         int elementCount = context.readInt();
         TypeHandler4 elementHandler = context.container().handlers().untypedObjectHandler();
         readSubCandidates(context, elementCount, elementHandler);

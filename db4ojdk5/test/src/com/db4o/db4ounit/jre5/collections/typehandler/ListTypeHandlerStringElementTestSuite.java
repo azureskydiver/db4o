@@ -23,6 +23,7 @@ public class ListTypeHandlerStringElementTestSuite extends FixtureBasedTestSuite
 				ListTypeHandlerTestVariables.ELEMENTS_SPEC,
 				elementSpecs
 			),
+			ListTypeHandlerTestVariables.TYPEHANDLER_FIXTURE_PROVIDER,
 		};
 	}
 

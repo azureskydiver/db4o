@@ -10,7 +10,11 @@ import db4ounit.fixtures.*;
 public final class ListTypeHandlerTestVariables {
 	
 	public final static FixtureVariable LIST_IMPLEMENTATION = new FixtureVariable("list");
+	
 	public final static FixtureVariable ELEMENTS_SPEC = new FixtureVariable("elements");
+	
+	public final static FixtureVariable LIST_TYPEHANDER = new FixtureVariable("typehandler");
+	
 	
 	public final static FixtureProvider LIST_FIXTURE_PROVIDER = 
 			new SimpleFixtureProvider(
@@ -21,6 +25,14 @@ public final class ListTypeHandlerTestVariables {
 						new ListItemFactory(),
 				}
 			);
+	
+	public final static FixtureProvider TYPEHANDLER_FIXTURE_PROVIDER =
+	    new SimpleFixtureProvider(LIST_TYPEHANDER,
+	        new Object[]{
+	            new ListTypeHandler(),
+	            new EmbeddedListTypeHandler(),
+	        }
+	    );
 
 	public final static ListTypeHandlerTestElementsSpec STRING_ELEMENTS_SPEC = 
 		new ListTypeHandlerTestElementsSpec(new Object[]{ "zero", "one" }, "two", "zzz");
