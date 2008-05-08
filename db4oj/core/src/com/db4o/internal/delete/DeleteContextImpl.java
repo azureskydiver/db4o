@@ -29,11 +29,11 @@ public class DeleteContextImpl extends BufferContext implements DeleteContext {
 	}
 
 	public void cascadeDeleteDepth(int depth) {
-	    ((StatefulBuffer)_buffer).setCascadeDeletes(depth);
+	    ((StatefulBuffer)buffer()).setCascadeDeletes(depth);
 	}
 
 	public int cascadeDeleteDepth() {
-	    return ((StatefulBuffer)_buffer).cascadeDeletes();
+	    return ((StatefulBuffer)buffer()).cascadeDeletes();
 	}
 	
     public boolean cascadeDelete() {
@@ -48,7 +48,7 @@ public class DeleteContextImpl extends BufferContext implements DeleteContext {
 	}
 
 	public Slot readSlot() {
-		return new Slot(_buffer.readInt(), _buffer.readInt());
+		return new Slot(buffer().readInt(), buffer().readInt());
 	}
 
 	public int handlerVersion() {
@@ -68,7 +68,7 @@ public class DeleteContextImpl extends BufferContext implements DeleteContext {
 	}
 
     public void deleteObject() {
-        int id = _buffer.readInt();
+        int id = buffer().readInt();
         if(cascadeDelete()){
             container().deleteByID(transaction(), id, cascadeDeleteDepth());
         }

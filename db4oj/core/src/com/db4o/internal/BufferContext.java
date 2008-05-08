@@ -11,22 +11,22 @@ import com.db4o.marshall.*;
  */
 public abstract class BufferContext implements ReadBuffer{
 	
-	protected ReadWriteBuffer _buffer;
+	private ReadBuffer _buffer;
 	
 	protected final Transaction _transaction;
 	
-	public BufferContext(Transaction transaction, ReadWriteBuffer buffer) {
+	public BufferContext(Transaction transaction, ReadBuffer buffer) {
 		_transaction = transaction;
         _buffer = buffer;
 	}
 
-	public ReadWriteBuffer buffer(ReadWriteBuffer buffer) {
-	    ReadWriteBuffer temp = _buffer;
+	public ReadBuffer buffer(ReadBuffer buffer) {
+	    ReadBuffer temp = _buffer;
 	    _buffer = buffer;
 	    return temp;
 	}
 
-	public ReadWriteBuffer buffer() {
+	public ReadBuffer buffer() {
 	    return _buffer;
 	}
 

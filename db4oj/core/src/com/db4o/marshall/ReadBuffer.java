@@ -2,6 +2,8 @@
 
 package com.db4o.marshall;
 
+import com.db4o.foundation.*;
+
 /**
  * a buffer interface with methods to read and to position 
  * the read pointer in the buffer.
@@ -13,6 +15,8 @@ public interface ReadBuffer {
 	 * @return the offset
 	 */
     int offset();
+    
+    public BitMap4 readBitMap(int bitCount);
 
     /**
      * reads a byte from the buffer.

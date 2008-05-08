@@ -3,6 +3,7 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.internal.*;
+import com.db4o.marshall.*;
 
 
 /**
@@ -12,6 +13,6 @@ public interface MarshallingInfo extends FieldListInfo {
 
     public ClassMetadata classMetadata();
 
-    public ReadWriteBuffer buffer();
+    public ReadBuffer buffer();
 
 }

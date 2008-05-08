@@ -56,16 +56,16 @@ public class DTrace {
 //            addRangeWithLength(455926,1);
 //
             
-            // addRangeWithLength(20161,1);
+            addRangeWithLength(1647603457,1);
             
             
-            trackEventsWithoutRange();
+            // trackEventsWithoutRange();
             
-//            turnAllOffExceptFor(new DTrace[] {YAPMETA_SET_ID});
+            turnAllOffExceptFor(new DTrace[] {OBJECT_REFERENCE_CREATED});
         	
-            turnAllOffExceptFor(new DTrace[] {
-                PERSISTENT_OWN_LENGTH,
-                });
+//            turnAllOffExceptFor(new DTrace[] {
+//                PERSISTENT_OWN_LENGTH,
+//                });
             
 //            turnAllOffExceptFor(new DTrace[] {
 //                FREESPACEMANAGER_GET_SLOT,
@@ -121,6 +121,7 @@ public class DTrace {
 			IO_COPY = new DTrace(true, true, "io copy", true);
 			JUST_SET = new DTrace(true, true, "just set", true);
 			NEW_INSTANCE = new DTrace(true, true, "newInstance", true);
+			OBJECT_REFERENCE_CREATED  = new DTrace(true, true, "new ObjectReference", true);
 			PERSISTENT_OWN_LENGTH = new DTrace(true, true, "Persistent own length",
                 true);
             PERSISTENTBASE_WRITE = new DTrace(true, true, "persistentbase write", true);
@@ -230,6 +231,7 @@ public class DTrace {
     public static DTrace IO_COPY;
     public static DTrace JUST_SET;
     public static DTrace NEW_INSTANCE;
+    public static DTrace OBJECT_REFERENCE_CREATED;
     public static DTrace PERSISTENT_OWN_LENGTH;
     public static DTrace PERSISTENTBASE_SET_ID;
     public static DTrace PERSISTENTBASE_WRITE;

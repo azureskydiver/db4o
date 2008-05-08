@@ -3,6 +3,7 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.*;
+import com.db4o.marshall.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
 
@@ -18,21 +19,6 @@ class ObjectMarshaller0 extends ObjectMarshaller {
 			}
     	};
     	traverseFields(yc, writer, attributes, command);
-    }
-    
-    public TreeInt collectFieldIDs(TreeInt tree, ClassMetadata yc, ObjectHeaderAttributes attributes, final StatefulBuffer writer, final String name) {
-    	final TreeInt[] ret={tree};
-    	TraverseFieldCommand command=new TraverseFieldCommand() {
-			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
-	            if (name.equals(field.getName())) {
-	                ret[0] = field.collectIDs(_family, ret[0], writer);
-	            } else {
-	                field.incrementOffset(writer);
-	            }
-			}
-    	};
-    	traverseFields(yc, writer, attributes, command);
-        return ret[0];
     }
     
     public void deleteMembers(ClassMetadata yc, ObjectHeaderAttributes attributes, final StatefulBuffer writer, int type, final boolean isUpdate){
@@ -109,7 +95,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
 		// FIXME copied from ObjectMarshaller1
         TraverseFieldCommand command = new TraverseFieldCommand() {
         	
-        	public int fieldCount(ClassMetadata yapClass, ByteArrayBuffer reader) {
+        	public int fieldCount(ClassMetadata yapClass, ReadBuffer reader) {
         		return context.readInt();
         	}
         	

@@ -300,14 +300,17 @@ public final class QCandidates implements Visitor4 {
                     	
                     ObjectHeader oh = new ObjectHeader(stream(), reader);
                     
-                    Tree idTree = oh.classMetadata().collectFieldIDs(
-                            oh._marshallerFamily,
-                            oh._headerAttributes,
-                            null,
-                            reader,
-                            fieldName);
+                    CollectIdContext context = new CollectIdContext(i_trans, oh, reader, fieldName);
+                    oh.classMetadata().collectIDs(context);
+                    
+//                    Tree idTree = oh.classMetadata().collectFieldIDs(
+//                            oh._marshallerFamily,
+//                            oh._headerAttributes,
+//                            null,
+//                            reader,
+//                            fieldName);
 
-					return new TreeKeyIterator(idTree);
+					return new TreeKeyIterator(context.ids());
 				}
 			}));
 			

@@ -2,7 +2,6 @@
 
 package com.db4o.internal;
 
-import com.db4o.foundation.*;
 import com.db4o.marshall.*;
 
 
@@ -18,7 +17,5 @@ public interface ReadWriteBuffer extends ReadBuffer, WriteBuffer{
     
 	void readBegin(byte identifier);
 	void readEnd();
-
-	public BitMap4 readBitMap(int bitCount);
 
 }

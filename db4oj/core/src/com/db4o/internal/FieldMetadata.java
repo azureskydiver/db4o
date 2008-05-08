@@ -351,19 +351,22 @@ public class FieldMetadata implements StoredField {
             }
         }
     }
+    
+    public final void collectIDs(CollectIdContext context) throws FieldIndexException {
+        if (! alive()) {
+            return ;
+        }
+        
+        // TODO: Consider to use SlotFormat.handleAsObject()
+        // to differentiate whether to call _handler.collectIDs
+        // or context.addId()
 
-    public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree,
-			StatefulBuffer a_bytes)  throws FieldIndexException {
-		if (! alive()) {
-		    return tree;
-		}
-		if (_handler instanceof ClassMetadata) {
-			return (TreeInt) Tree.add(tree, new TreeInt(a_bytes.readInt()));
-		} else if (_handler instanceof ArrayHandler) {
-			return ((ArrayHandler) _handler).collectIDs(mf, tree, a_bytes);
-		}
-		return tree;
-	}
+        if (_handler instanceof ClassMetadata) {
+            context.addId();
+        } else if (_handler instanceof CollectIdHandler) {
+            ((CollectIdHandler) _handler).collectIDs(context);
+        }
+    }
 
     void configure(ReflectClass clazz, boolean isPrimitive) {
         _isArray = clazz.isArray();
@@ -650,7 +653,7 @@ public class FieldMetadata implements StoredField {
         }
     }
     
-    private boolean checkAlive(ReadWriteBuffer buffer){
+    private boolean checkAlive(ReadBuffer buffer){
         boolean alive = alive(); 
         if (! alive) {
             incrementOffset(buffer);

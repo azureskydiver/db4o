@@ -14,7 +14,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHandler {
+public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHandler, CollectIdHandler {
     
     private static final int HASHCODE_FOR_NULL = 72483944; 
     
@@ -229,6 +229,24 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         FirstClassObjectHandler original = (FirstClassObjectHandler) typeHandlerCloneContext.original;
         cloned._classMetadata = original._classMetadata;
         return cloned;
+    }
+
+    
+    public void collectIDs(final CollectIdContext context) {
+        TraverseFieldCommand command = new TraverseFieldCommand() {
+            public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
+                if(isNull) {
+                    return;
+                }
+                if (context.fieldName().equals(field.getName())) {
+                    field.collectIDs(context);
+                } 
+                else {
+                    field.incrementOffset(context);
+                }
+            }
+        };
+        traverseFields(context, command);
     }
 
 }
