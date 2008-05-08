@@ -68,5 +68,4 @@ public class ListTypeHandlerCascadedDeleteTestCase extends AbstractDb4oTestCase{
         Db4oAssert.persistedCount(2, ArrayList.class);
     }
 
-
 }

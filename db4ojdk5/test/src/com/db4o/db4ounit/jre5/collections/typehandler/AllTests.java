@@ -14,9 +14,9 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 	        ListTypeHandlerCascadedDeleteTestCase.class,
 	        ListTypeHandlerPersistedCountTestCase.class,
-//			ListTypeHandlerTestSuite.class,
-//			ListTypeHandlerGreaterSmallerTestSuite.class,
-//			ListTypeHandlerStringElementTestSuite.class,
+			ListTypeHandlerTestSuite.class,
+			ListTypeHandlerGreaterSmallerTestSuite.class,
+			ListTypeHandlerStringElementTestSuite.class,
 		};
 	}
 

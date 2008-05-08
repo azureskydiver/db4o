@@ -427,8 +427,14 @@ public class FieldMetadata implements StoredField {
         
         try {
 			removeIndexEntry(mf, buffer);
-			DeleteContextImpl context = new DeleteContextImpl(getStoredType(), mf.handlerVersion(), _config,  buffer);
-			context.delete(_handler);
+			int handlerVersion = mf.handlerVersion();
+            final DeleteContextImpl context = new DeleteContextImpl(getStoredType(), handlerVersion, _config,  buffer);
+			SlotFormat.forHandlerVersion(handlerVersion).doWithSlotIndirection(buffer, _handler, new Closure4() {
+                public Object run() {
+                    context.delete(_handler);
+                    return null;
+                }
+            });
 		} catch (CorruptionException exc) {
 			throw new FieldIndexException(exc, this);
 		}

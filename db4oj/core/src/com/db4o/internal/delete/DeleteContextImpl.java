@@ -60,19 +60,12 @@ public class DeleteContextImpl extends BufferContext implements DeleteContext {
         final TypeHandler4 fieldHandler = correctHandlerVersion(handler);
 	    int preservedCascadeDepth = cascadeDeleteDepth();
 	    cascadeDeleteDepth(adjustedDepth());
-	    final SlotFormat slotFormat = SlotFormat.forHandlerVersion(handlerVersion());
-        slotFormat.doWithSlotIndirection(this, fieldHandler, new Closure4() {
-            public Object run() {
-                if(slotFormat.handleAsObject(fieldHandler)){
-                    deleteObject();
-                }else{
-                    fieldHandler.delete(DeleteContextImpl.this);    
-                }
-                return null;
-            }
-	    });
+        if(SlotFormat.forHandlerVersion(handlerVersion()).handleAsObject(fieldHandler)){
+            deleteObject();
+        }else{
+            fieldHandler.delete(DeleteContextImpl.this);    
+        }
         cascadeDeleteDepth(preservedCascadeDepth);
-
 	}
 
     public void deleteObject() {
