@@ -31,6 +31,7 @@ public class Reflection extends Test {
 
 	public Reflection(Reflector reflector) {
         _reflector = reflector;
+        _reflector.configuration(new MockReflectorConfiguration());
         _classReflector = _reflector.forName(TestReflectClass.class.getName());
 	}
 	
