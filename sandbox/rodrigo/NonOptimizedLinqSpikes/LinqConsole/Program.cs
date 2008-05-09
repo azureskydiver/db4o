@@ -25,7 +25,8 @@ namespace LinqConsole
 
         public void Run()
         {
-			Console.WriteLine(@"LinqConsole .02
+            AppDomain.CurrentDomain.AssemblyResolve += (object sender, ResolveEventArgs args) => Assembly.LoadFrom(modelAssembly);
+            Console.WriteLine(@"LinqConsole .02
 
 Type a linq query followed by a semicolon to see its results.
 Type :quit to quit the application.
@@ -40,6 +41,11 @@ Example:
 ");
             EvalLoop();
 		}
+
+        //Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         private static string ImportsFor(HashSet<string> namespaces)
         {
@@ -56,6 +62,7 @@ Example:
             HashSet<string> namespaces = new HashSet<string>();
             foreach (Type type in assembly.GetTypes())
             {
+                if (String.IsNullOrEmpty(type.Namespace)) continue;
                 namespaces.Add(type.Namespace);
             }
 
