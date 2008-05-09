@@ -131,7 +131,7 @@ public class JdkClass implements JavaReflectClass{
     }
     
     public Object newInstance() {
-		createConstructor();
+		createConstructor(false);
 		if (_constructorSpec == null) {
 			return ReflectPlatform.createInstance(_clazz);
 		}
@@ -178,8 +178,8 @@ public class JdkClass implements JavaReflectClass{
 		return _jdkReflector.nullValue(this);
 	}
 	
-	private void createConstructor() {
-		if(!_canBeInstantiated.isUnspecified()) {
+	private void createConstructor(boolean forceCheck) {
+		if(!forceCheck && !_canBeInstantiated.isUnspecified()) {
 			return;
 		}
 		try {
@@ -195,7 +195,7 @@ public class JdkClass implements JavaReflectClass{
 	}
 
 	public boolean ensureCanBeInstantiated() {
-		createConstructor();
+		createConstructor(true);
 		return _canBeInstantiated.definiteYes();
 	}
 }
