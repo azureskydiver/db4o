@@ -6,7 +6,7 @@ public class Program {
 		boolean running = true;
 		while (running) {
 			String option = Console.prompt("(a)dd new entry, (l)ist entries, (q)uit");
-			if (option.isEmpty()) continue;
+			if (option.length() == 0) continue;
 			switch (option.charAt(0)) {
 			case 'q':
 				running = false;

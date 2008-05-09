@@ -54,4 +54,18 @@
 		</sequential>
 	</macrodef>
 	
+	<macrodef name="copy-sharpen-output">
+		<attribute name="fromdir" />
+		<attribute name="todir" />
+		
+		<sequential>
+			<reset-dir dir="@{todir}" />
+			<copy todir="@{todir}">
+				<fileset dir="@{fromdir}">
+					<include name="**/*.cs" />
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
+	
 </project>

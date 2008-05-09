@@ -1,17 +1,19 @@
 <?xml version="1.0"?>
 <project name="ContactList" default="build">
 
-	<include buildfile="build-properties.xml" />
-	
-	<property name="src.dir" value="${sharpen.workspace.dir}/ContactList.net" />
+	<property name="src.dir" value="ContactList.net" />
 	<property name="bin.dir" value="${src.dir}/bin" />
 
-	<target name="build">
+	<target name="build" depends="init">
 		<csc target="exe" output="${bin.dir}/ContactList.exe">
 			<sources basedir="${src.dir}">
 				<include name="**/*.cs" />
 			</sources>
 		</csc>
+	</target>
+	
+	<target name="init">
+		<mkdir dir="${bin.dir}" />
 	</target>
 	
 </project>
