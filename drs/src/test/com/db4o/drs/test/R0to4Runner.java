@@ -192,7 +192,6 @@ public class R0to4Runner extends DrsTestCase {
 			ReflectField field = fields[i];
 			if (field.isStatic()) continue;
 			if (field.isTransient()) continue;
-			field.setAccessible();
 			field.set(object, null);
 		}
 

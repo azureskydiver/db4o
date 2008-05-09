@@ -67,10 +67,6 @@ public class GenericField implements ReflectField, DeepClone{
         ((GenericObject)onObject).set(_index,value);
     }
 
-    public void setAccessible() {
-        // do nothing
-    }
-
     void setIndex(int index) {
         _index = index;
     }

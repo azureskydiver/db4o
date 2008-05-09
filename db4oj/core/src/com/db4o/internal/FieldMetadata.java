@@ -80,7 +80,6 @@ public class FieldMetadata implements StoredField {
     	this(containingClass);
         init(containingClass, field.getName());
         _reflectField = field;
-        _reflectField.setAccessible();
         _handler = handler;
         _handlerID = handlerID;
         
@@ -728,7 +727,6 @@ public class FieldMetadata implements StoredField {
         if (_reflectField == null) {
             return null;
         }
-        _reflectField.setAccessible();
         return fieldHandlerForClass(container(), _reflectField.getFieldType());
     }
 

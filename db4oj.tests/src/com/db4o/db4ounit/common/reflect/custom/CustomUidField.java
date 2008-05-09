@@ -54,9 +54,6 @@ public class CustomUidField implements ReflectField {
 		entry(onObject).uid = value;
 	}
 
-	public void setAccessible() {
-	}
-
 	public String toString() {
 		return "CustomUidField()";
 	}

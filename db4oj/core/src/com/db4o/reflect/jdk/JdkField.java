@@ -20,6 +20,7 @@ public class JdkField implements ReflectField {
     public JdkField(Reflector reflector_, Field field_) {
     	reflector = reflector_;
         field = field_;
+        setAccessible();
     }
 
     public String getName() {

@@ -27,7 +27,6 @@ public class CollectionsUtil {
             String fieldName) {
         ReflectClass parentClazz = reflector.forObject(parent);
         ReflectField field = parentClazz.getDeclaredField(fieldName);
-        field.setAccessible();
         return field.get(parent);
     }
 

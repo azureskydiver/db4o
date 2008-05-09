@@ -53,7 +53,6 @@ public abstract class ItemTestCaseBase
     		if(field.isStatic() || field.isTransient()) {
     			continue;
     		}
-    		field.setAccessible();
     		ReflectClass type = field.getFieldType();
     		if(type.isSecondClass()) {
     			continue;
