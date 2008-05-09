@@ -15,7 +15,6 @@ public class Jdk1_2TestSuite extends TestSuite{
             ClusterQueryImplementsList.class,
             DeleteRemovedMapElements.class,
             DiscreteArrayInMap.class,
-            ExtendsHashMap.class,
             GenericObjects.class,
             HashMapClearUnsaved.class,
             JdkComparatorSort.class,
