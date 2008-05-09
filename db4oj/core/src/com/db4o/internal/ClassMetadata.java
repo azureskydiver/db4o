@@ -1731,7 +1731,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
 	private Object staticReflectFieldValue(final ReflectField reflectField) {
-		reflectField.setAccessible();
 		return reflectField.get(null);
 	}
 

@@ -187,7 +187,6 @@ public final class GenericReplicationSession implements ReplicationSession {
 		final Iterator4 fields = FieldIterators.persistentFields(claxx);
 		while (fields.moveNext()) {
 			ReflectField field = (ReflectField) fields.current();
-			field.setAccessible(); //TODO Optimization: Do this in the field constructor;
 			Object value = field.get(src);
 			field.set(dest, findCounterpart(value, sourceProvider));
 		}

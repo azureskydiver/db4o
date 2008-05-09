@@ -71,9 +71,6 @@ public class CustomField implements ReflectField {
 		fieldValues(onObject)[_index] = value;
 	}
 
-	public void setAccessible() {
-	}
-
 	public void indexed(boolean value) {
 		_indexed = value;
 	}
