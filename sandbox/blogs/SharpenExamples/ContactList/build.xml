@@ -4,7 +4,7 @@
 	<import file="sharpen-common.xml" />
 	
 	<target name="build-dotnet" depends="sharpen">
-		<exec executable="${nant.exe}">
+		<exec executable="${nant.exe}" failonerror="true">
 		</exec>
 	</target>
 		
@@ -13,7 +13,12 @@
 		<prepare-sharpen-workspace project="ContactList" dir="${sharpen.workspace.dir}" />
 		
 		<sharpen workspace="${sharpen.workspace.dir}" resource="ContactList/src">
+			<args>
+				<arg value="-pascalCase+"  />
+			</args>
 		</sharpen>
+		
+		<copy-sharpen-output todir="ContactList.net/converted" fromdir="${sharpen.workspace.dir}/ContactList.net/src" />
 		
 	</target>
 	

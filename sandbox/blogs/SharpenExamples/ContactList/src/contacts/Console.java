@@ -2,6 +2,9 @@ package contacts;
 
 import java.io.*;
 
+/**
+ * @sharpen.ignore
+ */
 public class Console {
 	
 	public static String prompt(String prompt) {
