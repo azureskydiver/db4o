@@ -10,6 +10,9 @@ public class ContactList {
 		_entries.add(contact);
 	}
 	
+	/**
+	 * @sharpen.property
+	 */
 	public Iterable<Contact> entries() {
 		return _entries;
 	}

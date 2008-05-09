@@ -10,10 +10,16 @@ public class Contact {
 		_email = email;
 	}
 
+	/**
+	 * @sharpen.property
+	 */
 	public String name() {
 		return _name;
 	}
 
+	/**
+	 * @sharpen.property
+	 */
 	public String email() {
 		return _email;
 	}
