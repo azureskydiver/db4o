@@ -1,13 +1,23 @@
 package contacts;
 
 public class Program {
-
-	public static void main(String[] args) {
+	
+	private ContactList _contacts = new ContactList();
+	
+	public void readEvalLoop() {
 		boolean running = true;
 		while (running) {
-			String option = Console.prompt("(a)dd new entry, (l)ist entries, (q)uit");
+			String option = prompt("(a)dd new entry, (l)ist entries, (q)uit: ");
 			if (option.length() == 0) continue;
 			switch (option.charAt(0)) {
+			case 'a':
+				addEntry();
+				break;
+				
+			case 'l':
+				listEntries();
+				break;
+				
 			case 'q':
 				running = false;
 				break;
@@ -15,5 +25,25 @@ public class Program {
 				System.out.println("'" + option + "' DOES NOT COMPUTE!");
 			}
 		}
+	}
+
+	private String prompt(String message) {
+		return Console.prompt(message);
+	}
+
+	private void listEntries() {
+		for (Contact c : _contacts.entries()) {
+			System.out.println(c.name() + " <" + c.email() + ">");
+		}
+	}
+
+	private void addEntry() {
+		String name = prompt("Name: ");
+		String email = prompt("Email: ");
+		_contacts.add(new Contact(name, email));
+	}
+
+	public static void main(String[] args) {
+		new Program().readEvalLoop();
 	}
 }
