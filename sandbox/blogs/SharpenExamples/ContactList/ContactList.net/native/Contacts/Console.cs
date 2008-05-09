@@ -4,7 +4,7 @@ namespace Contacts
 	{
 		public static string Prompt(string message)
 		{
-			System.Console.WriteLine(message);
+			System.Console.Write(message);
 			return System.Console.ReadLine();
 		}
 	}

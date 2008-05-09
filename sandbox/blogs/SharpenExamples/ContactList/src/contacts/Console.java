@@ -8,7 +8,7 @@ import java.io.*;
 public class Console {
 	
 	public static String prompt(String prompt) {
-		System.out.println(prompt);
+		System.out.print(prompt);
 		return readLine();
 	}
 
