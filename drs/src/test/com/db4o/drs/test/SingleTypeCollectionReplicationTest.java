@@ -24,7 +24,6 @@ import java.util.*;
 
 import com.db4o.drs.db4o.*;
 import com.db4o.drs.inside.*;
-import com.db4o.foundation.*;
 
 import db4ounit.*;
 import db4ounit.fixtures.*;
