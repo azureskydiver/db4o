@@ -281,6 +281,10 @@ public final class Platform4 {
         
         activationDepth(config, "P2HashMap", 2);
         activationDepth(config, "P1HashElement", 1);
+        
+        config.objectClass(UTIL + "Vector").callConstructor(true);
+        config.objectClass(UTIL + "Hashtable").callConstructor(true);
+        config.objectClass(UTIL + "LinkedList").callConstructor(true);
     }
 
     /**
