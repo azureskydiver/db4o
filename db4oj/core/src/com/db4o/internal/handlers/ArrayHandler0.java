@@ -104,7 +104,7 @@ public class ArrayHandler0 extends ArrayHandler2 {
     }
 
     public void defrag2(DefragmentContext context) {
-		int elements = readElementsDefrag(context);
+		int elements = readElementCountDefrag(context);
 		for (int i = 0; i < elements; i++) {
 		    delegateTypeHandler().defragment(context);
 		}

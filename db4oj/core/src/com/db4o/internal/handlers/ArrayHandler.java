@@ -111,19 +111,32 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
                 if (Deploy.debug) {
                     Debug.readBegin(context, identifier());
                 }
-                int count = elementCount(context.transaction(), context);
-                if (hasNullBitmap()) {
-                    int nullBitmapLength = context.readInt();
-                    context.seek(context.offset() + nullBitmapLength);
-                }
-                // TODO:  count has to be adjusted so we don't do this
-                //        for the nulls.
-                for (int i = 0; i < count; i++) {
+                int elementCount = elementCount(context.transaction(), context);
+                elementCount -= reducedCountForNullBitMap(context, elementCount);
+                for (int i = 0; i < elementCount; i++) {
                     context.addId();
                 }
                 return null;
             }
+
         });
+    }
+    
+    private int reducedCountForNullBitMap(final ReadBuffer context, int count) {
+        if (! hasNullBitmap()) {
+            return 0;
+        }
+        return reducedCountForNullBitMap(count, readNullBitmap(context, count));
+    }
+
+    private int reducedCountForNullBitMap(int count, BitMap4 bitMap) {
+        int nullCount = 0;
+        for (int i = 0; i < count; i++) {
+            if(bitMap.isTrue(i)){
+                nullCount++;
+            }
+        }
+        return nullCount;
     }
     
     protected void collectIDsWith(final CollectIdContext context, Closure4 closure){
@@ -140,13 +153,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             }
             
             int elementCount = elementCount(context.transaction(), context);
-            
-            if (hasNullBitmap()) {
-                
-            	int nullBitmapLength = context.readInt();
-				context.seek(context.offset() + nullBitmapLength);
-            }
-            
+            elementCount -= reducedCountForNullBitMap(context, elementCount);
 			for (int i = elementCount; i > 0; i--) {
 				_handler.delete(context);
             }
@@ -161,11 +168,11 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     //        For now the code simply returns without freeing.
     /** @param classPrimitive */
     public final void deletePrimitiveEmbedded(
-        StatefulBuffer a_bytes,
+        StatefulBuffer buffer,
         PrimitiveFieldHandler classPrimitive) {
         
-		a_bytes.readInt(); //int address = a_bytes.readInt();
-		a_bytes.readInt(); //int length = a_bytes.readInt();
+		buffer.readInt(); //int address = a_bytes.readInt();
+		buffer.readInt(); //int length = a_bytes.readInt();
 
         if(true){
             return;
@@ -262,11 +269,9 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         if(arr == null){
             return;
         }
-        
-        if (hasNullBitmap()) {
-            readNullBitmap(context, elements.value);
-        }
-        readSubCandidates(context, elements.value);
+        int elementCount = elements.value;
+        elementCount -= reducedCountForNullBitMap(context, elementCount);
+        readSubCandidates(context, elementCount);
     }
     
     protected void readSubCandidates(final QueryingReadContext context, int count) {
@@ -360,6 +365,9 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
        return ! Deploy.csharp;
     }
     
+    /**
+     * FIXME: Strange method name
+     */
 	protected boolean readingDotNetBeforeVersion4() {
 	    return false;
 	}
@@ -368,7 +376,6 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         ReflectClass claxx = componentType(container, obj);
         
         boolean primitive = isPrimitive(claxx); 
-            // useOldNetHandling() ? false : claxx.isPrimitive();
         
         if(primitive){
             claxx = container.produceClassMetadata(claxx).classReflector();
@@ -430,44 +437,42 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
 
     public void defrag2(DefragmentContext context) {
-		if(!(_handler instanceof UntypedFieldHandler)) {
-			defragElements(context);
-			return;
+		if(isUntypedByteArray(context)) {
+		    return;
 		}
-		ReflectClassByRef clazzRef = new ReflectClassByRef();
-		int offset = context.offset();
-		int numElements = readElementsAndClass(context.transaction(), context, clazzRef);
-		if(!(context.transaction().reflector().forClass(byte.class).equals(clazzRef.value))) {
-			// FIXME behavior should be identical to seek/defrag below - why failure?
-			// defragElements(context, numElements);
-			context.seek(offset);
-			defragElements(context);
-			return;
-		}
-		context.incrementOffset(numElements);
+		int elementCount = readElementCountDefrag(context);
+		if(hasNullBitmap()){
+            BitMap4 bitMap =  defragmentNullBitmap(context, elementCount);
+            elementCount -= reducedCountForNullBitMap(elementCount, bitMap);
+		} 
+        for (int i = 0; i < elementCount; i++) {
+            _handler.defragment(context);
+        }
     }
 
-	private void defragElements(DefragmentContext context) {
-		int elements = readElementsDefrag(context);
-		defragElements(context, elements);
-	}
+    private boolean isUntypedByteArray(DefragmentContext context) {
+        return _handler instanceof UntypedFieldHandler  && handleAsByteArray(context);
+    }
+    
+    private boolean handleAsByteArray(DefragmentContext context){
+        ReflectClassByRef clazzRef = new ReflectClassByRef();
+        int offset = context.offset();
+        readElementsAndClass(context.transaction(), context, clazzRef);
+        boolean isByteArray = context.transaction().reflector().forClass(byte.class).equals(clazzRef.value);
+        context.seek(offset);
+        return isByteArray;
+    }
 
-	private void defragElements(DefragmentContext context, int elements) {
-		defragmentNullBitmap(context, elements);
-		
-		for (int i = 0; i < elements; i++) {
-			_handler.defragment(context);
-		}
-	}
-	
-    private void defragmentNullBitmap(DefragmentContext context, int elements) {
-        if (hasNullBitmap()) {
-            BitMap4 nullBitmap = readNullBitmap(context.sourceBuffer(), elements);
-            writeNullBitmap(context.targetBuffer(), nullBitmap);
+	private BitMap4 defragmentNullBitmap(DefragmentContext context, int elements) {
+        if (! hasNullBitmap()) {
+            return null;
         }
+        BitMap4 nullBitmap = readNullBitmap(context.sourceBuffer(), elements);
+        writeNullBitmap(context.targetBuffer(), nullBitmap);
+        return nullBitmap;
     }	
 
-	protected int readElementsDefrag(DefragmentContext context) {
+	protected int readElementCountDefrag(DefragmentContext context) {
         int elements = context.sourceBuffer().readInt();
         context.targetBuffer().writeInt(mapElementsEntry(context, elements));
         if (elements < 0) {
@@ -506,9 +511,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
 
 	private BitMap4 readNullBitmap(ReadBuffer context, int length) {
-		byte[] bitMapBytes = new byte[context.readInt()];
-		context.readBytes(bitMapBytes);
-		return new BitMap4(bitMapBytes, 0, length);
+	    return context.readBitMap(length);
 	}
     
     protected boolean hasNullBitmap() {
@@ -545,11 +548,8 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         }
     }
 
-	private void writeNullBitmap(WriteBuffer context, BitMap4 nullItems) {
-		byte[] nullMapBytes = nullItems.bytes();
-		
-		context.writeInt(nullMapBytes.length);
-		context.writeBytes(nullMapBytes);
+	private void writeNullBitmap(WriteBuffer context, BitMap4 bitMap) {
+		context.writeBytes(bitMap.bytes());
 	}
 
     private BitMap4 nullItemsMap(ReflectArray reflector, Object array) {

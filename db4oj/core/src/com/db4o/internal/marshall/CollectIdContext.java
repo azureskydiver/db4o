@@ -26,7 +26,11 @@ public class CollectIdContext extends ObjectHeaderContext implements Marshalling
     }
 
     public void addId() {
-        _ids = (TreeInt) Tree.add(_ids, new TreeInt(readInt()));
+        int id = readInt();
+        if(id <= 0){
+            return;
+        }
+        _ids = (TreeInt) Tree.add(_ids, new TreeInt(id));
     }
     
     public ClassMetadata classMetadata() {
