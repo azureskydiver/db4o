@@ -15,6 +15,7 @@
 		<sharpen workspace="${sharpen.workspace.dir}" resource="ContactList/src">
 			<args>
 				<arg value="-pascalCase+"  />
+				<arg value="-organizeUsings" />
 			</args>
 		</sharpen>
 		
