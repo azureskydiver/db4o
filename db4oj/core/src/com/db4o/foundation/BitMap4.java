@@ -27,6 +27,10 @@ public final class BitMap4 {
     public boolean isTrue(int bit) {
         return ((_bits[arrayOffset(bit)]>>>byteOffset(bit))&1)!=0;
     }
+    
+    public boolean isFalse(int bit) {
+        return ! isTrue(bit);
+    }
 
     public int marshalledLength(){
         return _bits.length;

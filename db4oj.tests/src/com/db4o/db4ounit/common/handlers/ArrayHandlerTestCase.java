@@ -2,7 +2,6 @@
 
 package com.db4o.db4ounit.common.handlers;
 
-import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.reflect.*;
@@ -96,7 +95,7 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
         }
         assertCorrectedHandlerVersion(arrayHandler, HandlerRegistry.HANDLER_VERSION, ArrayHandler.class);
     }
-
+    
     private void assertCorrectedHandlerVersion(TypeHandler4 arrayHandler, int version, Class handlerClass) {
         TypeHandler4 correctedHandlerVersion = container().handlers().correctHandlerVersion(arrayHandler, version);
         Assert.isInstanceOf(handlerClass, correctedHandlerVersion);

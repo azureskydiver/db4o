@@ -67,7 +67,9 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
             context.seek(savedOffset);
             command = new TraverseFieldCommand() {
                 public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
-                    field.attemptUpdate(context);
+                    if (! isNull) {
+                        field.attemptUpdate(context);
+                    }
                 }
             };
             traverseFields(context, command);
