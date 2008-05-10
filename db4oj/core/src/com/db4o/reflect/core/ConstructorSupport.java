@@ -17,11 +17,11 @@ public class ConstructorSupport {
         if (claxx.isAbstract() || claxx.isInterface()) {
             return null;
         }
-        
+
         if(! Platform4.callConstructor()){
     		boolean skipConstructor = !config.callConstructor(claxx);
 
-            if(claxx.skipConstructor(skipConstructor, config.testConstructors())){
+            if(!claxx.isCollection() && claxx.skipConstructor(skipConstructor, config.testConstructors())){
               return null;
             }
         }
