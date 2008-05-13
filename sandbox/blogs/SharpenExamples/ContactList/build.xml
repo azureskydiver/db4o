@@ -16,6 +16,20 @@
 			<args>
 				<arg value="-pascalCase+"  />
 				<arg value="-organizeUsings" />
+
+				<arg value="-cp" />
+				<arg file="${db4o.jar}"  />
+				
+				<arg value="-nativeTypeSystem" />
+				<arg value="-nativeInterfaces"  />
+				
+				<arg value="-typeMapping" />
+				<arg value="com.db4o.Db4o" />
+				<arg value="Db4objects.Db4o.Db4oFactory" />
+				
+				<arg value="-namespaceMapping" />
+				<arg value="com.db4o" />
+				<arg value="Db4objects.Db4o"  />
 			</args>
 		</sharpen>
 		
