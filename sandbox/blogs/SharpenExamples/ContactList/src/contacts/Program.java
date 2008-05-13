@@ -42,8 +42,17 @@ public class Program {
 		String email = prompt("Email: ");
 		_contacts.add(new Contact(name, email));
 	}
+	
+	public void close() {
+		_contacts.close();
+	}
 
 	public static void main(String[] args) {
-		new Program().readEvalLoop();
+		Program program = new Program();
+		try {
+			program.readEvalLoop();
+		} finally {
+			program.close();
+		}
 	}
 }

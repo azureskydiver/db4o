@@ -1,20 +1,24 @@
 package contacts;
 
-import java.util.*;
+import com.db4o.*;
 
 public class ContactList {
 	
-	private List<Contact> _entries = new ArrayList<Contact>();
-
-	public void add(Contact contact) {
-		_entries.add(contact);
-	}
+	private ObjectContainer _container = Db4o.openFile("contacts.db4o");
 	
+	public void add(Contact contact) {
+		_container.store(contact);
+	}
+
 	/**
 	 * @sharpen.property
 	 */
 	public Iterable<Contact> entries() {
-		return _entries;
+		return _container.query(Contact.class);
+	}
+	
+	public void close() {
+		_container.close();
 	}
 
 }
