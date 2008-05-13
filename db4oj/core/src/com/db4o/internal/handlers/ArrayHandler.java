@@ -341,13 +341,14 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		    int classID = - elements;
 			ClassMetadata classMetadata = container(trans).classMetadataForId(classID);
 		    if (classMetadata != null) {
-		    	if(readingDotNetBeforeVersion4()){
-		    		primitive = classMetadata.isValueType();
-		    	}
-		        return (primitive ?   Handlers4.primitiveClassReflector(classMetadata, trans.reflector()) : classMetadata.classReflector());
+		        return classReflector(trans.reflector(), classMetadata, primitive);
 		    }
 		}
 		return classReflector(container(trans));
+	}
+	
+	protected ReflectClass classReflector(Reflector reflector, ClassMetadata classMetadata, boolean isPrimitive){
+	    return (isPrimitive?   Handlers4.primitiveClassReflector(classMetadata, reflector) : classMetadata.classReflector());
 	}
 
 	public static Iterator4 iterator(ReflectClass claxx, Object obj) {
@@ -364,13 +365,6 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
        }
        return ! Deploy.csharp;
     }
-    
-    /**
-     * FIXME: Strange method name
-     */
-	protected boolean readingDotNetBeforeVersion4() {
-	    return false;
-	}
     
     protected final int classID(ObjectContainerBase container, Object obj){
         ReflectClass claxx = componentType(container, obj);
@@ -516,6 +510,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     
     protected boolean hasNullBitmap() {
         return NullableArrayHandling.enabled();
+        
 	}
 
 	public void write(WriteContext context, Object obj) {

@@ -24,7 +24,7 @@ public final class CharHandler extends PrimitiveHandler {
 		return LENGTH;
 	}
 
-	protected Class primitiveJavaClass() {
+	public Class primitiveJavaClass() {
 		return char.class;
 	}
 

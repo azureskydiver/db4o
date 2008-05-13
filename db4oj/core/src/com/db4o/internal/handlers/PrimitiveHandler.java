@@ -37,7 +37,7 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
         return indexEntry;
     }
     
-    protected abstract Class primitiveJavaClass();
+    public abstract Class primitiveJavaClass();
     
     protected Class javaClass(){
         if(NullableArrayHandling.disabled()){

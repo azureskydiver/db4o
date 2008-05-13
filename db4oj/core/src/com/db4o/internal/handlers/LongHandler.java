@@ -26,7 +26,7 @@ public class LongHandler extends PrimitiveHandler {
 		return DEFAULTVALUE;
 	}
 	
-	protected Class primitiveJavaClass(){
+    public Class primitiveJavaClass(){
 		return long.class;
 	}
 	
