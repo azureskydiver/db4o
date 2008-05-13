@@ -25,7 +25,7 @@ public class IntHandler extends PrimitiveHandler {
 		return DEFAULTVALUE;
 	}
 	
-    protected Class primitiveJavaClass() {
+    public Class primitiveJavaClass() {
         return int.class;
     }
 

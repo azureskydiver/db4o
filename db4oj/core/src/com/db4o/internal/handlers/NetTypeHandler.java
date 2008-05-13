@@ -55,7 +55,7 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
 		return i_linkLength;
 	}
 
-    protected Class primitiveJavaClass(){
+    public Class primitiveJavaClass(){
     	if(NullableArrayHandling.enabled()){
     		return defaultValue().getClass();
     	}

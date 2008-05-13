@@ -27,7 +27,7 @@ public class ShortHandler extends PrimitiveHandler {
 		return LENGTH;
 	}
 	
-	protected Class primitiveJavaClass(){
+	public Class primitiveJavaClass(){
 		return short.class;
 	}
 	

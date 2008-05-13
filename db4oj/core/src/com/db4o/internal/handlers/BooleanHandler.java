@@ -30,7 +30,7 @@ public final class BooleanHandler extends PrimitiveHandler {
 		return LENGTH;
 	}
 	
-	protected Class primitiveJavaClass(){
+	public Class primitiveJavaClass(){
 		return boolean.class;
 	}
 	

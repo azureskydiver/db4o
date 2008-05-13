@@ -27,7 +27,7 @@ public final class ByteHandler extends PrimitiveHandler {
 		return LENGTH;
 	}
 
-	protected Class primitiveJavaClass(){
+	public Class primitiveJavaClass(){
 		return byte.class;
 	}
 	

@@ -23,7 +23,7 @@ public class FloatHandler extends IntHandler {
 		return DEFAULTVALUE;
 	}
 	
-	protected Class primitiveJavaClass() {
+	public Class primitiveJavaClass() {
 		return float.class;
 	}
 
