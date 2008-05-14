@@ -17,11 +17,11 @@ import com.db4o.reflect.core.*;
  */
 public class JdkClass implements JavaReflectClass{
 	
-	private final Reflector _reflector;
+	protected final Reflector _reflector;
 	private final JdkReflector _jdkReflector;
 	private final Class _clazz;
     private ReflectConstructorSpec _constructorSpec;
-	private  TernaryBool _canBeInstantiated = TernaryBool.UNSPECIFIED;
+	private TernaryBool _canBeInstantiated = TernaryBool.UNSPECIFIED;
     
 	public JdkClass(Reflector reflector, JdkReflector jdkReflector, Class clazz) {		
         if(jdkReflector == null){
@@ -50,17 +50,21 @@ public class JdkClass implements JavaReflectClass{
 	
 	public ReflectField getDeclaredField(String name){
 		try {
-			return new JdkField(_reflector, _clazz.getDeclaredField(name));
+			return createField(_clazz.getDeclaredField(name));
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	protected JdkField createField(Field field) {
+		return new JdkField(_reflector, field);
 	}
 	
 	public ReflectField[] getDeclaredFields(){
 		Field[] fields = _clazz.getDeclaredFields();
 		ReflectField[] reflectors = new ReflectField[fields.length];
 		for (int i = 0; i < reflectors.length; i++) {
-			reflectors[i] = new JdkField(_reflector, fields[i]);
+			reflectors[i] = createField(fields[i]);
 		}
 		return reflectors;
 	}
