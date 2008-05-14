@@ -15,7 +15,7 @@ import com.db4o.reflect.*;
 public class JdkReflector implements Reflector {
 	
 	private final JdkLoader _classLoader;
-    private Reflector _parent;
+    protected Reflector _parent;
     private ReflectArray _array;
 	private ReflectorConfiguration _config;
     
@@ -66,7 +66,7 @@ public class JdkReflector implements Reflector {
      * @return ReflectClass for the specified class
      */
 	public ReflectClass forClass(Class clazz){
-        return new JdkClass(_parent, this, clazz);
+        return createClass(clazz);
 	}
 	
 	/**
@@ -79,6 +79,10 @@ public class JdkReflector implements Reflector {
 		if (clazz == null) {
 			return null;
 		}
+		return createClass(clazz);
+	}
+
+	protected JdkClass createClass(Class clazz) {
 		return new JdkClass(_parent, this, clazz);
 	}
 	
