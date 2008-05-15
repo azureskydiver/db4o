@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.db4o.drs.inside.traversal;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.reflect.*;
 
@@ -93,7 +94,7 @@ public class GenericTraverser implements Traverser {
 		}
 
 		ReflectClass claxx = _reflector.forObject(object);
-		if (isSecondClass(claxx)) {
+		if (isSecondClass(claxx) || Platform4.isTransient(claxx)) {
 			return;
 		}
 

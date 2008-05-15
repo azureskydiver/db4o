@@ -25,6 +25,7 @@ import java.util.*;
 import com.db4o.drs.*;
 import com.db4o.drs.inside.traversal.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
 public final class GenericReplicationSession implements ReplicationSession {
@@ -230,7 +231,9 @@ public final class GenericReplicationSession implements ReplicationSession {
 		
 		ReflectClass claxx = _reflector.forObject(value);
 		if (claxx.isArray()) return arrayClone(value, claxx, sourceProvider);
+		if (Platform4.isTransient(claxx)) return null; // TODO: make it a warning
 		if (claxx.isSecondClass()) return value;
+		
 		if (_collectionHandler.canHandle(value)){
 			return collectionClone(value, claxx, sourceProvider);
 		}
@@ -245,7 +248,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 			throw new NullPointerException("unable to find the counterpart of " + value + " of class " + value.getClass());
 		return result;
 	}
-	
+
 	private  Object collectionClone(Object original, ReflectClass claxx, final ReplicationProviderInside sourceProvider) {
 		return _collectionHandler.cloneWithCounterparts(sourceProvider, original, claxx, new CounterpartFinder() {
 			public Object findCounterpart(Object original) {
@@ -263,25 +266,9 @@ public final class GenericReplicationSession implements ReplicationSession {
 			Object object = objects[i];
 			if (object == null) continue;
 
-			if (isSecondClass(object)) {
-				
-				objects[i] = object;
-				
-			} else {
-				ReplicationReference replicationReference = sourceProvider.produceReference(object, null, null);
-	
-				if (replicationReference == null)
-					throw new RuntimeException(sourceProvider + " cannot find ref for " + object);
-	
-				objects[i] = replicationReference.counterpart();
-			}
+			objects[i] = findCounterpart(object, sourceProvider);
 		}
 	}
-
-	private boolean isSecondClass(Object object) {
-		return _reflector.forObject(object).isSecondClass();
-	}
-
 
 	private void resetProcessedUuids(){
 		_processedUuids = new Hashtable4(SIZE);

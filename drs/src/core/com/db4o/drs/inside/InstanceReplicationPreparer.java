@@ -329,6 +329,7 @@ class InstanceReplicationPreparer implements Visitor {
 		if (_collectionHandler.canHandleClass(claxx)) {
 			return collectionClone(sourceProvider, obj, claxx);
 		}
+		
 		Object result = claxx.newInstance();
 		if (result == null)
 			throw new RuntimeException("Unable to create a new instance of " + obj.getClass()); //FIXME Use db4o's standard for throwing exceptions.
