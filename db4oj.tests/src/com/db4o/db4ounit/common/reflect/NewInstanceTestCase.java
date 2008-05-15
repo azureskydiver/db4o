@@ -180,6 +180,7 @@ public class NewInstanceTestCase implements TestCase, TestLifeCycle {
 	public void setUp() throws Exception {
 		_reflector = Platform4.reflectorForType(this.getClass());
 		String[] clazzs = new String[]{
+				_reflector.forClass(String.class).getName(),
 				_reflector.forClass(Hashtable.class).getName(),
 				_reflector.forClass(HashMap.class).getName(),
 				_reflector.forClass(ArrayList.class).getName(),
