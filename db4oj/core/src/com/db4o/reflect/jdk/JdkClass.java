@@ -4,8 +4,6 @@ package com.db4o.reflect.jdk;
 
 import java.lang.reflect.*;
 
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.core.*;
@@ -21,18 +19,18 @@ public class JdkClass implements JavaReflectClass{
 	private final JdkReflector _jdkReflector;
 	private final Class _clazz;
     private ReflectConstructorSpec _constructorSpec;
-	private TernaryBool _canBeInstantiated = TernaryBool.UNSPECIFIED;
     
 	public JdkClass(Reflector reflector, JdkReflector jdkReflector, Class clazz) {		
         if(jdkReflector == null){
             throw new NullPointerException();
         }
         if(reflector == null){
-            reflector = jdkReflector;
+            throw new NullPointerException();
         }
 		_reflector = reflector;
 		_clazz = clazz;
 		_jdkReflector = jdkReflector;
+		_constructorSpec = ReflectConstructorSpec.UNSPECIFIED_CONSTRUCTOR;
 	}
     
 	public ReflectClass getComponentType() {
@@ -135,10 +133,7 @@ public class JdkClass implements JavaReflectClass{
     }
     
     public Object newInstance() {
-		createConstructor();
-		if (_constructorSpec == null) {
-			return ReflectPlatform.createInstance(_clazz);
-		}
+		createConstructor(true);
 		return _constructorSpec.newInstance();
 	}
 	
@@ -149,57 +144,30 @@ public class JdkClass implements JavaReflectClass{
     public Reflector reflector() {
         return _reflector;
     }
-	
-    public boolean skipConstructor(boolean skipConstructor, boolean testConstructor) {
-		boolean useSerializableConstructor = false;
-		ReflectConstructor constructor = null;
-		if (skipConstructor) {
-			Constructor serializableConstructor = Platform4.jdk()
-					.serializableConstructor(_clazz);
-			if (serializableConstructor != null) {
-				JdkConstructor jdkConstructor = new JdkConstructor(_reflector,
-						serializableConstructor);
-				boolean serializableIsOk = true;
-				if(testConstructor) {
-					Object obj = jdkConstructor.newInstance((Object[]) null);
-					serializableIsOk = (obj != null);
-				}
-				if (serializableIsOk) {
-					useSerializableConstructor = true;
-					constructor = jdkConstructor;
-				}
-			}
+    
+    public ReflectConstructor getSerializableConstructor() {
+		Constructor serializableConstructor = Platform4.jdk()
+			.serializableConstructor(_clazz);
+		if (serializableConstructor == null) {
+			return null;
 		}
-		useConstructor(constructor, null);
-		return useSerializableConstructor;
-	}
-
-    private void useConstructor(ReflectConstructor constructor, Object[] args){
-    	_constructorSpec = (constructor == null ? null : new ReflectConstructorSpec(constructor, args));
+		return new JdkConstructor(_reflector, serializableConstructor);
     }
+	
 
 	public Object nullValue() {
 		return _jdkReflector.nullValue(this);
 	}
 	
-	private void createConstructor() {
-		if(!_canBeInstantiated.isUnspecified()) {
+	private void createConstructor(boolean forceTest) {
+		if(!_constructorSpec.canBeInstantiated().isUnspecified()) {
 			return;
 		}
-		try {
-			ReflectConstructorSpec constructor = ConstructorSupport.createConstructor(this, _clazz, _jdkReflector.configuration(), getDeclaredConstructors());
-			if(constructor != null) {
-				_constructorSpec = constructor;
-			}
-			_canBeInstantiated = TernaryBool.YES;
-		}
-		catch(ObjectNotStorableException exc) {
-			_canBeInstantiated = TernaryBool.NO;
-		}
+		_constructorSpec = ConstructorSupport.createConstructor(this, _clazz, _jdkReflector.configuration(), getDeclaredConstructors(), forceTest);
 	}
 
 	public boolean ensureCanBeInstantiated() {
-		createConstructor();
-		return _canBeInstantiated.definiteYes();
+		createConstructor(false);
+		return !_constructorSpec.canBeInstantiated().definiteNo();
 	}
 }

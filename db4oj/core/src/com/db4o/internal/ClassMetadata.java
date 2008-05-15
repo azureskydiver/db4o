@@ -504,6 +504,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return false;
         }
         
+        if(claxx.isAbstract() || claxx.isInterface()) {
+        	return true;
+        }
+        
 	    if(claxx.ensureCanBeInstantiated()) {
 	        return true;
         }

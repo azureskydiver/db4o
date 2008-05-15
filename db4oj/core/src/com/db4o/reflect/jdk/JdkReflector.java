@@ -46,7 +46,7 @@ public class JdkReflector implements Reflector {
 	 */
 	public ReflectArray array(){
         if(_array == null){
-            _array = new JdkArray(_parent);
+            _array = new JdkArray(parent());
         }
 		return _array;
 	}
@@ -83,7 +83,7 @@ public class JdkReflector implements Reflector {
 	}
 
 	protected JdkClass createClass(Class clazz) {
-		return new JdkClass(_parent, this, clazz);
+		return new JdkClass(parent(), this, clazz);
 	}
 	
 	/**
@@ -95,7 +95,7 @@ public class JdkReflector implements Reflector {
 		if(a_object == null){
 			return null;
 		}
-		return _parent.forClass(a_object.getClass());
+		return parent().forClass(a_object.getClass());
 	}
 	
 	/**
@@ -188,5 +188,12 @@ public class JdkReflector implements Reflector {
 	Object nullValue(ReflectClass clazz) {
 		return Platform4.nullValue(toNative(clazz));
 	}
+	
+	private Reflector parent() {
+		if(_parent == null){
+			return this;
+		}
+		return _parent; 
+	} 
 	
 }
