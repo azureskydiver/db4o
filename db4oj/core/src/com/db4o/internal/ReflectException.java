@@ -19,5 +19,13 @@ public class ReflectException extends Db4oException {
 	public ReflectException(Throwable cause) {
 		super(cause);
 	}
+	
+	/**
+	 * Constructor with message 
+	 * @param message detailed explanation
+	 */
+	public ReflectException(String message) {
+		super(message);
+	}
 
 }

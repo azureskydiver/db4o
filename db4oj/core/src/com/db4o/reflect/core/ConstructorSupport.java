@@ -1,6 +1,6 @@
 package com.db4o.reflect.core;
 
-import com.db4o.ext.*;
+import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
@@ -8,30 +8,32 @@ import com.db4o.reflect.*;
 public class ConstructorSupport {
 	
 	
-    public static ReflectConstructorSpec createConstructor(final ConstructorAwareReflectClass claxx, Class clazz, ReflectorConfiguration config, ReflectConstructor[] constructors){
+    public static ReflectConstructorSpec createConstructor(final ConstructorAwareReflectClass claxx, Class clazz, ReflectorConfiguration config, ReflectConstructor[] constructors, boolean forceTest){
         
         if (claxx == null) {
-			throw new ObjectNotStorableException(claxx);
+			return ReflectConstructorSpec.INVALID_CONSTRUCTOR; 
         }
         
         if (claxx.isAbstract() || claxx.isInterface()) {
-            return null;
+        	return ReflectConstructorSpec.INVALID_CONSTRUCTOR;
         }
 
         if(! Platform4.callConstructor()){
     		boolean skipConstructor = !config.callConstructor(claxx);
-
-            if(!claxx.isCollection() && claxx.skipConstructor(skipConstructor, config.testConstructors())){
-              return null;
+            if(!claxx.isCollection()) {
+            	ReflectConstructor serializableConstructor = skipConstructor(claxx, skipConstructor, config.testConstructors());
+            	if(serializableConstructor != null){
+            		return new ReflectConstructorSpec(serializableConstructor, null);
+            	}
             }
         }
         
-        if (! config.testConstructors()) {
-          return null;
+        if (!forceTest && ! config.testConstructors()) {
+          return ReflectConstructorSpec.UNSPECIFIED_CONSTRUCTOR;
         }
-
-		if(ReflectPlatform.createInstance(clazz) != null) {
-			return null;
+        
+        if(ReflectPlatform.createInstance(clazz) != null) {
+			return new ReflectConstructorSpec(new PlatformReflectConstructor(clazz), null);
 		}
 
 		Tree sortedConstructors = sortConstructorsByParamsCount(constructors);
@@ -41,7 +43,7 @@ public class ConstructorSupport {
 	private static ReflectConstructorSpec findConstructor(final ReflectClass claxx,
 			Tree sortedConstructors) {
 		if (sortedConstructors == null) {
-			throw new ObjectNotStorableException(claxx);
+			return ReflectConstructorSpec.INVALID_CONSTRUCTOR;
 		}
 		
 		Iterator4 iter = new TreeNodeIterator(sortedConstructors);
@@ -58,7 +60,7 @@ public class ConstructorSupport {
 				return new ReflectConstructorSpec(constructor, params);
 			}
 		}
-		throw new ObjectNotStorableException(claxx);
+		return ReflectConstructorSpec.INVALID_CONSTRUCTOR;
 	}
 	
 	private static Tree sortConstructorsByParamsCount(final ReflectConstructor[] constructors) {
@@ -73,5 +75,24 @@ public class ConstructorSupport {
 		}
 		return sortedConstructors;
 	}
+	
+    public static ReflectConstructor skipConstructor(ConstructorAwareReflectClass claxx, boolean skipConstructor, boolean testConstructor) {
+		if (!skipConstructor) {
+			return null;
+		}
+		ReflectConstructor serializableConstructor = claxx.getSerializableConstructor();
+		if (serializableConstructor == null) {
+			return null;
+		}
+		if(!testConstructor || Deploy.csharp) {
+			return serializableConstructor;
+		}
+		Object obj = serializableConstructor.newInstance((Object[]) null);
+		if (obj != null) {
+			return serializableConstructor;
+		}
+		return null;
+	}
+
 
 }
