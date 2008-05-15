@@ -5,16 +5,13 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.core.*;
 
 import db4ounit.*;
 
 public class NewInstanceTestCase implements TestCase, TestLifeCycle {
 	
 	private Reflector _reflector;
-	
-	public static class ItemNoPublicConstructors {
-		private ItemNoPublicConstructors(){}
-	}
 	
 	private static class ItemThrowingConstructors {
 		public ItemThrowingConstructors() {
@@ -86,11 +83,20 @@ public class NewInstanceTestCase implements TestCase, TestLifeCycle {
 	}
 	
 	public void testNotStorable() throws Exception {
-//		assertCannotBeInstantiated(ItemThrowingConstructors.class);
-//		assertCannotBeInstantiated(ItemNoPublicConstructors.class);
 		assertCannotBeInstantiated(List.class);
 		if(!Deploy.csharp){
 			assertCannotBeInstantiated(Dictionary.class);
+		}
+	}
+	
+	public void testPlatformDependentInstantiation() throws Exception {
+		ConstructorAwareReflectClass reflectClass = (ConstructorAwareReflectClass)_reflector.forClass(ItemThrowingConstructors.class);
+		if(reflectClass.getSerializableConstructor() != null){
+			Assert.isTrue(reflectClass.ensureCanBeInstantiated());
+			Assert.isNotNull(reflectClass.newInstance());
+		}else{
+			Assert.isFalse(reflectClass.ensureCanBeInstantiated());
+			Assert.isNull(reflectClass.newInstance());
 		}
 	}
 	
@@ -102,10 +108,6 @@ public class NewInstanceTestCase implements TestCase, TestLifeCycle {
 		ReflectClass reflectClass = _reflector.forClass(clazz);
 		Assert.isFalse(reflectClass.ensureCanBeInstantiated());
 		Assert.isNull(reflectClass.newInstance());
-	}
-	
-	private boolean classCanBeInitialized(Class clazz) {
-		return _reflector.forClass(clazz).ensureCanBeInstantiated();
 	}
 	
 	public void testHashTable() throws Exception {
@@ -177,16 +179,10 @@ public class NewInstanceTestCase implements TestCase, TestLifeCycle {
 	
 	public void setUp() throws Exception {
 		_reflector = Platform4.reflectorForType(this.getClass());
-//		_reflector.setParent(_reflector);
 		String[] clazzs = new String[]{
-				_reflector.forClass(ItemThrowingConstructors.class).getName(),
-				_reflector.forClass(ItemNoPublicConstructors.class).getName(),
 				_reflector.forClass(Hashtable.class).getName(),
 				_reflector.forClass(HashMap.class).getName(),
 				_reflector.forClass(ArrayList.class).getName(),
-				_reflector.forClass(Integer.class).getName(),
-				_reflector.forClass(Float.class).getName(),
-				_reflector.forClass(String.class).getName(),
 		};
 		MockReflectorConfiguration config = new MockReflectorConfiguration(clazzs, true);
 		_reflector.configuration(config);
