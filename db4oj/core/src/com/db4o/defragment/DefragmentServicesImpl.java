@@ -63,7 +63,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		Configuration sourceConfig=(Configuration) originalConfig.deepClone(null);
 		sourceConfig.weakReferences(false);
 		sourceConfig.flushFileBuffers(false);
-		sourceConfig.readOnly(true);
+		sourceConfig.readOnly(defragConfig.readOnly());
 		_sourceDb=(LocalObjectContainer)Db4o.openFile(sourceConfig,defragConfig.tempPath()).ext();
 		_targetDb = freshYapFile(defragConfig);
 		_mapping=defragConfig.mapping();

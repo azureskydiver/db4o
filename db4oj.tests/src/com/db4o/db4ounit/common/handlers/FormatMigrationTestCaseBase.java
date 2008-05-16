@@ -124,6 +124,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 		try{
 			DefragmentConfig defragConfig = new DefragmentConfig(testFileName, backupFileName);
 			defragConfig.forceBackupDelete(true);
+			defragConfig.readOnly(false);
 			Defragment.defrag(defragConfig);
 		} finally{
 			File4.delete(backupFileName);

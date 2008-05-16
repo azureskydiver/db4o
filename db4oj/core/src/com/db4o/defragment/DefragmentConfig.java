@@ -25,7 +25,11 @@ public class DefragmentConfig {
 	private Configuration _config;
 	
 	private StoredClassFilter _storedClassFilter=null;
+	
 	private boolean _forceBackupDelete=false;
+	
+	private boolean _readOnly = true;
+	
 	
 	private int _objectCommitFrequency;
 
@@ -123,6 +127,25 @@ public class DefragmentConfig {
 	public void forceBackupDelete(boolean forceBackupDelete) {
 		_forceBackupDelete=forceBackupDelete;
 	}
+	
+	/**
+	 * allows turning on and off readonly mode.<br><br>
+	 * When changed classes are likely to be detected defragment, it may be required 
+	 * to open the original database in read/write mode. <br><br>
+	 * Readonly mode is the default setting.
+	 * @param flag false, to turn off readonly mode. 
+	 */
+	public void readOnly(boolean flag){
+	    _readOnly = flag;
+	}
+	
+	/**
+	 * @return true, if the original database file is to be opened in readonly mode.
+	 */
+	public boolean readOnly(){
+	    return _readOnly;
+	}
+	
 
 	/**
 	 * @return The db4o {@link com.db4o.config.Configuration Configuration} to be applied
