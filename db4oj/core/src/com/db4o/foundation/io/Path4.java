@@ -28,10 +28,11 @@ public class Path4 {
 	
 	public static String getTempPath() {
 		String path = System.getProperty("java.io.tmpdir"); 
-		if(path != null && path.length() > 0){
-			return path;
+		if(path == null || path.length() <= 1){
+		    path = "/temp"; 
 		}
-		return "/temp";
+		File4.mkdirs(path);
+		return path;
 	}
 
 	public static String getTempFileName() {

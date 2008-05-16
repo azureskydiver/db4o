@@ -19,6 +19,8 @@ public class CrossPlatformServices {
 		String path = System.getProperty("db4ounit.file.path");
 		if(path == null || path.length() == 0) {
 			path =".";
+		} else {
+		    File4.mkdirs(path);
 		}
 		return Path4.combine(path, fileName);
 	}
