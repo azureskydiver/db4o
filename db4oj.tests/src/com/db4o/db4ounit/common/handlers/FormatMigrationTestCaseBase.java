@@ -124,7 +124,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 		try{
 			DefragmentConfig defragConfig = new DefragmentConfig(testFileName, backupFileName);
 			defragConfig.forceBackupDelete(true);
-			defragConfig.readOnly(false);
+			defragConfig.readOnly(! defragmentInReadWriteMode());
 			Defragment.defrag(defragConfig);
 		} finally{
 			File4.delete(backupFileName);
@@ -217,6 +217,13 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     
     protected void assertObjectsAreUpdated(ExtObjectContainer objectContainer) {
         // Override to check updates also
+    }
+    
+    /**
+     * override and return true for database updates that produce changed class metadata 
+     */
+    protected boolean defragmentInReadWriteMode() {
+        return false;
     }
     
 }
