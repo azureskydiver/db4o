@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.events;
 import com.db4o.config.Configuration;
 import com.db4o.events.Event4;
 import com.db4o.events.EventArgs;
+import com.db4o.events.EventException;
 import com.db4o.events.EventListener4;
 import com.db4o.internal.*;
 
@@ -29,7 +30,7 @@ public class DeletionEventExceptionTestCase extends EventsTestCaseBase implement
 		});
 		final Object item = retrieveOnlyInstance(Item.class);
 	    if(isMTOC()){
-	        Assert.expect( ReflectException.class, new CodeBlock() {
+	        Assert.expect( EventException.class, new CodeBlock() {
                 public void run() throws Throwable {
                     db().delete(item);
                 }

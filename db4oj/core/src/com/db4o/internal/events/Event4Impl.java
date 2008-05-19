@@ -78,7 +78,7 @@ public class Event4Impl implements Event4 {
 		} catch(Db4oException db4oException) {
 			throw db4oException;
 		} catch (Throwable exc) {
-			throw new ReflectException(exc);
+			throw new EventException(exc);
 		}
 	}
 	
