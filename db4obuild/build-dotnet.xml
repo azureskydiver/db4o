@@ -384,7 +384,7 @@
 	</target>	
 	
 	<target name="run-linq-tests" depends="build-core">
-		<exec executable="${dir.dist.dll}/Db4objects.Db4o.Linq.Tests.exe" failonerror="true"/>
+		<exec dir="${dir.dist.dll}" executable="${dir.dist.dll}/Db4objects.Db4o.Linq.Tests.exe" failonerror="true"/>
 	</target>
 	
 	<target name="run-msbuild-tests" depends="build-admin">
