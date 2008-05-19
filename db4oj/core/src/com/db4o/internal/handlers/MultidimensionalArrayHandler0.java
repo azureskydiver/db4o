@@ -39,5 +39,9 @@ public class MultidimensionalArrayHandler0 extends MultidimensionalArrayHandler 
     public void defragment(DefragmentContext context) {
         ArrayHandler0.defragment(context, this);
     }
+    
+    protected boolean hasNullBitmap() {
+        return false;
+    }
 
 }
