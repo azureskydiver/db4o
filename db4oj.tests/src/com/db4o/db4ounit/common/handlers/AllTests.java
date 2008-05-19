@@ -22,6 +22,7 @@ public class AllTests extends Db4oTestSuite {
             IntHandlerTestCase.class,
             LongHandlerTestCase.class,
             MultiDimensionalArrayHandlerTestCase.class,
+            SecondClassTestCase.class,
             StringBufferHandlerTestCase.class,
 			StringHandlerTestCase.class,
 			ShortHandlerTestCase.class,
