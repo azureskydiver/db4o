@@ -40,6 +40,11 @@ public class MemoryIoAdapter extends IoAdapter {
 		_memoryFiles = new Hashtable4();
 		_growBy = 10000;
 	}
+	
+	public MemoryIoAdapter(int initialLength){
+	    this();
+	    _bytes = new byte[initialLength];
+	}
 
 	private MemoryIoAdapter(MemoryIoAdapter adapter, byte[] bytes) {
 		_bytes = bytes;
