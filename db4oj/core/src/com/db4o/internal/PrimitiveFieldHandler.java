@@ -211,5 +211,10 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
         TypeHandler4 delegateTypeHandler = typeHandlerCloneContext.correctHandlerVersion(original.delegateTypeHandler());
         return new PrimitiveFieldHandler(original.container(), delegateTypeHandler, original._id, original.classReflector());
     }
+    
+    public boolean isSecondClass() {
+        return true;
+    }
+
 
 }

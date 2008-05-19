@@ -22,6 +22,7 @@ import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.core.*;
 import com.db4o.reflect.generic.*;
+import com.db4o.typehandlers.*;
 
 
 /**
@@ -1968,6 +1969,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	    }
     	    throw new IllegalComparisonException();
     	}
+    }
+
+    public boolean isSecondClass() {
+        return _typeHandler instanceof EmbeddedTypeHandler;
     }
 
 }
