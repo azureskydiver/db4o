@@ -26,7 +26,7 @@ import com.db4o.types.*;
 
 /**
  * NOTE: This is just a 'partial' base class to allow for variant implementations
- * in db4oj and db4ojdk1.2. It assumes that itself is an instance of YapStream
+ * in db4oj and db4ojdk1.2. It assumes that itself is an instance of ObjectContainerBase
  * and should never be used explicitly.
  * 
  * @exclude
