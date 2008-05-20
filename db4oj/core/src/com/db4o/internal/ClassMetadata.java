@@ -1971,8 +1971,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	}
     }
 
+    protected boolean isSecondClass(TypeHandler4 handler) {
+    	return Handlers4.baseTypeHandler(handler) instanceof EmbeddedTypeHandler;
+    }
+
     public boolean isSecondClass() {
-        return _typeHandler instanceof EmbeddedTypeHandler;
+        return isSecondClass(_typeHandler);
     }
 
 }

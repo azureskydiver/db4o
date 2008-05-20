@@ -38,9 +38,9 @@ public class SecondClassTestCase extends AbstractDb4oTestCase{
         register(new Date(), true);
         register("astring", true);
         register(new Item(), false);
-        register(new int[] {1}, true);
-        register(new Date[] {new Date()}, true);
-        register(new Item[] {new Item()}, true);
+        register(new int[] {1}, false);
+        register(new Date[] {new Date()}, false);
+        register(new Item[] {new Item()}, false);
         register(new CustomFirstClassItem(), false);
         register(new CustomSecondClassItem(), true);
     }

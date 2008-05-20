@@ -45,8 +45,6 @@ public interface ReflectClass {
 	
 	public boolean isPrimitive();
     
-    public boolean isSecondClass();
-    
 	public Object newInstance();
     
     public Reflector reflector();

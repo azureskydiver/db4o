@@ -20,14 +20,18 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test;
 
-import com.db4o.drs.inside.*;
+import com.db4o.config.*;
 
-public interface DrsFixture {
-	TestableReplicationProviderInside provider();
 
-	void open();
+public class TheSimplestWithCallConstructors extends TheSimplest {
 
-	void close();
+	protected void configure(Configuration config) {
+		config.callConstructors(true);
+	}
+	
+	protected SPCChild createChildObject(String name) {
+		return new SPCChildWithoutDefaultConstructor(name);
+	}
 
-	void clean();
+
 }

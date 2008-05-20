@@ -141,10 +141,6 @@ public class SelfClass implements ReflectClass {
 		return _registry.isPrimitive(_class);
 	}
 
-	public boolean isSecondClass() {
-		return isPrimitive();
-	}
-
 	public Object newInstance() {
 		try {
 			return _class.newInstance();

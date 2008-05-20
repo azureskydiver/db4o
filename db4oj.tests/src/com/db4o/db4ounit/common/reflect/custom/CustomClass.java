@@ -97,10 +97,6 @@ public class CustomClass implements ReflectClass {
 		return false;
 	}
 
-	public boolean isSecondClass() {
-		return false;
-	}
-
 	public Object newInstance() {
 		return new PersistentEntry(_name, null, new Object[_fields.length-1 /* uid field is kept explicitly */]);
 	}

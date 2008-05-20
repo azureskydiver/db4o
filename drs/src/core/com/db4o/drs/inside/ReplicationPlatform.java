@@ -68,7 +68,7 @@ public class ReplicationPlatform {
 		AbstractQueue.class,
 	};
 
-	static boolean isBuiltinCollectionClass(Reflector reflector, ReflectClass claxx) {
+	static boolean isBuiltinCollectionClass(ReplicationReflector reflector, ReflectClass claxx) {
 		for (Class c : _builtinCollectionClasses) {
 			if (reflector.forClass(c).isAssignableFrom(claxx)) {
 				return true;

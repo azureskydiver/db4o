@@ -4,6 +4,7 @@ package com.db4o.test;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
 public class KnownClasses {
@@ -27,7 +28,7 @@ public class KnownClasses {
             if(knownClasses[i].isPrimitive()){
                 Test.error();
             }
-            if(knownClasses[i].isSecondClass()){
+            if(((InternalObjectContainer)Test.objectContainer()).classMetadataForReflectClass(knownClasses[i]).isSecondClass()) {
                 Test.error();
             }
             if(knownClasses[i].getName().equals(this.getClass().getName())){

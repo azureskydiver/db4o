@@ -67,12 +67,17 @@ public class TheSimplest extends DrsTestCase {
 	}
 
 	private void storeInA() {
-		SPCChild child = new SPCChild("c1");
+		String name = "c1";
+		SPCChild child = createChildObject(name);
 		
 		a().provider().storeNew(child);
 		a().provider().commit();
 		
 		ensureNames(a(), "c1");
+	}
+
+	protected SPCChild createChildObject(String name) {
+		return new SPCChild(name);
 	}
 		
 	private void replicate() {

@@ -43,10 +43,10 @@ public class ArrayTestSuite extends FixtureBasedTestSuite {
 		}
 
 		private ReflectClass reflectClass(Object array) {
-			return reflector().forObject(array);
+			return genericReflector().forObject(array);
 		}
 
-		private GenericReflector reflector() {
+		private GenericReflector genericReflector() {
 			return new GenericReflector(null, Platform4.reflectorForType(getClass()));
 		}
 

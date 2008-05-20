@@ -57,9 +57,9 @@ public final class GenericReplicationSession implements ReplicationSession {
 	}
 
 	public GenericReplicationSession(ReplicationProvider providerA, ReplicationProvider providerB, ReplicationEventListener listener) {
-		_reflector = ReplicationReflector.getInstance();
-		_collectionHandler = new CollectionHandlerImpl(_reflector.reflector());
-		_traverser = new GenericTraverser(_reflector.reflector(), _collectionHandler);
+		_reflector = new ReplicationReflector(providerA, providerB);
+		_collectionHandler = new CollectionHandlerImpl(_reflector);
+		_traverser = new GenericTraverser(_reflector, _collectionHandler);
 
 		_providerA = (ReplicationProviderInside) providerA;
 		_providerB = (ReplicationProviderInside) providerB;
@@ -177,7 +177,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 		int[] dimensions = _reflector.arrayDimensions(original);
 		Object result = _reflector.newArrayInstance(componentType, dimensions);
 		Object[] flatContents = _reflector.arrayContents(original); //TODO Optimize: Copy the structure without flattening. Do this in ReflectArray.
-		if (!(claxx.isSecondClass()||componentType.isSecondClass()))
+		if (!(_reflector.isSecondClass(claxx)||_reflector.isSecondClass(componentType)))
 			replaceWithCounterparts(flatContents, sourceProvider);
 		_reflector.arrayShape(flatContents, 0, result, dimensions, 0);
 		return result;
@@ -232,7 +232,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 		ReflectClass claxx = _reflector.forObject(value);
 		if (claxx.isArray()) return arrayClone(value, claxx, sourceProvider);
 		if (Platform4.isTransient(claxx)) return null; // TODO: make it a warning
-		if (claxx.isSecondClass()) return value;
+		if (_reflector.isSecondClass(claxx)) return value;
 		
 		if (_collectionHandler.canHandle(value)){
 			return collectionClone(value, claxx, sourceProvider);

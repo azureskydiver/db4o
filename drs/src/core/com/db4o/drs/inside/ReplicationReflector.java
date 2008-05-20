@@ -20,36 +20,30 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside;
 
-import com.db4o.ext.ExtDb4o;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.ext.MemoryFile;
-import com.db4o.reflect.ReflectArray;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.Reflector;
+import com.db4o.drs.*;
+import com.db4o.drs.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.internal.*;
+import com.db4o.reflect.*;
 
 
 public class ReplicationReflector {
-	private static ReplicationReflector instance = new ReplicationReflector();
-	private final Reflector _reflector;
-	private final ReflectArray _arrayReflector;
+	private InternalObjectContainer _container;
 
-	private ReplicationReflector() {
-		ExtObjectContainer tempOcToGetReflector = ExtDb4o.openMemoryFile(new MemoryFile()).ext();
-//      FIXME: Find a better way without depending on ExtDb4o.  :P
-
-		_reflector = tempOcToGetReflector.reflector();
-		_arrayReflector = _reflector.array();
-		tempOcToGetReflector.close();
-	}
-
-	public static ReplicationReflector getInstance() {
-		return instance;
+	public ReplicationReflector(ReplicationProvider providerA, ReplicationProvider providerB) {
+		_container = containerFrom(providerA);
+		if(_container == null) {
+			_container = containerFrom(providerB);
+		}
+		if(_container == null) {
+			_container = (InternalObjectContainer)ExtDb4o.openMemoryFile(new MemoryFile()).ext();
+		}
 	}
 
 	public Object[] arrayContents(Object array) {
-		int[] dim = _arrayReflector.dimensions(array);
+		int[] dim = arrayReflector().dimensions(array);
 		Object[] result = new Object[volume(dim)];
-		_arrayReflector.flatten(array, dim, 0, result, 0); //TODO Optimize add a visit(Visitor) method to ReflectArray or navigate the array to avoid copying all this stuff all the time.
+		arrayReflector().flatten(array, dim, 0, result, 0); //TODO Optimize add a visit(Visitor) method to ReflectArray or navigate the array to avoid copying all this stuff all the time.
 		return result;
 	}
 
@@ -61,20 +55,24 @@ public class ReplicationReflector {
 		return result;
 	}
 
-	ReflectClass forObject(Object obj) {
-		return _reflector.forObject(obj);
+	public ReflectClass forObject(Object obj) {
+		return _container.reflector().forObject(obj);
+	}
+
+	public ReflectClass forClass(Class clazz) {
+		return _container.reflector().forClass(clazz);
 	}
 
 	ReflectClass getComponentType(ReflectClass claxx) {
-		return _arrayReflector.getComponentType(claxx);
+		return arrayReflector().getComponentType(claxx);
 	}
 
 	int[] arrayDimensions(Object obj) {
-		return _arrayReflector.dimensions(obj);
+		return arrayReflector().dimensions(obj);
 	}
 
 	public Object newArrayInstance(ReflectClass componentType, int[] dimensions) {
-		return _arrayReflector.newInstance(componentType, dimensions);
+		return arrayReflector().newInstance(componentType, dimensions);
 	}
 
 	public int arrayShape(
@@ -83,11 +81,30 @@ public class ReplicationReflector {
 			Object a_shaped,
 			int[] a_dimensions,
 			int a_currentDimension) {
-		return _arrayReflector.shape(a_flat, a_flatElement, a_shaped, a_dimensions, a_currentDimension);
+		return arrayReflector().shape(a_flat, a_flatElement, a_shaped, a_dimensions, a_currentDimension);
 	}
 
-	public Reflector reflector() {
-		return _reflector;
+	public boolean isSecondClass(ReflectClass clazz) {
+		ClassMetadata classMetadata = _container.classMetadataForReflectClass(clazz);
+		if(classMetadata == null) {
+			return false;
+		}
+		return classMetadata.isSecondClass();
 	}
-
+	
+	private InternalObjectContainer containerFrom(ReplicationProvider provider) {
+		if(!(provider instanceof Db4oReplicationProvider)) {
+			return null;
+		}
+		Db4oReplicationProvider db4oProvider = (Db4oReplicationProvider) provider;
+		ExtObjectContainer container = db4oProvider.getObjectContainer();
+		if(!(container instanceof InternalObjectContainer)) {
+			return null;
+		}
+		return (InternalObjectContainer) container;
+	}
+	
+	private ReflectArray arrayReflector() {
+		return _container.reflector().array();
+	}
 }

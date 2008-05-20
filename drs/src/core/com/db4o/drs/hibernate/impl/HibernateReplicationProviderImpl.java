@@ -94,9 +94,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	 */
 	private Record _replicationRecord;
 
-	private final CollectionHandler _collectionHandler = new CollectionHandlerImpl();
-
-	private Reflector _reflector = ReplicationReflector.getInstance().reflector();
+	private CollectionHandler _collectionHandler;
 
 	/**
 	 * Objects which meta data not yet updated.
@@ -199,8 +197,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		_dirtyRefs = null;
 
 		_objRefs = null;
-
-		_reflector = null;
 
 		EventListeners eventListeners = getConfiguration().getEventListeners();
 		FlushEventListener[] o1 = eventListeners.getFlushEventListeners();
@@ -691,5 +687,9 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	public boolean isProviderSpecific(Object original) {
 		return original.getClass().getName().startsWith("org.hibernate.collection.");
+	}
+	
+	public void replicationReflector(ReplicationReflector replicationReflector) {
+		_collectionHandler = new CollectionHandlerImpl(replicationReflector);
 	}
 }

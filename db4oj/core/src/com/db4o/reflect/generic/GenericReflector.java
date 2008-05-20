@@ -355,7 +355,8 @@ public class GenericReflector implements Reflector, DeepClone {
 		while(i.moveNext()){
             GenericClass clazz = (GenericClass)i.current();
             if(! _stream._handlers.ICLASS_INTERNAL.isAssignableFrom(clazz)){
-                if(! clazz.isSecondClass()){
+                ClassMetadata clazzMeta = _stream.classMetadataForReflectClass(clazz);
+				if(clazzMeta == null || !clazzMeta.isSecondClass()){
 					if(! clazz.isArray()){
 						classes.add(clazz);
 					}

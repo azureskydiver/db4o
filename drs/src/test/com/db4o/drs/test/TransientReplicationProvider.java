@@ -25,18 +25,16 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.drs.foundation.*;
 import com.db4o.drs.inside.*;
-import com.db4o.drs.inside.CollectionHandler;
 import com.db4o.drs.inside.traversal.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.reflect.*;
 
 public class TransientReplicationProvider implements TestableReplicationProvider, TestableReplicationProviderInside {
 	private TimeStampIdGenerator _timeStampIdGenerator = new TimeStampIdGenerator();
 
 	private final String _name;
 
-	private final Traverser _traverser;
+	private Traverser _traverser;
 
 	private final Map _storedObjects = new IdentityHashMap();
 
@@ -52,17 +50,9 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 
 	private Collection4 _uuidsDeletedSinceLastReplication = new Collection4();
 
-	public TransientReplicationProvider(byte[] signature) {
-		this(signature, null);
-	}
-
 	public TransientReplicationProvider(byte[] signature, String name) {
 		_signature = new MySignature(signature);
 		_name = name;
-
-		ReplicationReflector reflector = ReplicationReflector.getInstance();
-		CollectionHandler _collectionHandler = new CollectionHandlerImpl(reflector.reflector());
-		_traverser = new MyTraverser(reflector.reflector(), _collectionHandler);
 	}
 
 	public String toString() {
@@ -419,7 +409,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	public class MyTraverser implements Traverser {
 		Traverser _delegate;
 
-		public MyTraverser(Reflector reflector, CollectionHandler collectionHandler) {
+		public MyTraverser(ReplicationReflector reflector, CollectionHandler collectionHandler) {
 			_delegate = new GenericTraverser(reflector, collectionHandler);
 		}
 
@@ -438,5 +428,10 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 
 	public boolean isProviderSpecific(Object original) {
 		return false;
+	}
+
+	public void replicationReflector(ReplicationReflector replicationReflector) {
+		CollectionHandler _collectionHandler = new CollectionHandlerImpl(replicationReflector);
+		_traverser = new MyTraverser(replicationReflector, _collectionHandler);
 	}
 }
