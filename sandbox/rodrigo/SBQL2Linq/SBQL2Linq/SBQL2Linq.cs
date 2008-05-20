@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -14,8 +14,8 @@ namespace SBQL2Linq
 	{
 		public string Name { get; set; }
 		public Address Address { get; set; }
-		public double Salary { get; set; }
-		public Dept Dept { get; set; }
+		public double Sal { get; set; }
+		public Dept WorksIn { get; set; }
 
 		public override string ToString()
 		{
@@ -25,12 +25,12 @@ namespace SBQL2Linq
 
 	class Dept
 	{
-		private List<Emp> _employees;
+		private List<Emp> _employs;
 		private Emp _boss;
 
 		public string Name { get; set; }
 		public double Budget { get; set; }
-		public string City { get; set; }
+		public List<string> Loc { get; set; }
 
 		public Emp Boss
 		{
@@ -42,23 +42,23 @@ namespace SBQL2Linq
 			set
 			{
 				_boss = value;
-				_boss.Dept = this;
+				_boss.WorksIn = this;
 			}
 		}
 
-		public List<Emp> Employees
+		public List<Emp> Employs
 		{
 			get
 			{
-				return _employees;
+				return _employs;
 			}
 
 			set
 			{
-				_employees = value;
-				foreach (var e in _employees)
+				_employs = value;
+				foreach (var e in _employs)
 				{
-					e.Dept = this;
+					e.WorksIn = this;
 				}
 			}
 		}
@@ -78,35 +78,35 @@ namespace SBQL2Linq
 				new Emp
 				{
 					Name = "John Cleese",
-					Salary = 2223,
+					Sal = 2223,
 					Address = new Address { City = "Bridgwater" }
 				},
 
 				new Emp
 				{
 					Name = "Michael Palin",
-					Salary = 2221,
+					Sal = 2221,
 					Address = new Address { City = "Broomhill" }
 				},
 
 				new Emp
 				{
 					Name = "Eric Idle",
-					Salary = 2000,
+					Sal = 2000,
 					Address = new Address { City = "Runnymede" }
 				},
 
 				new Emp
 				{
 					Name = "Terry Gilliam",
-					Salary = 3000,
+					Sal = 3000,
 					//Address = new Address { City = "Dorset" }
 				},
 
 				new Emp
 				{
 					Name = "Graham Chapman",
-					Salary = 2000,
+					Sal = 2000,
 					Address = new Address { City = "Dorset" }
 				},
 			};
@@ -118,8 +118,12 @@ namespace SBQL2Linq
 					Name = "Ministry of Silly Walks",
 					Boss = employees[0],
 					Budget = 500000,
-					City = "Bridgwater",
-					Employees = new List<Emp>
+					Loc = new List<String>
+					{
+						"Bridgwater",
+						"Rome",
+					},
+					Employs = new List<Emp>
 					{
 						employees[0],
 						employees[2],
@@ -132,8 +136,12 @@ namespace SBQL2Linq
 					Name = "Parrot Store",
 					Boss = employees[1],
 					Budget = 100000,
-					City = "Runnymede",
-					Employees = new List<Emp>
+					Loc = new List<string>
+					{
+						"Runnymede",
+						"Rome",
+					},
+					Employs = new List<Emp>
 					{
 						employees[1],
 						employees[4]
@@ -149,11 +157,11 @@ namespace SBQL2Linq
 			//
 
 			var query1 = from d in depts
-						select new
-						{
-							Dept = d,
-							Avg = (from e in d.Employees select e.Salary).Average()
-						};
+						 select new
+						 {
+							 Dept = d,
+							 Avg = (from e in d.Employs select e.Sal).Average()
+						 };
 
 			query1.PrettyPrint();
 
@@ -165,12 +173,12 @@ namespace SBQL2Linq
 			//
 
 			var query2 = from e in employees
-						where e.Salary < 2222
-						select new
-						{
-							e.Name,
-							DeptName = e.Dept.Name,
-						};
+						 where e.Sal < 2222
+						 select new
+						 {
+							 e.Name,
+							 DeptName = e.WorksIn.Name,
+						 };
 			query2.PrettyPrint();
 
 			//
@@ -181,7 +189,7 @@ namespace SBQL2Linq
 			//
 
 			var query3 = from e in employees
-						 where e.Dept.Boss.Name == "John Cleese" /* && e.Dept.Boss != e */
+						 where e.WorksIn.Boss.Name == "John Cleese" /* && e.Dept.Boss != e */
 						 select new
 						 {
 							 Name = e.Name
@@ -198,7 +206,7 @@ namespace SBQL2Linq
 						 where e.Name == "Eric Idle"
 						 select new
 						 {
-							 Name = e.Dept.Boss.Name
+							 Name = e.WorksIn.Boss.Name
 						 };
 			query4.PrettyPrint();
 
@@ -214,14 +222,14 @@ namespace SBQL2Linq
 			// (name._VALUE as name, (((address.city._VALUE) union
 			// ("No address" where not exists(address)))) as city ) as empcity;
 			//
-			
+
 			var query5 = from e in employees
-						where e.Dept.Boss.Name == "John Cleese"
-						select new
-						{
-							e.Name,
-							City = (e.Address == null ? "No address" : e.Address.City)
-                       };
+						 where e.WorksIn.Boss.Name == "John Cleese"
+						 select new
+						 {
+							 e.Name,
+							 City = (e.Address == null ? "No address" : e.Address.City)
+						 };
 			query5.PrettyPrint();
 
 			//
@@ -232,7 +240,7 @@ namespace SBQL2Linq
 			// max(Dept.count(employs)) );
 			//
 
-			var counts = from d in depts select d.Employees.Count;
+			var counts = from d in depts select d.Employs.Count;
 			var query6 = new
 			{
 				Min = counts.Min(),
@@ -249,14 +257,14 @@ namespace SBQL2Linq
 			// ((sum(d.employs.Emp.sal._VALUE) - (d.boss.Emp.sal._VALUE)) as s )).
 			// (d.dname._VALUE, s));
 			//
-			
+
 			var query7 = from d in depts
 						 select new
 						 {
 							 DeptName = d.Name,
-							 StaffSalary = (from e in d.Employees
+							 StaffSalary = (from e in d.Employs
 											where e != d.Boss
-											select e.Salary).Sum()
+											select e.Sal).Sum()
 						 };
 			query7.PrettyPrint();
 
@@ -273,8 +281,8 @@ namespace SBQL2Linq
 				Answer = (
 					from d in depts
 					select (
-						from e in d.Employees
-						where e != d.Boss && e.Salary == d.Boss.Salary
+						from e in d.Employs
+						where e != d.Boss && e.Sal == d.Boss.Sal
 						select e).Any()
 					).All(found => found)
 			};
@@ -293,8 +301,8 @@ namespace SBQL2Linq
 						 select new
 						 {
 							 Message = "Employee " + e.Name + " consumes " +
-								((e.Salary * 12 * 100) / e.Dept.Budget) + "% of the " +
-								e.Dept.Name + " department budget."
+								((e.Sal * 12 * 100) / e.WorksIn.Budget) + "% of the " +
+								e.WorksIn.Name + " department budget."
 						 };
 			query9.PrettyPrint();
 
@@ -304,11 +312,10 @@ namespace SBQL2Linq
 			// deptemp.(unique(deref(Dept.loc._VALUE)) as deptcity)
 			// where forall(deptemp.Dept)(deptcity in loc._VALUE);
 			//
-			
-			var query10 = (from d in depts
-						   select d.City).Distinct();
-
-			(from city in query10 select new { City = city }).PrettyPrint();
+			var query10 = from city in depts.SelectMany(d => d.Loc).Distinct()
+						   where depts.All(d => d.Loc.Contains(city))
+						   select new { City = city };
+			query10.PrettyPrint();
 		}
 	}
 
