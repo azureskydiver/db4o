@@ -20,17 +20,18 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside.traversal;
 
+import com.db4o.drs.inside.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.reflect.*;
 
 public class GenericTraverser implements Traverser {
-	protected final Reflector _reflector;
+	protected final ReplicationReflector _reflector;
 	protected final CollectionTraverser _collectionHandler;
 	protected final Queue4 _queue = new NonblockingQueue();
 
-	public GenericTraverser(Reflector reflector, CollectionTraverser collectionHandler) {
+	public GenericTraverser(ReplicationReflector reflector, CollectionTraverser collectionHandler) {
 		_reflector = reflector;
 		_collectionHandler = collectionHandler;
 	}
@@ -117,8 +118,8 @@ public class GenericTraverser implements Traverser {
 
 	protected boolean isSecondClass(ReflectClass claxx) {
 		//      TODO Optimization: Compute this lazily in ReflectClass;
-		if (claxx.isSecondClass()) return true;
-		return claxx.isArray() && claxx.getComponentType().isSecondClass();
+		if (_reflector.isSecondClass(claxx)) return true;
+		return claxx.isArray() && _reflector.isSecondClass(claxx.getComponentType());
 	}
 
 	public void extendTraversalTo(Object disconnected) {

@@ -41,7 +41,7 @@ public class FixtureConfigurationTestCase implements TestCase {
 	public void testClientServer() {
 		assertFixtureConfiguration(
 			new Db4oClientServer(
-				new GlobalConfigurationSource(),
+				new CachingConfigurationSource(new IndependentConfigurationSource()),
 				false,
 				"C/S"));
 	}

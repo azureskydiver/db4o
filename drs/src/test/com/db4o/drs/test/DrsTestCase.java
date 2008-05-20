@@ -20,20 +20,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Iterator;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectSet;
-import com.db4o.drs.Replication;
-import com.db4o.drs.ReplicationEventListener;
-import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.inside.TestableReplicationProviderInside;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.drs.*;
+import com.db4o.drs.inside.*;
+import com.db4o.internal.*;
 
-import db4ounit.Assert;
-import db4ounit.TestCase;
-import db4ounit.TestLifeCycle;
+import db4ounit.*;
 
 public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	
@@ -54,10 +49,11 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	
 
 	private final DrsFixturePair _fixtures = DrsFixtureVariable.value();
+	private ReplicationReflector _reflector;
 	
 	public void setUp() throws Exception {
 		cleanBoth();
-		configure();
+		configureBoth();
 		openBoth();
 		store();
 		reopen();
@@ -85,11 +81,31 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 
 	protected void store() {}
 	
-	protected void configure() {
-		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
-		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
+	private void configureBoth() {
+		configureInitial(_fixtures.a);
+		configureInitial(_fixtures.b);
+	}
+
+	private void configureInitial(DrsFixture fixture) {
+		Configuration config = db4oConfiguration(fixture);
+		if(config == null) {
+			return;
+		}
+		config.generateUUIDs(ConfigScope.GLOBALLY);
+		config.generateVersionNumbers(ConfigScope.GLOBALLY);
+		configure(config);
+	}
+
+	private Configuration db4oConfiguration(DrsFixture fixture) {
+		if(!(fixture instanceof Db4oDrsFixture)) {
+			return null;
+		}
+		return ((Db4oDrsFixture)fixture).config();
 	}
 	
+	protected void configure(Configuration config) {
+	}
+
 	protected void reopen() throws Exception {
 		closeBoth();
 		openBoth();
@@ -98,6 +114,9 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	private void openBoth() throws Exception {
 		a().open();
 		b().open();
+		_reflector = new ReplicationReflector(a().provider(), b().provider());
+		a().provider().replicationReflector(_reflector);
+		b().provider().replicationReflector(_reflector);
 	}
 	
 	public void tearDown() throws Exception {
@@ -193,4 +212,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		}
 	}
 
+	protected ReplicationReflector replicationReflector() {
+		return _reflector;
+	}
 }

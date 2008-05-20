@@ -56,7 +56,7 @@ public class R0to4Runner extends DrsTestCase {
 		while (rr.hasNext()) {
 			Object o = rr.next();
 
-			ReflectClass claxx = ReplicationReflector.getInstance().reflector().forObject(o);
+			ReflectClass claxx = replicationReflector().forObject(o);
 			setFieldsToNull(o, claxx);
 			toDelete.add(o);
 		}

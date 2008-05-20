@@ -20,7 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs;
 
-import com.db4o.ObjectSet;
+import com.db4o.*;
+import com.db4o.drs.inside.*;
 
 /**
  * Facade for persistence systems that provide replication support.
@@ -51,4 +52,7 @@ public interface ReplicationProvider {
 	 * @return newly created objects and changed objects of the type specified in the clazz parameter since last replication
 	 */
 	ObjectSet objectsChangedSinceLastReplication(Class clazz);
+	
+	void replicationReflector(ReplicationReflector replicationReflector);
+
 }

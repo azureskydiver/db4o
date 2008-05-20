@@ -1,4 +1,4 @@
-package com.db4o.db4ounit.common.reflect;
+package com.db4o.db4ounit.jre12.reflect;
 
 import java.util.*;
 
@@ -9,7 +9,7 @@ import com.db4o.reflect.core.*;
 
 import db4ounit.*;
 
-public class NewInstanceTestCase implements TestCase, TestLifeCycle {
+public class StandaloneNativeReflectorTestCase implements TestCase, TestLifeCycle {
 	
 	private Reflector _reflector;
 	
@@ -87,6 +87,10 @@ public class NewInstanceTestCase implements TestCase, TestLifeCycle {
 		if(!Deploy.csharp){
 			assertCannotBeInstantiated(Dictionary.class);
 		}
+	}
+	
+	public void testForNullClass() {
+		Assert.isNull(_reflector.forClass(null));
 	}
 	
 	public void testPlatformDependentInstantiation() throws Exception {

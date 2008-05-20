@@ -246,13 +246,6 @@ public class GenericClass implements ReflectClass, DeepClone {
         return _isPrimitive;
     }
     
-    public boolean isSecondClass() {
-        if(isPrimitive()){
-            return true;
-        }
-        return _isSecondClass;
-    }
-    
     public Object newInstance() {
         if(_delegate != null){
             return _delegate.newInstance();

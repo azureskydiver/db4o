@@ -9,12 +9,11 @@ import db4ounit.extensions.*;
 
 public abstract class AbstractDb4oFixture implements Db4oFixture {
 
-	private final ConfigurationSource _configSource;
-	private Configuration _config;
+	private final CachingConfigurationSource _configSource;
 	private FixtureConfiguration _fixtureConfiguration;
 
 	protected AbstractDb4oFixture(ConfigurationSource configSource) {
-		_configSource=configSource;
+		_configSource = new CachingConfigurationSource(configSource);
 	}
 	
 	public void fixtureConfiguration(FixtureConfiguration fc) {
@@ -27,10 +26,7 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 	}
 
 	public Configuration config() {
-		if(_config==null) {
-			_config=_configSource.config();
-		}
-		return _config;
+		return _configSource.config();
 	}
 	
 	public void clean() {
@@ -43,7 +39,7 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 	protected abstract void doClean();	
 	
 	protected void resetConfig() {
-		_config=null;
+		_configSource.reset();
 	}
 	
 	protected void defragment(String fileName) throws Exception{

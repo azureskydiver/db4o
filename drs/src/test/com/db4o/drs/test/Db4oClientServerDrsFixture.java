@@ -20,10 +20,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectServer;
-import com.db4o.drs.db4o.Db4oProviderFactory;
-import com.db4o.ext.ExtObjectContainer;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.drs.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
 
 public class Db4oClientServerDrsFixture extends Db4oDrsFixture {
 	private static final String HOST = "localhost";
@@ -44,11 +45,12 @@ public class Db4oClientServerDrsFixture extends Db4oDrsFixture {
 	}
 
 	public void open(){
-		Db4o.configure().messageLevel(-1);
+		config().messageLevel(-1);
 		
-		_server = Db4o.openServer(testFile.getPath(), _port);
+		Configuration clientConfig = (Configuration) ((DeepClone)config()).deepClone(config());
+		_server = Db4o.openServer(config(), testFile.getPath(), _port);
 		_server.grantAccess(USERNAME, PASSWORD);
-		_db = (ExtObjectContainer) Db4o.openClient(HOST, _port, USERNAME, PASSWORD);
+		_db = (ExtObjectContainer) Db4o.openClient(clientConfig, HOST, _port, USERNAME, PASSWORD);
 		
 		_provider = Db4oProviderFactory.newInstance(_db, _name);
 	}

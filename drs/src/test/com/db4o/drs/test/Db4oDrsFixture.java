@@ -20,12 +20,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.test;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.drs.db4o.Db4oProviderFactory;
-import com.db4o.drs.inside.TestableReplicationProviderInside;
-import com.db4o.ext.ExtObjectContainer;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.drs.db4o.*;
+import com.db4o.drs.inside.*;
+import com.db4o.ext.*;
 
 public class Db4oDrsFixture implements DrsFixture {
 	static final File RAM_DRIVE = new File("w:");
@@ -34,6 +35,7 @@ public class Db4oDrsFixture implements DrsFixture {
 	protected ExtObjectContainer _db;
 	protected TestableReplicationProviderInside _provider;
 	protected final File testFile;
+	private Configuration _config;
 	
 	public Db4oDrsFixture(String name) {
 		_name = name;
@@ -50,6 +52,7 @@ public class Db4oDrsFixture implements DrsFixture {
 
 	public void clean() {
 		testFile.delete();
+		_config = null;
 	}
 
 	public void close() {
@@ -66,7 +69,14 @@ public class Db4oDrsFixture implements DrsFixture {
 		//	MemoryIoAdapter memoryIoAdapter = new MemoryIoAdapter();
 		//	Db4o.configure().io(memoryIoAdapter);
 		
-		_db = Db4o.openFile(testFile.getPath()).ext();
+		_db = Db4o.openFile(config(), testFile.getPath()).ext();
 		_provider = Db4oProviderFactory.newInstance(_db, _name);
+	}
+	
+	public Configuration config() {
+		if(_config == null) {
+			_config = Db4o.newConfiguration();
+		}
+		return _config;
 	}
 }

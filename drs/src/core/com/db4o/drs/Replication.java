@@ -22,8 +22,7 @@ package com.db4o.drs;
 
 import com.db4o.ObjectContainer;
 import com.db4o.drs.db4o.Db4oProviderFactory;
-import com.db4o.drs.inside.DefaultReplicationEventListener;
-import com.db4o.drs.inside.GenericReplicationSession;
+import com.db4o.drs.inside.*;
 
 /**
  * Factory to create ReplicationSessions.
@@ -65,6 +64,9 @@ public class Replication {
 		if (listener == null) {
 			listener = new DefaultReplicationEventListener();
 		}
+		ReplicationReflector reflector = new ReplicationReflector(providerA, providerB);
+		providerA.replicationReflector(reflector);
+		providerB.replicationReflector(reflector);
 		return new GenericReplicationSession(providerA, providerB, listener);
 	}
 

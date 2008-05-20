@@ -21,16 +21,24 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.db4o.drs.test;
 
 import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.inside.GenericReplicationSession;
+import com.db4o.drs.inside.*;
 import com.db4o.drs.test.Replicated;
 
-import db4ounit.Assert;
+import db4ounit.*;
 
-public class ReplicationTraversalTest extends DrsTestCase {
+public class ReplicationTraversalTest implements TestLifeCycle {
 
-	private TransientReplicationProvider _peerA = new TransientReplicationProvider(new byte[]{0});
-	private TransientReplicationProvider _peerB = new TransientReplicationProvider(new byte[]{1});
+	private TransientReplicationProvider _peerA;
+	private TransientReplicationProvider _peerB;
 
+	public void setUp() throws Exception {
+		_peerA = new TransientReplicationProvider(new byte[]{0}, "A");
+		_peerB = new TransientReplicationProvider(new byte[]{1}, "B");
+		ReplicationReflector reflector = new ReplicationReflector(_peerA, _peerB);
+		_peerA.replicationReflector(reflector);
+		_peerB.replicationReflector(reflector);
+	}
+	
 	public void test() {
 		Replicated obj1 = new Replicated("1");
 		Replicated obj2 = new Replicated("2");
@@ -53,6 +61,9 @@ public class ReplicationTraversalTest extends DrsTestCase {
 
 		_peerA = null;
 		_peerB = null;
+	}
+
+	public void tearDown() throws Exception {
 	}
 
 }

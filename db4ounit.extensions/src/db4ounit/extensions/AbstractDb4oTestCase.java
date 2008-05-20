@@ -195,7 +195,11 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	}
 	
     protected ConfigurationSource configSource(boolean independentConfig) {
-        return (independentConfig ? (ConfigurationSource)new IndependentConfigurationSource() : new GlobalConfigurationSource());
+    	ConfigurationSource configSource = new IndependentConfigurationSource();
+    	if(!independentConfig) {
+    		configSource = new CachingConfigurationSource(configSource);
+    	}
+    	return configSource;
     }
 
     protected InternalObjectContainer stream() {

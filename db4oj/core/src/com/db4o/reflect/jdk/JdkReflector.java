@@ -82,7 +82,10 @@ public class JdkReflector implements Reflector {
 		return createClass(clazz);
 	}
 
-	protected JdkClass createClass(Class clazz) {
+	private JdkClass createClass(Class clazz) {
+		if(clazz == null) {
+			return null;
+		}
 		return new JdkClass(parent(), this, clazz);
 	}
 	

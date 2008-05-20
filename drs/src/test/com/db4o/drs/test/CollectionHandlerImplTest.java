@@ -22,21 +22,19 @@ package com.db4o.drs.test;
 
 import java.util.*;
 
-import com.db4o.drs.inside.CollectionHandlerImpl;
-import com.db4o.drs.inside.ReplicationReflector;
+import com.db4o.drs.inside.*;
 import com.db4o.reflect.Reflector;
 import db4ounit.Assert;
 
 public class CollectionHandlerImplTest extends DrsTestCase {
 
-	private final Reflector _reflector = ReplicationReflector.getInstance().reflector();
-	private final CollectionHandlerImpl _collectionHandler = new CollectionHandlerImpl();
+	private CollectionHandlerImpl _collectionHandler;
 
 	public void testVector() {
 		Vector vector = new Vector();
-		Assert.isTrue(_collectionHandler.canHandle(vector));
-		Assert.isTrue(_collectionHandler.canHandleClass(_reflector.forObject(vector)));
-		Assert.isTrue(_collectionHandler.canHandleClass(Vector.class));
+		Assert.isTrue(collectionHandler().canHandle(vector));
+		Assert.isTrue(collectionHandler().canHandleClass(replicationReflector().forObject(vector)));
+		Assert.isTrue(collectionHandler().canHandleClass(Vector.class));
 	}
 
 	/**
@@ -44,9 +42,9 @@ public class CollectionHandlerImplTest extends DrsTestCase {
 	 */
 	public void testList() {
 		List list = new LinkedList();
-		Assert.isTrue(_collectionHandler.canHandle(list));
-		Assert.isTrue(_collectionHandler.canHandleClass(_reflector.forObject(list)));
-		Assert.isTrue(_collectionHandler.canHandleClass(AbstractList.class));
+		Assert.isTrue(collectionHandler().canHandle(list));
+		Assert.isTrue(collectionHandler().canHandleClass(replicationReflector().forObject(list)));
+		Assert.isTrue(collectionHandler().canHandleClass(AbstractList.class));
 	}
 	
 	/**
@@ -54,23 +52,29 @@ public class CollectionHandlerImplTest extends DrsTestCase {
 	 */
 	public void testSet() {
 		Set set = new HashSet();
-		Assert.isTrue(_collectionHandler.canHandle(set));
-		Assert.isTrue(_collectionHandler.canHandleClass(_reflector.forObject(set)));
-		Assert.isTrue(_collectionHandler.canHandleClass(AbstractSet.class));
+		Assert.isTrue(collectionHandler().canHandle(set));
+		Assert.isTrue(collectionHandler().canHandleClass(replicationReflector().forObject(set)));
+		Assert.isTrue(collectionHandler().canHandleClass(AbstractSet.class));
 	}
 
 	public void testMap() {
 		Map map = new HashMap();
-		Assert.isTrue(_collectionHandler.canHandle(map));
-		Assert.isTrue(_collectionHandler.canHandleClass(_reflector.forObject(map)));
-		Assert.isTrue(_collectionHandler.canHandleClass(Map.class));
+		Assert.isTrue(collectionHandler().canHandle(map));
+		Assert.isTrue(collectionHandler().canHandleClass(replicationReflector().forObject(map)));
+		Assert.isTrue(collectionHandler().canHandleClass(Map.class));
 	}
 
 	public void testString() {
 		String str = "abc";
-		Assert.isTrue(!_collectionHandler.canHandle(str));
-		Assert.isTrue(!_collectionHandler.canHandleClass(_reflector.forObject(str)));
-		Assert.isTrue(!_collectionHandler.canHandleClass(String.class));
+		Assert.isTrue(!collectionHandler().canHandle(str));
+		Assert.isTrue(!collectionHandler().canHandleClass(replicationReflector().forObject(str)));
+		Assert.isTrue(!collectionHandler().canHandleClass(String.class));
 	}
-
+	
+	private CollectionHandler collectionHandler() {
+		if(_collectionHandler == null) {
+			_collectionHandler = new CollectionHandlerImpl(replicationReflector());
+		}
+		return _collectionHandler;
+	}
 }

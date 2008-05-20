@@ -32,9 +32,9 @@ import java.util.Map;
 public class MapHandler implements CollectionHandler {
 
 	private final ReflectClass _reflectMapClass;
-	private final Reflector _reflector;
+	private final ReplicationReflector _reflector;
 
-	public MapHandler(Reflector reflector) {
+	public MapHandler(ReplicationReflector reflector) {
 		_reflector = reflector;
 		_reflectMapClass = reflector.forClass(Map.class);
 	}

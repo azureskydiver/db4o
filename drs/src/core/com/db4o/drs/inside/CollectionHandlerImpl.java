@@ -20,23 +20,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside;
 
-import com.db4o.foundation.Collection4;
-import com.db4o.foundation.Iterator4;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.Reflector;
-
 import java.util.*;
+
+import com.db4o.foundation.*;
+import com.db4o.reflect.*;
 
 public class CollectionHandlerImpl implements CollectionHandler {
 
 	private final CollectionHandler _mapHandler;
-	private final Reflector _reflector;
+	private final ReplicationReflector _reflector;
 
-	public CollectionHandlerImpl() {
-		this(ReplicationReflector.getInstance().reflector());
-	}
-
-	public CollectionHandlerImpl(Reflector reflector) {
+	public CollectionHandlerImpl(ReplicationReflector reflector) {
 		_mapHandler = new MapHandler(reflector);
 		_reflector = reflector;
 	}
