@@ -658,6 +658,10 @@ public final class Platform4 {
     public static boolean isTransient(ReflectClass claxx) {
         return false;
     }
+    
+    public static boolean isTransient(Class claxx) {
+    	return false;
+    }
 
 	public static Reflector reflectorForType(Class clazz) {
 		return jdk().reflectorForType(clazz);

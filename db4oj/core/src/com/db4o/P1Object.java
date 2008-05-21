@@ -162,7 +162,8 @@ public class P1Object implements Db4oTypeImpl{
 	            stream.checkStillToSet();
 	            stream.completeTopLevelSet();
             } catch(Db4oException e) {
-            	stream.completeTopLevelSet(e);
+            	stream.completeTopLevelCall();
+				throw e;
             } finally{
             	stream.endTopLevelSet(i_trans);
             }
