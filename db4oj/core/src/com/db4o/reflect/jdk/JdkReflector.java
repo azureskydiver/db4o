@@ -82,7 +82,14 @@ public class JdkReflector implements Reflector {
 		return createClass(clazz);
 	}
 
-	private JdkClass createClass(Class clazz) {
+	/**
+	 * creates a Class reflector when passed a class.
+	 * This method is protected to allow overriding in 
+	 * cusom reflectors that override JdkReflector. 
+	 * @param clazz the class
+	 * @return the class reflector
+	 */
+	protected JdkClass createClass(Class clazz) {
 		if(clazz == null) {
 			return null;
 		}
