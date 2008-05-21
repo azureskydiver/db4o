@@ -161,7 +161,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     }
 
     public void write(WriteContext context, Object obj) {
-        if(obj == null){
+        if(obj == null || Platform4.isTransient(obj.getClass())) {
             context.writeInt(0);
             return;
         }

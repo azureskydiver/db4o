@@ -1546,8 +1546,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	        completeTopLevelSet();
 			return id;
     	} catch(Db4oException e) {
-    		completeTopLevelSet(e);
-    		return 0;
+    		completeTopLevelCall();
+			throw e;
     	} finally{
     		endTopLevelSet(trans);
     	}
@@ -1865,7 +1865,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	 * This method has to be invoked in the end of top level call to indicate
 	 * it's ended as expected
 	 */
-    private final void completeTopLevelCall() {
+    public final void completeTopLevelCall() {
     	if(_stackDepth == 1){
     		_topLevelCallCompleted = true;
     	}
@@ -1882,11 +1882,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	 */
     public final void completeTopLevelSet() {
     	completeTopLevelCall();
-    }
-    
-    public final void completeTopLevelSet(Db4oException e) {
-    	completeTopLevelCall();
-    	throw e;
     }
     
     private final void endTopLevelCall(){
