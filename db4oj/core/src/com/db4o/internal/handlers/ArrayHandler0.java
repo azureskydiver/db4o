@@ -6,7 +6,6 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
@@ -20,7 +19,7 @@ import com.db4o.marshall.*;
  */
 public class ArrayHandler0 extends ArrayHandler2 {
     
-    protected void collectIDsWith(CollectIdContext context, Closure4 closure){
+    protected void withContent(BufferContext context, Runnable runnable){
         int address = context.readInt();
         int length = context.readInt();
         if(address == 0){
@@ -29,7 +28,7 @@ public class ArrayHandler0 extends ArrayHandler2 {
         ReadBuffer temp = context.buffer();
         ByteArrayBuffer indirectedBuffer = context.container().bufferByAddress(address, length);
         context.buffer(indirectedBuffer);
-        closure.run();
+        runnable.run();
         context.buffer(temp);
     }
 

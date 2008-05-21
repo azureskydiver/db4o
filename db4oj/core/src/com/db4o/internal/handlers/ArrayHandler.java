@@ -103,10 +103,18 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
     
     public void collectIDs(final CollectIdContext context) {
-        collectIDsWith(context, new Closure4() {
-            public Object run() {
+        forEachElement(context, new Runnable() {
+            public void run() {
+                context.addId();
+            }
+        });
+    }
+    
+    protected void forEachElement(final BufferContext context, final Runnable elementRunnable){
+        withContent(context, new Runnable() {
+            public void run() {
                 if (context.buffer() == null) {
-                    return null;
+                    return;
                 }
                 if (Deploy.debug) {
                     Debug.readBegin(context, identifier());
@@ -114,12 +122,14 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
                 int elementCount = elementCount(context.transaction(), context);
                 elementCount -= reducedCountForNullBitMap(context, elementCount);
                 for (int i = 0; i < elementCount; i++) {
-                    context.addId();
+                    elementRunnable.run();
                 }
-                return null;
             }
-
         });
+    }
+    
+    protected void withContent(BufferContext context, Runnable runnable){
+        runnable.run();
     }
     
     private int reducedCountForNullBitMap(final ReadBuffer context, int count) {
@@ -139,26 +149,19 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return nullCount;
     }
     
-    protected void collectIDsWith(final CollectIdContext context, Closure4 closure){
-        context.seek(context.readInt());
-        closure.run();
-    }
-    
-    public void delete(DeleteContext context) throws Db4oIOException {
-        
-        if (context.cascadeDelete() && _handler instanceof ClassMetadata) {
-            
-            if (Deploy.debug) {
-            	Debug.readBegin(context, Const4.YAPARRAY);
-            }
-            
-            int elementCount = elementCount(context.transaction(), context);
-            elementCount -= reducedCountForNullBitMap(context, elementCount);
-			for (int i = elementCount; i > 0; i--) {
-				_handler.delete(context);
-            }
+    public void delete(final DeleteContext context) throws Db4oIOException {
+        if (! cascadeDelete(context)) {
+            return;
         }
-        
+        forEachElement((BufferContext)context, new Runnable() {
+            public void run() {
+                _handler.delete(context);
+            }
+        });
+    }
+
+    private boolean cascadeDelete(DeleteContext context) {
+        return context.cascadeDelete() && _handler instanceof ClassMetadata;
     }
 
     
@@ -235,28 +238,42 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		return Handlers4.primitiveClassReflector(_handler, reflector);
 	}
 	
-	protected Object readCreate(Transaction trans, ReadBuffer buffer, IntByRef elements) {
-		ReflectClassByRef classByRef = new ReflectClassByRef();
-		elements.value = readElementsAndClass(trans, buffer, classByRef);
-		ReflectClass clazz = newInstanceReflectClass(trans.reflector(), classByRef);
+	protected final Object readCreate(Transaction trans, ReadBuffer buffer, ArrayInfo info) {
+		readElementsAndClass(trans, buffer, info);
+		ReflectClass clazz = newInstanceReflectClass(trans.reflector(), info);
 		if(clazz == null){
 		    return null;
 		}
-		return arrayReflector(container(trans)).newInstance(clazz, elements.value);	
+		return arrayReflector(container(trans)).newInstance(clazz, info.elementCount());	
 	}
 	
-    protected ReflectClass newInstanceReflectClass(Reflector reflector, ReflectClassByRef byRef){
+	protected final ReflectClass newInstanceReflectClass(Reflector reflector, ArrayInfo info){
         if(_usePrimitiveClassReflector){
             return primitiveClassReflector(reflector); 
         }
-        return byRef.value;
-    }
-
+        return info.reflectClass();
+	}
+	
     public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes) {
         return this;
     }
 
     public void readCandidates(final QueryingReadContext context) {
+        
+// TODO: The following simplification can make the readSubCandidates method unnecessary.
+//       Currently the change makes additional tests fail with 
+//       NullableArrayHandling.enabled().        
+        
+//        final QCandidates candidates = context.candidates();
+//        forEachElement(context, new Runnable() {
+//            public void run() {
+//                QCandidate qc = candidates.readSubCandidate(context, _handler);
+//                if(qc != null){
+//                    candidates.addByIdentity(qc);
+//                }
+//            }
+//        });
+        
         readSubCandidates(context);
     }
     
@@ -264,14 +281,12 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         if(Deploy.debug){
             Debug.readBegin(context, identifier());
         }
-        IntByRef elements = new IntByRef();
-        Object arr = readCreate(context.transaction(), context, elements);
+        ArrayInfo info = new ArrayInfo();
+        Object arr = readCreate(context.transaction(), context, info);
         if(arr == null){
             return;
         }
-        int elementCount = elements.value;
-        elementCount -= reducedCountForNullBitMap(context, elementCount);
-        readSubCandidates(context, elementCount);
+        readSubCandidates(context, info.elementCount() -  reducedCountForNullBitMap(context, info.elementCount()));
     }
     
     protected void readSubCandidates(final QueryingReadContext context, int count) {
@@ -284,18 +299,18 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         }
     }
     
-    final int readElementsAndClass(Transaction trans, ReadBuffer buffer, ReflectClassByRef clazz){
-        int elements = buffer.readInt();
-        if (newerArrayFormat(elements)) {
-            clazz.value = reflectClassFromElementsEntry(trans, elements);
-            elements = buffer.readInt();
+    protected final int readElementsAndClass(Transaction trans, ReadBuffer buffer, ArrayInfo info){
+        info.elementCount(buffer.readInt());
+        if (newerArrayFormat(info.elementCount())) {
+            reflectClassFromElementsEntry(trans, info);
+            info.elementCount(buffer.readInt());
         } else {
-    		clazz.value = classReflector(container(trans));
+            info.reflectClass(classReflector(container(trans)));
         }
-        if(Debug.exceedsMaximumArrayEntries(elements, _usePrimitiveClassReflector)){
+        if(Debug.exceedsMaximumArrayEntries(info.elementCount(), _usePrimitiveClassReflector)){
             return 0;
         }
-        return elements;
+        return info.elementCount();
     }
 
     private boolean newerArrayFormat(int elements) {
@@ -324,27 +339,28 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     	return mapped;
     }
     
-	private ReflectClass reflectClassFromElementsEntry(Transaction trans,int elements) {
+	private void reflectClassFromElementsEntry(Transaction trans, ArrayInfo info) {
 
 		// TODO: Here is a low-frequency mistake, extremely unlikely.
 		// If YapClass-ID == 99999 by accident then we will get ignore.
 		
-		if(elements != Const4.IGNORE_ID){
-		    boolean primitive = false;
+		if(info.elementCount() != Const4.IGNORE_ID){
+		    info.primitive(false);
 		    
 		    if(useJavaHandling()){
-		        if(elements < Const4.PRIMITIVE){
-		            primitive = true;
-		            elements -= Const4.PRIMITIVE;
+		        if(info.elementCount() < Const4.PRIMITIVE){
+		            info.primitive(true);
+		            info.elementCount(info.elementCount() - Const4.PRIMITIVE) ;
 		        }
 		    }
-		    int classID = - elements;
+		    int classID = - info.elementCount();
 			ClassMetadata classMetadata = container(trans).classMetadataForId(classID);
 		    if (classMetadata != null) {
-		        return classReflector(trans.reflector(), classMetadata, primitive);
+		        info.reflectClass( classReflector(trans.reflector(), classMetadata, info.primitive()));
+		        return;
 		    }
 		}
-		return classReflector(container(trans));
+		info.reflectClass(classReflector(container(trans)));
 	}
 	
 	protected ReflectClass classReflector(Reflector reflector, ClassMetadata classMetadata, boolean isPrimitive){
@@ -449,10 +465,10 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
     
     private boolean handleAsByteArray(DefragmentContext context){
-        ReflectClassByRef clazzRef = new ReflectClassByRef();
         int offset = context.offset();
-        readElementsAndClass(context.transaction(), context, clazzRef);
-        boolean isByteArray = context.transaction().reflector().forClass(byte.class).equals(clazzRef.value);
+        ArrayInfo info = new ArrayInfo();
+        readElementsAndClass(context.transaction(), context, info);
+        boolean isByteArray = context.transaction().reflector().forClass(byte.class).equals(info.reflectClass());
         context.seek(offset);
         return isByteArray;
     }
@@ -479,20 +495,20 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         if (Deploy.debug) {
             Debug.readBegin(context, Const4.YAPARRAY);
         }
-        IntByRef elements = new IntByRef();
-        Object array = readCreate(context.transaction(), context, elements);
+        ArrayInfo info = new ArrayInfo();
+        Object array = readCreate(context.transaction(), context, info);
         if (array != null){
             if(handleAsByteArray(array)){
                 context.readBytes((byte[])array); // byte[] performance optimisation
             } else{
 				if (hasNullBitmap()) {
-                    BitMap4 nullBitMap = readNullBitmap(context, elements.value);                    
-                    for (int i = 0; i < elements.value; i++) {
+                    BitMap4 nullBitMap = readNullBitmap(context, info.elementCount());                    
+                    for (int i = 0; i < info.elementCount(); i++) {
                         Object obj = nullBitMap.isTrue(i) ? null :context.readObject(_handler);
                         arrayReflector(container(context)).set(array, i, obj);
                     }
             	} else {
-                    for (int i = 0; i < elements.value; i++) {
+                    for (int i = 0; i < info.elementCount(); i++) {
                         arrayReflector(container(context)).set(array, i, context.readObject(_handler));
                     }
             	}
