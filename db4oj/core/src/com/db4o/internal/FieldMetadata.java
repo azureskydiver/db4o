@@ -351,7 +351,7 @@ public class FieldMetadata implements StoredField {
         }
     }
     
-    public final void collectIDs(CollectIdContext context) throws FieldIndexException {
+    public final void collectIDs(final CollectIdContext context) throws FieldIndexException {
         if (! alive()) {
             return ;
         }
@@ -363,7 +363,13 @@ public class FieldMetadata implements StoredField {
         if (_handler instanceof ClassMetadata) {
             context.addId();
         } else if (_handler instanceof CollectIdHandler) {
-            ((CollectIdHandler) _handler).collectIDs(context);
+            SlotFormat.forHandlerVersion(context.handlerVersion()).doWithSlotIndirection(context, _handler, new Closure4() {
+                public Object run() {
+                    ((CollectIdHandler) _handler).collectIDs(context);
+                    return null;
+                }
+            });
+            
         }
     }
 
