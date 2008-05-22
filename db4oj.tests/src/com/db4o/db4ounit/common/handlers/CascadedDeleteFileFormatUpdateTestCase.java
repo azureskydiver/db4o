@@ -76,8 +76,4 @@ public class CascadedDeleteFileFormatUpdateTestCase extends FormatMigrationTestC
 		storeObject(objectContainer, ParentItem.newTestInstance());
 	}
 
-	protected String[] versionNames() {
-		return new String[] { Db4o.version().substring(5) };	
-	}
-
 }

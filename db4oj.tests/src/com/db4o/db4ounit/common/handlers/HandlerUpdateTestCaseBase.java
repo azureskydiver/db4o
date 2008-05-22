@@ -27,10 +27,6 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
         return "migrate_" + typeName() + "_" ;
     }
     
-    protected String[] versionNames() {
-    	return new String[] { Db4o.version().substring(5) };
-    }
-
     protected void store(ExtObjectContainer objectContainer) {
         Holder holder = new Holder();
         holder._values = createValues();

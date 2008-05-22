@@ -75,8 +75,4 @@ public class IxFreespaceMigrationTestCase extends FormatMigrationTestCaseBase {
 		return "migrate_freespace_ix_" ;
 	}
 
-	protected String[] versionNames() {
-		return new String[] { Db4o.version().substring(5) };
-	}
-
 }
