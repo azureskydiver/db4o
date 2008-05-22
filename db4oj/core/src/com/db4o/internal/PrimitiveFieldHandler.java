@@ -11,7 +11,6 @@ import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
-import com.db4o.typehandlers.*;
 
 
 /**
