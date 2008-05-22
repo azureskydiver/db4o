@@ -17,7 +17,7 @@ public class AllTests extends Db4oTestSuite {
             FreespaceManagerDiscardLimitTestCase.class,
             FreespaceManagerReopenTestCase.class,
             FreespaceManagerTestCase.class,
-            FreespaceMigrationTestCase.class,
+            FreespaceManagerTypeChangeTestCase.class,
 		};
     }
 }

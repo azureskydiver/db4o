@@ -40,7 +40,6 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
     
     public void free(Slot slot) {
     	// Should no longer be used: Should not happen.
-    	throw new IllegalStateException();
     }
     
     public void freeSelf() {
@@ -48,7 +47,8 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
     }
     
     public Slot getSlot(int length) {
-    	throw new IllegalStateException();
+        // implementation is no longer present, no freespace returned.
+    	return null;
 	}
 
     public void migrateTo(FreespaceManager fm) {

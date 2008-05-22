@@ -559,8 +559,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		FreespaceManager newFreespaceManager = AbstractFreespaceManager.createNew(this, configImpl().freespaceSystem());
 		newFreespaceManager.start(0);
 		
-        systemData().freespaceAddress(0);
-        systemData().freespaceSystem(configImpl().freespaceSystem());
+		systemData().freespaceSystem(configImpl().freespaceSystem());
         
         _freespaceManager = newFreespaceManager;
 		

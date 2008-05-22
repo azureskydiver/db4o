@@ -18,6 +18,7 @@ public class AllTestsJdk1_2 extends Db4oTestSuite {
 		    
 			com.db4o.db4ounit.common.defragment.jdk2only.DefragUnknownClassTestCase.class,
 			com.db4o.db4ounit.common.defragment.LegacyDatabaseDefragTestCase.class,
+			com.db4o.db4ounit.common.freespace.FreespaceManagerTypeChangeSlotCountTestCase.class,
 			com.db4o.db4ounit.common.ta.AllTests.class,
 			com.db4o.db4ounit.jre11.AllTests.class,
 			com.db4o.db4ounit.jre12.assorted.AllTests.class,
