@@ -7,13 +7,7 @@ import com.db4o.reflect.*;
 public class ArrayHandler3 extends ArrayHandler {
  	
     protected boolean isPrimitive(ReflectClass claxx) {
-        
         if(Deploy.csharp){
-            // TODO: Check if this is correct. 
-            // In this case we may get the nullable type
-            // associated with this arrayhandler, but
-            // we always want to use the non-nullable
-            // type if we read with the old arrayHandler.
             return false;
         }
         return claxx.isPrimitive();
