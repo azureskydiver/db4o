@@ -5,7 +5,6 @@ package com.db4o.internal.handlers;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
@@ -67,18 +66,6 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
 	    return elementCount(dimensions);
     }
     
-    public void readSubCandidates(QueryingReadContext context) {
-        if(Deploy.debug){
-            Debug.readBegin(context, identifier());
-        }
-        IntArrayByRef dimensions = new IntArrayByRef();
-        Object arr = readCreate(context.transaction(), context, dimensions);
-        if(arr == null){
-            return;
-        }
-        readSubCandidates(context, elementCount(dimensions.value));
-    }
-    
     protected Object readCreate(Transaction trans, ReadBuffer buffer, IntArrayByRef dimensions) {
 		ArrayInfo info = new ArrayInfo();
 		dimensions.value = readDimensions(trans, buffer, info);
@@ -107,9 +94,20 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         Object array = readCreate(context.transaction(), context, dimensions);
 
         if(array != null){
-            Object[] objects = new Object[elementCount(dimensions.value)];
-            for (int i = 0; i < objects.length; i++) {
-                objects[i] = context.readObject(delegateTypeHandler());
+            int elementCount = elementCount(dimensions.value);
+            Object[] objects = new Object[elementCount];
+            
+            if (hasNullBitmap()) {
+                BitMap4 nullBitMap = readNullBitmap(context, elementCount);                    
+                for (int i = 0; i < elementCount; i++) {
+                    if (nullBitMap.isFalse(i)){
+                        objects[i] = context.readObject(delegateTypeHandler());    
+                    }
+                }
+            } else {
+                for (int i = 0; i < objects.length; i++) {
+                    objects[i] = context.readObject(delegateTypeHandler());
+                }
             }
             arrayReflector(container(context)).shape(objects, 0, array, dimensions.value, 0);
         }
@@ -137,9 +135,29 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         }
         
         Iterator4 objects = allElements(container(context), obj);
-        while (objects.moveNext()) {
-            context.writeObject(delegateTypeHandler(), objects.current());
+        
+        if (hasNullBitmap()) {
+            int elementCount = elementCount(dim);
+            BitMap4 nullBitMap = new BitMap4(elementCount);
+            ReservedBuffer nullBitMapBuffer = context.reserve(nullBitMap.marshalledLength());
+            int currentElement = 0;
+            while (objects.moveNext()) {
+                Object current = objects.current();
+                if(current == null){
+                    nullBitMap.setTrue(currentElement);
+                }else{
+                    context.writeObject(delegateTypeHandler(), current);
+                }
+                currentElement++;
+            }
+            nullBitMapBuffer.writeBytes(nullBitMap.bytes());
+        } else {
+            while (objects.moveNext()) {
+                context.writeObject(delegateTypeHandler(), objects.current());
+            }
         }
+
+        
         
         if (Deploy.debug) {
             Debug.writeEnd(context);

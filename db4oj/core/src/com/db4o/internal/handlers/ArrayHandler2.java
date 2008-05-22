@@ -11,6 +11,9 @@ import com.db4o.internal.*;
  */
 public class ArrayHandler2 extends ArrayHandler3 {
     
+    /**
+     * FIXME: We are not changing any behaviour, why do we override?
+     */
     protected int preparePayloadRead(DefragmentContext context) {
 		return context.offset();
     }

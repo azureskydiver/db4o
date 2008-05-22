@@ -259,34 +259,15 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
 
     public void readCandidates(final QueryingReadContext context) {
-        
-// TODO: The following simplification can make the readSubCandidates method unnecessary.
-//       Currently the change makes additional tests fail with 
-//       NullableArrayHandling.enabled().        
-        
-//        final QCandidates candidates = context.candidates();
-//        forEachElement(context, new Runnable() {
-//            public void run() {
-//                QCandidate qc = candidates.readSubCandidate(context, _handler);
-//                if(qc != null){
-//                    candidates.addByIdentity(qc);
-//                }
-//            }
-//        });
-        
-        readSubCandidates(context);
-    }
-    
-    public void readSubCandidates(final QueryingReadContext context) {
-        if(Deploy.debug){
-            Debug.readBegin(context, identifier());
-        }
-        ArrayInfo info = new ArrayInfo();
-        Object arr = readCreate(context.transaction(), context, info);
-        if(arr == null){
-            return;
-        }
-        readSubCandidates(context, info.elementCount() -  reducedCountForNullBitMap(context, info.elementCount()));
+        final QCandidates candidates = context.candidates();
+        forEachElement(context, new Runnable() {
+            public void run() {
+                QCandidate qc = candidates.readSubCandidate(context, _handler);
+                if(qc != null){
+                    candidates.addByIdentity(qc);
+                }
+            }
+        });
     }
     
     protected void readSubCandidates(final QueryingReadContext context, int count) {
@@ -318,7 +299,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
 
    final protected int mapElementsEntry(DefragmentContext context, int orig) {
-    	if(orig>=0||orig==Const4.IGNORE_ID) {
+    	if( orig>=0 || orig==Const4.IGNORE_ID ) {
     		return orig;
     	}
     	
@@ -429,6 +410,8 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     private void defragIDs(DefragmentContext context) {
     	int offset= preparePayloadRead(context);
         defrag1(context);
+        
+        // FIXME: Shouldn't we be beyound the array slot now?
         context.seek(offset);
     }
     
@@ -436,7 +419,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     	return context.offset();
     }
 
-    public void defrag1(DefragmentContext context) {
+    public final void defrag1(DefragmentContext context) {
 		if (Deploy.debug) {
 			Debug.readBegin(context, Const4.YAPARRAY);
 		}
@@ -520,7 +503,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return array;
     }
 
-	private BitMap4 readNullBitmap(ReadBuffer context, int length) {
+	protected BitMap4 readNullBitmap(ReadBuffer context, int length) {
 	    return context.readBitMap(length);
 	}
     
@@ -563,7 +546,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		context.writeBytes(bitMap.bytes());
 	}
 
-    private BitMap4 nullItemsMap(ReflectArray reflector, Object array) {
+    protected BitMap4 nullItemsMap(ReflectArray reflector, Object array) {
 		int arrayLength = reflector.getLength(array);
     	BitMap4 nullBitMap = new BitMap4(arrayLength);
     	for (int i = 0; i < arrayLength; i++) {
