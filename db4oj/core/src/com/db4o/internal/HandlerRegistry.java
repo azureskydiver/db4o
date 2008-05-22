@@ -230,6 +230,9 @@ public final class HandlerRegistry {
         
         MultidimensionalArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler();
         registerHandlerVersion(multidimensionalArrayHandler, 0, new MultidimensionalArrayHandler0());
+        if(NullableArrayHandling.enabled()){
+            registerHandlerVersion(multidimensionalArrayHandler, 3, new MultidimensionalArrayHandler3());
+        }
         
         PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler();
         registerHandlerVersion(primitiveFieldHandler, 0, primitiveFieldHandler);  // same handler, but making sure versions get cascaded

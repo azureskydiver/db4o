@@ -10,7 +10,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class MultidimensionalArrayHandler0 extends MultidimensionalArrayHandler {
+public class MultidimensionalArrayHandler0 extends MultidimensionalArrayHandler3 {
 
     public Object read(ReadContext readContext) {
         InternalReadContext context = (InternalReadContext) readContext;

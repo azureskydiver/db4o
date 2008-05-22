@@ -33,6 +33,7 @@ public class MockWriteContext extends MockMarshallingContext implements WriteCon
                 seek(currentOffset);
             }
         };
+        seek(offset() + length);
         return reservedBuffer;
     }
     

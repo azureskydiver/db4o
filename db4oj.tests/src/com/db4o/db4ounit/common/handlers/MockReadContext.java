@@ -25,7 +25,9 @@ public class MockReadContext extends MockMarshallingContext implements ReadConte
     }
 
     public BitMap4 readBitMap(int bitCount) {
-        throw new NotImplementedException();
+        BitMap4 map = new BitMap4(_current._buffer, _current._offset, bitCount);
+        _current.seek(_current.offset() + map.marshalledLength());
+        return map;
     }
 
 }
