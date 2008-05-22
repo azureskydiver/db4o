@@ -918,6 +918,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if(hideClassForExternalUse(claxx)){
             return null;
         }
+        if (Platform4.isTransient(claxx)) {
+        	return null;
+        }
         TypeHandler4 typeHandler = _handlers.typeHandlerForClass(claxx);
         if (typeHandler != null) {
             return typeHandler;
