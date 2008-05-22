@@ -5,7 +5,6 @@ package com.db4o.internal.events;
 import com.db4o.events.*;
 import com.db4o.ext.Db4oException;
 import com.db4o.foundation.*;
-import com.db4o.internal.ReflectException;
 
 /**
  * @exclude
