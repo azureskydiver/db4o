@@ -46,13 +46,20 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             FloatHandlerUpdateTestCase.class,
             IntHandlerUpdateTestCase.class,
             InterfaceHandlerUpdateTestCase.class,
-            IxFreespaceMigrationTestCase.class,
             LongHandlerUpdateTestCase.class,
             MultiDimensionalArrayHandlerUpdateTestCase.class,
             NestedArrayUpdateTestCase.class,
             ObjectArrayUpdateTestCase.class,
             ShortHandlerUpdateTestCase.class,
-            StringHandlerUpdateTestCase.class, 
+            StringHandlerUpdateTestCase.class,
+            
+            // Order to run freespace tests last is
+            // deliberate. Global configuration Db4o.configure()
+            // is changed in the #setUp call and reused.
+            
+            IxFreespaceMigrationTestCase.class,
+            FreespaceManagerMigrationTestCase.class,
+
 		};
 	}
 
