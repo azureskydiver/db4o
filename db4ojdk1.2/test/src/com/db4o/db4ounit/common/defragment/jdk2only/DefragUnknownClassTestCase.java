@@ -44,11 +44,12 @@ public class DefragUnknownClassTestCase implements TestLifeCycle {
 		defragMethod.invoke(null, new Object[]{});
 	}
 
-	private static class DefragStarter {
+	public static class DefragStarter {
 		public static void defrag() throws IOException {
 			DefragmentConfig defragConfig = new DefragmentConfig(FILENAME);
 			defragConfig.db4oConfig(config());
 			defragConfig.forceBackupDelete(true);
+			defragConfig.readOnly(false);
 			Defragment.defrag(defragConfig);
 		}
 	}
