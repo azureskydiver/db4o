@@ -179,13 +179,19 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         _db4oHeaderVersion = VersionServices.fileHeaderVersion(testFile); 
     }
     
+    
     protected int db4oMajorVersion(){
-        return new Integer (_db4oVersion.substring(0, 1)).intValue();
+        if(_db4oVersion != null){
+            return new Integer (_db4oVersion.substring(0, 1)).intValue();
+        }
+        return new Integer(Db4o.version().substring(5, 6)).intValue();
     }
     
     private byte _db4oHeaderVersion;
     
-    protected abstract String[] versionNames();
+    protected String[] versionNames(){
+        return new String[] { Db4o.version().substring(5) };
+    }
     
     protected abstract String fileNamePrefix();
 
