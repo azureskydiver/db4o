@@ -119,7 +119,9 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
                 if (Deploy.debug) {
                     Debug.readBegin(context, identifier());
                 }
-                int elementCount = elementCount(context.transaction(), context);
+                ArrayInfo info = newArrayInfo();
+                readInfo(context.transaction(), context, info);
+                int elementCount = info.elementCount();
                 elementCount -= reducedCountForNullBitMap(context, elementCount);
                 for (int i = 0; i < elementCount; i++) {
                     elementRunnable.run();
@@ -183,15 +185,6 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         
     }
 
-    /** @param trans */
-    public int elementCount(Transaction trans, ReadBuffer reader) {
-        int typeOrLength = reader.readInt();
-        if (typeOrLength >= 0) {
-            return typeOrLength;
-        }
-        return reader.readInt();
-    }
-
     public boolean equals(Object obj) {
         if (! (obj instanceof ArrayHandler)) {
             return false;
@@ -238,8 +231,8 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		return Handlers4.primitiveClassReflector(_handler, reflector);
 	}
 	
-	protected final Object readCreate(Transaction trans, ReadBuffer buffer, ArrayInfo info) {
-		readElementsAndClass(trans, buffer, info);
+	protected Object readCreate(Transaction trans, ReadBuffer buffer, ArrayInfo info) {
+		readInfo(trans, buffer, info);
 		ReflectClass clazz = newInstanceReflectClass(trans.reflector(), info);
 		if(clazz == null){
 		    return null;
@@ -280,18 +273,26 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         }
     }
     
-    protected final int readElementsAndClass(Transaction trans, ReadBuffer buffer, ArrayInfo info){
-        info.elementCount(buffer.readInt());
-        if (newerArrayFormat(info.elementCount())) {
-            reflectClassFromElementsEntry(trans, info);
-            info.elementCount(buffer.readInt());
+    protected final void readInfo(Transaction trans, ReadBuffer buffer, ArrayInfo info){
+        int classID = buffer.readInt();
+        if (newerArrayFormat(classID)) {
+            reflectClassFromElementsEntry(trans, info, classID);
+            readDimensions(info, buffer);
         } else {
             info.reflectClass(classReflector(container(trans)));
+            readDimensionsOldFormat(buffer, info, classID);
         }
         if(Debug.exceedsMaximumArrayEntries(info.elementCount(), _usePrimitiveClassReflector)){
-            return 0;
+            info.elementCount(0);
         }
-        return info.elementCount();
+    }
+
+    protected void readDimensionsOldFormat(ReadBuffer buffer, ArrayInfo info, int classID) {
+        info.elementCount(classID);
+    }
+
+    protected void readDimensions(ArrayInfo info, ReadBuffer buffer) {
+        info.elementCount(buffer.readInt());
     }
 
     private boolean newerArrayFormat(int elements) {
@@ -320,21 +321,21 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     	return mapped;
     }
     
-	private void reflectClassFromElementsEntry(Transaction trans, ArrayInfo info) {
+	private void reflectClassFromElementsEntry(Transaction trans, ArrayInfo info, int classID) {
 
 		// TODO: Here is a low-frequency mistake, extremely unlikely.
-		// If YapClass-ID == 99999 by accident then we will get ignore.
+		// If classID == 99999 by accident then we will get ignore.
 		
-		if(info.elementCount() != Const4.IGNORE_ID){
+		if(classID != Const4.IGNORE_ID){
 		    info.primitive(false);
 		    
 		    if(useJavaHandling()){
-		        if(info.elementCount() < Const4.PRIMITIVE){
+		        if(classID < Const4.PRIMITIVE){
 		            info.primitive(true);
-		            info.elementCount(info.elementCount() - Const4.PRIMITIVE) ;
+		            classID -= Const4.PRIMITIVE;
 		        }
 		    }
-		    int classID = - info.elementCount();
+		    classID = - classID;
 			ClassMetadata classMetadata = container(trans).classMetadataForId(classID);
 		    if (classMetadata != null) {
 		        info.reflectClass( classReflector(trans.reflector(), classMetadata, info.primitive()));
@@ -379,8 +380,25 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             // Discovered on adding the primitives
             return Const4.IGNORE_ID;
         }
+        
+        
         int classID = classMetadata.getID();
         if(primitive){
+            classID -= Const4.PRIMITIVE;
+        }
+        return -classID;
+    }
+    
+    private final int classID(ObjectContainerBase container, ArrayInfo info){
+        ClassMetadata classMetadata = container.produceClassMetadata(info.reflectClass());
+        if (classMetadata == null) {
+            // TODO: This one is a terrible low-frequency blunder !!!
+            // If YapClass-ID == 99999 then we will get IGNORE back.
+            // Discovered on adding the primitives
+            return Const4.IGNORE_ID;
+        }
+        int classID = classMetadata.getID();
+        if(info.primitive()){
             classID -= Const4.PRIMITIVE;
         }
         return -classID;
@@ -449,8 +467,8 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     
     private boolean handleAsByteArray(DefragmentContext context){
         int offset = context.offset();
-        ArrayInfo info = new ArrayInfo();
-        readElementsAndClass(context.transaction(), context, info);
+        ArrayInfo info = newArrayInfo();
+        readInfo(context.transaction(), context, info);
         boolean isByteArray = context.transaction().reflector().forClass(byte.class).equals(info.reflectClass());
         context.seek(offset);
         return isByteArray;
@@ -476,31 +494,40 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 	
     public Object read(ReadContext context) {
         if (Deploy.debug) {
-            Debug.readBegin(context, Const4.YAPARRAY);
+            Debug.readBegin(context, identifier());
         }
-        ArrayInfo info = new ArrayInfo();
+        ArrayInfo info = newArrayInfo();
         Object array = readCreate(context.transaction(), context, info);
-        if (array != null){
-            if(handleAsByteArray(array)){
-                context.readBytes((byte[])array); // byte[] performance optimisation
-            } else{
-				if (hasNullBitmap()) {
-                    BitMap4 nullBitMap = readNullBitmap(context, info.elementCount());                    
-                    for (int i = 0; i < info.elementCount(); i++) {
-                        Object obj = nullBitMap.isTrue(i) ? null :context.readObject(_handler);
-                        arrayReflector(container(context)).set(array, i, obj);
-                    }
-            	} else {
-                    for (int i = 0; i < info.elementCount(); i++) {
-                        arrayReflector(container(context)).set(array, i, context.readObject(_handler));
-                    }
-            	}
-            }
-        }
+		readElements(context, info, array);
         if (Deploy.debug) {
             Debug.readEnd(context);
         }
         return array;
+    }
+    
+    protected ArrayInfo newArrayInfo() {
+        return new ArrayInfo();
+    }
+
+    private void readElements(ReadContext context, ArrayInfo info, Object array) {
+        if (array == null){
+            return;
+        }
+        if(handleAsByteArray(array)){
+            context.readBytes((byte[])array); // byte[] performance optimisation
+            return;
+        }
+        if (hasNullBitmap()) {
+            BitMap4 nullBitMap = readNullBitmap(context, info.elementCount());                    
+            for (int i = 0; i < info.elementCount(); i++) {
+                Object obj = nullBitMap.isTrue(i) ? null :context.readObject(_handler);
+                arrayReflector(container(context)).set(array, i, obj);
+            }
+    	} else {
+            for (int i = 0; i < info.elementCount(); i++) {
+                arrayReflector(container(context)).set(array, i, context.readObject(_handler));
+            }
+    	}
     }
 
 	protected BitMap4 readNullBitmap(ReadBuffer context, int length) {
@@ -516,23 +543,23 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         if (Deploy.debug) {
             Debug.writeBegin(context, Const4.YAPARRAY);
         }
-        int classID = classID(container(context), obj);
-        context.writeInt(classID);
-        int elementCount = arrayReflector(container(context)).getLength(obj);
-        context.writeInt(elementCount);
+        ArrayInfo info = new ArrayInfo();
+        analyze(container(context), obj, info);
+        writeInfo(context, info);
+        
         if(handleAsByteArray(obj)){
             context.writeBytes((byte[])obj);  // byte[] performance optimisation
         }else{        	
             if (hasNullBitmap()) {
                 BitMap4 nullItems = nullItemsMap(arrayReflector(container(context)), obj);
                 writeNullBitmap(context, nullItems);
-                for (int i = 0; i < elementCount; i++) {
+                for (int i = 0; i < info.elementCount(); i++) {
                     if (!nullItems.isTrue(i)) {
                         context.writeObject(_handler, arrayReflector(container(context)).get(obj, i));
                     }
                 }
             } else {
-                for (int i = 0; i < elementCount; i++) {
+                for (int i = 0; i < info.elementCount(); i++) {
                     context.writeObject(_handler, arrayReflector(container(context)).get(obj, i));
                 }
             }
@@ -542,7 +569,36 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         }
     }
 
-	private void writeNullBitmap(WriteBuffer context, BitMap4 bitMap) {
+	protected void writeInfo(WriteContext context, ArrayInfo info) {
+	    context.writeInt(classID(container(context), info));
+	    writeDimensions(context, info);
+    }
+
+    protected void writeDimensions(WriteContext context, ArrayInfo info) {
+        context.writeInt(info.elementCount());
+    }
+
+    protected void analyze(ObjectContainerBase container, Object obj, ArrayInfo info) {
+	    
+        ReflectClass claxx = componentType(container, obj);
+        
+        ClassMetadata classMetadata = container.produceClassMetadata(claxx);
+        boolean primitive = isPrimitive(container.reflector(), claxx, classMetadata); 
+
+        if(primitive){
+            claxx = classMetadata.classReflector();
+        }
+        
+        info.primitive(primitive);
+        info.reflectClass(claxx);
+        analyzeDimensions(container, obj, info);
+    }
+    
+    protected void analyzeDimensions(ObjectContainerBase container, Object obj, ArrayInfo info){
+        info.elementCount(arrayReflector(container).getLength(obj));
+    }
+
+    private void writeNullBitmap(WriteBuffer context, BitMap4 bitMap) {
 		context.writeBytes(bitMap.bytes());
 	}
 

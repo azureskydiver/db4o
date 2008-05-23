@@ -37,6 +37,9 @@ public class ArrayHandler0 extends ArrayHandler2 {
     	context.defragmentRecommended();
     }
     
+    /**
+     * TODO: Consider to remove, Parent should take care.
+     */
     public void readCandidates(QueryingReadContext context) throws Db4oIOException {
         Transaction transaction = context.transaction();
         QCandidates candidates = context.candidates();
@@ -44,8 +47,9 @@ public class ArrayHandler0 extends ArrayHandler2 {
         if(Deploy.debug){
             arrayBuffer.readBegin(identifier());
         }
-        int count = elementCount(transaction, arrayBuffer);
-        for (int i = 0; i < count; i++) {
+        ArrayInfo info = newArrayInfo();
+        readInfo(transaction, arrayBuffer, info);
+        for (int i = 0; i < info.elementCount(); i++) {
             candidates.addByIdentity(new QCandidate(candidates, null, arrayBuffer.readInt(), true));
         }
     }

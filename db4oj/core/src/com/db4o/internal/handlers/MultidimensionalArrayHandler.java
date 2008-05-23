@@ -35,10 +35,6 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         return new ArrayIterator4(flat);
 	}
 
-    public final int elementCount(Transaction trans, ReadBuffer buffer) {
-        return elementCount(readDimensions(trans, buffer, new ArrayInfo()));
-    }
-
     protected static final int elementCount(int[] a_dim) {
         int elements = a_dim[0];
         for (int i = 1; i < a_dim.length; i++) {
@@ -49,6 +45,10 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
 
     public final byte identifier() {
         return Const4.YAPARRAYN;
+    }
+    
+    protected ArrayInfo newArrayInfo() {
+        return new MultidimensionalArrayInfo();
     }
 
     public int ownLength(ObjectContainerBase container, Object obj){
@@ -66,40 +66,48 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
 	    return elementCount(dimensions);
     }
     
-    protected Object readCreate(Transaction trans, ReadBuffer buffer, IntArrayByRef dimensions) {
-		ArrayInfo info = new ArrayInfo();
-		dimensions.value = readDimensions(trans, buffer, info);
+    protected Object readCreate(Transaction trans, ReadBuffer buffer, ArrayInfo info) {
+        readInfo(trans, buffer, info);
 		ReflectClass clazz = newInstanceReflectClass(trans.reflector(), info);
 		if(clazz == null){
 		    return null;
 		}
-		return arrayReflector(container(trans)).newInstance(clazz, dimensions.value);
+		return arrayReflector(container(trans)).newInstance(clazz, ((MultidimensionalArrayInfo)info).dimensions());
     }
     
-    private final int[] readDimensions(Transaction trans, ReadBuffer buffer, ArrayInfo info) {
-        int[] dim = new int[readElementsAndClass(trans, buffer, info)];
+    protected void readDimensions(ArrayInfo info, ReadBuffer buffer) {
+        readDimensions(info, buffer, buffer.readInt());
+    }
+
+    private void readDimensions(ArrayInfo info, ReadBuffer buffer, int dimensionCount) {
+        int[] dim = new int[dimensionCount];
         for (int i = 0; i < dim.length; i++) {
             dim[i] = buffer.readInt();
         }
-        return dim;
+        ((MultidimensionalArrayInfo)info).dimensions(dim);
+        info.elementCount(elementCount(dim));
+    }
+    
+    protected void readDimensionsOldFormat(ReadBuffer buffer, ArrayInfo info, int classID) {
+        readDimensions(info, buffer, classID);
     }
 
     public Object read(ReadContext context) {
         
         if (Deploy.debug) {
-            Debug.readBegin(context, Const4.YAPARRAYN);
+            Debug.readBegin(context, identifier());
         }
+        
+        MultidimensionalArrayInfo info = (MultidimensionalArrayInfo) newArrayInfo();
             
-        IntArrayByRef dimensions = new IntArrayByRef();
-        Object array = readCreate(context.transaction(), context, dimensions);
+        Object array = readCreate(context.transaction(), context, info);
 
         if(array != null){
-            int elementCount = elementCount(dimensions.value);
-            Object[] objects = new Object[elementCount];
+            Object[] objects = new Object[info.elementCount()];
             
             if (hasNullBitmap()) {
-                BitMap4 nullBitMap = readNullBitmap(context, elementCount);                    
-                for (int i = 0; i < elementCount; i++) {
+                BitMap4 nullBitMap = readNullBitmap(context, info.elementCount());                    
+                for (int i = 0; i < info.elementCount(); i++) {
                     if (nullBitMap.isFalse(i)){
                         objects[i] = context.readObject(delegateTypeHandler());    
                     }
@@ -109,7 +117,7 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
                     objects[i] = context.readObject(delegateTypeHandler());
                 }
             }
-            arrayReflector(container(context)).shape(objects, 0, array, dimensions.value, 0);
+            arrayReflector(container(context)).shape(objects, 0, array, info.dimensions() , 0);
         }
         
         if (Deploy.debug) {
@@ -118,27 +126,28 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         
         return array;
     }
+    
+    protected void writeDimensions(WriteContext context, ArrayInfo info) {
+        int[] dim = ((MultidimensionalArrayInfo)info).dimensions();
+        context.writeInt(dim.length);
+        for (int i = 0; i < dim.length; i++) {
+            context.writeInt(dim[i]);
+        }
+    }
 
     public void write(WriteContext context, Object obj) {
         
         if (Deploy.debug) {
             Debug.writeBegin(context, Const4.YAPARRAYN);
         }
-        
-        int classID = classID(container(context), obj);
-        context.writeInt(classID);
-        
-        int[] dim = arrayReflector(container(context)).dimensions(obj);
-        context.writeInt(dim.length);
-        for (int i = 0; i < dim.length; i++) {
-            context.writeInt(dim[i]);
-        }
+        ArrayInfo info = newArrayInfo();
+        analyze(container(context), obj, info);
+        writeInfo(context, info);
         
         Iterator4 objects = allElements(container(context), obj);
         
         if (hasNullBitmap()) {
-            int elementCount = elementCount(dim);
-            BitMap4 nullBitMap = new BitMap4(elementCount);
+            BitMap4 nullBitMap = new BitMap4(info.elementCount());
             ReservedBuffer nullBitMapBuffer = context.reserve(nullBitMap.marshalledLength());
             int currentElement = 0;
             while (objects.moveNext()) {
@@ -156,17 +165,20 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
                 context.writeObject(delegateTypeHandler(), objects.current());
             }
         }
-
-        
         
         if (Deploy.debug) {
             Debug.writeEnd(context);
         }
     }
     
+    protected void analyzeDimensions(ObjectContainerBase container, Object obj, ArrayInfo info){
+        int[] dim = arrayReflector(container).dimensions(obj);
+        ((MultidimensionalArrayInfo)info).dimensions(dim);
+        info.elementCount(elementCount(dim));
+    }
+
     public TypeHandler4 genericTemplate() {
         return new MultidimensionalArrayHandler();
     }
-    
 
 }
