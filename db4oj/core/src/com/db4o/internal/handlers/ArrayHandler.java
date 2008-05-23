@@ -366,12 +366,13 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     protected final int classID(ObjectContainerBase container, Object obj){
         ReflectClass claxx = componentType(container, obj);
         
-        boolean primitive = isPrimitive(claxx); 
-        
-        if(primitive){
-            claxx = container.produceClassMetadata(claxx).classReflector();
-        }
         ClassMetadata classMetadata = container.produceClassMetadata(claxx);
+        boolean primitive = isPrimitive(container.reflector(), claxx, classMetadata); 
+
+        if(primitive){
+            claxx = classMetadata.classReflector();
+        }
+        classMetadata = container.produceClassMetadata(claxx);
         if (classMetadata == null) {
             // TODO: This one is a terrible low-frequency blunder !!!
             // If YapClass-ID == 99999 then we will get IGNORE back.
@@ -385,13 +386,12 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return -classID;
     }
 
-	protected boolean isPrimitive(ReflectClass claxx) {
-	    if(NullableArrayHandling.enabled()){
-	        return claxx.isPrimitive();
+	protected boolean isPrimitive(Reflector reflector, ReflectClass claxx, ClassMetadata classMetadata) {
+	    if(NullableArrayHandling.disabled()){
+	        if(Deploy.csharp){
+	            return false;
+	        }
 	    }
-        if(Deploy.csharp){
-            return false;
-        }
         return claxx.isPrimitive();
     }
 
