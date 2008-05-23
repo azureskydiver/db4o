@@ -35,7 +35,7 @@ import com.db4o.types.*;
 public abstract class PartialObjectContainer implements TransientClass, Internal4, ObjectContainerSpec, InternalObjectContainer {
 
     // Collection of all classes
-    // if (i_classCollection == null) the engine is down.
+    // if (_classCollection == null) the engine is down.
     protected ClassMetadataRepository      _classCollection;
     
     protected ClassInfoHelper _classMetaHelper = new ClassInfoHelper();
