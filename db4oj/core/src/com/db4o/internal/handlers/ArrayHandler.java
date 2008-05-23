@@ -82,7 +82,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             return new NonDescendingActivationDepth(depth.mode());
         }
         ClassMetadata cm = classMetaDataForObject(container, obj);
-        if(cm.isPrimitive()){
+        if(cm == null || cm.isPrimitive()){
             return new NonDescendingActivationDepth(depth.mode());
         }
         return depth.descend(cm);
