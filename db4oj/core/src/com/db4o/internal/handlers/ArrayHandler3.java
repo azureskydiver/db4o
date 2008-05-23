@@ -6,9 +6,9 @@ import com.db4o.reflect.*;
 
 public class ArrayHandler3 extends ArrayHandler {
  	
-    protected boolean isPrimitive(ReflectClass claxx) {
+    protected boolean isPrimitive(Reflector reflector, ReflectClass claxx, ClassMetadata classMetadata) {
         if(Deploy.csharp){
-            return false;
+            return Handlers4.primitiveClassReflector(classMetadata, reflector) != null;
         }
         return claxx.isPrimitive();
     }
