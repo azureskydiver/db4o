@@ -38,15 +38,15 @@ public class DefragUnknownClassTestCase implements TestLifeCycle {
 	}
 
 	private void defragment() throws Exception {
-		ExcludingClassLoader loader = new ExcludingClassLoader(getClass().getClassLoader(), new Class[]{ Unknown.class });
+		ClassLoader loader = new ExcludingClassLoader(getClass().getClassLoader(), new Class[]{ Unknown.class });
 		Class starterClazz = loader.loadClass(DefragStarter.class.getName());
-		Method defragMethod = starterClazz.getDeclaredMethod("defrag", new Class[]{});
-		defragMethod.invoke(null, new Object[]{});
+		Method defragMethod = starterClazz.getDeclaredMethod("defrag", new Class[]{ String.class });
+		defragMethod.invoke(null, new Object[]{ FILENAME });
 	}
 
 	public static class DefragStarter {
-		public static void defrag() throws IOException {
-			DefragmentConfig defragConfig = new DefragmentConfig(FILENAME);
+		public static void defrag(String fileName) throws IOException {
+			DefragmentConfig defragConfig = new DefragmentConfig(fileName);
 			defragConfig.db4oConfig(config());
 			defragConfig.forceBackupDelete(true);
 			defragConfig.readOnly(false);

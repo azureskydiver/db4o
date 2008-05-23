@@ -109,6 +109,7 @@ public class Defragment {
 	 *             if the original file cannot be moved to the backup location
 	 */
 	public static void defrag(DefragmentConfig config, DefragmentListener listener) throws IOException {
+		ensureFileExists(config.origPath());
 		File backupFile = new File(config.backupPath());
 		if (backupFile.exists()) {
 			if (!config.forceBackupDelete()) {
@@ -149,6 +150,14 @@ public class Defragment {
 		}
 		else {
 			listener.notifyDefragmentInfo(new DefragmentInfo("No database identity found in original file."));
+		}
+	}
+
+	private static void ensureFileExists(String origPath) throws IOException {
+		File file = new File(origPath);
+		if(!file.exists() || file.length() == 0) {
+			throw new IOException("Source database file '" + origPath
+					+ "' does not exist or is empty.");			
 		}
 	}
 

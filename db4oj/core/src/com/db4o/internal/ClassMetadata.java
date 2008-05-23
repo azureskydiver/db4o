@@ -1486,9 +1486,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     boolean readThis() {
-        if (stateUnread()) {
+    	boolean stateUnread = stateUnread();
+        if (stateUnread) {
             setStateOK();
             setStateClean();
+        }
+        if (stateUnread || stateDead()) {
             forceRead();
             return true;
         }
