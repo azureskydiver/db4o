@@ -66,13 +66,8 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
 	    return elementCount(dimensions);
     }
     
-    protected Object readCreate(Transaction trans, ReadBuffer buffer, ArrayInfo info) {
-        readInfo(trans, buffer, info);
-		ReflectClass clazz = newInstanceReflectClass(trans.reflector(), info);
-		if(clazz == null){
-		    return null;
-		}
-		return arrayReflector(container(trans)).newInstance(clazz, ((MultidimensionalArrayInfo)info).dimensions());
+    protected Object newInstance(Transaction trans, ArrayInfo info, ReflectClass clazz) {
+        return arrayReflector(container(trans)).newInstance(clazz, ((MultidimensionalArrayInfo)info).dimensions());
     }
     
     protected void readDimensions(ArrayInfo info, ReadBuffer buffer) {
@@ -92,39 +87,13 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         readDimensions(info, buffer, classID);
     }
 
-    public Object read(ReadContext context) {
-        
-        if (Deploy.debug) {
-            Debug.readBegin(context, identifier());
+    protected void readElements(ReadContext context, ArrayInfo info, Object array) {
+        if(array == null){
+            return;
         }
-        
-        MultidimensionalArrayInfo info = (MultidimensionalArrayInfo) newArrayInfo();
-            
-        Object array = readCreate(context.transaction(), context, info);
-
-        if(array != null){
-            Object[] objects = new Object[info.elementCount()];
-            
-            if (hasNullBitmap()) {
-                BitMap4 nullBitMap = readNullBitmap(context, info.elementCount());                    
-                for (int i = 0; i < info.elementCount(); i++) {
-                    if (nullBitMap.isFalse(i)){
-                        objects[i] = context.readObject(delegateTypeHandler());    
-                    }
-                }
-            } else {
-                for (int i = 0; i < objects.length; i++) {
-                    objects[i] = context.readObject(delegateTypeHandler());
-                }
-            }
-            arrayReflector(container(context)).shape(objects, 0, array, info.dimensions() , 0);
-        }
-        
-        if (Deploy.debug) {
-            Debug.readEnd(context);
-        }
-        
-        return array;
+        Object[] objects = new Object[info.elementCount()];
+        readInto(context, info, objects);
+        arrayReflector(container(context)).shape(objects, 0, array, ((MultidimensionalArrayInfo)info).dimensions() , 0);
     }
     
     protected void writeDimensions(WriteContext context, ArrayInfo info) {
@@ -135,15 +104,7 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         }
     }
 
-    public void write(WriteContext context, Object obj) {
-        
-        if (Deploy.debug) {
-            Debug.writeBegin(context, Const4.YAPARRAYN);
-        }
-        ArrayInfo info = newArrayInfo();
-        analyze(container(context), obj, info);
-        writeInfo(context, info);
-        
+    protected void writeElements(WriteContext context, Object obj, ArrayInfo info) {
         Iterator4 objects = allElements(container(context), obj);
         
         if (hasNullBitmap()) {
@@ -166,9 +127,6 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
             }
         }
         
-        if (Deploy.debug) {
-            Debug.writeEnd(context);
-        }
     }
     
     protected void analyzeDimensions(ObjectContainerBase container, Object obj, ArrayInfo info){
