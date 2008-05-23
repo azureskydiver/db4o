@@ -17,42 +17,34 @@ public class ArrayInfo {
     private boolean _nullable;
     
     private ReflectClass _reflectClass;
-
     
     public int elementCount() {
         return _elementCount;
     }
-
     
     public void elementCount(int count) {
         _elementCount = count;
     }
-
     
     public boolean primitive() {
         return _primitive;
     }
-
     
     public void primitive(boolean flag) {
         _primitive = flag;
     }
-
     
     public boolean nullable() {
         return _nullable;
     }
-
     
     public void nullable(boolean flag) {
         _nullable = flag;
     }
-
     
     public ReflectClass reflectClass() {
         return _reflectClass;
     }
-
     
     public void reflectClass(ReflectClass claxx) {
         _reflectClass = claxx;

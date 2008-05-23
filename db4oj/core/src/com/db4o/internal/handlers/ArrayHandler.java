@@ -237,8 +237,12 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		if(clazz == null){
 		    return null;
 		}
-		return arrayReflector(container(trans)).newInstance(clazz, info.elementCount());	
+		return newInstance(trans, info, clazz);	
 	}
+
+    protected Object newInstance(Transaction trans, ArrayInfo info, ReflectClass clazz) {
+        return arrayReflector(container(trans)).newInstance(clazz, info.elementCount());
+    }
 	
 	protected final ReflectClass newInstanceReflectClass(Reflector reflector, ArrayInfo info){
         if(_usePrimitiveClassReflector){
@@ -504,12 +508,16 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         }
         return array;
     }
+
+    protected void readElements(ReadContext context, ArrayInfo info, Object array) {
+        readInto(context, info, array);
+    }
     
     protected ArrayInfo newArrayInfo() {
         return new ArrayInfo();
     }
 
-    private void readElements(ReadContext context, ArrayInfo info, Object array) {
+    protected final void readInto (ReadContext context, ArrayInfo info, Object array) {
         if (array == null){
             return;
         }
@@ -536,17 +544,23 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     
     protected boolean hasNullBitmap() {
         return NullableArrayHandling.enabled();
-        
 	}
 
 	public void write(WriteContext context, Object obj) {
         if (Deploy.debug) {
-            Debug.writeBegin(context, Const4.YAPARRAY);
+            Debug.writeBegin(context, identifier());
         }
-        ArrayInfo info = new ArrayInfo();
+        ArrayInfo info = newArrayInfo();
         analyze(container(context), obj, info);
         writeInfo(context, info);
         
+        writeElements(context, obj, info);
+        if (Deploy.debug) {
+            Debug.writeEnd(context);
+        }
+    }
+
+    protected void writeElements(WriteContext context, Object obj, ArrayInfo info) {
         if(handleAsByteArray(obj)){
             context.writeBytes((byte[])obj);  // byte[] performance optimisation
         }else{        	
@@ -563,9 +577,6 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
                     context.writeObject(_handler, arrayReflector(container(context)).get(obj, i));
                 }
             }
-        }
-        if (Deploy.debug) {
-            Debug.writeEnd(context);
         }
     }
 

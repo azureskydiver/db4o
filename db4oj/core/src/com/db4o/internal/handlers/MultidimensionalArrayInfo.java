@@ -18,7 +18,4 @@ public class MultidimensionalArrayInfo extends ArrayInfo {
         return _dimensions;
     }
 
-    
-    
-
 }
