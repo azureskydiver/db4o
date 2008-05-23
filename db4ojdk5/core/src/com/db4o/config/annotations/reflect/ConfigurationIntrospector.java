@@ -94,8 +94,11 @@ public class ConfigurationIntrospector {
 					applyAnnotation(f, a);
 				}
 			}
-		} catch (SecurityException e) {
+		} 
+		catch (SecurityException e) {
 			e.printStackTrace();
+		}
+		catch (NoClassDefFoundError e) {
 		}
 	}
 

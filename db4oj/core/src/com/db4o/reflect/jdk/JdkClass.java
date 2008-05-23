@@ -38,18 +38,27 @@ public class JdkClass implements JavaReflectClass{
 	}
 
 	private ReflectConstructor[] getDeclaredConstructors(){
-		Constructor[] constructors = _clazz.getDeclaredConstructors();
-		ReflectConstructor[] reflectors = new ReflectConstructor[constructors.length];
-		for (int i = 0; i < constructors.length; i++) {
-			reflectors[i] = new JdkConstructor(_reflector, constructors[i]);
+		try {
+			Constructor[] constructors = _clazz.getDeclaredConstructors();
+			ReflectConstructor[] reflectors = new ReflectConstructor[constructors.length];
+			for (int i = 0; i < constructors.length; i++) {
+				reflectors[i] = new JdkConstructor(_reflector, constructors[i]);
+			}
+			return reflectors;
 		}
-		return reflectors;
+		catch(NoClassDefFoundError exc) {
+			return new ReflectConstructor[0];
+		}
 	}
 	
 	public ReflectField getDeclaredField(String name){
 		try {
 			return createField(_clazz.getDeclaredField(name));
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
+			return null;
+		}
+		catch (NoClassDefFoundError e) {
 			return null;
 		}
 	}
@@ -59,12 +68,17 @@ public class JdkClass implements JavaReflectClass{
 	}
 	
 	public ReflectField[] getDeclaredFields(){
-		Field[] fields = _clazz.getDeclaredFields();
-		ReflectField[] reflectors = new ReflectField[fields.length];
-		for (int i = 0; i < reflectors.length; i++) {
-			reflectors[i] = createField(fields[i]);
+		try {
+			Field[] fields = _clazz.getDeclaredFields();
+			ReflectField[] reflectors = new ReflectField[fields.length];
+			for (int i = 0; i < reflectors.length; i++) {
+				reflectors[i] = createField(fields[i]);
+			}
+			return reflectors;
 		}
-		return reflectors;
+		catch(NoClassDefFoundError exc) {
+			return new ReflectField[0];
+		}
 	}
     
     public ReflectClass getDelegate(){
