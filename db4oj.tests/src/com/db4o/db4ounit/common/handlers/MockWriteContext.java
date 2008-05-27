@@ -25,15 +25,15 @@ public class MockWriteContext extends MockMarshallingContext implements WriteCon
 
     public ReservedBuffer reserve(int length) {
         ReservedBuffer reservedBuffer = new ReservedBuffer() {
-            final int reservedBufferOffset = offset();
+            private final int reservedOffset = offset();
             public void writeBytes(byte[] bytes) {
                 int currentOffset = offset();
-                seek(reservedBufferOffset);
+                seek(reservedOffset);
                 MockWriteContext.this.writeBytes(bytes);
                 seek(currentOffset);
             }
         };
-        seek(offset() + length);
+        seek(offset() + length );
         return reservedBuffer;
     }
     

@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.mapping.*;
 import com.db4o.internal.slots.*;
+import com.db4o.marshall.*;
 
 
 /**
@@ -318,5 +319,9 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 
     public void seekCurrentInt() {
         seek(readInt());
+    }
+
+    public ReadBuffer buffer() {
+        return _source;
     }
 }

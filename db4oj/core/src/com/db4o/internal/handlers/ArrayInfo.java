@@ -49,5 +49,5 @@ public class ArrayInfo {
     public void reflectClass(ReflectClass claxx) {
         _reflectClass = claxx;
     }
-
+    
 }

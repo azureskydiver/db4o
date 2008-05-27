@@ -9,13 +9,13 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public abstract class BufferContext implements ReadBuffer{
+public abstract class AbstractBufferContext implements BufferContext{
 	
 	private ReadBuffer _buffer;
 	
 	protected final Transaction _transaction;
 	
-	public BufferContext(Transaction transaction, ReadBuffer buffer) {
+	public AbstractBufferContext(Transaction transaction, ReadBuffer buffer) {
 		_transaction = transaction;
         _buffer = buffer;
 	}

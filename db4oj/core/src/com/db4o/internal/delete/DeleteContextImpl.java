@@ -12,7 +12,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class DeleteContextImpl extends BufferContext implements DeleteContext {
+public class DeleteContextImpl extends AbstractBufferContext implements DeleteContext {
     
     private final ReflectClass _fieldClass;
     
