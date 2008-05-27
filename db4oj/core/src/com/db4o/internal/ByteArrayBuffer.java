@@ -6,13 +6,12 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
-import com.db4o.marshall.*;
 
 /**
  * 
  * @exclude
  */
-public class ByteArrayBuffer implements ReadBuffer, ReadWriteBuffer, WriteBuffer {
+public class ByteArrayBuffer implements ReadWriteBuffer {
 	
 	// for coding convenience, we allow objects to grab into the buffer
 	public byte[] _buffer;
@@ -256,5 +255,5 @@ public class ByteArrayBuffer implements ReadBuffer, ReadWriteBuffer, WriteBuffer
 	public void seekCurrentInt(){
 	    seek(readInt());
 	}
-
+	
 }

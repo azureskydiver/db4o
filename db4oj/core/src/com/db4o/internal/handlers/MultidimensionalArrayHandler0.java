@@ -11,6 +11,10 @@ import com.db4o.marshall.*;
  * @exclude
  */
 public class MultidimensionalArrayHandler0 extends MultidimensionalArrayHandler3 {
+    
+    protected ArrayVersionHelper createVersionHelper() {
+        return new ArrayVersionHelper0();
+    }
 
     public Object read(ReadContext readContext) {
         InternalReadContext context = (InternalReadContext) readContext;
@@ -40,8 +44,5 @@ public class MultidimensionalArrayHandler0 extends MultidimensionalArrayHandler3
         ArrayHandler0.defragment(context, this);
     }
     
-    protected boolean hasNullBitmap() {
-        return false;
-    }
 
 }

@@ -7,7 +7,7 @@ import java.io.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 
-public interface DefragmentContext extends Context, ReadBuffer {
+public interface DefragmentContext extends BufferContext {
 	
 	public TypeHandler4 typeHandlerForId(int id);
 

@@ -18,5 +18,5 @@ public interface ReservedBuffer {
      * @param bytes the byte array.
      */
     public void writeBytes(byte[] bytes);
-
+    
 }

@@ -11,7 +11,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public abstract class AbstractReadContext extends BufferContext implements InternalReadContext {
+public abstract class AbstractReadContext extends AbstractBufferContext implements InternalReadContext {
     
     protected ActivationDepth _activationDepth = UnknownActivationDepth.INSTANCE;
     

@@ -2,7 +2,6 @@
 
 package com.db4o.internal.handlers;
 
-import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.marshall.*;
@@ -57,17 +56,8 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
             + (Const4.INT_LENGTH * (2 + dim.length));
     }
 
-    protected int readElementCountDefrag(DefragmentContext context) {
-    	int numDimensions=super.readElementCountDefrag(context);        
-    	int [] dimensions=new int[numDimensions];
-	    for (int i = 0; i < numDimensions; i++) {
-	    	dimensions[i]=context.readInt();
-	    }
-	    return elementCount(dimensions);
-    }
-    
-    protected Object newInstance(Transaction trans, ArrayInfo info, ReflectClass clazz) {
-        return arrayReflector(container(trans)).newInstance(clazz, ((MultidimensionalArrayInfo)info).dimensions());
+    protected Object newInstance(ReflectArray arrayReflector, ArrayInfo info, ReflectClass clazz) {
+        return arrayReflector.newInstance(clazz, ((MultidimensionalArrayInfo)info).dimensions());
     }
     
     protected void readDimensions(ArrayInfo info, ReadBuffer buffer) {
@@ -83,7 +73,7 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         info.elementCount(elementCount(dim));
     }
     
-    protected void readDimensionsOldFormat(ReadBuffer buffer, ArrayInfo info, int classID) {
+    protected void detectDimensionsPreVersion0Format(ReadBuffer buffer, ArrayInfo info, int classID) {
         readDimensions(info, buffer, classID);
     }
 
@@ -107,7 +97,7 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
     protected void writeElements(WriteContext context, Object obj, ArrayInfo info) {
         Iterator4 objects = allElements(container(context), obj);
         
-        if (hasNullBitmap()) {
+        if (hasNullBitmap(info)) {
             BitMap4 nullBitMap = new BitMap4(info.elementCount());
             ReservedBuffer nullBitMapBuffer = context.reserve(nullBitMap.marshalledLength());
             int currentElement = 0;
