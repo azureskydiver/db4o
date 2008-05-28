@@ -13,15 +13,6 @@
     <property name="drs.sharpen.workspace.dir" location="${dir.dist}/drs.net/workspace" />
     
     <target name="init" depends="properties, configure">
-        <!--
-    	<condition property="isUnix">
-            <os family="unix"/>
-        </condition>
-        
-        <fail message="The script should be used on Windows platform. For Mono build, please use build-drs-net.xml." 
-            if="isUnix"/>
-    	-->
-        
 		<mkdir dir="${drs.net.dir}" />
 		<mkdir dir="${drs.net.bin.dir}" />
         <mkdir dir="${drs.net.src.dir}" />
