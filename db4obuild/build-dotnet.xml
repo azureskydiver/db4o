@@ -260,14 +260,6 @@
 				<exclude name="**/*.pdb" />
 			</fileset>
 		</copy>
-		
-		<!--
-		<copy todir="${dir.dist.net.build.tutorial}/vb">
-			<fileset dir="${dir.j.tutorial.out.vb}">
-				<include name="**/**" />
-			</fileset>
-		</copy>
-		-->
 	</target>
 	
 	<target name="package-api" depends="package-api-net, package-api-mono">
@@ -865,8 +857,6 @@
 	</target>
 	
 	<target name="prepare-sandcastle-output">
-	
-		<!-- adapted from ${dir.lib.sandcastle}/Presentation/vs2005/copyOutput.bat"  -->
 		<mkdir dir="${dir.dist.ndoc}/Output" />
 		<mkdir dir="${dir.dist.ndoc}/Output/html" />
 		<mkdir dir="${dir.dist.ndoc}/Output/icons" />
@@ -932,23 +922,6 @@
 	<target name="ndoc-net" unless="mono">
 	
 		<antcall target="sandcastle" />
-	
-		<!--
-		<exec executable="${ndoc.home}/bin/net/2.0/NDocConsole.exe">
-			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
-			<arg value="-documenter=MSDN 2003" />
-			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
-			<arg value="-OutputDirectory=${dir.dist.ndoc}" />
-			<arg value="-HtmlHelpName=db4o" />
-			<arg value="-Title=db4o" />
-			<arg value="-SkipNamespacesWithoutSummaries=True" />
-			<arg value="-SdkLinksOnWeb=False" />
-            <arg value="-AssemblyVersionInfo=AssemblyVersion" />
-			<arg value="-CopyrightText=Copyright (C) 2004 - 2006  db4objects Inc." />
-            <arg value="-CopyrightHref=http://www.db4o.com/" />
-			<arg value="-IncludeFavorites=True" />			
-		</exec>
-		-->
 	</target>
 	
 	<target name="vsdoc" depends="ndoc" description="Build VS.NET 2003 integrated docs">
@@ -973,10 +946,6 @@
 			<arg value="-CopyrightText=Copyright (C) 2004 - 2006  db4objects Inc." />
             <arg value="-CopyrightHref=http://www.db4o.com/" />
 			<arg value="-IncludeFavorites=True" />
-			<!--
-            <property name="Preliminary" value="True" />
-            <property name="CleanIntermediates" value="True" />
-            -->
 		</exec>
 	</target>
 	

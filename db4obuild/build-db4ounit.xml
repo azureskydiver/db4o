@@ -30,15 +30,6 @@
 			encoding="UTF-8">
 			<compilerarg line="${file.compiler.jdk1.3.args.line}"/>
 		</javac>
-		
-		<!--
-		<jar destfile="${db4ounit.jar}">
-			<fileset dir="${db4ounit.bin.dir}">
-				<include name="**/*.class" />
-			</fileset>
-		</jar>
-		-->
-		
 	</target>
 		
 	<target name="buildnet" depends="update-csharp-projects">		

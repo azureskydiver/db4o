@@ -20,11 +20,6 @@
 			<variable name="java" boolean="true" />
 			<variable name="net" boolean="false" />
 			<variable name="mono" boolean="false" />
-			
-			<!--
-			<ignoreinputfolder name="net" />
-			<ignoreinputfolder name="mono" />
-			-->
 		</doctor>	
 	</target>
 	
