@@ -32,10 +32,8 @@
 			<echo>org.eclipse.core.launcher.Main -data @{workspace} -application decaf.application @{resource}</echo>
 		
 			<java fork="true" classname="org.eclipse.core.launcher.Main" failonerror="true" timeout="1800000">
-				<!--
 				<jvmarg value="-Xms256m" />
 				<jvmarg value="-Xmx512m" />
-				-->
 				<classpath>
 					<fileset dir="${eclipse.home}/plugins">
 						<include name="org.eclipse.equinox.launcher_*.jar"  />
