@@ -65,21 +65,14 @@ public class DecafBuilder extends IncrementalProjectBuilder {
 		final ICompilationUnit decaf = decafElementFor(element);
 		final ASTRewrite rewrite = DecafRewriter.rewrite(element, monitor);
 		
+		if (!PlatformUI.isWorkbenchRunning()) {
+			rewriteFile(decaf, rewrite);
+			return;
+		}
+		
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
-				IPath path= decaf.getPath();
-				try {
-					if (null != decaf.getBuffer() && decaf.isWorkingCopy()) {
-						rewriteDocument(rewrite, decaf);
-					} else {
-						FileRewriter.rewriteFile(rewrite, path);
-					}
-				} catch (CoreException e) {
-					e.printStackTrace();
-				} catch (BadLocationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				rewriteFile(decaf, rewrite);
 			}
 		});
 	}
@@ -198,5 +191,22 @@ public class DecafBuilder extends IncrementalProjectBuilder {
 		SimpleDocument doc = new SimpleDocument(decaf.getBuffer().getContents());
 		rewrite.rewriteAST().apply(doc);
 		decaf.getBuffer().setContents(doc.get());
+	}
+
+	private void rewriteFile(final ICompilationUnit decaf,
+			final ASTRewrite rewrite) {
+		IPath path= decaf.getPath();
+		try {
+			if (null != decaf.getBuffer() && decaf.isWorkingCopy()) {
+				rewriteDocument(rewrite, decaf);
+			} else {
+				FileRewriter.rewriteFile(rewrite, path);
+			}
+		} catch (CoreException e) {
+			e.printStackTrace();
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
