@@ -47,6 +47,9 @@
 				<fileset dir="${dir.workspace}/db4oj/core">
 					<include name="**/*.java"  />
 				</fileset>
+				<fileset dir="${dir.workspace}/db4oj/tools">
+					<include name="**/*.java" />
+				</fileset>
 			</sources>
 		</prepare-workspace>
 		
