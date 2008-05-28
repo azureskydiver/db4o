@@ -6,6 +6,8 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.InfixExpression.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
+import sharpen.core.framework.*;
+
 @SuppressWarnings("unchecked")
 public final class DecafRewritingVisitor extends ASTVisitor {
 	private final AST ast;
@@ -16,26 +18,54 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		this.rewrite = rewrite;
 	}
 
+	@Override
+	public boolean visit(TypeDeclaration node) {
+		if (handledAsIgnored(node)) {
+			return false;
+		}
+		return super.visit(node);
+	}
+
+	private boolean handledAsIgnored(BodyDeclaration node) {
+		if (isIgnored(node)) {
+			remove(node);
+			return true;
+		}
+		return false;
+	}
+
+	private void remove(ASTNode node) {
+		rewrite.remove(node, null);
+	}
+
+	private boolean isIgnored(BodyDeclaration node) {
+		return containsJavadoc(node, DecafAnnotations.DECAF_IGNORE);
+	}
+
+	private boolean containsJavadoc(BodyDeclaration node, String tag) {
+		return JavadocUtility.containsJavadoc(node, tag);
+	}
+
 	public boolean visit(MethodInvocation methodCall) {
 		IMethodBinding methodBinding = methodCall.resolveMethodBinding();
 		if (methodBinding.isVarargs()) {
-			MethodInvocation explicityArrayInCall = copy(methodCall);			
+			MethodInvocation explicityArrayInCall = copy(methodCall);
 
 			List arguments = explicityArrayInCall.arguments();
-			
+
 			List newArguments = mapVarArgsToArray(arguments, methodBinding.getParameterTypes());
-			
+
 			arguments.clear();
 			arguments.addAll(newArguments);
-			
+
 			replace(methodCall, explicityArrayInCall);
 		}
-		
+
 		return true;
 	}
 
 	private List mapVarArgsToArray(List arguments, ITypeBinding[] parameterTypes) {
-		List newArguments = copyAllArgumentsButVarArgs(arguments, parameterTypes);					
+		List newArguments = copyAllArgumentsButVarArgs(arguments, parameterTypes);
 		ArrayCreation varArgsArray = varArgsToArray(arguments, parameterTypes);
 		newArguments.add(varArgsArray);
 		return newArguments;
@@ -49,38 +79,44 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 		ArrayCreation varArgsArray = ast.newArrayCreation();
 		varArgsArray.setInitializer(arrayInitializer);
-		
+
 		varArgsArray.setType((ArrayType) newType(parameterTypes[parameterTypes.length-1]));
 		return varArgsArray;
 	}
 
 	private List copyAllArgumentsButVarArgs(List arguments, ITypeBinding[] parameterTypes) {
-		List newArguments = new ArrayList();			
+		List newArguments = new ArrayList();
 		for (int i = 0; i < parameterTypes.length - 1; i++) {
 			ASTNode arg = (ASTNode) arguments.get(i);
 			newArguments.add(copy( (ASTNode) arg));
 		}
 		return newArguments;
 	}
-	
+
 	public boolean visit(MethodDeclaration method) {
-		if (method.isVarargs()) {
-			MethodDeclaration decafMethod = copy(method);
-			
-			List parameters = decafMethod.parameters();
-			SingleVariableDeclaration varArgsParameter = lastParameter(parameters);
-			
-			SingleVariableDeclaration expandedVarArgsParam = newSingleVariableDeclaration(
-																copy(varArgsParameter.getName()), 
-																ast.newArrayType(copy(varArgsParameter.getType())));
-			
-			parameters.remove(varArgsParameter);
-			parameters.add(expandedVarArgsParam);
-			
-			replace(method, decafMethod);
+		if (handledAsIgnored(method)) {
+			return false;
 		}
-		
+		if (method.isVarargs()) {
+			handleVarArgsMethod(method);
+		}
 		return true;
+	}
+
+	private void handleVarArgsMethod(MethodDeclaration method) {
+		MethodDeclaration decafMethod = copy(method);
+
+		List parameters = decafMethod.parameters();
+		SingleVariableDeclaration varArgsParameter = lastParameter(parameters);
+
+		SingleVariableDeclaration expandedVarArgsParam = newSingleVariableDeclaration(
+															copy(varArgsParameter.getName()),
+															ast.newArrayType(copy(varArgsParameter.getType())));
+
+		parameters.remove(varArgsParameter);
+		parameters.add(expandedVarArgsParam);
+
+		replace(method, decafMethod);
 	}
 
 	private SingleVariableDeclaration newSingleVariableDeclaration(SimpleName paramName, Type paramType) {
@@ -92,10 +128,10 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	private SingleVariableDeclaration lastParameter(List parameters) {
 		return (SingleVariableDeclaration) parameters.get(parameters.size()-1);
-	}	
-	
+	}
+
 	public boolean visit(EnhancedForStatement node) {
-		
+
 		SingleVariableDeclaration variable = node.getParameter();
 		Expression array = node.getExpression();
 
@@ -108,18 +144,18 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 				copy(array));
 			array = newSimpleName(tempArrayName);
 		}
-		
+
 		String indexVariableName = variable.getName() + "Index";
 		VariableDeclarationExpression index = newVariableDeclaration(
 				ast.newPrimitiveType(PrimitiveType.INT),
 				indexVariableName,
 				ast.newNumberLiteral("0"));
-		
+
 		InfixExpression cmp = newInfixExpression(
 								InfixExpression.Operator.LESS,
 								newSimpleName(indexVariableName),
 								newFieldAccess(copy(array), "length"));
-			
+
 		Block newBody = ast.newBlock();
 		newBody.statements().add(
 				newVariableDeclarationStatement(
@@ -128,16 +164,16 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 						newArrayAccess(
 								copy(array),
 								newSimpleName(indexVariableName))));
-		
+
 		copyTo(node.getBody(), newBody);
-		
+
 		PrefixExpression updater = newPrefixExpression(
 												PrefixExpression.Operator.INCREMENT,
 												newSimpleName(indexVariableName));
-		
+
 		ForStatement stmt = newForStatement(index, cmp, updater, newBody);
 		if (null == tempArrayVariable) {
-			replace(node, stmt);	
+			replace(node, stmt);
 		} else {
 			replace(node, newBlock(tempArrayVariable, stmt));
 		}
@@ -159,7 +195,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	private boolean isName(Expression array) {
 		return array instanceof Name;
 	}
-	
+
 	private ForStatement newForStatement(
 			Expression initializer,
 			Expression comparison,
@@ -234,18 +270,18 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	private <T extends ASTNode> T copy(T array) {
 		return (T) ASTNode.copySubtree(ast, array);
 	}
-	
+
 	private List copyAll(List nodes) {
 		return ASTNode.copySubtrees(ast, nodes);
 	}
-	
+
 	private SimpleName newSimpleName(String name) {
 		return ast.newSimpleName(name);
 	}
 
 	VariableDeclarationExpression newVariableDeclaration(Type variableType, String variableName, Expression initializer) {
 		VariableDeclarationFragment indexFragment = newVariableFragment(variableName, initializer);
-		
+
 		VariableDeclarationExpression index = ast.newVariableDeclarationExpression(indexFragment);
 		index.setType(variableType);
 		return index;
