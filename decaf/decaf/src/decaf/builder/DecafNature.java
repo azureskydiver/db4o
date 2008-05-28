@@ -25,7 +25,7 @@ public class DecafNature implements IProjectNature {
 		ICommand[] commands = desc.getBuildSpec();
 
 		for (int i = 0; i < commands.length; ++i) {
-			if (commands[i].getBuilderName().equals(DecafBuilder.BUILDER_ID)) {
+			if (commands[i].getBuilderName().equals(DecafProjectBuilder.BUILDER_ID)) {
 				return;
 			}
 		}
@@ -33,7 +33,7 @@ public class DecafNature implements IProjectNature {
 		ICommand[] newCommands = new ICommand[commands.length + 1];
 		System.arraycopy(commands, 0, newCommands, 0, commands.length);
 		ICommand command = desc.newCommand();
-		command.setBuilderName(DecafBuilder.BUILDER_ID);
+		command.setBuilderName(DecafProjectBuilder.BUILDER_ID);
 		newCommands[newCommands.length - 1] = command;
 		desc.setBuildSpec(newCommands);
 		project.setDescription(desc, null);
@@ -48,7 +48,7 @@ public class DecafNature implements IProjectNature {
 		IProjectDescription description = getProject().getDescription();
 		ICommand[] commands = description.getBuildSpec();
 		for (int i = 0; i < commands.length; ++i) {
-			if (commands[i].getBuilderName().equals(DecafBuilder.BUILDER_ID)) {
+			if (commands[i].getBuilderName().equals(DecafProjectBuilder.BUILDER_ID)) {
 				ICommand[] newCommands = new ICommand[commands.length - 1];
 				System.arraycopy(commands, 0, newCommands, 0, i);
 				System.arraycopy(commands, i + 1, newCommands, i,
