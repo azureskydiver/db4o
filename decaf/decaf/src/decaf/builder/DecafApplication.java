@@ -12,7 +12,7 @@ public class DecafApplication implements IApplication {
 		String projectName = args[0];
 		try {
 			JavaProject project = new JavaProject(projectName);
-//			project.addNature(DecafNature.NATURE_ID);
+			project.addNature(DecafNature.NATURE_ID);
 			project.addSourceFolder("src");
 			project.joinBuild();
 		} catch (CoreException x) {
@@ -22,7 +22,7 @@ public class DecafApplication implements IApplication {
 	}
 
 	public void stop() {
-		// TODO Auto-generated method stub
+		// nothing to do
 
 	}
 	
