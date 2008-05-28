@@ -12,35 +12,43 @@ import sharpen.core.*;
 import decaf.builder.*;
 
 public class DecafTestCase extends TestCase {
-	
+
 	private JavaProject _project;
 
 	@Override
 	protected void setUp() throws Exception {
 		_project = new JavaProject();
 	}
-	
+
 	@Override
 	protected void tearDown() throws Exception {
 		_project.dispose();
 	}
-	
+
+	public void testIgnoreClass() throws Exception {
+		runResourceTestCase("IgnoreClass");
+	}
+
+	public void testIgnoreMethod() throws Exception {
+		runResourceTestCase("IgnoreMethod");
+	}
+
 	public void testForEachArray() throws Exception {
 		runResourceTestCase("ForEachArray");
 	}
-	
+
 	public void testForEachArrayMethod() throws Exception {
 		runResourceTestCase("ForEachArrayMethod");
 	}
-	
+
 	public void testVarArgsMethod() throws Exception {
 		runResourceTestCase("VarArgsMethod");
 	}
-	
+
 	public void testVarArgsGenericMethod() throws Exception {
 		runResourceTestCase("VarArgsGenericMethod");
 	}
-	
+
 	private void runResourceTestCase(String resourceName) throws Exception {
 		DecafTestResource resource = new DecafTestResource(resourceName);
 		ICompilationUnit cu = createCompilationUnit(resource);
@@ -48,7 +56,7 @@ public class DecafTestCase extends TestCase {
 		IFile decafFile = decafFileFor(cu.getResource());
 
 		FileRewriter.rewriteFile(DecafRewriter.rewrite(cu, null), decafFile.getFullPath());
-		
+
 		resource.assertFile(decafFile);
 	}
 

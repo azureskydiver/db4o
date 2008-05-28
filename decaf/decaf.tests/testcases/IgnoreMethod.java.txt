@@ -1,0 +1,11 @@
+class Foo {
+
+	public void bar() {
+	}
+	
+	/**
+	 * @decaf.ignore
+	 */
+	public void baz() {
+	}
+}

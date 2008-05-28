@@ -1,0 +1,14 @@
+/**
+ * @decaf.ignore
+ */
+class Foo {
+}
+
+class Bar {
+
+	/**
+	 * @decaf.ignore
+	 */
+	static class Nested {
+	}
+}
