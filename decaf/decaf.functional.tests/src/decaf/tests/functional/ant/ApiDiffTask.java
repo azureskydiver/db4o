@@ -6,6 +6,9 @@ import java.util.zip.*;
 
 import org.apache.tools.ant.*;
 
+/**
+ * Checks that two jars have the same API surface (same public types with same public methods).
+ */
 public class ApiDiffTask extends Task {
 	
 	private File _from;
@@ -28,10 +31,10 @@ public class ApiDiffTask extends Task {
 			final Set<String> fromEntries = classEntries(_from);
 			final Set<String> toEntries = classEntries(_to);
 			
-			final Set<String> unexpected = allBut(toEntries, fromEntries);
+			final Set<String> unexpected = difference(toEntries, fromEntries);
 			logAll("Unexpected class: ", unexpected);
 			
-			final Set<String> missing = allBut(fromEntries, toEntries);
+			final Set<String> missing = difference(fromEntries, toEntries);
 			logAll("Missing class: ", missing);
 			
 			if (!unexpected.isEmpty() || !missing.isEmpty()) {
@@ -50,10 +53,9 @@ public class ApiDiffTask extends Task {
 		}
 	}
 
-	private Set<String> allBut(final Set<String> source,
-			final Set<String> exclude) {
-		HashSet<String> clone = new HashSet<String>(source);
-		clone.removeAll(exclude);
+	private Set<String> difference(final Set<String> a, final Set<String> b) {
+		HashSet<String> clone = new HashSet<String>(a);
+		clone.removeAll(b);
 		return clone;
 	}
 
