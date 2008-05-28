@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<project name="decaf functional tests" default="test">
+	
+	<import file="decaf-common.xml" />
+	
+	<property name="dir.workspace" location="/Users/rodrigob/workspaces/db4o" />
+	<property name="eclipse.home" location="/Users/rodrigob/java/eclipse" />
+	<property name="build.dir" location="build" />
+	
+	<target name="test" depends="api-test, integration-test" description="runs all the tests">
+	</target>
+	
+	<target name="api-test" depends="old-core-jar, new-core-jar" description="checks inferred API surface is the same as original">
+		
+		<taskdef name="api-diff" classname="decaf.tests.functional.ant.ApiDiffTask">
+			<classpath>
+				<pathelement location="bin" />
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
+		
+		<api-diff from="${build.dir}/db4o-old.jar" to="${build.dir}/db4o-decaf.jar" />
+		
+	</target>
+	
+	<target name="integration-test" depends="decaf-core" description="checks inferred implementation against original tests">
+		
+		<!-- run db4oj.tests against db4o-decaf.jar -->
+	
+	</target>
+		
+	<target name="old-core-jar" depends="init">
+		<jar destfile="${build.dir}/db4o-old.jar" basedir="${dir.workspace}/db4oj/bin">
+		</jar>
+	</target>
+	
+	<target name="new-core-jar" depends="decaf-core">
+		<jar destfile="${build.dir}/db4o-decaf.jar" basedir="${build.dir}/workspace/db4o.decaf/bin">
+		</jar>
+	</target>
+	
+	<target name="decaf-core" depends="init, install-decaf-plugin">
+		<prepare-workspace dir="${build.dir}/workspace" project="db4o">
+			<sources>
+				<fileset dir="${dir.workspace}/db4oj/core">
+					<include name="**/*.java"  />
+				</fileset>
+			</sources>
+		</prepare-workspace>
+		
+		<decaf workspace="${build.dir}/workspace" resource="db4o" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+	</target>
+	
+	<target name="install-decaf-plugin">
+		
+		<property name="decaf.src.dir" location="../decaf" />
+		<property name="decaf.bin.dir" location="${decaf.src.dir}/bin" />
+		<property name="plugins.home" location="${eclipse.home}/plugins" />
+	
+		<jar manifest="${decaf.src.dir}/META-INF/MANIFEST.MF" destfile="${plugins.home}/decaf_1.0.0.jar" basedir="${decaf.bin.dir}">
+			<fileset dir="${decaf.src.dir}">
+				<include name="plugin.xml" />
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+
+</project>
