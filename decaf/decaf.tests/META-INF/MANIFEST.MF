@@ -6,8 +6,8 @@ Bundle-Version: 1.0.0
 Bundle-Vendor: Db4objects, Inc.
 Require-Bundle: org.junit,
  decaf,
- javatocsharp.ui.tests,
- javatocsharp.core,
+ sharpen.ui.tests,
+ sharpen.core,
  org.eclipse.core.runtime,
  org.eclipse.jdt.core,
  org.eclipse.core.resources,

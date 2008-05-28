@@ -1,6 +1,6 @@
 package decaf.tests;
 
-import javatocsharp.ui.tests.TestCaseResource;
+import sharpen.ui.tests.*;
 
 public class DecafTestResource extends TestCaseResource {
 

@@ -2,13 +2,13 @@ package decaf.tests;
 
 import java.io.*;
 
-import javatocsharp.core.*;
 import junit.framework.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 
+import sharpen.core.*;
 import decaf.builder.*;
 
 public class DecafTestCase extends TestCase {
