@@ -10,7 +10,19 @@ import org.eclipse.jdt.internal.core.util.*;
 import org.eclipse.jface.text.*;
 import org.eclipse.ui.*;
 
-public class DecafBuilder extends IncrementalProjectBuilder {
+public class DecafProjectBuilder extends IncrementalProjectBuilder {
+
+	public static IJavaProject decafProjectFor(IJavaProject javaProject) throws CoreException {
+		IWorkspaceRoot root = javaProject.getProject().getWorkspace().getRoot();
+		String decafProjectName = javaProject.getElementName() + ".decaf";
+		IProject decafProject = root.getProject(decafProjectName);
+		WorkspaceUtilities.initializeProject(decafProject, null);
+		WorkspaceUtilities.addProjectNature(decafProject, JavaCore.NATURE_ID);
+		
+		IJavaProject decafJavaProject = JavaCore.create(decafProject);
+		decafJavaProject.setRawClasspath(mapClasspathEntries(javaProject, decafJavaProject), null);
+		return decafJavaProject;
+	}
 
 	public static final String BUILDER_ID = "decaf.decafBuilder";
 
@@ -47,6 +59,7 @@ public class DecafBuilder extends IncrementalProjectBuilder {
 
 	void decaf(IResource resource, IProgressMonitor monitor) throws CoreException {
 		if (resource instanceof IFile && resource.getName().endsWith(".java")) {
+			monitor.subTask(resource.getName());
 			final IFile file = (IFile) resource;
 //			deleteMarkers(file);
 			ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
@@ -59,20 +72,20 @@ public class DecafBuilder extends IncrementalProjectBuilder {
 		}
 	}
 
-	private void decafFile(IProgressMonitor monitor, IFile file)
+	private void decafFile(final IProgressMonitor monitor, IFile file)
 			throws CoreException, JavaModelException {
 		final ICompilationUnit element = compilationUnitFor(file);
 		final ICompilationUnit decaf = decafElementFor(element);
 		final ASTRewrite rewrite = DecafRewriter.rewrite(element, monitor);
 		
 		if (!PlatformUI.isWorkbenchRunning()) {
-			rewriteFile(decaf, rewrite);
+			rewriteFile(decaf, rewrite, monitor);
 			return;
 		}
 		
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
-				rewriteFile(decaf, rewrite);
+				rewriteFile(decaf, rewrite, monitor);
 			}
 		});
 	}
@@ -113,24 +126,11 @@ public class DecafBuilder extends IncrementalProjectBuilder {
 		}
 	}
 
-	private IFile fileFor(ICompilationUnit decafElement) {
+	private static IFile fileFor(ICompilationUnit decafElement) {
 		return (IFile)decafElement.getResource();
 	}
 
-	private IJavaProject decafProjectFor(IJavaProject javaProject)
-			throws CoreException {
-		IWorkspaceRoot root = getProject().getWorkspace().getRoot();
-		String decafProjectName = javaProject.getElementName() + ".decaf";
-		IProject decafProject = root.getProject(decafProjectName);
-		WorkspaceUtilities.initializeProject(decafProject, null);
-		WorkspaceUtilities.addProjectNature(decafProject, JavaCore.NATURE_ID);
-
-		IJavaProject decafJavaProject = JavaCore.create(decafProject);
-		decafJavaProject.setRawClasspath(mapClasspathEntries(javaProject, decafJavaProject), null);
-		return decafJavaProject;
-	}
-
-	private IClasspathEntry[] mapClasspathEntries(IJavaProject javaProject,
+	private static IClasspathEntry[] mapClasspathEntries(IJavaProject javaProject,
 			IJavaProject decafJavaProject) throws JavaModelException,
 			CoreException {
 		IClasspathEntry[] srcClasspath = javaProject.getRawClasspath();
@@ -146,7 +146,7 @@ public class DecafBuilder extends IncrementalProjectBuilder {
 		return targetClasspath;
 	}
 
-	private IClasspathEntry createSourceFolder(IJavaProject decafJavaProject,
+	private static IClasspathEntry createSourceFolder(IJavaProject decafJavaProject,
 			IPath path) throws CoreException {
 		
 		IFolder folder = decafJavaProject.getProject().getFolder(path.removeFirstSegments(1));
@@ -193,11 +193,11 @@ public class DecafBuilder extends IncrementalProjectBuilder {
 		decaf.getBuffer().setContents(doc.get());
 	}
 
-	private void rewriteFile(final ICompilationUnit decaf,
-			final ASTRewrite rewrite) {
+	private void rewriteFile(final ICompilationUnit decaf, final ASTRewrite rewrite,
+			IProgressMonitor monitor) {
 		IPath path= decaf.getPath();
 		try {
-			if (null != decaf.getBuffer() && decaf.isWorkingCopy()) {
+			if (null != decaf.getBuffer() /*&& decaf.isWorkingCopy()*/) {
 				rewriteDocument(rewrite, decaf);
 			} else {
 				FileRewriter.rewriteFile(rewrite, path);

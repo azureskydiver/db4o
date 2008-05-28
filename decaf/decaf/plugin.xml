@@ -9,7 +9,7 @@
       <builder
             hasNature="true">
          <run
-               class="decaf.builder.DecafBuilder">
+               class="decaf.builder.DecafProjectBuilder">
          </run>
       </builder>
    </extension>
