@@ -64,12 +64,16 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
     
     final protected void close2() {
-    	if (!_config.isReadOnly()) {
-			freeInternalResources();
-			commitTransaction();
-			shutdown();
-		}
-        shutdownObjectContainer();
+    	try {
+	    	if (!_config.isReadOnly()) {
+				freeInternalResources();
+				commitTransaction();
+				shutdown();
+			}
+    	}
+    	finally {
+    		shutdownObjectContainer();
+    	}
     }
 
     protected abstract void freeInternalResources();

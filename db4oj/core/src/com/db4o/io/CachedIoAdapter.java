@@ -247,8 +247,12 @@ public class CachedIoAdapter extends IoAdapter {
 	 * Flushes and closes the file
 	 */
 	public void close() throws Db4oIOException {
-		flushAllPages();
-		_io.close();
+		try {
+			flushAllPages();
+		}
+		finally {
+			_io.close();
+		}
 	}
 	
 	public IoAdapter delegatedIoAdapter() {
@@ -397,7 +401,7 @@ public class CachedIoAdapter extends IoAdapter {
 
 		long _endAddress;
 
-		int _bufferSize;
+		final int _bufferSize;
 
 		boolean _dirty;
 
