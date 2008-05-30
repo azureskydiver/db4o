@@ -282,12 +282,13 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     }
 
     public void syncFiles() {
-        try {
-            _file.sync();
-            if (_timerFile != null) {
+        _file.sync();
+        if (_timerFile != null) {
+            // _timerFile can be set to null here by other thread
+            try{
                 _timerFile.sync();
+            }catch (Exception e){
             }
-        } catch (Exception e) {
         }
     }
 

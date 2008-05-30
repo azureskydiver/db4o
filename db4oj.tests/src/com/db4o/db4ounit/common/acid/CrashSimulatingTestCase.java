@@ -34,7 +34,7 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
 		}
 	}
 	
-    static final boolean LOG = false;
+    static final boolean VERBOSE = false;
     
     private boolean hasLockFileThread(){
         if (!Platform4.hasLockFileThread()) {
@@ -43,7 +43,16 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         return ! Platform4.hasNio();
     }
     
-    public void test() throws IOException{
+    public void testWithCache() throws IOException{
+        doTest(true);
+    }
+    
+    public void testWithoutCache() throws IOException{
+        doTest(false);
+    }
+
+    
+    private void doTest(boolean cached) throws IOException{
     	if(hasLockFileThread()){
     		System.out.println("CrashSimulatingTestCase is ignored on platforms with lock file thread.");
     		return;
@@ -57,8 +66,8 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         
     	createFile(baseConfig(), fileName);
         
-        CrashSimulatingIoAdapter adapterFactory = new CrashSimulatingIoAdapter(new RandomAccessFileAdapter());
-
+        CrashSimulatingIoAdapter crashSimulatingAdapter = new CrashSimulatingIoAdapter(new RandomAccessFileAdapter());
+        IoAdapter adapterFactory = cached ? (IoAdapter) new CachedIoAdapter(crashSimulatingAdapter) : crashSimulatingAdapter;
         
         Configuration recordConfig = baseConfig();
         recordConfig.io(adapterFactory);
@@ -96,11 +105,11 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
 
         oc.close();
 
-        int count = adapterFactory.batch.writeVersions(fileName);
+        int count = crashSimulatingAdapter.batch.writeVersions(fileName);
 
-        checkFiles(fileName, "R", adapterFactory.batch.numSyncs());
+        checkFiles(fileName, "R", crashSimulatingAdapter.batch.numSyncs());
         checkFiles(fileName, "W", count);
-		if (LOG) {
+		if (VERBOSE) {
 			System.out.println("Total versions: " + count);
 		}
     }
@@ -115,7 +124,7 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
 
 	private void checkFiles(String fileName, String infix,int count) {
         for (int i = 1; i <= count; i++) {
-            if(LOG){
+            if(VERBOSE){
                 System.out.println("Checking " + infix + i);
             }
             String versionedFileName = fileName + infix + i;

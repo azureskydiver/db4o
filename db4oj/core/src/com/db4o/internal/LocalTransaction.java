@@ -240,15 +240,12 @@ public class LocalTransaction extends Transaction {
 	
     private Slot allocateTransactionLogSlot(boolean appendToFile){
         int transactionLogByteCount = transactionLogSlotLength();
-    	if(freespaceManager() != null){
+    	if(! appendToFile && freespaceManager() != null){
     		int blockedLength = _file.bytesToBlocks(transactionLogByteCount);
     		Slot slot = freespaceManager().allocateTransactionLogSlot(blockedLength);
     		if(slot != null){
     			return _file.toNonBlockedLength(slot);
     		}
-    	}
-    	if(! appendToFile){
-    		return null;
     	}
     	return _file.appendBytes(transactionLogByteCount);
     }
