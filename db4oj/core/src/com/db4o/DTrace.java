@@ -40,13 +40,28 @@ public class DTrace {
     private static final void configure(){
         if(enabled){
         
-            // breakOnEvent(5);
+            
+            breakOnEvent(395);
+            
+//            breakOnEvent(10);
             
             // addRange(4874);
             
             // addRangeWithEnd(3835808, 3836267);
             
-//        	 addRangeWithLength(6539,1);
+            // breakOnEvent(5);
+            
+            
+            //addRangeWithLength(122866, 1);
+            addRangeWithLength(122405, 1);
+            //addRangeWithLength(139520, 1);
+            // addRangeWithLength(119190, 1);
+            
+//        	 addRangeWithLength(139520,1);
+//        	 
+//        	 addRangeWithLength(122866, 265);
+        	 
+        	 
 //        	addRangeWithLength(17673,1);
             
 //            addRangeWithLength(455404,1);
@@ -56,22 +71,22 @@ public class DTrace {
 //            addRangeWithLength(455926,1);
 //
             
-            addRangeWithLength(1647603457,1);
+//            addRangeWithLength(1647603457,1);
             
             
-            // trackEventsWithoutRange();
+            trackEventsWithoutRange();
             
-            turnAllOffExceptFor(new DTrace[] {OBJECT_REFERENCE_CREATED});
+//            turnAllOffExceptFor(new DTrace[] {WRITE_BYTES});
         	
 //            turnAllOffExceptFor(new DTrace[] {
 //                PERSISTENT_OWN_LENGTH,
 //                });
             
-//            turnAllOffExceptFor(new DTrace[] {
-//                FREESPACEMANAGER_GET_SLOT,
-//                FREESPACEMANAGER_RAM_FREE,
-//                FREESPACEMANAGER_BTREE_FREE,
-//                });
+            turnAllOffExceptFor(new DTrace[] {
+                GET_SLOT,
+                FILE_FREE,
+                TRANS_COMMIT,
+                });
         	
 //          turnAllOffExceptFor(new DTrace[] {BTREE_NODE_COMMIT_OR_ROLLBACK });
 //            turnAllOffExceptFor(new DTrace[] {BTREE_NODE_REMOVE, BTREE_NODE_COMMIT_OR_ROLLBACK YAPMETA_SET_ID});
@@ -147,7 +162,7 @@ public class DTrace {
 					"slot free on rollback id", true);
 			SLOT_FREE_ON_ROLLBACK_ADDRESS = new DTrace(true, true,
 					"slot free on rollback address", true);
-			TRANS_COMMIT = new DTrace(false, false, "trans commit", false);
+			TRANS_COMMIT = new DTrace(true, true, "trans commit", true);
 			TRANS_DELETE = new DTrace(true, true, "trans delete", true);
 			TRANS_DONT_DELETE = new DTrace(true, true, "trans dontDelete", true);
 			TRANS_FLUSH = new DTrace(true, true, "trans flush", true);
@@ -189,6 +204,7 @@ public class DTrace {
     public static long _eventNr;
     private static long[] _breakEventNrs;
     private static int _breakEventCount;
+    private static boolean _breakAfterEvent;
     
     private static boolean _trackEventsWithoutRange;
 
@@ -391,6 +407,15 @@ public class DTrace {
                                 break;
                             }
                         }
+                        if(_breakAfterEvent){
+                            for (int i = 0; i < _breakEventCount; i++) {
+                                if(_breakEventNrs[i] <= _eventNr){
+                                    breakPoint();
+                                    break;
+                                }
+                            }
+                            
+                        }
                     }else{
                         breakPoint();
                     }
@@ -485,6 +510,11 @@ public class DTrace {
             _rangeEnd[_rangeCount] = end;
             _rangeCount++;
         }
+    }
+    
+    private static void breakFromEvent(long eventNr){
+        breakOnEvent(eventNr);
+        _breakAfterEvent = true;
     }
     
     private static void breakOnEvent(long eventNr){

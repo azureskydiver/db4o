@@ -44,7 +44,7 @@ public class CrashSimulatingBatch {
             
             Collection4 writesBetweenSync = (Collection4)syncIter.current();
             
-            if(CrashSimulatingTestCase.LOG){
+            if(CrashSimulatingTestCase.VERBOSE){
                 System.out.println("Writing file " + rightFileName + rcount );
             }
             
@@ -54,7 +54,7 @@ public class CrashSimulatingBatch {
                 CrashSimulatingWrite csw = (CrashSimulatingWrite)singleForwardIter.current();
                 csw.write(rightRaf);
                 
-                if(CrashSimulatingTestCase.LOG){
+                if(CrashSimulatingTestCase.VERBOSE){
                     System.out.println(csw);
                 }
                 

@@ -26,6 +26,14 @@ public class CrashSimulatingIoAdapter extends VanillaIoAdapter{
         return new CrashSimulatingIoAdapter(_delegate, path, lockFile, initialLength, readOnly, batch);
     }
 
+    public int read(byte[] bytes, int length) throws Db4oIOException {
+        int readBytes = super.read(bytes, length);
+        if(readBytes > 0){
+            curPos += readBytes;
+        }
+        return readBytes;
+    }
+
     public void seek(long pos) throws Db4oIOException {
         curPos=pos;
         super.seek(pos);
@@ -34,8 +42,9 @@ public class CrashSimulatingIoAdapter extends VanillaIoAdapter{
     public void write(byte[] buffer, int length) throws Db4oIOException {
         super.write(buffer, length);
         byte[] copy=new byte[buffer.length];
-        System.arraycopy(buffer, 0, copy, 0, buffer.length);
+        System.arraycopy(buffer, 0, copy, 0, length);
         batch.add(copy, curPos, length);
+        curPos+= length;
     }
     
     public void sync() throws Db4oIOException {

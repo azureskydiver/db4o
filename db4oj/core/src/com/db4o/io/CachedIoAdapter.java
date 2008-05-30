@@ -371,9 +371,14 @@ public class CachedIoAdapter extends IoAdapter {
 	}
 
 	private void writePageToDisk(Page page) throws Db4oIOException {
-		_io.write(page._buffer, page.size());
-		_filePointer = page.endAddress();
-		page._dirty = false;
+	    try{
+	        _io.write(page._buffer, page.size());
+	        _filePointer = page.endAddress();
+	        page._dirty = false;
+	    }catch (Db4oIOException e){
+	        _readOnly = true;
+	        throw e;
+	    }
 	}
 
 	/**
