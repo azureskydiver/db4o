@@ -229,15 +229,6 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return Const4.YAPARRAY;
     }
     
-    /** @param obj */
-    public int ownLength(Object obj){
-        return ownLength();
-    }
-
-	private int ownLength() {
-		return Const4.OBJECT_LENGTH + Const4.INT_LENGTH * 2;
-	}
-    
 	public ReflectClass primitiveClassReflector(Reflector reflector) {
 		return Handlers4.primitiveClassReflector(_handler, reflector);
 	}
@@ -251,8 +242,8 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		return newInstance(arrayReflector(container(trans)), info, clazz);	
 	}
 
-    protected Object newInstance(ReflectArray arrayReflector, ArrayInfo info, ReflectClass clazz) {
-        return arrayReflector.newInstance(clazz, info.elementCount());
+    protected final Object newInstance(ReflectArray arrayReflector, ArrayInfo info, ReflectClass clazz) {
+        return arrayReflector.newInstance(clazz, info);
     }
 	
 	protected final ReflectClass newInstanceReflectClass(Reflector reflector, ArrayInfo info){
@@ -515,8 +506,11 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         context.writeInt(info.elementCount());
     }
 
-    protected void analyze(ObjectContainerBase container, Object obj, ArrayInfo info) {
-	    
+    protected final void analyze(ObjectContainerBase container, Object obj, ArrayInfo info) {
+
+        // TODO: Move as much analysis as possible to ReflectArray#analyze() 
+        arrayReflector(container).analyze(obj, info);
+
         ReflectClass claxx = componentType(container, obj);
         
         ClassMetadata classMetadata = container.produceClassMetadata(claxx);

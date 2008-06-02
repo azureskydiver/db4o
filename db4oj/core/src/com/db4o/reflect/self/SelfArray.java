@@ -12,6 +12,10 @@ public class SelfArray implements ReflectArray {
 	SelfArray(Reflector reflector,SelfReflectionRegistry registry) {
 		_registry=registry;
 	}
+	
+    public void analyze(Object obj, ArrayInfo info) {
+        // do nothing
+    }
 
 	public int[] dimensions(Object arr) {
 		return new int[]{getLength(arr)};
@@ -48,6 +52,12 @@ public class SelfArray implements ReflectArray {
 	public boolean isNDimensional(ReflectClass a_class) {
 		return false;
 	}
+	
+    public Object newInstance(ReflectClass componentType, ArrayInfo info) {
+        // TODO: implement multidimensional arrays.
+        int length = info.elementCount();
+        return newInstance(componentType, length);
+    }
 
 	public Object newInstance(ReflectClass componentType, int length) {
 		return _registry.arrayFor(((SelfClass)componentType).getJavaClass(),length);
@@ -74,5 +84,6 @@ public class SelfArray implements ReflectArray {
 		}
 		return _registry.shapeArray(a_flat,a_shaped);
 	}
+
 
 }

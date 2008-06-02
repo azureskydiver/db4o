@@ -50,16 +50,6 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         return new MultidimensionalArrayInfo();
     }
 
-    public int ownLength(ObjectContainerBase container, Object obj){
-        int[] dim = arrayReflector(container).dimensions(obj);
-        return Const4.OBJECT_LENGTH
-            + (Const4.INT_LENGTH * (2 + dim.length));
-    }
-
-    protected Object newInstance(ReflectArray arrayReflector, ArrayInfo info, ReflectClass clazz) {
-        return arrayReflector.newInstance(clazz, ((MultidimensionalArrayInfo)info).dimensions());
-    }
-    
     protected void readDimensions(ArrayInfo info, ReadBuffer buffer) {
         readDimensions(info, buffer, buffer.readInt());
     }

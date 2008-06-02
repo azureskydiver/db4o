@@ -10,6 +10,8 @@ package com.db4o.reflect;
  */
 public interface ReflectArray {
     
+    public void analyze(Object obj, ArrayInfo info);
+    
     public int[] dimensions(Object arr);
     
     public int flatten(
@@ -27,6 +29,8 @@ public interface ReflectArray {
 	
 	public boolean isNDimensional(ReflectClass a_class);
 	
+	public Object newInstance(ReflectClass componentType, ArrayInfo info);
+	
 	public Object newInstance(ReflectClass componentType, int length);
 	
 	public Object newInstance(ReflectClass componentType, int[] dimensions);
@@ -38,6 +42,8 @@ public interface ReflectArray {
         int a_flatElement,
         Object a_shaped,
         int[] a_dimensions,
-        int a_currentDimension);	
+        int a_currentDimension);
+
+	
 }
 
