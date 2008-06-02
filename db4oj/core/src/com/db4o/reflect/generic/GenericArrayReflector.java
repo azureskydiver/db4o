@@ -14,6 +14,10 @@ public class GenericArrayReflector implements ReflectArray{
     public GenericArrayReflector(GenericReflector reflector){
         _delegate = reflector.getDelegate().array();
     }
+    
+    public void analyze(Object obj, ArrayInfo info) {
+        _delegate.analyze(obj, info);
+    }
 
     public int[] dimensions(Object arr) {
         return _delegate.dimensions(arr);
@@ -51,6 +55,15 @@ public class GenericArrayReflector implements ReflectArray{
         }
         return _delegate.isNDimensional(a_class.getDelegate());
     }
+    
+    public Object newInstance(ReflectClass componentType, ArrayInfo info) {
+        componentType = componentType.getDelegate();
+        if(componentType instanceof GenericClass){
+            int length = info.elementCount();
+            return new GenericArray(((GenericClass)componentType).arrayClass(), length);
+        }
+        return _delegate.newInstance(componentType, info);
+    }
 
     public Object newInstance(ReflectClass componentType, int length) {
         componentType = componentType.getDelegate();
@@ -75,5 +88,6 @@ public class GenericArrayReflector implements ReflectArray{
     public int shape(Object[] a_flat, int a_flatElement, Object a_shaped, int[] a_dimensions, int a_currentDimension) {
         return _delegate.shape(a_flat, a_flatElement, a_shaped, a_dimensions, a_currentDimension);
     }
+
 
 }

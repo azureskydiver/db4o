@@ -18,12 +18,27 @@ public class JdkArray extends AbstractReflectArray {
         super(reflector);
     }
     
+    public void analyze(Object obj, ArrayInfo info) {
+        // do nothing
+        // possible further processing here:  
+        // Analyze component type, length, dimensions, primitive ... 
+    }
+    
     public Object newInstance(ReflectClass componentType, int length) {
         return Array.newInstance(JdkReflector.toNative(componentType), length);
     }
 
     public Object newInstance(ReflectClass componentType, int[] dimensions) {
-        return Array.newInstance(JdkReflector.toNative(componentType), dimensions);
+        Class native1 = JdkReflector.toNative(componentType);
+        return Array.newInstance(native1, dimensions);
+    }
+
+    public Object newInstance(ReflectClass componentType, ArrayInfo info) {
+        Class clazz = JdkReflector.toNative(componentType);
+        if(info instanceof MultidimensionalArrayInfo){
+            return Array.newInstance(clazz, ((MultidimensionalArrayInfo)info).dimensions());
+        }
+        return Array.newInstance(clazz, info.elementCount());
     }
 
 
