@@ -1,0 +1,29 @@
+package annotations;
+
+interface Interface1 {
+}
+
+interface Interface2 {
+}
+
+interface Interface3 {
+}
+
+/**
+ * @decaf.ignore.implements
+ */
+class Class1 implements Interface1, Interface2 {
+}
+
+/**
+ * @decaf.ignore.implements Interface1
+ */
+class Class2 implements Interface1, Interface2 {
+}
+
+/**
+ * @decaf.ignore.implements Interface1
+ * @decaf.ignore.implements Interface3
+ */
+class Class2 implements Interface1, Interface2, Interface3 {
+}

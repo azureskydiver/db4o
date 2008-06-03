@@ -10,6 +10,10 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
+/**
+ * 
+ * @decaf.ignore
+ */
 class JDK_1_4 extends JDK_1_3 {
 	
 	private Hashtable fileLocks;

@@ -124,6 +124,7 @@ public interface Query {
      * 
      * @param comparator The comparator to apply.
      * @return this {@link Query} object to allow the chaining of method calls.
+     * @decaf.ignore
      */
     public Query sortBy(Comparator comparator);
 

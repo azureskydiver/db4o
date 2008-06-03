@@ -9,6 +9,7 @@ import com.db4o.*;
 /**
  * @exclude
  * @sharpen.ignore
+ * @decaf.ignore
  */
 public class TTreeMap implements ObjectConstructor {
 	

@@ -2,6 +2,10 @@
 
 package com.db4o.internal;
 
+/**
+ * 
+ * @decaf.ignore
+ */
 class JDK_1_3 extends JDK_1_2{
 
 	Thread addShutdownHook(Runnable runnable){

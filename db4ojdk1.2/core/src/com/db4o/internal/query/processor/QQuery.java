@@ -23,7 +23,10 @@ public class QQuery extends QQueryBase implements Query {
     	super(a_trans,a_parent,a_field);
     }
 
-	public Query sortBy(Comparator comparator) {
+    /**
+     * @decaf.ignore
+     */
+    public Query sortBy(Comparator comparator) {
 		return sortBy(new JdkComparatorWrapper(comparator));
 	}
 }

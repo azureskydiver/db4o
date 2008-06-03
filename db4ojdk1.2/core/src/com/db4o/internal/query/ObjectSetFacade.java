@@ -7,10 +7,12 @@ import java.util.*;
 import com.db4o.ext.ExtObjectSet;
 import com.db4o.foundation.*;
 import com.db4o.internal.query.result.*;
+import com.db4o.query.*;
 
 /**
  * @exclude
  * @sharpen.ignore 
+ * @decaf.ignore.extends
  */
 public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     
@@ -20,6 +22,13 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
         _delegate = new StatefulQueryResult(qResult);
     }
     
+	public void sort(QueryComparator cmp) {
+		_delegate.sort(cmp);
+	}	
+    
+    /**
+     * @decaf.ignore
+     */
     public Iterator iterator() {
     	class JDKIterator extends Iterable4Adaptor implements Iterator {
 			public JDKIterator(Iterable4 delegate) {
@@ -64,6 +73,9 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
         return _delegate.size();
     }
     
+    /**
+     * @decaf.ignore
+     */
     public boolean contains(Object a_object) {
         return indexOf(a_object) >= 0;
     }
@@ -72,14 +84,23 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
         return _delegate.get(index);
     }
 
+    /**
+     * @decaf.ignore
+     */
     public int indexOf(Object a_object) {
     	return _delegate.indexOf(a_object);
     }
     
+    /**
+     * @decaf.ignore
+     */
     public int lastIndexOf(Object a_object) {
         return indexOf(a_object);
     }
     
+    /**
+     * @decaf.ignore
+     */
     public void remove() {
         throw new UnsupportedOperationException();
     }

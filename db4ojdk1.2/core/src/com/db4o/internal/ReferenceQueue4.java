@@ -2,6 +2,10 @@
 
 package com.db4o.internal;
 
+/**
+ * 
+ * @decaf.ignore
+ */
 class ReferenceQueue4 extends java.lang.ref.ReferenceQueue
 {
 	ActiveObjectReference yapPoll(){

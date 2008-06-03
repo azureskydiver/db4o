@@ -10,6 +10,7 @@ import com.db4o.internal.collections.*;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class FastList implements java.util.List{
     

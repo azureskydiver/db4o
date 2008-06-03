@@ -4,7 +4,10 @@ package com.db4o.foundation;
 
 import java.util.*;
 
-
+/**
+ * 
+ * @decaf.ignore
+ */
 public class JdkCollectionIterator4 implements Iterator4{
     
     private static final Object INVALID = new Object();

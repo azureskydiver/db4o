@@ -58,7 +58,7 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 	}
 
 	void decaf(IResource resource, IProgressMonitor monitor) throws CoreException {
-		if (resource instanceof IFile && resource.getName().endsWith(".java")) {
+		if (resource instanceof IFile && resource.getName().endsWith(".java") ) {
 			monitor.subTask(resource.getName());
 			final IFile file = (IFile) resource;
 //			deleteMarkers(file);
@@ -197,11 +197,11 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 			IProgressMonitor monitor) {
 		IPath path= decaf.getPath();
 		try {
-			if (null != decaf.getBuffer() /*&& decaf.isWorkingCopy()*/) {
-				rewriteDocument(rewrite, decaf);
-			} else {
+//			if (null != decaf.getBuffer() /*&& decaf.isWorkingCopy()*/) {
+//				rewriteDocument(rewrite, decaf);
+//			} else {
 				FileRewriter.rewriteFile(rewrite, path);
-			}
+//			}
 		} catch (CoreException e) {
 			e.printStackTrace();
 		} catch (BadLocationException e) {

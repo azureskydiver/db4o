@@ -5,6 +5,7 @@ import java.util.*;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class JdkComparatorWrapper implements QueryComparator {
 	private Comparator _comparator;
