@@ -27,11 +27,7 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
     }
 
 	public static Iterator4 allElements(final ReflectArray reflectArray, Object array) {
-		// TODO: replace array copying code with iteration
-		int[] dim = reflectArray.dimensions(array);
-        Object[] flat = new Object[elementCount(dim)];
-        reflectArray.flatten(array, dim, 0, flat, 0);
-        return new ArrayIterator4(flat);
+	    return new MultidimensionalArrayIterator(reflectArray, (Object[])array);
 	}
 
     protected static final int elementCount(int[] a_dim) {
