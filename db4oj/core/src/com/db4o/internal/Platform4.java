@@ -9,6 +9,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;

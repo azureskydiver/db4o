@@ -7,6 +7,7 @@ import java.util.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.internal.handlers.array.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 

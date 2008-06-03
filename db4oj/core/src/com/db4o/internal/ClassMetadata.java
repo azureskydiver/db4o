@@ -14,6 +14,7 @@ import com.db4o.internal.delete.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.slots.*;
