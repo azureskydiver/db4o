@@ -17,7 +17,6 @@ import db4ounit.extensions.fixtures.*;
 
 @SuppressWarnings("unchecked")
 public abstract class ListTypeHandlerTestUnitBase extends AbstractDb4oTestCase implements OptOutDefragSolo {
-	
     protected void configure(Configuration config) throws Exception {
         config.registerTypeHandler(
             new SingleClassTypeHandlerPredicate(itemFactory().listClass()),
@@ -84,13 +83,13 @@ public abstract class ListTypeHandlerTestUnitBase extends AbstractDb4oTestCase i
 			return (List) item.getClass().getField(ItemFactory.LIST_FIELD_NAME).get(item);
 		} 
 		catch (Exception exc) {
-			throw new RuntimeException(exc);
+			throw new RuntimeException("", exc);
 		}
 	}
 
 	private void assertEmptyQueryResult(Query q) {
 		ObjectSet set = q.execute();
-		Assert.isTrue(set.isEmpty());
+		Assert.areEqual(0, set.size());
 	}
 
 	private void assertSuccessfulQueryResult(Query q) {

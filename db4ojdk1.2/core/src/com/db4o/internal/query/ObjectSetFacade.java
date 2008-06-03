@@ -9,7 +9,8 @@ import com.db4o.foundation.*;
 import com.db4o.internal.query.result.*;
 
 /**
- * @exclude 
+ * @exclude
+ * @sharpen.ignore 
  */
 public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     
