@@ -58,7 +58,7 @@ public class MultidimensionalArrayIterator4TestCase extends AbstractDb4oTestCase
     }
     
     private Iterator4 iterate(Object[] array){
-        return new MultidimensionalArrayIterator4(reflectArray(), array);
+        return new MultidimensionalArrayIterator(reflectArray(), array);
     }
     
     private ReflectArray reflectArray(){

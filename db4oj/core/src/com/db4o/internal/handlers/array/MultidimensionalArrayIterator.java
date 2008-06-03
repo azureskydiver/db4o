@@ -9,7 +9,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class MultidimensionalArrayIterator4 implements Iterator4 {
+public class MultidimensionalArrayIterator implements Iterator4 {
     
     private final ReflectArray _reflectArray;
     
@@ -19,7 +19,7 @@ public class MultidimensionalArrayIterator4 implements Iterator4 {
     
     private Iterator4 _delegate;
     
-    public MultidimensionalArrayIterator4(ReflectArray reflectArray, Object[] array) {
+    public MultidimensionalArrayIterator(ReflectArray reflectArray, Object[] array) {
         _reflectArray = reflectArray;
         _array = array;
         reset();
@@ -47,7 +47,7 @@ public class MultidimensionalArrayIterator4 implements Iterator4 {
         Class clazz = obj.getClass();
         if(clazz.isArray()){
             if(clazz.getComponentType().isArray()){
-                _delegate = new MultidimensionalArrayIterator4(_reflectArray, (Object[]) obj);
+                _delegate = new MultidimensionalArrayIterator(_reflectArray, (Object[]) obj);
             } else {
                 _delegate = new ReflectArrayIterator(_reflectArray, obj);
             }
