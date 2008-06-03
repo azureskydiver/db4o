@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.assorted;
 import com.db4o.internal.*;
 import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.internal.handlers.array.*;
 import com.db4o.reflect.*;
 
 import db4ounit.Assert;

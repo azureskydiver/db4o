@@ -1,6 +1,9 @@
 /* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.foundation;
+package com.db4o.internal.handlers.array;
+
+import com.db4o.foundation.*;
+import com.db4o.reflect.*;
 
 
 /**
@@ -8,13 +11,16 @@ package com.db4o.foundation;
  */
 public class MultidimensionalArrayIterator4 implements Iterator4 {
     
+    private final ReflectArray _reflectArray;
+    
     private final Object[] _array;
     
     private int _currentElement;
     
     private Iterator4 _delegate;
     
-    public MultidimensionalArrayIterator4(Object[] array) {
+    public MultidimensionalArrayIterator4(ReflectArray reflectArray, Object[] array) {
+        _reflectArray = reflectArray;
         _array = array;
         reset();
     }
@@ -38,8 +44,13 @@ public class MultidimensionalArrayIterator4 implements Iterator4 {
             return false;
         }
         Object obj = _array[_currentElement];
-        if(obj.getClass().isArray()){
-            _delegate = new MultidimensionalArrayIterator4((Object[]) obj);
+        Class clazz = obj.getClass();
+        if(clazz.isArray()){
+            if(clazz.getComponentType().isArray()){
+                _delegate = new MultidimensionalArrayIterator4(_reflectArray, (Object[]) obj);
+            } else {
+                _delegate = new ReflectArrayIterator(_reflectArray, obj);
+            }
             return moveNext();
         }
         return true;

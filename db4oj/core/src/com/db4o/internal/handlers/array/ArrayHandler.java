@@ -1,6 +1,6 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.internal.handlers;
+package com.db4o.internal.handlers.array;
 
 import com.db4o.*;
 import com.db4o.ext.*;
@@ -8,6 +8,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
+import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
@@ -573,22 +574,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return _handler;
     }
     
-    private static final int HASHCODE_FOR_NULL = 9141078; 
-    
-    private static final class ReflectArrayIterator extends IndexedIterator {
-        private final Object _array;
-        private final ReflectArray _reflectArray;
-
-        public ReflectArrayIterator(ReflectArray reflectArray, Object array) {
-            super(reflectArray.getLength(array));
-            _reflectArray = reflectArray;
-            _array = array;
-        }
-
-        protected Object get(int index) {
-            return _reflectArray.get(_array, index);
-        }
-    }
+    private static final int HASHCODE_FOR_NULL = 9141078;
 
 
     

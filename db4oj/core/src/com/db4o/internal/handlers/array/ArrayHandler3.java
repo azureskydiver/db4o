@@ -1,12 +1,12 @@
 /* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.internal.handlers;
+package com.db4o.internal.handlers.array;
 
 
 /**
  * @exclude
  */
-public class MultidimensionalArrayHandler3 extends MultidimensionalArrayHandler {
+public class ArrayHandler3 extends ArrayHandler {
     
     protected ArrayVersionHelper createVersionHelper() {
         return new ArrayVersionHelper3();
