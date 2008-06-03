@@ -14,6 +14,8 @@
 -fullyQualify ICloneable
 -fullyQualify AllTests
 
+-methodMapping com.db4o.db4ounit.jre5.collections.typehandler.ListTypeHandlerTestUnitBase.itemFactory CreateItemFactory
+
 -typeMapping com.db4o.events.EventArgs System.EventArgs
 -typeMapping com.db4o.Db4o Db4objects.Db4o.Db4oFactory
 -typeMapping com.db4o.ext.ExtDb4o Db4objects.Db4o.Ext.ExtDb4oFactory
@@ -31,10 +33,10 @@
 -namespaceMapping com.db4o Db4objects.Db4o
 -namespaceMapping java Sharpen
 
-
 -propertyMapping java.lang.System.out Sharpen.Runtime.Out
 -propertyMapping java.lang.System.err Sharpen.Runtime.Err
 -propertyMapping db4ounit.TestPlatform.getExceptionCause InnerException
 -propertyMapping java.util.Date.getTime Ticks
+-propertyMapping java.lang.Class.getSimpleName Name
 
 -methodMapping com.db4o.db4ounit.util.Strings.replace Replace

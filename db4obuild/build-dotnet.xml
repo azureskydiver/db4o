@@ -478,7 +478,7 @@
 			<fileset dir="${dir.j.jdk5.core.src}">
 				<include name="com/db4o/collections/*.java" />
 			</fileset>
-		</copy>
+		</copy>		
 		
 	    <!--copy db4ounit src-->
         <copy todir="${dir.sharpen}/db4oj/core/src">
@@ -520,6 +520,21 @@
             
         <copy todir="${dir.sharpen}/db4oj/core/src">
             <fileset dir="${dir.j.jdk5.test.src}">
+            	<include name="**/collections/typehandler/AllTests.java" />
+            	
+            	<include name="**/collections/typehandler/ListTypeHandlerTestSuite.java" />
+            	<include name="**/collections/typehandler/ListTypeHandlerGreaterSmallerTestSuite.java" />
+            		
+            	<include name="**/collections/typehandler/ListTypeHandlerTestElementsSpec.java" />            	
+            	<include name="**/collections/typehandler/ListTypeHandlerCascadedDeleteTestCase.java" />
+            	<include name="**/collections/typehandler/ListTypeHandlerPersistedCountTestCase.java" />
+            	<include name="**/collections/typehandler/ListTypeHandlerStringElementTestSuite.java" />            	
+                <include name="**/collections/typehandler/ListTypeHandlerTestUnitBase.java" />
+            	<include name="**/collections/typehandler/ListTypeHandlerTestVariables.java" />
+            	<include name="**/collections/typehandler/ItemFactory.java" />
+        		<include name="**/collections/typehandler/ListTypeHandler.java" />
+        		<include name="**/collections/typehandler/EmbeddedListTypeHandler.java" />            	
+            	
                 <include name="**/collections/ArrayList4TATestCaseBase.java" />
                 <include name="**/collections/ArrayList4SODATestCase.java" />
                 <include name="**/collections/ArrayList4Asserter.java" />               
@@ -530,6 +545,12 @@
                 <include name="**/concurrency/query/*.java" />
             </fileset>
         </copy>
+                	
+		<copy 	todir="${dir.sharpen}/db4oj/core/src" verbose="true" overwrite="true">
+			<fileset dir="${dir.j.jdk1.2.core.src}">
+				<include name="com/db4o/internal/query/ObjectSetFacade.java" />
+			</fileset>
+		</copy>		
 
 	    <copy todir="${dir.sharpen}/db4oj/core/src">
             <fileset dir="${dir.j.nqopt}/test/src">

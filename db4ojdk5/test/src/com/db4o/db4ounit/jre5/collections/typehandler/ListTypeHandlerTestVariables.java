@@ -18,7 +18,7 @@ public final class ListTypeHandlerTestVariables {
 	
 	public final static FixtureProvider LIST_FIXTURE_PROVIDER = 
 			new SimpleFixtureProvider(
-				ListTypeHandlerTestVariables.LIST_IMPLEMENTATION,
+				LIST_IMPLEMENTATION,
 				new Object[] {
 						new ArrayListItemFactory(),
 						new LinkedListItemFactory(),
@@ -73,7 +73,7 @@ public final class ListTypeHandlerTestVariables {
 
 	}
 	
-	private static class ArrayListItemFactory implements ItemFactory, Labeled {
+	private static class ArrayListItemFactory extends ItemFactory implements Labeled {
 		private static class Item {
 			public ArrayList _list = new ArrayList();
 		}
@@ -95,7 +95,7 @@ public final class ListTypeHandlerTestVariables {
 		}
 	}
 
-	private static class LinkedListItemFactory implements ItemFactory, Labeled {
+	private static class LinkedListItemFactory extends ItemFactory implements Labeled {
 		private static class Item {
 			public LinkedList _list = new LinkedList();
 		}
@@ -117,7 +117,7 @@ public final class ListTypeHandlerTestVariables {
 		}
 	}
 
-	private static class ListItemFactory implements ItemFactory, Labeled {
+	private static class ListItemFactory extends ItemFactory implements Labeled {
 		private static class Item {
 			public List _list = new LinkedList();
 		}
