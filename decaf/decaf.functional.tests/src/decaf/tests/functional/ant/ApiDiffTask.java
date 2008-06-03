@@ -1,8 +1,6 @@
 package decaf.tests.functional.ant;
 
 import java.io.*;
-import java.util.*;
-import java.util.zip.*;
 
 import org.apache.tools.ant.*;
 
@@ -28,51 +26,34 @@ public class ApiDiffTask extends Task {
 		if (null == _to) throw new IllegalStateException("Missing 'to'.");
 		
 		try {
-			final Set<String> fromEntries = classEntries(_from);
-			final Set<String> toEntries = classEntries(_to);
-			
-			final Set<String> unexpected = difference(toEntries, fromEntries);
-			logAll("Unexpected class: ", unexpected);
-			
-			final Set<String> missing = difference(fromEntries, toEntries);
-			logAll("Missing class: ", missing);
-			
-			if (!unexpected.isEmpty() || !missing.isEmpty()) {
-				throw new BuildException("API surfaces do not match. Diferences have been reported.", getLocation());
+			final FailureHandler failureHandler = new FailureHandler();
+			new ApiDiff(failureHandler, _from, _to).run();
+			if (failureHandler.failures() > 0) {
+				throw new BuildException("API surfaces do not match. "  + format(failureHandler) + " been reported.", getLocation());
 			}
 		} catch (IOException e) {
 			throw new BuildException(e, getLocation());
-		}	
-	}
-
-	private void logAll(String prefix, Set<String> set) {
-		if (set.size() > 0) {
-			for (String klass : set) {
-				log(prefix + klass);
-			}
 		}
 	}
 
-	private Set<String> difference(final Set<String> a, final Set<String> b) {
-		HashSet<String> clone = new HashSet<String>(a);
-		clone.removeAll(b);
-		return clone;
+	private String format(final FailureHandler failureHandler) {
+		final int failures = failureHandler.failures();
+		return failures == 1
+			? "1 failure has"
+			: failures + " failures have";
 	}
-
-	private Set<String> classEntries(File file) throws IOException {
-		final Set<String> found = new HashSet<String>();
-		final ZipInputStream zip = new ZipInputStream(new FileInputStream(file));
-		try {
-			ZipEntry entry = null;
-			while (null != (entry = zip.getNextEntry())) {
-				if (entry.getName().endsWith(".class")
-					&& entry.getName().indexOf('$') == -1) {
-					found.add(entry.getName());
-				}
-			}
-		} finally {
-			zip.close();
+	
+	class FailureHandler implements ApiDiff.FailureHandler {
+		
+		private int count = 0;
+		
+		public int failures() {
+			return count;
 		}
-		return found;
+		
+		public void fail(String message) {
+			log(message);
+			++count;
+		}
 	}
 }

@@ -3,11 +3,20 @@
 	
 	<import file="decaf-common.xml" />
 	
+	<property file="machine.properties" />
+	
+	<!--
+	Must be defined in machine.properties:
+	 
 	<property name="dir.workspace" location="/Users/rodrigob/workspaces/db4o" />
 	<property name="eclipse.home" location="/Users/rodrigob/java/eclipse" />
+	-->
 	<property name="build.dir" location="build" />
 	
 	<target name="test" depends="api-test, integration-test" description="runs all the tests">
+	</target>
+	
+	<target name="clean-test" depends="clean, test" description="runs the tests in a clean workspace">
 	</target>
 	
 	<target name="api-test" depends="old-core-jar, new-core-jar" description="checks inferred API surface is the same as original">
@@ -15,6 +24,7 @@
 		<taskdef name="api-diff" classname="decaf.tests.functional.ant.ApiDiffTask">
 			<classpath>
 				<pathelement location="bin" />
+				<pathelement location="${asm.home}/lib/asm-3.1.jar" />
 				<fileset dir="lib">
 					<include name="**/*.jar" />
 				</fileset>
@@ -25,14 +35,60 @@
 		
 	</target>
 	
-	<target name="integration-test" depends="decaf-core" description="checks inferred implementation against original tests">
+	<macrodef name="javac11">
+		<attribute name="srcdir" />
+		<sequential>
+			<javac compiler="classic"
+				fork="yes"
+				executable="${file.compiler.jdk1.3}"
+				srcdir="@{srcdir}"
+				destdir="${build.dir}/java1.1"
+				debug="true">
+				<!-- <compilerarg line="${file.compiler.jdk1.3.args.line}"/> -->
+			</javac>
+		</sequential>
+	</macrodef>
+	
+	<target name="integration-test" depends="decaf-core, integration-test-execution" description="checks inferred implementation against original tests">
+	</target>
+	
+	<target name="integration-test-execution" depends="integration-test-compilation">
+		<path id="tests.java1.1.cp">
+			<pathelement location="${build.dir}/java1.1" />
+			<pathelement location="${path.classpath.jdk1.1}" />
+		</path>
 		
-		<!-- run db4oj.tests against db4o-decaf.jar -->
+		<java jvm="${file.jvm.jdk1.1}" 
+			fork="true" 
+			classname="com.db4o.db4ounit.jre11.AllTests" 
+			failonerror="true" 
+			timeout="1800000">
+			<classpath refid="tests.java1.1.cp" />
+			<sysproperty key="dir.workspace" value="${dir.workspace}" />
+		</java>
+	</target>
+		
+	<target name="integration-test-compilation">
+		
+		<mkdir dir="${build.dir}/java1.1" />
+		
+		<javac11 srcdir="${build.dir}/workspace/db4o.decaf/src"  />
+		<javac11 srcdir="../db4ounit/src" />
+		<javac11 srcdir="../db4ounit.extensions/src" />
+		<javac11 srcdir="../db4oj.tests/src" />
 	
 	</target>
 		
 	<target name="old-core-jar" depends="init">
-		<jar destfile="${build.dir}/db4o-old.jar" basedir="${dir.workspace}/db4oj/bin">
+		<jar destfile="${build.dir}/db4o-old.jar">
+			<fileset dir="${dir.workspace}/db4oj/bin">
+				<include name="**/*.class" />
+			</fileset>
+			<!--
+			<fileset dir="${dir.workspace}/db4oj.tests/bin">
+				<include name="**/*.class" />
+			</fileset>
+			-->
 		</jar>
 	</target>
 	
@@ -41,7 +97,35 @@
 		</jar>
 	</target>
 	
-	<target name="decaf-core" depends="init, install-decaf-plugin">
+	<target name="decaf-core" depends="decaf-workspace, install-decaf-plugin">
+
+		<decaf workspace="${build.dir}/workspace" resource="db4o" />
+		
+	</target>
+	
+	<target name="decaf-tests" depends="decaf-core">
+		
+		<jar destfile="${build.dir}/db4ounit-all.jar">
+			<fileset dir="../db4ounit/bin">
+				<include name="**/*.class" />
+			</fileset>
+			<fileset dir="../db4ounit.extensions/bin">
+				<include name="**/*.class" />
+			</fileset>
+		</jar>
+
+		<decaf workspace="${build.dir}/workspace" resource="db4o.tests">
+			<args>
+				<arg value="-projectReference" />
+				<arg value="db4o" />
+				<arg value="-cp" />
+				<arg path="${build.dir}/db4ounit-all.jar" />
+			</args>
+		</decaf>
+		
+	</target>
+			
+	<target name="decaf-workspace" depends="init">
 		<prepare-workspace dir="${build.dir}/workspace" project="db4o">
 			<sources>
 				<fileset dir="${dir.workspace}/db4oj/core">
@@ -50,20 +134,35 @@
 				<fileset dir="${dir.workspace}/db4oj/tools">
 					<include name="**/*.java" />
 				</fileset>
-				<fileset dir="${dir.workspace}/db4ojdk1.2/core">
+			</sources>
+		</prepare-workspace>
+		
+		<copy todir="${build.dir}/workspace/db4o" overwrite="true">
+			<fileset dir="${dir.workspace}/db4ojdk1.2/core">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		
+		<prepare-workspace dir="${build.dir}/workspace" project="db4o.tests">
+			<sources>
+				<fileset dir="${dir.workspace}/db4oj.tests">
 					<include name="**/*.java" />
 				</fileset>
 			</sources>
 		</prepare-workspace>
-		
-		<decaf workspace="${build.dir}/workspace" resource="db4o" />
+			
+		<copy todir="${build.dir}/workspace/db4o.tests" overwrite="true">
+			<fileset dir="${dir.workspace}/db4ojdk1.2/test">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="init">
 		<mkdir dir="${build.dir}" />
 	</target>
 	
-	<target name="install-decaf-plugin">
+	<target name="install-decaf-plugin" depends="install-sharpen-plugin">
 		
 		<property name="decaf.src.dir" location="../decaf" />
 		<property name="decaf.bin.dir" location="${decaf.src.dir}/bin" />
@@ -74,6 +173,19 @@
 				<include name="plugin.xml" />
 			</fileset>
 		</jar>
+	</target>
+	
+	<target name="install-sharpen-plugin">
+			
+		<property name="sharpen.src.dir" location="../sharpen.core" />
+		<property name="sharpen.bin.dir" location="${sharpen.src.dir}/bin" />
+		<property name="plugins.home" location="${eclipse.home}/plugins" />
+	
+		<property name="sharpen.plugin.dir" location="${plugins.home}/sharpen_1.0.0" />
+		<mkdir dir="${sharpen.plugin.dir}" />
+		<jar destfile="${sharpen.plugin.dir}/sharpen.jar" basedir="${sharpen.bin.dir}">
+		</jar>
+		<copy todir="${sharpen.plugin.dir}" file="${sharpen.src.dir}/plugin.xml"  />
 	</target>
 	
 	<target name="clean">

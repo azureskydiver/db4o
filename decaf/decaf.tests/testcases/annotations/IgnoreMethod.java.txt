@@ -1,3 +1,5 @@
+package annotations;
+
 class Foo {
 
 	public void bar() {

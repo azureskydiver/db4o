@@ -58,7 +58,7 @@
          name="Decaf Application"
          point="org.eclipse.core.runtime.applications">
          <application>
-	         <run class="decaf.builder.DecafApplication">
+	         <run class="decaf.application.DecafApplication">
 	         </run>
 	     </application>
    </extension>

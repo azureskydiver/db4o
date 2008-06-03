@@ -13,6 +13,7 @@ import com.db4o.reflect.*;
  * 
  * @exclude
  * @sharpen.ignore
+ * @decaf.ignore
  */
 public class NetDecimal extends NetSimpleTypeHandler{
 	

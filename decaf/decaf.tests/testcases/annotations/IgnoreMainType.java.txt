@@ -1,0 +1,9 @@
+package annotations;
+
+import java.util.*;
+
+/**
+ * @decaf.ignore
+ */
+public class IgnoreMainType {
+}

@@ -7,6 +7,11 @@ public class VarArgsMethod {
 				"Invocation" });
 		testVarArgs(1, new String[] { "test" + "Var" + "Args",
 				"Method" + "Invocation" });
+		testVarArgs(1, new String[0]);
+		testVarArgs(1, new String[] { "foo", "bar" });
+		testVarArgs(42, new String[] {});
+		String[] var = null;
+		testVarArgs(1, var);
 		
 		String value = "test";
 		testVarArgs(1, new String[] { value, "Var", "Args",
@@ -14,6 +19,8 @@ public class VarArgsMethod {
 				getDescription(getDescription("Invocation")) });
 		testVarArgsMethodWithObjects(new Object[] { "Test", new Integer(42),
 				new VarArgsMethod() });
+		testVarArgsMethodWithObjects(new String[2]);
+		testVarArgsMethodWithObjects(new Object[] { new int[2] });
 	}
 	
 	public void testVarArgsMethodWithObjects(Object[] args) {

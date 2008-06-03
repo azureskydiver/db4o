@@ -23,45 +23,119 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		if (handledAsIgnored(node)) {
 			return false;
 		}
+		
+		processIgnoreExtends(node);
+		processIgnoreImplements(node);
+		
 		return super.visit(node);
 	}
 
-	private boolean handledAsIgnored(BodyDeclaration node) {
-		if (isIgnored(node)) {
-			remove(node);
-			return true;
+	private void processIgnoreExtends(TypeDeclaration node) {
+		if (ignoreExtends(node)) {
+			remove(node.getSuperclassType());
 		}
-		return false;
 	}
 
-	private void remove(ASTNode node) {
-		rewrite.remove(node, null);
+	private void processIgnoreImplements(TypeDeclaration node) {
+		final Set<String> ignoredImplements = ignoredImplements(node);
+		if (ignoredImplements.isEmpty()) {
+			return;
+		}
+		
+		for (Object o : node.superInterfaceTypes()) {
+			final Type type = (Type)o;
+			if (ignoredImplements.contains(type.toString())) {
+				remove(type);
+			}
+		}
+	}	
+
+	private Set<String> ignoredImplements(TypeDeclaration node) {
+		
+		final List<TagElement> tags = JavadocUtility.getJavadocTags(node, DecafAnnotations.IGNORE_IMPLEMENTS);
+		if (tags.isEmpty()) {
+			return Collections.emptySet();
+		}
+		
+		if (singleTagWithNoFragments(tags)) {
+			return allSuperInterfaceTypeNames(node);
+		}
+		
+		final HashSet<String> ignored = new HashSet<String>(tags.size());
+		for (TagElement tag : tags) {
+			ignored.add(JavadocUtility.textFragment(tag.fragments(), 0));
+		}
+		return ignored;
 	}
 
-	private boolean isIgnored(BodyDeclaration node) {
-		return containsJavadoc(node, DecafAnnotations.DECAF_IGNORE);
+	private boolean singleTagWithNoFragments(final List<TagElement> tags) {
+		return tags.size() == 1 && tags.get(0).fragments().isEmpty();
 	}
 
-	private boolean containsJavadoc(BodyDeclaration node, String tag) {
-		return JavadocUtility.containsJavadoc(node, tag);
+	private Set<String> allSuperInterfaceTypeNames(TypeDeclaration node) {
+		final List superInterfaces = node.superInterfaceTypes();
+		final HashSet<String> set = new HashSet<String>(superInterfaces.size());
+		for (Object o : superInterfaces) {
+			set.add(o.toString());
+		}
+		return set;
 	}
 
-	public boolean visit(MethodInvocation methodCall) {
-		IMethodBinding methodBinding = methodCall.resolveMethodBinding();
-		if (methodBinding.isVarargs()) {
-			MethodInvocation explicityArrayInCall = copy(methodCall);
+	private boolean ignoreExtends(TypeDeclaration node) {
+		return containsJavadoc(node, DecafAnnotations.IGNORE_EXTENDS);
+	}
+
+	public boolean visit(MethodInvocation node) {
+		if (requiresVarArgsTranslation(node)) {
+			MethodInvocation explicityArrayInCall = copy(node);
 
 			List arguments = explicityArrayInCall.arguments();
 
-			List newArguments = mapVarArgsToArray(arguments, methodBinding.getParameterTypes());
+			List newArguments = mapVarArgsToArray(arguments, node.resolveMethodBinding().getParameterTypes());
 
 			arguments.clear();
 			arguments.addAll(newArguments);
 
-			replace(methodCall, explicityArrayInCall);
+			replace(node, explicityArrayInCall);
 		}
 
 		return true;
+	}
+
+	private boolean requiresVarArgsTranslation(MethodInvocation node) {
+		if (!isVarArgsMethodInvocation(node)) {
+			return false;
+		}
+		if (argumentCountDoesNotMatchParameterCount(node)) {
+			return true;
+		}
+		if (lastArgumentIsAssignmentCompatibleWithLastParameter(node)) {
+			return false;
+		}
+		return true;
+	}
+
+	private boolean lastArgumentIsAssignmentCompatibleWithLastParameter(
+			MethodInvocation node) {
+		final IMethodBinding binding = node.resolveMethodBinding();
+		final ITypeBinding[] parameters = binding.getParameterTypes();
+		final int lastIndex = parameters.length - 1;
+		final ITypeBinding lastArgumentType = expressionType(node.arguments().get(lastIndex));
+		final ITypeBinding lastParameterType = parameters[lastIndex];
+		return lastArgumentType.isAssignmentCompatible(lastParameterType);
+	}
+
+	private boolean argumentCountDoesNotMatchParameterCount(
+			MethodInvocation node) {
+		return node.resolveMethodBinding().getParameterTypes().length != node.arguments().size();
+	}
+
+	private boolean isVarArgsMethodInvocation(MethodInvocation node) {
+		return node.resolveMethodBinding().isVarargs();
+	}
+
+	private ITypeBinding expressionType(final Object expression) {
+		return ((Expression)expression).resolveTypeBinding();
 	}
 
 	private List mapVarArgsToArray(List arguments, ITypeBinding[] parameterTypes) {
@@ -261,6 +335,26 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		VariableDeclarationStatement variable = ast.newVariableDeclarationStatement(newVariableFragment(variableName, initializer));
 		variable.setType(variableType);
 		return variable;
+	}
+	
+	private boolean handledAsIgnored(BodyDeclaration node) {
+		if (isIgnored(node)) {
+			remove(node);
+			return true;
+		}
+		return false;
+	}
+
+	private void remove(ASTNode node) {
+		rewrite.remove(node, null);
+	}
+
+	private boolean isIgnored(BodyDeclaration node) {
+		return containsJavadoc(node, DecafAnnotations.IGNORE);
+	}
+
+	private boolean containsJavadoc(BodyDeclaration node, String tag) {
+		return JavadocUtility.containsJavadoc(node, tag);
 	}
 
 	private void replace(ASTNode node, ASTNode replacement) {

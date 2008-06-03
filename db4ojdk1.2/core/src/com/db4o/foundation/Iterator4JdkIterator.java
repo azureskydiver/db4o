@@ -4,7 +4,10 @@ package com.db4o.foundation;
 
 import java.util.*;
 
-
+/**
+ * 
+ * @decaf.ignore
+ */
 public class Iterator4JdkIterator implements Iterator{
     
     private static final Object BEFORE_START = new Object();

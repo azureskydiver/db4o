@@ -1,0 +1,19 @@
+package annotations;
+
+class Base {
+}
+
+interface Interface {
+}
+
+/**
+ * @decaf.ignore.extends
+ */
+class IgnoreExtends1 extends Base {
+}
+
+/**
+ * @decaf.ignore.extends
+ */
+class IgnoreExtends2 extends Base implements Interface {
+}

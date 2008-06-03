@@ -73,6 +73,9 @@ public class ClusterQuery implements Query{
 		throw new NotSupportedException();
 	}
 
+	/**
+	 * @decaf.ignore
+	 */
 	public Query sortBy(Comparator comparator) {
 		// FIXME
 		throw new NotSupportedException();

@@ -5,6 +5,7 @@ package com.db4o.collections.facades;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class CachedObject {
 		public static transient CachedObject NONE = new CachedObject(null);

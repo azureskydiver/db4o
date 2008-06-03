@@ -9,6 +9,7 @@ import com.db4o.types.*;
  * @persistent
  * @exclude
  * @deprecated since 7.0
+ * @decaf.ignore
  */
 public class P2Collections implements Db4oCollections{
     
