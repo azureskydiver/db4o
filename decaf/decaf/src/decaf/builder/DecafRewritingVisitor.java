@@ -29,6 +29,97 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		
 		return super.visit(node);
 	}
+	
+	@Override
+	public boolean visit(TypeParameter node) {
+		remove(node);
+		return super.visit(node);
+	}
+	
+	@Override
+	public boolean visit(ParameterizedType node) {
+		replace(node, node.getType());
+		return super.visit(node);
+	}
+	
+	@Override
+	public boolean visit(FieldAccess node) {
+		replaceGenericFieldAccessWithCast(node, node.resolveFieldBinding());
+		return super.visit(node);
+	}
+	
+	@Override
+	public boolean visit(QualifiedName node) {
+		IVariableBinding binding = fieldBinding(node);
+		if (null != binding) {
+			replaceGenericFieldAccessWithCast(node, binding);
+		}
+		return super.visit(node);
+	}
+
+	private void replaceGenericFieldAccessWithCast(Expression node, IVariableBinding binding) {
+		final ITypeBinding originalType = binding.getVariableDeclaration().getType();
+		if (originalType.isTypeVariable()) {
+			replace(node,
+					parenthesize(
+						newCast(binding.getType(), copy(node))));
+		}
+	}
+
+	private CastExpression newCast(final ITypeBinding type,
+			final Expression expression) {
+		final CastExpression cast = ast.newCastExpression();
+		cast.setType(newType(type));
+		cast.setExpression(expression);
+		return cast;
+	}
+	
+	private IVariableBinding fieldBinding(Name node) {
+		final IBinding binding = node.resolveBinding();
+		if (binding.getKind() != IBinding.VARIABLE) {
+			return null;
+		}
+		IVariableBinding variable = (IVariableBinding)binding;
+		if (!variable.isField()) {
+			return null;
+		}
+		return variable;
+	}
+
+	@Override
+	public boolean visit(SimpleType node) {
+		final ITypeBinding binding = node.resolveBinding();
+		if (binding.isTypeVariable()) {
+			replace(node, newType(binding.getErasure()));
+		}
+		return super.visit(node);
+	}
+	
+	@Override
+	public boolean visit(IfStatement node) {
+		
+		final Expression expression = node.getExpression();
+		if (expression.resolveUnboxing()) {
+			replace(expression,
+					newMethodInvocation(
+						parenthesize(copy(expression)), "booleanValue"));
+		}
+		return super.visit(node);
+	}
+
+	private ParenthesizedExpression parenthesize(final Expression expression) {
+		final ParenthesizedExpression pe = ast.newParenthesizedExpression();
+		pe.setExpression(expression);
+		return pe;
+	}
+
+	private MethodInvocation newMethodInvocation(final Expression target,
+			final String name) {
+		final MethodInvocation invocation = ast.newMethodInvocation();
+		invocation.setExpression(target);
+		invocation.setName(newSimpleName(name));
+		return invocation;
+	}
 
 	private void processIgnoreExtends(TypeDeclaration node) {
 		if (ignoreExtends(node)) {

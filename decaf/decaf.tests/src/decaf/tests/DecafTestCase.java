@@ -1,6 +1,10 @@
 package decaf.tests;
 
 public class DecafTestCase extends DecafTestCaseBase {
+	
+	public void testBooleanAutoUnboxing() throws Exception {
+		runResourceTestCase("BooleanAutoUnboxing");
+	}
 
 	public void testForEachArray() throws Exception {
 		runResourceTestCase("ForEachArray");

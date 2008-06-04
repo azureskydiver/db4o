@@ -58,7 +58,7 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 	}
 
 	void decaf(IResource resource, IProgressMonitor monitor) throws CoreException {
-		if (resource instanceof IFile && resource.getName().endsWith(".java") ) {
+		if (isJavaFile(resource)) {
 			monitor.subTask(resource.getName());
 			final IFile file = (IFile) resource;
 //			deleteMarkers(file);
@@ -70,6 +70,10 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 			}, monitor);
 			
 		}
+	}
+
+	private boolean isJavaFile(IResource resource) {
+		return resource instanceof IFile && resource.getName().endsWith(".java");
 	}
 
 	private void decafFile(final IProgressMonitor monitor, IFile file)

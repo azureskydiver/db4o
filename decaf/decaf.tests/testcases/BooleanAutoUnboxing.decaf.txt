@@ -1,0 +1,5 @@
+class BooleanAutoUnboxing {
+	public void foo(Boolean flag) {
+		if((flag = null).booleanValue());
+	}
+}
