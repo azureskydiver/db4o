@@ -1,0 +1,18 @@
+package generics;
+
+class Foo {
+	public Object field;
+	
+	public Foo(Object value) {
+		field = value;
+	}
+}
+
+class Main {
+	static void main() {
+		Foo foo = new Foo("42");
+		String s1 = ((String) foo.field);
+		String s2 = ((String) foo.field).toUpperCase();
+		String s3 = ((String) (foo).field);
+	}
+}

@@ -25,5 +25,5 @@ class Class2 implements Interface2 {
  * @decaf.ignore.implements Interface1
  * @decaf.ignore.implements Interface3
  */
-class Class2 implements Interface2 {
+class Class3 implements Interface2 {
 }
