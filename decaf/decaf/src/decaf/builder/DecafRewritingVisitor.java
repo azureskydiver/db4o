@@ -43,26 +43,39 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 	
 	@Override
-	public boolean visit(FieldAccess node) {
-		replaceGenericFieldAccessWithCast(node, node.resolveFieldBinding());
-		return super.visit(node);
-	}
-	
-	@Override
-	public boolean visit(QualifiedName node) {
-		IVariableBinding binding = fieldBinding(node);
-		if (null != binding) {
-			replaceGenericFieldAccessWithCast(node, binding);
+	public void endVisit(VariableDeclarationFragment node) {
+		final Expression initializer = node.getInitializer();
+		final Expression erasure = getErasure(initializer);
+		if (erasure != null) {
+			replace(initializer, erasure);
 		}
-		return super.visit(node);
 	}
 
-	private void replaceGenericFieldAccessWithCast(Expression node, IVariableBinding binding) {
-		final ITypeBinding originalType = binding.getVariableDeclaration().getType();
-		final ITypeBinding actualType = binding.getType();
-		if (originalType != actualType) {
-			replaceWithCast(node, actualType);
+	private Expression getErasure(final Expression expression) {
+		if (expression instanceof Name) {
+			final IVariableBinding field = fieldBinding((Name)expression);
+			if (null == field) {
+				return null;
+			}
+			return getErasureForField(expression, field);
 		}
+		if (expression instanceof FieldAccess) {
+			return getErasureForField(expression, ((FieldAccess)expression).resolveFieldBinding());
+		}
+		return null;
+	}
+
+	private Expression getErasureForField(final Expression initializer,
+			final IVariableBinding field) {
+		if (isErasedFieldAccess(field)) {
+			return createCastForErasure(initializer, field.getType());
+		}
+		return null;
+	}
+	
+	private boolean isErasedFieldAccess(IVariableBinding binding) {
+		final ITypeBinding originalType = binding.getVariableDeclaration().getType();
+		return originalType != binding.getType();
 	}
 
 	private void replaceWithCast(Expression node, final ITypeBinding type) {
@@ -200,6 +213,14 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 	
 	@Override
+	public void endVisit(ArrayAccess node) {
+		final Expression erasure = getErasure(node.getArray());
+		if (null != erasure) {
+			replace(node.getArray(), erasure);
+		}
+	}
+	
+	@Override
 	public void endVisit(MethodInvocation node) {
 	
 		
@@ -211,6 +232,11 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		
 		if (hasGenericReturnType(method)) {
 			replaceWithCast(node, method.getReturnType());
+		}
+		
+		final Expression erasure = getErasure(node.getExpression());
+		if (erasure != null) {
+			replace(node.getExpression(), erasure);
 		}
 	}
 
@@ -319,20 +345,27 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		return (SingleVariableDeclaration) parameters.get(parameters.size()-1);
 	}
 
-	public void endVisit(EnhancedForStatement node) {
+	public boolean visit(EnhancedForStatement node) {
 
-		SingleVariableDeclaration variable = node.getParameter();
-		Expression array = node.getExpression();
-
+		final SingleVariableDeclaration variable = node.getParameter();
+		final Expression erasure = getErasure(node.getExpression());
+		final Expression array = erasure != null
+				? erasure
+				: node.getExpression();
+		
+		Expression arrayReference = null;
+		
 		VariableDeclarationStatement tempArrayVariable = null;
-		if (!isName(array)) {
+		if (isName(array)) {
+			arrayReference = array;
+		} else {
 			String tempArrayName = variable.getName() + "Array";
 			final ITypeBinding type = node.getExpression().resolveTypeBinding();
 			tempArrayVariable = newVariableDeclarationStatement(
 				tempArrayName,
 				newType(type),
-				move(array));
-			array = newSimpleName(tempArrayName);
+				safeMove(array));
+			arrayReference = newSimpleName(tempArrayName);
 		}
 
 		String indexVariableName = variable.getName() + "Index";
@@ -344,42 +377,30 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		InfixExpression cmp = newInfixExpression(
 								InfixExpression.Operator.LESS,
 								newSimpleName(indexVariableName),
-								newFieldAccess(clone(array), "length"));
+								newFieldAccess(clone(arrayReference), "length"));
 
-		Block newBody = ast.newBlock();
-		newBody.statements().add(
+		final ListRewrite listRewrite = rewrite.getListRewrite(node.getBody(), Block.STATEMENTS_PROPERTY);
+		listRewrite.insertFirst(
 				newVariableDeclarationStatement(
 						variable.getName().toString(),
-						move(variable.getType()),
+						clone(variable.getType()),
 						newArrayAccess(
-								clone(array),
-								newSimpleName(indexVariableName))));
+								clone(arrayReference),
+								newSimpleName(indexVariableName))), null);
 
-		moveTo(node.getBody(), newBody);
+		final PrefixExpression updater = newPrefixExpression(
+				PrefixExpression.Operator.INCREMENT,
+				newSimpleName(indexVariableName));
 
-		PrefixExpression updater = newPrefixExpression(
-												PrefixExpression.Operator.INCREMENT,
-												newSimpleName(indexVariableName));
-
-		ForStatement stmt = newForStatement(index, cmp, updater, newBody);
+		final ForStatement stmt = newForStatement(index, cmp, updater, move(node.getBody()));
 		if (null == tempArrayVariable) {
 			replace(node, stmt);
 		} else {
 			replace(node, newBlock(tempArrayVariable, stmt));
 		}
+		return true;
 	}
-
-	private void moveTo(Statement statement, Block body) {
-		if (statement instanceof Block) {
-			final List statements = ((Block)statement).statements();
-			for (Object stmt : statements) {
-				moveTo((Statement) stmt, body);
-			}
-		} else {
-			body.statements().add(move(statement));
-		}
-	}
-
+	
 	private Expression newFieldAccess(Expression e, String fieldName) {
 		return newFieldAccess(e, newSimpleName(fieldName));
 	}
@@ -392,7 +413,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			Expression initializer,
 			Expression comparison,
 			Expression updater,
-			Block body) {
+			Statement body) {
 		ForStatement stmt = ast.newForStatement();
 		stmt.initializers().add(initializer);
 		stmt.setExpression(comparison);

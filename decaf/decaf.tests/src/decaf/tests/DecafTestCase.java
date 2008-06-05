@@ -14,6 +14,10 @@ public class DecafTestCase extends DecafTestCaseBase {
 		runResourceTestCase("ForEachArrayMethod");
 	}
 	
+	public void testNestedForEach() throws Exception {
+		runResourceTestCase("NestedForEach");
+	}
+	
 	public void testDeepVarArgs() throws Exception {
 		runResourceTestCase("DeepVarArgs");
 	}
