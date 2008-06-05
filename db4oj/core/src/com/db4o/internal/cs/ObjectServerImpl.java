@@ -321,6 +321,9 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	private void startCommittedCallbackThread(BlockingQueue committedInfosQueue) {
+		if(isEmbeddedServer()) {
+			return;
+		}
 		_committedCallbacksDispatcher = new CommittedCallbacksDispatcher(this, committedInfosQueue);
 		Thread thread = new Thread(_committedCallbacksDispatcher);
 		thread.setName("committed callback thread");
