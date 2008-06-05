@@ -59,11 +59,16 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	private void replaceGenericFieldAccessWithCast(Expression node, IVariableBinding binding) {
 		final ITypeBinding originalType = binding.getVariableDeclaration().getType();
-		if (originalType.isTypeVariable()) {
-			replace(node,
-					parenthesize(
-						newCast(binding.getType(), copy(node))));
+		final ITypeBinding actualType = binding.getType();
+		if (originalType != actualType) {
+			replaceWithCast(node, actualType);
 		}
+	}
+
+	private void replaceWithCast(Expression node, final ITypeBinding type) {
+		replace(node,
+				parenthesize(
+					newCast(type, move(node))));
 	}
 
 	private CastExpression newCast(final ITypeBinding type,
@@ -177,32 +182,43 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 	
 	@Override
-	public boolean visit(ClassInstanceCreation node) {
+	public void endVisit(ClassInstanceCreation node) {
 		final IMethodBinding ctor = node.resolveConstructorBinding();
 		final List arguments = node.arguments();
 		if (requiresVarArgsTranslation(ctor, arguments)) {
 			rewriteVarArgsArguments(ctor, arguments, rewrite.getListRewrite(node, ClassInstanceCreation.ARGUMENTS_PROPERTY));
 		}
-		return super.visit(node);
 	}
 
 	@Override
+	public boolean visit(MethodInvocation node) {
+		return true;
+	}
+	
+	@Override
 	public void endVisit(MethodInvocation node) {
+	
+		
 		final IMethodBinding method = node.resolveMethodBinding();
 		final List arguments = node.arguments();
 		if (requiresVarArgsTranslation(method, arguments)) {
 			rewriteVarArgsArguments(method, arguments, rewrite.getListRewrite(node, MethodInvocation.ARGUMENTS_PROPERTY));
 		}
+		
+		if (hasGenericReturnType(method)) {
+			replaceWithCast(node, method.getReturnType());
+		}
+	}
+
+	private boolean hasGenericReturnType(final IMethodBinding method) {
+		return method.getMethodDeclaration().getReturnType() != method.getReturnType();
 	}
 
 	private void rewriteVarArgsArguments(final IMethodBinding method,
 			final List arguments, final ListRewrite argumentListRewrite) {
+		
 		final ITypeBinding[] parameters = method.getParameterTypes();
-		final int varArgsBegin = parameters.length - 1;
-		for (int i=varArgsBegin; i<arguments.size(); ++i) {
-			argumentListRewrite.remove((ASTNode)arguments.get(i), null);
-		}
-		argumentListRewrite.insertAt(varArgsToArray(arguments, parameters), varArgsBegin, null);
+		argumentListRewrite.insertLast(varArgsToArray(argumentListRewrite, parameters), null);
 	}
 
 	private boolean requiresVarArgsTranslation(final IMethodBinding method,
@@ -219,8 +235,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		return true;
 	}
 
-	private boolean argumentCountDoesNotMatchParameterCount(
-			final IMethodBinding method, final List arguments) {
+	private boolean argumentCountDoesNotMatchParameterCount(final IMethodBinding method, final List arguments) {
 		return method.getParameterTypes().length != arguments.size();
 	}
 
@@ -237,33 +252,34 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		return ((Expression)expression).resolveTypeBinding();
 	}
 
-	private List mapVarArgsToArray(List arguments, ITypeBinding[] parameterTypes) {
-		List newArguments = copyAllArgumentsButVarArgs(arguments, parameterTypes);
-		ArrayCreation varArgsArray = varArgsToArray(arguments, parameterTypes);
-		newArguments.add(varArgsArray);
-		return newArguments;
-	}
-
-	private ArrayCreation varArgsToArray(List arguments, ITypeBinding[] parameterTypes) {
+	private ArrayCreation varArgsToArray(ListRewrite argumentListRewrite, ITypeBinding[] parameterTypes) {
+		
+		final List arguments = argumentListRewrite.getRewrittenList();
+		final List originalList = argumentListRewrite.getOriginalList();
+		for (int i = parameterTypes.length-1; i < originalList.size(); ++i) {
+			argumentListRewrite.remove((ASTNode)originalList.get(i), null);
+		}
+		
 		ArrayInitializer arrayInitializer = ast.newArrayInitializer();
 		for (int i = parameterTypes.length-1; i < arguments.size(); ++i) {
-			arrayInitializer.expressions().add(copy((ASTNode) arguments.get(i)));
+			final Expression arg = (Expression) arguments.get(i);
+			arrayInitializer.expressions().add(isExistingNode(arg) ? move(arg) : arg);
 		}
 
+		return newArrayCreation(parameterTypes[parameterTypes.length-1], arrayInitializer);
+	}
+
+	private ArrayCreation newArrayCreation(final ITypeBinding arrayType,
+			ArrayInitializer arrayInitializer) {
 		ArrayCreation varArgsArray = ast.newArrayCreation();
 		varArgsArray.setInitializer(arrayInitializer);
 
-		varArgsArray.setType((ArrayType) newType(parameterTypes[parameterTypes.length-1]));
+		varArgsArray.setType((ArrayType) newType(arrayType));
 		return varArgsArray;
 	}
 
-	private List copyAllArgumentsButVarArgs(List arguments, ITypeBinding[] parameterTypes) {
-		List newArguments = new ArrayList();
-		for (int i = 0; i < parameterTypes.length - 1; i++) {
-			ASTNode arg = (ASTNode) arguments.get(i);
-			newArguments.add(copy( (ASTNode) arg));
-		}
-		return newArguments;
+	private boolean isExistingNode(ASTNode arg) {
+		return arg.getStartPosition() != -1;
 	}
 
 	public boolean visit(MethodDeclaration node) {
@@ -289,17 +305,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	private void set(final ASTNode node, final SimplePropertyDescriptor property, final Object value) {
 		rewrite.set(node, property, value, null);
-	}
-
-	private ArrayType newArrayType(Type componentType) {
-		return ast.newArrayType(componentType);
-	}
-
-	private SingleVariableDeclaration newSingleVariableDeclaration(SimpleName paramName, Type paramType) {
-		SingleVariableDeclaration expandedVarArgsParam = ast.newSingleVariableDeclaration();
-		expandedVarArgsParam.setName(paramName);
-		expandedVarArgsParam.setType(paramType);
-		return expandedVarArgsParam;
 	}
 
 	private SingleVariableDeclaration lastParameter(List parameters) {
@@ -398,6 +403,9 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		if (erasedType.isArray()) {
 			return ast.newArrayType(newType(erasedType.getComponentType()));
 		}
+		if (erasedType.isPrimitive()) {
+			return ast.newPrimitiveType(PrimitiveType.toCode(erasedType.getName()));
+		}
 		return ast.newSimpleType(ast.newName(erasedType.getName()));
 	}
 
@@ -466,6 +474,10 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	private <T extends ASTNode> T copy(T node) {
 		return (T)rewrite.createCopyTarget(node);
+	}
+	
+	private <T extends ASTNode> T move(T node) {
+		return (T)rewrite.createMoveTarget(node);
 	}
 	
 	private <T extends ASTNode> T clone(T node) {

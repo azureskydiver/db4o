@@ -6,7 +6,6 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
-import org.eclipse.jdt.internal.core.util.*;
 import org.eclipse.jface.text.*;
 import org.eclipse.ui.*;
 
@@ -188,29 +187,15 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 		});
 	}
 	
-	@SuppressWarnings("restriction")
-	private void rewriteDocument(final ASTRewrite rewrite,
-			final ICompilationUnit decaf) throws JavaModelException,
-			BadLocationException {
-		SimpleDocument doc = new SimpleDocument(decaf.getBuffer().getContents());
-		rewrite.rewriteAST().apply(doc);
-		decaf.getBuffer().setContents(doc.get());
-	}
-
 	private void rewriteFile(final ICompilationUnit decaf, final ASTRewrite rewrite,
 			IProgressMonitor monitor) {
 		IPath path= decaf.getPath();
 		try {
-//			if (null != decaf.getBuffer() /*&& decaf.isWorkingCopy()*/) {
-//				rewriteDocument(rewrite, decaf);
-//			} else {
-				FileRewriter.rewriteFile(rewrite, path);
-//			}
+			FileRewriter.rewriteFile(rewrite, path);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 }
