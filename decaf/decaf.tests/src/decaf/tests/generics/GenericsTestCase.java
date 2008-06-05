@@ -11,6 +11,10 @@ public class GenericsTestCase extends DecafTestCaseBase {
 		runResourceTestCase("IntroduceCastsForFields");
 	}
 	
+	public void testIntroduceCastsForMethods() throws Exception {
+		runResourceTestCase("IntroduceCastsForMethods");
+	}
+	
 	@Override
 	protected void runResourceTestCase(String resourceName) throws Exception {
 		super.runResourceTestCase("generics/"  + resourceName);

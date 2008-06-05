@@ -2,6 +2,7 @@ package generics;
 
 class Foo {
 	public Object field;
+	public Object[] array;
 	
 	public Foo(Object value) {
 		field = value;
@@ -14,5 +15,6 @@ class Main {
 		String s1 = ((String) foo.field);
 		String s2 = ((String) foo.field).toUpperCase();
 		String s3 = ((String) (foo).field);
+		String s4 = ((String[]) foo.array)[0];
 	}
 }
