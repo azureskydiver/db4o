@@ -535,6 +535,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	        container().configImpl().typeHandlerForClass(claxx, HandlerRegistry.HANDLER_VERSION);
 	    _typeHandler = registeredTypeHandler4 != null ?
 	        registeredTypeHandler4 : createDefaultTypeHandler();
+	    if(_typeHandler instanceof FirstClassObjectHandler){
+	        // TODO: This could be any TypeHandler that wants to 
+	        //       know it's ClassMetadata. Maybe invent an
+	        //       interface for this purpose
+	        ((FirstClassObjectHandler)_typeHandler).classMetadata(this);
+	    }
     }
 
     public void deactivate(Transaction trans, Object obj, ActivationDepth depth) {
@@ -1180,7 +1186,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
     Object instantiateFields(UnmarshallingContext context) {
-        return context.correctHandlerVersion(_typeHandler).read(context);
+        return read(context);
     }
 
     public boolean isArray() {
@@ -1916,9 +1922,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public Object read(ReadContext context) {
-        // TODO: need to correct handler version here and
-        //       for all access to _typeHandler
-    	return _typeHandler.read(context);
+        UnmarshallingContext unmarshallingContext = (UnmarshallingContext)context;
+        return unmarshallingContext.correctHandlerVersion(_typeHandler).read(context);
     }
 
     public void write(WriteContext context, Object obj) {

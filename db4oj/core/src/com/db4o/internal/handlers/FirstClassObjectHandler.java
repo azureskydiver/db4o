@@ -25,7 +25,7 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
     }
     
     public FirstClassObjectHandler(){
-        // required for reflection cloning
+        
     }
 
     public void defragment(DefragmentContext context) {
@@ -89,6 +89,11 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
 //        int fieldCount = context.readInt();
 
         instantiateFields(unmarshallingContext);
+        
+        if(classMetadata().i_ancestor != null){
+            classMetadata().i_ancestor.read(context);
+        }
+
         return unmarshallingContext.persistentObject();
     }
 
@@ -103,23 +108,25 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         
 //        bitMapBuffer.writeBytes(nullBitMap.bytes());
         
+        if(classMetadata().i_ancestor != null){
+            classMetadata().i_ancestor.write(context, obj);
+        }
+        
     }
     
     public void marshall(final Object obj, final MarshallingContext context) {
        final Transaction trans = context.transaction();
         TraverseFieldCommand command = new TraverseFieldCommand() {
-            private int fieldIndex = -1; 
+             
             public int fieldCount(ClassMetadata classMetadata, ByteArrayBuffer buffer) {
                 int fieldCount = classMetadata.i_fields.length;
                 context.fieldCount(fieldCount);
                 return fieldCount;
             }
             public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
-                context.beginSlot();
-                fieldIndex++;
                 Object child = field.getOrCreate(trans, obj);
                 if(child == null) {
-                    context.isNull(fieldIndex, true);
+                    context.isNull(context.currentSlot(), true);
                     field.addIndexEntry(trans, context.objectID(), null);
                     return;
                 }
@@ -180,18 +187,10 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
     }
     
     protected final void traverseFields(MarshallingInfo context, TraverseFieldCommand command) {
-        traverseFields(context.classMetadata(), (ByteArrayBuffer)context.buffer(), context, command);
-    }
-    
-    protected final void traverseFields(ClassMetadata classMetadata, ByteArrayBuffer buffer, FieldListInfo fieldList,TraverseFieldCommand command) {
-        int fieldIndex=0;
-        while(classMetadata!=null&&!command.cancelled()) {
-            int fieldCount=command.fieldCount(classMetadata, buffer);
-            for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
-                command.processField(classMetadata.i_fields[i],isNull(fieldList,fieldIndex),classMetadata);
-                fieldIndex ++;
-            }
-            classMetadata=classMetadata.i_ancestor;
+        int fieldCount=command.fieldCount(classMetadata(), ((ByteArrayBuffer)context.buffer()));
+        for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
+            command.processField(classMetadata().i_fields[i],isNull(context,context.currentSlot()),classMetadata());
+            context.beginSlot();
         }
     }
     
@@ -201,6 +200,10 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
 
     public ClassMetadata classMetadata() {
         return _classMetadata;
+    }
+    
+    public void classMetadata(ClassMetadata classMetadata) {
+        _classMetadata = classMetadata;
     }
     
     public boolean equals(Object obj) {
@@ -249,6 +252,9 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
             }
         };
         traverseFields(context, command);
+        if(classMetadata().i_ancestor != null){
+            classMetadata().i_ancestor.collectIDs(context);
+        }
     }
 
 }
