@@ -1,10 +1,9 @@
 public class VarArgsGenericMethod {
-	public <T> void testVarArgs(int value, T[] args) {
+	public void testVarArgs(int value, Object[] args) {
 	}
 	
 	public void testVarArgsMethodInvocation() {
-		testVarArgs(1, new String[] { "test", "Var", "Args", "Method",
-				"Invocation" });
+		testVarArgs(1, new String[] { "test", "Var", "Args", "Method", "Invocation" });
 		testVarArgs(1, new Integer[] { 2, 3, 4 });
 		
 		int value = 5;

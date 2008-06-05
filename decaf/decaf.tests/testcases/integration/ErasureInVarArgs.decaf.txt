@@ -1,0 +1,24 @@
+package integration;
+
+class A {
+
+	private Object[] values;
+	
+	public A(Object[] values) {
+		this.values = values;
+	}
+	
+	public Object get(int index) {
+		return values[index];
+	}
+}
+
+class Main {
+	static void main() {
+		A a = new A(new String[] { "foo", "bar" });
+		foo(new Object[] { a.get(0) });
+	}
+	
+	static void foo(Object[] values) {
+	}
+}

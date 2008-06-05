@@ -175,54 +175,62 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	private boolean ignoreExtends(TypeDeclaration node) {
 		return containsJavadoc(node, DecafAnnotations.IGNORE_EXTENDS);
 	}
-
-	public boolean visit(MethodInvocation node) {
-		if (requiresVarArgsTranslation(node)) {
-			MethodInvocation explicityArrayInCall = copy(node);
-
-			List arguments = explicityArrayInCall.arguments();
-
-			List newArguments = mapVarArgsToArray(arguments, node.resolveMethodBinding().getParameterTypes());
-
-			arguments.clear();
-			arguments.addAll(newArguments);
-
-			replace(node, explicityArrayInCall);
+	
+	@Override
+	public boolean visit(ClassInstanceCreation node) {
+		final IMethodBinding ctor = node.resolveConstructorBinding();
+		final List arguments = node.arguments();
+		if (requiresVarArgsTranslation(ctor, arguments)) {
+			rewriteVarArgsArguments(ctor, arguments, rewrite.getListRewrite(node, ClassInstanceCreation.ARGUMENTS_PROPERTY));
 		}
-
-		return true;
+		return super.visit(node);
 	}
 
-	private boolean requiresVarArgsTranslation(MethodInvocation node) {
-		if (!isVarArgsMethodInvocation(node)) {
+	@Override
+	public void endVisit(MethodInvocation node) {
+		final IMethodBinding method = node.resolveMethodBinding();
+		final List arguments = node.arguments();
+		if (requiresVarArgsTranslation(method, arguments)) {
+			rewriteVarArgsArguments(method, arguments, rewrite.getListRewrite(node, MethodInvocation.ARGUMENTS_PROPERTY));
+		}
+	}
+
+	private void rewriteVarArgsArguments(final IMethodBinding method,
+			final List arguments, final ListRewrite argumentListRewrite) {
+		final ITypeBinding[] parameters = method.getParameterTypes();
+		final int lastFixed = parameters.length - 1;
+		for (int i=lastFixed; i<arguments.size(); ++i) {
+			argumentListRewrite.remove((ASTNode)arguments.get(i), null);
+		}
+		argumentListRewrite.insertAt(varArgsToArray(arguments, parameters), lastFixed, null);
+	}
+
+	private boolean requiresVarArgsTranslation(final IMethodBinding method,
+			final List arguments) {
+		if (!method.isVarargs()) {
 			return false;
 		}
-		if (argumentCountDoesNotMatchParameterCount(node)) {
+		if (argumentCountDoesNotMatchParameterCount(method, arguments)) {
 			return true;
 		}
-		if (lastArgumentIsAssignmentCompatibleWithLastParameter(node)) {
+		if (lastArgumentIsAssignmentCompatibleWithLastParameter(method, arguments)) {
 			return false;
 		}
 		return true;
-	}
-
-	private boolean lastArgumentIsAssignmentCompatibleWithLastParameter(
-			MethodInvocation node) {
-		final IMethodBinding binding = node.resolveMethodBinding();
-		final ITypeBinding[] parameters = binding.getParameterTypes();
-		final int lastIndex = parameters.length - 1;
-		final ITypeBinding lastArgumentType = expressionType(node.arguments().get(lastIndex));
-		final ITypeBinding lastParameterType = parameters[lastIndex];
-		return lastArgumentType.isAssignmentCompatible(lastParameterType);
 	}
 
 	private boolean argumentCountDoesNotMatchParameterCount(
-			MethodInvocation node) {
-		return node.resolveMethodBinding().getParameterTypes().length != node.arguments().size();
+			final IMethodBinding method, final List arguments) {
+		return method.getParameterTypes().length != arguments.size();
 	}
 
-	private boolean isVarArgsMethodInvocation(MethodInvocation node) {
-		return node.resolveMethodBinding().isVarargs();
+	private boolean lastArgumentIsAssignmentCompatibleWithLastParameter(
+			final IMethodBinding binding, final List arguments) {
+		final ITypeBinding[] parameters = binding.getParameterTypes();
+		final int lastIndex = parameters.length - 1;
+		final ITypeBinding lastArgumentType = expressionType(arguments.get(lastIndex));
+		final ITypeBinding lastParameterType = parameters[lastIndex];
+		return lastArgumentType.isAssignmentCompatible(lastParameterType);
 	}
 
 	private ITypeBinding expressionType(final Object expression) {
@@ -258,30 +266,33 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		return newArguments;
 	}
 
-	public boolean visit(MethodDeclaration method) {
-		if (handledAsIgnored(method)) {
+	public boolean visit(MethodDeclaration node) {
+		if (handledAsIgnored(node)) {
 			return false;
-		}
-		if (method.isVarargs()) {
-			handleVarArgsMethod(method);
 		}
 		return true;
 	}
+	
+	@Override
+	public void endVisit(MethodDeclaration node) {
+		if (node.isVarargs()) {
+			handleVarArgsMethod(node);
+		}
+	}
 
 	private void handleVarArgsMethod(MethodDeclaration method) {
-		MethodDeclaration decafMethod = copy(method);
+		SingleVariableDeclaration varArgsParameter = lastParameter(method.parameters());
 
-		List parameters = decafMethod.parameters();
-		SingleVariableDeclaration varArgsParameter = lastParameter(parameters);
+		set(varArgsParameter, SingleVariableDeclaration.VARARGS_PROPERTY, Boolean.FALSE);
+		replace(varArgsParameter.getType(), newType(varArgsParameter.resolveBinding().getType()));
+	}
 
-		SingleVariableDeclaration expandedVarArgsParam = newSingleVariableDeclaration(
-															copy(varArgsParameter.getName()),
-															ast.newArrayType(copy(varArgsParameter.getType())));
+	private void set(final ASTNode node, final SimplePropertyDescriptor property, final Object value) {
+		rewrite.set(node, property, value, null);
+	}
 
-		parameters.remove(varArgsParameter);
-		parameters.add(expandedVarArgsParam);
-
-		replace(method, decafMethod);
+	private ArrayType newArrayType(Type componentType) {
+		return ast.newArrayType(componentType);
 	}
 
 	private SingleVariableDeclaration newSingleVariableDeclaration(SimpleName paramName, Type paramType) {
@@ -319,7 +330,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		InfixExpression cmp = newInfixExpression(
 								InfixExpression.Operator.LESS,
 								newSimpleName(indexVariableName),
-								newFieldAccess(copy(array), "length"));
+								newFieldAccess(clone(array), "length"));
 
 		Block newBody = ast.newBlock();
 		newBody.statements().add(
@@ -327,7 +338,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 						variable.getName().toString(),
 						copy(variable.getType()),
 						newArrayAccess(
-								copy(array),
+								clone(array),
 								newSimpleName(indexVariableName))));
 
 		copyTo(node.getBody(), newBody);
@@ -382,7 +393,8 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		return block;
 	}
 
-	private Type newType(ITypeBinding type) {
+	private Type newType(ITypeBinding t) {
+		final ITypeBinding type = t.getErasure();
 		if (type.isArray()) {
 			return ast.newArrayType(newType(type.getComponentType()));
 		}
@@ -452,8 +464,12 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		rewrite.replace(node, replacement, null);
 	}
 
-	private <T extends ASTNode> T copy(T array) {
-		return (T) ASTNode.copySubtree(ast, array);
+	private <T extends ASTNode> T copy(T node) {
+		return (T)rewrite.createCopyTarget(node);
+	}
+	
+	private <T extends ASTNode> T clone(T node) {
+		return (T) ASTNode.copySubtree(ast, node);
 	}
 
 	private List copyAll(List nodes) {
