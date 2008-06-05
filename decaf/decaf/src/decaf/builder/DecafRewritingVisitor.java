@@ -198,11 +198,11 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	private void rewriteVarArgsArguments(final IMethodBinding method,
 			final List arguments, final ListRewrite argumentListRewrite) {
 		final ITypeBinding[] parameters = method.getParameterTypes();
-		final int lastFixed = parameters.length - 1;
-		for (int i=lastFixed; i<arguments.size(); ++i) {
+		final int varArgsBegin = parameters.length - 1;
+		for (int i=varArgsBegin; i<arguments.size(); ++i) {
 			argumentListRewrite.remove((ASTNode)arguments.get(i), null);
 		}
-		argumentListRewrite.insertAt(varArgsToArray(arguments, parameters), lastFixed, null);
+		argumentListRewrite.insertAt(varArgsToArray(arguments, parameters), varArgsBegin, null);
 	}
 
 	private boolean requiresVarArgsTranslation(final IMethodBinding method,
@@ -393,12 +393,12 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		return block;
 	}
 
-	private Type newType(ITypeBinding t) {
-		final ITypeBinding type = t.getErasure();
-		if (type.isArray()) {
-			return ast.newArrayType(newType(type.getComponentType()));
+	private Type newType(ITypeBinding type) {
+		final ITypeBinding erasedType = type.getErasure();
+		if (erasedType.isArray()) {
+			return ast.newArrayType(newType(erasedType.getComponentType()));
 		}
-		return ast.newSimpleType(ast.newName(type.getName()));
+		return ast.newSimpleType(ast.newName(erasedType.getName()));
 	}
 
 	private Expression newFieldAccess(Expression e, SimpleName fieldName) {
