@@ -177,14 +177,6 @@ public class UnmarshallingContext extends ObjectHeaderContext implements FieldLi
     protected boolean peekPersisted() {
         return _addToIDTree == Const4.TRANSIENT;
     }
-
-    /*public void adjustInstantiationDepth() {
-        Config4Class classConfig = classConfig();
-        if(classConfig != null){
-        	// FIXME: [TA] review this
-//            _activationDepth = classConfig.adjustActivationDepth(_activationDepth);
-        }
-    }*/
     
     public Config4Class classConfig() {
         return classMetadata().config();
@@ -197,6 +189,7 @@ public class UnmarshallingContext extends ObjectHeaderContext implements FieldLi
     public void persistentObject(Object obj) {
         _object = obj;
     }
+
     
 }
 

@@ -38,6 +38,8 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     
     private int _fieldWriteCount;
     
+    private int _currentSlot;
+    
     private ByteArrayBuffer _debugPrepend;
     
     private Object _currentMarshalledObject;
@@ -236,7 +238,8 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         _currentBuffer = childBuffer;
     }
 
-    public void nextField(){
+    public void beginSlot(){
+        _currentSlot++;
         _fieldWriteCount = 0;
         _currentBuffer = _writeBuffer;
     }
@@ -324,10 +327,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         _fieldWriteCount = NO_INDIRECTION;
     }
     
-    public void prepareIndirectionOfSecondWrite(){
-        _fieldWriteCount = 0;
-    }
-    
     public void createIndirectionWithinSlot(TypeHandler4 handler) {
         if(isIndirectedWithinSlot(handler)){
             createChildBuffer(false, true);
@@ -359,6 +358,10 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         ReservedBuffer reservedBuffer = _currentBuffer.reserve(length);
         postWrite();
         return reservedBuffer;
+    }
+
+    public int currentSlot() {
+        return _currentSlot;
     }
 
 }

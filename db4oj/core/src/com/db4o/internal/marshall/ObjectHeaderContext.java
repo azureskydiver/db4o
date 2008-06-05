@@ -13,6 +13,8 @@ public abstract class ObjectHeaderContext extends AbstractReadContext {
     
     protected ObjectHeader _objectHeader;
     
+    private int _currentSlot;
+    
     protected ObjectHeaderContext(Transaction transaction, ReadBuffer buffer, ObjectHeader objectHeader) {
         super(transaction, buffer);
         _objectHeader = objectHeader;
@@ -28,6 +30,23 @@ public abstract class ObjectHeaderContext extends AbstractReadContext {
 
     public final int handlerVersion() {
         return _objectHeader.handlerVersion();
+    }
+    
+    public void beginSlot() {
+        _currentSlot++;
+    }
+
+    public int currentSlot() {
+        return _currentSlot;
+    }
+    
+    public ContextState saveState(){
+        return new ContextState(offset(), _currentSlot);
+    }
+    
+    public void restoreState(ContextState state){
+        seek(state._offset);
+        _currentSlot = state._currentSlot;
     }
 
 }
