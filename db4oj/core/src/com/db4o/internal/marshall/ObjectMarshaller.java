@@ -196,7 +196,7 @@ public abstract class ObjectMarshaller {
                 return fieldCount;
             }
             public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
-                context.nextField();
+                context.beginSlot();
                 fieldIndex++;
                 Object child = field.getOrCreate(trans, obj);
                 if(child == null) {

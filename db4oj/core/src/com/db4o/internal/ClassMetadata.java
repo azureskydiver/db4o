@@ -1916,6 +1916,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public Object read(ReadContext context) {
+        // TODO: need to correct handler version here and
+        //       for all access to _typeHandler
     	return _typeHandler.read(context);
     }
 

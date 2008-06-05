@@ -14,5 +14,9 @@ public interface MarshallingInfo extends FieldListInfo {
     public ClassMetadata classMetadata();
 
     public ReadBuffer buffer();
+    
+    public int currentSlot();
+    
+    public void beginSlot();
 
 }

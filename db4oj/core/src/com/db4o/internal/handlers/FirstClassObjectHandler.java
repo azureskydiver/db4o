@@ -47,7 +47,7 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         
         final BooleanByRef updateFieldFound = new BooleanByRef();
         
-        int savedOffset = context.offset();
+        ContextState savedState = context.saveState();
         
         TraverseFieldCommand command = new TraverseFieldCommand() {
             public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
@@ -64,7 +64,7 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         traverseFields(context, command);
         
         if(updateFieldFound.value){
-            context.seek(savedOffset);
+            context.restoreState(savedState);
             command = new TraverseFieldCommand() {
                 public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
                     if (! isNull) {
@@ -115,7 +115,7 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
                 return fieldCount;
             }
             public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
-                context.nextField();
+                context.beginSlot();
                 fieldIndex++;
                 Object child = field.getOrCreate(trans, obj);
                 if(child == null) {
