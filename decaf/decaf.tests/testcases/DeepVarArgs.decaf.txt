@@ -1,0 +1,10 @@
+class DeepVarArgs {
+
+	static Object foo(Object[] values) {
+		return null;
+	}
+	
+	static main() {
+		foo(new Object[] { "1", foo(new Object[] { "2", "3", foo(new Object[] { "4" }) }) });
+	}
+}
