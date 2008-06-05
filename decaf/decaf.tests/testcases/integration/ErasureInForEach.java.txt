@@ -1,0 +1,17 @@
+package integration;
+
+class Foo<T> {
+	public T[] array;
+	
+	public Foo(T... values) {
+		array = values;
+	}
+}
+
+class Main {
+	static void main() {
+		for (String s : new Foo<String>("foo", "bar").array) {
+			new Foo<String>(s);
+		}
+	}
+}

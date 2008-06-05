@@ -1,0 +1,21 @@
+package integration;
+
+class Foo {
+	public Object[] array;
+	
+	public Foo(Object[] values) {
+		array = values;
+	}
+}
+
+class Main {
+	static void main() {
+		{
+			String[] sArray = ((String[]) new Foo(new String[] { "foo", "bar" }).array);
+			for (int sIndex = 0; sIndex < sArray.length; ++sIndex) {
+				String s = sArray[sIndex];
+				new Foo(new String[] { s });
+			}
+		}
+	}
+}

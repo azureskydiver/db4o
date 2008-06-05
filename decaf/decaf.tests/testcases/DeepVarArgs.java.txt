@@ -1,0 +1,10 @@
+class DeepVarArgs {
+
+	static Object foo(Object ... values) {
+		return null;
+	}
+	
+	static main() {
+		foo("1", foo("2", "3", foo("4")));
+	}
+}
