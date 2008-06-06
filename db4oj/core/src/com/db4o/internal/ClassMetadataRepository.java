@@ -19,6 +19,7 @@ public final class ClassMetadataRepository extends PersistentBase {
 
     private Hashtable4 _classMetadataByBytes;
     private Hashtable4 _classMetadataByClass;
+    private Hashtable4 _classMetadataByName;
     private Hashtable4 _classMetadataByID;
     
     private int _classMetadataCreationDepth;
@@ -263,10 +264,15 @@ public final class ClassMetadataRepository extends PersistentBase {
     }
     
     private ClassMetadata findInitializedClassByName(String name){
+    	ClassMetadata classMetadata = (ClassMetadata) _classMetadataByName.get(name);
+    	if(classMetadata != null){
+    		return classMetadata;
+    	}
         ClassMetadataIterator i = iterator();
         while (i.moveNext()) {
-            ClassMetadata classMetadata = (ClassMetadata)i.current();
+            classMetadata = (ClassMetadata)i.current();
             if (name.equals(classMetadata.getName())) {
+            	_classMetadataByName.put(name, classMetadata);
                 return classMetadata;
             }
         }
@@ -311,6 +317,7 @@ public final class ClassMetadataRepository extends PersistentBase {
             size = 16;
         }
         _classMetadataByClass = new Hashtable4(size);
+        _classMetadataByName = new Hashtable4(size);
         _classMetadataByID = new Hashtable4(size);
         _creating = new Hashtable4(1);
     }
