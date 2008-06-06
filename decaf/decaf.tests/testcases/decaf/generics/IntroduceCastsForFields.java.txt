@@ -9,6 +9,13 @@ class Foo<T> {
 	}
 }
 
+class Bar extends Foo<String> {
+
+	public String toString() {
+		return field;
+	}
+}
+
 class Main {
 	static void main() {
 		Foo<String> foo = new Foo<String>("42");

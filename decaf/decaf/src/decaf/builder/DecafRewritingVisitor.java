@@ -324,8 +324,29 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 	
 	@Override
-	public void endVisit(QualifiedName node) {
+	public void endVisit(SimpleName node) {
 		
+		if (node.isDeclaration()) {
+			return;
+		}
+		
+		if (node.getLocationInParent() == QualifiedName.NAME_PROPERTY) {
+			return ;
+		}
+		
+		if (node.getLocationInParent() == FieldAccess.NAME_PROPERTY) {
+			return;
+		}
+
+		processNameErasure(node);
+	}
+	
+	@Override
+	public void endVisit(QualifiedName node) {
+		processNameErasure(node);
+	}
+
+	private void processNameErasure(Name node) {
 		final Expression erasure = getErasureForName(node);
 		if (null != erasure) {
 			replace(node, erasure);

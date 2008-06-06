@@ -9,6 +9,13 @@ class Foo {
 	}
 }
 
+class Bar extends Foo {
+
+	public String toString() {
+		return ((String) field);
+	}
+}
+
 class Main {
 	static void main() {
 		Foo foo = new Foo("42");
