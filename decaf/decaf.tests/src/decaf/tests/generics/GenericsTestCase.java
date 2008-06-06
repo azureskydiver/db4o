@@ -4,6 +4,14 @@ import decaf.tests.*;
 
 public class GenericsTestCase extends DecafTestCaseBase {
 	
+	public void testCovarianceErasure() throws Exception {
+		runResourceTestCase("CovarianceErasure");
+	}
+	
+	public void testBoundedType() throws Exception {
+		runResourceTestCase("BoundedType");
+	}
+	
 	public void testMultipleGenericParameters() throws Exception {
 		runResourceTestCase("MultipleGenericParameters");
 	}

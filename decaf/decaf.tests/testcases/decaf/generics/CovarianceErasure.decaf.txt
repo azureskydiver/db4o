@@ -1,0 +1,19 @@
+class Base {
+	public Object get(Object value) {
+		return value;
+	}
+}
+
+class C extends Base {
+	public Object get(Object value) {
+		return ((String) value).toUpperCase();
+	}
+}
+
+class Main {
+
+	static void main() {
+		Base b = new C();
+		System.out.println(((String) b.get("42")));
+	}
+}
