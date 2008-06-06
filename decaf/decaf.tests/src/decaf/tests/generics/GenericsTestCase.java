@@ -4,6 +4,10 @@ import decaf.tests.*;
 
 public class GenericsTestCase extends DecafTestCaseBase {
 	
+	public void testMultipleGenericParameters() throws Exception {
+		runResourceTestCase("MultipleGenericParameters");
+	}
+	
 	public void testNestedGenerics() throws Exception {
 		runResourceTestCase("NestedGenerics");
 	}

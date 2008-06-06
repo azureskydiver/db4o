@@ -247,7 +247,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private boolean hasGenericReturnType(final IMethodBinding method) {
-		return method.getMethodDeclaration().getReturnType() != method.getReturnType();
+		return method.getMethodDeclaration().getReturnType().getErasure() != method.getReturnType().getErasure();
 	}
 
 	private void rewriteVarArgsArguments(final IMethodBinding method,
