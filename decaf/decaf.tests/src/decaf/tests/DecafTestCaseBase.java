@@ -33,7 +33,7 @@ public abstract class DecafTestCaseBase extends TestCase {
 	}
 
 	protected void runResourceTestCase(String resourceName) throws Exception {
-		DecafTestResource resource = new DecafTestResource(resourceName);
+		DecafTestResource resource = new DecafTestResource("decaf/" + resourceName);
 		ICompilationUnit cu = createCompilationUnit(resource);
 	
 		IFile decafFile = decafFileFor(cu.getResource());

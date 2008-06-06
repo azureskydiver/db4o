@@ -3,6 +3,15 @@ package decaf.tests.generics;
 import decaf.tests.*;
 
 public class GenericsTestCase extends DecafTestCaseBase {
+	
+	public void testNestedGenerics() throws Exception {
+		runResourceTestCase("NestedGenerics");
+	}
+	
+	public void testGenericMethods() throws Exception {
+		runResourceTestCase("GenericMethods");
+	}
+	
 	public void testDeclarationErasureNoBounds() throws Exception {
 		runResourceTestCase("DeclarationErasureNoBounds");
 	}
