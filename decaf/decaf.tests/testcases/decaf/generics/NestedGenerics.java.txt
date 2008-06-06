@@ -13,5 +13,7 @@ class NestedGenerics<T> {
 		System.out.println(nested.field.field);
 		System.out.println(nested.get().get());
 		nested.get().get();
+		System.out.println((nested.field).field);
+		System.out.println((nested).field.field);
 	}
 }
