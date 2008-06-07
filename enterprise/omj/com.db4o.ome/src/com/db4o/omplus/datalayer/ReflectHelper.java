@@ -114,9 +114,7 @@ public class ReflectHelper {
 	}	
 	
 	public static ReflectField getReflectField(ReflectClass clz, String fieldName) {
-		ReflectField field = clz.getDeclaredField(fieldName);
-		field.setAccessible();
-		return field;
+		return clz.getDeclaredField(fieldName);
 	}
 	
 	public static ReflectField getDeclaredFieldInHeirarchy(ReflectClass reflectClass,

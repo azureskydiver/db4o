@@ -4,6 +4,7 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ext.StoredClass;
 import com.db4o.ext.StoredField;
+import com.db4o.internal.*;
 import com.db4o.omplus.datalayer.DbInterfaceImpl;
 import com.db4o.omplus.datalayer.ReflectHelper;
 import com.db4o.omplus.datalayer.propertyViewer.classProperties.ClassProperties;
@@ -29,7 +30,7 @@ public class ConfigureIndex {
 		db.setDB(oc);// any error for path call DbInterface.setDbPath
 	}
 	
-	private boolean isIndexable(StoredField storedField) {
+	private boolean isIndexable(StoredField storedField, ObjectContainer db) {
 		
 		ReflectClass storedType = null;
 		try {
@@ -38,7 +39,8 @@ public class ConfigureIndex {
 			
 		}
 		if (storedType != null) { // primitive arrays return null
-			if (storedType.isPrimitive() || storedType.isSecondClass()) {
+			ClassMetadata classMeta = ((ExternalObjectContainer)db).classMetadataForReflectClass(storedType);
+			if (storedType.isPrimitive() || (classMeta != null && classMeta.isSecondClass())) {
 				return true;
 			}
 		}
@@ -52,7 +54,7 @@ public class ConfigureIndex {
 		if(storedClz != null) {
 			for(FieldProperties field : clsProperties.getFields()) {
 				StoredField sField = storedClz.storedField(field.getFieldName(), storedClz);
-				if(isIndexable(sField)) {
+				if(isIndexable(sField, null)) {
 					index(clazz, field.getFieldName(), field.isIndexed());
 					if(!reconnect)
 						reconnect = true;
