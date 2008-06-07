@@ -4,6 +4,7 @@ using System.Security.Principal;
 using System.Collections.Generic;
 using System.Text;
 using Db4objects.Db4o;
+using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Internal;
 using Db4objects.Db4o.Config ;
 using OManager.BusinessLayer.Login;
@@ -50,7 +51,7 @@ namespace OManager.DataLayer.Connection
                 get
                 {
                     exceptionConnection = "";
-                    Db4oFactory.Configure().Queries().EvaluationMode(QueryEvaluationMode.LAZY);
+                    Db4oFactory.Configure().Queries().EvaluationMode(QueryEvaluationMode.Lazy);
                     //Db4oFactory.Configure().UpdateDepth(int.MaxValue);
                     Db4oFactory.Configure().ActivationDepth(1);
                     Db4oFactory.Configure().AllowVersionUpdates(true);
@@ -107,7 +108,7 @@ namespace OManager.DataLayer.Connection
                     //    //File format incompatible.
                     //    exceptionConnection = ex.Message;
                     //}
-                    catch (Db4objects.Db4o.IncompatibleFileFormatException ex)
+                    catch (Db4objects.Db4o.Ext.IncompatibleFileFormatException ex)
                     {
                         exceptionConnection = ex.Message;
                     }
