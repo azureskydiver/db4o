@@ -11,10 +11,14 @@
     <NoStandardLibraries>false</NoStandardLibraries>
     <AssemblyName>OMAddin</AssemblyName>
     <RootNamespace>OMAddin</RootNamespace>
-    <SccProjectName>Rational ClearCase</SccProjectName>
-    <SccLocalPath>Rational ClearCase</SccLocalPath>
-    <SccAuxPath>Rational ClearCase</SccAuxPath>
-    <SccProvider>Rational ClearCase</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
