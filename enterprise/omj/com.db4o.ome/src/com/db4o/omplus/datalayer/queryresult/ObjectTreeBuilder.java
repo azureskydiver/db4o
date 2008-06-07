@@ -208,9 +208,7 @@ public class ObjectTreeBuilder {
 	}
 
 	private ReflectField getReflectField(ReflectClass clz, String fieldName) {
-		ReflectField field = clz.getDeclaredField(fieldName);
-		field.setAccessible();
-		return field;
+		return clz.getDeclaredField(fieldName);
 	}
 
 	@SuppressWarnings("unchecked")
