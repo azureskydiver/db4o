@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://db4o.com/User" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://db4o.com/User" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://db4o.com/User">
+      <s:element name="Authenticate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="credentials" type="tns:AuthenticationCredentials" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AuthenticationCredentials">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="LoginName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MachineName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MachineUser" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ProductName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ProductVersion" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CurrentDateTime" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Culture" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AuthenticateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AuthenticationTicket" type="tns:AuthenticationTicket" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AuthenticationTicket">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="UserInfo" type="tns:UserInfo" />
+          <s:element minOccurs="0" maxOccurs="1" name="SessionID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FeatureAuthorization" type="tns:ArrayOfFeaturePermissions" />
+          <s:element minOccurs="0" maxOccurs="1" name="LoginNoticeMessage" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LoginNoticeURL" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ExpirationDateTime" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="LoginNoticeOptional" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UserInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Username" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SalesforceID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FirstName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfFeaturePermissions">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="FeaturePermissions" nillable="true" type="tns:FeaturePermissions" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="FeaturePermissions">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Allow" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="Deny" type="tns:ArrayOfString" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Echo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="value" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="EchoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="EchoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="AuthenticateSoapIn">
+    <wsdl:part name="parameters" element="tns:Authenticate" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticateSoapOut">
+    <wsdl:part name="parameters" element="tns:AuthenticateResponse" />
+  </wsdl:message>
+  <wsdl:message name="EchoSoapIn">
+    <wsdl:part name="parameters" element="tns:Echo" />
+  </wsdl:message>
+  <wsdl:message name="EchoSoapOut">
+    <wsdl:part name="parameters" element="tns:EchoResponse" />
+  </wsdl:message>
+  <wsdl:portType name="AccountManagementServiceSoap">
+    <wsdl:operation name="Authenticate">
+      <wsdl:input message="tns:AuthenticateSoapIn" />
+      <wsdl:output message="tns:AuthenticateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Echo">
+      <wsdl:input message="tns:EchoSoapIn" />
+      <wsdl:output message="tns:EchoSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AccountManagementServiceSoap" type="tns:AccountManagementServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Authenticate">
+      <soap:operation soapAction="http://db4o.com/User/Authenticate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Echo">
+      <soap:operation soapAction="http://db4o.com/User/Echo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AccountManagementServiceSoap12" type="tns:AccountManagementServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Authenticate">
+      <soap12:operation soapAction="http://db4o.com/User/Authenticate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Echo">
+      <soap12:operation soapAction="http://db4o.com/User/Echo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AccountManagementService">
+    <wsdl:port name="AccountManagementServiceSoap" binding="tns:AccountManagementServiceSoap">
+      <soap:address location="http://customer.test.db4o.com/User.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AccountManagementServiceSoap12" binding="tns:AccountManagementServiceSoap12">
+      <soap12:address location="http://customer.test.db4o.com/User.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
