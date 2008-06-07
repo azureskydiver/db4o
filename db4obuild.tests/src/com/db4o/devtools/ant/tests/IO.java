@@ -5,32 +5,33 @@ package com.db4o.devtools.ant.tests;
 import java.io.*;
 import java.util.regex.*;
 
-import wheel.io.*;
-
-
 public class IO {
 
 	private static final String RESOURCE_PREFIX = "resource:";
 
 	public static String getTempPath() throws IOException {
-		return new File(System.getProperty("java.io.tmpdir")).getCanonicalPath();
+		return new File(System.getProperty("java.io.tmpdir"))
+				.getCanonicalPath();
 	}
 
 	public static void createFolder(String path) {
 		File targetFolder = new File(path);
-		if (!targetFolder.exists())	{
+		if (!targetFolder.exists()) {
 			targetFolder.mkdirs();
 		}
 	}
 
-	static final Pattern FILE_CONTENTS_REGEX = Pattern.compile("(.*)\\((.*)\\)");
+	static final Pattern FILE_CONTENTS_REGEX = Pattern
+			.compile("(.*)\\((.*)\\)");
 
-	public static void createFile(String filePath, String fileContents) throws IOException {
+	public static void createFile(String filePath, String fileContents)
+			throws IOException {
 		ensureParent(filePath);
-		writeFile(filePath, fileContents);		
+		writeFile(filePath, fileContents);
 	}
 
-	private static void writeFile(String filePath, String fileContents) throws IOException {
+	private static void writeFile(String filePath, String fileContents)
+			throws IOException {
 		FileWriter writer = new FileWriter(filePath);
 		try {
 			writer.write(fileContents);
@@ -43,13 +44,15 @@ public class IO {
 		createFolder(new File(filePath).getParent());
 	}
 
-	public static void createFileContents(String parent, String fileReference) throws IOException {
-		
+	public static void createFileContents(String parent, String fileReference)
+			throws IOException {
+
 		if (fileReference.startsWith(IO.RESOURCE_PREFIX)) {
-			createFileFromResource(parent, fileReference.substring(IO.RESOURCE_PREFIX.length()));
+			createFileFromResource(parent, fileReference
+					.substring(IO.RESOURCE_PREFIX.length()));
 			return;
 		}
-		
+
 		Matcher m = FILE_CONTENTS_REGEX.matcher(fileReference);
 		if (m.matches()) {
 			String filePath = combine(parent, m.group(1));
@@ -64,20 +67,57 @@ public class IO {
 		return parent + "/" + fname;
 	}
 
-	private static void createFileFromResource(String parent, String resource) throws IOException {
-		final String contents = ResourceLoader.getStringContents(IO.class, resource);
+	private static void createFileFromResource(String parent, String resource)
+			throws IOException {
+		final String contents = readResource(IO.class, resource);
 		createFile(combine(parent, resource), contents);
 	}
 
-	public static String createFolderStructure(String folderName, String... files) throws IOException {
+	public static String createFolderStructure(String folderName,
+			String... files) throws IOException {
 		String tempPath = getTempPath();
 		String fullFolderPath = combine(tempPath, folderName);
-		
-		for(int i = 0; i < files.length; i++) {
+
+		for (int i = 0; i < files.length; i++) {
 			createFileContents(fullFolderPath, files[i]);
 		}
-		
+
 		return fullFolderPath;
+	}
+	
+	public static String readResource(final Class anchor, String resourceName) throws IOException {
+		InputStream stream = anchor.getResourceAsStream(resourceName);
+		if (null == stream) {
+			throw new IllegalArgumentException("Resource '" + resourceName + "' not found");
+		}
+		try {
+			return IO.readString(stream);			
+		} finally {
+			stream.close();
+		}
+	}
+
+	public static String readString(java.io.InputStream stream)
+			throws IOException {
+		return readString(new InputStreamReader(stream));
+	}
+
+	public static String readString(InputStream stream, String charset)
+			throws IOException {
+		return readString(new InputStreamReader(stream, charset));
+	}
+
+	public static String readString(InputStreamReader reader)
+			throws IOException {
+
+		final BufferedReader bufferedReader = new BufferedReader(reader);
+		final StringWriter writer = new StringWriter();
+		String line = null;
+		while (null != (line = bufferedReader.readLine())) {
+			writer.write(line);
+			writer.write("\n");
+		}
+		return writer.toString();
 	}
 
 }
