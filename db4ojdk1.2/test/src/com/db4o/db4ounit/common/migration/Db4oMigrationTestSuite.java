@@ -36,7 +36,8 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 	}
 
 	protected Class[] testCases() {
-		return new Class[] {
+	    Class[] classes = 
+		new Class[] {
             BooleanHandlerUpdateTestCase.class,
             ByteHandlerUpdateTestCase.class,
 			CascadedDeleteFileFormatUpdateTestCase.class,
@@ -61,6 +62,28 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             FreespaceManagerMigrationTestCase.class,
 
 		};
+	    return addJavaTestCases(classes);
 	}
+	
+    /**
+     * @sharpen.remove null
+     */
+	protected Class[] javaOnlyTestCases(){
+	    return new Class[] {
+            ArrayListUpdateTestCase.class,
+	    };
+	}
+	
+   protected Class[] addJavaTestCases(Class[] classes){
+        Class[] javaTestCases = javaOnlyTestCases(); 
+        if(javaTestCases == null){
+            return classes;
+        }
+        int len = javaTestCases.length;
+        Class[] allClasses = new Class[classes.length + len];
+        System.arraycopy(javaTestCases, 0, allClasses, 0,len );
+        System.arraycopy(classes, 0, allClasses, len,classes.length);
+        return allClasses;
+    }
 
 }

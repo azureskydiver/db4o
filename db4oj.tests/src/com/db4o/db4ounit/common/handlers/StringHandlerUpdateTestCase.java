@@ -7,7 +7,7 @@ import db4ounit.*;
 
 public class StringHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     
-    private static final String[] data = new String[] { 
+    private static final String[] DATA = new String[] { 
         "one",
         "aAzZ|!§$%&/()=?ßöäüÄÖÜYZ;:-_+*~#^°'@",
         "",
@@ -42,12 +42,12 @@ public class StringHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
     
     protected Object[] createValues() {
-        Item[] values = new Item[data.length + 1];
-        for (int i = 0; i < data.length; i++) {
+        Item[] values = new Item[DATA.length + 1];
+        for (int i = 0; i < DATA.length; i++) {
             Item item = new Item();
             values[i] = item;
-            item._typed = data[i];
-            item._untyped = data[i];
+            item._typed = DATA[i];
+            item._untyped = DATA[i];
         }
         values[values.length - 1] = new Item();
         return values;
@@ -62,28 +62,28 @@ public class StringHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
     
     private void createUntypedArray(ItemArrays item){
-        item._untypedArray = new String[data.length + 1];
-        for (int i = 0; i < data.length; i++) {
-            item._untypedArray[i] = data[i];
+        item._untypedArray = new String[DATA.length + 1];
+        for (int i = 0; i < DATA.length; i++) {
+            item._untypedArray[i] = DATA[i];
         }
     }
     
     private void createTypedArray(ItemArrays item){
-        item._typedArray = new String[data.length];
-        System.arraycopy(data, 0, item._typedArray, 0, data.length);
+        item._typedArray = new String[DATA.length];
+        System.arraycopy(DATA, 0, item._typedArray, 0, DATA.length);
     }
     
     private void createArrayInObject(ItemArrays item){
-        String[] arr = new String[data.length];
-        System.arraycopy(data, 0, arr, 0, data.length);
+        String[] arr = new String[DATA.length];
+        System.arraycopy(DATA, 0, arr, 0, DATA.length);
         item._arrayInObject = arr;
     }
     
     protected void assertValues(Object[] values) {
-        for (int i = 0; i < data.length; i++) {
+        for (int i = 0; i < DATA.length; i++) {
             Item item = (Item) values[i];
-            assertAreEqual(data[i], item._typed);
-            assertAreEqual(data[i], (String)item._untyped);
+            assertAreEqual(DATA[i], item._typed);
+            assertAreEqual(DATA[i], (String)item._untyped);
         }
         Item nullItem = (Item) values[values.length - 1];
         Assert.isNull(nullItem._typed);
@@ -102,8 +102,8 @@ public class StringHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
 
     protected void assertUntypedArray(ItemArrays item) {
-        for (int i = 0; i < data.length; i++) {
-            assertAreEqual(data[i], (String)item._untypedArray[i]);
+        for (int i = 0; i < DATA.length; i++) {
+            assertAreEqual(DATA[i], (String)item._untypedArray[i]);
         }
         Assert.isNull(item._untypedArray[item._untypedArray.length - 1]);
     }
@@ -113,8 +113,8 @@ public class StringHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
 
     private void assertData(String[] values) {
-        for (int i = 0; i < data.length; i++) {
-            assertAreEqual(data[i], values[i]);
+        for (int i = 0; i < DATA.length; i++) {
+            assertAreEqual(DATA[i], values[i]);
         }
     }
     
