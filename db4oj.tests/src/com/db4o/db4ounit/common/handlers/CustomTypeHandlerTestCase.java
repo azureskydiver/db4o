@@ -12,6 +12,7 @@ import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 import com.db4o.typehandlers.*;
 
 import db4ounit.*;
@@ -41,6 +42,7 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
 
         public void write(WriteContext context, Object obj) {
             Item item = (Item)obj;
+            assertCurrentSlot(context, item);
             if(item.numbers == null){
                 context.writeInt(-1);
                 return;
@@ -53,6 +55,9 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
 
         public Object read(ReadContext context) {
             Item item = (Item)((UnmarshallingContext) context).persistentObject();
+            
+            assertCurrentSlot(context, item);
+            
             int elementCount = context.readInt();
             if(elementCount == -1){
                 return item;
@@ -65,15 +70,54 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
         }
 
         public void delete(DeleteContext context) throws Db4oIOException {
-            // TODO Auto-generated method stub
       
         }
 
         public void defragment(DefragmentContext context) {
-            // TODO Auto-generated method stub
       
         }
     }
+    
+    
+    private final class CustomItemGrandChildTypeHandler implements TypeHandler4, VariableLengthTypeHandler {
+
+        public PreparedComparison prepareComparison(Context context, Object obj) {
+            prepareComparisonCalled = true;
+            return new PreparedComparison() {
+                public int compareTo(Object obj) {
+                    return 0;
+                }
+            };
+        }
+
+        public void write(WriteContext context, Object obj) {
+            assertCurrentSlot(context, 0);
+            ItemGrandChild item = (ItemGrandChild)obj;
+            context.writeInt(item.age);
+            context.writeInt(100);
+        }
+
+        public Object read(ReadContext context) {
+            assertCurrentSlot(context, 0);
+            ItemGrandChild item = (ItemGrandChild)((UnmarshallingContext) context).persistentObject();
+            item.age = context.readInt();
+            int check = context.readInt();
+            if(check != 100){
+                throw new IllegalStateException();
+            }
+            return item;
+        }
+
+
+        public void delete(DeleteContext context) throws Db4oIOException {
+      
+        }
+
+        public void defragment(DefragmentContext context) {
+      
+        }
+    }
+
 
     public static class Item {
         
@@ -136,26 +180,51 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
             }
             return super.equals(obj);
         }
+    }
+    
+    public static class ItemGrandChild extends ItemChild {
+        
+        public int age;
+
+        public ItemGrandChild(int age_, String name_, int[] numbers_) {
+            super(name_, numbers_);
+            age = age_;
+        }
+        
+        public boolean equals(Object obj){
+            if(! (obj instanceof ItemGrandChild)){
+                return false;
+            }
+            ItemGrandChild other = (ItemGrandChild) obj;
+            if(age != other.age){
+                return false;
+            }
+            return super.equals(obj);
+        }
         
     }
     
     protected void configure(Configuration config) throws Exception {
-        TypeHandler4 customTypeHandler = new CustomItemTypeHandler();
-        
-        final ReflectClass claxx = ((Config4Impl)config).reflector().forClass(Item.class);
-        
+        registerTypeHandler(config, Item.class, new CustomItemTypeHandler());
+        registerTypeHandler(config, ItemGrandChild.class, new CustomItemGrandChildTypeHandler());
+    }
+
+    private void registerTypeHandler(Configuration config, Class clazz,
+        TypeHandler4 typeHandler) {
+        GenericReflector reflector = ((Config4Impl)config).reflector();
+        final ReflectClass itemClass = reflector.forClass(clazz);
         TypeHandlerPredicate predicate = new TypeHandlerPredicate() {
             public boolean match(ReflectClass classReflector, int version) {
-                return claxx.equals(classReflector);
+                return itemClass.equals(classReflector);
             }
         };
-        
-        config.registerTypeHandler(predicate, customTypeHandler);
+        config.registerTypeHandler(predicate, typeHandler);
     }
     
     protected void store() throws Exception {
         store(storedItem());
         store(storedItemChild());
+        store(storedItemGrandChild());
     }
     
     public void testConfiguration(){
@@ -166,14 +235,21 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
     }
     
     public void testRetrieveOnlyInstance(){
-        Query q = newQuery(Item.class);
-        Item retrievedItem = (Item) q.execute().next();  
-        Assert.areEqual(storedItem(), retrievedItem);
+        Assert.areEqual(storedItem(), retrieveItemOfClass(Item.class));
     }
     
-    public void testDerivedClass(){
-        Object retrievedItemChild = retrieveOnlyInstance(ItemChild.class);
-        Assert.areEqual(storedItemChild(), retrievedItemChild);
+    public void testChildClass(){
+        Assert.areEqual(storedItemChild(), retrieveItemOfClass(ItemChild.class));
+    }
+    
+    public void _testGrandChildClass(){
+        Assert.areEqual(storedItemGrandChild(), retrieveItemOfClass(ItemGrandChild.class));
+    }
+    
+    private Item retrieveItemOfClass(Class class1) {
+        Query q = newQuery(class1);
+        Item retrievedItem = (Item) q.execute().next();
+        return retrievedItem;
     }
     
     private Item storedItem(){
@@ -183,10 +259,29 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
     private Item storedItemChild(){
         return new ItemChild("child", DATA);
     }
-
+    
+    private Item storedItemGrandChild(){
+        return new ItemGrandChild(25, "child", DATA);
+    }
     
     ReflectClass itemClass(){
         return reflector().forClass(Item.class);
     }
+    
+    static void assertCurrentSlot(Object context, Item item) {
+        int expectedSlot = 0;
+        if(item instanceof ItemChild){
+            expectedSlot = 1;
+        }
+        if(item instanceof ItemGrandChild){
+            expectedSlot = 1;
+        }
+        assertCurrentSlot(context, expectedSlot);
+    }
+    
+    static void assertCurrentSlot(Object context, int expectedSlot) {
+        Assert.areEqual(expectedSlot, ((MarshallingInfo)context).currentSlot());
+    }
+
 
 }
