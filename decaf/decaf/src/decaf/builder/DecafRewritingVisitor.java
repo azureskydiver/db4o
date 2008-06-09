@@ -45,31 +45,31 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	@Override
 	public void endVisit(VariableDeclarationFragment node) {
 		final Expression initializer = node.getInitializer();
-		final Expression erasure = getErasure(initializer);
+		final Expression erasure = erasureFor(initializer);
 		if (erasure != null) {
 			replace(initializer, erasure);
 		}
 	}
 
-	private Expression getErasure(final Expression expression) {
+	private Expression erasureFor(final Expression expression) {
 		if (expression instanceof Name) {
-			return getErasureForName((Name)expression);
+			return erasureForName((Name)expression);
 		}
 		if (expression instanceof FieldAccess) {
-			return getErasureForField(expression, ((FieldAccess)expression).resolveFieldBinding());
+			return erasureForField(expression, ((FieldAccess)expression).resolveFieldBinding());
 		}
 		return null;
 	}
 
-	private Expression getErasureForName(final Name name) {
+	private Expression erasureForName(final Name name) {
 		final IVariableBinding field = fieldBinding(name);
 		if (null == field) {
 			return null;
 		}
-		return getErasureForField(name, field);
+		return erasureForField(name, field);
 	}
 
-	private Expression getErasureForField(final Expression expression,
+	private Expression erasureForField(final Expression expression,
 			final IVariableBinding field) {
 		if (isErasedFieldAccess(field)) {
 			return createCastForErasure(expression, field.getType());
@@ -214,7 +214,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public void endVisit(ArrayAccess node) {
-		final Expression erasure = getErasure(node.getArray());
+		final Expression erasure = erasureFor(node.getArray());
 		if (null != erasure) {
 			replace(node.getArray(), erasure);
 		}
@@ -228,11 +228,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		final List arguments = node.arguments();
 		if (requiresVarArgsTranslation(method, arguments)) {
 			rewriteVarArgsArguments(method, arguments, rewrite.getListRewrite(node, MethodInvocation.ARGUMENTS_PROPERTY));
-		}
-		
-		final Expression erasure = getErasure(node.getExpression());
-		if (erasure != null) {
-			replace(node.getExpression(), erasure);
 		}
 
 		if (!isExpressionStatement(node.getParent())) {
@@ -302,10 +297,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		return ((Expression)expression).resolveTypeBinding();
 	}
 	
-	private <T extends ASTNode> T safeCopy(final T arg) {
-		return isExistingNode(arg) ? copy(arg) : arg;
-	}
-
 	private <T extends ASTNode> T safeMove(final T arg) {
 		return isExistingNode(arg) ? move(arg) : arg;
 	}
@@ -347,7 +338,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private void processNameErasure(Name node) {
-		final Expression erasure = getErasureForName(node);
+		final Expression erasure = erasureForName(node);
 		if (null != erasure) {
 			replace(node, erasure);
 		}
@@ -355,7 +346,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public void endVisit(FieldAccess node) {
-		final Expression erasure = getErasureForField(node, node.resolveFieldBinding());
+		final Expression erasure = erasureForField(node, node.resolveFieldBinding());
 		if (null != erasure) {
 			replace(node, erasure);
 		}
@@ -374,9 +365,38 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			handleVarArgsMethod(node);
 		}
 		
-//		final IMethodBinding method = node.resolveBinding();
-//		method.getDeclaringClass()
+		final IMethodBinding method = node.resolveBinding();
+		final IMethodBinding definition = methodDefinitionFor(method);
+		if (definition == null) {
+			return;
+		}
 		
+		final IMethodBinding originalMethodDeclaration = definition.getMethodDeclaration();
+		if (originalMethodDeclaration != definition) {
+			eraseMethodDeclaration(node, originalMethodDeclaration);
+		}	
+	}
+	
+	private void eraseMethodDeclaration(MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
+		eraseIfNeeded(node.getReturnType2(), originalMethodDeclaration.getReturnType());
+		final ITypeBinding[] parameterTypes = originalMethodDeclaration.getParameterTypes();
+		for (int i = 0; i < parameterTypes.length; i++) {
+			final SingleVariableDeclaration actualParameter = (SingleVariableDeclaration) node.parameters().get(i);
+			eraseIfNeeded(actualParameter.getType(), parameterTypes[i]);
+		}
+	}
+
+	private void eraseIfNeeded(final Type actualType,
+			final ITypeBinding expectedType) {
+		final ITypeBinding expectedErasure = expectedType.getErasure();
+		if (actualType.resolveBinding() != expectedErasure) {
+			replace(actualType, newType(expectedErasure));
+		}
+	}
+
+	private IMethodBinding methodDefinitionFor(
+			final IMethodBinding method) {
+		return Bindings.findMethodDefininition(method, ast);
 	}
 
 	private void handleVarArgsMethod(MethodDeclaration method) {
@@ -397,7 +417,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	public void endVisit(EnhancedForStatement node) {
 
 		final SingleVariableDeclaration variable = node.getParameter();
-		final Expression erasure = getErasure(node.getExpression());
+		final Expression erasure = erasureFor(node.getExpression());
 		final Expression array = erasure != null ? erasure : node.getExpression();
 		
 		Expression arrayReference = null;
