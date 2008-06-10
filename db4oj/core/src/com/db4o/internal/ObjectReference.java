@@ -36,7 +36,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	private ObjectReference _hcPreceding;
 	private ObjectReference _hcSubsequent;
 	private int _hcSize;
-	private int _hcHashcode; // redundant hashCode
+	public int _hcHashcode; // redundant hashCode
 	
 	private int _lastTopLevelCallId;
     
@@ -581,7 +581,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return null;
 	}
 
-	private int hc_getCode(Object obj) {
+	public static int hc_getCode(Object obj) {
 		int hcode = System.identityHashCode(obj);
 		if (hcode < 0) {
 			hcode = ~hcode;
