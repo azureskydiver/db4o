@@ -10,12 +10,13 @@ import com.db4o.foundation.*;
  */
 public class TransactionalReferenceSystem implements ReferenceSystem{
 	
-	final ReferenceSystem _committedReferences = newReferenceSystem();
+	private final ReferenceSystem _committedReferences;
 	
 	private ReferenceSystem _newReferences;
 	
 	public TransactionalReferenceSystem() {
 		createNewReferences();
+		_committedReferences = newReferenceSystem();
 	}
 	
 	private ReferenceSystem newReferenceSystem(){
