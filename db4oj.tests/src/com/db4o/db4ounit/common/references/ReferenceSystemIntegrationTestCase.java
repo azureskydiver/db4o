@@ -27,8 +27,13 @@ public class ReferenceSystemIntegrationTestCase extends AbstractDb4oTestCase{
 	}
 	
 	public void testHashCodeReferenceSystem(){
-		HashcodeReferenceSystem hashcodeReferenceSystem = new HashcodeReferenceSystem();
-		assertAllRerefencesAvailableOnNew(hashcodeReferenceSystem);
+		ReferenceSystem referenceSystem = new HashcodeReferenceSystem();
+		assertAllRerefencesAvailableOnNew(referenceSystem);
+	}
+	
+	public void testHashTableReferenceSystem(){
+        ReferenceSystem referenceSystem = new HashtableReferenceSystem();
+        assertAllRerefencesAvailableOnNew(referenceSystem);
 	}
 	
 	private void assertAllRerefencesAvailableOnCommit(ReferenceSystem referenceSystem){

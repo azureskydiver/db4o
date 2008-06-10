@@ -10,12 +10,19 @@ import com.db4o.foundation.*;
  */
 public class TransactionalReferenceSystem implements ReferenceSystem{
 	
-	final ReferenceSystem _committedReferences = new HashcodeReferenceSystem();
+	final ReferenceSystem _committedReferences = newReferenceSystem();
 	
 	private ReferenceSystem _newReferences;
 	
 	public TransactionalReferenceSystem() {
 		createNewReferences();
+	}
+	
+	private ReferenceSystem newReferenceSystem(){
+	    return new HashcodeReferenceSystem();
+	    
+	    // An alternative reference system using a hashtable: 
+	    // return new HashtableReferenceSystem();
 	}
 
 	public void addExistingReference(ObjectReference ref) {
@@ -44,7 +51,7 @@ public class TransactionalReferenceSystem implements ReferenceSystem{
 	}
 	
 	private void createNewReferences(){
-		_newReferences = new HashcodeReferenceSystem();
+		_newReferences = newReferenceSystem();
 	}
 
 	public ObjectReference referenceForId(int id) {
