@@ -23,10 +23,7 @@ public final class ListTypeHandlerTestVariables {
 						new ArrayListItemFactory(),
 						new LinkedListItemFactory(),
 						new ListItemFactory(),
-						
-						// Does not sharpen. TODO: Improve Sharpen to handle
-						
-						// new NamedArrayListItemFactory(),
+						new NamedArrayListItemFactory(),
 				}
 			);
 	
@@ -141,6 +138,29 @@ public final class ListTypeHandlerTestVariables {
 		public String label() {
 			return "[Linked]List";
 		}
+	}
+	
+	private static class NamedArrayListItemFactory extends ItemFactory implements Labeled {
+	    
+	    private static class Item {
+	        public List _list = new NamedArrayList();
+	    }
+	    
+	    public Object newItem() {
+	        return new Item();
+	    }
+
+	    public Class itemClass() {
+	        return NamedArrayListItemFactory.Item.class;
+	    }
+
+	    public Class listClass() {
+	        return NamedArrayList.class;
+	    }
+
+	    public String label() {
+	        return "NamedArrayList";
+	    }
 	}
 
 }
