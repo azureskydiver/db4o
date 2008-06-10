@@ -365,8 +365,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			handleVarArgsMethod(node);
 		}
 		
-		final IMethodBinding method = node.resolveBinding();
-		final IMethodBinding definition = methodDefinitionFor(method);
+		final IMethodBinding definition = originalMethodDefinitionFor(node);
 		if (definition == null) {
 			return;
 		}
@@ -376,25 +375,59 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			eraseMethodDeclaration(node, originalMethodDeclaration);
 		}	
 	}
+
+	private IMethodBinding originalMethodDefinitionFor(MethodDeclaration node) {
+		return originalMethodDefinitionFor(node.resolveBinding());
+	}
 	
 	private void eraseMethodDeclaration(MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
+		eraseReturnType(node, originalMethodDeclaration);
+		final HashSet<IVariableBinding> erasedParameters = eraseParametersWhereNeeded(node, originalMethodDeclaration);
+		eraseParameterReferences(node, erasedParameters);
+	}
+
+	private void eraseReturnType(MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
 		eraseIfNeeded(node.getReturnType2(), originalMethodDeclaration.getReturnType());
+	}
+
+	private void eraseParameterReferences(MethodDeclaration node,
+			final HashSet<IVariableBinding> erasedParameters) {
+		node.accept(new ASTVisitor() {
+			@Override
+			public void endVisit(SimpleName node) {
+				if (node.isDeclaration()) {
+					return;
+				}
+				if (erasedParameters.contains(node.resolveBinding())) {
+					replaceWithCast(node, node.resolveTypeBinding());
+				}
+			}
+		});
+	}
+
+	private HashSet<IVariableBinding> eraseParametersWhereNeeded(
+			MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
+		final HashSet<IVariableBinding> erasedParameters = new HashSet<IVariableBinding>();
 		final ITypeBinding[] parameterTypes = originalMethodDeclaration.getParameterTypes();
 		for (int i = 0; i < parameterTypes.length; i++) {
 			final SingleVariableDeclaration actualParameter = (SingleVariableDeclaration) node.parameters().get(i);
-			eraseIfNeeded(actualParameter.getType(), parameterTypes[i]);
+			if (eraseIfNeeded(actualParameter.getType(), parameterTypes[i])) {
+				erasedParameters.add(actualParameter.resolveBinding());
+			}
 		}
+		return erasedParameters;
 	}
 
-	private void eraseIfNeeded(final Type actualType,
-			final ITypeBinding expectedType) {
+	private boolean eraseIfNeeded(final Type actualType, final ITypeBinding expectedType) {
 		final ITypeBinding expectedErasure = expectedType.getErasure();
-		if (actualType.resolveBinding() != expectedErasure) {
-			replace(actualType, newType(expectedErasure));
+		if (actualType.resolveBinding() == expectedErasure) {
+			return false;
 		}
+		replace(actualType, newType(expectedErasure));
+		return true;
 	}
 
-	private IMethodBinding methodDefinitionFor(
+	private IMethodBinding originalMethodDefinitionFor(
 			final IMethodBinding method) {
 		return Bindings.findMethodDefininition(method, ast);
 	}
