@@ -23,6 +23,10 @@ public final class ListTypeHandlerTestVariables {
 						new ArrayListItemFactory(),
 						new LinkedListItemFactory(),
 						new ListItemFactory(),
+						
+						// Does not sharpen. TODO: Improve Sharpen to handle
+						
+						// new NamedArrayListItemFactory(),
 				}
 			);
 	
@@ -138,4 +142,5 @@ public final class ListTypeHandlerTestVariables {
 			return "[Linked]List";
 		}
 	}
+
 }
