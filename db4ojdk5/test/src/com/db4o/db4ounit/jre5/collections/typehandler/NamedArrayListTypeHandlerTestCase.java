@@ -12,9 +12,6 @@ import com.db4o.typehandlers.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-/**
- * @sharpen.ignore
- */
 public class NamedArrayListTypeHandlerTestCase extends AbstractDb4oTestCase{
     
     private static String NAME = "listname";

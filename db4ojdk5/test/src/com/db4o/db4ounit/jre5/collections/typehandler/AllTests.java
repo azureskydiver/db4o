@@ -11,38 +11,15 @@ public class AllTests extends Db4oTestSuite {
     }
     
     protected Class[] testCases() {
-        Class[] classes = 
+        return 
             new Class[] {
 	        ListTypeHandlerCascadedDeleteTestCase.class,
 	        ListTypeHandlerPersistedCountTestCase.class,
 			ListTypeHandlerTestSuite.class,
 			ListTypeHandlerGreaterSmallerTestSuite.class,
 			ListTypeHandlerStringElementTestSuite.class,
+			NamedArrayListTypeHandlerTestCase.class,
 		};
-        return addJavaTestCases(classes);
 	}
-    
-    /**
-     * @sharpen.remove null
-     */
-    protected Class[] javaOnlyTestCases(){
-        return new Class[] {
-            // Somehow this method does not get removed by sharpen.
-            // NamedArrayListTypeHandlerTestCase.class,
-        };
-    }
-    
-   protected Class[] addJavaTestCases(Class[] classes){
-        Class[] javaTestCases = javaOnlyTestCases(); 
-        if(javaTestCases == null){
-            return classes;
-        }
-        int len = javaTestCases.length;
-        Class[] allClasses = new Class[classes.length + len];
-        System.arraycopy(javaTestCases, 0, allClasses, 0,len );
-        System.arraycopy(classes, 0, allClasses, len,classes.length);
-        return allClasses;
-    }
-
 
 }

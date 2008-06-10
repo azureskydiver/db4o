@@ -4,10 +4,6 @@ package com.db4o.db4ounit.jre5.collections.typehandler;
 
 import java.util.*;
 
-/**
- * Does not sharpen. TODO: Improve Sharpen to handle this class also
- * @sharpen.ignore
- */
 public class NamedArrayList extends ArrayList {
     
     public String name;

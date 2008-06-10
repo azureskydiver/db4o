@@ -522,6 +522,10 @@
             <fileset dir="${dir.j.jdk5.test.src}">
             	<include name="**/collections/typehandler/AllTests.java" />
             	
+        		<include name="**/collections/typehandler/EmbeddedListTypeHandler.java" />            	
+            	<include name="**/collections/typehandler/ItemFactory.java" />
+        		<include name="**/collections/typehandler/ListTypeHandler.java" />
+        		
             	<include name="**/collections/typehandler/ListTypeHandlerTestSuite.java" />
             	<include name="**/collections/typehandler/ListTypeHandlerGreaterSmallerTestSuite.java" />
             		
@@ -531,9 +535,10 @@
             	<include name="**/collections/typehandler/ListTypeHandlerStringElementTestSuite.java" />            	
                 <include name="**/collections/typehandler/ListTypeHandlerTestUnitBase.java" />
             	<include name="**/collections/typehandler/ListTypeHandlerTestVariables.java" />
-            	<include name="**/collections/typehandler/ItemFactory.java" />
-        		<include name="**/collections/typehandler/ListTypeHandler.java" />
-        		<include name="**/collections/typehandler/EmbeddedListTypeHandler.java" />            	
+            	
+            	<include name="**/collections/typehandler/NamedArrayList.java" />
+            	<include name="**/collections/typehandler/NamedArrayListItemFactory.java" />
+            	<include name="**/collections/typehandler/NamedArrayListTypeHandlerTestCase.java" />
             	
                 <include name="**/collections/ArrayList4TATestCaseBase.java" />
                 <include name="**/collections/ArrayList4SODATestCase.java" />
