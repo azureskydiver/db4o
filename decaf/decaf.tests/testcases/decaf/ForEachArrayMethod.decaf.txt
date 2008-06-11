@@ -1,9 +1,9 @@
 public class ForEachArray {
 	public static void main(String[] args) {
 		{
-			String[] argArray = fancy(args);
+			final String[] argArray = fancy(args);
 			for (int argIndex = 0; argIndex < argArray.length; ++argIndex) {
-				String arg = argArray[argIndex];
+				final String arg = argArray[argIndex];
 				System.out.println(arg);
 			}
 		}

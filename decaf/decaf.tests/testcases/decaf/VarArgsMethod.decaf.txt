@@ -20,7 +20,7 @@ public class VarArgsMethod {
 	
 	public void testVarArgsMethodWithObjects(Object[] args) {
 		for (int itemIndex = 0; itemIndex < args.length; ++itemIndex) {
-			Object item = args[itemIndex];
+			final Object item = args[itemIndex];
 			System.out.print(item);
 		}
 	}
