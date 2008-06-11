@@ -1,7 +1,7 @@
 public class ForEachArray {
 	public static void main(String[] args) {
 		for (int argIndex = 0; argIndex < args.length; ++argIndex) {
-			String arg = args[argIndex];
+			final String arg = args[argIndex];
 			System.out.println(arg);
 		}
 	}

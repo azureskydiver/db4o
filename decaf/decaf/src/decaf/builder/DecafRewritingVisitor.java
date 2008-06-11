@@ -4,6 +4,7 @@ import java.util.*;
 
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.InfixExpression.*;
+import org.eclipse.jdt.core.dom.Modifier.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
 import sharpen.core.framework.*;
@@ -500,6 +501,10 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		}
 		
 	}
+
+	private Modifier newFinalModifier() {
+		return ast.newModifier(ModifierKeyword.FINAL_KEYWORD);
+	}
 	
 	private Expression newFieldAccess(Expression e, String fieldName) {
 		return newFieldAccess(e, newSimpleName(fieldName));
@@ -576,6 +581,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			String variableName, Type variableType, Expression initializer) {
 		VariableDeclarationStatement variable = ast.newVariableDeclarationStatement(newVariableFragment(variableName, initializer));
 		variable.setType(variableType);
+		variable.modifiers().add(newFinalModifier());
 		return variable;
 	}
 	

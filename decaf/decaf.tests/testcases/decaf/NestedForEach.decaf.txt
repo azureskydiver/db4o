@@ -1,11 +1,11 @@
 class NestedForEach {
 	static void main(String[] args) {
 		for (int argIndex = 0; argIndex < args.length; ++argIndex) {
-			String arg = args[argIndex];
+			final String arg = args[argIndex];
 			{
-				char[] chArray = arg.toCharArray();
+				final char[] chArray = arg.toCharArray();
 				for (int chIndex = 0; chIndex < chArray.length; ++chIndex) {
-					char ch = chArray[chIndex];
+					final char ch = chArray[chIndex];
 					System.out.println(ch);
 				}
 			}
