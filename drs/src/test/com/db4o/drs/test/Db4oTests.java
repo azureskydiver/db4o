@@ -77,6 +77,7 @@ public class Db4oTests extends DrsTestSuite {
 				com.db4o.drs.test.dotnet.StructTestCase.class,
 				com.db4o.drs.test.DeepListGraphTestCase.class,
 				com.db4o.drs.test.UntypedFieldTestCase.class,
+				com.db4o.drs.test.db4o.PartialCollectionReplicationTestCase.class,
 				TheSimplestWithCallConstructors.class,
 			});
 	}
