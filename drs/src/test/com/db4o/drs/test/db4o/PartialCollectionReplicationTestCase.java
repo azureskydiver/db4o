@@ -6,6 +6,7 @@ import com.db4o.drs.db4o.*;
 import com.db4o.drs.test.*;
 import com.db4o.events.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 
 import db4ounit.*;
 
@@ -48,7 +49,7 @@ public class PartialCollectionReplicationTestCase extends DrsTestCase {
 		store(root, 1);
 		
 		final List<Data> created = replicateAllCapturingCreatedObjects();
-		Assert.areEqual(3, created.size());
+		assertData(created, "root", "c1", "c2");
 		
 		final Data c3 = new Data("c3");
 		root.add(c3);
@@ -58,13 +59,37 @@ public class PartialCollectionReplicationTestCase extends DrsTestCase {
 		c2.add(new Data("c4"));
 		
 		final List<Data> updated = replicateAllCapturingUpdatedObjects();
-		Assert.areEqual(1, updated.size());
-		Assert.areEqual("root", updated.get(0).id());
-		
+		assertData(updated, "root", "c3");
+	}
+
+	private void assertData(final Iterable<Data> data, final String... expectedIds) {
+		Iterator4Assert.sameContent(expectedIds, ids(data));
 	}
 	
+	private Iterator4 ids(Iterable<Data> data) {
+		final Collection4 ids = new Collection4();
+		for (Data d : data) {
+			ids.add(d.id());
+		}
+		return ids.iterator();
+	}
+
 	private List<Data> replicateAllCapturingUpdatedObjects() {
-		final List<Data> updated = new ArrayList<Data>();
+		final List<Data> changed = new ArrayList<Data>();
+		listenToUpdated(changed);
+		listenToCreated(changed);
+		replicateAll();
+		return changed;
+	}
+	
+	private List<Data> replicateAllCapturingCreatedObjects() {
+		final List<Data> created = new ArrayList<Data>();
+		listenToCreated(created);
+		replicateAll();
+		return created;
+	}
+
+	private void listenToUpdated(final List<Data> updated) {
 		eventRegistryFor(b()).updated().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				final Object o = ((ObjectEventArgs)args).object();
@@ -74,8 +99,6 @@ public class PartialCollectionReplicationTestCase extends DrsTestCase {
 				ods(o);
 			}
 		});
-		replicateAll();
-		return updated;
 	}
 
 	private void replicateAll() {
@@ -84,8 +107,7 @@ public class PartialCollectionReplicationTestCase extends DrsTestCase {
 		ods("END REPLICATION");
 	}
 
-	private List<Data> replicateAllCapturingCreatedObjects() {
-		final List<Data> created = new ArrayList<Data>();
+	private void listenToCreated(final List<Data> created) {
 		eventRegistryFor(b()).created().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				final Object o = ((ObjectEventArgs)args).object();
@@ -95,8 +117,6 @@ public class PartialCollectionReplicationTestCase extends DrsTestCase {
 				ods(o);
 			}
 		});
-		replicateAll();
-		return created;
 	}
 
 	private EventRegistry eventRegistryFor(final DrsFixture fixture) {
