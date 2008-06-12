@@ -23,3 +23,9 @@
 -propertyMapping java.lang.System.err Sharpen.Runtime.Err
 
 -propertyMapping db4ounit.fixtures.FixtureVariable.value Value
+
+-propertyMapping com.db4o.events.ObjectEventArgs.object Object
+-eventAddMapping com.db4o.events.Event4.addListener
+-eventMapping com.db4o.events.EventRegistry.created Db4objects.Db4o.Events.ObjectEventArgs
+-eventMapping com.db4o.events.EventRegistry.updated Db4objects.Db4o.Events.ObjectEventArgs
+
