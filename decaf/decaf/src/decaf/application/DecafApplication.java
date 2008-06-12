@@ -8,6 +8,7 @@ import decaf.builder.*;
 
 import sharpen.core.*;
 import sharpen.core.framework.*;
+import sharpen.core.resources.WorkspaceUtilities;
 
 public class DecafApplication implements IApplication {
 
@@ -43,11 +44,8 @@ public class DecafApplication implements IApplication {
 		return WorkspaceUtilities.getProject(name);
 	}
 
-	private void disableAutoBuilding() throws CoreException {
-		IWorkspace workspace = WorkspaceUtilities.getWorkspaceRoot().getWorkspace();
-		IWorkspaceDescription workspaceDescription = workspace.getDescription();
-		workspaceDescription.setAutoBuilding(false);
-		workspace.setDescription(workspaceDescription);
+	private static void disableAutoBuilding() throws CoreException {
+		WorkspaceUtilities.setAutoBuilding(false);
 	}
 
 	public void stop() {
