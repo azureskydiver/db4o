@@ -65,7 +65,7 @@ public class HashMapQueryTestCase extends AbstractDb4oTestCase {
 		};
 	}
 
-	public void _testQueryResult() throws Exception {
+	public void testQueryResult() throws Exception {
 		Query q = newQuery(Item.class);
 		q.descend("_map").constrain(keys()[0]);
 		assertQuery(q);		
@@ -86,7 +86,7 @@ public class HashMapQueryTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public static void main(String[] args) {
-		new ConsoleTestRunner(HashMapQueryTestCase.class).run();
+		new HashMapQueryTestCase().runSolo();
 	}
 
 }
