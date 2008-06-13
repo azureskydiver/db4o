@@ -205,6 +205,16 @@
 		<property name="file.bench.jar" value="${dir.dist.jars}/${filename.db4obench.jar}" />
 		
 		<property name="file.compiler.jdk1.3.args.line" value="${file.compiler.jdk1.3.args} ${file.compiler.jdk1.3.args.optional}" />
+		
+		<if>
+			<isset property="dir.tests.temp" />
+			<then>
+				<property name="Tests.Temp.Path" value="${dir.tests.temp}" />
+			</then>
+			<else>
+				<property name="Tests.Temp.Path" value="${env.TEMP}" />
+			</else>
+		</if>		
 	</target>
 
 </project>
