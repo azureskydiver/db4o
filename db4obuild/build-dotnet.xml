@@ -125,11 +125,13 @@
 	
 	<target name="run-tests-core" depends="build-core">
 		<exec executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" failonerror="true" timeout="3600000">
-		</exec>
+			<env key="TEMP" value="${Tests.Temp.Path}"/>
+		</exec>	
 	</target>
-
+	
 	<target name="run-tests-admin" depends="build-admin" unless="skip.admin">
 		<exec executable="${dir.dist.dll.net}/Db4oTool.Tests.exe" dir="${dir.dist.dll.net}" failonerror="true" timeout="1800000">
+			<env key="TEMP" value="${Tests.Temp.Path}"/>
 		</exec>
 	</target>
 	
@@ -380,8 +382,7 @@
 	</target>
 	
 	<target name="run-msbuild-tests" depends="build-admin">
-		<!-- <exec executable="${dir.dist.dll}/Db4oTool.MSBuild.Tests.exe" failonerror="true"/> -->
-		<echo>ENABLE THIS TEST AGAIN WHEN DB4OTool can handle .NET FRAMEWORK 3.5</echo>
+		<exec executable="${dir.dist.dll}/Db4oTool.MSBuild.Tests.exe" failonerror="true"/>
 	</target>	
 	
 	<target name="build-admin" depends="build-core" unless="skip.admin">
