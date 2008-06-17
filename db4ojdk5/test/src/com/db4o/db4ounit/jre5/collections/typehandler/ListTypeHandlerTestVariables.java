@@ -74,7 +74,7 @@ public final class ListTypeHandlerTestVariables {
 
 	}
 	
-	private static class ArrayListItemFactory extends ItemFactory implements Labeled {
+	private static class ArrayListItemFactory extends AbstractListItemFactory implements Labeled {
 		private static class Item {
 			public ArrayList _list = new ArrayList();
 		}
@@ -87,7 +87,7 @@ public final class ListTypeHandlerTestVariables {
 			return Item.class;
 		}
 
-		public Class listClass() {
+		public Class containerClass() {
 			return ArrayList.class;
 		}
 
@@ -96,7 +96,7 @@ public final class ListTypeHandlerTestVariables {
 		}
 	}
 
-	private static class LinkedListItemFactory extends ItemFactory implements Labeled {
+	private static class LinkedListItemFactory extends AbstractListItemFactory implements Labeled {
 		private static class Item {
 			public LinkedList _list = new LinkedList();
 		}
@@ -109,7 +109,7 @@ public final class ListTypeHandlerTestVariables {
 			return Item.class;
 		}
 
-		public Class listClass() {
+		public Class containerClass() {
 			return LinkedList.class;
 		}
 
@@ -118,7 +118,7 @@ public final class ListTypeHandlerTestVariables {
 		}
 	}
 
-	private static class ListItemFactory extends ItemFactory implements Labeled {
+	private static class ListItemFactory extends AbstractListItemFactory implements Labeled {
 		private static class Item {
 			public List _list = new LinkedList();
 		}
@@ -131,7 +131,7 @@ public final class ListTypeHandlerTestVariables {
 			return Item.class;
 		}
 
-		public Class listClass() {
+		public Class containerClass() {
 			return LinkedList.class;
 		}
 
@@ -140,7 +140,7 @@ public final class ListTypeHandlerTestVariables {
 		}
 	}
 	
-	private static class NamedArrayListItemFactory extends ItemFactory implements Labeled {
+	private static class NamedArrayListItemFactory extends AbstractListItemFactory implements Labeled {
 	    
 	    private static class Item {
 	        public List _list = new NamedArrayList();
@@ -154,7 +154,7 @@ public final class ListTypeHandlerTestVariables {
 	        return NamedArrayListItemFactory.Item.class;
 	    }
 
-	    public Class listClass() {
+	    public Class containerClass() {
 	        return NamedArrayList.class;
 	    }
 

@@ -37,13 +37,13 @@ public class ListTypeHandlerGreaterSmallerTestSuite extends FixtureBasedTestSuit
 		
 		public void testSuccessfulSmallerQuery() throws Exception {
 	    	Query q = newQuery(itemFactory().itemClass());
-	    	q.descend(ItemFactory.LIST_FIELD_NAME).constrain(largeElement()).smaller();
+	    	q.descend(AbstractItemFactory.LIST_FIELD_NAME).constrain(largeElement()).smaller();
 	    	assertQueryResult(q, true);
 		}
 		
 		public void testFailingGreaterQuery() throws Exception {
 	    	Query q = newQuery(itemFactory().itemClass());
-	    	q.descend(ItemFactory.LIST_FIELD_NAME).constrain(largeElement()).greater();
+	    	q.descend(AbstractItemFactory.LIST_FIELD_NAME).constrain(largeElement()).greater();
 	    	assertQueryResult(q, false);
 		}
 
