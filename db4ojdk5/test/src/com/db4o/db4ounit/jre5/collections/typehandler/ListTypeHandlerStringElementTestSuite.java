@@ -37,13 +37,13 @@ public class ListTypeHandlerStringElementTestSuite extends FixtureBasedTestSuite
 		
 		public void testSuccessfulEndsWithQuery() throws Exception {
 	    	Query q = newQuery(itemFactory().itemClass());
-	    	q.descend(ItemFactory.LIST_FIELD_NAME).constrain(successfulEndChar()).endsWith(false);
+	    	q.descend(AbstractItemFactory.LIST_FIELD_NAME).constrain(successfulEndChar()).endsWith(false);
 	    	assertQueryResult(q, true);
 		}
 		
 		public void testFailingEndsWithQuery() throws Exception {
 	    	Query q = newQuery(itemFactory().itemClass());
-	    	q.descend(ItemFactory.LIST_FIELD_NAME).constrain(failingEndChar()).endsWith(false);
+	    	q.descend(AbstractItemFactory.LIST_FIELD_NAME).constrain(failingEndChar()).endsWith(false);
 	    	assertQueryResult(q, false);
 		}
 
