@@ -9,7 +9,7 @@ import com.db4o.diagnostic.DiagnosticConfiguration;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.io.IoAdapter;
+import com.db4o.io.*;
 import com.db4o.reflect.Reflector;
 import com.db4o.typehandlers.*;
 
@@ -387,36 +387,13 @@ public interface Configuration {
     
     
     /**
-     * configures file buffers to be flushed during transaction commits.
+     * configuration setting to turn file buffer flushing off.
      * <br><br>
-     * db4o uses a resume-commit-on-crash strategy to ensure ACID transactions.
-     * When a transaction commits,<br>
-     * - (1) a list "pointers that are to be modified" is written to the database file,<br>
-     * - (2) the database file is switched into "in-commit" mode, <br>
-     * - (3) the pointers are actually modified in the database file,<br>
-     * - (4) the database file is switched to "not-in-commit" mode.<br>
-     * If the system is halted by a hardware or power failure <br>
-     * - before (2)<br>
-     * all objects will be available as before the commit<br>
-     * - between (2) and (4)
-     * the commit is restarted when the database file is opened the next time, all pointers 
-     * will be read from the "pointers to be modified" list and all of them will be modified 
-     * to the state they are intended to have after commit<br>
-     * - after (4) 
-     * no work is necessary, the transaction is committed.
-     * <br><br>
-     * In order for the above to be 100% failsafe, the order of writes to the
-     * storage medium has to be obeyed. On operating systems that use in-memory
-     * file caching, the OS cache may revert the order of writes to optimize
-     * file performance.<br><br>
-     * db4o enforces the correct write order by flushing file
-     * buffers after every single one of the above steps during transaction
-     * commit. Flush calls have a strong impact on performance. It is possible to 
-     * tune an application by turning flushing off, at the risc of less security
-     * for hardware-, power- or operating system failures.<br><br>
-     * In client/server environment this setting should be used on both 
-     * client and server.<br><br>
-     * @param flag true for flushing file buffers
+     * This configuration setting is no longer in use.
+     * To tune db4o performance at the cost of a higher risc of database
+     * file corruption in case of abnormal session terminations, please 
+     * use a {@link NonFlushingIoAdapter}.
+     * @deprecated Please use a {@link NonFlushingIoAdapter} instead.
      */
     public void flushFileBuffers(boolean flag);
     
