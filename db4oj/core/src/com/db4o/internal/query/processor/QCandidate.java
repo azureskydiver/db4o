@@ -128,14 +128,13 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			TypeHandler4 handler = _yapField.getHandler();
 			if (handler != null) {
 
-				final ByteArrayBuffer[] arrayBytes = { _bytes };
-				
+			    final QueryingReadContext queryingReadContext = new QueryingReadContext(transaction(), marshallerFamily().handlerVersion(), _bytes); 
+			    
 				TypeHandler4 tempHandler = null;
 				
 				if(handler instanceof FirstClassHandler){
-				    tempHandler = ((FirstClassHandler)handler).readArrayHandler(
-                        transaction(), marshallerFamily(), arrayBytes);
-				    
+				    FirstClassHandler firstClassHandler = (FirstClassHandler) queryingReadContext.correctHandlerVersion(handler); 
+				    tempHandler = firstClassHandler.readCandidateHandler(queryingReadContext);
 				}
 
 				if (tempHandler != null) {
@@ -143,7 +142,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	                final TypeHandler4 arrayElementHandler = tempHandler;
 
 
-					final int offset = arrayBytes[0]._offset;
+					final int offset = queryingReadContext.offset();
 					boolean outerRes = true;
 
 					// The following construct is worse than not ideal.
@@ -167,10 +166,10 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 							qcon.setCandidates(candidates);
 							
-							readArrayCandidates(handler, arrayBytes[0], arrayElementHandler,
+							readArrayCandidates(handler, queryingReadContext.buffer(), arrayElementHandler,
                                 candidates);
 							
-							arrayBytes[0]._offset = offset;
+							queryingReadContext.seek(offset);
 
 							final boolean isNot = qcon.isNot();
 							if (isNot) {
@@ -328,7 +327,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		return true;
 	}
 
-    private void readArrayCandidates(TypeHandler4 fieldHandler, final ByteArrayBuffer buffer,
+    private void readArrayCandidates(TypeHandler4 fieldHandler, final ReadBuffer buffer,
         final TypeHandler4 arrayElementHandler, final QCandidates candidates) {
         if(! (arrayElementHandler instanceof FirstClassHandler)){
             return;

@@ -254,9 +254,10 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return info.reflectClass();
 	}
 	
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes) {
+    public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
         return this;
     }
+
 
     public void readCandidates(final QueryingReadContext context) {
         final QCandidates candidates = context.candidates();

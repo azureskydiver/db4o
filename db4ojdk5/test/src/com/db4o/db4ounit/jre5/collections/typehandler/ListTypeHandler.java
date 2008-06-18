@@ -97,9 +97,9 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
 		}
 	}
 
-	public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes) {
-		return this;
-	}
+    public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
+        return this;
+    }
 	
    public void readCandidates(QueryingReadContext context) throws Db4oIOException {
         int elementCount = context.readInt();

@@ -125,7 +125,7 @@ public class EmbeddedListTypeHandler implements TypeHandler4 , FirstClassHandler
         }
     }
 
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes) {
+    public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
         return this;
     }
     
