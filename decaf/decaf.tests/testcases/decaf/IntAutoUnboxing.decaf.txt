@@ -1,0 +1,6 @@
+class IntAutoUnboxing {
+
+	public int foo(Integer i) {
+		return (i).intValue() + 2;
+	}
+}
