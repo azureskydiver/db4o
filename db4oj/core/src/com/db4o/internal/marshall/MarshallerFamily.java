@@ -41,8 +41,6 @@ public class MarshallerFamily {
 
     public final StringMarshaller _string;
     
-    public final UntypedMarshaller _untyped;
-
     private final int _converterVersion;
     
     private final int _handlerVersion;
@@ -60,8 +58,7 @@ public class MarshallerFamily {
 	            new FieldMarshaller0(),
 	            new ObjectMarshaller0(), 
 	            new PrimitiveMarshaller0(),
-	            new StringMarshaller0(),
-	            new UntypedMarshaller0());
+	            new StringMarshaller0());
     	
     	allVersions[1] =
 	        new MarshallerFamily(
@@ -71,8 +68,7 @@ public class MarshallerFamily {
 	            new FieldMarshaller0(),
 	            new ObjectMarshaller1(), 
 	            new PrimitiveMarshaller1(),
-	            new StringMarshaller1(),
-	            new UntypedMarshaller1());
+	            new StringMarshaller1());
     	for (int i = 2; i < allVersions.length; i++) {
     	    allVersions[i] = latestFamily(i);
         }
@@ -85,8 +81,7 @@ public class MarshallerFamily {
             FieldMarshaller fieldMarshaller,
             ObjectMarshaller objectMarshaller,
             PrimitiveMarshaller primitiveMarshaller, 
-            StringMarshaller stringMarshaller,
-            UntypedMarshaller untypedMarshaller) {
+            StringMarshaller stringMarshaller) {
         _converterVersion = converterVersion;
         _handlerVersion = handlerVersion;
         _class = classMarshaller;
@@ -97,8 +92,6 @@ public class MarshallerFamily {
         _primitive = primitiveMarshaller;
         _primitive._family = this;
         _string = stringMarshaller;
-        _untyped = untypedMarshaller;
-        _untyped._family = this;
     }
     
     public static MarshallerFamily latestFamily(int version){
@@ -109,8 +102,7 @@ public class MarshallerFamily {
             new FieldMarshaller1(),
             new ObjectMarshaller1(), 
             new PrimitiveMarshaller1(),
-            new StringMarshaller1(),
-            new UntypedMarshaller1());
+            new StringMarshaller1());
     }
 
     public static MarshallerFamily version(int n) {

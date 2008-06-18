@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;
@@ -22,6 +23,40 @@ public class UntypedFieldHandler0 extends UntypedFieldHandler2 {
     
     public Object read(ReadContext context) {
         return context.readObject();
+    }
+    
+    public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
+        int id = 0;
+
+        int offset = context.offset();
+        try {
+            id = context.readInt();
+        } catch (Exception e) {
+        }
+        context.seek(offset);
+
+        if (id != 0) {
+            StatefulBuffer reader =
+                context.container().readWriterByID(context.transaction(), id);
+            if (reader != null) {
+                ObjectHeader oh = new ObjectHeader(reader);
+                try {
+                    if (oh.classMetadata() != null) {
+                        context.buffer(reader);
+                        return oh.classMetadata().seekCandidateHandler(context);
+                    }
+                } catch (Exception e) {
+                    
+                    if(Debug.atHome){
+                        e.printStackTrace();
+                    }
+                    
+                    // TODO: Check Exception Types
+                    // Errors typically occur, if classes don't match
+                }
+            }
+        }
+        return null;
     }
     
     public ObjectID readObjectID(InternalReadContext context){

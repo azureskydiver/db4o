@@ -1309,27 +1309,22 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return new ObjectReference(id).read(trans, depth, Const4.ADD_TO_ID_TREE, false);
 	}
     
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes) {
+    public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
         if (isArray()) {
             return this;
         }
         return null;
     }
 
-    public TypeHandler4 readArrayHandler1(ByteArrayBuffer[] a_bytes) {
-        if(DTrace.enabled){
-            if(a_bytes[0] instanceof StatefulBuffer){
-                DTrace.READ_ARRAY_WRAPPER.log(((StatefulBuffer)a_bytes[0]).getID());
-            }
-        }
+    public TypeHandler4 seekCandidateHandler(QueryingReadContext context) {
         if (isArray()) {
             if (Platform4.isCollectionTranslator(this.i_config)) {
-                a_bytes[0].incrementOffset(Const4.INT_LENGTH);
+                context.seek(context.offset() + Const4.INT_LENGTH);
                 return new ArrayHandler(null, false);
             }
-            incrementFieldsOffset1(a_bytes[0]);
+            incrementFieldsOffset1((ByteArrayBuffer)context.buffer());
             if (i_ancestor != null) {
-                return i_ancestor.readArrayHandler1(a_bytes);
+                return i_ancestor.seekCandidateHandler(context);
             }
         }
         return null;

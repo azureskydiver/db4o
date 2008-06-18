@@ -11,8 +11,8 @@ import com.db4o.internal.marshall.*;
  */
 public interface FirstClassHandler extends CascadingTypeHandler {
     
-    void readCandidates(QueryingReadContext context) throws Db4oIOException;
+    TypeHandler4 readCandidateHandler(QueryingReadContext context);
     
-    TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes);
+    void readCandidates(QueryingReadContext context) throws Db4oIOException;
 
 }

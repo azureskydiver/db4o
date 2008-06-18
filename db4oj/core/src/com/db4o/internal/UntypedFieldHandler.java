@@ -76,8 +76,31 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 		return false;
 	}
     
-	public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes) {
-        return mf._untyped.readArrayHandler(a_trans, a_bytes);
+	public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
+        int payLoadOffSet = context.readInt();
+        if(payLoadOffSet == 0){
+            return null;
+        }
+
+        TypeHandler4 ret = null;
+
+        context.seek(payLoadOffSet);
+        
+        int yapClassID = context.readInt();
+        
+        ClassMetadata yc = context.container().classMetadataForId(yapClassID);
+        if(yc != null){
+            TypeHandler4 configuredHandler =
+                context.container().configImpl().typeHandlerForClass(yc.classReflector(), HandlerRegistry.HANDLER_VERSION);
+            if(configuredHandler != null && configuredHandler instanceof FirstClassHandler){
+                ret = ((FirstClassHandler)configuredHandler).readCandidateHandler(context);
+            }
+            else {
+                ret = yc.readCandidateHandler(context);
+            }
+        }
+        return ret;
+	    
 	}
     
     public ObjectID readObjectID(InternalReadContext context){
