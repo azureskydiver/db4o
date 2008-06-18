@@ -124,17 +124,29 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 	
 	@Override
-	public boolean visit(IfStatement node) {
+	public void postVisit(ASTNode node) {
 		
-		final Expression expression = node.getExpression();
-		if (expression.resolveUnboxing()) {
-			replace(expression,
-					newMethodInvocation(
-						parenthesize(copy(expression)), "booleanValue"));
+		if (node instanceof Expression) {
+			final Expression expression = (Expression)node;
+			if (expression.resolveUnboxing()) {
+				replace(expression,
+						newMethodInvocation(
+							parenthesize(move(expression)), unboxingMethodFor(expression.resolveTypeBinding())));
+			}
 		}
-		return super.visit(node);
 	}
-
+	
+	private String unboxingMethodFor(ITypeBinding type) {
+		final String typeName = type.getQualifiedName();
+		if ("java.lang.Integer".equals(typeName)) {
+			return "intValue";
+		}
+		if ("java.lang.Boolean".equals(typeName)) {
+			return "booleanValue";
+		}
+		throw new IllegalArgumentException(typeName);
+	}
+	
 	private ParenthesizedExpression parenthesize(final Expression expression) {
 		final ParenthesizedExpression pe = ast.newParenthesizedExpression();
 		pe.setExpression(expression);
@@ -607,10 +619,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	private void replace(ASTNode node, ASTNode replacement) {
 		rewrite.replace(node, replacement, null);
-	}
-
-	private <T extends ASTNode> T copy(T node) {
-		return (T)rewrite.createCopyTarget(node);
 	}
 	
 	private <T extends ASTNode> T move(T node) {

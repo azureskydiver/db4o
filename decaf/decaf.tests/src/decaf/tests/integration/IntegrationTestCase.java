@@ -3,12 +3,25 @@ package decaf.tests.integration;
 import decaf.tests.*;
 
 public class IntegrationTestCase extends DecafTestCaseBase {
+	
+	public void testUnboxingInVarArgs() throws Exception {
+		runResourceTestCase("UnboxingInVarArgs");
+	}
+	
+	public void testUnboxingInForEach() throws Exception {
+		runResourceTestCase("UnboxingInForEach");
+	}
 
 	public void testErasureInVarArgs() throws Exception {
-		runResourceTestCase("integration/ErasureInVarArgs");
+		runResourceTestCase("ErasureInVarArgs");
 	}
 	
 	public void testErasureInForEach() throws Exception {
-		runResourceTestCase("integration/ErasureInForEach");
+		runResourceTestCase("ErasureInForEach");
+	}
+	
+	@Override
+	protected void runResourceTestCase(String resourceName) throws Exception {
+		super.runResourceTestCase("integration/"  + resourceName);
 	}
 }

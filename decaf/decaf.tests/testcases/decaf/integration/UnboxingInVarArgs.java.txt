@@ -1,0 +1,11 @@
+package integration;
+
+class UnboxingInVarArgs {
+
+	static void foo(int... values) {
+	}
+	
+	static void main() {
+		foo(new Integer(42), new Integer(-1));
+	}
+}
