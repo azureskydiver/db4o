@@ -4,12 +4,12 @@ import decaf.tests.*;
 
 public class AutoBoxingTestCase extends DecafTestCaseBase {
 	
-	public void testBooleanAutoUnboxing() throws Exception {
-		runResourceTestCase("BooleanAutoUnboxing");
+	public void testAutoUnboxingInIf() throws Exception {
+		runResourceTestCase("AutoUnboxingInIf");
 	}
 	
-	public void testIntAutoUnboxing() throws Exception {
-		runResourceTestCase("IntAutoUnboxing");
+	public void testAutoUnboxing() throws Exception {
+		runResourceTestCase("AutoUnboxing");
 	}
 	
 	@Override
