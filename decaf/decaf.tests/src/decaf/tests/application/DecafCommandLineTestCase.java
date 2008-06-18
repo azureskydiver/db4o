@@ -1,4 +1,4 @@
-package decaf.tests;
+package decaf.tests.application;
 
 import decaf.application.*;
 import junit.framework.*;
