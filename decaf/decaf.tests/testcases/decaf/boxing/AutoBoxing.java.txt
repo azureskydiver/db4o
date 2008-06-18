@@ -1,0 +1,34 @@
+class AutoUnboxing {
+
+	public Byte unbox(byte b) {
+		return b;
+	}
+	
+	public Short unbox(short s) {
+		return s;
+	}
+	
+	public Integer box(int i) {
+		return i;
+	}
+	
+	public Long box(long l) {
+		return l;
+	}
+	
+	public Float box(float f) {
+		return f;
+	}
+	
+	public Double box(double d) {
+		return d;
+	} 
+	
+	public Character box(char c) {
+		return c;
+	}
+	
+	public Boolean box(boolean b) {
+		return b;
+	}
+}

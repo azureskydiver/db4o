@@ -12,6 +12,10 @@ public class AutoBoxingTestCase extends DecafTestCaseBase {
 		runResourceTestCase("AutoUnboxing");
 	}
 	
+	public void testAutoBoxing() throws Exception {
+		runResourceTestCase("AutoBoxing");
+	}
+	
 	@Override
 	protected void runResourceTestCase(String resourceName) throws Exception {
 		super.runResourceTestCase("boxing/" + resourceName);
