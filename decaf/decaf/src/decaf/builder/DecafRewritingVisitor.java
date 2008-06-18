@@ -125,19 +125,63 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public void postVisit(ASTNode node) {
-		
 		if (node instanceof Expression) {
 			final Expression expression = (Expression)node;
 			if (expression.resolveUnboxing()) {
-				final Expression target = expression instanceof Name
-					? move(expression)
-					: parenthesize(move(expression));
-				replace(expression,
-						newMethodInvocation(
-							target,
-							unboxingMethodFor(expression.resolveTypeBinding())));
+				replace(expression, unbox(expression));
+			} else if (expression.resolveBoxing()) {
+				replace(expression, box(expression));
 			}
 		}
+	}
+
+	private MethodInvocation unbox(final Expression expression) {
+		return newMethodInvocation(
+			parenthesizedMove(expression),
+			unboxingMethodFor(expression.resolveTypeBinding()));
+	}
+
+	private ClassInstanceCreation box(final Expression expression) {
+		final ClassInstanceCreation creation = ast.newClassInstanceCreation();
+		creation.setType(newSimpleType(boxedTypeFor(expression.resolveTypeBinding())));
+		creation.arguments().add(safeMove(expression));
+		return creation;
+	}
+	
+	private String boxedTypeFor(ITypeBinding type) {
+		final String typeName = type.getName();
+		if ("byte".equals(typeName)) {
+			return "Byte";
+		}
+		if ("boolean".equals(typeName)) {
+			return "Boolean";
+		}
+		if ("short".equals(typeName)) {
+			return "Short";
+		}
+		if ("int".equals(typeName)) {
+			return "Integer";
+		}
+		if ("long".equals(typeName)) {
+			return "Long";
+		}
+		if ("float".equals(typeName)) {
+			return "Float";
+		}
+		if ("double".equals(typeName)) {
+			return "Double";
+		}
+		if ("char".equals(typeName)) {
+			return "Character";
+		}
+		throw new IllegalArgumentException(typeName);
+	}
+
+	private Expression parenthesizedMove(final Expression expression) {
+		final Expression target = expression instanceof Name
+			? move(expression)
+			: parenthesize(move(expression));
+		return target;
 	}
 	
 	
@@ -276,15 +320,15 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			final List arguments, final ListRewrite argumentListRewrite) {
 		
 		final ITypeBinding[] parameters = method.getParameterTypes();
-		final List arguments1 = argumentListRewrite.getRewrittenList();
+		final List rewrittenArguments = argumentListRewrite.getRewrittenList();
 		final List originalList = argumentListRewrite.getOriginalList();
 		for (int i = parameters.length-1; i < originalList.size(); ++i) {
 			argumentListRewrite.remove((ASTNode)originalList.get(i), null);
 		}
 		
 		ArrayInitializer arrayInitializer = ast.newArrayInitializer();
-		for (int i = parameters.length-1; i < arguments1.size(); ++i) {
-			final Expression arg = (Expression) arguments1.get(i);
+		for (int i = parameters.length-1; i < rewrittenArguments.size(); ++i) {
+			final Expression arg = (Expression) rewrittenArguments.get(i);
 			arrayInitializer.expressions().add(safeMove(arg));
 		}
 		
@@ -566,9 +610,17 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			return ast.newArrayType(newType(type.getComponentType()));
 		}
 		if (type.isPrimitive()) {
-			return ast.newPrimitiveType(PrimitiveType.toCode(type.getName()));
+			return newPrimitiveType(type.getName());
 		}
-		return ast.newSimpleType(ast.newName(type.getName()));
+		return newSimpleType(type.getName());
+	}
+
+	private SimpleType newSimpleType(final String typeName) {
+		return ast.newSimpleType(ast.newName(typeName));
+	}
+
+	private PrimitiveType newPrimitiveType(final String primitiveTypeName) {
+		return ast.newPrimitiveType(PrimitiveType.toCode(primitiveTypeName));
 	}
 
 	private Expression newFieldAccess(Expression e, SimpleName fieldName) {
