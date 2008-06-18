@@ -129,22 +129,36 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		if (node instanceof Expression) {
 			final Expression expression = (Expression)node;
 			if (expression.resolveUnboxing()) {
+				final Expression target = expression instanceof Name
+					? move(expression)
+					: parenthesize(move(expression));
 				replace(expression,
 						newMethodInvocation(
-							parenthesize(move(expression)), unboxingMethodFor(expression.resolveTypeBinding())));
+							target,
+							unboxingMethodFor(expression.resolveTypeBinding())));
 			}
 		}
 	}
 	
+	
+	static final Map<String, String> _unboxing = new HashMap<String, String>();
+	{
+		unboxing("java.lang.Byte", "byteValue");
+		unboxing("java.lang.Short", "shortValue");
+		unboxing("java.lang.Integer", "intValue");
+		unboxing("java.lang.Long", "longValue");
+		unboxing("java.lang.Float", "floatValue");
+		unboxing("java.lang.Double", "doubleValue");
+		unboxing("java.lang.Boolean", "booleanValue");
+		unboxing("java.lang.Character", "charValue");
+	}
+
+	private void unboxing(final String typeName, final String method) {
+		_unboxing.put(typeName, method);
+	}
+	
 	private String unboxingMethodFor(ITypeBinding type) {
-		final String typeName = type.getQualifiedName();
-		if ("java.lang.Integer".equals(typeName)) {
-			return "intValue";
-		}
-		if ("java.lang.Boolean".equals(typeName)) {
-			return "booleanValue";
-		}
-		throw new IllegalArgumentException(typeName);
+		return _unboxing.get(type.getQualifiedName());
 	}
 	
 	private ParenthesizedExpression parenthesize(final Expression expression) {
