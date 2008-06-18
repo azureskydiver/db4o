@@ -78,8 +78,6 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec EXCEPTIONS_ON_NOT_STORABLE_KEY=new KeySpec(false);
     
-	private final static KeySpec FLUSH_FILE_BUFFERS_KEY=new KeySpec(true);
-    
 	private final static KeySpec FREESPACE_FILLER_KEY=new KeySpec(null);
 
 	private final static KeySpec FREESPACE_SYSTEM_KEY=new KeySpec(AbstractFreespaceManager.FM_DEFAULT);
@@ -360,12 +358,16 @@ public final class Config4Impl implements Configuration, DeepClone,
         return outStream == null ? System.err : outStream;
     }
 
+    
     public void exceptionsOnNotStorable(boolean flag) {
         _config.put(EXCEPTIONS_ON_NOT_STORABLE_KEY,flag);
     }
     
+    /**  
+     * @deprecated Please use a {@link NonFlushingIoAdapter} instead.
+     */
     public void flushFileBuffers(boolean flag){
-        _config.put(FLUSH_FILE_BUFFERS_KEY,flag);
+        // ignore
     }
 
     public FreespaceConfiguration freespace() {
@@ -773,10 +775,6 @@ public final class Config4Impl implements Configuration, DeepClone,
 
 	public boolean exceptionsOnNotStorable() {
 		return _config.getAsBoolean(EXCEPTIONS_ON_NOT_STORABLE_KEY);
-	}
-
-	public boolean flushFileBuffers() {
-		return _config.getAsBoolean(FLUSH_FILE_BUFFERS_KEY);
 	}
 
 	byte freespaceSystem() {

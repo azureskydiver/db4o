@@ -351,9 +351,7 @@ public class LocalTransaction extends Transaction {
         if(DTrace.enabled){
             DTrace.TRANS_FLUSH.log();
         }
-        if(_file.configImpl().flushFileBuffers()){
-            _file.syncFiles();
-        }
+        _file.syncFiles();
     }
     
     private SlotChange produceSlotChange(int id){
