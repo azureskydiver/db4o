@@ -26,7 +26,7 @@ public interface ChangeSetBuilder {
 	void updated(ObjectInfo object);
 
 	/**
-	 * Returns all the accumulated changes for the specific transaction as a {@link ChangeSet} object.
+	 * Returns all the accumulated changes as a {@link ChangeSet} object.
 	 *  
 	 * @return
 	 */
