@@ -8,6 +8,9 @@ public class MapTypeHandlerTestVariables {
 
 	public final static FixtureVariable MAP_IMPLEMENTATION = new FixtureVariable("map");
 	
+	public final static FixtureVariable MAP_TYPEHANDER = new FixtureVariable("typehandler");
+
+	
 	public final static FixtureProvider MAP_FIXTURE_PROVIDER = 
 		new SimpleFixtureProvider(
 			MAP_IMPLEMENTATION,
@@ -18,6 +21,14 @@ public class MapTypeHandlerTestVariables {
 				new NamedHashMapItemFactory(),
 			}
 		);
+	
+	public final static FixtureProvider TYPEHANDLER_FIXTURE_PROVIDER =
+	        new SimpleFixtureProvider(MAP_TYPEHANDER,
+	            new Object[]{
+	                null,
+	                new MapTypeHandler(),
+	            }
+	        );
 
 	public static final FixtureVariable MAP_KEYS_SPEC = new FixtureVariable("keys");
 	

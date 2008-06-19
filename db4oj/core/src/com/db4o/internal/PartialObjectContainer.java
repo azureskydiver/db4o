@@ -1762,8 +1762,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
         return still;
     }
-
-    public final void stillToActivate(Transaction trans, Object a_object, ActivationDepth a_depth) {
+    
+    public final void stillToActivate(Transaction trans, Object obj, ActivationDepth depth) {
 
         // TODO: We don't want the simple classes to search the hc_tree
         // Kick them out here.
@@ -1771,11 +1771,36 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         //		if (a_object != null) {
         //			Class clazz = a_object.getClass();
         //			if(! clazz.isPrimitive()){
+        
+        if(processedByImmediateActivation(trans, obj, depth)){
+            return;
+        }
 
-        _stillToActivate = stillTo1(trans, _stillToActivate, a_object, a_depth, false);
+        _stillToActivate = stillTo1(trans, _stillToActivate, obj, depth, false);
+    }
 
-        //			}
-        //		}
+    private boolean processedByImmediateActivation(Transaction trans, Object obj, ActivationDepth depth) {
+        if(! stackIsSmall()){
+            return false;
+        }
+        if (obj == null || !depth.requiresActivation()) {
+            return true;
+        }
+        ObjectReference ref = trans.referenceForObject(obj);
+        if(ref == null){
+            return false;
+        }
+        if(handledInCurrentTopLevelCall(ref)){
+            return true;
+        }
+        flagAsHandled(ref);
+        _stackDepth++;
+        try{
+            ref.activateInternal(trans, obj, depth);
+        } finally {
+            _stackDepth--;
+        }
+        return true;
     }
 
     public final void stillToDeactivate(Transaction trans, Object a_object, ActivationDepth a_depth,
