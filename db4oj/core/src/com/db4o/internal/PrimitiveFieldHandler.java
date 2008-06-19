@@ -35,7 +35,7 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
         _handler = null;
     }
 
-    void activateFields(Transaction trans, Object obj, ActivationDepth depth) {
+    public void activateFields(Transaction trans, Object obj, ActivationDepth depth) {
         // Override
         // do nothing
     }

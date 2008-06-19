@@ -77,24 +77,13 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
         // TODO Auto-generated method stub
 
     }
-
-    public final void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth) {
-		ObjectContainerBase container = trans.container();
-		List list = (List) onObject;
-		Iterator all = list.iterator();
-		while (all.hasNext()) {
-			final Object current = all.next();
-			ActivationDepth elementDepth = descend(container, depth, current);
-			if (elementDepth.requiresActivation()) {
-				if (depth.mode().isDeactivate()) {
-					container.stillToDeactivate(trans, current, elementDepth, false);
-				}
-				else {
-					container.stillToActivate(trans, current, elementDepth);
-				}
-			}
-		}
-	}
+    
+    public final void cascadeActivation(ActivationContext4 context) {
+        Iterator all = ((List) context.targetObject()).iterator();
+        while (all.hasNext()) {
+            context.cascadeActivationToChild(all.next());
+        }
+    }
 
     public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
         return this;

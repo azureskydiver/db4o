@@ -19,15 +19,11 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 		super(container, container._handlers.ICLASS_OBJECT);
 	}
 
-	public void cascadeActivation(
-		Transaction trans,
-		Object onObject,
-		ActivationDepth depth) {
-	    
-	    TypeHandler4 typeHandler = typeHandlerForObject(onObject, true);
-        if (typeHandler instanceof CascadingTypeHandler) {
-            ((CascadingTypeHandler)typeHandler).cascadeActivation(trans, onObject, depth);
-        }
+	public void cascadeActivation(ActivationContext4 context){
+	    TypeHandler4 typeHandler = typeHandlerForObject(context.targetObject(), true);
+	    if (typeHandler instanceof FirstClassHandler) {
+	        ((FirstClassHandler)typeHandler).cascadeActivation(context);
+	    }
 	}
 
     private HandlerRegistry handlerRegistry() {
