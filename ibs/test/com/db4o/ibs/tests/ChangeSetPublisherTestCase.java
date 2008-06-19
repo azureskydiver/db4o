@@ -7,23 +7,23 @@ import com.db4o.ibs.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class IncrementalBackupCoordinatorTestCase extends AbstractDb4oTestCase {
+public class ChangeSetPublisherTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
-		new IncrementalBackupCoordinatorTestCase().runSolo();
+		new ChangeSetPublisherTestCase().runSolo();
 	}
 	
 	public void testAddingAnObjectCreatesNewObjectChange() {
 	
-		final MockChangeSetListener channel = new MockChangeSetListener();
+		final MockChangeSetListener listener = new MockChangeSetListener();
 		final MockChangeSetBuilder builder = new MockChangeSetBuilder();
 		
-		new IncrementalBackupCoordinator(db(), builder, channel);
+		new ChangeSetPublisher(db(), builder, listener);
 		
 		db().store(new Contact("foo@bar.com"));
 		db().commit();
 		
-		final List<ChangeSet> changeSets = channel.changeSets();
+		final List<ChangeSet> changeSets = listener.changeSets();
 		Assert.areEqual(1, changeSets.size());
 		
 		MockChangeSet cs = (MockChangeSet)changeSets.get(0);
