@@ -19,6 +19,7 @@ public class MapTypeHandlerTestSuite extends FixtureBasedTestSuite implements Db
 				MapTypeHandlerTestVariables.MAP_FIXTURE_PROVIDER,
 				MapTypeHandlerTestVariables.MAP_KEYS_PROVIDER,
 				MapTypeHandlerTestVariables.MAP_VALUES_PROVIDER,
+				MapTypeHandlerTestVariables.TYPEHANDLER_FIXTURE_PROVIDER,
 		};
 	}
 
@@ -43,9 +44,8 @@ public class MapTypeHandlerTestSuite extends FixtureBasedTestSuite implements Db
 			return (AbstractItemFactory) MapTypeHandlerTestVariables.MAP_IMPLEMENTATION.value();
 		}
 		
-		//TODO: add variable to test against different typehandlers
 		protected TypeHandler4 typeHandler() {
-		    return null;
+		    return (TypeHandler4) MapTypeHandlerTestVariables.MAP_TYPEHANDER.value();
 		}
 		
 		protected ListTypeHandlerTestElementsSpec elementsSpec() {

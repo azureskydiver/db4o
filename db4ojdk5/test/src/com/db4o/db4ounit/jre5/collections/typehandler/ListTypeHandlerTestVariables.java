@@ -40,7 +40,7 @@ public final class ListTypeHandlerTestVariables {
 	public final static ListTypeHandlerTestElementsSpec INT_ELEMENTS_SPEC =
 		new ListTypeHandlerTestElementsSpec(new Object[]{ new Integer(0), new Integer(1) }, new Integer(2), new Integer(Integer.MAX_VALUE));
 	public final static ListTypeHandlerTestElementsSpec OBJECT_ELEMENTS_SPEC =
-		new ListTypeHandlerTestElementsSpec(new Object[]{ new FirstClassElement(0), new FirstClassElement(2) }, new FirstClassElement(2), null);
+		new ListTypeHandlerTestElementsSpec(new Object[]{ new FirstClassElement(0), new FirstClassElement(1) }, new FirstClassElement(2), null);
 	
 	private ListTypeHandlerTestVariables() {
 	}

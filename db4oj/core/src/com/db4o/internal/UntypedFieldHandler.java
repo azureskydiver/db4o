@@ -108,14 +108,19 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         if(payloadOffset == 0){
             return ObjectID.IS_NULL;
         }
+        int savedOffset = context.offset();
         TypeHandler4 typeHandler = readTypeHandler(context, payloadOffset);
         if(typeHandler == null){
+            context.seek(savedOffset);
             return ObjectID.IS_NULL;
         }
         seekSecondaryOffset(context, typeHandler);
         if(typeHandler instanceof ReadsObjectIds){
-            return ((ReadsObjectIds)typeHandler).readObjectID(context);
+            ObjectID readObjectID = ((ReadsObjectIds)typeHandler).readObjectID(context);
+            context.seek(savedOffset);
+            return readObjectID;
         }
+        context.seek(savedOffset);
         return ObjectID.NOT_POSSIBLE;
     }
     

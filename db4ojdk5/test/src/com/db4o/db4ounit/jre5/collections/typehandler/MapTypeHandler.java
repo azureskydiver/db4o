@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.db4ounit.jre5.collections.typehandler;
 
@@ -14,62 +14,67 @@ import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 
-@SuppressWarnings("unchecked")
-public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler{
 
+public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler{
+    
     public PreparedComparison prepareComparison(Context context, Object obj) {
         // TODO Auto-generated method stub
         return null;
     }
 
     public void write(WriteContext context, Object obj) {
-        List list = (List)obj;
-        writeElementCount(context, list);
-        writeElements(context, list);
+        Map map = (Map)obj;
+        writeElementCount(context, map);
+        writeElements(context, map);
     }
     
-	public Object read(ReadContext context) {
-        List list = (List)((UnmarshallingContext) context).persistentObject();
+    public Object read(ReadContext context) {
+        Map map = (Map)((UnmarshallingContext) context).persistentObject();
         int elementCount = context.readInt();
-        TypeHandler4 elementHandler = elementTypeHandler(context, list);
+        TypeHandler4 elementHandler = elementTypeHandler(context, map);
         for (int i = 0; i < elementCount; i++) {
-            list.add(context.readObject(elementHandler));
+            Object key = context.readObject(elementHandler);
+            Object value = context.readObject(elementHandler);
+            map.put(key, value);
         }
-        return list;
+        return map;
     }
     
-	private void writeElementCount(WriteContext context, List list) {
-		context.writeInt(list.size());
-	}
+    private void writeElementCount(WriteContext context, Map map) {
+        context.writeInt(map.size());
+    }
 
-	private void writeElements(WriteContext context, List list) {
-		TypeHandler4 elementHandler = elementTypeHandler(context, list);
-        final Iterator elements = list.iterator();
+    private void writeElements(WriteContext context, Map map) {
+        TypeHandler4 elementHandler = elementTypeHandler(context, map);
+        final Iterator elements = map.keySet().iterator();
         while (elements.hasNext()) {
-            context.writeObject(elementHandler, elements.next());
+            Object key = elements.next();
+            context.writeObject(elementHandler, key);
+            context.writeObject(elementHandler, map.get(key));
         }
-	}
+    }
 
     private ObjectContainerBase container(Context context) {
         return ((InternalObjectContainer)context.objectContainer()).container();
     }
     
-    private TypeHandler4 elementTypeHandler(Context context, List list){
+    private TypeHandler4 elementTypeHandler(Context context, Map map){
         
-        // TODO: If all elements in the list are of one type,
+        // TODO: If all elements in the map are of one type,
         //       it is possible to use a more specific handler
         
         return container(context).handlers().untypedObjectHandler();
     }        
 
     public void delete(final DeleteContext context) throws Db4oIOException {
-		if (! context.cascadeDelete()) {
-		    return;
-		}
+        if (! context.cascadeDelete()) {
+            return;
+        }
         TypeHandler4 handler = elementTypeHandler(context, null);
         int elementCount = context.readInt();
         for (int i = elementCount; i > 0; i--) {
-			handler.delete(context);
+            handler.delete(context);
+            handler.delete(context);
         }
     }
 
@@ -79,27 +84,30 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
     }
 
     public final void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth) {
-		ObjectContainerBase container = trans.container();
-		List list = (List) onObject;
-		Iterator all = list.iterator();
-		while (all.hasNext()) {
-			final Object current = all.next();
-			ActivationDepth elementDepth = descend(container, depth, current);
-			if (elementDepth.requiresActivation()) {
-				if (depth.mode().isDeactivate()) {
-					container.stillToDeactivate(trans, current, elementDepth, false);
-				}
-				else {
-					container.stillToActivate(trans, current, elementDepth);
-				}
-			}
-		}
-	}
+        ObjectContainerBase container = trans.container();
+        Map map = (Map) onObject;
+        Iterator all = map.keySet().iterator();
+        while (all.hasNext()) {
+            final Object currentKey = all.next();
+            final Object currentValue = map.get(currentKey);
+            ActivationDepth elementDepth = descend(container, depth, currentKey);
+            if (elementDepth.requiresActivation()) {
+                if (depth.mode().isDeactivate()) {
+                    container.stillToDeactivate(trans, currentKey, elementDepth, false);
+                    container.stillToDeactivate(trans, currentValue, elementDepth, false);
+                }
+                else {
+                    container.stillToActivate(trans, currentKey, elementDepth);
+                    container.stillToActivate(trans, currentValue, elementDepth);
+                }
+            }
+        }
+    }
 
     public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
         return this;
     }
-	
+    
    public void readCandidates(QueryingReadContext context) throws Db4oIOException {
         int elementCount = context.readInt();
         TypeHandler4 elementHandler = context.container().handlers().untypedObjectHandler();
@@ -113,6 +121,9 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
            if(qc != null){
                candidates.addByIdentity(qc);
            }
+           // Read the value too, but ignore.
+           // TODO: Optimize for just doing a seek here.
+           candidates.readSubCandidate(context, elementHandler);
        }
    }
 
