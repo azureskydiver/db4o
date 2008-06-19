@@ -25,6 +25,11 @@ public class ChangeSetPublisher {
 				onCreating((ObjectEventArgs)args);
 			}
 		});
+		registry.deleted().addListener(new EventListener4() {
+			public void onEvent(Event4 e, EventArgs args) {
+				onDeleted((ObjectEventArgs)args);
+			}
+		});
 		
 		registry.committing().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
@@ -33,13 +38,17 @@ public class ChangeSetPublisher {
 		});
 	}
 
+	protected void onDeleted(ObjectEventArgs args) {
+		_builder.deleted(transaction(args), args.object());
+	}
+
 	protected void onCommitting(CommitEventArgs args) {
 		final ChangeSet cs = _builder.build(transaction(args));
 		_listener.onChange(cs);
 	}
 
 	protected void onCreating(ObjectEventArgs args) {
-		_builder.create(transaction(args), args.object());
+		_builder.created(transaction(args), args.object());
 	}
 
 	private Transaction transaction(TransactionalEventArgs args) {

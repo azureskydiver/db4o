@@ -13,21 +13,48 @@ public class ChangeSetPublisherTestCase extends AbstractDb4oTestCase {
 		new ChangeSetPublisherTestCase().runSolo();
 	}
 	
-	public void testAddingAnObjectCreatesNewObjectChange() {
+	final MockChangeSetListener listener = new MockChangeSetListener();
+	final MockChangeSetBuilder builder = new MockChangeSetBuilder();
 	
-		final MockChangeSetListener listener = new MockChangeSetListener();
-		final MockChangeSetBuilder builder = new MockChangeSetBuilder();
-		
+	@Override
+	protected void db4oSetupAfterStore() throws Exception {
 		new ChangeSetPublisher(builder, listener).monitor(db());
+	}
+	
+	public void testAddingAnObjectCreatesNewObjectChange() {
 		
 		db().store(new Contact("foo@bar.com"));
 		db().commit();
+	
+		assertSingleChange(MockChangeSet.NewObjectChange.class);
+	}
+	
+	public void testDeletingAnObjectCreatesDeleteChange() {
 		
-		final List<ChangeSet> changeSets = listener.changeSets();
-		Assert.areEqual(1, changeSets.size());
+		final Contact contact = new Contact("foo@bar.com");
+		db().store(contact);
+		db().commit();
+		changeSets().clear(); 
 		
-		MockChangeSet cs = (MockChangeSet)changeSets.get(0);
-		Assert.areEqual(1, cs.changes().size());
+		db().delete(contact);
+		db().commit();
+		
+		assertSingleChange(MockChangeSet.DeleteObjectChange.class);
 	}
 
+	private List<ChangeSet> changeSets() {
+		return listener.changeSets();
+	}
+	
+
+	private void assertSingleChange(final Class<?> expectedChangeClass) {
+		Assert.areEqual(1, changeSets().size());
+		MockChangeSet cs = (MockChangeSet)changeSets().get(0);
+		assertChangeSet(cs, expectedChangeClass);
+	}
+	
+	private void assertChangeSet(MockChangeSet cs, final Class<?> expectedChangeClass) {
+		Assert.areEqual(1, cs.changes().size());
+		Assert.isInstanceOf(expectedChangeClass, cs.changes().get(0));
+	}
 }

@@ -13,7 +13,15 @@ public interface ChangeSetBuilder {
 	 * @param transaction
 	 * @param object
 	 */
-	void create(Transaction transaction, Object object);
+	void created(Transaction transaction, Object object);
+	
+	/**
+	 * Accumulates a 'Delete Object' change.
+	 * 
+	 * @param transaction
+	 * @param object
+	 */
+	void deleted(Transaction transaction, Object object);
 
 	/**
 	 * Returns all the accumulated changes for the specific transaction as a {@link ChangeSet} object.
@@ -25,3 +33,5 @@ public interface ChangeSetBuilder {
 	 */
 	ChangeSet build(Transaction transaction);
 }
+
+	

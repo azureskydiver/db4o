@@ -17,11 +17,15 @@ public class MockChangeSetBuilder implements ChangeSetBuilder {
 		return changes;
 	}
 
-	public void create(Transaction transaction, Object object) {
+	public void created(Transaction transaction, Object object) {
 		_changeSet.addNew(object);
 	}
 	
 	private void reset() {
 		_changeSet = new MockChangeSet();
+	}
+
+	public void deleted(Transaction transaction, Object object) {
+		_changeSet.addDeleted(object);
 	}
 }
