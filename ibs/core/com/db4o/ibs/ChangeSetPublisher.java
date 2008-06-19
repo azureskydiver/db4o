@@ -5,15 +5,15 @@ import com.db4o.events.*;
 import com.db4o.internal.*;
 
 /**
- * Listen to {@link ObjectContainer} events and pushes {@link ChangeSet} instances
+ * Listen to {@link ObjectContainer} events and publishes {@link ChangeSet} instances
  * provided by a {@link ChangeSetBuilder} to an {@link ChangeSetListener}.
  */
-public class IncrementalBackupCoordinator {
+public class ChangeSetPublisher {
 
 	private final ChangeSetBuilder _builder;
 	private final ChangeSetListener _listener;
 
-	public IncrementalBackupCoordinator(ObjectContainer container,
+	public ChangeSetPublisher(ObjectContainer container,
 			ChangeSetBuilder builder,
 			ChangeSetListener listener) {
 		
