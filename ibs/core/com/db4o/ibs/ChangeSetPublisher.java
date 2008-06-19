@@ -13,13 +13,12 @@ public class ChangeSetPublisher {
 	private final ChangeSetBuilder _builder;
 	private final ChangeSetListener _listener;
 
-	public ChangeSetPublisher(ObjectContainer container,
-			ChangeSetBuilder builder,
-			ChangeSetListener listener) {
-		
+	public ChangeSetPublisher(ChangeSetBuilder builder, ChangeSetListener listener) {		
 		_builder = builder;
 		_listener = listener;
-		
+	}
+
+	public void monitor(ObjectContainer container) {
 		final EventRegistry registry = EventRegistryFactory.forObjectContainer(container);
 		registry.creating().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
