@@ -1,0 +1,20 @@
+package com.db4o.ibs.tests;
+
+import java.util.*;
+
+import com.db4o.ibs.*;
+
+public class MockChangeSetListener implements ChangeSetListener {
+
+	private final List<ChangeSet> _changeSets = new ArrayList<ChangeSet>();
+
+	public void onChange(ChangeSet changes) {
+		
+		_changeSets.add(changes);
+	}
+
+	public List<ChangeSet> changeSets() {
+		return _changeSets;
+	}
+
+}
