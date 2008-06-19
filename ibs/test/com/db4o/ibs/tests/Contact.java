@@ -12,4 +12,8 @@ public class Contact {
 		return _email;
 	}
 
+	public void email(String value) {
+		_email = value;
+	}
+
 }

@@ -1,31 +1,25 @@
 package com.db4o.ibs.tests;
 
+import com.db4o.ext.*;
 import com.db4o.ibs.*;
-import com.db4o.internal.*;
 
 public class MockChangeSetBuilder implements ChangeSetBuilder {
 	
-	private MockChangeSet _changeSet;
-	
-	public MockChangeSetBuilder() {
-		reset();
+	private final MockChangeSet _changeSet = new MockChangeSet();
+
+	public ChangeSet build() {
+		return _changeSet;
 	}
 
-	public ChangeSet build(Transaction transaction) {
-		ChangeSet changes = _changeSet;
-		reset();
-		return changes;
-	}
-
-	public void created(Transaction transaction, Object object) {
+	public void added(ObjectInfo object) {
 		_changeSet.addNew(object);
 	}
 	
-	private void reset() {
-		_changeSet = new MockChangeSet();
+	public void deleted(ObjectInfo object) {
+		_changeSet.addDeleted(object);
 	}
 
-	public void deleted(Transaction transaction, Object object) {
-		_changeSet.addDeleted(object);
+	public void updated(ObjectInfo object) {
+		_changeSet.addUpdated(object);
 	}
 }
