@@ -6,12 +6,13 @@ import com.db4o.ibs.*;
 
 public class MockChangeSet implements ChangeSet {
 		
-	interface MockChange {
+	public interface MockChange {
 	}
 	
-	static class NewObjectChange implements MockChange {
-		public NewObjectChange(Object object) {
-		}
+	public static class NewObjectChange implements MockChange {
+	}
+	
+	public static class DeleteObjectChange implements MockChange {
 	}
 
 	private final List<MockChange> _changes = new ArrayList<MockChange>();
@@ -21,6 +22,10 @@ public class MockChangeSet implements ChangeSet {
 	}
 
 	public void addNew(Object object) {
-		_changes.add(new NewObjectChange(object));
+		_changes.add(new NewObjectChange());
+	}
+
+	public void addDeleted(Object object) {
+		_changes.add(new DeleteObjectChange());
 	}
 }
