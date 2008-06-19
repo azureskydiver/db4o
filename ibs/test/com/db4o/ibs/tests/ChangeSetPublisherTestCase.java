@@ -18,7 +18,7 @@ public class ChangeSetPublisherTestCase extends AbstractDb4oTestCase {
 		final MockChangeSetListener listener = new MockChangeSetListener();
 		final MockChangeSetBuilder builder = new MockChangeSetBuilder();
 		
-		new ChangeSetPublisher(db(), builder, listener);
+		new ChangeSetPublisher(builder, listener).monitor(db());
 		
 		db().store(new Contact("foo@bar.com"));
 		db().commit();
