@@ -56,48 +56,20 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 	public static Iterator4 allElements(final ReflectArray reflectArray, final Object array) {
 		return new ReflectArrayIterator(reflectArray, array);
 	}
-
-    public final void cascadeActivation(
-        Transaction trans,
-        Object onObject,
-        ActivationDepth depth) {
-        
+    
+    public final void cascadeActivation(ActivationContext4 context){
         if (! (_handler instanceof ClassMetadata)) {
             return;
         }
-        
-        ObjectContainerBase container = container(trans);
-        Iterator4 all = allElements(container, onObject);
+        ObjectContainerBase container = context.container();
+        Iterator4 all = allElements(container, context.targetObject());
         while (all.moveNext()) {
-        	final Object current = all.current();
-            ActivationDepth elementDepth = descend(container, depth, current);
-            if(elementDepth.requiresActivation()){
-            	if (depth.mode().isDeactivate()) {
-            	    container.stillToDeactivate(trans, current, elementDepth, false);
-            	} else {
-            	    container.stillToActivate(trans, current, elementDepth);
-            	}
-            }
+            context.cascadeActivationToChild(all.current());
         }
     }
 
     ObjectContainerBase container(Transaction trans) {
         return trans.container();
-    }
-    
-    private ActivationDepth descend(ObjectContainerBase container, ActivationDepth depth, Object obj){
-        if(obj == null){
-            return new NonDescendingActivationDepth(depth.mode());
-        }
-        ClassMetadata cm = classMetaDataForObject(container, obj);
-        if(cm == null || cm.isPrimitive()){
-            return new NonDescendingActivationDepth(depth.mode());
-        }
-        return depth.descend(cm);
-    }
-    
-    private ClassMetadata classMetaDataForObject(ObjectContainerBase container, Object obj){
-        return container.classMetadataForObject(obj);
     }
     
     protected ReflectClass classReflector(ObjectContainerBase container){

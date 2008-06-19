@@ -82,25 +82,14 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHold
         // TODO Auto-generated method stub
 
     }
-
-    public final void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth) {
-        ObjectContainerBase container = trans.container();
-        Map map = (Map) onObject;
-        Iterator all = map.keySet().iterator();
-        while (all.hasNext()) {
-            final Object currentKey = all.next();
-            final Object currentValue = map.get(currentKey);
-            ActivationDepth elementDepth = descend(container, depth, currentKey);
-            if (elementDepth.requiresActivation()) {
-                if (depth.mode().isDeactivate()) {
-                    container.stillToDeactivate(trans, currentKey, elementDepth, false);
-                    container.stillToDeactivate(trans, currentValue, elementDepth, false);
-                }
-                else {
-                    container.stillToActivate(trans, currentKey, elementDepth);
-                    container.stillToActivate(trans, currentValue, elementDepth);
-                }
-            }
+    
+    public final void cascadeActivation(ActivationContext4 context) {
+        Map map = (Map) context.targetObject();
+        Iterator keys = (map).keySet().iterator();
+        while (keys.hasNext()) {
+            final Object key = keys.next();
+            context.cascadeActivationToChild(key);
+            context.cascadeActivationToChild(map.get(key));
         }
     }
 

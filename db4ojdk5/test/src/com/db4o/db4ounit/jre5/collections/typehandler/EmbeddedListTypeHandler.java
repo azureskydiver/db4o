@@ -106,22 +106,11 @@ public class EmbeddedListTypeHandler implements TypeHandler4 , FirstClassHandler
         // TODO Auto-generated method stub
 
     }
-
-    public final void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth) {
-        ObjectContainerBase container = trans.container();
-        List list = (List) onObject;
-        Iterator all = list.iterator();
+    
+    public final void cascadeActivation(ActivationContext4 context) {
+        Iterator all = ((List) context.targetObject()).iterator();
         while (all.hasNext()) {
-            final Object current = all.next();
-            ActivationDepth elementDepth = descend(container, depth, current);
-            if (elementDepth.requiresActivation()) {
-                if (depth.mode().isDeactivate()) {
-                    container.stillToDeactivate(trans, current, elementDepth, false);
-                }
-                else {
-                    container.stillToActivate(trans, current, elementDepth);
-                }
-            }
+            context.cascadeActivationToChild(all.next());
         }
     }
 
