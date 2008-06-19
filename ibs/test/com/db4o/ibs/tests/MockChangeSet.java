@@ -12,6 +12,9 @@ public class MockChangeSet implements ChangeSet {
 	public static class NewObjectChange implements MockChange {
 	}
 	
+	public static class UpdateObjectChange implements MockChange {
+	}
+	
 	public static class DeleteObjectChange implements MockChange {
 	}
 
@@ -27,5 +30,9 @@ public class MockChangeSet implements ChangeSet {
 
 	public void addDeleted(Object object) {
 		_changes.add(new DeleteObjectChange());
+	}
+
+	public void addUpdated(Object object) {
+		_changes.add(new UpdateObjectChange());
 	}
 }

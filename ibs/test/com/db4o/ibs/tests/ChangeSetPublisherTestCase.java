@@ -14,26 +14,22 @@ public class ChangeSetPublisherTestCase extends AbstractDb4oTestCase {
 	}
 	
 	final MockChangeSetListener listener = new MockChangeSetListener();
-	final MockChangeSetBuilder builder = new MockChangeSetBuilder();
+	final MockChangeSetEngine engine = new MockChangeSetEngine();
 	
 	@Override
 	protected void db4oSetupAfterStore() throws Exception {
-		new ChangeSetPublisher(builder, listener).monitor(db());
+		new ChangeSetPublisher(engine, listener).monitor(db());
 	}
 	
 	public void testAddingAnObjectCreatesNewObjectChange() {
 		
-		db().store(new Contact("foo@bar.com"));
-		db().commit();
-	
+		storeNewContact();
 		assertSingleChange(MockChangeSet.NewObjectChange.class);
 	}
 	
 	public void testDeletingAnObjectCreatesDeleteChange() {
 		
-		final Contact contact = new Contact("foo@bar.com");
-		db().store(contact);
-		db().commit();
+		final Contact contact = storeNewContact();
 		changeSets().clear(); 
 		
 		db().delete(contact);
@@ -41,11 +37,28 @@ public class ChangeSetPublisherTestCase extends AbstractDb4oTestCase {
 		
 		assertSingleChange(MockChangeSet.DeleteObjectChange.class);
 	}
+	
+	public void testUpdatingAnObjectCreatesUpdateChange() {
+		final Contact contact = storeNewContact();
+		changeSets().clear();
+		
+		contact.email("foo@foo.com");
+		db().store(contact);
+		db().commit();
+		
+		assertSingleChange(MockChangeSet.UpdateObjectChange.class);
+	}
+
+	private Contact storeNewContact() {
+		final Contact contact = new Contact("foo@bar.com");
+		db().store(contact);
+		db().commit();
+		return contact;
+	}
 
 	private List<ChangeSet> changeSets() {
 		return listener.changeSets();
 	}
-	
 
 	private void assertSingleChange(final Class<?> expectedChangeClass) {
 		Assert.areEqual(1, changeSets().size());

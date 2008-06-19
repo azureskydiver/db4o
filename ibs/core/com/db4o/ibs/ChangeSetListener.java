@@ -1,7 +1,7 @@
 package com.db4o.ibs;
 
 /**
- * A party interested in {@link ChangeSet} notifications.
+ * Any party interested in {@link ChangeSet} notifications.
  */
 public interface ChangeSetListener {
 	

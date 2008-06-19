@@ -1,6 +1,6 @@
 package com.db4o.ibs;
 
-import com.db4o.internal.*;
+import com.db4o.ext.*;
 
 /**
  * Accumulates changes into {@link ChangeSet} instances.
@@ -9,29 +9,28 @@ public interface ChangeSetBuilder {
 	
 	/**
 	 * Accumulates a 'New Object' change.
-	 * 
-	 * @param transaction
 	 * @param object
 	 */
-	void created(Transaction transaction, Object object);
+	void added(ObjectInfo object);
 	
 	/**
 	 * Accumulates a 'Delete Object' change.
-	 * 
-	 * @param transaction
 	 * @param object
 	 */
-	void deleted(Transaction transaction, Object object);
+	void deleted(ObjectInfo object);
+	
+	/**
+	 * Accumulates a 'Update Object' change.
+	 * @param object
+	 */
+	void updated(ObjectInfo object);
 
 	/**
 	 * Returns all the accumulated changes for the specific transaction as a {@link ChangeSet} object.
-	 *
-	 * Accumulated changes are forgotten.
-	 * 
-	 * @param transaction
+	 *  
 	 * @return
 	 */
-	ChangeSet build(Transaction transaction);
+	ChangeSet build();
 }
 
 	
