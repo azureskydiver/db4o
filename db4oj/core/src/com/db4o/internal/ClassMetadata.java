@@ -388,7 +388,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return depth - 1;
     }
 
-	private int adjustDepthToBorders(int depth) {
+	public int adjustDepthToBorders(int depth) {
 		int depthBorder = reflector().collectionUpdateDepth(classReflector());
 		if (depth > Integer.MIN_VALUE && depth < depthBorder) {
 		    depth = depthBorder;

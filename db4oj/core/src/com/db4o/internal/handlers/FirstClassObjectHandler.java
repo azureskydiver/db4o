@@ -286,8 +286,8 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         final QCandidates candidates = context.candidates();
 
         // FIXME: [TA] review activation depth
-        
-        container.activate(transaction, obj, container.activationDepthProvider().activationDepth(2, ActivationMode.ACTIVATE));
+        int depth = classMetadata().adjustDepthToBorders(2);
+        container.activate(transaction, obj, container.activationDepthProvider().activationDepth(depth, ActivationMode.ACTIVATE));
         Platform4.forEachCollectionElement(obj, new Visitor4() {
             public void visit(Object elem) {
                 candidates.addByIdentity(new QCandidate(candidates, elem, container.getID(transaction, elem), true));
