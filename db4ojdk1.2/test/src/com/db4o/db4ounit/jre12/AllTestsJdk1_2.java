@@ -31,6 +31,7 @@ public class AllTestsJdk1_2 extends Db4oTestSuite {
 			com.db4o.db4ounit.jre12.collections.map.AllTests.class,
 			com.db4o.db4ounit.jre12.querying.AllTests.class,
 			com.db4o.db4ounit.jre12.regression.AllTests.class,
+			com.db4o.db4ounit.jre12.ta.AllTests.class,
 			com.db4o.db4ounit.jre12.ta.collections.AllTests.class,
 			StandaloneNativeReflectorTestCase.class,
 		};
