@@ -7,6 +7,7 @@ import java.util.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
 
+import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
@@ -68,6 +69,19 @@ public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements D
 	    	q.constrain(item);
 			assertQueryResult(q, successful);
 		}
+	    
+	    public void testActivation(){
+	        Object item = retrieveItemInstance();
+	        List list = listFromItem(item);
+	        Object element = list.get(0);
+	        if(db().isActive(element)){
+	            db().deactivate(item, Integer.MAX_VALUE);
+	            Assert.isFalse(db().isActive(element));
+	            db().activate(item, Integer.MAX_VALUE);
+	            Assert.isTrue(db().isActive(element));
+	        }
+	    }
+	    
 		
 	}
 

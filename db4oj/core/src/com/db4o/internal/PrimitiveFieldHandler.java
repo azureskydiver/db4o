@@ -53,7 +53,7 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
         // do nothing
     }
     
-    protected boolean descendOnCascadingActivation() {
+    public boolean descendOnCascadingActivation() {
         return false;
     }
 

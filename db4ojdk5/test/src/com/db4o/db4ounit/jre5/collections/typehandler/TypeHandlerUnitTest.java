@@ -19,10 +19,15 @@ public abstract class TypeHandlerUnitTest extends TypeHandlerTestUnitBase {
 	}
 	
 	public void testRetrieveInstance() {
-	    Class itemClass = itemFactory().itemClass();
-	    Object item = retrieveOnlyInstance(itemClass);
+	    Object item = retrieveItemInstance();
 	    assertContent(item);
 	}
+
+    protected Object retrieveItemInstance() {
+        Class itemClass = itemFactory().itemClass();
+	    Object item = retrieveOnlyInstance(itemClass);
+        return item;
+    }
 	
 	public void testSuccessfulQuery() throws Exception {
 		assertQuery(true, elements()[0], false);
