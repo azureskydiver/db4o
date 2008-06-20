@@ -1,8 +1,9 @@
-package com.db4o.db4ounit.jre12.staging;
+package com.db4o.db4ounit.jre12.collections.map;
 
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
@@ -86,7 +87,7 @@ public class HashMapQueryTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public static void main(String[] args) {
-		new HashMapQueryTestCase().runSolo();
+		new HashMapQueryTestCase().runAll();
 	}
 
 }
