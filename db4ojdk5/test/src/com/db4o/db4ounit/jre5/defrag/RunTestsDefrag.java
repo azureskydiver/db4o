@@ -2,9 +2,10 @@
 
 package com.db4o.db4ounit.jre5.defrag;
 
-import com.db4o.db4ounit.common.defragment.AbstractDb4oDefragTestCase;
+import com.db4o.db4ounit.common.defragment.*;
 
-import db4ounit.extensions.Db4oTestSuite;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 public class RunTestsDefrag extends AbstractDb4oDefragTestCase {
 	
@@ -12,7 +13,7 @@ public class RunTestsDefrag extends AbstractDb4oDefragTestCase {
 	public Class testSuite() {
 		return com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5.class;
 	}
-
+	
 	public static void main(String[] args) {
 		Db4oTestSuite suite=new Db4oTestSuite() {
 			protected Class[] testCases() {
@@ -20,8 +21,17 @@ public class RunTestsDefrag extends AbstractDb4oDefragTestCase {
 					RunTestsDefrag.class,
 				};
 			}
+
+			// FIXME: The following will reenable the Defragment runs:
+			//        Code is commented out because we have failing tests.
+			
+//			protected Db4oTestSuiteBuilder soloSuite(boolean independentConfig) {
+//		        return new Db4oTestSuiteBuilder(
+//	                new Db4oDefragSolo(configSource(independentConfig)), testCases());			}
 			
 		};
+		
 		System.exit(suite.runSolo());
 	}
+
 }
