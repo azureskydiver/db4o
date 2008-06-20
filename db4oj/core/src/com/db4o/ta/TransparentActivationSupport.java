@@ -115,7 +115,7 @@ public class TransparentActivationSupport implements ConfigurationItem {
 			if (activatableClass().isAssignableFrom(reflectClass)) {
 				return;
 			}
-			if (hasOnlyPrimitiveFields(reflectClass)) {
+			if (hasNoActivatingFields(reflectClass)) {
 				return;
 			}
 			NotTransparentActivationEnabled diagnostic = new NotTransparentActivationEnabled(
@@ -128,11 +128,11 @@ public class TransparentActivationSupport implements ConfigurationItem {
 			return _container.reflector().forClass(Activatable.class);
 		}
 
-		private boolean hasOnlyPrimitiveFields(ReflectClass clazz) {
+		private boolean hasNoActivatingFields(ReflectClass clazz) {
 			ReflectClass curClass = clazz;
 			while (curClass != null) {
 				final ReflectField[] fields = curClass.getDeclaredFields();
-				if (!hasOnlyPrimitiveFields(fields)) {
+				if (!hasNoActivatingFields(fields)) {
 					return false;
 				}
 				curClass = curClass.getSuperclass();
@@ -140,17 +140,18 @@ public class TransparentActivationSupport implements ConfigurationItem {
 			return true;
 		}
 
-		private boolean hasOnlyPrimitiveFields(ReflectField[] fields) {
+		private boolean hasNoActivatingFields(ReflectField[] fields) {
 			for (int i = 0; i < fields.length; i++) {
-				if (!isPrimitive(fields[i])) {
+				if (isActivating(fields[i])) {
 					return false;
 				}
 			}
 			return true;
 		}
 
-		private boolean isPrimitive(final ReflectField field) {
-			return field.getFieldType().isPrimitive();
+		private boolean isActivating(final ReflectField field) {
+			ReflectClass fieldType = field.getFieldType();
+			return fieldType != null && !fieldType.isPrimitive();
 		}
 	}
 }
