@@ -5,8 +5,10 @@ package com.db4o.internal.handlers;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
@@ -14,7 +16,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHandler, CollectIdHandler {
+public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHandler, CollectIdHandler, FirstClassHandler {
     
     private static final int HASHCODE_FOR_NULL = 72483944; 
     
@@ -255,6 +257,43 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         if(classMetadata().i_ancestor != null){
             classMetadata().i_ancestor.collectIDs(context);
         }
+    }
+
+    public void cascadeActivation(ActivationContext4 context) {
+        context.cascadeActivationToTarget(classMetadata(), classMetadata().descendOnCascadingActivation());
+    }
+
+    public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
+        if (classMetadata().isArray()) {
+            return classMetadata();
+        }
+        return null;
+    }
+
+    public void readCandidates(final QueryingReadContext context) throws Db4oIOException {
+
+        int id = context.collectionID();
+        if (id == 0) {
+            return;
+        }
+        final Transaction transaction = context.transaction();
+        final ObjectContainerBase container = context.container();
+        Object obj = container.getByID(transaction, id);
+        if (obj == null) {
+            return;
+        }
+            
+        final QCandidates candidates = context.candidates();
+
+        // FIXME: [TA] review activation depth
+        
+        container.activate(transaction, obj, container.activationDepthProvider().activationDepth(2, ActivationMode.ACTIVATE));
+        Platform4.forEachCollectionElement(obj, new Visitor4() {
+            public void visit(Object elem) {
+                candidates.addByIdentity(new QCandidate(candidates, elem, container.getID(transaction, elem), true));
+            }
+        });
+        
     }
 
 }

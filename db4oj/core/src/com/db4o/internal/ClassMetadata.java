@@ -316,10 +316,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public void cascadeActivation(ActivationContext4 context) {
-        context.cascadeActivationToTarget(this, descendOnCascadingActivation());
+        if(_typeHandler instanceof FirstClassHandler){
+            ((FirstClassHandler)_typeHandler).cascadeActivation(context);    
+        }
     }
 
-    protected boolean descendOnCascadingActivation() {
+    public boolean descendOnCascadingActivation() {
         return true;
     }
 
@@ -1288,8 +1290,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
     
     public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
-        if (isArray()) {
-            return this;
+        if(_typeHandler instanceof FirstClassHandler){
+            return ((FirstClassHandler)_typeHandler).readCandidateHandler(context);    
         }
         return null;
     }
@@ -1313,33 +1315,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public void readCandidates(final QueryingReadContext context) {
-
-        int id = context.collectionID();
-        if (id == 0) {
-            return;
+        if(_typeHandler instanceof FirstClassHandler){
+            ((FirstClassHandler)_typeHandler).readCandidates(context);    
         }
-        final Transaction trans = context.transaction();
-        Object obj = trans.container().getByID(trans, id);
-        if (obj == null) {
-            return;
-        }
-            
-        final QCandidates candidates = context.candidates();
-
-        // FIXME: [TA] review activation depth
-        
-        context.container().activate(trans, obj, activationDepthProvider().activationDepth(2, ActivationMode.ACTIVATE));
-        Platform4.forEachCollectionElement(obj, new Visitor4() {
-            public void visit(Object elem) {
-                candidates.addByIdentity(new QCandidate(candidates, elem, context.container().getID(trans, elem), true));
-            }
-        });
-        
     }
-
-    private ActivationDepthProvider activationDepthProvider() {
-    	return stream().activationDepthProvider();
-	}
 
 	public final int readFieldCount(ReadBuffer buffer) {
         int count = buffer.readInt();
