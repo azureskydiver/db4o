@@ -1,18 +1,18 @@
-package com.db4o.ibs.tests;
+package com.db4o.ibs.engine;
 
 import com.db4o.*;
-import com.db4o.foundation.*;
 import com.db4o.ibs.*;
 import com.db4o.internal.*;
 
-public class MockChangeSetEngine implements ChangeSetEngine {
+public class SlotBasedChangeSetEngine implements ChangeSetEngine {
 
 	public ChangeSetBuilder newBuilderFor(LocalTransaction transaction) {
-		return new MockChangeSetBuilder();
+		return new SlotBasedChangeSetBuilder(transaction);
 	}
 
 	public ChangeSetProcessor newProcessorFor(ObjectContainer container) {
-		throw new NotImplementedException();
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -364,7 +364,7 @@ public class LocalTransaction extends Transaction {
     }
     
     
-    private final SlotChange findSlotChange(int a_id) {
+    public final SlotChange findSlotChange(int a_id) {
         checkSynchronization();
         return (SlotChange)_slotChanges.find(a_id);
     }    

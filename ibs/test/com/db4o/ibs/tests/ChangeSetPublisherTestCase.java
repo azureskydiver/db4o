@@ -2,6 +2,7 @@ package com.db4o.ibs.tests;
 
 import java.util.*;
 
+import com.db4o.ext.*;
 import com.db4o.ibs.*;
 
 import db4ounit.*;
@@ -50,9 +51,11 @@ public class ChangeSetPublisherTestCase extends AbstractDb4oTestCase {
 	}
 
 	private Contact storeNewContact() {
+
+		ExtObjectContainer container = db();
 		final Contact contact = new Contact("foo@bar.com");
-		db().store(contact);
-		db().commit();
+		container.store(contact);
+		container.commit();
 		return contact;
 	}
 

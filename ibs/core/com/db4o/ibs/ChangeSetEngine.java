@@ -8,8 +8,7 @@ import com.db4o.internal.*;
  */
 public interface ChangeSetEngine {
 	
-	ChangeSetBuilder newBuilderFor(Transaction transaction);
+	ChangeSetBuilder newBuilderFor(LocalTransaction transaction);
 	
 	ChangeSetProcessor newProcessorFor(ObjectContainer container);
-
 }

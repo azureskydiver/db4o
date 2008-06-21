@@ -125,17 +125,10 @@ public class UnmarshallingContext extends ObjectHeaderContext implements FieldLi
         if(classMetadata == null){
             return null;
         }
-        if(! seekToField(classMetadata, field)){
-            return null;
-        }
-       	return field.read(this);
+        return readFieldValue(classMetadata, field);
     }
 
-	private boolean seekToField(ClassMetadata classMetadata, FieldMetadata field) {
-		return _objectHeader.objectMarshaller().findOffset(classMetadata, _objectHeader._headerAttributes, byteArrayBuffer(), field);
-	}
-
-    private ClassMetadata readObjectHeader() {
+	private ClassMetadata readObjectHeader() {
         _objectHeader = new ObjectHeader(container(), byteArrayBuffer());
         ClassMetadata classMetadata = _objectHeader.classMetadata();
         if(classMetadata == null){

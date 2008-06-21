@@ -49,4 +49,15 @@ public abstract class ObjectHeaderContext extends AbstractReadContext {
         _currentSlot = state._currentSlot;
     }
 
+	public Object readFieldValue(ClassMetadata classMetadata, FieldMetadata field) {
+		if(! seekToField(classMetadata, field)){
+	        return null;
+	    }
+	   	return field.read(this);
+	}
+
+	private boolean seekToField(ClassMetadata classMetadata, FieldMetadata field) {
+		return _objectHeader.objectMarshaller().findOffset(classMetadata, _objectHeader._headerAttributes, ((ByteArrayBuffer)buffer()), field);
+	}
+
 }

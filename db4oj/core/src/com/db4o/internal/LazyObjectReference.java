@@ -41,7 +41,7 @@ public class LazyObjectReference implements ObjectInfo{
 		}
 	}
 	
-	private ObjectReference reference() {
+	public ObjectReference reference() {
 		final HardObjectReference hardRef = _transaction.container().getHardObjectReferenceById(_transaction, _id);
 		return hardRef._reference;
 	}

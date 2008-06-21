@@ -50,7 +50,7 @@ public class ChangeSetPublisher {
 		return builder.build();
 	}
 
-	private Transaction transaction(TransactionalEventArgs args) {
-		return (Transaction) args.transaction();
+	private LocalTransaction transaction(TransactionalEventArgs args) {
+		return (LocalTransaction) args.transaction();
 	}
 }
