@@ -59,7 +59,7 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 				new FieldChangeExpectation("stringValue", "bar"));
 	}
 	
-	public void testUpdateObjectFieldFromNull() {
+	public void testReferenceFieldChangeFromNull() {
 		
 		final Item itemValue = new Item("value", 42);
 		commitItem(itemValue);
@@ -70,6 +70,45 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 		commitItem();
 		
 		assertSingleFieldChange("itemValue", itemValue);
+	}
+	
+	public void testReferenceFieldChangeToNull() {
+		
+		item.itemValue = new Item("value", 42);
+		commitItem();
+		
+		changeSets().clear();
+		
+		item.itemValue = null;
+		commitItem();
+		
+		assertSingleFieldChange("itemValue", null);
+	}
+	
+	public void testReferenceFieldChange() {
+		item.itemValue = new Item("value", 42);
+		commitItem();
+		
+		final Item newItem = new Item("newItem", 42);
+		commitItem(newItem);
+		
+		changeSets().clear();
+		
+		item.itemValue = newItem;
+		commitItem();
+		assertSingleFieldChange("itemValue", newItem);
+	}
+	
+	public void testReferenceFieldDoesntChange() {
+		
+		item.itemValue = new Item("value", 42);
+		commitItem();
+		
+		changeSets().clear();
+		
+		commitItem();
+		
+		Assert.areEqual(0, changeSets().size());
 	}
 
 	private List<ChangeSet> changeSets() {
@@ -110,8 +149,7 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 		}
 	}
 
-	private void assertSingleFieldChange(final String expectedFieldName,
-			final Object expectedValue) {
+	private void assertSingleFieldChange(final String expectedFieldName, final Object expectedValue) {
 		assertFieldChanges(new FieldChangeExpectation(expectedFieldName, expectedValue));
 	}
 

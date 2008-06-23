@@ -56,7 +56,7 @@ public abstract class ObjectHeaderContext extends AbstractReadContext {
 	   	return field.read(this);
 	}
 
-	private boolean seekToField(ClassMetadata classMetadata, FieldMetadata field) {
+	public boolean seekToField(ClassMetadata classMetadata, FieldMetadata field) {
 		return _objectHeader.objectMarshaller().findOffset(classMetadata, _objectHeader._headerAttributes, ((ByteArrayBuffer)buffer()), field);
 	}
 
