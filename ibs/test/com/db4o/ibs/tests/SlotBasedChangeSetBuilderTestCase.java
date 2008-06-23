@@ -15,6 +15,7 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 		
 		public String stringValue;
 		public int intValue;
+		public Item itemValue;
 		
 		public Item(String stringValue_, int intValue_) {
 			stringValue = stringValue_;
@@ -28,37 +29,54 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 	
 	@Override
 	protected void db4oSetupAfterStore() throws Exception {
-		storeAndCommit(item);
-		listenToChangeSets(listener);
+		commitItem();
+		setUpChangeSetPublisher();
 	}
-	
+
 	public void testNoUpdates() {
-		storeAndCommit(item);
-		Assert.areEqual(0, listener.changeSets().size());
+		commitItem();
+		Assert.areEqual(0, changeSets().size());
 	}
 	
 	public void testUpdateOnlyIntField() {
 		item.intValue = -1;
-		storeAndCommit(item);
-		assertSingleFieldUpdate("intValue", new Integer(-1));
+		commitItem();
+		assertSingleFieldChange("intValue", new Integer(-1));
 	}
 	
 	public void testUpdateOnlyStringField() {
 		item.stringValue = "bar";
-		storeAndCommit(item);
-		assertSingleFieldUpdate("stringValue", "bar");
+		commitItem();
+		assertSingleFieldChange("stringValue", "bar");
 	}
 	
 	public void testUpdateStringAndIntFields() {
 		item.stringValue = "bar";
 		item.intValue = -1;
-		storeAndCommit(item);
-		assertFieldUpdates(
-				new ExpectedFieldChange("intValue", -1),
-				new ExpectedFieldChange("stringValue", "bar"));
+		commitItem();
+		assertFieldChanges(
+				new FieldChangeExpectation("intValue", -1),
+				new FieldChangeExpectation("stringValue", "bar"));
+	}
+	
+	public void testUpdateObjectFieldFromNull() {
+		
+		final Item itemValue = new Item("value", 42);
+		commitItem(itemValue);
+		
+		changeSets().clear();
+
+		item.itemValue = itemValue;
+		commitItem();
+		
+		assertSingleFieldChange("itemValue", itemValue);
+	}
+
+	private List<ChangeSet> changeSets() {
+		return listener.changeSets();
 	}
 			
-	private void assertFieldUpdates(ExpectedFieldChange... expected) {
+	private void assertFieldChanges(FieldChangeExpectation... expected) {
 		final UpdateChange update = assertSingleUpdateChange();
 		final ArrayList<FieldChange> actual = sortedByName(update.fields());
 		Assert.areEqual(expected.length, actual.size());
@@ -77,11 +95,11 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 		return sortedChanges;
 	}
 
-	static class ExpectedFieldChange {
+	static class FieldChangeExpectation {
 		private final String _expectedFieldName;
 		private final Object _expectedValue;
 
-		public ExpectedFieldChange(String expectedFieldName, Object expectedValue) {
+		public FieldChangeExpectation(String expectedFieldName, Object expectedValue) {
 			_expectedFieldName = expectedFieldName;
 			_expectedValue = expectedValue;
 		}
@@ -92,15 +110,15 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 		}
 	}
 
-	private void assertSingleFieldUpdate(final String expectedFieldName,
+	private void assertSingleFieldChange(final String expectedFieldName,
 			final Object expectedValue) {
-		assertFieldUpdates(new ExpectedFieldChange(expectedFieldName, expectedValue));
+		assertFieldChanges(new FieldChangeExpectation(expectedFieldName, expectedValue));
 	}
 
 	private UpdateChange assertSingleUpdateChange() {
-		Assert.areEqual(1, listener.changeSets().size());
+		Assert.areEqual(1, changeSets().size());
 		
-		final SlotBasedChangeSet changeSet = (SlotBasedChangeSet)listener.changeSets().get(0);
+		final SlotBasedChangeSet changeSet = (SlotBasedChangeSet)changeSets().get(0);
 		Assert.areEqual(1, changeSet.changes().size());
 		
 		final UpdateChange update = (UpdateChange) changeSet.changes().get(0);
@@ -109,7 +127,7 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 		return update;
 	}
 
-	private void listenToChangeSets(final MockChangeSetListener listener) {
+	private void setUpChangeSetPublisher() {
 		new ChangeSetPublisher(new SlotBasedChangeSetEngine(), listener).monitor(db());
 	}
 
@@ -120,9 +138,13 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 	private ObjectInfo objectInfoFor(final Object object) {
 		return db().ext().getObjectInfo(object);
 	}
+	
+	private void commitItem() {
+		commitItem(item);
+	}
 
-	private void storeAndCommit(final Object contact) {
-		db().store(contact);
+	private void commitItem(Item i) {
+		db().store(i);
 		db().commit();
 	}
 }
