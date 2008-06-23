@@ -1830,8 +1830,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 	
     public static void defragObject(DefragmentContextImpl context) {
-    	ObjectHeader header=ObjectHeader.defrag(context);
-    	header._marshallerFamily._object.defragFields(header.classMetadata(),header,context);
+    	ObjectHeader header = ObjectHeader.defrag(context);
+    	ClassMetadata classMetadata = header.classMetadata();
+    	// classMetadata.defragment(context);
+    	
+        header._marshallerFamily._object.defragFields(classMetadata,header,context);
         if (Deploy.debug) {
             context.readEnd();
         }

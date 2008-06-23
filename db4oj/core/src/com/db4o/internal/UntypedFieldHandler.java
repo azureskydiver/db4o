@@ -125,16 +125,16 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         if(payLoadOffSet == 0){
             return;
         }
-        int linkOffSet = context.offset();
+        int savedOffSet = context.offset();
         context.seek(payLoadOffSet);
         
         int typeHandlerId = context.copyIDReturnOriginalID();
 		TypeHandler4 typeHandler = context.typeHandlerForId(typeHandlerId);
 		if(typeHandler != null){
 			seekSecondaryOffset(context, typeHandler);
-		    context.correctHandlerVersion(typeHandler).defragment(context);
+		    context.defragment(typeHandler);
 		}
-        context.seek(linkOffSet);
+        context.seek(savedOffSet);
     }
 
     private TypeHandler4 readTypeHandler(InternalReadContext context, int payloadOffset) {

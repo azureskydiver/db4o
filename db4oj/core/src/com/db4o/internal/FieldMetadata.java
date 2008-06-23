@@ -1066,9 +1066,9 @@ public class FieldMetadata implements StoredField {
     	int handlerVersion = mf.handlerVersion();
         context.handlerVersion(handlerVersion);
     	final TypeHandler4 typeHandler = context.correctHandlerVersion(getHandler());
-    	SlotFormat.forHandlerVersion(handlerVersion).doWithSlotIndirection(context, typeHandler, new Closure4() {
+        SlotFormat.forHandlerVersion(handlerVersion).doWithSlotIndirection(context, typeHandler, new Closure4() {
             public Object run() {
-                typeHandler.defragment(context);
+                context.defragment(typeHandler);
                 return null;
             }
         });

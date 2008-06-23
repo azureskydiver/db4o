@@ -11,12 +11,26 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 public class ClassIndexOffTestCase extends AbstractDb4oTestCase implements OptOutCS{
+    
+    static String NAME = "1";
+    
+    public static class Holder {
+        
+        public Item _item;
+        
+        public Item _nullItem;
+        
+        public Holder(Item item){
+            _item = item;
+        }
+    }
 	
 	public static class Item {
-		public String name;
+	    
+		public String _name;
 
-		public Item(String _name) {
-			this.name = _name;
+		public Item(String name) {
+			_name = name;
 		}
 	}
 	
@@ -29,21 +43,41 @@ public class ClassIndexOffTestCase extends AbstractDb4oTestCase implements OptOu
 		config.objectClass(Item.class).indexed(false);
 	}
 	
-	public void test(){
-		db().store(new Item("1"));
-		StoredClass yc = db().storedClass(Item.class);
-		Assert.isFalse(yc.hasClassIndex());
-		
-		assertNoItemFound();
-		
-		db().commit();
-		assertNoItemFound();
+	protected void store() throws Exception {
+        Item item = new Item(NAME);
+        store(new Holder(item));
 	}
 	
-	private void assertNoItemFound(){
+	public void testNoItemInIndex(){
+		
+		StoredClass storedClass = db().storedClass(Item.class);
+		Assert.isFalse(storedClass.hasClassIndex());
+		
+		assertNoItemFoundByQuery();
+		
+		db().commit();
+		assertNoItemFoundByQuery();
+	}
+	
+	private void assertNoItemFoundByQuery(){
 		Query q = db().query();
 		q.constrain(Item.class);
 		Assert.areEqual(0, q.execute().size());
+	}
+	
+	public void testRetrievalThroughHolder(){
+	    assertData();
+	}
+
+    private void assertData() {
+        Holder holder = (Holder) retrieveOnlyInstance(Holder.class);
+	    Assert.isNotNull(holder._item);
+	    Assert.areEqual(NAME, holder._item._name);
+    }
+	
+	public void testDefragment() throws Exception{
+	    defragment();
+	    assertData();
 	}
 
 }

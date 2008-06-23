@@ -7,6 +7,7 @@ import java.io.IOException;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.mapping.*;
+import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 
@@ -59,6 +60,13 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	
 	private int copyUnindexedId(boolean doRegister){
         int orig=_source.readInt();
+
+        // TODO: There is no test case for the zero case
+        if(orig == 0){
+            _target.writeInt(0);
+            return 0;
+        }
+        
         int mapped=-1;
         try {
             mapped=_services.mappedID(orig);
@@ -323,5 +331,25 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 
     public ReadBuffer buffer() {
         return _source;
+    }
+
+    public void defragment(TypeHandler4 handler) {
+        final TypeHandler4 typeHandler = correctHandlerVersion(handler);
+        if(FieldMetadata.useDedicatedSlot(this, typeHandler)){
+            if(hasClassIndex(typeHandler)){
+                copyID();
+            } else {
+                copyUnindexedID();
+            }
+            return;
+        }
+        typeHandler.defragment(DefragmentContextImpl.this);
+    }
+
+    private boolean hasClassIndex(TypeHandler4 typeHandler) {
+        if(typeHandler instanceof ClassMetadata){
+            return ((ClassMetadata)typeHandler).hasClassIndex();
+        }
+        return false;
     }
 }
