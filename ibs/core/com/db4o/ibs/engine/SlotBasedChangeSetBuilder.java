@@ -59,12 +59,43 @@ public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 			
 			final FieldMetadata field = (FieldMetadata) fields.current();
 			final Object currentFieldValue = field.getOn(_transaction, object.getObject());
-			final Object oldFieldValue = oldSlotContext.readFieldValue(classMetadata, field);
-			if (!Check.objectsAreEqual(currentFieldValue, oldFieldValue)) {
+			
+			if (fieldValueHasChanged(oldSlotContext, classMetadata, field, currentFieldValue)) {
 				fieldChanges.add(new FieldChange(field, currentFieldValue));
 			}
 		}
 		return fieldChanges;
+	}
+
+	private boolean fieldValueHasChanged(
+			final ObjectHeaderContext oldSlotContext,
+			final ClassMetadata classMetadata,
+			final FieldMetadata field,
+			final Object currentFieldValue) {
+		
+		if (oldSlotContext.useDedicatedSlot(oldSlotContext.correctHandlerVersion(field.getHandler()))) {
+			int oldId = readIdAtField(oldSlotContext, classMetadata, field);
+			if (currentFieldValue == null) {
+				return oldId != 0;
+			}
+			return oldId != idFor(currentFieldValue);
+		}
+		
+		final Object oldFieldValue = oldSlotContext.readFieldValue(classMetadata, field);
+		return !Check.objectsAreEqual(currentFieldValue, oldFieldValue);
+	}
+
+	private long idFor(final Object currentFieldValue) {
+		return _transaction.container().getID(currentFieldValue);
+	}
+
+	private int readIdAtField(final ObjectHeaderContext oldSlotContext,
+			final ClassMetadata classMetadata,
+			final FieldMetadata field) {
+		if (!oldSlotContext.seekToField(classMetadata, field)) {
+			return 0;
+		}
+		return oldSlotContext.readInt();
 	}
 
 	private ObjectHeaderContext readContextForOldSlot(ObjectInfo object) {
