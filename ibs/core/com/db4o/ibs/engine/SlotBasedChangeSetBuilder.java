@@ -22,8 +22,7 @@ public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 	}
 
 	public void added(ObjectInfo object) {
-		// TODO Auto-generated method stub
-
+		_changes.add(new NewObjectChange(object));
 	}
 
 	public ChangeSet build() {

@@ -110,7 +110,20 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 		
 		Assert.areEqual(0, changeSets().size());
 	}
-
+	
+	public void testNewObject() {
+		final Item newItem = new Item("value", 42);
+		commitItem(newItem);
+		
+		Assert.areEqual(1, changeSets().size());
+		
+		final SlotBasedChangeSet changeSet = (SlotBasedChangeSet)changeSets().get(0);
+		Assert.areEqual(1, changeSet.changes().size());
+		
+		final NewObjectChange change = (NewObjectChange)changeSet.changes().get(0);
+		Assert.areEqual(uuidFor(newItem), change.object().getUUID());
+	}
+	
 	private List<ChangeSet> changeSets() {
 		return listener.changeSets();
 	}
