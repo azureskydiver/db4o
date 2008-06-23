@@ -27,6 +27,9 @@ public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 	}
 
 	public ChangeSet build() {
+		if (_changes.isEmpty()) {
+			return null;
+		}
 		return new SlotBasedChangeSet(_changes);
 	}
 
@@ -37,33 +40,45 @@ public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 
 	public void updated(ObjectInfo object) {
 		
+		final ArrayList<FieldChange> fieldChanges = collectFieldChanges(object);
+		if (!fieldChanges.isEmpty()) {
+			_changes.add(new UpdateChange(object, fieldChanges));
+		}
+	}
+
+	private ArrayList<FieldChange> collectFieldChanges(ObjectInfo object) {
 		final ArrayList<FieldChange> fieldChanges = new ArrayList<FieldChange>();
 		
-		final SlotChange change = _transaction.findSlotChange((int) object.getInternalID());
-		final ObjectHeaderContext oldSlotContext = readContextForOldSlot(change);
+		final ObjectHeaderContext oldSlotContext = readContextForOldSlot(object);
 		final ClassMetadata classMetadata = classMetadataFor(object);
 		final Iterator4 fields = classMetadata.fields();
+		
+		final int initialOffset = oldSlotContext.offset();
 		while (fields.moveNext()) {
+			oldSlotContext.seek(initialOffset);
+			
 			final FieldMetadata field = (FieldMetadata) fields.current();
 			final Object currentFieldValue = field.getOn(_transaction, object.getObject());
 			final Object oldFieldValue = oldSlotContext.readFieldValue(classMetadata, field);
-			
 			if (!Check.objectsAreEqual(currentFieldValue, oldFieldValue)) {
 				fieldChanges.add(new FieldChange(field, currentFieldValue));
 			}
 		}
-		
-		_changes.add(new UpdateChange(object, fieldChanges));
+		return fieldChanges;
 	}
 
-	private ObjectHeaderContext readContextForOldSlot(final SlotChange change) {
+	private ObjectHeaderContext readContextForOldSlot(ObjectInfo object) {
+		final SlotChange change = slotChangeFor(object);
 		final Slot oldSlot = change.oldSlot();
 		final ByteArrayBuffer oldSlotBuffer = arrayBufferFor(oldSlot);
-		final ObjectHeaderContext oldSlotContext = new ObjectHeaderContext(_transaction, oldSlotBuffer, new ObjectHeader(_transaction.container(), oldSlotBuffer)) {
+		return new ObjectHeaderContext(_transaction, oldSlotBuffer, new ObjectHeader(_transaction.container(), oldSlotBuffer)) {
 		};
-		return oldSlotContext;
 	}
 
+	private SlotChange slotChangeFor(ObjectInfo object) {
+		return _transaction.findSlotChange((int) object.getInternalID());
+	}
+	
 	private ByteArrayBuffer arrayBufferFor(final Slot slot) {
 		final ByteArrayBuffer oldSlotBuffer = new ByteArrayBuffer(slot.length());
 		oldSlotBuffer.readEncrypt(_transaction.container(), slot.address());

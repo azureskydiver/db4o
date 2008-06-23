@@ -30,7 +30,10 @@ public class ChangeSetPublisher {
 	}
 
 	protected void onCommitting(CommitEventArgs args) {
-		_listener.onChange(changeSetFor(args));
+		final ChangeSet changeSet = changeSetFor(args);
+		if (null != changeSet) {
+			_listener.onChange(changeSet);
+		}
 	}
 
 	private ChangeSet changeSetFor(CommitEventArgs args) {
