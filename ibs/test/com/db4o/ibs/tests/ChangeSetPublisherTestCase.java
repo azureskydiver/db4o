@@ -22,6 +22,11 @@ public class ChangeSetPublisherTestCase extends AbstractDb4oTestCase {
 		new ChangeSetPublisher(engine, listener).monitor(db());
 	}
 	
+	public void testCommitWithNoChange() {
+		db().commit();
+		Assert.areEqual(0, changeSets().size());
+	}
+	
 	public void testAddingAnObjectCreatesNewObjectChange() {
 		
 		storeNewContact();

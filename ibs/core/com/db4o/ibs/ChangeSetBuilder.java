@@ -27,8 +27,10 @@ public interface ChangeSetBuilder {
 
 	/**
 	 * Returns all the accumulated changes as a {@link ChangeSet} object.
+	 * 
+	 * If there were no changes the builder should return null.
 	 *  
-	 * @return
+	 * @return null if there were no changes or the accumulated {@link ChangeSet}
 	 */
 	ChangeSet build();
 }

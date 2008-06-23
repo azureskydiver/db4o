@@ -8,6 +8,9 @@ public class MockChangeSetBuilder implements ChangeSetBuilder {
 	private final MockChangeSet _changeSet = new MockChangeSet();
 
 	public ChangeSet build() {
+		if (_changeSet.changes().isEmpty()) {
+			return null;
+		}
 		return _changeSet;
 	}
 
