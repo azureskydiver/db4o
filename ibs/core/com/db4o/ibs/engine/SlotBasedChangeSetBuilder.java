@@ -33,8 +33,7 @@ public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 	}
 
 	public void deleted(ObjectInfo object) {
-		// TODO Auto-generated method stub
-
+		_changes.add(new DeleteChange(object));
 	}
 
 	public void updated(ObjectInfo object) {
