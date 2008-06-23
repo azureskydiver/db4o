@@ -350,7 +350,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             elementCount -= reducedCountForNullBitMap(elementCount, bitMap);
         } 
         for (int i = 0; i < elementCount; i++) {
-            _handler.defragment(context);
+            context.defragment(_handler);
         }
         if (Deploy.debug) {
         	Debug.readEnd(context);

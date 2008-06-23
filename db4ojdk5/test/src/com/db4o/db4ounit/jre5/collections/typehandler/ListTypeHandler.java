@@ -4,6 +4,7 @@ package com.db4o.db4ounit.jre5.collections.typehandler;
 
 import java.util.*;
 
+import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -13,6 +14,7 @@ import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
+import com.db4o.reflect.*;
 
 @SuppressWarnings("unchecked")
 public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler{
@@ -74,8 +76,11 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
     }
 
     public void defragment(DefragmentContext context) {
-        // TODO Auto-generated method stub
-
+        TypeHandler4 handler = elementTypeHandler(context, null);
+        int elementCount = context.readInt();
+        for (int i = 0; i < elementCount; i++) {
+            handler.defragment(context);
+        }
     }
     
     public final void cascadeActivation(ActivationContext4 context) {
@@ -104,16 +109,5 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
            }
        }
    }
-
-    private ActivationDepth descend(ObjectContainerBase container, ActivationDepth depth, Object obj){
-        if(obj == null){
-            return new NonDescendingActivationDepth(depth.mode());
-        }
-        ClassMetadata cm = container.classMetadataForObject(obj);
-        if(cm.isPrimitive()){
-            return new NonDescendingActivationDepth(depth.mode());
-        }
-        return depth.descend(cm);
-    }
 
 }

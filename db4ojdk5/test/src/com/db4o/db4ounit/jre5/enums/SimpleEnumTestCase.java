@@ -30,7 +30,7 @@ public class SimpleEnumTestCase extends AbstractDb4oTestCase {
         db().commit();
         reopen();
         Item retrievedItem = (Item) retrieveOnlyInstance(Item.class);
-        Assert.areEqual(retrievedItem.a, TypeCountEnum.A);
+        Assert.areSame(retrievedItem.a, TypeCountEnum.A);
     }
 
 }

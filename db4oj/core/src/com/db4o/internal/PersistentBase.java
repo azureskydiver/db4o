@@ -72,7 +72,7 @@ public abstract class PersistentBase implements Persistent {
         return getID() == 0;
     }
 
-    public int linkLength() {
+    public final int linkLength() {
         return Const4.ID_LENGTH;
     }
 
