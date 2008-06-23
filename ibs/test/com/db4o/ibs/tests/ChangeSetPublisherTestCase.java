@@ -10,8 +10,13 @@ import db4ounit.extensions.*;
 
 public class ChangeSetPublisherTestCase extends AbstractDb4oTestCase {
 	
-	public static void main(String[] args) {
-		new ChangeSetPublisherTestCase().runSolo();
+	public static class Contact {
+
+		public String email;
+
+		public Contact(String email_) {
+			email = email_;
+		}
 	}
 	
 	final MockChangeSetListener listener = new MockChangeSetListener();
@@ -48,7 +53,7 @@ public class ChangeSetPublisherTestCase extends AbstractDb4oTestCase {
 		final Contact contact = storeNewContact();
 		changeSets().clear();
 		
-		contact.email("foo@foo.com");
+		contact.email = "foo@foo.com";
 		db().store(contact);
 		db().commit();
 		
