@@ -1,4 +1,4 @@
-package com.db4o.ibs.tests;
+package com.db4o.ibs.tests.mocking;
 
 import java.util.*;
 

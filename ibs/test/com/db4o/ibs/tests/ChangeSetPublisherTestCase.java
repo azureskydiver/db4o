@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.db4o.ext.*;
 import com.db4o.ibs.*;
+import com.db4o.ibs.tests.mocking.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
