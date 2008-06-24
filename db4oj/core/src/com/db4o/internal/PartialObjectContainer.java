@@ -2053,4 +2053,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	    return reflector().forObject(obj);
 	}
 
+    
+    public Object syncExec(Closure4 block) {
+    	synchronized(_lock) {
+    		return block.run();
+    	}
+    }
+
 }

@@ -450,4 +450,9 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     public HandlerRegistry handlers(){
         return _server.handlers();
     }
+
+    public Object syncExec(Closure4 block) {
+    	return _server.syncExec(block);
+    }
+
 }
