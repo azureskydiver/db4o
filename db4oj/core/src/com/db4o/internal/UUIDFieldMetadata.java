@@ -233,7 +233,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         return hardRef;
 	}
  
-	public void defragField(MarshallerFamily mf, DefragmentContextImpl context) {
+	public void defragField(DefragmentContext context) {
 		// database id
 		context.copyID(); 
 		// uuid

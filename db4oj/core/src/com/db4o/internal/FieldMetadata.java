@@ -1062,11 +1062,9 @@ public class FieldMetadata implements StoredField {
         _index = null;
     }    
     
-    public void defragField(MarshallerFamily mf, final DefragmentContextImpl context) {
-    	int handlerVersion = mf.handlerVersion();
-        context.handlerVersion(handlerVersion);
+    public void defragField(final DefragmentContext context) {
     	final TypeHandler4 typeHandler = context.correctHandlerVersion(getHandler());
-        SlotFormat.forHandlerVersion(handlerVersion).doWithSlotIndirection(context, typeHandler, new Closure4() {
+        SlotFormat.forHandlerVersion(context.handlerVersion()).doWithSlotIndirection(context, typeHandler, new Closure4() {
             public Object run() {
                 context.defragment(typeHandler);
                 return null;

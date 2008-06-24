@@ -4,10 +4,11 @@ package com.db4o.internal;
 
 import java.io.*;
 
+import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 
-public interface DefragmentContext extends BufferContext {
+public interface DefragmentContext extends BufferContext, MarshallingInfo{
 	
 	public TypeHandler4 typeHandlerForId(int id);
 

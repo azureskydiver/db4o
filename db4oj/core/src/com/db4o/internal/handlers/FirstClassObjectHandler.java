@@ -8,6 +8,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.internal.marshall.ObjectMarshaller.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -30,15 +31,23 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         
     }
 
-    public void defragment(DefragmentContext context) {
-        if(_classMetadata.hasClassIndex()) {
-            context.copyID();
+    public void defragment(final DefragmentContext context) {
+        TraverseFieldCommand command = new TraverseFieldCommand() {
+            public int fieldCount(ClassMetadata classMetadata, ByteArrayBuffer reader) {
+                return context.readInt();
+            }
+            public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
+                if (!isNull) {
+                    field.defragField(context);
+                } 
+            }
+        };
+        traverseFields(context, command);
+        
+        if(classMetadata().i_ancestor != null){
+            classMetadata().i_ancestor.defragment(context);
         }
-        else {
-            context.copyUnindexedID();
-        }
-        int restLength = (_classMetadata.linkLength()-Const4.INT_LENGTH);
-        context.incrementOffset(restLength);
+        
     }
 
     public void delete(DeleteContext context) throws Db4oIOException {
