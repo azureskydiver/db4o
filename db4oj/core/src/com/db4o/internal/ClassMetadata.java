@@ -830,7 +830,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public boolean hasClassIndex() {
-        return _classIndexed;
+        if(! _classIndexed){
+            return false;
+        }
+        return defaultObjectHandlerIsUsed() || ! (_typeHandler instanceof EmbeddedTypeHandler); 
     }
     
     private boolean ancestorHasUUIDField(){
@@ -1831,17 +1834,15 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	
     public static void defragObject(DefragmentContextImpl context) {
     	ObjectHeader header = ObjectHeader.defrag(context);
-    	ClassMetadata classMetadata = header.classMetadata();
-    	// classMetadata.defragment(context);
-    	
-        header._marshallerFamily._object.defragFields(classMetadata,header,context);
+    	DefragmentContextImpl childContext = new DefragmentContextImpl(context, header);
+    	header.classMetadata().defragment(childContext);
         if (Deploy.debug) {
             context.readEnd();
         }
     }	
 
 	public void defragment(DefragmentContext context) {
-		_typeHandler.defragment(context);
+	    context.correctHandlerVersion(_typeHandler).defragment(context);
 	}
 	
 	public void defragClass(DefragmentContextImpl context, int classIndexID) throws CorruptionException, IOException {

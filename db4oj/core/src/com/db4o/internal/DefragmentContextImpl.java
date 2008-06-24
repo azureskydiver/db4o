@@ -16,20 +16,38 @@ import com.db4o.marshall.*;
  * @exclude
  */
 public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentContext {
+    
 	private ByteArrayBuffer _source;
+	
 	private ByteArrayBuffer _target;
+	
 	private DefragmentServices _services;
-	private int _handlerVersion;
+	
+	private final ObjectHeader _objectHeader;
+	
+	private int _currentSlot;
 	
 	public DefragmentContextImpl(ByteArrayBuffer source, DefragmentContextImpl context) {
-		this(source, context._services);
+		this(source, context._services, context._objectHeader);
 	}
 
 	public DefragmentContextImpl(ByteArrayBuffer source,DefragmentServices services) {
-		_source = source;
-		_services=services;
-		_target = new ByteArrayBuffer(length());
-		_source.copyTo(_target, 0, 0, length());
+	    this(source, services, null);
+	}
+	
+	public DefragmentContextImpl(ByteArrayBuffer source, DefragmentServices services, ObjectHeader header){
+        _source = source;
+        _services=services;
+        _target = new ByteArrayBuffer(length());
+        _source.copyTo(_target, 0, 0, length());
+        _objectHeader = header;
+	}
+	
+	public DefragmentContextImpl(DefragmentContextImpl parentContext, ObjectHeader header){
+	    _source = parentContext._source;
+	    _target = parentContext._target;
+	    _services = parentContext._services;
+	    _objectHeader = header;
 	}
 	
 	public int offset() {
@@ -262,7 +280,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	}
 	
 	public int handlerVersion(){
-		return _handlerVersion;
+		return _objectHeader.handlerVersion();
 	}
 
 	public boolean isLegacyHandlerVersion() {
@@ -275,10 +293,6 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 
 	public ObjectContainer objectContainer() {
 		return container();
-	}
-
-	public void handlerVersion(int version) {
-		_handlerVersion = version;
 	}
 
 	public TypeHandler4 correctHandlerVersion(TypeHandler4 handler) {
@@ -352,4 +366,21 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
         }
         return false;
     }
+
+    public void beginSlot() {
+        _currentSlot ++;
+    }
+
+    public ClassMetadata classMetadata() {
+        return _objectHeader.classMetadata();
+    }
+
+    public int currentSlot() {
+        return _currentSlot;
+    }
+
+    public boolean isNull(int fieldIndex) {
+        return _objectHeader._headerAttributes.isNull(fieldIndex);
+    }
+    
 }

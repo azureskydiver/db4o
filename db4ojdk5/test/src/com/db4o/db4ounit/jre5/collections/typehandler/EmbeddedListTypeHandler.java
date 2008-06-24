@@ -103,8 +103,12 @@ public class EmbeddedListTypeHandler implements TypeHandler4 , FirstClassHandler
     }
 
     public void defragment(DefragmentContext context) {
-        // TODO Auto-generated method stub
-
+        context.copyID();
+        TypeHandler4 handler = elementTypeHandler(context, null);
+        int elementCount = context.readInt();
+        for (int i = 0; i < elementCount; i++) {
+            handler.defragment(context);
+        }
     }
     
     public final void cascadeActivation(ActivationContext4 context) {

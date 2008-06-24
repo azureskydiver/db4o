@@ -140,8 +140,6 @@ public abstract class ObjectMarshaller {
             ObjectHeaderAttributes attributes, 
             ByteArrayBuffer reader);
 
-	public abstract void defragFields(ClassMetadata yapClass,ObjectHeader header, DefragmentContextImpl context);
- 
 	public abstract void writeObjectClassID(ByteArrayBuffer reader,int id);
 	
 	public abstract void skipMarshallerInfo(ByteArrayBuffer reader);
