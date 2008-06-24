@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.jre5.defrag;
 
 import com.db4o.db4ounit.common.defragment.*;
+import com.db4o.db4ounit.jre5.enums.*;
 
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
@@ -22,12 +23,9 @@ public class RunTestsDefrag extends AbstractDb4oDefragTestCase {
 				};
 			}
 
-			// FIXME: The following will reenable the Defragment runs:
-			//        Code is commented out because we have failing tests.
-			
-//			protected Db4oTestSuiteBuilder soloSuite(boolean independentConfig) {
-//		        return new Db4oTestSuiteBuilder(
-//	                new Db4oDefragSolo(configSource(independentConfig)), testCases());			}
+			protected Db4oTestSuiteBuilder soloSuite(boolean independentConfig) {
+		        return new Db4oTestSuiteBuilder(
+	                new Db4oDefragSolo(configSource(independentConfig)), testCases());			}
 			
 		};
 		
