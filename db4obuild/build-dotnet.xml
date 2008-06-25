@@ -274,11 +274,6 @@
 				<include name="db4o.chm" />
 				<include name="db4o.HxS" />
 				<include name="db4oCollection.*" />
-				<include name="db4oCollection.h2reg.ini" />
-			</fileset>
-			<fileset dir="lib/h2reg">
-				<include name="*.exe" />
-				<include name="*.ini" />
 			</fileset>
 		</copy>		
 	</target>
