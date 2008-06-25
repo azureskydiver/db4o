@@ -38,10 +38,10 @@ public class Iterator4Assert {
 	}
 
 	public static void sameContent(Iterator4 expected, Iterator4 actual) {
-		Collection4 allExpected = new Collection4(expected);
+		final Collection4 allExpected = new Collection4(expected);
 		while (actual.moveNext()) {
-			Object current = actual.current();
-			Object removed = allExpected.remove(current);
+			final Object current = actual.current();
+			final Object removed = allExpected.remove(current);
 			if (null == removed) {
 				unexpected(current);
 			}
