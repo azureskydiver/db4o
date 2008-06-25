@@ -223,10 +223,6 @@
 				<include name="dRS.chm" />
 				<include name="dRS.HxS" />
 			</fileset>
-			<fileset dir="lib/h2reg">
-				<include name="*.exe" />
-				<include name="*.ini" />
-			</fileset>
 		</copy>		
 		<delete dir="${drs.net.dir}/ndoc" failonerror="true" /> 
 		<delete dir="${drs.net.dir}/config" failonerror="true" />		

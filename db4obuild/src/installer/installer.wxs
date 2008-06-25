@@ -37,17 +37,7 @@
 				ExeCommand=""
 				Execute="firstSequence"
 				Return="asyncNoWait" />
-				
-		<CustomAction Id="RegisterHelp"
-				FileKey="doc.api.H2Reg.exe"
-				ExeCommand="-q -r CmdFile=[#doc.api.db4oCollection.h2reg.ini]"
-				Return="asyncNoWait" />
-				
-		<CustomAction Id="UnregisterHelp"
-				FileKey="doc.api.H2Reg.exe"
-				ExeCommand="-q -u CmdFile=[#doc.api.db4oCollection.h2reg.ini]"
-				Return="asyncNoWait" />
-				
+								
 		<!-- INSTALLATION SEQUENCE PROPERTIES -->
 		<Property Id="LAUNCHTUTORIAL">1</Property>
 		<!-- -->
