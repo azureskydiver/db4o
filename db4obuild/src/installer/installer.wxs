@@ -84,8 +84,6 @@
 			<FindRelatedProducts />
 			<Custom Action="InitializeTargetDir" Before="CostInitialize" />			
 			<RemoveExistingProducts Before='InstallInitialize' />
-			<Custom Action="RegisterHelp" After="InstallFinalize">NOT Installed</Custom>
-			<Custom Action="UnregisterHelp" Before="RemoveFiles">Installed</Custom>
 		</InstallExecuteSequence>
 		
 		<AdminExecuteSequence>
