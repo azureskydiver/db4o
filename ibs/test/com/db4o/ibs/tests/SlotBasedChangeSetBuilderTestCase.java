@@ -24,6 +24,16 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 		}
 	}
 	
+	static class SubItem extends Item {
+		
+		public Integer integerValue;
+		
+		public SubItem(String stringValue_, int intValue_) {
+			super(stringValue_, intValue_);
+			integerValue = new Integer(intValue_);
+		}		
+	}
+	
 	final MockChangeSetListener listener = new MockChangeSetListener();
 	
 	final Item item = new Item("foo", 42);
@@ -32,6 +42,28 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 	protected void db4oSetupAfterStore() throws Exception {
 		commitItem();
 		setUpChangeSetPublisher();
+	}
+	
+	public void testUpdateToInheritedField() {
+		final SubItem subItem = new SubItem("sub", 42);
+		commitItem(subItem);
+		changeSets().clear();
+		
+		subItem.intValue = -1;
+		subItem.integerValue = new Integer(42);
+		commitItem(subItem);
+		
+		assertSingleFieldChange("intValue", new Integer(-1));
+	}
+	
+	public void testUpdateToSubClassField() {
+		final SubItem subItem = new SubItem("sub", 42);
+		commitItem(subItem);
+		changeSets().clear();
+		
+		subItem.integerValue = new Integer(21);
+		commitItem(subItem);
+		assertSingleFieldChange("integerValue", new Integer(21));
 	}
 
 	public void testNoUpdates() {

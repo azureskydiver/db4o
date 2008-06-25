@@ -49,6 +49,7 @@ public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 		
 		final ObjectHeaderContext oldSlotContext = readContextForOldSlot(object);
 		final ClassMetadata classMetadata = classMetadataFor(object);
+		
 		final Iterator4 fields = classMetadata.fields();
 		
 		final int initialOffset = oldSlotContext.offset();
@@ -72,7 +73,7 @@ public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 			final Object currentFieldValue) {
 		
 		if (oldSlotContext.useDedicatedSlot(oldSlotContext.correctHandlerVersion(field.getHandler()))) {
-			int oldId = readIdAtField(oldSlotContext, classMetadata, field);
+			final int oldId = readIdAtField(oldSlotContext, classMetadata, field);
 			if (currentFieldValue == null) {
 				return oldId != 0;
 			}
