@@ -144,17 +144,9 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	@Override
 	public void endVisit(SimpleName node) {
-// FIXME figure out how to process class literals in static method invocations
-//		if(node.getLocationInParent() == MethodInvocation.EXPRESSION_PROPERTY) {
-//			ITypeBinding binding = node.resolveTypeBinding();
-//			if(binding != null) {
-//				Type mapped = builder.mappedType(binding, null);
-//				if(mapped != null) {
-//					replace(node, builder.newSimpleName("Collections4"));
-//					return;
-//				}
-//			}
-//		}
+		if(mapStaticInvocationClassName(node)) {
+			return;
+		}
 		
 		if (node.isDeclaration()) {
 			return;
@@ -170,9 +162,31 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 		processNameErasure(node);
 	}
+
+	private boolean mapStaticInvocationClassName(Name node) {
+		// FIXME overcomplicated and fragile, too many unjustified assumptions here - find better way to handle static method invocation type mappings
+		if(node.getLocationInParent() != MethodInvocation.EXPRESSION_PROPERTY) {
+			return false;
+		}
+		MethodInvocation invocation = (MethodInvocation) node.getParent();
+		boolean isStatic = (invocation.resolveMethodBinding().getModifiers() & Modifier.STATIC) != 0;
+		ITypeBinding binding = node.resolveTypeBinding();
+		if(!isStatic || binding == null) {
+			return false;
+		}
+		SimpleType mapped = (SimpleType)builder.mappedType(binding, null);
+		if(mapped == null) {
+			return false;
+		}
+		replace(node, mapped.getName());
+		return true;
+	}
 	
 	@Override
 	public void endVisit(QualifiedName node) {
+		if(mapStaticInvocationClassName(node)) {
+			return;
+		}
 		processNameErasure(node);
 	}
 
