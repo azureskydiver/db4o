@@ -31,4 +31,12 @@ class AutoUnboxing {
 	public Boolean box(boolean b) {
 		return new Boolean(b);
 	}
+	
+	public int identity(int i) {
+		return i;
+	}
+	
+	public void boxIdentity() {
+		Integer i = new Integer(identity(6));
+	}
 }
