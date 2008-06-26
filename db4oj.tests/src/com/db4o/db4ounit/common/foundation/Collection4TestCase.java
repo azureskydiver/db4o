@@ -61,6 +61,24 @@ public class Collection4TestCase implements TestCase {
 		assertCollection(new String[] { "zero", "one", "two"}, c);
 	}
 	
+	public void testGetByIndex() {
+		final Collection4 c = new Collection4();
+		c.add("one");
+		c.add("two");
+		Assert.areEqual("one", c.get(0));
+		Assert.areEqual("two", c.get(1));
+		assertIllegalIndex(c, -1);
+		assertIllegalIndex(c, 2);
+	}
+
+	private void assertIllegalIndex(final Collection4 c, final int index) {
+		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				c.get(index);
+			}
+		});
+	}
+	
 	public void testPrepend() {
 		final Collection4 c = new Collection4();
 		c.prepend("foo");
