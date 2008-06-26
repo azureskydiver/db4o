@@ -1,0 +1,20 @@
+package integration;
+
+class Foo<T> {
+	private T value;
+	
+	public T value() {
+		return value;
+	}
+}
+
+class Main {
+	static void main() {
+		Foo<Integer> foo = new Foo<Integer>();
+		int i = foo.value();
+		bar(foo.value());
+	}
+	
+	static void bar(int i) {
+	}	
+} 

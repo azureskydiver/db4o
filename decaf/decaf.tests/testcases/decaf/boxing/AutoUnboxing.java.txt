@@ -27,4 +27,12 @@ class AutoUnboxing {
 	public char unbox(Character c) {
 		return c;
 	}
+	
+	public Integer identity(Integer i) {
+		return i;
+	}
+	
+	public void unboxIdentity() {
+		int i = identity(new Integer(42));
+	}
 }

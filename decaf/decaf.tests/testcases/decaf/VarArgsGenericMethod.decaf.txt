@@ -4,10 +4,10 @@ public class VarArgsGenericMethod {
 	
 	public void testVarArgsMethodInvocation() {
 		testVarArgs(1, new String[] { "test", "Var", "Args", "Method", "Invocation" });
-		testVarArgs(1, new Integer[] { 2, 3, 4 });
+		testVarArgs(1, new Integer[] { new Integer(2), new Integer(3), new Integer(4) });
 		
 		int value = 5;
-		testVarArgs(1, new Integer[] { 5, getValue(6) });		
+		testVarArgs(1, new Integer[] { new Integer(5), new Integer(getValue(6)) });		
 	}
 	
 	private int getValue(int value) {

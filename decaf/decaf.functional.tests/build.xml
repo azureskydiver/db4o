@@ -84,6 +84,10 @@
 			<fileset dir="${dir.workspace}/db4oj/bin">
 				<include name="**/*.class" />
 			</fileset>
+			<fileset dir="${dir.workspace}/ibs/bin">
+				<include name="**/*.class" />
+				<exclude name="**/tests/**/*" />
+			</fileset>
 			<!--
 			<fileset dir="${dir.workspace}/db4oj.tests/bin">
 				<include name="**/*.class" />
@@ -122,7 +126,7 @@
 				<arg path="${build.dir}/db4ounit-all.jar" />
 			</args>
 		</decaf>
-		
+
 	</target>
 			
 	<target name="decaf-workspace" depends="init">
@@ -136,13 +140,19 @@
 				</fileset>
 			</sources>
 		</prepare-workspace>
-		
+
 		<copy todir="${build.dir}/workspace/db4o" overwrite="true">
 			<fileset dir="${dir.workspace}/db4ojdk1.2/core">
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
-		
+
+		<copy todir="${build.dir}/workspace/db4o/src" overwrite="false">
+			<fileset dir="${dir.workspace}/ibs/core">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+
 		<prepare-workspace dir="${build.dir}/workspace" project="db4o.tests">
 			<sources>
 				<fileset dir="${dir.workspace}/db4oj.tests">
@@ -156,6 +166,7 @@
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
+
 	</target>
 
 	<target name="init">
