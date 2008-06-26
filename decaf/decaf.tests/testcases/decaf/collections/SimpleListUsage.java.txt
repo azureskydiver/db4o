@@ -8,5 +8,6 @@ public class SimpleListUsage {
 		list.add(42);
 		int value = list.get(0);
 		List<Integer> unmodifiable = Collections.unmodifiableList(list);
+		java.util.List<Integer> qUnmodifiable = java.util.Collections.unmodifiableList(list);
 	}
 }
