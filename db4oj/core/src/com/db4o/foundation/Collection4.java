@@ -2,6 +2,8 @@
 
 package com.db4o.foundation;
 
+import java.util.*;
+
 import com.db4o.types.Unversioned;
 
 /**
@@ -9,7 +11,7 @@ import com.db4o.types.Unversioned;
  * 
  * @exclude
  */
-public class Collection4 implements Iterable4, DeepClone, Unversioned {
+public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned {
 	
 	// FIELDS ARE PUBLIC SO THEY CAN BE REFLECTED ON IN JDKs <= 1.1
 
@@ -206,6 +208,21 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 		return _first == null
 			? Iterators.EMPTY_ITERATOR
 			: new Collection4Iterator(this, _first);
+	}
+	
+	public Object get(int index) {
+		if(index < 0) {
+			throw new IllegalArgumentException();
+		}
+		List4 cur = _first;
+		while(index > 0 && cur != null) {
+			cur = cur._next;
+			index--;
+		}
+		if(cur == null) {
+			throw new IllegalArgumentException();
+		}
+		return cur._element;
 	}
 	
 	/**

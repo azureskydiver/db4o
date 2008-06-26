@@ -6,7 +6,7 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public class Hashtable4 implements DeepClone {
+public class Hashtable4 implements DeepClone, Map4 {
 
 	private static final float FILL = 0.5F;
 	
