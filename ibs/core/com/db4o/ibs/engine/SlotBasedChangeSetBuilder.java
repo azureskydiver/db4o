@@ -9,8 +9,6 @@ import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 
-import db4ounit.*;
-
 public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 
 	private final LocalTransaction _transaction;
@@ -81,7 +79,7 @@ public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 		}
 		
 		final Object oldFieldValue = oldSlotContext.readFieldValue(classMetadata, field);
-		return !Check.objectsAreEqual(currentFieldValue, oldFieldValue);
+		return !objectsAreEqual(currentFieldValue, oldFieldValue);
 	}
 
 	private long idFor(final Object currentFieldValue) {
@@ -117,5 +115,12 @@ public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 
 	private ClassMetadata classMetadataFor(ObjectInfo object) {
 		return ((LazyObjectReference)object).reference().classMetadata();
+	}
+
+	private boolean objectsAreEqual(Object expected, Object actual) {
+		return expected == actual
+			|| (expected != null
+				&& actual != null
+				&& expected.equals(actual));
 	}
 }
