@@ -4,11 +4,11 @@ import decaf.tests.*;
 
 public class IntegrationTestCase extends DecafTestCaseBase {
 	
-	public void _testUnboxingInVarArgs() throws Exception {
+	public void testUnboxingInVarArgs() throws Exception {
 		runResourceTestCase("UnboxingInVarArgs");
 	}
 	
-	public void _testUnboxingInForEach() throws Exception {
+	public void testUnboxingInForEach() throws Exception {
 		runResourceTestCase("UnboxingInForEach");
 	}
 
@@ -16,11 +16,11 @@ public class IntegrationTestCase extends DecafTestCaseBase {
 		runResourceTestCase("UnboxingForGenerics");
 	}
 
-	public void _testErasureInVarArgs() throws Exception {
+	public void testErasureInVarArgs() throws Exception {
 		runResourceTestCase("ErasureInVarArgs");
 	}
 	
-	public void _testErasureInForEach() throws Exception {
+	public void testErasureInForEach() throws Exception {
 		runResourceTestCase("ErasureInForEach");
 	}
 	

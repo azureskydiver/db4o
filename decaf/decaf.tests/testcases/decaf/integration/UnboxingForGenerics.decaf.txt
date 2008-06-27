@@ -13,8 +13,13 @@ class Main {
 		Foo foo = new Foo();
 		int i = (((Integer) foo.value())).intValue();
 		bar((((Integer) foo.value())).intValue());
+		baz(new int[] { 42, (((Integer) foo.value())).intValue() });
+		baz(new int[] { (((Integer) foo.value())).intValue(), 42 });
 	}
 	
 	static void bar(int i) {
 	}	
+	
+	static void baz(int[] i) {
+	}
 }

@@ -12,9 +12,11 @@ import sharpen.core.framework.*;
 @SuppressWarnings("unchecked")
 class DecafASTNodeBuilder {
 	private final AST ast;
+	private final DecafConfiguration config;
 	
-	public DecafASTNodeBuilder(AST ast) {
+	public DecafASTNodeBuilder(AST ast, DecafConfiguration config) {
 		this.ast = ast;
+		this.config = config;
 	}
 
 	public <T extends ASTNode> T clone(T node) {
@@ -354,25 +356,9 @@ class DecafASTNodeBuilder {
 		return type.getTypeDeclaration().getQualifiedName();
 	}
 	
-	// FIXME Type mappings just hardwired for spiking here.
-	// Should be handled from external configuration.
 	public Type mappedType(ITypeBinding origBinding, Type origType) {
 		String name = qualifiedName(origBinding);
-		if(name.equals(Map.class.getName())) {
-			 return newSimpleType("com.db4o.foundation.Map4");
-		}
-		if(name.equals(HashMap.class.getName())) {
-			return newSimpleType("com.db4o.foundation.Hashtable4");
-		}
-		if(name.equals(List.class.getName())) {
-			 return newSimpleType("com.db4o.foundation.Sequence4");
-		}
-		if(name.equals(ArrayList.class.getName())) {
-			return newSimpleType("com.db4o.foundation.Collection4");
-		}
-		if(name.equals(Collections.class.getName())) {
-			return newSimpleType("com.db4o.foundation.Collections4");
-		}
-		return origType;
+		String mappedName = config.typeNameMapping(name);
+		return mappedName == null ? origType : newSimpleType(mappedName);
 	}
 }
