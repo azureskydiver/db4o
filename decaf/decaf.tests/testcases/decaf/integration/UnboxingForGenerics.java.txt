@@ -13,8 +13,13 @@ class Main {
 		Foo<Integer> foo = new Foo<Integer>();
 		int i = foo.value();
 		bar(foo.value());
+		baz(42, foo.value());
+		baz(foo.value(), 42);
 	}
 	
 	static void bar(int i) {
 	}	
+	
+	static void baz(int... i) {
+	}
 } 
