@@ -25,5 +25,9 @@ public class DecafTestCase extends DecafTestCaseBase {
 	public void testVarArgsGenericMethod() throws Exception {
 		runResourceTestCase("VarArgsGenericMethod");
 	}
+	
+	public void testPackageDeclaration() throws Exception {
+		runResourceTestCase("PackageDeclaration");
+	}
 
 }
