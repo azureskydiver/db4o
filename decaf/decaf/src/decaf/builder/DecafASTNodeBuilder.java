@@ -215,6 +215,9 @@ class DecafASTNodeBuilder {
 
 	public IVariableBinding fieldBinding(Name node) {
 		final IBinding binding = node.resolveBinding();
+		if(binding == null){
+			return null;
+		}	
 		if (binding.getKind() != IBinding.VARIABLE) {
 			return null;
 		}
