@@ -470,6 +470,13 @@ public interface Configuration {
     public void io(IoAdapter adapter) throws GlobalOnlyConfigException;
     
     /**
+     * returns the configured {@link IoAdapter}.
+     * 
+     * @return
+     */
+    public IoAdapter io();
+    
+    /**
      * allows to mark fields as transient with custom attributes.
      * <br><br>.NET only: Call this method with the attribute name that you
      * wish to use to mark fields as transient. Multiple transient attributes 

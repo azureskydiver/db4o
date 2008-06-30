@@ -136,10 +136,7 @@ public final class Messages {
     }
 
     public static void logErr (Configuration config, int code, String msg, Throwable t) {
-    	if(config == null){
-    		config = Db4o.configure();
-    	}
-    	PrintStream ps = ((Config4Impl)config).errStream();
+    	final PrintStream ps = ((Config4Impl)safeConfig(config)).errStream();
     	new Message(msg, code,ps);
     	if(t != null){
     		new Message(null,25,ps);
@@ -147,6 +144,16 @@ public final class Messages {
     		new Message(null,26,ps, false);
     	}
     }
+
+    /**
+     * @deprecated uses deprecated api
+     */
+	private static Configuration safeConfig(Configuration config) {
+		if (config != null) {
+			return config;
+		}
+		return Db4o.configure();
+	}
 
     public static void logMsg (Configuration config, int code, String msg) {
     	if(Deploy.debug){

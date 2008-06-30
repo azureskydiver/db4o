@@ -512,10 +512,10 @@ public class DTrace {
         }
     }
     
-    private static void breakFromEvent(long eventNr){
-        breakOnEvent(eventNr);
-        _breakAfterEvent = true;
-    }
+//    private static void breakFromEvent(long eventNr){
+//        breakOnEvent(eventNr);
+//        _breakAfterEvent = true;
+//    }
     
     private static void breakOnEvent(long eventNr){
         if(enabled){
