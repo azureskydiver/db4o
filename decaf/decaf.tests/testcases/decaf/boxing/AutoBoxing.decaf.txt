@@ -1,10 +1,12 @@
+package boxing;
+
 class AutoUnboxing {
 
-	public Byte unbox(byte b) {
+	public Byte box(byte b) {
 		return new Byte(b);
 	}
 	
-	public Short unbox(short s) {
+	public Short box(short s) {
 		return new Short(s);
 	}
 	
@@ -30,14 +32,6 @@ class AutoUnboxing {
 	
 	public Boolean box(boolean b) {
 		return new Boolean(b);
-	}
-	
-	public int identity(int i) {
-		return i;
-	}
-	
-	public void boxIdentity() {
-		Integer i = new Integer(identity(6));
 	}
 	
 	public void boxObject() {
