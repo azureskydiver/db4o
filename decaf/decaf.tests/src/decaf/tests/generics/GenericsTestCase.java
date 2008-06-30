@@ -11,7 +11,12 @@ public class GenericsTestCase extends DecafTestCaseBase {
 	public void testBoundedType() throws Exception {
 		runResourceTestCase("BoundedType");
 	}
-	
+
+	// FIXME
+	public void _testBoundedInheritance() throws Exception {
+		runResourceTestCase("BoundedInheritance");
+	}
+
 	public void testMultipleGenericParameters() throws Exception {
 		runResourceTestCase("MultipleGenericParameters");
 	}
