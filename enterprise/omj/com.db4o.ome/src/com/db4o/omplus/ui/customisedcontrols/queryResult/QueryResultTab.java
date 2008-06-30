@@ -410,12 +410,13 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 	}
 	
 	private void saveChanges() {
-		if(showMessage()) {
+//		if(showMessage()) { // Commented for OMJ-126
 			modifiedObjList.writeToDB();
-		}
+/*		}
 		else {
 			modifiedObjList.refresh();
-		}
+		}*/
+		
 	}
 	
 	private boolean showMessage(){
