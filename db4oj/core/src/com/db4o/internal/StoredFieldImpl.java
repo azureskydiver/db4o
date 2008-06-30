@@ -24,6 +24,10 @@ public class StoredFieldImpl implements StoredField {
     public void createIndex() {
         _fieldMetadata.createIndex();
     }
+
+    public FieldMetadata fieldMetadata(){
+        return _fieldMetadata;
+    }
     
     public Object get(Object onObject) {
         return _fieldMetadata.get(_transaction, onObject);
@@ -52,7 +56,6 @@ public class StoredFieldImpl implements StoredField {
     public void traverseValues(Visitor4 visitor) {
         _fieldMetadata.traverseValues(_transaction, visitor);
     }
-
     public int hashCode() {
         return _fieldMetadata.hashCode();
     }
@@ -66,6 +69,5 @@ public class StoredFieldImpl implements StoredField {
         }
         return _fieldMetadata.equals(((StoredFieldImpl) obj)._fieldMetadata);
     }
-
-
+    
 }
