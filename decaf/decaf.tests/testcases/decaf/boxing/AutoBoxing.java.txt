@@ -39,4 +39,8 @@ class AutoUnboxing {
 	public void boxIdentity() {
 		Integer i = identity(6);
 	}
+	
+	public void boxObject() {
+		Object obj = 42;
+	}
 }

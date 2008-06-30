@@ -35,4 +35,9 @@ class AutoUnboxing {
 	public void unboxIdentity() {
 		int i = identity(new Integer(42));
 	}
+
+	public void unboxCastObject() {
+		Object obj = new Integer(42);
+		int i = (Integer) obj;
+	}
 }
