@@ -11,8 +11,7 @@ public class SlotBasedChangeSetEngine implements ChangeSetEngine {
 	}
 
 	public ChangeSetProcessor newProcessorFor(ObjectContainer container) {
-		// TODO Auto-generated method stub
-		return null;
+		return new SlotBasedChangeSetProcessor(container);
 	}
 
 }
