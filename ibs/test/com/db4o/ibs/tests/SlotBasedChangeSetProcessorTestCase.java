@@ -5,6 +5,7 @@ package com.db4o.ibs.tests;
 import java.io.*;
 import java.util.*;
 
+import com.db4o.*;
 import com.db4o.foundation.io.*;
 import com.db4o.ibs.*;
 import com.db4o.ibs.engine.*;
@@ -32,18 +33,67 @@ public class SlotBasedChangeSetProcessorTestCase extends SlotBasedChangeSetTestC
     }
     
     public void testDeleteObject() throws Exception {
-//        runChangeSetTest(new ChangeSetTest() {
-//            public void applyChanges() {
-//                Item item = (Item) retrieveOnlyInstance(Item.class);
-//                db().delete(item);
-//            }
-//            public void runAssertions() {
-//                Item item = (Item) retrieveOnlyInstance(Item.class);
-//                Assert.areEqual(-1, item.intValue);
-//            }
-//        });
-        
+        runChangeSetTest(new ChangeSetTest() {
+            public void applyChanges() {
+                db().delete(persistentItem());
+            }
+            public void runAssertions() {
+                ObjectSet<Item> objectSet = db().query(Item.class);
+                Assert.areEqual(0, objectSet.size());
+            }
+        });
     }
+    
+    public void testNewObject() throws Exception {
+        runChangeSetTest(new ChangeSetTest() {
+            public void applyChanges() {
+                db().store(new Item("foo43", 43));
+            }
+            public void runAssertions() {
+                ObjectSet<Item> objectSet = db().query(Item.class);
+                Assert.areEqual(2, objectSet.size());
+            }
+        });
+    }
+    
+    /**
+     * FIXME: References to existing objects need to 
+     *        be converted to UUIDs 
+     */
+    public void _testReferenceExistingOnNewObject() throws Exception {
+        runChangeSetTest(new ChangeSetTest() {
+            public void applyChanges() {
+                Item newItem = new Item("foo43", 43);
+                newItem.itemValue = persistentItem();
+                db().store(newItem);
+            }
+            public void runAssertions() {
+                ObjectSet<Item> objectSet = db().query(Item.class);
+                Assert.areEqual(2, objectSet.size());
+            }
+        });
+    }
+    
+    /**
+     * FIXME: References to existing objects need to 
+     *        be converted to UUIDs 
+     */
+    public void _testReferenceExistingOnUpdate() throws Exception {
+        runChangeSetTest(new ChangeSetTest() {
+            public void applyChanges() {
+                Item existingItem = persistentItem();
+                Item newItem = new Item("foo43", 43);
+                db().store(newItem);
+                newItem.itemValue = existingItem; 
+                db().store(newItem);
+            }
+            public void runAssertions() {
+                ObjectSet<Item> objectSet = db().query(Item.class);
+                Assert.areEqual(2, objectSet.size());
+            }
+        });
+    }
+
     
     static interface ChangeSetTest {
         public void applyChanges();
