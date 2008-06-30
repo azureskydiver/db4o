@@ -1,0 +1,21 @@
+package boxing;
+
+class TernaryOpBoxing {
+
+	public static void wrapperType(boolean flag) {
+		Integer i = new Integer(flag ? (new Integer(10)).intValue() : 42);
+	}
+
+	public static void primitiveType(boolean flag) {
+		int i = flag ? (new Integer(10)).intValue() : 42;
+	}
+
+	public static void wrapperType(boolean flag) {
+		Integer i = new Integer(flag ? 42 : (new Integer(10)).intValue());
+	}
+
+	public static void primitiveType(boolean flag) {
+		int i = flag ? 42 : (new Integer(10)).intValue();
+	}
+
+}

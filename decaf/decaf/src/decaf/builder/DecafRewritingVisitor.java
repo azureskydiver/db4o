@@ -275,6 +275,11 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		}
 		
 	}
+	
+	@Override
+	public boolean visit(PackageDeclaration node) {
+		return false;
+	}
 
 	private void eraseMethodDeclaration(MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
 		eraseReturnType(node, originalMethodDeclaration);

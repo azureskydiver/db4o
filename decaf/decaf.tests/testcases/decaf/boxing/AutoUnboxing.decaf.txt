@@ -1,3 +1,5 @@
+package boxing;
+
 class AutoUnboxing {
 
 	public int foo(Integer i) {
@@ -28,14 +30,6 @@ class AutoUnboxing {
 		return c.charValue();
 	}
 	
-	public Integer identity(Integer i) {
-		return i;
-	}
-	
-	public void unboxIdentity() {
-		int i = (identity(new Integer(42))).intValue();
-	}
-
 	public void unboxCastObject() {
 		Object obj = new Integer(42);
 		int i = ((Integer) obj).intValue();
