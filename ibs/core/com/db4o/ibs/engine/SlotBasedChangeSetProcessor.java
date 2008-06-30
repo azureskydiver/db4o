@@ -37,6 +37,14 @@ public class SlotBasedChangeSetProcessor implements ChangeSetProcessor{
     }
     
     public void apply(UpdateChange change){
+        Object obj = activatedObjectByUUID(change);
+        for(FieldChange fieldChange : change.fields()){
+            mappedFieldMetadata(fieldChange.field()).set(obj, fieldChange.currentValue());
+        }
+        _container.store(obj);
+    }
+
+    private Object activatedObjectByUUID(SlotBasedChange change) {
         Object obj = _container.getByUUID(change.uuid());
         if(obj == null){
             
@@ -50,18 +58,16 @@ public class SlotBasedChangeSetProcessor implements ChangeSetProcessor{
         if(! _container.isActive(obj)){
             _container.activate(obj);
         }
-        for(FieldChange fieldChange : change.fields()){
-            mappedFieldMetadata(fieldChange.field()).set(obj, fieldChange.currentValue());
-        }
-        _container.store(obj);
+        return obj;
     }
     
     public void apply(DeleteChange change){
-        throw new NotImplementedException();
+        Object obj = activatedObjectByUUID(change);
+        _container.delete(obj);
     }
     
     public void apply(NewObjectChange change){
-        throw new NotImplementedException();
+        _container.store(change.object());
     }
     
     private FieldMetadata mappedFieldMetadata(FieldMetadata fieldMetadata){
