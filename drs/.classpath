@@ -5,7 +5,6 @@
 	<classpathentry kind="src" path="src/tutorial"/>
 	<classpathentry kind="src" path="src/misc"/>
 	<classpathentry kind="src" path="src/jira"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/oracle/ojdbc14.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-2.7.6.jar"/>
 	<classpathentry kind="lib" path="lib/asm.jar"/>
@@ -32,5 +31,6 @@
 	<classpathentry kind="lib" path="lib/derby/derby.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk5"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
