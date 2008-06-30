@@ -102,13 +102,13 @@ public class ObjectViewer extends CTabFolder
 	}
 	
 	private void saveEditedTab(boolean updateTree){
-		if(isModified()){
-			if(showMessage(SAVE_CHANGES_MESSAGE)) {
+		if(isModified()){ // Commented for OMJ-126
+//			if(showMessage(SAVE_CHANGES_MESSAGE)) {
 				updateTheQueryListonSaveClick();
-			}
+		/*	}
 			else {
 				clearModifiedlist();
-			}
+			}*/
 			((QueryResultTab)childModifier).modifyObjectViewerSaveButton(false);
 		}
 	}
@@ -133,7 +133,7 @@ public class ObjectViewer extends CTabFolder
 		tabItem.addDisposeListener(new DisposeListener(){
 
 			public void widgetDisposed(DisposeEvent e) {
-				saveEditedTab(false);			
+				saveEditedTab(false);
 			}
 			
 		});
