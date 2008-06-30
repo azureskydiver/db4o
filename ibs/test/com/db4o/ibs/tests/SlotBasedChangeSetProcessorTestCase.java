@@ -31,6 +31,20 @@ public class SlotBasedChangeSetProcessorTestCase extends SlotBasedChangeSetTestC
         });
     }
     
+    public void testDeleteObject() throws Exception {
+//        runChangeSetTest(new ChangeSetTest() {
+//            public void applyChanges() {
+//                Item item = (Item) retrieveOnlyInstance(Item.class);
+//                db().delete(item);
+//            }
+//            public void runAssertions() {
+//                Item item = (Item) retrieveOnlyInstance(Item.class);
+//                Assert.areEqual(-1, item.intValue);
+//            }
+//        });
+        
+    }
+    
     static interface ChangeSetTest {
         public void applyChanges();
         public void runAssertions();

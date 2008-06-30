@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.db4o.ext.*;
 import com.db4o.ibs.engine.*;
+import com.db4o.ibs.tests.SlotBasedChangeSetTestCaseBase.*;
 
 import db4ounit.*;
 
@@ -18,7 +19,7 @@ public class SlotBasedChangeSetBuilderTestCase extends SlotBasedChangeSetTestCas
 		subItem.integerValue = new Integer(42);
 		commitItem(subItem);
 		
-		assertSingleFieldChange("intValue", new Integer(-1));
+		assertSingleFieldChange(uuidFor(subItem), "intValue", new Integer(-1));
 	}
 	
 	public void testUpdateToSubClassField() {
@@ -28,64 +29,70 @@ public class SlotBasedChangeSetBuilderTestCase extends SlotBasedChangeSetTestCas
 		
 		subItem.integerValue = new Integer(21);
 		commitItem(subItem);
-		assertSingleFieldChange("integerValue", new Integer(21));
+		assertSingleFieldChange(uuidFor(subItem), "integerValue", new Integer(21));
 	}
 
 	public void testNoUpdates() {
-		commitItem();
+	    Item item = persistentItem();
+		commitItem(item);
 		Assert.areEqual(0, changeSets().size());
 	}
 	
 	public void testUpdateOnlyIntField() {
+	    Item item = persistentItem();
 		item.intValue = -1;
-		commitItem();
-		assertSingleFieldChange("intValue", new Integer(-1));
+		commitItem(item);
+		assertSingleItemFieldChange("intValue", new Integer(-1));
 	}
 	
 	public void testUpdateOnlyStringField() {
+	    Item item = persistentItem();
 		item.stringValue = "bar";
-		commitItem();
-		assertSingleFieldChange("stringValue", "bar");
+		commitItem(item);
+		assertSingleItemFieldChange("stringValue", "bar");
 	}
 	
 	public void testUpdateStringAndIntFields() {
+	    Item item = persistentItem();
 		item.stringValue = "bar";
 		item.intValue = -1;
-		commitItem();
-		assertFieldChanges(
+		commitItem(item);
+		assertFieldChanges(uuidFor(item),
 				new FieldChangeExpectation("intValue", -1),
 				new FieldChangeExpectation("stringValue", "bar"));
 	}
 	
 	public void testReferenceFieldChangeFromNull() {
-		
+	    Item item = persistentItem();
 		final Item itemValue = new Item("value", 42);
 		commitItem(itemValue);
 		
 		changeSets().clear();
-
-		item.itemValue = itemValue;
-		commitItem();
 		
-		assertSingleFieldChange("itemValue", itemValue);
+		item.itemValue = itemValue;
+		commitItem(item);
+		
+		assertSingleFieldChange(uuidFor(item),"itemValue", itemValue);
+		 
 	}
 	
 	public void testReferenceFieldChangeToNull() {
-		
+	    Item item = persistentItem();		
 		item.itemValue = new Item("value", 42);
-		commitItem();
+		commitItem(item);
 		
 		changeSets().clear();
 		
 		item.itemValue = null;
-		commitItem();
+		commitItem(item);
 		
-		assertSingleFieldChange("itemValue", null);
+		assertSingleFieldChange(uuidFor(item),"itemValue", null);
 	}
 	
 	public void testReferenceFieldChange() {
-		item.itemValue = new Item("value", 42);
-		commitItem();
+	    Item item = persistentItem();
+	    item.itemValue = new Item("value", 42);
+		commitItem(item);
 		
 		final Item newItem = new Item("newItem", 42);
 		commitItem(newItem);
@@ -93,23 +100,23 @@ public class SlotBasedChangeSetBuilderTestCase extends SlotBasedChangeSetTestCas
 		changeSets().clear();
 		
 		item.itemValue = newItem;
-		commitItem();
-		assertSingleFieldChange("itemValue", newItem);
+		commitItem(item);
+		assertSingleFieldChange(uuidFor(item), "itemValue", newItem);
 	}
 	
 	public void testReferenceFieldDoesntChange() {
-		
+		Item item = persistentItem();
 		item.itemValue = new Item("value", 42);
-		commitItem();
+		commitItem(item);
 		
 		changeSets().clear();
 		
-		commitItem();
+		commitItem(item);
 		
 		Assert.areEqual(0, changeSets().size());
 	}
 	
-	public void testNewObject() {
+    public void testNewObject() {
 		final Item newItem = new Item("value", 42);
 		commitItem(newItem);
 		
@@ -121,6 +128,7 @@ public class SlotBasedChangeSetBuilderTestCase extends SlotBasedChangeSetTestCas
 	}
 	
 	public void testDeletedObject() {
+	    Item item = persistentItem();
 		final Db4oUUID expectedUUID = uuidFor(item);
 		db().delete(item);
 		db().commit();
@@ -132,8 +140,8 @@ public class SlotBasedChangeSetBuilderTestCase extends SlotBasedChangeSetTestCas
 		assertAreEqual(expectedUUID, change.uuid());
 	}
 	
-	private void assertFieldChanges(FieldChangeExpectation... expected) {
-		final UpdateChange update = assertSingleUpdateChange();
+	private void assertFieldChanges(Db4oUUID originalUUID, FieldChangeExpectation... expected) {
+		final UpdateChange update = assertSingleUpdateChange(originalUUID);
 		final ArrayList<FieldChange> actual = sortedByName(update.fields());
 		Assert.areEqual(expected.length, actual.size());
 		for (int i = 0; i < expected.length; i++) {
@@ -165,18 +173,21 @@ public class SlotBasedChangeSetBuilderTestCase extends SlotBasedChangeSetTestCas
 			Assert.areEqual(_expectedValue, change.currentValue());
 		}
 	}
-
-	private void assertSingleFieldChange(final String expectedFieldName, final Object expectedValue) {
-		assertFieldChanges(new FieldChangeExpectation(expectedFieldName, expectedValue));
+	
+	private void assertSingleItemFieldChange(final String expectedFieldName, final Object expectedValue) {
+	    assertSingleFieldChange(uuidFor(persistentItem()), expectedFieldName, expectedValue);
 	}
 
-	private UpdateChange assertSingleUpdateChange() {
+	private void assertSingleFieldChange(Db4oUUID originalUUID, final String expectedFieldName, final Object expectedValue) {
+		assertFieldChanges(originalUUID, new FieldChangeExpectation(expectedFieldName, expectedValue));
+	}
+
+	private UpdateChange assertSingleUpdateChange(Db4oUUID originalUUID) {
 		final SlotBasedChangeSet changeSet = assertSingleChangeSet();
 		Assert.areEqual(1, changeSet.changes().size());
 		
 		final UpdateChange update = (UpdateChange) changeSet.changes().get(0);
-		assertAreEqual(uuidFor(item), update.uuid());
-		
+		assertAreEqual(originalUUID, update.uuid());
 		return update;
 	}
 

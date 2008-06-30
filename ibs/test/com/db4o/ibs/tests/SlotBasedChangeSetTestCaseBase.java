@@ -42,11 +42,9 @@ public abstract class SlotBasedChangeSetTestCaseBase extends AbstractDb4oTestCas
     
     final MockChangeSetListener listener = new MockChangeSetListener();
     
-    final Item item = new Item("foo", 42);
-    
     @Override
     protected void db4oSetupAfterStore() throws Exception {
-        commitItem();
+        commitItem(new Item("foo", 42));
         setUpChangeSetPublisher();
     }
     
@@ -55,12 +53,12 @@ public abstract class SlotBasedChangeSetTestCaseBase extends AbstractDb4oTestCas
         config.generateUUIDs(ConfigScope.GLOBALLY);
     }
 
-    protected void commitItem() {
-        commitItem(item);
-    }
-    
     protected void setUpChangeSetPublisher() {
         new ChangeSetPublisher(new SlotBasedChangeSetEngine(), listener).monitor(db());
+    }
+    
+    protected Item persistentItem() {
+        return (Item)retrieveOnlyInstance(Item.class);
     }
 
     protected void commitItem(Item i) {
