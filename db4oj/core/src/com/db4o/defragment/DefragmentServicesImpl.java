@@ -16,6 +16,7 @@ import com.db4o.internal.handlers.*;
 import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
+import com.db4o.io.*;
 
 /**
  * @exclude
@@ -62,7 +63,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		Config4Impl originalConfig =  (Config4Impl) defragConfig.db4oConfig();
 		Configuration sourceConfig=(Configuration) originalConfig.deepClone(null);
 		sourceConfig.weakReferences(false);
-		sourceConfig.flushFileBuffers(false);
+		sourceConfig.io(new NonFlushingIoAdapter(sourceConfig.io()));
 		sourceConfig.readOnly(defragConfig.readOnly());
 		_sourceDb=(LocalObjectContainer)Db4o.openFile(sourceConfig,defragConfig.tempPath()).ext();
 		_sourceDb.showInternalClasses(true);

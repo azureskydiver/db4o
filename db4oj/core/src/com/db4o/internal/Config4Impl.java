@@ -881,7 +881,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _config.getAsBoolean(WEAK_REFERENCES_KEY);
 	}
 
-	IoAdapter ioAdapter() {
+	public IoAdapter io() {
 		return (IoAdapter)_config.get(IOADAPTER_KEY);
 	}
 	
