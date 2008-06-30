@@ -79,8 +79,12 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHold
     }
 
     public void defragment(DefragmentContext context) {
-        // TODO Auto-generated method stub
-
+        TypeHandler4 handler = elementTypeHandler(context, null);
+        int elementCount = context.readInt(); 
+        for (int i = elementCount; i > 0; i--) {
+            context.defragment(handler);
+            context.defragment(handler);
+        }
     }
     
     public final void cascadeActivation(ActivationContext4 context) {
