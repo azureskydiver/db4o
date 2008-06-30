@@ -14,10 +14,27 @@ public class DecafConfiguration {
 		this.mapping = mapping;
 	}
 	
+	public Iterable<String> mappedTypeKeys() {
+		return mapping.keySet();
+	}
+
+	public Iterable<String> mappedTypeValues() {
+		return mapping.values();
+	}
+
 	public String typeNameMapping(String typeName) {
 		return mapping.get(typeName);
 	}
-	
+
+	public String reverseTypeNameMapping(String typeName) {
+		for (Map.Entry<String,String> entry : mapping.entrySet()) {
+			if(entry.getValue().equals(typeName)) {
+				return entry.getKey();
+			}
+		}
+		return null;
+	}
+
 	private static Map<String, String> defaultMapping() {
 		Map<String, String> mapping = new HashMap<String, String>();
 		mapping.put(Map.class.getName(), "com.db4o.foundation.Map4");

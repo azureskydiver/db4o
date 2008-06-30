@@ -4,6 +4,8 @@ import java.io.*;
 
 import org.apache.tools.ant.*;
 
+import decaf.builder.*;
+
 /**
  * Checks that two jars have the same API surface (same public types with same public methods).
  */
@@ -27,7 +29,7 @@ public class ApiDiffTask extends Task {
 		
 		try {
 			final FailureHandler failureHandler = new FailureHandler();
-			new ApiDiff(failureHandler, _from, _to).run();
+			new ApiDiff(failureHandler, _from, _to, new DecafConfiguration()).run();
 			if (failureHandler.failures() > 0) {
 				throw new BuildException("API surfaces do not match. "  + format(failureHandler) + " been reported.", getLocation());
 			}
