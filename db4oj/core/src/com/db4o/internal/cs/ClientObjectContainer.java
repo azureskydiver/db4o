@@ -199,9 +199,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return new ClientTransaction(this, parentTransaction, referenceSystem);
 	}
 
-	public boolean createClassMetadata(ClassMetadata a_yapClass, ReflectClass a_class,
-			ClassMetadata a_superYapClass) {
-		write(Msg.CREATE_CLASS.getWriterForString(systemTransaction(), a_class.getName()));
+	public boolean createClassMetadata(ClassMetadata clazz, ReflectClass claxx, ClassMetadata superClazz) {		
+		write(Msg.CREATE_CLASS.getWriterForString(systemTransaction(), config().resolveAliasRuntimeName(claxx.getName())));
 		Msg resp = getResponse();
 		if (resp == null) {
 			return false;
@@ -209,13 +208,13 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		
 		if (resp.equals(Msg.FAILED)) {
 			// if the class can not be created on the server, send class meta to the server.
-			sendClassMeta(a_class);
+			sendClassMeta(claxx);
 			resp = getResponse();
 		}
 		
 		if (resp.equals(Msg.FAILED)) {
 			if (configImpl().exceptionsOnNotStorable()) {
-				throw new ObjectNotStorableException(a_class);
+				throw new ObjectNotStorableException(claxx);
 			}
 			return false;
 		}
@@ -229,13 +228,13 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			return false;
 		}
 		bytes.setTransaction(systemTransaction());
-		if (!super.createClassMetadata(a_yapClass, a_class, a_superYapClass)) {
+		if (!super.createClassMetadata(clazz, claxx, superClazz)) {
 			return false;
 		}
-		a_yapClass.setID(message.getId());
-		a_yapClass.readName1(systemTransaction(), bytes);
-		classCollection().addClassMetadata(a_yapClass);
-		classCollection().readClassMetadata(a_yapClass, a_class);
+		clazz.setID(message.getId());
+		clazz.readName1(systemTransaction(), bytes);
+		classCollection().addClassMetadata(clazz);
+		classCollection().readClassMetadata(clazz, claxx);
 		return true;
 	}
 
@@ -360,18 +359,18 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return i_socket != null;
 	}
 
-	public ClassMetadata classMetadataForId(int a_id) {
-		if(a_id == 0) {
+	public ClassMetadata classMetadataForId(int clazzId) {
+		if(clazzId == 0) {
 			return null;
 		}
-		ClassMetadata yc = super.classMetadataForId(a_id);
+		ClassMetadata yc = super.classMetadataForId(clazzId);
 		if (yc != null) {
 			return yc;
 		}
-		MsgD msg = Msg.CLASS_NAME_FOR_ID.getWriterForInt(systemTransaction(), a_id);
+		MsgD msg = Msg.CLASS_NAME_FOR_ID.getWriterForInt(systemTransaction(), clazzId);
 		write(msg);
 		MsgD message = (MsgD) expectedResponse(Msg.CLASS_NAME_FOR_ID);
-		String className = message.readString();
+		String className = config().resolveAliasStoredName(message.readString());
 		if (className != null && className.length() > 0) {
 			ReflectClass claxx = reflector().forName(className);
 			if (claxx != null) {
