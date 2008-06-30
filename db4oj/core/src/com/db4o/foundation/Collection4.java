@@ -2,9 +2,7 @@
 
 package com.db4o.foundation;
 
-import java.util.*;
-
-import com.db4o.types.Unversioned;
+import com.db4o.types.*;
 
 /**
  * Fast linked list for all usecases.
