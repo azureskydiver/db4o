@@ -19,8 +19,8 @@ public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 		_transaction = transaction;
 	}
 
-	public void added(ObjectInfo object) {
-		_changes.add(new NewObjectChange(object));
+	public void added(ObjectInfo objectInfo) {
+		_changes.add(new NewObjectChange(objectInfo));
 	}
 
 	public ChangeSet build() {
@@ -55,6 +55,9 @@ public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 			oldSlotContext.seek(initialOffset);
 			
 			final FieldMetadata field = (FieldMetadata) fields.current();
+			if(field instanceof VirtualFieldMetadata){
+			    continue;
+			}
 			final Object currentFieldValue = field.getOn(_transaction, object.getObject());
 			
 			if (fieldValueHasChanged(oldSlotContext, classMetadata, field, currentFieldValue)) {

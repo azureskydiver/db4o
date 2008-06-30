@@ -3,46 +3,11 @@ package com.db4o.ibs.tests;
 import java.util.*;
 
 import com.db4o.ext.*;
-import com.db4o.ibs.*;
 import com.db4o.ibs.engine.*;
-import com.db4o.ibs.tests.mocking.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
 
-public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
-	
-	static class Item {
-		
-		public String stringValue;
-		public int intValue;
-		public Item itemValue;
-		
-		public Item(String stringValue_, int intValue_) {
-			stringValue = stringValue_;
-			intValue = intValue_;
-		}
-	}
-	
-	static class SubItem extends Item {
-		
-		public Integer integerValue;
-		
-		public SubItem(String stringValue_, int intValue_) {
-			super(stringValue_, intValue_);
-			integerValue = new Integer(intValue_);
-		}		
-	}
-	
-	final MockChangeSetListener listener = new MockChangeSetListener();
-	
-	final Item item = new Item("foo", 42);
-	
-	@Override
-	protected void db4oSetupAfterStore() throws Exception {
-		commitItem();
-		setUpChangeSetPublisher();
-	}
+public class SlotBasedChangeSetBuilderTestCase extends SlotBasedChangeSetTestCaseBase {
 	
 	public void testUpdateToInheritedField() {
 		final SubItem subItem = new SubItem("sub", 42);
@@ -152,7 +117,7 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(1, changeSet.changes().size());
 		
 		final NewObjectChange change = (NewObjectChange)changeSet.changes().get(0);
-		Assert.areEqual(uuidFor(newItem), change.object().getUUID());
+		assertAreEqual(uuidFor(newItem), change.uuid());
 	}
 	
 	public void testDeletedObject() {
@@ -164,13 +129,9 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(1, changeSet.changes().size());
 		
 		final DeleteChange change = (DeleteChange)changeSet.changes().get(0);
-		Assert.areEqual(expectedUUID, change.object().getUUID());
+		assertAreEqual(expectedUUID, change.uuid());
 	}
 	
-	private List<ChangeSet> changeSets() {
-		return listener.changeSets();
-	}
-			
 	private void assertFieldChanges(FieldChangeExpectation... expected) {
 		final UpdateChange update = assertSingleUpdateChange();
 		final ArrayList<FieldChange> actual = sortedByName(update.fields());
@@ -214,7 +175,7 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(1, changeSet.changes().size());
 		
 		final UpdateChange update = (UpdateChange) changeSet.changes().get(0);
-		Assert.areEqual(uuidFor(item), update.uuid());
+		assertAreEqual(uuidFor(item), update.uuid());
 		
 		return update;
 	}
@@ -226,10 +187,6 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 		return changeSet;
 	}
 
-	private void setUpChangeSetPublisher() {
-		new ChangeSetPublisher(new SlotBasedChangeSetEngine(), listener).monitor(db());
-	}
-
 	private Db4oUUID uuidFor(final Object object) {
 		return objectInfoFor(object).getUUID();
 	}
@@ -238,12 +195,5 @@ public class SlotBasedChangeSetBuilderTestCase extends AbstractDb4oTestCase {
 		return db().ext().getObjectInfo(object);
 	}
 	
-	private void commitItem() {
-		commitItem(item);
-	}
-
-	private void commitItem(Item i) {
-		db().store(i);
-		db().commit();
-	}
+	
 }

@@ -9,6 +9,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 			ChangeSetPublisherTestCase.class,
 			SlotBasedChangeSetBuilderTestCase.class,
+			SlotBasedChangeSetProcessorTestCase.class,
 		};
 	}
 

@@ -7,17 +7,14 @@ import com.db4o.ext.*;
 
 public class SlotBasedChange {
 	
-	private final ObjectInfo _object;
+	private final Db4oUUID _uuid;
 	
-	public SlotBasedChange(ObjectInfo object) {
-		_object = object;
+	public SlotBasedChange(ObjectInfo objectInfo) {
+		_uuid = objectInfo.getUUID();
 	}
 	
-	public ObjectInfo object() {
-		return _object;
+	public Db4oUUID uuid() {
+		return _uuid;
 	}
 
-	public Db4oUUID uuid() {
-		return _object.getUUID();
-	}
 }
