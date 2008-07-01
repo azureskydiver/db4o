@@ -10,6 +10,9 @@
 	 
 	<property name="dir.workspace" location="/Users/rodrigob/workspaces/db4o" />
 	<property name="eclipse.home" location="/Users/rodrigob/java/eclipse" />
+	<property name="asm.home" location="/work/lib/java/bytecode/asm-3.1" />
+	<property name="file.compiler.jdk1.3" location="/usr/java/jdk/jdk1.3/bin/javac" />
+	<property name="file.jvm.jdk1.1" location="/usr/java/jdk/jdk1.4/bin/java" />
 	-->
 	<property name="build.dir" location="build" />
 	
@@ -85,10 +88,6 @@
 			<fileset dir="${dir.workspace}/db4oj/bin">
 				<include name="**/*.class" />
 			</fileset>
-			<fileset dir="${dir.workspace}/ibs/bin">
-				<include name="**/*.class" />
-				<exclude name="**/tests/**/*" />
-			</fileset>
 			<!--
 			<fileset dir="${dir.workspace}/db4oj.tests/bin">
 				<include name="**/*.class" />
@@ -105,7 +104,14 @@
 	<target name="decaf-core" depends="decaf-workspace, install-decaf-plugin">
 
 		<decaf workspace="${build.dir}/workspace" resource="db4o" />
-		
+
+		<decaf workspace="${build.dir}/workspace" resource="ibs">
+			<args>
+				<arg value="-projectReference" />
+				<arg value="db4o" />
+			</args>
+		</decaf>
+
 	</target>
 	
 	<target name="decaf-tests" depends="decaf-core">
@@ -148,12 +154,6 @@
 			</fileset>
 		</copy>
 
-		<copy todir="${build.dir}/workspace/db4o/src" overwrite="false">
-			<fileset dir="${dir.workspace}/ibs/core">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-
 		<prepare-workspace dir="${build.dir}/workspace" project="db4o.tests">
 			<sources>
 				<fileset dir="${dir.workspace}/db4oj.tests">
@@ -164,6 +164,14 @@
 			
 		<copy todir="${build.dir}/workspace/db4o.tests" overwrite="true">
 			<fileset dir="${dir.workspace}/db4ojdk1.2/test">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+
+		<!-- prepare-workspace-dir assumes src folder in source project -->
+		<mkdir dir="${build.dir}/workspace/ibs/src" />
+		<copy todir="${build.dir}/workspace/ibs/src" overwrite="true">
+			<fileset dir="${dir.workspace}/ibs/core">
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
