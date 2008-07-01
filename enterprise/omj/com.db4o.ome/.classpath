@@ -16,7 +16,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/webservices/wstx-asl-3.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/webservices/XmlSchema-1.3.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.nebula.widgets.cdatetime.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/db4o-7.3.46.10480-java5.jar"/>
+	<classpathentry kind="lib" path="lib/db4o-7.4.50.10695-java5.jar" sourcepath="/db4oj"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="bin"/>
