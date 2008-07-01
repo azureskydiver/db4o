@@ -9,14 +9,14 @@ import com.db4o.ext.*;
 
 public class UpdateChange extends SlotBasedChange {
 
-	private final List<FieldChange> _fields;
+	private final List<FieldChange> _fieldChanges;
 
-	public UpdateChange(ObjectInfo object, List<FieldChange> fields) {
+	public UpdateChange(ObjectInfo object, List<FieldChange> fieldChanges) {
 		super(object);
-		_fields = Collections.unmodifiableList(fields);
+		_fieldChanges = Collections.unmodifiableList(fieldChanges);
 	}
 
-	public List<FieldChange> fields() {
-		return _fields;
+	public List<FieldChange> fieldChanges() {
+		return _fieldChanges;
 	}
 }

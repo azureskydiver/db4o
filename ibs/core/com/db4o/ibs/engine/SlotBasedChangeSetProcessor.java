@@ -38,7 +38,7 @@ public class SlotBasedChangeSetProcessor implements ChangeSetProcessor{
     
     public void apply(UpdateChange change){
         Object obj = activatedObjectByUUID(change);
-        for(FieldChange fieldChange : change.fields()){
+        for(FieldChange fieldChange : change.fieldChanges()){
             mappedFieldMetadata(fieldChange.field()).set(obj, fieldChange.currentValue());
         }
         _container.store(obj);
