@@ -97,6 +97,9 @@ public class Handlers4 {
     }
     
     public static ReflectClass baseType(ReflectClass clazz){
+        if(clazz == null){
+            return null;
+        }
         if(clazz.isArray()){
             return baseType(clazz.getComponentType());
         }
