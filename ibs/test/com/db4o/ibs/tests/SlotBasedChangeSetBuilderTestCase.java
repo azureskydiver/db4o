@@ -142,7 +142,7 @@ public class SlotBasedChangeSetBuilderTestCase extends SlotBasedChangeSetTestCas
 	
 	private void assertFieldChanges(Db4oUUID originalUUID, FieldChangeExpectation... expected) {
 		final UpdateChange update = assertSingleUpdateChange(originalUUID);
-		final ArrayList<FieldChange> actual = sortedByName(update.fields());
+		final ArrayList<FieldChange> actual = sortedByName(update.fieldChanges());
 		Assert.areEqual(expected.length, actual.size());
 		for (int i = 0; i < expected.length; i++) {
 			expected[i].check(actual.get(i));
