@@ -4,7 +4,8 @@ import sharpen.ui.tests.*;
 
 public class DecafTestResource extends TestCaseResource {
 
-	private static final String PATH_SUFFIX = ".decaf.txt";
+	private static final String PATH_SUFFIX_DECAF = ".decaf";
+	private static final String PATH_SUFFIX_TXT = ".txt";
 	private final TargetPlatform _targetPlatform;
 	
 	public DecafTestResource(String originalPath) {
@@ -18,15 +19,12 @@ public class DecafTestResource extends TestCaseResource {
 
 	@Override
 	public String packageName() {
-		return !_targetPlatform.hasFileIDPart() ? super.packageName() : super.packageName() + "." + _targetPlatform.fileIDPart();
+		return _targetPlatform.appendFileIDPart(super.packageName(), '.');
 	}
 	
 	@Override
 	protected String expectedPathSuffix() {
-		if(!_targetPlatform.hasFileIDPart()) {
-			return PATH_SUFFIX;
-		}
-		return "." + _targetPlatform.fileIDPart() + PATH_SUFFIX;
+		return _targetPlatform.appendFileIDPart(PATH_SUFFIX_DECAF, '.') + PATH_SUFFIX_TXT;
 	}
 
 }

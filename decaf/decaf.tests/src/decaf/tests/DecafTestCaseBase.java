@@ -49,7 +49,7 @@ public abstract class DecafTestCaseBase extends TestCase {
 		DecafTestResource resource = new DecafTestResource(resourcePath(resourceName), targetPlatform);
 		ICompilationUnit cu = createCompilationUnit(resource);
 	
-		IFile decafFile = decafFileFor(cu.getResource(), targetPlatform.fileIDPart());
+		IFile decafFile = decafFileFor(cu.getResource(), targetPlatform);
 	
 		FileRewriter.rewriteFile(DecafRewriter.rewrite(cu, null, targetPlatform.config()), decafFile.getFullPath());
 	
@@ -69,18 +69,21 @@ public abstract class DecafTestCaseBase extends TestCase {
 		return null;
 	}
 	
-	private IFile decafFileFor(IResource originalFile, String fileIDPart) throws CoreException {
-		String decafFolder = "decaf";
-		IFolder targetFolder = _project.getProject().getFolder(decafFolder);
-		if(!targetFolder.exists()) {
-			targetFolder = _project.createFolder(decafFolder);
-		}
-		if(fileIDPart != null) {
-			targetFolder = _project.createFolder(decafFolder + "/" + fileIDPart);
-		}
+	private IFile decafFileFor(IResource originalFile, TargetPlatform targetPlatform) throws CoreException {
+		final String decafFolderName = "decaf";
+		createFolder(decafFolderName);
+		IFolder targetFolder = createFolder(targetPlatform.appendFileIDPart(decafFolderName, '/'));
 		IFile actualFile = targetFolder.getFile("decaf.txt");
 		originalFile.copy(actualFile.getFullPath(), true, null);
 		return actualFile;
+	}
+
+	private IFolder createFolder(String folderPath) throws CoreException {
+		IFolder targetFolder = _project.getProject().getFolder(folderPath);
+		if(!targetFolder.exists()) {
+			targetFolder = _project.createFolder(folderPath);
+		}
+		return targetFolder;
 	}
 
 	private ICompilationUnit createCompilationUnit(DecafTestResource resource) throws CoreException, IOException {

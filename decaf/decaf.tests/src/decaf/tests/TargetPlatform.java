@@ -31,13 +31,10 @@ public enum TargetPlatform {
 		_fileIDPart = fileIDPart;
 	}
 	
-	public String fileIDPart() {
-		return _fileIDPart;
+	public String appendFileIDPart(String orig, char separator) {
+		return _fileIDPart == null ? orig : orig + separator + _fileIDPart;
 	}
 
 	public abstract DecafConfiguration config();
 	
-	public boolean hasFileIDPart() {
-		return _fileIDPart != null;
-	}
 }
