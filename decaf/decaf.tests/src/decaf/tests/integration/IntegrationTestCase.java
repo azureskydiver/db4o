@@ -25,7 +25,8 @@ public class IntegrationTestCase extends DecafTestCaseBase {
 	}
 	
 	@Override
-	protected void runResourceTestCase(String resourceName) throws Exception {
-		super.runResourceTestCase("integration/"  + resourceName);
+	protected String packagePath() {
+		return "integration";
 	}
+
 }

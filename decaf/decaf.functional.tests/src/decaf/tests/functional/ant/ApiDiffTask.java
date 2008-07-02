@@ -29,7 +29,7 @@ public class ApiDiffTask extends Task {
 		
 		try {
 			final FailureHandler failureHandler = new FailureHandler();
-			new ApiDiff(failureHandler, _from, _to, new DecafConfiguration()).run();
+			new ApiDiff(failureHandler, _from, _to, DecafConfiguration.forJDK11()).run();
 			if (failureHandler.failures() > 0) {
 				throw new BuildException("API surfaces do not match. "  + format(failureHandler) + " been reported.", getLocation());
 			}

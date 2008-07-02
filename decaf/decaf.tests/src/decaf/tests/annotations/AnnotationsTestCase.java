@@ -25,7 +25,7 @@ public class AnnotationsTestCase extends DecafTestCaseBase {
 	}
 	
 	@Override
-	protected void runResourceTestCase(String resourceName) throws Exception {
-		super.runResourceTestCase("annotations/"  + resourceName);
+	protected String packagePath() {
+		return "annotations";
 	}
 }

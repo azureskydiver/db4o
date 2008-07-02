@@ -79,7 +79,7 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 			throws CoreException, JavaModelException {
 		final ICompilationUnit element = compilationUnitFor(file);
 		final ICompilationUnit decaf = decafElementFor(element);
-		final ASTRewrite rewrite = DecafRewriter.rewrite(element, monitor);
+		final ASTRewrite rewrite = DecafRewriter.rewrite(element, monitor, DecafConfiguration.forJDK11());
 		
 		if (!PlatformUI.isWorkbenchRunning()) {
 			rewriteFile(decaf, rewrite, monitor);
