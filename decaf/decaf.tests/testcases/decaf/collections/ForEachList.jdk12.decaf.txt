@@ -1,0 +1,12 @@
+package collections;
+
+import java.util.*;
+
+class ForEachList {
+	void forEach(List list) {
+		for(Iterator listIter = list.iterator(); listIter.hasNext(); ) {
+			Object obj = listIter.next();
+			System.out.println(obj);
+		}
+	} 
+}

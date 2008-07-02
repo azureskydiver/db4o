@@ -11,7 +11,11 @@ public class CollectionsTestCase extends DecafTestCaseBase {
 	public void testSimpleListUsage() throws Exception {
 		runPlatformTestCase("SimpleListUsage");
 	}
-	
+
+	public void _testForEachList() throws Exception {
+		runResourceTestCase("ForEachList", TargetPlatform.JDK12);
+	}
+
 	@Override
 	protected String packagePath() {
 		return "collections";

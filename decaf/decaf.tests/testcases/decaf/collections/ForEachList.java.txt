@@ -1,0 +1,11 @@
+package collections;
+
+import java.util.*;
+
+class ForEachList {
+	void forEach(List<?> list) {
+		for(Object obj : list) {
+			System.out.println(obj);
+		}
+	} 
+}
