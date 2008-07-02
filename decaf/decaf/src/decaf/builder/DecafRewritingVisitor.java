@@ -11,8 +11,8 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	private final ASTRewrite rewrite;
 	private final DecafASTNodeBuilder builder;
 
-	public DecafRewritingVisitor(AST ast, ASTRewrite rewrite) {
-		builder = new DecafASTNodeBuilder(ast, new DecafConfiguration());
+	public DecafRewritingVisitor(AST ast, ASTRewrite rewrite, DecafConfiguration decafConfig) {
+		builder = new DecafASTNodeBuilder(ast, decafConfig);
 		this.rewrite = rewrite;
 	}
 

@@ -42,7 +42,8 @@ public class GenericsTestCase extends DecafTestCaseBase {
 	}
 	
 	@Override
-	protected void runResourceTestCase(String resourceName) throws Exception {
-		super.runResourceTestCase("generics/"  + resourceName);
+	protected String packagePath() {
+		return "generics";
 	}
+
 }

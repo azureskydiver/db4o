@@ -25,8 +25,8 @@ public class AutoBoxingTestCase extends DecafTestCaseBase {
 	}
 
 	@Override
-	protected void runResourceTestCase(String resourceName) throws Exception {
-		super.runResourceTestCase("boxing/" + resourceName);
+	protected String packagePath() {
+		return "boxing";
 	}
 
 }

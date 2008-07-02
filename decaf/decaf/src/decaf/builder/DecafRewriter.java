@@ -10,11 +10,11 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 public class DecafRewriter {
 
 	public static ASTRewrite rewrite(final ICompilationUnit element,
-			IProgressMonitor monitor) {
+			IProgressMonitor monitor, DecafConfiguration decafConfig) {
 		final CompilationUnit unit = parseCompilationUnit(monitor, element);
 		final AST ast = unit.getAST();
 		final ASTRewrite rewrite = ASTRewrite.create(ast);
-		unit.accept(new DecafRewritingVisitor(ast, rewrite));
+		unit.accept(new DecafRewritingVisitor(ast, rewrite, decafConfig));
 		return rewrite;
 	}
 
