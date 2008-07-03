@@ -12,7 +12,7 @@ public class CollectionsTestCase extends DecafTestCaseBase {
 		runPlatformTestCase("SimpleListUsage");
 	}
 
-	public void _testForEachList() throws Exception {
+	public void testForEachList() throws Exception {
 		runResourceTestCase("ForEachList", TargetPlatform.JDK12);
 	}
 

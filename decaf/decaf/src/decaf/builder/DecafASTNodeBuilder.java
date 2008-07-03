@@ -56,7 +56,9 @@ class DecafASTNodeBuilder {
 		ForStatement stmt = ast.newForStatement();
 		stmt.initializers().add(initializer);
 		stmt.setExpression(comparison);
-		stmt.updaters().add(updater);
+		if(updater != null) {
+			stmt.updaters().add(updater);
+		}
 		stmt.setBody(body);
 		return stmt;
 	}
@@ -188,8 +190,16 @@ class DecafASTNodeBuilder {
 		return originalMethodDefinitionFor(node.resolveBinding());
 	}
 	
-	public ParenthesizedExpression createParenthesizedCast(Expression node, final ITypeBinding type) {
+	public Expression createParenthesizedCast(Expression node, final ITypeBinding type) {
+		if(isObjectType(type)) {
+			return node;
+		}
 		return parenthesize(newCast(type, node));
+	}
+
+	// FIXME 
+	private boolean isObjectType(final ITypeBinding type) {
+		return type.getSuperclass() == null && !type.isArray();
 	}
 
 	public boolean isIgnored(BodyDeclaration node) {
