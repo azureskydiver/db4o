@@ -225,23 +225,23 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	public void endVisit(EnhancedForStatement node) {
 
 		final SingleVariableDeclaration variable = node.getParameter();
-		final Expression erasure = erasureFor(node.getExpression());
-		final Expression array = erasure != null ? erasure : node.getExpression();
-		
-		Expression arrayReference = null;
-		
-		VariableDeclarationStatement tempArrayVariable = null;
-		if (builder.isName(array)) {
-			arrayReference = array;
-		} else {
-			String tempArrayName = variable.getName() + "Array";
-			final ITypeBinding type = node.getExpression().resolveTypeBinding();
-			tempArrayVariable = builder.newVariableDeclarationStatement(
-				tempArrayName,
-				builder.newType(type),
-				safeMove(array));
-			arrayReference = builder.newSimpleName(tempArrayName);
+		Expression expression = node.getExpression();
+		final Expression erasure = erasureFor(expression);
+		final Expression array = erasure != null ? erasure : expression;
+
+		if(expression.resolveTypeBinding().isArray()) {
+			buildArrayEnhancedFor(node, variable, array);
 		}
+		else {
+			buildIterableEnhancedFor(node, variable, array);
+		}
+	}
+
+	private void buildArrayEnhancedFor(EnhancedForStatement node,
+			final SingleVariableDeclaration variable, final Expression array) {
+		Object[] tempVarDecl = createTempVarForEnhancedFor(array, node.getExpression().resolveTypeBinding(), variable.getName() + "Array");
+		Expression arrayReference = (Expression) tempVarDecl[0];
+		VariableDeclarationStatement tempArrayVariable = (VariableDeclarationStatement) tempVarDecl[1];
 
 		final String indexVariableName = variable.getName() + "Index";
 		VariableDeclarationExpression index = builder.newVariableDeclaration(
@@ -273,7 +273,50 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		} else {
 			replace(node, builder.newBlock(tempArrayVariable, stmt));
 		}
+	}
+
+	private void buildIterableEnhancedFor(EnhancedForStatement node, final SingleVariableDeclaration variable, final Expression iterable) {
+		Object[] tempVarDecl = createTempVarForEnhancedFor(iterable, node.getExpression().resolveTypeBinding(), variable.getName() + "Array");
+		Expression iterableReference = (Expression) tempVarDecl[0];
+		VariableDeclarationStatement tempIterableVariable = (VariableDeclarationStatement) tempVarDecl[1];
+
+		final String iterVariableName = variable.getName() + "Iter";
+		VariableDeclarationExpression iter = builder.newVariableDeclaration(
+				builder.newSimpleType(Iterator.class.getName()),
+				iterVariableName,
+				builder.newMethodInvocation(builder.clone(iterableReference), "iterator"));
+
+		Expression cmp = builder.newMethodInvocation(builder.newSimpleName(iterVariableName), "hasNext");
+
+		final ListRewrite statementsRewrite = rewrite.getListRewrite(node.getBody(), Block.STATEMENTS_PROPERTY);
+		statementsRewrite.insertFirst(
+				builder.newVariableDeclarationStatement(
+						variable.getName().toString(),
+						builder.clone(variable.getType()),
+						builder.createParenthesizedCast(builder.newMethodInvocation(builder.newSimpleName(iterVariableName), "next"), variable.getType().resolveBinding())), null);
+
+		final ForStatement stmt = builder.newForStatement(iter, cmp, null, move(node.getBody()));
+		if (null == tempIterableVariable) {
+			replace(node, stmt);
+		} else {
+			replace(node, builder.newBlock(tempIterableVariable, stmt));
+		}
+	}
+
+	private Object[] createTempVarForEnhancedFor(Expression sequence, ITypeBinding typeBinding, String name) {
+		Expression arrayReference = null;
 		
+		VariableDeclarationStatement tempArrayVariable = null;
+		if (builder.isName(sequence)) {
+			arrayReference = sequence;
+		} else {
+			tempArrayVariable = builder.newVariableDeclarationStatement(
+				name,
+				builder.newType(typeBinding),
+				safeMove(sequence));
+			arrayReference = builder.newSimpleName(name);
+		}
+		return new Object[]{ arrayReference, tempArrayVariable };
 	}
 	
 	@Override
@@ -371,7 +414,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		replace(node, createCastForErasure(node, type));
 	}
 
-	private ParenthesizedExpression createCastForErasure(Expression node, final ITypeBinding type) {
+	private Expression createCastForErasure(Expression node, final ITypeBinding type) {
 		return builder.createParenthesizedCast(move(node), type);
 	}
 

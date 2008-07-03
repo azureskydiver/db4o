@@ -4,9 +4,16 @@ import java.util.*;
 
 class ForEachList {
 	void forEach(List list) {
-		for(Iterator listIter = list.iterator(); listIter.hasNext(); ) {
-			Object obj = listIter.next();
+		for (java.util.Iterator objIter = list.iterator(); objIter.hasNext();) {
+			final Object obj = objIter.next();
 			System.out.println(obj);
+		}
+	} 
+
+	void forEachWithGenerics(List list) {
+		for (java.util.Iterator strIter = list.iterator(); strIter.hasNext();) {
+			final String str = ((String) strIter.next());
+			System.out.println(str);
 		}
 	} 
 }
