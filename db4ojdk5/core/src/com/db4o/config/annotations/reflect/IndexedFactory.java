@@ -10,6 +10,7 @@ import com.db4o.config.annotations.Indexed;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class IndexedFactory implements Db4oConfiguratorFactory {
 

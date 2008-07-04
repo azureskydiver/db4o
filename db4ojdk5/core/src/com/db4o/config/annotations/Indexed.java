@@ -14,6 +14,7 @@ import java.lang.annotation.Target;
  * {@code  @Indexed } annotation is used without any parameters and cannot
  * be used to disable indexing.
  *@see com.db4o.config.ObjectField#indexed(boolean)
+ * @decaf.ignore
  */
 @Documented
 @Target(ElementType.FIELD)

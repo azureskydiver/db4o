@@ -20,8 +20,7 @@ import com.db4o.ext.*;
  * for lazy instantiation. The objects in an ObjectSet are only instantiated
  * when they are actually being used by the application. 
  * @see ExtObjectSet for extended functionality.
- * @decaf.ignore.implements List 
- * @decaf.ignore.implements Iterator 
+ * @decaf.ignore.implements
  */
 public interface ObjectSet extends List, Iterator {
 	

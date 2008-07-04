@@ -4,6 +4,7 @@ package com.db4o.config.annotations.reflect;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class GeneratedVersionNumbersConfigurator extends Db4oConfigurator {
 

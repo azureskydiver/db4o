@@ -9,6 +9,7 @@ import com.db4o.config.annotations.UpdatedDepth;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class UpdatedDepthFactory implements Db4oConfiguratorFactory {
 

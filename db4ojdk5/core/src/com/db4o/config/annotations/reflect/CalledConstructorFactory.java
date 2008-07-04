@@ -9,6 +9,7 @@ import com.db4o.config.annotations.CalledConstructor;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class CalledConstructorFactory implements Db4oConfiguratorFactory {
 

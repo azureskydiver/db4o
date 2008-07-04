@@ -25,6 +25,7 @@ import com.db4o.ta.*;
  * @sharpen.partial
  * @sharpen.ignore.implements
  * @sharpen.ignore.extends
+ * @decaf.ignore
  */
 
 public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,

@@ -9,6 +9,7 @@ import com.db4o.config.annotations.PersistedStaticFieldValues;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class PersistedStaticFieldValuesFactory implements Db4oConfiguratorFactory {
 

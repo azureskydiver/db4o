@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 /**
  * generate version numbers for stored objects of this class.
  * @exclude
+ * @decaf.ignore
  */
 @Documented
 @Target(ElementType.TYPE)

@@ -4,6 +4,7 @@ package com.db4o.config.annotations.reflect;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class StoredTransientFieldsConfigurator extends Db4oConfigurator {
 	private String _className;

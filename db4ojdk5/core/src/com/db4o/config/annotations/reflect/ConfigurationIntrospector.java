@@ -22,6 +22,7 @@ import com.db4o.internal.*;
  * sets db4o configurations accordingly annotations
  * 
  * @exclude
+ * @decaf.ignore
  */
 public class ConfigurationIntrospector {
 

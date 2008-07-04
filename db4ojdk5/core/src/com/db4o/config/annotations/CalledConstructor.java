@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 /**
  * switches calling constructors on <br> <br>
  * @exclude
+ * @decaf.ignore
  */
 @Documented
 @Target(ElementType.TYPE)

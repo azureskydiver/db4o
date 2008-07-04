@@ -8,6 +8,7 @@ import java.lang.reflect.*;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class NoArgsClassConfiguratorFactory implements Db4oConfiguratorFactory {
 	private Constructor _constructor;
