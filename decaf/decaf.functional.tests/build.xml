@@ -16,6 +16,8 @@
 	-->
 	<property name="build.dir" location="build" />
 	
+	<property name="db4ounit.file.path" value="." />
+	
 	<target name="test" depends="api-test, integration-test" description="runs all the tests">
 	</target>
 	
@@ -69,6 +71,8 @@
 			timeout="1800000">
 			<classpath refid="tests.java1.1.cp" />
 			<sysproperty key="dir.workspace" value="${dir.workspace}" />
+			<sysproperty key="db4ounit.file.path" value="${db4ounit.file.path}" />
+			<sysproperty key="java.io.tmpdir" value="${java.io.tmpdir}" />
 		</java>
 	</target>
 		
@@ -104,13 +108,6 @@
 	<target name="decaf-core" depends="decaf-workspace, install-decaf-plugin">
 
 		<decaf workspace="${build.dir}/workspace" resource="db4o" />
-
-		<decaf workspace="${build.dir}/workspace" resource="ibs">
-			<args>
-				<arg value="-projectReference" />
-				<arg value="db4o" />
-			</args>
-		</decaf>
 
 	</target>
 	
@@ -154,6 +151,12 @@
 			</fileset>
 		</copy>
 
+		<copy todir="${build.dir}/workspace/db4o" overwrite="true">
+			<fileset dir="${dir.workspace}/db4ojdk5/core">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+
 		<prepare-workspace dir="${build.dir}/workspace" project="db4o.tests">
 			<sources>
 				<fileset dir="${dir.workspace}/db4oj.tests">
@@ -168,10 +171,8 @@
 			</fileset>
 		</copy>
 
-		<!-- prepare-workspace-dir assumes src folder in source project -->
-		<mkdir dir="${build.dir}/workspace/ibs/src" />
-		<copy todir="${build.dir}/workspace/ibs/src" overwrite="true">
-			<fileset dir="${dir.workspace}/ibs/core">
+		<copy todir="${build.dir}/workspace/db4o.tests" overwrite="true">
+			<fileset dir="${dir.workspace}/db4ojdk5/test">
 				<include name="**/*.java" />
 			</fileset>
 		</copy>

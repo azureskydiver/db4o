@@ -30,4 +30,8 @@ public class DecafTestCase extends DecafTestCaseBase {
 		runResourceTestCase("PackageDeclaration");
 	}
 
+	public void testSameSignatureConstructor() throws Exception {
+		runResourceTestCase("SameSignatureConstructor");
+	}
+
 }

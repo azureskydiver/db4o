@@ -201,6 +201,10 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			handleVarArgsMethod(node);
 		}
 		
+		if(node.isConstructor()) {
+			return;
+		}
+		
 		final IMethodBinding definition = builder.originalMethodDefinitionFor(node);
 		if (definition == null) {
 			return;

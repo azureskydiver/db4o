@@ -1,0 +1,11 @@
+/**
+ * @decaf.ignore.implements
+ */
+interface Interface {
+}
+
+/**
+ * @decaf.ignore.implements Interface
+ */
+interface Interface2 extends com.db4o.foundation.Sequence4 {
+}

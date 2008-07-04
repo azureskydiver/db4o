@@ -1,5 +1,6 @@
 package decaf.application;
 
+import org.eclipse.core.internal.resources.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.equinox.app.*;
@@ -29,7 +30,20 @@ public class DecafApplication implements IApplication {
 			project.buildProject(monitor);
 			
 			decafProjectFor(commandLine.project).build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
-		} catch (Exception x) {
+		} 
+		catch (CoreException x) {
+			IStatus[] children = x.getStatus().getChildren();
+			for(IStatus child : children) {
+				System.err.println(child);
+				Throwable childExc = child.getException();
+				if(childExc != null) {
+					childExc.printStackTrace();
+				}
+			}
+			x.printStackTrace();
+			throw x;
+		}
+		catch (Exception x) {
 			x.printStackTrace();
 			throw x;
 		}

@@ -17,3 +17,15 @@ class IgnoreExtends1 extends Base {
  */
 class IgnoreExtends2 extends Base implements Interface {
 }
+
+/**
+ * @decaf.ignore.implements
+ */
+interface Interface2 extends Interface {
+}
+
+/**
+ * @decaf.ignore.implements Interface2
+ */
+interface Interface3 extends Interface, Interface2 {
+}

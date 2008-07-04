@@ -59,9 +59,8 @@ class ApiDiff {
 	}
 
 	private void checkMembers(ClassEntry expected, ClassEntry actual) {
-		boolean isIbs = expected.name().contains(".ibs.");
-		checkMethods("Missing", expected, actual, isIbs ? MappingMode.SIMPLE_MAPPING : MappingMode.NO_MAPPING);
-		checkMethods("Unexpected", actual, expected, isIbs ? MappingMode.REVERSE_MAPPING : MappingMode.NO_MAPPING);
+		checkMethods("Missing", expected, actual, MappingMode.NO_MAPPING);
+		checkMethods("Unexpected", actual, expected, MappingMode.NO_MAPPING);
 	}
 
 	private void checkMethods(final String prefix, ClassEntry l, ClassEntry r, MappingMode mappingMode) {

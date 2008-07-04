@@ -1,0 +1,11 @@
+/**
+ * @decaf.ignore.implements
+ */
+interface Interface extends java.util.List {
+}
+
+/**
+ * @decaf.ignore.implements Interface
+ */
+interface Interface2 extends java.util.List, Interface {
+}
