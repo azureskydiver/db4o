@@ -103,7 +103,7 @@ public class QConClass extends QConObject{
     void marshall() {
         super.marshall();
         if(_claxx!=null) {
-        	_className = _claxx.getName();
+        	_className = container().config().resolveAliasRuntimeName(_claxx.getName());
         }
     }
 	
@@ -119,6 +119,7 @@ public class QConClass extends QConObject{
         if (i_trans == null) {
             super.unmarshall(a_trans);
             if(_className!=null) {
+            	_className = container().config().resolveAliasStoredName(_className);
             	_claxx = a_trans.reflector().forName(_className);
             }
         }
