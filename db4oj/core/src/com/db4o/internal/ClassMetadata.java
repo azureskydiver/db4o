@@ -372,9 +372,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         Config4Class config = configOrAncestorConfig();
         if (depth == Const4.UNSPECIFIED) {
             depth = checkUpdateDepthUnspecified(trans.container().configImpl());
-            if (classReflector().isCollection()) {
-                depth = adjustDepthToBorders(depth);
-            }
+            depth = adjustCollectionDepthToBorders(depth);
         }
         if(config == null){
             return depth - 1;
@@ -387,6 +385,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
         return depth - 1;
     }
+	
+	public int adjustCollectionDepthToBorders(int depth) {
+	    if (! classReflector().isCollection()) {
+	        return depth;
+	    }
+	    return adjustDepthToBorders(depth);
+	}
 
 	public int adjustDepthToBorders(int depth) {
 		int depthBorder = reflector().collectionUpdateDepth(classReflector());
@@ -645,7 +650,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     public final boolean hasEventRegistered(Transaction trans, int eventID) {
     	if(!dispatchingEvents(trans)){
-    		return true;
+    		return false;
     	}
     	return _eventDispatcher.hasEventRegistered(eventID);
     }
