@@ -197,9 +197,8 @@ class DecafASTNodeBuilder {
 		return parenthesize(newCast(type, node));
 	}
 
-	// FIXME 
 	private boolean isObjectType(final ITypeBinding type) {
-		return type.getSuperclass() == null && !type.isArray();
+		return ast.resolveWellKnownType(Object.class.getName()) == type;
 	}
 
 	public boolean isIgnored(BodyDeclaration node) {
