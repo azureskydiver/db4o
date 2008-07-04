@@ -239,7 +239,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	private void buildArrayEnhancedFor(EnhancedForStatement node,
 			final SingleVariableDeclaration variable, final Expression array) {
-		Object[] tempVarDecl = createTempVarForEnhancedFor(array, node.getExpression().resolveTypeBinding(), variable.getName() + "Array");
+		Object[] tempVarDecl = createTempVar(array, node.getExpression().resolveTypeBinding(), variable.getName() + "Array");
 		Expression arrayReference = (Expression) tempVarDecl[0];
 		VariableDeclarationStatement tempArrayVariable = (VariableDeclarationStatement) tempVarDecl[1];
 
@@ -249,7 +249,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 				indexVariableName,
 				builder.newNumberLiteral("0"));
 
-		InfixExpression cmp = builder.newInfixExpression(
+		Expression cmp = builder.newInfixExpression(
 								InfixExpression.Operator.LESS,
 								builder.newSimpleName(indexVariableName),
 								builder.newFieldAccess(builder.clone(arrayReference), builder.newSimpleName("length")));
@@ -267,24 +267,15 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 				PrefixExpression.Operator.INCREMENT,
 				builder.newSimpleName(indexVariableName));
 
-		final ForStatement stmt = builder.newForStatement(index, cmp, updater, move(node.getBody()));
-		if (null == tempArrayVariable) {
-			replace(node, stmt);
-		} else {
-			replace(node, builder.newBlock(tempArrayVariable, stmt));
-		}
+		replaceEnhancedForStatement(node, tempArrayVariable, index, cmp,updater);
 	}
 
 	private void buildIterableEnhancedFor(EnhancedForStatement node, final SingleVariableDeclaration variable, final Expression iterable) {
-		Object[] tempVarDecl = createTempVarForEnhancedFor(iterable, node.getExpression().resolveTypeBinding(), variable.getName() + "Array");
-		Expression iterableReference = (Expression) tempVarDecl[0];
-		VariableDeclarationStatement tempIterableVariable = (VariableDeclarationStatement) tempVarDecl[1];
-
 		final String iterVariableName = variable.getName() + "Iter";
 		VariableDeclarationExpression iter = builder.newVariableDeclaration(
 				builder.newSimpleType(Iterator.class.getName()),
 				iterVariableName,
-				builder.newMethodInvocation(builder.clone(iterableReference), "iterator"));
+				builder.newMethodInvocation(builder.clone(iterable), "iterator"));
 
 		Expression cmp = builder.newMethodInvocation(builder.newSimpleName(iterVariableName), "hasNext");
 
@@ -295,28 +286,30 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 						builder.clone(variable.getType()),
 						builder.createParenthesizedCast(builder.newMethodInvocation(builder.newSimpleName(iterVariableName), "next"), variable.getType().resolveBinding())), null);
 
-		final ForStatement stmt = builder.newForStatement(iter, cmp, null, move(node.getBody()));
-		if (null == tempIterableVariable) {
-			replace(node, stmt);
-		} else {
-			replace(node, builder.newBlock(tempIterableVariable, stmt));
-		}
+		replaceEnhancedForStatement(node, null, iter, cmp, null);
 	}
 
-	private Object[] createTempVarForEnhancedFor(Expression sequence, ITypeBinding typeBinding, String name) {
-		Expression arrayReference = null;
+	private void replaceEnhancedForStatement(EnhancedForStatement node, Statement tempVariable, Expression loopVar, Expression cmp, final Expression updater) {
+		final ForStatement stmt = builder.newForStatement(loopVar, cmp, updater, move(node.getBody()));
+		ASTNode replacement = (null == tempVariable) ? stmt : builder.newBlock(tempVariable, stmt);
+		replace(node, replacement);
+	}
+
+
+	private Object[] createTempVar(Expression sequence, ITypeBinding typeBinding, String name) {
+		Expression reference = null;
 		
-		VariableDeclarationStatement tempArrayVariable = null;
+		VariableDeclarationStatement tempVariable = null;
 		if (builder.isName(sequence)) {
-			arrayReference = sequence;
+			reference = sequence;
 		} else {
-			tempArrayVariable = builder.newVariableDeclarationStatement(
+			tempVariable = builder.newVariableDeclarationStatement(
 				name,
 				builder.newType(typeBinding),
 				safeMove(sequence));
-			arrayReference = builder.newSimpleName(name);
+			reference = builder.newSimpleName(name);
 		}
-		return new Object[]{ arrayReference, tempArrayVariable };
+		return new Object[]{ reference, tempVariable };
 	}
 	
 	@Override
