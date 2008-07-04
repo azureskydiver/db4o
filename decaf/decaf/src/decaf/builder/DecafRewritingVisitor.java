@@ -42,15 +42,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 	
 	@Override
-	public void endVisit(VariableDeclarationFragment node) {
-		final Expression initializer = node.getInitializer();
-		final Expression erasure = erasureFor(initializer);
-		if (erasure != null) {
-			replace(initializer, erasure);
-		}
-	}
-
-	@Override
 	public boolean visit(SimpleType node) {
 		ITypeBinding binding = node.resolveBinding();
 		if (binding.isTypeVariable()) {
@@ -89,7 +80,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			StructuralPropertyDescriptor parentLocation = expression.getLocationInParent();
 			if(parentLocation.isChildListProperty()) {
 				// FIXME This assumes that original and rewritten list are of the same size.
-				// This will not hold for a combination of varargs with generics and unboxing.
 				ListRewrite listRewrite = rewrite.getListRewrite(parent, (ChildListPropertyDescriptor) parentLocation);
 				List originalList = listRewrite.getOriginalList();
 				int originalIdx = originalList.indexOf(expression);
@@ -225,23 +215,31 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	public void endVisit(EnhancedForStatement node) {
 
 		final SingleVariableDeclaration variable = node.getParameter();
-		Expression expression = node.getExpression();
-		final Expression erasure = erasureFor(expression);
-		final Expression array = erasure != null ? erasure : expression;
+		Expression origExpr = node.getExpression();
+		final Expression erasure = erasureFor(origExpr);
+		final Expression sequenceExpr = erasure != null ? erasure : origExpr;
 
-		if(expression.resolveTypeBinding().isArray()) {
-			buildArrayEnhancedFor(node, variable, array);
+		if(origExpr.resolveTypeBinding().isArray()) {
+			buildArrayEnhancedFor(node, variable, sequenceExpr);
 		}
 		else {
-			buildIterableEnhancedFor(node, variable, array);
+			buildIterableEnhancedFor(node, variable, sequenceExpr);
 		}
 	}
 
 	private void buildArrayEnhancedFor(EnhancedForStatement node,
 			final SingleVariableDeclaration variable, final Expression array) {
-		Object[] tempVarDecl = createTempVar(array, node.getExpression().resolveTypeBinding(), variable.getName() + "Array");
-		Expression arrayReference = (Expression) tempVarDecl[0];
-		VariableDeclarationStatement tempArrayVariable = (VariableDeclarationStatement) tempVarDecl[1];
+		String name = variable.getName() + "Array";
+		Expression arrayReference = null;
+
+		VariableDeclarationStatement tempArrayVariable = null;
+		if (builder.isName(array)) {
+			arrayReference = array;
+		} 
+		else {
+			tempArrayVariable = builder.newVariableDeclarationStatement(name, builder.newType(node.getExpression().resolveTypeBinding()), safeMove(array));
+			arrayReference = builder.newSimpleName(name);
+		}
 
 		final String indexVariableName = variable.getName() + "Index";
 		VariableDeclarationExpression index = builder.newVariableDeclaration(
@@ -275,7 +273,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		VariableDeclarationExpression iter = builder.newVariableDeclaration(
 				builder.newSimpleType(Iterator.class.getName()),
 				iterVariableName,
-				builder.newMethodInvocation(builder.clone(iterable), "iterator"));
+				builder.newMethodInvocation(safeMove(iterable), "iterator"));
 
 		Expression cmp = builder.newMethodInvocation(builder.newSimpleName(iterVariableName), "hasNext");
 
@@ -296,22 +294,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 
-	private Object[] createTempVar(Expression sequence, ITypeBinding typeBinding, String name) {
-		Expression reference = null;
-		
-		VariableDeclarationStatement tempVariable = null;
-		if (builder.isName(sequence)) {
-			reference = sequence;
-		} else {
-			tempVariable = builder.newVariableDeclarationStatement(
-				name,
-				builder.newType(typeBinding),
-				safeMove(sequence));
-			reference = builder.newSimpleName(name);
-		}
-		return new Object[]{ reference, tempVariable };
-	}
-	
 	@Override
 	public boolean visit(PackageDeclaration node) {
 		return false;
@@ -417,6 +399,17 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		}
 		if (expression instanceof FieldAccess) {
 			return erasureForField(expression, ((FieldAccess)expression).resolveFieldBinding());
+		}
+		if(expression instanceof MethodInvocation) {
+			return erasureForMethodInvocation(((MethodInvocation)expression));
+		}
+		return null;
+	}
+
+	private Expression erasureForMethodInvocation(MethodInvocation node) {
+		final IMethodBinding method = node.resolveMethodBinding();
+		if (builder.hasGenericReturnType(method)) {
+			return createCastForErasure(node, method.getReturnType());
 		}
 		return null;
 	}
