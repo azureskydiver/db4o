@@ -9,6 +9,7 @@ import com.db4o.config.annotations.StoredTransientFields;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class StoredTransientFieldsFactory implements Db4oConfiguratorFactory {
 

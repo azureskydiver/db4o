@@ -2,14 +2,15 @@
 
 package com.db4o.config.annotations.reflect;
 
-/**
- * @exclude
- */
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
 import com.db4o.config.annotations.GeneratedUUIDs;
 
+/**
+ * @exclude
+ * @decaf.ignore
+ */
 public class GeneratedUUIDsFactory implements
 		Db4oConfiguratorFactory {
 

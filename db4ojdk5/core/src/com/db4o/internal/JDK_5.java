@@ -10,6 +10,9 @@ import com.db4o.ext.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.jdk.*;
 
+/**
+ * @decaf.ignore
+ */
 class JDK_5 extends JDK_1_4 {
 
 	private static final String ENUM_CLASSNAME = "java.lang.Enum";

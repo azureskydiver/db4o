@@ -6,6 +6,7 @@ import com.db4o.config.ObjectField;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class QueryEvaluationOffConfigurator extends FieldConfigurator {
 

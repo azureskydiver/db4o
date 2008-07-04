@@ -22,6 +22,7 @@ import com.db4o.ta.*;
  * @sharpen.ignore.implements
  * @sharpen.rename ArrayDictionary4
  * @sharpen.partial
+ * @decaf.ignore
  */
 
 public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,

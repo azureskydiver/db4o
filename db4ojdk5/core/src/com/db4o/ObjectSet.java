@@ -22,6 +22,7 @@ import com.db4o.ext.*;
  * @see ExtObjectSet for extended functionality.
  * 
  * @sharpen.extends System.Collections.IList
+ * @decaf.ignore.implements
  */
 public interface ObjectSet<Item> extends List<Item>, Iterator<Item> {
 	

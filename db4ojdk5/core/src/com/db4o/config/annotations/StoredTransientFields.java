@@ -12,6 +12,7 @@ import java.lang.annotation.Target;
  * allows to specify if transient fields are to be stored.
  * 
  * @exclude
+ * @decaf.ignore
  */
 @Documented
 @Target(ElementType.TYPE)

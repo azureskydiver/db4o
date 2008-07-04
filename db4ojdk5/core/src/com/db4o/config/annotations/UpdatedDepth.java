@@ -16,6 +16,7 @@ import java.lang.annotation.Target;
  * ObjectContainer.set(Object) will be updated.
  * 
  * @exclude
+ * @decaf.ignore
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

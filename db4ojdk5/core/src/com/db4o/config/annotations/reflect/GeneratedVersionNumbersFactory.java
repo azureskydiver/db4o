@@ -9,6 +9,7 @@ import com.db4o.config.annotations.GeneratedVersionNumbers;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class GeneratedVersionNumbersFactory implements Db4oConfiguratorFactory {
 

@@ -6,6 +6,7 @@ import com.db4o.config.*;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public abstract class Db4oConfigurator {	
 	private Configuration _config;

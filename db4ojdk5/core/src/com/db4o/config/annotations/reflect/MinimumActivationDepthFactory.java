@@ -9,6 +9,7 @@ import com.db4o.config.annotations.MinimumActivationDepth;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class MinimumActivationDepthFactory implements Db4oConfiguratorFactory {
 

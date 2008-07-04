@@ -9,6 +9,7 @@ import com.db4o.config.annotations.MaximumActivationDepth;
 
 /**
  * @exclude
+ * @decaf.ignore
  */
 public class MaximumActivationDepthFactory implements Db4oConfiguratorFactory {
 

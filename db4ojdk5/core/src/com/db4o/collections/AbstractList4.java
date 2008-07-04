@@ -2,16 +2,13 @@
 
 package com.db4o.collections;
 
-/**
- * @exclude
- */
 import java.lang.reflect.*;
 import java.util.*;
 
 /**
+ * @exclude
  * @sharpen.ignore
- * sharpen.ignore.implements
- * sharpen.partial
+ * @decaf.ignore
  */
 public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, List<E> {
 
