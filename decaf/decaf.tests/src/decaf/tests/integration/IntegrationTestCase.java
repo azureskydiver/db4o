@@ -24,6 +24,10 @@ public class IntegrationTestCase extends DecafTestCaseBase {
 		runResourceTestCase("ErasureInForEach");
 	}
 	
+	public void testIgnoreMappedInterface() throws Exception {
+		runPlatformTestCase("IgnoreMappedInterface");
+	}	
+	
 	@Override
 	protected String packagePath() {
 		return "integration";
