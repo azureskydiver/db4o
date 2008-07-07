@@ -1,3 +1,5 @@
+package decaf;
+
 class SameSignatureConstructorBase<E> {
 	public SameSignatureConstructorBase(int id) {
 	}	

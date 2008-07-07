@@ -11,11 +11,13 @@ import sharpen.core.framework.*;
 
 @SuppressWarnings("unchecked")
 class DecafASTNodeBuilder {
+	private final CompilationUnit unit;
 	private final AST ast;
 	private final DecafConfiguration config;
 	
-	public DecafASTNodeBuilder(AST ast, DecafConfiguration config) {
-		this.ast = ast;
+	public DecafASTNodeBuilder(CompilationUnit unit, DecafConfiguration config) {
+		this.unit = unit;
+		this.ast = unit.getAST();
 		this.config = config;
 	}
 
@@ -78,7 +80,44 @@ class DecafASTNodeBuilder {
 		if (type.isPrimitive()) {
 			return newPrimitiveType(type.getName());
 		}
-		return newSimpleType(type.getName());
+		
+		String typeName = requiresQualifier(type)
+			? qualifiedName(type)
+			: type.getName();
+		return newSimpleType(typeName);
+	}
+
+	private boolean requiresQualifier(ITypeBinding type) {
+		final String packageName = packageName(type);
+		return !importedPackages().contains(packageName);
+	}
+
+	private Set<String> importedPackages() {
+		if (importedPackages == null) {
+			importedPackages = buildImportedPackageSet();
+		}
+		return importedPackages;
+	}
+
+	private Set<String> buildImportedPackageSet() {
+		final HashSet<String> imported = new HashSet<String>();
+		imported.add("java.lang");
+		final PackageDeclaration packageDecl = unit.getPackage();
+		if (null != packageDecl) {
+			imported.add(packageDecl.getName().toString());
+		}
+		for (Object o : unit.imports()) {
+			final ImportDeclaration importDeclaration = ((ImportDeclaration)o);
+			if (!importDeclaration.isOnDemand()) {
+				continue;
+			}
+			imported.add(importDeclaration.getName().toString());
+		}
+		return imported;
+	}
+
+	private String packageName(ITypeBinding type) {
+		return type.getPackage().getName();
 	}
 
 	public SimpleType newSimpleType(final String typeName) {
@@ -268,6 +307,7 @@ class DecafASTNodeBuilder {
 	}
 	
 	private static final Map<String, String> _unboxing = new HashMap<String, String>();
+	private Set<String> importedPackages;
 	{
 		unboxing("java.lang.Byte", "byteValue");
 		unboxing("java.lang.Short", "shortValue");
@@ -365,9 +405,9 @@ class DecafASTNodeBuilder {
 		return type.getTypeDeclaration().getQualifiedName();
 	}
 	
-	public Type mappedType(ITypeBinding origBinding, Type origType) {
+	public Type mappedType(ITypeBinding origBinding) {
 		String name = qualifiedName(origBinding);
 		String mappedName = config.typeNameMapping(name);
-		return mappedName == null ? origType : newSimpleType(mappedName);
+		return mappedName == null ? null : newSimpleType(mappedName);
 	}
 }

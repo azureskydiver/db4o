@@ -1,4 +1,4 @@
-package generics;
+package decaf.generics;
 
 class Foo {
 	public Object field;

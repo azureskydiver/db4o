@@ -11,21 +11,23 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	private final ASTRewrite rewrite;
 	private final DecafASTNodeBuilder builder;
 
-	public DecafRewritingVisitor(AST ast, ASTRewrite rewrite, DecafConfiguration decafConfig) {
-		builder = new DecafASTNodeBuilder(ast, decafConfig);
+	public DecafRewritingVisitor(CompilationUnit unit, ASTRewrite rewrite, DecafConfiguration decafConfig) {
+		builder = new DecafASTNodeBuilder(unit, decafConfig);
 		this.rewrite = rewrite;
 	}
-
+	
 	@Override
 	public boolean visit(TypeDeclaration node) {
 		if (handledAsIgnored(node)) {
 			return false;
 		}
-		
+		return true;
+	}
+	
+	@Override
+	public void endVisit(TypeDeclaration node) {
 		processIgnoreExtends(node);
 		processIgnoreImplements(node);
-		
-		return super.visit(node);
 	}
 	
 	@Override
@@ -36,21 +38,28 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public boolean visit(ParameterizedType node) {
-		ITypeBinding binding = node.getType().resolveBinding();
-		replace(node, builder.mappedType(binding, builder.newType(binding.getErasure())));
+		final ITypeBinding binding = node.getType().resolveBinding().getErasure();
+		final Type mappedType = builder.mappedType(binding);
+		replace(node, mappedType == null ? builder.newType(binding) : mappedType);
 		return false;
 	}
 	
 	@Override
 	public boolean visit(SimpleType node) {
-		ITypeBinding binding = node.resolveBinding();
+		final ITypeBinding binding = node.resolveBinding();
 		if (binding.isTypeVariable()) {
-			binding = binding.getErasure();
-			Type mapped = 
-				builder.mappedType(binding, builder.newType(binding));
-			replace(node, mapped);
+			final ITypeBinding erasure = binding.getErasure();
+			final Type mapped = builder.mappedType(erasure);
+			replace(node, mapped == null ? builder.newType(erasure) : mapped);
 			return false;
 		}
+		
+		final Type mappedType = builder.mappedType(binding);
+		if (null != mappedType) {
+			replace(node, mappedType);
+			return false;
+		}
+		
 		return true;
 	}
 	
@@ -62,8 +71,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 				if(!isMethodName(expression)) {
 					replace(expression, unboxedMethodInvocation(expression));
 				}
-			} 
-			else {
+			} else {
 				if (expression.resolveBoxing()) {
 					if(!isMethodName(expression)) {
 						replace(expression, box(expression));
@@ -164,7 +172,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		if(!isStatic || binding == null) {
 			return false;
 		}
-		SimpleType mapped = (SimpleType)builder.mappedType(binding, null);
+		SimpleType mapped = (SimpleType)builder.mappedType(binding);
 		if(mapped == null) {
 			return false;
 		}
