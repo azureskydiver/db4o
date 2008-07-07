@@ -31,9 +31,6 @@
 				<pathelement location="bin" />
 				<pathelement location="../decaf/bin" />
 				<pathelement location="${asm.home}/lib/asm-3.1.jar" />
-				<fileset dir="lib">
-					<include name="**/*.jar" />
-				</fileset>
 			</classpath>
 		</taskdef>
 		
