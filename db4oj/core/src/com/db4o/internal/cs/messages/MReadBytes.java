@@ -17,7 +17,7 @@ public final class MReadBytes extends MsgD implements ServerSideMessage {
 	}
 
 	public final MsgD getWriter(StatefulBuffer bytes) {
-		MsgD message = getWriterForLength(bytes.getTransaction(), bytes.length() + Const4.INT_LENGTH);
+		MsgD message = getWriterForLength(bytes.transaction(), bytes.length() + Const4.INT_LENGTH);
 		message._payLoad.writeInt(bytes.getAddress());
 		message._payLoad.append(bytes._buffer);
 		return message;

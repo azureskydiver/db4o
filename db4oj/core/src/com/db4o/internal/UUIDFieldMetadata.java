@@ -32,7 +32,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         long uuid = writer.readLong();
         writer._offset = offset;
         
-        LocalObjectContainer yf = (LocalObjectContainer)writer.getStream();
+        LocalObjectContainer yf = (LocalObjectContainer)writer.container();
         
         if ((uuid == 0 || db4oDatabaseIdentityID == 0) && writer.getID() > 0
 				&& !isnew) {
@@ -43,7 +43,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
 		}
         
         if(db4oDatabaseIdentityID == 0){
-            db4oDatabaseIdentityID = yf.identity().getID(writer.getTransaction());
+            db4oDatabaseIdentityID = yf.identity().getID(writer.transaction());
         }
         
         if(uuid == 0){
@@ -92,9 +92,9 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         a_bytes.incrementOffset(Const4.INT_LENGTH);
         long longPart = a_bytes.readLong();
         if(longPart > 0){
-            ObjectContainerBase stream = a_bytes.getStream();
+            ObjectContainerBase stream = a_bytes.container();
             if (stream.maintainsIndices()){
-                removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), new Long(longPart));
+                removeIndexEntry(a_bytes.transaction(), a_bytes.getID(), new Long(longPart));
             }
         }
     }

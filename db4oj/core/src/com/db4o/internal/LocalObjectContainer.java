@@ -772,7 +772,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
     
     public final void getSlotForUpdate(StatefulBuffer buffer){
-        Slot slot = getSlotForUpdate(buffer.getTransaction(), buffer.getID(), buffer.length());
+        Slot slot = getSlotForUpdate(buffer.transaction(), buffer.getID(), buffer.length());
         buffer.address(slot.address());
     }
     

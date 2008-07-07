@@ -83,7 +83,7 @@ public final class FreeSlotNode extends TreeInt {
 		if (!(buffer instanceof StatefulBuffer)) {
 			return;
 		}
-		Transaction trans = ((StatefulBuffer) buffer).getTransaction();
+		Transaction trans = ((StatefulBuffer) buffer).transaction();
 		if (!(trans.container() instanceof IoAdaptedObjectContainer)) {
 			return;
 		}

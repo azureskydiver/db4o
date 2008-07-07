@@ -117,7 +117,7 @@ public class FieldMetadata implements StoredField {
     }
     
     protected void addIndexEntry(StatefulBuffer a_bytes, Object indexEntry) {
-        addIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), indexEntry);
+        addIndexEntry(a_bytes.transaction(), a_bytes.getID(), indexEntry);
     }
 
     public void addIndexEntry(Transaction trans, int parentID, Object indexEntry) {
@@ -461,7 +461,7 @@ public class FieldMetadata implements StoredField {
         }
         int offset = buffer._offset;
         Object obj = readIndexEntry(mf, buffer);
-        removeIndexEntry(buffer.getTransaction(), buffer.getID(), obj);
+        removeIndexEntry(buffer.transaction(), buffer.getID(), obj);
         buffer._offset = offset;
     }
 

@@ -73,7 +73,7 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
     }
     
 	final void free(StatefulBuffer a_bytes, int a_id) {
-          a_bytes.getTransaction().slotFreePointerOnCommit(a_id, a_bytes.slot());
+          a_bytes.transaction().slotFreePointerOnCommit(a_id, a_bytes.slot());
 	}
     
 	public boolean hasClassIndex() {

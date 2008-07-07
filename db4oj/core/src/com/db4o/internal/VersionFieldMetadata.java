@@ -19,7 +19,7 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
     }
     
     public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) {
-        writer.writeLong(writer.getStream().generateTimeStampId());
+        writer.writeLong(writer.container().generateTimeStampId());
     }
     
     public void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate) {
