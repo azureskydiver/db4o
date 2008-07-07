@@ -89,11 +89,7 @@ public final class StatefulBuffer extends ByteArrayBuffer {
         return i_length;
     }
 
-    public ObjectContainerBase getStream() {
-        return i_trans.container();
-    }
-    
-    public ObjectContainerBase stream(){
+    public ObjectContainerBase container(){
         return i_trans.container();
     }
     
@@ -101,7 +97,7 @@ public final class StatefulBuffer extends ByteArrayBuffer {
         return ((LocalTransaction)i_trans).file();
     }
 
-    public Transaction getTransaction() {
+    public Transaction transaction() {
         return i_trans;
     }
 
@@ -125,7 +121,7 @@ public final class StatefulBuffer extends ByteArrayBuffer {
     }
 
     public void read() throws Db4oIOException {
-        stream().readBytes(_buffer, i_address,_addressOffset, i_length);
+        container().readBytes(_buffer, i_address,_addressOffset, i_length);
     }
 
     public final StatefulBuffer readEmbeddedObject() throws Db4oIOException {
@@ -135,7 +131,7 @@ public final class StatefulBuffer extends ByteArrayBuffer {
             return null;
         }
         StatefulBuffer bytes = null;
-            bytes = stream().readWriterByAddress(i_trans, id, length);
+            bytes = container().readWriterByAddress(i_trans, id, length);
             if (bytes != null) {
                 bytes.setID(id);
             }
@@ -258,7 +254,7 @@ public final class StatefulBuffer extends ByteArrayBuffer {
             _payloadOffset = _offset + (Const4.INT_LENGTH * 2);
         }
         if(alignToBlockSize){
-            _payloadOffset = stream().blockAlignedBytes(_payloadOffset);
+            _payloadOffset = container().blockAlignedBytes(_payloadOffset);
         }
         writeInt(_payloadOffset);
         
@@ -288,7 +284,7 @@ public final class StatefulBuffer extends ByteArrayBuffer {
     }
 
     private void transferPayLoadAddress(StatefulBuffer toWriter, int offset) {
-        int blockedOffset = offset / stream().blockSize();
+        int blockedOffset = offset / container().blockSize();
         toWriter.i_address = i_address + blockedOffset;
         toWriter.i_id = toWriter.i_address;
         toWriter._addressOffset = _addressOffset;

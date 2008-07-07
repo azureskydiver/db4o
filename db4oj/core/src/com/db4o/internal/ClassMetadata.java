@@ -563,8 +563,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     private final void delete1(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, Object a_object) {
-        removeFromIndex(a_bytes.getTransaction(), a_bytes.getID());
-        deleteMembers(mf, attributes, a_bytes, a_bytes.getTransaction().container()._handlers.arrayType(a_object), false);
+        removeFromIndex(a_bytes.transaction(), a_bytes.getID());
+        deleteMembers(mf, attributes, a_bytes, a_bytes.transaction().container()._handlers.arrayType(a_object), false);
     }
 
     public void delete(DeleteContext context) throws Db4oIOException {

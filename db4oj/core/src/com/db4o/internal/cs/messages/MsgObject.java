@@ -38,7 +38,7 @@ public class MsgObject extends MsgD {
 
 
 	final public MsgD getWriter(StatefulBuffer buffer) {
-		return getWriter(buffer.getTransaction(), buffer.pointer(), buffer, null);
+		return getWriter(buffer.transaction(), buffer.pointer(), buffer, null);
 	}
 	
 	public final MsgD getWriter(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, ByteArrayBuffer buffer) {

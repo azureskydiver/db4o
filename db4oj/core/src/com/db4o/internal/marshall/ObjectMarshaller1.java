@@ -16,7 +16,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		TraverseFieldCommand command = new TraverseFieldCommand() {
 			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
 				if (isNull) {
-					field.addIndexEntry(writer.getTransaction(), writer.getID(), null);
+					field.addIndexEntry(writer.transaction(), writer.getID(), null);
 				} 
 				else {
 					field.addFieldIndex(_family, yc, writer, oldSlot);
@@ -30,7 +30,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
         TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
 		        if(isNull){
-		            field.removeIndexEntry(writer.getTransaction(), writer.getID(), null);
+		            field.removeIndexEntry(writer.transaction(), writer.getID(), null);
 		        }else{
 		            field.delete(_family, writer, isUpdate);
 		        }

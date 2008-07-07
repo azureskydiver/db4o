@@ -19,8 +19,8 @@ public final class ObjectHeader {
     
     private int _handlerVersion;
     
-    public ObjectHeader(ObjectContainerBase stream, ReadWriteBuffer reader){
-    	this(stream,null,reader);
+    public ObjectHeader(ObjectContainerBase container, ReadWriteBuffer reader){
+    	this(container,null,reader);
     }
 
     public ObjectHeader(ClassMetadata yapClass, ReadWriteBuffer reader){
@@ -28,7 +28,7 @@ public final class ObjectHeader {
     }
 
     public ObjectHeader(StatefulBuffer writer){
-        this(writer.getStream(), writer);
+        this(writer.container(), writer);
     }
     
     public ObjectHeader(ObjectContainerBase stream, ClassMetadata yc, ReadWriteBuffer reader){

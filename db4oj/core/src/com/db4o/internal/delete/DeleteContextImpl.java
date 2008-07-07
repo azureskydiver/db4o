@@ -21,7 +21,7 @@ public class DeleteContextImpl extends AbstractBufferContext implements DeleteCo
     private final Config4Field _fieldConfig;
     
 	public DeleteContextImpl(ReflectClass fieldClass, int handlerVersion, Config4Field fieldConfig, StatefulBuffer buffer){
-		super(buffer.getTransaction(), buffer);
+		super(buffer.transaction(), buffer);
 		_fieldClass = fieldClass;
 		_handlerVersion = handlerVersion;
 		_fieldConfig = fieldConfig;
