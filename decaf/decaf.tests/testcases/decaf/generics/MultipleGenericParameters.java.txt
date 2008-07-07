@@ -1,4 +1,4 @@
-package decaf.generics;
+package generics;
 
 class Function<TIn, TOut> {
 	public TOut apply(TIn value) {

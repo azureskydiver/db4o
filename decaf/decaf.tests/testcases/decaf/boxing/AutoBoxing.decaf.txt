@@ -1,4 +1,4 @@
-package decaf.boxing;
+package boxing;
 
 class AutoUnboxing {
 

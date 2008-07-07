@@ -1,4 +1,4 @@
-package decaf.annotations;
+package annotations;
 
 interface Interface1 {
 }
