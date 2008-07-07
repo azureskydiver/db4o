@@ -1,4 +1,4 @@
-package boxing;
+package decaf.boxing;
 
 class TernaryOpBoxing {
 

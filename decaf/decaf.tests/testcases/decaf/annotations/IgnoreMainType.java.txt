@@ -1,4 +1,4 @@
-package annotations;
+package decaf.annotations;
 
 import java.util.*;
 

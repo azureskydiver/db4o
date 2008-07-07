@@ -3,6 +3,10 @@ package decaf.tests.collections;
 import decaf.tests.*;
 
 public class CollectionsTestCase extends DecafTestCaseBase {
+	
+	public void testExtendsList() throws Exception {
+		runPlatformTestCase("ExtendsList");
+	}
 
 	public void testSimpleMapUsage() throws Exception {
 		runPlatformTestCase("SimpleMapUsage");
