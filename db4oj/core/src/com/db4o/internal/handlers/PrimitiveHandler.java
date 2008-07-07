@@ -33,7 +33,7 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     	context.seek(context.offset() + linkLength());
     }
     
-    public Object indexEntryToObject(Transaction trans, Object indexEntry){
+    public final Object indexEntryToObject(Context context, Object indexEntry){
         return indexEntry;
     }
     
@@ -62,7 +62,7 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
      */
     public Object read(
         
-        /* FIXME: Work in progress here, this signature should not be used */
+        /* FIXME: Work in progress here, this signature should not be used from the outside */
         MarshallerFamily mf,
         
         
@@ -80,7 +80,7 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
         return null;
     }
     
-    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
+    public final Object readIndexEntryFromObjectSlot(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
         return read(mf, a_writer, true);
     }
     

@@ -151,7 +151,12 @@ public class FieldMetadata implements StoredField {
     
     // alive() checked
     public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, Db4oIOException {
-    	return ((IndexableTypeHandler)_handler).readIndexEntry(mf, writer);
+        IndexableTypeHandler indexableTypeHandler = (IndexableTypeHandler) correctedHandlerVersion(mf.handlerVersion());
+    	return indexableTypeHandler.readIndexEntryFromObjectSlot(mf, writer);
+    }
+    
+    private TypeHandler4 correctedHandlerVersion(int handlerVersion){
+        return container().handlers().correctHandlerVersion(_handler, handlerVersion);
     }
     
     public void removeIndexEntry(Transaction trans, int parentID, Object indexEntry){
@@ -915,10 +920,11 @@ public class FieldMetadata implements StoredField {
             Exceptions4.throwRuntimeException(Messages.CLIENT_SERVER_UNSUPPORTED);
         }
         synchronized(stream.lock()){
+            final Context context = transaction.context();
             _index.traverseKeys(transaction, new Visitor4() {
                 public void visit(Object obj) {
                     FieldIndexKey key = (FieldIndexKey) obj;
-                    userVisitor.visit(((IndexableTypeHandler)_handler).indexEntryToObject(transaction, key.value()));
+                    userVisitor.visit(((IndexableTypeHandler)_handler).indexEntryToObject(context, key.value()));
                 }
             });
         }
