@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.marshall.*;
 import com.db4o.internal.marshall.*;
 
 
@@ -12,8 +13,8 @@ import com.db4o.internal.marshall.*;
  */
 public interface IndexableTypeHandler extends Indexable4, TypeHandler4{
     
-    Object indexEntryToObject(Transaction trans, Object indexEntry);
+    Object indexEntryToObject(Context context, Object indexEntry);
     
-    Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, Db4oIOException;
+    Object readIndexEntryFromObjectSlot(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, Db4oIOException;
 
 }

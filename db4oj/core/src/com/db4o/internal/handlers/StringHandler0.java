@@ -4,6 +4,7 @@ package com.db4o.internal.handlers;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.delete.*;
@@ -46,6 +47,10 @@ public class StringHandler0 extends StringHandler {
 		}
     	context.targetBuffer().writeInt(targetAddress);
     	context.targetBuffer().writeInt(length);
+    }
+    
+    public Object readIndexEntryFromObjectSlot(MarshallerFamily mf, StatefulBuffer buffer) throws CorruptionException, Db4oIOException {
+        return buffer.getStream().readWriterByAddress(buffer.getTransaction(), buffer.readInt(), buffer.readInt());
     }
 
 }

@@ -34,26 +34,28 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
         return Const4.YAPSTRING;
     }
 
-    public Object indexEntryToObject(Transaction trans, Object indexEntry){
+    public final Object indexEntryToObject(Context context, Object indexEntry){
         if(indexEntry instanceof Slot){
             Slot slot = (Slot)indexEntry;
-            indexEntry = trans.container().bufferByAddress(slot.address(), slot.length());
+            indexEntry = context.transaction().container().bufferByAddress(slot.address(), slot.length());
         }
-        return readStringNoDebug(trans.context(), (ReadBuffer)indexEntry);
+        return readStringNoDebug(context, (ReadBuffer)indexEntry);
     }
     
     /**
      * This readIndexEntry method reads from the parent slot.
-     * TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.  
-     * @throws CorruptionException
      */
-    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException, Db4oIOException {
-		return mf._string.readIndexEntry(a_writer);
+    public Object readIndexEntryFromObjectSlot(MarshallerFamily mf, StatefulBuffer buffer) throws CorruptionException, Db4oIOException {
+        int payLoadOffSet = buffer.readInt();
+        int length = buffer.readInt();
+        if(payLoadOffSet == 0){
+            return null;
+        }
+        return buffer.readPayloadWriter(payLoadOffSet, length);
     }
 
     /**
      * This readIndexEntry method reads from the actual index in the file.
-     * TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.  
      */
     public Object readIndexEntry(ByteArrayBuffer reader) {
     	Slot s = new Slot(reader.readInt(), reader.readInt());

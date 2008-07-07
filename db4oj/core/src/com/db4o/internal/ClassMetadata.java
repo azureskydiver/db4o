@@ -880,12 +880,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return _index.entryCount(ta);
     }
     
-    public Object indexEntryToObject(Transaction trans, Object indexEntry){
+    public final Object indexEntryToObject(Context context, Object indexEntry){
         if(indexEntry == null){
             return null;
         }
         int id = ((Integer)indexEntry).intValue();
-        return container().getByID2(trans, id);
+        return container().getByID2(context.transaction(), id);
     }    
 
     public ReflectClass classReflector(){
@@ -1346,14 +1346,14 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return count;
     }
 
-    public Object readIndexEntry(ByteArrayBuffer a_reader) {
+    public final Object readIndexEntry(ByteArrayBuffer a_reader) {
         return new Integer(a_reader.readInt());
     }
     
-    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
+    public final Object readIndexEntryFromObjectSlot(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
         return readIndexEntry(a_writer);
     }
-
+    
     byte[] readName(Transaction a_trans) {
         i_reader = a_trans.container().readReaderByID(a_trans, getID());
         return readName1(a_trans, i_reader);

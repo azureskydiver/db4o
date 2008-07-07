@@ -39,8 +39,6 @@ public class MarshallerFamily {
 
     public final PrimitiveMarshaller _primitive;
 
-    public final StringMarshaller _string;
-    
     private final int _converterVersion;
     
     private final int _handlerVersion;
@@ -57,8 +55,7 @@ public class MarshallerFamily {
 	            new ClassMarshaller0(),
 	            new FieldMarshaller0(),
 	            new ObjectMarshaller0(), 
-	            new PrimitiveMarshaller0(),
-	            new StringMarshaller0());
+	            new PrimitiveMarshaller0());
     	
     	allVersions[1] =
 	        new MarshallerFamily(
@@ -67,8 +64,7 @@ public class MarshallerFamily {
 	            new ClassMarshaller1(),
 	            new FieldMarshaller0(),
 	            new ObjectMarshaller1(), 
-	            new PrimitiveMarshaller1(),
-	            new StringMarshaller1());
+	            new PrimitiveMarshaller1());
     	for (int i = 2; i < allVersions.length; i++) {
     	    allVersions[i] = latestFamily(i);
         }
@@ -80,8 +76,7 @@ public class MarshallerFamily {
             ClassMarshaller classMarshaller,
             FieldMarshaller fieldMarshaller,
             ObjectMarshaller objectMarshaller,
-            PrimitiveMarshaller primitiveMarshaller, 
-            StringMarshaller stringMarshaller) {
+            PrimitiveMarshaller primitiveMarshaller) {
         _converterVersion = converterVersion;
         _handlerVersion = handlerVersion;
         _class = classMarshaller;
@@ -91,7 +86,6 @@ public class MarshallerFamily {
         _object._family = this;
         _primitive = primitiveMarshaller;
         _primitive._family = this;
-        _string = stringMarshaller;
     }
     
     public static MarshallerFamily latestFamily(int version){
@@ -101,8 +95,7 @@ public class MarshallerFamily {
             new ClassMarshaller2(),
             new FieldMarshaller1(),
             new ObjectMarshaller1(), 
-            new PrimitiveMarshaller1(),
-            new StringMarshaller1());
+            new PrimitiveMarshaller1());
     }
 
     public static MarshallerFamily version(int n) {
