@@ -1,4 +1,4 @@
-package generics;
+package decaf.generics;
 
 class Foo<T> {
 	public T field;

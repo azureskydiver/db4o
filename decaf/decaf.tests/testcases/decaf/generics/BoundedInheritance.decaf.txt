@@ -1,4 +1,4 @@
-package generics;
+package decaf.generics;
 
 interface Foo {
 	Object get();

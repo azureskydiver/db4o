@@ -1,4 +1,4 @@
-package integration;
+package decaf.integration;
 
 class A<T> {
 

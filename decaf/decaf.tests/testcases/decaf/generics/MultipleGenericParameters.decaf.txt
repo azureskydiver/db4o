@@ -1,4 +1,4 @@
-package generics;
+package decaf.generics;
 
 class Function {
 	public Object apply(Object value) {

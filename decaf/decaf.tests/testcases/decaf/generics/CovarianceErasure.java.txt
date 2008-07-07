@@ -1,3 +1,5 @@
+package decaf.generics;
+
 class Base<T> {
 	public T get(T value) {
 		return value;
