@@ -23,11 +23,30 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		}
 		return true;
 	}
+
 	
 	@Override
 	public void endVisit(TypeDeclaration node) {
 		processIgnoreExtends(node);
 		processIgnoreImplements(node);
+	}
+	
+	@Override
+	public boolean visit(AnnotationTypeDeclaration node) {
+		remove(node);
+		return false;	
+	}
+	
+	@Override
+	public boolean visit(MarkerAnnotation node) {
+		remove(node);
+		return false;	
+	}
+	
+	@Override
+	public boolean visit(SingleMemberAnnotation node) {
+		remove(node);
+		return false;	
 	}
 	
 	@Override
