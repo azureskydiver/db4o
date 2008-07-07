@@ -130,15 +130,13 @@ class ApiDiff {
 		return SetExtensions.difference(x.keySet(), y.keySet());
 	}
 	
-	private static class MappingMode {
-		private String _id;
+	private enum MappingMode {
+		
+		NO_MAPPING("no mapping"),
+		SIMPLE_MAPPING("simple mapping"),
+		REVERSE_MAPPING("reverse mapping");
 		
 		private MappingMode(String id) {
-			_id = id;
 		}
-		
-		public static MappingMode NO_MAPPING = new MappingMode("no mapping");
-		public static MappingMode SIMPLE_MAPPING = new MappingMode("simple mapping");
-		public static MappingMode REVERSE_MAPPING = new MappingMode("reverse mapping");
 	}
 }
