@@ -4,6 +4,10 @@ import decaf.tests.*;
 
 public class AnnotationsTestCase extends DecafTestCaseBase {
 	
+	public void testJdk5AnnotationsAreAutomaticallyIgnored() throws Exception {
+		runResourceTestCase("Jdk5AnnotationsAreAutomaticallyIgnored");
+	}
+	
 	public void testIgnoreImplements() throws Exception {
 		runResourceTestCase("IgnoreImplements");
 	}
