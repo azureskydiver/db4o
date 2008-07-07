@@ -1,4 +1,4 @@
-package decaf.integration;
+package integration;
 
 class Foo {
 	public Object[] array;

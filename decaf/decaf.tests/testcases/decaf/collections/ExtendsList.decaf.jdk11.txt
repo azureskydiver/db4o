@@ -1,7 +1,0 @@
-package decaf.collections;
-
-interface ExtendsList extends com.db4o.foundation.Sequence4 {
-}
-
-interface ExtendsSimpleList extends com.db4o.foundation.Sequence4 {
-}

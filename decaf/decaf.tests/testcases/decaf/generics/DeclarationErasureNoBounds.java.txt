@@ -1,4 +1,4 @@
-package decaf.generics;
+package generics;
 
 class NoBounds<T> { 
     public T field; 

@@ -1,5 +1,3 @@
-package decaf.generics;
-
 class Base {
 	public Object get(Object value) {
 		return value;
