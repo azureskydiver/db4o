@@ -42,6 +42,9 @@ class JDK_1_2 extends JDKReflect {
 	    new TTreeSet();
 	}
 
+	/**
+	 * @deprecated uses deprecated api
+	 */
     Db4oCollections collections(Transaction transaction){
         return new P2Collections(transaction);
     }
