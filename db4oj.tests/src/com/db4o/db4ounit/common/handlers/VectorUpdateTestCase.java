@@ -137,16 +137,6 @@ public class VectorUpdateTestCase extends HandlerUpdateTestCaseBase{
         assertItem(values[2], VectorExtensionWithoutField.class);
     }
 
-    private boolean testNotCompatibleToOldVersion() {
-        // This test fails for 3.0 and 4.0 versions, probably
-        // because translators are incompatible.
-        
-        if(db4oMajorVersion() < 5) {
-            return true;
-        }
-        return db4oHeaderVersion() == VersionServices.HEADER_30_40;
-    }
-
     private void assertItem(Object obj, Class clazz) {
         Item item = (Item) obj;
         assertVector(item._typed, clazz);
@@ -179,6 +169,18 @@ public class VectorUpdateTestCase extends HandlerUpdateTestCaseBase{
 
     protected void assertArrays(Object obj) {
         // do nothing
-    }    
+    }
+    
+    private boolean testNotCompatibleToOldVersion() {
+        // This test fails for 3.0 and 4.0 versions, probably
+        // because translators are incompatible.
+        
+        if(db4oMajorVersion() < 5) {
+            return true;
+        }
+        return db4oHeaderVersion() == VersionServices.HEADER_30_40;
+    }
+
+
     
 }

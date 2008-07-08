@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import java.lang.ref.*;
+import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
@@ -11,6 +12,7 @@ import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.net.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
+import com.db4o.typehandlers.*;
 import com.db4o.types.*;
 
 /**
@@ -57,8 +59,10 @@ class JDK_1_2 extends JDKReflect {
     }
     
     public void extendConfiguration(Config4Impl config) {
-        super.extendConfiguration(config);
-        new CollectionTypeHandlers().register(config);
+        new CollectionTypeHandlers(config, new ListTypeHandler()).registerLists(new Class[]{
+           ArrayList.class,
+           Vector.class,
+        });
     }
 
     void forEachCollectionElement(Object a_object, Visitor4 a_visitor) {

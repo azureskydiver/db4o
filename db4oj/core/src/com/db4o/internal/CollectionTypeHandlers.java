@@ -2,9 +2,6 @@
 
 package com.db4o.internal;
 
-import java.util.*;
-
-import com.db4o.internal.handlers.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
@@ -17,6 +14,15 @@ public class CollectionTypeHandlers {
     
     private final int INSTALLED_FROM_VERSION = 4;
     
+    private final Config4Impl _config;
+    
+    private final TypeHandler4 _listTypeHandler;
+    
+    public CollectionTypeHandlers(Config4Impl config, TypeHandler4 listTypeHandler){
+        _config = config;
+        _listTypeHandler = listTypeHandler;
+    }
+    
     /*
      * The plan is to switch live both changes at once.
      */
@@ -24,16 +30,18 @@ public class CollectionTypeHandlers {
         return NullableArrayHandling.enabled();
     }
     
-    public void register(Config4Impl config){
+    public void registerLists(Class[] classes){
         if(! enabled()){
             return;
         }
-        registerListTypeHandler(config, ArrayList.class);
+        for (int i = 0; i < classes.length; i++) {
+            registerListTypeHandler(classes[i]);    
+        }
     }
     
-    private void registerListTypeHandler(Config4Impl config, Class clazz){
-        final ReflectClass claxx = config.reflector().forClass(clazz);
-        config.registerTypeHandler(new TypeHandlerPredicate() {
+    private void registerListTypeHandler(Class clazz){
+        final ReflectClass claxx = _config.reflector().forClass(clazz);
+        _config.registerTypeHandler(new TypeHandlerPredicate() {
             public boolean match(ReflectClass classReflector, int version) {
                 if(version < INSTALLED_FROM_VERSION){
                     return false;
@@ -41,7 +49,7 @@ public class CollectionTypeHandlers {
                 return claxx.equals(classReflector);
             }
         
-        },new ListTypeHandler());
+        },_listTypeHandler);
     }
 
 }
