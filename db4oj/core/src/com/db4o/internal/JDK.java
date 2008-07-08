@@ -12,6 +12,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
+import com.db4o.typehandlers.*;
 import com.db4o.types.*;
 
 /**
@@ -52,7 +53,9 @@ public class JDK {
     }
 	
     public void extendConfiguration(Config4Impl config) {
-        
+        new CollectionTypeHandlers(config, new VectorTypeHandler()).registerLists(new Class[]{
+            Vector.class,
+         });
     }
 
     public Config4Class extendConfiguration(ReflectClass clazz, Configuration config, Config4Class classConfig) {

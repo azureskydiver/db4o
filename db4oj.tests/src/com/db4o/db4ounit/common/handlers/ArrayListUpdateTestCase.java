@@ -6,6 +6,7 @@ package com.db4o.db4ounit.common.handlers;
 import db4ounit.*;
 import java.util.*;
 
+import com.db4o.db4ounit.common.handlers.VectorUpdateTestCase.*;
 import com.db4o.db4ounit.util.*;
 
 
@@ -78,6 +79,9 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
     
     
     protected Object[] createValues() {
+        if(testNotCompatibleToOldVersion()){
+            return new Item[0];
+        }
         Item[] values = new Item[3];
         values[0] = createItem(ArrayList.class);
         values[1] = createItem(ArrayListExtensionWithField.class);
@@ -131,9 +135,7 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
     }
     
     protected void assertValues(Object[] values) {
-        if(db4oHeaderVersion() == VersionServices.HEADER_30_40){
-            // This test fails for 3.0 and 4.0 versions, probably
-            // because translators are incompatible.
+        if(testNotCompatibleToOldVersion()){
             return;
         }
         assertItem(values[0], ArrayList.class);
@@ -175,6 +177,18 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
 
     protected void assertArrays(Object obj) {
         // do nothing
-    }    
+    }
+    
+    private boolean testNotCompatibleToOldVersion() {
+        // This test fails for 3.0 and 4.0 versions, probably
+        // because translators are incompatible.
+        
+        if(db4oMajorVersion() < 5) {
+            return true;
+        }
+        return db4oHeaderVersion() == VersionServices.HEADER_30_40;
+    }
+
+
     
 }

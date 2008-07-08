@@ -15,10 +15,10 @@ import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 
 /**
- * TypeHandler for all lists.
- * 
+ * TypeHandler for java.util.Vector
+ * @sharpen.ignore
  */
-public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler{
+public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler{
 
     public PreparedComparison prepareComparison(Context context, Object obj) {
         // TODO Auto-generated method stub
@@ -26,30 +26,30 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
     }
 
     public void write(WriteContext context, Object obj) {
-        List list = (List)obj;
-        writeElementCount(context, list);
-        writeElements(context, list);
+        Vector vector = (Vector)obj;
+        writeElementCount(context, vector);
+        writeElements(context, vector);
     }
     
 	public Object read(ReadContext context) {
-        List list = (List)((UnmarshallingContext) context).persistentObject();
+        Vector vector = (Vector)((UnmarshallingContext) context).persistentObject();
         int elementCount = context.readInt();
-        TypeHandler4 elementHandler = elementTypeHandler(context, list);
+        TypeHandler4 elementHandler = elementTypeHandler(context, vector);
         for (int i = 0; i < elementCount; i++) {
-            list.add(context.readObject(elementHandler));
+            vector.addElement(context.readObject(elementHandler));
         }
-        return list;
+        return vector;
     }
     
-	private void writeElementCount(WriteContext context, List list) {
-		context.writeInt(list.size());
+	private void writeElementCount(WriteContext context, Vector vector) {
+		context.writeInt(vector.size());
 	}
 
-	private void writeElements(WriteContext context, List list) {
-		TypeHandler4 elementHandler = elementTypeHandler(context, list);
-        final Iterator elements = list.iterator();
-        while (elements.hasNext()) {
-            context.writeObject(elementHandler, elements.next());
+	private void writeElements(WriteContext context, Vector vector) {
+		TypeHandler4 elementHandler = elementTypeHandler(context, vector);
+        final Enumeration elements = vector.elements();
+        while (elements.hasMoreElements()) {
+            context.writeObject(elementHandler, elements.nextElement());
         }
 	}
 
@@ -57,7 +57,7 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
         return ((InternalObjectContainer)context.objectContainer()).container();
     }
     
-    private TypeHandler4 elementTypeHandler(Context context, List list){
+    private TypeHandler4 elementTypeHandler(Context context, Vector vector){
         
         // TODO: If all elements in the list are of one type,
         //       it is possible to use a more specific handler
@@ -85,9 +85,9 @@ public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHol
     }
     
     public final void cascadeActivation(ActivationContext4 context) {
-        Iterator all = ((List) context.targetObject()).iterator();
-        while (all.hasNext()) {
-            context.cascadeActivationToChild(all.next());
+        Enumeration all = ((Vector) context.targetObject()).elements();
+        while (all.hasMoreElements()) {
+            context.cascadeActivationToChild(all.nextElement());
         }
     }
 
