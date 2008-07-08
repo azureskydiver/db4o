@@ -65,7 +65,12 @@ class ApiDiff {
 
 	private void checkMethods(final String prefix, ClassEntry l, ClassEntry r, MappingMode mappingMode) {
 		for (MethodEntry method : l.methods()) {
-			String descriptor = mappedDescriptor(method.descriptor(), mappingMode);
+			if (method.name().contains("<clinit>")) {
+				// static ctors are not really API
+				continue;
+			}
+			
+			final String descriptor = mappedDescriptor(method.descriptor(), mappingMode);
 			final MethodEntry actual = r.method(method.name(), descriptor);
 			if (null == actual) {
 				fail(prefix  + " '" + method + "' on type '"  + r.name() + "'.");
