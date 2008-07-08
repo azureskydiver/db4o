@@ -3,12 +3,14 @@
 
 	<property file="machine.properties" />
 	<property file="ant.properties" />
+	
+	<import file="common-dotnet.xml" />
 
 	<property name="dir.wix" location="lib/wix" />	
 	<property name="candle.exe" location="${dir.wix}/candle.exe" />
 	<property name="light.exe" location="${dir.wix}/light.exe" />
 	
-	<target name="build">
+	<target name="build" depends="configure-net2">
 		<mkdir dir="bin" />
 		
 		<!--
@@ -39,7 +41,7 @@
 			<arg file="bin/installer.wxs" />
 		</exec>		
 		
-		<csc targettype="exe" destfile="bin/WixBuilder.exe">
+		<csc targettype="exe" destfile="bin/WixBuilder.exe" executable="${csc.executable}">
 			<src dir="src/installer">
 				<include name="WixBuilder.cs" />
 			</src>
