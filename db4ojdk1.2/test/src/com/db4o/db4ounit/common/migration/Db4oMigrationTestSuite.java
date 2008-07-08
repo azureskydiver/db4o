@@ -40,7 +40,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 		new Class[] {
             BooleanHandlerUpdateTestCase.class,
             ByteHandlerUpdateTestCase.class,
-			CascadedDeleteFileFormatUpdateTestCase.class,
+            CascadedDeleteFileFormatUpdateTestCase.class,
             CharHandlerUpdateTestCase.class,
             DateHandlerUpdateTestCase.class,
             DoubleHandlerUpdateTestCase.class,
@@ -71,6 +71,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 	protected Class[] javaOnlyTestCases(){
 	    return new Class[] {
             ArrayListUpdateTestCase.class,
+            VectorUpdateTestCase.class,
 	    };
 	}
 	
