@@ -611,4 +611,25 @@ public final class HandlerRegistry {
         return 0;
     }
 
+    public TypeHandler4 registerTypeHandlerVersions(ClassMetadata classMetadata, ReflectClass claxx) {
+        Config4Impl config = container().configImpl();
+        TypeHandler4 typeHandler = config.typeHandlerForClass(claxx, HandlerRegistry.HANDLER_VERSION);
+        if(typeHandler == null){
+            return null;
+        }
+        TypeHandler4 currentVersion = typeHandler;
+        for (int version = HandlerRegistry.HANDLER_VERSION - 1; version >= 0; version--) {
+            TypeHandler4 previousVersion = config.typeHandlerForClass(claxx, (byte) version);
+            if(previousVersion == null){
+                FirstClassObjectHandler firstClassObjectHandler = new FirstClassObjectHandler(classMetadata);
+                previousVersion = correctHandlerVersion(firstClassObjectHandler, version);
+            }
+            if(currentVersion.getClass() != previousVersion.getClass()){
+                registerHandlerVersion(typeHandler, version, previousVersion);
+                currentVersion = previousVersion;
+            }
+        }
+        return typeHandler;
+    }
+
 }

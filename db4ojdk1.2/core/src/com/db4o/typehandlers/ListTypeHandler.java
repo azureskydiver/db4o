@@ -1,10 +1,9 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.db4ounit.jre5.collections.typehandler;
+package com.db4o.typehandlers;
 
 import java.util.*;
 
-import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -14,9 +13,7 @@ import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
-import com.db4o.reflect.*;
 
-@SuppressWarnings("unchecked")
 public class ListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler{
 
     public PreparedComparison prepareComparison(Context context, Object obj) {

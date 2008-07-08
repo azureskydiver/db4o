@@ -4,6 +4,8 @@ package com.db4o.db4ounit.jre5.collections.typehandler;
 
 import java.util.*;
 
+import com.db4o.typehandlers.*;
+
 import db4ounit.fixtures.*;
 
 @SuppressWarnings("unchecked")

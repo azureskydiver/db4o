@@ -472,6 +472,13 @@
 		</copy>
 		
 		<copy todir="${dir.sharpen}/db4oj/core/src">
+			<fileset dir="${dir.j.jdk1.2.core.src}">
+				<include name="com/db4o/typehandlers/*.java" />
+			</fileset>
+		</copy>		
+		
+		
+		<copy todir="${dir.sharpen}/db4oj/core/src">
 			<fileset dir="${dir.j.jdk5.core.src}">
 				<include name="com/db4o/collections/*.java" />
 			</fileset>

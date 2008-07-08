@@ -50,6 +50,10 @@ public class JDK {
 	Object deserialize(byte[] bytes) {
     	throw new Db4oException(Messages.NOT_IMPLEMENTED);
     }
+	
+    public void extendConfiguration(Config4Impl config) {
+        
+    }
 
     public Config4Class extendConfiguration(ReflectClass clazz, Configuration config, Config4Class classConfig) {
     	return classConfig;
@@ -177,4 +181,5 @@ public class JDK {
 	public boolean useNativeSerialization() {
 		return true;
 	}
+
 }

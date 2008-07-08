@@ -241,11 +241,17 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
     public Object deepClone(Object context) {
         TypeHandlerCloneContext typeHandlerCloneContext = (TypeHandlerCloneContext) context;
         FirstClassObjectHandler cloned = (FirstClassObjectHandler) Reflection4.newInstance(this);
-        FirstClassObjectHandler original = (FirstClassObjectHandler) typeHandlerCloneContext.original;
-        cloned._classMetadata = original._classMetadata;
+        if(typeHandlerCloneContext.original instanceof FirstClassObjectHandler){
+            FirstClassObjectHandler original = (FirstClassObjectHandler) typeHandlerCloneContext.original;
+            cloned._classMetadata = original._classMetadata;
+        }else{
+            if(_classMetadata == null){
+                throw new IllegalStateException();
+            }
+            cloned._classMetadata = _classMetadata;
+        }
         return cloned;
     }
-
     
     public void collectIDs(final CollectIdContext context) {
         TraverseFieldCommand command = new TraverseFieldCommand() {

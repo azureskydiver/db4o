@@ -516,8 +516,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	        _typeHandler = null;
 	        return;
 	    }
-	    TypeHandler4 registeredTypeHandler4 =
-	        container().configImpl().typeHandlerForClass(claxx, HandlerRegistry.HANDLER_VERSION);
+	    TypeHandler4 registeredTypeHandler4 = container().handlers().registerTypeHandlerVersions(this, claxx);
 	    _typeHandler = registeredTypeHandler4 != null ?
 	        registeredTypeHandler4 : createDefaultTypeHandler();
 	    if(_typeHandler instanceof FirstClassObjectHandler){
