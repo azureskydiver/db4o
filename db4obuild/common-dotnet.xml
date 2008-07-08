@@ -35,6 +35,7 @@
 		
 		<property name="target.framework.version" value="2.0" />
 		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
+		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
 		<property name="msbuild.executable.net2" location="${csc.executable.path.net2}/MSBuild.exe" />
 		<property name="msbuild.executable" location="${msbuild.executable.net2}" />
 		<property name="msbuild.target.platform" value="2005" />
