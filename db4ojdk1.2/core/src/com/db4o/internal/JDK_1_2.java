@@ -55,9 +55,10 @@ class JDK_1_2 extends JDKReflect {
     Object createActivateObjectReference(Object a_queue, ObjectReference a_yapObject, Object a_object) {
         return new ActiveObjectReference(a_queue, a_yapObject, a_object);
     }
-
-    Object getContextClassLoader() {
-        return Thread.currentThread().getContextClassLoader();
+    
+    public void extendConfiguration(Config4Impl config) {
+        super.extendConfiguration(config);
+        new CollectionTypeHandlers().register(config);
     }
 
     void forEachCollectionElement(Object a_object, Visitor4 a_visitor) {
@@ -74,6 +75,10 @@ class JDK_1_2 extends JDKReflect {
         }
     }
 
+    Object getContextClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
+    }
+
     Object getYapRefObject(Object a_object) {
         if (a_object instanceof ActiveObjectReference) {
             return ((ActiveObjectReference) a_object).get();
@@ -81,9 +86,9 @@ class JDK_1_2 extends JDKReflect {
         return a_object;
     }
     
-    boolean isCollectionTranslator(Config4Class a_config) {
-        if (a_config != null) {
-            ObjectTranslator ot = a_config.getTranslator();
+    boolean isCollectionTranslator(Config4Class config) {
+        if (config != null) {
+            ObjectTranslator ot = config.getTranslator();
             if (ot != null) {
                 return ot instanceof TCollection || ot instanceof TMap || ot instanceof THashtable;
             }

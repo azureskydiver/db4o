@@ -282,7 +282,10 @@ public final class Platform4 {
         
         activationDepth(config, "P2HashMap", 2);
         activationDepth(config, "P1HashElement", 1);
+        
+        jdk().extendConfiguration(config);
     }
+    
 
     /**
      * @deprecated uses deprecated API
