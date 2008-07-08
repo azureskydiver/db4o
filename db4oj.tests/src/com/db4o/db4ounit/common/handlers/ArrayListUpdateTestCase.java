@@ -6,12 +6,11 @@ package com.db4o.db4ounit.common.handlers;
 import db4ounit.*;
 import java.util.*;
 
-import com.db4o.db4ounit.common.handlers.VectorUpdateTestCase.*;
 import com.db4o.db4ounit.util.*;
 
 
 /**
- * @sharpen.ignore
+ * 
  */
 public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
     

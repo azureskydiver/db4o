@@ -7,12 +7,11 @@ import com.db4o.typehandlers.*;
 
 
 /**
- * @sharpen.ignore
  * @exclude
  */
 public class CollectionTypeHandlerRegistry {
     
-    private final int INSTALLED_FROM_VERSION = 4;
+    private static final int INSTALLED_FROM_VERSION = 4;
     
     private final Config4Impl _config;
     
