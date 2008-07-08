@@ -10,7 +10,7 @@ import com.db4o.typehandlers.*;
  * @sharpen.ignore
  * @exclude
  */
-public class CollectionTypeHandlers {
+public class CollectionTypeHandlerRegistry {
     
     private final int INSTALLED_FROM_VERSION = 4;
     
@@ -18,7 +18,7 @@ public class CollectionTypeHandlers {
     
     private final TypeHandler4 _listTypeHandler;
     
-    public CollectionTypeHandlers(Config4Impl config, TypeHandler4 listTypeHandler){
+    public CollectionTypeHandlerRegistry(Config4Impl config, TypeHandler4 listTypeHandler){
         _config = config;
         _listTypeHandler = listTypeHandler;
     }

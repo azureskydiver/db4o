@@ -59,7 +59,7 @@ class JDK_1_2 extends JDKReflect {
     }
     
     public void extendConfiguration(Config4Impl config) {
-        new CollectionTypeHandlers(config, new ListTypeHandler()).registerLists(new Class[]{
+        new CollectionTypeHandlerRegistry(config, new ListTypeHandler()).registerLists(new Class[]{
            ArrayList.class,
            Vector.class,
         });
