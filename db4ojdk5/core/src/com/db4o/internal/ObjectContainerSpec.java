@@ -10,6 +10,7 @@ package com.db4o.internal;
  * otherwise and implementing it directly kills .NET conversion.)
  * 
  * @exclude
+ * @decaf.ignore.implements InternalObjectContainer
  */
 public interface ObjectContainerSpec extends InternalObjectContainer {
 }
