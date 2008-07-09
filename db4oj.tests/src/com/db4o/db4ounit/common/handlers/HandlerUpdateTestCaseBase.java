@@ -39,6 +39,7 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
         objectContainer.activate(holder, Integer.MAX_VALUE);
         assertValues(holder._values);
         assertArrays(holder._arrays);
+        assertQueries(objectContainer);
     }
 
     private Holder retrieveHolderInstance(ExtObjectContainer objectContainer) {
@@ -76,6 +77,10 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
     protected abstract void assertValues(Object[] values);
     
     protected abstract void assertArrays(Object obj);
+    
+    protected void assertQueries(ExtObjectContainer objectContainer) {
+        // override on demand to check queries
+    }
 
     protected int[] castToIntArray(Object obj){
         ObjectByRef byRef = new ObjectByRef(obj);

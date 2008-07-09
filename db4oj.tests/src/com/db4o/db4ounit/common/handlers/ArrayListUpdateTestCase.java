@@ -6,7 +6,10 @@ package com.db4o.db4ounit.common.handlers;
 import db4ounit.*;
 import java.util.*;
 
+import com.db4o.*;
 import com.db4o.db4ounit.util.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
 
 /**
@@ -37,6 +40,8 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
     }
     
     public static class Item {
+        
+        public String _listClassName;
         
         public ArrayList _typed;
         
@@ -90,6 +95,7 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
     
     private Item createItem(Class clazz){
         Item item = new Item();
+        item._listClassName = clazz.getName();
         createLists(item, clazz);
         return item;
     }
@@ -141,6 +147,34 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
         assertItem(values[1], ArrayListExtensionWithField.class);
         assertItem(values[2], ArrayListExtensionWithoutField.class);
     }
+    
+    protected void assertQueries(ExtObjectContainer objectContainer) {
+        if(testNotCompatibleToOldVersion()){
+            return;
+        }
+        assertQueries(objectContainer, ArrayList.class);
+        assertQueries(objectContainer, ArrayListExtensionWithField.class);
+        assertQueries(objectContainer, ArrayListExtensionWithoutField.class);
+    }
+    
+    private void assertQueries(ExtObjectContainer objectContainer, Class clazz){
+        assertQuery(objectContainer, clazz, "_typed");
+//        assertQuery(objectContainer, clazz, "_untyped");
+//        assertQuery(objectContainer, clazz, "_interface");
+    }
+
+    
+    private void assertQuery(ExtObjectContainer objectContainer, Class clazz, String fieldName ){
+        Query q = objectContainer.query();
+        q.constrain(Item.class);
+        q.descend("_listClassName").constrain(clazz.getName());
+        q.descend(fieldName).constrain("one");
+        ObjectSet objectSet = q.execute();
+        Assert.areEqual(1, objectSet.size());
+        Item item = (Item) objectSet.next();
+        assertItem(item, clazz);
+    }
+    
 
     private void assertItem(Object obj, Class clazz) {
         Item item = (Item) obj;
