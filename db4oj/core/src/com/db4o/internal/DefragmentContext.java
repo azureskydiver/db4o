@@ -8,7 +8,7 @@ import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 
-public interface DefragmentContext extends BufferContext, MarshallingInfo{
+public interface DefragmentContext extends BufferContext, MarshallingInfo, HandlerVersionContext{
 	
 	public TypeHandler4 typeHandlerForId(int id);
 
@@ -19,8 +19,6 @@ public interface DefragmentContext extends BufferContext, MarshallingInfo{
 	public int copySlotlessID();
 
 	public int copyUnindexedID();
-	
-	public TypeHandler4 correctHandlerVersion(TypeHandler4 handler);
 	
 	public void defragment(TypeHandler4 handler);
 	

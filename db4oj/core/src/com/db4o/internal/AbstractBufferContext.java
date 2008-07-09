@@ -4,12 +4,13 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 
 /**
  * @exclude
  */
-public abstract class AbstractBufferContext implements BufferContext{
+public abstract class AbstractBufferContext implements BufferContext, HandlerVersionContext{
 	
 	private ReadBuffer _buffer;
 	
@@ -64,10 +65,6 @@ public abstract class AbstractBufferContext implements BufferContext{
 
 	public Transaction transaction() {
 	    return _transaction;
-	}
-
-	public TypeHandler4 correctHandlerVersion(TypeHandler4 handler) {
-	    return container().handlers().correctHandlerVersion(handler, handlerVersion());
 	}
 
 	public abstract int handlerVersion();

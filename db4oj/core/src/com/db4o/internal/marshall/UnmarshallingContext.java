@@ -11,7 +11,7 @@ import com.db4o.internal.activation.*;
  * 
  * @exclude
  */
-public class UnmarshallingContext extends ObjectHeaderContext implements FieldListInfo, MarshallingInfo{
+public class UnmarshallingContext extends ObjectHeaderContext implements FieldListInfo, MarshallingInfo, HandlerVersionContext{
     
     private final ObjectReference _reference;
     

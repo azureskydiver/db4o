@@ -133,8 +133,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				TypeHandler4 tempHandler = null;
 				
 				if(handler instanceof FirstClassHandler){
-				    FirstClassHandler firstClassHandler = (FirstClassHandler) queryingReadContext.correctHandlerVersion(handler); 
-				    tempHandler = firstClassHandler.readCandidateHandler(queryingReadContext);
+				    FirstClassHandler firstClassHandler = (FirstClassHandler) Handlers4.correctHandlerVersion(queryingReadContext, handler); 
+				    tempHandler = Handlers4.correctHandlerVersion(queryingReadContext, firstClassHandler.readCandidateHandler(queryingReadContext));
 				}
 
 				if (tempHandler != null) {
@@ -550,7 +550,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		}
 		final int offset = currentOffSet();
         QueryingReadContext context = newQueryingReadContext();
-        TypeHandler4 handler = context.correctHandlerVersion(_yapField.getHandler());
+        TypeHandler4 handler = Handlers4.correctHandlerVersion(context, _yapField.getHandler());
         QCandidate subCandidate = candidateCollection.readSubCandidate(context, handler);
 		seek(offset);
 		if (subCandidate != null) {

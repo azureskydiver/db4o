@@ -9,7 +9,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public interface InternalReadContext extends ReadContext{
+public interface InternalReadContext extends ReadContext, HandlerVersionContext{
     
     public ReadBuffer buffer(ReadBuffer buffer);
     
