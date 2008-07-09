@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
+import com.db4o.internal.marshall.*;
 import com.db4o.reflect.*;
 
 
@@ -37,7 +38,14 @@ public class Handlers4 {
     public static final int ANY_ARRAY_ID = 12;
     
     public static final int ANY_ARRAY_N_ID = 13;
-
+    
+    public static TypeHandler4 correctHandlerVersion(HandlerVersionContext context, TypeHandler4 handler){
+        int version = context.handlerVersion();
+        if(version >= HandlerRegistry.HANDLER_VERSION){
+            return handler;
+        }
+        return context.transaction().container().handlers().correctHandlerVersion(handler, version);
+    }
     
     public static boolean handlerCanHold(TypeHandler4 handler, Reflector reflector, ReflectClass claxx){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler);

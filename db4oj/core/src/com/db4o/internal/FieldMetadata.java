@@ -155,7 +155,14 @@ public class FieldMetadata implements StoredField {
     	return indexableTypeHandler.readIndexEntryFromObjectSlot(mf, writer);
     }
     
+    private TypeHandler4 correctedHandlerVersion(HandlerVersionContext context){
+        return Handlers4.correctHandlerVersion(context, _handler);
+    }
+    
     private TypeHandler4 correctedHandlerVersion(int handlerVersion){
+        if(handlerVersion >= HandlerRegistry.HANDLER_VERSION){
+            return _handler;
+        }
         return container().handlers().correctHandlerVersion(_handler, handlerVersion);
     }
     
@@ -302,9 +309,30 @@ public class FieldMetadata implements StoredField {
         	return;
         }
         
+        ensureObjectIsActive(trans, cascadeTo, depth);
+        
         FirstClassHandler cascadingHandler = (FirstClassHandler) _handler;
         ActivationContext4 context = new ActivationContext4(trans, cascadeTo, depth);
         cascadingHandler.cascadeActivation(context);
+        
+    }
+
+    private void ensureObjectIsActive(Transaction trans, Object cascadeTo, ActivationDepth depth) {
+        if(!depth.mode().isActivate()){
+            return;
+        }
+        if(_handler instanceof EmbeddedTypeHandler){
+            return;
+        }
+        ObjectContainerBase container = trans.container();
+        ClassMetadata classMetadata = container.classMetadataForObject(cascadeTo);
+        if(classMetadata == null || classMetadata.isPrimitive()){
+            return;
+        }
+        if(container.isActive(cascadeTo)){
+            return;
+        }
+        container.stillToActivate(trans, cascadeTo, depth.descend(classMetadata));
     }
 
 	protected Object cascadingTarget(Transaction trans, ActivationDepth depth, Object onObject) {
@@ -366,13 +394,15 @@ public class FieldMetadata implements StoredField {
         // TODO: Consider to use SlotFormat.handleAsObject()
         // to differentiate whether to call _handler.collectIDs
         // or context.addId()
+        
+        final TypeHandler4 handler = correctedHandlerVersion(context);
 
-        if (_handler instanceof ClassMetadata) {
+        if (handler instanceof ClassMetadata) {
             context.addId();
-        } else if (_handler instanceof CollectIdHandler) {
-            SlotFormat.forHandlerVersion(context.handlerVersion()).doWithSlotIndirection(context, _handler, new Closure4() {
+        } else if (handler instanceof CollectIdHandler) {
+            SlotFormat.forHandlerVersion(context.handlerVersion()).doWithSlotIndirection(context, handler, new Closure4() {
                 public Object run() {
-                    ((CollectIdHandler) _handler).collectIDs(context);
+                    ((CollectIdHandler) handler).collectIDs(context);
                     return null;
                 }
             });
@@ -710,7 +740,11 @@ public class FieldMetadata implements StoredField {
             return ((PrimitiveHandler)_handler).linkLength();
         }
         if(_handler instanceof VariableLengthTypeHandler){
-            return Const4.INDIRECTION_LENGTH;
+            if(_handler instanceof EmbeddedTypeHandler){
+                return Const4.INDIRECTION_LENGTH;    
+            }
+            return Const4.ID_LENGTH;
+            
         }
         
         // TODO: For custom handlers there will have to be a way 
@@ -1069,7 +1103,7 @@ public class FieldMetadata implements StoredField {
     }    
     
     public void defragField(final DefragmentContext context) {
-    	final TypeHandler4 typeHandler = context.correctHandlerVersion(getHandler());
+    	final TypeHandler4 typeHandler = correctedHandlerVersion(context);
         SlotFormat.forHandlerVersion(context.handlerVersion()).doWithSlotIndirection(context, typeHandler, new Closure4() {
             public Object run() {
                 context.defragment(typeHandler);

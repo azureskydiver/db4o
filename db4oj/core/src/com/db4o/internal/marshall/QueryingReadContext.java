@@ -10,7 +10,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class QueryingReadContext extends AbstractReadContext {
+public class QueryingReadContext extends AbstractReadContext implements HandlerVersionContext{
     
     private final QCandidates _candidates;
     
@@ -41,7 +41,5 @@ public class QueryingReadContext extends AbstractReadContext {
     public int handlerVersion() {
         return _handlerVersion;
     }
-    
-
     
 }

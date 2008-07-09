@@ -295,10 +295,6 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 		return container();
 	}
 
-	public TypeHandler4 correctHandlerVersion(TypeHandler4 handler) {
-	    return container().handlers().correctHandlerVersion(handler, handlerVersion());
-	}
-
 	public Slot allocateTargetSlot(int length) {
 		return _services.allocateTargetSlot(length);
 	}
@@ -348,7 +344,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
     }
 
     public void defragment(TypeHandler4 handler) {
-        final TypeHandler4 typeHandler = correctHandlerVersion(handler);
+        final TypeHandler4 typeHandler = Handlers4.correctHandlerVersion(this, handler);
         if(FieldMetadata.useDedicatedSlot(this, typeHandler)){
             if(hasClassIndex(typeHandler)){
                 copyID();

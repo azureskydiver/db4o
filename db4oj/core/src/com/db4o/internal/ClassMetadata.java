@@ -432,7 +432,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     public final void collectIDs(CollectIdContext context) {
         if(_typeHandler instanceof CollectIdHandler){
-            ((CollectIdHandler)_typeHandler).collectIDs(context);
+            ((CollectIdHandler)correctHandlerVersion(context)).collectIDs(context);
         }
     }
     
@@ -567,7 +567,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public void delete(DeleteContext context) throws Db4oIOException {
-    	_typeHandler.delete(context);
+        correctHandlerVersion(context).delete(context);
     }
 
     void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer, int a_type, boolean isUpdate) {
@@ -585,7 +585,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	        if(defaultObjectHandlerIsUsed()){
 	            mf._object.deleteMembers(this, attributes, buffer, a_type, isUpdate);
 	        }else{
-	            _typeHandler.delete(context);
+	            correctHandlerVersion(context).delete(context);
 	        }
 
         }catch(Exception e){
@@ -710,6 +710,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     // be read at.
     public final HandlerVersion findOffset(ByteArrayBuffer buffer, FieldMetadata field) {
         if (buffer == null) {
+            return HandlerVersion.INVALID;
+        }
+        if(! defaultObjectHandlerIsUsed()){
             return HandlerVersion.INVALID;
         }
         buffer._offset = 0;
@@ -1298,7 +1301,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
         if(_typeHandler instanceof FirstClassHandler){
-            return ((FirstClassHandler)_typeHandler).readCandidateHandler(context);    
+            return ((FirstClassHandler)correctHandlerVersion(context)).readCandidateHandler(context);    
         }
         return null;
     }
@@ -1323,7 +1326,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     public void readCandidates(final QueryingReadContext context) {
         if(_typeHandler instanceof FirstClassHandler){
-            ((FirstClassHandler)_typeHandler).readCandidates(context);    
+            ((FirstClassHandler)correctHandlerVersion(context)).readCandidates(context);    
         }
     }
 
@@ -1846,7 +1849,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }	
 
 	public void defragment(DefragmentContext context) {
-	    context.correctHandlerVersion(_typeHandler).defragment(context);
+	    correctHandlerVersion(context).defragment(context);
 	}
 	
 	public void defragClass(DefragmentContextImpl context, int classIndexID) throws CorruptionException, IOException {
@@ -1882,8 +1885,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public Object read(ReadContext context) {
-        UnmarshallingContext unmarshallingContext = (UnmarshallingContext)context;
-        return unmarshallingContext.correctHandlerVersion(_typeHandler).read(context);
+        return correctHandlerVersion((HandlerVersionContext)context).read(context);
     }
 
     public void write(WriteContext context, Object obj) {
@@ -1948,6 +1950,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     public boolean isSecondClass() {
         return isSecondClass(_typeHandler);
+    }
+    
+    private TypeHandler4 correctHandlerVersion(HandlerVersionContext context){
+        return Handlers4.correctHandlerVersion(context, _typeHandler);
     }
 
 }

@@ -25,7 +25,6 @@ public class DeleteContextImpl extends AbstractBufferContext implements DeleteCo
 		_fieldClass = fieldClass;
 		_handlerVersion = handlerVersion;
 		_fieldConfig = fieldConfig;
-		 
 	}
 
 	public void cascadeDeleteDepth(int depth) {
@@ -56,7 +55,7 @@ public class DeleteContextImpl extends AbstractBufferContext implements DeleteCo
 	}
 	
 	public void delete(TypeHandler4 handler){
-        final TypeHandler4 fieldHandler = correctHandlerVersion(handler);
+        final TypeHandler4 fieldHandler = Handlers4.correctHandlerVersion(this, handler);
 	    int preservedCascadeDepth = cascadeDeleteDepth();
 	    cascadeDeleteDepth(adjustedDepth());
         if(SlotFormat.forHandlerVersion(handlerVersion()).handleAsObject(fieldHandler)){

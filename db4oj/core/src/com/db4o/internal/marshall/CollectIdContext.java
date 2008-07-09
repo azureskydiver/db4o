@@ -10,7 +10,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class CollectIdContext extends ObjectHeaderContext implements MarshallingInfo{
+public class CollectIdContext extends ObjectHeaderContext implements MarshallingInfo, HandlerVersionContext{
     
     private final String _fieldName;
     
