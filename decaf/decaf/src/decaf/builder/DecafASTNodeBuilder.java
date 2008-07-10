@@ -11,28 +11,28 @@ import sharpen.core.framework.*;
 
 @SuppressWarnings("unchecked")
 class DecafASTNodeBuilder {
-	private final CompilationUnit unit;
-	private final AST ast;
-	private final DecafConfiguration config;
+	private final CompilationUnit _unit;
+	private final AST _ast;
+	private final DecafConfiguration _config;
 	
 	public DecafASTNodeBuilder(CompilationUnit unit, DecafConfiguration config) {
-		this.unit = unit;
-		this.ast = unit.getAST();
-		this.config = config;
+		this._unit = unit;
+		this._ast = unit.getAST();
+		this._config = config;
 	}
 
 	public <T extends ASTNode> T clone(T node) {
-		return (T) ASTNode.copySubtree(ast, node);
+		return (T) ASTNode.copySubtree(_ast, node);
 	}
 	
 	public SimpleName newSimpleName(String name) {
-		return ast.newSimpleName(name);
+		return _ast.newSimpleName(name);
 	}
 
 	public VariableDeclarationExpression newVariableDeclaration(Type variableType, String variableName, Expression initializer) {
 		VariableDeclarationFragment indexFragment = newVariableFragment(variableName, initializer);
 
-		VariableDeclarationExpression index = ast.newVariableDeclarationExpression(indexFragment);
+		VariableDeclarationExpression index = _ast.newVariableDeclarationExpression(indexFragment);
 		index.setType(variableType);
 		return index;
 	}
@@ -44,7 +44,7 @@ class DecafASTNodeBuilder {
 
 	private VariableDeclarationFragment newVariableFragment(
 			final SimpleName name, Expression initializer) {
-		VariableDeclarationFragment indexFragment = ast.newVariableDeclarationFragment();
+		VariableDeclarationFragment indexFragment = _ast.newVariableDeclarationFragment();
 		indexFragment.setName(name);
 		indexFragment.setInitializer(initializer);
 		return indexFragment;
@@ -55,7 +55,7 @@ class DecafASTNodeBuilder {
 			Expression comparison,
 			Expression updater,
 			Statement body) {
-		ForStatement stmt = ast.newForStatement();
+		ForStatement stmt = _ast.newForStatement();
 		stmt.initializers().add(initializer);
 		stmt.setExpression(comparison);
 		if(updater != null) {
@@ -66,7 +66,7 @@ class DecafASTNodeBuilder {
 	}
 
 	public Block newBlock(Statement... stmts) {
-		Block block = ast.newBlock();
+		Block block = _ast.newBlock();
 		for (Statement stmt : stmts) {
 			block.statements().add(stmt);
 		}
@@ -75,7 +75,7 @@ class DecafASTNodeBuilder {
 
 	public Type newType(ITypeBinding type) {
 		if (type.isArray()) {
-			return ast.newArrayType(newType(type.getComponentType()));
+			return _ast.newArrayType(newType(type.getComponentType()));
 		}
 		if (type.isPrimitive()) {
 			return newPrimitiveType(type.getName());
@@ -102,11 +102,11 @@ class DecafASTNodeBuilder {
 	private Set<String> buildImportedPackageSet() {
 		final HashSet<String> imported = new HashSet<String>();
 		imported.add("java.lang");
-		final PackageDeclaration packageDecl = unit.getPackage();
+		final PackageDeclaration packageDecl = _unit.getPackage();
 		if (null != packageDecl) {
 			imported.add(packageDecl.getName().toString());
 		}
-		for (Object o : unit.imports()) {
+		for (Object o : _unit.imports()) {
 			final ImportDeclaration importDeclaration = ((ImportDeclaration)o);
 			if (!importDeclaration.isOnDemand()) {
 				continue;
@@ -121,22 +121,22 @@ class DecafASTNodeBuilder {
 	}
 
 	public SimpleType newSimpleType(final String typeName) {
-		return ast.newSimpleType(ast.newName(typeName));
+		return _ast.newSimpleType(_ast.newName(typeName));
 	}
 
 	private PrimitiveType newPrimitiveType(final String primitiveTypeName) {
-		return ast.newPrimitiveType(PrimitiveType.toCode(primitiveTypeName));
+		return _ast.newPrimitiveType(PrimitiveType.toCode(primitiveTypeName));
 	}
 	
 	public Assignment newAssignment(Expression left, Expression right) {
-		final Assignment assignment = ast.newAssignment();
+		final Assignment assignment = _ast.newAssignment();
 		assignment.setLeftHandSide(left);
 		assignment.setRightHandSide(right);
 		return assignment;
 	}
 
 	public Expression newFieldAccess(Expression e, SimpleName fieldName) {
-		FieldAccess field = ast.newFieldAccess();
+		FieldAccess field = _ast.newFieldAccess();
 		field.setExpression(e);
 		field.setName(fieldName);
 		return field;
@@ -144,7 +144,7 @@ class DecafASTNodeBuilder {
 
 	
 	public ArrayAccess newArrayAccess(Expression array, Expression index) {
-		ArrayAccess access = ast.newArrayAccess();
+		ArrayAccess access = _ast.newArrayAccess();
 		access.setArray(array);
 		access.setIndex(index);
 		return access;
@@ -153,7 +153,7 @@ class DecafASTNodeBuilder {
 	public PrefixExpression newPrefixExpression(
 			PrefixExpression.Operator operator,
 			SimpleName operand) {
-		PrefixExpression increment = ast.newPrefixExpression();
+		PrefixExpression increment = _ast.newPrefixExpression();
 		increment.setOperator(operator);
 		increment.setOperand(operand);
 		return increment;
@@ -161,7 +161,7 @@ class DecafASTNodeBuilder {
 
 	public InfixExpression newInfixExpression(Operator operator,
 			Expression left, Expression right) {
-		InfixExpression e = ast.newInfixExpression();
+		InfixExpression e = _ast.newInfixExpression();
 		e.setOperator(operator);
 		e.setLeftOperand(left);
 		e.setRightOperand(right);
@@ -170,23 +170,23 @@ class DecafASTNodeBuilder {
 
 	public VariableDeclarationStatement newVariableDeclarationStatement(
 			String variableName, Type variableType, Expression initializer) {
-		VariableDeclarationStatement variable = ast.newVariableDeclarationStatement(newVariableFragment(variableName, initializer));
+		VariableDeclarationStatement variable = _ast.newVariableDeclarationStatement(newVariableFragment(variableName, initializer));
 		variable.setType(variableType);
 		variable.modifiers().add(newFinalModifier());
 		return variable;
 	}
 	
 	public Modifier newFinalModifier() {
-		return ast.newModifier(ModifierKeyword.FINAL_KEYWORD);
+		return _ast.newModifier(ModifierKeyword.FINAL_KEYWORD);
 	}
 	
 	public Modifier newPrivateModifier() {
-		return ast.newModifier(ModifierKeyword.PRIVATE_KEYWORD);
+		return _ast.newModifier(ModifierKeyword.PRIVATE_KEYWORD);
 	}
 	
 	public CastExpression newCast(final ITypeBinding type,
 			final Expression expression) {
-		final CastExpression cast = ast.newCastExpression();
+		final CastExpression cast = _ast.newCastExpression();
 		cast.setType(newType(type.getErasure()));
 		cast.setExpression(expression);
 		return cast;
@@ -194,21 +194,21 @@ class DecafASTNodeBuilder {
 	
 	public MethodInvocation newMethodInvocation(final Expression target,
 			final String name) {
-		final MethodInvocation invocation = ast.newMethodInvocation();
+		final MethodInvocation invocation = _ast.newMethodInvocation();
 		invocation.setExpression(target);
 		invocation.setName(newSimpleName(name));
 		return invocation;
 	}
 
 	public ParenthesizedExpression parenthesize(final Expression expression) {
-		final ParenthesizedExpression pe = ast.newParenthesizedExpression();
+		final ParenthesizedExpression pe = _ast.newParenthesizedExpression();
 		pe.setExpression(expression);
 		return pe;
 	}
 
 	public ArrayCreation newArrayCreation(final ITypeBinding arrayType,
 			ArrayInitializer arrayInitializer) {
-		ArrayCreation varArgsArray = ast.newArrayCreation();
+		ArrayCreation varArgsArray = _ast.newArrayCreation();
 		varArgsArray.setInitializer(arrayInitializer);
 
 		varArgsArray.setType((ArrayType) newType(arrayType));
@@ -216,26 +216,26 @@ class DecafASTNodeBuilder {
 	}
 
 	public ArrayInitializer newArrayInitializer() {
-		return ast.newArrayInitializer();
+		return _ast.newArrayInitializer();
 	}
 
 	private IMethodBinding originalMethodDefinitionFor(
 			final IMethodBinding method) {
-		return Bindings.findMethodDefininition(method, ast);
+		return Bindings.findMethodDefininition(method, _ast);
 	}
 	
 	public ClassInstanceCreation newClassInstanceCreation(Type type) {
-		final ClassInstanceCreation creation = ast.newClassInstanceCreation();
+		final ClassInstanceCreation creation = _ast.newClassInstanceCreation();
 		creation.setType(type);
 		return creation;
 	}
 	
 	public PrimitiveType newPrimitiveType(Code typeCode) {
-		return ast.newPrimitiveType(typeCode);
+		return _ast.newPrimitiveType(typeCode);
 	}
 	
 	public NumberLiteral newNumberLiteral(String literal) {
-		return ast.newNumberLiteral(literal);
+		return _ast.newNumberLiteral(literal);
 	}
 
 	public IMethodBinding originalMethodDefinitionFor(MethodDeclaration node) {
@@ -250,7 +250,7 @@ class DecafASTNodeBuilder {
 	}
 
 	private boolean isObjectType(final ITypeBinding type) {
-		return ast.resolveWellKnownType(Object.class.getName()) == type;
+		return _ast.resolveWellKnownType(Object.class.getName()) == type;
 	}
 
 	public boolean isIgnored(BodyDeclaration node) {
@@ -389,18 +389,18 @@ class DecafASTNodeBuilder {
 	
 	public Type mappedType(ITypeBinding origBinding) {
 		String name = qualifiedName(origBinding);
-		String mappedName = config.typeNameMapping(name);
+		String mappedName = _config.typeNameMapping(name);
 		return mappedName == null ? null : newSimpleType(mappedName);
 	}
 
 	public FieldDeclaration newField(Type fieldType, String fieldName, Expression initializer) {
-		final FieldDeclaration field = ast.newFieldDeclaration(newVariableFragment(fieldName, initializer));
+		final FieldDeclaration field = _ast.newFieldDeclaration(newVariableFragment(fieldName, initializer));
 		field.setType(fieldType);
 		return field;
 	}
 
 	public ThisExpression newThisExpression() {
-		return ast.newThisExpression();
+		return _ast.newThisExpression();
 	}
 
 	public Expression newFieldAccess(Expression expression, String fieldName) {
@@ -408,12 +408,12 @@ class DecafASTNodeBuilder {
 	}
 
 	public ReturnStatement newReturnStatement(Expression e) {
-		final ReturnStatement stmt = ast.newReturnStatement();
+		final ReturnStatement stmt = _ast.newReturnStatement();
 		stmt.setExpression(e);
 		return stmt;
 	}
 
 	public ExpressionStatement newExpressionStatement(Expression e) {
-		return ast.newExpressionStatement(e);
+		return _ast.newExpressionStatement(e);
 	}
 }
