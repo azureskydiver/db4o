@@ -2,10 +2,10 @@
 
 package com.db4o.config.annotations.reflect;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
 
-import com.db4o.config.annotations.GeneratedUUIDs;
+import com.db4o.config.annotations.*;
 
 /**
  * @exclude

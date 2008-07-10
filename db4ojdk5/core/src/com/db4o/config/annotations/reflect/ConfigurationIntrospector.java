@@ -2,20 +2,12 @@
 
 package com.db4o.config.annotations.reflect;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
+import java.util.*;
 
-import com.db4o.config.Configuration;
-import com.db4o.config.annotations.CalledConstructor;
-import com.db4o.config.annotations.GeneratedUUIDs;
-import com.db4o.config.annotations.GeneratedVersionNumbers;
-import com.db4o.config.annotations.Indexed;
-import com.db4o.config.annotations.PersistedStaticFieldValues;
-import com.db4o.config.annotations.StoredTransientFields;
-import com.db4o.config.annotations.UpdatedDepth;
+import com.db4o.config.*;
+import com.db4o.config.annotations.*;
 import com.db4o.internal.*;
 
 /**

@@ -2,11 +2,10 @@
 
 package com.db4o.config.annotations.reflect;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
 
-import com.db4o.config.annotations.Indexed;
+import com.db4o.config.annotations.*;
 
 /**
  * @exclude
