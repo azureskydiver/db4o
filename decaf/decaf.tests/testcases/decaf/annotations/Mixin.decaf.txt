@@ -1,0 +1,88 @@
+package decaf.annotations;
+
+import java.io.*;
+
+/**
+ * @decaf.mixin ChainedRuntimeExceptionMixin
+ */
+abstract class ChainedRuntimeException extends RuntimeException {
+
+    private final ChainedRuntimeExceptionMixin _mixin;
+
+	public ChainedRuntimeException() {
+		this._mixin = new ChainedRuntimeExceptionMixin(this);
+    }
+
+    public ChainedRuntimeException(String msg) {
+        super(msg, null);
+		this._mixin = new ChainedRuntimeExceptionMixin(this, msg);
+    }
+
+    public ChainedRuntimeException(String msg, Throwable cause) {
+        super(msg, cause);
+		this._mixin = new ChainedRuntimeExceptionMixin(this, msg, cause);
+    }
+
+	/**
+	 * @return  The originating exception, if any
+	 */
+	public final Throwable getCause() {
+		return this._mixin.getCause();
+	}
+
+	public void printStackTrace() {
+		this._mixin.printStackTrace();
+	}
+
+	public void printStackTrace(PrintStream ps, boolean flag) {
+		this._mixin.printStackTrace(ps, flag);
+	}
+
+	public void printStackTrace(PrintWriter pw) {
+		this._mixin.printStackTrace(pw);
+	}
+}
+
+class ChainedRuntimeExceptionMixin {
+
+    private final ChainedRuntimeException _mixee;
+    private final Throwable _cause;
+
+    public ChainedRuntimeExceptionMixin(ChainedRuntimeException mixee) {
+        _mixee = mixee;
+        _cause = null;
+    }
+    
+    public ChainedRuntimeExceptionMixin(ChainedRuntimeException mixee, String msg) {
+        _mixee = mixee;
+        _cause = null;
+    }
+    
+    public ChainedRuntimeExceptionMixin(ChainedRuntimeException mixee, String msg, Throwable cause) {
+        _mixee = mixee;
+        _cause = cause;
+    }
+
+    /**
+    * @return The originating exception, if any
+    */
+    public final Throwable getCause() {
+        return _cause;
+    }
+
+    public void printStackTrace() {
+        printStackTrace(System.err);
+    }
+
+    public void printStackTrace(PrintStream ps, boolean flag) {
+        printStackTrace(new PrintWriter(ps, flag));
+    }
+
+    public void printStackTrace(PrintWriter pw) {
+        _mixee.printStackTrace(pw);
+        if (_cause != null) {
+            pw.println("Nested cause:");
+            _cause.printStackTrace(pw);
+        }
+    }
+}

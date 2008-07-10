@@ -4,6 +4,18 @@ import decaf.tests.*;
 
 public class AnnotationsTestCase extends DecafTestCaseBase {
 	
+	public void testRemoveAt() throws Exception {
+		runResourceTestCase("RemoveAt");
+	}
+	
+	public void testInsertFirst() throws Exception {
+		runResourceTestCase("InsertFirst");
+	}
+
+	public void testMixin() throws Exception {
+		runResourceTestCase("Mixin");
+	}
+	
 	public void testJdk5AnnotationsAreAutomaticallyIgnored() throws Exception {
 		runResourceTestCase("Jdk5AnnotationsAreAutomaticallyIgnored");
 	}

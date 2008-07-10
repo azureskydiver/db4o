@@ -1,0 +1,11 @@
+package decaf.annotations;
+
+class InsertFirst {
+
+	/**
+	 * @decaf.insertFirst bar();
+	 */
+	public void foo() {
+		System.out.println("foo");
+	}
+}
