@@ -127,6 +127,13 @@ class DecafASTNodeBuilder {
 	private PrimitiveType newPrimitiveType(final String primitiveTypeName) {
 		return ast.newPrimitiveType(PrimitiveType.toCode(primitiveTypeName));
 	}
+	
+	public Assignment newAssignment(Expression left, Expression right) {
+		final Assignment assignment = ast.newAssignment();
+		assignment.setLeftHandSide(left);
+		assignment.setRightHandSide(right);
+		return assignment;
+	}
 
 	public Expression newFieldAccess(Expression e, SimpleName fieldName) {
 		FieldAccess field = ast.newFieldAccess();
@@ -169,8 +176,12 @@ class DecafASTNodeBuilder {
 		return variable;
 	}
 	
-	private  Modifier newFinalModifier() {
+	public Modifier newFinalModifier() {
 		return ast.newModifier(ModifierKeyword.FINAL_KEYWORD);
+	}
+	
+	public Modifier newPrivateModifier() {
+		return ast.newModifier(ModifierKeyword.PRIVATE_KEYWORD);
 	}
 	
 	public CastExpression newCast(final ITypeBinding type,
@@ -213,8 +224,10 @@ class DecafASTNodeBuilder {
 		return Bindings.findMethodDefininition(method, ast);
 	}
 	
-	public ClassInstanceCreation newClassInstanceCreation() {
-		return ast.newClassInstanceCreation();
+	public ClassInstanceCreation newClassInstanceCreation(Type type) {
+		final ClassInstanceCreation creation = ast.newClassInstanceCreation();
+		creation.setType(type);
+		return creation;
 	}
 	
 	public PrimitiveType newPrimitiveType(Code typeCode) {
@@ -327,37 +340,6 @@ class DecafASTNodeBuilder {
 		return _unboxing.get(type.getQualifiedName());
 	}		
 
-	private boolean singleTagWithNoFragments(final List<TagElement> tags) {
-		return tags.size() == 1 && tags.get(0).fragments().isEmpty();
-	}
-
-	private Set<String> allSuperInterfaceTypeNames(TypeDeclaration node) {
-		final List superInterfaces = node.superInterfaceTypes();
-		final HashSet<String> set = new HashSet<String>(superInterfaces.size());
-		for (Object o : superInterfaces) {
-			set.add(o.toString());
-		}
-		return set;
-	}
-
-	public Set<String> ignoredImplements(TypeDeclaration node) {
-		
-		final List<TagElement> tags = JavadocUtility.getJavadocTags(node, DecafAnnotations.IGNORE_IMPLEMENTS);
-		if (tags.isEmpty()) {
-			return Collections.emptySet();
-		}
-		
-		if (singleTagWithNoFragments(tags)) {
-			return allSuperInterfaceTypeNames(node);
-		}
-		
-		final HashSet<String> ignored = new HashSet<String>(tags.size());
-		for (TagElement tag : tags) {
-			ignored.add(JavadocUtility.textFragment(tag.fragments(), 0));
-		}
-		return ignored;
-	}
-
 	public boolean isExpressionStatement(final ASTNode parent) {
 		return parent.getNodeType() == ASTNode.EXPRESSION_STATEMENT;
 	}
@@ -409,5 +391,29 @@ class DecafASTNodeBuilder {
 		String name = qualifiedName(origBinding);
 		String mappedName = config.typeNameMapping(name);
 		return mappedName == null ? null : newSimpleType(mappedName);
+	}
+
+	public FieldDeclaration newField(Type fieldType, String fieldName, Expression initializer) {
+		final FieldDeclaration field = ast.newFieldDeclaration(newVariableFragment(fieldName, initializer));
+		field.setType(fieldType);
+		return field;
+	}
+
+	public ThisExpression newThisExpression() {
+		return ast.newThisExpression();
+	}
+
+	public Expression newFieldAccess(Expression expression, String fieldName) {
+		return newFieldAccess(expression, newSimpleName(fieldName));
+	}
+
+	public ReturnStatement newReturnStatement(Expression e) {
+		final ReturnStatement stmt = ast.newReturnStatement();
+		stmt.setExpression(e);
+		return stmt;
+	}
+
+	public ExpressionStatement newExpressionStatement(Expression e) {
+		return ast.newExpressionStatement(e);
 	}
 }

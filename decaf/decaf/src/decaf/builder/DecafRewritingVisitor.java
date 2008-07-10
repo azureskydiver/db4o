@@ -5,14 +5,18 @@ import java.util.*;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
+import sharpen.core.framework.*;
+
 
 @SuppressWarnings("unchecked")
 public final class DecafRewritingVisitor extends ASTVisitor {
 	private final ASTRewrite rewrite;
 	private final DecafASTNodeBuilder builder;
+//	private final ASTProvider provider;
 
-	public DecafRewritingVisitor(CompilationUnit unit, ASTRewrite rewrite, DecafConfiguration decafConfig) {
-		builder = new DecafASTNodeBuilder(unit, decafConfig);
+	public DecafRewritingVisitor(ASTProvider provider, CompilationUnit unit, ASTRewrite rewrite, DecafConfiguration decafConfig) {
+//		this.provider = provider;
+		this.builder = new DecafASTNodeBuilder(unit, decafConfig);
 		this.rewrite = rewrite;
 	}
 	
@@ -29,8 +33,132 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	public void endVisit(TypeDeclaration node) {
 		processIgnoreExtends(node);
 		processIgnoreImplements(node);
+		processMixins(node);
 	}
 	
+	private void processMixins(TypeDeclaration node) {
+		final List<TagElement> mixins = JavadocUtility.getJavadocTags(node, DecafAnnotations.MIXIN);
+		for (String mixin : textFragments(mixins)) {
+			processMixin(node, mixin);
+		}
+	}
+
+	private void processMixin(TypeDeclaration node, String mixinTypeName) {
+		
+		final ListRewrite nodeDeclarationsRewrite = rewrite.getListRewrite(node, TypeDeclaration.BODY_DECLARATIONS_PROPERTY);
+		
+		final TypeDeclaration mixin = resolveMixin(node, mixinTypeName);	
+		
+		final FieldDeclaration mixinField = newMixinFieldDeclaration(mixin);
+		nodeDeclarationsRewrite.insertFirst(mixinField, null);
+		
+		generateMixinDelegators(mixin, nodeDeclarationsRewrite);
+		
+		introduceMixinInstantiations(node, mixin);
+		
+	}
+
+	private void introduceMixinInstantiations(TypeDeclaration node, final TypeDeclaration mixin) {
+		
+		node.accept(new ASTVisitor() {
+			@Override
+			public boolean visit(MethodDeclaration node) {
+				if (!node.isConstructor()) {
+					return false;
+				}
+				
+				final ClassInstanceCreation mixinInstantiation = newClassInstanceCreation(mixin);
+				mixinInstantiation.arguments().add(builder.newThisExpression());
+				addParametersToArgumentList(node, mixinInstantiation.arguments());
+				bodyListRewriteFor(node).insertLast(
+					builder.newExpressionStatement(
+						builder.newAssignment(
+							newMixinFieldAccess(),
+							mixinInstantiation)),
+					null);
+				
+				return false;
+			}
+		});
+	}
+
+	private void generateMixinDelegators(final TypeDeclaration mixin,
+			final ListRewrite nodeDeclarationsRewrite) {
+		mixin.accept(new ASTVisitor() {
+			@Override
+			public boolean visit(MethodDeclaration node) {
+				
+				if (node.isConstructor()) {
+					return false;
+				}
+				
+				final MethodInvocation delegation = builder.newMethodInvocation(
+					newMixinFieldAccess(),
+					node.getName().toString());
+				addParametersToArgumentList(node, delegation.arguments());
+								
+				final Statement stmt = returnsValue(node)
+					? builder.newReturnStatement(delegation)
+					: builder.newExpressionStatement(delegation);
+				
+				final MethodDeclaration delegator = builder.clone(node);
+				delegator.setBody(builder.newBlock(stmt));
+				
+				nodeDeclarationsRewrite.insertLast(delegator, null);
+				return false;
+			}
+		});
+	}
+	
+	private boolean returnsValue(MethodDeclaration node) {
+		final Type returnType = node.getReturnType2();		
+		if (!returnType.isPrimitiveType()) {
+			return true;
+		}
+		return PrimitiveType.VOID != ((PrimitiveType)returnType).getPrimitiveTypeCode();
+	}
+
+
+	private FieldDeclaration newMixinFieldDeclaration(
+			final TypeDeclaration mixin) {
+		final FieldDeclaration mixinField = newField(newType(mixin.resolveBinding()), "_mixin", null);
+		mixinField.modifiers().add(builder.newPrivateModifier());
+		mixinField.modifiers().add(builder.newFinalModifier());
+		return mixinField;
+	}
+
+	private ClassInstanceCreation newClassInstanceCreation(
+			final TypeDeclaration type) {
+		return builder.newClassInstanceCreation(newType(type.resolveBinding()));
+	}
+
+	private FieldDeclaration newField(Type fieldType, String fieldName, Expression initializer) {
+		return builder.newField(fieldType, fieldName, initializer);
+	}
+
+	private TypeDeclaration resolveMixin(TypeDeclaration node, String mixinTypeName) {
+		final CompilationUnit unit = (CompilationUnit) node.getParent();
+		for (Object o : unit.types()) {
+			final TypeDeclaration typeDeclaration = (TypeDeclaration)o;
+			if (typeDeclaration.getName().toString().equals(mixinTypeName)) {
+				return typeDeclaration;
+			}
+		}
+		throw new IllegalArgumentException("Type '" + mixinTypeName + "' must be defined in the same file as '" + node.getName() + "'.");
+		
+//		final IResource resource = resourceFor(node);
+//		final IFile mixinFile = resource.getParent().getFile(new Path(mixinTypeName + ".java"));
+//		final ICompilationUnit mixinUnit = JavaCore.createCompilationUnitFrom(mixinFile);
+//		final CompilationUnit mixinAST = provider.forCompilationUnit(mixinUnit, null);
+//		return (TypeDeclaration) mixinAST.types().get(0);
+	}
+
+//	private IResource resourceFor(TypeDeclaration node) {
+//		IJavaElement element = node.resolveBinding().getJavaElement();
+//		IResource resource = element.getResource();
+//		return resource;
+//	}
+
 	@Override
 	public boolean visit(AnnotationTypeDeclaration node) {
 		remove(node);
@@ -59,7 +187,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	public boolean visit(ParameterizedType node) {
 		final ITypeBinding binding = node.getType().resolveBinding().getErasure();
 		final Type mappedType = builder.mappedType(binding);
-		replace(node, mappedType == null ? builder.newType(binding) : mappedType);
+		replace(node, mappedType == null ? newType(binding) : mappedType);
 		return false;
 	}
 	
@@ -69,7 +197,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		if (binding.isTypeVariable()) {
 			final ITypeBinding erasure = binding.getErasure();
 			final Type mapped = builder.mappedType(erasure);
-			replace(node, mapped == null ? builder.newType(erasure) : mapped);
+			replace(node, mapped == null ? newType(erasure) : mapped);
 			return false;
 		}
 		
@@ -224,10 +352,16 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public void endVisit(MethodDeclaration node) {
+		
 		if (node.isVarargs()) {
 			handleVarArgsMethod(node);
 		}
 		
+		processRewritingAnnotations(node);
+		processMethodDeclarationErasure(node);	
+	}
+
+	private void processMethodDeclarationErasure(MethodDeclaration node) {		
 		if(node.isConstructor()) {
 			return;
 		}
@@ -240,13 +374,44 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		final IMethodBinding originalMethodDeclaration = definition.getMethodDeclaration();
 		if (originalMethodDeclaration != definition) {
 			eraseMethodDeclaration(node, originalMethodDeclaration);
-		}	
+		}
+	}
+
+	private void processRewritingAnnotations(MethodDeclaration node) {
+		
+		if (node.getBody() == null) {
+			return;
+		}
+		
+		final ListRewrite bodyRewrite = bodyListRewriteFor(node);
+		for (TagElement tag : javadocTags(node)) {
+			final String tagName = tag.getTagName();
+			if (tagName.equals(DecafAnnotations.INSERT_FIRST)) {
+				final String code = textFragment(tag, 0);
+				bodyRewrite.insertFirst(rewrite.createStringPlaceholder(code, ASTNode.EXPRESSION_STATEMENT), null);
+			} else if (tagName.equals(DecafAnnotations.REMOVE_AT)) {
+				final int index = Integer.parseInt(textFragment(tag, 0));
+				bodyRewrite.remove((ASTNode) bodyRewrite.getOriginalList().get(index), null);
+			}
+		}
+		
+	}
+
+	private ListRewrite bodyListRewriteFor(MethodDeclaration node) {
+		return rewrite.getListRewrite(node.getBody(), Block.STATEMENTS_PROPERTY);
+	}
+
+	private List<TagElement> javadocTags(MethodDeclaration node) {
+		final Javadoc javadoc = node.getJavadoc();
+		return javadoc == null
+			? Collections.emptyList()
+			: javadoc.tags();
 	}
 
 	public void endVisit(EnhancedForStatement node) {
 
 		final SingleVariableDeclaration variable = node.getParameter();
-		Expression origExpr = node.getExpression();
+		final Expression origExpr = node.getExpression();
 		final Expression erasure = erasureFor(origExpr);
 		final Expression sequenceExpr = erasure != null ? erasure : origExpr;
 
@@ -281,7 +446,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		Expression cmp = builder.newInfixExpression(
 								InfixExpression.Operator.LESS,
 								builder.newSimpleName(indexVariableName),
-								builder.newFieldAccess(builder.clone(arrayReference), builder.newSimpleName("length")));
+								builder.newFieldAccess(clone(arrayReference), builder.newSimpleName("length")));
 
 		final ListRewrite statementsRewrite = rewrite.getListRewrite(node.getBody(), Block.STATEMENTS_PROPERTY);
 		statementsRewrite.insertFirst(
@@ -289,7 +454,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 						variable.getName().toString(),
 						builder.clone(variable.getType()),
 						builder.newArrayAccess(
-								builder.clone(arrayReference),
+								clone(arrayReference),
 								builder.newSimpleName(indexVariableName))), null);
 
 		final PrefixExpression updater = builder.newPrefixExpression(
@@ -297,6 +462,10 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 				builder.newSimpleName(indexVariableName));
 
 		replaceEnhancedForStatement(node, tempArrayVariable, index, cmp,updater);
+	}
+
+	private <T extends ASTNode> T clone(T node) {
+		return builder.clone(node);
 	}
 
 	private void buildIterableEnhancedFor(EnhancedForStatement node, final SingleVariableDeclaration variable, final Expression iterable) {
@@ -374,8 +543,12 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		if (actualType.resolveBinding() == expectedErasure) {
 			return false;
 		}
-		replace(actualType, builder.newType(expectedErasure));
+		replace(actualType, newType(expectedErasure));
 		return true;
+	}
+
+	private Type newType(final ITypeBinding expectedErasure) {
+		return builder.newType(expectedErasure);
 	}
 
 	private void handleVarArgsMethod(MethodDeclaration method) {
@@ -410,8 +583,8 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private ClassInstanceCreation box(final Expression expression) {
-		final ClassInstanceCreation creation = builder.newClassInstanceCreation();
-		creation.setType(builder.newSimpleType(builder.boxedTypeFor(expression.resolveTypeBinding())));
+		SimpleType type = builder.newSimpleType(builder.boxedTypeFor(expression.resolveTypeBinding()));
+		final ClassInstanceCreation creation = builder.newClassInstanceCreation(type);
 		creation.arguments().add(safeMove(expression));
 		return creation;
 	}
@@ -477,7 +650,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private void processIgnoreImplements(TypeDeclaration node) {
-		final Set<String> ignoredImplements = builder.ignoredImplements(node);
+		final Set<String> ignoredImplements = ignoredImplements(node);
 		if (ignoredImplements.isEmpty()) {
 			return;
 		}
@@ -489,6 +662,45 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			}
 		}
 	}	
+	
+	private Set<String> allSuperInterfaceTypeNames(TypeDeclaration node) {
+		final List superInterfaces = node.superInterfaceTypes();
+		final HashSet<String> set = new HashSet<String>(superInterfaces.size());
+		for (Object o : superInterfaces) {
+			set.add(o.toString());
+		}
+		return set;
+	}
+	
+	private boolean singleTagWithNoFragments(final List<TagElement> tags) {
+		return tags.size() == 1 && tags.get(0).fragments().isEmpty();
+	}
+
+	public Set<String> ignoredImplements(TypeDeclaration node) {
+		
+		final List<TagElement> tags = JavadocUtility.getJavadocTags(node, DecafAnnotations.IGNORE_IMPLEMENTS);
+		if (tags.isEmpty()) {
+			return Collections.emptySet();
+		}
+		
+		if (singleTagWithNoFragments(tags)) {
+			return allSuperInterfaceTypeNames(node);
+		}
+		
+		return textFragments(tags);
+	}
+
+	private Set<String> textFragments(final List<TagElement> tags) {
+		final HashSet<String> ignored = new HashSet<String>(tags.size());
+		for (TagElement tag : tags) {
+			ignored.add(textFragment(tag, 0));
+		}
+		return ignored;
+	}
+
+	private String textFragment(TagElement tag, int index) {
+		return JavadocUtility.textFragment(tag.fragments(), index);
+	}
 
 	private void rewriteVarArgsArguments(final IMethodBinding method,
 			final List arguments, final ListRewrite argumentListRewrite) {
@@ -532,6 +744,20 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	private <T extends ASTNode> T move(T node) {
 		return (T)rewrite.createMoveTarget(node);
+	}
+
+	private void addParametersToArgumentList(MethodDeclaration node,
+			final List argumentList) {
+		for (Object o : node.parameters()) {
+			final SingleVariableDeclaration parameter = (SingleVariableDeclaration)o;
+			argumentList.add(builder.clone(parameter.getName()));
+		}
+	}
+
+	private Expression newMixinFieldAccess() {
+		return builder.newFieldAccess(
+			builder.newThisExpression(),
+			"_mixin");
 	}
 
 }
