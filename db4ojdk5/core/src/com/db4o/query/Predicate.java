@@ -120,9 +120,26 @@ public abstract class Predicate<ExtentType> implements Serializable{
      */
 	@SuppressWarnings("unchecked")
 	public Class<? extends ExtentType> extentType() {
-		if(_extentType!=null) {
-			return _extentType;
+		if (_extentType == null) {
+			_extentType = figureOutExtentType();
 		}
+		return _extentType;
+	}
+
+	/**
+	 * @decaf.removeAt 0
+	 */
+	private Class<? extends ExtentType> figureOutExtentType() {		
+		if (true) {
+			return extentTypeFromGenericParameter();
+		}
+		return (Class<? extends ExtentType>) getFilterMethod().getParameterTypes()[0];
+	}
+
+	/**
+	 * @decaf.ignore 
+	 */
+	private Class<? extends ExtentType> extentTypeFromGenericParameter() {
 		Class<ExtentType> extentType=(Class<ExtentType>)getFilterMethod().getParameterTypes()[0];
 		try {
 			Type genericType=((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
@@ -138,6 +155,8 @@ public abstract class Predicate<ExtentType> implements Serializable{
      * The match method that needs to be implemented by the user.
      * @param candidate the candidate object passed from db4o 
      * @return true to include an object in the resulting ObjectSet
+     * 
+     * @decaf.ignore
      */
 	public abstract boolean match(ExtentType candidate);
 	
