@@ -57,8 +57,16 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
         
         ArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler(untypedFieldHandler, false);
         assertCorrectedHandlerVersion(MultidimensionalArrayHandler0.class, multidimensionalArrayHandler, 0);
-        assertCorrectedHandlerVersion(MultidimensionalArrayHandler.class, multidimensionalArrayHandler, 1);
-        assertCorrectedHandlerVersion(MultidimensionalArrayHandler.class, multidimensionalArrayHandler, 2);
+        
+        if(NullableArrayHandling.enabled()){
+            assertCorrectedHandlerVersion(MultidimensionalArrayHandler3.class, multidimensionalArrayHandler, 1);
+            assertCorrectedHandlerVersion(MultidimensionalArrayHandler3.class, multidimensionalArrayHandler, 2);
+            assertCorrectedHandlerVersion(MultidimensionalArrayHandler3.class, multidimensionalArrayHandler, 3);
+        }else{
+            assertCorrectedHandlerVersion(MultidimensionalArrayHandler.class, multidimensionalArrayHandler, 1);
+            assertCorrectedHandlerVersion(MultidimensionalArrayHandler.class, multidimensionalArrayHandler, 2);
+        }
+        
         assertCorrectedHandlerVersion(MultidimensionalArrayHandler.class, multidimensionalArrayHandler, HandlerRegistry.HANDLER_VERSION);
 	    
 	}
