@@ -71,7 +71,7 @@ class ChainedRuntimeExceptionMixin {
     }
 
     public void printStackTrace() {
-        printStackTrace(System.err);
+        printStackTrace(System.err, true);
     }
 
     public void printStackTrace(PrintStream ps, boolean flag) {
