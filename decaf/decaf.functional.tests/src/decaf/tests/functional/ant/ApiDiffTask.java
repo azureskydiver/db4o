@@ -10,9 +10,10 @@ import decaf.builder.*;
  * Checks that two jars have the same API surface (same public types with same public methods).
  */
 public class ApiDiffTask extends Task {
-	
+		
 	private File _from;
 	private File _to;
+	private final IgnoreSettings _ignoreSettings = new IgnoreSettings();
 
 	public void setFrom(File from) {
 		_from = from;
@@ -20,6 +21,10 @@ public class ApiDiffTask extends Task {
 	
 	public void setTo(File to) {
 		_to = to;
+	}
+	
+	public IgnoreSettings.Entry createIgnore() {
+		return _ignoreSettings.createEntry();
 	}
 
 	@Override
@@ -29,7 +34,7 @@ public class ApiDiffTask extends Task {
 		
 		try {
 			final FailureHandler failureHandler = new FailureHandler();
-			new ApiDiff(failureHandler, _from, _to, DecafConfiguration.forJDK11()).run();
+			new ApiDiff(failureHandler, _ignoreSettings, _from, _to, DecafConfiguration.forJDK11()).run();
 			if (failureHandler.failures() > 0) {
 				throw new BuildException("API surfaces do not match. "  + format(failureHandler) + " been reported.", getLocation());
 			}

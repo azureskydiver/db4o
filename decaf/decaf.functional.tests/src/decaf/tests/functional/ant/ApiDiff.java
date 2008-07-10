@@ -18,14 +18,24 @@ class ApiDiff {
 	private final Map<String, ClassEntry> _expected;
 	private final Map<String, ClassEntry> _actual;
 	private final DecafConfiguration _config;
+	private final IgnoreSettings _ignoreSettings;
 	
-	public ApiDiff(FailureHandler failureHandler, File expect, File actual, DecafConfiguration config) throws IOException {
+	public ApiDiff(FailureHandler failureHandler, IgnoreSettings ignoreSettings, File expect, File actual, DecafConfiguration config) throws IOException {
+		_ignoreSettings = ignoreSettings;
 		_failureHandler = failureHandler;
-		_expected = classEntries(expect);
-		_actual = classEntries(actual);
+		_expected = removeAll(classEntries(expect), ignoreSettings.ignoredClasses());
+		_actual = removeAll(classEntries(actual), ignoreSettings.ignoredClasses());
 		_config = config;
 	}
-	
+
+	private Map<String, ClassEntry> removeAll(
+			Map<String, ClassEntry> classEntries, Iterable<String> ignoreList) {
+		for (String ignored : ignoreList) {
+			classEntries.remove(ignored);
+		}
+		return classEntries;
+	}
+
 	public void run() {
 		final Set<String> unexpected = difference(_actual, _expected);
 		logFailures("Unexpected class: ", unexpected);
@@ -59,14 +69,14 @@ class ApiDiff {
 	}
 
 	private void checkMembers(ClassEntry expected, ClassEntry actual) {
-		checkMethods("Missing", expected, actual, MappingMode.NO_MAPPING);
-		checkMethods("Unexpected", actual, expected, MappingMode.NO_MAPPING);
+		final Set<String> ignored = _ignoreSettings.ignoredMethodsFor(expected.name());
+		checkMethods("Missing", expected, actual, MappingMode.NO_MAPPING, ignored);
+		checkMethods("Unexpected", actual, expected, MappingMode.NO_MAPPING, ignored);
 	}
 
-	private void checkMethods(final String prefix, ClassEntry l, ClassEntry r, MappingMode mappingMode) {
+	private void checkMethods(final String prefix, ClassEntry l, ClassEntry r, MappingMode mappingMode, Set<String> ignored) {
 		for (MethodEntry method : l.methods()) {
-			if (method.name().contains("<clinit>")) {
-				// static ctors are not really API
+			if (ignored.contains(method.name())) {
 				continue;
 			}
 			
