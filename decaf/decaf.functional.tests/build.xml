@@ -34,7 +34,13 @@
 			</classpath>
 		</taskdef>
 		
-		<api-diff from="${build.dir}/db4o-old.jar" to="${build.dir}/db4o-decaf.jar" />
+		<api-diff from="${build.dir}/db4o-old.jar" to="${build.dir}/db4o-decaf.jar">
+			<ignore class="com.db4o.foundation.ChainedRuntimeExceptionMixin" />
+			<ignore class="com.db4o.query.Predicate">
+				<method name="figureOutExtentType" />
+				<method name="&lt;clinit&gt;" />
+			</ignore>
+		</api-diff>
 		
 	</target>
 	
