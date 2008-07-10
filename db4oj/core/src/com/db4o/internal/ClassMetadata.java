@@ -420,6 +420,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         QConObject a_parent,
         Object a_object,
         Visitor4 a_visitor) {
+        if(! defaultObjectHandlerIsUsed()){
+            return;
+        }
         if (i_fields != null) {
             for (int i = 0; i < i_fields.length; i++) {
                 i_fields[i].collectConstraints(a_trans, a_parent, a_object, a_visitor);
