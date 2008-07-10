@@ -15,7 +15,8 @@ import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 
 /**
- * TypeHandler for java.util.Vector
+ * TypeHandler for java.util.Vector for JDKs without the 
+ * collection framework.
  * @sharpen.ignore
  */
 public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler{

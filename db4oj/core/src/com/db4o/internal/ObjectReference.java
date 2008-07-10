@@ -443,7 +443,8 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		transaction.writeUpdateDeleteMembers(getID(), _class, container._handlers.arrayType(obj), 0);
 		
         MarshallingContext context = new MarshallingContext(transaction, this, updatedepth, false);
-        MarshallerFamily.current()._object.marshall(obj, context);
+        _class.write(context, obj);
+        
         Pointer4 pointer = context.allocateSlot();
         ByteArrayBuffer buffer = context.ToWriteBuffer(pointer);
         
