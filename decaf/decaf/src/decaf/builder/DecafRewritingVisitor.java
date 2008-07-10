@@ -12,10 +12,8 @@ import sharpen.core.framework.*;
 public final class DecafRewritingVisitor extends ASTVisitor {
 	private final ASTRewrite rewrite;
 	private final DecafASTNodeBuilder builder;
-//	private final ASTProvider provider;
 
-	public DecafRewritingVisitor(ASTProvider provider, CompilationUnit unit, ASTRewrite rewrite, DecafConfiguration decafConfig) {
-//		this.provider = provider;
+	public DecafRewritingVisitor(CompilationUnit unit, ASTRewrite rewrite, DecafConfiguration decafConfig) {
 		this.builder = new DecafASTNodeBuilder(unit, decafConfig);
 		this.rewrite = rewrite;
 	}
@@ -145,19 +143,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			}
 		}
 		throw new IllegalArgumentException("Type '" + mixinTypeName + "' must be defined in the same file as '" + node.getName() + "'.");
-		
-//		final IResource resource = resourceFor(node);
-//		final IFile mixinFile = resource.getParent().getFile(new Path(mixinTypeName + ".java"));
-//		final ICompilationUnit mixinUnit = JavaCore.createCompilationUnitFrom(mixinFile);
-//		final CompilationUnit mixinAST = provider.forCompilationUnit(mixinUnit, null);
-//		return (TypeDeclaration) mixinAST.types().get(0);
 	}
-
-//	private IResource resourceFor(TypeDeclaration node) {
-//		IJavaElement element = node.resolveBinding().getJavaElement();
-//		IResource resource = element.getResource();
-//		return resource;
-//	}
 
 	@Override
 	public boolean visit(AnnotationTypeDeclaration node) {
