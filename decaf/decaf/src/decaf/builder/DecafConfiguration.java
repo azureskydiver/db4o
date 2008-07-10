@@ -4,30 +4,30 @@ import java.util.*;
 
 public class DecafConfiguration {
 	
-	private final Map<String, String> mapping;
+	private final Map<String, String> _mapping;
 
 	public DecafConfiguration() {
-		this.mapping = Collections.emptyMap();
+		this._mapping = Collections.emptyMap();
 	}
 
 	public DecafConfiguration(Map<String, String> mapping) {
-		this.mapping = mapping;
+		this._mapping = mapping;
 	}
 	
 	public Iterable<String> mappedTypeKeys() {
-		return mapping.keySet();
+		return _mapping.keySet();
 	}
 
 	public Iterable<String> mappedTypeValues() {
-		return mapping.values();
+		return _mapping.values();
 	}
 
 	public String typeNameMapping(String typeName) {
-		return mapping.get(typeName);
+		return _mapping.get(typeName);
 	}
 
 	public String reverseTypeNameMapping(String typeName) {
-		for (Map.Entry<String,String> entry : mapping.entrySet()) {
+		for (Map.Entry<String,String> entry : _mapping.entrySet()) {
 			if(entry.getValue().equals(typeName)) {
 				return entry.getKey();
 			}
