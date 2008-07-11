@@ -16,9 +16,16 @@ public class CollectIdContext extends ObjectHeaderContext implements Marshalling
     
     private TreeInt _ids;
     
+    public CollectIdContext _parentContext;
+    
     public CollectIdContext(Transaction transaction, ObjectHeader oh, ReadBuffer buffer, String fieldName) {
         super(transaction, buffer, oh);
         _fieldName = fieldName;
+    }
+
+    public CollectIdContext(CollectIdContext context, ObjectHeader header, ReadBuffer buffer) {
+        this(context.transaction(), header, buffer, context._fieldName);
+        _parentContext = context;
     }
 
     public String fieldName() {
@@ -30,6 +37,14 @@ public class CollectIdContext extends ObjectHeaderContext implements Marshalling
         if(id <= 0){
             return;
         }
+        addIdToTree(id);
+    }
+
+    private void addIdToTree(int id) {
+        if(_parentContext != null){
+            _parentContext.addIdToTree(id);
+            return;
+        }
         _ids = (TreeInt) Tree.add(_ids, new TreeInt(id));
     }
     
@@ -39,6 +54,13 @@ public class CollectIdContext extends ObjectHeaderContext implements Marshalling
 
     public Tree ids() {
         return _ids;
+    }
+
+    public void readID(ReadsObjectIds objectIDHandler) {
+        ObjectID objectID = objectIDHandler.readObjectID(this);
+        if(objectID.isValid()){
+            addIdToTree(objectID._id);
+        }
     }
 
 }

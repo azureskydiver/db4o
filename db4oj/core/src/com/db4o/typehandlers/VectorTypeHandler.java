@@ -19,7 +19,7 @@ import com.db4o.marshall.*;
  * collection framework.
  * @sharpen.ignore
  */
-public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler{
+public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler, CollectIdHandler {
 
     public PreparedComparison prepareComparison(Context context, Object obj) {
         // TODO Auto-generated method stub
@@ -95,21 +95,38 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanH
     public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
         return this;
     }
-	
-   public void readCandidates(QueryingReadContext context) throws Db4oIOException {
-        int elementCount = context.readInt();
-        TypeHandler4 elementHandler = context.container().handlers().untypedObjectHandler();
-        readSubCandidates(context, elementCount, elementHandler);
+    
+    private TypeHandler4 untypedObjectHandlerFrom(Context context) {
+        return context.transaction().container().handlers().untypedObjectHandler();
     }
-   
-   private void readSubCandidates(QueryingReadContext context, int count, TypeHandler4 elementHandler) {
-       QCandidates candidates = context.candidates();
-       for (int i = 0; i < count; i++) {
-           QCandidate qc = candidates.readSubCandidate(context, elementHandler);
-           if(qc != null){
-               candidates.addByIdentity(qc);
-           }
-       }
-   }
+
+    // FIXME: readCandidates and CollectIDs are very similar.
+    //        Refactor to do the same task only once and use an accumulator
+    //        object that understands IDs
+    
+    public void readCandidates(QueryingReadContext context)
+            throws Db4oIOException {
+        int elementCount = context.readInt();
+        TypeHandler4 elementHandler = untypedObjectHandlerFrom(context);
+        QCandidates candidates = context.candidates();
+        for (int i = 0; i < elementCount; i++) {
+            QCandidate qc = candidates.readSubCandidate(context, elementHandler);
+            if (qc != null) {
+                candidates.addByIdentity(qc);
+            }
+        }
+    }
+
+    public void collectIDs(final CollectIdContext context) {
+        int elementCount = context.readInt();
+        TypeHandler4 elementHandler = untypedObjectHandlerFrom(context);
+        if(! (elementHandler instanceof ReadsObjectIds)){
+            return;
+        }
+        ReadsObjectIds objectIDHandler = (ReadsObjectIds) elementHandler;
+        for (int i = 0; i < elementCount; i++) {
+            context.readID(objectIDHandler);
+        }
+    }
 
 }

@@ -72,6 +72,9 @@ public final class QCandidates implements Visitor4 {
     }
 
     public QCandidate addByIdentity(QCandidate candidate) {
+        if(Debug.queries){
+            System.out.println("Candidate added by identity ID:" + candidate._key);
+        }
         i_root = Tree.add(i_root, candidate);
         if(candidate._size == 0){
         	
