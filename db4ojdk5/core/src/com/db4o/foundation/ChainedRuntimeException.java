@@ -16,38 +16,44 @@ public abstract class ChainedRuntimeException extends RuntimeException {
     public ChainedRuntimeException() {
     }
 
+    /**
+     * @decaf.replaceFirst super(msg);
+     */
     public ChainedRuntimeException(String msg) {
         super(msg, null);
     }
 
+    /**
+     * @decaf.replaceFirst super(msg);
+     */
     public ChainedRuntimeException(String msg, Throwable cause) {
         super(msg, cause);
     }
 }
 
 /**
- * Provides jdk11 compatible exception chaining. decaf will mixin this class
+ * Provides jdk11 compatible exception chaining. decaf will mix this class
  * into {@link ChainedRuntimeException}.
  * 
  * @exclude
  */
 class ChainedRuntimeExceptionMixin {
 
-    private final ChainedRuntimeException _mixee;
+    private final ChainedRuntimeException _subject;
     private final Throwable _cause;
 
     public ChainedRuntimeExceptionMixin(ChainedRuntimeException mixee) {
-        _mixee = mixee;
+        _subject = mixee;
         _cause = null;
     }
     
     public ChainedRuntimeExceptionMixin(ChainedRuntimeException mixee, String msg) {
-        _mixee = mixee;
+        _subject = mixee;
         _cause = null;
     }
     
     public ChainedRuntimeExceptionMixin(ChainedRuntimeException mixee, String msg, Throwable cause) {
-        _mixee = mixee;
+        _subject = mixee;
         _cause = cause;
     }
 
@@ -67,7 +73,7 @@ class ChainedRuntimeExceptionMixin {
     }
 
     public void printStackTrace(PrintWriter pw) {
-        _mixee.printStackTrace(pw);
+        _subject.printStackTrace(pw);
         if (_cause != null) {
             pw.println("Nested cause:");
             _cause.printStackTrace(pw);

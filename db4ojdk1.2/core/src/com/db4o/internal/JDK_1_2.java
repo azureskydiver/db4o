@@ -16,7 +16,6 @@ import com.db4o.typehandlers.*;
 import com.db4o.types.*;
 
 /**
- * 
  * @decaf.ignore
  */
 class JDK_1_2 extends JDKReflect {

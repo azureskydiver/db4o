@@ -38,6 +38,7 @@
 			<ignore class="com.db4o.foundation.ChainedRuntimeExceptionMixin" />
 			<ignore class="com.db4o.query.Predicate">
 				<method name="figureOutExtentType" />
+				<method name="filterParameterType" />
 				<method name="&lt;clinit&gt;" />
 			</ignore>
 		</api-diff>
