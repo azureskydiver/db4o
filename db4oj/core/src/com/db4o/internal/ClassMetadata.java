@@ -29,7 +29,7 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass, FieldHandler , ReadsObjectIds{
+public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass, FieldHandler , ReadsObjectIds, CollectIdHandler{
     
 	private TypeHandler4 _typeHandler;
     

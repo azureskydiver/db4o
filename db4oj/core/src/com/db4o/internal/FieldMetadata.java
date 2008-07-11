@@ -386,28 +386,43 @@ public class FieldMetadata implements StoredField {
         }
     }
     
-    public final void collectIDs(final CollectIdContext context) throws FieldIndexException {
+    public final void collectIDs(CollectIdContext context) throws FieldIndexException {
         if (! alive()) {
             return ;
         }
         
-        // TODO: Consider to use SlotFormat.handleAsObject()
-        // to differentiate whether to call _handler.collectIDs
-        // or context.addId()
-        
         final TypeHandler4 handler = correctedHandlerVersion(context);
+        
+        if(! (handler instanceof CollectIdHandler)){
+            return;
+        }
 
         if (handler instanceof ClassMetadata) {
             context.addId();
-        } else if (handler instanceof CollectIdHandler) {
-            SlotFormat.forHandlerVersion(context.handlerVersion()).doWithSlotIndirection(context, handler, new Closure4() {
-                public Object run() {
-                    ((CollectIdHandler) handler).collectIDs(context);
-                    return null;
-                }
-            });
-            
+            return;
+        } 
+        
+        CollectIdContext collectionContext = context;
+        
+        LocalObjectContainer container = (LocalObjectContainer) context.container();
+        final SlotFormat slotFormat = SlotFormat.forHandlerVersion(context.handlerVersion());
+        if(slotFormat.handleAsObject(handler)){
+            // TODO: Code is similar to QCandidate.readArrayCandidates. Try to refactor to one place.
+            int collectionID = context.readInt();
+            ByteArrayBuffer collectionBuffer = container.readReaderByID(context.transaction(), collectionID);
+            ObjectHeader header = ObjectHeader.scrollBufferToContent(container, collectionBuffer);
+            collectionContext = new CollectIdContext(context, header, collectionBuffer );
         }
+        
+        final CollectIdContext finalContext = collectionContext;
+        
+        slotFormat.doWithSlotIndirection(finalContext, handler, new Closure4() {
+            public Object run() {
+                ((CollectIdHandler) handler).collectIDs(finalContext);
+                return null;
+            }
+        });
+            
     }
 
     void configure(ReflectClass clazz, boolean isPrimitive) {

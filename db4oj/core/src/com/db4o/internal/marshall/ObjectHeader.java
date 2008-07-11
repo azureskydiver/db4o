@@ -105,8 +105,8 @@ public final class ObjectHeader {
         return _handlerVersion;
     }
 
-    public static void scrollBufferToContent(LocalObjectContainer container, ByteArrayBuffer buffer) {
-        new ObjectHeader(container, buffer);
+    public static ObjectHeader scrollBufferToContent(LocalObjectContainer container, ByteArrayBuffer buffer) {
+        return new ObjectHeader(container, buffer);
     }
     
 }

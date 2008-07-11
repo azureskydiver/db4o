@@ -73,6 +73,9 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
         if(id == 0){
             _key = candidates.generateCandidateId();
         }
+        if(Debug.queries){
+            System.out.println("Candidate identified ID:" + _key );
+        }
 	}
 
 	public Object shallowClone() {
@@ -339,9 +342,11 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
                 QueryingReadContext context = null;
                 
                 if(slotFormat.handleAsObject(arrayElementHandler)){
+                    // TODO: Code is similar to FieldMetadata.collectIDs. Try to refactor to one place.
                     int collectionID = buffer.readInt();
                     ByteArrayBuffer arrayElementBuffer = container().readReaderByID(transaction(), collectionID);
                     ObjectHeader.scrollBufferToContent(container(), arrayElementBuffer);
+                    
                     context = new QueryingReadContext(transaction(), candidates, _handlerVersion, arrayElementBuffer, collectionID);
                 }else{
                     context = new QueryingReadContext(transaction(), candidates, _handlerVersion, buffer, 0);                    
@@ -356,7 +361,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
     }
 
 	void doNotInclude() {
-		_include = false;
+		include(false);
 		if (_dependants != null) {
 			Iterator4 i = new Iterator4Impl(_dependants);
 			_dependants = null;
@@ -474,6 +479,10 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		// TODO:
 		// Internal and external flag may need to be handled seperately.
 		_include = flag;
+		if(Debug.queries){
+		    System.out.println("Candidate include " + flag + " ID: " + _key);
+	    }
+
 	}
 
 	public void onAttemptToAddDuplicate(Tree a_tree) {
@@ -530,10 +539,10 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 					}
                     setBytes(container().readReaderByID(transaction(), _key));
 					if (_bytes == null) {
-						_include = false;
+						include(false);
 					}
 				} else {
-					_include = false;
+				    include(false);
 				}
 			}
 		}
