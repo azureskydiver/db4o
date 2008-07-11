@@ -60,7 +60,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		_candidates = qcandidates;
 	}
 
-	public QCandidate(QCandidates candidates, Object obj, int id, boolean include) {
+	public QCandidate(QCandidates candidates, Object obj, int id) {
 		super(id);
 		if (DTrace.enabled) {
 			DTrace.CREATE_CANDIDATE.log(id);
@@ -68,7 +68,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
         _candidates = candidates;
 		_order = this;
 		_member = obj;
-		_include = include;
+		_include = true;
         
         if(id == 0){
             _key = candidates.generateCandidateId();
@@ -326,7 +326,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			}
 		}
 
-		addDependant(a_candidates.addByIdentity(candidate));
+		addDependant(a_candidates.add(candidate));
 		return true;
 	}
 
@@ -352,7 +352,20 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
                     context = new QueryingReadContext(transaction(), candidates, _handlerVersion, buffer, 0);                    
                 }
                 
-                ((FirstClassHandler)arrayElementHandler).readCandidates(context);
+                ((FirstClassHandler)arrayElementHandler).collectIDs(context);
+                
+                Tree.traverse(context.ids(), new Visitor4() {
+                    public void visit(Object obj) {
+                        TreeInt idNode = (TreeInt) obj;
+                        candidates.add(new QCandidate(candidates, null, idNode._key));
+                    }
+                });
+                
+                Iterator4 i = context.objectsWithoutId();
+                while(i.moveNext()){
+                    Object obj = i.current();
+                    candidates.add(new QCandidate(candidates, obj, 0));
+                }
                 
                 return null;
             }

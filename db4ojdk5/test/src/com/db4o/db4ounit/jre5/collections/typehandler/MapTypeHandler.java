@@ -112,7 +112,7 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHold
        for (int i = 0; i < count; i++) {
            QCandidate qc = candidates.readSubCandidate(context, elementHandler);
            if(qc != null){
-               candidates.addByIdentity(qc);
+               candidates.add(qc);
            }
            // Read the value too, but ignore.
            // TODO: Optimize for just doing a seek here.
@@ -130,5 +130,15 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHold
         }
         return depth.descend(cm);
     }
+    
+    public void collectIDs(final QueryingReadContext context) {
+        int elementCount = context.readInt();
+        TypeHandler4 elementHandler = context.container().handlers().untypedObjectHandler();
+        for (int i = 0; i < elementCount; i++) {
+            context.readId(elementHandler);
+            context.skipId(elementHandler);
+        }
+    }
+
 
 }

@@ -418,7 +418,7 @@ public class FieldMetadata implements StoredField {
         
         slotFormat.doWithSlotIndirection(finalContext, handler, new Closure4() {
             public Object run() {
-                ((CollectIdHandler) handler).collectIDs(finalContext);
+                ((CollectIdHandler) handler).oldCollectIDs(finalContext);
                 return null;
             }
         });

@@ -11,6 +11,6 @@ import com.db4o.internal.marshall.*;
  */
 public interface CollectIdHandler extends TypeHandler4{
     
-    public void collectIDs(CollectIdContext context);
+    public void oldCollectIDs(CollectIdContext context);
 
 }

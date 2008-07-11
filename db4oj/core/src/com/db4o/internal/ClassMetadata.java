@@ -438,11 +438,32 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
     }
     
-    public final void collectIDs(CollectIdContext context) {
+    public final void collectIDs(CollectIdContext context, String fieldName) {
+        if(! defaultObjectHandlerIsUsed()){
+            throw new IllegalStateException();
+        }
+        ((FirstClassObjectHandler)correctHandlerVersion(context)).collectIDs(context, fieldName);
+        
+    }
+    
+    public final void oldCollectIDs(CollectIdContext context) {
         if(_typeHandler instanceof CollectIdHandler){
-            ((CollectIdHandler)correctHandlerVersion(context)).collectIDs(context);
+            ((CollectIdHandler)correctHandlerVersion(context)).oldCollectIDs(context);
         }
     }
+    
+    public void readCandidates(final QueryingReadContext context) {
+        if(_typeHandler instanceof FirstClassHandler){
+            ((FirstClassHandler)correctHandlerVersion(context)).readCandidates(context);    
+        }
+    }
+    
+    public void collectIDs(final QueryingReadContext context) {
+        if(_typeHandler instanceof FirstClassHandler){
+            ((FirstClassHandler)correctHandlerVersion(context)).collectIDs(context);    
+        }
+    }
+
     
     public boolean customizedNewInstance(){
         return configInstantiates();
@@ -1330,12 +1351,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     public ObjectID readObjectID(InternalReadContext context){
         return ObjectID.read(context);
-    }
-
-    public void readCandidates(final QueryingReadContext context) {
-        if(_typeHandler instanceof FirstClassHandler){
-            ((FirstClassHandler)correctHandlerVersion(context)).readCandidates(context);    
-        }
     }
 
 	public final int readFieldCount(ReadBuffer buffer) {
