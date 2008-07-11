@@ -19,22 +19,30 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
     
     private final int _handlerVersion;
     
-    private TreeInt _ids;
+    private IdObjectCollector _collector;
     
-    private List4 _objectsWithoutId;
-
-    public QueryingReadContext(Transaction transaction, QCandidates candidates, int handlerVersion, ReadBuffer buffer, int collectionID) {
+    private QueryingReadContext(Transaction transaction, QCandidates candidates, int handlerVersion, ReadBuffer buffer, int collectionID, IdObjectCollector collector) {
         super(transaction, buffer);
         _candidates = candidates;
         _activationDepth = new LegacyActivationDepth(0);
         _collectionID = collectionID;
         _handlerVersion = handlerVersion;
+        _collector = collector;
+    }
+    
+    public QueryingReadContext(Transaction transaction, QCandidates candidates, int handlerVersion, ReadBuffer buffer, int collectionID) {
+        this(transaction, candidates, handlerVersion, buffer, collectionID, new IdObjectCollector());
     }
     
     public QueryingReadContext(Transaction transaction, int handlerVersion, ReadBuffer buffer) {
         this(transaction, null, handlerVersion, buffer, 0);
     }
     
+    public QueryingReadContext(Transaction transaction, int handlerVersion, ReadBuffer buffer,
+        IdObjectCollector collector) {
+        this(transaction, null, handlerVersion, buffer, 0,collector);
+    }
+
     public int collectionID() {
         return _collectionID;
     }
@@ -48,11 +56,11 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
     }
     
     private void addId(int id) {
-        _ids = (TreeInt) Tree.add(_ids, new TreeInt(id));
+        _collector.addId(id);
     }
     
     public Tree ids() {
-        return _ids;
+        return _collector.ids();
     }
     
     public void add(Object obj) {
@@ -89,7 +97,7 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
     }
 
     private void addObjectWithoutId(Object obj) {
-        _objectsWithoutId = new List4(_objectsWithoutId, obj);
+        _collector.add(obj);
     }
 
     public void skipId(TypeHandler4 handler) {
@@ -102,7 +110,7 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
     }
     
     public Iterator4 objectsWithoutId(){
-        return new Iterator4Impl(_objectsWithoutId);
+        return _collector.objects();
     }
     
 }

@@ -393,7 +393,7 @@ public class FieldMetadata implements StoredField {
         
         final TypeHandler4 handler = correctedHandlerVersion(context);
         
-        if(! (handler instanceof CollectIdHandler)){
+        if(! (handler instanceof FirstClassHandler)){
             return;
         }
 
@@ -402,7 +402,7 @@ public class FieldMetadata implements StoredField {
             return;
         } 
         
-        CollectIdContext collectionContext = context;
+        QueryingReadContext queryingReadContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), context.buffer(), context.collector());
         
         LocalObjectContainer container = (LocalObjectContainer) context.container();
         final SlotFormat slotFormat = SlotFormat.forHandlerVersion(context.handlerVersion());
@@ -410,15 +410,15 @@ public class FieldMetadata implements StoredField {
             // TODO: Code is similar to QCandidate.readArrayCandidates. Try to refactor to one place.
             int collectionID = context.readInt();
             ByteArrayBuffer collectionBuffer = container.readReaderByID(context.transaction(), collectionID);
-            ObjectHeader header = ObjectHeader.scrollBufferToContent(container, collectionBuffer);
-            collectionContext = new CollectIdContextDelegate(context, header, collectionBuffer );
+            ObjectHeader.scrollBufferToContent(container, collectionBuffer);
+            queryingReadContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), collectionBuffer, context.collector());
         }
         
-        final CollectIdContext finalContext = collectionContext;
+        final QueryingReadContext finalContext = queryingReadContext;
         
         slotFormat.doWithSlotIndirection(finalContext, handler, new Closure4() {
             public Object run() {
-                ((CollectIdHandler) handler).oldCollectIDs(finalContext);
+                ((FirstClassHandler) handler).collectIDs(finalContext);
                 return null;
             }
         });
