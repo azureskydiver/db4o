@@ -5,6 +5,8 @@ package com.db4o.query;
 import java.io.*;
 import java.lang.reflect.*;
 
+import com.db4o.internal.*;
+
 /**
  * Base class for native queries.
  * <br><br>Native Queries provide the ability to run one or more lines
@@ -167,7 +169,7 @@ public abstract class Predicate<ExtentType> implements Serializable{
 	public boolean appliesTo(ExtentType candidate) {
 		try {
 			Method filterMethod=getFilterMethod();
-			filterMethod.setAccessible(true);
+			Platform4.setAccessible(filterMethod);
 			Object ret=filterMethod.invoke(this,new Object[]{candidate});
 			return ((Boolean)ret).booleanValue();
 		} catch (Exception e) {
