@@ -1,0 +1,11 @@
+package decaf.annotations;
+
+class ReplaceFirst {
+
+	/**
+	 * @decaf.replaceFirst return "bar";
+	 */
+	public void foo() {
+		return "bar";
+	}
+}

@@ -4,8 +4,12 @@ import decaf.tests.*;
 
 public class AnnotationsTestCase extends DecafTestCaseBase {
 	
-	public void testRemoveAt() throws Exception {
-		runResourceTestCase("RemoveAt");
+	public void testReplaceFirst() throws Exception {
+		runResourceTestCase("ReplaceFirst");
+	}
+	
+	public void testRemoveFirst() throws Exception {
+		runResourceTestCase("RemoveFirst");
 	}
 	
 	public void testInsertFirst() throws Exception {
