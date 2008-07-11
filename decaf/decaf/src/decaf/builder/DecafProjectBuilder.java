@@ -11,18 +11,6 @@ import org.eclipse.ui.*;
 
 public class DecafProjectBuilder extends IncrementalProjectBuilder {
 
-	public static IJavaProject decafProjectFor(IJavaProject javaProject) throws CoreException {
-		IWorkspaceRoot root = javaProject.getProject().getWorkspace().getRoot();
-		String decafProjectName = javaProject.getElementName() + ".decaf";
-		IProject decafProject = root.getProject(decafProjectName);
-		WorkspaceUtilities.initializeProject(decafProject, null);
-		WorkspaceUtilities.addProjectNature(decafProject, JavaCore.NATURE_ID);
-		
-		IJavaProject decafJavaProject = JavaCore.create(decafProject);
-		decafJavaProject.setRawClasspath(mapClasspathEntries(javaProject, decafJavaProject), null);
-		return decafJavaProject;
-	}
-
 	public static final String BUILDER_ID = "decaf.decafBuilder";
 
 	private static final String MARKER_TYPE = "decaf.decafProblem";
@@ -77,10 +65,21 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 
 	private void decafFile(final IProgressMonitor monitor, IFile file)
 			throws CoreException, JavaModelException {
-		final ICompilationUnit element = compilationUnitFor(file);
-		final ICompilationUnit decaf = decafElementFor(element);
-		final ASTRewrite rewrite = DecafRewriter.rewrite(element, monitor, DecafConfiguration.forJDK11());
 		
+		final ICompilationUnit element = compilationUnitFor(file);
+		
+		final DecafProjectSettings properties = DecafProjectSettings.forProject(element.getJavaProject());
+		
+		for (DecafProjectSettings.OutputTarget outputTarget : properties.targets()) {
+			
+			final ICompilationUnit decaf = decafElementFor(element, outputTarget.targetProject());
+			final ASTRewrite rewrite = DecafRewriter.rewrite(element, monitor, outputTarget.targetPlatform().config());
+			
+			safeRewriteFile(decaf, rewrite, monitor);
+		}
+	}
+
+	private void safeRewriteFile(final ICompilationUnit decaf, final ASTRewrite rewrite, final IProgressMonitor monitor) {
 		if (!PlatformUI.isWorkbenchRunning()) {
 			rewriteFile(decaf, rewrite, monitor);
 			return;
@@ -93,11 +92,11 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 		});
 	}
 
-	private ICompilationUnit decafElementFor(ICompilationUnit element) throws CoreException {
-		IJavaProject srcJavaProject = element.getJavaProject();
-		
-		IJavaProject decafJavaProject = decafProjectFor(srcJavaProject);
-		IFile resource = fileFor(element);
+	private ICompilationUnit decafElementFor(
+			ICompilationUnit sourceCompilationUnit,
+			IJavaProject decafJavaProject) throws CoreException,
+			JavaModelException {
+		IFile resource = fileFor(sourceCompilationUnit);
 		
 		IFile decafFile = decafJavaProject.getProject().getFile(resource.getProjectRelativePath());
 		if (!decafFile.exists()) {
@@ -106,7 +105,7 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 		}
 		
 		ICompilationUnit decafElement = compilationUnitFor(decafFile);
-		updateDecafUnit(element, decafElement);
+		updateDecafUnit(sourceCompilationUnit, decafElement);
 		return decafElement;
 	}
 
@@ -131,30 +130,6 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 
 	private static IFile fileFor(ICompilationUnit decafElement) {
 		return (IFile)decafElement.getResource();
-	}
-
-	private static IClasspathEntry[] mapClasspathEntries(IJavaProject javaProject,
-			IJavaProject decafJavaProject) throws JavaModelException,
-			CoreException {
-		IClasspathEntry[] srcClasspath = javaProject.getRawClasspath();
-		IClasspathEntry[] targetClasspath = new IClasspathEntry[srcClasspath.length];
-		for (int i=0; i<srcClasspath.length; ++i) {
-			IClasspathEntry entry = srcClasspath[i];
-			if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-				targetClasspath[i] = createSourceFolder(decafJavaProject, entry.getPath());
-			} else {
-				targetClasspath[i] = entry;
-			}
-		}
-		return targetClasspath;
-	}
-
-	private static IClasspathEntry createSourceFolder(IJavaProject decafJavaProject,
-			IPath path) throws CoreException {
-		
-		IFolder folder = decafJavaProject.getProject().getFolder(path.removeFirstSegments(1));
-		WorkspaceUtilities.initializeTree(folder, null);
-		return JavaCore.newSourceEntry(folder.getFullPath(), new IPath[] {});
 	}
 
 	protected void fullBuild(final IProgressMonitor monitor)

@@ -1,6 +1,7 @@
 package decaf.application;
 
 import sharpen.core.framework.*;
+import decaf.builder.*;
 
 public class DecafCommandLineParser extends CommandLineParser {
 
@@ -31,6 +32,8 @@ public class DecafCommandLineParser extends CommandLineParser {
 			_commandLine.projectReferences.add(consumeNext());
 		} else if (areEqual(arg, "-cp")) {
 			_commandLine.classpath.add(consumeNext());
+		} else if (areEqual(arg, "-targetPlatform")) {
+			_commandLine.targetPlatforms.add(TargetPlatform.valueOf(consumeNext().toUpperCase()));
 		} else {
 			illegalArgument(arg);
 		}
