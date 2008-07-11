@@ -10,26 +10,13 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class CollectIdContext extends ObjectHeaderContext implements MarshallingInfo, HandlerVersionContext{
+public abstract class CollectIdContext extends ObjectHeaderContext implements MarshallingInfo, HandlerVersionContext{
     
     private final String _fieldName;
-    
-    private TreeInt _ids;
-    
-    public CollectIdContext _parentContext;
     
     public CollectIdContext(Transaction transaction, ObjectHeader oh, ReadBuffer buffer, String fieldName) {
         super(transaction, buffer, oh);
         _fieldName = fieldName;
-    }
-
-    public CollectIdContext(CollectIdContext context, ObjectHeader header, ReadBuffer buffer) {
-        this(context.transaction(), header, buffer, context._fieldName);
-        _parentContext = context;
-    }
-
-    public String fieldName() {
-        return _fieldName;
     }
 
     public void addId() {
@@ -39,22 +26,18 @@ public class CollectIdContext extends ObjectHeaderContext implements Marshalling
         }
         addIdToTree(id);
     }
-
-    private void addIdToTree(int id) {
-        if(_parentContext != null){
-            _parentContext.addIdToTree(id);
-            return;
-        }
-        _ids = (TreeInt) Tree.add(_ids, new TreeInt(id));
-    }
     
+    public abstract void addIdToTree(int id);
+
     public ClassMetadata classMetadata() {
         return _objectHeader.classMetadata();
     }
 
-    public Tree ids() {
-        return _ids;
+    public String fieldName() {
+        return _fieldName;
     }
+
+    public abstract Tree ids();
 
     public void readID(ReadsObjectIds objectIDHandler) {
         ObjectID objectID = objectIDHandler.readObjectID(this);
@@ -62,5 +45,6 @@ public class CollectIdContext extends ObjectHeaderContext implements Marshalling
             addIdToTree(objectID._id);
         }
     }
+
 
 }

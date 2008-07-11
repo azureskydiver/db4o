@@ -68,7 +68,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public final boolean canUpdateFast(){
-    	return _canUpdateFast.booleanValue(checkCanUpdateFast());
+        if(_canUpdateFast == TernaryBool.UNSPECIFIED){
+            _canUpdateFast = TernaryBool.forBoolean(checkCanUpdateFast());
+        }
+    	return _canUpdateFast.booleanValue(false);
     }
     
     private final boolean checkCanUpdateFast() {
