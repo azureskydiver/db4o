@@ -17,5 +17,7 @@ public interface FirstClassHandler {
     TypeHandler4 readCandidateHandler(QueryingReadContext context);
     
     void readCandidates(QueryingReadContext context) throws Db4oIOException;
+    
+    public void collectIDs(QueryingReadContext context);
 
 }

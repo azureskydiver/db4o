@@ -71,9 +71,9 @@ public final class QCandidates implements Visitor4 {
     	}
     }
 
-    public QCandidate addByIdentity(QCandidate candidate) {
+    public QCandidate add(QCandidate candidate) {
         if(Debug.queries){
-            System.out.println("Candidate added by identity ID:" + candidate._key);
+            System.out.println("Candidate added ID: " + candidate._key);
         }
         i_root = Tree.add(i_root, candidate);
         if(candidate._size == 0){
@@ -130,13 +130,13 @@ public final class QCandidates implements Visitor4 {
                 objectID = ((ReadsObjectIds)handler).readObjectID(context);
             }
             if(objectID.isValid()){
-                return new QCandidate(this, null, objectID._id, true);
+                return new QCandidate(this, null, objectID._id);
             }
             if(objectID == ObjectID.NOT_POSSIBLE){
                 context.seek(offset);
                 Object obj = context.read(handler);
                 if(obj != null){
-                    return new QCandidate(this, obj, 0, true);
+                    return new QCandidate(this, obj, 0);
                 }
             }
             
@@ -249,7 +249,7 @@ public final class QCandidates implements Visitor4 {
     	return Iterators.map(indexIterator, new Function4() {
 			public Object apply(Object current) {
 				int id = ((Integer)current).intValue();
-				QCandidate candidate = new QCandidate(QCandidates.this, null, id, true); 
+				QCandidate candidate = new QCandidate(QCandidates.this, null, id); 
 				i_root = candidate; 
 				evaluate();
 				if(! candidate.include()){
@@ -303,8 +303,8 @@ public final class QCandidates implements Visitor4 {
                     	
                     ObjectHeader oh = new ObjectHeader(stream(), reader);
                     
-                    CollectIdContext context = new CollectIdContextRoot(i_trans, oh, reader, fieldName);
-                    oh.classMetadata().collectIDs(context);
+                    CollectIdContext context = new CollectIdContextRoot(i_trans, oh, reader);
+                    oh.classMetadata().collectIDs(context, fieldName);
                     
 //                    Tree idTree = oh.classMetadata().collectFieldIDs(
 //                            oh._marshallerFamily,
@@ -430,7 +430,7 @@ public final class QCandidates implements Visitor4 {
     	final ClassIndexStrategy index = i_yapClass.index();
 		index.traverseAll(i_trans, new Visitor4() {
     		public void visit(Object obj) {
-    			result.add(new QCandidate(QCandidates.this, null, ((Integer)obj).intValue(), true));
+    			result.add(new QCandidate(QCandidates.this, null, ((Integer)obj).intValue()));
     		}
     	});
     

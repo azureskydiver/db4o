@@ -134,7 +134,7 @@ public class EmbeddedListTypeHandler implements TypeHandler4 , FirstClassHandler
        for (int i = 0; i < count; i++) {
            QCandidate qc = candidates.readSubCandidate(context, elementHandler);
            if(qc != null){
-               candidates.addByIdentity(qc);
+               candidates.add(qc);
            }
        }
    }
@@ -149,5 +149,15 @@ public class EmbeddedListTypeHandler implements TypeHandler4 , FirstClassHandler
         }
         return depth.descend(cm);
     }
+    
+    public void collectIDs(final QueryingReadContext context) {
+        int elementCount = context.readInt();
+        TypeHandler4 elementHandler = context.container().handlers().untypedObjectHandler();
+        for (int i = 0; i < elementCount; i++) {
+            context.readId(elementHandler);
+        }
+    }
+
+
 
 }

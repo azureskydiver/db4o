@@ -14,11 +14,11 @@ public class CollectIdContextRoot extends CollectIdContext{
     
     private TreeInt _ids;
     
-    public CollectIdContextRoot(Transaction transaction, ObjectHeader oh, ReadBuffer buffer, String fieldName) {
-        super(transaction, oh, buffer, fieldName);
+    public CollectIdContextRoot(Transaction transaction, ObjectHeader oh, ReadBuffer buffer) {
+        super(transaction, oh, buffer);
     }
 
-    public void addIdToTree(int id) {
+    public void addId(int id) {
         _ids = (TreeInt) Tree.add(_ids, new TreeInt(id));
     }
     

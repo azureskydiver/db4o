@@ -253,13 +253,19 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         return cloned;
     }
     
-    public void collectIDs(final CollectIdContext context) {
+    public void oldCollectIDs(final CollectIdContext context) {
+        // collectIDs(context, context.fieldName());
+        
+        throw new NotImplementedException();
+    }
+    
+    public void collectIDs(final CollectIdContext context, final String fieldName) {
         TraverseFieldCommand command = new TraverseFieldCommand() {
             public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
                 if(isNull) {
                     return;
                 }
-                if (context.fieldName().equals(field.getName())) {
+                if (fieldName.equals(field.getName())) {
                     field.collectIDs(context);
                 } 
                 else {
@@ -269,7 +275,7 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         };
         traverseFields(context, command);
         if(classMetadata().i_ancestor != null){
-            classMetadata().i_ancestor.collectIDs(context);
+            classMetadata().i_ancestor.collectIDs(context, fieldName);
         }
     }
 
@@ -304,10 +310,35 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         container.activate(transaction, obj, container.activationDepthProvider().activationDepth(depth, ActivationMode.ACTIVATE));
         Platform4.forEachCollectionElement(obj, new Visitor4() {
             public void visit(Object elem) {
-                candidates.addByIdentity(new QCandidate(candidates, elem, container.getID(transaction, elem), true));
+                candidates.add(new QCandidate(candidates, elem, container.getID(transaction, elem)));
             }
         });
         
     }
+    
+    public void collectIDs(final QueryingReadContext context) throws Db4oIOException {
+
+        int id = context.collectionID();
+        if (id == 0) {
+            return;
+        }
+        final Transaction transaction = context.transaction();
+        final ObjectContainerBase container = context.container();
+        Object obj = container.getByID(transaction, id);
+        if (obj == null) {
+            return;
+        }
+
+        // FIXME: [TA] review activation depth
+        int depth = classMetadata().adjustDepthToBorders(2);
+        container.activate(transaction, obj, container.activationDepthProvider().activationDepth(depth, ActivationMode.ACTIVATE));
+        Platform4.forEachCollectionElement(obj, new Visitor4() {
+            public void visit(Object elem) {
+                context.add(elem);
+            }
+        });
+        
+    }
+
 
 }

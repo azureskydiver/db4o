@@ -82,13 +82,23 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return container.handlers().classReflectorForHandler(_handler);
     }
     
-    public void collectIDs(final CollectIdContext context) {
+    public void oldCollectIDs(final CollectIdContext context) {
         forEachElement(context, new Runnable() {
             public void run() {
                 context.addId();
             }
         });
     }
+    
+    public void collectIDs(final QueryingReadContext context) {
+        final TypeHandler4 handler = Handlers4.correctHandlerVersion(context, _handler);
+        forEachElement(context, new Runnable() {
+            public void run() {
+                context.readId(handler);
+            }
+        });
+    }
+
     
     protected ArrayInfo forEachElement(final AbstractBufferContext context, final Runnable elementRunnable){
         final ArrayInfo info = newArrayInfo();
@@ -237,20 +247,10 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             public void run() {
                 QCandidate qc = candidates.readSubCandidate(context, _handler);
                 if(qc != null){
-                    candidates.addByIdentity(qc);
+                    candidates.add(qc);
                 }
             }
         });
-    }
-    
-    protected void readSubCandidates(final QueryingReadContext context, int count) {
-        QCandidates candidates = context.candidates();
-        for (int i = 0; i < count; i++) {
-            QCandidate qc = candidates.readSubCandidate(context, _handler);
-            if(qc != null){
-                candidates.addByIdentity(qc);
-            }
-        }
     }
     
     protected void readInfo(Transaction trans, ReadBuffer buffer, ArrayInfo info){

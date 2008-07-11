@@ -14,12 +14,12 @@ public class CollectIdContextDelegate extends CollectIdContext{
     public CollectIdContext _parentContext;
     
     public CollectIdContextDelegate(CollectIdContext context, ObjectHeader header, ReadBuffer buffer) {
-        super(context.transaction(), header, buffer, context.fieldName());
+        super(context.transaction(), header, buffer);
         _parentContext = context;
     }
     
-    public void addIdToTree(int id) {
-        _parentContext.addIdToTree(id);
+    public void addId(int id) {
+        _parentContext.addId(id);
     }
 
     public Tree ids() {

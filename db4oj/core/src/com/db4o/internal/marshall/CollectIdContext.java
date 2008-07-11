@@ -12,11 +12,8 @@ import com.db4o.marshall.*;
  */
 public abstract class CollectIdContext extends ObjectHeaderContext implements MarshallingInfo, HandlerVersionContext{
     
-    private final String _fieldName;
-    
-    public CollectIdContext(Transaction transaction, ObjectHeader oh, ReadBuffer buffer, String fieldName) {
+    public CollectIdContext(Transaction transaction, ObjectHeader oh, ReadBuffer buffer) {
         super(transaction, buffer, oh);
-        _fieldName = fieldName;
     }
 
     public void addId() {
@@ -24,17 +21,13 @@ public abstract class CollectIdContext extends ObjectHeaderContext implements Ma
         if(id <= 0){
             return;
         }
-        addIdToTree(id);
+        addId(id);
     }
     
-    public abstract void addIdToTree(int id);
+    public abstract void addId(int id);
 
     public ClassMetadata classMetadata() {
         return _objectHeader.classMetadata();
-    }
-
-    public String fieldName() {
-        return _fieldName;
     }
 
     public abstract Tree ids();
@@ -42,9 +35,8 @@ public abstract class CollectIdContext extends ObjectHeaderContext implements Ma
     public void readID(ReadsObjectIds objectIDHandler) {
         ObjectID objectID = objectIDHandler.readObjectID(this);
         if(objectID.isValid()){
-            addIdToTree(objectID._id);
+            addId(objectID._id);
         }
     }
-
 
 }

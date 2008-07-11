@@ -96,7 +96,7 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanH
         return this;
     }
     
-    private TypeHandler4 untypedObjectHandlerFrom(Context context) {
+    private TypeHandler4 untypedObjectHandlerFrom(HandlerVersionContext context) {
         return context.transaction().container().handlers().untypedObjectHandler();
     }
 
@@ -112,12 +112,12 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanH
         for (int i = 0; i < elementCount; i++) {
             QCandidate qc = candidates.readSubCandidate(context, elementHandler);
             if (qc != null) {
-                candidates.addByIdentity(qc);
+                candidates.add(qc);
             }
         }
     }
 
-    public void collectIDs(final CollectIdContext context) {
+    public void oldCollectIDs(final CollectIdContext context) {
         int elementCount = context.readInt();
         TypeHandler4 elementHandler = untypedObjectHandlerFrom(context);
         if(! (elementHandler instanceof ReadsObjectIds)){
@@ -128,5 +128,13 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanH
             context.readID(objectIDHandler);
         }
     }
-
+    
+    public void collectIDs(final QueryingReadContext context) {
+        int elementCount = context.readInt();
+        TypeHandler4 elementHandler = untypedObjectHandlerFrom(context);
+        for (int i = 0; i < elementCount; i++) {
+            context.readId(elementHandler);
+        }
+    }
+    
 }
