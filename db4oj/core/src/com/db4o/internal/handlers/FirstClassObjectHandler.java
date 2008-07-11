@@ -8,7 +8,6 @@ import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
@@ -16,7 +15,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHandler, CollectIdHandler, FirstClassHandler {
+public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHandler, FirstClassHandler {
     
     private static final int HASHCODE_FOR_NULL = 72483944; 
     
@@ -253,12 +252,6 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         return cloned;
     }
     
-    public void oldCollectIDs(final CollectIdContext context) {
-        // collectIDs(context, context.fieldName());
-        
-        throw new NotImplementedException();
-    }
-    
     public void collectIDs(final CollectIdContext context, final String fieldName) {
         TraverseFieldCommand command = new TraverseFieldCommand() {
             public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
@@ -290,32 +283,6 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         return null;
     }
 
-    public void readCandidates(final QueryingReadContext context) throws Db4oIOException {
-
-        int id = context.collectionID();
-        if (id == 0) {
-            return;
-        }
-        final Transaction transaction = context.transaction();
-        final ObjectContainerBase container = context.container();
-        Object obj = container.getByID(transaction, id);
-        if (obj == null) {
-            return;
-        }
-            
-        final QCandidates candidates = context.candidates();
-
-        // FIXME: [TA] review activation depth
-        int depth = classMetadata().adjustDepthToBorders(2);
-        container.activate(transaction, obj, container.activationDepthProvider().activationDepth(depth, ActivationMode.ACTIVATE));
-        Platform4.forEachCollectionElement(obj, new Visitor4() {
-            public void visit(Object elem) {
-                candidates.add(new QCandidate(candidates, elem, container.getID(transaction, elem)));
-            }
-        });
-        
-    }
-    
     public void collectIDs(final QueryingReadContext context) throws Db4oIOException {
 
         int id = context.collectionID();

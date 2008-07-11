@@ -11,7 +11,6 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -122,34 +121,6 @@ public class EmbeddedListTypeHandler implements TypeHandler4 , FirstClassHandler
         return this;
     }
     
-   public void readCandidates(QueryingReadContext context) throws Db4oIOException {
-        context.readInt(); // skip class id
-        int elementCount = context.readInt();
-        TypeHandler4 elementHandler = context.container().handlers().untypedObjectHandler();
-        readSubCandidates(context, elementCount, elementHandler);
-    }
-   
-   private void readSubCandidates(QueryingReadContext context, int count, TypeHandler4 elementHandler) {
-       QCandidates candidates = context.candidates();
-       for (int i = 0; i < count; i++) {
-           QCandidate qc = candidates.readSubCandidate(context, elementHandler);
-           if(qc != null){
-               candidates.add(qc);
-           }
-       }
-   }
-
-    private ActivationDepth descend(ObjectContainerBase container, ActivationDepth depth, Object obj){
-        if(obj == null){
-            return new NonDescendingActivationDepth(depth.mode());
-        }
-        ClassMetadata cm = container.classMetadataForObject(obj);
-        if(cm.isPrimitive()){
-            return new NonDescendingActivationDepth(depth.mode());
-        }
-        return depth.descend(cm);
-    }
-    
     public void collectIDs(final QueryingReadContext context) {
         int elementCount = context.readInt();
         TypeHandler4 elementHandler = context.container().handlers().untypedObjectHandler();
@@ -157,7 +128,5 @@ public class EmbeddedListTypeHandler implements TypeHandler4 , FirstClassHandler
             context.readId(elementHandler);
         }
     }
-
-
 
 }
