@@ -1,0 +1,17 @@
+package decaf.annotations;
+
+class RemoveFirst {
+
+	/**
+	 * @decaf.removeFirst
+	 */
+	public void foo() {
+		System.out.println("bar");
+	}
+	
+	/**
+	 * @decaf.removeFirst
+	 */
+	public void bar() {
+	}
+}

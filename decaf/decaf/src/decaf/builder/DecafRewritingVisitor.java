@@ -280,14 +280,29 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 				continue;
 			}
 			if (tagName.equals(DecafAnnotations.INSERT_FIRST)) {
-				final String code = textFragment(tag, 0);
-				bodyRewrite.insertFirst(rewrite().createStringPlaceholder(code, ASTNode.EXPRESSION_STATEMENT), null);
-			} else if (tagName.equals(DecafAnnotations.REMOVE_AT)) {
-				final int index = Integer.parseInt(textFragment(tag, 0));
-				bodyRewrite.remove((ASTNode) bodyRewrite.getOriginalList().get(index), null);
+				bodyRewrite.insertFirst(statementFromTagText(tag), null);
+			} else if (tagName.equals(DecafAnnotations.REPLACE_FIRST)) {
+				bodyRewrite.replace(firstNode(bodyRewrite), statementFromTagText(tag), null);
+			} else if (tagName.equals(DecafAnnotations.REMOVE_FIRST)) {
+				bodyRewrite.remove(firstNode(bodyRewrite), null);
 			}
 		}
 		
+	}
+
+	private ASTNode firstNode(final ListRewrite bodyRewrite) {
+		return originalNodeAt(bodyRewrite, 0);
+	}
+
+	private ASTNode originalNodeAt(final ListRewrite bodyRewrite,
+			final int index) {
+		return (ASTNode) bodyRewrite.getOriginalList().get(index);
+	}
+
+	private ASTNode statementFromTagText(TagElement tag) {
+		final String code = textFragment(tag, 0);
+		final ASTNode stmt = rewrite().createStringPlaceholder(code, ASTNode.EXPRESSION_STATEMENT);
+		return stmt;
 	}
 
 	private ListRewrite bodyListRewriteFor(MethodDeclaration node) {
