@@ -12,7 +12,10 @@ public class DecafRewriter {
 	public static ASTRewrite rewrite(final ICompilationUnit element,
 			IProgressMonitor monitor, DecafConfiguration decafConfig) {
 		
-		final CompilationUnit unit = parseCompilationUnit(element, monitor);
+		return rewrite(parseCompilationUnit(element, monitor), decafConfig);
+	}
+
+	private static ASTRewrite rewrite(final CompilationUnit unit, DecafConfiguration decafConfig) {
 		final ASTRewrite rewrite = ASTRewrite.create(unit.getAST());
 		unit.accept(new DecafRewritingVisitor(unit, rewrite, decafConfig));
 		return rewrite;

@@ -72,7 +72,7 @@ public abstract class DecafTestCaseBase extends TestCase {
 	private IFile decafFileFor(IResource originalFile, TargetPlatform targetPlatform) throws CoreException {
 		final String decafFolderName = "decaf";
 		createFolder(decafFolderName);
-		IFolder targetFolder = createFolder(targetPlatform.appendFileIDPart(decafFolderName, '/'));
+		IFolder targetFolder = createFolder(targetPlatform.appendPlatformId(decafFolderName, '/'));
 		IFile actualFile = targetFolder.getFile("decaf.txt");
 		originalFile.copy(actualFile.getFullPath(), true, null);
 		return actualFile;

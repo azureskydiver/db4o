@@ -1,5 +1,7 @@
 package decaf.application;
 
+import java.util.*;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
@@ -10,7 +12,7 @@ import org.eclipse.equinox.app.IApplicationContext;
 import sharpen.core.JavaProject;
 import sharpen.core.framework.ConsoleProgressMonitor;
 import sharpen.core.resources.WorkspaceUtilities;
-import decaf.builder.DecafNature;
+import decaf.builder.*;
 
 public class DecafApplication implements IApplication {
 
@@ -27,7 +29,9 @@ public class DecafApplication implements IApplication {
 				.nature(DecafNature.NATURE_ID)
 				.projectReferences(commandLine.projectReferences)
 				.classpath(commandLine.classpath)
+				.persistentProperty(DecafProjectSettings.TARGET_PLATFORMS, commaSeparatedPlatformIds(commandLine.targetPlatforms))
 				.project;
+			
 			project.buildProject(monitor);
 			
 			decafProjectFor(commandLine.project).build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
@@ -49,6 +53,17 @@ public class DecafApplication implements IApplication {
 			throw x;
 		}
 		return IApplication.EXIT_OK;
+	}
+
+	private String commaSeparatedPlatformIds(List<TargetPlatform> targetPlatforms) {
+		final StringBuilder value = new StringBuilder();
+		for (TargetPlatform targetPlatform : targetPlatforms) {
+			if (value.length() > 0) {
+				value.append(",");
+			}
+			value.append(targetPlatform.toString());
+		}
+		return value.toString();
 	}
 
 	private IProject decafProjectFor(final String projectName) {

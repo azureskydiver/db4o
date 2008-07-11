@@ -1,5 +1,6 @@
 package decaf.tests;
 
+import decaf.builder.*;
 import sharpen.ui.tests.*;
 
 public class DecafTestResource extends TestCaseResource {
@@ -19,12 +20,12 @@ public class DecafTestResource extends TestCaseResource {
 
 	@Override
 	public String packageName() {
-		return _targetPlatform.appendFileIDPart(super.packageName(), '.');
+		return _targetPlatform.appendPlatformId(super.packageName(), '.');
 	}
 	
 	@Override
 	protected String expectedPathSuffix() {
-		return _targetPlatform.appendFileIDPart(PATH_SUFFIX_DECAF, '.') + PATH_SUFFIX_TXT;
+		return _targetPlatform.appendPlatformId(PATH_SUFFIX_DECAF, '.') + PATH_SUFFIX_TXT;
 	}
 
 }
