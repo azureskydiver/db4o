@@ -11,7 +11,6 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 
 /**
@@ -19,7 +18,7 @@ import com.db4o.marshall.*;
  * collection framework.
  * @sharpen.ignore
  */
-public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler, CollectIdHandler {
+public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler {
 
     public PreparedComparison prepareComparison(Context context, Object obj) {
         // TODO Auto-generated method stub
@@ -100,35 +99,6 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanH
         return context.transaction().container().handlers().untypedObjectHandler();
     }
 
-    // FIXME: readCandidates and CollectIDs are very similar.
-    //        Refactor to do the same task only once and use an accumulator
-    //        object that understands IDs
-    
-    public void readCandidates(QueryingReadContext context)
-            throws Db4oIOException {
-        int elementCount = context.readInt();
-        TypeHandler4 elementHandler = untypedObjectHandlerFrom(context);
-        QCandidates candidates = context.candidates();
-        for (int i = 0; i < elementCount; i++) {
-            QCandidate qc = candidates.readSubCandidate(context, elementHandler);
-            if (qc != null) {
-                candidates.add(qc);
-            }
-        }
-    }
-
-    public void oldCollectIDs(final CollectIdContext context) {
-        int elementCount = context.readInt();
-        TypeHandler4 elementHandler = untypedObjectHandlerFrom(context);
-        if(! (elementHandler instanceof ReadsObjectIds)){
-            return;
-        }
-        ReadsObjectIds objectIDHandler = (ReadsObjectIds) elementHandler;
-        for (int i = 0; i < elementCount; i++) {
-            context.readID(objectIDHandler);
-        }
-    }
-    
     public void collectIDs(final QueryingReadContext context) {
         int elementCount = context.readInt();
         TypeHandler4 elementHandler = untypedObjectHandlerFrom(context);

@@ -10,7 +10,6 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
@@ -19,7 +18,7 @@ import com.db4o.typehandlers.*;
  * This is the latest version, the one that should be used.
  * @exclude
  */
-public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler4, VariableLengthTypeHandler, EmbeddedTypeHandler, CompositeTypeHandler, CollectIdHandler{
+public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler4, VariableLengthTypeHandler, EmbeddedTypeHandler, CompositeTypeHandler{
     
 	private TypeHandler4 _handler;
 	
@@ -80,14 +79,6 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             return ((ClassMetadata)_handler).classReflector();
         }
         return container.handlers().classReflectorForHandler(_handler);
-    }
-    
-    public void oldCollectIDs(final CollectIdContext context) {
-        forEachElement(context, new Runnable() {
-            public void run() {
-                context.addId();
-            }
-        });
     }
     
     public void collectIDs(final QueryingReadContext context) {
@@ -240,19 +231,6 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return this;
     }
 
-
-    public void readCandidates(final QueryingReadContext context) {
-        final QCandidates candidates = context.candidates();
-        forEachElement(context, new Runnable() {
-            public void run() {
-                QCandidate qc = candidates.readSubCandidate(context, _handler);
-                if(qc != null){
-                    candidates.add(qc);
-                }
-            }
-        });
-    }
-    
     protected void readInfo(Transaction trans, ReadBuffer buffer, ArrayInfo info){
         int classID = buffer.readInt();
         if (! isPreVersion0Format(classID)) {

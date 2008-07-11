@@ -29,7 +29,7 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass, FieldHandler , ReadsObjectIds, CollectIdHandler{
+public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass, FieldHandler , ReadsObjectIds{
     
 	private TypeHandler4 _typeHandler;
     
@@ -446,24 +446,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         
     }
     
-    public final void oldCollectIDs(CollectIdContext context) {
-        if(_typeHandler instanceof CollectIdHandler){
-            ((CollectIdHandler)correctHandlerVersion(context)).oldCollectIDs(context);
-        }
-    }
-    
-    public void readCandidates(final QueryingReadContext context) {
-        if(_typeHandler instanceof FirstClassHandler){
-            ((FirstClassHandler)correctHandlerVersion(context)).readCandidates(context);    
-        }
-    }
-    
     public void collectIDs(final QueryingReadContext context) {
         if(_typeHandler instanceof FirstClassHandler){
             ((FirstClassHandler)correctHandlerVersion(context)).collectIDs(context);    
         }
     }
-
     
     public boolean customizedNewInstance(){
         return configInstantiates();
