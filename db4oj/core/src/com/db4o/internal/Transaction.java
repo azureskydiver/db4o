@@ -130,14 +130,6 @@ public abstract class Transaction {
         _delete = TreeInt.removeLike((TreeInt)_delete, a_id);
     }
     
-    void dontRemoveFromClassIndex(int a_yapClassID, int a_id) {
-        // If objects are deleted and rewritten during a cascade
-        // on delete, we dont want them to be gone.        
-        checkSynchronization();
-        ClassMetadata yapClass = container().classMetadataForId(a_yapClassID);
-        yapClass.index().add(this, a_id);
-    }    
-    
     public HardObjectReference getHardReferenceBySignature(final long a_uuid, final byte[] a_signature) {
         checkSynchronization();  
         return container().uUIDIndex().getHardObjectReferenceBySignature(this, a_uuid, a_signature);

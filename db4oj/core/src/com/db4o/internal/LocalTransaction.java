@@ -697,15 +697,18 @@ public class LocalTransaction extends Transaction {
         }
         
         if(clazz.canUpdateFast()){
-        	slotFreeOnCommit(id, getCurrentSlotOfID(id));
+        	Slot currentSlot = getCurrentSlotOfID(id);
+        	if(currentSlot == null || currentSlot.address() == 0){
+        	    clazz.addToIndex(this, id);
+        	}else{
+        	    slotFreeOnCommit(id, currentSlot);
+        	}
         	return;
         }
         
         StatefulBuffer objectBytes = container().readWriterByID(this, id);
         if(objectBytes == null){
-            if (clazz.hasClassIndex()) {
-                 dontRemoveFromClassIndex(clazz.getID(), id);
-            }
+            clazz.addToIndex(this, id);
             return;
         }
         
