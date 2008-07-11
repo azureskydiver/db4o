@@ -125,33 +125,8 @@ public abstract class Predicate<ExtentType> implements Serializable{
 		}
 		return _extentType;
 	}
-
+	
 	/**
-	 * @decaf.removeAt 0
-	 */
-	private Class<? extends ExtentType> figureOutExtentType() {		
-		if (true) {
-			return extentTypeFromGenericParameter();
-		}
-		return (Class<? extends ExtentType>) getFilterMethod().getParameterTypes()[0];
-	}
-
-	/**
-	 * @decaf.ignore 
-	 */
-	private Class<? extends ExtentType> extentTypeFromGenericParameter() {
-		Class<ExtentType> extentType=(Class<ExtentType>)getFilterMethod().getParameterTypes()[0];
-		try {
-			Type genericType=((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-			if((genericType instanceof Class)&&(extentType.isAssignableFrom((Class)genericType))) {
-				extentType=(Class<ExtentType>)genericType;
-			}
-		} catch (RuntimeException e) {
-		}
-		return extentType;
-	}
-
-    /**
      * The match method that needs to be implemented by the user.
      * @param candidate the candidate object passed from db4o 
      * @return true to include an object in the resulting ObjectSet
@@ -159,6 +134,32 @@ public abstract class Predicate<ExtentType> implements Serializable{
      * @decaf.ignore
      */
 	public abstract boolean match(ExtentType candidate);
+
+	/**
+	 * @decaf.replaceFirst return filterParameterType();
+	 */
+	private Class<? extends ExtentType> figureOutExtentType() {		
+		return extentTypeFromGenericParameter();
+	}
+
+	/**
+	 * @decaf.ignore 
+	 */
+	private Class<? extends ExtentType> extentTypeFromGenericParameter() {
+		Class<? extends ExtentType> extentType=filterParameterType();
+		try {
+			Type genericType=((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+			if((genericType instanceof Class)&&(extentType.isAssignableFrom((Class)genericType))) {
+				extentType=(Class<? extends ExtentType>)genericType;
+			}
+		} catch (RuntimeException e) {
+		}
+		return extentType;
+	}
+
+	private Class<? extends ExtentType> filterParameterType() {
+		return (Class<? extends ExtentType>)getFilterMethod().getParameterTypes()[0];
+	}    
 	
     /**
      * public for implementation reasons, please ignore.
