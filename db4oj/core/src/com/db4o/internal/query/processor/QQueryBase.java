@@ -506,7 +506,7 @@ public abstract class QQueryBase implements Unversioned {
                                                     stream.readWriterByID(_trans, id);
                                                 if (reader != null) {
                                                     ObjectHeader oh = new ObjectHeader(stream, reader);
-                                                    CollectIdContext context = new CollectIdContextRoot(_trans, oh, reader);
+                                                    CollectIdContext context = new CollectIdContext(_trans, oh, reader);
                                                     oh.classMetadata().collectIDs(context, fieldName);
                                                     idsNew.value = context.ids();
                                                 }

@@ -4,26 +4,31 @@ package com.db4o.internal.marshall;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.marshall.*;
 
 
 /**
  * @exclude
  */
-public class CollectIdContextRoot extends CollectIdContext{
+public class IdObjectCollector {
     
     private TreeInt _ids;
     
-    public CollectIdContextRoot(Transaction transaction, ObjectHeader oh, ReadBuffer buffer) {
-        super(transaction, oh, buffer);
-    }
-
+    private List4 _objects;
+    
     public void addId(int id) {
         _ids = (TreeInt) Tree.add(_ids, new TreeInt(id));
     }
     
     public Tree ids() {
         return _ids;
+    }
+    
+    public void add(Object obj) {
+        _objects = new List4(_objects, obj);
+    }
+    
+    public Iterator4 objects(){
+        return new Iterator4Impl(_objects);
     }
 
 }
