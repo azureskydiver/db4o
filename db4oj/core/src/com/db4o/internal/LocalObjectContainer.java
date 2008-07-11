@@ -753,9 +753,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         if(classMetadata == null){
             return;
         }
-        if (maintainsIndices()) {
-            classMetadata.addToIndex(this, trans, pointer.id());
-        }
+        classMetadata.addToIndex(trans, pointer.id());
     }
 
     // This is a reroute of writeBytes to write the free blocks

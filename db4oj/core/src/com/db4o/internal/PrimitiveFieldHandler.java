@@ -40,7 +40,7 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
         // do nothing
     }
 
-    final void addToIndex(LocalObjectContainer container, Transaction trans, int id) {
+    final void addToIndex(Transaction trans, int id) {
         // Override
         // Primitive Indices will be created later.
     }

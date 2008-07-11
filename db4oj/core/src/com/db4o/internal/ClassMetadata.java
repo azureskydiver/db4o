@@ -297,15 +297,16 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		    && i_fields.length > 0;
 	}
 
-    void addToIndex(LocalObjectContainer a_stream, Transaction a_trans, int a_id) {
-        if (a_stream.maintainsIndices()) {
-            addToIndex1(a_stream, a_trans, a_id);
+    void addToIndex(Transaction trans, int id) {
+        if (! trans.container().maintainsIndices()) {
+            return;
         }
+        addToIndex1(trans, id);
     }
 
-    void addToIndex1(LocalObjectContainer a_stream, Transaction a_trans, int a_id) {
+    final void addToIndex1(Transaction a_trans, int a_id) {
         if (i_ancestor != null) {
-            i_ancestor.addToIndex1(a_stream, a_trans, a_id);
+            i_ancestor.addToIndex1(a_trans, a_id);
         }
         if (hasClassIndex()) {
             _index.add(a_trans, a_id);
