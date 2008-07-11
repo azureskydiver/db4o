@@ -303,7 +303,7 @@ public final class QCandidates implements Visitor4 {
                     	
                     ObjectHeader oh = new ObjectHeader(stream(), reader);
                     
-                    CollectIdContext context = new CollectIdContext(i_trans, oh, reader, fieldName);
+                    CollectIdContext context = new CollectIdContextRoot(i_trans, oh, reader, fieldName);
                     oh.classMetadata().collectIDs(context);
                     
 //                    Tree idTree = oh.classMetadata().collectFieldIDs(

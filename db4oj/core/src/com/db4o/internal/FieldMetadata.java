@@ -411,7 +411,7 @@ public class FieldMetadata implements StoredField {
             int collectionID = context.readInt();
             ByteArrayBuffer collectionBuffer = container.readReaderByID(context.transaction(), collectionID);
             ObjectHeader header = ObjectHeader.scrollBufferToContent(container, collectionBuffer);
-            collectionContext = new CollectIdContext(context, header, collectionBuffer );
+            collectionContext = new CollectIdContextDelegate(context, header, collectionBuffer );
         }
         
         final CollectIdContext finalContext = collectionContext;
