@@ -11,9 +11,7 @@ import com.db4o.internal.activation.*;
  * 
  * @exclude
  */
-public class UnmarshallingContext extends ObjectHeaderContext implements FieldListInfo, MarshallingInfo, HandlerVersionContext{
-    
-    private final ObjectReference _reference;
+public class UnmarshallingContext extends ObjectReferenceContext implements FieldListInfo, MarshallingInfo, HandlerVersionContext{
     
     private Object _object;
     
@@ -22,31 +20,13 @@ public class UnmarshallingContext extends ObjectHeaderContext implements FieldLi
     private boolean _checkIDTree;
     
     public UnmarshallingContext(Transaction transaction, ByteArrayBuffer buffer, ObjectReference ref, int addToIDTree, boolean checkIDTree) {
-        super(transaction, buffer, null);
-        _reference = ref;
+        super(transaction, buffer, null, ref);
         _addToIDTree = addToIDTree;
         _checkIDTree = checkIDTree;
     }
     
     public UnmarshallingContext(Transaction transaction, ObjectReference ref, int addToIDTree, boolean checkIDTree) {
         this(transaction, null, ref, addToIDTree, checkIDTree);
-    }
-    
-    private ByteArrayBuffer byteArrayBuffer(){
-        return (ByteArrayBuffer)buffer();
-    }
-
-    public StatefulBuffer statefulBuffer() {
-        StatefulBuffer statefulBuffer = new StatefulBuffer(_transaction, byteArrayBuffer().length());
-        statefulBuffer.setID(objectID());
-        statefulBuffer.setInstantiationDepth(activationDepth());
-        byteArrayBuffer().copyTo(statefulBuffer, 0, 0, byteArrayBuffer().length());
-        statefulBuffer.seek(byteArrayBuffer().offset());
-        return statefulBuffer;
-    }
-    
-    public int objectID(){
-        return _reference.getID();
     }
     
     public Object read(){
@@ -80,7 +60,7 @@ public class UnmarshallingContext extends ObjectHeaderContext implements FieldLi
         adjustActivationDepth(doAdjustActivationDepthForPrefetch);
         
         if(_checkIDTree){
-            Object objectInCacheFromClassCreation = _transaction.objectForIdFromCache(objectID());
+            Object objectInCacheFromClassCreation = transaction().objectForIdFromCache(objectID());
             if(objectInCacheFromClassCreation != null){
                 _object = objectInCacheFromClassCreation;
                 endProcessing();
@@ -139,14 +119,10 @@ public class UnmarshallingContext extends ObjectHeaderContext implements FieldLi
 
     private void readBuffer(int id) {
         if (buffer() == null && id > 0) {
-            buffer(container().readReaderByID(_transaction, id)); 
+            buffer(container().readReaderByID(transaction(), id)); 
         }
     }
     
-    public ClassMetadata classMetadata(){
-        return _reference.classMetadata();
-    }
-        
     private boolean beginProcessing() {
         return _reference.beginProcessing();
     }
@@ -173,10 +149,6 @@ public class UnmarshallingContext extends ObjectHeaderContext implements FieldLi
     
     public Config4Class classConfig() {
         return classMetadata().config();
-    }
-
-    public ObjectReference reference() {
-        return _reference;
     }
 
     public void persistentObject(Object obj) {
