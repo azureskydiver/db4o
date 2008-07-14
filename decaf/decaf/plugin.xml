@@ -19,7 +19,7 @@
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="decaf.builder.DecafNature">
+               class="decaf.core.DecafNature">
          </run>
       </runtime>
       <builder
@@ -35,7 +35,7 @@
             id="decaf.contribution1">
          <action
                label="I like it DECAF"
-               class="decaf.builder.ToggleNatureAction"
+               class="decaf.ui.ToggleNatureAction"
                menubarPath="additions"
                enablesFor="+"
                id="decaf.addRemoveNatureAction">

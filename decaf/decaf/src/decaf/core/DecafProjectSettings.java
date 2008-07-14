@@ -1,4 +1,4 @@
-package decaf.builder;
+package decaf.core;
 
 import java.util.*;
 
@@ -6,6 +6,7 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 
+import sharpen.core.framework.resources.*;
 import decaf.*;
 
 public class DecafProjectSettings {

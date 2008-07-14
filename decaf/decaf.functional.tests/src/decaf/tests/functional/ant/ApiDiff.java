@@ -6,7 +6,7 @@ package decaf.tests.functional.ant;
 import java.io.*;
 import java.util.*;
 
-import decaf.builder.*;
+import decaf.core.*;
 
 class ApiDiff {
 	

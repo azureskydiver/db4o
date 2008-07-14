@@ -5,6 +5,8 @@ import java.util.*;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
+import decaf.core.*;
+
 import sharpen.core.framework.*;
 
 

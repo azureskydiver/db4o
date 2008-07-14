@@ -4,7 +4,7 @@ import java.io.*;
 
 import org.apache.tools.ant.*;
 
-import decaf.builder.*;
+import decaf.core.*;
 
 /**
  * Checks that two jars have the same API surface (same public types with same public methods).

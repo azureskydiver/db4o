@@ -3,6 +3,8 @@ package decaf.builder;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
+import decaf.core.*;
+
 public class DecafRewritingContext {
 	
 	private final ASTRewrite _rewrite;

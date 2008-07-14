@@ -2,7 +2,7 @@ package decaf.tests.application;
 
 import junit.framework.*;
 import decaf.application.*;
-import decaf.builder.*;
+import decaf.core.*;
 
 public class DecafCommandLineTestCase extends TestCase {
 	

@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.*;
 
 import sharpen.core.*;
 import decaf.builder.*;
+import decaf.core.*;
 import junit.framework.*;
 
 public abstract class DecafTestCaseBase extends TestCase {

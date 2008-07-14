@@ -1,4 +1,4 @@
-package decaf.builder;
+package decaf.core;
 
 import java.util.*;
 
