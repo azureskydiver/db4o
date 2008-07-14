@@ -1,7 +1,7 @@
 package decaf.tests;
 
-import decaf.builder.*;
 import sharpen.ui.tests.*;
+import decaf.core.*;
 
 public class DecafTestResource extends TestCaseResource {
 

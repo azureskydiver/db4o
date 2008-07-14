@@ -2,7 +2,7 @@ package decaf.application;
 
 import java.util.*;
 
-import decaf.builder.*;
+import decaf.core.*;
 
 public class DecafCommandLine {
 

@@ -1,6 +1,6 @@
 package decaf.tests.collections;
 
-import decaf.builder.*;
+import decaf.core.*;
 import decaf.tests.*;
 
 public class CollectionsTestCase extends DecafTestCaseBase {

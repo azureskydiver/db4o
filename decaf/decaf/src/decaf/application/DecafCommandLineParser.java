@@ -1,7 +1,7 @@
 package decaf.application;
 
 import sharpen.core.framework.*;
-import decaf.builder.*;
+import decaf.core.*;
 
 public class DecafCommandLineParser extends CommandLineParser {
 

@@ -2,17 +2,14 @@ package decaf.application;
 
 import java.util.*;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.equinox.app.IApplication;
-import org.eclipse.equinox.app.IApplicationContext;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
+import org.eclipse.equinox.app.*;
 
-import sharpen.core.JavaProject;
-import sharpen.core.framework.ConsoleProgressMonitor;
-import sharpen.core.resources.WorkspaceUtilities;
-import decaf.builder.*;
+import sharpen.core.*;
+import sharpen.core.framework.*;
+import sharpen.core.framework.resources.*;
+import decaf.core.*;
 
 public class DecafApplication implements IApplication {
 
