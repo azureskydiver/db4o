@@ -17,7 +17,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler, CompositeTypeHandler{
+public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler, VersionedTypeHandler{
     
     private static final int HASHCODE_FOR_NULL = 283636383;
     
@@ -184,7 +184,7 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
         return _handler;
     }
     
-    public TypeHandler4 genericTemplate() {
+    public TypeHandler4 unversionedTemplate() {
         return new PrimitiveFieldHandler(null, null, 0, null);
     }
     

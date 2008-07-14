@@ -27,7 +27,7 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
     }
 
     void instantiate1(ObjectReferenceContext context) {
-        context.reference().virtualAttributes().i_version = context.readLong();
+        context.objectReference().virtualAttributes().i_version = context.readLong();
     }
 
     void marshall(Transaction trans, ObjectReference ref, WriteBuffer buffer, boolean isMigrating, boolean isNew) {

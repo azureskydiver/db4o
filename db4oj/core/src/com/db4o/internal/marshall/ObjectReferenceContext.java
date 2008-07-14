@@ -39,7 +39,7 @@ public class ObjectReferenceContext extends ObjectHeaderContext implements Field
         return _reference.classMetadata();
     }
 
-    public ObjectReference reference() {
+    public ObjectReference objectReference() {
         return _reference;
     }
 

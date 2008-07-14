@@ -150,7 +150,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
 	        if(db != null && db.i_signature == null){
 	            container.activate(trans, db, new FixedActivationDepth(2));
 	        }
-	        VirtualAttributes va = context.reference().virtualAttributes();
+	        VirtualAttributes va = context.objectReference().virtualAttributes();
 	        va.i_database = db; 
 	        va.i_uuid = context.readLong();
         } finally {

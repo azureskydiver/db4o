@@ -111,7 +111,7 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         info.elementCount(elementCount(dim));
     }
 
-    public TypeHandler4 genericTemplate() {
+    public TypeHandler4 unversionedTemplate() {
         return new MultidimensionalArrayHandler();
     }
 
