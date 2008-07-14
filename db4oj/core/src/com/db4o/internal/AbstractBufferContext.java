@@ -14,7 +14,7 @@ public abstract class AbstractBufferContext implements BufferContext, HandlerVer
 	
 	private ReadBuffer _buffer;
 	
-	protected final Transaction _transaction;
+	private final Transaction _transaction;
 	
 	public AbstractBufferContext(Transaction transaction, ReadBuffer buffer) {
 		_transaction = transaction;

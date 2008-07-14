@@ -1153,7 +1153,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		}
 	}
 
-	private Object instantiateFromConfig(UnmarshallingContext context) {
+	private Object instantiateFromConfig(ObjectReferenceContext context) {
        
        int offset = context.offset();
        
@@ -1397,18 +1397,18 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		}
 	}
     
-	public void readVirtualAttributes(Transaction a_trans, ObjectReference a_yapObject, boolean lastCommitted) {
-        int id = a_yapObject.getID();
-        ObjectContainerBase stream = a_trans.container();
-        ByteArrayBuffer reader = stream.readReaderByID(a_trans, id, lastCommitted);
-        ObjectHeader oh = new ObjectHeader(stream, this, reader);
-        oh.objectMarshaller().readVirtualAttributes(a_trans, this, a_yapObject, oh._headerAttributes, reader);
+	public void readVirtualAttributes(Transaction trans, ObjectReference ref, boolean lastCommitted) {
+	    if(! (_typeHandler instanceof VirtualAttributeHandler)){
+	        return;
+	    }
+        int id = ref.getID();
+        ObjectContainerBase stream = trans.container();
+        ByteArrayBuffer buffer = stream.readReaderByID(trans, id, lastCommitted);
+        ObjectHeader oh = new ObjectHeader(stream, this, buffer);
+        ObjectReferenceContext context = new ObjectReferenceContext(trans,buffer, oh, ref);
+	    ((VirtualAttributeHandler)correctHandlerVersion(context)).readVirtualAttributes(context);
 	}
 
-    void readVirtualAttributes(Transaction a_trans, ObjectReference a_yapObject) {
-    	readVirtualAttributes(a_trans, a_yapObject, false);
-    }
-    
 	public GenericReflector reflector() {
 		return _container.reflector();
 	}

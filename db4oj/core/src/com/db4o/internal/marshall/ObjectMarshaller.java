@@ -82,13 +82,6 @@ public abstract class ObjectMarshaller {
 
     public abstract ObjectHeaderAttributes readHeaderAttributes(ByteArrayBuffer reader);
     
-    public abstract void readVirtualAttributes(
-            Transaction trans,  
-            ClassMetadata yc, 
-            ObjectReference yo, 
-            ObjectHeaderAttributes attributes, 
-            ByteArrayBuffer reader);
-
 	public abstract void writeObjectClassID(ByteArrayBuffer reader,int id);
 	
 	public abstract void skipMarshallerInfo(ByteArrayBuffer reader);

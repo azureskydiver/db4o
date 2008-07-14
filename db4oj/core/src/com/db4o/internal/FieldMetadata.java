@@ -895,11 +895,10 @@ public class FieldMetadata implements StoredField {
     }
 
     /**
-     * @param trans
-     * @param ref
+     * @param context TODO
      */
-    public void readVirtualAttribute(Transaction trans, ByteArrayBuffer buffer, ObjectReference ref) {
-        incrementOffset(buffer);
+    public void readVirtualAttribute(ObjectReferenceContext context) {
+        incrementOffset(context);
     }
 
     /** never called but keep for Rickie */

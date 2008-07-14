@@ -77,17 +77,6 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		} 
     }
     
-    public void readVirtualAttributes(final Transaction trans, ClassMetadata yc, final ObjectReference yo, ObjectHeaderAttributes attributes, final ByteArrayBuffer reader) {
-		TraverseFieldCommand command = new TraverseFieldCommand() {
-			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
-				if (!isNull) {
-					field.readVirtualAttribute(trans, reader, yo);
-				}
-			}
-		};
-		traverseFields(yc, reader, attributes, command);
-	}
-
     protected boolean isNull(FieldListInfo fieldList,int fieldIndex) {
     	return fieldList.isNull(fieldIndex);
     }

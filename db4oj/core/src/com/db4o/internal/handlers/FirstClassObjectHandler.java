@@ -15,7 +15,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHandler, FirstClassHandler {
+public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHandler, FirstClassHandler, VirtualAttributeHandler{
     
     private static final int HASHCODE_FOR_NULL = 72483944; 
     
@@ -40,7 +40,7 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
                 } 
             }
         };
-        traverseFields(context, command);
+        traverseDeclaredFields(context, command);
         
         if(classMetadata().i_ancestor != null){
             classMetadata().i_ancestor.defragment(context);
@@ -70,7 +70,7 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
                 field.instantiate(context);
             }
         };
-        traverseFields(context, command);
+        traverseDeclaredFields(context, command);
         
         if(updateFieldFound.value){
             context.restoreState(savedState);
@@ -81,7 +81,7 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
                     }
                 }
             };
-            traverseFields(context, command);
+            traverseDeclaredFields(context, command);
         }
         
     }
@@ -146,7 +146,7 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
                 field.marshall(context, child);
             }
         };
-        traverseFields(context, command);
+        traverseDeclaredFields(context, command);
     }
 
 
@@ -195,13 +195,27 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         public abstract void processField(FieldMetadata field,boolean isNull, ClassMetadata containingClass);
     }
     
-    protected final void traverseFields(MarshallingInfo context, TraverseFieldCommand command) {
-        int fieldCount=command.fieldCount(classMetadata(), ((ByteArrayBuffer)context.buffer()));
+    protected final void traverseAllFields(MarshallingInfo context, TraverseFieldCommand command) {
+        ClassMetadata classMetadata = classMetadata();
+        while(classMetadata != null){
+            traverseDeclaredFields(context, classMetadata, command);
+            classMetadata = classMetadata.i_ancestor;
+        }
+    }
+    
+    protected final void traverseDeclaredFields(MarshallingInfo context, TraverseFieldCommand command) {
+        traverseDeclaredFields(context, classMetadata(), command);
+    }
+
+    private void traverseDeclaredFields(MarshallingInfo context, ClassMetadata classMetadata,
+        TraverseFieldCommand command) {
+        int fieldCount=command.fieldCount(classMetadata, ((ByteArrayBuffer)context.buffer()));
         for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
-            command.processField(classMetadata().i_fields[i],isNull(context,context.currentSlot()),classMetadata());
+            command.processField(classMetadata.i_fields[i],isNull(context,context.currentSlot()),classMetadata);
             context.beginSlot();
         }
     }
+    
     
     protected boolean isNull(FieldListInfo fieldList,int fieldIndex) {
         return fieldList.isNull(fieldIndex);
@@ -266,7 +280,7 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
                 }
             }
         };
-        traverseFields(context, command);
+        traverseDeclaredFields(context, command);
         if(classMetadata().i_ancestor != null){
             classMetadata().i_ancestor.collectIDs(context, fieldName);
         }
@@ -306,6 +320,16 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         });
         
     }
-
+    
+    public void readVirtualAttributes(final ObjectReferenceContext context){
+        TraverseFieldCommand command = new TraverseFieldCommand() {
+            public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
+                if (!isNull) {
+                    field.readVirtualAttribute(context);
+                }
+            }
+        };
+        traverseAllFields(context, command);
+    }
 
 }

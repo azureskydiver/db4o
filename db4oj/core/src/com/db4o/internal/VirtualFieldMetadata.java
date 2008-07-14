@@ -82,10 +82,10 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
 
     public void instantiate(UnmarshallingContext context) {
         context.reference().produceVirtualAttributes();
-        instantiate1(context.transaction(), context.reference(), context.buffer());
+        instantiate1(context);
     }
 
-    abstract void instantiate1(Transaction trans, ObjectReference ref, ReadBuffer buffer);
+    abstract void instantiate1(ObjectReferenceContext context);
     
     public void loadHandlerById(ObjectContainerBase container){
     	// do nothing
@@ -166,12 +166,12 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     
     abstract void marshallIgnore(WriteBuffer writer);
     
-    public void readVirtualAttribute(Transaction trans, ByteArrayBuffer buffer, ObjectReference ref) {
-        if(! trans.supportsVirtualFields()){
-            incrementOffset(buffer);
+    public void readVirtualAttribute(ObjectReferenceContext context) {
+        if(! context.transaction().supportsVirtualFields()){
+            incrementOffset(context);
             return;
         }
-        instantiate1(trans, ref, buffer);
+        instantiate1(context);
     }
     
     public boolean isVirtual() {
