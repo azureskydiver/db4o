@@ -18,7 +18,7 @@ import com.db4o.typehandlers.*;
  * This is the latest version, the one that should be used.
  * @exclude
  */
-public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler4, VariableLengthTypeHandler, EmbeddedTypeHandler, CompositeTypeHandler{
+public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler4, VariableLengthTypeHandler, EmbeddedTypeHandler, VersionedTypeHandler{
     
 	private TypeHandler4 _handler;
 	
@@ -508,7 +508,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return Const4.INDIRECTION_LENGTH;
     }
 
-    public TypeHandler4 genericTemplate() {
+    public TypeHandler4 unversionedTemplate() {
         return new ArrayHandler();
     }
     

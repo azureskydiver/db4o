@@ -15,7 +15,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHandler, FirstClassHandler, VirtualAttributeHandler{
+public class FirstClassObjectHandler  implements TypeHandler4, VersionedTypeHandler, FirstClassHandler, VirtualAttributeHandler{
     
     private static final int HASHCODE_FOR_NULL = 72483944; 
     
@@ -247,7 +247,7 @@ public class FirstClassObjectHandler  implements TypeHandler4, CompositeTypeHand
         return HASHCODE_FOR_NULL;
     }
     
-    public TypeHandler4 genericTemplate() {
+    public TypeHandler4 unversionedTemplate() {
         return new FirstClassObjectHandler(null);
     }
 

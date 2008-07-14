@@ -31,15 +31,15 @@ public class HandlerVersionRegistry {
         if(replacement == null){
             return correctHandlerVersion(originalHandler, version + 1);    
         }
-        if(replacement instanceof CompositeTypeHandler){
-            return (TypeHandler4) ((CompositeTypeHandler)replacement).deepClone(new TypeHandlerCloneContext(_registry, originalHandler,  version));
+        if(replacement instanceof VersionedTypeHandler){
+            return (TypeHandler4) ((VersionedTypeHandler)replacement).deepClone(new TypeHandlerCloneContext(_registry, originalHandler,  version));
         };
         return replacement;
     }
 
     private TypeHandler4 genericTemplate(final TypeHandler4 handler) {
-        if (handler instanceof CompositeTypeHandler){
-            return ((CompositeTypeHandler)handler).genericTemplate(); 
+        if (handler instanceof VersionedTypeHandler){
+            return ((VersionedTypeHandler)handler).unversionedTemplate(); 
         }
         return handler;
     }

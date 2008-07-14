@@ -81,7 +81,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     }
 
     public void instantiate(UnmarshallingContext context) {
-        context.reference().produceVirtualAttributes();
+        context.objectReference().produceVirtualAttributes();
         instantiate1(context);
     }
 

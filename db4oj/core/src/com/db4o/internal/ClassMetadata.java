@@ -1056,23 +1056,23 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             }
             
             shareTransaction(obj, context.transaction());
-            shareObjectReference(obj, context.reference());
+            shareObjectReference(obj, context.objectReference());
             
             context.setObjectWeak(obj);
             
-            context.transaction().referenceSystem().addExistingReference(context.reference());
+            context.transaction().referenceSystem().addExistingReference(context.objectReference());
             
             objectOnInstantiate(context.transaction(), obj);
 
             if (!context.activationDepth().requiresActivation()) {
-                context.reference().setStateDeactivated();
+                context.objectReference().setStateDeactivated();
             } 
             else {
                 obj = activate(context);
             }
         } 
         else {
-            if (activatingActiveObject(context.activationDepth().mode(), context.reference())) {
+            if (activatingActiveObject(context.activationDepth().mode(), context.objectReference())) {
             	ActivationDepth child = context.activationDepth().descend(this);
                 if (child.requiresActivation()) {
                     activateFields(context.transaction(), obj, child);
@@ -1109,10 +1109,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
    private Object activate(UnmarshallingContext context) {
         Object obj = context.persistentObject();
         if(! objectCanActivate(context.transaction(), obj)){
-            context.reference().setStateDeactivated();
+            context.objectReference().setStateDeactivated();
             return obj;
         }
-        context.reference().setStateClean();
+        context.objectReference().setStateClean();
         if (context.activationDepth().requiresActivation()/* || cascadeOnActivate()*/) {
             obj = instantiateFields(context);
         }

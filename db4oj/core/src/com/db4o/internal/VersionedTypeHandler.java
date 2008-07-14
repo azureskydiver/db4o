@@ -8,8 +8,8 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-public interface CompositeTypeHandler extends TypeHandler4, DeepClone {
+public interface VersionedTypeHandler extends TypeHandler4, DeepClone {
 
-    TypeHandler4 genericTemplate();
+    TypeHandler4 unversionedTemplate();
 
 }
