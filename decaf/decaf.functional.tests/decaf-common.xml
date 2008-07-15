@@ -25,7 +25,6 @@
 	<macrodef name="decaf">
 		<attribute name="workspace" />
 		<attribute name="resource" />
-		<attribute name="targetPlatform" default="jdk11" />
 		
 		<element name="args" optional="yes" />
 		
@@ -46,9 +45,6 @@
 				<arg value="-application" />
 				<arg value="decaf.application" />
 				<arg value="@{resource}" />
-				<arg value="-targetPlatform" />
-				<arg value="@{targetPlatform}" />
-				
 				<args />
 			</java>
 		</sequential>

@@ -52,16 +52,24 @@
 	<macrodef name="javac11">
 		<attribute name="srcdir" />
 		<attribute name="classpathref" default="java.1.1.cp" />
+		<attribute name="destdir"  default="${build.dir}/java1.1" />
 		<sequential>
 			<javac compiler="classic"
 				fork="yes"
 				executable="${file.compiler.jdk1.3}"
 				srcdir="@{srcdir}"
-				destdir="${build.dir}/java1.1"
+				destdir="@{destdir}"
 				debug="true"
 				classpathref="@{classpathref}">
 				<!-- <compilerarg line="${file.compiler.jdk1.3.args.line}"/> -->
 			</javac>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="javac12">
+		<attribute name="srcdir" />
+		<sequential>
+			<javac11 srcdir="@{srcdir}" destdir="${build.dir}/java1.2" />
 		</sequential>
 	</macrodef>
 	
@@ -89,11 +97,11 @@
 		
 		<mkdir dir="${build.dir}/java1.2" />
 		
-		<javac11 srcdir="${build.dir}/workspace/db4o.decaf.jdk12/src"  />
-		<javac11 srcdir="../db4ounit/src" />
-		<javac11 srcdir="../db4ounit.extensions/src" />
-		<javac11 srcdir="../db4oj.tests/src" />
-		<javac11 srcdir="../db4ojdk1.2/test/src"  />
+		<javac12 srcdir="${build.dir}/workspace/db4o.decaf.jdk12/src"  />
+		<javac12 srcdir="../db4ounit/src" />
+		<javac12 srcdir="../db4ounit.extensions/src" />
+		<javac12 srcdir="../db4oj.tests/src" />
+		<javac12 srcdir="../db4ojdk1.2/test/src"  />
 	
 	</target>
 	
@@ -150,10 +158,15 @@
 	
 	<target name="decaf-core" depends="decaf-workspace, install-decaf-plugin">
 
-		<decaf workspace="${build.dir}/workspace" resource="db4o" />
-		<!--
-		<decaf workspace="${build.dir}/workspace" resource="db4o" targetPlatform="jdk12" />
-		-->
+		<decaf workspace="${build.dir}/workspace" resource="db4o">
+			<args>
+				<arg value="-targetPlatform" />
+				<arg value="jdk11" />
+
+				<arg value="-targetPlatform" />
+				<arg value="jdk12" />
+			</args>
+		</decaf>
 	</target>
 	
 	<target name="decaf-tests" depends="decaf-core">
