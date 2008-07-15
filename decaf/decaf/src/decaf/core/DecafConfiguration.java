@@ -6,12 +6,12 @@ public class DecafConfiguration {
 	
 	private final Map<String, String> _mapping;
 
-	public DecafConfiguration() {
-		this._mapping = Collections.emptyMap();
+	DecafConfiguration() {
+		_mapping = Collections.emptyMap();
 	}
 
-	public DecafConfiguration(Map<String, String> mapping) {
-		this._mapping = mapping;
+	DecafConfiguration(Map<String, String> mapping) {
+		_mapping = mapping;
 	}
 	
 	public Iterable<String> mappedTypeKeys() {
@@ -35,7 +35,7 @@ public class DecafConfiguration {
 		return null;
 	}
 	
-	public static DecafConfiguration forJDK11() {
+	static DecafConfiguration forJDK11() {
 		Map<String, String> mapping = new HashMap<String, String>();
 		mapping.put(Map.class.getName(), "com.db4o.foundation.Map4");
 		mapping.put(HashMap.class.getName(), "com.db4o.foundation.Hashtable4");
@@ -45,7 +45,7 @@ public class DecafConfiguration {
 		return new DecafConfiguration(mapping);
 	}
 
-	public static DecafConfiguration forJDK12() {
+	static DecafConfiguration forJDK12() {
 		Map<String, String> mapping = Collections.emptyMap();
 		return new DecafConfiguration(mapping);
 	}

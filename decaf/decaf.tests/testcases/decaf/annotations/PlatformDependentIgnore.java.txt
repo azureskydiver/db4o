@@ -1,0 +1,19 @@
+package decaf.annotations;
+
+/**
+ * @decaf.ignore.jdk11
+ */
+class IgnoreJdk11 {
+}
+
+/**
+ * @decaf.ignore.jdk12
+ */
+class IgnoreJdk12 {
+}
+
+/**
+ * @decaf.ignore
+ */
+class IgnoreAll {
+}

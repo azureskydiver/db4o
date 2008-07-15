@@ -1,0 +1,22 @@
+package decaf.annotations;
+
+class Base {
+}
+
+/**
+ * @decaf.ignore.extends.jdk11
+ */
+class IgnoreJdk11 extends Base {
+}
+
+/**
+ * @decaf.ignore.extends.jdk12
+ */
+class IgnoreJdk12 {
+}
+
+/**
+ * @decaf.ignore.extends
+ */
+class IgnoreAll {
+}

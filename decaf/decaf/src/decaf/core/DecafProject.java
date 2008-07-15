@@ -15,6 +15,7 @@ public class DecafProject {
 		
 		private final TargetPlatform _targetPlatform;
 		private final IJavaProject _targetProject;
+		private DecafConfiguration _config;
 
 		public OutputTarget(TargetPlatform targetPlatform, IJavaProject targetProject) {
 			_targetPlatform = targetPlatform;
@@ -27,6 +28,13 @@ public class DecafProject {
 		
 		public TargetPlatform targetPlatform() {
 			return _targetPlatform;
+		}
+
+		public DecafConfiguration config() {
+			if (null == _config) {
+				_config = _targetPlatform.defaultConfig();
+			}
+			return _config;
 		}
 	}
 	

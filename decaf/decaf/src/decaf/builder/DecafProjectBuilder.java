@@ -76,7 +76,7 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 		for (DecafProject.OutputTarget outputTarget : project.targets()) {
 			
 			final ICompilationUnit decaf = decafElementFor(element, outputTarget.targetProject());
-			final ASTRewrite rewrite = DecafRewriter.rewrite(element, monitor, outputTarget.targetPlatform().config());
+			final ASTRewrite rewrite = DecafRewriter.rewrite(element, monitor, outputTarget.targetPlatform(), outputTarget.config());
 			
 			safeRewriteFile(decaf, rewrite, monitor);
 		}

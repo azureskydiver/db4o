@@ -254,15 +254,7 @@ class DecafASTNodeBuilder {
 	private boolean isObjectType(final ITypeBinding type) {
 		return _ast.resolveWellKnownType(Object.class.getName()) == type;
 	}
-
-	public boolean isIgnored(BodyDeclaration node) {
-		return containsJavadoc(node, DecafAnnotations.IGNORE);
-	}
-
-	private boolean containsJavadoc(BodyDeclaration node, String tag) {
-		return JavadocUtility.containsJavadoc(node, tag);
-	}
-
+	
 	public boolean isName(Expression array) {
 		return array instanceof Name;
 	}
@@ -316,13 +308,11 @@ class DecafASTNodeBuilder {
 		}
 		throw new IllegalArgumentException(typeName);
 	}
-
-	public boolean ignoreExtends(TypeDeclaration node) {
-		return containsJavadoc(node, DecafAnnotations.IGNORE_EXTENDS);
-	}
 	
 	private static final Map<String, String> _unboxing = new HashMap<String, String>();
+
 	private Set<String> importedPackages;
+	
 	{
 		unboxing("java.lang.Byte", "byteValue");
 		unboxing("java.lang.Short", "shortValue");

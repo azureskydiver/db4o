@@ -5,18 +5,15 @@ import java.util.*;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
-import decaf.core.*;
-
 import sharpen.core.framework.*;
-
 
 @SuppressWarnings("unchecked")
 public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	private final DecafRewritingContext _context;
 
-	public DecafRewritingVisitor(CompilationUnit unit, ASTRewrite rewrite, DecafConfiguration decafConfig) {
-		_context = new DecafRewritingContext(unit, rewrite, decafConfig);
+	public DecafRewritingVisitor(DecafRewritingContext context) {
+		_context = context;
 	}
 	
 	@Override
@@ -36,7 +33,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 	
 	private void processMixins(TypeDeclaration node) {
-		final List<TagElement> mixins = JavadocUtility.getJavadocTags(node, DecafAnnotations.MIXIN);
+		final List<TagElement> mixins = getJavadocTags(node, DecafAnnotations.MIXIN);
 		for (String mixin : textFragments(mixins)) {
 			processMixin(node, mixin);
 		}
@@ -473,7 +470,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private boolean handledAsIgnored(BodyDeclaration node) {
-		if (builder().isIgnored(node)) {
+		if (isIgnored(node)) {
 			remove(node);
 			return true;
 		}
@@ -554,9 +551,29 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	
 	private void processIgnoreExtends(TypeDeclaration node) {
-		if (builder().ignoreExtends(node)) {
+		if (ignoreExtends(node)) {
 			remove(node.getSuperclassType());
 		}
+	}
+	
+
+	public boolean ignoreExtends(TypeDeclaration node) {
+		return containsJavadoc(node, DecafAnnotations.IGNORE_EXTENDS);
+	}
+
+	public boolean isIgnored(BodyDeclaration node) {
+		return containsJavadoc(node, DecafAnnotations.IGNORE);
+	}
+
+	private boolean containsJavadoc(BodyDeclaration node, String tag) {
+		if (JavadocUtility.containsJavadoc(node, tag)) {
+			return true;
+		}
+		return JavadocUtility.containsJavadoc(node, platformSpecificTag(tag));
+	}
+
+	private String platformSpecificTag(String tag) {
+		return _context.targetPlatform().appendPlatformId(tag, ".");
 	}
 
 	private void processIgnoreImplements(TypeDeclaration node) {
@@ -588,7 +605,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	public Set<String> ignoredImplements(TypeDeclaration node) {
 		
-		final List<TagElement> tags = JavadocUtility.getJavadocTags(node, DecafAnnotations.IGNORE_IMPLEMENTS);
+		final List<TagElement> tags = getJavadocTags(node, DecafAnnotations.IGNORE_IMPLEMENTS);
 		if (tags.isEmpty()) {
 			return Collections.emptySet();
 		}
@@ -598,6 +615,19 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		}
 		
 		return textFragments(tags);
+	}
+
+	private List<TagElement> getJavadocTags(BodyDeclaration node, String tagName) {
+		final Javadoc javadoc = node.getJavadoc();
+		if (null == javadoc) {
+			return Collections.emptyList();
+		}
+		final ArrayList<TagElement> found = new ArrayList<TagElement>();
+		JavadocUtility.collectTags(javadoc.tags(), tagName, found);
+		if (_context.targetPlatform().isNone()) {
+			return found;
+		}
+		return JavadocUtility.collectTags(javadoc.tags(), platformSpecificTag(tagName), found);
 	}
 
 	private Set<String> textFragments(final List<TagElement> tags) {

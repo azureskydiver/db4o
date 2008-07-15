@@ -1,0 +1,22 @@
+package decaf.annotations;
+
+interface Interface {
+}
+
+/**
+ * @decaf.ignore.implements.jdk11
+ */
+class IgnoreJdk11 implements Interface {
+}
+
+/**
+ * @decaf.ignore.implements.jdk12
+ */
+class IgnoreJdk12 implements Interface {
+}
+
+/**
+ * @decaf.ignore.implements
+ */
+class IgnoreAll implements Interface {
+}

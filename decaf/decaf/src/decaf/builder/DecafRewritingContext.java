@@ -9,10 +9,16 @@ public class DecafRewritingContext {
 	
 	private final ASTRewrite _rewrite;
 	private final DecafASTNodeBuilder _builder;
+	private final TargetPlatform _targetPlatform;
 	
-	public DecafRewritingContext(CompilationUnit unit, ASTRewrite rewrite, DecafConfiguration decafConfig) {
+	public DecafRewritingContext(CompilationUnit unit, ASTRewrite rewrite, TargetPlatform targetPlatform, DecafConfiguration decafConfig) {
 		_builder = new DecafASTNodeBuilder(unit, decafConfig);
 		_rewrite = rewrite;
+		_targetPlatform = targetPlatform;
+	}
+	
+	public TargetPlatform targetPlatform() {
+		return _targetPlatform;
 	}
 
 	public DecafASTNodeBuilder builder() {
