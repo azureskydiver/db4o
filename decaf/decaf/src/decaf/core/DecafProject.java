@@ -30,15 +30,15 @@ public class DecafProject {
 		}
 	}
 	
-	public static DecafProject create(IJavaProject project) throws CoreException {
-		final DecafProject cached = (DecafProject) project.getProject().getSessionProperty(SESSION_KEY);
+	public static DecafProject create(IJavaProject javaProject) throws CoreException {
+		final DecafProject cached = (DecafProject) javaProject.getProject().getSessionProperty(SESSION_KEY);
 		if (null != cached) {
 			return cached;
 		}
 		
-		final DecafProject settings = new DecafProject(project);
-		project.getProject().setSessionProperty(SESSION_KEY, settings);
-		return settings;
+		final DecafProject decafProject = new DecafProject(javaProject);
+		javaProject.getProject().setSessionProperty(SESSION_KEY, decafProject);
+		return decafProject;
 	}
 	
 	private static final QualifiedName SESSION_KEY = new QualifiedName(Activator.PLUGIN_ID, "decafSession");
@@ -49,7 +49,7 @@ public class DecafProject {
 
 	private List<OutputTarget> _targets;
 	
-	public DecafProject(IJavaProject project) {
+	private DecafProject(IJavaProject project) {
 		_project = project;
 	}
 	

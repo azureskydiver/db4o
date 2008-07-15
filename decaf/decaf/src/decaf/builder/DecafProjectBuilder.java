@@ -71,9 +71,9 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 		
 		final ICompilationUnit element = compilationUnitFor(file);
 		
-		final DecafProject properties = DecafProject.create(element.getJavaProject());
+		final DecafProject project = DecafProject.create(element.getJavaProject());
 		
-		for (DecafProject.OutputTarget outputTarget : properties.targets()) {
+		for (DecafProject.OutputTarget outputTarget : project.targets()) {
 			
 			final ICompilationUnit decaf = decafElementFor(element, outputTarget.targetProject());
 			final ASTRewrite rewrite = DecafRewriter.rewrite(element, monitor, outputTarget.targetPlatform().config());
