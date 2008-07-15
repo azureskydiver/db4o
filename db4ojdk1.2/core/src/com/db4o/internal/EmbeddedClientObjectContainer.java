@@ -24,7 +24,7 @@ public class EmbeddedClientObjectContainer extends PartialEmbeddedClientObjectCo
     }
 
     /**
-     * @decaf.ignore
+     * @decaf.ignore.jdk11
      */
     public ObjectSet query(Predicate predicate, Comparator comparator) throws Db4oIOException,
         DatabaseClosedException {

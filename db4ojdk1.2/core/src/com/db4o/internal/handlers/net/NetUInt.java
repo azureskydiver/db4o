@@ -7,7 +7,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  * @sharpen.ignore
- * @decaf.ignore
+ * @decaf.ignore.jdk11
  */
 public class NetUInt extends NetSimpleTypeHandler{
 

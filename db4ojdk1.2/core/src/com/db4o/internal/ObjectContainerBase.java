@@ -19,7 +19,7 @@ public abstract class ObjectContainerBase extends PartialObjectContainer {
 	}
 	
 	/**
-     * @decaf.ignore
+     * @decaf.ignore.jdk11
      */
     public ObjectSet query(Predicate predicate,Comparator comparator) {
 		return query(null, predicate,new JdkComparatorWrapper(comparator));

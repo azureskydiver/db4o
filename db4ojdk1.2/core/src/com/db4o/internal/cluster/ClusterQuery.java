@@ -74,7 +74,7 @@ public class ClusterQuery implements Query{
 	}
 
 	/**
-	 * @decaf.ignore
+	 * @decaf.ignore.jdk11
 	 */
 	public Query sortBy(Comparator comparator) {
 		// FIXME

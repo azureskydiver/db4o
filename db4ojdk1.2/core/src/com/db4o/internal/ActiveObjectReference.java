@@ -3,7 +3,7 @@
 package com.db4o.internal;
 
 /**
- * @decaf.ignore
+ * @decaf.ignore.jdk11
  */
 class ActiveObjectReference extends java.lang.ref.WeakReference{
 	

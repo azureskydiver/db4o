@@ -9,7 +9,7 @@ import com.db4o.*;
 /**
  * @exclude
  * @sharpen.ignore
- * @decaf.ignore
+ * @decaf.ignore.jdk11
  */
 public class TTreeSet implements ObjectConstructor {
 	
