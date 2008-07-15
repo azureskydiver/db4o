@@ -54,14 +54,12 @@
 	<target name="api-test-jdk12" depends="old-core-jar-jdk12, new-core-jar-jdk12" description="checks inferred API surface is the same as original">		
 		
 		<api-diff from="${build.dir}/db4o-old-jdk12.jar" to="${build.dir}/db4o-decaf-jdk12.jar">
-			<!--
 			<ignore class="com.db4o.foundation.ChainedRuntimeExceptionMixin" />
 			<ignore class="com.db4o.query.Predicate">
 				<method name="figureOutExtentType" />
 				<method name="filterParameterType" />
 				<method name="&lt;clinit&gt;" />
 			</ignore>
-			-->
 		</api-diff>
 			
 	</target>
@@ -104,7 +102,7 @@
 		
 		<java jvm="${file.jvm.jdk1.3}" 
 			fork="true" 
-			classname="com.db4o.db4ounit.jre12s.AllTests" 
+			classname="com.db4o.db4ounit.jre12.AllTestsJdk1_2" 
 			failonerror="true" 
 			timeout="1800000">
 			<classpath refid="tests.java1.2.cp" />
@@ -114,7 +112,7 @@
 		</java>
 	</target>
 		
-	<target name="integration-test-jdk12-compilation">
+	<target name="integration-test-jdk12-compilation" depends="init">
 		
 		<mkdir dir="${build.dir}/java1.2" />
 		
