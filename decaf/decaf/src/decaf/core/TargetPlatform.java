@@ -13,7 +13,7 @@ public enum TargetPlatform {
 		}
 		
 		@Override
-		public String appendPlatformId(String orig, char separator) {
+		public String appendPlatformId(String orig, String separator) {
 			return orig;
 		}
 	},
@@ -30,7 +30,7 @@ public enum TargetPlatform {
 		}
 	};
 	
-	public String appendPlatformId(String orig, char separator) {
+	public String appendPlatformId(String orig, String separator) {
 		return orig + separator + platformId();
 	}
 

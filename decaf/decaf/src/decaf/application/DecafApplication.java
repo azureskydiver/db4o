@@ -26,12 +26,19 @@ public class DecafApplication implements IApplication {
 				.nature(DecafNature.NATURE_ID)
 				.projectReferences(commandLine.projectReferences)
 				.classpath(commandLine.classpath)
-				.persistentProperty(DecafProjectSettings.TARGET_PLATFORMS, commaSeparatedPlatformIds(commandLine.targetPlatforms))
 				.project;
+			
+			final DecafProject decaf = DecafProject.create(project.getJavaProject());
+			final List<TargetPlatform> targetPlatforms = commandLine.targetPlatforms;
+			if (!targetPlatforms.isEmpty()) {
+				decaf.setTargetPlatforms(toArray(targetPlatforms));
+			}
 			
 			project.buildProject(monitor);
 			
-			decafProjectFor(commandLine.project).build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
+			for (DecafProject.OutputTarget target : decaf.targets()) {
+				target.targetProject().getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
+			}
 		} 
 		catch (CoreException x) {
 			IStatus[] children = x.getStatus().getChildren();
@@ -52,25 +59,10 @@ public class DecafApplication implements IApplication {
 		return IApplication.EXIT_OK;
 	}
 
-	private String commaSeparatedPlatformIds(List<TargetPlatform> targetPlatforms) {
-		final StringBuilder value = new StringBuilder();
-		for (TargetPlatform targetPlatform : targetPlatforms) {
-			if (value.length() > 0) {
-				value.append(",");
-			}
-			value.append(targetPlatform.toString());
-		}
-		return value.toString();
+	private TargetPlatform[] toArray(final List<TargetPlatform> targetPlatforms) {
+		return targetPlatforms.toArray(new TargetPlatform[targetPlatforms.size()]);
 	}
-
-	private IProject decafProjectFor(final String projectName) {
-		return project(projectName + ".decaf");
-	}
-
-	private IProject project(final String name) {
-		return WorkspaceUtilities.getProject(name);
-	}
-
+	
 	private static void disableAutoBuilding() throws CoreException {
 		WorkspaceUtilities.setAutoBuilding(false);
 	}

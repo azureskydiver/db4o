@@ -73,7 +73,7 @@ public abstract class DecafTestCaseBase extends TestCase {
 	private IFile decafFileFor(IResource originalFile, TargetPlatform targetPlatform) throws CoreException {
 		final String decafFolderName = "decaf";
 		createFolder(decafFolderName);
-		IFolder targetFolder = createFolder(targetPlatform.appendPlatformId(decafFolderName, '/'));
+		IFolder targetFolder = createFolder(targetPlatform.appendPlatformId(decafFolderName, "/"));
 		IFile actualFile = targetFolder.getFile("decaf.txt");
 		originalFile.copy(actualFile.getFullPath(), true, null);
 		return actualFile;
@@ -88,7 +88,7 @@ public abstract class DecafTestCaseBase extends TestCase {
 	}
 
 	private ICompilationUnit createCompilationUnit(DecafTestResource resource) throws CoreException, IOException {
-				return _project.createCompilationUnit(resource.packageName(), resource.javaFileName(), resource.actualStringContents());
-			}
+		return _project.createCompilationUnit(resource.packageName(), resource.javaFileName(), resource.actualStringContents());
+	}
 
 }
