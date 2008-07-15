@@ -18,22 +18,28 @@
 	
 	<property name="db4ounit.file.path" value="." />
 	
-	<target name="test" depends="api-test, integration-test-jdk12, integration-test-jdk11" description="runs all the tests">
+	<target name="test" depends="test-jdk12, test-jdk11" description="runs all the tests">
+	</target>
+	
+	<target name="test-jdk12" depends="api-test-jdk12, integration-test-jdk12" description="runs all the jdk12 tests">
+	</target>
+	
+	<target name="test-jdk11" depends="api-test-jdk11, integration-test-jdk11" description="runs all the jdk11 tests">
 	</target>
 	
 	<target name="clean-test" depends="clean, test" description="runs the tests in a clean workspace">
 	</target>
 	
-	<target name="api-test" depends="old-core-jar, new-core-jar" description="checks inferred API surface is the same as original">
-		
-		<taskdef name="api-diff" classname="decaf.tests.functional.ant.ApiDiffTask">
-			<classpath>
-				<pathelement location="bin" />
-				<pathelement location="../decaf/bin" />
-				<pathelement location="${asm.home}/lib/asm-3.1.jar" />
-			</classpath>
-		</taskdef>
-		
+	<taskdef name="api-diff" classname="decaf.tests.functional.ant.ApiDiffTask">
+		<classpath>
+			<pathelement location="bin" />
+			<pathelement location="../decaf/bin" />
+			<pathelement location="${asm.home}/lib/asm-3.1.jar" />
+		</classpath>
+	</taskdef>
+
+	<target name="api-test-jdk11" depends="old-core-jar, new-core-jar" description="checks inferred API surface is the same as original">		
+	
 		<api-diff from="${build.dir}/db4o-old.jar" to="${build.dir}/db4o-decaf.jar">
 			<ignore class="com.db4o.foundation.ChainedRuntimeExceptionMixin" />
 			<ignore class="com.db4o.query.Predicate">
@@ -43,6 +49,21 @@
 			</ignore>
 		</api-diff>
 		
+	</target>
+	
+	<target name="api-test-jdk12" depends="old-core-jar-jdk12, new-core-jar-jdk12" description="checks inferred API surface is the same as original">		
+		
+		<api-diff from="${build.dir}/db4o-old-jdk12.jar" to="${build.dir}/db4o-decaf-jdk12.jar">
+			<!--
+			<ignore class="com.db4o.foundation.ChainedRuntimeExceptionMixin" />
+			<ignore class="com.db4o.query.Predicate">
+				<method name="figureOutExtentType" />
+				<method name="filterParameterType" />
+				<method name="&lt;clinit&gt;" />
+			</ignore>
+			-->
+		</api-diff>
+			
 	</target>
 	
 	<path id="java.1.1.cp">
@@ -153,6 +174,22 @@
 	
 	<target name="new-core-jar" depends="decaf-core">
 		<jar destfile="${build.dir}/db4o-decaf.jar" basedir="${build.dir}/workspace/db4o.decaf.jdk11/bin">
+		</jar>
+	</target>
+	
+	<target name="old-core-jar-jdk12" depends="init">
+		<jar destfile="${build.dir}/db4o-old-jdk12.jar">
+			<fileset dir="${dir.workspace}/db4oj/bin">
+				<include name="**/*.class" />
+			</fileset>
+			<fileset dir="${dir.workspace}/db4ojdk1.2/bin/core">
+				<include name="**/*.class" />
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="new-core-jar-jdk12" depends="decaf-core">
+		<jar destfile="${build.dir}/db4o-decaf-jdk12.jar" basedir="${build.dir}/workspace/db4o.decaf.jdk12/bin">
 		</jar>
 	</target>
 	
