@@ -38,6 +38,10 @@ public class NestedClassesTestCase
 	}
 	
 	public void test() throws Exception {
+		if (System.getProperty("java.version").startsWith("1.3")) {
+			System.err.println("IGNORED: " + getClass() + " will fail when run against JDK1.3/JDK1.4");
+			return;
+		}
 		ObjectSet query = db().query(OuterClass.InnerClass.class);
 		while(query.hasNext()){
 			OuterClass.InnerClass innerObject = (OuterClass.InnerClass) query.next();
