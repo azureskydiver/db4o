@@ -20,12 +20,12 @@ public class DecafTestResource extends TestCaseResource {
 
 	@Override
 	public String packageName() {
-		return _targetPlatform.appendPlatformId(super.packageName(), '.');
+		return _targetPlatform.appendPlatformId(super.packageName(), ".");
 	}
 	
 	@Override
 	protected String expectedPathSuffix() {
-		return _targetPlatform.appendPlatformId(PATH_SUFFIX_DECAF, '.') + PATH_SUFFIX_TXT;
+		return _targetPlatform.appendPlatformId(PATH_SUFFIX_DECAF, ".") + PATH_SUFFIX_TXT;
 	}
 
 }
