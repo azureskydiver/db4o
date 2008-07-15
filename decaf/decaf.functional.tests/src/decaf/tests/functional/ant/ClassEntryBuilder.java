@@ -10,6 +10,7 @@ import org.objectweb.asm.*;
 final class ClassEntryBuilder implements ClassVisitor {
 	
 	private ClassEntry _classEntry;
+	private int _classAccess;
 	
 	public ClassEntry classEntry() {
 		return _classEntry;
@@ -18,6 +19,7 @@ final class ClassEntryBuilder implements ClassVisitor {
 	public void visit(int version, int access, String name,
 			String signature, String superName,
 			String[] interfaces) {
+		_classAccess = access;
 		_classEntry = new ClassEntry(cleanName(name), cleanName(superName), cleanNameSet(interfaces));
 	}
 
@@ -60,12 +62,31 @@ final class ClassEntryBuilder implements ClassVisitor {
 
 	public MethodVisitor visitMethod(int access, String name,
 			String desc, String signature, String[] exceptions) {
-		if (isSynthetic(access) || isAbstract(access)) {
+		if (isSynthetic(access)) {
 			return null;
 		}
 		
+		if (visitingAbstractClass() && isAbstract(access)) {
+			// HACK: working around javac compiler idiosyncrasies - some compilers
+			// want to add abstract methods when an abstract class implements an
+			// interface
+			return null;
+		}
+				
 		_classEntry.methods().add(new MethodEntry(name, desc));
 		return null;
+	}
+
+	private boolean visitingAbstractClass() {
+		return visitingClass() && isAbstract(_classAccess);
+	}
+
+	private boolean visitingClass() {
+		return !isInterface(_classAccess);
+	}
+
+	private boolean isInterface(int access) {
+		return isBitSet(access, Opcodes.ACC_INTERFACE);
 	}
 
 	private boolean isAbstract(int access) {
