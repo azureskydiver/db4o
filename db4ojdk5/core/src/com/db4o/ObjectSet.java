@@ -22,7 +22,7 @@ import com.db4o.ext.*;
  * @see ExtObjectSet for extended functionality.
  * 
  * @sharpen.extends System.Collections.IList
- * @decaf.ignore.implements
+ * @decaf.ignore.implements.jdk11
  */
 public interface ObjectSet<Item> extends List<Item>, Iterator<Item> {
 	
@@ -70,6 +70,3 @@ public interface ObjectSet<Item> extends List<Item>, Iterator<Item> {
      */
     public int size ();
 }
-
-
-
