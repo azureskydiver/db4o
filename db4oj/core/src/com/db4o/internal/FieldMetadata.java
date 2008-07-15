@@ -99,28 +99,23 @@ public class FieldMetadata implements StoredField {
         _handler = handler;
     }
     
-    /**
-     * @param classMetadata
-     * @param oldSlot 
-     */
-    public void addFieldIndex(MarshallerFamily mf, ClassMetadata classMetadata, StatefulBuffer buffer, Slot oldSlot)  throws FieldIndexException {
+    public void addFieldIndex(ObjectIdContext context, Slot oldSlot)  throws FieldIndexException {
         if (! hasIndex()) {
-            incrementOffset(buffer);
+            incrementOffset(context);
             return;
         }
-        
         try {
-			addIndexEntry(buffer, readIndexEntry(mf, buffer));
-		} catch (CorruptionException exc) {
-			throw new FieldIndexException(exc,this);
-		} 
+            addIndexEntry(context.transaction(), context.id(), readIndexEntry(context));
+        } catch (CorruptionException exc) {
+            throw new FieldIndexException(exc,this);
+        } 
     }
     
-    protected void addIndexEntry(StatefulBuffer a_bytes, Object indexEntry) {
+    protected final void addIndexEntry(StatefulBuffer a_bytes, Object indexEntry) {
         addIndexEntry(a_bytes.transaction(), a_bytes.getID(), indexEntry);
     }
 
-    public void addIndexEntry(Transaction trans, int parentID, Object indexEntry) {
+    public final void addIndexEntry(Transaction trans, int parentID, Object indexEntry) {
         if (! hasIndex()) {
             return;
         }
@@ -150,9 +145,16 @@ public class FieldMetadata implements StoredField {
     }
     
     // alive() checked
-    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, Db4oIOException {
+    public final Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, Db4oIOException {
         IndexableTypeHandler indexableTypeHandler = (IndexableTypeHandler) correctedHandlerVersion(mf.handlerVersion());
     	return indexableTypeHandler.readIndexEntryFromObjectSlot(mf, writer);
+    	
+    	// return readIndexEntry( new ObjectIdContext(writer.transaction(), writer, ))
+    }
+    
+    public final Object readIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException {
+        IndexableTypeHandler indexableTypeHandler = (IndexableTypeHandler) correctedHandlerVersion(context.handlerVersion());
+        return indexableTypeHandler.readIndexEntry(context);
     }
     
     private TypeHandler4 correctedHandlerVersion(HandlerVersionContext context){
@@ -480,35 +482,36 @@ public class FieldMetadata implements StoredField {
     }
 
     /** @param isUpdate */
-    public void delete(MarshallerFamily mf, StatefulBuffer buffer, boolean isUpdate) throws FieldIndexException {
-        if (! checkAlive(buffer)) {
+    public void delete(ObjectIdContext context, boolean isUpdate) throws FieldIndexException {
+        if (! checkAlive(context)) {
             return;
         }
-        
         try {
-			removeIndexEntry(mf, buffer);
-			int handlerVersion = mf.handlerVersion();
-            final DeleteContextImpl context = new DeleteContextImpl(getStoredType(), handlerVersion, _config,  buffer);
-			SlotFormat.forHandlerVersion(handlerVersion).doWithSlotIndirection(buffer, _handler, new Closure4() {
+            removeIndexEntry(context);
+            int handlerVersion = context.handlerVersion();
+            StatefulBuffer buffer = (StatefulBuffer) context.buffer();
+            final DeleteContextImpl deleteContext = new DeleteContextImpl(getStoredType(), handlerVersion, _config,  buffer);
+            SlotFormat.forHandlerVersion(handlerVersion).doWithSlotIndirection(buffer, _handler, new Closure4() {
                 public Object run() {
-                    context.delete(_handler);
+                    deleteContext.delete(_handler);
                     return null;
                 }
             });
-		} catch (CorruptionException exc) {
-			throw new FieldIndexException(exc, this);
-		}
+        } catch (CorruptionException exc) {
+            throw new FieldIndexException(exc, this);
+        }
     }
 
-    private final void removeIndexEntry(MarshallerFamily mf, StatefulBuffer buffer) throws CorruptionException, Db4oIOException {
+    private final void removeIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException {
         if(! hasIndex()){
             return;
         }
-        int offset = buffer._offset;
-        Object obj = readIndexEntry(mf, buffer);
-        removeIndexEntry(buffer.transaction(), buffer.getID(), obj);
-        buffer._offset = offset;
+        int offset = context.offset();
+        Object obj = readIndexEntry(context);
+        removeIndexEntry(context.transaction(), context.id(), obj);
+        context.seek(offset);
     }
+
 
     public boolean equals(Object obj) {
         if (obj instanceof FieldMetadata) {
@@ -1099,8 +1102,20 @@ public class FieldMetadata implements StoredField {
 		addIndexEntry(stream.systemTransaction(), objectId, obj);
 	}
 
-	private Object readIndexEntryForRebuild(StatefulBuffer writer, ObjectHeader oh) {
-		return oh.objectMarshaller().readIndexEntry(oh.classMetadata(), oh._headerAttributes, this, writer);
+	private final Object readIndexEntryForRebuild(StatefulBuffer writer, ObjectHeader oh) {
+	    ClassMetadata classMetadata = oh.classMetadata();
+        if(classMetadata == null){
+            return null;
+        }
+        ObjectIdContext context = new ObjectIdContext(writer.transaction(), writer, oh, writer.getID());
+        if(! classMetadata.seekToField(context, this)){
+            return null;
+        }
+        try {
+            return readIndexEntry(context);
+        } catch (CorruptionException exc) {
+            throw new FieldIndexException(exc,this);
+        } 
 	}
 
     public void dropIndex(Transaction systemTrans) {

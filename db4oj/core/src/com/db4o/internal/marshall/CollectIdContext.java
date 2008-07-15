@@ -10,7 +10,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class CollectIdContext extends ObjectHeaderContext implements MarshallingInfo, HandlerVersionContext{
+public class CollectIdContext extends ObjectHeaderContext {
     
     private final IdObjectCollector _collector = new IdObjectCollector();
     

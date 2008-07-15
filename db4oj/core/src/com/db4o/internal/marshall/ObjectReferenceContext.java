@@ -8,7 +8,7 @@ package com.db4o.internal.marshall;
 import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
-public class ObjectReferenceContext extends ObjectHeaderContext implements FieldListInfo, MarshallingInfo, HandlerVersionContext{
+public class ObjectReferenceContext extends ObjectHeaderContext{
 
     protected final ObjectReference _reference;
 
@@ -16,19 +16,6 @@ public class ObjectReferenceContext extends ObjectHeaderContext implements Field
         ObjectHeader objectHeader, ObjectReference reference) {
         super(transaction, buffer, objectHeader);
         _reference = reference;
-    }
-
-    protected ByteArrayBuffer byteArrayBuffer() {
-        return (ByteArrayBuffer)buffer();
-    }
-
-    public StatefulBuffer statefulBuffer() {
-        StatefulBuffer statefulBuffer = new StatefulBuffer(transaction(), byteArrayBuffer().length());
-        statefulBuffer.setID(objectID());
-        statefulBuffer.setInstantiationDepth(activationDepth());
-        byteArrayBuffer().copyTo(statefulBuffer, 0, 0, byteArrayBuffer().length());
-        statefulBuffer.seek(byteArrayBuffer().offset());
-        return statefulBuffer;
     }
 
     public int objectID() {
@@ -41,6 +28,19 @@ public class ObjectReferenceContext extends ObjectHeaderContext implements Field
 
     public ObjectReference objectReference() {
         return _reference;
+    }
+    
+    protected ByteArrayBuffer byteArrayBuffer() {
+        return (ByteArrayBuffer)buffer();
+    }
+
+    public StatefulBuffer statefulBuffer() {
+        StatefulBuffer statefulBuffer = new StatefulBuffer(transaction(), byteArrayBuffer().length());
+        statefulBuffer.setID(objectID());
+        statefulBuffer.setInstantiationDepth(activationDepth());
+        byteArrayBuffer().copyTo(statefulBuffer, 0, 0, byteArrayBuffer().length());
+        statefulBuffer.seek(byteArrayBuffer().offset());
+        return statefulBuffer;
     }
 
 }

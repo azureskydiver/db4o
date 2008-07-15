@@ -13,13 +13,15 @@ public class AllTests extends Db4oTestSuite {
     protected Class[] testCases() {
         return 
             new Class[] {
-	        ListTypeHandlerCascadedDeleteTestCase.class,
-	        ListTypeHandlerPersistedCountTestCase.class,
-			ListTypeHandlerTestSuite.class,
-			ListTypeHandlerGreaterSmallerTestSuite.class,
-			ListTypeHandlerStringElementTestSuite.class,
-			MapTypeHandlerTestSuite.class,
-			NamedArrayListTypeHandlerTestCase.class,
+            
+//	        ListTypeHandlerCascadedDeleteTestCase.class,
+//	        ListTypeHandlerPersistedCountTestCase.class,
+//			ListTypeHandlerTestSuite.class,
+//			ListTypeHandlerGreaterSmallerTestSuite.class,
+//			ListTypeHandlerStringElementTestSuite.class,
+//			MapTypeHandlerTestSuite.class,
+//			NamedArrayListTypeHandlerTestCase.class,
+            
 		};
 	}
 

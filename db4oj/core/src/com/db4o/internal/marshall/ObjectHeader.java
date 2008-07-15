@@ -54,7 +54,7 @@ public final class ObjectHeader {
 		        }
         	}
         }
-        _headerAttributes = readAttributes(_marshallerFamily,reader);
+        _headerAttributes = slotFormat().readHeaderAttributes((ByteArrayBuffer)reader);
     }
 
     public static ObjectHeader defrag(DefragmentContextImpl context) {
@@ -65,16 +65,17 @@ public final class ObjectHeader {
         if (Deploy.debug) {
             target.readBegin(Const4.YAPOBJECT);
         }
-		header._marshallerFamily._object.writeObjectClassID(target,newID);		
-		header._marshallerFamily._object.skipMarshallerInfo(target);
-		readAttributes(header._marshallerFamily, target);
+        SlotFormat slotFormat = header.slotFormat();
+        slotFormat.writeObjectClassID(target,newID);
+        slotFormat.skipMarshallerInfo(target);
+        slotFormat.readHeaderAttributes(target);
     	return header;
-    }		
-    		
-    public ObjectMarshaller objectMarshaller() {
-        return _marshallerFamily._object;
     }
-
+    
+    private SlotFormat slotFormat(){
+        return SlotFormat.forHandlerVersion(handlerVersion());
+    }
+    		
 	private MarshallerFamily readMarshallerFamily(ReadWriteBuffer reader, int classID) {
 		boolean marshallerAware=marshallerAware(classID);
 		_handlerVersion = 0;
@@ -85,10 +86,6 @@ public final class ObjectHeader {
 		return marshallerFamily;
 	}
     
-    private static ObjectHeaderAttributes readAttributes(MarshallerFamily marshallerFamily,ReadWriteBuffer reader) {
-    	return marshallerFamily._object.readHeaderAttributes((ByteArrayBuffer)reader);
-    }
-
     private boolean marshallerAware(int id) {
     	return id<0;
     }

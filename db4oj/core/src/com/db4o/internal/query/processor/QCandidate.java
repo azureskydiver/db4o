@@ -300,7 +300,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
             return false;
         }
         
-        _yapClass.findOffset(_bytes, _yapField);
+        _yapClass.seekToField(transaction(), _bytes, _yapField);
         QCandidate candidate = readSubCandidate(a_candidates); 
 		if (candidate == null) {
 			return false;
@@ -664,7 +664,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		    return;
 		}
         
-		HandlerVersion handlerVersion = _yapClass.findOffset(_bytes, _yapField);
+		HandlerVersion handlerVersion = _yapClass.seekToField(transaction(), _bytes, _yapField);
         
 		if (handlerVersion == HandlerVersion.INVALID ) {
 		    fieldNotFound();

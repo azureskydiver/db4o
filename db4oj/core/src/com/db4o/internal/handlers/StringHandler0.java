@@ -52,5 +52,9 @@ public class StringHandler0 extends StringHandler {
     public Object readIndexEntryFromObjectSlot(MarshallerFamily mf, StatefulBuffer buffer) throws CorruptionException, Db4oIOException {
         return buffer.container().readWriterByAddress(buffer.transaction(), buffer.readInt(), buffer.readInt());
     }
+    
+    public Object readIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException{
+        return context.container().readWriterByAddress(context.transaction(), context.readInt(), context.readInt());
+    }
 
 }

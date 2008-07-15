@@ -93,5 +93,17 @@ public abstract class SlotFormat {
         }
         return true;
     }
+
+    public void writeObjectClassID(ByteArrayBuffer buffer, int id) {
+        buffer.writeInt(-id);
+    }
+    
+    public void skipMarshallerInfo(ByteArrayBuffer reader) {
+        reader.incrementOffset(1);
+    }
+
+    public ObjectHeaderAttributes readHeaderAttributes(ByteArrayBuffer reader) {
+        return new ObjectHeaderAttributes(reader);
+    }
     
 }

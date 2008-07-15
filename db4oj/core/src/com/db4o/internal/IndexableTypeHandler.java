@@ -16,5 +16,7 @@ public interface IndexableTypeHandler extends Indexable4, TypeHandler4{
     Object indexEntryToObject(Context context, Object indexEntry);
     
     Object readIndexEntryFromObjectSlot(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, Db4oIOException;
+    
+    Object readIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException;
 
 }

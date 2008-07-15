@@ -3,6 +3,7 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.delete.*;
@@ -82,6 +83,10 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     
     public final Object readIndexEntryFromObjectSlot(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
         return read(mf, a_writer, true);
+    }
+    
+    public Object readIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException{
+        return read(context);
     }
     
     public ReflectClass classReflector(){

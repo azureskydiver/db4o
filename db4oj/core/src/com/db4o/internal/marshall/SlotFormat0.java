@@ -24,5 +24,19 @@ public class SlotFormat0 extends SlotFormat {
         
         return false;
     }
+    
+    public void writeObjectClassID(ByteArrayBuffer buffer, int id) {
+        buffer.writeInt(id);
+    }
+    
+    public void skipMarshallerInfo(ByteArrayBuffer reader) {
+    }
+    
+    public ObjectHeaderAttributes readHeaderAttributes(ByteArrayBuffer reader) {
+        return null;
+    }
+
+
+
 
 }
