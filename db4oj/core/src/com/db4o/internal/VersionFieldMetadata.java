@@ -18,12 +18,13 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
         setName(VirtualField.VERSION);
     }
     
-    public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) {
-        writer.writeLong(writer.container().generateTimeStampId());
+    public void addFieldIndex(ObjectIdContext context, Slot oldSlot)  throws FieldIndexException{
+        StatefulBuffer buffer = (StatefulBuffer) context.buffer();
+        buffer.writeLong(context.container().generateTimeStampId());
     }
     
-    public void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate) {
-        a_bytes.incrementOffset(linkLength());
+    public void delete(ObjectIdContext context, boolean isUpdate){
+        context.seek(context.offset() + linkLength());
     }
 
     void instantiate1(ObjectReferenceContext context) {

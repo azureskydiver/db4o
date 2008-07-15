@@ -9,13 +9,13 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public abstract class ObjectHeaderContext extends AbstractReadContext {
+public class ObjectHeaderContext extends AbstractReadContext implements MarshallingInfo, HandlerVersionContext{
     
     protected ObjectHeader _objectHeader;
     
     private int _currentSlot;
     
-    protected ObjectHeaderContext(Transaction transaction, ReadBuffer buffer, ObjectHeader objectHeader) {
+    public ObjectHeaderContext(Transaction transaction, ReadBuffer buffer, ObjectHeader objectHeader) {
         super(transaction, buffer);
         _objectHeader = objectHeader;
     }
@@ -50,14 +50,14 @@ public abstract class ObjectHeaderContext extends AbstractReadContext {
     }
 
 	public Object readFieldValue(ClassMetadata classMetadata, FieldMetadata field) {
-		if(! seekToField(classMetadata, field)){
+		if(! classMetadata.seekToField(this, field)){
 	        return null;
 	    }
 	   	return field.read(this);
 	}
 
-	public boolean seekToField(ClassMetadata classMetadata, FieldMetadata field) {
-		return _objectHeader.objectMarshaller().findOffset(classMetadata, _objectHeader._headerAttributes, ((ByteArrayBuffer)buffer()), field);
+	public ClassMetadata classMetadata(){
+	    return _objectHeader.classMetadata(); 
 	}
 
 }

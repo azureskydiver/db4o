@@ -35,8 +35,6 @@ public class MarshallerFamily {
     
     public final FieldMarshaller _field;
     
-    public final ObjectMarshaller _object;
-
     public final PrimitiveMarshaller _primitive;
 
     private final int _converterVersion;
@@ -54,7 +52,6 @@ public class MarshallerFamily {
 	            0,
 	            new ClassMarshaller0(),
 	            new FieldMarshaller0(),
-	            new ObjectMarshaller0(), 
 	            new PrimitiveMarshaller0());
     	
     	allVersions[1] =
@@ -63,7 +60,6 @@ public class MarshallerFamily {
 	            1,
 	            new ClassMarshaller1(),
 	            new FieldMarshaller0(),
-	            new ObjectMarshaller1(), 
 	            new PrimitiveMarshaller1());
     	for (int i = 2; i < allVersions.length; i++) {
     	    allVersions[i] = latestFamily(i);
@@ -75,15 +71,12 @@ public class MarshallerFamily {
             int handlerVersion,
             ClassMarshaller classMarshaller,
             FieldMarshaller fieldMarshaller,
-            ObjectMarshaller objectMarshaller,
             PrimitiveMarshaller primitiveMarshaller) {
         _converterVersion = converterVersion;
         _handlerVersion = handlerVersion;
         _class = classMarshaller;
         _class._family = this;
         _field = fieldMarshaller;
-        _object = objectMarshaller;
-        _object._family = this;
         _primitive = primitiveMarshaller;
         _primitive._family = this;
     }
@@ -94,7 +87,6 @@ public class MarshallerFamily {
             version,
             new ClassMarshaller2(),
             new FieldMarshaller1(),
-            new ObjectMarshaller1(), 
             new PrimitiveMarshaller1());
     }
 

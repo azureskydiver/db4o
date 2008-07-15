@@ -23,32 +23,33 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         setName(Const4.VIRTUAL_FIELD_PREFIX + "uuid");
     }
     
-    public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) throws FieldIndexException {
-        
+    public void addFieldIndex(ObjectIdContext context, Slot oldSlot)  throws FieldIndexException{
         boolean isnew = (oldSlot == null);
 
-        int offset = writer._offset;
-        int db4oDatabaseIdentityID = writer.readInt();
-        long uuid = writer.readLong();
-        writer._offset = offset;
+        int offset = context.offset();
+        int db4oDatabaseIdentityID = context.readInt();
+        long uuid = context.readLong();
+        context.seek(offset);
         
-        LocalObjectContainer yf = (LocalObjectContainer)writer.container();
+        LocalObjectContainer yf = (LocalObjectContainer)context.container();
         
-        if ((uuid == 0 || db4oDatabaseIdentityID == 0) && writer.getID() > 0
-				&& !isnew) {
-			DatabaseIdentityIDAndUUID identityAndUUID = readDatabaseIdentityIDAndUUID(
-					yf, yapClass, oldSlot, false);
-			db4oDatabaseIdentityID = identityAndUUID.databaseIdentityID;
-			uuid = identityAndUUID.uuid;
-		}
+        if ((uuid == 0 || db4oDatabaseIdentityID == 0) && context.id() > 0
+                && !isnew) {
+            DatabaseIdentityIDAndUUID identityAndUUID = readDatabaseIdentityIDAndUUID(
+                    yf, context.classMetadata(), oldSlot, false);
+            db4oDatabaseIdentityID = identityAndUUID.databaseIdentityID;
+            uuid = identityAndUUID.uuid;
+        }
         
         if(db4oDatabaseIdentityID == 0){
-            db4oDatabaseIdentityID = yf.identity().getID(writer.transaction());
+            db4oDatabaseIdentityID = yf.identity().getID(context.transaction());
         }
         
         if(uuid == 0){
             uuid = yf.generateTimeStampId();
         }
+        
+        StatefulBuffer writer = (StatefulBuffer) context.buffer();
         
         writer.writeInt(db4oDatabaseIdentityID);
         writer.writeLong(uuid);
@@ -56,7 +57,9 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         if(isnew){
             addIndexEntry(writer, new Long(uuid));
         }
+        
     }
+    
     
     static class DatabaseIdentityIDAndUUID {
     	public int databaseIdentityID;
@@ -67,34 +70,33 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
 		}
     }
 
-   private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(ObjectContainerBase stream, ClassMetadata classMetadata, Slot oldSlot, boolean checkClass) throws Db4oIOException {
+   private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(ObjectContainerBase container, ClassMetadata classMetadata, Slot oldSlot, boolean checkClass) throws Db4oIOException {
         if(DTrace.enabled){
             DTrace.REREAD_OLD_UUID.logLength(oldSlot.address(), oldSlot.length());
         }
-		ByteArrayBuffer reader = stream.bufferByAddress(oldSlot.address(), oldSlot.length());
+		ByteArrayBuffer reader = container.bufferByAddress(oldSlot.address(), oldSlot.length());
 		if(checkClass){
-            ClassMetadata realClass = ClassMetadata.readClass(stream,reader);
+            ClassMetadata realClass = ClassMetadata.readClass(container,reader);
             if(realClass != classMetadata){
                 return null;
             }
         }
-		if (classMetadata.findOffset(reader, this) == HandlerVersion.INVALID ) {
+		if (classMetadata.seekToField(container.transaction(),  reader, this) == HandlerVersion.INVALID ) {
 			return null;
 		}
 		return new DatabaseIdentityIDAndUUID(reader.readInt(), reader.readLong());
 	}
 
-    public void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate) {
+    public void delete(ObjectIdContext context, boolean isUpdate){
         if(isUpdate){
-            a_bytes.incrementOffset(linkLength());
+            context.seek(context.offset() + linkLength());
             return;
         }
-        a_bytes.incrementOffset(Const4.INT_LENGTH);
-        long longPart = a_bytes.readLong();
+        context.seek(context.offset() + Const4.INT_LENGTH);
+        long longPart = context.readLong();
         if(longPart > 0){
-            ObjectContainerBase stream = a_bytes.container();
-            if (stream.maintainsIndices()){
-                removeIndexEntry(a_bytes.transaction(), a_bytes.getID(), new Long(longPart));
+            if (context.container().maintainsIndices()){
+                removeIndexEntry(context.transaction(), context.id(), new Long(longPart));
             }
         }
     }

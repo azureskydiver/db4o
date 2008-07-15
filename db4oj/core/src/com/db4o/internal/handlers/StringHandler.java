@@ -53,6 +53,15 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
         }
         return buffer.readPayloadWriter(payLoadOffSet, length);
     }
+    
+    public Object readIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException{
+        int payLoadOffSet = context.readInt();
+        int length = context.readInt();
+        if(payLoadOffSet == 0){
+            return null;
+        }
+        return ((StatefulBuffer)context.buffer()).readPayloadWriter(payLoadOffSet, length);
+    }
 
     /**
      * This readIndexEntry method reads from the actual index in the file.

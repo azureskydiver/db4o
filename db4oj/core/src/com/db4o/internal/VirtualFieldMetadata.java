@@ -29,7 +29,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         
     }
     
-    public abstract void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer a_writer, Slot oldSlot) throws FieldIndexException;
+    public abstract void addFieldIndex(ObjectIdContext context, Slot oldSlot)  throws FieldIndexException ;
     
     public boolean alive() {
         return true;
@@ -63,7 +63,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         // do nothing
     }
     
-    public abstract void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate);
+    public abstract void delete(ObjectIdContext context, boolean isUpdate);
     
     public Object getOrCreate(Transaction a_trans, Object a_OnObject) {
         // This is the first part of marshalling

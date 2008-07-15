@@ -8,6 +8,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
@@ -15,7 +16,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class FirstClassObjectHandler  implements TypeHandler4, VersionedTypeHandler, FirstClassHandler, VirtualAttributeHandler{
+public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
     
     private static final int HASHCODE_FOR_NULL = 72483944; 
     
@@ -199,6 +200,9 @@ public class FirstClassObjectHandler  implements TypeHandler4, VersionedTypeHand
         ClassMetadata classMetadata = classMetadata();
         while(classMetadata != null){
             traverseDeclaredFields(context, classMetadata, command);
+            if(command.cancelled()){
+                return;
+            }
             classMetadata = classMetadata.i_ancestor;
         }
     }
@@ -215,7 +219,6 @@ public class FirstClassObjectHandler  implements TypeHandler4, VersionedTypeHand
             context.beginSlot();
         }
     }
-    
     
     protected boolean isNull(FieldListInfo fieldList,int fieldIndex) {
         return fieldList.isNull(fieldIndex);
@@ -330,6 +333,50 @@ public class FirstClassObjectHandler  implements TypeHandler4, VersionedTypeHand
             }
         };
         traverseAllFields(context, command);
+    }
+
+    public void addFieldIndices(final ObjectIdContext context, final Slot oldSlot) {
+        TraverseFieldCommand command = new TraverseFieldCommand() {
+            public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
+                if (isNull) {
+                    field.addIndexEntry(context.transaction(), context.id(), null);
+                } else {
+                    field.addFieldIndex(context, oldSlot);
+                }
+            }
+        };
+        traverseAllFields(context, command);
+    }
+    
+    public void deleteMembers(final ObjectIdContext idContext, final DeleteContext deleteContext,  final boolean isUpdate) {
+        TraverseFieldCommand command=new TraverseFieldCommand() {
+            public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
+                if(isNull){
+                    field.removeIndexEntry(idContext.transaction(), idContext.id(), null);
+                }else{
+                    field.delete(idContext, isUpdate);
+                }
+            }
+        };
+        traverseAllFields(idContext, command);
+    }
+
+    public boolean seekToField(final ObjectHeaderContext context, final FieldMetadata field) {
+        final BooleanByRef found = new BooleanByRef(false);
+        TraverseFieldCommand command=new TraverseFieldCommand() {
+            public void processField(FieldMetadata curField, boolean isNull, ClassMetadata containingClass) {
+                if (curField == field) {
+                    found.value = !isNull;
+                    cancel();
+                    return;
+                }
+                if(!isNull){
+                    curField.incrementOffset(context);
+                }
+            }
+        };
+        traverseAllFields(context, command);
+        return found.value;
     }
 
 }
