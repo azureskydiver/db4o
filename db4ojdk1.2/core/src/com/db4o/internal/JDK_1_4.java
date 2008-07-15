@@ -12,7 +12,7 @@ import com.db4o.foundation.*;
 
 /**
  * 
- * @decaf.ignore
+ * @decaf.ignore.jdk11
  */
 class JDK_1_4 extends JDK_1_3 {
 	

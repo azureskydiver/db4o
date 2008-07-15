@@ -24,7 +24,7 @@ public class QQuery extends QQueryBase implements Query {
     }
 
     /**
-     * @decaf.ignore
+     * @decaf.ignore.jdk11
      */
     public Query sortBy(Comparator comparator) {
 		return sortBy(new JdkComparatorWrapper(comparator));

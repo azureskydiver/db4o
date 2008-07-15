@@ -4,7 +4,7 @@ package com.db4o.internal;
 
 /**
  * 
- * @decaf.ignore
+ * @decaf.ignore.jdk11
  */
 class ReferenceQueue4 extends java.lang.ref.ReferenceQueue
 {

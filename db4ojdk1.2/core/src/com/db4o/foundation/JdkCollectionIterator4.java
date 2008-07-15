@@ -6,7 +6,7 @@ import java.util.*;
 
 /**
  * 
- * @decaf.ignore
+ * @decaf.ignore.jdk11
  */
 public class JdkCollectionIterator4 implements Iterator4{
     

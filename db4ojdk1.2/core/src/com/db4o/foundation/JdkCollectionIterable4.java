@@ -5,7 +5,7 @@ package com.db4o.foundation;
 import java.util.*;
 
 /**
- * @decaf.ignore
+ * @decaf.ignore.jdk11
  */
 public class JdkCollectionIterable4 implements Iterable4{
     

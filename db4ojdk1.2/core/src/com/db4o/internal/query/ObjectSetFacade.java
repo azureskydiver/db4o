@@ -12,7 +12,7 @@ import com.db4o.query.*;
 /**
  * @exclude
  * @sharpen.ignore 
- * @decaf.ignore.extends
+ * @decaf.ignore.extends.jdk11
  */
 public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     
@@ -27,7 +27,7 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
 	}	
     
     /**
-     * @decaf.ignore
+     * @decaf.ignore.jdk11
      */
     public Iterator iterator() {
     	class JDKIterator extends Iterable4Adaptor implements Iterator {
@@ -74,7 +74,7 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     }
     
     /**
-     * @decaf.ignore
+     * @decaf.ignore.jdk11
      */
     public boolean contains(Object a_object) {
         return indexOf(a_object) >= 0;
@@ -85,21 +85,21 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     }
 
     /**
-     * @decaf.ignore
+     * @decaf.ignore.jdk11
      */
     public int indexOf(Object a_object) {
     	return _delegate.indexOf(a_object);
     }
     
     /**
-     * @decaf.ignore
+     * @decaf.ignore.jdk11
      */
     public int lastIndexOf(Object a_object) {
         return indexOf(a_object);
     }
     
     /**
-     * @decaf.ignore
+     * @decaf.ignore.jdk11
      */
     public void remove() {
         throw new UnsupportedOperationException();
