@@ -40,7 +40,7 @@
 
 	<target name="api-test-jdk11" depends="old-core-jar, new-core-jar" description="checks inferred API surface is the same as original">		
 	
-		<api-diff from="${build.dir}/db4o-old.jar" to="${build.dir}/db4o-decaf.jar">
+		<api-diff from="${build.dir}/db4o-old.jar" to="${build.dir}/db4o-decaf.jar" platform="jdk12">
 			<ignore class="com.db4o.foundation.ChainedRuntimeExceptionMixin" />
 			<ignore class="com.db4o.query.Predicate">
 				<method name="figureOutExtentType" />
