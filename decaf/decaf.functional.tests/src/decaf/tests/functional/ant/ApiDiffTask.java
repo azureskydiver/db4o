@@ -14,6 +14,7 @@ public class ApiDiffTask extends Task {
 	private File _from;
 	private File _to;
 	private final IgnoreSettings _ignoreSettings = new IgnoreSettings();
+	private TargetPlatform _platform = TargetPlatform.JDK11;
 
 	public void setFrom(File from) {
 		_from = from;
@@ -21,6 +22,10 @@ public class ApiDiffTask extends Task {
 	
 	public void setTo(File to) {
 		_to = to;
+	}
+	
+	public void setPlatform(String platform) {
+		_platform  = TargetPlatform.valueOf(platform.toUpperCase());
 	}
 	
 	public IgnoreSettings.Entry createIgnore() {
@@ -34,7 +39,7 @@ public class ApiDiffTask extends Task {
 		
 		try {
 			final FailureHandler failureHandler = new FailureHandler();
-			new ApiDiff(failureHandler, _ignoreSettings, _from, _to, DecafConfiguration.forJDK11()).run();
+			new ApiDiff(failureHandler, _ignoreSettings, _from, _to, _platform.defaultConfig()).run();
 			if (failureHandler.failures() > 0) {
 				throw new BuildException("API surfaces do not match. "  + format(failureHandler) + " been reported.", getLocation());
 			}

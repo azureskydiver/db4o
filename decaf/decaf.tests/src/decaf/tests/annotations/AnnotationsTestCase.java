@@ -4,6 +4,18 @@ import decaf.tests.*;
 
 public class AnnotationsTestCase extends DecafTestCaseBase {
 	
+	public void testPlatformDependentIgnoreExtends() throws Exception {
+		runPlatformTestCase("PlatformDependentIgnoreExtends");
+	}
+	
+	public void testPlatformDependentIgnoreImplements() throws Exception {
+		runPlatformTestCase("PlatformDependentIgnoreImplements");
+	}
+	
+	public void testPlatformDependentIgnore() throws Exception {
+		runPlatformTestCase("PlatformDependentIgnore");
+	}
+	
 	public void testReplaceFirst() throws Exception {
 		runResourceTestCase("ReplaceFirst");
 	}

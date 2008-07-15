@@ -35,7 +35,7 @@ public abstract class DecafTestCaseBase extends TestCase {
 
 	protected void runPlatformTestCase(String resourceName) throws Exception {
 		for (TargetPlatform targetPlatform : TargetPlatform.values()) {
-			if(targetPlatform == TargetPlatform.NONE) {
+			if (targetPlatform == TargetPlatform.NONE) {
 				continue;
 			}
 			runResourceTestCase(resourceName, targetPlatform);
@@ -52,7 +52,7 @@ public abstract class DecafTestCaseBase extends TestCase {
 	
 		IFile decafFile = decafFileFor(cu.getResource(), targetPlatform);
 	
-		FileRewriter.rewriteFile(DecafRewriter.rewrite(cu, null, targetPlatform.config()), decafFile.getFullPath());
+		FileRewriter.rewriteFile(DecafRewriter.rewrite(cu, null, targetPlatform, targetPlatform.defaultConfig()), decafFile.getFullPath());
 	
 		resource.assertFile(decafFile);
 	}

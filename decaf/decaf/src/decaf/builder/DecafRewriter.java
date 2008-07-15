@@ -12,14 +12,14 @@ import decaf.core.*;
 public class DecafRewriter {
 
 	public static ASTRewrite rewrite(final ICompilationUnit element,
-			IProgressMonitor monitor, DecafConfiguration decafConfig) {
+			IProgressMonitor monitor, TargetPlatform platform, DecafConfiguration decafConfig) {
 		
-		return rewrite(parseCompilationUnit(element, monitor), decafConfig);
+		return rewrite(parseCompilationUnit(element, monitor), platform, decafConfig);
 	}
 
-	private static ASTRewrite rewrite(final CompilationUnit unit, DecafConfiguration decafConfig) {
+	private static ASTRewrite rewrite(final CompilationUnit unit, TargetPlatform targetPlatform, DecafConfiguration decafConfig) {
 		final ASTRewrite rewrite = ASTRewrite.create(unit.getAST());
-		unit.accept(new DecafRewritingVisitor(unit, rewrite, decafConfig));
+		unit.accept(new DecafRewritingVisitor(new DecafRewritingContext(unit, rewrite, targetPlatform, decafConfig)));
 		return rewrite;
 	}
 	

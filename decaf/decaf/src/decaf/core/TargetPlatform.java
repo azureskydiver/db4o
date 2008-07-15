@@ -8,7 +8,7 @@ public enum TargetPlatform {
 	
 	NONE {
 		@Override
-		public DecafConfiguration config() {
+		public DecafConfiguration defaultConfig() {
 			return new DecafConfiguration();
 		}
 		
@@ -16,16 +16,21 @@ public enum TargetPlatform {
 		public String appendPlatformId(String orig, String separator) {
 			return orig;
 		}
+		
+		@Override
+		public boolean isNone() {
+			return true;
+		}
 	},
 	JDK11 {
 		@Override
-		public DecafConfiguration config() {
+		public DecafConfiguration defaultConfig() {
 			return DecafConfiguration.forJDK11();
 		}
 	},
 	JDK12 {
 		@Override
-		public DecafConfiguration config() {
+		public DecafConfiguration defaultConfig() {
 			return DecafConfiguration.forJDK12();
 		}
 	};
@@ -38,5 +43,9 @@ public enum TargetPlatform {
 		return toString().toLowerCase();
 	}
 
-	public abstract DecafConfiguration config();
+	public abstract DecafConfiguration defaultConfig();
+
+	public boolean isNone() {
+		return false;
+	}
 }
