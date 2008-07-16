@@ -186,6 +186,10 @@ class DecafASTNodeBuilder {
 		return _ast.newModifier(ModifierKeyword.PRIVATE_KEYWORD);
 	}
 	
+	public Object newPublicModifier() {
+		return _ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD);
+	}
+	
 	public CastExpression newCast(final ITypeBinding type,
 			final Expression expression) {
 		final CastExpression cast = _ast.newCastExpression();

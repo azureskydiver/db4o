@@ -46,8 +46,26 @@ public abstract class DecafTestCaseBase extends TestCase {
 		runResourceTestCase(resourceName, TargetPlatform.NONE);
 	}
 	
+	protected void runResourceTestCase(String resourceName, String... supportingClasses) throws Exception {
+		runResourceTestCase(TargetPlatform.NONE, resourceName, supportingClasses);
+	}
+
+	private void runResourceTestCase(final TargetPlatform platform,
+			String resourceName, String... supportingClasses)
+			throws CoreException, IOException, Exception {
+		createCompilationUnits(platform, supportingClasses);
+		runResourceTestCase(resourceName, platform);
+	}
+
+	private void createCompilationUnits(final TargetPlatform platform,
+			String... supportingClasses) throws CoreException, IOException {
+		for (String supportingClass : supportingClasses) {
+			createCompilationUnit(testResourceFor(supportingClass, platform));
+		}
+	}
+	
 	protected void runResourceTestCase(String resourceName, TargetPlatform targetPlatform) throws Exception {
-		DecafTestResource resource = new DecafTestResource(resourcePath(resourceName), targetPlatform);
+		DecafTestResource resource = testResourceFor(resourceName, targetPlatform);
 		ICompilationUnit cu = createCompilationUnit(resource);
 	
 		IFile decafFile = decafFileFor(cu.getResource(), targetPlatform);
@@ -55,6 +73,11 @@ public abstract class DecafTestCaseBase extends TestCase {
 		FileRewriter.rewriteFile(DecafRewriter.rewrite(cu, null, targetPlatform, targetPlatform.defaultConfig()), decafFile.getFullPath());
 	
 		resource.assertFile(decafFile);
+	}
+
+	private DecafTestResource testResourceFor(String name,
+			TargetPlatform platform) {
+		return new DecafTestResource(resourcePath(name), platform);
 	}
 
 	private String resourcePath(String resourceName) {
