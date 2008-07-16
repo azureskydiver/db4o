@@ -7,13 +7,13 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 
 
-final class TranslatedFieldMetadata extends FieldMetadata
+final class TranslatedAspect extends FieldMetadata
 {
-	private final ObjectTranslator i_translator;
+	private final ObjectTranslator _translator;
 
-	TranslatedFieldMetadata(ClassMetadata containingClass, ObjectTranslator translator){
+	TranslatedAspect(ClassMetadata containingClass, ObjectTranslator translator){
 	    super(containingClass, translator);
-		i_translator = translator;
+		_translator = translator;
 		ObjectContainerBase stream = containingClass.container();
 		configure(stream.reflector().forClass(translatorStoredClass(translator)), false);
 	}
@@ -31,7 +31,7 @@ final class TranslatedFieldMetadata extends FieldMetadata
 
 	public Object getOn(Transaction a_trans, Object a_OnObject) {
 		try {
-			return i_translator.onStore(a_trans.objectContainer(), a_OnObject);
+			return _translator.onStore(a_trans.objectContainer(), a_OnObject);
 		} catch(ReflectException e) {
 			throw e;
 		} catch (RuntimeException e) {
@@ -62,7 +62,7 @@ final class TranslatedFieldMetadata extends FieldMetadata
 	
 	private void setOn(Transaction trans, Object a_onObject, Object toSet) {
 		try {
-			i_translator.onActivate(trans.objectContainer(), a_onObject, toSet);
+			_translator.onActivate(trans.objectContainer(), a_onObject, toSet);
 		} catch (RuntimeException e) {
 			throw new ReflectException(e);
 		}
@@ -74,5 +74,20 @@ final class TranslatedFieldMetadata extends FieldMetadata
 	
 	protected Indexable4 indexHandler(ObjectContainerBase stream) {
 		return (Indexable4)_handler;
+	}
+	
+	public boolean equals(Object obj) {
+        if(obj == this){
+            return true;
+        }
+        if(obj == null || obj.getClass() != getClass()){
+            return false;
+        }
+        TranslatedAspect other = (TranslatedAspect) obj;
+        return _translator.equals(other._translator);
+	}
+	
+	public int hashCode() {
+	    return _translator.hashCode();
 	}
 }
