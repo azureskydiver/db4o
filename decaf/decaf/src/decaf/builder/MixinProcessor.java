@@ -80,7 +80,12 @@ public class MixinProcessor {
 	}
 	
 	private FieldDeclaration newMixinFieldDeclaration() {
-		final FieldDeclaration mixinField = newField(newType(_mixin.resolveBinding()), "_mixin", null);
+		return newPublicField(_mixin.resolveBinding(), "_mixin");
+	}
+
+	private FieldDeclaration newPublicField(final ITypeBinding fieldType,
+			final String fieldName) {
+		final FieldDeclaration mixinField = newField(newType(fieldType), fieldName, null);
 		mixinField.modifiers().add(builder().newPublicModifier());
 		return mixinField;
 	}
@@ -95,23 +100,33 @@ public class MixinProcessor {
 	}
 
 	private TypeDeclaration resolveMixin(String mixinTypeName) {
-		final CompilationUnit unit = (CompilationUnit) _node.getParent();
-		final TypeDeclaration found = resolveType(unit.types(), mixinTypeName);
-		if (null != found) return found;
-		final TypeDeclaration nested = resolveType(Arrays.asList(_node.getTypes()), mixinTypeName);
+		final TypeDeclaration nested = resolveNestedType(mixinTypeName);
 		if (null != nested) return nested;
+		final TypeDeclaration sibling = resolveSiblingType(mixinTypeName);
+		if (null != sibling) return sibling;
 		throw new IllegalArgumentException("Type '" + mixinTypeName + "' must be defined in the same file as '" + _node.getName() + "'.");
 	}
 
+	private TypeDeclaration resolveNestedType(String typeName) {
+		return resolveType(Arrays.asList(_node.getTypes()), typeName);
+	}
+
+	private TypeDeclaration resolveSiblingType(String typeName) {
+		return resolveType(compilationUnit().types(), typeName);
+	}
+
+	private CompilationUnit compilationUnit() {
+		return (CompilationUnit) _node.getParent();
+	}
+
 	private TypeDeclaration resolveType(final List types, String typeName) {
-		TypeDeclaration found = null;
 		for (Object o : types) {
 			final TypeDeclaration typeDeclaration = (TypeDeclaration)o;
 			if (typeDeclaration.getName().toString().equals(typeName)) {
-				found = typeDeclaration;
+				return typeDeclaration;
 			}
 		}
-		return found;
+		return null;
 	}
 	
 	private void addParametersToArgumentList(MethodDeclaration node,
