@@ -18,7 +18,7 @@
 	
 	<property name="db4ounit.file.path" value="." />
 	
-	<target name="test" depends="test-jdk12, test-jdk11" description="runs all the tests">
+	<target name="test" depends="test-jdk11, test-jdk12" description="runs all the tests">
 	</target>
 	
 	<target name="test-jdk12" depends="api-test-jdk12, integration-test-jdk12" description="runs all the jdk12 tests">
