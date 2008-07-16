@@ -31,54 +31,44 @@ public class MixinProcessor {
 	}
 	
 	private void introduceMixinInstantiations() {
-		
-		_node.accept(new ASTVisitor() {
-			@Override
-			public boolean visit(MethodDeclaration node) {
-				if (!node.isConstructor()) {
-					return false;
-				}
-				
-				final ClassInstanceCreation mixinInstantiation = newClassInstanceCreation(_mixin);
-				mixinInstantiation.arguments().add(builder().newThisExpression());
-				addParametersToArgumentList(node, mixinInstantiation.arguments());
-				bodyListRewriteFor(node).insertLast(
-					builder().newExpressionStatement(
-						builder().newAssignment(
-							newMixinFieldAccess(),
-							mixinInstantiation)),
-					null);
-				
-				return false;
-			}			
-		});
+		for (MethodDeclaration node : _node.getMethods()) {
+			if (!node.isConstructor()) {
+				continue;
+			}
+			
+			final ClassInstanceCreation mixinInstantiation = newClassInstanceCreation(_mixin);
+			mixinInstantiation.arguments().add(builder().newThisExpression());
+			addParametersToArgumentList(node, mixinInstantiation.arguments());
+			bodyListRewriteFor(node).insertLast(
+				builder().newExpressionStatement(
+					builder().newAssignment(
+						newMixinFieldAccess(),
+						mixinInstantiation)),
+				null);
+		}
 	}
 	
 	private void generateMixinDelegators() {
-		_mixin.accept(new ASTVisitor() {
-			@Override
-			public boolean visit(MethodDeclaration node) {
-				
-				if (node.isConstructor()) {
-					return false;
-				}
-				
-				final MethodInvocation delegation = builder().newMethodInvocation(
-					newMixinFieldAccess(),
-					node.getName().toString());
-				addParametersToArgumentList(node, delegation.arguments());
-								
-				final Statement stmt = returnsValue(node)
-					? builder().newReturnStatement(delegation)
-					: builder().newExpressionStatement(delegation);
-				
-				final MethodDeclaration delegator = builder().clone(node);
-				delegator.setBody(builder().newBlock(stmt));
-				
-				_nodeDeclarationsRewrite.insertLast(delegator, null);
-				return false;
+		final MethodDeclaration[] methods = _mixin.getMethods();
+		for (MethodDeclaration node : methods) {
+			if (node.isConstructor()) {
+				continue;
 			}
-		});
+			
+			final MethodInvocation delegation = builder().newMethodInvocation(
+				newMixinFieldAccess(),
+				node.getName().toString());
+			addParametersToArgumentList(node, delegation.arguments());
+							
+			final Statement stmt = returnsValue(node)
+				? builder().newReturnStatement(delegation)
+				: builder().newExpressionStatement(delegation);
+			
+			final MethodDeclaration delegator = builder().clone(node);
+			delegator.setBody(builder().newBlock(stmt));
+			
+			_nodeDeclarationsRewrite.insertLast(delegator, null);
+		}
 	}
 	
 	private boolean returnsValue(MethodDeclaration node) {
@@ -91,8 +81,7 @@ public class MixinProcessor {
 	
 	private FieldDeclaration newMixinFieldDeclaration() {
 		final FieldDeclaration mixinField = newField(newType(_mixin.resolveBinding()), "_mixin", null);
-		mixinField.modifiers().add(builder().newPrivateModifier());
-		mixinField.modifiers().add(builder().newFinalModifier());
+		mixinField.modifiers().add(builder().newPublicModifier());
 		return mixinField;
 	}
 
@@ -107,13 +96,22 @@ public class MixinProcessor {
 
 	private TypeDeclaration resolveMixin(String mixinTypeName) {
 		final CompilationUnit unit = (CompilationUnit) _node.getParent();
-		for (Object o : unit.types()) {
+		final TypeDeclaration found = resolveType(unit.types(), mixinTypeName);
+		if (null != found) return found;
+		final TypeDeclaration nested = resolveType(Arrays.asList(_node.getTypes()), mixinTypeName);
+		if (null != nested) return nested;
+		throw new IllegalArgumentException("Type '" + mixinTypeName + "' must be defined in the same file as '" + _node.getName() + "'.");
+	}
+
+	private TypeDeclaration resolveType(final List types, String typeName) {
+		TypeDeclaration found = null;
+		for (Object o : types) {
 			final TypeDeclaration typeDeclaration = (TypeDeclaration)o;
-			if (typeDeclaration.getName().toString().equals(mixinTypeName)) {
-				return typeDeclaration;
+			if (typeDeclaration.getName().toString().equals(typeName)) {
+				found = typeDeclaration;
 			}
 		}
-		throw new IllegalArgumentException("Type '" + mixinTypeName + "' must be defined in the same file as '" + _node.getName() + "'.");
+		return found;
 	}
 	
 	private void addParametersToArgumentList(MethodDeclaration node,
