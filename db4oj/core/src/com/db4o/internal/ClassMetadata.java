@@ -36,8 +36,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	public ClassMetadata i_ancestor;
 
     private Config4Class i_config;
-    public int _metaClassID;
-    
+
     public FieldMetadata[] i_fields;
     
     private final ClassIndexStrategy _index;
@@ -62,6 +61,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     private boolean _unversioned;
     
     private TernaryBool _canUpdateFast=TernaryBool.UNSPECIFIED;
+    
+    private TranslatedAspect _translator;
     
     public final ObjectContainerBase stream() {
     	return _container;
@@ -142,63 +143,103 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     void addMembers(ObjectContainerBase container) {
         bitTrue(Const4.CHECKED_CHANGES);
-        if (installTranslator(container)) {
-        	return;
+
+        boolean dirty = isDirty();
+
+        boolean translatorInstalled = false;
+
+        Collection4 members = new Collection4();
+
+        if (null != i_fields) {
+            members.addAll(i_fields);
+        }
+
+        ObjectTranslator ot = getTranslator();
+        if (ot != null) {
+            _translator = new TranslatedAspect(this, ot);
+
+            Iterator4 i = members.iterator();
+            while (i.moveNext()) {
+                FieldMetadata current = (FieldMetadata) i.current();
+                if (current.getName().equals(_translator.getName())) {
+
+                    members.replace(current, _translator);
+                    translatorInstalled = true;
+                    break;
+                }
+            }
+
+            if (!translatorInstalled) {
+                members.add(_translator);
+                dirty = true;
+            }
+            translatorInstalled = true;
         }
 
         if (container.detectSchemaChanges()) {
-            boolean dirty = isDirty();
 
-            Collection4 members = new Collection4();
-
-            if (null != i_fields) {
-            	members.addAll(i_fields);
-            	if(i_fields.length==1&&i_fields[0] instanceof TranslatedFieldMetadata) {
-            		setStateOK();
-            		return;
-            	}
-            }
-            if(generateVersionNumbers()) {
-                if(! hasVersionField()) {
+            if (generateVersionNumbers()) {
+                if (!hasVersionField()) {
                     members.add(container.versionIndex());
                     dirty = true;
                 }
             }
-            if(generateUUIDs()) {
-                if(! hasUUIDField()) {
+            if (generateUUIDs()) {
+                if (!hasUUIDField()) {
                     members.add(container.uUIDIndex());
                     dirty = true;
                 }
             }
-            dirty = collectReflectFields(container, members) | dirty;
+
+            if (installCustomTypehandlers(container, members)) {
+                dirty = true;
+            }
+
+            if (!translatorInstalled) {
+                dirty = collectReflectFields(container, members) | dirty;
+            }
+
             if (dirty) {
                 _container.setDirtyInSystemTransaction(this);
-                i_fields = new FieldMetadata[members.size()];
-                members.toArray(i_fields);
-                for (int i = 0; i < i_fields.length; i++) {
-                    i_fields[i].setArrayPosition(i);
-                }
-            } else {
-                if (members.size() == 0) {
-                    i_fields = new FieldMetadata[0];
-                }
             }
-            
-            DiagnosticProcessor dp = _container._handlers._diagnosticProcessor;
-            if(dp.enabled()){
-                dp.checkClassHasFields(this);
-            }
-            
-        } else {
-            if (i_fields == null) {
-                i_fields = new FieldMetadata[0];
+
+        }
+
+        if (dirty || translatorInstalled) {
+            i_fields = new FieldMetadata[members.size()];
+            members.toArray(i_fields);
+            for (int i = 0; i < i_fields.length; i++) {
+                i_fields[i].setArrayPosition(i);
             }
         }
+        
+        DiagnosticProcessor dp = _container._handlers._diagnosticProcessor;
+        if (dp.enabled()) {
+            dp.checkClassHasFields(this);
+        }
+
+        if (i_fields == null) {
+            i_fields = new FieldMetadata[0];
+        }
+
         _container.callbacks().classOnRegistered(this);
         setStateOK();
     }
 
-	private boolean collectReflectFields(ObjectContainerBase container, Collection4 collectedFields) {
+	private boolean installCustomTypehandlers(ObjectContainerBase container, Collection4 members) {
+	    TypeHandler4 customTypeHandler = container.handlers().registerTypeHandlerVersions(this, classReflector());
+	    if(customTypeHandler == null){
+	        return false;
+	    }
+	    TypeHandlerAspect typeHandlerAspect = new TypeHandlerAspect(customTypeHandler);
+	    if(members.contains(typeHandlerAspect)){
+	        return false;
+	    }
+	    members.add(typeHandlerAspect);
+        return true;
+    }
+
+    private boolean collectReflectFields(ObjectContainerBase container, Collection4 collectedFields) {
 		boolean dirty=false;
 		ReflectField[] fields = reflectFields();
 		for (int i = 0; i < fields.length; i++) {
@@ -227,80 +268,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		}
 		return dirty;
 	}
-	
-    private boolean installTranslator(ObjectContainerBase ocb) {
-    	ObjectTranslator ot = getTranslator();
-    	if (ot == null) {
-    		return false;
-    	}
-    	if (isNewTranslator(ot)) {
-    		_container.setDirtyInSystemTransaction(this);
-    	}
-        installCustomFieldMetadata(ocb, new TranslatedFieldMetadata(this, ot));
-    	return true;
-    }
-
-	private void installCustomFieldMetadata(ObjectContainerBase ocb, FieldMetadata customFieldMetadata) {
-		int fieldCount = 1;
-        
-        boolean versions = generateVersionNumbers() && ! ancestorHasVersionField();
-        boolean uuids = generateUUIDs()  && ! ancestorHasUUIDField();
-        
-        if(versions){
-            fieldCount = 2;
-        }
-        
-        if(uuids){
-            fieldCount = 3;
-        }
-    	
-    	i_fields = new FieldMetadata[fieldCount];
-    	
-        i_fields[0] = customFieldMetadata;
-        
-        
-        // Some explanation on the thoughts here:
-        
-        // Since i_fields for the translator are generated every time,
-        // we want to make sure that the order of fields is consistent.
-        
-        // Therefore it's easier to implement with fixed index places in
-        // the i_fields array:
-        
-        // [0] is the translator
-        // [1] is the version
-        // [2] is the UUID
-        
-        if(versions || uuids) {
-            
-            // We don't want to have a null field, so let's add the version
-            // number, if we have a UUID, even if it's not needed.
-            
-            i_fields[1] = ocb.versionIndex();
-        }
-        
-        if(uuids){
-            i_fields[2] = ocb.uUIDIndex();
-        }
-        
-    	setStateOK();
-	}
     
     private ObjectTranslator getTranslator() {
     	return i_config == null
     		? null
     		: i_config.getTranslator();
     }
-    
-	private boolean isNewTranslator(ObjectTranslator ot) {
-		return !hasFields()
-		    || !ot.getClass().getName().equals(i_fields[0].getName());
-	}
-
-	private boolean hasFields() {
-		return i_fields != null
-		    && i_fields.length > 0;
-	}
 
     void addToIndex(Transaction trans, int id) {
         if (! trans.container().maintainsIndices()) {
@@ -530,23 +503,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	        _typeHandler = null;
 	        return;
 	    }
-	    FirstClassObjectHandler firstClassObjectHandler = (FirstClassObjectHandler) createDefaultTypeHandler();
-	    TypeHandler4 registeredTypeHandler = container().handlers().registerTypeHandlerVersions(this, claxx);
-        if(registeredTypeHandler == null){
-            _typeHandler = firstClassObjectHandler;
-            return;
-        }
-        if(registeredTypeHandler instanceof FirstClassObjectHandler){
-            // TODO: This could be any TypeHandler that wants to 
-            //       know it's ClassMetadata. Maybe invent an
-            //       interface for this purpose
-            ((FirstClassObjectHandler)registeredTypeHandler).classMetadata(this);
-        }
-        if(registeredTypeHandler instanceof FieldAwareTypeHandler){
-            _typeHandler = (FieldAwareTypeHandler) registeredTypeHandler;
-            return;
-        }
-        _typeHandler = new CompositeTypeHandler(firstClassObjectHandler, registeredTypeHandler); 
+	    _typeHandler = createDefaultTypeHandler();
     }
 
     public void deactivate(Transaction trans, Object obj, ActivationDepth depth) {
@@ -949,16 +906,15 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public FieldMetadata fieldMetadataForName(final String name) {
-        final FieldMetadata[] yf = new FieldMetadata[1];
+        final ByReference byReference = new ByReference();
         forEachFieldMetadata(new Visitor4() {
             public void visit(Object obj) {
                 if (name.equals(((FieldMetadata)obj).getName())) {
-                    yf[0] = (FieldMetadata)obj;
+                    byReference.value = obj;
                 }
             }
         });
-        return yf[0];
-
+        return (FieldMetadata) byReference.value;
     }
     
     /** @param container */
@@ -1167,11 +1123,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
        
        int offset = context.offset();
        
-    // Field length is always 1
-       context.seek(offset + Const4.INT_LENGTH);
+       seekToField(context, _translator);
        
         try {
-            return i_config.instantiate(context.container(), i_fields[0].read(context));                      
+            return i_config.instantiate(context.container(), _translator.read(context));                      
         } finally {
             context.seek(offset);
         }
@@ -1393,7 +1348,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		try {
 			ClassMarshaller marshaller = MarshallerFamily.current()._class;
 			i_nameBytes = marshaller.readName(trans, reader);
-			_metaClassID = marshaller.readMetaClassID(reader);
+			marshaller.readMetaClassID(reader);  // never used ???
 
 			setStateUnread();
 

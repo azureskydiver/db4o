@@ -22,7 +22,7 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public class FieldMetadata implements StoredField {
+public class FieldMetadata extends ClassAspect implements StoredField {
 
     private ClassMetadata         _containingClass;
 
@@ -514,15 +514,15 @@ public class FieldMetadata implements StoredField {
 
 
     public boolean equals(Object obj) {
-        if (obj instanceof FieldMetadata) {
-            FieldMetadata yapField = (FieldMetadata) obj;
-            yapField.alive();
-            alive();
-            return yapField._isPrimitive == _isPrimitive
-                && yapField._handler.equals(_handler)
-                && yapField._name.equals(_name);
+        if (! (obj instanceof FieldMetadata)) {
+            return false;
         }
-        return false;
+        FieldMetadata other = (FieldMetadata) obj;
+        other.alive();
+        alive();
+        return other._isPrimitive == _isPrimitive
+            && ((_handler == null && other._handler == null) || other._handler.equals(_handler))
+            && other._name.equals(_name);
     }
 
     public int hashCode() {

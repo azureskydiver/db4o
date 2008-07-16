@@ -23,6 +23,7 @@ public class AllTests extends Db4oTestSuite {
 			NoP1ObjectIndexTestCase.class,
 			PersistentListTestCase.class,
 			SetCollectionOnUpdateTestCase.class,
+			TreeSetTestCase.class,
 			com.db4o.db4ounit.jre12.collections.custom.AllTests.class,
 			com.db4o.db4ounit.jre12.collections.map.AllTests.class,
 		};

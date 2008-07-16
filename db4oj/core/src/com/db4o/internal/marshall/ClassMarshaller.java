@@ -59,7 +59,7 @@ public abstract class ClassMarshaller {
         return name;
     }
     
-    public int readMetaClassID(ByteArrayBuffer reader) {
+    public final int readMetaClassID(ByteArrayBuffer reader) {
     	return reader.readInt();
     }
     
