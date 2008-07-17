@@ -59,17 +59,19 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
         
         ContextState savedState = context.saveState();
         
-        TraverseAspectCommand command = new TraverseFieldCommand() {
+        TraverseAspectCommand command = new TraverseAspectCommand() {
             public void processAspect(ClassAspect aspect, boolean isNull, ClassMetadata containingClass) {
-                FieldMetadata field = (FieldMetadata) aspect;
-                if(field.updating()){
-                    updateFieldFound.value = true;
+                if(aspect instanceof FieldMetadata){
+                    FieldMetadata field = (FieldMetadata) aspect;
+                    if(field.updating()){
+                        updateFieldFound.value = true;
+                    }
+                    if (isNull) {
+                        field.set(context.persistentObject(), null);
+                        return;
+                    }
                 }
-                if (isNull) {
-                    field.set(context.persistentObject(), null);
-                    return;
-                } 
-                field.instantiate(context);
+                aspect.instantiate(context);
             }
         };
         traverseDeclaredFields(context, command);

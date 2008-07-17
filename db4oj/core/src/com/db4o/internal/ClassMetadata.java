@@ -155,6 +155,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         boolean dirty = isDirty();
 
         boolean translatorInstalled = false;
+        boolean aspectListModified = false;
+        
 
         Collection4 aspects = new Collection4();
 
@@ -165,23 +167,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         ObjectTranslator ot = getTranslator();
         if (ot != null) {
             _translator = new TranslatedAspect(this, ot);
-
-            Iterator4 i = aspects.iterator();
-            while (i.moveNext()) {
-                FieldMetadata current = (FieldMetadata) i.current();
-                if (current.getName().equals(_translator.getName())) {
-
-                    aspects.replace(current, _translator);
-                    translatorInstalled = true;
-                    break;
-                }
-            }
-
-            if (!translatorInstalled) {
+            if (! replaceAspectByName(aspects, _translator) ) {
                 aspects.add(_translator);
                 dirty = true;
             }
             translatorInstalled = true;
+            aspectListModified = true;
         }
 
         if (container.detectSchemaChanges()) {
@@ -198,6 +189,16 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                     dirty = true;
                 }
             }
+            
+            TypeHandler4 customTypeHandler = container.handlers().registerTypeHandlerVersions(this, classReflector());
+            if(customTypeHandler != null){
+                TypeHandlerAspect typeHandlerAspect = new TypeHandlerAspect(customTypeHandler);
+                if(! replaceAspectByName(aspects, typeHandlerAspect)){
+                    aspects.add(typeHandlerAspect);
+                    dirty = true;
+                }
+                aspectListModified = true;
+            }
 
             if (installCustomTypehandlers(container, aspects)) {
                 dirty = true;
@@ -213,7 +214,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
         }
 
-        if (dirty || translatorInstalled) {
+        if (dirty || aspectListModified) {
             _aspects = new ClassAspect[aspects.size()];
             aspects.toArray(_aspects);
             for (int i = 0; i < _aspects.length; i++) {
@@ -232,6 +233,18 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
         _container.callbacks().classOnRegistered(this);
         setStateOK();
+    }
+
+    private boolean replaceAspectByName(Collection4 aspects, ClassAspect aspect) {
+        Iterator4 i = aspects.iterator();
+        while (i.moveNext()) {
+            ClassAspect current = (ClassAspect) i.current();
+            if (current.getName().equals(aspect.getName())) {
+                aspects.replace(current, aspect);
+                return true;
+            }
+        }
+        return false;
     }
 
 	private boolean installCustomTypehandlers(ObjectContainerBase container, Collection4 members) {
@@ -1122,15 +1135,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
 	private Object instantiateFromConfig(ObjectReferenceContext context) {
-       
-       int offset = context.offset();
-       
-       seekToField(context, _translator);
-       
+       ContextState contextState = context.saveState();
+       boolean fieldHasValue = seekToField(context, _translator);
         try {
-            return i_config.instantiate(context.container(), _translator.read(context));                      
+            return i_config.instantiate(context.container(), fieldHasValue ? _translator.read(context) : null);                      
         } finally {
-            context.seek(offset);
+            context.restoreState(contextState);
         }
     }
 
@@ -1836,7 +1846,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 	
 	public void defragClass(DefragmentContextImpl context, int classIndexID) throws CorruptionException, IOException {
-		MarshallerFamily mf = MarshallerFamily.current();
+		MarshallerFamily mf = MarshallerFamily.forConverterVersion(container().converterVersion());
 		mf._class.defrag(this,_container.stringIO(), context, classIndexID);
 	}
 

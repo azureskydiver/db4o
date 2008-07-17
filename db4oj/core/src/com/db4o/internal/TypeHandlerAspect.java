@@ -60,9 +60,15 @@ public class TypeHandlerAspect extends ClassAspect {
     }
 
     public void marshall(MarshallingContext context, Object child) {
-        throw new NotImplementedException();
-        // _typeHandler.write(context, context.getObject());
+        _typeHandler.write(context, context.getObject());
     }
     
+    public AspectType aspectType() {
+        return AspectType.TYPEHANDLER;
+    }
+
+    public void instantiate(UnmarshallingContext context) {
+        _typeHandler.read(context);
+    }
 
 }

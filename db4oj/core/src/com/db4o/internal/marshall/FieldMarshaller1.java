@@ -29,8 +29,8 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         writer.writeIDOf(trans, field.getIndex(trans));
     }
 
-    public RawFieldSpec readSpec(ObjectContainerBase stream, ByteArrayBuffer reader) {
-    	RawFieldSpec spec=super.readSpec(stream, reader);
+    protected RawFieldSpec readSpec(AspectType aspectType, ObjectContainerBase stream, ByteArrayBuffer reader) {
+    	RawFieldSpec spec=super.readSpec(aspectType, stream, reader);
     	if(spec==null) {
     		return null;
     	}

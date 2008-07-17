@@ -25,11 +25,13 @@ public class MarshallerFamily {
         
         public static final int MARSHALLER = 1;
         
-        public static final int BTREE_FIELD_INDEXES = 2; 
+        public static final int BTREE_FIELD_INDEXES = 2;
+        
+        public static final int CLASS_ASPECTS = 3;
         
     }
    
-    private static int CURRENT_VERSION = FamilyVersion.BTREE_FIELD_INDEXES;
+    private static int CURRENT_VERSION = FamilyVersion.CLASS_ASPECTS;
     
     public final ClassMarshaller _class;
     
@@ -54,14 +56,23 @@ public class MarshallerFamily {
 	            new FieldMarshaller0(),
 	            new PrimitiveMarshaller0());
     	
-    	allVersions[1] =
-	        new MarshallerFamily(
-	            ClassIndexesToBTrees_5_5.VERSION,
-	            1,
-	            new ClassMarshaller1(),
-	            new FieldMarshaller0(),
-	            new PrimitiveMarshaller1());
-    	for (int i = 2; i < allVersions.length; i++) {
+        allVersions[1] =
+            new MarshallerFamily(
+                ClassIndexesToBTrees_5_5.VERSION,
+                1,
+                new ClassMarshaller1(),
+                new FieldMarshaller0(),
+                new PrimitiveMarshaller1());
+        allVersions[2] =
+            new MarshallerFamily(
+                FieldIndexesToBTrees_5_7.VERSION,
+                2,
+                new ClassMarshaller2(),
+                new FieldMarshaller1(),
+                new PrimitiveMarshaller1());
+    	
+    	
+    	for (int i = 3; i < allVersions.length; i++) {
     	    allVersions[i] = latestFamily(i);
         }
     }
@@ -83,10 +94,10 @@ public class MarshallerFamily {
     
     public static MarshallerFamily latestFamily(int version){
         return new MarshallerFamily(
-            FieldIndexesToBTrees_5_7.VERSION,
+            ClassAspects_7_4.VERSION,
             version,
             new ClassMarshaller2(),
-            new FieldMarshaller1(),
+            new FieldMarshaller2(),
             new PrimitiveMarshaller1());
     }
 
