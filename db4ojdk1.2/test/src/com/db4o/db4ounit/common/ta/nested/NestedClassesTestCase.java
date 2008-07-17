@@ -38,7 +38,8 @@ public class NestedClassesTestCase
 	}
 	
 	public void test() throws Exception {
-		if (System.getProperty("java.version").startsWith("1.3")) {
+		String property = System.getProperty("java.version");
+        if (property != null && property.startsWith("1.3")) {
 			System.err.println("IGNORED: " + getClass() + " will fail when run against JDK1.3/JDK1.4");
 			return;
 		}
