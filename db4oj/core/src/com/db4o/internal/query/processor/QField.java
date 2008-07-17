@@ -121,7 +121,7 @@ public class QField implements Visitor4, Unversioned{
 	void unmarshall(Transaction a_trans){
 		if(i_yapClassID != 0){
 			ClassMetadata yc = a_trans.container().classMetadataForId(i_yapClassID);
-			i_yapField = yc.i_fields[i_index];
+			i_yapField = (FieldMetadata) yc._aspects[i_index];
 		}
 	}
 	

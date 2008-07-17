@@ -31,14 +31,16 @@ final class FirstPassCommand implements PassCommand {
 		return _ids!=null&&_ids.size()==ID_BATCH_SIZE;
 	}
 
-	public void processClass(DefragmentServicesImpl context, ClassMetadata yapClass,int id,int classIndexID) {
+	public void processClass(final DefragmentServicesImpl context, ClassMetadata classMetadata,int id,int classIndexID) {
 		process(context,id, true);
-		for (int fieldIdx = 0; fieldIdx < yapClass.i_fields.length; fieldIdx++) {
-			FieldMetadata field=yapClass.i_fields[fieldIdx];
-			if(!field.isVirtual()&&field.hasIndex()) {
-				processBTree(context,field.getIndex(context.systemTrans()));
-			}
-		}
+		classMetadata.forEachField(new Procedure4() {
+            public void apply(Object arg) {
+                FieldMetadata field = (FieldMetadata) arg;
+                if(!field.isVirtual()&&field.hasIndex()) {
+                    processBTree(context,field.getIndex(context.systemTrans()));
+                }
+            }
+        });
 	}
 
 	public void processObjectSlot(DefragmentServicesImpl context, ClassMetadata yapClass, int sourceID) {

@@ -2,10 +2,44 @@
 
 package com.db4o.internal;
 
+import com.db4o.internal.activation.*;
+import com.db4o.internal.marshall.*;
+import com.db4o.marshall.*;
+
 
 /**
  * @exclude
  */
-public class ClassAspect {
+public abstract class ClassAspect {
+    
+    //  position in ClassMetadata i_fields
+    protected int              _arrayPosition;
+
+    
+    public abstract String getName();
+    
+    public abstract int extendedLength();
+
+    public abstract void cascadeActivation(Transaction trans, Object obj, ActivationDepth depth);
+    
+    public abstract int linkLength();
+    
+    public final void incrementOffset(ReadBuffer buffer) {
+        buffer.seek(buffer.offset() + linkLength());
+    }
+
+    public abstract void defragAspect(DefragmentContext context);
+
+    public abstract void marshall(MarshallingContext context, Object child);
+
+    public abstract void collectIDs(CollectIdContext context);
+    
+    public void setArrayPosition(int a_index) {
+        _arrayPosition = a_index;
+    }
+    
+
+
+
 
 }

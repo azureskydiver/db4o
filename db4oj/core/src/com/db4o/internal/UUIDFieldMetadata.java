@@ -160,7 +160,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         }
     }
 
-    protected int linkLength() {
+    public int linkLength() {
         return Const4.LONG_LENGTH + Const4.ID_LENGTH;
     }
     
@@ -236,7 +236,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         return hardRef;
 	}
  
-	public void defragField(DefragmentContext context) {
+	public void defragAspect(DefragmentContext context) {
 		// database id
 		context.copyID(); 
 		// uuid

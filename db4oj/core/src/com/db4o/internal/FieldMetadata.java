@@ -26,9 +26,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 
     private ClassMetadata         _containingClass;
 
-    //  position in ClassMetadata i_fields
-    private int              _arrayPosition;
-
     private String         _name;
     
     private boolean          _isArray;
@@ -297,7 +294,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return true;
     }
 
-    final void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth) {
+    public final void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth) {
         if (! alive()) {
             return;
         }
@@ -648,10 +645,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return _index != null;
     }
 
-    public final void incrementOffset(ReadBuffer buffer) {
-    	buffer.seek(buffer.offset() + linkLength());
-    }
-
     public final void init(ClassMetadata containingClass, String name) {
         _containingClass = containingClass;
         _name = name;
@@ -732,7 +725,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     
-    protected int linkLength() {
+    public int linkLength() {
         alive();
         
         if(_linkLength == 0){
@@ -867,6 +860,12 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return true;
     }
     
+    public int extendedLength() {
+        
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    
     public boolean needsArrayAndPrimitiveInfo(){
         return true;
     }
@@ -895,13 +894,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             return null;
         }
         return context.read(_handler);
-    }
-
-    /**
-     * @param context TODO
-     */
-    public void readVirtualAttribute(ObjectReferenceContext context) {
-        incrementOffset(context);
     }
 
     /** never called but keep for Rickie */
@@ -934,10 +926,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
     }
 
-    public void setArrayPosition(int a_index) {
-        _arrayPosition = a_index;
-    }
-    
     public void set(Object onObject, Object obj){
     	// TODO: remove the following if and check callers
     	if (null == _reflectField) return;
@@ -1131,7 +1119,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         _index = null;
     }    
     
-    public void defragField(final DefragmentContext context) {
+    public void defragAspect(final DefragmentContext context) {
     	final TypeHandler4 typeHandler = correctedHandlerVersion(context);
         SlotFormat.forHandlerVersion(context.handlerVersion()).doWithSlotIndirection(context, typeHandler, new Closure4() {
             public Object run() {

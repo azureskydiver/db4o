@@ -13,14 +13,14 @@ import com.db4o.internal.*;
  */
 public interface FieldMarshaller {
 
-    void write(Transaction trans, ClassMetadata clazz, FieldMetadata field, ByteArrayBuffer writer);
+    void write(Transaction trans, ClassMetadata clazz, ClassAspect aspect, ByteArrayBuffer writer);
 
     RawFieldSpec readSpec(ObjectContainerBase stream,ByteArrayBuffer reader);
     
     FieldMetadata read(ObjectContainerBase stream, FieldMetadata field, ByteArrayBuffer reader);
 
-    int marshalledLength(ObjectContainerBase stream, FieldMetadata field);
+    int marshalledLength(ObjectContainerBase stream, ClassAspect aspect);
 
-	void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,DefragmentContextImpl context) throws CorruptionException, IOException;
+	void defrag(ClassMetadata classMetadata, ClassAspect aspect, LatinStringIO sio,DefragmentContextImpl context) throws CorruptionException, IOException;
 
 }

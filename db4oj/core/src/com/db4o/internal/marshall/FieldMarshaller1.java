@@ -17,8 +17,12 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         return ! field.isVirtual();
     }
 
-    public void write(Transaction trans, ClassMetadata clazz, FieldMetadata field, ByteArrayBuffer writer) {
-        super.write(trans, clazz, field, writer);
+    public void write(Transaction trans, ClassMetadata clazz, ClassAspect aspect, ByteArrayBuffer writer) {
+        super.write(trans, clazz, aspect, writer);
+        if(! (aspect instanceof FieldMetadata)){
+            return;
+        }
+        FieldMetadata field = (FieldMetadata) aspect;
         if(! hasBTreeIndex(field)){
             return;
         }
@@ -49,8 +53,12 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
 		return actualField;
 	}
     
-    public int marshalledLength(ObjectContainerBase stream, FieldMetadata field) {
-        int len = super.marshalledLength(stream, field);
+    public int marshalledLength(ObjectContainerBase stream, ClassAspect aspect) {
+        int len = super.marshalledLength(stream, aspect);
+        if(! (aspect instanceof FieldMetadata)){
+            return len;
+        }
+        FieldMetadata field = (FieldMetadata) aspect;
         if(! hasBTreeIndex(field)){
             return len;
         }
@@ -58,15 +66,19 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         return  len + BTREE_ID;
     }
 
-    public void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,
+    public void defrag(ClassMetadata classMetadata, ClassAspect aspect, LatinStringIO sio,
     		final DefragmentContextImpl context)
     		throws CorruptionException, IOException {
-    	super.defrag(yapClass, yapField, sio, context);
-    	if(yapField.isVirtual()) {
+    	super.defrag(classMetadata, aspect, sio, context);
+    	if(! (aspect instanceof FieldMetadata)){
+    	    return;
+    	}
+    	FieldMetadata field = (FieldMetadata) aspect;
+    	if(field.isVirtual()) {
     		return;
     	}
-    	if(yapField.hasIndex()) {
-        	BTree index = yapField.getIndex(context.systemTrans());
+    	if(field.hasIndex()) {
+        	BTree index = field.getIndex(context.systemTrans());
     		int targetIndexID=context.copyID();
     		if(targetIndexID!=0) {
     			index.defragBTree(context.services());

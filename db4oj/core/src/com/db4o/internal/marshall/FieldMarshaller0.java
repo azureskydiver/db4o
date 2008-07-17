@@ -15,13 +15,16 @@ import com.db4o.internal.handlers.array.*;
  */
 public class FieldMarshaller0 implements FieldMarshaller {
 
-    public int marshalledLength(ObjectContainerBase stream, FieldMetadata field) {
-        int len = stream.stringIO().shortLength(field.getName());
-        if(field.needsArrayAndPrimitiveInfo()){
-            len += 1;
-        }
-        if(field.needsHandlerId()){
-            len += Const4.ID_LENGTH;
+    public int marshalledLength(ObjectContainerBase stream, ClassAspect aspect) {
+        int len = stream.stringIO().shortLength(aspect.getName());
+        if(aspect instanceof FieldMetadata){
+            FieldMetadata field = (FieldMetadata) aspect;
+            if(field.needsArrayAndPrimitiveInfo()){
+                len += 1;
+            }
+            if(field.needsHandlerId()){
+                len += Const4.ID_LENGTH;
+            }
         }
         return len;
     }
@@ -61,11 +64,18 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
 
-    public void write(Transaction trans, ClassMetadata clazz, FieldMetadata field, ByteArrayBuffer writer) {
+    public void write(Transaction trans, ClassMetadata clazz, ClassAspect aspect, ByteArrayBuffer writer) {
+        
+        writer.writeShortString(trans, aspect.getName());
+        
+        if(! (aspect instanceof FieldMetadata)){
+            return;
+        }
+        
+        FieldMetadata field = (FieldMetadata) aspect;
         
         field.alive();
         
-        writer.writeShortString(trans, field.getName());
         if(field.isVirtual()){
             return;
         }
@@ -88,14 +98,18 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
 
-	public void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,DefragmentContextImpl context) throws CorruptionException, IOException {
-		context.incrementStringOffset(sio);
-        if (yapField.isVirtual()) {
-        	return;
+	public void defrag(ClassMetadata classMetadata, ClassAspect aspect, LatinStringIO sio,
+        DefragmentContextImpl context) throws CorruptionException, IOException {
+        context.incrementStringOffset(sio);
+        if (!(aspect instanceof FieldMetadata)) {
+            return;
+        }
+        if (((FieldMetadata) aspect).isVirtual()) {
+            return;
         }
         // handler ID
         context.copyID();
         // skip primitive/array/narray attributes
         context.incrementOffset(1);
-	}
+    }
 }
