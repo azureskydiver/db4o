@@ -5,6 +5,7 @@ package com.db4o.internal.marshall;
 import java.io.IOException;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 /**
@@ -35,7 +36,7 @@ public abstract class ClassMarshaller {
         
         writeIndex(trans, clazz, writer);
         
-        FieldMetadata[] fields = clazz.i_fields; 
+        ClassAspect[] fields = clazz._aspects; 
         
         if (fields == null) {
             writer.writeInt(0);
@@ -90,41 +91,42 @@ public abstract class ClassMarshaller {
         
         readIndex(stream, clazz, reader);
         
-        clazz.i_fields = createFields(clazz, reader.readInt());
-        readFields(stream, reader, clazz.i_fields);        
+        clazz._aspects = createFields(clazz, reader.readInt());
+        readFields(stream, reader, clazz._aspects);        
     }
 
     protected abstract void readIndex(ObjectContainerBase stream, ClassMetadata clazz, ByteArrayBuffer reader) ;
 
-	private FieldMetadata[] createFields(ClassMetadata clazz, final int fieldCount) {
-		final FieldMetadata[] fields = new FieldMetadata[fieldCount];
-        for (int i = 0; i < fields.length; i++) {
-            fields[i] = new FieldMetadata(clazz);
-            fields[i].setArrayPosition(i);
+	private ClassAspect[] createFields(ClassMetadata clazz, final int fieldCount) {
+		final ClassAspect[] aspects = new ClassAspect[fieldCount];
+        for (int i = 0; i < aspects.length; i++) {
+            aspects[i] = new FieldMetadata(clazz);
+            aspects[i].setArrayPosition(i);
         }
-		return fields;
+		return aspects;
 	}
 
-	private void readFields(ObjectContainerBase stream, ByteArrayBuffer reader, final FieldMetadata[] fields) {
+	private void readFields(ObjectContainerBase stream, ByteArrayBuffer reader, final ClassAspect[] fields) {
 		for (int i = 0; i < fields.length; i++) {
-            fields[i] = _family._field.read(stream, fields[i], reader);
+            fields[i] = _family._field.read(stream, (FieldMetadata)fields[i], reader);
         }
 	}
 
-    public int marshalledLength(ObjectContainerBase stream, ClassMetadata clazz) {
-        int len = stream.stringIO().shortLength(clazz.nameToWrite())
+    public int marshalledLength(final ObjectContainerBase stream, final ClassMetadata clazz) {
+        final IntByRef len = new IntByRef(
+            stream.stringIO().shortLength(clazz.nameToWrite())
                 + Const4.OBJECT_LENGTH
                 + (Const4.INT_LENGTH * 2)
-                + (Const4.ID_LENGTH);       
+                + (Const4.ID_LENGTH));       
 
-        len += clazz.index().ownLength();
+        len.value += clazz.index().ownLength();
         
-        if (clazz.i_fields != null) {
-            for (int i = 0; i < clazz.i_fields.length; i++) {
-                len += _family._field.marshalledLength(stream, clazz.i_fields[i]);
+        clazz.forEachDeclaredAspect(new Procedure4() {
+            public void apply(Object arg) {
+                len.value +=  _family._field.marshalledLength(stream, (ClassAspect)arg);
             }
-        }
-        return len;
+        });
+        return len.value;
     }
 
 	public void defrag(ClassMetadata classMetadata,LatinStringIO sio,DefragmentContextImpl context, int classIndexID) throws CorruptionException, IOException {
@@ -142,7 +144,7 @@ public abstract class ClassMarshaller {
 		// field length
 		int numFields = context.readInt();
 		
-		FieldMetadata[] fields=classMetadata.i_fields;
+		ClassAspect[] fields=classMetadata._aspects;
 		if(numFields > fields.length) {
 			throw new IllegalStateException();
 		}

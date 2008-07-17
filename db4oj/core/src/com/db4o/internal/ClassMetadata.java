@@ -37,7 +37,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     private Config4Class i_config;
 
-    public FieldMetadata[] i_fields;
+    public ClassAspect[] _aspects;
     
     private final ClassIndexStrategy _index;
     
@@ -82,12 +82,15 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		if(i_config != null && i_config.cascadeOnDelete() == TernaryBool.YES) {
 			return false;
 		}
-		for(int i = 0; i < i_fields.length; ++i) {
-			if(i_fields[i].hasIndex()) {
-				return false;
-			}
-		}
-		return true;
+		final BooleanByRef hasIndex = new BooleanByRef(false); 
+		forEachDeclaredField(new Procedure4() {
+            public void apply(Object arg) {
+                if(((FieldMetadata)arg).hasIndex()){
+                    hasIndex.value = true;
+                }
+            }
+        });
+		return ! hasIndex.value;
 	}
 
 	boolean isInternal() {
@@ -116,9 +119,14 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
     }
 
-    private final void activateFieldsLoop(Transaction trans, Object obj, ActivationDepth depth) {
-        for (int i = 0; i < i_fields.length; i++) {
-            i_fields[i].cascadeActivation(trans, obj, depth);
+    private final void activateFieldsLoop(final Transaction trans, final Object obj, final ActivationDepth depth) {
+        forEachAspect(new Procedure4() {
+            public void apply(Object arg) {
+                ((ClassAspect)arg).cascadeActivation(trans, obj, depth);
+            }
+        });
+        for (int i = 0; i < _aspects.length; i++) {
+            _aspects[i].cascadeActivation(trans, obj, depth);
         }
         if (i_ancestor != null) {
             i_ancestor.activateFieldsLoop(trans, obj, depth);
@@ -148,29 +156,29 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
         boolean translatorInstalled = false;
 
-        Collection4 members = new Collection4();
+        Collection4 aspects = new Collection4();
 
-        if (null != i_fields) {
-            members.addAll(i_fields);
+        if (null != _aspects) {
+            aspects.addAll(_aspects);
         }
 
         ObjectTranslator ot = getTranslator();
         if (ot != null) {
             _translator = new TranslatedAspect(this, ot);
 
-            Iterator4 i = members.iterator();
+            Iterator4 i = aspects.iterator();
             while (i.moveNext()) {
                 FieldMetadata current = (FieldMetadata) i.current();
                 if (current.getName().equals(_translator.getName())) {
 
-                    members.replace(current, _translator);
+                    aspects.replace(current, _translator);
                     translatorInstalled = true;
                     break;
                 }
             }
 
             if (!translatorInstalled) {
-                members.add(_translator);
+                aspects.add(_translator);
                 dirty = true;
             }
             translatorInstalled = true;
@@ -180,23 +188,23 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
             if (generateVersionNumbers()) {
                 if (!hasVersionField()) {
-                    members.add(container.versionIndex());
+                    aspects.add(container.versionIndex());
                     dirty = true;
                 }
             }
             if (generateUUIDs()) {
                 if (!hasUUIDField()) {
-                    members.add(container.uUIDIndex());
+                    aspects.add(container.uUIDIndex());
                     dirty = true;
                 }
             }
 
-            if (installCustomTypehandlers(container, members)) {
+            if (installCustomTypehandlers(container, aspects)) {
                 dirty = true;
             }
 
             if (!translatorInstalled) {
-                dirty = collectReflectFields(container, members) | dirty;
+                dirty = collectReflectFields(container, aspects) | dirty;
             }
 
             if (dirty) {
@@ -206,10 +214,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
 
         if (dirty || translatorInstalled) {
-            i_fields = new FieldMetadata[members.size()];
-            members.toArray(i_fields);
-            for (int i = 0; i < i_fields.length; i++) {
-                i_fields[i].setArrayPosition(i);
+            _aspects = new ClassAspect[aspects.size()];
+            aspects.toArray(_aspects);
+            for (int i = 0; i < _aspects.length; i++) {
+                _aspects[i].setArrayPosition(i);
             }
         }
         
@@ -218,8 +226,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             dp.checkClassHasFields(this);
         }
 
-        if (i_fields == null) {
-            i_fields = new FieldMetadata[0];
+        if (_aspects == null) {
+            _aspects = new FieldMetadata[0];
         }
 
         _container.callbacks().classOnRegistered(this);
@@ -239,7 +247,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return true;
     }
 
-    private boolean collectReflectFields(ObjectContainerBase container, Collection4 collectedFields) {
+    private boolean collectReflectFields(ObjectContainerBase container, Collection4 collectedAspects) {
 		boolean dirty=false;
 		ReflectField[] fields = reflectFields();
 		for (int i = 0; i < fields.length; i++) {
@@ -252,9 +260,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 int fieldHandlerId = container.fieldHandlerIdForFieldHandler(fieldHandler);
                 FieldMetadata field = new FieldMetadata(this, fields[i], (TypeHandler4)fieldHandler, fieldHandlerId);
 		        boolean found = false;
-		        Iterator4 m = collectedFields.iterator();
-		        while (m.moveNext()) {
-		            if (((FieldMetadata)m.current()).equals(field)) {
+		        Iterator4 aspectIterator = collectedAspects.iterator();
+		        while (aspectIterator.moveNext()) {
+		            if (((ClassAspect)aspectIterator.current()).equals(field)) {
 		                found = true;
 		                break;
 		            }
@@ -263,7 +271,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		            continue;
 		        }
 		        dirty = true;
-		        collectedFields.add(field);
+		        collectedAspects.add(field);
 		    }
 		}
 		return dirty;
@@ -394,21 +402,15 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public void collectConstraints(
-        Transaction a_trans,
-        QConObject a_parent,
-        Object a_object,
-        Visitor4 a_visitor) {
-        if(! defaultObjectHandlerIsUsed()){
-            return;
-        }
-        if (i_fields != null) {
-            for (int i = 0; i < i_fields.length; i++) {
-                i_fields[i].collectConstraints(a_trans, a_parent, a_object, a_visitor);
+        final Transaction trans,
+        final QConObject parentConstraint,
+        final Object obj,
+        final Visitor4 visitor) {
+        forEachField(new Procedure4() {
+            public void apply(Object arg) {
+                ((FieldMetadata)arg).collectConstraints(trans, parentConstraint, obj, visitor);
             }
-        }
-        if (i_ancestor != null) {
-            i_ancestor.collectConstraints(a_trans, a_parent, a_object, a_visitor);
-        }
+        });
     }
     
     public final void collectIDs(CollectIdContext context, String fieldName) {
@@ -525,14 +527,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			&& dispatchEvent(transaction, obj, EventDispatcher.CAN_DEACTIVATE);
 	}
 
-    void deactivateFields(Transaction a_trans, Object a_object, ActivationDepth a_depth) {
-        
-        for (int i = 0; i < i_fields.length; i++) {
-            i_fields[i].deactivate(a_trans, a_object, a_depth);
-        }
-        if (i_ancestor != null) {
-            i_ancestor.deactivateFields(a_trans, a_object, a_depth);
-        }
+    void deactivateFields(final Transaction trans, final Object obj, final ActivationDepth depth) {
+        forEachField(new Procedure4() {
+            public void apply(Object arg) {
+                ((FieldMetadata)arg).deactivate(trans, obj, depth);
+            }
+        });
     }
 
     final void delete(StatefulBuffer buffer, Object obj) {
@@ -634,7 +634,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public final int fieldCount(){
-        int count = i_fields.length;
+        int count = _aspects.length;
         
         if(i_ancestor != null){
             count += i_ancestor.fieldCount();
@@ -654,7 +654,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	}
     	
 		public Object current() {
-			return _curClazz.i_fields[_curIdx];
+			return _curClazz._aspects[_curIdx];
 		}
 
 		public boolean moveNext() {
@@ -677,7 +677,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		}
 
 		private boolean indexInRange() {
-			return _curIdx<_curClazz.i_fields.length;
+			return _curIdx<_curClazz._aspects.length;
 		}
 	}
     
@@ -708,9 +708,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     void forEachFieldMetadata(Visitor4 visitor) {
-        if (i_fields != null) {
-            for (int i = 0; i < i_fields.length; i++) {
-                visitor.visit(i_fields[i]);
+        if (_aspects != null) {
+            for (int i = 0; i < _aspects.length; i++) {
+                visitor.visit(_aspects[i]);
             }
         }
         if (i_ancestor != null) {
@@ -837,7 +837,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if(ancestorHasUUIDField()){
             return true;
         }
-        return Arrays4.containsInstanceOf(i_fields, UUIDFieldMetadata.class);
+        return Arrays4.containsInstanceOf(_aspects, UUIDFieldMetadata.class);
     }
     
     private boolean ancestorHasVersionField(){
@@ -851,7 +851,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if(ancestorHasVersionField()){
             return true;
         }
-        return Arrays4.containsInstanceOf(i_fields, VersionFieldMetadata.class);
+        return Arrays4.containsInstanceOf(_aspects, VersionFieldMetadata.class);
     }
 
     public ClassIndexStrategy index() {
@@ -892,11 +892,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     public StoredField[] getStoredFields(){
         synchronized(lock()){
-	        if(i_fields == null){
+	        if(_aspects == null){
 	            return new StoredField[0];
 	        }
-	        StoredField[] fields = new StoredField[i_fields.length];
-	        System.arraycopy(i_fields, 0, fields, 0, i_fields.length);
+	        StoredField[] fields = new StoredField[_aspects.length];
+	        System.arraycopy(_aspects, 0, fields, 0, _aspects.length);
 	        return fields;
         }
     }
@@ -939,7 +939,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     void incrementFieldsOffset1(ByteArrayBuffer a_bytes) {
         int length = readFieldCount(a_bytes);
         for (int i = 0; i < length; i++) {
-            i_fields[i].incrementOffset(a_bytes);
+            _aspects[i].incrementOffset(a_bytes);
         }
     }
 
@@ -982,17 +982,19 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return;
         }
         
-        if (i_fields == null) {
+        if (_aspects == null) {
             return;
         }
         
-        for (int i = 0; i < i_fields.length; i++) {
-            FieldMetadata curField = i_fields[i];
-            String fieldName = curField.getName();
-			if(!curField.hasConfig()&&extendedConfig!=null&&extendedConfig.configField(fieldName)!=null) {
-            	curField.initIndex(this,fieldName);
+        for (int i = 0; i < _aspects.length; i++) {
+            if(_aspects[i] instanceof FieldMetadata){
+                FieldMetadata field = (FieldMetadata) _aspects[i];
+                String fieldName = field.getName();
+    			if(!field.hasConfig()&&extendedConfig!=null&&extendedConfig.configField(fieldName)!=null) {
+                	field.initIndex(this,fieldName);
+                }
+    			field.initConfigOnUp(systemTrans);
             }
-			curField.initConfigOnUp(systemTrans);
         }
     }
 
@@ -1304,7 +1306,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
 	public final int readFieldCount(ReadBuffer buffer) {
         int count = buffer.readInt();
-        if (count > i_fields.length) {
+        if (count > _aspects.length) {
             if (Debug.atHome) {
                 System.out.println(
                     "ClassMetadata.readFieldCount "
@@ -1312,10 +1314,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                         + " count to high:"
                         + count
                         + " i_fields:"
-                        + i_fields.length);
+                        + _aspects.length);
                 new Exception().printStackTrace();
             }
-            return i_fields.length;
+            return _aspects.length;
         }		
         return count;
     }
@@ -1465,11 +1467,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             createConstructor(_container, i_name);
             bitFalse(Const4.CHECKED_CHANGES);
             checkChanges();
-            if (i_fields != null) {
-                for (int i = 0; i < i_fields.length; i++) {
-                    i_fields[i].refresh();
+            forEachDeclaredField(new Procedure4() {
+                public void apply(Object arg) {
+                    ((FieldMetadata)arg).refresh();
                 }
-            }
+            });
         }
     }
 
@@ -1482,21 +1484,24 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
     }
 
-    boolean renameField(String a_from, String a_to) {
-        boolean renamed = false;
-        for (int i = 0; i < i_fields.length; i++) {
-            if (i_fields[i].getName().equals(a_to)) {
-                _container.logMsg(9, "class:" + getName() + " field:" + a_to);
+    boolean renameField(final String oldName, final String newName) {
+        final BooleanByRef renamed = new BooleanByRef(false);
+        for (int i = 0; i < _aspects.length; i++) {
+            if (_aspects[i].getName().equals(newName)) {
+                _container.logMsg(9, "class:" + getName() + " field:" + newName);
                 return false;
             }
         }
-        for (int i = 0; i < i_fields.length; i++) {
-            if (i_fields[i].getName().equals(a_from)) {
-                i_fields[i].setName(a_to);
-                renamed = true;
+        forEachDeclaredField(new Procedure4() {
+            public void apply(Object arg) {
+                FieldMetadata field = (FieldMetadata) arg;
+                if (field.getName().equals(oldName)) {
+                    field.setName(newName);
+                    renamed.value = true;
+                }
             }
-        }
-        return renamed;
+        });
+        return renamed.value;
     }
     
     void setConfig(Config4Class config){
@@ -1543,7 +1548,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     final boolean stateOKAndAncestors(){
-        if(! stateOK()  || i_fields == null){
+        if(! stateOK()  || _aspects == null){
             return false;
         }
         if(i_ancestor != null){
@@ -1577,28 +1582,31 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return Platform4.canSetAccessible() || a_field.isPublic();
     }
     
-    public StoredField storedField(String name, Object clazz) {
+    public StoredField storedField(final String name, final Object clazz) {
         synchronized(lock()){
         	
-            ClassMetadata classMetadata = _container.classMetadataForReflectClass(ReflectorUtils.reflectClassFor(reflector(), clazz)); 
-    		
-	        if(i_fields != null){
-	            for (int i = 0; i < i_fields.length; i++) {
-	                if(i_fields[i].getName().equals(name)){
-	                    
-	                    
-	                    // FIXME: The == comparison in the following line could be wrong. 
-	                    
-	                    if(classMetadata == null || classMetadata == i_fields[i].handlerClassMetadata(_container)){
-	                        return (i_fields[i]);
-	                    }
-	                }
+            final ClassMetadata classMetadata = _container.classMetadataForReflectClass(ReflectorUtils.reflectClassFor(reflector(), clazz));
+            
+            final ByReference foundField = new ByReference();
+            forEachField(new Procedure4() {
+                public void apply(Object arg) {
+                    if(foundField.value != null){
+                        return;
+                    }
+                    FieldMetadata field = (FieldMetadata)arg;
+                    if(field.getName().equals(name)){
+                        // FIXME: The == comparison in the following line could be wrong. 
+                        
+                        if(classMetadata == null || classMetadata == field.handlerClassMetadata(_container)){
+                            foundField.value = field;
+                        }
+                    }
                 }
-	        }
+            });
     		
     		//TODO: implement field creation
     		
-	        return null;
+	        return (StoredField) foundField.value;
         }
     }
 
@@ -1930,5 +1938,55 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     private FieldAwareTypeHandler correctHandlerVersion(HandlerVersionContext context){
         return (FieldAwareTypeHandler)Handlers4.correctHandlerVersion(context, _typeHandler);
     }
+
+    public void forEachField(Procedure4 procedure) {
+        forEachAspect(new SubTypePredicate(FieldMetadata.class), procedure);
+    }
+    
+    public void forEachDeclaredField(Procedure4 procedure) {
+        forEachDeclaredAspect(new SubTypePredicate(FieldMetadata.class), procedure);
+    }
+    
+    public void forEachAspect(Predicate4 predicate, Procedure4 procedure){
+        ClassMetadata classMetadata = this;
+        while(classMetadata != null){
+            classMetadata.forEachDeclaredAspect(predicate, procedure);
+            classMetadata = classMetadata.i_ancestor;
+        }
+    }
+    
+    public void forEachAspect(Procedure4 procedure){
+        ClassMetadata classMetadata = this;
+        while(classMetadata != null){
+            classMetadata.forEachDeclaredAspect(procedure);
+            classMetadata = classMetadata.i_ancestor;
+        }
+    }
+    
+    public void forEachDeclaredAspect(Predicate4 predicate, Procedure4 procedure){
+        if(_aspects == null){
+            return;
+        }
+        for (int i = 0; i < _aspects.length; i++) {
+            if(predicate.match(_aspects[i])){
+                procedure.apply(_aspects[i]);
+            }
+        }
+    }
+    
+    public void forEachDeclaredAspect(Procedure4 procedure){
+        if(_aspects == null){
+            return;
+        }
+        for (int i = 0; i < _aspects.length; i++) {
+            procedure.apply(_aspects[i]);
+        }
+    }
+    
+    
+
+
+    
+    
 
 }

@@ -2,6 +2,10 @@
 
 package com.db4o.internal;
 
+import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
+import com.db4o.internal.marshall.*;
+
 
 /**
  * @exclude
@@ -27,6 +31,37 @@ public class TypeHandlerAspect extends ClassAspect {
     
     public int hashCode() {
         return _typeHandler.hashCode();
+    }
+
+    public String getName() {
+        return _typeHandler.getClass().getName();
+    }
+
+    public void cascadeActivation(Transaction trans, Object obj, ActivationDepth depth) {
+        throw new NotImplementedException();
+    }
+
+    public void collectIDs(CollectIdContext context) {
+        throw new NotImplementedException();
+    }
+
+    public void defragAspect(DefragmentContext context) {
+        throw new NotImplementedException();
+    }
+
+    public int extendedLength() {
+        throw new NotImplementedException();
+        // return 0;
+    }
+
+    public int linkLength() {
+        throw new NotImplementedException();
+        // return 0;
+    }
+
+    public void marshall(MarshallingContext context, Object child) {
+        throw new NotImplementedException();
+        // _typeHandler.write(context, context.getObject());
     }
     
 
