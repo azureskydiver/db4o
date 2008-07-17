@@ -38,7 +38,6 @@ public class Jdk1_2TestSuite extends TestSuite{
             TestTreeMap.class,
             TestTreeSet.class,
             TransientClone.class,
-            TreeSetCustomComparable.class,
         };
     }
 }

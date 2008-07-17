@@ -1150,6 +1150,10 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		    container.systemTransaction().commit();
 		}
 	}
+
+    public AspectType aspectType() {
+        return AspectType.FIELD;
+    }
 	
 
 }

@@ -4,6 +4,7 @@ package com.db4o.internal.marshall;
 import com.db4o.foundation.*;
 
 public class RawFieldSpec {
+    private final AspectType _type;
 	private final String _name;
 	private final int _handlerID;
 	private final boolean _isPrimitive;
@@ -12,8 +13,9 @@ public class RawFieldSpec {
 	private final boolean _isVirtual;
 	private int _indexID;
 
-	public RawFieldSpec(final String name, final int handlerID, final byte attribs) {
-		_name = name;
+	public RawFieldSpec(AspectType aspectType, final String name, final int handlerID, final byte attribs) {
+        _type = aspectType;
+        _name = name;
 		_handlerID = handlerID;
 		BitMap4 bitmap = new BitMap4(attribs);
         _isPrimitive = bitmap.isTrue(0);
@@ -23,7 +25,8 @@ public class RawFieldSpec {
         _indexID=0;
 	}
 
-	public RawFieldSpec(final String name) {
+	public RawFieldSpec(AspectType aspectType, final String name) {
+	    _type = aspectType;
 		_name = name;
 		_handlerID = 0;
         _isPrimitive = false;
@@ -68,4 +71,8 @@ public class RawFieldSpec {
 	public String toString() {
 		return "RawFieldSpec(" + name() + ")"; 
 	}
+
+    public boolean isFieldMetadata() {
+        return _type.isFieldMetadata();
+    }
 }

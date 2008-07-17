@@ -14,7 +14,8 @@ public abstract class ClassAspect {
     
     //  position in ClassMetadata i_fields
     protected int              _arrayPosition;
-
+    
+    public abstract AspectType aspectType();
     
     public abstract String getName();
     
@@ -37,9 +38,8 @@ public abstract class ClassAspect {
     public void setArrayPosition(int a_index) {
         _arrayPosition = a_index;
     }
-    
 
-
+    public abstract void instantiate(UnmarshallingContext context);
 
 
 }

@@ -90,4 +90,9 @@ final class TranslatedAspect extends FieldMetadata
 	public int hashCode() {
 	    return _translator.hashCode();
 	}
+	
+    public AspectType aspectType() {
+        return AspectType.TRANSLATOR;
+    }
+
 }

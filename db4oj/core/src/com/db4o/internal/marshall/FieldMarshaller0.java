@@ -13,7 +13,7 @@ import com.db4o.internal.handlers.array.*;
 /**
  * @exclude
  */
-public class FieldMarshaller0 implements FieldMarshaller {
+public class FieldMarshaller0 extends AbstractFieldMarshaller {
 
     public int marshalledLength(ObjectContainerBase stream, ClassAspect aspect) {
         int len = stream.stringIO().shortLength(aspect.getName());
@@ -29,16 +29,19 @@ public class FieldMarshaller0 implements FieldMarshaller {
         return len;
     }
     
-    public RawFieldSpec readSpec(ObjectContainerBase stream, ByteArrayBuffer reader) {
+    protected RawFieldSpec readSpec(AspectType aspectType, ObjectContainerBase stream, ByteArrayBuffer reader) {
         String name = StringHandler.readStringNoDebug(stream.transaction().context(), reader);
+        if(! aspectType.isFieldMetadata()){
+            return new RawFieldSpec(aspectType, name);
+        }
         if (name.indexOf(Const4.VIRTUAL_FIELD_PREFIX) == 0) {
         	if(stream._handlers.virtualFieldByName(name)!=null) {
-                return new RawFieldSpec(name);
+                return new RawFieldSpec(aspectType, name);
         	}
         }
         int handlerID = reader.readInt();
         byte attribs=reader.readByte();
-        return new RawFieldSpec(name,handlerID,attribs);
+        return new RawFieldSpec(aspectType, name,handlerID,attribs);
     }
     
     public final FieldMetadata read(ObjectContainerBase stream, FieldMetadata field, ByteArrayBuffer reader) {
@@ -50,7 +53,11 @@ public class FieldMarshaller0 implements FieldMarshaller {
     	if(spec==null) {
     		return field;
     	}
-    	String name=spec.name();
+        String name=spec.name();
+    	if(! spec.isFieldMetadata()){
+    	    field.init(field.containingClass(), name);
+    	    return field;
+    	}
         if (spec.isVirtual()) {
         	return stream._handlers.virtualFieldByName(name);
         }

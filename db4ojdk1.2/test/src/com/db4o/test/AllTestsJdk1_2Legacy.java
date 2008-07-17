@@ -19,13 +19,14 @@ public class AllTestsJdk1_2Legacy extends AllTestsLegacy {
     	suites.add(new TestSuite() {
 			public Class[] tests() {
 				return new Class[]{
-			            Db4oLinkedList.class,
-			            Db4oHashMap.class,
-			            Db4oHashMapDeletedKey.class,
-			            ExtendsHashMap.class,
-			            ExternalBlobs.class,
-			            PCollectionReferencedTwice.class,
-			            UpdatingDb4oVersions.class,
+				    Db4oLinkedList.class,
+				    Db4oHashMap.class,
+				    Db4oHashMapDeletedKey.class,
+				    ExtendsHashMap.class,
+				    ExternalBlobs.class,
+				    PCollectionReferencedTwice.class,
+				    TreeSetCustomComparable.class,
+				    UpdatingDb4oVersions.class,
 				};
 			}
     	});
