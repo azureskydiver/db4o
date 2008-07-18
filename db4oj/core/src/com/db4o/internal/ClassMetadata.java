@@ -64,6 +64,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     private TranslatedAspect _translator;
     
+    private TypeHandler4 _customTypeHandler;
+    
     public final ObjectContainerBase stream() {
     	return _container;
     }
@@ -140,90 +142,90 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     void addMembers(ObjectContainerBase container) {
-        bitTrue(Const4.CHECKED_CHANGES);
+		bitTrue(Const4.CHECKED_CHANGES);
 
-        boolean dirty = isDirty();
+		boolean dirty = isDirty();
 
-        boolean translatorInstalled = false;
-        boolean aspectListModified = false;
-        
+		boolean translatorInstalled = false;
+		boolean aspectListModified = false;
 
-        Collection4 aspects = new Collection4();
+		Collection4 aspects = new Collection4();
 
-        if (null != _aspects) {
-            aspects.addAll(_aspects);
-        }
+		if (null != _aspects) {
+			aspects.addAll(_aspects);
+		}
 
-        ObjectTranslator ot = getTranslator();
-        if (ot != null) {
-            _translator = new TranslatedAspect(this, ot);
-            if (! replaceAspectByName(aspects, _translator) ) {
-                aspects.add(_translator);
-                dirty = true;
-            }
-            translatorInstalled = true;
-            aspectListModified = true;
-        }
+		ObjectTranslator ot = getTranslator();
+		if (ot != null) {
+			_translator = new TranslatedAspect(this, ot);
+			if (!replaceAspectByName(aspects, _translator)) {
+				aspects.add(_translator);
+				dirty = true;
+			}
+			translatorInstalled = true;
+			aspectListModified = true;
+		}
 
-        if (container.detectSchemaChanges()) {
+		if (container.detectSchemaChanges()) {
 
-            if (generateVersionNumbers()) {
-                if (!hasVersionField()) {
-                    aspects.add(container.versionIndex());
-                    dirty = true;
-                }
-            }
-            if (generateUUIDs()) {
-                if (!hasUUIDField()) {
-                    aspects.add(container.uUIDIndex());
-                    dirty = true;
-                }
-            }
-            
-            TypeHandler4 customTypeHandler = container.handlers().registerTypeHandlerVersions(this, classReflector());
-            if(customTypeHandler != null){
-                TypeHandlerAspect typeHandlerAspect = new TypeHandlerAspect(customTypeHandler);
-                if(! replaceAspectByName(aspects, typeHandlerAspect)){
-                    aspects.add(typeHandlerAspect);
-                    dirty = true;
-                }
-                aspectListModified = true;
-            }
+			if (generateVersionNumbers()) {
+				if (!hasVersionField()) {
+					aspects.add(container.versionIndex());
+					dirty = true;
+				}
+			}
+			if (generateUUIDs()) {
+				if (!hasUUIDField()) {
+					aspects.add(container.uUIDIndex());
+					dirty = true;
+				}
+			}
+		}
 
-            if (installCustomTypehandlers(container, aspects)) {
-                dirty = true;
-            }
+		_customTypeHandler = container.handlers().registerTypeHandlerVersions(
+				this, classReflector());
+		if (_customTypeHandler != null) {
+			TypeHandlerAspect typeHandlerAspect = new TypeHandlerAspect(
+					_customTypeHandler);
+			if (!replaceAspectByName(aspects, typeHandlerAspect)) {
+				aspects.add(typeHandlerAspect);
+				dirty = true;
+			}
+			aspectListModified = true;
+		}
 
-            if (!translatorInstalled) {
-                dirty = collectReflectFields(container, aspects) | dirty;
-            }
+		if (container.detectSchemaChanges()) {
 
-            if (dirty) {
-                _container.setDirtyInSystemTransaction(this);
-            }
+			if (!translatorInstalled) {
+				dirty = collectReflectFields(container, aspects) | dirty;
+			}
 
-        }
+			if (dirty) {
+				_container.setDirtyInSystemTransaction(this);
+			}
 
-        if (dirty || aspectListModified) {
-            _aspects = new ClassAspect[aspects.size()];
-            aspects.toArray(_aspects);
-            for (int i = 0; i < _aspects.length; i++) {
-                _aspects[i].setArrayPosition(i);
-            }
-        }
-        
-        DiagnosticProcessor dp = _container._handlers._diagnosticProcessor;
-        if (dp.enabled()) {
-            dp.checkClassHasFields(this);
-        }
+		}
 
-        if (_aspects == null) {
-            _aspects = new FieldMetadata[0];
-        }
+		if (dirty || aspectListModified) {
+			_aspects = new ClassAspect[aspects.size()];
+			aspects.toArray(_aspects);
+			for (int i = 0; i < _aspects.length; i++) {
+				_aspects[i].setArrayPosition(i);
+			}
+		}
 
-        _container.callbacks().classOnRegistered(this);
-        setStateOK();
-    }
+		DiagnosticProcessor dp = _container._handlers._diagnosticProcessor;
+		if (dp.enabled()) {
+			dp.checkClassHasFields(this);
+		}
+
+		if (_aspects == null) {
+			_aspects = new FieldMetadata[0];
+		}
+
+		_container.callbacks().classOnRegistered(this);
+		setStateOK();
+	}
 
     private boolean replaceAspectByName(Collection4 aspects, ClassAspect aspect) {
         Iterator4 i = aspects.iterator();
@@ -235,19 +237,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             }
         }
         return false;
-    }
-
-	private boolean installCustomTypehandlers(ObjectContainerBase container, Collection4 members) {
-	    TypeHandler4 customTypeHandler = container.handlers().registerTypeHandlerVersions(this, classReflector());
-	    if(customTypeHandler == null){
-	        return false;
-	    }
-	    TypeHandlerAspect typeHandlerAspect = new TypeHandlerAspect(customTypeHandler);
-	    if(members.contains(typeHandlerAspect)){
-	        return false;
-	    }
-	    members.add(typeHandlerAspect);
-        return true;
     }
 
     private boolean collectReflectFields(ObjectContainerBase container, Collection4 collectedAspects) {
@@ -1877,16 +1866,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return this;
     }
     
-    /*
-     * TODO: Wrapping should eventually not be necessary.
-     *       Maybe moving all code to FirstClassObjectHandler  
-     *       can fix and ClassMetadata then only becomes what
-     *       it's name suggests.
-     */
-    public TypeHandler4 delegateTypeHandler(){
-        return _typeHandler;
-    }
-    
     public final static class PreparedComparisonImpl implements PreparedComparison {
     	
     	private final int _id;
@@ -1921,9 +1900,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     protected boolean isSecondClass(TypeHandler4 handler) {
     	return Handlers4.baseTypeHandler(handler) instanceof EmbeddedTypeHandler;
     }
+    
+    public TypeHandler4 delegateTypeHandler(){
+        return _typeHandler;
+    }
 
     public boolean isSecondClass() {
-        return isSecondClass(_typeHandler);
+        return isSecondClass(_customTypeHandler);
     }
     
     private FieldAwareTypeHandler correctHandlerVersion(HandlerVersionContext context){
@@ -1973,11 +1956,5 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             procedure.apply(_aspects[i]);
         }
     }
-    
-    
-
-
-    
-    
 
 }
