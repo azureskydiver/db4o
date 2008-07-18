@@ -773,6 +773,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 return obj;
             } catch(Db4oException e) {
             	completeTopLevelCall(new InvalidIDException(e));
+            } catch(ArrayIndexOutOfBoundsException aiobe){
+            	completeTopLevelCall(new InvalidIDException(aiobe));
             } finally {
             	endTopLevelCall();
             }

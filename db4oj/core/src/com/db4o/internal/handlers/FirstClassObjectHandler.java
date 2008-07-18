@@ -41,11 +41,8 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                 } 
             }
         };
-        traverseDeclaredFields(context, command);
-        
-        if(classMetadata().i_ancestor != null){
-            classMetadata().i_ancestor.defragment(context);
-        }
+        // FIXME: This should be for aspects also, right?
+        traverseAllAspects(context, command);
         
     }
 
@@ -53,7 +50,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
         context.deleteObject();
     }
 
-    public final void instantiateFields(final UnmarshallingContext context) {
+    public final void instantiateAspects(final UnmarshallingContext context) {
         
         final BooleanByRef updateFieldFound = new BooleanByRef();
         
@@ -74,7 +71,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                 aspect.instantiate(context);
             }
         };
-        traverseDeclaredFields(context, command);
+        traverseAllAspects(context, command);
         
         if(updateFieldFound.value){
             context.restoreState(savedState);
@@ -85,7 +82,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                     }
                 }
             };
-            traverseDeclaredFields(context, command);
+            traverseAllAspects(context, command);
         }
         
     }
@@ -101,12 +98,8 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
 //        BitMap4 nullBitMap = unmarshallingContext.readBitMap(fieldCount);
 //        int fieldCount = context.readInt();
 
-        instantiateFields(unmarshallingContext);
+        instantiateAspects(unmarshallingContext);
         
-        if(classMetadata().i_ancestor != null){
-            classMetadata().i_ancestor.read(context);
-        }
-
         return unmarshallingContext.persistentObject();
     }
 
@@ -117,17 +110,13 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
 //        final BitMap4 nullBitMap = new BitMap4(fieldCount);
 //        ReservedBuffer bitMapBuffer = context.reserve(nullBitMap.marshalledLength());
         
-        marshall(obj, (MarshallingContext)context);
+        marshallAspects(obj, (MarshallingContext)context);
         
 //        bitMapBuffer.writeBytes(nullBitMap.bytes());
         
-        if(classMetadata().i_ancestor != null){
-            classMetadata().i_ancestor.write(context, obj);
-        }
-        
     }
     
-    public void marshall(final Object obj, final MarshallingContext context) {
+    public void marshallAspects(final Object obj, final MarshallingContext context) {
        final Transaction trans = context.transaction();
         TraverseAspectCommand command = new TraverseAspectCommand() {
              
@@ -137,24 +126,24 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                 return fieldCount;
             }
             public void processAspect(ClassAspect aspect, boolean isNull, ClassMetadata containingClass) {
-                Object child = null;
+                Object marshalledObject = obj;
                 if(aspect instanceof FieldMetadata){
                     FieldMetadata field = (FieldMetadata) aspect;
-                    child = field.getOrCreate(trans, obj);
-                    if(child == null) {
+                    marshalledObject = field.getOrCreate(trans, obj);
+                    if(marshalledObject == null) {
                         context.isNull(context.currentSlot(), true);
                         field.addIndexEntry(trans, context.objectID(), null);
                         return;
                     }
-                    if (child instanceof Db4oTypeImpl) {
-                        child = ((Db4oTypeImpl) child).storedTo(trans);
+                    if (marshalledObject instanceof Db4oTypeImpl) {
+                    	marshalledObject = ((Db4oTypeImpl) marshalledObject).storedTo(trans);
                     }
                 }
                 
-                aspect.marshall(context, child);
+                aspect.marshall(context, marshalledObject);
             }
         };
-        traverseDeclaredFields(context, command);
+        traverseAllAspects(context, command);
     }
 
 
@@ -216,16 +205,10 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
         }
     }
     
-
-    
     protected final void traverseAllAspects(MarshallingInfo context, TraverseAspectCommand command) {
-        
-    }
-    
-    protected final void traverseAllFields(MarshallingInfo context, TraverseAspectCommand command) {
         ClassMetadata classMetadata = classMetadata();
         while(classMetadata != null){
-            traverseDeclaredFields(context, classMetadata, command);
+            traverseDeclaredAspects(context, classMetadata, command);
             if(command.cancelled()){
                 return;
             }
@@ -233,11 +216,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
         }
     }
     
-    protected final void traverseDeclaredFields(MarshallingInfo context, TraverseAspectCommand command) {
-        traverseDeclaredFields(context, classMetadata(), command);
-    }
-
-    private void traverseDeclaredFields(MarshallingInfo context, ClassMetadata classMetadata,
+    private void traverseDeclaredAspects(MarshallingInfo context, ClassMetadata classMetadata,
         TraverseAspectCommand command) {
         int fieldCount=command.fieldCount(classMetadata, ((ByteArrayBuffer)context.buffer()));
         for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
@@ -311,10 +290,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                 }
             }
         };
-        traverseDeclaredFields(context, command);
-        if(classMetadata().i_ancestor != null){
-            classMetadata().i_ancestor.collectIDs(context, fieldName);
-        }
+        traverseAllAspects(context, command);
     }
 
     public void cascadeActivation(ActivationContext4 context) {
@@ -364,7 +340,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                 }
             }
         };
-        traverseAllFields(context, command);
+        traverseAllAspects(context, command);
     }
 
     public void addFieldIndices(final ObjectIdContextImpl context, final Slot oldSlot) {
@@ -378,7 +354,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                 }
             }
         };
-        traverseAllFields(context, command);
+        traverseAllAspects(context, command);
     }
     
     public void deleteMembers(final DeleteContextImpl context, final boolean isUpdate) {
@@ -394,7 +370,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                 aspect.delete(context, isUpdate);
             }
         };
-        traverseAllFields(context, command);
+        traverseAllAspects(context, command);
     }
 
     public boolean seekToField(final ObjectHeaderContext context, final FieldMetadata field) {
@@ -411,7 +387,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                 }
             }
         };
-        traverseAllFields(context, command);
+        traverseAllAspects(context, command);
         return found.value;
     }
 
