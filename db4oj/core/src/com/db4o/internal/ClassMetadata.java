@@ -113,23 +113,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return new FirstClassObjectHandler(this);
     }
     
-    public void activateFields(Transaction trans, Object obj, ActivationDepth depth) {
+    public void activateFields(final Transaction trans, final Object obj, final ActivationDepth depth) {
         if(objectCanActivate(trans, obj)){
-            activateFieldsLoop(trans, obj, depth);
-        }
-    }
-
-    private final void activateFieldsLoop(final Transaction trans, final Object obj, final ActivationDepth depth) {
-        forEachAspect(new Procedure4() {
-            public void apply(Object arg) {
-                ((ClassAspect)arg).cascadeActivation(trans, obj, depth);
-            }
-        });
-        for (int i = 0; i < _aspects.length; i++) {
-            _aspects[i].cascadeActivation(trans, obj, depth);
-        }
-        if (i_ancestor != null) {
-            i_ancestor.activateFieldsLoop(trans, obj, depth);
+            forEachAspect(new Procedure4() {
+                public void apply(Object arg) {
+                    ((ClassAspect)arg).cascadeActivation(trans, obj, depth);
+                }
+            });
         }
     }
 
