@@ -129,7 +129,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
         if(hasClassIndex() || hasVirtualAttributes()){
             ObjectHeader oh = new ObjectHeader(_container, this, buffer);
-            ObjectIdContext context = new ObjectIdContext(buffer.transaction(), buffer, oh, buffer.getID());
+            ObjectIdContextImpl context = new ObjectIdContextImpl(buffer.transaction(), buffer, oh, buffer.getID());
             correctHandlerVersion(context).addFieldIndices(context, slot);
         }
     }
@@ -547,7 +547,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         
         removeFromIndex(trans, id);
         
-        ObjectIdContext context = new ObjectIdContext(trans, buffer, oh, id);
+        DeleteContextImpl context = new DeleteContextImpl(buffer,oh,  classReflector(), null);
         deleteMembers(context, typeId, false);
     }
 
@@ -555,19 +555,21 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         correctHandlerVersion(context).delete(context);
     }
     
-    void deleteMembers(ObjectIdContext idContext, int a_type, boolean isUpdate) {
-        StatefulBuffer buffer = (StatefulBuffer) idContext.buffer();
-        DeleteContextImpl deleteContext = new DeleteContextImpl( classReflector(), idContext.handlerVersion(), null,  buffer);
-        int preserveCascade = deleteContext.cascadeDeleteDepth();
+    void deleteMembers(DeleteContextImpl context, int a_type, boolean isUpdate) {
+        StatefulBuffer buffer = (StatefulBuffer) context.buffer();
+        
+        // public DeleteContextImpl(StatefulBuffer buffer, ObjectHeader objectHeader, ReflectClass fieldClass, Config4Field fieldConfig, int handlerVersion){
+        
+        int preserveCascade = context.cascadeDeleteDepth();
         try{
             if (cascadeOnDelete()) {
                 if (classReflector().isCollection()) {
-                    buffer.setCascadeDeletes(collectionDeleteDepth(deleteContext));
+                    buffer.setCascadeDeletes(collectionDeleteDepth(context));
                 } else {
                     buffer.setCascadeDeletes(1);
                 }
             }
-            correctHandlerVersion(deleteContext).deleteMembers(idContext, deleteContext, isUpdate);
+            correctHandlerVersion(context).deleteMembers(context, isUpdate);
 
         }catch(Exception e){
             

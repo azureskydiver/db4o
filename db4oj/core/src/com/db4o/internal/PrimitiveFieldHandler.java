@@ -72,11 +72,11 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
         }
     }
     
-    void deleteMembers(ObjectIdContext idContext, int a_type, boolean isUpdate) {
+    void deleteMembers(DeleteContextImpl context, int a_type, boolean isUpdate) {
         if (a_type == Const4.TYPE_ARRAY) {
-            new ArrayHandler(this, true).deletePrimitiveEmbedded((StatefulBuffer) idContext.buffer(), this);
+            new ArrayHandler(this, true).deletePrimitiveEmbedded((StatefulBuffer) context.buffer(), this);
         } else if (a_type == Const4.TYPE_NARRAY) {
-            new MultidimensionalArrayHandler(this, true).deletePrimitiveEmbedded((StatefulBuffer) idContext.buffer(), this);
+            new MultidimensionalArrayHandler(this, true).deletePrimitiveEmbedded((StatefulBuffer) context.buffer(), this);
         }
     }
     

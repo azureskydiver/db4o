@@ -7,6 +7,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.FixedActivationDepth;
 import com.db4o.internal.btree.*;
+import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
@@ -23,7 +24,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         setName(Const4.VIRTUAL_FIELD_PREFIX + "uuid");
     }
     
-    public void addFieldIndex(ObjectIdContext context, Slot oldSlot)  throws FieldIndexException{
+    public void addFieldIndex(ObjectIdContextImpl context, Slot oldSlot)  throws FieldIndexException{
         boolean isnew = (oldSlot == null);
 
         int offset = context.offset();
@@ -31,7 +32,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         long uuid = context.readLong();
         context.seek(offset);
         
-        LocalObjectContainer yf = (LocalObjectContainer)context.container();
+        LocalObjectContainer yf = (LocalObjectContainer)context.transaction().container();
         
         if ((uuid == 0 || db4oDatabaseIdentityID == 0) && context.id() > 0
                 && !isnew) {
@@ -87,7 +88,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
 		return new DatabaseIdentityIDAndUUID(reader.readInt(), reader.readLong());
 	}
 
-    public void delete(ObjectIdContext context, boolean isUpdate){
+    public void delete(DeleteContextImpl context, boolean isUpdate){
         if(isUpdate){
             context.seek(context.offset() + linkLength());
             return;

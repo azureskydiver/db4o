@@ -54,7 +54,7 @@ public class StringHandler0 extends StringHandler {
     }
     
     public Object readIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException{
-        return context.container().readWriterByAddress(context.transaction(), context.readInt(), context.readInt());
+        return context.transaction().container().readWriterByAddress(context.transaction(), context.readInt(), context.readInt());
     }
 
 }

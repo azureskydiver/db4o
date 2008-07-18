@@ -367,7 +367,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
         traverseAllFields(context, command);
     }
 
-    public void addFieldIndices(final ObjectIdContext context, final Slot oldSlot) {
+    public void addFieldIndices(final ObjectIdContextImpl context, final Slot oldSlot) {
         TraverseAspectCommand command = new TraverseFieldCommand() {
             public void processAspect(ClassAspect aspect, boolean isNull, ClassMetadata containingClass) {
                 FieldMetadata field = (FieldMetadata)aspect;
@@ -381,18 +381,20 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
         traverseAllFields(context, command);
     }
     
-    public void deleteMembers(final ObjectIdContext idContext, final DeleteContext deleteContext,  final boolean isUpdate) {
-        TraverseAspectCommand command=new TraverseFieldCommand() {
+    public void deleteMembers(final DeleteContextImpl context, final boolean isUpdate) {
+        TraverseAspectCommand command=new TraverseAspectCommand() {
             public void processAspect(ClassAspect aspect, boolean isNull, ClassMetadata containingClass) {
-                FieldMetadata field = (FieldMetadata)aspect;
                 if(isNull){
-                    field.removeIndexEntry(idContext.transaction(), idContext.id(), null);
-                }else{
-                    field.delete(idContext, isUpdate);
+                	if(aspect instanceof FieldMetadata){
+                		FieldMetadata field = (FieldMetadata)aspect;
+                        field.removeIndexEntry(context.transaction(), context.id(), null);
+                	}
+                	return;
                 }
+                aspect.delete(context, isUpdate);
             }
         };
-        traverseAllFields(idContext, command);
+        traverseAllFields(context, command);
     }
 
     public boolean seekToField(final ObjectHeaderContext context, final FieldMetadata field) {

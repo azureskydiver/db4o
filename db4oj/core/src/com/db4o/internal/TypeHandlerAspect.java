@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
+import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
 
 
@@ -73,5 +74,9 @@ public class TypeHandlerAspect extends ClassAspect {
     public void instantiate(UnmarshallingContext context) {
         _typeHandler.read(context);
     }
+
+	public void delete(DeleteContextImpl context, boolean isUpdate) {
+		_typeHandler.delete(context);
+	}
 
 }
