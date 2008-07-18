@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.foundation.Visitor4;
 import com.db4o.internal.activation.*;
+import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.QConObject;
 import com.db4o.internal.replication.*;
@@ -29,7 +30,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         
     }
     
-    public abstract void addFieldIndex(ObjectIdContext context, Slot oldSlot)  throws FieldIndexException ;
+    public abstract void addFieldIndex(ObjectIdContextImpl context, Slot oldSlot)  throws FieldIndexException ;
     
     public boolean alive() {
         return true;
@@ -63,7 +64,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         // do nothing
     }
     
-    public abstract void delete(ObjectIdContext context, boolean isUpdate);
+    public abstract void delete(DeleteContextImpl context, boolean isUpdate);
     
     public Object getOrCreate(Transaction a_trans, Object a_OnObject) {
         // This is the first part of marshalling

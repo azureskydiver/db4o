@@ -2,25 +2,14 @@
 
 package com.db4o.internal.marshall;
 
-import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
 
 /**
  * @exclude
  */
-public class ObjectIdContext extends ObjectHeaderContext {
+public interface ObjectIdContext extends HandlerVersionContext, MarshallingInfo, ReadContext {
     
-    private final int _id;
-
-    public ObjectIdContext(Transaction transaction, ReadBuffer buffer, ObjectHeader objectHeader, int id) {
-        super(transaction, buffer, objectHeader);
-        _id = id;
-    }
-    
-    public int id(){
-        return _id;
-    }
-    
+    public int id();
 
 }

@@ -19,9 +19,9 @@ public interface FieldAwareTypeHandler extends TypeHandler4, VersionedTypeHandle
     
     public void classMetadata(ClassMetadata classMetadata);
 
-    public void addFieldIndices(ObjectIdContext context, Slot oldSlot);
+    public void addFieldIndices(ObjectIdContextImpl context, Slot oldSlot);
 
-    public void deleteMembers(ObjectIdContext idContext, DeleteContext deleteContext, boolean isUpdate);
+    public void deleteMembers(DeleteContextImpl deleteContext, boolean isUpdate);
 
     public boolean seekToField(ObjectHeaderContext context, FieldMetadata field);
 

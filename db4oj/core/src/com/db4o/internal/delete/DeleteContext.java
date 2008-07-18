@@ -29,5 +29,7 @@ public interface DeleteContext extends Context, ReadBuffer, HandlerVersionContex
 	void defragmentRecommended();
 
 	Slot readSlot();
+
+	public int id();
 	
 }

@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.internal.activation.*;
+import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 
@@ -40,6 +41,8 @@ public abstract class ClassAspect {
     }
 
     public abstract void instantiate(UnmarshallingContext context);
+
+	public abstract void delete(DeleteContextImpl context, boolean isUpdate);
 
 
 }

@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.callbacks.*;
+import com.db4o.internal.delete.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
@@ -723,7 +724,7 @@ public class LocalTransaction extends Transaction {
         
         objectBytes.setCascadeDeletes(cascade);
         
-        ObjectIdContext context = new ObjectIdContext(this, objectBytes, oh, id);
+        DeleteContextImpl context = new DeleteContextImpl(objectBytes, oh, clazz.classReflector(), null);
         clazz.deleteMembers(context, typeInfo, true);
         
         slotFreeOnCommit(id, new Slot(objectBytes.getAddress(), objectBytes.length()));

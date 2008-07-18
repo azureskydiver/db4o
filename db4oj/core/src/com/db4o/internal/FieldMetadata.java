@@ -96,7 +96,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         _handler = handler;
     }
     
-    public void addFieldIndex(ObjectIdContext context, Slot oldSlot)  throws FieldIndexException {
+    public void addFieldIndex(ObjectIdContextImpl context, Slot oldSlot)  throws FieldIndexException {
         if (! hasIndex()) {
             incrementOffset(context);
             return;
@@ -479,7 +479,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     /** @param isUpdate */
-    public void delete(ObjectIdContext context, boolean isUpdate) throws FieldIndexException {
+    public void delete(DeleteContextImpl context, boolean isUpdate) throws FieldIndexException {
         if (! checkAlive(context)) {
             return;
         }
@@ -487,10 +487,11 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             removeIndexEntry(context);
             int handlerVersion = context.handlerVersion();
             StatefulBuffer buffer = (StatefulBuffer) context.buffer();
-            final DeleteContextImpl deleteContext = new DeleteContextImpl(getStoredType(), handlerVersion, _config,  buffer);
+            final DeleteContextImpl childContext = new DeleteContextImpl(context, getStoredType(), _config);
+            
             SlotFormat.forHandlerVersion(handlerVersion).doWithSlotIndirection(buffer, _handler, new Closure4() {
                 public Object run() {
-                    deleteContext.delete(_handler);
+                    childContext.delete(_handler);
                     return null;
                 }
             });
@@ -499,7 +500,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
     }
 
-    private final void removeIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException {
+    private final void removeIndexEntry(DeleteContextImpl context) throws CorruptionException, Db4oIOException {
         if(! hasIndex()){
             return;
         }
@@ -1095,7 +1096,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         if(classMetadata == null){
             return null;
         }
-        ObjectIdContext context = new ObjectIdContext(writer.transaction(), writer, oh, writer.getID());
+        ObjectIdContextImpl context = new ObjectIdContextImpl(writer.transaction(), writer, oh, writer.getID());
         if(! classMetadata.seekToField(context, this)){
             return null;
         }

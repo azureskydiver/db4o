@@ -12,27 +12,32 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class DeleteContextImpl extends AbstractBufferContext implements DeleteContext {
+public class DeleteContextImpl extends ObjectHeaderContext implements DeleteContext, ObjectIdContext {
     
     private final ReflectClass _fieldClass;
     
-    private final int _handlerVersion;
-
     private final Config4Field _fieldConfig;
     
-	public DeleteContextImpl(ReflectClass fieldClass, int handlerVersion, Config4Field fieldConfig, StatefulBuffer buffer){
-		super(buffer.transaction(), buffer);
+	public DeleteContextImpl(StatefulBuffer buffer, ObjectHeader objectHeader, ReflectClass fieldClass, Config4Field fieldConfig){
+		super(buffer.transaction(), buffer, objectHeader);
 		_fieldClass = fieldClass;
-		_handlerVersion = handlerVersion;
 		_fieldConfig = fieldConfig;
+	}
+	
+	public DeleteContextImpl(DeleteContextImpl parentContext, ReflectClass fieldClass, Config4Field fieldConfig){
+		this(parentContext.statefulBuffer(), parentContext._objectHeader, fieldClass, fieldConfig);
 	}
 
 	public void cascadeDeleteDepth(int depth) {
-	    ((StatefulBuffer)buffer()).setCascadeDeletes(depth);
+	    statefulBuffer().setCascadeDeletes(depth);
+	}
+
+	private StatefulBuffer statefulBuffer() {
+		return ((StatefulBuffer)buffer());
 	}
 
 	public int cascadeDeleteDepth() {
-	    return ((StatefulBuffer)buffer()).cascadeDeletes();
+	    return statefulBuffer().cascadeDeletes();
 	}
 	
     public boolean cascadeDelete() {
@@ -50,10 +55,6 @@ public class DeleteContextImpl extends AbstractBufferContext implements DeleteCo
 		return new Slot(buffer().readInt(), buffer().readInt());
 	}
 
-	public int handlerVersion() {
-		return _handlerVersion;
-	}
-	
 	public void delete(TypeHandler4 handler){
         final TypeHandler4 fieldHandler = Handlers4.correctHandlerVersion(this, handler);
 	    int preservedCascadeDepth = cascadeDeleteDepth();
@@ -87,6 +88,10 @@ public class DeleteContextImpl extends AbstractBufferContext implements DeleteCo
 	        return 0;
 	    }
 	    return cascadeDeleteDepth();
+	}
+
+	public int id() {
+		return statefulBuffer().getID();
 	}
 
 }
