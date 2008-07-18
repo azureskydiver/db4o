@@ -720,17 +720,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return correctHandlerVersion(context).seekToField(context, field);
     }
 
-    void forEachFieldMetadata(Visitor4 visitor) {
-        if (_aspects != null) {
-            for (int i = 0; i < _aspects.length; i++) {
-                visitor.visit(_aspects[i]);
-            }
-        }
-        if (i_ancestor != null) {
-            i_ancestor.forEachFieldMetadata(visitor);
-        }
-    }
-    
     public boolean generateUUIDs() {
         if(! generateVirtual()){
             return false;
@@ -920,13 +909,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     public FieldMetadata fieldMetadataForName(final String name) {
         final ByReference byReference = new ByReference();
-        forEachFieldMetadata(new Visitor4() {
-            public void visit(Object obj) {
-                if (name.equals(((FieldMetadata)obj).getName())) {
-                    byReference.value = obj;
+        forEachField(new Procedure4() {
+			public void apply(Object arg) {
+                if (name.equals(((FieldMetadata)arg).getName())) {
+                    byReference.value = arg;
                 }
-            }
-        });
+			}
+		});
         return (FieldMetadata) byReference.value;
     }
     

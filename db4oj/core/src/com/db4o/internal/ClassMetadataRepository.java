@@ -57,14 +57,15 @@ public final class ClassMetadataRepository extends PersistentBase {
         while (i.moveNext()) {
             final ClassMetadata classMetadata = i.currentClass();
             if(! classMetadata.isInternal()){
-                classMetadata.forEachFieldMetadata(new Visitor4() {
-                    public void visit(Object obj) {
+                classMetadata.forEachField(new Procedure4() {
+                    public void apply(Object obj) {
                         FieldMetadata field = (FieldMetadata)obj;
                         if(field.canAddToQuery(fieldName)){
                             visitor.visit(new Object[] {classMetadata, field});
                         }
                     }
                 });
+
             }
         }
     }

@@ -616,22 +616,24 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 return null;
             }
             ClassMetadata classMetadata = ref.classMetadata();
-            final FieldMetadata[] field = new FieldMetadata[]{null};
-            classMetadata.forEachFieldMetadata(new Visitor4() {
-                public void visit(Object yf) {
-                    FieldMetadata yapField = (FieldMetadata)yf;
-                    if(yapField.canAddToQuery(fieldName)){
-                        field[0] = yapField;
+            final ByReference foundField = new ByReference();
+            
+            classMetadata.forEachField(new Procedure4() {
+				public void apply(Object arg) {
+                    FieldMetadata fieldMetadata = (FieldMetadata)arg;
+                    if(fieldMetadata.canAddToQuery(fieldName)){
+                    	foundField.value = fieldMetadata;
                     }
-                }
-            });
-            if(field[0] == null){
+				}
+			});
+            FieldMetadata field = (FieldMetadata) foundField.value;
+            if(field == null){
                 return null;
             }
             
             Object child = ref.isActive()
-            	? field[0].get(trans, obj)
-                : descendMarshallingContext(trans, ref).readFieldValue(field[0]);
+            	? field.get(trans, obj)
+                : descendMarshallingContext(trans, ref).readFieldValue(field);
             
             if(path.length == 1){
                 return child;
