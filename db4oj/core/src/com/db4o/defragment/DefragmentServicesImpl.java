@@ -314,18 +314,18 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		if(cachedHasFieldIndex != null) {
 			return cachedHasFieldIndex.definiteYes();
 		}
-		boolean hasFieldIndex = false;
-		Iterator4 fieldIter = clazz.fields();
-		while (fieldIter.moveNext()) {
-			FieldMetadata curField = (FieldMetadata) fieldIter.current();
-			if (curField.hasIndex()
-					&& (curField.getHandler() instanceof StringHandler)) {
-				hasFieldIndex = true;
-				break;
+		final BooleanByRef hasFieldIndex = new BooleanByRef(false);
+		clazz.forEachDeclaredField(new Procedure4() {
+			public void apply(Object arg) {
+				FieldMetadata curField = (FieldMetadata)arg;
+				if (curField.hasIndex()
+						&& (curField.getHandler() instanceof StringHandler)) {
+					hasFieldIndex.value = true;
+				}
 			}
-		}
-		_hasFieldIndexCache.put(clazz, TernaryBool.forBoolean(hasFieldIndex));
-		return hasFieldIndex;
+		});
+		_hasFieldIndexCache.put(clazz, TernaryBool.forBoolean(hasFieldIndex.value));
+		return hasFieldIndex.value;
 	}
 
 	public int blockSize() {

@@ -38,7 +38,10 @@ public class TypeHandlerAspect extends ClassAspect {
     }
 
     public void cascadeActivation(Transaction trans, Object obj, ActivationDepth depth) {
-        throw new NotImplementedException();
+    	if(_typeHandler instanceof FirstClassHandler){
+            ActivationContext4 context = new ActivationContext4(trans, obj, depth);
+    		((FirstClassHandler)_typeHandler).cascadeActivation(context);
+    	}
     }
 
     public void collectIDs(CollectIdContext context) {
@@ -46,7 +49,7 @@ public class TypeHandlerAspect extends ClassAspect {
     }
 
     public void defragAspect(DefragmentContext context) {
-        throw new NotImplementedException();
+    	_typeHandler.defragment(context);
     }
 
     public int extendedLength() {
