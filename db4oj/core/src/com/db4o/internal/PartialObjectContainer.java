@@ -1646,6 +1646,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         
 		if (ref == null) {
             ClassMetadata classMetadata = analyzer.classMetadata();
+            if(classMetadata.isSecondClass()){
+            	analyzer.notStorable();
+            	return 0;
+            }
             if (!objectCanNew(trans, classMetadata, obj)) {
                 return 0;
             }

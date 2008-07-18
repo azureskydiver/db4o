@@ -6,7 +6,6 @@ import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.typehandlers.*;
 
 
 /**
@@ -65,14 +64,9 @@ public class TypeHandlerAspect extends ClassAspect {
     }
 
     public void marshall(MarshallingContext context, Object obj) {
-    	// Object obj = isSecondClass() ? child : context.getObject(); 
         _typeHandler.write(context, obj);
     }
 
-	private boolean isSecondClass() {
-		return (_typeHandler instanceof EmbeddedTypeHandler);
-	}
-    
     public AspectType aspectType() {
         return AspectType.TYPEHANDLER;
     }

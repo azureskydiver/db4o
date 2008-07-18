@@ -31,7 +31,7 @@ import com.db4o.typehandlers.*;
  */
 public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass, FieldHandler , ReadsObjectIds{
     
-	private FieldAwareTypeHandler _typeHandler;
+	private TypeHandler4 _typeHandler;
     
 	public ClassMetadata i_ancestor;
 
@@ -132,7 +132,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if(hasClassIndex() || hasVirtualAttributes()){
             ObjectHeader oh = new ObjectHeader(_container, this, buffer);
             ObjectIdContextImpl context = new ObjectIdContextImpl(buffer.transaction(), buffer, oh, buffer.getID());
-            correctHandlerVersion(context).addFieldIndices(context, slot);
+            fieldAwareTypeHandler(correctHandlerVersion(context)).addFieldIndices(context, slot);
         }
     }
     
@@ -192,6 +192,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 				dirty = true;
 			}
 			aspectListModified = true;
+			if(_customTypeHandler instanceof EmbeddedTypeHandler){
+				_typeHandler = _customTypeHandler;
+			}
 		}
 
 		if (container.detectSchemaChanges()) {
@@ -296,10 +299,24 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public void cascadeActivation(ActivationContext4 context) {
-        _typeHandler.cascadeActivation(context);    
+    	fieldAwareTypeHandler().cascadeActivation(context);
     }
 
-    public boolean descendOnCascadingActivation() {
+    private FieldAwareTypeHandler fieldAwareTypeHandler() {
+    	if(_typeHandler instanceof FieldAwareTypeHandler){
+    		return (FieldAwareTypeHandler) _typeHandler;
+    	}
+    	return NullFieldAwareTypeHandler.INSTANCE;
+	}
+    
+    private FieldAwareTypeHandler fieldAwareTypeHandler(TypeHandler4 typeHandler) {
+    	if(typeHandler instanceof FieldAwareTypeHandler){
+    		return (FieldAwareTypeHandler) typeHandler;
+    	}
+    	return NullFieldAwareTypeHandler.INSTANCE;
+    }
+
+	public boolean descendOnCascadingActivation() {
         return true;
     }
 
@@ -414,7 +431,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public void collectIDs(final QueryingReadContext context) {
-        correctHandlerVersion(context).collectIDs(context);    
+        TypeHandler4 typeHandler = correctHandlerVersion(context);
+        if(typeHandler instanceof FirstClassHandler){
+        	((FirstClassHandler)typeHandler).collectIDs(context);	
+        }
     }
     
     public boolean customizedNewInstance(){
@@ -558,7 +578,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                     buffer.setCascadeDeletes(1);
                 }
             }
-            correctHandlerVersion(context).deleteMembers(context, isUpdate);
+            fieldAwareTypeHandler(correctHandlerVersion(context)).deleteMembers(context, isUpdate);
 
         }catch(Exception e){
             
@@ -698,7 +718,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public final boolean seekToField(ObjectHeaderContext context, FieldMetadata field){
-        return correctHandlerVersion(context).seekToField(context, field);
+        return fieldAwareTypeHandler(correctHandlerVersion(context)).seekToField(context, field);
     }
 
     public boolean generateUUIDs() {
@@ -1263,7 +1283,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
     
     public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
-        return correctHandlerVersion(context).readCandidateHandler(context);    
+        TypeHandler4 typeHandler = correctHandlerVersion(context);
+        if(typeHandler instanceof FirstClassHandler){
+        	return ((FirstClassHandler)typeHandler).readCandidateHandler(context);	
+        }
+        return null;
     }
 
     public TypeHandler4 seekCandidateHandler(QueryingReadContext context) {
@@ -1353,7 +1377,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         ByteArrayBuffer buffer = stream.readReaderByID(trans, id, lastCommitted);
         ObjectHeader oh = new ObjectHeader(stream, this, buffer);
         ObjectReferenceContext context = new ObjectReferenceContext(trans,buffer, oh, ref);
-	    correctHandlerVersion(context).readVirtualAttributes(context);
+        fieldAwareTypeHandler(correctHandlerVersion(context)).readVirtualAttributes(context);
 	}
 
 	public GenericReflector reflector() {
@@ -1906,11 +1930,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public boolean isSecondClass() {
-        return isSecondClass(_customTypeHandler);
+        return isSecondClass(_typeHandler);
     }
     
-    private FieldAwareTypeHandler correctHandlerVersion(HandlerVersionContext context){
-        return (FieldAwareTypeHandler)Handlers4.correctHandlerVersion(context, _typeHandler);
+    private TypeHandler4 correctHandlerVersion(HandlerVersionContext context){
+    	return Handlers4.correctHandlerVersion(context, _typeHandler);
     }
 
     public void forEachField(Procedure4 procedure) {
