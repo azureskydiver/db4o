@@ -48,23 +48,29 @@ public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 		final ObjectHeaderContext oldSlotContext = readContextForOldSlot(object);
 		final ClassMetadata classMetadata = classMetadataFor(object);
 		
-		final Iterator4 fields = classMetadata.fields();
 		
-		final int initialOffset = oldSlotContext.offset();
-		while (fields.moveNext()) {
-			oldSlotContext.seek(initialOffset);
-			
-			final FieldMetadata field = (FieldMetadata) fields.current();
-			if(field instanceof VirtualFieldMetadata){
-			    continue;
-			}
-			final Object currentFieldValue = field.getOn(_transaction, object.getObject());
-			
-			if (fieldValueHasChanged(oldSlotContext, classMetadata, field, currentFieldValue)) {
-				fieldChanges.add(new FieldChange(field, currentFieldValue));
-			}
-		}
-		return fieldChanges;
+		// final Iterator4 fields = classMetadata.fields();
+		
+		// use ClassMetadata#forEachField()
+		
+		throw new NotImplementedException();
+		
+		
+//		final int initialOffset = oldSlotContext.offset();
+//		while (fields.moveNext()) {
+//			oldSlotContext.seek(initialOffset);
+//			
+//			final FieldMetadata field = (FieldMetadata) fields.current();
+//			if(field instanceof VirtualFieldMetadata){
+//			    continue;
+//			}
+//			final Object currentFieldValue = field.getOn(_transaction, object.getObject());
+//			
+//			if (fieldValueHasChanged(oldSlotContext, classMetadata, field, currentFieldValue)) {
+//				fieldChanges.add(new FieldChange(field, currentFieldValue));
+//			}
+//		}
+//		return fieldChanges;
 	}
 
 	private boolean fieldValueHasChanged(
@@ -73,7 +79,7 @@ public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 			final FieldMetadata field,
 			final Object currentFieldValue) {
 		
-		if (oldSlotContext.useDedicatedSlot(oldSlotContext.correctHandlerVersion(field.getHandler()))) {
+		if (oldSlotContext.useDedicatedSlot(Handlers4.correctHandlerVersion(oldSlotContext, field.getHandler()))) {
 			final int oldId = readIdAtField(oldSlotContext, classMetadata, field);
 			if (currentFieldValue == null) {
 				return oldId != 0;
@@ -92,7 +98,7 @@ public class SlotBasedChangeSetBuilder implements ChangeSetBuilder {
 	private int readIdAtField(final ObjectHeaderContext oldSlotContext,
 			final ClassMetadata classMetadata,
 			final FieldMetadata field) {
-		if (!oldSlotContext.seekToField(classMetadata, field)) {
+		if (! classMetadata.seekToField(oldSlotContext, field)) {
 			return 0;
 		}
 		return oldSlotContext.readInt();
