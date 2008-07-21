@@ -2,8 +2,7 @@
 
 package com.db4o.config;
 
-import com.db4o.messaging.MessageRecipient;
-import com.db4o.messaging.MessageSender;
+import com.db4o.messaging.*;
 
 /**
  * Client/Server configuration interface. 

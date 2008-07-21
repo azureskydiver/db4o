@@ -4,7 +4,7 @@ package com.db4o.internal.query.result;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.query.QueryComparator;
+import com.db4o.query.*;
 
 /**
  * @exclude 

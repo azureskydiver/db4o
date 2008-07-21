@@ -7,7 +7,7 @@ import java.io.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
-import com.db4o.internal.activation.FullActivationDepth;
+import com.db4o.internal.activation.*;
 
 
 public class MWriteBlob extends MsgBlob implements ServerSideMessage {

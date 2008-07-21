@@ -2,17 +2,13 @@
 
 package com.db4o.internal.cs.messages;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import com.db4o.*;
-import com.db4o.ext.Status;
-import com.db4o.foundation.network.Socket4;
+import com.db4o.ext.*;
+import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
-import com.db4o.internal.activation.FixedActivationDepth;
+import com.db4o.internal.activation.*;
 
 public abstract class MsgBlob extends MsgD implements BlobStatus{
 

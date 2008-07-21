@@ -2,7 +2,7 @@
 
 package com.db4o.defragment;
 
-import java.io.IOException;
+import java.io.*;
 
 import com.db4o.*;
 import com.db4o.internal.*;
@@ -33,7 +33,7 @@ final class SecondPassCommand implements PassCommand {
 			System.err.println("MAPPING NOT FOUND: "+id);
 		}
 		DefragmentContextImpl.processCopy(services, id, new SlotCopyHandler() {
-			public void processCopy(DefragmentContextImpl context) throws CorruptionException, IOException {
+			public void processCopy(DefragmentContextImpl context){
 				yapClass.defragClass(context, classIndexID);
 			}
 		});

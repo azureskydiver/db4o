@@ -169,17 +169,14 @@ public class Defragment {
 		db.close();
 	}
 
-	private static void defragUnindexed(DefragmentServicesImpl services)
-			throws CorruptionException, IOException {
+	private static void defragUnindexed(DefragmentServicesImpl services){
 		IdSource unindexedIDs = services.unindexedIDs();
 		while (unindexedIDs.hasMoreIds()) {
 			final int origID = unindexedIDs.nextId();
 			DefragmentContextImpl.processCopy(services, origID, new SlotCopyHandler() {
-				public void processCopy(DefragmentContextImpl context)
-						throws CorruptionException {
+				public void processCopy(DefragmentContextImpl context){
 					ClassMetadata.defragObject(context);
 				}
-
 			}, true);
 		}
 	}

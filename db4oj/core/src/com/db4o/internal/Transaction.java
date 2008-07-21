@@ -6,7 +6,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
-import com.db4o.reflect.Reflector;
+import com.db4o.reflect.*;
 
 
 /**

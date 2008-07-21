@@ -2,9 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import java.io.*;
-
-import com.db4o.*;
 import com.db4o.internal.*;
 
 
@@ -29,8 +26,7 @@ public class FieldMarshaller2 extends FieldMarshaller1 {
     }
     
     public void defrag(ClassMetadata classMetadata, ClassAspect aspect, LatinStringIO sio,
-        final DefragmentContextImpl context)
-        throws CorruptionException, IOException {
+        final DefragmentContextImpl context){
         context.readByte();
         super.defrag(classMetadata, aspect, sio, context);
     }

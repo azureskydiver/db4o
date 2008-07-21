@@ -2,9 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import java.io.IOException;
-
-import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
@@ -106,7 +103,7 @@ public class FieldMarshaller0 extends AbstractFieldMarshaller {
 
 
 	public void defrag(ClassMetadata classMetadata, ClassAspect aspect, LatinStringIO sio,
-        DefragmentContextImpl context) throws CorruptionException, IOException {
+        DefragmentContextImpl context) {
         context.incrementStringOffset(sio);
         if (!(aspect instanceof FieldMetadata)) {
             return;

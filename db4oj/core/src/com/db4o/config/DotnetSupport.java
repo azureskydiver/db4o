@@ -2,16 +2,12 @@
 package com.db4o.config;
 
 import com.db4o.*;
-import com.db4o.foundation.ChainedRuntimeException;
-import com.db4o.foundation.Collection4;
-import com.db4o.foundation.List4;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.ClassInfo;
-import com.db4o.internal.cs.FieldInfo;
-import com.db4o.internal.cs.messages.MUserMessage;
+import com.db4o.internal.cs.*;
+import com.db4o.internal.cs.messages.*;
 import com.db4o.internal.handlers.*;
-import com.db4o.query.Candidate;
-import com.db4o.query.Evaluation;
+import com.db4o.query.*;
 
 /**
  * Adds the basic configuration settings required to access a

@@ -2,16 +2,11 @@
 
 package com.db4o.tools;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
+import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.ext.StoredClass;
-import com.db4o.foundation.Tree;
-import com.db4o.foundation.Visitor4;
-import com.db4o.internal.ReflectPlatform;
-import com.db4o.internal.TreeInt;
-import com.db4o.internal.TreeString;
-import com.db4o.internal.TreeStringObject;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
+import com.db4o.internal.*;
 
 /**
  * prints statistics about a database file to System.out.

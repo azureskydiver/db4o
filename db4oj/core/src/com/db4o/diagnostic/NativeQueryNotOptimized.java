@@ -2,7 +2,7 @@
 
 package com.db4o.diagnostic;
 
-import com.db4o.query.Predicate;
+import com.db4o.query.*;
 
 /**
  * Diagnostic, if Native Query can not be run optimized.

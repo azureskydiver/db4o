@@ -2,7 +2,7 @@
 
 package com.db4o.internal;
 
-import com.db4o.ext.Db4oDatabase;
+import com.db4o.ext.*;
 
 /**
  * @exclude

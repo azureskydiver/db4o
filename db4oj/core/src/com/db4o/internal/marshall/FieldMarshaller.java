@@ -2,9 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import java.io.IOException;
-
-import com.db4o.*;
 import com.db4o.internal.*;
 
 
@@ -21,6 +18,6 @@ public interface FieldMarshaller {
 
     int marshalledLength(ObjectContainerBase stream, ClassAspect aspect);
 
-	void defrag(ClassMetadata classMetadata, ClassAspect aspect, LatinStringIO sio,DefragmentContextImpl context) throws CorruptionException, IOException;
+	void defrag(ClassMetadata classMetadata, ClassAspect aspect, LatinStringIO sio,DefragmentContextImpl context) ;
 
 }

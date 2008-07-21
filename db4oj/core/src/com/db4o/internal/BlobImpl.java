@@ -8,7 +8,7 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
-import com.db4o.internal.activation.FixedActivationDepth;
+import com.db4o.internal.activation.*;
 import com.db4o.types.*;
 
 /**

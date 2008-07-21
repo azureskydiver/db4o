@@ -2,7 +2,7 @@
 
 package com.db4o.internal;
 
-import java.io.IOException;
+import java.io.*;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
@@ -195,16 +195,16 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 		return _services;
 	}
 
-	public static void processCopy(DefragmentServices services, int sourceID,SlotCopyHandler command) throws CorruptionException, IOException {
+	public static void processCopy(DefragmentServices services, int sourceID,SlotCopyHandler command)  {
 		processCopy(services, sourceID, command, false);
 	}
 
-	public static void processCopy(DefragmentServices context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping) throws CorruptionException, IOException {
+	public static void processCopy(DefragmentServices context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping) {
 		ByteArrayBuffer sourceReader = context.sourceBufferByID(sourceID);
 		processCopy(context, sourceID, command, registerAddressMapping, sourceReader);
 	}
 
-	public static void processCopy(DefragmentServices services, int sourceID,SlotCopyHandler command,boolean registerAddressMapping, ByteArrayBuffer sourceReader) throws CorruptionException, IOException {
+	public static void processCopy(DefragmentServices services, int sourceID,SlotCopyHandler command,boolean registerAddressMapping, ByteArrayBuffer sourceReader) {
 		int targetID=services.mappedID(sourceID);
 	
 		Slot targetSlot = services.allocateTargetSlot(sourceReader.length());

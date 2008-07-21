@@ -4,7 +4,7 @@ package com.db4o.internal.freespace;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.slots.Slot;
+import com.db4o.internal.slots.*;
 
 /**
  * Old freespacemanager, before version 7.0.

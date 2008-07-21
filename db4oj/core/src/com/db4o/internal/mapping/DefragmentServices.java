@@ -2,7 +2,7 @@
 
 package com.db4o.internal.mapping;
 
-import java.io.IOException;
+import java.io.*;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -19,7 +19,7 @@ public interface DefragmentServices extends IDMapping {
 	ByteArrayBuffer sourceBufferByAddress(int address,int length) throws IOException;
 	ByteArrayBuffer targetBufferByAddress(int address,int length) throws IOException;
 
-	ByteArrayBuffer sourceBufferByID(int sourceID) throws IOException;
+	ByteArrayBuffer sourceBufferByID(int sourceID) ;
 
 	Slot allocateTargetSlot(int targetLength);
 

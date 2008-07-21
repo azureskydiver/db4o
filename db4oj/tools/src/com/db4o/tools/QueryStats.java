@@ -1,13 +1,9 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.tools;
 
-import com.db4o.ObjectContainer;
-import com.db4o.events.Event4;
-import com.db4o.events.EventArgs;
-import com.db4o.events.EventListener4;
-import com.db4o.events.EventRegistry;
-import com.db4o.events.EventRegistryFactory;
-import com.db4o.foundation.StopWatch;
+import com.db4o.*;
+import com.db4o.events.*;
+import com.db4o.foundation.*;
 
 /**
  * Keeps track of query statistics.

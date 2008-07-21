@@ -2,8 +2,7 @@
 
 package com.db4o.reflect.self;
 
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
+import com.db4o.reflect.*;
 
 public class SelfField implements ReflectField {
 

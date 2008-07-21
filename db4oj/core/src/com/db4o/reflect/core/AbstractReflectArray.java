@@ -2,7 +2,7 @@
 
 package com.db4o.reflect.core;
 
-import java.lang.reflect.Array;
+import java.lang.reflect.*;
 
 import com.db4o.reflect.*;
 

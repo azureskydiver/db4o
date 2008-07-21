@@ -2,7 +2,7 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.internal.LocalObjectContainer;
+import com.db4o.internal.*;
 
 public final class MSetSemaphore extends MsgD implements ServerSideMessage {
 	

@@ -2,15 +2,11 @@
 
 package com.db4o.internal;
 
-import com.db4o.Rename;
+import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.ext.Db4oException;
-import com.db4o.foundation.DeepClone;
-import com.db4o.foundation.Hashtable4;
-import com.db4o.foundation.KeySpec;
-import com.db4o.foundation.KeySpecHashtable4;
-import com.db4o.foundation.TernaryBool;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
+import com.db4o.reflect.*;
 
 
 /**

@@ -2,15 +2,14 @@
 
 package com.db4o.config;
 
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 
-import com.db4o.diagnostic.DiagnosticConfiguration;
+import com.db4o.diagnostic.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.io.*;
-import com.db4o.reflect.Reflector;
+import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
 /**
