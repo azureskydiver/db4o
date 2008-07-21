@@ -2,8 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import java.io.IOException;
-
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -129,7 +127,7 @@ public abstract class ClassMarshaller {
         return len.value;
     }
 
-	public void defrag(ClassMetadata classMetadata,LatinStringIO sio,DefragmentContextImpl context, int classIndexID) throws CorruptionException, IOException {
+	public void defrag(final ClassMetadata classMetadata, final LatinStringIO sio, final DefragmentContextImpl context, int classIndexID)  {
 		readName(sio, context.sourceBuffer());
 		readName(sio, context.targetBuffer());
 		
@@ -144,12 +142,14 @@ public abstract class ClassMarshaller {
 		// field length
 		int numFields = context.readInt();
 		
-		ClassAspect[] fields=classMetadata._aspects;
-		if(numFields > fields.length) {
+		if(numFields > classMetadata.declaredAspectCount()) {
 			throw new IllegalStateException();
 		}
-		for(int fieldIdx=0;fieldIdx<numFields;fieldIdx++) {
-			_family._field.defrag(classMetadata,fields[fieldIdx],sio,context);
-		}
+		classMetadata.forEachDeclaredAspect(new Procedure4() {
+			public void apply(Object arg) {
+				ClassAspect aspect = (ClassAspect) arg;
+				_family._field.defrag(classMetadata,aspect,sio,context);
+			}
+		});
 	}
 }

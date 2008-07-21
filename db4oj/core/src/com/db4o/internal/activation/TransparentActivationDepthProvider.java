@@ -1,6 +1,6 @@
 package com.db4o.internal.activation;
 
-import com.db4o.internal.ClassMetadata;
+import com.db4o.internal.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.ta.*;
 

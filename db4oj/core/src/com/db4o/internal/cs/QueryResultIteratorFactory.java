@@ -2,8 +2,8 @@
 
 package com.db4o.internal.cs;
 
-import com.db4o.foundation.Iterator4;
-import com.db4o.internal.query.result.AbstractQueryResult;
+import com.db4o.foundation.*;
+import com.db4o.internal.query.result.*;
 
 public interface QueryResultIteratorFactory {
 	

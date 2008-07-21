@@ -2,12 +2,9 @@
 
 package com.db4o.internal.cs;
 
-import com.db4o.foundation.Hashtable4;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.generic.GenericClass;
-import com.db4o.reflect.generic.GenericField;
-import com.db4o.reflect.generic.GenericReflector;
+import com.db4o.foundation.*;
+import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 
 public class ClassInfoHelper {
 

@@ -2,9 +2,9 @@
 
 package com.db4o.internal.marshall;
 
-import java.util.Date;
+import java.util.*;
 
-import com.db4o.Deploy;
+import com.db4o.*;
 import com.db4o.internal.*;
 
 

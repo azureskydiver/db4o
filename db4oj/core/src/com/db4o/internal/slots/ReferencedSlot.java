@@ -2,7 +2,7 @@
 
 package com.db4o.internal.slots;
 
-import com.db4o.foundation.Tree;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 /**

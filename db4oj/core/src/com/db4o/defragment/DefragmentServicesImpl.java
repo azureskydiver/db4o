@@ -260,7 +260,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		_targetDb.systemData().classCollectionID(newClassCollectionID);
 	}
 
-	public ByteArrayBuffer sourceBufferByID(int sourceID) throws IOException {
+	public ByteArrayBuffer sourceBufferByID(int sourceID)  {
 		return bufferByID(SOURCEDB,sourceID);
 	}
 	

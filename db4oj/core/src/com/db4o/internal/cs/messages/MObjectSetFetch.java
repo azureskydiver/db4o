@@ -2,7 +2,7 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.foundation.IntIterator4;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 

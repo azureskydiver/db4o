@@ -5,7 +5,7 @@ package com.db4o.internal.cs.messages;
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.*;
-import com.db4o.reflect.generic.GenericClass;
+import com.db4o.reflect.generic.*;
 
 public class MClassMeta extends MsgObject implements ServerSideMessage {
 	public boolean processAtServer() {

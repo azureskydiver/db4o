@@ -2,7 +2,7 @@
 
 package com.db4o.config;
 
-import com.db4o.foundation.ArgumentNullException;
+import com.db4o.foundation.*;
 
 /**
  * Wildcard Alias functionality to create aliases for packages, 

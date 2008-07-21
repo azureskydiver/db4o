@@ -2,7 +2,7 @@
 
 package com.db4o.internal.replication;
 
-import com.db4o.foundation.Hashtable4;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 /**

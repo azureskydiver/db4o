@@ -6,7 +6,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
-import com.db4o.internal.fieldhandlers.FieldHandler;
+import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;

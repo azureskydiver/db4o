@@ -2,7 +2,7 @@
 
 package com.db4o.events;
 
-import com.db4o.ext.ObjectInfoCollection;
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 
 /**

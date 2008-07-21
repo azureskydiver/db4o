@@ -1,8 +1,7 @@
 package com.db4o.internal.handlers;
 
-import com.db4o.ext.Db4oIOException;
-import com.db4o.foundation.NotImplementedException;
-import com.db4o.foundation.PreparedComparison;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;

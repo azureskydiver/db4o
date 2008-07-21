@@ -2,16 +2,15 @@
 
 package com.db4o.tools;
 
-import java.io.File;
-import java.lang.reflect.Modifier;
+import java.io.*;
+import java.lang.reflect.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ext.StoredClass;
-import com.db4o.foundation.Hashtable4;
-import com.db4o.foundation.io.File4;
-import com.db4o.internal.ReflectPlatform;
-import com.db4o.types.SecondClass;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
+import com.db4o.foundation.io.*;
+import com.db4o.internal.*;
+import com.db4o.types.*;
 
 /**
  * old Deframent source code, now replaced by the built-in functionality in com.db4o.defragment.Defragment.

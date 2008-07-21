@@ -2,8 +2,6 @@
 
 package com.db4o.internal.btree;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -396,42 +394,22 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 		BTreeNode.defragIndex(context, _keyHandler);
 	}
 
-	public void defragBTree(final DefragmentServices services) throws CorruptionException, IOException {
+	public void defragBTree(final DefragmentServices services) {
 		DefragmentContextImpl.processCopy(services,getID(),new SlotCopyHandler() {
-			public void processCopy(DefragmentContextImpl context) throws CorruptionException {
+			public void processCopy(DefragmentContextImpl context) {
 				defragIndex(context);
 			}
 		});
-		final CorruptionException[] corruptx={null};
-		final IOException[] iox={null};
-		try {
-			services.traverseAllIndexSlots(this, new Visitor4() {
-				public void visit(Object obj) {
-					final int id=((Integer)obj).intValue();
-					try {
-						DefragmentContextImpl.processCopy(services, id, new SlotCopyHandler() {
-							public void processCopy(DefragmentContextImpl context) {
-								defragIndexNode(context);
-							}
-						});
-					} catch (CorruptionException e) {
-						corruptx[0]=e;
-						throw new RuntimeException();
-					} catch (IOException e) {
-						iox[0] = e;
-						throw new RuntimeException();
-					}
-				}
-			});
-		} catch (RuntimeException e) {
-			if(corruptx[0]!=null) {
-				throw corruptx[0];
+		services.traverseAllIndexSlots(this, new Visitor4() {
+			public void visit(Object obj) {
+				final int id=((Integer)obj).intValue();
+					DefragmentContextImpl.processCopy(services, id, new SlotCopyHandler() {
+						public void processCopy(DefragmentContextImpl context) {
+							defragIndexNode(context);
+						}
+					});
 			}
-			if(iox[0]!=null) {
-				throw iox[0];
-			}
-			throw e;
-		}
+		});
 	}
 
 	public int compareKeys(Context context, Object key1, Object key2) {

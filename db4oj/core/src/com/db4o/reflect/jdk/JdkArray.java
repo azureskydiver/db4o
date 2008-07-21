@@ -5,7 +5,7 @@ package com.db4o.reflect.jdk;
 import java.lang.reflect.*;
 
 import com.db4o.reflect.*;
-import com.db4o.reflect.core.AbstractReflectArray;
+import com.db4o.reflect.core.*;
 
 /**
  * Reflection implementation for Array to map to JDK reflection.

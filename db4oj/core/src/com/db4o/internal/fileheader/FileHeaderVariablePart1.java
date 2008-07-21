@@ -5,7 +5,7 @@ package com.db4o.internal.fileheader;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
-import com.db4o.internal.activation.FixedActivationDepth;
+import com.db4o.internal.activation.*;
 
 
 /**

@@ -3,7 +3,7 @@
 package com.db4o.internal.diagnostic;
 
 import com.db4o.diagnostic.*;
-import com.db4o.diagnostic.DefragmentRecommendation.DefragmentRecommendationReason;
+import com.db4o.diagnostic.DefragmentRecommendation.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;

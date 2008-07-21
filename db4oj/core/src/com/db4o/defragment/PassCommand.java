@@ -2,7 +2,7 @@
 
 package com.db4o.defragment;
 
-import java.io.IOException;
+import java.io.*;
 
 import com.db4o.*;
 import com.db4o.internal.*;

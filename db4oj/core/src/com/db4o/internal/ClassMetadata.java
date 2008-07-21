@@ -2,8 +2,6 @@
 
 package com.db4o.internal;
 
-import java.io.IOException;
-
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
@@ -1803,7 +1801,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	    correctHandlerVersion(context).defragment(context);
 	}
 	
-	public void defragClass(DefragmentContextImpl context, int classIndexID) throws CorruptionException, IOException {
+	public void defragClass(DefragmentContextImpl context, int classIndexID) {
 		MarshallerFamily mf = MarshallerFamily.forConverterVersion(container().converterVersion());
 		mf._class.defrag(this,_container.stringIO(), context, classIndexID);
 	}

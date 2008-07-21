@@ -2,7 +2,7 @@
 
 package com.db4o.ext;
 
-import com.db4o.foundation.Iterable4;
+import com.db4o.foundation.*;
 
 /**
  * Interface to an iterable collection {@link ObjectInfo} objects.<br><br>

@@ -4,9 +4,8 @@ package com.db4o.internal.delete;
 
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.internal.slots.Slot;
-import com.db4o.marshall.Context;
-import com.db4o.marshall.ReadBuffer;
+import com.db4o.internal.slots.*;
+import com.db4o.marshall.*;
 
 
 /**

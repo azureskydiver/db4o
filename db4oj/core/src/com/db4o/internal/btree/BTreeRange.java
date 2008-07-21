@@ -2,7 +2,7 @@
 
 package com.db4o.internal.btree;
 
-import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.*;
 
 
 public interface BTreeRange {

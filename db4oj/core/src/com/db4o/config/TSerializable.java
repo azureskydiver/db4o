@@ -4,9 +4,9 @@ package com.db4o.config;
 
 import java.io.*;
 
-import com.db4o.ObjectContainer;
-import com.db4o.internal.ReflectException;
-import com.db4o.reflect.jdk.JdkReflector;
+import com.db4o.*;
+import com.db4o.internal.*;
+import com.db4o.reflect.jdk.*;
 
 /**
  * @exclude
