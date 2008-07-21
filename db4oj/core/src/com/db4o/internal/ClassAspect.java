@@ -20,8 +20,6 @@ public abstract class ClassAspect {
     
     public abstract String getName();
     
-    public abstract int extendedLength();
-
     public abstract void cascadeActivation(Transaction trans, Object obj, ActivationDepth depth);
     
     public abstract int linkLength();

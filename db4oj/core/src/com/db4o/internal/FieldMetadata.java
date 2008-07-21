@@ -861,12 +861,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return true;
     }
     
-    public int extendedLength() {
-        
-        // TODO Auto-generated method stub
-        return 0;
-    }
-    
     public boolean needsArrayAndPrimitiveInfo(){
         return true;
     }

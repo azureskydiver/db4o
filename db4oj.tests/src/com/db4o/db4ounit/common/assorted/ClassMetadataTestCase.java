@@ -23,13 +23,15 @@ public class ClassMetadataTestCase extends AbstractDb4oTestCase {
 		store(new SubClazz());
 	}
 	
-	public void testFieldIterator() {		
-		Collection4 expectedNames=new Collection4(new ArrayIterator4(new String[]{"_id","_name","_age"}));
-		Iterator4 fieldIter=classMetadataFor(SubClazz.class).fields();
-		while(fieldIter.moveNext()) {
-			FieldMetadata curField=(FieldMetadata)fieldIter.current();
-			Assert.isNotNull(expectedNames.remove(curField.getName()));
-		}
+	public void testForEachField() {		
+		final Collection4 expectedNames=new Collection4(new ArrayIterator4(new String[]{"_id","_name","_age"}));
+		ClassMetadata classMetadata = classMetadataFor(SubClazz.class);
+		classMetadata.forEachField(new Procedure4() {
+			public void apply(Object arg) {
+				FieldMetadata curField=(FieldMetadata)arg;
+				Assert.isNotNull(expectedNames.remove(curField.getName()));
+			}
+		});
 		Assert.isTrue(expectedNames.isEmpty());
 	}
 }

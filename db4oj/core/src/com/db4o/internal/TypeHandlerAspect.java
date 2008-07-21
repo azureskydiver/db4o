@@ -53,14 +53,8 @@ public class TypeHandlerAspect extends ClassAspect {
     	_typeHandler.defragment(context);
     }
 
-    public int extendedLength() {
-        throw new NotImplementedException();
-        // return 0;
-    }
-
     public int linkLength() {
-        throw new NotImplementedException();
-        // return 0;
+        return Const4.ID_LENGTH;
     }
 
     public void marshall(MarshallingContext context, Object obj) {

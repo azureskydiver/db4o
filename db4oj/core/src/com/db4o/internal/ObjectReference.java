@@ -838,8 +838,11 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 			        objToString = obj.toString();
 			    }catch(Exception e){
 			    }
-			    ReflectClass claxx = classMetadata().reflector().forObject(obj);
-			    str += "\n" + claxx.getName() + "\n" + objToString;
+			    if(classMetadata() != null){
+				    ReflectClass claxx = classMetadata().reflector().forObject(obj);
+				    str += "\n" + claxx.getName();
+			    }
+				str += "\n" + objToString;
 		    }
 		    return str;
 	    }catch(Exception e){
