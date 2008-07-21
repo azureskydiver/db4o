@@ -126,7 +126,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public final void addFieldIndices(StatefulBuffer buffer, Slot slot) {
-        if(! defaultObjectHandlerIsUsed()){
+        if(! firstClassObjectHandlerIsUsed()){
             return;
         }
         if(hasClassIndex() || hasVirtualAttributes()){
@@ -137,7 +137,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     // FIXME: This method wants to be removed.
-    private boolean defaultObjectHandlerIsUsed(){
+    private boolean firstClassObjectHandlerIsUsed(){
         return _typeHandler instanceof FirstClassObjectHandler;
     }
     
@@ -423,7 +423,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public final void collectIDs(CollectIdContext context, String fieldName) {
-        if(! defaultObjectHandlerIsUsed()){
+        if(! firstClassObjectHandlerIsUsed()){
             throw new IllegalStateException();
         }
         ((FirstClassObjectHandler)correctHandlerVersion(context)).collectIDs(context, fieldName);
@@ -431,6 +431,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public void collectIDs(final QueryingReadContext context) {
+        if(! firstClassObjectHandlerIsUsed()){
+            throw new IllegalStateException();
+        }
         TypeHandler4 typeHandler = correctHandlerVersion(context);
         if(typeHandler instanceof FirstClassHandler){
         	((FirstClassHandler)typeHandler).collectIDs(context);	
@@ -647,57 +650,18 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	return _eventDispatcher.hasEventRegistered(eventID);
     }
     
-    public final int fieldCount(){
-        int count = _aspects.length;
-        
+    public final int declaredAspectCount(){
+    	return _aspects.length;
+    }
+    
+    public final int aspectCount(){
+        int count = declaredAspectCount();
         if(i_ancestor != null){
-            count += i_ancestor.fieldCount();
+            count += i_ancestor.aspectCount();
         }
-        
         return count;
     }
     
-	private static class FieldMetadataIterator implements Iterator4 {
-    	private final ClassMetadata _initialClazz;
-    	private ClassMetadata _curClazz;
-    	private int _curIdx;
-    	
-    	public FieldMetadataIterator(ClassMetadata clazz) {
-    		_initialClazz=clazz;
-    		reset();
-    	}
-    	
-		public Object current() {
-			return _curClazz._aspects[_curIdx];
-		}
-
-		public boolean moveNext() {
-			if(_curClazz==null) {
-				_curClazz=_initialClazz;
-				_curIdx=0;
-			} else {
-				_curIdx++;
-			}
-			while(_curClazz!=null&&!indexInRange()) {
-				_curClazz=_curClazz.i_ancestor;
-				_curIdx=0;
-			}
-			return _curClazz!=null&&indexInRange();
-		}
-
-		public void reset() {
-    		_curClazz=null;
-    		_curIdx=-1;
-		}
-
-		private boolean indexInRange() {
-			return _curIdx<_curClazz._aspects.length;
-		}
-	}
-    
-	public Iterator4 fields() {
-		return new FieldMetadataIterator(this);
-	}
 
     // Scrolls offset in passed reader to the offset the passed field should
     // be read at.
@@ -705,7 +669,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if (buffer == null) {
             return HandlerVersion.INVALID;
         }
-        if(! defaultObjectHandlerIsUsed()){
+        if(! firstClassObjectHandlerIsUsed()){
             return HandlerVersion.INVALID;
         }
         buffer.seek(0);
@@ -826,7 +790,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if(! _classIndexed){
             return false;
         }
-        return defaultObjectHandlerIsUsed() || ! (_typeHandler instanceof EmbeddedTypeHandler); 
+        return firstClassObjectHandlerIsUsed() || ! (_typeHandler instanceof EmbeddedTypeHandler); 
     }
     
     private boolean ancestorHasUUIDField(){

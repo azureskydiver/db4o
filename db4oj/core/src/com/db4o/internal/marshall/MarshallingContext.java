@@ -58,7 +58,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     }
 
     private int fieldCount() {
-        return classMetadata().fieldCount();
+        return classMetadata().aspectCount();
     }
 
     public ClassMetadata classMetadata() {

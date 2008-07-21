@@ -345,14 +345,14 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
                     // TODO: Code is similar to FieldMetadata.collectIDs. Try to refactor to one place.
                     int collectionID = buffer.readInt();
                     ByteArrayBuffer arrayElementBuffer = container().readReaderByID(transaction(), collectionID);
-                    ObjectHeader.scrollBufferToContent(container(), arrayElementBuffer);
-                    
+                    ObjectHeader objectHeader = ObjectHeader.scrollBufferToContent(container(), arrayElementBuffer);
                     context = new QueryingReadContext(transaction(), candidates, _handlerVersion, arrayElementBuffer, collectionID);
+                    objectHeader.classMetadata().collectIDs(context);
+                    
                 }else{
-                    context = new QueryingReadContext(transaction(), candidates, _handlerVersion, buffer, 0);                    
+                    context = new QueryingReadContext(transaction(), candidates, _handlerVersion, buffer, 0);
+                    ((FirstClassHandler)arrayElementHandler).collectIDs(context);
                 }
-                
-                ((FirstClassHandler)arrayElementHandler).collectIDs(context);
                 
                 Tree.traverse(context.ids(), new Visitor4() {
                     public void visit(Object obj) {
