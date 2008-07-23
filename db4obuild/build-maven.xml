@@ -1,0 +1,120 @@
+<project name="db4o-loader" xmlns:artifact="urn:maven-artifact-ant">
+
+	<import file="common.xml" />	
+	<property name="tmpDir" location="tmpPoms"/>
+
+	<path id="maven-ant-tasks.classpath" path="maven/lib/maven-ant-tasks-2.0.9.jar" />
+	
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant" classpathref="maven-ant-tasks.classpath" />
+
+	<!-- ================================= 
+          The maven build requires the following values to be filled in machine.properties
+			maven.repository.releases.url=<repository url>
+			the following protocols are supported:
+			http, scp, dav:http, ftp and there are several extentions for other protocols
+			e.g. dav:http://10.10.3.108:8080/archiva/repository/third-party
+			maven.repository.releases.username=<username for the url>
+			maven.repository.releases.password=<password for the url>
+			maven.repository.snapshots.url=<repository url for snapshots>
+			maven.repository.snapshots.username=<username for the url>
+			maven.repository.snapshots.password=<password for the url>
+         ================================= -->
+	<artifact:remoteRepository id="db4o.releases" url="${maven.repository.releases.url}">
+		<authentication username="${maven.repository.releases.username}" password="${maven.repository.releases.password}" />
+	</artifact:remoteRepository>
+
+	<artifact:remoteRepository id="db4o.snapshots" url="${maven.repository.snapshots.url}">
+		<authentication username="${maven.repository.snapshots.username}" password="${maven.repository.snapshots.password}" />
+	</artifact:remoteRepository>
+
+	<!-- necessary for uploading artifacts via webdav -->	
+	<artifact:install-provider artifactId="wagon-webdav" version="1.0-beta-2" />
+
+	<!-- ================================= 
+          target: deploy-maven-release              
+         ================================= -->
+    <target name="deploy-maven-release" description="Deploy the current db4o version into the release repository" depends="properties">
+    	<property name="versionName" value="${db4o.version.iteration.revision}"/>
+    	<property name="repositoryId" value="db4o.releases"/>
+    	
+    	<antcall target="deploy-maven" inheritall="true"/>
+    </target>
+	
+	<!-- ================================= 
+          target: deploy-maven-snapshot        
+         ================================= -->
+    <target name="deploy-maven-snapshot" description="Deploy the current db4o version into the release repository" depends="properties">
+    	<property name="versionName" value="${db4o.version.dotted}-SNAPSHOT"/>
+    	<property name="repositoryId" value="db4o.snapshots"/>
+
+    	<antcall target="deploy-maven">
+    	</antcall>
+    </target>	
+	
+	<!-- ================================= 
+          target: deploy-maven              
+         ================================= -->
+	<target name="deploy-maven">
+		
+		<copy todir="${tmpDir}/poms" overwrite="true">
+			<fileset dir="maven/poms" />
+		</copy>
+		
+		<replace dir="${tmpDir}/poms" token="@VERSION@" value="${versionName}" />
+		
+		<artifact:deploy file="${file.bloat.jar}">			
+			<remoteRepository refid="${repositoryId}"/>
+			<pom file="${tmpDir}/poms/bloat.xml" />
+			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
+		</artifact:deploy>	
+		
+		<artifact:deploy file="${file.instrumentation.jar}">
+			<remoteRepository refid="${repositoryId}"/>
+			<pom file="${tmpDir}/poms/db4o-instrumentation.xml" />
+			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
+		</artifact:deploy>
+		
+		<artifact:deploy file="${file.java1.1.jar}">
+			<remoteRepository refid="${repositoryId}"/>
+			<pom file="${tmpDir}/poms/db4o-java1.1.xml" />
+			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
+		</artifact:deploy>
+		
+		<artifact:deploy file="${file.java1.2.jar}">
+			<remoteRepository refid="${repositoryId}"/>
+			<pom file="${tmpDir}/poms/db4o-java1.2.xml" />
+			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
+		</artifact:deploy>
+		
+		<artifact:deploy file="${file.java5.jar}">
+			<remoteRepository refid="${repositoryId}"/>
+			<pom file="${tmpDir}/poms/db4o-java5.xml" />		
+			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
+		</artifact:deploy>
+		
+		<artifact:deploy file="${file.nqopt.jar}">
+			<remoteRepository refid="${repositoryId}"/>
+			<pom file="${tmpDir}/poms/db4o-nqopt.xml" />
+			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
+		</artifact:deploy>	
+		<artifact:deploy file="${file.osgi.jar}">
+			<remoteRepository refid="${repositoryId}"/>
+			<pom file="${tmpDir}/poms/db4o-osgi.xml" />
+			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
+		</artifact:deploy>		
+		<artifact:deploy file="${file.taj.jar}">
+			<remoteRepository refid="${repositoryId}"/>
+			<pom file="${tmpDir}/poms/db4o-taj.xml" />
+			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
+		</artifact:deploy>
+		
+		<artifact:deploy file="${file.db4otools.jar}">
+			<remoteRepository refid="${repositoryId}"/>
+			<pom file="${tmpDir}/poms/db4o-tools.xml" />
+			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
+		</artifact:deploy>
+		
+		<delete dir="${tmpDir}" />
+	</target>
+
+</project>
