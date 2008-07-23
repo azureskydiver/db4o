@@ -26,11 +26,28 @@
 	java.vmargs=<OPTIONAL: java VM args for test suites>
 	sharpen.core.dir=<OPTIONAL: if you keep sharpen in a different location>
 	
+
+ 	##################################
+ 	#          Maven Support         # 
+    ##################################
+    
+	maven.repository.releases.url=<repository url>
+
+	#the following protocols are supported:
+	#http, scp, dav:http, ftp and there are several extentions for other protocols
+	#e.g. dav:http://10.10.3.108:8080/archiva/repository/third-party
+	maven.repository.releases.username=<username for the url>
+	maven.repository.releases.password=<password for the url>
+	maven.repository.snapshots.url=<repository url for snapshots>
+	maven.repository.snapshots.username=<username for the url>
+	maven.repository.snapshots.password=<password for the url>	
+	
 	If the java executable on your path is JDK>=1.6 you have to specify file.jvm.jdk1.1 to point to a JDK<=5,
 	otherwise you may experience failures running the java1.1 test suite.
 	
 	The path to this file can be specified via property "path.machine.properties", as in
 	ant -Dpath.machine.properties=machine.properties.win build-before-checkin
+	
 	
 	An example:
 	dir.workspace=C:/_db4o/production
@@ -294,6 +311,14 @@
 		<ant antfile="build-java.xml" target="package.java" />
 	</target>
 
+	<target name="deploy-maven-release" description="Deploys the current version in the release repository">
+		<ant antfile="build-maven.xml" target="deploy-maven-release" />
+	</target>
+	
+	<target name="deploy-maven-snapshot" description="Deploys the current version in the snapshot repository">
+		<ant antfile="build-maven.xml" target="deploy-maven-snapshot" />
+	</target>		
+	
 	<target name="buildnet" depends="init">
 		<ant antfile="build-java.xml" target="doctor"/>
 		<ant antfile="build-dotnet.xml" target="package" >
