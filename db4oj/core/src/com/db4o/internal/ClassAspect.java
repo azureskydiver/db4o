@@ -13,8 +13,8 @@ import com.db4o.marshall.*;
  */
 public abstract class ClassAspect {
     
-    //  position in ClassMetadata i_fields
-    protected int              _arrayPosition;
+    // used for identification when sending in C/S mode 
+	protected int              _handle;
     
     private int _disabledFromAspectCountVersion = AspectVersionContextImpl.ALWAYS_ENABLED.aspectCount();
     
@@ -36,8 +36,8 @@ public abstract class ClassAspect {
 
     public abstract void collectIDs(CollectIdContext context);
     
-    public void setArrayPosition(int a_index) {
-        _arrayPosition = a_index;
+    public void setHandle(int handle) {
+        _handle = handle;
     }
 
     public abstract void instantiate(UnmarshallingContext context);

@@ -73,6 +73,7 @@ public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements D
 	    public void testActivation(){
 	        Object item = retrieveItemInstance();
 	        List list = listFromItem(item);
+	        Assert.areEqual(expectedElementCount(), list.size());
 	        Object element = list.get(0);
 	        if(db().isActive(element)){
 	            db().deactivate(item, Integer.MAX_VALUE);
@@ -81,7 +82,6 @@ public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements D
 	            Assert.isTrue(db().isActive(element));
 	        }
 	    }
-	    
 		
 	}
 

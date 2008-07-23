@@ -44,6 +44,10 @@ public abstract class TypeHandlerTestUnitBase extends AbstractDb4oTestCase imple
         fillItem(item);
         store(item);
     }
+	
+	protected int expectedElementCount(){
+		return elements().length + 1;
+	}
 
 	protected Object[] elements() {
 		return elementsSpec()._elements;
@@ -126,7 +130,7 @@ public abstract class TypeHandlerTestUnitBase extends AbstractDb4oTestCase imple
 	protected void assertListContent(Object item) {
 		List list = listFromItem(item);
 		Assert.areEqual(itemFactory().containerClass(), list.getClass());
-		Assert.areEqual(elements().length + 1, list.size());
+		Assert.areEqual(expectedElementCount(), list.size());
 		for (int eltIdx = 0; eltIdx < elements().length; eltIdx++) {
 	        Assert.areEqual(elements()[eltIdx], list.get(eltIdx));
 		}
