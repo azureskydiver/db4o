@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<project name="omj" default="build">
+	
+	<import file="common.xml" />
+	
+	<property name="dir.project.ome.core" location="${dir.workspace}/com.db4o.ome" />
+	<property name="dir.project.ome.help" location="${dir.workspace}/com.db4o.ome.help" />
+	<property name="dir.dist.ome" location="${dir.dist}/ome/java" />
+	
+	<macrodef name="build-plugin">
+		
+		<attribute name="name" />
+		<attribute name="basedir" />
+		<attribute name="destdir" default="${dir.dist.classes}/@{name}" />
+		
+		<element name="additionalclasspath" optional="true" />
+		
+		<sequential>
+			<mkdir dir="@{destdir}" />
+			
+			<javac fork="true"
+				debug="true"
+				target="1.5"
+				source="1.5"
+				destdir="@{destdir}"
+				srcdir="@{basedir}/src"
+				encoding="UTF-8">
+				<classpath>
+					<fileset dir="${eclipse.home}/plugins">
+						<include name="org.eclipse.osgi_*/osgi.jar" />
+						<include name="org.eclipse.core.resources_*/resources.jar" />
+						<include name="org.eclipse.core.runtime_*/runtime.jar" />
+						<include name="org.eclipse.jdt.core_*/jdtcore.jar" />
+						<!-- redundant entries: in newer eclipse installs those reside in jars -->
+						<include name="org.eclipse.osgi_*.jar" />
+						<include name="org.eclipse.core.resources_*.jar" />
+						<include name="org.eclipse.core.runtime_*.jar" />
+						<include name="org.eclipse.jdt.core_*.jar" />
+						<include name="org.eclipse.jdt.launching_*.jar" />
+						<include name="org.eclipse.equinox.*.jar" />
+						<include name="org.eclipse.core.jobs_*.jar" />
+						<include name="org.eclipse.ui_*.jar" />
+						<include name="org.eclipse.swt_*.jar" />
+						<include name="org.eclipse.jface_*.jar" />
+						<include name="org.eclipse.core.commands_*.jar" />
+						<include name="org.eclipse.ui.workbench_*.jar" />
+						
+					</fileset>
+					
+					<pathelement location="${file.java5.jar}" />
+					
+					<additionalclasspath />
+				</classpath>
+			</javac>
+			
+			<property name="plugin.dir" value="${dir.dist.ome}/@{name}_1.0.0" />
+			<reset-dir dir="${plugin.dir}" />
+			<jar destfile="${plugin.dir}/@{name}.jar" basedir="@{destdir}" />
+			<copy todir="${plugin.dir}" file="@{basedir}/plugin.xml" />
+		
+		</sequential>
+	</macrodef>
+
+	<target name="build" depends="init">
+		
+		<build-plugin name="com.db4o.ome" basedir="${dir.project.ome.core}">
+			<additionalclasspath>
+				<fileset dir="${dir.project.ome.core}/lib">
+					<include name="**/*.jar" />
+				</fileset>
+			</additionalclasspath>
+		</build-plugin>
+		<build-plugin name="com.db4o.ome.help" basedir="${dir.project.ome.help}" />
+		
+	</target>
+	
+	<target name="init" depends="properties">
+	</target>
+	
+	<target name="clean">
+		<reset-dir dir="${dir.dist.ome}" />
+		<reset-dir dir="${dir.dist.classes}" />
+	</target>
+</project>
