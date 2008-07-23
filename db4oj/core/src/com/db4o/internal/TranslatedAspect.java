@@ -22,7 +22,7 @@ final class TranslatedAspect extends FieldMetadata
         return false;
     }
 
-	void deactivate(Transaction trans, Object onObject, ActivationDepth depth){
+	public void deactivate(Transaction trans, Object onObject, ActivationDepth depth){
 		if(depth.requiresActivation()){
 			cascadeActivation(trans, onObject, depth);
 		}

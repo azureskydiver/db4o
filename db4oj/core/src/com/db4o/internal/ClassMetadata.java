@@ -62,8 +62,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     private TranslatedAspect _translator;
     
-    private TypeHandler4 _customTypeHandler;
-    
     public final ObjectContainerBase stream() {
     	return _container;
     }
@@ -144,6 +142,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
 		boolean dirty = isDirty();
 
+		boolean typeHandlerInstalled = false;
 		boolean translatorInstalled = false;
 		boolean aspectListModified = false;
 
@@ -180,24 +179,30 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			}
 		}
 
-		_customTypeHandler = container.handlers().registerTypeHandlerVersions(
+	    TypeHandler4 customTypeHandler = container.handlers().registerTypeHandlerVersions(
 				this, classReflector());
-		if (_customTypeHandler != null) {
+		if (customTypeHandler != null) {
 			TypeHandlerAspect typeHandlerAspect = new TypeHandlerAspect(
-					_customTypeHandler);
+					customTypeHandler);
 			if (!replaceAspectByName(aspects, typeHandlerAspect)) {
 				aspects.add(typeHandlerAspect);
 				dirty = true;
 			}
-			aspectListModified = true;
-			if(_customTypeHandler instanceof EmbeddedTypeHandler){
-				_typeHandler = _customTypeHandler;
+			if(customTypeHandler instanceof EmbeddedTypeHandler){
+				_typeHandler = customTypeHandler;
 			}
+			aspectListModified = true;
+			typeHandlerInstalled = true;
+			
+			if(translatorInstalled){
+				_translator.disableFromAspectCountVersion(aspects.size());
+			}
+
 		}
 
 		if (container.detectSchemaChanges()) {
 
-			if (!translatorInstalled) {
+			if (!translatorInstalled  && !typeHandlerInstalled) {
 				dirty = collectReflectFields(container, aspects) | dirty;
 			}
 
@@ -541,9 +546,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
     void deactivateFields(final Transaction trans, final Object obj, final ActivationDepth depth) {
-        forEachField(new Procedure4() {
+        forEachAspect(new Procedure4() {
             public void apply(Object arg) {
-                ((FieldMetadata)arg).deactivate(trans, obj, depth);
+                ClassAspect classAspect = (ClassAspect)arg;
+                if(classAspect.enabled(AspectVersionContextImpl.CHECK_ALWAYS_ENABLED)){
+                	classAspect.deactivate(trans, obj, depth);
+                }
             }
         });
     }
@@ -649,6 +657,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public final int declaredAspectCount(){
+    	if(_aspects == null){
+    		return 0;
+    	}
     	return _aspects.length;
     }
     
@@ -1942,5 +1953,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             procedure.apply(_aspects[i]);
         }
     }
-
+    
+    public boolean aspectsAreNull(){
+    	return _aspects == null;
+    }
+    
 }

@@ -11,7 +11,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class QueryingReadContext extends AbstractReadContext implements HandlerVersionContext{
+public class QueryingReadContext extends AbstractReadContext implements HandlerVersionContext, AspectVersionContext{
     
     private final QCandidates _candidates;
     
@@ -20,6 +20,9 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
     private final int _handlerVersion;
     
     private IdObjectCollector _collector;
+    
+	private int _aspectCount;
+
     
     private QueryingReadContext(Transaction transaction, QCandidates candidates, int handlerVersion, ReadBuffer buffer, int collectionID, IdObjectCollector collector) {
         super(transaction, buffer);
@@ -112,5 +115,13 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
     public Iterator4 objectsWithoutId(){
         return _collector.objects();
     }
+    
+	public int aspectCount() {
+		return _aspectCount;
+	}
+
+	public void aspectCount(int count) {
+		_aspectCount = count;
+	}
     
 }

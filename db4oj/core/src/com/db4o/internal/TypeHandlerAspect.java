@@ -77,4 +77,8 @@ public class TypeHandlerAspect extends ClassAspect {
 		_typeHandler.delete(context);
 	}
 
+	public void deactivate(Transaction trans, Object obj, ActivationDepth depth) {
+		cascadeActivation(trans, obj, depth);
+	}
+
 }

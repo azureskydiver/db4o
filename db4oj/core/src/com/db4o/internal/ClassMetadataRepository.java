@@ -227,7 +227,7 @@ public final class ClassMetadataRepository extends PersistentBase {
             addMembers = true;
         }
         
-        if(addMembers || classMetadata._aspects == null){
+        if(addMembers || classMetadata.aspectsAreNull()){
 			_classInits.process(classMetadata);
         }
         

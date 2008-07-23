@@ -23,7 +23,7 @@ public abstract class ClassMarshaller {
 		return new RawClassSpec(className,ancestorID,numFields);
     }
 
-    public void write(Transaction trans, ClassMetadata clazz, ByteArrayBuffer writer) {
+    public void write(final Transaction trans, final ClassMetadata clazz, final ByteArrayBuffer writer) {
         
         writer.writeShortString(trans, clazz.nameToWrite());
         
@@ -34,16 +34,12 @@ public abstract class ClassMarshaller {
         
         writeIndex(trans, clazz, writer);
         
-        ClassAspect[] fields = clazz._aspects; 
-        
-        if (fields == null) {
-            writer.writeInt(0);
-            return;
-        } 
-        writer.writeInt(fields.length);
-        for (int i = 0; i < fields.length; i++) {
-            _family._field.write(trans, clazz, fields[i], writer);
-        }
+        writer.writeInt(clazz.declaredAspectCount());
+        clazz.forEachDeclaredAspect(new Procedure4() {
+			public void apply(Object arg) {
+				 _family._field.write(trans, clazz, (ClassAspect)arg, writer);
+			}
+		});
     }
 
     protected void writeIndex(Transaction trans, ClassMetadata clazz, ByteArrayBuffer writer) {

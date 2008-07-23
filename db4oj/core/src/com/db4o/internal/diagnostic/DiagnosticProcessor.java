@@ -31,10 +31,9 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
         _listeners.add(listener);
     }
     
-    public void checkClassHasFields(ClassMetadata yc){
-        ClassAspect[] aspects = yc._aspects;
-        if(aspects != null && aspects.length == 0){
-            String name = yc.getName();
+    public void checkClassHasFields(ClassMetadata classMetadata){
+        if( (! classMetadata.aspectsAreNull()) && classMetadata.declaredAspectCount() == 0){
+            String name = classMetadata.getName();
             String[] ignoredPackages = new String[]{
                 "java.util."
             };
@@ -43,7 +42,7 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
                     return;
                 }
             }
-            if(isDb4oClass(yc)){
+            if(isDb4oClass(classMetadata)){
                 return;
             }
             onDiagnostic(new ClassHasNoFields(name));

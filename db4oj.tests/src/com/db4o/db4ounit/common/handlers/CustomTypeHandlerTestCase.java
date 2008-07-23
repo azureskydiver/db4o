@@ -27,12 +27,9 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
         new CustomTypeHandlerTestCase().runSolo();
     }
     
-    private static boolean prepareComparisonCalled;
-    
     private final class CustomItemTypeHandler implements TypeHandler4, VariableLengthTypeHandler {
 
         public PreparedComparison prepareComparison(Context context, Object obj) {
-            prepareComparisonCalled = true;
             return new PreparedComparison() {
                 public int compareTo(Object obj) {
                     return 0;
@@ -42,7 +39,6 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
 
         public void write(WriteContext context, Object obj) {
             Item item = (Item)obj;
-            assertCurrentSlot(context, item);
             if(item.numbers == null){
                 context.writeInt(-1);
                 return;
@@ -55,9 +51,6 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
 
         public Object read(ReadContext context) {
             Item item = (Item)((UnmarshallingContext) context).persistentObject();
-            
-            assertCurrentSlot(context, item);
-            
             int elementCount = context.readInt();
             if(elementCount == -1){
                 return item;
@@ -82,7 +75,6 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
     private final class CustomItemGrandChildTypeHandler implements TypeHandler4, VariableLengthTypeHandler {
 
         public PreparedComparison prepareComparison(Context context, Object obj) {
-            prepareComparisonCalled = true;
             return new PreparedComparison() {
                 public int compareTo(Object obj) {
                     return 0;
@@ -227,13 +219,6 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
         store(storedItemGrandChild());
     }
     
-    public void testConfiguration(){
-        ClassMetadata classMetadata = stream().classMetadataForReflectClass(itemClass());
-        prepareComparisonCalled = false;
-        classMetadata.prepareComparison(stream().transaction().context(), null);
-        Assert.isTrue(prepareComparisonCalled);
-    }
-    
     public void testRetrieveOnlyInstance(){
         Assert.areEqual(storedItem(), retrieveItemOfClass(Item.class));
     }
@@ -266,17 +251,6 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
     
     ReflectClass itemClass(){
         return reflector().forClass(Item.class);
-    }
-    
-    static void assertCurrentSlot(Object context, Item item) {
-        int expectedSlot = 0;
-        if(item instanceof ItemChild){
-            expectedSlot = 1;
-        }
-        if(item instanceof ItemGrandChild){
-            expectedSlot = 1;
-        }
-        assertCurrentSlot(context, expectedSlot);
     }
     
     static void assertCurrentSlot(Object context, int expectedSlot) {
