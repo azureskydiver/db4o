@@ -94,12 +94,16 @@ public class EmbeddedListTypeHandler implements TypeHandler4 , FirstClassHandler
             return;
         }
         TypeHandler4 handler = elementTypeHandler(context, null);
-        context.readInt(); // class ID
+        skipClass(context);
         int elementCount = context.readInt();
         for (int i = elementCount; i > 0; i--) {
             handler.delete(context);
         }
     }
+
+	private void skipClass(final ReadBuffer context) {
+		context.readInt(); // class ID
+	}
 
     public void defragment(DefragmentContext context) {
         context.copyID();
@@ -122,6 +126,7 @@ public class EmbeddedListTypeHandler implements TypeHandler4 , FirstClassHandler
     }
     
     public void collectIDs(final QueryingReadContext context) {
+    	skipClass(context);
         int elementCount = context.readInt();
         TypeHandler4 elementHandler = context.container().handlers().untypedObjectHandler();
         for (int i = 0; i < elementCount; i++) {

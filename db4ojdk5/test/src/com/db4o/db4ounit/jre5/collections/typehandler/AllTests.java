@@ -7,21 +7,20 @@ import db4ounit.extensions.*;
 public class AllTests extends Db4oTestSuite {
     
     public static void main(String[] arguments) {
-        new AllTests().runClientServer();
+        new AllTests().runSolo();
     }
     
     protected Class[] testCases() {
         return 
             new Class[] {
-            
-//	        ListTypeHandlerCascadedDeleteTestCase.class,
-//	        ListTypeHandlerPersistedCountTestCase.class,
-//			ListTypeHandlerTestSuite.class,
-//			ListTypeHandlerGreaterSmallerTestSuite.class,
-//			ListTypeHandlerStringElementTestSuite.class,
-//			MapTypeHandlerTestSuite.class,
-//			NamedArrayListTypeHandlerTestCase.class,
-            
+		        ListTypeHandlerCascadedDeleteTestCase.class,
+		        ListTypeHandlerPersistedCountTestCase.class,
+				ListTypeHandlerTestSuite.class,
+				ListTypeHandlerGreaterSmallerTestSuite.class,
+				ListTypeHandlerStringElementTestSuite.class,
+ 				MapTypeHandlerTestSuite.class,
+				NamedArrayListTypeHandlerTestCase.class,
+				SimpleListTestCase.class,
 		};
 	}
 

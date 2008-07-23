@@ -95,7 +95,7 @@ public abstract class ClassMarshaller {
 		final ClassAspect[] aspects = new ClassAspect[fieldCount];
         for (int i = 0; i < aspects.length; i++) {
             aspects[i] = new FieldMetadata(clazz);
-            aspects[i].setArrayPosition(i);
+            aspects[i].setHandle(i);
         }
 		return aspects;
 	}

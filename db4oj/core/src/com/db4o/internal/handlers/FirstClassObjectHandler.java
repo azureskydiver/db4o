@@ -32,7 +32,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
 
     public void defragment(final DefragmentContext context) {
         TraverseAspectCommand command = new TraverseAspectCommand() {
-            public int fieldCount(ClassMetadata classMetadata, ByteArrayBuffer reader) {
+            public int aspectCount(ClassMetadata classMetadata, ByteArrayBuffer reader) {
                 return context.readInt();
             }
             public void processAspect(ClassAspect aspect, boolean isNull, ClassMetadata containingClass) {
@@ -118,7 +118,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
        final Transaction trans = context.transaction();
         TraverseAspectCommand command = new TraverseAspectCommand() {
              
-            public int fieldCount(ClassMetadata classMetadata, ByteArrayBuffer buffer) {
+            public int aspectCount(ClassMetadata classMetadata, ByteArrayBuffer buffer) {
                 int fieldCount = classMetadata._aspects.length;
                 context.fieldCount(fieldCount);
                 return fieldCount;
@@ -180,8 +180,8 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
         
         private boolean _cancelled=false;
         
-        public int fieldCount(ClassMetadata classMetadata, ByteArrayBuffer reader) {
-            return classMetadata.readFieldCount(reader);
+        public int aspectCount(ClassMetadata classMetadata, ByteArrayBuffer reader) {
+            return classMetadata.readAspectCount(reader);
         }
 
         public boolean cancelled() {
@@ -220,7 +220,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
     
     private void traverseDeclaredAspects(MarshallingInfo context, ClassMetadata classMetadata,
         TraverseAspectCommand command) {
-        int fieldCount=command.fieldCount(classMetadata, ((ByteArrayBuffer)context.buffer()));
+        int fieldCount=command.aspectCount(classMetadata, ((ByteArrayBuffer)context.buffer()));
         context.aspectCount(fieldCount);
         for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
             if(command.accept(classMetadata._aspects[i])){

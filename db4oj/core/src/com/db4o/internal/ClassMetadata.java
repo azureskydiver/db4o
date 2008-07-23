@@ -216,7 +216,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			_aspects = new ClassAspect[aspects.size()];
 			aspects.toArray(_aspects);
 			for (int i = 0; i < _aspects.length; i++) {
-				_aspects[i].setArrayPosition(i);
+				_aspects[i].setHandle(i);
 			}
 		}
 
@@ -545,7 +545,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			&& dispatchEvent(transaction, obj, EventDispatcher.CAN_DEACTIVATE);
 	}
 
-    void deactivateFields(final Transaction trans, final Object obj, final ActivationDepth depth) {
+    final void deactivateFields(final Transaction trans, final Object obj, final ActivationDepth depth) {
         forEachAspect(new Procedure4() {
             public void apply(Object arg) {
                 ClassAspect classAspect = (ClassAspect)arg;
@@ -913,7 +913,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     void incrementFieldsOffset1(ByteArrayBuffer a_bytes) {
-        int length = readFieldCount(a_bytes);
+        int length = readAspectCount(a_bytes);
         for (int i = 0; i < length; i++) {
             _aspects[i].incrementOffset(a_bytes);
         }
@@ -1281,7 +1281,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return ObjectID.read(context);
     }
 
-	public final int readFieldCount(ReadBuffer buffer) {
+	public final int readAspectCount(ReadBuffer buffer) {
         int count = buffer.readInt();
         if (count > _aspects.length) {
             if (Debug.atHome) {
@@ -1957,5 +1957,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     public boolean aspectsAreNull(){
     	return _aspects == null;
     }
+
     
 }

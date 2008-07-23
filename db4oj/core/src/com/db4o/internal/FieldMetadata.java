@@ -887,7 +887,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         if(_containingClass != null){
             yapClassID = _containingClass.getID();
         }
-        return new QField(a_trans, _name, this, yapClassID, _arrayPosition);
+        return new QField(a_trans, _name, this, yapClassID, _handle);
     }
 
     public Object read(InternalReadContext context) {

@@ -20,7 +20,7 @@ public class QField implements Visitor4, Unversioned{
 	public String i_name;
 	transient FieldMetadata i_yapField;
 	public int i_yapClassID;
-	public int i_index;
+	public int _fieldHandle;
 	
 	public QField(){
 		// C/S only	
@@ -31,7 +31,7 @@ public class QField implements Visitor4, Unversioned{
 		i_name = name;
 		i_yapField = a_yapField;
 		i_yapClassID = a_yapClassID;
-		i_index = a_index;
+		_fieldHandle = a_index;
 		if(i_yapField != null){
 		    if(! i_yapField.alive()){
 		        i_yapField = null;
@@ -121,7 +121,7 @@ public class QField implements Visitor4, Unversioned{
 	void unmarshall(Transaction a_trans){
 		if(i_yapClassID != 0){
 			ClassMetadata yc = a_trans.container().classMetadataForId(i_yapClassID);
-			i_yapField = (FieldMetadata) yc._aspects[i_index];
+			i_yapField = (FieldMetadata) yc._aspects[_fieldHandle];
 		}
 	}
 	
