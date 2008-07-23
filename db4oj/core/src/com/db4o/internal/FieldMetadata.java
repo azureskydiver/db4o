@@ -456,7 +456,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return Deploy.csharp ? false : _isPrimitive;
     }
 
-    void deactivate(Transaction a_trans, Object a_onObject, ActivationDepth a_depth) {
+    public void deactivate(Transaction a_trans, Object a_onObject, ActivationDepth a_depth) {
         
     	if (!alive()) {
             return;
@@ -679,7 +679,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     public void instantiate(UnmarshallingContext context) {
-        if(! checkAlive(context.buffer())) {
+        if(! checkAlive(context)) {
             return;
         }
         Object toSet = read(context);
@@ -707,10 +707,15 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
     }
     
-    private boolean checkAlive(ReadBuffer buffer){
+    private boolean checkAlive(AspectVersionContext context){
+    	if(! enabled(context)){
+    		incrementOffset((ReadBuffer)context);
+    		return false;
+    	}
+    	
         boolean alive = alive(); 
         if (! alive) {
-            incrementOffset(buffer);
+            incrementOffset((ReadBuffer)context);
         }
         return alive;
     }
@@ -829,6 +834,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
     
     public void marshall(MarshallingContext context, Object obj){
+    	
         // alive needs to be checked by all callers: Done
         int updateDepth = context.updateDepth();
         if (obj != null && cascadeOnUpdate(context.classConfiguration())) {
@@ -885,7 +891,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     public Object read(InternalReadContext context) {
-        if (!checkAlive(context.buffer())) {
+        if (!checkAlive((AspectVersionContext)context)) {
             return null;
         }
         return context.read(_handler);

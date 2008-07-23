@@ -41,9 +41,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                 } 
             }
         };
-        // FIXME: This should be for aspects also, right?
         traverseAllAspects(context, command);
-        
     }
 
     public void delete(DeleteContext context) throws Db4oIOException {
@@ -126,6 +124,10 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                 return fieldCount;
             }
             public void processAspect(ClassAspect aspect, boolean isNull, ClassMetadata containingClass) {
+                if(! aspect.enabled(context)){
+                	context.isNull(context.currentSlot(), true);
+                	return;
+                }
                 Object marshalledObject = obj;
                 if(aspect instanceof FieldMetadata){
                     FieldMetadata field = (FieldMetadata) aspect;
@@ -219,9 +221,13 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
     private void traverseDeclaredAspects(MarshallingInfo context, ClassMetadata classMetadata,
         TraverseAspectCommand command) {
         int fieldCount=command.fieldCount(classMetadata, ((ByteArrayBuffer)context.buffer()));
+        context.aspectCount(fieldCount);
         for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
             if(command.accept(classMetadata._aspects[i])){
-                command.processAspect(classMetadata._aspects[i],isNull(context,context.currentSlot()),classMetadata);
+                command.processAspect(
+                		classMetadata._aspects[i],
+                		isNull(context,context.currentSlot()),
+                		classMetadata);
             }
             context.beginSlot();
         }

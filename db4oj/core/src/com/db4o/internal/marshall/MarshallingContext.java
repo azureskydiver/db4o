@@ -46,6 +46,8 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     
     private Object _currentIndexEntry;
     
+	private int _aspectCount;
+    
 
     public MarshallingContext(Transaction trans, ObjectReference ref, int updateDepth, boolean isNew) {
         _transaction = trans;
@@ -363,5 +365,15 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     public int currentSlot() {
         return _currentSlot;
     }
+    
+	public int aspectCount() {
+		return _aspectCount;
+	}
+
+	public void aspectCount(int count) {
+		_aspectCount = count;
+	}
+    
+
 
 }

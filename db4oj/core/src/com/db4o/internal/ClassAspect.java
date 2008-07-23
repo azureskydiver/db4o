@@ -16,6 +16,8 @@ public abstract class ClassAspect {
     //  position in ClassMetadata i_fields
     protected int              _arrayPosition;
     
+    private int _disabledFromAspectCountVersion = AspectVersionContextImpl.ALWAYS_ENABLED.aspectCount();
+    
     public abstract AspectType aspectType();
     
     public abstract String getName();
@@ -41,6 +43,15 @@ public abstract class ClassAspect {
     public abstract void instantiate(UnmarshallingContext context);
 
 	public abstract void delete(DeleteContextImpl context, boolean isUpdate);
+	
+	public void disableFromAspectCountVersion(int aspectCount) {
+		_disabledFromAspectCountVersion = aspectCount;
+	}
+	
+	public boolean enabled(AspectVersionContext context){
+		return _disabledFromAspectCountVersion  > context.aspectCount();	
+	}
 
+	public abstract void deactivate(Transaction trans, Object obj, ActivationDepth depth);
 
 }

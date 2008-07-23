@@ -60,7 +60,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         
     }
     
-    void deactivate(Transaction a_trans, Object a_onObject, ActivationDepth a_depth) {
+    public void deactivate(Transaction a_trans, Object a_onObject, ActivationDepth a_depth) {
         // do nothing
     }
     

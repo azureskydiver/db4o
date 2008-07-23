@@ -9,7 +9,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public interface MarshallingInfo extends FieldListInfo {
+public interface MarshallingInfo extends FieldListInfo, AspectVersionContext {
 
     public ClassMetadata classMetadata();
 
@@ -18,5 +18,5 @@ public interface MarshallingInfo extends FieldListInfo {
     public int currentSlot();
     
     public void beginSlot();
-
+    
 }
