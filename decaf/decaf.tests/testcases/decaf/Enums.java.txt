@@ -1,0 +1,43 @@
+package decaf;
+
+enum Animal {
+	Cow,
+	Cat,
+	Dog
+}
+
+enum Hero {
+	SuperMan(1938),
+	Batman(1939),
+	BatGirl(1961),
+	BobParr(2004)
+	
+	private final int _year;
+	
+	Hero(int year) {
+		_year = year; 
+	}
+	
+	public int year() {
+		return _year; 
+	}
+}
+
+class TestEnum {
+	public void testSwitch(Hero h) {
+		switch(h) {
+			case Hero.BobParr:
+			case Hero.SuperMan: 
+				System.out.println("SuperMan or Mr. Incredible"); 
+				break;
+				  		
+			case Hero.BatGirl: 
+				System.out.println("BatGirl"); 
+				break;
+			
+			default: 
+				System.out.println(h); 
+				break;  		
+		}
+	}
+}

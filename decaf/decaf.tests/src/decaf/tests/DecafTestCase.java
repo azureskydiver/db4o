@@ -34,4 +34,7 @@ public class DecafTestCase extends DecafTestCaseBase {
 		runResourceTestCase("SameSignatureConstructor");
 	}
 
+	public void testEnums() throws Exception {
+		runResourceTestCase("Enums");
+	}
 }
