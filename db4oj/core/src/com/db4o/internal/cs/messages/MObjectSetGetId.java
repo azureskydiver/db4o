@@ -13,7 +13,10 @@ public class MObjectSetGetId extends MObjectSet implements ServerSideMessage {
 	public boolean processAtServer() {
 		AbstractQueryResult queryResult = queryResult(readInt());		
 		try {
-			int id = queryResult.getId(readInt()); 
+			int id = 0;
+			synchronized (streamLock()) {
+				id = queryResult.getId(readInt());
+			}
 			write(Msg.OBJECTSET_GET_ID.getWriterForInt(transaction(), id));
 		} catch (IndexOutOfBoundsException e) {
 			writeException(e);
