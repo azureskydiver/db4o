@@ -339,7 +339,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			}
 			msg = Msg.ERROR;
 		}
-		if(msg == Msg.ERROR) {	
+		if(msg instanceof MError) {	
 			onMsgError();
 		}
 		return msg;
@@ -789,32 +789,36 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     }
 
     public final void writeBatchedMessages() {
-		if (_batchedMessages.isEmpty()) {
-			return;
-		}
-
-		Msg msg;
-		MsgD multibytes = Msg.WRITE_BATCHED_MESSAGES.getWriterForLength(
-				transaction(), _batchedQueueLength);
-		multibytes.writeInt(_batchedMessages.size());
-		Iterator4 iter = _batchedMessages.iterator();
-		while(iter.moveNext()) {
-			msg = (Msg) iter.current();
-			if (msg == null) {
-				multibytes.writeInt(0);
-			} else {
-				multibytes.writeInt(msg.payLoad().length());
-				multibytes.payLoad().append(msg.payLoad()._buffer);
+    	synchronized(lock()) {
+			if (_batchedMessages.isEmpty()) {
+				return;
 			}
-		}
-		writeMessageToSocket(multibytes);
-		clearBatchedObjects();
+	
+			Msg msg;
+			MsgD multibytes = Msg.WRITE_BATCHED_MESSAGES.getWriterForLength(
+					transaction(), _batchedQueueLength);
+			multibytes.writeInt(_batchedMessages.size());
+			Iterator4 iter = _batchedMessages.iterator();
+			while(iter.moveNext()) {
+				msg = (Msg) iter.current();
+				if (msg == null) {
+					multibytes.writeInt(0);
+				} else {
+					multibytes.writeInt(msg.payLoad().length());
+					multibytes.payLoad().append(msg.payLoad()._buffer);
+				}
+			}
+			writeMessageToSocket(multibytes);
+			clearBatchedObjects();
+    	}
 	}
 
 	public final void addToBatch(Msg msg) {
-		_batchedMessages.add(msg);
-		// the first INT_LENGTH is for buffer.length, and then buffer content.
-		_batchedQueueLength += Const4.INT_LENGTH + msg.payLoad().length();
+		synchronized(lock()) {
+			_batchedMessages.add(msg);
+			// the first INT_LENGTH is for buffer.length, and then buffer content.
+			_batchedQueueLength += Const4.INT_LENGTH + msg.payLoad().length();
+		}
 	}
 
 	private final void clearBatchedObjects() {
@@ -890,4 +894,5 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			}
 		});
 	}
+
 }
