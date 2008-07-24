@@ -3,16 +3,18 @@
 	
 	<import file="common.xml" />
 	
+	<property name="omej.version" value="1.0.4" />
 	<property name="dir.project.ome.core" location="${dir.workspace}/com.db4o.ome" />
 	<property name="dir.project.ome.help" location="${dir.workspace}/com.db4o.ome.help" />
 	<property name="dir.dist.ome" location="${dir.dist}/ome/java" />
 	<property name="dir.dist.ome.classes" location="${dir.dist.ome}/classes" />
 	<property name="dir.dist.ome.jars" location="${dir.dist.ome}/jars" />
+	<property name="dir.dist.ome.temp" location="${dir.dist.ome}/temp" />
+	<property name="file.omej.manifest.tmp" location="${dir.dist.ome.temp}/MANIFEST.MF" />
 	
 	<macrodef name="build-plugin">
 		
 		<attribute name="name" />
-		<attribute name="version" default="1.0.0" />
 		<attribute name="basedir" />
 		<attribute name="classesdir" default="${dir.dist.ome.classes}/@{name}" />
 		
@@ -56,7 +58,14 @@
 				</classpath>
 			</javac>
 			
-			<jar destfile="${dir.dist.ome.jars}/@{name}_@{version}.jar" manifest="@{basedir}/META-INF/MANIFEST.MF">
+			<copy file="@{basedir}/META-INF/MANIFEST.MF.TM" tofile="${file.omej.manifest.tmp}" overwrite="true">
+				<filterset>
+					<filter token="OMEJ_VERSION" value="${omej.version}" />
+					<filter token="DB4O_JAR_NAME" value="${filename.java5.jar}" />
+				</filterset>
+			</copy>
+			
+			<jar destfile="${dir.dist.ome.jars}/@{name}_${omej.version}.jar" manifest="${file.omej.manifest.tmp}">
 				<fileset dir="@{classesdir}">
 					<include name="**/*.class"/>
 				</fileset>
@@ -76,6 +85,7 @@
 			<additionalclasspath>
 				<fileset dir="${dir.project.ome.core}/lib">
 					<include name="**/*.jar" />
+					<exclude name="**/db4o-*-java5.jar" />
 				</fileset>
 			</additionalclasspath>
 			<additionaljarcontent>
@@ -84,7 +94,9 @@
 					<include name="FAQ/**/*" />
 					<include name="icons/**/*" />
 					<include name="lib/**/*.jar" />
+					<exclude name="lib/**/db4o-*-java5.jar" />
 				</fileset>
+				<fileset file="${file.java5.jar}" />
 			</additionaljarcontent>
 		</build-plugin>
 		<build-plugin name="com.db4o.ome.help" basedir="${dir.project.ome.help}">
@@ -100,6 +112,7 @@
 	
 	<target name="init" depends="properties">
 		<mkdir dir="${dir.dist.ome.jars}" />
+		<mkdir dir="${dir.dist.ome.temp}" />
 	</target>
 	
 	<target name="clean">
