@@ -42,8 +42,8 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
     }
     
     public QueryingReadContext(Transaction transaction, int handlerVersion, ReadBuffer buffer,
-        IdObjectCollector collector) {
-        this(transaction, null, handlerVersion, buffer, 0,collector);
+    		int collectionID, IdObjectCollector collector) {
+        this(transaction, null, handlerVersion, buffer, collectionID, collector);
     }
 
     public int collectionID() {
