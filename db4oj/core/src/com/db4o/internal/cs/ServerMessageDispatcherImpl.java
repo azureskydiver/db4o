@@ -135,10 +135,13 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
     	return _transactionHandle.transaction();
     }
 
-    public void run() {
-        messageLoop();
-        close();
-    }
+	public void run() {
+		try{
+			messageLoop();
+		}finally{
+			close();
+		}
+	}
     
     private void messageLoop(){
         while (isMessageDispatcherAlive()) {
