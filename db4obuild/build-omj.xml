@@ -6,23 +6,27 @@
 	<property name="dir.project.ome.core" location="${dir.workspace}/com.db4o.ome" />
 	<property name="dir.project.ome.help" location="${dir.workspace}/com.db4o.ome.help" />
 	<property name="dir.dist.ome" location="${dir.dist}/ome/java" />
+	<property name="dir.dist.ome.classes" location="${dir.dist.ome}/classes" />
+	<property name="dir.dist.ome.jars" location="${dir.dist.ome}/jars" />
 	
 	<macrodef name="build-plugin">
 		
 		<attribute name="name" />
+		<attribute name="version" default="1.0.0" />
 		<attribute name="basedir" />
-		<attribute name="destdir" default="${dir.dist.classes}/@{name}" />
+		<attribute name="classesdir" default="${dir.dist.ome.classes}/@{name}" />
 		
 		<element name="additionalclasspath" optional="true" />
+		<element name="additionaljarcontent" optional="true" />
 		
 		<sequential>
-			<mkdir dir="@{destdir}" />
+			<mkdir dir="@{classesdir}" />
 			
 			<javac fork="true"
 				debug="true"
 				target="1.5"
 				source="1.5"
-				destdir="@{destdir}"
+				destdir="@{classesdir}"
 				srcdir="@{basedir}/src"
 				encoding="UTF-8">
 				<classpath>
@@ -31,7 +35,6 @@
 						<include name="org.eclipse.core.resources_*/resources.jar" />
 						<include name="org.eclipse.core.runtime_*/runtime.jar" />
 						<include name="org.eclipse.jdt.core_*/jdtcore.jar" />
-						<!-- redundant entries: in newer eclipse installs those reside in jars -->
 						<include name="org.eclipse.osgi_*.jar" />
 						<include name="org.eclipse.core.resources_*.jar" />
 						<include name="org.eclipse.core.runtime_*.jar" />
@@ -48,15 +51,21 @@
 					</fileset>
 					
 					<pathelement location="${file.java5.jar}" />
-					
+
 					<additionalclasspath />
 				</classpath>
 			</javac>
 			
-			<property name="plugin.dir" value="${dir.dist.ome}/@{name}_1.0.0" />
-			<reset-dir dir="${plugin.dir}" />
-			<jar destfile="${plugin.dir}/@{name}.jar" basedir="@{destdir}" />
-			<copy todir="${plugin.dir}" file="@{basedir}/plugin.xml" />
+			<jar destfile="${dir.dist.ome.jars}/@{name}_@{version}.jar" manifest="@{basedir}/META-INF/MANIFEST.MF">
+				<fileset dir="@{classesdir}">
+					<include name="**/*.class"/>
+				</fileset>
+				<fileset dir="@{basedir}">
+					<include name="plugin.xml"/>
+					<include name="build.properties"/>
+				</fileset>
+				<additionaljarcontent />
+			</jar>
 		
 		</sequential>
 	</macrodef>
@@ -69,16 +78,31 @@
 					<include name="**/*.jar" />
 				</fileset>
 			</additionalclasspath>
+			<additionaljarcontent>
+				<fileset dir="${dir.project.ome.core}">
+					<include name="ContactSales/**/*" />
+					<include name="FAQ/**/*" />
+					<include name="icons/**/*" />
+					<include name="lib/**/*.jar" />
+				</fileset>
+			</additionaljarcontent>
 		</build-plugin>
-		<build-plugin name="com.db4o.ome.help" basedir="${dir.project.ome.help}" />
+		<build-plugin name="com.db4o.ome.help" basedir="${dir.project.ome.help}">
+			<additionaljarcontent>
+				<fileset dir="${dir.project.ome.help}">
+					<include name="html/**/*" />
+					<include name="toc.xml" />
+				</fileset>
+			</additionaljarcontent>
+		</build-plugin>
 		
 	</target>
 	
 	<target name="init" depends="properties">
+		<mkdir dir="${dir.dist.ome.jars}" />
 	</target>
 	
 	<target name="clean">
 		<reset-dir dir="${dir.dist.ome}" />
-		<reset-dir dir="${dir.dist.classes}" />
 	</target>
 </project>
