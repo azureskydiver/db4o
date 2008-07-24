@@ -80,6 +80,9 @@ public abstract class AbstractBufferContext implements BufferContext, HandlerVer
     public void seekCurrentInt() {
         seek(readInt());
     }
-
+    
+	public SlotFormat slotFormat() {
+		return SlotFormat.forHandlerVersion(handlerVersion());
+	}
 
 }

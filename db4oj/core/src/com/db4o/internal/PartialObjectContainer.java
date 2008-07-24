@@ -227,7 +227,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 ObjectReference newRef = bind2(trans, ref, obj);
                 newRef.virtualAttributes(trans, false);
             } else {
-                throw new RuntimeException(Messages.get(57));
+                throw new Db4oException(Messages.get(57));
             }
         }
     }
@@ -711,7 +711,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 		if (!isClosed()) {
 			shutdownObjectContainer();
 		}
-		throw new RuntimeException(Messages.get(msgID));
+		throw new Db4oException(Messages.get(msgID));
 	}
 
     /**

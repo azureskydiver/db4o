@@ -10,5 +10,7 @@ import com.db4o.marshall.*;
 public interface HandlerVersionContext extends Context{
     
     public int handlerVersion();
+    
+    public SlotFormat slotFormat();
 
 }

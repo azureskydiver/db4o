@@ -141,28 +141,9 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return true;
     }
     
-    // alive() checked
-    public final Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, Db4oIOException {
-        IndexableTypeHandler indexableTypeHandler = (IndexableTypeHandler) correctedHandlerVersion(mf.handlerVersion());
-    	return indexableTypeHandler.readIndexEntryFromObjectSlot(mf, writer);
-    	
-    	// return readIndexEntry( new ObjectIdContext(writer.transaction(), writer, ))
-    }
-    
     public final Object readIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException {
-        IndexableTypeHandler indexableTypeHandler = (IndexableTypeHandler) correctedHandlerVersion(context.handlerVersion());
+        IndexableTypeHandler indexableTypeHandler = (IndexableTypeHandler) Handlers4.correctHandlerVersion(context, _handler);
         return indexableTypeHandler.readIndexEntry(context);
-    }
-    
-    private TypeHandler4 correctedHandlerVersion(HandlerVersionContext context){
-        return Handlers4.correctHandlerVersion(context, _handler);
-    }
-    
-    private TypeHandler4 correctedHandlerVersion(int handlerVersion){
-        if(handlerVersion >= HandlerRegistry.HANDLER_VERSION){
-            return _handler;
-        }
-        return container().handlers().correctHandlerVersion(_handler, handlerVersion);
     }
     
     public void removeIndexEntry(Transaction trans, int parentID, Object indexEntry){
@@ -390,7 +371,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             return ;
         }
         
-        final TypeHandler4 handler = correctedHandlerVersion(context);
+        final TypeHandler4 handler = Handlers4.correctHandlerVersion(context, _handler);
         
         if(! (handler instanceof FirstClassHandler)){
             return;
@@ -404,7 +385,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         QueryingReadContext queryingReadContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), context.buffer(), context.collector());
         
         LocalObjectContainer container = (LocalObjectContainer) context.container();
-        final SlotFormat slotFormat = SlotFormat.forHandlerVersion(context.handlerVersion());
+        final SlotFormat slotFormat = context.slotFormat();
         if(slotFormat.handleAsObject(handler)){
             // TODO: Code is similar to QCandidate.readArrayCandidates. Try to refactor to one place.
             int collectionID = context.readInt();
@@ -485,11 +466,9 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
         try {
             removeIndexEntry(context);
-            int handlerVersion = context.handlerVersion();
             StatefulBuffer buffer = (StatefulBuffer) context.buffer();
             final DeleteContextImpl childContext = new DeleteContextImpl(context, getStoredType(), _config);
-            
-            SlotFormat.forHandlerVersion(handlerVersion).doWithSlotIndirection(buffer, _handler, new Closure4() {
+            context.slotFormat().doWithSlotIndirection(buffer, _handler, new Closure4() {
                 public Object run() {
                     childContext.delete(_handler);
                     return null;
@@ -1080,7 +1059,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		    rebuildIndexForWriter(stream, writer, objectId);
 		} else {
 		    if(Deploy.debug){
-		        throw new RuntimeException("Unexpected null object for ID");
+		        throw new Db4oException("Unexpected null object for ID");
 		    }
 		}
 	}
@@ -1121,8 +1100,8 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }    
     
     public void defragAspect(final DefragmentContext context) {
-    	final TypeHandler4 typeHandler = correctedHandlerVersion(context);
-        SlotFormat.forHandlerVersion(context.handlerVersion()).doWithSlotIndirection(context, typeHandler, new Closure4() {
+    	final TypeHandler4 typeHandler = Handlers4.correctHandlerVersion(context, _handler);
+        context.slotFormat().doWithSlotIndirection(context, typeHandler, new Closure4() {
             public Object run() {
                 context.defragment(typeHandler);
                 return null;
