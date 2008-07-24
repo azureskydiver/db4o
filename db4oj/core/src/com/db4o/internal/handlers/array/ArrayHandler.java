@@ -98,11 +98,11 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
                 if (context.buffer() == null) {
                     return;
                 }
-                if(isUntypedByteArray(context)) {
-                    return;
-                }
                 if (Deploy.debug) {
                     Debug.readBegin(context, identifier());
+                }
+                if(isUntypedByteArray(context)) {
+                    return;
                 }
                 readInfo(context.transaction(), context, info);
                 int elementCount = info.elementCount();
