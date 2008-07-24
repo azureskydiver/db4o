@@ -46,15 +46,13 @@ public class SimpleListTestCase extends AbstractDb4oTestCase{
 		store(item);
 	}
 	
-	
-	
 	public void testRetrieveInstance() {
 		Item item = (Item) retrieveOnlyInstance(Item.class);
 		Assert.areEqual(2, item.list.size());
 		Assert.areEqual("zero", item.list.get(0));
 	}
 	
-    public void _testActivation(){
+    public void testActivation(){
     	Item item = (Item) retrieveOnlyInstance(Item.class);
         List list = item.list;
         Assert.areEqual(2, list.size());
@@ -67,7 +65,7 @@ public class SimpleListTestCase extends AbstractDb4oTestCase{
         }
     }
 	
-	public void _testQuery() {
+	public void testQuery() {
 		Query q = db().query();
 		q.constrain(Item.class);
 		q.descend("list").constrain("zero");

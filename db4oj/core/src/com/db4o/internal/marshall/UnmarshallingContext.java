@@ -11,7 +11,7 @@ import com.db4o.internal.activation.*;
  * 
  * @exclude
  */
-public class UnmarshallingContext extends ObjectReferenceContext {
+public class UnmarshallingContext extends ObjectReferenceContext implements HandlerVersionContext{
     
     private Object _object;
     

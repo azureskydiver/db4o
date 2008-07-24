@@ -18,5 +18,4 @@ public class SlotFormatCurrent extends SlotFormat {
         return isVariableLength(handler) && isEmbedded(handler);
     }
 
-
 }

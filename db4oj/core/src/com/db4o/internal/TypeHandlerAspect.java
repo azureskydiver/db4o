@@ -49,15 +49,22 @@ public class TypeHandlerAspect extends ClassAspect {
         throw new NotImplementedException();
     }
 
-    public void defragAspect(DefragmentContext context) {
-    	_typeHandler.defragment(context);
+    public void defragAspect(final DefragmentContext context) {
+    	context.slotFormat().doWithSlotIndirection(context, new Closure4() {
+			public Object run() {
+				_typeHandler.defragment(context);
+				return null;
+			}
+		
+		});
     }
 
     public int linkLength() {
-        return Const4.ID_LENGTH;
+        return Const4.INDIRECTION_LENGTH;
     }
 
     public void marshall(MarshallingContext context, Object obj) {
+    	context.createIndirectionWithinSlot();
         _typeHandler.write(context, obj);
     }
 
@@ -65,16 +72,26 @@ public class TypeHandlerAspect extends ClassAspect {
         return AspectType.TYPEHANDLER;
     }
 
-    public void instantiate(UnmarshallingContext context) {
-    	Object oldObject = context.persistentObject();
-        Object readObject = _typeHandler.read(context);
-        if(oldObject != readObject){
-        	context.persistentObject(readObject);
-        }
+    public void instantiate(final UnmarshallingContext context) {
+    	final Object oldObject = context.persistentObject();
+    	context.slotFormat().doWithSlotIndirection(context, new Closure4() {
+			public Object run() {
+		        Object readObject = _typeHandler.read(context);
+		        if(oldObject != readObject){
+		        	context.persistentObject(readObject);
+		        }
+				return null;
+			}
+		});
     }
 
-	public void delete(DeleteContextImpl context, boolean isUpdate) {
-		_typeHandler.delete(context);
+	public void delete(final DeleteContextImpl context, boolean isUpdate) {
+    	context.slotFormat().doWithSlotIndirection(context, new Closure4() {
+			public Object run() {
+				_typeHandler.delete(context);
+				return null;
+			}
+		});
 	}
 
 	public void deactivate(Transaction trans, Object obj, ActivationDepth depth) {

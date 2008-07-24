@@ -105,6 +105,9 @@ public class MarshallingBuffer implements WriteBuffer{
     }
     
     public void transferContentTo(ByteArrayBuffer buffer, int length){
+    	if(_delegate == null){
+    		return;
+    	}
         System.arraycopy(_delegate._buffer, 0, buffer._buffer, buffer._offset, length);
         buffer._offset += length;
     }

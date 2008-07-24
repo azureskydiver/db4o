@@ -388,5 +388,9 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	public void aspectCount(int count) {
 		_aspectCount = count;
 	}
+
+	public SlotFormat slotFormat() {
+		return SlotFormat.forHandlerVersion(handlerVersion());
+	}
     
 }

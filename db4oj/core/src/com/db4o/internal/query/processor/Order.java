@@ -2,6 +2,7 @@
 
 package com.db4o.internal.query.processor;
 
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
 class Order implements Orderable {
@@ -56,7 +57,7 @@ class Order implements Orderable {
 	
 	private int compareMinors(IntArrayList other) {
 	    if (i_minors.size() != other.size()) {
-	        throw new RuntimeException("Unexpected exception: this..size()=" + i_minors.size()
+	        throw new Db4oException("Unexpected exception: this..size()=" + i_minors.size()
 	                + ", other.size()=" + other.size());
 	    }
 	    

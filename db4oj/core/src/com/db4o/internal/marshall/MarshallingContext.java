@@ -331,9 +331,13 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     
     public void createIndirectionWithinSlot(TypeHandler4 handler) {
         if(isIndirectedWithinSlot(handler)){
-            createChildBuffer(false, true);
-            doNotIndirectWrites();
+        	createIndirectionWithinSlot();
         }
+    }
+    
+    public void createIndirectionWithinSlot() {
+    	createChildBuffer(false, true);
+    	doNotIndirectWrites();
     }
 
     private boolean isIndirectedWithinSlot(TypeHandler4 handler) {

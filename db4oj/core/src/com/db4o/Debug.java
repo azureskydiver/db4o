@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
@@ -141,13 +142,13 @@ public abstract class Debug {
 		if (Deploy.debug) {
 			if (Deploy.brackets) {
 				if (buffer.readByte() != Const4.YAPBEGIN) {
-					throw new RuntimeException("Debug.readBegin() YAPBEGIN expected.");
+					throw new Db4oException("Debug.readBegin() YAPBEGIN expected.");
 				}
 			}
 			if (Deploy.identifiers) {
 				byte readB = buffer.readByte();
 				if (readB != identifier) {
-					throw new RuntimeException("Debug.readBegin() wrong identifier: "+(char)readB);
+					throw new Db4oException("Debug.readBegin() wrong identifier: "+(char)readB);
 				}
 			}
 		}
