@@ -382,23 +382,23 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             return;
         } 
         
-        QueryingReadContext queryingReadContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), context.buffer(), context.collector());
-        
         LocalObjectContainer container = (LocalObjectContainer) context.container();
         final SlotFormat slotFormat = context.slotFormat();
+        
         if(slotFormat.handleAsObject(handler)){
             // TODO: Code is similar to QCandidate.readArrayCandidates. Try to refactor to one place.
             int collectionID = context.readInt();
             ByteArrayBuffer collectionBuffer = container.readReaderByID(context.transaction(), collectionID);
-            ObjectHeader.scrollBufferToContent(container, collectionBuffer);
-            queryingReadContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), collectionBuffer, context.collector());
+            ObjectHeader objectHeader = new ObjectHeader(container, collectionBuffer);
+            QueryingReadContext subContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), collectionBuffer, collectionID, context.collector());
+            objectHeader.classMetadata().collectIDs(subContext);
+            return;
         }
         
-        final QueryingReadContext finalContext = queryingReadContext;
-        
-        slotFormat.doWithSlotIndirection(finalContext, handler, new Closure4() {
+        final QueryingReadContext queryingReadContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), context.buffer(), 0, context.collector());
+        slotFormat.doWithSlotIndirection(queryingReadContext, handler, new Closure4() {
             public Object run() {
-                ((FirstClassHandler) handler).collectIDs(finalContext);
+                ((FirstClassHandler) handler).collectIDs(queryingReadContext);
                 return null;
             }
         });
