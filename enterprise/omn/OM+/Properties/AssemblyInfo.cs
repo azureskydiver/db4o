@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("OM+")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Persistent System Pvt.Ltd")]
-[assembly: AssemblyProduct("OM+")]
-[assembly: AssemblyCopyright("Copyright © Persistent System Pvt.Ltd 2007")]
+[assembly: AssemblyDescription("OM+ 7.4.1.11182 (.NET)")]
+[assembly: AssemblyConfiguration(".NET")]
+[assembly: AssemblyCompany("db4objects Inc., San Mateo, CA, USA")]
+[assembly: AssemblyProduct("db4o - database for objects")]
+[assembly: AssemblyCopyright("db4o 2005 - 2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("7.4.1.11182")]
+[assembly: AssemblyFileVersion("7.4.1.11182")]

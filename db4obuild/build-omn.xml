@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<project name="omnbuild" default="build" basedir=".">
+	<import file="common-dotnet.xml" />
+	
+	<target name="prepare-build" depends="properties">
+		<updateAssemblyInfo version="${db4o.version.iteration.revision}">
+			<fileset dir="${dir.omn.src}">
+				<include name="**/AssemblyInfo.cs" />
+			</fileset>
+		</updateAssemblyInfo>
+	</target>
+		
+	<target name="build" depends="properties,prepare-build" description="Builds OMN">
+		<property 
+			name="devenv.executable.vs2008" 
+			location="${env.ProgramFiles}/Microsoft Visual Studio 9.0/Common7/IDE/devenv.exe" />
+		
+		<property name="file.omn-build-log" value = "${dir.omn.dist}/omn-build.log" />
+		<property name="file.omn-solution" value = "${dir.omn.src}/OMAddin.sln" />
+
+		<mkdir dir="${dir.omn.dist}" />
+
+		<copy file="${dir.dist.dll}/Db4objects.Db4o.dll" todir="${dir.omn.src}/OM+/bin/Dependencies" overwrite="true"/>
+		
+		<exec executable="${devenv.executable.vs2008}" resultproperty="omn-build-result">
+			<arg file ="${file.omn-solution}"/>
+			<arg value="/Rebuild" />
+			<arg value="Release" />
+			<arg value="/out" />
+			<arg file="${file.omn-build-log}" />
+		</exec>
+		
+		<if >
+			<not><equals arg1="${omn-build-result}" arg2="0"/></not>
+			<then>
+				<loadfile property="omn-buil-log" srcfile="${file.omn-build-log}" />
+				<echo message="${omn-buil-log}" />
+				<fail message="OMN build failed. Check this log to find out the reason." />
+			</then>
+		</if>
+		
+		<copy file="${dir.omn.src}/OMInstaller/Release/OMInstaller.msi" tofile="${dir.omn.dist}/OMInstaller-${db4o.version.iteration.revision}.msi" overwrite="true"/>
+		<copy file="${dir.omn.src}/OMInstaller_VS2008/Release/OMInstaller_vs2008.msi" tofile="${dir.omn.dist}/OMInstaller_vs2008-${db4o.version.iteration.revision}.msi" overwrite="true"/>
+	</target>
+	
+	<target name="clean" depends="configure-net35" description="Cleans OMN build folders">
+		<delete dir="${dir.omn.dist}" />
+	</target>
+</project>
