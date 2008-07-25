@@ -39,8 +39,8 @@
 			</then>
 		</if>
 		
-		<copy file="${dir.omn.src}/OMInstaller/Release/OMInstaller.msi" tofile="${dir.omn.dist}/OMInstaller-${db4o.version.iteration.revision}.msi" overwrite="true"/>
-		<copy file="${dir.omn.src}/OMInstaller_VS2008/Release/OMInstaller_vs2008.msi" tofile="${dir.omn.dist}/OMInstaller_vs2008-${db4o.version.iteration.revision}.msi" overwrite="true"/>
+		<copy file="${dir.omn.src}/OMInstaller/Release/OMInstaller.msi" tofile="${dir.omn.dist}/OMInstaller-${db4o.version.dotted}.msi" overwrite="true"/>
+		<copy file="${dir.omn.src}/OMInstaller_VS2008/Release/OMInstaller_vs2008.msi" tofile="${dir.omn.dist}/OMInstaller_vs2008-${db4o.version.dotted}.msi" overwrite="true"/>
 	</target>
 	
 	<target name="clean" depends="configure-net35" description="Cleans OMN build folders">
