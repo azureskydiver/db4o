@@ -1,17 +1,28 @@
 <?xml version="1.0"?>
-<project name="omj" default="build">
+<project name="omj" default="zip">
 	
 	<import file="common.xml" />
 	
 	<property name="omej.version" value="1.0.4" />
 	<property name="dir.project.ome.core" location="${dir.workspace}/com.db4o.ome" />
 	<property name="dir.project.ome.help" location="${dir.workspace}/com.db4o.ome.help" />
+	<property name="dir.project.ome.feature" location="${dir.workspace}/com.db4o.ome.feature" />
 	<property name="dir.dist.ome" location="${dir.dist}/ome/java" />
 	<property name="dir.dist.ome.classes" location="${dir.dist.ome}/classes" />
 	<property name="dir.dist.ome.jars" location="${dir.dist.ome}/jars" />
 	<property name="dir.dist.ome.temp" location="${dir.dist.ome}/temp" />
+	<property name="dir.dist.ome.temp.zip" location="${dir.dist.ome.temp}/zip" />
+	<property name="dir.dist.ome.temp.zip.plugins" location="${dir.dist.ome.temp.zip}/plugins" />
+	<property name="dir.dist.ome.temp.zip.features" location="${dir.dist.ome.temp.zip}/features" />
+	<property name="dir.dist.ome.temp.zip.features.ome" location="${dir.dist.ome.temp.zip.features}/com.db4o.ome.feature_${omej.version}" />
 	<property name="file.omej.manifest.tmp" location="${dir.dist.ome.temp}/MANIFEST.MF" />
+	<property name="file.omej.zip" location="${dir.dist.ome}/com.db4o.omej_${omej.version}.zip" />
 	
+	<filterset id="filterset.ome">
+		<filter token="OMEJ_VERSION" value="${omej.version}" />
+		<filter token="DB4O_JAR_NAME" value="${filename.java5.jar}" />
+	</filterset>
+
 	<macrodef name="build-plugin">
 		
 		<attribute name="name" />
@@ -59,10 +70,7 @@
 			</javac>
 			
 			<copy file="@{basedir}/META-INF/MANIFEST.MF.TM" tofile="${file.omej.manifest.tmp}" overwrite="true">
-				<filterset>
-					<filter token="OMEJ_VERSION" value="${omej.version}" />
-					<filter token="DB4O_JAR_NAME" value="${filename.java5.jar}" />
-				</filterset>
+				<filterset refid="filterset.ome" />
 			</copy>
 			
 			<jar destfile="${dir.dist.ome.jars}/@{name}_${omej.version}.jar" manifest="${file.omej.manifest.tmp}">
@@ -108,6 +116,25 @@
 			</additionaljarcontent>
 		</build-plugin>
 		
+	</target>
+	
+	<target name="zip" depends="build">
+		<mkdir dir="${dir.dist.ome.temp.zip.plugins}" />
+		<copy todir="${dir.dist.ome.temp.zip.plugins}">
+			<fileset dir="${dir.dist.ome.jars}">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${dir.dist.ome.temp.zip.features.ome}" />
+		<copy file="${dir.project.ome.feature}/feature.xml.TM" tofile="${dir.dist.ome.temp.zip.features.ome}/feature.xml">
+			<filterset refid="filterset.ome" />
+		</copy>
+		<copy file="${dir.project.ome.feature}/build.properties" todir="${dir.dist.ome.temp.zip.features.ome}" />
+		<zip destfile="${file.omej.zip}">
+			<fileset dir="${dir.dist.ome.temp.zip}">
+				<include name="**/*" />
+			</fileset>
+		</zip>
 	</target>
 	
 	<target name="init" depends="properties">
