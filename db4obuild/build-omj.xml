@@ -3,7 +3,7 @@
 	
 	<import file="common.xml" />
 	
-	<property name="omej.version" value="1.0.4" />
+	<property name="omej.version" value="${db4o.version.dotted}" />
 	<property name="dir.project.ome.core" location="${dir.workspace}/com.db4o.ome" />
 	<property name="dir.project.ome.help" location="${dir.workspace}/com.db4o.ome.help" />
 	<property name="dir.project.ome.feature" location="${dir.workspace}/com.db4o.ome.feature" />
@@ -18,11 +18,6 @@
 	<property name="file.omej.manifest.tmp" location="${dir.dist.ome.temp}/MANIFEST.MF" />
 	<property name="file.omej.zip" location="${dir.dist.ome}/com.db4o.omej_${omej.version}.zip" />
 	
-	<filterset id="filterset.ome">
-		<filter token="OMEJ_VERSION" value="${omej.version}" />
-		<filter token="DB4O_JAR_NAME" value="${filename.java5.jar}" />
-	</filterset>
-
 	<macrodef name="build-plugin">
 		
 		<attribute name="name" />
@@ -33,6 +28,8 @@
 		<element name="additionaljarcontent" optional="true" />
 		
 		<sequential>
+			<echo message="${filename.db4o.jar} / ${file.db4o.jar} / ${omej.version}" />
+			
 			<mkdir dir="@{classesdir}" />
 			
 			<javac fork="true"
@@ -63,7 +60,7 @@
 						
 					</fileset>
 					
-					<pathelement location="${file.java5.jar}" />
+					<pathelement location="${file.db4o.jar}" />
 
 					<additionalclasspath />
 				</classpath>
@@ -104,7 +101,7 @@
 					<include name="lib/**/*.jar" />
 					<exclude name="lib/**/db4o-*-java5.jar" />
 				</fileset>
-				<fileset file="${file.java5.jar}" />
+				<fileset file="${file.db4o.jar}" />
 			</additionaljarcontent>
 		</build-plugin>
 		<build-plugin name="com.db4o.ome.help" basedir="${dir.project.ome.help}">
@@ -140,6 +137,14 @@
 	<target name="init" depends="properties">
 		<mkdir dir="${dir.dist.ome.jars}" />
 		<mkdir dir="${dir.dist.ome.temp}" />
+
+		<property name="filename.db4o.jar" value="${filename.java5.jar}" />
+		<property name="file.db4o.jar" value="${file.java5.jar}" />
+
+		<filterset id="filterset.ome">
+			<filter token="OMEJ_VERSION" value="${omej.version}" />
+			<filter token="DB4O_JAR_NAME" value="${filename.db4o.jar}" />
+		</filterset>
 	</target>
 	
 	<target name="clean">
