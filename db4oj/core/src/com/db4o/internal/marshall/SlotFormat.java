@@ -64,7 +64,7 @@ public abstract class SlotFormat {
         return handler instanceof VariableLengthTypeHandler;
     }
     
-    public boolean isEmbedded(TypeHandler4 handler) {
+    public static final boolean isEmbedded(TypeHandler4 handler) {
         return handler instanceof EmbeddedTypeHandler;
     }
 
