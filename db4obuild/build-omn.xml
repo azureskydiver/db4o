@@ -1,27 +1,12 @@
 <?xml version="1.0"?>
-<project name="omnbuild" default="build" basedir=".">
+<project name="omnbuild-project" default="omn-build" basedir=".">
 	<import file="common-dotnet.xml" />
 	
-	<target name="prepare-build" depends="properties">
-		<updateAssemblyInfo version="${db4o.version.iteration.revision}">
-			<fileset dir="${dir.omn.src}">
-				<include name="**/AssemblyInfo.cs" />
-			</fileset>
-		</updateAssemblyInfo>
-	</target>
-		
-	<target name="build" depends="properties,prepare-build" description="Builds OMN">
+	<target name="omn-build" depends="properties,copy-omn-dependencies" description="Builds OMN">
 		<property 
 			name="devenv.executable.vs2008" 
 			location="${env.ProgramFiles}/Microsoft Visual Studio 9.0/Common7/IDE/devenv.exe" />
-		
-		<property name="file.omn-build-log" value = "${dir.omn.dist}/omn-build.log" />
-		<property name="file.omn-solution" value = "${dir.omn.src}/OMAddin.sln" />
-
-		<mkdir dir="${dir.omn.dist}" />
-
-		<copy file="${dir.dist.dll}/Db4objects.Db4o.dll" todir="${dir.omn.src}/OM+/bin/Dependencies" overwrite="true"/>
-		
+	
 		<exec executable="${devenv.executable.vs2008}" resultproperty="omn-build-result">
 			<arg file ="${file.omn-solution}"/>
 			<arg value="/Rebuild" />
@@ -38,9 +23,44 @@
 				<fail message="OMN build failed. Check this log to find out the reason." />
 			</then>
 		</if>
+
+		<move file = "${dir.omn.dist.src}/OMInstaller/Release/OMInstaller.msi" tofile="${dir.omn.dist}/OMInstaller-${db4o.version.dotted}.msi" overwrite="true"/>
+		<move file = "${dir.omn.dist.src}/OMInstaller_VS2008/Release/OMInstaller_vs2008.msi" tofile="${dir.omn.dist}/OMInstaller_vs2008-${db4o.version.dotted}.msi" overwrite="true"/>		
+	</target>
+	
+	<target name="prepare-build" depends="properties">
+		<property name="dir.omn.dist.src"  value="${dir.dist.net.src.tools}/omn" />
+		<property name="file.omn-build-log" value = "${dir.omn.dist}/omn-build.log" />
+		<property name="file.omn-solution" value = "${dir.omn.dist.src}/OMAddin.sln" />
+
+		<mkdir dir="${dir.omn.dist}" />
+		<reset-dir dir="${dir.omn.dist.src}" />
 		
-		<copy file="${dir.omn.src}/OMInstaller/Release/OMInstaller.msi" tofile="${dir.omn.dist}/OMInstaller-${db4o.version.dotted}.msi" overwrite="true"/>
-		<copy file="${dir.omn.src}/OMInstaller_VS2008/Release/OMInstaller_vs2008.msi" tofile="${dir.omn.dist}/OMInstaller_vs2008-${db4o.version.dotted}.msi" overwrite="true"/>
+		
+		<delete file="${file.omn-buid-log}" />
+		
+		<copy todir="${dir.omn.dist.src}" description="copy omn sources to build...">
+            <fileset dir="${dir.omn.src}">
+                <include name="**/*" />
+            </fileset>
+		</copy>		
+		
+		<copy file="${dir.dist.dll}/Db4objects.Db4o.dll" todir="${dir.omn.dist.src}/OM+/bin/Dependencies" overwrite="true"/>
+			
+		<updateAssemblyInfo version="${db4o.version.iteration.revision}">
+			<fileset dir="${dir.omn.dist.src}">
+				<include name="**/AssemblyInfo.cs" />
+			</fileset>
+		</updateAssemblyInfo>
+	</target>
+	
+	<target name="copy-omn-dependencies" depends="prepare-build">
+		<mkdir dir="${dir.omn.dist.src}/LoggingBlock/bin/Dependencies/" />
+		<copy todir="${dir.omn.dist.src}/LoggingBlock/bin/Dependencies/">
+			<fileset dir="${env.ProgramFiles}/Microsoft Enterprise Library 3.1 - May 2007/Bin/">
+				<include name="*.dll"/>
+			</fileset>
+		</copy>		
 	</target>
 	
 	<target name="clean" depends="configure-net35" description="Cleans OMN build folders">
