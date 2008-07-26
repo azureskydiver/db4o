@@ -295,13 +295,5 @@ public class TranslatorToTypehandlerMigrationTestCase implements TestLifeCycle{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-
-	
-	
-	
-	
-	
-	
 
 }

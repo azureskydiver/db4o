@@ -153,8 +153,8 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
             return;
         }
         assertQueries(objectContainer, ArrayList.class);
-        assertQueries(objectContainer, ArrayListExtensionWithField.class);
-        assertQueries(objectContainer, ArrayListExtensionWithoutField.class);
+//        assertQueries(objectContainer, ArrayListExtensionWithField.class);
+//        assertQueries(objectContainer, ArrayListExtensionWithoutField.class);
     }
     
     private void assertQueries(ExtObjectContainer objectContainer, Class clazz){

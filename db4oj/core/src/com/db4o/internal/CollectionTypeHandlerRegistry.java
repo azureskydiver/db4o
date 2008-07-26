@@ -2,7 +2,6 @@
 
 package com.db4o.internal;
 
-import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
 
@@ -10,8 +9,6 @@ import com.db4o.typehandlers.*;
  * @exclude
  */
 public class CollectionTypeHandlerRegistry {
-    
-    private static final int INSTALLED_FROM_VERSION = 4;
     
     private final Config4Impl _config;
     
@@ -29,7 +26,7 @@ public class CollectionTypeHandlerRegistry {
         return NullableArrayHandling.enabled();
     }
     
-    public void registerLists(Class[] classes){
+    public void registerCollections(Class[] classes){
         if(! enabled()){
             return;
         }
@@ -39,16 +36,7 @@ public class CollectionTypeHandlerRegistry {
     }
     
     private void registerListTypeHandler(Class clazz){
-        final ReflectClass claxx = _config.reflector().forClass(clazz);
-        _config.registerTypeHandler(new TypeHandlerPredicate() {
-            public boolean match(ReflectClass classReflector, int version) {
-                if(version < INSTALLED_FROM_VERSION){
-                    return false;
-                }
-                return claxx.equals(classReflector);
-            }
-        
-        },_listTypeHandler);
+        _config.registerTypeHandler(new SingleClassTypeHandlerPredicate(clazz), _listTypeHandler);
     }
 
 }
