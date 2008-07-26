@@ -4,6 +4,7 @@ package com.db4o.db4ounit.jre5.collections.typehandler;
 
 import java.util.*;
 
+import com.db4o.internal.*;
 import com.db4o.typehandlers.*;
 
 import db4ounit.fixtures.*;
@@ -29,10 +30,16 @@ public final class ListTypeHandlerTestVariables {
 				}
 			);
 	
-	public final static FixtureProvider TYPEHANDLER_FIXTURE_PROVIDER =
-	    new SimpleFixtureProvider(LIST_TYPEHANDER,
+	public final static FixtureProvider TYPEHANDLER_FIXTURE_PROVIDER = NullableArrayHandling.enabled() ? 
+			new SimpleFixtureProvider(LIST_TYPEHANDER,
+			        new Object[]{
+			    		null, 
+			        }
+			    )
+	    	: 
+	    	new SimpleFixtureProvider(LIST_TYPEHANDER,
 	        new Object[]{
-	            new ListTypeHandler(),
+	    		new ListTypeHandler(), 
 	            new EmbeddedListTypeHandler(),
 	        }
 	    );

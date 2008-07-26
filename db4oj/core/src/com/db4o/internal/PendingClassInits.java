@@ -54,9 +54,9 @@ class PendingClassInits {
 	
 	private void checkMembers() {
 		while(_members.hasNext()) {
-			ClassMetadata yc = (ClassMetadata)_members.next();
-			yc.addMembers(stream());
-            _statics.add(yc);
+			ClassMetadata classMetadata = (ClassMetadata)_members.next();
+			classMetadata.addMembers(stream());
+            _statics.add(classMetadata);
 		}
 	}
 
