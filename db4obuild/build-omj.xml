@@ -47,6 +47,7 @@
 						<include name="org.eclipse.jdt.core_*/jdtcore.jar" />
 						<include name="org.eclipse.osgi_*.jar" />
 						<include name="org.eclipse.core.resources_*.jar" />
+						<include name="org.eclipse.core.resources.*.jar" />
 						<include name="org.eclipse.core.runtime_*.jar" />
 						<include name="org.eclipse.jdt.core_*.jar" />
 						<include name="org.eclipse.jdt.launching_*.jar" />
@@ -54,6 +55,7 @@
 						<include name="org.eclipse.core.jobs_*.jar" />
 						<include name="org.eclipse.ui_*.jar" />
 						<include name="org.eclipse.swt_*.jar" />
+						<include name="org.eclipse.swt.*.jar" />
 						<include name="org.eclipse.jface_*.jar" />
 						<include name="org.eclipse.core.commands_*.jar" />
 						<include name="org.eclipse.ui.workbench_*.jar" />
