@@ -28,7 +28,7 @@
 		<element name="additionaljarcontent" optional="true" />
 		
 		<sequential>
-			<echo message="${filename.db4o.jar} / ${file.db4o.jar} / ${omej.version}" />
+			<echo message="${filename.db4o.jar} / ${file.db4o.jar} / ${omej.version} / ${eclipse.home}" />
 			
 			<mkdir dir="@{classesdir}" />
 			
