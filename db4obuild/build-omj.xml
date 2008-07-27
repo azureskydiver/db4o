@@ -4,9 +4,9 @@
 	<import file="common.xml" />
 	
 	<property name="omej.version" value="${db4o.version.dotted}" />
-	<property name="dir.project.ome.core" location="${dir.workspace}/com.db4o.ome" />
-	<property name="dir.project.ome.help" location="${dir.workspace}/com.db4o.ome.help" />
-	<property name="dir.project.ome.feature" location="${dir.workspace}/com.db4o.ome.feature" />
+	<property name="dir.project.ome.core" location="${dir.base}/com.db4o.ome" />
+	<property name="dir.project.ome.help" location="${dir.base}/com.db4o.ome.help" />
+	<property name="dir.project.ome.feature" location="${dir.base}/com.db4o.ome.feature" />
 	<property name="dir.dist.ome" location="${dir.dist}/ome/java" />
 	<property name="dir.dist.ome.classes" location="${dir.dist.ome}/classes" />
 	<property name="dir.dist.ome.jars" location="${dir.dist.ome}/jars" />
