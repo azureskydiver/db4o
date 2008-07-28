@@ -14,7 +14,9 @@ public final class MQueryExecute extends MsgQuery implements ServerSideMessage {
 	public boolean processAtServer() {
 		try {
 			unmarshall(_payLoad._offset);
-			writeQueryResult(execute(), _evaluationMode);
+			synchronized (streamLock()) {
+				writeQueryResult(execute(), _evaluationMode);
+			}
 		} catch (Db4oException e) {
 			writeException(e);
 		}

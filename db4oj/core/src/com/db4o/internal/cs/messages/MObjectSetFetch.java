@@ -14,10 +14,13 @@ public class MObjectSetFetch extends MObjectSet implements ServerSideMessage {
 	public boolean processAtServer() {
 		int queryResultID = readInt();
 		int fetchSize = readInt();
-		IntIterator4 idIterator = stub(queryResultID).idIterator();
-		MsgD message = ID_LIST.getWriterForLength(transaction(), bufferLength(fetchSize));
-		StatefulBuffer writer = message.payLoad();
-    	writer.writeIDs(idIterator, fetchSize);
+		MsgD message = null;
+		synchronized(streamLock()) {
+			IntIterator4 idIterator = stub(queryResultID).idIterator();
+			message = ID_LIST.getWriterForLength(transaction(), bufferLength(fetchSize));
+			StatefulBuffer writer = message.payLoad();
+	    	writer.writeIDs(idIterator, fetchSize);
+		}
 		write(message);
 		return true;
 	}
