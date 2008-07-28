@@ -2,7 +2,7 @@
 <project name="omnbuild-project" default="build-omn" basedir=".">
 	<import file="common-dotnet.xml" />
 	
-	<target name="build-omn" depends="properties, copy-omn-dependencies" description="Builds OMN">
+	<target name="build-omn" depends="properties, prepare-build" description="Builds OMN">
 		<property 
 			name="devenv.executable.vs2008" 
 			location="${env.ProgramFiles}/Microsoft Visual Studio 9.0/Common7/IDE/devenv.exe" />
@@ -50,13 +50,4 @@
 			</fileset>
 		</updateAssemblyInfo>
 	</target>
-	
-	<target name="copy-omn-dependencies" depends="prepare-build">
-		<mkdir dir="${dir.omn.dist.src}/LoggingBlock/bin/Dependencies/" />
-		<copy todir="${dir.omn.dist.src}/LoggingBlock/bin/Dependencies/">
-			<fileset dir="${env.ProgramFiles}/Microsoft Enterprise Library 3.1 - May 2007/Bin/">
-				<include name="*.dll"/>
-			</fileset>
-		</copy>		
-	</target>	
 </project>
