@@ -12,8 +12,10 @@ public class MObjectSetIndexOf extends MObjectSet implements ServerSideMessage {
 	
 	public boolean processAtServer() {
 		AbstractQueryResult queryResult = queryResult(readInt());
-		int id = queryResult.indexOf(readInt()); 
-		write(Msg.OBJECTSET_INDEXOF.getWriterForInt(transaction(), id));
+		synchronized(streamLock()) {
+			int id = queryResult.indexOf(readInt()); 
+			write(Msg.OBJECTSET_INDEXOF.getWriterForInt(transaction(), id));
+		}
 		return true;
 	}
 
