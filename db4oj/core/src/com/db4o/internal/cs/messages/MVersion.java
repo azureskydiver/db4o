@@ -12,7 +12,7 @@ public class MVersion extends Msg implements ServerSideMessage {
 	public boolean processAtServer() {
 		long ver = 0;
 		ObjectContainerBase stream = stream();
-		synchronized (stream) {
+		synchronized (streamLock()) {
 			ver = stream.currentVersion();
 		}
 		write(Msg.ID_LIST.getWriterForLong(transaction(), ver));
