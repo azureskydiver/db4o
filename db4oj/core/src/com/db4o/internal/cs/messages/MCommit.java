@@ -28,10 +28,12 @@ public final class MCommit extends Msg implements ServerSideMessage {
 	}
 
 	private void addCommittedInfoMsg(CallbackObjectInfoCollections committedInfo, LocalTransaction serverTransaction) {
-		Msg.COMMITTED_INFO.setTransaction(serverTransaction);
-		MCommittedInfo message = Msg.COMMITTED_INFO.encode(committedInfo);
-		message.setMessageDispatcher(serverMessageDispatcher());
-		serverMessageDispatcher().server().addCommittedInfoMsg(message);
+		synchronized (streamLock()) {
+			Msg.COMMITTED_INFO.setTransaction(serverTransaction);
+			MCommittedInfo message = Msg.COMMITTED_INFO.encode(committedInfo);
+			message.setMessageDispatcher(serverMessageDispatcher());
+			serverMessageDispatcher().server().addCommittedInfoMsg(message);
+		}
 	}
 	
 }
