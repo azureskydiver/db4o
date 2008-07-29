@@ -37,7 +37,7 @@ Module Module1
 		Using db = OpenDatabase()
 
 			Dim book As Book = New Book("The God Delusion")
-			book.AddAuthor(New Author("Richard Dawkings"))
+			book.AddAuthor(New Author("Richard Dawkins"))
 
 			db.Store(book)
 		End Using

@@ -6,7 +6,7 @@ Module Spike1
 	Sub Main()
 
 		Dim book = New Book("The God Delusion")
-		book.AddAuthor(New Author("Richard Dawkings"))
+		book.AddAuthor(New Author("Richard Dawkins"))
 
 		Console.WriteLine(new JSONSerializer().Serialize(book))
 		Console.ReadKey()
