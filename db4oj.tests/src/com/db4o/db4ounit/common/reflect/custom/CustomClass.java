@@ -102,7 +102,7 @@ public class CustomClass implements ReflectClass {
 	}
 
 	public Reflector reflector() {
-		throw new NotImplementedException();
+		return _repository._reflector;
 	}
 
 	public Iterator4 customFields() {
