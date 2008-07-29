@@ -333,11 +333,11 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
     }
 
-    void collectConstraints(Transaction a_trans, QConObject a_parent,
+    void collectConstraints(Transaction trans, QConObject a_parent,
         Object a_template, Visitor4 a_visitor) {
-        Object obj = getOn(a_trans, a_template);
+        Object obj = getOn(trans, a_template);
         if (obj != null) {
-            Collection4 objs = Platform4.flattenCollection(a_trans.container(), obj);
+            Collection4 objs = Platform4.flattenCollection(trans.container(), obj);
             Iterator4 j = objs.iterator();
             while (j.moveNext()) {
                 obj = j.current();
@@ -356,8 +356,8 @@ public class FieldMetadata extends ClassAspect implements StoredField {
                     	return;
                     }
                     if (!a_parent.hasObjectInParentPath(obj)) {
-                        QConObject constraint = new QConObject(a_trans, a_parent,
-                                qField(a_trans), obj);
+                        QConObject constraint = new QConObject(trans, a_parent,
+                                qField(trans), obj);
                         constraint.byExample();
                         a_visitor.visit(constraint);
                     }

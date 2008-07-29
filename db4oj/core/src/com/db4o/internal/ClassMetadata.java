@@ -420,7 +420,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         final Visitor4 visitor) {
         forEachField(new Procedure4() {
             public void apply(Object arg) {
-                ((FieldMetadata)arg).collectConstraints(trans, parentConstraint, obj, visitor);
+                FieldMetadata fieldMetadata = (FieldMetadata)arg;
+                if(fieldMetadata.enabled(AspectVersionContextImpl.CHECK_ALWAYS_ENABLED)){
+                	fieldMetadata.collectConstraints(trans, parentConstraint, obj, visitor);
+                }
             }
         });
     }
