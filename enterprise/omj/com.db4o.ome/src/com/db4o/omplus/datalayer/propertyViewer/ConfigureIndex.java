@@ -54,7 +54,7 @@ public class ConfigureIndex {
 		if(storedClz != null) {
 			for(FieldProperties field : clsProperties.getFields()) {
 				StoredField sField = storedClz.storedField(field.getFieldName(), storedClz);
-				if(isIndexable(sField, null)) {
+				if(isIndexable(sField, db.getDB())) {
 					index(clazz, field.getFieldName(), field.isIndexed());
 					if(!reconnect)
 						reconnect = true;
