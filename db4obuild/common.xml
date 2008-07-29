@@ -31,7 +31,14 @@
 			<path path="${path.classpath.full}" />
 		</classpath>
 	</taskdef>
-	
+
+	<taskdef name="db4oIteration" classname="com.db4o.devtools.ant.Db4oIterationTask">
+		<classpath>
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+
 	<taskdef name="filehead" classname="com.db4o.devtools.ant.FileHeadAntTask">
 		<classpath>
 			<pathelement location="${dir.build.bin}" />
@@ -170,9 +177,7 @@
 	</macrodef>
 
 	<target name="properties" depends="get-svn-revision">
-		<tstamp>
-			<format property="db4o.iteration" pattern="w" offset="-29" unit="week"/>
-		</tstamp>
+		<db4oIteration property="db4o.iteration" />
 		<property name="db4o.version.iteration.revision" value="${db4o.version.dotted}.${db4o.iteration}.${svn.revision}" />
 		<property name="db4o.file" value="db4o-${db4o.version.iteration.revision}-" />
 		
