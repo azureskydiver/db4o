@@ -16,7 +16,7 @@
 	<property name="dir.dist.ome.temp.zip.features" location="${dir.dist.ome.temp.zip}/features" />
 	<property name="dir.dist.ome.temp.zip.features.ome" location="${dir.dist.ome.temp.zip.features}/com.db4o.ome.feature_${omej.version}" />
 	<property name="file.omej.manifest.tmp" location="${dir.dist.ome.temp}/MANIFEST.MF" />
-	<property name="file.omej.zip" location="${dir.dist.ome}/com.db4o.omej_${omej.version}.zip" />
+	<property name="file.omej.zip" location="${dir.dist.ome}/ObjectManagerEnterprise-Java-${omej.version}.zip" />
 	
 	<macrodef name="build-plugin">
 		
