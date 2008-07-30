@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{B762EAE2-AADD-4419-AFE4-E2344769525C}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -123,7 +123,6 @@
     <Content Include="ContactSales\ContactSales_files\image002.jpg" />
     <Content Include="FAQ\FAQ.htm" />
     <EmbeddedResource Include="FAQ\FAQ_files\filelist.xml" />
-    <Content Include="OMAddin.AddIn" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LoggingBlock\LoggingBlock.csproj">
