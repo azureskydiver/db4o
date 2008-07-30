@@ -13,7 +13,7 @@ import com.db4o.internal.marshall.*;
  */
 public class TypeHandlerAspect extends ClassAspect {
     
-    private final TypeHandler4 _typeHandler;
+    public final TypeHandler4 _typeHandler;
     
     public TypeHandlerAspect(TypeHandler4 typeHandler){
         _typeHandler = typeHandler;

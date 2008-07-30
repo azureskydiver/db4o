@@ -140,27 +140,18 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     void addMembers(ObjectContainerBase container) {
 		bitTrue(Const4.CHECKED_CHANGES);
 
-		boolean dirty = isDirty();
-
-		boolean typeHandlerInstalled = false;
-		boolean translatorInstalled = false;
-		boolean aspectListModified = false;
-
 		Collection4 aspects = new Collection4();
 
 		if (null != _aspects) {
 			aspects.addAll(_aspects);
 		}
+		
+		TypeHandler4 customTypeHandler = container.handlers().configuredTypeHandler(classReflector());
 
-		ObjectTranslator ot = getTranslator();
-		if (ot != null) {
-			_translator = new TranslatedAspect(this, ot);
-			if (!replaceAspectByName(aspects, _translator)) {
-				aspects.add(_translator);
-				dirty = true;
-			}
-			translatorInstalled = true;
-			aspectListModified = true;
+		boolean dirty = isDirty();
+		
+		if(installTranslator(aspects, customTypeHandler)){
+			dirty = true;
 		}
 
 		if (container.detectSchemaChanges()) {
@@ -179,30 +170,15 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			}
 		}
 
-	    TypeHandler4 customTypeHandler = container.handlers().registerTypeHandlerVersions(
-				this, classReflector());
-		if (customTypeHandler != null) {
-			TypeHandlerAspect typeHandlerAspect = new TypeHandlerAspect(
-					customTypeHandler);
-			if (!replaceAspectByName(aspects, typeHandlerAspect)) {
-				aspects.add(typeHandlerAspect);
-				dirty = true;
-			}
-			if(customTypeHandler instanceof EmbeddedTypeHandler){
-				_typeHandler = customTypeHandler;
-			}
-			aspectListModified = true;
-			typeHandlerInstalled = true;
-			
-			if(translatorInstalled){
-				_translator.disableFromAspectCountVersion(aspects.size());
-			}
-
+		if(installCustomTypehandler(aspects, customTypeHandler)){
+			dirty = true;
 		}
+		
+		boolean defaultFieldBehaviour = _translator == null  &&  customTypeHandler == null; 
 
 		if (container.detectSchemaChanges()) {
 
-			if (!translatorInstalled  && !typeHandlerInstalled) {
+			if ( defaultFieldBehaviour) {
 				dirty = collectReflectFields(container, aspects) | dirty;
 			}
 
@@ -212,7 +188,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
 		}
 
-		if (dirty || aspectListModified) {
+		if (dirty || ! defaultFieldBehaviour) {
 			_aspects = new ClassAspect[aspects.size()];
 			aspects.toArray(_aspects);
 			for (int i = 0; i < _aspects.length; i++) {
@@ -231,6 +207,48 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
 		_container.callbacks().classOnRegistered(this);
 		setStateOK();
+	}
+
+	private boolean installCustomTypehandler(Collection4 aspects, TypeHandler4 customTypeHandler) {
+		if (customTypeHandler == null) {
+			return false;
+		}
+		boolean dirty = false;
+		TypeHandlerAspect typeHandlerAspect = new TypeHandlerAspect(
+				customTypeHandler);
+		if (!replaceAspectByName(aspects, typeHandlerAspect)) {
+			aspects.add(typeHandlerAspect);
+			dirty = true;
+		}
+		if(customTypeHandler instanceof EmbeddedTypeHandler){
+			_typeHandler = customTypeHandler;
+		}
+		if(_translator != null){
+			_translator.disableFromAspectCountVersion(aspects.size());
+		}
+		return dirty;
+	}
+
+	private boolean installTranslator(Collection4 aspects,
+			TypeHandler4 customTypeHandler) {
+    	if( i_config == null){
+    		return false;
+    	}
+		ObjectTranslator ot = i_config.getTranslator();
+		if (ot == null) {
+			return false;
+		}
+		TranslatedAspect translator = new TranslatedAspect(this, ot);
+		if (replaceAspectByName(aspects, translator)) {
+			_translator = translator;
+			return false;
+		}
+		if(customTypeHandler == null){
+			aspects.add(translator);
+			_translator = translator;
+			return true;
+		}
+		return false;
 	}
 
     private boolean replaceAspectByName(Collection4 aspects, ClassAspect aspect) {
@@ -275,12 +293,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return dirty;
 	}
     
-    private ObjectTranslator getTranslator() {
-    	return i_config == null
-    		? null
-    		: i_config.getTranslator();
-    }
-
     void addToIndex(Transaction trans, int id) {
         if (! trans.container().maintainsIndices()) {
             return;

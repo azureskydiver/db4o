@@ -61,9 +61,14 @@ class JDK_1_2 extends JDKReflect {
     }
     
     public void extendConfiguration(Config4Impl config) {
-        new CollectionTypeHandlerRegistry(config, new CollectionTypeHandler()).registerCollections(new Class[]{
-           AbstractCollection.class,
-        });
+        CollectionTypeHandlerRegistry registry = new CollectionTypeHandlerRegistry(config, new CollectionTypeHandler());
+		registry.registerCollection(AbstractCollection.class);
+		registry.ignoreFieldsOn(AbstractList.class);
+		registry.ignoreFieldsOn(AbstractSequentialList.class);
+		registry.ignoreFieldsOn(LinkedList.class);
+		registry.ignoreFieldsOn(ArrayList.class);
+		registry.ignoreFieldsOn(Vector.class);
+		registry.ignoreFieldsOn(Stack.class);
     }
 
     void forEachCollectionElement(Object a_object, Visitor4 a_visitor) {
