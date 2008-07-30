@@ -24,8 +24,8 @@
 			</then>
 		</if>
 
-		<move file = "${dir.omn.dist.src}/OMInstaller/Release/OMInstaller.msi" tofile="${dir.omn.dist}/OMInstaller-${db4o.version.dotted}.msi" overwrite="true"/>
-		<move file = "${dir.omn.dist.src}/OMInstaller_VS2008/Release/OMInstaller_vs2008.msi" tofile="${dir.omn.dist}/OMInstaller_vs2008-${db4o.version.dotted}.msi" overwrite="true"/>		
+		<move file = "${dir.omn.dist.src}/OMInstaller/Release/OMInstaller.msi" tofile="${dir.omn.dist}/OMInstaller_VS2005-${db4o.version.dotted}.msi" overwrite="true"/>
+		<move file = "${dir.omn.dist.src}/OMInstaller_VS2008/Release/OMInstaller_vs2008.msi" tofile="${dir.omn.dist}/OMInstaller_VS2008-${db4o.version.dotted}.msi" overwrite="true"/>		
 	</target>
 	
 	<target name="prepare-build" depends="properties">
