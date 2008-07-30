@@ -130,6 +130,12 @@
         "Entry"
         {
         "MsmKey" = "8:_2B30514DCEBE245A2EA17AFB90BAC0E5"
+        "OwnerKey" = "8:_448C6C848141E3023CD8795571BA1CC0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2B30514DCEBE245A2EA17AFB90BAC0E5"
         "OwnerKey" = "8:_B4966A883A12455FA3E2305EE0272ABB"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -137,12 +143,6 @@
         {
         "MsmKey" = "8:_2B30514DCEBE245A2EA17AFB90BAC0E5"
         "OwnerKey" = "8:_56BAB4938D0A4DBBA418E35FED1E4FE7"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2B30514DCEBE245A2EA17AFB90BAC0E5"
-        "OwnerKey" = "8:_448C6C848141E3023CD8795571BA1CC0"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -292,6 +292,12 @@
         "Entry"
         {
         "MsmKey" = "8:_4C8F5F2CCC51DF42AEF13C0B08032A68"
+        "OwnerKey" = "8:_448C6C848141E3023CD8795571BA1CC0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_4C8F5F2CCC51DF42AEF13C0B08032A68"
         "OwnerKey" = "8:_B4966A883A12455FA3E2305EE0272ABB"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -299,12 +305,6 @@
         {
         "MsmKey" = "8:_4C8F5F2CCC51DF42AEF13C0B08032A68"
         "OwnerKey" = "8:_56BAB4938D0A4DBBA418E35FED1E4FE7"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4C8F5F2CCC51DF42AEF13C0B08032A68"
-        "OwnerKey" = "8:_448C6C848141E3023CD8795571BA1CC0"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -400,6 +400,12 @@
         "Entry"
         {
         "MsmKey" = "8:_69916ABD0CAEEF8B548FFE6AF95B74CE"
+        "OwnerKey" = "8:_448C6C848141E3023CD8795571BA1CC0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_69916ABD0CAEEF8B548FFE6AF95B74CE"
         "OwnerKey" = "8:_B4966A883A12455FA3E2305EE0272ABB"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -407,12 +413,6 @@
         {
         "MsmKey" = "8:_69916ABD0CAEEF8B548FFE6AF95B74CE"
         "OwnerKey" = "8:_56BAB4938D0A4DBBA418E35FED1E4FE7"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_69916ABD0CAEEF8B548FFE6AF95B74CE"
-        "OwnerKey" = "8:_448C6C848141E3023CD8795571BA1CC0"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -792,7 +792,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\OMInstaller.msi"
+        "OutputFilename" = "8:Release\\ObjectManagerEnterprise-vs2005.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -1262,7 +1262,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Db4objects.Db4o, Version=7.4.1.11182, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Db4objects.Db4o, Version=7.3.46.10936, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_3393E26A166F467197FEC37F22495F02"
@@ -1508,7 +1508,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:OMAddin, Version=1.0.3131.29745, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:OMAddin, Version=1.0.3133.22568, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_56BAB4938D0A4DBBA418E35FED1E4FE7"
