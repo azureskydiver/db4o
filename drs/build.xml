@@ -27,11 +27,12 @@
 	</path>
 
     <available property="db4obuild.available" 
-        file="../db4obuild/dist/java/lib" />
+        file="${dir.dist.jars}" />
     
 	<property name="dir.workspace" value=".." />
 	<property file="${dir.workspace}/db4obuild/ant.properties" />
-	<import file="${dir.workspace}/db4obuild/common.xml" optional="true"/>
+	<property name="dir.base" value="${dir.workspace}" />
+	<import file="${dir.base}/db4obuild/common.xml" />
 
 	<condition property="svn.revision" value="0000">
 		<not>
@@ -72,7 +73,7 @@
     
     <target name="copy.db4o.jar" if="db4obuild.available">
         <copy todir="lib">
-            <fileset dir="../db4obuild/dist/java/lib" >
+            <fileset dir="${dir.dist.jars}" >
                 <include name="db4o-*-java5.jar" />
                 <include name="db4o-*-db4ounit.jar" />
             </fileset>
