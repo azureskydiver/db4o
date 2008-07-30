@@ -77,26 +77,13 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         if(payLoadOffSet == 0){
             return null;
         }
-
-        TypeHandler4 ret = null;
-
         context.seek(payLoadOffSet);
-        
-        int yapClassID = context.readInt();
-        
-        ClassMetadata yc = context.container().classMetadataForId(yapClassID);
-        if(yc != null){
-            TypeHandler4 configuredHandler =
-                context.container().configImpl().typeHandlerForClass(yc.classReflector(), HandlerRegistry.HANDLER_VERSION);
-            if(configuredHandler != null && configuredHandler instanceof FirstClassHandler){
-                ret = ((FirstClassHandler)configuredHandler).readCandidateHandler(context);
-            }
-            else {
-                ret = yc.readCandidateHandler(context);
-            }
+        int classMetadataID = context.readInt();
+        ClassMetadata classMetadata = context.container().classMetadataForId(classMetadataID);
+        if(classMetadata == null){
+        	return null;
         }
-        return ret;
-	    
+    	return classMetadata.readCandidateHandler(context);
 	}
     
     public ObjectID readObjectID(InternalReadContext context){

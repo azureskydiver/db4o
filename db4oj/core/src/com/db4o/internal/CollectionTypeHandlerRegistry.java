@@ -26,16 +26,21 @@ public class CollectionTypeHandlerRegistry {
         return NullableArrayHandling.enabled();
     }
     
-    public void registerCollections(Class[] classes){
+    public void registerCollection(Class clazz){
         if(! enabled()){
             return;
         }
-        for (int i = 0; i < classes.length; i++) {
-            registerListTypeHandler(classes[i]);    
-        }
+        registerListTypeHandlerFor(clazz);    
     }
     
-    private void registerListTypeHandler(Class clazz){
+    public void ignoreFieldsOn(Class clazz){
+    	if(! enabled()){
+            return;
+        }
+    	_config.registerTypeHandler(new SingleClassTypeHandlerPredicate(clazz), new IgnoreFieldsTypeHandler());
+    }
+    
+    private void registerListTypeHandlerFor(Class clazz){
         _config.registerTypeHandler(new SingleClassTypeHandlerPredicate(clazz), _listTypeHandler);
     }
 
