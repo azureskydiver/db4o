@@ -227,7 +227,7 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
         Assert.areEqual(storedItemChild(), retrieveItemOfClass(ItemChild.class));
     }
     
-    public void _testGrandChildClass(){
+    public void testGrandChildClass(){
         Assert.areEqual(storedItemGrandChild(), retrieveItemOfClass(ItemGrandChild.class));
     }
     
