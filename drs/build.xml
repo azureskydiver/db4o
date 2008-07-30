@@ -40,11 +40,7 @@
 	</condition>
 	
 	<target name="drs.properties" if="db4obuild.available" depends="get-svn-revision">
-		<echo>Revision: ${svn.revision}</echo>
-		<tstamp>
-			<format property="db4o.iteration" pattern="w" offset="-29" unit="week"/>
-		</tstamp>
-
+		<db4oIteration property="db4o.iteration" />
 		<property name="drs.version.dotted" 
 			value="${drs.version.major}.${drs.version.minor}.${db4o.iteration}.${svn.revision}" />
 	</target>
