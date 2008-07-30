@@ -77,7 +77,7 @@ public class TypeHandlerAspect extends ClassAspect {
     	context.slotFormat().doWithSlotIndirection(context, new Closure4() {
 			public Object run() {
 		        Object readObject = _typeHandler.read(context);
-		        if(oldObject != readObject){
+		        if(readObject != null && oldObject != readObject){
 		        	context.persistentObject(readObject);
 		        }
 				return null;

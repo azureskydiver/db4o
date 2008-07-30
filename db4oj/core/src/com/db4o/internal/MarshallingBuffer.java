@@ -282,6 +282,9 @@ public class MarshallingBuffer implements WriteBuffer{
     }
 
     private void blockAlign(int length) {
+    	if(_delegate == null){
+    		return;
+    	}
         if(length > _delegate.length()){
             int sizeNeeded = length - _delegate.offset();
             prepareWrite(sizeNeeded);
