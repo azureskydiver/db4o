@@ -11,6 +11,7 @@ import com.db4o.internal.marshall.*;
 import com.db4o.internal.replication.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
+import com.db4o.typehandlers.*;
 
 
 /**
@@ -613,7 +614,11 @@ public final class HandlerRegistry {
     }
 
     public TypeHandler4 configuredTypeHandler(ReflectClass claxx) {
-        return container().configImpl().typeHandlerForClass(claxx, HANDLER_VERSION);
+        TypeHandler4 typeHandler = container().configImpl().typeHandlerForClass(claxx, HANDLER_VERSION);
+        if(typeHandler != null  && typeHandler instanceof EmbeddedTypeHandler){
+        	_mapReflectorToTypeHandler.put(claxx, typeHandler);
+        }
+        return typeHandler;
     }
 
 }

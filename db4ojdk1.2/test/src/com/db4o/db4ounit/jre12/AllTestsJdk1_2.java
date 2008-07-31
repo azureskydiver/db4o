@@ -25,6 +25,7 @@ public class AllTestsJdk1_2 extends Db4oTestSuite {
 			com.db4o.db4ounit.jre12.blobs.AllTests.class,
 			com.db4o.db4ounit.jre12.defragment.AllTests.class,
 			com.db4o.db4ounit.jre12.fieldindex.AllTests.class,
+			com.db4o.db4ounit.jre12.handlers.AllTests.class,
 			com.db4o.db4ounit.jre12.soda.AllTests.class,
 			com.db4o.db4ounit.jre12.collections.AllTests.class,
 			com.db4o.db4ounit.jre12.collections.facades.AllTests.class,
