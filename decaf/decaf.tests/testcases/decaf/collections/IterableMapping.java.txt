@@ -1,25 +1,26 @@
-package decaf.collections;
+import java.lang.*;
+import java.util.*;
 
 class MyIterable implements Iterable<Integer> {
-	Iterator<Integer> iterator() {
-		return new List<Integer>().iterator();
+	public Iterator<Integer> iterator() {
+		return new ArrayList<Integer>().iterator();
 	}
 }
 
 class SimpleIterable {
 	public void test() {
-		justIterate(new List<int>());		
-		justIterate(new List<String>());
+		justIterate(new ArrayList<Integer>());		
+		justIterateGeneric(new ArrayList<String>());
 		justIterate(new MyIterable());
 	}
 		
-	private void justIterate(Iterable<int> iterable) {
+	private void justIterate(Iterable<Integer> iterable) {
 		for (int v : iterable) {
 			System.out.println(v);
 		}
 	}
 	
-	private void justIterate2<T>(Iterable<T> iterable) {
+	private <T> void justIterateGeneric(Iterable<T> iterable) {
 		for (T v : iterable) {
 			System.out.println("First Pass: " + v);
 		}
