@@ -11,35 +11,43 @@ import com.db4o.typehandlers.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-/**
- * @exclude
- */
 public class TypeHandlerConfigurationTestCase extends AbstractDb4oTestCase {
 	
-	public static class Item {
+	public static class Holder {
 		
-		public List _list;
+		public Object _storedObject;
 		
-		public Item(List list){
-			_list = list;
+		public Holder(Object storedObject){
+			_storedObject = storedObject;
 		}
 		
 	}
 	
 	public void store(){
-		store(new Item(new ArrayList()));
+		addMetadata(new ArrayList());
+	}
+
+	private void addMetadata(Object storedObject) {
+		store(new Holder(storedObject));
 	}
 	
 	public void test(){
 		if(NullableArrayHandling.disabled()){
 			return;
 		}
-		ClassMetadata classMetadata = classMetadata(ArrayList.class);
-		assertSingleNullTypeHandlerAspect(classMetadata);
+		assertSingleNullTypeHandlerAspect(ArrayList.class);
+		assertSingleNullTypeHandlerAspect(AbstractList.class);
+		assertSingleTypeHandlerAspect(AbstractCollection.class, CollectionTypeHandler.class);
 	}
 
-	private void assertSingleNullTypeHandlerAspect(ClassMetadata classMetadata) {
+	private void assertSingleNullTypeHandlerAspect(Class storedClass) {
+		assertSingleTypeHandlerAspect(storedClass, IgnoreFieldsTypeHandler.class);
+	}
+
+	private void assertSingleTypeHandlerAspect(Class storedClass,
+			final Class typeHandlerClass) {
 		final IntByRef aspectCount = new IntByRef(0);
+		ClassMetadata classMetadata = classMetadata(storedClass);
 		classMetadata.forEachDeclaredAspect(new Procedure4() {
 			public void apply(Object arg) {
 				aspectCount.value ++;
@@ -47,7 +55,7 @@ public class TypeHandlerConfigurationTestCase extends AbstractDb4oTestCase {
 				ClassAspect aspect = (ClassAspect) arg;
 				Assert.isInstanceOf(TypeHandlerAspect.class, aspect);
 				TypeHandlerAspect typeHandlerAspect = (TypeHandlerAspect) aspect;
-				Assert.isInstanceOf(IgnoreFieldsTypeHandler.class, typeHandlerAspect._typeHandler);
+				Assert.isInstanceOf(typeHandlerClass, typeHandlerAspect._typeHandler);
 			}
 		});
 	}

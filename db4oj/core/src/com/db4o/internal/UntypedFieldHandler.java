@@ -20,7 +20,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 	}
 
 	public void cascadeActivation(ActivationContext4 context){
-	    TypeHandler4 typeHandler = typeHandlerForObject(context.targetObject(), true);
+	    TypeHandler4 typeHandler = typeHandlerForObject(context.targetObject());
 	    if (typeHandler instanceof FirstClassHandler) {
 	        ((FirstClassHandler)typeHandler).cascadeActivation(context);
 	    }
@@ -199,19 +199,9 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     }
 
     public TypeHandler4 typeHandlerForObject(Object obj) {
-    	return typeHandlerForObject(obj, false);
-    }
-
-    public TypeHandler4 typeHandlerForObject(Object obj, boolean lookupRegistered) {
         ReflectClass claxx = reflector().forObject(obj);
         if(claxx.isArray()){
             return handlerRegistry().untypedArrayHandler(claxx);
-        }
-        if(lookupRegistered) {
-	        TypeHandler4 configuredHandler = configuredHandler(claxx);
-	        if(configuredHandler != null){
-	            return configuredHandler;
-	        }
         }
         return container().typeHandlerForReflectClass(claxx);
     }
