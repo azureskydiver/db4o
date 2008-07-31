@@ -287,6 +287,19 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 		return _size;
 	}
 	
+	public int indexOf(Object obj){
+		int index = 0;
+		List4 current = _first;
+		while (current != null) {
+			if (current.holds(obj)) {
+				return index;
+			}
+			index++;
+			current = current._next;
+		}
+		return -1;
+	}
+	
 	public final boolean isEmpty() {
 		return _size == 0;
 	}
@@ -336,4 +349,5 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	private Iterator4 internalIterator() {
 		return new Iterator4Impl(_first);
 	}
+	
 }
