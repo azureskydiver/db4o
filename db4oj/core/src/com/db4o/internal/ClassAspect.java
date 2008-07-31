@@ -44,8 +44,15 @@ public abstract class ClassAspect {
 
 	public abstract void delete(DeleteContextImpl context, boolean isUpdate);
 	
+	public abstract boolean canBeDisabled();
+	
 	public void disableFromAspectCountVersion(int aspectCount) {
-		_disabledFromAspectCountVersion = aspectCount;
+		if(! canBeDisabled()){
+			return;
+		}
+		if(aspectCount < _disabledFromAspectCountVersion){
+			_disabledFromAspectCountVersion = aspectCount;
+		}
 	}
 	
 	public boolean enabled(AspectVersionContext context){

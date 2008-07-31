@@ -40,6 +40,10 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         return fieldName.equals(getName()); 
     }
     
+	public boolean canBeDisabled() {
+		return false;
+	}
+    
     public boolean canUseNullBitmap(){
         return false;
     }
