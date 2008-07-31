@@ -35,7 +35,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
             public int aspectCount(ClassMetadata classMetadata, ByteArrayBuffer reader) {
                 return context.readInt();
             }
-            public void processAspect(ClassAspect aspect, boolean isNull, ClassMetadata containingClass) {
+            public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
                 if (!isNull) {
                     aspect.defragAspect(context);
                 } 
@@ -55,7 +55,10 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
         ContextState savedState = context.saveState();
         
         TraverseAspectCommand command = new TraverseAspectCommand() {
-            public void processAspect(ClassAspect aspect, boolean isNull, ClassMetadata containingClass) {
+            public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
+				if(! aspect.enabled(context)){
+					return;
+				}
                 if(aspect instanceof FieldMetadata){
                     FieldMetadata field = (FieldMetadata) aspect;
                     if(field.updating()){
@@ -66,6 +69,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                         return;
                     }
                 }
+
                 aspect.instantiate(context);
             }
         };
@@ -74,7 +78,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
         if(updateFieldFound.value){
             context.restoreState(savedState);
             command = new TraverseFieldCommand() {
-                public void processAspect(ClassAspect aspect, boolean isNull, ClassMetadata containingClass) {
+                public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
                     if (! isNull) {
                         ((FieldMetadata)aspect).attemptUpdate(context);
                     }
@@ -123,9 +127,9 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                 context.fieldCount(fieldCount);
                 return fieldCount;
             }
-            public void processAspect(ClassAspect aspect, boolean isNull, ClassMetadata containingClass) {
+            public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
                 if(! aspect.enabled(context)){
-                	context.isNull(context.currentSlot(), true);
+                	context.isNull(currentSlot, true);
                 	return;
                 }
                 Object marshalledObject = obj;
@@ -133,7 +137,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                     FieldMetadata field = (FieldMetadata) aspect;
                     marshalledObject = field.getOrCreate(trans, obj);
                     if(marshalledObject == null) {
-                        context.isNull(context.currentSlot(), true);
+                        context.isNull(currentSlot, true);
                         field.addIndexEntry(trans, context.objectID(), null);
                         return;
                     }
@@ -197,7 +201,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
         }
         
 
-        public abstract void processAspect(ClassAspect aspect,boolean isNull, ClassMetadata containingClass);
+        public abstract void processAspect(ClassAspect aspect,int currentSlot, boolean isNull, ClassMetadata containingClass);
     }
     
     public abstract static class TraverseFieldCommand extends TraverseAspectCommand{
@@ -208,28 +212,25 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
     }
     
     protected final void traverseAllAspects(MarshallingInfo context, TraverseAspectCommand command) {
+    	int currentSlot = 0;
         ClassMetadata classMetadata = classMetadata();
         while(classMetadata != null){
-            traverseDeclaredAspects(context, classMetadata, command);
+            int fieldCount=command.aspectCount(classMetadata, ((ByteArrayBuffer)context.buffer()));
+			context.aspectCount(fieldCount);
+			for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
+			    if(command.accept(classMetadata._aspects[i])){
+			        command.processAspect(
+			        		classMetadata._aspects[i],
+			        		currentSlot,
+			        		isNull(context,currentSlot), classMetadata);
+			    }
+			    context.beginSlot();
+			    currentSlot++;
+			}
             if(command.cancelled()){
                 return;
             }
             classMetadata = classMetadata.i_ancestor;
-        }
-    }
-    
-    private void traverseDeclaredAspects(MarshallingInfo context, ClassMetadata classMetadata,
-        TraverseAspectCommand command) {
-        int fieldCount=command.aspectCount(classMetadata, ((ByteArrayBuffer)context.buffer()));
-        context.aspectCount(fieldCount);
-        for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
-            if(command.accept(classMetadata._aspects[i])){
-                command.processAspect(
-                		classMetadata._aspects[i],
-                		isNull(context,context.currentSlot()),
-                		classMetadata);
-            }
-            context.beginSlot();
         }
     }
     
@@ -284,7 +285,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
     
     public void collectIDs(final CollectIdContext context, final String fieldName) {
         TraverseAspectCommand command = new TraverseAspectCommand() {
-            public void processAspect(ClassAspect aspect, boolean isNull, ClassMetadata containingClass) {
+            public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
                 if(isNull) {
                     return;
                 }
@@ -336,7 +337,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
     
     public void readVirtualAttributes(final ObjectReferenceContext context){
         TraverseAspectCommand command = new TraverseAspectCommand() {
-            public void processAspect(ClassAspect aspect, boolean isNull, ClassMetadata containingClass) {
+            public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
                 if (!isNull) {
                     if(aspect instanceof VirtualFieldMetadata){
                         ((VirtualFieldMetadata)aspect).readVirtualAttribute(context);
@@ -351,7 +352,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
 
     public void addFieldIndices(final ObjectIdContextImpl context, final Slot oldSlot) {
         TraverseAspectCommand command = new TraverseFieldCommand() {
-            public void processAspect(ClassAspect aspect, boolean isNull, ClassMetadata containingClass) {
+            public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
                 FieldMetadata field = (FieldMetadata)aspect;
                 if (isNull) {
                     field.addIndexEntry(context.transaction(), context.id(), null);
@@ -365,7 +366,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
     
     public void deleteMembers(final DeleteContextImpl context, final boolean isUpdate) {
         TraverseAspectCommand command=new TraverseAspectCommand() {
-            public void processAspect(ClassAspect aspect, boolean isNull, ClassMetadata containingClass) {
+            public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
                 if(isNull){
                 	if(aspect instanceof FieldMetadata){
                 		FieldMetadata field = (FieldMetadata)aspect;
@@ -382,7 +383,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
     public boolean seekToField(final ObjectHeaderContext context, final FieldMetadata field) {
         final BooleanByRef found = new BooleanByRef(false);
         TraverseAspectCommand command=new TraverseAspectCommand() {
-            public void processAspect(ClassAspect curField, boolean isNull, ClassMetadata containingClass) {
+            public void processAspect(ClassAspect curField, int currentSlot, boolean isNull, ClassMetadata containingClass) {
                 if (curField == field) {
                     found.value = !isNull;
                     cancel();

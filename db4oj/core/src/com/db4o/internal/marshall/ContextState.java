@@ -10,11 +10,8 @@ public class ContextState {
     
     public final int _offset;
     
-    public final int _currentSlot;
-    
-    public ContextState(int offset, int currentSlot){
+    public ContextState(int offset){
         _offset = offset;
-        _currentSlot = currentSlot;
     }
 
 }

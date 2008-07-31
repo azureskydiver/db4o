@@ -46,6 +46,15 @@ public abstract class ClassAspect {
 	
 	public abstract boolean canBeDisabled();
 	
+    protected boolean checkEnabled(AspectVersionContext context){
+    	if(! enabled(context)){
+    		incrementOffset((ReadBuffer)context);
+    		return false;
+    	}
+    	return true;
+    }
+
+	
 	public void disableFromAspectCountVersion(int aspectCount) {
 		if(! canBeDisabled()){
 			return;

@@ -83,14 +83,12 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
         }
 
         public void write(WriteContext context, Object obj) {
-            assertCurrentSlot(context, 0);
             ItemGrandChild item = (ItemGrandChild)obj;
             context.writeInt(item.age);
             context.writeInt(100);
         }
 
         public Object read(ReadContext context) {
-            assertCurrentSlot(context, 0);
             ItemGrandChild item = (ItemGrandChild)((UnmarshallingContext) context).persistentObject();
             item.age = context.readInt();
             int check = context.readInt();
@@ -252,10 +250,5 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
     ReflectClass itemClass(){
         return reflector().forClass(Item.class);
     }
-    
-    static void assertCurrentSlot(Object context, int expectedSlot) {
-        Assert.areEqual(expectedSlot, ((MarshallingInfo)context).currentSlot());
-    }
-
 
 }

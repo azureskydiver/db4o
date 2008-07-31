@@ -25,8 +25,6 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	
 	private final ObjectHeader _objectHeader;
 	
-	private int _currentSlot;
-	
 	private int _aspectCount;
 	
 	public DefragmentContextImpl(ByteArrayBuffer source, DefragmentContextImpl context) {
@@ -366,15 +364,11 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
     }
 
     public void beginSlot() {
-        _currentSlot ++;
+        // do nothing
     }
 
     public ClassMetadata classMetadata() {
         return _objectHeader.classMetadata();
-    }
-
-    public int currentSlot() {
-        return _currentSlot;
     }
 
     public boolean isNull(int fieldIndex) {

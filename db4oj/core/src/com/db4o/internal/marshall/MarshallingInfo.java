@@ -15,8 +15,6 @@ public interface MarshallingInfo extends FieldListInfo, AspectVersionContext {
 
     public ReadBuffer buffer();
     
-    public int currentSlot();
-    
     public void beginSlot();
     
 }

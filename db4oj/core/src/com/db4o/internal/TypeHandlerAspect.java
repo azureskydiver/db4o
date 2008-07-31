@@ -73,6 +73,9 @@ public class TypeHandlerAspect extends ClassAspect {
     }
 
     public void instantiate(final UnmarshallingContext context) {
+    	if(! checkEnabled(context)){
+    		return;
+    	}
     	final Object oldObject = context.persistentObject();
     	context.slotFormat().doWithSlotIndirection(context, new Closure4() {
 			public Object run() {
