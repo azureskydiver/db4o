@@ -218,7 +218,7 @@ public class WixBuilder
 	
 	string GetIdFromRelativePath(string path)
 	{
-		return path.Replace("\\", ".").Replace("/", ".").Replace("-", "_").Replace("$", "_");
+		return path.Replace("\\", ".").Replace("/", ".").Replace("-", "_").Replace("$", "_").Replace(" ", "_");
 	}
 		
 	string GetRelativePath(string path)
