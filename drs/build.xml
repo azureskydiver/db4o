@@ -32,7 +32,14 @@
 	<property name="dir.workspace" value=".." />
 	<property file="${dir.workspace}/db4obuild/ant.properties" />
 	<property name="dir.base" value="${dir.workspace}" />
-	<import file="${dir.base}/db4obuild/common.xml" />
+
+	<taskdef name="db4oIteration" classname="com.db4o.devtools.ant.Db4oIterationTask">
+		<classpath>
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+	<db4oIteration property="db4o.iteration"/>
 
 	<condition property="svn.revision" value="0000">
 		<not>
