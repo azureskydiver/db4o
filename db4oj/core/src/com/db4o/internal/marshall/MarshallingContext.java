@@ -38,8 +38,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     
     private int _fieldWriteCount;
     
-    private int _currentSlot;
-    
     private ByteArrayBuffer _debugPrepend;
     
     private Object _currentMarshalledObject;
@@ -241,7 +239,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     }
 
     public void beginSlot(){
-        _currentSlot++;
         _fieldWriteCount = 0;
         _currentBuffer = _writeBuffer;
     }
@@ -366,10 +363,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         return reservedBuffer;
     }
 
-    public int currentSlot() {
-        return _currentSlot;
-    }
-    
 	public int aspectCount() {
 		return _aspectCount;
 	}

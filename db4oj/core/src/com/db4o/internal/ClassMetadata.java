@@ -213,6 +213,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		if (customTypeHandler == null) {
 			return false;
 		}
+		if(customTypeHandler instanceof EmbeddedTypeHandler){
+			_typeHandler = customTypeHandler;
+		}
 		boolean dirty = false;
 		TypeHandlerAspect typeHandlerAspect = new TypeHandlerAspect(
 				customTypeHandler);
@@ -220,9 +223,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			aspects.add(typeHandlerAspect);
 			dirty = true;
 		}
-		if(customTypeHandler instanceof EmbeddedTypeHandler){
-			_typeHandler = customTypeHandler;
-		}
+		disableAspectsBefore(aspects, typeHandlerAspect);
+		return dirty;
+	}
+
+	private void disableAspectsBefore(Collection4 aspects, TypeHandlerAspect typeHandlerAspect) {
 		int disableFromVersion = aspects.indexOf(typeHandlerAspect) + 1;
 		Iterator4 i = aspects.iterator();
 		while(i.moveNext()){
@@ -232,7 +237,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			}
 			aspect.disableFromAspectCountVersion(disableFromVersion);
 		}
-		return dirty;
 	}
 
 	private boolean installTranslator(Collection4 aspects,

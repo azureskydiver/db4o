@@ -687,8 +687,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
     
     private boolean checkAlive(AspectVersionContext context){
-    	if(! enabled(context)){
-    		incrementOffset((ReadBuffer)context);
+    	if(! checkEnabled(context)){
     		return false;
     	}
     	

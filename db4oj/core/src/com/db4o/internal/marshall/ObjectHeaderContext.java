@@ -13,8 +13,6 @@ public class ObjectHeaderContext extends AbstractReadContext implements Marshall
     
     protected ObjectHeader _objectHeader;
     
-    private int _currentSlot;
-    
 	private int _aspectCount;
     
     public ObjectHeaderContext(Transaction transaction, ReadBuffer buffer, ObjectHeader objectHeader) {
@@ -35,20 +33,15 @@ public class ObjectHeaderContext extends AbstractReadContext implements Marshall
     }
     
     public void beginSlot() {
-        _currentSlot++;
-    }
-
-    public int currentSlot() {
-        return _currentSlot;
+        // do nothing
     }
     
     public ContextState saveState(){
-        return new ContextState(offset(), _currentSlot);
+        return new ContextState(offset());
     }
     
     public void restoreState(ContextState state){
         seek(state._offset);
-        _currentSlot = state._currentSlot;
     }
 
 	public Object readFieldValue(ClassMetadata classMetadata, FieldMetadata field) {
