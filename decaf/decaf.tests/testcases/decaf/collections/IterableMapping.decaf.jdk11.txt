@@ -1,0 +1,37 @@
+package decaf.collections;
+
+class MyIterable implements Iterable4 {
+	Iterator4 iterator() {
+		return new Collection4().iterator();
+	}
+}
+
+class SimpleIterable {
+	public void test() {
+		justIterate(new Collection4());		
+		justIterate(new Collection4());
+		justIterate(new MyIterable());
+	}
+		
+	private void justIterate(Iterable4 iterable) {
+		Iterator4 iterator = iterable.iterator();
+		while (iterator.moveNext()) {
+			int v = (int) iterator.current();
+			System.out.println(v);
+		}
+	}
+	
+	private void justIterate2(Iterable4 iterable) {
+		Iterator4 iterator = iterable.iterator();
+		while (iterator.moveNext()) {
+			Object v = iterator.current();
+			System.out.println("First Pass: " + v);
+		}
+	
+		iterator = iterable.iterator();
+		while (iterator.moveNext()) {
+			Object v2 = iterator.current();
+			System.out.println("Second Pass: " + v2);
+		}
+	}		
+}
