@@ -1,7 +1,10 @@
 package decaf.collections;
 
+import java.util.*;
+import com.db4o.types.*;
+
 class MyIterable implements Iterable4 {
-	Iterator4 iterator() {
+	public Iterator4 iterator() {
 		return new Iterator4Wrapper(new ArrayList().iterator());
 	}
 }
@@ -9,7 +12,7 @@ class MyIterable implements Iterable4 {
 class SimpleIterable {
 	public void test() {
 		justIterate(new Iterable4Wrapper(new ArrayList()));		
-		justIterate(new Iterable4Wrapper(new ArrayList()));		
+		justIterateGeneric(new Iterable4Wrapper(new ArrayList()));		
 		justIterate(new MyIterable());
 	}
 		
@@ -21,7 +24,7 @@ class SimpleIterable {
 		}
 	}
 	
-	private void justIterate2(Iterable4 iterable) {
+	private void justIterateGeneric(Iterable4 iterable) {
 		Iterator4 iterator = iterable.iterator();
 		while (iterator.moveNext()) {
 			Object v = iterator.current();
