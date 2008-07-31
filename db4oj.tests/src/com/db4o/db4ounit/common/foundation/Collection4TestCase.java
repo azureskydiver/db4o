@@ -70,6 +70,20 @@ public class Collection4TestCase implements TestCase {
 		assertIllegalIndex(c, -1);
 		assertIllegalIndex(c, 2);
 	}
+	
+	public void testIndexOf() {
+		final Collection4 c = new Collection4();
+		Assert.areEqual(-1, c.indexOf("notInCollection"));
+		c.add("one");
+		Assert.areEqual(-1, c.indexOf("notInCollection"));
+		Assert.areEqual(0, c.indexOf("one"));
+		c.add("two");
+		c.add("three");
+		Assert.areEqual(0, c.indexOf("one"));
+		Assert.areEqual(1, c.indexOf("two"));
+		Assert.areEqual(2, c.indexOf("three"));
+		Assert.areEqual(-1, c.indexOf("notInCollection"));
+	}
 
 	private void assertIllegalIndex(final Collection4 c, final int index) {
 		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
