@@ -20,6 +20,11 @@ public class CollectionsTestCase extends DecafTestCaseBase {
 	public void testForEachList() throws Exception {
 		runResourceTestCase("ForEachList", TargetPlatform.JDK12);
 	}
+	
+	public void testIterableMapping() throws Exception {
+		//runPlatformTestCase("IterableMapping");
+		runResourceTestCase("IterableMapping", TargetPlatform.JDK11);
+	}
 
 	@Override
 	protected String packagePath() {

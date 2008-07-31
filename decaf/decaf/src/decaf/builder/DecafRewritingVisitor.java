@@ -5,6 +5,8 @@ import java.util.*;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
+import decaf.core.TargetPlatform;
+
 import sharpen.core.framework.*;
 
 @SuppressWarnings("unchecked")
@@ -24,7 +26,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		return true;
 	}
 
-	
 	@Override
 	public void endVisit(TypeDeclaration node) {
 		processIgnoreExtends(node);
@@ -376,22 +377,39 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private void buildIterableEnhancedFor(EnhancedForStatement node, final SingleVariableDeclaration variable, final Expression iterable) {
+		if (targetingJdk11()) {
+			buildIterableEnhancedFor(node, variable, iterable, "com.db4o.foundation.Iterator4", "moveNext", "current");	
+		}
+		else {
+			buildIterableEnhancedFor(node, variable, iterable, Iterator.class.getName(), "hasNext", "next");
+		}
+	}
+
+	private void buildIterableEnhancedFor(EnhancedForStatement node,
+			final SingleVariableDeclaration variable,
+			final Expression iterable, String iteratorClassName,
+			String nextCheckMethodName, String nextElementMethodName) {
 		final String iterVariableName = variable.getName() + "Iter";
+		
 		VariableDeclarationExpression iter = builder().newVariableDeclaration(
-				builder().newSimpleType(Iterator.class.getName()),
+				builder().newSimpleType(iteratorClassName),
 				iterVariableName,
 				builder().newMethodInvocation(safeMove(iterable), "iterator"));
 
-		Expression cmp = builder().newMethodInvocation(builder().newSimpleName(iterVariableName), "hasNext");
+		Expression cmp = builder().newMethodInvocation(builder().newSimpleName(iterVariableName), nextCheckMethodName);
 
 		final ListRewrite statementsRewrite = getListRewrite(node.getBody(), Block.STATEMENTS_PROPERTY);
 		statementsRewrite.insertFirst(
 				builder().newVariableDeclarationStatement(
 						variable.getName().toString(),
 						builder().clone(variable.getType()),
-						builder().createParenthesizedCast(builder().newMethodInvocation(builder().newSimpleName(iterVariableName), "next"), variable.getType().resolveBinding())), null);
+						builder().createParenthesizedCast(builder().newMethodInvocation(builder().newSimpleName(iterVariableName), nextElementMethodName), variable.getType().resolveBinding())), null);
 
 		replaceEnhancedForStatement(node, null, iter, cmp, null);
+	}
+
+	private boolean targetingJdk11() {
+		return _context.targetPlatform().isNone() || _context.targetPlatform() == TargetPlatform.JDK11;
 	}
 
 	private void replaceEnhancedForStatement(EnhancedForStatement node, Statement tempVariable, Expression loopVar, Expression cmp, final Expression updater) {
@@ -416,8 +434,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		eraseIfNeeded(node.getReturnType2(), originalMethodDeclaration.getReturnType());
 	}
 
-	private void eraseParameterReferences(MethodDeclaration node,
-			final HashSet<IVariableBinding> erasedParameters) {
+	private void eraseParameterReferences(MethodDeclaration node, final HashSet<IVariableBinding> erasedParameters) {		
 		node.accept(new ASTVisitor() {
 			@Override
 			public void endVisit(SimpleName node) {
@@ -445,12 +462,14 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		return erasedParameters;
 	}
 
-	private boolean eraseIfNeeded(final Type actualType, final ITypeBinding expectedType) {
+	private boolean eraseIfNeeded(final Type actualType, final ITypeBinding expectedType) {	
 		final ITypeBinding expectedErasure = expectedType.getErasure();
 		if (actualType.resolveBinding() == expectedErasure) {
 			return false;
-		}
-		replace(actualType, newType(expectedErasure));
+		}		
+		
+		Type mappedType = builder().mappedType(expectedErasure);
+		replace(actualType, mappedType == null ? newType(expectedErasure) : mappedType);
 		return true;
 	}
 
@@ -693,5 +712,4 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	private <T extends ASTNode> T move(T node) {
 		return (T)rewrite().createMoveTarget(node);
 	}
-
 }

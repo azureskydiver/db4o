@@ -42,6 +42,9 @@ public class DecafConfiguration {
 		mapping.put(List.class.getName(), "com.db4o.foundation.Sequence4");
 		mapping.put(ArrayList.class.getName(), "com.db4o.foundation.Collection4");
 		mapping.put(Collections.class.getName(), "com.db4o.foundation.Collections4");
+		mapping.put(Iterator.class.getName() , "com.db4o.foundation.Iterator4");
+		mapping.put(Iterable.class.getName() , "com.db4o.foundation.Iterable4");
+		
 		return new DecafConfiguration(mapping);
 	}
 
