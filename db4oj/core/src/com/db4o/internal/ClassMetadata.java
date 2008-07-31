@@ -223,8 +223,14 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		if(customTypeHandler instanceof EmbeddedTypeHandler){
 			_typeHandler = customTypeHandler;
 		}
-		if(_translator != null){
-			_translator.disableFromAspectCountVersion(aspects.size());
+		int disableFromVersion = aspects.indexOf(typeHandlerAspect) + 1;
+		Iterator4 i = aspects.iterator();
+		while(i.moveNext()){
+			ClassAspect aspect = (ClassAspect) i.current();
+			if(aspect == typeHandlerAspect){
+				break;
+			}
+			aspect.disableFromAspectCountVersion(disableFromVersion);
 		}
 		return dirty;
 	}

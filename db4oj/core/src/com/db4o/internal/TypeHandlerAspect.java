@@ -98,4 +98,8 @@ public class TypeHandlerAspect extends ClassAspect {
 		cascadeActivation(trans, obj, depth);
 	}
 
+	public boolean canBeDisabled() {
+		return true;
+	}
+
 }

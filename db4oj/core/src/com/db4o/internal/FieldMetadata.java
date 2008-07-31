@@ -1134,6 +1134,11 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     public AspectType aspectType() {
         return AspectType.FIELD;
     }
+
+    // overriden in VirtualFieldMetadata
+	public boolean canBeDisabled() {
+		return true;
+	}
 	
 
 }
