@@ -21,6 +21,7 @@ public class AllTests extends Db4oTestSuite {
  				MapTypeHandlerTestSuite.class,
 				NamedArrayListTypeHandlerTestCase.class,
 				SimpleListTestCase.class,
+				SimpleListQueryTestCase.class,
 		};
 	}
 
