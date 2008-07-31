@@ -33,6 +33,7 @@
 	<property file="${dir.workspace}/db4obuild/ant.properties" />
 	<property name="dir.base" value="${dir.workspace}" />
 
+	<!--
 	<taskdef name="db4oIteration" classname="com.db4o.devtools.ant.Db4oIterationTask">
 		<classpath>
 			<pathelement location="${dir.build.bin}" />
@@ -40,6 +41,7 @@
 		</classpath>
 	</taskdef>
 	<db4oIteration property="db4o.iteration"/>
+	-->
 
 	<condition property="svn.revision" value="0000">
 		<not>
@@ -48,7 +50,13 @@
 	</condition>
 	
 	<target name="drs.properties" if="db4obuild.available" depends="get-svn-revision">
+		<!--
 		<db4oIteration property="db4o.iteration" />
+		-->
+		<tstamp>
+				<format property="db4o.iteration" pattern="w" offset="-29" unit="week"/>
+		</tstamp>
+		
 		<property name="drs.version.dotted" 
 			value="${drs.version.major}.${drs.version.minor}.${db4o.iteration}.${svn.revision}" />
 	</target>
