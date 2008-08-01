@@ -412,4 +412,14 @@ class DecafASTNodeBuilder {
 	public ExpressionStatement newExpressionStatement(Expression e) {
 		return _ast.newExpressionStatement(e);
 	}
+	
+	public Type mapType(Type type) {
+		final ITypeBinding erasure = type.resolveBinding().getErasure();		
+		return (erasure != null) ? safeMapTypeBinding(erasure) : safeMapTypeBinding(type.resolveBinding());
+	}
+
+	public Type safeMapTypeBinding(ITypeBinding binding) {
+		final Type mappedType = mappedType(binding);
+		return mappedType == null ? newType(binding) : mappedType;
+	}
 }

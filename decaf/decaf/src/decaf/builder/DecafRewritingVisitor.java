@@ -4,9 +4,6 @@ import java.util.*;
 
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
-
-import decaf.core.TargetPlatform;
-
 import sharpen.core.framework.*;
 
 @SuppressWarnings("unchecked")
@@ -51,31 +48,31 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(AnnotationTypeDeclaration node) {
-		remove(node);
+		rewrite().remove(node);
 		return false;	
 	}
 	
 	@Override
 	public boolean visit(MarkerAnnotation node) {
-		remove(node);
+		rewrite().remove(node);
 		return false;	
 	}
 	
 	@Override
 	public boolean visit(SingleMemberAnnotation node) {
-		remove(node);
+		rewrite().remove(node);
 		return false;	
 	}
 	
 	@Override
 	public boolean visit(TypeParameter node) {
-		remove(node);
+		rewrite().remove(node);
 		return false;
 	}
 	
 	@Override
 	public boolean visit(ParameterizedType node) {
-		replace(node, mapType(node.getType()));
+		rewrite().replace(node, builder().mapType(node.getType()));
 		return false;		
 	}
 	
@@ -83,13 +80,13 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	public boolean visit(SimpleType node) {
 		final ITypeBinding binding = node.resolveBinding();
 		if (binding.isTypeVariable()) {
-			replace(node, safeMapTypeBinding(binding.getErasure()));
+			rewrite().replace(node, builder().safeMapTypeBinding(binding.getErasure()));
 			return false;
 		}
 		
 		final Type mappedType = builder().mappedType(binding);
 		if (null != mappedType) {
-			replace(node, mappedType);
+			rewrite().replace(node, mappedType);
 			return false;
 		}
 		
@@ -102,12 +99,12 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			final Expression expression = (Expression)node;
 			if (expression.resolveUnboxing()) {
 				if(!isMethodName(expression)) {
-					replace(expression, unboxedMethodInvocation(expression));
+					rewrite().replace(expression, unboxedMethodInvocation(expression));
 				}
 			} else {
 				if (expression.resolveBoxing()) {
 					if(!isMethodName(expression)) {
-						replace(expression, box(expression));
+						rewrite().replace(expression, box(expression));
 					}
 				}
 			}
@@ -148,9 +145,9 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public void endVisit(ArrayAccess node) {
-		final Expression erasure = erasureFor(node.getArray());
+		final Expression erasure = rewrite().erasureFor(node.getArray());
 		if (null != erasure) {
-			replace(node.getArray(), erasure);
+			rewrite().replace(node.getArray(), erasure);
 		}
 	}
 	
@@ -168,7 +165,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 		if (!builder().isExpressionStatement(node.getParent())) {
 			if (builder().hasGenericReturnType(method)) {
-				replaceWithCast(node, method.getReturnType());
+				rewrite().replaceWithCast(node, method.getReturnType());
 			}
 		}
 	}
@@ -209,7 +206,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		if(mapped == null) {
 			return false;
 		}
-		replace(node, mapped.getName());
+		rewrite().replace(node, mapped.getName());
 		return true;
 	}
 	
@@ -223,9 +220,9 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	@Override
 	public void endVisit(FieldAccess node) {
-		final Expression erasure = erasureForField(node, node.resolveFieldBinding());
+		final Expression erasure = rewrite().erasureForField(node, node.resolveFieldBinding());
 		if (null != erasure) {
-			replace(node, erasure);
+			rewrite().replace(node, erasure);
 		}
 	}
 
@@ -313,117 +310,8 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	public void endVisit(EnhancedForStatement node) {
-
-		final SingleVariableDeclaration variable = node.getParameter();
-		final Expression origExpr = node.getExpression();
-		final Expression erasure = erasureFor(origExpr);
-		final Expression sequenceExpr = erasure != null ? erasure : origExpr;
-
-		if(origExpr.resolveTypeBinding().isArray()) {
-			buildArrayEnhancedFor(node, variable, sequenceExpr);
-		}
-		else {
-			buildIterableEnhancedFor(node, variable, sequenceExpr);
-		}
+		new EnhancedForProcessor(_context).run(node);
 	}
-
-	private void buildArrayEnhancedFor(EnhancedForStatement node,
-			final SingleVariableDeclaration variable, final Expression array) {
-		String name = variable.getName() + "Array";
-		Expression arrayReference = null;
-
-		VariableDeclarationStatement tempArrayVariable = null;
-		if (builder().isName(array)) {
-			arrayReference = array;
-		} 
-		else {
-			tempArrayVariable = builder().newVariableDeclarationStatement(name, builder().newType(node.getExpression().resolveTypeBinding()), safeMove(array));
-			arrayReference = builder().newSimpleName(name);
-		}
-
-		final String indexVariableName = variable.getName() + "Index";
-		VariableDeclarationExpression index = builder().newVariableDeclaration(
-				builder().newPrimitiveType(PrimitiveType.INT),
-				indexVariableName,
-				builder().newNumberLiteral("0"));
-
-		Expression cmp = builder().newInfixExpression(
-								InfixExpression.Operator.LESS,
-								builder().newSimpleName(indexVariableName),
-								builder().newFieldAccess(clone(arrayReference), builder().newSimpleName("length")));
-
-		final ListRewrite statementsRewrite = getListRewrite(node.getBody(), Block.STATEMENTS_PROPERTY);
-		statementsRewrite.insertFirst(
-				builder().newVariableDeclarationStatement(
-						variable.getName().toString(),
-						builder().clone(mapType(variable.getType())),
-						builder().newArrayAccess(
-								clone(arrayReference),
-								builder().newSimpleName(indexVariableName))), null);
-
-		final PrefixExpression updater = builder().newPrefixExpression(
-				PrefixExpression.Operator.INCREMENT,
-				builder().newSimpleName(indexVariableName));
-
-		replaceEnhancedForStatement(node, tempArrayVariable, index, cmp,updater);
-	}
-
-	private <T extends ASTNode> T clone(T node) {
-		return builder().clone(node);
-	}
-
-	private void buildIterableEnhancedFor(EnhancedForStatement node, final SingleVariableDeclaration variable, final Expression iterable) {
-		if (targetingJdk11()) {
-			buildIterableEnhancedFor(node, variable, iterable, "com.db4o.foundation.Iterator4", "moveNext", "current");	
-		}
-		else {
-			buildIterableEnhancedFor(node, variable, iterable, Iterator.class.getName(), "hasNext", "next");
-		}
-	}
-
-	private void buildIterableEnhancedFor(EnhancedForStatement node,
-			final SingleVariableDeclaration variable,
-			final Expression iterable, String iteratorClassName,
-			String nextCheckMethodName, String nextElementMethodName) {
-		final String iterVariableName = variable.getName() + "Iter";
-		
-		VariableDeclarationExpression iter = builder().newVariableDeclaration(
-				builder().newSimpleType(iteratorClassName),
-				iterVariableName,
-				builder().newMethodInvocation(safeMove(iterable), "iterator"));
-
-		Expression cmp = builder().newMethodInvocation(builder().newSimpleName(iterVariableName), nextCheckMethodName);
-
-		final ListRewrite statementsRewrite = getListRewrite(node.getBody(), Block.STATEMENTS_PROPERTY);
-		statementsRewrite.insertFirst(
-				builder().newVariableDeclarationStatement(
-						variable.getName().toString(),
-						builder().clone(mapType(variable.getType())),
-						builder().createParenthesizedCast(builder().newMethodInvocation(builder().newSimpleName(iterVariableName), nextElementMethodName), variable.getType().resolveBinding())), null);
-
-		replaceEnhancedForStatement(node, null, iter, cmp, null);
-	}
-
-	private Type mapType(Type type) {
-		final ITypeBinding erasure = type.resolveBinding().getErasure();		
-		return (erasure != null) ? safeMapTypeBinding(erasure) : safeMapTypeBinding(type.resolveBinding());
-	}
-
-	private Type safeMapTypeBinding(ITypeBinding binding) {
-		final Type mappedType = builder().mappedType(binding);
-		return mappedType == null ? newType(binding) : mappedType;
-	}
-
-	private boolean targetingJdk11() {
-		return _context.targetPlatform().isNone() || _context.targetPlatform() == TargetPlatform.JDK11;
-	}
-
-	private void replaceEnhancedForStatement(EnhancedForStatement node, Statement tempVariable, Expression loopVar, Expression cmp, final Expression updater) {
-		final ForStatement stmt = builder().newForStatement(loopVar, cmp, updater, move(node.getBody()));
-		ASTNode replacement = (null == tempVariable) ? stmt : builder().newBlock(tempVariable, stmt);
-		replace(node, replacement);
-	}
-
 
 	@Override
 	public boolean visit(PackageDeclaration node) {
@@ -448,7 +336,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 					return;
 				}
 				if (erasedParameters.contains(node.resolveBinding())) {
-					replaceWithCast(node, node.resolveTypeBinding());
+					rewrite().replaceWithCast(node, node.resolveTypeBinding());
 				}
 			}
 		});
@@ -475,7 +363,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		}		
 		
 		Type mappedType = builder().mappedType(expectedErasure);
-		replace(actualType, mappedType == null ? newType(expectedErasure) : mappedType);
+		rewrite().replace(actualType, mappedType == null ? newType(expectedErasure) : mappedType);
 		return true;
 	}
 
@@ -487,7 +375,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		SingleVariableDeclaration varArgsParameter = builder().lastParameter(method.parameters());
 
 		set(varArgsParameter, SingleVariableDeclaration.VARARGS_PROPERTY, Boolean.FALSE);
-		replace(varArgsParameter.getType(), builder().newType(varArgsParameter.resolveBinding().getType().getErasure()));
+		rewrite().replace(varArgsParameter.getType(), builder().newType(varArgsParameter.resolveBinding().getType().getErasure()));
 	}
 
 	private void set(final ASTNode node, final SimplePropertyDescriptor property, final Object value) {
@@ -496,7 +384,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	private boolean handledAsIgnored(BodyDeclaration node) {
 		if (isIgnored(node)) {
-			remove(node);
+			rewrite().remove(node);
 			return true;
 		}
 		return false;
@@ -517,57 +405,12 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	private ClassInstanceCreation box(final Expression expression) {
 		SimpleType type = builder().newSimpleType(builder().boxedTypeFor(expression.resolveTypeBinding()));
 		final ClassInstanceCreation creation = builder().newClassInstanceCreation(type);
-		creation.arguments().add(safeMove(expression));
+		creation.arguments().add(rewrite().safeMove(expression));
 		return creation;
 	}
 
-	private void replaceWithCast(Expression node, final ITypeBinding type) {
-		replace(node, createCastForErasure(node, type));
-	}
-
-	private Expression createCastForErasure(Expression node, final ITypeBinding type) {
-		return builder().createParenthesizedCast(move(node), type);
-	}
-
-	private Expression erasureFor(final Expression expression) {
-		if (expression instanceof Name) {
-			return erasureForName((Name)expression);
-		}
-		if (expression instanceof FieldAccess) {
-			return erasureForField(expression, ((FieldAccess)expression).resolveFieldBinding());
-		}
-		if(expression instanceof MethodInvocation) {
-			return erasureForMethodInvocation(((MethodInvocation)expression));
-		}
-		return null;
-	}
-
-	private Expression erasureForMethodInvocation(MethodInvocation node) {
-		final IMethodBinding method = node.resolveMethodBinding();
-		if (builder().hasGenericReturnType(method)) {
-			return createCastForErasure(node, method.getReturnType());
-		}
-		return null;
-	}
-
-	private Expression erasureForName(final Name name) {
-		final IVariableBinding field = builder().fieldBinding(name);
-		if (null == field) {
-			return null;
-		}
-		return erasureForField(name, field);
-	}
-
-	private Expression erasureForField(final Expression expression,
-			final IVariableBinding field) {
-		if (builder().isErasedFieldAccess(field)) {
-			return createCastForErasure(expression, field.getType());
-		}
-		return null;
-	}
-	
 	private Expression parenthesizedMove(final Expression expression) {
-		Expression moved = move(expression);
+		Expression moved = rewrite().move(expression);
 		final Expression target = expression instanceof Name
 			? moved
 			: builder().parenthesize(moved);
@@ -577,7 +420,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	private void processIgnoreExtends(TypeDeclaration node) {
 		if (ignoreExtends(node)) {
-			remove(node.getSuperclassType());
+			rewrite().remove(node.getSuperclassType());
 		}
 	}
 	
@@ -610,7 +453,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		for (Object o : node.superInterfaceTypes()) {
 			final Type type = (Type)o;
 			if (ignoredImplements.contains(type.toString())) {
-				remove(type);
+				rewrite().remove(type);
 			}
 		}
 	}	
@@ -680,7 +523,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		ArrayInitializer arrayInitializer = builder().newArrayInitializer();
 		for (int i = parameters.length-1; i < rewrittenArguments.size(); ++i) {
 			final Expression arg = (Expression) rewrittenArguments.get(i);
-			arrayInitializer.expressions().add(safeMove(arg));
+			arrayInitializer.expressions().add(rewrite().safeMove(arg));
 		}
 		
 		argumentListRewrite.insertLast(
@@ -688,34 +531,18 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 				null);
 	}
 
-	private <T extends ASTNode> T safeMove(final T arg) {
-		return builder().isExistingNode(arg) ? move(arg) : arg;
-	}
-
 	private void processNameErasure(Name node) {
-		final Expression erasure = erasureForName(node);
+		final Expression erasure = rewrite().erasureForName(node);
 		if (null != erasure) {
-			replace(node, erasure);
+			rewrite().replace(node, erasure);
 		}
 	}	
 
-	private void remove(ASTNode node) {
-		rewrite().remove(node, null);
-	}
-
-	private void replace(ASTNode node, ASTNode replacement) {
-		rewrite().replace(node, replacement, null);
-	}
-	
 	private ListRewrite getListRewrite(ASTNode node, ChildListPropertyDescriptor property) {
 		return rewrite().getListRewrite(node, property);
 	}
 	
-	private ASTRewrite rewrite() {
+	private DecafRewritingServices rewrite() {
 		return _context.rewrite();
-	}
-
-	private <T extends ASTNode> T move(T node) {
-		return (T)rewrite().createMoveTarget(node);
 	}
 }

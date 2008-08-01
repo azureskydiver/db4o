@@ -156,7 +156,7 @@ public class MixinProcessor {
 		return rewrite().getListRewrite(node, property);
 	}
 
-	private ASTRewrite rewrite() {
+	private DecafRewritingServices rewrite() {
 		return _context.rewrite();
 	}
 	

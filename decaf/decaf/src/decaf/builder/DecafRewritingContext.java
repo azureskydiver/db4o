@@ -1,19 +1,19 @@
 package decaf.builder;
 
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.rewrite.*;
+import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
 import decaf.core.*;
 
 public class DecafRewritingContext {
 	
-	private final ASTRewrite _rewrite;
+	private final DecafRewritingServices _rewrite;
 	private final DecafASTNodeBuilder _builder;
 	private final TargetPlatform _targetPlatform;
 	
 	public DecafRewritingContext(CompilationUnit unit, ASTRewrite rewrite, TargetPlatform targetPlatform, DecafConfiguration decafConfig) {
 		_builder = new DecafASTNodeBuilder(unit, decafConfig);
-		_rewrite = rewrite;
+		_rewrite = new DecafRewritingServices(rewrite, _builder);
 		_targetPlatform = targetPlatform;
 	}
 	
@@ -25,8 +25,7 @@ public class DecafRewritingContext {
 		return _builder;
 	}
 
-	public ASTRewrite rewrite() {
+	public DecafRewritingServices rewrite() {
 		return _rewrite;
 	}
-
 }

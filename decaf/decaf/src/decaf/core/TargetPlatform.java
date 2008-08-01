@@ -48,4 +48,8 @@ public enum TargetPlatform {
 	public boolean isNone() {
 		return false;
 	}
+	
+	public boolean isJDK11() {
+		return isNone() || this.equals(JDK11);
+	}
 }
