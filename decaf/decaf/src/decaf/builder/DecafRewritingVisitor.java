@@ -99,35 +99,16 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			final Expression expression = (Expression)node;
 			if (expression.resolveUnboxing()) {
 				if(!isMethodName(expression)) {
-					rewrite().replace(expression, unboxedMethodInvocation(expression));
+					rewrite().replace(expression, rewrite().unboxedMethodInvocation(expression));
 				}
 			} else {
 				if (expression.resolveBoxing()) {
 					if(!isMethodName(expression)) {
-						rewrite().replace(expression, box(expression));
+						rewrite().replace(expression, rewrite().box(expression));
 					}
 				}
 			}
 		}
-	}
-
-	private MethodInvocation unboxedMethodInvocation(final Expression expression) {
-		Expression modified = expression;
-		if(expression.getNodeType() == ASTNode.METHOD_INVOCATION) {
-			ASTNode parent = expression.getParent();
-			StructuralPropertyDescriptor parentLocation = expression.getLocationInParent();
-			if(parentLocation.isChildListProperty()) {
-				// FIXME This assumes that original and rewritten list are of the same size.
-				ListRewrite listRewrite = getListRewrite(parent, (ChildListPropertyDescriptor) parentLocation);
-				List originalList = listRewrite.getOriginalList();
-				int originalIdx = originalList.indexOf(expression);
-				modified = (Expression) listRewrite.getRewrittenList().get(originalIdx);
-			}
-			else {
-				modified = (Expression) rewrite().get(parent, parentLocation);
-			}
-		}
-		return (expression == modified ? unbox(modified) : unboxModified(expression, modified));
 	}
 
 	private boolean isMethodName(Expression exp) {
@@ -390,34 +371,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		return false;
 	}
 
-	private MethodInvocation unbox(final Expression expression) {
-		return builder().newMethodInvocation(
-			parenthesizedMove(expression),
-			builder().unboxingMethodFor(expression.resolveTypeBinding()));
-	}
-
-	private MethodInvocation unboxModified(final Expression expression, final Expression modified) {
-		return builder().newMethodInvocation(
-			builder().parenthesize(modified),
-			builder().unboxingMethodFor(expression.resolveTypeBinding()));
-	}
-
-	private ClassInstanceCreation box(final Expression expression) {
-		SimpleType type = builder().newSimpleType(builder().boxedTypeFor(expression.resolveTypeBinding()));
-		final ClassInstanceCreation creation = builder().newClassInstanceCreation(type);
-		creation.arguments().add(rewrite().safeMove(expression));
-		return creation;
-	}
-
-	private Expression parenthesizedMove(final Expression expression) {
-		Expression moved = rewrite().move(expression);
-		final Expression target = expression instanceof Name
-			? moved
-			: builder().parenthesize(moved);
-		return target;
-	}
-	
-	
 	private void processIgnoreExtends(TypeDeclaration node) {
 		if (ignoreExtends(node)) {
 			rewrite().remove(node.getSuperclassType());

@@ -1,7 +1,10 @@
 package decaf.builder;
 
+import java.util.List;
+
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
+import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.IMethodBinding;
@@ -10,6 +13,7 @@ import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.SimplePropertyDescriptor;
+import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
@@ -95,6 +99,61 @@ public class DecafRewritingServices {
 	
 	public ASTNode createStringPlaceholder(String code, int nodeType) {
 		return rewrite().createStringPlaceholder(code, nodeType);
+	}
+
+	public MethodInvocation unboxedMethodInvocation(final Expression expression) {
+		Expression modified = expression;
+		if(expression.getNodeType() == ASTNode.METHOD_INVOCATION) {
+			ASTNode parent = expression.getParent();
+			StructuralPropertyDescriptor parentLocation = expression.getLocationInParent();
+			if(parentLocation.isChildListProperty()) {
+				// FIXME This assumes that original and rewritten list are of the same size.
+				ListRewrite listRewrite = getListRewrite(parent, (ChildListPropertyDescriptor) parentLocation);
+				List originalList = listRewrite.getOriginalList();
+				int originalIdx = originalList.indexOf(expression);
+				modified = (Expression) listRewrite.getRewrittenList().get(originalIdx);
+			}
+			else {
+				modified = (Expression) rewrite().get(parent, parentLocation);
+			}
+		}
+		return (expression == modified ? unbox(modified) : unboxModified(expression, modified));
+	}
+
+	public ClassInstanceCreation box(final Expression expression) {
+		SimpleType type = builder().newSimpleType(builder().boxedTypeFor(expression.resolveTypeBinding()));
+		final ClassInstanceCreation creation = builder().newClassInstanceCreation(type);
+		creation.arguments().add(safeMove(expression));
+		return creation;
+	}
+
+	public MethodInvocation unbox(final Expression expression) {
+		return builder().newMethodInvocation(
+			parenthesizedMove(expression),
+			builder().unboxingMethodFor(expression.resolveTypeBinding()));
+	}
+
+	public MethodInvocation unboxModified(final Expression expression, final Expression modified) {
+		return unboxModified(modified, expression.resolveTypeBinding());
+	}
+
+	public MethodInvocation unboxModified(final Expression modified, final ITypeBinding typeBinding) {
+		return unboxModified(modified, typeBinding.getQualifiedName());
+	}
+
+	public MethodInvocation unboxModified(final Expression modified,
+			String name) {
+		return builder().newMethodInvocation(
+			builder().parenthesize(modified),
+			builder().unboxingMethodFor(name));
+	}
+
+	private Expression parenthesizedMove(final Expression expression) {
+		Expression moved = move(expression);
+		final Expression target = expression instanceof Name
+			? moved
+			: builder().parenthesize(moved);
+		return target;
 	}
 	
 	private Expression createCastForErasure(Expression node, final ITypeBinding type) {

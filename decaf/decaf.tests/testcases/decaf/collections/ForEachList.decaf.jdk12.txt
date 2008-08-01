@@ -39,8 +39,8 @@ class ForEachList {
 
 	void forEachWithMapList(Map map) {
 		for (java.util.Iterator iIter = map.keySet().iterator(); iIter.hasNext();) {
-					final int i = ((Integer) iIter.next()).intValue();
-					System.out.println(i);
-				}
+			final int i = ((Integer) iIter.next()).intValue();
+			System.out.println(i);
+		}
 	}
 }

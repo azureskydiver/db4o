@@ -22,7 +22,7 @@ public class CollectionsTestCase extends DecafTestCaseBase {
 	}
 	
 	public void testIterableMapping() throws Exception {
-		//runPlatformTestCase("IterableMapping");
+//		runPlatformTestCase("IterableMapping");
 		runResourceTestCase("IterableMapping", TargetPlatform.JDK11);
 	}
 
