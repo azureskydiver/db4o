@@ -18,7 +18,7 @@ class SimpleIterable {
 		
 	private void justIterate(com.db4o.foundation.Iterable4 iterable) {
 		for (Iterator vIter = Iterators.coerce(iterable); vIter.hasNext();) {
-			final int v = ((int) vIter.next());
+			final int v = ((Integer) vIter.next()).intValue();
 			System.out.println(v);
 		}
 	}

@@ -190,8 +190,8 @@ class DecafASTNodeBuilder {
 		return _ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD);
 	}
 	
-	public CastExpression newCast(final ITypeBinding type,
-			final Expression expression) {
+	public CastExpression newCast(final Expression expression,
+			final ITypeBinding type) {
 		final CastExpression cast = _ast.newCastExpression();
 		cast.setType(newType(type.getErasure()));
 		cast.setExpression(expression);
@@ -252,11 +252,15 @@ class DecafASTNodeBuilder {
 		if(isObjectType(type)) {
 			return node;
 		}
-		return parenthesize(newCast(type, node));
+		return parenthesize(newCast(node, type));
 	}
 
 	private boolean isObjectType(final ITypeBinding type) {
 		return _ast.resolveWellKnownType(Object.class.getName()) == type;
+	}
+	
+	public ITypeBinding resolveWellKnownType(String fullyQualifiedName) {
+		return _ast.resolveWellKnownType(fullyQualifiedName);
 	}
 	
 	public boolean isName(Expression array) {
@@ -283,7 +287,7 @@ class DecafASTNodeBuilder {
 		}
 		return variable;
 	}
-
+	
 	public String boxedTypeFor(ITypeBinding type) {
 		final String typeName = type.getName();
 		if ("byte".equals(typeName)) {
@@ -333,7 +337,11 @@ class DecafASTNodeBuilder {
 	}
 	
 	public String unboxingMethodFor(ITypeBinding type) {
-		return _unboxing.get(type.getQualifiedName());
+		return unboxingMethodFor(type.getQualifiedName());
+	}
+
+	public String unboxingMethodFor(String typeName) {
+		return _unboxing.get(typeName);
 	}		
 
 	public boolean isExpressionStatement(final ASTNode parent) {

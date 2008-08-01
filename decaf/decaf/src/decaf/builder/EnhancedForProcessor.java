@@ -7,7 +7,9 @@ import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ForStatement;
+import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.InfixExpression;
+import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.PrefixExpression;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
@@ -102,13 +104,28 @@ public class EnhancedForProcessor {
 		Expression cmp = builder().newMethodInvocation(builder().newSimpleName(iterVariableName), nextCheckMethodName);
 
 		final ListRewrite statementsRewrite = rewrite().getListRewrite(node.getBody(), Block.STATEMENTS_PROPERTY);
+		Expression initializerExpr = newInitializerExpression(variable, nextElementMethodName, iterVariableName);
 		statementsRewrite.insertFirst(
 				builder().newVariableDeclarationStatement(
 						variable.getName().toString(),
 						builder().clone(builder().mapType(variable.getType())),
-						builder().createParenthesizedCast(builder().newMethodInvocation(builder().newSimpleName(iterVariableName), nextElementMethodName), variable.getType().resolveBinding())), null);
+						initializerExpr), null);
 
 		replaceEnhancedForStatement(node, null, iter, cmp, null);
+	}
+
+	private Expression newInitializerExpression(final SingleVariableDeclaration elementVariable, String nextElementMethodName, final String iterVariableName) {
+		MethodInvocation iterNextInvocation = builder().newMethodInvocation(builder().newSimpleName(iterVariableName), nextElementMethodName);
+		ITypeBinding elementType = elementVariable.getType().resolveBinding();
+		if(elementVariable.getType().isPrimitiveType()) {
+			String wrapperTypeName = "java.lang." + builder().boxedTypeFor(elementType);
+			ITypeBinding wrapperType = builder().resolveWellKnownType(wrapperTypeName);
+			Expression castExpr = builder().newCast(iterNextInvocation, wrapperType);
+			return rewrite().unboxModified(castExpr, wrapperType);
+		}
+		else {
+			return builder().createParenthesizedCast(iterNextInvocation, elementType);
+		}
 	}
 	
 	private DecafASTNodeBuilder builder() {
