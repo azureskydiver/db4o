@@ -1,40 +1,37 @@
 package decaf.collections;
 
+import java.lang.*;
 import java.util.*;
-import com.db4o.types.*;
 
-class MyIterable implements Iterable4 {
-	public Iterator4 iterator() {
-		return new Iterator4Wrapper(new ArrayList().iterator());
+class MyIterable implements com.db4o.foundation.Iterable4 {
+	public Iterator iterator() {
+		return Iterators.coerce(new com.db4o.foundation.Collection4());
 	}
 }
 
 class SimpleIterable {
 	public void test() {
-		justIterate(new Iterable4Wrapper(new ArrayList()));		
-		justIterateGeneric(new Iterable4Wrapper(new ArrayList()));		
+		justIterate(new com.db4o.foundation.Collection4());		
+		justIterateGeneric(new com.db4o.foundation.Collection4());
 		justIterate(new MyIterable());
 	}
 		
-	private void justIterate(Iterable4 iterable) {
-		Iterator4 iterator = iterable.iterator();
-		while (iterator.moveNext()) {
-			int v = (int) iterator.current();
+	private void justIterate(com.db4o.foundation.Iterable4 iterable) {
+		for (Iterator vIter = Iterators.coerce(iterable); vIter.hasNext();) {
+			final int v = ((int) vIter.next());
 			System.out.println(v);
 		}
 	}
 	
-	private void justIterateGeneric(Iterable4 iterable) {
-		Iterator4 iterator = iterable.iterator();
-		while (iterator.moveNext()) {
-			Object v = iterator.current();
+	private void justIterateGeneric(com.db4o.foundation.Iterable4 iterable) {
+		for (Iterator vIter = Iterators.coerce(iterable); vIter.hasNext();) {
+			final Object v = ((Object) vIter.next());
 			System.out.println("First Pass: " + v);
 		}
-		
-		iterator = iterable.iterator();
-		while (iterator.moveNext()) {
-			Object v2 = iterator.current();
+	
+		for (Iterator v2Iter = Iterators.coerce(iterable); v2Iter.next();) {
+			final Object v2 = ((Object) v2Iter.current());
 			System.out.println("Second Pass: " + v2);
-		}		
+		}
 	}		
 }
