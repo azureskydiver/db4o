@@ -33,6 +33,10 @@ public class DecafTestCase extends DecafTestCaseBase {
 	public void testSameSignatureConstructor() throws Exception {
 		runResourceTestCase("SameSignatureConstructor");
 	}
+	
+	public void testGenericForEach() throws Exception {
+		runResourceTestCase("GenericForEach");
+	}
 
 	public void testEnums() throws Exception {
 		runResourceTestCase("Enums");

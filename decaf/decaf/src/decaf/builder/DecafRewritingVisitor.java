@@ -75,19 +75,15 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public boolean visit(ParameterizedType node) {
-		final ITypeBinding binding = node.getType().resolveBinding().getErasure();
-		final Type mappedType = builder().mappedType(binding);
-		replace(node, mappedType == null ? newType(binding) : mappedType);
-		return false;
+		replace(node, mapType(node.getType()));
+		return false;		
 	}
 	
 	@Override
 	public boolean visit(SimpleType node) {
 		final ITypeBinding binding = node.resolveBinding();
 		if (binding.isTypeVariable()) {
-			final ITypeBinding erasure = binding.getErasure();
-			final Type mapped = builder().mappedType(erasure);
-			replace(node, mapped == null ? newType(erasure) : mapped);
+			replace(node, safeMapTypeBinding(binding.getErasure()));
 			return false;
 		}
 		
@@ -360,7 +356,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		statementsRewrite.insertFirst(
 				builder().newVariableDeclarationStatement(
 						variable.getName().toString(),
-						builder().clone(variable.getType()),
+						builder().clone(mapType(variable.getType())),
 						builder().newArrayAccess(
 								clone(arrayReference),
 								builder().newSimpleName(indexVariableName))), null);
@@ -402,10 +398,20 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		statementsRewrite.insertFirst(
 				builder().newVariableDeclarationStatement(
 						variable.getName().toString(),
-						builder().clone(variable.getType()),
+						builder().clone(mapType(variable.getType())),
 						builder().createParenthesizedCast(builder().newMethodInvocation(builder().newSimpleName(iterVariableName), nextElementMethodName), variable.getType().resolveBinding())), null);
 
 		replaceEnhancedForStatement(node, null, iter, cmp, null);
+	}
+
+	private Type mapType(Type type) {
+		final ITypeBinding erasure = type.resolveBinding().getErasure();		
+		return (erasure != null) ? safeMapTypeBinding(erasure) : safeMapTypeBinding(type.resolveBinding());
+	}
+
+	private Type safeMapTypeBinding(ITypeBinding binding) {
+		final Type mappedType = builder().mappedType(binding);
+		return mappedType == null ? newType(binding) : mappedType;
 	}
 
 	private boolean targetingJdk11() {
