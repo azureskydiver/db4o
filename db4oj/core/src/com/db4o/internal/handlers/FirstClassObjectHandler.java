@@ -129,7 +129,6 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
             }
             public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
                 if(! aspect.enabled(context)){
-                	context.isNull(currentSlot, true);
                 	return;
                 }
                 Object marshalledObject = obj;
