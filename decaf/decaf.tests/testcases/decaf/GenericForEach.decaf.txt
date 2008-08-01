@@ -1,0 +1,20 @@
+package decaf;
+
+using java.lang.*;
+
+class TestDriver {
+	public void GenericForEachArray(Object []items) {
+		for (int itemIndex = 0; itemIndex < items.length; ++itemIndex) {
+			final Object item = items[itemIndex];
+			System.out.println(item);
+		}
+	}
+	
+	public void GenericForEachIterable(Iterable items) {
+		for (com.db4o.foundation.Iterator4 itemIter = items.iterator(); itemIter
+				.moveNext();) {
+					final Object item = ((Object) itemIter.current());
+					System.out.println(item);
+				}
+	}
+}
