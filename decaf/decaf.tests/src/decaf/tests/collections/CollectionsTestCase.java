@@ -18,7 +18,7 @@ public class CollectionsTestCase extends DecafTestCaseBase {
 	}
 
 	public void testForEachList() throws Exception {
-		runResourceTestCase("ForEachList", TargetPlatform.JDK12);
+		runPlatformTestCase("ForEachList");
 	}
 	
 	public void testIterableMapping() throws Exception {
