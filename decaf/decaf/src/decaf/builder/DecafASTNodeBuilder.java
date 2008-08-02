@@ -190,10 +190,13 @@ class DecafASTNodeBuilder {
 		return _ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD);
 	}
 	
-	public CastExpression newCast(final Expression expression,
-			final ITypeBinding type) {
+	public CastExpression newCast(final Expression expression, final ITypeBinding type) {
+		return newCast(expression, safeMapTypeBinding(type.getErasure()));
+	}
+
+	private CastExpression newCast(final Expression expression, Type castType) {
 		final CastExpression cast = _ast.newCastExpression();
-		cast.setType(newType(type.getErasure()));
+		cast.setType(castType);
 		cast.setExpression(expression);
 		return cast;
 	}
