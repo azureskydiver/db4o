@@ -21,6 +21,14 @@ public class Collections4 {
 		public boolean isEmpty() {
 			return _sequence.isEmpty();
 		}
+
+		public Iterator4 iterator() {
+			return _sequence.iterator();
+		}
+
+		public Object get(int index) {
+			return _sequence.get(index);
+		}
 		
 	}
 }
