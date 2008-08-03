@@ -20,18 +20,8 @@ public class HashtableUpdateTestCase extends HandlerUpdateTestCaseBase {
         "one",
         "aAzZ|!§$%&/()=?ßöäüÄÖÜYZ;:-_+*~#^°'@",
         "",
-        createNestedList(1),
+        new Integer(42),
     };
-    
-    private static List createNestedList(int depth){
-        List list = new ArrayList();
-        list.add("nested1");
-        list.add("nested2");
-        if(depth > 0){
-            list.add(createNestedList(depth - 1));
-        }
-        return list;
-    }
 
     protected String typeName() {
         return "ArrayList";
@@ -141,9 +131,9 @@ public class HashtableUpdateTestCase extends HandlerUpdateTestCaseBase {
         if(testNotCompatibleToOldVersion()){
             return;
         }
-        assertItem(values[0], Hashtable.class);
-        assertItem(values[1], HashtableExtensionWithField.class);
-        assertItem(values[2], HashtableExtensionWithoutField.class);
+        assertItem(objectContainer, values[0], Hashtable.class);
+        assertItem(objectContainer, values[1], HashtableExtensionWithField.class);
+        assertItem(objectContainer, values[2], HashtableExtensionWithoutField.class);
     }
     
     protected void assertQueries(ExtObjectContainer objectContainer) {
@@ -170,15 +160,15 @@ public class HashtableUpdateTestCase extends HandlerUpdateTestCaseBase {
         ObjectSet objectSet = q.execute();
         Assert.areEqual(1, objectSet.size());
         Item item = (Item) objectSet.next();
-        assertItem(item, clazz);
+        assertItem(objectContainer, item, clazz);
     }
     
 
-    private void assertItem(Object obj, Class clazz) {
+    private void assertItem(ExtObjectContainer objectContainer, Object obj, Class clazz) {
         Item item = (Item) obj;
-        assertMap(item._typed, clazz);
-        assertMap(item._untyped, clazz);
-        assertMap(item._interface, clazz);
+        assertMap(objectContainer, item._typed, clazz);
+        assertMap(objectContainer, item._untyped, clazz);
+        assertMap(objectContainer, item._interface, clazz);
         assertEmptyMap(item._emptyTyped);
         assertEmptyMap(item._emptyUntyped);
         assertEmptyMap(item._emptyInterface);
@@ -191,8 +181,9 @@ public class HashtableUpdateTestCase extends HandlerUpdateTestCaseBase {
         Assert.areEqual(0, map.keySet().size());
     }
 
-    private void assertMap(Object obj, Class clazz) {
+    private void assertMap(ExtObjectContainer objectContainer, Object obj, Class clazz) {
         Map map = (Map) obj;
+        objectContainer.activate(map, Integer.MAX_VALUE);
         Object[] array = new Object[map.size()];
         int idx = 0;
         Iterator i = map.keySet().iterator();
@@ -203,10 +194,7 @@ public class HashtableUpdateTestCase extends HandlerUpdateTestCaseBase {
         Assert.areEqual(DATA.length, array.length);
         for (int j = 0; j < DATA.length; j++) {
         	Object mapValue = map.get(DATA[j]);
-        	if(! (mapValue instanceof ArrayList)){
-        		// For the ArrayList we have an issue with activation: Don't compare
-    			Assert.areEqual(DATA[j], mapValue);
-        	}
+        	Assert.areEqual(DATA[j], mapValue);
 		}
         
         Assert.isInstanceOf(clazz, map);

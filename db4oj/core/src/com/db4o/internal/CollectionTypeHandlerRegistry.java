@@ -12,12 +12,22 @@ public class CollectionTypeHandlerRegistry {
     
     private final Config4Impl _config;
     
-    private final TypeHandler4 _listTypeHandler;
+    private TypeHandler4 _listTypeHandler;
     
-    public CollectionTypeHandlerRegistry(Config4Impl config, TypeHandler4 listTypeHandler){
+    private TypeHandler4 _mapTypeHandler;
+    
+    public CollectionTypeHandlerRegistry(Config4Impl config){
         _config = config;
-        _listTypeHandler = listTypeHandler;
     }
+    
+    public void listTypeHandler(TypeHandler4 listTypeHandler){
+    	_listTypeHandler = listTypeHandler;
+    }
+    
+    public void mapTypeHandler(TypeHandler4 mapTypehandler){
+    	_mapTypeHandler = mapTypehandler;
+    }
+    
     
     /*
      * The plan is to switch live both changes at once.
@@ -33,6 +43,14 @@ public class CollectionTypeHandlerRegistry {
         registerListTypeHandlerFor(clazz);    
     }
     
+    public void registerMap(Class clazz){
+        if(! enabled()){
+            return;
+        }
+        registerMapTypeHandlerFor(clazz);    
+    }
+
+    
     public void ignoreFieldsOn(Class clazz){
     	if(! enabled()){
             return;
@@ -41,7 +59,18 @@ public class CollectionTypeHandlerRegistry {
     }
     
     private void registerListTypeHandlerFor(Class clazz){
-        _config.registerTypeHandler(new SingleClassTypeHandlerPredicate(clazz), _listTypeHandler);
+        registerTypeHandlerFor(_listTypeHandler, clazz);
     }
+    
+    private void registerMapTypeHandlerFor(Class clazz){
+        registerTypeHandlerFor(_mapTypeHandler, clazz);
+    }
+    
+    private void registerTypeHandlerFor(TypeHandler4 typeHandler, Class clazz){
+        _config.registerTypeHandler(new SingleClassTypeHandlerPredicate(clazz), typeHandler);
+    }
+    
+    
+
 
 }

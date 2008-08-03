@@ -74,6 +74,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 	protected Class[] javaOnlyTestCases(){
 	    return new Class[] {
             ArrayListUpdateTestCase.class,
+            HashtableUpdateTestCase.class,
             VectorUpdateTestCase.class,
 	    };
 	}
