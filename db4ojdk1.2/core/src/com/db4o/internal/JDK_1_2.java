@@ -69,6 +69,9 @@ class JDK_1_2 extends JDKReflect {
 		registry.ignoreFieldsOn(ArrayList.class);
 		registry.ignoreFieldsOn(Vector.class);
 		registry.ignoreFieldsOn(Stack.class);
+		registry.ignoreFieldsOn(AbstractSet.class);
+		registry.ignoreFieldsOn(HashSet.class);
+		
     }
 
     void forEachCollectionElement(Object a_object, Visitor4 a_visitor) {
