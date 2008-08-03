@@ -37,8 +37,8 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
     protected void assertObjectsAreReadable(ExtObjectContainer objectContainer) {
         Holder holder = retrieveHolderInstance(objectContainer);
         objectContainer.activate(holder, Integer.MAX_VALUE);
-        assertValues(holder._values);
-        assertArrays(holder._arrays);
+        assertValues(objectContainer, holder._values);
+        assertArrays(objectContainer, holder._arrays);
         assertQueries(objectContainer);
     }
 
@@ -74,9 +74,9 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
     
     protected abstract Object createArrays();
     
-    protected abstract void assertValues(Object[] values);
+    protected abstract void assertValues(ExtObjectContainer objectContainer, Object[] values);
     
-    protected abstract void assertArrays(Object obj);
+    protected abstract void assertArrays(ExtObjectContainer objectContainer, Object obj);
     
     protected void assertQueries(ExtObjectContainer objectContainer) {
         // override on demand to check queries

@@ -4,6 +4,7 @@ package com.db4o.db4ounit.common.handlers;
 
 import java.util.*;
 
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 
@@ -40,7 +41,7 @@ public class DateHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         new ConsoleTestRunner(DateHandlerUpdateTestCase.class).run();
     }
 
-    protected void assertArrays(Object obj) {
+    protected void assertArrays(ExtObjectContainer objectContainer, Object obj) {
         ItemArrays itemArrays = (ItemArrays) obj;
         Date[] dateArray = (Date[]) itemArrays._arrayInObject;
         for (int i = 0; i < data.length; i++) {
@@ -59,7 +60,7 @@ public class DateHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         Assert.areEqual(emptyValue(), dateArray[data.length]);
     }
 
-    protected void assertValues(Object[] values) {
+    protected void assertValues(ExtObjectContainer objectContainer, Object[] values) {
         for (int i = 0; i < data.length; i++) {
             Item item = (Item) values[i];
             assertAreEqual(data[i], item._date);

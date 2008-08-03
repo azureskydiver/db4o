@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.db4ounit.util.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
@@ -128,7 +129,7 @@ public class MultiDimensionalArrayHandlerUpdateTestCase extends HandlerUpdateTes
     }
     
     
-    protected void assertArrays(Object obj) {
+    protected void assertArrays(ExtObjectContainer objectContainer, Object obj) {
         if(multiDimensionalArraysCantBeStored()){
             return;
         }
@@ -205,7 +206,7 @@ public class MultiDimensionalArrayHandlerUpdateTestCase extends HandlerUpdateTes
         return null;
     }
 
-    protected void assertValues(Object[] values) {
+    protected void assertValues(ExtObjectContainer objectContainer, Object[] values) {
         // not used
     }
 
