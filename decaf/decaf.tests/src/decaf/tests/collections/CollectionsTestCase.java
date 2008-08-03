@@ -26,6 +26,11 @@ public class CollectionsTestCase extends DecafTestCaseBase {
 		runResourceTestCase("IterableMapping", TargetPlatform.JDK11);
 	}
 
+	// TODO jdk11 code doesn't compile
+	public void testMapAPI() throws Exception {
+		runPlatformTestCase("MapAPI");
+	}
+
 	@Override
 	protected String packagePath() {
 		return "collections";

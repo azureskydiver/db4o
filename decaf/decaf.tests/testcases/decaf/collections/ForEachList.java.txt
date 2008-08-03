@@ -30,10 +30,4 @@ class ForEachList {
 			System.out.println(str);
 		}
 	}
-
-	void forEachWithMapList(Map<Integer, String> map) {
-		for(int i : map.keySet()) {
-			System.out.println(i);
-		}
-	}
 }
