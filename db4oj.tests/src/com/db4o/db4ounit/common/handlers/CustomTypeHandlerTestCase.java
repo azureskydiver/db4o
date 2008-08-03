@@ -204,7 +204,7 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
         GenericReflector reflector = ((Config4Impl)config).reflector();
         final ReflectClass itemClass = reflector.forClass(clazz);
         TypeHandlerPredicate predicate = new TypeHandlerPredicate() {
-            public boolean match(ReflectClass classReflector, int version) {
+            public boolean match(ReflectClass classReflector) {
                 return itemClass.equals(classReflector);
             }
         };

@@ -7,19 +7,18 @@ import com.db4o.reflect.*;
 
 /**
  * Predicate to be able to select if a specific TypeHandler is
- * applicable for a specific Type and version.
+ * applicable for a specific Type.
  */
 public interface TypeHandlerPredicate {
     
     /**
      * return true if a TypeHandler is to be used for a specific
-     * Type and version 
+     * Type 
      * @param classReflector the Type passed by db4o that is to
      * be tested by this predicate.
-     * @param version the version
      * @return true if the TypeHandler is to be used for a specific
-     * Type and version.
+     * Type.
      */
-    public boolean match(ReflectClass classReflector, int version);
+    public boolean match(ReflectClass classReflector);
 
 }
