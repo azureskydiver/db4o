@@ -61,8 +61,13 @@ class JDK_1_2 extends JDKReflect {
     }
     
     public void extendConfiguration(Config4Impl config) {
-        CollectionTypeHandlerRegistry registry = new CollectionTypeHandlerRegistry(config, new CollectionTypeHandler());
-		registry.registerCollection(AbstractCollection.class);
+    	
+        CollectionTypeHandlerRegistry registry = new CollectionTypeHandlerRegistry(config);
+        
+        registry.listTypeHandler(new CollectionTypeHandler());
+        registry.mapTypeHandler(new MapTypeHandler());
+		
+        registry.registerCollection(AbstractCollection.class);
 		registry.ignoreFieldsOn(AbstractList.class);
 		registry.ignoreFieldsOn(AbstractSequentialList.class);
 		registry.ignoreFieldsOn(LinkedList.class);
@@ -71,6 +76,11 @@ class JDK_1_2 extends JDKReflect {
 		registry.ignoreFieldsOn(Stack.class);
 		registry.ignoreFieldsOn(AbstractSet.class);
 		registry.ignoreFieldsOn(HashSet.class);
+		
+		registry.registerMap(AbstractMap.class);
+		registry.registerMap(Hashtable.class);
+		registry.ignoreFieldsOn(HashMap.class);
+		registry.ignoreFieldsOn(WeakHashMap.class);
 		
     }
 

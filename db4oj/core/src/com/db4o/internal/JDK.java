@@ -53,9 +53,10 @@ public class JDK {
     }
 	
     public void extendConfiguration(Config4Impl config) {
-        CollectionTypeHandlerRegistry collectionTypeHandlerRegistry = new CollectionTypeHandlerRegistry(config, new VectorTypeHandler());
-		collectionTypeHandlerRegistry.registerCollection(Vector.class);
-		
+        CollectionTypeHandlerRegistry registry = new CollectionTypeHandlerRegistry(config);
+        registry.listTypeHandler(new VectorTypeHandler());
+        registry.mapTypeHandler(new HashtableTypeHandler());
+		registry.registerCollection(Vector.class);
     }
 
     public Config4Class extendConfiguration(ReflectClass clazz, Configuration config, Config4Class classConfig) {
