@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.handlers;
 
+import com.db4o.ext.*;
+
 import db4ounit.*;
 
 public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
@@ -112,7 +114,7 @@ public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         item._wrapperArrayInObject = arr;
     }
 
-    protected void assertValues(Object[] values) {
+    protected void assertValues(ExtObjectContainer objectContainer, Object[] values) {
         for (int i = 0; i < data.length; i++) {
             Item item = (Item) values[i];
             assertAreEqual(data[i], item._typedPrimitive);
@@ -125,7 +127,7 @@ public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         Assert.isNull(nullItem._untyped);
     }
     
-    protected void assertArrays(Object obj) {
+    protected void assertArrays(ExtObjectContainer objectContainer, Object obj) {
         ItemArrays item = (ItemArrays) obj;
         assertTypedPrimitiveArray(item);
         assertTypedWrapperArray(item);

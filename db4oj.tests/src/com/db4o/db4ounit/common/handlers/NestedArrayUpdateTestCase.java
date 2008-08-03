@@ -3,6 +3,8 @@
 package com.db4o.db4ounit.common.handlers;
 
 
+import com.db4o.ext.*;
+
 import db4ounit.*;
 
 
@@ -78,7 +80,7 @@ public class NestedArrayUpdateTestCase extends HandlerUpdateTestCaseBase{
         return item;
     }
     
-    protected void assertArrays(Object obj) {
+    protected void assertArrays(ExtObjectContainer objectContainer, Object obj) {
         ItemArrays item = (ItemArrays) obj;
         
         assertPrimitiveArray(item._primitiveArray);
@@ -139,7 +141,7 @@ public class NestedArrayUpdateTestCase extends HandlerUpdateTestCaseBase{
         return null;
     }
 
-    protected void assertValues(Object[] values) {
+    protected void assertValues(ExtObjectContainer objectContainer, Object[] values) {
         // not used
     }
 

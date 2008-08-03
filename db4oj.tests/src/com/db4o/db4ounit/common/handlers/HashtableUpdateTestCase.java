@@ -2,8 +2,6 @@
 
 package com.db4o.db4ounit.common.handlers;
 
-
-import db4ounit.*;
 import java.util.*;
 
 import com.db4o.*;
@@ -11,18 +9,18 @@ import com.db4o.db4ounit.util.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
 
+import db4ounit.*;
 
 /**
- * 
+ * @sharpen.ignore
  */
-public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
-    
+public class HashtableUpdateTestCase extends HandlerUpdateTestCaseBase {
+	
     private static final Object[] DATA = new Object[] { 
         "one",
         "aAzZ|!§$%&/()=?ßöäüÄÖÜYZ;:-_+*~#^°'@",
         "",
-        createNestedList(10),
-        null,
+        createNestedList(1),
     };
     
     private static List createNestedList(int depth){
@@ -41,24 +39,24 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
     
     public static class Item {
         
-        public String _listClassName;
+        public String _mapClassName;
         
-        public ArrayList _typed;
+        public Hashtable _typed;
         
         public Object _untyped;
         
-        public ArrayList _emptyTyped;
+        public Hashtable _emptyTyped;
         
         public Object _emptyUntyped;
         
-        public List _interface;
+        public Map _interface;
         
-        public List _emptyInterface;
+        public Map _emptyInterface;
         
     }
     
     /** Todo: add as type to Item **/
-    public static class ArrayListExtensionWithField extends ArrayList{
+    public static class HashtableExtensionWithField extends Hashtable{
         
         public static final String STORED_NAME = "outListsName";
         
@@ -68,7 +66,7 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
             if(! super.equals(obj)){
                 return false;
             }
-            ArrayListExtensionWithField other = (ArrayListExtensionWithField) obj;
+            HashtableExtensionWithField other = (HashtableExtensionWithField) obj;
             if(name == null){
                 return other.name == null;
             }
@@ -77,7 +75,7 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
     }
     
     /** Todo: add as type to Item **/
-    public static class ArrayListExtensionWithoutField extends ArrayList{
+    public static class HashtableExtensionWithoutField extends Hashtable{
         
     }
     
@@ -87,51 +85,51 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
             return new Item[0];
         }
         Item[] values = new Item[3];
-        values[0] = createItem(ArrayList.class);
-        values[1] = createItem(ArrayListExtensionWithField.class);
-        values[2] = createItem(ArrayListExtensionWithoutField.class);
+        values[0] = createItem(Hashtable.class);
+        values[1] = createItem(HashtableExtensionWithField.class);
+        values[2] = createItem(HashtableExtensionWithoutField.class);
         return values;
     }
     
     private Item createItem(Class clazz){
         Item item = new Item();
-        item._listClassName = clazz.getName();
-        createLists(item, clazz);
+        item._mapClassName = clazz.getName();
+        createMaps(item, clazz);
         return item;
     }
 
-    private void createLists(Item item, Class clazz) {
-        item._typed = (ArrayList) createFilledList(clazz);
-        item._untyped = createFilledList(clazz);
-        item._interface = createFilledList(clazz);
-        item._emptyTyped = (ArrayList)createList(clazz);
-        item._emptyUntyped = createList(clazz);
-        item._emptyInterface = createList(clazz);
+    private void createMaps(Item item, Class clazz) {
+        item._typed = (Hashtable) createFilledMap(clazz);
+        item._untyped = createFilledMap(clazz);
+        item._interface = createFilledMap(clazz);
+        item._emptyTyped = (Hashtable)createMap(clazz);
+        item._emptyUntyped = createMap(clazz);
+        item._emptyInterface = createMap(clazz);
     }
     
-    private List createFilledList(Class clazz){
-        List list = createList(clazz); 
-        fillList(list);
-        if( list instanceof ArrayListExtensionWithField){
-            ArrayListExtensionWithField typedList = (ArrayListExtensionWithField) list;
-            typedList.name = ArrayListExtensionWithField.STORED_NAME;
+    private Map createFilledMap(Class clazz){
+        Map map = createMap(clazz); 
+        fillMap(map);
+        if( map instanceof HashtableExtensionWithField){
+        	HashtableExtensionWithField typedList = (HashtableExtensionWithField) map;
+            typedList.name = HashtableExtensionWithField.STORED_NAME;
         }
-        return list;
+        return map;
     }
 
-    private List createList(Class clazz) {
-        List list = null;
+    private Map createMap(Class clazz) {
+        Map map = null;
         try {
-            list = (List) clazz.newInstance();
+            map = (Map) clazz.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return list;
+        return map;
     }
     
-    private void fillList(Object list){
+    private void fillMap(Object map){
         for (int i = 0; i < DATA.length; i++) {
-            ((List)list).add(DATA[i]);
+            ((Map)map).put(DATA[i], DATA[i]);
         }
     }
     
@@ -143,18 +141,18 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
         if(testNotCompatibleToOldVersion()){
             return;
         }
-        assertItem(values[0], ArrayList.class);
-        assertItem(values[1], ArrayListExtensionWithField.class);
-        assertItem(values[2], ArrayListExtensionWithoutField.class);
+        assertItem(values[0], Hashtable.class);
+        assertItem(values[1], HashtableExtensionWithField.class);
+        assertItem(values[2], HashtableExtensionWithoutField.class);
     }
     
     protected void assertQueries(ExtObjectContainer objectContainer) {
         if(testNotCompatibleToOldVersion()){
             return;
         }
-        assertQueries(objectContainer, ArrayList.class);
-        assertQueries(objectContainer, ArrayListExtensionWithField.class);
-        assertQueries(objectContainer, ArrayListExtensionWithoutField.class);
+        assertQueries(objectContainer, Hashtable.class);
+        assertQueries(objectContainer, HashtableExtensionWithField.class);
+        assertQueries(objectContainer, HashtableExtensionWithoutField.class);
     }
     
     private void assertQueries(ExtObjectContainer objectContainer, Class clazz){
@@ -167,7 +165,7 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
     private void assertQuery(ExtObjectContainer objectContainer, Class clazz, String fieldName ){
         Query q = objectContainer.query();
         q.constrain(Item.class);
-        q.descend("_listClassName").constrain(clazz.getName());
+        q.descend("_mapClassName").constrain(clazz.getName());
         q.descend(fieldName).constrain("one");
         ObjectSet objectSet = q.execute();
         Assert.areEqual(1, objectSet.size());
@@ -178,32 +176,43 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
 
     private void assertItem(Object obj, Class clazz) {
         Item item = (Item) obj;
-        assertList(item._typed, clazz);
-        assertList(item._untyped, clazz);
-        assertList(item._interface, clazz);
-        assertEmptyList(item._emptyTyped);
-        assertEmptyList(item._emptyUntyped);
-        assertEmptyList(item._emptyInterface);
+        assertMap(item._typed, clazz);
+        assertMap(item._untyped, clazz);
+        assertMap(item._interface, clazz);
+        assertEmptyMap(item._emptyTyped);
+        assertEmptyMap(item._emptyUntyped);
+        assertEmptyMap(item._emptyInterface);
     }
     
-    private void assertEmptyList(Object obj) {
-        List list = (List) obj;
-        Assert.areEqual(0, list.size());
+    private void assertEmptyMap(Object obj) {
+        Map map = (Map) obj;
+        Assert.isTrue(map.isEmpty());
+        Assert.areEqual(0, map.size());
+        Assert.areEqual(0, map.keySet().size());
     }
 
-    private void assertList(Object obj, Class clazz) {
-        List list = (List) obj;
-        Object[] array = new Object[list.size()];
+    private void assertMap(Object obj, Class clazz) {
+        Map map = (Map) obj;
+        Object[] array = new Object[map.size()];
         int idx = 0;
-        Iterator i = list.iterator();
+        Iterator i = map.keySet().iterator();
         while(i.hasNext()){
             array[idx++] = i.next();
         }
-        ArrayAssert.areEqual(DATA, array);
-        Assert.isInstanceOf(clazz, list);
-        if( list instanceof ArrayListExtensionWithField){
-            ArrayListExtensionWithField typedList = (ArrayListExtensionWithField) list;
-            Assert.areEqual(ArrayListExtensionWithField.STORED_NAME, typedList.name);
+        ArrayAssert.contains(DATA, array);
+        Assert.areEqual(DATA.length, array.length);
+        for (int j = 0; j < DATA.length; j++) {
+        	Object mapValue = map.get(DATA[j]);
+        	if(! (mapValue instanceof ArrayList)){
+        		// For the ArrayList we have an issue with activation: Don't compare
+    			Assert.areEqual(DATA[j], mapValue);
+        	}
+		}
+        
+        Assert.isInstanceOf(clazz, map);
+        if( map instanceof HashtableExtensionWithField){
+        	HashtableExtensionWithField typedList = (HashtableExtensionWithField) map;
+            Assert.areEqual(HashtableExtensionWithField.STORED_NAME, typedList.name);
         }
 
     }
@@ -223,5 +232,6 @@ public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
     }
 
 
-    
+
+
 }

@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.handlers;
 
+import com.db4o.ext.*;
+
 import db4ounit.*;
 
 
@@ -69,7 +71,7 @@ public class InterfaceHandlerUpdateTestCase extends HandlerUpdateTestCaseBase{
         return ItemContainer.createNew();
     }
 
-    protected void assertArrays(Object obj) {
+    protected void assertArrays(ExtObjectContainer objectContainer, Object obj) {
         if(db4oMajorVersion() == 4){
             return;
         }
@@ -83,7 +85,7 @@ public class InterfaceHandlerUpdateTestCase extends HandlerUpdateTestCaseBase{
         assertItemInterfaceArray(name, (Object[]) itemContainer._object);
     }
 
-    protected void assertValues(Object[] values) {
+    protected void assertValues(ExtObjectContainer objectContainer, Object[] values) {
         if(db4oMajorVersion() == 4){
             return;
         }

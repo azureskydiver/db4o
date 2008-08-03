@@ -6,8 +6,8 @@ package com.db4o.db4ounit.common.handlers;
 import db4ounit.*;
 import java.util.*;
 
-import com.db4o.*;
 import com.db4o.db4ounit.util.*;
+import com.db4o.ext.*;
 
 
 /**
@@ -128,7 +128,7 @@ public class VectorUpdateTestCase extends HandlerUpdateTestCaseBase{
         return null;
     }
     
-    protected void assertValues(Object[] values) {
+    protected void assertValues(ExtObjectContainer objectContainer, Object[] values) {
         if(testNotCompatibleToOldVersion()){
             return;
         }
@@ -167,7 +167,7 @@ public class VectorUpdateTestCase extends HandlerUpdateTestCaseBase{
 
     }
 
-    protected void assertArrays(Object obj) {
+    protected void assertArrays(ExtObjectContainer objectContainer, Object obj) {
         // do nothing
     }
     
