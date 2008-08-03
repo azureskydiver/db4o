@@ -949,7 +949,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 	    Iterator4 i = _registeredTypeHandlers.iterator();
 	    while(i.moveNext()){
 	        TypeHandlerPredicatePair pair = (TypeHandlerPredicatePair) i.current();
-	        if(pair._predicate.match(classReflector, handlerVersion)){
+	        if(pair._predicate.match(classReflector)){
 	            return pair._typeHandler;
 	        }
 	    }
