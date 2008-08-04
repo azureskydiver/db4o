@@ -11,7 +11,7 @@ public interface IterablePlatformMapping {
 	String iteratorNextCheckName();
 	String iteratorNextElementName();
 
-	Expression coerceIterableExpression(Expression iterableExpr,
-			DecafASTNodeBuilder builder, DecafRewritingServices rewrite);
+	Expression coerceIterableExpression(Expression iterableExpr, DecafASTNodeBuilder builder, DecafRewritingServices rewrite);
+	Expression unwrapIterableExpression(Expression iterableExpr, DecafASTNodeBuilder builder, DecafRewritingServices rewrite);
 
 }

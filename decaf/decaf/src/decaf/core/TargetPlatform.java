@@ -89,6 +89,10 @@ public enum TargetPlatform {
 		public Expression coerceIterableExpression(Expression iterableExpr, DecafASTNodeBuilder builder, DecafRewritingServices rewrite) {
 			return iterableExpr;
 		}
+
+		public Expression unwrapIterableExpression(Expression iterableExpr, DecafASTNodeBuilder builder, DecafRewritingServices rewrite) {
+			return iterableExpr;
+		}
 		
 	}
 
@@ -110,6 +114,12 @@ public enum TargetPlatform {
 			MethodInvocation coerceInvocation = builder.newMethodInvocation(builder.newQualifiedName("com", "db4o", "foundation", "IterableBaseFactory"), "coerce");
 			coerceInvocation.arguments().add(rewrite.safeMove(iterableExpr));
 			return coerceInvocation;
+		}
+
+		public Expression unwrapIterableExpression(Expression iterableExpr, DecafASTNodeBuilder builder, DecafRewritingServices rewrite) {
+			MethodInvocation unwrapInvocation = builder.newMethodInvocation(builder.newQualifiedName("com", "db4o", "foundation", "IterableBaseFactory"), "unwrap");
+			unwrapInvocation.arguments().add(rewrite.safeMove(iterableExpr));
+			return unwrapInvocation;
 		}
 	}
 
