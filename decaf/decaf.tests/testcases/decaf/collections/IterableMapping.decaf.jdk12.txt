@@ -35,7 +35,7 @@ class IterableMapping {
 			System.out.println("Second Pass: " + v2);
 		}
 	}
-	
+
 	private com.db4o.foundation.IterableBase doCast(com.db4o.foundation.IterableBase iterable) {
 		List list = (List)com.db4o.foundation.IterableBaseFactory.unwrap(iterable);
 		com.db4o.foundation.IterableBase iterable2 = com.db4o.foundation.IterableBaseFactory.coerce(list);
