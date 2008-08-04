@@ -1,6 +1,5 @@
 package decaf.tests.collections;
 
-import decaf.core.*;
 import decaf.tests.*;
 
 public class CollectionsTestCase extends DecafTestCaseBase {
@@ -23,7 +22,7 @@ public class CollectionsTestCase extends DecafTestCaseBase {
 	
 	public void testIterableMapping() throws Exception {
 		runPlatformTestCase("IterableMapping");
-//		runResourceTestCase("IterableMapping", TargetPlatform.JDK11);
+		//runResourceTestCase("IterableMapping", TargetPlatform.JDK12);
 	}
 
 	// TODO jdk11 code doesn't compile

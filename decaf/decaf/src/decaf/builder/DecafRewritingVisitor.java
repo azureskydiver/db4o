@@ -132,6 +132,13 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		}
 	}
 	
+	@Override
+	public void endVisit(Assignment node) {
+		if (isIterableInterface(node.getLeftHandSide().resolveTypeBinding())) {
+			replaceCoercedIterable(node.getRightHandSide());
+		}
+	}
+	
 	public boolean visit(MethodInvocation node) {
 		return true;
 	}
@@ -153,9 +160,17 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 	
 	@Override
+	public void endVisit(FieldDeclaration node) {
+		replaceCoercedIterableFieldInitializer(node.fragments(), node.getType());
+	}
+	
+	@Override
 	public void endVisit(VariableDeclarationStatement node) {
-		if(isIterableInterface(node.getType().resolveBinding())) {
-			List<VariableDeclarationFragment> fragments = node.fragments();
+		replaceCoercedIterableFieldInitializer(node.fragments(), node.getType());
+	}
+
+	private void replaceCoercedIterableFieldInitializer(List<VariableDeclarationFragment> fragments, Type type) {
+		if(isIterableInterface(type.resolveBinding())) {
 			for (VariableDeclarationFragment fragment : fragments) {
 				replaceCoercedIterable(fragment.getInitializer());
 			}
