@@ -174,6 +174,15 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		replaceCoercedIterable(node.getExpression());
 	}
 	
+	@Override
+	public void endVisit(CastExpression node) {
+		if(!isIterableInterface(node.getExpression().resolveTypeBinding())) {
+			return;
+		}
+		Expression rewrittenExpr = (Expression) rewrite().get(node, CastExpression.EXPRESSION_PROPERTY);
+		replaceUnwrappedIterable(rewrittenExpr);
+	}
+	
 	private void coerceIterableMethodArguments(MethodInvocation node,
 			final IMethodBinding method) {
 		ListRewrite rewrittenArgs = getListRewrite(node, MethodInvocation.ARGUMENTS_PROPERTY);
@@ -189,18 +198,21 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private void replaceCoercedIterable(Expression iterableArg) {
-		Expression coerced = coerceIterableExpression(iterableArg);
+		Expression coerced = _context.targetPlatform().iterablePlatformMapping().coerceIterableExpression(iterableArg, builder(), rewrite());
 		if(coerced != iterableArg) {
 			rewrite().replace(iterableArg, coerced);
 		}
 	}
 
-	private boolean isIterableInterface(ITypeBinding paramType) {
-		return Iterable.class.getName().equals(paramType.getErasure().getQualifiedName());
+	private void replaceUnwrappedIterable(Expression iterableArg) {
+		Expression unwrapped = _context.targetPlatform().iterablePlatformMapping().unwrapIterableExpression(iterableArg, builder(), rewrite());
+		if(unwrapped != iterableArg) {
+			rewrite().replace(iterableArg, unwrapped);
+		}
 	}
 
-	private Expression coerceIterableExpression(Expression iterableExpr) {
-		return _context.targetPlatform().iterablePlatformMapping().coerceIterableExpression(iterableExpr, builder(), rewrite());
+	private boolean isIterableInterface(ITypeBinding paramType) {
+		return Iterable.class.getName().equals(paramType.getErasure().getQualifiedName());
 	}
 
 	@Override
