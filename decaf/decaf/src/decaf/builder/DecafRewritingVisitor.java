@@ -149,6 +149,28 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 				rewrite().replaceWithCast(node, method.getReturnType());
 			}
 		}
+		coerceIterableMethodArguments(node, method);
+	}
+
+	private void coerceIterableMethodArguments(MethodInvocation node,
+			final IMethodBinding method) {
+		ListRewrite rewrittenArgs = getListRewrite(node, MethodInvocation.ARGUMENTS_PROPERTY);
+		List<Expression> rewrittenArgList = rewrittenArgs.getRewrittenList();
+		int paramIdx = 0;
+		for (ITypeBinding paramType : method.getParameterTypes()) {
+			if(Iterable.class.getName().equals(paramType.getErasure().getQualifiedName())) {
+				Expression iterableArg = rewrittenArgList.get(paramIdx);
+				Expression coerced = coerceIterableExpression(iterableArg);
+				if(coerced != iterableArg) {
+					rewrite().replace(iterableArg, coerced);
+				}
+			}
+			paramIdx++;
+		}
+	}
+
+	private Expression coerceIterableExpression(Expression iterableExpr) {
+		return _context.targetPlatform().iterablePlatformMapping().coerceIterableExpression(iterableExpr, builder(), rewrite());
 	}
 
 	@Override

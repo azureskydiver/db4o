@@ -1,22 +1,9 @@
 package decaf.builder;
 
-import java.util.Iterator;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.rewrite.*;
 
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.EnhancedForStatement;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.ForStatement;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.InfixExpression;
-import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.PrefixExpression;
-import org.eclipse.jdt.core.dom.PrimitiveType;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
-import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
+import decaf.core.*;
 
 public class EnhancedForProcessor {
 
@@ -82,12 +69,8 @@ public class EnhancedForProcessor {
 	}
 	
 	private void buildIterableEnhancedFor(EnhancedForStatement node, final SingleVariableDeclaration variable, final Expression iterable) {
-		if (_context.targetPlatform().isJDK11()) {
-			buildIterableEnhancedFor(node, variable, iterable, "com.db4o.foundation.Iterator4", "moveNext", "current");	
-		}
-		else {
-			buildIterableEnhancedFor(node, variable, iterable, Iterator.class.getName(), "hasNext", "next");
-		}
+		IterablePlatformMapping iterableMapping = _context.targetPlatform().iterablePlatformMapping();
+		buildIterableEnhancedFor(node, variable, iterable, iterableMapping.iteratorClassName(), iterableMapping.iteratorNextCheckName(), iterableMapping.iteratorNextElementName());	
 	}
 
 	private void buildIterableEnhancedFor(EnhancedForStatement node,

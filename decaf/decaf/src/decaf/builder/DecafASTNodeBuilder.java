@@ -12,7 +12,7 @@ import decaf.core.*;
 import sharpen.core.framework.*;
 
 @SuppressWarnings("unchecked")
-class DecafASTNodeBuilder {
+public class DecafASTNodeBuilder {
 	private final CompilationUnit _unit;
 	private final AST _ast;
 	private final DecafConfiguration _config;
@@ -29,6 +29,14 @@ class DecafASTNodeBuilder {
 	
 	public SimpleName newSimpleName(String name) {
 		return _ast.newSimpleName(name);
+	}
+
+	public Name newQualifiedName(String... components) {
+		Name name = newSimpleName(components[0]);
+		for(int idx = 1; idx < components.length; idx++) {
+			name = _ast.newQualifiedName(name, newSimpleName(components[idx]));
+		}
+		return name;
 	}
 
 	public VariableDeclarationExpression newVariableDeclaration(Type variableType, String variableName, Expression initializer) {
@@ -75,6 +83,12 @@ class DecafASTNodeBuilder {
 		return block;
 	}
 
+	public TypeLiteral newTypeLiteral(String name) {
+		TypeLiteral literal = _ast.newTypeLiteral();
+		literal.setType(newSimpleType(name));
+		return literal;
+	}
+	
 	public Type newType(ITypeBinding type) {
 		if (type.isArray()) {
 			return _ast.newArrayType(newType(type.getComponentType()));
