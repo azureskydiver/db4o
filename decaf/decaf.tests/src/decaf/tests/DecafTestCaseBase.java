@@ -5,7 +5,6 @@ import java.io.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
-
 import sharpen.core.*;
 import decaf.builder.*;
 import decaf.core.*;
@@ -33,6 +32,15 @@ public abstract class DecafTestCaseBase extends TestCase {
 		_project.dispose();
 	}
 
+	protected void runPlatformTestCaseWithConfig(String resourceName, DecafConfiguration config) throws Exception {
+		for (TargetPlatform targetPlatform : TargetPlatform.values()) {
+			if (targetPlatform == TargetPlatform.NONE) {
+				continue;
+			}
+			runResourceTestCaseWithConfig(resourceName, targetPlatform, config);
+		}
+	}
+	
 	protected void runPlatformTestCase(String resourceName) throws Exception {
 		for (TargetPlatform targetPlatform : TargetPlatform.values()) {
 			if (targetPlatform == TargetPlatform.NONE) {
@@ -65,12 +73,16 @@ public abstract class DecafTestCaseBase extends TestCase {
 	}
 	
 	protected void runResourceTestCase(String resourceName, TargetPlatform targetPlatform) throws Exception {
+		runResourceTestCaseWithConfig(resourceName, targetPlatform, targetPlatform.defaultConfig());
+	}
+
+	protected void runResourceTestCaseWithConfig(String resourceName, TargetPlatform targetPlatform, DecafConfiguration config) throws Exception {
 		DecafTestResource resource = testResourceFor(resourceName, targetPlatform);
 		ICompilationUnit cu = createCompilationUnit(resource);
 	
 		IFile decafFile = decafFileFor(cu.getResource(), targetPlatform);
 	
-		FileRewriter.rewriteFile(DecafRewriter.rewrite(cu, null, targetPlatform, targetPlatform.defaultConfig()), decafFile.getFullPath());
+		FileRewriter.rewriteFile(DecafRewriter.rewrite(cu, null, targetPlatform, config), decafFile.getFullPath());
 	
 		resource.assertFile(decafFile);
 	}
