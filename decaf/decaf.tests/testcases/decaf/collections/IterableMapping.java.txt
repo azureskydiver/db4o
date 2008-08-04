@@ -16,7 +16,7 @@ class IterableMapping {
 		justIterate(new MyIterable());
 		doCast(new ArrayList<String>());
 	}
-		
+	
 	private void justIterate(Iterable<Integer> iterable) {
 		for (int v : iterable) {
 			System.out.println(v);
@@ -36,7 +36,12 @@ class IterableMapping {
 	private <T> Iterable<T> doCast(Iterable<T> iterable) {
 		List<T> list = (List<T>)iterable;
 		Iterable<T> iterable2 = list;
+		Iterable<T> iterable3 = null;
+		iterable3 = list;
+		
 		return list;
 	}
-	 	
+	
+	private static final Iterable<Integer> fieldTest = new ArrayList<Integer>();
+	
 }
