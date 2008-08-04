@@ -45,14 +45,17 @@ public class DecafConfiguration {
 		mapping.put(Iterator.class.getName() , "com.db4o.foundation.Iterator4");
 		mapping.put(Iterable.class.getName() , "com.db4o.foundation.Iterable4");
 		
-		return new DecafConfiguration(mapping);
+		return create(mapping);
 	}
 
 	static DecafConfiguration forJDK12() {
 		Map<String, String> mapping = new HashMap<String, String>();
 		mapping.put(Iterable.class.getName() , "com.db4o.foundation.IterableBase");
 
+		return create(mapping);
+	}
+	
+	public static DecafConfiguration create(Map<String, String> mapping) {
 		return new DecafConfiguration(mapping);
 	}
-
 }
