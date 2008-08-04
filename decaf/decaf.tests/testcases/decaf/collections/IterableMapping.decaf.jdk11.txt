@@ -9,7 +9,7 @@ class MyIterable implements com.db4o.foundation.Iterable4 {
 	}
 }
 
-class SimpleIterable {
+class IterableMapping {
 	public void test() {
 		justIterate(new com.db4o.foundation.Collection4());		
 		justIterateGeneric(new com.db4o.foundation.Collection4());
@@ -36,5 +36,10 @@ class SimpleIterable {
 					final Object v2 = ((Object) v2Iter.current());
 					System.out.println("Second Pass: " + v2);
 				}
-	}		
+	}
+
+	private void doCast(com.db4o.foundation.Iterable4 iterable) {
+		com.db4o.foundation.Sequence4 list = (com.db4o.foundation.Sequence4)iterable;
+	}
+	 	
 }
