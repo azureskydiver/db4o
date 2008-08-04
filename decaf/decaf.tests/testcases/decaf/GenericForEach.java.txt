@@ -8,10 +8,4 @@ class TestDriver {
 			System.out.println(item);
 		}
 	}
-	
-	public <T> void GenericForEachIterable(Iterable<T> items) {
-		for(T item : items) {
-			System.out.println(item);
-		}
-	}
 }

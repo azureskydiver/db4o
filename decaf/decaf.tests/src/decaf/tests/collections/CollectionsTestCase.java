@@ -22,8 +22,8 @@ public class CollectionsTestCase extends DecafTestCaseBase {
 	}
 	
 	public void testIterableMapping() throws Exception {
-//		runPlatformTestCase("IterableMapping");
-		runResourceTestCase("IterableMapping", TargetPlatform.JDK11);
+		runPlatformTestCase("IterableMapping");
+//		runResourceTestCase("IterableMapping", TargetPlatform.JDK11);
 	}
 
 	// TODO jdk11 code doesn't compile
