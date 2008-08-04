@@ -9,7 +9,7 @@ class MyIterable implements Iterable<Integer> {
 	}
 }
 
-class SimpleIterable {
+class IterableMapping {
 	public void test() {
 		justIterate(new ArrayList<Integer>());		
 		justIterateGeneric(new ArrayList<String>());
@@ -30,5 +30,10 @@ class SimpleIterable {
 		for (T v2 : iterable) {
 			System.out.println("Second Pass: " + v2);
 		}
-	}		
+	}
+
+	private <T> void doCast(Iterable<T> iterable) {
+		List<T> list = (List<T>)iterable;
+	}
+	 	
 }
