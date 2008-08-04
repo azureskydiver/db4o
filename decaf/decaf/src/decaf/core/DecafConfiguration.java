@@ -49,7 +49,9 @@ public class DecafConfiguration {
 	}
 
 	static DecafConfiguration forJDK12() {
-		Map<String, String> mapping = Collections.emptyMap();
+		Map<String, String> mapping = new HashMap<String, String>();
+		mapping.put(Iterable.class.getName() , "com.db4o.foundation.IterableBase");
+
 		return new DecafConfiguration(mapping);
 	}
 
