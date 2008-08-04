@@ -447,4 +447,12 @@ public class DecafASTNodeBuilder {
 		final Type mappedType = mappedType(binding);
 		return mappedType == null ? newType(binding) : mappedType;
 	}
+	
+	public MethodDeclaration findMethodDeclarationParent(ASTNode node) {
+		ASTNode curNode = node;
+		while(curNode != null && curNode.getNodeType() != ASTNode.METHOD_DECLARATION) {
+			curNode = curNode.getParent();
+		}
+		return (MethodDeclaration) curNode;
+	}
 }
