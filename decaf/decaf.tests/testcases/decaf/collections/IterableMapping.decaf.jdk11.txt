@@ -14,6 +14,7 @@ class IterableMapping {
 		justIterate(new com.db4o.foundation.Collection4());		
 		justIterateGeneric(new com.db4o.foundation.Collection4());
 		justIterate(new MyIterable());
+		doCast(new com.db4o.foundation.Collection4());
 	}
 		
 	private void justIterate(com.db4o.foundation.Iterable4 iterable) {
@@ -38,8 +39,10 @@ class IterableMapping {
 				}
 	}
 
-	private void doCast(com.db4o.foundation.Iterable4 iterable) {
+	private com.db4o.foundation.Iterable4 doCast(com.db4o.foundation.Iterable4 iterable) {
 		com.db4o.foundation.Sequence4 list = (com.db4o.foundation.Sequence4)iterable;
+		com.db4o.foundation.Iterable4 iterable2 = list;
+		return list;
 	}
 	 	
 }

@@ -13,7 +13,8 @@ class IterableMapping {
 	public void test() {
 		justIterate(com.db4o.foundation.IterableBaseFactory.coerce(new ArrayList()));		
 		justIterateGeneric(com.db4o.foundation.IterableBaseFactory.coerce(new ArrayList()));
-		justIterate(new MyIterable());
+		justIterate(com.db4o.foundation.IterableBaseFactory.coerce(new MyIterable()));
+		doCast(com.db4o.foundation.IterableBaseFactory.coerce(new ArrayList()));
 	}
 		
 	private void justIterate(com.db4o.foundation.IterableBase iterable) {
@@ -35,8 +36,10 @@ class IterableMapping {
 		}
 	}
 	
-	private void doCast(com.db4o.foundation.IterableBase iterable) {
+	private com.db4o.foundation.IterableBase doCast(com.db4o.foundation.IterableBase iterable) {
 		List list = (List)com.db4o.foundation.IterableBaseFactory.unwrap(iterable);
+		com.db4o.foundation.IterableBase iterable2 = com.db4o.foundation.IterableBaseFactory.coerce(list);
+		return com.db4o.foundation.IterableBaseFactory.coerce(list);
 	}
 	 	
 }

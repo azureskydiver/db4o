@@ -9,12 +9,4 @@ class TestDriver {
 			System.out.println(item);
 		}
 	}
-	
-	public void GenericForEachIterable(Iterable items) {
-		for (com.db4o.foundation.Iterator4 itemIter = items.iterator(); itemIter
-				.moveNext();) {
-					final Object item = ((Object) itemIter.current());
-					System.out.println(item);
-				}
-	}
 }
