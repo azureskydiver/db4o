@@ -151,22 +151,52 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		}
 		coerceIterableMethodArguments(node, method);
 	}
+	
+	@Override
+	public void endVisit(VariableDeclarationStatement node) {
+		if(isIterableInterface(node.getType().resolveBinding())) {
+			List<VariableDeclarationFragment> fragments = node.fragments();
+			for (VariableDeclarationFragment fragment : fragments) {
+				replaceCoercedIterable(fragment.getInitializer());
+			}
+		}
+	}
 
+	@Override
+	public void endVisit(ReturnStatement node) {
+		if(node.getExpression() == null) {
+			return;
+		}
+		MethodDeclaration methodDeclaration = builder().findMethodDeclarationParent(node);
+		if(!isIterableInterface(methodDeclaration.getReturnType2().resolveBinding())) {
+			return;
+		}
+		replaceCoercedIterable(node.getExpression());
+	}
+	
 	private void coerceIterableMethodArguments(MethodInvocation node,
 			final IMethodBinding method) {
 		ListRewrite rewrittenArgs = getListRewrite(node, MethodInvocation.ARGUMENTS_PROPERTY);
 		List<Expression> rewrittenArgList = rewrittenArgs.getRewrittenList();
 		int paramIdx = 0;
 		for (ITypeBinding paramType : method.getParameterTypes()) {
-			if(Iterable.class.getName().equals(paramType.getErasure().getQualifiedName())) {
+			if(isIterableInterface(paramType)) {
 				Expression iterableArg = rewrittenArgList.get(paramIdx);
-				Expression coerced = coerceIterableExpression(iterableArg);
-				if(coerced != iterableArg) {
-					rewrite().replace(iterableArg, coerced);
-				}
+				replaceCoercedIterable(iterableArg);
 			}
 			paramIdx++;
 		}
+	}
+
+	private void replaceCoercedIterable(Expression iterableArg) {
+		Expression coerced = coerceIterableExpression(iterableArg);
+		if(coerced != iterableArg) {
+			rewrite().replace(iterableArg, coerced);
+		}
+	}
+
+	private boolean isIterableInterface(ITypeBinding paramType) {
+		return Iterable.class.getName().equals(paramType.getErasure().getQualifiedName());
 	}
 
 	private Expression coerceIterableExpression(Expression iterableExpr) {
