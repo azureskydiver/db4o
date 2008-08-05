@@ -12,6 +12,7 @@ public class CommonConversions {
     public static void register(Converter converter){
         converter.register(ClassIndexesToBTrees_5_5.VERSION, new ClassIndexesToBTrees_5_5());
         converter.register(FieldIndexesToBTrees_5_7.VERSION, new FieldIndexesToBTrees_5_7());
+        converter.register(ClassAspects_7_4.VERSION, new ClassAspects_7_4());
     }
     
     

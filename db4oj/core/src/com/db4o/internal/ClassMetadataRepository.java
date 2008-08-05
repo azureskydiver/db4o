@@ -503,15 +503,23 @@ public final class ClassMetadataRepository extends PersistentBase {
     }
 
     public void writeAllClasses(){
+    	Collection4 deadClasses = new Collection4();
         StoredClass[] storedClasses = storedClasses();
         for (int i = 0; i < storedClasses.length; i++) {
             ClassMetadata clazz = (ClassMetadata)storedClasses[i];
             clazz.setStateDirty();
+            if(clazz.stateDead()){
+            	deadClasses.add(clazz);
+            	clazz.setStateOK();
+            }
         }
-        
         for (int i = 0; i < storedClasses.length; i++) {
             ClassMetadata clazz = (ClassMetadata)storedClasses[i];
             clazz.write(_systemTransaction);
+        }
+        Iterator4 it = deadClasses.iterator();
+        while(it.moveNext()){
+        	((ClassMetadata)it.current()).setStateDead();
         }
     }
 
