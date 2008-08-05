@@ -1,5 +1,6 @@
 package com.db4o.db4ounit.jre12;
 
+import com.db4o.db4ounit.jre12.foundation.*;
 import com.db4o.db4ounit.jre12.reflect.*;
 
 import db4ounit.extensions.*;
@@ -35,6 +36,7 @@ public class AllTestsJdk1_2 extends Db4oTestSuite {
 			com.db4o.db4ounit.jre12.ta.AllTests.class,
 			com.db4o.db4ounit.jre12.ta.collections.AllTests.class,
 			StandaloneNativeReflectorTestCase.class,
+			IterableBaseTestCase.class,
 		};
 	}
 }
