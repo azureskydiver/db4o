@@ -1534,7 +1534,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         bitTrue(Const4.CONTINUE);
     }
 
-    private final void setStateOK() {
+    final void setStateOK() {
         bitFalse(Const4.DEAD);
         bitFalse(Const4.CONTINUE);
     }
