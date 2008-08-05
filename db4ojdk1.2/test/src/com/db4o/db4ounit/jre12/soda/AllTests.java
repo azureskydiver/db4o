@@ -51,7 +51,7 @@ public class AllTests  extends Db4oTestSuite {
 	}
 	
 	private Class[] vectorQbeTestCases () {
-		return CollectionTypeHandlerRegistry.enabled() ? 
+		return TypeHandlerConfiguration.enabled() ? 
 				new Class[] {
 			//  QBE with vector is not expressible as SODA and it
 			//  will no longer work with new collection Typehandlers
