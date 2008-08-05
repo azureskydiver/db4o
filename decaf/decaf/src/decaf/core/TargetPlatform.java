@@ -2,6 +2,8 @@
 
 package decaf.core;
 
+import decaf.config.*;
+
 
 
 

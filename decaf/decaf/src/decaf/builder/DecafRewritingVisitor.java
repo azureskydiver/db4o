@@ -4,6 +4,8 @@ import java.util.*;
 
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
+
+import decaf.rewrite.*;
 import sharpen.core.framework.*;
 
 @SuppressWarnings("unchecked")

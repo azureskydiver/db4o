@@ -7,6 +7,7 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
+import decaf.config.*;
 import decaf.core.*;
 
 public class DecafRewriter {

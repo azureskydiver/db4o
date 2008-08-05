@@ -6,6 +6,7 @@ import java.util.*;
 import org.eclipse.jdt.core.dom.*;
 
 import decaf.builder.*;
+import decaf.rewrite.*;
 
 public class IterableJdk12Mapping implements IterablePlatformMapping {
 

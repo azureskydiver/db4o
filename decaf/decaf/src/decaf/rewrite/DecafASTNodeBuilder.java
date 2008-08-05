@@ -1,4 +1,4 @@
-package decaf.builder;
+package decaf.rewrite;
 
 import java.util.*;
 
@@ -7,6 +7,7 @@ import org.eclipse.jdt.core.dom.InfixExpression.*;
 import org.eclipse.jdt.core.dom.Modifier.*;
 import org.eclipse.jdt.core.dom.PrimitiveType.*;
 
+import decaf.config.*;
 import decaf.core.*;
 
 import sharpen.core.framework.*;

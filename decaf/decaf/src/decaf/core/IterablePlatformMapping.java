@@ -4,6 +4,7 @@ package decaf.core;
 import org.eclipse.jdt.core.dom.*;
 
 import decaf.builder.*;
+import decaf.rewrite.*;
 
 public interface IterablePlatformMapping {
 
