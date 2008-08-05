@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.*;
 
 import sharpen.core.framework.resources.*;
 import decaf.*;
+import decaf.config.*;
 
 public class DecafProject {
 	

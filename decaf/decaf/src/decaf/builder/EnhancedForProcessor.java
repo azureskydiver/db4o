@@ -4,6 +4,7 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
 import decaf.core.*;
+import decaf.rewrite.*;
 
 public class EnhancedForProcessor {
 

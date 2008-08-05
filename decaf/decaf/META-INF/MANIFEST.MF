@@ -17,6 +17,7 @@ Bundle-ActivationPolicy: lazy
 Export-Package: decaf,
  decaf.application,
  decaf.builder,
+ decaf.config,
  decaf.core,
  decaf.ui
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

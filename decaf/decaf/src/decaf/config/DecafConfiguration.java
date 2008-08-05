@@ -1,4 +1,4 @@
-package decaf.core;
+package decaf.config;
 
 import java.util.*;
 
@@ -6,7 +6,7 @@ public class DecafConfiguration {
 	
 	private final Map<String, String> _mapping;
 
-	DecafConfiguration() {
+	public DecafConfiguration() {
 		_mapping = Collections.emptyMap();
 	}
 
@@ -35,7 +35,7 @@ public class DecafConfiguration {
 		return null;
 	}
 	
-	static DecafConfiguration forJDK11() {
+	public static DecafConfiguration forJDK11() {
 		Map<String, String> mapping = new HashMap<String, String>();
 		mapping.put(Map.class.getName(), "com.db4o.foundation.Map4");
 		mapping.put(HashMap.class.getName(), "com.db4o.foundation.Hashtable4");
@@ -48,7 +48,7 @@ public class DecafConfiguration {
 		return create(mapping);
 	}
 
-	static DecafConfiguration forJDK12() {
+	public static DecafConfiguration forJDK12() {
 		Map<String, String> mapping = new HashMap<String, String>();
 		mapping.put(Iterable.class.getName() , "com.db4o.foundation.IterableBase");
 
