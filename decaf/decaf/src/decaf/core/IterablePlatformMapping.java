@@ -7,6 +7,8 @@ import decaf.builder.*;
 
 public interface IterablePlatformMapping {
 
+	public static final IterablePlatformMapping JDK11_ITERABLE_MAPPING = new IterableJdk11Mapping();
+	public static final IterablePlatformMapping JDK12_ITERABLE_MAPPING = new IterableJdk12Mapping();
 	String iteratorClassName();
 	String iteratorNextCheckName();
 	String iteratorNextElementName();
