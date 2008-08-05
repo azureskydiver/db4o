@@ -8,26 +8,27 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public class CollectionTypeHandlerRegistry {
+public abstract class TypeHandlerConfiguration {
     
-    private final Config4Impl _config;
+    protected final Config4Impl _config;
     
     private TypeHandler4 _listTypeHandler;
     
     private TypeHandler4 _mapTypeHandler;
     
-    public CollectionTypeHandlerRegistry(Config4Impl config){
+    public abstract void apply();
+    
+    public TypeHandlerConfiguration(Config4Impl config){
         _config = config;
     }
     
-    public void listTypeHandler(TypeHandler4 listTypeHandler){
+    protected void listTypeHandler(TypeHandler4 listTypeHandler){
     	_listTypeHandler = listTypeHandler;
     }
     
-    public void mapTypeHandler(TypeHandler4 mapTypehandler){
+    protected void mapTypeHandler(TypeHandler4 mapTypehandler){
     	_mapTypeHandler = mapTypehandler;
     }
-    
     
     /*
      * The plan is to switch live both changes at once.
@@ -36,25 +37,16 @@ public class CollectionTypeHandlerRegistry {
         return NullableArrayHandling.enabled();
     }
     
-    public void registerCollection(Class clazz){
-        if(! enabled()){
-            return;
-        }
+    protected void registerCollection(Class clazz){
         registerListTypeHandlerFor(clazz);    
     }
     
-    public void registerMap(Class clazz){
-        if(! enabled()){
-            return;
-        }
+    protected void registerMap(Class clazz){
         registerMapTypeHandlerFor(clazz);    
     }
 
     
-    public void ignoreFieldsOn(Class clazz){
-    	if(! enabled()){
-            return;
-        }
+    protected void ignoreFieldsOn(Class clazz){
     	_config.registerTypeHandler(new SingleClassTypeHandlerPredicate(clazz), new IgnoreFieldsTypeHandler());
     }
     
@@ -69,8 +61,5 @@ public class CollectionTypeHandlerRegistry {
     private void registerTypeHandlerFor(TypeHandler4 typeHandler, Class clazz){
         _config.registerTypeHandler(new SingleClassTypeHandlerPredicate(clazz), typeHandler);
     }
-    
-    
-
 
 }

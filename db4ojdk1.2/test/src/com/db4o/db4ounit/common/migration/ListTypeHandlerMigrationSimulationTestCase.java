@@ -39,7 +39,7 @@ public class ListTypeHandlerMigrationSimulationTestCase implements TestLifeCycle
 	
 	public void testMigration(){
 		
-		if(CollectionTypeHandlerRegistry.enabled()){
+		if(TypeHandlerConfiguration.enabled()){
 			// Then we always have a list Typehandler installed.
 			// This test no longer makes sense.
 			return;
