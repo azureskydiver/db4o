@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import sharpen.core.*;
 import decaf.builder.*;
+import decaf.config.*;
 import decaf.core.*;
 import junit.framework.*;
 

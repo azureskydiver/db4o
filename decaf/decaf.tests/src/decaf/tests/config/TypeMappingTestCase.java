@@ -3,7 +3,7 @@ package decaf.tests.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import decaf.core.DecafConfiguration;
+import decaf.config.*;
 import decaf.core.TargetPlatform;
 import decaf.tests.DecafTestCaseBase;
 
