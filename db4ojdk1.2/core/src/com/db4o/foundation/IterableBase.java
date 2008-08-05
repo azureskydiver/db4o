@@ -6,6 +6,7 @@ import java.util.*;
 
 /**
  * @exclude
+ * @decaf.ignore.jdk11
  */
 public interface IterableBase {
 	
