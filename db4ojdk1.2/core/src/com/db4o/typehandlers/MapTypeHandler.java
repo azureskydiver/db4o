@@ -14,6 +14,9 @@ import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 
 
+/**
+ * @decaf.ignore.jdk11
+ */
 public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler{
     
     public PreparedComparison prepareComparison(Context context, Object obj) {

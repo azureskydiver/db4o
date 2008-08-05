@@ -5,10 +5,14 @@ import java.util.*;
 
 /**
  * @exclude
+ * @decaf.ignore.jdk11
  */
 public class IterableBaseWrapper implements IterableBase {
 
 	private Object _delegate;
+	
+	public IterableBaseWrapper(Object obj) {
+	}
 	
 	public Iterator iterator() {
 		return null;

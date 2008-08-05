@@ -3,11 +3,12 @@ package com.db4o.foundation;
 
 /**
  * @exclude
+ * @decaf.ignore.jdk11
  */
 public class IterableBaseFactory {
 
 	public static IterableBase coerce(Object obj) {
-		return null;
+		return new IterableBaseWrapper(obj);
 	}
 	
 	public static Object unwrap(IterableBase iterable) {
