@@ -31,7 +31,8 @@ public class DecafASTNodeBuilder {
 		return _ast.newSimpleName(name);
 	}
 
-	public Name newQualifiedName(String... components) {
+	public Name newQualifiedName(String qualifiedName) {
+		String[] components = qualifiedName.split("\\.");
 		Name name = newSimpleName(components[0]);
 		for(int idx = 1; idx < components.length; idx++) {
 			name = _ast.newQualifiedName(name, newSimpleName(components[idx]));
