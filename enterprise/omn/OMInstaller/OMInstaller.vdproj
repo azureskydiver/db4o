@@ -845,7 +845,7 @@
             "Sequence" = "3:1"
             "Identifier" = "8:_FC63BF03_7286_49EE_91C8_48B70568C019"
             "InstallerClass" = "11:TRUE"
-            "CustomActionData" = "8:"
+            "CustomActionData" = "8:/version=2005"
             }
         }
         "DefaultFeature"
@@ -1508,7 +1508,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:OMAddin, Version=1.0.3133.22568, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:OMAddin, Version=1.0.3139.32632, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_56BAB4938D0A4DBBA418E35FED1E4FE7"
@@ -1794,7 +1794,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Db4objects.Db4o, Version=7.4.1.11182, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Db4objects.Db4o, Version=7.3.46.10936, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_AA20F5005D45D8512C49B248D47B7232"
@@ -2277,9 +2277,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:ObjectManager Enterprise for Visual Studio"
+        "ProductName" = "8:ObjectManager Enterprise for Visual Studio 2005"
         "ProductCode" = "8:{2C8EACA7-1596-4CAA-AC5A-96B278A308DB}"
-        "PackageCode" = "8:{57274156-5049-4B44-B198-0BBFDC91EE63}"
+        "PackageCode" = "8:{608E7490-7B20-4ED7-9B9A-AB9A84BFE51F}"
         "UpgradeCode" = "8:{00E0E7E3-A7C7-4A6F-8AC1-AE4912CF82B1}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -2289,7 +2289,7 @@
         "Manufacturer" = "8:db4objects"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:ObjectManager Enterprise"
+        "Title" = "8:ObjectManager Enterprise for Visual Studio 2005"
         "Subject" = "8:"
         "ARPCONTACT" = "8:db4objects"
         "Keywords" = "8:"

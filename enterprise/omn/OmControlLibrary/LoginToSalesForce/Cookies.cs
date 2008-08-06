@@ -1,17 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
 using System.IO;
-using System.Windows.Forms;
 using OME.Crypto;
-using OMControlLibrary.Common;
 
 namespace OMControlLibrary.LoginToSalesForce
 {
     public class CustomCookies
     {
-        CryptoDES objCryptoDES = new CryptoDES();
+        private readonly CryptoDES objCryptoDES = new CryptoDES();
 
         public CustomCookies()
         {
@@ -58,10 +53,10 @@ namespace OMControlLibrary.LoginToSalesForce
 #endif
             string filepath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects" + Path.DirectorySeparatorChar + "ObjectManagerEnterprise" + Path.DirectorySeparatorChar + "encyr.info";
 
-            byte[] contents = new byte[0];
             if(File.Exists(filepath))
             {
-                using(FileStream fs = new FileStream(filepath, FileMode.Open, FileAccess.Read))
+				byte[] contents;
+				using (FileStream fs = new FileStream(filepath, FileMode.Open, FileAccess.Read))
                 {
                     contents = new byte[fs.Length];
                     fs.Read(contents, 0, (int)fs.Length);
@@ -70,8 +65,7 @@ namespace OMControlLibrary.LoginToSalesForce
                 if (contents.Length > 0)
                 {
                     string info = ByteArrayToStr(contents);
-                    info = objCryptoDES.DESSelfDecrypt(info);
-                    return info;
+                    return objCryptoDES.DESSelfDecrypt(info);
                 }
             }
             return null;

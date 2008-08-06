@@ -1,130 +1,93 @@
 using System;
 using System.IO;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration.Install;
-using System.Windows.Forms;
-using Microsoft.Win32;
 
 namespace OMAddin
 {
     [RunInstaller(true)]
     public partial class OMInstaller : Installer
     {
-
         public OMInstaller()
         {
             InitializeComponent();
-
         }
-
      
         protected override void OnAfterInstall(IDictionary savedState)
         {
-            //Add steps to be done after the installation is over.
-            base.OnAfterInstall(savedState);
+        	base.OnAfterInstall(savedState);
+        	DeleteApplicationDataFolder();
 
-            try
-            {
-                if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects"))
-                {
-                    string[] directory = Directory.GetDirectories(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects");
-                    foreach (string dir in directory)
-                    {
-                        string[] files = Directory.GetFiles(dir);
-                        foreach (string str in files)
-                        {
-                            File.Delete(str);
-                        }
-                        Directory.Delete(dir);
-                    }
-                    string[] db4ofiles = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects");
-                    foreach (string file in db4ofiles)
-                    {
-                        File.Delete(file);
-                    }
-                    Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects");
-                }
-                if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects" + Path.DirectorySeparatorChar + "ObjectManagerEnterprise"))
-                {
+			try
+			{
+				string version = Context.Parameters["version"];
 
-                    Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects" + Path.DirectorySeparatorChar + "ObjectManagerEnterprise");
-                }
-
-
-                CopyWindowsPRFFile();
-                InvokeReadMe();
-            }
-
-            catch (Exception oEx)
-            {               
-
-            }
+				CopyWindowsPRFFile(version);
+				InvokeReadMe(version);
+			}
+			catch (Exception)
+			{
+			}
         }
 
-        protected override void OnAfterUninstall(IDictionary savedState)
+    	protected override void OnAfterUninstall(IDictionary savedState)
         {
             base.OnAfterUninstall(savedState);
-
-            try
-            {
-
-                if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects"))
-                {
-                    string[] directory = Directory.GetDirectories(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects");
-
-                    foreach (string dir in directory)
-                    {
-                        string[] files = Directory.GetFiles(dir);
-                        foreach (string str in files)
-                        {
-                            File.Delete(str);
-                        }
-
-                        Directory.Delete(dir);
-                    }
-                    string[] db4ofiles = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects");
-                    foreach (string file in db4ofiles)
-                    {
-                        File.Delete(file);
-                    }
-                    Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects");
-                }
-            }
-            catch (Exception oEx)
-            {
-
-            }
+			DeleteApplicationDataFolder();
         }
 
-        internal static void CopyWindowsPRFFile()
+        internal static void CopyWindowsPRFFile(string VSVersion)
         {
-            string filePathforWindowsprf = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar;
-            filePathforWindowsprf = filePathforWindowsprf + @"Microsoft\VisualStudio\9.0\windows.prf";
-            if (File.Exists(filePathforWindowsprf))
+        	string currentVSConfigFile = Path.Combine(VSProfilePathFor(VSVersion), "windows.prf");
+            if (File.Exists(currentVSConfigFile))
             {
-                string filePathforWindowsprfinAddinFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Visual Studio 2008\Addins\windows.prf";
-
-                if (File.Exists(filePathforWindowsprfinAddinFolder))
+                string addinWindowConfigFile = Path.Combine(VSUserHomeFor(VSVersion), @"Addins\windows.prf");
+                if (File.Exists(addinWindowConfigFile))
                 {
-                    File.Copy(filePathforWindowsprfinAddinFolder, filePathforWindowsprf, true);
-
-                    File.Delete(filePathforWindowsprfinAddinFolder);
+                    File.Copy(addinWindowConfigFile, currentVSConfigFile, true);
+                    File.Delete(addinWindowConfigFile);
                 }
             }
         }
 
-        internal void InvokeReadMe()
+    	internal static void InvokeReadMe(string VSVersion)
         {
+			String readmeFilePath = Path.Combine(VSUserHomeFor(VSVersion), @"Addins\ReadMe\ReadMe.htm");
 
-            string filepath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            filepath = filepath + @"\Visual Studio 2008\Addins\ReadMe_vs2008\ReadMe_vs2008.htm";
-            int Index = filepath.LastIndexOf('\\');
-            string CheckFilePath = filepath.Remove(Index);
-
-            if (Directory.Exists(CheckFilePath))
-                System.Diagnostics.Process.Start(filepath);
+            if (File.Exists(readmeFilePath))
+			{
+                System.Diagnostics.Process.Start(readmeFilePath);
+			}
         }
-    }
+
+		private static void DeleteApplicationDataFolder()
+		{
+			try
+			{
+				string path = Folder.DB4OHome;
+				Folder.Delete(path);
+				if (!Directory.Exists(Folder.OMNHome))
+				{
+					Directory.CreateDirectory(Folder.OMNHome);
+				}
+			}
+			catch (Exception oEx)
+			{
+
+			}
+		}
+
+		private static string VSUserHomeFor(string VSVersion)
+    	{
+			return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Visual Studio " + VSVersion);
+    	}
+
+		private static string VSProfilePathFor(string version)
+		{
+			return Path.Combine(
+						Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+						string.Format(@"Microsoft\VisualStudio\{0}", version == "2005" ? "8.0" : "9.0"));
+		}
+	}
 }
