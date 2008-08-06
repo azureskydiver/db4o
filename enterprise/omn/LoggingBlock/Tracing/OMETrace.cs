@@ -70,12 +70,11 @@ namespace OME.Logging.Tracing
         #endregion
 
         #region Public Static Functions
-        #region XML Documentation Initialize
+
         /// <summary>
         /// Used to initialize the tracing. The function rethrows any exception occured to the caller. 
         /// The caller is required to put this function call in a try block.
         /// </summary>
-        #endregion
         public static void Initialize()
         {
             if (!m_TraceInfo.IsTracingEnabled)
