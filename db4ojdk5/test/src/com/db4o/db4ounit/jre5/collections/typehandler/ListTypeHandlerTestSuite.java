@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.db4o.internal.*;
 import com.db4o.query.*;
+import com.db4o.typehandlers.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;

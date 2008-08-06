@@ -2,8 +2,10 @@
 
 package com.db4o.internal;
 
+import com.db4o.typehandlers.*;
+
 /**
- * Marker interface for {@link TypeHandle4}s for second class
+ * Marker interface for {@link TypeHandler4}s for second class
  * types.
  */
 public interface SecondClassTypeHandler extends TypeHandler4 {

@@ -1,6 +1,7 @@
 package com.db4o.db4ounit.jre5.collections.typehandler;
 
 import com.db4o.internal.*;
+import com.db4o.typehandlers.*;
 
 public class ListTypeHandlerTestUnitBase extends TypeHandlerTestUnitBase {
 	

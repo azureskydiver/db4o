@@ -6,6 +6,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.typehandlers.*;
 
 
 /**

@@ -5,6 +5,7 @@ import java.util.*;
 import com.db4o.db4ounit.jre5.collections.typehandler.ListTypeHandlerTestVariables.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
+import com.db4o.typehandlers.*;
 
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;

@@ -3,6 +3,7 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.internal.*;
+import com.db4o.typehandlers.*;
 
 
 /**
