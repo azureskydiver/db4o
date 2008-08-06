@@ -10,6 +10,7 @@ import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
+import com.db4o.typehandlers.*;
 
 
 /**

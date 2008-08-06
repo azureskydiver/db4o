@@ -9,6 +9,9 @@ import com.db4o.marshall.*;
 import com.db4o.typehandlers.*;
 
 
+/**
+ * Tyehandler for naked plain objects (java.lang.Object).
+ */
 public class PlainObjectHandler implements TypeHandler4, ReadsObjectIds, EmbeddedTypeHandler{
 
     public void defragment(DefragmentContext context) {

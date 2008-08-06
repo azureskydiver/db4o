@@ -3,6 +3,8 @@
 
 package com.db4o.internal;
 
+import com.db4o.typehandlers.*;
+
 /**
  * (Temporary) marker interface to indicate handlers 
  *  that can hold arbitrary types

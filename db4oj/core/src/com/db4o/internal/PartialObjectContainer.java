@@ -21,6 +21,7 @@ import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.core.*;
 import com.db4o.reflect.generic.*;
+import com.db4o.typehandlers.*;
 import com.db4o.types.*;
 
 

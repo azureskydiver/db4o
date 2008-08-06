@@ -8,6 +8,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
+import com.db4o.typehandlers.*;
 
 
 /**

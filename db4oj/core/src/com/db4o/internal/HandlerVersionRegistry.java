@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.fieldhandlers.*;
+import com.db4o.typehandlers.*;
 
 
 /**

@@ -9,6 +9,7 @@ import com.db4o.internal.classindex.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.fieldindex.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.typehandlers.*;
 
 
 /**

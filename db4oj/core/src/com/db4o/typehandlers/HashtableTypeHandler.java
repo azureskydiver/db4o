@@ -14,6 +14,7 @@ import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 
 /**
+ * Typehandler for java.util.Hashtable
  * @sharpen.ignore
  */
 public class HashtableTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler{

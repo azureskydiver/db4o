@@ -12,6 +12,7 @@ import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
+import com.db4o.typehandlers.*;
 
 /**
  * Represents an actual object in the database. Forms a tree structure, indexed
