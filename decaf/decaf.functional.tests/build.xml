@@ -191,6 +191,9 @@
 		</jar>
 	</target>
 	
+	<target name="clean-decaf" depends="clean, decaf-core">
+	</target>
+	
 	<target name="decaf-core" depends="decaf-workspace, install-decaf-plugin">
 
 		<decaf workspace="${build.dir}/workspace" resource="db4o">
