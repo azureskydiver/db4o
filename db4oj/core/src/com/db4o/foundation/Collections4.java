@@ -29,6 +29,18 @@ public class Collections4 {
 		public Object get(int index) {
 			return _sequence.get(index);
 		}
+
+		public int size() {
+			return _sequence.size();
+		}
+
+		public void clear() {
+			_sequence.clear();
+		}
+
+		public Object remove(Object obj) {
+			return _sequence.remove(obj);
+		}
 		
 	}
 }

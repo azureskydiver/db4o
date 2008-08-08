@@ -12,4 +12,11 @@ public interface Sequence4 extends Iterable4 {
 	boolean isEmpty();
 
 	Object get(int index);
+	
+	int size();
+	
+	void clear();
+	
+	Object remove(Object obj);
+	
 }
