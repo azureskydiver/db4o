@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Reflect;
@@ -9,13 +7,16 @@ using Db4objects.Db4o.Reflect.Generic;
 using OManager.BusinessLayer.Common;
 using OManager.DataLayer.Connection;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
 
 namespace OManager.DataLayer.CommonDatalayer
 {
     public class DataLayerCommon
     {
-         
+    	public static string Db4oVersion
+    	{
+			get { return Db4oFactory.Version(); }
+    	}
+
         public static IReflectField getDeclaredFieldInHeirarchy(IReflectClass aClass, string attribute)
         {
             try
@@ -89,6 +90,7 @@ namespace OManager.DataLayer.CommonDatalayer
         {
             try
             {
+				
                 ArrayList ret = getDeclaredFieldsListInHeirarchy(aClass);
                 Object[] refFieldArr = ret.ToArray();
                 IReflectField[] fieldArr = new IReflectField[refFieldArr.Length];
@@ -150,10 +152,7 @@ namespace OManager.DataLayer.CommonDatalayer
 
         public static string RemoveGFromClassName(string name)
         {
-            if (name.Contains("(G) "))
-                return name.Replace("(G) ", "");
-            else
-                return name;
+			return name.Contains("(G) ") ? name.Replace("(G) ", "") : name;
         }
 
         public static IReflectClass returnReflectClass(string classname)
