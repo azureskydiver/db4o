@@ -8,168 +8,168 @@ using OMControlLibrary;
 
 namespace OMControlLibrary.Design
 {
-    public class OMETabStripDesigner : ParentControlDesigner
-    {
-        #region Fields
+	public class OMETabStripDesigner : ParentControlDesigner
+	{
+		#region Fields
 
-        IComponentChangeService changeService;
+		IComponentChangeService changeService;
 
-        #endregion
+		#endregion
 
-        #region Initialize & Dispose
+		#region Initialize & Dispose
 
-        public override void Initialize(System.ComponentModel.IComponent component)
-        {
-            base.Initialize(component);
-            
-            //Design services
-            changeService = (IComponentChangeService)GetService(typeof(IComponentChangeService));
+		public override void Initialize(System.ComponentModel.IComponent component)
+		{
+			base.Initialize(component);
 
-            //Bind design events
-            changeService.ComponentRemoving += new ComponentEventHandler(OnRemoving);
+			//Design services
+			changeService = (IComponentChangeService)GetService(typeof(IComponentChangeService));
 
-            Verbs.Add(new DesignerVerb("Add TabStrip", new EventHandler(OnAddTabStrip)));
-            Verbs.Add(new DesignerVerb("Remove TabStrip", new EventHandler(OnRemoveTabStrip)));
-        }
+			//Bind design events
+			changeService.ComponentRemoving += new ComponentEventHandler(OnRemoving);
 
-        protected override void Dispose(bool disposing)
-        {
-            changeService.ComponentRemoving -= new ComponentEventHandler(OnRemoving);
+			Verbs.Add(new DesignerVerb("Add TabStrip", new EventHandler(OnAddTabStrip)));
+			Verbs.Add(new DesignerVerb("Remove TabStrip", new EventHandler(OnRemoveTabStrip)));
+		}
 
-            base.Dispose(disposing);
-        }
+		protected override void Dispose(bool disposing)
+		{
+			changeService.ComponentRemoving -= new ComponentEventHandler(OnRemoving);
 
-        #endregion
+			base.Dispose(disposing);
+		}
 
-        #region Private Methods
+		#endregion
 
-        private void OnRemoving(object sender, ComponentEventArgs e)
-        {
-            IDesignerHost host = (IDesignerHost) GetService(typeof (IDesignerHost));
+		#region Private Methods
 
-            //Removing a button
-            if (e.Component is OMETabStripItem)
-            {
-                OMETabStripItem itm = e.Component as OMETabStripItem;
-                if (Control.Items.Contains(itm))
-                {
-                    changeService.OnComponentChanging(Control, null);
-                    Control.RemoveTab(itm);
-                    changeService.OnComponentChanged(Control, null, null, null);
-                    return;
-                }
-            }
+		private void OnRemoving(object sender, ComponentEventArgs e)
+		{
+			IDesignerHost host = (IDesignerHost)GetService(typeof(IDesignerHost));
 
-            if (e.Component is OMETabStrip)
-            {
-                for (int i = Control.Items.Count - 1; i >= 0; i--)
-                {
-                    OMETabStripItem itm = Control.Items[i];
-                    changeService.OnComponentChanging(Control, null);
-                    Control.RemoveTab(itm);
-                    host.DestroyComponent(itm);
-                    changeService.OnComponentChanged(Control, null, null, null);
-                }
-            }
-        }
+			//Removing a button
+			if (e.Component is OMETabStripItem)
+			{
+				OMETabStripItem itm = e.Component as OMETabStripItem;
+				if (Control.Items.Contains(itm))
+				{
+					changeService.OnComponentChanging(Control, null);
+					Control.RemoveTab(itm);
+					changeService.OnComponentChanged(Control, null, null, null);
+					return;
+				}
+			}
 
-        private void OnAddTabStrip(object sender, EventArgs e)
-        {
-            IDesignerHost host = (IDesignerHost)GetService(typeof(IDesignerHost));
-            DesignerTransaction transaction = host.CreateTransaction("Add TabStrip");
-            OMETabStripItem itm = (OMETabStripItem)host.CreateComponent(typeof(OMETabStripItem));
-            changeService.OnComponentChanging(Control, null);
-            Control.AddTab(itm);
-            int indx = Control.Items.IndexOf(itm) + 1;
-            itm.Title = "TabStrip Page " + indx.ToString();
-            Control.SelectItem(itm);
-            changeService.OnComponentChanged(Control, null, null, null);
-            transaction.Commit();
-        }
+			if (e.Component is OMETabStrip)
+			{
+				for (int i = Control.Items.Count - 1; i >= 0; i--)
+				{
+					OMETabStripItem itm = Control.Items[i];
+					changeService.OnComponentChanging(Control, null);
+					Control.RemoveTab(itm);
+					host.DestroyComponent(itm);
+					changeService.OnComponentChanged(Control, null, null, null);
+				}
+			}
+		}
 
-        private void OnRemoveTabStrip(object sender, EventArgs e)
-        {
-            IDesignerHost host = (IDesignerHost)GetService(typeof(IDesignerHost));
-            DesignerTransaction transaction = host.CreateTransaction("Remove Button");
-            changeService.OnComponentChanging(Control, null);
-            OMETabStripItem itm = Control.Items[Control.Items.Count - 1];
-            Control.UnSelectItem(itm);
-            Control.Items.Remove(itm);
-            changeService.OnComponentChanged(Control, null, null, null);
-            transaction.Commit();
-        }
+		private void OnAddTabStrip(object sender, EventArgs e)
+		{
+			IDesignerHost host = (IDesignerHost)GetService(typeof(IDesignerHost));
+			DesignerTransaction transaction = host.CreateTransaction("Add TabStrip");
+			OMETabStripItem itm = (OMETabStripItem)host.CreateComponent(typeof(OMETabStripItem));
+			changeService.OnComponentChanging(Control, null);
+			Control.AddTab(itm);
+			int indx = Control.Items.IndexOf(itm) + 1;
+			itm.Title = "TabStrip Page " + indx.ToString();
+			Control.SelectItem(itm);
+			changeService.OnComponentChanged(Control, null, null, null);
+			transaction.Commit();
+		}
 
-        #endregion
+		private void OnRemoveTabStrip(object sender, EventArgs e)
+		{
+			IDesignerHost host = (IDesignerHost)GetService(typeof(IDesignerHost));
+			DesignerTransaction transaction = host.CreateTransaction("Remove Button");
+			changeService.OnComponentChanging(Control, null);
+			OMETabStripItem itm = Control.Items[Control.Items.Count - 1];
+			Control.UnSelectItem(itm);
+			Control.Items.Remove(itm);
+			changeService.OnComponentChanged(Control, null, null, null);
+			transaction.Commit();
+		}
 
-        #region Overrides
+		#endregion
 
-        /// <summary>
-        /// Check HitTest on <see cref="OMETabStrip"/> control and
-        /// let the user click on close and menu buttons.
-        /// </summary>
-        /// <param name="point"></param>
-        /// <returns></returns>
-        protected override bool GetHitTest(Point point)
-        {
-            HitTestResult result = Control.HitTest(point);
-            if(result == HitTestResult.CloseButton || result == HitTestResult.MenuGlyph)
-                return true;
-            
-            return false;
-        }
+		#region Overrides
 
-        protected override void PreFilterProperties(IDictionary properties)
-        {
-            base.PreFilterProperties(properties);
+		/// <summary>
+		/// Check HitTest on <see cref="OMETabStrip"/> control and
+		/// let the user click on close and menu buttons.
+		/// </summary>
+		/// <param name="point"></param>
+		/// <returns></returns>
+		protected override bool GetHitTest(Point point)
+		{
+			HitTestResult result = Control.HitTest(point);
+			if (result == HitTestResult.CloseButton || result == HitTestResult.MenuGlyph)
+				return true;
 
-            properties.Remove("DockPadding");
-            properties.Remove("DrawGrid");
-            properties.Remove("Margin");
-            properties.Remove("Padding");
-            properties.Remove("BorderStyle");
-            properties.Remove("ForeColor");
-            properties.Remove("BackColor");
-            properties.Remove("BackgroundImage");
-            properties.Remove("BackgroundImageLayout");
-            properties.Remove("GridSize");
-            properties.Remove("ImeMode");
-        }
+			return false;
+		}
 
-        protected override void WndProc(ref Message msg)
-        {
-            if (msg.Msg == 0x201)
-            {
-                Point pt = Control.PointToClient(Cursor.Position);
-                OMETabStripItem itm = Control.GetTabItemByPoint(pt);
-                if (itm != null)
-                {
-                    Control.SelectedItem = itm;
-                    ArrayList selection = new ArrayList();
-                    selection.Add(itm);
-                    ISelectionService selectionService = (ISelectionService)GetService(typeof(ISelectionService));
-                    selectionService.SetSelectedComponents(selection);
-                }
-            }
+		protected override void PreFilterProperties(IDictionary properties)
+		{
+			base.PreFilterProperties(properties);
 
-            base.WndProc(ref msg);
-        }
+			properties.Remove("DockPadding");
+			properties.Remove("DrawGrid");
+			properties.Remove("Margin");
+			properties.Remove("Padding");
+			properties.Remove("BorderStyle");
+			properties.Remove("ForeColor");
+			properties.Remove("BackColor");
+			properties.Remove("BackgroundImage");
+			properties.Remove("BackgroundImageLayout");
+			properties.Remove("GridSize");
+			properties.Remove("ImeMode");
+		}
 
-        public override ICollection AssociatedComponents
-        {
-            get
-            {
-                return Control.Items;
-            }
-        }
+		protected override void WndProc(ref Message msg)
+		{
+			if (msg.Msg == 0x201)
+			{
+				Point pt = Control.PointToClient(Cursor.Position);
+				OMETabStripItem itm = Control.GetTabItemByPoint(pt);
+				if (itm != null)
+				{
+					Control.SelectedItem = itm;
+					ArrayList selection = new ArrayList();
+					selection.Add(itm);
+					ISelectionService selectionService = (ISelectionService)GetService(typeof(ISelectionService));
+					selectionService.SetSelectedComponents(selection);
+				}
+			}
 
-        public new virtual OMETabStrip Control
-        {
-            get
-            {
-                return base.Control as OMETabStrip;
-            }
-        }
+			base.WndProc(ref msg);
+		}
 
-        #endregion
-    }
+		public override ICollection AssociatedComponents
+		{
+			get
+			{
+				return Control.Items;
+			}
+		}
+
+		public new virtual OMETabStrip Control
+		{
+			get
+			{
+				return base.Control as OMETabStrip;
+			}
+		}
+
+		#endregion
+	}
 }

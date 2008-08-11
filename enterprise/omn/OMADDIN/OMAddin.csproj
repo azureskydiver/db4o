@@ -145,7 +145,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="ReadMe_vs2008\ReadMe_vs2008.htm.keep" />
     <EmbeddedResource Include="Images\DBconnect.gif" />
     <EmbeddedResource Include="Images\DB_DISCONNECT2_a.GIF" />
     <EmbeddedResource Include="Images\SupportCases.gif" />

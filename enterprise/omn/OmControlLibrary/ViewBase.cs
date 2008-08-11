@@ -11,46 +11,46 @@ using System.Runtime.InteropServices;
 
 namespace OMControlLibrary
 {
-    [ComVisibleAttribute(true)]
-    public partial class ViewBase : UserControl, IView
-    {
+	[ComVisibleAttribute(true)]
+	public partial class ViewBase : UserControl, IView
+	{
 
-        #region Member Variables
+		#region Member Variables
 
-        private static DTE2 m_applicationObject;
+		private static DTE2 m_applicationObject;
 
-        #endregion
+		#endregion
 
-        #region Properties
+		#region Properties
 
-        public static DTE2 ApplicationObject
-        {
-            get { return m_applicationObject; }
-            set { m_applicationObject = value; }
-        }
+		public static DTE2 ApplicationObject
+		{
+			get { return m_applicationObject; }
+			set { m_applicationObject = value; }
+		}
 
-        #endregion
+		#endregion
 
-        #region Constructor
-        public ViewBase()
-        {
-            InitializeComponent();
-            //ApplicationManager.CheckLocalAndSetLanguage();
-        }
-        #endregion
+		#region Constructor
+		public ViewBase()
+		{
+			InitializeComponent();
+			//ApplicationManager.CheckLocalAndSetLanguage();
+		}
+		#endregion
 
 
-        #region Virtual Method
+		#region Virtual Method
 
-        /// <summary>
-        /// Set Literals
-        /// </summary>
-        public virtual void SetLiterals()
-        {
+		/// <summary>
+		/// Set Literals
+		/// </summary>
+		public virtual void SetLiterals()
+		{
 
-        }
+		}
 
-        #endregion
+		#endregion
 
-    }
+	}
 }

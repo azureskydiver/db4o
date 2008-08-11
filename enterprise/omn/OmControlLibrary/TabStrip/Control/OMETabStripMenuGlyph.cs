@@ -4,77 +4,77 @@ using System.Windows.Forms;
 
 namespace OMControlLibrary
 {
-    internal class OMETabStripMenuGlyph
-    {
-        #region Fields
+	internal class OMETabStripMenuGlyph
+	{
+		#region Fields
 
-        private Rectangle glyphRect = Rectangle.Empty;
-        private bool isMouseOver = false;
-        private ToolStripProfessionalRenderer renderer;
+		private Rectangle glyphRect = Rectangle.Empty;
+		private bool isMouseOver = false;
+		private ToolStripProfessionalRenderer renderer;
 
-        #endregion
+		#endregion
 
-        #region Props
+		#region Props
 
-        public bool IsMouseOver
-        {
-            get { return isMouseOver; }
-            set { isMouseOver = value; }
-        }
+		public bool IsMouseOver
+		{
+			get { return isMouseOver; }
+			set { isMouseOver = value; }
+		}
 
-        public Rectangle Bounds
-        {
-            get { return glyphRect; }
-            set { glyphRect = value; }
-        }
+		public Rectangle Bounds
+		{
+			get { return glyphRect; }
+			set { glyphRect = value; }
+		}
 
-        #endregion
+		#endregion
 
-        #region Ctor
+		#region Ctor
 
-        internal OMETabStripMenuGlyph(ToolStripProfessionalRenderer renderer)
-        {
-            this.renderer = renderer;
-        }
+		internal OMETabStripMenuGlyph(ToolStripProfessionalRenderer renderer)
+		{
+			this.renderer = renderer;
+		}
 
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
 
-        public void DrawGlyph(Graphics g)
-        {
-            if (isMouseOver)
-            {
-                Color fill = renderer.ColorTable.ButtonSelectedHighlight; //Color.FromArgb(35, SystemColors.Highlight);
-                g.FillRectangle(new SolidBrush(fill), glyphRect);
-                Rectangle borderRect = glyphRect;
+		public void DrawGlyph(Graphics g)
+		{
+			if (isMouseOver)
+			{
+				Color fill = renderer.ColorTable.ButtonSelectedHighlight; //Color.FromArgb(35, SystemColors.Highlight);
+				g.FillRectangle(new SolidBrush(fill), glyphRect);
+				Rectangle borderRect = glyphRect;
 
-                borderRect.Width--;
-                borderRect.Height--;
+				borderRect.Width--;
+				borderRect.Height--;
 
-                g.DrawRectangle(SystemPens.Highlight, borderRect);
-            }
+				g.DrawRectangle(SystemPens.Highlight, borderRect);
+			}
 
-            SmoothingMode bak = g.SmoothingMode;
+			SmoothingMode bak = g.SmoothingMode;
 
-            g.SmoothingMode = SmoothingMode.Default;
+			g.SmoothingMode = SmoothingMode.Default;
 
-            using (Pen pen = new Pen(Color.Black))
-            {
-                pen.Width = 2;
+			using (Pen pen = new Pen(Color.Black))
+			{
+				pen.Width = 2;
 
-                g.DrawLine(pen, new Point(glyphRect.Left + (glyphRect.Width / 3) - 2, glyphRect.Height / 2 - 1),
-                    new Point(glyphRect.Right - (glyphRect.Width / 3), glyphRect.Height / 2 - 1));
-            }
+				g.DrawLine(pen, new Point(glyphRect.Left + (glyphRect.Width / 3) - 2, glyphRect.Height / 2 - 1),
+					new Point(glyphRect.Right - (glyphRect.Width / 3), glyphRect.Height / 2 - 1));
+			}
 
-            g.FillPolygon(Brushes.Black, new Point[]{
+			g.FillPolygon(Brushes.Black, new Point[]{
                 new Point(glyphRect.Left + (glyphRect.Width / 3)-2, glyphRect.Height / 2+2),
                 new Point(glyphRect.Right - (glyphRect.Width / 3), glyphRect.Height / 2+2),
                 new Point(glyphRect.Left + glyphRect.Width / 2-1,glyphRect.Bottom-4)});
 
-            g.SmoothingMode = bak;
-        }
+			g.SmoothingMode = bak;
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

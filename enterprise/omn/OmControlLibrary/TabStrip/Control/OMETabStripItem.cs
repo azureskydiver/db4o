@@ -6,255 +6,257 @@ using OMControlLibrary.Design;
 
 namespace OMControlLibrary
 {
-    [Designer(typeof(OMETabStripItemDesigner))]
-    [ToolboxItem(false)]
-    [DefaultProperty("Title")]
-    [DefaultEvent("Changed")]
-    public class OMETabStripItem : Panel
-    {
-        #region Events
+	[Designer(typeof(OMETabStripItemDesigner))]
+	[ToolboxItem(false)]
+	[DefaultProperty("Title")]
+	[DefaultEvent("Changed")]
+	public class OMETabStripItem : Panel
+	{
+		#region Events
 
-        public event EventHandler Changed;
+		public event EventHandler Changed;
 
-        #endregion
+		#endregion
 
-        #region Fields
+		#region Fields
 
-        //private DrawItemState drawState = DrawItemState.None;
-        private RectangleF stripRect = Rectangle.Empty;
-        private Image image = null;
-        private bool canClose = true;
-        private bool selected = false;
-        private bool visible = true;
-        private bool isDrawn = false;
-        private string title = string.Empty;
+		//private DrawItemState drawState = DrawItemState.None;
+		private RectangleF stripRect = Rectangle.Empty;
+		private Image image = null;
+		private bool canClose = true;
+		private bool selected = false;
+		private bool visible = true;
+		private bool isDrawn = false;
+		private string title = string.Empty;
 
-        #endregion
+		#endregion
 
-        #region Props
-        
-        [Browsable(false)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public new Size Size
-        {
-            get { return base.Size; }
-            set { base.Size = value; }
-        }
+		#region Props
 
-        [DefaultValue(true)]
-        public new bool Visible
-        {
-            get { return visible; }
-            set
-            {
-                if (visible == value)
-                    return;
+		[Browsable(false)]
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public new Size Size
+		{
+			get { return base.Size; }
+			set { base.Size = value; }
+		}
 
-                visible = value;
-                OnChanged();
-            }
-        }
+		[DefaultValue(true)]
+		public new bool Visible
+		{
+			get { return visible; }
+			set
+			{
+				if (visible == value)
+					return;
 
-        internal RectangleF StripRect
-        {
-            get { return stripRect; }
-            set { stripRect = value; }
-        }
+				visible = value;
+				OnChanged();
+			}
+		}
 
-        [Browsable(false)]
-        [DefaultValue(false)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public bool IsDrawn
-        {
-            get { return isDrawn; }
-            set
-            {
-                if (isDrawn == value)
-                    return;
+		internal RectangleF StripRect
+		{
+			get { return stripRect; }
+			set { stripRect = value; }
+		}
 
-                isDrawn = value;
-            }
-        }
+		[Browsable(false)]
+		[DefaultValue(false)]
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public bool IsDrawn
+		{
+			get { return isDrawn; }
+			set
+			{
+				if (isDrawn == value)
+					return;
 
-        /// <summary>
-        /// Image of <see cref="OMETabStripItem"/> which will be displayed
-        /// on menu items.
-        /// </summary>
-        [DefaultValue(null)]
-        public Image Image
-        {
-            get { return image; }
-            set { image = value; }
-        }
-        
-        [DefaultValue(true)]
-        public bool CanClose
-        {
-            get { return canClose; }
-            set { canClose = value; }
-        }
+				isDrawn = value;
+			}
+		}
 
-        [DefaultValue("Name")]
-        public string Title
-        {
-            get
-            {
-                return title;
-            }
-            set
-            {
-                if (title == value)
-                    return;
+		/// <summary>
+		/// Image of <see cref="OMETabStripItem"/> which will be displayed
+		/// on menu items.
+		/// </summary>
+		[DefaultValue(null)]
+		public Image Image
+		{
+			get { return image; }
+			set { image = value; }
+		}
 
-                title = value;
-                OnChanged();
-            }
-        }
+		[DefaultValue(true)]
+		public bool CanClose
+		{
+			get { return canClose; }
+			set { canClose = value; }
+		}
 
-        /// <summary>
-        /// Gets and sets a value indicating if the page is selected.
-        /// </summary>
-        [DefaultValue(false)]
-        [Browsable(false)]
-        public bool Selected
-        {
-            get { return selected; }
-            set
-            {
-                if (selected == value)
-                    return;
+		[DefaultValue("Name")]
+		public string Title
+		{
+			get
+			{
+				return title;
+			}
+			set
+			{
+				if (title == value)
+					return;
 
-                selected = value;
-            }
-        }
+				title = value;
+				OnChanged();
+			}
+		}
 
-        [Browsable(false)]
-        public string Caption
-        {
-            get { return Title; }
-        }
+		/// <summary>
+		/// Gets and sets a value indicating if the page is selected.
+		/// </summary>
+		[DefaultValue(false)]
+		[Browsable(false)]
+		public bool Selected
+		{
+			get { return selected; }
+			set
+			{
+				if (selected == value)
+					return;
 
-        #endregion
+				selected = value;
+			}
+		}
 
-        #region Ctor
+		[Browsable(false)]
+		public string Caption
+		{
+			get { return Title; }
+		}
 
-        public OMETabStripItem() : this(string.Empty, null)
-        {
-        }
+		#endregion
 
-        public OMETabStripItem(Control displayControl) : this(string.Empty, displayControl)
-        {
-        }
+		#region Ctor
 
-        public OMETabStripItem(string caption, Control displayControl) 
-        {
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            SetStyle(ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.UserPaint, true);
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.ContainerControl, true);
-            
-            selected = false;
-            Visible = true;
+		public OMETabStripItem()
+			: this(string.Empty, null)
+		{
+		}
 
-            UpdateText(caption, displayControl);
+		public OMETabStripItem(Control displayControl)
+			: this(string.Empty, displayControl)
+		{
+		}
 
-            //Add to controls
-            if(displayControl != null)
-                Controls.Add(displayControl);
-        }
+		public OMETabStripItem(string caption, Control displayControl)
+		{
+			SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+			SetStyle(ControlStyles.ResizeRedraw, true);
+			SetStyle(ControlStyles.UserPaint, true);
+			SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+			SetStyle(ControlStyles.ContainerControl, true);
 
-        #endregion
+			selected = false;
+			Visible = true;
 
-        #region IDisposable
+			UpdateText(caption, displayControl);
 
-        /// <summary>
-        /// Handles proper disposition of the tab page control.
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            
-            if(disposing)
-            {
-                if(image != null)
-                    image.Dispose();
-            }
-        }
+			//Add to controls
+			if (displayControl != null)
+				Controls.Add(displayControl);
+		}
 
-        #endregion
+		#endregion
 
-        #region ShouldSerialize
+		#region IDisposable
 
-        public bool ShouldSerializeIsDrawn()
-        {
-            return false;
-        }
+		/// <summary>
+		/// Handles proper disposition of the tab page control.
+		/// </summary>
+		/// <param name="disposing"></param>
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose(disposing);
 
-        public bool ShouldSerializeDock()
-        {
-            return false;
-        }
+			if (disposing)
+			{
+				if (image != null)
+					image.Dispose();
+			}
+		}
 
-        public bool ShouldSerializeControls()
-        {
-            return Controls != null && Controls.Count > 0;
-        }
-        
-        public bool ShouldSerializeVisible()
-        {
-            return true;
-        }
+		#endregion
 
-        #endregion
+		#region ShouldSerialize
 
-        #region Methods
+		public bool ShouldSerializeIsDrawn()
+		{
+			return false;
+		}
 
-        private void UpdateText(string caption, Control displayControl)
-        {
-            if (displayControl != null && displayControl is ICaptionSupport)
-            {
-                ICaptionSupport capControl = displayControl as ICaptionSupport;
-                Title = capControl.Caption;
-            }
-            else if (caption.Length <= 0 && displayControl != null)
-            {
-                Title = displayControl.Text;
-            }
-            else if (caption != null)
-            {
-                Title = caption;
-            }
-            else
-            {
-                Title = string.Empty;
-            }
-        }
+		public bool ShouldSerializeDock()
+		{
+			return false;
+		}
 
-        public void Assign(OMETabStripItem item)
-        {
-            Visible = item.Visible;
-            Text = item.Text;
-            CanClose = item.CanClose;
-            Tag = item.Tag;
-        }
+		public bool ShouldSerializeControls()
+		{
+			return Controls != null && Controls.Count > 0;
+		}
 
-        protected internal virtual void OnChanged()
-        {
-            if (Changed != null)
-                Changed(this, EventArgs.Empty);
-        }
+		public bool ShouldSerializeVisible()
+		{
+			return true;
+		}
 
-        /// <summary>
-        /// Return a string representation of page.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return Caption;
-        }
+		#endregion
 
-        #endregion
-    }
+		#region Methods
+
+		private void UpdateText(string caption, Control displayControl)
+		{
+			if (displayControl != null && displayControl is ICaptionSupport)
+			{
+				ICaptionSupport capControl = displayControl as ICaptionSupport;
+				Title = capControl.Caption;
+			}
+			else if (caption.Length <= 0 && displayControl != null)
+			{
+				Title = displayControl.Text;
+			}
+			else if (caption != null)
+			{
+				Title = caption;
+			}
+			else
+			{
+				Title = string.Empty;
+			}
+		}
+
+		public void Assign(OMETabStripItem item)
+		{
+			Visible = item.Visible;
+			Text = item.Text;
+			CanClose = item.CanClose;
+			Tag = item.Tag;
+		}
+
+		protected internal virtual void OnChanged()
+		{
+			if (Changed != null)
+				Changed(this, EventArgs.Empty);
+		}
+
+		/// <summary>
+		/// Return a string representation of page.
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return Caption;
+		}
+
+		#endregion
+	}
 }

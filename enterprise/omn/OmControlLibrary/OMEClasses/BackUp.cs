@@ -11,28 +11,28 @@ using OME.Logging.Tracing;
 
 namespace OMControlLibrary
 {
-    public class Backup 
-    {
-        
-        public void BackUpDataBase()
-        {
-            try
-            {
-                SaveFileDialog dialog = new SaveFileDialog();
-                dialog.ShowDialog();
+	public class Backup
+	{
 
-                string filepath = dialog.FileName;
-                bool checkForException= Helper.DbInteraction.BackUpDatabase(filepath);
-                if (checkForException == false)
-                {
-                    MessageBox.Show("Backup Successful!", "ObjectManager Enterprise"); 
-                }
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.ShowMessage(oEx);
-            }
-   
-        }
-    }
+		public void BackUpDataBase()
+		{
+			try
+			{
+				SaveFileDialog dialog = new SaveFileDialog();
+				dialog.ShowDialog();
+
+				string filepath = dialog.FileName;
+				bool checkForException = Helper.DbInteraction.BackUpDatabase(filepath);
+				if (checkForException == false)
+				{
+					MessageBox.Show("Backup Successful!", "ObjectManager Enterprise");
+				}
+			}
+			catch (Exception oEx)
+			{
+				LoggingHelper.ShowMessage(oEx);
+			}
+
+		}
+	}
 }

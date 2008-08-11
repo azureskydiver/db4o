@@ -6,36 +6,36 @@ using System.Collections;
 
 namespace OMControlLibrary
 {
-    public class SaveIndexClass
-    {
-        ArrayList fieldname;
-        string classname;
+	public class SaveIndexClass
+	{
+		ArrayList fieldname;
+		string classname;
 
-        ArrayList indexed;
+		ArrayList indexed;
 
-        public string Classname
-        {
-            get { return classname; }
-            set { classname = value; }
-        }
+		public string Classname
+		{
+			get { return classname; }
+			set { classname = value; }
+		}
 
-        public ArrayList Indexed
-        {
-            get { return indexed; }
-            set { indexed = value; }
-        }
+		public ArrayList Indexed
+		{
+			get { return indexed; }
+			set { indexed = value; }
+		}
 
-        public ArrayList Fieldname
-        {
-            get { return fieldname; }
-            set { fieldname = value; }
-        }
-        internal void SaveIndex()
-        {
-            for (int i = 0; i < fieldname.Count; i++)
-            {
-                Helper.DbInteraction.SetIndexedConfiguration(fieldname[i].ToString(), classname, Convert.ToBoolean(indexed[i]));
-            }
-        }
-    }
+		public ArrayList Fieldname
+		{
+			get { return fieldname; }
+			set { fieldname = value; }
+		}
+		internal void SaveIndex()
+		{
+			for (int i = 0; i < fieldname.Count; i++)
+			{
+				Helper.DbInteraction.SetIndexedConfiguration(fieldname[i].ToString(), classname, Convert.ToBoolean(indexed[i]));
+			}
+		}
+	}
 }

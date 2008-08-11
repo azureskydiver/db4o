@@ -4,13 +4,13 @@ using System.Text;
 
 namespace OMControlLibrary
 {
-    interface IView
-    {
+	interface IView
+	{
 
-        /// <summary>
-        /// Set Literals
-        /// </summary>
-        void SetLiterals();
+		/// <summary>
+		/// Set Literals
+		/// </summary>
+		void SetLiterals();
 
-    }
+	}
 }
