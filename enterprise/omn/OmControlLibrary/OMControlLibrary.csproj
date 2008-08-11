@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{73E41A2F-EDD6-4547-BB46-0D33965994EC}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -298,19 +298,6 @@
     <Content Include="TabStrip\FATabStrip.bmp" />
     <None Include="Resources\openfolder.gif" />
     <None Include="Resources\Closefolder.gif" />
-    <None Include="TabStrip\BaseClasses\BaseStyledPanel.cs.keep" />
-    <None Include="TabStrip\Control\OMETabStrip.cs.keep" />
-    <None Include="TabStrip\Control\OMETabStripCloseButton.cs.keep" />
-    <None Include="TabStrip\Control\OMETabStripItem.cs.keep" />
-    <None Include="TabStrip\Control\OMETabStripItemCollection.cs.keep" />
-    <None Include="TabStrip\Control\OMETabStripMenuGlyph.cs.keep" />
-    <None Include="TabStrip\Delegates.cs.keep" />
-    <None Include="TabStrip\Design\ICaptionSupport.cs.keep" />
-    <None Include="TabStrip\Design\OMETabStripDesigner.cs.keep" />
-    <None Include="TabStrip\Design\OMETabStripItemDesigner.cs.keep" />
-    <None Include="TabStrip\Enums.cs.keep" />
-    <None Include="TabStrip\FATabStrip.bmp.keep" />
-    <None Include="TabStrip\Helpers\CollectionWithEvents.cs.keep" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

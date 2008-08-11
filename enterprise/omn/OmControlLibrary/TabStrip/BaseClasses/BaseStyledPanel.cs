@@ -5,86 +5,86 @@ using System.Windows.Forms.VisualStyles;
 
 namespace OMControlLibrary.BaseClasses
 {
-    [ToolboxItem(false)]
-    public class BaseStyledPanel : ContainerControl
-    {
-        #region Fields
+	[ToolboxItem(false)]
+	public class BaseStyledPanel : ContainerControl
+	{
+		#region Fields
 
-        private static ToolStripProfessionalRenderer renderer;
+		private static ToolStripProfessionalRenderer renderer;
 
-        #endregion
+		#endregion
 
-        #region Events
+		#region Events
 
-        public event EventHandler ThemeChanged;
+		public event EventHandler ThemeChanged;
 
-        #endregion
+		#endregion
 
-        #region Ctor
+		#region Ctor
 
-        static BaseStyledPanel()
-        {
-            renderer = new ToolStripProfessionalRenderer();
-        }
+		static BaseStyledPanel()
+		{
+			renderer = new ToolStripProfessionalRenderer();
+		}
 
-        public BaseStyledPanel()
-        {
-            // Set painting style for better performance.
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            SetStyle(ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.UserPaint, true);
-        }
+		public BaseStyledPanel()
+		{
+			// Set painting style for better performance.
+			SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+			SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+			SetStyle(ControlStyles.ResizeRedraw, true);
+			SetStyle(ControlStyles.UserPaint, true);
+		}
 
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
 
-        protected override void OnSystemColorsChanged(EventArgs e)
-        {
-            base.OnSystemColorsChanged(e);
-            UpdateRenderer();
-            Invalidate();
-        }
+		protected override void OnSystemColorsChanged(EventArgs e)
+		{
+			base.OnSystemColorsChanged(e);
+			UpdateRenderer();
+			Invalidate();
+		}
 
-        protected virtual void OnThemeChanged(EventArgs e)
-        {
-            if (ThemeChanged != null)
-                ThemeChanged(this, e);
-        }
+		protected virtual void OnThemeChanged(EventArgs e)
+		{
+			if (ThemeChanged != null)
+				ThemeChanged(this, e);
+		}
 
-        private void UpdateRenderer()
-        {
-            if (!UseThemes)
-            {
-                renderer.ColorTable.UseSystemColors = true;
-            }
-            else
-            {
-                renderer.ColorTable.UseSystemColors = false;
-            }
-        }
+		private void UpdateRenderer()
+		{
+			if (!UseThemes)
+			{
+				renderer.ColorTable.UseSystemColors = true;
+			}
+			else
+			{
+				renderer.ColorTable.UseSystemColors = false;
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Props
+		#region Props
 
-        [Browsable(false)]
-        public ToolStripProfessionalRenderer ToolStripRenderer
-        {
-            get { return renderer; }
-        }
+		[Browsable(false)]
+		public ToolStripProfessionalRenderer ToolStripRenderer
+		{
+			get { return renderer; }
+		}
 
-        [DefaultValue(true)]
-        [Browsable(false)]
-        public bool UseThemes
-        {
-            get
-            {
-                return VisualStyleRenderer.IsSupported && VisualStyleInformation.IsSupportedByOS && Application.RenderWithVisualStyles;
-            }
-        }
+		[DefaultValue(true)]
+		[Browsable(false)]
+		public bool UseThemes
+		{
+			get
+			{
+				return VisualStyleRenderer.IsSupported && VisualStyleInformation.IsSupportedByOS && Application.RenderWithVisualStyles;
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

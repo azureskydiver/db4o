@@ -8,18 +8,18 @@ using System.Xml;
 
 namespace OMAddin
 {
-    [RunInstaller(true)]
-    public partial class OMInstaller : Installer
-    {
-        public OMInstaller()
-        {
-            InitializeComponent();
-        }
-     
-        protected override void OnAfterInstall(IDictionary savedState)
-        {
-        	base.OnAfterInstall(savedState);
-        	DeleteApplicationDataFolder();
+	[RunInstaller(true)]
+	public partial class OMInstaller : Installer
+	{
+		public OMInstaller()
+		{
+			InitializeComponent();
+		}
+
+		protected override void OnAfterInstall(IDictionary savedState)
+		{
+			base.OnAfterInstall(savedState);
+			DeleteApplicationDataFolder();
 
 			try
 			{
@@ -34,66 +34,66 @@ namespace OMAddin
 			{
 				MessageBox.Show(ex.ToString());
 			}
-        }
+		}
 
-    	private static void UpdateAddinFile(string yearVersion, string addinAssemblyPath)
-    	{
+		private static void UpdateAddinFile(string yearVersion, string addinAssemblyPath)
+		{
 			string addinFilePath = AddinFileFor(yearVersion);
 
 			XmlDocument addinFile = new XmlDocument();
 			addinFile.Load(addinFilePath);
 
-    		XmlNamespaceManager nsmgr = NameSpaceManagerFor(addinFile, "");
+			XmlNamespaceManager nsmgr = NameSpaceManagerFor(addinFile, "");
 
-    		UpdateNode(addinFile, nsmgr,  "/ns:Extensibility/ns:Addin/ns:Assembly", addinAssemblyPath);
+			UpdateNode(addinFile, nsmgr, "/ns:Extensibility/ns:Addin/ns:Assembly", addinAssemblyPath);
 			UpdateNode(addinFile, nsmgr, "/ns:Extensibility/ns:HostApplication/ns:Version", VSVersionNumberFor(yearVersion));
 
 			addinFile.Save(addinFilePath);
-    	}
+		}
 
-    	private static XmlNamespaceManager NameSpaceManagerFor(XmlDocument addinFile, string prefix)
-    	{
-    		XmlNamespaceManager nsmgr = new XmlNamespaceManager(addinFile.NameTable);
-    		nsmgr.AddNamespace("ns", addinFile.DocumentElement.GetNamespaceOfPrefix(prefix));
-    		
+		private static XmlNamespaceManager NameSpaceManagerFor(XmlDocument addinFile, string prefix)
+		{
+			XmlNamespaceManager nsmgr = new XmlNamespaceManager(addinFile.NameTable);
+			nsmgr.AddNamespace("ns", addinFile.DocumentElement.GetNamespaceOfPrefix(prefix));
+
 			return nsmgr;
-    	}
+		}
 
-    	private static void UpdateNode(XmlDocument addinFile, XmlNamespaceManager nsmgr, string nodePath, string value)
-    	{
+		private static void UpdateNode(XmlDocument addinFile, XmlNamespaceManager nsmgr, string nodePath, string value)
+		{
 			XmlNode node = addinFile.SelectSingleNode(nodePath, nsmgr);
-    		node.FirstChild.Value = value;
-    	}
+			node.FirstChild.Value = value;
+		}
 
-    	protected override void OnAfterUninstall(IDictionary savedState)
-        {
-            base.OnAfterUninstall(savedState);
+		protected override void OnAfterUninstall(IDictionary savedState)
+		{
+			base.OnAfterUninstall(savedState);
 			DeleteApplicationDataFolder();
-        }
+		}
 
-        internal static void CopyWindowsPRFFile(string yearVersion)
-        {
-        	string currentVSConfigFile = Path.Combine(VSProfilePathFor(yearVersion), "windows.prf");
-            if (File.Exists(currentVSConfigFile))
-            {
-                string addinWindowConfigFile = Path.Combine(VSUserHomeFor(yearVersion), @"Addins\windows.prf");
-                if (File.Exists(addinWindowConfigFile))
-                {
-                    File.Copy(addinWindowConfigFile, currentVSConfigFile, true);
-                    File.Delete(addinWindowConfigFile);
-                }
-            }
-        }
+		internal static void CopyWindowsPRFFile(string yearVersion)
+		{
+			string currentVSConfigFile = Path.Combine(VSProfilePathFor(yearVersion), "windows.prf");
+			if (File.Exists(currentVSConfigFile))
+			{
+				string addinWindowConfigFile = Path.Combine(VSUserHomeFor(yearVersion), @"Addins\windows.prf");
+				if (File.Exists(addinWindowConfigFile))
+				{
+					File.Copy(addinWindowConfigFile, currentVSConfigFile, true);
+					File.Delete(addinWindowConfigFile);
+				}
+			}
+		}
 
-    	internal static void InvokeReadMe(string basePath)
-        {
+		internal static void InvokeReadMe(string basePath)
+		{
 			String readmeFilePath = Path.Combine(basePath, @"ReadMe\ReadMe.htm");
 
-            if (File.Exists(readmeFilePath))
+			if (File.Exists(readmeFilePath))
 			{
-                System.Diagnostics.Process.Start(readmeFilePath);
+				System.Diagnostics.Process.Start(readmeFilePath);
 			}
-        }
+		}
 
 		private static void DeleteApplicationDataFolder()
 		{
@@ -113,9 +113,9 @@ namespace OMAddin
 		}
 
 		private static string VSUserHomeFor(string yearVersion)
-    	{
+		{
 			return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Visual Studio " + yearVersion);
-    	}
+		}
 
 		private static string VSProfilePathFor(string version)
 		{

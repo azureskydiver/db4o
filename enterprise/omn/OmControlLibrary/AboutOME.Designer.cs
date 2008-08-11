@@ -1,33 +1,33 @@
 namespace OMControlLibrary
 {
-    partial class AboutOME
-    {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
+	partial class AboutOME
+	{
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
 
-        #region Windows Form Designer generated code
+		#region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
 			this.labelStatus = new System.Windows.Forms.Label();
 			this.labeldb4o = new System.Windows.Forms.Label();
@@ -158,18 +158,18 @@ namespace OMControlLibrary
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
-        }
+		}
 
-        #endregion
+		#endregion
 
-        private System.Windows.Forms.PictureBox pictureBoxLogo;
-        private System.Windows.Forms.Label labelStatus;
-        private System.Windows.Forms.Label labeldb4o;
-        private System.Windows.Forms.Label labelOME;
-        private System.Windows.Forms.Label labelCopyRight;
-        private System.Windows.Forms.Label labelCStatus;
-        private System.Windows.Forms.Button buttonOk;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-    }
+		private System.Windows.Forms.PictureBox pictureBoxLogo;
+		private System.Windows.Forms.Label labelStatus;
+		private System.Windows.Forms.Label labeldb4o;
+		private System.Windows.Forms.Label labelOME;
+		private System.Windows.Forms.Label labelCopyRight;
+		private System.Windows.Forms.Label labelCStatus;
+		private System.Windows.Forms.Button buttonOk;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.GroupBox groupBox2;
+	}
 }
