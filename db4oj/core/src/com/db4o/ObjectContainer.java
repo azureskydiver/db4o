@@ -191,11 +191,11 @@ public interface ObjectContainer {
 
 	/**
      * Query-By-Example interface to retrieve objects.
-     * <br><br><code>get()</code> creates an
+     * <br><br><code>queryByExample()</code> creates an
      * {@link ObjectSet ObjectSet} containing
      * all objects in the <code>ObjectContainer</code> that match the passed
      * template object.<br><br>
-	 * Calling <code>get(NULL)</code> returns all objects stored in the
+	 * Calling <code>queryByExample(NULL)</code> returns all objects stored in the
      * <code>ObjectContainer</code>.<br><br><br>
      * <b>Query Evaluation</b>
      * <br>All non-null members of the template object are compared against
@@ -217,7 +217,7 @@ public interface ObjectContainer {
      * db4o keeps track of all instantiatied objects. Queries will return
      * references to these objects instead of instantiating them a second time.
      * <br><br>
-     * Objects newly activated by <code>get()</code> can respond to the callback
+     * Objects newly activated by <code>queryByExample()</code> can respond to the callback
      * method {@link com.db4o.ext.ObjectCallbacks#objectOnActivate objectOnActivate}.
      * <br><br>
      * @param template object to be used as an example to find all matching objects.<br><br>
@@ -232,7 +232,7 @@ public interface ObjectContainer {
     /**
      * creates a new SODA {@link Query Query}.
      * <br><br>
-     * Use {@link #get get(Object template)} for simple Query-By-Example.<br><br>
+     * Use {@link #queryByExample(Object)} for simple Query-By-Example.<br><br>
      * {@link #query(Predicate) Native queries } are the recommended main db4o query
      * interface. 
      * <br><br>

@@ -32,7 +32,7 @@ public class ArrayVersionHelper3 extends ArrayVersionHelper {
     }
     
     public ReflectClass classReflector(Reflector reflector, ClassMetadata classMetadata, boolean isPrimitive){
-        if(Deploy.csharp && NullableArrayHandling.enabled()){
+        if(Deploy.csharp){
             ReflectClass primitiveClaxx = Handlers4.primitiveClassReflector(classMetadata, reflector);
             if(primitiveClaxx != null){
                 return primitiveClaxx;

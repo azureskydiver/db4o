@@ -42,7 +42,7 @@ public abstract class AbstractReadContext extends AbstractBufferContext implemen
         if(handler instanceof ClassMetadata){
             ClassMetadata classMetadata = (ClassMetadata) handler;
             if(classMetadata.isValueType()){
-                return classMetadata.readValueType(transaction(), readInt(), activationDepth().descend(classMetadata));
+                return classMetadata.readAndActivate(transaction(), readInt(), activationDepth().descend(classMetadata));
             }
         }
         if(useDedicatedSlot(handler)){

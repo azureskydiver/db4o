@@ -20,10 +20,6 @@ public class TypeHandlerConfigurationJDK_1_1 extends TypeHandlerConfiguration {
 	}
 
 	public void apply() {
-		if(! enabled()){
-			return;
-		}
-
 		registerCollection(Vector.class);
 		registerMap(Hashtable.class);
 	}

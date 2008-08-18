@@ -32,9 +32,6 @@ public class TypeHandlerConfigurationTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void test(){
-		if(NullableArrayHandling.disabled()){
-			return;
-		}
 		assertSingleNullTypeHandlerAspect(ArrayList.class);
 		assertSingleNullTypeHandlerAspect(AbstractList.class);
 		assertSingleTypeHandlerAspect(AbstractCollection.class, CollectionTypeHandler.class);

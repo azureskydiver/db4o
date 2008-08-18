@@ -30,19 +30,12 @@ public final class ListTypeHandlerTestVariables {
 				}
 			);
 	
-	public final static FixtureProvider TYPEHANDLER_FIXTURE_PROVIDER = NullableArrayHandling.enabled() ? 
+	public final static FixtureProvider TYPEHANDLER_FIXTURE_PROVIDER =  
 			new SimpleFixtureProvider(LIST_TYPEHANDER,
 			        new Object[]{
 			    		null, 
 			        }
-			    )
-	    	: 
-	    	new SimpleFixtureProvider(LIST_TYPEHANDER,
-	        new Object[]{
-	    		new ListTypeHandler(), 
-	            new EmbeddedListTypeHandler(),
-	        }
-	    );
+			    );
 
 	public final static ListTypeHandlerTestElementsSpec STRING_ELEMENTS_SPEC = 
 		new ListTypeHandlerTestElementsSpec(new Object[]{ "zero", "one" }, "two", "zzz");

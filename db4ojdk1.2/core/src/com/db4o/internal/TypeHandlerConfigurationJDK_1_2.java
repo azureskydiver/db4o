@@ -19,10 +19,6 @@ public class TypeHandlerConfigurationJDK_1_2 extends TypeHandlerConfiguration{
 	}
 
 	public void apply(){
-		if(! enabled()){
-			return;
-		}
-		
         registerCollection(AbstractCollection.class);
 		ignoreFieldsOn(AbstractList.class);
 		ignoreFieldsOn(AbstractSequentialList.class);
