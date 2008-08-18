@@ -19,8 +19,6 @@ public class AllTests  extends Db4oTestSuite {
 				STArrayListUTestCase.class,
 				STHashSetTTestCase.class,
 				STHashSetUTestCase.class,
-				STHashtableDTestCase.class,
-				STHashtableEDTestCase.class,
 				STHashtableETTestCase.class,
 				STHashtableEUTestCase.class,
 				STHashtableTTestCase.class,
@@ -51,15 +49,15 @@ public class AllTests  extends Db4oTestSuite {
 	}
 	
 	private Class[] vectorQbeTestCases () {
-		return TypeHandlerConfiguration.enabled() ? 
-				new Class[] {
-			//  QBE with vector is not expressible as SODA and it
-			//  will no longer work with new collection Typehandlers
-				} 
-		: 
-				new Class[] {
-						STVectorDTestCase.class,
-						STVectorEDTestCase.class,
+		return new Class[] {
+			//  QBE with vector and Hashtable is not expressible as SODA and 
+			//  it will no longer work with new collection Typehandlers
+
+//				STVectorDTestCase.class,
+//				STVectorEDTestCase.class,
+//				STHashtableDTestCase.class,
+//				STHashtableEDTestCase.class,
+
 		};
 	}
 }

@@ -33,11 +33,6 @@ public class SimpleListTestCase extends AbstractDb4oTestCase{
 	}
 	
 	protected void configure(Configuration config) throws Exception {
-		if(! NullableArrayHandling.enabled()){
-			config.registerTypeHandler(
-				new SingleClassTypeHandlerPredicate(ArrayList.class), 
-				new ListTypeHandler());
-		}
 		config.objectClass(Item.class).cascadeOnDelete(true);
 	}
 	

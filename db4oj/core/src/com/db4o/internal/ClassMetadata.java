@@ -635,9 +635,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
 
     private int collectionDeleteDepth(DeleteContextImpl context) {
-        int depth = context.cascadeDeleteDepth() 
-            + reflector().collectionUpdateDepth(classReflector()) 
-            - 3;  // Minus three ???  
+        int depth = 
+        	reflector().collectionUpdateDepth(classReflector())
+        	- 2;  // Minus two ???  
         if (depth < 1) {
             depth = 1;
         }
@@ -1258,13 +1258,18 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     // FIXME: [TA] ActivationDepth review
-	public Object readValueType(Transaction trans, int id, ActivationDepth depth) {
+	public Object readAndActivate(Transaction trans, int id, ActivationDepth depth) {
 		
-		// for C# value types only:
-		// they need to be instantiated fully before setting them
-		// on the parent object because the set call modifies identity.
+		// Method for C# value types and for map members:
+		// they need to be instantiated before setting them
+		// on the parent object. 
 		
-		// TODO: Do we want value types in the ID tree?
+		// For value types the set call modifies identity.
+
+		// In maps, adding the object to the map calls #hashCode and #equals,
+		// so the object needs to be activated.
+		
+		// TODO: Question: Do we want value types in the ID tree?
 		// Shouldn't we treat them like strings and update
 		// them every time ???		
 		ObjectReference ref = trans.referenceForId(id);

@@ -56,20 +56,14 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
 	}
 
     public Class primitiveJavaClass(){
-    	if(NullableArrayHandling.enabled()){
-    		return defaultValue().getClass();
-    	}
-    	return null;
+    	return defaultValue().getClass();
     }
     
     protected Class javaClass() {
-    	if(NullableArrayHandling.enabled()){
-    		if(!Deploy.csharp){
-    			return primitiveJavaClass();
-    		}
-    		return super.javaClass();
-    	}
-    	return super.javaClass();
+		if(!Deploy.csharp){
+			return primitiveJavaClass();
+		}
+		return super.javaClass();
     }
     
     public abstract Object read(byte[] bytes, int offset);

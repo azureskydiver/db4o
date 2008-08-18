@@ -61,9 +61,7 @@ public class NullElementsInArrayTestCase extends AbstractDb4oTestCase{
     
     public void testRetrieve(){
         Item item = (Item) retrieveOnlyInstance(Item.class);
-        if(NullableArrayHandling.enabled()){
-            ArrayAssert.areEqual(DATA, item.array);
-        }
+        ArrayAssert.areEqual(DATA, item.array);
     }
     
     public void _testQueryIntegerNull(){

@@ -30,13 +30,6 @@ public abstract class TypeHandlerConfiguration {
     	_mapTypeHandler = mapTypehandler;
     }
     
-    /*
-     * The plan is to switch live both changes at once.
-     */
-    public static boolean enabled(){
-        return NullableArrayHandling.enabled();
-    }
-    
     protected void registerCollection(Class clazz){
         registerListTypeHandlerFor(clazz);    
     }

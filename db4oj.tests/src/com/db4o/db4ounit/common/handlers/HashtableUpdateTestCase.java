@@ -194,6 +194,7 @@ public class HashtableUpdateTestCase extends HandlerUpdateTestCaseBase {
         Assert.areEqual(DATA.length, array.length);
         for (int j = 0; j < DATA.length; j++) {
         	Object mapValue = map.get(DATA[j]);
+        	objectContainer.activate(mapValue, Integer.MAX_VALUE);
         	Assert.areEqual(DATA[j], mapValue);
 		}
         

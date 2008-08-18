@@ -431,10 +431,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     private boolean arraysUsePrimitiveClassReflector() {
-        if(NullableArrayHandling.useJavaHandling()){
-            return _isPrimitive;
-        }
-        return Deploy.csharp ? false : _isPrimitive;
+    	return _isPrimitive;
     }
 
     public void deactivate(Transaction a_trans, Object a_onObject, ActivationDepth a_depth) {

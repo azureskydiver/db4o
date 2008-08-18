@@ -5,10 +5,7 @@ package com.db4o.db4ounit.jre5.collections.typehandler;
 import java.util.*;
 
 import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.internal.*;
 import com.db4o.query.*;
-import com.db4o.typehandlers.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -23,14 +20,6 @@ public class NamedArrayListTypeHandlerTestCase extends AbstractDb4oTestCase{
     
     protected void store() throws Exception {
         store(createNamedArrayList());
-    }
-    
-    protected void configure(Configuration config) throws Exception {
-    	if(! NullableArrayHandling.enabled()){
-	        config.registerTypeHandler(
-	            new SingleClassTypeHandlerPredicate(ArrayList.class), 
-	            new ListTypeHandler());
-    	}
     }
     
     private NamedArrayList createNamedArrayList(){

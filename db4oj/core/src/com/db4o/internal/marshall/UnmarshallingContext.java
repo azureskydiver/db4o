@@ -4,6 +4,7 @@ package com.db4o.internal.marshall;
 
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
+import com.db4o.typehandlers.*;
 
 
 /**
@@ -94,6 +95,15 @@ public class UnmarshallingContext extends ObjectReferenceContext implements Hand
     
     private ActivationDepthProvider activationDepthProvider() {
     	return container().activationDepthProvider();
+	}
+    
+	public Object readActivatedObject(TypeHandler4 handler) {
+		ActivationDepth tempDepth = activationDepth();
+		activationDepthProvider().activationDepth(Integer.MAX_VALUE, ActivationMode.ACTIVATE);
+		Object obj = readObject(handler);
+		container().activate(transaction(), obj, activationDepth());
+		activationDepth(tempDepth);
+		return obj;
 	}
 
 	public Object readFieldValue (FieldMetadata field){

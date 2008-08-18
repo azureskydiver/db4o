@@ -92,9 +92,7 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
         assertCorrectedHandlerVersion(arrayHandler, 0, ArrayHandler0.class);
         assertCorrectedHandlerVersion(arrayHandler, 1, ArrayHandler2.class);
         assertCorrectedHandlerVersion(arrayHandler, 2, ArrayHandler2.class);
-        if(NullableArrayHandling.enabled()){
-            assertCorrectedHandlerVersion(arrayHandler, 3, ArrayHandler3.class);
-        }
+        assertCorrectedHandlerVersion(arrayHandler, 3, ArrayHandler3.class);
         assertCorrectedHandlerVersion(arrayHandler, HandlerRegistry.HANDLER_VERSION, ArrayHandler.class);
     }
     

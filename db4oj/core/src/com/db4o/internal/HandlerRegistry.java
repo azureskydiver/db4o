@@ -28,7 +28,7 @@ import com.db4o.typehandlers.*;
  */
 public final class HandlerRegistry {
     
-    public static final byte HANDLER_VERSION = NullableArrayHandling.enabled() ? (byte)4:(byte)3;
+    public static final byte HANDLER_VERSION = (byte)4;
     
     private final ObjectContainerBase _container;  // this is the master container and not valid
 	                                   // for TransportObjectContainer
@@ -227,15 +227,11 @@ public final class HandlerRegistry {
         ArrayHandler arrayHandler = new ArrayHandler();
         registerHandlerVersion(arrayHandler, 0, new ArrayHandler0());
         registerHandlerVersion(arrayHandler, 2, new ArrayHandler2());
-        if(NullableArrayHandling.enabled()){
-        	registerHandlerVersion(arrayHandler, 3, new ArrayHandler3());
-        }
+        registerHandlerVersion(arrayHandler, 3, new ArrayHandler3());
         
         MultidimensionalArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler();
         registerHandlerVersion(multidimensionalArrayHandler, 0, new MultidimensionalArrayHandler0());
-        if(NullableArrayHandling.enabled()){
-            registerHandlerVersion(multidimensionalArrayHandler, 3, new MultidimensionalArrayHandler3());
-        }
+        registerHandlerVersion(multidimensionalArrayHandler, 3, new MultidimensionalArrayHandler3());
         
         PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler();
         registerHandlerVersion(primitiveFieldHandler, 0, primitiveFieldHandler);  // same handler, but making sure versions get cascaded
@@ -263,13 +259,11 @@ public final class HandlerRegistry {
         
         map(id, classMetadata, typeHandler, typeHandler, classReflector);
         
-        if (NullableArrayHandling.useJavaHandling()) {
-            if(typeHandler instanceof PrimitiveHandler){
-                ReflectClass primitiveClassReflector = 
-                    ((PrimitiveHandler) typeHandler).primitiveClassReflector();
-                if(primitiveClassReflector != null){
-                    mapPrimitive(0, classMetadata, typeHandler, typeHandler, primitiveClassReflector);
-                }
+        if(typeHandler instanceof PrimitiveHandler){
+            ReflectClass primitiveClassReflector = 
+                ((PrimitiveHandler) typeHandler).primitiveClassReflector();
+            if(primitiveClassReflector != null){
+                mapPrimitive(0, classMetadata, typeHandler, typeHandler, primitiveClassReflector);
             }
         }
     }

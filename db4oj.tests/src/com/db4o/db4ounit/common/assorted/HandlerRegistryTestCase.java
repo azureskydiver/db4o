@@ -50,23 +50,15 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
         assertCorrectedHandlerVersion(ArrayHandler0.class, arrayHandler, 0);
         assertCorrectedHandlerVersion(ArrayHandler2.class, arrayHandler, 1);
         assertCorrectedHandlerVersion(ArrayHandler2.class, arrayHandler, 2);
+        assertCorrectedHandlerVersion(ArrayHandler3.class, arrayHandler, 3);
         
-        if(NullableArrayHandling.enabled()){
-            assertCorrectedHandlerVersion(ArrayHandler3.class, arrayHandler, 3);
-        }
         assertCorrectedHandlerVersion(ArrayHandler.class, arrayHandler, HandlerRegistry.HANDLER_VERSION);
         
         ArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler(untypedFieldHandler, false);
         assertCorrectedHandlerVersion(MultidimensionalArrayHandler0.class, multidimensionalArrayHandler, 0);
-        
-        if(NullableArrayHandling.enabled()){
-            assertCorrectedHandlerVersion(MultidimensionalArrayHandler3.class, multidimensionalArrayHandler, 1);
-            assertCorrectedHandlerVersion(MultidimensionalArrayHandler3.class, multidimensionalArrayHandler, 2);
-            assertCorrectedHandlerVersion(MultidimensionalArrayHandler3.class, multidimensionalArrayHandler, 3);
-        }else{
-            assertCorrectedHandlerVersion(MultidimensionalArrayHandler.class, multidimensionalArrayHandler, 1);
-            assertCorrectedHandlerVersion(MultidimensionalArrayHandler.class, multidimensionalArrayHandler, 2);
-        }
+        assertCorrectedHandlerVersion(MultidimensionalArrayHandler3.class, multidimensionalArrayHandler, 1);
+        assertCorrectedHandlerVersion(MultidimensionalArrayHandler3.class, multidimensionalArrayHandler, 2);
+        assertCorrectedHandlerVersion(MultidimensionalArrayHandler3.class, multidimensionalArrayHandler, 3);
         
         assertCorrectedHandlerVersion(MultidimensionalArrayHandler.class, multidimensionalArrayHandler, HandlerRegistry.HANDLER_VERSION);
 	    
@@ -164,11 +156,7 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
     }
 	
     private ReflectClass integerClassReflector() {
-    	if(NullableArrayHandling.disabled()){
-    		return reflectorFor(Integer.class);
-    	}else{    		
-    		return reflectorFor(Platform4.nullableTypeFor(int.class));
-    	}
+    	return reflectorFor(Platform4.nullableTypeFor(int.class));
     }
 
     private ReflectClass reflectorFor(Class clazz) {
