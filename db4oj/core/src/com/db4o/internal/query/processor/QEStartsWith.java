@@ -8,6 +8,10 @@ package com.db4o.internal.query.processor;
  */
 public class QEStartsWith extends QEStringCmp
 {
+	/** for C/S messaging only */
+	public QEStartsWith() {
+	}
+	
 	public QEStartsWith(boolean caseSensitive_) {
 		super(caseSensitive_);
 	}
