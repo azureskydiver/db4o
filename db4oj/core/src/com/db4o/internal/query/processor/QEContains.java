@@ -8,6 +8,10 @@ package com.db4o.internal.query.processor;
  */
 public class QEContains extends QEStringCmp
 {
+	/** for C/S messaging only */
+	public QEContains() {
+	}
+	
 	public QEContains(boolean caseSensitive_) {
 		super(caseSensitive_);
 	}

@@ -12,6 +12,10 @@ public abstract class QEStringCmp extends QEAbstract {
     
 	public boolean caseSensitive;
 
+	/** for C/S messaging only */
+	public QEStringCmp() {
+	}
+	
 	public QEStringCmp(boolean caseSensitive_) {
 		caseSensitive = caseSensitive_;
 	}

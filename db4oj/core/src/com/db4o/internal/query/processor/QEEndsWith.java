@@ -8,6 +8,10 @@ package com.db4o.internal.query.processor;
  */
 public class QEEndsWith extends QEStringCmp {
 
+	/** for C/S messaging only */
+	public QEEndsWith() {
+	}
+	
 	public QEEndsWith(boolean caseSensitive_) {
 		super(caseSensitive_);
 	}
