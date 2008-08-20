@@ -89,12 +89,12 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     }
     
 	private void printOutResult(TestResult result) {
-		System.out.println("\n\nAllTests completed.\nAssertions: "
+		System.err.println("\n\nAllTests completed.\nAssertions: "
 		    + result.numAssertions() + "\nTime: " + result.timeTaken() + "ms");
 		if (result.numFailures() == 0) {
-		    System.out.println("No errors detected.\n");
+		    System.err.println("No errors detected.\n");
 		} else {
-		    System.out
+		    System.err
 		        .println("" + result.numFailures() + " ERRORS DETECTED !!!.\n");
 		}
 	}
@@ -282,7 +282,7 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     }
 
     protected void logConfiguration() {
-        System.out.println("Running " + getClass().getName() + " against\n"
+        System.err.println("Running " + getClass().getName() + " against\n"
             + Db4o.version() + "\n");
         System.out.println("Using " + TEST_CONFIGURATION
         	+ ".\n");
