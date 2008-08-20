@@ -18,6 +18,7 @@ public class AllTests extends Db4oTestSuite {
 			EventArgsTransactionTestCase.class,			
 			InstantiationEventsTestCase.class,
 			ObjectContainerEventsTestCase.class,
+			EventCountTestCase.class,
 		};
 	}
 
