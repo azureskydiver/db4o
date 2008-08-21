@@ -34,6 +34,7 @@ public class CascadeToHashtableTestCase extends AbstractDb4oTestCase {
 	}
 
 	public void test() throws Exception {
+		
 		Item item = (Item) retrieveOnlyInstance(Item.class);
 		item.ht.put("key1", new Atom("updated1"));
 		Atom atom = (Atom) item.ht.get("key2");
@@ -41,6 +42,8 @@ public class CascadeToHashtableTestCase extends AbstractDb4oTestCase {
 		store(item);
 		db().commit();
 		fixture().reopen(getClass());
+		
+		assertOccurrences(Atom.class, 4);
 
 		item = (Item) retrieveOnlyInstance(Item.class);
 		atom = (Atom) item.ht.get("key1");
@@ -52,8 +55,7 @@ public class CascadeToHashtableTestCase extends AbstractDb4oTestCase {
 
 		fixture().reopen(getClass());
 		deleteAll(Item.class);
-		atom = (Atom) retrieveOnlyInstance(Atom.class);
-		assertOccurrences(Atom.class, 1);
+		assertOccurrences(Atom.class, 2);
 	}
 
 	public static class Atom {

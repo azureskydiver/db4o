@@ -32,6 +32,7 @@ public class HashtableTypeHandler implements TypeHandler4 , FirstClassHandler, C
     
     public Object read(ReadContext context) {
     	Hashtable hashtable = (Hashtable)((UnmarshallingContext) context).persistentObject();
+    	hashtable.clear();
         int elementCount = context.readInt();
         TypeHandler4 elementHandler = elementTypeHandler(context, hashtable);
         for (int i = 0; i < elementCount; i++) {

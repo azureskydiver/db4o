@@ -11,14 +11,16 @@ public class AllTests extends Db4oTestSuite {
     }
 
     protected Class[] testCases() {
-		return new Class[] { 
+		return new Class[] {
+			ArrayListInHashMapTestCase.class,
 			ArrayListCandidatesTestCase.class,
         	CollectionActivationTestCase.class, 
         	CollectionUuidTest.class,
         	EmbeddedClientObjectContainerJre12TestCase.class,
         	HashMapUpdateFileSizeTestCase.class,
         	Iterator4JdkIteratorTestCase.class,
-        	JdkCollectionIterator4TestCase.class, 
+        	JdkCollectionIterator4TestCase.class,
+        	KeepCollectionContentTestCase.class,
         	NestedListTestCase.class,
         	NoP1ObjectIndexTestCase.class, 
         	PersistentListTestCase.class,

@@ -6,7 +6,7 @@ import java.util.*;
 
 public class ArrayListInHashMap {
     
-    HashMap hm;
+    public HashMap hm;
     
     public void storeOne(){
         hm = new HashMap();

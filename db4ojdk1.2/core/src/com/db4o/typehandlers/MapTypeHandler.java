@@ -39,7 +39,9 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHold
         for (int i = 0; i < elementCount; i++) {
             Object key = unmarshallingContext.readActivatedObject(elementHandler);
             Object value = context.readObject(elementHandler);
-            map.put(key, value);
+            if(key != null  && value != null){
+            	map.put(key, value);
+            }
         }
         return map;
     }

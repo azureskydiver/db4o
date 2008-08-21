@@ -124,7 +124,6 @@ class JDK_1_2 extends JDKReflect {
 	public void registerCollections(GenericReflector reflector) {
 		reflector.registerCollection(java.util.Collection.class);
 		reflector.registerCollection(java.util.Map.class);
-		reflector.registerCollectionUpdateDepth(java.util.Map.class, 3);
 	}
 
     void setAccessible(Object a_accessible) {

@@ -19,11 +19,15 @@ public class AllTestsJdk1_2Legacy extends AllTestsLegacy {
     	suites.add(new TestSuite() {
 			public Class[] tests() {
 				return new Class[]{
+					ArrayListInHashMap.class,
+					CascadeToHashMap.class,
 				    Db4oLinkedList.class,
 				    Db4oHashMap.class,
 				    Db4oHashMapDeletedKey.class,
 				    ExtendsHashMap.class,
 				    ExternalBlobs.class,
+		            KeepCollectionContent.class,
+
 				    PCollectionReferencedTwice.class,
 				    TreeSetCustomComparable.class,
 				    UpdatingDb4oVersions.class,

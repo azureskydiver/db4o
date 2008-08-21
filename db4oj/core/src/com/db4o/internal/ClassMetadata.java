@@ -600,9 +600,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     void deleteMembers(DeleteContextImpl context, int a_type, boolean isUpdate) {
         StatefulBuffer buffer = (StatefulBuffer) context.buffer();
-        
-        // public DeleteContextImpl(StatefulBuffer buffer, ObjectHeader objectHeader, ReflectClass fieldClass, Config4Field fieldConfig, int handlerVersion){
-        
         int preserveCascade = context.cascadeDeleteDepth();
         try{
             if (cascadeOnDelete()) {

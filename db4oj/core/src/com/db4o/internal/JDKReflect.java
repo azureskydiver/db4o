@@ -58,7 +58,6 @@ public class JDKReflect extends JDK {
     public void registerCollections(GenericReflector reflector) {
         reflector.registerCollection(java.util.Vector.class);
         reflector.registerCollection(java.util.Hashtable.class);
-        reflector.registerCollectionUpdateDepth(java.util.Hashtable.class, 3);
     }
     
     byte[] serialize(Object obj) throws Exception{
