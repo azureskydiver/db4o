@@ -18,7 +18,7 @@ public class ExternalBlobs {
 	
 	public Blob blob;
 	
-	void configure(){
+	public void configure(){
 		try{
 			Db4o.configure().setBlobPath(AllTestsConfAll.BLOB_PATH);
 			deleteFiles();
@@ -27,7 +27,7 @@ public class ExternalBlobs {
 		}
 	}
 	
-	void storeOne(){
+	public void storeOne(){
 	}
 	
 	public void testOne(){

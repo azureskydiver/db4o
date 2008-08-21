@@ -792,7 +792,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
     }
 
-    private int adjustUpdateDepth(Object obj, int updateDepth) {
+    private int adjustUpdateDepthForCascade(Object obj, int updateDepth) {
         int minimumUpdateDepth = 1;
         if (_containingClass.isCollection(obj)) {
             GenericReflector reflector = reflector();
@@ -813,7 +813,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         // alive needs to be checked by all callers: Done
         int updateDepth = context.updateDepth();
         if (obj != null && cascadeOnUpdate(context.classConfiguration())) {
-            context.updateDepth(adjustUpdateDepth(obj, updateDepth));
+            context.updateDepth(adjustUpdateDepthForCascade(obj, updateDepth));
         }
         if(useDedicatedSlot(context, _handler)){
             context.writeObject(_handler, obj);

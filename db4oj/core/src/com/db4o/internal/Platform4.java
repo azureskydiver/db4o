@@ -245,7 +245,7 @@ public final class Platform4 {
         configStringBufferCompare(config);
         
         translate(config.objectClass("java.lang.Class"), "TClass");
-        translateCollection(config, "Hashtable", "THashtable", true);
+        translateCollection(config, "Hashtable", "THashtable", false);
         if (jdk().ver() >= 2) {
 			try {
 				translateCollection(config, "AbstractCollection", "TCollection", false);
@@ -258,7 +258,7 @@ public final class Platform4 {
 				translateUtilNull(config, "AbstractSet");
 				translateUtilNull(config, "HashSet");
 				translate(config, UTIL + "TreeSet", "TTreeSet");
-				translateCollection(config, "AbstractMap", "TMap", true);
+				translateCollection(config, "AbstractMap", "TMap", false);
 				translateUtilNull(config, "HashMap");
 				translateUtilNull(config, "WeakHashMap");
 				translate(config, UTIL + "TreeMap", "TTreeMap");
@@ -620,7 +620,12 @@ public final class Platform4 {
         String to,
         boolean cascadeOnDelete) {
         ObjectClass oc = config.objectClass(UTIL + from);
+        
+        // FIXME: Maybe we don't need any special
+        //        configuration here. Or should this be 2
+        //        after the Typehandler changes ?
         oc.updateDepth(3);
+        
         if (cascadeOnDelete) {
             oc.cascadeOnDelete(true);
         }

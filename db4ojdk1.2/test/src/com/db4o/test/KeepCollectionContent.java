@@ -28,6 +28,7 @@ public class KeepCollectionContent {
 		TreeMap tm = new TreeMap();
 		tm.put(new ComparableAtom(), new ComparableAtom());
 		Test.store(tm);
+		Test.commit();
 	}
 	
 	public void test(){
@@ -36,9 +37,8 @@ public class KeepCollectionContent {
 		Test.deleteAllInstances(new ArrayList());
 		Test.deleteAllInstances(new Vector());
 		Test.deleteAllInstances(new TreeMap());
+		Test.commit();
 		Test.ensureOccurrences(new ComparableAtom(), 8);
-		// System.out.println(Test.occurrences(new ComparableAtom()));
-		
 	}
 
 }

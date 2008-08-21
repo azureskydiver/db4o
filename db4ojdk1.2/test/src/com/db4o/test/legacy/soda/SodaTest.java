@@ -75,8 +75,12 @@ public class SodaTest {
             new STFloatWU(),
             new STHashSetT(),
             new STHashSetU(),
-            new STHashtableD(),
-            new STHashtableED(),
+            
+            // QBE is no longer supported where the
+            // query can't be expressed with SODA
+            // new STHashtableD(),
+            // new STHashtableED(),
+            
             new STHashtableET(),
             new STHashtableEU(),
             new STHashtableT(),
@@ -111,8 +115,12 @@ public class SodaTest {
             new STTreeSetT(),
             new STTreeSetU(),
             new STUH1(),
-            new STVectorD(),
-            new STVectorED(),
+            
+            // QBE is no longer supported where the
+            // query can't be expressed with SODA
+            // new STVectorD(),
+            // new STVectorED(),
+            
             new STVectorT(),
             new STVectorU(),
             new STVectorET(),

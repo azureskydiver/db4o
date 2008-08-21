@@ -351,14 +351,18 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
     }
 
     public void addFieldIndices(final ObjectIdContextImpl context, final Slot oldSlot) {
-        TraverseAspectCommand command = new TraverseFieldCommand() {
+        TraverseAspectCommand command = new TraverseAspectCommand() {
             public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
-                FieldMetadata field = (FieldMetadata)aspect;
-                if (isNull) {
-                    field.addIndexEntry(context.transaction(), context.id(), null);
-                } else {
-                    field.addFieldIndex(context, oldSlot);
-                }
+            	if(aspect instanceof FieldMetadata){
+	                FieldMetadata field = (FieldMetadata)aspect;
+	                if (isNull) {
+	                    field.addIndexEntry(context.transaction(), context.id(), null);
+	                } else {
+	                    field.addFieldIndex(context, oldSlot);
+	                }
+            	}else{
+            		aspect.incrementOffset(context.buffer());
+            	}
             }
         };
         traverseAllAspects(context, command);

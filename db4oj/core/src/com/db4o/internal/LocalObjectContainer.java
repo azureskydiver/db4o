@@ -156,6 +156,9 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
             reader.setCascadeDeletes(a_cascade);
             reader.slotDelete();
             ClassMetadata yc = yo.classMetadata();
+            
+            // FIXME: What if obj is null here ?
+            
             yc.delete(reader, obj);
 
             // The following will not work with this approach.

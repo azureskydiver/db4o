@@ -9,9 +9,11 @@ import com.db4o.foundation.*;
 
 public class CascadeToHashMap {
 
-	HashMap hm;
+	public HashMap hm;
 
 	public void configure() {
+        Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
+        Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 		Db4o.configure().objectClass(this).cascadeOnUpdate(true);
 		Db4o.configure().objectClass(this).cascadeOnDelete(true);
 	}
@@ -19,11 +21,13 @@ public class CascadeToHashMap {
 	public void store() {
 		Test.deleteAllInstances(this);
 		Test.deleteAllInstances(new Atom());
+		Test.commit();
 		CascadeToHashMap cth = new CascadeToHashMap();
 		cth.hm = new HashMap();
 		cth.hm.put("key1", new Atom("stored1"));
 		cth.hm.put("key2", new Atom(new Atom("storedChild1"), "stored2"));
 		Test.store(cth);
+		Test.commit();
 	}
 
 	public void test() {
@@ -52,6 +56,7 @@ public class CascadeToHashMap {
 		// Cascade-On-Delete Test: We only want one atom to remain.
 		
 		Test.reOpen();
+		
 		Test.deleteAllInstances(this);
 		Test.ensureOccurrences(new Atom(), 1);
 	}

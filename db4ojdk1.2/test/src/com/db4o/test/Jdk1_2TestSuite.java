@@ -10,15 +10,12 @@ public class Jdk1_2TestSuite extends TestSuite{
     
     public Class[] tests(){
         return new Class[] {
-            ArrayListInHashMap.class,
-            CascadeToHashMap.class,
             ClusterQueryImplementsList.class,
             DeleteRemovedMapElements.class,
             DiscreteArrayInMap.class,
             GenericObjects.class,
             HashMapClearUnsaved.class,
             JdkComparatorSort.class,
-            KeepCollectionContent.class,
             MultipleEvaluationGetObjectCalls.class,
             ObjectSetAsList.class,
             ObjectSetAsIterator.class,
