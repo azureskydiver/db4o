@@ -33,7 +33,7 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanH
     
 	public Object read(ReadContext context) {
         Vector vector = (Vector)((UnmarshallingContext) context).persistentObject();
-        vector.clear();
+        vector.removeAllElements();
         int elementCount = context.readInt();
         TypeHandler4 elementHandler = elementTypeHandler(context, vector);
         for (int i = 0; i < elementCount; i++) {
