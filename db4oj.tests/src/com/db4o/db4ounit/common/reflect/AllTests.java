@@ -10,6 +10,7 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 			GenericReflectorStateTest.class,
+			NoTestConstructorsTestCase.class,
 			ReflectArrayTestCase.class,
 			com.db4o.db4ounit.common.reflect.custom.AllTests.class,
 		};
