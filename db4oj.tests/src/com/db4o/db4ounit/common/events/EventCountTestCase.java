@@ -8,6 +8,7 @@ import com.db4o.events.EventArgs;
 import com.db4o.events.EventListener4;
 import com.db4o.events.EventRegistry;
 import com.db4o.events.EventRegistryFactory;
+import com.db4o.foundation.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
@@ -15,11 +16,13 @@ import db4ounit.extensions.Db4oClientServerFixture;
 
 public class EventCountTestCase extends AbstractDb4oTestCase {
 
-	private int _activated;
-	private int _updated;
-	private int _deleted;
-	private int _created;
-	private int _committed;
+	private static final int MAX_CHECKS = 10;
+	private static final long WAIT_TIME = 10;
+	private IntByRef _activated = new IntByRef(0);
+	private IntByRef _updated = new IntByRef(0);
+	private IntByRef _deleted = new IntByRef(0);
+	private IntByRef _created = new IntByRef(0);
+	private IntByRef _committed = new IntByRef(0);
 
 	/**
 	 * @param args
@@ -28,7 +31,7 @@ public class EventCountTestCase extends AbstractDb4oTestCase {
 		new EventCountTestCase().runAll();
 	}
 
-	public void testEventRegistryStress() throws Exception {
+	public void testEventRegistryCounts() throws Exception {
 		registerEventHandlers();
 
 		for (int i = 0; i < 1000; i++) {
@@ -36,13 +39,13 @@ public class EventCountTestCase extends AbstractDb4oTestCase {
 			db().store(item);
 			Assert.isTrue(db().isStored(item));
 
-			if ((i % 100) == 9) {
+			if (((i + 1) % 100) == 0) {
 				db().commit();
 			}
 		}
 
-		Assert.areEqual(1000, _created, "The counted number of created objects is not correct");
-		Assert.areEqual(10, _committed, "The counted number of committed objects is not correct");
+		assertCount(_created, 1000, "created");
+		assertCount(_committed, 10, "commit");
 
 		reopenAndRegister();
 
@@ -55,8 +58,8 @@ public class EventCountTestCase extends AbstractDb4oTestCase {
 			store(item);
 		}
 
-		Assert.areEqual(1000, _activated, "The counted number of activated objects is not correct");
-		Assert.areEqual(1000, _updated, "The counted number of updated objects is not correct");
+		assertCount(_activated, 1000, "activated");
+		assertCount(_updated, 1000, "updated");
 
 		items.reset();		
 		while (items.hasNext()) {
@@ -66,9 +69,21 @@ public class EventCountTestCase extends AbstractDb4oTestCase {
 			Assert.isFalse(db().isStored(item));
 		}
 
-		Assert.areEqual(1000, _deleted, "The counted number of deleted objects is not correct");
+		assertCount(_deleted, 1000, "deleted");
 	}
 
+	private void assertCount(IntByRef ref, int expected, String name) throws InterruptedException {
+		for(int checkCount = 0; checkCount < MAX_CHECKS; checkCount++) {
+			synchronized(ref) {
+				if(ref.value == expected) {
+					break;
+				}
+				ref.wait(WAIT_TIME);
+			}
+		}
+		Assert.areEqual(expected, ref.value, "Incorrect count for " + name);
+	}
+	
 	private void reopenAndRegister() throws Exception {
 		reopen();
 		registerEventHandlers();
@@ -84,33 +99,31 @@ public class EventCountTestCase extends AbstractDb4oTestCase {
 		EventRegistry eventRegistry = EventRegistryFactory.forObjectContainer(db());
 		EventRegistry deletionEventRegistry = EventRegistryFactory.forObjectContainer(deletionEventSource);
 
+		// No dedicated IncrementListener class due to sharpen event semantics
+		
 		deletionEventRegistry.deleted().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				_deleted++;
+				increment(_deleted);
 			}
 		});		
-
 		eventRegistry.activated().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				_activated++;
+				increment(_activated);
 			}
 		});
-
 		eventRegistry.committed().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				_committed++;
+				increment(_committed);
 			}
 		});
-
 		eventRegistry.created().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				_created++;
+				increment(_created);
 			}
 		});
-
 		eventRegistry.updated().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				_updated++;
+				increment(_updated);
 			}
 		});
 	}
@@ -122,4 +135,12 @@ public class EventCountTestCase extends AbstractDb4oTestCase {
 
 		public int _value;
 	}
+	
+	static void increment(IntByRef ref) {
+		synchronized(ref) {
+			ref.value++;
+			ref.notifyAll();
+		}
+	}
+	
 }
