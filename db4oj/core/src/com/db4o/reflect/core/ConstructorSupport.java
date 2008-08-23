@@ -27,8 +27,12 @@ public class ConstructorSupport {
             	}
             }
         }
-        
-        if (!forceTest && ! config.testConstructors()) {
+
+        if (!config.testConstructors()) {
+        	return new ReflectConstructorSpec(new PlatformReflectConstructor(clazz), null);
+        }
+
+        if (!forceTest) {
           return ReflectConstructorSpec.UNSPECIFIED_CONSTRUCTOR;
         }
         
