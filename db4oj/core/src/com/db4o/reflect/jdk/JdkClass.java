@@ -171,7 +171,7 @@ public class JdkClass implements JavaReflectClass{
 	}
 
 	public boolean ensureCanBeInstantiated() {
-		createConstructor(false);
-		return !_constructorSpec.canBeInstantiated().definiteNo();
+		createConstructor(true);
+		return _constructorSpec.canBeInstantiated().definiteYes();
 	}
 }
