@@ -8,7 +8,7 @@ import com.db4o.reflect.*;
 public class ConstructorSupport {
 	
 	
-    public static ReflectConstructorSpec createConstructor(final ConstructorAwareReflectClass claxx, Class clazz, ReflectorConfiguration config, ReflectConstructor[] constructors, boolean forceTest){
+    public static ReflectConstructorSpec createConstructor(final ConstructorAwareReflectClass claxx, Class clazz, ReflectorConfiguration config, ReflectConstructor[] constructors){
         
         if (claxx == null) {
 			return ReflectConstructorSpec.INVALID_CONSTRUCTOR; 
@@ -32,10 +32,6 @@ public class ConstructorSupport {
         	return new ReflectConstructorSpec(new PlatformReflectConstructor(clazz), null);
         }
 
-        if (!forceTest) {
-          return ReflectConstructorSpec.UNSPECIFIED_CONSTRUCTOR;
-        }
-        
         if(ReflectPlatform.createInstance(clazz) != null) {
 			return new ReflectConstructorSpec(new PlatformReflectConstructor(clazz), null);
 		}
