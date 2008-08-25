@@ -22,6 +22,8 @@ package org.polepos;
 
 import org.polepos.circuits.bahrain.*;
 import org.polepos.circuits.barcelona.*;
+import org.polepos.circuits.hockenheim.*;
+import org.polepos.circuits.hungaroring.*;
 import org.polepos.circuits.imola.*;
 import org.polepos.circuits.indianapolis.*;
 import org.polepos.circuits.magnycours.*;
@@ -46,6 +48,14 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     
     private static String JAR70 = "db4o-7.0.21.8746-java5.jar";
     
+    private static String JAR72 = "db4o-7.2.39.10644-java5.jar";
+    
+    private static String UTF8 = "db4o-7.2-utf8.jar";
+    
+    private static String SORTED_QUERY = "db4o-7.2-sortedquery.jar";
+    
+    private static String CACHED_QUERIES = "db4o-7.4-cachedqueries.jar";
+    
     
     public static void main(String[] arguments) {
         new AllRacesRunner().run();
@@ -56,11 +66,14 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 		return new Team[] {
 //            db4oTeam(Db4oVersions.JAR45, null),
 //            db4oTeam(Db4oVersions.JAR57, null),
-            db4oTeam(Db4oVersions.JAR61, null),
 //            db4oTeam(Db4oVersions.JAR63, null),
-            db4oTeam(JAR64, null),
-            db4oTeam(JAR70, null),
-            db4oTeam(JAR_TRUNK, null),
+            db4oTeam(JAR72, null),
+            db4oTeam(UTF8, null),
+            db4oTeam(SORTED_QUERY, null),
+            db4oTeam(CACHED_QUERIES, null),
+            
+//             db4oTeam(JAR_TRUNK, null),
+            
 //                db4oTeam(Db4oVersions.JAR57, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
 //                db4oTeam(Db4oVersions.JAR61, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
 //                db4oTeam(Db4oVersions.JAR63, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
@@ -80,6 +93,8 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 				 new Indianapolis(),
 				 new Magnycours(),
                  new Silverstone(),
+                 new Hockenheim(),
+                 new Hungaroring(),
 		};
 	}
 
@@ -96,6 +111,8 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 				new MagnycoursDb4o(),
 				new IndianapolisDb4o(),
                 new SilverstoneDb4o(),
+                new HockenheimDb4o(),
+                new HungaroringDb4o(),
 		};
 	}
     
