@@ -55,7 +55,7 @@ public class Db4oLinkedList {
         checkHelper(i_helper);
         runElementTest(true);
         
-        Test.defragment();
+        Test.defragment(true);
         
        restoreMembers();
        checkHelper(i_helper);
@@ -243,7 +243,7 @@ public class Db4oLinkedList {
         Query q = Test.query();
         q.constrain(this.getClass());
         ObjectSet objectSet = q.execute();
-        Db4oLinkedList dll = (Db4oLinkedList)objectSet.next();
+        Db4oLinkedList dll = (Db4oLinkedList)objectSet.get(0);
         i_list = dll.i_list;
         i_helper = dll.i_helper;
     }
