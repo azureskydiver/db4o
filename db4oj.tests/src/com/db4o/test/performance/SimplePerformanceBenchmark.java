@@ -12,18 +12,26 @@ import com.db4o.query.*;
 
 public class SimplePerformanceBenchmark {
     
-    private static int COUNT = 1000;
+    private static int COUNT = 10000;
     
-    private static int DEPTH = 3;
+    private static int DEPTH = 1;
     
     private static boolean CLIENT_SERVER = false;
+    
+    private static boolean INDEXED_FIELD = true;
+    
+    private static int COMMIT_FREQUENCY = 10;
+    
+    private static int BTREE_CACHE_HEIGHT = 4;
+    
+	private static final int BTREE_NODE_SIZE = 100;
+
     
     private static boolean TCP = true;
     
     private static final String FILE = "sip.yap";
     
     private static final int PORT = 4477;
-    
     
     private ObjectContainer objectContainer;
     
@@ -34,7 +42,9 @@ public class SimplePerformanceBenchmark {
     
     
     public static void main(String[] arguments) {
-    	new SimplePerformanceBenchmark().run();
+    	// for (int i = 0; i < 5; i++) {
+    		new SimplePerformanceBenchmark().run();
+		// }
     }
     
     private void run(){
@@ -47,9 +57,9 @@ public class SimplePerformanceBenchmark {
     	store();
     	close();
     	
-    	open();
-    	delete();
-    	close();
+//    	open();
+//    	delete();
+//    	close();
     }
     
     private void clean(){
@@ -62,6 +72,11 @@ public class SimplePerformanceBenchmark {
         config.weakReferences(false);
         config.io(new MemoryIoAdapter());
         config.flushFileBuffers(false);
+        config.bTreeCacheHeight(BTREE_CACHE_HEIGHT);
+        config.bTreeNodeSize(BTREE_NODE_SIZE);
+        if(INDEXED_FIELD){
+        	config.objectClass(Item.class).objectField("_name").indexed(true);
+        }
         config.clientServer().singleThreadedClient(true);
     }
     
@@ -73,6 +88,9 @@ public class SimplePerformanceBenchmark {
                 item = new Item("load", item);
             }
             objectContainer.store(item);
+            if(i % COMMIT_FREQUENCY == 0){
+            	objectContainer.commit();
+            }
         }
         objectContainer.commit();
         stopTimer("Store "+ totalObjects() + " objects");
@@ -83,8 +101,13 @@ public class SimplePerformanceBenchmark {
     	Query q = objectContainer.query();
     	q.constrain(Item.class);
     	ObjectSet objectSet = q.execute();
+    	int i = 0;
     	while(objectSet.hasNext()){
     		objectContainer.delete(objectSet.next());
+    		i++;
+            if(i % COMMIT_FREQUENCY == 0){
+            	objectContainer.commit();
+            }
     	}
         objectContainer.commit();
         stopTimer("Delete "+ totalObjects() + " objects");

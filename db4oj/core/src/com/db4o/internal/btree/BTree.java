@@ -219,12 +219,18 @@ public class BTree extends PersistentBase implements TransactionParticipant {
         Tree temp = _nodes;
         _nodes = null;
         
-        if(_cacheHeight > 0){
-            _root.markAsCached(_cacheHeight);
-        }else{
+        // FIXME: Caching doesn't work as expected. Disabled.
+        //        Reimplement with LRU cache for all nodes,
+        //        independant of _root.
+        
+//        if(_cacheHeight > 0){
+//            _root.markAsCached(_cacheHeight);
+//        }else{
+        
             _root.holdChildrenAsIDs();
             addNode(_root);
-        }
+            
+//        }
         
         temp.traverse(new Visitor4() {
             public void visit(Object obj) {

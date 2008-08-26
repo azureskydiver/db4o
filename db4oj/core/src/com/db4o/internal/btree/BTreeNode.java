@@ -44,7 +44,7 @@ public final class BTreeNode extends PersistentBase{
     
     private boolean _cached;
     
-    private boolean _dead;    
+    private boolean _dead;
     
     /* Constructor for new nodes */
     public BTreeNode(BTree btree, 
@@ -110,7 +110,7 @@ public final class BTreeNode extends PersistentBase{
             }
             
             prepareInsert(s.cursor());
-            _keys[s.cursor()] = newAddPatch(trans, obj);
+            _keys[s.cursor()] = applyNewAddPatch(trans, obj);
         }else{
             
             BTreeNode childNode = child(reader, s.cursor());
@@ -143,7 +143,7 @@ public final class BTreeNode extends PersistentBase{
 		return _count >= _btree.nodeSize();
 	}
 
-    private BTreeAdd newAddPatch(Transaction trans, Object obj) {
+    private BTreeAdd applyNewAddPatch(Transaction trans, Object obj) {
         sizeIncrement(trans);
         return new BTreeAdd(trans, obj);
     }
@@ -328,7 +328,7 @@ public final class BTreeNode extends PersistentBase{
             Object key = _keys[i];
             BTreePatch patch = keyPatch(i);
             if(patch != null){
-                key = isCommit ? patch.commit(trans, _btree) : patch.rollback(trans, _btree); 
+                key = isCommit ? patch.commit(trans, _btree) : patch.rollback(trans, _btree);
             }
             if(key != No4.INSTANCE){
                 tempKeys[count] = key;
@@ -446,7 +446,7 @@ public final class BTreeNode extends PersistentBase{
         throw new IllegalStateException("child not found");
     }
     
-    private void tellParentAboutChangedKey(Transaction trans){
+	private void tellParentAboutChangedKey(Transaction trans){
         if(! isRoot()){
             BTreeNode parent = _btree.produceNode(_parentID);
             parent.keyChanged(trans, this);
@@ -457,13 +457,11 @@ public final class BTreeNode extends PersistentBase{
         if(! canWrite()){
             return false;
         }
-        
         for (int i = 0; i < _count; i++) {
             if(keyPatch(trans, i) != null){
                 return true;
             }
         }
-        
         return false;
     }
     
@@ -601,25 +599,34 @@ public final class BTreeNode extends PersistentBase{
     }
     
     void markAsCached(int height){
-        _cached = true;
-        _btree.addNode(this);
-        
-        if( _isLeaf || (_children == null)){
-            return;
-        }
-        
-        height --;
-        
-        if(height < 1){
-            holdChildrenAsIDs();
-            return;
-        }
-        
-        for (int i = 0; i < _count; i++) {
-            if(_children[i] instanceof BTreeNode){
-                ((BTreeNode)_children[i]).markAsCached(height);
-            }
-        }
+    	
+    	throw new NotImplementedException();
+    	
+        // FIXME: Caching doesn't work as expected. Disabled.
+        //        Reimplement with LRU cache for all nodes,
+        //        independant of _root.
+
+    	
+//        _cached = true;
+//        _btree.addNode(this);
+//        
+//        if( _isLeaf || (_children == null)){
+//            return;
+//        }
+//        
+//        height --;
+//        
+//        if(height < 1){
+//            holdChildrenAsIDs();
+//            return;
+//        }
+//        
+//        for (int i = 0; i < _count; i++) {
+//            if(_children[i] instanceof BTreeNode){
+//                ((BTreeNode)_children[i]).markAsCached(height);
+//            }
+//        }
+    	
     }
     
     public int ownLength() {
@@ -715,7 +722,7 @@ public final class BTreeNode extends PersistentBase{
         
         // no patch, no problem, can remove
         if(patch == null){
-            _keys[index] = newRemovePatch(trans, obj);
+            _keys[index] = applyNewRemovePatch(trans, obj);
             keyChanged(trans, index);
             return;
         }
@@ -736,7 +743,7 @@ public final class BTreeNode extends PersistentBase{
             // If the patch is a removal of a cancelled removal for another
             // transaction, we need one for this transaction also.
             if(! patch.isAdd()){
-                ((BTreeUpdate)patch).append(newRemovePatch(trans, obj));
+                ((BTreeUpdate)patch).append(applyNewRemovePatch(trans, obj));
                 return;
             }
         }
@@ -784,10 +791,6 @@ public final class BTreeNode extends PersistentBase{
 		return _count - 1;
 	}
 
-	private BTreeRemove newRemovePatch(Transaction trans, Object obj) {
-		return applyNewRemovePatch(trans, obj);
-	}
-	
 	private BTreeRemove applyNewRemovePatch(Transaction trans, Object key) {
         sizeDecrement(trans);
 		return new BTreeRemove(trans, key);
