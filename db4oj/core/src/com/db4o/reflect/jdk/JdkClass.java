@@ -38,6 +38,9 @@ public class JdkClass implements JavaReflectClass{
 	}
 
 	private ReflectConstructor[] getDeclaredConstructors(){
+		if(!_jdkReflector.configuration().testConstructors()) {
+			return null;
+		}
 		try {
 			Constructor[] constructors = _clazz.getDeclaredConstructors();
 			ReflectConstructor[] reflectors = new ReflectConstructor[constructors.length];
