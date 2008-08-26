@@ -5,6 +5,7 @@ package com.db4o.test;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.defragment.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -92,8 +93,12 @@ public class Test extends AllTests {
     	}
     	return null;
     }
-    
+
     public static void defragment(){
+    	defragment(false);
+    }
+
+    public static void defragment(boolean excludeSerialized){
         String fileName = FILE_SOLO;
         close();
         if (isClientServer()) {
@@ -113,6 +118,15 @@ public class Test extends AllTests {
 	            String targetFile = fileName + ".defrag.backup";
 	            DefragmentConfig defragConfig = new DefragmentConfig(fileName, targetFile);
 	            defragConfig.forceBackupDelete(true);
+	            // super ugly hack to avoid trying to defrag serialized classes without having the translator installed
+	            if(excludeSerialized) {
+		            defragConfig.storedClassFilter(new StoredClassFilter() {
+						public boolean accept(StoredClass storedClass) {
+							StoredField[] fields = storedClass.getStoredFields();
+							return fields.length < 2 || !fields[0].getName().endsWith(TSerializable.class.getName());
+						}
+		            });
+	            }
 				com.db4o.defragment.Defragment.defrag(defragConfig);
             } else {
             	
