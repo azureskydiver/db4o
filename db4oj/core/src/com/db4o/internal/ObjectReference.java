@@ -61,16 +61,19 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 
 	public void activateOn(final Transaction transaction, ActivationPurpose purpose) {
 		final ObjectContainerBase container = transaction.container(); 
-	    synchronized(container.lock()){
 	    	if (ActivationPurpose.WRITE == purpose) {
-	    		enlistForUpdate(transaction);
+	    		synchronized(container.lock()){
+	    			enlistForUpdate(transaction);
+	    		}
 	    	}
     		if (isActive()) {    			
     			return;
     		}
-    		TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) container.activationDepthProvider();
-			activate(transaction, getObject(), new DescendingActivationDepth(provider, ActivationMode.ACTIVATE));
-	    }
+    		synchronized(container.lock()){
+	    		TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) container.activationDepthProvider();
+				activate(transaction, getObject(), new DescendingActivationDepth(provider, ActivationMode.ACTIVATE));
+    		}
+	    
 	}
 	
 	private transient TransactionListener _updateListener;
