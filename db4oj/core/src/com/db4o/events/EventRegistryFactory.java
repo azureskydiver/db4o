@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.callbacks.*;
+import com.db4o.internal.cs.ClientObjectContainer;
 import com.db4o.internal.events.*;
 
 /**
@@ -27,7 +28,7 @@ public class EventRegistryFactory {
 			return (EventRegistry)callbacks;
 		}		
 		if (callbacks instanceof NullCallbacks) {
-			EventRegistryImpl impl = new EventRegistryImpl(container);
+			EventRegistryImpl impl = newEventRegistryFor(container);
 			container.callbacks(impl);
 			return impl;
 		}
@@ -35,5 +36,11 @@ public class EventRegistryFactory {
 		// TODO: create a MulticastingCallbacks and register both
 		// the current one and the new one
 		throw new IllegalArgumentException();
+	}
+
+	private static EventRegistryImpl newEventRegistryFor(InternalObjectContainer container) {
+		return (container instanceof ClientObjectContainer)	? 
+							new ClientEventRegistryImpl(container) :
+							new EventRegistryImpl(container);
 	}
 }
