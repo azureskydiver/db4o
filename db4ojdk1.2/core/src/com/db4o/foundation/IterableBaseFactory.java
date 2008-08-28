@@ -15,9 +15,8 @@ public class IterableBaseFactory {
 		}
 		try {
 			return new ReflectionIterableBase(obj);
-		}
-		catch (Exception exc) {
-			throw new RuntimeException(exc);
+		} catch (Exception exc) {
+			throw new RuntimeException(exc.getMessage());
 		}
 	}
 	
