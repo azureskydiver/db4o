@@ -5,8 +5,8 @@ import java.util.*;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
-import decaf.rewrite.*;
 import sharpen.core.framework.*;
+import decaf.rewrite.*;
 
 @SuppressWarnings("unchecked")
 public final class DecafRewritingVisitor extends ASTVisitor {
@@ -26,6 +26,12 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	@Override
+	public boolean visit(EnumDeclaration node) {
+		rewrite().remove(node);
+		return false;
+	}
+
+	@Override
 	public void endVisit(TypeDeclaration node) {
 		processIgnoreExtends(node);
 		processIgnoreImplements(node);
@@ -33,15 +39,16 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 	
 	private void processMixins(TypeDeclaration node) {
-		final List<TagElement> mixins = getJavadocTags(node, DecafAnnotations.MIXIN);
-		for (String mixin : textFragments(mixins)) {
+		for (TypeDeclaration mixin : node.getTypes()) {
+			if (!containsJavadoc(mixin, DecafAnnotations.MIXIN))
+				continue;
 			processMixin(node, mixin);
 		}
 	}
 
-	private void processMixin(TypeDeclaration node, String mixinTypeName) {
+	private void processMixin(TypeDeclaration node, TypeDeclaration mixinType) {
 		
-		new MixinProcessor(_context, node, mixinTypeName).run();
+		new MixinProcessor(_context, node, mixinType).run();
 	}
 		
 	private DecafASTNodeBuilder builder() {
@@ -317,6 +324,9 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		}
 		
 		final IMethodBinding originalMethodDeclaration = definition.getMethodDeclaration();
+		if(builder().isPredicateMatchMethod(originalMethodDeclaration)) {
+			return;
+		}
 		if (originalMethodDeclaration != definition) {
 			eraseMethodDeclaration(node, originalMethodDeclaration);
 		}
@@ -334,15 +344,20 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			if (null == tagName) {
 				continue;
 			}
-			if (tagName.equals(DecafAnnotations.INSERT_FIRST)) {
+			if (isTag(DecafAnnotations.INSERT_FIRST, tagName)) {
 				bodyRewrite.insertFirst(statementFromTagText(tag), null);
-			} else if (tagName.equals(DecafAnnotations.REPLACE_FIRST)) {
+			} else if (isTag(DecafAnnotations.REPLACE_FIRST, tagName)) {
 				bodyRewrite.replace(firstNode(bodyRewrite), statementFromTagText(tag), null);
-			} else if (tagName.equals(DecafAnnotations.REMOVE_FIRST)) {
+			} else if (isTag(DecafAnnotations.REMOVE_FIRST, tagName)) {
 				bodyRewrite.remove(firstNode(bodyRewrite), null);
 			}
 		}
 		
+	}
+
+	private boolean isTag(String expected, String actual) {
+		return expected.equals(actual)
+			|| platformSpecificTag(expected).equals(actual);
 	}
 
 	private ASTNode firstNode(final ListRewrite bodyRewrite) {
@@ -535,6 +550,8 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	private Set<String> textFragments(final List<TagElement> tags) {
 		final HashSet<String> ignored = new HashSet<String>(tags.size());
 		for (TagElement tag : tags) {
+			if (tag.fragments().isEmpty())
+				continue;
 			ignored.add(textFragment(tag, 0));
 		}
 		return ignored;

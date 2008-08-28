@@ -28,10 +28,6 @@ public class AnnotationsTestCase extends DecafTestCaseBase {
 		runResourceTestCase("InsertFirst");
 	}
 	
-	public void testMixinInSameCompilationUnit() throws Exception {
-		runResourceTestCase("MixinInSameCompilationUnit");
-	}
-	
 	public void testMixinAsNestedClass() throws Exception {
 		runResourceTestCase("MixinAsNestedClass");
 	}

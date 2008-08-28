@@ -18,7 +18,14 @@ public class AllTestsConfAll extends TestSuite{
         suites.add(new ConstraintsTestSuite());
         suites.add(new ConjunctionsTestSuite());
         suites.add(new JavaTestSuite());
-        suites.add(new NativeQueryTestSuite());
+        addNativeQueryTestSuite(suites);
+	}
+
+    /**
+     * @decaf.replaceFirst return;
+     */
+	private void addNativeQueryTestSuite(TestSuite suites) {
+		suites.add(new NativeQueryTestSuite());
 	}
     
     public Class[] tests(){

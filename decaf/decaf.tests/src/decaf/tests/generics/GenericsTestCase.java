@@ -40,7 +40,12 @@ public class GenericsTestCase extends DecafTestCaseBase {
 	public void testIntroduceCastsForMethods() throws Exception {
 		runResourceTestCase("IntroduceCastsForMethods");
 	}
-	
+
+	public void testNQPredicate() throws Exception {
+		addNQPredicateDefinition();
+		runResourceTestCase("NQPredicate");
+	}
+
 	@Override
 	protected String packagePath() {
 		return "generics";

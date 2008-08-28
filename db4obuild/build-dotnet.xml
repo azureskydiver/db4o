@@ -9,25 +9,12 @@
 	if you don't want this, copy your sandcastle installation to a different folder.
 	-->
 	<import file="common-dotnet.xml" />
-	
-	<fileset id="db4oj.srcfiles" dir="..">
-		<include name="db4oj/core/src/**/*.java" />
-	</fileset>
-	
+
 	<fileset id="db4o.instrumentation.srcfiles" dir="../db4o.instrumentation">
 		<include name="src/com/db4o/instrumentation/api/*.java" />
 		<include name="src/com/db4o/instrumentation/core/DefaultNativeClassFactory.java" />
 	</fileset>
 	
-	<fileset id="db4onqopt.srcfiles" dir="../db4onqopt">
-		<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
-		<include name="core/src/com/db4o/nativequery/optimization/NativeQueriesPlatform.java" />
-		<include name="core/src/com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
-		<include name="core/src/com/db4o/nativequery/optimization/ComparisonQueryGeneratingVisitor.java" />
-		<include name="core/src/com/db4o/nativequery/optimization/ReflectUtil.java" />
-		<include name="core/src/com/db4o/nativequery/instrumentation/*.java" />
-	</fileset>
-
 	<macrodef name="copy-bin">
 		<attribute name="srcdir" />
 		<attribute name="name" />
@@ -334,11 +321,24 @@
 	
 	<target name="build-net35" depends="init, configure-net35, build-all" description="Builds Db4o for the .net 3.5 framework including LINQ">
 	</target>
+	
+	<target name="check-api" depends="init, configure-net35, build-core, api-diff" description="Compares the api of the current .net version against the last released one">
+	
+		<exec executable="${dir.dist.dll}/ApiDiff.exe">
+			<arg file="${dir.base}/db4o.archives/net-2.0/7.2/Db4objects.Db4o.dll" />
+			<arg file="${file.dll.net}" />
+		</exec>
+	
+	</target>
 
 	<target name="build-all" depends="check-dependencies, build-core, build-admin, build-tutorial">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
+	</target>
+	
+	<target name="api-diff">
+		<msb solution="${dir.build.src}/ApiDiff/ApiDiff" />
 	</target>
 
 	<target name="build-db4ounit-extensions" depends="build-core, build-db4ounit, prepare-csproject-db4ounit-extensions"> 
@@ -424,7 +424,7 @@
 	</target>
 	
 	<target name="prepare-csproject-all"
-		depends="sharpen-all, 
+		depends="sharpen-all,
 	    prepare-csproject-core, 
 	    prepare-csproject-instrumentation, 
 	    prepare-csproject-nq, 
@@ -454,12 +454,29 @@
         <reset-dir dir="${dir.sharpen}" />
 	    
 	    <!-- copy db4o core src -->
-		<copy todir="${dir.sharpen}">
-			<fileset refid="db4oj.srcfiles" />
+		<copy todir="${dir.sharpen}/db4oj/core/src">
+			<fileset dir="${dir.dist.decaf.jdk1.2.core.src}">
+				<include name="**/*.java" />
+				<exclude name="**/*Jdk1_2*" />
+				<exclude name="com/db4o/tools/**" />
+			</fileset>
 		</copy>
+		
+		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
+			<fileset dir="${dir.j.core.src}">
+				<include name="com/db4o/collections/*.java" />
+			</fileset>
+		</copy>		
 
-		<copy todir="${dir.sharpen}/db4oj">
-			<fileset refid="db4onqopt.srcfiles" />
+		<copy todir="${dir.sharpen}/db4oj/core/src">
+			<fileset dir="${dir.j.nqopt.src}">
+				<include name="com/db4o/nativequery/expr/**/*.java" />
+				<include name="com/db4o/nativequery/optimization/NativeQueriesPlatform.java" />
+				<include name="com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
+				<include name="com/db4o/nativequery/optimization/ComparisonQueryGeneratingVisitor.java" />
+				<include name="com/db4o/nativequery/optimization/ReflectUtil.java" />
+				<include name="com/db4o/nativequery/instrumentation/*.java" />
+			</fileset>
 		</copy>
 
 		<copy todir="${dir.sharpen}/db4oj/core">
@@ -471,20 +488,7 @@
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
-		
-		<copy todir="${dir.sharpen}/db4oj/core/src">
-			<fileset dir="${dir.j.jdk1.2.core.src}">
-				<include name="com/db4o/typehandlers/*.java" />
-			</fileset>
-		</copy>		
-		
-		
-		<copy todir="${dir.sharpen}/db4oj/core/src">
-			<fileset dir="${dir.j.jdk5.core.src}">
-				<include name="com/db4o/collections/*.java" />
-			</fileset>
-		</copy>		
-		
+			
 	    <!--copy db4ounit src-->
         <copy todir="${dir.sharpen}/db4oj/core/src">
             <fileset dir="${dir.db4ounit.src}">
@@ -508,55 +512,34 @@
 
 		<!-- copy db4o tests src-->
         <copy todir="${dir.sharpen}/db4oj/core/src">
-            <fileset dir="${dir.j.tests.src}">
+            <fileset dir="${dir.dist.decaf.jdk1.2.test.src}">
                 <include name="**/db4ounit/common/**/*.java" />
                 <include name="**/db4ounit/util/**/*.java" />
-            </fileset>
-        </copy>
-        
-        <copy todir="${dir.sharpen}/db4oj/core/src">
-            <fileset dir="${dir.j.jdk1.2.test.src}">
-                <include name="**/db4ounit/common/defragment/*.java" />
-                <include name="**/db4ounit/common/migration/*.java" />
                 <include name="**/db4ounit/common/ta/**/*.java" />
                 <include name="**/db4ounit/util/*.java" />
             </fileset>
         </copy>
-            
-        <copy todir="${dir.sharpen}/db4oj/core/src">
-            <fileset dir="${dir.j.jdk5.test.src}">
-            	<include name="**/collections/typehandler/*.java" />
             	
-                <include name="**/collections/ArrayList4TATestCaseBase.java" />
-                <include name="**/collections/ArrayList4SODATestCase.java" />
-                <include name="**/collections/ArrayList4Asserter.java" />               
-                <include name="**/collections/CollectionsUtil.java" />
-                <include name="**/collections/Order.java" />
-                <include name="**/collections/OrderItem.java" />
-                <include name="**/collections/Product.java" />
-                <include name="**/concurrency/query/*.java" />
+    	<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
+    	    <fileset dir="${dir.j.tests.src}">
+    	    	<include name="**/jre5/collections/typehandler/*.java" />
+        		<include name="**/jre5/collections/ArrayList4TATestCaseBase.java" />
+                <include name="**/jre5/collections/ArrayList4SODATestCase.java" />
+                <include name="**/jre5/collections/ArrayList4Asserter.java" />               
+                <include name="**/jre5/collections/CollectionsUtil.java" />
+                <include name="**/jre5/collections/Order.java" />
+                <include name="**/jre5/collections/OrderItem.java" />
+                <include name="**/jre5/collections/Product.java" />
+                <include name="**/jre5/concurrency/query/*.java" />
             </fileset>
         </copy>
                 	
-		<copy 	todir="${dir.sharpen}/db4oj/core/src" verbose="true" overwrite="true">
-			<fileset dir="${dir.j.jdk1.2.core.src}">
-				<include name="com/db4o/internal/query/ObjectSetFacade.java" />
-			</fileset>
-		</copy>		
-
 	    <copy todir="${dir.sharpen}/db4oj/core/src">
-            <fileset dir="${dir.j.nqopt}/test/src">
+            <fileset dir="${dir.dist.decaf.jdk1.2.nqopt.test.src}">
                 <include name="**/mocks/*.java" />
                 <include name="**/diagnostics/*.java" />
             </fileset>
-        </copy> 
-
-	    <!--copy project settings of db4ojdk5 -->
-        <copy todir="${dir.sharpen}/db4oj" >
-            <fileset dir="../db4ojdk5/" >
-                <include name=".settings/**/*" />
-            </fileset>
-        </copy>
+        </copy>	    
 	</target>
 	
 	<macrodef name="updateProjectFiles">

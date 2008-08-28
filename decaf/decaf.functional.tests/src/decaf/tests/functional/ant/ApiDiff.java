@@ -7,7 +7,6 @@ import java.io.*;
 import java.util.*;
 
 import decaf.config.*;
-import decaf.core.*;
 
 class ApiDiff {
 	
@@ -61,12 +60,20 @@ class ApiDiff {
 		for (String klass : intersection(_expected.keySet(), _actual.keySet())) {
 			final ClassEntry expectedEntry = _expected.get(klass);
 			final ClassEntry actualEntry = _actual.get(klass);
-			if (!expectedEntry.sameDeclaration(actualEntry)) {
+			if (!sameDeclaration(expectedEntry, actualEntry)) {
 				fail("Expecting '" + expectedEntry + "' got '" + actualEntry + "'.");
 				continue;
 			}
 			checkMembers(expectedEntry, actualEntry);
 		}
+	}
+
+	private boolean sameDeclaration(final ClassEntry expectedEntry,
+			final ClassEntry actualEntry) {
+		if (!expectedEntry.superType().equals(actualEntry.superType())) {
+			return false;
+		}
+		return SetExtensions.difference(expectedEntry.interfaces(), _ignoreSettings.ignoredInterfacesFor(expectedEntry.name())).equals(actualEntry.interfaces());
 	}
 
 	private void checkMembers(ClassEntry expected, ClassEntry actual) {

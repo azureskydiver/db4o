@@ -36,8 +36,10 @@ public class DecafApplication implements IApplication {
 			
 			project.buildProject(monitor);
 			
-			for (DecafProject.OutputTarget target : decaf.targets()) {
-				target.targetProject().getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
+			if (commandLine.build) {
+				for (DecafProject.OutputTarget target : decaf.targets()) {
+					target.targetProject().getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
+				}
 			}
 		} 
 		catch (CoreException x) {

@@ -2,9 +2,10 @@
 
 package com.db4o.internal.query.processor;
 
+import java.util.*;
+
 import com.db4o.internal.*;
 import com.db4o.query.*;
-
 
 /**
  * QQuery is the users hook on our graph.
@@ -14,13 +15,19 @@ import com.db4o.query.*;
  * @exclude
  */
 public class QQuery extends QQueryBase implements Query {
-	
+    public QQuery() {
+    	// C/S only
+    }
+
     public QQuery(Transaction a_trans, QQuery a_parent, String a_field) {
     	super(a_trans,a_parent,a_field);
     }
 
-    public QQuery() {
-        // C/S only
-    	super();
-    }
+    /**
+     * @decaf.ignore.jdk11
+     * @sharpen.ignore
+     */
+    public Query sortBy(Comparator comparator) {
+		return sortBy(new JdkComparatorWrapper(comparator));
+	}
 }

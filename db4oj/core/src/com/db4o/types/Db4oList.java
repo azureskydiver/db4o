@@ -2,6 +2,8 @@
 
 package com.db4o.types;
 
+import java.util.*;
+
 /**
  *  db4o List implementation for database-aware lists.
  * <br><br>
@@ -22,11 +24,9 @@ package com.db4o.types;
  * }<br><br>
  * MyClass myObject = new MyClass();<br> 
  * myObject.myList = objectContainer.ext().collections().newLinkedList();
- * 
  * @see com.db4o.ext.ExtObjectContainer#collections
- * 
- * @sharpen.ignore
+ * @decaf.ignore.implements.jdk11 List
  */
-public interface Db4oList extends Db4oCollection {
+public interface Db4oList extends Db4oCollection, List {
 
 }

@@ -5,7 +5,8 @@ package com.db4o.db4ounit.common.internal;
 import com.db4o.db4ounit.common.internal.EmbeddedClientObjectContainerTestCase.*;
 import com.db4o.query.*;
 
-public class ItemPredicate extends Predicate{
+
+public class ItemPredicate extends Predicate<Item>{
     public boolean match(Item item){
         return true;
     }

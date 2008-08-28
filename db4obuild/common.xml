@@ -7,7 +7,7 @@
 	
 	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
 		<classpath>
-			<pathelement location="${dir.dist.classes.java5}" />
+			<pathelement location="${dir.dist.classes.jdk1.5}" />
 			<pathelement location="${dir.doctor.bin}" />
 			<pathelement location="${dir.doctor.lib}/iText.jar" />
 			<pathelement location="${dir.dist.classes.tutorial}" />
@@ -114,9 +114,107 @@
 		</sequential>
 	</macrodef>
 	
+	<macrodef name="prepare-workspace">
+		<attribute name="project" />
+		<attribute name="dir" />
+		<element name="sources" optional="no" />
+		
+		<sequential>
+			<mkdir dir="@{dir}/@{project}"  />
+			
+			<copy todir="@{dir}/@{project}">
+				<sources />
+			</copy>
+		</sequential>
+	</macrodef>
+			
+	<macrodef name="decaf">
+		<attribute name="workspace" />
+		<attribute name="resource" />
+		
+		<element name="args" optional="yes" />
+		
+		<sequential>
+			<echo>org.eclipse.core.launcher.Main -data @{workspace} -application decaf.application @{resource}</echo>
+		
+			<java fork="true" classname="org.eclipse.core.launcher.Main" failonerror="true" timeout="1800000">
+				<jvmarg value="-Xms256m" />
+				<jvmarg value="-Xmx512m" />
+				<classpath>
+					<fileset dir="${eclipse.home}/plugins">
+						<include name="org.eclipse.equinox.launcher_*.jar"  />
+					</fileset>
+				</classpath>
+				<arg value="-clean" />
+				<arg value="-data" />
+				<arg file="@{workspace}" />
+				<arg value="-application" />
+				<arg value="decaf.application" />
+				<arg value="@{resource}" />
+				<args />
+			</java>
+		</sequential>
+	</macrodef>
+	
+	<target name="install-decaf-plugin" depends="install-sharpen-plugin" >
+				
+		<property name="dir.decaf.core" location="${dir.base}/decaf" />
+		<property name="dir.decaf.src"  location="${dir.decaf.core}/src"  />
+		<reset-dir dir="${dir.dist.decaf.classes}" />
+		
+		<echo>${eclipse.home}/plugins</echo>
+		<javac fork="true"
+			debug="true"
+			target="1.5"
+			source="1.5"
+			destdir="${dir.dist.decaf.classes}"
+			srcdir="${dir.decaf.src}"
+			encoding="UTF-8">
+			<classpath>
+				<fileset dir="${eclipse.home}/plugins">
+					<include name="org.eclipse.osgi_*/osgi.jar" />
+					<include name="org.eclipse.core.resources_*/resources.jar" />
+					<include name="org.eclipse.core.runtime_*/runtime.jar" />
+					<include name="org.eclipse.jdt.core_*/jdtcore.jar" />
+					<!-- redundant entries: in newer eclipse installs those reside in jars -->
+					<include name="org.eclipse.osgi_*.jar" />
+					<include name="org.eclipse.core.resources_*.jar" />
+					<include name="org.eclipse.core.runtime_*.jar" />
+					<include name="org.eclipse.jdt.core_*.jar" />
+					<include name="org.eclipse.jdt.launching_*.jar" />
+					<include name="org.eclipse.equinox.*.jar" />
+					<include name="org.eclipse.core.jobs_*.jar" />
+					
+					<include name="org.eclipse.core.filebuffers_*.jar" />
+										
+					<include name="org.eclipse.jdt.ui_*.jar" />
+										
+					<include name="org.eclipse.jface_*.jar"  />
+					<include name="org.eclipse.jface.text_*.jar"  />
+					<include name="org.eclipse.text_*jar" />
+										
+					<include name="org.eclipse.ui_*.jar"  />
+					<include name="org.eclipse.ui.workbench_*.jar"  />
+										
+					<include name="sharpen*/sharpen.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+		
+		<jar manifest="${dir.decaf.core}/META-INF/MANIFEST.MF"
+			destfile="${plugins.home}/decaf_1.0.0.jar"
+			basedir="${dir.dist.decaf.classes}">
+			
+			<fileset dir="${dir.decaf.core}">
+				<include name="plugin.xml" />
+			</fileset>
+		</jar>
+
+	</target>
+	
 	<target name="install-sharpen-plugin">
 			
-		<property name="sharpen.core.dir" location="../sharpen.core" />
+		<property name="sharpen.core.dir" location="${dir.base}/sharpen.core" />
 		<reset-dir dir="${dir.dist.classes.sharp}" />
 		
 		<echo>${eclipse.home}/plugins</echo>
@@ -181,9 +279,9 @@
 		<property name="db4o.version.iteration.revision" value="${db4o.version.dotted}.${db4o.iteration}.${svn.revision}" />
 		<property name="db4o.file" value="db4o-${db4o.version.iteration.revision}-" />
 		
-		<property name="filename.java1.1.jar" value="${db4o.file}java1.1.jar" />
-		<property name="filename.java1.2.jar" value="${db4o.file}java1.2.jar" />
-		<property name="filename.java5.jar" value="${db4o.file}java5.jar" />
+		<property name="filename.jdk1.1.jar" value="${db4o.file}java1.1.jar" />
+		<property name="filename.jdk1.2.jar" value="${db4o.file}java1.2.jar" />
+		<property name="filename.jdk1.5.jar" value="${db4o.file}java5.jar" />
 		<property name="filename.nqopt.jar" value="${db4o.file}nqopt.jar" />
 		<property name="filename.instrumentation.jar" value="${db4o.file}instrumentation.jar" />
 		<property name="filename.db4otools.jar" value="${db4o.file}tools.jar" />
@@ -193,9 +291,9 @@
 		<property name="filename.osgi.jar" value="${db4o.file}osgi.jar" />
 		<property name="filename.osgi.test.jar" value="${db4o.file}osgi-test.jar" />
 		
-		<property name="file.java1.1.jar" value="${dir.dist.jars}/${filename.java1.1.jar}" />
-		<property name="file.java1.2.jar" value="${dir.dist.jars}/${filename.java1.2.jar}" />
-		<property name="file.java5.jar" value="${dir.dist.jars}/${filename.java5.jar}" />
+		<property name="file.jdk1.1.jar" value="${dir.dist.jars}/${filename.jdk1.1.jar}" />
+		<property name="file.jdk1.2.jar" value="${dir.dist.jars}/${filename.jdk1.2.jar}" />
+		<property name="file.jdk1.5.jar" value="${dir.dist.jars}/${filename.jdk1.5.jar}" />
 		<property name="file.nqopt.jar" value="${dir.dist.jars}/${filename.nqopt.jar}" />
 		<property name="file.instrumentation.jar" value="${dir.dist.jars}/${filename.instrumentation.jar}" />
 		<property name="file.db4otools.jar" value="${dir.dist.jars}/${filename.db4otools.jar}" />

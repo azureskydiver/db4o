@@ -2,6 +2,8 @@
 
 package com.db4o.types;
 
+import java.util.*;
+
 /**
  *  db4o Map implementation for database-aware maps.
  * <br><br>
@@ -24,8 +26,8 @@ package com.db4o.types;
  * myObject.myMap = objectContainer.ext().collections().newHashMap();
  * @see com.db4o.ext.ExtObjectContainer#collections
  * 
- * @sharpen.ignore
+ * @decaf.ignore.implements.jdk11 Map
  */
-public interface Db4oMap extends Db4oCollection {
+public interface Db4oMap extends Db4oCollection, Map {
 
 }

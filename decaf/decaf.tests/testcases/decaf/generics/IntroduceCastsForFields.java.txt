@@ -11,6 +11,10 @@ class Foo<T> {
 
 class Bar extends Foo<String> {
 
+	public Bar() {
+		super(null);
+	}
+
 	public String toString() {
 		return field;
 	}

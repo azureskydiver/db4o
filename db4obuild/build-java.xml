@@ -7,12 +7,12 @@
 		<property name="java.src.core" value="${dir.dist.java}/src/core"/>
 		<property name="java.src.core.jdk1.1" value="${java.src.core}/jdk1.1"/>
 		<property name="java.src.core.jdk1.2" value="${java.src.core}/jdk1.2"/>
-		<property name="java.src.core.jdk5" value="${java.src.core}/jdk5"/>
+		<property name="java.src.core.jdk1.5" value="${java.src.core}/jdk5"/>
 		
 		<property name="java.src.tests" value="${dir.dist.java}/src/tests" />
 		<property name="java.src.tests.jdk1.1" value="${java.src.tests}/jdk1.1" />
 		<property name="java.src.tests.jdk1.2" value="${java.src.tests}/jdk1.2" />
-		<property name="java.src.tests.jdk5" value="${java.src.tests}/jdk5" />
+		<property name="java.src.tests.jdk1.5" value="${java.src.tests}/jdk5" />
 		
 		<property name="java.src.bench" value="${dir.dist.java}/src/bench"/>
 		<property name="java.src.tools" value="${dir.dist.java}/src/tools"/>
@@ -44,7 +44,7 @@
 	<target name="build.db4ojava" 
 		depends="build.db4ojdk1.1, 
 			build.db4ojdk1.2, 
-			build.db4ojdk5, 
+			build.db4ojdk1.5, 
 			build.instrumentation, 
 			build.nqopt,
 			build.taj,
@@ -52,90 +52,109 @@
 			build.osgi" 
 	/>
 	
-	<target name="build.db4ojdk1.1" depends="init">
-		<mkdir dir="${java.src.core.jdk1.1}" />
-		<copy todir="${java.src.core.jdk1.1}">
-			<fileset dir="${dir.j.core.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-		
-		<mkdir dir="${dir.dist.classes.java1.1}" />
+	<target name="decaf.core" depends="decaf.workspace, install-decaf-plugin">
+
+		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4o">
+			<args>
+				<arg value="-targetPlatform" />
+				<arg value="jdk11" />
+
+				<arg value="-targetPlatform" />
+				<arg value="jdk12" />
+			</args>
+		</decaf>
+	</target>
+	
+	<target name="decaf.tests" depends="decaf.core, build.db4ounit">
+	
+		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4o.tests">
+			<args>
+				<arg value="-projectReference" />
+				<arg value="db4o" />
+				<arg value="-cp" />
+				<arg path="${file.db4ounit.jar}" />
+				
+				<arg value="-targetPlatform" />
+				<arg value="jdk11" />
+
+				<arg value="-targetPlatform" />
+				<arg value="jdk12" />
+			</args>
+		</decaf>
+
+	</target>
+			
+	<target name="decaf.workspace" depends="init">
+		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4o">
+			<sources>
+				<fileset dir="${dir.j.core}">
+					<include name="**/*.java"  />
+				</fileset>
+				<fileset dir="${dir.j.tools}">
+					<include name="**/*.java" />
+				</fileset>
+			</sources>
+		</prepare-workspace>
+
+		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4o.tests">
+			<sources>
+				<fileset dir="${dir.j.tests}">
+					<include name="**/*.java" />
+				</fileset>
+			</sources>
+		</prepare-workspace>
+			
+	</target>
+	
+	<target name="build.db4ojdk1.1" depends="decaf.core">
+		<mkdir dir="${dir.dist.classes.jdk1.1}" />
 		<javac compiler="classic"
 			fork="yes"
 			executable="${file.compiler.jdk1.3}"
-			srcdir="${java.src.core.jdk1.1}"
-			destdir="${dir.dist.classes.java1.1}" debug="${javac.debug.mode}">
+			srcdir="${dir.dist.decaf.jdk1.1.core.src}"
+			destdir="${dir.dist.classes.jdk1.1}"
+			debug="${javac.debug.mode}">
 			<compilerarg line="${file.compiler.jdk1.3.args.line}"/>
 		</javac>
 		
-		<jar destfile="${file.java1.1.jar}">
-			<fileset dir="${dir.dist.classes.java1.1}" />
+		<jar destfile="${file.jdk1.1.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.1}" />
 		</jar>
 	</target>
 	
 	<target name="build.db4ojdk1.2" depends="init">
-		<mkdir dir="${java.src.core.jdk1.2}" />
-		<copy todir="${java.src.core.jdk1.2}">
-			<fileset dir="${dir.j.core.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${java.src.core.jdk1.2}" overwrite="true">
-			<fileset dir="${dir.j.jdk1.2.core.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-		
-        <mkdir dir="${dir.dist.classes.java1.2}" />
-		<javac srcdir="${java.src.core.jdk1.2}" 
+		<mkdir dir="${dir.dist.classes.jdk1.2}" />
+		<javac srcdir="${dir.dist.decaf.jdk1.2.core.src}" 
             fork="true" 
-            destdir="${dir.dist.classes.java1.2}" 
+            destdir="${dir.dist.classes.jdk1.2}" 
             debug="${javac.debug.mode}" 
             target="1.1" 
             source="1.3" 
             encoding="UTF-8" />
 
-		<jar destfile="${file.java1.2.jar}">
-			<fileset dir="${dir.dist.classes.java1.2}" />
+		<jar destfile="${file.jdk1.2.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.2}" />
 		</jar>
 
 	</target>
 	
-	<target name="build.db4ojdk5" depends="init">
-		<mkdir dir="${java.src.core.jdk5}" />
-		<copy todir="${java.src.core.jdk5}">
-			<fileset dir="${dir.j.core.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${java.src.core.jdk5}" overwrite="true">
-			<fileset dir="${dir.j.jdk1.2.core.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-		<copy todir="${java.src.core.jdk5}" overwrite="true">
-			<fileset dir="${dir.j.jdk5.core.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-		
-        <mkdir dir="${dir.dist.classes.java5}" />
-		<javac srcdir="${java.src.core.jdk5}" 
+	<target name="build.db4ojdk1.5" depends="init">
+		<mkdir dir="${dir.dist.classes.jdk1.5}" />
+		<javac  
             fork="true" 
-            destdir="${dir.dist.classes.java5}" 
+            destdir="${dir.dist.classes.jdk1.5}" 
             debug="${javac.debug.mode}" 
             target="1.5" 
             source="1.5" 
-            encoding="UTF-8" />
+            encoding="UTF-8">
+			<src path="${dir.j.core.src}" />
+		</javac>
 		
-		<jar destfile="${file.java5.jar}">
-			<fileset dir="${dir.dist.classes.java5}" />
+		<jar destfile="${file.jdk1.5.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.5}" />
 		</jar>
 		
-		<echo file="${dir.dist.java}/tempfile.txt" message="${file.java5.jar}"/>
+		<echo file="${dir.dist.java}/tempfile.txt" message="${file.jdk1.5.jar}"/>
 	</target>
 	
 	<target name="build.instrumentation" depends="build.db4ojdk1.2">
@@ -150,13 +169,13 @@
 			<classpath>
 				<pathelement path="${file.ant.jar}"/>
 				<pathelement path="${file.bloat.jar}"/>
-				<pathelement path="${file.java1.2.jar}"/>
+				<pathelement path="${file.jdk1.2.jar}"/>
 			</classpath>
 		</javac>
 		<jar destfile="${file.instrumentation.jar}">
 			<fileset dir="${dir.dist.classes.instrumentation}" />
 			<manifest>
-				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.java1.2.jar}"/>
+				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.jdk1.2.jar}"/>
 			</manifest>
 		</jar>
 	</target>
@@ -194,7 +213,7 @@
 			<classpath>
 				<pathelement path="${file.ant.jar}"/>
 				<pathelement path="${file.bloat.jar}"/>
-				<pathelement path="${file.java1.2.jar}"/>
+				<pathelement path="${file.jdk1.2.jar}"/>
 				<pathelement path="${file.instrumentation.jar}"/>
 				<pathelement path="${file.nqopt.jar}"/>
 				<pathelement path="${file.taj.jar}"/>
@@ -210,7 +229,7 @@
 		    encoding="UTF-8">
 			<classpath>
 				<pathelement path="${file.ant.jar}"/>
-				<pathelement path="${file.java1.2.jar}"/>
+				<pathelement path="${file.jdk1.2.jar}"/>
 			</classpath>
 		</javac>
 		<copy todir="${dir.dist.classes.db4otools}">
@@ -221,13 +240,13 @@
         <jar destfile="${file.db4otools.jar}">
 			<fileset dir="${dir.dist.classes.db4otools}" />
 			<manifest>
-				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.java1.2.jar} ${filename.instrumentation.jar} ${filename.nqopt.jar} ${filename.taj.jar}"/>
+				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.jdk1.2.jar} ${filename.instrumentation.jar} ${filename.nqopt.jar} ${filename.taj.jar}"/>
 			</manifest>
 		</jar>
 	    <jar destfile="${file.db4obench.jar}">
 				<fileset dir="${dir.dist.classes.db4obench}" />
 				<manifest>
-					<attribute name="Class-Path" value="${filename.ant.jar} ${filename.java1.2.jar}"/>
+					<attribute name="Class-Path" value="${filename.ant.jar} ${filename.jdk1.2.jar}"/>
 				</manifest>
 			</jar>
 	</target>
@@ -242,17 +261,22 @@
             source="1.3" 
             encoding="UTF-8">
 			<exclude name="**/j2me/**"/>
+			<!--
+				examples might include java5 code
+				so let's not compile them here
+			-->
+			<exclude name="**/com/db4o/nativequery/example/**" />
 			<classpath>
 				<pathelement path="${file.ant.jar}"/>
 				<pathelement path="${file.bloat.jar}"/>
-				<pathelement path="${file.java1.2.jar}"/>
+				<pathelement path="${file.jdk1.2.jar}"/>
 				<pathelement path="${file.instrumentation.jar}"/>
 			</classpath>
 		</javac>
 		<jar destfile="${file.nqopt.jar}">
 			<fileset dir="${dir.dist.classes.nqopt}" />
 			<manifest>
-				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.java1.2.jar} ${filename.instrumentation.jar} "/>
+				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.jdk1.2.jar} ${filename.instrumentation.jar} "/>
 			</manifest>
 		</jar>
 	</target>
@@ -269,7 +293,7 @@
 			<classpath>
 				<pathelement path="${file.ant.jar}"/>
                 <pathelement path="${file.bloat.jar}"/>
-				<pathelement path="${file.java1.2.jar}"/>
+				<pathelement path="${file.jdk1.2.jar}"/>
 			    <pathelement path="${file.instrumentation.jar}"/>
 			</classpath>
 		</javac>
@@ -277,7 +301,7 @@
 		<jar destfile="${file.taj.jar}">
 			<fileset dir="${dir.dist.classes.taj}" />
 			<manifest>
-				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.java1.2.jar} ${filename.instrumentation.jar}"/>
+				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.jdk1.2.jar} ${filename.instrumentation.jar}"/>
 			</manifest>
 		</jar>
 	</target>
@@ -287,7 +311,7 @@
 		<delete dir="${dir.dist.classes.osgi.lib}"/>
 		<mkdir dir="${dir.dist.classes.osgi}"/>
 		<mkdir dir="${dir.dist.classes.osgi.lib}"/>
-		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.java1.2.jar}"/>
+		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.jdk1.2.jar}"/>
 		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.nqopt.jar}"/>
 		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.bloat.jar}"/>
 		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.instrumentation.jar}"/>
@@ -297,7 +321,7 @@
 				<fileset dir="${dir.build.lib}">
 					<include name="*.jar" />
 				</fileset>
-				<pathelement location="${file.java1.2.jar}"/>
+				<pathelement location="${file.jdk1.2.jar}"/>
 			</classpath>
 			<src path="${dir.osgi.src}"/>
 		</javac>
@@ -323,7 +347,7 @@
 		depends="build.db4ounit, 
 			build.db4ojdk1.1.tests, 
 			build.db4ojdk1.2.tests,
-			build.db4ojdk5.tests,
+			build.db4ojdk1.5.tests,
 			build.nqopt.tests,
 			build.osgi.tests,
 			build.taj.tests"
@@ -338,7 +362,7 @@
 			source="1.3" 
 			encoding="UTF-8">
 			<classpath>
-				<pathelement path="${file.java1.1.jar}" />
+				<pathelement path="${file.jdk1.1.jar}" />
 			</classpath>
 			<src path="${dir.db4ounit.src}"/>
 			<src path="${dir.db4ounit.extensions.src}" />
@@ -348,7 +372,7 @@
 		</jar>
 	</target>
 	
-	<target name="build.db4ojdk1.1.tests" depends="build.db4ojdk1.1, build.db4ounit">
+	<target name="build.db4ojdk1.1.tests" depends="build.db4ojdk1.1, decaf.tests">
 		<mkdir dir="${dir.dist.classes.test.jdk1.1}" />
 		<javac executable="${file.compiler.jdk1.3}" 
             destdir="${dir.dist.classes.test.jdk1.1}" 
@@ -356,11 +380,10 @@
             debug="on" 
             encoding="UTF-8">
 			<classpath>
-				<pathelement location="${file.java1.1.jar}" />
+				<pathelement location="${file.jdk1.1.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
 			</classpath>
-			<src path="${dir.j.tests.src}"/>
-			<src path="${dir.j.tools.src}" />
+			<src path="${dir.dist.decaf.jdk1.1.test.src}"/>
 		</javac>
 		<copy todir="${dir.dist.classes.test.jdk1.1}" overwrite="true">
 			<fileset dir="${dir.j.tests.src}">
@@ -369,32 +392,22 @@
 		</copy>
 	</target>
 	
-	<target name="build.db4ojdk1.2.tests" depends="build.db4ojdk1.2, build.db4ounit">
-		<mkdir dir="${java.src.tests.jdk1.2}" />
-		<copy todir="${java.src.tests.jdk1.2}">
-			<fileset dir="${dir.j.tests.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-		<copy todir="${java.src.tests.jdk1.2}" overwrite="true">
-			<fileset dir="${dir.j.jdk1.2.test.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-		
+	<target name="build.db4ojdk1.2.tests" depends="build.db4ojdk1.2, decaf.tests">
 		<mkdir dir="${dir.dist.classes.test.jdk1.2}" />
 		<javac destdir="${dir.dist.classes.test.jdk1.2}" 
 			fork="true" 
 			debug="on" 
 			target="1.1" 
 			source="1.3" 
-			encoding="UTF-8">
+			encoding="UTF-8"
+			srcdir="${dir.dist.decaf.jdk1.2.test.src}">
 			<classpath>
-				<pathelement location="${file.java1.2.jar}" />
+				<pathelement location="${file.jdk1.2.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
 			</classpath>
-			<src path="${java.src.tests.jdk1.2}"/>
-			<src path="${dir.j.tools.src}" />
+			
+			<exclude name="**/jre5/annotation/IndexedAnnotationTestCase.java"  />
+			<exclude name="**/com/db4o/test/Sheep.java" />
 		</javac>
 		<copy todir="${dir.dist.classes.test.jdk1.2}" overwrite="true">
 			<fileset dir="${dir.j.tests.src}">
@@ -403,24 +416,7 @@
 		</copy>
 	</target>
 	
-	<target name="build.db4ojdk5.tests" depends="build.db4ojdk5, build.db4ounit">
-		<mkdir dir="${java.src.tests.jdk5}" />
-		<copy todir="${java.src.tests.jdk5}">
-			<fileset dir="${dir.j.tests.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-		<copy todir="${java.src.tests.jdk5}" overwrite="true">
-			<fileset dir="${dir.j.jdk1.2.test.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-		<copy todir="${java.src.tests.jdk5}" overwrite="true">
-			<fileset dir="${dir.j.jdk5.test.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-		
+	<target name="build.db4ojdk1.5.tests" depends="build.db4ojdk1.5">
 		<mkdir dir="${dir.dist.classes.test.jdk1.5}" />
 		<javac destdir="${dir.dist.classes.test.jdk1.5}" 
 			fork="true" 
@@ -429,10 +425,10 @@
 			source="1.5" 
 			encoding="UTF-8">
 			<classpath>
-				<pathelement location="${file.java5.jar}" />
+				<pathelement location="${file.jdk1.5.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
 			</classpath>
-			<src path="${java.src.tests.jdk5}"/>
+			<src path="${dir.j.tests.src}"/>
 			<src path="${dir.j.tools.src}" />
 		</javac>
 		<copy todir="${dir.dist.classes.test.jdk1.5}" overwrite="true">
@@ -440,25 +436,63 @@
 				<include name="**/*.yap" />
 			</fileset>
 		</copy>
-
 	</target>
 	
-	<target name="build.nqopt.tests" depends="build.nqopt, build.db4ounit">
+	<target name="decaf.nqopt.tests" depends="build.nqopt, build.db4ojdk1.5.tests">
+		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="nqopt.tests">
+			<sources>
+				<fileset dir="${dir.j.nqopt}/test">
+					<include name="**/*.java" />
+				</fileset>
+			</sources>
+		</prepare-workspace>
+		
+		<property name="file.tests.jdk1.5.jar" location="${dir.dist.decaf}/db4o-tests-java5.jar" />
+		
+		<jar destfile="${file.tests.jdk1.5.jar}">
+			<fileset dir="${dir.dist.classes.test.jdk1.5}">
+				<include name="**/*.class"  />
+			</fileset>
+		</jar>
+		
+		<decaf workspace="${dir.dist.decaf.workspace}" resource="nqopt.tests">
+			<args>
+				<arg value="-targetPlatform" />
+				<arg value="jdk12" />
+				<arg value="-cp" />
+				<arg value="${file.bloat.jar}" />
+				<arg value="-cp" />
+				<arg value="${file.jdk1.5.jar}" />
+				<arg value="-cp" />
+				<arg value="${file.db4ounit.jar}" />
+				<arg value="-cp" />
+				<arg value="${file.instrumentation.jar}" />
+				<arg value="-cp" />
+				<arg value="${file.nqopt.jar}" />
+				<arg value="-cp" />
+				<arg value="${file.tests.jdk1.5.jar}" />
+				<arg value="-cp" />
+				<arg value="${file.ant.jar}" />
+			</args>
+		</decaf>
+	</target>
+	
+	<target name="build.nqopt.tests" depends="build.nqopt, decaf.nqopt.tests, build.db4ojdk1.2.tests">
 		<mkdir dir="${dir.dist.classes.test.nq}" />
 		<javac
 			destdir="${dir.dist.classes.test.nq}"
 			fork="true" debug="on" target="1.4" source="1.4" encoding="UTF-8">
 			<classpath>
 				<pathelement location="${file.bloat.jar}" />
-				<pathelement location="${file.java1.2.jar}" />
+				<pathelement location="${file.jdk1.2.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
 				<pathelement location="${file.instrumentation.jar}" />
 				<pathelement location="${file.nqopt.jar}" />
 				<pathelement location="${dir.dist.classes.test.jdk1.2}" />
+				<pathelement location="${file.ant.jar}"  />
 			</classpath>
-			<src path="${dir.j.tests.src}"/>
 			<src path="${dir.j.tools.src}" />
-			<src path="${dir.j.nqopt}/test/src" />
+			<src path="${dir.dist.decaf.jdk1.2.nqopt.test.src}" />
 		</javac>
 	</target>
 	
@@ -479,7 +513,7 @@
 		<javac destdir="${dir.dist.classes.osgi.test}" fork="true" debug="on" encoding="UTF-8" target="1.2" source="1.2">
 			<classpath>
 				<pathelement path="${file.db4ounit.jar}" />
-				<pathelement path="${file.java1.2.jar}" />
+				<pathelement path="${file.jdk1.2.jar}" />
 				<pathelement path="${file.osgi.jar}" />
 				<pathelement path="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testlib.jar}" />
 				<pathelement path="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testnqlib.jar}" />
@@ -516,7 +550,7 @@
             <src path="${dir.taj.test.src}" />
 			<classpath>
 				<pathelement location="${file.taj.jar}"/>
-				<pathelement path="${file.java1.2.jar}"/>
+				<pathelement path="${file.jdk1.2.jar}"/>
                 <pathelement path="${file.bloat.jar}"/>
 			    <pathelement path="${file.instrumentation.jar}"/>
 				<pathelement location="${file.db4ounit.jar}" />
@@ -530,7 +564,7 @@
 	<target name="run.tests.db4ojava" 
 		depends="run.tests.jdk1.1, 
 			run.tests.jdk1.2,
-			run.tests.jdk5,
+			run.tests.jdk1.5,
 			run.tests.nqopt,
 			run.tests.taj,
 			run.tests.concurrency,
@@ -538,9 +572,9 @@
 	/>
 	
 	<target name="run.tests.jdk1.1" depends="init, build.db4ojdk1.1.tests">
-        <path id="tests.java1.1.cp">
+        <path id="tests.jdk1.1.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.1}" />
-			<pathelement location="${file.java1.1.jar}" />
+			<pathelement location="${file.jdk1.1.jar}" />
             <pathelement path="${file.db4ounit.jar}" />
 			<pathelement location="${path.classpath.jdk1.1}" />
         </path>
@@ -551,7 +585,7 @@
 			classname="com.db4o.db4ounit.jre11.AllTests" 
 			failonerror="true" 
 			timeout="1800000">
-			<classpath refid="tests.java1.1.cp" />
+			<classpath refid="tests.jdk1.1.cp" />
 			<sysproperty key="dir.workspace" value="${dir.base}" />
 		</java>
 
@@ -561,15 +595,15 @@
 			classname="com.db4o.test.AllTests" 
 			failonerror="true" 
 			timeout="1200000">
-			<classpath refid="tests.java1.1.cp" />
+			<classpath refid="tests.jdk1.1.cp" />
 			<arg value="-withExceptions" />
 		</java>		
 	</target>
 	
 	<target name="run.tests.jdk1.2" depends="init, build.db4ojdk1.2.tests">
-        <path id="tests.java1.2.cp">
+        <path id="tests.jdk1.2.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.2}" />
-            <pathelement location="${file.java1.2.jar}" />
+            <pathelement location="${file.jdk1.2.jar}" />
 			<pathelement location="${file.db4ounit.jar}" />
         </path>
 
@@ -579,7 +613,7 @@
 			classname="com.db4o.db4ounit.jre12.AllTestsJdk1_2" 
 			failonerror="true" 
 			timeout="1200000">
-			<classpath refid="tests.java1.2.cp" />
+			<classpath refid="tests.jdk1.2.cp" />
 			<sysproperty key="dir.workspace" value="${dir.base}" />
 			<sysproperty key="db4oj.tests.bin" value="${dir.dist.classes.test.jdk1.2}" />
 			<sysproperty key="db4o.archives.path" value="${dir.base}/db4o.archives/java1.2/" />
@@ -591,7 +625,7 @@
 			classname="com.db4o.test.AllTestsJdk1_2" 
 			failonerror="true" 
 			timeout="3600000">
-			<classpath refid="tests.java1.2.cp" />
+			<classpath refid="tests.jdk1.2.cp" />
 			<arg value="-withExceptions" />
 		</java>
 		
@@ -601,17 +635,17 @@
 			classname="com.db4o.db4ounit.jre12.RunAllCommonMigrationTests" 
 			failonerror="true" 
 			timeout="3600000">
-			<classpath refid="tests.java1.2.cp" />
+			<classpath refid="tests.jdk1.2.cp" />
 			<sysproperty key="db4oj.tests.bin" value="${dir.dist.classes.test.jdk1.2}"/>
 			<arg value="-withExceptions" />
 		</java>
 
 	</target>
 	
-	<target name="run.tests.jdk5" depends="init, build.db4ojdk5.tests">
-        <path id="tests.java5.cp">
+	<target name="run.tests.jdk1.5" depends="init, build.db4ojdk1.5.tests">
+        <path id="tests.jdk1.5.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.5}" />
-            <pathelement location="${file.java5.jar}" />
+            <pathelement location="${file.jdk1.5.jar}" />
 			<pathelement location="${file.db4ounit.jar}" />
         </path>
         
@@ -623,7 +657,7 @@
 			timeout="10000000">
 			<jvmarg value="-Xmx512m"/>
 			<sysproperty key="dir.workspace" value="${dir.base}" />
-			<classpath refid="tests.java5.cp" />
+			<classpath refid="tests.jdk1.5.cp" />
 		</java>
 
         <java jvm="${file.jvm.jdk1.5}" 
@@ -632,7 +666,7 @@
         	classname="com.db4o.test.AllTestsJdk5" 
         	failonerror="true" 
         	timeout="3600000">
-			<classpath refid="tests.java5.cp" />
+			<classpath refid="tests.jdk1.5.cp" />
 			<arg value="-withExceptions" />
 		</java>
 		<java jvm="${file.jvm.jdk1.5}" 
@@ -642,7 +676,7 @@
 			failonerror="true" 
 			timeout="3000000">
 			<sysproperty key="dir.workspace" value="${dir.base}" />
-			<classpath refid="tests.java5.cp" />
+			<classpath refid="tests.jdk1.5.cp" />
 		</java>
 		<java jvm="${file.jvm.jdk1.5}" 
 			jvmargs="${java.vmargs}"
@@ -651,7 +685,7 @@
 			failonerror="true" 
 			timeout="3000000">
 			<sysproperty key="dir.workspace" value="${dir.base}" />
-			<classpath refid="tests.java5.cp" />
+			<classpath refid="tests.jdk1.5.cp" />
 		</java>
 		<java jvm="${file.jvm.jdk1.5}" 
 			jvmargs="${java.vmargs}"
@@ -659,15 +693,15 @@
 			classname="com.db4o.test.AllTestsLegacy" 
 			failonerror="true" 
 			timeout="3600000">
-			<classpath refid="tests.java5.cp" />
+			<classpath refid="tests.jdk1.5.cp" />
 			<arg value="-withExceptions" />
 		</java>
 	</target>
 	
 	<target name="run.tests.nqopt" depends="build.nqopt.tests">
-        <path id="tests.java1.2.cp">
+        <path id="tests.jdk1.2.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.2}" />
-            <pathelement location="${file.java1.2.jar}" />
+            <pathelement location="${file.jdk1.2.jar}" />
 			<pathelement location="${file.db4ounit.jar}" />
 			<pathelement location="${file.ant.jar}" />
         </path>
@@ -683,12 +717,12 @@
                 <pathelement location="${file.nqopt.jar}" />
 				<pathelement location="${file.bloat.jar}" />
 				<pathelement location="${file.instrumentation.jar}" />
-                <path refid="tests.java1.2.cp" />
+                <path refid="tests.jdk1.2.cp" />
 			</classpath>
 		</java>
 	</target>
 	
-    <target name="run.tests.concurrency" depends="build.db4ojdk1.1.tests, build.db4ojdk5.tests">
+    <target name="run.tests.concurrency" depends="build.db4ojdk1.1.tests, build.db4ojdk1.5.tests">
         <java jvm="${file.jvm.jdk1.1}" 
 			jvmargs="${java.vmargs}"
         	fork="true" 
@@ -697,7 +731,7 @@
         	timeout="1200000">
 			<classpath>
 				<pathelement path="${dir.dist.classes.test.jdk1.1}" />
-				<pathelement location="${file.java1.1.jar}" />
+				<pathelement location="${file.jdk1.1.jar}" />
                 <pathelement path="${file.db4ounit.jar}" />
 				<pathelement location="${path.classpath.jdk1.1}" />
 			</classpath>
@@ -712,7 +746,7 @@
         	timeout="3600000">
 			<classpath>
 				<pathelement path="${dir.dist.classes.test.jdk1.5}" />
-                <pathelement location="${file.java5.jar}" />
+                <pathelement location="${file.jdk1.5.jar}" />
                 <pathelement location="${file.db4ounit.jar}" />
 			</classpath>
 			<arg value="-withExceptions" />
@@ -759,7 +793,7 @@
 			timeout="1800000">
 			<classpath>
 	            <pathelement location="${file.bloat.jar}"/>
-				<pathelement location="${file.java1.2.jar}"/>
+				<pathelement location="${file.jdk1.2.jar}"/>
 				<pathelement location="${file.db4ounit.jar}" />
 			    <pathelement location="${file.instrumentation.jar}"/>
 				<pathelement location="${file.taj.jar}"/>
@@ -774,7 +808,7 @@
 		<ant antfile="run-doctor.xml" />
 	</target>
 	
-	<target name="build.jtutorial" depends="build.db4ojdk5, build.db4otools">
+	<target name="build.jtutorial" depends="build.db4ojdk1.5, build.db4otools">
 		<mkdir dir="${dir.dist.classes.tutorial}" />
 		<javac fork="true" 
             srcdir="${dir.j.tutorial.src}" 
@@ -784,7 +818,7 @@
 			debug="on" 
 			encoding="UTF-8"> 
             <classpath>
-				<pathelement path="${file.java5.jar}"/>
+				<pathelement path="${file.jdk1.5.jar}"/>
 				<pathelement path="${file.bench.jar}"/>
 			</classpath>
         </javac>
@@ -792,14 +826,14 @@
 
 	<target name="build.javadoc" depends="build.javadoc.db4oj, build.javadoc.osgi" />
 	
-	<target name="build.javadoc.db4oj" depends="init, build.db4ojdk5">
-		<javadoc classpath="${file.java5.jar}" 
+	<target name="build.javadoc.db4oj" depends="init, build.db4ojdk1.5">
+		<javadoc classpath="${file.jdk1.5.jar}" 
             access="public" 
             windowtitle="db4o - database for objects - documentation" 
             header="db4o ${db4o.version.dotted}" 
             destdir="${dir.dist.doc.api}">
 			<bottom><![CDATA[<i>Copyright 2007 db4objects Inc. All rights reserved.</i>]]></bottom>
-			<fileset dir="${java.src.core.jdk5}" includes="com/db4o/**/*.java">
+			<fileset dir="${dir.j.core.src}" includes="com/db4o/**/*.java">
 				<exclude name="com/db4o/cs/**/*.java" />
 				<exclude name="com/db4o/internal/**/*.java" />
 				<exclude name="com/db4o/foundation/**/*.java" />
@@ -825,8 +859,8 @@
 		<copy file="${javadoc.stylesheet}" todir="${dir.dist.doc.api}" overwrite="true" />
 	</target>
 	
-	<target name="build.javadoc.osgi" depends="init, build.db4ojdk5">
-        <javadoc classpath="${file.java5.jar}" 
+	<target name="build.javadoc.osgi" depends="init, build.db4ojdk1.5">
+        <javadoc classpath="${file.jdk1.5.jar}" 
             access="public" 
             windowtitle="db4o - database for objects - documentation" 
             header="db4o ${db4o.version.dotted}" 
@@ -869,24 +903,6 @@
 				<include name="src/**/*.yap" />
 				<include name="test/**/*.*" />
 				<exclude name="test/db4oVersions/*.yap" />
-			</fileset>
-		</copy>
-		<copy todir="${dir.dist.java.src}/${name.project.jdk1.2}">
-			<fileset dir="${dir.j.jdk1.2}">
-				<include name=".project" />
-				<include name=".classpath" />
-				<include name="**/src/**/*.java" />
-				<include name="**/src/**/*.yap" />
-				<include name="test/db4oVersions/*.*" />
-			</fileset>
-		</copy>
-		<copy todir="${dir.dist.java.src}/${name.project.jdk5}">
-			<fileset dir="${dir.j.jdk5}">
-				<include name=".project" />
-				<include name=".classpath" />
-				<include name="**/src/**/*.java" />
-				<include name="**/src/**/*.yap" />
-				<include name="test/db4oVersions/*.*" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.bloat}">
@@ -1068,7 +1084,7 @@
 		</zip>
 	</target>
 	
-	<target name="cc.step.1" depends="build.db4ojava, build.db4ojava.tests, run.tests.jdk5" />
+	<target name="cc.step.1" depends="build.db4ojava, build.db4ojava.tests, run.tests.jdk1.5" />
 	<target name="cc.step.3" 
 		depends="run.tests.jdk1.1, 
 				run.tests.jdk1.2, 

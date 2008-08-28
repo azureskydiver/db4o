@@ -2,16 +2,19 @@
 
 package com.db4o.internal.cluster;
 
+import java.util.*;
+
 import com.db4o.*;
-import com.db4o.cluster.*;
+import com.db4o.cluster.Cluster;
 import com.db4o.foundation.*;
 import com.db4o.internal.query.*;
 import com.db4o.query.*;
 
 /**
+ * 
  * @exclude
  */
-public class ClusterQuery implements Query {
+public class ClusterQuery implements Query{
     
     private final Cluster _cluster;
     private final Query[] _queries;
@@ -62,10 +65,20 @@ public class ClusterQuery implements Query {
     }
 
     public Query orderDescending() {
-        throw new NotSupportedException();
+    	throw new NotSupportedException();
     }
 
 	public Query sortBy(QueryComparator comparator) {
-        throw new NotSupportedException();
+		// FIXME
+		throw new NotSupportedException();
+	}
+
+	/**
+	 * @decaf.ignore.jdk11
+	 * @sharpen.ignore
+	 */
+	public Query sortBy(Comparator comparator) {
+		// FIXME
+		throw new NotSupportedException();
 	}
 }

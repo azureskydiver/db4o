@@ -3,12 +3,14 @@
 package com.db4o.internal;
 
 
+
 /**
  * Workaround to provide the Java 5 version with a hook to add ExtObjectContainer.
  * (Generic method declarations won't match ungenerified YapStreamBase implementations
  * otherwise and implementing it directly kills .NET conversion.)
  * 
  * @exclude
+ * @decaf.ignore.implements InternalObjectContainer
  */
-public interface ObjectContainerSpec {
+public interface ObjectContainerSpec extends InternalObjectContainer {
 }

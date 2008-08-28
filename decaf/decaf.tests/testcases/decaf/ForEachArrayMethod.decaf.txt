@@ -1,4 +1,6 @@
-public class ForEachArray {
+package decaf;
+
+class ForEachArray {
 	public static void main(String[] args) {
 		{
 			final String[] argArray = fancy(args);

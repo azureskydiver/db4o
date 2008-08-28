@@ -17,6 +17,9 @@ import com.db4o.test.util.*;
 import db4ounit.*;
 import db4ounit.extensions.util.*;
 
+/**
+ * @sharpen.ignore
+ */
 public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 
 	private final static String BASE_DIR = Path4.combine(Path4.getTempPath(), "nqfileinstr");

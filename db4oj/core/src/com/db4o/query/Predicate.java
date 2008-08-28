@@ -9,18 +9,16 @@ import com.db4o.internal.*;
 
 /**
  * Base class for native queries.
- * <br><br>Native Queries allow typesafe, compile-time checked and refactorable 
- * querying, following object-oriented principles. Native Queries expressions
- * are written as if one or more lines of code would be run against all
- * instances of a class. A Native Query expression should return true to mark 
- * specific instances as part of the result set. 
- * db4o will  attempt to optimize native query expressions and execute them 
+ * <br><br>Native Queries provide the ability to run one or more lines
+ * of code against all instances of a class. Native query expressions should
+ * return true to mark specific instances as part of the result set. 
+ * db4o will  attempt to optimize native query expressions and run them 
  * against indexes and without instantiating actual objects, where this is 
  * possible.<br><br>
- * The syntax of the enclosing object for the native query expression varies,
- * depending on the language version used. Here are some examples,
- * how a simple native query will look like in some of the programming languages 
- * and dialects that db4o supports:<br><br>
+ * The syntax of the enclosing object for the native query expression varies
+ * slightly, depending on the language version used. Here are some examples,
+ * how a simple native query will look like in some of the programming languages and
+ * dialects that db4o supports:<br><br>
  * 
  * <code>
  * <b>// C# .NET 2.0</b><br>
@@ -70,9 +68,9 @@ import com.db4o.internal.*;
  * - use the delegate notation for .NET 2.0.<br>
  * - extend the Predicate class for all other language dialects<br><br>
  * A class that extends Predicate is required to 
- * implement the #match() method, following the native query
+ * implement the #match() / #Match() method, following the native query
  * conventions:<br>
- * - The name of the method is "#match()" (Java).<br>
+ * - The name of the method is "#match()" (Java) / "#Match()" (.NET).<br>
  * - The method must be public public.<br>
  * - The method returns a boolean.<br>
  * - The method takes one parameter.<br>
@@ -82,70 +80,103 @@ import com.db4o.internal.*;
  * instances that are not to be included, the match method should return
  * false.<br><br>
  */
-public abstract class Predicate implements Serializable {
+public abstract class Predicate<ExtentType> implements Serializable{
+    
+    /**
+     * public for implementation reasons, please ignore.
+     */
+	public final static String PREDICATEMETHOD_NAME="match";
 	
-    static final Class OBJECT_CLASS = Object.class;
-	
-	private Class _extentType;
+	private Class<? extends ExtentType> _extentType;
+
 	private transient Method cachedFilterMethod=null;
 	
 	public Predicate() {
 		this(null);
 	}
 
-	public Predicate(Class extentType) {
+	public Predicate(Class<? extends ExtentType> extentType) {
 		_extentType=extentType;
 	}
 
-	// IMPORTANT: must have package visibility because it is used as
-	// internal on the .net side
-	Method getFilterMethod() {
+	public Method getFilterMethod() {
 		if(cachedFilterMethod!=null) {
 			return cachedFilterMethod;
 		}
 		Method[] methods=getClass().getMethods();
-		Method untypedMethod=null;
 		for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
 			Method method=methods[methodIdx];
-			if (PredicatePlatform.isFilterMethod(method)) {
-				if (!OBJECT_CLASS.equals(method.getParameterTypes()[0])) {
+			if((method.getName().equals(PredicatePlatform.PREDICATEMETHOD_NAME))&&method.getParameterTypes().length==1) {					
+				String targetName=method.getParameterTypes()[0].getName();
+				if(!"java.lang.Object".equals(targetName)) {
 					cachedFilterMethod=method;
 					return method;
 				}
-				untypedMethod=method;
 			}
 		}
-		if(untypedMethod!=null) {
-			cachedFilterMethod=untypedMethod;
-			return untypedMethod;
-		}
 		throw new IllegalArgumentException("Invalid predicate.");
-	}
-
-	/**
-     * public for implementation reasons, please ignore.
-     */
-	public Class extentType() {
-		return (_extentType!=null ? _extentType : getFilterMethod().getParameterTypes()[0]);
 	}
 
     /**
      * public for implementation reasons, please ignore.
      */
-	public boolean appliesTo(Object candidate) {
+	@SuppressWarnings("unchecked")
+	public Class<? extends ExtentType> extentType() {
+		if (_extentType == null) {
+			_extentType = figureOutExtentType();
+		}
+		return _extentType;
+	}
+	
+	/**
+     * The match method that needs to be implemented by the user.
+     * @param candidate the candidate object passed from db4o 
+     * @return true to include an object in the resulting ObjectSet
+     * 
+     * @decaf.ignore
+     * @sharpen.ignore
+     */
+	public abstract boolean match(ExtentType candidate);
+
+	/**
+	 * @decaf.replaceFirst return filterParameterType();
+	 * @sharpen.remove FilterParameterType()
+	 */
+	private Class<? extends ExtentType> figureOutExtentType() {		
+		return extentTypeFromGenericParameter();
+	}
+
+	/**
+	 * @decaf.ignore 
+	 * @sharpen.ignore
+	 */
+	private Class<? extends ExtentType> extentTypeFromGenericParameter() {
+		Class<? extends ExtentType> extentType=filterParameterType();
+		try {
+			Type genericType=((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+			if((genericType instanceof Class)&&(extentType.isAssignableFrom((Class)genericType))) {
+				extentType=(Class<? extends ExtentType>)genericType;
+			}
+		} catch (RuntimeException e) {
+		}
+		return extentType;
+	}
+
+	private Class<? extends ExtentType> filterParameterType() {
+		return (Class<? extends ExtentType>)getFilterMethod().getParameterTypes()[0];
+	}    
+	
+    /**
+     * public for implementation reasons, please ignore.
+     */
+	public boolean appliesTo(ExtentType candidate) {
 		try {
 			Method filterMethod=getFilterMethod();
 			Platform4.setAccessible(filterMethod);
 			Object ret=filterMethod.invoke(this,new Object[]{candidate});
 			return ((Boolean)ret).booleanValue();
 		} catch (Exception e) {
-            
-            // FIXME: Exceptions should be logged for app developers,
-            // but we can't print them out here.
-            
-			// e.printStackTrace();
-            
-            
+			e.printStackTrace();
 			return false;
 		}
 	}

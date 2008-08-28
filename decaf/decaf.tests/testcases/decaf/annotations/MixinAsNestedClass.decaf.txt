@@ -2,9 +2,6 @@ package decaf.annotations;
 
 import java.io.*;
 
-/**
- * @decaf.mixin ChainedRuntimeExceptionMixin
- */
 abstract class ChainedRuntimeException extends RuntimeException {
 
     public ChainedRuntimeExceptionMixin _mixin;
@@ -23,6 +20,9 @@ abstract class ChainedRuntimeException extends RuntimeException {
 		this._mixin = new ChainedRuntimeExceptionMixin(this, msg, cause);
     }
     
+    /**
+     * @decaf.mixin
+     */
     public static class ChainedRuntimeExceptionMixin {
 
 	    private final Throwable _mixee;

@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
+import com.db4o.test.legacy.soda.collections.*;
 
 public class STHashtableU implements STClass {
 	

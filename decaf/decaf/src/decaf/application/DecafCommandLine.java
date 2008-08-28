@@ -10,5 +10,6 @@ public class DecafCommandLine {
 	public final List<String> projectReferences = new ArrayList<String>();
 	public final List<String> classpath = new ArrayList<String>();
 	public final List<TargetPlatform> targetPlatforms = new ArrayList<TargetPlatform>();
+	public boolean build;
 
 }

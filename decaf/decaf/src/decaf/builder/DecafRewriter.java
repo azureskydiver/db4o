@@ -7,6 +7,8 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
+import sharpen.core.framework.*;
+
 import decaf.config.*;
 import decaf.core.*;
 
@@ -15,7 +17,9 @@ public class DecafRewriter {
 	public static ASTRewrite rewrite(final ICompilationUnit element,
 			IProgressMonitor monitor, TargetPlatform platform, DecafConfiguration decafConfig) {
 		
-		return rewrite(parseCompilationUnit(element, monitor), platform, decafConfig);
+		final CompilationUnit ast = parseCompilationUnit(element, monitor);
+		ASTUtility.checkForProblems(ast, true);
+		return rewrite(ast, platform, decafConfig);
 	}
 
 	private static ASTRewrite rewrite(final CompilationUnit unit, TargetPlatform targetPlatform, DecafConfiguration decafConfig) {

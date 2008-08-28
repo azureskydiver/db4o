@@ -38,7 +38,7 @@ public class NativeQueryOptimizerDiagnosticsTestCase extends AbstractDb4oTestCas
 	
 	public void testNativeQueryNotOptimized() {
 		ObjectSet items = db().query(
-								new Predicate(){
+								new Predicate<Subject>(){
 									public boolean match(final Subject subject) {
 										return subject.complexName().startsWith("Test");
 									}

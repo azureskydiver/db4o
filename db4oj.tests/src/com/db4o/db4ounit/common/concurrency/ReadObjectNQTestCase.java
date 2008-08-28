@@ -15,7 +15,7 @@ public class ReadObjectNQTestCase extends Db4oClientServerTestCase {
 	public static void main(String[] args) {
 		new ReadObjectNQTestCase().runConcurrency();
 	}
-	
+
 	private static String testString = "simple test string";
 
 	protected void store() throws Exception {
@@ -40,17 +40,16 @@ public class ReadObjectNQTestCase extends Db4oClientServerTestCase {
 		Assert.areEqual(expected, result.next());
 	}
 
-	public static class MyPredicate extends Predicate {
-		public SimpleObject expected;
+	public static class MyPredicate extends Predicate<SimpleObject> {
+		SimpleObject expected;
 
-		public MyPredicate(SimpleObject o) {
+		MyPredicate(SimpleObject o) {
 			this.expected = o;
 		}
 
 		public boolean match(SimpleObject candidate) {
 			return expected.equals(candidate);
 		}
-
 	}
 
 }

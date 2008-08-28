@@ -1,23 +1,27 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
-
 package com.db4o.db4ounit.common.io;
 
-import com.db4o.foundation.*;
+import com.db4o.db4ounit.common.util.*;
 
-import db4ounit.ReflectionTestSuiteBuilder;
-import db4ounit.ConsoleTestRunner;
-import db4ounit.TestSuiteBuilder;
+import db4ounit.*;
 
-public class AllTests implements TestSuiteBuilder {
 
-	public Iterator4 iterator() {
-		return new ReflectionTestSuiteBuilder(new Class[] {
-				IoAdapterTest.class
-			}).iterator();	
+public class AllTests extends ReflectionTestSuite {
+
+	protected Class[] testCases() {
+		Class[] commonCases = {
+				IoAdapterTest.class,
+		};
+		return Db4oUnitTestUtil.mergeClasses(commonCases, stackTraceBasedCases());
 	}
 
-	public static void main(String[] args) {
-		new ConsoleTestRunner(AllTests.class).run();
+	/**
+	 * @decaf.replaceFirst return new Class[0];
+	 */
+	private Class[] stackTraceBasedCases() {
+		return new Class[] {
+				DiskFullTestCase.class,
+				StackBasedDiskFullTestCase.class,
+		};
 	}
 
 }

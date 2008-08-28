@@ -13,7 +13,7 @@ import com.db4o.query.*;
 
 
 /**
- * 
+ * @decaf.ignore.jdk11
  */
 public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
     

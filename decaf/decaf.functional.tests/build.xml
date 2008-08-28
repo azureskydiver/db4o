@@ -18,8 +18,7 @@
 	
 	<property name="db4ounit.file.path" value="." />
 	
-	<target name="test" depends="test-jdk11, test-jdk12" description="runs all the tests">
-	</target>
+	<target name="test" depends="test-jdk11, test-jdk12" description="runs all the tests" />
 	
 	<target name="test-jdk12" depends="api-test-jdk12, integration-test-jdk12" description="runs all the jdk12 tests">
 	</target>
@@ -38,9 +37,9 @@
 		</classpath>
 	</taskdef>
 
-	<target name="api-test-jdk11" depends="old-core-jar, new-core-jar" description="checks inferred API surface is the same as original">		
-	
-		<api-diff from="${build.dir}/db4o-old.jar" to="${build.dir}/db4o-decaf.jar" platform="jdk12">
+	<target name="api-test-jdk11" depends="new-core-jar" description="checks inferred API surface is the same as original">		
+		<!--
+		<api-diff from="oldjars/db4o-old-jdk11.jar" to="${build.dir}/db4o-decaf.jar" platform="jdk12">
 			<ignore class="com.db4o.foundation.ChainedRuntimeExceptionMixin" />
 			<ignore class="com.db4o.query.Predicate">
 				<method name="figureOutExtentType" />
@@ -48,20 +47,24 @@
 				<method name="&lt;clinit&gt;" />
 			</ignore>
 		</api-diff>
-		
+		-->
 	</target>
 	
-	<target name="api-test-jdk12" depends="old-core-jar-jdk12, new-core-jar-jdk12" description="checks inferred API surface is the same as original">		
+	<target name="api-test-jdk12" depends="new-core-jar-jdk12" description="checks inferred API surface is the same as original">		
 		
-		<api-diff from="${build.dir}/db4o-old-jdk12.jar" to="${build.dir}/db4o-decaf-jdk12.jar">
+		<!--
+		<api-diff from="oldjars/db4o-old-jdk12.jar" to="${build.dir}/db4o-decaf-jdk12.jar">
 			<ignore class="com.db4o.foundation.ChainedRuntimeExceptionMixin" />
 			<ignore class="com.db4o.query.Predicate">
 				<method name="figureOutExtentType" />
 				<method name="filterParameterType" />
 				<method name="&lt;clinit&gt;" />
 			</ignore>
+			<ignore class="com.db4o.ObjectSet">
+				<interface name="java.util.Iterator" />
+			</ignore>
 		</api-diff>
-			
+		-->
 	</target>
 	
 	<path id="java.1.1.cp">
@@ -112,15 +115,14 @@
 		</java>
 	</target>
 		
-	<target name="integration-test-jdk12-compilation" depends="init">
+	<target name="integration-test-jdk12-compilation" depends="init, decaf-tests">
 		
 		<mkdir dir="${build.dir}/java1.2" />
 		
 		<javac12 srcdir="${build.dir}/workspace/db4o.decaf.jdk12/src"  />
 		<javac12 srcdir="../db4ounit/src" />
 		<javac12 srcdir="../db4ounit.extensions/src" />
-		<javac12 srcdir="../db4oj.tests/src" />
-		<javac12 srcdir="../db4ojdk1.2/test/src"  />
+		<javac12 srcdir="${build.dir}/workspace/db4o.tests.decaf.jdk12/src"  />
 	
 	</target>
 	
@@ -146,52 +148,29 @@
 		</java>
 	</target>
 		
-	<target name="integration-test-jdk11-compilation">
+	<target name="integration-test-jdk11-compilation" depends="init, decaf-tests">
 		
 		<mkdir dir="${build.dir}/java1.1" />
 		
 		<javac11 srcdir="${build.dir}/workspace/db4o.decaf.jdk11/src"  />
 		<javac11 srcdir="../db4ounit/src" />
 		<javac11 srcdir="../db4ounit.extensions/src" />
-		<javac11 srcdir="../db4oj.tests/src" />
-	
+		<javac11 srcdir="${build.dir}/workspace/db4o.tests.decaf.jdk11/src"  />
+
 	</target>
 		
-	<target name="old-core-jar" depends="init">
-		<jar destfile="${build.dir}/db4o-old.jar">
-			<fileset dir="${dir.workspace}/db4oj/bin">
-				<include name="**/*.class" />
-			</fileset>
-			<!--
-			<fileset dir="${dir.workspace}/db4oj.tests/bin">
-				<include name="**/*.class" />
-			</fileset>
-			-->
-		</jar>
-	</target>
-	
 	<target name="new-core-jar" depends="decaf-core">
 		<jar destfile="${build.dir}/db4o-decaf.jar" basedir="${build.dir}/workspace/db4o.decaf.jdk11/bin">
-		</jar>
-	</target>
-	
-	<target name="old-core-jar-jdk12" depends="init">
-		<jar destfile="${build.dir}/db4o-old-jdk12.jar">
-			<fileset dir="${dir.workspace}/db4oj/bin">
-				<include name="**/*.class" />
-			</fileset>
-			<fileset dir="${dir.workspace}/db4ojdk1.2/bin/core">
-				<include name="**/*.class" />
-			</fileset>
+			<exclude name="**/com/db4o/tools/**/*.class" />
+			<exclude name="**/com/db4o/io/DebugIoAdapter.class" />
 		</jar>
 	</target>
 	
 	<target name="new-core-jar-jdk12" depends="decaf-core">
 		<jar destfile="${build.dir}/db4o-decaf-jdk12.jar" basedir="${build.dir}/workspace/db4o.decaf.jdk12/bin">
+			<exclude name="**/com/db4o/tools/**/*.class" />
+			<exclude name="**/com/db4o/io/DebugIoAdapter.class" />
 		</jar>
-	</target>
-	
-	<target name="clean-decaf" depends="clean, decaf-core">
 	</target>
 	
 	<target name="decaf-core" depends="decaf-workspace, install-decaf-plugin">
@@ -203,6 +182,8 @@
 
 				<arg value="-targetPlatform" />
 				<arg value="jdk12" />
+				
+				<arg value="-build"  />
 			</args>
 		</decaf>
 	</target>
@@ -224,6 +205,12 @@
 				<arg value="db4o" />
 				<arg value="-cp" />
 				<arg path="${build.dir}/db4ounit-all.jar" />
+
+				<arg value="-targetPlatform" />
+				<arg value="jdk11" />
+
+				<arg value="-targetPlatform" />
+				<arg value="jdk12" />
 			</args>
 		</decaf>
 
@@ -241,18 +228,6 @@
 			</sources>
 		</prepare-workspace>
 
-		<copy todir="${build.dir}/workspace/db4o" overwrite="true">
-			<fileset dir="${dir.workspace}/db4ojdk1.2/core">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-
-		<copy todir="${build.dir}/workspace/db4o" overwrite="true">
-			<fileset dir="${dir.workspace}/db4ojdk5/core">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-
 		<prepare-workspace dir="${build.dir}/workspace" project="db4o.tests">
 			<sources>
 				<fileset dir="${dir.workspace}/db4oj.tests">
@@ -261,18 +236,6 @@
 			</sources>
 		</prepare-workspace>
 			
-		<copy todir="${build.dir}/workspace/db4o.tests" overwrite="true">
-			<fileset dir="${dir.workspace}/db4ojdk1.2/test">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-
-		<copy todir="${build.dir}/workspace/db4o.tests" overwrite="true">
-			<fileset dir="${dir.workspace}/db4ojdk5/test">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-
 	</target>
 
 	<target name="init">

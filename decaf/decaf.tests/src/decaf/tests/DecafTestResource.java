@@ -17,11 +17,6 @@ public class DecafTestResource extends TestCaseResource {
 		super(originalPath);
 		_targetPlatform = targetPlatform;
 	}
-
-	@Override
-	public String packageName() {
-		return _targetPlatform.appendPlatformId(super.packageName(), ".");
-	}
 	
 	@Override
 	protected String expectedPathSuffix() {

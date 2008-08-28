@@ -368,7 +368,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
         }
     }
 
-    public ObjectSet query(Predicate predicate, QueryComparator comparator) throws Db4oIOException,
+    public <T> ObjectSet<T> query(Predicate<T> predicate, QueryComparator<T> comparator) throws Db4oIOException,
         DatabaseClosedException {
         synchronized(lock()){
             checkClosed();

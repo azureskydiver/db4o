@@ -14,7 +14,10 @@ import com.db4o.test.legacy.soda.arrays.untyped.*;
 import com.db4o.test.legacy.soda.classes.simple.*;
 import com.db4o.test.legacy.soda.classes.typedhierarchy.*;
 import com.db4o.test.legacy.soda.classes.untypedhierarchy.*;
+import com.db4o.test.legacy.soda.collections.*;
+import com.db4o.test.legacy.soda.deepOR.*;
 import com.db4o.test.legacy.soda.engines.db4o.*;
+import com.db4o.test.legacy.soda.experiments.*;
 import com.db4o.test.legacy.soda.joins.typed.*;
 import com.db4o.test.legacy.soda.joins.untyped.*;
 import com.db4o.test.legacy.soda.ordered.*;
@@ -30,8 +33,19 @@ public class SodaTest {
         // new STDb4oClientServer()
     };
 
-    public static final STClass[] CLASSES =
-        new STClass[] {
+    public static final STClass[] CLASSES = sodaTestCases();
+    
+    private static STClass[] sodaTestCases() {
+    	STClass[] commonCases = commonTestCases();
+    	STClass[] collectionCases = collectionTestCases();
+    	STClass[] allCases = new STClass[commonCases.length + collectionCases.length];
+    	System.arraycopy(commonCases, 0, allCases, 0, commonCases.length);
+    	System.arraycopy(collectionCases, 0, allCases, commonCases.length, collectionCases.length);
+    	return allCases;
+    }
+    
+    private static STClass[] commonTestCases() {
+        return new STClass[] {
             new STArrMixed(),
             new STArrStringO(),
             new STArrStringON(),
@@ -54,6 +68,7 @@ public class SodaTest {
             new STByte(),
             new STByteWT(),
             new STByteWU(),
+            new STCaseInsensitive(),
             new STChar(),
             new STCharWT(),
             new STCharWU(),
@@ -66,12 +81,25 @@ public class SodaTest {
             new STFloat(),
             new STFloatWT(),
             new STFloatWU(),
+            
+            // QBE is no longer supported where the
+            // query can't be expressed with SODA
+            // new STHashtableD(),
+            // new STHashtableED(),
+            
+            new STHashtableET(),
+            new STHashtableEU(),
+            new STHashtableT(),
+            new STHashtableU(),
+            new STIdentityEvaluation(),
             new STInteger(),
             new STIntegerWT(),
             new STIntegerWU(),
             new STLong(),
             new STLongWT(),
             new STLongWU(),
+            new STNullOnPath(),
+			new STOrContains(), 
             new STOrT(),
             new STOrU(),
             new STOString(),
@@ -82,11 +110,42 @@ public class SodaTest {
             new STShort(),
             new STShortWT(),
             new STShortWU(),
+            new STString(),
             new STStringU(),
             new STRUH1(),
             new STTH1(),
             new STUH1(),
+            
+            // QBE is no longer supported where the
+            // query can't be expressed with SODA
+            // new STVectorD(),
+            // new STVectorED(),
+            
+            new STVectorT(),
+            new STVectorU(),
+            new STVectorET(),
+            new STVectorEU(),
+        	new STMagic(),
        };
+    }
+
+    /**
+     * @decaf.replaceFirst.jdk11 return new STClass[0];
+     */
+    private static STClass[] collectionTestCases() {
+        return new STClass[] {
+            new STArrayListT(),
+            new STArrayListU(),
+            new STHashSetT(),
+            new STHashSetU(),
+            new STLinkedListT(),
+            new STLinkedListU(),
+            new STOwnCollectionT(),
+            new STOwnCollectionW(),
+            new STTreeSetT(),
+            new STTreeSetU(),
+       };
+    }
 
 		protected static final boolean quiet = false;
         protected static STEngine engine;
@@ -168,7 +227,7 @@ public class SodaTest {
                         Method method = methods[j];
                         if (method.getName().startsWith("test")) {
                             try {
-                                method.invoke(classes[i], (Object[])null);
+                                method.invoke(classes[i], null);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

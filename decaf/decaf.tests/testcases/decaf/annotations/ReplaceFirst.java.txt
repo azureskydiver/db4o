@@ -5,7 +5,7 @@ class ReplaceFirst {
 	/**
 	 * @decaf.replaceFirst return "bar";
 	 */
-	public void foo() {
+	public String foo() {
 		return "foo";
 	}
 }

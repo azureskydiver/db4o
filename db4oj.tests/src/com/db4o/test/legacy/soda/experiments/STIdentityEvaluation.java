@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
 
+
 public class STIdentityEvaluation implements STClass1{
     
     public static transient SodaTest st;
