@@ -5,6 +5,7 @@ package com.db4o.test.legacy.soda.experiments;
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
 
+
 public class STNullOnPath implements STClass {
 
 	public static transient SodaTest st;

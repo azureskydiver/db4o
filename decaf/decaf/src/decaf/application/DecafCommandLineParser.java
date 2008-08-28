@@ -34,6 +34,8 @@ public class DecafCommandLineParser extends CommandLineParser {
 			_commandLine.classpath.add(consumeNext());
 		} else if (areEqual(arg, "-targetPlatform")) {
 			_commandLine.targetPlatforms.add(TargetPlatform.valueOf(consumeNext().toUpperCase()));
+		} else if (areEqual(arg, "-build")) {
+			_commandLine.build = true;
 		} else {
 			illegalArgument(arg);
 		}

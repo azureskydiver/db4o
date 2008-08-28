@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
 import com.db4o.test.legacy.soda.arrays.typed.*;
+import com.db4o.test.legacy.soda.classes.simple.*;
 
 
 public class STString implements STClass1, STInterface {
@@ -83,6 +84,19 @@ public class STString implements STClass1, STInterface {
 		st.expectOne(q,store()[3]);
 	}
 
+	public void testNotLike() {
+		Query q = st.query();
+		Constraint c = q.constrain(new STString("aaa"));
+		q.descend("str").constraints().like().not();
+		st.expect(
+			q,
+			new Object[] { new STString(null), new STString("bbb"), new STString("dod")});
+		q = st.query();
+		c = q.constrain(new STString("xxx"));
+		q.descend("str").constraints().like();
+		st.expectNone(q);
+	}
+
 	public void testStartsWith() {
 		Query q = st.query();
 		Constraint c = q.constrain(new STString("do"));
@@ -107,19 +121,6 @@ public class STString implements STClass1, STInterface {
 		c = q.constrain(new STString("D"));
 		q.descend("str").constraints().endsWith(false);
 		st.expectOne(q, new STString("dod"));
-	}
-
-	public void testNotLike() {
-		Query q = st.query();
-		Constraint c = q.constrain(new STString("aaa"));
-		q.descend("str").constraints().like().not();
-		st.expect(
-			q,
-			new Object[] { new STString(null), new STString("bbb"), new STString("dod")});
-		q = st.query();
-		c = q.constrain(new STString("xxx"));
-		q.descend("str").constraints().like();
-		st.expectNone(q);
 	}
 
 	public void testIdentity() {
@@ -181,6 +182,7 @@ public class STString implements STClass1, STInterface {
 		q.constrain(new Evaluation() {
 			public void evaluate(Candidate candidate) {
 				STString sts = (STString) candidate.getObject();
+				// FIXME: NPE expected here?
 				candidate.include(sts.str.indexOf("od") == 1);
 			}
 		});
@@ -193,6 +195,7 @@ public class STString implements STClass1, STInterface {
         q.constrain(new Evaluation() {
             public void evaluate(Candidate candidate) {
                 STString sts = (STString) candidate.getObject();
+                // FIXME: NPE expected?
                 candidate.include(sts.str.toLowerCase().indexOf("od") >= 0);
             }
         });

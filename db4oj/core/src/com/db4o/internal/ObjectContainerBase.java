@@ -2,18 +2,27 @@
 
 package com.db4o.internal;
 
+import java.util.*;
+
+import com.db4o.*;
 import com.db4o.config.*;
-
-
+import com.db4o.query.*;
 
 /**
  * @exclude
- * @sharpen.partial
- * @sharpen.ignore
+ * @sharpen.extends System.IDisposable
  */
 public abstract class ObjectContainerBase extends PartialObjectContainer {
 	
 	public ObjectContainerBase(Configuration config,ObjectContainerBase a_parent) {
 		super(config,a_parent);
+	}
+	
+	/**
+     * @decaf.ignore.jdk11
+     * @sharpen.ignore
+     */
+    public ObjectSet query(Predicate predicate,Comparator comparator) {
+		return query(null, predicate,new JdkComparatorWrapper(comparator));
 	}
 }

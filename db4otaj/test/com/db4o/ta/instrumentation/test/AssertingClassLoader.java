@@ -12,6 +12,8 @@ import db4ounit.*;
 /**
  * Creates a separate environment to load classes ({@link ExcludingClassLoader}
  * so they can be asserted after instrumentation.
+ * 
+ * @sharpen.ignore
  */
 public class AssertingClassLoader {
 

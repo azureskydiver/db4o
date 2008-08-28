@@ -2,11 +2,17 @@
 
 package com.db4o.test.nativequery;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.query.*;
 import com.db4o.test.*;
 
 
+
+/**
+ * @decaf.ignore.jdk11
+ */
 public class Cat {
     
     public String name;
@@ -20,7 +26,6 @@ public class Cat {
     }
     
     public void store(){
-        Test.deleteAllInstances(Cat.class);
         Test.store(new Cat("Fritz"));
         Test.store(new Cat("Garfield"));
         Test.store(new Cat("Tom"));
@@ -30,12 +35,15 @@ public class Cat {
     
     public void test(){
         ObjectContainer objectContainer = Test.objectContainer();
-        ObjectSet objectSet = objectContainer.query(new CatPredicate());
-        Test.ensure(objectSet.size() == 2);
+        List<Cat> list = objectContainer.query(new Predicate <Cat> () {
+            public boolean match(Cat cat){
+                return cat.name.equals("Occam") || cat.name.equals("Zora"); 
+            }
+        });
+        Test.ensure(list.size() == 2);
         String[] lookingFor = new String[] {"Occam" , "Zora"};
         boolean[] found = new boolean[2];
-        while(objectSet.hasNext()){
-            Cat cat = (Cat)objectSet.next();
+        for (Cat cat : list){
             for (int i = 0; i < lookingFor.length; i++) {
                 if(cat.name.equals(lookingFor[i])){
                     found[i] = true;
@@ -47,10 +55,5 @@ public class Cat {
         }
     }
     
-    public static class CatPredicate extends Predicate{
-        public boolean match(Cat cat){
-            return cat.name.equals("Occam") || cat.name.equals("Zora"); 
-        }
-    }
 
 }

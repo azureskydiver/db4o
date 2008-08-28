@@ -2,35 +2,31 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import com.db4o.*;
+import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
 import com.db4o.query.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
 
+
 public class ComparatorSortTestCase extends AbstractDb4oTestCase {
-	
-	public static void main(String[] args) {
-		new ComparatorSortTestCase().runAll();
-	}
-	
-	public static class AscendingIdComparator implements QueryComparator {
-		public int compare(Object first, Object second) {
-			return ((Item)first)._id-((Item)second)._id;
+	public static class AscendingIdComparator implements QueryComparator<Item> {
+		public int compare(Item first, Item second) {
+			return first._id-second._id;
 		}
 	}
 
-	public static class DescendingIdComparator implements QueryComparator {
-		public int compare(Object first, Object second) {
-			return ((Item)second)._id-((Item)first)._id;
+	public static class DescendingIdComparator implements QueryComparator<Item> {
+		public int compare(Item first, Item second) {
+			return second._id-first._id;
 		}
 	}
 
-	public static class OddEvenIdComparator implements QueryComparator {
-		public int compare(Object first, Object second) {
-			int idA=((Item)first)._id;
-			int idB=((Item)second)._id;
+	public static class OddEvenIdComparator implements QueryComparator<Item> {
+		public int compare(Item first, Item second) {
+			int idA=first._id;
+			int idB=second._id;
 			int modA=idA%2;
 			int modB=idB%2;
 			if(modA!=modB) {
@@ -40,14 +36,13 @@ public class ComparatorSortTestCase extends AbstractDb4oTestCase {
 		}
 	}
 
-	public static class AscendingNameComparator implements QueryComparator {
-		public int compare(Object first, Object second) {
-			return ((Item)first)._name.compareTo(((Item)second)._name);
+	public static class AscendingNameComparator implements QueryComparator<Item> {
+		public int compare(Item first, Item second) {
+			return first._name.compareTo(second._name);
 		}
 	}
 
-	public static class SmallerThanThreePredicate extends Predicate {
-		// FIXME: #COR-736 The test fails if we use Object as the parameter type.
+	public static class SmallerThanThreePredicate extends Predicate<Item> {
 		public boolean match(Item candidate) {
 			return candidate._id<3;
 		}
@@ -149,7 +144,7 @@ public class ComparatorSortTestCase extends AbstractDb4oTestCase {
 	private void assertIdOrder(Query query,QueryComparator comparator,int[] ids) {
 		query.sortBy(comparator);
 		ObjectSet result=query.execute();
-		assertIdOrder(result,ids); 
+		assertIdOrder(result,ids);
 	}
 
 	private void assertIdOrder(ObjectSet result,int[] ids) {

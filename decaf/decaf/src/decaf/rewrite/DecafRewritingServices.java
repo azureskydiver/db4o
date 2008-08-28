@@ -15,10 +15,11 @@ public class DecafRewritingServices {
 		_builder = builder;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <T extends ASTNode> T move(T node) {
-		return (T) rewrite().createMoveTarget(node);
+		return (T)rewrite().createMoveTarget(node);
 	}
-
+	
 	public <T extends ASTNode> T safeMove(final T arg) {
 		return builder().isExistingNode(arg) ? move(arg) : arg;
 	}
@@ -88,6 +89,7 @@ public class DecafRewritingServices {
 		return rewrite().createStringPlaceholder(code, nodeType);
 	}
 
+	@SuppressWarnings("unchecked")
 	public MethodInvocation unboxedMethodInvocation(final Expression expression) {
 		Expression modified = expression;
 		if(expression.getNodeType() == ASTNode.METHOD_INVOCATION) {
@@ -107,6 +109,7 @@ public class DecafRewritingServices {
 		return (expression == modified ? unbox(modified) : unboxModified(expression, modified));
 	}
 
+	@SuppressWarnings("unchecked")
 	public ClassInstanceCreation box(final Expression expression) {
 		SimpleType type = builder().newSimpleType(builder().boxedTypeFor(expression.resolveTypeBinding()));
 		final ClassInstanceCreation creation = builder().newClassInstanceCreation(type);

@@ -15,7 +15,7 @@ public class Collections4 {
 		}		
 
 		public void add(Object element) {
-			throw new IllegalStateException();
+			throw new UnsupportedOperationException();
 		}
 
 		public boolean isEmpty() {
@@ -35,11 +35,15 @@ public class Collections4 {
 		}
 
 		public void clear() {
-			_sequence.clear();
+			throw new UnsupportedOperationException();
 		}
 
 		public Object remove(Object obj) {
-			return _sequence.remove(obj);
+			throw new UnsupportedOperationException();
+		}
+
+		public boolean contains(Object obj) {
+			return _sequence.contains(obj);
 		}
 		
 	}

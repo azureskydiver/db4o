@@ -27,8 +27,8 @@ class MethodArgBoxing {
 	}
 
 	public void convertArgs() {
-		int i = convertToWrapper(new Integer(42));
-		Integer i = convertToPrimitive(42);
+		int intValue = convertToWrapper(new Integer(42));
+		Integer intRef = convertToPrimitive(42);
 	}
 
 }

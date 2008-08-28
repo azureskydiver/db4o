@@ -80,12 +80,15 @@ public abstract class DecafTestCaseBase extends TestCase {
 	protected void runResourceTestCaseWithConfig(String resourceName, TargetPlatform targetPlatform, DecafConfiguration config) throws Exception {
 		DecafTestResource resource = testResourceFor(resourceName, targetPlatform);
 		ICompilationUnit cu = createCompilationUnit(resource);
-	
-		IFile decafFile = decafFileFor(cu.getResource(), targetPlatform);
-	
-		FileRewriter.rewriteFile(DecafRewriter.rewrite(cu, null, targetPlatform, config), decafFile.getFullPath());
-	
-		resource.assertFile(decafFile);
+		try {
+			IFile decafFile = decafFileFor(cu.getResource(), targetPlatform);
+		
+			FileRewriter.rewriteFile(DecafRewriter.rewrite(cu, null, targetPlatform, config), decafFile.getFullPath());
+		
+			resource.assertFile(decafFile);
+		} finally {
+			cu.getResource().delete(true, null);
+		}
 	}
 
 	private DecafTestResource testResourceFor(String name,
@@ -123,8 +126,21 @@ public abstract class DecafTestCaseBase extends TestCase {
 		return targetFolder;
 	}
 
+	protected void addNQPredicateDefinition() throws CoreException {
+		String content =
+			"package com.db4o.query;\n\n" +
+			"public abstract class Predicate<E> {\n" +
+			"  public abstract boolean match(E candidate);\n" +
+			"}\n";
+		createCompilationUnit("com.db4o.query", "Predicate.java", content);
+	}
+	
 	private ICompilationUnit createCompilationUnit(DecafTestResource resource) throws CoreException, IOException {
-		return _project.createCompilationUnit(resource.packageName(), resource.javaFileName(), resource.actualStringContents());
+		return createCompilationUnit(resource.packageName(), resource.javaFileName(), resource.actualStringContents());
+	}
+
+	private ICompilationUnit createCompilationUnit(String packageName, String javaFileName, String contents) throws CoreException {
+		return _project.createCompilationUnit(packageName, javaFileName, contents);
 	}
 
 }

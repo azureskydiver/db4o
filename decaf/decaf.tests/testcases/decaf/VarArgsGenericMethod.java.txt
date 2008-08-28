@@ -1,3 +1,5 @@
+package decaf;
+
 public class VarArgsGenericMethod {
 	public <T> void testVarArgs(int value, T... args) {
 	}

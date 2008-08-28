@@ -15,11 +15,11 @@ public class MixinProcessor {
 	private final TypeDeclaration _node;
 	private final DecafRewritingContext _context;
 
-	public MixinProcessor(DecafRewritingContext context, TypeDeclaration node, String mixinTypeName) {
+	public MixinProcessor(DecafRewritingContext context, TypeDeclaration node, TypeDeclaration mixinType) {
 		_context = context;
 		_node = node;
 		_nodeDeclarationsRewrite = getListRewrite(node, TypeDeclaration.BODY_DECLARATIONS_PROPERTY);
-		_mixin = resolveMixin(mixinTypeName);
+		_mixin = mixinType;
 		_mixinField = newMixinFieldDeclaration();
 		
 	}
@@ -32,6 +32,7 @@ public class MixinProcessor {
 		introduceMixinInstantiations();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void introduceMixinInstantiations() {
 		for (MethodDeclaration node : _node.getMethods()) {
 			if (!node.isConstructor()) {
@@ -85,6 +86,7 @@ public class MixinProcessor {
 		return newPublicField(_mixin.resolveBinding(), "_mixin");
 	}
 
+	@SuppressWarnings("unchecked")
 	private FieldDeclaration newPublicField(final ITypeBinding fieldType,
 			final String fieldName) {
 		final FieldDeclaration mixinField = newField(newType(fieldType), fieldName, null);
@@ -100,37 +102,8 @@ public class MixinProcessor {
 	private FieldDeclaration newField(Type fieldType, String fieldName, Expression initializer) {
 		return builder().newField(fieldType, fieldName, initializer);
 	}
-
-	private TypeDeclaration resolveMixin(String mixinTypeName) {
-		final TypeDeclaration nested = resolveNestedType(mixinTypeName);
-		if (null != nested) return nested;
-		final TypeDeclaration sibling = resolveSiblingType(mixinTypeName);
-		if (null != sibling) return sibling;
-		throw new IllegalArgumentException("Type '" + mixinTypeName + "' must be defined in the same file as '" + _node.getName() + "'.");
-	}
-
-	private TypeDeclaration resolveNestedType(String typeName) {
-		return resolveType(Arrays.asList(_node.getTypes()), typeName);
-	}
-
-	private TypeDeclaration resolveSiblingType(String typeName) {
-		return resolveType(compilationUnit().types(), typeName);
-	}
-
-	private CompilationUnit compilationUnit() {
-		return (CompilationUnit) _node.getParent();
-	}
-
-	private TypeDeclaration resolveType(final List types, String typeName) {
-		for (Object o : types) {
-			final TypeDeclaration typeDeclaration = (TypeDeclaration)o;
-			if (typeDeclaration.getName().toString().equals(typeName)) {
-				return typeDeclaration;
-			}
-		}
-		return null;
-	}
 	
+	@SuppressWarnings("unchecked")
 	private void addParametersToArgumentList(MethodDeclaration node,
 			final List argumentList) {
 		for (Object o : node.parameters()) {

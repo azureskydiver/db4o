@@ -2,10 +2,15 @@
 
 package com.db4o.internal;
 
+import java.util.*;
+
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
+
 
 /**
  * @exclude
- * @sharpen.partial
  * @sharpen.ignore
  */
 public class EmbeddedClientObjectContainer extends PartialEmbeddedClientObjectContainer implements InternalObjectContainer {
@@ -16,6 +21,15 @@ public class EmbeddedClientObjectContainer extends PartialEmbeddedClientObjectCo
 
     public EmbeddedClientObjectContainer(LocalObjectContainer server, Transaction trans) {
         super(server, trans);
+    }
+
+    /**
+     * @decaf.ignore.jdk11
+     * @sharpen.ignore
+     */
+    public ObjectSet query(Predicate predicate, Comparator comparator) throws Db4oIOException,
+        DatabaseClosedException {
+        return _server.query(_transaction, predicate, new JdkComparatorWrapper(comparator)); 
     }
 
 }

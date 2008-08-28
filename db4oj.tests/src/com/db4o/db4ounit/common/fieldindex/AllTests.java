@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.fieldindex;
 
+import com.db4o.db4ounit.common.util.*;
+
 import db4ounit.extensions.Db4oTestSuite;
 
 public class AllTests extends Db4oTestSuite {
@@ -26,9 +28,6 @@ public class AllTests extends Db4oTestSuite {
 	            StringIndexWithSuperClassTestCase.class,
 		};
 		
-		Class[] tests=new Class[fieldBased.length+neutral.length];
-    	System.arraycopy(neutral, 0, tests, 0, neutral.length);
-    	System.arraycopy(fieldBased, 0, tests, neutral.length, fieldBased.length);
-        return tests;
+		return Db4oUnitTestUtil.mergeClasses(neutral, fieldBased);
     }
 }

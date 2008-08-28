@@ -2,7 +2,8 @@
 
 package  com.db4o;
 
-import com.db4o.constraints.*;
+import java.util.*;
+
 import com.db4o.ext.*;
 import com.db4o.query.*;
 
@@ -22,15 +23,13 @@ import com.db4o.query.*;
  * {@link ObjectServer#openClient() connect locally} or
  * {@link Db4o#openClient(String, int, String, String) over TCP}.
  * @see ExtObjectContainer ExtObjectContainer for extended functionality.
- * 
- * @sharpen.partial
  * @sharpen.ignore
  */
 public interface ObjectContainer {
 	
     /**
      * activates all members on a stored object to the specified depth.
-	 * <br><br>
+     * <br><br>
      * See {@link com.db4o.config.Configuration#activationDepth(int) "Why activation"}
      * for an explanation why activation is necessary.<br><br>
      * The activate method activates a graph of persistent objects in memory.
@@ -50,28 +49,28 @@ public interface ObjectContainer {
      * A successful call to activate triggers the callback method
      * {@link com.db4o.ext.ObjectCallbacks#objectOnActivate objectOnActivate}
      * which can be used for cascaded activation.<br><br>
-	 * @see com.db4o.config.Configuration#activationDepth Why activation?
-	 * @see ObjectCallbacks Using callbacks
+     * @see com.db4o.config.Configuration#activationDepth Why activation?
+     * @see ObjectCallbacks Using callbacks
      * @param obj the object to be activated.
-	 * @param depth the member {@link com.db4o.config.Configuration#activationDepth depth}
-	 *  to which activate is to cascade.
-	 *  @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @param depth the member {@link com.db4o.config.Configuration#activationDepth depth}
+     *  to which activate is to cascade.
+     *  @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
 	 *  @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
     public void activate (Object obj, int depth) throws Db4oIOException, DatabaseClosedException;
     
     /**
-     * closes this ObjectContainer.
-     * <br><br>A call to close() automatically performs a 
+     * closes the <code>ObjectContainer</code>.
+     * <br><br>A call to <code>close()</code> automatically performs a 
      * {@link #commit commit()}.
-     * <br><br>Note that every session opened with {@link com.db4o.Db4o#openFile(String)} requires one
-     * close() call, even if the same filename was used multiple times.<br><br>
+     * <br><br>Note that every session opened with Db4o.openFile() requires one
+     * close()call, even if the same filename was used multiple times.<br><br>
      * Use <code>while(!close()){}</code> to kill all sessions using this container.<br><br>
      * @return success - true denotes that the last used instance of this container
      * and the database file were closed.
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      */
-	public boolean close() throws Db4oIOException;
+	public boolean close () throws Db4oIOException;
 
     /**
      * commits the running transaction.
@@ -80,17 +79,14 @@ public interface ObjectContainer {
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      * @throws DatabaseReadOnlyException database was configured as read-only.
-     * @throws UniqueFieldValueConstraintViolationException 
      */
-    public void commit() throws Db4oIOException, DatabaseClosedException,
-			DatabaseReadOnlyException,
-			UniqueFieldValueConstraintViolationException;
+    public void commit () throws Db4oIOException, DatabaseClosedException, DatabaseReadOnlyException;
     
 
     /**
      * deactivates a stored object by setting all members to <code>NULL</code>.
      * <br>Primitive types will be set to their default values.
-     * <br><br>
+     * <br><br><b>Examples: ../com/db4o/samples/activate.</b><br><br>
      * Calls to this method save memory.
      * The method has no effect, if the passed object is not stored in the
      * <code>ObjectContainer</code>.<br><br>
@@ -187,7 +183,7 @@ public interface ObjectContainer {
 	 * @throws DatabaseClosedException db4o database file was closed or failed to open.
 	 * @deprecated Use {@link #queryByExample(Object)} instead
 	 */
-	public ObjectSet get (Object template) throws Db4oIOException, DatabaseClosedException;
+	public <T> ObjectSet<T> get (Object template) throws Db4oIOException, DatabaseClosedException;
 
 	/**
      * Query-By-Example interface to retrieve objects.
@@ -227,10 +223,10 @@ public interface ObjectContainer {
 	 * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
 	 * @throws DatabaseClosedException db4o database file was closed or failed to open.
 	 */
-    public ObjectSet queryByExample (Object template) throws Db4oIOException, DatabaseClosedException;
+    public <T> ObjectSet<T> queryByExample (Object template) throws Db4oIOException, DatabaseClosedException;
     
     /**
-     * creates a new SODA {@link Query Query}.
+     * creates a new S.O.D.A. {@link Query Query}.
      * <br><br>
      * Use {@link #queryByExample(Object)} for simple Query-By-Example.<br><br>
      * {@link #query(Predicate) Native queries } are the recommended main db4o query
@@ -248,7 +244,7 @@ public interface ObjectContainer {
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
-    public ObjectSet query(Class clazz) throws Db4oIOException, DatabaseClosedException;
+    public <TargetType> ObjectSet <TargetType> query(Class<TargetType> clazz) throws Db4oIOException, DatabaseClosedException;
 
     
     /**
@@ -308,15 +304,16 @@ public interface ObjectContainer {
      * &#160;&#160;&#160;}<br>
      * });<br>
      * </code>
+
      * <br>
      * Summing up the above:<br>
      * In order to run a Native Query, you can<br>
      * - use the delegate notation for .NET 2.0.<br>
      * - extend the Predicate class for all other language dialects<br><br>
      * A class that extends Predicate is required to 
-     * implement the #match() method, following the native query
+     * implement the #match() / #Match() method, following the native query
      * conventions:<br>
-     * - The name of the method is "#match()"<br>
+     * - The name of the method is "#match()" (Java) / "#Match()" (.NET).<br>
      * - The method must be public public.<br>
      * - The method returns a boolean.<br>
      * - The method takes one parameter.<br>
@@ -331,27 +328,39 @@ public interface ObjectContainer {
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
-    public ObjectSet query(Predicate predicate) throws Db4oIOException, DatabaseClosedException;
+    public <TargetType> ObjectSet <TargetType> query(Predicate<TargetType> predicate) throws Db4oIOException, DatabaseClosedException;
 
     /**
      * Native Query Interface. Queries as with {@link com.db4o.ObjectContainer#query(com.db4o.query.Predicate)},
      * but will sort the resulting {@link com.db4o.ObjectSet} according to the given {@link com.db4o.query.QueryComparator}.
      * 
      * @param predicate the {@link Predicate} containing the native query expression.
-     * @param comparator the {@link com.db4o.query.QueryComparator} specifiying the sort order of the result
+     * @param comparator the {@link QueryComparator} specifiying the sort order of the result
      * @return the {@link ObjectSet} returned by the query.
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
-    public ObjectSet query(Predicate predicate,QueryComparator comparator) throws Db4oIOException, DatabaseClosedException;
+    public <TargetType> ObjectSet <TargetType> query(Predicate<TargetType> predicate,QueryComparator<TargetType> comparator) throws Db4oIOException, DatabaseClosedException;
+
+    /**
+     * Native Query Interface. Queries as with {@link com.db4o.ObjectContainer#query(com.db4o.query.Predicate)},
+     * but will sort the resulting {@link com.db4o.ObjectSet} according to the given {@link com.db4o.query.QueryComparator}.
+     * 
+     * @param predicate the {@link Predicate} containing the native query expression.
+     * @param comparator the java.util.Comparator specifying the sort order of the result
+     * @return the {@link ObjectSet} returned by the query.
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
+     * @decaf.ignore.jdk11
+     * @sharpen.ignore
+     */
+    public <TargetType> ObjectSet <TargetType> query(Predicate<TargetType> predicate,Comparator<TargetType> comparator) throws Db4oIOException, DatabaseClosedException;
 
     /**
      * rolls back the running transaction.
-     * <br><br>Transactions are back-to-back. A call to rollback will starts
-     * a new transaction immedidately.
-     * <br><br>rollback will not restore modified objects in memory. They
-     * can be refreshed from the database by calling 
-     * {@link ExtObjectContainer#refresh(Object, int)}.
+     * <br><br>Modified application objects im memory are not restored.
+     * Use combined calls to {@link #deactivate deactivate()}
+     * and {@link #activate activate()} to reload an objects member values.
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      * @throws DatabaseReadOnlyException database was configured as read-only.
@@ -376,7 +385,7 @@ public interface ObjectContainer {
 	 * update depth was configured or cascaded updates were 
 	 * {@link com.db4o.config.ObjectClass#cascadeOnUpdate defined in the class}
 	 * or in {@link com.db4o.config.ObjectField#cascadeOnUpdate one of the member fields}.
-	 * <br><br>
+	 * <br><br><b>Examples: ../com/db4o/samples/update.</b><br><br>
 	 * Depending if the passed object is newly stored or updated, the
 	 * callback method
 	 * {@link com.db4o.ext.ObjectCallbacks#objectOnNew objectOnNew} or
@@ -384,7 +393,7 @@ public interface ObjectContainer {
 	 * {@link com.db4o.ext.ObjectCallbacks#objectOnUpdate objectOnUpdate}
 	 * might also be used for cascaded updates.<br><br>
 	 * @param obj the object to be stored or updated.
-	 * @see ExtObjectContainer#store(java.lang.Object, int) ExtObjectContainer#store(object, depth)
+	 * @see ExtObjectContainer#store(java.lang.Object, int) ExtObjectContainer#set(object, depth)
 	 * @see com.db4o.config.Configuration#updateDepth
 	 * @see com.db4o.config.ObjectClass#updateDepth
 	 * @see com.db4o.config.ObjectClass#cascadeOnUpdate
@@ -399,7 +408,7 @@ public interface ObjectContainer {
 	/**
      * newly stores objects or updates stored objects.
      * <br><br>An object not yet stored in the <code>ObjectContainer</code> will be
-     * stored when it is passed to <code>store()</code>. An object already stored
+     * stored when it is passed to <code>set()</code>. An object already stored
      * in the <code>ObjectContainer</code> will be updated.
      * <br><br><b>Updates</b><br>
 	 * - will affect all simple type object members.<br>
@@ -408,13 +417,13 @@ public interface ObjectContainer {
 	 * new members, as long as further new members are found.<br>
      * - object members that are already stored will <b>not</b> be updated
      * themselves.<br>Every object member needs to be updated individually with a
-	 * call to <code>store()</code> unless a deep
+	 * call to <code>set()</code> unless a deep
 	 * {@link com.db4o.config.Configuration#updateDepth global} or 
      * {@link com.db4o.config.ObjectClass#updateDepth class-specific}
      * update depth was configured or cascaded updates were 
      * {@link com.db4o.config.ObjectClass#cascadeOnUpdate defined in the class}
      * or in {@link com.db4o.config.ObjectField#cascadeOnUpdate one of the member fields}.
-     * <br><br>
+     * <br><br><b>Examples: ../com/db4o/samples/update.</b><br><br>
      * Depending if the passed object is newly stored or updated, the
      * callback method
      * {@link com.db4o.ext.ObjectCallbacks#objectOnNew objectOnNew} or
@@ -422,7 +431,7 @@ public interface ObjectContainer {
      * {@link com.db4o.ext.ObjectCallbacks#objectOnUpdate objectOnUpdate}
      * might also be used for cascaded updates.<br><br>
      * @param obj the object to be stored or updated.
-	 * @see ExtObjectContainer#store(java.lang.Object, int) ExtObjectContainer#store(object, depth)
+	 * @see ExtObjectContainer#store(java.lang.Object, int) ExtObjectContainer#set(object, depth)
 	 * @see com.db4o.config.Configuration#updateDepth
 	 * @see com.db4o.config.ObjectClass#updateDepth
 	 * @see com.db4o.config.ObjectClass#cascadeOnUpdate

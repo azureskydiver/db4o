@@ -1,6 +1,6 @@
 package decaf;
 
-using java.lang.*;
+import java.lang.*;
 
 class TestDriver {
 	public void GenericForEachArray(Object []items) {

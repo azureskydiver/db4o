@@ -7,10 +7,8 @@ import org.eclipse.jdt.core.dom.InfixExpression.*;
 import org.eclipse.jdt.core.dom.Modifier.*;
 import org.eclipse.jdt.core.dom.PrimitiveType.*;
 
-import decaf.config.*;
-import decaf.core.*;
-
 import sharpen.core.framework.*;
+import decaf.config.*;
 
 @SuppressWarnings("unchecked")
 public class DecafASTNodeBuilder {
@@ -456,5 +454,10 @@ public class DecafASTNodeBuilder {
 			curNode = curNode.getParent();
 		}
 		return (MethodDeclaration) curNode;
+	}
+	
+	public  boolean isPredicateMatchMethod(final IMethodBinding method) {
+		return "com.db4o.query.Predicate".equals(method.getDeclaringClass().getQualifiedName()) &&
+			"match".equals(method.getName());
 	}
 }

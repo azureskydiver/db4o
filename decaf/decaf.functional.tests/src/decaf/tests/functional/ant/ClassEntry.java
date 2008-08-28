@@ -23,10 +23,8 @@ public class ClassEntry {
 		return _superType;
 	}
 	
-	public boolean sameDeclaration(ClassEntry other) {
-		if (!_name.equals(other._name)) return false;
-		if (!_superType.equals(other._superType)) return false;
-		return _interfaces.equals(other._interfaces);
+	public Set<String> interfaces() {
+		return _interfaces;
 	}
 	
 	@Override
@@ -42,7 +40,7 @@ public class ClassEntry {
 	}
 
 	private String implementsClause() {
-		return " implements " + IterableExtensions.join(_interfaces, ", ");
+		return " implements " + IterableExtensions.join(interfaces(), ", ");
 	}
 
 	public List<MethodEntry> methods() {

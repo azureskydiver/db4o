@@ -16,10 +16,12 @@ import com.db4o.types.*;
  * {@link com.db4o.ObjectContainer ObjectContainer} interface.
  * <br><br>Every db4o {@link com.db4o.ObjectContainer ObjectContainer}
  * always is an <code>ExtObjectContainer</code> so a cast is possible.<br><br>
- * {@link com.db4o.ObjectContainer#ext}
+ * {@link com.db4o.ObjectContainer#ext ObjectContainer.ext()}
  * is a convenient method to perform the cast.<br><br>
  * The ObjectContainer functionality is split to two interfaces to allow newcomers to
  * focus on the essential methods.
+ * 
+ * @sharpen.partial
  */
 public interface ExtObjectContainer extends ObjectContainer {
     
@@ -36,7 +38,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * along the referenced graph will break cascading activation.
      */
     public void activate(Object obj)throws Db4oIOException, DatabaseClosedException; 
-    
+
     /**
      * deactivates an object. 
      * Only the passed object will be deactivated, i.e, no object referenced by this
@@ -53,13 +55,11 @@ public interface ExtObjectContainer extends ObjectContainer {
      * the open ObjectContainer and to the backup.<br><br>
      * While the backup is running, the ObjectContainer should not be closed.<br><br>
      * If a file already exists at the specified path, it will be overwritten.<br><br>
-     * The backup call may be started in a seperated thread by the application,
-     * if concurrent execution with normal database access is desired.<br><br>
      * @param path a fully qualified path
-     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      * @throws NotSupportedException is thrown when the operation is not supported in current 
      * configuration/environment
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      */
     public void backup(String path) throws Db4oIOException,
 			DatabaseClosedException, NotSupportedException;
@@ -72,11 +72,11 @@ public interface ExtObjectContainer extends ObjectContainer {
      * reference with the object parameter. The method may be used to replace
      * objects or to reassociate an object with it's stored instance
      * after closing and opening a database file. A subsequent call to 
-     * {@link com.db4o.ObjectContainer#store(Object)} is
+     * {@link com.db4o.ObjectContainer#set set(Object)} is
      * necessary to update the stored object.<br><br>
      * <b>Requirements:</b><br>- The ID needs to be a valid internal object ID, 
      * previously retrieved with 
-     * {@link #getID(Object)}.<br>
+     * {@link #getID getID(Object)}.<br>
      * - The object parameter needs to be of the same class as the stored object.<br><br>
      * @see #getID(java.lang.Object)
      * @param obj the object that is to be bound
@@ -93,7 +93,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * collections for this {@link ObjectContainer}.<br><br>
      * @return the {@link Db4oCollections} interface for this {@link ObjectContainer}.
      * @deprecated since 7.0. Use of old internal collections is discouraged. Please use 
-     * com.db4o.collections.ArrayList4 and com.db4o.collections.ArrayMap4 instead.
+     * com.db4o.collections.ArrayList4 and com.db4o.collections.ArrayMap4 instead. 
      */
     public Db4oCollections collections();
     
@@ -102,18 +102,17 @@ public interface ExtObjectContainer extends ObjectContainer {
      * returns the Configuration context for this ObjectContainer.
      * <br><br>
      * Upon opening an ObjectContainer with any of the factory methods in the
-     * {@link com.db4o.Db4o} class, the global 
+     * {@link com.db4o.Db4o Db4o class}, the global 
      * {@link com.db4o.config.Configuration Configuration} context
      * is copied into the ObjectContainer. The 
      * {@link com.db4o.config.Configuration Configuration}
      * can be modified individually for
      * each ObjectContainer without any effects on the global settings.<br><br>
-     * @return {@link com.db4o.config.Configuration} the Configuration
+     * @return {@link com.db4o.config.Configuration Configuration} the Configuration
      * context for this ObjectContainer
      * @see Db4o#configure
      */
     public Configuration configure();
-    
     
     /**
      * returns a member at the specific path without activating intermediate objects.
@@ -126,23 +125,20 @@ public interface ExtObjectContainer extends ObjectContainer {
      */
     public Object descend(Object obj, String[] path);
 
-
     /**
      * returns the stored object for an internal ID.
      * <br><br>This is the fastest method for direct access to objects. Internal
-     * IDs can be obtained with {@link ExtObjectContainer#getID(Object)}.
+     * IDs can be obtained with {@link #getID getID(Object)}.
      * Objects will not be activated by this method. They will be returned in the 
      * activation state they are currently in, in the local cache.<br><br>
-     * To activate the returned object with the current activation strategy, call
-     * {@link #activate(Object)}.<br><br> 
-     * @param id the internal ID
+     * @param ID the internal ID
      * @return the object associated with the passed ID or <code>null</code>, 
      * if no object is associated with this ID in this <code>ObjectContainer</code>.
      * @see com.db4o.config.Configuration#activationDepth Why activation?
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
-     * @throws InvalidIDException when the provided id is not valid.
+     * @throws InvalidIDException when the provided id is outside the scope of the
      */
-    public Object getByID(long id) throws DatabaseClosedException, InvalidIDException;
+    public <T> T getByID(long ID) throws DatabaseClosedException, InvalidIDException;
     
     /**
      * returns a stored object for a {@link Db4oUUID}.
@@ -158,7 +154,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
-    public Object getByUUID(Db4oUUID uuid) throws DatabaseClosedException, Db4oIOException;
+    public <T> T getByUUID(Db4oUUID uuid) throws DatabaseClosedException, Db4oIOException;
 
     /**
      * returns the internal unique object ID.
@@ -166,7 +162,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * guaranteed to be unique within one <code>ObjectContainer</code>. 
      * An object carries the same ID in every db4o session. Internal IDs can 
      * be used to look up objects with the very fast 
-     * {@link #getByID(Object)} method.<br><br>
+     * {@link #getByID getByID} method.<br><br>
      * Internal IDs will change when a database is defragmented. Use 
      * {@link #getObjectInfo(Object)}, {@link ObjectInfo#getUUID()} and
      * {@link #getByUUID(Db4oUUID)} for long-term external references to
@@ -187,7 +183,7 @@ public interface ExtObjectContainer extends ObjectContainer {
     public ObjectInfo getObjectInfo(Object obj);
     
     /**
-     * returns the {@link Db4oDatabase} identity object for this ObjectContainer. 
+     * returns the Db4oDatabase object for this ObjectContainer. 
      * @return the Db4oDatabase identity object for this ObjectContainer.
      */
     public Db4oDatabase identity();
@@ -204,9 +200,9 @@ public interface ExtObjectContainer extends ObjectContainer {
     /**
      * tests if an object with this ID is currently cached.
      * <br><br>
-     * @param id the internal id
+     * @param ID the internal ID
      */
-    public boolean isCached(long id);
+    public boolean isCached(long ID);
 
     /**
      * tests if this <code>ObjectContainer</code> is closed.
@@ -239,7 +235,6 @@ public interface ExtObjectContainer extends ObjectContainer {
      * the ObjectContainer.<br><br> 
      * Handle the use of this functionality with extreme care,
      * since deadlocks can be produced with just two lines of code.
-     * @deprecated Use is not recommended. Use your own monitor objects instead.
      * @return Object the ObjectContainer lock object
      */
     public Object lock();
@@ -251,7 +246,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * desirable to preserve virtual object attributes such as the object version number
      * or the UUID. Use this method to signal to an ObjectContainer that it should read
      * existing version numbers and UUIDs from another ObjectContainer. This method should
-     * also be used during the Defragment. It is included in the default
+     * also be used during the {@link com.db4o.tools.Defragment Defragment} operation. It is included in the default
      * implementation supplied in Defragment.java/Defragment.cs.<br><br>
      * @param objectContainer the {@link ObjectContainer} objects are to be migrated
      * from or <code>null</code> to denote that migration is completed.
@@ -275,7 +270,7 @@ public interface ExtObjectContainer extends ObjectContainer {
 	 * @param committed whether committed or set values are to be returned
 	 * @return the object
 	 */
-    public Object peekPersisted(Object object,int depth, boolean committed);
+    public <T> T peekPersisted(T object,int depth, boolean committed);
     
 
     /**
@@ -355,11 +350,11 @@ public interface ExtObjectContainer extends ObjectContainer {
     /**
 	 * deep update interface to store or update objects.
 	 * <br><br>In addition to the normal storage interface, 
-	 * {@link com.db4o.ObjectContainer#store(Object)},
+	 * {@link com.db4o.ObjectContainer#set ObjectContainer#set(Object)},
 	 * this method allows a manual specification of the depth, the passed object is to be updated.<br><br>
 	 * @param obj the object to be stored or updated.
 	 * @param depth the depth to which the object is to be updated
-	 * @see com.db4o.ObjectContainer#store(Object)
+	 * @see com.db4o.ObjectContainer#set
 	 * @deprecated Use {@link #store(Object,int)} instead
 	 */
 	public void set (Object obj, int depth);
@@ -367,11 +362,11 @@ public interface ExtObjectContainer extends ObjectContainer {
 	/**
      * deep update interface to store or update objects.
      * <br><br>In addition to the normal storage interface, 
-     * {@link com.db4o.ObjectContainer#store(Object)},
+     * {@link com.db4o.ObjectContainer#set ObjectContainer#set(Object)},
      * this method allows a manual specification of the depth, the passed object is to be updated.<br><br>
      * @param obj the object to be stored or updated.
      * @param depth the depth to which the object is to be updated
-     * @see com.db4o.ObjectContainer#store(Object)
+     * @see com.db4o.ObjectContainer#set
      */
     public void store (Object obj, int depth);
     
@@ -404,7 +399,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * A suggested name for the semaphore:  "SINGLETON_" + Object#getClass().getName().<br>  - lock
      * objects. A suggested name:   "LOCK_" + {@link #getID(java.lang.Object) getID(Object)}<br> -
      * generate a unique client ID. A suggested name:  "CLIENT_" +
-     * currentTime.<br><br>   
+     * System.currentTimeMillis().<br><br>   
      * 
      * @param name the name of the semaphore to be set
      * @param waitForAvailability the time in milliseconds to wait for other
@@ -436,6 +431,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      */
     public StoredClass[] storedClasses();
     
+    
     /**
      * returns the {@link SystemInfo} for this ObjectContainer.
      * <br><br>The {@link SystemInfo} supplies methods that provide
@@ -444,7 +440,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @return the {@link SystemInfo} for this ObjectContainer.
      */
     public SystemInfo systemInfo();
-    
+
     /**
      * returns the current transaction serial number.
      * <br><br>This serial number can be used to query for modified objects

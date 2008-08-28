@@ -40,7 +40,7 @@ public class NativeQueryHandler {
 		_listeners=null;
 	}
 	
-	public ObjectSet execute(Query query, Predicate predicate,QueryComparator comparator) {
+	public <T> ObjectSet<T> execute(Query query, Predicate<T> predicate,QueryComparator<T> comparator) {
 		return configureQuery(query, predicate,comparator).execute();
 	}
 	

@@ -37,7 +37,7 @@ public class SimpleMain {
 			
 			db=Db4o.openFile(FILENAME);
 			final String protoName="Achilles";
-			Predicate filter=new Predicate() {
+			Predicate<Student> filter=new Predicate<Student>() {
 				private int protoAge=203;
 				
 				public boolean match(Student candidate) {

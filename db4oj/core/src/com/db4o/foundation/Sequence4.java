@@ -19,4 +19,6 @@ public interface Sequence4 extends Iterable4 {
 	
 	Object remove(Object obj);
 	
+	boolean contains(Object obj);
+	
 }

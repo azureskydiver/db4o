@@ -15,8 +15,8 @@ public class ClassEntryReaderTestCase extends TestCase {
 		final ArrayList<ClassEntry> entries = readAll(createJar(Foo.class, IFoo.class));
 		assertEquals(2, entries.size());
 		assertEntry(Foo.class, entries.get(0));
+		assertEquals(2, entries.get(0).methods().size());
 		assertEntry(IFoo.class, entries.get(1));
-		
 	}
 
 	private void assertEntry(final Class<?> expected, final ClassEntry actual) {

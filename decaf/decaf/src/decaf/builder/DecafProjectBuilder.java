@@ -32,6 +32,7 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
 		if (kind == FULL_BUILD) {
@@ -74,10 +75,9 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 		final DecafProject project = DecafProject.create(element.getJavaProject());
 		
 		for (DecafProject.OutputTarget outputTarget : project.targets()) {
-			
 			final ICompilationUnit decaf = decafElementFor(element, outputTarget.targetProject());
-			final ASTRewrite rewrite = DecafRewriter.rewrite(element, monitor, outputTarget.targetPlatform(), outputTarget.config());
 			
+			final ASTRewrite rewrite = DecafRewriter.rewrite(element, monitor, outputTarget.targetPlatform(), outputTarget.config());
 			safeRewriteFile(decaf, rewrite, monitor);
 		}
 	}

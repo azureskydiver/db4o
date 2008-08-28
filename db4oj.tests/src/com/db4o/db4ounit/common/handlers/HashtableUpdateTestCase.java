@@ -13,6 +13,7 @@ import db4ounit.*;
 
 /**
  * @sharpen.ignore
+ * @decaf.ignore.jdk11
  */
 public class HashtableUpdateTestCase extends HandlerUpdateTestCaseBase {
 	

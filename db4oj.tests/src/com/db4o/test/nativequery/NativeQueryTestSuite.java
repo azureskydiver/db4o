@@ -4,6 +4,10 @@ package com.db4o.test.nativequery;
 
 import com.db4o.test.*;
 
+
+/**
+ * @decaf.ignore.jdk11
+ */
 public class NativeQueryTestSuite extends TestSuite{
     
     public Class[] tests(){

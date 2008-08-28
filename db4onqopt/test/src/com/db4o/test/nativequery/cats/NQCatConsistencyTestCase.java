@@ -37,25 +37,25 @@ public class NQCatConsistencyTestCase extends AbstractDb4oTestCase {
     
     public void runTests(){
         
-        expect(new Predicate(){
+        expect(new Predicate<Cat>(){
             public boolean match(Cat cat){
                 return cat._age == 7;
             }
         }, null);
         
-        expect(new Predicate(){
+        expect(new Predicate<Cat>(){
             public boolean match(Cat cat){
                 return cat._age == 1;
             }
         }, new String[]{"Occam", "Vahiné" });
         
-        expect(new Predicate(){
+        expect(new Predicate<Cat>(){
             public boolean match(Cat cat){
                 return cat._father._age == 1;
             }
         }, new String[]{"Achat", "Acrobat" });
         
-        expect(new Predicate(){
+        expect(new Predicate<Cat>(){
             public boolean match(Cat cat){
                 return cat._father._father._firstName.equals("Edwin");
             }
@@ -65,7 +65,7 @@ public class NQCatConsistencyTestCase extends AbstractDb4oTestCase {
         // The following will fail with nqopt
         // because SODA swallows nulls
         
-//        expect(new Predicate(){
+//        expect(new Predicate<Cat>(){
 //            public boolean match(Cat cat){
 //                return cat._father._father._firstName.equals("Edwin")
 //                    || cat._father._firstName.equals("Edwin");
@@ -74,14 +74,14 @@ public class NQCatConsistencyTestCase extends AbstractDb4oTestCase {
 
         
         // will be run unoptimized (arithmetics on candidate member)        
-        expect(new Predicate(){
+        expect(new Predicate<Cat>(){
             public boolean match(Cat cat){
                 return cat._age + 1 == 2;
             }
         }, new String[]{"Occam", "Vahiné" });
 
         
-        expect(new Predicate(){
+        expect(new Predicate<Cat>(){
             public boolean match(Cat cat){
                 return cat.getFirstName().equals("Occam")
                     && cat.getAge() == 1;
@@ -90,7 +90,7 @@ public class NQCatConsistencyTestCase extends AbstractDb4oTestCase {
         
         
         // will be run unoptimized (non-getter method call: getFullName)        
-        expect(new Predicate(){
+        expect(new Predicate<Cat>(){
             public boolean match(Cat cat){
                 return cat.getFullName().equals("Achat Leo Lenis");
             }
@@ -98,7 +98,7 @@ public class NQCatConsistencyTestCase extends AbstractDb4oTestCase {
 
 
         // will be run unoptimized (non-getter method call: getFullName)        
-        expect(new Predicate(){
+        expect(new Predicate<Cat>(){
             public boolean match(Cat cat){
                 return cat.getFullName() == null;
             }
@@ -106,7 +106,7 @@ public class NQCatConsistencyTestCase extends AbstractDb4oTestCase {
         
 
         // will be run optimized        
-        expect(new Predicate(){
+        expect(new Predicate<Cat>(){
             public boolean match(Cat cat){
                 return cat._firstName.startsWith("A");
             }

@@ -1344,14 +1344,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return query(trans, predicate,(QueryComparator)null);
     }
     
-    public final ObjectSet query(Transaction trans, Predicate predicate,QueryComparator comparator){
+    public final <T> ObjectSet<T> query(Transaction trans, Predicate<T> predicate,QueryComparator<T> comparator){
         synchronized (_lock) {
             trans = checkTransaction(trans);
             return getNativeQueryHandler().execute(query(trans), predicate,comparator);
         }
     }
 
-    public final ObjectSet query(Transaction trans, Class clazz) {
+    public final <T> ObjectSet<T> query(Transaction trans, Class<T> clazz) {
         return queryByExample(trans, clazz);
     }
 

@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.util.*;
 
 /**
  * This is the main db4o regression test. 
@@ -312,17 +313,10 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     	Enumeration e = _testSuites.elements();
     	while (e.hasMoreElements()) {
     		TestSuite suite = (TestSuite)e.nextElement();
-            _testCases = concat(_testCases, suite.tests());
+            _testCases = Db4oUnitTestUtil.mergeClasses(_testCases, suite.tests());
     	}
     }
     
-	private Class[] concat(Class[] a, Class[] b) {
-		Class[] result = new Class[a.length + b.length];
-    	System.arraycopy(a,0, result,0       , a.length);
-    	System.arraycopy(b,0, result,a.length, b.length);
-    	return result;
-	}
-
 	private static Class[] testCasesFromArgs(String[] testcasenames) {
 		return testCasesFromArgs(testcasenames,0);
     }

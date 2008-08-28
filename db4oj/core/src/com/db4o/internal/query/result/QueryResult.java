@@ -23,6 +23,6 @@ public interface QueryResult extends Iterable4 {
 
     public int size();
     
-	public void sort(QueryComparator cmp);
+    public void sort(QueryComparator cmp);
 
 }

@@ -82,5 +82,4 @@ public class HybridQueryResult extends AbstractQueryResult {
 		_delegate = _delegate.supportSort();
 		_delegate.sort(cmp);
 	}
-
 }

@@ -2,6 +2,8 @@
 
 package  com.db4o.query;
 
+import java.util.*;
+
 import com.db4o.*;
 
 
@@ -83,8 +85,8 @@ public interface Query {
 
     
     /**
-	 * adds an ascending ordering criteria to this node of the 
-	 * query graph.
+	 * adds an ascending ordering criteria to this node of
+	 * the query graph. 
 	 * <p>
 	 * If multiple ordering criteria are applied, the chronological
 	 * order of method calls is relevant: criteria created by 'earlier' calls are
@@ -101,7 +103,7 @@ public interface Query {
 
     /**
 	 * adds a descending order criteria to this node of
-	 * the query graph.
+	 * the query graph. 
 	 * <br><br>
 	 * For semantics of multiple calls setting ordering criteria, see {@link #orderAscending()}.
      * @return this {@link Query} object to allow the chaining of method calls.
@@ -114,9 +116,19 @@ public interface Query {
      * @param comparator The comparator to apply.
      * @return this {@link Query} object to allow the chaining of method calls.
      */
-    public Query sortBy(QueryComparator comparator);
+    public Query sortBy(QueryComparator<?> comparator);
 
-    
+
+    /**
+     * Sort the resulting ObjectSet by the given comparator.
+     * 
+     * @param comparator The comparator to apply.
+     * @return this {@link Query} object to allow the chaining of method calls.
+     * @decaf.ignore.jdk11
+     * @sharpen.ignore
+     */
+    public Query sortBy(Comparator comparator);
+
 //    /**
 //     * defines a Query node to be represented as a column in the array
 //     * returned in every element of the ObjectSet upon query execution. 

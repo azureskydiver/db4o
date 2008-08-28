@@ -7,13 +7,14 @@ public class IgnoreSettings {
 	public static class Entry {
 		private String _className;
 		private final Set<String> _methods = new HashSet<String>();
+		private final Set<String> _interfaces = new HashSet<String>();
 
 		public void setClass(String className) {
 			_className = className;
 		}
 		
 		public boolean isIgnoredClass() {
-			return _methods.isEmpty();
+			return _methods.isEmpty() && _interfaces.isEmpty();
 		}
 
 		public String className() {
@@ -26,12 +27,26 @@ public class IgnoreSettings {
 			}
 		}
 		
+		public class InterfaceEntry {
+			public void setName(String name) {
+				_interfaces.add(name);
+			}
+		}
+		
+		public InterfaceEntry createInterface() {
+			return new InterfaceEntry();
+		}
+		
 		public MethodEntry createMethod() {
 			return new MethodEntry();
 		}
 
 		public Set<String> methods() {
 			return _methods;
+		}
+		
+		public Set<String> interfaces() {
+			return _interfaces;
 		}
 	}
 	
@@ -54,12 +69,28 @@ public class IgnoreSettings {
 	}
 
 	public Set<String> ignoredMethodsFor(String name) {
+		final Entry found = entry(name);
+		if (null == found) {
+			return Collections.emptySet();
+		}
+		return found.methods();
+	}
+
+	private Entry entry(String name) {
 		for (Entry entry : _entries) {
 			if (entry.className().equals(name)) {
-				return entry.methods();
+				return entry;
 			}
 		}
-		return Collections.emptySet();
+		return null;
+	}
+
+	public Set<String> ignoredInterfacesFor(String name) {
+		final Entry found = entry(name);
+		if (null == found) {
+			return Collections.emptySet();
+		}
+		return found.interfaces();
 	}
 
 }

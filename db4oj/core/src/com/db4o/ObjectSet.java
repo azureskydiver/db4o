@@ -2,6 +2,8 @@
 
 package  com.db4o;
 
+import java.util.*;
+
 import com.db4o.ext.*;
 
 /**
@@ -19,9 +21,9 @@ import com.db4o.ext.*;
  * when they are actually being used by the application. 
  * @see ExtObjectSet for extended functionality.
  * 
- * @sharpen.extends System.Collections.IList
+ * @decaf.ignore.implements.jdk11
  */
-public interface ObjectSet {
+public interface ObjectSet<Item> extends List<Item> {
 	
 	
 	/**
@@ -53,7 +55,7 @@ public interface ObjectSet {
 	 * setting.<br><br>
      * @return the next object in the <code>ObjectSet</code>.
      */
-    public Object next ();
+    public Item next ();
 
     /**
 	 * resets the <code>ObjectSet</code> cursor before the first element.
@@ -64,9 +66,8 @@ public interface ObjectSet {
     /**
 	 * returns the number of elements in the <code>ObjectSet</code>.
      * @return the number of elements in the <code>ObjectSet</code>.
+     * 
+     * @sharpen.ignore
      */
     public int size ();
 }
-
-
-

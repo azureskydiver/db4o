@@ -109,6 +109,7 @@
 
     <target name="clean.java">
         <delete dir="${dir.dist.java}" />
+    	<delete dir="${dir.dist.decaf}" />
     </target>
 
 	<target name="cleanomscripttempdir">

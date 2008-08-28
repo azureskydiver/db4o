@@ -62,7 +62,7 @@ final class ClassEntryBuilder implements ClassVisitor {
 
 	public MethodVisitor visitMethod(int access, String name,
 			String desc, String signature, String[] exceptions) {
-		if (isSynthetic(access)) {
+		if (isSynthetic(access) || isPrivate(access)) {
 			return null;
 		}
 		
@@ -75,6 +75,10 @@ final class ClassEntryBuilder implements ClassVisitor {
 				
 		_classEntry.methods().add(new MethodEntry(name, desc));
 		return null;
+	}
+
+	private boolean isPrivate(int access) {
+		return isBitSet(access, Opcodes.ACC_PRIVATE);
 	}
 
 	private boolean visitingAbstractClass() {
