@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 import org.eclipse.jface.text.*;
-import org.eclipse.ui.*;
 
 import sharpen.core.framework.resources.*;
 import decaf.core.*;
@@ -83,16 +82,17 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 	}
 
 	private void safeRewriteFile(final ICompilationUnit decaf, final ASTRewrite rewrite, final IProgressMonitor monitor) {
-		if (!PlatformUI.isWorkbenchRunning()) {
-			rewriteFile(decaf, rewrite, monitor);
-			return;
-		}
-		
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-			public void run() {
-				rewriteFile(decaf, rewrite, monitor);
-			}
-		});
+		rewriteFile(decaf, rewrite, monitor);
+//		if (!PlatformUI.isWorkbenchRunning()) {
+//			rewriteFile(decaf, rewrite, monitor);
+//			return;
+//		}
+//		
+//		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+//			public void run() {
+//				rewriteFile(decaf, rewrite, monitor);
+//			}
+//		});
 	}
 
 	private ICompilationUnit decafElementFor(
