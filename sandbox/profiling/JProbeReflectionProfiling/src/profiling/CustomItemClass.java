@@ -11,30 +11,31 @@ public class CustomItemClass extends JdkClass {
 		super(reflector, customItemReflector, Item.class);
 	}
 	
-	@Override
+	public Object newInstance() {
+	    return new Item();
+	}
+	
 	protected JdkField createField(Field field) {
 		if (field.getName().equals("_intValue")) {
 			return new JdkField(_reflector, field) {
-				@Override
+			    
 				public Object get(Object onObject) {
-					return ((Item)onObject)._intValue;
+					return new Integer(((Item)onObject)._intValue);
 				}
 				
-				@Override
 				public void set(Object onObject, Object attribute) {
-					((Item)onObject)._intValue = (Integer)attribute;
+					((Item)onObject)._intValue = ((Integer)attribute).intValue();
 				}
 			};
 		}
 		
 		if (field.getName().equals("_stringValue")) {
 			return new JdkField(_reflector, field) {
-				@Override
+			    
 				public Object get(Object onObject) {
 					return ((Item)onObject)._stringValue;
 				}
 				
-				@Override
 				public void set(Object onObject, Object attribute) {
 					((Item)onObject)._stringValue = (String)attribute;
 				}
