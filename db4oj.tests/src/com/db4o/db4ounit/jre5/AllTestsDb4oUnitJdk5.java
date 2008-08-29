@@ -11,8 +11,8 @@ import db4ounit.extensions.*;
 public class AllTestsDb4oUnitJdk5 extends Db4oTestSuite {
 
 	public static void main(String[] args) {
-//		System.exit(new AllTestsDb4oUnitJdk5().runAll());
-		System.exit(new AllTestsDb4oUnitJdk5().runClientServer());
+		System.exit(new AllTestsDb4oUnitJdk5().runAll());
+//		System.exit(new AllTestsDb4oUnitJdk5().runClientServer());
 	}
 
 	@Override
