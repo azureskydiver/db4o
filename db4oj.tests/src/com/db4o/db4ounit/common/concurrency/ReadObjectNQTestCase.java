@@ -41,9 +41,9 @@ public class ReadObjectNQTestCase extends Db4oClientServerTestCase {
 	}
 
 	public static class MyPredicate extends Predicate<SimpleObject> {
-		SimpleObject expected;
+		public SimpleObject expected;
 
-		MyPredicate(SimpleObject o) {
+		public MyPredicate(SimpleObject o) {
 			this.expected = o;
 		}
 
