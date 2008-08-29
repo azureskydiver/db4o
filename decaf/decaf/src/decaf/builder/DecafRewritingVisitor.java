@@ -13,16 +13,8 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	private final DecafRewritingContext _context;
 	
-	private final List<TypeDeclaration> _removedTopLevelTypes = new ArrayList<TypeDeclaration>();
-
 	public DecafRewritingVisitor(DecafRewritingContext context) {
 		_context = context;
-	}
-	
-	@Override
-	public boolean visit(CompilationUnit node) {
-		_removedTopLevelTypes.clear();
-		return super.visit(node);
 	}
 	
 	@Override
@@ -41,15 +33,12 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private boolean allTopLevelTypesHaveBeenRemoved(CompilationUnit node) {
-		return _removedTopLevelTypes.size() == node.types().size();
+		return getListRewrite(node, CompilationUnit.TYPES_PROPERTY).getRewrittenList().isEmpty();
 	}
 	
 	@Override
 	public boolean visit(TypeDeclaration node) {
 		if (handledAsIgnored(node)) {
-			if (node.isPackageMemberTypeDeclaration()) {
-				_removedTopLevelTypes.add(node);
-			}
 			return false;
 		}
 		return true;
