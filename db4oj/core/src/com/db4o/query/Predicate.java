@@ -80,6 +80,7 @@ import com.db4o.internal.*;
  * instances that are not to be included, the match method should return
  * false.<br><br>
  */
+@SuppressWarnings("serial")
 public abstract class Predicate<ExtentType> implements Serializable{
     
     /**
@@ -106,21 +107,24 @@ public abstract class Predicate<ExtentType> implements Serializable{
 		Method[] methods=getClass().getMethods();
 		for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
 			Method method=methods[methodIdx];
-			if((method.getName().equals(PredicatePlatform.PREDICATEMETHOD_NAME))&&method.getParameterTypes().length==1) {					
-				String targetName=method.getParameterTypes()[0].getName();
-				if(!"java.lang.Object".equals(targetName)) {
-					cachedFilterMethod=method;
-					return method;
-				}
+			if((!method.getName().equals(PredicatePlatform.PREDICATEMETHOD_NAME)) || method.getParameterTypes().length != 1) {
+				continue;
+			}
+			cachedFilterMethod = method;
+			String targetName=method.getParameterTypes()[0].getName();
+			if(!"java.lang.Object".equals(targetName)) {
+				break;
 			}
 		}
-		throw new IllegalArgumentException("Invalid predicate.");
+		if(cachedFilterMethod == null) {
+			throw new IllegalArgumentException("Invalid predicate.");
+		}
+		return cachedFilterMethod;
 	}
 
     /**
      * public for implementation reasons, please ignore.
      */
-	@SuppressWarnings("unchecked")
 	public Class<? extends ExtentType> extentType() {
 		if (_extentType == null) {
 			_extentType = figureOutExtentType();
