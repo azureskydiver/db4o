@@ -20,7 +20,11 @@ public class AssertingClassLoader {
 	private final URLClassLoader _loader;
 
 	public AssertingClassLoader(File classPath, Class[] excludedClasses) throws MalformedURLException {
-		ExcludingClassLoader excludingLoader = new ExcludingClassLoader(getClass().getClassLoader(), excludedClasses);		
+		this(classPath, excludedClasses, new Class[0]);
+	}
+
+	public AssertingClassLoader(File classPath, Class[] excludedClasses, Class[] delegatedClasses) throws MalformedURLException {
+		ExcludingClassLoader excludingLoader = new ExcludingClassLoader(getClass().getClassLoader(), excludedClasses, delegatedClasses);		
 		_loader = new URLClassLoader(new URL[] { toURL(classPath) }, excludingLoader);
 	}
 
@@ -52,7 +56,8 @@ public class AssertingClassLoader {
 	}
 
 	private boolean isAssignableFrom(Class expected, Class actual) throws ClassNotFoundException {
-		return expected.isAssignableFrom(loadClass(actual));
+		Class loaded = loadClass(actual);
+		return expected.isAssignableFrom(loaded);
 	}
 
 	private Class loadClass(Class actual) throws ClassNotFoundException {

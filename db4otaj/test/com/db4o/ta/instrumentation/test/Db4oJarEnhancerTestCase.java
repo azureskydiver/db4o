@@ -28,7 +28,7 @@ public class Db4oJarEnhancerTestCase implements TestCase {
 
 	private void assertJarClassesWereInstrumented(File jar) throws IOException, ClassNotFoundException {
 		final Class[] klasses = new Class[] { Foo.class, Bar.class };
-		final AssertingClassLoader loader = new AssertingClassLoader(jar, klasses);
+		final AssertingClassLoader loader = new AssertingClassLoader(jar, klasses, new Class[] { Marker.class });
 		for (int i = 0; i < klasses.length; i++) {
 			loader.assertAssignableFrom(Marker.class, klasses[i]);
 		}
