@@ -8,7 +8,6 @@ public class CustomItemReflector extends JdkReflector {
 		super(Item.class.getClassLoader());
 	}
 	
-	@Override
 	protected JdkClass createClass(Class clazz) {
 		if (clazz == Item.class) {
 			return new CustomItemClass(_parent, this);
