@@ -15,13 +15,29 @@ public class CallbackTestCase extends AbstractDb4oTestCase {
     public static void main(String[] args) {
         new CallbackTestCase().runAll();
     }
+    
+    public void testPublicCallback() {
+    	runTest(new PublicCallback());
+    }
 
-    public void testBaseClass() {
-        runTest(new Item());
+    public void testPrivateCallback() {
+        runTest(new PrivateCallback());
     }
     
-    public void testDerived() {
-    	runTest(new DerivedItem());
+    public void testPackageCallback() {
+    	runTest(new PackageCallback());
+    }
+    
+    public void testInheritedPublicCallback() {
+    	runTest(new InheritedPublicCallback());
+    }
+
+    public void testInheritedPrivateCallback() {
+        runTest(new InheritedPrivateCallback());
+    }
+    
+    public void testInheritedPackageCallback() {
+    	runTest(new InheritedPackageCallback());
     }
 
 	private void runTest(Item item) {
@@ -30,20 +46,40 @@ public class CallbackTestCase extends AbstractDb4oTestCase {
         Assert.isTrue(item.isStored());
         Assert.isTrue(db().ext().isStored(item));
 	}
+	
+	public static class Item {
+		public transient ObjectContainer _objectContainer;
 
-    public static class Item {
-
-        public transient ObjectContainer _objectContainer;
-
-        public void objectOnNew(ObjectContainer container) {
-            _objectContainer = container;
-        }
-
-        public boolean isStored() {
+		public boolean isStored() {
             return _objectContainer.ext().isStored(this);
+        }
+	}
+
+    public static class PackageCallback extends Item {
+        void objectOnNew(ObjectContainer container) {
+            _objectContainer = container;
         }
     }
     
-    public static class DerivedItem extends Item {
+    public static class InheritedPackageCallback extends PackageCallback {
+    }
+    
+    public static class PrivateCallback extends Item {
+        @SuppressWarnings("unused")
+		private void objectOnNew(ObjectContainer container) {
+            _objectContainer = container;
+        }
+    }
+    
+    public static class InheritedPrivateCallback extends PrivateCallback {
+    }
+    
+    public static class PublicCallback extends Item {
+        public void objectOnNew(ObjectContainer container) {
+            _objectContainer = container;
+        }
+    }
+    
+    public static class InheritedPublicCallback extends PublicCallback {
     }
 }
