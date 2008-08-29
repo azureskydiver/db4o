@@ -17,10 +17,10 @@ public class JdkClass implements JavaReflectClass{
 	
 	protected final Reflector _reflector;
 	private final JdkReflector _jdkReflector;
-	private final Class _clazz;
+	private final Class<?> _clazz;
     private ReflectConstructorSpec _constructorSpec;
     
-	public JdkClass(Reflector reflector, JdkReflector jdkReflector, Class clazz) {		
+	public JdkClass(Reflector reflector, JdkReflector jdkReflector, Class<?> clazz) {		
         if(jdkReflector == null){
             throw new NullPointerException();
         }
@@ -42,7 +42,7 @@ public class JdkClass implements JavaReflectClass{
 			return null;
 		}
 		try {
-			Constructor[] constructors = _clazz.getDeclaredConstructors();
+			Constructor<?>[] constructors = _clazz.getDeclaredConstructors();
 			ReflectConstructor[] reflectors = new ReflectConstructor[constructors.length];
 			for (int i = 0; i < constructors.length; i++) {
 				reflectors[i] = new JdkConstructor(_reflector, constructors[i]);
@@ -89,15 +89,26 @@ public class JdkClass implements JavaReflectClass{
     }
 	
 	public ReflectMethod getMethod(String methodName, ReflectClass[] paramClasses){
+		Class<?>[] nativeParamClasses = JdkReflector.toNative(paramClasses);
 		try {
-			Method method = _clazz.getMethod(methodName, JdkReflector.toNative(paramClasses));
-			if(method == null){
-				return null;
-			}
-			return new JdkMethod(method, reflector());
+			Method method = getNativeMethod(methodName, nativeParamClasses);
+			return ((method == null) ? null : new JdkMethod(method, reflector()));
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	private Method getNativeMethod(String methodName, Class<?>[] paramClasses) {
+		Class<?> clazz = _clazz;
+		while(clazz != null) {
+			try {
+				return clazz.getDeclaredMethod(methodName, paramClasses);
+			}
+			catch(NoSuchMethodException exc) {
+				clazz = clazz.getSuperclass();
+			}
+		}
+		return null;
 	}
 	
 	public String getName(){
@@ -144,7 +155,7 @@ public class JdkClass implements JavaReflectClass{
 		return _constructorSpec.newInstance();
 	}
 	
-	public Class getJavaClass(){
+	public Class<?> getJavaClass(){
 		return _clazz;
 	}
     
@@ -153,7 +164,7 @@ public class JdkClass implements JavaReflectClass{
     }
     
     public ReflectConstructor getSerializableConstructor() {
-		Constructor serializableConstructor = Platform4.jdk()
+		Constructor<?> serializableConstructor = Platform4.jdk()
 			.serializableConstructor(_clazz);
 		if (serializableConstructor == null) {
 			return null;
