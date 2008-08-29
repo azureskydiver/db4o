@@ -180,7 +180,8 @@ public abstract class Predicate<ExtentType> implements Serializable{
 			Object ret=filterMethod.invoke(this,new Object[]{candidate});
 			return ((Boolean)ret).booleanValue();
 		} catch (Exception e) {
-			e.printStackTrace();
+			// TODO: log this exception somewhere?
+//			e.printStackTrace();
 			return false;
 		}
 	}
