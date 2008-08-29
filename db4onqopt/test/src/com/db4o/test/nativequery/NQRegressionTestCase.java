@@ -132,6 +132,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		}
 	}
 	
+	@SuppressWarnings("serial")
 	private static ExpectingPredicate[] _PREDICATES={
 		// unconditional/untyped
 		new ExpectingPredicate<Object>("unconditional/untyped") {
