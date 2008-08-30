@@ -71,6 +71,7 @@ public class SvnSync extends Task {
 
 	private void createFolderIfNecessary(File folder) {
 		if (!folder.exists()) {
+			createFolderIfNecessary(folder.getParentFile());
 			folder.mkdir();
 		}
 	}
