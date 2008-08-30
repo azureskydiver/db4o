@@ -32,6 +32,13 @@ background-color:#838383;
               </ul>
             </li>
             <li><a target="content" href="reference/basic_concepts.html">Basic Concepts</a><ul>
+                <li><a target="content" href="reference/basic_concepts/evaluation_guide.html">Evaluation Guide</a><ul>
+                    <li><a target="content" href="reference/basic_concepts/evaluation_guide/db4o_applications.html">Db4o Applications</a></li>
+                    <li><a target="content" href="reference/basic_concepts/evaluation_guide/common_beginner_pitfalls.html">Common Beginner Pitfalls</a></li>
+                    <li><a target="content" href="reference/basic_concepts/evaluation_guide/performance_benchmarks.html">Performance Benchmarks</a></li>
+                    <li><a target="content" href="reference/basic_concepts/evaluation_guide/scalability.html">Scalability</a></li>
+                  </ul>
+                </li>
                 <li><a target="content" href="reference/basic_concepts/acid_model.html">ACID Model</a><ul>
                     <li><a target="content" href="reference/basic_concepts/acid_model/atomicity.html">Atomicity</a></li>
                     <li><a target="content" href="reference/basic_concepts/acid_model/consistency.html">Consistency</a></li>
@@ -363,6 +370,7 @@ background-color:#838383;
                         <li><a target="content" href="reference/implementation_strategies/io_adapter/cachedioadapter/cachedioadapter_example.html">CachedIoAdapter Example</a></li>
                       </ul>
                     </li>
+                    <li><a target="content" href="reference/implementation_strategies/io_adapter/nonflushingioadapter.html">NonFlushingIoAdapter</a></li>
                   </ul>
                 </li>
                 <li><a target="content" href="reference/implementation_strategies/db4o_meta-information.html">Db4o meta-information</a><ul>
@@ -467,7 +475,8 @@ background-color:#838383;
             </li>
             <li><a target="content" href="reference/platform_specific_issues.html">Platform Specific Issues</a><ul>
                 <li><a target="content" href="reference/platform_specific_issues/db4o_on_java_platforms.html">db4o on Java Platforms</a></li>
-                <li><a target="content" href="reference/platform_specific_issues/security_requirements_on_java_platform.html">Security Requirements On Java Platform</a></li>
+                <li><a target="content" href="reference/platform_specific_issues/security_requirements_on_java_platform.html">Security Requirements On Java Platform</a><ul></ul>
+                </li>
                 <li><a target="content" href="reference/platform_specific_issues/db4o_on_.net_platforms.html">db4o on .NET Platforms</a></li>
                 <li><a target="content" href="reference/platform_specific_issues/security_requirements_on_.net_platform.html">Security Requirements On .NET Platform</a><ul></ul>
                 </li>
@@ -540,6 +549,35 @@ background-color:#838383;
                         <li><a target="content" href="reference/tuning/main_operations_performance/insert_performance/configuration_options.html">Configuration Options</a></li>
                       </ul>
                     </li>
+                    <li><a target="content" href="reference/tuning/main_operations_performance/delete_performance.html">Delete Performance</a><ul>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/delete_performance/commit_frequency.html">Commit Frequency</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/delete_performance/complexity_of_objects.html">Complexity Of Objects</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/delete_performance/storage_characteristics.html">Storage Characteristics</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/delete_performance/client-server.html">Client-Server</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/delete_performance/cascade_on_delete.html">Cascade On Delete</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/tuning/main_operations_performance/update_performance.html">Update Performance</a><ul>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/update_performance/configuration.html">Configuration</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/update_performance/object_structure.html">Object Structure</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/update_performance/commit_frequency.html">Commit Frequency</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/update_performance/hard_drive_speed.html">Hard Drive Speed</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/update_performance/client-server.html">Client-Server</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/update_performance/indexes.html">Indexes</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/update_performance/inheritance.html">Inheritance</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/tuning/main_operations_performance/query_performance.html">Query Performance</a><ul>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/query_performance/different_query_types.html">Different Query Types</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/query_performance/query_structure.html">Query Structure</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/query_performance/database_size.html">Database Size</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/query_performance/complexity_of_objects.html">Complexity Of Objects</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/query_performance/inherited_objects.html">Inherited Objects</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/query_performance/hardware_resources.html">Hardware Resources</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/query_performance/client-server.html">Client-Server</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/query_performance/indexing.html">Indexing</a></li>
+                      </ul>
+                    </li>
                   </ul>
                 </li>
                 <li><a target="content" href="reference/tuning/io_benchmark_tools.html">IO Benchmark Tools</a><ul>
@@ -580,7 +618,6 @@ background-color:#838383;
                     <li><a target="content" href="reference/tuning/performance_hints/no_lock_file_thread.html">No lock file thread</a></li>
                     <li><a target="content" href="reference/tuning/performance_hints/no_test_instances.html">No test instances</a></li>
                     <li><a target="content" href="reference/tuning/performance_hints/increasing_the_maximum_database_file_size.html">Increasing The Maximum Database File Size</a></li>
-                    <li><a target="content" href="reference/tuning/performance_hints/flushfilebuffers.html">FlushFileBuffers</a></li>
                     <li><a target="content" href="reference/tuning/performance_hints/b-tree_tuning.html">B-Tree tuning</a></li>
                     <li><a target="content" href="reference/tuning/performance_hints/inheritance_hierarchies.html">Inheritance hierarchies</a></li>
                     <li><a target="content" href="reference/tuning/performance_hints/persistent_and_transient_fields.html">Persistent and transient fields</a></li>
@@ -674,6 +711,7 @@ background-color:#838383;
                 <li><a target="content" href="reference/usage_pitfalls/classloader_and_generic_classes.html">Classloader And Generic Classes</a></li>
                 <li><a target="content" href="reference/usage_pitfalls/client-server_timeouts.html">Client-Server Timeouts</a></li>
                 <li><a target="content" href="reference/usage_pitfalls/dangerous_practices.html">Dangerous Practices</a></li>
+                <li><a target="content" href="reference/usage_pitfalls/persistent_hashtables.html">Persistent Hashtables</a></li>
                 <li><a target="content" href="reference/usage_pitfalls/update_depth.html">Update Depth</a></li>
                 <li><a target="content" href="reference/usage_pitfalls/working_with_large_amounts_of_data.html">Working With Large Amounts Of Data</a></li>
               </ul>
@@ -692,6 +730,8 @@ background-color:#838383;
                     <li><a target="content" href="reference/client-server/server_without_persistent_classes_deployed/qbe.html">QBE</a></li>
                     <li><a target="content" href="reference/client-server/server_without_persistent_classes_deployed/soda.html">SODA</a></li>
                     <li><a target="content" href="reference/client-server/server_without_persistent_classes_deployed/native_queries.html">Native Queries</a></li>
+                    <li><a target="content" href="reference/client-server/server_without_persistent_classes_deployed/linq.html">LINQ</a><ul></ul>
+                    </li>
                     <li><a target="content" href="reference/client-server/server_without_persistent_classes_deployed/evaluations.html">Evaluations</a></li>
                     <li><a target="content" href="reference/client-server/server_without_persistent_classes_deployed/multidimensional_arrays.html">Multidimensional Arrays</a></li>
                   </ul>
@@ -776,12 +816,27 @@ background-color:#838383;
                 <li><a target="content" href="reference/object_manager_for_db4o/object_manager_tour.html">Object Manager Tour</a></li>
               </ul>
             </li>
+            <li><a target="content" href="reference/sharpen.html">Sharpen</a><ul>
+                <li><a target="content" href="reference/sharpen/how_to_setup_sharpen.html">How To Setup Sharpen</a><ul></ul>
+                </li>
+                <li><a target="content" href="reference/sharpen/example_conversion.html">Example Conversion</a><ul>
+                    <li><a target="content" href="reference/sharpen/example_conversion/persistentexample.java.html">PersistentExample.Java</a></li>
+                    <li><a target="content" href="reference/sharpen/example_conversion/pilot.java.html">Pilot.Java</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/sharpen/sharpen_command-line_arguments.html">Sharpen Command-Line Arguments</a></li>
+                <li><a target="content" href="reference/sharpen/sharpen_annotations.html">Sharpen Annotations</a></li>
+              </ul>
+            </li>
             <li><a target="content" href="reference/working_with_source_code.html">Working With Source Code</a><ul>
                 <li><a target="content" href="reference/working_with_source_code/using_the_sources_from_db4o_distribution.html">Using The Sources From Db4o Distribution</a></li>
                 <li><a target="content" href="reference/working_with_source_code/using_the_repository.html">Using The Repository</a></li>
                 <li><a target="content" href="reference/working_with_source_code/db4o_directory_structure.html">Db4o Directory Structure</a></li>
                 <li><a target="content" href="reference/working_with_source_code/configuring_java_system_libraries.html">Configuring Java System Libraries</a></li>
+                <li><a target="content" href="reference/working_with_source_code/building_full_distribution.html">Building Full Distribution</a></li>
                 <li><a target="content" href="reference/working_with_source_code/building_java_version.html">Building Java Version</a></li>
+                <li><a target="content" href="reference/working_with_source_code/sharpen_set-up_for_db4o_build.html">Sharpen Set-Up For Db4o Build</a><ul></ul>
+                </li>
                 <li><a target="content" href="reference/working_with_source_code/building_.net_version.html">Building .NET Version</a></li>
                 <li><a target="content" href="reference/working_with_source_code/testing_db4o.html">Testing Db4o</a></li>
                 <li><a target="content" href="reference/working_with_source_code/object_manager_sources.html">Object Manager Sources</a></li>

@@ -258,7 +258,7 @@ support. </p>
 </span>
 
 <p>configures file buffers to be flushed during transaction
-commits. For more information see <a href="../performance_hints/flushfilebuffers.html" class="wikiLink">FlushFileBuffers</a>.</p>
+commits. Deprecated. Use <a href="../../implementation_strategies/io_adapter/nonflushingioadapter.html" class="wikiLink">NonFlushingIoAdapter</a> instead.<br></p>
 
 <p><br></p>
 
@@ -492,7 +492,7 @@ more information see <a href="../debugging_db4o.html" class="wikiLink">Debugging
 </span>
 
 <p>can be used to turn the database file locking thread off.
-This tuning setting makes sense with java version 1.4 and higher. For more
+This tuning setting is potentially dangerous and can lead to the database corruption when a concurrent access to the database happens. However, it can significantly increase the performance for the databases used with JDK version &lt; 1.4. Use it only when you are 100% sure that no concurrent access to the database is possible. For more
 information see <a href="../performance_hints/no_lock_file_thread.html" class="wikiLink">No lock file thread</a>.</p>
 
 <p><br></p>
@@ -842,7 +842,7 @@ configuration.</p>
 </div>
     </div>
     <div id="footer">
-					This revision (13) was last Modified 2007-06-04T16:55:04 by Tetyana.
+					This revision (15) was last Modified 2008-06-30T16:59:14 by Tetyana.
 				</div>
   </body>
 </html>

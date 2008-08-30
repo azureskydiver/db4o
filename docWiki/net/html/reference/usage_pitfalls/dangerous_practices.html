@@ -7,8 +7,7 @@
   <body>
     <div class="CommonContent">
       <div class="CommonContentArea">
-        <h1>Dangerous Practices</h1>
-<p>Db4o
+        <h1>Dangerous Practices</h1><p>Db4o
 databases are well protected against corruption. However some specific
 configurations can make your database file vulnerable.
 </p>
@@ -21,7 +20,7 @@ database file immediately. Do not use this setting unless your
 application logic guarantees that only one VM session can access your
 database file at a time. For more information see <a href="../tuning/performance_hints/no_lock_file_thread.html" class="wikiLink">No lock file thread</a>.</p>
 </li>
-<li> <code>Db4o.configure().flushFileBuffers(false)</code>
+<li> <code><a href="../implementation_strategies/io_adapter/nonflushingioadapter.html" class="wikiLink">NonFlushingIoAdapter</a></code>
 
 
 <p>In order to ensure ACID transaction db4o uses a <a href="../basic_concepts/acid_model/acid_properties_for_db4o.html" class="wikiLink">special strategy</a>, which relies on the order of writes to the storage medium.
@@ -91,7 +90,7 @@ commit.
 <br><br></p></div>
     </div>
     <div id="footer">
-					This revision (1) was last Modified 2007-09-09T12:22:25 by Tetyana.
+					This revision (2) was last Modified 2008-06-30T16:59:58 by Tetyana.
 				</div>
   </body>
 </html>

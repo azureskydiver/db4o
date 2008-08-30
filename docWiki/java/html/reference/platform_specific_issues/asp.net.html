@@ -22,50 +22,24 @@ window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
 		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
 	}
 }
-</script>
+</script> 
 
-
-<p><font color="#990000">This topic applies to .NET version only</font>&nbsp;</p>
-
-<p>You can use db4o as a persistent layer of your ASP.NET
-application. The actual integration of db4o into your web application is quite
-simple: you just need to add reference to Db4objects.Db4o.dll and use it in a client/server mode. <br></p>
-<a name="Security Requirements&nbsp;"></a><h2>Security Requirements&nbsp;</h2>
-
-<p>However, as it is characteristic to web-applications in general, there
-are some security permissions involved, which can in fact forbid db4o
-functionality in your ASP.NET application. So, before developing/deploying you
-should make sure that the required permissions would be granted to your
-application at the hosting server:</p>
-
-<ol>
-<li>ASPNET user should have read/write permissions to the
-directory containing database file. Obviously this is necessary to work with
-the database.</li>
-
-<li>
-
-<p class="MsoNormal">Trust Level of your site should be set to "Full".</p>
-</li>
-
-<li>
-<p class="MsoNormal">All the necessary permissions should be granted to db4o assembly. The easiest way to ensure this is to add full trust to db4o:</p>
-
-</li>
-
-<ul>
-<li>For .NET 1.1 you can set this using caspol utility:</li>
-<code>caspol -af Db4objects.Db4o.dll</code>
-<li>For .NET versions &gt;= 2.0 Db4objects.Db4o.dll should be
-installed in GAC</li>
-</ul>
-
-<p>If full trust is not a suitable solution for, you can check the minimum security permissions that
-db4o dll needs to operate using permcalc.exe tool from your Visual Studio installation. </p>
-
-<p><code>PermCalc.exe -Sandbox Db4objects.Db4o.dll</code></p>
-
-<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">sandbox.PermCalc.xml</span></div><div class="fscCode"><pre ID="ResourcesReferencePlatform_Specific_Issuessandbox.Permcalc.Xml_1618_34"><div><!--
+<P><FONT color=#990000>This topic applies to .NET version only</FONT>&nbsp;</P>
+<P>You can use db4o as a persistent layer of your ASP.NET application. The actual integration of db4o into your web application is quite simple: you just need to add reference to Db4objects.Db4o.dll and use it in a client/server mode. <BR></P>
+<a name="Security Requirements&nbsp;"></a><H2>Security Requirements&nbsp;</H2>
+<P>However, as it is characteristic to web-applications in general, there are some security permissions involved, which can in fact forbid db4o functionality in your ASP.NET application. So, before developing/deploying you should make sure that the required permissions would be granted to your application at the hosting server:</P>
+<OL>
+<LI>ASPNET user should have read/write permissions to the directory containing database file. Obviously this is necessary to work with the database.</LI>
+<LI>
+<P class=MsoNormal>Trust Level of your site should be set to "Full".</P></LI>
+<LI>
+<P class=MsoNormal>All the necessary permissions should be granted to db4o assembly. The easiest way to ensure this is to add full trust to db4o:</P></LI>
+<UL>
+<LI>For .NET 1.1 you can set this using caspol utility:</LI><code>caspol -af Db4objects.Db4o.dll</code> 
+<LI>For .NET versions &gt;= 2.0 Db4objects.Db4o.dll should be installed in GAC</LI></UL>
+<P>If full trust is not a suitable solution for, you can check the minimum security permissions that db4o dll needs to operate using permcalc.exe tool from your Visual Studio installation. </P>
+<P><code>PermCalc.exe -Sandbox Db4objects.Db4o.dll</code></P>
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">sandbox.PermCalc.xml</span></div><div class="fscCode"><pre ID="ResourcesReferencePlatform_Specific_Issuessandbox.Permcalc.Xml_1572_34"><div><!--
 
 Code highlighting produced by Actipro CodeHighlighter (freeware)
 http://www.CodeHighlighter.com/
@@ -80,119 +54,53 @@ http://www.CodeHighlighter.com/
 </span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">IPermission </span><span style="color: #FF0000;">version</span><span style="color: #0000FF;">=&quot;1&quot;</span><span style="color: #FF0000;"> class</span><span style="color: #0000FF;">=&quot;System.Security.Permissions.KeyContainerPermission, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot;</span><span style="color: #FF0000;"> Unrestricted</span><span style="color: #0000FF;">=&quot;true&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
 </span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">PermissionSet</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
 </span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">Sandbox</span><span style="color: #0000FF;">&gt;</span></div></pre></div></div>
-
-<p>Consult with your web-server administrator to grant these
-permissions.</p>
-</ol>
-<a name="Sample Application"></a><h2>Sample Application</h2>
-<ol>
-</ol>
-
-<p>Let's look at an example implementation: we will create a
-simple ASP.NET application, which will use db4o to store, retrieve and delete
-objects </p>
-
-<p>The basic requirements for seamless db4o integration are:</p>
-
-<ul>
-<li>db4o server should open database file at application start
-and close it when application is terminated</li>
-
-<li>clients, accessing application through web-browser, should
-get their db4o-client connection on request.</li>
-</ul>
-
-<p>In order to keep page-specific code clean we will implement
-db4o functionality in a separate Db4oHttpModule
-implementing IhttpModule interface.</p>
-
-<p>Database file path can be saved in <a href="web.config.html" class="wikiLink">Web.Config</a>: </p>
-
-<p><code>&lt;appSettings&gt;<br>
-&nbsp;&nbsp;&nbsp; &lt;add key="db4oFileName" value="~/Data/Test.yap"/&gt;<br>
-&lt;/appSettings&gt;</code></p>
-
-<p>Make sure that you have Data folder inside you web-site
-directory. ASPNET user should have enough rights to create and modify files
-inside this folder. You should also make sure that Data folder is not
-accessible to anonymous user; otherwise web-server visitors will be able to
-download your database.</p>
+<P>Consult with your web-server administrator to grant these permissions.</P></OL>
+<a name="Sample Application"></a><H2>Sample Application</H2>
+<OL></OL>
+<P>Let's look at an example implementation: we will create a simple ASP.NET application, which will use db4o to store, retrieve and delete objects </P>
+<P>The basic requirements for seamless db4o integration are:</P>
+<UL>
+<LI>db4o server should open database file at application start and close it when application is terminated</LI>
+<LI>clients, accessing application through web-browser, should get their db4o-client connection on request.</LI></UL>
+<P>In order to keep page-specific code clean we will implement db4o functionality in a separate Db4oHttpModule implementing IhttpModule interface.</P>
+<P>Database file path can be saved in <a href="web.config.html" class="wikiLink">Web.Config</a>: </P>
+<P><code>&lt;appSettings&gt;<BR>&nbsp;&nbsp;&nbsp; &lt;add key="db4oFileName" value="~/Data/Test.yap"/&gt;<BR>&lt;/appSettings&gt;</code></P>
+<P>Make sure that you have Data folder inside you web-site directory. ASPNET user should have enough rights to create and modify files inside this folder. You should also make sure that Data folder is not accessible to anonymous user; otherwise web-server visitors will be able to download your database.</P>
+<P>We will open db4o connection only with the first client request:</P>
 
 
-<p>We will open db4o connection only with the first client
-request:</p>
+<P>The following code will ensure that the database is closed upon termination:</P>
 
 
+<P>This is basically all the functionality that is required from db4o module. In order to make use of it we need to register it in <a href="web.config.html" class="wikiLink">Web.Config</a>:</P>
+<P><code>&lt;httpModules&gt;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;add type="Db4objects.Db4odoc.Web.Data.Db4oHttpModule" name="Db4oHttpModule" /&gt;<BR>&lt;/httpModules&gt;</code></P>
+<P>With the help of the created module we can access db4o database fairly easy:</P>
 
 
-
-<p>The following code
-will ensure that the database is closed upon termination:</p>
+<P>To test the whole application you can use the following simple form:<BR></P>
 
 
+<a name="Persisting Objects in ASP.NET2&nbsp;"></a><H2>Persisting Objects in ASP.NET2&nbsp;</H2>
+
+<P>If you are creating your application in ASP.NET2 you should take into consideration the fact that the assembly names are generated automatically on each build by default. Db4o distinguish persisted classes by name, namespace and assembly, so after the assembly name change, you won't be able to access classes saved with the previous version of the assembly.</P>
+<P>There are several workarounds:</P>
+<UL>
+<LI>You can create a separate class library keeping db4o logic and persistent classes. This can also help if you need to access fully trusted db4o library from partially trusted ASP application</LI>
+<LI>You can build your ASP.NET2 application manually using aspnet_compiler utility from .NET2 SDK.</LI>
+<P><code>aspnet_compiler.exe -v /WebSite -f -fixednames c:\WebSite -c -errorstack</code></P>
+<P>Microsoft has published a how-to for <A class="" href="http://msdn.microsoft.com/en-us/library/ms228040.aspx">using the aspnet_compiler to generate fixed names for ASP.NET assemblies</A>.</P>
+<LI>You can use db4o aliasing API to redirect saved classes to the new assembly name. The following method should be called before opening database file to make all the classes within the namespace available after assembly name change:</LI>
 
 
-
-<p>This is basically all the functionality that is required
-from db4o module. In order to make use of it we need to register it in
-<a href="web.config.html" class="wikiLink">Web.Config</a>:</p>
-
-<p><code>&lt;httpModules&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;add type="Db4objects.Db4odoc.Web.Data.Db4oHttpModule"
-name="Db4oHttpModule" /&gt;<br>
-&lt;/httpModules&gt;</code></p>
-
-
-<p>With the help of the created module we can access db4o
-database fairly easy:</p>
-
-
-
-
-
-<p>To test the whole application you can use the following simple form:<br></p>
-
-
-
-
-<a name="Persisting Objects in ASP.NET2&nbsp;"></a><h2>Persisting Objects in ASP.NET2&nbsp;</h2>
-
-
-<p>If you are creating your application in ASP.NET2 you should
-take into consideration the fact that the assembly names are generated
-automatically on each build by default. Db4o distinguish persisted classes by
-name, namespace and assembly, so after the assembly name change, you won't be
-able to access classes saved with the previous version of the assembly.</p>
-
-<p>There are several workarounds:</p>
-
-<ul>
-<li>You can create a separate class library keeping db4o
-logic and persistent classes. This can also help if you need to access fully
-trusted db4o library from partially trusted ASP application</li>
-
-<li>You can build your ASP.NET2 application manually using
-aspnet_compiler utility from .NET2 SDK.</li>
-
-<p><code>aspnet_compiler.exe
--v /WebSite -f -fixednames c:\WebSite -c -errorstack</code></p>
-
-<li>You can use db4o aliasing API to redirect saved classes
-to the new assembly name. The following method should be called before opening
-database file to make all the classes within the namespace available after
-assembly name change:</li>
-
-
-
-
-
-<p>You can use TypeAlias for aliasing
-only specific class.</p>
-</ul>
-<a name="More Information"></a><h2>More Information</h2><p>Additional information about using db4o in ASP.NET environment can be found in db4o <a href="http://developer.db4o.com/ProjectSpaces/view.aspx/All_Tools_and_Add-Ons">Project Spaces</a>. The following community projects featuring db4o ASP.NET membership providers exist:</p><ul><li><a href="http://www.codeplex.com/db4oProviders">db4o ASP.NET Providers</a> <br></li><li><a href="http://developer.db4o.com/ProjectSpaces/view.aspx/Db4oMembership_Provider">db4oMembershipProvider for ASP.NET2</a><br></li></ul></div>
+<P>You can use TypeAlias for aliasing only specific class.</P></UL>
+<a name="More Information"></a><H2>More Information</H2>
+<P>Additional information about using db4o in ASP.NET environment can be found in db4o <A href="http://developer.db4o.com/ProjectSpaces/view.aspx/All_Tools_and_Add-Ons">Project Spaces</A>. The following community projects featuring db4o ASP.NET membership providers exist:</P>
+<UL>
+<LI><A href="http://www.codeplex.com/db4oProviders">db4o ASP.NET Providers</A> <BR></LI>
+<LI><A href="http://developer.db4o.com/ProjectSpaces/view.aspx/Db4oMembership_Provider">db4oMembershipProvider for ASP.NET2</A><BR></LI></UL></div>
     </div>
     <div id="footer">
-					This revision (22) was last Modified 2008-01-01T10:54:11 by Tetyana.
+					This revision (23) was last Modified 2008-06-03T00:19:05 by Eric Falsken.
 				</div>
   </body>
 </html>

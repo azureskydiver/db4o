@@ -14,12 +14,11 @@ produces diagnostic messages about classes that are not Activatable, and TP exam
 this.</p>
 
 <p>First
-of all you will need to add a reference to Db4oTool.MSBuild.dll (from Db4oTool distro) to your project.
+of all you will need to edit your project file and add a link to Db4oTool.MSBuild.dll (from the /bin folder in your distribution).
 Note, that this dll in its turn references Db4oTool.exe, Mono.Cecil.dll and
-Mono.GetOptions.dll, so you must keep them in the same directory.</p>
+Mono.GetOptions.dll, so you must keep them in the same directory. <br></p>
 
-<p>Open
-the project file (csproj for c# and vbproj for VB) in any text editor and add
+<p>To edit the project file (csproj for c# and vbproj for VB) open it in any text editor and add
 the following lines at the end of the file before the closing &lt;/Project&gt;
 tag:</p>
 
@@ -57,7 +56,7 @@ Queries, &nbsp;NQ were also optimized by the
 updated build script.</p></div>
     </div>
     <div id="footer">
-					This revision (3) was last Modified 2008-01-21T06:17:58 by Tetyana.
+					This revision (5) was last Modified 2008-07-23T12:38:17 by Tetyana.
 				</div>
   </body>
 </html>
