@@ -37,7 +37,7 @@
 		</fileset>
 		
 		<pathelement location="${drs.dir.dist.classes}" />
-		<pathelement location="${file.java5.jar}" />
+		<pathelement location="${file.jdk1.5.jar}" />
 		<pathelement location="${file.db4ounit.jar}" />
 	</path>
 	
@@ -133,7 +133,7 @@
 			<zipfileset dir="${drs.dir.base}" prefix="${zipbasedir}" includes="machine.properties, ant.properties, build.xml, readme.html, drs.license.html" />
 			<zipfileset dir="${drs.dir.dist.temp}" prefix="${zipbasedir}" includes="compatibility.html" />
 			<zipfileset dir="${drs.dir.base}/lib" prefix="${zipbasedir}/lib" includes="*.jar, *.html" />
-			<zipfileset file="${file.java5.jar}" prefix="${zipbasedir}/lib" />
+			<zipfileset file="${file.jdk1.5.jar}" prefix="${zipbasedir}/lib" />
 			<zipfileset file="${file.db4ounit.jar}" prefix="${zipbasedir}/lib" />
 			<zipfileset dir="${drs.dir.src}" prefix="${zipbasedir}/src" excludes="misc/, jira/" />
 
