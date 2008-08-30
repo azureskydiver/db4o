@@ -49,7 +49,8 @@ record).</p>
 <span name="cs_wiki_filter" csw_filters="java">
 <p>Java:&nbsp;</p>
 
-<p><code>configuration.flushFileBuffers(false)</code></p>
+<p><code>RandomAccessFileAdapter randomAccessFileAdapter = new RandomAccessFileAdapter();<br></p><pre></code></pre>
+<pre><code>NonFlushingIoAdapter nonFlushingIoAdapter = <br>                                 new NonFlushingIoAdapter(randomAccessFileAdapter);<br></code><br><code>CachedIoAdapter cachedIoAdapter = new CachedIoAdapter(nonFlushingIoAdapter);</code></pre>
 
 </span>
 
@@ -80,7 +81,7 @@ the commit can be re-enabled after restoring the original configuration.</li>
 </ol></div>
     </div>
     <div id="footer">
-					This revision (2) was last Modified 2007-05-22T11:27:41 by Tetyana.
+					This revision (3) was last Modified 2008-06-30T16:56:05 by Tetyana.
 				</div>
   </body>
 </html>

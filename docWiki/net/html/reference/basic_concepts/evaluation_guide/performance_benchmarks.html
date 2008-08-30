@@ -1,0 +1,44 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Performance Benchmarks</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Performance Benchmarks</h1>
+
+<p>The best way to evaluate the suitability of db4o for your
+next application is to write some performance tests. The Benchmarks part of
+reference documentation provides some simple benchmarks on insert, delete,
+update and query operations. You can use those tests and adjust them to your
+application environment.</p>
+
+<p>To get the best picture of the expected performance, replace
+the classes used in the benchmark with your own object model classes, use the
+appropriate amount of them and calculate the times of the most frequently used
+operations. For example, if the primary use of your application is caching, you
+will be mostly interested in insert performance (The cache might not be ever
+read after all). If you require rapid access to the data in the database - use
+query benchmarks to evaluate the general performance. </p>
+
+<p>It is also a good idea to run benchmarks on the hardware,
+which is going to be used in production. That might be not so critical for
+normal desktop application, where the characteristics of the hardware can be
+easily improved, i.e. memory added, hard disk drive replaces for a faster one,
+etc. But for embedded device a simple memory upgrade can mean a considerable
+additional cost (multiplied by the amount of devices used in production).&nbsp; To simplify the decision-making process for
+such cases db4o provides a special IO benchmark, which can be configured to
+emulate the slower IO operations on an embedded device. For more information
+see <a href="../../tuning/io_benchmark_tools.html" class="wikiLink">IO Benchmark Tools</a>.</p>
+
+<p>Other valuable information and tips for fine-tuning and
+improving db4o performance for different environments can be found in <a href="../../tuning.html" class="wikiLink">Tuning</a>
+chapter. It also reveals the common mistakes that lead to poor performance. </p></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2008-06-10T16:14:37 by Tetyana.
+				</div>
+  </body>
+</html>
