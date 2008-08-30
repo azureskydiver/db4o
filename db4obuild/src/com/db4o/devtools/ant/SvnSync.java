@@ -57,7 +57,7 @@ public class SvnSync extends Task {
 		FileChannel sourceChannel = null;
 		
 		try {
-			createFolderIfNecessary(new File(target).getParentFile());
+			new File(target).getParentFile().mkdirs();
 			targetChannel = new FileOutputStream(target).getChannel();
 			sourceChannel = new FileInputStream(source).getChannel();
 			
@@ -66,13 +66,6 @@ public class SvnSync extends Task {
 		finally {
 			if (targetChannel != null) targetChannel.close();
 			if (sourceChannel != null) sourceChannel.close();			
-		}
-	}
-
-	private void createFolderIfNecessary(File folder) {
-		if (!folder.exists()) {
-			createFolderIfNecessary(folder.getParentFile());
-			folder.mkdir();
 		}
 	}
 
