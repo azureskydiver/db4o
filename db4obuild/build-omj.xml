@@ -140,8 +140,8 @@
 		<mkdir dir="${dir.dist.ome.jars}" />
 		<mkdir dir="${dir.dist.ome.temp}" />
 
-		<property name="filename.db4o.jar" value="${filename.java5.jar}" />
-		<property name="file.db4o.jar" value="${file.java5.jar}" />
+		<property name="filename.db4o.jar" value="${filename.jdk1.5.jar}" />
+		<property name="file.db4o.jar" value="${file.jdk1.5.jar}" />
 
 		<filterset id="filterset.ome">
 			<filter token="OMEJ_VERSION" value="${omej.version}" />
