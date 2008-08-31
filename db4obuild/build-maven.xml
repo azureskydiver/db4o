@@ -74,19 +74,19 @@
 			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
 		</artifact:deploy>
 		
-		<artifact:deploy file="${file.java1.1.jar}">
+		<artifact:deploy file="${file.jdk1.1.jar}">
 			<remoteRepository refid="${repositoryId}"/>
 			<pom file="${tmpDir}/poms/db4o-java1.1.xml" />
 			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
 		</artifact:deploy>
 		
-		<artifact:deploy file="${file.java1.2.jar}">
+		<artifact:deploy file="${file.jdk1.2.jar}">
 			<remoteRepository refid="${repositoryId}"/>
 			<pom file="${tmpDir}/poms/db4o-java1.2.xml" />
 			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
 		</artifact:deploy>
 		
-		<artifact:deploy file="${file.java5.jar}">
+		<artifact:deploy file="${file.jdk1.5.jar}">
 			<remoteRepository refid="${repositoryId}"/>
 			<pom file="${tmpDir}/poms/db4o-java5.xml" />		
 			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
