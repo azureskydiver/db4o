@@ -193,7 +193,7 @@
 		<property name="dependencies.jar" location="${drs.sharpen.workspace.dir}/lib/dependencies.jar" />
 		
 		<jar destfile="${dependencies.jar}">
-            <fileset dir="${dir.dist.classes.java5}" />
+            <fileset dir="${dir.dist.classes.jdk1.5}" />
 			<fileset dir="${dir.dist.classes.db4ounit}" />
 		</jar>
         
