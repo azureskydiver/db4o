@@ -11,15 +11,21 @@ import com.db4o.internal.cs.messages.*;
 
 class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatcher {
 	
-	private ClientObjectContainer i_stream;
-	private Socket4 i_socket;
-	private final BlockingQueue _messageQueue;
+	private ClientObjectContainer _container;
+	private Socket4 _socket;
+	private final BlockingQueue _synchronousMessageQueue;
+	private final BlockingQueue _asynchronousMessageQueue;
 	private boolean _isClosed;
 	
-	ClientMessageDispatcherImpl(ClientObjectContainer client, Socket4 a_socket, BlockingQueue messageQueue_){
-		i_stream = client;
-		_messageQueue = messageQueue_;
-		i_socket = a_socket;
+	ClientMessageDispatcherImpl(
+			ClientObjectContainer client, 
+			Socket4 a_socket, 
+			BlockingQueue synchronousMessageQueue, 
+			BlockingQueue asynchronousMessageQueue){
+		_container = client;
+		_synchronousMessageQueue = synchronousMessageQueue;
+		_asynchronousMessageQueue = asynchronousMessageQueue;
+		_socket = a_socket;
 	}
 	
 	public synchronized boolean isMessageDispatcherAlive() {
@@ -31,14 +37,15 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 	        return true;
 	    }
 		_isClosed = true;
-		if(i_socket != null) {
+		if(_socket != null) {
 			try {
-				i_socket.close();
+				_socket.close();
 			} catch (Db4oIOException e) {
 				
 			}
 		}
-		_messageQueue.stop();
+		_synchronousMessageQueue.stop();
+		_asynchronousMessageQueue.stop();
 		return true;
 	}
 	
@@ -51,7 +58,7 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 		while (isMessageDispatcherAlive()) {
 			Msg message = null;
 			try {
-				message = Msg.readMessage(this, transaction(), i_socket);
+				message = Msg.readMessage(this, transaction(), _socket);
 			} catch (Db4oIOException exc) {
 				if(DTrace.enabled){
 					DTrace.CLIENT_MESSAGE_LOOP_EXCEPTION.log(exc.toString());
@@ -61,15 +68,11 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 			if(message == null){
 			    continue;
 			}
-			
-			// TODO are there possibly messages that have to be processed *and* passed on?
 			if (isClientSideMessage(message)) {
-				if (((ClientSideMessage) message).processAtClient()) {
-					continue;
-				}
+				_asynchronousMessageQueue.add(message);
+			} else {
+				_synchronousMessageQueue.add(message);
 			}
-			_messageQueue.add(message);
-			
 		}
 	}
 	
@@ -78,12 +81,12 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 	}
 	
 	public boolean write(Msg msg) {
-		i_stream.write(msg);
+		_container.write(msg);
 		return true;
 	}
 
 	public void setDispatcherName(String name) {
-		setName("db4o client side message dispather for " + name);
+		setName("db4o client side message dispatcher for " + name);
 	}
 
 	public void startDispatcher() {
@@ -91,7 +94,7 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 	}
 	
 	private Transaction transaction(){
-	    return i_stream.transaction();
+	    return _container.transaction();
 	}
 	
 }
