@@ -6,13 +6,13 @@ import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.messaging.*;
 
-public final class MUserMessage extends MsgObject implements ServerSideMessage, ClientSideTask {
+public final class MUserMessage extends MsgObject implements ServerSideMessage, ClientSideMessage {
 	
 	public final boolean processAtServer() {
 		return processUserMessage();
 	}
 	
-	public boolean runOnClient() {
+	public boolean processAtClient() {
 		return processUserMessage();
 	}
 	

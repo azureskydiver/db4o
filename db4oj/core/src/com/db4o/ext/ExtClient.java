@@ -2,7 +2,6 @@
 
 package com.db4o.ext;
 
-import com.db4o.messaging.*;
 
 /**
  * extended client functionality for the
@@ -59,12 +58,5 @@ public interface ExtClient extends ExtObjectContainer{
      */
 	public boolean isAlive();
 	
-	/**
-	 * Dispatches any pending messages to
-	 * the currently configured {@link MessageRecipient}.
-	 * 
-	 * @param maxTimeSlice how long before the method returns leaving messages on the queue for later dispatching
-	 */
-	public void dispatchPendingMessages(long maxTimeSlice);
 }
 

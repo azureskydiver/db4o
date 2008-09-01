@@ -29,13 +29,17 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	private Socket4 i_socket;
 
-	private BlockingQueue _messageQueue = new BlockingQueue();
+	private BlockingQueue _synchronousMessageQueue = new BlockingQueue();
+	
+	private BlockingQueue _asynchronousMessageQueue = new BlockingQueue();
 
 	private final String _password; // null denotes password not necessary
 
 	int[] _prefetchedIDs;
 
 	ClientMessageDispatcher _messageDispatcher;
+	
+	ClientAsynchronousMessageProcessor _asynchronousMessageProcessor;
 
 	int remainingIDs;
 
@@ -98,7 +102,11 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	}
 	
 	private void startDispatcherThread(Socket4 socket, String user) {
-		_messageDispatcher = new ClientMessageDispatcherImpl(this, socket, _messageQueue);
+		if(! _singleThreaded){
+			_asynchronousMessageProcessor = new ClientAsynchronousMessageProcessor(_asynchronousMessageQueue);
+			_asynchronousMessageProcessor.startProcessing();
+		}
+		_messageDispatcher = new ClientMessageDispatcherImpl(this, socket, _synchronousMessageQueue, _asynchronousMessageQueue);
 		_messageDispatcher.setDispatcherName(user);
 		_messageDispatcher.startDispatcher();
 	}
@@ -159,8 +167,14 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
         } catch (Exception e) {
             Exceptions4.catchAllExceptDb4oException(e);
         }
+        try {
+            if (!_singleThreaded) {
+            	_asynchronousMessageProcessor.stopProcessing();
+            }
+        } catch (Exception e) {
+            Exceptions4.catchAllExceptDb4oException(e);
+        }
     }
-    
 
 	public final void commit1(Transaction trans) {
 		trans.commit();
@@ -303,8 +317,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	public Msg getResponse() {
 		while(true){
 			Msg msg = _singleThreaded ? getResponseSingleThreaded(): getResponseMultiThreaded();
-			if(isClientSideTask(msg)){
-				if(((ClientSideTask)msg).runOnClient()){
+			if(isClientSideMessage(msg)){
+				if(((ClientSideMessage)msg).processAtClient()){
 					continue;
 				}
 			}
@@ -316,7 +330,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		while (isMessageDispatcherAlive()) {
 			try {
 				final Msg message = Msg.readMessage(this, _transaction, i_socket);
-				if(message instanceof ClientSideMessage) {
+				if(isClientSideMessage(message)) {
 					if(((ClientSideMessage)message).processAtClient()){
 						continue;
 					}
@@ -332,7 +346,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	private Msg getResponseMultiThreaded() {
 		Msg msg;
 		try {
-			msg = (Msg)_messageQueue.next();
+			msg = (Msg)_synchronousMessageQueue.next();
 		} catch (BlockingQueueStoppedException e) {
 			if(DTrace.enabled){
 				DTrace.BLOCKING_QUEUE_STOPPED_EXCEPTION.log(e.toString());
@@ -345,11 +359,10 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return msg;
 	}
 	
-	private boolean isClientSideTask(Msg message) {
-		return message instanceof ClientSideTask;
+	private boolean isClientSideMessage(Msg message) {
+		return message instanceof ClientSideMessage;
 	}
 
-	
 	private void onMsgError() {
 		close();
 		throw new DatabaseClosedException();
@@ -839,7 +852,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	private void shutDownCommunicationRessources() {
 	    stopHeartBeat();
 	    closeMessageDispatcher();
-	    _messageQueue.stop();
+	    _synchronousMessageQueue.stop();
+	    _asynchronousMessageQueue.stop();
 	}
 
 	public void setDispatcherName(String name) {
@@ -867,32 +881,5 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
         MsgD response = (MsgD) expectedResponse(Msg.CLASS_ID);
         return response.readInt();
     }
-	
-	public void dispatchPendingMessages(long maxTimeSlice) {
-		synchronized (_lock) {
-			Cool.loopWithTimeout(maxTimeSlice, new ConditionalBlock() {
-				public boolean run() {
-					return dispatchPendingMessage();
-				}
-			});
-		}
-	}
-
-	private boolean dispatchPendingMessage() {
-		ClientSideTask task = nextClientSideTask();
-		if (null == task) {
-			return false;
-		}
-		task.runOnClient();
-		return true;
-	}
-
-	private ClientSideTask nextClientSideTask() {
-		return (ClientSideTask) _messageQueue.nextMatching(new Predicate4() {
-			public boolean match(Object message) {
-				return message instanceof ClientSideTask;
-			}
-		});
-	}
 
 }

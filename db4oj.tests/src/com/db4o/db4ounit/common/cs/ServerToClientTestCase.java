@@ -26,20 +26,6 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 		void wait(ObjectContainer client1, ObjectContainer client2); 
 	}
 	
-	public void testDispatchPendingMessages() {
-		assertReplyBehavior(new ClientWaitLogic() {
-			public void wait(final ObjectContainer client1, final ObjectContainer client2) {
-				final int timeout = 2000;				
-				Cool.loopWithTimeout(timeout, new ConditionalBlock() {
-					public boolean run() {
-						((ExtClient)client1).dispatchPendingMessages(timeout);
-						((ExtClient)client2).dispatchPendingMessages(timeout);
-						return true;
-					}
-				});
-			}
-		});
-	}
 	
 	public void testInterleavedCommits() {
 		
@@ -70,6 +56,13 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 					sendEvenOddMessages(sender1, sender2);
 					
 					clientWaitLogic.wait(client1, client2);
+					
+					try {
+						// Give the message processor thread time to dispatch the message.
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					
 					Assert.areEqual("[reply: 0, reply: 2, reply: 4, reply: 6, reply: 8]", collector1.messages.toString());
 					Assert.areEqual("[reply: 1, reply: 3, reply: 5, reply: 7, reply: 9]", collector2.messages.toString());
