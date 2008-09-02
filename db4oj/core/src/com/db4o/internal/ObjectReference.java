@@ -423,7 +423,10 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		    
 	    Object obj = getObject();
 	    
-	    if( !objectCanUpdate(transaction, obj) ||  !isActive()  || obj == null ){
+	    if( !objectCanUpdate(transaction, obj) ||  
+	    	!isActive()  || 
+	    	obj == null || 
+	    	! classMetadata().isModified(obj)){
 	        endProcessing();
 	        return;
 	    }

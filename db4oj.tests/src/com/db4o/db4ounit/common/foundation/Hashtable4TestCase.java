@@ -175,8 +175,8 @@ public class Hashtable4TestCase implements TestCase {
 		Iterator4 iter = tableFromKeys(keys).iterator();
 		while (iter.moveNext()){
 			Entry4 entry = (Entry4) iter.current();
-			Object removed = expected.remove(entry.key());
-			Assert.isNotNull(removed);
+			boolean removedOK = expected.remove(entry.key()); 
+			Assert.isTrue(removedOK);
 		}
 		Assert.isTrue(expected.isEmpty(), expected.toString());
 	}

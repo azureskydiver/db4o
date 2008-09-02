@@ -158,7 +158,7 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         ObjectSet actual = container.query(CrashData.class);
         while (actual.hasNext()){
             CrashData current = (CrashData)actual.next();
-            if (null == expected.remove(current._name)) {
+            if (! expected.remove(current._name)) {
             	return false;
             }
         }

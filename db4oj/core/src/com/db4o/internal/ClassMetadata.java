@@ -62,6 +62,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     private TranslatedAspect _translator;
     
+    private ModificationAware _modificationChecker = AlwaysModified.INSTANCE;
+    
     public final ObjectContainerBase stream() {
     	return _container;
     }
@@ -215,6 +217,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		}
 		if(customTypeHandler instanceof EmbeddedTypeHandler){
 			_typeHandler = customTypeHandler;
+		}
+		if(customTypeHandler instanceof ModificationAware){
+			_modificationChecker = (ModificationAware) customTypeHandler;
 		}
 		boolean dirty = false;
 		TypeHandlerAspect typeHandlerAspect = new TypeHandlerAspect(
@@ -1984,6 +1989,20 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     public boolean aspectsAreNull(){
     	return _aspects == null;
     }
+    
+    private static final class AlwaysModified implements ModificationAware{
+
+		static final AlwaysModified INSTANCE = new AlwaysModified();
+
+		public boolean isModified(Object obj) {
+			return true;
+		}
+    	
+    }
+
+	public boolean isModified(Object obj) {
+		return _modificationChecker.isModified(obj);
+	}
 
     
 }

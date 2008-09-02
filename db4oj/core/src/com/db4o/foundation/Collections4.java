@@ -14,7 +14,7 @@ public class Collections4 {
 			_sequence = sequence;
 		}		
 
-		public void add(Object element) {
+		public boolean add(Object element) {
 			throw new UnsupportedOperationException();
 		}
 
@@ -38,7 +38,7 @@ public class Collections4 {
 			throw new UnsupportedOperationException();
 		}
 
-		public Object remove(Object obj) {
+		public boolean remove(Object obj) {
 			throw new UnsupportedOperationException();
 		}
 

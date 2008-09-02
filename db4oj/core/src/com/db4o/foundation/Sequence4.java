@@ -7,7 +7,7 @@ package com.db4o.foundation;
  */
 public interface Sequence4 extends Iterable4 {
 	
-	void add(Object element);
+	boolean add(Object element);
 	
 	boolean isEmpty();
 
@@ -17,7 +17,7 @@ public interface Sequence4 extends Iterable4 {
 	
 	void clear();
 	
-	Object remove(Object obj);
+	boolean remove(Object obj);
 	
 	boolean contains(Object obj);
 	

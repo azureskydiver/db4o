@@ -24,10 +24,9 @@ public class AllTests extends Db4oTestSuite {
 			ArrayMap4TATestCase.class,
 			ArrayMap4TestCase.class,
 			ArrayMap4TransparentUpdateTestCase.class,
-			ArrayMap4TestCase.class,
-			ArrayMap4TATestCase.class,
 	        SubArrayList4TestCase.class,
 	        com.db4o.db4ounit.jre5.collections.typehandler.AllTests.class,
+	        com.db4o.db4ounit.jre5.collections.fast.AllTests.class,
 		};
 	}
 

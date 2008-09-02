@@ -64,9 +64,10 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	 * 
 	 * @param element
 	 */
-	public final void add(Object element) {
+	public final boolean add(Object element) {
 		doAdd(element);
 		changed();
+		return true;
 	}	
 	
 	public final void prepend(Object element) {
@@ -249,7 +250,7 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	 * removes an object from the Collection equals() comparison returns the
 	 * removed object or null, if none found
 	 */
-	public Object remove(Object a_object) {
+	public boolean remove(Object a_object) {
 		List4 previous = null;
 		List4 current = _first;
 		while (current != null) {
@@ -257,12 +258,12 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 				_size--;
 				adjustOnRemoval(previous, current);
 				changed();
-				return current._element;
+				return true;
 			}
 			previous = current;
 			current = current._next;
 		}
-		return null;
+		return false;
 	}
 	
     public void replace(Object oldObject, Object newObject) {
