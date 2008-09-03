@@ -229,6 +229,12 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
         Assert.areEqual(storedItemGrandChild(), retrieveItemOfClass(ItemGrandChild.class));
     }
     
+    public void testStoredFields(){
+    	StoredClass storedClass = db().storedClass(Item.class);
+    	StoredField[] storedFields = storedClass.getStoredFields();
+    	Assert.areEqual(0, storedFields.length);
+    }
+    
     private Item retrieveItemOfClass(Class class1) {
         Query q = newQuery(class1);
         Item retrievedItem = (Item) q.execute().next();

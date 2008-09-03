@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.internal;
 
+import com.db4o.db4ounit.common.ext.*;
+
 import db4ounit.extensions.*;
 
 
@@ -21,7 +23,6 @@ public class AllTests extends Db4oTestSuite {
 		    MarshallingContextTestCase.class,
 		    PartialObjectContainerTestCase.class,
 			SerializerTestCase.class,
-			StoredClassTestCase.class,
 			TransactionTestCase.class,
 		};
 	}

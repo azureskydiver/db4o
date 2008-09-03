@@ -898,8 +898,14 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	        if(_aspects == null){
 	            return new StoredField[0];
 	        }
-	        StoredField[] fields = new StoredField[_aspects.length];
-	        System.arraycopy(_aspects, 0, fields, 0, _aspects.length);
+	        final Collection4 storedFields = new Collection4();
+	        forEachDeclaredField(new Procedure4() {
+				public void apply(Object field) {
+					storedFields.add(field);
+				}
+			});
+	        StoredField[] fields = new StoredField[storedFields.size()];
+	        storedFields.toArray(fields);
 	        return fields;
         }
     }

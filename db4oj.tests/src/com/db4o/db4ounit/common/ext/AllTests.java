@@ -13,6 +13,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 			Db4oDatabaseTestCase.class,
 			RefreshTestCase.class,
+			StoredClassTestCase.class,
 		};
 	}
 
