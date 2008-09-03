@@ -41,8 +41,8 @@ public class Iterator4Assert {
 		final Collection4 allExpected = new Collection4(expected);
 		while (actual.moveNext()) {
 			final Object current = actual.current();
-			final Object removed = allExpected.remove(current);
-			if (null == removed) {
+			final boolean removed = allExpected.remove(current);
+			if (! removed) {
 				unexpected(current);
 			}
 		}
