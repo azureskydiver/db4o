@@ -1,4 +1,4 @@
-package com.db4o.db4ounit.jre12.assorted;
+package com.db4o.db4ounit.jre12.staging;
 
 import java.util.*;
 
@@ -7,6 +7,9 @@ import com.db4o.config.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
+/**
+ * Jira #COR-1373
+ */
 public class SerializableConstructorTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
