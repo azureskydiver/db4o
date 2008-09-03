@@ -597,7 +597,18 @@
 			timeout="1200000">
 			<classpath refid="tests.jdk1.1.cp" />
 			<arg value="-withExceptions" />
-		</java>		
+		</java>
+		
+		<java jvm="${file.jvm.jdk1.1}" 
+			jvmargs="${java.vmargs}"
+			fork="true" 
+			classname="com.db4o.test.AllTestsLegacy" 
+			failonerror="true" 
+			timeout="3600000">
+			<classpath refid="tests.jdk1.1.cp" />
+			<arg value="-withExceptions" />
+		</java>
+
 	</target>
 	
 	<target name="run.tests.jdk1.2" depends="init, build.db4ojdk1.2.tests">
@@ -637,6 +648,16 @@
 			timeout="3600000">
 			<classpath refid="tests.jdk1.2.cp" />
 			<sysproperty key="db4oj.tests.bin" value="${dir.dist.classes.test.jdk1.2}"/>
+			<arg value="-withExceptions" />
+		</java>
+		
+		<java jvm="${file.jvm.jdk1.3}" 
+			jvmargs="${java.vmargs}"
+			fork="true" 
+			classname="com.db4o.test.AllTestsJdk1_2Legacy" 
+			failonerror="true" 
+			timeout="3600000">
+			<classpath refid="tests.jdk1.2.cp" />
 			<arg value="-withExceptions" />
 		</java>
 
@@ -690,12 +711,13 @@
 		<java jvm="${file.jvm.jdk1.5}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
-			classname="com.db4o.test.AllTestsLegacy" 
+			classname="com.db4o.test.AllTestsJdk1_2Legacy" 
 			failonerror="true" 
 			timeout="3600000">
 			<classpath refid="tests.jdk1.5.cp" />
 			<arg value="-withExceptions" />
 		</java>
+
 	</target>
 	
 	<target name="run.tests.nqopt" depends="build.nqopt.tests">
