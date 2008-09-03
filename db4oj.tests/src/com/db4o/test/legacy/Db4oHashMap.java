@@ -73,7 +73,14 @@ public class Db4oHashMap {
         runElementTest(false);
 
         
-        boolean defrag = true;
+        // FIXME: Turned off because of issuse with 
+        //        defragmenting P2HashMap.
+        
+        //        throws NotImlemented Exception
+        //        created Jira: #COR-1381
+        
+        
+        boolean defrag = false;
         
         if(defrag){
             

@@ -112,13 +112,12 @@ public class UpdatingDb4oVersions {
     }
 
     private void checkBTreeSize(ExtObjectContainer objectContainer) {
-        ObjectContainerBase yapStream = (ObjectContainerBase)objectContainer;
-        StoredClass storedClass = objectContainer.storedClass(this.getClass().getName());
-        ClassMetadata yc = (ClassMetadata) storedClass;
-        BTreeClassIndexStrategy btreeClassIndexStrategy = (BTreeClassIndexStrategy) yc.index();
+        ObjectContainerBase container = (ObjectContainerBase)objectContainer;
+        ClassMetadata classMetadata = container.classMetadataForName(this.getClass().getName());
+        BTreeClassIndexStrategy btreeClassIndexStrategy = (BTreeClassIndexStrategy) classMetadata.index();
         BTree btree = btreeClassIndexStrategy.btree();
         Test.ensure(btree != null);
-        int size = btree.size(yapStream.transaction());
+        int size = btree.size(container.transaction());
         Test.ensure(size == 1);
     }
 
