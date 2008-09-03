@@ -24,6 +24,7 @@ public class AllTests extends Db4oTestSuite {
             HashMapTestCase.class,
             NullElementsInArrayTestCase.class,
 			MapNullValueTestCase.class,
+			SerializableConstructorTestCase.class,
 		};
 	}
 }
