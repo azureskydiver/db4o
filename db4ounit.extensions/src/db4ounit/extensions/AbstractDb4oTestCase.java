@@ -116,6 +116,17 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 				clientServerSuite(independentConfig),				
 		})).run();
 	}
+	
+	public int runSoloAndEmbeddedClientServer() {
+		return runSoloAndEmbeddedClientServer(true);
+	}
+
+	private int runSoloAndEmbeddedClientServer(final boolean independentConfig) {
+		return new ConsoleTestRunner(Iterators.concat(new Iterable4[] {
+				soloSuite(independentConfig),
+				embeddedClientServerSuite(independentConfig),				
+		})).run();
+	}
 
 	public int runSolo() {
 		return runSolo(true);
