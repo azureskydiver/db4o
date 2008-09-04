@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
 import com.db4o.test.legacy.soda.arrays.typed.*;
-import com.db4o.test.legacy.soda.classes.simple.*;
 
 
 public class STString implements STClass1, STInterface {
@@ -179,27 +178,31 @@ public class STString implements STClass1, STInterface {
 	public void testEvaluation() {
 		Query q = st.query();
 		q.constrain(new STString(null));
-		q.constrain(new Evaluation() {
-			public void evaluate(Candidate candidate) {
-				STString sts = (STString) candidate.getObject();
-				// FIXME: NPE expected here?
-				candidate.include(sts.str.indexOf("od") == 1);
-			}
-		});
+		q.constrain(new IndexOfEvaluation());
 		st.expectOne(q, new STString("dod"));
 	}
 	
     public void testCaseInsenstiveContains() {
         Query q = st.query();
         q.constrain(STString.class);
-        q.constrain(new Evaluation() {
-            public void evaluate(Candidate candidate) {
-                STString sts = (STString) candidate.getObject();
-                // FIXME: NPE expected?
-                candidate.include(sts.str.toLowerCase().indexOf("od") >= 0);
-            }
-        });
+        q.constrain(new ContainsEvaluation());
         st.expectOne(q, new STString("dod"));
     }
+    
+	public static class ContainsEvaluation implements Evaluation {
+		public void evaluate(Candidate candidate) {
+		    STString sts = (STString) candidate.getObject();
+		    // FIXME: NPE expected?
+		    candidate.include(sts.str.toLowerCase().indexOf("od") >= 0);
+		}
+	}
+
+	public static class IndexOfEvaluation implements Evaluation {
+		public void evaluate(Candidate candidate) {
+			STString sts = (STString) candidate.getObject();
+			// FIXME: NPE expected here?
+			candidate.include(sts.str.indexOf("od") == 1);
+		}
+	}
 
 }

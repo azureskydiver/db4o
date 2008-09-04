@@ -43,11 +43,7 @@ public class STIdentityEvaluation implements STClass1{
         q = st.query();
         q.constrain(STIdentityEvaluation.class);
         q.descend("helper").constrain(helperA).identity();
-        q.constrain(new Evaluation() {
-            public void evaluate(Candidate candidate) {
-                candidate.include(true);
-            }
-        });
+        q.constrain(new IncludeAllEvaluation());
         st.expect(q,new Object[]{r[1], r[2], r[3]});
     }
     
@@ -80,5 +76,12 @@ public class STIdentityEvaluation implements STClass1{
         }
         
     }
+    
+    public static class IncludeAllEvaluation implements Evaluation {
+        public void evaluate(Candidate candidate) {
+            candidate.include(true);
+        }
+    } 
+
     
 }
