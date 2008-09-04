@@ -465,6 +465,7 @@
 		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
 			<fileset dir="${dir.j.core.src}">
 				<include name="com/db4o/collections/*.java" />
+				<include name="com/db4o/config/annotations/Indexed.java" />
 			</fileset>
 		</copy>		
 
@@ -511,7 +512,7 @@
         </copy>
 
 		<!-- copy db4o tests src-->
-        <copy todir="${dir.sharpen}/db4oj/core/src">
+        <copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
             <fileset dir="${dir.dist.decaf.jdk1.2.test.src}">
                 <include name="**/db4ounit/common/**/*.java" />
                 <include name="**/db4ounit/util/**/*.java" />
@@ -531,6 +532,7 @@
                 <include name="**/jre5/collections/OrderItem.java" />
                 <include name="**/jre5/collections/Product.java" />
                 <include name="**/jre5/concurrency/query/*.java" />
+    	    	<include name="**/jre5/annotation/*.java" />
             </fileset>
         </copy>
                 	
