@@ -115,15 +115,15 @@ public class STMagic implements STClass1, STInterface {
 	public void testInterface() {
 		Query q = st.query();
 		q.constrain(STInterface.class);
-		q.constrain(new Evaluation() {
-			public void evaluate(Candidate candidate) {
-				STInterface sti = (STInterface) candidate.getObject();
-				// FIXME: NPE expected?
-				candidate.include(sti.returnSomething().equals("aaa"));
-			}
-		});
+		q.constrain(new MethodCallEvaluation());
 		st.expect(q, new Object[] { new STMagic("aaa"), new STString("aaa")});
 	}
 	
+	public static class MethodCallEvaluation implements Evaluation {
+		public void evaluate(Candidate candidate) {
+			STInterface sti = (STInterface) candidate.getObject();
+			candidate.include(sti.returnSomething().equals("aaa"));
+		}
+	}
 
 }
