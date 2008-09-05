@@ -22,6 +22,7 @@ public class AllTests extends Db4oTestSuite {
             BTreeRollbackTestCase.class,
             BTreeSearchTestCase.class,
             BTreeSimpleTestCase.class,
+            BTreeStructureChangeListenerTestCase.class,
             SearcherLowestHighestTestCase.class,
             SearcherTestCase.class,
 		};

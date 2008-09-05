@@ -11,7 +11,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class BTree extends PersistentBase implements TransactionParticipant {
+public class BTree extends PersistentBase implements TransactionParticipant, BTreeStructureListener {
     
     private static final byte BTREE_VERSION = (byte)1;
     
@@ -41,6 +41,12 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     int _halfNodeSize;
     
     private final int _cacheHeight;
+    
+    private BTreeStructureListener _structureListener;
+    
+    public BTree(Transaction trans, Indexable4 keyHandler) {
+    	this(trans, 0, keyHandler);
+    }
     
     public BTree(Transaction trans, int id, Indexable4 keyHandler){
 		this(trans, id, keyHandler, config(trans).bTreeNodeSize(), config(trans).bTreeCacheHeight());
@@ -76,10 +82,14 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     public int nodeSize() {
 		return _nodeSize;
 	}
-
-	public void add(Transaction trans, Object key){	
+    
+    public void add(Transaction trans, Object key){
     	keyCantBeNull(key);
     	PreparedComparison preparedComparison = _keyHandler.prepareComparison(trans.context(), key);
+    	add(trans, preparedComparison, key);
+    }
+
+	public void add(Transaction trans, PreparedComparison preparedComparison, Object key){	
         ensureDirty(trans);
         BTreeNode rootOrSplit = _root.add(trans, preparedComparison, key);
         if(rootOrSplit != null && rootOrSplit != _root){
@@ -480,6 +490,22 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 		});
     	return sb.toString();
     }
+
+	public void structureListener(BTreeStructureListener listener) {
+		_structureListener = listener;
+	}
+
+	public void notifySplit(BTreeNode originalNode, BTreeNode newRightNode) {
+		if(_structureListener != null){
+			_structureListener.notifySplit(originalNode, newRightNode);
+		}
+	}
+
+	public void notifyDeleted(BTreeNode node) {
+		if(_structureListener != null){
+			_structureListener.notifyDeleted(node);
+		}
+	}
     
 }
 
