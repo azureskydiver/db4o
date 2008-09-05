@@ -33,7 +33,11 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private boolean allTopLevelTypesHaveBeenRemoved(CompilationUnit node) {
-		return getListRewrite(node, CompilationUnit.TYPES_PROPERTY).getRewrittenList().isEmpty();
+		return rewrittenTypeListFor(node).isEmpty();
+	}
+
+	private List rewrittenTypeListFor(CompilationUnit node) {
+		return getListRewrite(node, CompilationUnit.TYPES_PROPERTY).getRewrittenList();
 	}
 	
 	@Override
