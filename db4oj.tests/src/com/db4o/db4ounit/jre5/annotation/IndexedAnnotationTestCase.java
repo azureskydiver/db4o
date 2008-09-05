@@ -8,7 +8,6 @@ import com.db4o.ext.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-
 /**
  * @decaf.ignore
  */
@@ -56,7 +55,7 @@ public class IndexedAnnotationTestCase extends AbstractDb4oTestCase {
 		assertIndexed(DataAnnotated.class,true);
 	}
 	
-	private void assertIndexed(Class clazz,boolean expected) {
+	private void assertIndexed(Class<?> clazz,boolean expected) {
 		StoredClass storedClass=fileSession().storedClass(clazz);
 		StoredField storedField=storedClass.storedField("_id",Integer.TYPE);
 		Assert.areEqual(expected,storedField.hasIndex());
