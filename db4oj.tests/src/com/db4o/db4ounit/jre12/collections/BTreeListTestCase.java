@@ -8,8 +8,9 @@ import com.db4o.internal.collections.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class BTreeListTestCase extends AbstractDb4oTestCase {
+public class BTreeListTestCase extends AbstractDb4oTestCase implements OptOutNetworkingCS {
 	
 	public void _testOneElement(){
 		BTreeList bTreeList = newBTreeList();
