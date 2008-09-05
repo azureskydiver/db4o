@@ -34,6 +34,7 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHold
     public Object read(ReadContext context) {
     	UnmarshallingContext unmarshallingContext = (UnmarshallingContext) context; 
         Map map = (Map)unmarshallingContext.persistentObject();
+        map.clear();
         int elementCount = context.readInt();
         TypeHandler4 elementHandler = elementTypeHandler(context, map);
         for (int i = 0; i < elementCount; i++) {

@@ -397,6 +397,7 @@ public final class BTreeNode extends PersistentBase{
         pointNextTo(trans, _previousID);
         super.free(trans);
         _btree.removeNode(this);
+        _btree.notifyDeleted(this);
     }
     
     void holdChildrenAsIDs(){
@@ -872,6 +873,7 @@ public final class BTreeNode extends PersistentBase{
                 res.child(i).setParentID(trans, splitID );
             }
         }
+        _btree.notifySplit(this, res);
         return res;
     }
     
