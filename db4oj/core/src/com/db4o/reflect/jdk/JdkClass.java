@@ -151,8 +151,7 @@ public class JdkClass implements JavaReflectClass{
 	}
     
     public Object newInstance() {
-		createConstructor();
-		return _constructorSpec.newInstance();
+		return constructorSpec().newInstance();
 	}
 	
 	public Class<?> getJavaClass(){
@@ -177,15 +176,14 @@ public class JdkClass implements JavaReflectClass{
 		return _jdkReflector.nullValue(this);
 	}
 	
-	private void createConstructor() {
-		if(!_constructorSpec.canBeInstantiated().isUnspecified()) {
-			return;
+	private ReflectConstructorSpec constructorSpec() {
+		if(_constructorSpec.canBeInstantiated().isUnspecified()) {
+			_constructorSpec = ConstructorSupport.createConstructor(this, _clazz, _jdkReflector.configuration(), getDeclaredConstructors());
 		}
-		_constructorSpec = ConstructorSupport.createConstructor(this, _clazz, _jdkReflector.configuration(), getDeclaredConstructors());
+		return _constructorSpec;
 	}
 
 	public boolean ensureCanBeInstantiated() {
-		createConstructor();
-		return _constructorSpec.canBeInstantiated().definiteYes();
+		return constructorSpec().canBeInstantiated().definiteYes();
 	}
 }
