@@ -16,7 +16,7 @@ public class TNull implements ObjectTranslator
 	public void onActivate(ObjectContainer con, Object object, Object members){
 	}
 
-	public Class storedClass(){
+	public Class<?> storedClass(){
 		return Object.class;
 	}
 }
