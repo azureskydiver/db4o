@@ -289,7 +289,7 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
         return 1 + Const4.OBJECT_LENGTH + (Const4.INT_LENGTH * 2) + Const4.ID_LENGTH;
     }
     
-    BTreeNode produceNode(int id){
+    public BTreeNode produceNode(int id){
         TreeIntObject addtio = new TreeIntObject(id);
         _nodes = (TreeIntObject)Tree.add(_nodes, addtio);
         TreeIntObject tio = (TreeIntObject)addtio.addedOrExisting();
@@ -355,7 +355,8 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
         _root.traverseKeys(trans, visitor);
     }
     
-    public void sizeChanged(Transaction trans, int changeBy){
+    public void sizeChanged(Transaction trans, BTreeNode node, int changeBy){
+    	notifyCountChanged(trans, node, changeBy);
         Object sizeDiff = _sizesByTransaction.get(trans);
         if(sizeDiff == null){
             _sizesByTransaction.put(trans, new Integer(changeBy));
@@ -495,15 +496,21 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
 		_structureListener = listener;
 	}
 
-	public void notifySplit(BTreeNode originalNode, BTreeNode newRightNode) {
+	public void notifySplit(Transaction trans, BTreeNode originalNode, BTreeNode newRightNode) {
 		if(_structureListener != null){
-			_structureListener.notifySplit(originalNode, newRightNode);
+			_structureListener.notifySplit(trans, originalNode, newRightNode);
 		}
 	}
 
-	public void notifyDeleted(BTreeNode node) {
+	public void notifyDeleted(Transaction trans, BTreeNode node) {
 		if(_structureListener != null){
-			_structureListener.notifyDeleted(node);
+			_structureListener.notifyDeleted(trans, node);
+		}
+	}
+
+	public void notifyCountChanged(Transaction trans, BTreeNode node, int diff) {
+		if(_structureListener != null){
+			_structureListener.notifyCountChanged(trans, node, diff);
 		}
 	}
     

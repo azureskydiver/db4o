@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.btree;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 
 import db4ounit.*;
@@ -15,11 +16,14 @@ public class BTreeStructureChangeListenerTestCase extends BTreeTestCaseBase {
 	public void testSplits(){
 		final BooleanByRef splitNotified = new BooleanByRef(); 
 		BTreeStructureListener listener = new BTreeStructureListener(){
-			public void notifySplit(BTreeNode originalNode, BTreeNode newRightNode){
+			public void notifySplit(Transaction trans, BTreeNode originalNode, BTreeNode newRightNode){
 				Assert.isFalse(splitNotified.value);
 				splitNotified.value = true;
 			}
-			public void notifyDeleted(BTreeNode node){
+			public void notifyDeleted(Transaction trans, BTreeNode node){
+				
+			}
+			public void notifyCountChanged(Transaction trans, BTreeNode node, int diff){
 				
 			}
 		};
@@ -33,11 +37,14 @@ public class BTreeStructureChangeListenerTestCase extends BTreeTestCaseBase {
 	public void testDelete(){
 		final IntByRef deletedCount = new IntByRef(); 
 		BTreeStructureListener listener = new BTreeStructureListener(){
-			public void notifySplit(BTreeNode originalNode, BTreeNode newRightNode){
+			public void notifySplit(Transaction trans, BTreeNode originalNode, BTreeNode newRightNode){
 				
 			}
-			public void notifyDeleted(BTreeNode node){
+			public void notifyDeleted(Transaction trans, BTreeNode node){
 				deletedCount.value++;
+			}
+			public void notifyCountChanged(Transaction trans, BTreeNode node, int diff){
+				
 			}
 		};
 		_btree.structureListener(listener);
@@ -49,6 +56,30 @@ public class BTreeStructureChangeListenerTestCase extends BTreeTestCaseBase {
 			remove(i);	
 		}
 		Assert.areEqual(2, deletedCount.value);
+	}
+	
+	public void testItemCountChanged(){
+		final IntByRef changedCount = new IntByRef(); 
+		BTreeStructureListener listener = new BTreeStructureListener(){
+			public void notifySplit(Transaction trans, BTreeNode originalNode, BTreeNode newRightNode){
+				
+			}
+			public void notifyDeleted(Transaction trans, BTreeNode node){
+				
+			}
+			public void notifyCountChanged(Transaction trans, BTreeNode node, int diff){
+				changedCount.value = diff;
+			}
+		};
+		_btree.structureListener(listener);
+		changedCount.value = 0;
+		add(42);
+		Assert.areEqual(1, changedCount.value);
+		remove(42);
+		Assert.areEqual(-1, changedCount.value);
+		changedCount.value = 0;
+		remove(42);
+		Assert.areEqual(0, changedCount.value);
 	}
 
 

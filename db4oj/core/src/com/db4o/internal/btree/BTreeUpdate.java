@@ -61,13 +61,13 @@ public abstract class BTreeUpdate extends BTreePatch {
 
 	protected abstract void committed(BTree btree);
 
-	public Object commit(Transaction trans, BTree btree) {
+	public Object commit(Transaction trans, BTree btree, BTreeNode node) {
 		final BTreeUpdate patch = (BTreeUpdate) forTransaction(trans);
 		if (patch instanceof BTreeCancelledRemoval) {
 			Object obj = patch.getCommittedObject();
 			applyKeyChange(obj);
 		} else if (patch instanceof BTreeRemove){
-		    removedBy(trans, btree);
+		    removedBy(trans, btree, node);
 		    patch.committed(btree);
 		    return No4.INSTANCE;
 		}
@@ -134,15 +134,15 @@ public abstract class BTreeUpdate extends BTreePatch {
 		return this;
 	}
 	
-    public void removedBy(Transaction trans, BTree btree) {
+    public void removedBy(Transaction trans, BTree btree, BTreeNode node) {
         if(trans != _transaction){
-            adjustSizeOnRemovalByOtherTransaction(btree);
+            adjustSizeOnRemovalByOtherTransaction(btree, node);
         }
         if(hasNext()){
-            _next.removedBy(trans, btree);
+            _next.removedBy(trans, btree, node);
         }
     }
     
-    protected abstract void adjustSizeOnRemovalByOtherTransaction(BTree btree);
+    protected abstract void adjustSizeOnRemovalByOtherTransaction(BTree btree, BTreeNode node);
 
 }

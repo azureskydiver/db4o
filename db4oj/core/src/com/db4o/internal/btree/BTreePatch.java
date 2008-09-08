@@ -15,7 +15,7 @@ public abstract class BTreePatch {
         _object = obj;
     }    
     
-    public abstract Object commit(Transaction trans, BTree btree);
+    public abstract Object commit(Transaction trans, BTree btree, BTreeNode node);
 
     public abstract BTreePatch forTransaction(Transaction trans);
     
