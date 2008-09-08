@@ -7,25 +7,22 @@ import java.util.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
-import com.db4o.internal.handlers.*;
+import com.db4o.internal.mapping.*;
 import com.db4o.marshall.*;
 
 /**
  * @exclude
  */
-public class BTreeList<E> extends PersistentBase  {
-
+public class BTreeList<E> extends PersistentBase implements BTreeStructureListener{
 	
-
 	private BTree _index;
 	
 	private BTree _payload;
 
 	public BTreeList (Transaction trans){
-		_index = new BTree(trans, new IntHandler());
-		_payload = new BTree(trans, new PayloadKeyHandler());
+		index(new BTree(trans, new IndexHandler()));
+		payload(new BTree(trans, new PayloadHandler()));
 	}
-
 
 	public BTreeList(Transaction trans, int id) {
 		setID(id);
@@ -41,8 +38,21 @@ public class BTreeList<E> extends PersistentBase  {
 	}
 
 	public void readThis(Transaction trans, ByteArrayBuffer reader) {
-		_index = new BTree(trans, reader.readInt(), new IntHandler());
-		_payload = new BTree(trans, reader.readInt(), new PayloadKeyHandler());
+		BTree index = new BTree(trans, reader.readInt(), new IndexHandler());
+		index.read(trans);
+		index(index);
+		BTree payload = new BTree(trans, reader.readInt(), new PayloadHandler());
+		payload.read(trans);
+		payload(payload);
+	}
+	
+	private void index(BTree btree){
+		_index = btree;
+	}
+	
+	private void payload(BTree btree){
+		_payload = btree;
+		_payload.structureListener(this);
 	}
 
 	public void writeThis(Transaction trans, ByteArrayBuffer writer) {
@@ -51,9 +61,10 @@ public class BTreeList<E> extends PersistentBase  {
 	}
 	
 	public boolean add(Transaction trans, E obj) {
+		
 		PreparedComparison preparedComparison = new PreparedComparison() {
-			public int compareTo(Object obj) {
-				return -1;
+			public int compareTo(Object other) {
+				return 1;
 			}
 		};
 		_payload.add(trans,preparedComparison, obj);
@@ -90,9 +101,15 @@ public class BTreeList<E> extends PersistentBase  {
 		return false;
 	}
 
-	public E get(int index) {
-		// TODO Auto-generated method stub
-		return null;
+	public E get(Transaction trans, int index) {
+		BTreeRange range = _index.search(trans, new IndexEntry(index, 0));
+		BTreePointer pointer = range.lastPointer();
+		if(pointer == null){
+			pointer = range.smaller().lastPointer();
+		}
+		IndexEntry entry = (IndexEntry) pointer.key();
+		BTreeNode payloadNode = _payload.produceNode(entry._nodeId);
+		return (E)payloadNode.key(trans, index - entry._listIndex);
 	}
 
 	public int indexOf(Object o) {
@@ -184,33 +201,109 @@ public class BTreeList<E> extends PersistentBase  {
 		return _payload;
 	}
 	
+	public void notifyDeleted(Transaction trans, BTreeNode node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void notifySplit(Transaction trans, BTreeNode originalNode, BTreeNode newRightNode) {
+		System.out.println("Split");	
+	}
+
+	public void notifyCountChanged(Transaction trans, BTreeNode node, int diff) {
+		final BooleanByRef found = new BooleanByRef();
+		final Collection4 modifiedEntries = new Collection4();
+		_index.traverseKeys(trans, new Visitor4() {
+			public void visit(Object obj) {
+				if(found.value){
+					modifiedEntries.add(obj);
+					
+				}
+				found.value = true;
+			}
+		});
+		Iterator4 i = modifiedEntries.iterator();
+		while(i.moveNext()){
+			IndexEntry entry = (IndexEntry) i.current();
+			_index.remove(trans, entry);
+			_index.add(trans, new IndexEntry(entry._listIndex + diff, entry._nodeId));
+		}
+		if(! found.value){
+			_index.add(trans, new IndexEntry(0, node.getID()));
+		}
+	}
 	
-	private final class PayloadKeyHandler implements Indexable4 {
+	private static final class PayloadHandler implements Indexable4 {
 		public PreparedComparison prepareComparison(Context context, Object obj) {
-			// TODO Auto-generated method stub
-			return null;
+			throw new NotImplementedException();
 		}
 
 		public void writeIndexEntry(ByteArrayBuffer writer, Object obj) {
-			// TODO Auto-generated method stub
-
+			writer.writeInt(((Integer)obj).intValue());
 		}
 
 		public Object readIndexEntry(ByteArrayBuffer reader) {
-			// TODO Auto-generated method stub
-			return null;
+			return new Integer(reader.readInt());
 		}
 
 		public int linkLength() {
-			// TODO Auto-generated method stub
-			return 0;
+			return Const4.ID_LENGTH;
 		}
 
 		public void defragIndexEntry(DefragmentContextImpl context) {
-			// TODO Auto-generated method stub
+			throw new NotImplementedException();
 
 		}
 	}
+	
+	private static final class IndexHandler implements Indexable4 {
+		public PreparedComparison prepareComparison(Context context, Object obj) {
+			final IndexEntry indexEntry = (IndexEntry)obj;
+			return new PreparedComparison() {
+				public int compareTo(Object other) {
+					return indexEntry._listIndex - ((IndexEntry)other)._listIndex;
+				}
+			};
+		}
+
+		public void writeIndexEntry(ByteArrayBuffer writer, Object obj) {
+			IndexEntry indexEntry = (IndexEntry)obj;
+			writer.writeInt(indexEntry._listIndex);
+			writer.writeInt(indexEntry._nodeId);
+		}
+
+		public Object readIndexEntry(ByteArrayBuffer reader) {
+			return new IndexEntry(reader.readInt(), reader.readInt());
+		}
+
+		public int linkLength() {
+			return Const4.INT_LENGTH + Const4.ID_LENGTH;
+		}
+
+		public void defragIndexEntry(DefragmentContextImpl context) {
+			throw new NotImplementedException();
+		}
+	}
+
+	
+	public static class IndexEntry {
+		
+		public int _listIndex;
+		
+		public int _nodeId;
+
+		public IndexEntry(int listIndex, int nodeId) {
+			_listIndex = listIndex;
+			_nodeId = nodeId;
+		}
+
+	}
+
+
+
+
+
+
 
 
 

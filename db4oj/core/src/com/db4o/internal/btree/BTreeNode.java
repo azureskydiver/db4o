@@ -160,7 +160,7 @@ public final class BTreeNode extends PersistentBase{
 	}
 
 	private void sizeIncrement(Transaction trans) {
-		_btree.sizeChanged(trans, 1);
+		_btree.sizeChanged(trans, this, 1);
 	}
 
 	private boolean wasRemoved(Transaction trans, Searcher s) {
@@ -328,7 +328,7 @@ public final class BTreeNode extends PersistentBase{
             Object key = _keys[i];
             BTreePatch patch = keyPatch(i);
             if(patch != null){
-                key = isCommit ? patch.commit(trans, _btree) : patch.rollback(trans, _btree);
+                key = isCommit ? patch.commit(trans, _btree, this) : patch.rollback(trans, _btree);
             }
             if(key != No4.INSTANCE){
                 tempKeys[count] = key;
@@ -397,7 +397,7 @@ public final class BTreeNode extends PersistentBase{
         pointNextTo(trans, _previousID);
         super.free(trans);
         _btree.removeNode(this);
-        _btree.notifyDeleted(this);
+        _btree.notifyDeleted(trans, this);
     }
     
     void holdChildrenAsIDs(){
@@ -521,7 +521,7 @@ public final class BTreeNode extends PersistentBase{
     	if (-1 == index) {
     		return No4.INSTANCE;
     	}
-		return key(trans, index);
+		return internalKey(trans, index);
     }
     
     public byte getIdentifier() {
@@ -563,15 +563,19 @@ public final class BTreeNode extends PersistentBase{
         return obj;
     }
     
+    public Object key(Transaction trans, int index){
+    	return key(trans, prepareRead(trans), index);
+    }
+    
     Object key(Transaction trans, ByteArrayBuffer reader, int index){
         if(canWrite()){
-            return key(trans, index);
+            return internalKey(trans, index);
         }
         seekKey(reader, index);
         return keyHandler().readIndexEntry(reader);
     }
     
-    Object key(Transaction trans, int index){
+    private Object internalKey(Transaction trans, int index){
         BTreePatch patch = keyPatch(index);
         if(patch == null){
             return _keys[index];
@@ -785,7 +789,7 @@ public final class BTreeNode extends PersistentBase{
 	}
 
 	private void sizeDecrement(Transaction trans) {
-		_btree.sizeChanged(trans, -1);
+		_btree.sizeChanged(trans, this, -1);
 	}
 
 	private int lastIndex() {
@@ -873,7 +877,7 @@ public final class BTreeNode extends PersistentBase{
                 res.child(i).setParentID(trans, splitID );
             }
         }
-        _btree.notifySplit(this, res);
+        _btree.notifySplit(trans, this, res);
         return res;
     }
     
@@ -1030,7 +1034,7 @@ public final class BTreeNode extends PersistentBase{
 
         if(_isLeaf){
             for (int i = 0; i < _count; i++) {
-                Object obj = key(trans, i);
+                Object obj = internalKey(trans, i);
                 if(obj != No4.INSTANCE){
                     count ++;
                     keyHandler().writeIndexEntry(a_writer, obj);

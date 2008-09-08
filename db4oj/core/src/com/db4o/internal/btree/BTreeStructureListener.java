@@ -2,13 +2,17 @@
 
 package com.db4o.internal.btree;
 
+import com.db4o.internal.*;
+
 /**
  * @exclude
  */
 public interface BTreeStructureListener {
 
-	public void notifySplit(BTreeNode originalNode, BTreeNode newRightNode);
+	public void notifySplit(Transaction trans, BTreeNode originalNode, BTreeNode newRightNode);
 
-	void notifyDeleted(BTreeNode node);
+	void notifyDeleted(Transaction trans, BTreeNode node);
+
+	void notifyCountChanged(Transaction trans, BTreeNode node, int diff);
 
 }

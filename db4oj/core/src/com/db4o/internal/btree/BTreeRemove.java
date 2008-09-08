@@ -29,9 +29,9 @@ public class BTreeRemove extends BTreeUpdate {
 		return No4.INSTANCE;
 	}
 
-    protected void adjustSizeOnRemovalByOtherTransaction(BTree btree) {
+    protected void adjustSizeOnRemovalByOtherTransaction(BTree btree, BTreeNode node) {
         // The size was reduced for this entry, let's change back.
-        btree.sizeChanged(_transaction, +1);
+        btree.sizeChanged(_transaction, node, +1);
     }
     
 }
