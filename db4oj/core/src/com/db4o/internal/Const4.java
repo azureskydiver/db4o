@@ -9,7 +9,9 @@ import com.db4o.*;
 /**
  * @exclude
  * 
- *  TODO: Split into separate enums with defined range and values. 
+ *  TODO: Split into separate enums with defined range and values.
+ *  
+ *   @sharpen.partial
  */
 public final class Const4
 {
@@ -160,8 +162,9 @@ public final class Const4
     };
 	
     public static final String VIRTUAL_FIELD_PREFIX = "v4o";
-    
+
+    /**
+     * @sharpen.ignore
+     */
     public static final int MAX_STACK_DEPTH = 20;
-
-
 }
