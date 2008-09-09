@@ -34,4 +34,8 @@ public class BTreeRemove extends BTreeUpdate {
         btree.sizeChanged(_transaction, node, +1);
     }
     
+	protected int sizeDiff() {
+		return 0;
+	}
+    
 }
