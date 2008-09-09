@@ -38,5 +38,9 @@ public class BTreeCancelledRemoval extends BTreeUpdate {
     protected void adjustSizeOnRemovalByOtherTransaction(BTree btree, BTreeNode node) {
         // The other transaction reduces the size, this entry ignores.
     }
+
+	protected int sizeDiff() {
+		return 1;
+	}
 	
 }

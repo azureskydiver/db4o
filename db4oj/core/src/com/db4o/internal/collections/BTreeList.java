@@ -60,6 +60,13 @@ public class BTreeList<E> extends PersistentBase implements BTreeStructureListen
 		writer.writeIDOf(trans, _payload);
 	}
 	
+	public void commit(Transaction trans){
+		_index.commit(trans);
+		_payload.commit(trans);
+        setStateDirty();
+        write(trans.systemTransaction());
+	}
+	
 	public boolean add(Transaction trans, E obj) {
 		
 		PreparedComparison preparedComparison = new PreparedComparison() {
@@ -87,6 +94,8 @@ public class BTreeList<E> extends PersistentBase implements BTreeStructureListen
 	}
 
 	public void clear() {
+		
+		// _index.remove(trans, key)
 		// TODO Auto-generated method stub
 		
 	}
@@ -207,19 +216,48 @@ public class BTreeList<E> extends PersistentBase implements BTreeStructureListen
 	}
 
 	public void notifySplit(Transaction trans, BTreeNode originalNode, BTreeNode newRightNode) {
-		System.out.println("Split");	
+		
+		// System.out.println("Split " + originalNode.getID() + " " + newRightNode.getID());
+		
+		if(! originalNode.isLeaf()){
+			return;
+		}
+		
+		final int originalId = originalNode.getID();
+		final IntByRef originalListIndex = new IntByRef(-1);
+		_index.traverseKeys(trans, new Visitor4() {
+			public void visit(Object obj) {
+				if(originalListIndex.value >=0){
+					return;
+				}
+				IndexEntry entry = (IndexEntry) obj;
+				if(entry._nodeId == originalId){
+					originalListIndex.value = entry._listIndex;
+				}
+			}
+		});
+		IndexEntry newIndexEntry = new IndexEntry(originalListIndex.value + originalNode.size(trans), newRightNode.getID());
+		_index.add(trans, newIndexEntry);
+		
+		
 	}
 
-	public void notifyCountChanged(Transaction trans, BTreeNode node, int diff) {
+	public void notifyCountChanged(Transaction trans, final BTreeNode node, int diff) {
+		
+		// System.out.println("count changed id:" + node.getID() + " count:" + (node.count() - diff) + " new count:" + node.count() );
+		
 		final BooleanByRef found = new BooleanByRef();
 		final Collection4 modifiedEntries = new Collection4();
 		_index.traverseKeys(trans, new Visitor4() {
 			public void visit(Object obj) {
 				if(found.value){
 					modifiedEntries.add(obj);
-					
+					return;
+				} 
+				IndexEntry indexEntry = (IndexEntry) obj;
+				if(indexEntry._nodeId == node.getID()){
+					found.value = true;
 				}
-				found.value = true;
 			}
 		});
 		Iterator4 i = modifiedEntries.iterator();
@@ -296,16 +334,11 @@ public class BTreeList<E> extends PersistentBase implements BTreeStructureListen
 			_listIndex = listIndex;
 			_nodeId = nodeId;
 		}
+		
+		public String toString() {
+			return "{ix: " + _listIndex + " id:" + _nodeId + "}";
+		}
 
 	}
-
-
-
-
-
-
-
-
-
 
 }

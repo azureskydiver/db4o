@@ -54,4 +54,8 @@ public class BTreeAdd extends BTreePatch{
         return true;
     }
 
+	public int sizeDiff(Transaction trans) {
+		return _transaction == trans ? 1 : 0;
+	}
+
 }

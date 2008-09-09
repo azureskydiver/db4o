@@ -144,5 +144,15 @@ public abstract class BTreeUpdate extends BTreePatch {
     }
     
     protected abstract void adjustSizeOnRemovalByOtherTransaction(BTree btree, BTreeNode node);
+    
+	public int sizeDiff(Transaction trans) {
+		BTreeUpdate patchForTransaction = (BTreeUpdate) forTransaction(trans);
+		if(patchForTransaction == null){
+			return 1;
+		}
+		return patchForTransaction.sizeDiff();
+	}
+
+	protected abstract int sizeDiff();
 
 }

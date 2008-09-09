@@ -46,4 +46,6 @@ public abstract class BTreePatch {
         return _object.toString();
     }
 
+	public abstract int sizeDiff(Transaction trans);
+
 }

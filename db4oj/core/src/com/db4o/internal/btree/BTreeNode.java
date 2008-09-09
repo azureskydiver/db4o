@@ -295,7 +295,7 @@ public final class BTreeNode extends PersistentBase{
         return ((BTreeNode)_children[index]).canWrite();
     }
     
-    void commit(Transaction trans){
+    public void commit(Transaction trans){
         commitOrRollback(trans, true);
     }
     
@@ -959,7 +959,7 @@ public final class BTreeNode extends PersistentBase{
 		return new BTreePointer(trans, reader, this, index);
 	}
     
-    void purge(){
+    public void purge(){
         if(_dead){
             _keys = null;
             _children = null;
@@ -1159,5 +1159,22 @@ public final class BTreeNode extends PersistentBase{
             child(reader, childIdx).traverseAllNodes(trans, command);
         }
     }
+
+	public int size(Transaction trans) {
+		prepareRead(trans);
+		if(! canWrite()){
+			return _count;
+		}
+		int size = 0;
+		for (int i = 0; i < _count; i++) {
+			BTreePatch keyPatch = keyPatch(i);
+			if(keyPatch != null){
+				size += keyPatch.sizeDiff(trans);
+			}else{
+				size++;
+			}
+		}
+		return size;
+	}
     
 }
