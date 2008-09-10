@@ -16,7 +16,7 @@ public class BTreeListTestCase extends AbstractDb4oTestCase implements OptOutNet
 	
 	private static final int FIRST_ELEMENT = 1;
 	
-	private static final int BTREE_NODE_SIZE = 5;
+	private static final int BTREE_NODE_SIZE = 7;
 	
 	private static final int[] createList(int length){
 		int[] fibs = new int[length];
@@ -34,6 +34,15 @@ public class BTreeListTestCase extends AbstractDb4oTestCase implements OptOutNet
 	
 	protected void configure(Configuration config) throws Exception {
 		config.bTreeNodeSize(BTREE_NODE_SIZE);
+	}
+	
+	public void testPrepend(){
+		BTreeList bTreeList = newBTreeList();
+		int count = BTREE_NODE_SIZE - 3;
+		addMultipleElements(bTreeList, count);
+		bTreeList.add(trans(), 0, 0);
+		Assert.areEqual(0, bTreeList.get(trans(), 0));
+		assertMultipleElements(bTreeList, count, 1);
 	}
 	
 	public void testMultipleElementsSpanningNodes(){
@@ -56,11 +65,15 @@ public class BTreeListTestCase extends AbstractDb4oTestCase implements OptOutNet
 			bTreeList.add(trans(), elements[i]);
 		}
 	}
-
+	
 	private void assertMultipleElements(BTreeList bTreeList, int elementCount) {
+		assertMultipleElements(bTreeList, elementCount, 0);
+	}
+
+	private void assertMultipleElements(BTreeList bTreeList, int elementCount, int startIndex) {
 		int[] elements = createList(elementCount);
 		for (int i = 0; i < elementCount; i++) {
-			Assert.areEqual(elements[i], bTreeList.get(trans(), i));
+			Assert.areEqual(elements[i], bTreeList.get(trans(), startIndex + i));
 		}
 	}
 
