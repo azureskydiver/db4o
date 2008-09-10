@@ -32,7 +32,7 @@ public class ContainerTestCase implements TestCase {
 	public void testDependencyResolution() {
 		
 		final ComplexService service = container.produce(ComplexService.class);
-		Assert.areSame(container.produce(SingletonService.class), service.dependency());
+		Assert.areSame(container.produce(SingletonService.class), service.singletonDependency());
 	}
 	
 	public void testContainerDependencyResolvesToSelf() {
@@ -40,11 +40,27 @@ public class ContainerTestCase implements TestCase {
 		Assert.areSame(container, service.container());
 	}
 	
-	public void testCustomBindings() {
+	public void testCustomBindingReplacesDefaultBinding() {
 		final SingletonServiceImpl singleton = new SingletonServiceImpl();
 		final Container container = ContainerFactory.newContainer(singleton);
 		Assert.areSame(singleton, container.produce(SingletonService.class));
-		Assert.areSame(singleton, container.produce(ComplexService.class).dependency());
+		Assert.areSame(singleton, container.produce(ComplexService.class).singletonDependency());
 	}
+	
+	interface SingletonSimpleMix extends SingletonService, SimpleService {
+	}
+	
+	public void testCustomBindingCanProvideMultipleServices() {
+		
+		SingletonSimpleMix customBinding = new SingletonSimpleMix() {};
+		final Container container = ContainerFactory.newContainer(customBinding);
+		Assert.areSame(customBinding, container.produce(SingletonService.class));
+		Assert.areSame(customBinding, container.produce(SimpleService.class));
+		
+		final ComplexService service = container.produce(ComplexService.class);
+		Assert.areSame(customBinding, service.singletonDependency());
+		Assert.areSame(customBinding, service.simpleDependency());
+	}
+	
 
 }
