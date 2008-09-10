@@ -3,7 +3,6 @@ package com.db4o.container.internal;
 import java.lang.reflect.*;
 import java.util.*;
 
-import com.db4o.collections.*;
 import com.db4o.container.*;
 
 public class ContainerImpl implements Container {
@@ -12,7 +11,7 @@ public class ContainerImpl implements Container {
 		Object get();
 	}
 	
-	private final Map<Class, Binding> _serviceBindingCache = new ArrayMap4<Class, Binding>();
+	private final Map<Class, Binding> _serviceBindingCache = new HashMap<Class, Binding>();
 
 	public <T> T produce(Class<T> serviceType) {
 		final Binding binding = bindingFor(serviceType);
@@ -62,7 +61,7 @@ public class ContainerImpl implements Container {
 	    return serviceType.getPackage().getName() + ".internal." + serviceType.getSimpleName() + "Impl";
     }
 	
-	final class SingletonBinding implements Binding {
+	final static class SingletonBinding implements Binding {
 		private final Object _instance;
 
 		public SingletonBinding(Object instance) {
@@ -74,7 +73,7 @@ public class ContainerImpl implements Container {
 		}
 	}
 	
-	final class SimpleInstanceBinding implements Binding {
+	final static class SimpleInstanceBinding implements Binding {
 
 		private final Class<?> _concreteType;
 
@@ -102,11 +101,7 @@ public class ContainerImpl implements Container {
 
 	    public Object get() {
 	    	try {
-	    		final Class<?>[] types = _constructor.getParameterTypes();
-	    		final Object[] args = new Object[types.length];
-	    		for (int i=0; i<types.length; ++i) {
-	    			args[i] = produce(types[i]);
-	    		}
+	    		final Object[] args = produceAll(_constructor.getParameterTypes());
 	    		return _constructor.newInstance(args);
 	    	} catch (InstantiationException e) {
 	        	throw new ContainerException(e);
@@ -118,5 +113,13 @@ public class ContainerImpl implements Container {
             	throw new ContainerException(e);
             }
 	    }
+
+		private Object[] produceAll(final Class<?>[] types) {
+	        final Object[] args = new Object[types.length];
+	        for (int i=0; i<types.length; ++i) {
+	        	args[i] = produce(types[i]);
+	        }
+	        return args;
+        }
 	}
 }
