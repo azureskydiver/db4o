@@ -3,6 +3,7 @@ package com.db4o.container.internal;
 import java.lang.reflect.*;
 import java.util.*;
 
+import com.db4o.collections.*;
 import com.db4o.container.*;
 
 public class ContainerImpl implements Container {
@@ -11,7 +12,7 @@ public class ContainerImpl implements Container {
 		Object get();
 	}
 	
-	private final Map<Class, Binding> _serviceBindingCache = new IdentityHashMap<Class, Binding>();
+	private final Map<Class, Binding> _serviceBindingCache = new ArrayMap4<Class, Binding>();
 
 	public <T> T produce(Class<T> serviceType) {
 		final Binding binding = bindingFor(serviceType);
@@ -30,13 +31,13 @@ public class ContainerImpl implements Container {
         }
 	}
 
-	private Binding resolve(Class serviceType) throws ClassNotFoundException {
+	protected Binding resolve(Class serviceType) throws ClassNotFoundException {
+		if (serviceType.isAssignableFrom(getClass())) {
+			return new SingletonBinding(this);
+		}
 	    final Class<?> concreteType = Class.forName(defaultImplementationFor(serviceType));
-	    
 	    final Constructor<?> mostComplexConstructor = mostComplexConstructorFor(concreteType);
-	    
 	    final Binding newInstance = arity(mostComplexConstructor) > 0 ? new ComplexInstanceBinding(mostComplexConstructor) : new SimpleInstanceBinding(concreteType);
-	    
 	    if (Singleton.class.isAssignableFrom(concreteType)) {
 	    	return new SingletonBinding(newInstance.get());
 	    }
@@ -90,7 +91,6 @@ public class ContainerImpl implements Container {
             	throw new ContainerException(e);
             }
         }
-		
 	}
 	
 	final class ComplexInstanceBinding implements Binding {
