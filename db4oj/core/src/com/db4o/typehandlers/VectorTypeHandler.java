@@ -27,15 +27,17 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanH
 
     public void write(WriteContext context, Object obj) {
         Vector vector = (Vector)obj;
+        TypeHandler4 elementHandler = detectElementTypeHandler(container(context), vector);
+        writeElementTypeHandlerId(context, elementHandler);
         writeElementCount(context, vector);
-        writeElements(context, vector);
+        writeElements(context, vector, elementHandler);
     }
     
 	public Object read(ReadContext context) {
         Vector vector = (Vector)((UnmarshallingContext) context).persistentObject();
         vector.removeAllElements();
+        TypeHandler4 elementHandler = readElementTypeHandler(context, context);
         int elementCount = context.readInt();
-        TypeHandler4 elementHandler = elementTypeHandler(context, vector);
         for (int i = 0; i < elementCount; i++) {
             vector.addElement(context.readObject(elementHandler));
         }
@@ -46,8 +48,7 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanH
 		context.writeInt(vector.size());
 	}
 
-	private void writeElements(WriteContext context, Vector vector) {
-		TypeHandler4 elementHandler = elementTypeHandler(context, vector);
+	private void writeElements(WriteContext context, Vector vector, TypeHandler4 elementHandler) {
         final Enumeration elements = vector.elements();
         while (elements.hasMoreElements()) {
             context.writeObject(elementHandler, elements.nextElement());
@@ -58,30 +59,22 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanH
         return ((InternalObjectContainer)context.objectContainer()).container();
     }
     
-    private TypeHandler4 elementTypeHandler(Context context, Vector vector){
-        
-        // TODO: If all elements in the list are of one type,
-        //       it is possible to use a more specific handler
-        
-        return container(context).handlers().untypedObjectHandler();
-    }        
-
     public void delete(final DeleteContext context) throws Db4oIOException {
 		if (! context.cascadeDelete()) {
 		    return;
 		}
-        TypeHandler4 handler = elementTypeHandler(context, null);
+        TypeHandler4 elementHandler = readElementTypeHandler(context, context);
         int elementCount = context.readInt();
         for (int i = elementCount; i > 0; i--) {
-			handler.delete(context);
+			elementHandler.delete(context);
         }
     }
 
     public void defragment(DefragmentContext context) {
-        TypeHandler4 handler = elementTypeHandler(context, null);
+        TypeHandler4 elementHandler = readElementTypeHandler(context, context);
         int elementCount = context.readInt();
         for (int i = 0; i < elementCount; i++) {
-            handler.defragment(context);
+            elementHandler.defragment(context);
         }
     }
     
@@ -107,5 +100,18 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanH
             context.readId(elementHandler);
         }
     }
-    
+
+	private void writeElementTypeHandlerId(WriteContext context, TypeHandler4 elementHandler) {
+		context.writeInt(0);
+	}
+
+	private TypeHandler4 readElementTypeHandler(ReadBuffer buffer, Context context) {
+		buffer.readInt();
+		return container(context).handlers().untypedObjectHandler();
+	}
+
+	private TypeHandler4 detectElementTypeHandler(InternalObjectContainer container, Vector vector) {
+		return container.handlers().untypedObjectHandler();
+	}
+
 }

@@ -25,19 +25,22 @@ public class HashtableTypeHandler implements TypeHandler4 , FirstClassHandler, C
     }
 
     public void write(WriteContext context, Object obj) {
-        Hashtable hashtable = (Hashtable)obj;
-        writeElementCount(context, hashtable);
-        writeElements(context, hashtable);
+        Hashtable hashTable = (Hashtable)obj;
+        KeyValueHandlerPair handlers = detectKeyValueTypeHandlers(container(context), hashTable);
+        writeTypeHandlerIds(context, handlers);
+        writeElementCount(context, hashTable);
+        writeElements(context, hashTable, handlers);
     }
     
     public Object read(ReadContext context) {
-    	Hashtable hashtable = (Hashtable)((UnmarshallingContext) context).persistentObject();
+    	UnmarshallingContext unmarshallingContext = (UnmarshallingContext) context; 
+    	Hashtable hashtable = (Hashtable) unmarshallingContext.persistentObject();
     	hashtable.clear();
-        int elementCount = context.readInt();
-        TypeHandler4 elementHandler = elementTypeHandler(context, hashtable);
+    	KeyValueHandlerPair handlers = readKeyValueTypeHandlers(unmarshallingContext, unmarshallingContext);
+        int elementCount = unmarshallingContext.readInt();
         for (int i = 0; i < elementCount; i++) {
-            Object key = context.readObject(elementHandler);
-            Object value = context.readObject(elementHandler);
+            Object key = unmarshallingContext.readActivatedObject(handlers._keyHandler);
+            Object value = unmarshallingContext.readObject(handlers._valueHandler);
             hashtable.put(key, value);
         }
         return hashtable;
@@ -47,13 +50,12 @@ public class HashtableTypeHandler implements TypeHandler4 , FirstClassHandler, C
         context.writeInt(hashtable.size());
     }
 
-    private void writeElements(WriteContext context, Hashtable hashtable) {
-        TypeHandler4 elementHandler = elementTypeHandler(context, hashtable);
+    private void writeElements(WriteContext context, Hashtable hashtable, KeyValueHandlerPair handlers) {
         final Enumeration elements = hashtable.keys();
         while (elements.hasMoreElements()) {
             Object key = elements.nextElement();
-            context.writeObject(elementHandler, key);
-            context.writeObject(elementHandler, hashtable.get(key));
+            context.writeObject(handlers._keyHandler, key);
+            context.writeObject(handlers._valueHandler, hashtable.get(key));
         }
     }
 
@@ -61,32 +63,24 @@ public class HashtableTypeHandler implements TypeHandler4 , FirstClassHandler, C
         return ((InternalObjectContainer)context.objectContainer()).container();
     }
     
-    private TypeHandler4 elementTypeHandler(Context context, Hashtable hashtable){
-        
-        // TODO: If all elements in the Hashtable are of one type,
-        //       it is possible to use a more specific handler
-        
-        return container(context).handlers().untypedObjectHandler();
-    }        
-
     public void delete(final DeleteContext context) throws Db4oIOException {
         if (! context.cascadeDelete()) {
             return;
         }
-        TypeHandler4 handler = elementTypeHandler(context, null);
+    	KeyValueHandlerPair handlers = readKeyValueTypeHandlers(context, context);
         int elementCount = context.readInt();
         for (int i = elementCount; i > 0; i--) {
-            handler.delete(context);
-            handler.delete(context);
+            handlers._keyHandler.delete(context);
+            handlers._valueHandler.delete(context);
         }
     }
 
     public void defragment(DefragmentContext context) {
-        TypeHandler4 handler = elementTypeHandler(context, null);
+    	KeyValueHandlerPair handlers = readKeyValueTypeHandlers(context, context);
         int elementCount = context.readInt(); 
         for (int i = elementCount; i > 0; i--) {
-            context.defragment(handler);
-            context.defragment(handler);
+            context.defragment(handlers._keyHandler);
+            context.defragment(handlers._valueHandler);
         }
     }
     
@@ -112,5 +106,22 @@ public class HashtableTypeHandler implements TypeHandler4 , FirstClassHandler, C
             context.skipId(elementHandler);
         }
     }
+
+	private void writeTypeHandlerIds(WriteContext context, KeyValueHandlerPair handlers) {
+		context.writeInt(0);
+		context.writeInt(0);
+	}
+
+	private KeyValueHandlerPair readKeyValueTypeHandlers(ReadBuffer buffer, Context context) {
+		buffer.readInt();
+		buffer.readInt();
+		TypeHandler4 untypedHandler = container(context).handlers().untypedObjectHandler();
+		return new KeyValueHandlerPair(untypedHandler, untypedHandler);
+	}
+
+	private KeyValueHandlerPair detectKeyValueTypeHandlers(InternalObjectContainer container, Hashtable hashTable) {
+		TypeHandler4 untypedHandler = container.handlers().untypedObjectHandler();
+		return new KeyValueHandlerPair(untypedHandler, untypedHandler);
+	}
 
 }

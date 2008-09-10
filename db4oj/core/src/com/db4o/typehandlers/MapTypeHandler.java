@@ -27,19 +27,21 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHold
 
     public void write(WriteContext context, Object obj) {
         Map map = (Map)obj;
+        KeyValueHandlerPair handlers = detectKeyValueTypeHandlers(container(context), map);
+        writeTypeHandlerIds(context, handlers);
         writeElementCount(context, map);
-        writeElements(context, map);
+        writeElements(context, map, handlers);
     }
     
     public Object read(ReadContext context) {
     	UnmarshallingContext unmarshallingContext = (UnmarshallingContext) context; 
         Map map = (Map)unmarshallingContext.persistentObject();
         map.clear();
+        KeyValueHandlerPair handlers = readKeyValueTypeHandlers(context, context);
         int elementCount = context.readInt();
-        TypeHandler4 elementHandler = elementTypeHandler(context, map);
         for (int i = 0; i < elementCount; i++) {
-            Object key = unmarshallingContext.readActivatedObject(elementHandler);
-            Object value = context.readObject(elementHandler);
+            Object key = unmarshallingContext.readActivatedObject(handlers._keyHandler);
+            Object value = context.readObject(handlers._valueHandler);
             if(key != null  && value != null){
             	map.put(key, value);
             }
@@ -51,13 +53,12 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHold
         context.writeInt(map.size());
     }
 
-    private void writeElements(WriteContext context, Map map) {
-        TypeHandler4 elementHandler = elementTypeHandler(context, map);
+    private void writeElements(WriteContext context, Map map, KeyValueHandlerPair handlers) {
         final Iterator elements = map.keySet().iterator();
         while (elements.hasNext()) {
             Object key = elements.next();
-            context.writeObject(elementHandler, key);
-            context.writeObject(elementHandler, map.get(key));
+            context.writeObject(handlers._keyHandler, key);
+            context.writeObject(handlers._valueHandler, map.get(key));
         }
     }
 
@@ -65,32 +66,24 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHold
         return ((InternalObjectContainer)context.objectContainer()).container();
     }
     
-    private TypeHandler4 elementTypeHandler(Context context, Map map){
-        
-        // TODO: If all elements in the map are of one type,
-        //       it is possible to use a more specific handler
-        
-        return container(context).handlers().untypedObjectHandler();
-    }        
-
     public void delete(final DeleteContext context) throws Db4oIOException {
         if (! context.cascadeDelete()) {
             return;
         }
-        TypeHandler4 handler = elementTypeHandler(context, null);
+        KeyValueHandlerPair handlers = readKeyValueTypeHandlers(context, context);
         int elementCount = context.readInt();
         for (int i = elementCount; i > 0; i--) {
-            handler.delete(context);
-            handler.delete(context);
+            handlers._keyHandler.delete(context);
+            handlers._valueHandler.delete(context);
         }
     }
 
     public void defragment(DefragmentContext context) {
-        TypeHandler4 handler = elementTypeHandler(context, null);
+        KeyValueHandlerPair handlers = readKeyValueTypeHandlers(context, context);
         int elementCount = context.readInt(); 
         for (int i = elementCount; i > 0; i--) {
-            context.defragment(handler);
-            context.defragment(handler);
+            context.defragment(handlers._keyHandler);
+            context.defragment(handlers._valueHandler);
         }
     }
     
@@ -117,4 +110,20 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHold
         }
     }
 
+	private void writeTypeHandlerIds(WriteContext context, KeyValueHandlerPair handlers) {
+		context.writeInt(0);
+		context.writeInt(0);
+	}
+
+	private KeyValueHandlerPair readKeyValueTypeHandlers(ReadBuffer buffer, Context context) {
+		buffer.readInt();
+		buffer.readInt();
+		TypeHandler4 untypedHandler = container(context).handlers().untypedObjectHandler();
+		return new KeyValueHandlerPair(untypedHandler, untypedHandler);
+	}
+
+	private KeyValueHandlerPair detectKeyValueTypeHandlers(InternalObjectContainer container, Map map) {
+		TypeHandler4 untypedHandler = container.handlers().untypedObjectHandler();
+		return new KeyValueHandlerPair(untypedHandler, untypedHandler);
+	}
 }
