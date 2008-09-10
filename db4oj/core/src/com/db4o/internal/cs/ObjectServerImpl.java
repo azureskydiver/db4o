@@ -43,6 +43,8 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	private final boolean _isEmbeddedServer;
 	
+	private final ClassInfoHelper _classInfoHelper = new ClassInfoHelper();
+	
 	public ObjectServerImpl(final LocalObjectContainer container, int port, NativeSocketFactory socketFactory) {
 		this(container, (port < 0 ? 0 : port), port == 0, socketFactory);
 	}
@@ -410,5 +412,9 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	    synchronized(_dispatchers){
 	        return _dispatchers.size();
 	    }
+	}
+
+	public ClassInfoHelper classInfoHelper() {
+		return _classInfoHelper;
 	}
 }

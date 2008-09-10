@@ -7,7 +7,6 @@ import java.util.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
-import com.db4o.internal.mapping.*;
 import com.db4o.marshall.*;
 
 /**
@@ -68,7 +67,6 @@ public class BTreeList<E> extends PersistentBase implements BTreeStructureListen
 	}
 	
 	public boolean add(Transaction trans, E obj) {
-		
 		PreparedComparison preparedComparison = new PreparedComparison() {
 			public int compareTo(Object other) {
 				return 1;
@@ -78,7 +76,7 @@ public class BTreeList<E> extends PersistentBase implements BTreeStructureListen
 		return true;
 	}
 
-	public void add(int index, E element) {
+	public void add(Transaction trans, int index, E element) {
 		// TODO Auto-generated method stub
 		
 	}

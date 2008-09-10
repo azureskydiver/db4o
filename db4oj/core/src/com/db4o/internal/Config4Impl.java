@@ -10,7 +10,7 @@ import com.db4o.diagnostic.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
-import com.db4o.internal.cs.*;
+import com.db4o.internal.cs.config.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.handlers.*;
@@ -59,6 +59,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec CLASS_ACTIVATION_DEPTH_CONFIGURABLE_KEY=new KeySpec(true);
     
 	private final static KeySpec CLASSLOADER_KEY=new KeySpec(null);
+	
+	private final static KeySpec CLIENT_SERVER_FACTORY_KEY=new KeySpec(defaultClientServerFactory());
 	
 	private final static KeySpec DATABASE_GROWTH_SIZE_KEY=new KeySpec(0);
     
@@ -160,7 +162,22 @@ public final class Config4Impl implements Configuration, DeepClone,
     	return _config.getAsInt(ACTIVATION_DEPTH_KEY);
     }
 
-    public void activationDepth(int depth) {
+    private static ClientServerFactory defaultClientServerFactory() {
+    	try {
+    		
+    		// FIXME: won't work, because we need the assembly name for .NET
+			// return (ClientServerFactory) Class.forName("com.db4o.internal.cs.config.ClientServerFactoryImpl").newInstance();
+    		
+    		// FIXME: circular cs dependancy. Improve.
+    		return new ClientServerFactoryImpl();
+    		
+		} catch (Exception e) {
+			// can happen if CS lib is not present
+			return null;
+		}
+	}
+
+	public void activationDepth(int depth) {
     	_config.put(ACTIVATION_DEPTH_KEY,depth);
     }
     
@@ -965,4 +982,13 @@ public final class Config4Impl implements Configuration, DeepClone,
 			_cloned = cloned;
 		}
 	}
+
+	public void factory(ClientServerFactory factory) {
+		_config.put(CLIENT_SERVER_FACTORY_KEY, factory);
+	}
+	
+	public ClientServerFactory clientServerFactory(){
+		return (ClientServerFactory) _config.get(CLIENT_SERVER_FACTORY_KEY);
+	}
+	
 }

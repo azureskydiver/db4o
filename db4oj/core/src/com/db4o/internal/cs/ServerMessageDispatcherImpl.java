@@ -280,4 +280,8 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	public boolean willDispatchCommitted() {
 		return server().caresAboutCommitted();
 	}
+
+	public ClassInfoHelper classInfoHelper() {
+		return server().classInfoHelper();
+	}
 }

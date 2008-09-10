@@ -14,7 +14,8 @@ public class MClassMeta extends MsgObject implements ServerSideMessage {
 		try{
 			synchronized (streamLock()) {
 	            ClassInfo classMeta = (ClassInfo) readObjectFromPayLoad();
-	            GenericClass genericClass = stream.getClassMetaHelper().classMetaToGenericClass(stream().reflector(), classMeta);
+	            ClassInfoHelper classInfoHelper = serverMessageDispatcher().classInfoHelper();
+	            GenericClass genericClass = classInfoHelper.classMetaToGenericClass(stream().reflector(), classMeta);
 	            if (genericClass != null) {
 	                
     				Transaction trans = stream.systemTransaction();
