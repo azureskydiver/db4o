@@ -5,9 +5,7 @@ package  com.db4o;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 import com.db4o.reflect.*;
 
 /**
@@ -174,11 +172,7 @@ public class Db4o {
 			String hostName, int port, String user, String password, NativeSocketFactory socketFactory)
 			throws Db4oIOException, OldFormatException,
 			InvalidPasswordException {
-		if (user == null || password == null) {
-			throw new InvalidPasswordException();
-		}
-		NetworkSocket networkSocket = new NetworkSocket(socketFactory, hostName, port);
-		return new ClientObjectContainer(config, networkSocket, user, password, true);
+		return ((Config4Impl)config).clientServerFactory().openClient(config, hostName, port, user, password, socketFactory);
 	}
 
     /**
@@ -374,13 +368,7 @@ public class Db4o {
 			String databaseFileName, int port, NativeSocketFactory socketFactory) throws Db4oIOException,
 			IncompatibleFileFormatException, OldFormatException,
 			DatabaseFileLockedException, DatabaseReadOnlyException {
-		LocalObjectContainer stream = (LocalObjectContainer)openFile(config,databaseFileName);
-        if(stream == null){
-            return null;
-        }
-        synchronized(stream.lock()){
-            return new ObjectServerImpl(stream, port, socketFactory);
-        }
+		return ((Config4Impl)config).clientServerFactory().openServer(config, databaseFileName, port, socketFactory);
 	}
 
 	static Reflector reflector(){

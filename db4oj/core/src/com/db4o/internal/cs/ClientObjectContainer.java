@@ -64,6 +64,12 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	private boolean _login;
 	
 	private final ClientHeartbeat _heartbeat;
+	
+    private final ClassInfoHelper _classInfoHelper = new ClassInfoHelper();
+	
+	static{
+		// Db4o.registerClientConstructor(new ClientConstructor());
+	}
 
 	public ClientObjectContainer(Configuration config,Socket4 socket, String user, String password, boolean login) {
 		super(config, null);
@@ -253,7 +259,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	}
 
 	private void sendClassMeta(ReflectClass reflectClass) {
-		ClassInfo classMeta = _classMetaHelper.getClassMeta(reflectClass);
+		ClassInfo classMeta = _classInfoHelper.getClassMeta(reflectClass);
 		write(Msg.CLASS_META.getWriter(Serializer.marshall(systemTransaction(),classMeta)));
 	}
 	

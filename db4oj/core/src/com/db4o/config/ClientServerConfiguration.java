@@ -8,6 +8,13 @@ import com.db4o.messaging.*;
  * Client/Server configuration interface. 
  */
 public interface ClientServerConfiguration {
+	
+	/**
+	 * sets the ClientServerFactory  to open C/S servers and clients
+	 * @param factory the factory to be used
+	 */
+	void factory(ClientServerFactory factory);
+	
 	/**
 	 * Sets the number of IDs to be pre-allocated in the database for new 
 	 * objects created on the client.

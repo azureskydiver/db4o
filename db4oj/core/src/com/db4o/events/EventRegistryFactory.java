@@ -39,8 +39,9 @@ public class EventRegistryFactory {
 	}
 
 	private static EventRegistryImpl newEventRegistryFor(InternalObjectContainer container) {
-		return (container instanceof ClientObjectContainer)	? 
-							new ClientEventRegistryImpl(container) :
-							new EventRegistryImpl(container);
+		if(container instanceof PartialObjectContainer && ((PartialObjectContainer)container).isClient()){
+			return new ClientEventRegistryImpl(container);
+		}
+		return new EventRegistryImpl(container);
 	}
 }

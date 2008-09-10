@@ -8,7 +8,6 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.callbacks.*;
-import com.db4o.internal.cs.*;
 import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
@@ -39,8 +38,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     // if (_classCollection == null) the engine is down.
     protected ClassMetadataRepository      _classCollection;
     
-    protected ClassInfoHelper _classMetaHelper = new ClassInfoHelper();
-
     // the Configuration context for this ObjectContainer
     protected Config4Impl             _config;
 
@@ -2010,10 +2007,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public ClassMetadataRepository classCollection() {
         return _classCollection;
-    }
-    
-    public ClassInfoHelper getClassMetaHelper() {
-    	return _classMetaHelper;
     }
     
     public abstract long[] getIDsForClass(Transaction trans, ClassMetadata clazz);

@@ -45,4 +45,6 @@ public interface ServerMessageDispatcher extends MessageDispatcher, CommittedCal
 	public boolean write(Msg msg);
 
 	public CallbackObjectInfoCollections committedInfo();
+
+	public ClassInfoHelper classInfoHelper();
 }
