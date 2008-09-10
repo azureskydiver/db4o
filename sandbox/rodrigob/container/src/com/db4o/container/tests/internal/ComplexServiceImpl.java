@@ -4,18 +4,25 @@ import com.db4o.container.tests.*;
 
 public class ComplexServiceImpl implements ComplexService {
 	
-	private final SingletonService _service;
+	private final SingletonService _singleton;
+	private final SimpleService _simple;
 
-	public ComplexServiceImpl(SingletonService dependency) {
-		_service = dependency;
+	public ComplexServiceImpl(SingletonService singleton, SimpleService simple) {
+		_singleton = singleton;
+		_simple = simple;
 	}
 	
 	public ComplexServiceImpl() {
-		_service = null;
+		_singleton = null;
+		_simple = null;
 	}
 	
-	public SingletonService dependency() {
-		return _service;
+	public SingletonService singletonDependency() {
+		return _singleton;
+	}
+
+	public SimpleService simpleDependency() {
+		return _simple;
 	}
 
 }
