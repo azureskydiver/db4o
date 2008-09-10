@@ -9,7 +9,7 @@ public class ContainerFactory {
     }
 	
 	public static Container newContainer(Object... bindings) {
-		return new ContainerImpl(); // new ContainerImpl(new BoundResolver(bindings));
+		return new BoundContainerImpl(bindings);
 	}
 
 }

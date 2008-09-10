@@ -17,11 +17,14 @@ public class ContainerTestCase implements TestCase {
 
 		final SimpleService service = container.produce(SimpleService.class);
 		Assert.areSame(SimpleServiceImpl.class, service.getClass());
-		
-		Assert.areNotSame(service, container.produce(SimpleService.class));
 	}
 	
-	public void testSingleton() {
+	public void testDefaultLifetime() {
+		
+		Assert.areNotSame(container.produce(SimpleService.class), container.produce(SimpleService.class));
+	}
+	
+	public void testSingletonLifetime() {
 		Assert.isNotNull(container.produce(SingletonService.class));
 		Assert.areSame(container.produce(SingletonService.class), container.produce(SingletonService.class));
 	}
@@ -32,7 +35,12 @@ public class ContainerTestCase implements TestCase {
 		Assert.areSame(container.produce(SingletonService.class), service.dependency());
 	}
 	
-	public void testCustomService() {
+	public void testContainerDependencyResolvesToSelf() {
+		final ContainerDependentService service = container.produce(ContainerDependentService.class);
+		Assert.areSame(container, service.container());
+	}
+	
+	public void testCustomBindings() {
 		final SingletonServiceImpl singleton = new SingletonServiceImpl();
 		final Container container = ContainerFactory.newContainer(singleton);
 		Assert.areSame(singleton, container.produce(SingletonService.class));
