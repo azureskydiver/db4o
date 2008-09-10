@@ -684,17 +684,21 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
     
     private boolean checkAlive(AspectVersionContext context){
+    	return checkAlive(context, true);
+    }
+
+    private boolean checkAlive(AspectVersionContext context, boolean doIncrement){
     	if(! checkEnabled(context)){
     		return false;
     	}
     	
         boolean alive = alive(); 
-        if (! alive) {
+        if (! alive && doIncrement) {
             incrementOffset((ReadBuffer)context);
         }
         return alive;
     }
-    
+
     private void informAboutTransaction(Object obj, Transaction trans){
         if (_db4oType != null  && obj != null) {
             ((Db4oTypeImpl) obj).setTrans(trans);
@@ -866,7 +870,9 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     public Object read(InternalReadContext context) {
-        if (!checkAlive((AspectVersionContext)context)) {
+        boolean alive = checkAlive((AspectVersionContext)context, false);
+		if (!alive && !updating()) {
+			incrementOffset(context);
             return null;
         }
         return context.read(_handler);
