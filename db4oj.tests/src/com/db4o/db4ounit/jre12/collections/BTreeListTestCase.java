@@ -36,7 +36,7 @@ public class BTreeListTestCase extends AbstractDb4oTestCase implements OptOutNet
 		config.bTreeNodeSize(BTREE_NODE_SIZE);
 	}
 	
-	public void testPrepend(){
+	public void _testPrepend(){
 		BTreeList bTreeList = newBTreeList();
 		int count = BTREE_NODE_SIZE - 3;
 		addMultipleElements(bTreeList, count);
