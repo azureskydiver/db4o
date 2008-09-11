@@ -19,10 +19,11 @@ public class AllTests implements TestSuiteBuilder {
 			Arrays4TestCase.class,
 			BitMap4TestCase.class,
 			BlockingQueueTestCase.class,
+			BufferTestCase.class,
 			Collection4TestCase.class,
 			CompositeIterator4TestCase.class,
-			DynamicVariableTestCase.class,
 			CoolTestCase.class,
+			DynamicVariableTestCase.class,
 			Hashtable4TestCase.class,
 			IntArrayListTestCase.class,
 			IntMatcherTestCase.class,
@@ -35,7 +36,7 @@ public class AllTests implements TestSuiteBuilder {
 			Stack4TestCase.class,
 			TreeKeyIteratorTestCase.class,
 			TreeNodeIteratorTestCase.class,
-			BufferTestCase.class,
+			UTF8EncoderTestCase.class,
 		}).iterator();	
 	}
 	

@@ -681,6 +681,11 @@ public interface Configuration {
     public void setOut(PrintStream outStream);
     
     /**
+     * return the string encoding configuration interface
+     */
+    public StringEncodingConfiguration stringEncoding();
+    
+    /**
      * tuning feature: configures whether db4o should try to instantiate one instance
      * of each persistent class on system startup.
      * <br><br>In a production environment this setting can be set to <code>false</code>,

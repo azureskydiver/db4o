@@ -2,6 +2,7 @@
 
 package com.db4o.internal;
 
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
 
@@ -41,6 +42,8 @@ class WeakReferenceCollector implements Runnable {
     public void run() {
     	try {
     		pollReferenceQueue();
+    	} catch (DatabaseClosedException dce) {
+    		// can happen, no stack trace
     	} catch (Exception e) {
     		// don't bring down the thread
     		e.printStackTrace();

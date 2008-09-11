@@ -106,6 +106,7 @@ public final class Const4
 	// String Encoding
 	public static final byte	ISO8859 = (byte)1;
 	public static final byte	UNICODE = (byte)2;
+	public static final byte	UTF8 = (byte)3;
 
 	// Timings
 	public static final int LOCK_TIME_INTERVAL = 1000;
