@@ -99,14 +99,9 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
          throw new IllegalArgumentException();
     }
     
-    public final void writeShort(Transaction trans, String str, ByteArrayBuffer buffer) {
-        if (str == null) {
-            buffer.writeInt(0);
-        } else {
-            buffer.writeInt(str.length());
-            trans.container().handlers().stringIO().write(buffer, str);
-        }
-    }
+	public final void writeShort(Transaction trans, String str, ByteArrayBuffer buffer) {
+		trans.container().handlers().stringIO().writeLengthAndString(buffer, str);
+	}
 
     ByteArrayBuffer val(Object obj, Context context) {
         if(obj instanceof ByteArrayBuffer) {
@@ -176,9 +171,7 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
         if (Deploy.debug) {
             Debug.writeBegin(buffer, Const4.YAPSTRING);
         }
-        buffer.writeInt(str.length());
-        stringIo(objectContainer).write(buffer, str);
-        
+        stringIo(objectContainer).writeLengthAndString(buffer, str);
         if (Deploy.debug) {
             Debug.writeEnd(buffer);
         }
@@ -210,11 +203,7 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
     }
     
     public static String readStringNoDebug(Context context, ReadBuffer buffer) {
-        int length = buffer.readInt();
-        if (length > 0) {
-            return intern(context, stringIo(context).read(buffer, length));
-        }
-        return "";
+    	return intern(context, stringIo(context).readLengthAndString(buffer));
     }
     
     protected static String intern(Context context, String str){

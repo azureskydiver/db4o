@@ -10,7 +10,7 @@ import com.db4o.marshall.*;
  */
 public final class UnicodeStringIO extends LatinStringIO{
 	
-    public int bytesPerChar(){
+    protected int bytesPerChar(){
         return 2;
     }
     

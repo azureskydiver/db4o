@@ -11,7 +11,7 @@ import com.db4o.marshall.*;
  */
 public class LatinStringIO {
     
-    public int bytesPerChar(){
+    protected int bytesPerChar(){
         return 1;
     }
     
@@ -30,6 +30,14 @@ public class LatinStringIO {
 	
 	public int length(String str){
 		return str.length() + Const4.OBJECT_LENGTH + Const4.INT_LENGTH;
+	}
+	
+	public String readLengthAndString(ReadBuffer buffer){
+		int length = buffer.readInt();
+		if (length == 0) {
+			return "";
+		}
+		return read(buffer, length);
 	}
 	
 	public String read(ReadBuffer buffer, int length){
@@ -52,6 +60,15 @@ public class LatinStringIO {
 		return str.length() + Const4.INT_LENGTH;
 	}
 	
+	public void writeLengthAndString(WriteBuffer buffer, String str){
+	    if (str == null) {
+	        buffer.writeInt(0);
+	        return;
+	    }
+        buffer.writeInt(str.length());
+        write(buffer, str);
+	}
+	
 	public void write(WriteBuffer buffer, String str){
 	    final int length = str.length();
 	    char[] chars = new char[length];
@@ -70,6 +87,14 @@ public class LatinStringIO {
 	        bytes[i] = (byte) (chars[i] & 0xff);
 	    }
 	    return bytes;
+	}
+
+	public byte[] bytes(ByteArrayBuffer buffer) {
+        int len = buffer.readInt();
+        len = bytesPerChar() * len;
+        byte[] res = new byte[len];
+        System.arraycopy(buffer._buffer, buffer._offset, res, 0, len);
+		return res;
 	}
 	
 }

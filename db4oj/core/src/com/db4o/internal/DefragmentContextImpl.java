@@ -170,10 +170,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	}
 	
 	private void incrementStringOffset(LatinStringIO sio, ByteArrayBuffer buffer) {
-	    int length = buffer.readInt();
-	    if(length > 0){
-	        sio.read(buffer, length);
-	    }
+		sio.readLengthAndString(buffer);
 	}
 	
 	public ByteArrayBuffer sourceBuffer() {
