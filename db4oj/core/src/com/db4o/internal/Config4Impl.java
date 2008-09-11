@@ -29,7 +29,7 @@ import com.db4o.typehandlers.*;
  */
 public final class Config4Impl implements Configuration, DeepClone,
 		MessageSender, FreespaceConfiguration, QueryConfiguration,
-		ClientServerConfiguration {
+		ClientServerConfiguration, StringEncodingConfiguration {
     
 	private KeySpecHashtable4 _config=new KeySpecHashtable4(50);
 	
@@ -606,6 +606,10 @@ public final class Config4Impl implements Configuration, DeepClone,
     public void singleThreadedClient(boolean flag) {
     	_config.put(SINGLE_THREADED_CLIENT_KEY,flag);
     }
+    
+	public StringEncodingConfiguration stringEncoding() {
+		return this;
+	}
 
     public void testConstructors(boolean flag) {
     	_config.put(TEST_CONSTRUCTORS_KEY,flag);
@@ -645,6 +649,19 @@ public final class Config4Impl implements Configuration, DeepClone,
     public void useIndexSystem() {
 		throw new NotSupportedException();
 	}
+    
+	public void useLatin() {
+		_config.put(ENCODING_KEY, Const4.ISO8859);		
+	}
+
+	public void useUnicode() {
+		_config.put(ENCODING_KEY, Const4.UNICODE);
+	}
+
+	public void useUtf8() {
+		_config.put(ENCODING_KEY, Const4.UTF8);		
+	}
+
     
     public void weakReferenceCollectionInterval(int milliseconds) {
     	_config.put(WEAK_REFERENCE_COLLECTION_INTERVAL_KEY,milliseconds);
@@ -990,5 +1007,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public ClientServerFactory clientServerFactory(){
 		return (ClientServerFactory) _config.get(CLIENT_SERVER_FACTORY_KEY);
 	}
+
+
 	
 }

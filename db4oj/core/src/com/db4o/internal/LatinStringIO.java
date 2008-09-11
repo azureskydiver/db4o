@@ -11,6 +11,14 @@ import com.db4o.marshall.*;
  */
 public class LatinStringIO {
     
+	public byte[] bytes(ByteArrayBuffer buffer) {
+        int len = buffer.readInt();
+        len = bytesPerChar() * len;
+        byte[] res = new byte[len];
+        System.arraycopy(buffer._buffer, buffer._offset, res, 0, len);
+		return res;
+	}
+	
     protected int bytesPerChar(){
         return 1;
     }
@@ -23,6 +31,8 @@ public class LatinStringIO {
         switch (encodingByte) {
         case Const4.ISO8859:
         	return new LatinStringIO();
+        case Const4.UTF8:
+        	return new UTF8StringIO();
         default:
             return new UnicodeStringIO();
         }
@@ -30,14 +40,6 @@ public class LatinStringIO {
 	
 	public int length(String str){
 		return str.length() + Const4.OBJECT_LENGTH + Const4.INT_LENGTH;
-	}
-	
-	public String readLengthAndString(ReadBuffer buffer){
-		int length = buffer.readInt();
-		if (length == 0) {
-			return "";
-		}
-		return read(buffer, length);
 	}
 	
 	public String read(ReadBuffer buffer, int length){
@@ -56,17 +58,16 @@ public class LatinStringIO {
 	    return new String(chars,0,bytes.length);
 	}
 	
-	public int shortLength(String str){
-		return str.length() + Const4.INT_LENGTH;
+	public String readLengthAndString(ReadBuffer buffer){
+		int length = buffer.readInt();
+		if (length == 0) {
+			return "";
+		}
+		return read(buffer, length);
 	}
 	
-	public void writeLengthAndString(WriteBuffer buffer, String str){
-	    if (str == null) {
-	        buffer.writeInt(0);
-	        return;
-	    }
-        buffer.writeInt(str.length());
-        write(buffer, str);
+	public int shortLength(String str){
+		return str.length() + Const4.INT_LENGTH;
 	}
 	
 	public void write(WriteBuffer buffer, String str){
@@ -88,13 +89,15 @@ public class LatinStringIO {
 	    }
 	    return bytes;
 	}
-
-	public byte[] bytes(ByteArrayBuffer buffer) {
-        int len = buffer.readInt();
-        len = bytesPerChar() * len;
-        byte[] res = new byte[len];
-        System.arraycopy(buffer._buffer, buffer._offset, res, 0, len);
-		return res;
+	
+	public void writeLengthAndString(WriteBuffer buffer, String str){
+	    if (str == null) {
+	        buffer.writeInt(0);
+	        return;
+	    }
+        buffer.writeInt(str.length());
+        write(buffer, str);
 	}
+
 	
 }

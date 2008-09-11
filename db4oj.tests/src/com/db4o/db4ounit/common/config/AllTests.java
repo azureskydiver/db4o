@@ -15,6 +15,7 @@ public class AllTests extends Db4oTestSuite {
         		ConfigurationItemTestCase.class,
         		GlobalVsNonStaticConfigurationTestCase.class,
         		ObjectTranslatorTestCase.class,
+        		UTF8StringEncodingTestCase.class,
 		};
     }
 }
