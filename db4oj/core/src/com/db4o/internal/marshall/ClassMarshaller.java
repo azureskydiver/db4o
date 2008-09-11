@@ -49,7 +49,7 @@ public abstract class ClassMarshaller {
     
     protected abstract int indexIDForWriting(int indexID);
 
-    public byte[] readName(Transaction trans, ByteArrayBuffer reader) {
+    public final byte[] readName(Transaction trans, ByteArrayBuffer reader) {
         byte[] name = readName(trans.container().stringIO(), reader);
         return name;
     }
@@ -62,12 +62,9 @@ public abstract class ClassMarshaller {
         if (Deploy.debug) {
             reader.readBegin(Const4.YAPCLASS);
         }
-        int len = reader.readInt();
-        len = len * sio.bytesPerChar();
-        byte[] nameBytes = new byte[len];
-        System.arraycopy(reader._buffer, reader._offset, nameBytes, 0, len);
+        byte[] nameBytes = sio.bytes(reader);
+        reader.incrementOffset(nameBytes.length);
         nameBytes  = Platform4.updateClassName(nameBytes);
-        reader.incrementOffset(len);
         return nameBytes;
     }
 
