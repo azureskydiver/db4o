@@ -15,6 +15,18 @@ public class IteratorsTestCase implements TestCase {
 		new ConsoleTestRunner(IteratorsTestCase.class).run();
 	}
 	
+	public void testIterateSingle() {
+		final Iterator4 i = Iterators.iterateSingle("foo");
+		Assert.isTrue(i.moveNext());
+		Assert.areEqual("foo", i.current());
+		Assert.isFalse(i.moveNext());
+		Assert.expect(IllegalStateException.class, new CodeBlock() {
+			public void run() {
+				Assert.isNotNull(i.current());
+			}
+		});
+	}
+	
 	public void testEnumerate() {
 		Iterable4 e = Iterators.enumerate(Iterators.iterable(new Object[] { "1", "2" }));
 		
