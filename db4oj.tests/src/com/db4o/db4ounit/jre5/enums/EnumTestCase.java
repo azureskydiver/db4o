@@ -50,7 +50,7 @@ public class EnumTestCase extends AbstractDb4oTestCase {
         sub.descend("type").constrain("A");
         sub.descend("count").constrain(Integer.valueOf(1));
 
-        ObjectSet<EnumHolder> result=(ObjectSet<EnumHolder>)query.execute();
+        ObjectSet<EnumHolder> result = query.execute();
         Assert.areEqual(1, result.size());
         data=(EnumHolder)result.next();
         Assert.areEqual(data.getType(), TypeCountEnum.A);
@@ -140,7 +140,7 @@ public class EnumTestCase extends AbstractDb4oTestCase {
 		ObjectSet<TypeCountEnum> result;
 		query=db.query();
 		query.constrain(TypeCountEnum.class);
-		result=(ObjectSet<TypeCountEnum>)query.execute();
+		result = query.execute();
 		// We should have all enum members once in the database, since they're
         // statically referenced by the Enum subclass.
 		if(result.size()!=2) {
