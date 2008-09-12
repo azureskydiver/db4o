@@ -752,7 +752,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
 
-    ClassMetadata getAncestor() {
+    public ClassMetadata getAncestor() {
         return i_ancestor;
     }
 

@@ -81,7 +81,7 @@ public interface Query {
 	 * executes the {@link Query}.
      * @return {@link ObjectSet} - the result of the {@link Query}.
      */
-    public ObjectSet execute ();
+    public <T> ObjectSet<T> execute ();
 
     
     /**
