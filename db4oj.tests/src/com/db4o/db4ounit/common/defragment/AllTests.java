@@ -14,6 +14,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 				COR775TestCase.class,
 				BlockSizeDefragTestCase.class,
+				DefragInheritedFieldIndexTestCase.class,
 				SlotDefragmentTestCase.class,
 				StoredClassFilterTestCase.class,
 				TranslatedDefragTestCase.class,
