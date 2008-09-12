@@ -18,7 +18,7 @@ public class SubjectFixtureProvider implements FixtureProvider {
 	}
 	
 	public SubjectFixtureProvider(Object[] values) {
-		_values = Iterators.iterable(values);
+		this(Iterators.iterable(values));
 	}
 
 	public FixtureVariable variable() {

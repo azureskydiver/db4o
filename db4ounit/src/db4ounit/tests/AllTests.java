@@ -14,6 +14,7 @@ public class AllTests extends ReflectionTestSuite {
 			TestLifeCycleTestCase.class,
 			TestRunnerTestCase.class,
 			
+			db4ounit.tests.data.AllTests.class,
 			db4ounit.tests.fixtures.AllTests.class,
 		};
 	}

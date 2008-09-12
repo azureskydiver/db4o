@@ -5,6 +5,10 @@ import com.db4o.foundation.*;
 
 
 public class Iterator4Assert {
+	
+	public static void areEqual(Iterable4 expected, Iterable4 actual) {
+		areEqual(expected.iterator(), actual.iterator());
+	}
 
 	public static void areEqual(Iterator4 expected, Iterator4 actual) {
 		if (null == expected) {
@@ -48,5 +52,20 @@ public class Iterator4Assert {
 		}
 		Assert.isTrue(allExpected.isEmpty(), allExpected.toString());
 	}
+
+	public static void areInstanceOf(Class expectedType, final Iterable4 values) {
+        for (final Iterator4 i = values.iterator(); i.moveNext();) {
+    		Assert.isInstanceOf(expectedType, i.current());
+    	}	
+    }
+
+	public static void all(Iterable4 values, Predicate4 condition) {
+		final Iterator4 iterator = values.iterator();
+		while (iterator.moveNext()) {
+			if (!condition.match(iterator.current())) {
+				Assert.fail("Condition does not hold for for value '" + iterator.current() + "'.");
+			}
+		}
+    }
 
 }
