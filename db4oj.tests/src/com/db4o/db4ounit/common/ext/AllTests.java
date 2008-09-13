@@ -6,7 +6,7 @@ import db4ounit.extensions.Db4oTestSuite;
 public class AllTests extends Db4oTestSuite {
 	
 	public static void main(String[] args) {
-		new AllTests().runSolo();
+		new AllTests().runAll();
 	}
 
 	protected Class[] testCases() {
@@ -14,6 +14,7 @@ public class AllTests extends Db4oTestSuite {
 			Db4oDatabaseTestCase.class,
 			RefreshTestCase.class,
 			StoredClassTestCase.class,
+			StoredClassInstanceCountTestCase.class,
 		};
 	}
 
