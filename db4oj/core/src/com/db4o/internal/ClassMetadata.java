@@ -2010,5 +2010,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return _modificationChecker.isModified(obj);
 	}
 
-    
+	public int instanceCount() {
+		return instanceCount(_container.transaction());
+	}
+
+	public int instanceCount(Transaction trans) {
+		return _container.instanceCount(this, trans);
+	}
+
 }
