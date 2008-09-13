@@ -850,5 +850,9 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     public void onCommittedListener() {
         // do nothing
     }
+
+	public int instanceCount(ClassMetadata clazz, Transaction trans) {
+		return clazz.indexEntryCount(trans);
+	}
 	
 }
