@@ -6,6 +6,8 @@ package com.db4o.foundation;
  * Iterator primitives (concat, map, reduce, filter, etc...).
  * 
  * @exclude
+ * 
+ * @sharpen.partial
  */
 public class Iterators {
 	
@@ -97,6 +99,14 @@ public class Iterators {
 		return filter(new ArrayIterator4(array), predicate);
 	}
 	
+	public static Iterable4 filter(final Iterable4 source, final Predicate4 predicate) {
+		return new Iterable4() {
+			public Iterator4 iterator() {
+				return filter(source.iterator(), predicate);
+			}
+		};
+	}
+	
 	public static Iterator4 filter(Iterator4 iterator, Predicate4 predicate) {
 		return new FilteredIterator(iterator, predicate);
 	}
@@ -142,6 +152,10 @@ public class Iterators {
 
 	public static String toString(Iterator4 i) {
 		return join(i, "[", "]", ", ");
+	}
+	
+	public static String join(Iterable4 i, String separator) {
+		return join(i.iterator(), separator);
 	}
 	
 	public static String join(Iterator4 i, String separator) {
@@ -244,5 +258,6 @@ public class Iterators {
 				return iterator;
 			}
 		};
-	}	
+	}
+
 }
