@@ -89,13 +89,9 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanH
         return this;
     }
     
-    private TypeHandler4 untypedObjectHandlerFrom(HandlerVersionContext context) {
-        return context.transaction().container().handlers().untypedObjectHandler();
-    }
-
     public void collectIDs(final QueryingReadContext context) {
+        TypeHandler4 elementHandler = readElementTypeHandler(context, context);
         int elementCount = context.readInt();
-        TypeHandler4 elementHandler = untypedObjectHandlerFrom(context);
         for (int i = 0; i < elementCount; i++) {
             context.readId(elementHandler);
         }

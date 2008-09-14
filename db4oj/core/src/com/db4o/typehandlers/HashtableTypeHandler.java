@@ -99,11 +99,11 @@ public class HashtableTypeHandler implements TypeHandler4 , FirstClassHandler, C
     }
     
     public void collectIDs(final QueryingReadContext context) {
+    	KeyValueHandlerPair handlers = readKeyValueTypeHandlers(context, context);
         int elementCount = context.readInt();
-        TypeHandler4 elementHandler = context.container().handlers().untypedObjectHandler();
         for (int i = 0; i < elementCount; i++) {
-            context.readId(elementHandler);
-            context.skipId(elementHandler);
+            context.readId(handlers._keyHandler);
+            context.skipId(handlers._valueHandler);
         }
     }
 
