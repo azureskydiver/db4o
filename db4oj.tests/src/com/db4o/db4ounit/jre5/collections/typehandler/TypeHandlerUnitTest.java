@@ -64,6 +64,19 @@ public abstract class TypeHandlerUnitTest extends TypeHandlerTestUnitBase {
 	    assertFirstClassElementCount(0);
 	}
 
+	public void testDefrag() throws Exception {
+		defragment();
+	    Object item = retrieveItemInstance();
+	    assertContent(item);
+	}
+
+	public void testJoin() {
+		Query q = newQuery(itemFactory().itemClass());
+		q.descend(itemFactory().fieldName()).constrain(elements()[0])
+			.and(q.descend(itemFactory().fieldName()).constrain(elements()[1]));
+		assertQueryResult(q, true);
+	}
+
 	protected void assertFirstClassElementCount(int expected) {
 		if(!isFirstClass(elementClass())) {
 			return;

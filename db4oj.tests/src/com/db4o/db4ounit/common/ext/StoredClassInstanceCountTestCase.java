@@ -72,6 +72,6 @@ public class StoredClassInstanceCountTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public static void main(String[] args) {
-		new StoredClassInstanceCountTestCase().runAll();
+		new StoredClassInstanceCountTestCase().runClientServer();
 	}
 }
