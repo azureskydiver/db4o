@@ -1,8 +1,12 @@
 package com.db4o.db4ounit.jre12.collections.typehandler;
 
+import java.util.*;
+
+import com.db4o.*;
 import com.db4o.db4ounit.jre12.collections.typehandler.ListTypeHandlerTestVariables.*;
 import com.db4o.query.*;
 
+import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
@@ -31,7 +35,13 @@ public abstract class TypeHandlerUnitTest extends TypeHandlerTestUnitBase {
 	    Object item = retrieveOnlyInstance(itemClass);
         return item;
     }
-	
+
+	public void testDefragRetrieveInstance() throws Exception {
+		defragment();
+	    Object item = retrieveItemInstance();
+	    assertContent(item);
+	}
+
 	public void testSuccessfulQuery() throws Exception {
 		assertQuery(true, elements()[0], false);
 	}
@@ -65,6 +75,23 @@ public abstract class TypeHandlerUnitTest extends TypeHandlerTestUnitBase {
 	    assertFirstClassElementCount(0);
 	}
 
+	public void testJoin() {
+		Query q = newQuery(itemFactory().itemClass());
+		q.descend(itemFactory().fieldName()).constrain(elements()[0])
+			.and(q.descend(itemFactory().fieldName()).constrain(elements()[1]));
+		assertQueryResult(q, true);
+	}
+
+	// TODO
+	public void _testSubQuery() {
+		Query q = newQuery(itemFactory().itemClass());
+		Query qq = q.descend(itemFactory().fieldName());
+		Constraint constraint = qq.constrain(elements()[0]);
+		ObjectSet set = qq.execute();
+    	Assert.areEqual(1, set.size());
+    	assertPlainContent(set.next());
+	}
+	
 	protected void assertFirstClassElementCount(int expected) {
 		if(!isFirstClass(elementClass())) {
 			return;

@@ -1,5 +1,7 @@
 package com.db4o.db4ounit.jre12.collections.typehandler;
 
+import java.util.*;
+
 import com.db4o.internal.*;
 import com.db4o.typehandlers.*;
 
@@ -7,7 +9,7 @@ import com.db4o.typehandlers.*;
 /**
  * @decaf.ignore.jdk11
  */
-public class ListTypeHandlerTestUnitBase extends TypeHandlerTestUnitBase {
+public abstract class ListTypeHandlerTestUnitBase extends TypeHandlerTestUnitBase {
 	
 	protected AbstractItemFactory itemFactory() {
 		return (AbstractItemFactory) ListTypeHandlerTestVariables.LIST_IMPLEMENTATION.value();
@@ -23,6 +25,10 @@ public class ListTypeHandlerTestUnitBase extends TypeHandlerTestUnitBase {
 
 	protected void assertContent(Object item) {
 		assertListContent(item);
+	}
+
+	protected void assertPlainContent(Object item) {
+		assertPlainListContent((List) item);
 	}
 
 	protected ListTypeHandlerTestElementsSpec elementsSpec() {

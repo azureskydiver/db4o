@@ -1,5 +1,7 @@
 package com.db4o.db4ounit.jre5.collections.typehandler;
 
+import java.util.*;
+
 import com.db4o.typehandlers.*;
 
 /**
@@ -21,6 +23,10 @@ public class ListTypeHandlerTestUnitBase extends TypeHandlerTestUnitBase {
 
 	protected void assertContent(Object item) {
 		assertListContent(item);
+	}
+
+	protected void assertPlainContent(Object item) {
+		assertPlainListContent((List) item);
 	}
 
 	protected ListTypeHandlerTestElementsSpec elementsSpec() {
