@@ -456,7 +456,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     }
 
 	public int instanceCount(ClassMetadata clazz, Transaction trans) {
-		return clazz.indexEntryCount(trans);
+		return _server.instanceCount(clazz, trans);
 	}
 
 }
