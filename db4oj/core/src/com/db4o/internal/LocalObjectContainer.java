@@ -852,7 +852,9 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
 
 	public int instanceCount(ClassMetadata clazz, Transaction trans) {
-		return clazz.indexEntryCount(trans);
+		synchronized(lock()) {
+			return clazz.indexEntryCount(trans);
+		}
 	}
 	
 }
