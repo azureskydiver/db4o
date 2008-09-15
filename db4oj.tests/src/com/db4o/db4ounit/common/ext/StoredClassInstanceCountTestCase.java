@@ -16,7 +16,6 @@ public class StoredClassInstanceCountTestCase extends AbstractDb4oTestCase {
 
 	private static final int COUNT_A = 5;
 	
-	
 	protected void store() throws Exception {
 		for(int idx = 0; idx < COUNT_A; idx++) {
 			store(new ItemA());
@@ -30,7 +29,7 @@ public class StoredClassInstanceCountTestCase extends AbstractDb4oTestCase {
 		store(new ItemA());
 		deleteAll(ItemB.class);
 		assertInstanceCount(ItemA.class, COUNT_A + 1);
-		assertInstanceCount(ItemB.class, isNetworkingCS() ? 1 : 0);
+		assertInstanceCount(ItemB.class, 0);
 	}
 
 	public void testTransactionalInstanceCount() {
@@ -41,7 +40,7 @@ public class StoredClassInstanceCountTestCase extends AbstractDb4oTestCase {
 		store(new ItemA());
 		deleteAll(ItemB.class);
 		assertInstanceCount(db(), ItemA.class, COUNT_A + 1);
-		assertInstanceCount(db(), ItemB.class, isNetworkingCS() ? 1 : 0);
+		assertInstanceCount(db(), ItemB.class, 0);
 		assertInstanceCount(otherClient, ItemA.class, COUNT_A);
 		assertInstanceCount(otherClient, ItemB.class, 1);
 		db().commit();
@@ -49,9 +48,10 @@ public class StoredClassInstanceCountTestCase extends AbstractDb4oTestCase {
 		assertInstanceCount(db(), ItemB.class, 0);
 		assertInstanceCount(otherClient, ItemA.class, COUNT_A + 1);
 		assertInstanceCount(otherClient, ItemB.class, 0);
+		otherClient.commit();
 		otherClient.store(new ItemB());
 		assertInstanceCount(db(), ItemB.class, 0);
-		assertInstanceCount(otherClient, ItemB.class, isNetworkingCS() ? 0 : 1);
+		assertInstanceCount(otherClient, ItemB.class, 1);
 		otherClient.commit();
 		assertInstanceCount(db(), ItemB.class, 1);
 		assertInstanceCount(otherClient, ItemB.class, 1);
@@ -72,6 +72,6 @@ public class StoredClassInstanceCountTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public static void main(String[] args) {
-		new StoredClassInstanceCountTestCase().runClientServer();
+		new StoredClassInstanceCountTestCase().runAll();
 	}
 }
