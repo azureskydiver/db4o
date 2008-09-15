@@ -45,6 +45,10 @@ public class MapTypeHandlerTestSuite extends FixtureBasedTestSuite implements Db
 			assertMapContent(item);
 		}
 
+		protected void assertPlainContent(Object item) {
+			assertPlainMapContent((Map) item);
+		}
+
 		protected AbstractItemFactory itemFactory() {
 			return (AbstractItemFactory) MapTypeHandlerTestVariables.MAP_IMPLEMENTATION.value();
 		}

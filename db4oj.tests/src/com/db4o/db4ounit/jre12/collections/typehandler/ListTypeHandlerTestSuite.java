@@ -65,7 +65,11 @@ public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements D
 		protected void assertContent(Object item) {
 			assertListContent(item);
 		}
-		
+
+		protected void assertPlainContent(Object item) {
+			assertPlainListContent((List) item);
+		}
+
 	    protected void assertCompareItems(Object element, boolean successful) {
 			Query q = newQuery();
 	    	Object item = itemFactory().newItem();

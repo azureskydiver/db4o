@@ -27,7 +27,9 @@ public abstract class TypeHandlerTestUnitBase extends AbstractDb4oTestCase imple
 	protected abstract void fillItem(Object item);
 	
 	protected abstract void assertContent(Object item);
-	
+
+	protected abstract void assertPlainContent(Object coll);
+
 	protected abstract ListTypeHandlerTestElementsSpec elementsSpec(); 
 	
     protected void configure(Configuration config) throws Exception {
@@ -129,7 +131,10 @@ public abstract class TypeHandlerTestUnitBase extends AbstractDb4oTestCase imple
 	}
 
 	protected void assertListContent(Object item) {
-		List list = listFromItem(item);
+		assertPlainContent(listFromItem(item));
+	}
+
+	protected void assertPlainListContent(List list) {
 		Assert.areEqual(itemFactory().containerClass(), list.getClass());
 		Assert.areEqual(expectedElementCount(), list.size());
 		for (int eltIdx = 0; eltIdx < elements().length; eltIdx++) {
@@ -139,7 +144,10 @@ public abstract class TypeHandlerTestUnitBase extends AbstractDb4oTestCase imple
 	}
 	
 	protected void assertMapContent(Object item) {
-		Map map = mapFromItem(item);
+		assertPlainMapContent(mapFromItem(item));
+	}
+
+	protected void assertPlainMapContent(Map map) {
 		Assert.areEqual(itemFactory().containerClass(), map.getClass());
 		Assert.areEqual(elements().length, map.size());
 		for (int eltIdx = 0; eltIdx < elements().length; eltIdx++) {
