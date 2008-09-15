@@ -67,10 +67,6 @@ public class StoredClassInstanceCountTestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(expectedCount, storedClazz.instanceCount());
 	}
 	
-	private boolean isNetworkingCS() {
-		return isClientServer() && !isEmbeddedClientServer();
-	}
-	
 	public static void main(String[] args) {
 		new StoredClassInstanceCountTestCase().runAll();
 	}
