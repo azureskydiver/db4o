@@ -95,8 +95,7 @@
 		<sequential>
 			<echo>java -cp ${eclipse.startup.jar} org.eclipse.core.launcher.Main -data @{workspace} -application sharpen.core.application @{resource}</echo>
 			<exec executable="${file.jvm.jdk1.5}" failonerror="true" timeout="1800000">
-				<arg value="-Xms256m" />
-				<arg value="-Xmx512m" />
+				<arg line="${sharpen.vmargs}" />
 				<arg value="-cp" />
 				<arg value="${eclipse.startup.jar}" />
 				<arg value="org.eclipse.core.launcher.Main" />
@@ -107,7 +106,6 @@
 				<arg value="-header" />
 				<arg file="${dir.config}/copyright_comment.txt" />
 				<arg value="@{resource}" />
-				
 				<args />
 				
 			</exec>
@@ -137,9 +135,7 @@
 		<sequential>
 			<echo>org.eclipse.core.launcher.Main -data @{workspace} -application decaf.application @{resource}</echo>
 		
-			<java fork="true" classname="org.eclipse.core.launcher.Main" failonerror="true" timeout="1800000">
-				<jvmarg value="-Xms256m" />
-				<jvmarg value="-Xmx512m" />
+			<java fork="true" classname="org.eclipse.core.launcher.Main" failonerror="true" timeout="1800000" jvmargs="${decaf.vmargs}">
 				<classpath>
 					<fileset dir="${eclipse.home}/plugins">
 						<include name="org.eclipse.equinox.launcher_*.jar"  />
