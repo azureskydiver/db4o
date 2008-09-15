@@ -890,7 +890,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	public int instanceCount(ClassMetadata clazz, Transaction trans) {
         MsgD msg = Msg.INSTANCE_COUNT.getWriterForInt(trans, clazz.getID());
-        msg.write(i_socket);
+        write(msg);
         MsgD response = (MsgD) expectedResponse(Msg.INSTANCE_COUNT);
         return response.readInt();
 	}
