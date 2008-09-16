@@ -13,6 +13,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.cs.config.*;
 import com.db4o.internal.diagnostic.*;
+import com.db4o.internal.encoding.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.io.*;
@@ -72,11 +73,13 @@ public final class Config4Impl implements Configuration, DeepClone,
     private final static KeySpec DISABLE_COMMIT_RECOVERY_KEY=new KeySpec(false);
     
 	private final static KeySpec DISCARD_FREESPACE_KEY=new KeySpec(0);
-    
-	private final static KeySpec ENCODING_KEY=new KeySpec(Const4.UNICODE);
 	
-	private final static KeySpec STRING_ENCODING_KEY=new KeySpec(StringEncodings.unicode());
+	private final static StringEncoding DEFAULT_STRING_ENCODING = StringEncodings.unicode(); 
     
+	private final static KeySpec STRING_ENCODING_KEY=new KeySpec(DEFAULT_STRING_ENCODING);
+	
+	private final static KeySpec ENCODING_KEY=new KeySpec(BuiltInStringEncoding.encodingByteForEncoding(DEFAULT_STRING_ENCODING));
+	
 	private final static KeySpec ENCRYPT_KEY=new KeySpec(false);
     
 	private final static KeySpec EXCEPTIONAL_CLASSES_KEY=new KeySpec(null);
@@ -631,8 +634,11 @@ public final class Config4Impl implements Configuration, DeepClone,
     	_config.put(TIMEOUT_SERVER_SOCKET_KEY,milliseconds);
     }
 
+    /**
+     * @deprecated
+     */
     public void unicode(boolean unicodeOn) {
-    	_config.put(ENCODING_KEY,(unicodeOn ? Const4.UNICODE : Const4.ISO8859));
+    	// do nothing
     }
 
     public void updateDepth(int depth) {

@@ -2,8 +2,12 @@
 
 package com.db4o.config.encoding;
 
+import com.db4o.config.*;
+import com.db4o.internal.encoding.*;
+
 /**
- * @exclude
+ * All built in String encodings
+ * @see Configuration#stringEncoding(StringEncoding)
  */
 public class StringEncodings {
 	

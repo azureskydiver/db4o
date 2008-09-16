@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.config;
 
 import com.db4o.internal.*;
+import com.db4o.internal.encoding.*;
 
 /**
  * @exclude

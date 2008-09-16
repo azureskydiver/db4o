@@ -1,9 +1,9 @@
 /* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.config.encoding;
+package com.db4o.internal.encoding;
 
+import com.db4o.config.encoding.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
 
 /**
  * @exclude

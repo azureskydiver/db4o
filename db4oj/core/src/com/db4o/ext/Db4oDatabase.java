@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
+import com.db4o.internal.encoding.*;
 import com.db4o.query.*;
 import com.db4o.types.*;
 

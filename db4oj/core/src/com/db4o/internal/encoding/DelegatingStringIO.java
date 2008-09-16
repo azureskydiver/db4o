@@ -1,8 +1,9 @@
 /* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.internal;
+package com.db4o.internal.encoding;
 
 import com.db4o.config.encoding.*;
+import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
 /**
@@ -26,7 +27,7 @@ public class DelegatingStringIO extends LatinStringIO{
  	
     public byte encodingByte(){
     	if(_encoding instanceof BuiltInStringEncoding){
-    		return BuiltInStringEncoding.encodingByteForEncoding((BuiltInStringEncoding) _encoding); 
+    		return BuiltInStringEncoding.encodingByteForEncoding(_encoding); 
     	}
 		return 0;
 	}

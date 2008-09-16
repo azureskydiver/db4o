@@ -10,6 +10,7 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.diagnostic.*;
+import com.db4o.internal.encoding.*;
 import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
