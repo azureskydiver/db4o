@@ -70,54 +70,6 @@ public class MapTypeHandlerTestSuite extends FixtureBasedTestSuite implements Db
 			assertQueryResult(q, successful);
 		}    
 		
-		//TODO: remove when COR-1311 solved 
-		public void testSuccessfulQuery() throws Exception {
-			if(elements()[0] instanceof FirstClassElement){
-				return;
-			}
-			super.testSuccessfulQuery();
-		}
-		
-		//TODO: remove when COR-1311 solved 
-		public void testFailingQuery() throws Exception {
-			if(elements()[0] instanceof FirstClassElement){
-				return;
-			}
-			super.testFailingQuery();
-		}
-		
-		//TODO: remove when COR-1311 solved 
-		public void testFailingContainsQuery() throws Exception {
-			if(elements()[0] instanceof FirstClassElement){
-				return;
-			}
-			super.testFailingContainsQuery();
-		}
-		
-		//TODO: remove when COR-1311 solved 
-		public void testFailingCompareItems() throws Exception {
-			if(elements()[0] instanceof FirstClassElement){
-				return;
-			}
-			super.testFailingCompareItems();
-		}
-		
-		//TODO: remove when COR-1311 solved 
-		public void testCompareItems() throws Exception {
-			if(elements()[0] instanceof FirstClassElement){
-				return;
-			}
-			super.testCompareItems();
-		}
-		
-		//TODO: remove when COR-1311 solved 
-		public void testSuccessfulContainsQuery() throws Exception {
-			if(elements()[0] instanceof FirstClassElement){
-				return;
-			}
-			super.testSuccessfulContainsQuery();
-		}
-		
 	}
 
 }
