@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.config.encoding.*;
 import com.db4o.diagnostic.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -29,7 +30,7 @@ import com.db4o.typehandlers.*;
  */
 public final class Config4Impl implements Configuration, DeepClone,
 		MessageSender, FreespaceConfiguration, QueryConfiguration,
-		ClientServerConfiguration, StringEncodingConfiguration {
+		ClientServerConfiguration{
     
 	private KeySpecHashtable4 _config=new KeySpecHashtable4(50);
 	
@@ -73,6 +74,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec DISCARD_FREESPACE_KEY=new KeySpec(0);
     
 	private final static KeySpec ENCODING_KEY=new KeySpec(Const4.UNICODE);
+	
+	private final static KeySpec STRING_ENCODING_KEY=new KeySpec(StringEncodings.unicode());
     
 	private final static KeySpec ENCRYPT_KEY=new KeySpec(false);
     
@@ -607,8 +610,13 @@ public final class Config4Impl implements Configuration, DeepClone,
     	_config.put(SINGLE_THREADED_CLIENT_KEY,flag);
     }
     
-	public StringEncodingConfiguration stringEncoding() {
-		return this;
+	public StringEncoding stringEncoding() {
+		return (StringEncoding) _config.get(STRING_ENCODING_KEY);
+	}
+	
+	public void stringEncoding(StringEncoding encoding) {
+		_config.put(STRING_ENCODING_KEY, encoding);
+		_config.put(ENCODING_KEY, BuiltInStringEncoding.encodingByteForEncoding(encoding));
 	}
 
     public void testConstructors(boolean flag) {
@@ -649,19 +657,6 @@ public final class Config4Impl implements Configuration, DeepClone,
     public void useIndexSystem() {
 		throw new NotSupportedException();
 	}
-    
-	public void useLatin() {
-		_config.put(ENCODING_KEY, Const4.ISO8859);		
-	}
-
-	public void useUnicode() {
-		_config.put(ENCODING_KEY, Const4.UNICODE);
-	}
-
-	public void useUtf8() {
-		_config.put(ENCODING_KEY, Const4.UTF8);		
-	}
-
     
     public void weakReferenceCollectionInterval(int milliseconds) {
     	_config.put(WEAK_REFERENCE_COLLECTION_INTERVAL_KEY,milliseconds);
@@ -1007,6 +1002,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public ClientServerFactory clientServerFactory(){
 		return (ClientServerFactory) _config.get(CLIENT_SERVER_FACTORY_KEY);
 	}
+
 
 
 	

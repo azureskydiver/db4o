@@ -2,6 +2,7 @@
 
 package com.db4o.internal;
 
+import com.db4o.config.encoding.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.fieldhandlers.*;
@@ -97,7 +98,7 @@ public final class HandlerRegistry {
         
         _handlerVersions = new HandlerVersionRegistry(this);
         
-        _stringIO = LatinStringIO.forEncoding(stringEncoding);
+        _stringIO = BuiltInStringEncoding.stringIoForEncoding(stringEncoding, container.configImpl().stringEncoding());
     	
     	_container = container;
     	container._handlers = this;

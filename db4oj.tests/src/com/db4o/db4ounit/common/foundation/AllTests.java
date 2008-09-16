@@ -36,7 +36,6 @@ public class AllTests implements TestSuiteBuilder {
 			Stack4TestCase.class,
 			TreeKeyIteratorTestCase.class,
 			TreeNodeIteratorTestCase.class,
-			UTF8EncoderTestCase.class,
 		}).iterator();	
 	}
 	

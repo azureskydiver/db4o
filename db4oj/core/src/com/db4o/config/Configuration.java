@@ -4,6 +4,7 @@ package com.db4o.config;
 
 import java.io.*;
 
+import com.db4o.config.encoding.*;
 import com.db4o.diagnostic.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -681,9 +682,23 @@ public interface Configuration {
     public void setOut(PrintStream outStream);
     
     /**
-     * return the string encoding configuration interface
+     * configures the string encoding to be used.
+     * <br><br>The string encoding can not be changed in the lifetime of a 
+     * database file. To set up the database with the correct string encoding,
+     * this configuration needs to be set correctly <b>before</b> a database 
+     * file is created with the first call to
+     * {@link com.db4o.Db4o#openFile} or  {@link com.db4o.Db4o#openServer}.
+     * <br><br>For subsequent open calls, db4o remembers built-in
+     * string encodings. If a custom encoding is used (an encoding that is 
+     * not supplied from within the db4o library), the correct encoding
+     * needs to be configured correctly again for all subsequent calls 
+     * that open database files.
+     * <br><br>Example:<br>
+     * <code>config.stringEncoding(StringEncodings.utf8()));</code>
+     * @see StringEncodings
      */
-    public StringEncodingConfiguration stringEncoding();
+	public void stringEncoding(StringEncoding encoding);
+
     
     /**
      * tuning feature: configures whether db4o should try to instantiate one instance
@@ -710,6 +725,7 @@ public interface Configuration {
      * Default setting: <b>true</b><br><br>
      * @param flag <code>true</code> for turning Unicode support on, <code>false</code> for turning
      * Unicode support off.
+     * @deprecated use {@link #stringEncoding(StringEncoding)}
      */
     public void unicode(boolean flag);
 
@@ -767,6 +783,7 @@ public interface Configuration {
      * @param typeHandler to be used for the classes that match the predicate.
      */
     public void registerTypeHandler(TypeHandlerPredicate predicate, TypeHandler4 typeHandler);
+
     
 	    
 }
