@@ -57,6 +57,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             MultiDimensionalArrayHandlerUpdateTestCase.class,
             NestedArrayUpdateTestCase.class,
             ObjectArrayUpdateTestCase.class,
+            QueryingMigrationTestCase.class,
             ShortHandlerUpdateTestCase.class,
             StringHandlerUpdateTestCase.class,
             
