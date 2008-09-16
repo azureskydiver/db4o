@@ -2,37 +2,33 @@
 
 package com.db4o.internal;
 
-import java.io.*;
-
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
+import com.db4o.config.encoding.*;
 import com.db4o.marshall.*;
 
 /**
  * @exclude
  */
-public class UTF8StringIO extends LatinStringIO{
+public class DelegatingStringIO extends LatinStringIO{
 	
-	private static final UTF8Encoder ENCODER = new UTF8Encoder();
+	private final StringEncoding _encoding;
+	
+	public DelegatingStringIO(StringEncoding encoding){
+		_encoding = encoding;
+	}
 	
  	private String decode(byte[] bytes, int start ,int length){
- 		try {
-			return ENCODER.decode(bytes, start, length);
-		} catch (IOException e) {
-			throw new Db4oIOException(e);
-		}
+ 		return _encoding.decode(bytes, start, length);
  	}
  	
  	private byte[] encode(String str){
- 		try {
-			return ENCODER.encode(str);
-		} catch (IOException e) {
-			throw new Db4oIOException(e);
-		}
+ 		return _encoding.encode(str);
  	}
  	
     public byte encodingByte(){
-		return Const4.UTF8;
+    	if(_encoding instanceof BuiltInStringEncoding){
+    		return BuiltInStringEncoding.encodingByteForEncoding((BuiltInStringEncoding) _encoding); 
+    	}
+		return 0;
 	}
     
  	public int length(String str){

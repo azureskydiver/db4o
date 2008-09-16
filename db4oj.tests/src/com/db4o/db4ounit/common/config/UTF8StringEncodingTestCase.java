@@ -3,40 +3,31 @@
 package com.db4o.db4ounit.common.config;
 
 import com.db4o.config.*;
+import com.db4o.config.encoding.*;
 import com.db4o.internal.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
 
-public class UTF8StringEncodingTestCase extends AbstractDb4oTestCase {
-	
-	public static class Item {
-		
-		public Item(String name){
-			_name = name;
-		}
-		
-		public String _name;
-	}
+public class UTF8StringEncodingTestCase extends StringEncodingTestCaseBase {
 	
 	protected void configure(Configuration config) throws Exception {
-		config.stringEncoding().useUtf8();
+		config.stringEncoding(StringEncodings.utf8());
 	}
-	
-	public void testGlobalEncoderIsUtf8(){
-		Assert.isInstanceOf(UTF8StringIO.class, container().stringIO());
-	}
-	
-	public void testStoreSimpleObject() throws Exception{
-		String name = "one";
-		store(new Item(name));
-		reopen();
-		Item item = (Item) retrieveOnlyInstance(Item.class);
-		Assert.areEqual(name, item._name);
+
+	protected Class stringIoClass() {
+		return DelegatingStringIO.class;
 	}
 	
 	public static void main(String[] arguments) {
 		new UTF8StringEncodingTestCase().runEmbeddedClientServer();
+	}
+	
+	public void testEncodeDecode() {
+		String original = "ABCZabcz?$@#.,;:";
+		UTF8StringEncoding encoder = new UTF8StringEncoding();
+		byte[] bytes = encoder.encode(original);
+		String decoded = encoder.decode(bytes, 0, bytes.length);
+		Assert.areEqual(original, decoded);
 	}
 
 }

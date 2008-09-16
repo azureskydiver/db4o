@@ -27,16 +27,6 @@ public class LatinStringIO {
 		return Const4.ISO8859;
 	}
     
-    static LatinStringIO forEncoding(byte encodingByte){
-        switch (encodingByte) {
-        case Const4.ISO8859:
-        	return new LatinStringIO();
-        case Const4.UTF8:
-        	return new UTF8StringIO();
-        default:
-            return new UnicodeStringIO();
-        }
-    }
 	
 	public int length(String str){
 		return str.length() + Const4.OBJECT_LENGTH + Const4.INT_LENGTH;

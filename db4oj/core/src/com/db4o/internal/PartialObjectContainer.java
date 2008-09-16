@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.config.encoding.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
@@ -399,8 +400,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract AbstractQueryResult newQueryResult(Transaction trans, QueryEvaluationMode mode);
 
-    protected void createStringIO(byte encoding) {
-    	stringIO(LatinStringIO.forEncoding(encoding));
+    protected final void createStringIO(byte encoding) {
+    	stringIO(BuiltInStringEncoding.stringIoForEncoding(encoding, configImpl().stringEncoding()));
     }
 
     final protected void initializeTransactions() {

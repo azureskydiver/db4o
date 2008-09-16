@@ -10,11 +10,13 @@ public class AllTests extends Db4oTestSuite {
     }
 
 	protected Class[] testCases() {
-        
         return new Class[] {
         		ConfigurationItemTestCase.class,
+        		CustomStringEncodingTestCase.class,
         		GlobalVsNonStaticConfigurationTestCase.class,
+        		LatinStringEncodingTestCase.class,
         		ObjectTranslatorTestCase.class,
+        		UnicodeStringEncodingTestCase.class,
         		UTF8StringEncodingTestCase.class,
 		};
     }
