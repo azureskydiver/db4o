@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.*;
+import com.db4o.internal.encoding.*;
 
 
 
@@ -102,11 +103,6 @@ public final class Const4
 	public static final int    TRANSIENT = -1;
 	public static final int    ADD_MEMBERS_TO_ID_TREE_ONLY = 0;
 	public static final int    ADD_TO_ID_TREE = 1;
-	
-	// String Encoding
-	public static final byte	ISO8859 = (byte)1;
-	public static final byte	UNICODE = (byte)2;
-	public static final byte	UTF8 = (byte)3;
 
 	// Timings
 	public static final int LOCK_TIME_INTERVAL = 1000;

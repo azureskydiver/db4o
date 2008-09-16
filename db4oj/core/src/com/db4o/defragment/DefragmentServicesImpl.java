@@ -12,6 +12,7 @@ import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
+import com.db4o.internal.encoding.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;

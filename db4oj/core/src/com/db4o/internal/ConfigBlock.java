@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.encoding.*;
 import com.db4o.internal.fileheader.*;
 import com.db4o.internal.handlers.*;
 

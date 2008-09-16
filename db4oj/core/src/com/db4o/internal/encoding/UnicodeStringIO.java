@@ -1,7 +1,8 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.internal;
+package com.db4o.internal.encoding;
 
+import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
 
@@ -15,7 +16,7 @@ public final class UnicodeStringIO extends LatinStringIO{
     }
     
     public byte encodingByte(){
-		return Const4.UNICODE;
+    	return BuiltInStringEncoding.encodingByteForEncoding(new UnicodeStringEncoding());
 	}
 	
 	public int length(String str){

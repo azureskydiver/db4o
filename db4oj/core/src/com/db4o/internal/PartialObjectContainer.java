@@ -4,11 +4,11 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.config.encoding.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.callbacks.*;
+import com.db4o.internal.encoding.*;
 import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
