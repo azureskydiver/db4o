@@ -24,7 +24,7 @@ class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 	
 	
 	public Db4oOSGiBundleFixture(BundleContext context, String fileName) {
-		super(new IndependentConfigurationSource());
+		super(new ServiceConfigurationSource(context));
 		_context = context;
 		_fileName = CrossPlatformServices.databasePath(fileName);
 	}
@@ -37,9 +37,13 @@ class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 			_origConfig = _config;
 			_config = (Configuration) ((DeepClone)_config).deepClone(null);
 		}
-	    ServiceReference sRef = _context.getServiceReference(Db4oService.class.getName());
-	    Db4oService dbs = (Db4oService)_context.getService(sRef);
-	    return dbs.openFile(_config,_fileName);
+	    return service(_context).openFile(_config,_fileName);
+	}
+
+	private static Db4oService service(BundleContext context) {
+		ServiceReference sRef = context.getServiceReference(Db4oService.class.getName());
+	    Db4oService dbs = (Db4oService)context.getService(sRef);
+		return dbs;
 	}
 
 	protected void doClean() {
@@ -66,4 +70,17 @@ class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 		}
 	}
 
+	private static class ServiceConfigurationSource implements ConfigurationSource {
+
+		private BundleContext _context;
+		
+		public ServiceConfigurationSource(BundleContext context) {
+			_context = context;
+		}
+		
+		public Configuration config() {
+			return service(_context).newConfiguration();
+		}
+		
+	}
 }
