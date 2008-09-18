@@ -124,5 +124,9 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
 	public void aspectCount(int count) {
 		_aspectCount = count;
 	}
+	
+	public IdObjectCollector collector(){
+		return _collector;
+	}
     
 }
