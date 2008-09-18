@@ -12,12 +12,29 @@ import com.db4o.marshall.*;
  */
 public class CollectIdContext extends ObjectHeaderContext {
     
-    private final IdObjectCollector _collector = new IdObjectCollector();
+    private final IdObjectCollector _collector;
     
-    public CollectIdContext(Transaction transaction, ObjectHeader oh, ReadBuffer buffer) {
-        super(transaction, buffer, oh);
+    private CollectIdContext(Transaction transaction, IdObjectCollector collector, ObjectHeader oh, ReadBuffer buffer) {
+    	super(transaction, buffer, oh);
+    	_collector = collector;
     }
     
+    public CollectIdContext(Transaction transaction, ObjectHeader oh, ReadBuffer buffer) {
+        this(transaction, new IdObjectCollector(), oh, buffer);
+    }
+    
+    public static CollectIdContext forID(Transaction transaction, int id){
+    	return forID(transaction, new IdObjectCollector(), id);
+    }
+    
+    public static CollectIdContext forID(Transaction transaction, IdObjectCollector collector, int id){
+        StatefulBuffer reader = transaction.container().readWriterByID(transaction, id);
+        if (reader == null) {
+        	return null;
+        }
+        ObjectHeader oh = new ObjectHeader(transaction.container(), reader);
+        return new CollectIdContext(transaction, collector, oh, reader);
+    }
 
     public void addId() {
         int id = readInt();
@@ -29,6 +46,10 @@ public class CollectIdContext extends ObjectHeaderContext {
 
     private void addId(int id) {
         _collector.addId(id);
+    }
+    
+    public void addPrimitiveObject(Object obj){
+    	_collector.add(obj);
     }
     
     public ClassMetadata classMetadata() {

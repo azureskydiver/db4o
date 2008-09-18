@@ -297,15 +297,11 @@ public final class QCandidates implements Visitor4 {
 				
 				public Object apply(Object current) {
 					int id = ((Integer)current).intValue();
-                    StatefulBuffer reader = stream().readWriterByID(i_trans, id);
-                    if (reader == null) {
+                    CollectIdContext context = CollectIdContext.forID(i_trans, id);
+                    if(context == null){
                     	return Iterators.SKIP;
                     }
-                    	
-                    ObjectHeader oh = new ObjectHeader(stream(), reader);
-                    
-                    CollectIdContext context = new CollectIdContext(i_trans, oh, reader);
-                    oh.classMetadata().collectIDs(context, fieldName);
+                    context.classMetadata().collectIDs(context, fieldName);
                     
 //                    Tree idTree = oh.classMetadata().collectFieldIDs(
 //                            oh._marshallerFamily,

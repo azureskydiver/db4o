@@ -312,7 +312,24 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
     }
 
     public void collectIDs(final QueryingReadContext context) throws Db4oIOException {
-
+    	// collectIDsNewCode(context);
+    	collectIDsOldCode(context);
+    }
+    
+    private void collectIDsNewCode(final QueryingReadContext context) throws Db4oIOException {
+    	final CollectIdContext subContext =  CollectIdContext.forID(context.transaction(), context.collector(), context.collectionID());
+        TraverseAspectCommand command = new TraverseAspectCommand() {
+            public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
+                if(isNull) {
+                    return;
+                }
+                aspect.collectIDs(subContext);
+            }
+        };
+        traverseAllAspects(subContext, command);
+    }
+    
+    private void collectIDsOldCode(final QueryingReadContext context) throws Db4oIOException {
         int id = context.collectionID();
         if (id == 0) {
             return;
@@ -332,7 +349,6 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                 context.add(elem);
             }
         });
-        
     }
     
     public void readVirtualAttributes(final ObjectReferenceContext context){

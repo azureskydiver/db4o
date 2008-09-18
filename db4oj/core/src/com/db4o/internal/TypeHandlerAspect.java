@@ -46,8 +46,18 @@ public class TypeHandlerAspect extends ClassAspect {
     	}
     }
 
-    public void collectIDs(CollectIdContext context) {
-        throw new NotImplementedException();
+    public void collectIDs(final CollectIdContext context) {
+    	if(! (_typeHandler instanceof FirstClassHandler)){
+    		incrementOffset(context);
+    		return;
+    	}
+    	context.slotFormat().doWithSlotIndirection(context, new Closure4() {
+			public Object run() {
+		    	QueryingReadContext queryingReadContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), context.buffer(), 0, context.collector());
+		    	((FirstClassHandler)_typeHandler).collectIDs(queryingReadContext);
+				return null;
+			}
+    	});
     }
 
     public void defragAspect(final DefragmentContext context) {

@@ -368,12 +368,14 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     
     public final void collectIDs(CollectIdContext context) throws FieldIndexException {
         if (! alive()) {
+        	incrementOffset(context.buffer());
             return ;
         }
         
         final TypeHandler4 handler = Handlers4.correctHandlerVersion(context, _handler);
         
         if(! (handler instanceof FirstClassHandler)){
+        	incrementOffset(context.buffer());
             return;
         }
 
