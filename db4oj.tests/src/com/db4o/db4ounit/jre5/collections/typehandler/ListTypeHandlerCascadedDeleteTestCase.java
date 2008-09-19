@@ -41,7 +41,7 @@ public class ListTypeHandlerCascadedDeleteTestCase extends AbstractDb4oTestCase{
         config.objectClass(ArrayList.class).cascadeOnDelete(true);
         config.registerTypeHandler(
             new SingleClassTypeHandlerPredicate(ArrayList.class), 
-            new ListTypeHandler());
+            new CollectionTypeHandler());
     }
     
     @Override

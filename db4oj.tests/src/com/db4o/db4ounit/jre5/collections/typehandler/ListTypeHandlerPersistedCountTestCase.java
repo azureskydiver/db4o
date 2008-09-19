@@ -39,7 +39,7 @@ public class ListTypeHandlerPersistedCountTestCase extends AbstractDb4oTestCase{
     protected void configure(Configuration config) throws Exception {
         config.registerTypeHandler(
             new SingleClassTypeHandlerPredicate(ArrayList.class), 
-            new ListTypeHandler());
+            new CollectionTypeHandler());
     }
     
     public void testTypedItem(){
