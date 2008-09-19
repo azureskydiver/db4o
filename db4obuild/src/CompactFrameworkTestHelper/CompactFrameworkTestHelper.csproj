@@ -39,6 +39,7 @@
       <HintPath>C:\Program Files\Common Files\Microsoft Shared\CoreCon\1.0\Bin\Microsoft.Smartdevice.Connectivity.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandLine.cs" />
