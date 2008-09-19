@@ -30,6 +30,8 @@ namespace CompactFrameworkTestHelper
 		private static readonly Dictionary<string, FrameWorkInfo> _deployment;
 
 		private const int DoNotSaveState = 0;
+        private const int SaveState = 1;
+
 		private static readonly string DeviceTestPath = "/Temp/";
 
 		private static readonly int ERROR_BASE = 0;
@@ -64,12 +66,14 @@ namespace CompactFrameworkTestHelper
 			int ret;
 			try
 			{
-				Console.WriteLine("CompactFrameworkTestHelper - Copyright (C) 2004-2008  db4objects Inc.\r\n");
+			    Console.WriteLine("CompactFrameworkTestHelper - Copyright (C) 2004-2008  db4objects Inc.\r\n");
+                
+                ConfigureEmulator(arguments["dir.storagecard"]);
 
 				Device device = EmulatorHelper.GetDevice();
 				device.Connect();
 
-				DeployDotNetFramework(device, targetFrameworkVersion);
+			    DeployDotNetFramework(device, targetFrameworkVersion);
 
 				try
 				{
@@ -114,7 +118,32 @@ namespace CompactFrameworkTestHelper
 			return ret;
 		}
 
-		private static void Help()
+	    private static void ConfigureEmulator(string storageCard)
+	    {
+            IDeviceEmulatorManagerVMID emulator = EmulatorHelper.GetVirtualDevice();
+
+            ResetConfiguration(emulator);
+	        ConfigureStorageCard(emulator, storageCard);
+	    }
+
+	    private static void ConfigureStorageCard(IDeviceEmulatorManagerVMID emulator, string storageCard)
+	    {
+            if (storageCard != null)
+            {
+                emulator.Connect();
+                EmulatorHelper.SetStorageCardPath(emulator, storageCard);
+                emulator.Shutdown(SaveState);
+            }
+	    }
+
+	    private static void ResetConfiguration(IDeviceEmulatorManagerVMID emulator)
+	    {
+	        emulator.Connect();
+	        emulator.ClearSaveState();
+	        emulator.Shutdown(DoNotSaveState);
+	    }
+
+	    private static void Help()
 		{
 		    Console.WriteLine("Invalid program parameter count.\r\n" +
 		                        "Use: {0} [-version]=[2.0 | 3.5] <-dir.dll.compact>=<path to db4o .NET Compact Framework distribution> \r\n\r\n", 
