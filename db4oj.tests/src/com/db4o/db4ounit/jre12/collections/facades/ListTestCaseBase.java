@@ -4,7 +4,6 @@ package com.db4o.db4ounit.jre12.collections.facades;
 
 import java.util.*;
 
-import com.db4o.collections.facades.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -12,13 +11,13 @@ import db4ounit.extensions.*;
 /**
  * @decaf.ignore.jdk11
  */
-public class FastListTestCaseBase extends AbstractDb4oTestCase {
+public class ListTestCaseBase extends AbstractDb4oTestCase {
 
-	public FastList _list;
+	public List _list;
 
 	private static int CAPACITY = 100;
 
-	protected void init(FastList list) {
+	protected void init(List list) {
 		_list = list;
 		for (int i = 0; i < CAPACITY; i++) {
 			_list.add(new Integer(i));
