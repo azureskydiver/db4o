@@ -27,8 +27,10 @@
 		<authentication username="${maven.repository.snapshots.username}" password="${maven.repository.snapshots.password}" />
 	</artifact:remoteRepository>
 
-	<!-- necessary for uploading artifacts via webdav -->	
+	<!-- necessary for uploading artifacts via webdav/scp/ftp -->	
 	<artifact:install-provider artifactId="wagon-webdav" version="1.0-beta-2" />
+	<artifact:install-provider artifactId="wagon-ssh" version="1.0-beta-2"/>
+	<artifact:install-provider artifactId="wagon-ftp" version="1.0-beta-2"/>
 
 	<!-- ================================= 
           target: deploy-maven-release              
@@ -54,8 +56,7 @@
 	<!-- ================================= 
           target: deploy-maven              
          ================================= -->
-	<target name="deploy-maven">
-		
+	<target name="deploy-maven">		
 		<copy todir="${tmpDir}/poms" overwrite="true">
 			<fileset dir="maven/poms" />
 		</copy>
