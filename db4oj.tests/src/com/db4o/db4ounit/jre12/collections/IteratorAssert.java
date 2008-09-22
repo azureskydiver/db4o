@@ -4,6 +4,8 @@ package com.db4o.db4ounit.jre12.collections;
 
 import java.util.*;
 
+import com.db4o.foundation.*;
+
 import db4ounit.*;
 
 
@@ -32,5 +34,26 @@ public class IteratorAssert {
         }
         areEqual(v.iterator(), iterator);
     }
+    
+	public static void sameContent(Iterator expected, Iterator actual) {
+		final Collection4 allExpected = new Collection4();
+		while(expected.hasNext()){
+			allExpected.add(expected.next());
+		}
+		while (actual.hasNext()) {
+			final Object current = actual.next();
+			final boolean removed = allExpected.remove(current);
+			if (! removed) {
+				unexpected(current);
+			}
+		}
+		Assert.isTrue(allExpected.isEmpty(), allExpected.toString());
+	}
+	
+	private static void unexpected(Object element) {
+		Assert.fail("Unexpected element: " + element);
+	}
+
+
 
 }
