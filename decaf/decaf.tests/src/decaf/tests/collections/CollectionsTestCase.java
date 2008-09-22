@@ -1,5 +1,6 @@
 package decaf.tests.collections;
 
+import decaf.core.*;
 import decaf.tests.*;
 
 public class CollectionsTestCase extends DecafTestCaseBase {
@@ -28,6 +29,10 @@ public class CollectionsTestCase extends DecafTestCaseBase {
 	// TODO jdk11 code doesn't compile
 	public void testMapAPI() throws Exception {
 		runPlatformTestCase("MapAPI");
+	}
+	
+	public void testImplementsSet() throws Exception {
+		runResourceTestCase("ImplementsSet", TargetPlatform.JDK12);
 	}
 
 	@Override
