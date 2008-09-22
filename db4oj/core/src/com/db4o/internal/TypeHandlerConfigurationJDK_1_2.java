@@ -4,6 +4,8 @@ package com.db4o.internal;
 
 import java.util.*;
 
+import com.db4o.collections.*;
+import com.db4o.internal.collections.*;
 import com.db4o.typehandlers.*;
 
 /**

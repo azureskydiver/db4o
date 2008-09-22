@@ -513,6 +513,10 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
 			_structureListener.notifyCountChanged(trans, node, diff);
 		}
 	}
+
+	public Iterator4 iterator(Transaction trans) {
+		return new BTreeIterator(trans, this);
+	}
     
 }
 
