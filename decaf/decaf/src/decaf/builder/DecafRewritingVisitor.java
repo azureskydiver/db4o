@@ -420,8 +420,8 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	private void eraseMethodDeclaration(MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
 		eraseReturnType(node, originalMethodDeclaration);
-		final HashSet<IVariableBinding> erasedParameters = eraseParametersWhereNeeded(node, originalMethodDeclaration);
-		eraseParameterReferences(node, erasedParameters);
+		eraseParametersWhereNeeded(node, originalMethodDeclaration);
+		eraseParameterReferences(node, collectParametersTypedToVariables(node, originalMethodDeclaration));
 	}
 
 	private void eraseReturnType(MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
@@ -443,17 +443,29 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	
-	private HashSet<IVariableBinding> eraseParametersWhereNeeded(
+	private void eraseParametersWhereNeeded(
 			MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
-		final HashSet<IVariableBinding> erasedParameters = new HashSet<IVariableBinding>();
 		final ITypeBinding[] parameterTypes = originalMethodDeclaration.getParameterTypes();
 		for (int i = 0; i < parameterTypes.length; i++) {
-			final SingleVariableDeclaration actualParameter = (SingleVariableDeclaration) node.parameters().get(i);
-			if (eraseIfNeeded(actualParameter.getType(), parameterTypes[i])) {
-				erasedParameters.add(actualParameter.resolveBinding());
-			}
+			final SingleVariableDeclaration actualParameter = parameterAt(node, i);
+			eraseIfNeeded(actualParameter.getType(), parameterTypes[i]);
 		}
-		return erasedParameters;
+	}
+
+	private SingleVariableDeclaration parameterAt(MethodDeclaration node, int i) {
+	    return (SingleVariableDeclaration) node.parameters().get(i);
+    }
+	
+	private HashSet<IVariableBinding> collectParametersTypedToVariables(MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
+		final HashSet<IVariableBinding> found = new HashSet<IVariableBinding>();
+		int i=0;
+		for (ITypeBinding type : originalMethodDeclaration.getParameterTypes()) {
+			if (type.isTypeVariable()) {
+				found.add(parameterAt(node, i).resolveBinding());
+			}
+			++i;
+		}
+		return found;
 	}
 
 	private boolean eraseIfNeeded(final Type actualType, final ITypeBinding expectedType) {	

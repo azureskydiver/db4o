@@ -2,11 +2,11 @@ package decaf.collections;
 
 import java.util.*;
 
-public class ImplementsSet <E> implements Set<E> {
+interface Appendable<E> {
+	boolean addAll(Collection<? extends E> c);
+}
 
-	public boolean add(E o) {
-		return false;
-	}
+class AppendableImpl<E> implements Appendable<E> {
 
 	public boolean addAll(Collection<? extends E> c) {
 		for (E element : c) {
@@ -14,48 +14,8 @@ public class ImplementsSet <E> implements Set<E> {
 		}
 		return false;
 	}
-
-	public void clear() {
-	}
-
-	public boolean contains(Object o) {
+	
+	public boolean add(E o) {
 		return false;
 	}
-
-	public boolean containsAll(Collection<?> c) {
-		return false;
-	}
-
-	public boolean isEmpty() {
-		return false;
-	}
-
-	public Iterator<E> iterator() {
-		return null;
-	}
-
-	public boolean remove(Object o) {
-		return false;
-	}
-
-	public boolean removeAll(Collection<?> c) {
-		return false;
-	}
-
-	public boolean retainAll(Collection<?> c) {
-		return false;
-	}
-
-	public int size() {
-		return 0;
-	}
-
-	public Object[] toArray() {
-		return null;
-	}
-
-	public <T> T[] toArray(T[] a) {
-		return null;
-	}
-
 }
