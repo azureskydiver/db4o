@@ -312,24 +312,42 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
     }
 
     public void collectIDs(final QueryingReadContext context) throws Db4oIOException {
-    	// collectIDsNewCode(context);
-    	collectIDsOldCode(context);
+    	if(collectIDsByTypehandlerAspect(context)){
+    		return;
+    	}
+    	collectIDsByInstantiatingCollection(context);
     }
     
-    private void collectIDsNewCode(final QueryingReadContext context) throws Db4oIOException {
+    private boolean collectIDsByTypehandlerAspect(final QueryingReadContext context) throws Db4oIOException {
+    	final BooleanByRef aspectFound = new BooleanByRef(false);
     	final CollectIdContext subContext =  CollectIdContext.forID(context.transaction(), context.collector(), context.collectionID());
         TraverseAspectCommand command = new TraverseAspectCommand() {
             public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
                 if(isNull) {
                     return;
                 }
-                aspect.collectIDs(subContext);
+                if(isCollectIdTypehandlerAspect(aspect)){
+                	aspectFound.value = true;
+                	aspect.collectIDs(subContext);
+                }else {
+                	aspect.incrementOffset(subContext);
+                }
+
             }
         };
         traverseAllAspects(subContext, command);
+        return aspectFound.value;
     }
     
-    private void collectIDsOldCode(final QueryingReadContext context) throws Db4oIOException {
+    private boolean isCollectIdTypehandlerAspect(ClassAspect aspect){
+    	if(! (aspect instanceof TypeHandlerAspect)){
+    		return false;
+    	}
+    	TypeHandler4 typehandler = ((TypeHandlerAspect)aspect)._typeHandler;
+    	return typehandler instanceof FirstClassHandler;
+    }
+    
+    private void collectIDsByInstantiatingCollection(final QueryingReadContext context) throws Db4oIOException {
         int id = context.collectionID();
         if (id == 0) {
             return;
