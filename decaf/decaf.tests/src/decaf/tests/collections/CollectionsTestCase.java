@@ -17,6 +17,10 @@ public class CollectionsTestCase extends DecafTestCaseBase {
 		runPlatformTestCase("SimpleListUsage");
 	}
 
+	public void testForEachCollection() throws Exception {
+		runResourceTestCase("ForEachCollection", TargetPlatform.JDK12);
+	}
+
 	public void testForEachList() throws Exception {
 		runPlatformTestCase("ForEachList");
 	}
@@ -31,10 +35,6 @@ public class CollectionsTestCase extends DecafTestCaseBase {
 		runPlatformTestCase("MapAPI");
 	}
 	
-	public void testImplementsSet() throws Exception {
-		runResourceTestCase("ImplementsSet", TargetPlatform.JDK12);
-	}
-
 	@Override
 	protected String packagePath() {
 		return "collections";
