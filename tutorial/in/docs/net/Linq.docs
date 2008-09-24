@@ -38,3 +38,22 @@ when SODA equivalent does not exists. For example:
 The query still works, but it requires instantiation of all candidate ._
 objects, which is much less performant than SODA query. 
 
+.2 LINQ for Compact Framework .. 
+Compact Framework version 3.5 contains LINQ implementation for querying ._
+objects, however it does not contain the namespace System.Linq.Expressions, ._
+which is used by all optimized LINQ providers. Luckily there is a solution ._
+to this problem. Mono implementation of System.Core can be used to ._
+support optimized LINQ providers and expression interpreter contributed ._
+by  .l http://www.mainsoft.com/ Mainsoft ..l  to Mono's System.Core can be used to support full LINQ expression trees.
+
+These assemblies were used by db4o team to compile a new assembly, ._
+System.Linq.Expressions.dll, which provides LINQ support ._
+to .NET Compact Framework 3.5. In order to use the full LINQ ._
+functionality including optimisation, add a reference to ._
+System.Linq.Expressions.dll in your project and enjoy.
+
+System.Linq.Expressions.dll can be found in bin\compact-3.5 folder ._
+of your distribution. You can also examine the code ._
+in src\Libs\compact-3.5\System.Linq.Expressions or db4o  .l https://source.db4o.com/db4o/trunk/db4o.net/Libs/compact-3.5/System.Linq.Expressions/ SVN ..l  .
+
+
