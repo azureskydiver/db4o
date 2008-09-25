@@ -12,6 +12,7 @@ import com.db4o.internal.handlers.*;
 import com.db4o.marshall.*;
 
 /**
+ * @exclude
  * @decaf.ignore
  * @sharpen.ignore
  */
