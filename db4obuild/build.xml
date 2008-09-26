@@ -316,7 +316,7 @@
 		<ant antfile="build-maven.xml" target="deploy-maven-release" />
 	</target>
 	
-	<target name="deploy-maven-snapshot" description="Deploys the current version in the snapshot repository">
+	<target name="deploy-maven-snapshot" description="Deploys the current version in the snapshot repository" depends="init">
 		<ant antfile="build-maven.xml" target="deploy-maven-snapshot" />
 	</target>		
 	
