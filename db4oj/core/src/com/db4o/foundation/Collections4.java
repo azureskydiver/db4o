@@ -45,6 +45,9 @@ public class Collections4 {
 		public boolean contains(Object obj) {
 			return _sequence.contains(obj);
 		}
-		
+
+		public Object[] toArray() {
+			return _sequence.toArray();
+		}
 	}
 }

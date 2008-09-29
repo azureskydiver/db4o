@@ -69,9 +69,9 @@ public class TranslatorStoredClassesTestCase implements TestCase {
 	}
 
 	private static ObjectContainer db(Class translated,ObjectTranslator translator) {
-		Configuration config=Db4o.newConfiguration();
+		Configuration config=Db4oEmbedded.newConfiguration();
 		config.objectClass(translated).translate(translator);
-		return Db4o.openFile(config,FILENAME);
+		return Db4oEmbedded.openFile(config,FILENAME);
 	}
 
 }

@@ -42,7 +42,7 @@ public class IsAliveTestCase  implements TestLifeCycle {
 	}
 	
 	private Configuration config() {
-		return Db4o.newConfiguration();
+		return Db4oEmbedded.newConfiguration();
 	}
 
 	private ObjectServer openServer() {

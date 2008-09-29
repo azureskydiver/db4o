@@ -45,7 +45,7 @@ public class Db4o {
 	 * {@link com.db4o.ext.ExtObjectContainer#configure ObjectContainer}.<br><br>
 	 * @return the global {@link Configuration configuration} context
 	 * 
-	 * @deprecated use explicit configuration via {@link #newConfiguration()} instead
+	 * @deprecated use explicit configuration via {@link Db4oEmbedded#newConfiguration()} instead
      */
 	public static Configuration configure(){
 		return i_config;
@@ -55,11 +55,10 @@ public class Db4o {
 	 * Creates a fresh {@link Configuration Configuration} instance.
 	 * 
 	 * @return a fresh, independent configuration with all options set to their default values
+	 * @deprecated Use {@link Db4oEmbedded#newConfiguration()} instead
 	 */
 	public static Configuration newConfiguration() {
-		Config4Impl config = new Config4Impl();
-		Platform4.getDefaultConfiguration(config);
-		return config;
+		return Db4oEmbedded.newConfiguration();
 	}
 
 	/**
@@ -68,7 +67,7 @@ public class Db4o {
 	 * @return a fresh configuration with all option values set to the values
 	 * currently configured for the global db4o configuration context
 	 * 
-	 * @deprecated use explicit configuration via {@link #newConfiguration()} instead
+	 * @deprecated use explicit configuration via {@link Db4oEmbedded#newConfiguration()} instead
 	 */
 	public static Configuration cloneConfiguration() {
 		return (Config4Impl) ((DeepClone) Db4o.configure()).deepClone(null);
@@ -121,7 +120,7 @@ public class Db4o {
 	 * {@link ExtObjectContainer ExtObjectContainer} 
 	 * and {@link ExtClient ExtClient} methods.
 	 * <br><br>
-	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4o#newConfiguration()}
+	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4oEmbedded#newConfiguration()}
      * @param hostName the host name
      * @param port the port the server is using
      * @param user the user name
@@ -154,7 +153,7 @@ public class Db4o {
 	 * {@link ExtObjectContainer ExtObjectContainer} 
 	 * and {@link ExtClient ExtClient} methods.
 	 * <br><br>
-	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4o#newConfiguration()}
+	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4oEmbedded#newConfiguration()}
      * @param hostName the host name
      * @param port the port the server is using
      * @param user the user name
@@ -176,7 +175,7 @@ public class Db4o {
 	}
 
     /**
-     * Operates just like {@link Db4o#openFile(Configuration, String)}, but uses
+     * Operates just like {@link Db4oEmbedded#openFile(Configuration, String)}, but uses
      * the global db4o {@link Configuration Configuration} context.
      * 
      * opens an {@link ObjectContainer ObjectContainer}
@@ -207,43 +206,43 @@ public class Db4o {
 	public static final ObjectContainer openFile(String databaseFileName)
 			throws Db4oIOException, DatabaseFileLockedException,
 			IncompatibleFileFormatException, OldFormatException, DatabaseReadOnlyException {
-		return openFile(cloneConfiguration(),databaseFileName);
+		return Db4oEmbedded.openFile(cloneConfiguration(),databaseFileName);
 	}
 
     /**
-     * opens an {@link ObjectContainer ObjectContainer}
+	 * opens an {@link ObjectContainer ObjectContainer}
 	 * on the specified database file for local use.
 	 * <br><br>A database file can only be opened once, subsequent attempts to open
 	 * another {@link ObjectContainer ObjectContainer} against the same file will result in
 	 * a {@link DatabaseFileLockedException DatabaseFileLockedException}.<br><br>
- 	 * Database files can only be accessed for readwrite access from one process 
- 	 * (one Java VM) at one time. All versions except for db4o mobile edition use an
- 	 * internal mechanism to lock the database file for other processes. 
-     * <br><br>
-	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4o#newConfiguration()}
-     * @param databaseFileName an absolute or relative path to the database file
+	 * Database files can only be accessed for readwrite access from one process 
+	 * (one Java VM) at one time. All versions except for db4o mobile edition use an
+	 * internal mechanism to lock the database file for other processes. 
+	 * <br><br>
+	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4oEmbedded#newConfiguration()}
+	 * @param databaseFileName an absolute or relative path to the database file
 	 * @return an open {@link ObjectContainer ObjectContainer}
-     * @see Configuration#readOnly
-     * @see Configuration#encrypt
-     * @see Configuration#password
-     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
-     * @throws DatabaseFileLockedException the required database file is locked by 
-     * another process.
-     * @throws IncompatibleFileFormatException runtime 
-     * {@link com.db4o.config.Configuration configuration} is not compatible
-     * with the configuration of the database file. 
-     * @throws OldFormatException open operation failed because the database file
-     * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
-     * is set to false.
-     * @throws DatabaseReadOnlyException database was configured as read-only.
+	 * @see Configuration#readOnly
+	 * @see Configuration#encrypt
+	 * @see Configuration#password
+	 * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+	 * @throws DatabaseFileLockedException the required database file is locked by 
+	 * another process.
+	 * @throws IncompatibleFileFormatException runtime 
+	 * {@link com.db4o.config.Configuration configuration} is not compatible
+	 * with the configuration of the database file. 
+	 * @throws OldFormatException open operation failed because the database file
+	 * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
+	 * is set to false.
+	 * @throws DatabaseReadOnlyException database was configured as read-only.
+	 * @deprecated Use {@link Db4oEmbedded#openFile(Configuration,String)} instead
 	 */
 	public static final ObjectContainer openFile(Configuration config,
 			String databaseFileName) throws Db4oIOException,
 			DatabaseFileLockedException, IncompatibleFileFormatException,
 			OldFormatException, DatabaseReadOnlyException {
-		return ObjectContainerFactory.openObjectContainer(config,
-				databaseFileName);
-	}
+				return Db4oEmbedded.openFile(config, databaseFileName);
+			}
 
 	protected static final ObjectContainer openMemoryFile1(
 			Configuration config, MemoryFile memoryFile)
@@ -307,7 +306,7 @@ public class Db4o {
      * If the server does not need to listen on a port because it will only be used
      * in embedded mode with {@link ObjectServer#openClient}, specify '0' as the
      * port number.
-	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4o#newConfiguration()}
+	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4oEmbedded#newConfiguration()}
      * @param databaseFileName an absolute or relative path to the database file
      * @param port the port to be used, or 0, if the server should not open a port,
      * because it will only be used with {@link ObjectServer#openClient()}.
@@ -342,7 +341,7 @@ public class Db4o {
      * If the server does not need to listen on a port because it will only be used
      * in embedded mode with {@link ObjectServer#openClient}, specify '0' as the
      * port number.
-	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4o#newConfiguration()}
+	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4oEmbedded#newConfiguration()}
      * @param databaseFileName an absolute or relative path to the database file
      * @param port the port to be used, or 0, if the server should not open a port,
      * because it will only be used with {@link ObjectServer#openClient()}.

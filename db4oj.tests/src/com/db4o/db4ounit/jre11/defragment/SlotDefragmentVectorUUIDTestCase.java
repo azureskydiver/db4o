@@ -58,11 +58,11 @@ public class SlotDefragmentVectorUUIDTestCase implements TestCase {
     private ObjectContainer openDatabase() {
         Configuration config = configuration();
         config.generateUUIDs(ConfigScope.GLOBALLY);
-        return Db4o.openFile(config,SlotDefragmentTestConstants.FILENAME);
+        return Db4oEmbedded.openFile(config,SlotDefragmentTestConstants.FILENAME);
     }
     
     private Configuration configuration() {
-        Configuration config = Db4o.newConfiguration();
+        Configuration config = Db4oEmbedded.newConfiguration();
         config.reflectWith(Platform4.reflectorForType(Data.class));
         return config;
     }

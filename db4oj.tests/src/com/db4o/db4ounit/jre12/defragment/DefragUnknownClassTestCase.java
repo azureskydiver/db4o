@@ -74,11 +74,11 @@ public class DefragUnknownClassTestCase implements TestLifeCycle {
 	}
 
 	private ObjectContainer openDatabase() {
-		return Db4o.openFile(config(), FILENAME);
+		return Db4oEmbedded.openFile(config(), FILENAME);
 	}
 	
 	public static Configuration config() {
-		Configuration config = Db4o.newConfiguration();
+		Configuration config = Db4oEmbedded.newConfiguration();
 		config.reflectWith(Platform4.reflectorForType(ClassHolder.class));
 		return config;
 	}

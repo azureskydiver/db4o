@@ -4,6 +4,7 @@ package com.db4o.test.types;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class ArrayMixedInObjectPrivate extends RTest
 {
 	private Object o1;

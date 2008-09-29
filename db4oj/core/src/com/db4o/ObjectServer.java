@@ -62,7 +62,7 @@ public interface ObjectServer {
     /**
      * See {@link #openClient()}
      * 
-     * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4o#newConfiguration()}
+     * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4oEmbedded#newConfiguration()}
      * @return an open {@link ObjectContainer ObjectContainer}
      */
     public ObjectContainer openClient(Configuration config);

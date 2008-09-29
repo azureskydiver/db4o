@@ -34,9 +34,9 @@ public class Statistics {
 		if (new java.io.File(filename).exists()) {
 			ObjectContainer con = null;
 			try {
-				Configuration config = Db4o.newConfiguration();
+				Configuration config = Db4oEmbedded.newConfiguration();
 				config.messageLevel(-1);
-				con = Db4o.openFile(config, filename);
+				con = Db4oEmbedded.openFile(config, filename);
 				printHeader("STATISTICS");
 				System.out.println("File: " + filename);
 				printStats(con, filename);

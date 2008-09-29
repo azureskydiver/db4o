@@ -72,7 +72,7 @@ public class FreespaceManagerTypeChangeSlotCountTestCase implements TestCase {
     }
 
     private void open() {
-        _container = (LocalObjectContainer)Db4o.openFile(_currentConfig, _fileName);
+        _container = (LocalObjectContainer)Db4oEmbedded.openFile(_currentConfig, _fileName);
     }
 
     private void createFreeSpace() {
@@ -88,7 +88,7 @@ public class FreespaceManagerTypeChangeSlotCountTestCase implements TestCase {
 
 
     private void configureBTreeManager() {
-        _currentConfig = Db4o.newConfiguration();
+        _currentConfig = Db4oEmbedded.newConfiguration();
         _currentConfig.freespace().useBTreeSystem();
     }
     
@@ -100,7 +100,7 @@ public class FreespaceManagerTypeChangeSlotCountTestCase implements TestCase {
 
 
     private void configureRamManager() {
-        _currentConfig = Db4o.newConfiguration();
+        _currentConfig = Db4oEmbedded.newConfiguration();
         _currentConfig.freespace().useRamSystem();
     }
     

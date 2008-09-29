@@ -1,8 +1,7 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.config;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
+import com.db4o.*;
 import com.db4o.config.Configuration;
 import com.db4o.config.ConfigurationItem;
 import com.db4o.foundation.io.File4;
@@ -40,7 +39,7 @@ public class ConfigurationItemTestCase implements TestCase {
 	}
 
 	public void test() {
-		Configuration configuration = Db4o.newConfiguration();
+		Configuration configuration = Db4oEmbedded.newConfiguration();
 		
 		ConfigurationItemStub item = new ConfigurationItemStub();
 		configuration.add(item);
@@ -50,7 +49,7 @@ public class ConfigurationItemTestCase implements TestCase {
 		
 		File4.delete(databaseFile());
 		
-		ObjectContainer container = Db4o.openFile(configuration, databaseFile());
+		ObjectContainer container = Db4oEmbedded.openFile(configuration, databaseFile());
 		container.close();
 		
 		Assert.areSame(container, item.appliedContainer());

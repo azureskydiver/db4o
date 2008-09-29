@@ -4,7 +4,9 @@ package com.db4o.test.types;
 
 public class BiChildTypedPrivate
 {
+	@SuppressWarnings("unused")
 	private BiParentTypedPrivate parent;
+	@SuppressWarnings("unused")
 	private String name;
 	
 	public BiChildTypedPrivate(){
