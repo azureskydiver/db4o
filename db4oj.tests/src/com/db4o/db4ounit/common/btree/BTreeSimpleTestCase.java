@@ -5,7 +5,7 @@ package com.db4o.db4ounit.common.btree;
 import com.db4o.internal.Transaction;
 import com.db4o.internal.btree.BTree;
 
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 public class BTreeSimpleTestCase extends AbstractDb4oTestCase implements

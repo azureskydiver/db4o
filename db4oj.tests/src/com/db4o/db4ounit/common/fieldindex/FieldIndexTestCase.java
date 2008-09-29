@@ -4,7 +4,6 @@ package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.db4ounit.common.btree.*;
 import com.db4o.db4ounit.common.foundation.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -13,6 +12,7 @@ import com.db4o.internal.btree.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
 
 public class FieldIndexTestCase extends FieldIndexTestCaseBase {
@@ -58,7 +58,7 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
         int lastValue = Integer.MIN_VALUE;
         for (int i = 0; i < values.length; i++) {
             if(values[i] != lastValue){
-                final ExpectingVisitor expectingVisitor = BTreeAssert.createExpectingVisitor(values[i], IntArrays4.occurences(values, values[i]));
+                final ExpectingVisitor expectingVisitor = ExpectingVisitor.createExpectingVisitor(values[i], IntArrays4.occurences(values, values[i]));
                 BTreeRange range = fieldIndexKeySearch(trans(), btree, new Integer(values[i]));
                 BTreeAssert.traverseKeys(range, new Visitor4() {
                     public void visit(Object obj) {

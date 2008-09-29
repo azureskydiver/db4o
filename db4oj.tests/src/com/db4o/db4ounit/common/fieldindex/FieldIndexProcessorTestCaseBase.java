@@ -3,7 +3,6 @@ package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.db4ounit.common.btree.*;
 import com.db4o.db4ounit.common.foundation.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -15,6 +14,7 @@ import com.db4o.internal.query.processor.QQueryBase.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
 public abstract class FieldIndexProcessorTestCaseBase extends
 		FieldIndexTestCaseBase {
@@ -113,7 +113,7 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 	}
 
 	protected void assertTreeInt(final int[] expectedValues, final TreeInt treeInt) {
-		final ExpectingVisitor visitor = BTreeAssert.createExpectingVisitor(expectedValues);
+		final ExpectingVisitor visitor = ExpectingVisitor.createExpectingVisitor(expectedValues);
 		treeInt.traverse(new Visitor4() {
 			public void visit(Object obj) {
 				visitor.visit(new Integer(((TreeInt)obj)._key));

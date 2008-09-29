@@ -4,7 +4,6 @@ package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
-import com.db4o.db4ounit.common.btree.ExpectingVisitor;
 import com.db4o.foundation.Visitor4;
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
@@ -12,7 +11,7 @@ import com.db4o.internal.slots.Slot;
 import com.db4o.query.Query;
 
 import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.*;
 
 /**
  * @exclude

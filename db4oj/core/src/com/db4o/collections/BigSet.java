@@ -44,7 +44,7 @@ public class BigSet<E> implements Set<E> {
 			container().store(obj);
 			id = getID(obj);
 		}
-		_bTree.add(_transaction, new Integer(id));
+		bTree().add(_transaction, new Integer(id));
 		return true;
 	}
 
@@ -68,7 +68,7 @@ public class BigSet<E> implements Set<E> {
 		if(id == 0){
 			return false;
 		}
-		BTreeRange range = _bTree.search(transaction(), new Integer(id));
+		BTreeRange range = bTree().search(transaction(), new Integer(id));
 		return ! range.isEmpty();
 	}
 
@@ -86,7 +86,7 @@ public class BigSet<E> implements Set<E> {
 	}
 
 	public Iterator<E> iterator() {
-		MappingIterator i = new MappingIterator(_bTree.iterator(transaction())){
+		MappingIterator i = new MappingIterator(bTree().iterator(transaction())){
 			protected Object map(Object current) {
 				int id = ((Integer)current).intValue();
 				Object obj = container().getByID(transaction(), id);
@@ -102,7 +102,7 @@ public class BigSet<E> implements Set<E> {
 			return false;
 		}
 		int id = getID(obj);
-		_bTree.remove(transaction(), new Integer(id));
+		bTree().remove(transaction(), new Integer(id));
 		return true;
 	}
 
@@ -121,7 +121,7 @@ public class BigSet<E> implements Set<E> {
 	}
 
 	public int size() {
-		return _bTree.size(transaction());
+		return bTree().size(transaction());
 	}
 
 	public Object[] toArray() {
@@ -133,11 +133,11 @@ public class BigSet<E> implements Set<E> {
 	}
 
 	public void write(WriteContext context) {
-		int id = _bTree.getID();
+		int id = bTree().getID();
 		if(id == 0){
-			_bTree.write(container().systemTransaction());
+			bTree().write(container().systemTransaction());
 		}
-		context.writeInt(_bTree.getID());
+		context.writeInt(bTree().getID());
 	}
 
 	public void read(ReadContext context) {
@@ -156,6 +156,17 @@ public class BigSet<E> implements Set<E> {
 	
 	private Transaction systemTransaction(){
 		return container().systemTransaction();
+	}
+
+	public void invalidate() {
+		_bTree = null;
+	}
+
+	private BTree bTree() {
+		if(_bTree == null){
+			throw new IllegalStateException();
+		}
+		return _bTree;
 	}
 	
 

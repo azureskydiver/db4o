@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import java.io.*;
 
+import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
@@ -46,4 +47,6 @@ public interface DefragmentContext extends BufferContext, MarshallingInfo, Handl
 	public ByteArrayBuffer sourceBufferById(int sourceId) throws IOException;
 	
 	public void targetWriteBytes(int address, ByteArrayBuffer buffer);
+	
+	public DefragmentServices services();
 }

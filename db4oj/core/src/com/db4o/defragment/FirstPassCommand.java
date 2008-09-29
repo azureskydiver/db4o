@@ -15,7 +15,8 @@ import com.db4o.internal.slots.*;
  * 
  * @exclude
  */
-final class FirstPassCommand implements PassCommand {
+public final class FirstPassCommand implements PassCommand {
+	
 	private final static int ID_BATCH_SIZE=4096;
 
 	private TreeInt _ids;
