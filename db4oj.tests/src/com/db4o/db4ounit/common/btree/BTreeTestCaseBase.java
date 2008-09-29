@@ -6,7 +6,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 
 import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.OptOutCS;
 
 public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase implements

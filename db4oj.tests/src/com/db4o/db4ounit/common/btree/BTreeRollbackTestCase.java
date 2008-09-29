@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.btree;
 
+import db4ounit.extensions.*;
+
 
 public class BTreeRollbackTestCase extends BTreeTestCaseBase {
 

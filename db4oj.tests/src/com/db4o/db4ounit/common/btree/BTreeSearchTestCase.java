@@ -2,11 +2,10 @@
 
 package com.db4o.db4ounit.common.btree;
 
-import com.db4o.db4ounit.common.foundation.IntArrays4;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 public class BTreeSearchTestCase extends AbstractDb4oTestCase implements
@@ -65,7 +64,7 @@ public class BTreeSearchTestCase extends AbstractDb4oTestCase implements
 		int lastValue = Integer.MIN_VALUE;
 		for (int i = 0; i < keys.length; i++) {
 			if (keys[i] != lastValue) {
-				ExpectingVisitor expectingVisitor = BTreeAssert
+				ExpectingVisitor expectingVisitor = ExpectingVisitor
 						.createExpectingVisitor(keys[i], IntArrays4.occurences(
 								keys, keys[i]));
 				BTreeRange range = btree.search(trans, new Integer(keys[i]));

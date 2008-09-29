@@ -5,6 +5,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 
 import db4ounit.Assert;
+import db4ounit.extensions.*;
 
 public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 	

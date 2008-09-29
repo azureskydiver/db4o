@@ -5,6 +5,8 @@ package com.db4o.db4ounit.jre12.collections;
 import java.util.*;
 
 import com.db4o.collections.*;
+import com.db4o.internal.*;
+import com.db4o.internal.btree.*;
 import com.db4o.internal.collections.*;
 import com.db4o.typehandlers.*;
 
@@ -81,11 +83,15 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 		store(holder);
 		reopen();
 		holder = (Holder) retrieveOnlyInstance(Holder.class);
-		Item expectedItem = (Item)retrieveOnlyInstance(Item.class);
 		set = holder._set;
+		assertSinglePersistentItem(set);
+	}
+
+	private void assertSinglePersistentItem(Set set) {
+		Item expectedItem = (Item)retrieveOnlyInstance(Item.class);
 		Assert.isNotNull(set);
 		Assert.areEqual(1, set.size());
-		Iterator setIterator = holder._set.iterator();
+		Iterator setIterator = set.iterator();
 		Assert.isNotNull(setIterator);
 		Assert.isTrue(setIterator.hasNext());
 		Item actualItem = (Item) setIterator.next();
@@ -138,6 +144,35 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 		Assert.isNotNull(i);
 		IteratorAssert.sameContent(collection.iterator(), i);
 	}
+	
+	public void testDelete() throws Throwable{
+		final BigSet set = new BigSet(db());
+		set.add(ITEM_ONE);
+		db().store(set);
+		db().commit();
+		BTree bTree = bTree(set);
+		BTreeAssert.assertAllSlotsFreed(fileTransaction(), bTree, new CodeBlock() {
+			public void run() throws Throwable {
+				db().delete(set);
+				db().commit();
+			}
+		});
+		Assert.expect(IllegalStateException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				set.add(ITEM_ONE);
+			}
+		});
+	}
+	
+	public void testDefragment() throws Exception{
+		BigSet set = new BigSet(db());
+		set.add(ITEM_ONE);
+		db().store(set);
+		db().commit();
+		defragment();
+		set = (BigSet) retrieveOnlyInstance(BigSet.class);
+		assertSinglePersistentItem(set);
+	}
 
 	private Collection itemCollection() {
 		Collection c = new ArrayList<Item>();
@@ -146,6 +181,21 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 		}
 		return c;
 	}
+	
+	public void testGetInternalImplementation() throws Exception{
+		BigSet set = new BigSet(db());
+		BTree bTree = bTree(set);
+		Assert.isNotNull(bTree);
+	}
+	
+	public static BTree bTree(BigSet set) throws IllegalAccessException{
+		return (BTree)Reflection4.getFieldValue(set, "_bTree");
+	}
+	
+	private LocalTransaction fileTransaction() {
+		return ((LocalTransaction)trans());
+	}
+
 	
 	
 	

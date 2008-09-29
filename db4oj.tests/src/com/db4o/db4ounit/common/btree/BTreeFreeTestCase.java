@@ -2,11 +2,10 @@
 
 package com.db4o.db4ounit.common.btree;
 
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.slots.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
 
 public class BTreeFreeTestCase extends BTreeTestCaseBase {
@@ -17,45 +16,15 @@ public class BTreeFreeTestCase extends BTreeTestCaseBase {
         new BTreeFreeTestCase().runSolo();
     }
     
-    public void test(){
-        
+    public void test() throws Throwable{
         add(VALUES);
+        BTreeAssert.assertAllSlotsFreed(fileTransaction(), _btree, new CodeBlock() {
+			public void run() throws Throwable {
+		        _btree.free(systemTrans());
+		        systemTrans().commit();
+			}
+		});
         
-        Iterator4 allSlotIDs = _btree.allNodeIds(systemTrans());
-        
-        Collection4 allSlots = new Collection4();
-        
-        while(allSlotIDs.moveNext()){
-            int slotID = ((Integer)allSlotIDs.current()).intValue();
-            Slot slot = getSlotForID(slotID);
-            allSlots.add(slot);
-        }
-        
-        Slot bTreeSlot = getSlotForID(_btree.getID());
-        allSlots.add(bTreeSlot);
-        
-        final LocalObjectContainer container = (LocalObjectContainer)stream();
-        
-        
-        final Collection4 freedSlots = new Collection4();
-        
-        container.installDebugFreespaceManager(
-            new FreespaceManagerForDebug(container, new SlotListener() {
-                public void onFree(Slot slot) {
-                    freedSlots.add(container.toNonBlockedLength(slot));
-                }
-        }));
-        
-        _btree.free(systemTrans());
-        
-        systemTrans().commit();
-        
-        Assert.isTrue(freedSlots.containsAll(allSlots.iterator()));
-        
-    }
-
-    private Slot getSlotForID(int slotID) {
-        return fileTransaction().getCurrentSlotOfID(slotID);
     }
 
 	private LocalTransaction fileTransaction() {
