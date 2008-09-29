@@ -28,7 +28,7 @@ private Db4oUUID _uuid;
 	}
 	
 	public void test() {
-		ObjectContainer db = Db4o.openFile(config(true), FILEPATH);
+		ObjectContainer db = Db4oEmbedded.openFile(config(true), FILEPATH);
 		ObjectSet result = db.query(Item.class);
 		Assert.areEqual(1, result.size());
 		Object obj = result.next();
@@ -39,7 +39,7 @@ private Db4oUUID _uuid;
 
 	public void setUp() throws Exception {
 		deleteFile();
-		ObjectContainer db = Db4o.openFile(config(false), FILEPATH);
+		ObjectContainer db = Db4oEmbedded.openFile(config(false), FILEPATH);
 		Item obj = new Item();
 		db.store(obj);
 		_uuid = db.ext().getObjectInfo(obj).getUUID();
@@ -55,7 +55,7 @@ private Db4oUUID _uuid;
 	}
 	
 	private Configuration config(boolean withCL) {
-		Configuration config = Db4o.newConfiguration();
+		Configuration config = Db4oEmbedded.newConfiguration();
 		config.generateUUIDs(ConfigScope.GLOBALLY);
 		config.add(new TransparentActivationSupport());
 		if(withCL) {

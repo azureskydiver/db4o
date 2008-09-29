@@ -42,7 +42,7 @@ public class SlotDefragmentVectorTestCase implements TestCase {
     }
 
     private void query() {
-        ObjectContainer db=Db4o.openFile(configuration(),SlotDefragmentTestConstants.FILENAME);
+        ObjectContainer db=Db4oEmbedded.openFile(configuration(),SlotDefragmentTestConstants.FILENAME);
         Query query=db.query();
         query.constrain(Holder.class);
         ObjectSet result=query.execute();
@@ -51,7 +51,7 @@ public class SlotDefragmentVectorTestCase implements TestCase {
     }
 
     private Configuration configuration() {
-        Configuration config = Db4o.newConfiguration();
+        Configuration config = Db4oEmbedded.newConfiguration();
         config.reflectWith(Platform4.reflectorForType(Data.class));
         return config;
     }
@@ -65,7 +65,7 @@ public class SlotDefragmentVectorTestCase implements TestCase {
 
     private void store() {
         new File(SlotDefragmentTestConstants.FILENAME).delete();
-        ObjectContainer db=Db4o.openFile(configuration(),SlotDefragmentTestConstants.FILENAME);
+        ObjectContainer db=Db4oEmbedded.openFile(configuration(),SlotDefragmentTestConstants.FILENAME);
         for(int vectorIdx=0;vectorIdx<NUMVECTORS;vectorIdx++) {
             Vector vector=new Vector(NUMENTRIES);
             for(int entryIdx=0;entryIdx<NUMENTRIES;entryIdx++) {

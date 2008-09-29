@@ -59,7 +59,7 @@ public class BlockSizeDefragTestCase implements TestCase {
 	}
 
 	private void createDatabase(String fileName, int blockSize) {
-		ObjectContainer db = Db4o.openFile(config(blockSize), fileName);
+		ObjectContainer db = Db4oEmbedded.openFile(config(blockSize), fileName);
 		Collection4 removed = new Collection4();
 		for(int idx = 0; idx < NUM_ITEMS_PER_CLASS; idx++) {
 			ItemA itemA = new ItemA(idx);
@@ -100,7 +100,7 @@ public class BlockSizeDefragTestCase implements TestCase {
 	}
 
 	private void assertCanRead(String fileName, int blockSize) {
-		ObjectContainer db = Db4o.openFile(config(blockSize), fileName);
+		ObjectContainer db = Db4oEmbedded.openFile(config(blockSize), fileName);
 		assertResult(db, ItemA.class);
 		assertResult(db, ItemB.class);
 		db.close();
@@ -116,7 +116,7 @@ public class BlockSizeDefragTestCase implements TestCase {
 	}
 
 	private Configuration config(int blockSize) {
-		Configuration config = Db4o.newConfiguration();
+		Configuration config = Db4oEmbedded.newConfiguration();
 		config.blockSize(blockSize);
 		config.reflectWith(Platform4.reflectorForType(ItemA.class));
 		return config;

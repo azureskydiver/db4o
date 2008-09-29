@@ -11,7 +11,6 @@ import com.db4o.diagnostic.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
-import com.db4o.internal.cs.config.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.encoding.*;
 import com.db4o.internal.freespace.*;
@@ -28,6 +27,8 @@ import com.db4o.typehandlers.*;
  * Configuration template for creating new db4o files
  * 
  * @exclude
+ * 
+ * @sharpen.partial
  */
 public final class Config4Impl implements Configuration, DeepClone,
 		MessageSender, FreespaceConfiguration, QueryConfiguration,
@@ -62,7 +63,11 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec CLASSLOADER_KEY=new KeySpec(null);
 	
-	private final static KeySpec CLIENT_SERVER_FACTORY_KEY=new KeySpec(defaultClientServerFactory());
+	private final static KeySpec CLIENT_SERVER_FACTORY_KEY=new KeySpec(new KeySpec.Deferred() {
+		public Object evaluate() {
+			return defaultClientServerFactory();
+		}
+	});
 	
 	private final static KeySpec DATABASE_GROWTH_SIZE_KEY=new KeySpec(0);
     
@@ -168,18 +173,16 @@ public final class Config4Impl implements Configuration, DeepClone,
     	return _config.getAsInt(ACTIVATION_DEPTH_KEY);
     }
 
+    /**
+     * @sharpen.ignore
+     */
     private static ClientServerFactory defaultClientServerFactory() {
     	try {
-    		
-    		// FIXME: won't work, because we need the assembly name for .NET
-			// return (ClientServerFactory) Class.forName("com.db4o.internal.cs.config.ClientServerFactoryImpl").newInstance();
-    		
     		// FIXME: circular cs dependancy. Improve.
-    		return new ClientServerFactoryImpl();
-    		
+    		// FIXME: won't work, because we need the assembly name for .NET
+			 return (ClientServerFactory) Class.forName("com.db4o.internal.cs.config.ClientServerFactoryImpl").newInstance();
 		} catch (Exception e) {
-			// can happen if CS lib is not present
-			return null;
+			throw new Db4oException(e);
 		}
 	}
 
@@ -496,7 +499,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     	return (PrintStream)_config.get(OUTSTREAM_KEY);
     }
     
-    PrintStream outStream() {
+    public PrintStream outStream() {
     	PrintStream outStream=outStreamOrNull();
         return outStream == null ? System.out : outStream;
     }
@@ -735,7 +738,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _config.getAsBoolean(ALLOW_VERSION_UPDATES_KEY);
 	}
 
-	boolean automaticShutDown() {
+	public boolean automaticShutDown() {
 		return _config.getAsBoolean(AUTOMATIC_SHUTDOWN_KEY);
 	}
 
@@ -751,15 +754,15 @@ public final class Config4Impl implements Configuration, DeepClone,
         return _config.getAsInt(BTREE_CACHE_HEIGHT_KEY);
     }
     
-	String blobPath() {
+	public String blobPath() {
 		return _config.getAsString(BLOB_PATH_KEY);
 	}
 
-	boolean callbacks() {
+	public boolean callbacks() {
 		return _config.getAsBoolean(CALLBACKS_KEY);
 	}
 
-	TernaryBool callConstructors() {
+	public TernaryBool callConstructors() {
 		return _config.getAsTernaryBool(CALL_CONSTRUCTORS_KEY);
 	}
 
@@ -771,11 +774,11 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _config.get(CLASSLOADER_KEY);
 	}
 
-	boolean detectSchemaChanges() {
+	public boolean detectSchemaChanges() {
 		return _config.getAsBoolean(DETECT_SCHEMA_CHANGES_KEY);
 	}
 
-	boolean commitRecoveryDisabled() {
+	public boolean commitRecoveryDisabled() {
 		return _config.getAsBoolean(DISABLE_COMMIT_RECOVERY_KEY);
 	}
 
@@ -836,11 +839,11 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _config.getAsBoolean(IS_SERVER_KEY);
 	}
 
-	boolean lockFile() {
+	public boolean lockFile() {
 		return _config.getAsBoolean(LOCK_FILE_KEY);
 	}
 
-	int messageLevel() {
+	public int messageLevel() {
 		return _messageLevel;
 	}
 
@@ -884,7 +887,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return (Collection4)_config.get(RENAME_KEY);
 	}
 
-	int reservedStorageSpace() {
+	public int reservedStorageSpace() {
 		return _config.getAsInt(RESERVED_STORAGE_SPACE_KEY);
 	}
 
@@ -904,15 +907,15 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _config.getAsInt(TIMEOUT_SERVER_SOCKET_KEY);
 	}
 
-	int updateDepth() {
+	public int updateDepth() {
 		return _config.getAsInt(UPDATE_DEPTH_KEY);
 	}
 
-	int weakReferenceCollectionInterval() {
+	public int weakReferenceCollectionInterval() {
 		return _config.getAsInt(WEAK_REFERENCE_COLLECTION_INTERVAL_KEY);
 	}
 
-	boolean weakReferences() {
+	public boolean weakReferences() {
 		return _config.getAsBoolean(WEAK_REFERENCES_KEY);
 	}
 
@@ -1008,8 +1011,4 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public ClientServerFactory clientServerFactory(){
 		return (ClientServerFactory) _config.get(CLIENT_SERVER_FACTORY_KEY);
 	}
-
-
-
-	
 }

@@ -78,13 +78,13 @@ public class COR775TestCase implements TestLifeCycle {
 
     private ObjectContainer openDB() {
         Configuration db4oConfig = getConfiguration();
-        ObjectContainer testDB = Db4o.openFile(db4oConfig, ORIGINAL);
+        ObjectContainer testDB = Db4oEmbedded.openFile(db4oConfig, ORIGINAL);
         return testDB;
     }
 
     private Configuration getConfiguration() {
         if (db4oConfig == null) {
-            db4oConfig = Db4o.newConfiguration();
+            db4oConfig = Db4oEmbedded.newConfiguration();
 
             db4oConfig.activationDepth(Integer.MAX_VALUE);
             db4oConfig.callConstructors(true);

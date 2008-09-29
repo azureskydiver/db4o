@@ -209,7 +209,7 @@ public class DefragmentConfig {
 	private final static StoredClassFilter NULLFILTER=new NullFilter();
 	
 	public static Configuration vanillaDb4oConfig(int blockSize){
-		Configuration config = Db4o.newConfiguration();
+		Configuration config = Db4oEmbedded.newConfiguration();
 		config.weakReferences(false);
 		config.blockSize(blockSize);
 		return config;

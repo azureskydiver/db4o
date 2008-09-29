@@ -59,9 +59,9 @@ public class ArrayListCandidatesTestCase implements TestCase {
 	}
 
 	public void test() {		
-		Configuration config = Db4o.newConfiguration();
+		Configuration config = Db4oEmbedded.newConfiguration();
 		config.io(new MemoryIoAdapter());
-		ObjectContainer db = Db4o.openFile(config, DB_ID);
+		ObjectContainer db = Db4oEmbedded.openFile(config, DB_ID);
 
 		try {
 			storeObjects(db);

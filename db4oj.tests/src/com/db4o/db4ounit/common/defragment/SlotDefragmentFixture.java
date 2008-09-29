@@ -42,13 +42,13 @@ public class SlotDefragmentFixture {
 	}
 
 	public static Configuration db4oConfig() {
-		Configuration db4oConfig = Db4o.newConfiguration();
+		Configuration db4oConfig = Db4oEmbedded.newConfiguration();
 		db4oConfig.reflectWith(Platform4.reflectorForType(Data.class));
 		return db4oConfig;
 	}
 
 	public static void createFile(String fileName) {
-		ObjectContainer db=Db4o.openFile(db4oConfig(),fileName);
+		ObjectContainer db=Db4oEmbedded.openFile(db4oConfig(),fileName);
 		Data data=null;
 		for(int value=VALUE-1;value<=VALUE+1;value++) {
 			data=new Data(value,data);
@@ -62,7 +62,7 @@ public class SlotDefragmentFixture {
 		config.objectClass(Data.class).objectField(PRIMITIVE_FIELDNAME).indexed(true);
 		config.objectClass(Data.class).objectField(WRAPPER_FIELDNAME).indexed(true);
 		config.objectClass(Data.class).objectField(TYPEDOBJECT_FIELDNAME).indexed(true);
-		ObjectContainer db=Db4o.openFile(config,SlotDefragmentTestConstants.FILENAME);
+		ObjectContainer db=Db4oEmbedded.openFile(config,SlotDefragmentTestConstants.FILENAME);
 		Assert.isTrue(db.ext().storedClass(Data.class).storedField(PRIMITIVE_FIELDNAME,Integer.TYPE).hasIndex());
 		Assert.isTrue(db.ext().storedClass(Data.class).storedField(WRAPPER_FIELDNAME,Integer.class).hasIndex());
 		Assert.isTrue(db.ext().storedClass(Data.class).storedField(TYPEDOBJECT_FIELDNAME,Data.class).hasIndex());
@@ -74,7 +74,7 @@ public class SlotDefragmentFixture {
 		DefragmentConfig defragConfig = new DefragmentConfig(SlotDefragmentTestConstants.FILENAME,SlotDefragmentTestConstants.BACKUPFILENAME);
 		defragConfig.db4oConfig(db4oConfig());
 		Defragment.defrag(defragConfig);
-		ObjectContainer db=Db4o.openFile(db4oConfig(),SlotDefragmentTestConstants.FILENAME);
+		ObjectContainer db=Db4oEmbedded.openFile(db4oConfig(),SlotDefragmentTestConstants.FILENAME);
 		Query query=db.query();
 		query.constrain(Data.class);
 		query.descend(fieldName).constrain(new Integer(VALUE));
@@ -84,7 +84,7 @@ public class SlotDefragmentFixture {
 	}
 
 	public static void assertDataClassKnown(boolean expected) {
-		ObjectContainer db=Db4o.openFile(db4oConfig(),SlotDefragmentTestConstants.FILENAME);
+		ObjectContainer db=Db4oEmbedded.openFile(db4oConfig(),SlotDefragmentTestConstants.FILENAME);
 		try {
 			StoredClass storedClass=db.ext().storedClass(Data.class);
 			if(expected) {

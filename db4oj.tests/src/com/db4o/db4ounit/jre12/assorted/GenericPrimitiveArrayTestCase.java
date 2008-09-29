@@ -31,9 +31,9 @@ public class GenericPrimitiveArrayTestCase implements TestCase {
 		final String filePath = Path4.combine(Path4.getTempPath(), "generic.db4o");
 		store(filePath);
 		ClassLoader loader = new ExcludingClassLoader(Data.class.getClassLoader(), new Class[]{Data.class});
-		Configuration config = Db4o.newConfiguration();
+		Configuration config = Db4oEmbedded.newConfiguration();
 		config.reflectWith(new JdkReflector(loader));
-		ObjectContainer db = Db4o.openFile(config, filePath);
+		ObjectContainer db = Db4oEmbedded.openFile(config, filePath);
 		GenericReflector reflector = db.ext().reflector();
 		ReflectClass clazz = reflector.forName(Data.class.getName());
 		ReflectField field = clazz.getDeclaredField("_bytes");
@@ -51,7 +51,7 @@ public class GenericPrimitiveArrayTestCase implements TestCase {
 
 	private void store(final String filePath) {
 		File4.delete(filePath);
-		ObjectContainer db = Db4o.openFile(Db4o.newConfiguration(), filePath);
+		ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), filePath);
 		db.store(new Data(BYTES));
 		db.close();
 	}

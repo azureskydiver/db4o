@@ -93,6 +93,9 @@
 				<fileset dir="${dir.j.tools}">
 					<include name="**/*.java" />
 				</fileset>
+				<fileset dir="${dir.j.cs}">
+					<include name="**/*.java" />
+				</fileset>
 			</sources>
 		</prepare-workspace>
 
@@ -140,6 +143,7 @@
 	
 	<target name="build.db4ojdk1.5" depends="init">
 		<mkdir dir="${dir.dist.classes.jdk1.5}" />
+		
 		<javac  
             fork="true" 
             destdir="${dir.dist.classes.jdk1.5}" 
@@ -148,6 +152,7 @@
             source="1.5" 
             encoding="UTF-8">
 			<src path="${dir.j.core.src}" />
+			<src path="${dir.j.cs.src}" />
 		</javac>
 		
 		<jar destfile="${file.jdk1.5.jar}">
@@ -856,7 +861,6 @@
             destdir="${dir.dist.doc.api}">
 			<bottom><![CDATA[<i>Copyright 2007 db4objects Inc. All rights reserved.</i>]]></bottom>
 			<fileset dir="${dir.j.core.src}" includes="com/db4o/**/*.java">
-				<exclude name="com/db4o/cs/**/*.java" />
 				<exclude name="com/db4o/internal/**/*.java" />
 				<exclude name="com/db4o/foundation/**/*.java" />
 				<not>
@@ -905,6 +909,13 @@
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.j}">
 			<fileset dir="${dir.j}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="**/src/**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.dist.java.src}/db4o.cs">
+			<fileset dir="${dir.j.cs}">
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="**/src/**/*.java" />

@@ -80,11 +80,11 @@ public class TranslatedDefragTestCase implements TestLifeCycle {
 	}
 
 	private ObjectContainer openDatabase() {
-		return Db4o.openFile(config(true), FILENAME);
+		return Db4oEmbedded.openFile(config(true), FILENAME);
 	}
 	
 	private Configuration config(boolean registerTranslator) {
-		Configuration config = Db4o.newConfiguration();
+		Configuration config = Db4oEmbedded.newConfiguration();
 		config.reflectWith(Platform4.reflectorForType(Translated.class));
 		if(registerTranslator) {
 			config.objectClass(Translated.class).translate(new TranslatedTranslator());

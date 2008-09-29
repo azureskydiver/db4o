@@ -117,7 +117,7 @@ public class BackupStressTestCase implements Db4oTestCase, TestLifeCycle {
    
     private void openDatabase(){
         deleteFile(FILE);
-        _objectContainer = Db4o.openFile(config(), FILE);
+        _objectContainer = Db4oEmbedded.openFile(config(), FILE);
     }
     
     private void closeDatabase() throws InterruptedException{
@@ -133,7 +133,7 @@ public class BackupStressTestCase implements Db4oTestCase, TestLifeCycle {
         
         for (int i = 1; i < _backups; i++) {
             stdout("Backup " + i);
-            ObjectContainer container = Db4o.openFile(config(), backupFile(i));
+            ObjectContainer container = Db4oEmbedded.openFile(config(), backupFile(i));
             try {
 	            stdout("Open successful");
 	            Query q = container.query();
@@ -186,7 +186,7 @@ public class BackupStressTestCase implements Db4oTestCase, TestLifeCycle {
     }
 
 	private Configuration config() {
-		Configuration config = Db4o.newConfiguration();
+		Configuration config = Db4oEmbedded.newConfiguration();
         config.objectClass(BackupStressItem.class).objectField("_iteration").indexed(true);
         config.reflectWith(Platform4.reflectorForType(BackupStressItem.class));
         return config;

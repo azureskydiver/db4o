@@ -6,7 +6,12 @@ package com.db4o.foundation;
  * @exclude
  */
 public class KeySpec {
-	private final Object _defaultValue;
+	
+	public interface Deferred {
+		Object evaluate();
+	}
+	
+	private Object _defaultValue;
 	
 	public KeySpec(byte defaultValue) {
 		_defaultValue = new Byte(defaultValue);
@@ -25,6 +30,9 @@ public class KeySpec {
 	}
 
 	public Object defaultValue() {
+		if (_defaultValue instanceof Deferred) {
+			_defaultValue = ((Deferred)_defaultValue).evaluate();
+		}
 		return _defaultValue;
 	}		
 }

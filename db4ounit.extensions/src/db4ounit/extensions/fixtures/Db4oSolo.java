@@ -26,7 +26,7 @@ public class Db4oSolo extends AbstractFileBasedDb4oFixture {
 	}
 
 	protected ObjectContainer createDatabase(Configuration config) {
-		return Db4o.openFile(config, getAbsolutePath());
+		return Db4oEmbedded.openFile(config, getAbsolutePath());
 	}
 	
 	public String label() {

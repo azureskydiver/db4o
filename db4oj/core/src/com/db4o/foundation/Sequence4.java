@@ -21,4 +21,6 @@ public interface Sequence4 extends Iterable4 {
 	
 	boolean contains(Object obj);
 	
+	Object[] toArray();
+	
 }

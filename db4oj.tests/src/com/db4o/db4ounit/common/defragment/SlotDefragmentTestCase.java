@@ -23,7 +23,7 @@ public class SlotDefragmentTestCase implements TestLifeCycle {
 	public void testTypedObjectIndex() throws Exception {
 		SlotDefragmentFixture.forceIndex();
 		Defragment.defrag(SlotDefragmentTestConstants.FILENAME,SlotDefragmentTestConstants.BACKUPFILENAME);
-		ObjectContainer db=Db4o.openFile(Db4o.newConfiguration(),SlotDefragmentTestConstants.FILENAME);
+		ObjectContainer db=Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(),SlotDefragmentTestConstants.FILENAME);
 		Query query=db.query();
 		query.constrain(SlotDefragmentFixture.Data.class);
 		query.descend(SlotDefragmentFixture.TYPEDOBJECT_FIELDNAME).descend(SlotDefragmentFixture.PRIMITIVE_FIELDNAME).constrain(new Integer(SlotDefragmentFixture.VALUE));

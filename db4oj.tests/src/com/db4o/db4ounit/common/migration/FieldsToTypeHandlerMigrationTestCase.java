@@ -206,11 +206,11 @@ public class FieldsToTypeHandlerMigrationTestCase implements TestLifeCycle{
 		if(_typeHandler != null){
 			_typeHandler.reset();
 		}
-		Configuration configuration = Db4o.newConfiguration();
+		Configuration configuration = Db4oEmbedded.newConfiguration();
 		if(_typeHandler != null){
 			configuration.registerTypeHandler(new SingleClassTypeHandlerPredicate(Item.class), _typeHandler);
 		}
-		ObjectContainer db = Db4o.openFile(configuration, _fileName);
+		ObjectContainer db = Db4oEmbedded.openFile(configuration, _fileName);
 		return db;
 	}
 

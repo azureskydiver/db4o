@@ -4,6 +4,7 @@ package com.db4o.test.types;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class UntypedPrivate extends RTest
 {
 	private Object oBoolean;

@@ -217,52 +217,7 @@
             -->
 		</exec>
 	</target>
-
-	<target name="javadoc" depends="init" description="Build public javadocs">
-		<javadoc classpath="" 
-            access="public" 
-            windowtitle="db4o - database for objects - documentation" 
-            header="db4o ${db4o.version.dotted}" 
-            destdir="${dir.dist.doc.api}">
-			<bottom><![CDATA[<i>Copyright 2007 db4objects Inc. All rights reserved.</i>]]></bottom>
-			<fileset dir="${dir.dist.java.temp.src.core}" includes="com/db4o/**/*.java">
-				<exclude name="com/db4o/cs/**/*.java" />
-				<exclude name="com/db4o/internal/**/*.java" />
-				<exclude name="com/db4o/foundation/**/*.java" />
-				<not>
-					<contains text="* @exclude" />
-				</not>
-			</fileset>
-			<fileset dir="${dir.j.tools.src}" includes="com/db4o/**/*.java">
-				<not>
-					<contains text="* @exclude" />
-				</not>
-			</fileset>
-			<fileset dir="${dir.osgi.src}" includes="com/db4o/**/*.java"/>
-			<group title="Core Engine" packages="com.db4o" />
-			<group title="Query Functionality" packages="com.db4o.query" />
-			<group title="Configuration Features" packages="com.db4o.config" />
-			<group title="Extended Functionality" packages="com.db4o.ext" />
-			<group title="Messaging" packages="com.db4o.messaging" />
-			<group title="Reflection" packages="com.db4o.reflect" />
-			<group title="Tools" packages="com.db4o.tools" />
-			<group title="Types" packages="com.db4o.types" />
-		</javadoc>
-		<copy file="${javadoc.stylesheet}" todir="${dir.dist.doc.api}" overwrite="true" />
-        
-        <javadoc classpath="" 
-            access="public" 
-            windowtitle="db4o - database for objects - documentation" 
-            header="db4o ${db4o.version.dotted}" 
-            destdir="${dir.dist.doc.osgi}">
-        	<bottom><![CDATA[<i>Copyright 2007 db4objects Inc. All rights reserved.</i>]]></bottom>
-            <fileset dir="${dir.osgi.src}" includes="com/db4o/**/*.java"/>
-            <group title="OSGi Services" packages="com.db4o.osgi" />
-        </javadoc>
-        
-        <copy file="${javadoc.stylesheet}" todir="${dir.dist.doc.osgi}" overwrite="true" />
-	</target>
-
+	
     <target name="compile.java.all" depends="clean.java">
     	<ant antfile="build-java.xml" target="build.db4ojava" />
     </target>

@@ -33,11 +33,11 @@ public class Logger
 			if(! new File(args[0]).exists()){
 				System.out.println("A database file with the name '" + args[0] + "' does not exist.");
 			}else{
-				Configuration config = Db4o.newConfiguration();
+				Configuration config = Db4oEmbedded.newConfiguration();
 				config.messageLevel(-1);
 				ExtObjectContainer con = null;
 				try{
-					ObjectContainer c = Db4o.openFile(config, args[0]);
+					ObjectContainer c = Db4oEmbedded.openFile(config, args[0]);
 					if(c == null){
 						throw new RuntimeException();
 					}

@@ -67,7 +67,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		sourceConfig.weakReferences(false);
 		sourceConfig.io(new NonFlushingIoAdapter(sourceConfig.io()));
 		sourceConfig.readOnly(defragConfig.readOnly());
-		_sourceDb=(LocalObjectContainer)Db4o.openFile(sourceConfig,defragConfig.tempPath()).ext();
+		_sourceDb=(LocalObjectContainer)Db4oEmbedded.openFile(sourceConfig,defragConfig.tempPath()).ext();
 		_sourceDb.showInternalClasses(true);
 		_targetDb = freshYapFile(defragConfig);
 		_mapping=defragConfig.mapping();
@@ -77,12 +77,12 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	
 	static LocalObjectContainer freshYapFile(String fileName,int blockSize) {
 		File4.delete(fileName);
-		return (LocalObjectContainer)Db4o.openFile(DefragmentConfig.vanillaDb4oConfig(blockSize),fileName).ext();
+		return (LocalObjectContainer)Db4oEmbedded.openFile(DefragmentConfig.vanillaDb4oConfig(blockSize),fileName).ext();
 	}
 	
 	static LocalObjectContainer freshYapFile(DefragmentConfig  config) {
 		File4.delete(config.origPath());
-		return (LocalObjectContainer)Db4o.openFile(config.clonedDb4oConfig(),config.origPath()).ext();
+		return (LocalObjectContainer)Db4oEmbedded.openFile(config.clonedDb4oConfig(),config.origPath()).ext();
 	}
 	
 	public int mappedID(int oldID,int defaultID) {
