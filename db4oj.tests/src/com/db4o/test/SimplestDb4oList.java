@@ -4,8 +4,6 @@ package com.db4o.test;
 
 import java.util.*;
 
-import com.db4o.tools.*;
-
 /**
  * @decaf.ignore.jdk11
  */
@@ -20,12 +18,6 @@ public class SimplestDb4oList {
 	
 	public void testOne(){
 		Test.ensure(list.get(0).equals("hi"));
-        if(!Test.clientServer ){
-            Test.close();
-            new Defragment().run(AllTests.FILE_SOLO, true);
-            Test.open();
-        }
-
 	}
 
 }

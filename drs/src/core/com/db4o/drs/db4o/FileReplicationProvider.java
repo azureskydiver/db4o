@@ -24,7 +24,6 @@ import java.util.*;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.ReplicationRecord;
 import com.db4o.config.Configuration;
 import com.db4o.drs.inside.*;
 import com.db4o.ext.Db4oDatabase;

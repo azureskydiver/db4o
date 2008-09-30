@@ -71,34 +71,6 @@ public class Db4oHashMap {
         
         checkHelper(i_helper);
         runElementTest(false);
-
-        
-        // FIXME: Turned off because of issuse with 
-        //        defragmenting P2HashMap.
-        
-        //        throws NotImlemented Exception
-        //        created Jira: #COR-1381
-        
-        
-        boolean defrag = false;
-        
-        if(defrag){
-            
-            Test.commit();
-            
-            close();
-            
-            try {
-                new Defragment().run(currentFileName(), true);
-            } finally {
-                
-                reOpen();
-            }
-            
-           restoreMembers();
-           checkHelper(i_helper);
-           runElementTest(false);
-        }
     }
     
     

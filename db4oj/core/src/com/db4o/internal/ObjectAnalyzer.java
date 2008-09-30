@@ -11,7 +11,7 @@ import com.db4o.reflect.*;
  */
 class ObjectAnalyzer {
     
-    private final PartialObjectContainer _container;
+    private final ObjectContainerBase _container;
     
     private final Object _obj;
     
@@ -21,7 +21,7 @@ class ObjectAnalyzer {
     
     private boolean _notStorable;
     
-    ObjectAnalyzer(PartialObjectContainer container, Object obj){
+    ObjectAnalyzer(ObjectContainerBase container, Object obj){
         _container = container;
         _obj = obj;
     }

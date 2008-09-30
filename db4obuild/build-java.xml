@@ -63,6 +63,19 @@
 				<arg value="jdk12" />
 			</args>
 		</decaf>
+
+		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4o.optional">
+			<args>
+				<arg value="-projectReference" />
+				<arg value="db4o" />
+
+				<arg value="-targetPlatform" />
+				<arg value="jdk11" />
+
+				<arg value="-targetPlatform" />
+				<arg value="jdk12" />
+			</args>
+		</decaf>
 	</target>
 	
 	<target name="decaf.tests" depends="decaf.core, build.db4ounit">
@@ -71,6 +84,8 @@
 			<args>
 				<arg value="-projectReference" />
 				<arg value="db4o" />
+				<arg value="-projectReference" />
+				<arg value="db4o.optional" />
 				<arg value="-cp" />
 				<arg path="${file.db4ounit.jar}" />
 				
@@ -88,6 +103,14 @@
 		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4o">
 			<sources>
 				<fileset dir="${dir.j.core}">
+					<include name="**/*.java"  />
+				</fileset>
+			</sources>
+		</prepare-workspace>
+
+		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4o.optional">
+			<sources>
+				<fileset dir="${dir.j.optional.core}">
 					<include name="**/*.java"  />
 				</fileset>
 				<fileset dir="${dir.j.tools}">
@@ -123,6 +146,23 @@
 		<jar destfile="${file.jdk1.1.jar}">
 			<fileset dir="${dir.dist.classes.jdk1.1}" />
 		</jar>
+		
+		<mkdir dir="${dir.dist.classes.jdk1.1.optional}" />
+		<javac compiler="classic"
+			fork="yes"
+			executable="${file.compiler.jdk1.3}"
+			srcdir="${dir.dist.decaf.jdk1.1.core.optional.src}"
+			destdir="${dir.dist.classes.jdk1.1.optional}"
+			debug="${javac.debug.mode}">
+			<compilerarg line="${file.compiler.jdk1.3.args.line}"/>
+			<classpath>
+				<pathelement location="${dir.dist.classes.jdk1.1}"/>
+			</classpath>
+		</javac>
+		
+		<jar destfile="${file.jdk1.1.optional.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.1.optional}" />
+		</jar>
 	</target>
 	
 	<target name="build.db4ojdk1.2" depends="init">
@@ -137,6 +177,23 @@
 
 		<jar destfile="${file.jdk1.2.jar}">
 			<fileset dir="${dir.dist.classes.jdk1.2}" />
+		</jar>
+
+		<mkdir dir="${dir.dist.classes.jdk1.2.optional}" />
+		<javac srcdir="${dir.dist.decaf.jdk1.2.core.optional.src}" 
+            fork="true" 
+            destdir="${dir.dist.classes.jdk1.2.optional}" 
+            debug="${javac.debug.mode}" 
+            target="1.1" 
+            source="1.3" 
+            encoding="UTF-8">
+			<classpath>
+				<pathelement location="${dir.dist.classes.jdk1.2}"/>
+			</classpath>
+		</javac>
+
+		<jar destfile="${file.jdk1.2.optional.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.2.optional}" />
 		</jar>
 
 	</target>
@@ -158,7 +215,25 @@
 		<jar destfile="${file.jdk1.5.jar}">
 			<fileset dir="${dir.dist.classes.jdk1.5}" />
 		</jar>
+
+		<mkdir dir="${dir.dist.classes.jdk1.5.optional}" />
+		<javac  
+            fork="true" 
+            destdir="${dir.dist.classes.jdk1.5.optional}" 
+            debug="${javac.debug.mode}" 
+            target="1.5" 
+            source="1.5" 
+            encoding="UTF-8">
+			<src path="${dir.j.optional.core.src}" />
+			<classpath>
+				<pathelement location="${dir.dist.classes.jdk1.5}"/>
+			</classpath>
+		</javac>
 		
+		<jar destfile="${file.jdk1.5.optional.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.5.optional}" />
+		</jar>
+
 		<echo file="${dir.dist.java}/tempfile.txt" message="${file.jdk1.5.jar}"/>
 	</target>
 	
@@ -386,6 +461,7 @@
             encoding="UTF-8">
 			<classpath>
 				<pathelement location="${file.jdk1.1.jar}" />
+				<pathelement location="${file.jdk1.1.optional.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
 			</classpath>
 			<src path="${dir.dist.decaf.jdk1.1.test.src}"/>
@@ -408,6 +484,7 @@
 			srcdir="${dir.dist.decaf.jdk1.2.test.src}">
 			<classpath>
 				<pathelement location="${file.jdk1.2.jar}" />
+				<pathelement location="${file.jdk1.2.optional.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
 			</classpath>
 			
@@ -431,6 +508,7 @@
 			encoding="UTF-8">
 			<classpath>
 				<pathelement location="${file.jdk1.5.jar}" />
+				<pathelement location="${file.jdk1.5.optional.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
 			</classpath>
 			<src path="${dir.j.tests.src}"/>
@@ -684,6 +762,20 @@
 			<jvmarg value="-Xmx512m"/>
 			<sysproperty key="dir.workspace" value="${dir.base}" />
 			<classpath refid="tests.jdk1.5.cp" />
+		</java>
+
+		<java jvm="${file.jvm.jdk1.5}" 
+			jvmargs="${java.vmargs}"
+			fork="true" 
+			classname="com.db4o.db4ounit.jre11.AllTestsOptional" 
+			failonerror="true" 
+			timeout="10000000">
+			<jvmarg value="-Xmx512m"/>
+			<sysproperty key="dir.workspace" value="${dir.base}" />
+			<classpath>
+				<pathelement id="tests.jdk1.5.cp"/>
+				<pathelement location="${file.jdk1.5.optional.jar}"/>
+			</classpath>
 		</java>
 
         <java jvm="${file.jvm.jdk1.5}" 

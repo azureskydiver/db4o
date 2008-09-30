@@ -65,7 +65,7 @@ public final class Platform4 {
 		java.util.Date.class
 	};
     
-    synchronized static final void addShutDownHook(PartialObjectContainer container) {
+    synchronized static final void addShutDownHook(ObjectContainerBase container) {
         if (!hasShutDownHook()) {
         	return;
         }
@@ -565,7 +565,7 @@ public final class Platform4 {
 		reflector.registerCollection(P1Collection.class);
 	}
 
-    synchronized static final void removeShutDownHook(PartialObjectContainer container) {
+    synchronized static final void removeShutDownHook(ObjectContainerBase container) {
         if (!hasShutDownHook() || shutDownRunnable == null) {
         	return;
         }
@@ -674,10 +674,6 @@ public final class Platform4 {
 
 	public static Reflector reflectorForType(Class clazz) {
 		return jdk().reflectorForType(clazz);
-	}
-	
-	public static String stackTrace(){
-		return StackTracer.stackTrace();
 	}
 	
 	public static Date now(){

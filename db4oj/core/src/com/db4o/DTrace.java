@@ -5,7 +5,6 @@ package com.db4o;
 import java.io.*;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
 import com.db4o.internal.encoding.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.slots.*;
@@ -289,14 +288,7 @@ public class DTrace {
             log(UNUSED);
         }
     }
-    
-    public void logStack(String msg){
-    	if(enabled){
-    		log(msg);
-    		log(Platform4.stackTrace());
-    	}
-    }
-    
+        
     public void log(String msg){
         if(enabled){
             log(UNUSED, msg);

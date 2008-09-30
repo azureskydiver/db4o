@@ -113,7 +113,7 @@ public class BigSetPerformanceMain implements TestLifeCycle{
 	}
 
 	private Transaction trans() {
-		return ((PartialObjectContainer)_container).transaction();
+		return ((ObjectContainerBase)_container).transaction();
 	}
 	
 	

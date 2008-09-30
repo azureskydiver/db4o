@@ -10,7 +10,7 @@ import com.db4o.internal.slots.*;
 
 public class RamFreespaceManager extends AbstractFreespaceManager {
     
-    private final TreeIntObject _finder   = new TreeIntObject(0);
+	private final TreeIntObject _finder   = new TreeIntObject(0);
 
     private Tree _freeByAddress;
     
@@ -228,20 +228,9 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         final StringBuffer sb = new StringBuffer();
         sb.append("RAM FreespaceManager\n");
         sb.append("Address Index\n");
-        _freeByAddress.traverse(new Visitor4() {
-            public void visit(Object obj) {
-                sb.append(obj);
-                sb.append("\n");
-            }
-        
-        });
+        _freeByAddress.traverse(new ToStringVisitor(sb));
         sb.append("Length Index\n");
-        _freeBySize.traverse(new Visitor4() {
-              public void visit(Object obj) {
-                  sb.append(obj);
-                  sb.append("\n");
-              }
-          });
+        _freeBySize.traverse(new ToStringVisitor(sb));
         return sb.toString();
     }
     
@@ -272,5 +261,18 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         transaction().flushFile();
         transaction().writePointer(pointer);
     }
+
+    final static class ToStringVisitor implements Visitor4 {
+		private final StringBuffer _sb;
+
+		ToStringVisitor(StringBuffer sb) {
+			_sb = sb;
+		}
+
+		public void visit(Object obj) {
+		    _sb.append(obj);
+		    _sb.append("\n");
+		}
+	}
 
 }

@@ -117,46 +117,16 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         boolean migrating = false;
         
         
-        if (stream._replicationCallState != Const4.NONE) {
-            if (stream._replicationCallState == Const4.OLD) {
-                
-                // old replication code 
-
+        if (stream._replicationCallState == Const4.NEW) {                
+            Db4oReplicationReferenceProvider provider = handlers._replicationReferenceProvider;
+            Object parentObject = ref.getObject();
+            Db4oReplicationReference replicationReference = provider.referenceFor(parentObject); 
+            if(replicationReference != null){
                 migrating = true;
-                if (ref.virtualAttributes() == null) {
-                    Object obj = ref.getObject();
-                    ObjectReference migratingRef = null;
-                    MigrationConnection mgc = handlers.i_migration;
-                    if(mgc != null){
-                        migratingRef = mgc.referenceFor(obj);
-                        if(migratingRef == null){
-                            ObjectContainerBase peer = mgc.peer(stream);
-                            migratingRef = peer.transaction().referenceForObject(obj);
-                        }
-                    }
-                    if (migratingRef != null){
-                    	VirtualAttributes migrateAttributes = migratingRef.virtualAttributes();
-                    	if(migrateAttributes != null && migrateAttributes.i_database != null){
-	                        migrating = true;
-	                        ref.setVirtualAttributes((VirtualAttributes)migrateAttributes.shallowClone());
-                            migrateAttributes.i_database.bind(trans);
-                    	}
-                    }
-                }
-            }else {
-                
-                // new dRS replication
-                
-                Db4oReplicationReferenceProvider provider = handlers._replicationReferenceProvider;
-                Object parentObject = ref.getObject();
-                Db4oReplicationReference replicationReference = provider.referenceFor(parentObject); 
-                if(replicationReference != null){
-                    migrating = true;
-                    VirtualAttributes va = ref.produceVirtualAttributes();
-                    va.i_version = replicationReference.version();
-                    va.i_uuid = replicationReference.longPart();
-                    va.i_database = replicationReference.signaturePart();
-                }
+                VirtualAttributes va = ref.produceVirtualAttributes();
+                va.i_version = replicationReference.version();
+                va.i_uuid = replicationReference.longPart();
+                va.i_database = replicationReference.signaturePart();
             }
         }
         

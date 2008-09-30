@@ -123,7 +123,6 @@ public final class Const4
 	public final static Class CLASS_UNVERSIONED = com.db4o.types.Unversioned.class;
 	public final static Class CLASS_OBJECT = new Object().getClass();
 	public final static Class CLASS_OBJECTCONTAINER = ObjectContainer.class;
-    public final static Class CLASS_REPLICATIONRECORD = new ReplicationRecord().getClass(); 
 	public final static Class CLASS_STATICFIELD = new StaticField().getClass();
 	public final static Class CLASS_STATICCLASS = new StaticClass().getClass();
 	public final static Class CLASS_TRANSIENTCLASS = com.db4o.types.TransientClass.class;

@@ -240,19 +240,6 @@ public interface ExtObjectContainer extends ObjectContainer {
     public Object lock();
     
     
-    /**
-     * aids migration of objects between ObjectContainers.  
-     * <br><br>When objects are migrated from one ObjectContainer to another, it is
-     * desirable to preserve virtual object attributes such as the object version number
-     * or the UUID. Use this method to signal to an ObjectContainer that it should read
-     * existing version numbers and UUIDs from another ObjectContainer. This method should
-     * also be used during the {@link com.db4o.tools.Defragment Defragment} operation. It is included in the default
-     * implementation supplied in Defragment.java/Defragment.cs.<br><br>
-     * @param objectContainer the {@link ObjectContainer} objects are to be migrated
-     * from or <code>null</code> to denote that migration is completed.
-     */
-    public void migrateFrom(ObjectContainer objectContainer);
-    
 	/**
 	 * returns a transient copy of a persistent object with all members set
 	 * to the values that are currently stored to the database.  
