@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Class-Path: libs/db4o-tests-nq.jar libs/ant.jar libs/bloat-1.0.jar libs/db4o-@db4o.version.iteration.revision@-nqopt.jar libs/db4o-@db4o.version.iteration.revision@-db4ounit.jar libs/db4o-@db4o.version.iteration.revision@-tools.jar
+Class-Path: 
 Bundle-Name: db4o OSGi test
 Created-By: 1.5.0-beta2 (Sun Microsystems Inc.)
 Bundle-Activator: @bundle.activator@
