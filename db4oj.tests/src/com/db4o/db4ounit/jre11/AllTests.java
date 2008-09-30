@@ -22,7 +22,6 @@ public class AllTests extends Db4oTestSuite {
             com.db4o.db4ounit.jre11.migration.AllTests.class,
             com.db4o.db4ounit.jre11.soda.AllTests.class,
             com.db4o.db4ounit.jre11.types.AllTests.class,
-			com.db4o.db4ounit.jre11.tools.AllTests.class,
 		};
 	}
 }

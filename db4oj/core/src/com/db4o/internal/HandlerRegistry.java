@@ -66,8 +66,6 @@ public final class HandlerRegistry {
     
     private SharedIndexedFields              		_indexes;
     
-    MigrationConnection             i_migration;
-    
     Db4oReplicationReferenceProvider _replicationReferenceProvider;
     
     public final DiagnosticProcessor      _diagnosticProcessor;
@@ -553,14 +551,6 @@ public final class HandlerRegistry {
     public boolean isSystemHandler(int id) {
     	return id <= _highestBuiltinTypeID;
     }
-
-	public void migrationConnection(MigrationConnection mgc) {
-		i_migration = mgc;
-	}
-	
-	public MigrationConnection  migrationConnection() {
-		return i_migration;
-	}
 
 	public VirtualFieldMetadata virtualFieldByName(String name) {
         for (int i = 0; i < _virtualFields.length; i++) {

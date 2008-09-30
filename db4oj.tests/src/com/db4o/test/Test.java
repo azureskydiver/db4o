@@ -15,8 +15,6 @@ import com.db4o.tools.*;
 
 public class Test extends AllTests {
 	
-	private static final boolean USE_NEW_DEFRAGMENT = true;
-    
     private static ObjectServer objectServer;
     private static ExtObjectContainer oc;
     private static ExtObjectContainer _replica;
@@ -114,25 +112,19 @@ public class Test extends AllTests {
                 raf.close();
             }
             
-            if(USE_NEW_DEFRAGMENT){
-	            String targetFile = fileName + ".defrag.backup";
-	            DefragmentConfig defragConfig = new DefragmentConfig(fileName, targetFile);
-	            defragConfig.forceBackupDelete(true);
-	            // super ugly hack to avoid trying to defrag serialized classes without having the translator installed
-	            if(excludeSerialized) {
-		            defragConfig.storedClassFilter(new StoredClassFilter() {
-						public boolean accept(StoredClass storedClass) {
-							StoredField[] fields = storedClass.getStoredFields();
-							return fields.length < 2 || !fields[0].getName().endsWith(TSerializable.class.getName());
-						}
-		            });
-	            }
-				com.db4o.defragment.Defragment.defrag(defragConfig);
-            } else {
-            	
-            	new com.db4o.tools.Defragment().run(fileName, true);
-            	
+            String targetFile = fileName + ".defrag.backup";
+            DefragmentConfig defragConfig = new DefragmentConfig(fileName, targetFile);
+            defragConfig.forceBackupDelete(true);
+            // super ugly hack to avoid trying to defrag serialized classes without having the translator installed
+            if(excludeSerialized) {
+	            defragConfig.storedClassFilter(new StoredClassFilter() {
+					public boolean accept(StoredClass storedClass) {
+						StoredField[] fields = storedClass.getStoredFields();
+						return fields.length < 2 || !fields[0].getName().endsWith(TSerializable.class.getName());
+					}
+	            });
             }
+			com.db4o.defragment.Defragment.defrag(defragConfig);
             
             if(MEMORY_FILE){
                 RandomAccessFile raf = new RandomAccessFile(fileName, "rw");

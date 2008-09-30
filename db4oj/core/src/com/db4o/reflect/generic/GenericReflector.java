@@ -162,7 +162,7 @@ public class GenericReflector implements Reflector, DeepClone {
 	private GenericClass genericClass(ReflectClass clazz) {
 		GenericClass ret;
 		String name = clazz.getName();
-		if(name.equals(GenericArray.class.getName())){ // special case, comparing name because can't compare class == class directly with ReflectClass
+		if(name.equals(ReflectPlatform.fullyQualifiedName(GenericArray.class))){ // special case, comparing name because can't compare class == class directly with ReflectClass
 			ret = new GenericArrayClass(this, clazz, name, null);
 		} else {
 			ret = new GenericClass(this, clazz, name, null);

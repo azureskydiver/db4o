@@ -458,6 +458,9 @@
 			<fileset dir="${dir.dist.decaf.jdk1.2.core.src}">
 				<include name="**/*.java" />
 				<exclude name="**/*Jdk1_2*" />
+			</fileset>
+			<fileset dir="${dir.dist.decaf.jdk1.2.core.optional.src}">
+				<include name="**/*.java" />
 				<exclude name="com/db4o/tools/**" />
 			</fileset>
 		</copy>

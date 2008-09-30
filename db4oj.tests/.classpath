@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit.extensions"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4o.cs"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4oj.optional"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

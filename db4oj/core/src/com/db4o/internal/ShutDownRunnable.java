@@ -11,11 +11,11 @@ class ShutDownRunnable implements Runnable {
 	
 	public volatile boolean dontRemove = false;
 
-	public void ensure(PartialObjectContainer container) {
+	public void ensure(ObjectContainerBase container) {
 		_containers.ensure(container);	
 	}
 	
-	public void remove(PartialObjectContainer container) {
+	public void remove(ObjectContainerBase container) {
 		_containers.remove(container);
 	}
 

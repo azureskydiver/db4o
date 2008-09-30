@@ -9,5 +9,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/db4oj.tests"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4o.instrumentation"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4oj"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4oj.optional"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

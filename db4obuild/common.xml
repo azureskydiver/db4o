@@ -278,6 +278,9 @@
 		<property name="filename.jdk1.1.jar" value="${db4o.file}java1.1.jar" />
 		<property name="filename.jdk1.2.jar" value="${db4o.file}java1.2.jar" />
 		<property name="filename.jdk1.5.jar" value="${db4o.file}java5.jar" />
+		<property name="filename.jdk1.1.optional.jar" value="${db4o.file}optional-java1.1.jar" />
+		<property name="filename.jdk1.2.optional.jar" value="${db4o.file}optional-java1.2.jar" />
+		<property name="filename.jdk1.5.optional.jar" value="${db4o.file}optional-java5.jar" />
 		<property name="filename.nqopt.jar" value="${db4o.file}nqopt.jar" />
 		<property name="filename.instrumentation.jar" value="${db4o.file}instrumentation.jar" />
 		<property name="filename.db4otools.jar" value="${db4o.file}tools.jar" />
@@ -290,6 +293,9 @@
 		<property name="file.jdk1.1.jar" value="${dir.dist.jars}/${filename.jdk1.1.jar}" />
 		<property name="file.jdk1.2.jar" value="${dir.dist.jars}/${filename.jdk1.2.jar}" />
 		<property name="file.jdk1.5.jar" value="${dir.dist.jars}/${filename.jdk1.5.jar}" />
+		<property name="file.jdk1.1.optional.jar" value="${dir.dist.jars}/${filename.jdk1.1.optional.jar}" />
+		<property name="file.jdk1.2.optional.jar" value="${dir.dist.jars}/${filename.jdk1.2.optional.jar}" />
+		<property name="file.jdk1.5.optional.jar" value="${dir.dist.jars}/${filename.jdk1.5.optional.jar}" />
 		<property name="file.nqopt.jar" value="${dir.dist.jars}/${filename.nqopt.jar}" />
 		<property name="file.instrumentation.jar" value="${dir.dist.jars}/${filename.instrumentation.jar}" />
 		<property name="file.db4otools.jar" value="${dir.dist.jars}/${filename.db4otools.jar}" />
