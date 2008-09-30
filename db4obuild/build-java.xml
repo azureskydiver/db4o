@@ -64,7 +64,20 @@
 			</args>
 		</decaf>
 
-		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4o.optional">
+		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4oj.optional">
+			<args>
+				<arg value="-projectReference" />
+				<arg value="db4o" />
+
+				<arg value="-targetPlatform" />
+				<arg value="jdk11" />
+
+				<arg value="-targetPlatform" />
+				<arg value="jdk12" />
+			</args>
+		</decaf>
+
+		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4o.cs">
 			<args>
 				<arg value="-projectReference" />
 				<arg value="db4o" />
@@ -85,7 +98,9 @@
 				<arg value="-projectReference" />
 				<arg value="db4o" />
 				<arg value="-projectReference" />
-				<arg value="db4o.optional" />
+				<arg value="db4oj.optional" />
+				<arg value="-projectReference" />
+				<arg value="db4o.cs" />
 				<arg value="-cp" />
 				<arg path="${file.db4ounit.jar}" />
 				
@@ -108,7 +123,7 @@
 			</sources>
 		</prepare-workspace>
 
-		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4o.optional">
+		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4oj.optional">
 			<sources>
 				<fileset dir="${dir.j.optional.core}">
 					<include name="**/*.java"  />
@@ -116,6 +131,14 @@
 				<fileset dir="${dir.j.tools}">
 					<include name="**/*.java" />
 				</fileset>
+				<fileset dir="${dir.j.cs}">
+					<include name="**/*.java" />
+				</fileset>
+			</sources>
+		</prepare-workspace>
+
+		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4o.cs">
+			<sources>
 				<fileset dir="${dir.j.cs}">
 					<include name="**/*.java" />
 				</fileset>
@@ -163,6 +186,24 @@
 		<jar destfile="${file.jdk1.1.optional.jar}">
 			<fileset dir="${dir.dist.classes.jdk1.1.optional}" />
 		</jar>
+
+		<mkdir dir="${dir.dist.classes.jdk1.1.cs}" />
+		<javac compiler="classic"
+			fork="yes"
+			executable="${file.compiler.jdk1.3}"
+			srcdir="${dir.dist.decaf.jdk1.1.core.cs.src}"
+			destdir="${dir.dist.classes.jdk1.1.cs}"
+			debug="${javac.debug.mode}">
+			<compilerarg line="${file.compiler.jdk1.3.args.line}"/>
+			<classpath>
+				<pathelement location="${dir.dist.classes.jdk1.1}"/>
+			</classpath>
+		</javac>
+		
+		<jar destfile="${file.jdk1.1.cs.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.1.cs}" />
+		</jar>
+
 	</target>
 	
 	<target name="build.db4ojdk1.2" depends="init">
@@ -196,6 +237,23 @@
 			<fileset dir="${dir.dist.classes.jdk1.2.optional}" />
 		</jar>
 
+		<mkdir dir="${dir.dist.classes.jdk1.2.cs}" />
+		<javac srcdir="${dir.dist.decaf.jdk1.2.core.cs.src}" 
+            fork="true" 
+            destdir="${dir.dist.classes.jdk1.2.cs}" 
+            debug="${javac.debug.mode}" 
+            target="1.1" 
+            source="1.3" 
+            encoding="UTF-8">
+			<classpath>
+				<pathelement location="${dir.dist.classes.jdk1.2}"/>
+			</classpath>
+		</javac>
+
+		<jar destfile="${file.jdk1.2.cs.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.2.cs}" />
+		</jar>
+
 	</target>
 	
 	<target name="build.db4ojdk1.5" depends="init">
@@ -209,7 +267,6 @@
             source="1.5" 
             encoding="UTF-8">
 			<src path="${dir.j.core.src}" />
-			<src path="${dir.j.cs.src}" />
 		</javac>
 		
 		<jar destfile="${file.jdk1.5.jar}">
@@ -234,7 +291,24 @@
 			<fileset dir="${dir.dist.classes.jdk1.5.optional}" />
 		</jar>
 
-		<echo file="${dir.dist.java}/tempfile.txt" message="${file.jdk1.5.jar}"/>
+		<mkdir dir="${dir.dist.classes.jdk1.5.cs}" />
+		<javac  
+            fork="true" 
+            destdir="${dir.dist.classes.jdk1.5.cs}" 
+            debug="${javac.debug.mode}" 
+            target="1.5" 
+            source="1.5" 
+            encoding="UTF-8">
+			<src path="${dir.j.cs.src}" />
+			<classpath>
+				<pathelement location="${dir.dist.classes.jdk1.5}"/>
+			</classpath>
+		</javac>
+		
+		<jar destfile="${file.jdk1.5.cs.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.5.cs}" />
+		</jar>
+
 	</target>
 	
 	<target name="build.instrumentation" depends="build.db4ojdk1.2">
@@ -392,6 +466,8 @@
 		<mkdir dir="${dir.dist.classes.osgi}"/>
 		<mkdir dir="${dir.dist.classes.osgi.lib}"/>
 		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.jdk1.2.jar}"/>
+		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.jdk1.2.cs.jar}"/>
+		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.jdk1.2.optional.jar}"/>
 		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.nqopt.jar}"/>
 		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.bloat.jar}"/>
 		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.instrumentation.jar}"/>
@@ -402,6 +478,8 @@
 					<include name="*.jar" />
 				</fileset>
 				<pathelement location="${file.jdk1.2.jar}"/>
+				<pathelement location="${file.jdk1.2.cs.jar}"/>
+				<pathelement location="${file.jdk1.2.optional.jar}"/>
 			</classpath>
 			<src path="${dir.osgi.src}"/>
 		</javac>
@@ -462,6 +540,7 @@
 			<classpath>
 				<pathelement location="${file.jdk1.1.jar}" />
 				<pathelement location="${file.jdk1.1.optional.jar}" />
+				<pathelement location="${file.jdk1.1.cs.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
 			</classpath>
 			<src path="${dir.dist.decaf.jdk1.1.test.src}"/>
@@ -485,6 +564,7 @@
 			<classpath>
 				<pathelement location="${file.jdk1.2.jar}" />
 				<pathelement location="${file.jdk1.2.optional.jar}" />
+				<pathelement location="${file.jdk1.2.cs.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
 			</classpath>
 			
@@ -509,6 +589,7 @@
 			<classpath>
 				<pathelement location="${file.jdk1.5.jar}" />
 				<pathelement location="${file.jdk1.5.optional.jar}" />
+				<pathelement location="${file.jdk1.5.cs.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
 			</classpath>
 			<src path="${dir.j.tests.src}"/>
@@ -597,6 +678,8 @@
 			<classpath>
 				<pathelement path="${file.db4ounit.jar}" />
 				<pathelement path="${file.jdk1.2.jar}" />
+				<pathelement path="${file.jdk1.2.cs.jar}" />
+				<pathelement path="${file.jdk1.2.optional.jar}" />
 				<pathelement path="${file.osgi.jar}" />
 				<pathelement path="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testlib.jar}" />
 				<pathelement path="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testnqlib.jar}" />
