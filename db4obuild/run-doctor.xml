@@ -64,7 +64,7 @@
 			outputfile="db4o-${db4o.version.dotted}-tutorial" 
 			outputpath="${dir.j.tutorial.out.java}" 
 			pdfbasefont="${font.pdf.base}" 
-			archive="${filename.doctor.applets.jar}, ${filename.jdk1.5.jar}, ${filename.db4obench.jar}, ${filename.tutorial.jar}" 
+			archive="${filename.doctor.applets.jar}, ${filename.jdk1.5.jar}, ${filename.jdk1.5.cs.jar}, ${filename.db4obench.jar}, ${filename.tutorial.jar}" 
 			outlineimage="db4objects1.jpg" 
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="true" />
@@ -80,9 +80,11 @@
 			</fileset>
 			<fileset dir="${dir.dist.jars}">
 				<include name="${filename.jdk1.5.jar}" />
+				<include name="${filename.jdk1.5.cs.jar}" />
 			</fileset>
 		</copy>
 		<signjar keystore="${file.keystore}" jar="${dir.j.tutorial.out.java}/docs/${filename.jdk1.5.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
+		<signjar keystore="${file.keystore}" jar="${dir.j.tutorial.out.java}/docs/${filename.jdk1.5.cs.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
 		<doctor 
 			name="f1" 
 			home="${dir.j.tutorial}" 
@@ -94,7 +96,7 @@
 			outputfile="db4o-${db4o.version.dotted}-tutorial" 
 			outputpath="${dir.j.tutorial.out.net}" 
 			pdfbasefont="${font.pdf.base}" 
-			archive="${filename.doctor.applets.jar}, ${filename.jdk1.5.jar}, ${filename.db4obench.jar}, ${filename.tutorial.jar}" 
+			archive="${filename.doctor.applets.jar}, ${filename.jdk1.5.jar}, ${filename.jdk1.5.cs.jar}, ${filename.db4obench.jar}, ${filename.tutorial.jar}" 
 			outlineimage="db4objects1.jpg" 
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="false" />
