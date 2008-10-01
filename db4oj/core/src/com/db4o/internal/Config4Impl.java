@@ -182,7 +182,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     		// FIXME: won't work, because we need the assembly name for .NET
 			 return (ClientServerFactory) Class.forName("com.db4o.internal.cs.config.ClientServerFactoryImpl").newInstance();
 		} catch (Exception e) {
-			throw new Db4oException(e);
+			throw new Db4oException("ClientServer jar db4o-[version]-cs-java.jar not in CLASSPATH", e);
 		}
 	}
 
