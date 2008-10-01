@@ -16,13 +16,13 @@ public class DecafApplication implements IApplication {
 	public Object start(IApplicationContext context) throws Exception {
 		try {
 			final DecafCommandLine commandLine = DecafCommandLineParser.parse(argv(context));
+			if (commandLine.srcFolders.isEmpty()) commandLine.srcFolders.add("src");
 			
 			disableAutoBuilding();
 			
 			final ConsoleProgressMonitor monitor = new ConsoleProgressMonitor();
-			
 			final JavaProject project = new JavaProject.Builder(monitor, commandLine.project)
-				.sourceFolder("src")
+				.sourceFolders(commandLine.srcFolders)
 				.nature(DecafNature.NATURE_ID)
 				.projectReferences(commandLine.projectReferences)
 				.classpath(commandLine.classpath)

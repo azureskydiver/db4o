@@ -137,12 +137,15 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 
 	protected void fullBuild(final IProgressMonitor monitor)
 			throws CoreException {
-		getProject().accept(new IResourceVisitor() {
-			public boolean visit(IResource resource) throws CoreException {
-				decaf(resource, monitor);
-				return true;
-			}
-		});
+		for (IPackageFragmentRoot p : JavaCore.create(getProject()).getAllPackageFragmentRoots()) {
+			if (p.getKind() != IPackageFragmentRoot.K_SOURCE) continue;
+			p.getResource().accept(new IResourceVisitor() {
+				public boolean visit(IResource resource) throws CoreException {
+					decaf(resource, monitor);
+					return true;
+				}
+			});
+		}
 	}
 	
 	protected void incrementalBuild(IResourceDelta delta,
