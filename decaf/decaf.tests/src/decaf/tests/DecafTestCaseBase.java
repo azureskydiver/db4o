@@ -22,6 +22,10 @@ public abstract class DecafTestCaseBase extends TestCase {
 	public DecafTestCaseBase(String name) {
 		super(name);
 	}
+	
+	protected JavaProject javaProject() {
+		return _project;
+	}
 
 	@Override
 	protected void setUp() throws Exception {
@@ -91,7 +95,7 @@ public abstract class DecafTestCaseBase extends TestCase {
 		}
 	}
 
-	private DecafTestResource testResourceFor(String name,
+	protected DecafTestResource testResourceFor(String name,
 			TargetPlatform platform) {
 		return new DecafTestResource(resourcePath(name), platform);
 	}
@@ -135,8 +139,12 @@ public abstract class DecafTestCaseBase extends TestCase {
 		createCompilationUnit("com.db4o.query", "Predicate.java", content);
 	}
 	
-	private ICompilationUnit createCompilationUnit(DecafTestResource resource) throws CoreException, IOException {
+	protected ICompilationUnit createCompilationUnit(DecafTestResource resource) throws CoreException, IOException {
 		return createCompilationUnit(resource.packageName(), resource.javaFileName(), resource.actualStringContents());
+	}
+	
+	protected ICompilationUnit createCompilationUnit(IPackageFragmentRoot sourceFolder, DecafTestResource resource) throws CoreException, IOException {
+		return _project.createCompilationUnit(sourceFolder, resource.packageName(), resource.javaFileName(), resource.actualStringContents());
 	}
 
 	private ICompilationUnit createCompilationUnit(String packageName, String javaFileName, String contents) throws CoreException {
