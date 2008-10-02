@@ -41,3 +41,13 @@
 -propertyMapping java.lang.Class.getSimpleName Name
 
 -methodMapping com.db4o.db4ounit.util.Strings.replace Replace
+
+-srcFolder core/src
+-srcFolder optional/src
+-srcFolder cs/src
+-srcFolder nq/src
+-srcFolder db4ounit/src
+-srcFolder extensions/src
+-srcFolder db4obench/src
+-srcFolder tests/src
+-srcFolder instrumentation/src
