@@ -392,7 +392,7 @@
 	</target>
 	
 	<target name="prepare-csproject-optional" unless="skip.sharpen" >
-        <copy-sharpened-sources dir="${dir.n.v6.optional}/Db4objects.Db4o.Optional/">
+        <copy-sharpened-sources dir="${dir.n.v6.optional}/Db4objects.Db4o/">
             <files>
                 <fileset dir="${dir.sharpened}/optional/src/Db4objects/Db4o">
                 	<include name="**/*.cs" />
@@ -523,7 +523,6 @@
 		<copy todir="${dir.sharpen}/db4oj/optional/src">
 			<fileset dir="${dir.dist.decaf.jdk1.2.core.optional.src}">
 				<include name="**/*.java" />
-				<exclude name="com/db4o/tools/**" />
 			</fileset>
 		</copy>
 		
