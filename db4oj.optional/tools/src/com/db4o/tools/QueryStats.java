@@ -7,6 +7,8 @@ import com.db4o.foundation.*;
 
 /**
  * Keeps track of query statistics.
+ * 
+ * @sharpen.ignore
  */
 public class QueryStats {	
 	

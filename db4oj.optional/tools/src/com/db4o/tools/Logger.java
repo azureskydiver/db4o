@@ -16,9 +16,10 @@ import com.db4o.internal.*;
  * <br><br><b>This class is not part of db4o.jar!</b><br>
  * It is delivered as sourcecode in the
  * path ../com/db4o/tools/<br><br>
+ * 
+ * @sharpen.ignore
  */
-public class Logger
-{
+public class Logger {
 	
 	private static final int MAXIMUM_OBJECTS = 20;
 	

@@ -4,6 +4,8 @@ package com.db4o.tools;
 
 /**
  * @exclude
+ * 
+ * @sharpen.ignore
  */
 public class MemoryStats {
 
