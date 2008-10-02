@@ -2,6 +2,9 @@
 
 package com.db4o.reflect.jdk;
 
+/**
+ * @sharpen.ignore
+ */
 public class ClassLoaderJdkLoader implements JdkLoader {
 
 	private final ClassLoader _loader;
