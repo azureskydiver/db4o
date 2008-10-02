@@ -131,9 +131,6 @@
 				<fileset dir="${dir.j.tools}">
 					<include name="**/*.java" />
 				</fileset>
-				<fileset dir="${dir.j.cs}">
-					<include name="**/*.java" />
-				</fileset>
 			</sources>
 		</prepare-workspace>
 

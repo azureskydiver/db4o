@@ -391,10 +391,43 @@
 		</ant>
 	</target>
 	
+	<target name="prepare-csproject-optional" unless="skip.sharpen" >
+        <copy-sharpened-sources dir="${dir.n.v6.optional}/Db4objects.Db4o.Optional/">
+            <files>
+                <fileset dir="${dir.sharpened}/optional/src/Db4objects/Db4o">
+                	<include name="**/*.cs" />
+                </fileset>
+            </files>
+        </copy-sharpened-sources>
+
+		<fileset id="optional.net.files" dir="${dir.n.v6.optional}">
+			<include name="**/*.cs" />
+		</fileset>
+		
+	    <updateProjectFiles project="${dir.n.v6.optional}/Db4objects.Db4o.Optional" sources="optional.net.files"  />
+	</target>
+	
+	<target name="prepare-csproject-cs" unless="skip.sharpen" >
+        <copy-sharpened-sources dir="${dir.n.v6.cs}/Db4objects.Db4o.CS/">
+            <files>
+                <fileset dir="${dir.sharpened}/cs/src/Db4objects/Db4o/">
+                    <include name="**/*.cs" />
+                </fileset>
+            </files>
+        </copy-sharpened-sources>
+		
+
+		<fileset id="cs.net.files" dir="${dir.n.v6.cs}">
+			<include name="**/*.cs" />
+		</fileset>
+		
+	    <updateProjectFiles project="${dir.n.v6.cs}/Db4objects.Db4o.CS" sources="cs.net.files"  />
+	</target>
+	
 	<target name="prepare-csproject-instrumentation" unless="skip.sharpen">
         <copy-sharpened-sources dir="${dir.n.v6.instrumentation}/Db4objects.Db4o.Instrumentation/">
             <files>
-                <fileset dir="${dir.sharpened.src}/Db4objects/Db4o/Instrumentation">
+                <fileset dir="${dir.sharpened}/instrumentation/src/Db4objects/Db4o/Instrumentation">
                     <include name="**/*.cs" />
                 </fileset>
             </files>
@@ -410,7 +443,7 @@
 	<target name="prepare-csproject-nq" unless="skip.sharpen">
         <copy-sharpened-sources dir="${dir.n.v6.nq}/Db4objects.Db4o.NativeQueries/">
             <files>
-                <fileset dir="${dir.sharpened.src}/Db4objects/Db4o/NativeQueries">
+                <fileset dir="${dir.sharpened}/nq/src/Db4objects/Db4o/NativeQueries">
                     <include name="**/*.cs" />
                 </fileset>
             </files>
@@ -426,6 +459,8 @@
 	<target name="prepare-csproject-all"
 		depends="sharpen-all,
 	    prepare-csproject-core, 
+		prepare-csproject-cs,
+		prepare-csproject-optional,
 	    prepare-csproject-instrumentation, 
 	    prepare-csproject-nq, 
 	    prepare-csproject-db4ounit, 
@@ -459,10 +494,6 @@
 				<include name="**/*.java" />
 				<exclude name="**/*Jdk1_2*" />
 			</fileset>
-			<fileset dir="${dir.dist.decaf.jdk1.2.core.optional.src}">
-				<include name="**/*.java" />
-				<exclude name="com/db4o/tools/**" />
-			</fileset>
 		</copy>
 		
 		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
@@ -471,8 +502,14 @@
 				<include name="com/db4o/config/annotations/Indexed.java" />
 			</fileset>
 		</copy>		
+		
+		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
+			<fileset dir="${dir.n.v6}/sharpen/">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>	
 
-		<copy todir="${dir.sharpen}/db4oj/core/src">
+		<copy todir="${dir.sharpen}/db4oj/nq/src">
 			<fileset dir="${dir.j.nqopt.src}">
 				<include name="com/db4o/nativequery/expr/**/*.java" />
 				<include name="com/db4o/nativequery/optimization/NativeQueriesPlatform.java" />
@@ -482,40 +519,48 @@
 				<include name="com/db4o/nativequery/instrumentation/*.java" />
 			</fileset>
 		</copy>
-
-		<copy todir="${dir.sharpen}/db4oj/core">
-			<fileset refid="db4o.instrumentation.srcfiles" />
+		
+		<copy todir="${dir.sharpen}/db4oj/optional/src">
+			<fileset dir="${dir.dist.decaf.jdk1.2.core.optional.src}">
+				<include name="**/*.java" />
+				<exclude name="com/db4o/tools/**" />
+			</fileset>
 		</copy>
-
-		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
-			<fileset dir="${dir.n.v6}/sharpen/">
+		
+		<copy todir="${dir.sharpen}/db4oj/cs/src">
+			<fileset dir="${dir.dist.decaf.jdk1.2.core.cs.src}">
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
-			
+
+		<copy todir="${dir.sharpen}/db4oj/instrumentation">
+			<fileset refid="db4o.instrumentation.srcfiles" />
+		</copy>
+
+		
 	    <!--copy db4ounit src-->
-        <copy todir="${dir.sharpen}/db4oj/core/src">
+        <copy todir="${dir.sharpen}/db4oj/db4ounit/src">
             <fileset dir="${dir.db4ounit.src}">
                 <include name="**/*.java" />
             </fileset>
         </copy>
 
 		<!--copy db4ounit.extension src-->
-        <copy todir="${dir.sharpen}/db4oj/core/src">
+        <copy todir="${dir.sharpen}/db4oj/extensions/src">
             <fileset dir="${dir.db4ounit.extensions.src}">
                 <include name="**/*.java" />
             </fileset>
         </copy>
 
 		<!--copy db4obench src-->
-        <copy todir="${dir.sharpen}/db4oj/core/src">
+        <copy todir="${dir.sharpen}/db4oj/db4obench/src">
             <fileset dir="${dir.j.db4otools.src}">
                 <include name="**/bench/**/*.java" />
             </fileset>
         </copy>
 
 		<!-- copy db4o tests src-->
-        <copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
+        <copy todir="${dir.sharpen}/db4oj/tests/src" overwrite="true">
             <fileset dir="${dir.dist.decaf.jdk1.2.test.src}">
                 <include name="**/db4ounit/common/**/*.java" />
                 <include name="**/db4ounit/util/**/*.java" />
@@ -524,7 +569,7 @@
             </fileset>
         </copy>
             	
-    	<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
+    	<copy todir="${dir.sharpen}/db4oj/tests/src" overwrite="true">
     	    <fileset dir="${dir.j.tests.src}">
     	    	<include name="**/jre5/collections/typehandler/*.java" />
         		<include name="**/jre5/collections/ArrayList4TATestCaseBase.java" />
@@ -539,7 +584,7 @@
             </fileset>
         </copy>
                 	
-	    <copy todir="${dir.sharpen}/db4oj/core/src">
+	    <copy todir="${dir.sharpen}/db4oj/tests/src">
             <fileset dir="${dir.dist.decaf.jdk1.2.nqopt.test.src}">
                 <include name="**/mocks/*.java" />
                 <include name="**/diagnostics/*.java" />
@@ -590,14 +635,8 @@
 	<target name="prepare-csproject-core" unless="skip.sharpen">
 		<copy-sharpened-sources dir="${dir.n.v6.core.src}">
 			<files>
-				<fileset dir="${dir.sharpened.src}/Db4objects/Db4o">
+				<fileset dir="${dir.sharpened}/core/src/Db4objects/Db4o">
 					<include name="**/*.cs" />
-					<exclude name="Bench/**/*.*" />
-					<exclude name="Instrumentation/**/*.*" />
-					<exclude name="NativeQueries/**/*.*" />
-					<exclude name="**/Reflect/Jdk/**" />
-					<exclude name="**/Reflect/Self/**" />
-				    <exclude name="Tests/"/>
 				</fileset>
 			</files>
 		</copy-sharpened-sources>
@@ -618,7 +657,7 @@
 		
 		<mkdir dir="${dir.n.db4ounit}/Db4oUnit" />
 		<copy todir="${dir.n.db4ounit}/Db4oUnit">
-			<fileset dir="${dir.sharpened.src}">
+			<fileset dir="${dir.sharpened}/db4ounit/src">
 				<include name="Db4oUnit/**/*.cs" />
 			    <exclude name="Db4oUnit/Extensions/" />
 			</fileset>
@@ -661,15 +700,12 @@
 		
 		<mkdir dir="${dir.n.db4obench}/Bench" />
 		<copy todir="${dir.n.db4obench}/Bench">
-			<fileset dir="${dir.sharpened.src}/Db4objects/Db4o/Bench">
+			<fileset dir="${dir.sharpened}/db4obench/src/Db4objects/Db4o/Bench">
 				<include name="**/*.cs" />
             	<exclude name="**/NanoTiming.cs" />
             	<exclude name="**/NanoStopWatch.cs" />
 			</fileset>
 		</copy>
-		<delete dir="${dir.sharpened.src}/Db4objects/Db4o/Bench">
-			<include name="**/*.cs" />
-		</delete>
 		
 		<fileset id="db4obench.files" dir="${dir.n.db4obench}">
 			<include name="**/*.cs" />
@@ -720,7 +756,7 @@
 		</delete>
 		
 		<copy todir="${dir.n.v6.extensions}/Db4oUnit.Extensions">
-			<fileset dir="${dir.sharpened.src}/Db4oUnit/Extensions">
+			<fileset dir="${dir.sharpened}/extensions/src/Db4oUnit/Extensions">
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
@@ -746,7 +782,7 @@
 		</delete>
 		
 		<copy todir="${dir.n.v6.tests.src}">
-			<fileset dir="${dir.sharpened.src}/Db4objects/Db4o/Tests">
+			<fileset dir="${dir.sharpened}/tests/src/Db4objects/Db4o/Tests">
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
@@ -1090,13 +1126,13 @@
 	</target>
     
     <target name="sharpen-all" depends="check-dependencies, install-sharpen-plugin, prepare-conversion-workspace" unless="skip.sharpen">
-        <sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
+        <sharpen workspace="${dir.sharpen}" resource="db4oj">
             <args>
                 <arg value="-xmldoc" />
                 <arg file="config/sharpen/ApiOverlay.xml" />
                 <arg value="@sharpen-all-options" />
             </args>
         </sharpen>
-        <property name="dir.sharpened.src" location="${dir.sharpen}/db4oj.net/src" />
+        <property name="dir.sharpened" location="${dir.sharpen}/db4oj.net" />
     </target>
 </project>
