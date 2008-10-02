@@ -7,8 +7,6 @@ import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
 
-import db4ounit.extensions.*;
-
 
 public class FreespaceManagerForDebug extends AbstractFreespaceManager {
 
