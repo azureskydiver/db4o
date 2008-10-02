@@ -10,7 +10,6 @@ import java.lang.reflect.*;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
-import db4ounit.fixtures.*;
 
 public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 		
