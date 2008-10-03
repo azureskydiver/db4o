@@ -18,6 +18,7 @@ public class AllTests extends Db4oTestSuite {
         		ObjectTranslatorTestCase.class,
         		UnicodeStringEncodingTestCase.class,
         		UTF8StringEncodingTestCase.class,
+        		VersionNumbersTestCase.class,
 		};
     }
 }
