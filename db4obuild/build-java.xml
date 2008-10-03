@@ -1086,8 +1086,15 @@
 				<include name="**/src/**/*.java" />
 			</fileset>
 		</copy>
-		<copy todir="${dir.dist.java.src}/db4o.cs">
+		<copy todir="${dir.dist.java.src}/${name.project.j.cs}">
 			<fileset dir="${dir.j.cs}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="**/src/**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.dist.java.src}/${name.project.j.optional}">
+			<fileset dir="${dir.j.optional}">
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="**/src/**/*.java" />
