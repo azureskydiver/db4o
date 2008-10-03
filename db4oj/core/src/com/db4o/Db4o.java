@@ -58,7 +58,9 @@ public class Db4o {
 	 * @deprecated Use {@link Db4oEmbedded#newConfiguration()} instead
 	 */
 	public static Configuration newConfiguration() {
-		return Db4oEmbedded.newConfiguration();
+		Config4Impl config = new Config4Impl();
+		Platform4.getDefaultConfiguration(config);
+		return config;
 	}
 
 	/**
@@ -206,7 +208,7 @@ public class Db4o {
 	public static final ObjectContainer openFile(String databaseFileName)
 			throws Db4oIOException, DatabaseFileLockedException,
 			IncompatibleFileFormatException, OldFormatException, DatabaseReadOnlyException {
-		return Db4oEmbedded.openFile(cloneConfiguration(),databaseFileName);
+		return Db4o.openFile(cloneConfiguration(),databaseFileName);
 	}
 
     /**
@@ -241,7 +243,7 @@ public class Db4o {
 			String databaseFileName) throws Db4oIOException,
 			DatabaseFileLockedException, IncompatibleFileFormatException,
 			OldFormatException, DatabaseReadOnlyException {
-				return Db4oEmbedded.openFile(config, databaseFileName);
+				return ObjectContainerFactory.openObjectContainer(config, databaseFileName);
 			}
 
 	protected static final ObjectContainer openMemoryFile1(

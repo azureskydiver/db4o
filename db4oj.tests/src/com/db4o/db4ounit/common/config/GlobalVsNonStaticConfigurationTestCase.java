@@ -38,15 +38,15 @@ public class GlobalVsNonStaticConfigurationTestCase implements Db4oTestCase, Tes
 	private static final String FILENAME = Path4.getTempFileName();
 
 	public void testOpenWithNonStaticConfiguration() {
-		final Configuration config1 = Db4oEmbedded.newConfiguration();
+		final Configuration config1 = Db4o.newConfiguration();
 		config1.readOnly(true);
 		Assert.expect(DatabaseReadOnlyException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				Db4oEmbedded.openFile(config1, FILENAME);
+				Db4o.openFile(config1, FILENAME);
 			}
 		});
 		config1.readOnly(false);
-		final ObjectContainer db1 = Db4oEmbedded.openFile(config1, FILENAME);
+		final ObjectContainer db1 = Db4o.openFile(config1, FILENAME);
 		config1.readOnly(true);
 		try {
 			Assert.expect(DatabaseReadOnlyException.class, new CodeBlock() {
@@ -58,8 +58,8 @@ public class GlobalVsNonStaticConfigurationTestCase implements Db4oTestCase, Tes
 			db1.close();
 		}
 
-		Configuration config2 = Db4oEmbedded.newConfiguration();
-		ObjectContainer db2 = Db4oEmbedded.openFile(config2, FILENAME);
+		Configuration config2 = Db4o.newConfiguration();
+		ObjectContainer db2 = Db4o.openFile(config2, FILENAME);
 		try {
 			db2.store(new Data(2));
 			Assert.areEqual(1, db2.query(Data.class).size());
@@ -86,10 +86,10 @@ public class GlobalVsNonStaticConfigurationTestCase implements Db4oTestCase, Tes
 	}
 
 	public void testIndependentObjectConfigs() {
-		Configuration config = Db4oEmbedded.newConfiguration();
+		Configuration config = Db4o.newConfiguration();
 		ObjectClass objectConfig = config.objectClass(Data.class);
 		objectConfig.translate(new TNull());
-		Configuration otherConfig = Db4oEmbedded.newConfiguration();
+		Configuration otherConfig = Db4o.newConfiguration();
 		Assert.areNotSame(config, otherConfig);
 		Config4Class otherObjectConfig = (Config4Class) otherConfig
 				.objectClass(Data.class);

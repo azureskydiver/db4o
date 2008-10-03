@@ -376,13 +376,13 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
 
     public void setUp() throws Exception {
         File4.delete(FILENAME);
-        Configuration config = Db4oEmbedded.newConfiguration();
+        Configuration config = Db4o.newConfiguration();
         config.objectClass(Item.class).generateUUIDs(true);
         
         // ExtObjectServer server = Db4o.openServer(config, FILENAME, 0);
         // EmbeddedClientObjectContainer container = server.openClient();
         
-        _server = (LocalObjectContainer) Db4oEmbedded.openFile(config, FILENAME);
+        _server = (LocalObjectContainer) Db4o.openFile(config, FILENAME);
         _client1 = new EmbeddedClientObjectContainer(_server);
         _client2 = new EmbeddedClientObjectContainer(_server);
     }

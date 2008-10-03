@@ -18,20 +18,20 @@ public class TransparentActivationSampleMain extends AbstractDb4oTestCase {
 	private static final String FILENAME = "ta.db4o";
 
 	public static void main(String[] args) {
-		Configuration config = Db4oEmbedded.newConfiguration();
+		Configuration config = Db4o.newConfiguration();
 		config.add(new PagedListSupport());
 		config.add(new TransparentActivationSupport());
 		config.reflectWith(new JdkReflector(TransparentActivationSampleMain.class.getClassLoader()));
 		
 		new File(FILENAME).delete();
-		ObjectContainer db = Db4oEmbedded.openFile(config, FILENAME);
+		ObjectContainer db = Db4o.openFile(config, FILENAME);
 		PrioritizedProject project = new PrioritizedProject("db4o",PRIORITY);
 		project.logWorkDone(new UnitOfWork("ta kick-off", new Date(1000), new Date(2000)));
 		db.store(project);
 		db.close();
 		project = null;
 
-		db = Db4oEmbedded.openFile(config, FILENAME);
+		db = Db4o.openFile(config, FILENAME);
 		ObjectSet result = db.query(PrioritizedProject.class);
 		System.out.println(result.size());
 		project = (PrioritizedProject) result.next();

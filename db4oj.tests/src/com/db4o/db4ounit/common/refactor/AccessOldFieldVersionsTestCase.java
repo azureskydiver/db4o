@@ -52,7 +52,7 @@ public class AccessOldFieldVersionsTestCase implements TestLifeCycle {
 	}
 
 	private void renameClass(String targetName) {
-		Configuration config = Db4oEmbedded.newConfiguration();
+		Configuration config = Db4o.newConfiguration();
 		config.objectClass(OriginalData.class).rename(targetName);
 		withDatabase(config, new DatabaseAction() {
 			public void runWith(ObjectContainer db) {
@@ -66,11 +66,11 @@ public class AccessOldFieldVersionsTestCase implements TestLifeCycle {
 	}
 
 	private void withDatabase(DatabaseAction action) {
-		withDatabase(Db4oEmbedded.newConfiguration(), action);
+		withDatabase(Db4o.newConfiguration(), action);
 	}
 	
 	private void withDatabase(Configuration config, DatabaseAction action) {
-		ObjectContainer db = Db4oEmbedded.openFile(config, DATABASE_PATH);
+		ObjectContainer db = Db4o.openFile(config, DATABASE_PATH);
 		try {
 			action.runWith(db);
 		}

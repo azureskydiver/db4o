@@ -69,13 +69,13 @@ public class Db4oDrsFixture implements DrsFixture {
 		//	MemoryIoAdapter memoryIoAdapter = new MemoryIoAdapter();
 		//	Db4o.configure().io(memoryIoAdapter);
 		
-		_db = Db4oEmbedded.openFile(config(), testFile.getPath()).ext();
+		_db = Db4o.openFile(config(), testFile.getPath()).ext();
 		_provider = Db4oProviderFactory.newInstance(_db, _name);
 	}
 	
 	public Configuration config() {
 		if(_config == null) {
-			_config = Db4oEmbedded.newConfiguration();
+			_config = Db4o.newConfiguration();
 		}
 		return _config;
 	}

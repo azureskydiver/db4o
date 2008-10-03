@@ -81,12 +81,12 @@ public abstract class DiskFullTestCaseBase implements TestLifeCycle {
 	}
 
 	public void openDatabase(Object conditionConfig, boolean readOnly, boolean doCache) {
-		Configuration config = Db4oEmbedded.newConfiguration();
+		Configuration config = Db4o.newConfiguration();
 		_throwCondition = createThrowCondition(conditionConfig);
 		config.freespace().discardSmallerThan(Integer.MAX_VALUE);
 		config.readOnly(readOnly);
 		configureIoAdapter(config, _throwCondition, doCache);
-		_db = Db4oEmbedded.openFile(config, FILENAME);
+		_db = Db4o.openFile(config, FILENAME);
 	}
 
 	private void configureIoAdapter(Configuration config, ThrowCondition throwCondition, boolean doCache) {

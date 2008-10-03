@@ -32,7 +32,7 @@ public class MessagingTestCaseBase implements TestCase, OptOutCS {
 	}
 
 	private Configuration multithreadedClientConfig() {
-		final Configuration config = Db4oEmbedded.newConfiguration();
+		final Configuration config = Db4o.newConfiguration();
 		config.clientServer().singleThreadedClient(false);
 		return config;
 	}
@@ -44,7 +44,7 @@ public class MessagingTestCaseBase implements TestCase, OptOutCS {
 	}
 
 	protected Configuration memoryIoConfiguration() {
-		final Configuration config = Db4oEmbedded.newConfiguration();
+		final Configuration config = Db4o.newConfiguration();
 		config.io(new MemoryIoAdapter());
 		return config;
 	}

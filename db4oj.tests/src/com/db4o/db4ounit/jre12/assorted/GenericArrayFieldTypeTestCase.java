@@ -39,9 +39,9 @@ public class GenericArrayFieldTypeTestCase implements TestLifeCycle {
 				SubData.class,
 		};
 		ClassLoader loader = new ExcludingClassLoader(getClass().getClassLoader(), excludedClasses);
-		Configuration config = Db4oEmbedded.newConfiguration();
+		Configuration config = Db4o.newConfiguration();
 		config.reflectWith(new JdkReflector(loader));
-		ObjectContainer db = Db4oEmbedded.openFile(config, FILENAME);
+		ObjectContainer db = Db4o.openFile(config, FILENAME);
 		try {
 			ReflectClass dataClazz = db.ext().reflector().forName(Data.class.getName());
 			ReflectField field = dataClazz.getDeclaredField("_data");
@@ -56,7 +56,7 @@ public class GenericArrayFieldTypeTestCase implements TestLifeCycle {
 	}
 
 	private void store() {
-		ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), FILENAME);
+		ObjectContainer db = Db4o.openFile(Db4o.newConfiguration(), FILENAME);
 		SubData[] subData = {
 			new SubData(1),
 			new SubData(42),

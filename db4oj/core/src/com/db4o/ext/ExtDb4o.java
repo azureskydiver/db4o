@@ -29,7 +29,7 @@ public class ExtDb4o extends Db4o {
      * @deprecated Use {@link #openMemoryFile(Configuration, MemoryFile)} instead.
 	 */
 	public static final ObjectContainer openMemoryFile(MemoryFile memoryFile) {
-		return openMemoryFile1(Db4oEmbedded.newConfiguration(),memoryFile);
+		return openMemoryFile1(Db4o.newConfiguration(),memoryFile);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class ExtDb4o extends Db4o {
 	 * to other media or other databases.<br><br>Be aware of the danger of running
 	 * into OutOfMemory problems or complete loss of all data, in case of hardware
 	 * or JVM failures.<br><br>
-	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4oEmbedded#newConfiguration()}
+	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4o#newConfiguration()}
      * @param memoryFile a {@link MemoryFile MemoryFile} 
      * to store the raw byte data.
 	 * @return an open {@link com.db4o.ObjectContainer ObjectContainer}

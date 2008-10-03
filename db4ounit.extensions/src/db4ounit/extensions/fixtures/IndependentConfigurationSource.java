@@ -8,7 +8,7 @@ import com.db4o.config.*;
 public class IndependentConfigurationSource implements ConfigurationSource {
 
 	public Configuration config() {
-		return Db4oEmbedded.newConfiguration();
+		return Db4o.newConfiguration();
 	}
 
 }

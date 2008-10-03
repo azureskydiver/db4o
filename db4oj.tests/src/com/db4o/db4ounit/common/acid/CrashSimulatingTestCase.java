@@ -72,7 +72,7 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         Configuration recordConfig = baseConfig();
         recordConfig.io(adapterFactory);
         
-        ObjectContainer oc = Db4oEmbedded.openFile(recordConfig, fileName);
+        ObjectContainer oc = Db4o.openFile(recordConfig, fileName);
         
         ObjectSet objectSet = oc.queryByExample(new CrashData(null, "three"));
         oc.delete(objectSet.next());
@@ -115,7 +115,7 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
     }
 
 	private Configuration baseConfig() {
-		Configuration config = Db4oEmbedded.newConfiguration();
+		Configuration config = Db4o.newConfiguration();
 		config.objectClass(CrashData.class).objectField("_name").indexed(true);
     	config.reflectWith(Platform4.reflectorForType(CrashSimulatingTestCase.class));
         config.bTreeNodeSize(4);
@@ -128,7 +128,7 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
                 System.out.println("Checking " + infix + i);
             }
             String versionedFileName = fileName + infix + i;
-            ObjectContainer oc = Db4oEmbedded.openFile(baseConfig(), versionedFileName);
+            ObjectContainer oc = Db4o.openFile(baseConfig(), versionedFileName);
 	        try {
 	            if(! stateBeforeCommit(oc)){
 	                if(! stateAfterFirstCommit(oc)){
@@ -166,7 +166,7 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
     }
     
     private void createFile(Configuration config, String fileName) throws IOException{
-        ObjectContainer oc = Db4oEmbedded.openFile(config, fileName);
+        ObjectContainer oc = Db4o.openFile(config, fileName);
         try {
         	populate(oc);
         } finally {
