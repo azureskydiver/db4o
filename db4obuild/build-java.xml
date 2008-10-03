@@ -738,6 +738,8 @@
         <path id="tests.jdk1.1.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.1}" />
 			<pathelement location="${file.jdk1.1.jar}" />
+        	<pathelement location="${file.jdk1.1.cs.jar}" />
+        	<pathelement location="${file.jdk1.1.optional.jar}" />
             <pathelement path="${file.db4ounit.jar}" />
 			<pathelement location="${path.classpath.jdk1.1}" />
         </path>
@@ -777,7 +779,9 @@
 	<target name="run.tests.jdk1.2" depends="init, build.db4ojdk1.2.tests">
         <path id="tests.jdk1.2.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.2}" />
-            <pathelement location="${file.jdk1.2.jar}" />
+        	<pathelement location="${file.jdk1.2.jar}" />
+        	<pathelement location="${file.jdk1.2.cs.jar}" />
+        	<pathelement location="${file.jdk1.2.optional.jar}" />
 			<pathelement location="${file.db4ounit.jar}" />
         </path>
 
@@ -830,6 +834,8 @@
         <path id="tests.jdk1.5.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.5}" />
             <pathelement location="${file.jdk1.5.jar}" />
+            <pathelement location="${file.jdk1.5.cs.jar}" />
+            <pathelement location="${file.jdk1.5.optional.jar}" />
 			<pathelement location="${file.db4ounit.jar}" />
         </path>
         
@@ -901,6 +907,8 @@
         <path id="tests.jdk1.2.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.2}" />
             <pathelement location="${file.jdk1.2.jar}" />
+        	<pathelement location="${file.jdk1.2.cs.jar}" />
+        	<pathelement location="${file.jdk1.2.optional.jar}" />
 			<pathelement location="${file.db4ounit.jar}" />
 			<pathelement location="${file.ant.jar}" />
         </path>
@@ -931,6 +939,8 @@
 			<classpath>
 				<pathelement path="${dir.dist.classes.test.jdk1.1}" />
 				<pathelement location="${file.jdk1.1.jar}" />
+	        	<pathelement location="${file.jdk1.1.cs.jar}" />
+	        	<pathelement location="${file.jdk1.1.optional.jar}" />
                 <pathelement path="${file.db4ounit.jar}" />
 				<pathelement location="${path.classpath.jdk1.1}" />
 			</classpath>
@@ -946,6 +956,8 @@
 			<classpath>
 				<pathelement path="${dir.dist.classes.test.jdk1.5}" />
                 <pathelement location="${file.jdk1.5.jar}" />
+	            <pathelement location="${file.jdk1.5.cs.jar}" />
+	            <pathelement location="${file.jdk1.5.optional.jar}" />
                 <pathelement location="${file.db4ounit.jar}" />
 			</classpath>
 			<arg value="-withExceptions" />
@@ -993,6 +1005,8 @@
 			<classpath>
 	            <pathelement location="${file.bloat.jar}"/>
 				<pathelement location="${file.jdk1.2.jar}"/>
+	        	<pathelement location="${file.jdk1.2.cs.jar}" />
+	        	<pathelement location="${file.jdk1.2.optional.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
 			    <pathelement location="${file.instrumentation.jar}"/>
 				<pathelement location="${file.taj.jar}"/>
