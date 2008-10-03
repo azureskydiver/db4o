@@ -858,10 +858,7 @@
 			timeout="10000000">
 			<jvmarg value="-Xmx512m"/>
 			<sysproperty key="dir.workspace" value="${dir.base}" />
-			<classpath>
-				<pathelement id="tests.jdk1.5.cp"/>
-				<pathelement location="${file.jdk1.5.optional.jar}"/>
-			</classpath>
+			<classpath refid="tests.jdk1.5.cp"/>
 		</java>
 
         <java jvm="${file.jvm.jdk1.5}" 
