@@ -4,9 +4,10 @@ package com.db4o.internal.cs.config;
 
 import com.db4o.cs.config.*;
 import com.db4o.internal.*;
+import com.db4o.internal.config.*;
 
 public class NetworkingConfigurationProviderImpl implements
-		NetworkingConfigurationProvider {
+		NetworkingConfigurationProvider, LegacyConfigurationProvider {
 
 	private final NetworkingConfigurationImpl _networking;
 
@@ -18,7 +19,7 @@ public class NetworkingConfigurationProviderImpl implements
 		return _networking;
 	}
 	
-	protected Config4Impl config() {
+	public Config4Impl legacy() {
 		return _networking.config();
 	}
 

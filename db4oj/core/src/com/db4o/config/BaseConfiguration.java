@@ -1,15 +1,17 @@
 /* Copyright (C) 2008  db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.cs.config;
+package com.db4o.config;
 
 import java.io.*;
 
-import com.db4o.config.*;
 import com.db4o.config.encoding.*;
 import com.db4o.diagnostic.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
+/**
+ * @since 7.5
+ */
 public interface BaseConfiguration {
 
     /**
@@ -308,25 +310,7 @@ public interface BaseConfiguration {
      * @sharpen.property
      */
     public QueryConfiguration queries();
-
-    /**
-     * turns readOnly mode on and off.
-     * <br><br>This method configures the mode in which subsequent calls to
-     * {@link com.db4o.Db4o#openFile Db4o.openFile()} will open files.
-     * <br><br>Readonly mode allows to open an unlimited number of reading
-     * processes on one database file. It is also convenient
-     * for deploying db4o database files on CD-ROM.<br><br>
-     * In client-server environment this setting should be used on the server side 
-     * in embedded mode and ONLY on client side in networked mode.<br><br>
-     * @param flag <code>true</code> for configuring readOnly mode for subsequent
-     * calls to {@link com.db4o.Db4o#openFile Db4o.openFile()}.
-     * 
-     * TODO: this is rather embedded + client than base?
-     * 
-     * @sharpen.property
-     */
-    public void readOnly(boolean flag);
-
+   
     /**
      * configures the use of a specially designed reflection implementation.
      * <br><br>
@@ -335,25 +319,10 @@ public interface BaseConfiguration {
      * to supply all the functionality of the interfaces in the com.db4o.reflect
      * package. This method can be used to install a custom reflection
      * implementation.<br><br>
-     * In client-server environment this setting should be used on the server side
-     * (reflector class must be available)<br><br>
+     * In client-server environment this setting should be used on both the client and
+     * the server side (reflector class must be available)<br><br>
      */
-    public void reflectWith(Reflector reflector);
-
-    /**
-     * forces analysis of all Classes during a running session.
-     * <br><br>
-     * This method may be useful in combination with a modified ClassLoader and
-     * allows exchanging classes during a running db4o session.<br><br>
-     * Calling this method on the global Configuration context will refresh
-     * the classes in all db4o sessions in the running VM. Calling this method
-     * in an ObjectContainer Configuration context, only the classes of the
-     * respective ObjectContainer will be refreshed.<br><br>
-     * @see #setClassLoader
-     * 
-     * TODO: this does not really seem to be a configuration setting at all
-     */
-    public void refreshClasses();
+    public void reflectWith(Reflector reflector);   
 
     /**
      * Assigns a {@link java.io.PrintStream PrintStream} where db4o is to print its event messages.
@@ -368,7 +337,7 @@ public interface BaseConfiguration {
      * @param outStream the new <code>PrintStream</code> for messages.
      * @see #messageLevel
      * 
-     * TODO: this is deprecated in Config4Impl?!?
+     * @sharpen.property
      */
     public void outStream(PrintStream outStream);
 

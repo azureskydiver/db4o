@@ -2,17 +2,12 @@
 
 package com.db4o.cs.config;
 
-import com.db4o.config.*;
 
+
+/**
+ * @since 7.5
+ */
 public interface NetworkingConfiguration {
-
-	/**
-	 * sets the ClientServerFactory  to open C/S servers and clients
-	 * @param factory the factory to be used
-	 * 
-	 * @sharpen.property
-	 */
-	void factory(ClientServerFactory factory);
 	
 	/**
 	 * configures the time a client waits for a message response 

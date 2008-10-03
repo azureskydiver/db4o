@@ -4,18 +4,20 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.config.*;
 
+/**
+ * @since 7.5
+ */
 public class Db4oEmbedded {
 
 	/**
-	 * Creates a fresh {@link Configuration Configuration} instance.
+	 * Creates a fresh {@link EmbeddedConfiguration EmbeddedConfiguration} instance.
 	 * 
 	 * @return a fresh, independent configuration with all options set to their default values
 	 */
-	public static Configuration newConfiguration() {
-		Config4Impl config = new Config4Impl();
-		Platform4.getDefaultConfiguration(config);
-		return config;
+	public static EmbeddedConfiguration newConfiguration() {
+		return new EmbeddedConfigurationImpl(Db4o.newConfiguration());
 	}
 
 	/**
@@ -45,14 +47,14 @@ public class Db4oEmbedded {
 	 * is set to false.
 	 * @throws DatabaseReadOnlyException database was configured as read-only.
 	 */
-	public static final ObjectContainer openFile(Configuration config,
+	public static final ObjectContainer openFile(EmbeddedConfiguration config,
 			String databaseFileName) throws Db4oIOException,
 			DatabaseFileLockedException, IncompatibleFileFormatException,
 			OldFormatException, DatabaseReadOnlyException {
 		if (null == config) {
 			throw new ArgumentNullException();
 		}
-		return ObjectContainerFactory.openObjectContainer(config,
+		return ObjectContainerFactory.openObjectContainer(((LegacyConfigurationProvider)config).legacy(),
 				databaseFileName);
 	}
 

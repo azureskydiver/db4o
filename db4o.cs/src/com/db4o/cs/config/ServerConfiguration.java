@@ -2,10 +2,13 @@
 
 package com.db4o.cs.config;
 
+import com.db4o.config.*;
 import com.db4o.messaging.*;
 
-
-public interface ServerConfiguration extends NetworkingConfigurationProvider {
+/**
+ * @since 7.5
+ */
+public interface ServerConfiguration extends LocalConfigurationProvider, NetworkingConfigurationProvider, BaseConfigurationProvider {
 	
 	/**
 	 * sets the MessageRecipient to receive Client Server messages. <br>
@@ -17,15 +20,5 @@ public interface ServerConfiguration extends NetworkingConfigurationProvider {
 	 * @sharpen.property
 	 */
 	void messageRecipient(MessageRecipient messageRecipient);
-
-	/**
-	 * @sharpen.property
-	 */
-	LocalConfiguration local();
-
-	/**
-	 * @sharpen.property
-	 */
-	BaseConfiguration base();
 
 }

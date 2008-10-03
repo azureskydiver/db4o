@@ -2,9 +2,11 @@
 
 package com.db4o.internal.cs.config;
 
+import com.db4o.config.*;
 import com.db4o.cs.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.config.*;
 import com.db4o.messaging.*;
 
 public class ClientConfigurationImpl extends NetworkingConfigurationProviderImpl implements ClientConfiguration {
@@ -26,5 +28,9 @@ public class ClientConfigurationImpl extends NetworkingConfigurationProviderImpl
 	public void prefetchObjectCount(int prefetchObjectCount) {
 		// TODO Auto-generated method stub
 		throw new NotImplementedException();
+	}
+
+	public BaseConfiguration base() {
+		return new BaseConfigurationImpl(legacy());
 	}
 }

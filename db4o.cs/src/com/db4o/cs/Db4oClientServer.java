@@ -6,6 +6,9 @@ import com.db4o.cs.config.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.config.*;
 
+/**
+ * @since 7.5
+ */
 public class Db4oClientServer {
 
 	public static ServerConfiguration newServerConfiguration() {
@@ -32,7 +35,8 @@ public class Db4oClientServer {
 		return new ClientConfigurationImpl(newLegacyConfig());
 	}
 	
-	private static Config4Impl newLegacyConfig() {
-		return (Config4Impl) Db4oEmbedded.newConfiguration();
+	@SuppressWarnings("deprecation")
+    private static Config4Impl newLegacyConfig() {
+		return (Config4Impl) Db4o.newConfiguration();
 	}
 }

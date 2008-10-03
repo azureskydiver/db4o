@@ -2,6 +2,10 @@
 
 package com.db4o.cs.config;
 
+
+/**
+ * @since 7.5
+ */
 public interface NetworkingConfigurationProvider {
 
 	/**

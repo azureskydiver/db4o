@@ -2,9 +2,13 @@
 
 package com.db4o.cs.config;
 
+import com.db4o.config.*;
 import com.db4o.messaging.*;
 
-public interface ClientConfiguration extends NetworkingConfigurationProvider {
+/**
+ * @since 7.5
+ */
+public interface ClientConfiguration extends NetworkingConfigurationProvider, BaseConfigurationProvider {
 	
 	/**
 	 * Sets the number of IDs to be pre-allocated in the database for new 
