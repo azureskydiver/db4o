@@ -165,7 +165,7 @@ public class Defragment {
 		File4.copy(config.backupPath(),config.tempPath());
 		Configuration db4oConfig=(Configuration)((Config4Impl)config.db4oConfig()).deepClone(null);
 		db4oConfig.allowVersionUpdates(true);
-		ObjectContainer db=Db4oEmbedded.openFile(db4oConfig,config.tempPath());
+		ObjectContainer db=Db4o.openFile(db4oConfig,config.tempPath());
 		db.close();
 	}
 
@@ -183,7 +183,7 @@ public class Defragment {
 
 	private static void setIdentity(DefragmentConfig config, int targetIdentityID,
 			int targetUuidIndexID) {
-		LocalObjectContainer targetDB = (LocalObjectContainer) Db4oEmbedded.openFile(config.clonedDb4oConfig(), config.origPath());
+		LocalObjectContainer targetDB = (LocalObjectContainer) Db4o.openFile(config.clonedDb4oConfig(), config.origPath());
 		try {
 			Db4oDatabase identity = (Db4oDatabase) targetDB
 					.getByID(targetIdentityID);

@@ -13,9 +13,9 @@ import db4ounit.*;
 public class ClientTransactionPoolTestCase implements TestLifeCycle {
 
 	public void testPool() {
-		Configuration config = Db4oEmbedded.newConfiguration();
+		Configuration config = Db4o.newConfiguration();
 		config.io(new MemoryIoAdapter());
-		final LocalObjectContainer db = (LocalObjectContainer) Db4oEmbedded.openFile(config, SwitchingFilesFromClientUtil.MAINFILE_NAME);
+		final LocalObjectContainer db = (LocalObjectContainer) Db4o.openFile(config, SwitchingFilesFromClientUtil.MAINFILE_NAME);
 		final ClientTransactionPool pool = new ClientTransactionPool(db);
 		try {
 			Assert.areEqual(1, pool.openFileCount());

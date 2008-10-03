@@ -170,7 +170,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	private Configuration dataConfiguration(CustomReflector reflector) {
-		Configuration config = Db4oEmbedded.newConfiguration();
+		Configuration config = Db4o.newConfiguration();
 		config.reflectWith(reflector);
 		configureCustomClasses(config, reflector);
 		return config;
@@ -209,7 +209,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	private Configuration metaConfiguration() {
-		Configuration config = Db4oEmbedded.newConfiguration();
+		Configuration config = Db4o.newConfiguration();
 		config.exceptionsOnNotStorable(true);
 		
 		// the following line is only necessary for the tests to run
@@ -244,11 +244,11 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	private ObjectContainer openData(CustomReflector reflector, String fname) {
-		return Db4oEmbedded.openFile(dataConfiguration(reflector), fname);
+		return Db4o.openFile(dataConfiguration(reflector), fname);
 	}
 
 	private ObjectContainer openMetadata(String fname) {
-		return Db4oEmbedded.openFile(metaConfiguration(), metadataFile(fname));
+		return Db4o.openFile(metaConfiguration(), metadataFile(fname));
 	}
 
 	public void purge(String url) {

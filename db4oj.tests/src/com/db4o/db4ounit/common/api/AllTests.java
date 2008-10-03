@@ -7,6 +7,7 @@ public class AllTests extends Db4oTestSuite {
 	@Override
 	protected Class[] testCases() {
 		return new Class[] {
+			BaseAndLocalConfigurationTestSuite.class,
 			Db4oClientServerTestCase.class,
 			Db4oEmbeddedTestCase.class,
 		};

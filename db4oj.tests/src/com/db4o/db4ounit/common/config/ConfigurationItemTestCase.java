@@ -39,7 +39,7 @@ public class ConfigurationItemTestCase implements TestCase {
 	}
 
 	public void test() {
-		Configuration configuration = Db4oEmbedded.newConfiguration();
+		Configuration configuration = Db4o.newConfiguration();
 		
 		ConfigurationItemStub item = new ConfigurationItemStub();
 		configuration.add(item);
@@ -49,7 +49,7 @@ public class ConfigurationItemTestCase implements TestCase {
 		
 		File4.delete(databaseFile());
 		
-		ObjectContainer container = Db4oEmbedded.openFile(configuration, databaseFile());
+		ObjectContainer container = Db4o.openFile(configuration, databaseFile());
 		container.close();
 		
 		Assert.areSame(container, item.appliedContainer());

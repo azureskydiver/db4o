@@ -91,7 +91,7 @@ public class CrudApplication {
 	}
 
 	private ObjectContainer open(Configuration config) {
-		return Db4oEmbedded.openFile(config, DATABASE_FILE);
+		return Db4o.openFile(config, DATABASE_FILE);
 	}
 
 	public static String logFileName(int itemCount) {

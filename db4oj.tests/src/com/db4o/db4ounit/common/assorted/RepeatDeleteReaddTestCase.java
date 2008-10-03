@@ -57,7 +57,7 @@ public class RepeatDeleteReaddTestCase implements TestCase {
 	}
 
 	private void createDatabase(String fileName) {
-		ObjectContainer db = Db4oEmbedded.openFile(config(), fileName);
+		ObjectContainer db = Db4o.openFile(config(), fileName);
 		Collection4 removed = new Collection4();
 		for(int idx = 0; idx < NUM_ITEMS_PER_CLASS; idx++) {
 			ItemA itemA = new ItemA(idx);
@@ -92,7 +92,7 @@ public class RepeatDeleteReaddTestCase implements TestCase {
 	}
 
 	private void assertCanRead(String fileName) {
-		ObjectContainer db = Db4oEmbedded.openFile(config(), fileName);
+		ObjectContainer db = Db4o.openFile(config(), fileName);
 		assertResults(db);
 		db.close();
 	}
@@ -112,7 +112,7 @@ public class RepeatDeleteReaddTestCase implements TestCase {
 	}
 
 	private Configuration config() {
-		Configuration config = Db4oEmbedded.newConfiguration();
+		Configuration config = Db4o.newConfiguration();
 		config.reflectWith(Platform4.reflectorForType(ItemA.class));
 		return config;
 	}
