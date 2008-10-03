@@ -2,9 +2,11 @@
 
 package com.db4o.internal.cs.config;
 
+import com.db4o.config.*;
 import com.db4o.cs.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.config.*;
 import com.db4o.messaging.*;
 
 public class ServerConfigurationImpl extends NetworkingConfigurationProviderImpl implements ServerConfiguration {
@@ -19,10 +21,10 @@ public class ServerConfigurationImpl extends NetworkingConfigurationProviderImpl
 	}
 
 	public LocalConfiguration local() {
-		return new LocalConfigurationImpl(config());
+		return new LocalConfigurationImpl(legacy());
 	}
 
 	public BaseConfiguration base() {
-		return new BaseConfigurationImpl(config());
+		return new BaseConfigurationImpl(legacy());
 	}
 }

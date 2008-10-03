@@ -1,20 +1,16 @@
 /* Copyright (C) 2008  db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.cs.config;
+package com.db4o.config;
 
 import java.io.IOException;
 
-import com.db4o.config.Alias;
-import com.db4o.config.ConfigScope;
-import com.db4o.config.Configuration;
-import com.db4o.config.FreespaceConfiguration;
-import com.db4o.config.GlobalOnlyConfigException;
-import com.db4o.config.TypeAlias;
-import com.db4o.config.WildcardAlias;
 import com.db4o.ext.DatabaseReadOnlyException;
 import com.db4o.foundation.NotSupportedException;
 import com.db4o.io.IoAdapter;
 
+/**
+ * @since 7.5
+ */
 public interface LocalConfiguration {
 
 	/**
@@ -233,5 +229,24 @@ public interface LocalConfiguration {
      * @sharpen.property
      */
     public void blobPath(String path) throws IOException;
+    
+    /**
+     * turns readOnly mode on and off.
+     * <br><br>This method configures the mode in which subsequent calls to
+     * {@link com.db4o.Db4o#openFile Db4o.openFile()} will open files.
+     * <br><br>Readonly mode allows to open an unlimited number of reading
+     * processes on one database file. It is also convenient
+     * for deploying db4o database files on CD-ROM.<br><br>
+     * In client-server environment this setting should be used on the server side 
+     * in embedded mode and ONLY on client side in networked mode.<br><br>
+     * @param flag <code>true</code> for configuring readOnly mode for subsequent
+     * calls to {@link com.db4o.Db4o#openFile Db4o.openFile()}.
+     * 
+     * TODO: this is rather embedded + client than base?
+     * 
+     * @sharpen.property
+     */
+    public void readOnly(boolean flag);
+
 
 }

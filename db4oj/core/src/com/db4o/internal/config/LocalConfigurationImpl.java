@@ -1,15 +1,14 @@
 /* Copyright (C) 2008  db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.internal.cs.config;
+package com.db4o.internal.config;
 
-import java.io.IOException;
+import java.io.*;
 
 import com.db4o.config.*;
-import com.db4o.cs.config.*;
-import com.db4o.ext.DatabaseReadOnlyException;
-import com.db4o.foundation.NotSupportedException;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.io.IoAdapter;
+import com.db4o.io.*;
 
 public class LocalConfigurationImpl implements LocalConfiguration {
 
@@ -70,6 +69,8 @@ public class LocalConfigurationImpl implements LocalConfiguration {
 	public void blobPath(String path) throws IOException {
 		_config.setBlobPath(path);
 	}
-
-
+	
+	public void readOnly(boolean flag) {
+		_config.readOnly(flag);
+	}
 }

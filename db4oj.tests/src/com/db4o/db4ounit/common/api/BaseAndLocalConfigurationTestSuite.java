@@ -86,9 +86,6 @@ public class BaseAndLocalConfigurationTestSuite extends FixtureBasedTestSuite {
 			base.queries().evaluationMode(QueryEvaluationMode.LAZY);
 			Assert.areEqual(QueryEvaluationMode.LAZY, legacy.queryEvaluationMode());
 			
-			base.readOnly(true);
-			Assert.isTrue(legacy.isReadOnly());
-			
 			// TODO: test reflectWith()
 			
 			// TODO: test refreshClasses()
@@ -196,6 +193,10 @@ public class BaseAndLocalConfigurationTestSuite extends FixtureBasedTestSuite {
 			
 			local.blobPath(Path4.getTempPath());
 			Assert.areEqual(Path4.getTempPath(), legacy.blobPath());
+			
+			local.readOnly(true);
+			Assert.isTrue(legacy.isReadOnly());
+			
 		}
 		
 	}

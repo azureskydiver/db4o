@@ -19,10 +19,6 @@ public class NetworkingConfigurationImpl implements NetworkingConfiguration {
 		return _config;
 	}
 
-	public void factory(ClientServerFactory clientServerFactory) {
-		_config.factory(clientServerFactory);
-	}
-
 	public void batchMessages(boolean flag) {
 		// TODO Auto-generated method stub
 		throw new NotImplementedException();

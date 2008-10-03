@@ -11,9 +11,14 @@ import com.db4o.internal.cs.*;
 
 /**
  * @exclude
+ * 
+ * @deprecated Use Db4oClientServer
  */
 public class ClientServerFactoryImpl implements ClientServerFactory{
 
+	/**
+	 * @deprecated Use {@link Db4oClientServer#openClient}
+	 */
 	public ObjectContainer openClient(Configuration config, String hostName,
 			int port, String user, String password,
 			NativeSocketFactory socketFactory) throws Db4oIOException,
@@ -25,12 +30,15 @@ public class ClientServerFactoryImpl implements ClientServerFactory{
 		return new ClientObjectContainer(config, networkSocket, user, password, true);
 	}
 
+	/**
+	 * @deprecated Use {@link Db4oClientServer#openServer}
+	 */
 	public ObjectServer openServer(Configuration config,
 			String databaseFileName, int port, NativeSocketFactory socketFactory)
 			throws Db4oIOException, IncompatibleFileFormatException,
 			OldFormatException, DatabaseFileLockedException,
 			DatabaseReadOnlyException {
-		LocalObjectContainer container = (LocalObjectContainer)Db4oEmbedded.openFile(config,databaseFileName);
+		LocalObjectContainer container = (LocalObjectContainer)Db4o.openFile(config,databaseFileName);
         if(container == null){
             return null;
         }
