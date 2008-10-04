@@ -85,6 +85,21 @@
 		</sequential>
 	</macrodef>
 	
+	<macrodef name="msbuild">
+		
+		<attribute name="solutionFile" />
+		<attribute name="outputPath" default="${dir.dist.dll.net}" />
+		
+		<sequential>
+			<exec executable="${msbuild.executable}" failonerror="true">
+				<arg file="@{solutionFile}" />
+				<arg value="/t:Rebuild" />
+				<arg value="/p:Configuration=${msbuild.target.configuration}" />
+				<arg value="/p:OutputPath=@{outputPath}" />
+			</exec>
+		</sequential>
+	</macrodef>
+	
 	
 	<macrodef name="msb">
 		<attribute name="solution" />
@@ -103,13 +118,9 @@
 		            <include name="**/obj/Release/" />
 		        </fileset>
 		    </delete>
+			
+			<msbuild solution="${solution.file}" outputPath="@{outputPath}" />
 
-			<exec executable="${msbuild.executable}" failonerror="true">
-				<arg file="${solution.file}" />
-				<arg value="/t:Rebuild" />
-				<arg value="/p:Configuration=${msbuild.target.configuration}" />
-				<arg value="/p:OutputPath=@{outputPath}" />
-			</exec>
 		</sequential>
 	</macrodef>
 

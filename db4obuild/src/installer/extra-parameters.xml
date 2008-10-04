@@ -1,10 +1,22 @@
 <?xml version="1.0"?>
 <WixBuilderParameters>
+	<KnownIds>
+		<KnownId>
+			<Id>doc.tutorial.Db4oTutorial.exe</Id>
+			<Path>doc/tutorial/Db4oTutorial.exe</Path>
+		</KnownId>
+	</KnownIds>
+	
 	<Shortcuts>
 		
 		<WixShortcut>
 			<Path>doc/tutorial/Db4oTutorial.exe</Path>
 			<Name>Db4o Tutorial</Name>
+		</WixShortcut>
+		
+		<WixShortcut>
+			<Path>doc/api/db4o.chm</Path>
+			<Name>Db4o API</Name>
 		</WixShortcut>
 		
 		<!--
@@ -13,11 +25,6 @@
 			<Name>Db4o Reference</Name>
 		</WixShortcut>
 		-->
-		
-		<WixShortcut>
-			<Path>doc/api/db4o.chm</Path>
-			<Name>Db4o API</Name>
-		</WixShortcut>
 		
 		<!--		
 		<WixShortcut>
