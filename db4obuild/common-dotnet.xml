@@ -119,7 +119,7 @@
 		        </fileset>
 		    </delete>
 			
-			<msbuild solution="${solution.file}" outputPath="@{outputPath}" />
+			<msbuild solutionFile="${solution.file}" outputPath="@{outputPath}" />
 
 		</sequential>
 	</macrodef>
