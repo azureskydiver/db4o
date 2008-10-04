@@ -872,14 +872,16 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     public Object read(InternalReadContext context) {
-        boolean alive = checkAlive((AspectVersionContext)context, false);
-        if(!alive && _state == FieldMetadataState.NOT_LOADED) {
-//		if (!alive && !updating()) {
+        if(!canReadFromSlot(context)) {
 			incrementOffset(context);
             return null;
         }
         return context.read(_handler);
     }
+
+	private boolean canReadFromSlot(InternalReadContext context) {
+		return checkAlive((AspectVersionContext)context, false) || _state != FieldMetadataState.NOT_LOADED;
+	}
 
     /** never called but keep for Rickie */
     public void refreshActivated() {
