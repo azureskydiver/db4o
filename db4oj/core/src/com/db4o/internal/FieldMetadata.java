@@ -686,19 +686,14 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
     
     private boolean checkAlive(AspectVersionContext context){
-    	return checkAlive(context, true);
-    }
-
-    private boolean checkAlive(AspectVersionContext context, boolean doIncrement){
     	if(! checkEnabled(context)){
-    		return false;
-    	}
-    	
-        boolean alive = alive(); 
-        if (! alive && doIncrement) {
-            incrementOffset((ReadBuffer)context);
-        }
-        return alive;
+			return false;
+		}		
+		boolean alive = alive(); 
+		if (!alive) {
+		    incrementOffset((ReadBuffer)context);
+		}
+		return alive;
     }
 
     private void informAboutTransaction(Object obj, Transaction trans){
@@ -872,15 +867,21 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     public Object read(InternalReadContext context) {
-        if(!canReadFromSlot(context)) {
+        if(!canReadFromSlot((AspectVersionContext) context)) {
 			incrementOffset(context);
             return null;
         }
         return context.read(_handler);
     }
 
-	private boolean canReadFromSlot(InternalReadContext context) {
-		return checkAlive((AspectVersionContext)context, false) || _state != FieldMetadataState.NOT_LOADED;
+	private boolean canReadFromSlot(AspectVersionContext context) {
+    	if(!checkEnabled(context)){
+    		return false;
+    	}
+    	if(alive()) {
+    		return true;
+    	}
+		return _state != FieldMetadataState.NOT_LOADED;
 	}
 
     /** never called but keep for Rickie */
