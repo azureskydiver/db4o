@@ -231,7 +231,7 @@
 	</target>   
 
 	<target name="runtestsjava5">
-    	<ant antfile="build-java.xml" target="run.tests.jdk5" />
+    	<ant antfile="build-java.xml" target="run.tests.jdk1.5" />
     </target>
     
     <target name="runconcurrencytests">
