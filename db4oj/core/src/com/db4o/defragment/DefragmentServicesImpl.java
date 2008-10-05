@@ -230,6 +230,16 @@ public class DefragmentServicesImpl implements DefragmentServices {
 			command.visit(slotIDIter.current());
 		}
 	}
+	
+	public void registerBTreeIDs(BTree btree, final IDMappingCollector collector) {
+		collector.process(this, btree.getID(), false);
+		traverseAllIndexSlots(btree, new Visitor4() {
+			public void visit(Object obj) {
+				int id=((Integer)obj).intValue();
+				collector.process(DefragmentServicesImpl.this, id, false);
+			}
+		});
+	}
 
 	public int databaseIdentityID(DbSelector selector) {
 		LocalObjectContainer db = selector.db(this);

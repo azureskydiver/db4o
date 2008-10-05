@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import java.io.*;
 
+import com.db4o.defragment.*;
 import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;

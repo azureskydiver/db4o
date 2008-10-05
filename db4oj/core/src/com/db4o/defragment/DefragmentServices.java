@@ -1,12 +1,13 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.internal.mapping;
+package com.db4o.defragment;
 
 import java.io.*;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
+import com.db4o.internal.mapping.*;
 import com.db4o.internal.slots.*;
 
 /**
@@ -30,6 +31,8 @@ public interface DefragmentServices extends IDMapping {
 	void targetWriteBytes(DefragmentContextImpl context, int targetAddress);
 
 	void traverseAllIndexSlots(BTree tree, Visitor4 visitor4);	
+	
+	void registerBTreeIDs(BTree tree, IDMappingCollector collector);
 	
 	ClassMetadata classMetadataForId(int id);
 
