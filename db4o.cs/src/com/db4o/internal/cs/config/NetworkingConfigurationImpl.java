@@ -2,7 +2,6 @@
 
 package com.db4o.internal.cs.config;
 
-import com.db4o.config.*;
 import com.db4o.cs.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
