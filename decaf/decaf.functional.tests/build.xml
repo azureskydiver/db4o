@@ -222,7 +222,10 @@
 				<fileset dir="${dir.workspace}/db4oj/core">
 					<include name="**/*.java"  />
 				</fileset>
-				<fileset dir="${dir.workspace}/db4oj/tools">
+				<fileset dir="${dir.workspace}/db4oj.optional/core">
+					<include name="**/*.java" />
+				</fileset>
+				<fileset dir="${dir.workspace}/db4oj.optional/tools">
 					<include name="**/*.java" />
 				</fileset>
 				<fileset dir="${dir.workspace}/db4o.cs">
