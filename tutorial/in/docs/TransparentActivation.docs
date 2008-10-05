@@ -31,9 +31,7 @@ up with some leaves of our object graph being null.
 
 Let's configure db4o to run in Transparent Activation mode and let's try again:
 
-.s com.db4o.f1.chapter7.TransparentActivationExample#configureTransparentActivation -out ..
-
-.s com.db4o.f1.chapter7.TransparentActivationExample#retrieveSnapshotsSequentially ..
+.s com.db4o.f1.chapter7.TransparentActivationExample#retrieveSnapshotsSequentiallyTA ..
 
 Wow it worked! Is it really that easy? Principally yes. When db4o is run in ._
 Transparent Activation mode there are no surprises with null members that ._

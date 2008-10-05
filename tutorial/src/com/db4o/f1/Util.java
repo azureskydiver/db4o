@@ -4,8 +4,7 @@ import com.db4o.*;
 
 
 public class Util {
-    public final static String DB4OFILENAME="formula1.db4o";
-
+    
     public static void listResult(ObjectSet result) {
         System.out.println(result.size());
         while(result.hasNext()) {

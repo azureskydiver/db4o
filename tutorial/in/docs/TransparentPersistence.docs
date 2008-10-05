@@ -49,9 +49,7 @@ to that all methods that read or write object fields has got  .i activate ..  ca
 with a corresponding purpose.
 Similar modifications should be done to the SensorReadout class.
 Now we are ready to test how Transparent Persistence work. First we should ._
-configure the database to use TransparentPersistenceSupport:
-.s com.db4o.f1.chapter8.TransparentPersistenceExample#configureTransparentPersistence -out ..
-Now we can store some objects:        
+configure the database to use TransparentPersistenceSupport before storing objects:        
 .s com.db4o.f1.chapter8.TransparentPersistenceExample#storeCarAndSnapshots -out ..
 Ok, all the objects are stored. 
 Now, let's retrieve all the stored objects and modify them:

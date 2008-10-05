@@ -6,17 +6,20 @@ import com.db4o.f1.*;
 
 
 public class TransactionExample extends Util {
+	
+	final static String DB4OFILENAME = System.getProperty("user.home") + "/formula1.db4o";
+	
     public static void main(String[] args) {
-        new File(Util.DB4OFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
+        new File(DB4OFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(DB4OFILENAME);
         try {
             storeCarCommit(db);
             db.close();
-            db=Db4o.openFile(Util.DB4OFILENAME);
+            db=Db4o.openFile(DB4OFILENAME);
             listAllCars(db);
             storeCarRollback(db);
             db.close();
-            db=Db4o.openFile(Util.DB4OFILENAME);
+            db=Db4o.openFile(DB4OFILENAME);
             listAllCars(db);
             carSnapshotRollback(db);
             carSnapshotRollbackRefresh(db);

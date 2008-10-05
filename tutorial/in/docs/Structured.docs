@@ -10,7 +10,7 @@ a vehicle.
 
 .1 Storing structured objects ..
 
-To store a car with its pilot, we just call .x set() .. on our top level object, ._
+To store a car with its pilot, we just call .x store() .. on our top level object, ._
 the car. The pilot will be stored implicitly.
 
 .s com.db4o.f1.chapter2.StructuredExample#storeFirstCar -out ..
@@ -89,7 +89,7 @@ by a Car, where the Car model is 'Ferrari'":
 
 .1 Updating structured objects ..
 
-To update structured objects in db4o, we simply call .x set() .. on them again.
+To update structured objects in db4o, we simply call .x store() .. on them again.
 
 .s com.db4o.f1.chapter2.StructuredExample#updateCar ..
 
@@ -139,13 +139,11 @@ Car objects by setting cascadeOnUpdate() for this class accordingly.
 
 .s com.db4o.f1.chapter2.StructuredExample#updatePilotSeparateSessionsImprovedPart1 -out ..
 
-.s com.db4o.f1.chapter2.StructuredExample#updatePilotSeparateSessionsImprovedPart2 -out ..
-
-.s com.db4o.f1.chapter2.StructuredExample#updatePilotSeparateSessionsImprovedPart3 ..
+.s com.db4o.f1.chapter2.StructuredExample#updatePilotSeparateSessionsImprovedPart2 ..
 
 This looks much better.
 
-Note that container configuration must be set before the container is opened.
+Note that container configuration must be passed when the container is opened.
 
 We'll cover update depth as well as other issues with complex object graphs ._
 and the respective db4o configuration options in more detail in a later ._
@@ -171,10 +169,9 @@ You may already suspect that the problem of recursive deletion (and ._
 perhaps its solution, too) is quite similar to our little update problem, and you're ._
 right. Let's configure db4o to delete a car's pilot, too, when the car is deleted.
 
-.s com.db4o.f1.chapter2.StructuredExample#deleteDeepPart1 -out ..
-.s com.db4o.f1.chapter2.StructuredExample#deleteDeepPart2 ..
+.s com.db4o.f1.chapter2.StructuredExample#deleteDeep ..
 
-Again: Note that all configuration must take place before the .x ObjectContainer .. is opened.
+Again: Note that configuration should be passed to the call opening ObjectContainer.
 
 Let's have a look at our pilots again.
 
