@@ -1,7 +1,6 @@
 package com.db4o.db4ounit.common.api;
 
 import java.io.*;
-import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
@@ -20,6 +19,10 @@ import db4ounit.fixtures.*;
 public class BaseAndLocalConfigurationTestSuite extends FixtureBasedTestSuite {
 	
 	public static class BaseConfigurationProviderTestUnit implements TestCase {
+		public static final class Item {
+			
+		}
+		
 		public void test() {
 			final BaseConfigurationProvider config = subject();
 			final Config4Impl legacy = legacyFrom(config);
@@ -74,10 +77,10 @@ public class BaseAndLocalConfigurationTestSuite extends FixtureBasedTestSuite {
 			base.messageLevel(3);
 			Assert.areEqual(3, legacy.messageLevel());
 			
-			ObjectClass objectClass = base.objectClass(Collection.class);
+			ObjectClass objectClass = base.objectClass(Item.class);
 			objectClass.cascadeOnDelete(true);
-			Assert.isTrue(((Config4Class)legacy.objectClass(Collection.class)).cascadeOnDelete().definiteYes());
-			Assert.isTrue(((Config4Class)base.objectClass(Collection.class)).cascadeOnDelete().definiteYes());
+			Assert.isTrue(((Config4Class)legacy.objectClass(Item.class)).cascadeOnDelete().definiteYes());
+			Assert.isTrue(((Config4Class)base.objectClass(Item.class)).cascadeOnDelete().definiteYes());
 			
 			base.optimizeNativeQueries(false);
 			Assert.isFalse(legacy.optimizeNativeQueries());
