@@ -9,7 +9,6 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.delete.*;
-import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 import com.db4o.typehandlers.*;
@@ -24,10 +23,10 @@ public class BigSetTypeHandler implements TypeHandler4{
 		int pos = context.offset();
 		int id = context.readInt();
 		BTree bTree = newBTree(context, id);
-		FirstPassCommand firstPassCommand = new FirstPassCommand();
 		DefragmentServicesImpl services = (DefragmentServicesImpl) context.services();
-		firstPassCommand.processBTree(services, bTree);
-		firstPassCommand.flush(services);
+		IDMappingCollector collector = new IDMappingCollector();
+		services.registerBTreeIDs(bTree, collector);
+		collector.flush(services);
 		context.seek(pos);
 		context.copyID();
 		bTree.defragBTree(services);
@@ -49,11 +48,7 @@ public class BigSetTypeHandler implements TypeHandler4{
 	}
 
 	private BTree newBTree(Context context, int id) {
-		BTree bTree = new BTree(systemTransaction(context), id, new IntHandler(){
-			public void defragIndexEntry(DefragmentContextImpl defragmentContext) {
-				defragmentContext.copyID();
-			}
-		});
+		BTree bTree = new BTree(systemTransaction(context), id, new IDHandler());
 		return bTree;
 	}
 
