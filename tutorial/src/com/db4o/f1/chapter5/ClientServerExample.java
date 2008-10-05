@@ -6,15 +6,17 @@ import com.db4o.f1.*;
 
 
 public class ClientServerExample extends Util {
+	final static String DB4OFILENAME = System.getProperty("user.home") + "/formula1.db4o";
+	
     private final static int PORT=0xdb40;
     private final static String USER="user";
     private final static String PASSWORD="password";
     
     public static void main(String[] args) throws IOException {
-        new File(Util.DB4OFILENAME).delete();
+        new File(DB4OFILENAME).delete();
         accessLocalServer();
-        new File(Util.DB4OFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
+        new File(DB4OFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(DB4OFILENAME);
         try {
             setFirstCar(db);
             setSecondCar(db);
@@ -23,7 +25,7 @@ public class ClientServerExample extends Util {
             db.close();
         }
         configureDb4o();
-        ObjectServer server=Db4o.openServer(Util.DB4OFILENAME,0);
+        ObjectServer server=Db4o.openServer(DB4OFILENAME,0);
         try {
             queryLocalServer(server);
             demonstrateLocalReadCommitted(server);
@@ -33,7 +35,7 @@ public class ClientServerExample extends Util {
             server.close();
         }
         accessRemoteServer();
-        server=Db4o.openServer(Util.DB4OFILENAME,PORT);
+        server=Db4o.openServer(DB4OFILENAME,PORT);
         server.grantAccess(USER,PASSWORD);
         try {
             queryRemoteServer(PORT,USER,PASSWORD);
@@ -60,7 +62,7 @@ public class ClientServerExample extends Util {
     }
 
     public static void accessLocalServer() {
-        ObjectServer server=Db4o.openServer(Util.DB4OFILENAME,0);
+        ObjectServer server=Db4o.openServer(DB4OFILENAME,0);
         try {
             ObjectContainer client=server.openClient();
             // Do something with this client, or open more clients
@@ -116,7 +118,7 @@ public class ClientServerExample extends Util {
     }
 
     public static void accessRemoteServer() throws IOException {
-        ObjectServer server=Db4o.openServer(Util.DB4OFILENAME,PORT);
+        ObjectServer server=Db4o.openServer(DB4OFILENAME,PORT);
         server.grantAccess(USER,PASSWORD);
         try {
             ObjectContainer client=Db4o.openClient("localhost",PORT,USER,PASSWORD);

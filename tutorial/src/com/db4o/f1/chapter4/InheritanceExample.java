@@ -1,7 +1,6 @@
 package com.db4o.f1.chapter4;
 
 import java.io.*;
-import java.util.Arrays;
 
 import com.db4o.*;
 import com.db4o.f1.*;
@@ -9,9 +8,12 @@ import com.db4o.query.*;
 
 
 public class InheritanceExample extends Util {
+	
+	final static String DB4OFILENAME = System.getProperty("user.home") + "/formula1.db4o";
+	
     public static void main(String[] args) {
-        new File(Util.DB4OFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
+        new File(DB4OFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(DB4OFILENAME);
         try {
             storeFirstCar(db);
             storeSecondCar(db);

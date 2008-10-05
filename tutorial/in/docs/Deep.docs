@@ -26,10 +26,6 @@ No surprises here.
 Now we would like to build a sensor readout chain. We already know ._
 about the update depth trap, so we configure this first.
 
-.s com.db4o.f1.chapter5.DeepExample#setCascadeOnUpdate -out ..
-
-Let's collect a few sensor readouts.
-
 .s com.db4o.f1.chapter5.DeepExample#takeManySnapshots -out ..
 
 .1 Retrieving ..
@@ -82,9 +78,7 @@ Instead of dynamically activating subgraph elements, you can configure ._
 activation depth statically, too. We can tell our SensorReadout class ._
 objects to cascade activation automatically, for example.
 
-.s com.db4o.f1.chapter5.DeepExample#setActivationDepth -out ..
-
-.s com.db4o.f1.chapter5.DeepExample#retrieveSnapshotsSequentially ..
+.s com.db4o.f1.chapter5.DeepExample#retrieveSnapshotsSequentiallyCascade ..
 
 You have to be very careful, though. Activation issues are tricky. Db4o ._
 provides a wide range of configuration features to control activation ._

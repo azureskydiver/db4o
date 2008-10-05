@@ -203,7 +203,7 @@ public class HtmlWriter extends AbstractWriter {
                 write("<div class=\"console\">");
                 write("<applet name=\""+ DoctorConsoleApplet.APPLETNAME + "\" code=\"com.yetac.doctor.applet.DoctorConsoleApplet\" archive=\"");
                 write(files.task.getArchive());
-                write("\" width=\"100%\" height=\"150\"><param name=\"yapfile\" value=\"formula1.yap\"/>");
+                write("\" width=\"100%\" height=\"150\"><param name=\"yapfile\" value=\"formula1.db4o\"/>");
                 executableInCurrent=false;
             }
             write("</body></html>");

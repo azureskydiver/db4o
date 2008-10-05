@@ -1,20 +1,21 @@
 package com.db4o.f1.chapter1;
 
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.f1.Util;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.f1.*;
 
 
 public class FirstStepsExample extends Util {    
+	final static String DB4OFILENAME = System.getProperty("user.home") + "/formula1.db4o";
+	
     public static void main(String[] args) {
-        new File(Util.DB4OFILENAME).delete();
+        new File(DB4OFILENAME).delete();
         accessDb4o();
-        new File(Util.DB4OFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
+        new File(DB4OFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(DB4OFILENAME);
         try {
             storeFirstPilot(db);
             storeSecondPilot(db);
@@ -31,7 +32,7 @@ public class FirstStepsExample extends Util {
     }
     
     public static void accessDb4o() {
-        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
+        ObjectContainer db=Db4o.openFile(DB4OFILENAME);
         try {
             // do something with db4o
         }

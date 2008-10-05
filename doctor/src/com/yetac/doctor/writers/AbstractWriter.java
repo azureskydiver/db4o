@@ -53,8 +53,9 @@ public abstract class AbstractWriter extends Configuration implements
     }
     
     protected void installRunner() throws Exception{
-        
-        File yapFile=File.createTempFile("formula1",".yap");
+     
+    	File userdir=new File(System.getProperty("user.home","."));
+        File yapFile=new File(userdir,"formula1.db4o");
         
         try{
             runner=new ExampleRunner(getClass().getClassLoader(),yapFile);

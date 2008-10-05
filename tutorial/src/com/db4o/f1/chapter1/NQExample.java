@@ -7,9 +7,11 @@ import com.db4o.f1.*;
 import com.db4o.query.*;
 
 public class NQExample extends Util {
+
+	final static String DB4OFILENAME = System.getProperty("user.home") + "/formula1.db4o";
 	
     public static void main(String[] args) {
-        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
+        ObjectContainer db=Db4o.openFile(DB4OFILENAME);
         try {
             storePilots(db);
             retrieveComplexSODA(db);

@@ -9,8 +9,11 @@ import com.db4o.query.Query;
 
 
 public class QueryExample extends Util {
+	
+	final static String DB4OFILENAME = System.getProperty("user.home") + "/formula1.db4o";
+	
     public static void main(String[] args) {
-        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
+        ObjectContainer db=Db4o.openFile(DB4OFILENAME);
         try {
             storeFirstPilot(db);
             storeSecondPilot(db);

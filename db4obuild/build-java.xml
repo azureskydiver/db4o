@@ -1030,6 +1030,7 @@
             <classpath>
 				<pathelement path="${file.jdk1.5.jar}"/>
 				<pathelement path="${file.bench.jar}"/>
+            	<pathelement path="${file.jdk1.5.cs.jar}"/>
 			</classpath>
         </javac>
 	</target>

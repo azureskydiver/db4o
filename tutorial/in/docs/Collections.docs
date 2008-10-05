@@ -84,9 +84,7 @@ Then let's get some Cars with matching Readout values:
 This should be familiar, we just have to remember to take care of ._
 the update depth.
 
-.s com.db4o.f1.chapter3.CollectionsExample#updateCarPart1 -out ..
-
-.s com.db4o.f1.chapter3.CollectionsExample#updateCarPart2 ..
+.s com.db4o.f1.chapter3.CollectionsExample#updateCar ..
 
 There's nothing special about deleting arrays and collections, too.
 
@@ -100,9 +98,7 @@ and be careful.)
 
 We will delete all cars from the database again to prepare for the next chapter.
 
-.s com.db4o.f1.chapter3.CollectionsExample#deleteAllPart1 -out ..
-
-.s com.db4o.f1.chapter3.CollectionsExample#deleteAllPart2 -out ..
+.s com.db4o.f1.chapter3.CollectionsExample#deleteAll -out ..
 
 .1 Conclusion ..
 
