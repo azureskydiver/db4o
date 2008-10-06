@@ -306,6 +306,8 @@
 		</zip>			
 		
 	</target>
+
+	<target name="build-net-installer-standalone" depends="init, configure, build-net-installer" />
 	
 	<target name="build-net-installer"  depends="prepare-package-structure" unless="mono">
 		<ant antfile="build-net-installer.xml">
@@ -1111,18 +1113,14 @@
 	        </exec>
 		</sequential>
 	</macrodef>
-		
-    <target name="build-cf35" depends="init, configure-debug, configure-net35, prepare-csproject-all, define-msbuild-task">
+	
+    <target name="build-cf35" depends="init, configure-debug, configure-net35, prepare-csproject-all">
     	<build-cf />
     </target>
 	
-    <target name="build-cf20" depends="init, configure, prepare-csproject-all, define-msbuild-task">
+    <target name="build-cf20" depends="init, configure, prepare-csproject-all">
     	<build-cf />
-    </target>
-	
-	<target name="define-msbuild-task">
-		<taskdef resource="org/apache/ant/dotnet/antlib.xml" />
-	</target>
+    </target>	
     
     <target name="sharpen-all" depends="check-dependencies, install-sharpen-plugin, prepare-conversion-workspace" unless="skip.sharpen">
         <sharpen workspace="${dir.sharpen}" resource="db4oj">
