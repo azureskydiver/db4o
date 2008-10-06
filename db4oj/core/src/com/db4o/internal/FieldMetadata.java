@@ -875,7 +875,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
 	private boolean canReadFromSlot(AspectVersionContext context) {
-    	if(!checkEnabled(context)){
+    	if(! enabled(context)){
     		return false;
     	}
     	if(alive()) {
