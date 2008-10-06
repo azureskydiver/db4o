@@ -49,9 +49,9 @@ public class TransparentActivationExample extends Util {
 	}
 
 	public static void retrieveSnapshotsSequentiallyTA() {
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-		config.base().add(new TransparentActivationSupport());
-		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
+		Configuration config = Db4o.newConfiguration();
+		config.add(new TransparentActivationSupport());
+		ObjectContainer db = Db4o.openFile(config, DB4OFILENAME);
 		ObjectSet result = db.queryByExample(Car.class);
 		if (result.hasNext()) {
 			Car car = (Car) result.next();
@@ -65,9 +65,9 @@ public class TransparentActivationExample extends Util {
 	}
 
 	public static void demonstrateTransparentActivation() {
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-		config.base().add(new TransparentActivationSupport());
-		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
+		Configuration config = Db4o.newConfiguration();
+		config.add(new TransparentActivationSupport());
+		ObjectContainer db = Db4o.openFile(config, DB4OFILENAME);
 
 		ObjectSet result = db.queryByExample(Car.class);
 		if (result.hasNext()) {

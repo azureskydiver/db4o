@@ -35,9 +35,9 @@ public class DeepExample extends Util {
 	}
 
 	public static void takeManySnapshots() {
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-		config.base().objectClass(Car.class).cascadeOnUpdate(true);
-		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
+		Configuration config = Db4o.newConfiguration();
+		config.objectClass(Car.class).cascadeOnUpdate(true);
+		ObjectContainer db = Db4o.openFile(config, DB4OFILENAME);
 		ObjectSet result = db.queryByExample(Car.class);
 		if (result.hasNext()) {
 			Car car = (Car) result.next();
@@ -67,10 +67,10 @@ public class DeepExample extends Util {
 	}
 
 	public static void retrieveSnapshotsSequentiallyCascade() {
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-		config.base().objectClass(TemperatureSensorReadout.class).cascadeOnActivate(
+		Configuration config = Db4o.newConfiguration();
+		config.objectClass(TemperatureSensorReadout.class).cascadeOnActivate(
 				true);
-		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
+		ObjectContainer db = Db4o.openFile(config, DB4OFILENAME);
 
 		ObjectSet result = db.queryByExample(Car.class);
 		if (result.hasNext()) {
