@@ -232,11 +232,11 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 	
 	public void registerBTreeIDs(BTree btree, final IDMappingCollector collector) {
-		collector.process(this, btree.getID(), false);
+		collector.createIDMapping(this, btree.getID(), false);
 		traverseAllIndexSlots(btree, new Visitor4() {
 			public void visit(Object obj) {
 				int id=((Integer)obj).intValue();
-				collector.process(DefragmentServicesImpl.this, id, false);
+				collector.createIDMapping(DefragmentServicesImpl.this, id, false);
 			}
 		});
 	}

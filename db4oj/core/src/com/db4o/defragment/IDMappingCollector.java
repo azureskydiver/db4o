@@ -12,7 +12,7 @@ public class IDMappingCollector {
 
 	private TreeInt _ids;
 	
-	void process(DefragmentServicesImpl context, int objectID, boolean isClassID) {
+	void createIDMapping(DefragmentServicesImpl context, int objectID, boolean isClassID) {
 		if(batchFull()) {
 			flush(context);
 		}

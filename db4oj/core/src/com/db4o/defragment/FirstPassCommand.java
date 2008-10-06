@@ -19,7 +19,7 @@ public final class FirstPassCommand implements PassCommand {
 	private IDMappingCollector _collector = new IDMappingCollector();
 	
 	public void processClass(final DefragmentServicesImpl context, ClassMetadata classMetadata,int id,int classIndexID) {
-		_collector.process(context,id, true);
+		_collector.createIDMapping(context,id, true);
 		classMetadata.forEachField(new Procedure4() {
             public void apply(Object arg) {
                 FieldMetadata field = (FieldMetadata) arg;
@@ -31,11 +31,11 @@ public final class FirstPassCommand implements PassCommand {
 	}
 
 	public void processObjectSlot(DefragmentServicesImpl context, ClassMetadata yapClass, int sourceID) {
-		_collector.process(context,sourceID, false);
+		_collector.createIDMapping(context,sourceID, false);
 	}
 
 	public void processClassCollection(DefragmentServicesImpl context) throws CorruptionException {
-		_collector.process(context,context.sourceClassCollectionID(), false);
+		_collector.createIDMapping(context,context.sourceClassCollectionID(), false);
 	}
 
 	public void processBTree(final DefragmentServicesImpl context, final BTree btree) {
