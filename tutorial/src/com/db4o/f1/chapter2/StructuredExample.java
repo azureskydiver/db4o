@@ -185,9 +185,9 @@ public class StructuredExample extends Util {
 	}
 
 	public static void updatePilotSeparateSessionsImprovedPart1() {
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-		config.base().objectClass("com.db4o.f1.chapter2.Car").cascadeOnUpdate(true);
-		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
+		Configuration config = Db4o.newConfiguration();
+		config.objectClass("com.db4o.f1.chapter2.Car").cascadeOnUpdate(true);
+		ObjectContainer db = Db4o.openFile(config, DB4OFILENAME);
 		List<Car> result = db.query(new Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getModel().equals("Ferrari");
@@ -227,9 +227,9 @@ public class StructuredExample extends Util {
 	}
 
 	public static void deleteDeep() {
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-		config.base().objectClass("com.db4o.f1.chapter2.Car").cascadeOnDelete(true);
-		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
+		Configuration config = Db4o.newConfiguration();
+		config.objectClass("com.db4o.f1.chapter2.Car").cascadeOnDelete(true);
+		ObjectContainer db = Db4o.openFile(config, DB4OFILENAME);
 		List<Car> result = db.query(new Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getModel().equals("BMW");
@@ -249,9 +249,9 @@ public class StructuredExample extends Util {
 	}
 
 	public static void deleteDeepRevisited() {
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-		config.base().objectClass("com.db4o.f1.chapter2.Car").cascadeOnDelete(true);
-		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
+		Configuration config = Db4o.newConfiguration();
+		config.objectClass("com.db4o.f1.chapter2.Car").cascadeOnDelete(true);
+		ObjectContainer db = Db4o.openFile(config, DB4OFILENAME);
 		ObjectSet<Pilot> result = db.query(new Predicate<Pilot>() {
 			public boolean match(Pilot pilot) {
 				return pilot.getName().equals("Michael Schumacher");
