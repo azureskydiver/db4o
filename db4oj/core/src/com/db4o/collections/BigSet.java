@@ -60,7 +60,7 @@ public class BigSet<E> implements Set<E> {
 	}
 
 	public void clear() {
-		throw new UnsupportedOperationException("Create new BigSet instead.");
+		bTree().clear(transaction());
 	}
 
 	public boolean contains(Object obj) {

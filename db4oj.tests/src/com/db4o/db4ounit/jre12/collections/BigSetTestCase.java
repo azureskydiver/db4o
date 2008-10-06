@@ -69,6 +69,20 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 		Assert.areEqual(1, set.size());
 	}
 	
+	public void testSize(){
+		BigSet set = new BigSet(db());
+		set.add(ITEM_ONE);
+		Assert.areEqual(1, set.size());
+		set.remove(ITEM_ONE);
+		Assert.areEqual(0, set.size());
+		Item itemTwo = new Item("two");
+		set.add(itemTwo);
+		set.add(new Item("three"));
+		Assert.areEqual(2, set.size());
+		set.remove(itemTwo);
+		Assert.areEqual(1, set.size());
+	}
+	
 	public void testContains(){
 		BigSet set = new BigSet(db());
 		set.add(ITEM_ONE);
@@ -173,6 +187,13 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 		set = (BigSet) retrieveOnlyInstance(BigSet.class);
 		assertSinglePersistentItem(set);
 	}
+	
+	public void testClear(){
+		BigSet set = new BigSet(db());
+		set.add(ITEM_ONE);
+		set.clear();
+		Assert.areEqual(0, set.size());
+	}
 
 	private Collection itemCollection() {
 		Collection c = new ArrayList<Item>();
@@ -195,9 +216,5 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	private LocalTransaction fileTransaction() {
 		return ((LocalTransaction)trans());
 	}
-
-	
-	
-	
 
 }

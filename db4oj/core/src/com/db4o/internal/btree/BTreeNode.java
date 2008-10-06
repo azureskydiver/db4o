@@ -591,7 +591,7 @@ public final class BTreeNode extends PersistentBase{
         return null;
     }
     
-    private BTreePatch keyPatch(Transaction trans, int index){
+    BTreePatch keyPatch(Transaction trans, int index){
     	Object obj = _keys[index];
         if( obj instanceof BTreePatch){
             return ((BTreePatch)obj).forTransaction(trans);
@@ -716,7 +716,31 @@ public final class BTreeNode extends PersistentBase{
         }
     }
     
-    public void remove(Transaction trans, PreparedComparison preparedComparison, Object obj, int index){
+    public void remove(Transaction trans, int index){
+        if(!_isLeaf){
+            throw new IllegalStateException();
+        }
+        prepareWrite(trans);
+        Object obj = null;
+        
+        BTreePatch patch = keyPatch(index);
+        if(patch == null){
+        	obj = _keys[index]; 
+        }else {
+	        BTreePatch transPatch = patch.forTransaction(trans);
+	        if(transPatch != null){
+	        	obj = transPatch.getObject();
+	        } else {
+	        	// There could be more than one patch with different object
+	        	// identities. We have no means to determine a "best" object 
+	        	// so we just take any one. Could be problematic.
+	        	obj = patch.getObject();  
+	        }
+        }
+        remove(trans, obj, index);
+    }
+    
+    public boolean remove(Transaction trans, Object obj, int index){
         if(!_isLeaf){
             throw new IllegalStateException();
         }
@@ -729,29 +753,39 @@ public final class BTreeNode extends PersistentBase{
         if(patch == null){
             _keys[index] = applyNewRemovePatch(trans, obj);
             keyChanged(trans, index);
-            return;
+            return true;
         }
         
         BTreePatch transPatch = patch.forTransaction(trans);
         if(transPatch != null){
             if(transPatch.isAdd()){
                 cancelAdding(trans, index);
-                return;
+                return true;
             }
 			if(transPatch.isCancelledRemoval()){
 				BTreeRemove removePatch = applyNewRemovePatch(trans, transPatch.getObject());
 				_keys[index] = ((BTreeUpdate)patch).replacePatch(transPatch, removePatch);
 				keyChanged(trans, index);
-				return;
+				return true;
 			}
         }else{
             // If the patch is a removal of a cancelled removal for another
             // transaction, we need one for this transaction also.
             if(! patch.isAdd()){
                 ((BTreeUpdate)patch).append(applyNewRemovePatch(trans, obj));
-                return;
+                return true;
             }
         }
+        
+        return false;
+    	
+    }
+    
+    public void remove(Transaction trans, PreparedComparison preparedComparison, Object obj, int index){
+    	
+    	if(remove(trans, obj, index)){
+    		return;
+    	}
         
         // now we try if removal is OK for the next element in this node
         if(index != lastIndex()){

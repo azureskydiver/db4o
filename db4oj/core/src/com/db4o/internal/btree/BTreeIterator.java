@@ -48,8 +48,7 @@ public class BTreeIterator implements Iterator4{
 	}
 
 	public void reset() {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 }

@@ -340,6 +340,13 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
     }
     
     public int size(Transaction trans){
+    	
+		// This implementation of size will not work accurately for multiple
+		// transactions. If two transactions call clear and both commit, _size
+		// can end up negative.
+		
+		// For multiple transactions the size patches only are an estimate.
+    	
         ensureActive(trans);
         Object sizeDiff = _sizesByTransaction.get(trans);
         if(sizeDiff != null){
@@ -517,6 +524,16 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
 
 	public Iterator4 iterator(Transaction trans) {
 		return new BTreeIterator(trans, this);
+	}
+
+	public void clear(Transaction transaction) {
+		BTreePointer currentPointer = firstPointer(transaction);
+		while(currentPointer != null && currentPointer.isValid()){
+			BTreeNode node = currentPointer.node();
+			int index = currentPointer.index();
+			node.remove(transaction, index);
+			currentPointer = currentPointer.next();
+		}
 	}
     
 }
