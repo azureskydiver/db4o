@@ -55,8 +55,10 @@ public class Db4o {
 	 * Creates a fresh {@link Configuration Configuration} instance.
 	 * 
 	 * @return a fresh, independent configuration with all options set to their default values
-	 * @deprecated Use {@link Db4oEmbedded#newConfiguration()} instead
+	 * 
 	 */
+	
+	// deprecated Use {@link Db4oEmbedded#newConfiguration()} instead
 	public static Configuration newConfiguration() {
 		Config4Impl config = new Config4Impl();
 		Platform4.getDefaultConfiguration(config);
@@ -102,6 +104,7 @@ public class Db4o {
      * is set to false.
      * @throws InvalidPasswordException password supplied for the connection is
      * invalid.
+     * @deprecated Use {@link #openClient(Configuration, String, int, String, String)} instead.
 	 */
 	public static ObjectContainer openClient(String hostName, int port,
 			String user, String password) throws Db4oIOException,
@@ -204,6 +207,7 @@ public class Db4o {
      * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
      * is set to false.
      * @throws DatabaseReadOnlyException database was configured as read-only.
+     * @deprecated Use {@link Db4o#openFile(Configuration,String)} instead
 	 */
 	public static final ObjectContainer openFile(String databaseFileName)
 			throws Db4oIOException, DatabaseFileLockedException,
@@ -237,8 +241,9 @@ public class Db4o {
 	 * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
 	 * is set to false.
 	 * @throws DatabaseReadOnlyException database was configured as read-only.
-	 * @deprecated Use {@link Db4oEmbedded#openFile(Configuration,String)} instead
+	 * 
 	 */
+	// @deprecated Use {@link Db4oEmbedded#openFile(Configuration,String)} instead
 	public static final ObjectContainer openFile(Configuration config,
 			String databaseFileName) throws Db4oIOException,
 			DatabaseFileLockedException, IncompatibleFileFormatException,
@@ -293,6 +298,7 @@ public class Db4o {
      * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
      * is set to false.
      * @throws DatabaseReadOnlyException database was configured as read-only.
+     * @deprecated Use {@link #openServer(Configuration, String, int)} instead.
 	 */
 	public static final ObjectServer openServer(String databaseFileName,
 			int port) throws Db4oIOException, IncompatibleFileFormatException,
