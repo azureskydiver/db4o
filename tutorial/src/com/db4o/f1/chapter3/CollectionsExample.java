@@ -144,8 +144,8 @@ public class CollectionsExample extends Util {
 	}
 
 	public static void updateCar() {
-		Configuration config = Db4oEmbedded.newConfiguration();
-		config.objectClass(Car.class).cascadeOnUpdate(true);
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.base().objectClass(Car.class).cascadeOnUpdate(true);
 		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
 		List<Car> results = db.query(new Predicate<Car>() {
 			public boolean match(Car candidate) {
@@ -162,8 +162,8 @@ public class CollectionsExample extends Util {
 	}
 
 	public static void updateCollection() {
-		Configuration config = Db4oEmbedded.newConfiguration();
-		config.objectClass(Car.class).cascadeOnUpdate(true);
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.base().objectClass(Car.class).cascadeOnUpdate(true);
 		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
 		ObjectSet<Car> results = db.query(new Predicate<Car>() {
 			public boolean match(Car candidate) {
@@ -190,8 +190,8 @@ public class CollectionsExample extends Util {
 	}
 
 	public static void deleteAll() {
-		Configuration config = Db4oEmbedded.newConfiguration();
-		config.objectClass(Car.class).cascadeOnDelete(true);
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.base().objectClass(Car.class).cascadeOnDelete(true);
 		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
 
 		ObjectSet<Car> cars = db.query(new Predicate<Car>() {

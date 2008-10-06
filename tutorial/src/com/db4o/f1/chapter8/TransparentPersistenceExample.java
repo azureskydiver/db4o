@@ -20,8 +20,8 @@ public class TransparentPersistenceExample extends Util {
 	}
 
 	public static void storeCarAndSnapshots() {
-		Configuration config = Db4oEmbedded.newConfiguration();
-		config.add(new TransparentPersistenceSupport());
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.base().add(new TransparentPersistenceSupport());
 		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
 		Car car = new Car("Ferrari");
 		for (int i = 0; i < 3; i++) {
@@ -32,8 +32,8 @@ public class TransparentPersistenceExample extends Util {
 	}
 
 	public static void modifySnapshotHistory() {
-		Configuration config = Db4oEmbedded.newConfiguration();
-		config.add(new TransparentPersistenceSupport());
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.base().add(new TransparentPersistenceSupport());
 		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
 
 		System.out.println("Read all sensors and modify the description:");
@@ -52,8 +52,8 @@ public class TransparentPersistenceExample extends Util {
 	}
 
 	public static void readSnapshotHistory() {
-		Configuration config = Db4oEmbedded.newConfiguration();
-		config.add(new TransparentPersistenceSupport());
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.base().add(new TransparentPersistenceSupport());
 		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
 
 		System.out.println("Read all modified sensors:");
