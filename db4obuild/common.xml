@@ -293,6 +293,9 @@
 		<property name="filename.taj.jar" value="${db4o.file}taj.jar" />
 		<property name="filename.osgi.jar" value="${db4o.file}osgi.jar" />
 		<property name="filename.osgi.test.jar" value="${db4o.file}osgi-test.jar" />
+		<property name="filename.jdk1.1.nodep.jar" value="${db4o.file}full-java1.1.jar" />
+		<property name="filename.jdk1.2.nodep.jar" value="${db4o.file}full-java1.2.jar" />
+		<property name="filename.jdk1.5.nodep.jar" value="${db4o.file}full-java5.jar" />
 		
 		<property name="file.jdk1.1.jar" value="${dir.dist.jars}/${filename.jdk1.1.jar}" />
 		<property name="file.jdk1.2.jar" value="${dir.dist.jars}/${filename.jdk1.2.jar}" />
@@ -315,6 +318,9 @@
 		<property name="file.java.test.src.zip" value="${dir.dist.java}/${db4o.file}test.zip" />
 		<property name="file.dist.java" value="${dir.dist}/${db4o.file}java.zip" />
 		<property name="file.bench.jar" value="${dir.dist.jars}/${filename.db4obench.jar}" />
+		<property name="file.jdk1.1.nodep.jar" value="${dir.dist.jars}/${filename.jdk1.1.nodep.jar}" />
+		<property name="file.jdk1.2.nodep.jar" value="${dir.dist.jars}/${filename.jdk1.2.nodep.jar}" />
+		<property name="file.jdk1.5.nodep.jar" value="${dir.dist.jars}/${filename.jdk1.5.nodep.jar}" />
 		
 		<property name="file.compiler.jdk1.3.args.line" value="${file.compiler.jdk1.3.args} ${file.compiler.jdk1.3.args.optional}" />
 		
