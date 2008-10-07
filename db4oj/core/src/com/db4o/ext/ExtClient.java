@@ -39,6 +39,10 @@ public interface ExtClient extends ExtObjectContainer{
 	 * All persistent references to objects that are currently in memory
 	 * are discarded during the switching process.<br><br>
 	 * @param fileName the fully qualified path of the requested database file.
+	 * @deprecated Switching to database files from clients is insecure because it 
+	 * allows free access to any file on the server. It is no longer recommended
+	 * to be used. Please open multiple servers instead, one server for each
+	 * database file.
 	 */
 	public void switchToFile(String fileName);
 	
@@ -49,6 +53,10 @@ public interface ExtClient extends ExtObjectContainer{
 	 * <br><br>
 	 * All persistent references to objects that are currently in memory
 	 * are discarded during the switching process.<br><br>
+	 * @deprecated Switching database files from clients is insecure because it 
+	 * allows free access to any file on the server. It is no longer recommended
+	 * to be used. Please open multiple servers instead, one server for each
+	 * database file. 
 	 */
 	public void switchToMainFile();
 	
