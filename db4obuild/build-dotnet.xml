@@ -138,6 +138,8 @@
 	<target name="package-net35" depends="build-net35, meta-package" description="Builds the complete set of .net 2 distros">
 	</target>
 	
+	<target name="package-net35-standalone" depends="init, configure-net35, meta-package" />
+	
 	<target name="meta-package" depends="ndoc, build-zip, build-net-installer">
 	</target>
 	
