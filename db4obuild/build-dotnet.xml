@@ -164,6 +164,7 @@
 						<include name="Cecil.FlowAnalysis.license.html" />
 						<include name="Mono.Cecil.license.html" />
 						<include name="Mono.GetOptions.license.html" />
+						<include name="System.Linq.Expressions.license.html" />
 					</fileset>
 				</copy>
 				<!-- readme's in distribution folders-->
