@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 using System.IO;
 using System.Xml;
@@ -187,13 +186,13 @@ public class WixBuilder
 
 	void WriteNameAndLongName(string path)
 	{
-		string name = Path.GetFileName(path);
-		string shortName = Path.GetFileName(GetShortPathName(path));
-		_writer.WriteAttributeString("Name", shortName);
-		if (name != shortName)
-		{
-			_writer.WriteAttributeString("LongName", name);
-		}
+        string name = Path.GetFileName(path);
+        string shortName = Path.GetFileName(GetShortPathName(path));
+        _writer.WriteAttributeString("Name", shortName);
+        if (name != shortName)
+        {
+            _writer.WriteAttributeString("LongName", name);
+        }
 	}
 
 	string GetIdFromPath(string path)
@@ -205,23 +204,11 @@ public class WixBuilder
 		string newId = "_" + NewGuid().Replace('-', '_');
 		_fileIdMapping.Add(path, newId);
 		return newId;
-
-//		return GetIdFromRelativePath(GetRelativePath(path));
 	}
 
-	string GetIdFromRelativePath(string path)
+    static string GetIdFromRelativePath(string path)
 	{
 		return path.Replace("\\", ".").Replace("/", ".").Replace("-", "_").Replace("$", "_").Replace(" ", "_");
-	}
-
-	string GetRelativePath(string path)
-	{
-		Debug.Assert(path.StartsWith(_basePath));
-		if (path.Length == _basePath.Length)
-		{
-			return "";
-		}
-		return path.Substring(_basePath.Length + 1);
 	}
 
 	static string NewGuid()
@@ -237,15 +224,15 @@ public class WixBuilder
 
 	static string GetShortPathName(string name)
 	{
-		StringBuilder builder = new StringBuilder();
-		builder.Capacity = name.Length;
+        StringBuilder builder = new StringBuilder(new string(' ', name.Length));
 		int cch = GetShortPathName(name, builder, builder.Capacity);
 		if (cch > builder.Capacity)
 		{
 			builder.Capacity = cch;
-			GetShortPathName(name, builder, builder.Capacity);
+			cch = GetShortPathName(name, builder, builder.Capacity);
 		}
-		return builder.ToString();
+	    builder.Length = cch;
+        return builder.ToString();
 	}
 
 	static int Main(string[] argv)
