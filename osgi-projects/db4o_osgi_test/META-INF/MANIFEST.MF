@@ -12,7 +12,7 @@ Require-Bundle: db4o_osgi
 Bundle-ClassPath: .,
  lib/db4o-tests.jar,
  lib/db4o-tests-nq.jar,
- lib/db4o-7.6-db4ounit.jar
+ lib/db4o-7.7-db4ounit.jar
 Bundle-ActivationPolicy: lazy 
 Provide-Package: com.db4o.osgi.test
 
