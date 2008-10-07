@@ -49,7 +49,8 @@
 			build.nqopt,
 			build.taj,
 		    build.db4otools,
-			build.osgi" 
+			build.osgi,
+			build.nodep" 
 	/>
 	
 	<target name="decaf.core" depends="decaf.workspace, install-decaf-plugin">
@@ -494,6 +495,42 @@
 			<fileset dir="${dir.dist.classes.osgi}"></fileset>
 		</jar>
 
+	</target>
+	
+	<target name="build.nodep">
+		<jar destfile="${file.jdk1.1.nodep.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.1}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes.jdk1.1.cs}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes.jdk1.1.optional}">
+				<include name="**/*.class"/>
+			</fileset>
+		</jar>
+		<jar destfile="${file.jdk1.2.nodep.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.2}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes.jdk1.2.cs}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes.jdk1.2.optional}">
+				<include name="**/*.class"/>
+			</fileset>
+		</jar>
+		<jar destfile="${file.jdk1.5.nodep.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.5}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes.jdk1.5.cs}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes.jdk1.5.optional}">
+				<include name="**/*.class"/>
+			</fileset>
+		</jar>
 	</target>
 	
 	<!-- Compile test -->
