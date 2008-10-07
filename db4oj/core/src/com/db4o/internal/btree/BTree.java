@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.defragment.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.mapping.*;
 import com.db4o.marshall.*;
 
 /**
