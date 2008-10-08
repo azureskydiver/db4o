@@ -255,7 +255,7 @@ public interface BaseConfiguration {
      * depending on which information do you want to track (server side provides more
      * detailed information).<br><br>  
      * @param level integer from 0 to 3
-     * @see #setOut
+     * @see #outStream
      * 
      * TODO: replace int with enumeration
      * 
@@ -330,7 +330,7 @@ public interface BaseConfiguration {
      * to understand, how db4o works. The message level can be raised with
      * {@link Configuration#messageLevel(int)}
      * to produce more detailed messages.
-     * <br><br>Use <code>setOut(System.out)</code> to print messages to the
+     * <br><br>Use <code>outStream(System.out)</code> to print messages to the
      * console.<br><br>
      * In client-server environment this setting should be used on the same side
      * where {@link Configuration#messageLevel(int)} is used.<br><br>
