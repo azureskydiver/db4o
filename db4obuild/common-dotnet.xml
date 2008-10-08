@@ -96,6 +96,7 @@
 				<arg value="/t:Rebuild" />
 				<arg value="/p:Configuration=${msbuild.target.configuration}" />
 				<arg value="/p:OutputPath=@{outputPath}" />
+				<arg value="/p:WarningLevel=1" />
 			</exec>
 		</sequential>
 	</macrodef>
