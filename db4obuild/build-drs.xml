@@ -39,6 +39,8 @@
 		<pathelement location="${drs.dir.dist.classes}" />
 		<pathelement location="${file.jdk1.5.jar}" />
 		<pathelement location="${file.db4ounit.jar}" />
+		<pathelement location="${file.jdk1.5.cs.jar}" />
+		<pathelement location="${file.jdk1.5.optional.jar}" />
 	</path>
 	
 	<target name="init" depends="properties">
