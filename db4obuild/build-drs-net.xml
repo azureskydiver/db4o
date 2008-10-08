@@ -194,6 +194,8 @@
 		
 		<jar destfile="${dependencies.jar}">
             <fileset dir="${dir.dist.classes.jdk1.5}" />
+            <fileset dir="${dir.dist.classes.jdk1.5.cs}" />
+            <fileset dir="${dir.dist.classes.jdk1.5.optional}" />
 			<fileset dir="${dir.dist.classes.db4ounit}" />
 		</jar>
         
