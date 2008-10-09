@@ -1117,8 +1117,8 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
 
     /**
-     * overridden in YapClient
-     * This method will make it easier to refactor than
+     * overridden in ClientObjectContainer
+     * The method allows checking whether will make it easier to refactor than
      * an "instanceof YapClient" check.
      */
     public boolean isClient() {

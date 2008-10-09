@@ -5,13 +5,12 @@ package com.db4o.db4ounit.jre12.collections;
 import java.util.*;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.collections.*;
 
 
 /**
  * @decaf.ignore.jdk11
  */
-public class MockPersistentList implements PersistentList{
+public class MockPersistentList implements List{
     
     private Vector _vector = new Vector();
 
@@ -69,8 +68,8 @@ public class MockPersistentList implements PersistentList{
         return _vector.isEmpty();
     }
 
-    public Iterator4 iterator() {
-        return new Collection4(_vector.toArray()).iterator();
+    public Iterator iterator() {
+        return _vector.iterator();
     }
 
     public int lastIndexOf(Object o) {
@@ -127,7 +126,7 @@ public class MockPersistentList implements PersistentList{
         return _vector.size();
     }
 
-    public PersistentList subList(int fromIndex, int toIndex) {
+    public List subList(int fromIndex, int toIndex) {
         throw new NotImplementedException();
     }
 
@@ -138,5 +137,40 @@ public class MockPersistentList implements PersistentList{
     public Object[] toArray(Object[] a) {
         return _vector.toArray(a);
     }
+
+	public boolean addAll(Collection c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean addAll(int index, Collection c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean containsAll(Collection c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public ListIterator listIterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ListIterator listIterator(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean removeAll(Collection c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean retainAll(Collection c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

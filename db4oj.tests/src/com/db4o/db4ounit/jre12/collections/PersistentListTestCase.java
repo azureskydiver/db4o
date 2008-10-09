@@ -4,8 +4,6 @@ package com.db4o.db4ounit.jre12.collections;
 
 import java.util.*;
 
-import com.db4o.internal.collections.*;
-
 import db4ounit.*;
 import db4ounit.extensions.*;
 
@@ -19,7 +17,7 @@ public class PersistentListTestCase extends AbstractDb4oTestCase {
         new PersistentListTestCase().runSolo();
     }
     
-    private final PersistentList[] lists = new PersistentList[]{
+    private final List[] lists = new List[]{
         new MockPersistentList(),
     };
     
@@ -33,7 +31,7 @@ public class PersistentListTestCase extends AbstractDb4oTestCase {
     
     public void testAdd(){
         for (int i = 0; i < lists.length; i++) {
-            PersistentList list = lists[i];
+            List list = lists[i];
             Vector data = testData();
             addData(list, data);
             assertAreEqual(data, list);
@@ -45,7 +43,7 @@ public class PersistentListTestCase extends AbstractDb4oTestCase {
 
     public void testClear(){
         for (int i = 0; i < lists.length; i++) {
-            PersistentList list = lists[i];
+            List list = lists[i];
             list.clear();
             Assert.areEqual(0, list.size());
             addData(list, testData());
@@ -56,7 +54,7 @@ public class PersistentListTestCase extends AbstractDb4oTestCase {
     
     public void testRemove(){
         for (int i = 0; i < lists.length; i++) {
-            PersistentList list = lists[i];
+            List list = lists[i];
             Vector data = testData();
             addData(list, data);
             
@@ -76,7 +74,7 @@ public class PersistentListTestCase extends AbstractDb4oTestCase {
     
     public void testSet(){
         for (int i = 0; i < lists.length; i++) {
-            PersistentList list = lists[i];
+            List list = lists[i];
             Vector data = testData();
             addData(list, data);
             
@@ -92,7 +90,7 @@ public class PersistentListTestCase extends AbstractDb4oTestCase {
     
     public void testAddAtIndex(){
         for (int i = 0; i < lists.length; i++) {
-            PersistentList list = lists[i];
+            List list = lists[i];
             Vector data = testData();
             addData(list, data);
             
@@ -108,7 +106,7 @@ public class PersistentListTestCase extends AbstractDb4oTestCase {
     
     public void testRemoveAtIndex(){
         for (int i = 0; i < lists.length; i++) {
-            PersistentList list = lists[i];
+            List list = lists[i];
             
             Vector data = testData();
             addData(list, data);
@@ -143,13 +141,13 @@ public class PersistentListTestCase extends AbstractDb4oTestCase {
         }
     }
     
-    private void addData(PersistentList list, Vector data) {
+    private void addData(List list, Vector data) {
         for (int j = 0; j < data.size(); j++) {
             list.add(data.get(j));
         }
     }
     
-    private void assertAreEqual(Vector vector, PersistentList list){
+    private void assertAreEqual(Vector vector, List list){
         Assert.areEqual(vector.size(), list.size());
         ArrayAssert.areEqual(vector.toArray(), list.toArray());
     }

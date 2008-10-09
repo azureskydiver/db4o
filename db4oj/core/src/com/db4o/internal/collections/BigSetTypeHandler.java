@@ -2,7 +2,6 @@
 
 package com.db4o.internal.collections;
 
-import com.db4o.collections.*;
 import com.db4o.defragment.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -16,6 +15,7 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  * @decaf.ignore
+ * @sharpen.ignore
  */
 public class BigSetTypeHandler implements TypeHandler4{
 
