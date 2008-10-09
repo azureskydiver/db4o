@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.collections.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
+import com.db4o.internal.collections.*;
 
 import db4ounit.*;
 

@@ -4,7 +4,6 @@ package com.db4o.internal;
 
 import java.net.*;
 
-import com.db4o.collections.*;
 import com.db4o.config.*;
 import com.db4o.config.annotations.reflect.*;
 import com.db4o.ext.*;

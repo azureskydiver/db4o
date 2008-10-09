@@ -462,5 +462,9 @@ public class EmbeddedClientObjectContainer implements InternalObjectContainer, T
         DatabaseClosedException {
         return _server.query(_transaction, predicate, new JdkComparatorWrapper(comparator)); 
     }
+    
+    public boolean isClient(){
+    	return true;
+    }
 
 }

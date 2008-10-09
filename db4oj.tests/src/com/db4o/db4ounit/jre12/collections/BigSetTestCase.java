@@ -59,18 +59,18 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	}
 	
 	public void testEmptySet(){
-		BigSet set = new BigSet(db());
+		Set set = newBigSet();
 		Assert.areEqual(0, set.size()); 
 	}
-	
+
 	public void testAddSize(){
-		BigSet set = new BigSet(db());
+		Set set = newBigSet();
 		set.add(ITEM_ONE);
 		Assert.areEqual(1, set.size());
 	}
 	
 	public void testSize(){
-		BigSet set = new BigSet(db());
+		Set set = newBigSet();
 		set.add(ITEM_ONE);
 		Assert.areEqual(1, set.size());
 		set.remove(ITEM_ONE);
@@ -84,14 +84,14 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	}
 	
 	public void testContains(){
-		BigSet set = new BigSet(db());
+		Set set = newBigSet();
 		set.add(ITEM_ONE);
 		Assert.isTrue(set.contains(ITEM_ONE));
 	}
 	
 	public void testPersistence() throws Exception{
 		Holder holder = new Holder();
-		holder._set = new BigSet(db());
+		holder._set = newBigSet();
 		Set set = holder._set;
 		set.add(ITEM_ONE);
 		store(holder);
@@ -113,14 +113,14 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	}
 	
 	public void testAddAllContainsAll(){
-		BigSet set = new BigSet(db());
+		Set set = newBigSet();
 		Collection collection = itemCollection();
 		set.addAll(collection);
 		Assert.isTrue(set.containsAll(collection));
 	}
 	
 	public void testRemove(){
-		BigSet set = new BigSet(db());
+		Set set = newBigSet();
 		Collection collection = itemCollection();
 		set.addAll(collection);
 		Object first = collection.iterator().next();
@@ -132,7 +132,7 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	}
 	
 	public void testRemoveAll(){
-		BigSet set = new BigSet(db());
+		Set set = newBigSet();
 		Collection collection = itemCollection();
 		set.addAll(collection);
 		Assert.isTrue(set.removeAll(collection));
@@ -141,7 +141,7 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	}
 	
 	public void testIsEmpty(){
-		BigSet set = new BigSet(db());
+		Set set = newBigSet();
 		Assert.isTrue(set.isEmpty());
 		set.add(ITEM_ONE);
 		Assert.isFalse(set.isEmpty());
@@ -150,7 +150,7 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	}
 	
 	public void testIterator(){
-		BigSet set = new BigSet(db());
+		Set set = newBigSet();
 		Collection collection = itemCollection();
 		set.addAll(collection);
 		
@@ -160,7 +160,7 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	}
 	
 	public void testDelete() throws Throwable{
-		final BigSet set = new BigSet(db());
+		final Set set = newBigSet();
 		set.add(ITEM_ONE);
 		db().store(set);
 		db().commit();
@@ -179,17 +179,17 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	}
 	
 	public void testDefragment() throws Exception{
-		BigSet set = new BigSet(db());
+		Set set = newBigSet();
 		set.add(ITEM_ONE);
 		db().store(set);
 		db().commit();
 		defragment();
-		set = (BigSet) retrieveOnlyInstance(BigSet.class);
+		set = (Set) retrieveOnlyInstance(BigSet.class);
 		assertSinglePersistentItem(set);
 	}
 	
 	public void testClear(){
-		BigSet set = new BigSet(db());
+		Set set = newBigSet();
 		set.add(ITEM_ONE);
 		set.clear();
 		Assert.areEqual(0, set.size());
@@ -204,17 +204,24 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	}
 	
 	public void testGetInternalImplementation() throws Exception{
-		BigSet set = new BigSet(db());
+		Set set = newBigSet();
 		BTree bTree = bTree(set);
 		Assert.isNotNull(bTree);
 	}
 	
-	public static BTree bTree(BigSet set) throws IllegalAccessException{
+	private Set newBigSet() {
+		return CollectionFactory.forObjectContainer(db()).newBigSet();
+	}
+
+	public static BTree bTree(Set set) throws IllegalAccessException{
 		return (BTree)Reflection4.getFieldValue(set, "_bTree");
 	}
 	
 	private LocalTransaction fileTransaction() {
 		return ((LocalTransaction)trans());
 	}
+	
+	
+
 
 }
