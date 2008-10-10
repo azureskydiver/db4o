@@ -181,7 +181,7 @@
 			<args>
 				<arg value="-cp" />
 				<arg value="${dependencies.jar}" />
-				<arg value="-srcfolder" />
+				<arg value="-srcFolder" />
 				<arg value="test" />
 				<arg value="@sharpen-dRS-options" />
 			</args>
