@@ -26,24 +26,23 @@
 	<property name="drs.dir.dist.api" value="${drs.dir.dist}/api" />
 	<property name="drs.dir.dist.temp" value="${drs.dir.dist}/tmp" />
 	
-	
-	<path id="class.path" description="universal classpath for all targets">
-		<fileset dir="${drs.dir.base}/lib">
-			<include name="*.jar" />
-		</fileset>
-		
-		<fileset dir="${drs.dir.dist.lib}">
-			<include name="*.jar" />
-		</fileset>
-		
-		<pathelement location="${drs.dir.dist.classes}" />
-		<pathelement location="${file.jdk1.5.jar}" />
-		<pathelement location="${file.db4ounit.jar}" />
-		<pathelement location="${file.jdk1.5.cs.jar}" />
-		<pathelement location="${file.jdk1.5.optional.jar}" />
-	</path>
-	
 	<target name="init" depends="properties">
+		<path id="class.path" description="universal classpath for all targets">
+			<fileset dir="${drs.dir.base}/lib">
+				<include name="*.jar" />
+			</fileset>
+			
+			<fileset dir="${drs.dir.dist.lib}">
+				<include name="*.jar" />
+			</fileset>
+			
+			<pathelement location="${drs.dir.dist.classes}" />
+			<pathelement location="${file.jdk1.5.jar}" />
+			<pathelement location="${file.db4ounit.jar}" />
+			<pathelement location="${file.jdk1.5.cs.jar}" />
+			<pathelement location="${file.jdk1.5.optional.jar}" />
+		</path>
+		
 		<property name="drs.file" value="dRS-${db4o.version.iteration.revision}-" />
 		<property name="filename.drs.core.jar" value="${drs.file}core.jar" />
 		<property name="filename.drs.test.jar" value="${drs.file}test.jar" />
@@ -72,7 +71,7 @@
 			<delete dir="${temp.dir}" />
 			<mkdir dir="${temp.dir}" />
 
-			<javac srcdir="@{srcdir}" destdir="${temp.dir}" target="1.5" source="1.5">
+			<javac srcdir="@{srcdir}" destdir="${temp.dir}" target="1.5" source="1.5" failonerror="true">
 				<classpath refid="@{classpathrefid}" />
 			</javac>
 			<copy todir="${temp.dir}">
@@ -165,7 +164,7 @@
 	</target>
 	
 	<target name="run-regression" depends="init">
-		<java fork="true" classname="com.db4o.drs.test.all.AllDrsTests">
+		<java fork="true" classname="com.db4o.drs.test.all.AllDrsTests" failonerror="true">
 			<classpath refid="class.path" />
 		</java>
 	</target>
