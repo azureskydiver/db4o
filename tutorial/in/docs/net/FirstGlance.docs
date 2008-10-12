@@ -8,8 +8,8 @@ This is all that you need to program against. The versions ._
 supplied with the distribution can be found in /db4o- .p version .. /bin/.
 
 db4o is available in multiple distributions for Microsoft .NET. ._
-One downloadable distribution is for the .NET Framework 1.0/1.1 ._
-and the other is for the .NET Framework 2.0. Be sure to download ._
+One downloadable distribution is for the .NET Framework 2.0 ._
+and the other is for the .NET Framework 3.5. Be sure to download ._
 and use the correct one for your project environment.
 
 .b /db4o- .p version .. /bin/net-2.0/Db4objects.Db4o.dll ..
