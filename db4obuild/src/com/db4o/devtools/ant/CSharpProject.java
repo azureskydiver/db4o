@@ -3,18 +3,13 @@ package com.db4o.devtools.ant;
 import java.io.*;
 
 import javax.xml.parsers.*;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+import javax.xml.xpath.*;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSSerializer;
+import org.w3c.dom.*;
+import org.w3c.dom.ls.*;
 import org.xml.sax.*;
+
+import sun.reflect.generics.reflectiveObjects.*;
 
 public abstract class CSharpProject {
 	
@@ -57,12 +52,16 @@ public abstract class CSharpProject {
 	}
 
 	public void addFile(String file) throws Exception {
-		if (null == _files) {
+		String relativePath = prepareFileNameForNode(file);
+		filesElement().appendChild(createFileNode(relativePath));
+	}
+
+	private Element filesElement() throws Exception {
+	    if (null == _files) {
 			_files = resetFilesContainerElement();
 		}
-		String relativePath = prepareFileNameForNode(file);
-		_files.appendChild(createFileNode(relativePath));
-	}
+	    return _files;
+    }
 
 	protected String prepareFileNameForNode(String file) {
 		return file.replace('/', '\\');
@@ -73,7 +72,18 @@ public abstract class CSharpProject {
 			addFile(files[i]);
 		}
 	}
-	
+
+	public void addResources(String[] resources) throws Exception {
+		for (int i = 0; i < resources.length; i++) {
+	        addResource(resources[i]);
+        }
+    }
+
+	private void addResource(String resource) throws Exception {
+		String relativePath = prepareFileNameForNode(resource);
+		filesElement().appendChild(createResourceNode(relativePath));
+    }
+
 	public void writeToFile(File file) throws IOException {
 		// write to temp file first to avoid problem with file
 		// being locked
@@ -109,6 +119,10 @@ public abstract class CSharpProject {
 	protected abstract Element resetFilesContainerElement() throws Exception;
 
 	protected abstract Node createFileNode(String file);
+	
+	protected Node createResourceNode(String resource) {
+		throw new UnsupportedOperationException();
+	}
 
 	public Element selectElement(String xpath) throws XPathExpressionException {
 		return (Element)newXPath().evaluate(xpath, _document, XPathConstants.NODE);

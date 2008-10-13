@@ -738,14 +738,22 @@
 		<fileset id="db4otool-tests.files" dir="${dir.n.admin}/Db4oTool.Tests">
 			<include name="**/*.cs" />
 			<exclude name="**/Resources/*.*" />
+			<exclude name="**/obj/**" />
+			<exclude name="**/bin/**" />
+		</fileset>
+		
+		<fileset id="db4otool-tests.resources" dir="${dir.n.admin}/Db4oTool.Tests">
+			<include name="**/Resources/*.*" />
 		</fileset>
 			
 		<updatecsharpproject projectfile="${dir.n.admin}/Db4oTool.Tests/Db4oTool.Tests-2005.csproj">
 			<sources refid="db4otool-tests.files" />
+			<resources refid="db4otool-tests.resources" />
 		</updatecsharpproject>
 		
 		<updatecsharpproject projectfile="${dir.n.admin}/Db4oTool.Tests/Db4oTool.Tests-2008.csproj">
 			<sources refid="db4otool-tests.files" />
+			<resources refid="db4otool-tests.resources" />
 		</updatecsharpproject>
 	</target>
 			

@@ -38,11 +38,20 @@ public class CSharp2005Project extends CSharpProject {
 
 	@Override
 	protected Node createFileNode(String file) {
-		Element node = createElement("Compile");
-		node.setAttribute("Include", file);
-		return node;
+		return createNode("Compile", file);
 	}
 
+	@Override
+	protected Node createResourceNode(String resource) {
+		return createNode("EmbeddedResource", resource);
+	}
+
+	private Node createNode(final String nodeName, String path) {
+	    Element node = createElement(nodeName);
+		node.setAttribute("Include", path);
+		return node;
+    }
+	
 	@Override
 	protected Element resetFilesContainerElement() throws Exception {
 		Element compile = selectElement("//*[local-name()='ItemGroup']/*[local-name()='Compile']");
