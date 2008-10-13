@@ -312,6 +312,9 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	@Override
 	public void endVisit(FieldAccess node) {
+		if (isLeftHandSideOfAssignment(node)) {
+			return;
+		}
 		final Expression erasure = rewrite().erasureForField(node, node.resolveFieldBinding());
 		if (null != erasure) {
 			rewrite().replace(node, erasure);
@@ -618,11 +621,19 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private void processNameErasure(Name node) {
+		if (isLeftHandSideOfAssignment(node)) {
+			return;
+		}
+		
 		final Expression erasure = rewrite().erasureForName(node);
 		if (null != erasure) {
 			rewrite().replace(node, erasure);
 		}
 	}	
+
+	private boolean isLeftHandSideOfAssignment(ASTNode node) {
+		return node.getLocationInParent() == Assignment.LEFT_HAND_SIDE_PROPERTY;
+    }
 
 	private ListRewrite getListRewrite(ASTNode node, ChildListPropertyDescriptor property) {
 		return rewrite().getListRewrite(node, property);
