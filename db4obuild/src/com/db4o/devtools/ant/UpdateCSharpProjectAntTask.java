@@ -13,7 +13,8 @@ import org.apache.tools.ant.types.FileSet;
 
 public class UpdateCSharpProjectAntTask extends Task {
 
-	private List<FileSet> _sources = new ArrayList<FileSet>();
+	private final List<FileSet> _sources = new ArrayList<FileSet>();
+	private final List<FileSet> _resources = new ArrayList<FileSet>();
 	private File _projectFile;
 	private URI _baseDir;
 	
@@ -23,6 +24,12 @@ public class UpdateCSharpProjectAntTask extends Task {
 	public FileSet createSources() {
 		FileSet set = new FileSet();
 		_sources.add(set);
+		return set;
+	}
+	
+	public FileSet createResources() {
+		FileSet set = new FileSet();
+		_resources.add(set);
 		return set;
 	}
 	
@@ -38,8 +45,10 @@ public class UpdateCSharpProjectAntTask extends Task {
 			CSharpProject project = CSharpProject.load(_projectFile);
 			
 			for (FileSet fs : _sources) {
-				DirectoryScanner scanner = fs.getDirectoryScanner(this.getProject());
-				project.addFiles(scanner.getIncludedFiles());
+				project.addFiles(includedFilesBy(fs));
+			}
+			for (FileSet fs : _resources) {
+				project.addResources(includedFilesBy(fs));
 			}
 			
 			log("writing '" + _projectFile + "'");
@@ -50,4 +59,10 @@ public class UpdateCSharpProjectAntTask extends Task {
 			throw new BuildException(x, getLocation());
 		}
 	}
+
+	private String[] includedFilesBy(FileSet fs) {
+	    final DirectoryScanner scanner = fs.getDirectoryScanner(this.getProject());
+	    final String[] files = scanner.getIncludedFiles();
+	    return files;
+    }
 }
