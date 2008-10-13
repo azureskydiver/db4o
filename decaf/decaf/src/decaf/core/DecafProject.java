@@ -152,10 +152,18 @@ public class DecafProject {
 	    	if (!referencedProject.hasNature(DecafNature.NATURE_ID)) {
 	    		return entry;
 	    	}
-	    	final OutputTarget target = DecafProject.create(JavaCore.create(referencedProject)).targetFor(platform);
+	    	final OutputTarget target = decafTargetFor(referencedProject, platform);
 			return JavaCore.newProjectEntry(target.targetProject().getPath());
 	    }
 	    return entry;
+    }
+
+	private static OutputTarget decafTargetFor(final IProject project, TargetPlatform platform) throws CoreException {
+	    return create(project).targetFor(platform);
+    }
+
+	private static DecafProject create(final IProject project) throws CoreException {
+	    return DecafProject.create(JavaCore.create(project));
     }
 	
 	private OutputTarget targetFor(TargetPlatform platform) throws CoreException {
