@@ -127,26 +127,46 @@ public class DecafProject {
 		WorkspaceUtilities.addProjectNature(decafProject, JavaCore.NATURE_ID);
 		
 		IJavaProject decafJavaProject = JavaCore.create(decafProject);
-		decafJavaProject.setRawClasspath(mapClasspathEntries(_project, decafJavaProject), null);
+		decafJavaProject.setRawClasspath(mapClasspathEntries(_project, decafJavaProject, platform), null);
 		return decafJavaProject;
 	}
 	
 	private static IClasspathEntry[] mapClasspathEntries(IJavaProject javaProject,
-			IJavaProject decafJavaProject) throws JavaModelException,
+			IJavaProject decafJavaProject, TargetPlatform platform) throws JavaModelException,
 			CoreException {
 		IClasspathEntry[] srcClasspath = javaProject.getRawClasspath();
 		IClasspathEntry[] targetClasspath = new IClasspathEntry[srcClasspath.length];
 		for (int i=0; i<srcClasspath.length; ++i) {
-			IClasspathEntry entry = srcClasspath[i];
-			if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-				targetClasspath[i] = createSourceFolder(decafJavaProject, entry.getPath());
-			} else {
-				targetClasspath[i] = entry;
-			}
+			targetClasspath[i] = mapClasspathEntryFor(decafJavaProject, srcClasspath[i], platform);
 		}
 		return targetClasspath;
 	}
+
+	private static IClasspathEntry mapClasspathEntryFor(IJavaProject decafJavaProject, final IClasspathEntry entry, TargetPlatform platform)
+            throws CoreException {
+	    if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+	    	return createSourceFolder(decafJavaProject, entry.getPath());
+	    }
+	    if (entry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
+	    	final IProject referencedProject = WorkspaceUtilities.getProject(entry.getPath().lastSegment());
+	    	if (!referencedProject.hasNature(DecafNature.NATURE_ID)) {
+	    		return entry;
+	    	}
+	    	final OutputTarget target = DecafProject.create(JavaCore.create(referencedProject)).targetFor(platform);
+			return JavaCore.newProjectEntry(target.targetProject().getPath());
+	    }
+	    return entry;
+    }
 	
+	private OutputTarget targetFor(TargetPlatform platform) throws CoreException {
+		for (OutputTarget target : targets()) {
+	        if (target.targetPlatform() == platform) {
+	        	return target;
+	        }
+        }
+		return null;
+    }
+
 	private static IClasspathEntry createSourceFolder(IJavaProject decafJavaProject,
 			IPath path) throws CoreException {
 		
