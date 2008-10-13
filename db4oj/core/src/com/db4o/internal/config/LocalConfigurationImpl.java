@@ -18,14 +18,6 @@ public class LocalConfigurationImpl implements LocalConfiguration {
 		_config = config;
 	}
 
-	public void addAlias(Alias alias) {
-		_config.addAlias(alias);
-	}
-
-	public void removeAlias(Alias alias) {
-		_config.removeAlias(alias);
-	}
-
 	public void blockSize(int bytes) {
 		_config.blockSize(bytes);
 	}

@@ -41,6 +41,15 @@ public class BaseAndLocalConfigurationTestSuite extends FixtureBasedTestSuite {
 				}
 			});
 			
+			final TypeAlias alias = new TypeAlias("foo", "bar");
+			base.addAlias(alias);
+			Assert.areEqual("bar", legacy.resolveAliasStoredName("foo"));
+			Assert.areEqual("foo", legacy.resolveAliasRuntimeName("bar"));
+			
+			base.removeAlias(alias);
+			Assert.areEqual("foo", legacy.resolveAliasStoredName("foo"));
+
+			
 			base.allowVersionUpdates(false);
 			Assert.isFalse(legacy.allowVersionUpdates());
 			
@@ -156,14 +165,6 @@ public class BaseAndLocalConfigurationTestSuite extends FixtureBasedTestSuite {
 			final LocalConfigurationProvider config = subject();
 			final LocalConfiguration local = config.local();
 			final Config4Impl legacy = legacyFrom(config);
-			
-			final TypeAlias alias = new TypeAlias("foo", "bar");
-			local.addAlias(alias);
-			Assert.areEqual("bar", legacy.resolveAliasStoredName("foo"));
-			Assert.areEqual("foo", legacy.resolveAliasRuntimeName("bar"));
-			
-			local.removeAlias(alias);
-			Assert.areEqual("foo", legacy.resolveAliasStoredName("foo"));
 			
 			local.blockSize(42);
 			Assert.areEqual(42, legacy.blockSize());

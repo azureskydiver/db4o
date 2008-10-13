@@ -30,6 +30,14 @@ public class BaseConfigurationImpl implements BaseConfiguration {
 	public void add(ConfigurationItem configurationItem) {
 		_config.add(configurationItem);
 	}
+	
+	public void addAlias(Alias alias) {
+		_config.addAlias(alias);
+	}
+
+	public void removeAlias(Alias alias) {
+		_config.removeAlias(alias);
+	}
 
 	public void allowVersionUpdates(boolean flag) {
 		_config.allowVersionUpdates(flag);
