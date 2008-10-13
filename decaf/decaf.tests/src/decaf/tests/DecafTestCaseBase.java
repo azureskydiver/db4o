@@ -140,8 +140,13 @@ public abstract class DecafTestCaseBase extends TestCase {
 	}
 	
 	protected ICompilationUnit createCompilationUnit(DecafTestResource resource) throws CoreException, IOException {
-		return createCompilationUnit(resource.packageName(), resource.javaFileName(), resource.actualStringContents());
+		return createCompilationUnitIn(_project, resource);
 	}
+
+	protected ICompilationUnit createCompilationUnitIn(final JavaProject targetProject, DecafTestResource resource)
+            throws CoreException, IOException {
+	    return targetProject.createCompilationUnit(resource.packageName(), resource.javaFileName(), resource.actualStringContents());
+    }
 	
 	protected ICompilationUnit createCompilationUnit(IPackageFragmentRoot sourceFolder, DecafTestResource resource) throws CoreException, IOException {
 		return _project.createCompilationUnit(sourceFolder, resource.packageName(), resource.javaFileName(), resource.actualStringContents());
