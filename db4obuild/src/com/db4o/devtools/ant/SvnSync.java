@@ -76,7 +76,8 @@ public class SvnSync extends Task {
 		}
 	}
 
-	private void addNewFilesToWorkingCopy(FolderDiff diff, SVNWCClient workingCopyClient) throws SVNException, IOException {
+	@SuppressWarnings("deprecation")
+    private void addNewFilesToWorkingCopy(FolderDiff diff, SVNWCClient workingCopyClient) throws SVNException, IOException {
 		for (String toBeAdded : diff.newFiles()) {
 			String newFileInRepository = diff.sourceFolder() + toBeAdded;
 			String sourceFile = diff.compareToFolder() + toBeAdded;

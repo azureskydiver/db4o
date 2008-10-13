@@ -9,8 +9,6 @@ import org.w3c.dom.*;
 import org.w3c.dom.ls.*;
 import org.xml.sax.*;
 
-import sun.reflect.generics.reflectiveObjects.*;
-
 public abstract class CSharpProject {
 	
 	/**
