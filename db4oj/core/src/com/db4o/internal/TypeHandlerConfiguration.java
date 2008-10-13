@@ -44,14 +44,14 @@ public abstract class TypeHandlerConfiguration {
     }
     
     private void registerListTypeHandlerFor(Class clazz){
-        registerTypeHandlerFor(_listTypeHandler, clazz);
+        registerTypeHandlerFor(clazz, _listTypeHandler);
     }
     
     private void registerMapTypeHandlerFor(Class clazz){
-        registerTypeHandlerFor(_mapTypeHandler, clazz);
+        registerTypeHandlerFor(clazz, _mapTypeHandler);
     }
     
-    private void registerTypeHandlerFor(TypeHandler4 typeHandler, Class clazz){
+    protected void registerTypeHandlerFor(Class clazz, TypeHandler4 typeHandler){
         _config.registerTypeHandler(new SingleClassTypeHandlerPredicate(clazz), typeHandler);
     }
 

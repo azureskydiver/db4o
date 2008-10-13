@@ -15,7 +15,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 /**
- * @decaf.ignore
+ * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
 public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{

@@ -13,8 +13,8 @@ import com.db4o.marshall.*;
 
 /**
  * @exclude
- * @decaf.ignore
  * @sharpen.ignore
+ * @decaf.ignore.jdk11
  */
 public class BigSet<E> implements Set<E> {
 	
@@ -22,11 +22,11 @@ public class BigSet<E> implements Set<E> {
 	
 	private Transaction _transaction;
 
-	public BigSet(ObjectContainer db) {
+	public BigSet(LocalObjectContainer db) {
 		if(db == null){
 			return;
 		}
-		_transaction = ((LocalObjectContainer)db).transaction();
+		_transaction = db.transaction();
 		_bTree = newBTree(0);
 	}
 

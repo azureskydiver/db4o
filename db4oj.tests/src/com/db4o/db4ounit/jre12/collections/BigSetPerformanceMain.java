@@ -89,7 +89,7 @@ public class BigSetPerformanceMain implements TestLifeCycle{
 	
 	private Set timeBigSetCreation() {
 		long start = System.currentTimeMillis();
-		Set set = new BigSet(_container);
+		Set set = newBigSet();
 		for (int i = 0; i < COUNT; i++) {
 			set.add(new Item(i));
 		}
@@ -100,6 +100,10 @@ public class BigSetPerformanceMain implements TestLifeCycle{
 		System.out.println("Big Set creation: " + duration + "ms" );
 		return set;
 	}
+
+	private Set newBigSet() {
+	    return CollectionFactory.forObjectContainer(_container).newBigSet();
+    }
 	
 	private void timeBigSetSingleAdd(Set set) {
 		long start = System.currentTimeMillis();

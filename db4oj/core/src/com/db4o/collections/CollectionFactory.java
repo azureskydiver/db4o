@@ -14,7 +14,7 @@ import com.db4o.internal.collections.*;
  * Example usage:<br>
  * <code>CollectionFactory.forObjectContainer(objectContainer).newBigSet();<code>
  *
- * @decaf.ignore
+ * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
 public class CollectionFactory {
@@ -47,11 +47,9 @@ public class CollectionFactory {
 	 * BigSet is recommend whenever one object references a huge number of other objects and sorting is not required.
 	 * @param <E>
 	 * @return
-	 * @decaf.ignore
-	 * @sharpen.remove
 	 */
 	public <E> Set<E> newBigSet(){
-		return new BigSet<E>(_objectContainer);
+		return new BigSet<E>((LocalObjectContainer) _objectContainer);
 	}
 	
 	private static boolean isClient(ObjectContainer oc){
