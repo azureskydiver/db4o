@@ -14,7 +14,7 @@ import com.db4o.typehandlers.*;
 
 /**
  * @exclude
- * @decaf.ignore
+ * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
 public class BigSetTypeHandler implements TypeHandler4{

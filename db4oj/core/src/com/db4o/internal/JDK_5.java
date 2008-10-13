@@ -7,10 +7,8 @@ import java.net.*;
 import com.db4o.config.*;
 import com.db4o.config.annotations.reflect.*;
 import com.db4o.ext.*;
-import com.db4o.internal.collections.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.jdk.*;
-import com.db4o.typehandlers.*;
 
 /**
  * @decaf.ignore
@@ -74,13 +72,4 @@ class JDK_5 extends JDK_1_4 {
 	public int ver() {
 	    return 5;
 	}
-	
-    public void extendConfiguration(Config4Impl config) {
-    	super.extendConfiguration(config);
-    	// FIXME: This code should go to TypeHandlerConfigurationJDK_1_2
-    	// as soon as Decaf can deal with BigSet correctly.
-        config.registerTypeHandler(new SingleClassTypeHandlerPredicate(BigSet.class), new BigSetTypeHandler());
-    }
-
-	
 }
