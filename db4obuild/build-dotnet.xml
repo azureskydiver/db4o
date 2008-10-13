@@ -471,7 +471,8 @@
 	    prepare-csproject-db4ounit, 
 	    prepare-csproject-db4ounit-extensions,
 		prepare-csproject-db4obench,
-	    prepare-csproject-tests"
+	    prepare-csproject-tests,
+		prepare-csproject-tools"
 		unless="skip.sharpen">
 		
 		<updateAssemblyInfo version="${assembly.version}">
@@ -720,38 +721,38 @@
 	</target>
 
 	
-	<target name="update-admin-projects">
-		<property name="dir.n.admin" location="${dir.n.v6}/Db4oTool" />
+	<target name="prepare-csproject-tools">
+		<property name="dir.n.tools" location="${dir.n.v6}/Db4oTool" />
 		
-		<fileset id="db4otool.files" dir="${dir.n.admin}/Db4oTool">
+		<fileset id="db4otool.files" dir="${dir.n.tools}/Db4oTool">
 			<include name="**/*.cs" />
 		</fileset>
 
-		<updatecsharpproject projectfile="${dir.n.admin}/Db4oTool/Db4oTool-2005.csproj">
+		<updatecsharpproject projectfile="${dir.n.tools}/Db4oTool/Db4oTool-2005.csproj">
 			<sources refid="db4otool.files" />
 		</updatecsharpproject>			
 		
-		<updatecsharpproject projectfile="${dir.n.admin}/Db4oTool/Db4oTool-2008.csproj">
+		<updatecsharpproject projectfile="${dir.n.tools}/Db4oTool/Db4oTool-2008.csproj">
 			<sources refid="db4otool.files" />
 		</updatecsharpproject>
 				
-		<fileset id="db4otool-tests.files" dir="${dir.n.admin}/Db4oTool.Tests">
+		<fileset id="db4otool-tests.files" dir="${dir.n.tools}/Db4oTool.Tests">
 			<include name="**/*.cs" />
 			<exclude name="**/Resources/*.*" />
 			<exclude name="**/obj/**" />
 			<exclude name="**/bin/**" />
 		</fileset>
 		
-		<fileset id="db4otool-tests.resources" dir="${dir.n.admin}/Db4oTool.Tests">
+		<fileset id="db4otool-tests.resources" dir="${dir.n.tools}/Db4oTool.Tests">
 			<include name="**/Resources/*.*" />
 		</fileset>
 			
-		<updatecsharpproject projectfile="${dir.n.admin}/Db4oTool.Tests/Db4oTool.Tests-2005.csproj">
+		<updatecsharpproject projectfile="${dir.n.tools}/Db4oTool.Tests/Db4oTool.Tests-2005.csproj">
 			<sources refid="db4otool-tests.files" />
 			<resources refid="db4otool-tests.resources" />
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectfile="${dir.n.admin}/Db4oTool.Tests/Db4oTool.Tests-2008.csproj">
+		<updatecsharpproject projectfile="${dir.n.tools}/Db4oTool.Tests/Db4oTool.Tests-2008.csproj">
 			<sources refid="db4otool-tests.files" />
 			<resources refid="db4otool-tests.resources" />
 		</updatecsharpproject>
