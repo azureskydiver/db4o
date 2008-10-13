@@ -7,6 +7,22 @@ class Foo<T> {
 	public Foo(T value) {
 		field = value;
 	}
+	
+}
+
+class Foo2<T extends CharSequence> extends Foo<T> {
+
+	public Foo2(T value) {
+		super(value);
+	}
+
+	public void set(int index, T value) {
+		array[index] = value;
+	}
+	
+	public void set(T value) {
+		field = value;
+	}
 }
 
 class Bar extends Foo<String> {
@@ -27,5 +43,8 @@ class Main {
 		String s2 = foo.field.toUpperCase();
 		String s3 = (foo).field;
 		String s4 = foo.array[0];
+		foo.field = s1;
+		(foo).field = s2;
+		foo.array[0] = s3;
 	}
 }
