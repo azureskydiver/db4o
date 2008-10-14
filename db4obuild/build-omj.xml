@@ -63,6 +63,7 @@
 					</fileset>
 					
 					<pathelement location="${file.db4o.jar}" />
+					<pathelement location="${file.db4o.optional.jar}" />
 
 					<additionalclasspath />
 				</classpath>
@@ -104,6 +105,7 @@
 					<exclude name="lib/**/db4o-*-java5.jar" />
 				</fileset>
 				<fileset file="${file.db4o.jar}" />
+				<fileset file="${file.db4o.optional.jar}" />
 			</additionaljarcontent>
 		</build-plugin>
 		<build-plugin name="com.db4o.ome.help" basedir="${dir.project.ome.help}">
@@ -142,6 +144,7 @@
 
 		<property name="filename.db4o.jar" value="${filename.jdk1.5.jar}" />
 		<property name="file.db4o.jar" value="${file.jdk1.5.jar}" />
+		<property name="file.db4o.optional.jar" value="${file.jdk1.5.optional.jar}" />
 
 		<filterset id="filterset.ome">
 			<filter token="OMEJ_VERSION" value="${omej.version}" />
