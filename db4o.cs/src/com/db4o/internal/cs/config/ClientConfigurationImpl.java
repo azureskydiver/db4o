@@ -30,7 +30,7 @@ public class ClientConfigurationImpl extends NetworkingConfigurationProviderImpl
 		throw new NotImplementedException();
 	}
 
-	public BaseConfiguration base() {
-		return new BaseConfigurationImpl(legacy());
+	public CommonConfiguration common() {
+		return new CommonConfigurationImpl(legacy());
 	}
 }

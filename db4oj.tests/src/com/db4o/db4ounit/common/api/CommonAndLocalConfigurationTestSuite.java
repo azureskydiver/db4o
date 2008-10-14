@@ -16,7 +16,7 @@ import com.db4o.io.*;
 import db4ounit.*;
 import db4ounit.fixtures.*;
 
-public class BaseAndLocalConfigurationTestSuite extends FixtureBasedTestSuite {
+public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite {
 	
 	public static class BaseConfigurationProviderTestUnit implements TestCase {
 		public static final class Item {
@@ -24,16 +24,16 @@ public class BaseAndLocalConfigurationTestSuite extends FixtureBasedTestSuite {
 		}
 		
 		public void test() {
-			final BaseConfigurationProvider config = subject();
+			final CommonConfigurationProvider config = subject();
 			final Config4Impl legacy = legacyFrom(config);
 			
-			final BaseConfiguration base = config.base();
-			base.activationDepth(42);		
+			final CommonConfiguration common = config.common();
+			common.activationDepth(42);		
 			Assert.areEqual(42, legacy.activationDepth());
-			Assert.areEqual(42, base.activationDepth());
+			Assert.areEqual(42, common.activationDepth());
 
 			// TODO: assert
-			base.add(new ConfigurationItem() {
+			common.add(new ConfigurationItem() {
 				public void apply(InternalObjectContainer container) {
 				}
 
@@ -42,60 +42,60 @@ public class BaseAndLocalConfigurationTestSuite extends FixtureBasedTestSuite {
 			});
 			
 			final TypeAlias alias = new TypeAlias("foo", "bar");
-			base.addAlias(alias);
+			common.addAlias(alias);
 			Assert.areEqual("bar", legacy.resolveAliasStoredName("foo"));
 			Assert.areEqual("foo", legacy.resolveAliasRuntimeName("bar"));
 			
-			base.removeAlias(alias);
+			common.removeAlias(alias);
 			Assert.areEqual("foo", legacy.resolveAliasStoredName("foo"));
 
 			
-			base.allowVersionUpdates(false);
+			common.allowVersionUpdates(false);
 			Assert.isFalse(legacy.allowVersionUpdates());
 			
-			base.automaticShutDown(false);
+			common.automaticShutDown(false);
 			Assert.isFalse(legacy.automaticShutDown());
 			
-			base.bTreeNodeSize(42);
+			common.bTreeNodeSize(42);
 			Assert.areEqual(42, legacy.bTreeNodeSize());
 			
-			base.callbacks(false);
+			common.callbacks(false);
 			Assert.isFalse(legacy.callbacks());
 			
-			base.callConstructors(false);
+			common.callConstructors(false);
 			Assert.isTrue(legacy.callConstructors().definiteNo());
 			
-			base.detectSchemaChanges(false);
+			common.detectSchemaChanges(false);
 			Assert.isFalse(legacy.detectSchemaChanges());
 			
 			final DiagnosticCollector collector = new DiagnosticCollector();
-			base.diagnostic().addListener(collector);
+			common.diagnostic().addListener(collector);
 			final Diagnostic diagnostic = dummyDiagnostic();
 			legacy.diagnosticProcessor().onDiagnostic(diagnostic);
 			collector.verify(diagnostic);
 
-			base.exceptionsOnNotStorable(true);
+			common.exceptionsOnNotStorable(true);
 			Assert.isTrue(legacy.exceptionsOnNotStorable());
 			
-			base.internStrings(true);
+			common.internStrings(true);
 			Assert.isTrue(legacy.internStrings());
 
 			// TODO: assert
-			base.markTransient("Foo");
+			common.markTransient("Foo");
 			
-			base.messageLevel(3);
+			common.messageLevel(3);
 			Assert.areEqual(3, legacy.messageLevel());
 			
-			ObjectClass objectClass = base.objectClass(Item.class);
+			ObjectClass objectClass = common.objectClass(Item.class);
 			objectClass.cascadeOnDelete(true);
 			Assert.isTrue(((Config4Class)legacy.objectClass(Item.class)).cascadeOnDelete().definiteYes());
-			Assert.isTrue(((Config4Class)base.objectClass(Item.class)).cascadeOnDelete().definiteYes());
+			Assert.isTrue(((Config4Class)common.objectClass(Item.class)).cascadeOnDelete().definiteYes());
 			
-			base.optimizeNativeQueries(false);
+			common.optimizeNativeQueries(false);
 			Assert.isFalse(legacy.optimizeNativeQueries());
-			Assert.isFalse(base.optimizeNativeQueries());
+			Assert.isFalse(common.optimizeNativeQueries());
 			
-			base.queries().evaluationMode(QueryEvaluationMode.LAZY);
+			common.queries().evaluationMode(QueryEvaluationMode.LAZY);
 			Assert.areEqual(QueryEvaluationMode.LAZY, legacy.queryEvaluationMode());
 			
 			// TODO: test reflectWith()
@@ -104,7 +104,7 @@ public class BaseAndLocalConfigurationTestSuite extends FixtureBasedTestSuite {
 			
 			// TODO: this probably won't sharpen :/
 			PrintStream outStream = System.out;
-			base.outStream(outStream);
+			common.outStream(outStream);
 			Assert.areEqual(outStream, legacy.outStream());
 
 			StringEncoding stringEncoding = new StringEncoding() {
@@ -116,21 +116,21 @@ public class BaseAndLocalConfigurationTestSuite extends FixtureBasedTestSuite {
 					return null;
 				}			
 			};
-			base.stringEncoding(stringEncoding);
+			common.stringEncoding(stringEncoding);
 			Assert.areEqual(stringEncoding, legacy.stringEncoding());
 			
-			base.testConstructors(false);
+			common.testConstructors(false);
 			Assert.isFalse(legacy.testConstructors());
-			base.testConstructors(true);
+			common.testConstructors(true);
 			Assert.isTrue(legacy.testConstructors());
 			
-			base.updateDepth(1024);
+			common.updateDepth(1024);
 			Assert.areEqual(1024, legacy.updateDepth());
 			
-			base.weakReferences(false);
+			common.weakReferences(false);
 			Assert.isFalse(legacy.weakReferences());
 			
-			base.weakReferenceCollectionInterval(1024);
+			common.weakReferenceCollectionInterval(1024);
 			Assert.areEqual(1024, legacy.weakReferenceCollectionInterval());
 			
 			// TODO: test registerTypeHandler()
@@ -162,44 +162,44 @@ public class BaseAndLocalConfigurationTestSuite extends FixtureBasedTestSuite {
 				return;
 			}
 			
-			final LocalConfigurationProvider config = subject();
-			final LocalConfiguration local = config.local();
-			final Config4Impl legacy = legacyFrom(config);
+			final FileConfigurationProvider config = subject();
+			final FileConfiguration fileConfig = config.file();
+			final Config4Impl legacyConfig = legacyFrom(config);
 			
-			local.blockSize(42);
-			Assert.areEqual(42, legacy.blockSize());
+			fileConfig.blockSize(42);
+			Assert.areEqual(42, legacyConfig.blockSize());
 			
-			local.databaseGrowthSize(42);
-			Assert.areEqual(42, legacy.databaseGrowthSize());
+			fileConfig.databaseGrowthSize(42);
+			Assert.areEqual(42, legacyConfig.databaseGrowthSize());
 			
-			local.disableCommitRecovery();
-			Assert.isTrue(legacy.commitRecoveryDisabled());
+			fileConfig.disableCommitRecovery();
+			Assert.isTrue(legacyConfig.commitRecoveryDisabled());
 			
-			local.freespace().discardSmallerThan(8);
-			Assert.areEqual(8, legacy.discardFreeSpace());
+			fileConfig.freespace().discardSmallerThan(8);
+			Assert.areEqual(8, legacyConfig.discardFreeSpace());
 			
-			local.generateUUIDs(ConfigScope.GLOBALLY);
-			Assert.areEqual(ConfigScope.GLOBALLY, legacy.generateUUIDs());
+			fileConfig.generateUUIDs(ConfigScope.GLOBALLY);
+			Assert.areEqual(ConfigScope.GLOBALLY, legacyConfig.generateUUIDs());
 
-			local.generateVersionNumbers(ConfigScope.GLOBALLY);
-			Assert.areEqual(ConfigScope.GLOBALLY, legacy.generateVersionNumbers());
+			fileConfig.generateVersionNumbers(ConfigScope.GLOBALLY);
+			Assert.areEqual(ConfigScope.GLOBALLY, legacyConfig.generateVersionNumbers());
 			
 			MemoryIoAdapter ioAdapter = new MemoryIoAdapter();
-			local.io(ioAdapter);
-			Assert.areEqual(ioAdapter, legacy.io());
-			Assert.areEqual(ioAdapter, local.io());
+			fileConfig.io(ioAdapter);
+			Assert.areEqual(ioAdapter, legacyConfig.io());
+			Assert.areEqual(ioAdapter, fileConfig.io());
 			
-			local.lockDatabaseFile(true);
-			Assert.isTrue(legacy.lockFile());
+			fileConfig.lockDatabaseFile(true);
+			Assert.isTrue(legacyConfig.lockFile());
 			
-			local.reserveStorageSpace(1024);
-			Assert.areEqual(1024, legacy.reservedStorageSpace());
+			fileConfig.reserveStorageSpace(1024);
+			Assert.areEqual(1024, legacyConfig.reservedStorageSpace());
 			
-			local.blobPath(Path4.getTempPath());
-			Assert.areEqual(Path4.getTempPath(), legacy.blobPath());
+			fileConfig.blobPath(Path4.getTempPath());
+			Assert.areEqual(Path4.getTempPath(), legacyConfig.blobPath());
 			
-			local.readOnly(true);
-			Assert.isTrue(legacy.isReadOnly());
+			fileConfig.readOnly(true);
+			Assert.isTrue(legacyConfig.isReadOnly());
 			
 		}
 		

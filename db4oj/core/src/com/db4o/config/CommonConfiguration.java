@@ -10,9 +10,13 @@ import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
 /**
+ * Common configuration methods, applicable for
+ * embedded, client and server use of db4o.<br><br>
+ * In Client/Server use it is good practice to configure the
+ * client and the server in exactly the same way. 
  * @since 7.5
  */
-public interface BaseConfiguration {
+public interface CommonConfiguration {
 
 	
 	/**

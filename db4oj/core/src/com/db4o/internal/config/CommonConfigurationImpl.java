@@ -11,11 +11,11 @@ import com.db4o.internal.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
-public class BaseConfigurationImpl implements BaseConfiguration {
+public class CommonConfigurationImpl implements CommonConfiguration {
 
 	private final Config4Impl _config;
 
-	public BaseConfigurationImpl(Config4Impl config) {
+	public CommonConfigurationImpl(Config4Impl config) {
 		_config = config;
 	}
 

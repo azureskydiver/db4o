@@ -6,9 +6,10 @@ import com.db4o.config.*;
 import com.db4o.messaging.*;
 
 /**
+ * Configuration interface for db4o clients.
  * @since 7.5
  */
-public interface ClientConfiguration extends NetworkingConfigurationProvider, BaseConfigurationProvider {
+public interface ClientConfiguration extends NetworkingConfigurationProvider, CommonConfigurationProvider {
 	
 	/**
 	 * Sets the number of IDs to be pre-allocated in the database for new 

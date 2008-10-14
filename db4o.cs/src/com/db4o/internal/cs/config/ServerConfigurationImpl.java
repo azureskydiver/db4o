@@ -20,11 +20,11 @@ public class ServerConfigurationImpl extends NetworkingConfigurationProviderImpl
 		throw new NotImplementedException();
 	}
 
-	public LocalConfiguration local() {
-		return new LocalConfigurationImpl(legacy());
+	public FileConfiguration file() {
+		return new FileConfigurationImpl(legacy());
 	}
 
-	public BaseConfiguration base() {
-		return new BaseConfigurationImpl(legacy());
+	public CommonConfiguration common() {
+		return new CommonConfigurationImpl(legacy());
 	}
 }
