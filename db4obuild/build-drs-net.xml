@@ -68,46 +68,7 @@
     </target>
     
     <target name="build" depends="init, prepare-dotnet-solution">
-    	<copy todir="${drs.net.bin.dir}" >
-    		<fileset dir="${dir.dist.dll.net}">
-    			<include name="Db4objects.Db4o.dll" />
-    			<include name="Db4oUnit.dll" />
-        	</fileset>
-    	</copy>
-    	
-    	<csc destfile="${drs.net.dir}/bin/Db4objects.Drs.dll"
-    		targettype="library"
-    		srcdir="${drs.net.src.dir}/Db4objects.Drs"
-    		docfile="${drs.net.bin.dir}/Db4objects.Drs.xml"
-    		executable="${csc.executable.path.net2}/csc.exe"
-    		>
-			<reference dir="${drs.net.bin.dir}">
-				<include name="Db4objects.Db4o.dll" />
-			</reference>
-    	</csc>
-    	
-    	<csc destfile="${drs.net.dir}/bin/Db4objects.Drs.Tests.exe"
-    		targettype="exe"
-    		mainclass="Db4objects.Drs.Tests.Db4oTests"
-    		srcdir="${drs.net.src.dir}/Db4objects.Drs.Tests"
-    		executable="${csc.executable.path.net2}/csc.exe">
-			<reference dir="${drs.net.bin.dir}">
-				<include name="Db4objects.Db4o.dll" />
-				<include name="Db4oUnit.dll" />
-				<include name="Db4objects.Drs.dll" />
-			</reference>
-    	</csc>
-    	
-    	<csc destfile="${drs.net.dir}/bin/QuickStart.exe"
-    		targettype="exe"
-    		mainclass="Db4objects.Drs.Quickstart.Simple.Simple"
-    		srcdir="${drs.net.src.dir}/QuickStart"
-    		executable="${csc.executable.path.net2}/csc.exe">
-			<reference dir="${drs.net.bin.dir}">
-				<include name="Db4objects.Db4o.dll" />
-				<include name="Db4objects.Drs.dll" />
-			</reference>
-    	</csc>
+    	<msbuild outputpath="${drs.net.bin.dir}" solutionfile="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs-2005.sln" />
     </target>
     
     <target name="prepare-dotnet-solution" depends="sharpen-drs, get-svn-revision">
@@ -116,7 +77,7 @@
     		
         <!-- .NET: drs -->
 		<copy todir="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs">
-			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src/Db4objects/Drs">
+			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/core/Db4objects/Drs">
 				<include name="**/*.cs" />
 				<exclude name="Foundation/*.cs" />
 				<exclude name="Inside/ReplicationPlatform.cs" />
@@ -134,7 +95,7 @@
     		<include name="**/*.cs" />
     	</fileset>
     	
-        <updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs.csproj">
+        <updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs-2005.csproj">
         	<sources refid="drs.sources" />	
         </updatecsharpproject>
     	
@@ -146,7 +107,7 @@
         <!--.NET: drs.tests -->
     	<reset-src-dir dir="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests" />
         <copy todir="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests">
-			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src/Db4objects/Drs/Tests">
+			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/test/Db4objects/Drs/Tests">
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
@@ -160,9 +121,11 @@
     	<fileset id="drs.tests.sources" dir="${drs.net.src.dir}/Db4objects.Drs.Tests">
     		<include name="**/*.cs" />
     	</fileset>
-        <updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests.csproj">
+    	
+        <updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests-2005.csproj">
         	<sources refid="drs.tests.sources" />
         </updatecsharpproject>
+    	
     	<updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests-2008.csproj">
         	<sources refid="drs.tests.sources" />
         </updatecsharpproject>
