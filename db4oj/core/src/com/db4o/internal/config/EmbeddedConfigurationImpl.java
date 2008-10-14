@@ -11,12 +11,12 @@ public class EmbeddedConfigurationImpl implements EmbeddedConfiguration, LegacyC
 		_legacy = (Config4Impl) legacy;
     }
 
-	public LocalConfiguration local() {
-		return new LocalConfigurationImpl(_legacy);
+	public FileConfiguration file() {
+		return new FileConfigurationImpl(_legacy);
 	}
 
-	public BaseConfiguration base() {
-		return new BaseConfigurationImpl(_legacy);
+	public CommonConfiguration common() {
+		return new CommonConfigurationImpl(_legacy);
 	}
 
 	public Config4Impl legacy() {

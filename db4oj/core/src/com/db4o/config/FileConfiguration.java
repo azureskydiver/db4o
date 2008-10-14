@@ -9,9 +9,12 @@ import com.db4o.foundation.NotSupportedException;
 import com.db4o.io.IoAdapter;
 
 /**
+ * File-related configuration methods, applicable 
+ * for db4o embedded use and on the server in a 
+ * Client/Server setup. 
  * @since 7.5
  */
-public interface LocalConfiguration {
+public interface FileConfiguration {
 
     /**
      * sets the storage data blocksize for new ObjectContainers. 

@@ -1277,16 +1277,16 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             .add(_justPeeked, new TreeIntObject(id, obj));
     }
 
-    public void purge() {
-        synchronized (_lock) {
-            checkClosed();
-            System.gc();
-            System.runFinalization();
-            System.gc();
-            gc();
-            _classCollection.purge();
-        }
-    }
+	public void purge() {
+	    synchronized (_lock) {
+	        checkClosed();
+	        System.gc();
+	        System.runFinalization();
+	        System.gc();
+	        gc();
+	        _classCollection.purge();
+	    }
+	}
     
     public final void purge(Transaction trans, Object obj) {
         synchronized (_lock) {
