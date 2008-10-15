@@ -12,10 +12,10 @@ import com.db4o.marshall.*;
 
 /**
  * @exclude
- * @sharpen.ignore
  * @decaf.ignore.jdk11
+ * @sharpen.partial
  */
-public class BigSet<E> implements Set<E> {
+public class BigSet<E> implements Set<E>, BigSetPersistence {
 	
 	private BTree _bTree;
 	
@@ -61,7 +61,7 @@ public class BigSet<E> implements Set<E> {
 	public void clear() {
 		bTree().clear(transaction());
 	}
-
+	
 	public boolean contains(Object obj) {
 		int id = getID(obj);
 		if(id == 0){
@@ -70,7 +70,7 @@ public class BigSet<E> implements Set<E> {
 		BTreeRange range = bTree().search(transaction(), new Integer(id));
 		return ! range.isEmpty();
 	}
-
+	
 	public boolean containsAll(Collection<?> collection) {
 		for (Object element : collection) {
 			if(! contains(element)){
@@ -80,21 +80,35 @@ public class BigSet<E> implements Set<E> {
 		return true;
 	}
 
+	/**
+	 * @sharpen.property
+	 */
 	public boolean isEmpty() {
 		return size() == 0;
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	public Iterator<E> iterator() {
-		MappingIterator i = new MappingIterator(bTree().iterator(transaction())){
+		return new Iterator4JdkIterator(elements());
+	}
+
+	/**
+	 * @sharpen.ignore
+	 */
+	private Iterator4 elements() {
+	    return new MappingIterator(bTreeIterator()) {
 			protected Object map(Object current) {
 				int id = ((Integer)current).intValue();
-				Object obj = container().getByID(transaction(), id);
-				container().activate(obj);
-				return obj; 
+				return element(id); 
 			}
 		};
-		return new Iterator4JdkIterator(i);
-	}
+    }
+
+	private Iterator4 bTreeIterator() {
+	    return bTree().iterator(transaction());
+    }
 
 	public boolean remove(Object obj) {
 		if(!contains(obj)){
@@ -105,6 +119,9 @@ public class BigSet<E> implements Set<E> {
 		return true;
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	public boolean removeAll(Collection<?> collection) {
 		boolean res = false;
 		for (Object element : collection) {
@@ -115,6 +132,9 @@ public class BigSet<E> implements Set<E> {
 		return res;
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	public boolean retainAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
 	}
@@ -131,6 +151,9 @@ public class BigSet<E> implements Set<E> {
 		throw new UnsupportedOperationException();
 	}
 
+	/* (non-Javadoc)
+     * @see com.db4o.internal.collections.BigSetPersistence#write(com.db4o.marshall.WriteContext)
+     */
 	public void write(WriteContext context) {
 		int id = bTree().getID();
 		if(id == 0){
@@ -139,6 +162,9 @@ public class BigSet<E> implements Set<E> {
 		context.writeInt(bTree().getID());
 	}
 
+	/* (non-Javadoc)
+     * @see com.db4o.internal.collections.BigSetPersistence#read(com.db4o.marshall.ReadContext)
+     */
 	public void read(ReadContext context) {
 		int id = context.readInt();
 		if(_transaction == null){
@@ -157,6 +183,9 @@ public class BigSet<E> implements Set<E> {
 		return container().systemTransaction();
 	}
 
+	/* (non-Javadoc)
+     * @see com.db4o.internal.collections.BigSetPersistence#invalidate()
+     */
 	public void invalidate() {
 		_bTree = null;
 	}
@@ -167,6 +196,12 @@ public class BigSet<E> implements Set<E> {
 		}
 		return _bTree;
 	}
+
+	private Object element(int id) {
+	    Object obj = container().getByID(transaction(), id);
+	    container().activate(obj);
+	    return obj;
+    }
 	
 
 }

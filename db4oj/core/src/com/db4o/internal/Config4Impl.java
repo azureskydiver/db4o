@@ -51,8 +51,6 @@ public final class Config4Impl implements Configuration, DeepClone,
     
     private final static KeySpec BTREE_NODE_SIZE_KEY=new KeySpec(119);
     
-    private final static KeySpec BTREE_CACHE_HEIGHT_KEY=new KeySpec(1);
-    
 	private final static KeySpec CALLBACKS_KEY=new KeySpec(true);
     
 	private final static KeySpec CALL_CONSTRUCTORS_KEY=new KeySpec(TernaryBool.UNSPECIFIED);
@@ -179,7 +177,6 @@ public final class Config4Impl implements Configuration, DeepClone,
     private static ClientServerFactory defaultClientServerFactory() {
     	try {
     		// FIXME: circular cs dependancy. Improve.
-    		// FIXME: won't work, because we need the assembly name for .NET
 			 return (ClientServerFactory) Class.forName("com.db4o.internal.cs.config.ClientServerFactoryImpl").newInstance();
 		} catch (Exception e) {
 			throw new Db4oException("ClientServer jar db4o-[version]-cs-java.jar not in CLASSPATH", e);
@@ -257,7 +254,6 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
     
     public void bTreeCacheHeight(int height){
-        _config.put(BTREE_CACHE_HEIGHT_KEY,height);
     }
 
     public void callbacks(boolean turnOn) {
@@ -748,10 +744,6 @@ public final class Config4Impl implements Configuration, DeepClone,
     
     public int bTreeNodeSize() {
         return _config.getAsInt(BTREE_NODE_SIZE_KEY);
-    }
-    
-    public int bTreeCacheHeight(){
-        return _config.getAsInt(BTREE_CACHE_HEIGHT_KEY);
     }
     
 	public String blobPath() {
