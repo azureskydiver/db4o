@@ -78,7 +78,9 @@ public interface EventRegistry {
 	 * This event is fired before an object is deleted.
 	 * The object can be obtained from {@link CancellableObjectEventArgs}
 	 * event parameter. The action can be cancelled using 
-	 * {@link CancellableObjectEventArgs#cancel()}
+	 * {@link CancellableObjectEventArgs#cancel()}<br><br>
+	 * Note, that this event is not available in networked client/server
+	 * mode and will throw an exception when attached to a client ObjectContainer.
 	 *
 	 * @sharpen.event com.db4o.events.CancellableObjectEventArgs
 	 * @return event
@@ -147,7 +149,9 @@ public interface EventRegistry {
 	 * The object can be obtained from the {@link ObjectEventArgs}
 	 * event parameter.<br><br>
 	 * The event can be used to trigger some post-deletion
-	 * functionality.
+	 * functionality.<br><br>
+	 * Note, that this event is not available in networked client/server
+	 * mode and will throw an exception when attached to a client ObjectContainer.
 	 *  
 	 * @sharpen.event com.db4o.events.ObjectEventArgs
 	 * @return event
