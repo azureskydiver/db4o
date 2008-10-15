@@ -27,10 +27,14 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private void removeImports(CompilationUnit node) {
-		for (Object importNode : node.imports()) {
+		removeAll(node.imports());
+	}
+
+	private void removeAll(final List nodes) {
+	    for (Object importNode : nodes) {
 			rewrite().remove((ASTNode) importNode);
 		}
-	}
+    }
 
 	private boolean allTopLevelTypesHaveBeenRemoved(CompilationUnit node) {
 		return rewrittenTypeListFor(node).isEmpty();
@@ -177,6 +181,9 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public void endVisit(MethodInvocation node) {
+
+		removeAll(node.typeArguments());
+		
 		final IMethodBinding method = node.resolveMethodBinding();
 		final List arguments = node.arguments();
 		if (builder().requiresVarArgsTranslation(method, arguments)) {
