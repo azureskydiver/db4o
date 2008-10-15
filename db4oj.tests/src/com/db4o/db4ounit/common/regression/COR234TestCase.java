@@ -2,19 +2,16 @@
 
 package com.db4o.db4ounit.common.regression;
 
-import java.io.IOException;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.db4ounit.util.IOServices;
-import com.db4o.db4ounit.util.WorkspaceServices;
-import com.db4o.ext.OldFormatException;
-import com.db4o.foundation.io.File4;
-import com.db4o.internal.Platform4;
+import com.db4o.*;
+import com.db4o.db4ounit.util.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.io.*;
+import com.db4o.internal.*;
 
-import db4ounit.Assert;
-import db4ounit.CodeBlock;
-import db4ounit.TestCase;
-import db4ounit.extensions.fixtures.OptOutNoFileSystemData;
+import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 
 /**
  * @exclude

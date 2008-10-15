@@ -3,8 +3,6 @@
 package com.db4o.db4ounit.common.cs;
 
 import com.db4o.*;
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
 import com.db4o.messaging.*;
 
 import db4ounit.*;

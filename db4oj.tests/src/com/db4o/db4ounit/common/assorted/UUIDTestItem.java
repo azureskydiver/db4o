@@ -2,12 +2,12 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import com.db4o.ObjectSet;
+import com.db4o.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.Hashtable4;
-import com.db4o.query.Query;
+import com.db4o.foundation.*;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 
 /**
  * @exclude

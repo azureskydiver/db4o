@@ -61,7 +61,7 @@ public class STInnerClasses implements STClass
 	public void testNothing()
 	{
 		Query q = st.query();
-		Query q2 = q.descend("child");
+		q.descend("child");
 		Object[] r = store();
 		st.expect(q, r);
 		//SodaTest.log(q);

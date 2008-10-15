@@ -1,6 +1,5 @@
 package com.db4o.db4ounit.jre12.concurrency;
 
-import com.db4o.db4ounit.common.concurrency.*;
 import com.db4o.db4ounit.jre12.querying.*;
 
 import db4ounit.extensions.*;

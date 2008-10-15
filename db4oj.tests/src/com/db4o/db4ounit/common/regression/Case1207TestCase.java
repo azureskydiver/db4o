@@ -2,11 +2,11 @@
 
 package com.db4o.db4ounit.common.regression;
 
-import com.db4o.ObjectContainer;
-import com.db4o.db4ounit.common.assorted.SimpleObject;
+import com.db4o.*;
+import com.db4o.db4ounit.common.assorted.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.Db4oClientServerTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 public class Case1207TestCase extends Db4oClientServerTestCase {
 

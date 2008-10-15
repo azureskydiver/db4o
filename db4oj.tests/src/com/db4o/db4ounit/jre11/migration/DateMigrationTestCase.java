@@ -2,9 +2,9 @@
 
 package com.db4o.db4ounit.jre11.migration;
 
-import java.util.Date;
+import java.util.*;
 
-import db4ounit.ConsoleTestRunner;
+import db4ounit.*;
 
 public class DateMigrationTestCase extends MigrationTestCaseBase {
 	

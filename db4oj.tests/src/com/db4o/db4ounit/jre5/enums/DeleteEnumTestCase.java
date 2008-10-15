@@ -2,11 +2,11 @@
 
 package com.db4o.db4ounit.jre5.enums;
 
-import com.db4o.config.Configuration;
-import com.db4o.query.Query;
+import com.db4o.config.*;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 
 /**

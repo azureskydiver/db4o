@@ -113,7 +113,7 @@ public class STUH1 implements STClass {
 	public void testSequentialAddition() {
 		Query q = st.query();
 		q.constrain(new STUH1());
-		Object[] r = store();
+		store();
 		Query cur = q.descend("h2");
 		cur.constrain(new STUH2());
 		cur.descend("foo2").constrain("str2");

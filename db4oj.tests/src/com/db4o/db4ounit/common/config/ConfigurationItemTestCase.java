@@ -2,14 +2,11 @@
 package com.db4o.db4ounit.common.config;
 
 import com.db4o.*;
-import com.db4o.config.Configuration;
-import com.db4o.config.ConfigurationItem;
-import com.db4o.foundation.io.File4;
-import com.db4o.foundation.io.Path4;
+import com.db4o.config.*;
+import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 
-import db4ounit.Assert;
-import db4ounit.TestCase;
+import db4ounit.*;
 
 public class ConfigurationItemTestCase implements TestCase {
 	

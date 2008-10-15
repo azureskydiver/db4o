@@ -3,7 +3,6 @@
 package com.db4o.db4ounit.jre12.staging;
 
 import com.db4o.*;
-import com.db4o.internal.*;
 import com.db4o.query.*;
 
 import db4ounit.*;

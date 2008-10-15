@@ -2,15 +2,11 @@
 
 package com.db4o.db4ounit.common.events;
 
-import com.db4o.config.Configuration;
-import com.db4o.events.Event4;
-import com.db4o.events.EventArgs;
-import com.db4o.events.EventException;
-import com.db4o.events.EventListener4;
-import com.db4o.internal.*;
+import com.db4o.config.*;
+import com.db4o.events.*;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.OptOutSolo;
+import db4ounit.extensions.fixtures.*;
 
 public class DeletionEventExceptionTestCase extends EventsTestCaseBase implements OptOutSolo {
 	

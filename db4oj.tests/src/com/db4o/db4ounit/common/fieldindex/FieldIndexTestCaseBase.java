@@ -3,10 +3,10 @@ package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.config.*;
 import com.db4o.internal.*;
-import com.db4o.query.Query;
+import com.db4o.query.*;
 
-import db4ounit.extensions.AbstractDb4oTestCase;
-import db4ounit.extensions.fixtures.OptOutCS;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 public abstract class FieldIndexTestCaseBase extends AbstractDb4oTestCase
 		implements OptOutCS {

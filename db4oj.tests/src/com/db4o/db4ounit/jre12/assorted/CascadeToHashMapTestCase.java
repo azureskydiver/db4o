@@ -4,9 +4,7 @@ package com.db4o.db4ounit.jre12.assorted;
 
 import java.util.*;
 
-import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.query.*;
 import com.db4o.test.*;
 
 import db4ounit.extensions.*;

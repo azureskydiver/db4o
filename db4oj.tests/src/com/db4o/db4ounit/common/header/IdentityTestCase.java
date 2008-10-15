@@ -2,13 +2,12 @@
 
 package com.db4o.db4ounit.common.header;
 
-import com.db4o.ext.Db4oDatabase;
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 
-import db4ounit.Assert;
-import db4ounit.ArrayAssert;
-import db4ounit.extensions.AbstractDb4oTestCase;
-import db4ounit.extensions.fixtures.OptOutCS;
+import db4ounit.*;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 public class IdentityTestCase extends AbstractDb4oTestCase implements OptOutCS {
 

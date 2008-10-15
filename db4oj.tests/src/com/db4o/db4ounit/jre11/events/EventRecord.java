@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.jre11.events;
 
-import com.db4o.events.Event4;
+import com.db4o.events.*;
 
 public class EventRecord {
 	public Event4 e;

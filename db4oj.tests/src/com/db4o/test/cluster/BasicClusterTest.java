@@ -7,9 +7,9 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.cluster.*;
 import com.db4o.query.*;
-import com.db4o.test.*;
+import com.db4o.test.Test;
 
-import db4ounit.Assert;
+import db4ounit.*;
 
 
 public class BasicClusterTest {

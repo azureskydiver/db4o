@@ -43,14 +43,14 @@ public class STShort implements STClass1{
 	public void testNotEquals(){
 		Query q = st.query();
 		Object[] r = store();
-		Constraint c = q.constrain(r[0]);
+		q.constrain(r[0]);
 		q.descend(DESCENDANT).constrain(new Short((short)0)).not();
 		st.expect(q, new Object[] {r[1], r[2], r[3]});
 	}
 	
 	public void testGreater(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STShort((short)9));
+		q.constrain(new STShort((short)9));
 		q.descend(DESCENDANT).constraints().greater();
 		Object[] r = store();
 		st.expect(q, new Object[] {r[2], r[3]});
@@ -58,14 +58,14 @@ public class STShort implements STClass1{
 	
 	public void testSmaller(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STShort((short)1));
+		q.constrain(new STShort((short)1));
 		q.descend(DESCENDANT).constraints().smaller();
 		st.expectOne(q, store()[0]);
 	}
 	
 	public void testContains(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STShort((short)9));
+		q.constrain(new STShort((short)9));
 		q.descend(DESCENDANT).constraints().contains();
 		Object[] r = store();
 		st.expect(q, new Object[] {r[2], r[3]});
@@ -73,7 +73,7 @@ public class STShort implements STClass1{
 	
 	public void testNotContains(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STShort((short)0));
+		q.constrain(new STShort((short)0));
 		q.descend(DESCENDANT).constrain(new Short((short)0)).contains().not();
 		Object[] r = store();
 		st.expect(q, new Object[] {r[1], r[2]});
@@ -81,18 +81,18 @@ public class STShort implements STClass1{
 	
 	public void testLike(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STShort((short)90));
+		q.constrain(new STShort((short)90));
 		q.descend(DESCENDANT).constraints().like();
 		st.expectOne(q, store()[3]);
 		q = st.query();
-		c = q.constrain(new STShort((short)10));
+		q.constrain(new STShort((short)10));
 		q.descend(DESCENDANT).constraints().like();
 		st.expectNone(q);
 	}
 	
 	public void testNotLike(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STShort((short)1));
+		q.constrain(new STShort((short)1));
 		q.descend(DESCENDANT).constraints().like().not();
 		Object[] r = store();
 		st.expect(q, new Object[] {r[0], r[2], r[3]});
@@ -100,7 +100,7 @@ public class STShort implements STClass1{
 	
 	public void testIdentity(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STShort((short)1));
+		q.constrain(new STShort((short)1));
 		ObjectSet set = q.execute();
 		STShort identityConstraint = (STShort)set.next();
 		identityConstraint.i_short = 9999;
@@ -112,7 +112,7 @@ public class STShort implements STClass1{
 	
 	public void testNotIdentity(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STShort((short)1));
+		q.constrain(new STShort((short)1));
 		ObjectSet set = q.execute();
 		STShort identityConstraint = (STShort)set.next();
 		identityConstraint.i_short = 9080;

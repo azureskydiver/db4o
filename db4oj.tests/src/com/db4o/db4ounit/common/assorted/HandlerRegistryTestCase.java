@@ -9,7 +9,7 @@ import com.db4o.internal.handlers.array.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 import db4ounit.extensions.*;
 
 

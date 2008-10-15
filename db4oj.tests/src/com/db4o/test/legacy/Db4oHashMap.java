@@ -8,7 +8,6 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
 import com.db4o.test.*;
-import com.db4o.tools.*;
 import com.db4o.types.*;
 
 

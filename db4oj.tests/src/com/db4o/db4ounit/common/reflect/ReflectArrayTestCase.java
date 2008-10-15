@@ -5,7 +5,7 @@ package com.db4o.db4ounit.common.reflect;
 import com.db4o.reflect.*;
 
 import db4ounit.*;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.*;
 
 public class ReflectArrayTestCase extends AbstractDb4oTestCase {
 	

@@ -3,6 +3,7 @@
 package com.db4o.test.performance;
 
 import java.io.*;
+
 import com.db4o.*;
 
 public class TransactionsPerSecond {

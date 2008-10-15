@@ -2,10 +2,10 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import com.db4o.config.Configuration;
+import com.db4o.config.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 public class PersistStaticFieldValuesTestCase extends AbstractDb4oTestCase {
     public static class Data {

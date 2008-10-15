@@ -4,7 +4,6 @@ package com.db4o.test.collections;
 
 import java.util.*;
 
-import com.db4o.*;
 import com.db4o.test.*;
 
 

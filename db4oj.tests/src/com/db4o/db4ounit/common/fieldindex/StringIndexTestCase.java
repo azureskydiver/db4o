@@ -2,11 +2,11 @@
 
 package com.db4o.db4ounit.common.fieldindex;
 
-import com.db4o.internal.Transaction;
-import com.db4o.query.Query;
+import com.db4o.internal.*;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.fixtures.OptOutCS;
+import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 
 /**
  * @exclude

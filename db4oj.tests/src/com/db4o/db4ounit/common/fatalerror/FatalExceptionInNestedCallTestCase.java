@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.common.fatalerror;
 
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.*;
 
 
 public class FatalExceptionInNestedCallTestCase extends AbstractDb4oTestCase{

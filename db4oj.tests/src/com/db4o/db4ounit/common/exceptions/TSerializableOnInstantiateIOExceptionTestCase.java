@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.exceptions;
 
 import java.io.*;
+
 import com.db4o.config.*;
 import com.db4o.internal.*;
 

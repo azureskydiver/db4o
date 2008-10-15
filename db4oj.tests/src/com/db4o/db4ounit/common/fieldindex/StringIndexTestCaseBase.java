@@ -2,15 +2,15 @@
 
 package com.db4o.db4ounit.common.fieldindex;
 
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.foundation.Visitor4;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
-import com.db4o.internal.slots.Slot;
-import com.db4o.query.Query;
+import com.db4o.internal.slots.*;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**

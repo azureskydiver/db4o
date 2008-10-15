@@ -2,14 +2,12 @@
 
 package com.db4o.db4ounit.jre11.tools;
 
-import com.db4o.ObjectSet;
-import com.db4o.events.Event4;
-import com.db4o.events.EventListener4;
-import com.db4o.events.EventRegistryFactory;
-import com.db4o.query.Query;
-import com.db4o.tools.QueryStats;
+import com.db4o.*;
+import com.db4o.events.*;
+import com.db4o.query.*;
+import com.db4o.tools.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 import db4ounit.extensions.*;
 
 public class QueryStatsTestCase extends AbstractDb4oTestCase {	

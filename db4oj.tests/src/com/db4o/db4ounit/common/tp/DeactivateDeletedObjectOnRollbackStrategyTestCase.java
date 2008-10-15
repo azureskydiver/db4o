@@ -2,15 +2,13 @@
 
 package com.db4o.db4ounit.common.tp;
 
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.query.Query;
-import com.db4o.ta.RollbackStrategy;
-import com.db4o.ta.TransparentPersistenceSupport;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.query.*;
+import com.db4o.ta.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 public class DeactivateDeletedObjectOnRollbackStrategyTestCase extends
 		AbstractDb4oTestCase {

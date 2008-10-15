@@ -2,8 +2,6 @@
 
 package com.db4o.db4ounit.common.internal;
 
-import com.db4o.db4ounit.common.ext.*;
-
 import db4ounit.extensions.*;
 
 

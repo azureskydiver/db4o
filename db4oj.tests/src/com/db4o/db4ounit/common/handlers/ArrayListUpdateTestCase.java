@@ -3,13 +3,14 @@
 package com.db4o.db4ounit.common.handlers;
 
 
-import db4ounit.*;
 import java.util.*;
 
 import com.db4o.*;
 import com.db4o.db4ounit.util.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
+
+import db4ounit.*;
 
 
 /**

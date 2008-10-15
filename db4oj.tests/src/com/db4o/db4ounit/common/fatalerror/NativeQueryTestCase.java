@@ -1,11 +1,10 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 package com.db4o.db4ounit.common.fatalerror;
 
-import com.db4o.query.Predicate;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.CodeBlock;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 public class NativeQueryTestCase extends AbstractDb4oTestCase {
 	

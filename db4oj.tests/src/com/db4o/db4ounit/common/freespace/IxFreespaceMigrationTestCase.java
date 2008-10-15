@@ -2,7 +2,6 @@
 
 package com.db4o.db4ounit.common.freespace;
 
-import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.handlers.*;
 import com.db4o.ext.*;

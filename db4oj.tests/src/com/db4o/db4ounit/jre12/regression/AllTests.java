@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.jre12.regression;
 
-import db4ounit.extensions.Db4oTestSuite;
+import db4ounit.extensions.*;
 
 
 /**

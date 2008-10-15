@@ -110,7 +110,7 @@ public class STTH1 implements STClass1 {
 	
 	public void testSequentialAddition(){
 		Query q = st.query();
-		Object[] r = store();
+		store();
 		q.constrain(new STTH1());
 		Query cur = q.descend("h2");
 		cur.constrain(new STTH2());

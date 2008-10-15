@@ -7,7 +7,6 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 
-
 import db4ounit.*;
 import db4ounit.extensions.*;
 

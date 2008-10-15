@@ -3,7 +3,7 @@ package com.db4o.db4ounit.common.btree;
 
 import com.db4o.internal.btree.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 import db4ounit.extensions.*;
 
 public class BTreeRangeTestCase extends BTreeTestCaseBase {

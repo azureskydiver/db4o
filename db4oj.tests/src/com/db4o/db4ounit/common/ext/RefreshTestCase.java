@@ -2,13 +2,12 @@
 
 package com.db4o.db4ounit.common.ext;
 
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.Db4oClientServerTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 public class RefreshTestCase extends Db4oClientServerTestCase {
 

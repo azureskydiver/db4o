@@ -2,13 +2,13 @@
 
 package com.db4o.db4ounit.common.exceptions;
 
-import com.db4o.ObjectContainer;
+import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.internal.ReflectException;
+import com.db4o.internal.*;
 
 import db4ounit.*;
-import db4ounit.extensions.AbstractDb4oTestCase;
-import db4ounit.extensions.fixtures.OptOutCS;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 
 public class StoredClassExceptionBubblesUpTestCase extends AbstractDb4oTestCase implements OptOutCS {

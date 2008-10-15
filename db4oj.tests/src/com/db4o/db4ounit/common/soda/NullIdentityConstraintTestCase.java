@@ -1,10 +1,10 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.soda;
 
-import com.db4o.query.Query;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 public class NullIdentityConstraintTestCase extends AbstractDb4oTestCase {
 	

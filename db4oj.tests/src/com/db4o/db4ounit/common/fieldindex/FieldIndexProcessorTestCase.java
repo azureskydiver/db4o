@@ -9,7 +9,7 @@ import com.db4o.internal.fieldindex.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.query.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 import db4ounit.extensions.*;
 
 

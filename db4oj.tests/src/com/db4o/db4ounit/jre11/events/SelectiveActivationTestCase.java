@@ -8,7 +8,7 @@ import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.Db4oSolo;
+import db4ounit.extensions.fixtures.*;
 
 public class SelectiveActivationTestCase
 	extends AbstractDb4oTestCase

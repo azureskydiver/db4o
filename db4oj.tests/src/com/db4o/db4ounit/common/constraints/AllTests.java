@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.common.constraints;
 
-import db4ounit.extensions.Db4oTestSuite;
+import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {
 
