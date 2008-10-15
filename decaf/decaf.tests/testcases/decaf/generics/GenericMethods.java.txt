@@ -9,5 +9,6 @@ class GenericMethods {
 	static void main() {
 		String s = get(String.class);
 		get(String.class);
+		GenericMethods.<String>get(null);
 	}
 }
