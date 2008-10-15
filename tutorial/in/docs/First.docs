@@ -25,6 +25,9 @@ database file and release all resources associated with it.
 
 .s com.db4o.f1.chapter1.FirstStepsExample#accessDb4o -run ..
 
+.? java DB4OFILENAME ..?  .? net Db4oFileName ..?  is just a string value ._
+representing any filename. If the file with this name already exists, it will be opened ._
+as db4o database, otherwise a new db4o database will be created.
 For the following examples we will assume that our environment takes care ._
 of opening and closing the .x ObjectContainer .. automagically, and stores the ._
 reference in a variable named 'db'.
