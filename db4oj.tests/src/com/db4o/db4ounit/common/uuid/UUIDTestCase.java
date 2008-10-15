@@ -9,7 +9,7 @@ import com.db4o.foundation.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.*;
 
 public class UUIDTestCase extends AbstractDb4oTestCase {
     

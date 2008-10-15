@@ -3,7 +3,6 @@
 package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.config.*;
-import com.db4o.internal.handlers.*;
 import com.db4o.typehandlers.*;
 
 import db4ounit.*;

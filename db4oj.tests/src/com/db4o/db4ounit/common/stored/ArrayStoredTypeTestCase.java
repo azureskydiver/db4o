@@ -6,7 +6,7 @@ import com.db4o.ext.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.util.CrossPlatformServices;
+import db4ounit.extensions.util.*;
 
 public class ArrayStoredTypeTestCase extends AbstractDb4oTestCase {
 

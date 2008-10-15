@@ -3,7 +3,6 @@
 package com.db4o.test;
 
 import com.db4o.*;
-import com.db4o.config.*;
 
 public class BindFileSize {
 	

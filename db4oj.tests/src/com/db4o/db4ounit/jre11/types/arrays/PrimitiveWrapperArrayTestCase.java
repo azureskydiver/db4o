@@ -3,7 +3,7 @@
 package com.db4o.db4ounit.jre11.types.arrays;
 
 import db4ounit.*;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.*;
 
 public class PrimitiveWrapperArrayTestCase extends AbstractDb4oTestCase {
 

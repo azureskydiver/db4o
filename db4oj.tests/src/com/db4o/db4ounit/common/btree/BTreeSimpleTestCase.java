@@ -2,8 +2,8 @@
 
 package com.db4o.db4ounit.common.btree;
 
-import com.db4o.internal.Transaction;
-import com.db4o.internal.btree.BTree;
+import com.db4o.internal.*;
+import com.db4o.internal.btree.*;
 
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;

@@ -2,13 +2,13 @@
 
 package com.db4o.db4ounit.jre11.assorted;
 
-import java.io.IOException;
+import java.io.*;
 
 import com.db4o.*;
-import com.db4o.config.ConfigScope;
-import com.db4o.db4ounit.common.assorted.UUIDTestItem;
+import com.db4o.config.*;
+import com.db4o.db4ounit.common.assorted.*;
 import com.db4o.db4ounit.util.*;
-import com.db4o.foundation.Hashtable4;
+import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;

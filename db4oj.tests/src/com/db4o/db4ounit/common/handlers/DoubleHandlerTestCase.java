@@ -3,11 +3,10 @@
 package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.ByteArrayBuffer;
-import com.db4o.internal.Indexable4;
-import com.db4o.internal.handlers.DoubleHandler;
+import com.db4o.internal.*;
+import com.db4o.internal.handlers.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 
 /**
  * @exclude

@@ -2,8 +2,8 @@
 
 package com.db4o.test.fileheader;
 
-import com.db4o.db4ounit.common.assorted.SimplestPossibleTestCase;
-import com.db4o.test.AllTestsJdk1_2;
+import com.db4o.db4ounit.common.assorted.*;
+import com.db4o.test.*;
 
 
 /**

@@ -2,11 +2,11 @@
 
 package com.db4o.db4ounit.common.regression;
 
-import com.db4o.db4ounit.common.assorted.SimpleObject;
-import com.db4o.ext.ExtObjectContainer;
+import com.db4o.db4ounit.common.assorted.*;
+import com.db4o.ext.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.Db4oClientServerTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 public class SetRollbackTestCase extends Db4oClientServerTestCase {
 

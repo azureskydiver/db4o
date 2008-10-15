@@ -1,7 +1,7 @@
 package com.db4o.db4ounit.common.reflect.custom;
 
 import com.db4o.foundation.*;
-import com.db4o.foundation.io.Path4;
+import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 
 import db4ounit.*;

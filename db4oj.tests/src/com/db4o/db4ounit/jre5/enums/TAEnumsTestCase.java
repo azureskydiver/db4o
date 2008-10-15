@@ -1,15 +1,15 @@
 package com.db4o.db4ounit.jre5.enums;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.*;
 
-import com.db4o.ObjectSet;
-import com.db4o.activation.ActivationPurpose;
-import com.db4o.config.Configuration;
-import com.db4o.db4ounit.common.ta.ActivatableImpl;
-import com.db4o.ta.TransparentActivationSupport;
+import com.db4o.*;
+import com.db4o.activation.*;
+import com.db4o.config.*;
+import com.db4o.db4ounit.common.ta.*;
+import com.db4o.ta.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 
 /**

@@ -2,7 +2,6 @@
 
 package com.db4o.test;
 
-import com.db4o.*;
 import com.db4o.messaging.*;
 
 public class Messaging implements MessageRecipient{

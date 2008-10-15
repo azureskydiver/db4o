@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.common;
 
-import db4ounit.extensions.Db4oTestSuite;
+import db4ounit.extensions.*;
 
 /**
  * 

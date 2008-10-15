@@ -42,7 +42,7 @@ public class STString implements STClass1, STInterface {
 
 	public void testNotEquals() {
 		Query q = st.query();
-		Constraint c = q.constrain(store()[2]);
+		q.constrain(store()[2]);
 		q.descend("str").constraints().not();
 		Object[] r = store();
 		st.expect(q, new Object[] { r[0], r[1], r[3] });
@@ -57,14 +57,14 @@ public class STString implements STClass1, STInterface {
 
 	public void testContains() {
 		Query q = st.query();
-		Constraint c = q.constrain(new STString("od"));
+		q.constrain(new STString("od"));
 		q.descend("str").constraints().contains();
 		st.expectOne(q, new STString("dod"));
 	}
 
 	public void testNotContains() {
 		Query q = st.query();
-		Constraint c = q.constrain(new STString("od"));
+		q.constrain(new STString("od"));
 		q.descend("str").constraints().contains().not();
 		st.expect(
 			q,
@@ -73,11 +73,11 @@ public class STString implements STClass1, STInterface {
 
 	public void testLike() {
 		Query q = st.query();
-		Constraint c = q.constrain(new STString("do"));
+		q.constrain(new STString("do"));
 		q.descend("str").constraints().like();
 		st.expectOne(q, new STString("dod"));
 		q = st.query();
-		c = q.constrain(new STString("od"));
+		q.constrain(new STString("od"));
 		q.descend("str").constraints().like();
         
 		st.expectOne(q,store()[3]);
@@ -85,46 +85,46 @@ public class STString implements STClass1, STInterface {
 
 	public void testNotLike() {
 		Query q = st.query();
-		Constraint c = q.constrain(new STString("aaa"));
+		q.constrain(new STString("aaa"));
 		q.descend("str").constraints().like().not();
 		st.expect(
 			q,
 			new Object[] { new STString(null), new STString("bbb"), new STString("dod")});
 		q = st.query();
-		c = q.constrain(new STString("xxx"));
+		q.constrain(new STString("xxx"));
 		q.descend("str").constraints().like();
 		st.expectNone(q);
 	}
 
 	public void testStartsWith() {
 		Query q = st.query();
-		Constraint c = q.constrain(new STString("do"));
+		q.constrain(new STString("do"));
 		q.descend("str").constraints().startsWith(true);
 		st.expectOne(q, new STString("dod"));
 		q = st.query();
-		c = q.constrain(new STString("od"));
+		q.constrain(new STString("od"));
 		q.descend("str").constraints().startsWith(true);
 		st.expectNone(q);
 	}
 
 	public void testEndsWith() {
 		Query q = st.query();
-		Constraint c = q.constrain(new STString("do"));
+		q.constrain(new STString("do"));
 		q.descend("str").constraints().endsWith(true);
 		st.expectNone(q);
 		q = st.query();
-		c = q.constrain(new STString("od"));
+		q.constrain(new STString("od"));
 		q.descend("str").constraints().endsWith(true);
 		st.expectOne(q, new STString("dod"));
 		q = st.query();
-		c = q.constrain(new STString("D"));
+		q.constrain(new STString("D"));
 		q.descend("str").constraints().endsWith(false);
 		st.expectOne(q, new STString("dod"));
 	}
 
 	public void testIdentity() {
 		Query q = st.query();
-		Constraint c = q.constrain(new STString("aaa"));
+		q.constrain(new STString("aaa"));
 		ObjectSet set = q.execute();
 		STString identityConstraint = (STString) set.next();
 		identityConstraint.str = "hihs";
@@ -136,7 +136,7 @@ public class STString implements STClass1, STInterface {
 
 	public void testNotIdentity() {
 		Query q = st.query();
-		Constraint c = q.constrain(new STString("aaa"));
+		q.constrain(new STString("aaa"));
 		ObjectSet set = q.execute();
 		STString identityConstraint = (STString) set.next();
 		identityConstraint.str = null;
@@ -150,14 +150,14 @@ public class STString implements STClass1, STInterface {
 
 	public void testNull() {
 		Query q = st.query();
-		Constraint c = q.constrain(new STString(null));
+		q.constrain(new STString(null));
 		q.descend("str").constrain(null);
 		st.expectOne(q, new STString(null));
 	}
 
 	public void testNotNull() {
 		Query q = st.query();
-		Constraint c = q.constrain(new STString(null));
+		q.constrain(new STString(null));
 		q.descend("str").constrain(null).not();
 		st.expect(
 			q,

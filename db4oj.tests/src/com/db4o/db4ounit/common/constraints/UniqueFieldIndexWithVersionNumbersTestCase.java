@@ -1,7 +1,6 @@
 package com.db4o.db4ounit.common.constraints;
 
-import com.db4o.config.ConfigScope;
-import com.db4o.config.Configuration;
+import com.db4o.config.*;
 
 public class UniqueFieldIndexWithVersionNumbersTestCase extends
 		UniqueFieldIndexTestCase {

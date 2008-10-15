@@ -4,7 +4,6 @@ package com.db4o.db4ounit.jre12.collections.facades;
 
 import java.util.*;
 
-
 import db4ounit.*;
 import db4ounit.extensions.*;
 

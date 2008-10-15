@@ -44,14 +44,14 @@ public class STByte implements STClass1{
 	public void testNotEquals(){
 		Query q = st.query();
 		Object[] r = store();
-		Constraint c = q.constrain(r[0]);
+		q.constrain(r[0]);
 		q.descend(DESCENDANT).constrain(new Byte((byte)0)).not();
 		st.expect(q, new Object[] {r[1], r[2], r[3]});
 	}
 	
 	public void testGreater(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STByte((byte)9));
+		q.constrain(new STByte((byte)9));
 		q.descend(DESCENDANT).constraints().greater();
 		Object[] r = store();
 		st.expect(q, new Object[] {r[2], r[3]});
@@ -59,14 +59,14 @@ public class STByte implements STClass1{
 	
 	public void testSmaller(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STByte((byte)1));
+		q.constrain(new STByte((byte)1));
 		q.descend(DESCENDANT).constraints().smaller();
 		st.expectOne(q, store()[0]);
 	}
 	
 	public void testContains(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STByte((byte)9));
+		q.constrain(new STByte((byte)9));
 		q.descend(DESCENDANT).constraints().contains();
 		Object[] r = store();
 		st.expect(q, new Object[] {r[2]});
@@ -74,7 +74,7 @@ public class STByte implements STClass1{
 	
 	public void testNotContains(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STByte((byte)0));
+		q.constrain(new STByte((byte)0));
 		q.descend(DESCENDANT).constrain(new Byte((byte)0)).contains().not();
 		Object[] r = store();
 		st.expect(q, new Object[] {r[1], r[2], r[3]});
@@ -82,18 +82,18 @@ public class STByte implements STClass1{
 	
 	public void testLike(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STByte((byte)11));
+		q.constrain(new STByte((byte)11));
 		q.descend(DESCENDANT).constraints().like();
 		st.expectOne(q, new STByte((byte)113));
 		q = st.query();
-		c = q.constrain(new STByte((byte)10));
+		q.constrain(new STByte((byte)10));
 		q.descend(DESCENDANT).constraints().like();
 		st.expectNone(q);
 	}
 	
 	public void testNotLike(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STByte((byte)1));
+		q.constrain(new STByte((byte)1));
 		q.descend(DESCENDANT).constraints().like().not();
 		Object[] r = store();
 		st.expect(q, new Object[] {r[0], r[2]});
@@ -101,7 +101,7 @@ public class STByte implements STClass1{
 	
 	public void testIdentity(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STByte((byte)1));
+		q.constrain(new STByte((byte)1));
 		ObjectSet set = q.execute();
 		STByte identityConstraint = (STByte)set.next();
 		identityConstraint.i_byte = 102;
@@ -113,7 +113,7 @@ public class STByte implements STClass1{
 	
 	public void testNotIdentity(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STByte((byte)1));
+		q.constrain(new STByte((byte)1));
 		ObjectSet set = q.execute();
 		STByte identityConstraint = (STByte)set.next();
 		identityConstraint.i_byte = 102;

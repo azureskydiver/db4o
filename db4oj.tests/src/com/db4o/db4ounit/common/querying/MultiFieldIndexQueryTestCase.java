@@ -3,14 +3,14 @@
 package com.db4o.db4ounit.common.querying;
 
 
-import java.lang.reflect.Field;
+import java.lang.reflect.*;
 
-import com.db4o.ObjectSet;
+import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 /**
  * @exclude

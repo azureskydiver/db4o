@@ -3,11 +3,8 @@
 package com.db4o.db4ounit.jre5.defrag;
 
 import com.db4o.db4ounit.common.defragment.*;
-import com.db4o.db4ounit.common.exceptions.*;
-import com.db4o.db4ounit.jre5.enums.*;
 
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 
 /**

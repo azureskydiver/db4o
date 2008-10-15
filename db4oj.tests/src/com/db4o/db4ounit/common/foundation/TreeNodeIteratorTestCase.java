@@ -2,15 +2,10 @@
 
 package com.db4o.db4ounit.common.foundation;
 
-import com.db4o.foundation.Iterator4;
-import com.db4o.foundation.Tree;
-import com.db4o.foundation.TreeNodeIterator;
-import com.db4o.foundation.Visitor4;
-import com.db4o.internal.TreeInt;
+import com.db4o.foundation.*;
+import com.db4o.internal.*;
 
-import db4ounit.Assert;
-import db4ounit.TestCase;
-import db4ounit.ConsoleTestRunner;
+import db4ounit.*;
 
 
 public class TreeNodeIteratorTestCase implements TestCase {

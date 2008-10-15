@@ -2,11 +2,11 @@
 
 package com.db4o.db4ounit.common.internal;
 
-import com.db4o.ObjectSet;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 public class DeactivateTestCase extends AbstractDb4oTestCase  {
 	protected void store() throws Exception {

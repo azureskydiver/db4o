@@ -43,14 +43,14 @@ public class STChar implements STClass1{
 	public void testNotEquals(){
 		Query q = st.query();
 		Object[] r = store();
-		Constraint c = q.constrain(r[0]);
+		q.constrain(r[0]);
 		q.descend(DESCENDANT).constrain(new Character((char)0)).not();
 		st.expect(q, new Object[] {r[1], r[2], r[3]});
 	}
 	
 	public void testGreater(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STChar((char)9));
+		q.constrain(new STChar((char)9));
 		q.descend(DESCENDANT).constraints().greater();
 		Object[] r = store();
 		st.expect(q, new Object[] {r[2], r[3]});
@@ -58,14 +58,14 @@ public class STChar implements STClass1{
 	
 	public void testSmaller(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STChar((char)1));
+		q.constrain(new STChar((char)1));
 		q.descend(DESCENDANT).constraints().smaller();
 		st.expectOne(q, store()[0]);
 	}
 	
 	public void testIdentity(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STChar((char)1));
+		q.constrain(new STChar((char)1));
 		ObjectSet set = q.execute();
 		STChar identityConstraint = (STChar)set.next();
 		identityConstraint.i_char = 9999;
@@ -77,7 +77,7 @@ public class STChar implements STClass1{
 	
 	public void testNotIdentity(){
 		Query q = st.query();
-		Constraint c = q.constrain(new STChar((char)1));
+		q.constrain(new STChar((char)1));
 		ObjectSet set = q.execute();
 		STChar identityConstraint = (STChar)set.next();
 		identityConstraint.i_char = 9080;

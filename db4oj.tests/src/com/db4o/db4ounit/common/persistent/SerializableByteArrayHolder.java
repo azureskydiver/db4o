@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.common.persistent;
 
-import java.io.Serializable;
+import java.io.*;
 
 public class SerializableByteArrayHolder implements Serializable, IByteArrayHolder {
 

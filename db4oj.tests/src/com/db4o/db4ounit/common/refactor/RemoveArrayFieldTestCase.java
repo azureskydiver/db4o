@@ -1,13 +1,13 @@
 package com.db4o.db4ounit.common.refactor;
 
-import com.db4o.ObjectSet;
-import com.db4o.config.ObjectClass;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
-import db4ounit.extensions.fixtures.OptOutDefragSolo;
-import db4ounit.extensions.util.CrossPlatformServices;
+import db4ounit.*;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.util.*;
 
 public class RemoveArrayFieldTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 	public static class DataBefore {

@@ -3,11 +3,11 @@
 package com.db4o.db4ounit.jre11.assorted;
 
 import com.db4o.events.*;
-import com.db4o.ext.Db4oException;
+import com.db4o.ext.*;
 
 import db4ounit.*;
-import db4ounit.extensions.AbstractDb4oTestCase;
-import db4ounit.extensions.fixtures.OptOutSolo;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 
 public class ClientServerThrowsOnCommitTestCase extends AbstractDb4oTestCase implements OptOutSolo{

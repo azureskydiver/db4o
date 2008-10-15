@@ -1,10 +1,9 @@
 package com.db4o.db4ounit.common.internal;
 
-import com.db4o.internal.ClassMetadata;
-import com.db4o.internal.InternalObjectContainer;
+import com.db4o.internal.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 import db4ounit.extensions.util.*;
 
 public class InternalObjectContainerAPITestCase extends AbstractDb4oTestCase {

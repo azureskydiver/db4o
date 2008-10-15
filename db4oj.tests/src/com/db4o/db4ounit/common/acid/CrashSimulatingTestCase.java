@@ -5,7 +5,7 @@ package com.db4o.db4ounit.common.acid;
 import java.io.*;
 
 import com.db4o.*;
-import com.db4o.config.Configuration;
+import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;

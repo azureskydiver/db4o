@@ -1,7 +1,6 @@
 package com.db4o.db4ounit.jre12.collections.map;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @decaf.ignore.jdk11

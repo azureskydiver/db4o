@@ -6,7 +6,7 @@ import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 
 
 public class EventAssert {

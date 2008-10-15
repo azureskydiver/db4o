@@ -31,7 +31,7 @@ public class STBoolean implements STClass1{
 	public void testEqualsTrue(){
 		Query q = st.query();
 		q.constrain(new STBoolean(true));  
-		Object[] r = store();
+		store();
 		st.expectOne(q, new STBoolean(true));
 	}
 	

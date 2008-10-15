@@ -2,10 +2,8 @@
 
 package com.db4o.test;
 
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.ext.ExtDb4o;
-import com.db4o.ext.MemoryFile;
+import com.db4o.*;
+import com.db4o.ext.*;
 
 
 /**

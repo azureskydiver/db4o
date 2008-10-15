@@ -2,9 +2,9 @@
 
 package com.db4o.db4ounit.common.handlers;
 
-import com.db4o.internal.handlers.FloatHandler;
+import com.db4o.internal.handlers.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 
 public class FloatHandlerTestCase extends TypeHandlerTestCaseBase {
     

@@ -1,12 +1,10 @@
 package com.db4o.db4ounit.jre5.collections;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.db4o.collections.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 
 /**
  * @sharpen.ignore

@@ -2,10 +2,8 @@ package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.diagnostic.Diagnostic;
-import com.db4o.diagnostic.DiagnosticListener;
-import com.db4o.diagnostic.LoadedFromClassIndex;
-import com.db4o.query.Query;
+import com.db4o.diagnostic.*;
+import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;

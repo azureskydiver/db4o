@@ -130,7 +130,7 @@ public class STRUH1 implements STClass{
 	
 	public void testSequentialAddition(){
 		Query q = st.query();
-		Object[] r = store();
+		store();
 		q.constrain(new STRUH1());
 		Query cur = q.descend("h2");
 		cur.constrain(new STRUH2());
