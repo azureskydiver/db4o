@@ -59,7 +59,7 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	}
 	
 	public void testEmptySet(){
-		Set set = newBigSet();
+		Set<Item> set = newBigSet();
 		Assert.areEqual(0, set.size()); 
 	}
 
@@ -209,8 +209,8 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 		Assert.isNotNull(bTree);
 	}
 	
-	private Set newBigSet() {
-		return CollectionFactory.forObjectContainer(db()).newBigSet();
+	private <E> Set<E> newBigSet() {
+		return CollectionFactory.forObjectContainer(db()).<E>newBigSet();
 	}
 
 	public static BTree bTree(Set set) throws IllegalAccessException{

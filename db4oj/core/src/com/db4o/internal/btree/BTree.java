@@ -40,8 +40,6 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
     
     int _halfNodeSize;
     
-    private final int _cacheHeight;
-    
     private BTreeStructureListener _structureListener;
     
     public BTree(Transaction trans, Indexable4 keyHandler) {
@@ -49,10 +47,10 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
     }
     
     public BTree(Transaction trans, int id, Indexable4 keyHandler){
-		this(trans, id, keyHandler, config(trans).bTreeNodeSize(), config(trans).bTreeCacheHeight());
+		this(trans, id, keyHandler, config(trans).bTreeNodeSize());
     }	
 
-	public BTree(Transaction trans, int id, Indexable4 keyHandler, final int treeNodeSize, final int treeCacheHeight) {
+	public BTree(Transaction trans, int id, Indexable4 keyHandler, final int treeNodeSize) {
 		if (null == keyHandler) {
     		throw new ArgumentNullException();
     	}
@@ -60,7 +58,6 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
 		
         _halfNodeSize = _nodeSize / 2;
         _nodeSize = _halfNodeSize * 2;
-		_cacheHeight = treeCacheHeight;
         _keyHandler = keyHandler;
         _sizesByTransaction = new Hashtable4();
         if(id == 0){

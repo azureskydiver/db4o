@@ -46,11 +46,10 @@ public class BTreeIDMapping extends AbstractContextIDMapping {
 	 * 
 	 * @param fileName The location where the BTree file should be created.
 	 * @param nodeSize The size of a BTree node
-	 * @param cacheHeight The height of the BTree node cache
 	 * @param commitFrequency The number of inserts after which a commit should be issued (<=0: never commit)
 	 */
-	public BTreeIDMapping(String fileName,int nodeSize,int cacheHeight,int commitFrequency) {
-		this(fileName,new BTreeSpec(nodeSize,cacheHeight),commitFrequency);
+	public BTreeIDMapping(String fileName,int nodeSize,int commitFrequency) {
+		this(fileName,new BTreeSpec(nodeSize),commitFrequency);
 	}
 
 	private BTreeIDMapping(String fileName,BTreeSpec treeSpec,int commitFrequency) {
@@ -105,7 +104,7 @@ public class BTreeIDMapping extends AbstractContextIDMapping {
 	public void open() {
 		_mappingDb = DefragmentServicesImpl.freshYapFile(_fileName,1);
 		Indexable4 handler = new MappedIDPairHandler();
-		_idTree = (_treeSpec==null ? new BTree(trans(), 0, handler) : new BTree(trans(), 0, handler, _treeSpec.nodeSize(), _treeSpec.cacheHeight()));
+		_idTree = (_treeSpec==null ? new BTree(trans(), 0, handler) : new BTree(trans(), 0, handler, _treeSpec.nodeSize()));
 	}
 
 	public void close() {
@@ -118,19 +117,13 @@ public class BTreeIDMapping extends AbstractContextIDMapping {
 	
 	private static class BTreeSpec {
 		private int _nodeSize;
-		private int _cacheHeight;
 		
-		public BTreeSpec(int nodeSize, int cacheHeight) {
+		public BTreeSpec(int nodeSize) {
 			_nodeSize = nodeSize;
-			_cacheHeight = cacheHeight;
 		}
 		
 		public int nodeSize() {
 			return _nodeSize;
-		}
-		
-		public int cacheHeight() {
-			return _cacheHeight;
 		}
 	}
 }

@@ -15,7 +15,6 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  * @decaf.ignore.jdk11
- * @sharpen.ignore
  */
 public class BigSetTypeHandler implements TypeHandler4{
 
@@ -33,33 +32,40 @@ public class BigSetTypeHandler implements TypeHandler4{
 	}
 
 	public void delete(DeleteContext context) throws Db4oIOException {
-		BigSet bigSet = (BigSet) context.transaction().objectForIdFromCache(context.id());
+		invalidBigSet(context);
+		int id = context.readInt();
+		freeBTree(context, id);
+	}
+
+	private void invalidBigSet(DeleteContext context) {
+	    BigSetPersistence bigSet = (BigSetPersistence) context.transaction().objectForIdFromCache(context.id());
 		if(bigSet != null){
 			bigSet.invalidate();
 		}
-		int id = context.readInt();
-		BTree bTree = newBTree(context, id);
+    }
+
+	private void freeBTree(DeleteContext context, int id) {
+	    BTree bTree = newBTree(context, id);
 		bTree.free(systemTransaction(context));
 		bTree = null;
-	}
+    }
 
 	private static Transaction systemTransaction(Context context) {
 		return context.transaction().systemTransaction();
 	}
 
 	private BTree newBTree(Context context, int id) {
-		BTree bTree = new BTree(systemTransaction(context), id, new IDHandler());
-		return bTree;
+		return new BTree(systemTransaction(context), id, new IDHandler());
 	}
 
 	public Object read(ReadContext context) {
-		BigSet bigSet = (BigSet)((UnmarshallingContext)context).persistentObject();
+		BigSetPersistence bigSet = (BigSetPersistence)((UnmarshallingContext)context).persistentObject();
 		bigSet.read(context);
 		return bigSet;
 	}
 
 	public void write(WriteContext context, Object obj) {
-		BigSet bigSet = (BigSet) obj;
+		BigSetPersistence bigSet = (BigSetPersistence) obj;
 		bigSet.write(context);
 	}
 
