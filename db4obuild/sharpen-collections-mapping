@@ -2,3 +2,5 @@
 -typeMapping com.db4o.foundation.Iterator4 System.Collections.IEnumerator
 -methodMapping com.db4o.foundation.Iterable4.iterator GetEnumerator
 -propertyMapping com.db4o.foundation.Iterator4.current Current
+-typeMapping java.util.Set<> Db4objects.Db4o.Collections.ISet
+-propertyMapping java.util.Collection.isEmpty IsEmpty

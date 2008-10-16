@@ -8,7 +8,6 @@ import com.db4o.foundation.*;
 
 import db4ounit.*;
 
-
 /**
  * @decaf.ignore.jdk11
  */
@@ -53,7 +52,4 @@ public class IteratorAssert {
 	private static void unexpected(Object element) {
 		Assert.fail("Unexpected element: " + element);
 	}
-
-
-
 }

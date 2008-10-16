@@ -15,7 +15,6 @@ import com.db4o.internal.collections.*;
  * <code>CollectionFactory.forObjectContainer(objectContainer).newBigSet();<code>
  *
  * @decaf.ignore.jdk11
- * @sharpen.ignore
  */
 public class CollectionFactory {
 	
@@ -45,7 +44,6 @@ public class CollectionFactory {
 	 * - Objects are activated upon getting them from the BigSet.
 	 * <br><br>
 	 * BigSet is recommend whenever one object references a huge number of other objects and sorting is not required.
-	 * @param <E>
 	 * @return
 	 */
 	public <E> Set<E> newBigSet(){

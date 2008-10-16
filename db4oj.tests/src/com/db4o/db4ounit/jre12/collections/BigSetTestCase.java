@@ -62,7 +62,10 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 		Assert.areEqual(0, set.size()); 
 	}
 
-	public void testAddSize(){
+	/**
+	 * @sharpen.ignore
+	 */
+	public void testAdd(){
 		Set<Item> set = newBigSet();
 		Assert.isTrue(set.add(ITEM_ONE));
 		Assert.isFalse(set.add(ITEM_ONE));
@@ -154,7 +157,7 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	
 	public void testIterator(){
 		Set<Item> set = newBigSet();
-		Collection collection = itemList();
+		Collection<Item> collection = itemList();
 		set.addAll(collection);
 		
 		Iterator i = set.iterator();
@@ -224,7 +227,4 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 		return ((LocalTransaction)trans());
 	}
 	
-	
-
-
 }
