@@ -38,10 +38,9 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 	}
 
 	public boolean add(E obj) {
-		int id = getID(obj);
+		final int id = getID(obj);
 		if(id == 0){
-			container().store(obj);
-			add(getID(obj));
+			add(store(obj));
 			return true;
 		}
 		if (contains(id)) {
@@ -50,6 +49,10 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 		add(id);
 		return true;
 	}
+
+	private int store(E obj) {
+	    return container().store(_transaction, obj, Const4.UNSPECIFIED);
+    }
 
 	private void add(int id) {
 	    bTree().add(_transaction, new Integer(id));

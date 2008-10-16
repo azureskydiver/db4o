@@ -1506,10 +1506,10 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     	store(trans, obj, Const4.UNSPECIFIED);
     }    
     
-	public final void store(Transaction trans, Object obj, int depth)
+	public final int store(Transaction trans, Object obj, int depth)
 			throws DatabaseClosedException, DatabaseReadOnlyException {
 		synchronized (_lock) {
-            storeInternal(trans, obj, depth, true);
+            return storeInternal(trans, obj, depth, true);
         }
 	}
     
