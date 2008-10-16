@@ -18,7 +18,7 @@ public class AllTests extends Db4oTestSuite {
 			ArrayListElementQueriesTestCase.class,
 			ArrayListInHashMapTestCase.class,
 			ArrayListCandidatesTestCase.class,
-			// BigSetTestCase.class,
+			BigSetTestCase.class,
         	CollectionActivationTestCase.class, 
         	CollectionUuidTest.class,
         	EmbeddedClientObjectContainerJre12TestCase.class,
@@ -34,7 +34,6 @@ public class AllTests extends Db4oTestSuite {
         	TreeSetTestCase.class,
         	com.db4o.db4ounit.jre12.collections.custom.AllTests.class,
         	com.db4o.db4ounit.jre12.collections.map.AllTests.class, 
-	};
+		};
     }
-
 }

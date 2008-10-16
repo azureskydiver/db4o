@@ -506,7 +506,6 @@
 			<fileset dir="${dir.j.core.src}">
 				<include name="com/db4o/collections/*.java" />
 				<include name="com/db4o/internal/collections/*.java" />
-				<exclude name="com/db4o/collections/CollectionFactory.java" />
 				<include name="com/db4o/config/annotations/Indexed.java" />
 			</fileset>
 		</copy>		
@@ -573,6 +572,13 @@
                 <include name="**/db4ounit/util/**/*.java" />
                 <include name="**/db4ounit/common/ta/**/*.java" />
                 <include name="**/db4ounit/util/*.java" />
+            </fileset>
+        </copy>
+		
+		<copy todir="${dir.sharpen}/db4oj/tests/src" overwrite="true">
+    	    <fileset dir="${dir.j.tests.src}">
+    	    	<include name="**/jre12/collections/BigSetTestCase.java" />
+    	    	<include name="**/jre12/collections/IteratorAssert.java" />
             </fileset>
         </copy>
             	
@@ -790,7 +796,7 @@
 		<property name="dir.n.v6.tests.src" location="${dir.n.v6.tests}/Db4objects.Db4o.Tests" />
 		
 		<delete failonerror="false">
-			<fileset dir="${dir.n.v6.tests.src}/Common">
+			<fileset dir="${dir.n.v6.tests.src}">
 				<include name="**/*.cs" />
 				<exclude name="**/.svn/**" />
 			</fileset>
