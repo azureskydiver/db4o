@@ -41,22 +41,41 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 		int id = getID(obj);
 		if(id == 0){
 			container().store(obj);
-			id = getID(obj);
+			add(getID(obj));
+			return true;
 		}
-		bTree().add(_transaction, new Integer(id));
+		if (contains(id)) {
+			return false;
+		}
+		add(id);
 		return true;
 	}
+
+	private void add(int id) {
+	    bTree().add(_transaction, new Integer(id));
+    }
 
 	private int getID(Object obj) {
 		return (int) container().getID(obj);
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	public boolean addAll(Collection<? extends E> collection) {
-		for (E element : collection) {
-			add(element);
-		}
-		return true;
+		final Iterable<? extends E> iterable = collection;
+		return addAll(iterable);
 	}
+
+	public boolean addAll(final Iterable<? extends E> iterable) {
+		boolean result = false;
+	    for (E element : iterable) {
+			if (add(element)) {
+				result = true;
+			}
+		}
+		return result;
+    }
 
 	public void clear() {
 		bTree().clear(transaction());
@@ -67,12 +86,20 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 		if(id == 0){
 			return false;
 		}
-		BTreeRange range = bTree().search(transaction(), new Integer(id));
-		return ! range.isEmpty();
+		return contains(id);
 	}
+
+	private boolean contains(int id) {
+	    BTreeRange range = bTree().search(transaction(), new Integer(id));
+		return ! range.isEmpty();
+    }
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	public boolean containsAll(Collection<?> collection) {
-		for (Object element : collection) {
+		final Iterable<?> iterable = collection;
+		for (Object element : iterable) {
 			if(! contains(element)){
 				return false;
 			}
