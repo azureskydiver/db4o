@@ -65,4 +65,8 @@ public class FileConfigurationImpl implements FileConfiguration {
 	public void readOnly(boolean flag) {
 		_config.readOnly(flag);
 	}
+
+	public void recoveryMode(boolean flag) {
+		_config.recoveryMode(flag);
+	}
 }

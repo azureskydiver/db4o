@@ -199,6 +199,19 @@ public interface FileConfiguration {
      * @sharpen.property
      */
     public void readOnly(boolean flag);
+    
+
+    /**
+     * turns recovery mode on and off.<br><br>
+     * Recovery mode can be used to try to retrieve as much as possible
+     * out of an already corrupted database. In recovery mode internal 
+     * checks are more relaxed. Null or invalid objects may be returned 
+     * instead of throwing exceptions.<br><br>
+     * Use this method with care as a last resort to get data out of a
+     * corrupted database.
+     * @param flag <code>true</code> to turn recover mode on.
+     */
+    public void recoveryMode(boolean flag);
 
 
 }
