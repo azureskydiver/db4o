@@ -123,7 +123,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 	
 	private final static KeySpec READ_AS_KEY=new KeySpec(new Hashtable4(16));
 	
-	private final static KeySpec RECOVERY_MODE=new KeySpec(false);
+	private final static KeySpec RECOVERY_MODE_KEY=new KeySpec(false);
     
 	private final static KeySpec REFLECTOR_KEY=new KeySpec(null);
     
@@ -878,11 +878,11 @@ public final class Config4Impl implements Configuration, DeepClone,
 	}
 	
 	public void recoveryMode(boolean flag) {
-		_config.put(RECOVERY_MODE, flag);
+		_config.put(RECOVERY_MODE_KEY, flag);
 	}
 	
 	public boolean recoveryMode(){
-		return _config.getAsBoolean(RECOVERY_MODE);
+		return _config.getAsBoolean(RECOVERY_MODE_KEY);
 	}
 
 	Collection4 rename() {
