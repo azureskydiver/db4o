@@ -158,7 +158,7 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 	
 	public static class LocalConfigurationProviderTestUnit implements TestCase {
 		public void test() throws Exception {
-			if (subject() instanceof ClientConfiguration) {
+			if (CommonAndLocalConfigurationTestSuite.<Object>subject() instanceof ClientConfiguration) {
 				return;
 			}
 			
