@@ -15,6 +15,9 @@ public class CascadeToHashMapTestCase extends AbstractDb4oTestCase{
 		public HashMap hm;
 	}
 	
+	/**
+	 * @deprecated using deprecated api
+	 */
 	protected void configure(Configuration config) throws Exception {
 		
 		config.weakReferences(false);

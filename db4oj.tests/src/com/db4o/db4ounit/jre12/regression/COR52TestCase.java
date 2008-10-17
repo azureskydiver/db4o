@@ -21,6 +21,9 @@ public class COR52TestCase implements TestCase {
 	
 	private static final String TEST_FILE = Path4.getTempFileName();
 	
+	/**
+	 * @deprecated using deprecated api
+	 */
 	public void test() throws Exception {
 		int originalActivationDepth = ((Config4Impl) Db4o.configure())
 				.activationDepth();
