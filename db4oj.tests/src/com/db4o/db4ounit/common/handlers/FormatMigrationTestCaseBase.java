@@ -131,14 +131,17 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 	}
 
 	private void runDefrag(String testFileName) throws IOException {
-		Db4o.configure().allowVersionUpdates(true);
-		ObjectContainer oc = Db4o.openFile(testFileName);
+		Configuration config = Db4o.newConfiguration();
+		config.allowVersionUpdates(true);
+		configureForTest(config);
+		ObjectContainer oc = Db4o.openFile(config, testFileName);
 		oc.close();
 		
 		String backupFileName = Path4.getTempFileName();
 		try{
 			DefragmentConfig defragConfig = new DefragmentConfig(testFileName, backupFileName);
 			defragConfig.forceBackupDelete(true);
+			configureForTest(defragConfig.db4oConfig());
 			defragConfig.readOnly(! defragmentInReadWriteMode());
 			Defragment.defrag(defragConfig);
 		} finally{
@@ -194,6 +197,12 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         _db4oHeaderVersion = VersionServices.fileHeaderVersion(testFile); 
     }
     
+    protected int db4oMinorVersion(){
+        if(_db4oVersion != null){
+            return new Integer (_db4oVersion.substring(2, 3)).intValue();
+        }
+        return new Integer(Db4o.version().substring(7, 8)).intValue();
+    }
     
     protected int db4oMajorVersion(){
         if(_db4oVersion != null){
