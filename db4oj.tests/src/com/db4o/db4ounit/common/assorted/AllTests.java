@@ -29,6 +29,8 @@ public class AllTests extends Db4oTestSuite {
             DeleteUpdateTestCase.class,
             DescendToNullFieldTestCase.class,
             DualDeleteTestCase.class,
+            ExceptionsOnNotStorableFalseTestCase.class,
+            ExceptionsOnNotStorableIsDefaultTestCase.class,
             GetSingleSimpleArrayTestCase.class,
             HandlerRegistryTestCase.class,
             IndexCreateDropTestCase.class,
