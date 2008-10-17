@@ -87,7 +87,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec EXCEPTIONAL_CLASSES_KEY=new KeySpec(null);
     
-	private final static KeySpec EXCEPTIONS_ON_NOT_STORABLE_KEY=new KeySpec(false);
+	private final static KeySpec EXCEPTIONS_ON_NOT_STORABLE_KEY=new KeySpec(true);
     
 	private final static KeySpec FREESPACE_FILLER_KEY=new KeySpec(null);
 
