@@ -6,8 +6,8 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.collections.*;
+import com.db4o.config.*;
 import com.db4o.foundation.io.*;
-import com.db4o.internal.*;
 
 import db4ounit.*;
 import db4ounit.fixtures.*;
@@ -48,11 +48,16 @@ public class BigSetPerformanceMain extends FixtureBasedTestSuite {
 		static final String FILENAME = Path4.getTempFileName();
 
 		public void setUp() throws Exception {
-			Db4o.configure().bTreeNodeSize(1000);
-			_container = Db4o.openFile(FILENAME);
+			_container = openFile();
 			System.out.println("Element count: " + count());
 			System.out.println("Add runs: " + ADD_RUNS);
 		}
+
+		private ObjectContainer openFile() {
+	        final Configuration config = Db4o.newConfiguration();
+			config.bTreeNodeSize(1000);
+			return Db4o.openFile(config, FILENAME);
+        }
 
 		public void tearDown() {
 			_container.close();
@@ -73,8 +78,7 @@ public class BigSetPerformanceMain extends FixtureBasedTestSuite {
 			long start = System.currentTimeMillis();
 			for (int i = 0; i < ADD_RUNS; i++) {
 				list.add(new Item(i));
-				_container.store(list);
-				_container.commit();
+				storeAndCommit(list);
 			}
 			long stop = System.currentTimeMillis();
 			long duration = stop - start;
@@ -82,33 +86,44 @@ public class BigSetPerformanceMain extends FixtureBasedTestSuite {
 
 		}
 
+		private void storeAndCommit(Object o) {
+	        _container.store(o);
+	        _container.commit();
+        }
+
 		private List timePlainListCreation() {
 			long start = System.currentTimeMillis();
-			List list = new ArrayList();
-			for (int i = 0; i < count(); i++) {
-				list.add(new Item(i));
-			}
-			_container.store(list);
-			_container.commit();
+			storeAndCommit(setUpList());
 			long stop = System.currentTimeMillis();
 			long duration = stop - start;
 			System.out.println("ArrayList creation: " + duration + "ms");
-			return list;
+			return setUpList();
 		}
+
+		private List setUpList() {
+	        List list = new ArrayList();
+			for (int i = 0; i < count(); i++) {
+				list.add(new Item(i));
+			}
+	        return list;
+        }
 
 		private Set timeBigSetCreation() {
 			long start = System.currentTimeMillis();
-			Set set = newBigSet();
-			for (int i = 0; i < count(); i++) {
-				set.add(new Item(i));
-			}
-			_container.store(set);
-			_container.commit();
+			storeAndCommit(setUpSet());
 			long stop = System.currentTimeMillis();
 			long duration = stop - start;
 			System.out.println("Big Set creation: " + duration + "ms");
-			return set;
+			return setUpSet();
 		}
+
+		private Set setUpSet() {
+	        Set set = newBigSet();
+			for (int i = 0; i < count(); i++) {
+				set.add(new Item(i));
+			}
+	        return set;
+        }
 
 		private int count() {
 			return ((Integer) SubjectFixtureProvider.value()).intValue();
@@ -122,18 +137,11 @@ public class BigSetPerformanceMain extends FixtureBasedTestSuite {
 			long start = System.currentTimeMillis();
 			for (int i = 0; i < ADD_RUNS; i++) {
 				set.add(new Item(i));
-				_container.store(set);
-				_container.commit();
+				storeAndCommit(set);
 			}
 			long stop = System.currentTimeMillis();
 			long duration = stop - start;
 			System.out.println("BigSet single add: " + duration + "ms");
 		}
-
-		private Transaction trans() {
-			return ((ObjectContainerBase) _container).transaction();
-		}
-	}
-
-	
+	}	
 }
