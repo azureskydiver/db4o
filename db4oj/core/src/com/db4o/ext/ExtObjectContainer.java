@@ -131,12 +131,17 @@ public interface ExtObjectContainer extends ObjectContainer {
      * IDs can be obtained with {@link #getID getID(Object)}.
      * Objects will not be activated by this method. They will be returned in the 
      * activation state they are currently in, in the local cache.<br><br>
+     * Passing invalid id values to this method may result in all kinds of 
+     * exceptions being thrown. OutOfMemoryError and arithmetic exceptions 
+     * may occur. If an application is known to use invalid IDs, it is
+     * recommended to call this method within a catch-all block.
      * @param ID the internal ID
      * @return the object associated with the passed ID or <code>null</code>, 
      * if no object is associated with this ID in this <code>ObjectContainer</code>.
      * @see com.db4o.config.Configuration#activationDepth Why activation?
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      * @throws InvalidIDException when the provided id is outside the scope of the
+     * file length.
      */
     public <T> T getByID(long ID) throws DatabaseClosedException, InvalidIDException;
     

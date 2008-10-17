@@ -2,6 +2,7 @@
 
 package com.db4o.internal.marshall;
 
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 import com.db4o.typehandlers.*;
@@ -52,8 +53,12 @@ public class UnmarshallingContext extends ObjectReferenceContext implements Hand
         
         ClassMetadata classMetadata = readObjectHeader();
         if(classMetadata == null){
+        	invalidSlot();
             endProcessing();
             return _object;
+        }
+        if(classMetadata instanceof PrimitiveFieldHandler){
+        	invalidSlot();
         }
         
         _reference.classMetadata(classMetadata);
@@ -78,6 +83,13 @@ public class UnmarshallingContext extends ObjectReferenceContext implements Hand
         endProcessing();
         return _object;
     }
+
+	private void invalidSlot() {
+		if(container().config().recoveryMode()){
+			return;
+		}
+		// throw new InvalidSlotException("id: " + objectID());
+	}
 
 	private void adjustActivationDepth(boolean doAdjustActivationDepthForPrefetch) {
 		if(doAdjustActivationDepthForPrefetch){

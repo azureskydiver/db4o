@@ -57,6 +57,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	
 	private final static KeySpec CONFIGURATION_ITEMS_KEY=new KeySpec(null);
     
+	private final static KeySpec CONFIGURED_REFLECTOR_KEY=new KeySpec(null);
+    
 	private final static KeySpec CLASS_ACTIVATION_DEPTH_CONFIGURABLE_KEY=new KeySpec(true);
     
 	private final static KeySpec CLASSLOADER_KEY=new KeySpec(null);
@@ -120,8 +122,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private static final KeySpec PREFETCH_OBJECT_COUNT_KEY = new KeySpec(10);
 	
 	private final static KeySpec READ_AS_KEY=new KeySpec(new Hashtable4(16));
-    
-	private final static KeySpec CONFIGURED_REFLECTOR_KEY=new KeySpec(null);
+	
+	private final static KeySpec RECOVERY_MODE=new KeySpec(false);
     
 	private final static KeySpec REFLECTOR_KEY=new KeySpec(null);
     
@@ -874,6 +876,14 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public boolean isReadOnly() {
 		return _readOnly;
 	}
+	
+	public void recoveryMode(boolean flag) {
+		_config.put(RECOVERY_MODE, flag);
+	}
+	
+	public boolean recoveryMode(){
+		return _config.getAsBoolean(RECOVERY_MODE);
+	}
 
 	Collection4 rename() {
 		return (Collection4)_config.get(RENAME_KEY);
@@ -1003,4 +1013,5 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public ClientServerFactory clientServerFactory(){
 		return (ClientServerFactory) _config.get(CLIENT_SERVER_FACTORY_KEY);
 	}
+
 }
