@@ -15,7 +15,7 @@ public class CloseUnlocksFileTestCase implements TestCase {
     public void test(){
         File4.delete(FILE);
         Assert.isFalse(File4.exists(FILE));
-        ObjectContainer oc = Db4o.openFile(FILE);
+        ObjectContainer oc = Db4o.openFile(Db4o.newConfiguration(), FILE);
         oc.close();
         File4.delete(FILE);
         Assert.isFalse(File4.exists(FILE));

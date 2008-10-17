@@ -24,6 +24,9 @@ public class SwitchingFilesFromMultipleClientsTestCase extends StandaloneCSTestC
 		config.reflectWith(Platform4.reflectorForType(Data.class));
 	}
 
+	/**
+	 * @deprecated using deprecated api
+	 */
 	protected void runTest() {
 		_counter = 0;
 		ClientObjectContainer clientA = openClient();

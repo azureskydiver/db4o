@@ -26,7 +26,7 @@ public class ServerPortUsedTestCase extends Db4oClientServerTestCase {
 		final int port = clientServerFixture().serverPort();
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				Db4o.openServer(DATABASE_FILE, port);
+				Db4o.openServer(Db4o.newConfiguration(), DATABASE_FILE, port);
 			}
 		});
 

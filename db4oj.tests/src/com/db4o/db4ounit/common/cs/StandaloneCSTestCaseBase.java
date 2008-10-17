@@ -18,6 +18,11 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 	public static final class Item {
 	}
 	
+	/**
+	 * @deprecated using deprecated api
+	 * 
+	 * @throws Throwable
+	 */
 	public void test() throws Throwable {
 		final Configuration config = Db4o.configure();
 		configure(config);
@@ -41,6 +46,9 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 		ContainerServices.withContainer(openClient(), block);
 	}
 
+	/**
+	 * @deprecated using deprecated api
+	 */
 	protected ClientObjectContainer openClient() {
 		return (ClientObjectContainer)Db4o.openClient("localhost", _port, "db4o", "db4o");
 	}

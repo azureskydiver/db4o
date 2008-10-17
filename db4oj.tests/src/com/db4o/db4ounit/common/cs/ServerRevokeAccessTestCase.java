@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.cs;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -29,7 +30,7 @@ public class ServerRevokeAccessTestCase
 		ObjectServer server = clientServerFixture().server();
 		server.grantAccess(user, password);
 
-		ObjectContainer con = Db4o.openClient(SERVER_HOSTNAME,
+		ObjectContainer con = Db4o.openClient(config(), SERVER_HOSTNAME,
 				clientServerFixture().serverPort(), user, password);
 		Assert.isNotNull(con);
 		con.close();
@@ -38,9 +39,13 @@ public class ServerRevokeAccessTestCase
 
 		Assert.expect(Exception.class, new CodeBlock() {
 			public void run() throws Throwable {
-				Db4o.openClient(SERVER_HOSTNAME, clientServerFixture()
+				Db4o.openClient(config(), SERVER_HOSTNAME, clientServerFixture()
 						.serverPort(), user, password);
 			}
 		});
 	}
+
+	private Configuration config() {
+	    return clientServerFixture().config();
+    }
 }

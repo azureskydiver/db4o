@@ -18,6 +18,9 @@ public class InMemoryObjectContainerTestCase implements TestLifeCycle{
     
     private static int STORED_ITEMS = 1000;
 
+    /**
+     * @deprecated using deprecated api
+     */
     public void setUp() throws Exception {
         memoryFile = new MemoryFile();
         memoryFile.setIncrementSizeBy(100);

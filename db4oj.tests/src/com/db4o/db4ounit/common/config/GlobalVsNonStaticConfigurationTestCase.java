@@ -68,6 +68,9 @@ public class GlobalVsNonStaticConfigurationTestCase implements Db4oTestCase, Tes
 		}
 	}
 
+	/**
+	 * @deprecated using deprecated api
+	 */
 	public void testOpenWithStaticConfiguration() {
 		Db4o.configure().readOnly(true);
 		Assert.expect(DatabaseReadOnlyException.class, new CodeBlock() {

@@ -18,7 +18,7 @@ public class ObjectServerTestCase implements TestLifeCycle {
 
     public void setUp() throws Exception {
         fileName = Path4.getTempFileName();
-        server = Db4o.openServer(fileName, -1).ext();
+        server = Db4o.openServer(Db4o.newConfiguration(), fileName, -1).ext();
         server.grantAccess(credentials(), credentials());
     }
 
@@ -29,9 +29,9 @@ public class ObjectServerTestCase implements TestLifeCycle {
     
     public void testClientCount(){
         assertClientCount(0);
-        ObjectContainer client1 = Db4o.openClient("localhost", port(), credentials(), credentials());
+        ObjectContainer client1 = Db4o.openClient(Db4o.newConfiguration(), "localhost", port(), credentials(), credentials());
         assertClientCount(1);
-        ObjectContainer client2 = Db4o.openClient("localhost", port(), credentials(), credentials());
+        ObjectContainer client2 = Db4o.openClient(Db4o.newConfiguration(), "localhost", port(), credentials(), credentials());
         assertClientCount(2);
         client1.close();
         client2.close();
