@@ -5,6 +5,9 @@ package com.db4o.db4ounit.common.cs;
 
 public class SwitchingFilesFromClientTestCase extends ClientServerTestCaseBase {
 
+	/**
+	 * @deprecated using deprecated api
+	 */
 	public void testSwitch() {
         if(isMTOC()){
             // Cast to ExtClient won't work and switching files is 

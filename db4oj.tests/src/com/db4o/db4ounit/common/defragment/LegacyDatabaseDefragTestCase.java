@@ -14,8 +14,6 @@ import db4ounit.*;
 
 /**
  * test case for COR-785
- */
-/**
  * @decaf.ignore.jdk11
  */
 public class LegacyDatabaseDefragTestCase implements TestCase {
