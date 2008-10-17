@@ -486,9 +486,20 @@
 				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 			</filterset>
 		</copy>
+		<listPackages property="db4o.osgi.exported.packages" extension=".class">
+			<dir path="${dir.dist.classes.jdk1.2}" />
+			<dir path="${dir.dist.classes.jdk1.2.cs}" />
+			<dir path="${dir.dist.classes.jdk1.2.optional}" />
+			<dir path="${dir.dist.classes.instrumentation}" />
+			<dir path="${dir.dist.classes.nqopt}" />
+			<dir path="${dir.dist.classes.db4otools}" />
+			<dir path="${dir.dist.classes.osgi}" />
+			<!-- bloat packages are hardwired in template --> 
+		</listPackages>
 		<copy tofile="${dir.dist.classes.osgi}/META-INF/MANIFEST.MF" file="${file.osgi.manifest}.TM" overwrite="true">
 			<filterset>
 				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
+				<filter token="db4o.osgi.exported.packages" value="${db4o.osgi.exported.packages}"/>
 			</filterset>
 		</copy>
 		<jar destfile="${file.osgi.jar}" manifest="${dir.dist.classes.osgi}/META-INF/MANIFEST.MF">
