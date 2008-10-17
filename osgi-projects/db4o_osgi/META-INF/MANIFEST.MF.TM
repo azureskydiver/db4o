@@ -35,4 +35,4 @@ Export-Package: EDU.purdue.cs.bloat.benchmark,
  EDU.purdue.cs.bloat.trans,
  EDU.purdue.cs.bloat.tree,
  EDU.purdue.cs.bloat.util,
- @db4o.osgi.exported.packages@
+@db4o.osgi.exported.packages@
