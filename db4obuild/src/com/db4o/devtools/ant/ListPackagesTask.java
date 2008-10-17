@@ -15,12 +15,12 @@ public class ListPackagesTask extends Task {
 		_property = property;
 	}
 
-	public void addDir(PackagesBaseDir dir) {
-		_baseDirs.add(dir);
-	}
-	
 	public void setExtension(String extension) {
 		_extension = extension;
+	}
+	
+	public void addDir(PackagesBaseDir dir) {
+		_baseDirs.add(dir);
 	}
 	
 	@Override
@@ -37,20 +37,7 @@ public class ListPackagesTask extends Task {
 		}
 	}
 
-	private static String joinPackages(List<String> packages) {
-		StringBuilder builder = new StringBuilder();
-		boolean isFirst = true;
-		for (String pkg : packages) {
-			if(!isFirst) {
-				builder.append(",\n");
-			}
-			builder.append(' ').append(pkg);
-			isFirst = false;
-		}
-		return builder.toString();
-	}
-
-	public static void collectPackages(String baseDirName, final String extension, List<String> packages) throws IOException {
+	private static void collectPackages(String baseDirName, final String extension, List<String> packages) throws IOException {
 		File baseDir = new File(baseDirName);
 		String baseDirPath = baseDir.getCanonicalPath();
 		LinkedList<File> pendingDirs = new LinkedList<File>();
@@ -74,20 +61,25 @@ public class ListPackagesTask extends Task {
 		}
 	}
 
+	private static String joinPackages(List<String> packages) {
+		StringBuilder builder = new StringBuilder();
+		boolean isFirst = true;
+		for (String pkg : packages) {
+			if(!isFirst) {
+				builder.append(",\n");
+			}
+			builder.append(' ').append(pkg);
+			isFirst = false;
+		}
+		return builder.toString();
+	}
+
 	private static String packageName(String baseDirPath, File curDir) throws IOException {
 		String curDirPath = curDir.getCanonicalPath();
 		String packageSegment = curDirPath.substring(baseDirPath.length() + 1);
 		return packageSegment.replace(File.separatorChar, '.');
 	}
 
-	public static void main(String[] args) throws IOException {
-		List<String> packages = new ArrayList<String>();
-		ListPackagesTask.collectPackages(args[0], args[1], packages);
-		for (String pkg : packages) {
-			System.out.println(pkg);
-		}
-	}
-	
 	public static class PackagesBaseDir {
 		private String _path;
 		
