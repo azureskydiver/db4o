@@ -37,6 +37,9 @@ public class BlobThreadCloseTestCase extends Db4oClientServerTestCase {
 		IOUtil.deleteDir("blobs");
 	}
 
+	/**
+	 * @deprecated using deprecated api
+	 */
 	public void test() throws Exception {
 		if (isEmbeddedClientServer()) {
 			return;

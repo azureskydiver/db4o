@@ -92,7 +92,7 @@ public class ClientProcessesTestCase extends AbstractDb4oTestCase implements Opt
         }
 
         private void start() {
-            ObjectContainer oc = Db4o.openClient(Db4oClientServer.HOST, _port, Db4oClientServer.USERNAME, Db4oClientServer.PASSWORD);
+            ObjectContainer oc = Db4o.openClient(Db4o.newConfiguration(), Db4oClientServer.HOST, _port, Db4oClientServer.USERNAME, Db4oClientServer.PASSWORD);
             oc.store(new Item(0));
             oc.commit();
             print("[0]");
