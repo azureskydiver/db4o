@@ -40,6 +40,13 @@
 		</classpath>
 	</taskdef>
 
+	<taskdef name="listPackages" classname="com.db4o.devtools.ant.ListPackagesTask">
+		<classpath>
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+
 	<taskdef name="filehead" classname="com.db4o.devtools.ant.FileHeadAntTask">
 		<classpath>
 			<pathelement location="${dir.build.bin}" />
