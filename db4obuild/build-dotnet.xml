@@ -1023,15 +1023,33 @@
 	</target>
 	
 	<target
-		name="update-cecil"
-		description="updates Mono.Cecil and Cecil.FlowAnalysis from mono's repository"
-		depends="init">
+		name="update-cecil-nant-cecil"
+		depends="update-cecil-init">
+		<exec executable="${nant.exe}" dir="${cecil.dir}" failonerror="true">
+			<arg value="-D:compactframework.v2.dir=${dir.compactframework}/v2.0/WindowsCE" />
+			<arg value="-t:netcf-2.0" />
+			<arg value="-D:csc.defines=KEYFILE" />
+			<arg value="clean" />
+			<arg value="compactframework2" />
+		</exec>
+	</target>
 	
+	<target name="update-cecil-init" depends="init">
 		<property name="nant.exe" location="nant" />
 		<property name="svn.exe" location="svn" />
 	
 		<property name="dir.dist.cecil" location="${dir.dist}/cecil" />
 		<property name="mono.svn" value="svn://anonsvn.mono-project.com/source/trunk" />
+		<property name="cecil.dir" location="${dir.dist.cecil}/mcs/class/Mono.Cecil" />
+		<property name="cecil.fa.dir" location="${dir.dist.cecil}/cecil/flowanalysis" />
+		<property name="nant.output.dir" location="${cecil.fa.dir}/bin" />
+	</target>
+	
+	<target
+		name="update-cecil"
+		description="updates Mono.Cecil and Cecil.FlowAnalysis from mono's repository"
+		depends="update-cecil-init">
+		
 		
 		<delete dir="${dir.dist.cecil}" />
 		<mkdir dir="${dir.dist.cecil}/mcs/class" />
@@ -1057,10 +1075,6 @@
 			<arg value="${mono.svn}/cecil/pdb" />
 		</exec>
 		
-		<property name="cecil.dir" location="${dir.dist.cecil}/mcs/class/Mono.Cecil" />
-		<property name="cecil.fa.dir" location="${dir.dist.cecil}/cecil/flowanalysis" />
-		<property name="nant.output.dir" location="${cecil.fa.dir}/bin" />
-		
 		<macrodef name="copy-cecil-libs">
 			<attribute name="todir" />
 			<sequential>
@@ -1073,13 +1087,7 @@
 			</sequential>
 		</macrodef>
 		
-		<exec executable="${nant.exe}" dir="${cecil.dir}" failonerror="true">
-			<arg value="-D:compactframework.v2.dir=${dir.compactframework}/v2.0/WindowsCE" />
-			<arg value="-t:netcf-2.0" />
-			<arg value="-D:csc.defines=KEYFILE" />
-			<arg value="clean" />
-			<arg value="compactframework2" />
-		</exec>
+		<antcall target="update-cecil-nant-cecil" />
 	
 		<exec executable="${nant.exe}" dir="${cecil.fa.dir}" failonerror="true">
 			<arg value="-D:compactframework.v2.dir=${dir.compactframework}/v2.0/WindowsCE" />
