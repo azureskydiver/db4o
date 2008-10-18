@@ -9,8 +9,9 @@ import com.db4o.io.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
+public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase implements OptOutNetworkingCS {
 	
 	private static final int INVALID_ID = 3;
 	
