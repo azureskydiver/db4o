@@ -8,13 +8,12 @@ import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 public class SelectiveActivationTestCase
 	extends AbstractDb4oTestCase
 	implements OptOutTA {
 	
-    private boolean debug = false;
+	private boolean debug = false;
 
     protected void configure(Configuration config) {
         enableCascadeOnDelete(config);
@@ -103,11 +102,7 @@ public class SelectiveActivationTestCase
         Query q = db().query();
         q.constrain(Item.class);
         // todo: having this here will not fire the activation events!
-        q.sortBy(new QueryComparator() {
-			public int compare(Object first, Object second) {
-				return ((Item)first).id.compareTo(((Item)second).id);
-			}
-		});
+        q.sortBy(new ItemQueryComparator());
         return q;
     }
 
@@ -121,10 +116,13 @@ public class SelectiveActivationTestCase
         return (Item) q.execute().next();
     }
 
+    public static class ItemQueryComparator implements QueryComparator {
+		public int compare(Object first, Object second) {
+			return ((Item)first).id.compareTo(((Item)second).id);
+		}
+	}
+
     public static void main(String[] args) {
-        new ConsoleTestRunner(
-                new Db4oTestSuiteBuilder(
-                        new Db4oSolo(),
-                        SelectiveActivationTestCase.class)).run();
+    	new SelectiveActivationTestCase().runAll();
     }
 }
