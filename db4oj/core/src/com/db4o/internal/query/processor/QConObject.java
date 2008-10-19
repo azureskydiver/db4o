@@ -333,7 +333,7 @@ public class QConObject extends QCon {
             }
             
             if(i_objectID > 0){
-                Object obj = trans.container().getByID(trans, i_objectID);
+                Object obj = trans.container().attemptGetByID(trans, i_objectID);
                 if(obj != null){
                     i_object = obj;
                 }

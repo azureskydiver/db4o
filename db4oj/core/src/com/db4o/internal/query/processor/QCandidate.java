@@ -4,6 +4,7 @@ package com.db4o.internal.query.processor;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
@@ -596,7 +597,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 		final ObjectContainerBase container = transaction().container();
 		
-		_member = container.getByID(transaction(), _key);
+		_member = container.attemptGetByID(transaction(), _key);
+			
 		if (_member != null && (a_activate || _member instanceof Compare)) {
 			container.activate(transaction(), _member);
 			checkInstanceOfCompare();
