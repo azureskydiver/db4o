@@ -183,7 +183,11 @@ public class Defragment {
 
 	private static void setIdentity(DefragmentConfig config, int targetIdentityID,
 			int targetUuidIndexID) {
-		LocalObjectContainer targetDB = (LocalObjectContainer) Db4o.openFile(config.clonedDb4oConfig(), config.origPath());
+		Configuration db4oConfig = config.clonedDb4oConfig();
+		// required because reading of old identity fails
+		// and we don't want to see an invalid ID exception
+		db4oConfig.recoveryMode(true);  
+		LocalObjectContainer targetDB = (LocalObjectContainer) Db4o.openFile(db4oConfig, config.origPath());
 		try {
 			Db4oDatabase identity = (Db4oDatabase) targetDB
 					.getByID(targetIdentityID);
