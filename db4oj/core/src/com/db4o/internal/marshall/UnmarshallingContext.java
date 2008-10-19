@@ -88,7 +88,8 @@ public class UnmarshallingContext extends ObjectReferenceContext implements Hand
 		if(container().config().recoveryMode()){
 			return;
 		}
-		// throw new InvalidSlotException("id: " + objectID());
+		throw new InvalidSlotException("id: " + objectID());
+		// System.out.println("Invalid ID");
 	}
 
 	private void adjustActivationDepth(boolean doAdjustActivationDepthForPrefetch) {

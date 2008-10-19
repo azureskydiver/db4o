@@ -3,6 +3,7 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 
 public final class MDelete extends MsgD implements ServerSideMessage {
@@ -10,7 +11,7 @@ public final class MDelete extends MsgD implements ServerSideMessage {
 		ByteArrayBuffer bytes = this.getByteLoad();
 		ObjectContainerBase stream = stream();
 		synchronized (streamLock()) {
-			Object obj = stream.getByID(transaction(), bytes.readInt());
+			Object obj = stream.attemptGetByID(transaction(), bytes.readInt());
             boolean userCall = bytes.readInt() == 1;
 			if (obj != null) {
 				try {
