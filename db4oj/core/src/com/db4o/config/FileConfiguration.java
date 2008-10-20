@@ -210,6 +210,8 @@ public interface FileConfiguration {
      * Use this method with care as a last resort to get data out of a
      * corrupted database.
      * @param flag <code>true</code> to turn recover mode on.
+     * 
+     * @sharpen.property
      */
     public void recoveryMode(boolean flag);
 
