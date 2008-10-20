@@ -596,7 +596,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 		final ObjectContainerBase container = transaction().container();
 		
-		_member = container.attemptGetByID(transaction(), _key);
+		_member = container.tryGetByID(transaction(), _key);
 			
 		if (_member != null && (a_activate || _member instanceof Compare)) {
 			container.activate(transaction(), _member);

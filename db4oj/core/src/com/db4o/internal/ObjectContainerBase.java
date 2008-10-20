@@ -754,7 +754,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     
     public abstract AbstractQueryResult queryAllObjects(Transaction ta);
     
-    public final Object attemptGetByID(Transaction ta, long id) throws DatabaseClosedException{
+    public final Object tryGetByID(Transaction ta, long id) throws DatabaseClosedException{
 		try {
 			return getByID(ta, id);
 		} catch (InvalidSlotException ise){
