@@ -34,8 +34,11 @@ public class TestException extends RuntimeException {
 	}
 	
 	public String toString() {
-		return null != _reason
-			? _reason.toString()
-			: super.toString();
+		String s = super.toString();
+		if (null != _reason) {
+			s = s + _reason.toString();
+		}
+		
+		return s;
 	}
 }
