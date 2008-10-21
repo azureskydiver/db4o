@@ -2,15 +2,14 @@
 
 package com.db4o.j2me.bloat;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.instrumentation.core.*;
-import com.db4o.instrumentation.util.*;
-
-import EDU.purdue.cs.bloat.context.PersistentBloatContext;
+import EDU.purdue.cs.bloat.context.*;
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.file.ClassFileLoader;
+import EDU.purdue.cs.bloat.file.*;
 import EDU.purdue.cs.bloat.reflect.*;
+
+import com.db4o.instrumentation.util.*;
 
 // TODO extract generic functionality, move to db4otools, delete
 public class BloatJ2MEContext {
