@@ -18,10 +18,11 @@ public class SimpleMain {
 	public static void main(String[] args) {
 		System.setProperty("db4o.dynamicnq","true");
 		new File(FILENAME).delete();
-		ObjectClass classConfig=Db4o.configure().objectClass(Student.class);
+		final Configuration config = Db4o.newConfiguration();
+		ObjectClass classConfig=config.objectClass(Student.class);
 		classConfig.objectField("name").indexed(true);
 		classConfig.objectField("age").indexed(true);
-		ObjectContainer db=Db4o.openFile(FILENAME);
+		ObjectContainer db=Db4o.openFile(config, FILENAME);
 		try {
 			Student mumon = new Student(100,"Mumon",1.50f);
 			Student tortoise = new Student(101,"Tortoise",0.85f,mumon);
@@ -35,7 +36,7 @@ public class SimpleMain {
 			db.commit();
 			db.close();
 			
-			db=Db4o.openFile(FILENAME);
+			db=Db4o.openFile(config, FILENAME);
 			final String protoName="Achilles";
 			Predicate<Student> filter=new Predicate<Student>() {
 				private int protoAge=203;

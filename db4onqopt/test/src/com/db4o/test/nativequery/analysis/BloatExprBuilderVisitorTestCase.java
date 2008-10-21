@@ -38,7 +38,6 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	private final static String STRING_CMPVAL="Test";
 	private final static Integer INT_WRAPPER_CMPVAL=new Integer(INT_CMPVAL);
 	private final static Boolean BOOLEAN_WRAPPER_CMPVAL=Boolean.TRUE;
-	private final static Date DATE_WRAPPER_CMPVAL=new Date();
 	private final Integer intWrapperCmpVal=new Integer(INT_CMPVAL);
 	
 	private boolean boolMember=false;

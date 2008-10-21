@@ -15,7 +15,7 @@ import db4ounit.extensions.AbstractDb4oTestCase;
  */
 public class NativeQueryOptimizerDiagnosticsTestCase extends AbstractDb4oTestCase {
 	private boolean _failed = false; 
-	private Object _reason = null;
+//	private Object _reason = null;
 	
 	protected void configure(Configuration config) {
 		config.objectClass(Subject.class).objectField("_name").indexed(true);
@@ -24,7 +24,7 @@ public class NativeQueryOptimizerDiagnosticsTestCase extends AbstractDb4oTestCas
 				new DiagnosticListener() {
 					public void onDiagnostic(Diagnostic d) {
 						if (d.getClass() == NativeQueryNotOptimized.class) {
-							_reason = ((NativeQueryNotOptimized) d).reason();
+//							_reason = ((NativeQueryNotOptimized) d).reason();
 							_failed = true;
 						}
 					}					
@@ -43,7 +43,7 @@ public class NativeQueryOptimizerDiagnosticsTestCase extends AbstractDb4oTestCas
 										return subject.complexName().startsWith("Test");
 									}
 								});
-		
+		Assert.isNotNull(items);
 		Assert.isTrue(_failed);
 	}
 	
