@@ -4,6 +4,7 @@ package com.db4o.internal.cs.messages;
 
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.cs.*;
 
 public final class MReadObject extends MsgD implements ServerSideMessage {
 	
@@ -16,6 +17,9 @@ public final class MReadObject extends MsgD implements ServerSideMessage {
 				bytes = stream().readWriterByID(transaction(), _payLoad.readInt(), _payLoad.readInt()==1);
 			} catch (Db4oException e) {
 				writeException(e);
+				return true;
+			} catch (OutOfMemoryError oome){
+				writeException(new InternalServerError(oome));
 				return true;
 			}
 		}
