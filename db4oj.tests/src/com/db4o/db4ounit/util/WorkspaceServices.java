@@ -53,6 +53,44 @@ public class WorkspaceServices {
 		return findFolderWithChild(getParentFile(test).getParent(), folderChild);
 	}
 	
+	private static String findProperty(String fname, String property) {
+		FileReader fileReader = null; 
+		try {
+			fileReader = new FileReader(new File(fname));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		BufferedReader reader = new BufferedReader(fileReader);
+		while (true){
+			String line = null;
+			try {
+				line = reader.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			if(line == null){
+				return null;
+			}
+			if (line.startsWith(property))
+			{
+				return line.substring(property.length() + 1);
+			}
+		}
+	}
+	
+	public static String readProperty(String fname, String property) 
+	{
+		return readProperty(fname, property, false);
+	}
+
+	public static String readProperty(String fname, String property, boolean lenient)
+	{
+		String value = findProperty(fname, property);
+		if (value != null) return value;
+		if (lenient) return null;
+		throw new IllegalArgumentException("property '" + property + "' not found in '" + fname + "'");
+	}
+	
 	private static File getParentFile(File file){
         String path = file.getParent();
         if (path == null){
@@ -67,5 +105,36 @@ public class WorkspaceServices {
 		Assert.isTrue(file.exists(), path); 
 		return file;
 	}
+	
+	public static String machinePropertiesPath(){
+		String fileName = "machine.properties";
+		String path = workspacePath("db4obuild/" + fileName);
+		Assert.isTrue(File4.exists(path));
+		return path;
+	}
+	
+	public static String readMachineProperty(String property)
+	{
+		return readProperty(machinePropertiesPath(), property);
+	}
+	
+	public static String readMachinePathProperty(String property)
+	{
+		String path = readMachineProperty(property);
+		assertFileExists(path);
+		return path;
+	}
+	
+	private static void assertFileExists(String path){
+		Assert.isTrue(File4.exists(path), "File '" + path + "' could not be found ");
+	}
+	
+	public static String javacPath()
+	{
+		return "javac";
+		// FIXME: Should be a property from machine.properties 
+        // return readMachinePathProperty("file.compiler.jdk1.3");
+	}
+
 
 }
