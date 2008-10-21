@@ -4,8 +4,11 @@ package com.db4o.db4ounit.util;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
+
+import db4ounit.*;
 
 
 /**
@@ -16,6 +19,29 @@ public class JavaServices {
     public static String java(String className) throws IOException, InterruptedException{
         return IOServices.exec(javaExecutable(), javaRunArguments(className));
     }
+    
+	public static String javac(String srcFile) throws IOException, InterruptedException
+	{
+			String[] classPath =
+				new String[]{
+					"-classpath",
+					IOServices.joinQuotedArgs(
+	        				File.pathSeparator,
+	        				new String[]{
+	        						currentClassPath(),
+	        						db4oCoreJarPath(), 
+	        						db4oJarPath("-optional"),
+	        						db4oJarPath("-cs"),
+	        				}),
+	        		srcFile};
+
+			return IOServices.exec(WorkspaceServices.javacPath(),classPath);
+	}
+	
+	private static void assertJarExists(String path){
+		Assert.isTrue(File4.exists(path), "'" + path + "' not found. Make sure the jar was built before running this test.");		
+	}
+
 
     public static String startAndKillJavaProcess(String className, String expectedOutput, long timeout) throws IOException{
         return IOServices.execAndDestroy(javaExecutable(), javaRunArguments(className), expectedOutput, timeout);
@@ -31,7 +57,17 @@ public class JavaServices {
     }
     
     private static String[] javaRunArguments(String className) {
-        return new String[] {"-cp", currentClassPath(), className};
+        return new String[] {"-cp",
+                IOServices.joinQuotedArgs(
+						File.pathSeparator,
+						new String[] {
+						JavaServices.javaTempPath(), 
+						currentClassPath(),
+						db4oCoreJarPath(), 
+						db4oJarPath("-optional"),
+						db4oJarPath("-cs")})
+        		, className};
+        
     }
     
     private static String currentClassPath(){
@@ -83,5 +119,28 @@ public class JavaServices {
         }
         
     }
+    
+    public static String db4oCoreJarPath()
+    {
+        return db4oJarPath("-core");
+    }
+
+	public static String db4oJarPath(String extension)
+	{
+		String db4oVersion =  
+				Db4oVersion.MAJOR + "." + Db4oVersion.MINOR + "." + 
+            Db4oVersion.ITERATION + "." + Db4oVersion.REVISION;
+		String distDir = WorkspaceServices.readProperty(WorkspaceServices.machinePropertiesPath(), "dir.dist", true);
+		if(distDir == null || distDir.length() == 0)
+		{
+			distDir = "db4obuild/dist";
+		}
+		return WorkspaceServices.workspacePath(distDir + "/java/lib/db4o-" + db4oVersion + extension + "-java1.2.jar");
+	}
+	
+	public static String javaTempPath()
+	{
+		return IOServices.buildTempPath("java");
+	}
 
 }

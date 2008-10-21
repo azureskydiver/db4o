@@ -233,4 +233,23 @@ public class IOServices {
             return _result;
         }
     }
+    
+    public static String joinQuotedArgs(String separator, String[] args)
+    {
+        StringBuffer buffer = new StringBuffer();
+        for (String arg : args)
+        {
+            if (buffer.length() > 0) buffer.append(separator);
+            buffer.append(quote(arg));
+        }
+        return buffer.toString();
+    }
+    
+    public static String quote(String s)
+    {
+        if (s.startsWith("\"")) return s;
+        return "\"" + s + "\"";
+    }
+
+
 }
