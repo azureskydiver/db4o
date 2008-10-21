@@ -11,14 +11,14 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase implements OptOutNetworkingCS {
+public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
 	
 	private static final int INVALID_ID = 3;
 	
 	private static final int OUT_OF_MEMORY_ID = 4;
 
 	public static void main(String[] args) {
-		new InvalidSlotExceptionTestCase().runSolo();
+		new InvalidSlotExceptionTestCase().runAll();
 	}
 	
 	
@@ -35,7 +35,9 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase implement
 	}
 	
 	public void testDbNotClosedOnOutOfMemory(){
-		Assert.expect(OutOfMemoryError.class, new CodeBlock(){
+		Class expectedException = isClientServer() && ! isEmbeddedClientServer() 
+		? InvalidIDException.class : OutOfMemoryError.class;
+		Assert.expect(expectedException, new CodeBlock(){
 			public void run() throws Throwable {
 				db().getByID(OUT_OF_MEMORY_ID);
 			}
