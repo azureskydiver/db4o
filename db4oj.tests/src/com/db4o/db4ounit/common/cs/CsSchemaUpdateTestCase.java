@@ -9,12 +9,13 @@ import com.db4o.foundation.io.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 /**
  * @decaf.ignore
  * @sharpen.ignore
  */
-public class CsSchemaUpdateTestCase extends AbstractDb4oTestCase{
+public class CsSchemaUpdateTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	
 	public static void main(String[] arguments) {
 		new CsSchemaUpdateTestCase().runSolo();
