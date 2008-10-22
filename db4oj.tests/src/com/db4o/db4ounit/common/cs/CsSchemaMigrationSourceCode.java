@@ -71,7 +71,7 @@ public class CsSchemaMigrationSourceCode {
 		Item item = (Item) query.execute().next();
 		//update
 		//assert
-		/*item._name = "one";*/
+		/*item._name = "IsNamedOK";*/
 		client.store(item);
 		client.close();
 	}

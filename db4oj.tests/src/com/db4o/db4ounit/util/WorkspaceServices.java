@@ -107,11 +107,30 @@ public class WorkspaceServices {
 	}
 	
 	public static String machinePropertiesPath(){
-		String fileName = "machine.properties";
+		return propertiesPath("machine.properties");
+	}
+	
+	public static String antPropertiesPath(){
+		return propertiesPath("ant.properties");
+	}
+
+	private static String propertiesPath(String fileName) {
 		String path = workspacePath("db4obuild/" + fileName);
 		Assert.isTrue(File4.exists(path));
 		return path;
 	}
+	
+	public static String readAntProperty(String property, boolean lenient)
+	{
+		return readProperty(antPropertiesPath(), property, lenient);
+	}
+	
+	
+	public static String readMachineProperty(String property, boolean lenient)
+	{
+		return readProperty(machinePropertiesPath(), property, lenient);
+	}
+
 	
 	public static String readMachineProperty(String property)
 	{
@@ -131,10 +150,16 @@ public class WorkspaceServices {
 	
 	public static String javacPath()
 	{
+		String filePropertyName = "file.compiler.jdk1.5";
+		String path = readMachineProperty(filePropertyName, true);
+		if(path != null){
+			return path;
+		}
+		path = readAntProperty(filePropertyName, true);
+		if(path != null){
+			return path;
+		}
 		return "javac";
-		// FIXME: Should be a property from machine.properties 
-        // return readMachinePathProperty("file.compiler.jdk1.3");
 	}
-
 
 }
