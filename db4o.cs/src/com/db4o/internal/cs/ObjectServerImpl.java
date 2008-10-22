@@ -61,10 +61,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		_container.setServer(true);	
 		configureObjectServer();
 		
-		// Checking all class changes improves refactoring
-		// behaviour but it fails Alias test cases.
-		// Commenting out until the Alias issue is resolved.
-		// _container.classCollection().checkAllClassChanges();
+		_container.classCollection().checkAllClassChanges();
 		
 		boolean ok = false;
 		try {

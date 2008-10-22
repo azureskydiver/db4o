@@ -46,7 +46,7 @@ public class AliasesTestCase extends AbstractDb4oTestCase implements OptOutDefra
 		public String bar;
 	}
 	
-	protected void store(){
+	protected void store() throws Exception{
 		addACAlias();
 		CBar bar = new CBar();
 		bar.foo = "foo";
@@ -94,11 +94,11 @@ public class AliasesTestCase extends AbstractDb4oTestCase implements OptOutDefra
 		addAlias("A", "B");
 	}
 	
-	private void addACAlias(){
+	private void addACAlias() throws Exception{
 		addAlias("A", "C");
 	}
 	
-	private void addAlias(String storedLetter, String runtimeLetter){
+	private void addAlias(String storedLetter, String runtimeLetter) throws Exception{
 		removeAlias();
 		alias = createAlias(storedLetter, runtimeLetter);
 		fixture().configureAtRuntime(new RuntimeConfigureAction() {
@@ -106,9 +106,10 @@ public class AliasesTestCase extends AbstractDb4oTestCase implements OptOutDefra
 				config.addAlias(alias);	
 			}
 		});
+		reopen();
 	}
 	
-	private void removeAlias(){
+	private void removeAlias() throws Exception{
 		if(alias != null){
 			fixture().configureAtRuntime(new RuntimeConfigureAction() {
 				public void apply(Configuration config) {
@@ -117,6 +118,8 @@ public class AliasesTestCase extends AbstractDb4oTestCase implements OptOutDefra
 			});
 			alias = null;
 		}
+		reopen();
+
 	}
 	
 	private WildcardAlias createAlias(String storedLetter, String runtimeLetter){
