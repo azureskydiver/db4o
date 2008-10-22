@@ -238,7 +238,7 @@ public final class ClassMetadataRepository extends PersistentBase {
         return classMetadata;
     }    
     
-	ClassMetadata getClassMetadata(int id) {
+	ClassMetadata classMetadataForId(int id) {
         return readClassMetadata((ClassMetadata)_classMetadataByID.get(id), null);
     }
 	
@@ -444,6 +444,14 @@ public final class ClassMetadataRepository extends PersistentBase {
         _classMetadataCreationDepth--;
         initClassMetadataOnUp();
         return classMetadata;
+    }
+    
+    public void checkAllClassChanges(){
+    	Iterator4 i = _classMetadataByID.keys();
+    	while(i.moveNext()){
+    		int classMetadataID = ((Integer)i.current()).intValue();
+    		classMetadataForId(classMetadataID);
+    	}
     }
 
     public void refreshClasses() {
