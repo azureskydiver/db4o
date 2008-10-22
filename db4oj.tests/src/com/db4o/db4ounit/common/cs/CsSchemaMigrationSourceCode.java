@@ -6,6 +6,9 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
 
+/**
+ * required for CsSchemaUpdateTestCase
+ */
 public class CsSchemaMigrationSourceCode {
 	
 	public static class Item {

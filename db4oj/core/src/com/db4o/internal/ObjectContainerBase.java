@@ -1009,7 +1009,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         if (classMetadata != null) {
             return classMetadata;
         }
-        return _classCollection.getClassMetadata(id);
+        return _classCollection.classMetadataForId(id);
     }
     
     public HandlerRegistry handlers(){
@@ -1412,7 +1412,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		return activationDepthProvider().activationDepth(depth, ActivationMode.REFRESH);
 	}
 
-    final void refreshClasses() {
+    public final void refreshClasses() {
         synchronized (_lock) {
             _classCollection.refreshClasses();
         }

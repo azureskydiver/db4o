@@ -5,7 +5,6 @@ package com.db4o.db4ounit.common.cs;
 import java.io.*;
 
 import com.db4o.db4ounit.util.*;
-import com.db4o.foundation.io.*;
 
 import db4ounit.extensions.*;
 
@@ -65,7 +64,7 @@ public class CsSchemaUpdateTestCase extends AbstractDb4oTestCase{
 	private void replaceStringWithBlank(StringBuffer stringBuffer,
 			int labelPos, String commentString) {
 		int startCommentPos = stringBuffer.indexOf(commentString, labelPos);
-		stringBuffer.replace(startCommentPos, startCommentPos + 2, "\r\n");
+		stringBuffer.replace(startCommentPos, startCommentPos + 2, "  ");
 	}
 	
 	private String tempPath(){
