@@ -5,7 +5,9 @@ package com.db4o.db4ounit.common.cs;
 import java.io.*;
 
 import com.db4o.db4ounit.util.*;
+import com.db4o.foundation.io.*;
 
+import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
@@ -21,13 +23,14 @@ public class CsSchemaUpdateTestCase extends AbstractDb4oTestCase{
 	public void test() throws IOException, InterruptedException{
 		runForLabel("store");
 		runForLabel("update");
-		runForLabel("assert");
+		String res = runForLabel("assert");
+		Assert.isGreater(-1, res.indexOf("IsNamedOK"));
 	}
 
-	private void runForLabel(String label) throws IOException, InterruptedException {
+	private String runForLabel(String label) throws IOException, InterruptedException {
 		prepareSource(label);
-		System.out.println(JavaServices.javac(targetFileName()));
-		System.out.println(JavaServices.java(packageName() + "." + className()));
+		JavaServices.javac(targetFileName());
+		return JavaServices.java(packageName() + "." + className());
 	}
 	
 	private void prepareSource(String label) throws IOException{
@@ -41,6 +44,7 @@ public class CsSchemaUpdateTestCase extends AbstractDb4oTestCase{
 		}
 		reader.close();
 		processLabel(label, stringBuffer);
+		File4.mkdirs(targetFilePath());
 		FileWriter writer = new FileWriter(targetFileName());
 		writer.write(stringBuffer.toString());
 		writer.flush();
