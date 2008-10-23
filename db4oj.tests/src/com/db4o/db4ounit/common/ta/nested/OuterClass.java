@@ -5,7 +5,8 @@ import com.db4o.activation.*;
 import com.db4o.db4ounit.common.ta.*;
 
 /**
- * @decaf.ignore.jdk11
+ * 	@decaf.ignore.jdk11
+ *  @sharpen.partial
  */
 public class OuterClass extends ActivatableImpl {
 	
@@ -23,10 +24,11 @@ public class OuterClass extends ActivatableImpl {
 	}
 	
 	/**
- * @decaf.ignore.jdk11
- */
-public class InnerClass extends ActivatableImpl {
-		
+	 * 	@decaf.ignore.jdk11
+	 *  @sharpen.partial
+ 	 */
+	public class InnerClass extends ActivatableImpl {	
+	
 		public OuterClass getOuterObject(){
 			// TA BEGIN
 			activate(ActivationPurpose.READ);
