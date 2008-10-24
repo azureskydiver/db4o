@@ -4,6 +4,10 @@ import decaf.tests.*;
 
 public class IntegrationTestCase extends DecafTestCaseBase {
 	
+	public void testIterableErasureInForEach() throws Exception {
+		runPlatformTestCase("IterableErasureInForEach");
+	}
+	
 	public void testUnboxingInVarArgs() throws Exception {
 		runResourceTestCase("UnboxingInVarArgs");
 	}

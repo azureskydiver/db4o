@@ -24,7 +24,12 @@ public class DecafRewriter {
 
 	private static ASTRewrite rewrite(final CompilationUnit unit, TargetPlatform targetPlatform, DecafConfiguration decafConfig) {
 		final ASTRewrite rewrite = ASTRewrite.create(unit.getAST());
-		unit.accept(new DecafRewritingVisitor(new DecafRewritingContext(unit, rewrite, targetPlatform, decafConfig)));
+		final DecafRewritingContext context = new DecafRewritingContext(unit, rewrite, targetPlatform, decafConfig);
+		context.run(new Runnable() {
+			public void run() {
+				unit.accept(new DecafRewritingVisitor(context));
+			}
+		});
 		return rewrite;
 	}
 	

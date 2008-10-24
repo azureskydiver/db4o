@@ -5,7 +5,7 @@ import java.util.*;
 
 import org.eclipse.jdt.core.dom.*;
 
-import decaf.rewrite.*;
+import decaf.builder.*;
 
 public class IterableJdk12Mapping implements IterablePlatformMapping {
 
@@ -24,16 +24,18 @@ public class IterableJdk12Mapping implements IterablePlatformMapping {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Expression coerceIterableExpression(Expression iterableExpr, DecafASTNodeBuilder builder, DecafRewritingServices rewrite) {
-		MethodInvocation coerceInvocation = builder.newMethodInvocation(builder.newQualifiedName(FACTORY_CLASS_NAME), "coerce");
-		coerceInvocation.arguments().add(rewrite.safeMove(iterableExpr));
+	public Expression coerceIterableExpression(Expression iterableExpr) {
+		final DecafRewritingContext context = DecafRewritingContext.current();
+		MethodInvocation coerceInvocation = context.builder().newMethodInvocation(context.builder().newQualifiedName(FACTORY_CLASS_NAME), "coerce");
+		coerceInvocation.arguments().add(context.rewrite().safeMove(iterableExpr));
 		return coerceInvocation;
 	}
 
 	@SuppressWarnings("unchecked")
-	public Expression unwrapIterableExpression(Expression iterableExpr, DecafASTNodeBuilder builder, DecafRewritingServices rewrite) {
-		MethodInvocation unwrapInvocation = builder.newMethodInvocation(builder.newQualifiedName(FACTORY_CLASS_NAME), "unwrap");
-		unwrapInvocation.arguments().add(rewrite.safeMove(iterableExpr));
+	public Expression unwrapIterableExpression(Expression iterableExpr) {
+		final DecafRewritingContext context = DecafRewritingContext.current();
+		MethodInvocation unwrapInvocation = context.builder().newMethodInvocation(context.builder().newQualifiedName(FACTORY_CLASS_NAME), "unwrap");
+		unwrapInvocation.arguments().add(context.rewrite().safeMove(iterableExpr));
 		return unwrapInvocation;
 	}
 }

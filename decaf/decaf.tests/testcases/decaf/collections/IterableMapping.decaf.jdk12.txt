@@ -26,12 +26,12 @@ class IterableMapping {
 	
 	private void justIterateGeneric(com.db4o.foundation.IterableBase iterable) {
 		for (java.util.Iterator vIter = iterable.iterator(); vIter.hasNext();) {
-			final Object v = ((Object) vIter.next());
+			final Object v = vIter.next();
 			System.out.println("First Pass: " + v);
 		}
 	
 		for (java.util.Iterator v2Iter = iterable.iterator(); v2Iter.hasNext();) {
-			final Object v2 = ((Object) v2Iter.next());
+			final Object v2 = v2Iter.next();
 			System.out.println("Second Pass: " + v2);
 		}
 	}

@@ -3,6 +3,7 @@ package decaf.builder;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
+import sharpen.core.framework.*;
 import decaf.core.*;
 import decaf.rewrite.*;
 
@@ -17,16 +18,47 @@ public class EnhancedForProcessor {
 	public void run(EnhancedForStatement node) {
 		final SingleVariableDeclaration variable = node.getParameter();
 		final Expression origExpr = node.getExpression();
-		final Expression erasure = rewrite().erasureFor(origExpr);
+		final Expression erasure = erasureFor(origExpr);
 		final Expression sequenceExpr = erasure != null ? erasure : origExpr;
 
 		if(origExpr.resolveTypeBinding().isArray()) {
 			buildArrayEnhancedFor(node, variable, sequenceExpr);
-		}
-		else {
+		} else {
 			buildIterableEnhancedFor(node, variable, sequenceExpr);
 		}
 	}
+	
+	private final DecafRewritingServices.CastProvider _platformCoercion = new DecafRewritingServices.CastProvider() {
+		public Expression provide(Expression e, ITypeBinding type) {
+			if (exposesIteratorMethod(type))
+				return builder().createParenthesizedCast(rewrite().safeMove(e), type);
+			return iterablePlatformMapping().coerceIterableExpression(e);
+        }
+	};
+
+	private Expression erasureFor(final Expression origExpr) {
+		DynamicVariableCapture context = rewrite().forceCastOnErasure().using(true);
+		if (isJDK12()) {
+			context = context.combine(rewrite().castForErasureProvider().using(_platformCoercion));
+		}
+		return context.run(new Producer<Expression>() {
+			public Expression produce() {
+				return rewrite().erasureFor(origExpr);
+			}
+		});
+    }
+
+	private boolean isJDK12() {
+		return TargetPlatform.JDK12 == targetPlatform();
+    }
+
+	private IterablePlatformMapping iterablePlatformMapping() {
+	    return targetPlatform().iterablePlatformMapping();
+    }
+
+	private TargetPlatform targetPlatform() {
+	    return _context.targetPlatform();
+    }
 	
 	private void buildArrayEnhancedFor(EnhancedForStatement node,
 			final SingleVariableDeclaration variable, final Expression array) {
@@ -70,7 +102,7 @@ public class EnhancedForProcessor {
 	}
 	
 	private void buildIterableEnhancedFor(EnhancedForStatement node, final SingleVariableDeclaration variable, final Expression iterable) {
-		IterablePlatformMapping iterableMapping = _context.targetPlatform().iterablePlatformMapping();
+		IterablePlatformMapping iterableMapping = iterablePlatformMapping();
 		buildIterableEnhancedFor(node, variable, iterable, iterableMapping.iteratorClassName(), iterableMapping.iteratorNextCheckName(), iterableMapping.iteratorNextElementName());	
 	}
 
@@ -78,14 +110,15 @@ public class EnhancedForProcessor {
 			final SingleVariableDeclaration variable,
 			final Expression iterable, String iteratorClassName,
 			String nextCheckMethodName, String nextElementMethodName) {
+		
 		final String iterVariableName = variable.getName() + "Iter";
 		
-		VariableDeclarationExpression iter = builder().newVariableDeclaration(
+		final VariableDeclarationExpression iter = builder().newVariableDeclaration(
 				builder().newSimpleType(iteratorClassName),
 				iterVariableName,
 				builder().newMethodInvocation(rewrite().safeMove(iterable), "iterator"));
 
-		Expression cmp = builder().newMethodInvocation(builder().newSimpleName(iterVariableName), nextCheckMethodName);
+		final Expression cmp = builder().newMethodInvocation(builder().newSimpleName(iterVariableName), nextCheckMethodName);
 
 		final ListRewrite statementsRewrite = rewrite().getListRewrite(node.getBody(), Block.STATEMENTS_PROPERTY);
 		Expression initializerExpr = newInitializerExpression(variable, nextElementMethodName, iterVariableName);
@@ -99,15 +132,16 @@ public class EnhancedForProcessor {
 	}
 
 	private Expression newInitializerExpression(final SingleVariableDeclaration elementVariable, String nextElementMethodName, final String iterVariableName) {
-		MethodInvocation iterNextInvocation = builder().newMethodInvocation(builder().newSimpleName(iterVariableName), nextElementMethodName);
-		ITypeBinding elementType = elementVariable.getType().resolveBinding();
-		if(elementVariable.getType().isPrimitiveType()) {
-			String wrapperTypeName = "java.lang." + builder().boxedTypeFor(elementType);
-			ITypeBinding wrapperType = builder().resolveWellKnownType(wrapperTypeName);
-			Expression castExpr = builder().newCast(iterNextInvocation, wrapperType);
+		final MethodInvocation iterNextInvocation = builder().newMethodInvocation(builder().newSimpleName(iterVariableName), nextElementMethodName);
+		final ITypeBinding elementType = elementVariable.getType().resolveBinding();
+		if (elementVariable.getType().isPrimitiveType()) {
+			final String wrapperTypeName = "java.lang." + builder().boxedTypeFor(elementType);
+			final ITypeBinding wrapperType = builder().resolveWellKnownType(wrapperTypeName);
+			final Expression castExpr = builder().newCast(iterNextInvocation, wrapperType);
 			return rewrite().unboxModified(castExpr, wrapperType);
-		}
-		else {
+		} else {
+			if (Bindings.qualifiedName(elementType.getErasure()).equals("java.lang.Object"))
+				return iterNextInvocation;
 			return builder().createParenthesizedCast(iterNextInvocation, elementType);
 		}
 	}
@@ -133,4 +167,25 @@ public class EnhancedForProcessor {
 	private <T extends ASTNode> T clone(T node) {
 		return builder().clone(node);
 	}
+
+	private boolean exposesIteratorMethod(ITypeBinding type) {
+		return null != findMethod(type, "iterator");
+    }
+
+	private IMethodBinding findMethod(ITypeBinding type, String methodName) {
+		while (type != null) {
+			final IMethodBinding found = declaredMethod(type, methodName);
+			if (null != found)
+				return found;
+			type = type.getSuperclass();
+		}
+		return null;
+    }
+
+	private IMethodBinding declaredMethod(ITypeBinding type, String methodName) {
+		for (IMethodBinding method : type.getDeclaredMethods())
+	        if (method.getName().equals(methodName))
+	        	return method;
+	    return null;
+    }
 }

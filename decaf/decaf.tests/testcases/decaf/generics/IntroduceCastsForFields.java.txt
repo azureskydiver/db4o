@@ -8,6 +8,8 @@ class Foo<T> {
 		field = value;
 	}
 	
+	public void run(T value) {
+	}
 }
 
 class Foo2<T extends CharSequence> extends Foo<T> {
@@ -30,9 +32,26 @@ class Bar extends Foo<String> {
 	public Bar() {
 		super(null);
 	}
-
+	
 	public String toString() {
+		String value = field;
+		if (value.isEmpty())
+			return null;
 		return field;
+	}
+}
+
+class Baz extends Foo<Foo<String>> {
+	public Baz() {
+		super(null);
+	}
+	
+	public int size() {
+		return field.field.length();
+	}
+	
+	public void run(Foo<String> value) {
+		int size = value.field.length();
 	}
 }
 

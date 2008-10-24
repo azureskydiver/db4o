@@ -242,7 +242,7 @@ public class DecafASTNodeBuilder {
 		return _ast.newArrayInitializer();
 	}
 
-	private IMethodBinding originalMethodDefinitionFor(
+	IMethodBinding originalMethodDefinitionFor(
 			final IMethodBinding method) {
 		return Bindings.findMethodDefininition(method, _ast);
 	}
@@ -455,8 +455,29 @@ public class DecafASTNodeBuilder {
 		}
 		return (MethodDeclaration) curNode;
 	}
+
+	public boolean isMethodInvocationExpressionProperty(ASTNode node) {
+		return node.getLocationInParent() == MethodInvocation.EXPRESSION_PROPERTY;
+    }
+
+	public boolean isEnhancedForStatementExpressionProperty(ASTNode node) {
+		return node.getLocationInParent() == EnhancedForStatement.EXPRESSION_PROPERTY;
+    }
+
+	public boolean isFieldAccessExpressionProperty(ASTNode node) {
+	   return node.getLocationInParent() == FieldAccess.EXPRESSION_PROPERTY
+	   	|| node.getLocationInParent() == QualifiedName.QUALIFIER_PROPERTY;
+    }
+
+	public boolean isPredicateMatchOverride(MethodDeclaration node) {
+		final IMethodBinding definition = originalMethodDefinitionFor(node);
+		if (definition == null) {
+			return false;
+		}
+		return isPredicateMatchMethod(definition.getMethodDeclaration());
+    }
 	
-	public  boolean isPredicateMatchMethod(final IMethodBinding method) {
+	private boolean isPredicateMatchMethod(final IMethodBinding method) {
 		return "com.db4o.query.Predicate".equals(method.getDeclaringClass().getQualifiedName()) &&
 			"match".equals(method.getName());
 	}

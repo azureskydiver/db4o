@@ -267,8 +267,8 @@
 		<property name="sharpen.bin.dir" location="${sharpen.src.dir}/bin" />
 		<property name="plugins.home" location="${eclipse.home}/plugins" />
 	
-		<property name="sharpen.plugin.dir" location="${plugins.home}/sharpen_1.0.0" />
-		<mkdir dir="${sharpen.plugin.dir}" />
+		<property name="sharpen.plugin.dir" location="${plugins.home}/sharpen.core_1.0.0" />
+		<reset-dir dir="${sharpen.plugin.dir}" />
 		<jar destfile="${sharpen.plugin.dir}/sharpen.jar" basedir="${sharpen.bin.dir}">
 		</jar>
 		<copy todir="${sharpen.plugin.dir}" file="${sharpen.src.dir}/plugin.xml"  />
