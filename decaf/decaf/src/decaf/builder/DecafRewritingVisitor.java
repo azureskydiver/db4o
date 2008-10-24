@@ -6,6 +6,7 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
 import sharpen.core.framework.*;
+import decaf.core.*;
 import decaf.rewrite.*;
 
 @SuppressWarnings("unchecked")
@@ -252,14 +253,22 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private void replaceCoercedIterable(Expression iterableArg) {
-		Expression coerced = _context.targetPlatform().iterablePlatformMapping().coerceIterableExpression(iterableArg, builder(), rewrite());
+		Expression coerced = iterablePlatformMapping().coerceIterableExpression(iterableArg);
 		if(coerced != iterableArg) {
 			rewrite().replace(iterableArg, coerced);
 		}
 	}
 
+	private IterablePlatformMapping iterablePlatformMapping() {
+	    return targetPlatform().iterablePlatformMapping();
+    }
+
+	private TargetPlatform targetPlatform() {
+	    return _context.targetPlatform();
+    }
+
 	private void replaceUnwrappedIterable(Expression iterableArg) {
-		Expression unwrapped = _context.targetPlatform().iterablePlatformMapping().unwrapIterableExpression(iterableArg, builder(), rewrite());
+		Expression unwrapped = iterablePlatformMapping().unwrapIterableExpression(iterableArg);
 		if(unwrapped != iterableArg) {
 			rewrite().replace(iterableArg, unwrapped);
 		}
@@ -332,9 +341,15 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		if (handledAsIgnored(node)) {
 			return false;
 		}
+		
+		rewrite().erasingParameters(!isPredicateMatchMethod(node));
 		return true;
 	}
 	
+	private boolean isPredicateMatchMethod(MethodDeclaration node) {
+		return builder().isPredicateMatchOverride(node);
+    }
+
 	@Override
 	public void endVisit(MethodDeclaration node) {
 		
@@ -343,11 +358,11 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		}
 		
 		processRewritingAnnotations(node);
-		processMethodDeclarationErasure(node);	
+		processMethodDeclarationErasure(node);
 	}
-
+	
 	private void processMethodDeclarationErasure(MethodDeclaration node) {		
-		if(node.isConstructor()) {
+		if(node.isConstructor() || !rewrite().erasingParameters()) {
 			return;
 		}
 		
@@ -355,13 +370,9 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		if (definition == null) {
 			return;
 		}
-		
-		final IMethodBinding originalMethodDeclaration = definition.getMethodDeclaration();
-		if(builder().isPredicateMatchMethod(originalMethodDeclaration)) {
-			return;
-		}
-		if (originalMethodDeclaration != definition) {
-			eraseMethodDeclaration(node, originalMethodDeclaration);
+		final IMethodBinding declaration = definition.getMethodDeclaration();
+		if (declaration != definition) {
+			eraseMethodDeclaration(node, declaration);
 		}
 	}
 
@@ -418,8 +429,8 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			? Collections.emptyList()
 			: javadoc.tags();
 	}
-
-	public void endVisit(EnhancedForStatement node) {
+	
+	public void endVisit(final EnhancedForStatement node) {
 		new EnhancedForProcessor(_context).run(node);
 	}
 
@@ -431,27 +442,11 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	private void eraseMethodDeclaration(MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
 		eraseReturnType(node, originalMethodDeclaration);
 		eraseParametersWhereNeeded(node, originalMethodDeclaration);
-		eraseParameterReferences(node, collectParametersTypedToVariables(node, originalMethodDeclaration));
 	}
 
 	private void eraseReturnType(MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
 		eraseIfNeeded(node.getReturnType2(), originalMethodDeclaration.getReturnType());
 	}
-
-	private void eraseParameterReferences(MethodDeclaration node, final HashSet<IVariableBinding> erasedParameters) {		
-		node.accept(new ASTVisitor() {
-			@Override
-			public void endVisit(SimpleName node) {
-				if (node.isDeclaration()) {
-					return;
-				}
-				if (erasedParameters.contains(node.resolveBinding())) {
-					rewrite().replaceWithCast(node, node.resolveTypeBinding());
-				}
-			}
-		});
-	}
-
 	
 	private void eraseParametersWhereNeeded(
 			MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
@@ -465,18 +460,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	private SingleVariableDeclaration parameterAt(MethodDeclaration node, int i) {
 	    return (SingleVariableDeclaration) node.parameters().get(i);
     }
-	
-	private HashSet<IVariableBinding> collectParametersTypedToVariables(MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
-		final HashSet<IVariableBinding> found = new HashSet<IVariableBinding>();
-		int i=0;
-		for (ITypeBinding type : originalMethodDeclaration.getParameterTypes()) {
-			if (type.isTypeVariable()) {
-				found.add(parameterAt(node, i).resolveBinding());
-			}
-			++i;
-		}
-		return found;
-	}
 
 	private boolean eraseIfNeeded(final Type actualType, final ITypeBinding expectedType) {	
 		final ITypeBinding expectedErasure = expectedType.getErasure();
@@ -535,7 +518,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private String platformSpecificTag(String tag) {
-		return _context.targetPlatform().appendPlatformId(tag, ".");
+		return targetPlatform().appendPlatformId(tag, ".");
 	}
 
 	private void processIgnoreImplements(TypeDeclaration node) {
@@ -586,7 +569,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		}
 		final ArrayList<TagElement> found = new ArrayList<TagElement>();
 		JavadocUtility.collectTags(javadoc.tags(), tagName, found);
-		if (_context.targetPlatform().isNone()) {
+		if (targetPlatform().isNone()) {
 			return found;
 		}
 		return JavadocUtility.collectTags(javadoc.tags(), platformSpecificTag(tagName), found);

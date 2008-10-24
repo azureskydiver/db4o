@@ -6,9 +6,25 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 import org.eclipse.text.edits.*;
 
+import sharpen.core.framework.*;
+
 public class DecafRewritingServices {
+	
+	public static interface CastProvider {
+		Expression provide(Expression e, ITypeBinding type);
+	}
+	
 	private final ASTRewrite _rewrite;
 	private final DecafASTNodeBuilder _builder;
+	private boolean _erasingParameters = true;
+	private final DynamicVariable<Boolean> _forceCastOnErasure = new DynamicVariable<Boolean>(false);
+	private final DynamicVariable<CastProvider> _castForErasureProvider = new DynamicVariable<CastProvider>(new CastProvider() {
+
+		public Expression provide(Expression e, ITypeBinding type) {
+			return builder().createParenthesizedCast(safeMove(e), type);
+        }
+		
+	});
 	
 	public DecafRewritingServices(ASTRewrite rewrite, DecafASTNodeBuilder builder) {
 		_rewrite = rewrite;
@@ -58,12 +74,97 @@ public class DecafRewritingServices {
 	}
 	
 	public Expression erasureForName(final Name name) {
-		final IVariableBinding field = builder().fieldBinding(name);
-		if (null == field) {
+		final IBinding binding = name.resolveBinding();
+		if (!(binding instanceof IVariableBinding)) {
 			return null;
 		}
-		return erasureForField(name, field);
+		final IVariableBinding variable = (IVariableBinding)binding;
+		if (variable.isParameter()) {
+			return erasureForParameter(name);
+		}
+		return erasureForField(name, variable);
 	}
+
+	private Expression erasureForParameter(Name name) {
+		
+		if (isErasedParameter(name))
+			return createCastForErasure(name, name.resolveTypeBinding());
+		
+		return null;
+    }
+
+	private boolean isErasedParameter(Name name) {
+		if (!_erasingParameters)
+			return false;
+		
+		final ITypeBinding originalParameterType = originalParameterTypeFor(name);
+		if (!originalParameterType.isTypeVariable())
+			return false;
+		
+		if (hasAssignmentCompatibleErasure(name.resolveTypeBinding(), originalParameterType))
+			if (!_forceCastOnErasure.value()
+				&& !isExpressionPropertyOfEitherMethodInvocationOrFieldAccess(name))
+				return false;
+		
+		return true;
+    }
+
+	private boolean isExpressionPropertyOfEitherMethodInvocationOrFieldAccess(Name name) {
+	    return builder().isMethodInvocationExpressionProperty(name)
+	    	|| builder().isFieldAccessExpressionProperty(name);
+    }
+
+	private ITypeBinding originalParameterTypeFor(Name parameterReference) {
+	    final MethodDeclaration method = declaringMethodFor(parameterReference);
+		final ITypeBinding originalParameterType = originalParameterType(method, (IVariableBinding) parameterReference.resolveBinding());
+	    return originalParameterType;
+    }
+
+	private boolean hasAssignmentCompatibleErasure(final ITypeBinding parameterType,
+            final ITypeBinding originalParameterType) {
+	    return parameterType.getErasure().isAssignmentCompatible(originalParameterType.getErasure());
+    }
+
+	private ITypeBinding originalParameterType(final MethodDeclaration method, IVariableBinding parameter) {
+	    return originalDeclaringMethod(parameter).getMethodDeclaration().getParameterTypes()[parameterIndexByName(method, parameter.getName())];
+    }
+
+	private IMethodBinding originalDeclaringMethod(IVariableBinding parameter) {
+	    final IMethodBinding enclosingMethod = declaringMethod(parameter);
+		final IMethodBinding original = builder().originalMethodDefinitionFor(enclosingMethod);
+		return original == null ? enclosingMethod : original;
+    }
+
+	private IMethodBinding declaringMethod(IVariableBinding variable) {
+	    return variable.getDeclaringMethod();
+    }
+
+	private int parameterIndexByName(MethodDeclaration method, String parameterName) {
+		int index = 0;
+		for (Object o : method.parameters()) {
+			final SingleVariableDeclaration parameter = ((SingleVariableDeclaration) o);
+			if (parameter.getName().getIdentifier().equals(parameterName)) {
+				return index;
+			}
+			++index;
+		}
+		throw new IllegalArgumentException("No parameter named '" + parameterName + "' in '" + method + "'");
+	}
+
+	private MethodDeclaration declaringMethodFor(Name parameter) {
+		return enclosingMethod(parameter, ((IVariableBinding)parameter.resolveBinding()).getDeclaringMethod());
+    }
+
+	private MethodDeclaration enclosingMethod(ASTNode node, IMethodBinding binding) {
+		final ASTNode parent = node.getParent();
+		if (parent instanceof MethodDeclaration) {
+			final MethodDeclaration method = ((MethodDeclaration)parent);
+			if (method.resolveBinding() == binding) {
+				return method;
+			}
+		}
+		return enclosingMethod(parent, binding);
+    }
 
 	public Expression erasureForField(final Expression expression,
 			final IVariableBinding field) {
@@ -73,8 +174,9 @@ public class DecafRewritingServices {
 		return null;
 	}
 	
-	public Object get(ASTNode node, StructuralPropertyDescriptor parentLocation) {
-		return rewrite().get(node, parentLocation);
+	@SuppressWarnings("unchecked")
+    public <T extends ASTNode> T get(ASTNode node, StructuralPropertyDescriptor parentLocation) {
+		return (T)rewrite().get(node, parentLocation);
 	}
 	
 	public void set(ASTNode node, SimplePropertyDescriptor property, Object value, TextEditGroup editGroup) {
@@ -139,7 +241,7 @@ public class DecafRewritingServices {
 	}
 
 	private Expression parenthesizedMove(final Expression expression) {
-		Expression moved = move(expression);
+		Expression moved = safeMove(expression);
 		final Expression target = expression instanceof Name
 			? moved
 			: builder().parenthesize(moved);
@@ -147,7 +249,7 @@ public class DecafRewritingServices {
 	}
 	
 	private Expression createCastForErasure(Expression node, final ITypeBinding type) {
-		return builder().createParenthesizedCast(move(node), type);
+		return _castForErasureProvider.value().provide(node, type);
 	}
 	
 	private ASTRewrite rewrite() {
@@ -157,4 +259,20 @@ public class DecafRewritingServices {
 	private DecafASTNodeBuilder builder() {
 		return _builder;
 	}
+	
+	public void erasingParameters(boolean value) {
+		_erasingParameters = value;
+	}
+
+	public boolean erasingParameters() {
+    	return _erasingParameters;
+    }
+
+	public DynamicVariable<Boolean> forceCastOnErasure() {
+		return _forceCastOnErasure;
+    }
+
+	public DynamicVariable<CastProvider> castForErasureProvider() {
+		return _castForErasureProvider;
+    }
 }

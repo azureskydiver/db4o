@@ -3,8 +3,6 @@ package decaf.core;
 
 import org.eclipse.jdt.core.dom.*;
 
-import decaf.rewrite.*;
-
 public class IterableJdk11Mapping implements IterablePlatformMapping {
 	
 	public String iteratorClassName() {
@@ -19,11 +17,11 @@ public class IterableJdk11Mapping implements IterablePlatformMapping {
 		return "current";
 	}
 
-	public Expression coerceIterableExpression(Expression iterableExpr, DecafASTNodeBuilder builder, DecafRewritingServices rewrite) {
+	public Expression coerceIterableExpression(Expression iterableExpr) {
 		return iterableExpr;
 	}
 
-	public Expression unwrapIterableExpression(Expression iterableExpr, DecafASTNodeBuilder builder, DecafRewritingServices rewrite) {
+	public Expression unwrapIterableExpression(Expression iterableExpr) {
 		return iterableExpr;
 	}
 	

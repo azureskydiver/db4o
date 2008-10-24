@@ -11,7 +11,7 @@ class AppendableImpl implements Appendable {
 	public boolean addAll(Collection c) {
 		for (java.util.Iterator elementIter = c.iterator(); elementIter
 				.hasNext();) {
-					final Object element = ((Object) elementIter.next());
+					final Object element = elementIter.next();
 					add(element);
 				}
 		return false;

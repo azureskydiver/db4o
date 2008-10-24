@@ -8,6 +8,8 @@ class Foo {
 		field = value;
 	}
 	
+	public void run(Object value) {
+	}
 }
 
 class Foo2 extends Foo {
@@ -30,9 +32,26 @@ class Bar extends Foo {
 	public Bar() {
 		super(null);
 	}
-
+	
 	public String toString() {
+		String value = ((String) field);
+		if (value.isEmpty())
+			return null;
 		return ((String) field);
+	}
+}
+
+class Baz extends Foo {
+	public Baz() {
+		super(null);
+	}
+	
+	public int size() {
+		return ((String) ((Foo) field).field).length();
+	}
+	
+	public void run(Object value) {
+		int size = ((String) ((Foo) value).field).length();
 	}
 }
 
