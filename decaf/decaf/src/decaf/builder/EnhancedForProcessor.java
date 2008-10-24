@@ -27,29 +27,13 @@ public class EnhancedForProcessor {
 			buildIterableEnhancedFor(node, variable, sequenceExpr);
 		}
 	}
-	
-	private final DecafRewritingServices.CastProvider _platformCoercion = new DecafRewritingServices.CastProvider() {
-		public Expression provide(Expression e, ITypeBinding type) {
-			if (exposesIteratorMethod(type))
-				return builder().createParenthesizedCast(rewrite().safeMove(e), type);
-			return iterablePlatformMapping().coerceIterableExpression(e);
-        }
-	};
 
 	private Expression erasureFor(final Expression origExpr) {
-		DynamicVariableCapture context = rewrite().forceCastOnErasure().using(true);
-		if (isJDK12()) {
-			context = context.combine(rewrite().castForErasureProvider().using(_platformCoercion));
-		}
-		return context.run(new Producer<Expression>() {
+		return rewrite().forceCastOnErasure().using(true, new Producer<Expression>() {
 			public Expression produce() {
 				return rewrite().erasureFor(origExpr);
 			}
 		});
-    }
-
-	private boolean isJDK12() {
-		return TargetPlatform.JDK12 == targetPlatform();
     }
 
 	private IterablePlatformMapping iterablePlatformMapping() {
@@ -167,25 +151,4 @@ public class EnhancedForProcessor {
 	private <T extends ASTNode> T clone(T node) {
 		return builder().clone(node);
 	}
-
-	private boolean exposesIteratorMethod(ITypeBinding type) {
-		return null != findMethod(type, "iterator");
-    }
-
-	private IMethodBinding findMethod(ITypeBinding type, String methodName) {
-		while (type != null) {
-			final IMethodBinding found = declaredMethod(type, methodName);
-			if (null != found)
-				return found;
-			type = type.getSuperclass();
-		}
-		return null;
-    }
-
-	private IMethodBinding declaredMethod(ITypeBinding type, String methodName) {
-		for (IMethodBinding method : type.getDeclaredMethods())
-	        if (method.getName().equals(methodName))
-	        	return method;
-	    return null;
-    }
 }

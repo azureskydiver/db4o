@@ -9,22 +9,10 @@ import org.eclipse.text.edits.*;
 import sharpen.core.framework.*;
 
 public class DecafRewritingServices {
-	
-	public static interface CastProvider {
-		Expression provide(Expression e, ITypeBinding type);
-	}
-	
 	private final ASTRewrite _rewrite;
 	private final DecafASTNodeBuilder _builder;
 	private boolean _erasingParameters = true;
 	private final DynamicVariable<Boolean> _forceCastOnErasure = new DynamicVariable<Boolean>(false);
-	private final DynamicVariable<CastProvider> _castForErasureProvider = new DynamicVariable<CastProvider>(new CastProvider() {
-
-		public Expression provide(Expression e, ITypeBinding type) {
-			return builder().createParenthesizedCast(safeMove(e), type);
-        }
-		
-	});
 	
 	public DecafRewritingServices(ASTRewrite rewrite, DecafASTNodeBuilder builder) {
 		_rewrite = rewrite;
@@ -249,7 +237,7 @@ public class DecafRewritingServices {
 	}
 	
 	private Expression createCastForErasure(Expression node, final ITypeBinding type) {
-		return _castForErasureProvider.value().provide(node, type);
+		return builder().createParenthesizedCast(safeMove(node), type);
 	}
 	
 	private ASTRewrite rewrite() {
@@ -270,9 +258,5 @@ public class DecafRewritingServices {
 
 	public DynamicVariable<Boolean> forceCastOnErasure() {
 		return _forceCastOnErasure;
-    }
-
-	public DynamicVariable<CastProvider> castForErasureProvider() {
-		return _castForErasureProvider;
     }
 }

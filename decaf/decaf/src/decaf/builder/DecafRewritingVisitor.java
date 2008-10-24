@@ -362,18 +362,21 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 	
 	private void processMethodDeclarationErasure(MethodDeclaration node) {		
-		if(node.isConstructor() || !rewrite().erasingParameters()) {
+		if (!rewrite().erasingParameters())
 			return;
-		}
+		
+		if (node.isConstructor())
+			return;
 		
 		final IMethodBinding definition = builder().originalMethodDefinitionFor(node);
-		if (definition == null) {
+		if (definition == null)
 			return;
-		}
+		
 		final IMethodBinding declaration = definition.getMethodDeclaration();
-		if (declaration != definition) {
-			eraseMethodDeclaration(node, declaration);
-		}
+		if (declaration == definition)
+			return;
+		
+		eraseMethodDeclaration(node, declaration);
 	}
 
 	private void processRewritingAnnotations(MethodDeclaration node) {
