@@ -33,14 +33,43 @@ H4 { font-size: 10pt; color: black; }
                IO benchmark library
            </td>
 	</tr>
+	<tr>
+            <td style="width: 230px">
+                db4o-@db4o.version.dotted@-core-java1.1.jar</td>
+            <td style="width: 500px">
+                db4o database engine core for JDK1.1</td>
+        </tr>
         <tr>
-           <td style="width: 230px">
-               db4o-@db4o.version.dotted@-instrumentation.jar</td>
-           <td style="width: 500px">
-               Instrumentation layer on top of bloat
-           </td>
-		</tr>
-		<tr>
+            <td style="width: 230px">
+                db4o-@db4o.version.dotted@-core-java1.2.jar</td>
+            <td style="width: 500px">
+                db4o database engine core for JDK 1.2 - JDK 1.4</td>
+        </tr>
+        <tr>
+            <td style="width: 230px">
+                db4o-@db4o.version.dotted@-core-java5.jar</td>
+            <td style="width: 500px">
+                db4o database engine core for JDK 5 and JDK 6</td>
+        </tr>
+        <tr>
+            <td style="width: 230px">
+                db4o-@db4o.version.dotted@-cs-java1.1.jar</td>
+            <td style="width: 500px">
+                db4o client/server components for JDK1.1</td>
+        </tr>
+        <tr>
+            <td style="width: 230px">
+                db4o-@db4o.version.dotted@-cs-java1.2.jar</td>
+            <td style="width: 500px">
+                db4o client/server components for JDK 1.2 - JDK 1.4</td>
+        </tr>
+        <tr>
+            <td style="width: 230px">
+                db4o-@db4o.version.dotted@-cs-java5.jar</td>
+            <td style="width: 500px">
+                db4o client/server components JDK 5 and JDK 6</td>
+        </tr>
+        <tr>
           <td style="width: 230px">
               db4o-@db4o.version.dotted@-db4ounit.jar
           </td>
@@ -51,28 +80,54 @@ H4 { font-size: 10pt; color: black; }
 		</tr>
 		<tr>
             <td style="width: 230px">
-                db4o-@db4o.version.dotted@-java1.1.jar</td>
+                db4o-@db4o.version.dotted@-full-java1.1.jar</td>
             <td style="width: 500px">
-                db4o database engine core for JDK1.1</td>
+                db4o database engine core including CS and optional components for JDK1.1</td>
         </tr>
         <tr>
             <td style="width: 230px">
-                db4o-@db4o.version.dotted@-java1.2.jar</td>
+                db4o-@db4o.version.dotted@-core-java1.2.jar</td>
             <td style="width: 500px">
-                db4o database engine core for JDK 1.2 - JDK 1.4</td>
+                db4o database engine core including CS and optional components for JDK 1.2 - JDK 1.4</td>
         </tr>
         <tr>
             <td style="width: 230px">
-                db4o-@db4o.version.dotted@-java5.jar</td>
+                db4o-@db4o.version.dotted@-core-java5.jar</td>
             <td style="width: 500px">
-                db4o database engine core for JDK 5 and JDK 6</td>
+                db4o database engine core including CS and optional components for JDK 5 and JDK 6</td>
         </tr>
         <tr>
+           <td style="width: 230px">
+               db4o-@db4o.version.dotted@-instrumentation.jar</td>
+           <td style="width: 500px">
+               Instrumentation layer on top of bloat
+           </td>
+		</tr>
+		
+		<tr>
             <td style="width: 230px">
                 db4o-@db4o.version.dotted@-nqopt.jar</td>
             <td style="width: 500px">
                 Native Query optimization library. This library should be available in the classpath
                 for NQ optimization</td>
+        </tr>
+        <tr>
+            <td style="width: 230px">
+                db4o-@db4o.version.dotted@-optional-java1.1.jar</td>
+            <td style="width: 500px">
+                db4o optional components for JDK1.1</td>
+        </tr>
+        <tr>
+            <td style="width: 230px">
+                db4o-@db4o.version.dotted@-optional-java1.2.jar</td>
+            <td style="width: 500px">
+                db4o optional components for JDK 1.2 - JDK 1.4</td>
+        </tr>
+        <tr>
+            <td style="width: 230px">
+                db4o-@db4o.version.dotted@-optional-java5.jar</td>
+            <td style="width: 500px">
+                db4o optional components for JDK 5 and JDK 6</td>
         </tr>
 		<tr>
             <td style="width: 230px">
@@ -107,10 +162,24 @@ H4 { font-size: 10pt; color: black; }
         USING DB4O LIBRARIES
     </h2>
     <p>
-        For using db4o with JDK1.1 you will only need db4o-@db4o.version.dotted@-java1.1.jar.
+        For using db4o with JDK1.1 you will only need db4o-@db4o.version.dotted@-core-java1.1.jar.
     </p>
     <p>
         For JDK 1.2 - JDK 6 you will need the respective db4o core database engine library.
+	</p>
+	<p>
+        For using db4o in client/server mode you will additionally need the respective
+        client/server library, i.e. db4o-@db4o.version.dotted@-cs-java1.1.jar for JDK1.1. 
+        You can also use full db4o library (db4o-@db4o.version.dotted@-full-java1.1.jar,
+        db4o-@db4o.version.dotted@-full-java1.2.jar or db4o-@db4o.version.dotted@-full-java5.jar) to get
+        core and client/server classes together. However, full jar also contains optional
+        resources and will need more space than core + cs libraries.
+	</p>
+	<p>
+	db4o optional components ( .NET support, clustering, statistics etc) can be obtained from
+	db4o optional jars (i.e. db4o-@db4o.version.dotted@-optional-java1.1.jar, 
+	db4o-@db4o.version.dotted@-optional-java1.2.jar, db4o-@db4o.version.dotted@-optional-java5.jar). 
+	These components are also included in the full jar.
 	</p>
 	<p>
         For Native Query optimization on JDK 1.2 - JDK 6 you will additionally need:<br>
