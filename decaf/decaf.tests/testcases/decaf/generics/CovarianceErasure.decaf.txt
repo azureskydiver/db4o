@@ -1,6 +1,10 @@
 package decaf.generics;
 
-class Base {
+interface IBase {
+	public Object get(Object value);
+}
+
+class Base implements IBase {
 	public Object get(Object value) {
 		return value;
 	}
