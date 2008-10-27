@@ -18,22 +18,28 @@ public class ClientTransactionPoolTestCase implements TestLifeCycle {
 		final LocalObjectContainer db = (LocalObjectContainer) Db4o.openFile(config, SwitchingFilesFromClientUtil.MAINFILE_NAME);
 		final ClientTransactionPool pool = new ClientTransactionPool(db);
 		try {
+			Assert.areEqual(0, pool.openTransactionCount());
 			Assert.areEqual(1, pool.openFileCount());
 			Transaction trans1 = pool.acquire(SwitchingFilesFromClientUtil.MAINFILE_NAME);
 			Assert.areEqual(db, trans1.container());			
+			Assert.areEqual(1, pool.openTransactionCount());
 			Assert.areEqual(1, pool.openFileCount());
 			Transaction trans2 = pool.acquire(SwitchingFilesFromClientUtil.FILENAME_A);
 			Assert.areNotEqual(db, trans2.container());			
+			Assert.areEqual(2, pool.openTransactionCount());
 			Assert.areEqual(2, pool.openFileCount());
 			Transaction trans3 = pool.acquire(SwitchingFilesFromClientUtil.FILENAME_A);
-			Assert.areEqual(trans2.container(), trans3.container());			
+			Assert.areEqual(trans2.container(), trans3.container());
+			Assert.areEqual(3, pool.openTransactionCount());
 			Assert.areEqual(2, pool.openFileCount());
 			pool.release(trans3, true);
+			Assert.areEqual(2, pool.openTransactionCount());
 			Assert.areEqual(2, pool.openFileCount());
 			pool.release(trans2, true);
+			Assert.areEqual(1, pool.openTransactionCount());
 			Assert.areEqual(1, pool.openFileCount());
-			pool.release(trans1, true);
-			Assert.areEqual(1, pool.openFileCount());
+			
+			
 		}
 		finally {
 			Assert.isFalse(db.isClosed());

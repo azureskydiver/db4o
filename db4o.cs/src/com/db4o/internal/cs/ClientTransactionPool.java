@@ -66,7 +66,10 @@ public class ClientTransactionPool {
 			_closed = true;
 		}
 	}
-
+	
+	public int openTransactionCount(){
+		return isClosed() ? 0 : _transaction2Container.size();
+	}
 
 	public int openFileCount() {
 		return isClosed() ? 0 : _fileName2Container.size();
