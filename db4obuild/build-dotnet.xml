@@ -472,7 +472,8 @@
 	    prepare-csproject-db4ounit-extensions,
 		prepare-csproject-db4obench,
 	    prepare-csproject-tests,
-		prepare-csproject-tools"
+		prepare-csproject-tools,
+		prepare-csproject-linq"
 		unless="skip.sharpen">
 		
 		<updateAssemblyInfo version="${assembly.version}">
@@ -725,6 +726,23 @@
 		</fileset>
 
 		<updateProjectFiles project="${dir.n.db4obench}/Db4oBench" sources="db4obench.files" />
+	</target>
+	
+	<target name="prepare-csproject-linq" depends="init, configure">
+		<property name="dir.n.linq" value="${dir.n.v6}/Db4objects.Db4o.Linq" />
+		<property name="dir.n.linq.tests" value="${dir.n.v6}/Db4objects.Db4o.Linq.Tests" />
+			
+		<updatecsharpproject projectfile="${dir.n.linq}/Db4objects.Db4o.Linq-2008.csproj">
+			<sources dir="${dir.n.linq}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>			
+		
+		<updatecsharpproject projectfile="${dir.n.linq.tests}/Db4objects.Db4o.Linq.Tests-2008.csproj">
+			<sources dir="${dir.n.linq.tests}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>	
 	</target>
 
 	
