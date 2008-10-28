@@ -36,7 +36,7 @@ public class FrameworkTestCase implements TestCase {
 		if (checkException) {
 			for(Iterator4 iter=result.failures().iterator(); iter.moveNext();) {
 				TestFailure failure = (TestFailure) iter.current();
-				Assert.areEqual(EXCEPTION, failure.getFailure());
+				Assert.areEqual(EXCEPTION, failure.reason());
 			}
 		}
 	}

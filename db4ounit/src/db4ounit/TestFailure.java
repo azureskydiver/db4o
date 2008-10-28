@@ -5,24 +5,30 @@ import java.io.Writer;
 
 public class TestFailure extends Printable {
 	
-	Test _test;
-	Throwable _failure;
+	private final String _testLabel;
+	private final Throwable _failure;
 	
-	public TestFailure(Test test, Throwable failure) {
-		_test = test;
+	public TestFailure(String test, Throwable failure) {
+		_testLabel = test;
 		_failure = failure;
 	}
 	
-	public Test getTest() {
-		return _test;
+	/**
+	 * @sharpen.property
+	 */
+	public String testLabel() {
+		return _testLabel;
 	}
 	
-	public Throwable getFailure() {
+	/**
+	 * @sharpen.property
+	 */
+	public Throwable reason() {
 		return _failure;
 	}
 	
 	public void print(Writer writer) throws IOException {
-		writer.write(_test.label());
+		writer.write(_testLabel);
 		writer.write(": ");
 		// TODO: don't print the first stack trace elements
 		// which reference db4ounit.Assert methods

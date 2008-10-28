@@ -93,7 +93,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	private Iterator4 fromMethods(final Class clazz) {
 		return Iterators.map(clazz.getMethods(), new Function4() {
 			public Object apply(Object arg) {
-				Method method = (Method)arg;
+				final Method method = (Method)arg;
 				if (!isTestMethod(method)) {
 					emitWarningOnIgnoredTestMethod(clazz, method);
 					return Iterators.SKIP;			

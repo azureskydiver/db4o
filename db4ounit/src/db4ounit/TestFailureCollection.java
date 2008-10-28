@@ -12,6 +12,9 @@ public class TestFailureCollection extends Printable implements Iterable4 {
 		return _failures.iterator();
 	}
 	
+	/**
+	 * @sharpen.property Count
+	 */
 	public int size() {
 		return _failures.size();
 	}
@@ -31,7 +34,7 @@ public class TestFailureCollection extends Printable implements Iterable4 {
 		while (e.moveNext()) {
 			writer.write(String.valueOf(index));
 			writer.write(") ");
-			writer.write(((TestFailure)e.current()).getTest().label());
+			writer.write(((TestFailure)e.current()).testLabel());
 			writer.write(TestPlatform.NEW_LINE);
 			++index;
 		}
