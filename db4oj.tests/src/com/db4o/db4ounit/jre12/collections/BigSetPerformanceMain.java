@@ -10,6 +10,7 @@ import com.db4o.config.*;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 import db4ounit.fixtures.*;
 
 /**
@@ -18,6 +19,17 @@ import db4ounit.fixtures.*;
  */
 public class BigSetPerformanceMain extends FixtureBasedTestSuite {
 	
+	public static void main(String[] args) {
+		new Db4oTestSuite() {
+
+			@Override
+            protected Class[] testCases() {
+				return new Class[] { BigSetPerformanceMain.class };
+            }
+			
+		}.runSolo();
+    }
+
 	@Override
     public FixtureProvider[] fixtureProviders() {
 		return new FixtureProvider[] {
