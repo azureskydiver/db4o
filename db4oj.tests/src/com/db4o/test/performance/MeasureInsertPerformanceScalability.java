@@ -35,6 +35,8 @@ public class MeasureInsertPerformanceScalability {
     }
 
     private void run() {
+    	
+    	long start = System.currentTimeMillis();
         prepare();
         ObjectContainer objectContainer = Db4o.openFile(FILE);
         
@@ -50,8 +52,12 @@ public class MeasureInsertPerformanceScalability {
             bulk = ! bulk;
         }
         objectContainer.close();
+        
+        long stop = System.currentTimeMillis();
+        long duration = stop - start;
+        
+        System.out.println("Total test duration " + duration + "ms");
     }
-
 
     private int storeSingle(ObjectContainer objectContainer) {
         long start = System.currentTimeMillis();
