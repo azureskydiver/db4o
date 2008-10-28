@@ -18,7 +18,7 @@ public class TestRunner {
 		
 		final Iterator4 iterator = _tests.iterator();
 		while (iterator.moveNext()) {
-			Test test = (Test)iterator.current();
+			final Test test = (Test)iterator.current();
 			listener.testStarted(test);
 			try {
 				test.run();

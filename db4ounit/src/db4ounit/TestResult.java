@@ -21,7 +21,7 @@ public class TestResult extends Printable implements TestListener {
 	}	
 	
 	public void testFailed(Test test, Throwable failure) {
-		_failures.add(new TestFailure(test, failure));
+		_failures.add(new TestFailure(test.label(), failure));
 	}
 	
 	/**
