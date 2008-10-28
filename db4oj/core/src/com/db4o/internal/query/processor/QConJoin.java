@@ -57,7 +57,7 @@ public class QConJoin extends QCon {
 			i_evaluator.not(
 				i_and
 					? ((a_pending._result + a_secondResult) > 0)
-					: (a_pending._result + a_secondResult) > -4);
+					: (a_pending._result + a_secondResult) > QPending.FALSE);
 					
 		if (hasJoins()) {
 			Iterator4 i = iterateJoins();
@@ -80,7 +80,7 @@ public class QConJoin extends QCon {
 					System.out.println(
 						"QConJoin evaluatePending FALSE "
 							+ i_id
-							+ " Calling: "
+							+ " doNotInclude: "
 							+ i_constraint1.i_id
 							+ ", "
 							+ i_constraint2.i_id);
@@ -92,7 +92,7 @@ public class QConJoin extends QCon {
 					System.out.println(
 						"QConJoin evaluatePending TRUE "
 							+ i_id
-							+ " NOT calling: "
+							+ " keeping constraints: "
 							+ i_constraint1.i_id
 							+ ", "
 							+ i_constraint2.i_id);
