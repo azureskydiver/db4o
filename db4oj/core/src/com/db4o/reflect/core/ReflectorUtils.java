@@ -2,7 +2,6 @@
 
 package com.db4o.reflect.core;
 
-import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
 
@@ -13,9 +12,7 @@ public class ReflectorUtils {
 	
 	public static ReflectClass reflectClassFor(Reflector reflector, Object clazz) {
         
-        clazz = Platform4.getClassForType(clazz);
-        
-        if(clazz instanceof ReflectClass){
+       if(clazz instanceof ReflectClass){
             return (ReflectClass)clazz;
         }
         

@@ -625,7 +625,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
      * @param obj
      * @param removeExisting
      */
-    QCon shareParent(Object obj, boolean[] removeExisting) {
+    QCon shareParent(Object obj, BooleanByRef removeExisting) {
         // virtual
         return null;
     }
@@ -634,7 +634,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
      * @param claxx
      * @param removeExisting
      */
-    QConClass shareParentForClass(ReflectClass claxx, boolean[] removeExisting) {
+    QConClass shareParentForClass(ReflectClass claxx, BooleanByRef removeExisting) {
         // virtual
         return null;
     }

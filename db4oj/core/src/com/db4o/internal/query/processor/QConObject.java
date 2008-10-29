@@ -287,7 +287,8 @@ public class QConObject extends QCon {
         _children = null;
     }
 
-    QCon shareParent(Object a_object, boolean[] removeExisting) {
+    @Override
+    QCon shareParent(Object a_object, BooleanByRef removeExisting) {
         if(i_parent == null){
             return null;
         }
@@ -298,7 +299,8 @@ public class QConObject extends QCon {
         return i_parent.addSharedConstraint(i_field, obj);
     }
 
-    QConClass shareParentForClass(ReflectClass a_class, boolean[] removeExisting) {
+    @Override
+    QConClass shareParentForClass(ReflectClass a_class, BooleanByRef removeExisting) {
         if(i_parent == null){
             return null;
         }
