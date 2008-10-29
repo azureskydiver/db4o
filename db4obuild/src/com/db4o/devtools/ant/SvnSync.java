@@ -8,6 +8,7 @@ import java.nio.channels.FileChannel;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
@@ -76,14 +77,13 @@ public class SvnSync extends Task {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
     private void addNewFilesToWorkingCopy(FolderDiff diff, SVNWCClient workingCopyClient) throws SVNException, IOException {
 		for (String toBeAdded : diff.newFiles()) {
 			String newFileInRepository = diff.sourceFolder() + toBeAdded;
 			String sourceFile = diff.compareToFolder() + toBeAdded;
 			
 			copyFile(newFileInRepository, sourceFile);
-			workingCopyClient.doAdd(new File(newFileInRepository), true, false, true, true);
+			workingCopyClient.doAdd(new File(newFileInRepository), true, true, true, SVNDepth.INFINITY, false, true);
 		}
 	}
 }
