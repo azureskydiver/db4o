@@ -48,7 +48,8 @@ public class QConPath extends QConClass {
 		return ! hasChildren();
 	}
 
-	QConClass shareParentForClass(ReflectClass a_class, boolean[] removeExisting) {
+	@Override
+	QConClass shareParentForClass(ReflectClass a_class, BooleanByRef removeExisting) {
         if (i_parent == null) {
             return null;
         }
@@ -60,8 +61,8 @@ public class QConPath extends QConClass {
 		return newConstraint;
 	}
 
-
-	QCon shareParent(Object a_object, boolean[] removeExisting) {
+	@Override
+	QCon shareParent(Object a_object, BooleanByRef removeExisting) {
         if (i_parent == null) {
             return null;
         }
@@ -85,7 +86,7 @@ public class QConPath extends QConClass {
 	// so the parents are reachable.
 	// If we find a "real" constraint, we throw the QPath
 	// out and replace it with the other constraint. 
-    private void morph(boolean[] removeExisting, QCon newConstraint, ReflectClass claxx) {
+    private void morph(BooleanByRef removeExisting, QCon newConstraint, ReflectClass claxx) {
         boolean mayMorph = true;
         if (claxx != null) {
         	ClassMetadata yc = i_trans.container().produceClassMetadata(claxx);
@@ -117,7 +118,7 @@ public class QConPath extends QConClass {
         		}
         	}
         	i_parent.exchangeConstraint(this, newConstraint);
-        	removeExisting[0] = true;
+        	removeExisting.value = true;
         	
         } else {
         	i_parent.addConstraint(newConstraint);

@@ -225,10 +225,6 @@ public final class Platform4 {
     	return jdk().format(date, showTime);
     }
 
-    public static Object getClassForType(Object obj) {
-        return obj;
-    }
-
     public static final void getDefaultConfiguration(Config4Impl config) {
 		
     	// Initialize all JDK stuff first, before doing ClassLoader stuff

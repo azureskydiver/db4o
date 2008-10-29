@@ -74,23 +74,23 @@ public abstract class QQueryBase implements Unversioned {
         col.add(newConstraint);
     }
 
-    private boolean attachToExistingConstraints(Collection4 col, Object obj, boolean onlyForPaths) {
+    private boolean attachToExistingConstraints(Collection4 newConstraintsCollector, Object obj, boolean onlyForPaths) {
         boolean found = false;
-        Iterator4 j = iterateConstraints();
+        final Iterator4 j = iterateConstraints();
         while (j.moveNext()) {
             QCon existingConstraint = (QCon)j.current();
-            boolean[] removeExisting = { false };
+            final BooleanByRef removeExisting = new BooleanByRef(false);
             if(! onlyForPaths || (existingConstraint instanceof QConPath) ){
                 QCon newConstraint = existingConstraint.shareParent(obj, removeExisting);
                 if (newConstraint != null) {
+                	newConstraintsCollector.add(newConstraint);
                     addConstraint(newConstraint);
-                    col.add(newConstraint);
-                    if (removeExisting[0]) {
+                    if (removeExisting.value) {
                         removeConstraint(existingConstraint);
                     }
                     found = true;
                     if(! onlyForPaths){
-                        return true;
+                        break;
                     }
                 }
             }
@@ -104,8 +104,6 @@ public abstract class QQueryBase implements Unversioned {
 	 */
     public Constraint constrain(Object example) {
         synchronized (streamLock()) {
-            example = Platform4.getClassForType(example);
-            
             ReflectClass claxx = reflectClassForClass(example);             
             if (claxx != null) {                
                 return addClassConstraint(claxx);
@@ -145,37 +143,46 @@ public abstract class QQueryBase implements Unversioned {
 	}
 
 	private Constraint addClassConstraint(ReflectClass claxx) {
-		if(claxx.equals(stream()._handlers.ICLASS_OBJECT)){
+		if (isTheObjectClass(claxx)) {
 			return null;
 		}
 		
-		Collection4 col = new Collection4();
 		if (claxx.isInterface()) {
 		    return addInterfaceConstraint(claxx);
 		}
 
-		Iterator4 constraintsIterator = iterateConstraints();
-		while (constraintsIterator.moveNext()) {
-		    QCon existingConstraint = (QConObject)constraintsIterator.current();
-		    boolean[] removeExisting = { false };
-		    QCon newConstraint =
-		        existingConstraint.shareParentForClass(claxx, removeExisting);
-		    if (newConstraint != null) {
-		        addConstraint(newConstraint);
-		        col.add(newConstraint);
-		        if (removeExisting[0]) {
-		            removeConstraint(existingConstraint);
-		        }
-		    }
-		}
-		if (col.size() == 0) {
+		final Collection4 newConstraints = introduceClassConstrain(claxx);
+		if (newConstraints.isEmpty()) {
 		    QConClass qcc = new QConClass(_trans,claxx);
 		    addConstraint(qcc);
 		    return qcc;
 		}
 
-		return toConstraint(col);
+		return toConstraint(newConstraints);
 	}
+
+	private Collection4 introduceClassConstrain(ReflectClass claxx) {
+	    final Collection4 newConstraints = new Collection4();
+		final Iterator4 constraintsIterator = iterateConstraints();
+		while (constraintsIterator.moveNext()) {
+		    final QCon existingConstraint = (QConObject)constraintsIterator.current();
+		    final BooleanByRef removeExisting = new BooleanByRef(false);
+		    final QCon newConstraint =
+		        existingConstraint.shareParentForClass(claxx, removeExisting);
+		    if (newConstraint != null) {
+		    	newConstraints.add(newConstraint);
+		        addConstraint(newConstraint);
+		        if (removeExisting.value) {
+		            removeConstraint(existingConstraint);
+		        }
+		    }
+		}
+	    return newConstraints;
+    }
+
+	private boolean isTheObjectClass(ReflectClass claxx) {
+	    return claxx.equals(stream()._handlers.ICLASS_OBJECT);
+    }
 
 	private Constraint addInterfaceConstraint(ReflectClass claxx) {
 		Collection4 classes = stream().classCollection().forInterface(claxx);
