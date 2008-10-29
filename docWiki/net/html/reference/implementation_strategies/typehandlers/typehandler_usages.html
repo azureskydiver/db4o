@@ -1,0 +1,71 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>TypeHandler Usages</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>TypeHandler Usages</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Selective Field Persistence">Selective Field Persistence</a></li><li><a href ="#Ignore Fields Persistence">Ignore Fields Persistence</a></li></ul></li></ul></div></div></div>
+
+<p>This chapter provides some of the typehandler examples,
+which can be used as a replacement of translators.</p><a name="Selective Field Persistence"></a><h2>Selective Field Persistence <br></h2>
+
+<p>In the first example we will look at the case, when we want
+to save only certain fields of a class. Suppose we have the following class:</p>
+
+
+
+<p>In this case we obviously do not want to store transient
+<code>length</code> field.&nbsp; To achieve
+this we can write a new typehandler, which will store a duplicate of the class
+without the length field. To make the work easier, we will extend the default
+FirstClassObjectHandler.&nbsp; First class
+means any persistent object that has its identity in the database.</p>
+
+
+
+<p>You can see that in this case, we are just replacing
+NotStorable class with a duplicate class Storable and save it instead. </p>
+
+<p>Let's test how it works. First we should create
+configuration to include the typehandler:</p>
+
+
+
+<p>And now test store and retrieve:</p>
+
+
+
+<p>This works. However, this example has certain
+limitations:&nbsp; the fields were in fact
+discarded and encapsulated into a Storable object. This means that we won't be
+able to query for fields or index on fields. </p>
+
+<a name="Ignore Fields Persistence"></a><h2>Ignore Fields Persistence <br></h2>
+
+<p>In the next example we will use one of the db4o internal
+typehandlers, which allows to skip all the field information for certain
+objects. This can be useful to safe the database space when the object information
+is not required for future retrieval. Let's use the following classes:</p>
+
+
+
+
+
+<p>Let's assume that TransientItem field information is not
+required to be stored in our application. We can save the database space then,
+by using IgnoreFieldsTypeHandler. The configuration will look like this:</p>
+
+
+
+<p>We can check the result with the following code:</p>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2008-10-29T10:35:44 by Tetyana.
+				</div>
+  </body>
+</html>
