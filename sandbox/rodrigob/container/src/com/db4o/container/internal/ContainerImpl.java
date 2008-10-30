@@ -3,11 +3,14 @@ package com.db4o.container.internal;
 import java.lang.reflect.*;
 import java.util.*;
 
+import org.objectweb.asm.*;
+import org.objectweb.asm.Type;
+
 import com.db4o.container.*;
 
 public class ContainerImpl implements Container {
 
-	interface Binding {
+	public interface Binding {
 		Object get();
 	}
 	
@@ -35,13 +38,85 @@ public class ContainerImpl implements Container {
 			return new SingletonBinding(this);
 		}
 	    final Class<?> concreteType = Class.forName(defaultImplementationFor(serviceType));
-	    final Constructor<?> mostComplexConstructor = mostComplexConstructorFor(concreteType);
-	    final Binding newInstance = arity(mostComplexConstructor) > 0 ? new ComplexInstanceBinding(mostComplexConstructor) : new SimpleInstanceBinding(concreteType);
+	    final Binding newInstance = bindingFor(mostComplexConstructorFor(concreteType));
 	    if (Singleton.class.isAssignableFrom(concreteType)) {
 	    	return new SingletonBinding(newInstance.get());
 	    }
 	    return newInstance;
     }
+	
+	static final class BindingClassLoader extends ClassLoader {
+
+		public BindingClassLoader(ClassLoader parent) {
+			super(parent);
+		}
+
+		public Class define(String className, byte[] classBytes) {
+			return defineClass(className, classBytes, 0, classBytes.length);
+		}
+		
+	}
+
+	private Binding bindingFor(final Constructor<?> ctor) {
+		if (arity(ctor) > 0)
+			return new ComplexInstanceBinding(ctor);
+		
+		try {
+			return (Binding)defineClass(bindingClassNameFor(ctor), emitClassBindingFor(ctor)).newInstance();
+		} catch (SecurityException e) {
+			throw new ContainerException(e);
+		} catch (NoSuchMethodException e) {
+			throw new ContainerException(e);
+		} catch (InstantiationException e) {
+			throw new ContainerException(e);
+		} catch (IllegalAccessException e) {
+			throw new ContainerException(e);
+		}
+	}
+
+	private Class defineClass(final String className, final byte[] classBytes) {
+		return bindingClassLoader().define(className.replace('/', '.'), classBytes);
+	}
+
+	private byte[] emitClassBindingFor(final Constructor<?> ctor)
+			throws NoSuchMethodException {
+		final String concreteTypeName = internalNameFor(ctor.getDeclaringClass());
+		final ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+		classWriter.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, bindingClassNameFor(ctor), null, internalNameFor(Object.class), new String[] { internalNameFor(Binding.class) });
+		
+		final MethodVisitor bindingCtor = classWriter.visitMethod(Opcodes.ACC_PUBLIC, "<init>", Type.getConstructorDescriptor(ctor), null, null);
+		bindingCtor.visitIntInsn(Opcodes.ALOAD, 0);
+		bindingCtor.visitMethodInsn(Opcodes.INVOKESPECIAL, internalNameFor(Object.class), "<init>", Type.getConstructorDescriptor(ctor));
+		bindingCtor.visitInsn(Opcodes.RETURN);
+		bindingCtor.visitMaxs(0, 0);
+		bindingCtor.visitEnd();
+		
+		final MethodVisitor method = classWriter.visitMethod(Opcodes.ACC_PUBLIC, "get", Type.getMethodDescriptor(Binding.class.getMethod("get")), null, null);
+		method.visitTypeInsn(Opcodes.NEW, concreteTypeName);
+		method.visitInsn(Opcodes.DUP);
+		method.visitMethodInsn(Opcodes.INVOKESPECIAL, concreteTypeName, "<init>", Type.getConstructorDescriptor(ctor));
+		method.visitInsn(Opcodes.ARETURN);
+		method.visitMaxs(0, 0);
+		method.visitEnd();
+		classWriter.visitEnd();
+		return classWriter.toByteArray();
+	}
+
+	private String bindingClassNameFor(final Constructor<?> ctor) {
+		return ctor.getDeclaringClass().getSimpleName() + "Binding";
+	}
+
+	private BindingClassLoader bindingClassLoader() {
+		return new BindingClassLoader(getClass().getClassLoader());
+	}
+
+	private String internalNameFor(final Class<?> klass) {
+		return typeFor(klass).getInternalName();
+	}
+
+	private Type typeFor(final Class<?> klass) {
+		return Type.getType(klass);
+	}
 
 	private int arity(final Constructor<?> ctor) {
 	    return ctor.getParameterTypes().length;
@@ -72,25 +147,31 @@ public class ContainerImpl implements Container {
 			return _instance;
 		}
 	}
-	
-	final static class SimpleInstanceBinding implements Binding {
-
-		private final Class<?> _concreteType;
-
-		public SimpleInstanceBinding(Class<?> concreteType) {
-			_concreteType = concreteType;
-        }
-
-		public Object get() {
-			try {
-	            return _concreteType.newInstance();
-            } catch (InstantiationException e) {
-            	throw new ContainerException(e);
-            } catch (IllegalAccessException e) {
-            	throw new ContainerException(e);
-            }
-        }
-	}
+//	
+//	final static class SimpleInstanceBinding implements Binding {
+//
+//		private static final Object[] NO_ARGS = new Object[0];
+//		
+//		private final Constructor<?> _parameterlessConstructor;
+//
+//		public SimpleInstanceBinding(Constructor<?> parameterlessConstructor) {
+//			_parameterlessConstructor = parameterlessConstructor;
+//        }
+//
+//		public Object get() {
+//			try {
+//	            return _parameterlessConstructor.newInstance(NO_ARGS);
+//            } catch (InstantiationException e) {
+//            	throw new ContainerException(e);
+//            } catch (IllegalAccessException e) {
+//            	throw new ContainerException(e);
+//            } catch (IllegalArgumentException e) {
+//            	throw new ContainerException(e);
+//			} catch (InvocationTargetException e) {
+//				throw new ContainerException(e);
+//			}
+//        }
+//	}
 	
 	final class ComplexInstanceBinding implements Binding {
 		private final Constructor<?> _constructor;
@@ -123,3 +204,4 @@ public class ContainerImpl implements Container {
         }
 	}
 }
+

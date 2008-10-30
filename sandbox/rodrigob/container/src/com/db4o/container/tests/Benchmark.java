@@ -2,7 +2,6 @@ package com.db4o.container.tests;
 
 import com.db4o.container.*;
 import com.db4o.container.tests.internal.*;
-import com.db4o.foundation.*;
 
 public class Benchmark {
 	
@@ -23,12 +22,11 @@ public class Benchmark {
     }
 
 	private static long time(String label, Runnable block) {
-		final AutoStopWatch stopWatch = new AutoStopWatch();
-		for (int i=0; i<1000000; ++i)
+		final long t0 = System.nanoTime();
+		for (int i=0; i<2000000; ++i)
 			block.run();
-		final long elapsed = stopWatch.peek();
-		System.out.println(label + ": " + elapsed + "ms");
+		final long elapsed = System.nanoTime() - t0;
+		System.out.println(label + ": " + (elapsed/1000000) + "ms");
 		return elapsed;
     }
-
 }
