@@ -36,6 +36,7 @@ public class DecafASTNodeBuilder {
 		for(int idx = 1; idx < components.length; idx++) {
 			name = _ast.newQualifiedName(name, newSimpleName(components[idx]));
 		}
+		
 		return name;
 	}
 
@@ -136,10 +137,21 @@ public class DecafASTNodeBuilder {
 		return type.getPackage().getName();
 	}
 
+	public TypeDeclaration newTypeDeclaration(final SimpleName typeName) { 
+		final TypeDeclaration newType = _ast.newTypeDeclaration();
+		newType.setName(newSimpleName(typeName.getIdentifier()));
+		
+		return newType;
+	}
+	
 	public SimpleType newSimpleType(final String typeName) {
 		return _ast.newSimpleType(_ast.newName(typeName));
 	}
 
+	public Type newArrayType(Type componentType) {
+		return _ast.newArrayType(componentType);
+	}
+	
 	private PrimitiveType newPrimitiveType(final String primitiveTypeName) {
 		return _ast.newPrimitiveType(PrimitiveType.toCode(primitiveTypeName));
 	}
@@ -192,6 +204,10 @@ public class DecafASTNodeBuilder {
 		return variable;
 	}
 	
+	public Modifier newStaticModifier() {
+		return _ast.newModifier(ModifierKeyword.STATIC_KEYWORD);
+	}
+	
 	public Modifier newFinalModifier() {
 		return _ast.newModifier(ModifierKeyword.FINAL_KEYWORD);
 	}
@@ -215,6 +231,21 @@ public class DecafASTNodeBuilder {
 		return cast;
 	}
 	
+	public MethodDeclaration newMethodDeclaration(String name) {
+		final MethodDeclaration method = _ast.newMethodDeclaration();
+		method.setName(newSimpleName(name));
+		
+		return method;
+	}
+	
+	public MethodDeclaration newConstructorDeclaration(SimpleName name) {
+		final MethodDeclaration ctor = newMethodDeclaration(name.getIdentifier());
+		ctor.setConstructor(true);
+		ctor.modifiers().add(newPrivateModifier());
+		
+		return ctor;
+	}
+	
 	public MethodInvocation newMethodInvocation(final Expression target,
 			final String name) {
 		final MethodInvocation invocation = _ast.newMethodInvocation();
@@ -229,14 +260,22 @@ public class DecafASTNodeBuilder {
 		return pe;
 	}
 
-	public ArrayCreation newArrayCreation(final ITypeBinding arrayType,
-			ArrayInitializer arrayInitializer) {
+	public ArrayCreation newArrayCreation(final ITypeBinding arrayType, ArrayInitializer arrayInitializer) {
 		ArrayCreation varArgsArray = _ast.newArrayCreation();
 		varArgsArray.setInitializer(arrayInitializer);
 
 		varArgsArray.setType((ArrayType) newType(arrayType));
 		return varArgsArray;
 	}
+	
+	public ArrayCreation newArrayCreation(final Type elementType, ArrayInitializer arrayInitializer) {
+		ArrayCreation array = _ast.newArrayCreation();
+		array.setInitializer(arrayInitializer);
+
+		array.setType(_ast.newArrayType(elementType));
+		return array;
+	}
+	
 
 	public ArrayInitializer newArrayInitializer() {
 		return _ast.newArrayInitializer();
@@ -249,6 +288,7 @@ public class DecafASTNodeBuilder {
 	
 	public ClassInstanceCreation newClassInstanceCreation(Type type) {
 		final ClassInstanceCreation creation = _ast.newClassInstanceCreation();
+
 		creation.setType(type);
 		return creation;
 	}
@@ -259,6 +299,13 @@ public class DecafASTNodeBuilder {
 	
 	public NumberLiteral newNumberLiteral(String literal) {
 		return _ast.newNumberLiteral(literal);
+	}
+	
+	public StringLiteral newStringLiteral(String literal) {
+		final StringLiteral stringLiteral = _ast.newStringLiteral();
+		stringLiteral.setLiteralValue(literal);
+		
+		return stringLiteral;
 	}
 
 	public IMethodBinding originalMethodDefinitionFor(MethodDeclaration node) {
@@ -480,5 +527,9 @@ public class DecafASTNodeBuilder {
 	private boolean isPredicateMatchMethod(final IMethodBinding method) {
 		return "com.db4o.query.Predicate".equals(method.getDeclaringClass().getQualifiedName()) &&
 			"match".equals(method.getName());
+	}
+
+	public SuperConstructorInvocation newSuperConstructorInvocation() {
+		return _ast.newSuperConstructorInvocation();
 	}
 }

@@ -1,0 +1,45 @@
+package decaf.enums;
+
+final class Hero extends Enum4 {
+	public static final Hero SuperMan = new Hero("SuperMan", 0, 1938);
+	public static final Hero Batman = new Hero("Batman", 1,1939);
+	public static final Hero BatGirl = new Hero("BatGirl", 2, 1961);
+	public static final Hero BobParr = new Hero("BobParr", 3, 2004);
+	
+	Hero(String name, int ordinal, int year) {
+		super(name, ordinal);
+		
+		_year = year; 
+	}
+
+	public int year() {
+		return _year; 
+	}
+	
+	public String toString() {
+		return _name + "/" + _year;
+	}
+	
+	public Hero[] values() {
+		return new Hero[] {SuperMan, Batman, BatGirl, BobParr };	
+	}
+		
+	private final int _year;	
+}
+
+class TestEnum {
+	public void testValueOf() {
+		Hero h = (Hero) Enum4.valueOf(Hero.class, "BatGirl");
+		Animal a = (Animal) Enum4.valueOf(Animal.class, "Dog");
+	}
+
+	public void testSwitch(Hero h) {
+		if (h == Hero.SuperMan || h == Hero.BobParr) {
+			System.out.println("SuperMan or Mr. Incredible"); 
+		} else if (h == Hero.BatGirl) {
+			System.out.println("BatGirl"); 
+		} else {
+			System.out.println(h);
+		}
+	}
+}
