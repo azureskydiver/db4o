@@ -1,0 +1,15 @@
+package decaf.enums;
+
+final class Animal extends Enum4 {
+	public static final Animal Cow = new Animal("Cow", 0);
+	public static final Animal Cat = new Animal("Cat", 1);
+	public static final Animal Dog = new Animal("Dog", 2);
+
+	private Animal(String name, int ordinal) {
+		super(name, ordinal);
+	}
+
+	public static Animal[] values() {
+		return new Animal[] { Cow, Cat, Dog };
+	}
+}

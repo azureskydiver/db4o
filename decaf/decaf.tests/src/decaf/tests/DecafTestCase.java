@@ -38,10 +38,6 @@ public class DecafTestCase extends DecafTestCaseBase {
 		runResourceTestCase("GenericForEach");
 	}
 
-	public void _testEnums() throws Exception {
-		runResourceTestCase("Enums");
-	}
-
 	public void _testCovariance() throws Exception {
 		runResourceTestCase("Covariance");
 	}
