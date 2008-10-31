@@ -40,6 +40,8 @@ import org.eclipse.jdt.core.dom.SimplePropertyDescriptor;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.SwitchCase;
+import org.eclipse.jdt.core.dom.SwitchStatement;
 import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -48,6 +50,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
+import sharpen.core.framework.Bindings;
 import sharpen.core.framework.JavadocUtility;
 import decaf.core.IterablePlatformMapping;
 import decaf.core.TargetPlatform;
@@ -100,15 +103,53 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(EnumDeclaration node) {
-		rewrite().remove(node);
-		return false;
+		if (isIgnored(node)) {
+			rewrite().remove(node);
+			return false;
+		}
 		
-//		final TypeDeclaration enumType = new EnumProcessor(_context, node).run();		
-//		rewrite().replace(node, enumType);
-//		
-//		return false;
+		final TypeDeclaration enumType = new EnumProcessor(_context, node).run();		
+		rewrite().replace(node, enumType);
+		
+		return false;
 	}
-
+	
+	@Override
+	public boolean visit(SwitchStatement node) {
+		final ITypeBinding binding = node.getExpression().resolveTypeBinding();
+		if (!binding.isEnum()) {
+			return true;
+		}
+	
+		final SwitchStatement statement = builder().clone(node);
+		
+		statement.setExpression(builder().newMethodInvocation(builder().clone(node.getExpression()), "ordinal"));
+		
+		for (Object stmt : statement.statements()) {
+			if (!(stmt instanceof SwitchCase)) {
+				continue;
+			}
+			
+			SwitchCase caseStmt = (SwitchCase) stmt;
+			
+			if (caseStmt.isDefault()) {
+				continue;
+			}		
+		
+			final SimpleName originalConstantName = builder().clone((SimpleName) caseStmt.getExpression());
+			
+			final String qualifiedName = Bindings.qualifiedName(node.getExpression().resolveTypeBinding());
+			caseStmt.setExpression(
+					builder().newFieldAccess(
+								builder().newFieldAccess(builder().newSimpleName(qualifiedName), originalConstantName),
+								"ORDINAL"));
+					
+		}		
+		
+		rewrite().replace(node, statement);
+		return false;
+	}
+	
 	@Override
 	public void endVisit(TypeDeclaration node) {
 		processIgnoreExtends(node);

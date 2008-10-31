@@ -1,0 +1,30 @@
+package decaf.enums;
+
+enum ComponentType {
+	ComPlus,
+	JavaBeans,
+	DotNet,
+	CORBA;
+};
+
+class EnumUsageTest {
+	public String UseIt(ComponentType type) {
+	
+		switch(type) {
+			case CORBA:
+			case JavaBeans: return "The other side :)";
+			
+			case ComPlus: return "Cool!";
+			case DotNet: return "Yeah!";
+		}
+
+		switch(componentType()) {
+			case DotNet: return "Sure!!";
+			default: return "Humm ?" ;
+		}
+	}
+
+	private ComponentType componentType() {
+		return ComponentType.ComPlus;
+	}
+}

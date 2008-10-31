@@ -1,0 +1,76 @@
+package decaf.enums;
+
+final class ComponentType extends Enum4 {
+	public static class ComPlus extends ComponentType {
+		public static final int ORDINAL = 0;
+
+		private ComPlus() {
+			super("ComPlus", ComPlus.ORDINAL);
+		}
+	}
+
+	public static class JavaBeans extends ComponentType {
+		public static final int ORDINAL = 1;
+
+		private JavaBeans() {
+			super("JavaBeans", JavaBeans.ORDINAL);
+		}
+	}
+
+	public static class DotNet extends ComponentType {
+		public static final int ORDINAL = 2;
+
+		private DotNet() {
+			super("DotNet", DotNet.ORDINAL);
+		}
+	}
+
+	public static class CORBA extends ComponentType {
+		public static final int ORDINAL = 3;
+
+		private CORBA() {
+			super("CORBA", CORBA.ORDINAL);
+		}
+	}
+
+	public static final ComponentType ComPlus = new ComPlus();
+	public static final ComponentType JavaBeans = new JavaBeans();
+	public static final ComponentType DotNet = new DotNet();
+	public static final ComponentType CORBA = new CORBA();
+
+	private ComponentType(String name, int ordinal) {
+		super(name, ordinal);
+	}
+
+	public static ComponentType[] values() {
+		return new ComponentType[] { ComponentType.ComPlus,
+				ComponentType.JavaBeans, ComponentType.DotNet,
+				ComponentType.CORBA };
+	}
+};
+
+class EnumUsageTest {
+	public String UseIt(ComponentType type) {
+	
+		switch (type.ordinal()) {
+		case ComponentType.CORBA.ORDINAL:
+		case ComponentType.JavaBeans.ORDINAL:
+			return "The other side :)";
+		case ComponentType.ComPlus.ORDINAL:
+			return "Cool!";
+		case ComponentType.DotNet.ORDINAL:
+			return "Yeah!";
+		}
+
+		switch (componentType().ordinal()) {
+		case ComponentType.DotNet.ORDINAL:
+			return "Sure!!";
+		default:
+			return "Humm ?";
+		}
+	}
+
+	private ComponentType componentType() {
+		return ComponentType.ComPlus;
+	}
+}
