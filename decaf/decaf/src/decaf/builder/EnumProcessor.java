@@ -1,14 +1,20 @@
 package decaf.builder;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayCreation;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
-import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.ReturnStatement;
+import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
 import org.eclipse.jdt.core.dom.Type;
@@ -21,6 +27,7 @@ import decaf.rewrite.DecafRewritingServices;
 @SuppressWarnings("unchecked")
 public class EnumProcessor {
 
+	private static final String ORDINAL_CONSTANT_NAME = "ORDINAL";
 	private final DecafRewritingContext _context;
 	private final EnumDeclaration _enumNode;
 
@@ -34,24 +41,67 @@ public class EnumProcessor {
 		enumType.setSuperclassType(builder().newSimpleType("Enum4"));
 		enumType.modifiers().add(builder().newFinalModifier());
 		
-		int constantOrdinal = 0;
+		int ordinal = 0;
+		for (Object item : _enumNode.enumConstants()) {
+			EnumConstantDeclaration enumConstant = (EnumConstantDeclaration) item;			
+			enumType.bodyDeclarations().add(newConcreteEnumClass(_enumNode.getName().getIdentifier(), enumConstant, ordinal));
+			ordinal++;
+		}
+		
+		List<SimpleName> enumConstants = new ArrayList<SimpleName>();
 		for (Object item : _enumNode.enumConstants()) {
 			EnumConstantDeclaration enumConstant = (EnumConstantDeclaration) item;
 			
-			final FieldDeclaration newEnumConstant = newEnumConstant(_enumNode, enumConstant, constantOrdinal);
-			final ListRewrite rewrite = rewrite().getListRewrite(enumType, TypeDeclaration.BODY_DECLARATIONS_PROPERTY);
-			rewrite.insertLast(newEnumConstant, null);
+			enumType.bodyDeclarations().add(newEnumConstant(_enumNode, enumConstant, enumConstants.size()));
 			
-			constantOrdinal++;
+			enumConstants.add(clone(enumConstant.getName()));
 		}
+		
 		
 		addEnumConstructor(enumType);
 		
-		addValuesMethod(enumType);
+		addValuesMethod(enumType, enumConstants);
 		
 		return enumType;
+	}	
+
+	private TypeDeclaration newConcreteEnumClass(String name, EnumConstantDeclaration enumConstant, int ordinal) {
+		final TypeDeclaration enumConstantClass = createConcreteEnumClassDeclaration(name, enumConstant);
+		
+		emitOrdinalConstant(ordinal, enumConstantClass);
+		
+		emitConcreteEnumClassConstructor(enumConstant, enumConstantClass);		
+		
+		return enumConstantClass;		
 	}
-	
+
+	private TypeDeclaration createConcreteEnumClassDeclaration(String name, EnumConstantDeclaration enumConstant) {
+		final TypeDeclaration enumConstantClass = builder().newTypeDeclaration(enumConstant.getName());
+		enumConstantClass.modifiers().add(builder().newPublicModifier());
+		enumConstantClass.modifiers().add(builder().newStaticModifier());
+		enumConstantClass.setSuperclassType(newSimpleType(name));
+		
+		return enumConstantClass;
+	}
+
+	private void emitConcreteEnumClassConstructor(
+			EnumConstantDeclaration enumConstant,
+			final TypeDeclaration enumConstantClass) {
+		final MethodDeclaration ctor = builder().newConstructorDeclaration(enumConstant.getName());
+
+		final SuperConstructorInvocation superCtorInvocation = builder().newSuperConstructorInvocation();
+		superCtorInvocation.arguments().add(builder().newStringLiteral(enumConstant.getName().getIdentifier()));
+		superCtorInvocation.arguments().add(builder().newFieldAccess(clone(enumConstant.getName()), ORDINAL_CONSTANT_NAME));
+		
+		ctor.setBody(builder().newBlock(superCtorInvocation));		
+		addMethod(enumConstantClass, ctor);
+	}
+
+	private void emitOrdinalConstant(int ordinal, final TypeDeclaration enumConstantClass) {
+		final FieldDeclaration ordinalDeclaration = builder().newConstant(builder().newPrimitiveType(PrimitiveType.INT), ORDINAL_CONSTANT_NAME, builder().newNumberLiteral(String.valueOf(ordinal)));
+		enumConstantClass.bodyDeclarations().add(ordinalDeclaration);
+	}
+
 	private DecafRewritingServices rewrite() {
 		return _context.rewrite();
 	}
@@ -60,24 +110,40 @@ public class EnumProcessor {
 		return _context.builder();
 	}
 
-	private void addValuesMethod(TypeDeclaration enumType) {
-		final MethodDeclaration valuesMethod = builder().newMethodDeclaration("values");
-		valuesMethod.setReturnType2(builder().newArrayType(newSimpleType(enumType.getName().getIdentifier())));
-		valuesMethod.modifiers().add(builder().newPublicModifier());
-		valuesMethod.modifiers().add(builder().newStaticModifier());
+	private void addValuesMethod(TypeDeclaration enumType, List<SimpleName> enumConstants) {
+		final MethodDeclaration valuesMethod = newMethod(
+													enumType, 
+													"values",
+													builder().newArrayType(newSimpleType(enumType.getName().getIdentifier())),
+													builder().newPublicModifier(), 
+													builder().newStaticModifier());
 		
 		final ArrayInitializer valuesInitializer = builder().newArrayInitializer();
 		
-		//TODO: check if type is the same as enumType and (maybe) if field is static; 
-		for (Object field : enumType.bodyDeclarations() ) {
-			valuesInitializer.expressions().add(builder().newThisExpression() );
-		}
+		for (SimpleName enumConstant : enumConstants) {
+			valuesInitializer.expressions().add(builder().newFieldAccess(clone(enumType.getName()), builder().clone(enumConstant)));
+		}		
 		
 		final ArrayCreation valuesArray = builder().newArrayCreation(newSimpleType(enumType.getName().getIdentifier()), valuesInitializer);
 		final ReturnStatement returnStmt = builder().newReturnStatement(valuesArray);
 		valuesMethod.setBody(builder().newBlock(returnStmt));
 		
 		addMethod(enumType, valuesMethod);
+	}
+
+	private <T extends ASTNode> T clone(T node) {
+		return builder().clone(node);
+	}
+
+	private MethodDeclaration newMethod(TypeDeclaration type, final String name, Type returnType, final Modifier... modifiers) {
+		final MethodDeclaration method = builder().newMethodDeclaration(name);
+		method.setReturnType2(returnType);
+		
+		for(Modifier modifier : modifiers) {
+			method.modifiers().add(modifier);
+		}
+		
+		return method;
 	}
 
 	private void addEnumConstructor(TypeDeclaration enumType) {
@@ -105,21 +171,15 @@ public class EnumProcessor {
 	}
 
 	private FieldDeclaration newEnumConstant(EnumDeclaration node, EnumConstantDeclaration originalEnumConstant, int ordinal) {
-		final ClassInstanceCreation creation = builder().newClassInstanceCreation(newEnumType(node));
+		final Expression initializer = builder().newClassInstanceCreation(newEnumType(originalEnumConstant.getName()));
 		
-		creation.arguments().add(builder().newStringLiteral(originalEnumConstant.getName().getIdentifier()));
-		creation.arguments().add(builder().newNumberLiteral(String.valueOf(ordinal)));
+//		creation.arguments().add(builder().newStringLiteral(originalEnumConstant.getName().getIdentifier()));
+//		creation.arguments().add(builder().newNumberLiteral(String.valueOf(ordinal)));
 		
-		final FieldDeclaration enumConstant = builder().newField(newEnumType(node) , originalEnumConstant.getName().getIdentifier(), creation);
-		
-		enumConstant.modifiers().add(builder().newPublicModifier());
-		enumConstant.modifiers().add(builder().newStaticModifier());
-		enumConstant.modifiers().add(builder().newFinalModifier());
-		
-		return enumConstant;
+		return builder().newConstant(newEnumType(node.getName()), originalEnumConstant.getName().getIdentifier(), initializer);
 	}
 
-	private SimpleType newEnumType(EnumDeclaration node) {
-		return builder().newSimpleType(node.getName().getIdentifier());
+	private SimpleType newEnumType(SimpleName name) {
+		return builder().newSimpleType(name.getIdentifier());
 	}	
 }

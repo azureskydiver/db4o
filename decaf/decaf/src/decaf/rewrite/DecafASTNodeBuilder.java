@@ -163,14 +163,6 @@ public class DecafASTNodeBuilder {
 		return assignment;
 	}
 
-	public Expression newFieldAccess(Expression e, SimpleName fieldName) {
-		FieldAccess field = _ast.newFieldAccess();
-		field.setExpression(e);
-		field.setName(fieldName);
-		return field;
-	}
-
-	
 	public ArrayAccess newArrayAccess(Expression array, Expression index) {
 		ArrayAccess access = _ast.newArrayAccess();
 		access.setArray(array);
@@ -216,7 +208,7 @@ public class DecafASTNodeBuilder {
 		return _ast.newModifier(ModifierKeyword.PRIVATE_KEYWORD);
 	}
 	
-	public Object newPublicModifier() {
+	public Modifier newPublicModifier() {
 		return _ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD);
 	}
 	
@@ -471,6 +463,13 @@ public class DecafASTNodeBuilder {
 		return _ast.newThisExpression();
 	}
 
+	public Expression newFieldAccess(Expression e, SimpleName fieldName) {
+		FieldAccess field = _ast.newFieldAccess();
+		field.setExpression(e);
+		field.setName(fieldName);
+		return field;
+	}
+	
 	public Expression newFieldAccess(Expression expression, String fieldName) {
 		return newFieldAccess(expression, newSimpleName(fieldName));
 	}
@@ -531,5 +530,15 @@ public class DecafASTNodeBuilder {
 
 	public SuperConstructorInvocation newSuperConstructorInvocation() {
 		return _ast.newSuperConstructorInvocation();
+	}
+	
+	public FieldDeclaration newConstant(final Type fieldType, final String name, final Expression initializer) {
+		final FieldDeclaration constantDecl = newField(fieldType, name, initializer);
+		
+		constantDecl.modifiers().add(newPublicModifier());
+		constantDecl.modifiers().add(newStaticModifier());
+		constantDecl.modifiers().add(newFinalModifier());
+		
+		return constantDecl;
 	}
 }

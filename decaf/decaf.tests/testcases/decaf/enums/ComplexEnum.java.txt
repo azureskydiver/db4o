@@ -1,10 +1,29 @@
 package decaf.enums;
 
 enum Hero {
-	SuperMan(1938),
-	Batman(1939),
-	BatGirl(1961),
-	BobParr(2004);
+	SuperMan(1938) {
+		public String movieName() {
+			return "Superman Returns"; 
+		}
+	}
+	
+	Batman(1939) {
+		public String movieName() {
+			return "The Incredibles"; 
+		}
+	}
+	
+	BatGirl(1961) {
+		public String movieName() {
+			return "The Incredibles"; 
+		}
+	}
+	
+	BobParr(2004) {
+		public String movieName() {
+			return "The Incredibles"; 
+		}
+	}
 
 	Hero(int year) {
 		_year = year; 
@@ -14,29 +33,7 @@ enum Hero {
 		return _year; 
 	}
 	
-	private final int _year;	
-}
-
-class TestEnum {
-	public void testValueOf() {
-		Hero h = Enum.valueOf(Hero.class, "BatGirl");
-		Animal a = Enum.valueOf(Animal.class, "Dog");
-	}
+	public abstract String movieName();
 	
-	public void testSwitch(Hero h) {
-		switch(h) {
-			case BobParr:
-			case SuperMan: 
-				System.out.println("SuperMan or Mr. Incredible"); 
-				break;
-				  		
-			case BatGirl: 
-				System.out.println("BatGirl"); 
-				break;
-			
-			default: 
-				System.out.println(h); 
-				break;  		
-		}
-	}
+	private final int _year;	
 }
