@@ -55,7 +55,7 @@ class Enum4 implements Comparable {
 		}
 		
 		if (t != null) {
-			throw new IllegalArgumentException("enumClass", t);
+			throw new IllegalArgumentException(enumClass + ": " + t.getMessage());
 		}
 		
 		for(int i = 0; i < values.length; i++) {
