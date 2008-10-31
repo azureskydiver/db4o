@@ -34,7 +34,7 @@ public class ContainerImpl implements Container {
 	}
 
 	protected Binding resolve(Class serviceType) throws ClassNotFoundException {
-		if (serviceType.isAssignableFrom(getClass())) {
+		if (canBeServedByMe(serviceType)) {
 			return new SingletonBinding(this);
 		}
 	    final Class<?> concreteType = Class.forName(defaultImplementationFor(serviceType));
@@ -44,6 +44,10 @@ public class ContainerImpl implements Container {
 	    }
 	    return newInstance;
     }
+
+	private boolean canBeServedByMe(Class serviceType) {
+		return serviceType.isAssignableFrom(getClass());
+	}
 	
 	static final class BindingClassLoader extends ClassLoader {
 
