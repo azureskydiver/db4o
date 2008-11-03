@@ -226,9 +226,22 @@ public class DecafASTNodeBuilder {
 	public MethodDeclaration newMethodDeclaration(String name) {
 		final MethodDeclaration method = _ast.newMethodDeclaration();
 		method.setName(newSimpleName(name));
-		
+
 		return method;
 	}
+
+	public Object newSingleVariableDeclaration(String name, Type type, Expression initializer) {
+		final SingleVariableDeclaration singleVarDecl = _ast.newSingleVariableDeclaration();
+		
+		singleVarDecl.setName(newSimpleName(name));
+		singleVarDecl.setType(type);
+		
+		if (initializer != null) {
+			singleVarDecl.setInitializer(initializer);
+		}
+		
+		return singleVarDecl;
+	}	
 	
 	public MethodDeclaration newConstructorDeclaration(SimpleName name) {
 		final MethodDeclaration ctor = newMethodDeclaration(name.getIdentifier());

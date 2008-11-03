@@ -1,39 +1,43 @@
 package decaf.enums;
 
 enum Hero {
-	SuperMan(1938) {
+	SuperMan(2006) {
 		public String movieName() {
 			return "Superman Returns"; 
 		}
-	}
+	},
 	
 	Batman(1939) {
 		public String movieName() {
-			return "The Incredibles"; 
+			return "Batman"; 
 		}
-	}
+	},
 	
 	BatGirl(1961) {
 		public String movieName() {
-			return "The Incredibles"; 
+			return "Batman"; 
 		}
-	}
+	},
 	
 	BobParr(2004) {
 		public String movieName() {
 			return "The Incredibles"; 
 		}
-	}
+	};
 
 	Hero(int year) {
-		_year = year; 
+		_year = year;
 	}
-	
+
+	public String toString() {
+		return name() + "/" + _year;
+	}
+
 	public int year() {
-		return _year; 
+		return _year;
 	}
-	
+
 	public abstract String movieName();
-	
-	private final int _year;	
+
+	private final int _year;
 }
