@@ -5,3 +5,19 @@ enum Animal {
 	Cat,
 	Dog
 }
+
+public class SimpleEnum {
+	
+	public String simpleSwitch(Animal animal) {
+		switch(animal) {
+			case Cow:
+			case Cat:
+				return "moo or meeow";
+			case Dog:
+				return "wauwau";
+			default:
+				throw new IllegalArgumentException();
+		}
+	}
+
+}
