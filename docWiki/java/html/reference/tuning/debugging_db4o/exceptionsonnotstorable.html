@@ -10,12 +10,12 @@
         <h1>ExceptionsOnNotStorable</h1>
 <p>There is another setting that can be of great value in debug process:</p>
 <span name="cs_wiki_filter" csw_filters="java">
-<p>Java: </p><p><code>configuration.exceptionsOnNotStorable (true)</code> </p>
+<p>Java: </p><p><code>configuration.exceptionsOnNotStorable (true|false)</code> </p>
 </span>
 
 
 <p>In some environments (especially those that provide plugin mechanics or perform some kind of class reloading) you may encounter strange problems due to classloader issues. These environments include servlet containers, Eclipse plugins, reloading JUnit test runners, etc. </p>
-<p>In most of those cases db4o will fail quietly (i.e. will not deliver any results on queries), unless you have configured #exceptionsOnNotStorable(true) - then you may see messages related to not being able to store db4o internal classes or set db4o internal translators, etc. </p>
+<p>In the default configuration ExceptionsOnNotStorable is set to true, which means that an exception will be thrown when db4o is not able to store db4o internal classes or set db4o internal translators, etc. </p>
 <p>Db4o uses the context classloader by default. This is an appropriate choice in most situations, but it's not really reliable, since the concrete context classloader depends on the environment you're running in. Therefore you can explicitly specify the classloader to be used for db4o operation by calling</p>
 <span name="cs_wiki_filter" csw_filters="java">
 <p>Java: </p><p><code>configuration.reflectWith(new JdkReflector(classLoader)) </code></p>
@@ -60,7 +60,7 @@ add a zero-parameter constructor specifically for db4o; </li>
 <p>Another db4o system, which can give you a valuable feedback about db4o functioning in your application is <a href="../diagnostics.html" class="wikiLink">Diagnostics</a>.</p></div>
     </div>
     <div id="footer">
-					This revision (10) was last Modified 2007-05-07T16:55:45 by Tetyana.
+					This revision (11) was last Modified 2008-10-31T19:06:46 by Tetyana.
 				</div>
   </body>
 </html>
