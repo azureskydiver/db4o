@@ -5,6 +5,8 @@ import java.util.concurrent.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.cs.*;
+import com.db4o.cs.config.*;
 import com.db4o.foundation.io.*;
 import com.db4o.query.*;
 
@@ -25,6 +27,7 @@ public class Main {
 	private final List<Class> _classes = Collections.synchronizedList(new ArrayList<Class>());
 	private final CountDownLatch _startSignal = new CountDownLatch(1);
 	private ObjectContainer _container;
+	private ObjectServer _server;
 
 	public Main() {
 		createNewDatabase();
@@ -39,7 +42,12 @@ public class Main {
 	private void dumpDatabaseInfo() {
 		openDatabase();
 		try {
-			System.out.println(_container.query(Item.class).size() + " objects left in the database.");
+			final ObjectSet<Item> remaining = _container.query(Item.class);
+			System.out.print("checking");
+			for (Item item : remaining)
+				System.out.print('.');
+			System.out.println(" ok!");
+			System.out.println(remaining.size() + " objects left in the database.");
 		} finally {
 			dispose();
 		}
@@ -72,12 +80,19 @@ public class Main {
 	}
 
 	private void openDatabase() {
-		final EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-		config.common().objectClass(Item1.class).objectField(FIELD_NAME).indexed(true);
-		_container = Db4oEmbedded.openFile(config, FILENAME);
+		final int port = 0xDB40;
+		final String userName = "user";
+		final String password = "password";
+		
+		final ServerConfiguration serverConfig = Db4oClientServer.newServerConfiguration();
+		_server = Db4oClientServer.openServer(serverConfig, FILENAME, port);
+		_server.grantAccess(userName, password);
+		serverConfig.common().objectClass(Item1.class).objectField(FIELD_NAME).indexed(true);
+		_container = Db4oClientServer.openClient(Db4oClientServer.newClientConfiguration(), "localhost", port, userName, password);
 	}
 
 	private void dispose() {
+		_server.close();
 		_container.close();
 	}
 	
