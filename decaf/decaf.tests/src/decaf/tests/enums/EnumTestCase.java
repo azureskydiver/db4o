@@ -7,9 +7,13 @@ public class EnumTestCase extends DecafTestCaseBase {
 		runResourceTestCase("SimpleEnum");
 	}
 	
-	public void _testComplexEnum() throws Exception {
-		runResourceTestCase("ComplexEnum");
+	public void testEnumsWithConstructors() throws Exception {
+		runResourceTestCase("EnumsWithConstructors");
 	}
+	
+	public void testComplexEnum() throws Exception {
+		runResourceTestCase("ComplexEnum");
+	}	
 	
 	public void _testEnumUsage() throws Exception {
 		runResourceTestCase("EnumUsage");

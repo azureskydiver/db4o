@@ -7,10 +7,6 @@ class Hero extends com.db4o.foundation.Enum4 {
 		private SuperManHero(int param_0) {
 			super("SuperMan", SuperManHero.ORDINAL, param_0);
 		}
-
-		public String movieName() {
-			return "Superman Returns";
-		}
 	}
 
 	public static class BatmanHero extends Hero {
@@ -18,10 +14,6 @@ class Hero extends com.db4o.foundation.Enum4 {
 
 		private BatmanHero(int param_0) {
 			super("Batman", BatmanHero.ORDINAL, param_0);
-		}
-
-		public String movieName() {
-			return "Batman";
 		}
 	}
 
@@ -31,10 +23,6 @@ class Hero extends com.db4o.foundation.Enum4 {
 		private BatGirlHero(int param_0) {
 			super("BatGirl", BatGirlHero.ORDINAL, param_0);
 		}
-
-		public String movieName() {
-			return "Batman";
-		}
 	}
 
 	public static class BobParrHero extends Hero {
@@ -42,10 +30,6 @@ class Hero extends com.db4o.foundation.Enum4 {
 
 		private BobParrHero(int param_0) {
 			super("BobParr", BobParrHero.ORDINAL, param_0);
-		}
-
-		public String movieName() {
-			return "The Incredibles";
 		}
 	}
 
@@ -64,15 +48,9 @@ class Hero extends com.db4o.foundation.Enum4 {
 				Hero.BobParr };
 	}
 
-	public String toString() {
-		return name() + "/" + _year;
-	}
-
 	public int year() {
 		return _year;
 	}
-
-	public abstract String movieName();
 
 	private final int _year;
 }
