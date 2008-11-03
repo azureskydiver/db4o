@@ -6,11 +6,11 @@ import java.lang.reflect.Method;
 /**
  * @sharpen.ignore
  */
-class Enum4 implements Comparable {
+public class Enum4 implements Comparable {
 	private final String _name;
 	private final int _ordinal;
 	
-	private Enum4(String name, int ordinal) {
+	protected Enum4(String name, int ordinal) {
 		_ordinal = ordinal;
 		_name = name;
 	}
