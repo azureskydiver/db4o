@@ -320,8 +320,7 @@ This method is deprecated, please use:</p>
 
 <p>configures whether Exceptions are to be thrown, if objects
 can not be stored. For more information see
-<a href="../debugging_db4o/exceptionsonnotstorable.html" class="wikiLink">ExceptionsOnNotStorable</a>. The default for this setting is
-false.</p>
+<a href="../debugging_db4o/exceptionsonnotstorable.html" class="wikiLink">ExceptionsOnNotStorable</a>. The default for this setting is true, which means that an exception will be thrown if an object can't be stored fully to the database. In order to prevent the exception and make sure that the object is correctly stored to the database, a custom <a href="../../implementation_strategies/typehandlers.html" class="wikiLink">Typehandler</a> can be written, which will make sure that only relevant information is persisted.<br></p>
 
 <p><br></p>
 
@@ -859,7 +858,7 @@ configuration.</p>
 </div>
     </div>
     <div id="footer">
-					This revision (16) was last Modified 2008-09-10T10:14:11 by Tetyana.
+					This revision (18) was last Modified 2008-10-31T19:27:16 by Tetyana.
 				</div>
   </body>
 </html>

@@ -127,7 +127,7 @@ storage time, db4o tests the only available constructor with null
 arguments and runs into a NullPointerException, so it refuses to accept
 our object.</p>
 <p>(Note that this test only occurs when configured
-with exceptionsOnNotStorable - otherwise db4o will silently fail when
+with exceptionsOnNotStorable (default setting is true) - otherwise db4o will silently fail when
 trying to reinstantiate the object.)</p>
 <p>This
 still does not work for our case because the native pointer will
@@ -135,7 +135,7 @@ definetely be invalid. </p><p>In order to solve the problem we will need to use 
 </span></div>
     </div>
     <div id="footer">
-					This revision (7) was last Modified 2007-08-04T20:00:34 by Tetyana.
+					This revision (8) was last Modified 2008-10-31T19:33:23 by Tetyana.
 				</div>
   </body>
 </html>
