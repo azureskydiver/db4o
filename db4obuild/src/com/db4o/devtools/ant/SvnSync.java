@@ -83,7 +83,7 @@ public class SvnSync extends Task {
 			String sourceFile = diff.compareToFolder() + toBeAdded;
 			
 			copyFile(newFileInRepository, sourceFile);
-			workingCopyClient.doAdd(new File(newFileInRepository), true, true, true, SVNDepth.INFINITY, false, true);
+			workingCopyClient.doAdd(new File(newFileInRepository), true, false, true, SVNDepth.INFINITY, false, true);
 		}
 	}
 }
