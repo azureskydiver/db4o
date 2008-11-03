@@ -120,7 +120,11 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		if (!binding.isEnum()) {
 			return true;
 		}
-	
+		rewrite().replace(node, transformEnumSwitchStatement(node));
+		return false;
+	}
+
+	private SwitchStatement transformEnumSwitchStatement(SwitchStatement node) {
 		final SwitchStatement statement = builder().clone(node);
 		
 		statement.setExpression(builder().newMethodInvocation(builder().clone(node.getExpression()), "ordinal"));
@@ -138,16 +142,15 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		
 			final SimpleName originalConstantName = builder().clone((SimpleName) caseStmt.getExpression());
 			
-			final String qualifiedName = Bindings.qualifiedName(node.getExpression().resolveTypeBinding());
+			ITypeBinding switchExprType = node.getExpression().resolveTypeBinding();
+			final String qualifiedName = Bindings.qualifiedName(switchExprType);
 			caseStmt.setExpression(
 					builder().newFieldAccess(
-								builder().newFieldAccess(builder().newSimpleName(qualifiedName), originalConstantName),
-								"ORDINAL"));
+								builder().newFieldAccess(builder().newQualifiedName(qualifiedName), EnumProcessor.concreteEnumClassName(switchExprType.getName(), originalConstantName.getIdentifier())),
+								EnumProcessor.ORDINAL_CONSTANT_NAME));
 					
-		}		
-		
-		rewrite().replace(node, statement);
-		return false;
+		}
+		return statement;
 	}
 	
 	@Override
