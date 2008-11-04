@@ -23,10 +23,13 @@ import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
+import org.eclipse.jdt.core.dom.SwitchCase;
+import org.eclipse.jdt.core.dom.SwitchStatement;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
+import sharpen.core.framework.Bindings;
 import sharpen.core.framework.ByRef;
 import decaf.rewrite.DecafASTNodeBuilder;
 import decaf.rewrite.DecafRewritingServices;
@@ -36,24 +39,57 @@ public class EnumProcessor {
 
 	public static final String ORDINAL_CONSTANT_NAME = "ORDINAL";
 	private final DecafRewritingContext _context;
-	private final EnumDeclaration _enumNode;
 
-	public EnumProcessor(DecafRewritingContext context, EnumDeclaration enumNode) {
+	public EnumProcessor(DecafRewritingContext context) {
 		_context = context;
-		_enumNode = enumNode;
 	}
 
-	public TypeDeclaration run() {
-		final TypeDeclaration newEnumType = newConcreteEnumClass();
+	public TypeDeclaration run(EnumDeclaration enumNode) {
+		final TypeDeclaration newEnumType = newConcreteEnumClass(enumNode);
 		
-		addEnumConstantClassesTo(newEnumType);		
-		List<SimpleName> enumConstants = addEnumConstantFieldsTo(newEnumType);		
-		addEnumConstructors(newEnumType);		
+		addEnumConstantClassesTo(enumNode, newEnumType);		
+		List<SimpleName> enumConstants = addEnumConstantFieldsTo(enumNode, newEnumType);		
+		addEnumConstructors(enumNode, newEnumType);		
 		addValuesMethod(newEnumType, enumConstants);
-		copyEnumMembers(newEnumType, _enumNode);
+		copyEnumMembers(newEnumType, enumNode);
 		
 		return newEnumType;
 	}
+	
+	
+	public SwitchStatement transformEnumSwitchStatement(SwitchStatement originalSwitch) {
+		final SwitchStatement statement = builder().clone(originalSwitch);
+		
+		statement.setExpression(builder().newMethodInvocation(builder().clone(originalSwitch.getExpression()), "ordinal"));
+		
+		adjustCaseStatementsConstants(originalSwitch, statement);
+		
+		return statement;
+	}
+
+	private void adjustCaseStatementsConstants(SwitchStatement originalSwitch, final SwitchStatement statement) {
+		for (Object stmt : statement.statements()) {
+			if (!(stmt instanceof SwitchCase)) {
+				continue;
+			}
+			
+			SwitchCase caseStmt = (SwitchCase) stmt;
+			
+			if (caseStmt.isDefault()) {
+				continue;
+			}		
+		
+			final SimpleName originalConstantName = builder().clone((SimpleName) caseStmt.getExpression());
+			
+			ITypeBinding switchExprType = originalSwitch.getExpression().resolveTypeBinding();
+			final String qualifiedName = Bindings.qualifiedName(switchExprType);
+			caseStmt.setExpression(
+					builder().newFieldAccess(
+								builder().newFieldAccess(builder().newQualifiedName(qualifiedName), EnumProcessor.concreteEnumClassName(switchExprType.getName(), originalConstantName.getIdentifier())),
+								EnumProcessor.ORDINAL_CONSTANT_NAME));
+					
+		}
+	}	
 
 	private void copyEnumMembers(final TypeDeclaration newEnumType, EnumDeclaration originalEnumType) {
 		
@@ -77,34 +113,34 @@ public class EnumProcessor {
 		});
 	}
 
-	private List<SimpleName> addEnumConstantFieldsTo(final TypeDeclaration enumType) {
+	private List<SimpleName> addEnumConstantFieldsTo(final EnumDeclaration originalEnum, final TypeDeclaration newEnumType) {
 		List<SimpleName> enumConstants = new ArrayList<SimpleName>();
-		for (Object item : _enumNode.enumConstants()) {
+		for (Object item : originalEnum.enumConstants()) {
 			EnumConstantDeclaration enumConstant = (EnumConstantDeclaration) item;
-			enumType.bodyDeclarations().add(newEnumConstant(_enumNode, enumConstant, enumConstants.size()));
+			newEnumType.bodyDeclarations().add(newEnumConstant(originalEnum, enumConstant, enumConstants.size()));
 			enumConstants.add(clone(enumConstant.getName()));
 		}
 		return enumConstants;
 	}
 
-	private void addEnumConstantClassesTo(final TypeDeclaration enumType) {
+	private void addEnumConstantClassesTo(final EnumDeclaration originalEnum, final TypeDeclaration enumType) {
 		int ordinal = 0;
-		final List<EnumConstantDeclaration> enumConstants = _enumNode.enumConstants();
+		final List<EnumConstantDeclaration> enumConstants = originalEnum.enumConstants();
 		for (EnumConstantDeclaration enumConstant : enumConstants) {			 			
-			enumType.bodyDeclarations().add(newConcreteEnumConstantClass(enumConstant, ordinal));
+			enumType.bodyDeclarations().add(newConcreteEnumConstantClass(originalEnum.getName(), enumConstant, ordinal));
 			ordinal++;
 		}
 	}
 
-	private TypeDeclaration newConcreteEnumClass() {
-		final TypeDeclaration enumType = builder().newTypeDeclaration(_enumNode.getName());		
+	private TypeDeclaration newConcreteEnumClass(final EnumDeclaration originalEnum) {
+		final TypeDeclaration enumType = builder().newTypeDeclaration(originalEnum.getName());		
 		enumType.setSuperclassType(builder().newSimpleType("com.db4o.foundation.Enum4"));
-		enumType.modifiers().addAll(_enumNode.modifiers());
+		enumType.modifiers().addAll(originalEnum.modifiers());
 		return enumType;
 	}	
 	
-	private TypeDeclaration newConcreteEnumConstantClass(EnumConstantDeclaration enumConstant, int ordinal) {
-		final TypeDeclaration enumConstantClass = createConcreteEnumClassDeclaration(enumConstant);
+	private TypeDeclaration newConcreteEnumConstantClass(SimpleName prefix, EnumConstantDeclaration enumConstant, int ordinal) {
+		final TypeDeclaration enumConstantClass = createConcreteEnumClassDeclaration(prefix, enumConstant);
 		emitOrdinalConstant(enumConstantClass, ordinal);
 		
 		emitConcreteEnumClassConstructor(enumConstantClass, enumConstant);
@@ -125,12 +161,11 @@ public class EnumProcessor {
 		});		
 	}
 
-	private TypeDeclaration createConcreteEnumClassDeclaration(EnumConstantDeclaration enumConstant) {
-		SimpleName enumName = _enumNode.getName();
-		final TypeDeclaration enumConstantClass = builder().newTypeDeclaration(concreteEnumClassName(enumName, enumConstant.getName()));
+	private TypeDeclaration createConcreteEnumClassDeclaration(SimpleName prefix, EnumConstantDeclaration enumConstant) {
+		final TypeDeclaration enumConstantClass = builder().newTypeDeclaration(concreteEnumClassName(prefix, enumConstant.getName()));
 		enumConstantClass.modifiers().add(builder().newPublicModifier());
 		enumConstantClass.modifiers().add(builder().newStaticModifier());
-		enumConstantClass.setSuperclassType(newSimpleType(enumName.getIdentifier()));
+		enumConstantClass.setSuperclassType(newSimpleType(prefix.getIdentifier()));
 		
 		return enumConstantClass;
 	}
@@ -232,10 +267,10 @@ public class EnumProcessor {
 		return method;
 	}
 
-	private void addEnumConstructors(final TypeDeclaration enumType) {
+	private void addEnumConstructors(final EnumDeclaration originalEnum, final TypeDeclaration enumType) {
 		final ByRef<Boolean> constructorFound = new ByRef<Boolean>(false);
 		
-		_enumNode.accept(new ASTVisitor() {
+		originalEnum.accept(new ASTVisitor() {
 			@Override
 			public boolean visit(MethodDeclaration node) {
 				if (!node.isConstructor()) {

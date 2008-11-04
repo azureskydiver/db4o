@@ -9,6 +9,13 @@ enum Animal {
 public class SimpleEnum {
 	
 	public String simpleSwitch(Animal animal) {
+		switch(theAnimal()) {
+			case Cow:
+			case Cat:
+			case Dog:
+				return "moo or meeow or wauwau";
+		}
+
 		switch(animal) {
 			case Cow:
 			case Cat:
@@ -20,4 +27,7 @@ public class SimpleEnum {
 		}
 	}
 
+	private Animal theAnimal() {
+		return Animal.Dog;
+	}
 }
