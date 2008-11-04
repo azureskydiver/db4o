@@ -48,7 +48,7 @@ public class Db4oMigrationSuiteBuilder extends ReflectionTestSuiteBuilder {
 			final Iterator4 migrationTestSuite = migrationTestSuite(clazz, db4oLibraries());
 			return Iterators.concat(migrationTestSuite, defaultTestSuite);
 		} catch (Exception e) {
-			return Iterators.concat(Iterators.iterateSingle(new FailingTest(clazz.getName(), e)), defaultTestSuite);
+			return Iterators.concat(Iterators.singletonIterator(new FailingTest(clazz.getName(), e)), defaultTestSuite);
 		}
 	}
 

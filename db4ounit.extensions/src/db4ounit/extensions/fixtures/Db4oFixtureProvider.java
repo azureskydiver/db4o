@@ -14,6 +14,6 @@ public class Db4oFixtureProvider implements FixtureProvider {
 	}
 
 	public Iterator4 iterator() {
-		return Iterators.iterateSingle(variable().value());
+		return Iterators.singletonIterator(variable().value());
 	}	
 }

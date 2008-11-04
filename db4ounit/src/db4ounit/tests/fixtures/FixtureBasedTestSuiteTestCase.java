@@ -66,6 +66,65 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 			new MethodCall("testBar", new Object[] {"f12", "f22"})
 		});
 	}
+	
+	public void testCombinationToRun() {
+		
+		final MethodCallRecorder recorder = new MethodCallRecorder();
+		
+		run(new FixtureBasedTestSuite() {
+			public FixtureProvider[] fixtureProviders() {
+				return new FixtureProvider[] {
+					new SimpleFixtureProvider(RECORDER_FIXTURE, new Object[] { recorder }),
+					new SimpleFixtureProvider(FIXTURE1, new Object[] { "f11", "f12" }),
+					new SimpleFixtureProvider(FIXTURE2, new Object[] { "f21", "f22" }),
+				};
+			}
+
+			public Class[] testUnits() {
+				return new Class[] { TestUnit.class };
+			}
+			
+			public int[] combinationToRun() {
+				return new int[] { 0, 0, 1 };
+			}
+		});
+		
+		
+//		System.out.println(CodeGenerator.generateMethodCallArray(recorder));
+		
+		recorder.verify(new MethodCall[] {
+			new MethodCall("testFoo", new Object[] {"f11", "f22"}),
+			new MethodCall("testBar", new Object[] {"f11", "f22"}),
+		});
+	}
+	
+	public void testInvalidCombinationToRun() {
+		
+		Assert.expect(AssertionException.class, new CodeBlock() {
+			public void run() {
+				runInvalidCombination();
+			}
+		});
+	}
+	
+	private void runInvalidCombination() {
+		run(new FixtureBasedTestSuite() {
+			public FixtureProvider[] fixtureProviders() {
+				return new FixtureProvider[] {
+						new SimpleFixtureProvider(FIXTURE1, new Object[] { "f11", "f12" }),
+						new SimpleFixtureProvider(FIXTURE2, new Object[] { "f21", "f22" }),
+				};
+			}
+			
+			public Class[] testUnits() {
+				return new Class[] { TestUnit.class };
+			}
+			
+			public int[] combinationToRun() {
+				return new int[] { 0 };
+			}
+		});
+	}
 
 	private void run(final FixtureBasedTestSuite suite) {
 		final TestResult result = new TestResult();
@@ -109,5 +168,6 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 		final String prefix = "(f2[" + fixture1Index + "]) (f1[" + fixture2Index + "]) ";
 		return prefix + TestUnit.class.getName() + "." + testMethod;
 	}
+
 
 }
