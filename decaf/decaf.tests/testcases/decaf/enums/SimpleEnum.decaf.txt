@@ -41,6 +41,13 @@ class Animal extends com.db4o.foundation.Enum4 {
 public class SimpleEnum {
 	
 	public String simpleSwitch(Animal animal) {
+		switch (theAnimal().ordinal()) {
+		case decaf.enums.Animal.CowAnimal.ORDINAL:
+		case decaf.enums.Animal.CatAnimal.ORDINAL:
+		case decaf.enums.Animal.DogAnimal.ORDINAL:
+			return "moo or meeow or wauwau";
+		}
+
 		switch (animal.ordinal()) {
 		case decaf.enums.Animal.CowAnimal.ORDINAL:
 		case decaf.enums.Animal.CatAnimal.ORDINAL:
@@ -52,4 +59,7 @@ public class SimpleEnum {
 		}
 	}
 
+	private Animal theAnimal() {
+		return Animal.Dog;
+	}
 }

@@ -40,7 +40,6 @@ import org.eclipse.jdt.core.dom.SimplePropertyDescriptor;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.SwitchCase;
 import org.eclipse.jdt.core.dom.SwitchStatement;
 import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.Type;
@@ -50,7 +49,6 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
-import sharpen.core.framework.Bindings;
 import sharpen.core.framework.JavadocUtility;
 import decaf.core.IterablePlatformMapping;
 import decaf.core.TargetPlatform;
@@ -108,7 +106,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			return false;
 		}
 		
-		final TypeDeclaration enumType = new EnumProcessor(_context, node).run();		
+		final TypeDeclaration enumType = new EnumProcessor(_context).run(node);		
 		rewrite().replace(node, enumType);
 		
 		return false;
@@ -120,44 +118,10 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		if (!binding.isEnum()) {
 			return true;
 		}
-		rewrite().replace(node, transformEnumSwitchStatement(node));
+		rewrite().replace(node, new EnumProcessor(_context).transformEnumSwitchStatement(node));
 		return false;
 	}
 
-	private SwitchStatement transformEnumSwitchStatement(SwitchStatement originalSwitch) {
-		final SwitchStatement statement = builder().clone(originalSwitch);
-		
-		statement.setExpression(builder().newMethodInvocation(builder().clone(originalSwitch.getExpression()), "ordinal"));
-		
-		adjustCaseStatementsConstants(originalSwitch, statement);
-		
-		return statement;
-	}
-
-	private void adjustCaseStatementsConstants(SwitchStatement originalSwitch, final SwitchStatement statement) {
-		for (Object stmt : statement.statements()) {
-			if (!(stmt instanceof SwitchCase)) {
-				continue;
-			}
-			
-			SwitchCase caseStmt = (SwitchCase) stmt;
-			
-			if (caseStmt.isDefault()) {
-				continue;
-			}		
-		
-			final SimpleName originalConstantName = builder().clone((SimpleName) caseStmt.getExpression());
-			
-			ITypeBinding switchExprType = originalSwitch.getExpression().resolveTypeBinding();
-			final String qualifiedName = Bindings.qualifiedName(switchExprType);
-			caseStmt.setExpression(
-					builder().newFieldAccess(
-								builder().newFieldAccess(builder().newQualifiedName(qualifiedName), EnumProcessor.concreteEnumClassName(switchExprType.getName(), originalConstantName.getIdentifier())),
-								EnumProcessor.ORDINAL_CONSTANT_NAME));
-					
-		}
-	}
-	
 	@Override
 	public void endVisit(TypeDeclaration node) {
 		processIgnoreExtends(node);
