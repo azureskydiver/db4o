@@ -111,16 +111,16 @@ public class Iterators {
 		return new FilteredIterator(iterator, predicate);
 	}
 	
-	public static Iterable4 cons(final Object element) {
+	public static Iterable4 singletonIterable(final Object element) {
 		return new Iterable4() {
 			public Iterator4 iterator() {
-				return iterateSingle(element);
+				return singletonIterator(element);
 			}
 		};
 	}
 	
-	public static Iterable4 cons(Iterable4 front, Object last) {
-		return concat(iterable(new Object[] { front, cons(last) }));
+	public static Iterable4 append(Iterable4 front, Object last) {
+		return concat(iterable(new Object[] { front, singletonIterable(last) }));
 	}
 	
 	public static Iterator4 iterate(Object[] array) {
@@ -227,7 +227,7 @@ public class Iterators {
 				iterables[level],
 				new Function4() {
 					public Object apply(Object arg) {
-						return cons(row, arg);
+						return append(row, arg);
 					}
 				}
 			);
@@ -235,7 +235,7 @@ public class Iterators {
 		return concatMap(iterables[level],
 				new Function4() {
 					public Object apply(Object arg) {
-						return crossProduct(iterables, level+1, cons(row, arg));
+						return crossProduct(iterables, level+1, append(row, arg));
 					}
 				});
 	}
@@ -248,7 +248,7 @@ public class Iterators {
 		};
 	}
 
-	public static Iterator4 iterateSingle(final Object element) {
+	public static Iterator4 singletonIterator(final Object element) {
 		return new SingleValueIterator(element);
 	}
 
