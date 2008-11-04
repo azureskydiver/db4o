@@ -59,7 +59,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 				try {
 					return new ContextfulIterator(suiteFor(clazz));
 				} catch (Exception e) {
-					return Iterators.cons(new FailingTest(clazz.getName(), e)).iterator();
+					return Iterators.singletonIterable(new FailingTest(clazz.getName(), e)).iterator();
 				}
 			}
 		});
@@ -74,7 +74,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 			return ((TestSuiteBuilder)newInstance(clazz)).iterator();
 		}
 		if (Test.class.isAssignableFrom(clazz)) {
-			return Iterators.iterateSingle(newInstance(clazz));
+			return Iterators.singletonIterator(newInstance(clazz));
 		}
 		validateTestClass(clazz);
 		return fromMethods(clazz);

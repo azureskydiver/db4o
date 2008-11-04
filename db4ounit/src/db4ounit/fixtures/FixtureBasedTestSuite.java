@@ -14,24 +14,20 @@ import db4ounit.*;
  */
 public abstract class FixtureBasedTestSuite implements TestSuiteBuilder {
 
+	private static final int[] ALL_COMBINATIONS = null;
+
 	public abstract Class[] testUnits();
 
 	public abstract FixtureProvider[] fixtureProviders();
+	
+	public int[] combinationToRun() {
+		return ALL_COMBINATIONS;
+	}
 
 	public Iterator4 iterator() {
 		final FixtureProvider[] providers = fixtureProviders();
 		
-		final Iterable4 decorators = Iterators.map(Iterators.iterable(providers), new Function4() {
-			public Object apply(final Object arg) {
-				final FixtureProvider provider = (FixtureProvider)arg;
-				return Iterators.map(Iterators.enumerate(provider), new Function4() {
-					public Object apply(final Object arg) {
-						EnumerateIterator.Tuple tuple = (EnumerateIterator.Tuple)arg;
-						return new FixtureDecorator(provider.variable(), tuple.value, tuple.index);
-					}
-				});
-			}
-		});
+		final Iterable4 decorators = fixtureDecoratorsFor(providers);
 		final Iterable4 testsXdecorators = Iterators.crossProduct(new Iterable4[] {
 			tests(),
 			Iterators.crossProduct(decorators)
@@ -45,6 +41,49 @@ public abstract class FixtureBasedTestSuite implements TestSuiteBuilder {
 			}
 		}).iterator();
 	}
+
+	private Iterable4 fixtureDecoratorsFor(final FixtureProvider[] providers) {
+		final int[] combination = combinationToRun();
+		return combination == ALL_COMBINATIONS
+			? allFixtureDecoratorsFor(providers)
+			: combinationFixtureDecoratorsFor(providers, combination);
+    }
+
+	private Iterable4 combinationFixtureDecoratorsFor(FixtureProvider[] providers, final int[] combination) {
+		Assert.areEqual(providers.length, combination.length, "Number of indexes in combinationToRun should match number of providers");
+		final Iterable4 decorators = Iterators.map(Iterators.enumerate(Iterators.iterable(providers)), new Function4() {
+			public Object apply(final Object arg) {
+				EnumerateIterator.Tuple providerTuple = (EnumerateIterator.Tuple)arg;
+				final FixtureProvider provider = (FixtureProvider)providerTuple.value;
+				final int wantedIndex = combination[providerTuple.index];
+				return Iterators.map(Iterators.enumerate(provider), new Function4() {
+					public Object apply(final Object arg) {
+						EnumerateIterator.Tuple tuple = (EnumerateIterator.Tuple)arg;
+						if (tuple.index != wantedIndex) {
+							return Iterators.SKIP;
+						}
+						return new FixtureDecorator(provider.variable(), tuple.value, tuple.index);
+					}
+				});
+			}
+		});
+	    return decorators;
+    }
+
+	private Iterable4 allFixtureDecoratorsFor(final FixtureProvider[] providers) {
+	    final Iterable4 decorators = Iterators.map(Iterators.iterable(providers), new Function4() {
+			public Object apply(final Object arg) {
+				final FixtureProvider provider = (FixtureProvider)arg;
+				return Iterators.map(Iterators.enumerate(provider), new Function4() {
+					public Object apply(final Object arg) {
+						EnumerateIterator.Tuple tuple = (EnumerateIterator.Tuple)arg;
+						return new FixtureDecorator(provider.variable(), tuple.value, tuple.index);
+					}
+				});
+			}
+		});
+	    return decorators;
+    }
 
 	private Iterable4 tests() {
 		return new ReflectionTestSuiteBuilder(testUnits());

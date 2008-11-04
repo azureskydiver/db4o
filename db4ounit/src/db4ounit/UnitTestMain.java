@@ -34,7 +34,7 @@ public class UnitTestMain {
 					if (methodSeparatorIndex>0) {
 						String className=testIdentifier.substring(0,methodSeparatorIndex);
 						String methodName=testIdentifier.substring(methodSeparatorIndex+1);
-						return Iterators.cons(testMethod(className, methodName));
+						return Iterators.singletonIterable(testMethod(className, methodName));
 					}
 					
 					return builder(Class.forName(testIdentifier));

@@ -17,7 +17,7 @@ public class IteratorsTestCase implements TestCase {
 	}
 	
 	public void testIterateSingle() {
-		final Iterator4 i = Iterators.iterateSingle("foo");
+		final Iterator4 i = Iterators.singletonIterator("foo");
 		Assert.isTrue(i.moveNext());
 		Assert.areEqual("foo", i.current());
 		Assert.isFalse(i.moveNext());
