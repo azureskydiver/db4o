@@ -28,8 +28,8 @@ class Hero extends com.db4o.foundation.Enum4 {
 	public static class BatGirlHero extends Hero {
 		public static final int ORDINAL = 2;
 
-		private BatGirlHero(int param_0) {
-			super("BatGirl", BatGirlHero.ORDINAL, param_0);
+		private BatGirlHero(int param_0, String param_1) {
+			super("BatGirl", BatGirlHero.ORDINAL, param_0, param_1);
 		}
 
 		public String movieName() {
@@ -51,10 +51,15 @@ class Hero extends com.db4o.foundation.Enum4 {
 
 	public static final Hero SuperMan = new SuperManHero(2006);
 	public static final Hero Batman = new BatmanHero(1939);
-	public static final Hero BatGirl = new BatGirlHero(1961);
+	public static final Hero BatGirl = new BatGirlHero(1961, "What?");
 	public static final Hero BobParr = new BobParrHero(2004);
 
 	private Hero(String name, int ordinal, int year) {
+		super(name, ordinal);
+		_year = year;
+	}
+
+	private Hero(String name, int ordinal, int year, String noSense) {
 		super(name, ordinal);
 		_year = year;
 	}

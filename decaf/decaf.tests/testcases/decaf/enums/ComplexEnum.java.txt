@@ -13,7 +13,7 @@ enum Hero {
 		}
 	},
 	
-	BatGirl(1961) {
+	BatGirl(1961, "What?") {
 		public String movieName() {
 			return "Batman"; 
 		}
@@ -26,6 +26,10 @@ enum Hero {
 	};
 
 	Hero(int year) {
+		_year = year;
+	}
+
+	Hero(int year, String noSense) {
 		_year = year;
 	}
 
