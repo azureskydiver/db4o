@@ -4,6 +4,7 @@ package com.db4o.reflect.jdk;
 
 import java.lang.reflect.*;
 
+import com.db4o.foundation.ArgumentNullException;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.core.*;
@@ -22,10 +23,10 @@ public class JdkClass implements JavaReflectClass{
     
 	public JdkClass(Reflector reflector, JdkReflector jdkReflector, Class<?> clazz) {		
         if(jdkReflector == null){
-            throw new NullPointerException();
+        	throw new ArgumentNullException();
         }
         if(reflector == null){
-            throw new NullPointerException();
+            throw new ArgumentNullException();
         }
 		_reflector = reflector;
 		_clazz = clazz;
