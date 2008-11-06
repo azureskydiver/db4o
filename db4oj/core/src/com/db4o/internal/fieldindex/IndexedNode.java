@@ -18,4 +18,6 @@ public interface IndexedNode extends Iterable4 {
 
 	//FIXME: do we need this?
 	TreeInt toTreeInt();
+
+	void markAsBestIndex();
 }

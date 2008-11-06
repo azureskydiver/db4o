@@ -135,5 +135,10 @@ public class QConClass extends QConObject{
         }
     }
     
+    @Override
+    public void setProcessedByIndex() {
+    	// do nothing, QConClass needs to stay in the evaluation graph.
+    }
+    
 }
 

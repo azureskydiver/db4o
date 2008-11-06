@@ -7,7 +7,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.query.processor.*;
 
-public class JoinedLeaf implements IndexedNodeWithRange {
+public abstract class JoinedLeaf implements IndexedNodeWithRange {
 
 	private final QCon _constraint;
 	private final IndexedNodeWithRange _leaf1;
@@ -52,5 +52,10 @@ public class JoinedLeaf implements IndexedNodeWithRange {
 
 	public int resultSize() {
 		return _range.size();
+	}
+	
+	public void markAsBestIndex() {
+		_leaf1.markAsBestIndex();
+		_constraint.setProcessedByIndex();
 	}
 }

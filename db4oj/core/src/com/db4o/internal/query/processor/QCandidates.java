@@ -339,36 +339,53 @@ public final class QCandidates implements Visitor4 {
     		return;
     	}
     	
+    	forEachConstraint(new Procedure4() {
+			public void apply(Object arg) {
+	            QCon qCon = (QCon)arg;
+	            qCon.setCandidates(QCandidates.this);
+	    		qCon.evaluateSelf();
+			}
+		});
+    	
+    	forEachConstraint(new Procedure4() {
+			public void apply(Object arg) {
+	            ((QCon)arg).evaluateSimpleChildren();
+			}
+		});
+    	
+    	forEachConstraint(new Procedure4() {
+			public void apply(Object arg) {
+	            ((QCon)arg).evaluateEvaluations();
+			}
+		});
+
+    	forEachConstraint(new Procedure4() {
+			public void apply(Object arg) {
+	            ((QCon)arg).evaluateCreateChildrenCandidates();
+			}
+		});
+    	
+    	forEachConstraint(new Procedure4() {
+			public void apply(Object arg) {
+	            ((QCon)arg).evaluateCollectChildren();
+			}
+		});
+
+    	forEachConstraint(new Procedure4() {
+			public void apply(Object arg) {
+	            ((QCon)arg).evaluateChildren();
+			}
+		});
+
+    }
+    
+    private void forEachConstraint(Procedure4 proc){
     	Iterator4 i = iterateConstraints();
     	while(i.moveNext()){
-            QCon qCon = (QCon)i.current();
-            qCon.setCandidates(this);
-    		qCon.evaluateSelf();
-    	}
-    	
-    	i = iterateConstraints();
-    	while(i.moveNext()){
-    		((QCon)i.current()).evaluateSimpleChildren();
-    	}
-    	
-    	i = iterateConstraints();
-    	while(i.moveNext()){
-    		((QCon)i.current()).evaluateEvaluations();
-    	}
-    	
-    	i = iterateConstraints();
-    	while(i.moveNext()){
-    		((QCon)i.current()).evaluateCreateChildrenCandidates();
-    	}
-    	
-    	i = iterateConstraints();
-    	while(i.moveNext()){
-    		((QCon)i.current()).evaluateCollectChildren();
-    	}
-    	
-    	i = iterateConstraints();
-    	while(i.moveNext()){
-    		((QCon)i.current()).evaluateChildren();
+    		QCon constraint = (QCon)i.current();
+    		if(! constraint.processedByIndex()){
+    			proc.apply(constraint);
+    		} 
     	}
     }
 

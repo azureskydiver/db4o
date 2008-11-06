@@ -45,4 +45,10 @@ public class IndexedPath extends IndexedNodeBase {
 	public int resultSize() {
 		throw new NotSupportedException();
 	}
+	
+	public void markAsBestIndex() {
+		_constraint.setProcessedByIndex();
+		_next.markAsBestIndex();
+	}
+
 }

@@ -42,7 +42,15 @@ public final class List4 implements Unversioned
 		}
 		return obj.equals(_element);
 	}
-	
 
+	public static int size(List4 list) {
+		int counter = 0;
+		List4 nextList = list; 
+		while(nextList != null){
+			counter++;
+			nextList = nextList._next;
+		}
+		return counter;
+	}
 	
 }
