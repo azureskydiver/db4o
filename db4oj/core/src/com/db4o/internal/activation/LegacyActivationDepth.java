@@ -1,6 +1,5 @@
 package com.db4o.internal.activation;
 
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 /**

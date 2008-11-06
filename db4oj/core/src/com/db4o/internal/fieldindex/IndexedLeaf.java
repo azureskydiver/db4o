@@ -51,4 +51,9 @@ public class IndexedLeaf extends IndexedNodeBase implements IndexedNodeWithRange
 	public BTreeRange getRange() {
 		return _range;
 	}
+	
+	public void markAsBestIndex() {
+		_constraint.setProcessedByIndex();
+	}
+
 }

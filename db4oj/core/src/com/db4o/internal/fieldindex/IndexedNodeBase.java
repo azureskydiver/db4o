@@ -9,7 +9,7 @@ import com.db4o.internal.query.processor.*;
 
 public abstract class IndexedNodeBase  implements IndexedNode {
 	
-	private final QConObject _constraint;
+	protected final QConObject _constraint;
 
 	public IndexedNodeBase(QConObject qcon) {
 		if (null == qcon) {

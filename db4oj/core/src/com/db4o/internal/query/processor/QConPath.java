@@ -132,6 +132,12 @@ public class QConPath extends QConClass {
 	public String toString(){
         return "QConPath " + super.toString();
 	}
-
+	
+    @Override
+    public void setProcessedByIndex() {
+    	if(childrenCount() <=1){
+    		internalSetProcessedByIndex();
+    	}
+    }
 
 }

@@ -127,6 +127,15 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
         assertExpectedFoos(ComplexFieldIndexItem.class, new int[] { 4, 9 }, query);
     }
     
+    public void testThreeOrs(){
+    	Query query = createItemQuery();
+        Constraint c1 = query.descend("foo").constrain(new Integer(3));
+        Constraint c2 = query.descend("foo").constrain(new Integer(4));
+        Constraint c3 = query.descend("foo").constrain(new Integer(7));
+        c1.or(c2).or(c3);
+        assertExpectedFoos(FieldIndexItem.class, new int[] { 3, 4, 7}, query);
+    }
+    
     public void _testOrOnDifferentFields(){
         final Query query = createComplexItemQuery();
         Constraint c1 = query.descend("foo").constrain(new Integer(3));

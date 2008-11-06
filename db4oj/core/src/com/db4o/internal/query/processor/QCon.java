@@ -54,6 +54,10 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 
     // our transaction to get a stream object anywhere
     transient Transaction i_trans;
+    
+    // whether or not this constraint was used to get the initial set
+    // in the FieldIndexProcessor
+    private transient boolean _processedByIndex;
 
     public QCon() {
         // C/S only
@@ -756,4 +760,27 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 	protected boolean hasOrdering() {
 		return i_orderID != 0;
 	}	
+	
+	public void setProcessedByIndex() {
+		internalSetProcessedByIndex();
+	}
+
+	protected void internalSetProcessedByIndex() {
+		_processedByIndex = true;
+		if(i_joins != null){
+			Iterator4 i = i_joins.iterator();
+			while(i.moveNext()){
+				((QConJoin)i.current()).setProcessedByIndex();
+			}
+		}
+	}
+	
+	public boolean processedByIndex(){
+		return _processedByIndex;
+	}
+	
+	public int childrenCount(){
+		return List4.size(_children);
+	}
+
 }
