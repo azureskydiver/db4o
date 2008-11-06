@@ -49,10 +49,13 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 					ObjectInfo info = (ObjectInfo) i.current();
 					int id = (int)info.getInternalID();
 					
-					// TODO: check if the object is of the appropriate
-					// type before going further?
-					
 					HardObjectReference ref = HardObjectReference.peekPersisted(trans, id, 1);
+
+					if (!reflectClass().isInstance(ref._object))
+					{
+						continue;
+					}
+					
 					Object fieldValue = fieldMetadata().getOn(trans, ref._object);
 					if(fieldValue == null){
 						continue;
