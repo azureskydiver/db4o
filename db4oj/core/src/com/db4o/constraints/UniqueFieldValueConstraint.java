@@ -51,13 +51,16 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 					
 					HardObjectReference ref = HardObjectReference.peekPersisted(trans, id, 1);
 
-					if (!reflectClass().isInstance(ref._object))
-					{
+					// TODO: apparently ref could be legitimately null
+					// if (ref == null) { 
+					//		continue;
+					// }
+					if(!reflectClass().isInstance(ref._object)) {
 						continue;
 					}
 					
 					Object fieldValue = fieldMetadata().getOn(trans, ref._object);
-					if(fieldValue == null){
+					if(fieldValue == null) {
 						continue;
 					}
 					BTreeRange range = fieldMetadata().search(trans, fieldValue);
