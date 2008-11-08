@@ -70,14 +70,16 @@ public class TAWithGCBeforeCommitTestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(UPDATED_ID, item.id());
 	}
 
-	public void testRollback() {
+	public void _testRollback() {
 		Item item = (Item)retrieveOnlyInstance(Item.class);
 		item.id(UPDATED_ID);
+		System.out.println(System.identityHashCode(item));
 		item = null;
 		System.gc();
 		db().rollback();
 		db().purge();
 		item = (Item)retrieveOnlyInstance(Item.class);
+		System.out.println(System.identityHashCode(item));
 		Assert.areEqual(ORIG_ID, item.id());
 	}
 
