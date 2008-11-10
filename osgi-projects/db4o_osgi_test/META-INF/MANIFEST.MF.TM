@@ -10,7 +10,7 @@ Bundle-Version: @db4o.version.iteration.revision@
 Bundle-SymbolicName: db4o_osgi_test
 Require-Bundle: db4o_osgi
 Bundle-ClassPath: .,
- lib/db4o-@db4o.version.iteration.revision@-db4ounit.jar,
+ lib/db4o-@db4o.version.iteration.revision@-db4ounit-java1.2.jar,
  lib/db4o-tests.jar,
  lib/db4o-tests-nq.jar
 Bundle-ActivationPolicy: lazy 

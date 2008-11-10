@@ -242,7 +242,6 @@
 		<property name="dir.bin" location="${dir.dist.net.build}/bin" />
 	    <reset-dir dir="${dir.bin}" />
 		<copy-bin-set suffix="" srcdir="${dir.dist.dll}"  />
-		
 	</target>
 	
 	<target name="package-tutorial">
@@ -547,14 +546,14 @@
 		
 	    <!--copy db4ounit src-->
         <copy todir="${dir.sharpen}/db4oj/db4ounit/src">
-            <fileset dir="${dir.db4ounit.src}">
+            <fileset dir="${dir.dist.decaf.jdk1.2.db4ounit.src}">
                 <include name="**/*.java" />
             </fileset>
         </copy>
 
 		<!--copy db4ounit.extension src-->
         <copy todir="${dir.sharpen}/db4oj/extensions/src">
-            <fileset dir="${dir.db4ounit.extensions.src}">
+            <fileset dir="${dir.dist.decaf.jdk1.2.db4ounit.extensions.src}">
                 <include name="**/*.java" />
             </fileset>
         </copy>
@@ -690,7 +689,7 @@
 		<mkdir dir="${dir.sharpen}/lib" />
 		<jar destfile="${dependencies.jar}">			
 			<fileset dir="${dir.dist.classes.java1.1}" />
-			<fileset dir="${dir.dist.classes.db4ounit}" />
+			<fileset dir="${dir.dist.classes.db4ounit.jdk1.1}" />
 			<fileset dir="${dir.dist.classes.test.jdk1.1}" />
 		</jar>
 	</target>
