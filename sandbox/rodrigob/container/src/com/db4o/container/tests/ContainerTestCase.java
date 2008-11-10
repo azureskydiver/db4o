@@ -61,6 +61,4 @@ public class ContainerTestCase implements TestCase {
 		Assert.areSame(customBinding, service.singletonDependency());
 		Assert.areSame(customBinding, service.simpleDependency());
 	}
-	
-
 }
