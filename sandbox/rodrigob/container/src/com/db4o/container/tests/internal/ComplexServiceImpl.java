@@ -24,5 +24,4 @@ public class ComplexServiceImpl implements ComplexService {
 	public SimpleService simpleDependency() {
 		return _simple;
 	}
-
 }

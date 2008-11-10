@@ -12,13 +12,29 @@ public class Benchmark {
 			}
 		});
 	    
+	    long t1 = time("complex object instantiation", new Runnable() {
+			public void run() {
+				new ComplexServiceImpl(new SingletonServiceImpl(), new SimpleServiceImpl()).toString();
+			}
+		});
+	    
 	    final Container container = ContainerFactory.newContainer();
-	    long t1 = time("container service instantiation", new Runnable() {
+	    long t2 = time("container service instantiation", new Runnable() {
 			public void run() {
 				container.produce(SimpleService.class).toString();
 			}
 		});
-	    System.out.println("Overhead is " + (((((float)t1)/t0)-1)*100) + "%");
+	    long t3 = time("container complex instantiation", new Runnable() {
+			public void run() {
+				container.produce(ComplexService.class).toString();
+			}
+		});
+	    System.out.println("Overhead for simple case is " + overhead(t0, t2) + "%");
+	    System.out.println("Overhead for complex case is " + overhead(t1, t3) + "%");
+    }
+
+	private static float overhead(long t0, long t1) {
+	    return (((((float)t1)/t0)-1)*100);
     }
 
 	private static long time(String label, Runnable block) {
