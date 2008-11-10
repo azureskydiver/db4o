@@ -44,22 +44,14 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 			private FieldMetadata _fieldMetaData;
 			
 			private void ensureSingleOccurence(Transaction trans, ObjectInfoCollection col){
-				Iterator4 i = col.iterator();
+				final Iterator4 i = col.iterator();
 				while(i.moveNext()){
-					ObjectInfo info = (ObjectInfo) i.current();
-					int id = (int)info.getInternalID();
-					
-					HardObjectReference ref = HardObjectReference.peekPersisted(trans, id, 1);
-
-					// TODO: apparently ref could be legitimately null
-					// if (ref == null) { 
-					//		continue;
-					// }
-					if(!reflectClass().isInstance(ref._object)) {
+					final Object obj = objectFor(trans, (ObjectInfo) i.current());
+					if(!reflectClass().isInstance(obj)) {
 						continue;
 					}
 					
-					Object fieldValue = fieldMetadata().getOn(trans, ref._object);
+					Object fieldValue = fieldMetadata().getOn(trans, obj);
 					if(fieldValue == null) {
 						continue;
 					}
@@ -99,6 +91,13 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 				ensureSingleOccurence(trans, commitEventArgs.added());
 				ensureSingleOccurence(trans, commitEventArgs.updated());
 			}
+			
+			private Object objectFor(Transaction trans, ObjectInfo info) {
+			    int id = (int)info.getInternalID();
+			    
+			    HardObjectReference ref = HardObjectReference.peekPersisted(trans, id, 1);
+			    return ref._object;
+		    }
 		});
 		
 	}
