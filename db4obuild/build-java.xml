@@ -92,7 +92,42 @@
 		</decaf>
 	</target>
 	
-	<target name="decaf.tests" depends="decaf.core, build.db4ounit">
+	<target name="decaf.db4ounit" depends="decaf.core">
+
+		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4ounit">
+			<args>
+				<arg value="-projectReference" />
+				<arg value="db4o" />
+				
+				<arg value="-targetPlatform" />
+				<arg value="jdk11" />
+
+				<arg value="-targetPlatform" />
+				<arg value="jdk12" />
+			</args>
+		</decaf>
+		
+		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4ounit.extensions">
+			<args>
+				<arg value="-projectReference" />
+				<arg value="db4ounit" />
+				
+				<arg value="-projectReference" />
+				<arg value="db4o" />
+				
+				<arg value="-projectReference" />
+				<arg value="db4o.cs" />
+				
+				<arg value="-targetPlatform" />
+				<arg value="jdk11" />
+
+				<arg value="-targetPlatform" />
+				<arg value="jdk12" />
+			</args>
+		</decaf>
+	</target>
+	
+	<target name="decaf.tests" depends="decaf.core, decaf.db4ounit">
 	
 		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4o.tests">
 			<args>
@@ -102,8 +137,10 @@
 				<arg value="db4oj.optional" />
 				<arg value="-projectReference" />
 				<arg value="db4o.cs" />
-				<arg value="-cp" />
-				<arg path="${file.db4ounit.jar}" />
+				<arg value="-projectReference" />
+				<arg value="db4ounit" />
+				<arg value="-projectReference" />
+				<arg value="db4ounit.extensions" />
 				
 				<arg value="-targetPlatform" />
 				<arg value="jdk11" />
@@ -138,6 +175,22 @@
 		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4o.cs">
 			<sources>
 				<fileset dir="${dir.j.cs}">
+					<include name="**/*.java" />
+				</fileset>
+			</sources>
+		</prepare-workspace>
+		
+		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4ounit">
+			<sources>
+				<fileset dir="${dir.db4ounit}">
+					<include name="**/*.java" />
+				</fileset>
+			</sources>
+		</prepare-workspace>
+		
+		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4ounit.extensions">
+			<sources>
+				<fileset dir="${dir.db4ounit.extensions}">
 					<include name="**/*.java" />
 				</fileset>
 			</sources>
@@ -547,8 +600,7 @@
 	<!-- Compile test -->
 	
 	<target name="build.db4ojava.tests" 
-		depends="build.db4ounit, 
-			build.db4ojdk1.1.tests, 
+		depends="build.db4ojdk1.1.tests, 
 			build.db4ojdk1.2.tests,
 			build.db4ojdk1.5.tests,
 			build.nqopt.tests,
@@ -556,26 +608,63 @@
 			build.taj.tests"
 	/>
 	
-	<target name="build.db4ounit" depends="init, build.db4ojdk1.1">
-		<mkdir dir="${dir.dist.classes.db4ounit}" />
-		<javac destdir="${dir.dist.classes.db4ounit}" 
-			fork="true" 
-			debug="on" 
-			target="1.1" 
-			source="1.3" 
-			encoding="UTF-8">
-			<classpath>
-				<pathelement path="${file.jdk1.1.jar}" />
-			</classpath>
-			<src path="${dir.db4ounit.src}"/>
-			<src path="${dir.db4ounit.extensions.src}" />
-		</javac>
-		<jar destfile="${file.db4ounit.jar}">
-			<fileset dir="${dir.dist.classes.db4ounit}" />
-		</jar>
+	<macrodef name="build-db4ounit">
+		<attribute name="src" />
+		<attribute name="extensions" />
+		<attribute name="target" />
+		<attribute name="source" />
+		<attribute name="build-dir" default="${dir.dist.classes.db4ounit.jdk@{target}}" />
+		
+		<sequential>
+			<reset-dir dir="@{build-dir}" />
+			<javac destdir="@{build-dir}" 
+				fork="true" 
+				debug="on" 
+				target="@{target}" 
+				source="@{source}" 
+				encoding="UTF-8">
+				<classpath>
+					<pathelement path="${file.jdk@{target}.jar}" />
+				</classpath>
+				<src path="@{src}"/>
+				<src path="@{extensions}" />
+			</javac>
+			<jar destfile="${file.jdk@{target}.db4ounit.jar}">
+				<fileset dir="@{build-dir}" />
+			</jar>
+		</sequential>
+	</macrodef>
+	
+	<target name="build.db4ounitjdk1.5" depends="build.db4ojdk1.5, decaf.db4ounit">
+		
+		<build-db4ounit
+				source="1.5"
+				target="1.5"
+				src="${dir.db4ounit.src}"
+				extensions="${dir.db4ounit.extensions.src}" />
+		
+	</target>
+		
+	<target name="build.db4ounitjdk1.2" depends="build.db4ojdk1.2, decaf.db4ounit">
+		
+		<build-db4ounit
+				source="1.3"
+				target="1.2"
+				src="${dir.dist.decaf.jdk1.2.db4ounit.src}"
+				extensions="${dir.dist.decaf.jdk1.2.db4ounit.extensions.src}" />
+	</target>
+		
+	<target name="build.db4ounitjdk1.1" depends="build.db4ojdk1.1, decaf.db4ounit">
+			
+		<build-db4ounit
+				source="1.3"
+				target="1.1"
+				src="${dir.dist.decaf.jdk1.1.db4ounit.src}"
+				extensions="${dir.dist.decaf.jdk1.1.db4ounit.extensions.src}" />
+		
 	</target>
 	
-	<target name="build.db4ojdk1.1.tests" depends="build.db4ojdk1.1, decaf.tests">
+	<target name="build.db4ojdk1.1.tests" depends="build.db4ojdk1.1, build.db4ounitjdk1.1, decaf.tests">
 		<mkdir dir="${dir.dist.classes.test.jdk1.1}" />
 		<javac executable="${file.compiler.jdk1.3}" 
             destdir="${dir.dist.classes.test.jdk1.1}" 
@@ -586,7 +675,7 @@
 				<pathelement location="${file.jdk1.1.jar}" />
 				<pathelement location="${file.jdk1.1.optional.jar}" />
 				<pathelement location="${file.jdk1.1.cs.jar}" />
-				<pathelement location="${file.db4ounit.jar}" />
+				<pathelement location="${file.jdk1.1.db4ounit.jar}" />
 			</classpath>
 			<src path="${dir.dist.decaf.jdk1.1.test.src}"/>
 		</javac>
@@ -597,7 +686,7 @@
 		</copy>
 	</target>
 	
-	<target name="build.db4ojdk1.2.tests" depends="build.db4ojdk1.2, decaf.tests">
+	<target name="build.db4ojdk1.2.tests" depends="build.db4ojdk1.2, build.db4ounitjdk1.2, decaf.tests">
 		<mkdir dir="${dir.dist.classes.test.jdk1.2}" />
 		<javac destdir="${dir.dist.classes.test.jdk1.2}" 
 			fork="true" 
@@ -610,7 +699,7 @@
 				<pathelement location="${file.jdk1.2.jar}" />
 				<pathelement location="${file.jdk1.2.optional.jar}" />
 				<pathelement location="${file.jdk1.2.cs.jar}" />
-				<pathelement location="${file.db4ounit.jar}" />
+				<pathelement location="${file.jdk1.2.db4ounit.jar}" />
 			</classpath>
 			
 			<exclude name="**/jre5/annotation/IndexedAnnotationTestCase.java"  />
@@ -623,7 +712,7 @@
 		</copy>
 	</target>
 	
-	<target name="build.db4ojdk1.5.tests" depends="build.db4ojdk1.5">
+	<target name="build.db4ojdk1.5.tests" depends="build.db4ojdk1.5, build.db4ounitjdk1.5">
 		<mkdir dir="${dir.dist.classes.test.jdk1.5}" />
 		<javac destdir="${dir.dist.classes.test.jdk1.5}" 
 			fork="true" 
@@ -635,7 +724,7 @@
 				<pathelement location="${file.jdk1.5.jar}" />
 				<pathelement location="${file.jdk1.5.optional.jar}" />
 				<pathelement location="${file.jdk1.5.cs.jar}" />
-				<pathelement location="${file.db4ounit.jar}" />
+				<pathelement location="${file.jdk1.5.db4ounit.jar}" />
 			</classpath>
 			<src path="${dir.j.tests.src}"/>
 			<src path="${dir.j.tools.src}" />
@@ -673,7 +762,7 @@
 				<arg value="-cp" />
 				<arg value="${file.jdk1.5.jar}" />
 				<arg value="-cp" />
-				<arg value="${file.db4ounit.jar}" />
+				<arg value="${file.jdk1.5.db4ounit.jar}" />
 				<arg value="-cp" />
 				<arg value="${file.instrumentation.jar}" />
 				<arg value="-cp" />
@@ -694,7 +783,7 @@
 			<classpath>
 				<pathelement location="${file.bloat.jar}" />
 				<pathelement location="${file.jdk1.2.jar}" />
-				<pathelement location="${file.db4ounit.jar}" />
+				<pathelement location="${file.jdk1.2.db4ounit.jar}" />
 				<pathelement location="${file.instrumentation.jar}" />
 				<pathelement location="${file.nqopt.jar}" />
 				<pathelement location="${dir.dist.classes.test.jdk1.2}" />
@@ -709,7 +798,7 @@
 		<delete dir="${dir.dist.classes.osgi.test}"/>
 		<mkdir dir="${dir.dist.classes.osgi.test}"/>
 		<mkdir dir="${dir.dist.classes.osgi.test.lib}"/>
-		<copy todir="${dir.dist.classes.osgi.test.lib}" file="${file.db4ounit.jar}"/>
+		<copy todir="${dir.dist.classes.osgi.test.lib}" file="${file.jdk1.2.db4ounit.jar}"/>
 		<jar destfile="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testlib.jar}">
 			<fileset dir="${dir.dist.classes.test.jdk1.2}">
 				<include name="**/*" />
@@ -721,7 +810,7 @@
 	
 		<javac destdir="${dir.dist.classes.osgi.test}" fork="true" debug="on" encoding="UTF-8" target="1.2" source="1.2">
 			<classpath>
-				<pathelement path="${file.db4ounit.jar}" />
+				<pathelement path="${file.jdk1.2.db4ounit.jar}" />
 				<pathelement path="${file.jdk1.2.jar}" />
 				<pathelement path="${file.jdk1.2.cs.jar}" />
 				<pathelement path="${file.jdk1.2.optional.jar}" />
@@ -750,7 +839,7 @@
 		</jar>
 	</target>
 	
-	<target name="build.taj.tests" depends="build.taj, build.db4ounit, build.db4ojdk1.2.tests">
+	<target name="build.taj.tests" depends="build.taj, build.db4ojdk1.2.tests">
 		<mkdir dir="${dir.dist.classes.test.taj}" />
 		<javac fork="true" 
             destdir="${dir.dist.classes.test.taj}" 
@@ -764,7 +853,7 @@
 				<pathelement path="${file.jdk1.2.jar}"/>
                 <pathelement path="${file.bloat.jar}"/>
 			    <pathelement path="${file.instrumentation.jar}"/>
-				<pathelement location="${file.db4ounit.jar}" />
+				<pathelement location="${file.jdk1.2.db4ounit.jar}" />
 				<pathelement location="${dir.dist.classes.test.jdk1.2}" />
 			</classpath>
 		</javac>
@@ -788,7 +877,7 @@
 			<pathelement location="${file.jdk1.1.jar}" />
         	<pathelement location="${file.jdk1.1.cs.jar}" />
         	<pathelement location="${file.jdk1.1.optional.jar}" />
-            <pathelement path="${file.db4ounit.jar}" />
+            <pathelement path="${file.jdk1.1.db4ounit.jar}" />
 			<pathelement location="${path.classpath.jdk1.1}" />
         </path>
 		
@@ -830,7 +919,7 @@
         	<pathelement location="${file.jdk1.2.jar}" />
         	<pathelement location="${file.jdk1.2.cs.jar}" />
         	<pathelement location="${file.jdk1.2.optional.jar}" />
-			<pathelement location="${file.db4ounit.jar}" />
+			<pathelement location="${file.jdk1.2.db4ounit.jar}" />
         </path>
 
 		<java jvm="${file.jvm.jdk1.3}" 
@@ -884,7 +973,7 @@
             <pathelement location="${file.jdk1.5.jar}" />
             <pathelement location="${file.jdk1.5.cs.jar}" />
             <pathelement location="${file.jdk1.5.optional.jar}" />
-			<pathelement location="${file.db4ounit.jar}" />
+			<pathelement location="${file.jdk1.5.db4ounit.jar}" />
         </path>
         
 		<java jvm="${file.jvm.jdk1.5}" 
@@ -954,7 +1043,7 @@
             <pathelement location="${file.jdk1.2.jar}" />
         	<pathelement location="${file.jdk1.2.cs.jar}" />
         	<pathelement location="${file.jdk1.2.optional.jar}" />
-			<pathelement location="${file.db4ounit.jar}" />
+			<pathelement location="${file.jdk1.2.db4ounit.jar}" />
 			<pathelement location="${file.ant.jar}" />
         </path>
 
@@ -986,7 +1075,7 @@
 				<pathelement location="${file.jdk1.1.jar}" />
 	        	<pathelement location="${file.jdk1.1.cs.jar}" />
 	        	<pathelement location="${file.jdk1.1.optional.jar}" />
-                <pathelement path="${file.db4ounit.jar}" />
+                <pathelement path="${file.jdk1.1.db4ounit.jar}" />
 				<pathelement location="${path.classpath.jdk1.1}" />
 			</classpath>
             <jvmarg line="-ms32m -mx64m " />
@@ -1003,7 +1092,7 @@
                 <pathelement location="${file.jdk1.5.jar}" />
 	            <pathelement location="${file.jdk1.5.cs.jar}" />
 	            <pathelement location="${file.jdk1.5.optional.jar}" />
-                <pathelement location="${file.db4ounit.jar}" />
+                <pathelement location="${file.jdk1.5.db4ounit.jar}" />
 			</classpath>
 			<arg value="-withExceptions" />
 		</java>
@@ -1052,7 +1141,7 @@
 				<pathelement location="${file.jdk1.2.jar}"/>
 	        	<pathelement location="${file.jdk1.2.cs.jar}" />
 	        	<pathelement location="${file.jdk1.2.optional.jar}" />
-				<pathelement location="${file.db4ounit.jar}" />
+				<pathelement location="${file.jdk1.2.db4ounit.jar}" />
 			    <pathelement location="${file.instrumentation.jar}"/>
 				<pathelement location="${file.taj.jar}"/>
 				<pathelement location="${dir.dist.classes.test.jdk1.2}" />

@@ -296,7 +296,11 @@
 		<property name="filename.instrumentation.jar" value="${db4o.file}instrumentation.jar" />
 		<property name="filename.db4otools.jar" value="${db4o.file}tools.jar" />
 		<property name="filename.db4obench.jar" value="${db4o.file}bench.jar" />
-		<property name="filename.db4ounit.jar" value="${db4o.file}db4ounit.jar" />
+		
+		<property name="filename.jdk1.1.db4ounit.jar" value="${db4o.file}db4ounit-java1.1.jar" />
+		<property name="filename.jdk1.2.db4ounit.jar" value="${db4o.file}db4ounit-java1.2.jar" />
+		<property name="filename.jdk1.5.db4ounit.jar" value="${db4o.file}db4ounit-java5.jar" />
+				
 		<property name="filename.taj.jar" value="${db4o.file}taj.jar" />
 		<property name="filename.osgi.jar" value="${db4o.file}osgi.jar" />
 		<property name="filename.osgi.test.jar" value="${db4o.file}osgi-test.jar" />
@@ -317,7 +321,10 @@
 		<property name="file.instrumentation.jar" value="${dir.dist.jars}/${filename.instrumentation.jar}" />
 		<property name="file.db4otools.jar" value="${dir.dist.jars}/${filename.db4otools.jar}" />
 		<property name="file.db4obench.jar" value="${dir.dist.jars}/${filename.db4obench.jar}" />
-		<property name="file.db4ounit.jar" value="${dir.dist.jars}/${filename.db4ounit.jar}" />
+		<property name="file.jdk1.1.db4ounit.jar" value="${dir.dist.jars}/${filename.jdk1.1.db4ounit.jar}" />
+		<property name="file.jdk1.2.db4ounit.jar" value="${dir.dist.jars}/${filename.jdk1.2.db4ounit.jar}" />
+		<property name="file.jdk1.5.db4ounit.jar" value="${dir.dist.jars}/${filename.jdk1.5.db4ounit.jar}" />
+				
 		<property name="file.taj.jar" value="${dir.dist.jars}/${filename.taj.jar}" />
 		<property name="file.osgi.jar" value="${dir.dist.jars}/${filename.osgi.jar}" />
 		<property name="file.osgi.test.jar" value="${dir.dist.jars}/${filename.osgi.test.jar}" />
