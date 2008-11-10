@@ -266,36 +266,39 @@ public class LocalTransaction extends Transaction {
         checkSynchronization();
             
         int slotChangeCount = countSlotChanges();
-        
         if (slotChangeCount > 0) {
-
-			Slot transactionLogSlot = slotLongEnoughForLog(reservedSlot) ? reservedSlot
-				: allocateTransactionLogSlot(true);
-
-			final StatefulBuffer buffer = new StatefulBuffer(this, transactionLogSlot);
-			buffer.writeInt(transactionLogSlot.length());
-			buffer.writeInt(slotChangeCount);
-
-			appendSlotChanges(buffer);
-
-			buffer.write();
-			flushFile();
-
-			container().writeTransactionPointer(transactionLogSlot.address());
-			flushFile();
-
-			if (writeSlots()) {
-				flushFile();
-			}
-
-			container().writeTransactionPointer(0);
-			flushFile();
-			
-			if (transactionLogSlot != reservedSlot) {
-				freeTransactionLogSlot(transactionLogSlot);
-			}
+			writeSlotChanges(reservedSlot, slotChangeCount);
 		}
         freeTransactionLogSlot(reservedSlot);
+    }
+
+	private void writeSlotChanges(Slot reservedSlot, int slotChangeCount) {
+		
+	    Slot transactionLogSlot = slotLongEnoughForLog(reservedSlot) ? reservedSlot
+	    	: allocateTransactionLogSlot(true);
+
+	    final StatefulBuffer buffer = new StatefulBuffer(this, transactionLogSlot);
+	    buffer.writeInt(transactionLogSlot.length());
+	    buffer.writeInt(slotChangeCount);
+
+	    appendSlotChanges(buffer);
+
+	    buffer.write();
+	    flushFile();
+
+	    container().writeTransactionPointer(transactionLogSlot.address());
+	    flushFile();
+
+	    if (writeSlots()) {
+	    	flushFile();
+	    }
+
+	    container().writeTransactionPointer(0);
+	    flushFile();
+	    
+	    if (transactionLogSlot != reservedSlot) {
+	    	freeTransactionLogSlot(transactionLogSlot);
+	    }
     }
 	
     private void freeTransactionLogSlot(Slot slot) {
