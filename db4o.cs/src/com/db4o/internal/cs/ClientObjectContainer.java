@@ -500,10 +500,10 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	}
 
 	public void readBytes(byte[] a_bytes, int a_address, int a_length) {
-		MsgD msg = Msg.READ_BYTES.getWriterForInts(_transaction, new int[] {
+		MsgD msg = Msg.READ_SLOT.getWriterForInts(_transaction, new int[] {
 				a_address, a_length });
 		write(msg);
-		ByteArrayBuffer reader = expectedByteResponse(Msg.READ_BYTES);
+		ByteArrayBuffer reader = expectedByteResponse(Msg.READ_SLOT);
 		System.arraycopy(reader._buffer, 0, a_bytes, 0, a_length);
 	}
 
@@ -547,8 +547,9 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	}
 
 	public final ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id, boolean lastCommitted) {
-		// TODO: read lightweight reader instead
-		return readWriterByID(a_ta, a_id, lastCommitted);
+		MsgD msg = Msg.READ_READER_BY_ID.getWriterForInts(a_ta, new int[]{a_id, lastCommitted?1:0});
+		write(msg);
+		return ((MReadBytes) expectedResponse(Msg.READ_BYTES)).unmarshall();
 	}
 
 	public final ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id) {

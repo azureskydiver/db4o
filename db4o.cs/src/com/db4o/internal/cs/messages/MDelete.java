@@ -3,7 +3,7 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.*;
-import com.db4o.ext.*;
+
 import com.db4o.internal.*;
 
 public final class MDelete extends MsgD implements ServerSideMessage {

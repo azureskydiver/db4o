@@ -61,7 +61,7 @@ public class MsgObject extends MsgD {
 		
 		int length = _payLoad.readInt();
 		if (length == 0) {
-			return null;  // does this happen ?
+			return null;  // does this happen ? Yes it does. Confirmed.
 		}
 		_id = _payLoad.readInt();
 		_address = _payLoad.readInt();
