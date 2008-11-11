@@ -15,7 +15,7 @@ import com.db4o.internal.cs.*;
 public abstract class Msg implements Cloneable {
 
 	static int _messageIdGenerator = 1;
-	private static Msg[] _messages = new Msg[70];
+	private static Msg[] _messages = new Msg[75];
 
 	int _msgID;
 	String _name;
@@ -67,8 +67,10 @@ public abstract class Msg implements Cloneable {
 	public static final MRaiseVersion RAISE_VERSION = new MRaiseVersion();
 	public static final MReadBlob READ_BLOB = new MReadBlob();
 	public static final MReadBytes READ_BYTES = new MReadBytes();
+	public static final MReadSlot READ_SLOT = new MReadSlot();
 	public static final MReadMultipleObjects READ_MULTIPLE_OBJECTS = new MReadMultipleObjects();
 	public static final MReadObject READ_OBJECT = new MReadObject();
+	public static final MReadReaderById READ_READER_BY_ID = new MReadReaderById();
 	public static final MReleaseSemaphore RELEASE_SEMAPHORE = new MReleaseSemaphore();
 	public static final MRollback ROLLBACK = new MRollback();
 	public static final MSetSemaphore SET_SEMAPHORE = new MSetSemaphore();
