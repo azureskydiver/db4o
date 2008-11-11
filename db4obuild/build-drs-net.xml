@@ -159,7 +159,7 @@
             <fileset dir="${dir.dist.classes.jdk1.5}" />
             <fileset dir="${dir.dist.classes.jdk1.5.cs}" />
             <fileset dir="${dir.dist.classes.jdk1.5.optional}" />
-			<fileset dir="${dir.dist.classes.db4ounit}" />
+			<fileset dir="${dir.dist.classes.db4ounit.jdk1.5}" />
 		</jar>
         
 		<copy todir="${drs.sharpen.workspace.dir}/drs">
