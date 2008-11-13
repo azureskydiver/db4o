@@ -76,8 +76,13 @@ public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 		int dotIdx = clazzName.lastIndexOf('.');
 		String simpleName = clazzName.substring(dotIdx + 1);
 		URL url = clazz.getResource(simpleName + ".class");
-		return new File(URLDecoder.decode(url.getPath()));
+		return new File(decode(url));
 	}
+
+	@SuppressWarnings("deprecation")
+    private String decode(URL url) {
+	    return URLDecoder.decode(url.getPath());
+    }
 
 	public void setUp() throws Exception {
 		IOUtil.deleteDir(SRC_DIR);
