@@ -146,7 +146,12 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec WEAK_REFERENCES_KEY=new KeySpec(true);
     
 	private final static KeySpec IOADAPTER_KEY=new KeySpec(new CachedIoAdapter(new RandomAccessFileAdapter()));
-	
+//	private final static KeySpec IOADAPTER_KEY=new KeySpec(new IoAdapterWithCache(new RandomAccessFileAdapter()) {
+//		@Override
+//		protected Cache4 newCache() {
+//			return CacheFactory.new2QCache(64);
+//		}
+//	});
 //	private final static KeySpec IOADAPTER_KEY=new KeySpec(new RandomAccessFileAdapter());
     
     	// NOTE: activate this config to trigger the defragment failure

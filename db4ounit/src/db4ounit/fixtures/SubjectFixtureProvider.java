@@ -6,8 +6,8 @@ import com.db4o.foundation.*;
 
 public class SubjectFixtureProvider implements FixtureProvider {
 	
-	public static Object value() {
-		return _variable.value();
+	public static <T> T value() {
+		return (T)_variable.value();
 	}
 	
 	private static final FixtureVariable _variable = new FixtureVariable("subject");

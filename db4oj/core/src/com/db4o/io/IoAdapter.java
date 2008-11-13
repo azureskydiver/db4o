@@ -29,8 +29,10 @@ public abstract class IoAdapter {
 	 */
 	public void blockCopy(int oldAddress, int oldAddressOffset, int newAddress,
 			int newAddressOffset, int length) throws Db4oIOException {
-		copy(regularAddress(oldAddress, oldAddressOffset), regularAddress(
-				newAddress, newAddressOffset), length);
+		copy(
+			regularAddress(oldAddress, oldAddressOffset),
+			regularAddress(newAddress, newAddressOffset),
+			length);
 	}
 
 	/**

@@ -13,6 +13,14 @@ import db4ounit.mocking.*;
  */
 public class CacheTestCase implements TestCase {
 	
+	public void testIterable() {
+		final TestPuppet puppet = new TestPuppet();
+		Iterator4Assert.sameContent(new Object[] {}, puppet.values());
+		puppet.produce(0);
+		Iterator4Assert.sameContent(new Object[] { "0" }, puppet.values());
+		puppet.fillCache();
+		Iterator4Assert.sameContent(new Object[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" }, puppet.values());
+	}
 	
 	public void testProduce(){
 		final Object obj = new Object();
@@ -40,6 +48,14 @@ public class CacheTestCase implements TestCase {
 		public void fillCache() {
 			fillCache(0, 10);
 		}
+
+		public Iterator4 values() {
+			final Collection4 values = new Collection4();
+			for (String s : cache) {
+				values.add(s);
+			}
+			return values.iterator();
+        }
 
 		public void fillCache(final int from, final int to) {
 			for (int i=from; i<to; ++i) {
@@ -73,7 +89,7 @@ public class CacheTestCase implements TestCase {
 		}
 
 		public void dumpCache() {
-			System.out.println(cache);
+//			System.out.println(cache);
 		}
 
 		public void cacheMisses(int... keys) {

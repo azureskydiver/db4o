@@ -8,7 +8,7 @@ import com.db4o.foundation.*;
  * @exclude
  * @decaf.ignore
  */
-public interface Cache4 <K, V> {
+public interface Cache4<K, V> extends Iterable<V> {
 
 	V produce(K key, Function4<K,V> producer);
 
