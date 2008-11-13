@@ -6,8 +6,8 @@ package com.db4o.foundation;
 /**
  * Useful as "out" or "by reference" function parameter.
  */
-public class ByReference {
+public class ByRef<T> {
     
-    public Object value;
+    public T value;
 
 }
