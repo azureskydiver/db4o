@@ -9,7 +9,7 @@ public class AllTests extends ReflectionTestSuite {
 
 	protected Class[] testCases() {
 		Class[] commonCases = {
-				IoAdapterTest.class,
+			IoAdapterTestSuite.class,
 		};
 		return Db4oUnitTestUtil.mergeClasses(commonCases, stackTraceBasedCases());
 	}

@@ -3,6 +3,7 @@
 package com.db4o.internal.caching;
 
 import java.util.*;
+
 import com.db4o.foundation.*;
 
 /**
@@ -77,5 +78,9 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 	private String toString(Collection<K> list) {
 		return Iterators.toString(new JdkCollectionIterator4(list));
 	}
+
+	public Iterator<V> iterator() {
+		return _slots.values().iterator();
+    }
 	
 }

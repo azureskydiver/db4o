@@ -34,7 +34,6 @@ public class TimerFileLockEnabled extends TimerFileLock{
     
     private boolean _closed = false;
     
-    
     public TimerFileLockEnabled(IoAdaptedObjectContainer file) {
         _timerLock = file.lock();
         
