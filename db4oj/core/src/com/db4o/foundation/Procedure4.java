@@ -6,8 +6,8 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public interface Procedure4 {
+public interface Procedure4<T> {
     
-    void apply(Object arg);
+    void apply(T arg);
 
 }

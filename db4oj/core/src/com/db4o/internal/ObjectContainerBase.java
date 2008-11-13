@@ -611,7 +611,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
                 return null;
             }
             ClassMetadata classMetadata = ref.classMetadata();
-            final ByReference foundField = new ByReference();
+            final ByRef foundField = new ByRef();
             
             classMetadata.forEachField(new Procedure4() {
 				public void apply(Object arg) {

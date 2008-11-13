@@ -916,7 +916,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public FieldMetadata fieldMetadataForName(final String name) {
-        final ByReference byReference = new ByReference();
+        final ByRef byReference = new ByRef();
         forEachField(new Procedure4() {
 			public void apply(Object arg) {
                 if (name.equals(((FieldMetadata)arg).getName())) {
@@ -1603,7 +1603,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         	
             final ClassMetadata classMetadata = _container.classMetadataForReflectClass(ReflectorUtils.reflectClassFor(reflector(), clazz));
             
-            final ByReference foundField = new ByReference();
+            final ByRef foundField = new ByRef();
             forEachField(new Procedure4() {
                 public void apply(Object arg) {
                     if(foundField.value != null){
