@@ -69,20 +69,28 @@ public class EnhancedForProcessor {
 								builder().newSimpleName(indexVariableName),
 								builder().newFieldAccess(clone(arrayReference), builder().newSimpleName("length")));
 
-		final ListRewrite statementsRewrite = rewrite().getListRewrite(node.getBody(), Block.STATEMENTS_PROPERTY);
-		statementsRewrite.insertFirst(
-				builder().newVariableDeclarationStatement(
-						variable.getName().toString(),
-						builder().clone(builder().mapType(variable.getType())),
-						builder().newArrayAccess(
-								clone(arrayReference),
-								builder().newSimpleName(indexVariableName))), null);
+		final VariableDeclarationStatement currentVariableDeclaration = builder().newVariableDeclarationStatement(
+        		variable.getName().toString(),
+        		builder().clone(builder().mapType(variable.getType())),
+        		builder().newArrayAccess(
+        				clone(arrayReference),
+        				builder().newSimpleName(indexVariableName)));
+
+		Statement body = null;
+		if (node.getBody() instanceof ExpressionStatement) {
+			body = builder().newBlock(currentVariableDeclaration, rewrite().move(node.getBody()));
+		} else {
+			final ListRewrite statementsRewrite = rewrite().getListRewrite(node.getBody(), Block.STATEMENTS_PROPERTY);
+			statementsRewrite.insertFirst(currentVariableDeclaration, null);
+			body = rewrite().move(node.getBody());
+		}
 
 		final PrefixExpression updater = builder().newPrefixExpression(
 				PrefixExpression.Operator.INCREMENT,
 				builder().newSimpleName(indexVariableName));
+		
 
-		replaceEnhancedForStatement(node, tempArrayVariable, index, cmp,updater);
+		replaceEnhancedForStatement(node, tempArrayVariable, index, cmp, updater, body);
 	}
 	
 	private void buildIterableEnhancedFor(EnhancedForStatement node, final SingleVariableDeclaration variable, final Expression iterable) {
@@ -112,7 +120,7 @@ public class EnhancedForProcessor {
 						builder().clone(builder().mapType(variable.getType())),
 						initializerExpr), null);
 
-		replaceEnhancedForStatement(node, null, iter, cmp, null);
+		replaceEnhancedForStatement(node, null, iter, cmp, null, rewrite().move(node.getBody()));
 	}
 
 	private Expression newInitializerExpression(final SingleVariableDeclaration elementVariable, String nextElementMethodName, final String iterVariableName) {
@@ -142,8 +150,8 @@ public class EnhancedForProcessor {
 		return _context.rewrite();
 	}
 
-	private void replaceEnhancedForStatement(EnhancedForStatement node, Statement tempVariable, Expression loopVar, Expression cmp, final Expression updater) {
-		final ForStatement stmt = builder().newForStatement(loopVar, cmp, updater, rewrite().move(node.getBody()));
+	private void replaceEnhancedForStatement(EnhancedForStatement node, Statement tempVariable, Expression loopVar, Expression cmp, final Expression updater, Statement body) {
+		final ForStatement stmt = builder().newForStatement(loopVar, cmp, updater, body);
 		ASTNode replacement = (null == tempVariable) ? stmt : builder().newBlock(tempVariable, stmt);
 		replace(node, replacement);
 	}	

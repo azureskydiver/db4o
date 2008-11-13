@@ -4,6 +4,10 @@ import decaf.tests.*;
 
 public class GenericsTestCase extends DecafTestCaseBase {
 	
+	public void testNestedTypeErasure() throws Exception {
+		runResourceTestCase("NestedTypeErasure");
+	}
+	
 	public void testCovarianceErasure() throws Exception {
 		runResourceTestCase("CovarianceErasure");
 	}

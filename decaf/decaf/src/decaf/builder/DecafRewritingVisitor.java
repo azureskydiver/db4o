@@ -217,10 +217,15 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public void endVisit(ClassInstanceCreation node) {
-		final IMethodBinding ctor = node.resolveConstructorBinding();
-		final List arguments = node.arguments();
-		if (builder().requiresVarArgsTranslation(ctor, arguments)) {
-			rewriteVarArgsArguments(ctor, arguments, getListRewrite(node, ClassInstanceCreation.ARGUMENTS_PROPERTY));
+		try {
+			final IMethodBinding ctor = node.resolveConstructorBinding();
+			final List arguments = node.arguments();
+			if (builder().requiresVarArgsTranslation(ctor, arguments)) {
+				rewriteVarArgsArguments(ctor, arguments, getListRewrite(node, ClassInstanceCreation.ARGUMENTS_PROPERTY));
+			}
+		} catch (RuntimeException e) {
+			System.err.println("Error processing node '" + node + "': " + e);
+			throw e;
 		}
 	}
 	

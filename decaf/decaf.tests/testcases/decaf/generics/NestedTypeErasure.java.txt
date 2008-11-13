@@ -1,0 +1,23 @@
+package decaf.generics;
+
+public class NestedTypeErasure {
+
+	public interface NestedType {
+	}
+	
+	public static class NestedClass {
+	}
+	
+	public <T> T[] foo(T... args) {
+		return null;
+	}
+	
+	public void main() {
+		for (NestedType t : foo(new NestedType() {})) {
+			System.out.println(t);
+		}
+		for (NestedClass c : foo(new NestedClass() {})) {
+			System.out.println(c);
+		}
+	}
+}
