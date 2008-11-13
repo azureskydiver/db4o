@@ -1,7 +1,12 @@
 package decaf.tests.builder;
 
+import java.util.*;
+
 import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
+import org.eclipse.jdt.core.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 import sharpen.core.*;
 import sharpen.core.framework.resources.*;
@@ -13,28 +18,72 @@ public class DecafProjectBuilderTestCase extends DecafTestCaseBase {
 	@Test
 	public void testDecafProjectReferencesGetMapped() throws Exception {
 		
-		final JavaProject main = javaProject();
-		main.addNature(DecafNature.NATURE_ID);
 		final DecafTestResource dependencyResource = testResourceFor("Dependency", TargetPlatform.NONE);
-		createCompilationUnitIn(main, dependencyResource);
-		main.buildProject(null);
+		createCompilationUnitIn(javaProject(), dependencyResource);
+		
+		runDecafBuild();
 		
 		final JavaProject dependent = new JavaProject("Dependent");
 		try {
-			dependent.addReferencedProject(main.getProject(), null);
+			dependent.addReferencedProject(javaProject().getProject(), null);
 			dependent.addNature(DecafNature.NATURE_ID);
 			final DecafTestResource dependentResource = testResourceFor("Dependent", TargetPlatform.NONE);
 			createCompilationUnitIn(dependent, dependentResource);
 			dependent.buildProject(null);
 			
 			final IProject decafDependent = targetDecafProjectFor(dependent, TargetPlatform.JDK11);
-			final IProject decafMain = targetDecafProjectFor(main, TargetPlatform.JDK11);
-			Assert.assertArrayEquals(new Object[] { decafMain }, decafDependent.getReferencedProjects());
+			final IProject decafMain = targetDecafProjectFor(javaProject(), TargetPlatform.JDK11);
+			assertArrayEquals(new Object[] { decafMain }, decafDependent.getReferencedProjects());
 		} finally {
 			dependent.dispose();
 		}
 	}
+
+	private void runDecafBuild(TargetPlatform... platforms) throws CoreException {
+	    final JavaProject project = javaProject();
+
+		if (platforms.length > 0) {
+			final DecafProject decaf = DecafProject.create(project.getJavaProject());
+			decaf.setTargetPlatforms(platforms);
+		}
+		
+		runDecafBuild(project);
+    }
+
+	private void runDecafBuild(final JavaProject project) throws CoreException {
+	    project.addNature(DecafNature.NATURE_ID);
+		project.buildProject(null);
+    }
 	
+	@Test
+	public void testDecafProjectCompilerSettings() throws Exception {
+		createCompilationUnit(testResourceFor("CompilerSettingsSubject", TargetPlatform.NONE));
+		runDecafBuild(TargetPlatform.JDK11, TargetPlatform.JDK12);
+		
+		final IJavaProject decaf11 = decafJavaProjectFor(TargetPlatform.JDK11);
+		final Map options11 = decaf11.getOptions(false);
+		assertEquals("1.3", options11.get(JavaCore.COMPILER_SOURCE));
+		assertEquals("1.1", options11.get(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM));
+		
+		final IJavaProject decaf12 = decafJavaProjectFor(TargetPlatform.JDK12);
+		assertEquals(
+				"org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.3",
+				containerClasspathEntryFor(decaf12).getPath().toString());
+		final Map options12 = decaf12.getOptions(false);
+		assertEquals("1.3", options12.get(JavaCore.COMPILER_SOURCE));
+		assertEquals("1.1", options12.get(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM));
+	}
+
+	private IClasspathEntry containerClasspathEntryFor(IJavaProject p) throws CoreException {
+		for (IClasspathEntry e : p.getRawClasspath())
+			if (e.getEntryKind() == IClasspathEntry.CPE_CONTAINER)
+				return e;
+		return null;
+    }
+
+	private IJavaProject decafJavaProjectFor(final TargetPlatform platform) {
+	    return JavaCore.create(targetDecafProjectFor(javaProject(), platform));
+    }
 
 	@Test
 	public void testDecafOnlySourceFolders() throws Exception {
@@ -50,8 +99,7 @@ public class DecafProjectBuilderTestCase extends DecafTestCaseBase {
 		final DecafTestResource testResource2 = testResourceFor("FooImpl", TargetPlatform.NONE);
 		createCompilationUnit(project.addSourceFolder("src2"), testResource2);
 		
-		project.addNature(DecafNature.NATURE_ID);
-		project.buildProject(null);
+		runDecafBuild();
 		
 		final IProject decaf = targetDecafProjectFor(project, TargetPlatform.JDK11);
 		assertTrue(decaf.exists());

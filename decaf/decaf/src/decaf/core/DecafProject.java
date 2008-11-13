@@ -74,7 +74,6 @@ public class DecafProject {
 	}
 	
 	public void setTargetPlatforms(TargetPlatform... targetPlatforms) throws CoreException {
-		
 		_project.getProject().setPersistentProperty(TARGET_PLATFORMS, commaSeparatedPlatformIds(targetPlatforms));
 		_targets = null;
 	}
@@ -83,13 +82,11 @@ public class DecafProject {
 		return targetsForPlatforms(readTargetPlatforms());
 	}
 
-	private List<OutputTarget> targetsForPlatforms(
-			final Iterable<TargetPlatform> targetPlatforms) throws CoreException {
+	private List<OutputTarget> targetsForPlatforms(final Iterable<TargetPlatform> targetPlatforms) throws CoreException {
 		final List<OutputTarget> targets = new ArrayList<OutputTarget>();
 		for (TargetPlatform platform : targetPlatforms) {
 			targets.add(new OutputTarget(platform, decafProjectFor(platform)));
 		}
-		
 		return targets;
 	}
 	
@@ -104,8 +101,7 @@ public class DecafProject {
 		return value.toString();
 	}
 
-	private List<TargetPlatform> readTargetPlatforms()
-			throws CoreException {
+	private List<TargetPlatform> readTargetPlatforms() throws CoreException {
 		final String targetPlatforms = _project.getProject().getPersistentProperty(TARGET_PLATFORMS);
 		if (null == targetPlatforms) {
 			return Collections.singletonList(TargetPlatform.JDK11);
@@ -123,11 +119,19 @@ public class DecafProject {
 		IWorkspaceRoot root = _project.getProject().getWorkspace().getRoot();
 		String decafProjectName = platform.appendPlatformId(_project.getElementName() + ".decaf", ".");
 		IProject decafProject = root.getProject(decafProjectName);
+		if (decafProject.exists()) {
+			return JavaCore.create(decafProject);
+		}
+		
 		WorkspaceUtilities.initializeProject(decafProject, null);
 		WorkspaceUtilities.addProjectNature(decafProject, JavaCore.NATURE_ID);
 		
 		IJavaProject decafJavaProject = JavaCore.create(decafProject);
 		decafJavaProject.setRawClasspath(mapClasspathEntries(_project, decafJavaProject, platform), null);
+		final Hashtable options = JavaCore.getDefaultOptions();
+		options.put(JavaCore.COMPILER_SOURCE, "1.3");
+		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, "1.1");
+		decafJavaProject.setOptions(options);
 		return decafJavaProject;
 	}
 	
@@ -144,16 +148,18 @@ public class DecafProject {
 
 	private static IClasspathEntry mapClasspathEntryFor(IJavaProject decafJavaProject, final IClasspathEntry entry, TargetPlatform platform)
             throws CoreException {
-	    if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+	    switch (entry.getEntryKind()) {
+	    case IClasspathEntry.CPE_SOURCE:
 	    	return createSourceFolder(decafJavaProject, entry.getPath());
-	    }
-	    if (entry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
+	    case IClasspathEntry.CPE_PROJECT:
 	    	final IProject referencedProject = WorkspaceUtilities.getProject(entry.getPath().lastSegment());
 	    	if (!referencedProject.hasNature(DecafNature.NATURE_ID)) {
 	    		return entry;
 	    	}
 	    	final OutputTarget target = decafTargetFor(referencedProject, platform);
 			return JavaCore.newProjectEntry(target.targetProject().getPath());
+	    case IClasspathEntry.CPE_CONTAINER:
+	    	return JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.3"));
 	    }
 	    return entry;
     }
@@ -167,17 +173,14 @@ public class DecafProject {
     }
 	
 	private OutputTarget targetFor(TargetPlatform platform) throws CoreException {
-		for (OutputTarget target : targets()) {
-	        if (target.targetPlatform() == platform) {
+		for (OutputTarget target : targets())
+	        if (target.targetPlatform() == platform)
 	        	return target;
-	        }
-        }
 		return null;
     }
 
 	private static IClasspathEntry createSourceFolder(IJavaProject decafJavaProject,
 			IPath path) throws CoreException {
-		
 		IFolder folder = decafJavaProject.getProject().getFolder(path.removeFirstSegments(1));
 		WorkspaceUtilities.initializeTree(folder, null);
 		return JavaCore.newSourceEntry(folder.getFullPath(), new IPath[] {});
