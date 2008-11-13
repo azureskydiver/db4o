@@ -75,13 +75,12 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 	 * @param pageCount
 	 *            allocated amount of pages
 	 */
-	public IoAdapterWithCache(String path, boolean lockFile, long initialLength, boolean readOnly, IoAdapter io,
-	        Cache4<Long, Page> cache, int pageSize, int pageCount) throws Db4oIOException {
+	private IoAdapterWithCache(String path, boolean lockFile, long initialLength, boolean readOnly, IoAdapter io,
+	        Cache4<Long, Page> cache, int pageSize) throws Db4oIOException {
 		_readOnly = readOnly;
 		_pageSize = pageSize;
-		_pageCount = pageCount;
 
-		initIOAdaptor(path, lockFile, initialLength, readOnly, io);
+		_io = io.open(path, lockFile, initialLength, readOnly);
 
 		_cache = cache;
 		_position = initialLength;
@@ -99,9 +98,9 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 	 *            initial file length, new writes will start from this point
 	 */
 	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-		return new IoAdapterWithCache(path, lockFile, initialLength, readOnly, _io, newCache(), _pageSize, _pageCount) {
+		return new IoAdapterWithCache(path, lockFile, initialLength, readOnly, _io, newCache(_pageCount), _pageSize) {
 			@Override
-			protected Cache4 newCache() {
+			protected Cache4 newCache(int pageCount) {
 				throw new IllegalStateException();
 			}
 		};
@@ -125,11 +124,6 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 	 */
 	public boolean exists(String path) {
 		return _io.exists(path);
-	}
-
-	private void initIOAdaptor(String path, boolean lockFile, long initialLength, boolean readOnly, IoAdapter io)
-	        throws Db4oIOException {
-		_io = io.open(path, lockFile, initialLength, readOnly);
 	}
 
 	/**
@@ -227,9 +221,12 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 	}
 
 	private Page getPage(final long startAddress, final boolean loadFromDisk) throws Db4oIOException {
+		
+		final BooleanByRef isNewPage = new BooleanByRef(true);
 		final Page page = _cache.produce(pageAddressFor(startAddress), new Function4<Long, Page>() {
 			public Page apply(Long pageAddress) {
 				// in case that page is not found in the cache
+				isNewPage.value = true;
 				final Page newPage = new Page(_pageSize);
 				if (loadFromDisk) {
 					getPageFromDisk(newPage, pageAddress.longValue());
@@ -238,6 +235,10 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 				}
 				return newPage;
 			}
+		}, new Procedure4<Page>() {
+			public void apply(Page discardedPage) {
+				flushPage(discardedPage);
+            }
 		});
 		page.ensureEndAddress(_fileLength);
 		return page;
@@ -395,6 +396,6 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 		}
 	}
 
-	protected abstract Cache4<Long, Page> newCache();
+	protected abstract Cache4<Long, Page> newCache(int pageCount);
 
 }

@@ -13,6 +13,19 @@ import db4ounit.mocking.*;
  */
 public class CacheTestCase implements TestCase {
 	
+	public void testOnDiscard() {
+		final TestPuppet puppet = new TestPuppet();
+		puppet.fillCache();
+		
+		final ByRef<String> discarded = new ByRef<String>();
+		puppet.produce(42, new Procedure4<String>() {
+			public void apply(String discardedValue) {
+				discarded.value = discardedValue;
+            }
+		});
+		Assert.areEqual("0", discarded.value);
+	}
+	
 	public void testIterable() {
 		final TestPuppet puppet = new TestPuppet();
 		Iterator4Assert.sameContent(new Object[] {}, puppet.values());
@@ -29,9 +42,9 @@ public class CacheTestCase implements TestCase {
 			public Object apply(Integer key) {
 				return obj;
 			}
-		});
+		}, null);
 		Assert.areSame(obj, value);
-		Assert.areSame(obj, cache.produce(1, null));
+		Assert.areSame(obj, cache.produce(1, null, null));
 	}
 	
 	static class TestPuppet {
@@ -59,7 +72,7 @@ public class CacheTestCase implements TestCase {
 
 		public void fillCache(final int from, final int to) {
 			for (int i=from; i<to; ++i) {
-				Assert.areEqual(Integer.toString(i), cache.produce(i, producer));
+				Assert.areEqual(Integer.toString(i), cache.produce(i, producer, null));
 			}
 		}
 		
@@ -68,8 +81,13 @@ public class CacheTestCase implements TestCase {
 		}
 
 		public String produce(int key) {
-			return cache.produce(key, producer);
+			return produce(key, null);
 		}
+		
+		public String produce(int key, Procedure4<String> onDiscard) {
+			return cache.produce(key, producer, onDiscard);
+        }
+
 
 		public void reset() {
 			producerCalls.reset();
