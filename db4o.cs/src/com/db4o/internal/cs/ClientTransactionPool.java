@@ -32,7 +32,7 @@ public class ClientTransactionPool {
 		synchronized(_mainContainer.lock()) {
 			ContainerCount entry = (ContainerCount) _fileName2Container.get(fileName);
 			if (entry == null) {
-				LocalObjectContainer container = (LocalObjectContainer) Db4o.openFile(fileName);
+				LocalObjectContainer container = (LocalObjectContainer) Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), fileName);
 		        container.configImpl().setMessageRecipient(_mainContainer.configImpl().messageRecipient());
 				entry = new ContainerCount(container);
 				_fileName2Container.put(fileName, entry);
