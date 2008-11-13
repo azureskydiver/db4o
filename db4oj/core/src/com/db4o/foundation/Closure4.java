@@ -2,8 +2,8 @@
 
 package com.db4o.foundation;
 
-public interface Closure4 {
+public interface Closure4<R> {
 	
-	public Object run();
+	public R run();
 
 }
