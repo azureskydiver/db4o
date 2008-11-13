@@ -28,8 +28,8 @@ public class PerformanceCompetition extends AbstractDb4oVersionsRaceRunner{
     public Team[] teams() {
 
 		return new Team[] {
-            db4oTeam(JAR72, null),
-            db4oTeam(JAR_PATCHED, null),
+            db4oTeam(JAR72),
+            db4oTeam(JAR_PATCHED),
             db4oTeam(JAR72, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
             db4oTeam(JAR_PATCHED, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
 		};
