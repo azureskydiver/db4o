@@ -91,8 +91,11 @@ public class DecafASTNodeBuilder {
 	}
 	
 	public Type newType(ITypeBinding type) {
+		if (type.isAnonymous()) {
+			return newErasedType(implementedTypeFromAnonymous(type));
+		}
 		if (type.isArray()) {
-			return _ast.newArrayType(newType(type.getComponentType()));
+			return _ast.newArrayType(newErasedType(type.getComponentType()));
 		}
 		if (type.isPrimitive()) {
 			return newPrimitiveType(type.getName());
@@ -100,9 +103,23 @@ public class DecafASTNodeBuilder {
 		
 		String typeName = requiresQualifier(type)
 			? qualifiedName(type)
-			: type.getName();
+			: simpleTypeName(type);
 		return newSimpleType(typeName);
 	}
+
+	private String simpleTypeName(ITypeBinding type) {
+		if (type.isNested()) {
+			return simpleTypeName(type.getDeclaringClass()) + "." + type.getName();
+		}
+	    return type.getName();
+    }
+
+	private ITypeBinding implementedTypeFromAnonymous(ITypeBinding type) {
+		final ITypeBinding[] interfaces = type.getInterfaces();
+		return (interfaces.length > 0)
+			? interfaces[0]
+			: type.getSuperclass();
+    }
 
 	private boolean requiresQualifier(ITypeBinding type) {
 		final String packageName = packageName(type);
@@ -269,9 +286,13 @@ public class DecafASTNodeBuilder {
 		ArrayCreation varArgsArray = _ast.newArrayCreation();
 		varArgsArray.setInitializer(arrayInitializer);
 
-		varArgsArray.setType((ArrayType) newType(arrayType));
+		varArgsArray.setType((ArrayType) newErasedType(arrayType));
 		return varArgsArray;
 	}
+
+	private Type newErasedType(final ITypeBinding arrayType) {
+	    return newType(arrayType.getErasure());
+    }
 	
 	public ArrayCreation newArrayCreation(final Type elementType, ArrayInitializer arrayInitializer) {
 		ArrayCreation array = _ast.newArrayCreation();

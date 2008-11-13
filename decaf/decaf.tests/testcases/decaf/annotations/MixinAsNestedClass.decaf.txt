@@ -4,20 +4,23 @@ import java.io.*;
 
 abstract class ChainedRuntimeException extends RuntimeException {
 
-    public ChainedRuntimeExceptionMixin _mixin;
+    public ChainedRuntimeException.ChainedRuntimeExceptionMixin _mixin;
 
 	public ChainedRuntimeException() {
-		this._mixin = new ChainedRuntimeExceptionMixin(this);
+		this._mixin = new ChainedRuntimeException.ChainedRuntimeExceptionMixin(
+				this);
     }
 
     public ChainedRuntimeException(String msg) {
         super(msg, null);
-		this._mixin = new ChainedRuntimeExceptionMixin(this, msg);
+		this._mixin = new ChainedRuntimeException.ChainedRuntimeExceptionMixin(
+				this, msg);
     }
 
     public ChainedRuntimeException(String msg, Throwable cause) {
         super(msg, cause);
-		this._mixin = new ChainedRuntimeExceptionMixin(this, msg, cause);
+		this._mixin = new ChainedRuntimeException.ChainedRuntimeExceptionMixin(
+				this, msg, cause);
     }
     
     /**

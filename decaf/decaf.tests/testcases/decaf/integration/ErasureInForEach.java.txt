@@ -6,6 +6,11 @@ class Foo<T> {
 	public Foo(T... values) {
 		array = values;
 	}
+	
+	public void bar(T[] ts) {
+		for (T arg : ts)
+			System.out.println(arg);
+	}
 }
 
 class Main {
