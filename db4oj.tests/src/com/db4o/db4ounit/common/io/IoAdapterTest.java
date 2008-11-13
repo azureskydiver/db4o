@@ -27,13 +27,26 @@ public class IoAdapterTest extends IoAdapterTestUnitBase  {
         	Assert.areEqual(data[i], readBytes[i]);
         }
 	}
+	
+	public void testHugeFile() {
+		final int dataSize = 1024 * 2;
+		final byte[] data = newDataArray(dataSize);
+		for (int i=0; i<64; ++i) {
+			_adapter.write(data);
+		}
+		
+		final byte[] readBuffer = new byte[dataSize];
+		for (int i=0; i<64; ++i) {
+			_adapter.seek(dataSize * (63-i));
+			_adapter.read(readBuffer);
+			ArrayAssert.areEqual(data, readBuffer);
+		}
+		
+	}
 
 	public void testSeek() throws Exception {
 		final int count = 1024 * 2 + 10;
-        final byte[] data = new byte[count];
-        for (int i = 0; i < data.length; ++i) {
-        	data[i] = (byte) (i % 256);
-        }
+        final byte[] data = newDataArray(count);
         _adapter.write(data);
         final byte[] readBytes = new byte[count];
         _adapter.seek(0);
@@ -60,6 +73,14 @@ public class IoAdapterTest extends IoAdapterTestUnitBase  {
         	Assert.areEqual(i, readBytes[i]);
         }
 	}
+
+	private byte[] newDataArray(final int count) {
+	    final byte[] data = new byte[count];
+        for (int i = 0; i < data.length; ++i) {
+        	data[i] = (byte) (i % 256);
+        }
+	    return data;
+    }
 
 	public void testReadWriteBytes() throws Exception {
 		String[] strs = {
