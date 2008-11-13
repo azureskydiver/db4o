@@ -35,7 +35,6 @@ public class Db4oClientServer {
 		return new ClientConfigurationImpl(newLegacyConfig());
 	}
 	
-	@SuppressWarnings("deprecation")
     private static Config4Impl newLegacyConfig() {
 		return (Config4Impl) Db4o.newConfiguration();
 	}
