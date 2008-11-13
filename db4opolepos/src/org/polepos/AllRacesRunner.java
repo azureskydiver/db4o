@@ -37,6 +37,9 @@ import org.polepos.framework.*;
 import org.polepos.runner.db4o.*;
 import org.polepos.teams.db4o.*;
 
+import com.db4o.config.*;
+import com.db4o.io.*;
+
 /**
  * Please read the README file in the home directory first.
  */
@@ -44,18 +47,9 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     
     private static String JAR_TRUNK = "db4o-trunk-java5.jar";
     
-    private static String JAR64 = "db4o-6.4.14.8131-java5.jar";
-    
     private static String JAR70 = "db4o-7.0.21.8746-java5.jar";
     
     private static String JAR72 = "db4o-7.2.39.10644-java5.jar";
-    
-    private static String UTF8 = "db4o-7.2-utf8.jar";
-    
-    private static String SORTED_QUERY = "db4o-7.2-sortedquery.jar";
-    
-    private static String CACHED_QUERIES = "db4o-7.4-cachedqueries.jar";
-    
     
     public static void main(String[] arguments) {
         new AllRacesRunner().run();
@@ -64,19 +58,39 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     public Team[] teams() {
 
 		return new Team[] {
-//            db4oTeam(Db4oVersions.JAR45, null),
-//            db4oTeam(Db4oVersions.JAR57, null),
-//            db4oTeam(Db4oVersions.JAR63, null),
-            db4oTeam(JAR72, null),
-            db4oTeam(UTF8, null),
-            db4oTeam(SORTED_QUERY, null),
-            db4oTeam(CACHED_QUERIES, null),
+				
+			// db4oTeam(JAR72),
+
+			configuredDb4oTeam(new ConfigurationSetting[]{
+            		new ConfigurationSetting(){
+						public void apply(Object config) {
+							((Configuration)config).io(new CachedIoAdapter(new RandomAccessFileAdapter()));
+							
+						}
+						public String name() {
+							return "CachedIoAdapter";
+						}
+            		}
+            }),
+				
+		
+            configuredDb4oTeam(new ConfigurationSetting[]{
+            		new ConfigurationSetting(){
+						public void apply(Object config) {
+							((Configuration)config).io(new RandomAccessFileAdapter());
+							
+						}
+						public String name() {
+							return "RandomAccessFileAdapter";
+						}
+            			
+            		}
+            }),
+            
+
             
 //             db4oTeam(JAR_TRUNK, null),
-            
-//                db4oTeam(Db4oVersions.JAR57, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
-//                db4oTeam(Db4oVersions.JAR61, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
-//                db4oTeam(Db4oVersions.JAR63, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
+            //  db4oTeam(Db4oVersions.JAR63, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
 		};
 	}
 

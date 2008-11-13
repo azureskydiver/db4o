@@ -21,12 +21,12 @@ MA  02111-1307, USA. */
 package org.polepos;
 
 import org.polepos.circuits.indianapolis.*;
-import org.polepos.db4o.*;
 import org.polepos.framework.*;
 import org.polepos.runner.db4o.*;
 import org.polepos.teams.db4o.*;
 
 public class IndianapolisRunner extends AbstractDb4oVersionsRaceRunner {
+	
 	public static void main(String[] arguments) {
         new IndianapolisRunner().run();
     }
@@ -39,8 +39,8 @@ public class IndianapolisRunner extends AbstractDb4oVersionsRaceRunner {
 	
 	public Team[] teams(){
 		return new Team [] {
-				db4oTeam(Db4oVersions.JAR60, null),		
-				db4oTeam(null, null),
+				db4oTeam(Db4oVersions.JAR60),		
+				db4oTeam(),
 		};
 	}
 

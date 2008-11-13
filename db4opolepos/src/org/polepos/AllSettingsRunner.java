@@ -45,16 +45,13 @@ public class AllSettingsRunner extends AbstractDb4oVersionsRaceRunner{
     }
     
     public Team[] teams() {
-        
-        String jar = Db4oVersions.JAR63;
-
 		return new Team[] {
-                db4oTeam(jar, null),
-                db4oTeam(jar, new int[] {Db4oOptions.NO_FLUSH}),
-                db4oTeam(jar, new int[] {Db4oOptions.BTREE_FREESPACE}),
-                db4oTeam(jar, new int[] {Db4oOptions.MEMORY_IO}),
-                db4oTeam(jar, new int[] {Db4oOptions.SNAPSHOT_QUERIES}),
-                db4oTeam(jar, new int[] {Db4oOptions.LAZY_QUERIES}),
+                db4oTeam(),
+                db4oTeam(new int[] {Db4oOptions.NO_FLUSH}),
+                db4oTeam(new int[] {Db4oOptions.BTREE_FREESPACE}),
+                db4oTeam(new int[] {Db4oOptions.MEMORY_IO}),
+                db4oTeam(new int[] {Db4oOptions.SNAPSHOT_QUERIES}),
+                db4oTeam(new int[] {Db4oOptions.LAZY_QUERIES}),
 		};
 	}
 
