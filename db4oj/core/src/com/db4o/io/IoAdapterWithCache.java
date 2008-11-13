@@ -19,8 +19,6 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 
 	private long _fileLength;
 
-	private long _filePointer;
-
 	private IoAdapter _io;
 
 	private boolean _readOnly;
@@ -87,7 +85,6 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 
 		_cache = cache;
 		_position = initialLength;
-		_filePointer = initialLength;
 		_fileLength = _io.getLength();
 	}
 
@@ -282,17 +279,12 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 	}
 
 	private int ioRead(Page page) throws Db4oIOException {
-		int count = _io.read(page._buffer);
-		if (count > 0) {
-			_filePointer = page._startAddress + count;
-		}
-		return count;
+		return _io.read(page._buffer);
 	}
 
 	private void writePageToDisk(Page page) throws Db4oIOException {
 		try {
 			_io.write(page._buffer, page.size());
-			_filePointer = page.endAddress();
 			page._dirty = false;
 		} catch (Db4oIOException e) {
 			_readOnly = true;
@@ -311,10 +303,7 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 	}
 
 	private void ioSeek(long pos) throws Db4oIOException {
-		if (_filePointer != pos) {
-			_io.seek(pos);
-			_filePointer = pos;
-		}
+		_io.seek(pos);
 	}
 
 	private static class Page {
