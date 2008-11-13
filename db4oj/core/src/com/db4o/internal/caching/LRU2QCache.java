@@ -8,9 +8,10 @@ import com.db4o.foundation.*;
 
 /**
  * @exclude
- * @decaf.ignore 
  * Algorithm taken from here:
  * http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.34.2641
+ * 
+ * @decaf.ignore
  */
 class LRU2QCache<K,V> implements Cache4<K,V>{
 	
@@ -29,7 +30,7 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 		_slots = new HashMap<K, V>(maxSize);
 	}
 	
-	public V produce(K key, Function4<K, V> producer) {
+	public V produce(K key, Function4<K, V> producer, Procedure4<V> onDiscard) {
 		
 		if(key == null){
 			throw new ArgumentNullException();
@@ -54,11 +55,11 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 			_slots.put(key, newValue);
 		} else if(_a1.size() >= a1Threshold()){
 			K freedSlot = _a1.remove(0);
-			_slots.remove(freedSlot);
+			discard(freedSlot, onDiscard);
 			_slots.put(key, newValue);
 		} else {
 			K freedSlot = _am.remove(0);
-			_slots.remove(freedSlot);
+			discard(freedSlot, onDiscard);
 			_slots.put(key, newValue);
 		}
 		_a1.add(key);
@@ -66,6 +67,13 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 		
 		return newValue;
 	}
+
+	private void discard(K key, Procedure4<V> onDiscard) {
+	    final V discardedPage = _slots.remove(key);
+	    if (null != onDiscard) {
+	    	onDiscard.apply(discardedPage);
+	    }
+    }
 
 	private int a1Threshold() {
 		return _maxSize / 4;

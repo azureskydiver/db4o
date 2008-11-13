@@ -4,11 +4,12 @@ package com.db4o.internal.caching;
 
 /**
  * @exclude
+ * 
  * @decaf.ignore
  */
 public class CacheFactory {
 
-	public static <K, V> Cache4 <K, V> new2QCache(int size) {
+	public static <K, V> Cache4<K, V> new2QCache(int size) {
 		return new LRU2QCache<K, V>(size);
 	}
 

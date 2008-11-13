@@ -14,8 +14,8 @@ public class IoAdapterTestSuite extends FixtureBasedTestSuite {
 				new CachedIoAdapter(new RandomAccessFileAdapter()),
 //				new IoAdapterWithCache(new RandomAccessFileAdapter()) {
 //					@Override
-//					protected Cache4 newCache() {
-//						return CacheFactory.new2QCache(64);
+//					protected Cache4 newCache(int pageCount) {
+//						return CacheFactory.new2QCache(pageCount);
 //					}
 //				}
 			}),
