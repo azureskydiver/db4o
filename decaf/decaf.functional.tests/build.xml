@@ -190,22 +190,11 @@
 	
 	<target name="decaf-tests" depends="decaf-core">
 		
-		<jar destfile="${build.dir}/db4ounit-all.jar">
-			<fileset dir="../db4ounit/bin">
-				<include name="**/*.class" />
-			</fileset>
-			<fileset dir="../db4ounit.extensions/bin">
-				<include name="**/*.class" />
-			</fileset>
-		</jar>
-
 		<decaf workspace="${build.dir}/workspace" resource="db4o.tests">
 			<args>
 				<arg value="-projectReference" />
 				<arg value="db4o" />
-				<arg value="-cp" />
-				<arg path="${build.dir}/db4ounit-all.jar" />
-
+								
 				<arg value="-targetPlatform" />
 				<arg value="jdk11" />
 
@@ -229,6 +218,12 @@
 					<include name="**/*.java" />
 				</fileset>
 				<fileset dir="${dir.workspace}/db4o.cs">
+					<include name="**/*.java" />
+				</fileset>
+				<fileset dir="${dir.workspace}/db4ounit">
+					<include name="**/*.java" />
+				</fileset>
+				<fileset dir="${dir.workspace}/db4ounit.extensions">
 					<include name="**/*.java" />
 				</fileset>
 			</sources>
