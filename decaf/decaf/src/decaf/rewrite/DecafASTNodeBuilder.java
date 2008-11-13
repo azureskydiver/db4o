@@ -307,8 +307,10 @@ public class DecafASTNodeBuilder {
 		return _ast.newArrayInitializer();
 	}
 
-	IMethodBinding originalMethodDefinitionFor(
-			final IMethodBinding method) {
+	IMethodBinding originalMethodDefinitionFor(final IMethodBinding method) {
+		if (method.isConstructor()) {
+			return method;
+		}
 		return Bindings.findMethodDefininition(method, _ast);
 	}
 	

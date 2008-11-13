@@ -110,7 +110,7 @@ public class DecafRewritingServices {
 
 	private boolean hasAssignmentCompatibleErasure(final ITypeBinding parameterType,
             final ITypeBinding originalParameterType) {
-	    return parameterType.getErasure().isAssignmentCompatible(originalParameterType.getErasure());
+	    return originalParameterType.getErasure().isAssignmentCompatible(parameterType.getErasure());
     }
 
 	private ITypeBinding originalParameterType(final MethodDeclaration method, IVariableBinding parameter) {

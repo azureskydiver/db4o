@@ -8,6 +8,10 @@ public class NestedTypeErasure {
 	public static class NestedClass {
 	}
 	
+	public interface Procedure4 {
+		void apply(Object arg);
+	}
+	
 	public Object[] foo(Object[] args) {
 		return null;
 	}
@@ -27,5 +31,10 @@ public class NestedTypeErasure {
 				System.out.println(c);
 			}
 		}
+		new NestedTypeErasure.Procedure4() {
+			public void apply(Object arg) {
+				System.out.println(((String) arg));
+			}
+		};
 	}
 }

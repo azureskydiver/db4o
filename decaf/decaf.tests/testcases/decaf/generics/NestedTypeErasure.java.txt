@@ -8,6 +8,10 @@ public class NestedTypeErasure {
 	public static class NestedClass {
 	}
 	
+	public interface Procedure4<T> {
+		void apply(T arg);
+	}
+	
 	public <T> T[] foo(T... args) {
 		return null;
 	}
@@ -19,5 +23,10 @@ public class NestedTypeErasure {
 		for (NestedClass c : foo(new NestedClass() {})) {
 			System.out.println(c);
 		}
+		new Procedure4<String>() {
+			public void apply(String arg) {
+				System.out.println(arg);
+			}
+		};
 	}
 }
