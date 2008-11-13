@@ -47,13 +47,13 @@ public class ActivatableTestCase extends TransparentActivationTestCaseBase {
 		
 		// mock1 has only be bound by store so far
 		// client.close should have no effect on it
-		mock1.recorder().verify(new MethodCall[] {
+		mock1.recorder().verify(
 			new MethodCall("bind", new MethodCall.ArgumentCondition() {
 				public void verify(Object argument) {
 					Assert.isNotNull(argument);
 				}
-			}),
-		});
+			})
+		);
 	}
 
 	private MockActivatable retrieveMockFromNewClientAndClose() {
@@ -70,16 +70,16 @@ public class ActivatableTestCase extends TransparentActivationTestCaseBase {
 	}
 	
 	private void assertBindUnbindCalls(final MockActivatable mock) {
-		mock.recorder().verify(new MethodCall[] {
+		mock.recorder().verify(
 			new MethodCall("bind", MethodCall.IGNORED_ARGUMENT),
-			new MethodCall("bind", new Object[] { null }),
-		});
+			new MethodCall("bind", new Object[] { null })
+		);
 	}
 
 	private void assertSingleBindCall(final MockActivatable mock) {
-		mock.recorder().verify(new MethodCall[] {
+		mock.recorder().verify(
 			new MethodCall("bind", MethodCall.IGNORED_ARGUMENT)
-		});
+		);
 	}
 
 	private MockActivatable retrieveMock() {
@@ -95,6 +95,4 @@ public class ActivatableTestCase extends TransparentActivationTestCaseBase {
 		store(mock);
 		return mock;
 	}
-	
-
 }
