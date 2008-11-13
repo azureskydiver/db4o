@@ -48,20 +48,25 @@ public class ConstructorSupport {
 		
 		Iterator4 iter = new TreeNodeIterator(sortedConstructors);
 		while (iter.moveNext()) {
-			Object obj = iter.current();
-			ReflectConstructor constructor = (ReflectConstructor) ((TreeIntObject) obj)._object;
-			ReflectClass[] paramTypes = constructor.getParameterTypes();
-			Object[] params = new Object[paramTypes.length];
-			for (int j = 0; j < params.length; j++) {
-				params[j] = paramTypes[j].nullValue();
-			}
-			Object res = constructor.newInstance(params);
+			Object current = iter.current();
+			ReflectConstructor constructor = (ReflectConstructor) ((TreeIntObject) current)._object;
+			Object[] args = nullArgumentsFor(constructor);
+			Object res = constructor.newInstance(args);
 			if (res != null) {
-				return new ReflectConstructorSpec(constructor, params);
+				return new ReflectConstructorSpec(constructor, args);
 			}
 		}
 		return ReflectConstructorSpec.INVALID_CONSTRUCTOR;
 	}
+
+	private static Object[] nullArgumentsFor(ReflectConstructor constructor) {
+	    ReflectClass[] paramTypes = constructor.getParameterTypes();
+	    Object[] params = new Object[paramTypes.length];
+	    for (int j = 0; j < params.length; j++) {
+	    	params[j] = paramTypes[j].nullValue();
+	    }
+	    return params;
+    }
 	
 	private static Tree sortConstructorsByParamsCount(final ReflectConstructor[] constructors) {
 		Tree sortedConstructors = null;
