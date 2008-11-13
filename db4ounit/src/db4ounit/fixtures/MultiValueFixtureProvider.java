@@ -14,7 +14,7 @@ public class MultiValueFixtureProvider implements FixtureProvider {
 	
 	private final Object[][] _values;
 
-	public MultiValueFixtureProvider(Object[][] values) {
+	public <T> MultiValueFixtureProvider(T[]... values) {
 		_values = values;
 	}
 

@@ -41,9 +41,9 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 		run(new FixtureBasedTestSuite() {
 			public FixtureProvider[] fixtureProviders() {
 				return new FixtureProvider[] {
-					new SimpleFixtureProvider(RECORDER_FIXTURE, new Object[] { recorder }),
-					new SimpleFixtureProvider(FIXTURE1, new Object[] { "f11", "f12" }),
-					new SimpleFixtureProvider(FIXTURE2, new Object[] { "f21", "f22" }),
+					new SimpleFixtureProvider(RECORDER_FIXTURE, recorder),
+					new SimpleFixtureProvider(FIXTURE1, "f11", "f12"),
+					new SimpleFixtureProvider(FIXTURE2, "f21", "f22"),
 				};
 			}
 
@@ -56,14 +56,14 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 //		System.out.println(CodeGenerator.generateMethodCallArray(recorder));
 		
 		recorder.verify(new MethodCall[] {
-			new MethodCall("testFoo", new Object[] {"f11", "f21"}),
-			new MethodCall("testFoo", new Object[] {"f11", "f22"}),
-			new MethodCall("testFoo", new Object[] {"f12", "f21"}),
-			new MethodCall("testFoo", new Object[] {"f12", "f22"}),
-			new MethodCall("testBar", new Object[] {"f11", "f21"}),
-			new MethodCall("testBar", new Object[] {"f11", "f22"}),
-			new MethodCall("testBar", new Object[] {"f12", "f21"}),
-			new MethodCall("testBar", new Object[] {"f12", "f22"})
+			new MethodCall("testFoo", "f11", "f21"),
+			new MethodCall("testFoo", "f11", "f22"),
+			new MethodCall("testFoo", "f12", "f21"),
+			new MethodCall("testFoo", "f12", "f22"),
+			new MethodCall("testBar", "f11", "f21"),
+			new MethodCall("testBar", "f11", "f22"),
+			new MethodCall("testBar", "f12", "f21"),
+			new MethodCall("testBar", "f12", "f22")
 		});
 	}
 	
@@ -74,9 +74,9 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 		run(new FixtureBasedTestSuite() {
 			public FixtureProvider[] fixtureProviders() {
 				return new FixtureProvider[] {
-					new SimpleFixtureProvider(RECORDER_FIXTURE, new Object[] { recorder }),
-					new SimpleFixtureProvider(FIXTURE1, new Object[] { "f11", "f12" }),
-					new SimpleFixtureProvider(FIXTURE2, new Object[] { "f21", "f22" }),
+					new SimpleFixtureProvider(RECORDER_FIXTURE,  recorder ),
+					new SimpleFixtureProvider(FIXTURE1,  "f11", "f12" ),
+					new SimpleFixtureProvider(FIXTURE2,  "f21", "f22" ),
 				};
 			}
 
@@ -93,8 +93,8 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 //		System.out.println(CodeGenerator.generateMethodCallArray(recorder));
 		
 		recorder.verify(new MethodCall[] {
-			new MethodCall("testFoo", new Object[] {"f11", "f22"}),
-			new MethodCall("testBar", new Object[] {"f11", "f22"}),
+			new MethodCall("testFoo", "f11", "f22"),
+			new MethodCall("testBar", "f11", "f22"),
 		});
 	}
 	
@@ -111,8 +111,8 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 		run(new FixtureBasedTestSuite() {
 			public FixtureProvider[] fixtureProviders() {
 				return new FixtureProvider[] {
-						new SimpleFixtureProvider(FIXTURE1, new Object[] { "f11", "f12" }),
-						new SimpleFixtureProvider(FIXTURE2, new Object[] { "f21", "f22" }),
+						new SimpleFixtureProvider(FIXTURE1,  "f11", "f12" ),
+						new SimpleFixtureProvider(FIXTURE2,  "f21", "f22" ),
 				};
 			}
 			
@@ -138,8 +138,8 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 		final FixtureBasedTestSuite suite = new FixtureBasedTestSuite() {
 			public FixtureProvider[] fixtureProviders() {
 				return new FixtureProvider[] {
-					new SimpleFixtureProvider(FIXTURE1, new Object[] { "f11", "f12" }),
-					new SimpleFixtureProvider(FIXTURE2, new Object[] { "f21", "f22" }),
+					new SimpleFixtureProvider(FIXTURE1,  "f11", "f12" ),
+					new SimpleFixtureProvider(FIXTURE2,  "f21", "f22" ),
 				};
 			}
 

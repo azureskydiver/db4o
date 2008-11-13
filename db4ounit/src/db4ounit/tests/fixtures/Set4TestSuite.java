@@ -13,7 +13,7 @@ public class Set4TestSuite extends FixtureBasedTestSuite {
 	
 	public FixtureProvider[] fixtureProviders() {
 		return new FixtureProvider[] {
-			new SubjectFixtureProvider(new Object[] {
+			new SubjectFixtureProvider(
 					new Deferred4() {
 						public Object value() {
 							return new CollectionSet4();
@@ -23,14 +23,13 @@ public class Set4TestSuite extends FixtureBasedTestSuite {
 						public Object value() {
 							return new HashtableSet4();
 						}
-					}
 				}),
-			new MultiValueFixtureProvider(new Object[][] {
+			new MultiValueFixtureProvider(
 					new Object[] {},
 					new Object[] { "foo", "bar", "baz" },
 					new Object[] { "foo" },
 					new Object[] { new Integer(42), new Integer(-1) }
-				}),
+				),
 		};
 	}
 	

@@ -19,21 +19,9 @@ public class MethodCall {
 	public final String methodName;
 	public final Object[] args;
 	
-	public MethodCall(String methodName) {
-		this(methodName, new Object[0]);
-	}
-	
-	public MethodCall(String methodName, Object[] args) {
+	public <T> MethodCall(String methodName, T... args) {
 		this.methodName = methodName;
 		this.args = args;
-	}
-	
-	public MethodCall(String methodName, Object singleArg) {
-		this(methodName, new Object[] { singleArg });
-	}
-	
-	public MethodCall(String methodName, Object arg1, Object arg2) {
-		this(methodName, new Object[] { arg1, arg2 });
 	}
 
 	public String toString() {

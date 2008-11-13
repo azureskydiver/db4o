@@ -22,7 +22,8 @@ public class MockActivatable implements com.db4o.ta.Activatable {
 	}
 	
 	public void activate(ActivationPurpose purpose) {
-		record(new MethodCall("activate", purpose));
+		/* need to call with explicit Object[] so it sharpens correctly */
+		record(new MethodCall("activate", new Object[] { purpose }));
 	}
 	
 	private void record(MethodCall methodCall) {

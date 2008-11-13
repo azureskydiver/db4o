@@ -28,7 +28,7 @@ public class MethodCallRecorder implements Iterable4 {
 	 * 
 	 * @param expectedCalls
 	 */
-	public void verify(MethodCall[] expectedCalls) {
+	public void verify(MethodCall... expectedCalls) {
 		Iterator4Assert.areEqual(expectedCalls, iterator());
 	}
 }

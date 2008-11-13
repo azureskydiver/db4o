@@ -52,15 +52,15 @@ public class Iterators {
 		};
 	}
 	
-	public static Iterator4 concat(Iterator4[] array) {
-		return concat(iterate(array));
+	public static Iterator4 concat(Iterator4... array) {
+		return concat(iterate((Object[])array));
 	}
 	
 	public static Iterator4 concat(Iterator4 iterators) {
 		return new CompositeIterator4(iterators);
 	}
 	
-	public static Iterable4 concat(Iterable4[] iterables) {
+	public static Iterable4 concat(Iterable4... iterables) {
 		return concat(iterable(iterables));
 	}
 	
@@ -123,7 +123,7 @@ public class Iterators {
 		return concat(iterable(new Object[] { front, singletonIterable(last) }));
 	}
 	
-	public static Iterator4 iterate(Object[] array) {
+	public static <T> Iterator4 iterate(T... array) {
 		return new ArrayIterator4(array);
 	}
 
@@ -217,7 +217,7 @@ public class Iterators {
 		}));
 	}
 
-	public static Iterable4 crossProduct(Iterable4[] iterables) {
+	public static Iterable4 crossProduct(Iterable4... iterables) {
 		return crossProduct(iterables, 0, Iterators.EMPTY_ITERABLE);
 	}
 
@@ -240,7 +240,7 @@ public class Iterators {
 				});
 	}
 
-	public static Iterable4 iterable(final Object[] objects) {
+	public static <T> Iterable4 iterable(final T... objects) {
 		return new Iterable4() {
 			public Iterator4 iterator() {
 				return iterate(objects);

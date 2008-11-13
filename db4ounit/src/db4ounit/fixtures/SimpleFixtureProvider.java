@@ -9,11 +9,7 @@ public class SimpleFixtureProvider implements FixtureProvider {
 	private final FixtureVariable _variable;
 	private final Object[] _values;
 
-	public SimpleFixtureProvider(FixtureVariable variable, Object value) {
-		this(variable, new Object[] { value });
-	}
-
-	public SimpleFixtureProvider(FixtureVariable variable, Object[] values) {
+	public <T> SimpleFixtureProvider(FixtureVariable variable, T... values) {
 		_variable = variable;
 		_values = values;
 	}
