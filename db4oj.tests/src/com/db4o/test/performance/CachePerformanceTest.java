@@ -24,9 +24,12 @@ public class CachePerformanceTest {
 	public static class Item {
 
 		private int _id;
+		
+		private boolean[] _payLoad;
 
 		public Item(int id) {
 			_id = id;
+			_payLoad = new boolean[100];
         }
 		
 		public int id() {
@@ -44,7 +47,7 @@ public class CachePerformanceTest {
 			final StopWatch stopWatch = new StopWatch();
 			stopWatch.start();
 			
-			for (int i=0; i<10000; ++i) {
+			for (int i=0; i<1000; ++i) {
 				writeAFewItems();
 				queryAnotherFew();
 			}
