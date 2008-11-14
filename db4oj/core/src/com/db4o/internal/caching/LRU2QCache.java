@@ -11,7 +11,7 @@ import com.db4o.foundation.*;
  * Algorithm taken from here:
  * http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.34.2641
  * 
- * @decaf.ignore
+ * @decaf.ignore.jdk11
  */
 class LRU2QCache<K,V> implements Cache4<K,V>{
 	
@@ -54,35 +54,42 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 		if(_slots.size() < _maxSize){
 			_slots.put(key, newValue);
 		} else if(_a1.size() >= a1Threshold()){
-			K freedSlot = _a1.remove(0);
-			discard(freedSlot, onDiscard);
-			_slots.put(key, newValue);
+			replacePageOn(_a1, key, newValue, onDiscard);
 		} else {
-			K freedSlot = _am.remove(0);
-			discard(freedSlot, onDiscard);
-			_slots.put(key, newValue);
+			replacePageOn(_am, key, newValue, onDiscard);
 		}
 		_a1.add(key);
-		
 		
 		return newValue;
 	}
 
+	private void replacePageOn(final List<K> list, K newPageKey, final V newPageValue, Procedure4<V> onDiscard) {
+	    discard(list.get(0), onDiscard);
+	    list.remove(0);
+	    _slots.put(newPageKey, newPageValue);
+    }
+
 	private void discard(K key, Procedure4<V> onDiscard) {
-	    final V discardedPage = _slots.remove(key);
-	    if (null != onDiscard) {
-	    	onDiscard.apply(discardedPage);
-	    }
+		if (null != onDiscard) {
+			onDiscard.apply(_slots.get(key));
+		}
+	    _slots.remove(key);
     }
 
 	private int a1Threshold() {
 		return _maxSize / 4;
 	}
 	
-	public String toString(){
+	/**
+	 * @decaf.ignore
+	 */
+	public String toString() {
 		return "LRU2QCache(am=" + toString(_am)  + ", a1=" + toString(_a1) + ")";
 	}
 
+	/**
+	 * @decaf.ignore
+	 */
 	private String toString(Collection<K> list) {
 		return Iterators.toString(new JdkCollectionIterator4(list));
 	}

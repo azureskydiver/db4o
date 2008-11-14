@@ -7,7 +7,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.caching.*;
 
 /**
- * @decaf.ignore
+ * @decaf.ignore.jdk11
  */
 public abstract class IoAdapterWithCache extends IoAdapter {
 
@@ -222,11 +222,9 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 
 	private Page getPage(final long startAddress, final boolean loadFromDisk) throws Db4oIOException {
 		
-		final BooleanByRef isNewPage = new BooleanByRef(true);
 		final Page page = _cache.produce(pageAddressFor(startAddress), new Function4<Long, Page>() {
 			public Page apply(Long pageAddress) {
 				// in case that page is not found in the cache
-				isNewPage.value = true;
 				final Page newPage = new Page(_pageSize);
 				if (loadFromDisk) {
 					getPageFromDisk(newPage, pageAddress.longValue());

@@ -9,7 +9,7 @@ import db4ounit.*;
 import db4ounit.mocking.*;
 
 /**
- * @decaf.ignore
+ * @decaf.ignore.jdk11
  */
 public class CacheTestCase implements TestCase {
 	
@@ -72,7 +72,7 @@ public class CacheTestCase implements TestCase {
 
 		public void fillCache(final int from, final int to) {
 			for (int i=from; i<to; ++i) {
-				Assert.areEqual(Integer.toString(i), cache.produce(i, producer, null));
+				Assert.areEqual(new Integer(i).toString(), cache.produce(i, producer, null));
 			}
 		}
 		
