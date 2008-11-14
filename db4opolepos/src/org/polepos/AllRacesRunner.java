@@ -38,6 +38,7 @@ import org.polepos.runner.db4o.*;
 import org.polepos.teams.db4o.*;
 
 import com.db4o.config.*;
+import com.db4o.internal.caching.*;
 import com.db4o.io.*;
 
 /**
@@ -87,16 +88,35 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
             		}
             }),
             
+            configuredDb4oTeam(new ConfigurationSetting[]{
+            		new ConfigurationSetting(){
+						public void apply(Object config) {
+							((Configuration)config).io(new IoAdapterWithCache(new RandomAccessFileAdapter()){
+								@Override
+								protected Cache4 newCache(int pageSize) {
+									return CacheFactory.new2QCache(pageSize);
+								}
+								
+							});
+						}
+						public String name() {
+							return "LRU2QCachedIoAdapter";
+						}
+            			
+            		}
+            }),
 
             
-//             db4oTeam(JAR_TRUNK, null),
-            //  db4oTeam(Db4oVersions.JAR63, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
+//          db4oTeam(JAR_TRUNK, null),
+//          db4oTeam(Db4oVersions.JAR63, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
 		};
 	}
 
 	public Circuit[] circuits() {
-		return new Circuit[] { 
+		return new Circuit[] {
+				
 				 new Melbourne(),
+				 
 				 new Sepang(),
 				 new Bahrain(),
 				 new Imola(),
