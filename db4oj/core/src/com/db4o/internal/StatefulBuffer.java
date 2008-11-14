@@ -298,7 +298,7 @@ public final class StatefulBuffer extends ByteArrayBuffer {
         _addressOffset += length;
     }
     
-    public void writeForward() {
+    public final void writeForward() {
         write();
         _addressOffset += i_length;
         _offset = 0;

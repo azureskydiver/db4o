@@ -16,6 +16,9 @@ import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
+import com.db4o.internal.reflect.FieldAccessor;
+import com.db4o.internal.reflect.LenientFieldAccessor;
+import com.db4o.internal.reflect.StrictFieldAccessor;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.query.*;
@@ -65,6 +68,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     private ModificationAware _modificationChecker = AlwaysModified.INSTANCE;
     
+    private FieldAccessor _fieldAccessor;
+    
     public final ObjectContainerBase stream() {
     	return _container;
     }
@@ -107,7 +112,18 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	_container = container;
     	_classReflector = claxx;
         _index = createIndexStrategy();
-        _classIndexed = true;
+        _classIndexed = true;       
+       
+        if (_container == null || _container.config().exceptionsOnNotStorable()) {
+        	_fieldAccessor = new StrictFieldAccessor();	
+        }
+        else {
+        	_fieldAccessor = new LenientFieldAccessor();
+        }        
+    }
+    
+    FieldAccessor fieldAccessor() {
+    	return _fieldAccessor;
     }
 
     private FieldAwareTypeHandler createDefaultTypeHandler() {
@@ -1707,7 +1723,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
 	private Object staticReflectFieldValue(final ReflectField reflectField) {
-		return reflectField.get(null);
+		return _fieldAccessor.get(reflectField, null);
 	}
 
 	private void setStaticClass(Transaction trans, StaticClass sc) {
@@ -1764,7 +1780,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		
 		if(newValue == null){
             try{
-                reflectField.set(null, existingField.value);
+            	_fieldAccessor.set(reflectField, null,  existingField.value);
             }catch(Exception ex){
                 // fail silently
             	// TODO: why?
