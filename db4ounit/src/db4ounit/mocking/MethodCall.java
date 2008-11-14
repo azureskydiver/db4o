@@ -19,7 +19,7 @@ public class MethodCall {
 	public final String methodName;
 	public final Object[] args;
 	
-	public <T> MethodCall(String methodName, T... args) {
+	public MethodCall(String methodName, Object... args) {
 		this.methodName = methodName;
 		this.args = args;
 	}
