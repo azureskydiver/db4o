@@ -22,11 +22,14 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 	private final Map<K,V> _slots;
 	
 	private final int _maxSize;
+
+	private final int _a1_threshold;
 	
 	LRU2QCache(int maxSize) {
 		_maxSize = maxSize;
+		_a1_threshold = _maxSize / 4;
 		_am = new ArrayList<K>();
-		_a1 = new ArrayList<K>(a1Threshold());
+		_a1 = new ArrayList<K>(_a1_threshold);
 		_slots = new HashMap<K, V>(maxSize);
 	}
 	
@@ -50,23 +53,27 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 			return _slots.get(key);
 		}
 		
-		final V newValue = producer.apply(key);
-		if(_slots.size() < _maxSize){
-			_slots.put(key, newValue);
-		} else if(_a1.size() >= a1Threshold()){
-			replacePageOn(_a1, key, newValue, onDiscard);
-		} else {
-			replacePageOn(_am, key, newValue, onDiscard);
+		if(_slots.size() >= _maxSize){
+			discardPage(onDiscard);
 		}
-		_a1.add(key);
 		
-		return newValue;
+		final V value = producer.apply(key);
+		_slots.put(key, value);
+		_a1.add(key);
+		return value;
 	}
 
-	private void replacePageOn(final List<K> list, K newPageKey, final V newPageValue, Procedure4<V> onDiscard) {
+	private void discardPage(Procedure4<V> onDiscard) {
+	    if(_a1.size() >= _a1_threshold) {
+	    	discardPageFrom(_a1, onDiscard);
+	    } else {
+	    	discardPageFrom(_am, onDiscard);
+	    }
+    }
+
+	private void discardPageFrom(final List<K> list, Procedure4<V> onDiscard) {
 	    discard(list.get(0), onDiscard);
 	    list.remove(0);
-	    _slots.put(newPageKey, newPageValue);
     }
 
 	private void discard(K key, Procedure4<V> onDiscard) {
@@ -76,22 +83,12 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 	    _slots.remove(key);
     }
 
-	private int a1Threshold() {
-		return _maxSize / 4;
-	}
-	
-	/**
-	 * @decaf.ignore
-	 */
 	public String toString() {
 		return "LRU2QCache(am=" + toString(_am)  + ", a1=" + toString(_a1) + ")";
 	}
 
-	/**
-	 * @decaf.ignore
-	 */
 	private String toString(Collection<K> list) {
-		return Iterators.toString(new JdkCollectionIterator4(list));
+		return Iterators.toString(Iterators.iterate(list));
 	}
 
 	public Iterator<V> iterator() {

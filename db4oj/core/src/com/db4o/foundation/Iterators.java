@@ -123,6 +123,14 @@ public class Iterators {
 		return concat(iterable(new Object[] { front, singletonIterable(last) }));
 	}
 	
+	/**
+	 * @sharpen.remove
+	 * @decaf.ignore.jdk11
+	 */
+	public static <T> Iterator4 iterator(java.util.Collection<T> c) {
+		return new JdkCollectionIterator4(c);
+	}
+	
 	public static <T> Iterator4 iterate(T... array) {
 		return new ArrayIterator4(array);
 	}
