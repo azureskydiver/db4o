@@ -2,12 +2,9 @@
 
 package com.db4o.foundation;
 
-
 /**
  * @exclude
  */
 public interface Procedure4<T> {
-    
     void apply(T arg);
-
 }
