@@ -2,6 +2,8 @@
 
 package com.db4o.cs.config;
 
+import com.db4o.messaging.MessageRecipient;
+
 
 
 /**
@@ -94,5 +96,16 @@ public interface NetworkingConfiguration {
 	 * @sharpen.property
 	 */
 	public void maxBatchQueueSize(int maxSize);
+	
 
+	/**
+	 * sets the MessageRecipient to receive Client Server messages. <br>
+	 * <br>
+	 * This setting can be used on both client and server.<br><br>
+	 * @param messageRecipient
+	 *            the MessageRecipient to be used
+	 *            
+	 * @sharpen.property
+	 */
+	void messageRecipient(MessageRecipient messageRecipient);
 }

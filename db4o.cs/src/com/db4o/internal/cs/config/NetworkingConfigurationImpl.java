@@ -2,9 +2,9 @@
 
 package com.db4o.internal.cs.config;
 
-import com.db4o.cs.config.*;
-import com.db4o.foundation.*;
-import com.db4o.internal.*;
+import com.db4o.cs.config.NetworkingConfiguration;
+import com.db4o.internal.Config4Impl;
+import com.db4o.messaging.MessageRecipient;
 
 public class NetworkingConfigurationImpl implements NetworkingConfiguration {
 
@@ -19,28 +19,28 @@ public class NetworkingConfigurationImpl implements NetworkingConfiguration {
 	}
 
 	public void batchMessages(boolean flag) {
-		// TODO Auto-generated method stub
-		throw new NotImplementedException();
+		_config.batchMessages(flag);
+		
 	}
 
 	public void maxBatchQueueSize(int maxSize) {
-		// TODO Auto-generated method stub
-		throw new NotImplementedException();
+		_config.maxBatchQueueSize(maxSize);
 	}
 
 	public void singleThreadedClient(boolean flag) {
-		// TODO Auto-generated method stub
-		throw new NotImplementedException();
+		_config.singleThreadedClient(flag);
 	}
 
 	public void timeoutClientSocket(int milliseconds) {
-		// TODO Auto-generated method stub
-		throw new NotImplementedException();
+		_config.timeoutClientSocket(milliseconds);
 	}
 
 	public void timeoutServerSocket(int milliseconds) {
-		// TODO Auto-generated method stub
-		throw new NotImplementedException();
+		_config.timeoutServerSocket(milliseconds);
+	}
+	
+	public void messageRecipient(MessageRecipient messageRecipient) {
+		_config.setMessageRecipient(messageRecipient);
 	}
 
 }
