@@ -13,6 +13,7 @@ import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
+import com.db4o.internal.reflect.FieldAccessor;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -320,7 +321,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 			if (null == _reflectField) {
 				return null;
 			}
-			return _reflectField.get(onObject);
+			return fieldAccessor().get( _reflectField, onObject);
 		}
 		return getOrCreate(trans, onObject);
 	}
@@ -436,7 +437,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     	return _isPrimitive;
     }
 
-    public void deactivate(Transaction a_trans, Object a_onObject, ActivationDepth a_depth) {
+    public void deactivate(Transaction trans, Object onObject, ActivationDepth depth) {
         
     	if (!alive()) {
             return;
@@ -446,17 +447,21 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		if (_isPrimitive && !_isArray) {
 			if (!isEnumClass) {
 				Object nullValue = _reflectField.getFieldType().nullValue();
-				_reflectField.set(a_onObject, nullValue);
+				fieldAccessor().set(_reflectField, onObject, nullValue);
 			}
 			return;
 		}
-		if (a_depth.requiresActivation()) {
-			cascadeActivation(a_trans, a_onObject, a_depth);
+		if (depth.requiresActivation()) {
+			cascadeActivation(trans, onObject, depth);
 		}
 		if (!isEnumClass) {
-			_reflectField.set(a_onObject, null);
+			fieldAccessor().set(_reflectField, onObject, null);
 		}
     }
+
+	private FieldAccessor fieldAccessor() {
+		return _containingClass.fieldAccessor();
+	}
 
     /** @param isUpdate */
     public void delete(DeleteContextImpl context, boolean isUpdate) throws FieldIndexException {
@@ -575,7 +580,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     /** @param trans */
     public Object getOn(Transaction trans, Object onObject) {
 		if (alive()) {
-			return _reflectField.get(onObject);
+			return fieldAccessor().get( _reflectField, onObject);
 		}
 		return null;
 	}
@@ -588,10 +593,10 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		if (!alive()) {
 			return null;
 		}
-		Object obj = _reflectField.get(onObject);
+		Object obj = fieldAccessor().get( _reflectField, onObject);
 		if (_db4oType != null && obj == null) {
 			obj = _db4oType.createDefault(trans);
-			_reflectField.set(onObject, obj);
+			fieldAccessor().set(_reflectField, onObject, obj);
 		}
 		return obj;
 	}
@@ -917,7 +922,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     public void set(Object onObject, Object obj){
     	// TODO: remove the following if and check callers
     	if (null == _reflectField) return;
-    	_reflectField.set(onObject, obj);
+    	fieldAccessor().set(_reflectField, onObject, obj);
     }
 
     void setName(String a_name) {
