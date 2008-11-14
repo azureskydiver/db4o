@@ -25,9 +25,20 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 
 	private Cache4<Long, Page> _cache;
 
-	private static int DEFAULT_PAGE_SIZE = 1024;
+	private ObjectPool<Page> _pagePool;
+	
+	private static int FACTOR = 1;
 
-	private static int DEFAULT_PAGE_COUNT = 64;
+	private static int DEFAULT_PAGE_SIZE = 1024 * FACTOR;
+
+	private static int DEFAULT_PAGE_COUNT = 64 * FACTOR;
+
+	private Procedure4<Page> _onDiscardPage = new Procedure4<Page>() {
+    	public void apply(Page discardedPage) {
+    		flushPage(discardedPage);
+    		_pagePool.returnObject(discardedPage);
+        }
+    };
 
 	/**
 	 * Creates an instance of CachedIoAdapter with the default page size and
@@ -76,16 +87,25 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 	 *            allocated amount of pages
 	 */
 	private IoAdapterWithCache(String path, boolean lockFile, long initialLength, boolean readOnly, IoAdapter io,
-	        Cache4<Long, Page> cache, int pageSize) throws Db4oIOException {
+	        Cache4<Long, Page> cache, int pageCount, int pageSize) throws Db4oIOException {
 		_readOnly = readOnly;
 		_pageSize = pageSize;
 
 		_io = io.open(path, lockFile, initialLength, readOnly);
 
+		_pagePool = new FixedObjectPool<Page>(newPagePool(pageCount));
 		_cache = cache;
 		_position = initialLength;
 		_fileLength = _io.getLength();
 	}
+
+	private Page[] newPagePool(int pageCount) {
+	    final Page[] pages = new Page[pageCount];
+		for (int i=0; i<pages.length; ++i) {
+			pages[i] = new Page(_pageSize);
+		}
+	    return pages;
+    }
 
 	/**
 	 * Creates and returns a new CachedIoAdapter <br>
@@ -98,7 +118,7 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 	 *            initial file length, new writes will start from this point
 	 */
 	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-		return new IoAdapterWithCache(path, lockFile, initialLength, readOnly, _io, newCache(_pageCount), _pageSize) {
+		return new IoAdapterWithCache(path, lockFile, initialLength, readOnly, _io, newCache(_pageCount), _pageCount, _pageSize) {
 			@Override
 			protected Cache4 newCache(int pageCount) {
 				throw new IllegalStateException();
@@ -220,24 +240,27 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 		return _io.delegatedIoAdapter();
 	}
 
+	final Function4<Long, Page> _producerFromDisk = new Function4<Long, Page>() {
+		public Page apply(Long pageAddress) {
+			// in case that page is not found in the cache
+			final Page newPage = _pagePool.borrowObject();
+			getPageFromDisk(newPage, pageAddress.longValue());
+			return newPage;
+		}
+	};
+	
+	final Function4<Long, Page> _producerFromCache = new Function4<Long, Page>() {
+		public Page apply(Long pageAddress) {
+			// in case that page is not found in the cache
+			final Page newPage = _pagePool.borrowObject();
+			resetPageAddress(newPage, pageAddress.longValue());
+			return newPage;
+		}
+	};
+	
 	private Page getPage(final long startAddress, final boolean loadFromDisk) throws Db4oIOException {
-		
-		final Page page = _cache.produce(pageAddressFor(startAddress), new Function4<Long, Page>() {
-			public Page apply(Long pageAddress) {
-				// in case that page is not found in the cache
-				final Page newPage = new Page(_pageSize);
-				if (loadFromDisk) {
-					getPageFromDisk(newPage, pageAddress.longValue());
-				} else {
-					resetPageAddress(newPage, pageAddress.longValue());
-				}
-				return newPage;
-			}
-		}, new Procedure4<Page>() {
-			public void apply(Page discardedPage) {
-				flushPage(discardedPage);
-            }
-		});
+		final Function4<Long, Page> producer = loadFromDisk ? _producerFromDisk : _producerFromCache;
+		final Page page = _cache.produce(pageAddressFor(startAddress), producer, _onDiscardPage);
 		page.ensureEndAddress(_fileLength);
 		return page;
 	}
