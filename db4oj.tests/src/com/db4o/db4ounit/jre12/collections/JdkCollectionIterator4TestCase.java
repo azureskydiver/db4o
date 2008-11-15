@@ -23,7 +23,7 @@ public class JdkCollectionIterator4TestCase implements TestCase{
         for (int i = 0; i < content.length; i++) {
             collection.add(content[i]);    
         }
-        Iterator4 iterator = Iterators.iterate(collection);
+        Iterator4 iterator = Iterators.iterator(collection);
         Iterator4Assert.areEqual(content, iterator); 
     }
 
