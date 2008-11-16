@@ -7,7 +7,7 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  * 
- * @decaf.ignore.jdk11
+ * @decaf.ignore
  */
 public interface Cache4<K, V> extends Iterable<V> {
 	

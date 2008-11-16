@@ -12,7 +12,7 @@ public class ObjectPoolTestCase implements TestCase {
 		final Object o2 = new Object();
 		final Object o3 = new Object();
 		
-		final ObjectPool<Object> pool = new FixedObjectPool<Object>(o1, o2, o3);
+		final ObjectPool<Object> pool = new SimpleObjectPool<Object>(o1, o2, o3);
 		Assert.areSame(o1, pool.borrowObject());
 		Assert.areSame(o2, pool.borrowObject());
 		Assert.areSame(o3, pool.borrowObject());
@@ -26,13 +26,4 @@ public class ObjectPoolTestCase implements TestCase {
 		pool.returnObject(o2);
 		Assert.areSame(o2, pool.borrowObject());
 	}
-	
-	public void testCantReturnObjectThatDoesnBelongToPool() {
-		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
-			public void run() {
-				new FixedObjectPool<Object>(new Object()).returnObject(new Object());
-			}
-		});
-	}
-
 }

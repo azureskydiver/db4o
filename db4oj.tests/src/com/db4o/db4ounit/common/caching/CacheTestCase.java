@@ -9,7 +9,7 @@ import db4ounit.*;
 import db4ounit.mocking.*;
 
 /**
- * @decaf.ignore.jdk11
+ * @decaf.ignore
  */
 public class CacheTestCase implements TestCase {
 	

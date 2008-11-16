@@ -11,13 +11,13 @@ import com.db4o.foundation.*;
  * Algorithm taken from here:
  * http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.34.2641
  * 
- * @decaf.ignore.jdk11
+ * @decaf.ignore
  */
 class LRU2QCache<K,V> implements Cache4<K,V>{
 	
-	private final List<K> _am;
+	private final LinkedList<K> _am;
 	
-	private final List<K> _a1;
+	private final LinkedList<K> _a1;
 	
 	private final Map<K,V> _slots;
 	
@@ -28,8 +28,8 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 	LRU2QCache(int maxSize) {
 		_maxSize = maxSize;
 		_a1_threshold = _maxSize / 4;
-		_am = new ArrayList<K>();
-		_a1 = new ArrayList<K>(_a1_threshold);
+		_am = new LinkedList<K>();
+		_a1 = new LinkedList<K>();
 		_slots = new HashMap<K, V>(maxSize);
 	}
 	
@@ -39,17 +39,13 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 			throw new ArgumentNullException();
 		}
 		
-		final int amIndex = _am.indexOf(key);
-		if(amIndex >= 0){
-			// move key ToFirst
-			_am.remove(amIndex);
-			_am.add(key);
+		if(_am.remove(key)){
+			_am.addLast(key);
 			return _slots.get(key);
 		}
 		
-		if(_a1.contains(key)){
-			_a1.remove(key);
-			_am.add(key);
+		if(_a1.remove(key)){
+			_am.addLast(key);
 			return _slots.get(key);
 		}
 		
@@ -71,9 +67,9 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 	    }
     }
 
-	private void discardPageFrom(final List<K> list, Procedure4<V> onDiscard) {
-	    discard(list.get(0), onDiscard);
-	    list.remove(0);
+	private void discardPageFrom(final LinkedList<K> list, Procedure4<V> onDiscard) {
+	    discard(list.getFirst(), onDiscard);
+	    list.removeFirst();
     }
 
 	private void discard(K key, Procedure4<V> onDiscard) {
@@ -94,5 +90,4 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 	public Iterator<V> iterator() {
 		return _slots.values().iterator();
     }
-	
 }
