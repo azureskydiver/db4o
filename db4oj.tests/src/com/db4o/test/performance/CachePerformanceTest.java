@@ -64,7 +64,8 @@ public class CachePerformanceTest {
 		return new IoAdapterWithCache(new RandomAccessFileAdapter()) {
 			@Override
 			protected Cache4 newCache(int pageCount) {
-				return CacheFactory.new2QCache(pageCount);
+				return CacheFactory.newLRUCache(pageCount);
+//				return CacheFactory.new2QCache(pageCount);
 			}
     	};
     }

@@ -193,9 +193,4 @@ public class CacheTestCase implements TestCase {
 		return new MethodCall("apply", arg);
 	}
 
-	
-	
-	
-	
-
 }
