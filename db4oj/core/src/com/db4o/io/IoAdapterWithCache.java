@@ -7,7 +7,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.caching.*;
 
 /**
- * @decaf.ignore.jdk11
+ * @decaf.ignore
  */
 public abstract class IoAdapterWithCache extends IoAdapter {
 
@@ -27,11 +27,9 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 
 	private ObjectPool<Page> _pagePool;
 	
-	private static int FACTOR = 1;
+	private static int DEFAULT_PAGE_SIZE = 1024;
 
-	private static int DEFAULT_PAGE_SIZE = 1024 * FACTOR;
-
-	private static int DEFAULT_PAGE_COUNT = 64 * FACTOR;
+	private static int DEFAULT_PAGE_COUNT = 64;
 
 	private Procedure4<Page> _onDiscardPage = new Procedure4<Page>() {
     	public void apply(Page discardedPage) {
@@ -93,7 +91,7 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 
 		_io = io.open(path, lockFile, initialLength, readOnly);
 
-		_pagePool = new FixedObjectPool<Page>(newPagePool(pageCount));
+		_pagePool = new SimpleObjectPool<Page>(newPagePool(pageCount));
 		_cache = cache;
 		_position = initialLength;
 		_fileLength = _io.getLength();
@@ -160,7 +158,7 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 		int bytesToRead = length;
 		int totalRead = 0;
 		while (bytesToRead > 0) {
-			final Page page = getPage(startAddress, true);
+			final Page page = getPage(startAddress, _producerFromDisk);
 			final int readBytes = page.read(buffer, totalRead, startAddress, bytesToRead);
 			if (readBytes <= 0) {
 				break;
@@ -244,7 +242,7 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 		public Page apply(Long pageAddress) {
 			// in case that page is not found in the cache
 			final Page newPage = _pagePool.borrowObject();
-			getPageFromDisk(newPage, pageAddress.longValue());
+			loadPage(newPage, pageAddress.longValue());
 			return newPage;
 		}
 	};
@@ -260,10 +258,14 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 	
 	private Page getPage(final long startAddress, final boolean loadFromDisk) throws Db4oIOException {
 		final Function4<Long, Page> producer = loadFromDisk ? _producerFromDisk : _producerFromCache;
-		final Page page = _cache.produce(pageAddressFor(startAddress), producer, _onDiscardPage);
+		return getPage(startAddress, producer);
+	}
+
+	private Page getPage(final long startAddress, final Function4<Long, Page> producer) {
+	    final Page page = _cache.produce(pageAddressFor(startAddress), producer, _onDiscardPage);
 		page.ensureEndAddress(_fileLength);
 		return page;
-	}
+    }
 
 	private Long pageAddressFor(long startAddress) {
 		return (startAddress / _pageSize) * _pageSize;
@@ -288,7 +290,7 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 		writePageToDisk(page);
 	}
 
-	private void getPageFromDisk(Page page, long pos) throws Db4oIOException {
+	private void loadPage(Page page, long pos) throws Db4oIOException {
 		long startAddress = pos - pos % _pageSize;
 		page.startAddress(startAddress);
 		ioSeek(page._startAddress);
@@ -336,7 +338,7 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 
 		long _endAddress;
 
-		final int _bufferSize;
+		private final int _bufferSize;
 
 		boolean _dirty;
 
@@ -406,14 +408,6 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 			}
 			_dirty = true;
 			return writtenBytes;
-		}
-
-		boolean contains(long address) {
-			return (_startAddress != -1 && address >= _startAddress && address < _startAddress + _bufferSize);
-		}
-
-		boolean isFree() {
-			return _startAddress == -1;
 		}
 	}
 

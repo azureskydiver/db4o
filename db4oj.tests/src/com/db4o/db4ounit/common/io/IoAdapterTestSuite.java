@@ -6,21 +6,41 @@ import db4ounit.fixtures.*;
 
 public class IoAdapterTestSuite extends FixtureBasedTestSuite {
 
+	/**
+	 * @decaf.replaceFirst return jdk11FixtureProviders();
+	 */
 	@Override
 	public FixtureProvider[] fixtureProviders() {
-		return new FixtureProvider[] {
+		return allFixtureProviders();
+	}
+	
+	@SuppressWarnings("unused")
+    private FixtureProvider[] jdk11FixtureProviders() {
+	    return new FixtureProvider[] {
 			new SubjectFixtureProvider(new Object[] {
 				new RandomAccessFileAdapter(),
 				new CachedIoAdapter(new RandomAccessFileAdapter()),
-//				new IoAdapterWithCache(new RandomAccessFileAdapter()) {
-//					@Override
-//					protected Cache4 newCache(int pageCount) {
-//						return CacheFactory.new2QCache(pageCount);
-//					}
-//				}
 			}),
 		};
-	}
+    }
+
+	/**
+	 * @decaf.ignore
+	 */
+	private FixtureProvider[] allFixtureProviders() {
+	    return new FixtureProvider[] {
+			new SubjectFixtureProvider(new Object[] {
+				new RandomAccessFileAdapter(),
+				new CachedIoAdapter(new RandomAccessFileAdapter()),
+				new IoAdapterWithCache(new RandomAccessFileAdapter()) {
+					@Override
+					protected com.db4o.internal.caching.Cache4 newCache(int pageCount) {
+						return com.db4o.internal.caching.CacheFactory.new2QCache(pageCount);
+					}
+				}
+			}),
+		};
+    }
 	
 //	@Override
 //	public int[] combinationToRun() {
