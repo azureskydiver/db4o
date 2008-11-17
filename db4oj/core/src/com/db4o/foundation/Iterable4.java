@@ -5,6 +5,6 @@ package com.db4o.foundation;
 /**
  * @sharpen.ignore
  */
-public interface Iterable4 {
+public interface Iterable4<T> {
 	public Iterator4 iterator();
 }
