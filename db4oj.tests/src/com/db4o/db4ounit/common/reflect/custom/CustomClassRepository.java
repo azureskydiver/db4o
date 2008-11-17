@@ -72,6 +72,6 @@ public class CustomClassRepository {
 	}
 
 	public Iterator4 iterator() {
-		return _classes.values();
+		return _classes.valuesIterator();
 	}
 }
