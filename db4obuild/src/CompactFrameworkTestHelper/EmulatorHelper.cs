@@ -9,30 +9,38 @@ namespace CompactFrameworkTestHelper
 {
 	class EmulatorHelper
 	{
-		private static readonly int ITERATION_FINISHED_HRESULT = -2147024637;
+		private const int ITERATION_FINISHED_HRESULT = -2147024637;
+
 		public static readonly string DEVICE_ID = "{DE425A95-FBB8-46CB-8DFD-89867130F732}";
 		public static readonly string POCKET_PC_PLATFORM_ID = "3C41C503-53EF-4c2a-8DD4-A8217CAD115E";
 
-		public static void CopyFiles(FileDeployer deployer, string desktoPath, string devicePath)
+		public static void CopyFiles(FileDeployer deployer, string desktoPath, string devicePath, string deployFileFilter)
 		{
-			foreach (string file in Directory.GetFiles(Path.GetDirectoryName(desktoPath), Path.GetFileName(desktoPath)))
-			{
-                string extension = Path.GetExtension(file);
-                if (extension.Equals(".dll") || extension.Equals(".exe"))
-                {
+		    string[] filters = deployFileFilter.Split(',');
+		    foreach (string file in Directory.GetFiles(Path.GetDirectoryName(desktoPath), Path.GetFileName(desktoPath)))
+		    {
+		        if (AcceptFile(file, filters))
+			    {
+                    Console.WriteLine("Deploying file: {0} to {1}", file, devicePath);
                     deployer.SendFile(file, devicePath + Path.GetFileName(file));
                 }
-			}
+		    }
 		}
 
-        public static void PublishTestLog(FileDeployer deployer, string path)
+	    private static bool AcceptFile(string file, string[] filters)
+	    {
+	        string extension = Path.GetExtension(file);
+	        return Array.Exists(filters, delegate(string candidate) { return extension.Equals("." + candidate); });
+	    }
+
+	    public static void PublishTestLog(FileDeployer deployer, string path)
         {
             string logFile = Path.Combine(path, "db4ounit.log");
             deployer.ReceiveFile(@"\db4ounit.log", logFile);
             try
             {
                 StreamReader reader = File.OpenText(logFile);
-                string line = "";
+                string line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     Console.Error.WriteLine(line);

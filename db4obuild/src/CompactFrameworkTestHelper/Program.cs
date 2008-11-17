@@ -62,11 +62,24 @@ namespace CompactFrameworkTestHelper
                 Help();
                 return INVALID_PROGRAM_PARAMETERS;
             }
-            
-			int ret;
+
+		    string cfAppName = arguments["app.name"];
+            if (string.IsNullOrEmpty(cfAppName))
+            {
+                Help();
+                return INVALID_PROGRAM_PARAMETERS;
+            }
+
+		    string deployFileFilter = AppendExtraFilterForDeploy(arguments["deploy.extra.files"]);
+		    int ret;
 			try
 			{
-			    Console.WriteLine("CompactFrameworkTestHelper - Copyright (C) 2004-2008  db4objects Inc.\r\n");
+			    Console.WriteLine("CompactFrameworkTestHelper v1.1 - Copyright (C) 2004-2008  db4objects Inc.\r\n");
+                Console.WriteLine("\tCF App: {0}", cfAppName);
+                Console.WriteLine("\tCF Target Version: {0}", targetFrameworkVersion);
+                Console.WriteLine("\tFolder: {0}", db4oDistPath);
+                Console.WriteLine("\tDeployed File Types: {0}", deployFileFilter);
+                Console.WriteLine("\tArguments: {0}", arguments["app.args"] ?? "no argument");
                 
                 ConfigureEmulator(arguments["dir.storagecard"]);
 
@@ -77,30 +90,28 @@ namespace CompactFrameworkTestHelper
 
 				try
 				{
-					string db4oTests = "Db4objects.Db4o.Tests.exe";
+                    EmulatorHelper.CopyFiles(device.GetFileDeployer(), Path.Combine(db4oDistPath, "*"), DeviceTestPath, deployFileFilter);
 
-                    EmulatorHelper.CopyFiles(device.GetFileDeployer(), Path.Combine(db4oDistPath, "*"), DeviceTestPath);
-
-					RemoteProcess process = device.GetRemoteProcess();
-					if (process.Start(DeviceTestPath + db4oTests, "run"))
-					{
-						while (!process.HasExited())
-						{
-							Thread.Sleep(2000);
-						}
+                    RemoteProcess process = device.GetRemoteProcess();
+                    if (process.Start(DeviceTestPath + cfAppName, "\"" + arguments["app.args"] ?? String.Empty + "\""))
+                    {
+                        while (!process.HasExited())
+                        {
+                            Thread.Sleep(2000);
+                        }
 
                         EmulatorHelper.PublishTestLog(device.GetFileDeployer(), db4oDistPath);
 
-						ret = process.GetExitCode();
-						if (ret != 0)
-						{
-							Console.WriteLine("{0} returned: {1}", db4oTests, ret);
-						}
-					}
-					else
-					{
-						ret = FAILED_LAUNCHING_TESTS;
-					}
+                        ret = process.GetExitCode();
+                        if (ret != 0)
+                        {
+                            Console.WriteLine("{0} returned: {1}", cfAppName, ret);
+                        }
+                    }
+                    else
+                    {
+                        ret = FAILED_LAUNCHING_TESTS;
+                    }
 				}
 				finally
 				{
@@ -111,27 +122,32 @@ namespace CompactFrameworkTestHelper
 			}
 			catch(Exception ex)
 			{
-				Console.WriteLine("Error running Db4objects.Db4o.Tests.exe\r\n{0}", ex);
+				Console.WriteLine("Error running {0}\r\n{1}", cfAppName, ex);
 				ret = EXCEPTION_RUNNING_TESTS;
 			}
 
 			return ret;
 		}
 
+	    private static string AppendExtraFilterForDeploy(string deployFileFilter)
+	    {
+	        return "dll,exe," + deployFileFilter ?? "";
+	    }
+
 	    private static void ConfigureEmulator(string storageCard)
 	    {
             IDeviceEmulatorManagerVMID emulator = EmulatorHelper.GetVirtualDevice();
 
-            ResetConfiguration(emulator);
+            //ResetConfiguration(emulator);
 	        ConfigureStorageCard(emulator, storageCard);
 	    }
 
-	    private static void ConfigureStorageCard(IDeviceEmulatorManagerVMID emulator, string storageCard)
+	    private static void ConfigureStorageCard(IDeviceEmulatorManagerVMID emulator, string storageCardPath)
 	    {
-            if (storageCard != null)
+            if (!String.IsNullOrEmpty(storageCardPath))
             {
                 emulator.Connect();
-                EmulatorHelper.SetStorageCardPath(emulator, storageCard);
+                EmulatorHelper.SetStorageCardPath(emulator, storageCardPath);
                 emulator.Shutdown(SaveState);
             }
 	    }
@@ -146,7 +162,7 @@ namespace CompactFrameworkTestHelper
 	    private static void Help()
 		{
 		    Console.WriteLine("Invalid program parameter count.\r\n" +
-		                        "Use: {0} [-version]=[2.0 | 3.5] <-dir.dll.compact>=<path to db4o .NET Compact Framework distribution> \r\n\r\n", 
+		                        "Use: {0} [-version]=[2.0 | 3.5] <-app.name>=<executable name> <-dir.dll.compact>=<path to db4o .NET Compact Framework distribution> \r\n\r\n", 
                                 Assembly.GetExecutingAssembly().GetName().Name);
 		}
 
