@@ -38,21 +38,15 @@ public class DynamicFixtureTestCase implements TestSuiteBuilder {
 	/**
 	 * The test suite which binds together fixture providers and test units.
 	 */
-	public static class FooTestSuite extends FixtureBasedTestSuite {
+	public static class FooTestSuite extends FixtureTestSuiteDescription {{
 
-		public FixtureProvider[] fixtureProviders() {
-			return new FixtureProvider[] {
-				new MultiValueFixtureProvider(new Object[][] {
-					new Object[] { "foo", "bar" },
-					new Object[] { new Integer(1), new Integer(42) },
-				}),
-			};
-		}
+		fixtureProviders(
+			new MultiValueFixtureProvider(new Object[][] {
+				new Object[] { "foo", "bar" },
+				new Object[] { 1, 42 },
+			})
+		);
 	
-		public Class[] testUnits() {
-			return new Class[] {
-				FooTestUnit.class,
-			};
-		}
-	}
+		testUnits(FooTestUnit.class);
+	}}
 }
