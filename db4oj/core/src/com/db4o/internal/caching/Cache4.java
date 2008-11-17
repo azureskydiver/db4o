@@ -6,8 +6,6 @@ import com.db4o.foundation.*;
 
 /**
  * @exclude
- * 
- * @decaf.ignore
  */
 public interface Cache4<K, V> extends Iterable<V> {
 	

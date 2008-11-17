@@ -6,12 +6,10 @@ import com.db4o.foundation.*;
 import com.db4o.internal.caching.*;
 
 import db4ounit.*;
+import db4ounit.fixtures.*;
 import db4ounit.mocking.*;
 
-/**
- * @decaf.ignore
- */
-public class CacheTestCase implements TestCase {
+public class CacheTestUnit implements TestCase {
 	
 	public void testOnDiscard() {
 		final TestPuppet puppet = new TestPuppet();
@@ -37,7 +35,7 @@ public class CacheTestCase implements TestCase {
 	
 	public void testProduce(){
 		final Object obj = new Object();
-		Cache4<Integer, Object> cache = CacheFactory.new2QCache(10);
+		Cache4<Integer, Object> cache = SubjectFixtureProvider.value();
 		Object value = cache.produce(1, new Function4<Integer, Object> () {
 			public Object apply(Integer key) {
 				return obj;
@@ -56,7 +54,7 @@ public class CacheTestCase implements TestCase {
 			}
 		};
 		
-		final Cache4<Integer, String> cache = CacheFactory.new2QCache(10);
+		final Cache4<Integer, String> cache = SubjectFixtureProvider.value();
 		
 		public void fillCache() {
 			fillCache(0, 10);

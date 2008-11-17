@@ -8,16 +8,14 @@ import com.db4o.foundation.*;
 
 /**
  * @exclude
- * Algorithm taken from here:
+ * Simplified version of the algorithm taken from here:
  * http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.34.2641
- * 
- * @decaf.ignore
  */
 class LRU2QCache<K,V> implements Cache4<K,V>{
 	
-	private final LinkedList<K> _am;
+	private final CircularBuffer4<K> _am;
 	
-	private final LinkedList<K> _a1;
+	private final CircularBuffer4<K> _a1;
 	
 	private final Map<K,V> _slots;
 	
@@ -28,8 +26,8 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 	LRU2QCache(int maxSize) {
 		_maxSize = maxSize;
 		_a1_threshold = _maxSize / 4;
-		_am = new LinkedList<K>();
-		_a1 = new LinkedList<K>();
+		_am = new CircularBuffer4<K>(_maxSize);
+		_a1 = new CircularBuffer4<K>(_maxSize);
 		_slots = new HashMap<K, V>(maxSize);
 	}
 	
@@ -40,12 +38,12 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 		}
 		
 		if(_am.remove(key)){
-			_am.addLast(key);
+			_am.addFirst(key);
 			return _slots.get(key);
 		}
 		
 		if(_a1.remove(key)){
-			_am.addLast(key);
+			_am.addFirst(key);
 			return _slots.get(key);
 		}
 		
@@ -55,7 +53,7 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 		
 		final V value = producer.apply(key);
 		_slots.put(key, value);
-		_a1.add(key);
+		_a1.addFirst(key);
 		return value;
 	}
 
@@ -67,9 +65,8 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 	    }
     }
 
-	private void discardPageFrom(final LinkedList<K> list, Procedure4<V> onDiscard) {
-	    discard(list.getFirst(), onDiscard);
-	    list.removeFirst();
+	private void discardPageFrom(final CircularBuffer4<K> list, Procedure4<V> onDiscard) {
+	    discard(list.removeLast(), onDiscard);
     }
 
 	private void discard(K key, Procedure4<V> onDiscard) {
@@ -83,8 +80,8 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 		return "LRU2QCache(am=" + toString(_am)  + ", a1=" + toString(_a1) + ")";
 	}
 
-	private String toString(Collection<K> list) {
-		return Iterators.toString(Iterators.iterate(list));
+	private String toString(Iterable4<K> buffer) {
+		return Iterators.toString(buffer);
 	}
 
 	public Iterator<V> iterator() {

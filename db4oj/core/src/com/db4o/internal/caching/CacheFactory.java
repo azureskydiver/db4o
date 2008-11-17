@@ -4,8 +4,6 @@ package com.db4o.internal.caching;
 
 /**
  * @exclude
- * 
- * @decaf.ignore
  */
 public class CacheFactory {
 
