@@ -7,8 +7,14 @@ package com.db4o.foundation;
  */
 public interface Map4 {
 
+	int size();
+	
 	Object get(Object key);
 
 	void put(Object key, Object value);
+
+	Object remove(Object key);
+
+	Iterable4 values();
 
 }

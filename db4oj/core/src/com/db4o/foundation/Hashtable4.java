@@ -106,12 +106,20 @@ public class Hashtable4 implements DeepClone, Map4 {
 		});
 	}
 	
+	public Iterable4 values() {
+		return new Iterable4() {
+			public Iterator4 iterator() {
+				return valuesIterator();
+			}
+		};
+	}
+	
 	/**
 	 * Iterates through all the values.
 	 * 
 	 * @return value iterator
 	 */
-	public Iterator4 values() {
+	public Iterator4 valuesIterator() {
 		return Iterators.map(iterator(), new Function4() {
 			public Object apply(Object current) {
 				return ((Entry4)current).value();
@@ -172,9 +180,9 @@ public class Hashtable4 implements DeepClone, Map4 {
 		}
 	}
 
-	public void remove(Object objectKey) {
+	public Object remove(Object objectKey) {
 		int intKey = objectKey.hashCode();
-		removeObjectEntry(intKey, objectKey);
+		return removeObjectEntry(intKey, objectKey);
 	}
 	
 	public String toString() {
