@@ -7,7 +7,6 @@ import com.db4o.foundation.*;
 import com.db4o.internal.caching.*;
 
 /**
- * @decaf.ignore
  */
 public abstract class IoAdapterWithCache extends IoAdapter {
 

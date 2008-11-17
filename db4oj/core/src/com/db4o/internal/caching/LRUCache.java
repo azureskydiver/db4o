@@ -5,7 +5,6 @@ import java.util.*;
 import com.db4o.foundation.*;
 
 /**
- * @decaf.ignore
  */
 class LRUCache<K, V> implements Cache4<K, V> {
 	
