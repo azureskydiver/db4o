@@ -17,7 +17,12 @@ import db4ounit.fixtures.*;
  * @decaf.ignore
  * @sharpen.ignore
  */
-public class BigSetPerformanceMain extends FixtureBasedTestSuite {
+public class BigSetPerformanceMain extends FixtureTestSuiteDescription {
+	
+	{
+		fixtureProviders(new SubjectFixtureProvider(new Object[] { 10, 100, 1000, 10000 }));
+		testUnits(BigSetPerformance.class);
+    }
 	
 	public static void main(String[] args) {
 		new Db4oTestSuite() {
@@ -30,17 +35,7 @@ public class BigSetPerformanceMain extends FixtureBasedTestSuite {
 		}.runSolo();
     }
 
-	@Override
-    public FixtureProvider[] fixtureProviders() {
-		return new FixtureProvider[] {
-			new SubjectFixtureProvider(new Object[] { new Integer(10), new Integer(100), new Integer(1000), new Integer(10000) })
-		};
-    }
-
-	@Override
-    public Class[] testUnits() {
-		return new Class[] { BigSetPerformance.class };
-    }
+	
 
 	public static class BigSetPerformance implements TestLifeCycle {
 
