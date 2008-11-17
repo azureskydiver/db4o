@@ -97,7 +97,7 @@ public class HashtableReferenceSystem implements ReferenceSystem{
     }
     
     public void traverseReferences(final Visitor4 visitor) {
-        Iterator4 i = _hashCodeTable.values();
+        Iterator4 i = _hashCodeTable.valuesIterator();
         while(i.moveNext()){
             visitor.visit(i.current());
         }
