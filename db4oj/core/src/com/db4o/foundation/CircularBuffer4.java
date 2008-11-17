@@ -1,9 +1,9 @@
 package com.db4o.foundation;
 
 /**
- * @decaf.ignore
+ * A fixed size double ended queue with O(1) complexity for addFirst, removeFirst and removeLast operations.
  */
-public class CircularBuffer4<T> {
+public class CircularBuffer4<T> implements Iterable4<T> {
 	
 	private final T[] _buffer;
 	private int _head;
@@ -12,6 +12,10 @@ public class CircularBuffer4<T> {
 	public CircularBuffer4(int size) {
 		_buffer = (T[])new Object[size + 1];
     }
+	
+	public int size() {
+		return index(_tail - _head);
+	}
 
 	public void addFirst(T value) {
 		final int newHead = circularIndex(_head - 1);
@@ -60,21 +64,20 @@ public class CircularBuffer4<T> {
 		return erasedValue;
     }
 
-	public void remove(T value) {
+	public boolean remove(T value) {
 		int current = index(_head);
 		int tail = index(_tail);
 		while (current != tail) {
 			if (value.equals(_buffer[current])) {
-				remove(current);
-				return;
+				removeAt(current);
+				return true;
 			}
 			current = circularIndex(current + 1);
 		}
-		
-		throw new IllegalArgumentException();
+		return false;
     }
 
-	private void remove(int index) {
+	private void removeAt(int index) {
 		if (index(_tail - 1) == index) {
 			removeLast();
 			return;
@@ -92,5 +95,37 @@ public class CircularBuffer4<T> {
 			current = next;
 		}
 		_tail = circularIndex(_tail - 1);
+    }
+
+	public Iterator4 iterator() {
+		final int tail = index(_tail);
+		final int head = index(_head);
+		
+		// TODO: detect concurrent modification and throw IllegalStateException
+		return new Iterator4() {
+			
+			private int _index = head;
+			private Object _current = Iterators.NO_ELEMENT;
+
+			public Object current() {
+				if (_current == Iterators.NO_ELEMENT) {
+					throw new IllegalStateException();
+				}
+				return _current;
+            }
+
+			public boolean moveNext() {
+				if (_index == tail) {
+					return false;
+				}
+				_current = _buffer[_index];
+				_index = circularIndex(_index + 1);
+				return true;
+            }
+
+			public void reset() {
+				throw new NotImplementedException();
+            }
+		};
     }
 }

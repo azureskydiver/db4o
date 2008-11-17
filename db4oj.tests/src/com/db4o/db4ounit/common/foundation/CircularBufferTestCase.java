@@ -5,7 +5,6 @@ import com.db4o.foundation.*;
 import db4ounit.*;
 
 /**
- * @decaf.ignore
  */
 public class CircularBufferTestCase implements TestCase {
 	
@@ -71,6 +70,41 @@ public class CircularBufferTestCase implements TestCase {
 	    Assert.areEqual(value, (int)buffer.removeLast());
     }
 	
+	public void testIterator() {
+		for (int i=0; i<3; ++i) {
+			assertIterator();
+			buffer.addFirst(1);
+			assertIterator(1);
+			buffer.addFirst(2);
+			assertIterator(2, 1);
+			buffer.removeLast();
+			assertIterator(2);
+			buffer.removeLast();
+		}
+	}
+	
+	public void testSize() {
+		for (int i=0; i<3; ++i) {
+			assertSize(0);
+			for (int j=0; j<BUFFER_SIZE; ++j) {
+				buffer.addFirst(j);
+				assertSize(j+1);
+			}
+			for (int j=0; j<BUFFER_SIZE; ++j) {
+				buffer.removeLast();
+				assertSize(BUFFER_SIZE - j - 1);
+			}
+		}
+	}
+
+	private void assertSize(final int expected) {
+	    Assert.areEqual(expected, buffer.size());
+    }
+
+	private void assertIterator(Object... expected) {
+	    Iterator4Assert.areEqual(expected, buffer.iterator());
+    }
+	
 	public void testRemove() {
 		assertIllegalRemove(42);
 		
@@ -109,16 +143,12 @@ public class CircularBufferTestCase implements TestCase {
 	}
 
 	private void assertRemove(int value) {
-	    buffer.remove(value);
+	    Assert.isTrue(buffer.remove(value));
 		assertIllegalRemove(value);
     }
 
 	private void assertIllegalRemove(final int value) {
-	    Assert.expect(IllegalArgumentException.class, new CodeBlock() {
-			public void run() {
-				buffer.remove(value);
-			}
-		});
+	   Assert.isFalse(buffer.remove(value));
     }
 	
 	private void fillBuffer() {
