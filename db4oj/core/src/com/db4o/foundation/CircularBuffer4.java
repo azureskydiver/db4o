@@ -84,8 +84,13 @@ public class CircularBuffer4<T> {
 			removeFirst();
 			return;
 		}
-		
-		// move array stuff
-		throw new NotImplementedException();
+		int current = index;
+		int tail = index(_tail);
+		while(current != tail){
+			final int next = circularIndex(current + 1);
+			_buffer[current] = _buffer[next];
+			current = next;
+		}
+		_tail = circularIndex(_tail - 1);
     }
 }

@@ -8,8 +8,10 @@ import db4ounit.*;
  * @decaf.ignore
  */
 public class CircularBufferTestCase implements TestCase {
+	
+	private static final int BUFFER_SIZE = 4;
 
-	final CircularBuffer4<Integer> buffer = new CircularBuffer4<Integer>(2);
+	final CircularBuffer4<Integer> buffer = new CircularBuffer4<Integer>(BUFFER_SIZE);
 	
 	public void testAddFirstRemoveLast() {
 		for (int i=1; i<11; ++i) {
@@ -19,14 +21,13 @@ public class CircularBufferTestCase implements TestCase {
 	}
 	
 	public void testAddFirstBounds() {
-		buffer.addFirst(1);
-		buffer.addFirst(2);
-		assertIllegalAddFirst();
-		buffer.removeLast();
-		buffer.addFirst(4);
+		fillBuffer();
 		assertIllegalAddFirst();
 		buffer.removeLast();
 		buffer.addFirst(5);
+		assertIllegalAddFirst();
+		buffer.removeLast();
+		buffer.addFirst(6);
 	}
 
 	private void assertIllegalAddFirst() {
@@ -68,19 +69,33 @@ public class CircularBufferTestCase implements TestCase {
 		buffer.addFirst(1);
 		assertRemove(1);
 		
-		buffer.addFirst(1);
-		buffer.addFirst(2);
+		fillBuffer();
+		assertRemovals(1, 2, 3, 4);
 		
-		assertRemove(1);
-		assertRemove(2);
+		fillBuffer();
+		assertRemovals(2, 3, 4, 1);
 		
-		buffer.addFirst(1);
-		buffer.addFirst(2);
-		assertRemove(2);
-		buffer.addFirst(4);
+		fillBuffer();
+		assertRemovals(3, 2, 4, 1);
 		
+		fillBuffer();
+		assertRemovals(4, 3, 2, 1);
+		
+		fillBuffer();
+		assertRemovals(4, 1, 2, 3);
+		
+		fillBuffer();
 		assertRemoveLast(1);
+		assertRemoveLast(2);
+		assertRemoveLast(3);
 		assertRemoveLast(4);
+		
+	}
+
+	private void assertRemovals(int... indexes) {
+		for(int i : indexes){
+			assertRemove(i);	
+		}
 	}
 
 	private void assertRemove(int value) {
@@ -95,5 +110,11 @@ public class CircularBufferTestCase implements TestCase {
 			}
 		});
     }
+	
+	private void fillBuffer() {
+		for (int i = 1; i <= BUFFER_SIZE; i++) {
+			buffer.addFirst(i);	
+		}
+	}
 
 }
