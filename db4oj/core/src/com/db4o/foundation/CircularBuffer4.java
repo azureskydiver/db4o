@@ -61,21 +61,17 @@ public class CircularBuffer4<T> {
     }
 
 	public void remove(T value) {
-		int current = _tail < _head ? invertedIndex(_head) : _head;
-		while (current != _tail) {
-			final int bufferIndex = index(current);
-			if (value.equals(_buffer[bufferIndex])) {
-				remove(bufferIndex);
+		int current = index(_head);
+		int tail = index(_tail);
+		while (current != tail) {
+			if (value.equals(_buffer[current])) {
+				remove(current);
 				return;
 			}
 			current = circularIndex(current + 1);
 		}
 		
 		throw new IllegalArgumentException();
-    }
-
-	private int invertedIndex(final int indexToInvert) {
-	    return -1 * (_buffer.length - Math.abs(indexToInvert));
     }
 
 	private void remove(int index) {
