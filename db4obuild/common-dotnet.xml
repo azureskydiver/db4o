@@ -13,7 +13,8 @@
 	<property name="dir.n.v6.instrumentation" location="${dir.n.v6}/Db4objects.Db4o.Instrumentation" />
 	<property name="dir.n.v6.cs" location="${dir.n.v6}/Db4objects.Db4o.CS" />	
 	<property name="dir.n.v6.optional" location="${dir.n.v6}/Db4objects.Db4o.Optional" />	
-	<property name="dir.n.v6.msbuild" location="${dir.n.v6}/Db4oTool/Db4oTool.MSBuild" />
+	<property name="dir.n.v6.msbuild" location="${dir.n.v6}/Db4oTool/Db4oTool.MSBuild" />	
+	<property name="db4o.tests.cf.launcher" location="${dir.build}/src/CompactFrameworkTestHelper/Lib/CompactFrameworkTestHelper.exe" />
 	
 	<condition property="mono" value="true">
 		<os family="unix" />

@@ -1145,17 +1145,56 @@
 
 	<macrodef name="build-cf">
 		<sequential>
-			<var name="targetFolder" value="${dir.dist.dll}/cf${target.framework.version}" /> 
-			<var name="db4o.tests.cf.launcher" 
-			    value="${dir.build}/src/CompactFrameworkTestHelper/Lib/CompactFrameworkTestHelper.exe" />
+			<var name="targetFolder" value="${dir.dist.dll}/cf${target.framework.version}" />			
+			<var name="db4o.tests.cf.app" value="Db4objects.Db4o.Tests" />
 		    
-			<msb solution="${dir.n.v6}/Db4o-CF" outputPath="${targetFolder}" />
-		    
+			<msb solution="${dir.n.v6}/Db4o-CF" outputPath="${targetFolder}" />		    
 		    <echo message="Run db4o tests on .NET CompactFramework ${target.framework.version}" />
+	        
 	        <exec executable="${db4o.tests.cf.launcher}" failonerror="true">
 	            <arg line="-version=${target.framework.version}" />
 	            <arg value="-dir.dll.compact=${targetFolder}" />
+	        	<arg value="-app.name=${db4o.tests.cf.app}" />
+				<arg value="-app.args=run" />
 	        </exec>
+	        			
+			<run-cf-compatibility-tests targetfolder="${targetFolder}"/>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="run-cf-compatibility-tests">
+		<attribute name="targetFolder" />
+		<sequential>
+		    <echo message="Run db4o CF compatibility tests on .NET CompactFramework ${target.framework.version}" />
+			
+			<var name="cfc-basedir" value="${dir.n.v6}/Db4objects.Db4o.CFCompatibilityTests/" />
+			<var name="project-base" value="${dir.n.v6}/Db4objects.Db4o.CFCompatibilityTests" />
+			<var name="database.file" value="CFCompatibilityTest.odb" />
+			
+			<reset-dir dir="@{targetFolder}/Desktop" />
+			<reset-dir dir="@{targetFolder}/Device" />
+		
+			<!-- Compile Desktop application that generates the database -->
+			<msb solution="${project-base}/Desktop/Db4objects.Db4o.CFCompatibilityTests.Desktop" outputPath="${targetFolder}/Desktop" />
+			<msb solution="${project-base}/Device/Db4objects.Db4o.CFCompatibilityTests.Device" outputPath="${targetFolder}/Device" />
+			
+			<exec executable="@{targetFolder}/Desktop/CFCompatibilityTests.Desktop.exe">
+				<arg value="-generateDatabase" />
+				<arg path="${env.TEMP}/${database.file}" />
+			</exec>
+			
+			<exec executable="${db4o.tests.cf.launcher}" failonerror="true">
+	            <arg line="-version=${target.framework.version}" />
+				<arg value="-app.name=Db4objects.Db4o.CFCompatibilityTests.Device.exe" />
+				<arg value="-app.args='/Storage Card/${database.file}'" />
+	            <arg value="-dir.dll.compact=${targetFolder}/Device" />
+	        	<arg value="-dir.storagecard=${env.TEMP}" />
+	        </exec>
+			
+			<exec executable="@{targetFolder}/Desktop/CFCompatibilityTests.Desktop.exe">
+				<arg value="-validateDatabase" />
+				<arg path="${env.TEMP}/${database.file}" />
+			</exec>		
 		</sequential>
 	</macrodef>
 	
