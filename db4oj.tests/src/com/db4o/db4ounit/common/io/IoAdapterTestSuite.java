@@ -35,7 +35,7 @@ public class IoAdapterTestSuite extends FixtureBasedTestSuite {
 				new IoAdapterWithCache(new RandomAccessFileAdapter()) {
 					@Override
 					protected com.db4o.internal.caching.Cache4 newCache(int pageCount) {
-						return com.db4o.internal.caching.CacheFactory.new2QCache(pageCount);
+						return com.db4o.internal.caching.CacheFactory.newLRUCache(pageCount);
 					}
 				}
 			}),
