@@ -16,11 +16,11 @@ import db4ounit.data.*;
  */
 public class CachePerformanceTest {
 
-	private static final int BENCHMARKS = 3;
+	private static final int BENCHMARKS = 5;
 
 	private static final int ITERATIONS = 1000;
 
-	private static final int COMMIT_EVERY = 120;
+	private static final int COMMIT_EVERY = 200;
 	
 	/**
 	 * @param args
@@ -136,10 +136,14 @@ public class CachePerformanceTest {
 
 	private void openFile() {
 	    _filename = Path4.getTempFileName();
-		final EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		_container = Db4oEmbedded.openFile(configuration(), _filename);
+    }
+
+	private EmbeddedConfiguration configuration() {
+	    final EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.common().objectClass(Item.class).objectField("_id").indexed(true);
 		config.file().io(_io);
-		_container = Db4oEmbedded.openFile(config, _filename);
+	    return config;
     }
 
 	private void queryAnotherFew() {
