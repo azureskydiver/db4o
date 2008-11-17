@@ -50,6 +50,14 @@ public class CircularBufferTestCase implements TestCase {
 			assertIllegalRemoveLast();
 		}
 	}
+	
+	private void assertIllegalRemoveFirst() {
+	    Assert.expect(IllegalStateException.class, new CodeBlock() {
+			public void run() {
+				buffer.removeFirst();
+			}
+		});
+    }
 
 	private void assertIllegalRemoveLast() {
 	    Assert.expect(IllegalStateException.class, new CodeBlock() {
@@ -96,6 +104,8 @@ public class CircularBufferTestCase implements TestCase {
 		for(int i : indexes){
 			assertRemove(i);	
 		}
+		assertIllegalRemoveLast();
+		assertIllegalRemoveFirst();
 	}
 
 	private void assertRemove(int value) {
