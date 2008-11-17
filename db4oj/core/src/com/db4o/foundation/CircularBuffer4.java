@@ -43,7 +43,7 @@ public class CircularBuffer4<T> {
     }
 
 	private boolean isEmpty() {
-	    return _head == _tail;
+	    return index(_head) == index(_tail);
     }
 	
 	public T removeFirst() {

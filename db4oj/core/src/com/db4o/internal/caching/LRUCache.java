@@ -10,12 +10,13 @@ import com.db4o.foundation.*;
 class LRUCache<K, V> implements Cache4<K, V> {
 	
 	private final Map<K, V> _slots;
-	private final LinkedList<K> _lru = new LinkedList<K>();
+	private final CircularBuffer4<K> _lru;
 	private final int _maxSize;
 
 	LRUCache(int size) {
 		_maxSize = size;
 		_slots = new HashMap<K, V>(size);
+		_lru = new CircularBuffer4<K>(size);
 	}
 
 	public V produce(K key, Function4<K, V> producer, Procedure4<V> onDiscard) {
@@ -33,7 +34,7 @@ class LRUCache<K, V> implements Cache4<K, V> {
 			return newValue;
 		}
 		
-		_lru.remove(key);
+		_lru.remove(key); // O(N) 
 		_lru.addFirst(key);
 		return value;
 	}
