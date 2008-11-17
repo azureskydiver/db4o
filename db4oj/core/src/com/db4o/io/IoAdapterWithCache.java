@@ -38,7 +38,7 @@ public abstract class IoAdapterWithCache extends IoAdapter {
     };
 
 	/**
-	 * Creates an instance of CachedIoAdapter with the default page size and
+	 * Creates an instance of IoAdapterWithCache with the default page size and
 	 * page count.
 	 * 
 	 * @param ioAdapter
@@ -49,7 +49,7 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 	}
 
 	/**
-	 * Creates an instance of CachedIoAdapter with a custom page size and page
+	 * Creates an instance of IoAdapterWithCache with a custom page size and page
 	 * count.<br>
 	 * 
 	 * @param ioAdapter
@@ -66,7 +66,7 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 	}
 
 	/**
-	 * Creates an instance of CachedIoAdapter with extended parameters.<br>
+	 * Creates an instance of IoAdapterWithCache with extended parameters.<br>
 	 * 
 	 * @param path
 	 *            database file path
@@ -246,7 +246,7 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 		}
 	};
 	
-	final Function4<Long, Page> _producerFromCache = new Function4<Long, Page>() {
+	final Function4<Long, Page> _producerFromPool = new Function4<Long, Page>() {
 		public Page apply(Long pageAddress) {
 			// in case that page is not found in the cache
 			final Page newPage = _pagePool.borrowObject();
@@ -256,7 +256,7 @@ public abstract class IoAdapterWithCache extends IoAdapter {
 	};
 	
 	private Page getPage(final long startAddress, final boolean loadFromDisk) throws Db4oIOException {
-		final Function4<Long, Page> producer = loadFromDisk ? _producerFromDisk : _producerFromCache;
+		final Function4<Long, Page> producer = loadFromDisk ? _producerFromDisk : _producerFromPool;
 		return getPage(startAddress, producer);
 	}
 
