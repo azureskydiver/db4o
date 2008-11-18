@@ -1148,10 +1148,12 @@
 			<var name="targetFolder" value="${dir.dist.dll}/cf${target.framework.version}" />			
 			<var name="db4o.tests.cf.app" value="Db4objects.Db4o.Tests" />
 		    
+			<msbuild solutionFile="src\CompactFrameworkTestHelper\CompactFrameworkTestHelper.csproj" outputPath="${targetFolder}" /> 
+			
 			<msb solution="${dir.n.v6}/Db4o-CF" outputPath="${targetFolder}" />		    
 		    <echo message="Run db4o tests on .NET CompactFramework ${target.framework.version}" />
 	        
-	        <exec executable="${db4o.tests.cf.launcher}" failonerror="true">
+	        <exec executable="${targetFolder}/CompactFrameworkTestHelper.exe" failonerror="true">
 	            <arg line="-version=${target.framework.version}" />
 	            <arg value="-dir.dll.compact=${targetFolder}" />
 	        	<arg value="-app.name=${db4o.tests.cf.app}" />
@@ -1183,7 +1185,7 @@
 				<arg path="${env.TEMP}/${database.file}" />
 			</exec>
 			
-			<exec executable="${db4o.tests.cf.launcher}" failonerror="true">
+			<exec executable="@{targetFolder}/CompactFrameworkTestHelper.exe" failonerror="true">
 	            <arg line="-version=${target.framework.version}" />
 				<arg value="-app.name=Db4objects.Db4o.CFCompatibilityTests.Device.exe" />
 				<arg value="-app.args='/Storage Card/${database.file}'" />
