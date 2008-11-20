@@ -60,51 +60,31 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 
 		return new Team[] {
 				
-			// db4oTeam(JAR72),
-
-			configuredDb4oTeam(new ConfigurationSetting[]{
-            		new ConfigurationSetting(){
-						public void apply(Object config) {
-							((Configuration)config).io(new CachedIoAdapter(new RandomAccessFileAdapter()));
-							
-						}
-						public String name() {
-							return "CachedIoAdapter";
-						}
-            		}
-            }),
-				
-		
             configuredDb4oTeam(new ConfigurationSetting[]{
-            		new ConfigurationSetting(){
-						public void apply(Object config) {
-							((Configuration)config).io(new RandomAccessFileAdapter());
-							
-						}
-						public String name() {
-							return "RandomAccessFileAdapter";
-						}
-            			
-            		}
+            		slotCache(0),
+            		randomAccessFileAdapter(),
             }),
             
             configuredDb4oTeam(new ConfigurationSetting[]{
-            		new ConfigurationSetting(){
-						public void apply(Object config) {
-							((Configuration)config).io(new IoAdapterWithCache(new RandomAccessFileAdapter()){
-								@Override
-								protected Cache4 newCache(int pageSize) {
-									return CacheFactory.new2QCache(pageSize);
-								}
-								
-							});
-						}
-						public String name() {
-							return "LRU2QCachedIoAdapter";
-						}
-            			
-            		}
+            		slotCache(30),
+            		randomAccessFileAdapter(),
             }),
+            
+            configuredDb4oTeam(new ConfigurationSetting[]{
+            		slotCache(100),
+            		randomAccessFileAdapter(),
+            }),
+            
+            configuredDb4oTeam(new ConfigurationSetting[]{
+            		slotCache(300),
+            		randomAccessFileAdapter(),
+            }),
+
+            
+//            configuredDb4oTeam(new ConfigurationSetting[]{
+//            		cachedIoAdapter()
+//            }),
+//            
 
             
 //          db4oTeam(JAR_TRUNK, null),
@@ -112,11 +92,81 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 		};
 	}
 
+	private ConfigurationSetting cachedIoAdapter() {
+		return new ConfigurationSetting(){
+			public void apply(Object config) {
+				((Configuration)config).io(new CachedIoAdapter(new RandomAccessFileAdapter()));
+			}
+			public String name() {
+				return "CachedIoAdapter";
+			}
+			
+		};
+	}
+
+	private ConfigurationSetting lru() {
+		return new ConfigurationSetting(){
+			public void apply(Object config) {
+				((Configuration)config).io(new IoAdapterWithCache(new RandomAccessFileAdapter()){
+					@Override
+					protected Cache4 newCache(int pageSize) {
+						return CacheFactory.newLRUCache(pageSize);
+					}
+					
+				});
+			}
+			public String name() {
+				return "NewLRU";
+			}
+		};
+	}
+
+	private ConfigurationSetting lRU2Q() {
+		return new ConfigurationSetting(){
+			public void apply(Object config) {
+				((Configuration)config).io(new IoAdapterWithCache(new RandomAccessFileAdapter()){
+					@Override
+					protected Cache4 newCache(int pageSize) {
+						return CacheFactory.new2QCache(pageSize);
+					}
+					
+				});
+			}
+			public String name() {
+				return "LRU2Q";
+			}
+		};
+	}
+
+	private ConfigurationSetting slotCache(final int slotCacheSize) {
+		return new ConfigurationSetting(){
+			public void apply(Object config) {
+				((Configuration)config).cache().slotCacheSize(slotCacheSize);
+			}
+			public String name() {
+				return "" + slotCacheSize + " slotCacheSize";
+			}
+		};
+	}
+
+	private ConfigurationSetting randomAccessFileAdapter() {
+		return new ConfigurationSetting(){
+			public void apply(Object config) {
+				((Configuration)config).io(new RandomAccessFileAdapter());
+				
+			}
+			public String name() {
+				return "RandomAccessFileAdapter";
+			}
+			
+		};
+	}
+    
+    
+
 	public Circuit[] circuits() {
 		return new Circuit[] {
-				
 				 new Melbourne(),
-				 
 				 new Sepang(),
 				 new Bahrain(),
 				 new Imola(),

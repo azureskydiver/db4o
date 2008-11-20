@@ -214,7 +214,13 @@ public interface Configuration {
      */
     public void bTreeCacheHeight(int height);
     
-
+    
+    /**
+     * returns the Cache configuration interface.
+     */
+    public CacheConfiguration cache();
+    
+    
     /**
      * turns callback methods on and off.
      * <br><br>Callbacks are turned on by default.<br><br>

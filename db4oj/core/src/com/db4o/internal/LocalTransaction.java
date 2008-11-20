@@ -5,6 +5,7 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.caching.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.freespace.*;
@@ -31,6 +32,8 @@ public class LocalTransaction extends Transaction {
 	protected final LocalObjectContainer _file;
 	
 	private final CommittedCallbackDispatcher _committedCallbackDispatcher;
+	
+	private Cache4<Integer, ByteArrayBuffer> _slotCache;
 
 	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
 		super(container, parentTransaction, referenceSystem);
@@ -45,6 +48,12 @@ public class LocalTransaction extends Transaction {
     			callbacks().commitOnCompleted(LocalTransaction.this, committedInfo);
     		}
     	};
+    	if(isSystemTransaction()){
+	    	int slotCacheSize = container.config().slotCacheSize();
+			if(slotCacheSize > 0){
+	    		_slotCache = CacheFactory.new2QCache(slotCacheSize);
+	    	}
+    	}
 	}
 	
 	public LocalObjectContainer file() {
@@ -874,6 +883,10 @@ public class LocalTransaction extends Transaction {
 
 	private LazyObjectReference lazyReferenceFor(final int id) {
 		return new LazyObjectReference(LocalTransaction.this, id);
+	}
+	
+	public Cache4<Integer, ByteArrayBuffer> slotCache(){
+		return _slotCache;
 	}
     
 }

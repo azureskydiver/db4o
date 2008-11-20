@@ -201,6 +201,11 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			fileConfig.readOnly(true);
 			Assert.isTrue(legacyConfig.isReadOnly());
 			
+			CacheConfigurationProvider cacheProvider = subject();
+			final CacheConfiguration cache = cacheProvider.cache();
+			
+			cache.slotCacheSize(30);
+			Assert.areEqual(30, legacyConfig.slotCacheSize());
 		}
 		
 	}

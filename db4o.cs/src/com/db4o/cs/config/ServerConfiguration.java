@@ -2,13 +2,12 @@
 
 package com.db4o.cs.config;
 
-import com.db4o.config.CommonConfigurationProvider;
-import com.db4o.config.FileConfigurationProvider;
+import com.db4o.config.*;
 
 /**
  * Configuration interface for db4o servers.
  * @since 7.5
  */
-public interface ServerConfiguration extends FileConfigurationProvider, NetworkingConfigurationProvider, CommonConfigurationProvider {
+public interface ServerConfiguration extends FileConfigurationProvider, NetworkingConfigurationProvider, CommonConfigurationProvider , CacheConfigurationProvider{
 
 }
