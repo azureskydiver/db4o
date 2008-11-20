@@ -8,7 +8,11 @@ package com.db4o.foundation;
  * The value is brought into scope with the {@link #with} method.
  * 
  */
-public class DynamicVariable {
+public class DynamicVariable<T> {
+	
+	public static <T> DynamicVariable<T> newInstance() {
+		return new DynamicVariable();
+	}
 	
 	private static class ThreadSlot {
 		public final Thread thread;
@@ -29,20 +33,20 @@ public class DynamicVariable {
 		this(null);
 	}
 	
-	public DynamicVariable(Class expectedType) {
+	public DynamicVariable(Class<T> expectedType) {
 		_expectedType = expectedType;
 	}
 	
 	/**
 	 * @sharpen.property
 	 */
-	public Object value() {
+	public T value() {
 		final Thread current = Thread.currentThread();
 		synchronized (this) {
 			ThreadSlot slot = _values;
 			while (null != slot) {
 				if (slot.thread == current) {
-					return slot.value;
+					return (T)slot.value;
 				}
 				slot = slot.next;
 			}
@@ -50,11 +54,11 @@ public class DynamicVariable {
 		return defaultValue();
 	}
 	
-	protected Object defaultValue() {
+	protected T defaultValue() {
 		return null;
 	}
 	
-	public Object with(Object value, Closure4 block) {
+	public Object with(T value, Closure4 block) {
 		validate(value);
 		
 		ThreadSlot slot = pushValue(value);
@@ -65,7 +69,7 @@ public class DynamicVariable {
 		}
 	}
 	
-	public void with(Object value, final Runnable block) {
+	public void with(T value, final Runnable block) {
 		with(value, new Closure4() {
 			public Object run() {
 				block.run();
