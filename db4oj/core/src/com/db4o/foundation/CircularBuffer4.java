@@ -46,10 +46,14 @@ public class CircularBuffer4<T> implements Iterable4<T> {
 		}
     }
 
-	private boolean isEmpty() {
+	public boolean isEmpty() {
 	    return index(_head) == index(_tail);
     }
-	
+
+	public boolean isFull() {
+	    return circularIndex(_head - 1) == _tail;
+    }
+
 	public T removeFirst() {
 		assertNotEmpty();
 		final T erased = erase(_head);
@@ -65,17 +69,29 @@ public class CircularBuffer4<T> implements Iterable4<T> {
     }
 
 	public boolean remove(T value) {
+		int idx = indexOf(value);
+		if(idx >= 0) {
+			removeAt(idx);
+			return true;
+		}
+		return false;
+    }
+
+	public boolean contains(T value) {
+		return indexOf(value) >= 0;
+	}
+	
+	private int indexOf(T value) {
 		int current = index(_head);
 		int tail = index(_tail);
 		while (current != tail) {
 			if (value.equals(_buffer[current])) {
-				removeAt(current);
-				return true;
+				break;
 			}
 			current = circularIndex(current + 1);
 		}
-		return false;
-    }
+		return (current == tail ? -1 : current);
+	}
 
 	private void removeAt(int index) {
 		if (index(_tail - 1) == index) {
