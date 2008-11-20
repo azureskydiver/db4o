@@ -145,6 +145,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec WEAK_REFERENCE_COLLECTION_INTERVAL_KEY=new KeySpec(1000);
     
 	private final static KeySpec WEAK_REFERENCES_KEY=new KeySpec(true);
+	
+	private final static KeySpec STORAGE_FACTORY_KEY=new KeySpec(new RandomAccessFileStorageFactory());
     
 	private final static KeySpec IOADAPTER_KEY=new KeySpec(new CachedIoAdapter(new RandomAccessFileAdapter()));
 //	private final static KeySpec IOADAPTER_KEY=new KeySpec(new IoAdapterWithCache(new RandomAccessFileAdapter()) {
@@ -453,6 +455,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     public void io(IoAdapter adapter){
         globalSettingOnly();
         _config.put(IOADAPTER_KEY,adapter);
+        storageFactory(new IoAdapterStorageFactory(adapter));
     }
 
     public void lockDatabaseFile(boolean flag) {
@@ -932,6 +935,14 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public IoAdapter io() {
 		return (IoAdapter)_config.get(IOADAPTER_KEY);
 	}
+	
+	public StorageFactory storageFactory() {
+		return (StorageFactory)_config.get(STORAGE_FACTORY_KEY);
+	}
+	
+	private void storageFactory(final StorageFactory factory) {
+	    _config.put(STORAGE_FACTORY_KEY, factory);
+    }
 	
 	public QueryConfiguration queries() {
 		return this;

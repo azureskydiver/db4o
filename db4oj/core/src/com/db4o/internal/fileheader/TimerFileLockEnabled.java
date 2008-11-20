@@ -14,7 +14,7 @@ import com.db4o.io.*;
  */
 public class TimerFileLockEnabled extends TimerFileLock{
     
-    private final IoAdapter _timerFile;
+    private final BlockAwareIo _timerFile;
     
     private final Object _timerLock;
     
@@ -157,14 +157,13 @@ public class TimerFileLockEnabled extends TimerFileLock{
             if(_timerFile == null){
                 return false;
             }
-            _timerFile.blockSeek(address, offset);
             if (Deploy.debug) {
                 ByteArrayBuffer lockBytes = new ByteArrayBuffer(Const4.LONG_LENGTH);
                 lockBytes.writeLong(time);
-                _timerFile.write(lockBytes._buffer);
+                _timerFile.blockWrite(address, offset, lockBytes._buffer);
             } else {
             	PrimitiveCodec.writeLong(_longBytes, time);
-                _timerFile.write(_longBytes);
+                _timerFile.blockWrite(address, offset, _longBytes);
             }
             return true;
     	}
@@ -175,13 +174,12 @@ public class TimerFileLockEnabled extends TimerFileLock{
             if(_timerFile == null){
                 return 0;
             }
-            _timerFile.blockSeek(address, offset);
             if (Deploy.debug) {
                 ByteArrayBuffer lockBytes = new ByteArrayBuffer(Const4.LONG_LENGTH);
-                _timerFile.read(lockBytes._buffer, Const4.LONG_LENGTH);
+                _timerFile.blockRead(address, offset, lockBytes._buffer, Const4.LONG_LENGTH);
                 return lockBytes.readLong();
             }
-            _timerFile.read(_longBytes);
+            _timerFile.blockRead(address, offset, _longBytes);
             return PrimitiveCodec.readLong(_longBytes, 0);
     	}
     }
@@ -191,14 +189,13 @@ public class TimerFileLockEnabled extends TimerFileLock{
             if(_timerFile == null){
                 return false;
             }
-            _timerFile.blockSeek(address, offset);
             if (Deploy.debug) {
                 ByteArrayBuffer lockBytes = new ByteArrayBuffer(Const4.INT_LENGTH);
                 lockBytes.writeInt(time);
-                _timerFile.write(lockBytes._buffer);
+                _timerFile.blockWrite(address, offset, lockBytes._buffer);
             } else {
             	PrimitiveCodec.writeInt(_intBytes, 0, time);
-                _timerFile.write(_intBytes);
+                _timerFile.blockWrite(address, offset, _intBytes);
             }
             return true;
     	}
@@ -209,13 +206,12 @@ public class TimerFileLockEnabled extends TimerFileLock{
             if(_timerFile == null){
                 return 0;
             }
-            _timerFile.blockSeek(address, offset);
             if (Deploy.debug) {
                 ByteArrayBuffer lockBytes = new ByteArrayBuffer(Const4.INT_LENGTH);
-                _timerFile.read(lockBytes._buffer, Const4.INT_LENGTH);
+                _timerFile.blockRead(address, offset, lockBytes._buffer, Const4.INT_LENGTH);
                 return lockBytes.readInt();
             }
-            _timerFile.read(_longBytes);
+            _timerFile.blockRead(address, offset, _longBytes);
             return PrimitiveCodec.readInt(_longBytes, 0);
     	}
     }

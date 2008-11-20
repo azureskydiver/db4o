@@ -19,9 +19,9 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     private final String _fileName;
 
-    private IoAdapter          _file;
-    private IoAdapter          _timerFile;                                 //This is necessary as a separate File because access is not synchronized with access for normal data read/write so the seek pointer can get lost.
-    private volatile IoAdapter _backupFile;
+    private BlockAwareIo          _file;
+    private BlockAwareIo          _timerFile;                                 //This is necessary as a separate File because access is not synchronized with access for normal data read/write so the seek pointer can get lost.
+    private volatile BlockAwareIo _backupFile;
 
     private Object             _fileLock;
     
@@ -37,7 +37,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     protected final void openImpl() throws OldFormatException,
 			DatabaseReadOnlyException {
-		IoAdapter ioAdapter = configImpl().io();
+		final StorageFactory ioAdapter = configImpl().storageFactory();
 		boolean isNew = !ioAdapter.exists(fileName());
 		if (isNew) {
 			logMsg(14, fileName());
@@ -47,9 +47,10 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		boolean readOnly = configImpl().isReadOnly();
 		boolean lockFile = Debug.lockFile && configImpl().lockFile()
 				&& (!readOnly);
-		_file = ioAdapter.open(fileName(), lockFile, 0, readOnly);
+		_file = new BlockAwareIo(ioAdapter.open(fileName(), lockFile, 0, readOnly));
 		if (needsLockFileThread()) {
-			_timerFile = ioAdapter.delegatedIoAdapter().open(fileName(), false,	0, false);
+			// FIXME: with a SynchronizedStorage or something
+			_timerFile = new BlockAwareIo(ioAdapter.open(fileName(), false, 0, false));
 		}
 		if (isNew) {
 			configureNewFile();
@@ -69,21 +70,19 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			if (_backupFile != null) {
 				throw new BackupInProgressException();
 			}
-			_backupFile = configImpl().io().open(path, true,
-					_file.getLength(), false);
+			_backupFile = new BlockAwareIo(configImpl().storageFactory().open(path, true,
+					_file.length(), false));
 			_backupFile.blockSize(blockSize());
 		}
         long pos = 0;
         byte[] buffer = new byte[8192];
         while (true) {
 			synchronized (_lock) {
-				_file.seek(pos);
-				int read = _file.read(buffer);
+				int read = _file.read(pos, buffer);
 				if (read <= 0) {
 					break;
 				}
-				_backupFile.seek(pos);
-				_backupFile.write(buffer, read);
+				_backupFile.write(pos, buffer, read);
 				pos += read;
 			}
 		}
@@ -180,16 +179,11 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
                 return;
             }
 
-            byte[] copyBytes = new byte[length];
-            _file.blockSeek(oldAddress, oldAddressOffset);
-            _file.read(copyBytes);
-
-            _file.blockSeek(newAddress, newAddressOffset);
-            _file.write(copyBytes);
-
+            final byte[] copyBytes = new byte[length];
+            _file.blockRead(oldAddress, oldAddressOffset, copyBytes);
+            _file.blockWrite(newAddress, newAddressOffset, copyBytes);
             if (_backupFile != null) {
-                _backupFile.blockSeek(newAddress, newAddressOffset);
-                _backupFile.write(copyBytes);
+                _backupFile.blockWrite(newAddress, newAddressOffset, copyBytes);
             }
 
         } catch (Exception e) {
@@ -202,8 +196,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         if (Debug.xbytes && Deploy.overwrite) {
             try {
                 byte[] checkXBytes = new byte[length];
-                _file.blockSeek(newAddress, newAddressOffset);
-                _file.read(checkXBytes);
+                _file.blockRead(newAddress, newAddressOffset, checkXBytes);
                 for (int i = 0; i < checkXBytes.length; i++) {
                     if (checkXBytes[i] != Const4.XBYTE) {
                         String msg = "XByte corruption adress:" + newAddress + " length:"
@@ -219,7 +212,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     public long fileLength() {
         try {
-            return _file.getLength();
+            return _file.length();
         } catch (Exception e) {
             throw new RuntimeException();
         }
@@ -240,8 +233,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		if (DTrace.enabled) {
 			DTrace.READ_BYTES.logLength(address + addressOffset, length);
 		}
-		_file.blockSeek(address, addressOffset);
-		int bytesRead = _file.read(bytes, length);
+		int bytesRead = _file.blockRead(address, addressOffset, bytes, length);
 		checkReadCount(bytesRead, length);
 	}
 
@@ -265,19 +257,20 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     	zeroFile(_backupFile, slot);
     }
     
-    private void zeroFile(IoAdapter io, Slot slot) {
+    private void zeroFile(BlockAwareIo io, Slot slot) {
     	if(io == null) {
     		return;
     	}
     	byte[] zeroBytes = new byte[1024];
         int left = slot.length();
-        io.blockSeek(slot.address(), 0);
+        int offset = 0;
         while (left > zeroBytes.length) {
-			io.write(zeroBytes, zeroBytes.length);
+			io.blockWrite(slot.address(), offset, zeroBytes, zeroBytes.length);
+			offset += zeroBytes.length;
 			left -= zeroBytes.length;
 		}
         if(left > 0) {
-        	io.write(zeroBytes, left);
+        	io.blockWrite(slot.address(), offset, zeroBytes, left);
         }
     }
 
@@ -316,11 +309,9 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 					.length());
 		}
 
-		_file.blockSeek(blockedAddress, addressOffset);
-		_file.write(buffer._buffer, buffer.length());
+		_file.blockWrite(blockedAddress, addressOffset, buffer._buffer, buffer.length());
 		if (_backupFile != null) {
-			_backupFile.blockSeek(blockedAddress, addressOffset);
-			_backupFile.write(buffer._buffer, buffer.length());
+			_backupFile.blockWrite(blockedAddress, addressOffset, buffer._buffer, buffer.length());
 		}
 	}
 
@@ -335,7 +326,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			if (DTrace.enabled) {
 				DTrace.WRITE_XBYTES.logLength(address, length);
 			}
-			IoAdapterWindow window = new IoAdapterWindow(_file, address, length);
+			BlockAwareIoWindow window = new BlockAwareIoWindow(_file, address, length);
 			try {
 				createFreespaceFiller().fill(window);
 			} catch (IOException e) {
@@ -347,7 +338,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
 	}
 
-	public IoAdapter timerFile() {
+	public BlockAwareIo timerFile() {
 		return _timerFile;
 	}
 	
@@ -361,7 +352,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 	
 	private static class XByteFreespaceFiller implements FreespaceFiller {
 
-		public void fill(IoAdapterWindow io) throws IOException {
+		public void fill(BlockAwareIoWindow io) throws IOException {
 			io.write(0,xBytes(io.length()));
 		}
 
