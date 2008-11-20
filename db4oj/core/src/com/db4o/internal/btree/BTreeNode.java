@@ -650,13 +650,15 @@ public final class BTreeNode extends CacheablePersistentBase{
             return null;
         }
         
-        if(_cached){
-            read(trans.systemTransaction());
+        Transaction systemTransaction = trans.systemTransaction();
+        
+		if(_cached){
+            read(systemTransaction);
             _btree.addToProcessing(this);
             return null;
         }
         
-        ByteArrayBuffer reader = ((LocalTransaction)trans).file().readReaderByID(trans.systemTransaction(), getID());
+        ByteArrayBuffer reader = produceReadBuffer(systemTransaction);
         
         if (Deploy.debug) {
             reader.readBegin(getIdentifier());
