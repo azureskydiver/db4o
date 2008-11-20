@@ -83,6 +83,33 @@ public class CircularBufferTestCase implements TestCase {
 		}
 	}
 	
+	public void testContains() {
+		buffer.addFirst(1);
+		buffer.addFirst(3);
+		buffer.addFirst(5);
+		Assert.isTrue(buffer.contains(1));
+		Assert.isFalse(buffer.contains(2));
+		Assert.isTrue(buffer.contains(3));
+		Assert.isFalse(buffer.contains(4));
+		Assert.isTrue(buffer.contains(5));
+	}
+	
+	public void testFullEmpty() {
+		Assert.isTrue(buffer.isEmpty());
+		Assert.isFalse(buffer.isFull());
+		buffer.addFirst(1);
+		Assert.isFalse(buffer.isEmpty());
+		Assert.isFalse(buffer.isFull());
+		buffer.addFirst(2);
+		buffer.addFirst(3);
+		buffer.addFirst(4);
+		Assert.isFalse(buffer.isEmpty());
+		Assert.isTrue(buffer.isFull());
+		buffer.removeLast();
+		Assert.isFalse(buffer.isEmpty());
+		Assert.isFalse(buffer.isFull());
+	}
+	
 	public void testSize() {
 		for (int i=0; i<3; ++i) {
 			assertSize(0);
