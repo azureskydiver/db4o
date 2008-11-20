@@ -881,7 +881,8 @@
 			<pathelement location="${path.classpath.jdk1.1}" />
         </path>
 		
-		<java jvm="${file.jvm.jdk1.1}" 
+		<java taskname="core/j11"
+			jvm="${file.jvm.jdk1.1}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.db4ounit.jre11.AllTests" 
@@ -891,7 +892,8 @@
 			<sysproperty key="dir.workspace" value="${dir.base}" />
 		</java>
 
-		<java jvm="${file.jvm.jdk1.1}" 
+		<java taskname="legacy/j11"
+			jvm="${file.jvm.jdk1.1}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.test.AllTests" 
@@ -901,7 +903,8 @@
 			<arg value="-withExceptions" />
 		</java>
 		
-		<java jvm="${file.jvm.jdk1.1}" 
+		<java taskname="legacy2/j11"
+			jvm="${file.jvm.jdk1.1}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.test.AllTestsLegacy" 
@@ -922,7 +925,8 @@
 			<pathelement location="${file.jdk1.2.db4ounit.jar}" />
         </path>
 
-		<java jvm="${file.jvm.jdk1.3}" 
+		<java taskname="core/j12"
+			jvm="${file.jvm.jdk1.3}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.db4ounit.jre12.AllTestsJdk1_2" 
@@ -934,7 +938,8 @@
 			<sysproperty key="db4o.archives.path" value="${dir.base}/db4o.archives/java1.2/" />
 		</java>
         
-		<java jvm="${file.jvm.jdk1.3}" 
+		<java taskname="legacy/j12"
+			jvm="${file.jvm.jdk1.3}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.test.AllTestsJdk1_2" 
@@ -944,7 +949,8 @@
 			<arg value="-withExceptions" />
 		</java>
 		
-		<java jvm="${file.jvm.jdk1.3}" 
+		<java taskname="migration/j12"
+			jvm="${file.jvm.jdk1.3}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.db4ounit.jre12.RunAllCommonMigrationTests" 
@@ -955,7 +961,8 @@
 			<arg value="-withExceptions" />
 		</java>
 		
-		<java jvm="${file.jvm.jdk1.3}" 
+		<java taskname="legacy2/j12"
+			jvm="${file.jvm.jdk1.3}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.test.AllTestsJdk1_2Legacy" 
@@ -976,7 +983,7 @@
 			<pathelement location="${file.jdk1.5.db4ounit.jar}" />
         </path>
         
-		<java jvm="${file.jvm.jdk1.5}" 
+		<java taskname="core/j15" jvm="${file.jvm.jdk1.5}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5" 
@@ -987,7 +994,7 @@
 			<classpath refid="tests.jdk1.5.cp" />
 		</java>
 
-		<java jvm="${file.jvm.jdk1.5}" 
+		<java taskname="opt/j15" jvm="${file.jvm.jdk1.5}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.db4ounit.jre11.AllTestsOptional" 
@@ -998,7 +1005,7 @@
 			<classpath refid="tests.jdk1.5.cp"/>
 		</java>
 
-        <java jvm="${file.jvm.jdk1.5}" 
+        <java taskname="legacy/j15" jvm="${file.jvm.jdk1.5}" 
 			jvmargs="${java.vmargs}"
         	fork="true" 
         	classname="com.db4o.test.AllTestsJdk5" 
@@ -1007,7 +1014,7 @@
 			<classpath refid="tests.jdk1.5.cp" />
 			<arg value="-withExceptions" />
 		</java>
-		<java jvm="${file.jvm.jdk1.5}" 
+		<java taskname="tests defrag/jdk1.5" jvm="${file.jvm.jdk1.5}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.db4ounit.jre5.defrag.RunTestsDefrag" 
@@ -1016,7 +1023,7 @@
 			<sysproperty key="dir.workspace" value="${dir.base}" />
 			<classpath refid="tests.jdk1.5.cp" />
 		</java>
-		<java jvm="${file.jvm.jdk1.5}" 
+		<java taskname="core+ta/j15" jvm="${file.jvm.jdk1.5}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.db4ounit.jre5.AllTestsWithTAJdk5" 
@@ -1025,7 +1032,7 @@
 			<sysproperty key="dir.workspace" value="${dir.base}" />
 			<classpath refid="tests.jdk1.5.cp" />
 		</java>
-		<java jvm="${file.jvm.jdk1.5}" 
+		<java taskname="legacy2/j15" jvm="${file.jvm.jdk1.5}" 
 			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.test.AllTestsJdk1_2Legacy" 
@@ -1047,7 +1054,7 @@
 			<pathelement location="${file.ant.jar}" />
         </path>
 
-		<java jvm="${file.jvm.jdk1.5}"
+		<java taskname="nqopt/j15" jvm="${file.jvm.jdk1.5}"
 				jvmargs="${java.vmargs}"
 				fork="true"
 				classname="com.db4o.test.nativequery.AllTestsNQ"
@@ -1064,7 +1071,7 @@
 	</target>
 	
     <target name="run.tests.concurrency" depends="build.db4ojdk1.1.tests, build.db4ojdk1.5.tests">
-        <java jvm="${file.jvm.jdk1.1}" 
+        <java taskname="conc/j11" jvm="${file.jvm.jdk1.1}" 
 			jvmargs="${java.vmargs}"
         	fork="true" 
         	classname="com.db4o.db4ounit.jre11.concurrency.AllTests" 
@@ -1081,7 +1088,7 @@
             <jvmarg line="-ms32m -mx64m " />
 		</java>
         
-        <java jvm="${file.jvm.jdk1.5}" 
+        <java taskname="conc/j15" jvm="${file.jvm.jdk1.5}" 
 			jvmargs="${java.vmargs}"
         	fork="true" 
         	classname="com.db4o.db4ounit.jre5.AllTestsConcurrency" 
@@ -1107,6 +1114,7 @@
 		<copy tofile="${dir.test.osgi}/db4o-osgi-edition.jar" file="${file.osgi.jar}"/>
 		
 		<java 
+			taskname="osgi/cdc"
 			classname="com.db4o.osgi.test.launch.TestLauncher" 
 			fork="true" 
 			jvm="${file.jvm.cdc_fp}" 
@@ -1130,7 +1138,7 @@
 	</target>
 
 	<target name="run.tests.taj" depends="build.taj.tests">
-		<java classname="com.db4o.ta.instrumentation.test.AllTests"
+		<java taskname="ta/j15" classname="com.db4o.ta.instrumentation.test.AllTests"
 			jvmargs="${java.vmargs}"
 			fork="true"
 			jvm="${file.jvm.jdk1.3}"
