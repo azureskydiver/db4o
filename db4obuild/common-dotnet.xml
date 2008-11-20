@@ -91,7 +91,7 @@
 		<attribute name="outputPath" default="${dir.dist.dll.net}" />
 		
 		<sequential>
-			<exec executable="${msbuild.executable}" failonerror="true">
+			<exec taskname="msbuild" executable="${msbuild.executable}" failonerror="true">
 				<arg file="@{solutionFile}" />
 				<arg value="/t:Rebuild" />
 				<arg value="/p:Configuration=${msbuild.target.configuration}" />
