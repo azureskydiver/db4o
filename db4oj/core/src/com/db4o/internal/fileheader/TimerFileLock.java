@@ -13,6 +13,7 @@ public abstract class TimerFileLock implements Runnable{
     
     public static TimerFileLock forFile(LocalObjectContainer file){
         if(file.needsLockFileThread()){
+        	// return file.synchronizedIoAdapter();
             return new TimerFileLockEnabled((IoAdaptedObjectContainer)file);
         }
         return new TimerFileLockDisabled();
