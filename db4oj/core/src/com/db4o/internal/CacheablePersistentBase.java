@@ -12,33 +12,34 @@ public abstract class CacheablePersistentBase extends PersistentBase{
 	
 	@Override
 	protected ByteArrayBuffer produceReadBuffer(final Transaction trans) {
-		Cache4<Integer, ByteArrayBuffer> cache = cache(trans);
-		if(cache == null){
-			return readBufferById(trans);
-		}
-		ByteArrayBuffer buffer = cache.produce(getID(), new Function4<Integer, ByteArrayBuffer>(){
+		ByteArrayBuffer buffer = cache(trans).produce(getID(), readProducer(trans), null);
+		buffer.seek(0);
+		return buffer;
+	}
+
+	private Function4<Integer, ByteArrayBuffer> readProducer(
+			final Transaction trans) {
+		return new Function4<Integer, ByteArrayBuffer>(){
 			public ByteArrayBuffer apply(Integer id) {
 				return readBufferById(trans);
 			}
-		}, null);
-		buffer.seek(0);
-		return buffer;
+		};
 	}
 	
 	@Override
 	protected ByteArrayBuffer produceWriteBuffer(final Transaction trans, final int length) {
-		Cache4<Integer, ByteArrayBuffer> cache = cache(trans);
-		if(cache == null){
-			return newWriteBuffer(length);
-		}
-		ByteArrayBuffer buffer = cache.produce(getID(), new Function4<Integer, ByteArrayBuffer>(){
-			public ByteArrayBuffer apply(Integer id) {
-				return newWriteBuffer(length);
-			}
-		}, null);
+		ByteArrayBuffer buffer = cache(trans).produce(getID(), writerProducer(length), null);
 		buffer.ensureSize(length);
 		buffer.seek(0);
 		return buffer;
+	}
+
+	private Function4<Integer, ByteArrayBuffer> writerProducer(final int length) {
+		return new Function4<Integer, ByteArrayBuffer>(){
+			public ByteArrayBuffer apply(Integer id) {
+				return newWriteBuffer(length);
+			}
+		};
 	}
 
 

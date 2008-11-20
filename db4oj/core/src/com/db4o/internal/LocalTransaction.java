@@ -54,6 +54,10 @@ public class LocalTransaction extends Transaction {
 	    		_slotCache = CacheFactory.new2QCache(slotCacheSize);
 	    	}
     	}
+    	if(_slotCache == null){
+    		_slotCache = new NullCache4<Integer, ByteArrayBuffer>();
+    	}
+
 	}
 	
 	public LocalObjectContainer file() {
