@@ -7,6 +7,7 @@ import java.util.*;
 import com.db4o.config.*;
 import com.db4o.internal.*;
 import com.db4o.internal.caching.*;
+import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
@@ -32,13 +33,14 @@ public class SlotCachingTestCase extends AbstractDb4oTestCase implements OptOutC
 	public void test(){
 		store(new Item(1));
 		db().commit();
-		LocalTransaction localTrans = (LocalTransaction) systemTrans();
-		Cache4<Integer, ByteArrayBuffer> cache = localTrans.slotCache();
+		LocalTransaction systemTrans = (LocalTransaction) systemTrans();
+		Cache4<Integer, ByteArrayBuffer> cache = systemTrans.slotCache();
 		Assert.isNotNull(cache);
 		Iterator<ByteArrayBuffer> i = cache.iterator();
 		
 		// doesn't decaf
 		// Assert.isTrue(i.hasNext());
+		
 	}
 
 }

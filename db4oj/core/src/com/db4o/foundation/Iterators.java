@@ -131,6 +131,15 @@ public class Iterators {
 		return new JdkCollectionIterator4(c);
 	}
 	
+	/**
+	 * @sharpen.unwrap
+	 * @sharpen.ignore
+	 * @decaf.replaceFirst.jdk11 return iterator;
+	 */
+	public static <T> java.util.Iterator<T> platformIterator(Iterator4 iterator) {
+		return new Iterator4JdkIterator(iterator);
+	}
+	
 	public static <T> Iterator4 iterate(T... array) {
 		return new ArrayIterator4(array);
 	}
