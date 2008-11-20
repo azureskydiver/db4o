@@ -96,6 +96,7 @@
 		</exec>
 		
 		<exec 
+			taskname="core.net+instr"
 			executable="${dir.dist.dll.net}/Instrumented/Db4objects.Db4o.Tests.exe"
 			dir = "${dir.dist.dll.net}/Instrumented"
 			failonerror="true" timeout="3600000"
@@ -111,13 +112,13 @@
 	</target>
 	
 	<target name="run-tests-core" depends="build-core">
-		<exec executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" failonerror="true" timeout="3600000">
+		<exec taskname="core.net" executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" failonerror="true" timeout="3600000">
 			<env key="TEMP" value="${Tests.Temp.Path}"/>
 		</exec>	
 	</target>
 	
 	<target name="run-tests-admin" depends="build-admin" unless="skip.admin">
-		<exec executable="${dir.dist.dll.net}/Db4oTool.Tests.exe" dir="${dir.dist.dll.net}" failonerror="true" timeout="1800000">
+		<exec taskname="tool.net" executable="${dir.dist.dll.net}/Db4oTool.Tests.exe" dir="${dir.dist.dll.net}" failonerror="true" timeout="1800000">
 			<env key="TEMP" value="${Tests.Temp.Path}"/>
 		</exec>
 	</target>
@@ -126,7 +127,7 @@
 	</target>
 	
 	<target name="run-tests-mono" depends="build-core" if="mono">
-		<exec executable="${mono.vm.executable}" failonerror="true">
+		<exec taskname="core.mono" executable="${mono.vm.executable}" failonerror="true">
 			<arg value="--debug" />
 			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" />
 		</exec>
@@ -377,8 +378,8 @@
 	</target>	
 	
 	<target name="run-linq-tests" depends="build-core">
-		<exec dir="${dir.dist.dll}" executable="${dir.dist.dll}/Db4objects.Db4o.Linq.Tests.exe" failonerror="true"/>
-		<exec dir="${dir.dist.dll}" executable="${dir.dist.dll}/Db4objects.Db4o.Linq.VB.Tests.exe" failonerror="true"/>
+		<exec taskname="linq" dir="${dir.dist.dll}" executable="${dir.dist.dll}/Db4objects.Db4o.Linq.Tests.exe" failonerror="true"/>
+		<exec taskname="linq/vb" dir="${dir.dist.dll}" executable="${dir.dist.dll}/Db4objects.Db4o.Linq.VB.Tests.exe" failonerror="true"/>
 	</target>
 	
 	<target name="run-msbuild-tests" depends="build-admin">
