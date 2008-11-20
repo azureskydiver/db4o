@@ -16,7 +16,13 @@ public class IoAdapterTestSuite extends FixtureTestSuiteDescription {{
     			protected Cache4 newCache(int pageCount) {
     				return CacheFactory.new2QCache(pageCount);
     			}
-    		}
+    		},
+    		new IoAdapterWithCache(new RandomAccessFileAdapter()) {
+    			@Override
+    			protected Cache4 newCache(int pageCount) {
+    				return CacheFactory.new2QXCache(pageCount);
+    			}
+    		},
     	})
 	);
 	

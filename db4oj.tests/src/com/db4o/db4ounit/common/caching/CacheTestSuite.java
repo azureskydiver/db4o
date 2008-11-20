@@ -16,6 +16,11 @@ public class CacheTestSuite extends FixtureTestSuiteDescription {{
 			public Object value() {
 				return CacheFactory.new2QCache(10);
 			}
+		},
+		new Deferred4() {
+			public Object value() {
+				return CacheFactory.new2QXCache(10);
+			}
 		}
 	));
 	
