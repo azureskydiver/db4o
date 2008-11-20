@@ -15,9 +15,9 @@ public class SlotCachePerformanceTest {
 	
 	private static final int BENCHMARKS = 5;
 
-	private static final int STORED_ITEMS = 30000;
+	private static final int STORED_ITEMS = 50000;
 	
-	private static final int QUERY_ITERATIONS = 200;
+	private static final int QUERY_ITERATIONS = 300;
 	
 	private static final int QUERY_VALUES = 10;
 	
