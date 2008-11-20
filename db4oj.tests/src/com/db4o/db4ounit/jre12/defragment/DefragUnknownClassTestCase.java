@@ -25,9 +25,12 @@ public class DefragUnknownClassTestCase implements TestLifeCycle {
 	
 	public static class ClassHolder {
 		public Class _clazz;
-		public Unknown _unknown;
+		public /* Unknown */ Object _unknown;
 
-		public ClassHolder(Class clazz, Unknown unknown) {
+		// 2nd argument cant be typed to Unknown because this might cause ConstructorSupport to not 
+		// find this constructor for platforms that require it
+		// (Confirmed for JDK1.3.1_20 on Windows XP)
+		public ClassHolder(Class clazz, /* Unknown */ Object unknown) {
 			_clazz = clazz;
 			_unknown = unknown;
 		}
@@ -44,8 +47,8 @@ public class DefragUnknownClassTestCase implements TestLifeCycle {
 	private void defragment() throws Exception {
 		ClassLoader loader = new ExcludingClassLoader(getClass().getClassLoader(), new Class[]{ Unknown.class });
 		Class starterClazz = loader.loadClass(DefragStarter.class.getName());
-		Method defragMethod = starterClazz.getDeclaredMethod("defrag", new Class[]{ String.class });
-		defragMethod.invoke(null, new Object[]{ FILENAME });
+		Method defragMethod = starterClazz.getDeclaredMethod("defrag", String.class);
+		defragMethod.invoke(null, FILENAME);
 	}
 
 	public static class DefragStarter {
