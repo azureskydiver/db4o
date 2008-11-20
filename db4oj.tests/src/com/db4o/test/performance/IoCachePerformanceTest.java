@@ -14,46 +14,56 @@ import db4ounit.data.*;
 /**
  * @decaf.ignore
  */
-public class CachePerformanceTest {
-
+public class IoCachePerformanceTest {
+	
 	private static final int BENCHMARKS = 5;
 
-	private static final int ITERATIONS = 1000;
+	private static final int PRE_EXISTING_ITEMS = 10000;
+	
+	private static final int ITERATIONS = 20;
 
-	private static final int COMMIT_EVERY = 200;
+	private static final int COMMIT_EVERY = 5;
+	
+	private static final int ITEMS_PER_ITERATION = 10;
+	
 	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		
+		IoCachePerformanceTest test0 = benchmarkCachedIoAdapter();
+		IoCachePerformanceTest test1 = benchmarkIoAdapterWithCache();
+
 		// warm up
-		benchmarkCachedIoAdapter();
-		benchmarkIoAdapterWithCache();
+		test0.run();
+		test1.run();
 		
 		double totalRatio = 0;
 		for (int i=0; i<BENCHMARKS; ++i) {
-			final long t0 = benchmarkCachedIoAdapter();
-			final long t1 = benchmarkIoAdapterWithCache();
+			
+			
+			final long t0 = test0.run();
+			final long t1 = test1.run();
 			
 			final double ratio = t1/((double)t0);
-			report(ratio);
+			report(test1, ratio);
 			totalRatio += ratio;
 		}
 		System.out.print("On average ");
-		report(totalRatio / BENCHMARKS);
+		report(test1, totalRatio / BENCHMARKS);
 	}
 
-	private static long benchmarkCachedIoAdapter() {
-	    return new CachePerformanceTest(cachedIoAdapter()).run();
+	private static IoCachePerformanceTest benchmarkCachedIoAdapter() {
+	    return new IoCachePerformanceTest("CachedIoAdapter", cachedIoAdapter());
     }
 
-	private static long benchmarkIoAdapterWithCache() {
-	    return new CachePerformanceTest(ioAdapterWithCache()).run();
+	private static IoCachePerformanceTest benchmarkIoAdapterWithCache() {
+	    return new IoCachePerformanceTest("IoAdapterWithCache", ioAdapterWithCache());
     }
 
-	private static void report(final double ratio) {
-	    System.out.println("IoAdapterWithCache is " + (ratio > 1 ? "slower by " : "faster by ") + ((int)(((ratio > 1 ? ratio : (1 - ratio)) * 100) % 100)) + "%");
+	private static void report(IoCachePerformanceTest test1, final double ratio) {
+	    System.out.println(test1._name + " is " + (ratio > 1 ? "slower by " : "faster by ") + ((int)(((ratio > 1 ? ratio : (1 - ratio)) * 100) % 100)) + "%");
     }
 	
 	private static IoAdapter cachedIoAdapter() {
@@ -61,11 +71,11 @@ public class CachePerformanceTest {
     }
 
 	private static IoAdapter ioAdapterWithCache() {
-		return new IoAdapterWithCache(new RandomAccessFileAdapter()) {
+		return new  IoAdapterWithCache(new RandomAccessFileAdapter()) {
 			@Override
 			protected Cache4 newCache(int pageCount) {
-				return CacheFactory.newLRUCache(pageCount);
-//				return CacheFactory.new2QCache(pageCount);
+				// return CacheFactory.newLRUCache(pageCount);
+				return CacheFactory.new2QCache(pageCount);
 			}
     	};
     }
@@ -86,16 +96,25 @@ public class CachePerformanceTest {
 		}
 	}
 	
+	private final String _name;
 	private ObjectContainer _container;
 	private String _filename;
 	private final IoAdapter _io;
 	
-	public CachePerformanceTest(IoAdapter ioAdapter) {
+	public IoCachePerformanceTest(String name, IoAdapter ioAdapter) {
+		_name = name;
 		_io = ioAdapter;
     }
 
 	private long run() {
 		openFile();
+		
+		if(PRE_EXISTING_ITEMS > 0){
+			for (int i = 0; i < PRE_EXISTING_ITEMS; i++) {
+				_container.store(new Item(i));
+			}
+			commit();
+		}
 		
 		try {
 			final long t0 = System.nanoTime();
@@ -109,7 +128,7 @@ public class CachePerformanceTest {
 			
 			final long t1 = System.nanoTime();
 			final long elapsed = t1-t0;
-			System.out.println("" + adapterName() + ": " + ((int)(elapsed/1000000.0)) + "ms");
+			System.out.println(_name + ": " + ((int)(elapsed/1000000.0)) + "ms");
 			return elapsed;
 			
 		} finally {
@@ -119,14 +138,6 @@ public class CachePerformanceTest {
 
 	private void commit() {
 	    _container.commit();
-    }
-
-	private String adapterName() {
-	    final String simpleName = _io.getClass().getSimpleName();
-	    if (simpleName.length() == 0) {
-	    	return _io.getClass().getSuperclass().getSimpleName();
-	    }
-		return simpleName;
     }
 
 	private void dispose() {
@@ -175,6 +186,6 @@ public class CachePerformanceTest {
     }
 
 	private Iterator4 arbitraryIntegers() {
-	    return Generators.arbitraryValuesOf(Integer.class).iterator();
+	    return Generators.take(ITEMS_PER_ITERATION, Streams.randomIntegers()).iterator();
     }
 }

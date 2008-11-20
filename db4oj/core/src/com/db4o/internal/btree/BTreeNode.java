@@ -16,7 +16,7 @@ import com.db4o.internal.*;
  * 
  * @exclude
  */
-public final class BTreeNode extends PersistentBase{
+public final class BTreeNode extends CacheablePersistentBase{
     
     private static final int COUNT_LEAF_AND_3_LINK_LENGTH = (Const4.INT_LENGTH * 4) + 1; 
  

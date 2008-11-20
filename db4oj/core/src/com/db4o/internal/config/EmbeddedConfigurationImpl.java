@@ -11,6 +11,10 @@ public class EmbeddedConfigurationImpl implements EmbeddedConfiguration, LegacyC
 		_legacy = (Config4Impl) legacy;
     }
 
+	public CacheConfiguration cache() {
+		return new CacheConfigurationImpl(_legacy);
+	}
+	
 	public FileConfiguration file() {
 		return new FileConfigurationImpl(_legacy);
 	}

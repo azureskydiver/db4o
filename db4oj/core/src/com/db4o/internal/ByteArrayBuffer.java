@@ -261,4 +261,11 @@ public class ByteArrayBuffer implements ReadWriteBuffer {
 	    seek(readInt());
 	}
 	
+	public void ensureSize(int size){
+		if(size == _buffer.length){
+			return;
+		}
+		_buffer = new byte[size];
+	}
+
 }

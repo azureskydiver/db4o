@@ -85,7 +85,8 @@ public abstract class PersistentBase implements Persistent {
 			return;
 		}
 		try {
-			ByteArrayBuffer reader = trans.container().readReaderByID(trans, getID());
+			ByteArrayBuffer reader = produceReadBuffer(trans); 
+			
 			if (Deploy.debug) {
 				reader.readBegin(getIdentifier());
 			}
@@ -95,7 +96,15 @@ public abstract class PersistentBase implements Persistent {
 			endProcessing();
 		}
 	}
-	
+    
+    protected ByteArrayBuffer produceReadBuffer(Transaction trans){
+    	return readBufferById(trans);
+    }
+    
+    protected ByteArrayBuffer readBufferById(Transaction trans){
+    	return trans.container().readReaderByID(trans, getID());
+    }
+
     
     public void setID(int a_id) {
     	if(DTrace.enabled){
@@ -145,8 +154,6 @@ public abstract class PersistentBase implements Persistent {
 	        int length = ownLength();
 	        length = stream.blockAlignedBytes(length);
 	        
-	        ByteArrayBuffer writer = new ByteArrayBuffer(length);
-	        
 	        Slot slot;
 	        
 	        if(isNew()){
@@ -162,12 +169,23 @@ public abstract class PersistentBase implements Persistent {
 	            trans.slotFreeOnRollbackCommitSetPointer(_id, slot, isFreespaceComponent());
 	        }
 	        
+	        ByteArrayBuffer writer = produceWriteBuffer(trans, length);
+	        
 	        writeToFile(trans, writer, slot);
         }finally{
         	endProcessing();
         }
 
     }
+
+	protected ByteArrayBuffer produceWriteBuffer(Transaction trans, int length) {
+		return newWriteBuffer(length);
+	}
+	
+	protected ByteArrayBuffer newWriteBuffer(int length) {
+		return new ByteArrayBuffer(length);
+	}
+	
     
     public boolean isFreespaceComponent(){
         return false;

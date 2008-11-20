@@ -11,6 +11,7 @@ import com.db4o.diagnostic.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
+import com.db4o.internal.config.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.encoding.*;
 import com.db4o.internal.freespace.*;
@@ -162,6 +163,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec BATCH_MESSAGES_KEY=new KeySpec(true);
 	
 	private static final KeySpec MAX_BATCH_QUEUE_SIZE_KEY = new KeySpec(Integer.MAX_VALUE);
+	
+	private static final KeySpec SLOT_CACHE_SIZE_KEY = new KeySpec(30);
 
 	//  is null in the global configuration until deepClone is called
 	private ObjectContainerBase        i_stream;
@@ -1018,5 +1021,18 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public ClientServerFactory clientServerFactory(){
 		return (ClientServerFactory) _config.get(CLIENT_SERVER_FACTORY_KEY);
 	}
+	
+	public CacheConfiguration cache() {
+		return new CacheConfigurationImpl(this);
+	}
+	
+	public void slotCacheSize(int size) {
+		_config.put(SLOT_CACHE_SIZE_KEY, size);
+	}
+	
+	public int slotCacheSize(){
+		return _config.getAsInt(SLOT_CACHE_SIZE_KEY);
+	}
+	
 
 }

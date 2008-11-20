@@ -2,17 +2,19 @@
 
 package com.db4o.internal.cs.config;
 
-import com.db4o.config.CommonConfiguration;
-import com.db4o.config.FileConfiguration;
+import com.db4o.config.*;
 import com.db4o.cs.config.ServerConfiguration;
 import com.db4o.internal.Config4Impl;
-import com.db4o.internal.config.CommonConfigurationImpl;
-import com.db4o.internal.config.FileConfigurationImpl;
+import com.db4o.internal.config.*;
 
 public class ServerConfigurationImpl extends NetworkingConfigurationProviderImpl implements ServerConfiguration {
 
 	public ServerConfigurationImpl(Config4Impl config) {
 		super(config);
+	}
+	
+	public CacheConfiguration cache() {
+		return new CacheConfigurationImpl(legacy());
 	}
 
 	public FileConfiguration file() {
@@ -22,4 +24,6 @@ public class ServerConfigurationImpl extends NetworkingConfigurationProviderImpl
 	public CommonConfiguration common() {
 		return new CommonConfigurationImpl(legacy());
 	}
+	
+	
 }
