@@ -9,7 +9,9 @@ public class AllTests extends ReflectionTestSuite {
 
 	protected Class[] testCases() {
 		Class[] commonCases = {
+			BlockAwareIoTestSuite.class,
 			IoAdapterTestSuite.class,
+			StorageTestSuite.class,
 		};
 		return Db4oUnitTestUtil.mergeClasses(commonCases, stackTraceBasedCases());
 	}
