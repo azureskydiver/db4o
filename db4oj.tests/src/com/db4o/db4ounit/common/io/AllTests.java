@@ -11,6 +11,7 @@ public class AllTests extends ReflectionTestSuite {
 		Class[] commonCases = {
 			BlockAwareIoTestSuite.class,
 			IoAdapterTestSuite.class,
+			RandomAccessFileStorageFactoryTestCase.class,
 			StorageTestSuite.class,
 		};
 		return Db4oUnitTestUtil.mergeClasses(commonCases, stackTraceBasedCases());

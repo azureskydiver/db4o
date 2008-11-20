@@ -1,10 +1,11 @@
 package com.db4o.db4ounit.common.io;
 
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.io.*;
 
 import db4ounit.fixtures.*;
 
-public class StorageTestUnitBase extends TestWithFile {
+public class StorageTestUnitBase extends TestWithTempFile {
 
 	protected Storage _storage;
 
@@ -22,7 +23,7 @@ public class StorageTestUnitBase extends TestWithFile {
 		if (null != _storage) {
 			throw new IllegalStateException();
 		}
-	    _storage = factory().open(_filename, false, 0, readOnly);
+	    _storage = factory().open(_tempFile, false, 0, readOnly);
     }
 
 	@Override
