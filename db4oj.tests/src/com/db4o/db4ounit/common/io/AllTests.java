@@ -21,8 +21,8 @@ public class AllTests extends ReflectionTestSuite {
 	 */
 	private Class[] stackTraceBasedCases() {
 		return new Class[] {
-				DiskFullTestCase.class,
-				StackBasedDiskFullTestCase.class,
+			DiskFullTestCase.class,
+			StackBasedDiskFullTestCase.class,
 		};
 	}
 

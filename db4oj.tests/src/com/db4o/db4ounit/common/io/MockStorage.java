@@ -6,6 +6,8 @@ import db4ounit.mocking.*;
 
 public class MockStorage extends MethodCallRecorder implements Storage {
 
+	private int _returnValue;
+
 	public void close() {
 		record("close");
 	}
@@ -21,7 +23,7 @@ public class MockStorage extends MethodCallRecorder implements Storage {
 
 	public int read(long position, byte[] buffer, int bytesToRead) {
 		record(new MethodCall("read", position, buffer, bytesToRead));
-		return bytesToRead;
+		return _returnValue;
 	}
 
 	public void sync() {
@@ -31,5 +33,9 @@ public class MockStorage extends MethodCallRecorder implements Storage {
 	public void write(long position, byte[] bytes, int bytesToWrite) {
 		record(new MethodCall("write", position, bytes, bytesToWrite));
 	}
+
+	public void returnValueForNextCall(int value) {
+		_returnValue = value;
+    }
 
 }
