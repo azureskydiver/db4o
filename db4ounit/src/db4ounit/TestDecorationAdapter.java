@@ -2,18 +2,14 @@
 
 package db4ounit;
 
-public class TestDecorationAdapter implements TestDecoration {
+public class TestDecorationAdapter implements Test {
 
 	private final Test _test;
 	
 	public TestDecorationAdapter(Test test) {
 		_test = test;
 	}
-
-	public Test test() {
-		return _test;
-	}
-
+	
 	public String label() {
 		return _test.label();
 	}

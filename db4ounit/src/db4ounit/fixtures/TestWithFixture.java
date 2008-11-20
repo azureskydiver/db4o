@@ -4,17 +4,17 @@ import com.db4o.foundation.*;
 
 import db4ounit.*;
 
-public final class FixtureDecoration implements TestDecoration {
+public final class TestWithFixture implements Test {
 	private final Test _test;
 	private final FixtureVariable _variable;
 	private final Object _value;
 	private final String _fixtureLabel;
 	
-	public FixtureDecoration(Test test, FixtureVariable fixtureVariable, Object fixtureValue) {
+	public TestWithFixture(Test test, FixtureVariable fixtureVariable, Object fixtureValue) {
 		this(test, null, fixtureVariable, fixtureValue);
 	}
 
-	public FixtureDecoration(Test test, String fixtureLabel, FixtureVariable fixtureVariable, Object fixtureValue) {
+	public TestWithFixture(Test test, String fixtureLabel, FixtureVariable fixtureVariable, Object fixtureValue) {
 		_test = test;
 		_fixtureLabel = fixtureLabel;
 		_variable = fixtureVariable;

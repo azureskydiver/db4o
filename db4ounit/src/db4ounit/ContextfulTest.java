@@ -6,10 +6,9 @@ import com.db4o.foundation.*;
 
 import db4ounit.fixtures.*;
 
-public class ContextfulTest extends Contextful implements TestDecoration {
+public class ContextfulTest extends Contextful implements Test {
 	
 	private final TestFactory _factory;
-	private Test _test;
 
 	public ContextfulTest(TestFactory factory) {
 		_factory = factory;
@@ -26,16 +25,8 @@ public class ContextfulTest extends Contextful implements TestDecoration {
 	public void run() {
 		run(testInstance());
 	}
-	
-	public Test test() {
-		if (null == _test) throw new IllegalStateException();
-		return _test;
-	}
 
 	private Test testInstance() {
-		if (_test == null) {
-			_test = _factory.newInstance();
-		}
-		return _test;
+		return _factory.newInstance();
 	}
 }

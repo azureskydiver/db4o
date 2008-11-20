@@ -8,17 +8,6 @@ import db4ounit.fixtures.*;
 
 public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	
-	public static Object getTestSubject(Test test) {
-		return ((TestMethod)undecorate(test)).getSubject();
-	}
-
-	private static Test undecorate(Test test) {
-		while (test instanceof TestDecoration) {
-			test = ((TestDecoration)test).test();
-		}
-		return test;
-	}
-	
 	private Class[] _classes;
 	
 	public ReflectionTestSuiteBuilder(Class clazz) {

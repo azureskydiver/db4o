@@ -65,11 +65,11 @@ public class FixtureConfigurationTestCase implements TestCase {
 					TestCase2.class,
 				})).run(new TestResult());
 		
-		configuration.verify(new MethodCall[] {
+		configuration.verify(
 			new MethodCall("configure", TestCase1.class, MethodCall.IGNORED_ARGUMENT),
 			new MethodCall("configure", TestCase1.class, MethodCall.IGNORED_ARGUMENT),
 			new MethodCall("configure", TestCase2.class, MethodCall.IGNORED_ARGUMENT),
-			new MethodCall("configure", TestCase2.class, MethodCall.IGNORED_ARGUMENT),
-		});
+			new MethodCall("configure", TestCase2.class, MethodCall.IGNORED_ARGUMENT)
+		);
 	}
 }
