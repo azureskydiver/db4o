@@ -1,5 +1,7 @@
 package com.db4o.test.performance;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.io.*;
@@ -17,7 +19,9 @@ public class SlotCachePerformanceTest {
 
 	private static final int STORED_ITEMS = 50000;
 	
-	private static final int QUERY_ITERATIONS = 300;
+	private static final int QUERY_ITERATIONS = 100;
+	
+	private static final int GET_ALL_ITERATIONS = 20000;
 	
 	private static final int QUERY_VALUES = 10;
 	
@@ -64,7 +68,7 @@ public class SlotCachePerformanceTest {
 	private static IoAdapter randomAccessFileAdapter(){
 		return new RandomAccessFileAdapter();
 	}
-
+	
 	public static class Item {
 
 		private int _id;
@@ -94,16 +98,17 @@ public class SlotCachePerformanceTest {
     }
 
 	private long run() {
+		
 		openFile();
 		if(STORED_ITEMS > 0){
 			for (int i = 0; i < STORED_ITEMS; i++) {
 				_container.store(new Item(i));
 			}
-			commit();
 		}
 		
 		try {
 			final long t0 = System.nanoTime();
+			getAllItems();
 			queryItems();
 			final long t1 = System.nanoTime();
 			final long elapsed = t1-t0;
@@ -115,12 +120,29 @@ public class SlotCachePerformanceTest {
 		}
     }
 
+	private void getAllItems() {
+		for (int i = 0; i < GET_ALL_ITERATIONS; i++) {
+			Query q = _container.query();
+			q.constrain("Item.class");
+			ObjectSet<Object> objectSet = q.execute();
+			objectSet.ext().getIDs();
+			while(objectSet.hasNext()){
+				final Item found = (Item)objectSet.next();
+				Assert.isNotNull(found);
+			}
+		}
+	}
+
 	private void commit() {
 	    _container.commit();
     }
+	
+	private void closeFile(){
+		_container.close();
+	}
 
 	private void dispose() {
-	    _container.close();
+	    closeFile();
 	    File4.delete(_filename);
     }
 
