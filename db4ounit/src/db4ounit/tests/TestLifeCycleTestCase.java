@@ -6,11 +6,15 @@ import db4ounit.*;
 
 public class TestLifeCycleTestCase implements TestCase {
 	public void testLifeCycle() {
-		final Iterator4 tests = new ReflectionTestSuiteBuilder(RunsLifeCycle.class).iterator();
-		final Test test = (Test)Iterators.next(tests);
-		FrameworkTestCase.runTestAndExpect(test, 1);
 		
-		final RunsLifeCycle testSubject = (RunsLifeCycle)ReflectionTestSuiteBuilder.getTestSubject(test);
-		Assert.isTrue(testSubject.tearDownCalled());
+		final ByRef<Boolean> tearDownCalled = ByRef.newInstance(false);
+		RunsLifeCycle._tearDownCalled.with(tearDownCalled, new Runnable() {
+			public void run() {
+				final Iterator4 tests = new ReflectionTestSuiteBuilder(RunsLifeCycle.class).iterator();
+				final Test test = (Test)Iterators.next(tests);
+				FrameworkTestCase.runTestAndExpect(test, 1);
+			}
+		});
+		Assert.isTrue(tearDownCalled.value);
 	}
 }

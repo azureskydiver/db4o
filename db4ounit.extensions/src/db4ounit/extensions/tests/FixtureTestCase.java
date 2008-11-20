@@ -9,6 +9,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.*;
+import db4ounit.mocking.*;
 import db4ounit.tests.*;
 
 public class FixtureTestCase implements TestCase {
@@ -46,14 +47,18 @@ public class FixtureTestCase implements TestCase {
 		final Iterator4 tests = new Db4oTestSuiteBuilder(fixture, SimpleDb4oTestCase.class).iterator();
 		final Test test = nextTest(tests);
 		
-		SimpleDb4oTestCase.EXPECTED_FIXTURE_VARIABLE.with(fixture, new Runnable() {
+		final MethodCallRecorder recorder = new MethodCallRecorder();
+		SimpleDb4oTestCase.RECORDER_VARIABLE.with(recorder, new Runnable() {
 			public void run() {
 				FrameworkTestCase.runTestAndExpect(test, 0);
 			}
 		});
-
-		final SimpleDb4oTestCase subject = (SimpleDb4oTestCase)Db4oTestSuiteBuilder.getTestSubject(test);
-		Assert.isTrue(subject.everythingCalled());
+		recorder.verify(
+			new MethodCall("fixture", fixture), // synthetic method call
+			new MethodCall("configure", MethodCall.IGNORED_ARGUMENT),
+			new MethodCall("store"),
+			new MethodCall("testResultSize")
+		);
 	}
 
 	private Test nextTest(Iterator4 tests) {

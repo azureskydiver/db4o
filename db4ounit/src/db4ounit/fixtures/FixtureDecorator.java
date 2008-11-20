@@ -20,6 +20,6 @@ final class FixtureDecorator implements TestDecorator {
 		if(_fixture instanceof Labeled) {
 			label += ":" + ((Labeled)_fixture).label();
 		}
-		return new FixtureDecoration(test, label, _provider, _fixture);
+		return new TestWithFixture(test, label, _provider, _fixture);
 	}
 }
