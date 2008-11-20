@@ -48,7 +48,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 				try {
 					return new ContextfulIterator(suiteFor(clazz));
 				} catch (Exception e) {
-					return Iterators.singletonIterable(new FailingTest(clazz.getName(), e)).iterator();
+					return Iterators.singletonIterator(new FailingTest(clazz.getName(), e));
 				}
 			}
 		});
