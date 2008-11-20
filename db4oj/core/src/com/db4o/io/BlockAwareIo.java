@@ -37,21 +37,7 @@ public class BlockAwareIo {
 			regularAddress(newAddress, newAddressOffset),
 			length);
 	}
-
-//	/**
-//	 * sets the read/write pointer in the file using block mode
-//	 */
-//	public void blockSeek(int address) throws Db4oIOException {
-//		blockSeek(address, 0);
-//	}
-//
-//	/**
-//	 * sets the read/write pointer in the file using block mode
-//	 */
-//	public void blockSeek(int address, int offset) throws Db4oIOException {
-//		seek(regularAddress(address, offset));
-//	}
-
+	
 	/**
 	 * outside call to set the block size of this adapter
 	 */
@@ -109,6 +95,38 @@ public class BlockAwareIo {
 	 * 
 	 * @return the number of bytes read and returned
 	 */
+	public int blockRead(int address, int offset, byte[] buffer) throws Db4oIOException {
+		return blockRead(address, offset, buffer, buffer.length);
+	}
+
+	/**
+	 * implement to read a buffer at the seeked address
+	 */
+	public int blockRead(int address, int offset, byte[] bytes, int length) throws Db4oIOException {
+		return read(regularAddress(address, offset), bytes, length);
+	}
+	
+	/**
+	 * reads a buffer at the seeked address
+	 * 
+	 * @return the number of bytes read and returned
+	 */
+	public int blockRead(int address, byte[] buffer) throws Db4oIOException {
+		return blockRead(address, 0, buffer, buffer.length);
+	}
+
+	/**
+	 * implement to read a buffer at the seeked address
+	 */
+	public int blockRead(int address, byte[] bytes, int length) throws Db4oIOException {
+		return blockRead(address, 0, bytes, length);
+	}
+	
+	/**
+	 * reads a buffer at the seeked address
+	 * 
+	 * @return the number of bytes read and returned
+	 */
 	public int read(long pos, byte[] buffer) throws Db4oIOException {
 		return read(pos, buffer, buffer.length);
 	}
@@ -117,11 +135,43 @@ public class BlockAwareIo {
 	 * implement to read a buffer at the seeked address
 	 */
 	public int read(long pos, byte[] bytes, int length) throws Db4oIOException {
-		return length;
+		return _storage.read(pos, bytes, length);
 	}
 
 	public void sync() throws Db4oIOException {
-		
+		_storage.sync();
+	}
+	
+	/**
+	 * reads a buffer at the seeked address
+	 * 
+	 * @return the number of bytes read and returned
+	 */
+	public void blockWrite(int address, int offset, byte[] buffer) throws Db4oIOException {
+		blockWrite(address, offset, buffer, buffer.length);
+	}
+
+	/**
+	 * implement to read a buffer at the seeked address
+	 */
+	public void blockWrite(int address, int offset, byte[] bytes, int length) throws Db4oIOException {
+		write(regularAddress(address, offset), bytes, length);
+	}
+	
+	/**
+	 * reads a buffer at the seeked address
+	 * 
+	 * @return the number of bytes read and returned
+	 */
+	public void blockWrite(int address, byte[] buffer) throws Db4oIOException {
+		blockWrite(address, 0, buffer, buffer.length);
+	}
+
+	/**
+	 * implement to read a buffer at the seeked address
+	 */
+	public void blockWrite(int address, byte[] bytes, int length) throws Db4oIOException {
+		blockWrite(address, 0, bytes, length);
 	}
 
 	/**
@@ -136,7 +186,7 @@ public class BlockAwareIo {
 	 */
 	public void write(long pos, byte[] buffer, int length)
 			throws Db4oIOException {
-		
+		_storage.write(pos, buffer, length);
 	}
 
 	/**
