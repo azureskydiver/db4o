@@ -6,7 +6,11 @@ import com.db4o.foundation.*;
 
 import db4ounit.fixtures.FixtureContext.*;
 
-public class FixtureVariable {
+public class FixtureVariable<T> {
+	
+	public static <T> FixtureVariable<T> newInstance(String label) {
+		return new FixtureVariable<T>(label);
+    }
 	
 	private final String _label;
 	
@@ -29,25 +33,25 @@ public class FixtureVariable {
 		return _label;
 	}
 	
-	public Object with(Object value, Closure4 closure) {
+	public Object with(T value, Closure4 closure) {
 		return inject(value).run(closure);
 	}
 
-	public void with(Object value, Runnable runnable) {
+	public void with(T value, Runnable runnable) {
 		inject(value).run(runnable);
 	}
 
-	private FixtureContext inject(Object value) {
+	private FixtureContext inject(T value) {
 		return currentContext().add(this, value);
 	} 
 	
 	/**
 	 * @sharpen.property
 	 */
-	public Object value() {
+	public T value() {
 		final Found found = currentContext().get(this);
 		if (null == found) throw new IllegalStateException();
-		return found.value;
+		return (T)found.value;
 	}
 
 	private FixtureContext currentContext() {

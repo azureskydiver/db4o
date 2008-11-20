@@ -10,13 +10,16 @@ import db4ounit.mocking.*;
 
 public class FixtureBasedTestSuiteTestCase implements TestCase {
 	
-	static FixtureVariable RECORDER_FIXTURE = new FixtureVariable("recorder");
+	static FixtureVariable<MethodCallRecorder> RECORDER_FIXTURE = FixtureVariable.newInstance("recorder");
 	
 	static FixtureVariable FIXTURE1 = new FixtureVariable("f1");
 	
 	static FixtureVariable FIXTURE2 = new FixtureVariable("f2");
 	
 	public static final class TestUnit implements TestCase {
+		
+		private final MethodCallRecorder _recorder = RECORDER_FIXTURE.value();
+		
 		public void testFoo() {
 			record("testFoo");
 		}
@@ -30,7 +33,7 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 		}
 
 		private MethodCallRecorder recorder() {
-			return ((MethodCallRecorder)RECORDER_FIXTURE.value());
+			return _recorder;
 		}
 	}
 	
