@@ -49,7 +49,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
-import sharpen.core.framework.JavadocUtility;
+import sharpen.core.framework.*;
 import decaf.core.IterablePlatformMapping;
 import decaf.core.TargetPlatform;
 import decaf.rewrite.DecafASTNodeBuilder;
@@ -195,25 +195,68 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public void postVisit(ASTNode node) {
-		if (node instanceof Expression) {
-			final Expression expression = (Expression)node;
-			if (expression.resolveUnboxing()) {
-				if(!isMethodName(expression)) {
-					rewrite().replace(expression, rewrite().unboxedMethodInvocation(expression));
-				}
-			} else {
-				if (expression.resolveBoxing()) {
-					if(!isMethodName(expression)) {
-						rewrite().replace(expression, rewrite().box(expression));
-					}
-				}
-			}
+		if (!(node instanceof Expression)) {
+			return;
+		}
+		
+		try {
+			postVisitExpression((Expression)node);
+		} catch (RuntimeException e) {
+			unsupportedConstruct(node, e);
 		}
 	}
-
-	private boolean isMethodName(Expression exp) {
-		return (exp.getParent().getNodeType() == ASTNode.METHOD_INVOCATION) && (exp.getLocationInParent() == MethodInvocation.NAME_PROPERTY);
+	
+	private void unsupportedConstruct(ASTNode node, Exception cause) {
+		unsupportedConstruct(node, "failed to map: '" + node + "'", cause);
 	}
+	
+	protected String sourceInformation(ASTNode node) {
+		return builder().sourceInformationFor(node);
+	}
+
+	private void unsupportedConstruct(ASTNode node, final String message, Exception cause) {
+		throw new IllegalArgumentException(sourceInformation(node) + ": " + message, cause);
+	}
+
+	private void postVisitExpression(final Expression expression) {
+		
+		if (!isAutoBoxingTarget(expression)) {
+			return;
+			
+		}
+	    if (expression.resolveUnboxing()) {
+			final Expression erasure = rewrite().erasureFor(expression);
+			rewrite().replace(expression, rewrite().unboxedMethodInvocation(erasure != null ? erasure : expression, expression.resolveTypeBinding()));
+			return;
+		}
+	    
+	    if (expression.resolveBoxing()) {
+			rewrite().replace(expression, rewrite().box(expression));
+		}
+    }
+
+	private boolean isAutoBoxingTarget(Expression exp) {
+		if (!(exp instanceof Name)) {
+			return true;
+		}
+		return exp.getLocationInParent() != MethodInvocation.NAME_PROPERTY
+			&& !isPartOfFieldAccess(exp)
+			&& !isPartOfQualifiedName(exp);
+	}
+
+	private boolean isPartOfFieldAccess(Expression exp) {
+		if (exp.getLocationInParent() == FieldAccess.NAME_PROPERTY) {
+			return true;
+		}
+	    return exp.getLocationInParent() == FieldAccess.EXPRESSION_PROPERTY;
+    }
+
+	private boolean isPartOfQualifiedName(Expression exp) {
+		if (exp.getLocationInParent() == QualifiedName.NAME_PROPERTY) {
+			return true;
+		}
+		return exp.getLocationInParent() == QualifiedName.QUALIFIER_PROPERTY;
+    }
 	
 	@Override
 	public void endVisit(ClassInstanceCreation node) {

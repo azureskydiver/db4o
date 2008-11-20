@@ -180,7 +180,7 @@ public class DecafRewritingServices {
 	}
 
 	@SuppressWarnings("unchecked")
-	public MethodInvocation unboxedMethodInvocation(final Expression expression) {
+	public MethodInvocation unboxedMethodInvocation(final Expression expression, ITypeBinding toType) {
 		Expression modified = expression;
 		if(expression.getNodeType() == ASTNode.METHOD_INVOCATION) {
 			ASTNode parent = expression.getParent();
@@ -196,7 +196,7 @@ public class DecafRewritingServices {
 				modified = (Expression) rewrite().get(parent, parentLocation);
 			}
 		}
-		return (expression == modified ? unbox(modified) : unboxModified(expression, modified));
+		return (expression == modified ? unbox(modified, toType) : unboxModified(expression, modified));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -207,10 +207,10 @@ public class DecafRewritingServices {
 		return creation;
 	}
 
-	public MethodInvocation unbox(final Expression expression) {
+	public MethodInvocation unbox(final Expression expression, ITypeBinding type) {
 		return builder().newMethodInvocation(
 			parenthesizedMove(expression),
-			builder().unboxingMethodFor(expression.resolveTypeBinding()));
+			builder().unboxingMethodFor(type));
 	}
 
 	public MethodInvocation unboxModified(final Expression expression, final Expression modified) {

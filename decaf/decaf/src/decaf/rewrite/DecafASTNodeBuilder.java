@@ -577,4 +577,8 @@ public class DecafASTNodeBuilder {
 		
 		return constantDecl;
 	}
+
+	public String sourceInformationFor(ASTNode node) {
+		return ASTUtility.sourceInformation(this._unit, node);
+    }
 }
