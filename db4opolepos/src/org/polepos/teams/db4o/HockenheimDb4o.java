@@ -3,9 +3,15 @@ package org.polepos.teams.db4o;
 import org.polepos.circuits.hockenheim.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.query.*;
 
 public class HockenheimDb4o extends Db4oDriver implements HockenheimDriver {
+	
+	@Override
+	public void configure(Configuration config) {
+		
+	}
 
 	public void query_ascending() {
 		Query query = db().query();
@@ -41,5 +47,6 @@ public class HockenheimDb4o extends Db4oDriver implements HockenheimDriver {
 			return second.id - first.id;
 		}
 	}
+
 
 }

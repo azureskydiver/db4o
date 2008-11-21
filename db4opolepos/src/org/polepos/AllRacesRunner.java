@@ -26,6 +26,7 @@ import org.polepos.circuits.hockenheim.*;
 import org.polepos.circuits.hungaroring.*;
 import org.polepos.circuits.imola.*;
 import org.polepos.circuits.indianapolis.*;
+import org.polepos.circuits.istanbul.*;
 import org.polepos.circuits.magnycours.*;
 import org.polepos.circuits.melbourne.*;
 import org.polepos.circuits.monaco.*;
@@ -60,35 +61,29 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 
 		return new Team[] {
 				
-            configuredDb4oTeam(new ConfigurationSetting[]{
-            		slotCache(0),
-            		randomAccessFileAdapter(),
-            }),
+	            configuredDb4oTeam(new ConfigurationSetting[] { 
+	            		slotCache(0),
+						randomAccessFileAdapter(), }),
+				configuredDb4oTeam(new ConfigurationSetting[] { 
+						slotCache(30),
+						randomAccessFileAdapter(), }),
+				configuredDb4oTeam(new ConfigurationSetting[] { 
+						slotCache(0),
+						cachedIoAdapter(), }),
+				configuredDb4oTeam(new ConfigurationSetting[] { 
+						slotCache(30),
+						cachedIoAdapter(), }),
+						
             
-            configuredDb4oTeam(new ConfigurationSetting[]{
-            		slotCache(30),
-            		randomAccessFileAdapter(),
-            }),
-            
-            configuredDb4oTeam(new ConfigurationSetting[]{
-            		slotCache(100),
-            		randomAccessFileAdapter(),
-            }),
-            
-            configuredDb4oTeam(new ConfigurationSetting[]{
-            		slotCache(300),
-            		randomAccessFileAdapter(),
-            }),
-
-            
-//            configuredDb4oTeam(new ConfigurationSetting[]{
-//            		cachedIoAdapter()
-//            }),
+// configuredDb4oTeam(new ConfigurationSetting[]{
+// cachedIoAdapter()
+// }),
 //            
 
             
-//          db4oTeam(JAR_TRUNK, null),
-//          db4oTeam(Db4oVersions.JAR63, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
+// db4oTeam(JAR_TRUNK, null),
+// db4oTeam(Db4oVersions.JAR63, new int[] {Db4oOptions.CLIENT_SERVER,
+// Db4oOptions.CLIENT_SERVER_TCP }),
 		};
 	}
 
@@ -166,19 +161,20 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 
 	public Circuit[] circuits() {
 		return new Circuit[] {
-				 new Melbourne(),
-				 new Sepang(),
-				 new Bahrain(),
-				 new Imola(),
-				 new Barcelona(),
-				 new Monaco(),
-				 new Nurburgring(),
-				 new Montreal(),
-				 new Indianapolis(),
-				 new Magnycours(),
-                 new Silverstone(),
-                 new Hockenheim(),
-                 new Hungaroring(),
+//				 new Melbourne(),
+//				 new Sepang(),
+//				 new Bahrain(),
+//				 new Imola(),
+//				 new Barcelona(),
+//				 new Monaco(),
+//				 new Nurburgring(),
+//				 new Montreal(),
+//				 new Indianapolis(),
+//				 new Magnycours(),
+//                 new Silverstone(),
+//                 new Hockenheim(),
+//                 new Hungaroring(),
+                 new Istanbul(),
 		};
 	}
 
@@ -197,6 +193,7 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
                 new SilverstoneDb4o(),
                 new HockenheimDb4o(),
                 new HungaroringDb4o(),
+                new IstanbulDb4o(),
 		};
 	}
     

@@ -21,9 +21,7 @@ MA  02111-1307, USA. */
 package org.polepos.teams.db4o;
 
 import org.polepos.circuits.indianapolis.*;
-import org.polepos.framework.*;
 
-import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
 
@@ -32,16 +30,11 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
     
     private static int maximumPayload;
     
-    public void takeSeatIn(Car car, TurnSetup setup) throws CarMotorFailureException{
-        indexField(fieldNext());
-        indexField(fieldPayload());
-        super.takeSeatIn(car, setup);
-    }
-    
-    private void indexField(String fieldName){
-        ObjectClass objectClass = Db4o.configure().objectClass( IndianapolisList.class );
-        objectClass.objectField( fieldName).indexed( true );
-    }
+	@Override
+	public void configure(Configuration config) {
+		indexField(config, IndianapolisList.class  , fieldNext());
+		indexField(config, IndianapolisList.class  , fieldPayload());
+	}
 
     public void write() {
         IndianapolisList list = IndianapolisList.generate(setup().getObjectCount());

@@ -10,17 +10,11 @@ import com.db4o.query.*;
 public class HungaroringDb4o extends Db4oDriver implements HungaroringDriver {
 
 	private static int maximumPayload;
-
-	public void takeSeatIn(Car car, TurnSetup setup)
-			throws CarMotorFailureException {
-		indexField(fieldNext());
-		indexField(fieldPayload());
-		super.takeSeatIn(car, setup);
-	}
-
-	private void indexField(String fieldName) {
-		ObjectClass objectClass = Db4o.configure().objectClass(HungaroringList.class);
-		objectClass.objectField(fieldName).indexed(true);
+	
+	@Override
+	public void configure(Configuration config) {
+		indexField(config, Hungaroring.class, fieldNext());
+		indexField(config, Hungaroring.class, fieldPayload());
 	}
 
 	public void write() {
