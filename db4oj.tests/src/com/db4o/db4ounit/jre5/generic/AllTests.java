@@ -19,7 +19,7 @@ public class AllTests extends Db4oTestSuite {
 	@Override
 	protected Class[] testCases() {
 		return new Class[] {
-//			GenericStringTestCase.class,
+			GenericStringTestCase.class,
 		};
 	}
 
