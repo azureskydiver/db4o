@@ -11,6 +11,7 @@ import com.db4o.internal.delete.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
+import com.db4o.internal.transactionlog.*;
 
 /**
  * @exclude
@@ -34,6 +35,8 @@ public class LocalTransaction extends Transaction {
 	private final CommittedCallbackDispatcher _committedCallbackDispatcher;
 	
 	private Cache4<Integer, ByteArrayBuffer> _slotCache;
+	
+	private final EmbeddedTransactionLogHandler _transactionLogHandler = new EmbeddedTransactionLogHandler(this);
 
 	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
 		super(container, parentTransaction, referenceSystem);
@@ -136,7 +139,7 @@ public class LocalTransaction extends Transaction {
         
         container().writeDirty();
         
-        Slot reservedSlot = allocateTransactionLogSlot(false);
+        Slot reservedSlot = _transactionLogHandler.allocateSlot(false);
         
         freeSlotChanges(false);
                 
@@ -146,7 +149,7 @@ public class LocalTransaction extends Transaction {
         
         freeSlotChanges(true);
         
-        commit6WriteChanges(reservedSlot);
+        _transactionLogHandler.processSlotChanges(reservedSlot);
         
         freespaceEndCommit();
     }
@@ -252,78 +255,6 @@ public class LocalTransaction extends Transaction {
     	return slotChangeIsFlaggedDeleted(id);
     }
 	
-    private Slot allocateTransactionLogSlot(boolean appendToFile){
-        int transactionLogByteCount = transactionLogSlotLength();
-    	if(! appendToFile && freespaceManager() != null){
-    		int blockedLength = _file.bytesToBlocks(transactionLogByteCount);
-    		Slot slot = freespaceManager().allocateTransactionLogSlot(blockedLength);
-    		if(slot != null){
-    			return _file.toNonBlockedLength(slot);
-    		}
-    	}
-    	return _file.appendBytes(transactionLogByteCount);
-    }
-    
-    private int transactionLogSlotLength(){
-    	// slotchanges * 3 for ID, address, length
-    	// 2 ints for slotlength and count
-    	return ((countSlotChanges() * 3) + 2) * Const4.INT_LENGTH;
-    }
-    
-    private boolean slotLongEnoughForLog(Slot slot){
-    	return slot != null  &&  slot.length() >= transactionLogSlotLength();
-    }
-    
-
-	protected final void commit6WriteChanges(Slot reservedSlot) {
-        checkSynchronization();
-            
-        int slotChangeCount = countSlotChanges();
-        if (slotChangeCount > 0) {
-			writeSlotChanges(reservedSlot, slotChangeCount);
-		}
-        freeTransactionLogSlot(reservedSlot);
-    }
-
-	private void writeSlotChanges(Slot reservedSlot, int slotChangeCount) {
-		
-	    Slot transactionLogSlot = slotLongEnoughForLog(reservedSlot) ? reservedSlot
-	    	: allocateTransactionLogSlot(true);
-
-	    final StatefulBuffer buffer = new StatefulBuffer(this, transactionLogSlot);
-	    buffer.writeInt(transactionLogSlot.length());
-	    buffer.writeInt(slotChangeCount);
-
-	    appendSlotChanges(buffer);
-
-	    buffer.write();
-	    flushFile();
-
-	    container().writeTransactionPointer(transactionLogSlot.address());
-	    flushFile();
-
-	    if (writeSlots()) {
-	    	flushFile();
-	    }
-
-	    container().writeTransactionPointer(0);
-	    flushFile();
-	    
-	    if (transactionLogSlot != reservedSlot) {
-	    	freeTransactionLogSlot(transactionLogSlot);
-	    }
-    }
-	
-    private void freeTransactionLogSlot(Slot slot) {
-    	if(slot == null){
-    		return;
-    	}
-    	if(freespaceManager() == null){
-    	    return;
-    	}
-    	freespaceManager().freeTransactionLogSlot(_file.toBlockedLength(slot));
-	}
-    
     public void writeZeroPointer(int id){
         writePointer(id, Slot.ZERO);   
     }
@@ -353,7 +284,7 @@ public class LocalTransaction extends Transaction {
         i_pointerIo.write();
     }
 	
-    private boolean writeSlots() {
+    public boolean writeSlots() {
         final BooleanByRef ret = new BooleanByRef();
         traverseSlotChanges(new Visitor4() {
 			public void visit(Object obj) {
@@ -499,18 +430,6 @@ public class LocalTransaction extends Transaction {
         return false;
     }
 	
-	private int countSlotChanges(){
-        final IntByRef count = new IntByRef();
-        traverseSlotChanges(new Visitor4() {
-			public void visit(Object obj) {
-                SlotChange slot = (SlotChange)obj;
-                if(slot.isSetPointer()){
-                    count.value++;
-                }
-			}
-		});
-        return count.value;
-	}
 	
 	final void writeOld() {
         synchronized (container()._lock) {
@@ -535,15 +454,7 @@ public class LocalTransaction extends Transaction {
         }
     }
 	
-	private void appendSlotChanges(final ByteArrayBuffer writer){
-		traverseSlotChanges(new Visitor4() {
-			public void visit(Object obj) {
-				((SlotChange)obj).write(writer);
-			}
-		});
-    }
-	
-	private void traverseSlotChanges(Visitor4 visitor){
+	public void traverseSlotChanges(Visitor4 visitor){
         if(_systemTransaction != null){
         	parentLocalTransaction().traverseSlotChanges(visitor);
         }
@@ -860,7 +771,7 @@ public class LocalTransaction extends Transaction {
 	    return null;
 	}
 	
-	private FreespaceManager freespaceManager(){
+	public FreespaceManager freespaceManager(){
 		return _file.freespaceManager();
 	}
 	
@@ -892,5 +803,5 @@ public class LocalTransaction extends Transaction {
 	public Cache4<Integer, ByteArrayBuffer> slotCache(){
 		return _slotCache;
 	}
-    
+	
 }

@@ -319,7 +319,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return slot; 
     }
     
-    final Slot appendBytes(long bytes){
+    public final Slot appendBytes(long bytes){
     	Slot slot = appendBlocks(bytesToBlocks(bytes));
     	return toNonBlockedLength(slot);
     }
