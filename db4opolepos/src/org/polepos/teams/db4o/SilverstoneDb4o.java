@@ -22,10 +22,16 @@ package org.polepos.teams.db4o;
 import org.polepos.circuits.silverstone.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.query.*;
 
 
 public class SilverstoneDb4o extends Db4oDriver implements SilverstoneDriver{
+	
+	@Override
+	public void configure(Configuration config) {
+		
+	}
 
     public void store() {
         int count = setup().getObjectCount();

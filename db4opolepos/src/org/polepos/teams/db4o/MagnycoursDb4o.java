@@ -24,11 +24,18 @@ import java.util.*;
 import org.polepos.circuits.magnycours.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.query.*;
 
 public class MagnycoursDb4o extends Db4oDriver implements
 		MagnycoursDriver {
 
+	
+	@Override
+	public void configure(Configuration config) {
+		
+	}
+	
 	private List _list;
 
 	public void addFirstElement() {
