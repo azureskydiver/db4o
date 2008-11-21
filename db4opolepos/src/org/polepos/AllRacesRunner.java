@@ -61,8 +61,8 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 
 		return new Team[] {
 				
-	            configuredDb4oTeam(new ConfigurationSetting[] { 
-	            		slotCache(0),
+				configuredDb4oTeam(new ConfigurationSetting[] { 
+						slotCache(0),
 						randomAccessFileAdapter(), }),
 				configuredDb4oTeam(new ConfigurationSetting[] { 
 						slotCache(30),
@@ -161,39 +161,39 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 
 	public Circuit[] circuits() {
 		return new Circuit[] {
-//				 new Melbourne(),
-//				 new Sepang(),
-//				 new Bahrain(),
-//				 new Imola(),
-//				 new Barcelona(),
-//				 new Monaco(),
-//				 new Nurburgring(),
-//				 new Montreal(),
-//				 new Indianapolis(),
-//				 new Magnycours(),
-//                 new Silverstone(),
-//                 new Hockenheim(),
-//                 new Hungaroring(),
-                 new Istanbul(),
+			 new Melbourne(),
+			 new Sepang(),
+			 new Bahrain(),
+			 new Imola(),
+			 new Barcelona(),
+			 new Monaco(),
+			 new Nurburgring(),
+			 new Montreal(),
+			 new Indianapolis(),
+			 new Magnycours(),
+			 new Silverstone(),
+			 new Hockenheim(),
+			 new Hungaroring(),
+			 new Istanbul(),
 		};
 	}
 
 	public Driver[] drivers() {
 		return new Driver [] {
-				new MelbourneDb4o(),
-		        new SepangDb4o(),
-		        new BahrainDb4o(),
-		        new ImolaDb4o(),
-		        new BarcelonaDb4o(),
-		        new MonacoDb4o(),
-		        new NurburgringDb4o(),
-		        new MontrealDb4o(),
-				new MagnycoursDb4o(),
-				new IndianapolisDb4o(),
-                new SilverstoneDb4o(),
-                new HockenheimDb4o(),
-                new HungaroringDb4o(),
-                new IstanbulDb4o(),
+			new MelbourneDb4o(),
+			new SepangDb4o(),
+			new BahrainDb4o(),
+			new ImolaDb4o(),
+			new BarcelonaDb4o(),
+			new MonacoDb4o(),
+			new NurburgringDb4o(),
+			new MontrealDb4o(),
+			new MagnycoursDb4o(),
+			new IndianapolisDb4o(),
+			new SilverstoneDb4o(),
+			new HockenheimDb4o(),
+			new HungaroringDb4o(),
+			new IstanbulDb4o(),
 		};
 	}
     
