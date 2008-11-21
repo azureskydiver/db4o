@@ -42,12 +42,12 @@ public class FileConfigurationImpl implements FileConfiguration {
 		_config.generateVersionNumbers(setting);
 	}
 
-	public void io(IoAdapter adapter) throws GlobalOnlyConfigException {
-		_config.io(adapter);
+	public void storageFactory(StorageFactory factory) throws GlobalOnlyConfigException {
+		_config.storageFactory(factory);
 	}
 
-	public IoAdapter io() {
-		return _config.io();
+	public StorageFactory storageFactory() {
+		return _config.storageFactory();
 	}
 
 	public void lockDatabaseFile(boolean flag) {

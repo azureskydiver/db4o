@@ -2,11 +2,11 @@
 
 package com.db4o.config;
 
-import java.io.IOException;
+import java.io.*;
 
-import com.db4o.ext.DatabaseReadOnlyException;
-import com.db4o.foundation.NotSupportedException;
-import com.db4o.io.IoAdapter;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
+import com.db4o.io.*;
 
 /**
  * File-related configuration methods, applicable 
@@ -99,29 +99,25 @@ public interface FileConfiguration {
     public void generateVersionNumbers(ConfigScope setting);
 
     /**
-     * allows to configure db4o to use a customized byte IO adapter.
-     * <br><br>Derive from the abstract class {@link IoAdapter} to
+     * allows to configure db4o to use a customized byte IO storage mechanism.
+     * <br><br>Implement the interface {@link StorageFactory} to
      * write your own. Possible usecases could be improved performance
      * with a native library, mirrored write to two files, encryption or 
-     * read-on-write fail-safety control.<br><br>An example of a custom
-     * io adapter can be found in xtea_db4o community project:<br>
-     * http://developer.db4o.com/ProjectSpaces/view.aspx/XTEA<br><br>
-     * In client-server environment this setting should be used on the server 
-     * (adapter class must be available)<br><br>
-     * @param adapter - the IoAdapter
+     * read-on-write fail-safety control.<br><br>
+     * @param factory - the factory
      * 
      * @sharpen.property
      */
-    public void io(IoAdapter adapter) throws GlobalOnlyConfigException;
+    public void storageFactory(StorageFactory factory) throws GlobalOnlyConfigException;
 
     /**
-     * returns the configured {@link IoAdapter}.
+     * returns the configured {@link StorageFactory}.
      * 
      * @return
      * 
      * @sharpen.property
      */
-    public IoAdapter io();
+    public StorageFactory storageFactory();
 
     /**
      * can be used to turn the database file locking thread off. 

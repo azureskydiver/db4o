@@ -471,16 +471,36 @@ public interface Configuration {
      * In client-server environment this setting should be used on the server 
      * (adapter class must be available)<br><br>
      * @param adapter - the IoAdapter
+     * 
+     * @deprecated Use {@link #storageFactory(StorageFactory)} instead.
      */
     public void io(IoAdapter adapter) throws GlobalOnlyConfigException;
+    
+    /**
+     * allows to configure db4o to use a customized byte IO storage mechanism.
+     * <br><br>Implement the interface {@link StorageFactory} to
+     * write your own. Possible usecases could be improved performance
+     * with a native library, mirrored write to two files, encryption or 
+     * read-on-write fail-safety control.<br><br>
+     * @param factory - the factory
+     * 
+     * @sharpen.property
+     */
+    public void storageFactory(StorageFactory factory) throws GlobalOnlyConfigException;
+    
+    /**
+     * @sharpen.property
+     */
+    public StorageFactory storageFactory();
     
     /**
      * returns the configured {@link IoAdapter}.
      * 
      * @return
+     * 
+     * @deprecated Use {@link #storageFactory} instead.
      */
     public IoAdapter io();
-    
     /**
      * allows to mark fields as transient with custom attributes.
      * <br><br>.NET only: Call this method with the attribute name that you

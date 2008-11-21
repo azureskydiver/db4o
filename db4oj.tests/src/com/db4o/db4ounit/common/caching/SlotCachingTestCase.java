@@ -7,12 +7,10 @@ import java.util.*;
 import com.db4o.config.*;
 import com.db4o.internal.*;
 import com.db4o.internal.caching.*;
-import com.db4o.query.*;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
-
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 public class SlotCachingTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	
@@ -39,8 +37,7 @@ public class SlotCachingTestCase extends AbstractDb4oTestCase implements OptOutC
 		Iterator<ByteArrayBuffer> i = cache.iterator();
 		
 		// doesn't decaf
-		// Assert.isTrue(i.hasNext());
-		
+		Assert.isTrue(i.hasNext());
 	}
 
 }

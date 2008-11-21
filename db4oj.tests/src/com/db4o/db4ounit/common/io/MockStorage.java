@@ -14,7 +14,7 @@ public class MockStorage extends MethodCallRecorder implements Storage {
 
 	public long length() {
 		record("length");
-		return 0;
+		return _returnValue;
 	}
 
 	private void record(final String methodName) {

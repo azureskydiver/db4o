@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.jre.android;
 
 import com.db4o.config.*;
+import com.db4o.internal.*;
 import com.db4o.io.*;
 import com.db4o.reflect.jdk.*;
 
@@ -19,17 +20,17 @@ public class Db4oAndroid extends Db4oSolo{
 	}
 	
 	public Configuration config() {
-		Configuration config = super.config();
+		Config4Impl config = (Config4Impl)super.config();
 		if(alreadyConfigured(config)){
 			return config;
 		}
-		config.io(new RandomAccessFileAdapter());
+		config.storageFactory(new RandomAccessFileStorageFactory());
 		config.reflectWith(new JdkReflector(this.getClass().getClassLoader()));
 		return config;
 	}
 
-	private boolean alreadyConfigured(Configuration config) {
-		return config.io() instanceof RandomAccessFileAdapter;
+	private boolean alreadyConfigured(Config4Impl config) {
+		return config.storageFactory() instanceof RandomAccessFileStorageFactory;
 	}
 	
 }

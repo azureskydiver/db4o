@@ -153,7 +153,7 @@ public class IoCachePerformanceTest {
 	private EmbeddedConfiguration configuration() {
 	    final EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.common().objectClass(Item.class).objectField("_id").indexed(true);
-		config.file().io(_io);
+		config.file().storageFactory(new IoAdapterStorageFactory(_io));
 	    return config;
     }
 
