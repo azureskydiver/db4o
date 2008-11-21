@@ -60,7 +60,7 @@ public class ArrayListCandidatesTestCase implements TestCase {
 
 	public void test() {		
 		Configuration config = Db4o.newConfiguration();
-		config.io(new MemoryIoAdapter());
+		config.storageFactory(new MemoryStorageFactory());
 		ObjectContainer db = Db4o.openFile(config, DB_ID);
 
 		try {
