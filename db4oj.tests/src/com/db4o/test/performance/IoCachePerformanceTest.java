@@ -4,7 +4,6 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
-import com.db4o.internal.caching.*;
 import com.db4o.io.*;
 import com.db4o.query.*;
 
@@ -59,7 +58,11 @@ public class IoCachePerformanceTest {
     }
 
 	private static IoCachePerformanceTest benchmarkIoAdapterWithCache() {
-	    return new IoCachePerformanceTest("IoAdapterWithCache", ioAdapterWithCache());
+	    return new IoCachePerformanceTest("CachingStorage", cachingStorage());
+    }
+
+	private static StorageFactory cachingStorage() {
+		return new CachingStorageFactory(new RandomAccessFileStorageFactory());
     }
 
 	private static void report(IoCachePerformanceTest test1, final double ratio) {
@@ -68,16 +71,6 @@ public class IoCachePerformanceTest {
 	
 	private static IoAdapter cachedIoAdapter() {
 	    return new CachedIoAdapter(new RandomAccessFileAdapter());
-    }
-
-	private static IoAdapter ioAdapterWithCache() {
-		return new  IoAdapterWithCache(new RandomAccessFileAdapter()) {
-			@Override
-			protected Cache4 newCache(int pageCount) {
-				// return CacheFactory.newLRUCache(pageCount);
-				return CacheFactory.new2QCache(pageCount);
-			}
-    	};
     }
 
 	public static class Item {
@@ -99,12 +92,16 @@ public class IoCachePerformanceTest {
 	private final String _name;
 	private ObjectContainer _container;
 	private String _filename;
-	private final IoAdapter _io;
+	private final StorageFactory _io;
 	
-	public IoCachePerformanceTest(String name, IoAdapter ioAdapter) {
+	public IoCachePerformanceTest(String name, StorageFactory storageFactory) {
 		_name = name;
-		_io = ioAdapter;
+		_io = storageFactory;
     }
+
+	public IoCachePerformanceTest(String name, IoAdapter adapter) {
+		this(name, new IoAdapterStorageFactory(adapter));
+	}
 
 	private long run() {
 		openFile();
@@ -153,7 +150,7 @@ public class IoCachePerformanceTest {
 	private EmbeddedConfiguration configuration() {
 	    final EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.common().objectClass(Item.class).objectField("_id").indexed(true);
-		config.file().storageFactory(new IoAdapterStorageFactory(_io));
+		config.file().storageFactory(_io);
 	    return config;
     }
 

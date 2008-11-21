@@ -1,22 +1,25 @@
 package com.db4o.io;
 
-import com.db4o.ext.*;
-
-public class NonFlushingStorageFactory implements StorageFactory {
-
-	private final StorageFactory _factory;
+public class NonFlushingStorageFactory extends StorageFactoryDecorator {
 
 	public NonFlushingStorageFactory(StorageFactory factory) {
-		_factory = factory;
+		super(factory);
     }
 
-	public boolean exists(String uri) {
-		return _factory.exists(uri);
-	}
-
-	public Storage open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-		final Storage storage = _factory.open(uri, lockFile, initialLength, readOnly);
+	@Override
+	protected Storage decorate(Storage storage) {
 		return new NonFlushingStorage(storage);
+	}
+	
+	private static class NonFlushingStorage extends StorageDecorator {
+
+		public NonFlushingStorage(Storage storage) {
+			super(storage);
+	    }
+		
+		@Override
+		public void sync() {
+		}
 	}
 
 }
