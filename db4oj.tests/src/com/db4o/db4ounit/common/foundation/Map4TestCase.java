@@ -18,6 +18,18 @@ public class Map4TestCase implements TestCase {
 		}
 	}
 	
+	public void testContainsKey() {
+		final String key1 = "foo";
+		final String key2 = "bar";
+		subject.put(key1, "v");
+		subject.put(key2, "v");
+		Assert.isTrue(subject.containsKey(key1));
+		Assert.isTrue(subject.containsKey(key2));
+		Assert.isFalse(subject.containsKey(null));
+		Assert.isFalse(subject.containsKey(key1.toUpperCase()));
+		Assert.isFalse(subject.containsKey(key2.toUpperCase()));
+	}
+	
 	public void testValuesIterator() {
 		
 		final Object[] values = new Object[5];
