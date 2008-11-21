@@ -14,7 +14,7 @@ public class ClientTransactionHandleTestCase implements TestLifeCycle {
 
 	public void testHandles() {
 		Configuration config = Db4o.newConfiguration();
-		config.io(new MemoryIoAdapter());
+		config.storageFactory(new MemoryStorageFactory());
 		final LocalObjectContainer db = (LocalObjectContainer) Db4o.openFile(config, SwitchingFilesFromClientUtil.MAINFILE_NAME);
 		final ClientTransactionPool pool = new ClientTransactionPool(db);
 		try {

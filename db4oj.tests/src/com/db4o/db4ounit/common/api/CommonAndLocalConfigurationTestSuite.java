@@ -184,10 +184,10 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			fileConfig.generateVersionNumbers(ConfigScope.GLOBALLY);
 			Assert.areEqual(ConfigScope.GLOBALLY, legacyConfig.generateVersionNumbers());
 			
-			MemoryIoAdapter ioAdapter = new MemoryIoAdapter();
-			fileConfig.io(ioAdapter);
-			Assert.areEqual(ioAdapter, legacyConfig.io());
-			Assert.areEqual(ioAdapter, fileConfig.io());
+			StorageFactory storageFactory = new RandomAccessFileStorageFactory();
+			fileConfig.storageFactory(storageFactory);
+			Assert.areSame(storageFactory, legacyConfig.storageFactory());
+			Assert.areSame(storageFactory, fileConfig.storageFactory());
 			
 			fileConfig.lockDatabaseFile(true);
 			Assert.isTrue(legacyConfig.lockFile());

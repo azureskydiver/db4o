@@ -9,6 +9,7 @@ public class StorageTestSuite extends FixtureTestSuiteDescription {{
 	fixtureProviders(
 		new SubjectFixtureProvider(new Object[] {
     		new RandomAccessFileStorageFactory(),
+    		new MemoryStorageFactory(),
     	})
 	);
 	

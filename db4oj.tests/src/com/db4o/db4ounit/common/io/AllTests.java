@@ -13,6 +13,7 @@ public class AllTests extends ReflectionTestSuite {
 			IoAdapterTestSuite.class,
 			RandomAccessFileStorageFactoryTestCase.class,
 			StorageTestSuite.class,
+			NonFlushingStorageTestCase.class,
 		};
 		return Db4oUnitTestUtil.mergeClasses(commonCases, stackTraceBasedCases());
 	}

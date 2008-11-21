@@ -147,19 +147,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec WEAK_REFERENCES_KEY=new KeySpec(true);
 	
 	private final static KeySpec STORAGE_FACTORY_KEY=new KeySpec(new RandomAccessFileStorageFactory());
-    
-	private final static KeySpec IOADAPTER_KEY=new KeySpec(new CachedIoAdapter(new RandomAccessFileAdapter()));
-//	private final static KeySpec IOADAPTER_KEY=new KeySpec(new IoAdapterWithCache(new RandomAccessFileAdapter()) {
-//		@Override
-//		protected Cache4 newCache() {
-//			return CacheFactory.new2QCache(64);
-//		}
-//	});
-//	private final static KeySpec IOADAPTER_KEY=new KeySpec(new RandomAccessFileAdapter());
-    
-    	// NOTE: activate this config to trigger the defragment failure
-    	//= new NIOFileAdapter(512,3);
-    
+        
 	private final static KeySpec ALIASES_KEY=new KeySpec(null);
 	
 	private final static KeySpec BATCH_MESSAGES_KEY=new KeySpec(true);
@@ -453,9 +441,8 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
     
     public void io(IoAdapter adapter){
-        globalSettingOnly();
-        _config.put(IOADAPTER_KEY,adapter);
-        storageFactory(new IoAdapterStorageFactory(adapter));
+    	globalSettingOnly();
+    	storageFactory(new IoAdapterStorageFactory(adapter));
     }
 
     public void lockDatabaseFile(boolean flag) {
@@ -933,14 +920,14 @@ public final class Config4Impl implements Configuration, DeepClone,
 	}
 
 	public IoAdapter io() {
-		return (IoAdapter)_config.get(IOADAPTER_KEY);
+		throw new NotImplementedException();
 	}
 	
 	public StorageFactory storageFactory() {
 		return (StorageFactory)_config.get(STORAGE_FACTORY_KEY);
 	}
 	
-	private void storageFactory(final StorageFactory factory) {
+	public void storageFactory(final StorageFactory factory) {
 	    _config.put(STORAGE_FACTORY_KEY, factory);
     }
 	

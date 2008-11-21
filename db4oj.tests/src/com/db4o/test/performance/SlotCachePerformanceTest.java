@@ -3,7 +3,6 @@ package com.db4o.test.performance;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.io.*;
-import com.db4o.internal.*;
 import com.db4o.io.*;
 import com.db4o.query.*;
 
@@ -139,7 +138,7 @@ public class SlotCachePerformanceTest {
 	private EmbeddedConfiguration configuration() {
 	    final EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.common().objectClass(Item.class).objectField("_id").indexed(true);
-		config.file().io(_io);
+		config.file().storageFactory(new IoAdapterStorageFactory(_io));
 		config.cache().slotCacheSize(_slotCacheSize);
 	    return config;
     }
