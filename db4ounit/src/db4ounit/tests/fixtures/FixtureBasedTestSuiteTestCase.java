@@ -18,7 +18,8 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 	
 	public static final class TestUnit implements TestCase {
 		
-		private final MethodCallRecorder _recorder = RECORDER_FIXTURE.value();
+		private final Object fixture1 = FIXTURE1.value();
+		private final Object fixture2 = FIXTURE2.value();
 		
 		public void testFoo() {
 			record("testFoo");
@@ -29,11 +30,11 @@ public class FixtureBasedTestSuiteTestCase implements TestCase {
 		}
 
 		private void record(final String test) {
-			recorder().record(new MethodCall(test, FIXTURE1.value(), FIXTURE2.value()));
+			recorder().record(new MethodCall(test, fixture1, fixture2));
 		}
 
 		private MethodCallRecorder recorder() {
-			return _recorder;
+			return RECORDER_FIXTURE.value();
 		}
 	}
 	

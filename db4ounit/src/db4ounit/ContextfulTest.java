@@ -25,7 +25,7 @@ public class ContextfulTest extends Contextful implements Test {
 	public void run() {
 		run(new Runnable() {
 			public void run() {
-				testInstance();
+				testInstance().run();
 			}
 		});
 	}
