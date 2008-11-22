@@ -138,7 +138,7 @@ public class SlotCachePerformanceTest {
 	private EmbeddedConfiguration configuration() {
 	    final EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.common().objectClass(Item.class).objectField("_id").indexed(true);
-		config.file().storageFactory(new IoAdapterStorageFactory(_io));
+		config.file().storageFactory(new IoAdapterStorage(_io));
 		config.cache().slotCacheSize(_slotCacheSize);
 	    return config;
     }

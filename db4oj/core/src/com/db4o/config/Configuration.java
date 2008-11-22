@@ -472,13 +472,13 @@ public interface Configuration {
      * (adapter class must be available)<br><br>
      * @param adapter - the IoAdapter
      * 
-     * @deprecated Use {@link #storage(StorageFactory)} instead.
+     * @deprecated Use {@link #storage(Storage)} instead.
      */
     public void io(IoAdapter adapter) throws GlobalOnlyConfigException;
     
     /**
      * allows to configure db4o to use a customized byte IO storage mechanism.
-     * <br><br>Implement the interface {@link StorageFactory} to
+     * <br><br>Implement the interface {@link Storage} to
      * write your own. Possible usecases could be improved performance
      * with a native library, mirrored write to two files, encryption or 
      * read-on-write fail-safety control.<br><br>
@@ -486,12 +486,12 @@ public interface Configuration {
      * 
      * @sharpen.property
      */
-    public void storage(StorageFactory factory) throws GlobalOnlyConfigException;
+    public void storage(Storage factory) throws GlobalOnlyConfigException;
     
     /**
      * @sharpen.property
      */
-    public StorageFactory storage();
+    public Storage storage();
     
     /**
      * returns the configured {@link IoAdapter}.

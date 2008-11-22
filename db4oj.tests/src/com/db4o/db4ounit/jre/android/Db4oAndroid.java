@@ -24,13 +24,13 @@ public class Db4oAndroid extends Db4oSolo{
 		if(alreadyConfigured(config)){
 			return config;
 		}
-		config.storage(new RandomAccessFileStorageFactory());
+		config.storage(new FileStorage());
 		config.reflectWith(new JdkReflector(this.getClass().getClassLoader()));
 		return config;
 	}
 
 	private boolean alreadyConfigured(Config4Impl config) {
-		return config.storage() instanceof RandomAccessFileStorageFactory;
+		return config.storage() instanceof FileStorage;
 	}
 	
 }

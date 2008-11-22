@@ -2,11 +2,11 @@ package com.db4o.io;
 
 import com.db4o.ext.*;
 
-public class IoAdapterStorageFactory implements StorageFactory {
+public class IoAdapterStorage implements Storage {
 	
 	private final IoAdapter _io;
 
-	public IoAdapterStorageFactory(IoAdapter io) {
+	public IoAdapterStorage(IoAdapter io) {
 		_io = io;
 	}
 
@@ -15,14 +15,14 @@ public class IoAdapterStorageFactory implements StorageFactory {
 	}
 
 	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-		return new IoAdapterStorage(_io.open(uri, lockFile, initialLength, readOnly));
+		return new IoAdapterBin(_io.open(uri, lockFile, initialLength, readOnly));
 	}
 	
-	static  class IoAdapterStorage implements Bin {
+	static  class IoAdapterBin implements Bin {
 
 		private final IoAdapter _io;
 
-		public IoAdapterStorage(IoAdapter io) {
+		public IoAdapterBin(IoAdapter io) {
 			_io = io;
 	    }
 

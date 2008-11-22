@@ -100,7 +100,7 @@ public interface FileConfiguration {
 
     /**
      * allows to configure db4o to use a customized byte IO storage mechanism.
-     * <br><br>Implement the interface {@link StorageFactory} to
+     * <br><br>Implement the interface {@link Storage} to
      * write your own. Possible usecases could be improved performance
      * with a native library, mirrored write to two files, encryption or 
      * read-on-write fail-safety control.<br><br>
@@ -108,16 +108,16 @@ public interface FileConfiguration {
      * 
      * @sharpen.property
      */
-    public void storageFactory(StorageFactory factory) throws GlobalOnlyConfigException;
+    public void storageFactory(Storage factory) throws GlobalOnlyConfigException;
 
     /**
-     * returns the configured {@link StorageFactory}.
+     * returns the configured {@link Storage}.
      * 
      * @return
      * 
      * @sharpen.property
      */
-    public StorageFactory storageFactory();
+    public Storage storageFactory();
 
     /**
      * can be used to turn the database file locking thread off. 

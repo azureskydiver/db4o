@@ -10,9 +10,9 @@ import db4ounit.mocking.*;
 public class NonFlushingStorageTestCase implements TestCase {
 	
 	public void test() {
-		final MockStorage mock = new MockStorage();
+		final MockBin mock = new MockBin();
 		
-		final StorageFactory.Bin storage = new NonFlushingStorageFactory(new StorageFactory() {
+		final Bin storage = new NonFlushingStorageFactory(new Storage() {
 			public boolean exists(String uri) {
 				throw new NotImplementedException();
             }
