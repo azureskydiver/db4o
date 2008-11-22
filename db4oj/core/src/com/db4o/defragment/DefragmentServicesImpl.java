@@ -64,7 +64,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		Config4Impl originalConfig =  (Config4Impl) defragConfig.db4oConfig();
 		Config4Impl sourceConfig=(Config4Impl) originalConfig.deepClone(null);
 		sourceConfig.weakReferences(false);
-		sourceConfig.storageFactory(new NonFlushingStorageFactory(sourceConfig.storageFactory()));
+		sourceConfig.storage(new NonFlushingStorageFactory(sourceConfig.storage()));
 		sourceConfig.readOnly(defragConfig.readOnly());
 		_sourceDb=(LocalObjectContainer)Db4o.openFile(sourceConfig,defragConfig.tempPath()).ext();
 		_sourceDb.showInternalClasses(true);

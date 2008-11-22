@@ -12,7 +12,7 @@ public class StorageFactoryTestUnit extends TestWithTempFile {
 		
 		factory().open(_tempFile, false, 1000, false).close();
 		
-		final Storage storage = factory().open(_tempFile, false, 0, false);
+		final StorageFactory.Bin storage = factory().open(_tempFile, false, 0, false);
 		try {
 			Assert.areEqual(1000, storage.length());
 		} finally {

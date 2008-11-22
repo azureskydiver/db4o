@@ -43,7 +43,7 @@ class CachingStorage extends StorageDecorator {
 	 * @param pageCount
 	 *            allocated amount of pages
 	 */
-	public CachingStorage(Storage storage,
+	public CachingStorage(StorageFactory.Bin storage,
 	        Cache4 cache, int pageCount, int pageSize) throws Db4oIOException {
 		super(storage);
 		

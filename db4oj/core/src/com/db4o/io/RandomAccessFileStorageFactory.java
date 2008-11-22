@@ -9,7 +9,7 @@ import com.db4o.internal.*;
 public class RandomAccessFileStorageFactory implements StorageFactory {
 
 	// TODO: replace readOnly by ReadOnlyStorage decorator
-	public Storage open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
+	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
 		return new RandomAccessFileStorage(uri, lockFile, initialLength, readOnly);
     }
 
@@ -21,7 +21,7 @@ public class RandomAccessFileStorageFactory implements StorageFactory {
 	/**
 	 * IO adapter for random access files.
 	 */
-	static class RandomAccessFileStorage implements Storage {
+	static class RandomAccessFileStorage implements Bin {
 
 		private final String _path;
 

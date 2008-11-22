@@ -442,7 +442,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
     public void io(IoAdapter adapter){
     	globalSettingOnly();
-    	storageFactory(new IoAdapterStorageFactory(adapter));
+    	storage(new IoAdapterStorageFactory(adapter));
     }
 
     public void lockDatabaseFile(boolean flag) {
@@ -923,11 +923,11 @@ public final class Config4Impl implements Configuration, DeepClone,
 		throw new NotImplementedException();
 	}
 	
-	public StorageFactory storageFactory() {
+	public StorageFactory storage() {
 		return (StorageFactory)_config.get(STORAGE_FACTORY_KEY);
 	}
 	
-	public void storageFactory(final StorageFactory factory) {
+	public void storage(final StorageFactory factory) {
 	    _config.put(STORAGE_FACTORY_KEY, factory);
     }
 	

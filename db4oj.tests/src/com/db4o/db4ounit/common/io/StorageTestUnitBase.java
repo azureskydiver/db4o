@@ -7,7 +7,7 @@ import db4ounit.fixtures.*;
 
 public class StorageTestUnitBase extends TestWithTempFile {
 
-	protected Storage _storage;
+	protected StorageFactory.Bin _storage;
 
 	public StorageTestUnitBase() {
 		super();

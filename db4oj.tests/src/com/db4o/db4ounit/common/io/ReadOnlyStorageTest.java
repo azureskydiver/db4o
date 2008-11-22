@@ -17,7 +17,7 @@ public class ReadOnlyStorageTest extends StorageTestUnitBase {
 		open(true);
     }
 	
-	private void assertReadOnly(final Storage adapter) {
+	private void assertReadOnly(final StorageFactory.Bin adapter) {
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
 				adapter.write(0, new byte[] {0}, 1);

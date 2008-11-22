@@ -37,7 +37,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     protected final void openImpl() throws OldFormatException,
 			DatabaseReadOnlyException {
-		final StorageFactory ioAdapter = configImpl().storageFactory();
+		final StorageFactory ioAdapter = configImpl().storage();
 		boolean isNew = !ioAdapter.exists(fileName());
 		if (isNew) {
 			logMsg(14, fileName());
@@ -70,7 +70,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			if (_backupFile != null) {
 				throw new BackupInProgressException();
 			}
-			_backupFile = new BlockAwareIo(configImpl().storageFactory().open(path, true,
+			_backupFile = new BlockAwareIo(configImpl().storage().open(path, true,
 					_file.length(), false));
 			_backupFile.blockSize(blockSize());
 		}

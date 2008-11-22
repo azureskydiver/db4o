@@ -7,13 +7,13 @@ public class NonFlushingStorageFactory extends StorageFactoryDecorator {
     }
 
 	@Override
-	protected Storage decorate(Storage storage) {
+	protected Bin decorate(Bin storage) {
 		return new NonFlushingStorage(storage);
 	}
 	
 	private static class NonFlushingStorage extends StorageDecorator {
 
-		public NonFlushingStorage(Storage storage) {
+		public NonFlushingStorage(Bin storage) {
 			super(storage);
 	    }
 		

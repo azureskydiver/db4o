@@ -1,10 +1,10 @@
 package com.db4o.io;
 
-public class StorageDecorator implements Storage {
+public class StorageDecorator implements StorageFactory.Bin {
 
-	protected final Storage _storage;
+	protected final StorageFactory.Bin _storage;
 
-	public StorageDecorator(Storage storage) {
+	public StorageDecorator(StorageFactory.Bin storage) {
 		_storage = storage;
 	}
 

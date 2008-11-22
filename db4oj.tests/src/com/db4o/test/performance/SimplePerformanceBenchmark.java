@@ -70,7 +70,7 @@ public class SimplePerformanceBenchmark {
     	Configuration config = Db4o.configure(); 
         config.lockDatabaseFile(false);
         config.weakReferences(false);
-        config.storageFactory(new MemoryStorageFactory());
+        config.storage(new MemoryStorageFactory());
         config.flushFileBuffers(false);
         config.bTreeCacheHeight(BTREE_CACHE_HEIGHT);
         config.bTreeNodeSize(BTREE_NODE_SIZE);

@@ -14,8 +14,8 @@ public class CachingStorageFactory extends StorageFactoryDecorator {
     }
 	
 	@Override
-	public Storage open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-	    final Storage storage = super.open(uri, lockFile, initialLength, readOnly);
+	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
+	    final Bin storage = super.open(uri, lockFile, initialLength, readOnly);
 	    if (readOnly) {
 	    	return new ReadOnlyStorage(new NonFlushingCachingStorage(storage, newCache(), DEFAULT_PAGE_COUNT, DEFAULT_PAGE_SIZE));
 	    }
@@ -28,7 +28,7 @@ public class CachingStorageFactory extends StorageFactoryDecorator {
 
 	private static final class NonFlushingCachingStorage extends CachingStorage {
 		
-		public NonFlushingCachingStorage(Storage storage, Cache4 cache, int pageCount, int pageSize) throws Db4oIOException {
+		public NonFlushingCachingStorage(Bin storage, Cache4 cache, int pageCount, int pageSize) throws Db4oIOException {
 			super(storage, cache, pageCount, pageSize);
 		}
 		

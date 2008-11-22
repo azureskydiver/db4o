@@ -4,7 +4,7 @@ import com.db4o.ext.*;
 
 public class ReadOnlyStorage extends StorageDecorator {
 
-	public ReadOnlyStorage(Storage storage) {
+	public ReadOnlyStorage(StorageFactory.Bin storage) {
 	    super(storage);
     }
 	

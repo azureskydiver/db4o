@@ -186,7 +186,7 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			
 			StorageFactory storageFactory = new RandomAccessFileStorageFactory();
 			fileConfig.storageFactory(storageFactory);
-			Assert.areSame(storageFactory, legacyConfig.storageFactory());
+			Assert.areSame(storageFactory, legacyConfig.storage());
 			Assert.areSame(storageFactory, fileConfig.storageFactory());
 			
 			fileConfig.lockDatabaseFile(true);

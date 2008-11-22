@@ -43,11 +43,11 @@ public class FileConfigurationImpl implements FileConfiguration {
 	}
 
 	public void storageFactory(StorageFactory factory) throws GlobalOnlyConfigException {
-		_config.storageFactory(factory);
+		_config.storage(factory);
 	}
 
 	public StorageFactory storageFactory() {
-		return _config.storageFactory();
+		return _config.storage();
 	}
 
 	public void lockDatabaseFile(boolean flag) {

@@ -12,12 +12,12 @@ public class NonFlushingStorageTestCase implements TestCase {
 	public void test() {
 		final MockStorage mock = new MockStorage();
 		
-		final Storage storage = new NonFlushingStorageFactory(new StorageFactory() {
+		final StorageFactory.Bin storage = new NonFlushingStorageFactory(new StorageFactory() {
 			public boolean exists(String uri) {
 				throw new NotImplementedException();
             }
 
-			public Storage open(String uri, boolean lockFile, long initialLength, boolean readOnly)
+			public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly)
                     throws Db4oIOException {
 				mock.record(new MethodCall("open", uri, lockFile, initialLength, readOnly));
 				return mock;

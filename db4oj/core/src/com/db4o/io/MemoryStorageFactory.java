@@ -6,19 +6,19 @@ import com.db4o.ext.*;
 
 public class MemoryStorageFactory implements StorageFactory {
 
-	private final Map<String, Storage> _storages = new HashMap<String, Storage>();
+	private final Map<String, Bin> _storages = new HashMap<String, Bin>();
 
 	public boolean exists(String uri) {
 		return _storages.containsKey(uri);
 	}
 
-	public Storage open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-		final Storage storage = produceStorage(uri, initialLength);
+	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
+		final Bin storage = produceStorage(uri, initialLength);
 		return readOnly ? new ReadOnlyStorage(storage) : storage;
 	}
 
-	private Storage produceStorage(String uri, long initialLength) {
-	    final Storage storage = _storages.get(uri);
+	private Bin produceStorage(String uri, long initialLength) {
+	    final Bin storage = _storages.get(uri);
 		if (null != storage) {
 			return storage;
 		}
@@ -27,7 +27,7 @@ public class MemoryStorageFactory implements StorageFactory {
 		return newStorage;
     }
 	
-	private static class MemoryStorage implements Storage {
+	private static class MemoryStorage implements Bin {
 		
 		private static final int GROW_BY = 10000;
 		private byte[] _bytes;
