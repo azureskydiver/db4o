@@ -14,11 +14,11 @@ public class IoAdapterStorageFactory implements StorageFactory {
 		return _io.exists(uri);
 	}
 
-	public Storage open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
+	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
 		return new IoAdapterStorage(_io.open(uri, lockFile, initialLength, readOnly));
 	}
 	
-	static  class IoAdapterStorage implements Storage {
+	static  class IoAdapterStorage implements Bin {
 
 		private final IoAdapter _io;
 

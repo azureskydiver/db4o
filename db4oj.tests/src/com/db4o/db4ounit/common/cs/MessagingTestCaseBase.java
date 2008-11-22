@@ -45,7 +45,7 @@ public class MessagingTestCaseBase implements TestCase, OptOutCS {
 
 	protected Configuration memoryIoConfiguration() {
 		final Configuration config = Db4o.newConfiguration();
-		config.storageFactory(new MemoryStorageFactory());
+		config.storage(new MemoryStorageFactory());
 		return config;
 	}
 

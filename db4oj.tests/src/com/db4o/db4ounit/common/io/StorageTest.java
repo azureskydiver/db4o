@@ -86,7 +86,7 @@ public class StorageTest extends StorageTestUnitBase  {
 		}
 	}
 	
-	private void assertReadWriteString(Storage adapter, String str) throws Exception {
+	private void assertReadWriteString(StorageFactory.Bin adapter, String str) throws Exception {
 		byte[] data = str.getBytes();
 		byte[] read = new byte[2048];
 		adapter.write(0, data, data.length);
@@ -102,7 +102,7 @@ public class StorageTest extends StorageTestUnitBase  {
 		assertReadWriteAheadFileEnd(_storage, str);
 	}
 	
-	private void assertReadWriteAheadFileEnd(Storage adapter, String str) throws Exception {
+	private void assertReadWriteAheadFileEnd(StorageFactory.Bin adapter, String str) throws Exception {
 		byte[] data = str.getBytes();
 		byte[] read = new byte[2048];
 		int readBytes = adapter.read(10, data, data.length);

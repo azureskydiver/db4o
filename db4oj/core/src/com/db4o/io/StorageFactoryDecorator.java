@@ -14,11 +14,11 @@ public class StorageFactoryDecorator implements StorageFactory {
     	return _factory.exists(uri);
     }
 	
-	public Storage open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
+	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
 		return decorate( _factory.open(uri, lockFile, initialLength, readOnly));
 	}
 
-	protected Storage decorate(Storage storage) {
+	protected Bin decorate(Bin storage) {
 		return storage;
     }
 

@@ -472,7 +472,7 @@ public interface Configuration {
      * (adapter class must be available)<br><br>
      * @param adapter - the IoAdapter
      * 
-     * @deprecated Use {@link #storageFactory(StorageFactory)} instead.
+     * @deprecated Use {@link #storage(StorageFactory)} instead.
      */
     public void io(IoAdapter adapter) throws GlobalOnlyConfigException;
     
@@ -486,12 +486,12 @@ public interface Configuration {
      * 
      * @sharpen.property
      */
-    public void storageFactory(StorageFactory factory) throws GlobalOnlyConfigException;
+    public void storage(StorageFactory factory) throws GlobalOnlyConfigException;
     
     /**
      * @sharpen.property
      */
-    public StorageFactory storageFactory();
+    public StorageFactory storage();
     
     /**
      * returns the configured {@link IoAdapter}.

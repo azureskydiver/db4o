@@ -4,7 +4,7 @@ import com.db4o.io.*;
 
 import db4ounit.mocking.*;
 
-public class MockStorage extends MethodCallRecorder implements Storage {
+public class MockStorage extends MethodCallRecorder implements StorageFactory.Bin {
 
 	private int _returnValue;
 
