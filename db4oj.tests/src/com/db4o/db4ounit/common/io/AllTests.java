@@ -9,7 +9,7 @@ public class AllTests extends ReflectionTestSuite {
 
 	protected Class[] testCases() {
 		Class[] commonCases = {
-			BlockAwareIoTestSuite.class,
+			BlockAwareBinTestSuite.class,
 			IoAdapterTestSuite.class,
 			RandomAccessFileStorageFactoryTestCase.class,
 			StorageTestSuite.class,

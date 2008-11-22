@@ -15,5 +15,5 @@ public interface FreespaceFiller {
 	 * 
 	 * @param io Handle for the freed slot
 	 */
-	void fill(BlockAwareIoWindow io) throws IOException;
+	void fill(BlockAwareBinWindow io) throws IOException;
 }

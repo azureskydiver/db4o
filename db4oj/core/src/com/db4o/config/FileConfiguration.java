@@ -104,11 +104,11 @@ public interface FileConfiguration {
      * write your own. Possible usecases could be improved performance
      * with a native library, mirrored write to two files, encryption or 
      * read-on-write fail-safety control.<br><br>
-     * @param factory - the factory
+     * @param storage - the storage
      * 
      * @sharpen.property
      */
-    public void storageFactory(Storage factory) throws GlobalOnlyConfigException;
+    public void storage(Storage storage) throws GlobalOnlyConfigException;
 
     /**
      * returns the configured {@link Storage}.
@@ -117,7 +117,7 @@ public interface FileConfiguration {
      * 
      * @sharpen.property
      */
-    public Storage storageFactory();
+    public Storage storage();
 
     /**
      * can be used to turn the database file locking thread off. 

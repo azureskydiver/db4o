@@ -42,11 +42,11 @@ public class FileConfigurationImpl implements FileConfiguration {
 		_config.generateVersionNumbers(setting);
 	}
 
-	public void storageFactory(Storage factory) throws GlobalOnlyConfigException {
+	public void storage(Storage factory) throws GlobalOnlyConfigException {
 		_config.storage(factory);
 	}
 
-	public Storage storageFactory() {
+	public Storage storage() {
 		return _config.storage();
 	}
 

@@ -5,7 +5,7 @@ import com.db4o.io.*;
 
 import db4ounit.*;
 
-public class ReadOnlyStorageTest extends StorageTestUnitBase {
+public class ReadOnlyBinTest extends StorageTestUnitBase {
 	
 	public void test() {
 		reopenAsReadOnly();

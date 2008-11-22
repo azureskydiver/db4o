@@ -2,30 +2,30 @@ package com.db4o.io;
 
 public class BinDecorator implements Bin {
 
-	protected final Bin _storage;
+	protected final Bin _bin;
 
-	public BinDecorator(Bin storage) {
-		_storage = storage;
+	public BinDecorator(Bin bin) {
+		_bin = bin;
 	}
 
 	public void close() {
-    	_storage.close();
+    	_bin.close();
     }
 
 	public long length() {
-		return _storage.length();
+		return _bin.length();
     }
 
 	public int read(long position, byte[] buffer, int bytesToRead) {
-    	return _storage.read(position, buffer, bytesToRead);
+    	return _bin.read(position, buffer, bytesToRead);
     }
 
 	public void sync() {
-		_storage.sync();
+		_bin.sync();
     }
 
 	public void write(long position, byte[] bytes, int bytesToWrite) {
-    	_storage.write(position, bytes, bytesToWrite);
+    	_bin.write(position, bytes, bytesToWrite);
     }
 
 }
