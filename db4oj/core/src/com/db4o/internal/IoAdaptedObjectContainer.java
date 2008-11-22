@@ -19,9 +19,9 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     private final String _fileName;
 
-    private BlockAwareIo          _file;
-    private BlockAwareIo          _timerFile;                                 //This is necessary as a separate File because access is not synchronized with access for normal data read/write so the seek pointer can get lost.
-    private volatile BlockAwareIo _backupFile;
+    private BlockAwareBin          _file;
+    private BlockAwareBin          _timerFile;                                 //This is necessary as a separate File because access is not synchronized with access for normal data read/write so the seek pointer can get lost.
+    private volatile BlockAwareBin _backupFile;
 
     private Object             _fileLock;
     
@@ -37,8 +37,8 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     protected final void openImpl() throws OldFormatException,
 			DatabaseReadOnlyException {
-		final Storage ioAdapter = configImpl().storage();
-		boolean isNew = !ioAdapter.exists(fileName());
+		final Storage storage = configImpl().storage();
+		boolean isNew = !storage.exists(fileName());
 		if (isNew) {
 			logMsg(14, fileName());
 			checkReadOnly();
@@ -47,10 +47,10 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		boolean readOnly = configImpl().isReadOnly();
 		boolean lockFile = Debug.lockFile && configImpl().lockFile()
 				&& (!readOnly);
-		_file = new BlockAwareIo(ioAdapter.open(fileName(), lockFile, 0, readOnly));
+		_file = new BlockAwareBin(storage.open(fileName(), lockFile, 0, readOnly));
 		if (needsLockFileThread()) {
 			// FIXME: with a SynchronizedStorage or something
-			_timerFile = new BlockAwareIo(ioAdapter.open(fileName(), false, 0, false));
+			_timerFile = new BlockAwareBin(storage.open(fileName(), false, 0, false));
 		}
 		if (isNew) {
 			configureNewFile();
@@ -70,7 +70,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			if (_backupFile != null) {
 				throw new BackupInProgressException();
 			}
-			_backupFile = new BlockAwareIo(configImpl().storage().open(path, true,
+			_backupFile = new BlockAwareBin(configImpl().storage().open(path, true,
 					_file.length(), false));
 			_backupFile.blockSize(blockSize());
 		}
@@ -257,7 +257,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     	zeroFile(_backupFile, slot);
     }
     
-    private void zeroFile(BlockAwareIo io, Slot slot) {
+    private void zeroFile(BlockAwareBin io, Slot slot) {
     	if(io == null) {
     		return;
     	}
@@ -326,7 +326,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			if (DTrace.enabled) {
 				DTrace.WRITE_XBYTES.logLength(address, length);
 			}
-			BlockAwareIoWindow window = new BlockAwareIoWindow(_file, address, length);
+			BlockAwareBinWindow window = new BlockAwareBinWindow(_file, address, length);
 			try {
 				createFreespaceFiller().fill(window);
 			} catch (IOException e) {
@@ -338,7 +338,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
 	}
 
-	public BlockAwareIo timerFile() {
+	public BlockAwareBin timerFile() {
 		return _timerFile;
 	}
 	
@@ -352,7 +352,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 	
 	private static class XByteFreespaceFiller implements FreespaceFiller {
 
-		public void fill(BlockAwareIoWindow io) throws IOException {
+		public void fill(BlockAwareBinWindow io) throws IOException {
 			io.write(0,xBytes(io.length()));
 		}
 

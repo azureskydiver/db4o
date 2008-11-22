@@ -14,7 +14,7 @@ import com.db4o.io.*;
  */
 public class TimerFileLockEnabled extends TimerFileLock{
     
-    private final BlockAwareIo _timerFile;
+    private final BlockAwareBin _timerFile;
     
     private final Object _timerLock;
     

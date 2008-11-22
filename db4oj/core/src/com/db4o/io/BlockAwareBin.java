@@ -5,16 +5,14 @@ package com.db4o.io;
 import com.db4o.*;
 import com.db4o.ext.*;
 
-public class BlockAwareIo {
+public class BlockAwareBin extends BinDecorator {
 
 	private static final int COPY_SIZE = 4096;
 
 	private int _blockSize;
-
-	private final Bin _storage;
-
-	public BlockAwareIo(Bin storage) {
-		_storage = storage;
+	
+	public BlockAwareBin(Bin bin) {
+		super(bin);
     }
 
 	/**
@@ -47,14 +45,7 @@ public class BlockAwareIo {
 		}
 		_blockSize = blockSize;
 	}
-
-	/**
-	 * implement to close the adapter
-	 */
-	public void close() throws Db4oIOException {
-		_storage.close();
-	}
-
+	
 	/**
 	 * copies a block within a file in absolute mode
 	 */
@@ -84,10 +75,6 @@ public class BlockAwareIo {
 			throws Db4oIOException {
 		read(oldAddress, buffer);
 		write(oldAddress, buffer);
-	}
-	
-	public long length() throws Db4oIOException {
-		return _storage.length();
 	}
 	
 	/**
@@ -130,17 +117,6 @@ public class BlockAwareIo {
 	public int read(long pos, byte[] buffer) throws Db4oIOException {
 		return read(pos, buffer, buffer.length);
 	}
-
-	/**
-	 * implement to read a buffer at the seeked address
-	 */
-	public int read(long pos, byte[] bytes, int length) throws Db4oIOException {
-		return _storage.read(pos, bytes, length);
-	}
-
-	public void sync() throws Db4oIOException {
-		_storage.sync();
-	}
 	
 	/**
 	 * reads a buffer at the seeked address
@@ -179,14 +155,6 @@ public class BlockAwareIo {
 	 */
 	public void write(long pos, byte[] bytes) throws Db4oIOException {
 		write(pos, bytes, bytes.length);
-	}
-
-	/**
-	 * implement to write a buffer at the seeked address
-	 */
-	public void write(long pos, byte[] buffer, int length)
-			throws Db4oIOException {
-		_storage.write(pos, buffer, length);
 	}
 
 	/**

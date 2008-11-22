@@ -10,15 +10,15 @@ public class StorageTestSuite extends FixtureTestSuiteDescription {{
 		new SubjectFixtureProvider(new Object[] {
     		new FileStorage(),
     		new MemoryStorage(),
-    		new CachingStorageFactory(new FileStorage()),
+    		new CachingStorage(new FileStorage()),
     		new IoAdapterStorage(new RandomAccessFileAdapter()),
     	})
 	);
 	
 	testUnits(
-		StorageTest.class,
-		ReadOnlyStorageTest.class,
-		StorageFactoryTestUnit.class
+		BinTest.class,
+		ReadOnlyBinTest.class,
+		StorageTest.class
 	);
 		
 //	combinationToRun(2);

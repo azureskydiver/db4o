@@ -12,7 +12,7 @@ public class NonFlushingStorageTestCase implements TestCase {
 	public void test() {
 		final MockBin mock = new MockBin();
 		
-		final Bin storage = new NonFlushingStorageFactory(new Storage() {
+		final Bin storage = new NonFlushingStorage(new Storage() {
 			public boolean exists(String uri) {
 				throw new NotImplementedException();
             }

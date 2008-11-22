@@ -62,7 +62,7 @@ public class IoCachePerformanceTest {
     }
 
 	private static Storage cachingStorage() {
-		return new CachingStorageFactory(new FileStorage());
+		return new CachingStorage(new FileStorage());
     }
 
 	private static void report(IoCachePerformanceTest test1, final double ratio) {
@@ -150,7 +150,7 @@ public class IoCachePerformanceTest {
 	private EmbeddedConfiguration configuration() {
 	    final EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.common().objectClass(Item.class).objectField("_id").indexed(true);
-		config.file().storageFactory(_io);
+		config.file().storage(_io);
 	    return config;
     }
 

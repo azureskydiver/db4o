@@ -6,17 +6,17 @@ import db4ounit.*;
 import db4ounit.fixtures.*;
 import db4ounit.mocking.*;
 
-public class BlockAwareIoTestSuite extends FixtureTestSuiteDescription {
+public class BlockAwareBinTestSuite extends FixtureTestSuiteDescription {
 	
 	{
 		fixtureProviders(new SubjectFixtureProvider(2, 3, 17));
-		testUnits(BlockAwareIoTestCase.class);
+		testUnits(BlockAwareBinTest.class);
 	}
 	
-	public static class BlockAwareIoTestCase implements TestLifeCycle {
+	public static class BlockAwareBinTest implements TestLifeCycle {
 		
 		private final MockBin _mockBin = new MockBin();
-		private final BlockAwareIo _subject = new BlockAwareIo(_mockBin);
+		private final BlockAwareBin _subject = new BlockAwareBin(_mockBin);
 		
 		public void testBlockSize() {
 			Assert.areEqual(blockSize(), _subject.blockSize());

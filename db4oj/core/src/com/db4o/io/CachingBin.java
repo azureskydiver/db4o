@@ -25,32 +25,12 @@ class CachingBin extends BinDecorator {
         }
     };
     
-	/**
-	 * Creates an instance of IoAdapterWithCache with extended parameters.<br>
-	 * 
-	 * @param path
-	 *            database file path
-	 * @param lockFile
-	 *            determines if the file should be locked
-	 * @param initialLength
-	 *            initial file length, new writes will start from this point
-	 * @param readOnly
-	 *            if the file should be used in read-onlyt mode.
-	 * @param io
-	 *            delegate IO adapter (RandomAccessFileAdapter by default)
-	 * @param pageSize
-	 *            cache page size
-	 * @param pageCount
-	 *            allocated amount of pages
-	 */
-	public CachingBin(Bin storage,
-	        Cache4 cache, int pageCount, int pageSize) throws Db4oIOException {
-		super(storage);
-		
+	public CachingBin(Bin bin, Cache4 cache, int pageCount, int pageSize) throws Db4oIOException {
+		super(bin);
 		_pageSize = pageSize;
 		_pagePool = new SimpleObjectPool<Page>(newPagePool(pageCount));
 		_cache = cache;
-		_fileLength = _storage.length();
+		_fileLength = _bin.length();
 	}
 
 	private Page[] newPagePool(int pageCount) {
@@ -195,7 +175,7 @@ class CachingBin extends BinDecorator {
 	private void loadPage(Page page, long pos) throws Db4oIOException {
 		long startAddress = pos - pos % _pageSize;
 		page._startAddress = startAddress;
-		int count = _storage.read(page._startAddress, page._buffer, page._bufferSize);
+		int count = _bin.read(page._startAddress, page._buffer, page._bufferSize);
 		if (count > 0) {
 			page._endAddress = startAddress + count;
 		} else {

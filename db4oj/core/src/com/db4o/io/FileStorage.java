@@ -8,7 +8,6 @@ import com.db4o.internal.*;
 
 public class FileStorage implements Storage {
 
-	// TODO: replace readOnly by ReadOnlyStorage decorator
 	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
 		return new FileBin(uri, lockFile, initialLength, readOnly);
     }
@@ -18,26 +17,23 @@ public class FileStorage implements Storage {
 		return file.exists() && file.length() > 0;
     }
 	
-	/**
-	 * IO adapter for random access files.
-	 */
 	static class FileBin implements Bin {
 
 		private final String _path;
 
-		private final RandomAccessFile _delegate;
+		private final RandomAccessFile _file;
 
 		FileBin(String path, boolean lockFile,
 				long initialLength, boolean readOnly) throws Db4oIOException {
 			boolean ok = false;
 			try {
 				_path = new File(path).getCanonicalPath();
-				_delegate = new RandomAccessFile(_path, readOnly ? "r" : "rw");
+				_file = new RandomAccessFile(_path, readOnly ? "r" : "rw");
 				if (initialLength > 0) {
 					write(initialLength - 1, new byte[] { 0 }, 1);
 				}
 				if (lockFile) {
-					Platform4.lockFile(_path, _delegate);
+					Platform4.lockFile(_path, _file);
 				} 
 				ok = true;
 			} catch (IOException e) {
@@ -56,17 +52,17 @@ public class FileStorage implements Storage {
 			// FIXME: This is a temporary quickfix for a bug in Android.
 			//        Remove after Android has been fixed.
 			try {
-				if (_delegate != null) {
-					_delegate.seek(0);
+				if (_file != null) {
+					_file.seek(0);
 				}
 			} catch (IOException e) {
 				// ignore
 			}
 			
-			Platform4.unlockFile(_path, _delegate);
+			Platform4.unlockFile(_path, _file);
 			try {
-				if (_delegate != null) {
-					_delegate.close();
+				if (_file != null) {
+					_file.close();
 				}
 			} catch (IOException e) {
 				throw new Db4oIOException(e);
@@ -75,7 +71,7 @@ public class FileStorage implements Storage {
 		
 		public long length() throws Db4oIOException {
 			try {
-				return _delegate.length();
+				return _file.length();
 			} catch (IOException e) {
 				throw new Db4oIOException(e);
 			}
@@ -84,7 +80,7 @@ public class FileStorage implements Storage {
 		public int read(long pos, byte[] bytes, int length) throws Db4oIOException {
 			try {
 				seek(pos);
-				return _delegate.read(bytes, 0, length);
+				return _file.read(bytes, 0, length);
 			} catch (IOException e) {
 				throw new Db4oIOException(e);
 			}
@@ -95,12 +91,12 @@ public class FileStorage implements Storage {
 			if (DTrace.enabled) {
 				DTrace.REGULAR_SEEK.log(pos);
 			}
-			_delegate.seek(pos);
+			_file.seek(pos);
 		}
 
 		public void sync() throws Db4oIOException {
 			try {
-				_delegate.getFD().sync();
+				_file.getFD().sync();
 			} catch (IOException e) {
 				throw new Db4oIOException(e);
 			}
@@ -109,7 +105,7 @@ public class FileStorage implements Storage {
 		public void write(long pos, byte[] buffer, int length) throws Db4oIOException {
 			try {
 				seek(pos);
-				_delegate.write(buffer, 0, length);
+				_file.write(buffer, 0, length);
 			} catch (IOException e) {
 				throw new Db4oIOException(e);
 			}

@@ -5,9 +5,9 @@ package com.db4o.io;
 /**
  * Bounded handle into an IoAdapter: Can only access a restricted area.
  */
-public class BlockAwareIoWindow {
+public class BlockAwareBinWindow {
 
-	private BlockAwareIo _io;
+	private BlockAwareBin _bin;
 	private int _blockOff;
 	private int _len;
 	private boolean _disabled;
@@ -17,8 +17,8 @@ public class BlockAwareIoWindow {
 	 * @param blockOff The block offset address into the I/O adapter that maps to the start index (0) of this window
 	 * @param len The size of this window in bytes
 	 */
-	public BlockAwareIoWindow(BlockAwareIo io,int blockOff,int len) {
-		_io = io;
+	public BlockAwareBinWindow(BlockAwareBin io,int blockOff,int len) {
+		_bin = io;
 		_blockOff=blockOff;
 		_len=len;
 		_disabled=false;
@@ -37,7 +37,7 @@ public class BlockAwareIoWindow {
 	 */
 	public void write(int off,byte[] data) throws IllegalArgumentException, IllegalStateException{
 		checkBounds(off, data);
-		_io.blockWrite(_blockOff+off, data);
+		_bin.blockWrite(_blockOff+off, data);
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class BlockAwareIoWindow {
 	 */
 	public int read(int off,byte[] data) throws IllegalArgumentException, IllegalStateException {
 		checkBounds(off, data);
-		return _io.blockRead(_blockOff+off, data);
+		return _bin.blockRead(_blockOff+off, data);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class BlockAwareIoWindow {
 	 */
 	public void flush()  {
 		if(!_disabled) {
-			_io.sync();
+			_bin.sync();
 		}
 	}
 	
