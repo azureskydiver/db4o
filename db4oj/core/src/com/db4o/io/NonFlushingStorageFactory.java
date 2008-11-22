@@ -2,7 +2,7 @@ package com.db4o.io;
 
 public class NonFlushingStorageFactory extends StorageFactoryDecorator {
 
-	public NonFlushingStorageFactory(StorageFactory factory) {
+	public NonFlushingStorageFactory(Storage factory) {
 		super(factory);
     }
 
@@ -11,7 +11,7 @@ public class NonFlushingStorageFactory extends StorageFactoryDecorator {
 		return new NonFlushingStorage(storage);
 	}
 	
-	private static class NonFlushingStorage extends StorageDecorator {
+	private static class NonFlushingStorage extends BinDecorator {
 
 		public NonFlushingStorage(Bin storage) {
 			super(storage);

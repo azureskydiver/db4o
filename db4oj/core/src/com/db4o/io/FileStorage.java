@@ -6,11 +6,11 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
 
-public class RandomAccessFileStorageFactory implements StorageFactory {
+public class FileStorage implements Storage {
 
 	// TODO: replace readOnly by ReadOnlyStorage decorator
 	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-		return new RandomAccessFileStorage(uri, lockFile, initialLength, readOnly);
+		return new FileBin(uri, lockFile, initialLength, readOnly);
     }
 
 	public boolean exists(String uri) {
@@ -21,13 +21,13 @@ public class RandomAccessFileStorageFactory implements StorageFactory {
 	/**
 	 * IO adapter for random access files.
 	 */
-	static class RandomAccessFileStorage implements Bin {
+	static class FileBin implements Bin {
 
 		private final String _path;
 
 		private final RandomAccessFile _delegate;
 
-		RandomAccessFileStorage(String path, boolean lockFile,
+		FileBin(String path, boolean lockFile,
 				long initialLength, boolean readOnly) throws Db4oIOException {
 			boolean ok = false;
 			try {

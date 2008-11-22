@@ -18,11 +18,11 @@ public class StorageTest extends StorageTestUnitBase  {
         for (int i = 0; i < count; ++i) {
         	data[i] = (byte) (i % 256);
         }
-        _storage.write(0, data, data.length);
-        _storage.sync();
+        _bin.write(0, data, data.length);
+        _bin.sync();
         
         byte[] readBytes = new byte[count];
-        _storage.read(0, readBytes, readBytes.length);
+        _bin.read(0, readBytes, readBytes.length);
         for (int i = 0; i < count; i++) {
         	Assert.areEqual(data[i], readBytes[i]);
         }
@@ -32,12 +32,12 @@ public class StorageTest extends StorageTestUnitBase  {
 		final int dataSize = 1024 * 2;
 		final byte[] data = newDataArray(dataSize);
 		for (int i=0; i<64; ++i) {
-			_storage.write(i * data.length, data, data.length);
+			_bin.write(i * data.length, data, data.length);
 		}
 		
 		final byte[] readBuffer = new byte[dataSize];
 		for (int i=0; i<64; ++i) {
-			_storage.read(dataSize * (63-i), readBuffer, readBuffer.length);
+			_bin.read(dataSize * (63-i), readBuffer, readBuffer.length);
 			ArrayAssert.areEqual(data, readBuffer);
 		}
 		
@@ -46,13 +46,13 @@ public class StorageTest extends StorageTestUnitBase  {
 	public void testSeek() throws Exception {
 		final int count = 1024 * 2 + 10;
         final byte[] data = newDataArray(count);
-        _storage.write(0, data, data.length);
+        _bin.write(0, data, data.length);
         final byte[] readBytes = new byte[count];
-        _storage.read(0, readBytes, readBytes.length);
+        _bin.read(0, readBytes, readBytes.length);
         for (int i = 0; i < count; i++) {
         	Assert.areEqual(data[i], readBytes[i]);
         }
-        _storage.read(20, readBytes, readBytes.length);
+        _bin.read(20, readBytes, readBytes.length);
         for (int i = 0; i < count - 20; i++) {
         	Assert.areEqual(data[i + 20], readBytes[i]);
         }
@@ -61,8 +61,8 @@ public class StorageTest extends StorageTestUnitBase  {
         for (int i = 0; i < writtenData.length; ++i) {
         	writtenData[i] = (byte) i;
         }
-        _storage.write(1000, writtenData, writtenData.length);
-        int readCount = _storage.read(1000, readBytes, 10);
+        _bin.write(1000, writtenData, writtenData.length);
+        int readCount = _bin.read(1000, readBytes, 10);
         Assert.areEqual(10, readCount);
         for (int i = 0; i < readCount; ++i) {
         	Assert.areEqual(i, readBytes[i]);
@@ -82,11 +82,11 @@ public class StorageTest extends StorageTestUnitBase  {
 				"short string",
 				"this is a really long string, just to make sure that all IoAdapters work correctly. " };
 		for(int j = 0; j < strs.length; j++) {
-			assertReadWriteString(_storage, strs[j]);
+			assertReadWriteString(_bin, strs[j]);
 		}
 	}
 	
-	private void assertReadWriteString(StorageFactory.Bin adapter, String str) throws Exception {
+	private void assertReadWriteString(Bin adapter, String str) throws Exception {
 		byte[] data = str.getBytes();
 		byte[] read = new byte[2048];
 		adapter.write(0, data, data.length);
@@ -99,10 +99,10 @@ public class StorageTest extends StorageTestUnitBase  {
 	 */
 	public void testReadWriteAheadFileEnd() throws Exception {
 		String str = "this is a really long string, just to make sure that all IoAdapters work correctly. ";
-		assertReadWriteAheadFileEnd(_storage, str);
+		assertReadWriteAheadFileEnd(_bin, str);
 	}
 	
-	private void assertReadWriteAheadFileEnd(StorageFactory.Bin adapter, String str) throws Exception {
+	private void assertReadWriteAheadFileEnd(Bin adapter, String str) throws Exception {
 		byte[] data = str.getBytes();
 		byte[] read = new byte[2048];
 		int readBytes = adapter.read(10, data, data.length);

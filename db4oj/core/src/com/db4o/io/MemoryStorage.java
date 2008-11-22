@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.db4o.ext.*;
 
-public class MemoryStorageFactory implements StorageFactory {
+public class MemoryStorage implements Storage {
 
 	private final Map<String, Bin> _storages = new HashMap<String, Bin>();
 
@@ -14,7 +14,7 @@ public class MemoryStorageFactory implements StorageFactory {
 
 	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
 		final Bin storage = produceStorage(uri, initialLength);
-		return readOnly ? new ReadOnlyStorage(storage) : storage;
+		return readOnly ? new ReadOnlyBin(storage) : storage;
 	}
 
 	private Bin produceStorage(String uri, long initialLength) {
@@ -22,18 +22,18 @@ public class MemoryStorageFactory implements StorageFactory {
 		if (null != storage) {
 			return storage;
 		}
-		final MemoryStorage newStorage = new MemoryStorage(new byte[(int)initialLength]);
+		final MemoryBin newStorage = new MemoryBin(new byte[(int)initialLength]);
 		_storages.put(uri, newStorage);
 		return newStorage;
     }
 	
-	private static class MemoryStorage implements Bin {
+	private static class MemoryBin implements Bin {
 		
 		private static final int GROW_BY = 10000;
 		private byte[] _bytes;
 		private int _length;
 
-		public MemoryStorage(byte[] bytes) {
+		public MemoryBin(byte[] bytes) {
 			_bytes = bytes;
 			_length = bytes.length;
         }

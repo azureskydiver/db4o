@@ -2,9 +2,9 @@ package com.db4o.io;
 
 import com.db4o.ext.*;
 
-public class ReadOnlyStorage extends StorageDecorator {
+public class ReadOnlyBin extends BinDecorator {
 
-	public ReadOnlyStorage(StorageFactory.Bin storage) {
+	public ReadOnlyBin(Bin storage) {
 	    super(storage);
     }
 	

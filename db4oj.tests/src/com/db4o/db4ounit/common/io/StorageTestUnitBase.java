@@ -7,7 +7,7 @@ import db4ounit.fixtures.*;
 
 public class StorageTestUnitBase extends TestWithTempFile {
 
-	protected StorageFactory.Bin _storage;
+	protected Bin _bin;
 
 	public StorageTestUnitBase() {
 		super();
@@ -20,10 +20,10 @@ public class StorageTestUnitBase extends TestWithTempFile {
     }
 
 	protected void open(final boolean readOnly) {
-		if (null != _storage) {
+		if (null != _bin) {
 			throw new IllegalStateException();
 		}
-	    _storage = factory().open(_tempFile, false, 0, readOnly);
+	    _bin = storage().open(_tempFile, false, 0, readOnly);
     }
 
 	@Override
@@ -33,13 +33,13 @@ public class StorageTestUnitBase extends TestWithTempFile {
     }
 
 	protected void close() {
-	    if (null != _storage) {
-    		_storage.close();
-    		_storage = null;
+	    if (null != _bin) {
+    		_bin.close();
+    		_bin = null;
     	}
     }
 
-	private StorageFactory factory() {
+	private Storage storage() {
     	return SubjectFixtureProvider.value();
     }
 

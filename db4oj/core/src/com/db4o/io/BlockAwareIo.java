@@ -11,9 +11,9 @@ public class BlockAwareIo {
 
 	private int _blockSize;
 
-	private final StorageFactory.Bin _storage;
+	private final Bin _storage;
 
-	public BlockAwareIo(StorageFactory.Bin storage) {
+	public BlockAwareIo(Bin storage) {
 		_storage = storage;
     }
 

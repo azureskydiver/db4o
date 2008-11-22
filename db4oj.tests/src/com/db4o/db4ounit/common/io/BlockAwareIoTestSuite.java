@@ -15,8 +15,8 @@ public class BlockAwareIoTestSuite extends FixtureTestSuiteDescription {
 	
 	public static class BlockAwareIoTestCase implements TestLifeCycle {
 		
-		private final MockStorage _mockStorage = new MockStorage();
-		private final BlockAwareIo _subject = new BlockAwareIo(_mockStorage);
+		private final MockBin _mockBin = new MockBin();
+		private final BlockAwareIo _subject = new BlockAwareIo(_mockBin);
 		
 		public void testBlockSize() {
 			Assert.areEqual(blockSize(), _subject.blockSize());
@@ -34,7 +34,7 @@ public class BlockAwareIoTestSuite extends FixtureTestSuiteDescription {
 		
 		public void testBlockReadReturnsStorageReturnValue() {
 
-			_mockStorage.returnValueForNextCall(-1);
+			_mockBin.returnValueForNextCall(-1);
 			Assert.areEqual(-1, _subject.blockRead(0, new byte[10]));
 		}
 		
@@ -91,7 +91,7 @@ public class BlockAwareIoTestSuite extends FixtureTestSuiteDescription {
 		}
 		
 		private void verify(MethodCall... expectedCalls) {
-			_mockStorage.verify(expectedCalls);
+			_mockBin.verify(expectedCalls);
         }
 
 		private int blockSize() {

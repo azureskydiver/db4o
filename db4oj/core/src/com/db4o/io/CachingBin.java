@@ -8,7 +8,7 @@ import com.db4o.internal.caching.*;
 
 /**
  */
-class CachingStorage extends StorageDecorator {
+class CachingBin extends BinDecorator {
 
 	private final int _pageSize;
 	
@@ -43,7 +43,7 @@ class CachingStorage extends StorageDecorator {
 	 * @param pageCount
 	 *            allocated amount of pages
 	 */
-	public CachingStorage(StorageFactory.Bin storage,
+	public CachingBin(Bin storage,
 	        Cache4 cache, int pageCount, int pageSize) throws Db4oIOException {
 		super(storage);
 		

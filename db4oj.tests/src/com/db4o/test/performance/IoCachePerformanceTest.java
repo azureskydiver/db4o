@@ -61,8 +61,8 @@ public class IoCachePerformanceTest {
 	    return new IoCachePerformanceTest("CachingStorage", cachingStorage());
     }
 
-	private static StorageFactory cachingStorage() {
-		return new CachingStorageFactory(new RandomAccessFileStorageFactory());
+	private static Storage cachingStorage() {
+		return new CachingStorageFactory(new FileStorage());
     }
 
 	private static void report(IoCachePerformanceTest test1, final double ratio) {
@@ -92,15 +92,15 @@ public class IoCachePerformanceTest {
 	private final String _name;
 	private ObjectContainer _container;
 	private String _filename;
-	private final StorageFactory _io;
+	private final Storage _io;
 	
-	public IoCachePerformanceTest(String name, StorageFactory storageFactory) {
+	public IoCachePerformanceTest(String name, Storage storageFactory) {
 		_name = name;
 		_io = storageFactory;
     }
 
 	public IoCachePerformanceTest(String name, IoAdapter adapter) {
-		this(name, new IoAdapterStorageFactory(adapter));
+		this(name, new IoAdapterStorage(adapter));
 	}
 
 	private long run() {

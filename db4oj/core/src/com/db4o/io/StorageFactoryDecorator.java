@@ -2,11 +2,11 @@ package com.db4o.io;
 
 import com.db4o.ext.*;
 
-public class StorageFactoryDecorator implements StorageFactory {
+public class StorageFactoryDecorator implements Storage {
 
-	protected final StorageFactory _factory;
+	protected final Storage _factory;
 
-	public StorageFactoryDecorator(StorageFactory factory) {
+	public StorageFactoryDecorator(Storage factory) {
 		_factory = factory;
 	}
 

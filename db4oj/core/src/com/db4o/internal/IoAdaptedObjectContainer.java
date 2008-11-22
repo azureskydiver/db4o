@@ -37,7 +37,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     protected final void openImpl() throws OldFormatException,
 			DatabaseReadOnlyException {
-		final StorageFactory ioAdapter = configImpl().storage();
+		final Storage ioAdapter = configImpl().storage();
 		boolean isNew = !ioAdapter.exists(fileName());
 		if (isNew) {
 			logMsg(14, fileName());

@@ -184,7 +184,7 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			fileConfig.generateVersionNumbers(ConfigScope.GLOBALLY);
 			Assert.areEqual(ConfigScope.GLOBALLY, legacyConfig.generateVersionNumbers());
 			
-			StorageFactory storageFactory = new RandomAccessFileStorageFactory();
+			Storage storageFactory = new FileStorage();
 			fileConfig.storageFactory(storageFactory);
 			Assert.areSame(storageFactory, legacyConfig.storage());
 			Assert.areSame(storageFactory, fileConfig.storageFactory());
