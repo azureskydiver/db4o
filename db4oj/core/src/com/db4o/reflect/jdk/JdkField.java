@@ -4,6 +4,7 @@ package com.db4o.reflect.jdk;
 
 import java.lang.reflect.*;
 
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
@@ -43,27 +44,26 @@ public class JdkField implements ReflectField {
         return Modifier.isTransient(field.getModifiers());
     }
 
-    public void setAccessible() {
+    private void setAccessible() {
         Platform4.setAccessible(field);
     }
 
     public Object get(Object onObject) {
-        try {
-            return field.get(onObject);
-        } catch (Exception e) {
-            return null;
-        }
+    	try {
+			return field.get(onObject);
+		} 
+    	catch (Exception exc) {
+			throw new Db4oException(exc);
+		}
     }
 
     public void set(Object onObject, Object attribute) {
-        try {
-            field.set(onObject, attribute);
-        } catch (Exception e) {
-            // FIXME: This doesn't work when in its own package...
-//            if(Debug.atHome){
-//                e.printStackTrace();
-//            }
-        }
+    	try {
+			field.set(onObject, attribute);
+		} 
+    	catch (Exception exc) {
+			throw new Db4oException(exc);
+		}
     }
 
 	public Object indexEntry(Object orig) {
