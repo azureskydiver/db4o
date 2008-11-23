@@ -27,6 +27,7 @@ public abstract class MigrationTestCaseBase implements TestCase, TestLifeCycle, 
 
 	public void setUp() throws Exception {
 		Db4o.configure().allowVersionUpdates(true);
+		Db4o.configure().exceptionsOnNotStorable(false);
 		prepareDatabaseFile();
 		open();
 	}
