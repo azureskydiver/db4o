@@ -90,12 +90,12 @@ public abstract class DiskFullTestCaseBase implements TestLifeCycle {
 	}
 
 	private void configureIoAdapter(Configuration config, ThrowCondition throwCondition, boolean doCache) {
-		IoAdapter ioAdapter = new RandomAccessFileAdapter();
-		ioAdapter = new ThrowingIoAdapter(ioAdapter, throwCondition);
+		Storage storage = new FileStorage();
+		storage = new ThrowingStorage(storage, throwCondition);
 		if(doCache) {
-			ioAdapter = new CachedIoAdapter(ioAdapter, 256, 2);
+			storage = new CachingStorage(storage, 256, 2);
 		}
-		config.io(ioAdapter);
+		config.storage(storage);
 	}
 
 	protected void closeDb() {

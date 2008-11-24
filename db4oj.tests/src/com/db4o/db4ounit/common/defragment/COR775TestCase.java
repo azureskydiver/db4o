@@ -88,9 +88,9 @@ public class COR775TestCase implements TestLifeCycle {
 
             db4oConfig.activationDepth(Integer.MAX_VALUE);
             db4oConfig.callConstructors(true);
-            IoAdapter ioAdapter = new MockIOAdapter(
-                    new RandomAccessFileAdapter(), "db4o");
-            db4oConfig.io(ioAdapter);
+            Storage storage = new MockStorage(
+                    new FileStorage(), "db4o");
+            db4oConfig.storage(storage);
         }
         return db4oConfig;
     }
@@ -106,68 +106,45 @@ public class COR775TestCase implements TestLifeCycle {
         }
     }
 
-    public static class MockIOAdapter extends IoAdapter {
-
-        private IoAdapter ioAdapter;
+    public static class MockStorage extends StorageDecorator {
 
         private String password;
 
-        private long pos;
-
-        public MockIOAdapter(IoAdapter ioAdapter, String password) {
-            this.ioAdapter = ioAdapter;
+        public MockStorage(Storage storage, String password) {
+        	super(storage);
             this.password = password;
         }
 
-        public void close() throws Db4oIOException {
-            ioAdapter.close();
+        @Override
+        protected Bin decorate(Bin bin) {
+        	return new MockBin(bin, password);
         }
 
-        public void delete(String path) {
-            ioAdapter.delete(path);
+
+        static class MockBin extends BinDecorator {
+        
+        	private String _password;
+        	
+	        public MockBin(Bin bin, String password) {
+				super(bin);
+				_password = password;
+			}
+
+			public int read(long pos, byte[] bytes, int length) throws Db4oIOException {
+	            _bin.read(pos, bytes, length);
+	            for (int i = 0; i < length; i++) {
+	                bytes[i] = (byte) (bytes[i] - _password.hashCode());
+	            }
+	            return length;
+	        }
+	
+	        public void write(long pos, byte[] buffer, int length) throws Db4oIOException {
+	            for (int i = 0; i < length; i++) {
+	                buffer[i] = (byte) (buffer[i] + _password.hashCode());
+	            }
+	            _bin.write(pos, buffer, length);
+	        }
         }
-
-        public boolean exists(String path) {
-            return ioAdapter.exists(path);
-        }
-
-        public long getLength() throws Db4oIOException {
-            return ioAdapter.getLength();
-        }
-
-        public IoAdapter open(String path, boolean lockFile,
-                long initialLength, boolean readOnly) throws Db4oIOException {
-            return new MockIOAdapter(ioAdapter.open(path, lockFile,
-                    initialLength, readOnly), password);
-        }
-
-        public int read(byte[] bytes, int length) throws Db4oIOException {
-            ioAdapter.read(bytes);
-            for (int i = 0; i < length; i++) {
-                bytes[i] = (byte) (bytes[i] - password.hashCode());
-            }
-
-            ioAdapter.seek(pos + length);
-            return length;
-        }
-
-        public void seek(long pos) throws Db4oIOException {
-            this.pos = pos;
-            ioAdapter.seek(pos);
-        }
-
-        public void sync() throws Db4oIOException {
-            ioAdapter.sync();
-        }
-
-        public void write(byte[] buffer, int length) throws Db4oIOException {
-            for (int i = 0; i < length; i++) {
-                buffer[i] = (byte) (buffer[i] + password.hashCode());
-            }
-            ioAdapter.write(buffer, length);
-            seek(pos + length);
-        }
-
     }
 
 }

@@ -66,11 +66,11 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         
     	createFile(baseConfig(), fileName);
         
-        CrashSimulatingIoAdapter crashSimulatingAdapter = new CrashSimulatingIoAdapter(new RandomAccessFileAdapter());
-        IoAdapter adapterFactory = cached ? (IoAdapter) new CachedIoAdapter(crashSimulatingAdapter) : crashSimulatingAdapter;
+        CrashSimulatingStorage crashSimulatingStorage = new CrashSimulatingStorage(new FileStorage());
+        Storage storage = cached ? (Storage) new CachingStorage(crashSimulatingStorage) : crashSimulatingStorage;
         
         Configuration recordConfig = baseConfig();
-        recordConfig.io(adapterFactory);
+        recordConfig.storage(storage);
         
         ObjectContainer oc = Db4o.openFile(recordConfig, fileName);
         
@@ -105,9 +105,9 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
 
         oc.close();
 
-        int count = crashSimulatingAdapter.batch.writeVersions(fileName);
+        int count = crashSimulatingStorage._batch.writeVersions(fileName);
 
-        checkFiles(fileName, "R", crashSimulatingAdapter.batch.numSyncs());
+        checkFiles(fileName, "R", crashSimulatingStorage._batch.numSyncs());
         checkFiles(fileName, "W", count);
 		if (VERBOSE) {
 			System.out.println("Total versions: " + count);

@@ -24,7 +24,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 		final Item item = (Item) retrieveOnlyInstance(Item.class);
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				ExceptionIOAdapter.exception = true;
+				ExceptionSimulatingStorage.exception = true;
 				db().activate(item, 3);
 			}
 		});
@@ -33,7 +33,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 	public void testClose() {
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				ExceptionIOAdapter.exception = true;
+				ExceptionSimulatingStorage.exception = true;
 				db().close();
 			}
 		});
@@ -43,7 +43,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 		store(new Item(0));
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				ExceptionIOAdapter.exception = true;
+				ExceptionSimulatingStorage.exception = true;
 				db().commit();
 			}
 		});
@@ -54,7 +54,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 		final Item item = (Item) retrieveOnlyInstance(Item.class);
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				ExceptionIOAdapter.exception = true;
+				ExceptionSimulatingStorage.exception = true;
 				db().delete(item);
 			}
 		});
@@ -64,7 +64,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 		store(new Item(3));
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				ExceptionIOAdapter.exception = true;
+				ExceptionSimulatingStorage.exception = true;
 				db().queryByExample(Item.class);
 			}
 		});
@@ -74,7 +74,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 		store(new Item(3));
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				ExceptionIOAdapter.exception = true;
+				ExceptionSimulatingStorage.exception = true;
 				ObjectSet os = db().queryByExample(null);
 				while(os.hasNext()) {
 					os.next();
@@ -87,7 +87,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 		store(new Item(3));
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				ExceptionIOAdapter.exception = true;
+				ExceptionSimulatingStorage.exception = true;
 				db().query(Item.class);
 			}
 		});
@@ -97,7 +97,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 		store(new Item(3));
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				ExceptionIOAdapter.exception = true;
+				ExceptionSimulatingStorage.exception = true;
 				db().rollback();
 			}
 		});
@@ -106,7 +106,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 	public void testSet() throws Exception {
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				ExceptionIOAdapter.exception = true;
+				ExceptionSimulatingStorage.exception = true;
 				db().store(new Item(3));
 			}
 		});
@@ -121,7 +121,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 		fixture().reopen(getClass());
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				ExceptionIOAdapter.exception = true;
+				ExceptionSimulatingStorage.exception = true;
 				db().getByUUID(uuid);
 			}
 		});
