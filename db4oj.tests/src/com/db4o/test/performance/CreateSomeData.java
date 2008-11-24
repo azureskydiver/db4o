@@ -35,8 +35,8 @@ public class CreateSomeData {
 	public static void main(String[] args) {
 		new File(Util.BENCHFILE).delete();
 		new File(Util.DBFILE).delete();
-		Db4o.configure().io(
-				new RecordingIoAdapter(new RandomAccessFileAdapter(),
+		Db4o.configure().storage(
+				new RecordingStorage(new FileStorage(),
 						Util.BENCHFILE));
 		Db4o.configure().optimizeNativeQueries(true);
 		ObjectContainer db = Db4o.openFile(Util.DBFILE);
