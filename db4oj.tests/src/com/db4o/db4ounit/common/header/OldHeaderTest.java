@@ -24,11 +24,13 @@ public class OldHeaderTest implements TestCase, OptOutNoFileSystemData {
     	File4.copy(originalFilePath, dbFilePath);
         
     	Db4o.configure().allowVersionUpdates(true);    	
+    	Db4o.configure().exceptionsOnNotStorable(false);    	
         ObjectContainer oc = Db4o.openFile(dbFilePath);
         try {
         	Assert.isNotNull(oc);
         } finally {
         	oc.close();
+        	Db4o.configure().exceptionsOnNotStorable(true);    	
         	Db4o.configure().allowVersionUpdates(false);
         }
     }
