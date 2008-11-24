@@ -54,11 +54,13 @@ public class UUIDMigrationTestCase implements TestCase, OptOutNoFileSystemData {
 	}
 
 	private void restoreConfiguration() {
+		Db4o.configure().exceptionsOnNotStorable(true);
 		Db4o.configure().allowVersionUpdates(false);
 		Db4o.configure().generateUUIDs(ConfigScope.DISABLED);
 	}
 
 	private void configure() {
+		Db4o.configure().exceptionsOnNotStorable(false);
 		Db4o.configure().allowVersionUpdates(true);
 		Db4o.configure().generateUUIDs(ConfigScope.GLOBALLY);
 	}
