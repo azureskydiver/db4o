@@ -24,7 +24,7 @@ public class CsSchemaMigrationSourceCode {
 
 	}
 	
-	private static final String FILE = "csmig.db4o";
+	private static final String FILE = System.getProperty("java.io.tmpdir", ".") + File.separator + "csmig.db4o";
 	private static final int PORT = 4447;
 
 	public static void main(String[] arguments) throws IOException {

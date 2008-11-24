@@ -234,13 +234,13 @@ public class IOServices {
         }
     }
     
-    public static String joinQuotedArgs(String separator, String[] args)
+    public static String joinArgs(String separator, String[] args, boolean doQuote)
     {
         StringBuffer buffer = new StringBuffer();
         for (String arg : args)
         {
             if (buffer.length() > 0) buffer.append(separator);
-            buffer.append(quote(arg));
+            buffer.append((doQuote ? quote(arg) : arg));
         }
         return buffer.toString();
     }
@@ -250,6 +250,5 @@ public class IOServices {
         if (s.startsWith("\"")) return s;
         return "\"" + s + "\"";
     }
-
 
 }
