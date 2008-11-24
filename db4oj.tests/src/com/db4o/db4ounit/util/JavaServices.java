@@ -25,14 +25,14 @@ public class JavaServices {
 			String[] classPath =
 				new String[]{
 					"-classpath",
-					IOServices.joinQuotedArgs(
+					IOServices.joinArgs(
 	        				File.pathSeparator,
 	        				new String[]{
 	        						currentClassPath(),
 	        						db4oCoreJarPath(), 
 	        						db4oJarPath("-optional"),
 	        						db4oJarPath("-cs"),
-	        				}),
+	        				}, runningOnWindows()),
 	        		srcFile};
 
 			return IOServices.exec(WorkspaceServices.javacPath(),classPath);
@@ -58,14 +58,15 @@ public class JavaServices {
     
     private static String[] javaRunArguments(String className) {
         return new String[] {"-cp",
-                IOServices.joinQuotedArgs(
+                IOServices.joinArgs(
 						File.pathSeparator,
 						new String[] {
 						JavaServices.javaTempPath(), 
 						currentClassPath(),
 						db4oCoreJarPath(), 
 						db4oJarPath("-optional"),
-						db4oJarPath("-cs")})
+						db4oJarPath("-cs")
+				}, runningOnWindows())
         		, className};
         
     }
@@ -142,5 +143,13 @@ public class JavaServices {
 	{
 		return IOServices.buildTempPath("java");
 	}
-
+	
+	private static boolean runningOnWindows() {
+		String osName = System.getProperty("os.name");
+		if(osName == null) {
+			return false;
+		}
+		return osName.contains("Win");
+	}
+	
 }
