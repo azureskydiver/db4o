@@ -17,7 +17,7 @@ class LRU2QXCache<K,V> implements Cache4<K,V> {
 	private final CircularBuffer4<K> _am; // 'eden': long-term lru queue
 	private final CircularBuffer4<K> _a1in; // 'nursery': short-term fifo queue, entry point for all new items
 	private final CircularBuffer4<K> _a1out; // 'backlog': fifo queue, elements may not be backed in _slots or may overlap with _am
-	private final int _maxSize; // invariant: |_am| + |_a1in| <= _maxSize
+	private final int _maxSize; // invariant: |_slots| = |_am| + |_a1in| <= _maxSize
 	private final int _inSize;
 	
 	public LRU2QXCache(int maxSize) {
@@ -30,7 +30,6 @@ class LRU2QXCache<K,V> implements Cache4<K,V> {
 	}
 	
 	public V produce(K key, Function4<K,V> producer, Procedure4<V> onDiscard) {
-		//System.out.println(key + " - " + this);
 		if(key == null){
 			throw new ArgumentNullException();
 		}
