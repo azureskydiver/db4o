@@ -149,7 +149,7 @@ public class JavaServices {
 		if(osName == null) {
 			return false;
 		}
-		return osName.contains("Win");
+		return osName.indexOf("Win") >= 0;
 	}
 	
 }
