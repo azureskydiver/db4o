@@ -5,25 +5,33 @@ import com.db4o.internal.caching.*;
 
 public class CachingStorage extends StorageDecorator {
 
-	private static int DEFAULT_PAGE_SIZE = 1024;
-
 	private static int DEFAULT_PAGE_COUNT = 64;
+	private static int DEFAULT_PAGE_SIZE = 1024;
+	
+	private int _pageCount;
+	private int _pageSize;
 
 	public CachingStorage(Storage storage) {
-	    super(storage);
+	    this(storage, DEFAULT_PAGE_COUNT, DEFAULT_PAGE_SIZE);
     }
-	
+
+	public CachingStorage(Storage storage, int pageCount, int pageSize) {
+	    super(storage);
+		_pageCount = pageCount;
+		_pageSize = pageSize;
+    }
+
 	@Override
 	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
 	    final Bin storage = super.open(uri, lockFile, initialLength, readOnly);
 	    if (readOnly) {
-	    	return new ReadOnlyBin(new NonFlushingCachingBin(storage, newCache(), DEFAULT_PAGE_COUNT, DEFAULT_PAGE_SIZE));
+	    	return new ReadOnlyBin(new NonFlushingCachingBin(storage, newCache(), _pageCount, _pageSize));
 	    }
-	    return new CachingBin(storage, newCache(), DEFAULT_PAGE_COUNT, DEFAULT_PAGE_SIZE);
+	    return new CachingBin(storage, newCache(), _pageCount, _pageSize);
 	}
 
 	protected Cache4<Object, Object> newCache() {
-	    return CacheFactory.new2QXCache(DEFAULT_PAGE_COUNT);
+	    return CacheFactory.new2QXCache(_pageCount);
     }
 
 	private static final class NonFlushingCachingBin extends CachingBin {
@@ -32,7 +40,8 @@ public class CachingStorage extends StorageDecorator {
 			super(bin, cache, pageCount, pageSize);
 		}
 		
-		@Override protected void flushAllPages() {
+		@Override 
+		protected void flushAllPages() {
 		}
 	}
 }

@@ -18,7 +18,7 @@ public class StorageDecorator implements Storage {
 		return decorate( _storage.open(uri, lockFile, initialLength, readOnly));
 	}
 
-	protected Bin decorate(Bin storage) {
-		return storage;
+	protected Bin decorate(Bin bin) {
+		return bin;
     }
 }

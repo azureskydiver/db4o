@@ -36,6 +36,14 @@ public class CacheStatistics <K,V> implements Cache4<K, V>{
 		return _delegate.iterator();
 	}
 	
+	public int calls() {
+		return _calls;
+	}
+	
+	public int misses() {
+		return _misses;
+	}
+	
 	public String toString(){
 		return "Cache statistics  Calls:" + _calls + " Misses:" + _misses;
 	}
