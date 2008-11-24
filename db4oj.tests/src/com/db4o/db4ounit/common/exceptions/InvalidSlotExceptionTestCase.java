@@ -9,7 +9,6 @@ import com.db4o.io.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
 	
@@ -23,7 +22,7 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
 	
 	
 	protected void configure(Configuration config) throws Exception {
-		config.io(new MockIoAdapter());
+		config.storage(new MockStorage());
 	}
 	
 	public void testInvalidSlotException() throws Exception {
@@ -54,48 +53,47 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
 		}
 	}
 	
-	public static class MockIoAdapter extends VanillaIoAdapter{
-		
-		
-		private boolean _deliverInvalidSlot;
-		
-		public MockIoAdapter(){
-			super(new RandomAccessFileAdapter());
-		}
-		
-		protected MockIoAdapter(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-			super(new RandomAccessFileAdapter(), path, lockFile, initialLength, readOnly);
+	public static class MockStorage extends StorageDecorator {
+				
+		public MockStorage(){
+			super(new FileStorage());
 		}
 
-		public IoAdapter open(String path, boolean lockFile,
-				long initialLength, boolean readOnly) throws Db4oIOException {
-			// TODO Auto-generated method stub
-			return new MockIoAdapter(path, lockFile, initialLength, readOnly);
+		@Override
+		protected Bin decorate(Bin bin) {
+			return new MockBin(bin);
 		}
 		
-		public void seek(long pos) throws Db4oIOException {
-			if(pos == OUT_OF_MEMORY_ID){
-				throw new OutOfMemoryError();
+		private static class MockBin extends BinDecorator {
+			private boolean _deliverInvalidSlot;
+
+			public MockBin(Bin bin) {
+				super(bin);
 			}
-			if(pos == INVALID_ID){
-				_deliverInvalidSlot = true;
-				return;
+			
+			public int read(long pos, byte[] bytes, int length) throws Db4oIOException {
+				seek(pos);
+				if(_deliverInvalidSlot){
+					ByteArrayBuffer buffer = new ByteArrayBuffer(Const4.POINTER_LENGTH);
+					buffer.writeInt(1);
+					buffer.writeInt(Integer.MAX_VALUE);
+					System.arraycopy(buffer._buffer, 0, bytes, 0, Const4.POINTER_LENGTH);
+					return length;
+				}
+				return super.read(pos, bytes, length);
 			}
-			_deliverInvalidSlot = false;
-			super.seek(pos);
+
+			private void seek(long pos) throws Db4oIOException {
+				if(pos == OUT_OF_MEMORY_ID){
+					throw new OutOfMemoryError();
+				}
+				if(pos == INVALID_ID){
+					_deliverInvalidSlot = true;
+					return;
+				}
+				_deliverInvalidSlot = false;
+			}
 		}
-		
-		public int read(byte[] bytes, int length) throws Db4oIOException {
-			if(_deliverInvalidSlot){
-				ByteArrayBuffer buffer = new ByteArrayBuffer(Const4.POINTER_LENGTH);
-				buffer.writeInt(1);
-				buffer.writeInt(Integer.MAX_VALUE);
-				System.arraycopy(buffer._buffer, 0, bytes, 0, Const4.POINTER_LENGTH);
-				return length;
-			}
-			return super.read(bytes, length);
-		}
-		
 	}
 
 }

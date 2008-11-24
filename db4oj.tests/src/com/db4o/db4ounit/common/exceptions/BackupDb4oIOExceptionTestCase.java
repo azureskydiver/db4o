@@ -27,7 +27,7 @@ public class BackupDb4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 	public void testBackup() {
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				ExceptionIOAdapter.exception = true;
+				ExceptionSimulatingStorage.exception = true;
 				db().backup(BACKUP_FILE);
 			}
 		});
