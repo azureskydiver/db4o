@@ -29,9 +29,9 @@ public class LongHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         public Object _wrapperArrayInObject;
     }
 
-    private static final long[] data = new long[] { Long.MIN_VALUE,
+    private final long[] data = new long[] { Long.MIN_VALUE,
             Long.MIN_VALUE + 1, -5, -1, 0, 1, 5, Long.MAX_VALUE - 1,
-            Long.MAX_VALUE, };
+            usesNullMarkerValue() ? 0:Long.MAX_VALUE, };
 
     public static void main(String[] args) {
         new ConsoleTestRunner(LongHandlerUpdateTestCase.class).run();

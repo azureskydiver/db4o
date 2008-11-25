@@ -29,7 +29,7 @@ public class FloatHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         public Object _wrapperArrayInObject;
     }
     
-    private static final float[] data = new float[] {
+    private final float[] data = new float[] {
         Float.NEGATIVE_INFINITY,
         Float.MIN_VALUE,
         Float.MIN_VALUE + 1,
@@ -41,7 +41,7 @@ public class FloatHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         Float.MAX_VALUE - 1,
         Float.MAX_VALUE,
         Float.POSITIVE_INFINITY,
-        Float.NaN,
+        usesNullMarkerValue() ? 0:Float.NaN,
     };
     
     public static void main(String[] args) {

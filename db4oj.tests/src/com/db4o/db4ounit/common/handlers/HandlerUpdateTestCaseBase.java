@@ -139,5 +139,9 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
         // Override to check updates also
     }
     
+    protected boolean usesNullMarkerValue() {
+    	return db4oHandlerVersion() == 0;
+    }
+    
 
 }
