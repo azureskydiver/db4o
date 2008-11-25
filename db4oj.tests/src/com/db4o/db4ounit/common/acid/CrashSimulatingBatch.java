@@ -6,15 +6,37 @@ import java.io.*;
 
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
+import com.db4o.internal.transactionlog.*;
 
 
 public class CrashSimulatingBatch {
     
     Collection4 writes = new Collection4();
+    
     Collection4 currentWrite = new Collection4();
     
-    public void add(byte[] bytes, long offset, int length){
-        currentWrite.add(new CrashSimulatingWrite(bytes, offset, length));
+    public void add(String path, byte[] bytes, long offset, int length){
+    	byte[] lockFileBuffer = null;
+    	byte[] logFileBuffer = null;
+    	if(File4.exists(FileBasedTransactionLogHandler.lockFileName(path))){
+    		try {
+				lockFileBuffer = readAllBytes(FileBasedTransactionLogHandler.lockFileName(path));
+				logFileBuffer =  readAllBytes(FileBasedTransactionLogHandler.logFileName(path));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}
+        CrashSimulatingWrite crashSimulatingWrite = new CrashSimulatingWrite(bytes, offset, length, lockFileBuffer, logFileBuffer);
+		currentWrite.add(crashSimulatingWrite);
+    }
+    
+    private byte[] readAllBytes(String fileName) throws IOException{
+    	int length = (int) new File(fileName).length();
+    	RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
+    	byte[] buffer = new byte[length];
+    	raf.read(buffer);
+    	raf.close();
+    	return buffer;
     }
 
     public void sync() {
@@ -52,7 +74,7 @@ public class CrashSimulatingBatch {
             Iterator4 singleForwardIter = writesBetweenSync.iterator();
             while(singleForwardIter.moveNext()){
                 CrashSimulatingWrite csw = (CrashSimulatingWrite)singleForwardIter.current();
-                csw.write(rightRaf);
+                csw.write(rightFileName, rightRaf);
                 
                 if(CrashSimulatingTestCase.VERBOSE){
                     System.out.println(csw);
@@ -69,7 +91,7 @@ public class CrashSimulatingBatch {
                 File4.copy(lastFileName, currentFileName);
                 
                 RandomAccessFile raf = new RandomAccessFile(currentFileName, "rw");
-                csw.write(raf);
+                csw.write(currentFileName, raf);
                 raf.close();
                 lastFileName = currentFileName;
             }

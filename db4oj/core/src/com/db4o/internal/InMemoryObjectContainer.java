@@ -48,6 +48,11 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
     public void blockSize(int size){
         // do nothing, blocksize is always 1
     }
+    
+    @Override
+    protected void closeSystemTransaction() {
+    	// do nothing
+    }
 
     protected void freeInternalResources() {
     	// nothing to do here

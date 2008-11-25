@@ -7,27 +7,34 @@ import com.db4o.io.*;
 
 
 public class CrashSimulatingStorage extends StorageDecorator {
+	
+	private final String _fileName;
     
     CrashSimulatingBatch _batch;
         
-    public CrashSimulatingStorage(Storage storage) {
+    public CrashSimulatingStorage(Storage storage, String fileName) {
         super(storage);
         _batch = new CrashSimulatingBatch();
+        _fileName = fileName;
     }
     
     @Override
     protected Bin decorate(Bin bin) {
-    	return new CrashSimulatingBin(bin, _batch);
+    	return new CrashSimulatingBin(bin, _batch, _fileName);
     }
 
     static class CrashSimulatingBin extends BinDecorator {
     	
+    	private final String _fileName;
+    	
     	private CrashSimulatingBatch _batch;
+    	
         long _curPos;
   	
-	    public CrashSimulatingBin(Bin bin, CrashSimulatingBatch batch) {
+	    public CrashSimulatingBin(Bin bin, CrashSimulatingBatch batch, String fileName) {
 			super(bin);
 			_batch = batch;
+			_fileName = fileName;
 		}
 
 		public int read(long pos, byte[] bytes, int length) throws Db4oIOException {
@@ -44,7 +51,7 @@ public class CrashSimulatingStorage extends StorageDecorator {
 	        super.write(pos, buffer, length);
 	        byte[] copy=new byte[buffer.length];
 	        System.arraycopy(buffer, 0, copy, 0, length);
-	        _batch.add(copy, _curPos, length);
+	        _batch.add(_fileName, copy, _curPos, length);
 	        _curPos+= length;
 	    }
 	    

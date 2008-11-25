@@ -16,7 +16,7 @@ public class StackBasedDiskFullTestCase extends DiskFullTestCaseBase {
 	}
 
 	public void testFailDuringCommitWriteChanges() {
-		assertFailDuringCommit(2, false);
+		assertFailDuringCommit(1, false);
 	}
 
 	public void testFailDuringCommitWriteChangesWithCache() {

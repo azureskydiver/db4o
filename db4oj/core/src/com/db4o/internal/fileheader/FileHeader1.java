@@ -35,7 +35,8 @@ public class FileHeader1 extends FileHeader {
     private static final int HEADER_LOCK_OFFSET = SIGNATURE.length + 1;
     private static final int OPEN_TIME_OFFSET = HEADER_LOCK_OFFSET + Const4.INT_LENGTH;
     private static final int ACCESS_TIME_OFFSET = OPEN_TIME_OFFSET + Const4.LONG_LENGTH;
-    private static final int TRANSACTION_POINTER_OFFSET = ACCESS_TIME_OFFSET + Const4.LONG_LENGTH; 
+    private static final int TRANSACTION_POINTER_OFFSET = ACCESS_TIME_OFFSET + Const4.LONG_LENGTH;
+    private static final int BLOCKSIZE_OFFSET = TRANSACTION_POINTER_OFFSET + (Const4.INT_LENGTH * 2);
     
     public static final int HEADER_LENGTH = TRANSACTION_POINTER_OFFSET + (Const4.INT_LENGTH * 6);
     
@@ -80,6 +81,7 @@ public class FileHeader1 extends FileHeader {
         checkThreadFileLock(file, reader);
         reader.seek(TRANSACTION_POINTER_OFFSET);
         _interruptedTransaction = LocalTransaction.readInterruptedTransaction(file, reader);
+        reader.seek(BLOCKSIZE_OFFSET);
         file.blockSizeReadFromFile(reader.readInt());
         readClassCollectionAndFreeSpace(file, reader);
         _variablePart = new FileHeaderVariablePart1(reader.readInt(), file.systemData());

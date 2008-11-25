@@ -15,7 +15,7 @@ public class DiskFullTestCase extends DiskFullTestCaseBase {
 	}
 
 	public void testReleasesFileLocksWithCache() {
-		assertReleasesFileLocks(false);
+		assertReleasesFileLocks(true);
 	}
 
 	public void testKeepsCommittedDataReadOnlyLimited() {
