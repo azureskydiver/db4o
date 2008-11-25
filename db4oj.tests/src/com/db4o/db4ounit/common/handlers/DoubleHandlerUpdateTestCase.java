@@ -11,13 +11,13 @@ import db4ounit.*;
 
 public class DoubleHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 
-    private static final double[] data = new double[] {
+    private final double[] data = new double[] {
         Double.MIN_VALUE, 
         Double.MIN_VALUE + 1,
         -3.1415926535789,
         -1,
         0,
-        Double.NaN,
+        usesNullMarkerValue() ? 0 : Double.NaN,
         Double.NEGATIVE_INFINITY,
         Double.POSITIVE_INFINITY,
         1,
@@ -195,7 +195,7 @@ public class DoubleHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 	}
 
     private void assertAreEqual(double expected, double actual){
-        if(Double.isNaN(expected) && db4oHandlerVersion() == 0){
+        if(Double.isNaN(expected) && usesNullMarkerValue()){
             expected = 0;
         }
         if(Double.isNaN(expected) && Double.isNaN(actual)){
@@ -205,7 +205,7 @@ public class DoubleHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
     
     private void assertAreEqual(Object expected, Object actual){
-        if(((Double)expected).isNaN() && db4oHandlerVersion() == 0){
+        if(((Double)expected).isNaN() && usesNullMarkerValue()){
             expected = null;
         }
         if(expected != null && actual != null && ((Double)expected).isNaN() && ((Double)actual).isNaN()){

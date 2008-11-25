@@ -29,7 +29,7 @@ public class ShortHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         public Object _wrapperArrayInObject;
     }
     
-    private static final short[] data = new short[] {
+    private final short[] data = new short[] {
         Short.MIN_VALUE,
         Short.MIN_VALUE + 1,
         -5,
@@ -38,7 +38,7 @@ public class ShortHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         1,
         5,
         Short.MAX_VALUE - 1,
-        Short.MAX_VALUE,
+        usesNullMarkerValue() ? 0:Short.MAX_VALUE,
     };
     
     public static void main(String[] args) {
