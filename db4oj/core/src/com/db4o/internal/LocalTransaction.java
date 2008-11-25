@@ -22,8 +22,6 @@ public class LocalTransaction extends Transaction {
     
     protected final StatefulBuffer i_pointerIo;    
     
-    private int i_address;	// only used to pass address to Thread
-	
     private final Collection4 _participants = new Collection4(); 
 
     private final LockedTree _slotChanges = new LockedTree();
@@ -36,7 +34,7 @@ public class LocalTransaction extends Transaction {
 	
 	private Cache4<Integer, ByteArrayBuffer> _slotCache;
 	
-	private final EmbeddedTransactionLogHandler _transactionLogHandler = new EmbeddedTransactionLogHandler(this);
+	private TransactionLogHandler _transactionLogHandler = new EmbeddedTransactionLogHandler();
 
 	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
 		super(container, parentTransaction, referenceSystem);
@@ -52,7 +50,7 @@ public class LocalTransaction extends Transaction {
     		}
     	};
     	if(isSystemTransaction()){
-	    	int slotCacheSize = container.config().slotCacheSize();
+	    	int slotCacheSize = config().slotCacheSize();
 			if(slotCacheSize > 0){
 	    		_slotCache = CacheFactory.new2QCache(slotCacheSize);
 	    	}
@@ -60,9 +58,27 @@ public class LocalTransaction extends Transaction {
     	if(_slotCache == null){
     		_slotCache = new NullCache4<Integer, ByteArrayBuffer>();
     	}
-
+    	initializeTransactionLogHandler();
 	}
 	
+	private void initializeTransactionLogHandler() {
+    	if(! isSystemTransaction()){
+    		_transactionLogHandler = ((LocalTransaction)systemTransaction())._transactionLogHandler;
+    		return;
+    	}
+		boolean fileBased = config().fileBasedTransactionLog() && container() instanceof IoAdaptedObjectContainer;
+		if(! fileBased){
+			_transactionLogHandler = new EmbeddedTransactionLogHandler();
+			return;
+		}
+		String fileName = ((IoAdaptedObjectContainer)container()).fileName();
+		_transactionLogHandler = new FileBasedTransactionLogHandler(this, fileName); 
+	}
+
+	public Config4Impl config() {
+		return container().config();
+	}
+
 	public LocalObjectContainer file() {
 		return _file;
 	}
@@ -139,7 +155,7 @@ public class LocalTransaction extends Transaction {
         
         container().writeDirty();
         
-        Slot reservedSlot = _transactionLogHandler.allocateSlot(false);
+        Slot reservedSlot = _transactionLogHandler.allocateSlot(this, false);
         
         freeSlotChanges(false);
                 
@@ -149,12 +165,12 @@ public class LocalTransaction extends Transaction {
         
         freeSlotChanges(true);
         
-        _transactionLogHandler.processSlotChanges(reservedSlot);
+        _transactionLogHandler.applySlotChanges(this, reservedSlot);
         
         freespaceEndCommit();
     }
 	
-	private final void freeSlotChanges(final boolean forFreespace) {
+	public final void freeSlotChanges(final boolean forFreespace) {
         Visitor4 visitor = new Visitor4() {
             public void visit(Object obj) {
                 ((SlotChange)obj).freeDuringCommit(_file, forFreespace);
@@ -430,27 +446,9 @@ public class LocalTransaction extends Transaction {
         return false;
     }
 	
-	
-	final void writeOld() {
+	final void completeInterruptedTransaction() {
         synchronized (container()._lock) {
-            i_pointerIo.useSlot(i_address);
-            i_pointerIo.read();
-            int length = i_pointerIo.readInt();
-            if (length > 0) {
-                StatefulBuffer bytes = new StatefulBuffer(this, i_address, length);
-                bytes.read();
-                bytes.incrementOffset(Const4.INT_LENGTH);
-                _slotChanges.read(bytes, new SlotChange(0));
-                if(writeSlots()){
-                    flushFile();
-                }
-                container().writeTransactionPointer(0);
-                flushFile();
-                freeSlotChanges(false);
-            } else {
-                container().writeTransactionPointer(0);
-                flushFile();
-            }
+        	_transactionLogHandler.completeInterruptedTransaction(this);
         }
     }
 	
@@ -756,19 +754,16 @@ public class LocalTransaction extends Transaction {
 		return new FrozenObjectInfo(this, referenceForId(id));
 	}
 	
-    private void setAddress(int a_address) {
-        i_address = a_address;
-    }
-
 	public static Transaction readInterruptedTransaction(LocalObjectContainer file, ByteArrayBuffer reader) {
-	    int transactionID1 = reader.readInt();
-	    int transactionID2 = reader.readInt();
-	    if( (transactionID1 > 0)  &&  (transactionID1 == transactionID2)){
-	        LocalTransaction transaction = (LocalTransaction) file.newTransaction(null, null);
-	        transaction.setAddress(transactionID1);
-	        return transaction;
-	    }
+		LocalTransaction transaction = (LocalTransaction) file.newTransaction(null, null);
+		if(transaction.wasInterrupted(reader)){
+			return transaction;
+		}
 	    return null;
+	}
+	
+	public boolean wasInterrupted(ByteArrayBuffer reader){
+		return _transactionLogHandler.checkForInterruptedTransaction(this, reader);
 	}
 	
 	public FreespaceManager freespaceManager(){
@@ -802,6 +797,14 @@ public class LocalTransaction extends Transaction {
 	
 	public Cache4<Integer, ByteArrayBuffer> slotCache(){
 		return _slotCache;
+	}
+
+	public void readSlotChanges(ByteArrayBuffer buffer) {
+		_slotChanges.read(buffer, new SlotChange(0));
+	}
+
+	public void close() {
+		_transactionLogHandler.close();
 	}
 	
 }

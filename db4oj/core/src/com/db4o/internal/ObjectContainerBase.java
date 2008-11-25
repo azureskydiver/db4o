@@ -346,10 +346,13 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		}
 		logMsg(3, toString());
 		synchronized (_lock) {
+			closeSystemTransaction();
 			stopSession();
 			shutdownDataStorage();
 		}
 	}
+
+	protected abstract void closeSystemTransaction();
 
 	protected abstract void shutdownDataStorage();
 	

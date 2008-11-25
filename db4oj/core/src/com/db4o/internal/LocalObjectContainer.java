@@ -533,7 +533,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
         if (trans != null) {
             if (!configImpl().commitRecoveryDisabled()) {
-                trans.writeOld();
+                trans.completeInterruptedTransaction();
             }
         }
 

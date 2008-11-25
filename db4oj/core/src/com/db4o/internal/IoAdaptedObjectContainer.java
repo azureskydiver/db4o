@@ -146,6 +146,11 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		}
 	}
 	
+	@Override
+	protected void closeSystemTransaction() {
+    	((LocalTransaction)systemTransaction()).close();
+	}
+	
 	/*
      * This method swallows IOException,
      * because it should not affect other close precedures.

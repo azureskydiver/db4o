@@ -122,6 +122,11 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		throw new NotSupportedException();
 	}
 	
+	@Override
+	protected void closeSystemTransaction() {
+		// do nothing for clients
+	}
+	
 	public void reserve(int byteCount) {
 		throw new NotSupportedException();
 	}

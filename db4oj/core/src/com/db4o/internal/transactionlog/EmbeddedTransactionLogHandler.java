@@ -2,7 +2,6 @@
 
 package com.db4o.internal.transactionlog;
 
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
@@ -10,112 +9,104 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public class EmbeddedTransactionLogHandler implements TransactionLogHandler{
+public class EmbeddedTransactionLogHandler extends TransactionLogHandler{
 	
-	private final LocalTransaction _trans;
+	private int _addressOfIncompleteCommit; 
 	
-	public EmbeddedTransactionLogHandler(LocalTransaction trans) {
-		_trans = trans;
+	public boolean checkForInterruptedTransaction(LocalTransaction trans, ByteArrayBuffer reader) {
+	    int transactionID1 = reader.readInt();
+	    int transactionID2 = reader.readInt();
+	    if( (transactionID1 > 0)  &&  (transactionID1 == transactionID2)){
+	        _addressOfIncompleteCommit = transactionID1; 
+	        return true;
+	    }
+		return false;
+	}
+	
+	public void completeInterruptedTransaction(LocalTransaction trans) {
+		StatefulBuffer bytes = new StatefulBuffer(trans, _addressOfIncompleteCommit, Const4.INT_LENGTH);
+		bytes.read();
+        int length = bytes.readInt();
+        if (length > 0) {
+            bytes = new StatefulBuffer(trans, _addressOfIncompleteCommit, length);
+            bytes.read();
+            bytes.incrementOffset(Const4.INT_LENGTH);
+            trans.readSlotChanges(bytes);
+            if(trans.writeSlots()){
+                flushDatabaseFile(trans);
+            }
+            file(trans).writeTransactionPointer(0);
+            flushDatabaseFile(trans);
+            trans.freeSlotChanges(false);
+        } else {
+            file(trans).writeTransactionPointer(0);
+            flushDatabaseFile(trans);
+        }
 	}
 
-	public Slot allocateSlot(boolean appendToFile) {
-		int transactionLogByteCount = transactionLogSlotLength();
-    	FreespaceManager freespaceManager = freespaceManager();
+	public Slot allocateSlot(LocalTransaction trans, boolean appendToFile) {
+		int transactionLogByteCount = transactionLogSlotLength(trans);
+    	FreespaceManager freespaceManager = trans.freespaceManager();
 		if(! appendToFile && freespaceManager != null){
-    		int blockedLength = file().bytesToBlocks(transactionLogByteCount);
+    		int blockedLength = file(trans).bytesToBlocks(transactionLogByteCount);
     		Slot slot = freespaceManager.allocateTransactionLogSlot(blockedLength);
     		if(slot != null){
-    			return file().toNonBlockedLength(slot);
+    			return file(trans).toNonBlockedLength(slot);
     		}
     	}
-    	return file().appendBytes(transactionLogByteCount);
+    	return file(trans).appendBytes(transactionLogByteCount);
 	}
 
-	private LocalObjectContainer file() {
-		return _trans.file();
-	}
-	
-	private void freeSlot(Slot slot){
+	private void freeSlot(LocalTransaction trans, Slot slot){
     	if(slot == null){
     		return;
     	}
-    	if(freespaceManager() == null){
+    	if(trans.freespaceManager() == null){
     	    return;
     	}
-    	freespaceManager().freeTransactionLogSlot(file().toBlockedLength(slot));
+    	trans.freespaceManager().freeTransactionLogSlot(file(trans).toBlockedLength(slot));
 	}
 
-	private FreespaceManager freespaceManager() {
-		return _trans.freespaceManager();
-	}
-	
-	public void processSlotChanges(Slot reservedSlot) {
-		int slotChangeCount = countSlotChanges();
+	public void applySlotChanges(LocalTransaction trans, Slot reservedSlot) {
+		int slotChangeCount = countSlotChanges(trans);
 		if(slotChangeCount > 0){
 				
-		    Slot transactionLogSlot = slotLongEnoughForLog(reservedSlot) ? reservedSlot
-			    	: allocateSlot(true);
+		    Slot transactionLogSlot = slotLongEnoughForLog(trans, reservedSlot) ? reservedSlot
+			    	: allocateSlot(trans, true);
 	
-			    final StatefulBuffer buffer = new StatefulBuffer(_trans, transactionLogSlot);
+			    final StatefulBuffer buffer = new StatefulBuffer(trans, transactionLogSlot);
 			    buffer.writeInt(transactionLogSlot.length());
 			    buffer.writeInt(slotChangeCount);
 	
-			    appendSlotChanges(buffer);
+			    appendSlotChanges(trans, buffer);
 	
 			    buffer.write();
-			    flushFile();
+			    flushDatabaseFile(trans);
 	
-			    file().writeTransactionPointer(transactionLogSlot.address());
-			    flushFile();
+			    file(trans).writeTransactionPointer(transactionLogSlot.address());
+			    flushDatabaseFile(trans);
 	
-			    if (_trans.writeSlots()) {
-			    	flushFile();
+			    if (trans.writeSlots()) {
+			    	flushDatabaseFile(trans);
 			    }
 	
-			    file().writeTransactionPointer(0);
-			    flushFile();
+			    file(trans).writeTransactionPointer(0);
+			    flushDatabaseFile(trans);
 			    
 			    if (transactionLogSlot != reservedSlot) {
-			    	freeSlot(transactionLogSlot);
+			    	freeSlot(trans, transactionLogSlot);
 			    }
 		}
-		freeSlot(reservedSlot);
+		freeSlot(trans, reservedSlot);
 	}
 	
-    private void flushFile() {
-		_trans.flushFile();
-	}
-
-	private boolean slotLongEnoughForLog(Slot slot){
-    	return slot != null  &&  slot.length() >= transactionLogSlotLength();
-    }
-    
-	private void appendSlotChanges(final ByteArrayBuffer writer){
-		_trans.traverseSlotChanges(new Visitor4() {
-			public void visit(Object obj) {
-				((SlotChange)obj).write(writer);
-			}
-		});
-    }
-    
-    private int transactionLogSlotLength(){
-    	// slotchanges * 3 for ID, address, length
-    	// 2 ints for slotlength and count
-    	return ((countSlotChanges() * 3) + 2) * Const4.INT_LENGTH;
+	private boolean slotLongEnoughForLog(LocalTransaction trans, Slot slot){
+    	return slot != null  &&  slot.length() >= transactionLogSlotLength(trans);
     }
     
 
-	private int countSlotChanges(){
-        final IntByRef count = new IntByRef();
-        _trans.traverseSlotChanges(new Visitor4() {
-			public void visit(Object obj) {
-                SlotChange slot = (SlotChange)obj;
-                if(slot.isSetPointer()){
-                    count.value++;
-                }
-			}
-		});
-        return count.value;
+	public void close() {
+		// do nothing
 	}
 
 }

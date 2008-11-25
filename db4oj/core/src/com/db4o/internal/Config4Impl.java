@@ -91,6 +91,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec EXCEPTIONAL_CLASSES_KEY=new KeySpec(null);
     
 	private final static KeySpec EXCEPTIONS_ON_NOT_STORABLE_KEY=new KeySpec(true);
+	
+	private final static KeySpec FILE_BASED_TRANSACTION_LOG_KEY = new KeySpec(false);
     
 	private final static KeySpec FREESPACE_FILLER_KEY=new KeySpec(null);
 
@@ -1031,6 +1033,15 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public int slotCacheSize(){
 		return _config.getAsInt(SLOT_CACHE_SIZE_KEY);
 	}
+
+	public boolean fileBasedTransactionLog() {
+		return _config.getAsBoolean(FILE_BASED_TRANSACTION_LOG_KEY);
+	}
+	
+	public void fileBasedTransactionLog(boolean flag) {
+		_config.put(FILE_BASED_TRANSACTION_LOG_KEY, flag);
+	}
+
 	
 
 }

@@ -43,16 +43,36 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         return ! Platform4.hasNio();
     }
     
-    public void testWithCache() throws IOException{
-        doTest(true);
+    /**
+     * @sharpen.remove
+     */
+    public void testWithCacheWithoutLogFile() throws IOException{
+        doTest(true, false);
     }
     
-    public void testWithoutCache() throws IOException{
-        doTest(false);
+    /**
+     * @sharpen.remove
+     */
+    public void testWithCacheWithLogFile() throws IOException{
+        doTest(true, true);
+    }
+    
+    /**
+     * @sharpen.remove
+     */
+    public void testWithoutCacheWithoutLogFile() throws IOException{
+        doTest(false, false);
+    }
+    
+    /**
+     * @sharpen.remove
+     */
+    public void testWithoutCacheWithLogFile() throws IOException{
+        doTest(false, true);
     }
 
     
-    private void doTest(boolean cached) throws IOException{
+    private void doTest(boolean cached, boolean useLogFile) throws IOException{
     	if(hasLockFileThread()){
     		System.out.println("CrashSimulatingTestCase is ignored on platforms with lock file thread.");
     		return;
@@ -64,12 +84,12 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
     	File4.delete(fileName);
     	File4.mkdirs(path);
         
-    	createFile(baseConfig(), fileName);
+    	createFile(baseConfig(useLogFile), fileName);
         
-        CrashSimulatingStorage crashSimulatingStorage = new CrashSimulatingStorage(new FileStorage());
+        CrashSimulatingStorage crashSimulatingStorage = new CrashSimulatingStorage(new FileStorage(), fileName);
         Storage storage = cached ? (Storage) new CachingStorage(crashSimulatingStorage) : crashSimulatingStorage;
         
-        Configuration recordConfig = baseConfig();
+        Configuration recordConfig = baseConfig(useLogFile);
         recordConfig.storage(storage);
         
         ObjectContainer oc = Db4o.openFile(recordConfig, fileName);
@@ -107,28 +127,30 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
 
         int count = crashSimulatingStorage._batch.writeVersions(fileName);
 
-        checkFiles(fileName, "R", crashSimulatingStorage._batch.numSyncs());
-        checkFiles(fileName, "W", count);
+        checkFiles(useLogFile, fileName, "R", crashSimulatingStorage._batch.numSyncs());
+        checkFiles(useLogFile, fileName, "W", count);
 		if (VERBOSE) {
 			System.out.println("Total versions: " + count);
 		}
     }
 
-	private Configuration baseConfig() {
-		Configuration config = Db4o.newConfiguration();
+	private Configuration baseConfig(boolean useLogFile) {
+		Config4Impl config = (Config4Impl) Db4o.newConfiguration();
 		config.objectClass(CrashData.class).objectField("_name").indexed(true);
     	config.reflectWith(Platform4.reflectorForType(CrashSimulatingTestCase.class));
         config.bTreeNodeSize(4);
+        config.lockDatabaseFile(false);
+    	config.fileBasedTransactionLog(useLogFile);
 		return config;
 	}
 
-	private void checkFiles(String fileName, String infix,int count) {
+	private void checkFiles(boolean useLogFile, String fileName, String infix,int count) {
         for (int i = 1; i <= count; i++) {
             if(VERBOSE){
                 System.out.println("Checking " + infix + i);
             }
             String versionedFileName = fileName + infix + i;
-            ObjectContainer oc = Db4o.openFile(baseConfig(), versionedFileName);
+            ObjectContainer oc = Db4o.openFile(baseConfig(useLogFile), versionedFileName);
 	        try {
 	            if(! stateBeforeCommit(oc)){
 	                if(! stateAfterFirstCommit(oc)){
