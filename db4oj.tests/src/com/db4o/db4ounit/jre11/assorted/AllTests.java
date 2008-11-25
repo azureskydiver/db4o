@@ -16,8 +16,9 @@ public class AllTests extends Db4oTestSuite {
 			NanoTimeTestCase.class,
             NullWrapperTestCase.class,
             ObjectNotStorableExceptionTestCase.class,
-            UUIDMigrationTestCase.class,
             StoreNumberTestCase.class,
+            SyntheticStaticClassFieldTestCase.class,
+            UUIDMigrationTestCase.class,
 		};
 	}
 }
