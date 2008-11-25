@@ -293,7 +293,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public void endVisit(MethodInvocation node) {
-
 		removeAll(node.typeArguments());
 		
 		final IMethodBinding method = node.resolveMethodBinding();
@@ -308,6 +307,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			}
 		}
 		coerceIterableMethodArguments(node, method);
+		IdiomProcessor.processMethodInvocation(_context, node);
 	}
 	
 	@Override
