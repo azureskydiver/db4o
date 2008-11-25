@@ -11,20 +11,24 @@ import db4ounit.*;
 
 public class DoubleHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 
-    private final double[] data = new double[] {
-        Double.MIN_VALUE, 
-        Double.MIN_VALUE + 1,
-        -3.1415926535789,
-        -1,
-        0,
-        usesNullMarkerValue() ? 0 : Double.NaN,
-        Double.NEGATIVE_INFINITY,
-        Double.POSITIVE_INFINITY,
-        1,
-        3.1415926535789,
-        Double.MAX_VALUE - 1,
-        Double.MAX_VALUE,
-    };
+    private final double[] data; 
+    
+    public DoubleHandlerUpdateTestCase(){
+    	data = new double[] {
+    	        Double.MIN_VALUE, 
+    	        Double.MIN_VALUE + 1,
+    	        -3.1415926535789,
+    	        -1,
+    	        0,
+    	        usesNullMarkerValue() ? 0 : Double.NaN,
+    	        Double.NEGATIVE_INFINITY,
+    	        Double.POSITIVE_INFINITY,
+    	        1,
+    	        3.1415926535789,
+    	        Double.MAX_VALUE - 1,
+    	        Double.MAX_VALUE,
+    	    };
+    }
     
     public static class Item {
         

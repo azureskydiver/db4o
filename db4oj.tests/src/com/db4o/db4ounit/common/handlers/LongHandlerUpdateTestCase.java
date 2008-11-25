@@ -8,6 +8,17 @@ import com.db4o.ext.*;
 import db4ounit.*;
 
 public class LongHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
+	
+    private final long[] data;
+    
+    public LongHandlerUpdateTestCase() {
+    	data = new long[] { Long.MIN_VALUE,
+                Long.MIN_VALUE + 1, -5, -1, 0, 1, 5, Long.MAX_VALUE - 1,
+                usesNullMarkerValue() ? 0:Long.MAX_VALUE, };
+        
+	}
+
+
 
     public static class Item {
         public long _typedPrimitive;
@@ -28,10 +39,6 @@ public class LongHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 
         public Object _wrapperArrayInObject;
     }
-
-    private final long[] data = new long[] { Long.MIN_VALUE,
-            Long.MIN_VALUE + 1, -5, -1, 0, 1, 5, Long.MAX_VALUE - 1,
-            usesNullMarkerValue() ? 0:Long.MAX_VALUE, };
 
     public static void main(String[] args) {
         new ConsoleTestRunner(LongHandlerUpdateTestCase.class).run();
