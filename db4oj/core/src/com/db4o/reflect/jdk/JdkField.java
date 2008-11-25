@@ -53,7 +53,7 @@ public class JdkField implements ReflectField {
 			return field.get(onObject);
 		} 
     	catch (Exception exc) {
-			throw new Db4oException(exc);
+			return handleException(exc);
 		}
     }
 
@@ -62,7 +62,7 @@ public class JdkField implements ReflectField {
 			field.set(onObject, attribute);
 		} 
     	catch (Exception exc) {
-			throw new Db4oException(exc);
+			handleException(exc);
 		}
     }
 
@@ -76,5 +76,16 @@ public class JdkField implements ReflectField {
 	
 	public String toString() {
 	    return "JDKField " + getFieldType().getName() + ":" + getName();
+	}
+	
+	private Object handleException(Exception exc) {
+		if(!isSynthetic()) {
+			throw new Db4oException(exc);
+		}
+		return null;
+	}
+	
+	private boolean isSynthetic() {
+		return field.getName().startsWith("class$"); // || field.getName().startsWith("this$");
 	}
 }
