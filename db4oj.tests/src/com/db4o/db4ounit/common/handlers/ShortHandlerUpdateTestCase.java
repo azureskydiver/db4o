@@ -9,7 +9,23 @@ import db4ounit.*;
 
 public class ShortHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 
-    public static class Item {
+    private final short[] data; 
+    
+    public ShortHandlerUpdateTestCase() {
+    	data = new short[] {
+                Short.MIN_VALUE,
+                Short.MIN_VALUE + 1,
+                -5,
+                -1,
+                0,
+                1,
+                5,
+                Short.MAX_VALUE - 1,
+                usesNullMarkerValue() ? (short)0: Short.MAX_VALUE,
+            };
+	}
+
+	public static class Item {
         public short _typedPrimitive;
 
         public Short _typedWrapper;
@@ -28,18 +44,6 @@ public class ShortHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 
         public Object _wrapperArrayInObject;
     }
-    
-    private final short[] data = new short[] {
-        Short.MIN_VALUE,
-        Short.MIN_VALUE + 1,
-        -5,
-        -1,
-        0,
-        1,
-        5,
-        Short.MAX_VALUE - 1,
-        usesNullMarkerValue() ? 0:Short.MAX_VALUE,
-    };
     
     public static void main(String[] args) {
         new ConsoleTestRunner(ShortHandlerUpdateTestCase.class).run();

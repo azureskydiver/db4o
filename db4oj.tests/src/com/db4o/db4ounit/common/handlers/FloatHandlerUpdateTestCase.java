@@ -8,6 +8,27 @@ import com.db4o.ext.*;
 import db4ounit.*;
 
 public class FloatHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
+	
+    private final float[] data;
+                        
+    public FloatHandlerUpdateTestCase() {
+    	data = new float[] {
+                Float.NEGATIVE_INFINITY,
+                Float.MIN_VALUE,
+                Float.MIN_VALUE + 1,
+                -5,
+                -1,
+                0,
+                1,
+                5,
+                Float.MAX_VALUE - 1,
+                Float.MAX_VALUE,
+                Float.POSITIVE_INFINITY,
+                usesNullMarkerValue() ? 0:Float.NaN,
+            };
+        
+	}
+
     
     public static class Item {
         public float _typedPrimitive;
@@ -29,20 +50,6 @@ public class FloatHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         public Object _wrapperArrayInObject;
     }
     
-    private final float[] data = new float[] {
-        Float.NEGATIVE_INFINITY,
-        Float.MIN_VALUE,
-        Float.MIN_VALUE + 1,
-        -5,
-        -1,
-        0,
-        1,
-        5,
-        Float.MAX_VALUE - 1,
-        Float.MAX_VALUE,
-        Float.POSITIVE_INFINITY,
-        usesNullMarkerValue() ? 0:Float.NaN,
-    };
     
     public static void main(String[] args) {
         new ConsoleTestRunner(FloatHandlerUpdateTestCase.class).run();

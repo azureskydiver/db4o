@@ -8,17 +8,21 @@ import db4ounit.*;
 
 public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     
-    private final int[] data = new int[] { 
-        Integer.MIN_VALUE, 
-        Integer.MIN_VALUE + 1,
-        -5,
-        -1,
-        0,
-        1,
-        5,
-        Integer.MAX_VALUE - 1,
-        usesNullMarkerValue() ? 0:Integer.MAX_VALUE
-    };
+    private final int[] data; 
+    
+    public IntHandlerUpdateTestCase() {
+    	data = new int[] { 
+    	        Integer.MIN_VALUE, 
+    	        Integer.MIN_VALUE + 1,
+    	        -5,
+    	        -1,
+    	        0,
+    	        1,
+    	        5,
+    	        Integer.MAX_VALUE - 1,
+    	        usesNullMarkerValue() ? 0:Integer.MAX_VALUE
+    	    };
+	}
 
     public static void main(String[] args) {
         new ConsoleTestRunner(IntHandlerUpdateTestCase.class).run();
