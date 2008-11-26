@@ -31,7 +31,7 @@ public class CachingStorage extends StorageDecorator {
 	}
 
 	protected Cache4<Object, Object> newCache() {
-	    return CacheFactory.new2QXCache(_pageCount);
+	    return CacheFactory.new2QCache(_pageCount);
     }
 
 	private static final class NonFlushingCachingBin extends CachingBin {
