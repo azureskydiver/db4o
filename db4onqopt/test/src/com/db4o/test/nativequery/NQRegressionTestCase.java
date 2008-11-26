@@ -133,7 +133,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 	}
 	
 	@SuppressWarnings("serial")
-	private static ExpectingPredicate[] _PREDICATES={
+	private static ExpectingPredicate[] COMMON_PREDICATES={
 		// unconditional/untyped
 		new ExpectingPredicate<Object>("unconditional/untyped") {
 			public int expected() { return 5;}
@@ -217,24 +217,6 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 			}
 		},
 		// string specific comparisons
-		new ExpectingPredicate<Data>("name.contains('a')") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.name.contains("a");
-			}
-		},
-		new ExpectingPredicate<Data>("name.contains('A')") {
-			public int expected() { return 1;}
-			public boolean match(Data candidate) {
-				return candidate.name.contains("A");
-			}
-		},
-		new ExpectingPredicate<Data>("name.contains('C')") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.name.contains("C");
-			}
-		},
 		new ExpectingPredicate<Data>("name.startsWith('C')") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
@@ -257,12 +239,6 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 			public int expected() { return 0;}
 			public boolean match(Data candidate) {
 				return candidate.name.endsWith("A");
-			}
-		},
-		new ExpectingPredicate<Data>("!(name.contains('A'))") {
-			public int expected() { return 3;}
-			public boolean match(Data candidate) {
-				return !candidate.name.contains("A");
 			}
 		},
 		new ExpectingPredicate<Data>("!(name.startsWith('C'))") {
@@ -616,7 +592,49 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		},
 	};
 	
-	private static ExpectingPredicate[] PREDICATES = _PREDICATES;
+	/**
+	 * @decaf.replaceFirst return null;
+	 */
+	private static ExpectingPredicate[] jdk5Predicates() {
+		return new ExpectingPredicate[] {
+			new ExpectingPredicate<Data>("name.contains('a')") {
+				public int expected() { return 2;}
+				public boolean match(Data candidate) {
+					return candidate.name.contains("a");
+				}
+			},
+			new ExpectingPredicate<Data>("name.contains('A')") {
+				public int expected() { return 1;}
+				public boolean match(Data candidate) {
+					return candidate.name.contains("A");
+				}
+			},
+			new ExpectingPredicate<Data>("name.contains('C')") {
+				public int expected() { return 2;}
+				public boolean match(Data candidate) {
+					return candidate.name.contains("C");
+				}
+			},
+			new ExpectingPredicate<Data>("!(name.contains('A'))") {
+				public int expected() { return 3;}
+				public boolean match(Data candidate) {
+					return !candidate.name.contains("A");
+				}
+			},			
+		};
+	}
+	
+	private static ExpectingPredicate[] mergePredicates(ExpectingPredicate[] common, ExpectingPredicate[] specific) {
+		if(specific == null) {
+			return common;
+		}
+		ExpectingPredicate[] all = new ExpectingPredicate[common.length +  specific.length];
+		System.arraycopy(common, 0, all, 0, common.length);
+		System.arraycopy(specific, 0, all, common.length, specific.length);
+		return all;
+	}
+	
+	private static ExpectingPredicate[] PREDICATES = mergePredicates(COMMON_PREDICATES, jdk5Predicates());
 	
 	public void testAll() throws Exception {
 		_prevData = (Data) db().queryByExample(_prevData).next();
