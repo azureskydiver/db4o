@@ -18,13 +18,13 @@ public class ClientEventRegistryImpl extends EventRegistryImpl {
 	 * @sharpen.ignore
 	 */
 	public Event4 deleted() {
-		throw new IllegalArgumentException("delete() event is raised only at server side.");
+		throw new IllegalArgumentException("delete() events are raised only at server side.");
 	}
 	
 	/**
 	 * @sharpen.ignore
 	 */
 	public Event4 deleting() {
-		throw new IllegalArgumentException("deleting() event is raised only at server side.");
+		throw new IllegalArgumentException("deleting() events are raised only at server side.");
 	}
 }
