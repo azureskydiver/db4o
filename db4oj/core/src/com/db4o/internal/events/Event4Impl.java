@@ -40,7 +40,7 @@ public class Event4Impl implements Event4 {
 	}
 
 	/**
-	 * Might be overriden whenever specific events need
+	 * Might be overridden whenever specific events need
 	 * to know when listeners subscribe to the event.
 	 */
 	protected void onListenerAdded() {
