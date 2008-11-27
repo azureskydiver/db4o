@@ -273,14 +273,14 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 		return container().newUserTransaction();
 	}
 	
-	public Object retrieveOnlyInstance(Class clazz) {
+	public <T> T retrieveOnlyInstance(Class<T> clazz) {
 		return retrieveOnlyInstance(db(), clazz);
 	}
 	
-	public static Object retrieveOnlyInstance(ExtObjectContainer oc, Class clazz) {
+	public static <T> T retrieveOnlyInstance(ExtObjectContainer oc, Class<T> clazz) {
 		ObjectSet result=newQuery(oc, clazz).execute();
 		Assert.areEqual(1,result.size());
-		return result.next();
+		return (T)result.next();
 	}
 	
 	protected int countOccurences(Class clazz) {
