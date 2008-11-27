@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 - 2007   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2006 - 2008   db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.io;
 
@@ -7,6 +7,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.caching.*;
 
 /**
+ * @exclude
  */
 class CachingBin extends BinDecorator {
 

@@ -1,3 +1,5 @@
+/* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
+
 package com.db4o.io;
 
 import java.io.*;
@@ -6,6 +8,10 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
 
+/**
+ * Storage adapter to store db4o database data to physical
+ * files on hard disc. 
+ */
 public class FileStorage implements Storage {
 
 	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {

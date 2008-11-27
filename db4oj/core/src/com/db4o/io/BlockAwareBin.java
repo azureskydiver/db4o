@@ -1,10 +1,13 @@
-/* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
+/* Copyright (C) 2004 - 2008  db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.io;
 
 import com.db4o.*;
 import com.db4o.ext.*;
 
+/**
+ * @exclude
+ */
 public class BlockAwareBin extends BinDecorator {
 
 	private static final int COPY_SIZE = 4096;
