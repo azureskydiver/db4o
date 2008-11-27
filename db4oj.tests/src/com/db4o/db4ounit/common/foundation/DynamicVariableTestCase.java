@@ -70,24 +70,6 @@ public class DynamicVariableTestCase implements TestCase {
 		return threads;
 	}
 
-	public void testTypeChecking() {
-
-		final Runnable emptyBlock = new Runnable() {
-			public void run() {
-			}
-		};
-
-		final DynamicVariable stringVar = new DynamicVariable(String.class);
-		stringVar.with("foo", emptyBlock);
-
-		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				stringVar.with(Boolean.TRUE, emptyBlock);
-			}
-		});
-
-	}
-
 	private void checkVariableBehavior(final DynamicVariable variable) {
 		Assert.isNull(variable.value());
 		variable.with("foo", new Runnable() {

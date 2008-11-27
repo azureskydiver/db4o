@@ -6,9 +6,9 @@ import com.db4o.events.*;
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
-public class DeleteEventOnClient extends EventsTestCaseBase implements OptOutSolo {
+public class DeleteEventOnClientTestCase extends EventsTestCaseBase implements OptOutSolo {
 	public static void main(String[] args) {
-		new DeleteEventOnClient().runAll();
+		new DeleteEventOnClientTestCase().runAll();
 	}
 	
 	public void testAttachingToDeletingEventThrows() {
