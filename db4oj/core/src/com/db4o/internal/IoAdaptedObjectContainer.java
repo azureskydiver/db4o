@@ -47,10 +47,13 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		boolean readOnly = configImpl().isReadOnly();
 		boolean lockFile = Debug.lockFile && configImpl().lockFile()
 				&& (!readOnly);
-		_file = new BlockAwareBin(storage.open(fileName(), lockFile, 0, readOnly));
 		if (needsLockFileThread()) {
-			// FIXME: with a SynchronizedStorage or something
-			_timerFile = new BlockAwareBin(storage.open(fileName(), false, 0, false));
+			Bin fileBin = storage.open(fileName(), false, 0, false);
+			Bin synchronizedBin = new SynchronizedBin(fileBin);
+			_file = new BlockAwareBin(synchronizedBin);
+			_timerFile = _file;
+		} else {
+			_file = new BlockAwareBin(storage.open(fileName(), lockFile, 0, readOnly));	
 		}
 		if (isNew) {
 			configureNewFile();
@@ -112,9 +115,8 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     protected void shutdownDataStorage() {
 		synchronized (_fileLock) {
-			closeDatabaseFile();
 			closeFileHeader();
-			closeTimerFile();
+			closeDatabaseFile();
 		}
 	}
 
@@ -149,20 +151,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 	@Override
 	protected void closeSystemTransaction() {
     	((LocalTransaction)systemTransaction()).close();
-	}
-	
-	/*
-     * This method swallows IOException,
-     * because it should not affect other close precedures.
-     */
-    private void closeTimerFile() {
-		try {
-			if (_timerFile != null) {
-				_timerFile.close();
-			}
-		} finally {
-			_timerFile = null;
-		}
 	}
     
     public void commit1(Transaction trans) {

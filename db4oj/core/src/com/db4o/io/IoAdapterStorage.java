@@ -18,7 +18,7 @@ public class IoAdapterStorage implements Storage {
 		return new IoAdapterBin(_io.open(uri, lockFile, initialLength, readOnly));
 	}
 	
-	static  class IoAdapterBin implements Bin {
+	static  class IoAdapterBin implements BlockSizeAwareBin {
 
 		private final IoAdapter _io;
 
@@ -46,6 +46,10 @@ public class IoAdapterStorage implements Storage {
 		public void write(long position, byte[] bytes, int bytesToWrite) {
 			_io.seek(position);
 			_io.write(bytes, bytesToWrite);
+		}
+		
+		public void blockSize(int blockSize) {
+			_io.blockSize(blockSize);
 		}
 
 	}

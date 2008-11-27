@@ -27,5 +27,9 @@ public class BinDecorator implements Bin {
 	public void write(long position, byte[] bytes, int bytesToWrite) {
     	_bin.write(position, bytes, bytesToWrite);
     }
+	
+	public Bin undecorate(){
+		return _bin;
+	}
 
 }

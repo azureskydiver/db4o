@@ -148,7 +148,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec WEAK_REFERENCES_KEY=new KeySpec(true);
 	
-	private final static KeySpec STORAGE_FACTORY_KEY=new KeySpec(new FileStorage());
+	private final static KeySpec STORAGE_FACTORY_KEY=new KeySpec(new CachingStorage(new FileStorage()));
         
 	private final static KeySpec ALIASES_KEY=new KeySpec(null);
 	
