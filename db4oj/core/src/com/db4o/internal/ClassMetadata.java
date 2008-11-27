@@ -1264,15 +1264,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public int prefetchActivationDepth(){
-        // We only allow prefetching, if there is no special configuration for the class. 
-        // This was a fix for a problem instantiating Hashtables. There may be a better 
-        // workaround that also works for configured objects.
-        //
-        // An instantiation depth of 1 makes use of possibly prefetched strings and 
-        // arrays that are carried around in the buffer anyway
-        //
-        // TODO: optimize
-        return configOrAncestorConfig() == null ? 1 : 0;
+    	return 1;
     }
     
     void purge() {

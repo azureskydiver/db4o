@@ -4,6 +4,7 @@ package com.db4o.internal.events;
 
 import com.db4o.*;
 import com.db4o.events.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
 
@@ -14,49 +15,83 @@ import com.db4o.query.*;
  */
 public class EventPlatform {
 
-	public static void triggerQueryEvent(Transaction transaction, Event4Impl e, Query q) {
-		if(!e.hasListeners()) {
-			return;
-		}
-		e.trigger(new QueryEventArgs(transaction, q));
+	public static void triggerQueryEvent(final Transaction transaction, final Event4Impl e, final Query q) {
+		trigger(e, new Runnable() {
+			public void run() {
+				e.trigger(new QueryEventArgs(transaction, q));
+			}
+		});
 	}
 
-	public static void triggerClassEvent(Event4Impl e, ClassMetadata clazz) {
-		if(!e.hasListeners()) {
-			return;
-		}
-		e.trigger(new ClassEventArgs(clazz));
+	public static void triggerClassEvent(final Event4Impl e, final ClassMetadata clazz) {
+		trigger(e, new Runnable() {
+			public void run() {
+				e.trigger(new ClassEventArgs(clazz));
+			}
+		});
 	}
 
-	public static boolean triggerCancellableObjectEventArgs(Transaction transaction, Event4Impl e, Object o) {
-		if(!e.hasListeners()) {
+	public static boolean triggerCancellableObjectEventArgs(final Transaction transaction, final Event4Impl e, final Object o) {
+		return trigger(e, new Closure4<Boolean>() {
+			public Boolean run() {
+				CancellableObjectEventArgs args = new CancellableObjectEventArgs(transaction, o);
+				e.trigger(args);
+				return !args.isCancelled();
+			}
+		});		
+	}
+	
+	public static void triggerObjectEvent(final Transaction transaction, final Event4Impl e, final Object o) {
+		trigger(e, new Runnable() {
+			public void run() {
+				e.trigger(new ObjectEventArgs(transaction, o));
+			}
+		});
+	}
+
+	public static void triggerCommitEvent(final Transaction transaction, final Event4Impl e, final CallbackObjectInfoCollections collections) {
+		trigger(e, new Runnable() {
+			public void run() {
+				e.trigger(new CommitEventArgs(transaction, collections));
+			}
+		});
+	}
+	
+	public static void triggerObjectContainerEvent(final ObjectContainer container, final Event4Impl e) {
+		trigger(e, new Runnable() {
+			public void run() {
+				e.trigger(new ObjectContainerEventArgs(container));
+			}
+		});
+	}
+	
+	private static boolean trigger(Event4Impl e, final Closure4<Boolean> code) {
+		if (!e.hasListeners()) {
 			return true;
 		}
-		CancellableObjectEventArgs args = new CancellableObjectEventArgs(transaction, o);
-		e.trigger(args);
-		return !args.isCancelled();
+		
+		final ByRef<Boolean> ret = ByRef.newInstance(false);
+		ObjectReference._inCallback.with(true, new Runnable() {
+			public void run() {
+				ret.value = code.run();
+			}
+		});
+		
+		return ret.value;		
 	}
 	
-	public static void triggerObjectEvent(Transaction transaction, Event4Impl e, Object o) {
-		if(!e.hasListeners()) {
+	private static void trigger(Event4Impl e, final Runnable code) {
+		if (!e.hasListeners()) {
 			return;
 		}
-		e.trigger(new ObjectEventArgs(transaction, o));
-	}
-
-	public static void triggerCommitEvent(Transaction transaction, Event4Impl e, CallbackObjectInfoCollections collections) {
-		if(!e.hasListeners()) {
-			return;
-		}
-		e.trigger(new CommitEventArgs(transaction, collections));
+		
+		ObjectReference._inCallback.with(true, new Runnable() {
+			public void run() {
+				code.run();
+			}
+		});
 	}
 	
-	public static void triggerObjectContainerEvent(ObjectContainer container, Event4Impl e) {
-		if(!e.hasListeners()) {
-			return;
-		}
-		e.trigger(new ObjectContainerEventArgs(container));
-	}
 	
 	public static boolean hasListeners(Event4Impl e) {
 		return e.hasListeners();

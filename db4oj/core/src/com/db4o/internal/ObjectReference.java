@@ -25,6 +25,8 @@ import com.db4o.ta.*;
  */
 public class ObjectReference extends PersistentBase implements ObjectInfo, Activator {
     
+	public final static DynamicVariable<Boolean> _inCallback = new DynamicVariable<Boolean>();
+	
 	private ClassMetadata _class;
 	private Object _object;
 	private VirtualAttributes _virtualAttributes;
@@ -420,9 +422,12 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		continueSet(transaction, updatedepth);
 		// make sure, a concurrent new, possibly triggered by objectOnNew
 		// is written to the file
-
+		
 		// preventing recursive
 		if ( !beginProcessing() ) {
+			if(_inCallback.value()) {
+				throw new IllegalStateException("Objects must not be updated in callback");
+			}
 		    return;
 		}
 		    
