@@ -44,6 +44,18 @@ public class BlockAwareBin extends BinDecorator {
 			throw new IllegalArgumentException();
 		}
 		_blockSize = blockSize;
+		Bin bin = undecorate();
+		blockSize(bin, blockSize);
+		while(bin instanceof BinDecorator){
+			bin = ((BinDecorator)bin).undecorate();
+			blockSize(bin, blockSize);
+		}
+	}
+
+	private static void blockSize(Bin bin, int blockSize) {
+		if(bin instanceof BlockSizeAwareBin){
+			((BlockSizeAwareBin)bin).blockSize(blockSize);
+		}
 	}
 	
 	/**

@@ -461,19 +461,10 @@ public final class Platform4 {
         new TNull();
     }
 
-    // FIXME: functionality should really be in IoAdapter
     public static final void lockFile(String path,Object file) {
         if (!hasNio()) {
             return;
         }
-
-        // FIXME: libgcj 3.x isn't able to properly lock the database file
-        String fullversion = System.getProperty("java.fullversion");
-        if (fullversion != null && fullversion.indexOf("GNU libgcj") >= 0) {
-            System.err.println("Warning: Running in libgcj 3.x--not locking database file!");
-            return;
-        }
-        
         jdk().lockFile(path,file);
     }
     

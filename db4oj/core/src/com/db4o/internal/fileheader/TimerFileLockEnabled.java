@@ -35,18 +35,14 @@ public class TimerFileLockEnabled extends TimerFileLock{
     private boolean _closed = false;
     
     public TimerFileLockEnabled(IoAdaptedObjectContainer file) {
-        _timerLock = file.lock();
-        
-        // FIXME: No reason to sync over the big master lock.
-        //        A local lock should be OK.
-        // _timerLock = new Object();
-        
+        _timerLock = new Object();
         _timerFile = file.timerFile();
         _opentime = uniqueOpenTime();
     }
     
     public void checkHeaderLock() {
-    	if( ((int)_opentime) != readInt(0, _headerLockOffset)){
+    	long openTime = readInt(0, _headerLockOffset);
+		if( ((int)_opentime) != openTime){
     		throw new DatabaseFileLockedException(_timerFile.toString());	
     	}
 		writeHeaderLock();
@@ -114,7 +110,6 @@ public class TimerFileLockEnabled extends TimerFileLock{
     
     public void start() throws Db4oIOException{
         writeAccessTime(false);
-        _timerFile.sync();
         checkOpenTime();
         Thread thread = new Thread(this);
         thread.setName("db4o file lock");
@@ -174,15 +169,27 @@ public class TimerFileLockEnabled extends TimerFileLock{
             if(_timerFile == null){
                 return 0;
             }
+            
+            // We want to make sure we don't get caching effects when reading. 
+			Bin bin = underlyingBin();
+			
             if (Deploy.debug) {
                 ByteArrayBuffer lockBytes = new ByteArrayBuffer(Const4.LONG_LENGTH);
-                _timerFile.blockRead(address, offset, lockBytes._buffer, Const4.LONG_LENGTH);
+                bin.read(address + offset, lockBytes._buffer, Const4.LONG_LENGTH);
                 return lockBytes.readLong();
             }
-            _timerFile.blockRead(address, offset, _longBytes);
+            bin.read(address + offset, _longBytes, Const4.LONG_LENGTH);
             return PrimitiveCodec.readLong(_longBytes, 0);
     	}
     }
+
+	private Bin underlyingBin() {
+		Bin innerMostBin = _timerFile;
+		while(innerMostBin instanceof BinDecorator){
+			innerMostBin = ((BinDecorator)innerMostBin).undecorate();
+		}
+		return innerMostBin;
+	}
     
     private boolean writeInt(int address, int offset, int time) {
     	synchronized (_timerLock) {
@@ -206,12 +213,13 @@ public class TimerFileLockEnabled extends TimerFileLock{
             if(_timerFile == null){
                 return 0;
             }
+            Bin bin = underlyingBin();
             if (Deploy.debug) {
                 ByteArrayBuffer lockBytes = new ByteArrayBuffer(Const4.INT_LENGTH);
-                _timerFile.blockRead(address, offset, lockBytes._buffer, Const4.INT_LENGTH);
+                bin.read(address + offset, lockBytes._buffer, Const4.INT_LENGTH);
                 return lockBytes.readInt();
             }
-            _timerFile.blockRead(address, offset, _longBytes);
+            bin.read(address + offset, _longBytes, Const4.LONG_LENGTH);
             return PrimitiveCodec.readInt(_longBytes, 0);
     	}
     }
