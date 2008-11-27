@@ -1,5 +1,8 @@
 package com.db4o.io;
 
+/**
+ * @exclude
+ */
 public class BinDecorator implements Bin {
 
 	protected final Bin _bin;
