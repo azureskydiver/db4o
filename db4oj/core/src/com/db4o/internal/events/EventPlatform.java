@@ -71,7 +71,7 @@ public class EventPlatform {
 		}
 		
 		final ByRef<Boolean> ret = ByRef.newInstance(false);
-		ObjectReference._inCallback.with(true, new Runnable() {
+		InCallbackState._inCallback.with(true, new Runnable() {
 			public void run() {
 				ret.value = code.run();
 			}
@@ -85,7 +85,7 @@ public class EventPlatform {
 			return;
 		}
 		
-		ObjectReference._inCallback.with(true, new Runnable() {
+		InCallbackState._inCallback.with(true, new Runnable() {
 			public void run() {
 				code.run();
 			}
