@@ -25,7 +25,6 @@ import com.db4o.ta.*;
  */
 public class ObjectReference extends PersistentBase implements ObjectInfo, Activator {
     
-	public final static DynamicVariable<Boolean> _inCallback = new DynamicVariable<Boolean>();
 	
 	private ClassMetadata _class;
 	private Object _object;
@@ -425,7 +424,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		
 		// preventing recursive
 		if ( !beginProcessing() ) {
-			if(_inCallback.value()) {
+			if(InCallbackState._inCallback.value()) {
 				throw new IllegalStateException("Objects must not be updated in callback");
 			}
 		    return;
