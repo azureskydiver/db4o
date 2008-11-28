@@ -23,7 +23,12 @@ public class CallbackHelper {
 		}
 		
 		public void objectOnNew(ObjectContainer container){
-			container.store(parent);
+			
+			// New logic: Updating a touched object inside a callback
+			//            is not allowes. The following is no longer
+			//            a legal call:
+			
+			// container.store(parent);
 		}
 		
 		public void objectOnUpdate(ObjectContainer container){
