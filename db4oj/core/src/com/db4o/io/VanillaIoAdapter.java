@@ -6,6 +6,7 @@ import com.db4o.ext.*;
 
 /**
  * base class for IoAdapters that delegate to other IoAdapters (decorator pattern)
+ * @deprecated use {@link StorageDecorator} / {@link BinDecorator} instead.
  */
 public abstract class VanillaIoAdapter extends IoAdapter {
     

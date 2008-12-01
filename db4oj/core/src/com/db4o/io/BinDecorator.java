@@ -1,36 +1,62 @@
+/* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
 package com.db4o.io;
 
 /**
- * @exclude
+ * Wrapper baseclass for all classes that wrap Bin.
+ * Each class that adds functionality to a Bin must
+ * extend this class to allow db4o to access the 
+ * delegate instance with {@link #undecorate()}.
  */
 public class BinDecorator implements Bin {
 
 	protected final Bin _bin;
 
+	/**
+	 * Default constructor.
+	 * @param bin the {@link Bin} that is to be wrapped.
+	 */
 	public BinDecorator(Bin bin) {
 		_bin = bin;
 	}
 
+	/**
+	 * closes the BinDecorator and the underlying {@link Bin}.
+	 */
 	public void close() {
     	_bin.close();
     }
 
+	/**
+	 * @see Bin#length()  
+	 */
 	public long length() {
 		return _bin.length();
     }
 
+	/**
+	 * @see Bin#read(long, byte[], int)
+	 */
 	public int read(long position, byte[] buffer, int bytesToRead) {
     	return _bin.read(position, buffer, bytesToRead);
     }
 
+	/**
+	 * @see Bin#sync()
+	 */
 	public void sync() {
 		_bin.sync();
     }
 
+	/**
+	 * @see Bin#write(long, byte[], int)
+	 */
 	public void write(long position, byte[] bytes, int bytesToWrite) {
     	_bin.write(position, bytes, bytesToWrite);
     }
 	
+	/**
+	 * returns the underlying {@link Bin}.
+	 */
 	public Bin undecorate(){
 		return _bin;
 	}

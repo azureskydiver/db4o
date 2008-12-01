@@ -8,7 +8,7 @@ import com.db4o.internal.caching.*;
 
 /**
  * Caching storage adapter to cache db4o database data in memory
- * until the underlying {@linkBin} is instructed to flush its 
+ * until the underlying {@link Bin} is instructed to flush its 
  * data when {@link Bin#sync()} is called.<br><br> 
  * 
  * You can override the {@link #newCache()} method if you want to
@@ -44,6 +44,9 @@ public class CachingStorage extends StorageDecorator {
 		_pageSize = pageSize;
     }
 
+	/**
+	 * opens a Bin for the given URI.
+	 */
 	@Override
 	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
 	    final Bin storage = super.open(uri, lockFile, initialLength, readOnly);
@@ -61,9 +64,6 @@ public class CachingStorage extends StorageDecorator {
 	    return CacheFactory.new2QCache(_pageCount);
     }
 
-	/**
-	 * @exclude
-	 */
 	private static final class NonFlushingCachingBin extends CachingBin {
 		
 		public NonFlushingCachingBin(Bin bin, Cache4 cache, int pageCount, int pageSize) throws Db4oIOException {

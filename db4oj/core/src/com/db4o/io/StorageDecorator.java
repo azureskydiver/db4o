@@ -4,7 +4,10 @@ package com.db4o.io;
 import com.db4o.ext.*;
 
 /**
- * @exclude
+ * Wrapper baseclass for all classes that wrap Storage.
+ * Each class that adds functionality to a Storage must
+ * extend this class.
+ * @see BinDecorator 
  */
 public class StorageDecorator implements Storage {
 

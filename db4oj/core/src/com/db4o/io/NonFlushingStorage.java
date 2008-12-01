@@ -1,5 +1,13 @@
+/* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
 package com.db4o.io;
 
+/**
+ * Storage adapter that does not pass flush calls 
+ * on to its delegate.
+ * You can use this {@link Storage} for improved db4o
+ * speed at the risk of corrupted database files in 
+ * case of system failure.    
+ */
 public class NonFlushingStorage extends StorageDecorator {
 
 	public NonFlushingStorage(Storage storage) {
