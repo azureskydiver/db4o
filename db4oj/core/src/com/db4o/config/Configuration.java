@@ -483,12 +483,16 @@ public interface Configuration {
      * with a native library, mirrored write to two files, encryption or 
      * read-on-write fail-safety control.<br><br>
      * @param factory - the factory
-     * 
+     * @see CachingStorage
+     * @see MemoryStorage
+     * @see FileStorage
+     * @see StorageDecorator
      * @sharpen.property
      */
     public void storage(Storage factory) throws GlobalOnlyConfigException;
     
     /**
+     * returns the configured {@link Storage}
      * @sharpen.property
      */
     public Storage storage();
@@ -498,7 +502,7 @@ public interface Configuration {
      * 
      * @return
      * 
-     * @deprecated Use {@link #storageFactory} instead.
+     * @deprecated Use {@link #storage()} instead.
      */
     public IoAdapter io();
     /**

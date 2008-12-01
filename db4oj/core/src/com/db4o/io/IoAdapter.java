@@ -7,6 +7,10 @@ import com.db4o.ext.*;
 
 /**
  * Base class for database file adapters, both for file and memory databases.
+ * @deprecated Use classes that implement {@link Storage} instead. 
+ * The new functionality has been split: {@link Storage} is the factory class
+ * to open {@link Bin} adapters.  
+ * {@link Bin} is the actual implementation of IO access.  
  */
 public abstract class IoAdapter {
 

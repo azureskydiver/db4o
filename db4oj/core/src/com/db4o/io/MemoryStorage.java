@@ -1,17 +1,30 @@
+/* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
 package com.db4o.io;
 
 import java.util.*;
 
 import com.db4o.ext.*;
 
+/**
+ * {@link Storage} implementation that produces {@link Bin} instances
+ * that operate in memory.
+ * Use this {@link Storage} to work with db4o as an in-memory database. 
+ */
 public class MemoryStorage implements Storage {
 
 	private final Map<String, Bin> _storages = new HashMap<String, Bin>();
 
+	/**
+	 * returns true if a MemoryBin with the given URI name already exists
+	 * in this Storage.
+	 */
 	public boolean exists(String uri) {
 		return _storages.containsKey(uri);
 	}
 
+	/**
+	 * opens a MemoryBin for the given URI (name can be freely chosen).
+	 */
 	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
 		final Bin storage = produceStorage(uri, initialLength);
 		return readOnly ? new ReadOnlyBin(storage) : storage;

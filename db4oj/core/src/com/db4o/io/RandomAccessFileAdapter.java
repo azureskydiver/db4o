@@ -10,6 +10,7 @@ import com.db4o.internal.*;
 
 /**
  * IO adapter for random access files.
+ * @deprecated Use {@link FileStorage} instead.
  */
 public class RandomAccessFileAdapter extends IoAdapter {
 

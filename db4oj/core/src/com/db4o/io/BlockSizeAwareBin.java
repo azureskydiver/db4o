@@ -3,10 +3,14 @@
 package com.db4o.io;
 
 /**
- * @exclude
+ * implement with adapters that need to know
+ * about the db4o database file blocksize. 
  */
 public interface BlockSizeAwareBin extends Bin {
 	
+	/**
+	 * setter method that gets passed the blocksize.
+	 */
 	public void blockSize(int blockSize);
 	
 }

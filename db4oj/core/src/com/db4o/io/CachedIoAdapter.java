@@ -11,6 +11,7 @@ import com.db4o.internal.fileheader.*;
  * Example:<br>
  * <code>delegateAdapter = new RandomAccessFileAdapter();</code><br>
  * <code>Db4o.configure().io(new CachedIoAdapter(delegateAdapter));</code><br>
+ * @deprecated Use {@link CachingStorage} instead.
  */
 public class CachedIoAdapter extends IoAdapter {
 

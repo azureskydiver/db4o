@@ -14,16 +14,22 @@ import com.db4o.internal.*;
  */
 public class FileStorage implements Storage {
 
+	/**
+	 * opens a {@link Bin} on the specified URI (file system path).
+	 */
 	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
 		return new FileBin(uri, lockFile, initialLength, readOnly);
     }
 
+	/**
+	 * returns true if the specified file system path already exists.
+	 */
 	public boolean exists(String uri) {
 		final File file = new File(uri);
 		return file.exists() && file.length() > 0;
     }
 	
-	static class FileBin implements Bin {
+	private static class FileBin implements Bin {
 
 		private final String _path;
 
