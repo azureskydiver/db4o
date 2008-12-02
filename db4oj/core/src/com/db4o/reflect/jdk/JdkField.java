@@ -80,7 +80,7 @@ public class JdkField implements ReflectField {
 	
 	private Object handleException(Exception exc) {
 		if(!isSynthetic()) {
-			throw new Db4oException(exc);
+			throw new Db4oException(toString(), exc);
 		}
 		return null;
 	}
