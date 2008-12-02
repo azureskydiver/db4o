@@ -11,8 +11,9 @@ import com.db4o.io.*;
 /**
  * File-related configuration methods, applicable 
  * for db4o embedded use and on the server in a 
- * Client/Server setup. 
+ * Client/Server setup.
  * @since 7.5
+ * @see FileConfigurationProvider#file()
  */
 public interface FileConfiguration {
 
@@ -100,12 +101,14 @@ public interface FileConfiguration {
 
     /**
      * allows to configure db4o to use a customized byte IO storage mechanism.
-     * <br><br>Implement the interface {@link Storage} to
+     * <br><br>You can implement the interface {@link Storage} to
      * write your own. Possible usecases could be improved performance
      * with a native library, mirrored write to two files, encryption or 
      * read-on-write fail-safety control.<br><br>
      * @param storage - the storage
-     * 
+     * @see FileStorage
+     * @see CachingStorage
+     * @see MemoryStorage
      * @sharpen.property
      */
     public void storage(Storage storage) throws GlobalOnlyConfigException;

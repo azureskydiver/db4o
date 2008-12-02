@@ -55,10 +55,9 @@ public class Db4o {
 	 * Creates a fresh {@link Configuration Configuration} instance.
 	 * 
 	 * @return a fresh, independent configuration with all options set to their default values
-	 * 
+	 *
+	 * @deprecated Use {@link Db4oEmbedded#newConfiguration()} instead.
 	 */
-	
-	// deprecated Use {@link Db4oEmbedded#newConfiguration()} instead
 	public static Configuration newConfiguration() {
 		Config4Impl config = new Config4Impl();
 		Platform4.getDefaultConfiguration(config);
@@ -104,7 +103,9 @@ public class Db4o {
      * is set to false.
      * @throws InvalidPasswordException password supplied for the connection is
      * invalid.
-     * @deprecated Use {@link #openClient(Configuration, String, int, String, String)} instead.
+     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in
+     * db4o-X.x-cs-java.jar / Db4objects.Db4o.CS.dll
+     * for methods to open db4o servers and db4o clients. 
 	 */
 	public static ObjectContainer openClient(String hostName, int port,
 			String user, String password) throws Db4oIOException,
@@ -138,6 +139,9 @@ public class Db4o {
      * is set to false.
      * @throws InvalidPasswordException password supplied for the connection is
      * invalid.
+     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in
+     * db4o-X.x-cs-java.jar / Db4objects.Db4o.CS.dll
+     * for methods to open db4o servers and db4o clients. 
 	 */
 	public static ObjectContainer openClient(Configuration config,
 			String hostName, int port, String user, String password)
@@ -171,6 +175,9 @@ public class Db4o {
      * is set to false.
      * @throws InvalidPasswordException password supplied for the connection is
      * invalid.
+     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in
+     * db4o-X.x-cs-java.jar / Db4objects.Db4o.CS.dll
+     * for methods to open db4o servers and db4o clients. 
 	 */
 	public static ObjectContainer openClient(Configuration config,
 			String hostName, int port, String user, String password, NativeSocketFactory socketFactory)
@@ -207,7 +214,7 @@ public class Db4o {
      * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
      * is set to false.
      * @throws DatabaseReadOnlyException database was configured as read-only.
-     * @deprecated Use {@link Db4o#openFile(Configuration,String)} instead
+     * @deprecated Use {@link Db4oEmbedded#openFile(EmbeddedConfiguration, String)} instead
 	 */
 	public static final ObjectContainer openFile(String databaseFileName)
 			throws Db4oIOException, DatabaseFileLockedException,
@@ -241,9 +248,8 @@ public class Db4o {
 	 * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
 	 * is set to false.
 	 * @throws DatabaseReadOnlyException database was configured as read-only.
-	 * 
+     * @deprecated Use {@link Db4oEmbedded#openFile(EmbeddedConfiguration, String)} instead
 	 */
-	// @deprecated Use {@link Db4oEmbedded#openFile(Configuration,String)} instead
 	public static final ObjectContainer openFile(Configuration config,
 			String databaseFileName) throws Db4oIOException,
 			DatabaseFileLockedException, IncompatibleFileFormatException,
@@ -298,7 +304,9 @@ public class Db4o {
      * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
      * is set to false.
      * @throws DatabaseReadOnlyException database was configured as read-only.
-     * @deprecated Use {@link #openServer(Configuration, String, int)} instead.
+     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in
+     * db4o-X.x-cs-java.jar / Db4objects.Db4o.CS.dll
+     * for methods to open db4o servers and db4o clients. 
 	 */
 	public static final ObjectServer openServer(String databaseFileName,
 			int port) throws Db4oIOException, IncompatibleFileFormatException,
@@ -334,6 +342,9 @@ public class Db4o {
      * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
      * is set to false.
      * @throws DatabaseReadOnlyException database was configured as read-only.
+     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in
+     * db4o-X.x-cs-java.jar / Db4objects.Db4o.CS.dll
+     * for methods to open db4o servers and db4o clients. 
 	 */
 	public static final ObjectServer openServer(Configuration config,
 			String databaseFileName, int port) throws Db4oIOException,
@@ -370,6 +381,9 @@ public class Db4o {
      * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
      * is set to false.
      * @throws DatabaseReadOnlyException database was configured as read-only.
+     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in
+     * db4o-X.x-cs-java.jar / Db4objects.Db4o.CS.dll
+     * for methods to open db4o servers and db4o clients. 
 	 */
 	public static final ObjectServer openServer(Configuration config,
 			String databaseFileName, int port, NativeSocketFactory socketFactory) throws Db4oIOException,

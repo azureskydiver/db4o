@@ -1,11 +1,13 @@
 /* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
 package com.db4o.io;
 
+import com.db4o.config.*;
 import com.db4o.ext.*;
 
 /**
  * Base interface for Storage adapters that open a {@link Bin}
- * to store db4o database data to. 
+ * to store db4o database data to.
+ * @see FileConfiguration#storage(Storage) 
  */
 public interface Storage {
 	
