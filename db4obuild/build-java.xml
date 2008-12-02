@@ -1201,7 +1201,13 @@
 					<contains text="* @exclude" />
 				</not>
 			</fileset>
-
+			<fileset dir="${dir.j.cs.src}" includes="com/db4o/**/*.java">
+				<exclude name="com/db4o/internal/**/*.java" />
+				<exclude name="com/db4o/foundation/**/*.java" />
+				<not>
+					<contains text="* @exclude" />
+				</not>
+			</fileset>
 			<group title="Core Engine" packages="com.db4o" />
 			<group title="Query Functionality" packages="com.db4o.query" />
 			<group title="Configuration Features" packages="com.db4o.config" />
