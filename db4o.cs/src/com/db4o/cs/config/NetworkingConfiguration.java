@@ -7,6 +7,7 @@ import com.db4o.messaging.MessageRecipient;
 
 
 /**
+ * Configuration interface for networking configuration settings.
  * @since 7.5
  */
 public interface NetworkingConfiguration {
