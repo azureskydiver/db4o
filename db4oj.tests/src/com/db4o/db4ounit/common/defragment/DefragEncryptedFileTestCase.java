@@ -13,7 +13,16 @@ import com.db4o.io.*;
 
 import db4ounit.*;
 
-public class COR775TestCase implements TestLifeCycle {
+/**
+ * #COR-775
+ * Currently this test doesn't work with JDKs that use a 
+ * timer file lock because the new logic grabs into the Bin 
+ * below the MockBin and reads open times there directly.
+ * The times are then inconsistent with the written times.
+ *   
+ * @decaf.ignore 
+ */
+public class DefragEncryptedFileTestCase implements TestLifeCycle {
 
     private static final String ORIGINAL = Path4.getTempFileName();
     
@@ -35,7 +44,7 @@ public class COR775TestCase implements TestLifeCycle {
 	}
 
     public static void main(String[] args) {
-        new ConsoleTestRunner(COR775TestCase.class).run();
+        new ConsoleTestRunner(DefragEncryptedFileTestCase.class).run();
     }
 
     public void testCOR775() throws Exception {
