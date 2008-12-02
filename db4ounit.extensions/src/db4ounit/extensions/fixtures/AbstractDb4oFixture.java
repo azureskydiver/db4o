@@ -38,7 +38,7 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 
 	protected abstract void doClean();	
 	
-	protected void resetConfig() {
+	public void resetConfig() {
 		_configSource.reset();
 	}
 	
