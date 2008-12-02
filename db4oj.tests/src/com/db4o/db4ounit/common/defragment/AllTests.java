@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.defragment;
 
+import com.db4o.db4ounit.common.util.*;
+
 import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {
@@ -11,13 +13,23 @@ public class AllTests extends Db4oTestSuite {
     }
 
 	protected Class[] testCases() {
-		return new Class[] {
-				DefragEncryptedFileTestCase.class,
+		Class[] commonCases = new Class[] {
 				BlockSizeDefragTestCase.class,
 				DefragInheritedFieldIndexTestCase.class,
 				SlotDefragmentTestCase.class,
 				StoredClassFilterTestCase.class,
 				TranslatedDefragTestCase.class,
 		};
+		return Db4oUnitTestUtil.mergeClasses(commonCases, nonDecafTestCases());
 	}
+
+	/**
+	 * @decaf.replaceFirst return new Class[0];
+	 */
+	private Class[] nonDecafTestCases() {
+		return new Class[] {
+				DefragEncryptedFileTestCase.class,
+		};
+	}
+
 }
