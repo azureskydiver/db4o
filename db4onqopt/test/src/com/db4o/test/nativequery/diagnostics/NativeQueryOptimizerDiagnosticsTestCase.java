@@ -47,7 +47,7 @@ public class NativeQueryOptimizerDiagnosticsTestCase extends AbstractDb4oTestCas
 		Assert.isTrue(_failed);
 	}
 	
-	private class Subject {
+	private static class Subject {
 		private String _name;
 
 		public Subject(String name) {

@@ -51,7 +51,7 @@ public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 	private void assertInstrumented() throws MalformedURLException,
 			ClassNotFoundException, NoSuchMethodException {
 		ExcludingClassLoader excludingLoader = new ExcludingClassLoader(getClass().getClassLoader(), CLAZZES);
-		URLClassLoader loader = new URLClassLoader(new URL[] { new File(TARGET_DIR).toURI().toURL() }, excludingLoader);
+		URLClassLoader loader = new URLClassLoader(new URL[] { new File(TARGET_DIR).toURL() }, excludingLoader);
 		
 		Class instrumented = loader.loadClass(ToBeInstrumented.class.getName());
 		final Class[] queryClassSig = new Class[]{Query.class};
