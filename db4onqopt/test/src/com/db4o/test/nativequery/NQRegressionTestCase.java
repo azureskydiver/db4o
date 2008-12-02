@@ -63,7 +63,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		public Data(int id, boolean bool,float value, String name,Data prev, int id2, java.util.Date curDate) {
 			super(id);
 			this.bool=bool;
-			this.boolWrap=Boolean.valueOf(bool);
+			this.boolWrap=new Boolean(bool);
 			this.value=value;
 			this.name = name;
 			this.prev=prev;
