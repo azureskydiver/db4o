@@ -257,7 +257,7 @@
 
 	</target>
 	
-	<target name="build.db4ojdk1.2" depends="init">
+	<target name="build.db4ojdk1.2" depends="init, decaf.core">
 		<mkdir dir="${dir.dist.classes.jdk1.2}" />
 		<javac srcdir="${dir.dist.decaf.jdk1.2.core.src}" 
             fork="true" 
@@ -456,7 +456,7 @@
 			</jar>
 	</target>
 	
-	<target name="build.nqopt" depends="build.db4ojdk1.2, build.instrumentation">
+	<target name="build.nqopt" depends="build.db4ojdk1.5, build.db4ojdk1.2, build.instrumentation">
         <mkdir dir="${dir.dist.classes.nqopt}" />
 		<javac srcdir="${dir.j.nqopt.src}" 
             fork="true" 
@@ -776,10 +776,11 @@
 	</target>
 	
 	<target name="build.nqopt.tests" depends="build.nqopt, decaf.nqopt.tests, build.db4ojdk1.2.tests">
-		<mkdir dir="${dir.dist.classes.test.nq}" />
+		<mkdir dir="${dir.dist.classes.test.nq.jdk1.2}" />
+		<mkdir dir="${dir.dist.classes.test.nq.jdk1.5}" />
 		<javac
-			destdir="${dir.dist.classes.test.nq}"
-			fork="true" debug="on" target="1.4" source="1.4" encoding="UTF-8">
+			destdir="${dir.dist.classes.test.nq.jdk1.2}"
+			fork="true" debug="on" target="1.2" source="1.2" encoding="UTF-8">
 			<classpath>
 				<pathelement location="${file.bloat.jar}" />
 				<pathelement location="${file.jdk1.2.jar}" />
@@ -791,6 +792,21 @@
 			</classpath>
 			<src path="${dir.j.tools.src}" />
 			<src path="${dir.dist.decaf.jdk1.2.nqopt.test.src}" />
+		</javac>
+		<javac
+			destdir="${dir.dist.classes.test.nq.jdk1.5}"
+			fork="true" debug="on" target="1.5" source="1.5" encoding="UTF-8">
+			<classpath>
+				<pathelement location="${file.bloat.jar}" />
+				<pathelement location="${file.jdk1.5.jar}" />
+				<pathelement location="${file.jdk1.5.db4ounit.jar}" />
+				<pathelement location="${file.instrumentation.jar}" />
+				<pathelement location="${file.nqopt.jar}" />
+				<pathelement location="${dir.dist.classes.test.jdk1.5}" />
+				<pathelement location="${file.ant.jar}"  />
+			</classpath>
+			<src path="${dir.j.tools.src}" />
+			<src path="${dir.j.nqopt.test.src}" />
 		</javac>
 	</target>
 	
@@ -805,7 +821,7 @@
 			</fileset>
 		</jar>
 		<jar destfile="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testnqlib.jar}">
-			<fileset dir="${dir.dist.classes.test.nq}"></fileset>
+			<fileset dir="${dir.dist.classes.test.nq.jdk1.2}"></fileset>
 		</jar>
 	
 		<javac destdir="${dir.dist.classes.osgi.test}" fork="true" debug="on" encoding="UTF-8" target="1.2" source="1.2">
@@ -1045,12 +1061,20 @@
 	</target>
 	
 	<target name="run.tests.nqopt" depends="build.nqopt.tests">
-        <path id="tests.jdk1.2.cp">
+        <path id="tests.nqopt.jdk1.2.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.2}" />
             <pathelement location="${file.jdk1.2.jar}" />
         	<pathelement location="${file.jdk1.2.cs.jar}" />
         	<pathelement location="${file.jdk1.2.optional.jar}" />
 			<pathelement location="${file.jdk1.2.db4ounit.jar}" />
+			<pathelement location="${file.ant.jar}" />
+        </path>
+        <path id="tests.nqopt.jdk1.5.cp">
+            <pathelement path="${dir.dist.classes.test.jdk1.5}" />
+            <pathelement location="${file.jdk1.5.jar}" />
+        	<pathelement location="${file.jdk1.5.cs.jar}" />
+        	<pathelement location="${file.jdk1.5.optional.jar}" />
+			<pathelement location="${file.jdk1.5.db4ounit.jar}" />
 			<pathelement location="${file.ant.jar}" />
         </path>
 
@@ -1061,11 +1085,26 @@
 				failonerror="true"
 				timeout="320000">
 			<classpath>
-				<pathelement location="${dir.dist.classes.test.nq}" />
+				<pathelement location="${dir.dist.classes.test.nq.jdk1.5}" />
                 <pathelement location="${file.nqopt.jar}" />
 				<pathelement location="${file.bloat.jar}" />
 				<pathelement location="${file.instrumentation.jar}" />
-                <path refid="tests.jdk1.2.cp" />
+                <path refid="tests.nqopt.jdk1.5.cp" />
+			</classpath>
+		</java>
+
+		<java taskname="nqopt/j12" jvm="${file.jvm.jdk1.2}"
+				jvmargs="${java.vmargs}"
+				fork="true"
+				classname="com.db4o.test.nativequery.AllTestsNQ"
+				failonerror="true"
+				timeout="320000">
+			<classpath>
+				<pathelement location="${dir.dist.classes.test.nq.jdk1.2}" />
+                <pathelement location="${file.nqopt.jar}" />
+				<pathelement location="${file.bloat.jar}" />
+				<pathelement location="${file.instrumentation.jar}" />
+                <path refid="tests.nqopt.jdk1.2.cp" />
 			</classpath>
 		</java>
 	</target>
