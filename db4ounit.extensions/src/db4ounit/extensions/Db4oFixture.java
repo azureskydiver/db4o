@@ -32,4 +32,6 @@ public interface Db4oFixture extends Labeled {
 
 	void fixtureConfiguration(FixtureConfiguration configuration);
 
+	void resetConfig();
+
 }
