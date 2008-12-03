@@ -9,7 +9,7 @@ import com.db4o.internal.config.*;
 /**
  * Factory class to open db4o instances in embedded mode.
  * 
- * <br><br>See the {@link com.db4o.cs.Db4oClientServer} class in
+ * <br><br>See the <code>com.db4o.cs.Db4oClientServer</code> class in
  * db4o-[version]-cs-java[java-version].jar/ Db4objects.Db4o.CS.dll
  * for methods to open db4o servers and db4o clients.
  * @since 7.5
