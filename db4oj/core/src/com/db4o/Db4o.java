@@ -103,7 +103,7 @@ public class Db4o {
      * is set to false.
      * @throws InvalidPasswordException password supplied for the connection is
      * invalid.
-     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in
+     * @deprecated See the <code>com.db4o.cs.Db4oClientServer</code> class in
      * db4o-X.x-cs-java.jar / Db4objects.Db4o.CS.dll
      * for methods to open db4o servers and db4o clients. 
 	 */
@@ -139,7 +139,7 @@ public class Db4o {
      * is set to false.
      * @throws InvalidPasswordException password supplied for the connection is
      * invalid.
-     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in
+     * @deprecated See the <code>com.db4o.cs.Db4oClientServer</code> class in
      * db4o-X.x-cs-java.jar / Db4objects.Db4o.CS.dll
      * for methods to open db4o servers and db4o clients. 
 	 */
@@ -175,7 +175,7 @@ public class Db4o {
      * is set to false.
      * @throws InvalidPasswordException password supplied for the connection is
      * invalid.
-     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in
+     * @deprecated See the <code>com.db4o.cs.Db4oClientServer</code> class in
      * db4o-X.x-cs-java.jar / Db4objects.Db4o.CS.dll
      * for methods to open db4o servers and db4o clients. 
 	 */
@@ -304,7 +304,7 @@ public class Db4o {
      * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
      * is set to false.
      * @throws DatabaseReadOnlyException database was configured as read-only.
-     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in
+     * @deprecated See the <code>com.db4o.cs.Db4oClientServer</code> class in
      * db4o-X.x-cs-java.jar / Db4objects.Db4o.CS.dll
      * for methods to open db4o servers and db4o clients. 
 	 */
@@ -342,7 +342,7 @@ public class Db4o {
      * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
      * is set to false.
      * @throws DatabaseReadOnlyException database was configured as read-only.
-     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in
+     * @deprecated See the <code>com.db4o.cs.Db4oClientServer</code> class in
      * db4o-X.x-cs-java.jar / Db4objects.Db4o.CS.dll
      * for methods to open db4o servers and db4o clients. 
 	 */
@@ -381,7 +381,7 @@ public class Db4o {
      * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
      * is set to false.
      * @throws DatabaseReadOnlyException database was configured as read-only.
-     * @deprecated See the {@link com.db4o.cs.Db4oClientServer} class in
+     * @deprecated See the <code>com.db4o.cs.Db4oClientServer</code> class in
      * db4o-X.x-cs-java.jar / Db4objects.Db4o.CS.dll
      * for methods to open db4o servers and db4o clients. 
 	 */
