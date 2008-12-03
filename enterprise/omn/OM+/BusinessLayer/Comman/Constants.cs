@@ -82,6 +82,7 @@ namespace OManager.BusinessLayer.Common
         public const string OPERATOR_OR = "OR";
 
         //Common Constant
+        public const string DB4OBJECTS_GCLASS = "GenericClass";
         public const string DB4OBJECTS_REF = "db4oObjRef";
         public const string DB4OBJECTS_SYS = "System";
         public const string DB4OBJECTS_NULL = "null";
