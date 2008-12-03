@@ -287,16 +287,30 @@ namespace OManager.DataLayer.QueryParser
         {
             try
             {
+                 object value;
+                 string gridValue=string.Empty  ;
                 Hashtable hash = new Hashtable();
                 hash.Add(OManager.BusinessLayer.Common.BusinessConstants.DB4OBJECTS_REF, obj);
                 foreach (IReflectField rfields in reff)
                 {
-                    string name = rfields.GetName();                   
-                    object value = rfields.Get(obj);
+                    string name = rfields.GetName();
+                    value = rfields.Get(obj);                  
+
+  
                     if (value != null)
                     {
+                        if (!DataLayerCommon.IsPrimitive(value))
+                        {
+                            value = rfields.GetFieldType();
+
+                        }
                         if (!hash.ContainsKey(name))
-                            hash.Add(name, value.ToString());
+                        {
+                            gridValue = value.ToString();
+                            if (gridValue.StartsWith(OManager.BusinessLayer.Common.BusinessConstants.DB4OBJECTS_GCLASS))
+                                gridValue = gridValue.Remove(0, OManager.BusinessLayer.Common.BusinessConstants.DB4OBJECTS_GCLASS.Length);  
+                            hash.Add(name, gridValue);
+                        }
                     }
                     else
                     {
