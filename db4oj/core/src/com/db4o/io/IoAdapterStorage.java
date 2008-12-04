@@ -2,6 +2,7 @@
 package com.db4o.io;
 
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 
 /**
  * @exclude
@@ -20,11 +21,13 @@ public class IoAdapterStorage implements Storage {
 	}
 
 	public Bin open(BinConfiguration config) throws Db4oIOException {
-		return new IoAdapterBin(_io.open(config.uri(), config.lockFile(), config.initialLength(), config.readOnly()));
+		IoAdapterBin bin = new IoAdapterBin(_io.open(config.uri(), config.lockFile(), config.initialLength(), config.readOnly()));
+		config.blockSizeListenerRegistry().register(bin);
+		return bin;
 	}
 	
 	
-	static  class IoAdapterBin implements BlockSizeAwareBin {
+	static  class IoAdapterBin implements Bin, Listener<Integer>{
 
 		private final IoAdapter _io;
 
@@ -60,6 +63,10 @@ public class IoAdapterStorage implements Storage {
 		
 		public void blockSize(int blockSize) {
 			_io.blockSize(blockSize);
+		}
+
+		public void onEvent(Integer event) {
+			blockSize(event);
 		}
 
 	}
