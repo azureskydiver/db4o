@@ -6,6 +6,7 @@ import com.db4o.ext.*;
 /**
  * @exclude
  */
+@SuppressWarnings("deprecation")
 public class IoAdapterStorage implements Storage {
 	
 	private final IoAdapter _io;
@@ -22,6 +23,7 @@ public class IoAdapterStorage implements Storage {
 		return new IoAdapterBin(_io.open(config.uri(), config.lockFile(), config.initialLength(), config.readOnly()));
 	}
 	
+	
 	static  class IoAdapterBin implements BlockSizeAwareBin {
 
 		private final IoAdapter _io;
@@ -29,20 +31,20 @@ public class IoAdapterStorage implements Storage {
 		public IoAdapterBin(IoAdapter io) {
 			_io = io;
 	    }
-
+		
 		public void close() {
 			_io.close();
 		}
-
+		
 		public long length() {
 			return _io.getLength();
 		}
-
+		
 		public int read(long position, byte[] buffer, int bytesToRead) {
 			_io.seek(position);
 			return _io.read(buffer, bytesToRead);
 		}
-
+		
 		public void sync() {
 			_io.sync();
 		}
@@ -50,7 +52,7 @@ public class IoAdapterStorage implements Storage {
 		public int syncRead(long position, byte[] bytes, int bytesToRead) {
 			return read(position, bytes, bytesToRead);
 		}
-
+		
 		public void write(long position, byte[] bytes, int bytesToWrite) {
 			_io.seek(position);
 			_io.write(bytes, bytesToWrite);

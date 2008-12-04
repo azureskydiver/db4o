@@ -442,6 +442,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     	_internStrings = doIntern;
     }
     
+    @SuppressWarnings("deprecation")
     public void io(IoAdapter adapter){
     	globalSettingOnly();
     	storage(new IoAdapterStorage(adapter));
@@ -921,6 +922,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _config.getAsBoolean(WEAK_REFERENCES_KEY);
 	}
 
+	@SuppressWarnings("deprecation")
 	public IoAdapter io() {
 		throw new NotImplementedException();
 	}
