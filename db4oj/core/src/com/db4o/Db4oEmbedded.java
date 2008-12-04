@@ -22,6 +22,7 @@ public class Db4oEmbedded {
 	 * 
 	 * @return a fresh, independent configuration with all options set to their default values
 	 */
+	@SuppressWarnings("deprecation")
 	public static EmbeddedConfiguration newConfiguration() {
 		return new EmbeddedConfigurationImpl(Db4o.newConfiguration());
 	}
