@@ -12,18 +12,20 @@ public class NonFlushingStorageTestCase implements TestCase {
 	public void test() {
 		final MockBin mock = new MockBin();
 		
+		BinConfiguration binConfig = new BinConfiguration("uri", true, 42L, false, null);
+		
 		final Bin storage = new NonFlushingStorage(new Storage() {
 			public boolean exists(String uri) {
 				throw new NotImplementedException();
             }
 
-			public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly)
+			public Bin open(BinConfiguration config)
                     throws Db4oIOException {
-				mock.record(new MethodCall("open", uri, lockFile, initialLength, readOnly));
+				mock.record(new MethodCall("open", config));
 				return mock;
             }
 			
-		}).open("uri", true, 42, false);
+		}).open(binConfig);
 		
 		final byte[] buffer = new byte[5];
 		storage.read(1, buffer, 4);
@@ -34,7 +36,7 @@ public class NonFlushingStorageTestCase implements TestCase {
 		storage.close();
 		
 		mock.verify(
-			new MethodCall("open", "uri", true, 42L, false),
+			new MethodCall("open", binConfig),
 			new MethodCall("read", 1L, buffer, 4),
 			new MethodCall("write", 2L, buffer, 3),
 			new MethodCall("length"),

@@ -14,8 +14,7 @@ public interface Storage {
 	/**
 	 * opens a {@link Bin} to store db4o database data. 
 	 */
-	Bin open(String uri, boolean lockFile,
-			long initialLength, boolean readOnly) throws Db4oIOException;
+	Bin open(BinConfiguration config) throws Db4oIOException;
 
 	/**
 	 * returns true if a Bin (file or memory) exists with the passed name. 

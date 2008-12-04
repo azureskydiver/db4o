@@ -169,28 +169,16 @@ public class TimerFileLockEnabled extends TimerFileLock{
             if(_timerFile == null){
                 return 0;
             }
-            
-            // We want to make sure we don't get caching effects when reading. 
-			Bin bin = underlyingBin();
-			
             if (Deploy.debug) {
                 ByteArrayBuffer lockBytes = new ByteArrayBuffer(Const4.LONG_LENGTH);
-                bin.read(address + offset, lockBytes._buffer, Const4.LONG_LENGTH);
+                _timerFile.syncRead(address + offset, lockBytes._buffer, Const4.LONG_LENGTH);
                 return lockBytes.readLong();
             }
-            bin.read(address + offset, _longBytes, Const4.LONG_LENGTH);
+            _timerFile.syncRead(address + offset, _longBytes, Const4.LONG_LENGTH);
             return PrimitiveCodec.readLong(_longBytes, 0);
     	}
     }
 
-	private Bin underlyingBin() {
-		Bin innerMostBin = _timerFile;
-		while(innerMostBin instanceof BinDecorator){
-			innerMostBin = ((BinDecorator)innerMostBin).undecorate();
-		}
-		return innerMostBin;
-	}
-    
     private boolean writeInt(int address, int offset, int time) {
     	synchronized (_timerLock) {
             if(_timerFile == null){
@@ -213,19 +201,22 @@ public class TimerFileLockEnabled extends TimerFileLock{
             if(_timerFile == null){
                 return 0;
             }
-            Bin bin = underlyingBin();
             if (Deploy.debug) {
                 ByteArrayBuffer lockBytes = new ByteArrayBuffer(Const4.INT_LENGTH);
-                bin.read(address + offset, lockBytes._buffer, Const4.INT_LENGTH);
+                _timerFile.syncRead(address + offset, lockBytes._buffer, Const4.INT_LENGTH);
                 return lockBytes.readInt();
             }
-            bin.read(address + offset, _longBytes, Const4.LONG_LENGTH);
+            _timerFile.syncRead(address + offset, _longBytes, Const4.LONG_LENGTH);
             return PrimitiveCodec.readInt(_longBytes, 0);
     	}
     }
     
     private void sync() throws Db4oIOException {
-    	_timerFile.sync();
+    	try{
+    		_timerFile.sync();	
+    	} catch(EmergencyShutdownReadOnlyException ex){
+    		// ignore this one, emergency shutdown in progress
+    	}
     }
     
 }

@@ -4,6 +4,7 @@ package com.db4o.io;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 
 /**
  * @exclude
@@ -14,8 +15,13 @@ public class BlockAwareBin extends BinDecorator {
 
 	private int _blockSize;
 	
-	public BlockAwareBin(Bin bin) {
+	private final ListenerRegistry<Integer> _blockSizeListenerRegistry;
+	
+	private boolean _readOnly;
+	
+	public BlockAwareBin(Bin bin, ListenerRegistry<Integer> blockSizeListenerRegistry) {
 		super(bin);
+		_blockSizeListenerRegistry = blockSizeListenerRegistry;
     }
 
 	/**
@@ -47,17 +53,8 @@ public class BlockAwareBin extends BinDecorator {
 			throw new IllegalArgumentException();
 		}
 		_blockSize = blockSize;
-		Bin bin = undecorate();
-		blockSize(bin, blockSize);
-		while(bin instanceof BinDecorator){
-			bin = ((BinDecorator)bin).undecorate();
-			blockSize(bin, blockSize);
-		}
-	}
-
-	private static void blockSize(Bin bin, int blockSize) {
-		if(bin instanceof BlockSizeAwareBin){
-			((BlockSizeAwareBin)bin).blockSize(blockSize);
+		if(_blockSizeListenerRegistry != null){
+			_blockSizeListenerRegistry.notifyListeners(blockSize);
 		}
 	}
 	
@@ -164,12 +161,35 @@ public class BlockAwareBin extends BinDecorator {
 	public void blockWrite(int address, byte[] bytes, int length) throws Db4oIOException {
 		blockWrite(address, 0, bytes, length);
 	}
+	
+	@Override
+	public void sync() {
+		validateReadOnly();
+		try{
+			super.sync();
+		} catch(Db4oIOException e){
+			_readOnly = true;
+			throw e;
+		}
+	}
 
 	/**
 	 * writes a buffer to the seeked address
 	 */
 	public void write(long pos, byte[] bytes) throws Db4oIOException {
-		write(pos, bytes, bytes.length);
+		validateReadOnly();
+		try{
+			write(pos, bytes, bytes.length);
+		} catch(Db4oIOException e){
+			_readOnly = true;
+			throw e;
+		}
+	}
+
+	private void validateReadOnly() {
+		if(_readOnly){
+			throw new EmergencyShutdownReadOnlyException();
+		}
 	}
 
 	/**

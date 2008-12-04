@@ -48,9 +48,9 @@ public class CachingStorage extends StorageDecorator {
 	 * opens a Bin for the given URI.
 	 */
 	@Override
-	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-	    final Bin storage = super.open(uri, lockFile, initialLength, readOnly);
-	    if (readOnly) {
+	public Bin open(BinConfiguration config) throws Db4oIOException {
+	    final Bin storage = super.open(config);
+	    if (config.readOnly()) {
 	    	return new ReadOnlyBin(new NonFlushingCachingBin(storage, newCache(), _pageCount, _pageSize));
 	    }
 	    return new CachingBin(storage, newCache(), _pageCount, _pageSize);

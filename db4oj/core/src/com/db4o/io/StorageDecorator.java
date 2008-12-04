@@ -21,8 +21,8 @@ public class StorageDecorator implements Storage {
     	return _storage.exists(uri);
     }
 	
-	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-		return decorate( _storage.open(uri, lockFile, initialLength, readOnly));
+	public Bin open(BinConfiguration config) throws Db4oIOException {
+		return decorate( _storage.open(config));
 	}
 
 	protected Bin decorate(Bin bin) {

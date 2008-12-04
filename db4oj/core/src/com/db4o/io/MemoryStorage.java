@@ -25,18 +25,18 @@ public class MemoryStorage implements Storage {
 	/**
 	 * opens a MemoryBin for the given URI (name can be freely chosen).
 	 */
-	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-		final Bin storage = produceStorage(uri, initialLength);
-		return readOnly ? new ReadOnlyBin(storage) : storage;
+	public Bin open(BinConfiguration config) throws Db4oIOException {
+		final Bin storage = produceStorage(config);
+		return config.readOnly() ? new ReadOnlyBin(storage) : storage;
 	}
 
-	private Bin produceStorage(String uri, long initialLength) {
-	    final Bin storage = _storages.get(uri);
+	private Bin produceStorage(BinConfiguration config) {
+	    final Bin storage = _storages.get(config.uri());
 		if (null != storage) {
 			return storage;
 		}
-		final MemoryBin newStorage = new MemoryBin(new byte[(int)initialLength]);
-		_storages.put(uri, newStorage);
+		final MemoryBin newStorage = new MemoryBin(new byte[(int)config.initialLength()]);
+		_storages.put(config.uri(), newStorage);
 		return newStorage;
     }
 	
@@ -68,6 +68,10 @@ public class MemoryStorage implements Storage {
 		public void sync() throws Db4oIOException {
 		}
 		
+		public int syncRead(long position, byte[] bytes, int bytesToRead) {
+			return read(position, bytes, bytesToRead);
+		}
+		
 		public void close() {
 		}
 
@@ -90,6 +94,7 @@ public class MemoryStorage implements Storage {
 				_length = (int)pos;
 			}
 		}
+
 		
 	}
 

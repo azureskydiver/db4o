@@ -1020,7 +1020,15 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
 
     public boolean needsLockFileThread() {
-		if(! Debug.lockFile){
+        
+//    	if (configImpl().isReadOnly()) {
+//            return false;
+//        }
+//        if(true){
+//        	return true;
+//        }
+        
+        if(! Debug.lockFile){
 			return false;
 		}
         if (!Platform4.hasLockFileThread()) {

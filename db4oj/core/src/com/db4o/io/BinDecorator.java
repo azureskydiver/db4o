@@ -46,6 +46,13 @@ public class BinDecorator implements Bin {
 	public void sync() {
 		_bin.sync();
     }
+	
+	/**
+	 * @see Bin#syncRead(long, byte[], int)
+	 */
+	public int syncRead(long position, byte[] bytes, int bytesToRead) {
+		return _bin.syncRead(position, bytes, bytesToRead);
+	}
 
 	/**
 	 * @see Bin#write(long, byte[], int)
@@ -53,12 +60,5 @@ public class BinDecorator implements Bin {
 	public void write(long position, byte[] bytes, int bytesToWrite) {
     	_bin.write(position, bytes, bytesToWrite);
     }
-	
-	/**
-	 * returns the underlying {@link Bin}.
-	 */
-	public Bin undecorate(){
-		return _bin;
-	}
 
 }

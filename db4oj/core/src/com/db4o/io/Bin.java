@@ -37,10 +37,26 @@ public interface Bin {
 	 * media.
 	 */
 	void sync();
+	
+	
+	/**
+	 * reads a given number of bytes into an array of bytes at an 
+	 * offset position. In contrast to the normal {@link #read(long, byte[], int)}
+	 * method, the Bin should ensure direct access to the raw storage medium.
+	 * No caching should take place.
+	 * @param position the offset position to read at
+	 * @param bytes the byte array to read bytes into
+	 * @param bytesToRead the number of bytes to be read
+	 * @return
+	 */
+	int syncRead(long position, byte[] bytes, int bytesToRead);
+
 
 	/**
 	 * closes the Bin.
 	 */
 	void close();
+	
+	
 
 }
