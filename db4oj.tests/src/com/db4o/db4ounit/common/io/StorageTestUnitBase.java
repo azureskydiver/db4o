@@ -23,7 +23,7 @@ public class StorageTestUnitBase extends TestWithTempFile {
 		if (null != _bin) {
 			throw new IllegalStateException();
 		}
-	    _bin = storage().open(_tempFile, false, 0, readOnly);
+	    _bin = storage().open(new BinConfiguration(_tempFile, false, 0, readOnly, null));
     }
 
 	@Override

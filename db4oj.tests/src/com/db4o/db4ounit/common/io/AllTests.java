@@ -6,10 +6,15 @@ import db4ounit.*;
 
 
 public class AllTests extends ReflectionTestSuite {
+	
+	public static void main(String[] arguments) {
+		new ConsoleTestRunner(AllTests.class).run();
+	}
 
 	protected Class[] testCases() {
 		Class[] commonCases = {
 			BlockAwareBinTestSuite.class,
+			BlockSizeDependentBinTestCase.class,
 			IoAdapterTestSuite.class,
 			RandomAccessFileStorageFactoryTestCase.class,
 			StorageTestSuite.class,

@@ -30,6 +30,11 @@ public class MockBin extends MethodCallRecorder implements Bin {
 		record("sync");
 	}
 
+	public int syncRead(long position, byte[] buffer, int bytesToRead) {
+		record(new MethodCall("syncRead", position, buffer, bytesToRead));
+		return _returnValue;
+	}
+	
 	public void write(long position, byte[] bytes, int bytesToWrite) {
 		record(new MethodCall("write", position, bytes, bytesToWrite));
 	}
@@ -37,5 +42,6 @@ public class MockBin extends MethodCallRecorder implements Bin {
 	public void returnValueForNextCall(int value) {
 		_returnValue = value;
     }
+
 
 }

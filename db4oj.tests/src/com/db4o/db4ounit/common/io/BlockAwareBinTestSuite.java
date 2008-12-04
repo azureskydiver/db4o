@@ -16,7 +16,7 @@ public class BlockAwareBinTestSuite extends FixtureTestSuiteDescription {
 	public static class BlockAwareBinTest implements TestLifeCycle {
 		
 		private final MockBin _mockBin = new MockBin();
-		private final BlockAwareBin _subject = new BlockAwareBin(_mockBin);
+		private final BlockAwareBin _subject = new BlockAwareBin(_mockBin, null);
 		
 		public void testBlockSize() {
 			Assert.areEqual(blockSize(), _subject.blockSize());

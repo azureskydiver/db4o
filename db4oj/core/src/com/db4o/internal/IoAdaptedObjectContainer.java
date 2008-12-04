@@ -20,7 +20,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     private final String _fileName;
 
     private BlockAwareBin          _file;
-    private BlockAwareBin          _timerFile;                                 //This is necessary as a separate File because access is not synchronized with access for normal data read/write so the seek pointer can get lost.
+    
     private volatile BlockAwareBin _backupFile;
 
     private Object             _fileLock;
@@ -44,16 +44,18 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			checkReadOnly();
 			_handlers.oldEncryptionOff();
 		}
+		
+		ListenerRegistry<Integer> blockSizeListenerRegistry = new ListenerRegistry<Integer>();
+		
 		boolean readOnly = configImpl().isReadOnly();
 		boolean lockFile = Debug.lockFile && configImpl().lockFile()
 				&& (!readOnly);
 		if (needsLockFileThread()) {
-			Bin fileBin = storage.open(fileName(), false, 0, false);
+			Bin fileBin = storage.open(new BinConfiguration(fileName(), false, 0, false, blockSizeListenerRegistry ));
 			Bin synchronizedBin = new SynchronizedBin(fileBin);
-			_file = new BlockAwareBin(synchronizedBin);
-			_timerFile = _file;
+			_file = new BlockAwareBin(synchronizedBin, blockSizeListenerRegistry);
 		} else {
-			_file = new BlockAwareBin(storage.open(fileName(), lockFile, 0, readOnly));	
+			_file = new BlockAwareBin(storage.open(new BinConfiguration(fileName(), lockFile, 0, readOnly, blockSizeListenerRegistry)), blockSizeListenerRegistry);	
 		}
 		if (isNew) {
 			configureNewFile();
@@ -73,8 +75,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			if (_backupFile != null) {
 				throw new BackupInProgressException();
 			}
-			_backupFile = new BlockAwareBin(configImpl().storage().open(path, true,
-					_file.length(), false));
+			_backupFile = new BlockAwareBin(configImpl().storage().open(new BinConfiguration(path, true,_file.length(), false, null)), null);
 			_backupFile.blockSize(blockSize());
 		}
         long pos = 0;
@@ -100,9 +101,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     
     public void blockSize(int size){
         _file.blockSize(size);
-        if (_timerFile != null) {
-            _timerFile.blockSize(size);
-        }
     }
 
     public byte blockSize() {
@@ -115,8 +113,11 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     protected void shutdownDataStorage() {
 		synchronized (_fileLock) {
-			closeFileHeader();
-			closeDatabaseFile();
+			try{
+				closeFileHeader();
+			} finally{
+				closeDatabaseFile();
+			}
 		}
 	}
 
@@ -269,13 +270,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     public void syncFiles() {
         _file.sync();
-        if (_timerFile != null) {
-            // _timerFile can be set to null here by other thread
-            try{
-                _timerFile.sync();
-            }catch (Exception e){
-            }
-        }
     }
 
     public void writeBytes(ByteArrayBuffer buffer, int blockedAddress, int addressOffset) {
@@ -332,7 +326,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 	}
 
 	public BlockAwareBin timerFile() {
-		return _timerFile;
+		return _file;
 	}
 	
 	private FreespaceFiller createFreespaceFiller() {

@@ -146,6 +146,10 @@ public class DefragEncryptedFileTestCase implements TestLifeCycle {
 	            }
 	            return length;
 	        }
+			
+			public int syncRead(long pos, byte[] bytes, int length) throws Db4oIOException {
+				return read(pos, bytes, length);
+	        }
 	
 	        public void write(long pos, byte[] buffer, int length) throws Db4oIOException {
 	            for (int i = 0; i < length; i++) {

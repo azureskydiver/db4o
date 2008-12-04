@@ -18,8 +18,8 @@ public class IoAdapterStorage implements Storage {
 		return _io.exists(uri);
 	}
 
-	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-		return new IoAdapterBin(_io.open(uri, lockFile, initialLength, readOnly));
+	public Bin open(BinConfiguration config) throws Db4oIOException {
+		return new IoAdapterBin(_io.open(config.uri(), config.lockFile(), config.initialLength(), config.readOnly()));
 	}
 	
 	static  class IoAdapterBin implements BlockSizeAwareBin {
@@ -45,6 +45,10 @@ public class IoAdapterStorage implements Storage {
 
 		public void sync() {
 			_io.sync();
+		}
+		
+		public int syncRead(long position, byte[] bytes, int bytesToRead) {
+			return read(position, bytes, bytesToRead);
 		}
 
 		public void write(long position, byte[] bytes, int bytesToWrite) {

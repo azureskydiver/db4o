@@ -17,8 +17,8 @@ public class FileStorage implements Storage {
 	/**
 	 * opens a {@link Bin} on the specified URI (file system path).
 	 */
-	public Bin open(String uri, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-		return new FileBin(uri, lockFile, initialLength, readOnly);
+	public Bin open(BinConfiguration config) throws Db4oIOException {
+		return new FileBin(config);
     }
 
 	/**
@@ -34,17 +34,16 @@ public class FileStorage implements Storage {
 		private final String _path;
 
 		private final RandomAccessFile _file;
-
-		FileBin(String path, boolean lockFile,
-				long initialLength, boolean readOnly) throws Db4oIOException {
+		
+		FileBin(BinConfiguration config) throws Db4oIOException {
 			boolean ok = false;
 			try {
-				_path = new File(path).getCanonicalPath();
-				_file = new RandomAccessFile(_path, readOnly ? "r" : "rw");
-				if (initialLength > 0) {
-					write(initialLength - 1, new byte[] { 0 }, 1);
+				_path = new File(config.uri()).getCanonicalPath();
+				_file = new RandomAccessFile(_path, config.readOnly() ? "r" : "rw");
+				if (config.initialLength() > 0) {
+					write(config.initialLength() - 1, new byte[] { 0 }, 1);
 				}
-				if (lockFile) {
+				if (config.lockFile()) {
 					Platform4.lockFile(_path, _file);
 				} 
 				ok = true;
@@ -113,7 +112,11 @@ public class FileStorage implements Storage {
 				throw new Db4oIOException(e);
 			}
 		}
-
+		
+		public int syncRead(long position, byte[] bytes, int bytesToRead) {
+			return read(position, bytes, bytesToRead);
+		}
+		
 		public void write(long pos, byte[] buffer, int length) throws Db4oIOException {
 			try {
 				seek(pos);

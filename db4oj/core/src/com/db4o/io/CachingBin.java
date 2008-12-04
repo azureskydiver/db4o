@@ -52,11 +52,17 @@ class CachingBin extends BinDecorator {
 	 *            how many bytes to read
 	 */
 	public int read(final long pos, byte[] buffer, int length) throws Db4oIOException {
+		return readInternal(pos, buffer, length, false);
+	}
+
+	private int readInternal(final long pos, byte[] buffer, int length, boolean syncRead) {
 		long startAddress = pos;
 		int bytesToRead = length;
 		int totalRead = 0;
 		while (bytesToRead > 0) {
-			final Page page = getPage(startAddress, _producerFromDisk);
+			final Page page = syncRead ? 
+					syncReadPage(startAddress) : 
+					getPage(startAddress, _producerFromDisk);
 			final int readBytes = page.read(buffer, totalRead, startAddress, bytesToRead);
 			if (readBytes <= 0) {
 				break;
@@ -103,6 +109,11 @@ class CachingBin extends BinDecorator {
 		flushAllPages();
 		super.sync();
 	}
+	
+	@Override
+	public int syncRead(long position, byte[] bytes, int bytesToRead) {
+		return readInternal(position, bytes, bytesToRead, true);
+	}
 
 	/**
 	 * Returns the file length
@@ -139,16 +150,23 @@ class CachingBin extends BinDecorator {
 			return newPage;
 		}
 	};
-	
+
 	private Page getPage(final long startAddress, final boolean loadFromDisk) throws Db4oIOException {
 		final Function4<Long, Page> producer = loadFromDisk ? _producerFromDisk : _producerFromPool;
 		return getPage(startAddress, producer);
 	}
 
 	private Page getPage(final long startAddress, final Function4<Long, Page> producer) {
-	    final Page page = _cache.produce(pageAddressFor(startAddress), producer, _onDiscardPage);
-		page.ensureEndAddress(_fileLength);
+	    Page page = _cache.produce(pageAddressFor(startAddress), producer, _onDiscardPage);
+	    page.ensureEndAddress(_fileLength);
 		return page;
+    }
+	
+	private Page syncReadPage(final long startAddress) {
+	    Page page = new Page(_pageSize);
+		loadPage(page, startAddress);
+		page.ensureEndAddress(_fileLength);
+	    return page;
     }
 
 	private Long pageAddressFor(long startAddress) {

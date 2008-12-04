@@ -2,6 +2,8 @@ package com.db4o.db4ounit.common.io;
 
 import java.io.*;
 
+import db4ounit.*;
+
 
 /**
  * @decaf.ignore
@@ -9,6 +11,10 @@ import java.io.*;
 public class DiskFullTestCase extends DiskFullTestCaseBase {
 
 	private static final long NO_SIZE_LIMIT = -1;
+	
+	public static void main(String[] arguments) {
+		new ConsoleTestRunner(DiskFullTestCase.class).run();
+	}
 
 	public void testReleasesFileLocks() {
 		assertReleasesFileLocks(false);
