@@ -49,12 +49,12 @@ public class DiskFullTestCase extends DiskFullTestCaseBase {
 
 	private void assertKeepsCommittedDataReadOnlyLimited(boolean doCache) {
 		storeOneAndFail(NO_SIZE_LIMIT, doCache);
-		assertItemsStored(1, curFileLength(), true);
+		assertItemsStored(1, curFileLength(), true, doCache);
 	}
 
 	private void assertKeepsCommittedDataReadWriteUnlimited(boolean doCache) {
 		storeOneAndFail(NO_SIZE_LIMIT, doCache);
-		assertItemsStored(1, NO_SIZE_LIMIT, false);
+		assertItemsStored(1, NO_SIZE_LIMIT, false, doCache);
 	}
 
 	@Override
