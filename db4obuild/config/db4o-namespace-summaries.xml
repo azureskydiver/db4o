@@ -4,7 +4,8 @@
 	<namespace name="Db4objects.Db4o.Collections">Transparent Activation-aware collections.</namespace>
 	<namespace name="Db4objects.Db4o.Config">Configuration package.</namespace>
 	<namespace name="Db4objects.Db4o.Constraints">Constraints package.</namespace>
-	<namespace name="Db4objects.Db4o.Defragment">Database file defragmentation utilities.</namespace>
+	<namespace name="Db4objects.Db4o.CS">Client Server support.</namespace>
+	<namespace name="Db4objects.Db4o.CS.Config">Client Server configuration support.</namespace>	<namespace name="Db4objects.Db4o.Defragment">Database file defragmentation utilities.</namespace>
 	<namespace name="Db4objects.Db4o.Diagnostic">Diagnostics functionality.</namespace>
 	<namespace name="Db4objects.Db4o.Events">Events package.</namespace>
 	<namespace name="Db4objects.Db4o.Ext">Advanced API package.</namespace>
