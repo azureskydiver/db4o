@@ -13,7 +13,7 @@ import System.Reflection
 import System.Collections.Generic
 
 def getExportedTypes(path as string):
-	return groupByNamespace(Assembly.ReflectionOnlyLoadFrom(path).GetExportedTypes())
+	return groupByNamespace(Assembly.LoadFrom(path).GetExportedTypes())
 	
 def groupByNamespace(types):
 	groups = Dictionary[of string, List[of Type]]()
@@ -67,6 +67,21 @@ def isExcluded(excluded as Boo.Lang.List, type as System.Type) as bool:
 	if type.DeclaringType is not null:
 		return isExcluded(excluded, type.DeclaringType)
 	return false
+	
+	
+def processAssembly(assemblyPath as string, filters as XmlElement, documentedNamespaces as Boo.Lang.List):
+	xmldocPath = Path.ChangeExtension(assemblyPath, ".xml")
+	excludedTypes = getExcludedTypes(xmldocPath)
+	
+	for namespaceGroup in getExportedTypes(assemblyPath):
+		currentNamespace = namespaceGroup.Key
+		if currentNamespace in documentedNamespaces:
+			filter = appendElement(filters, "namespace", {"name": currentNamespace, "expose": "true"})
+			for type as Type in namespaceGroup.Value:
+				if isExcluded(excludedTypes, type):
+					appendElement(filter, "type", { "name": type.Name, "expose": "false" })								
+		else:
+			appendElement(filters, "namespace", {"name": currentNamespace, "expose": "false" })	
 			
 if len(argv) == 2:
 	 baseConfigPath, baseDistPath = argv
@@ -80,29 +95,18 @@ buildConfigPath = { path | Path.Combine(baseConfigPath, path) }
 
 configTemplatePath = buildConfigPath("sandcastle/MRefBuilder.config")
 configPath = buildDistPath("ndoc/Output/MRefBuilder.config")
-assemblyPath = buildDistPath("dll/Db4objects.Db4o.dll")
 namespaceSummaryPath = buildConfigPath("db4o-namespace-summaries.xml")
-xmldocPath = Path.ChangeExtension(assemblyPath, ".xml")
 
 try: 
 	File.Copy(configTemplatePath, configPath, true)
 	
 	documentedNamespaces = namespacesFromXmlSummary(namespaceSummaryPath)
-	excludedTypes = getExcludedTypes(xmldocPath)
-	
 	filters = resetApiFilters(configPath)	
-	for namespaceGroup in getExportedTypes(assemblyPath):
-		currentNamespace = namespaceGroup.Key
-		if currentNamespace in documentedNamespaces:
-			filter = appendElement(filters, "namespace", {"name": currentNamespace, "expose": "true"})
-			for type as Type in namespaceGroup.Value:
-				if isExcluded(excludedTypes, type):
-					appendElement(filter, "type", { "name": type.Name, "expose": "false" })								
-		else:
-			appendElement(filters, "namespace", {"name": currentNamespace, "expose": "false" })		
+	
+	for assemblyName in ["Db4Objects.Db4o.dll", "Db4Objects.Db4o.CS.dll"]:
+		processAssembly(buildDistPath("dll/${assemblyName}"), filters, documentedNamespaces)
 	
 	filters.OwnerDocument.Save(configPath)
-	
 			
 	print "MRefBuilder.config successfully saved to '${configPath}'"
 except x:
