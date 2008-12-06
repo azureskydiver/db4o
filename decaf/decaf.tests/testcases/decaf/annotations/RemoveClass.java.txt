@@ -1,0 +1,11 @@
+package decaf.annotations;
+
+@decaf.Remove
+class Removed {
+}
+
+class RemoveClass {
+	public Class[] testCases() {
+		return new Class[] { Removed.class, RemoveClass.class };
+	}
+}

@@ -4,6 +4,11 @@ import decaf.tests.*;
 
 public class AnnotationsTestCase extends DecafTestCaseBase {
 	
+	public void testRemoveClass() throws Exception {
+		javaProject().addClasspathEntry(Activator.getResource("lib/decaf-annotations.jar"));
+		runResourceTestCase("RemoveClass");
+	}
+	
 	public void testPlatformDependentIgnoreExtends() throws Exception {
 		runPlatformTestCase("PlatformDependentIgnoreExtends");
 	}
