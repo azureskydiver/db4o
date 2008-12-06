@@ -1,59 +1,13 @@
 package decaf.builder;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
-import org.eclipse.jdt.core.dom.ArrayAccess;
-import org.eclipse.jdt.core.dom.ArrayInitializer;
-import org.eclipse.jdt.core.dom.Assignment;
-import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.BodyDeclaration;
-import org.eclipse.jdt.core.dom.CastExpression;
-import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
-import org.eclipse.jdt.core.dom.ClassInstanceCreation;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.EnhancedForStatement;
-import org.eclipse.jdt.core.dom.EnumDeclaration;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.FieldAccess;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.IMethodBinding;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.Javadoc;
-import org.eclipse.jdt.core.dom.MarkerAnnotation;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.Name;
-import org.eclipse.jdt.core.dom.PackageDeclaration;
-import org.eclipse.jdt.core.dom.ParameterizedType;
-import org.eclipse.jdt.core.dom.QualifiedName;
-import org.eclipse.jdt.core.dom.ReturnStatement;
-import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.SimplePropertyDescriptor;
-import org.eclipse.jdt.core.dom.SimpleType;
-import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.SwitchStatement;
-import org.eclipse.jdt.core.dom.TagElement;
-import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.TypeParameter;
-import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
-import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.rewrite.*;
 
 import sharpen.core.framework.*;
-import decaf.core.IterablePlatformMapping;
-import decaf.core.TargetPlatform;
-import decaf.rewrite.DecafASTNodeBuilder;
-import decaf.rewrite.DecafRewritingServices;
+import decaf.core.*;
+import decaf.rewrite.*;
 
 @SuppressWarnings("unchecked")
 public final class DecafRewritingVisitor extends ASTVisitor {
@@ -93,11 +47,33 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public boolean visit(TypeDeclaration node) {
-		if (handledAsIgnored(node)) {
+		if (handledAsIgnored(node) || handledAsRemoved(node)) {
 			return false;
 		}
 		return true;
 	}
+
+	private boolean handledAsRemoved(TypeDeclaration node) {
+	    if (isMarkedForRemoval(node.resolveBinding())) {
+	    	rewrite().remove(node);
+	    	return true;
+	    }
+	    return false;
+    }
+
+	private boolean isMarkedForRemoval(final ITypeBinding type) {
+	    return containsAnnotation(type, DecafAnnotations.REMOVE);
+    }
+
+	private boolean containsAnnotation(final ITypeBinding type, String annotation) {
+	    for (IAnnotationBinding binding : type.getAnnotations()) {
+			final String qualifiedName = Bindings.qualifiedName(binding.getAnnotationType());
+			if (qualifiedName.equals(annotation)) {
+				return true;
+			}
+		}
+		return false;
+    }
 
 	@Override
 	public boolean visit(EnumDeclaration node) {
@@ -131,7 +107,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	private void processMixins(TypeDeclaration node) {
 		for (TypeDeclaration mixin : node.getTypes()) {
-			if (!containsJavadoc(mixin, DecafAnnotations.MIXIN))
+			if (!containsJavadoc(mixin, DecafTags.MIXIN))
 				continue;
 			processMixin(node, mixin);
 		}
@@ -349,6 +325,15 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		replaceUnwrappedIterable(rewrittenExpr);
 	}
 	
+	@Override
+	public boolean visit(TypeLiteral node) {
+	    if (isMarkedForRemoval(node.getType().resolveBinding())) {
+			rewrite().remove(node);
+			return false;
+		}
+	    return super.visit(node);
+	}
+
 	private void coerceIterableMethodArguments(MethodInvocation node,
 			final IMethodBinding method) {
 		ListRewrite rewrittenArgs = getListRewrite(node, MethodInvocation.ARGUMENTS_PROPERTY);
@@ -502,11 +487,11 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			if (null == tagName) {
 				continue;
 			}
-			if (isTag(DecafAnnotations.INSERT_FIRST, tagName)) {
+			if (isTag(DecafTags.INSERT_FIRST, tagName)) {
 				bodyRewrite.insertFirst(statementFromTagText(tag), null);
-			} else if (isTag(DecafAnnotations.REPLACE_FIRST, tagName)) {
+			} else if (isTag(DecafTags.REPLACE_FIRST, tagName)) {
 				bodyRewrite.replace(firstNode(bodyRewrite), statementFromTagText(tag), null);
-			} else if (isTag(DecafAnnotations.REMOVE_FIRST, tagName)) {
+			} else if (isTag(DecafTags.REMOVE_FIRST, tagName)) {
 				bodyRewrite.remove(firstNode(bodyRewrite), null);
 			}
 		}
@@ -617,13 +602,13 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 
 	public boolean ignoreExtends(TypeDeclaration node) {
-		return containsJavadoc(node, DecafAnnotations.IGNORE_EXTENDS);
+		return containsJavadoc(node, DecafTags.IGNORE_EXTENDS);
 	}
 
 	public boolean isIgnored(BodyDeclaration node) {
-		return containsJavadoc(node, DecafAnnotations.IGNORE);
+		return containsJavadoc(node, DecafTags.IGNORE);
 	}
-
+	
 	private boolean containsJavadoc(BodyDeclaration node, String tag) {
 		if (JavadocUtility.containsJavadoc(node, tag)) {
 			return true;
@@ -664,7 +649,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	public Set<String> ignoredImplements(TypeDeclaration node) {
 		
-		final List<TagElement> tags = getJavadocTags(node, DecafAnnotations.IGNORE_IMPLEMENTS);
+		final List<TagElement> tags = getJavadocTags(node, DecafTags.IGNORE_IMPLEMENTS);
 		if (tags.isEmpty()) {
 			return Collections.emptySet();
 		}
