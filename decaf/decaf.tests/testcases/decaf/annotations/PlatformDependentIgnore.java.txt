@@ -1,19 +1,13 @@
 package decaf.annotations;
 
-/**
- * @decaf.ignore.jdk11
- */
+@decaf.Ignore(decaf.Platform.JDK11)
 class IgnoreJdk11 {
 }
 
-/**
- * @decaf.ignore.jdk12
- */
+@decaf.Ignore(decaf.Platform.JDK12)
 class IgnoreJdk12 {
 }
 
-/**
- * @decaf.ignore
- */
+@decaf.Ignore(decaf.Platform.ALL)
 class IgnoreAll {
 }

@@ -1,8 +1,5 @@
 package decaf.tests;
 
-import java.io.*;
-import java.net.*;
-
 import org.eclipse.core.runtime.*;
 import org.osgi.framework.*;
 
@@ -42,10 +39,5 @@ public class Activator extends Plugin {
 	 */
 	public static Activator getDefault() {
 		return plugin;
-	}
-
-	public static String getResource(String path) throws IOException {
-		URL url = FileLocator.find(getDefault().getBundle(), new Path(path), null);
-		return new File(FileLocator.toFileURL(url).getFile()).getCanonicalPath();
 	}
 }

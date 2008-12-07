@@ -1,16 +1,12 @@
 package decaf.annotations;
 
-/**
- * @decaf.ignore
- */
+@decaf.Ignore
 class Foo {
 }
 
 class Bar {
 
-	/**
-	 * @decaf.ignore
-	 */
+	@decaf.Ignore
 	static class Nested {
 	}
 }
