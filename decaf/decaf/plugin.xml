@@ -41,6 +41,26 @@
                id="decaf.addRemoveNatureAction">
          </action>
       </objectContribution>
+      <objectContribution
+            id="decaf.contribution1"
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject">
+         <menu
+               id="decaf.menu1"
+               label="Decaf Utilities"
+               path="additions">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               class="decaf.popup.actions.JavadocToAnnotationsAction"
+               enablesFor="+"
+               id="decaf.newAction"
+               label="Javadoc To Annotations"
+               menubarPath="decaf.menu1/group1">
+         </action>
+      </objectContribution>
    </extension>
    <extension
          id="decafProblem"
