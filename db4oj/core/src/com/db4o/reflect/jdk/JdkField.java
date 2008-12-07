@@ -86,6 +86,7 @@ public class JdkField implements ReflectField {
 	}
 	
 	private boolean isSynthetic() {
-		return field.getName().startsWith("class$"); // || field.getName().startsWith("this$");
+		return field.getName().startsWith("class$")
+			|| field.getName().startsWith("this$"); // confirmed on MacOSX jdk 1.4
 	}
 }
