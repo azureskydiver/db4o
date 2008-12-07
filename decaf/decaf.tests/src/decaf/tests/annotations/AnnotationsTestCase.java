@@ -1,11 +1,16 @@
 package decaf.tests.annotations;
 
+import decaf.*;
 import decaf.tests.*;
 
 public class AnnotationsTestCase extends DecafTestCaseBase {
 	
+	@Override protected void setUp() throws Exception {
+		super.setUp();
+		javaProject().addClasspathEntry(Resources.decafAnnotationsJar());
+	}
+	
 	public void testRemoveClass() throws Exception {
-		javaProject().addClasspathEntry(Activator.getResource("lib/decaf-annotations.jar"));
 		runResourceTestCase("RemoveClass");
 	}
 	

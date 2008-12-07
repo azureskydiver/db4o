@@ -1,11 +1,17 @@
 package decaf.core;
 
+import java.io.*;
+
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.*;
 
+import sharpen.core.*;
+
+import decaf.*;
 import decaf.builder.*;
 
 public class DecafNature implements IProjectNature {
@@ -39,6 +45,12 @@ public class DecafNature implements IProjectNature {
 		newCommands[newCommands.length - 1] = command;
 		desc.setBuildSpec(newCommands);
 		project.setDescription(desc, null);
+		
+		try {
+			new JavaProject(JavaCore.create(project)).addClasspathEntry(Resources.decafAnnotationsJar());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/*

@@ -33,7 +33,7 @@ public class DecafRewriter {
 		return rewrite;
 	}
 	
-	private static CompilationUnit parseCompilationUnit(ICompilationUnit unit, IProgressMonitor monitor) {
+	public static CompilationUnit parseCompilationUnit(ICompilationUnit unit, IProgressMonitor monitor) {
 		final ASTParser parser = ASTParser.newParser(AST.JLS3);
 		parser.setSource(unit);
 		parser.setResolveBindings(true);

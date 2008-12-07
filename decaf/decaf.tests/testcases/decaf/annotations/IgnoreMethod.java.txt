@@ -5,9 +5,7 @@ class Foo {
 	public void bar() {
 	}
 	
-	/**
-	 * @decaf.ignore
-	 */
+	@decaf.Ignore
 	public void baz() {
 	}
 }

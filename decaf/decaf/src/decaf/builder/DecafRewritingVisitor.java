@@ -47,7 +47,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public boolean visit(TypeDeclaration node) {
-		if (handledAsIgnored(node) || handledAsRemoved(node)) {
+		if (handledAsIgnored(node, node.resolveBinding()) || handledAsRemoved(node)) {
 			return false;
 		}
 		return true;
@@ -61,19 +61,42 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	    return false;
     }
 
-	private boolean isMarkedForRemoval(final ITypeBinding type) {
-	    return containsAnnotation(type, DecafAnnotations.REMOVE);
+	private boolean isMarkedForRemoval(final IBinding binding) {
+	    return containsAnnotation(binding, DecafAnnotations.REMOVE);
     }
 
-	private boolean containsAnnotation(final ITypeBinding type, String annotation) {
-	    for (IAnnotationBinding binding : type.getAnnotations()) {
-			final String qualifiedName = Bindings.qualifiedName(binding.getAnnotationType());
-			if (qualifiedName.equals(annotation)) {
-				return true;
-			}
+	private boolean containsAnnotation(final IBinding binding, String annotation) {
+		final IAnnotationBinding annotationBinding = findAnnotation(binding, annotation);
+		if (annotationBinding == null)
+			return false;
+		
+		return isApplicableToTargetPlatform(annotationBinding);
+	}
+
+	private boolean isApplicableToTargetPlatform(final IAnnotationBinding annotationBinding) {
+		if (targetPlatform().isNone())
+			return true; // annotation is considered to be valid for all platforms
+		
+		final String platform = applicablePlatformFor(annotationBinding);
+		return platform.equals("ALL")
+			|| platform.equals(targetPlatform().toString());
+	}
+	
+	private IAnnotationBinding findAnnotation(IBinding binding, String annotation) {
+	    for (IAnnotationBinding annotationBinding : binding.getAnnotations()) {
+			final String qualifiedName = Bindings.qualifiedName(annotationBinding.getAnnotationType());
+			if (qualifiedName.equals(annotation))
+				return annotationBinding;
 		}
-		return false;
+		return null;
     }
+
+	private String applicablePlatformFor(IAnnotationBinding annotationBinding) {
+		for (IMemberValuePairBinding valuePair : annotationBinding.getAllMemberValuePairs())
+			if (valuePair.getName().equals("value"))
+				return ((IVariableBinding)valuePair.getValue()).getName();
+		return null;
+	}
 
 	@Override
 	public boolean visit(EnumDeclaration node) {
@@ -434,7 +457,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(MethodDeclaration node) {
-		if (handledAsIgnored(node)) {
+		if (handledAsIgnored(node, node.resolveBinding())) {
 			return false;
 		}
 		
@@ -586,12 +609,16 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		rewrite().set(node, property, value, null);
 	}
 
-	private boolean handledAsIgnored(BodyDeclaration node) {
-		if (isIgnored(node)) {
+	private boolean handledAsIgnored(BodyDeclaration node, IBinding binding) {
+		if (isIgnored(binding) || isIgnored(node)) {
 			rewrite().remove(node);
 			return true;
 		}
 		return false;
+	}
+
+	private boolean isIgnored(IBinding binding) {
+		return containsAnnotation(binding, DecafAnnotations.IGNORE);
 	}
 
 	private void processIgnoreExtends(TypeDeclaration node) {

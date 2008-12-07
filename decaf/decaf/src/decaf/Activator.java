@@ -1,5 +1,9 @@
 package decaf;
 
+import java.io.*;
+import java.net.*;
+
+import org.eclipse.core.runtime.*;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -57,5 +61,10 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+	}
+	
+	public static String getResource(String path) throws IOException {
+		URL url = FileLocator.find(getDefault().getBundle(), new Path(path), null);
+		return new File(FileLocator.toFileURL(url).getFile()).getCanonicalPath();
 	}
 }

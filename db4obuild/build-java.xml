@@ -318,6 +318,9 @@
             source="1.5" 
             encoding="UTF-8">
 			<src path="${dir.j.core.src}" />
+			<classpath>
+				<pathelement location="${file.decaf.annotations}" />
+			</classpath>
 		</javac>
 		
 		<jar destfile="${file.jdk1.5.jar}">
@@ -334,7 +337,8 @@
             encoding="UTF-8">
 			<src path="${dir.j.optional.core.src}" />
 			<classpath>
-				<pathelement location="${dir.dist.classes.jdk1.5}"/>
+				<pathelement location="${file.jdk1.5.jar}"/>
+				<pathelement location="${file.decaf.annotations}" />
 			</classpath>
 		</javac>
 		
@@ -352,7 +356,8 @@
             encoding="UTF-8">
 			<src path="${dir.j.cs.src}" />
 			<classpath>
-				<pathelement location="${dir.dist.classes.jdk1.5}"/>
+				<pathelement location="${file.jdk1.5.jar}"/>
+				<pathelement location="${file.decaf.annotations}" />
 			</classpath>
 		</javac>
 		
@@ -721,6 +726,7 @@
 			source="1.5" 
 			encoding="UTF-8">
 			<classpath>
+				<pathelement location="${file.decaf.annotations}" />
 				<pathelement location="${file.jdk1.5.jar}" />
 				<pathelement location="${file.jdk1.5.optional.jar}" />
 				<pathelement location="${file.jdk1.5.cs.jar}" />
@@ -797,8 +803,9 @@
 			destdir="${dir.dist.classes.test.nq.jdk1.5}"
 			fork="true" debug="on" target="1.5" source="1.5" encoding="UTF-8">
 			<classpath>
-				<pathelement location="${file.bloat.jar}" />
 				<pathelement location="${file.jdk1.5.jar}" />
+				<pathelement location="${file.decaf.annotations}" />
+				<pathelement location="${file.bloat.jar}" />
 				<pathelement location="${file.jdk1.5.db4ounit.jar}" />
 				<pathelement location="${file.instrumentation.jar}" />
 				<pathelement location="${file.nqopt.jar}" />
@@ -993,7 +1000,7 @@
 	<target name="run.tests.jdk1.5" depends="init, build.db4ojdk1.5.tests">
         <path id="tests.jdk1.5.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.5}" />
-            <pathelement location="${file.jdk1.5.jar}" />
+        	<pathelement location="${file.jdk1.5.jar}" />
             <pathelement location="${file.jdk1.5.cs.jar}" />
             <pathelement location="${file.jdk1.5.optional.jar}" />
 			<pathelement location="${file.jdk1.5.db4ounit.jar}" />
@@ -1071,7 +1078,7 @@
         </path>
         <path id="tests.nqopt.jdk1.5.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.5}" />
-            <pathelement location="${file.jdk1.5.jar}" />
+        	<pathelement location="${file.jdk1.5.jar}" />
         	<pathelement location="${file.jdk1.5.cs.jar}" />
         	<pathelement location="${file.jdk1.5.optional.jar}" />
 			<pathelement location="${file.jdk1.5.db4ounit.jar}" />
@@ -1222,11 +1229,17 @@
 	<target name="build.javadoc" depends="build.javadoc.db4oj, build.javadoc.osgi" />
 	
 	<target name="build.javadoc.db4oj" depends="init, build.db4ojdk1.5">
-		<javadoc classpath="${file.jdk1.5.jar}" 
+		<javadoc 
             access="public" 
             windowtitle="db4o - database for objects - documentation" 
             header="db4o ${db4o.version.dotted}" 
             destdir="${dir.dist.doc.api}">
+			
+			<classpath>
+				<pathelement location="${file.jdk1.5.jar}" />
+				<pathelement location="${file.decaf.annotations}" />
+			</classpath>
+			
 			<bottom><![CDATA[<i>Copyright 2007 db4objects Inc. All rights reserved.</i>]]></bottom>
 			<fileset dir="${dir.j.core.src}" includes="com/db4o/**/*.java">
 				<exclude name="com/db4o/internal/**/*.java" />
@@ -1260,11 +1273,16 @@
 	</target>
 	
 	<target name="build.javadoc.osgi" depends="init, build.db4ojdk1.5">
-        <javadoc classpath="${file.jdk1.5.jar}" 
+        <javadoc 
             access="public" 
             windowtitle="db4o - database for objects - documentation" 
             header="db4o ${db4o.version.dotted}" 
             destdir="${dir.dist.doc.osgi}">
+        	<classpath>
+        		<pathelement location="${file.jdk1.5.jar}" />
+        		<pathelement location="${file.decaf.annotations}" />
+        	</classpath>
+        						
         	<bottom><![CDATA[<i>Copyright 2007 db4objects Inc. All rights reserved.</i>]]></bottom>
             <fileset dir="${dir.osgi.src}" includes="com/db4o/**/*.java"/>
             <group title="OSGi Services" packages="com.db4o.osgi" />
