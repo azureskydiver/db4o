@@ -4,6 +4,7 @@ import com.db4o.io.*;
 
 import db4ounit.fixtures.*;
 
+@SuppressWarnings("deprecation")
 public class StorageTestSuite extends FixtureTestSuiteDescription {{
 
 	fixtureProviders(
