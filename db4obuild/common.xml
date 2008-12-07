@@ -203,7 +203,7 @@
 					<include name="org.eclipse.ui_*.jar"  />
 					<include name="org.eclipse.ui.workbench_*.jar"  />
 										
-					<include name="sharpen*/sharpen.jar" />
+					<include name="sharpen*.jar" />
 				</fileset>
 			</classpath>
 		</javac>
@@ -211,12 +211,13 @@
 		<jar manifest="${dir.decaf.core}/META-INF/MANIFEST.MF"
 			destfile="${plugins.home}/decaf_1.0.0.jar"
 			basedir="${dir.dist.decaf.classes}">
-			
 			<fileset dir="${dir.decaf.core}">
 				<include name="plugin.xml" />
 			</fileset>
+			<fileset dir="${dir.decaf.core}">
+				<include name="lib/*" />
+			</fileset>
 		</jar>
-
 	</target>
 	
 	<target name="install-sharpen-plugin">
@@ -250,11 +251,12 @@
 			</classpath>
 		</javac>
 		
-		<property name="plugin.dir" value="${plugins.home}/sharpen.core_1.0.0" />
-		<reset-dir dir="${plugin.dir}" />
-		<jar destfile="${plugin.dir}/sharpen.jar" basedir="${dir.dist.classes.sharp}" />
-		<copy todir="${plugin.dir}" file="${sharpen.core.dir}/plugin.xml" />
-
+		<jar destfile="${plugins.home}/sharpen.core_1.0.0.jar" basedir="${dir.dist.classes.sharp}">
+			<fileset dir="${sharpen.core.dir}">
+				<include name="plugin.xml" />
+			</fileset>
+		</jar>
+		
 	</target>
 	
 	<target name="get-svn-revision" unless="svn.revision">
@@ -314,6 +316,7 @@
 		<property name="file.jdk1.1.jar" value="${dir.dist.jars}/${filename.jdk1.1.jar}" />
 		<property name="file.jdk1.2.jar" value="${dir.dist.jars}/${filename.jdk1.2.jar}" />
 		<property name="file.jdk1.5.jar" value="${dir.dist.jars}/${filename.jdk1.5.jar}" />
+		<property name="file.decaf.annotations" value="${dir.j}/lib/decaf-annotations.jar" />
 		<property name="file.jdk1.1.optional.jar" value="${dir.dist.jars}/${filename.jdk1.1.optional.jar}" />
 		<property name="file.jdk1.2.optional.jar" value="${dir.dist.jars}/${filename.jdk1.2.optional.jar}" />
 		<property name="file.jdk1.5.optional.jar" value="${dir.dist.jars}/${filename.jdk1.5.optional.jar}" />

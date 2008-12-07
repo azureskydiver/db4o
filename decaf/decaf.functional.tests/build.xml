@@ -120,8 +120,8 @@
 		<mkdir dir="${build.dir}/java1.2" />
 		
 		<javac12 srcdir="${build.dir}/workspace/db4o.decaf.jdk12/src"  />
-		<javac12 srcdir="../db4ounit/src" />
-		<javac12 srcdir="../db4ounit.extensions/src" />
+		<javac12 srcdir="${dir.workspace}/db4ounit/src" />
+		<javac12 srcdir="${dir.workspace}/db4ounit.extensions/src" />
 		<javac12 srcdir="${build.dir}/workspace/db4o.tests.decaf.jdk12/src"  />
 	
 	</target>
@@ -153,8 +153,8 @@
 		<mkdir dir="${build.dir}/java1.1" />
 		
 		<javac11 srcdir="${build.dir}/workspace/db4o.decaf.jdk11/src"  />
-		<javac11 srcdir="../db4ounit/src" />
-		<javac11 srcdir="../db4ounit.extensions/src" />
+		<javac11 srcdir="${dir.workspace}/db4ounit/src" />
+		<javac11 srcdir="${dir.workspace}/db4ounit.extensions/src" />
 		<javac11 srcdir="${build.dir}/workspace/db4o.tests.decaf.jdk11/src"  />
 
 	</target>
@@ -253,20 +253,23 @@
 			<fileset dir="${decaf.src.dir}">
 				<include name="plugin.xml" />
 			</fileset>
+			<fileset dir="${decaf.src.dir}">
+				<include name="lib/*" />
+			</fileset>
 		</jar>
 	</target>
 	
 	<target name="install-sharpen-plugin">
 			
-		<property name="sharpen.src.dir" location="../sharpen.core" />
+		<property name="sharpen.src.dir" location="${dir.workspace}/sharpen.core" />
 		<property name="sharpen.bin.dir" location="${sharpen.src.dir}/bin" />
 		<property name="plugins.home" location="${eclipse.home}/plugins" />
 	
-		<property name="sharpen.plugin.dir" location="${plugins.home}/sharpen.core_1.0.0" />
-		<reset-dir dir="${sharpen.plugin.dir}" />
-		<jar destfile="${sharpen.plugin.dir}/sharpen.jar" basedir="${sharpen.bin.dir}">
+		<jar destfile="${plugins.home}/sharpen.core_1.0.0.jar" basedir="${sharpen.bin.dir}">
+			<fileset dir="${sharpen.src.dir}">
+				<include name="plugin.xml" />
+			</fileset>
 		</jar>
-		<copy todir="${sharpen.plugin.dir}" file="${sharpen.src.dir}/plugin.xml"  />
 	</target>
 	
 	<target name="clean">
