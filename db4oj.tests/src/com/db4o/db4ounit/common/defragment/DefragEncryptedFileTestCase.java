@@ -19,9 +19,8 @@ import db4ounit.*;
  * timer file lock because the new logic grabs into the Bin 
  * below the MockBin and reads open times there directly.
  * The times are then inconsistent with the written times.
- *   
- * @decaf.ignore 
  */
+@decaf.Remove
 public class DefragEncryptedFileTestCase implements TestLifeCycle {
 
     private static final String ORIGINAL = Path4.getTempFileName();
