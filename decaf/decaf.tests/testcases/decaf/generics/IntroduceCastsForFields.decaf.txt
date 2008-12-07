@@ -35,7 +35,7 @@ class Bar extends Foo {
 	
 	public String toString() {
 		String value = ((String) field);
-		if (value.isEmpty())
+		if (value.length() == 0)
 			return null;
 		return ((String) field);
 	}
