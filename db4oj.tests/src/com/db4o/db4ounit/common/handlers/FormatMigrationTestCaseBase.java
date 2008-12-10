@@ -19,7 +19,6 @@ import db4ounit.extensions.fixtures.*;
 /**
  * @sharpen.partial
  */
-		
 public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptOutNoFileSystemData {
     
     private String _db4oVersion;
@@ -30,17 +29,18 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         configureForTest(config);
     }
     
-    protected static final String TEMP_PATH;    
-    
-    static {
-    	TEMP_PATH = Path4.combine(getTempPath(), "test/db4oVersions");
-    }
-
     /**
      * @sharpen.ignore
      */
 	private static String getTempPath() {
 		return Path4.getTempPath();
+	}
+	
+	/**
+	 * @sharpen.property
+	 */
+	private String databasePath() {
+		return Path4.combine(getTempPath(), "test/db4oVersions");
 	}
 
     protected String fileName(){
@@ -53,7 +53,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     }
     
     protected String oldVersionFileName(String versionName){
-        return Path4.combine(TEMP_PATH, fileNamePrefix() + versionName.replace(' ', '_'));
+        return Path4.combine(databasePath(), fileNamePrefix() + versionName.replace(' ', '_'));
     }
     
     public void createDatabase() {
@@ -76,7 +76,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     }
 
 	private void createDatabase(String file) {
-		File4.mkdirs(TEMP_PATH);
+		File4.mkdirs(databasePath());
         if(File4.exists(file)){
             File4.delete(file);
         }
