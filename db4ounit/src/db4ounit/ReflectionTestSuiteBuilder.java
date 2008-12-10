@@ -25,7 +25,12 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 						_classes,
 						new Function4() {
 							public Object apply(Object arg) {
-								return fromClass((Class) arg);
+								final Class klass = (Class) arg;
+								try {
+									return fromClass(klass);
+								} catch (Exception e) {
+									return new FailingTest(klass.getName(), e);
+								}
 							}
 						})
 					);
@@ -42,14 +47,10 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		return closure.run();
 	}
 	
-	protected Iterator4 fromClass(final Class clazz) {
+	protected Iterator4 fromClass(final Class clazz) throws Exception {
 		return (Iterator4)withContext(new Closure4() {
 			public Object run() {
-				try {
-					return new ContextfulIterator(suiteFor(clazz));
-				} catch (Exception e) {
-					return Iterators.singletonIterator(new FailingTest(clazz.getName(), e));
-				}
+				return new ContextfulIterator(suiteFor(clazz));
 			}
 		});
 	}
