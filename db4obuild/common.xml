@@ -101,12 +101,18 @@
 		<element name="args" optional="yes" />
 		
 		<sequential>
-			<echo>java -cp ${eclipse.startup.jar} org.eclipse.core.launcher.Main -data @{workspace} -application sharpen.core.application @{resource}</echo>
-			<exec taskname="sharpen" executable="${file.jvm.jdk1.5}" failonerror="true" timeout="1800000">
-				<arg line="${sharpen.vmargs}" />
-				<arg value="-cp" />
-				<arg value="${eclipse.startup.jar}" />
-				<arg value="org.eclipse.core.launcher.Main" />
+			<echo>org.eclipse.core.launcher.Main -data @{workspace} -application sharpen.core.application @{resource}</echo>
+			<java taskname="sharpen"
+				fork="true"
+				classname="org.eclipse.core.launcher.Main" failonerror="true" timeout="1800000" jvmargs="${sharpen.vmargs}">
+				
+				<classpath>
+					<fileset dir="${eclipse.home}/plugins">
+						<include name="org.eclipse.equinox.launcher_*.jar"  />
+					</fileset>
+				</classpath>
+				
+				<arg value="-clean" />
 				<arg value="-data" />
 				<arg file="@{workspace}" />
 				<arg value="-application" />
@@ -115,8 +121,7 @@
 				<arg file="${dir.config}/copyright_comment.txt" />
 				<arg value="@{resource}" />
 				<args />
-				
-			</exec>
+			</java>
 		</sequential>
 	</macrodef>
 	
