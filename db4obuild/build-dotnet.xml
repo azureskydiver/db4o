@@ -126,10 +126,18 @@
 	<target name="run-tests-net" depends="run-tests-core, run-tests-admin, run-msbuild-tests" unless="mono">
 	</target>
 	
-	<target name="run-tests-mono" depends="build-core" if="mono">
+	<target name="run-tests-mono" depends="build-core-mono" if="mono">
 		<exec taskname="core.mono" executable="${mono.vm.executable}" failonerror="true">
 			<arg value="--debug" />
-			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" />
+			<arg file="${dir.n.v6}/bin/Db4objects.Db4o.Tests.exe" />
+		</exec>
+	</target>
+	
+	<target name="build-core-mono" depends="sharpen-all, prepare-csproject-all">
+	    <reset-dir dir="${dir.dist.dll.net}" />
+	    <reset-dir dir="${dir.dist.dll.compact}" />
+	    
+		<exec executable="make" dir="${dir.n.v6}">
 		</exec>
 	</target>
 	
