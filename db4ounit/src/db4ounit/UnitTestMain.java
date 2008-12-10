@@ -36,9 +36,7 @@ public class UnitTestMain {
 						String methodName=testIdentifier.substring(methodSeparatorIndex+1);
 						return Iterators.singletonIterable(testMethod(className, methodName));
 					}
-					
 					return builder(Class.forName(testIdentifier));
-					
 				} catch (Exception x) {
 					return new FailingTest(testIdentifier, x);
 				}

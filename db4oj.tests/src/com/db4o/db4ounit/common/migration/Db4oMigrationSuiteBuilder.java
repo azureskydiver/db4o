@@ -41,15 +41,11 @@ public class Db4oMigrationSuiteBuilder extends ReflectionTestSuiteBuilder {
 		_specificLibraries = specificLibraries;
 	}
 	
-	protected Iterator4 fromClass(Class clazz) {
+	protected Iterator4 fromClass(Class clazz) throws Exception {
 		assertMigrationTestCase(clazz);
 		final Iterator4 defaultTestSuite = super.fromClass(clazz);
-		try {
-			final Iterator4 migrationTestSuite = migrationTestSuite(clazz, db4oLibraries());
-			return Iterators.concat(migrationTestSuite, defaultTestSuite);
-		} catch (Exception e) {
-			return Iterators.concat(Iterators.singletonIterator(new FailingTest(clazz.getName(), e)), defaultTestSuite);
-		}
+		final Iterator4 migrationTestSuite = migrationTestSuite(clazz, db4oLibraries());
+		return Iterators.concat(migrationTestSuite, defaultTestSuite);
 	}
 
 	private Iterator4 migrationTestSuite(final Class clazz, Db4oLibrary[] libraries) throws Exception {
