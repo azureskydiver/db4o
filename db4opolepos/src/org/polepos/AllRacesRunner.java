@@ -39,6 +39,7 @@ import org.polepos.runner.db4o.*;
 import org.polepos.teams.db4o.*;
 
 import com.db4o.config.*;
+import com.db4o.internal.*;
 import com.db4o.internal.caching.*;
 import com.db4o.io.*;
 
@@ -61,18 +62,23 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 
 		return new Team[] {
 				
+				db4oTeam(),
 				configuredDb4oTeam(new ConfigurationSetting[] { 
-						slotCache(0),
-						randomAccessFileAdapter(), }),
-				configuredDb4oTeam(new ConfigurationSetting[] { 
-						slotCache(30),
-						randomAccessFileAdapter(), }),
-				configuredDb4oTeam(new ConfigurationSetting[] { 
-						slotCache(0),
-						cachedIoAdapter(), }),
-				configuredDb4oTeam(new ConfigurationSetting[] { 
-						slotCache(30),
-						cachedIoAdapter(), }),
+				fileBasedTransactionLog(),
+				}),
+				
+//				configuredDb4oTeam(new ConfigurationSetting[] { 
+//						slotCache(0),
+//						randomAccessFileAdapter(), }),
+//				configuredDb4oTeam(new ConfigurationSetting[] { 
+//						slotCache(30),
+//						randomAccessFileAdapter(), }),
+//				configuredDb4oTeam(new ConfigurationSetting[] { 
+//						slotCache(0),
+//						cachedIoAdapter(), }),
+//				configuredDb4oTeam(new ConfigurationSetting[] { 
+//						slotCache(30),
+//						cachedIoAdapter(), }),
 						
             
 // configuredDb4oTeam(new ConfigurationSetting[]{
@@ -86,6 +92,18 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 // Db4oOptions.CLIENT_SERVER_TCP }),
 		};
 	}
+    
+    private ConfigurationSetting fileBasedTransactionLog(){
+		return new ConfigurationSetting(){
+			public void apply(Object config) {
+				((Config4Impl)config).fileBasedTransactionLog(true);
+			}
+			public String name() {
+				return "CachedIoAdapter";
+			}
+			
+		};
+    }
 
 	private ConfigurationSetting cachedIoAdapter() {
 		return new ConfigurationSetting(){
@@ -93,7 +111,7 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 				((Configuration)config).io(new CachedIoAdapter(new RandomAccessFileAdapter()));
 			}
 			public String name() {
-				return "CachedIoAdapter";
+				return "TransactionLog";
 			}
 			
 		};
@@ -102,13 +120,7 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 	private ConfigurationSetting lru() {
 		return new ConfigurationSetting(){
 			public void apply(Object config) {
-				((Configuration)config).io(new IoAdapterWithCache(new RandomAccessFileAdapter()){
-					@Override
-					protected Cache4 newCache(int pageSize) {
-						return CacheFactory.newLRUCache(pageSize);
-					}
-					
-				});
+				((Configuration)config).storage(new CachingStorage(new FileStorage()));
 			}
 			public String name() {
 				return "NewLRU";
@@ -119,10 +131,10 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 	private ConfigurationSetting lRU2Q() {
 		return new ConfigurationSetting(){
 			public void apply(Object config) {
-				((Configuration)config).io(new IoAdapterWithCache(new RandomAccessFileAdapter()){
+				((Configuration)config).storage(new CachingStorage(new FileStorage()){
 					@Override
-					protected Cache4 newCache(int pageSize) {
-						return CacheFactory.new2QCache(pageSize);
+					protected Cache4 newCache() {
+						return CacheFactory.new2QCache(30);
 					}
 					
 				});
@@ -161,20 +173,20 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 
 	public Circuit[] circuits() {
 		return new Circuit[] {
-			 new Melbourne(),
-			 new Sepang(),
-			 new Bahrain(),
-			 new Imola(),
-			 new Barcelona(),
-			 new Monaco(),
-			 new Nurburgring(),
-			 new Montreal(),
-			 new Indianapolis(),
+//			 new Melbourne(),
+//			 new Sepang(),
+//			 new Bahrain(),
+//			 new Imola(),
+//			 new Barcelona(),
+//			 new Monaco(),
+//			 new Nurburgring(),
+//			 new Montreal(),
+//			 new Indianapolis(),
 			 new Magnycours(),
-			 new Silverstone(),
-			 new Hockenheim(),
-			 new Hungaroring(),
-			 new Istanbul(),
+//			 new Silverstone(),
+//			 new Hockenheim(),
+//			 new Hungaroring(),
+//			 new Istanbul(),
 		};
 	}
 
