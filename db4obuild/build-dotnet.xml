@@ -62,7 +62,7 @@
 			description="Builds and runs all the .net 3.5 relevant test cases (including LINQ)">
 	</target>
 	
-	<target name="run-tests" depends="clean, configure, run-tests-mono, run-tests-net">
+	<target name="run-tests" depends="clean, configure, run-tests-net">
 	</target>
 
 	<target name="run-core-tests-instrumented" depends="configure, build-core, build-admin">
