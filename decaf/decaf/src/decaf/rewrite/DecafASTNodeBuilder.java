@@ -21,6 +21,10 @@ public class DecafASTNodeBuilder {
 		this._ast = unit.getAST();
 		this._config = config;
 	}
+	
+	public CompilationUnit compilationUnit() {
+		return _unit;
+	}
 
 	public <T extends ASTNode> T clone(T node) {
 		return (T) ASTNode.copySubtree(_ast, node);
