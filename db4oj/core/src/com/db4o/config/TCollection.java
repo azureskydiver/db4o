@@ -9,8 +9,8 @@ import com.db4o.*;
 /**
  * @exclude
  * @sharpen.ignore
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class TCollection implements ObjectTranslator {
 	
 	public Object onStore(ObjectContainer con, Object object){

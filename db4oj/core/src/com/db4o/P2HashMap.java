@@ -12,9 +12,9 @@ import com.db4o.types.*;
  * @exclude
  * @persistent
  * @deprecated since 7.0
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class P2HashMap extends P1Collection implements Db4oMap, TransactionListener {
 
     private static final float FILL = 0.6F;

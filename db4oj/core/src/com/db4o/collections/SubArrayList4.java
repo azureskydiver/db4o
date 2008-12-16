@@ -7,8 +7,8 @@ import java.util.*;
 /**
  * @exclude
  * @sharpen.ignore
- * @decaf.ignore
  */
+@decaf.Ignore
 public class SubArrayList4<E> extends AbstractList4<E> {
 
 	private AbstractList4<E> _delegate;
