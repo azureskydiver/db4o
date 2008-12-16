@@ -1224,6 +1224,8 @@
                 <arg value="-xmldoc" />
                 <arg file="config/sharpen/ApiOverlay.xml" />
                 <arg value="@sharpen-all-options" />
+            	<arg value="-cp" />
+            	<arg path="${file.decaf.annotations}" />
             </args>
         </sharpen>
         <property name="dir.sharpened" location="${dir.sharpen}/db4oj.net" />
