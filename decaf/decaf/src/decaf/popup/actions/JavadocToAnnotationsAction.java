@@ -60,7 +60,9 @@ public class JavadocToAnnotationsAction implements IObjectActionDelegate {
 					if (null == tagName)
 						continue;
 					
-					if (tagName.startsWith(DecafTags.IGNORE)) {
+					if (tagName.startsWith(DecafTags.IGNORE) 
+						&& !tagName.startsWith(DecafTags.IGNORE_EXTENDS)
+						&& !tagName.startsWith(DecafTags.IGNORE_IMPLEMENTS)) {
 						System.out.println(ASTUtility.sourceInformation(compilationUnit, tag) + ": '" + tag + "' removed.");
 						rewrite.remove(tag, null);
 						
