@@ -149,5 +149,11 @@ public class IteratorsTestCase implements TestCase {
 			Assert.areEqual(new Integer(array[i]*2), iterator.current());
 		}
 	}
+	
+	public void testEmptyIterator(){
+		Iterator4 i = Iterators.EMPTY_ITERATOR;
+		Assert.isFalse(i.moveNext());
+		i.reset();
+	}
 
 }
