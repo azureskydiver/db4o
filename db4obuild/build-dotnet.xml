@@ -133,7 +133,7 @@
 		</exec>
 	</target>
 	
-	<target name="build-core-mono" depends="sharpen-all, prepare-csproject-all">
+	<target name="build-core-mono" depends="sharpen-all, prepare-csproject-all" if="mono">
 	    <reset-dir dir="${dir.dist.dll.net}" />
 	    <reset-dir dir="${dir.dist.dll.compact}" />
 	    
