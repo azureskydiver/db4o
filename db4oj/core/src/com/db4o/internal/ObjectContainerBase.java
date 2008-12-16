@@ -772,7 +772,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             return queryAllObjects(trans);
         } 
         Query q = query(trans);
-        q.constrain(template);
+        q.constrain(template).byExample();
         return executeQuery((QQuery)q);
     }
     

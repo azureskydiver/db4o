@@ -32,7 +32,7 @@ public class QueryByExampleTestCase extends AbstractDb4oTestCase {
     }
     
     public void testDefaultQueryModeIsIdentity(){
-    	Item itemOne = new Item("one");
+		Item itemOne = new Item("one");
     	Item itemTwo = new Item("two");
     	store(itemOne);
     	store(itemTwo);
@@ -45,18 +45,15 @@ public class QueryByExampleTestCase extends AbstractDb4oTestCase {
     	q.constrain(itemOne);
     	ObjectSet objectSet = q.execute();
     	
-    	// Expect to get the sample 
-    	Assert.areEqual(1, objectSet.size());
-    	Item retrievedItem = (Item) objectSet.next();
-    	Assert.areSame(itemOne, retrievedItem);
+    	assertItem(objectSet, itemOne);
     }
+
     
-    
-    public void testQueryByExample(){
+    public void testConstrainByExample(){
     	Item itemOne = new Item("one");
-    	Item itemTwo = new Item("two");
-    	store(itemOne);
-    	store(itemTwo);
+		Item itemTwo = new Item("two");
+		store(itemOne);
+		store(itemTwo);
     	
     	// Change the name of the "sample"
     	itemOne._name = "two";
@@ -67,9 +64,42 @@ public class QueryByExampleTestCase extends AbstractDb4oTestCase {
     	ObjectSet objectSet = q.execute();
     	
     	// Expect to get the other 
-    	Assert.areEqual(1, objectSet.size());
+    	assertItem(objectSet, itemTwo);
+    }
+
+	private void assertItem(ObjectSet objectSet, Item item) {
+		Assert.areEqual(1, objectSet.size());
     	Item retrievedItem = (Item) objectSet.next();
-    	Assert.areSame(itemTwo, retrievedItem);
+    	Assert.areSame(item, retrievedItem);
+	}
+    
+    public void testQueryByExample(){
+    	Item itemOne = new Item("one");
+		Item itemTwo = new Item("two");
+		store(itemOne);
+		store(itemTwo);
+    	
+    	// Change the name of the "sample"
+    	itemOne._name = "two";
+    	
+    	// Query by Example
+    	ObjectSet objectSet = db().queryByExample(itemOne);
+    	
+    	assertItem(objectSet, itemTwo);
+    }
+    
+    public void testQueryByExampleNoneFound(){
+    	Item itemOne = new Item("one");
+		Item itemTwo = new Item("two");
+		store(itemOne);
+		store(itemTwo);
+    	
+    	// Change the name of the "sample"
+    	itemOne._name = "three";
+    	
+    	ObjectSet objectSet = db().queryByExample(itemOne);
+    	
+    	Assert.areEqual(0, objectSet.size());
     }
     
 
