@@ -27,7 +27,7 @@ public class Iterators {
 		}
 
 		public void reset() {
-			throw new NotImplementedException();
+			// do nothing
 		}
 	};
 	
