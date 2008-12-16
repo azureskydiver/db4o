@@ -262,9 +262,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		try {
 			final IMethodBinding ctor = node.resolveConstructorBinding();
 			final List arguments = node.arguments();
-			if (builder().requiresVarArgsTranslation(ctor, arguments)) {
-				rewriteVarArgsArguments(ctor, arguments, getListRewrite(node, ClassInstanceCreation.ARGUMENTS_PROPERTY));
-			}
+			rewriteVarArgsArguments(ctor, arguments, getListRewrite(node, ClassInstanceCreation.ARGUMENTS_PROPERTY));
 		} catch (RuntimeException e) {
 			System.err.println("Error processing node '" + node + "': " + e);
 			throw e;
@@ -292,13 +290,15 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public void endVisit(MethodInvocation node) {
+		
+		if (mapClassCastIdiom(node))
+			return;
+		
 		removeAll(node.typeArguments());
 		
 		final IMethodBinding method = node.resolveMethodBinding();
 		final List arguments = node.arguments();
-		if (builder().requiresVarArgsTranslation(method, arguments)) {
-			rewriteVarArgsArguments(method, arguments, getListRewrite(node, MethodInvocation.ARGUMENTS_PROPERTY));
-		}
+		rewriteVarArgsArguments(method, arguments, getListRewrite(node, MethodInvocation.ARGUMENTS_PROPERTY));
 
 		if (!builder().isExpressionStatement(node.getParent())) {
 			if (builder().hasGenericReturnType(method)) {
@@ -309,6 +309,18 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		IdiomProcessor.processMethodInvocation(_context, node);
 	}
 	
+	private boolean mapClassCastIdiom(MethodInvocation node) {
+		if (!Bindings.qualifiedName(node.resolveMethodBinding()).equals("java.lang.Class.cast"))
+			return false;
+		
+		rewrite().replace(
+					node,
+					builder().newCast(
+							rewrite().move((Expression)node.arguments().get(0)),
+							node.resolveMethodBinding().getReturnType()));
+		return true;
+	}
+
 	@Override
 	public void endVisit(FieldDeclaration node) {
 		replaceCoercedIterableFieldInitializer(node.fragments(), node.getType());
@@ -783,6 +795,9 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	private void rewriteVarArgsArguments(final IMethodBinding method,
 			final List arguments, final ListRewrite argumentListRewrite) {
+		
+		if (!builder().requiresVarArgsTranslation(method, arguments))
+			return;
 		
 		final ITypeBinding[] parameters = method.getParameterTypes();
 		final List rewrittenArguments = argumentListRewrite.getRewrittenList();
