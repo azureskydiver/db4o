@@ -10,9 +10,9 @@ import com.db4o.reflect.*;
 /**
  * @persistent
  * @deprecated since 7.0
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 class P2HashMapKeySet implements Set {
 
     private final P2HashMap i_map;

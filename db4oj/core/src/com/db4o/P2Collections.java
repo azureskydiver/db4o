@@ -9,9 +9,9 @@ import com.db4o.types.*;
  * @persistent
  * @exclude
  * @deprecated since 7.0
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class P2Collections implements Db4oCollections{
     
     private final Transaction _transaction;

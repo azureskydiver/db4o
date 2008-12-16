@@ -9,8 +9,8 @@ import java.util.*;
  * @exclude
  * 
  * @sharpen.ignore
- * @decaf.ignore
  */
+@decaf.Ignore
 public class MapEntry4<K, V> implements Map.Entry<K, V> {
 
     private K _key;

@@ -7,9 +7,9 @@ import java.util.*;
 /**
  * @persistent 
  * @deprecated since 7.0
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 class P2HashMapIterator implements Iterator {
 
     private P1HashElement i_current;

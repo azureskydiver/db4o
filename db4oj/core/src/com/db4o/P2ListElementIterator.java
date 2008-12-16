@@ -11,9 +11,9 @@ import java.util.*;
  *  
  * @persistent
  * @deprecated since 7.0
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 class P2ListElementIterator implements Iterator {
 
     private final P2LinkedList i_list;

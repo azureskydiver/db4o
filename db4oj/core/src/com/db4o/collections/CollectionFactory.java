@@ -13,9 +13,8 @@ import com.db4o.internal.collections.*;
  * that is optimized for db4o.<br><br> 
  * Example usage:<br>
  * <code>CollectionFactory.forObjectContainer(objectContainer).newBigSet();<code>
- *
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class CollectionFactory {
 	
 	private final ObjectContainer _objectContainer;
