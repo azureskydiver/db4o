@@ -50,6 +50,10 @@ public class Handlers4 {
     
     public static boolean handlerCanHold(TypeHandler4 handler, Reflector reflector, ReflectClass claxx){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler);
+        if (handler instanceof TypeFamilyTypeHandler)
+        {
+            return ((TypeFamilyTypeHandler)handler).canHold(claxx);
+        }
         if(handlesSimple(baseTypeHandler)){
         	if(baseTypeHandler instanceof PrimitiveHandler){
         		return claxx.equals(((BuiltinTypeHandler)baseTypeHandler).classReflector())
@@ -78,7 +82,8 @@ public class Handlers4 {
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler); 
         return (baseTypeHandler instanceof PrimitiveHandler)
         	|| (baseTypeHandler instanceof StringHandler)
-        	|| (baseTypeHandler instanceof SecondClassTypeHandler); 
+        	|| (baseTypeHandler instanceof SecondClassTypeHandler)
+        	|| (baseTypeHandler instanceof TypeFamilyTypeHandler && ((TypeFamilyTypeHandler)baseTypeHandler).isSimple());
     }
     
     public static boolean handlesClass(TypeHandler4 handler){
