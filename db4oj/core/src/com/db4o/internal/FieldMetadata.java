@@ -731,6 +731,10 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             // must be ClassMetadata
             return Const4.ID_LENGTH;
         }
+        if(_handler instanceof TypeFamilyTypeHandler)
+        {
+            return ((TypeFamilyTypeHandler) _handler).linkLength();
+        }
         if(_handler instanceof PersistentBase){
             return ((PersistentBase)_handler).linkLength();
         }
