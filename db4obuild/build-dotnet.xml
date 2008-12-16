@@ -377,7 +377,7 @@
 		</csc>
 	</target>
 
-	<target name="build-core" depends="sharpen-all, prepare-csproject-all">
+	<target name="build-core" depends="sharpen-all, prepare-csproject-all" unless="mono">
 	    <reset-dir dir="${dir.dist.dll.net}" />
 	    <reset-dir dir="${dir.dist.dll.compact}" />
 	    
@@ -399,7 +399,7 @@
 		<msb solution="${dir.n.v6}/Db4oTool/Db4oTool" />		
 	</target>
 
-	<target name="build-tutorial" >
+	<target name="build-tutorial" unless="mono">
 		<ant antfile="build-dotnet-tutorial.xml">
 		</ant>
 	</target>
