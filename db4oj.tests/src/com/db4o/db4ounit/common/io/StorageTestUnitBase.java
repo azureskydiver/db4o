@@ -1,7 +1,6 @@
 package com.db4o.db4ounit.common.io;
 
 import com.db4o.db4ounit.common.api.*;
-import com.db4o.foundation.*;
 import com.db4o.io.*;
 
 import db4ounit.fixtures.*;
@@ -24,7 +23,7 @@ public class StorageTestUnitBase extends TestWithTempFile {
 		if (null != _bin) {
 			throw new IllegalStateException();
 		}
-	    _bin = storage().open(new BinConfiguration(_tempFile, false, 0, readOnly, new ListenerRegistry<Integer>()));
+	    _bin = storage().open(new BinConfiguration(_tempFile, false, 0, readOnly));
     }
 
 	@Override

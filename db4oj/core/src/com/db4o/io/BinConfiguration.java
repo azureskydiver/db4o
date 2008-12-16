@@ -17,14 +17,11 @@ public class BinConfiguration {
 	
 	private final boolean _readOnly;
 	
-	private final ListenerRegistry<Integer> _blockSizeListenerRegistry;
-
-	public BinConfiguration(String uri, boolean lockFile, long initialLength, boolean readOnly, ListenerRegistry<Integer> blockSizeListenerRegistry) {
+	public BinConfiguration(String uri, boolean lockFile, long initialLength, boolean readOnly) {
 		_uri = uri;
 		_lockFile = lockFile;
 		_initialLength = initialLength;
 		_readOnly = readOnly;
-		_blockSizeListenerRegistry = blockSizeListenerRegistry;
 	}
 	
 	public String uri(){
@@ -42,9 +39,4 @@ public class BinConfiguration {
 	public boolean readOnly(){
 		return _readOnly;
 	}
-	
-	public ListenerRegistry<Integer> blockSizeListenerRegistry(){
-		return _blockSizeListenerRegistry;
-	}
-
 }

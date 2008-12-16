@@ -12,7 +12,7 @@ public class NonFlushingStorageTestCase implements TestCase {
 	public void test() {
 		final MockBin mock = new MockBin();
 		
-		BinConfiguration binConfig = new BinConfiguration("uri", true, 42L, false, null);
+		BinConfiguration binConfig = new BinConfiguration("uri", true, 42L, false);
 		
 		final Bin storage = new NonFlushingStorage(new Storage() {
 			public boolean exists(String uri) {

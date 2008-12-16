@@ -3,15 +3,18 @@
 package com.db4o.db4ounit.common.foundation;
 
 
-import com.db4o.foundation.*;
-
 import db4ounit.*;
 
 
-public class AllTests implements TestSuiteBuilder {
+public class AllTests extends ReflectionTestSuite {
 	
-	public Iterator4 iterator() {
-		return new ReflectionTestSuiteBuilder(new Class[] {
+	public static void main(String[] args) {
+		new ConsoleTestRunner(AllTests.class).run();
+	}
+
+	@Override
+	protected Class[] testCases() {
+		return new Class[] {
 			Algorithms4TestCase.class,
 			ArrayIterator4TestCase.class,
 			Arrays4TestCase.class,
@@ -23,6 +26,7 @@ public class AllTests implements TestSuiteBuilder {
 			CompositeIterator4TestCase.class,
 			CoolTestCase.class,
 			DynamicVariableTestCase.class,
+			EnvironmentsTestCase.class,
 			Hashtable4TestCase.class,
 			IntArrayListTestCase.class,
 			IntMatcherTestCase.class,
@@ -37,11 +41,7 @@ public class AllTests implements TestSuiteBuilder {
 			Stack4TestCase.class,
 			TreeKeyIteratorTestCase.class,
 			TreeNodeIteratorTestCase.class,
-		}).iterator();	
-	}
-	
-	public static void main(String[] args) {
-		new ConsoleTestRunner(AllTests.class).run();
+		};
 	}
 
 }

@@ -7,6 +7,10 @@ package com.db4o.foundation;
  */
 public class ListenerRegistry <E>{
 	
+	public static <E> ListenerRegistry<E> newInstance() {
+		return new ListenerRegistry<E>();
+	}
+
 	private Collection4 _listeners;
 	
 	public void register(Listener<E> listener){
@@ -25,5 +29,4 @@ public class ListenerRegistry <E>{
 			((Listener)i.current()).onEvent(event);
 		}
 	}
-
 }

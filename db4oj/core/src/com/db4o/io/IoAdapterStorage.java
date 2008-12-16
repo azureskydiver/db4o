@@ -3,7 +3,8 @@ package com.db4o.io;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-
+import com.db4o.internal.*;
+import static com.db4o.foundation.Environments.*;
 /**
  * @exclude
  */
@@ -21,11 +22,10 @@ public class IoAdapterStorage implements Storage {
 	}
 
 	public Bin open(BinConfiguration config) throws Db4oIOException {
-		IoAdapterBin bin = new IoAdapterBin(_io.open(config.uri(), config.lockFile(), config.initialLength(), config.readOnly()));
-		config.blockSizeListenerRegistry().register(bin);
+		final IoAdapterBin bin = new IoAdapterBin(_io.open(config.uri(), config.lockFile(), config.initialLength(), config.readOnly()));
+		my(BlockSize.class).register(bin);
 		return bin;
 	}
-	
 	
 	static  class IoAdapterBin implements Bin, Listener<Integer>{
 
@@ -68,7 +68,5 @@ public class IoAdapterStorage implements Storage {
 		public void onEvent(Integer event) {
 			blockSize(event);
 		}
-
 	}
-
 }

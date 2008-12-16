@@ -14,7 +14,7 @@ public class RandomAccessFileStorageFactoryTestCase extends TestWithTempFile {
 	}
 	
 	public void testExistsWithZeroLengthFile() {
-		final Bin storage = subject.open(new BinConfiguration(_tempFile, false, 0, false, null));
+		final Bin storage = subject.open(new BinConfiguration(_tempFile, false, 0, false));
 		storage.close();
 		Assert.isFalse(subject.exists(_tempFile));
 	}
