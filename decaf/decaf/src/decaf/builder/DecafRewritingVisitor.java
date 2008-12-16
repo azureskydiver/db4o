@@ -399,16 +399,22 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 
 	@Override
 	public void endVisit(SimpleName node) {
-		if(mapStaticInvocationClassName(node)) {
-			return;
-		}
 		
 		if (node.isDeclaration()) {
 			return;
 		}
 		
+		if (mapNameOfStaticMethodInvocation(node)) {
+			return;
+		}
+		
+		if (mapStaticInvocationClassName(node)) {
+			return;
+		}
+		
+		
 		if (node.getLocationInParent() == QualifiedName.NAME_PROPERTY) {
-			return ;
+			return;
 		}
 		
 		if (node.getLocationInParent() == FieldAccess.NAME_PROPERTY) {
@@ -418,15 +424,56 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		processNameErasure(node);
 	}
 
+	private boolean mapNameOfStaticMethodInvocation(SimpleName node) {
+		if (node.getLocationInParent() != MethodInvocation.NAME_PROPERTY)
+			return false;
+		
+		final MethodInvocation invocation = parentMethodInvocation(node);
+		if (invocation.getExpression() != null)
+			return false;
+		
+		final IMethodBinding method = invocation.resolveMethodBinding();
+		if (!isStaticImport(method))
+			return false;
+		
+		rewrite().replace(node, 
+				builder().newQualifiedName(Bindings.qualifiedName(method)));
+			
+		return true;
+	}
+
+	private boolean isStaticImport(IMethodBinding method) {
+		if (!isStatic(method))
+			return false;
+		
+		for (Object imp : builder().compilationUnit().imports())
+			if (isStaticMethodImport((ImportDeclaration) imp, method))
+				return true;
+		
+		return false;
+	}
+
+	private boolean isStaticMethodImport(ImportDeclaration imp, IMethodBinding method) {
+		final IBinding binding = imp.resolveBinding();
+		switch (binding.getKind()) {
+		case IBinding.TYPE:
+			return imp.isOnDemand() && method.getDeclaringClass() == binding;
+		}
+		return false;
+	}
+
+	private MethodInvocation parentMethodInvocation(SimpleName node) {
+		return ((MethodInvocation)node.getParent());
+	}
+
 	private boolean mapStaticInvocationClassName(Name node) {
 		// FIXME overcomplicated and fragile, too many unjustified assumptions here - find better way to handle static method invocation type mappings
-		if(node.getLocationInParent() != MethodInvocation.EXPRESSION_PROPERTY) {
+		if(!isExpressionOfMethodInvocation(node)) {
 			return false;
 		}
-		MethodInvocation invocation = (MethodInvocation) node.getParent();
-		boolean isStatic = (invocation.resolveMethodBinding().getModifiers() & Modifier.STATIC) != 0;
-		ITypeBinding binding = node.resolveTypeBinding();
-		if(!isStatic || binding == null) {
+		final MethodInvocation invocation = (MethodInvocation) node.getParent();
+		final ITypeBinding binding = node.resolveTypeBinding();
+		if(!isStatic(invocation) || binding == null) {
 			return false;
 		}
 		SimpleType mapped = (SimpleType)builder().mappedType(binding);
@@ -435,6 +482,18 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		}
 		rewrite().replace(node, mapped.getName());
 		return true;
+	}
+
+	private boolean isStatic(MethodInvocation invocation) {
+		return isStatic(invocation.resolveMethodBinding());
+	}
+
+	private boolean isStatic(final IMethodBinding method) {
+		return Modifier.isStatic(method.getModifiers());
+	}
+
+	private boolean isExpressionOfMethodInvocation(Name node) {
+		return node.getLocationInParent() == MethodInvocation.EXPRESSION_PROPERTY;
 	}
 	
 	@Override
@@ -559,6 +618,13 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(PackageDeclaration node) {
 		return false;
+	}
+	
+	@Override
+	public void endVisit(ImportDeclaration node) {
+		if (node.isStatic()) {
+			rewrite().remove(node);
+		}
 	}
 
 	private void eraseMethodDeclaration(MethodDeclaration node, IMethodBinding originalMethodDeclaration) {

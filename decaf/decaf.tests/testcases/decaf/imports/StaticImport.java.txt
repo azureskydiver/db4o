@@ -1,0 +1,15 @@
+package decaf.imports;
+
+import static decaf.imports.Foo.*;
+
+class Foo {
+	static void bar() {
+	}
+}
+
+class Driver {
+
+	public static void main(String[] args) {
+		bar();
+	}
+}
