@@ -35,7 +35,7 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 
 	private Bin openBin(LocalTransaction trans, String fileName) {
 		
-		return new FileStorage().open(new BinConfiguration(fileName, trans.config().lockFile(), 0, false, null));
+		return new FileStorage().open(new BinConfiguration(fileName, trans.config().lockFile(), 0, false));
 	}
 	
 	public boolean checkForInterruptedTransaction(LocalTransaction trans, ByteArrayBuffer reader) {

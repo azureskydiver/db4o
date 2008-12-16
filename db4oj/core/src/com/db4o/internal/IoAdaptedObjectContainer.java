@@ -45,17 +45,15 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			_handlers.oldEncryptionOff();
 		}
 		
-		ListenerRegistry<Integer> blockSizeListenerRegistry = new ListenerRegistry<Integer>();
-		
 		boolean readOnly = configImpl().isReadOnly();
 		boolean lockFile = Debug.lockFile && configImpl().lockFile()
 				&& (!readOnly);
 		if (needsLockFileThread()) {
-			Bin fileBin = storage.open(new BinConfiguration(fileName(), false, 0, false, blockSizeListenerRegistry ));
+			Bin fileBin = storage.open(new BinConfiguration(fileName(), false, 0, false));
 			Bin synchronizedBin = new SynchronizedBin(fileBin);
-			_file = new BlockAwareBin(synchronizedBin, blockSizeListenerRegistry);
+			_file = new BlockAwareBin(synchronizedBin);
 		} else {
-			_file = new BlockAwareBin(storage.open(new BinConfiguration(fileName(), lockFile, 0, readOnly, blockSizeListenerRegistry)), blockSizeListenerRegistry);	
+			_file = new BlockAwareBin(storage.open(new BinConfiguration(fileName(), lockFile, 0, readOnly)));	
 		}
 		if (isNew) {
 			configureNewFile();
@@ -69,34 +67,37 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		}
 	}
     
-    public void backup(String path) throws DatabaseClosedException, Db4oIOException {
-        synchronized (_lock) {
-			checkClosed();
-			if (_backupFile != null) {
-				throw new BackupInProgressException();
-			}
-			_backupFile = new BlockAwareBin(configImpl().storage().open(new BinConfiguration(path, true,_file.length(), false, null)), null);
-			_backupFile.blockSize(blockSize());
-		}
-        long pos = 0;
-        byte[] buffer = new byte[8192];
-        while (true) {
-			synchronized (_lock) {
-				int read = _file.read(pos, buffer);
-				if (read <= 0) {
-					break;
+    public void backup(final String path) throws DatabaseClosedException, Db4oIOException {
+        runWithEnvironment(new Runnable() { public void run() {
+        	
+	    	synchronized (_lock) {
+				checkClosed();
+				if (_backupFile != null) {
+					throw new BackupInProgressException();
 				}
-				_backupFile.write(pos, buffer, read);
-				pos += read;
+				_backupFile = new BlockAwareBin(configImpl().storage().open(new BinConfiguration(path, true,_file.length(), false)));
 			}
-		}
-        
-		Cool.sleepIgnoringInterruption(1);
-
-        synchronized (_lock) {
-			_backupFile.close();
-			_backupFile = null;
-		}
+	        long pos = 0;
+	        byte[] buffer = new byte[8192];
+	        while (true) {
+				synchronized (_lock) {
+					int read = _file.read(pos, buffer);
+					if (read <= 0) {
+						break;
+					}
+					_backupFile.write(pos, buffer, read);
+					pos += read;
+				}
+			}
+	        
+			Cool.sleepIgnoringInterruption(1);
+	
+	        synchronized (_lock) {
+				_backupFile.close();
+				_backupFile = null;
+			}
+	        
+        }});
     }
     
     public void blockSize(int size){

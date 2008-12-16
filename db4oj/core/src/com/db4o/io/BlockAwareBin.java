@@ -2,9 +2,11 @@
 
 package com.db4o.io;
 
+import static com.db4o.foundation.Environments.*;
+
 import com.db4o.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
+import com.db4o.internal.*;
 
 /**
  * @exclude
@@ -13,25 +15,22 @@ public class BlockAwareBin extends BinDecorator {
 
 	private static final int COPY_SIZE = 4096;
 
-	private int _blockSize;
-	
-	private final ListenerRegistry<Integer> _blockSizeListenerRegistry;
-	
 	private boolean _readOnly;
 	
-	public BlockAwareBin(Bin bin, ListenerRegistry<Integer> blockSizeListenerRegistry) {
+	private final BlockSize _blockSize = my(BlockSize.class);
+	
+	public BlockAwareBin(Bin bin) {
 		super(bin);
-		_blockSizeListenerRegistry = blockSizeListenerRegistry;
     }
 
 	/**
 	 * converts address and address offset to an absolute address
 	 */
 	protected final long regularAddress(int blockAddress, int blockAddressOffset) {
-		if (0 == _blockSize) {
+		if (0 == blockSize()) {
 			throw new IllegalStateException();
 		}
-		return (long) blockAddress * _blockSize + blockAddressOffset;
+		return (long) blockAddress * blockSize() + blockAddressOffset;
 	}
 
 	/**
@@ -52,10 +51,7 @@ public class BlockAwareBin extends BinDecorator {
 		if (blockSize < 1) {
 			throw new IllegalArgumentException();
 		}
-		_blockSize = blockSize;
-		if(_blockSizeListenerRegistry != null){
-			_blockSizeListenerRegistry.notifyListeners(blockSize);
-		}
+		_blockSize.set(blockSize);
 	}
 	
 	/**
@@ -196,6 +192,6 @@ public class BlockAwareBin extends BinDecorator {
 	 * returns the block size currently used
 	 */
 	public int blockSize() {
-		return _blockSize;
+		return _blockSize.value();
 	}
 }
