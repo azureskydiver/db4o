@@ -151,12 +151,17 @@
 			<java
 				taskname="decaf"
 				fork="true"
+				logerror="true"
 				classname="org.eclipse.core.launcher.Main" failonerror="true" timeout="1800000" jvmargs="${decaf.vmargs}">
 				<classpath>
 					<fileset dir="${eclipse.home}/plugins">
 						<include name="org.eclipse.equinox.launcher_*.jar"  />
 					</fileset>
 				</classpath>
+				<!-- uncomment for debugging purposes
+				<jvmarg value="-Declipse.consoleLog=true"/>
+				<arg value="-debug" />
+				-->
 				<arg value="-clean" />
 				<arg value="-data" />
 				<arg file="@{workspace}" />
