@@ -1975,21 +1975,7 @@ namespace OMAddin
 		{
 			try
 			{
-				//if (Helper.CheckForIfAlreadyLoggedIn == true)
-				//{
-				//    Helper.CheckForIfAlreadyLoggedIn = true;
-				//    ConnectToSupport();
-				//}
-				//else
-				//{
-				if (Helper.CheckPermissions(SUPPORT))
-				{
-					// Helper.CheckForIfAlreadyLoggedIn = true;
-					ConnectToSupport();
-				}
-				else
-					DisplayInadequatePermissions();
-				//}
+				ConnectToSupport();
 			}
 			catch (Exception oEx)
 			{
@@ -2019,20 +2005,7 @@ namespace OMAddin
 		{
 			try
 			{
-				//if (Helper.CheckForIfAlreadyLoggedIn == true)
-				//{
-				//    ConnectToXtremeConnect();
-				//}
-				//else
-				//{
-				if (Helper.CheckPermissions(PAIRING))
-				{
-					//Helper.CheckForIfAlreadyLoggedIn = true;
-					ConnectToXtremeConnect();
-				}
-				else
-					DisplayInadequatePermissions();
-				//}
+				ConnectToXtremeConnect();
 			}
 			catch (Exception oEx)
 			{

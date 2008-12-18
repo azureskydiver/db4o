@@ -2,9 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using EnvDTE;
 using EnvDTE80;
@@ -12,13 +9,8 @@ using System.Reflection;
 using OMControlLibrary.Common;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.QueryManager;
-using OManager.BusinessLayer.ObjectExplorer;
-using sforce;
-using OManager.BusinessLayer.Common;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
-using OManager.DataLayer.QueryParser;
-using System.IO;
 
 namespace OMControlLibrary
 {
@@ -361,42 +353,8 @@ namespace OMControlLibrary
 			try
 			{
 				OMETrace.WriteFunctionStart();
-				//if (Helper.CheckForIfAlreadyLoggedIn == true)
-				//{
-				//    ExecuteQuery(sender, e);
-				//}
-				//else
-				//{
-				if (Helper.CheckPermissions(Common.Constants.OBJECTMANAGER_USER_PERMISSION_QUERYBUILDER))
-				{
-					//Helper.CheckForIfAlreadyLoggedIn = true;
-					ExecuteQuery(sender, e);
-
-				}
-				else
-				{
-					// Helper.CheckForIfAlreadyLoggedIn = false;
-					string filepath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8); ;
-
-
-					int index = filepath.LastIndexOf('/');
-					filepath = filepath.Remove(index);
-					filepath = filepath + Common.Constants.OBJECTMANAGER_CONTACT_US_FILE_PATH;
-					try
-					{
-						if (Helper.winSalesPage == null || Helper.winSalesPage.Visible != true)
-							Helper.winSalesPage = ApplicationObject.DTE.ItemOperations.Navigate(filepath, vsNavigateOptions.vsNavigateOptionsNewWindow);
-						else
-							Helper.winSalesPage.Visible = true;
-					}
-					catch
-					{
-						Helper.winSalesPage = ApplicationObject.DTE.ItemOperations.Navigate(filepath, vsNavigateOptions.vsNavigateOptionsNewWindow);
-					}
-					//}
-
-					OMETrace.WriteFunctionEnd();
-				}
+				ExecuteQuery(sender, e);
+				OMETrace.WriteFunctionEnd();
 			}
 			catch (Exception oEx)
 			{
@@ -945,49 +903,11 @@ namespace OMControlLibrary
 			try
 			{
 				OMETrace.WriteFunctionStart();
-
-				//if (Helper.CheckForIfAlreadyLoggedIn == true)
-				//{
-				//    ShowObjectsForAClass();
-				//}
-				//else
-				//{
-
-
-				if (Helper.CheckPermissions(Common.Constants.OBJECTMANAGER_USER_PERMISSION_QUERYBUILDER))
-				{
-					// Helper.CheckForIfAlreadyLoggedIn = true;
-					ShowObjectsForAClass();
-				}
-
-				else
-				{
-					string filepath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8); ;
-
-					filepath = filepath.Remove(filepath.Length - 21, 21);
-					filepath = filepath + Common.Constants.OBJECTMANAGER_CONTACT_US_FILE_PATH;
-					try
-					{
-						if (Helper.winSalesPage == null || Helper.winSalesPage.Visible != true)
-							Helper.winSalesPage = ApplicationObject.DTE.ItemOperations.Navigate(filepath,
-													vsNavigateOptions.vsNavigateOptionsNewWindow);
-						else
-							Helper.winSalesPage.Visible = true;
-					}
-					catch
-					{
-						Helper.winSalesPage = ApplicationObject.DTE.ItemOperations.Navigate(filepath,
-												vsNavigateOptions.vsNavigateOptionsNewWindow);
-					}
-					//Helper.CheckForIfAlreadyLoggedIn = false;
-				}
-				//}
-
+				ShowObjectsForAClass();
 				OMETrace.WriteFunctionEnd();
 			}
 			catch (Exception oEx)
 			{
-
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}

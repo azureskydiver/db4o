@@ -346,44 +346,15 @@ namespace OMControlLibrary
 			try
 			{
 				OMETrace.WriteFunctionStart();
-
-				if (Helper.CheckPermissions(Constants.OBJECTMANAGER_USER_PERMISSION_QUERYBUILDER))
-				{
-					ExecuteQuery();
-				}
-				else
-				{
-					//Helper.CheckForIfAlreadyLoggedIn = false;
-					string filepath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-
-					int index = filepath.LastIndexOf('/');
-					filepath = filepath.Remove(index);
-					filepath = filepath + Constants.OBJECTMANAGER_CONTACT_US_FILE_PATH;
-					try
-					{
-						if (Helper.winSalesPage == null || Helper.winSalesPage.Visible != true)
-							Helper.winSalesPage = ApplicationObject.DTE.ItemOperations.Navigate(filepath,
-																								vsNavigateOptions.vsNavigateOptionsNewWindow);
-						else
-							Helper.winSalesPage.Visible = true;
-					}
-					catch
-					{
-						Helper.winSalesPage = ApplicationObject.DTE.ItemOperations.Navigate(filepath,
-																							vsNavigateOptions.vsNavigateOptionsNewWindow);
-					}
-					//}
-
-					OMETrace.WriteFunctionEnd();
-				}
+				ExecuteQuery();
+				OMETrace.WriteFunctionEnd();
 			}
-			catch (Exception oEx)
+			catch(Exception oEx)
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
-
-
+        
 		//------------
 		private static void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
 		{
