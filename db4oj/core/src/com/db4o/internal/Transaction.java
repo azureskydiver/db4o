@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -333,5 +334,14 @@ public abstract class Transaction {
             }
         };
     }
+
+	public void deactivate(int id, ActivationDepth activationDepth) {
+		//FIXME: JavaServerCrossplatformTestCase crashes with we remove
+		//		  null test.
+		final ObjectReference reference = referenceForId(id);
+		if (null != reference) {
+			reference.deactivate(this, activationDepth);
+		}
+	}
 
 }
