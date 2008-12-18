@@ -2,7 +2,6 @@
 
 package com.db4o.io;
 
-import com.db4o.foundation.*;
 
 /**
  * @exclude
