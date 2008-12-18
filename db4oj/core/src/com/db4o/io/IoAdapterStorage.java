@@ -1,10 +1,10 @@
 /* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
 package com.db4o.io;
 
+import static com.db4o.foundation.Environments.*;
+
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
-import static com.db4o.foundation.Environments.*;
 /**
  * @exclude
  */

@@ -6,7 +6,6 @@ import static com.db4o.foundation.Environments.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
-import com.db4o.internal.*;
 
 /**
  * @exclude
@@ -42,16 +41,6 @@ public class BlockAwareBin extends BinDecorator {
 			regularAddress(oldAddress, oldAddressOffset),
 			regularAddress(newAddress, newAddressOffset),
 			length);
-	}
-	
-	/**
-	 * outside call to set the block size of this adapter
-	 */
-	public void blockSize(int blockSize) {
-		if (blockSize < 1) {
-			throw new IllegalArgumentException();
-		}
-		_blockSize.set(blockSize);
 	}
 	
 	/**

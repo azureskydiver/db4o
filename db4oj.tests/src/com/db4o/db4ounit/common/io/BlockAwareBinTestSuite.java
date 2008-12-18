@@ -1,7 +1,6 @@
 package com.db4o.db4ounit.common.io;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
@@ -15,7 +14,7 @@ public class BlockAwareBinTestSuite extends FixtureTestSuiteDescription {
 		testUnits(BlockAwareBinTest.class);
 	}
 	
-	public static class BlockAwareBinTest implements TestLifeCycle, Environment {
+	public static class BlockAwareBinTest implements TestCase, Environment {
 		
 		private final MockBin _mockBin = new MockBin();
 		private final BlockSize _mockBlockSize = new BlockSize() {
@@ -126,13 +125,6 @@ public class BlockAwareBinTestSuite extends FixtureTestSuiteDescription {
 		private int blockSize() {
 			return SubjectFixtureProvider.<Integer>value().intValue();
 		}
-
-		public void setUp() throws Exception {
-			_subject.blockSize(blockSize());
-        }
-
-		public void tearDown() throws Exception {
-        }
 	}
 
 }

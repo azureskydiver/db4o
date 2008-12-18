@@ -1,7 +1,15 @@
-package com.db4o.internal;
+package com.db4o.io;
 
 import com.db4o.foundation.*;
 
+/**
+ * Block size registry.
+ * 
+ * Accessible through the environment. 
+ * 
+ * @see Environments#my(Class)
+ * @since 7.7
+ */
 public interface BlockSize {
 
 	void register(Listener<Integer> listener);
