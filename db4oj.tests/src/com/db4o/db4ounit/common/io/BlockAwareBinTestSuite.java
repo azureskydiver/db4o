@@ -1,5 +1,7 @@
 package com.db4o.db4ounit.common.io;
 
+import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
@@ -13,10 +15,37 @@ public class BlockAwareBinTestSuite extends FixtureTestSuiteDescription {
 		testUnits(BlockAwareBinTest.class);
 	}
 	
-	public static class BlockAwareBinTest implements TestLifeCycle {
+	public static class BlockAwareBinTest implements TestLifeCycle, Environment {
 		
 		private final MockBin _mockBin = new MockBin();
-		private final BlockAwareBin _subject = new BlockAwareBin(_mockBin);
+		private final BlockSize _mockBlockSize = new BlockSize() {
+			public void register(Listener<Integer> listener) {
+				throw new NotImplementedException();
+            }
+
+			public void set(int newValue) {
+				Assert.areEqual(blockSize(), newValue);
+            }
+
+			public int value() {
+	            return blockSize();
+            }
+		};
+		
+		private BlockAwareBin _subject;
+		
+		public BlockAwareBinTest() {
+			Environments.runWith(this, new Runnable() { public void run() {
+				_subject = new BlockAwareBin(_mockBin);
+			}});
+		}
+		
+		public <T> T provide(Class<T> service) {
+			if (service != BlockSize.class) {
+				throw new IllegalArgumentException();
+			}
+			return service.cast(_mockBlockSize);
+        }
 		
 		public void testBlockSize() {
 			Assert.areEqual(blockSize(), _subject.blockSize());
