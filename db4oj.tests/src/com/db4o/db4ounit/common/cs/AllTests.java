@@ -25,6 +25,7 @@ public class AllTests extends Db4oTestSuite {
 	            NoTestConstructorsQEStringCmpTestCase.class,
 	            ObjectServerTestCase.class,
 	            PrimitiveMessageTestCase.class,
+	            QueryConsistencyTestCase.class,
 	            SendMessageToClientTestCase.class,
 	            ServerClosedTestCase.class,
 	            ServerPortUsedTestCase.class,

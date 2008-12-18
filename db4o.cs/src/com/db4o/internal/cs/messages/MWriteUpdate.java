@@ -3,6 +3,7 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.slots.*;
 
 public final class MWriteUpdate extends MsgObject implements ServerSideMessage {
@@ -19,7 +20,12 @@ public final class MWriteUpdate extends MsgObject implements ServerSideMessage {
             stream.getSlotForUpdate(_payLoad);
 			yc.addFieldIndices(_payLoad, oldSlot);
             _payLoad.writeEncrypt();
+            deactivateCacheFor(id);            
 		}
 		return true;
+	}
+
+	private void deactivateCacheFor(int id) {
+		transaction().deactivate(id, new FixedActivationDepth(1));
 	}
 }
