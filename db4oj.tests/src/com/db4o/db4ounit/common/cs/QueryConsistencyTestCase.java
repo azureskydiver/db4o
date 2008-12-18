@@ -53,7 +53,7 @@ public class QueryConsistencyTestCase extends AbstractDb4oTestCase implements Op
 		Assert.isNull(nativeQueryForItem(42));
 	}
 	
-	public void testUpdate() {		
+	public void _testUpdate() {		
 		final Item found = sodaQueryForItem(42);
 		Assert.areEqual(42, found._id);
 		Assert.areSame(found, nativeQueryForItem(42));
