@@ -7,7 +7,7 @@ package com.db4o.internal;
  * @sharpen.ignore
  */
 public class ReflectPlatform {
-
+	
 	/**
 	 * @param className
 	 * @return the Class object for specified className. Returns null if an
@@ -48,5 +48,21 @@ public class ReflectPlatform {
 
 	public static boolean isNamedClass(Class clazz) {
 		return !clazz.isPrimitive();
+	}
+
+	/**
+	 * @decaf.replaceFirst return simpleNameJdk11(service);
+	 */
+	public static String simpleName(Class service) {
+		return service.getSimpleName();
+    }
+	
+	@SuppressWarnings("unused")
+    private static String simpleNameJdk11(Class service) {
+		final String name = service.getName();
+		final int lastDot = name.lastIndexOf('.');
+		return lastDot < 0
+			? name
+			: name.substring(lastDot + 1);
 	}
 }

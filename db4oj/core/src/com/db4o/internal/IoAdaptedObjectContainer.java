@@ -101,7 +101,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     }
     
     public void blockSize(int size){
-        _file.blockSize(size);
+    	provide(BlockSize.class).set(size);
     }
 
     public byte blockSize() {

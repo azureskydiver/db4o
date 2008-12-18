@@ -8,6 +8,7 @@ import db4ounit.fixtures.*;
 public class StorageTestSuite extends FixtureTestSuiteDescription {{
 
 	fixtureProviders(
+		new EnvironmentProvider(),
 		new SubjectFixtureProvider(new Object[] {
     		new FileStorage(),
     		new MemoryStorage(),
