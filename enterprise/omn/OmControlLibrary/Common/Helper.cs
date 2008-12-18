@@ -1,15 +1,11 @@
 using System;
 using System.Text;
-using System.Resources;
 using System.Windows.Forms;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.IO;
-using System.Drawing;
-using System.Security.Permissions;
 using Microsoft.Win32;
-using OMControlLibrary;
 using OManager.BusinessLayer.QueryManager;
 using OManager.BusinessLayer.Login;
 using EnvDTE;
@@ -22,12 +18,9 @@ using OMControlLibrary.LoginToSalesForce;
 using System.Web.Services.Protocols;
 
 using Microsoft.VisualStudio.CommandBars;
-using stdole;
 using System.Threading;
 using System.Data;
-using System.Xml;
 using OME.Crypto;
-using System.Configuration;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
 
@@ -1786,35 +1779,6 @@ namespace OMControlLibrary.Common
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
-		}
-
-		//check User permisssions for features
-		public static bool CheckPermissions(string featureName)
-		{
-			bool permitted = false;
-			try
-			{
-				if (ResponseTicket != null)
-				{
-					permitted = CheckFeaturePermission(featureName);
-					// permitted = true;
-				}
-				else
-				{
-					InvokeDDNForm();
-					if (ResponseTicket == null)
-						permitted = false;
-					else
-						permitted = CheckPermissions(featureName);
-
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-
-			return permitted;
 		}
 
 		public static bool CheckFeaturePermission(string featureName)
