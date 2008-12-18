@@ -68,7 +68,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 	}
     
     public void backup(final String path) throws DatabaseClosedException, Db4oIOException {
-        runWithEnvironment(new Runnable() { public void run() {
+        withEnvironment(new Runnable() { public void run() {
         	
 	    	synchronized (_lock) {
 				checkClosed();
@@ -101,7 +101,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     }
     
     public void blockSize(int size){
-    	provide(BlockSize.class).set(size);
+    	_file.blockSize(size);
     }
 
     public byte blockSize() {
@@ -331,11 +331,10 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 	}
 	
 	private FreespaceFiller createFreespaceFiller() {
-		FreespaceFiller freespaceFiller=config().freespaceFiller();
 		if(Debug.xbytes) {
-			freespaceFiller=new XByteFreespaceFiller();
+			return new XByteFreespaceFiller();
 		}
-		return freespaceFiller;
+		return config().freespaceFiller();
 	}
 	
 	private static class XByteFreespaceFiller implements FreespaceFiller {
