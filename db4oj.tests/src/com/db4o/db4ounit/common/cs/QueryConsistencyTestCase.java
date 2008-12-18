@@ -18,7 +18,7 @@ public class QueryConsistencyTestCase extends AbstractDb4oTestCase implements Op
 				return new Class[] { QueryConsistencyTestCase.class };
             }
 	    	
-	    }.runClientServer();
+	    }.runAll();
     }
 	
 	public static class Item {
@@ -53,7 +53,7 @@ public class QueryConsistencyTestCase extends AbstractDb4oTestCase implements Op
 		Assert.isNull(nativeQueryForItem(42));
 	}
 	
-	public void _testUpdate() {		
+	public void testUpdate() {		
 		final Item found = sodaQueryForItem(42);
 		Assert.areEqual(42, found._id);
 		Assert.areSame(found, nativeQueryForItem(42));
