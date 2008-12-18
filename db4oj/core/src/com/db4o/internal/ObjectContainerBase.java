@@ -1362,8 +1362,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     
     public final <T> ObjectSet<T> query(Transaction trans, Predicate<T> predicate,QueryComparator<T> comparator){
         synchronized (_lock) {
-            trans = checkTransaction(trans);
-            return getNativeQueryHandler().execute(query(trans), predicate,comparator);
+            return getNativeQueryHandler().execute(query(trans), predicate, comparator);
         }
     }
 

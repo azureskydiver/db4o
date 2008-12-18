@@ -51,7 +51,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
 
     public final void instantiateAspects(final UnmarshallingContext context) {
         
-        final BooleanByRef updateFieldFound = new BooleanByRef();
+        final BooleanByRef schemaUpdateDetected = new BooleanByRef();
         
         ContextState savedState = context.saveState();
         
@@ -63,8 +63,11 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
                 if(aspect instanceof FieldMetadata){
                     FieldMetadata field = (FieldMetadata) aspect;
                     if(field.updating()){
-                        updateFieldFound.value = true;
+                        schemaUpdateDetected.value = true;
                     }
+                    // TODO: cant the aspect handle it itself?
+                    // Probably no because old aspect versions might not be able
+                    // to handle null...
                     if (isNull) {
                         field.set(context.persistentObject(), null);
                         return;
@@ -76,7 +79,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
         };
         traverseAllAspects(context, command);
         
-        if(updateFieldFound.value){
+        if(schemaUpdateDetected.value){
             context.restoreState(savedState);
             command = new TraverseFieldCommand() {
                 public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
