@@ -183,4 +183,14 @@ public class BlockAwareBin extends BinDecorator {
 	public int blockSize() {
 		return _blockSize.value();
 	}
+	
+	/**
+	 * outside call to set the block size of this adapter
+	 */
+	public void blockSize(int blockSize) {
+		if (blockSize < 1) {
+			throw new IllegalArgumentException();
+		}
+		_blockSize.set(blockSize);
+	}
 }

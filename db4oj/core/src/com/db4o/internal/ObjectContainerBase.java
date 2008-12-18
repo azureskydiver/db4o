@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import static com.db4o.foundation.Environments.*;
+
 import java.util.*;
 
 import com.db4o.*;
@@ -13,27 +15,24 @@ import com.db4o.internal.callbacks.*;
 import com.db4o.internal.encoding.*;
 import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.array.*;
-import com.db4o.internal.io.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.replication.*;
 import com.db4o.internal.slots.*;
-import com.db4o.io.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.core.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.typehandlers.*;
 import com.db4o.types.*;
-import static com.db4o.foundation.Environments.*;
 /**
  * @exclude
  * @sharpen.extends System.IDisposable
  * @sharpen.partial
  */
-public abstract class ObjectContainerBase  implements TransientClass, Internal4, ObjectContainerSpec, InternalObjectContainer, Environment {
+public abstract class ObjectContainerBase  implements TransientClass, Internal4, ObjectContainerSpec, InternalObjectContainer {
 	
 
     // Collection of all classes
@@ -105,47 +104,37 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
 	private boolean _topLevelCallCompleted;
 	
-	private BlockSize _blockSize;
-
+	private final Environment _environment = Environments.newConventionBasedEnvironment();
+	
 	protected ObjectContainerBase(Configuration config, ObjectContainerBase parent) {
     	_parent = parent == null ? this : parent;
     	_lock = parent == null ? new Object() : parent._lock;
     	_config = (Config4Impl)config;
     }
-	
-	public <T> T provide(Class<T> service) {
-		if (BlockSize.class != service) {
-			throw new IllegalArgumentException();
-		}
-		if (null == _blockSize) {
-			_blockSize = new BlockSizeImpl();
-		}
-		return service.cast(_blockSize);
-	}
 
 	protected final void open() throws OldFormatException {
-		runWithEnvironment(new Runnable() {
-			public void run() {
-				boolean ok = false;
-				synchronized (_lock) {
-					try {
-			        	initializeTransactions();
-			            initialize1(_config);
-			        	openImpl();
-						initializePostOpen();
-						ok = true;
-					} finally {
-						if(!ok) {
-							shutdownObjectContainer();
-						}
+		withEnvironment(new Runnable() { public void run() {
+			
+			boolean ok = false;
+			synchronized (_lock) {
+				try {
+		        	initializeTransactions();
+		            initialize1(_config);
+		        	openImpl();
+					initializePostOpen();
+					ok = true;
+				} finally {
+					if(!ok) {
+						shutdownObjectContainer();
 					}
 				}
 			}
-		});
+			
+		}});
 	}
 	
-	protected void runWithEnvironment(Runnable runnable) {
-		runWith(this, runnable);
+	protected void withEnvironment(Runnable runnable) {
+		runWith(_environment, runnable);
 	}
 
 	protected abstract void openImpl() throws Db4oIOException;

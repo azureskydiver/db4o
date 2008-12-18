@@ -40,6 +40,15 @@ public class Environments {
 	        return binding;
 	    }
 	    
+	    /**
+	     * Resolves a service interface to its default implementation using the
+	     * db4o namespace convention:
+	     * 
+	     *      interface foo.bar.Baz
+	     *      default implementation foo.internal.bar.BazImpl
+	     *
+	     * @return the convention based type name for the requested service
+	     */
 	    private <T> T resolve(Class<T> service) {
 	    	final String className = defaultImplementationFor(service);
 			return service.cast(ReflectPlatform.createInstance(className));
