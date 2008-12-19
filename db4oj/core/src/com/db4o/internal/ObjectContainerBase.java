@@ -941,10 +941,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         return _classCollection.classMetadataForReflectClass(claxx);
     }
     
-    public final TypeHandler4 typeHandlerForObject(Object obj){
-        return typeHandlerForReflectClass(reflectorForObject(obj));
-    }
-    
     public final TypeHandler4 typeHandlerForReflectClass(ReflectClass claxx){
         if(hideClassForExternalUse(claxx)){
             return null;
@@ -953,15 +949,14 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         	return null;
         }
         TypeHandler4 typeHandler = _handlers.typeHandlerForClass(claxx);
-        if (typeHandler != null) {
-            return typeHandler;
+        if (Handlers4.hasID(typeHandler)){
+        	return typeHandler;
         }
         ClassMetadata classMetadata = _classCollection.produceClassMetadata(claxx);
         if(classMetadata == null){
             return null;
         }
-        // TODO: consider to return classMetadata
-        return classMetadata.typeHandler();
+        return classMetadata;
     }
     
     // TODO: Some ReflectClass implementations could hold a 

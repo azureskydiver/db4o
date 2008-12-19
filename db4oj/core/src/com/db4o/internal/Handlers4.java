@@ -2,9 +2,13 @@
 
 package com.db4o.internal;
 
+import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
+import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
@@ -39,14 +43,6 @@ public class Handlers4 {
     public static final int ANY_ARRAY_ID = 12;
     
     public static final int ANY_ARRAY_N_ID = 13;
-    
-    public static TypeHandler4 correctHandlerVersion(HandlerVersionContext context, TypeHandler4 handler){
-        int version = context.handlerVersion();
-        if(version >= HandlerRegistry.HANDLER_VERSION){
-            return handler;
-        }
-        return context.transaction().container().handlers().correctHandlerVersion(handler, version);
-    }
     
     public static boolean handlerCanHold(TypeHandler4 handler, Reflector reflector, ReflectClass claxx){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler);
@@ -86,6 +82,14 @@ public class Handlers4 {
         	|| (baseTypeHandler instanceof TypeFamilyTypeHandler && ((TypeFamilyTypeHandler)baseTypeHandler).isSimple());
     }
     
+    public static boolean handlesArray(TypeHandler4 handler){
+        return handler instanceof ArrayHandler;
+    }
+    
+    public static boolean handlesMultidimensionalArray(TypeHandler4 handler){
+        return handler instanceof MultidimensionalArrayHandler;
+    }
+    
     public static boolean handlesClass(TypeHandler4 handler){
         return baseTypeHandler(handler) instanceof FirstClassHandler;
     }
@@ -117,4 +121,147 @@ public class Handlers4 {
         }
         return clazz;
     }
+
+	public static boolean hasID(TypeHandler4 typeHandler){
+		return 	typeHandler instanceof BuiltinTypeHandler || 
+				typeHandler instanceof ClassMetadata || 
+				typeHandler instanceof PlainObjectHandler;
+	}
+
+	public static int calculateLinkLength(TypeHandler4 _handler){
+	    if (_handler == null) {
+	        // must be ClassMetadata
+	        return Const4.ID_LENGTH;
+	    }
+	    if(_handler instanceof TypeFamilyTypeHandler){
+	        return ((TypeFamilyTypeHandler) _handler).linkLength();
+	    }
+	    if(_handler instanceof PersistentBase){
+	        return ((PersistentBase)_handler).linkLength();
+	    }
+	    if(_handler instanceof PrimitiveHandler){
+	        return ((PrimitiveHandler)_handler).linkLength();
+	    }
+	    if(_handler instanceof VariableLengthTypeHandler){
+	        if(_handler instanceof EmbeddedTypeHandler){
+	            return Const4.INDIRECTION_LENGTH;    
+	        }
+	        return Const4.ID_LENGTH;
+	    }
+	    
+	    // TODO: For custom handlers there will have to be a way 
+	    //       to calculate the length in the slot.
+	    
+	    //        Options:
+	    
+	    //        (1) Remember when the first object is marshalled.
+	    //        (2) Add a #defaultValue() method to TypeHandler4,
+	    //            marshall the default value and check.
+	    //        (3) Add a way to test the custom handler when it
+	    //            is installed and remember the length there. 
+	    
+	    throw new NotImplementedException();
+	}
+
+	public static ReflectClass classReflectorForHandler(HandlerRegistry handlerRegistry, TypeHandler4 handler) {
+		if(handler instanceof BuiltinTypeHandler){
+	        return ((BuiltinTypeHandler)handler).classReflector();
+	    }
+	    if(handler instanceof ClassMetadata){
+	        return ((ClassMetadata)handler).classReflector();
+	    }
+		return handlerRegistry.classReflectorForHandler(handler);
+	}
+
+	public static boolean holdsEmbedded(TypeHandler4 handler) {
+		return isEmbedded(baseTypeHandler(handler));
+	}
+	
+	public static boolean isEmbedded(TypeHandler4 handler) {
+	    return handler instanceof EmbeddedTypeHandler;
+	}
+	
+	public static boolean isFirstClass(TypeHandler4 handler) {
+	    return handler instanceof FirstClassHandler;
+	}
+	
+	public static boolean isPrimitive(TypeHandler4 handler) {
+		return handler instanceof PrimitiveHandler;
+	}
+	
+	public static boolean isSecondClass(FieldHandler handler) {
+		return handler instanceof SecondClassTypeHandler;
+	}
+	
+	public static boolean isUntyped(TypeHandler4 handler) {
+		return handler instanceof UntypedFieldHandler;
+	}
+	
+	public static boolean isVariableLength(TypeHandler4 handler) {
+	    return handler instanceof VariableLengthTypeHandler;
+	}
+
+	public static FieldAwareTypeHandler fieldAwareTypeHandler(TypeHandler4 typeHandler) {
+		if(typeHandler instanceof FieldAwareTypeHandler){
+			return (FieldAwareTypeHandler) typeHandler;
+		}
+		return NullFieldAwareTypeHandler.INSTANCE;
+	}
+
+	public static void collectIDs(final QueryingReadContext context,
+			TypeHandler4 typeHandler) {
+		if(typeHandler instanceof FirstClassHandler){
+	    	((FirstClassHandler)typeHandler).collectIDs(context);	
+	    }
+	}
+
+	public static boolean useDedicatedSlot(Context context, TypeHandler4 handler) {
+	    if (handler instanceof EmbeddedTypeHandler) {
+	        return false;
+	    }
+	    if (handler instanceof UntypedFieldHandler) {
+	        return false;
+	    }
+	    if (handler instanceof ClassMetadata) {
+	        return useDedicatedSlot(context, ((ClassMetadata) handler).delegateTypeHandler());
+	    }
+	    return true;
+	}
+
+	public static TypeHandler4 arrayElementHandler(TypeHandler4 handler, QueryingReadContext queryingReadContext) {
+		if(! (handler instanceof FirstClassHandler)){
+			return null;
+		}
+	    FirstClassHandler firstClassHandler = (FirstClassHandler) HandlerRegistry.correctHandlerVersion(queryingReadContext, handler); 
+	    return HandlerRegistry.correctHandlerVersion(queryingReadContext, firstClassHandler.readCandidateHandler(queryingReadContext));
+	}
+	
+	public static Object nullRepresentationInUntypedArrays(TypeHandler4 handler){
+        if (handler instanceof PrimitiveHandler){
+            return ((PrimitiveHandler) handler).nullRepresentationInUntypedArrays();
+        }
+        return null;
+	}
+
+	public static boolean handleAsObject(TypeHandler4 typeHandler){
+	    if(isEmbedded(typeHandler)){
+	        return false;
+	    }
+	    if(typeHandler instanceof UntypedFieldHandler){
+	        return false;
+	    }
+	    return true;
+	}
+
+	public static void cascadeActivation(ActivationContext4 context, TypeHandler4 handler) {
+    	if(! (handler instanceof FirstClassHandler)){
+    		return;
+    	}
+    	((FirstClassHandler)handler).cascadeActivation(context);
+	}
+
+	public static boolean handlesPrimitiveArray(TypeHandler4 classMetadata) {
+	    return classMetadata instanceof PrimitiveFieldHandler && ((PrimitiveFieldHandler)classMetadata).isArray();
+	}
+
 }

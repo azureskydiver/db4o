@@ -2,6 +2,7 @@
 
 package com.db4o.internal.marshall;
 
+import com.db4o.internal.*;
 import com.db4o.typehandlers.*;
 
 
@@ -15,7 +16,7 @@ public class SlotFormat2 extends SlotFormat {
     }
 
     public boolean isIndirectedWithinSlot(TypeHandler4 handler) {
-        return isVariableLength(handler);
+        return Handlers4.isVariableLength(handler);
     }
 
 }

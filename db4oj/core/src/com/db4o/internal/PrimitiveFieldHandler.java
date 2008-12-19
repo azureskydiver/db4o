@@ -148,7 +148,7 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
         if(_handler instanceof ClassMetadata){
             return ((ClassMetadata)_handler).readObjectID(context);
         }
-        if(_handler instanceof ArrayHandler){
+        if(Handlers4.handlesArray(_handler)){
             // TODO: Here we should theoretically read through the array and collect candidates.
             // The respective construct is wild: "Contains query through an array in an array."
             // Ignore for now.
@@ -223,11 +223,11 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
     }
     
     public boolean isSecondClass() {
-    	return isSecondClass(_handler);
+    	return Handlers4.holdsEmbedded(_handler);
     }
     
     private TypeHandler4 correctHandlerVersion(Context context){
-    	return Handlers4.correctHandlerVersion((HandlerVersionContext)context, _handler);
+    	return HandlerRegistry.correctHandlerVersion((HandlerVersionContext)context, _handler);
     }
 
 }

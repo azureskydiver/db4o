@@ -72,17 +72,11 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
     
     protected ReflectClass classReflector(ObjectContainerBase container){
-        if(_handler instanceof BuiltinTypeHandler){
-            return ((BuiltinTypeHandler)_handler).classReflector();
-        }
-        if(_handler instanceof ClassMetadata){
-            return ((ClassMetadata)_handler).classReflector();
-        }
-        return container.handlers().classReflectorForHandler(_handler);
+        return Handlers4.classReflectorForHandler(container.handlers(), _handler);
     }
-    
-    public void collectIDs(final QueryingReadContext context) {
-        final TypeHandler4 handler = Handlers4.correctHandlerVersion(context, _handler);
+
+	public void collectIDs(final QueryingReadContext context) {
+        final TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(context, _handler);
         forEachElement(context, new Runnable() {
             public void run() {
                 context.readId(handler);
@@ -348,7 +342,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
 
     private boolean isUntypedByteArray(BufferContext context) {
-        return _handler instanceof UntypedFieldHandler  && handleAsByteArray(context);
+        return Handlers4.isUntyped(_handler) && handleAsByteArray(context);
     }
     
     private boolean handleAsByteArray(BufferContext context){

@@ -51,7 +51,7 @@ class ObjectAnalyzer {
         _classMetadata = _container.getActiveClassMetadata(claxx);
         if (_classMetadata == null) {
             FieldHandler fieldHandler = _container.fieldHandlerForClass(claxx);
-            if(fieldHandler instanceof SecondClassTypeHandler){
+            if(Handlers4.isSecondClass(fieldHandler)){
                 notStorable(_obj, claxx);
             }
             _classMetadata = _container.produceClassMetadata(claxx);

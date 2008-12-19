@@ -481,7 +481,7 @@ public final class HandlerRegistry {
         }
         TypeHandler4 configuredHandler =
             container().configImpl().typeHandlerForClass(clazz, HandlerRegistry.HANDLER_VERSION);
-        if(configuredHandler != null && SlotFormat.isEmbedded(configuredHandler)){
+        if(configuredHandler != null && Handlers4.isEmbedded(configuredHandler)){
             mapFieldHandler(clazz, configuredHandler);
             return configuredHandler;
         }
@@ -528,11 +528,10 @@ public final class HandlerRegistry {
         // This method never gets called from test cases so far.
         
         // It is written for the usecase of custom Typehandlers and
-        // it is only require for arrays.
+        // it is only required for arrays.
         
         // The methodology is highly problematic since it implies that 
         // one Typehandler can only be used for one ReflectClass.
-        
         
         return (ReflectClass) _mapFieldHandlerToReflector.get(handler);
     }
@@ -561,10 +560,6 @@ public final class HandlerRegistry {
         return null;
 	}
 
-    public boolean isVariableLength(TypeHandler4 handler) {
-        return handler instanceof VariableLengthTypeHandler;
-    }
-    
     public SharedIndexedFields indexes(){
         return _indexes;
     }
@@ -600,10 +595,18 @@ public final class HandlerRegistry {
 
     public TypeHandler4 configuredTypeHandler(ReflectClass claxx) {
         TypeHandler4 typeHandler = container().configImpl().typeHandlerForClass(claxx, HANDLER_VERSION);
-        if(typeHandler != null  && typeHandler instanceof EmbeddedTypeHandler){
+        if(Handlers4.isEmbedded(typeHandler)){
         	_mapReflectorToTypeHandler.put(claxx, typeHandler);
         }
         return typeHandler;
     }
+
+	public static TypeHandler4 correctHandlerVersion(HandlerVersionContext context, TypeHandler4 handler){
+	    int version = context.handlerVersion();
+	    if(version >= HANDLER_VERSION){
+	        return handler;
+	    }
+	    return context.transaction().container().handlers().correctHandlerVersion(handler, version);
+	}
 
 }

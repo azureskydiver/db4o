@@ -347,7 +347,7 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
     		return false;
     	}
     	TypeHandler4 typehandler = ((TypeHandlerAspect)aspect)._typeHandler;
-    	return typehandler instanceof FirstClassHandler;
+    	return  Handlers4.isFirstClass(typehandler);
     }
     
     private void collectIDsByInstantiatingCollection(final QueryingReadContext context) throws Db4oIOException {

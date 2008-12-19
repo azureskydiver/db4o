@@ -4,7 +4,6 @@ package com.db4o.internal.marshall;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.handlers.*;
 import com.db4o.marshall.*;
 import com.db4o.typehandlers.*;
 
@@ -60,14 +59,6 @@ public abstract class SlotFormat {
         return CURRENT_SLOT_FORMAT;
     }
     
-    protected boolean isVariableLength(TypeHandler4 handler) {
-        return handler instanceof VariableLengthTypeHandler;
-    }
-    
-    public static final boolean isEmbedded(TypeHandler4 handler) {
-        return handler instanceof EmbeddedTypeHandler;
-    }
-
     public Object doWithSlotIndirection(ReadBuffer buffer, TypeHandler4 typeHandler, Closure4 closure){
         if(! isIndirectedWithinSlot(typeHandler)){
             return closure.run();
@@ -88,16 +79,6 @@ public abstract class SlotFormat {
         return res;
     }
     
-    public boolean handleAsObject(TypeHandler4 typeHandler){
-        if(isEmbedded(typeHandler)){
-            return false;
-        }
-        if(typeHandler instanceof UntypedFieldHandler){
-            return false;
-        }
-        return true;
-    }
-
     public void writeObjectClassID(ByteArrayBuffer buffer, int id) {
         buffer.writeInt(-id);
     }

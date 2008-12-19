@@ -267,7 +267,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     
     public void writeObject(TypeHandler4 handler, Object obj){
         MarshallingContextState state = currentState();
-        if(FieldMetadata.useDedicatedSlot(this, handler)){
+        if(Handlers4.useDedicatedSlot(this, handler)){
             writeObject(obj);
         }else{
             if(obj == null){
@@ -295,14 +295,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
             writeNullLink();
             return;
         }
-        
-        if (handler instanceof PrimitiveHandler){
-            PrimitiveHandler primitiveHandler = (PrimitiveHandler) handler;
-            handler.write(this, primitiveHandler.nullRepresentationInUntypedArrays());
-            return;
-        }
-            
-        handler.write(this, null);
+        handler.write(this, Handlers4.nullRepresentationInUntypedArrays(handler));
     }
     
     private void writeNullLink(){

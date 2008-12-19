@@ -98,8 +98,8 @@ public class FieldMarshaller0 extends AbstractFieldMarshaller {
         writer.writeInt(field.handlerID());
         BitMap4 bitmap = new BitMap4(3);
         bitmap.set(0, field.isPrimitive());
-        bitmap.set(1, handler instanceof ArrayHandler);
-        bitmap.set(2, handler instanceof MultidimensionalArrayHandler); // keep the order
+        bitmap.set(1, Handlers4.handlesArray(handler));
+        bitmap.set(2, Handlers4.handlesMultidimensionalArray(handler)); // keep the order
         writer.writeByte(bitmap.getByte(0));
     }
 
