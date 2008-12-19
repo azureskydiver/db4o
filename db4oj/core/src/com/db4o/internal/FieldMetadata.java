@@ -143,7 +143,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
     
     public final Object readIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException {
-        IndexableTypeHandler indexableTypeHandler = (IndexableTypeHandler) Handlers4.correctHandlerVersion(context, _handler);
+        IndexableTypeHandler indexableTypeHandler = (IndexableTypeHandler) HandlerRegistry.correctHandlerVersion(context, _handler);
         return indexableTypeHandler.readIndexEntry(context);
     }
     
@@ -281,7 +281,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             return;
         }
         
-        if(! (_handler instanceof FirstClassHandler)){
+        if(! Handlers4.isFirstClass(_handler)){
             return;
         }
         
@@ -292,17 +292,15 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         
         ensureObjectIsActive(trans, cascadeTo, depth);
         
-        FirstClassHandler cascadingHandler = (FirstClassHandler) _handler;
         ActivationContext4 context = new ActivationContext4(trans, cascadeTo, depth);
-        cascadingHandler.cascadeActivation(context);
-        
+        Handlers4.cascadeActivation(context, _handler);
     }
 
     private void ensureObjectIsActive(Transaction trans, Object cascadeTo, ActivationDepth depth) {
         if(!depth.mode().isActivate()){
             return;
         }
-        if(_handler instanceof EmbeddedTypeHandler){
+        if(Handlers4.isEmbedded(_handler)){
             return;
         }
         ObjectContainerBase container = trans.container();
@@ -345,7 +343,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
                 if (obj != null) {
                     
                     if (_isPrimitive) {
-                        if (_handler instanceof PrimitiveHandler) {
+                        if (Handlers4.isPrimitive(_handler)) {
                             Object nullValue = _reflectField.getFieldType().nullValue();
 							if (obj.equals(nullValue)) {
                                 return;
@@ -373,9 +371,9 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             return ;
         }
         
-        final TypeHandler4 handler = Handlers4.correctHandlerVersion(context, _handler);
+        final TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(context, _handler);
         
-        if(! (handler instanceof FirstClassHandler)){
+        if(! (Handlers4.isFirstClass(handler))){
         	incrementOffset(context.buffer());
             return;
         }
@@ -388,7 +386,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         LocalObjectContainer container = (LocalObjectContainer) context.container();
         final SlotFormat slotFormat = context.slotFormat();
         
-        if(slotFormat.handleAsObject(handler)){
+        if(Handlers4.handleAsObject(handler)){
             // TODO: Code is similar to QCandidate.readArrayCandidates. Try to refactor to one place.
             int collectionID = context.readInt();
             ByteArrayBuffer collectionBuffer = container.readReaderByID(context.transaction(), collectionID);
@@ -722,45 +720,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
     
     private int calculateLinkLength(){
-        
-        // TODO: Clean up here by creating a common interface
-        //       for the Typehandlers that have a "linkLength"
-        //       concept.
-        
-        if (_handler == null) {
-            // must be ClassMetadata
-            return Const4.ID_LENGTH;
-        }
-        if(_handler instanceof TypeFamilyTypeHandler)
-        {
-            return ((TypeFamilyTypeHandler) _handler).linkLength();
-        }
-        if(_handler instanceof PersistentBase){
-            return ((PersistentBase)_handler).linkLength();
-        }
-        if(_handler instanceof PrimitiveHandler){
-            return ((PrimitiveHandler)_handler).linkLength();
-        }
-        if(_handler instanceof VariableLengthTypeHandler){
-            if(_handler instanceof EmbeddedTypeHandler){
-                return Const4.INDIRECTION_LENGTH;    
-            }
-            return Const4.ID_LENGTH;
-            
-        }
-        
-        // TODO: For custom handlers there will have to be a way 
-        //       to calculate the length in the slot.
-        
-        //        Options:
-        
-        //        (1) Remember when the first object is marshalled.
-        //        (2) Add a #defaultValue() method to TypeHandler4,
-        //            marshall the default value and check.
-        //        (3) Add a way to test the custom handler when it
-        //            is installed and remember the length there. 
-        
-        throw new NotImplementedException();
+    	return Handlers4.calculateLinkLength(_handler);
     }
     
     public void loadHandlerById(ObjectContainerBase container) {
@@ -825,7 +785,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         if (obj != null && cascadeOnUpdate(context.classConfiguration())) {
             context.updateDepth(adjustUpdateDepthForCascade(obj, updateDepth));
         }
-        if(useDedicatedSlot(context, _handler)){
+        if(Handlers4.useDedicatedSlot(context, _handler)){
             context.writeObject(_handler, obj);
         }else {
             context.createIndirectionWithinSlot(_handler);
@@ -837,19 +797,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         if(hasIndex()){
             context.addIndexEntry(this, obj);
         }
-    }
-    
-    public static boolean useDedicatedSlot(Context context, TypeHandler4 handler) {
-        if (handler instanceof EmbeddedTypeHandler) {
-            return false;
-        }
-        if (handler instanceof UntypedFieldHandler) {
-            return false;
-        }
-        if (handler instanceof ClassMetadata) {
-            return useDedicatedSlot(context, ((ClassMetadata) handler).delegateTypeHandler());
-        }
-        return true;
     }
     
     public boolean needsArrayAndPrimitiveInfo(){
@@ -936,7 +883,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     boolean supportsIndex() {
         return alive() && 
             (_handler instanceof Indexable4)  && 
-            (! (_handler instanceof UntypedFieldHandler));
+            (! Handlers4.isUntyped(_handler));
     }
     
     public final void traverseValues(final Visitor4 userVisitor) {
@@ -1117,7 +1064,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }    
     
     public void defragAspect(final DefragmentContext context) {
-    	final TypeHandler4 typeHandler = Handlers4.correctHandlerVersion(context, _handler);
+    	final TypeHandler4 typeHandler = HandlerRegistry.correctHandlerVersion(context, _handler);
         context.slotFormat().doWithSlotIndirection(context, typeHandler, new Closure4() {
             public Object run() {
                 context.defragment(typeHandler);

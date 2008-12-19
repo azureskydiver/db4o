@@ -344,8 +344,8 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
     }
 
     public void defragment(TypeHandler4 handler) {
-        final TypeHandler4 typeHandler = Handlers4.correctHandlerVersion(this, handler);
-        if(FieldMetadata.useDedicatedSlot(this, typeHandler)){
+        final TypeHandler4 typeHandler = HandlerRegistry.correctHandlerVersion(this, handler);
+        if(Handlers4.useDedicatedSlot(this, typeHandler)){
             if(hasClassIndex(typeHandler)){
                 copyID();
             } else {

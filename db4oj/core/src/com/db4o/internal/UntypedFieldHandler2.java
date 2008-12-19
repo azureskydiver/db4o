@@ -16,7 +16,7 @@ public class UntypedFieldHandler2 extends UntypedFieldHandler {
     }
     
     protected void seekSecondaryOffset(ReadBuffer buffer, TypeHandler4 typeHandler) {
-        if(isPrimitiveArray(typeHandler)){
+        if(Handlers4.handlesPrimitiveArray(typeHandler)){
             buffer.seekCurrentInt();
         }
     }

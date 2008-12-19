@@ -28,7 +28,8 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
     }
     
     public void delete(DeleteContext context){
-        // do nothing
+        // do nothing, we are in a slot indirection anyway, the 
+    	// buffer position does not need to be changed.
     }
     
     byte getIdentifier() {

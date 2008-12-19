@@ -147,7 +147,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if(hasClassIndex() || hasVirtualAttributes()){
             ObjectHeader oh = new ObjectHeader(_container, this, buffer);
             ObjectIdContextImpl context = new ObjectIdContextImpl(buffer.transaction(), buffer, oh, buffer.getID());
-            fieldAwareTypeHandler(correctHandlerVersion(context)).addFieldIndices(context, slot);
+            Handlers4.fieldAwareTypeHandler(correctHandlerVersion(context)).addFieldIndices(context, slot);
         }
     }
     
@@ -232,8 +232,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		if (customTypeHandler == null) {
 			return false;
 		}
-		if(customTypeHandler instanceof EmbeddedTypeHandler){
-			_typeHandler = customTypeHandler;
+		if(Handlers4.isEmbedded(customTypeHandler)){
+			_typeHandler = customTypeHandler;	
 		}
 		if(customTypeHandler instanceof ModificationAware){
 			_modificationChecker = (ModificationAware) customTypeHandler;
@@ -350,20 +350,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     private FieldAwareTypeHandler fieldAwareTypeHandler() {
-    	if(_typeHandler instanceof FieldAwareTypeHandler){
-    		return (FieldAwareTypeHandler) _typeHandler;
-    	}
-    	return NullFieldAwareTypeHandler.INSTANCE;
+    	return Handlers4.fieldAwareTypeHandler(_typeHandler);
 	}
     
-    private FieldAwareTypeHandler fieldAwareTypeHandler(TypeHandler4 typeHandler) {
-    	if(typeHandler instanceof FieldAwareTypeHandler){
-    		return (FieldAwareTypeHandler) typeHandler;
-    	}
-    	return NullFieldAwareTypeHandler.INSTANCE;
-    }
-
-	public boolean descendOnCascadingActivation() {
+    public boolean descendOnCascadingActivation() {
         return true;
     }
 
@@ -484,13 +474,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if(! firstClassObjectHandlerIsUsed()){
             throw new IllegalStateException();
         }
-        TypeHandler4 typeHandler = correctHandlerVersion(context);
-        if(typeHandler instanceof FirstClassHandler){
-        	((FirstClassHandler)typeHandler).collectIDs(context);	
-        }
+        Handlers4.collectIDs(context, correctHandlerVersion(context));
     }
-    
-    public boolean customizedNewInstance(){
+
+	public boolean customizedNewInstance(){
         return configInstantiates();
     }
     
@@ -631,7 +618,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                     buffer.setCascadeDeletes(1);
                 }
             }
-            fieldAwareTypeHandler(correctHandlerVersion(context)).deleteMembers(context, isUpdate);
+            Handlers4.fieldAwareTypeHandler(correctHandlerVersion(context)).deleteMembers(context, isUpdate);
 
         }catch(Exception e){
             
@@ -735,7 +722,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public final boolean seekToField(ObjectHeaderContext context, FieldMetadata field){
-        return fieldAwareTypeHandler(correctHandlerVersion(context)).seekToField(context, field);
+        return Handlers4.fieldAwareTypeHandler(correctHandlerVersion(context)).seekToField(context, field);
     }
 
     public boolean generateUUIDs() {
@@ -843,7 +830,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if(! _classIndexed){
             return false;
         }
-        return firstClassObjectHandlerIsUsed() || ! (_typeHandler instanceof EmbeddedTypeHandler); 
+        return firstClassObjectHandlerIsUsed() || !  (Handlers4.isEmbedded(_typeHandler)); 
     }
     
     private boolean ancestorHasUUIDField(){
@@ -1217,6 +1204,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public boolean isValueType(){
+        if (!firstClassObjectHandlerIsUsed())
+        {
+            return false;
+        }
         return Platform4.isValueType(classReflector());
     }
     
@@ -1397,7 +1388,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         ByteArrayBuffer buffer = stream.readReaderByID(trans, id, lastCommitted);
         ObjectHeader oh = new ObjectHeader(stream, this, buffer);
         ObjectReferenceContext context = new ObjectReferenceContext(trans,buffer, oh, ref);
-        fieldAwareTypeHandler(correctHandlerVersion(context)).readVirtualAttributes(context);
+        Handlers4.fieldAwareTypeHandler(correctHandlerVersion(context)).readVirtualAttributes(context);
 	}
 
 	public GenericReflector reflector() {
@@ -1941,20 +1932,16 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	}
     }
 
-    protected boolean isSecondClass(TypeHandler4 handler) {
-    	return Handlers4.baseTypeHandler(handler) instanceof EmbeddedTypeHandler;
-    }
-    
     public TypeHandler4 delegateTypeHandler(){
         return _typeHandler;
     }
 
     public boolean isSecondClass() {
-        return isSecondClass(_typeHandler);
+        return Handlers4.holdsEmbedded(_typeHandler);
     }
     
     private TypeHandler4 correctHandlerVersion(HandlerVersionContext context){
-    	return Handlers4.correctHandlerVersion(context, _typeHandler);
+    	return HandlerRegistry.correctHandlerVersion(context, _typeHandler);
     }
 
     public void forEachField(Procedure4 procedure) {

@@ -272,7 +272,7 @@ public abstract class QQueryBase implements Unversioned {
 
                     boolean take = true;
 
-                    if (childYc instanceof UntypedFieldHandler) {
+                    if (Handlers4.isUntyped(childYc)) {
                         if (anyClassCollected.value) {
                             take = false;
                         } else {

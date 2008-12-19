@@ -95,7 +95,7 @@ public class UntypedFieldHandler0 extends UntypedFieldHandler2 {
 
 			int clazzId = payloadContext.copyIDReturnOriginalID();
 			TypeHandler4 payloadHandler = payloadContext.typeHandlerForId(clazzId);
-			TypeHandler4 versionedPayloadHandler = Handlers4.correctHandlerVersion(payloadContext, payloadHandler);
+			TypeHandler4 versionedPayloadHandler = HandlerRegistry.correctHandlerVersion(payloadContext, payloadHandler);
 			versionedPayloadHandler.defragment(payloadContext);
 			
 			payloadContext.writeToTarget(targetPayloadSlot.address());

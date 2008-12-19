@@ -40,14 +40,15 @@ public class TypeHandlerAspect extends ClassAspect {
     }
 
     public void cascadeActivation(Transaction trans, Object obj, ActivationDepth depth) {
-    	if(_typeHandler instanceof FirstClassHandler){
-            ActivationContext4 context = new ActivationContext4(trans, obj, depth);
-    		((FirstClassHandler)_typeHandler).cascadeActivation(context);
+    	if(! Handlers4.isFirstClass(_typeHandler)){
+    		return;
     	}
+    	ActivationContext4 context = new ActivationContext4(trans, obj, depth);
+    	Handlers4.cascadeActivation(context, _typeHandler);
     }
 
     public void collectIDs(final CollectIdContext context) {
-    	if(! (_typeHandler instanceof FirstClassHandler)){
+    	if(! Handlers4.isFirstClass(_typeHandler)){
     		incrementOffset(context);
     		return;
     	}

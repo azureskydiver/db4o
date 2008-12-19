@@ -29,7 +29,7 @@ public abstract class AbstractReadContext extends AbstractBufferContext implemen
     }
     
     public final Object readObject(TypeHandler4 handlerType) {
-        final TypeHandler4 handler = Handlers4.correctHandlerVersion(this, handlerType);
+        final TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(this, handlerType);
         return slotFormat().doWithSlotIndirection(this, handler, new Closure4() {
             public Object run() {
                 return readAtCurrentSeekPosition(handler);
@@ -52,7 +52,7 @@ public abstract class AbstractReadContext extends AbstractBufferContext implemen
     }
 
 	public boolean useDedicatedSlot(TypeHandler4 handler) {
-		return FieldMetadata.useDedicatedSlot(this, handler);
+		return Handlers4.useDedicatedSlot(this, handler);
 	}
 
     public final Object readObject() {

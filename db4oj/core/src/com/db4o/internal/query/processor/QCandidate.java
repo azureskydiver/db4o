@@ -131,20 +131,9 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		if (_yapField != null) {
 			TypeHandler4 handler = _yapField.getHandler();
 			if (handler != null) {
-
 			    final QueryingReadContext queryingReadContext = new QueryingReadContext(transaction(), marshallerFamily().handlerVersion(), _bytes); 
-			    
-				TypeHandler4 tempHandler = null;
-				
-				if(handler instanceof FirstClassHandler){
-				    FirstClassHandler firstClassHandler = (FirstClassHandler) Handlers4.correctHandlerVersion(queryingReadContext, handler); 
-				    tempHandler = Handlers4.correctHandlerVersion(queryingReadContext, firstClassHandler.readCandidateHandler(queryingReadContext));
-				}
-
-				if (tempHandler != null) {
-				    
-	                final TypeHandler4 arrayElementHandler = tempHandler;
-
+				final TypeHandler4 arrayElementHandler = Handlers4.arrayElementHandler(handler, queryingReadContext);
+				if (arrayElementHandler != null) {
 
 					final int offset = queryingReadContext.offset();
 					boolean outerRes = true;
@@ -314,7 +303,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				TypeHandler4 handler = _yapField.getHandler();
 				if (handler instanceof ClassMetadata) {
 					ClassMetadata classMetadata = (ClassMetadata) handler;
-					if (classMetadata instanceof UntypedFieldHandler) {
+					if (Handlers4.isUntyped(classMetadata)){
 						classMetadata = candidate.readYapClass();
 					}
                     if(classMetadata == null){
@@ -331,9 +320,9 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		return true;
 	}
 
-    private void readArrayCandidates(TypeHandler4 fieldHandler, final ReadBuffer buffer,
+	private void readArrayCandidates(TypeHandler4 fieldHandler, final ReadBuffer buffer,
         final TypeHandler4 arrayElementHandler, final QCandidates candidates) {
-        if(! (arrayElementHandler instanceof FirstClassHandler)){
+        if(! Handlers4.isFirstClass(arrayElementHandler)){
             return;
         }
         final SlotFormat slotFormat = SlotFormat.forHandlerVersion(_handlerVersion);
@@ -342,7 +331,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
                 
                 QueryingReadContext context = null;
                 
-                if(slotFormat.handleAsObject(arrayElementHandler)){
+                if(Handlers4.handleAsObject(arrayElementHandler)){
                     // TODO: Code is similar to FieldMetadata.collectIDs. Try to refactor to one place.
                     int collectionID = buffer.readInt();
                     ByteArrayBuffer arrayElementBuffer = container().readReaderByID(transaction(), collectionID);
@@ -573,7 +562,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		}
 		final int offset = currentOffSet();
         QueryingReadContext context = newQueryingReadContext();
-        TypeHandler4 handler = Handlers4.correctHandlerVersion(context, _yapField.getHandler());
+        TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(context, _yapField.getHandler());
         QCandidate subCandidate = candidateCollection.readSubCandidate(context, handler);
 		seek(offset);
 		if (subCandidate != null) {

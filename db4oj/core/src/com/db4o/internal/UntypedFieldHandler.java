@@ -22,9 +22,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 
 	public void cascadeActivation(ActivationContext4 context){
 	    TypeHandler4 typeHandler = typeHandlerForObject(context.targetObject());
-	    if (typeHandler instanceof FirstClassHandler) {
-	        ((FirstClassHandler)typeHandler).cascadeActivation(context);
-	    }
+	    Handlers4.cascadeActivation(context, typeHandler);
 	}
 
     private HandlerRegistry handlerRegistry() {
@@ -128,7 +126,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     private TypeHandler4 readTypeHandler(InternalReadContext context, int payloadOffset) {
         context.seek(payloadOffset);
         TypeHandler4 typeHandler = container().typeHandlerForId(context.readInt());
-        return Handlers4.correctHandlerVersion(context, typeHandler);
+        return HandlerRegistry.correctHandlerVersion(context, typeHandler);
     }
 
     /**
@@ -137,10 +135,6 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
      */
     protected void seekSecondaryOffset(ReadBuffer buffer, TypeHandler4 typeHandler) {
         // do nothing, no longer needed in current implementation.
-    }
-
-    protected boolean isPrimitiveArray(TypeHandler4 classMetadata) {
-        return classMetadata instanceof PrimitiveFieldHandler && ((PrimitiveFieldHandler)classMetadata).isArray();
     }
 
     public Object read(ReadContext readContext) {
@@ -184,7 +178,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         MarshallingContextState state = marshallingContext.currentState();
         marshallingContext.createChildBuffer(false, false);
         context.writeInt(id);
-        if(!isPrimitiveArray(typeHandler)){
+        if(!Handlers4.handlesPrimitiveArray(typeHandler)){
             marshallingContext.doNotIndirectWrites();
         }
         writeObject(context, typeHandler, obj);
@@ -192,7 +186,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     }
 
     private void writeObject(WriteContext context, TypeHandler4 typeHandler, Object obj) {
-        if(FieldMetadata.useDedicatedSlot(context, typeHandler)){
+        if(Handlers4.useDedicatedSlot(context, typeHandler)){
             context.writeObject(obj);
         }else {
             typeHandler.write(context, obj);

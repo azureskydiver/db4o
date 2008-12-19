@@ -16,13 +16,6 @@ public class SlotFormat0 extends SlotFormat {
     }
     
     public boolean isIndirectedWithinSlot(TypeHandler4 handler){
-        
-        // TODO: Past knowledge from #scrollToContent
-        // Consider to try the following:
-        
-        // return arrayElementHandler instanceof ArrayHandler;
-        
-        
         return false;
     }
     
