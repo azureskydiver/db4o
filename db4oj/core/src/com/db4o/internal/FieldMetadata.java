@@ -208,12 +208,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     private void checkHandlerID() {
-        if(! (_handler instanceof ClassMetadata)){
-            return;
-        }
-        ClassMetadata classMetadata = (ClassMetadata) _handler;
-        int id = classMetadata.getID();
-        
+        int id = container().handlers().typeHandlerID(_handler);
         if (_handlerID == 0) {
             _handlerID = id;
             return;
@@ -267,16 +262,10 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     public final boolean canLoadByIndex() {
-        if (_handler instanceof ClassMetadata) {
-            ClassMetadata yc = (ClassMetadata) _handler;
-            if(yc.isArray()){
-                return false;
-            }
-        }
-        return true;
+        return Handlers4.canLoadFieldByIndex(_handler);
     }
 
-    public final void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth) {
+	public final void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth) {
         if (! alive()) {
             return;
         }
@@ -378,7 +367,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             return;
         }
 
-        if (handler instanceof ClassMetadata) {
+        if (Handlers4.isClassMetadata(handler)) {
             context.addId();
             return;
         } 
@@ -982,20 +971,13 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 	
 	public BTreeRange search(Transaction transaction, Object value) {
 		assertHasIndex();
-		Object transActionalValue = wrapWithTransactionContext(transaction, value);
+		Object transActionalValue = Handlers4.wrapWithTransactionContext(transaction, value, _handler);
 		BTreeNodeSearchResult lowerBound = searchLowerBound(transaction, transActionalValue);
 	    BTreeNodeSearchResult upperBound = searchUpperBound(transaction, transActionalValue);	    
 		return lowerBound.createIncludingRange(upperBound);
 	}
 
-    private Object wrapWithTransactionContext(Transaction transaction, Object value) {
-        if(_handler instanceof ClassMetadata){
-		    value = ((ClassMetadata)_handler).wrapWithTransactionContext(transaction, value);
-		}
-        return value;
-    }
-	
-	private BTreeNodeSearchResult searchUpperBound(Transaction transaction, final Object value) {
+    private BTreeNodeSearchResult searchUpperBound(Transaction transaction, final Object value) {
 		return searchBound(transaction, Integer.MAX_VALUE, value);
 	}
 

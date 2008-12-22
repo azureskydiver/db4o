@@ -29,7 +29,7 @@ import com.db4o.typehandlers.*;
  */
 public final class HandlerRegistry {
     
-    public static final byte HANDLER_VERSION = (byte)4;
+    public static final byte HANDLER_VERSION = (byte)5;
     
     private final ObjectContainerBase _container;  // this is the master container and not valid
 	                                   // for TransportObjectContainer
@@ -309,7 +309,7 @@ public final class HandlerRegistry {
         _mapReflectorToFieldHandler.put(classReflector, fieldHandler);
     }
 
-	private void registerHandlerVersion(FieldHandler handler, int version, TypeHandler4 replacement) {
+	public void registerHandlerVersion(FieldHandler handler, int version, TypeHandler4 replacement) {
 		if(replacement instanceof BuiltinTypeHandler) {
 			((BuiltinTypeHandler)replacement).registerReflector(_reflector);
 		}
@@ -388,7 +388,7 @@ public final class HandlerRegistry {
         return (TypeInfo)_mapIdToTypeInfo.get(id);
     }
     
-    public final int typeHandlerID(TypeHandler4 handler){
+    public final int typeHandlerID(FieldHandler handler){
         if(handler instanceof ClassMetadata){
             return ((ClassMetadata)handler).getID();
         }
@@ -398,6 +398,17 @@ public final class HandlerRegistry {
         }
         return ((Integer)idAsInt).intValue();
     }
+    
+    public int fieldHandlerIdForFieldHandler(FieldHandler fieldHandler) {
+        Object wrappedIdObj = _mapFieldHandlerToId.get(fieldHandler);
+        if(wrappedIdObj != null){
+    		Integer wrappedId = (Integer) wrappedIdObj;
+            return wrappedId.intValue();
+        }
+        return 0;
+    }
+
+
 
 	private void initClassReflectors(GenericReflector reflector){
 		ICLASS_COMPARE = reflector.forClass(Const4.CLASS_COMPARE);
@@ -582,15 +593,6 @@ public final class HandlerRegistry {
     
     private static final Hashtable4 newHashtable(){
         return new Hashtable4(32);
-    }
-
-    public int fieldHandlerIdForFieldHandler(FieldHandler fieldHandler) {
-        Object wrappedIdObj = _mapFieldHandlerToId.get(fieldHandler);
-        if(wrappedIdObj != null){
-    		Integer wrappedId = (Integer) wrappedIdObj;
-            return wrappedId.intValue();
-        }
-        return 0;
     }
 
     public TypeHandler4 configuredTypeHandler(ReflectClass claxx) {

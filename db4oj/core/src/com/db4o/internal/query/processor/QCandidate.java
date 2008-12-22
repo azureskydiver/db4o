@@ -296,23 +296,20 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			return false;
 		}
 
-		// fast early check for YapClass
+		// fast early check for ClassMetadata
 		if (a_candidates.i_yapClass != null
 				&& a_candidates.i_yapClass.isStrongTyped()) {
 			if (_yapField != null) {
 				TypeHandler4 handler = _yapField.getHandler();
-				if (handler instanceof ClassMetadata) {
-					ClassMetadata classMetadata = (ClassMetadata) handler;
-					if (Handlers4.isUntyped(classMetadata)){
-						classMetadata = candidate.readYapClass();
-					}
-                    if(classMetadata == null){
-                        return false;
-                    }
-                    if(! Handlers4.handlerCanHold(classMetadata, container().reflector(), a_candidates.i_yapClass.classReflector())){
-                        return false;
-                    }
+				if (Handlers4.isUntyped(handler)){
+					handler = candidate.readYapClass();
 				}
+                if(handler == null){
+                    return false;
+                }
+                if(! Handlers4.handlerCanHold(handler, container().reflector(), a_candidates.i_yapClass.classReflector())){
+                    return false;
+                }
 			}
 		}
 

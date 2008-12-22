@@ -1196,13 +1196,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         return classMetadataForId(id);
     }
     
-    public int fieldHandlerIdForFieldHandler(FieldHandler fieldHandler) {
-        if(fieldHandler instanceof ClassMetadata){
-            return ((ClassMetadata)fieldHandler).getID();
-        }
-        return _handlers.fieldHandlerIdForFieldHandler(fieldHandler);
-    }
-    
     public FieldHandler fieldHandlerForClass(ReflectClass claxx) {
         if(hideClassForExternalUse(claxx)){
             return null;
@@ -1245,8 +1238,8 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         new Message(this, msg);
     }
 
-    public final void needsUpdate(ClassMetadata a_yapClass) {
-        _pendingClassUpdates = new List4(_pendingClassUpdates, a_yapClass);
+    public final void needsUpdate(ClassMetadata classMetadata) {
+        _pendingClassUpdates = new List4(_pendingClassUpdates, classMetadata);
     }
     
     public long generateTimeStampId() {

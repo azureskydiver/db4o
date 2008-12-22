@@ -177,6 +177,10 @@ public class Handlers4 {
 		return isEmbedded(baseTypeHandler(handler));
 	}
 	
+	public static boolean isClassMetadata(TypeHandler4 handler){
+		return handler instanceof ClassMetadata;
+	}
+	
 	public static boolean isEmbedded(TypeHandler4 handler) {
 	    return handler instanceof EmbeddedTypeHandler;
 	}
@@ -223,7 +227,7 @@ public class Handlers4 {
 	        return false;
 	    }
 	    if (handler instanceof ClassMetadata) {
-	        return useDedicatedSlot(context, ((ClassMetadata) handler).delegateTypeHandler());
+	        return useDedicatedSlot(context, ((ClassMetadata) handler).delegateTypeHandler(context));
 	    }
 	    return true;
 	}
@@ -262,6 +266,31 @@ public class Handlers4 {
 
 	public static boolean handlesPrimitiveArray(TypeHandler4 classMetadata) {
 	    return classMetadata instanceof PrimitiveFieldHandler && ((PrimitiveFieldHandler)classMetadata).isArray();
+	}
+
+	public static boolean hasClassIndex(TypeHandler4 typeHandler) {
+	    if(typeHandler instanceof ClassMetadata){
+	        return ((ClassMetadata)typeHandler).hasClassIndex();
+	    }
+	    return false;
+	}
+
+	public static boolean canLoadFieldByIndex(TypeHandler4 handler) {
+		if (handler instanceof ClassMetadata) {
+	        ClassMetadata yc = (ClassMetadata) handler;
+	        if(yc.isArray()){
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+
+	public static Object wrapWithTransactionContext(Transaction transaction,
+			Object value, TypeHandler4 handler) {
+		if(handler instanceof ClassMetadata){
+		    value = ((ClassMetadata)handler).wrapWithTransactionContext(transaction, value);
+		}
+	    return value;
 	}
 
 }

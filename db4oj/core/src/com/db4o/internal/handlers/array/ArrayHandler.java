@@ -57,7 +57,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 	}
     
     public final void cascadeActivation(ActivationContext4 context){
-        if (! (_handler instanceof ClassMetadata)) {
+        if (! Handlers4.isClassMetadata(_handler)) {
             return;
         }
         ObjectContainerBase container = context.container();
@@ -142,7 +142,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
 
     private boolean cascadeDelete(DeleteContext context) {
-        return context.cascadeDelete() && _handler instanceof ClassMetadata;
+        return context.cascadeDelete() && Handlers4.isClassMetadata(_handler);
     }
 
     

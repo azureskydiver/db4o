@@ -189,7 +189,7 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
         return _handler;
     }
     
-    public TypeHandler4 delegateTypeHandler(){
+    public TypeHandler4 delegateTypeHandler(Context context){
         return _handler;
     }
     
@@ -218,7 +218,7 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
     public Object deepClone(Object context) {
         TypeHandlerCloneContext typeHandlerCloneContext = (TypeHandlerCloneContext) context;
         PrimitiveFieldHandler original = (PrimitiveFieldHandler) typeHandlerCloneContext.original;
-        TypeHandler4 delegateTypeHandler = typeHandlerCloneContext.correctHandlerVersion(original.delegateTypeHandler());
+        TypeHandler4 delegateTypeHandler = typeHandlerCloneContext.correctHandlerVersion(original.delegateTypeHandler(null));
         return new PrimitiveFieldHandler(original.container(), delegateTypeHandler, original._id, original.classReflector());
     }
     
