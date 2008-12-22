@@ -12,6 +12,17 @@ public class Hashtable4TestCase implements TestCase {
 		new ConsoleTestRunner(Hashtable4TestCase.class).run();
 	}
 	
+	public void testClear() {
+		final Hashtable4 table = new Hashtable4();
+		for (int i=0; i<2; ++i) {
+			table.clear();
+			Assert.areEqual(0, table.size());
+			table.put("foo", "bar");
+			Assert.areEqual(1, table.size());
+			assertIterator(table, "foo");
+		}
+	}
+	
 	public void testToString() {
 		final Hashtable4 table = new Hashtable4();
 		table.put("foo", "bar");
@@ -169,15 +180,20 @@ public class Hashtable4TestCase implements TestCase {
 	}
 	
 	public void assertIsIteratable(Object[] keys){
-		Collection4 expected = new Collection4(keys);
-		Iterator4 iter = tableFromKeys(keys).iterator();
+		final Hashtable4 table = tableFromKeys(keys);
+		assertIterator(table, keys);
+	}
+
+	private void assertIterator(final Hashtable4 table, Object... keys) {
+	    final Iterator4 iter = table.iterator();
+		final Collection4 expected = new Collection4(keys);
 		while (iter.moveNext()){
 			Entry4 entry = (Entry4) iter.current();
 			boolean removedOK = expected.remove(entry.key()); 
 			Assert.isTrue(removedOK);
 		}
 		Assert.isTrue(expected.isEmpty(), expected.toString());
-	}
+    }
 
 	private Hashtable4 tableFromKeys(Object[] keys) {
 		Hashtable4 ht = new Hashtable4();

@@ -18,5 +18,7 @@ public interface Map4 {
 	Object remove(Object key);
 
 	Iterable4 values();
+	
+	void clear();
 
 }
