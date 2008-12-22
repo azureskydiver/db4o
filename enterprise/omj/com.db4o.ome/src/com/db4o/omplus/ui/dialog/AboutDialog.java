@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Shell;
 import com.db4o.omplus.connection.ConnectionStatus;
 import com.db4o.omplus.datalayer.ImageUtility;
 import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.webservices.PermissionValidator;
 
 public class AboutDialog 
 {
@@ -41,12 +40,7 @@ public class AboutDialog
 	private Label db4oLabel;
 	private FontData db4oFontData =	new FontData("TAHOMA", 8, SWT.BOLD);
 	private Font db4oFont = new Font(null,db4oFontData);
-	
-	private Label staticStatusLabel;
-	private Label dynamicStatusLabel;
-	private Color dynmaicStatusLabelColor =new Color(null,0,0,255);
-	
-	
+		
 	private Composite bottomComposite;
 	private Label copyrightLabel;
 	private final String COPYRIGHT_STRING = "(c) Copyright 2007 db4objects, Inc.";
@@ -112,25 +106,6 @@ public class AboutDialog
 		db4oLabel.setText(new ConnectionStatus().getVersion());
 		db4oLabel.setFont(db4oFont);
 		
-		staticStatusLabel = new Label(upperComposite, SWT.NONE);
-		staticStatusLabel.setText("Status:");
-		
-		dynamicStatusLabel = new Label(upperComposite, SWT.NONE);
-		String str;
-		if(PermissionValidator.checkIfUserHasLoggedIntoWebService())
-			if(PermissionValidator.checkIfUserHasPermissionForService(OMPlusConstants.WEB_SERVICE_QUERY_BUILDER))
-				str = OMPlusConstants.FULL_MODE;
-			else
-				str = OMPlusConstants.REDUCED_MODE;
-		else
-			str = OMPlusConstants.STATUS_LOGGEDOUT;		
-		dynamicStatusLabel.setText(str);
-		
-		FontData fontData =	new FontData("TAHOMA", 8, SWT.NORMAL);
-		Font font = new Font(null,fontData);
-		dynamicStatusLabel.setFont(font);
-		dynamicStatusLabel.setForeground(dynmaicStatusLabelColor );
-		
 		setLayoutForUpperComposite();		
 	}
 	
@@ -147,16 +122,6 @@ public class AboutDialog
 		data.top = new FormAttachment(objectMgrLabel,20);
 		data.left = new FormAttachment(30,5);
 		db4oLabel.setLayoutData(data);
-		
-		data = new FormData();
-		data.top = new FormAttachment(db4oLabel,50);
-		data.left = new FormAttachment(0,5);
-		staticStatusLabel.setLayoutData(data);
-		
-		data = new FormData();
-		data.top = new FormAttachment(db4oLabel, 50);
-		data.left = new FormAttachment(staticStatusLabel, 2);
-		dynamicStatusLabel.setLayoutData(data);
 		
 		upperComposite.layout(true);
 		
@@ -241,7 +206,6 @@ public class AboutDialog
 	{
 		objMgrFont.dispose();
 		db4oFont.dispose();
-		dynmaicStatusLabelColor.dispose();
 	}
 
 }

@@ -1,62 +1,25 @@
 package com.db4o.omplus.ui;
 
-import java.util.ArrayList;
-import java.util.ListIterator;
+import java.util.*;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DragSourceAdapter;
-import org.eclipse.swt.dnd.DragSourceEvent;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.events.TreeEvent;
-import org.eclipse.swt.events.TreeListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.ViewPart;
+import org.eclipse.jface.action.*;
+import org.eclipse.jface.dialogs.*;
+import org.eclipse.jface.resource.*;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.swt.*;
+import org.eclipse.swt.dnd.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
+import org.eclipse.ui.part.*;
 
-import com.db4o.omplus.connection.ConnectionStatus;
-import com.db4o.omplus.datalayer.DbInterfaceImpl;
-import com.db4o.omplus.datalayer.ImageUtility;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.classviewer.ClassTreeNode;
-import com.db4o.omplus.datalayer.classviewer.RecentSearchKeys;
-import com.db4o.omplus.datalayer.queryresult.QueryResultList;
-import com.db4o.omplus.datalayer.queryresult.QueryResultsManager;
-import com.db4o.omplus.datalayer.webservices.PermissionValidator;
-import com.db4o.omplus.ui.actions.StatusAction;
-import com.db4o.omplus.ui.dialog.WebServiceLoginDialog;
-import com.db4o.omplus.ui.model.ClassViewerContentProvider;
-import com.db4o.omplus.ui.model.ClassViewerLabelProvider;
-import com.db4o.omplus.ui.model.StringPattern;
+import com.db4o.omplus.connection.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.datalayer.classviewer.*;
+import com.db4o.omplus.datalayer.queryresult.*;
+import com.db4o.omplus.ui.model.*;
 
 
 public class ClassViewer extends ViewPart
@@ -596,42 +559,6 @@ public class ClassViewer extends ViewPart
 	
 	private void runQuery(String name)
 	{		
-		//Check for web service permissions
-		if(!PermissionValidator.checkIfUserHasLoggedIntoWebService())
-		{
-			WebServiceLoginDialog dialog = PermissionValidator.showWebServiceLoginDialog(OMPlusConstants.WEB_SERVICE_QUERY_BUILDER);
-			Shell dialogShell = null;
-			
-			if(dialog != null)
-			{
-				dialogShell = dialog.getShell();				
-			
-				//Go into sleep mode till teh dialog box not disposed
-				if(dialogShell != null)
-				{
-					Shell mainShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-					Display display = mainShell.getDisplay();
-					while (!dialogShell.isDisposed()) 
-				    {
-				      if (!display.readAndDispatch())
-				    	  display.sleep();
-				    }
-				}
-				
-				//If cancel clicked ont the dialog return  
-				if(dialog.getButtonClicked() == OMPlusConstants.DIALOG_CANCEL_CLICKED)
-				{
-					return;
-				}
-			}
-		}
-		if(!PermissionValidator.checkIfUserHasPermissionForService(OMPlusConstants.WEB_SERVICE_QUERY_BUILDER))
-		{
-			StatusAction.setStatus(OMPlusConstants.REDUCED_MODE);
-			MessageDialog.openInformation(null, OMPlusConstants.DIALOG_BOX_TITLE, "You do not have permissions to access this service");
-			return;
-		}else
-			StatusAction.setStatus(OMPlusConstants.FULL_MODE);
 		QueryResultsManager results = new QueryResultsManager();
 		
 		// get Attribute list
