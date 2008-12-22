@@ -1,27 +1,13 @@
 package com.db4o.omplus.ui.actions.browsers;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.*;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.browser.IWebBrowser;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+import org.eclipse.jface.action.*;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.ui.*;
+import org.eclipse.ui.browser.*;
 
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.webservices.PermissionValidator;
-import com.db4o.omplus.ui.dialog.WebServiceLoginDialog;
+import com.db4o.omplus.datalayer.*;
 
 public class SupportCasesBrowserAction implements IWorkbenchWindowActionDelegate {
 
@@ -37,45 +23,6 @@ public class SupportCasesBrowserAction implements IWorkbenchWindowActionDelegate
 
 	public void run(IAction action)
 	{
-		//MessageDialog.openInformation(null, "!!!", "Support cases -yahoo");
-		
-		if(!PermissionValidator.checkIfUserHasLoggedIntoWebService())
-		{
-			//PermissionValidator.showWebServiceLoginDialog(OMPlusConstants.WEB_SERVICE_SUPPORT);
-			WebServiceLoginDialog dialog = PermissionValidator.showWebServiceLoginDialog(OMPlusConstants.WEB_SERVICE_SUPPORT);
-			Shell dialogShell = null;
-			
-			if(dialog != null)
-			{
-				dialogShell = dialog.getShell();				
-			
-				//Go into sleep mode till teh dialog box not disposed
-				if(dialogShell != null)
-				{
-					Shell mainShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-					Display display = mainShell.getDisplay();
-					while (!dialogShell.isDisposed()) 
-				    {
-				      if (!display.readAndDispatch())
-				    	  display.sleep();
-				    }
-				}
-				
-				//If cancel clicked ont the dialog return  
-				if(dialog.getButtonClicked() == OMPlusConstants.DIALOG_CANCEL_CLICKED)
-				{
-					return;
-				}
-			}
-		}		
-		
-		if(!PermissionValidator.checkIfUserHasPermissionForService(OMPlusConstants.WEB_SERVICE_SUPPORT))
-		{
-			MessageDialog.openInformation(null, OMPlusConstants.DIALOG_BOX_TITLE,
-											"You do not have permissions to access this service");
-			return;
-		}
-		
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchBrowserSupport support =	workbench.getBrowserSupport();
 		try 

@@ -1,18 +1,14 @@
 package com.db4o.omplus;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IPartListener2;
-import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.BundleContext;
+import org.eclipse.jface.resource.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
+import org.eclipse.ui.plugin.*;
+import org.osgi.framework.*;
 
-import com.db4o.omplus.connection.ConnectionStatus;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.prefs.PreferenceConstants;
-import com.db4o.omplus.ui.BrowserEditorManager;
-import com.db4o.omplus.ui.ViewerManager;
+import com.db4o.omplus.connection.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.ui.*;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -179,14 +175,6 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
-	}
-	
-	public static String getProxyAddress(){
-		return plugin.getPreferenceStore().getString(PreferenceConstants.ADDRESS);
-	}
-	
-	public static int getProxyPort(){
-		return plugin.getPreferenceStore().getInt(PreferenceConstants.PORT);
 	}
 	
 }

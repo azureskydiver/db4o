@@ -30,12 +30,6 @@
             
          </menu>
          
-          <menu
-               id="com.db4o.ome.statuslabel" 
-               label="Logged Out: OME Reduced mode"
-               path="additions"> 
-               <separator name="aboutSep"/>
-            </menu> 
             
          
           <!-- ************************* ABout Dialog *************************-->    
@@ -132,14 +126,6 @@
          <!-- Currently handled using actionSets. Updating labels suported in eclipse 3.3M5 version
          
          -->
-           <action
-               label="Logged Out: OME Reduced mode"
-               class="com.db4o.omplus.ui.actions.StatusAction"
-               tooltip="Logged Out: OME Reduced mode"
-               toolbarPath="sampleGroup"
-               allowLabelUpdate="true"
-               id="com.db4o.omplus.ui.actions.StatusAction">
-         </action>
          <!-- Support Cases browser -->
          <action
                label="&amp;Support Cases"
@@ -188,24 +174,6 @@
          </action>
          
          <!-- ************************* Web Services login/logout ************************* -->
-          <action
-               label="Logout"
-               icon="icons/Logout.png"
-               class="com.db4o.omplus.ui.actions.WebServiceLogoutAction"
-               tooltip="Logout"
-               menubarPath="sampleMenu/loginSep"
-               toolbarPath="sampleGroup"
-               id="com.db4o.omplus.ui.actions.WebServiceLogoutAction">
-         </action>
-          <action
-               label="Login"
-               icon="icons/Login.png"
-               class="com.db4o.omplus.ui.actions.WebServiceLoginAction"
-               tooltip="Login"
-               menubarPath="sampleMenu/loginSep"
-               toolbarPath="sampleGroup"
-               id="com.db4o.omplus.ui.actions.WebServiceLoginAction">
-         </action>
          
                         
      </actionSet>
@@ -256,14 +224,6 @@
       </view>      
    </extension>
    
-      <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            class="com.db4o.omplus.prefs.OMEPreferencePage"
-            id="com.db4o.omplus.prefs.OMEPreferencePage"
-            name="OME">
-      </page>
-   </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
