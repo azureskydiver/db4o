@@ -278,9 +278,15 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
             FirstClassObjectHandler original = (FirstClassObjectHandler) typeHandlerCloneContext.original;
             cloned._classMetadata = original._classMetadata;
         }else{
-            if(_classMetadata == null){
-                throw new IllegalStateException();
-            }
+
+        	// New logic: ClassMetadata takes the responsibility in 
+        	//           #correctHandlerVersion() to set the 
+        	//           ClassMetadata directly on cloned handler.
+        	
+//            if(_classMetadata == null){
+//                throw new IllegalStateException();
+//            }
+        	
             cloned._classMetadata = _classMetadata;
         }
         return cloned;

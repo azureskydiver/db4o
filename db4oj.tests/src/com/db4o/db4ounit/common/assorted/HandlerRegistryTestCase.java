@@ -67,7 +67,7 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
     private void assertPrimitiveFieldHandlerDelegate(Class fieldHandlerClass,
         PrimitiveFieldHandler primitiveFieldHandler, int version) {
         PrimitiveFieldHandler primitiveFieldHandler0 = (PrimitiveFieldHandler) correctHandlerVersion(primitiveFieldHandler, version);
-        Assert.areSame(fieldHandlerClass,primitiveFieldHandler0.delegateTypeHandler().getClass());
+        Assert.areSame(fieldHandlerClass,primitiveFieldHandler0.delegateTypeHandler(null).getClass());
     }
 
     private ClassMetadata itemClassMetadata() {

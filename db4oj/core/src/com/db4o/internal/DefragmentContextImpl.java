@@ -346,7 +346,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
     public void defragment(TypeHandler4 handler) {
         final TypeHandler4 typeHandler = HandlerRegistry.correctHandlerVersion(this, handler);
         if(Handlers4.useDedicatedSlot(this, typeHandler)){
-            if(hasClassIndex(typeHandler)){
+            if(Handlers4.hasClassIndex(typeHandler)){
                 copyID();
             } else {
                 copyUnindexedID();
@@ -354,13 +354,6 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
             return;
         }
         typeHandler.defragment(DefragmentContextImpl.this);
-    }
-
-    private boolean hasClassIndex(TypeHandler4 typeHandler) {
-        if(typeHandler instanceof ClassMetadata){
-            return ((ClassMetadata)typeHandler).hasClassIndex();
-        }
-        return false;
     }
 
     public void beginSlot() {

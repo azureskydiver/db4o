@@ -305,7 +305,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 if (fieldHandler == null) {
                     continue;
                 }
-                int fieldHandlerId = container.fieldHandlerIdForFieldHandler(fieldHandler);
+                int fieldHandlerId = container.handlers().typeHandlerID(fieldHandler);
                 FieldMetadata field = new FieldMetadata(this, fields[i], (TypeHandler4)fieldHandler, fieldHandlerId);
 		        boolean found = false;
 		        Iterator4 aspectIterator = collectedAspects.iterator();
@@ -1610,8 +1610,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                     }
                     FieldMetadata field = (FieldMetadata)arg;
                     if(field.getName().equals(name)){
-                        // FIXME: The == comparison in the following line could be wrong. 
-                        
                         if(classMetadata == null || classMetadata == field.handlerClassMetadata(_container)){
                             foundField.value = field;
                         }
@@ -1932,7 +1930,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	}
     }
 
-    public TypeHandler4 delegateTypeHandler(){
+    public TypeHandler4 delegateTypeHandler(Context context){
+    	if(context instanceof HandlerVersionContext){
+    		return correctHandlerVersion((HandlerVersionContext)context);
+    	}
         return _typeHandler;
     }
 
@@ -1941,7 +1942,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     private TypeHandler4 correctHandlerVersion(HandlerVersionContext context){
-    	return HandlerRegistry.correctHandlerVersion(context, _typeHandler);
+        TypeHandler4 typeHandler = HandlerRegistry.correctHandlerVersion(context, _typeHandler);
+        if(typeHandler != _typeHandler){
+            if(typeHandler instanceof FirstClassObjectHandler){
+                ((FirstClassObjectHandler) typeHandler).classMetadata(this);
+            }
+        }
+    	return typeHandler;
     }
 
     public void forEachField(Procedure4 procedure) {

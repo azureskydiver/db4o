@@ -45,17 +45,13 @@ public abstract class AbstractReadContext extends AbstractBufferContext implemen
                 return classMetadata.readAndActivate(transaction(), readInt(), activationDepth().descend(classMetadata));
             }
         }
-        if(useDedicatedSlot(handler)){
+        if(Handlers4.useDedicatedSlot(this, handler)){
             return readObject();
         }
         return handler.read(this);
     }
 
-	public boolean useDedicatedSlot(TypeHandler4 handler) {
-		return Handlers4.useDedicatedSlot(this, handler);
-	}
-
-    public final Object readObject() {
+	public final Object readObject() {
         int id = readInt();
         if (id == 0) {
         	return null;
