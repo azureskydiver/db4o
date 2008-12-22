@@ -2,6 +2,8 @@
 
 package com.db4o.foundation;
 
+import java.util.*;
+
 
 /**
  * @exclude
@@ -39,6 +41,11 @@ public class Hashtable4 implements DeepClone, Map4 {
 	
     /** @param cloneOnlyCtor */
 	protected Hashtable4(DeepClone cloneOnlyCtor) {
+	}
+	
+	public void clear() {
+		_size = 0;
+		Arrays.fill(_table, null);
 	}
 	
 	public int size() {
