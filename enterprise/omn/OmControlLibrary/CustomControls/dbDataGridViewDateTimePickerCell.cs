@@ -132,13 +132,11 @@ namespace OMControlLibrary.Common
 						(this.Tag != null && this.Tag.ToString() == typeof(System.DateTime).ToString()))
 					{
 						controlType = typeof(dbDataGridViewDateTimePickerEditingControl);
-						//return typeof(AIDataGridViewDateTimePickerEditingControl);
 					}
-					else if (typeOfValue == typeof(System.Boolean).ToString() ||
-						(this.Tag != null && this.Tag.ToString() == typeof(System.Boolean).ToString()))
+					else if (typeOfValue == typeof(Boolean).ToString() ||
+						(Tag != null && Tag.ToString() == typeof(Boolean).ToString()))
 					{
 						controlType = typeof(DataGridViewComboBoxEditingControl);
-						//return typeof(DataGridViewComboBoxEditingControl);
 					}
 				}
 				catch (Exception oEx)
