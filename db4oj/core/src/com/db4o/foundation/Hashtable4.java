@@ -2,7 +2,6 @@
 
 package com.db4o.foundation;
 
-import java.util.*;
 
 
 /**
@@ -45,7 +44,7 @@ public class Hashtable4 implements DeepClone, Map4 {
 	
 	public void clear() {
 		_size = 0;
-		Arrays.fill(_table, null);
+		Arrays4.fill(_table, null);
 	}
 	
 	public int size() {
