@@ -1,28 +1,18 @@
 #region Namespaces
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
-using System.Configuration;
 using EnvDTE;
 using EnvDTE80;
 using System.Reflection;
 using OMControlLibrary.Common;
-using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.Login;
-using OManager.BusinessLayer.ObjectExplorer;
-using OManager.BusinessLayer.QueryManager;
-using OManager.DataLayer.QueryParser;
 using Microsoft.VisualStudio.CommandBars;
 using System.IO;
 using stdole;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
-using OME.Logging.Exceptions;
-using System.Xml;
+
 #endregion
 
 namespace OMControlLibrary
@@ -31,7 +21,7 @@ namespace OMControlLibrary
 	/// <summary>
 	/// Using this user control, user can login to ObjectManager Enterprise.
 	/// </summary>
-	public partial class Login : ViewBase
+	public partial class Login
 	{
 		#region Member Variables
 
@@ -44,7 +34,7 @@ namespace OMControlLibrary
 		private static Assembly m_AddIn_Assembly;
 		private static WindowVisibilityEvents windowsVisEvents;
 		//Private variables
-		private IList<RecentQueries> m_recentConnections = null;
+		private IList<RecentQueries> m_recentConnections;
 
 		//Constants
 
@@ -71,7 +61,7 @@ namespace OMControlLibrary
 			InitializeComponent();
 			try
 			{
-				m_recentConnections = this.GetAllRecentConnections();
+				m_recentConnections = GetAllRecentConnections();
 				if (m_recentConnections != null)
 				{
 					foreach (RecentQueries recentQuery in m_recentConnections)
@@ -123,7 +113,6 @@ namespace OMControlLibrary
 		/// <summary>
 		/// Creates the login tool window.
 		/// </summary>
-		/// <param name="_applicationObject"></param>
 		public static void CreateLoginToolWindow(CommandBarControl cmdBarCtrl,
 			CommandBarButton cmdBarBtn, Assembly addIn_Assembly, CommandBarControl cmdBarCtrlDefrag,
 			CommandBarControl cmdBarCtrlBackup, CommandBarControl dbCreateDemoDbControl)
@@ -138,8 +127,7 @@ namespace OMControlLibrary
 				m_cmdBarCtrlCreateDemoDb = dbCreateDemoDbControl;
 
 				string assemblyPath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-				string className = Common.Constants.CLASS_NAME_LOGIN;
-				string guidPos = System.Guid.NewGuid().ToString(Helper.GetResourceString(Common.Constants.GUID_FORMATTER_STRING));//"{426E8D27-3D33-4fc8-B3E9-9883AADC679F}";
+			    string guidPos = Guid.NewGuid().ToString(Helper.GetResourceString(Common.Constants.GUID_FORMATTER_STRING));//"{426E8D27-3D33-4fc8-B3E9-9883AADC679F}";
 				string caption = string.Empty;
 				object ctlObj = null;
 				AddIn addinObj = ApplicationObject.AddIns.Item(1);
@@ -149,17 +137,17 @@ namespace OMControlLibrary
 					Helper.LoginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
 
 				// Creates Tool Window and inserts the user control in it.
-				Helper.LoginToolWindow = wins2Obj.CreateToolWindow2(addinObj, assemblyPath, className, caption, guidPos, ref ctlObj);
-				if (Helper.LoginToolWindow.AutoHides == true)
+				Helper.LoginToolWindow = wins2Obj.CreateToolWindow2(addinObj, assemblyPath, Common.Constants.CLASS_NAME_LOGIN, caption, guidPos, ref ctlObj);
+				if (Helper.LoginToolWindow.AutoHides)
 				{
 					Helper.LoginToolWindow.AutoHides = false;
 				}
 				Helper.LoginToolWindow.Visible = true;
 				Helper.LoginToolWindow.Width = 425;
 				Helper.LoginToolWindow.Height = 170;
-				EnvDTE80.Events2 event_1 = (EnvDTE80.Events2)ApplicationObject.Events;
-				windowsVisEvents = (WindowVisibilityEvents)event_1.get_WindowVisibilityEvents(Helper.QueryResultToolWindow);
-				windowsVisEvents.WindowHiding += new _dispWindowVisibilityEvents_WindowHidingEventHandler(windowsVisEvents_WindowHiding);
+				EnvDTE80.Events2 event_1 = (Events2)ApplicationObject.Events;
+				windowsVisEvents = event_1.get_WindowVisibilityEvents(Helper.QueryResultToolWindow);
+				windowsVisEvents.WindowHiding += windowsVisEvents_WindowHiding;
 			}
 			catch (Exception oEx)
 			{
@@ -184,17 +172,14 @@ namespace OMControlLibrary
 				Helper.m_AddIn_Assembly = m_AddIn_Assembly;
 
 				string assemblypath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-				string className = Common.Constants.CLASS_NAME_QUERYBUILDER;
-				string guidpos = Common.Constants.GUID_QUERYBUILDER;
-				string caption = Helper.GetResourceString(Common.Constants.QUERY_BUILDER_CAPTION);
+			    string caption = Helper.GetResourceString(Common.Constants.QUERY_BUILDER_CAPTION);
 				object ctlobj = null;
 				AddIn addinobj = ApplicationObject.AddIns.Item(1);
 				EnvDTE80.Windows2 wins2obj = (Windows2)ApplicationObject.Windows;
 
 				// Creates Tool Window and inserts the user control in it.
-				queryBuilderToolWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath,
-								   className, caption, guidpos, ref ctlobj);
-				if (queryBuilderToolWindow.AutoHides == true)
+				queryBuilderToolWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath, Common.Constants.CLASS_NAME_QUERYBUILDER, caption, Common.Constants.GUID_QUERYBUILDER, ref ctlobj);
+				if (queryBuilderToolWindow.AutoHides)
 				{
 					queryBuilderToolWindow.AutoHides = false;
 				}
@@ -230,7 +215,7 @@ namespace OMControlLibrary
 				m_cmdBarBtnConnect.TooltipText = Common.Constants.TOOLBAR_DISCONNECT;
 				m_cmdBarBtnConnect.State = MsoButtonState.msoButtonDown;
 
-				if (radioButtonLocal.Checked == true)
+				if (radioButtonLocal.Checked)
 				{
 					m_cmdBarCtrlDefrag.Enabled = true;
 					m_cmdBarCtrlBackup.Enabled = true;
@@ -238,12 +223,12 @@ namespace OMControlLibrary
 				}
 				Stream imgageStream = m_AddIn_Assembly.GetManifestResourceStream(IMAGE_DISCONNECT);
 				Stream imageStreamMask = m_AddIn_Assembly.GetManifestResourceStream(IMAGE_DISCONNECT_MASKED);
-				((CommandBarButton)m_cmdBarCtrlConnect.Control).Picture = (stdole.StdPicture)Common.PictureHost.IPictureDisp(Image.FromStream(imgageStream));
-				((CommandBarButton)m_cmdBarCtrlConnect.Control).Mask = (stdole.StdPicture)Common.PictureHost.IPictureDisp(Image.FromStream(imageStreamMask));
+				((CommandBarButton)m_cmdBarCtrlConnect.Control).Picture = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imgageStream));
+				((CommandBarButton)m_cmdBarCtrlConnect.Control).Mask = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imageStreamMask));
 
 
-				((CommandBarButton)m_cmdBarBtnConnect.Control).Picture = (stdole.StdPicture)Common.PictureHost.IPictureDisp(Image.FromStream(imgageStream));
-				((CommandBarButton)m_cmdBarBtnConnect.Control).Mask = (stdole.StdPicture)Common.PictureHost.IPictureDisp(Image.FromStream(imageStreamMask));
+				((CommandBarButton)m_cmdBarBtnConnect.Control).Picture = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imgageStream));
+				((CommandBarButton)m_cmdBarBtnConnect.Control).Mask = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imageStreamMask));
 
 				//Stream imgStreamPic = m_AddIn_Assembly.GetManifestResourceStream(IMAGE_DISCONNECT);
 				//Stream imgStreamMask = m_AddIn_Assembly.GetManifestResourceStream(IMAGE_DISCONNECT_MASKED);
@@ -319,7 +304,7 @@ namespace OMControlLibrary
 		#endregion
 
 		#region GetAllRecentConnections()
-		private List<RecentQueries> GetAllRecentConnections()
+		private static List<RecentQueries> GetAllRecentConnections()
 		{
 			List<RecentQueries> recentConnections = new List<RecentQueries>();
 			try
@@ -355,7 +340,7 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				this.SetLiterals();
+				SetLiterals();
 			}
 			catch (Exception oEx)
 			{
@@ -441,7 +426,7 @@ namespace OMControlLibrary
 				if (openFileDialog.ShowDialog() != DialogResult.Cancel)
 				{
 					textBoxConnection.Text = openFileDialog.FileName;
-					toolTipForTextBox.SetToolTip(this.textBoxConnection, textBoxConnection.Text);
+					toolTipForTextBox.SetToolTip(textBoxConnection, textBoxConnection.Text);
 					if (comboBoxFilePath.Items.Contains(textBoxConnection.Text))
 						comboBoxFilePath.SelectedItem = textBoxConnection.Text;
 					buttonConnect.Focus();
@@ -521,7 +506,7 @@ namespace OMControlLibrary
 
 					PropertyPaneToolWin.CreatePropertiesPaneToolWindow(true);
 					PropertyPaneToolWin.PropWindow.Visible = true;
-					if (Helper.LoginToolWindow.AutoHides == true)
+					if (Helper.LoginToolWindow.AutoHides)
 					{
 						Helper.LoginToolWindow.AutoHides = false;
 					}
@@ -546,42 +531,12 @@ namespace OMControlLibrary
 		}
 		#endregion
 
-		#region buttonOpen_Click
-		private void buttonOpen_Click(object sender, EventArgs e)
-		{
-			try
-			{
-
-				bool isConnected = false;
-
-				if (isConnected == true)
-				{
-					ObjectBrowserToolWin.CreateObjectBrowserToolWindow();
-					CreateQueryBuilderToolWindow();
-					if (Helper.LoginToolWindow.AutoHides == true)
-					{
-						Helper.LoginToolWindow.AutoHides = false;
-					}
-					Helper.LoginToolWindow.Visible = false;
-				}
-				else
-				{
-					MessageBox.Show(Helper.GetResourceString(Common.Constants.ERROR_MSG_CONNECTION), Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-		}
-		#endregion
-
 		#region comboBoxFilePath_SelectedIndexChanged
 		private void comboBoxFilePath_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			try
 			{
-				if (radioButtonRemote.Checked == true)
+				if (radioButtonRemote.Checked)
 				{
 					if (!comboBoxFilePath.Text.Equals(Helper.GetResourceString(Common.Constants.COMBOBOX_DEFAULT_TEXT)))
 					{
@@ -590,7 +545,7 @@ namespace OMControlLibrary
 						textBoxPort.Text = strRemote[2];
 						textBoxUserName.Text = strRemote[3];
 						textBoxPassword.Focus();
-						toolTipForTextBox.SetToolTip(this.comboBoxFilePath, comboBoxFilePath.SelectedItem.ToString());
+						toolTipForTextBox.SetToolTip(comboBoxFilePath, comboBoxFilePath.SelectedItem.ToString());
 					}
 					else
 					{
@@ -605,8 +560,8 @@ namespace OMControlLibrary
 					if (!comboBoxFilePath.Text.Equals(Helper.GetResourceString(Common.Constants.COMBOBOX_DEFAULT_TEXT)))
 					{
 						textBoxConnection.Text = comboBoxFilePath.Text.Trim();
-						toolTipForTextBox.SetToolTip(this.textBoxConnection, textBoxConnection.Text);
-						toolTipForTextBox.SetToolTip(this.comboBoxFilePath, comboBoxFilePath.SelectedItem.ToString());
+						toolTipForTextBox.SetToolTip(textBoxConnection, textBoxConnection.Text);
+						toolTipForTextBox.SetToolTip(comboBoxFilePath, comboBoxFilePath.SelectedItem.ToString());
 					}
 					else
 					{
@@ -678,7 +633,7 @@ namespace OMControlLibrary
 
 		private void textBoxPort_TextChanged(object sender, EventArgs e)
 		{
-			int result = 0;
+			int result;
 			if (!Int32.TryParse(textBoxPort.Text.Trim(), out result))
 			{
 				textBoxPort.Text = string.Empty;
@@ -687,11 +642,9 @@ namespace OMControlLibrary
 
 		private void textBoxPort_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (Keys.Modifiers == Keys.Control)
+			if (e.Modifiers == Keys.Control)
 				e.Handled = true;
 		}
-
-
 	}
 	#endregion
 }

@@ -2,25 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using System.Collections;
 using EnvDTE;
 using EnvDTE80;
-using System.Reflection;
 using OMControlLibrary.Common;
 using OManager.BusinessLayer.pagingData;
-using OManager.BusinessLayer.Common;
-using OManager.BusinessLayer.Login;
-using OManager.BusinessLayer.ObjectExplorer;
 using OManager.BusinessLayer.QueryManager;
-using OManager.DataLayer.QueryParser;
-
 using System.Runtime.InteropServices;
 using OME.AdvancedDataGridView;
-using System.Diagnostics;
-using OManager.DataLayer.Modal;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
 
@@ -997,7 +988,6 @@ namespace OMControlLibrary
 						Helper.IsQueryResultUpdated = true;
 					}
 				}
-				//long[] objectid = Helper.DbInteraction.ExecuteQueryResults(omQuery, 0);
 				int startindex = (int)dbDataGridViewQueryResult.Rows[dbDataGridViewQueryResult.Rows.Count - 1].Cells[1].Value;
 				int endindex = startindex + m_defaultPageSize;
 				if (endindex > lstObjIdLong.Count && startindex < lstObjIdLong.Count)
@@ -1032,7 +1022,7 @@ namespace OMControlLibrary
 				{
 					DataGridViewRow row = dbDataGridViewQueryResult.SelectedRows[0];
 
-					string strShowMessage = "Do You want to CascadeonDelete?";
+					const string strShowMessage = "Do You want to CascadeonDelete?";
 					DialogResult dialogRes = MessageBox.Show(strShowMessage, Helper.GetResourceString(Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.YesNoCancel,
 						MessageBoxIcon.Question);
 					deletedId = dbI.GetLocalID(row.Tag);
@@ -1073,14 +1063,11 @@ namespace OMControlLibrary
 						if (tabIndex > delIndex)
 						{
 							int newIndex = tabIndex - 1;
-							string title = CONST_TAB_CAPTION + "" + newIndex.ToString();
+							string title = CONST_TAB_CAPTION + "" + newIndex;
 							tp.Title = title;
 
 						}
 					}
-
-
-
 
 					lstObjIdLong.Remove(deletedId);
 
@@ -1089,28 +1076,24 @@ namespace OMControlLibrary
 					int endIndex = startIndex + m_defaultPageSize;
 					PagingData pagData = new PagingData(startIndex, endIndex);
 					pagData.ObjectId = lstObjIdLong;
-					//long[] objectid = Helper.DbInteraction.ExecuteQueryResults(omQuery, 1);
-
 
 					lblPageCount.Text = pagData.GetPageCount().ToString();
 					txtObjectNumber.Text = pageNumber.ToString();
 					labelNoOfObjects.Text = pagData.ObjectId.Count.ToString();
 
-					//int m_pageCount = Convert.ToInt32(intpageCount);
-
 					dbDataGridViewQueryResult.Rows.Clear();
 					if (lstObjIdLong.Count > 0)
 					{
-						hashListResult = Helper.DbInteraction.ReturnQueryResults(pagData, true, omQuery.BaseClass, this.omQuery.AttributeList);
+						hashListResult = Helper.DbInteraction.ReturnQueryResults(pagData, true, omQuery.BaseClass, omQuery.AttributeList);
 						Hashtable hAttributes = null;
 
 						if (omQuery != null)
 						{
-							hAttributes = this.omQuery.AttributeList;
+							hAttributes = omQuery.AttributeList;
 						}
 						dbDataGridViewQueryResult.SetDatagridRowsWithIndex(hashListResult, this.ClassName, hAttributes, Helper.DbInteraction.runQuery.StartIndex + 1);
 
-						int rowIndex = Convert.ToInt32(tabControlObjHierarchy.SelectedItem.Title.Split(CONST_SPACE)[1].ToString());
+						int rowIndex = Convert.ToInt32(tabControlObjHierarchy.SelectedItem.Title.Split(CONST_SPACE)[1]);
 
 						int pageIndex = rowIndex % m_defaultPageSize;
 						if (pageIndex == 0)
@@ -1124,7 +1107,6 @@ namespace OMControlLibrary
 							dbDataGridViewQueryResult.Rows[pageIndex - 1].Cells[1].Selected = true;
 						}
 					}
-
 
 					Helper.SelectedObject = null;
 					buttonSaveResult.Enabled = false;
@@ -1140,7 +1122,7 @@ namespace OMControlLibrary
 		public void CascadeOndeleteobjects(object obj)
 		{
 
-			System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ThreadStart(ShowDialogforProgressBar));
+			System.Threading.Thread t = new System.Threading.Thread(ShowDialogforProgressBar);
 			t.Start();
 			Helper.DbInteraction.DeleteObject(obj, true);
 			t.Abort();
@@ -1166,9 +1148,6 @@ namespace OMControlLibrary
 			}
 		}
 
-
-
-
 		private void buttonSaveResult_Click(object sender, EventArgs e)
 		{
 			try
@@ -1187,17 +1166,15 @@ namespace OMControlLibrary
 
 							PaintBlack((TreeGridView)pg.Controls[0]);
 							pg.Name = CONST_FALSE;
-							int rowIndex = Convert.ToInt32(pg.Title.Split(CONST_SPACE)[1].ToString());
+							int rowIndex = Convert.ToInt32(pg.Title.Split(CONST_SPACE)[1]);
 							int pageIndex = rowIndex % m_defaultPageSize;
 							if (pageIndex == 0)
 								pageIndex = m_defaultPageSize;
 							dbDataGridViewQueryResult.Rows[pageIndex - 1].Cells[Common.Constants.QUERY_GRID_ISEDITED_HIDDEN].Value = false;
-
 						}
 					}
 
 					Helper.IsQueryResultUpdated = true;
-					//long[] objectid = Helper.DbInteraction.ExecuteQueryResults(omQuery, 0);
 					int startindex = (int)dbDataGridViewQueryResult.Rows[dbDataGridViewQueryResult.Rows.Count - 1].Cells[1].Value;
 					int endindex = startindex + m_defaultPageSize;
 					if (endindex > lstObjIdLong.Count && startindex < lstObjIdLong.Count)
@@ -1206,10 +1183,9 @@ namespace OMControlLibrary
 					}
 					PagingData pagingData = new PagingData(startindex, endindex);
 					pagingData.ObjectId = lstObjIdLong;
-					hashListResult = Helper.DbInteraction.ReturnQueryResults(pagingData, false, omQuery.BaseClass, this.omQuery.AttributeList);
+					hashListResult = Helper.DbInteraction.ReturnQueryResults(pagingData, false, omQuery.BaseClass, omQuery.AttributeList);
 					btnSave.Enabled = false;
 					buttonSaveResult.Enabled = false;
-
 				}
 				OMETrace.WriteFunctionEnd();
 			}
@@ -1221,8 +1197,6 @@ namespace OMControlLibrary
 
 		private void btnPrevious_Click(object sender, EventArgs e)
 		{
-
-
 			try
 			{
 				m_pageCount--;
@@ -1491,14 +1465,11 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				int startIndex = 0;
-				int endIndex = 0;
-				Hashtable hAttributes = null;
+			    Hashtable hAttributes = null;
 				bool check = false;
 				DialogResult dialogRes = DialogResult.Ignore;
-				PagingData pagingData = null;
-				long[] objectid = null;
-				bool checkforValueChanged = false;
+				PagingData pagingData;
+			    bool checkforValueChanged = false;
 
 				if (e.Modifiers == Keys.Control)
 				{
@@ -1522,8 +1493,8 @@ namespace OMControlLibrary
 						Convert.ToInt32(txtObjectNumber.Text) <= Convert.ToInt32(lblPageCount.Text))
 					{
 						m_pageCount = Convert.ToInt32(txtObjectNumber.Text);
-						startIndex = (Convert.ToInt32(txtObjectNumber.Text) * m_defaultPageSize) - m_defaultPageSize;
-						endIndex = startIndex + m_defaultPageSize;
+						int startIndex = (Convert.ToInt32(txtObjectNumber.Text) * m_defaultPageSize) - m_defaultPageSize;
+						int endIndex = startIndex + m_defaultPageSize;
 						//objectid = Helper.DbInteraction.ExecuteQueryResults(omQuery,1);
 						pagingData = new PagingData(startIndex, endIndex);
 						pagingData.ObjectId = this.lstObjIdLong;
@@ -1908,7 +1879,6 @@ namespace OMControlLibrary
 		{
 			try
 			{
-
 				OMETrace.WriteFunctionStart();
 
 				if (objUpdated != null)
@@ -1939,7 +1909,7 @@ namespace OMControlLibrary
 			}
 		}
 
-		private void MakeAllElementsInGridBlack(dbDataGridView gridView)
+		private static void MakeAllElementsInGridBlack(DataGridView gridView)
 		{
 			try
 			{
@@ -1962,55 +1932,8 @@ namespace OMControlLibrary
 			}
 		}
 
-		private bool IsParentArrayOrCollection(TreeGridNode node)
-		{
-			bool isArrayOrCollection = false;
-			try
-			{
-				while (node.Parent != null)
-				{
-					isArrayOrCollection = (Helper.DbInteraction.IsArray(node.Tag))
-											|| Helper.IsArrayOrCollection(node.Cells[2].Value.ToString());
 
-					if (!isArrayOrCollection)
-					{
-						node = node.Parent;
-					}
-					else
-						break;
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-			return isArrayOrCollection;
-		}
-
-
-
-		private bool CheckUniqueNessAttributes(string fullpath, ListBox listbox)
-		{
-			try
-			{
-				if (listbox.Items.Count > 0)
-				{
-					for (int i = 0; i < listbox.Items.Count; i++)
-					{
-						if (fullpath.Equals(listbox.Items[i].ToString()))
-							return false;
-					}
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-
-			return true;
-		}
-
-		private string GetFullPath(TreeGridNode treenode)
+	    private static string GetFullPath(TreeGridNode treenode)
 		{
 			StringBuilder fullpath = new StringBuilder(string.Empty);
 			TreeGridNode treenodeParent;
@@ -2033,10 +1956,8 @@ namespace OMControlLibrary
 						Helper.BaseClass = treenodeParent.Cells[0].Value.ToString();
 
 						parentName = treenodeParent.Cells[0].Value.ToString().Split(CONST_COMMA.ToCharArray())[0];
-						assemplyName = treenodeParent.Cells[0].Value.ToString().Split(CONST_COMMA.ToCharArray())[1];
-						int classIndex = parentName.LastIndexOf(CONST_DOT);
-						parentName = parentName.Substring(classIndex + 1,
-										parentName.Length - classIndex - 1);
+					    int classIndex = parentName.LastIndexOf(CONST_DOT);
+						parentName = parentName.Substring(classIndex + 1, parentName.Length - classIndex - 1);
 					}
 					else
 						parentName = treenodeParent.Cells[0].Value.ToString();
@@ -2053,7 +1974,7 @@ namespace OMControlLibrary
 
 				for (int i = stringParent.Count; i > 0; i--)
 				{
-					string parent = stringParent[i - 1].ToString() + ".";
+					string parent = stringParent[i - 1] + ".";
 					fullpath.Append(parent);
 				}
 

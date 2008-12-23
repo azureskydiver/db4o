@@ -110,12 +110,6 @@ namespace OMControlLibrary
 
 		#endregion
 
-		#region Event Handlers
-
-		internal event EventHandler<EventArgs> OnRunQueryClick;
-
-		#endregion
-
 		#region Events
 
 		//Object Browser Event Handler
