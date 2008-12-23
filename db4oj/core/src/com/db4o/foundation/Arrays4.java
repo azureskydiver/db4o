@@ -3,6 +3,7 @@
 package com.db4o.foundation;
 
 
+
 /**
  * @exclude
  */
@@ -46,4 +47,10 @@ public class Arrays4 {
 		}
 		return false;
 	}
+
+	public static <T> void fill(T[] array, T value) {
+		for (int i=0; i<array.length; ++i) {
+			array[i] = value;
+		}
+    }
 }
