@@ -51,7 +51,11 @@ public class Environments {
 	     */
 	    private <T> T resolve(Class<T> service) {
 	    	final String className = defaultImplementationFor(service);
-			return service.cast(ReflectPlatform.createInstance(className));
+	    	final Object binding = ReflectPlatform.createInstance(className);
+	    	if (null == binding) {
+	        	throw new IllegalArgumentException("Cant find default implementation for " + service.toString() + ": " + className);
+	        }
+			return service.cast(binding);
 	    }
     }
 
@@ -59,8 +63,31 @@ public class Environments {
 	 * @sharpen.ignore
 	 */
 	static String defaultImplementationFor(Class service) {
-		final String packageName = service.getPackage().getName();
-		final int lastPackage = packageName.lastIndexOf('.');
-		return packageName.substring(0, lastPackage) + ".internal" + packageName.substring(lastPackage) + "." + ReflectPlatform.simpleName(service) + "Impl";
+		final String packageName = splitQualifiedName(service.getName()).qualifier;
+		final QualifiedName packageParts = splitQualifiedName(packageName);
+		return packageParts.qualifier + ".internal" + packageParts.name + "." + ReflectPlatform.simpleName(service) + "Impl";
 	}
+	
+	/**
+	 * @sharpen.ignore
+	 */
+	private static final class QualifiedName {
+		final String qualifier;
+		final String name;
+
+		public QualifiedName(String qualifier, String name) {
+	        this.qualifier = qualifier;
+	        this.name = name;
+        }
+	}
+
+	/**
+	 * @sharpen.ignore
+	 */
+	private static QualifiedName splitQualifiedName(final String qualifiedName) {
+	    final int lastDot = qualifiedName.lastIndexOf('.');
+		final String qualifier = qualifiedName.substring(0, lastDot);
+		final String name = qualifiedName.substring(lastDot);
+		return new QualifiedName(qualifier, name);
+    }
 }
