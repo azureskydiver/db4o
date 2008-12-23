@@ -227,9 +227,8 @@ namespace OManager.BusinessLayer.Login
 
         public List<OMQuery> FetchQueriesForAClass(string className)
         {
-           
             List<OMQuery> qList = new List<OMQuery>();           
-            IObjectSet objSet = null;
+            IObjectSet objSet;
             try
             {
                 container = Db4oClient.RecentConn;
@@ -251,8 +250,6 @@ namespace OManager.BusinessLayer.Login
                 }
                 else
                     return null; 
-               // container = null;
-                //Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
             }
             catch (Exception oEx)
             {

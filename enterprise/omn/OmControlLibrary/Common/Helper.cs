@@ -15,8 +15,6 @@ using sforce;
 using System.Net;
 
 using OMControlLibrary.LoginToSalesForce;
-using System.Web.Services.Protocols;
-
 using Microsoft.VisualStudio.CommandBars;
 using System.Threading;
 using System.Data;
@@ -30,25 +28,21 @@ namespace OMControlLibrary.Common
 	{
 		#region Member Variable
 
-
 		private static dbInteraction m_dbInteraction;
 		private static string m_className;
 		private static string m_baseClass;
 		private static List<OMQuery> m_listOMQueries;
 		private static object m_selectedObject;
-		private static bool m_isSameOMQuery = false;
+		private static bool m_isSameOMQuery;
 		private static Hashtable m_OMResultedQuery = new Hashtable();
 		private static SeatAuthorization m_responseTicket;
-		static string m_guidposForClassDetails = System.Guid.NewGuid().ToString("B");
-		static string m_guidposForQueryResult = System.Guid.NewGuid().ToString("B");
+		static readonly string m_guidposForClassDetails = Guid.NewGuid().ToString("B");
+		static string m_guidposForQueryResult = Guid.NewGuid().ToString("B");
 		private static int m_depth;
 		private static int m_tabIndex;
 
-
 		private static Window loginToolWindow;
-		private static Window objectBrowserToolWindow;
 		private static Window queryResultToolWindow;
-
 
 		public static Window winSalesPage;
 		private static List<Hashtable> m_hashList;
@@ -56,37 +50,24 @@ namespace OMControlLibrary.Common
 		private static string m_selectedClass;
 		private static bool m_isValidQuery;
 		private static Hashtable m_hashTableBaseClass = new Hashtable();
-		static System.Threading.Thread SessionThread = null;
+		static System.Threading.Thread SessionThread;
 		private static bool checkObjectBrowser;
 
-		public static AccountManagementService serviceProxy = null;
-		static WinAppCache win;
-		static string m_ddnUsername = string.Empty;
-		static string m_ddnPassword = string.Empty;
+		public static AccountManagementService serviceProxy;
+	    static readonly string m_ddnUsername = string.Empty;
+		static readonly string m_ddnPassword = string.Empty;
 		static string m_sessionId = string.Empty;
 		public static CommandBarButton m_statusLabel;
-		public static CommandBarControl m_cmdBarCtrlLogin;
-		public static CommandBarControl m_cmdBarCtrlLogout;
-		public static CommandBarButton m_cmdBarBtnLogin;
-		public static CommandBarButton m_cmdBarBtnLogout;
 		public static Assembly m_AddIn_Assembly;
-		private static bool m_IsQueryResultUpdated = false;
-		//private static string m_connectionString = string.Empty;
+		private static bool m_IsQueryResultUpdated;
 
-		private static bool m_checkforIfAlreadyLoggedIn = false;
+		private static bool m_checkforIfAlreadyLoggedIn;
 
-		delegate void DeletgateAuthenticationForRememberME(string info);
-		delegate void DeletgateAuthenticationWithoutRememberME();
-		delegate void DelegateShowLoginForm();
-
-
-		#endregion
+	    #endregion
 
 		#region Constant
 
-		private const string IMAGE_LOGGEDIN = "OMAddin.Images.Connected_1.gif";
-		private const string IMAGE_LOGGEDOUT = "OMAddin.Images.NotConnected_1.gif";
-		private const string PLACEHOLDER_KEY = "<<KEY>>";
+	    private const string PLACEHOLDER_KEY = "<<KEY>>";
 		private const string GENERIC_TEXT = "(G) ";
 		private const string CLASS_NAME_PROPERTIES = "OMControlLibrary.PropertiesTab";
 		private const string RECENT_QUERY_QUERY_COLUMN = "Query";
@@ -114,8 +95,6 @@ namespace OMControlLibrary.Common
 			set { m_checkforIfAlreadyLoggedIn = value; }
 		}
 
-
-
 		public static bool CheckObjectBrowser
 		{
 			get { return checkObjectBrowser; }
@@ -128,7 +107,6 @@ namespace OMControlLibrary.Common
 			set { m_isValidQuery = value; }
 		}
 
-
 		public static Hashtable HashTableBaseClass
 		{
 			get { return m_hashTableBaseClass; }
@@ -140,6 +118,7 @@ namespace OMControlLibrary.Common
 			get { return m_isSameOMQuery; }
 			set { m_isSameOMQuery = value; }
 		}
+
 		public static SeatAuthorization ResponseTicket
 		{
 			get { return m_responseTicket; }
@@ -152,8 +131,6 @@ namespace OMControlLibrary.Common
 			set { m_OMResultedQuery = value; }
 		}
 
-
-
 		public static string SelectedClass
 		{
 			get { return m_selectedClass; }
@@ -165,11 +142,13 @@ namespace OMControlLibrary.Common
 			get { return m_hashClassGUID; }
 			set { m_hashClassGUID = value; }
 		}
+
 		public static List<Hashtable> HashList
 		{
 			get { return m_hashList; }
 			set { m_hashList = value; }
 		}
+
 		public static int Tab_index
 		{
 			get { return m_tabIndex; }
@@ -192,12 +171,6 @@ namespace OMControlLibrary.Common
 		{
 			get { return queryResultToolWindow; }
 			set { queryResultToolWindow = value; }
-		}
-
-		public static Window ObjectBrowserToolWindow
-		{
-			get { return objectBrowserToolWindow; }
-			set { objectBrowserToolWindow = value; }
 		}
 
 		public static Window LoginToolWindow
@@ -377,16 +350,15 @@ namespace OMControlLibrary.Common
 			if (className.Contains(GENERIC_TEXT))
 				className = className.Replace(GENERIC_TEXT, string.Empty);
 
-			string classGUID = System.Guid.NewGuid().ToString("B");
-			bool isPresent = false;
-			try
+			string classGUID = Guid.NewGuid().ToString("B");
+		    try
 			{
 				if (m_hashClassGUID == null)
 				{
 					m_hashClassGUID = new Hashtable();
 				}
 
-				isPresent = m_hashClassGUID.ContainsKey(className);
+				bool isPresent = m_hashClassGUID.ContainsKey(className);
 				if (isPresent)
 				{
 					classGUID = (string)m_hashClassGUID[className];
@@ -408,24 +380,16 @@ namespace OMControlLibrary.Common
 			try
 			{
 				string assemblypath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-				string className = CLASS_NAME_PROPERTIES;
-				string caption = string.Empty;
-				Window objectBrowserToolWindow;
-				if (DbDetails)
-				{
-					caption = GetResourceString(Common.Constants.PROPERTIES_TAB_DATABASE_CAPTION);
-				}
-				else
-				{
-					caption = ClassName + GetResourceString(Common.Constants.PROPERTIES_TAB_CAPTION);
-				}
-				object ctlobj = null;
+			    string caption = DbDetails 
+                                        ? GetResourceString(Constants.PROPERTIES_TAB_DATABASE_CAPTION)
+                                        : ClassName + GetResourceString(Constants.PROPERTIES_TAB_CAPTION);
+				
+                object ctlobj = null;
 				AddIn addinobj = ViewBase.ApplicationObject.AddIns.Item(1);
 				EnvDTE80.Windows2 wins2obj = (Windows2)ViewBase.ApplicationObject.Windows;
 
-				objectBrowserToolWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath,
-									className, caption, m_guidposForClassDetails, ref ctlobj);
-				if (objectBrowserToolWindow.AutoHides == true)
+				Window objectBrowserToolWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath, CLASS_NAME_PROPERTIES, caption, m_guidposForClassDetails, ref ctlobj);
+				if (objectBrowserToolWindow.AutoHides)
 				{
 					objectBrowserToolWindow.AutoHides = false;
 				}
@@ -461,7 +425,7 @@ namespace OMControlLibrary.Common
 
 		public static void PopulateRecentQueryComboBox(List<OMQuery> qrylist, ComboBox comboboxRecentQueries)
 		{
-			DataTable recentQueriesDatatable = null;
+			DataTable recentQueriesDatatable;
 
 			try
 			{
@@ -500,37 +464,6 @@ namespace OMControlLibrary.Common
 			}
 		}
 
-		//public static void SetAppSettingForToolWindows()
-		//{
-		//    try
-		//    {
-		//        if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects" + Path.DirectorySeparatorChar + "ObjectManagerEnterprise" + Path.DirectorySeparatorChar + "ToolWinSettings.config"))
-		//        {
-		//            XmlDocument myXmlDocument = new XmlDocument();
-		//            myXmlDocument.Load(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects" + Path.DirectorySeparatorChar + "ObjectManagerEnterprise" + Path.DirectorySeparatorChar + "ToolWinSettings.config");
-		//            XmlNode node = myXmlDocument.DocumentElement;
-		//            foreach (XmlNode node1 in node.ChildNodes)
-		//            {
-		//                foreach (XmlNode node2 in node1.ChildNodes)
-		//                {
-
-		//                    if (node2.Name == "value")
-		//                    {
-		//                        string val = node2.InnerText;
-		//                        node2.InnerText = "false";
-		//                    }
-		//                }
-		//            }
-		//            myXmlDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects" + Path.DirectorySeparatorChar + "ObjectManagerEnterprise" + Path.DirectorySeparatorChar + "ToolWinSettings.config");
-		//        }
-		//    }
-		//    catch (Exception oEx)
-		//    {
-		//        LoggingHelper.ShowMessage(oEx);
-		//    }
-
-		//}
-
 		public static string GetTypeOfObject(string nodetype)
 		{
 			int indexof = nodetype.IndexOf(CONST_COMMA);
@@ -547,8 +480,7 @@ namespace OMControlLibrary.Common
 			{
 				if (e.Node.Nodes.Count < 1)
 					return false;
-				dbTreeView treeview = (dbTreeView)sender;
-				TreeNode treenode = (TreeNode)e.Node;
+			    TreeNode treenode = e.Node;
 
 				if (treenode.Nodes[0].Name == Constants.DUMMY_NODE_TEXT)
 					treenode.Nodes[Constants.DUMMY_NODE_TEXT].Remove();
@@ -560,12 +492,8 @@ namespace OMControlLibrary.Common
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
-			finally
-			{
 
-			}
-
-			return true;
+		    return true;
 
 		}
 
@@ -576,7 +504,7 @@ namespace OMControlLibrary.Common
 		/// <returns></returns>
 		public static bool IsPrimitive(string type)
 		{
-			bool isPrimitive = false;
+			bool isPrimitive;
 
 			switch (type)
 			{
@@ -611,18 +539,13 @@ namespace OMControlLibrary.Common
 		public static object GetValue(string type, object value)
 		{
 			object resultValue = false;
-
-
-
 			switch (type)
 			{
 				case OManager.BusinessLayer.Common.BusinessConstants.STRING:
 					if (value == null)
 						value = string.Empty;
-					if (value.ToString() == CONST_NULL)
-						resultValue = value.ToString();
-					else
-						resultValue = Convert.ToString(value);
+					
+                    resultValue = value.ToString() == CONST_NULL ? value.ToString() : Convert.ToString(value);
 					break;
 				case OManager.BusinessLayer.Common.BusinessConstants.SINGLE:
 					if (value != null && value.ToString() == CONST_NULL)
@@ -732,12 +655,12 @@ namespace OMControlLibrary.Common
 			if (tempTreeNode.Parent == null || tempTreeNode.Parent.Tag.ToString() == "Fav Folder")
 			{
 
-				parentName = tempTreeNode.Text.ToString().Split(',')[0];
+				parentName = tempTreeNode.Text.Split(',')[0];
 				parentName = parentName.Split('.')[1] + '.' + eNum.Key;
 			}
 			else
 			{
-				parentName = Helper.FormulateCompleteClassPath(tempTreeNode) + eNum.Key;
+				parentName = FormulateCompleteClassPath(tempTreeNode) + eNum.Key;
 
 			}
 			return parentName;
@@ -748,8 +671,6 @@ namespace OMControlLibrary.Common
 			List<string> stringParent = new List<string>();
 			try
 			{
-
-
 				while (treeNode.Parent != null && treeNode.Parent.Tag != null
 					&& treeNode.Parent.Tag.ToString() != "Fav Folder" && treeNode.Parent.Tag.ToString() != "Assembly View")
 				{
@@ -760,14 +681,13 @@ namespace OMControlLibrary.Common
 					treeNode = treeNode.Parent;
 
 				}
-				stringParent.Add((treeNode.Text.ToString().Split(',')[0]).Split('.')[1]);
+				stringParent.Add((treeNode.Text.Split(',')[0]).Split('.')[1]);
 
 				for (int i = stringParent.Count; i > 0; i--)
 				{
-					string parent = stringParent[i - 1].ToString() + ".";
+					string parent = stringParent[i - 1] + ".";
 					fullpath.Append(parent);
 				}
-
 			}
 			catch (Exception ex)
 			{
@@ -824,9 +744,6 @@ namespace OMControlLibrary.Common
 				case "":
 					isArrayOrCollection = true;
 					break;
-				default:
-					isArrayOrCollection = false;
-					break;
 			}
 			if (type.Contains(CONST_COLLECTION))
 				isArrayOrCollection = true;
@@ -834,42 +751,31 @@ namespace OMControlLibrary.Common
 			return isArrayOrCollection;
 		}
 
-		public static void ListClassAttributes(dbTreeView dbtreeview, Hashtable list, TreeNode tn)
+		public static void ListClassAttributes(dbTreeView dbtreeview, TreeNode tn)
 		{
 			TreeNode treeNodeNew = null;
-			TreeNode treeNodeParent = null;
+			TreeNode treeNodeParent;
 
 			try
 			{
-				TreeViewEventArgs e = null;
-				string nodeName = string.Empty;
-				bool isPrimitiveType = false;
+			    bool isPrimitiveType = false;
 
 				string treenodeparent = tn.Name;
 
-				if (!OnTreeViewAfterExpand(dbtreeview, e))
+				if (!OnTreeViewAfterExpand(dbtreeview, null))
 					return;
 
-				if (tn.Name.IndexOf(CONST_COMMA.ToString()) == -1)
-					nodeName = tn.Tag.ToString();
-				else
-					nodeName = tn.Name;
+				string nodeName = tn.Name.IndexOf(CONST_COMMA.ToString()) == -1 ? tn.Tag.ToString() : tn.Name;
 
-				list = new Hashtable();
-				list = DbInteraction.FetchStoredFields(nodeName);
+				Hashtable list = DbInteraction.FetchStoredFields(nodeName);
 
 				dbtreeview.BeginUpdate();
 
-				IDictionaryEnumerator enumerator =
-					list.GetEnumerator();
-
+				IDictionaryEnumerator enumerator = list.GetEnumerator();
 				while (enumerator.MoveNext())
 				{
-					string nodevalue = string.Empty;
-					string nodetype = string.Empty;
-
-					nodevalue = enumerator.Key.ToString();
-					nodetype = enumerator.Value.ToString();
+				    string nodevalue = enumerator.Key.ToString();
+					string nodetype = enumerator.Value.ToString();
 
 					if (!string.IsNullOrEmpty(nodevalue))
 						treeNodeNew = new TreeNode(nodevalue);
@@ -894,16 +800,15 @@ namespace OMControlLibrary.Common
 						}
 						isPrimitiveType = IsPrimitive(typeofObject);
 
-						treeNodeParent = (TreeNode)dbtreeview.Nodes[treenodeparent];
+						treeNodeParent = dbtreeview.Nodes[treenodeparent];
 						treeNodeParent.Nodes.Add(treeNodeNew);
 					}
 
 					if (!isPrimitiveType)
 					{
-						ListClassAttributes(dbtreeview, null, treeNodeNew);
+						ListClassAttributes(dbtreeview, treeNodeNew);
 					}
 				}
-
 			}
 			catch (Exception oEx)
 			{
@@ -983,7 +888,6 @@ namespace OMControlLibrary.Common
 				IsValidQuery = false;
 
 				LoginToolWindow = null;
-				ObjectBrowserToolWindow = null;
 
 				if (OMResultedQuery != null)
 					OMResultedQuery.Clear();
@@ -1028,13 +932,13 @@ namespace OMControlLibrary.Common
 		}
 		private static byte[] StrToByteArray(string str)
 		{
-			System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
+			System.Text.ASCIIEncoding encoding = new ASCIIEncoding();
 			return encoding.GetBytes(str);
 		}
 
 		private static string ByteArrayToStr(byte[] array)
 		{
-			System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
+			System.Text.ASCIIEncoding encoding = new ASCIIEncoding();
 			return encoding.GetString(array);
 		}
 
@@ -1053,15 +957,14 @@ namespace OMControlLibrary.Common
 			try
 			{
 				NetworkCredential cred = (NetworkCredential)serviceProxy.Proxy.Credentials;
-				serviceProxy.ReleaseSeat(m_sessionId, Environment.MachineName,
-									   cred.Domain + CONST_BACKSLASH + cred.UserName);
+				serviceProxy.ReleaseSeat(m_sessionId, Environment.MachineName, cred.Domain + CONST_BACKSLASH + cred.UserName);
 
 				serviceProxy.Logout(m_sessionId);
 				serviceProxy.Credentials = null;
 				serviceProxy.Proxy = null;
 				serviceProxy.CookieContainer = null;
 				serviceProxy.Dispose();
-				Helper.ResponseTicket = null;
+				ResponseTicket = null;
 				serviceProxy = null;
 				m_sessionId = string.Empty;
 				AbortSession();
@@ -1076,21 +979,14 @@ namespace OMControlLibrary.Common
 				else if (e.Message.Contains("The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel."))
 				{
 					m_checkforIfAlreadyLoggedIn = false;
-					DialogResult dialogRes = MessageBox.Show("Connecting to network has failed due to an expired authentication certificate.  The common cause of this expired certificate is due to time differences between your computer and the network. Please verify your computer's clock settings are correct and then press Retry Or press cancel to continue without logging out ", Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
-					if (dialogRes == DialogResult.Retry)
-					{
-						return ReleaseSeat();
-					}
-					else
-					{
-						return false;
-					}
+					DialogResult dialogRes = MessageBox.Show("Connecting to network has failed due to an expired authentication certificate.  The common cause of this expired certificate is due to time differences between your computer and the network. Please verify your computer's clock settings are correct and then press Retry Or press cancel to continue without logging out ", GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
+					return (dialogRes == DialogResult.Retry) ? ReleaseSeat() : false;
 				}
 				else if (e.Message.Contains("The remote name could not be resolved") || e.Message.Contains("Unable to connect to the remote server") || e.Message.Contains("The remote server returned an error: (500) Internal Server Error"))
 				{
 
 					MessageBox.Show("Error in Network Connection. Please check the proxy configurations " + PROXYCONFIG_LOCATION,
-						Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION),
+						GetResourceString(Constants.PRODUCT_CAPTION),
 						MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 					return false;
 
@@ -1123,469 +1019,33 @@ namespace OMControlLibrary.Common
 			}
 		}
 
-		public static bool CheckIfAlreadyLoggedIn()
+	    private static bool CheckProxyAuthetication()
 		{
-			try
-			{
-				win = new WinAppCache(ViewBase.ApplicationObject);
-
-				CustomCookies cookies = new CustomCookies();
-				string info = cookies.GetCookies();
-				if (info == null)
-				{
-					ChangeLogoutToLogin();
-
-				}
-				else
-				{
-					int index = info.IndexOf(CONST_TILD);
-					m_ddnUsername = info.Substring(0, index);
-					m_ddnPassword = info.Substring(index + 1, info.Length - index - 1);
-					try
-					{
-
-						serviceProxy = new AccountManagementService();
-						DeletgateAuthenticationForRememberME UpdateProgress = new DeletgateAuthenticationForRememberME(AuthenticationForRememberME);
-						UpdateProgress.Invoke(info);
-
-					}
-					catch (SoapException soapException)
-					{
-
-						m_checkforIfAlreadyLoggedIn = false;
-
-						cookies.SetCookies(string.Empty);
-						if (soapException.Message.Contains("The security token could not be authenticated or authorized"))
-						{
-							MessageBox.Show(GetResourceString(Common.Constants.VALIDATION_MSG_INVALID_CREDENTIALS),
-											GetResourceString(Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.OK,
-											MessageBoxIcon.Warning);
-							InvokeDDNForm();
-						}
-
-						OMETrace.WriteLine(soapException.Message);
-
-					}
-					catch (ArgumentNullException argException)
-					{
-						m_checkforIfAlreadyLoggedIn = false;
-						MessageBox.Show(GetResourceString(Common.Constants.VALIDATION_MSG_INVALID_CREDENTIALS),
-										GetResourceString(Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.OK,
-										MessageBoxIcon.Warning);
-						cookies.SetCookies(string.Empty);
-						OMETrace.WriteLine(argException.Message);
-						InvokeDDNForm();
-
-					}
-					catch (System.Runtime.InteropServices.COMException)
-					{
-						m_checkforIfAlreadyLoggedIn = true;
-						//This will handle
-						//Catastrophic failure (Exception from HRESULT: 0x8000FFFF (E_UNEXPECTED))
-					}
-
-					catch (WebException e)
-					{
-						HandleWebExceptions(e);
-						//if (e.Message.Contains("The remote name could not be resolved") || e.Message.Contains("Unable to connect to the remote server") || e.Message.Contains("The remote server returned an error: (500) Internal Server Error"))
-						//{
-						//    m_checkforIfAlreadyLoggedIn = false;
-						//    MessageBox.Show("Error in Network Connection. Please check the proxy configurations " + PROXYCONFIG_LOCATION,
-						//        Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION),
-						//        MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-						//    ChangeLogoutToLogin();
-
-						//}
-						//else if (e.Message.Contains("The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel."))
-						//{
-						//    m_checkforIfAlreadyLoggedIn = false;
-						//    DialogResult dialogRes = MessageBox.Show("Connecting to network has failed due to an expired authentication certificate.  The common cause of this expired certificate is due to time differences between your computer and the network. Please verify your computer's clock settings are correct and then press Retry Or press cancel to continue without logging out ", Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
-						//    if (dialogRes == DialogResult.Retry)
-						//    {
-						//        return InvokeDDNForm();
-						//    }
-						//    else
-						//    {
-						//        ChangeLogoutToLogin();
-						//        return false;
-						//    }
-						//}
-
-
-
-						//else
-						//{
-						//    m_checkforIfAlreadyLoggedIn = false;
-						//    MessageBox.Show(e.Message, Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.OK,
-						//              MessageBoxIcon.Warning);
-						//    ChangeLogoutToLogin();
-						//}
-
-					}
-					catch (Exception oEx)
-					{
-						m_checkforIfAlreadyLoggedIn = false;
-						LoggingHelper.ShowMessage(oEx);
-						ChangeLogoutToLogin();
-					}
-
-				}
-				return m_checkforIfAlreadyLoggedIn;
-
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-				return false;
-			}
-		}
-
-		public static bool InvokeDDNForm()
-		{
-
-			CustomCookies cookies = new CustomCookies();
-			string info = string.Empty;
-
-			try
+	        try
 			{
 				OMETrace.WriteFunctionStart();
-
-				if (serviceProxy == null)
-					serviceProxy = new AccountManagementService();
-				win = new WinAppCache(ViewBase.ApplicationObject);
-
-				info = cookies.GetCookies();
-
-				if (info == null)
-				{
-					DelegateShowLoginForm winfrm = new DelegateShowLoginForm(ShowLoginForm);
-					winfrm.Invoke();
-					win = null;
-					winfrm = null;
-					if (checkval == true)
-					{
-						DeletgateAuthenticationWithoutRememberME delegateWithoutremembermMe =
-							new DeletgateAuthenticationWithoutRememberME(AutenticationForCredentialsgivenByuser);
-						delegateWithoutremembermMe.Invoke();
-						m_checkforIfAlreadyLoggedIn = true;
-					}
-					else
-					{
-						m_checkforIfAlreadyLoggedIn = false;
-					}
-
-				}
-				else
-				{
-					win.checkBoxRememberMe.Checked = true;
-					DeletgateAuthenticationForRememberME UpdateProgress = new DeletgateAuthenticationForRememberME(AuthenticationForRememberME);
-					UpdateProgress.Invoke(info);
-					m_checkforIfAlreadyLoggedIn = true;
-				}
-
-			}
-
-			catch (SoapException soapException)
-			{
-
-				m_checkforIfAlreadyLoggedIn = false;
-
-				cookies.SetCookies(string.Empty);
-				if (soapException.Message.Contains("The security token could not be authenticated or authorized"))
-				{
-					MessageBox.Show(GetResourceString(Common.Constants.VALIDATION_MSG_INVALID_CREDENTIALS),
-									GetResourceString(Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.OK,
-									MessageBoxIcon.Warning);
-					InvokeDDNForm();
-				}
-
-				OMETrace.WriteLine(soapException.Message);
-			}
-			catch (ArgumentNullException argException)
-			{
-				m_checkforIfAlreadyLoggedIn = false;
-				MessageBox.Show(GetResourceString(Common.Constants.VALIDATION_MSG_INVALID_CREDENTIALS),
-								GetResourceString(Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.OK,
-								MessageBoxIcon.Warning);
-				cookies.SetCookies(string.Empty);
-				InvokeDDNForm();
-				OMETrace.WriteLine(argException.Message);
-
-			}
-			catch (System.Runtime.InteropServices.COMException)
-			{   //This will handle
-				//Catastrophic failure (Exception from HRESULT: 0x8000FFFF (E_UNEXPECTED))
-			}
-
-			catch (System.UriFormatException)
-			{
-				m_checkforIfAlreadyLoggedIn = false;
-
-				MessageBox.Show("Error in Network Connection. Please check the proxy configurations " + PROXYCONFIG_LOCATION,
-						Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION),
-						MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-				ChangeLogoutToLogin();
-
-			}
-
-			catch (WebException e)
-			{
-				HandleWebExceptions(e);
-				//if (e.Message.Contains("The remote name could not be resolved") ||e.Message.Contains("Unable to connect to the remote server") ||e.Message.Contains("The remote server returned an error: (500) Internal Server Error"))
-				//{
-				//    m_checkforIfAlreadyLoggedIn = false;
-				//    MessageBox.Show("Error in Network Connection. Please check the proxy configurations " + PROXYCONFIG_LOCATION,
-				//        Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION),
-				//        MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-				//    ChangeLogoutToLogin();
-
-				//}
-				//else if(e.Message.Contains("The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel."))
-				//{
-				//    m_checkforIfAlreadyLoggedIn = false;
-				//    DialogResult dialogRes = MessageBox.Show("Connecting to network has failed due to an expired authentication certificate.  The common cause of this expired certificate is due to time differences between your computer and the network. Please verify your computer's clock settings are correct and then press Retry Or press cancel to continue without logging out ", Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
-				//    if (dialogRes == DialogResult.Retry)
-				//    {
-				//        return InvokeDDNForm();
-				//    }
-				//    else
-				//    {
-				//        ChangeLogoutToLogin();
-				//        return false;
-				//    }
-				//}
-
-
-
-				//else
-				//{
-				//    m_checkforIfAlreadyLoggedIn = false;
-				//    MessageBox.Show(e.Message, Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.OK,
-				//              MessageBoxIcon.Warning);
-				//    ChangeLogoutToLogin();
-				//}
-			}
-			catch (Exception oEx)
-			{
-				if (oEx.Message.Equals(GetResourceString(Common.Constants.VALIDATION_MSG_INVALID_CREDENTIALS)))
-				{
-					m_checkforIfAlreadyLoggedIn = false;
-
-					cookies.SetCookies(string.Empty);
-
-					MessageBox.Show(GetResourceString(Common.Constants.VALIDATION_MSG_INVALID_CREDENTIALS),
-									GetResourceString(Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.OK,
-									MessageBoxIcon.Warning);
-					InvokeDDNForm();
-
-
-
-				}
-				else
-				{
-					m_checkforIfAlreadyLoggedIn = false;
-					LoggingHelper.ShowMessage(oEx);
-				}
-			}
-			OMETrace.WriteFunctionEnd();
-
-			return m_checkforIfAlreadyLoggedIn;
-		}
-
-		private static bool checkval = false;
-
-		private static bool HandleWebExceptions(Exception e)
-		{
-			if (e.Message.Contains("The remote name could not be resolved") || e.Message.Contains("Unable to connect to the remote server") || e.Message.Contains("The remote server returned an error: (500) Internal Server Error"))
-			{
-				m_checkforIfAlreadyLoggedIn = false;
-				MessageBox.Show("Error in Network Connection. Please check the proxy configurations " + PROXYCONFIG_LOCATION,
-					Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION),
-					MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-				ChangeLogoutToLogin();
-				return false;
-
-			}
-			else if (e.Message.Contains("The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel."))
-			{
-				m_checkforIfAlreadyLoggedIn = false;
-				DialogResult dialogRes = MessageBox.Show("Connecting to network has failed due to an expired authentication certificate.  The common cause of this expired certificate is due to time differences between your computer and the network. Please verify your computer's clock settings are correct and then press Retry Or press cancel to continue without logging out ", Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
-				if (dialogRes == DialogResult.Retry)
-				{
-					return InvokeDDNForm();
-				}
-				else
-				{
-					ChangeLogoutToLogin();
-					return false;
-				}
-			}
-
-
-
-			else
-			{
-				m_checkforIfAlreadyLoggedIn = false;
-				MessageBox.Show(e.Message, Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.OK,
-						  MessageBoxIcon.Warning);
-				ChangeLogoutToLogin();
-				return false;
-			}
-		}
-
-		private static void ShowLoginForm()
-		{
-			try
-			{
-				win.textBoxPassword.Text = string.Empty;
-				win.textBoxUserID.Text = string.Empty;
-				win.ShowDialog();
-				if (win.DialogResult == DialogResult.OK)
-				{
-					m_ddnUsername = win.textBoxUserID.Text;
-					m_ddnPassword = win.textBoxPassword.Text;
-					win.Close();
-
-					checkval = true;
-				}
-				else
-				{
-					checkval = false;
-					m_checkforIfAlreadyLoggedIn = false;
-					ChangeLogoutToLogin();
-
-				}
-			}
-			catch (Exception e)
-			{
-				throw e;
-			}
-
-		}
-
-		private static void AutenticationForCredentialsgivenByuser()
-		{
-			System.Threading.Thread progressbarthread = null;
-			try
-			{
-				progressbarthread = new System.Threading.Thread(new ThreadStart(ShowDialogforProgressBar));
-				progressbarthread.Start();
-
-
-				try
-				{
-					if (CheckProxyAuthetication())
-					{
-						ChangeLoginToLogout();
-						m_checkforIfAlreadyLoggedIn = true;
-
-					}
-				}
-				catch (Exception e1)
-				{
-					m_checkforIfAlreadyLoggedIn = false;
-					progressbarthread.Abort();
-					throw e1;
-				}
-				progressbarthread.Abort();
-
-
-				if (winSalesPage != null && winSalesPage.Visible == true)
-				{
-					winSalesPage.Close(vsSaveChanges.vsSaveChangesNo);
-				}
-
-			}
-			catch (Exception e)
-			{
-
-				progressbarthread.Abort();
-				throw e;
-			}
-		}
-
-		private static void AuthenticationForRememberME(string info)
-		{
-			System.Threading.Thread t = new System.Threading.Thread(new ThreadStart(ShowDialogforProgressBar));
-			try
-			{
-
-				t.Start();
-				int index = info.IndexOf('~');
-				m_ddnUsername = info.Substring(0, index);
-				m_ddnPassword = info.Substring(index + 1, info.Length - index - 1);
-
-				if (CheckProxyAuthetication())
-				{
-					ChangeLoginToLogout();
-					m_checkforIfAlreadyLoggedIn = true;
-					//LoginNotification();
-				}
-				t.Abort();
-			}
-			catch (Exception e)
-			{
-				m_checkforIfAlreadyLoggedIn = false;
-				t.Abort();
-
-				throw e;
-			}
-
-		}
-
-		private static void ShowDialogforProgressBar()
-		{
-			try
-			{
-				ProgressBar p = new ProgressBar();
-				p.Text = GetResourceString(Common.Constants.PROGRESS_MESSAGE_CHECKING_CREDENTIALS);
-				p.ShowDialog();
-			}
-			catch (ThreadAbortException)
-			{
-				System.Threading.Thread.ResetAbort();
-
-			}
-		}
-
-		private static bool CheckProxyAuthetication()
-		{
-
-			CustomCookies cookies = new CustomCookies();
-			try
-			{
-				OMETrace.WriteFunctionStart();
-
 
 				GetResponseFromWebservice(m_ddnUsername, m_ddnPassword);
 
-				SessionThread = new System.Threading.Thread(new ThreadStart(KeepSessionAlive));
+				SessionThread = new System.Threading.Thread(KeepSessionAlive);
 				SessionThread.IsBackground = true;
 				SessionThread.Start();
 				return true;
 			}
 			catch (WebException e)
 			{
-
 				if (e.Message.Contains("407) Proxy Authentication Required"))
 				{
-
 					return HandleProxyException();
-
 				}
-				else
-					throw e;
-
-
-
-
-
+				
+                throw;
 			}
-			catch (Exception oEx)
+			catch (Exception)
 			{
 				if (SessionThread != null)
 					SessionThread.Abort();
-				throw oEx;
+				throw;
 			}
 		}
 
@@ -1619,16 +1079,13 @@ namespace OMControlLibrary.Common
 				serviceProxy.Proxy = selectedProxy;
 				return CheckProxyAuthetication();
 			}
-
 			else
 			{
-				ChangeLogoutToLogin();
 				cookies.SetCookies(null);
 				if (SessionThread != null)
 					SessionThread.Abort();
 				return false;
 			}
-
 		}
 
 		private static void KeepSessionAlive()
@@ -1658,68 +1115,44 @@ namespace OMControlLibrary.Common
 
 		private static void GetResponseFromWebservice(string ddnUsername, string ddnPassword)
 		{
+		    WebProxy selectedProxy;
+		    dbInteraction dbInt = new dbInteraction();
+		    ProxyAuthentication proxy = dbInt.RetrieveProxyInfo();
+		    if (proxy != null)
+		    {
+		        string[] stringArr = proxy.UserName.Split('\\');
+		        string username = string.Empty;
+		        string domain = string.Empty;
+		        if (stringArr.Length > 1)
+		        {
+		            username = stringArr[1].Replace("\\", "");
 
-			try
-			{
-				WebProxy selectedProxy;
-				dbInteraction dbInt = new dbInteraction();
-				ProxyAuthentication proxy = dbInt.RetrieveProxyInfo();
-				if (proxy != null)
-				{
+		            domain = stringArr[0];
+		        }
+		        selectedProxy = new WebProxy(proxy.ProxyAddress + ":" + proxy.Port);
+		        selectedProxy.Credentials = new NetworkCredential(username, DecryptPass(proxy.PassWord), domain);
+		    }
+		    else
+		    {
+		        selectedProxy = (WebProxy)GlobalProxySelection.Select;
+		        selectedProxy.UseDefaultCredentials = true;
+		    }
 
-					string[] stringArr = proxy.UserName.Split('\\');
-					string username = string.Empty;
-					string domain = string.Empty;
-					if (stringArr.Length > 1)
-					{
-						username = stringArr[1].Replace("\\", "");
+		    serviceProxy.Proxy = selectedProxy;
 
-						domain = stringArr[0];
-					}
-					selectedProxy = new WebProxy(proxy.ProxyAddress + ":" + proxy.Port);
-					//   WebProxy selectedProxy = (WebProxy)GlobalProxySelection.Select;// GlobalProxySelection.Select;
-					selectedProxy.Credentials = new NetworkCredential(username, DecryptPass(proxy.PassWord), domain);
-				}
-				else
-				{
+		    serviceProxy.CookieContainer = new CookieContainer();
+		    m_sessionId = serviceProxy.Login(ddnUsername, ddnPassword);
 
-					selectedProxy = (WebProxy)GlobalProxySelection.Select;
-					// selectedProxy.BypassProxyOnLocal=true;
-					selectedProxy.UseDefaultCredentials = true;
-				}
+		    SeatAuthorization response = serviceProxy.ReserveSeat();
+		    ResponseTicket = response;
 
-				serviceProxy.Proxy = selectedProxy;
+		    // Response ticket is null for invalid credentials
+		    if (ResponseTicket == null)
+		    {
+		        throw new Exception(GetResourceString(Constants.VALIDATION_MSG_INVALID_CREDENTIALS));
+		    }
 
-				//  serviceProxy.SetPolicy(new Policy(new UsernameOverTransportAssertion(), new RequireActionHeaderAssertion()));
-				serviceProxy.CookieContainer = new System.Net.CookieContainer();
-				m_sessionId = serviceProxy.Login(ddnUsername, ddnPassword);
-
-
-				SeatAuthorization response = serviceProxy.ReserveSeat();
-				ResponseTicket = response;
-
-				// Response ticket is null for invalid credentials
-				if (ResponseTicket == null)
-				{
-					throw new Exception(GetResourceString(Common.Constants.VALIDATION_MSG_INVALID_CREDENTIALS));
-					//m_checkforIfAlreadyLoggedIn = false;
-					//CustomCookies cookies = new CustomCookies();
-					//cookies.SetCookies(string.Empty);
-
-					//MessageBox.Show(GetResourceString(Common.Constants.VALIDATION_MSG_INVALID_CREDENTIALS),
-					//                GetResourceString(Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.OK,
-					//                MessageBoxIcon.Warning);
-					//InvokeDDNForm();
-				}
-
-				LoginNotification();
-
-			}
-			catch (Exception oEx)
-			{
-				throw oEx;
-			}
-
+		    LoginNotification();
 		}
 
 		public static void LoginNotification()
@@ -1732,130 +1165,6 @@ namespace OMControlLibrary.Common
 					MessageBoxButtons.OK,
 					MessageBoxIcon.Information);
 			}
-
-		}
-
-		public static void ChangeLoginToLogout()
-		{
-			try
-			{
-				m_cmdBarBtnLogin.Enabled = false;
-				m_cmdBarBtnLogout.Enabled = true;
-				m_cmdBarCtrlLogin.Enabled = false;
-				m_cmdBarCtrlLogout.Enabled = true;
-
-				if (!Helper.m_cmdBarBtnLogin.Enabled)
-				{
-					if (Helper.CheckFeaturePermission("QueryBuilder"))
-						m_statusLabel.Caption = "Status : " + Helper.STATUS_FULLFUNCTIONALITYMODE;
-					else
-						m_statusLabel.Caption = "Status : " + Helper.STATUS_REDUCEDMODELOGGEDIN;
-				}
-				else //logged out so no functionality
-					m_statusLabel.Caption = "Status : " + Helper.STATUS_LOGGEDOUT;
-
-
-
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-		}
-
-		public static void ChangeLogoutToLogin()
-		{
-			try
-			{
-				m_cmdBarBtnLogin.Enabled = true;
-				m_cmdBarBtnLogout.Enabled = false;
-				m_cmdBarCtrlLogin.Enabled = true;
-				m_cmdBarCtrlLogout.Enabled = false;
-				m_statusLabel.Caption = "Status : " + STATUS_LOGGEDOUT;
-
-
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-		}
-
-		public static bool CheckFeaturePermission(string featureName)
-		{
-			bool permitted = false;
-			try
-			{
-
-				if (ResponseTicket != null)
-				{
-					foreach (FeaturePermission permission in ResponseTicket.FeatureAuthorization)
-					{
-						if (permission.Allow != null)
-						{
-							switch (featureName)
-							{
-								case "QueryBuilder":
-
-									if (permission.name == "QueryBuilder")
-									{
-										if (permission.Allow.Length > 0)
-										{
-											if (permission.Allow[0].Equals("Full"))
-												permitted = true;
-											else if (permission.Allow[0].Equals("Reduced"))
-												permitted = false;
-										}
-										else
-											permitted = false;
-									}
-									break;
-
-								case "Support":
-
-									if (permission.name == "Support")
-									{
-										if (permission.Allow.Length > 0)
-										{
-											if (permission.Allow[0].Equals("Full"))
-												permitted = true;
-											else if (permission.Allow[0].Equals("Reduced"))
-												permitted = false;
-										}
-										else
-											permitted = false;
-									}
-									break;
-
-								case "Pairing":
-									if (permission.name == "Pairing")
-									{
-										if (permission.Allow.Length > 0)
-										{
-											if (permission.Allow[0].Equals("Full"))
-												permitted = true;
-											else if (permission.Allow[0].Equals("Reduced"))
-												permitted = false;
-										}
-										else
-											permitted = false;
-									}
-									break;
-								default:
-									permitted = false;
-									break;
-
-							}
-						}
-					}
-				}
-
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-			return permitted;
 		}
 		#endregion
 
@@ -1864,8 +1173,7 @@ namespace OMControlLibrary.Common
 			StringBuilder fullpath = new StringBuilder(string.Empty);
 			TreeNode treenodeParent;
 			List<string> stringParent = new List<string>();
-			string parentName = string.Empty;
-			string assemplyName = string.Empty;
+			string parentName;
 
 			try
 			{
@@ -1878,20 +1186,16 @@ namespace OMControlLibrary.Common
 					{
 						char[] splitChar = { ',' };
 						//Set the base class name for selected field
-						Helper.BaseClass = treenodeParent.Name;
+						BaseClass = treenodeParent.Name;
 
 						//get parent name from node text
 						parentName = treenodeParent.Name.Split(splitChar)[0];
 
-						//get the assembly name
-						assemplyName = treenodeParent.Name.Split(splitChar)[1];
 
-
-						int classIndex = parentName.LastIndexOf('.');
+					    int classIndex = parentName.LastIndexOf('.');
 
 						//get the parent name of selected node
-						parentName = parentName.Substring(classIndex + 1,
-										parentName.Length - classIndex - 1);
+						parentName = parentName.Substring(classIndex + 1, parentName.Length - classIndex - 1);
 					}
 					else if (treenodeParent.Tag != null) //get name of patent in class view
 						if (treenodeParent.Name != "")
@@ -1915,7 +1219,7 @@ namespace OMControlLibrary.Common
 				//Prepare fullpath of the selected node
 				for (int i = stringParent.Count; i > 0; i--)
 				{
-					string parent = stringParent[i - 1].ToString() + ".";
+					string parent = stringParent[i - 1] + ".";
 					fullpath.Append(parent);
 				}
 
@@ -1926,10 +1230,6 @@ namespace OMControlLibrary.Common
 				LoggingHelper.ShowMessage(oEx);
 			}
 			return fullpath.Append(treenode.Name).ToString();
-
-
 		}
-
 	}
-
 }

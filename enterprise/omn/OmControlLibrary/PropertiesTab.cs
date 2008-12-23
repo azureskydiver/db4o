@@ -26,8 +26,7 @@ namespace OMControlLibrary
 		private bool m_showClassProperties;
 
 		private static PropertiesTab instance;
-		private EnvDTE.WindowEvents _windowsEvents;
-		object m_selectedObject = null;
+	    object m_selectedObject;
 
 		#endregion
 
