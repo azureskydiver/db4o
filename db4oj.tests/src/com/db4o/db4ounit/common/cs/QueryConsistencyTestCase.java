@@ -21,6 +21,7 @@ public class QueryConsistencyTestCase extends AbstractDb4oTestCase implements Op
 	    }.runAll();
     }
 	
+
 	public static class Item {
 		public int _id;
 
@@ -76,15 +77,23 @@ public class QueryConsistencyTestCase extends AbstractDb4oTestCase implements Op
 	}
 	
 	private Item nativeQueryForItem(final int id) {
-		final ObjectSet<Item> result = db().query(new Predicate<Item>() {
-			@Override
-            public boolean match(Item candidate) {
-				return candidate._id == id;
-			}
-		});
+		final ObjectSet<Item> result = db().query(new ItemById(id));
 		return firstOrNull(result);
 	}
 
+	public static final class ItemById extends Predicate<Item> {
+		public int _id;
+		
+		public ItemById(int id) {
+			_id = id;
+		}
+		
+		@Override
+		public boolean match(Item candidate) {
+			return candidate._id == _id;
+		}
+	}
+	
 	private Item sodaQueryForItem(final int id) {
 	    final Query q = db().query();
 	    q.constrain(Item.class);
