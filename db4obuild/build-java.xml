@@ -153,6 +153,7 @@
 	</target>
 			
 	<target name="decaf.workspace" depends="init">
+		<reset-dir dir="${dir.dist.decaf.workspace}"/>
 		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4o">
 			<sources>
 				<fileset dir="${dir.j.core}">
