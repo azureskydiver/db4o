@@ -4,6 +4,7 @@ package com.db4o.types;
 
 /**
  * base interface for db4o collections
+ * @deprecated since 7.0
  */
 public interface Db4oCollection extends Db4oType{
     
