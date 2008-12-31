@@ -12,7 +12,7 @@ import com.db4o.ext.*;
  */
 public class MemoryStorage implements Storage {
 
-	private final Map<String, Bin> _storages = new HashMap<String, Bin>();
+	private final Map<String, MemoryBin> _storages = new HashMap<String, MemoryBin>();
 
 	/**
 	 * returns true if a MemoryBin with the given URI name already exists
@@ -30,8 +30,22 @@ public class MemoryStorage implements Storage {
 		return config.readOnly() ? new ReadOnlyBin(storage) : storage;
 	}
 
+	/**
+	 * Returns the memory bin for the given URI for external use.
+	 */
+	public MemoryBin bin(String uri) {
+		return _storages.get(uri);
+	}
+
+	/**
+	 * Registers the given bin for this storage with the given URI.
+	 */
+	public void bin(String uri, MemoryBin bin) {
+		_storages.put(uri, bin);
+	}
+
 	private Bin produceStorage(BinConfiguration config) {
-	    final Bin storage = _storages.get(config.uri());
+	    final Bin storage = bin(config.uri());
 		if (null != storage) {
 			return storage;
 		}
@@ -39,63 +53,5 @@ public class MemoryStorage implements Storage {
 		_storages.put(config.uri(), newStorage);
 		return newStorage;
     }
-	
-	private static class MemoryBin implements Bin {
-		
-		private static final int GROW_BY = 10000;
-		private byte[] _bytes;
-		private int _length;
-
-		public MemoryBin(byte[] bytes) {
-			_bytes = bytes;
-			_length = bytes.length;
-        }
-		
-		public long length() {
-			return _length;
-		}
-		
-		public int read(long pos, byte[] bytes, int length) throws Db4oIOException {
-			final long avail = _length - pos;
-			if (avail <= 0) {
-				return - 1;
-			}
-			final int read = Math.min((int)avail, length);
-			System.arraycopy(_bytes, (int)pos, bytes, 0, read);
-			return read;
-		}
-
-		public void sync() throws Db4oIOException {
-		}
-		
-		public int syncRead(long position, byte[] bytes, int bytesToRead) {
-			return read(position, bytes, bytesToRead);
-		}
-		
-		public void close() {
-		}
-
-		/**
-		 * for internal processing only.
-		 */
-		public void write(long pos, byte[] buffer, int length) throws Db4oIOException {
-			if (pos + length > _bytes.length) {
-				long growBy = GROW_BY;
-				if (pos + length > growBy) {
-					growBy = pos + length;
-				}
-				byte[] temp = new byte[(int)(_bytes.length + growBy)];
-				System.arraycopy(_bytes, 0, temp, 0, _length);
-				_bytes = temp;
-			}
-			System.arraycopy(buffer, 0, _bytes, (int)pos, length);
-			pos += length;
-			if (pos > _length) {
-				_length = (int)pos;
-			}
-		}
-
-		
-	}
 
 }
