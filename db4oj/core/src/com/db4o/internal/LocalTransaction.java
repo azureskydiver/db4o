@@ -22,7 +22,7 @@ public class LocalTransaction extends Transaction {
     
     protected final StatefulBuffer i_pointerIo;    
     
-    private final Hashtable4 _participants = new Hashtable4(); 
+    private final IdentityHashtable4 _participants = new IdentityHashtable4(); 
 
     private final LockedTree _slotChanges = new LockedTree();
 	
@@ -138,8 +138,8 @@ public class LocalTransaction extends Transaction {
 			throw new ArgumentNullException();
 		}
 		checkSynchronization();	
-		if (!_participants.containsByIdentity(participant)) {
-			_participants.putByIdentity(participant);
+		if (!_participants.contains(participant)) {
+			_participants.put(participant);
 		}
 	}
 
@@ -202,10 +202,9 @@ public class LocalTransaction extends Transaction {
         	parentLocalTransaction().commitParticipants();
         }
         
-        Iterator4 iterator = _participants.iterator();
+        Iterator4 iterator = _participants.valuesIterator();
 		while (iterator.moveNext()) {
-			Entry4 entry = (Entry4)iterator.current();
-			((TransactionParticipant)entry.value()).commit(this);
+			((TransactionParticipant)iterator.current()).commit(this);
 		}
     }
     
@@ -234,11 +233,10 @@ public class LocalTransaction extends Transaction {
 	}
 	
 	private void disposeParticipants() {
-		Iterator4 iterator = _participants.iterator();
-        while (iterator.moveNext()) {
-        	Entry4 entry = (Entry4) iterator.current();
-        	((TransactionParticipant)entry.value()).dispose(this);
-        }
+        Iterator4 iterator = _participants.valuesIterator();
+		while (iterator.moveNext()) {
+			((TransactionParticipant)iterator.current()).dispose(this);
+		}
 	}
 	
     public void rollback() {
@@ -255,10 +253,9 @@ public class LocalTransaction extends Transaction {
     }
     
     private void rollbackParticipants() {
-    	Iterator4 iterator = _participants.iterator();
+        Iterator4 iterator = _participants.valuesIterator();
 		while (iterator.moveNext()) {
-			Entry4 entry = (Entry4) iterator.current();
-			((TransactionParticipant)entry.value()).rollback(this);
+			((TransactionParticipant)iterator.current()).rollback(this);
 		}
 	}
 	

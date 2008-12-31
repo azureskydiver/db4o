@@ -7,31 +7,10 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public class Hashtable4 implements DeepClone, Map4 {
-
-	private static final float FILL = 0.5F;
-	
-	// FIELDS ARE PUBLIC SO THEY CAN BE REFLECTED ON IN JDKs <= 1.1
-
-	public int _tableSize;
-
-	public int _mask;
-
-	public int _maximumSize;
-
-	public int _size;
-
-	public HashtableIntEntry[] _table;
+public class Hashtable4 extends HashtableBase implements DeepClone, Map4 {
 
 	public Hashtable4(int size) {
-		size = newSize(size); // legacy for .NET conversion
-		_tableSize = 1;
-		while (_tableSize < size) {
-			_tableSize = _tableSize << 1;
-		}
-		_mask = _tableSize - 1;
-		_maximumSize = (int) (_tableSize * FILL);
-		_table = new HashtableIntEntry[_tableSize];
+		super(size);
 	}
 
 	public Hashtable4() {
@@ -40,17 +19,9 @@ public class Hashtable4 implements DeepClone, Map4 {
 	
     /** @param cloneOnlyCtor */
 	protected Hashtable4(DeepClone cloneOnlyCtor) {
+		super(cloneOnlyCtor);
 	}
 	
-	public void clear() {
-		_size = 0;
-		Arrays4.fill(_table, null);
-	}
-	
-	public int size() {
-		return _size;
-	}
-
 	public Object deepClone(Object obj) {
 		return deepCloneInternal(new Hashtable4((DeepClone)null), obj);
 	}
@@ -90,52 +61,6 @@ public class Hashtable4 implements DeepClone, Map4 {
 		return getFromObjectEntry(key.hashCode(), key);
 	}
 	
-	/**
-	 * Iterates through all the {@link Entry4 entries}.
-	 *   
-	 * @return {@link Entry4} iterator
-	 */
-	public Iterator4 iterator(){
-		return new HashtableIterator(_table);
-	}
-	
-	/**
-	 * Iterates through all the keys.
-	 * 
-	 * @return key iterator
-	 */
-	public Iterator4 keys() {
-		return Iterators.map(iterator(), new Function4() {
-			public Object apply(Object current) {
-				return ((Entry4)current).key();
-			}
-		});
-	}
-	
-	public Iterable4 values() {
-		return new Iterable4() {
-			public Iterator4 iterator() {
-				return valuesIterator();
-			}
-		};
-	}
-	
-	/**
-	 * Iterates through all the values.
-	 * 
-	 * @return value iterator
-	 */
-	public Iterator4 valuesIterator() {
-		return Iterators.map(iterator(), new Function4() {
-			public Object apply(Object current) {
-				return ((Entry4)current).value();
-			}
-		});
-	}
-	
-	public boolean containsByIdentity(Object obj){
-		return findWithSameKey(new HashtableIdentityEntry(obj)) != null;
-	}
 	
 	public boolean containsKey(Object key) {
 		if (null == key) {
@@ -172,13 +97,6 @@ public class Hashtable4 implements DeepClone, Map4 {
 		putEntry(new HashtableObjectEntry(key, value));
 	}
 	
-	public void putByIdentity(Object obj){
-		if(null == obj){
-			throw new ArgumentNullException();
-		}
-		putEntry(new HashtableIdentityEntry(obj));
-	}
-	
 	public Object remove(byte[] key) {
 		int intKey = HashtableByteArrayEntry.hash(key);
 		return removeObjectEntry(intKey, key);
@@ -202,10 +120,6 @@ public class Hashtable4 implements DeepClone, Map4 {
 		return removeObjectEntry(intKey, objectKey);
 	}
 	
-	public String toString() {
-		return Iterators.join(iterator(), "{", "}", ", ");
-	}
-
 	protected Hashtable4 deepCloneInternal(Hashtable4 ret, Object obj) {
 		ret._mask = _mask;
 		ret._maximumSize = _maximumSize;
@@ -218,21 +132,6 @@ public class Hashtable4 implements DeepClone, Map4 {
 			}
 		}
 		return ret;
-	}
-
-	private int entryIndex(HashtableIntEntry entry) {
-		return entry._key & _mask;
-	}
-
-	private HashtableIntEntry findWithSameKey(HashtableIntEntry newEntry) {
-		HashtableIntEntry existing = _table[entryIndex(newEntry)];
-		while (null != existing) {
-			if (existing.sameKeyAs(newEntry)) {
-				return existing;
-			}
-			existing = existing._next;
-		}
-		return null;
 	}
 
 	private Object getFromObjectEntry(int intKey, Object objectKey) {
@@ -249,40 +148,6 @@ public class Hashtable4 implements DeepClone, Map4 {
 			entry = (HashtableObjectEntry) entry._next;
 		}
 		return null;
-	}
-
-	private void increaseSize() {
-		_tableSize = _tableSize << 1;
-		_maximumSize = _maximumSize << 1;
-		_mask = _tableSize - 1;
-		HashtableIntEntry[] temp = _table;
-		_table = new HashtableIntEntry[_tableSize];
-		for (int i = 0; i < temp.length; i++) {
-			reposition(temp[i]);
-		}
-	}
-
-	private void insert(HashtableIntEntry newEntry) {
-		_size++;
-		if (_size > _maximumSize) {
-			increaseSize();
-		}
-		int index = entryIndex(newEntry);
-		newEntry._next = _table[index];
-		_table[index] = newEntry;
-	}
-
-	private final int newSize(int size) {
-		return (int) (size / FILL);
-	}
-
-	private void putEntry(HashtableIntEntry newEntry) {
-		HashtableIntEntry existing = findWithSameKey(newEntry);
-		if (null != existing) {
-			replace(existing, newEntry);
-		} else {
-			insert(newEntry);
-		}
 	}
 
 	private void removeEntry(HashtableIntEntry predecessor, HashtableIntEntry entry) {
@@ -308,24 +173,4 @@ public class Hashtable4 implements DeepClone, Map4 {
 		return null;
 	}
 
-	private void replace(HashtableIntEntry existing, HashtableIntEntry newEntry) {
-		newEntry._next = existing._next;
-		HashtableIntEntry entry = _table[entryIndex(existing)];
-		if (entry == existing) {
-			_table[entryIndex(existing)] = newEntry;
-		} else {
-			while (entry._next != existing) {
-				entry = entry._next;
-			}
-			entry._next = newEntry;
-		}
-	}
-
-	private void reposition(HashtableIntEntry entry) {
-		if (entry != null) {
-			reposition(entry._next);
-			entry._next = _table[entryIndex(entry)];
-			_table[entryIndex(entry)] = entry;
-		}
-	}		
 }
