@@ -20,7 +20,6 @@ import db4ounit.*;
  * below the MockBin and reads open times there directly.
  * The times are then inconsistent with the written times.
  */
-@decaf.Remove
 public class DefragEncryptedFileTestCase implements TestLifeCycle {
 
     private static final String ORIGINAL = Path4.getTempFileName();
