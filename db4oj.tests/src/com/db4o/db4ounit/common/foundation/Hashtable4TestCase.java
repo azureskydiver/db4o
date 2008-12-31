@@ -12,6 +12,29 @@ public class Hashtable4TestCase implements TestCase {
 		new ConsoleTestRunner(Hashtable4TestCase.class).run();
 	}
 	
+	public static class Item {
+		
+		int _id;
+		
+		public Item(int id){
+			_id = id;
+		}
+		
+		@Override
+		public int hashCode() {
+			return _id;
+		}
+		
+		public boolean equals(Object obj) {
+			if(! (obj instanceof Item)){
+				return false;
+			}
+			Item other = (Item) obj;
+			return _id == other._id;
+		}
+		
+	}
+	
 	public void testClear() {
 		final Hashtable4 table = new Hashtable4();
 		for (int i=0; i<2; ++i) {
@@ -164,6 +187,25 @@ public class Hashtable4TestCase implements TestCase {
 		Assert.areEqual("mice", table.get(key2));
 		Assert.areEqual("eggs", table.get(key3));
 		Assert.areEqual(3, countKeys(table));
+	}
+	
+	public void testByIdentity(){
+		Hashtable4 table = new Hashtable4(2);
+		Item item1 = new Item(1);
+		Assert.isFalse(table.containsByIdentity(item1));
+		table.putByIdentity(item1);
+		Assert.isTrue(table.containsByIdentity(item1));
+		Item item2 = new Item(2);
+		Assert.isFalse(table.containsByIdentity(item2));
+		table.putByIdentity(item2);
+		Assert.isTrue(table.containsByIdentity(item2));
+		Assert.areEqual(2, table.size());
+		int size = 0;
+		Iterator4 i = table.iterator();
+		while(i.moveNext()){
+			size++;
+		}
+		Assert.areEqual(2, size);
 	}
 	
 	static class KeyCount {

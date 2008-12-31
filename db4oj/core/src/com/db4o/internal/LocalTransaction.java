@@ -22,7 +22,7 @@ public class LocalTransaction extends Transaction {
     
     protected final StatefulBuffer i_pointerIo;    
     
-    private final Collection4 _participants = new Collection4(); 
+    private final Hashtable4 _participants = new Hashtable4(); 
 
     private final LockedTree _slotChanges = new LockedTree();
 	
@@ -139,7 +139,7 @@ public class LocalTransaction extends Transaction {
 		}
 		checkSynchronization();	
 		if (!_participants.containsByIdentity(participant)) {
-			_participants.add(participant);
+			_participants.putByIdentity(participant);
 		}
 	}
 
@@ -204,7 +204,8 @@ public class LocalTransaction extends Transaction {
         
         Iterator4 iterator = _participants.iterator();
 		while (iterator.moveNext()) {
-			((TransactionParticipant)iterator.current()).commit(this);
+			Entry4 entry = (Entry4)iterator.current();
+			((TransactionParticipant)entry.value()).commit(this);
 		}
     }
     
@@ -235,7 +236,8 @@ public class LocalTransaction extends Transaction {
 	private void disposeParticipants() {
 		Iterator4 iterator = _participants.iterator();
         while (iterator.moveNext()) {
-        	((TransactionParticipant)iterator.current()).dispose(this);
+        	Entry4 entry = (Entry4) iterator.current();
+        	((TransactionParticipant)entry.value()).dispose(this);
         }
 	}
 	
@@ -255,7 +257,8 @@ public class LocalTransaction extends Transaction {
     private void rollbackParticipants() {
     	Iterator4 iterator = _participants.iterator();
 		while (iterator.moveNext()) {
-			((TransactionParticipant)iterator.current()).rollback(this);
+			Entry4 entry = (Entry4) iterator.current();
+			((TransactionParticipant)entry.value()).rollback(this);
 		}
 	}
 	
