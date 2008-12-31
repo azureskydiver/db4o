@@ -30,11 +30,6 @@ public class ReferenceSystemIntegrationTestCase extends AbstractDb4oTestCase{
 		assertAllRerefencesAvailableOnNew(referenceSystem);
 	}
 	
-	public void testHashTableReferenceSystem(){
-        ReferenceSystem referenceSystem = new HashtableReferenceSystem();
-        assertAllRerefencesAvailableOnNew(referenceSystem);
-	}
-	
 	private void assertAllRerefencesAvailableOnCommit(ReferenceSystem referenceSystem){
 		fillReferenceSystem(referenceSystem);
 		referenceSystem.commit();
