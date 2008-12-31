@@ -133,6 +133,10 @@ public class Hashtable4 implements DeepClone, Map4 {
 		});
 	}
 	
+	public boolean containsByIdentity(Object obj){
+		return findWithSameKey(new HashtableIdentityEntry(obj)) != null;
+	}
+	
 	public boolean containsKey(Object key) {
 		if (null == key) {
 			return false;
@@ -167,7 +171,14 @@ public class Hashtable4 implements DeepClone, Map4 {
 		}
 		putEntry(new HashtableObjectEntry(key, value));
 	}
-
+	
+	public void putByIdentity(Object obj){
+		if(null == obj){
+			throw new ArgumentNullException();
+		}
+		putEntry(new HashtableIdentityEntry(obj));
+	}
+	
 	public Object remove(byte[] key) {
 		int intKey = HashtableByteArrayEntry.hash(key);
 		return removeObjectEntry(intKey, key);
