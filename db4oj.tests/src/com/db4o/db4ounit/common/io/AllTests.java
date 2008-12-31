@@ -16,6 +16,7 @@ public class AllTests extends ReflectionTestSuite {
 			BlockAwareBinTestSuite.class,
 			BlockSizeDependentBinTestCase.class,
 			IoAdapterTestSuite.class,
+			MemoryBinIsReusableTestCase.class,
 			RandomAccessFileStorageFactoryTestCase.class,
 			StorageTestSuite.class,
 			NonFlushingStorageTestCase.class,
