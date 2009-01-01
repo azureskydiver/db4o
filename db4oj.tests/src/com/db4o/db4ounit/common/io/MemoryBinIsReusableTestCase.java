@@ -2,8 +2,8 @@ package com.db4o.db4ounit.common.io;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.internal.*;
 import com.db4o.io.*;
-import com.db4o.reflect.jdk.*;
 
 import db4ounit.*;
 
@@ -44,7 +44,7 @@ public class MemoryBinIsReusableTestCase implements TestCase {
 	private EmbeddedConfiguration config(MemoryStorage storage) {
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.file().storage(storage);
-		config.common().reflectWith(new JdkReflector(Item.class.getClassLoader()));
+		config.common().reflectWith(Platform4.reflectorForType(Item.class));
 		return config;
 	}
 	
