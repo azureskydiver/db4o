@@ -5,8 +5,8 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public interface Visitor4 {
+public interface Visitor4<T> {
     
-	public void visit(Object obj);
+	public void visit(T obj);
 	
 }
