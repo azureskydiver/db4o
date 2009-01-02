@@ -422,11 +422,11 @@ public abstract class Tree implements ShallowClone , DeepClone{
         tree.traverse(visitor);
     }
     
-	public final void traverse(final Visitor4 a_visitor){
+	public final <T extends Tree> void traverse(final Visitor4<T> a_visitor){
 		if(_preceding != null){
 			_preceding.traverse(a_visitor);
 		}
-		a_visitor.visit(this);
+		a_visitor.visit((T) this);
 		if(_subsequent != null){
 			_subsequent.traverse(a_visitor);
 		}
