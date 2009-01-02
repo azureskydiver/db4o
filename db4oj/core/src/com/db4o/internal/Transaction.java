@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
@@ -40,10 +42,28 @@ public abstract class Transaction {
     
     private final TransactionalReferenceSystem _referenceSystem;
     
+    private final Map<TransactionLocal<?>, Object> _state = new HashMap<TransactionLocal<?>, Object>();
+    
     public Transaction(ObjectContainerBase container, Transaction systemTransaction, TransactionalReferenceSystem referenceSystem) {
         _container = container;
         _systemTransaction = systemTransaction;
         _referenceSystem = referenceSystem;
+    }
+    
+    /**
+     * Transaction local variables.
+     * 
+     * @param <T>
+     * @param local
+     * @return
+     */
+    public <T> ByRef<T> get(TransactionLocal<T> local) {
+    	final ByRef<T> existing = (ByRef<T>) _state.get(local);
+    	if (null != existing)
+    		return existing;
+		final ByRef<T> initialValue = ByRef.newInstance(local.initialValueFor(this));
+		_state.put(local, initialValue);
+		return initialValue;
     }
 
 	public final void checkSynchronization() {
@@ -59,6 +79,7 @@ public abstract class Transaction {
     protected final void clearAll() {
         clear();
         _transactionListeners = null;
+        _state.clear();
     }
     
     protected abstract void clear(); 
@@ -153,6 +174,7 @@ public abstract class Transaction {
 
 	protected void rollBackTransactionListeners() {
         checkSynchronization();
+        
         if (_transactionListeners != null) {
             Iterator4 i = new Iterator4Impl(_transactionListeners);
             while (i.moveNext()) {
