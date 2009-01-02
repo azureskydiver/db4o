@@ -22,7 +22,7 @@ public class LocalTransaction extends Transaction {
     
     protected final StatefulBuffer i_pointerIo;    
     
-    private final IdentityHashtable4 _participants = new IdentityHashtable4(); 
+    private final IdentitySet4 _participants = new IdentitySet4(); 
 
     private final LockedTree _slotChanges = new LockedTree();
 	
@@ -139,7 +139,7 @@ public class LocalTransaction extends Transaction {
 		}
 		checkSynchronization();	
 		if (!_participants.contains(participant)) {
-			_participants.put(participant);
+			_participants.add(participant);
 		}
 	}
 

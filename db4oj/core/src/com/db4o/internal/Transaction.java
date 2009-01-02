@@ -42,7 +42,7 @@ public abstract class Transaction {
     
     private final TransactionalReferenceSystem _referenceSystem;
     
-    private final Map<TransactionLocal<?>, Object> _state = new HashMap<TransactionLocal<?>, Object>();
+    private final Map<TransactionLocal<?>, Object> _locals = new HashMap<TransactionLocal<?>, Object>();
     
     public Transaction(ObjectContainerBase container, Transaction systemTransaction, TransactionalReferenceSystem referenceSystem) {
         _container = container;
@@ -58,11 +58,11 @@ public abstract class Transaction {
      * @return
      */
     public <T> ByRef<T> get(TransactionLocal<T> local) {
-    	final ByRef<T> existing = (ByRef<T>) _state.get(local);
+    	final ByRef<T> existing = (ByRef<T>) _locals.get(local);
     	if (null != existing)
     		return existing;
 		final ByRef<T> initialValue = ByRef.newInstance(local.initialValueFor(this));
-		_state.put(local, initialValue);
+		_locals.put(local, initialValue);
 		return initialValue;
     }
 
@@ -79,7 +79,7 @@ public abstract class Transaction {
     protected final void clearAll() {
         clear();
         _transactionListeners = null;
-        _state.clear();
+        _locals.clear();
     }
     
     protected abstract void clear(); 

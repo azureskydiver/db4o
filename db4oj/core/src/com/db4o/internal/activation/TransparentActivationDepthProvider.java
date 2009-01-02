@@ -29,12 +29,12 @@ public class TransparentActivationDepthProvider implements ActivationDepthProvid
 	}
 	
 	private RollbackStrategy _rollbackStrategy;
-	private boolean _transparentPersistenceEnabled;
+	private boolean _transparentPersistenceIsEnabled;
 	
 	public void enableTransparentPersistenceSupportFor(InternalObjectContainer container, RollbackStrategy rollbackStrategy) {
 		flushOnQueryStarted(container);
 		_rollbackStrategy = rollbackStrategy;
-		_transparentPersistenceEnabled = true;
+		_transparentPersistenceIsEnabled = true;
 	}
 
 	private void flushOnQueryStarted(InternalObjectContainer container) {
@@ -53,7 +53,7 @@ public class TransparentActivationDepthProvider implements ActivationDepthProvid
     }
 
 	public void addModified(Transaction transaction, Object object) {
-		if (!_transparentPersistenceEnabled)
+		if (!_transparentPersistenceIsEnabled)
 			return;
 		objectsModifiedIn(transaction).add(object);
 	}
@@ -83,7 +83,7 @@ public class TransparentActivationDepthProvider implements ActivationDepthProvid
 
 	private static final class ObjectsModifiedInTransaction {
 
-		private final IdentityHashtable4 _modified = new IdentityHashtable4();
+		private final IdentitySet4 _modified = new IdentitySet4();
 		private final Transaction _transaction;
 
 		public ObjectsModifiedInTransaction(Transaction transaction) {
@@ -93,7 +93,7 @@ public class TransparentActivationDepthProvider implements ActivationDepthProvid
 		public void add(Object object) {
 			if (contains(object))
 				return;
-			_modified.put(object);
+			_modified.add(object);
 		}
 
 		private boolean contains(Object object) {
@@ -108,7 +108,6 @@ public class TransparentActivationDepthProvider implements ActivationDepthProvid
 		private void storeModifiedObjects() {
 	        final ObjectContainerBase container = _transaction.container();
 			final Iterator4 values = _modified.valuesIterator();
-			// container.storeAll(_transaction, values);
 			while (values.moveNext()) {
 				container.store(_transaction, values.current());
 			}
