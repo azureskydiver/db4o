@@ -36,8 +36,8 @@ public interface InternalObjectContainer extends ExtObjectContainer {
     
     public Config4Impl configImpl();
     
-    public Object syncExec(Closure4 block);
-
+    public <R> R syncExec(Closure4<R> block);
+    
     public int instanceCount(ClassMetadata clazz, Transaction trans);
     
     public boolean isClient();
