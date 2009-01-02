@@ -31,4 +31,8 @@ public class MethodCallRecorder implements Iterable4 {
 	public void verify(MethodCall... expectedCalls) {
 		Iterator4Assert.areEqual(expectedCalls, iterator());
 	}
+
+	public void verifyUnordered(MethodCall... expectedCalls) {
+		Iterator4Assert.sameContent(expectedCalls, iterator());
+    }
 }

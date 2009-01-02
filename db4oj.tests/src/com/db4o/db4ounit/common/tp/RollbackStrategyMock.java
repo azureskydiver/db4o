@@ -18,4 +18,8 @@ public class RollbackStrategyMock implements RollbackStrategy {
 	public void verify(MethodCall[] expectedCalls) {
 		_recorder.verify(expectedCalls);
 	}
+
+	public void verifyUnordered(MethodCall[] methodCalls) {
+		_recorder.verifyUnordered(methodCalls);
+    }
 }

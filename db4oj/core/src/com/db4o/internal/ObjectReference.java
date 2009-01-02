@@ -10,8 +10,6 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.reflect.*;
-import com.db4o.ta.*;
-
 
 /**
  * A weak reference to an known object.
@@ -62,64 +60,24 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 
 	public void activateOn(final Transaction transaction, ActivationPurpose purpose) {
 		final ObjectContainerBase container = transaction.container(); 
-	    	if (ActivationPurpose.WRITE == purpose) {
-	    		synchronized(container.lock()){
-	    			enlistForUpdate(transaction);
-	    		}
-	    	}
-    		if (isActive()) {    			
-    			return;
-    		}
+		if (!(container.activationDepthProvider() instanceof TransparentActivationDepthProvider)) {
+			return;
+		}
+		
+		final TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) container.activationDepthProvider();
+    	if (ActivationPurpose.WRITE == purpose) {
     		synchronized(container.lock()){
-	    		TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) container.activationDepthProvider();
-				activate(transaction, getObject(), new DescendingActivationDepth(provider, ActivationMode.ACTIVATE));
+    			provider.addModified(transaction, getObject());
     		}
-	    
-	}
-	
-	private transient TransactionListener _updateListener;
-
-	private void enlistForUpdate(final Transaction transaction) {
-		if (null != _updateListener) {
+    	}
+    	
+		if (isActive()) {    			
 			return;
 		}
-		final TransparentPersistenceSupport transparentPersistence = configuredTransparentPersistence();
-		if (null == transparentPersistence) {
-			// don't check for update again for this object
-			_updateListener = NullTransactionListener.INSTANCE;
-			return;
+		
+		synchronized(container.lock()){
+			activate(transaction, getObject(), new DescendingActivationDepth(provider, ActivationMode.ACTIVATE));
 		}
-		_updateListener = new TransactionListener() {
-			
-			private Object _hardRef = getObject();
-			
-			public void postRollback() {
-				resetListener();
-				transparentPersistence.rollback(transaction.objectContainer(), _hardRef);
-				_hardRef = null;
-			}
-
-			public void preCommit() {
-				resetListener();
-				container().store(transaction, _hardRef);
-				_hardRef = null;
-			}
-		};
-		transaction.addTransactionListener(_updateListener);
-	}
-	
-	private void resetListener() {
-		_updateListener = null;
-	}
-
-	private TransparentPersistenceSupport configuredTransparentPersistence() {
-		final Iterator4 iterator = container().config().configurationItemsIterator();
-		while (iterator.moveNext()) {
-			if (iterator.current() instanceof TransparentPersistenceSupport) {
-				return (TransparentPersistenceSupport) iterator.current();
-			}
-		}
-		return null;
 	}
 
 	public void activate(Transaction ta, Object obj, ActivationDepth depth) {

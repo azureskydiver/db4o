@@ -14,9 +14,12 @@ public final class MQueryExecute extends MsgQuery implements ServerSideMessage {
 	public boolean processAtServer() {
 		try {
 			unmarshall(_payLoad._offset);
-			synchronized (streamLock()) {
+			
+			stream().withTransaction(transaction(), new Runnable() { public void run() {
+				
 				writeQueryResult(execute(), _evaluationMode);
-			}
+				
+			}});
 		} catch (Db4oException e) {
 			writeException(e);
 		}
@@ -25,20 +28,18 @@ public final class MQueryExecute extends MsgQuery implements ServerSideMessage {
 
 	private AbstractQueryResult execute() {
 		
-		synchronized (streamLock()) {
             
-            // TODO: The following used to run outside of the
-            // synchronisation block for better performance but
-            // produced inconsistent results, cause unknown.
+        // TODO: The following used to run outside of the
+        // synchronisation block for better performance but
+        // produced inconsistent results, cause unknown.
 
-            QQuery query = (QQuery) readObjectFromPayLoad();
-            query.unmarshall(transaction());
-            
-            _evaluationMode = query.evaluationMode();
-            
-			return executeFully(query);
-			
-		}
+        QQuery query = (QQuery) readObjectFromPayLoad();
+        query.unmarshall(transaction());
+        
+        _evaluationMode = query.evaluationMode();
+        
+		return executeFully(query);
+		
 	}
 
 	private AbstractQueryResult executeFully(QQuery query) {
