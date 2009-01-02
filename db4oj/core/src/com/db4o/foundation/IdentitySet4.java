@@ -5,12 +5,12 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public class IdentityHashtable4 extends HashtableBase{
+public class IdentitySet4 extends HashtableBase{
 	
-	public IdentityHashtable4(){
+	public IdentitySet4(){
 	}
 	
-	public IdentityHashtable4(int size){
+	public IdentitySet4(int size){
 		super(size);
 	}
 	
@@ -18,7 +18,7 @@ public class IdentityHashtable4 extends HashtableBase{
 		return findWithSameKey(new HashtableIdentityEntry(obj)) != null;
 	}
 	
-	public void put(Object obj){
+	public void add(Object obj){
 		if(null == obj){
 			throw new ArgumentNullException();
 		}

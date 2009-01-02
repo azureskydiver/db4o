@@ -6,7 +6,7 @@ import com.db4o.foundation.*;
 
 import db4ounit.*;
 
-public class IdentityHashtable4TestCase implements TestCase{
+public class IdentitySet4TestCase implements TestCase{
 	
 	public static class Item {
 		
@@ -32,14 +32,14 @@ public class IdentityHashtable4TestCase implements TestCase{
 	}
 	
 	public void testByIdentity(){
-		IdentityHashtable4 table = new IdentityHashtable4(2);
+		IdentitySet4 table = new IdentitySet4(2);
 		Item item1 = new Item(1);
 		Assert.isFalse(table.contains(item1));
-		table.put(item1);
+		table.add(item1);
 		Assert.isTrue(table.contains(item1));
 		Item item2 = new Item(2);
 		Assert.isFalse(table.contains(item2));
-		table.put(item2);
+		table.add(item2);
 		Assert.isTrue(table.contains(item2));
 		Assert.areEqual(2, table.size());
 		int size = 0;
