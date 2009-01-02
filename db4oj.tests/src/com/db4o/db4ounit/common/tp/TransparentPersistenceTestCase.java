@@ -15,6 +15,10 @@ import db4ounit.extensions.*;
 
 public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 	
+	public static void main(String[] args) {
+	    new TransparentPersistenceTestCase().runClientServer();
+    }
+	
 	protected void configure(Configuration config) throws Exception {
 		config.add(new TransparentPersistenceSupport());
 	}
@@ -40,9 +44,8 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 		final ExtObjectContainer client2 = openNewClient();
 		try {
 			Item foo1 = itemByName(client1, "Foo");
-			foo1.setName("Foo*");
-			
 			Item foo2 = itemByName(client2, "Foo");
+			foo1.setName("Foo*");
 			foo2.setName("Foo**");
 			
 			assertUpdatedObjects(client1, foo1);
@@ -58,11 +61,11 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 	public void testTransparentUpdate() throws Exception {
 		
 		Item foo = itemByName("Foo");
+		Item bar = itemByName("Bar");
+		
+		Assert.areEqual("Bar", bar.getName()); // accessed but not changed
 		foo.setName("Bar"); // changing more than once shouldn't be a problem
 		foo.setName("Foo*");
-		
-		Item bar = itemByName("Bar"); 
-		Assert.areEqual("Bar", bar.getName()); // accessed but not changed
 		
 		assertUpdatedObjects(foo);
 		

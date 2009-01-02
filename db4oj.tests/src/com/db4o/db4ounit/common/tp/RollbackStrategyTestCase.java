@@ -28,9 +28,9 @@ public class RollbackStrategyTestCase extends AbstractDb4oTestCase {
 		
 		db().rollback();
 		
-		_mock.verify(new MethodCall[] {
-			new MethodCall("rollback", db(), item2),
+		_mock.verifyUnordered(new MethodCall[] {
 			new MethodCall("rollback", db(), item1),
+			new MethodCall("rollback", db(), item2),
 		});
 		
 	}

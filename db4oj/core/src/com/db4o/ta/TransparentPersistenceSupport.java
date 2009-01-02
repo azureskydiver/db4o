@@ -2,14 +2,13 @@
 
 package com.db4o.ta;
 
-import com.db4o.*;
-import com.db4o.config.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 
 /**
  * Enables the Transparent Update and Transparent Activation behaviors.
  */
-public class TransparentPersistenceSupport implements ConfigurationItem {
+public class TransparentPersistenceSupport extends TransparentActivationSupport {
 
 	private final RollbackStrategy _rollbackStrategy;
 
@@ -21,17 +20,11 @@ public class TransparentPersistenceSupport implements ConfigurationItem {
 		this(null);
 	}
 
+	@Override
 	public void apply(InternalObjectContainer container) {
-	}
-
-	public void prepare(Configuration configuration) {
-		configuration.add(new TransparentActivationSupport());
-	}
-
-	public void rollback(ObjectContainer container, Object obj) {
-		if (null == _rollbackStrategy) {
-			return;
-		}
-		_rollbackStrategy.rollback(container, obj);
+		super.apply(container);
+		
+		final TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) container.configImpl().activationDepthProvider();
+		provider.enableTransparentPersistenceSupportFor(container, _rollbackStrategy);
 	}
 }

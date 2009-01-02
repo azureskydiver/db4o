@@ -11,6 +11,7 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 			DeactivateDeletedObjectOnRollbackStrategyTestCase.class,
+			QueryConsistencyTestCase.class,
 			RollbackStrategyTestCase.class,
 			TransparentPersistenceTestCase.class,
 		};
