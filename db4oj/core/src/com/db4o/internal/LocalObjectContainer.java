@@ -215,10 +215,9 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
     final void freePrefetchedPointers() {
         if (i_prefetchedIDs != null) {
-            i_prefetchedIDs.traverse(new Visitor4() {
-
-                public void visit(Object a_object) {
-                    free(((TreeInt) a_object)._key, Const4.POINTER_LENGTH);
+            i_prefetchedIDs.traverse(new Visitor4<TreeInt>() {
+                public void visit(TreeInt node) {
+                    free(node._key, Const4.POINTER_LENGTH);
                 }
             });
         }
