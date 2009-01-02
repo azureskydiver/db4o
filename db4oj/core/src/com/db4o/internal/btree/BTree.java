@@ -32,7 +32,11 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
     
     private Visitor4 _removeListener;
     
-    private Hashtable4 _sizesByTransaction;
+    private final TransactionLocal<Integer> _sizeDeltaInTransaction = new TransactionLocal<Integer>() {
+    	@Override public Integer initialValueFor(Transaction transaction) {
+    		return 0;
+    	}
+    };
     
     protected Queue4 _processing;
     
@@ -59,7 +63,6 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
         _halfNodeSize = _nodeSize / 2;
         _nodeSize = _halfNodeSize * 2;
         _keyHandler = keyHandler;
-        _sizesByTransaction = new Hashtable4();
         if(id == 0){
             setStateDirty();
             _root = new BTreeNode(this, 0, true, 0, 0, 0);
@@ -149,69 +152,64 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
         return _root.searchLeaf(trans, preparedComparison, target);
     }
     
-    public void commit(final Transaction trans){
-        
-        final Transaction systemTransaction = trans.systemTransaction();
-        
-        Object sizeDiff = _sizesByTransaction.get(trans);
-        if(sizeDiff != null){
-            _size += ((Integer) sizeDiff).intValue();
-        }
-        _sizesByTransaction.remove(trans);
-        
-        if(_nodes != null){
-        	commitNodes(trans);
-            writeAllNodes(systemTransaction);
-        }
-        
-        setStateDirty();
-        write(systemTransaction);
-        
-        purge();
+    public void commit(final Transaction transaction){
+    	updateSize(transaction);
+    	commitNodes(transaction);
+    	finishTransaction(transaction);
+    }
+
+	private void updateSize(final Transaction transaction) {
+	    final ByRef<Integer> sizeInTransaction = sizeIn(transaction);
+		_size += sizeInTransaction.value;
+		sizeInTransaction.value = 0;
+    }
+
+	private ByRef<Integer> sizeIn(final Transaction trans) {
+	    return trans.get(_sizeDeltaInTransaction);
     }
     
-    public void commitNodes(Transaction trans){
-        if(_nodes == null){
+    public void commitNodes(final Transaction trans){
+        processEachNode(new Procedure4<BTreeNode>() { public void apply(BTreeNode node) {
+			node.commit(trans);
+		}});
+    }
+    
+    private void processEachNode(Procedure4<BTreeNode> action) {
+        if(_nodes == null)
         	return;
-        }
         processAllNodes();
         while(_processing.hasNext()){
-        	((BTreeNode)_processing.next()).commit(trans);
+        	action.apply((BTreeNode)_processing.next());
         }
         _processing = null;
     }
     
     public void rollback(final Transaction trans){
-    	
-        final Transaction systemTransaction = trans.systemTransaction();
-        
-        _sizesByTransaction.remove(trans);
-        
-        if(_nodes == null){
-            return;
-        }
-        
-        processAllNodes();
-        while(_processing.hasNext()){
-            ((BTreeNode)_processing.next()).rollback(trans);
-        }
-        _processing = null;
-        
+        rollbackNodes(trans);
+        finishTransaction(trans);
+    }
+
+	private void finishTransaction(final Transaction trans) {
+	    final Transaction systemTransaction = trans.systemTransaction();
         writeAllNodes(systemTransaction);
-        
         setStateDirty();
         write(systemTransaction);
-        
         purge();
+    }
+
+	private void rollbackNodes(final Transaction trans) {
+	    processEachNode(new Procedure4<BTreeNode>() { public void apply(BTreeNode node) {
+            node.rollback(trans);
+        }});
     }
     
     private void writeAllNodes(final Transaction systemTransaction){
         if(_nodes == null){
         	return;
         }
-    	_nodes.traverse(new Visitor4() {
-            public void visit(Object obj) {
-                BTreeNode node = (BTreeNode)((TreeIntObject)obj).getObject();
+    	_nodes.traverse(new Visitor4<TreeIntObject>() {
+            public void visit(TreeIntObject obj) {
+                BTreeNode node = (BTreeNode)obj.getObject();
                 node.write(systemTransaction);
             }
         });
@@ -249,9 +247,9 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
     
     private void processAllNodes(){
         _processing = new NonblockingQueue();
-        _nodes.traverse(new Visitor4() {
-            public void visit(Object obj) {
-                _processing.add(((TreeIntObject)obj).getObject());
+        _nodes.traverse(new Visitor4<TreeIntObject>() {
+            public void visit(TreeIntObject node) {
+                _processing.add(node.getObject());
             }
         });
     }
@@ -344,11 +342,7 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
 		// For multiple transactions the size patches only are an estimate.
     	
         ensureActive(trans);
-        Object sizeDiff = _sizesByTransaction.get(trans);
-        if(sizeDiff != null){
-            return _size + ((Integer) sizeDiff).intValue();
-        }
-        return _size;
+        return _size + sizeIn(trans).value;
     }
     
     public void traverseKeys(Transaction trans, Visitor4 visitor){
@@ -359,18 +353,15 @@ public class BTree extends PersistentBase implements TransactionParticipant, BTr
         _root.traverseKeys(trans, visitor);
     }
     
-    public void sizeChanged(Transaction trans, BTreeNode node, int changeBy){
-    	notifyCountChanged(trans, node, changeBy);
-        Object sizeDiff = _sizesByTransaction.get(trans);
-        if(sizeDiff == null){
-            _sizesByTransaction.put(trans, new Integer(changeBy));
-            return;
-        }
-        _sizesByTransaction.put(trans, new Integer(((Integer) sizeDiff).intValue() + changeBy));
+    public void sizeChanged(Transaction transaction, BTreeNode node, int changeBy){
+    	notifyCountChanged(transaction, node, changeBy);
+
+    	final ByRef<Integer> sizeInTransaction = sizeIn(transaction);
+		sizeInTransaction.value = sizeInTransaction.value + changeBy;
+		
     }
 
 	public void dispose(Transaction transaction) {
-		// nothing to do here
 	}
 
 	public BTreePointer firstPointer(Transaction trans) {
