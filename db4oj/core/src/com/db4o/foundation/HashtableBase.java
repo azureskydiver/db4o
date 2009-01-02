@@ -166,7 +166,4 @@ public class HashtableBase {
 	public String toString() {
 		return Iterators.join(iterator(), "{", "}", ", ");
 	}
-
-
-
 }
