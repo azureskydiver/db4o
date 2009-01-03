@@ -46,8 +46,7 @@ public interface ObjectContainer {
      * {@link com.db4o.config.ObjectClass#maximumActivationDepth maximumActivationDepth()} and
      * {@link com.db4o.config.ObjectClass#minimumActivationDepth minimumActivationDepth()} in the
      * {@link com.db4o.config.ObjectClass ObjectClass interface}.<br><br>
-     * A successful call to activate triggers the callback method
-     * {@link com.db4o.ext.ObjectCallbacks#objectOnActivate objectOnActivate}
+     * A successful call to activate triggers Activating and Activated callbacks,
      * which can be used for cascaded activation.<br><br>
      * @see com.db4o.config.Configuration#activationDepth Why activation?
      * @see ObjectCallbacks Using callbacks
@@ -86,12 +85,10 @@ public interface ObjectContainer {
     /**
      * deactivates a stored object by setting all members to <code>NULL</code>.
      * <br>Primitive types will be set to their default values.
-     * <br><br><b>Examples: ../com/db4o/samples/activate.</b><br><br>
      * Calls to this method save memory.
      * The method has no effect, if the passed object is not stored in the
      * <code>ObjectContainer</code>.<br><br>
-     * <code>deactivate()</code> triggers the callback method
-     * {@link com.db4o.ext.ObjectCallbacks#objectOnDeactivate objectOnDeactivate}.
+     * <code>deactivate()</code> triggers Deactivating and Deactivated callbacks.
      * <br><br>
      * Be aware that calling this method with a depth parameter greater than 
      * 1 sets members on member objects to null. This may have side effects 
@@ -119,8 +116,7 @@ public interface ObjectContainer {
      * <br><br>A subsequent call to
      * <code>set()</code> with the same object newly stores the object
      * to the <code>ObjectContainer</code>.<br><br>
-     * <code>delete()</code> triggers the callback method
-     * {@link com.db4o.ext.ObjectCallbacks#objectOnDelete objectOnDelete}
+     * <code>delete()</code> triggers Deleting and Deleted callbacks,
      * which can be also used for cascaded deletes.<br><br>
 	 * @see com.db4o.config.ObjectClass#cascadeOnDelete
 	 * @see com.db4o.config.ObjectField#cascadeOnDelete
@@ -172,8 +168,8 @@ public interface ObjectContainer {
 	 * db4o keeps track of all instantiatied objects. Queries will return
 	 * references to these objects instead of instantiating them a second time.
 	 * <br><br>
-	 * Objects newly activated by <code>get()</code> can respond to the callback
-	 * method {@link com.db4o.ext.ObjectCallbacks#objectOnActivate objectOnActivate}.
+	 * Objects newly activated by <code>get()</code> can respond to the Activating callback
+	 * method.
 	 * <br><br>
 	 * @param template object to be used as an example to find all matching objects.<br><br>
 	 * @return {@link ObjectSet ObjectSet} containing all found objects.<br><br>
@@ -213,8 +209,8 @@ public interface ObjectContainer {
      * db4o keeps track of all instantiatied objects. Queries will return
      * references to these objects instead of instantiating them a second time.
      * <br><br>
-     * Objects newly activated by <code>queryByExample()</code> can respond to the callback
-     * method {@link com.db4o.ext.ObjectCallbacks#objectOnActivate objectOnActivate}.
+	 * Objects newly activated by <code>queryByExample()</code> can respond to the Activating callback
+	 * method.
      * <br><br>
      * @param template object to be used as an example to find all matching objects.<br><br>
      * @return {@link ObjectSet ObjectSet} containing all found objects.<br><br>
@@ -258,17 +254,9 @@ public interface ObjectContainer {
      * against indexes and without instantiating actual objects, where this is 
      * possible.<br><br>
      * The syntax of the enclosing object for the native query expression varies,
-     * depending on the language version used. Here are some examples,
-     * how a simple native query will look like in some of the programming languages 
-     * and dialects that db4o supports:<br><br>
+     * depending on the language version used. Here are some examples:<br><br>
      * 
      * <code>
-     * <b>// C# .NET 2.0</b><br>
-     * IList &lt;Cat&gt; cats = db.Query &lt;Cat&gt; (delegate(Cat cat) {<br>
-     * &#160;&#160;&#160;return cat.Name == "Occam";<br>
-     * });<br>
-     * <br>
-     *<br>
      * <b>// Java JDK 5</b><br>
      * List &lt;Cat&gt; cats = db.query(new Predicate&lt;Cat&gt;() {<br>
      * &#160;&#160;&#160;public boolean match(Cat cat) {<br>
@@ -293,31 +281,19 @@ public interface ObjectContainer {
      * &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br>
      * &#160;&#160;&#160;}<br>
      * });<br>
-     * <br>
-     * <br>     
-     * <b>// C# .NET 1.1</b><br>
-     * IList cats = db.Query(new CatOccam());<br>
-     * <br>
-     * public class CatOccam : Predicate {<br>
-     * &#160;&#160;&#160;public boolean Match(Cat cat) {<br>
-     * &#160;&#160;&#160;&#160;&#160;&#160;return cat.Name == "Occam";<br>
-     * &#160;&#160;&#160;}<br>
-     * });<br>
-     * </code>
+      * </code>
 
      * <br>
      * Summing up the above:<br>
-     * In order to run a Native Query, you can<br>
-     * - use the delegate notation for .NET 2.0.<br>
-     * - extend the Predicate class for all other language dialects<br><br>
+     * In order to run a Native Query, you can extend the Predicate class for all other language dialects<br><br>
      * A class that extends Predicate is required to 
-     * implement the #match() / #Match() method, following the native query
+     * implement the #match() method, following the native query
      * conventions:<br>
-     * - The name of the method is "#match()" (Java) / "#Match()" (.NET).<br>
-     * - The method must be public public.<br>
+     * - The name of the method is "#match()".<br>
+     * - The method must be public.<br>
      * - The method returns a boolean.<br>
      * - The method takes one parameter.<br>
-     * - The Type (.NET) / Class (Java) of the parameter specifies the extent.<br>
+     * - The Class (Java) of the parameter specifies the extent.<br>
      * - For all instances of the extent that are to be included into the
      * resultset of the query, the match method should return true. For all
      * instances that are not to be included, the match method should return
@@ -351,9 +327,9 @@ public interface ObjectContainer {
      * @return the {@link ObjectSet} returned by the query.
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
+     * @decaf.ignore.jdk11
      * @sharpen.ignore
      */
-    @decaf.Ignore(decaf.Platform.JDK11)
     public <TargetType> ObjectSet <TargetType> query(Predicate<TargetType> predicate,Comparator<TargetType> comparator) throws Db4oIOException, DatabaseClosedException;
 
     /**
@@ -385,12 +361,9 @@ public interface ObjectContainer {
 	 * update depth was configured or cascaded updates were 
 	 * {@link com.db4o.config.ObjectClass#cascadeOnUpdate defined in the class}
 	 * or in {@link com.db4o.config.ObjectField#cascadeOnUpdate one of the member fields}.
-	 * <br><br><b>Examples: ../com/db4o/samples/update.</b><br><br>
-	 * Depending if the passed object is newly stored or updated, the
-	 * callback method
-	 * {@link com.db4o.ext.ObjectCallbacks#objectOnNew objectOnNew} or
-	 * {@link com.db4o.ext.ObjectCallbacks#objectOnUpdate objectOnUpdate} is triggered.
-	 * {@link com.db4o.ext.ObjectCallbacks#objectOnUpdate objectOnUpdate}
+	 * Depending if the passed object is newly stored or updated, Creating/Created 
+	 * or Updating/Updated callback method is triggered.
+	 * Callbacks
 	 * might also be used for cascaded updates.<br><br>
 	 * @param obj the object to be stored or updated.
 	 * @see ExtObjectContainer#store(java.lang.Object, int) ExtObjectContainer#set(object, depth)
@@ -408,7 +381,7 @@ public interface ObjectContainer {
 	/**
      * newly stores objects or updates stored objects.
      * <br><br>An object not yet stored in the <code>ObjectContainer</code> will be
-     * stored when it is passed to <code>set()</code>. An object already stored
+     * stored when it is passed to <code>store()</code>. An object already stored
      * in the <code>ObjectContainer</code> will be updated.
      * <br><br><b>Updates</b><br>
 	 * - will affect all simple type object members.<br>
@@ -417,19 +390,16 @@ public interface ObjectContainer {
 	 * new members, as long as further new members are found.<br>
      * - object members that are already stored will <b>not</b> be updated
      * themselves.<br>Every object member needs to be updated individually with a
-	 * call to <code>set()</code> unless a deep
+	 * call to <code>store()</code> unless a deep
 	 * {@link com.db4o.config.Configuration#updateDepth global} or 
      * {@link com.db4o.config.ObjectClass#updateDepth class-specific}
      * update depth was configured or cascaded updates were 
      * {@link com.db4o.config.ObjectClass#cascadeOnUpdate defined in the class}
      * or in {@link com.db4o.config.ObjectField#cascadeOnUpdate one of the member fields}.
-     * <br><br><b>Examples: ../com/db4o/samples/update.</b><br><br>
-     * Depending if the passed object is newly stored or updated, the
-     * callback method
-     * {@link com.db4o.ext.ObjectCallbacks#objectOnNew objectOnNew} or
-     * {@link com.db4o.ext.ObjectCallbacks#objectOnUpdate objectOnUpdate} is triggered.
-     * {@link com.db4o.ext.ObjectCallbacks#objectOnUpdate objectOnUpdate}
-     * might also be used for cascaded updates.<br><br>
+	 * Depending if the passed object is newly stored or updated, Creating/Created 
+	 * or Updating/Updated callback method is triggered.
+	 * Callbacks
+	 * might also be used for cascaded updates.<br><br>
      * @param obj the object to be stored or updated.
 	 * @see ExtObjectContainer#store(java.lang.Object, int) ExtObjectContainer#set(object, depth)
 	 * @see com.db4o.config.Configuration#updateDepth
