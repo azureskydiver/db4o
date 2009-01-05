@@ -3,7 +3,6 @@
 package com.db4o.foundation;
 
 /**
- * @sharpen.ignore
  * @exclude
  */
 public final class SimpleTimer implements Runnable {
