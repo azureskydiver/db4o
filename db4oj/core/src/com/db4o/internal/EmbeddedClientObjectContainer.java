@@ -466,5 +466,9 @@ public class EmbeddedClientObjectContainer implements InternalObjectContainer, T
     public boolean isClient(){
     	return true;
     }
+    
+	public void storeAll(Transaction transaction, Iterator4 objects){
+		_server.storeAll(transaction, objects);
+	}
 
 }

@@ -107,10 +107,7 @@ public class TransparentActivationDepthProvider implements ActivationDepthProvid
 
 		private void storeModifiedObjects() {
 	        final ObjectContainerBase container = _transaction.container();
-			final Iterator4 values = _modified.valuesIterator();
-			while (values.moveNext()) {
-				container.store(_transaction, values.current());
-			}
+	        container.storeAll(_transaction, _modified.valuesIterator());
         }
 
 		public void rollback(RollbackStrategy rollbackStrategy) {

@@ -42,4 +42,6 @@ public interface InternalObjectContainer extends ExtObjectContainer {
     
     public boolean isClient();
 
+	public void storeAll(Transaction trans, Iterator4 objects);
+
 }
