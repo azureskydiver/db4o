@@ -455,11 +455,11 @@
 			</manifest>
 		</jar>
 	    <jar destfile="${file.db4obench.jar}">
-				<fileset dir="${dir.dist.classes.db4obench}" />
-				<manifest>
-					<attribute name="Class-Path" value="${filename.ant.jar} ${filename.jdk1.2.jar}"/>
-				</manifest>
-			</jar>
+			<fileset dir="${dir.dist.classes.db4obench}" />
+			<manifest>
+				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.jdk1.2.jar}"/>
+			</manifest>
+		</jar>
 	</target>
 	
 	<target name="build.nqopt" depends="build.db4ojdk1.5, build.db4ojdk1.2, build.instrumentation">
@@ -567,37 +567,42 @@
 
 	</target>
 	
-	<target name="build.nodep">
-		<jar destfile="${file.jdk1.1.nodep.jar}">
-			<fileset dir="${dir.dist.classes.jdk1.1}">
+	<target name="build.nodep" depends="init">
+		<foreach list="1.1,1.2,1.5" target="nodep.jar.generation" param="nodep.platform" inheritall="true" />
+	</target>
+	
+	<target name="nodep.jar.generation">
+		
+		<propertycopy name="nodep.jar" from="file.jdk${nodep.platform}.nodep.jar" />
+		
+		<propertycopy name="nodep.dir.classes" from="dir.dist.classes.jdk${nodep.platform}" />
+		<propertycopy name="nodep.dir.classes.cs" from="dir.dist.classes.jdk${nodep.platform}.cs" />
+		<propertycopy name="nodep.dir.classes.optional" from="dir.dist.classes.jdk${nodep.platform}.optional" />
+		
+		<property name="nodep.dir.classes.bloat" location="${dir.dist.classes}/bloat" />
+		<unjar src="${file.bloat.jar}" dest="${nodep.dir.classes.bloat}">
+		</unjar>
+		
+		<jar destfile="${nodep.jar}">
+			<fileset dir="${nodep.dir.classes}">
 				<include name="**/*.class"/>
 			</fileset>
-			<fileset dir="${dir.dist.classes.jdk1.1.cs}">
+			<fileset dir="${nodep.dir.classes.cs}">
 				<include name="**/*.class"/>
 			</fileset>
-			<fileset dir="${dir.dist.classes.jdk1.1.optional}">
+			<fileset dir="${nodep.dir.classes.optional}">
 				<include name="**/*.class"/>
 			</fileset>
-		</jar>
-		<jar destfile="${file.jdk1.2.nodep.jar}">
-			<fileset dir="${dir.dist.classes.jdk1.2}">
+			<fileset dir="${dir.dist.classes.instrumentation}">
 				<include name="**/*.class"/>
 			</fileset>
-			<fileset dir="${dir.dist.classes.jdk1.2.cs}">
+			<fileset dir="${dir.dist.classes.nqopt}">
 				<include name="**/*.class"/>
 			</fileset>
-			<fileset dir="${dir.dist.classes.jdk1.2.optional}">
+			<fileset dir="${dir.dist.classes.taj}">
 				<include name="**/*.class"/>
 			</fileset>
-		</jar>
-		<jar destfile="${file.jdk1.5.nodep.jar}">
-			<fileset dir="${dir.dist.classes.jdk1.5}">
-				<include name="**/*.class"/>
-			</fileset>
-			<fileset dir="${dir.dist.classes.jdk1.5.cs}">
-				<include name="**/*.class"/>
-			</fileset>
-			<fileset dir="${dir.dist.classes.jdk1.5.optional}">
+			<fileset dir="${nodep.dir.classes.bloat}">
 				<include name="**/*.class"/>
 			</fileset>
 		</jar>
@@ -892,8 +897,29 @@
 			run.tests.nqopt,
 			run.tests.taj,
 			run.tests.concurrency,
-			run.tests.osgi"
+			run.tests.osgi,
+			run.tests.nodep.jdk1.1"
 	/>
+	
+	<target name="run.tests.nodep.jdk1.1" depends="init, build.db4ojdk1.1.tests, build.nodep">
+		 <path id="tests.jdk1.1.nodep.cp">
+            <pathelement path="${dir.dist.classes.test.jdk1.1}" />
+			<pathelement location="${file.jdk1.1.nodep.jar}" />
+            <pathelement path="${file.jdk1.1.db4ounit.jar}" />
+			<pathelement location="${path.classpath.jdk1.1}" />
+        </path>
+		
+		<java taskname="nodep/j11"
+			jvm="${file.jvm.jdk1.1}" 
+			jvmargs="${java.vmargs}"
+			fork="true" 
+			classname="com.db4o.db4ounit.jre11.AllTests" 
+			failonerror="true" 
+			timeout="1800000">
+			<classpath refid="tests.jdk1.1.nodep.cp" />
+			<sysproperty key="dir.workspace" value="${dir.base}" />
+		</java>
+	</target>
 	
 	<target name="run.tests.jdk1.1" depends="init, build.db4ojdk1.1.tests">
         <path id="tests.jdk1.1.cp">
