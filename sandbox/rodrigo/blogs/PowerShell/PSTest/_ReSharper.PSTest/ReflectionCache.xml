@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Assemblies Version="1073741836">
+  <Assembly Name="Microsoft.PowerShell.Commands.Management, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Image="d41ae483-b3fa-4075-baed-7ff5f89fbf60" Timestamp="633042155160000000" />
+  <Assembly Name="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Image="c82c4d86-8d92-4ddd-b8ab-5011bc3a8782" Timestamp="633042155140000000" />
+  <Assembly Name="Cecil.FlowAnalysis, Version=0.1.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" Image="6b29f4b5-90dd-41ae-b1a7-d0d1b592cc7e" Timestamp="633655429376000000" />
+  <Assembly Name="Mono.Cecil, Version=0.6.9.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" Image="a4aa89ae-1dd8-448a-bfce-482dc433b405" Timestamp="633655429371740000" />
+  <Assembly Name="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Image="1b6c81c8-c682-4e32-9418-f4ab3a001f41" Timestamp="633529824480000000" XmlDocIndexTimestamp="633490147300000000" />
+  <Assembly Name="System.Xml.Linq, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Image="b6247387-0110-4a59-9754-5493e888bc63" Timestamp="633529824480000000" XmlDocIndexTimestamp="633490147300000000" />
+  <Assembly Name="System.Data.DataSetExtensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Image="a0dfffd0-74ae-488b-b908-84709f86e11f" Timestamp="633529824480000000" XmlDocIndexTimestamp="633490147300000000" />
+  <Assembly Name="JetBrains.Annotations, Version=4.1.933.3, Culture=neutral, PublicKeyToken=1010a0d8d6380325" Image="88bbd683-caee-4bfb-bcf2-3407229da8a4" Timestamp="633559850920000000" XmlDocIndexTimestamp="633559850920000000" />
+</Assemblies>

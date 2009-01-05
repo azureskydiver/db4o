@@ -1,0 +1,85 @@
+﻿Desinstalando o assembly 'C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll'.
+Parâmetros afetados são:
+   logtoconsole = 
+   assemblypath = C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll
+   logfile = C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog
+Ocorreu uma exceção durante a desinstalação do instalador GetProcPSSnapIn01.
+System.UnauthorizedAccessException: O acesso à chave do Registro 'HKEY_LOCAL_MACHINE\Software\Microsoft\PowerShell\1\PowerShellSnapIns' foi negado.
+Ocorreu uma exceção ao desinstalar. Essa exceção será ignorada e a desinstalação continuará. Mas talvez o aplicativo não seja totalmente desinstalado após a conclusão da desinstalação.
+Desinstalando o assembly 'C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll'.
+Parâmetros afetados são:
+   logtoconsole = 
+   assemblypath = C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll
+   logfile = C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog
+Ocorreu uma exceção durante a desinstalação do instalador GetProcPSSnapIn01.
+System.UnauthorizedAccessException: O acesso à chave do Registro 'HKEY_LOCAL_MACHINE\Software\Microsoft\PowerShell\1\PowerShellSnapIns' foi negado.
+Ocorreu uma exceção ao desinstalar. Essa exceção será ignorada e a desinstalação continuará. Mas talvez o aplicativo não seja totalmente desinstalado após a conclusão da desinstalação.
+Desinstalando o assembly 'C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll'.
+Parâmetros afetados são:
+   logtoconsole = 
+   v = 
+   assemblypath = C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll
+   logfile = C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog
+Ocorreu uma exceção durante a desinstalação do instalador GetProcPSSnapIn01.
+System.UnauthorizedAccessException: O acesso à chave do Registro 'HKEY_LOCAL_MACHINE\Software\Microsoft\PowerShell\1\PowerShellSnapIns' foi negado.
+Ocorreu uma exceção ao desinstalar. Essa exceção será ignorada e a desinstalação continuará. Mas talvez o aplicativo não seja totalmente desinstalado após a conclusão da desinstalação.
+Desinstalando o assembly 'C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll'.
+Parâmetros afetados são:
+   logtoconsole = 
+   assemblypath = C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll
+   logfile = C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog
+Ocorreu uma exceção durante a desinstalação do instalador GetProcPSSnapIn01.
+System.UnauthorizedAccessException: O acesso à chave do Registro 'HKEY_LOCAL_MACHINE\Software\Microsoft\PowerShell\1\PowerShellSnapIns' foi negado.
+Ocorreu uma exceção ao desinstalar. Essa exceção será ignorada e a desinstalação continuará. Mas talvez o aplicativo não seja totalmente desinstalado após a conclusão da desinstalação.
+Desinstalando o assembly 'C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll'.
+Parâmetros afetados são:
+   logtoconsole = 
+   assemblypath = C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll
+   showcallstack = 
+   logfile = C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog
+Ocorreu uma exceção durante a desinstalação do instalador GetProcPSSnapIn01.
+System.UnauthorizedAccessException: O acesso à chave do Registro 'HKEY_LOCAL_MACHINE\Software\Microsoft\PowerShell\1\PowerShellSnapIns' foi negado.
+   em Microsoft.Win32.RegistryKey.Win32Error(Int32 errorCode, String str)
+   em Microsoft.Win32.RegistryKey.CreateSubKey(String subkey, RegistryKeyPermissionCheck permissionCheck, RegistrySecurity registrySecurity)
+   em Microsoft.Win32.RegistryKey.CreateSubKey(String subkey)
+   em System.Management.Automation.PSInstaller.Uninstall(IDictionary savedState)
+   em System.Configuration.Install.Installer.Uninstall(IDictionary savedState)
+Ocorreu uma exceção ao desinstalar. Essa exceção será ignorada e a desinstalação continuará. Mas talvez o aplicativo não seja totalmente desinstalado após a conclusão da desinstalação.
+Desinstalando o assembly 'C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll'.
+Parâmetros afetados são:
+   logtoconsole = 
+   assemblypath = C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll
+   logfile = C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog
+Instalando o assembly 'C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll'.
+Parâmetros afetados são:
+   logtoconsole = 
+   assemblypath = C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll
+   logfile = C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog
+Confirmando o assembly 'C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll'.
+Parâmetros afetados são:
+   logtoconsole = 
+   assemblypath = C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll
+   logfile = C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog
+Installing assembly 'J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll
+   logfile = J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog
+Rolling back assembly 'J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll
+   logfile = J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog
+An exception occurred during the Rollback phase of the GetProcPSSnapIn01 installer.
+System.UnauthorizedAccessException: Access to the registry key 'HKEY_LOCAL_MACHINE\Software\Microsoft\PowerShell\1\PowerShellSnapIns' is denied.
+An exception occurred during the Rollback phase of the installation. This exception will be ignored and the rollback will continue. However, the machine might not fully revert to its initial state after the rollback is complete.
+Installing assembly 'J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll
+   logfile = J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog
+Committing assembly 'J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll
+   logfile = J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog
