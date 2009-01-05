@@ -319,9 +319,9 @@
 		<property name="filename.taj.jar" value="${db4o.file}taj.jar" />
 		<property name="filename.osgi.jar" value="${db4o.file}osgi.jar" />
 		<property name="filename.osgi.test.jar" value="${db4o.file}osgi-test.jar" />
-		<property name="filename.jdk1.1.nodep.jar" value="${db4o.file}full-java1.1.jar" />
-		<property name="filename.jdk1.2.nodep.jar" value="${db4o.file}full-java1.2.jar" />
-		<property name="filename.jdk1.5.nodep.jar" value="${db4o.file}full-java5.jar" />
+		<property name="filename.jdk1.1.nodep.jar" value="${db4o.file}all-java1.1.jar" />
+		<property name="filename.jdk1.2.nodep.jar" value="${db4o.file}all-java1.2.jar" />
+		<property name="filename.jdk1.5.nodep.jar" value="${db4o.file}all-java5.jar" />
 		
 		<property name="file.jdk1.1.jar" value="${dir.dist.jars}/${filename.jdk1.1.jar}" />
 		<property name="file.jdk1.2.jar" value="${dir.dist.jars}/${filename.jdk1.2.jar}" />
