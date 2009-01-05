@@ -6,7 +6,7 @@
       provider-name="db4objects">
 
    <description url="http://www.db4o.com/about/productinformation/dom/">
-      ObjectManager Enterprise (OME) is a new tool exclusively for dDN Enterprise subscribers. OME comes as a plug in for Visual Studio or Eclipse or as a standalone.
+      ObjectManager Enterprise (OME) is an object browser for the db4objects object database provided as an Eclipse IDE plugin. A .NET version is available as a plugin for Visual Studio 2005 and 2008.
    </description>
 
    <copyright url="http://www.db4o.com/about/company/legalpolicies/copyright.aspx">
