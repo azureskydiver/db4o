@@ -2061,6 +2061,12 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     public ObjectSet query(Predicate predicate,Comparator comparator) {
 		return query(null, predicate,new JdkComparatorWrapper(comparator));
 	}
+    
+	public void storeAll(Transaction transaction, Iterator4 objects) {
+		while(objects.moveNext()){
+			store(transaction, objects.current());
+		}
+	}
 
 	public void withTransaction(Transaction transaction, Runnable runnable) {
 		synchronized (_lock) {

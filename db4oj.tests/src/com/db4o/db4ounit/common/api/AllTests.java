@@ -10,6 +10,7 @@ public class AllTests extends Db4oTestSuite {
 			CommonAndLocalConfigurationTestSuite.class,
 			Db4oClientServerTestCase.class,
 			Db4oEmbeddedTestCase.class,
+			StoreAllTestCase.class,
 		};
 	}
 
