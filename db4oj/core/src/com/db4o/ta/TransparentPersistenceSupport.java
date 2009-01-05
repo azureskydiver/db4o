@@ -9,7 +9,7 @@ import com.db4o.internal.activation.*;
  * Enables the Transparent Update and Transparent Activation behaviors.
  */
 public class TransparentPersistenceSupport extends TransparentActivationSupport {
-
+	
 	private final RollbackStrategy _rollbackStrategy;
 
 	public TransparentPersistenceSupport(RollbackStrategy rollbackStrategy) {
@@ -23,8 +23,11 @@ public class TransparentPersistenceSupport extends TransparentActivationSupport 
 	@Override
 	public void apply(InternalObjectContainer container) {
 		super.apply(container);
-		
-		final TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) container.configImpl().activationDepthProvider();
-		provider.enableTransparentPersistenceSupportFor(container, _rollbackStrategy);
+		enableTransparentPersistenceFor(container);
 	}
+
+	private void enableTransparentPersistenceFor(InternalObjectContainer container) {
+	    final TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) activationProvider(container);
+		provider.enableTransparentPersistenceSupportFor(container, _rollbackStrategy);
+    }
 }

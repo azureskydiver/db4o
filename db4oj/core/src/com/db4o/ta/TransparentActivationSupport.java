@@ -17,11 +17,14 @@ public class TransparentActivationSupport implements ConfigurationItem {
 	public void prepare(Configuration configuration) {
 		// Nothing to do...
 	}
-
+	
 	public void apply(final InternalObjectContainer container) {
-		final TransparentActivationDepthProvider provider = new TransparentActivationDepthProvider();
 		
-		container.configImpl().activationDepthProvider(provider);
+		if (activationProvider(container) instanceof TransparentActivationDepthProvider)
+			return;
+				
+		final TransparentActivationDepthProvider provider = new TransparentActivationDepthProvider();
+		setActivationDepthProvider(container, provider);
 
 		EventRegistry registry = eventRegistryFor(container);
 		registry.instantiated().addListener(new EventListener4() {
@@ -37,7 +40,9 @@ public class TransparentActivationSupport implements ConfigurationItem {
 		
 		registry.closing().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				unbindAll((InternalObjectContainer) ((ObjectContainerEventArgs)args).objectContainer());
+				final InternalObjectContainer objectContainer = (InternalObjectContainer) ((ObjectContainerEventArgs)args).objectContainer();
+				unbindAll(objectContainer);
+				setActivationDepthProvider(objectContainer, null);
 			}
 		});
 
@@ -50,6 +55,11 @@ public class TransparentActivationSupport implements ConfigurationItem {
 		});
 	}
 
+	private void setActivationDepthProvider(final InternalObjectContainer container,
+            final TransparentActivationDepthProvider provider) {
+	    container.configImpl().activationDepthProvider(provider);
+    }
+	
 	private EventRegistry eventRegistryFor(final ObjectContainer container) {
 		return EventRegistryFactory.forObjectContainer(container);
 	}
@@ -103,6 +113,10 @@ public class TransparentActivationSupport implements ConfigurationItem {
 
 	Transaction transaction(EventArgs args) {
 	    return (Transaction) ((TransactionalEventArgs)args).transaction();
+    }
+
+	protected ActivationDepthProvider activationProvider(InternalObjectContainer container) {
+        return container.configImpl().activationDepthProvider();
     }
 
 	private final class TADiagnosticProcessor {
