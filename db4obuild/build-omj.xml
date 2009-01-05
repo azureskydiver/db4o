@@ -3,7 +3,7 @@
 	
 	<import file="common.xml" />
 	
-	<property name="omej.version" value="${db4o.version.dotted}" />
+	<property name="omej.version" value="${db4o.version.dotted}.0" />
 	<property name="dir.project.ome.core" location="${dir.base}/com.db4o.ome" />
 	<property name="dir.project.ome.help" location="${dir.base}/com.db4o.ome.help" />
 	<property name="dir.project.ome.feature" location="${dir.base}/com.db4o.ome.feature" />
@@ -14,7 +14,7 @@
 	<property name="dir.dist.ome.temp.zip" location="${dir.dist.ome.temp}/zip" />
 	<property name="dir.dist.ome.temp.zip.plugins" location="${dir.dist.ome.temp.zip}/plugins" />
 	<property name="dir.dist.ome.temp.zip.features" location="${dir.dist.ome.temp.zip}/features" />
-	<property name="dir.dist.ome.temp.zip.features.ome" location="${dir.dist.ome.temp.zip.features}/com.db4o.ome.feature_${omej.version}" />
+	<property name="dir.dist.ome.temp.feature" location="${dir.dist.ome.temp}/feature" />
 	<property name="file.omej.manifest.tmp" location="${dir.dist.ome.temp}/MANIFEST.MF" />
 	<property name="file.omej.zip" location="${dir.dist.ome}/ObjectManagerEnterprise-Java-${omej.version}.zip" />
 	
@@ -127,11 +127,18 @@
 				<include name="*.jar"/>
 			</fileset>
 		</copy>
-		<mkdir dir="${dir.dist.ome.temp.zip.features.ome}" />
-		<copy file="${dir.project.ome.feature}/feature.xml.TM" tofile="${dir.dist.ome.temp.zip.features.ome}/feature.xml">
+		<mkdir dir="${dir.dist.ome.temp.feature}" />
+		<copy file="${dir.project.ome.feature}/feature.xml.TM" tofile="${dir.dist.ome.temp.feature}/feature.xml">
 			<filterset refid="filterset.ome" />
 		</copy>
-		<copy file="${dir.project.ome.feature}/build.properties" todir="${dir.dist.ome.temp.zip.features.ome}" />
+		<copy file="${dir.project.ome.feature}/build.properties" todir="${dir.dist.ome.temp.feature}" />
+		<mkdir dir="${dir.dist.ome.temp.zip.features}" />
+		<jar destfile="${dir.dist.ome.temp.zip.features}/com.db4o.ome.feature_${omej.version}.jar">
+			<fileset dir="${dir.dist.ome.temp.feature}" />
+		</jar>
+		<copy file="${dir.project.ome.feature}/site.xml.TM" tofile="${dir.dist.ome.temp.zip}/site.xml">
+			<filterset refid="filterset.ome" />
+		</copy>
 		<zip destfile="${file.omej.zip}">
 			<fileset dir="${dir.dist.ome.temp.zip}">
 				<include name="**/*" />
