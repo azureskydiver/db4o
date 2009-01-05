@@ -4,10 +4,10 @@
 	<import file="common.xml" />
 	
 	<property name="omej.version" value="${db4o.version.dotted}.0" />
+	<property name="file.omej.zip" location="${dir.dist.ome.deploy}/ObjectManagerEnterprise-Java-${omej.version}.zip" />
 	<property name="dir.project.ome.core" location="${dir.base}/com.db4o.ome" />
 	<property name="dir.project.ome.help" location="${dir.base}/com.db4o.ome.help" />
 	<property name="dir.project.ome.feature" location="${dir.base}/com.db4o.ome.feature" />
-	<property name="dir.dist.ome" location="${dir.dist}/ome/java" />
 	<property name="dir.dist.ome.classes" location="${dir.dist.ome}/classes" />
 	<property name="dir.dist.ome.jars" location="${dir.dist.ome}/jars" />
 	<property name="dir.dist.ome.temp" location="${dir.dist.ome}/temp" />
@@ -16,8 +16,7 @@
 	<property name="dir.dist.ome.temp.zip.features" location="${dir.dist.ome.temp.zip}/features" />
 	<property name="dir.dist.ome.temp.feature" location="${dir.dist.ome.temp}/feature" />
 	<property name="file.omej.manifest.tmp" location="${dir.dist.ome.temp}/MANIFEST.MF" />
-	<property name="file.omej.zip" location="${dir.dist.ome}/ObjectManagerEnterprise-Java-${omej.version}.zip" />
-	
+
 	<macrodef name="build-plugin">
 		
 		<attribute name="name" />
@@ -139,11 +138,13 @@
 		<copy file="${dir.project.ome.feature}/site.xml.TM" tofile="${dir.dist.ome.temp.zip}/site.xml">
 			<filterset refid="filterset.ome" />
 		</copy>
+		<mkdir dir="${dir.dist.ome.deploy}" />
 		<zip destfile="${file.omej.zip}">
 			<fileset dir="${dir.dist.ome.temp.zip}">
 				<include name="**/*" />
 			</fileset>
 		</zip>
+		<copy file="${dir.project.ome.feature}/readme.html" todir="${dir.dist.ome.deploy}" />
 	</target>
 	
 	<target name="init" depends="properties">
@@ -159,9 +160,13 @@
 			<filter token="OMEJ_VERSION" value="${omej.version}" />
 			<filter token="DB4O_JAR_NAME" value="${filename.db4o.jar}" />
 		</filterset>
+		
+		<echo message="OMJ version is ${omej.version}" />
 	</target>
 	
 	<target name="clean">
 		<reset-dir dir="${dir.dist.ome}" />
 	</target>
+	
+	<target name="cleanzip" depends="clean,zip" />
 </project>
