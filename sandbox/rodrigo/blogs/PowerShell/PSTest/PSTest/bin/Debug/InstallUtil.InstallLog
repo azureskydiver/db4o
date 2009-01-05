@@ -1,0 +1,87 @@
+﻿
+
+Desinstalação está começando.
+Consulte o conteúdo do arquivo de log para o andamento do assembly C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll.
+Arquivo está localizado em C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog.
+
+Desinstalação concluída.
+
+
+Desinstalação está começando.
+Consulte o conteúdo do arquivo de log para o andamento do assembly C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll.
+Arquivo está localizado em C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog.
+
+Desinstalação concluída.
+
+
+Desinstalação está começando.
+Consulte o conteúdo do arquivo de log para o andamento do assembly C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll.
+Arquivo está localizado em C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog.
+
+Desinstalação concluída.
+
+
+Desinstalação está começando.
+Consulte o conteúdo do arquivo de log para o andamento do assembly C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll.
+Arquivo está localizado em C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog.
+
+Desinstalação concluída.
+
+
+Desinstalação está começando.
+Consulte o conteúdo do arquivo de log para o andamento do assembly C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll.
+Arquivo está localizado em C:\Users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog.
+
+Desinstalação concluída.
+
+
+Desinstalação está começando.
+Consulte o conteúdo do arquivo de log para o andamento do assembly C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll.
+Arquivo está localizado em C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog.
+
+Desinstalação concluída.
+
+Executando uma instalação transacionada.
+
+Começando a fase de instalação da instalação.
+Consulte o conteúdo do arquivo de log para o andamento do assembly C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll.
+Arquivo está localizado em C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog.
+
+Fase de instalação foi concluída com êxito e a fase de confirmação está começando.
+Consulte o conteúdo do arquivo de log para o andamento do assembly C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll.
+Arquivo está localizado em C:\users\adriano\Documents\Study\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog.
+
+Fase de confirmação foi concluída com êxito.
+
+Instalação transacionada concluída.
+
+Running a transacted installation.
+
+Beginning the Install phase of the installation.
+See the contents of the log file for the J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll assembly's progress.
+The file is located at J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog.
+
+An exception occurred during the Install phase.
+System.UnauthorizedAccessException: Access to the registry key 'HKEY_LOCAL_MACHINE\Software\Microsoft\PowerShell\1\PowerShellSnapIns\AddDb4oObbjectSnapin' is denied.
+
+The Rollback phase of the installation is beginning.
+See the contents of the log file for the J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll assembly's progress.
+The file is located at J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog.
+
+The Rollback phase completed successfully.
+
+The transacted install has completed.
+
+Running a transacted installation.
+
+Beginning the Install phase of the installation.
+See the contents of the log file for the J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll assembly's progress.
+The file is located at J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog.
+
+The Install phase completed successfully, and the Commit phase is beginning.
+See the contents of the log file for the J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.dll assembly's progress.
+The file is located at J:\Projects\db4o\trunk\sandbox\blogs\PowerShell\PSTest\PSTest\bin\Debug\PSTest.InstallLog.
+
+The Commit phase completed successfully.
+
+The transacted install has completed.
