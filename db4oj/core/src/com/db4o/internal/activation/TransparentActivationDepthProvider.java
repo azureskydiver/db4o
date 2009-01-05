@@ -7,7 +7,7 @@ import com.db4o.internal.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.ta.*;
 
-public class TransparentActivationDepthProvider implements ActivationDepthProvider {
+public class TransparentActivationDepthProvider implements ActivationDepthProvider, DeepClone {
 	
 	public ActivationDepth activationDepth(int depth, ActivationMode mode) {
 		if (Integer.MAX_VALUE == depth)
@@ -128,4 +128,11 @@ public class TransparentActivationDepthProvider implements ActivationDepthProvid
 			}
 		}
 	}
+
+	public Object deepClone(Object context) {
+		// TransparentActivationDepthProvider cannot be reused.
+		// TransparentActivationSupport will create a fresh one for the new
+		// configuration.
+	    return null;
+    }
 }
