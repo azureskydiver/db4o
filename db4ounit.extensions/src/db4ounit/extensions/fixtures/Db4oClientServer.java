@@ -52,7 +52,7 @@ public class Db4oClientServer extends
     
     public void open(Class testCaseClass) throws Exception {
 		openServer();
-		final Configuration config = config();
+		final Configuration config = cloneConfiguration();
 		applyFixtureConfiguration(testCaseClass, config);
 		_objectContainer = _embeddedClient ? openEmbeddedClient().ext() : Db4o
 				.openClient(config, HOST, _port, USERNAME, PASSWORD).ext();
@@ -60,12 +60,16 @@ public class Db4oClientServer extends
 
 	public ExtObjectContainer openNewClient() {
 		return _embeddedClient ? openEmbeddedClient().ext() : Db4o.openClient(
-				cloneDb4oConfiguration((Config4Impl) config()), HOST, _port,
+				cloneConfiguration(), HOST, _port,
 				USERNAME, PASSWORD).ext();
 	}
 
+	private Config4Impl cloneConfiguration() {
+	    return cloneDb4oConfiguration((Config4Impl) config());
+    }
+
     private void openServer() throws Exception {
-        _serverConfig = cloneDb4oConfiguration(config());
+        _serverConfig = cloneConfiguration();
 		_server = Db4o.openServer(_serverConfig,_file.getAbsolutePath(), -1);
         _port = _server.ext().port();
         _server.grantAccess(USERNAME, PASSWORD);
