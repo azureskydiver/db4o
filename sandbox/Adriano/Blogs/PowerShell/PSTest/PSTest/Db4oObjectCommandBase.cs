@@ -17,8 +17,8 @@ namespace CmdLets.Db4objects
         protected static IEmbeddedConfiguration Configure()
         {
             IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
-            //configuration.Common.ExceptionsOnNotStorable = true;
-
+			
+			configuration.Common.ObjectClass(typeof(PSObject)).CallConstructor(true);
             configuration.Common.RegisterTypeHandler(new SingleClassTypeHandlerPredicate(typeof(PSObject)), new PSObjectTypeHandler());
             return configuration;
         }

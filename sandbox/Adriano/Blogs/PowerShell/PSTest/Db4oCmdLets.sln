@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSTest", "PSTest\PSTest.csproj", "{DA88C1C9-2FA2-4CBB-8425-C66B20488E1A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DB4oCmdLets", "PSTest\DB4oCmdLets.csproj", "{DA88C1C9-2FA2-4CBB-8425-C66B20488E1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o-2008", "..\..\..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2008.csproj", "{600CD3BF-2ED2-4183-87F7-ADD78A968AE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o-2008", "..\..\..\..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2008.csproj", "{600CD3BF-2ED2-4183-87F7-ADD78A968AE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -11,44 +11,48 @@ namespace CmdLets.Db4objects
         {
             using (var container = Db4oEmbedded.OpenFile(Configure(), DatabasePath))
             {
-                DumpResults(container.Query().Execute());
+				DumpResults(container.Query<PSObject>());
             }
         }
 
         private void DumpResults(IEnumerable results)
         {
-			//foreach (var result in results)
-			//{
-			//    if (Match((PSObject) result))
-			//    { 
-			//        WriteObject(result); 
-			//    }
-			//}
-			IEnumerator enumerator = results.GetEnumerator();
-			if (enumerator.MoveNext())
+			foreach (var result in results)
 			{
-				WriteObject(enumerator.Current);
+				if (Match((PSObject)result))
+				{
+					WriteObject(result);
+				}
 			}
         }
 
         private bool Match(PSObject o)
         {
+			if (null == _value) return true;
+
             foreach (var property in o.Properties)
             {
-                //if (property.Value )
+                if (property.Value.GetType() == _value.GetType())
+                {
+                	if (property.Value.Equals(_value))
+                	{
+                		return true;
+                	}
+                }
             }
+
             return false;
         }
-        
-		//[Parameter(Mandatory = true)]
-		//public string Value
-		//{
-		//    set
-		//    {
-		//        _value = value;
-		//    }
-		//}
 
-        private string _value;
+		[Parameter(Mandatory = false, HelpMessage = "Specifies the value to be looked up.")]
+		public object Value
+		{
+			set
+			{
+				_value = value;
+			}
+		}
+
+        private object _value;
     }
 }
