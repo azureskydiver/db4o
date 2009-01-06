@@ -36,7 +36,7 @@ public class SlotCachingTestCase extends AbstractDb4oTestCase implements OptOutC
 		Assert.isNotNull(cache);
 		Iterator<ByteArrayBuffer> i = cache.iterator();
 		
-		// doesn't decaf
+		// FIXME: doesn't decaf
 //		Assert.isTrue(i.hasNext());
 	}
 
