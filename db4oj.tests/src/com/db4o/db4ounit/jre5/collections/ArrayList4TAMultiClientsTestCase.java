@@ -20,20 +20,20 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 	}
 	
 	
-	private static final ArrayList4Operation <Integer> _addOp = new ArrayList4Operation<Integer>() {
+	private static final ArrayList4Operation <Integer> _addOneElement = new ArrayList4Operation<Integer>() {
 		public void operate(ArrayList4<Integer> list) {
 			list.add(new Integer(ArrayList4Asserter.CAPACITY));
 		}
 	};
 	
-	private static final ArrayList4Operation<Integer> _removeOp = new ArrayList4Operation<Integer>() {
+	private static final ArrayList4Operation<Integer> _removeFirstElement = new ArrayList4Operation<Integer>() {
 		
 		public void operate(ArrayList4<Integer> list) {
 			list.remove(0);
 		}
 	};	
 	
-	private static final ArrayList4Operation<Integer> _setOp = new ArrayList4Operation<Integer>() {
+	private static final ArrayList4Operation<Integer> _setFirstElementTo1 = new ArrayList4Operation<Integer>() {
 		public void operate(ArrayList4<Integer> list) {
 			list.set(0, new Integer(1));
 		}
@@ -73,17 +73,17 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 				list.add(new Integer(ArrayList4Asserter.CAPACITY + 42));
 			}	
 		};	
-		operate(anotherAddOp, _addOp);
+		operateOnClient1And2(anotherAddOp, _addOneElement);
 		checkAdd();
 	}
 
 	public void testSetAdd() throws Exception {
-		operate(_setOp, _addOp);
+		operateOnClient1And2(_setFirstElementTo1, _addOneElement);
 		checkAdd();
 	}
 	
 	public void testRemoveAdd() throws Exception {
-		operate(_removeOp, _addOp);
+		operateOnClient1And2(_removeFirstElement, _addOneElement);
 		checkAdd();
 	}
 	
@@ -104,12 +104,12 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 	}
 
 	public void testAddRemove() throws Exception {
-		operate(_addOp, _removeOp);
+		operateOnClient1And2(_addOneElement, _removeFirstElement);
 		checkRemove();
 	}
 	
 	public void testsetRemove() throws Exception {
-		operate(_setOp, _removeOp);
+		operateOnClient1And2(_setFirstElementTo1, _removeFirstElement);
 		checkRemove();
 	}
 	
@@ -119,7 +119,7 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 				list.remove(1);
 			}	
 		};	
-		operate(anotherRemoveOp, _removeOp);
+		operateOnClient1And2(anotherRemoveOp, _removeFirstElement);
 		checkRemove();
 	}
 	
@@ -132,12 +132,12 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 	}
 
 	public void testAddSet() throws Exception {
-		operate(_addOp, _setOp);
+		operateOnClient1And2(_addOneElement, _setFirstElementTo1);
 		checkSet();
 	}
 	
 	public void testRemoveSet() throws Exception {
-		operate(_removeOp, _setOp);
+		operateOnClient1And2(_removeFirstElement, _setFirstElementTo1);
 		checkSet();
 	}
 	
@@ -147,167 +147,167 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 				list.set(0, new Integer(2));
 			}	
 		};
-		operate(anotherSetOp, _setOp);
+		operateOnClient1And2(anotherSetOp, _setFirstElementTo1);
 		checkSet();
 	}
 	
 	public void testClearSet() throws Exception {
-		operate(_clearOp, _setOp);
+		operateOnClient1And2(_clearOp, _setFirstElementTo1);
 		checkSet();
 	}
 	
 	public void testSetClear() throws Exception {
-		operate(_setOp, _clearOp);
+		operateOnClient1And2(_setFirstElementTo1, _clearOp);
 		checkClear();
 	}
 	
 	public void testClearRemove() throws Exception {
-		operate(_clearOp, _removeOp);
+		operateOnClient1And2(_clearOp, _removeFirstElement);
 		checkRemove();
 	}
 	
 	public void testRemoveClear() throws Exception {
-		operate(_removeOp, _clearOp);
+		operateOnClient1And2(_removeFirstElement, _clearOp);
 		checkClear();
 	}
 	
 	public void testContainsClear() throws Exception {
-		operate(_containsOp, _clearOp);
+		operateOnClient1And2(_containsOp, _clearOp);
 		checkClear();
 	}
 	
 	public void testContainsSet() throws Exception {
-		operate(_containsOp, _setOp);
+		operateOnClient1And2(_containsOp, _setFirstElementTo1);
 		checkSet();
 	}
 	
 	public void testContainsRemove() throws Exception {
-		operate(_containsOp, _removeOp);
+		operateOnClient1And2(_containsOp, _removeFirstElement);
 		checkRemove();
 	}
 	
 	public void testContainsAdd() throws Exception {
-		operate(_containsOp, _addOp);
+		operateOnClient1And2(_containsOp, _addOneElement);
 		checkAdd();
 	}
 	
 	public void testContainsRemoveRange() throws Exception {
-		operate(_containsOp, _removeRangeOp);
+		operateOnClient1And2(_containsOp, _removeRangeOp);
 		checkRemoveRange();
 	}
 	
 	public void testAddContains() throws Exception {
-		operate(_addOp, _containsOp);
+		operateOnClient1And2(_addOneElement, _containsOp);
 		checkNotModified();
 	}
 	
 	public void testSetContains() throws Exception {
-		operate(_setOp, _containsOp);
+		operateOnClient1And2(_setFirstElementTo1, _containsOp);
 		checkNotModified();
 	}
 	
 	public void testRemoveContains() throws Exception {
-		operate(_removeOp, _containsOp);
+		operateOnClient1And2(_removeFirstElement, _containsOp);
 		checkNotModified();
 	}
 	
 	public void testClearContains() throws Exception {
-		operate(_clearOp, _containsOp);
+		operateOnClient1And2(_clearOp, _containsOp);
 		checkNotModified();
 	}
 	
 	public void testRemoveRangeContains() throws Exception {
-		operate(_removeRangeOp, _containsOp);
+		operateOnClient1And2(_removeRangeOp, _containsOp);
 		checkNotModified();
 	}
 	
 	public void testAddAllSet() throws Exception {
-		operate(_addAllOp, _setOp);
+		operateOnClient1And2(_addAllOp, _setFirstElementTo1);
 		checkSet();		
 	}
 	
 	public void testAddAllClear() throws Exception {
-		operate(_addAllOp, _clearOp);
+		operateOnClient1And2(_addAllOp, _clearOp);
 		checkClear();		
 	}
 	
 	public void testAddAllRemove() throws Exception {
-		operate(_addAllOp, _removeOp);
+		operateOnClient1And2(_addAllOp, _removeFirstElement);
 		checkRemove();		
 	}
 	
 	public void testAddAllAdd() throws Exception {
-		operate(_addAllOp, _addOp);
+		operateOnClient1And2(_addAllOp, _addOneElement);
 		checkAdd();		
 	}
 
 	public void testSetAddAll() throws Exception {
-		operate(_setOp, _addAllOp);
+		operateOnClient1And2(_setFirstElementTo1, _addAllOp);
 		checkAddAll();		
 	}
 	
 	public void testClearAddAll() throws Exception {
-		operate(_clearOp, _addAllOp);
+		operateOnClient1And2(_clearOp, _addAllOp);
 		checkAddAll();		
 	}
 	
 	public void testRemoveAddAll() throws Exception {
-		operate(_removeOp, _addAllOp);
+		operateOnClient1And2(_removeFirstElement, _addAllOp);
 		checkAddAll();		
 	}
 	
 	public void testAddAddAll() throws Exception {
-		operate(_addOp, _addAllOp);
+		operateOnClient1And2(_addOneElement, _addAllOp);
 		checkAddAll();		
 	}
 	
 	public void testRemoveRangeSet() throws Exception {
-		operate(_removeRangeOp, _setOp);
+		operateOnClient1And2(_removeRangeOp, _setFirstElementTo1);
 		checkSet();		
 	}
 
 	public void testRemoveRangeAdd() throws Exception {
-		operate(_removeRangeOp, _addOp);
+		operateOnClient1And2(_removeRangeOp, _addOneElement);
 		checkAdd();		
 	}
 
 	public void testRemoveRangeClear() throws Exception {
-		operate(_removeRangeOp, _clearOp);
+		operateOnClient1And2(_removeRangeOp, _clearOp);
 		checkClear();		
 	}
 
 	public void testRemoveRangeAddAll() throws Exception {
-		operate(_removeRangeOp, _addAllOp);
+		operateOnClient1And2(_removeRangeOp, _addAllOp);
 		checkAddAll();		
 	}
 
 	public void testRemoveRangeRemove() throws Exception {
-		operate(_removeRangeOp, _removeOp);
+		operateOnClient1And2(_removeRangeOp, _removeFirstElement);
 		checkRemove();		
 	}
 	
 	public void testSetRemoveRange() throws Exception {
-		operate(_setOp, _removeRangeOp);
+		operateOnClient1And2(_setFirstElementTo1, _removeRangeOp);
 		checkRemoveRange();		
 	}
 	
 	public void testAddRemoveRange() throws Exception {
-		operate(_addOp, _removeRangeOp);
+		operateOnClient1And2(_addOneElement, _removeRangeOp);
 		checkRemoveRange();		
 	}
 
 	public void testClearRemoveRange() throws Exception {
-		operate(_clearOp, _removeRangeOp);
+		operateOnClient1And2(_clearOp, _removeRangeOp);
 		checkRemoveRange();		
 	}
 	
 	public void testAddAllRemoveRange() throws Exception {
-		operate(_addAllOp, _removeRangeOp);
+		operateOnClient1And2(_addAllOp, _removeRangeOp);
 		checkRemoveRange();		
 	}
 	
 	public void testRemoveRemoveRange() throws Exception {
-		operate(_removeOp, _removeRangeOp);
+		operateOnClient1And2(_removeFirstElement, _removeRangeOp);
 		checkRemoveRange();		
 	}
 	
@@ -336,7 +336,7 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 		}
 	}
 	
-	private void operate(ArrayList4Operation <Integer> op1, ArrayList4Operation<Integer> op2) throws Exception {
+	private void operateOnClient1And2(ArrayList4Operation <Integer> op1, ArrayList4Operation<Integer> op2) throws Exception {
 		ExtObjectContainer client1 = openNewClient();
 		ExtObjectContainer client2 = openNewClient();
 		ArrayList4<Integer> list1 = retrieveAndAssertNullArrayList4(client1);
