@@ -18,11 +18,13 @@ public class ActivationEventsTestCase extends EventsTestCaseBase {
 		
 		eventRegistry().activating().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
+				assertClientTransaction(args);
 				activationLog.xing = true;
 			}
 		});
 		eventRegistry().activated().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
+				assertClientTransaction(args);
 				activationLog.xed = true;
 			}
 		});
