@@ -67,6 +67,16 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	private final ClientHeartbeat _heartbeat;
 	
     private final ClassInfoHelper _classInfoHelper = new ClassInfoHelper();
+
+	private MessageListener _messageListener = new MessageListener() {
+		public void onMessage(Msg msg) {
+			// do nothing
+		}
+	};
+	
+	public interface MessageListener {
+		public void onMessage(Msg msg);
+	}
 	
 	static{
 		// Db4o.registerClientConstructor(new ClientConstructor());
@@ -708,11 +718,19 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 				}
 			}
 		} else {
-			writeMessageToSocket(msg);
+			if (!_batchedMessages.isEmpty()) {
+				addToBatch(msg);
+				writeBatchedMessages();
+			} else {
+				writeMessageToSocket(msg);
+			}
 		}
 	}
 
 	public boolean writeMessageToSocket(Msg msg) {
+		if(_messageListener != null){
+			_messageListener.onMessage(msg);
+		}
 		return msg.write(i_socket);
 	}
 	
@@ -902,4 +920,19 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
         return response.readInt();
 	}
 	
+	public void messageListener(MessageListener listener){
+		_messageListener = listener;
+	}
+	
+	@Override
+	public void storeAll(final Transaction transaction, final Iterator4 objects) {
+		boolean configuredBatchMessages = _config.batchMessages();
+		_config.batchMessages(true);
+		try{
+			super.storeAll(transaction, objects);
+		} finally{
+			_config.batchMessages(configuredBatchMessages);
+		}
+	}
+
 }
