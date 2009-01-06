@@ -58,7 +58,7 @@ public class TransparentActivationDepthProviderImpl implements ActivationDepthPr
 	/* (non-Javadoc)
 	 * @see com.db4o.internal.activation.TransparentActivationDepthProvider#addModified(com.db4o.internal.Transaction, java.lang.Object)
 	 */
-	public void addModified(Transaction transaction, Object object) {
+	public void addModified(Object object, Transaction transaction) {
 		if (!_transparentPersistenceIsEnabled)
 			return;
 		objectsModifiedIn(transaction).add(object);

@@ -1047,12 +1047,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
             if (!context.activationDepth().requiresActivation()) {
                 context.objectReference().setStateDeactivated();
-            } 
-            else {
+            } else {
                 obj = activate(context);
             }
-        } 
-        else {
+        } else {
             if (activatingActiveObject(context.activationDepth().mode(), context.objectReference())) {
             	ActivationDepth child = context.activationDepth().descend(this);
                 if (child.requiresActivation()) {
