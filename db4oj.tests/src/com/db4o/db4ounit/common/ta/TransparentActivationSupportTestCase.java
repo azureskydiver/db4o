@@ -8,7 +8,7 @@ import com.db4o.events.EventListener4;
 import com.db4o.events.ObjectEventArgs;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.foundation.Collection4;
-import com.db4o.internal.activation.TransparentActivationDepthProvider;
+import com.db4o.internal.activation.TransparentActivationDepthProviderImpl;
 
 import db4ounit.Assert;
 
@@ -24,7 +24,7 @@ public class TransparentActivationSupportTestCase extends TransparentActivationT
 	}
 	
 	public void testActivationDepth() {
-		Assert.isInstanceOf(TransparentActivationDepthProvider.class, stream().configImpl().activationDepthProvider());
+		Assert.isInstanceOf(TransparentActivationDepthProviderImpl.class, stream().configImpl().activationDepthProvider());
 	}
 	
 	/**
