@@ -67,7 +67,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		final TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) container.activationDepthProvider();
     	if (ActivationPurpose.WRITE == purpose) {
     		synchronized(container.lock()){
-    			provider.addModified(transaction, getObject());
+    			provider.addModified(getObject(), transaction);
     		}
     	}
     	

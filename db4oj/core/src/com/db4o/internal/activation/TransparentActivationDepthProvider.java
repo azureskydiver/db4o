@@ -11,8 +11,8 @@ import com.db4o.ta.*;
 public interface TransparentActivationDepthProvider extends ActivationDepthProvider{
 
 	void enableTransparentPersistenceSupportFor(
-			InternalObjectContainer container, RollbackStrategy rollbackStrategy);
+			InternalObjectContainer container, RollbackStrategy withRollbackStrategy);
 
-	void addModified(Transaction transaction, Object object);
+	void addModified(Object object, Transaction inTransaction);
 
 }
