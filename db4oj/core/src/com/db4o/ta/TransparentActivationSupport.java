@@ -42,7 +42,9 @@ public class TransparentActivationSupport implements ConfigurationItem {
 			public void onEvent(Event4 e, EventArgs args) {
 				final InternalObjectContainer objectContainer = (InternalObjectContainer) ((ObjectContainerEventArgs)args).objectContainer();
 				unbindAll(objectContainer);
-				setActivationDepthProvider(objectContainer, null);
+				if (!isEmbeddedClient(objectContainer)) {
+					setActivationDepthProvider(objectContainer, null);
+				}
 			}
 		});
 
@@ -108,7 +110,7 @@ public class TransparentActivationSupport implements ConfigurationItem {
 	}
 
 	private boolean isEmbeddedClient(Transaction transaction) {
-		return transaction.objectContainer() instanceof EmbeddedClientObjectContainer;
+		return isEmbeddedClient(transaction.objectContainer());
 	}
 
 	Transaction transaction(EventArgs args) {
@@ -117,6 +119,10 @@ public class TransparentActivationSupport implements ConfigurationItem {
 
 	protected ActivationDepthProvider activationProvider(InternalObjectContainer container) {
         return container.configImpl().activationDepthProvider();
+    }
+
+	private boolean isEmbeddedClient(final ObjectContainer objectContainer) {
+	    return objectContainer instanceof EmbeddedClientObjectContainer;
     }
 
 	private final class TADiagnosticProcessor {
