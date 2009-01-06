@@ -4,6 +4,7 @@ package db4ounit.extensions.fixtures;
 
 import com.db4o.config.*;
 import com.db4o.defragment.*;
+import com.db4o.internal.*;
 
 import db4ounit.extensions.*;
 
@@ -46,7 +47,7 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
         String targetFile = fileName + ".defrag.backup";
         DefragmentConfig defragConfig = new DefragmentConfig(fileName, targetFile);
         defragConfig.forceBackupDelete(true);
-        defragConfig.db4oConfig(config());
+        defragConfig.db4oConfig(cloneConfiguration());
 		com.db4o.defragment.Defragment.defrag(defragConfig);
 	}
 	
@@ -63,4 +64,12 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 	public String toString() {
 		return label();
 	}
+
+	protected Config4Impl cloneConfiguration() {
+        return cloneDb4oConfiguration((Config4Impl) config());
+    }
+
+	protected Config4Impl cloneDb4oConfiguration(Configuration config) {
+    	return (Config4Impl) ((Config4Impl)config).deepClone(this);
+    }
 }

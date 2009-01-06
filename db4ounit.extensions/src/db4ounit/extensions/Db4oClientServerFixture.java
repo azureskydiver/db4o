@@ -13,5 +13,4 @@ public interface Db4oClientServerFixture extends Db4oFixture {
 	public ExtObjectContainer openNewClient();
 	
 	public boolean embeddedClients();
-
 }

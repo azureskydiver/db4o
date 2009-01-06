@@ -64,11 +64,7 @@ public class Db4oClientServer extends
 				USERNAME, PASSWORD).ext();
 	}
 
-	private Config4Impl cloneConfiguration() {
-	    return cloneDb4oConfiguration((Config4Impl) config());
-    }
-
-    private void openServer() throws Exception {
+	private void openServer() throws Exception {
         _serverConfig = cloneConfiguration();
 		_server = Db4o.openServer(_serverConfig,_file.getAbsolutePath(), -1);
         _port = _server.ext().port();
@@ -138,13 +134,9 @@ public class Db4oClientServer extends
 	}
 	
 	private ObjectContainer openEmbeddedClient() {
-		return _server.openClient(config());
+		return _server.openClient(cloneConfiguration());
 	}
 	
-	private Config4Impl cloneDb4oConfiguration(Configuration config) {
-		return (Config4Impl) ((Config4Impl)config).deepClone(this);
-	}
-
 	public String label() {
 		return buildLabel(_label);
 	}
