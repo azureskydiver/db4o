@@ -4,9 +4,9 @@ import com.db4o.internal.*;
 
 public class DescendingActivationDepth extends ActivationDepthImpl {
 
-	private final TransparentActivationDepthProvider _provider;
+	private final ActivationDepthProvider _provider;
 	
-	public DescendingActivationDepth(TransparentActivationDepthProvider provider, ActivationMode mode) {
+	public DescendingActivationDepth(ActivationDepthProvider provider, ActivationMode mode) {
 		super(mode);
 		_provider = provider;
 	}

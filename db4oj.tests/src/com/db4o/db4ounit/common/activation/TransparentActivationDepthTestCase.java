@@ -86,8 +86,8 @@ public class TransparentActivationDepthTestCase extends AbstractDb4oTestCase {
 		return provider().activationDepthFor(classMetadataFor(clazz), ActivationMode.ACTIVATE);
 	}
 
-	private TransparentActivationDepthProvider provider() {
-		return new TransparentActivationDepthProvider();
+	private TransparentActivationDepthProviderImpl provider() {
+		return new TransparentActivationDepthProviderImpl();
 	}
 
 	private ActivationDepth TAAwareDepth() {

@@ -23,7 +23,7 @@ public class TransparentActivationSupport implements ConfigurationItem {
 		if (activationProvider(container) instanceof TransparentActivationDepthProvider)
 			return;
 				
-		final TransparentActivationDepthProvider provider = new TransparentActivationDepthProvider();
+		final TransparentActivationDepthProviderImpl provider = new TransparentActivationDepthProviderImpl();
 		setActivationDepthProvider(container, provider);
 
 		EventRegistry registry = eventRegistryFor(container);
@@ -56,7 +56,7 @@ public class TransparentActivationSupport implements ConfigurationItem {
 	}
 
 	private void setActivationDepthProvider(final InternalObjectContainer container,
-            final TransparentActivationDepthProvider provider) {
+            final ActivationDepthProvider provider) {
 	    container.configImpl().activationDepthProvider(provider);
     }
 	
