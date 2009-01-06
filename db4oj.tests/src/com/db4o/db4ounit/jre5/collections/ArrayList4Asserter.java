@@ -14,7 +14,9 @@ import db4ounit.*;
  * @decaf.ignore
  */
 public class ArrayList4Asserter {
+	
 	public static int CAPACITY = 100;
+	
 	private static final Integer ITEM = new Integer((CAPACITY/2));
 	
 	public static void createList(final List<Integer> list) throws Exception {
