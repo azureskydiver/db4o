@@ -1,6 +1,9 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.events;
 
+import com.db4o.events.*;
+
+import db4ounit.*;
 import db4ounit.extensions.*;
 
 public class EventsTestCaseBase extends AbstractDb4oTestCase {
@@ -24,4 +27,8 @@ public class EventsTestCaseBase extends AbstractDb4oTestCase {
 	protected void store() throws Exception {
 		store(new Item(1));
 	}
+
+	protected void assertClientTransaction(EventArgs args) {
+        Assert.areSame(trans(), ((TransactionalEventArgs)args).transaction());
+    }
 }

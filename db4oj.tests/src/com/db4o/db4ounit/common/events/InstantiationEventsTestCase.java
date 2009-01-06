@@ -18,6 +18,8 @@ public class InstantiationEventsTestCase extends EventsTestCaseBase {
 		
 		eventRegistry().instantiated().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
+				assertClientTransaction(args);
+				
 				instantiatedLog.xed = true;
 				Object obj = ((ObjectEventArgs)args).object();
 				Assert.isNotNull(trans().referenceSystem().referenceForObject(obj));
