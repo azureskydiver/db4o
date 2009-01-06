@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CmdLets.Db4objects</RootNamespace>
-    <AssemblyName>PSTest</AssemblyName>
+    <AssemblyName>Db4oCmdLets</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -60,7 +60,7 @@
     <Compile Include="SelectDb4oObjectCommand.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2008.csproj">
+    <ProjectReference Include="..\..\..\..\..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2008.csproj">
       <Project>{600CD3BF-2ED2-4183-87F7-ADD78A968AE0}</Project>
       <Name>Db4objects.Db4o-2008</Name>
     </ProjectReference>

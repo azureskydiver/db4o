@@ -11,7 +11,7 @@ public class GetProcPSSnapIn01 : PSSnapIn
     {
         get
         {
-            return "AddDb4oObbjectSnapin";
+            return "Db4o.PowerShellSnapin";
         }
     }
 
@@ -34,7 +34,7 @@ public class GetProcPSSnapIn01 : PSSnapIn
     {
         get
         {
-            return "AddDb4oObbjectSnapin,Db4o";
+			return "Db4o.PowerShellSnapin,Db4o";
         }
     }
 
@@ -57,7 +57,7 @@ public class GetProcPSSnapIn01 : PSSnapIn
     {
         get
         {
-            return "AddDb4oObbjectSnapin,This is a PowerShell snap-in that includes the add-db4o-object cmdlet.";
+			return "Db4o.PowerShellSnapin, This is a PowerShell snap-in that includes the add-db4o-object cmdlet.";
         }
     }
 }
