@@ -6,7 +6,6 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.db4ounit.jre12.collections.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.*;
@@ -48,9 +47,8 @@ public class StoreAllTestCase extends AbstractDb4oTestCase{
 	}
 	
 	public void test(){
-		InternalObjectContainer internalObjectContainer = container();
-		storeAll(internalObjectContainer);
-		ObjectSetAssert.sameContent(queryAllItems(), item1, item2 );
+		storeAll(container());
+		ObjectSetAssert.sameContent(queryAllItems(), item1, item2);
 	}
 
 	private void storeAll(InternalObjectContainer internalObjectContainer) {
