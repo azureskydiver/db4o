@@ -24,12 +24,14 @@ public class AllTestsLegacy extends AllTests {
 	}
     
     public Class[] tests(){
+//    	if (true) return new Class[] { KnownClasses.class };
         return new Class[] {
         		ArrayNOrder.class,
         		Book.class,
         		ByteArray.class,
         		CreateIndex.class,
         		GetByUUID.class,
+        		KnownClasses.class,
         		MultiDelete.class,
         		NestedArrays.class,
         		PersistStaticFieldValues.class,
