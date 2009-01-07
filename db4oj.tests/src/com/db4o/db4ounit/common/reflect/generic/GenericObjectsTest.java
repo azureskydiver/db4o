@@ -12,19 +12,12 @@ import com.db4o.reflect.generic.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
-/**
- * 
- * @author treeder, Andrew
- * 
- */
 public class GenericObjectsTest extends AbstractDb4oTestCase {
 	private String PERSON_CLASSNAME = "com.acme.Person";
 
 	public static void main(String[] args) {
-		new ConsoleTestRunner(new Db4oTestSuiteBuilder(new Db4oSolo(),
-				GenericObjectsTest.class)).run();
+		new GenericObjectsTest().runAll();
 	}
 
 	public void testCreate() throws Exception {
@@ -137,9 +130,6 @@ public class GenericObjectsTest extends AbstractDb4oTestCase {
 	}
 
 	private ReflectClass getReflectClass(ExtObjectContainer oc, String className) {
-		// FIXME: If GenericReflector#knownClasses is not called, the test will
-		// fail.
-		/*ReflectClass[] classes = */ oc.reflector().knownClasses();
 		return oc.reflector().forName(className);
 	}
 
