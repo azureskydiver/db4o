@@ -53,8 +53,7 @@ public class KnownClassesRepository {
 	}
     
     public void register(ReflectClass clazz) {
-    	_classByName.put(clazz.getName(), clazz);
-		_classes.add(clazz);
+    	register(clazz.getName(), clazz);
     }
 
     public ReflectClass forID(int id) {
@@ -68,7 +67,7 @@ public class KnownClassesRepository {
     }
     
     public ReflectClass forName(String className) {
-        final ReflectClass clazz = (ReflectClass)_classByName.get(className);
+        final ReflectClass clazz = lookupByName(className);
         if(clazz != null){
             return clazz;
         }
@@ -99,11 +98,17 @@ public class KnownClassesRepository {
 	}
 
 	private void readAll(){
-		for(Iterator4 idIter=_stream.classCollection().ids();idIter.moveNext();) {
-			ensureClassAvailability(((Integer)idIter.current()).intValue());
-		}
-		for(Iterator4 idIter=_stream.classCollection().ids();idIter.moveNext();) {
-			ensureClassRead(((Integer)idIter.current()).intValue());
+		forEachClassId(new Procedure4<Integer>() { public void apply(Integer id) {
+			ensureClassAvailability(id);
+		}});
+		forEachClassId(new Procedure4<Integer>() { public void apply(Integer id) {
+			ensureClassRead(id);
+		}});
+	}
+	
+	private void forEachClassId(Procedure4<Integer> procedure) {
+		for(Iterator4 ids=_stream.classCollection().ids();ids.moveNext();) {
+			procedure.apply((Integer)ids.current());
 		}
 	}
 
@@ -124,7 +129,7 @@ public class KnownClassesRepository {
 		RawClassSpec spec=marshaller.readSpec(_trans, classreader);
 
 		String className = spec.name();
-		ret = (ReflectClass)_classByName.get(className);
+		ret = lookupByName(className);
 		if(ret != null){
 			_classByID.put(id, ret);
 			_pendingClasses.add(new Integer(id));
@@ -154,13 +159,12 @@ public class KnownClassesRepository {
 		// that the class is fully read. This is breakable if we start
 		// returning GenericClass'es in other methods like forName
 		// even if a native class has not been found
-		if(_classByName.get(className) != null){
+		if(lookupByName(className) != null){
 			return;
 		}
 		
         // step 2 add the class to _classByName and _classes to denote reading is completed
-        _classByName.put(className, clazz);
-		_classes.add(clazz);
+        register(className, clazz);
 		
 		int numFields=classInfo.numFields();
 		ReflectField[] fields=_builder.fieldArray(numFields);
@@ -175,6 +179,13 @@ public class KnownClassesRepository {
 		}
 		_builder.initFields(clazz, fields);
 	}
+
+	private void register(String className, ReflectClass clazz) {
+		if (lookupByName(className) != null)
+			throw new IllegalArgumentException();
+	    _classByName.put(className, clazz);
+		_classes.add(clazz);
+    }
 
 	private ReflectClass reflectClassForFieldSpec(RawFieldSpec fieldInfo, Reflector reflector) {
 		
