@@ -269,7 +269,7 @@ public final class HandlerRegistry {
     
     private void map(
         int id,
-        ClassMetadata classMetadata,  // TODO: remove when _mapIdToClassMetadata is gone 
+        PrimitiveFieldHandler classMetadata,  // TODO: remove when _mapIdToClassMetadata is gone 
         FieldHandler fieldHandler, 
         TypeHandler4 typeHandler, 
         ReflectClass classReflector) {
@@ -610,5 +610,10 @@ public final class HandlerRegistry {
 	    }
 	    return context.transaction().container().handlers().correctHandlerVersion(handler, version);
 	}
+
+	public boolean isTransient(ReflectClass claxx) {
+		return ICLASS_TRANSIENTCLASS.isAssignableFrom(claxx)
+    		|| Platform4.isTransient(claxx);
+    }
 
 }

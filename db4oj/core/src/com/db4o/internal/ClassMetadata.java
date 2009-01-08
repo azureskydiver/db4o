@@ -517,8 +517,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
         
         if(claxx != null){
-            if(container._handlers.ICLASS_TRANSIENTCLASS.isAssignableFrom(claxx)
-            	|| Platform4.isTransient(claxx)) {
+            if(container._handlers.isTransient(claxx)) {
                 claxx = null;
             }
         }
