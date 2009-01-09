@@ -8,8 +8,8 @@ import db4ounit.*;
 
 /**
  * @sharpen.ignore
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ArrayMap4Asserter {
 
     public static int DATA_LENGTH = 10;

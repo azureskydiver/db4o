@@ -12,9 +12,9 @@ import com.db4o.marshall.*;
 
 /**
  * @exclude
- * @decaf.ignore.jdk11
  * @sharpen.partial
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class BigSet<E> implements Set<E>, BigSetPersistence {
 	
 	private BTree _bTree;

@@ -14,8 +14,8 @@ import db4ounit.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ArrayListUpdateTestCase extends HandlerUpdateTestCaseBase{
     
     private static final Object[] DATA = new Object[] { 

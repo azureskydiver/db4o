@@ -18,8 +18,8 @@ import com.db4o.typehandlers.*;
 import db4ounit.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class FieldsToTypeHandlerMigrationTestCase implements TestLifeCycle{
 	
 	public static class Item {

@@ -5,9 +5,9 @@ import com.db4o.db4ounit.jre12.querying.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class AllTestsJdk1_2 extends Db4oConcurrencyTestSuite {
 
 	public static void main(String[] args) {

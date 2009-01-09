@@ -13,8 +13,8 @@ import db4ounit.extensions.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class TAEnumsTestCase extends AbstractDb4oTestCase {
 
 	public static void main(String[] args) {

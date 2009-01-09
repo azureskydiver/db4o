@@ -5,10 +5,9 @@ package com.db4o.foundation;
 import java.util.*;
 
 /**
- * 
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Iterator4JdkIterator implements Iterator{
     
     private static final Object BEFORE_START = new Object();

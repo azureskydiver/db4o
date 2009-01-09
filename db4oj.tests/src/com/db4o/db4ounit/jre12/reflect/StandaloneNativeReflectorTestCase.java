@@ -10,8 +10,8 @@ import com.db4o.reflect.core.*;
 import db4ounit.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class StandaloneNativeReflectorTestCase implements TestCase, TestLifeCycle {
 	
 	private Reflector _reflector;

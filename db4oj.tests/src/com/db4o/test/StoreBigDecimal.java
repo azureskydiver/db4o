@@ -8,8 +8,8 @@ import com.db4o.*;
 import com.db4o.query.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class StoreBigDecimal {
 	public BigDecimal _bd;
 

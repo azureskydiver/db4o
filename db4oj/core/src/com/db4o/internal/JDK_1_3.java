@@ -4,9 +4,9 @@ package com.db4o.internal;
 
 /**
  * 
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 class JDK_1_3 extends JDK_1_2{
 
 	Thread addShutdownHook(Runnable runnable){

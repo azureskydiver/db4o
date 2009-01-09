@@ -4,8 +4,8 @@ import com.db4o.collections.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public interface ArrayMap4Operation<K, V> {
     
     public void operate(ArrayMap4<K, V> map);

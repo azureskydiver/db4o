@@ -8,8 +8,8 @@ import db4ounit.extensions.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class AllTests extends Db4oTestSuite {
 	
 	public static void main(String[] args) {

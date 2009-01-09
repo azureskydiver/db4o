@@ -7,9 +7,7 @@ import java.util.*;
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
 
-/**
- * @decaf.ignore.jdk11
- */
+@decaf.Remove(decaf.Platform.JDK11)
 public class STArrayListT implements STClass {
 	
 	public static transient SodaTest st;

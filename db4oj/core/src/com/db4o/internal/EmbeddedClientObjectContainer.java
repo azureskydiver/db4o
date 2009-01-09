@@ -455,9 +455,9 @@ public class EmbeddedClientObjectContainer implements InternalObjectContainer, T
 	}
 
     /**
-     * @decaf.ignore.jdk11
      * @sharpen.ignore
      */
+    @decaf.Ignore(decaf.Platform.JDK11)
     public ObjectSet query(Predicate predicate, Comparator comparator) throws Db4oIOException,
         DatabaseClosedException {
         return _server.query(_transaction, predicate, new JdkComparatorWrapper(comparator)); 

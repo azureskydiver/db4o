@@ -13,8 +13,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ReadCollectionNQTestCase extends Db4oClientServerTestCase {
 	
 	public static void main(String[] args) {

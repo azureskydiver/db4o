@@ -74,10 +74,10 @@ public class ClusterQuery implements Query{
 	}
 
 	/**
-	 * @decaf.ignore.jdk11
 	 * @sharpen.ignore
 	 */
-	public Query sortBy(Comparator comparator) {
+	@decaf.Ignore(decaf.Platform.JDK11)
+    public Query sortBy(Comparator comparator) {
 		// FIXME
 		throw new NotSupportedException();
 	}

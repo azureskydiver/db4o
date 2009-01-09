@@ -8,8 +8,8 @@ import com.db4o.db4ounit.util.*;
 
 /**
  * @sharpen.ignore
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class PathProvider {
 
 	/**

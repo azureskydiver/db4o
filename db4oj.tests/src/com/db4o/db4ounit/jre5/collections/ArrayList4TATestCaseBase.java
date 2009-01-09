@@ -13,8 +13,8 @@ import db4ounit.extensions.*;
 /**
  * @exclude
  * @sharpen.ignore
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ArrayList4TATestCaseBase extends TransparentActivationTestCaseBase {
 	
 	@Override

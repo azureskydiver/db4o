@@ -11,8 +11,8 @@ import com.db4o.internal.*;
 import db4ounit.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class COR52TestCase implements TestCase {
 	
 	public static void main(String[] args) {

@@ -14,9 +14,9 @@ import com.db4o.test.util.*;
 
 // TODO: Works for solo mode only currently
 /**
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class GRHierarchy {
 	public static abstract class A {
 		private int id;

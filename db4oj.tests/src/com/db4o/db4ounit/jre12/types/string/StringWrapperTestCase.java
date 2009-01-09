@@ -6,8 +6,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class StringWrapperTestCase extends AbstractDb4oTestCase {
 	public static void main(String[] args) {
 		new StringWrapperTestCase().runSolo();
@@ -21,8 +21,8 @@ public class StringWrapperTestCase extends AbstractDb4oTestCase {
 	}
 	
 	/**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class StringItem {
 		public Comparable str;
 		public StringItem(Comparable c) {

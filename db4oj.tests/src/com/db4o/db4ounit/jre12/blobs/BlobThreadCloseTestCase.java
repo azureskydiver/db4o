@@ -10,8 +10,8 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.util.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class BlobThreadCloseTestCase extends Db4oClientServerTestCase {
 
 	public static void main(String[] args) {

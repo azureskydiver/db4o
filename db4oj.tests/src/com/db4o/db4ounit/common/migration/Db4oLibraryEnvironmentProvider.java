@@ -7,8 +7,8 @@ import java.io.*;
 import com.db4o.foundation.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Db4oLibraryEnvironmentProvider {
 	
 	private final Hashtable4 _environments = new Hashtable4();

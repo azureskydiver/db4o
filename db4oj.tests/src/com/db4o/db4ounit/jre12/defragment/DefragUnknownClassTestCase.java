@@ -15,9 +15,9 @@ import com.db4o.test.util.*;
 import db4ounit.*;
 
 /**
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class DefragUnknownClassTestCase implements TestLifeCycle {
 
 	public static class Unknown {

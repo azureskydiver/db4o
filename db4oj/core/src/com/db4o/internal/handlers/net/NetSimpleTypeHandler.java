@@ -9,8 +9,8 @@ import com.db4o.reflect.generic.*;
 /**
  * @exclude
  * @sharpen.ignore
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public abstract class NetSimpleTypeHandler extends NetTypeHandler implements GenericConverter{
 	
 	private final String _name;

@@ -8,8 +8,8 @@ import com.db4o.test.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class UpwardCollectionQuery {
     public void store(){
 	    SimpleNode sub=new SimpleNode("sub",new SimpleNode[0]);

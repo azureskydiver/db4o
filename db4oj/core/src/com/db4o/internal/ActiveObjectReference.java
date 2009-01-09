@@ -3,9 +3,9 @@
 package com.db4o.internal;
 
 /**
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 class ActiveObjectReference extends java.lang.ref.WeakReference{
 	
 	Object _referent;

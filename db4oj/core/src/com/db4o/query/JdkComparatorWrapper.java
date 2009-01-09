@@ -5,9 +5,9 @@ import java.util.*;
 
 /**
  * @exclude
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class JdkComparatorWrapper implements QueryComparator {
 	private Comparator _comparator;
 	

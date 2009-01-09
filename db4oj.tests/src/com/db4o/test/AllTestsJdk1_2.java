@@ -5,8 +5,8 @@ package com.db4o.test;
 import com.db4o.test.nativequery.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class AllTestsJdk1_2 extends AllTests{
 	
     public static void main(String[] args) {

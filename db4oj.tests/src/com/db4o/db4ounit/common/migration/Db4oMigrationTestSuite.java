@@ -11,8 +11,8 @@ import db4ounit.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 	
 	public static void main(String[] args) {

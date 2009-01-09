@@ -8,9 +8,7 @@ import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
 import com.db4o.test.util.*;
 
-/**
- * @decaf.ignore.jdk11
- */
+@decaf.Remove(decaf.Platform.JDK11)
 public class STOwnCollectionW implements STClass {
 
 	public static transient SodaTest st;

@@ -10,8 +10,8 @@ import com.db4o.query.*;
 // Why is this duplicated in jdk1.2/jdk5?
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ObjectSetAsList {
     
     String name;

@@ -9,8 +9,8 @@ import com.db4o.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class QueryForClass {
     
     public String name;

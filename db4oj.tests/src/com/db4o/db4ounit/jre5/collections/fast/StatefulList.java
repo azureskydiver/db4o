@@ -5,8 +5,8 @@ package com.db4o.db4ounit.jre5.collections.fast;
 import java.util.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class StatefulList implements List {
 	
 	private transient List _delegate = new ArrayList();

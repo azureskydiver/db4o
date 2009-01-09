@@ -11,8 +11,8 @@ import db4ounit.*;
 import db4ounit.data.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class IoCachePerformanceTest {
 	
 	private static final int BENCHMARKS = 5;

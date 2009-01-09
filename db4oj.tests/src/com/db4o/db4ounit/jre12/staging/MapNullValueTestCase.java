@@ -7,8 +7,8 @@ import db4ounit.extensions.*;
 
 // COR-404
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class MapNullValueTestCase extends AbstractDb4oTestCase {
 
 	public static class Data {

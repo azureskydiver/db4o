@@ -8,8 +8,8 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class CascadeToHashMap {
 
 	public HashMap hm;

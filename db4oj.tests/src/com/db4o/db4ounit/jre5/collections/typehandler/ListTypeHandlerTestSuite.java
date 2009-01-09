@@ -13,8 +13,8 @@ import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 @SuppressWarnings("unchecked")
 public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements Db4oTestCase {
 	

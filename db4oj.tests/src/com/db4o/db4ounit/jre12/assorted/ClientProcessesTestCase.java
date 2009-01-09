@@ -12,8 +12,8 @@ import db4ounit.extensions.fixtures.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ClientProcessesTestCase extends AbstractDb4oTestCase implements OptOutAllButNetworkingCS {
 
     public static final int ITEM_COUNT = 10;

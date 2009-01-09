@@ -7,8 +7,8 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class HashMapTestCase extends AbstractDb4oTestCase implements OptOutCS {
 	public static void main(String[] args) {
 		new HashMapTestCase().runSolo();

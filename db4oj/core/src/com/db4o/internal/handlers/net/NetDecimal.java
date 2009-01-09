@@ -13,8 +13,8 @@ import com.db4o.reflect.*;
  * 
  * @exclude
  * @sharpen.ignore
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class NetDecimal extends NetSimpleTypeHandler{
 	
 	private static final BigInteger BYTESHIFT_FACTOR=new BigInteger("100",16); //$NON-NLS-1$

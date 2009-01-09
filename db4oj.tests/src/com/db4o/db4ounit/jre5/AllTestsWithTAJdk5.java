@@ -8,8 +8,8 @@ import db4ounit.extensions.fixtures.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class AllTestsWithTAJdk5 {
 	public static void main(String[] args) {
 		TestSuiteBuilder builder = new Db4oTestSuiteBuilder(

@@ -11,8 +11,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ObjectSetListAPITestCase extends AbstractDb4oTestCase {
 
 	private static final int NUMDATA = 1000;

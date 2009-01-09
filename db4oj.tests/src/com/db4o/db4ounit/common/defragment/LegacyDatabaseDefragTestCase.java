@@ -14,8 +14,8 @@ import db4ounit.*;
 
 /**
  * test case for COR-785
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class LegacyDatabaseDefragTestCase implements TestCase {
 	
 	private static final int ITEM_COUNT = 50;

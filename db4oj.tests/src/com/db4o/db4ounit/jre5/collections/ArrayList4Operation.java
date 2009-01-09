@@ -6,8 +6,8 @@ import com.db4o.collections.*;
 
 /**
  * @exclude
- * @decaf.ignore
  */
+@decaf.Ignore
 public interface ArrayList4Operation <T> {
 	public void operate(ArrayList4<T> list);
 }

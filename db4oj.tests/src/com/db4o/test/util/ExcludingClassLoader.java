@@ -9,9 +9,9 @@ import java.util.*;
 import com.db4o.foundation.*;
 
 /**
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ExcludingClassLoader extends URLClassLoader {
     
     private static final boolean VERBOSE = false;

@@ -12,8 +12,8 @@ import db4ounit.extensions.*;
 
 /**
  * @exclude
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ListTypeHandlerCascadedDeleteTestCase extends AbstractDb4oTestCase{
 
     /**

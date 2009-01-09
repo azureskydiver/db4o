@@ -7,8 +7,8 @@ import com.db4o.config.annotations.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class Sheep {
 
 	@Indexed 

@@ -9,8 +9,8 @@ import com.db4o.query.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class JdkComparatorSort {
 	private static class AscendingIdComparator implements Comparator {
 		public int compare(Object first, Object second) {

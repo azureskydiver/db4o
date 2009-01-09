@@ -7,8 +7,8 @@ import java.util.*;
 import com.db4o.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class TestHashMap {
 	
 	HashMap hm;

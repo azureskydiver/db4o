@@ -7,8 +7,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class SimpleMapTestCase extends AbstractDb4oTestCase{
 	
 	/**

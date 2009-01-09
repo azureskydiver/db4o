@@ -4,20 +4,8 @@ package com.db4o.test.jdk5;
 
 import java.util.*;
 
-// JDK1.5: annotations
-/**
- * @decaf.ignore
- */
-@Jdk5Annotation(
-		cascadeOnActivate=true,
-		cascadeOnUpdate=true,
-		maximumActivationDepth=3)
-
-		// JDK1.5: generics
-
-/**
- * @decaf.ignore
- */
+@Jdk5Annotation(cascadeOnActivate=true, cascadeOnUpdate=true, maximumActivationDepth=3)
+@decaf.Ignore
 public class Jdk5Data<Item> {
     private Item item;
     // JDK1.5: typesafe enums

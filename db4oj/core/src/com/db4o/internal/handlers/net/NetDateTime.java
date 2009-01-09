@@ -9,9 +9,9 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  * @sharpen.ignore
- * @decaf.ignore.jdk11
  */
 // TODO: Between .NET and Java there seems to be a difference of two days between era offsets?!?
+@decaf.Ignore(decaf.Platform.JDK11)
 public class NetDateTime extends NetSimpleTypeHandler{
 	private final static String ZEROES="0000"; //$NON-NLS-1$
 	

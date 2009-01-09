@@ -7,8 +7,8 @@ import com.db4o.test.nativequery.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class AllTestsJdk5 extends AllTestsJdk1_2{
 	
     public static void main(String[] args) {

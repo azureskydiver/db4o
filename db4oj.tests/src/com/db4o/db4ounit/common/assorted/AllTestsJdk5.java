@@ -6,9 +6,9 @@ import db4ounit.extensions.*;
 
 
 /**
- * @decaf.ignore
  * @sharpen.ignore
  */
+@decaf.Ignore
 public class AllTestsJdk5 extends Db4oConcurrencyTestSuite {
 
 	public static void main(String[] args) {

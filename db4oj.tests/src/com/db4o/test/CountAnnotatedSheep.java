@@ -7,8 +7,8 @@ import com.db4o.query.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class CountAnnotatedSheep {
 	public final static int NUMSHEEP=10;
 	

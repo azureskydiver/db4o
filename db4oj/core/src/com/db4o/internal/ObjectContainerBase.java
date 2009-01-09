@@ -2055,9 +2055,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
 	
 	/**
-     * @decaf.ignore.jdk11
      * @sharpen.ignore
      */
+    @decaf.Ignore(decaf.Platform.JDK11)
     public ObjectSet query(Predicate predicate,Comparator comparator) {
 		return query(null, predicate,new JdkComparatorWrapper(comparator));
 	}

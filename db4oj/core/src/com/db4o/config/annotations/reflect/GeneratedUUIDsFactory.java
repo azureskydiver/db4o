@@ -9,9 +9,9 @@ import com.db4o.config.annotations.*;
 
 /**
  * @exclude
- * @decaf.ignore
  * @sharpen.ignore
  */
+@decaf.Ignore
 public class GeneratedUUIDsFactory implements
 		Db4oConfiguratorFactory {
 

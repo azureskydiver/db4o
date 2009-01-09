@@ -9,8 +9,8 @@ import db4ounit.*;
 
 /**
  * @exclude
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ArrayList4TATestCase extends ArrayList4TATestCaseBase {
 
 	public static void main(String[] args) {

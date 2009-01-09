@@ -11,8 +11,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class NamedArrayListTypeHandlerTestCase extends AbstractDb4oTestCase{
     
     private static String NAME = "listname";

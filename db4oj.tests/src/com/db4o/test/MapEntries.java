@@ -9,8 +9,8 @@ import com.db4o.*;
 import com.db4o.test.types.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class MapEntries {
 	
 	static String FILE = "hm.yap";

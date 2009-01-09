@@ -12,9 +12,9 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 /**
- * @decaf.ignore
  * @sharpen.ignore
  */
+@decaf.Remove
 public class CsSchemaUpdateTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	
 	public static void main(String[] arguments) {

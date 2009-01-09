@@ -19,8 +19,8 @@ import com.db4o.typehandlers.*;
 
 /**
  * @exclude
- * @decaf.ignore
  */
+@decaf.Ignore
 public class EmbeddedListTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler, EmbeddedTypeHandler{
 
     public PreparedComparison prepareComparison(Context context, Object obj) {

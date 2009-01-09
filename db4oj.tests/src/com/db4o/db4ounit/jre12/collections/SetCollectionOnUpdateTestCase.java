@@ -8,8 +8,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class SetCollectionOnUpdateTestCase extends AbstractDb4oTestCase {
 	private static final String OLDNAME = "A";
 

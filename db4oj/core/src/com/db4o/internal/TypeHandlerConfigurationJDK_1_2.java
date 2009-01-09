@@ -9,9 +9,9 @@ import com.db4o.typehandlers.*;
 
 /**
  * @exclude
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class TypeHandlerConfigurationJDK_1_2 extends TypeHandlerConfiguration{
 	
 	public TypeHandlerConfigurationJDK_1_2(Config4Impl config) {

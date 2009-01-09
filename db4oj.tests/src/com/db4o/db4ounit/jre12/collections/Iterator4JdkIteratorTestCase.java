@@ -10,8 +10,8 @@ import db4ounit.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Iterator4JdkIteratorTestCase implements TestCase{
 
     public static void main(String[] arguments) {

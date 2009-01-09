@@ -2,6 +2,8 @@
 
 package db4ounit;
 
+import com.db4o.foundation.*;
+
 /**
  * @sharpen.partial
  */
@@ -23,12 +25,7 @@ public class ArrayAssert {
     }
     
     public static int indexOf(Object[] array, Object expected) {
-        for (int i = 0; i < array.length; ++i) {                
-            if (expected.equals(array[i])) {
-                return i;
-            }
-        }
-        return -1;
+        return Arrays4.indexOf(array, expected);
     }
 	
 	public static void areEqual(Object[] expected, Object[] actual) {

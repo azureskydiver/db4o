@@ -15,8 +15,8 @@ import com.db4o.types.*;
  * 
  */
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Db4oHashMap {
     
     public static class Db4oHashMapHelper{

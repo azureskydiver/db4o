@@ -3,8 +3,8 @@
 package com.db4o.db4ounit.jre12.soda.collections;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class STElement {
 	
 	public String foo1;

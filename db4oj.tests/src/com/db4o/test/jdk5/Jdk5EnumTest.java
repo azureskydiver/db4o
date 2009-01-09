@@ -10,8 +10,8 @@ import com.db4o.test.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class Jdk5EnumTest {
 	private final static int NUMRUNS=1;
     

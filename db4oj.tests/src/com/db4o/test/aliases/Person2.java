@@ -3,8 +3,8 @@
 package com.db4o.test.aliases;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Person2 {
 
 	private String _name;

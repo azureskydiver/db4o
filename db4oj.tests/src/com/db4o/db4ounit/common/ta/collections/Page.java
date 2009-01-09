@@ -5,8 +5,8 @@ import com.db4o.activation.*;
 import com.db4o.db4ounit.common.ta.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Page extends ActivatableImpl {
 
 	public static final int PAGESIZE = 100;

@@ -14,8 +14,8 @@ import com.db4o.query.*;
  */
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class CallConstructors {
     
     static Hashtable constructorCalledByClass = new Hashtable();

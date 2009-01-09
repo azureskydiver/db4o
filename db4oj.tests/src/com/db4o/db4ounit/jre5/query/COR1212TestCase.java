@@ -11,8 +11,8 @@ import db4ounit.extensions.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class COR1212TestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {

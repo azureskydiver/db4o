@@ -14,9 +14,9 @@ import com.db4o.reflect.generic.*;
 import com.db4o.types.*;
 
 /**
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 class JDK_1_2 extends JDKReflect {
 	
 	JDK_1_2(){

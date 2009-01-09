@@ -8,8 +8,8 @@ import db4ounit.extensions.*;
 
 /**
  * @sharpen.ignore
- * @decaf.ignore
  */
+@decaf.Ignore
 public class AllTestsDb4oUnitAndroid extends AllTestsDb4oUnitJdk5{
 	
 	public static void main(String[] args) {

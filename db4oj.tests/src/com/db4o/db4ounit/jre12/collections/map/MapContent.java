@@ -1,8 +1,8 @@
 package com.db4o.db4ounit.jre12.collections.map;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class MapContent {
 	String name;
 	

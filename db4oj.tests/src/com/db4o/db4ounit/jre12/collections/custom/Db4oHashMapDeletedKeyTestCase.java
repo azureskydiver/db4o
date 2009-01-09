@@ -8,8 +8,8 @@ import db4ounit.extensions.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Db4oHashMapDeletedKeyTestCase extends AbstractDb4oTestCase {
 
 	public static class Data {

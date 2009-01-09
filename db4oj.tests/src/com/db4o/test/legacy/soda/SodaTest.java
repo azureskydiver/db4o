@@ -129,9 +129,7 @@ public class SodaTest {
        };
     }
 
-    /**
-     * @decaf.replaceFirst.jdk11 return new STClass[0];
-     */
+    @decaf.ReplaceFirst(value="return new STClass[0];", platform=decaf.Platform.JDK11)
     private static STClass[] collectionTestCases() {
         return new STClass[] {
             new STArrayListT(),
@@ -227,7 +225,7 @@ public class SodaTest {
                         Method method = methods[j];
                         if (method.getName().startsWith("test")) {
                             try {
-                                method.invoke(classes[i], null);
+                                method.invoke(classes[i], new Object[0]);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

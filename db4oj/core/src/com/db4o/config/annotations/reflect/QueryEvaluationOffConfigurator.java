@@ -6,9 +6,9 @@ import com.db4o.config.*;
 
 /**
  * @exclude
- * @decaf.ignore
  * @sharpen.ignore
  */
+@decaf.Ignore
 public class QueryEvaluationOffConfigurator extends FieldConfigurator {
 
 	public QueryEvaluationOffConfigurator(String className, String fieldName) {

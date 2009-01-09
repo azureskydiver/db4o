@@ -10,8 +10,8 @@ import com.db4o.typehandlers.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ListTypeHandlerPersistedCountTestCase extends AbstractDb4oTestCase{
 
     public static void main(String[] args) {

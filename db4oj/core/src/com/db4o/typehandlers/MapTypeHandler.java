@@ -16,8 +16,8 @@ import com.db4o.marshall.*;
 
 /**
  * Typehandler for classes that implement java.util.Map.
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler{
     
     public PreparedComparison prepareComparison(Context context, Object obj) {

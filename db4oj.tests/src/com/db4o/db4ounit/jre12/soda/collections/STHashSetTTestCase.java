@@ -8,8 +8,8 @@ import com.db4o.query.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class STHashSetTTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTestCase {
 
 	HashSet col;

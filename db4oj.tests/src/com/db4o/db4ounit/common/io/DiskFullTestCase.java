@@ -6,8 +6,8 @@ import db4ounit.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Remove
 public class DiskFullTestCase extends DiskFullTestCaseBase {
 
 	private static final long NO_SIZE_LIMIT = -1;

@@ -12,8 +12,8 @@ import com.db4o.foundation.io.*;
 import db4ounit.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class TranslatorStoredClassesTestCase implements TestCase {
 
 	private final static String FILENAME=Path4.getTempFileName();

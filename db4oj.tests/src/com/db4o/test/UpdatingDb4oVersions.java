@@ -14,8 +14,8 @@ import com.db4o.internal.classindex.*;
 import com.db4o.query.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class UpdatingDb4oVersions {
     
     public static final String PATH = "./test/db4oVersions/";

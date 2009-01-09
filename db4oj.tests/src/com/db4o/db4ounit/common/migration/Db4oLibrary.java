@@ -4,8 +4,8 @@ package com.db4o.db4ounit.common.migration;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Db4oLibrary {
 	
 	public final String path;

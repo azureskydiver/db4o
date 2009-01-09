@@ -8,8 +8,8 @@ import com.db4o.test.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class Jdk5DeleteEnum {
     
     Jdk5Enum a;

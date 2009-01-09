@@ -6,9 +6,9 @@ import com.db4o.config.*;
 
 /**
  * @exclude
- * @decaf.ignore
  * @sharpen.ignore
  */
+@decaf.Ignore
 public class IndexedConfigurator extends FieldConfigurator {
 
 	public IndexedConfigurator(String className, String fieldName) {

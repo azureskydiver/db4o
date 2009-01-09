@@ -9,8 +9,8 @@ import java.net.*;
  * 
  */
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class CustomClassLoaderTest {
 
     public static void main(String[] args) throws Exception{

@@ -10,8 +10,8 @@ import com.db4o.db4ounit.common.ta.collections.*;
 import db4ounit.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class TransparentActivationTestCase
 	extends TransparentActivationTestCaseBase {
 

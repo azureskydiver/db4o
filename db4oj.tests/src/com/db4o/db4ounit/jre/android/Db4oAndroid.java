@@ -11,8 +11,8 @@ import db4ounit.extensions.fixtures.*;
 
 /**
  * @sharpen.ignore
- * @decaf.ignore
  */
+@decaf.Ignore
 public class Db4oAndroid extends Db4oSolo{
 	
 	public Db4oAndroid(ConfigurationSource configSource) {

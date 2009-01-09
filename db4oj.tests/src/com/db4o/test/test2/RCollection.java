@@ -10,8 +10,8 @@ import com.db4o.test.*;
 import com.db4o.test.types.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public abstract class RCollection implements RTestable{
 
 	abstract public Object newInstance();

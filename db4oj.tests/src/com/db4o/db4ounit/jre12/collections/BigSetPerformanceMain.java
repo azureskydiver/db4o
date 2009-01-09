@@ -14,9 +14,9 @@ import db4ounit.extensions.*;
 import db4ounit.fixtures.*;
 
 /**
- * @decaf.ignore
  * @sharpen.ignore
  */
+@decaf.Ignore
 public class BigSetPerformanceMain extends FixtureTestSuiteDescription {
 	
 	{

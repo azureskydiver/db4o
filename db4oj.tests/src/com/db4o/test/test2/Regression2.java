@@ -6,8 +6,8 @@ import com.db4o.test.*;
 import com.db4o.test.types.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Regression2 extends Regression{
 
 	public RTestable[] testClasses(){

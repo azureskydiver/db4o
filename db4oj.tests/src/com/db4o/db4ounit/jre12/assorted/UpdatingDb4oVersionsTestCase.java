@@ -17,8 +17,8 @@ import db4ounit.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class UpdatingDb4oVersionsTestCase extends FormatMigrationTestCaseBase {
 
 	public static void main(String[] args) {

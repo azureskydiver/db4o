@@ -5,8 +5,8 @@ package com.db4o.db4ounit.jre5.collections.typehandler;
 import db4ounit.fixtures.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ListTypeHandlerTestElementsSpec implements Labeled {
 
 	public final Object[] _elements;

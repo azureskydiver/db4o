@@ -5,8 +5,8 @@ import java.util.*;
 import com.db4o.typehandlers.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ListTypeHandlerTestUnitBase extends TypeHandlerTestUnitBase {
 	
 	protected AbstractItemFactory itemFactory() {

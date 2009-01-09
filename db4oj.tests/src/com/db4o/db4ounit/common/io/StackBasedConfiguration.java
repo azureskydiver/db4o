@@ -3,8 +3,8 @@ package com.db4o.db4ounit.common.io;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class StackBasedConfiguration {
 	public final String _className;
 	public final String _methodName;

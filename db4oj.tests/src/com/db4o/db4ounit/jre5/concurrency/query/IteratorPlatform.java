@@ -6,8 +6,8 @@ import java.util.*;
 
 /**
  * @sharpen.ignore
- * @decaf.ignore
  */
+@decaf.Ignore
 public class IteratorPlatform {
 
 	static Object next(final Iterator result) {

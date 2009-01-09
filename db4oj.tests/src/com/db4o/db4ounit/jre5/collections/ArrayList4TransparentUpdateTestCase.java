@@ -9,8 +9,8 @@ import db4ounit.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ArrayList4TransparentUpdateTestCase implements TestLifeCycle {
 	
 	private ArrayList4<Object> list;

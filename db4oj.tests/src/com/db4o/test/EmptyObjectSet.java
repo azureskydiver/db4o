@@ -8,8 +8,8 @@ import com.db4o.internal.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class EmptyObjectSet {
     
     public void test(){

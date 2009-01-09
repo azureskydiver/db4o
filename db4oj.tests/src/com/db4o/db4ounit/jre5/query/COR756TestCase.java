@@ -10,8 +10,8 @@ import db4ounit.extensions.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class COR756TestCase extends AbstractDb4oTestCase {
 	
 	public static class A implements Serializable {

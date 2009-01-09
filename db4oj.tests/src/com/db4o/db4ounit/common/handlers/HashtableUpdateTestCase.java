@@ -13,8 +13,8 @@ import db4ounit.*;
 
 /**
  * @sharpen.ignore
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class HashtableUpdateTestCase extends HandlerUpdateTestCaseBase {
 	
     private static final Object[] DATA = new Object[] { 

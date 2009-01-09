@@ -7,8 +7,8 @@ import com.db4o.db4ounit.common.ta.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ArrayMap4TATestCase extends TransparentActivationTestCaseBase {
 
     public static void main(String[] args) {

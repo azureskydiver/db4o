@@ -9,9 +9,9 @@ import com.db4o.config.annotations.*;
 
 /**
  * @exclude
- * @decaf.ignore
  * @sharpen.ignore
  */
+@decaf.Ignore
 public class StoredTransientFieldsFactory implements Db4oConfiguratorFactory {
 
 	public Db4oConfigurator configuratorFor(AnnotatedElement element,

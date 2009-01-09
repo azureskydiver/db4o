@@ -3,8 +3,8 @@ package com.db4o.db4ounit.common.io;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Remove
 public class StackBasedDiskFullTestCase extends DiskFullTestCaseBase {
 
 	public void testFailDuringCommitParticipants() {

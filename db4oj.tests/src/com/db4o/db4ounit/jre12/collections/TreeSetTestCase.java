@@ -12,8 +12,8 @@ import db4ounit.extensions.*;
  * @exclude
  */
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class TreeSetTestCase extends AbstractDb4oTestCase{
     
     private static final String ONE = "one";

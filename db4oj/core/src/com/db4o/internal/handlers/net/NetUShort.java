@@ -7,8 +7,8 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  * @sharpen.ignore
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class NetUShort extends NetSimpleTypeHandler{
 
 	public NetUShort(Reflector reflector) {

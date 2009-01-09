@@ -12,8 +12,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class TypeHandlerConfigurationTestCase extends AbstractDb4oTestCase {
 	
 	public static class Holder {

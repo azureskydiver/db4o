@@ -7,8 +7,8 @@ import com.db4o.typehandlers.*;
 import db4ounit.fixtures.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class MapTypeHandlerTestVariables {
 
 	public final static FixtureVariable MAP_IMPLEMENTATION = new FixtureVariable("map");

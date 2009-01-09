@@ -12,8 +12,8 @@ import db4ounit.*;
  * @exclude
  */
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class EmbeddedClientObjectContainerJre12TestCase extends EmbeddedClientObjectContainerTestCase{
     
 	/**

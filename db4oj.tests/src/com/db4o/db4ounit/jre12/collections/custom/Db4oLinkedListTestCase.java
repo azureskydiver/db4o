@@ -13,8 +13,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Db4oLinkedListTestCase extends AbstractDb4oTestCase {
     
     public static class Db4oLinkedListHelper{

@@ -14,9 +14,9 @@ import com.db4o.internal.*;
  * sets db4o configurations accordingly annotations
  * 
  * @exclude
- * @decaf.ignore
  * @sharpen.ignore
  */
+@decaf.Ignore
 public class ConfigurationIntrospector {
 
 	Map<Class<? extends Annotation>, Db4oConfiguratorFactory> _configurators;

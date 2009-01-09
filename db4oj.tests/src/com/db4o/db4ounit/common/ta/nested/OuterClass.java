@@ -5,9 +5,9 @@ import com.db4o.activation.*;
 import com.db4o.db4ounit.common.ta.*;
 
 /**
- * 	@decaf.ignore.jdk11
- *  @sharpen.partial
+ * 	@sharpen.partial
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class OuterClass extends ActivatableImpl {
 	
 	public int _foo;
@@ -24,10 +24,10 @@ public class OuterClass extends ActivatableImpl {
 	}
 	
 	/**
-	 * 	@decaf.ignore.jdk11
-	 *  @sharpen.partial
+	 * 	@sharpen.partial
  	 */
-	public class InnerClass extends ActivatableImpl {	
+	@decaf.Ignore(decaf.Platform.JDK11)
+    public class InnerClass extends ActivatableImpl {	
 	
 		public OuterClass getOuterObject(){
 			// TA BEGIN

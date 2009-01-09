@@ -15,9 +15,9 @@ import db4ounit.*;
 
 // OMR-70
 /**
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class DuplicatePrimitiveArrayTestCase implements TestCase {
 
 	private static final String FILENAME = "duplicate.db4o";
