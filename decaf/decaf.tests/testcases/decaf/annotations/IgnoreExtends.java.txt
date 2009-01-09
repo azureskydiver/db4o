@@ -6,26 +6,18 @@ class Base {
 interface Interface {
 }
 
-/**
- * @decaf.ignore.extends
- */
+@decaf.IgnoreExtends
 class IgnoreExtends1 extends Base {
 }
 
-/**
- * @decaf.ignore.extends
- */
+@decaf.IgnoreExtends
 class IgnoreExtends2 extends Base implements Interface {
 }
 
-/**
- * @decaf.ignore.implements
- */
+@decaf.IgnoreImplements
 interface Interface2 extends Interface {
 }
 
-/**
- * @decaf.ignore.implements Interface2
- */
+@decaf.IgnoreImplements(interfaces={Interface2.class})
 interface Interface3 extends Interface, Interface2 {
 }

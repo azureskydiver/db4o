@@ -1,13 +1,9 @@
 package decaf.integration;
 
-/**
- * @decaf.ignore.implements
- */
+@decaf.IgnoreImplements
 interface Interface extends java.util.List {
 }
 
-/**
- * @decaf.ignore.implements Interface
- */
+@decaf.IgnoreImplements(interfaces={Interface.class})
 interface Interface2 extends java.util.List, Interface {
 }

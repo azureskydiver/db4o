@@ -6,6 +6,7 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import sharpen.core.*;
+import decaf.*;
 import decaf.builder.*;
 import decaf.config.*;
 import decaf.core.*;
@@ -30,6 +31,7 @@ public abstract class DecafTestCaseBase extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		_project = new JavaProject();
+		_project.addClasspathEntry(Resources.decafAnnotationsJar());
 	}
 
 	@Override

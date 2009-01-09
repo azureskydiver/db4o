@@ -2,9 +2,7 @@ package decaf.annotations;
 
 class ReplaceFirst {
 
-	/**
-	 * @decaf.replaceFirst return "bar";
-	 */
+	@decaf.ReplaceFirst("return \"bar\";")
 	public String foo() {
 		return "foo";
 	}

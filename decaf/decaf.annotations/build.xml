@@ -5,7 +5,7 @@
 	
 	<target name="publish" depends="build">
 		
-		<jar destfile="decaf-annotations.jar">
+		<jar destfile="../decaf/lib/decaf-annotations.jar">
 			<fileset dir="${build.dir}">
 				<include name="**/*.class" />
 			</fileset>

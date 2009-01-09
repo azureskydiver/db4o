@@ -2,9 +2,6 @@ package decaf.annotations;
 
 class InsertFirst {
 
-	/**
-	 * @decaf.insertFirst bar();
-	 */
 	public void foo() {
 		bar();
 		System.out.println("foo");

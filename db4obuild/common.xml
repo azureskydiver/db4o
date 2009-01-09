@@ -188,6 +188,9 @@
 			srcdir="${dir.decaf.src}"
 			encoding="UTF-8">
 			<classpath>
+				<fileset dir="${dir.decaf.core}/lib">
+					<include name="*.jar" />
+				</fileset>
 				<fileset dir="${eclipse.home}/plugins">
 					<include name="org.eclipse.osgi_*/osgi.jar" />
 					<include name="org.eclipse.core.resources_*/resources.jar" />

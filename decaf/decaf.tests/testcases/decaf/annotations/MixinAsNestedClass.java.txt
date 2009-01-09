@@ -15,9 +15,7 @@ abstract class ChainedRuntimeException extends RuntimeException {
         super(msg, cause);
     }
     
-    /**
-     * @decaf.mixin
-     */
+    @decaf.Mixin
     public static class ChainedRuntimeExceptionMixin {
 
 	    private final Throwable _mixee;

@@ -3,20 +3,14 @@ package decaf.annotations;
 interface Interface {
 }
 
-/**
- * @decaf.ignore.implements.jdk11
- */
+@decaf.IgnoreImplements(decaf.Platform.JDK11)
 class IgnoreJdk11 implements Interface {
 }
 
-/**
- * @decaf.ignore.implements.jdk12
- */
+@decaf.IgnoreImplements(decaf.Platform.JDK12)
 class IgnoreJdk12 implements Interface {
 }
 
-/**
- * @decaf.ignore.implements
- */
+@decaf.IgnoreImplements
 class IgnoreAll implements Interface {
 }
