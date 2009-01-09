@@ -62,7 +62,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
     }
 
 	private boolean isMarkedForRemoval(final IBinding binding) {
-	    return containsAnnotation(binding, DecafAnnotations.REMOVE);
+	    return containsAnnotation(binding, decaf.Remove.class);
     }
 
 	private boolean containsAnnotation(final IBinding binding, String annotation) {
@@ -78,29 +78,46 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			return true; // annotation is considered to be valid for all platforms
 		
 		final String platform = applicablePlatformFor(annotationBinding);
+		if (platform == null)
+			return false; // not a decaf annotation
+		
 		return platform.equals("ALL")
-			|| platform.equals(targetPlatform().toString());
+        	|| platform.equals(targetPlatform().toString());
 	}
-	
-	private IAnnotationBinding findAnnotation(IBinding binding, String annotation) {
+
+	private IAnnotationBinding findAnnotation(IBinding binding, String annotationQualifiedName) {
 	    for (IAnnotationBinding annotationBinding : binding.getAnnotations()) {
-			final String qualifiedName = Bindings.qualifiedName(annotationBinding.getAnnotationType());
-			if (qualifiedName.equals(annotation))
+			final ITypeBinding annotationtype = annotationBinding.getAnnotationType();
+			if (typeHasQualifiedName(annotationtype, annotationQualifiedName))
 				return annotationBinding;
 		}
 		return null;
     }
 
+	private boolean typeHasQualifiedName(final ITypeBinding type, String qualifiedName) {
+	    return Bindings.qualifiedName(type).equals(qualifiedName);
+    }
+
 	private String applicablePlatformFor(IAnnotationBinding annotationBinding) {
-		for (IMemberValuePairBinding valuePair : annotationBinding.getAllMemberValuePairs())
-			if (valuePair.getName().equals("value"))
-				return ((IVariableBinding)valuePair.getValue()).getName();
+		for (IMemberValuePairBinding valuePair : annotationBinding.getAllMemberValuePairs()) {
+			final Object value = valuePair.getValue();
+            if (!(value instanceof IVariableBinding))
+            	continue;
+            
+            final IVariableBinding variable = (IVariableBinding)value;
+            if (isDecafPlatform(variable.getType()))
+            	return variable.getName();
+        }
 		return null;
 	}
 
+	private boolean isDecafPlatform(ITypeBinding type) {
+		return typeHasSameQualifiedNameAs(type, decaf.Platform.class);
+    }
+
 	@Override
 	public boolean visit(EnumDeclaration node) {
-		if (isIgnored(node)) {
+		if (isIgnored(node.resolveBinding())) {
 			rewrite().remove(node);
 			return false;
 		}
@@ -130,11 +147,19 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	private void processMixins(TypeDeclaration node) {
 		for (TypeDeclaration mixin : node.getTypes()) {
-			if (!containsJavadoc(mixin, DecafTags.MIXIN))
+			if (!isMixin(mixin))
 				continue;
 			processMixin(node, mixin);
 		}
 	}
+
+	private boolean isMixin(TypeDeclaration type) {
+		return containsAnnotation(type.resolveBinding(), decaf.Mixin.class);
+    }
+
+	private boolean containsAnnotation(IBinding binding, Class<?> annotationType) {
+		return containsAnnotation(binding, annotationType.getName());
+    }
 
 	private void processMixin(TypeDeclaration node, TypeDeclaration mixinType) {
 		
@@ -161,6 +186,12 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	public boolean visit(SingleMemberAnnotation node) {
 		rewrite().remove(node);
 		return false;	
+	}
+	
+	@Override
+	public boolean visit(NormalAnnotation node) {
+	    rewrite().remove(node);
+	    return false;
 	}
 	
 	@Override
@@ -576,26 +607,44 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		}
 		
 		final ListRewrite bodyRewrite = bodyListRewriteFor(node);
-		for (TagElement tag : javadocTags(node)) {
-			final String tagName = tag.getTagName();
-			if (null == tagName) {
+		for (IAnnotationBinding annotation : node.resolveBinding().getAnnotations()) {
+			
+			if (!isApplicableToTargetPlatform(annotation))
 				continue;
-			}
-			if (isTag(DecafTags.INSERT_FIRST, tagName)) {
-				bodyRewrite.insertFirst(statementFromTagText(tag), null);
-			} else if (isTag(DecafTags.REPLACE_FIRST, tagName)) {
-				bodyRewrite.replace(firstNode(bodyRewrite), statementFromTagText(tag), null);
-			} else if (isTag(DecafTags.REMOVE_FIRST, tagName)) {
+			
+			if (isAnnotation(annotation, decaf.InsertFirst.class)) {
+				bodyRewrite.insertFirst(statementFrom(annotation), null);
+			} else if (isAnnotation(annotation, decaf.ReplaceFirst.class)) {
+				bodyRewrite.replace(firstNode(bodyRewrite), statementFrom(annotation), null);
+			} else if (isAnnotation(annotation, decaf.RemoveFirst.class)) {
 				bodyRewrite.remove(firstNode(bodyRewrite), null);
 			}
 		}
-		
 	}
 
-	private boolean isTag(String expected, String actual) {
-		return expected.equals(actual)
-			|| platformSpecificTag(expected).equals(actual);
-	}
+	private ASTNode statementFrom(IAnnotationBinding annotation) {
+	    return statementFrom((String)valueFrom(annotation));
+    }
+
+	private <T> T valueFrom(IAnnotationBinding annotation) {
+	    return (T)memberValueFrom(annotation, "value");
+    }
+
+	private <T> T memberValueFrom(IAnnotationBinding annotation, String memberName) {
+		for (IMemberValuePairBinding valuePair : annotation.getAllMemberValuePairs()) {
+	        if (valuePair.getName().equals(memberName))
+	        	return (T)valuePair.getValue();
+        }
+		throw new IllegalArgumentException("No '" + memberName + "' member in annotation '" + annotation + "'.");
+    }
+
+	private boolean isAnnotation(IAnnotationBinding annotation, Class<?> annotationClass) {
+	    return typeHasSameQualifiedNameAs(annotation.getAnnotationType(), annotationClass);
+    }
+
+	private boolean typeHasSameQualifiedNameAs(final ITypeBinding type, Class<?> classToCompare) {
+	    return typeHasQualifiedName(type, classToCompare.getName());
+    }
 
 	private ASTNode firstNode(final ListRewrite bodyRewrite) {
 		return originalNodeAt(bodyRewrite, 0);
@@ -606,23 +655,14 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		return (ASTNode) bodyRewrite.getOriginalList().get(index);
 	}
 
-	private ASTNode statementFromTagText(TagElement tag) {
-		final String code = textFragment(tag, 0);
-		final ASTNode stmt = rewrite().createStringPlaceholder(code, ASTNode.EXPRESSION_STATEMENT);
-		return stmt;
-	}
+	private ASTNode statementFrom(final String code) {
+	    return rewrite().createStringPlaceholder(code, ASTNode.EXPRESSION_STATEMENT);
+    }
 
 	private ListRewrite bodyListRewriteFor(MethodDeclaration node) {
 		return getListRewrite(node.getBody(), Block.STATEMENTS_PROPERTY);
 	}
 
-	private List<TagElement> javadocTags(MethodDeclaration node) {
-		final Javadoc javadoc = node.getJavadoc();
-		return javadoc == null
-			? Collections.emptyList()
-			: javadoc.tags();
-	}
-	
 	public void endVisit(final EnhancedForStatement node) {
 		new EnhancedForProcessor(_context).run(node);
 	}
@@ -688,7 +728,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private boolean handledAsIgnored(BodyDeclaration node, IBinding binding) {
-		if (isIgnored(binding) || isIgnored(node)) {
+		if (isIgnored(binding)) {
 			rewrite().remove(node);
 			return true;
 		}
@@ -696,7 +736,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private boolean isIgnored(IBinding binding) {
-		return containsAnnotation(binding, DecafAnnotations.IGNORE);
+		return containsAnnotation(binding, decaf.Ignore.class);
 	}
 
 	private void processIgnoreExtends(TypeDeclaration node) {
@@ -704,94 +744,60 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			rewrite().remove(node.getSuperclassType());
 		}
 	}
-	
 
 	public boolean ignoreExtends(TypeDeclaration node) {
-		return containsJavadoc(node, DecafTags.IGNORE_EXTENDS);
+		return containsAnnotation(node, decaf.IgnoreExtends.class);
 	}
 
-	public boolean isIgnored(BodyDeclaration node) {
-		return containsJavadoc(node, DecafTags.IGNORE);
-	}
-	
-	private boolean containsJavadoc(BodyDeclaration node, String tag) {
-		if (JavadocUtility.containsJavadoc(node, tag)) {
-			return true;
-		}
-		return JavadocUtility.containsJavadoc(node, platformSpecificTag(tag));
-	}
-
-	private String platformSpecificTag(String tag) {
-		return targetPlatform().appendPlatformId(tag, ".");
-	}
+	private boolean containsAnnotation(TypeDeclaration node, Class<?> annotationType) {
+	   return containsAnnotation(node.resolveBinding(), annotationType);
+    }
 
 	private void processIgnoreImplements(TypeDeclaration node) {
-		final Set<String> ignoredImplements = ignoredImplements(node);
+		final Set<ITypeBinding> ignoredImplements = ignoredImplements(node);
 		if (ignoredImplements.isEmpty()) {
 			return;
 		}
 		
 		for (Object o : node.superInterfaceTypes()) {
 			final Type type = (Type)o;
-			if (ignoredImplements.contains(type.toString())) {
+			if (ignoredImplements.contains(type.resolveBinding())) {
 				rewrite().remove(type);
 			}
 		}
 	}	
 	
-	private Set<String> allSuperInterfaceTypeNames(TypeDeclaration node) {
+	private Set<ITypeBinding> allSuperInterfaceBindings(TypeDeclaration node) {
 		final List superInterfaces = node.superInterfaceTypes();
-		final HashSet<String> set = new HashSet<String>(superInterfaces.size());
+		final HashSet<ITypeBinding> set = new HashSet<ITypeBinding>(superInterfaces.size());
 		for (Object o : superInterfaces) {
-			set.add(o.toString());
+			set.add(((Type)o).resolveBinding());
 		}
 		return set;
 	}
 	
-	private boolean singleTagWithNoFragments(final List<TagElement> tags) {
-		return tags.size() == 1 && tags.get(0).fragments().isEmpty();
-	}
-
-	public Set<String> ignoredImplements(TypeDeclaration node) {
-		
-		final List<TagElement> tags = getJavadocTags(node, DecafTags.IGNORE_IMPLEMENTS);
-		if (tags.isEmpty()) {
-			return Collections.emptySet();
-		}
-		
-		if (singleTagWithNoFragments(tags)) {
-			return allSuperInterfaceTypeNames(node);
-		}
-		
-		return textFragments(tags);
-	}
-
-	private List<TagElement> getJavadocTags(BodyDeclaration node, String tagName) {
-		final Javadoc javadoc = node.getJavadoc();
-		if (null == javadoc) {
-			return Collections.emptyList();
-		}
-		final ArrayList<TagElement> found = new ArrayList<TagElement>();
-		JavadocUtility.collectTags(javadoc.tags(), tagName, found);
-		if (targetPlatform().isNone()) {
-			return found;
-		}
-		return JavadocUtility.collectTags(javadoc.tags(), platformSpecificTag(tagName), found);
-	}
-
-	private Set<String> textFragments(final List<TagElement> tags) {
-		final HashSet<String> ignored = new HashSet<String>(tags.size());
-		for (TagElement tag : tags) {
-			if (tag.fragments().isEmpty())
+	public Set<ITypeBinding> ignoredImplements(TypeDeclaration node) {
+		final HashSet<ITypeBinding> ignored = new HashSet<ITypeBinding>();
+		for (IAnnotationBinding annotation : node.resolveBinding().getAnnotations()) {
+			if (!isAnnotation(annotation, decaf.IgnoreImplements.class))
 				continue;
-			ignored.add(textFragment(tag, 0));
-		}
+			if (!isApplicableToTargetPlatform(annotation))
+				continue;
+			
+			final Object[] interfaces = memberValuesFrom(annotation, "interfaces");
+			if (interfaces.length == 0)
+				return allSuperInterfaceBindings(node);
+
+			for (Object itf : interfaces)
+				ignored.add((ITypeBinding)itf);
+        }
 		return ignored;
 	}
-
-	private String textFragment(TagElement tag, int index) {
-		return JavadocUtility.textFragment(tag.fragments(), index);
-	}
+	
+	private Object[] memberValuesFrom(IAnnotationBinding annotation, String memberName) {
+		final Object value = memberValueFrom(annotation, memberName);
+		return value instanceof Object[] ? (Object[])value : new Object[] { value };
+    }
 
 	private void rewriteVarArgsArguments(final IMethodBinding method,
 			final List arguments, final ListRewrite argumentListRewrite) {

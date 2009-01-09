@@ -1,9 +1,12 @@
 package decaf.annotations;
 
-class InsertFirst {
+class RemoveFirst {
 
-	@decaf.InsertFirst("bar();")
 	public void foo() {
+		System.out.println("bar");
+	}
+	
+	public void bar() {
 		System.out.println("foo");
 	}
 }

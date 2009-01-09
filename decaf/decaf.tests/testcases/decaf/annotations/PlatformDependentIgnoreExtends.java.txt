@@ -3,20 +3,14 @@ package decaf.annotations;
 class Base {
 }
 
-/**
- * @decaf.ignore.extends.jdk11
- */
+@decaf.IgnoreExtends(decaf.Platform.JDK11)
 class IgnoreJdk11 extends Base {
 }
 
-/**
- * @decaf.ignore.extends.jdk12
- */
+@decaf.IgnoreExtends(decaf.Platform.JDK12)
 class IgnoreJdk12 extends Base {
 }
 
-/**
- * @decaf.ignore.extends
- */
+@decaf.IgnoreExtends
 class IgnoreAll extends Base {
 }

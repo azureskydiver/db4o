@@ -1,6 +1,9 @@
 package decaf.popup.actions;
 
+import java.util.*;
+
 import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
@@ -10,6 +13,7 @@ import org.eclipse.ui.*;
 
 import sharpen.core.*;
 import sharpen.core.framework.*;
+import decaf.*;
 import decaf.builder.*;
 
 public class JavadocToAnnotationsAction implements IObjectActionDelegate {
@@ -35,13 +39,30 @@ public class JavadocToAnnotationsAction implements IObjectActionDelegate {
 		final IJavaProject javaProject = JavaCore.create(o);
 		if (javaProject == null) return;
 		
-		try {
-			for (ICompilationUnit cu : JavaModelUtility.collectCompilationUnits(javaProject)) {
-				javadocToAnnotations(cu);
-			}
-		} catch (JavaModelException e) {
-			e.printStackTrace();
-		}
+		new WorkspaceJob("javadoc to annotations") {
+
+			@Override
+            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+				try {
+					final List<ICompilationUnit> units = JavaModelUtility.collectCompilationUnits(javaProject);
+					monitor.beginTask(getName(), units.size());
+					
+					for (ICompilationUnit cu : units) {
+						if (monitor.isCanceled())
+							return Status.CANCEL_STATUS;
+						
+						monitor.subTask(cu.getElementName());
+						javadocToAnnotations(cu);
+						monitor.worked(1);
+					}
+				} catch (JavaModelException e) {
+					return new Status(Status.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
+				}
+	            return Status.OK_STATUS;
+            }
+			
+		}.schedule();
+		
 	}
 
 	private void javadocToAnnotations(ICompilationUnit cu) throws JavaModelException {
@@ -60,14 +81,16 @@ public class JavadocToAnnotationsAction implements IObjectActionDelegate {
 					if (null == tagName)
 						continue;
 					
-					if (tagName.startsWith(DecafTags.IGNORE) 
-						&& !tagName.startsWith(DecafTags.IGNORE_EXTENDS)
-						&& !tagName.startsWith(DecafTags.IGNORE_IMPLEMENTS)) {
+					if (tagName.startsWith("@decaf.ignore") 
+						&& !tagName.startsWith("@decaf.ignore.extends")
+						&& !tagName.startsWith("@decaf.ignore.implements")) {
 						System.out.println(ASTUtility.sourceInformation(compilationUnit, tag) + ": '" + tag + "' removed.");
 						rewrite.remove(tag, null);
 						
 						if (parent instanceof TypeDeclaration) {
 							addAnnotationForTag(parent, TypeDeclaration.MODIFIERS2_PROPERTY, tagName);
+						} else if (parent instanceof EnumDeclaration) {
+							addAnnotationForTag(parent, EnumDeclaration.MODIFIERS2_PROPERTY, tagName);
 						} else if (parent instanceof MethodDeclaration) {
 							addAnnotationForTag(parent, MethodDeclaration.MODIFIERS2_PROPERTY, tagName);
 						} else {

@@ -9,21 +9,11 @@ interface Interface2 {
 interface Interface3 {
 }
 
-/**
- * @decaf.ignore.implements
- */
 class Class1 {
 }
 
-/**
- * @decaf.ignore.implements Interface1
- */
 class Class2 implements Interface2 {
 }
 
-/**
- * @decaf.ignore.implements Interface1
- * @decaf.ignore.implements Interface3
- */
 class Class3 implements Interface2 {
 }

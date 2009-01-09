@@ -9,21 +9,14 @@ interface Interface2 {
 interface Interface3 {
 }
 
-/**
- * @decaf.ignore.implements
- */
+@decaf.IgnoreImplements
 class Class1 implements Interface1, Interface2 {
 }
 
-/**
- * @decaf.ignore.implements Interface1
- */
+@decaf.IgnoreImplements(interfaces=Interface1.class)
 class Class2 implements Interface1, Interface2 {
 }
 
-/**
- * @decaf.ignore.implements Interface1
- * @decaf.ignore.implements Interface3
- */
+@decaf.IgnoreImplements(interfaces={Interface1.class, Interface3.class})
 class Class3 implements Interface1, Interface2, Interface3 {
 }
