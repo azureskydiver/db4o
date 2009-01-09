@@ -28,6 +28,7 @@ public class Collection4Iterator extends Iterator4Impl {
 
 	private void validate() {
 		if (_initialVersion != currentVersion()) {
+			// FIXME: change to ConcurrentModificationException
 			throw new InvalidIteratorException();
 		}
 	}
