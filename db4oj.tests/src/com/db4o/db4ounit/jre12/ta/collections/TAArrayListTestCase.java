@@ -11,8 +11,8 @@ import com.db4o.db4ounit.common.ta.ta.*;
 import db4ounit.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class TAArrayListTestCase extends ItemTestCaseBase {
 
     public static void main(String[] args) {

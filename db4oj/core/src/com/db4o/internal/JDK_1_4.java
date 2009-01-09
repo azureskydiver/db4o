@@ -12,9 +12,9 @@ import com.db4o.foundation.*;
 
 /**
  * 
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 class JDK_1_4 extends JDK_1_3 {
 	
 	private Hashtable fileLocks;

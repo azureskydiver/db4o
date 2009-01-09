@@ -21,8 +21,8 @@ import com.db4o.reflect.jdk.*;
  * implements IReflect. Alternatively you can call the test(IReflect) method.
  */
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Reflection extends Test {
 
 	private final Reflector _reflector;

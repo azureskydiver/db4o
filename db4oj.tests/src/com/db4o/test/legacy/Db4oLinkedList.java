@@ -14,8 +14,8 @@ import com.db4o.test.*;
  * 
  */
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Db4oLinkedList {
     
     public static class Db4oLinkedListHelper{

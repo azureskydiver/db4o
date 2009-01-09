@@ -5,8 +5,8 @@ import com.db4o.db4ounit.common.ta.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class Product extends ActivatableImpl {
 	private String _code;
 	private String _description;

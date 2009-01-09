@@ -9,8 +9,8 @@ import com.db4o.test.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ClassAliasesInheritance {
     
     public void test(){

@@ -9,8 +9,8 @@ import com.db4o.reflect.generic.*;
 import com.db4o.reflect.jdk.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class GenericObjects extends Test {
 
 	private GenericReflector _reflector;

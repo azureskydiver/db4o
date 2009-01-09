@@ -8,8 +8,8 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class NoP1ObjectIndexTestCase extends AbstractDb4oTestCase implements OptOutCS, OptOutDefragSolo {
 
 	public static class Data {

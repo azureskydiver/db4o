@@ -10,8 +10,8 @@ import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class MapTypeHandlerTestSuite extends FixtureBasedTestSuite implements Db4oTestCase  {
 
 	@Override

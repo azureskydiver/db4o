@@ -7,8 +7,8 @@ import com.db4o.test.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class FileHeaderTestSuite extends TestSuite{
 
     @Override

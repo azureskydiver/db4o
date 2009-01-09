@@ -14,7 +14,6 @@ import java.lang.annotation.Target;
  * All fields are evaluated by default.
  * 
  * @exclude
- * @decaf.ignore
  */
 @Documented
 @Target(ElementType.FIELD)

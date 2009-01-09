@@ -5,9 +5,9 @@ package com.db4o.config.annotations.reflect;
 
 /**
  * @exclude
- * @decaf.ignore
  * @sharpen.ignore
  */
+@decaf.Ignore
 public class GeneratedUUIDsConfigurator extends Db4oConfigurator {
 	private String _className;
 

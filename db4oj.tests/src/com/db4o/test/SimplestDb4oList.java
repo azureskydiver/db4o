@@ -5,8 +5,8 @@ package com.db4o.test;
 import java.util.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class SimplestDb4oList {
 	
 	List list;

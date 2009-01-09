@@ -4,8 +4,8 @@ package com.db4o.test;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ComparableAtom extends Atom implements Comparable{
 
 }

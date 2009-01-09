@@ -10,8 +10,8 @@ import com.db4o.test.legacy.soda.collections.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class STCurrentTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTestCase {
 
 	public String mystr;

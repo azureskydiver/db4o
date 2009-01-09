@@ -6,8 +6,8 @@ import com.db4o.test.jdk5.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class Jdk5TestSuite extends TestSuite{   
     public Class[] tests(){
         return new Class[] {

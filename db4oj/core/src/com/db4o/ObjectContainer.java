@@ -327,9 +327,9 @@ public interface ObjectContainer {
      * @return the {@link ObjectSet} returned by the query.
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
-     * @decaf.ignore.jdk11
      * @sharpen.ignore
      */
+    @decaf.Ignore(decaf.Platform.JDK11)
     public <TargetType> ObjectSet <TargetType> query(Predicate<TargetType> predicate,Comparator<TargetType> comparator) throws Db4oIOException, DatabaseClosedException;
 
     /**

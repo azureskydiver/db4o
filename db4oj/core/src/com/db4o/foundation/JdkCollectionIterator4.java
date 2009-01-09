@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * 
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 class JdkCollectionIterator4 implements Iterator4{
     
     private static final Object INVALID = new Object();

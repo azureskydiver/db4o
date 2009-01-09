@@ -12,8 +12,8 @@ import com.db4o.query.*;
 /**
  * @exclude
  * @sharpen.ignore 
- * @decaf.ignore.extends.jdk11
  */
+@decaf.IgnoreExtends(decaf.Platform.JDK11)
 public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     
     public final StatefulQueryResult _delegate;
@@ -27,8 +27,8 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
 	}	
     
     /**
-     * @decaf.ignore.jdk11
      */
+    @decaf.Ignore(decaf.Platform.JDK11)
     public Iterator iterator() {
     	class JDKIterator extends Iterable4Adaptor implements Iterator {
 			public JDKIterator(Iterable4 delegate) {
@@ -74,8 +74,8 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     }
     
     /**
-     * @decaf.ignore.jdk11
      */
+    @decaf.Ignore(decaf.Platform.JDK11)
     public boolean contains(Object a_object) {
         return indexOf(a_object) >= 0;
     }
@@ -85,22 +85,22 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     }
 
     /**
-     * @decaf.ignore.jdk11
      */
+    @decaf.Ignore(decaf.Platform.JDK11)
     public int indexOf(Object a_object) {
     	return _delegate.indexOf(a_object);
     }
     
     /**
-     * @decaf.ignore.jdk11
      */
+    @decaf.Ignore(decaf.Platform.JDK11)
     public int lastIndexOf(Object a_object) {
         return indexOf(a_object);
     }
     
     /**
-     * @decaf.ignore.jdk11
      */
+    @decaf.Ignore(decaf.Platform.JDK11)
     public void remove() {
         throw new UnsupportedOperationException();
     }

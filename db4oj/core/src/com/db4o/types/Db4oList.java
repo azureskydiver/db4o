@@ -26,8 +26,8 @@ import java.util.*;
  * myObject.myList = objectContainer.ext().collections().newLinkedList();
  * @see com.db4o.ext.ExtObjectContainer#collections
  * @deprecated since 7.0
- * @decaf.ignore.implements.jdk11 List
  */
+@decaf.IgnoreImplements(value=decaf.Platform.JDK11, interfaces=List.class)
 public interface Db4oList extends Db4oCollection, List {
 
 }

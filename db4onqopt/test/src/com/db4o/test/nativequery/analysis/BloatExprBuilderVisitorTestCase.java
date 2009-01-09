@@ -437,30 +437,22 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	
 	// string-specific comparisons
 
-	/**
-	 * @decaf.ignore
-	 */
+	@decaf.Ignore
 	boolean sampleFieldStringContains(Data data) {
 		return data.name.contains(STRING_CMPVAL);
 	}
 
-	/**
-	 * @decaf.ignore
-	 */
+	@decaf.Ignore
 	public void testFieldStringContains() throws Exception {
 		assertComparison("sampleFieldStringContains",STRING_FIELDNAME,STRING_CMPVAL,ComparisonOperator.CONTAINS,false);
 	}
 
-	/**
-	 * @decaf.ignore
-	 */
+	@decaf.Ignore
 	boolean sampleFieldStringContainsWrongWay(Data data) {
 		return STRING_CMPVAL.contains(data.name);
 	}
 
-	/**
-	 * @decaf.ignore
-	 */
+	@decaf.Ignore
 	public void testFieldStringContainsWrongWay() throws Exception {
 		assertInvalid("sampleFieldStringContainsWrongWay");
 	}

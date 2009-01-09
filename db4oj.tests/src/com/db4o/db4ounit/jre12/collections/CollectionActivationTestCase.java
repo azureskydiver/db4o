@@ -9,8 +9,8 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class CollectionActivationTestCase
 	extends AbstractDb4oTestCase
 	implements OptOutDefragSolo, OptOutTA {

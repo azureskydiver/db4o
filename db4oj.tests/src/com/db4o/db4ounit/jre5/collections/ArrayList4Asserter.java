@@ -11,8 +11,8 @@ import db4ounit.*;
 
 /**
  * @sharpen.ignore
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ArrayList4Asserter {
 	
 	public static int CAPACITY = 100;

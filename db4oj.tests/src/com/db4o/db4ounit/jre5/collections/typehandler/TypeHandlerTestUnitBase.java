@@ -14,8 +14,8 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 @SuppressWarnings("unchecked")
 public abstract class TypeHandlerTestUnitBase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 	

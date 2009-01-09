@@ -15,8 +15,8 @@ import db4ounit.extensions.*;
  * @exclude
  */
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class CollectionFieldIndexTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {

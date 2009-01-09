@@ -4,9 +4,9 @@ package com.db4o.internal;
 
 /**
  * 
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 class ReferenceQueue4 extends java.lang.ref.ReferenceQueue
 {
 	ActiveObjectReference yapPoll(){

@@ -10,8 +10,8 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class HashMapUpdateFileSizeTestCase extends AbstractDb4oTestCase implements OptOutCS, OptOutDefragSolo, OptOutTA {
 
 	public static void main(String[] args) {

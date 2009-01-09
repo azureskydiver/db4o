@@ -9,8 +9,8 @@ import com.db4o.foundation.io.*;
 
 /**
  * @sharpen.ignore
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Db4oLibrarian {
 	
 	private final Db4oLibraryEnvironmentProvider _provider;

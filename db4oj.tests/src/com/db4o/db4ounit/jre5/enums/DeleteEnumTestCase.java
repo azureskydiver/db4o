@@ -10,8 +10,8 @@ import db4ounit.extensions.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class DeleteEnumTestCase extends AbstractDb4oTestCase {
     
 	public static final class Item {

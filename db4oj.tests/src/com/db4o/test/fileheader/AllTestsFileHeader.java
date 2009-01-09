@@ -7,8 +7,8 @@ import com.db4o.test.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class AllTestsFileHeader extends AllTestsJdk1_2 {
 
     public static void main(String[] args) {

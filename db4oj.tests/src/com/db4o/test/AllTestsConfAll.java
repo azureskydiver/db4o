@@ -21,9 +21,7 @@ public class AllTestsConfAll extends TestSuite{
         addNativeQueryTestSuite(suites);
 	}
 
-    /**
-     * @decaf.replaceFirst return;
-     */
+    @decaf.ReplaceFirst("return;")
 	private void addNativeQueryTestSuite(TestSuite suites) {
 		suites.add(new NativeQueryTestSuite());
 	}

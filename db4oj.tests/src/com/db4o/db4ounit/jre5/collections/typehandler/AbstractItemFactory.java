@@ -3,8 +3,8 @@
 package com.db4o.db4ounit.jre5.collections.typehandler;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public abstract class AbstractItemFactory {
 	
 	static final String MAP_FIELD_NAME = "_map";

@@ -6,8 +6,8 @@ import com.db4o.db4ounit.jre12.reflect.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class AllTestsJdk1_2 extends Db4oTestSuite {
 
 	public static void main(String[] args) {

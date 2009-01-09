@@ -21,8 +21,8 @@ import db4ounit.*;
  * @exclude
  */
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class TranslatorToTypehandlerMigrationTestCase implements TestLifeCycle{
 	
 	public static class Item {

@@ -6,8 +6,8 @@ import com.db4o.query.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class STNullOnPathTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTestCase {
 
 	Boolean bool;

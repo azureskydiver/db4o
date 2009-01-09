@@ -21,8 +21,8 @@ import com.db4o.ext.*;
  * when they are actually being used by the application. 
  * @see ExtObjectSet for extended functionality.
  * 
- * @decaf.ignore.implements.jdk11
  */
+@decaf.IgnoreImplements(decaf.Platform.JDK11)
 public interface ObjectSet<Item> extends List<Item> {
 	
 	

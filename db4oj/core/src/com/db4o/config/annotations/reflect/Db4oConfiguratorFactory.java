@@ -7,9 +7,9 @@ import java.lang.reflect.*;
 
 /**
  * @exclude
- * @decaf.ignore
  * @sharpen.ignore
  */
+@decaf.Ignore
 public interface Db4oConfiguratorFactory {
 	Db4oConfigurator configuratorFor(AnnotatedElement element,Annotation annotation);
 }

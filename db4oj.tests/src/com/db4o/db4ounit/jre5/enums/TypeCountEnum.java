@@ -5,8 +5,8 @@ package com.db4o.db4ounit.jre5.enums;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public enum TypeCountEnum {
     
     A("A"),

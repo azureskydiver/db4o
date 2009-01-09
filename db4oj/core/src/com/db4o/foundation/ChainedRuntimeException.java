@@ -16,16 +16,12 @@ public abstract class ChainedRuntimeException extends RuntimeException {
     public ChainedRuntimeException() {
     }
 
-    /**
-     * @decaf.replaceFirst super(msg);
-     */
+    @decaf.ReplaceFirst("super(msg);")
     public ChainedRuntimeException(String msg) {
         super(msg, null);
     }
 
-    /**
-     * @decaf.replaceFirst super(msg);
-     */
+    @decaf.ReplaceFirst("super(msg);")
     public ChainedRuntimeException(String msg, Throwable cause) {
         super(msg, cause);
     }
@@ -35,9 +31,8 @@ public abstract class ChainedRuntimeException extends RuntimeException {
      * 
      * Provides jdk11 compatible exception chaining. decaf will mix this class
      * into {@link ChainedRuntimeException}.
-     * 
-     * @decaf.mixin
-     */
+     **/
+    @decaf.Mixin
     public static class ChainedRuntimeExceptionMixin {
 
         public ChainedRuntimeException _subject;

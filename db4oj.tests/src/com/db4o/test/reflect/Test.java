@@ -3,8 +3,8 @@
 package com.db4o.test.reflect;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Test {
 
     static protected void _assert(boolean condition) {

@@ -9,8 +9,8 @@ import com.db4o.foundation.*;
 import db4ounit.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class IterableBaseTestCase implements TestCase {
 
 	private static final String[] ITEMS = {"a", "b", "c"};

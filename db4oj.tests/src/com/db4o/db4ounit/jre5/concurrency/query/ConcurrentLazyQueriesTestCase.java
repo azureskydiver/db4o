@@ -14,8 +14,8 @@ import db4ounit.extensions.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ConcurrentLazyQueriesTestCase extends Db4oClientServerTestCase {
 
 	private static final int ITEM_COUNT = 100;

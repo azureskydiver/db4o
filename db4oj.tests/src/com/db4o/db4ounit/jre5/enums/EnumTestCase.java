@@ -12,8 +12,8 @@ import db4ounit.extensions.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class EnumTestCase extends AbstractDb4oTestCase {
 	private final static int NUMRUNS=1;
     

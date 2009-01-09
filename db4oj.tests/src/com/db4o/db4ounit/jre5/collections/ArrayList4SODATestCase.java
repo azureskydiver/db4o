@@ -9,8 +9,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ArrayList4SODATestCase extends TransparentActivationTestCaseBase {
 	
 	private static final Product PRODUCT_BATERY = new Product("BATE", "Batery 9v");

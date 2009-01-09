@@ -6,8 +6,8 @@ import db4ounit.extensions.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class AllTests extends Db4oConcurrencyTestSuite {
 	
 	public static void main(String[] args) {

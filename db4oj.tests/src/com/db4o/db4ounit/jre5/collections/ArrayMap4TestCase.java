@@ -10,8 +10,8 @@ import db4ounit.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ArrayMap4TestCase implements TestLifeCycle {
 
     private ArrayMap4<String, Integer> map;

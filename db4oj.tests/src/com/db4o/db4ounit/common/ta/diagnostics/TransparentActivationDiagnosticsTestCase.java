@@ -13,8 +13,8 @@ import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class TransparentActivationDiagnosticsTestCase
 	extends TransparentActivationTestCaseBase
 	implements OptOutCS, OptOutDefragSolo {

@@ -3,8 +3,8 @@ package com.db4o.db4ounit.jre12.collections.map;
 import java.util.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class MapHolder {
 
 	public String name;

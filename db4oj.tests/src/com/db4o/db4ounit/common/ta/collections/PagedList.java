@@ -13,8 +13,8 @@ import com.db4o.db4ounit.common.ta.*;
  * @param 
  * 
  * @sharpen.ignore
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class PagedList extends /* TA BEGIN */ ActivatableImpl /* TA END */ implements List {
 		
 	PagedBackingStore _store = new PagedBackingStore();

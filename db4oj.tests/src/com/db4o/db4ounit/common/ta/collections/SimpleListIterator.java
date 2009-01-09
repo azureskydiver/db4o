@@ -5,8 +5,8 @@ import java.util.*;
 
 /**
  * @sharpen.ignore
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class SimpleListIterator implements Iterator {
 	
 	private List _list;

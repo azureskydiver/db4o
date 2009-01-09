@@ -125,8 +125,8 @@ public class Iterators {
 	
 	/**
 	 * @sharpen.remove
-	 * @decaf.ignore.jdk11
 	 */
+	@decaf.Ignore(decaf.Platform.JDK11)
 	public static <T> Iterator4 iterator(java.util.Collection<T> c) {
 		return new JdkCollectionIterator4(c);
 	}
@@ -134,8 +134,8 @@ public class Iterators {
 	/**
 	 * @sharpen.unwrap
 	 * @sharpen.ignore
-	 * @decaf.replaceFirst.jdk11 return iterator;
 	 */
+	@decaf.ReplaceFirst(value="return iterator;", platform=decaf.Platform.JDK11)
 	public static <T> java.util.Iterator<T> platformIterator(Iterator4 iterator) {
 		return new Iterator4JdkIterator(iterator);
 	}

@@ -8,8 +8,8 @@ import com.db4o.db4ounit.common.ta.*;
  * Shared implementation for a paged collection.
  */
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public 
 class PagedBackingStore extends ActivatableImpl {
 

@@ -7,8 +7,8 @@ import com.db4o.test.collections.*;
 import com.db4o.test.reflect.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Jdk1_2TestSuite extends TestSuite{
     
     public Class[] tests(){

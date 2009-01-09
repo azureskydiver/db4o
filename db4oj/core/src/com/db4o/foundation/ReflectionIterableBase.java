@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * @exclude
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ReflectionIterableBase implements IterableBaseWrapper {
 
 	private Object _delegate;

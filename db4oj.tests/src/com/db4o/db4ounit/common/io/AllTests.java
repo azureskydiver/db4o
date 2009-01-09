@@ -12,7 +12,7 @@ public class AllTests extends ReflectionTestSuite {
 	}
 
 	protected Class[] testCases() {
-		Class[] commonCases = {
+		return new Class[] {
 			BlockAwareBinTestSuite.class,
 			BlockSizeDependentBinTestCase.class,
 			IoAdapterTestSuite.class,
@@ -20,15 +20,6 @@ public class AllTests extends ReflectionTestSuite {
 			RandomAccessFileStorageFactoryTestCase.class,
 			StorageTestSuite.class,
 			NonFlushingStorageTestCase.class,
-		};
-		return Db4oUnitTestUtil.mergeClasses(commonCases, stackTraceBasedCases());
-	}
-
-	/**
-	 * @decaf.replaceFirst return new Class[0];
-	 */
-	private Class[] stackTraceBasedCases() {
-		return new Class[] {
 			DiskFullTestCase.class,
 			StackBasedDiskFullTestCase.class,
 		};

@@ -21,15 +21,15 @@ public class CallbackTestCase extends AbstractDb4oTestCase {
     }
 
     /**
-     * @decaf.ignore.jdk11
      */
+    @decaf.Ignore(decaf.Platform.JDK11)
     public void testPrivateCallback() {
         runTest(new PrivateCallback());
     }
     
     /**
-     * @decaf.ignore.jdk11
      */
+    @decaf.Ignore(decaf.Platform.JDK11)
     public void testPackageCallback() {
     	runTest(new PackageCallback());
     }
@@ -39,15 +39,15 @@ public class CallbackTestCase extends AbstractDb4oTestCase {
     }
 
     /**
-     * @decaf.ignore.jdk11
      */
+    @decaf.Ignore(decaf.Platform.JDK11)
     public void testInheritedPrivateCallback() {
         runTest(new InheritedPrivateCallback());
     }
     
     /**
-     * @decaf.ignore.jdk11
      */
+    @decaf.Ignore(decaf.Platform.JDK11)
     public void testInheritedPackageCallback() {
     	runTest(new InheritedPackageCallback());
     }

@@ -11,8 +11,8 @@ import com.db4o.io.*;
 import db4ounit.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public abstract class DiskFullTestCaseBase implements TestLifeCycle {
 
 	protected static final String FILENAME = Path4.getTempFileName();

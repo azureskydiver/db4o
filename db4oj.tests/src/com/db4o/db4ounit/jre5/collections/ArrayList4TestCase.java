@@ -12,8 +12,8 @@ import db4ounit.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ArrayList4TestCase implements TestLifeCycle {
 
 	public static void main(String[] args) {

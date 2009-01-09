@@ -8,8 +8,8 @@ import java.net.*;
  * 
  */
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class CustomClassLoader extends URLClassLoader{
     
     CustomClassLoader(URL[] urls, ClassLoader parent) {

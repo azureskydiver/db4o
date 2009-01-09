@@ -9,8 +9,8 @@ import com.db4o.foundation.*;
 import db4ounit.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class JdkCollectionIterator4TestCase implements TestCase{
     
     public static void main(String[] arguments) {

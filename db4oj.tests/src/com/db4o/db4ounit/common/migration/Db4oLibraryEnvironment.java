@@ -10,8 +10,8 @@ import com.db4o.db4ounit.util.*;
 
 /**
  * @sharpen.ignore
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Db4oLibraryEnvironment {
 	
 	private final static String[] PREFIXES = { "com.db4o" };

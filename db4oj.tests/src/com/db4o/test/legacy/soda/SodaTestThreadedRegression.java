@@ -10,9 +10,7 @@ import com.db4o.test.legacy.soda.collections.*;
 import com.db4o.test.legacy.soda.engines.db4o.*;
 import com.db4o.test.legacy.soda.wrapper.untyped.*;
 
-/**
- * @decaf.ignore.jdk11
- */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class SodaTestThreadedRegression extends SodaTest implements Runnable{
 	
 	private static final Object lock = new Object();

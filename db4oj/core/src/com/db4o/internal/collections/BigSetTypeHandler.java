@@ -14,8 +14,8 @@ import com.db4o.typehandlers.*;
 
 /**
  * @exclude
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class BigSetTypeHandler implements TypeHandler4{
 
 	public void defragment(DefragmentContext context) {

@@ -5,8 +5,8 @@ package com.db4o.test.test2;
 import java.util.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class RArrayList extends RCollection{
 	public Object newInstance(){
 		return new ArrayList();

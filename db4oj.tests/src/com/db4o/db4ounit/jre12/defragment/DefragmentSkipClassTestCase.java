@@ -16,9 +16,9 @@ import db4ounit.*;
  * ExcludingClassLoader which doesn't work on JDK < 1.2.
  */
 /**
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class DefragmentSkipClassTestCase implements TestLifeCycle {
 
 	public void testSkipsClass() throws Exception {

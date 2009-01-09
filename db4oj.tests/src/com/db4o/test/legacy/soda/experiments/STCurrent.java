@@ -10,8 +10,8 @@ import com.db4o.test.legacy.soda.collections.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class STCurrent implements STClass {
 
 	public static transient SodaTest st;

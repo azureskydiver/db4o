@@ -2,8 +2,6 @@
 
 package com.db4o.db4ounit.common.cs;
 
-import com.db4o.db4ounit.common.util.*;
-
 import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {
@@ -13,7 +11,7 @@ public class AllTests extends Db4oTestSuite {
     }
 	
 	protected Class[] testCases() {
-		Class[] commonCases = {
+		return new Class[] {
 		        CallConstructorsConfigTestCase.class,
 		        ClientDisconnectTestCase.class,
 	            ClientTimeOutTestCase.class,
@@ -35,15 +33,6 @@ public class AllTests extends Db4oTestSuite {
 	            SetSemaphoreTestCase.class,
 	            SwitchingFilesFromClientTestCase.class,
 	            SwitchingFilesFromMultipleClientsTestCase.class,
-		};
-		return Db4oUnitTestUtil.mergeClasses(commonCases, nonDecafTestCases());
-	}
-
-	/**
-	 * @decaf.replaceFirst return new Class[0];
-	 */
-	private Class[] nonDecafTestCases() {
-		return new Class[] {
 	            CsSchemaUpdateTestCase.class,
 		};
 	}

@@ -7,8 +7,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public abstract class TypeHandlerUnitTest extends TypeHandlerTestUnitBase {
 
 	protected abstract void assertCompareItems(Object element, boolean successful);

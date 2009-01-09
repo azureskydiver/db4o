@@ -4,8 +4,8 @@ package com.db4o.test.collections;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ComparableContent implements Comparable{
     
     public String _name;

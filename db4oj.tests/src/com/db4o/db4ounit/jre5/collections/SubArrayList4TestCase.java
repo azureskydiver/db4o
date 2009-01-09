@@ -8,8 +8,8 @@ import db4ounit.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class SubArrayList4TestCase implements TestLifeCycle {
 
 	List<Integer> _subList;

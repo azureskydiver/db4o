@@ -9,8 +9,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class IndexedAnnotationTestCase extends AbstractDb4oTestCase {
 
 	private static class DataAnnotated {

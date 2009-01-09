@@ -5,8 +5,8 @@ package com.db4o.test;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class SheepNotAnnotated {
 	
 	private String name;

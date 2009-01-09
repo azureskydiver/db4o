@@ -12,8 +12,8 @@ import db4ounit.extensions.*;
 /**
  * @exclude 
  * @sharpen.ignore
- * @decaf.ignore
  */
+@decaf.Ignore
 public class CollectionsUtil {
     @SuppressWarnings("unchecked")
     public static ArrayList4<Integer> retrieveAndAssertNullArrayList4(

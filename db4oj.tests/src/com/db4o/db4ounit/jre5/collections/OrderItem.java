@@ -5,8 +5,8 @@ import com.db4o.db4ounit.common.ta.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class OrderItem extends ActivatableImpl {
 	private Product _product;
 	private int _quantity;

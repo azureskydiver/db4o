@@ -12,8 +12,8 @@ import com.db4o.internal.*;
  * Configures the support for paged collections.
  */
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class PagedListSupport implements ConfigurationItem {
 
 	public void apply(InternalObjectContainer db) {

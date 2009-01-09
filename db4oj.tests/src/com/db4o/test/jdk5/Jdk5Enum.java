@@ -5,8 +5,8 @@ package com.db4o.test.jdk5;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public enum Jdk5Enum {
     
     A("A"),

@@ -5,8 +5,8 @@ import com.db4o.io.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ThrowingStorage extends StorageDecorator {
 
 	private final ThrowCondition _condition;

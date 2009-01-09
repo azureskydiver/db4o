@@ -16,8 +16,8 @@ import db4ounit.extensions.*;
  */
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ArrayList4TestCase extends Db4oConcurrencyTestCase {
 	public static void main(String[] args) {
 		new ArrayList4TestCase().runEmbeddedConcurrency();

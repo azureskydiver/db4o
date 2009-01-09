@@ -6,8 +6,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ConstructorNotRequiredTestCase extends AbstractDb4oTestCase {
 	
     public static class Item {

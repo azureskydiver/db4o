@@ -12,8 +12,8 @@ import com.db4o.types.*;
 import db4ounit.extensions.util.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ExternalBlobs {
 	
 	static final String BLOB_FILE_IN = AllTestsConfAll.BLOB_PATH + "/regressionBlobIn.txt"; 

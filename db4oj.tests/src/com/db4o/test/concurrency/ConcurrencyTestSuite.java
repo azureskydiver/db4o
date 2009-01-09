@@ -6,8 +6,8 @@ import com.db4o.test.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ConcurrencyTestSuite extends TestSuite{
     
     public Class[] tests(){

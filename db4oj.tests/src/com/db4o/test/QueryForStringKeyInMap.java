@@ -10,8 +10,8 @@ import com.db4o.query.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class QueryForStringKeyInMap {
     
     String name;

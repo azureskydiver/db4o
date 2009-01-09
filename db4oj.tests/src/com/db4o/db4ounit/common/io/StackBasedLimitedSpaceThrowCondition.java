@@ -2,8 +2,8 @@ package com.db4o.db4ounit.common.io;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class StackBasedLimitedSpaceThrowCondition implements ThrowCondition {
 
 	private boolean _enabled;

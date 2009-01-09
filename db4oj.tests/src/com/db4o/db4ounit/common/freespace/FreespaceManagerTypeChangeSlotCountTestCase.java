@@ -13,8 +13,8 @@ import com.db4o.internal.slots.*;
 import db4ounit.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class FreespaceManagerTypeChangeSlotCountTestCase implements TestCase {
 
     private static final int SIZE = 10000;

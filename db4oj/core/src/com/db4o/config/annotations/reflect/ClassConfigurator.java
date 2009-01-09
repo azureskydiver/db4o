@@ -6,9 +6,9 @@ import com.db4o.config.*;
 
 /**
  * @exclude
- * @decaf.ignore
  * @sharpen.ignore
  */
+@decaf.Ignore
 public abstract class ClassConfigurator extends Db4oConfigurator {
 	private String _className;
 	

@@ -14,8 +14,8 @@ import db4ounit.extensions.*;
  * See http://developer.db4o.com/Resources/view.aspx/Reference/Implementation_Strategies/Type_Handling/Final_Fields/Final_Fields_Specifics
  */
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class NestedClassesTestCase
 	extends AbstractDb4oTestCase
 	implements OptOutTA { 

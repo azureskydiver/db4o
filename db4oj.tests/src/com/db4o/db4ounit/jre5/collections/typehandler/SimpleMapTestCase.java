@@ -14,8 +14,8 @@ import db4ounit.extensions.*;
 
 /**
  * @exclude
- * @decaf.ignore
  */
+@decaf.Ignore
 public class SimpleMapTestCase extends AbstractDb4oTestCase{
 	
 	public static class Item {

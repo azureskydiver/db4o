@@ -137,24 +137,24 @@ public abstract class Predicate<ExtentType> implements Serializable{
      * @param candidate the candidate object passed from db4o 
      * @return true to include an object in the resulting ObjectSet
      * 
-     * @decaf.ignore
      * @sharpen.ignore
      */
-	public abstract boolean match(ExtentType candidate);
+	@decaf.Ignore
+    public abstract boolean match(ExtentType candidate);
 
 	/**
-	 * @decaf.replaceFirst return filterParameterType();
 	 * @sharpen.remove FilterParameterType()
 	 */
+	@decaf.ReplaceFirst("return filterParameterType();")
 	private Class<? extends ExtentType> figureOutExtentType() {		
 		return extentTypeFromGenericParameter();
 	}
 
 	/**
-	 * @decaf.ignore 
 	 * @sharpen.ignore
 	 */
-	private Class<? extends ExtentType> extentTypeFromGenericParameter() {
+	@decaf.Ignore
+    private Class<? extends ExtentType> extentTypeFromGenericParameter() {
 		Class<? extends ExtentType> extentType=filterParameterType();
 		try {
 			Type genericType=((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];

@@ -10,8 +10,8 @@ import db4ounit.extensions.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class NullElementsInArrayTestCase extends AbstractDb4oTestCase{
 
     public static void main(String[] args) {
@@ -19,8 +19,8 @@ public class NullElementsInArrayTestCase extends AbstractDb4oTestCase{
     }
     
     /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class Item {
         
         public Integer[] array;
@@ -28,8 +28,8 @@ public class Item {
     }
     
     /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ItemArrayHolder {
         
         public NamedItem[] child;
@@ -37,8 +37,8 @@ public class ItemArrayHolder {
     }
     
     /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class NamedItem {
         
         public String name;

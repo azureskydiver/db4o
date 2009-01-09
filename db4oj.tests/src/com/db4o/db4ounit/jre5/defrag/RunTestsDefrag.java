@@ -8,8 +8,8 @@ import db4ounit.extensions.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class RunTestsDefrag extends AbstractDb4oDefragTestCase {
 	
 	@Override

@@ -13,8 +13,8 @@ import db4ounit.extensions.*;
 
 /**
  * @exclude
- * @decaf.ignore
  */
+@decaf.Ignore
 public class SimpleListQueryTestCase extends AbstractDb4oTestCase {
 	
 	public static class Item {

@@ -8,8 +8,8 @@ import java.util.*;
 
 /**
  * @sharpen.ignore
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class VersionClassLoader extends URLClassLoader {
 
     private Map cache = new HashMap();

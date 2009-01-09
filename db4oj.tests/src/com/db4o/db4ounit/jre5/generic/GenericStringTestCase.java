@@ -7,8 +7,8 @@ import db4ounit.extensions.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class GenericStringTestCase extends AbstractDb4oTestCase {
 	public static void main(String[] args) {
 		new GenericStringTestCase().runAll();

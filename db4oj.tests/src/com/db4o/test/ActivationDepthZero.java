@@ -6,8 +6,8 @@ import com.db4o.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class ActivationDepthZero {
 	public void configure() {
 		Db4o.configure().activationDepth(0);

@@ -9,8 +9,8 @@ import com.db4o.query.*;
 import db4ounit.*;
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class SlotCachePerformanceTest {
 	
 	private static final int BENCHMARKS = 5;

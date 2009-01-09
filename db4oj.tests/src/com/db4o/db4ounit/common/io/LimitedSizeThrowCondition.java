@@ -3,8 +3,8 @@ package com.db4o.db4ounit.common.io;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class LimitedSizeThrowCondition implements ThrowCondition {
 
 	private long _size;

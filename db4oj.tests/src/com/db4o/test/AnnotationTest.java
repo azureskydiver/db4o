@@ -7,8 +7,8 @@ import com.db4o.ext.*;
 
 
 /**
- * @decaf.ignore
  */
+@decaf.Ignore
 public class AnnotationTest {
 
 	public static void main(String[] args) {

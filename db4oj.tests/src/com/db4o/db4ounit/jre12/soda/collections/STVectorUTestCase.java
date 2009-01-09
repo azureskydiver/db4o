@@ -8,8 +8,8 @@ import com.db4o.query.*;
 
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class STVectorUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTestCase {
 
 	Object col;

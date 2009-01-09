@@ -5,8 +5,8 @@ package com.db4o.test;
 import com.db4o.test.legacy.*;
 
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class AllTestsJdk1_2Legacy extends AllTestsLegacy {
 	
     public static void main(String[] args) {

@@ -13,8 +13,8 @@ import db4ounit.*;
 
 // see COR-714
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class ArrayListCandidatesTestCase implements TestCase {
 	
 	private static final String DB_ID = "in_memory";

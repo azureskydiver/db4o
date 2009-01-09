@@ -10,8 +10,8 @@ import com.db4o.types.*;
  * 
  */
 /**
- * @decaf.ignore.jdk11
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class DeleteRemovedMapElements {
     
     Map i_map;

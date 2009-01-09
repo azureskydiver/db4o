@@ -12,9 +12,9 @@ import com.db4o.test.util.*;
 import db4ounit.*;
 
 /**
- * @decaf.ignore.jdk11
  * @sharpen.ignore
  */
+@decaf.Ignore(decaf.Platform.JDK11)
 public class GenericPrimitiveArrayTestCase implements TestCase {
 
 	private static final byte[] BYTES = new byte[]{1,2};
