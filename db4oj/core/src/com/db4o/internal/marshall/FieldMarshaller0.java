@@ -56,7 +56,7 @@ public class FieldMarshaller0 extends AbstractFieldMarshaller {
     	    field.init(field.containingClass(), name);
     	    return field;
     	}
-        if (spec.isVirtual()) {
+        if (spec.isVirtualField()) {
         	return stream._handlers.virtualFieldByName(name);
         }
         

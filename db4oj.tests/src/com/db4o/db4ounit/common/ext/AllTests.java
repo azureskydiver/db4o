@@ -15,6 +15,7 @@ public class AllTests extends Db4oTestSuite {
 			RefreshTestCase.class,
 			StoredClassTestCase.class,
 			StoredClassInstanceCountTestCase.class,
+			UnavailableClassesWithTypeHandlerTestCase.class,
 		};
 	}
 
