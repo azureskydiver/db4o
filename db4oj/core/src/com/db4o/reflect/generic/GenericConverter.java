@@ -9,4 +9,6 @@ public interface GenericConverter {
 	
 	public String toString(GenericObject obj);
 
+	public String toString(GenericArray array);
+
 }

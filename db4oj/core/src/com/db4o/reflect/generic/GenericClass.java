@@ -25,7 +25,7 @@ public class GenericClass implements ReflectClass, DeepClone {
     
     private int _isCollection;
     
-    private GenericConverter _converter;
+    protected GenericConverter _converter;
     
     private GenericField[] _fields = NO_FIELDS;
     
@@ -280,11 +280,11 @@ public class GenericClass implements ReflectClass, DeepClone {
         return "GenericClass " + _name; 
     }
     
-    public String toString(GenericObject obj) {
+    public String toString(Object obj) {
     	if(_converter == null) {
     		return "(G) " + getName();
     	}
-    	return _converter.toString(obj);
+    	return _converter.toString((GenericObject) obj);
     }
 
 	public boolean ensureCanBeInstantiated() {

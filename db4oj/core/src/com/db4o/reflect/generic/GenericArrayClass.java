@@ -11,7 +11,7 @@ import com.db4o.reflect.*;
 public class GenericArrayClass extends GenericClass {
     
     public GenericArrayClass(GenericReflector reflector, ReflectClass delegateClass, String name, GenericClass superclass) {
-        super(reflector, delegateClass, "(GA) " + name, superclass);
+        super(reflector, delegateClass, name, superclass);
     }
     
     public ReflectClass getComponentType() {
@@ -34,6 +34,13 @@ public class GenericArrayClass extends GenericClass {
             return false;
         }
         return super.equals(obj);
+    }
+    
+    public String toString(Object obj) {
+    	if(_converter == null) {
+    		return "(GA) " + getName();
+    	}
+    	return _converter.toString((GenericArray) obj);
     }
     
 }
