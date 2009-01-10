@@ -6,13 +6,17 @@ import db4ounit.*;
 
 public class TestWithTempFile implements TestLifeCycle{
 
-	protected final String _tempFile = Path4.getTempFileName();
+	private final String _tempFile = Path4.getTempFileName();
 	
+	protected String tempFile() {
+		return _tempFile;
+	}
+
 	public void setUp() throws Exception {
 	}
 
 	public void tearDown() throws Exception {
-		File4.delete(_tempFile);
+		File4.delete(tempFile());
 	}
 
 }

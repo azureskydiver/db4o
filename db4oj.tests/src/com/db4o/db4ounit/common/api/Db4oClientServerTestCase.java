@@ -11,7 +11,7 @@ public class Db4oClientServerTestCase extends TestWithTempFile {
 	public void testClientServerApi() {
 		final ServerConfiguration config = Db4oClientServer.newServerConfiguration();
 		
-		final ObjectServer server = Db4oClientServer.openServer(config, _tempFile, 0xdb40);
+		final ObjectServer server = Db4oClientServer.openServer(config, tempFile(), 0xdb40);
 		try {
 			server.grantAccess("user", "password");
 			

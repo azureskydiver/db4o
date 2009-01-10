@@ -10,9 +10,9 @@ public class StorageTest extends TestWithTempFile {
 	
 	public void testInitialLength() {
 		
-		storage().open(new BinConfiguration(_tempFile, false, 1000, false)).close();
+		storage().open(new BinConfiguration(tempFile(), false, 1000, false)).close();
 		
-		final Bin bin = storage().open(new BinConfiguration(_tempFile, false, 0, false));
+		final Bin bin = storage().open(new BinConfiguration(tempFile(), false, 0, false));
 		try {
 			Assert.areEqual(1000, bin.length());
 		} finally {

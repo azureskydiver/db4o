@@ -2,16 +2,16 @@
 
 package com.db4o.db4ounit.common.io;
 
+import static com.db4o.foundation.Environments.*;
+
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.api.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
-import static com.db4o.foundation.Environments.*;
 
 /**
  * @exclude
@@ -60,14 +60,14 @@ public class BlockSizeDependentBinTestCase extends TestWithTempFile{
 	
 	public void test(){
 		int configuredBlockSize = 13;
-		ObjectContainer db = Db4oEmbedded.openFile(configure(configuredBlockSize), _tempFile);
+		ObjectContainer db = Db4oEmbedded.openFile(configure(configuredBlockSize), tempFile());
 		try {
 			Assert.areEqual(configuredBlockSize, _blockSize.value);
 		} finally {
 			db.close();
 		}
 		
-		db = Db4oEmbedded.openFile(configure(14), _tempFile);
+		db = Db4oEmbedded.openFile(configure(14), tempFile());
 		try {
 			Assert.areEqual(configuredBlockSize, _blockSize.value);
 		} finally {

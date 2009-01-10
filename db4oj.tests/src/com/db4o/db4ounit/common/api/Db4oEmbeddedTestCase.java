@@ -9,9 +9,9 @@ import db4ounit.*;
 public class Db4oEmbeddedTestCase extends TestWithTempFile {
 	
 	public void testOpenFile() {
-		final ObjectContainer container = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), _tempFile);
+		final ObjectContainer container = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), tempFile());
 		try {
-			Assert.isTrue(File4.exists(_tempFile));
+			Assert.isTrue(File4.exists(tempFile()));
 		} finally {
 			container.close();
 		}
@@ -20,7 +20,7 @@ public class Db4oEmbeddedTestCase extends TestWithTempFile {
 	public void testOpenFileWithNullConfiguration() {
 		Assert.expect(ArgumentNullException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				Db4oEmbedded.openFile(null, _tempFile);
+				Db4oEmbedded.openFile(null, tempFile());
 			}
 		});
 	}
