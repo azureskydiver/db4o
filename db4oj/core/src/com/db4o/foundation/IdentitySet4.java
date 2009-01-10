@@ -2,10 +2,11 @@
 
 package com.db4o.foundation;
 
+
 /**
  * @exclude
  */
-public class IdentitySet4 extends HashtableBase{
+public class IdentitySet4 extends HashtableBase implements Iterable4 {
 	
 	public IdentitySet4(){
 	}
@@ -24,5 +25,16 @@ public class IdentitySet4 extends HashtableBase{
 		}
 		putEntry(new HashtableIdentityEntry(obj));
 	}
-
+	
+	public void remove(Object obj) {
+		if(null == obj){
+			throw new ArgumentNullException();
+		}
+		
+		removeIntEntry(System.identityHashCode(obj));
+	}
+	
+	public Iterator4 iterator() {
+		return valuesIterator();
+	}
 }

@@ -113,15 +113,7 @@ public class HashtableBase {
 		}
 	}
 
-	/**
-	 * Iterates through all the {@link Entry4 entries}.
-	 *   
-	 * @return {@link Entry4} iterator
-	 * @see #values();
-	 * @see #keys();
-	 * #see {@link #valuesIterator()}
-	 */
-	public Iterator4 iterator(){
+	protected HashtableIterator hashtableIterator() {
 		return new HashtableIterator(_table);
 	}
 	
@@ -134,7 +126,7 @@ public class HashtableBase {
 	}		
 	
 	public Iterator4 keys() {
-		return Iterators.map(iterator(), new Function4() {
+		return Iterators.map(hashtableIterator(), new Function4() {
 			public Object apply(Object current) {
 				return ((Entry4)current).key();
 			}
@@ -155,7 +147,7 @@ public class HashtableBase {
 	 * @return value iterator
 	 */
 	public Iterator4 valuesIterator() {
-		return Iterators.map(iterator(), new Function4() {
+		return Iterators.map(hashtableIterator(), new Function4() {
 			public Object apply(Object current) {
 				return ((Entry4)current).value();
 			}
@@ -164,6 +156,42 @@ public class HashtableBase {
 
 
 	public String toString() {
-		return Iterators.join(iterator(), "{", "}", ", ");
+		return Iterators.join(hashtableIterator(), "{", "}", ", ");
+	}
+
+	protected void removeEntry(HashtableIntEntry predecessor, HashtableIntEntry entry) {
+		if (predecessor != null) {
+			predecessor._next = entry._next;
+		} else {
+			_table[entryIndex(entry)] = entry._next;
+		}
+		_size--;
+	}
+
+	protected Object removeObjectEntry(int intKey, Object objectKey) {
+		HashtableObjectEntry entry = (HashtableObjectEntry) _table[intKey & _mask];
+		HashtableObjectEntry predecessor = null;
+		while (entry != null) {
+			if (entry._key == intKey && entry.hasKey(objectKey)) {
+				removeEntry(predecessor, entry);
+				return entry._object;
+			}
+			predecessor = entry;
+			entry = (HashtableObjectEntry) entry._next;
+		}
+		return null;
+	}
+
+	protected void removeIntEntry(int key) {
+		HashtableIntEntry entry = _table[key & _mask];
+		HashtableIntEntry predecessor = null;
+		while (entry != null) {
+			if (entry._key == key) {
+				removeEntry(predecessor, entry);
+				return;
+			}
+			predecessor = entry;
+			entry = entry._next;
+		}
 	}
 }
