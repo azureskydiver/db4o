@@ -202,7 +202,7 @@ public class LocalTransaction extends Transaction {
         	parentLocalTransaction().commitParticipants();
         }
         
-        Iterator4 iterator = _participants.valuesIterator();
+        Iterator4 iterator = _participants.iterator();
 		while (iterator.moveNext()) {
 			((TransactionParticipant)iterator.current()).commit(this);
 		}

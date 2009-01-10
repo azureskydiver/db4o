@@ -50,7 +50,23 @@ public class IdentitySet4TestCase implements TestCase{
 		Assert.areEqual(2, size);
 	}
 	
+	public void testRemove() {
+		final IdentitySet4 set = new IdentitySet4();
+		final Object obj = new Object();
+		set.add(obj);
+		Assert.isTrue(set.contains(obj));
+		set.remove(obj);
+		Assert.isFalse(set.contains(obj));
+	}
 	
-
+	public void testIterator() {
+		final IdentitySet4 set = new IdentitySet4();
+		final Object o1 = new Object();
+		final Object o2 = new Object();
+		set.add(o1);
+		set.add(o2);		
+		
+		Iterator4Assert.sameContent(Iterators.iterate(o1, o2), set.iterator());
+	}
 
 }

@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.migration;
 
+import com.db4o.db4ounit.common.assorted.*;
 import com.db4o.db4ounit.common.freespace.*;
 import com.db4o.db4ounit.common.handlers.*;
 import com.db4o.db4ounit.util.*;
@@ -79,6 +80,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 	    return new Class[] {
             ArrayListUpdateTestCase.class,
             HashtableUpdateTestCase.class,
+            KnownClassesMigrationTestCase.class,
             VectorUpdateTestCase.class,
 	    };
 	}

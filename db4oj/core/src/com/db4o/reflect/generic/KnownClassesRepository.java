@@ -35,6 +35,8 @@ public class KnownClassesRepository {
 	private Transaction _trans;
 
     private ReflectClassBuilder _builder;
+    
+    private final ListenerRegistry<ReflectClass> _listeners = ListenerRegistry.newInstance();
 
     private final Hashtable4 _classByName = new Hashtable4();
     private final Hashtable4 _classByID = new Hashtable4();
@@ -183,13 +185,16 @@ public class KnownClassesRepository {
 	private void register(String className, ReflectClass clazz) {
 		if (lookupByName(className) != null)
 			throw new IllegalArgumentException();
+		
 	    _classByName.put(className, clazz);
 		_classes.add(clazz);
+		
+		_listeners.notifyListeners(clazz);
     }
 
 	private ReflectClass reflectClassForFieldSpec(RawFieldSpec fieldInfo, Reflector reflector) {
 		
-		if (fieldInfo.isVirtual()) {
+		if (fieldInfo.isVirtualField()) {
 			 return virtualFieldByName(fieldInfo.name()).classReflector(reflector);
 		}
 		
@@ -277,5 +282,13 @@ public class KnownClassesRepository {
 			return baseClass.reflector().forClass(primitive);
 		}
 		return baseClass;
+	}
+
+	public void addListener(Listener<ReflectClass> listener) {
+		_listeners.register(listener);
+	}
+
+	public void removeListener(Listener<ReflectClass> listener) {
+		_listeners.remove(listener);
 	}
 }

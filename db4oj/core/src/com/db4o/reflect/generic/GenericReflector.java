@@ -350,19 +350,51 @@ public class GenericReflector implements Reflector, DeepClone {
 		return (ReflectClass[])classes.toArray(new ReflectClass[classes.size()]);
 	}
 
-	private void collectKnownClasses(Collection4 classes) {
-		Iterator4 i = _repository.classes();
-		while(i.moveNext()){
-            GenericClass clazz = (GenericClass)i.current();
-            if(! _stream._handlers.ICLASS_INTERNAL.isAssignableFrom(clazz)){
-                ClassMetadata clazzMeta = _stream.classMetadataForReflectClass(clazz);
-				if(clazzMeta == null || !clazzMeta.isSecondClass()){
-					if(! clazz.isArray()){
-						classes.add(clazz);
-					}
-                }
-            }
+	private void collectKnownClasses(final Collection4 classes) {
+		final Listener<ReflectClass> collectingListener = newCollectingClassListener(classes);
+		_repository.addListener(collectingListener);
+		try { 
+			collectKnownClasses(classes, Iterators.copy(_repository.classes()));
+		} finally { 
+			_repository.removeListener(collectingListener);
 		}
+	}
+
+	private Listener<ReflectClass> newCollectingClassListener(final Collection4 classes) {
+		return new Listener<ReflectClass>() {		
+			public void onEvent(ReflectClass addedClass) {
+				collectKnownClass(classes, addedClass);
+			}
+		};
+	}
+
+	private void collectKnownClasses(Collection4 collector, Iterator4 knownClasses) {
+		while(knownClasses.moveNext()){
+            ReflectClass clazz = (ReflectClass) knownClasses.current();
+            collectKnownClass(collector, clazz);
+		}
+	}
+
+	private void collectKnownClass(Collection4 classes, ReflectClass clazz) {
+		if(isInternalClass(clazz))
+			return;
+		
+		if(isSecondClass(clazz))
+			return;
+		
+		if(clazz.isArray())
+			return;
+		
+		classes.add(clazz);
+	}
+
+	private boolean isInternalClass(ReflectClass clazz) {
+		return _stream._handlers.ICLASS_INTERNAL.isAssignableFrom(clazz);
+	}
+
+	private boolean isSecondClass(ReflectClass clazz) {
+		ClassMetadata clazzMeta = _stream.classMetadataForReflectClass(clazz);
+		return clazzMeta != null && clazzMeta.isSecondClass();
 	}
 	
 	/**

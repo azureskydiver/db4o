@@ -2,6 +2,7 @@
 
 package com.db4o.foundation;
 
+
 /**
  * @exclude
  */
@@ -11,11 +12,11 @@ public class ListenerRegistry <E>{
 		return new ListenerRegistry<E>();
 	}
 
-	private Collection4 _listeners;
+	private IdentitySet4 _listeners;
 	
 	public void register(Listener<E> listener){
 		if(_listeners == null){
-			_listeners = new Collection4();
+			_listeners = new IdentitySet4();
 		}
 		_listeners.add(listener);
 	}
@@ -28,5 +29,13 @@ public class ListenerRegistry <E>{
 		while(i.moveNext()){
 			((Listener)i.current()).onEvent(event);
 		}
+	}
+
+	public void remove(Listener<E> listener) {
+		if (_listeners == null) {
+			return;
+		}
+		
+		_listeners.remove(listener);			
 	}
 }
