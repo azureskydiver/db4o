@@ -2,6 +2,7 @@
 
 package com.db4o.internal.handlers.net;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -81,6 +82,10 @@ public abstract class NetSimpleTypeHandler extends NetTypeHandler implements Gen
 	
 	public String toString(GenericObject obj) {
 		return toString((byte[])obj.get(0));
+	}
+	
+	public String toString(GenericArray array) {
+		return Iterators.toString(array.iterator());
 	}
 	
     /** @param bytes */
