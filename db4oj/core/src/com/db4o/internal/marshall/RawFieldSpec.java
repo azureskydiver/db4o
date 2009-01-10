@@ -60,6 +60,14 @@ public class RawFieldSpec {
 		return _isVirtual;
 	}
 	
+	public boolean isVirtualField() {
+		return isVirtual() && isField();
+	}
+	
+	private boolean isField() {
+		return _type.isField();
+	}
+
 	public int indexID() {
 		return _indexID;
 	}

@@ -33,8 +33,15 @@ public class AspectType {
     }
     
     public boolean isFieldMetadata() {
-        return this == AspectType.FIELD || this == AspectType.TRANSLATOR;
+        return isField() || isTranslator();
     }
-    
+
+	public boolean isTranslator() {
+		return this == AspectType.TRANSLATOR;
+	}
+
+	public boolean isField() {
+		return this == AspectType.FIELD;
+	}
 
 }
