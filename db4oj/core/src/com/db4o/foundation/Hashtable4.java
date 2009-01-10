@@ -97,27 +97,30 @@ public class Hashtable4 extends HashtableBase implements DeepClone, Map4 {
 		putEntry(new HashtableObjectEntry(key, value));
 	}
 	
+	public Object remove(Object objectKey) {
+		int intKey = objectKey.hashCode();
+		return removeObjectEntry(intKey, objectKey);
+	}
+	
 	public Object remove(byte[] key) {
 		int intKey = HashtableByteArrayEntry.hash(key);
 		return removeObjectEntry(intKey, key);
 	}
 
 	public void remove(int key) {
-		HashtableIntEntry entry = _table[key & _mask];
-		HashtableIntEntry predecessor = null;
-		while (entry != null) {
-			if (entry._key == key) {
-				removeEntry(predecessor, entry);
-				return;
-			}
-			predecessor = entry;
-			entry = entry._next;
-		}
+		removeIntEntry(key);
 	}
 
-	public Object remove(Object objectKey) {
-		int intKey = objectKey.hashCode();
-		return removeObjectEntry(intKey, objectKey);
+	/**
+	 * Iterates through all the {@link Entry4 entries}.
+	 *   
+	 * @return {@link Entry4} iterator
+	 * @see #values();
+	 * @see #keys();
+	 * #see {@link #valuesIterator()}
+	 */
+	public Iterator4 iterator(){
+		return hashtableIterator();
 	}
 	
 	protected Hashtable4 deepCloneInternal(Hashtable4 ret, Object obj) {
@@ -149,28 +152,4 @@ public class Hashtable4 extends HashtableBase implements DeepClone, Map4 {
 		}
 		return null;
 	}
-
-	private void removeEntry(HashtableIntEntry predecessor, HashtableIntEntry entry) {
-		if (predecessor != null) {
-			predecessor._next = entry._next;
-		} else {
-			_table[entryIndex(entry)] = entry._next;
-		}
-		_size--;
-	}
-
-	private Object removeObjectEntry(int intKey, Object objectKey) {
-		HashtableObjectEntry entry = (HashtableObjectEntry) _table[intKey & _mask];
-		HashtableObjectEntry predecessor = null;
-		while (entry != null) {
-			if (entry._key == intKey && entry.hasKey(objectKey)) {
-				removeEntry(predecessor, entry);
-				return entry._object;
-			}
-			predecessor = entry;
-			entry = (HashtableObjectEntry) entry._next;
-		}
-		return null;
-	}
-
 }
