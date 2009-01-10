@@ -140,9 +140,9 @@ public class GenericObjectsTest extends AbstractDb4oTestCase {
 	public void testGenericArrayClass() {
 		ExtObjectContainer oc = fixture().db();
 		initGenericObjects();
-		ReflectClass rc = oc.reflector().forName(PERSON_CLASSNAME);
+		ReflectClass elementType = oc.reflector().forName(PERSON_CLASSNAME);
 
-		Object array = reflector().array().newInstance(rc, 5);
+		Object array = reflector().array().newInstance(elementType, 5);
 
 		ReflectClass arrayClass = oc.reflector().forObject(array);
 		Assert.isTrue(arrayClass.isArray());
@@ -155,5 +155,9 @@ public class GenericObjectsTest extends AbstractDb4oTestCase {
 		arrayClass = oc.reflector().forClass(array.getClass());
 		Assert.isTrue(arrayClass.isArray());
 		Assert.isTrue(arrayClass instanceof GenericArrayClass);
+		
+		Assert.areEqual(arrayClass.getName(), ReflectPlatform.fullyQualifiedName(array.getClass()));
+	
+		Assert.areEqual("(GA) " + elementType.getName(), array.toString()); 
 	}
 }

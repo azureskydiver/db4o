@@ -12,6 +12,7 @@ public class AllTests extends Db4oTestSuite {
 			GenericReflectorStateTest.class,
 			NoTestConstructorsTestCase.class,
 			ReflectArrayTestCase.class,
+			ReflectClassTestCase.class,
 			ReflectFieldExceptionTestCase.class,
 			com.db4o.db4ounit.common.reflect.custom.AllTests.class,
 			com.db4o.db4ounit.common.reflect.generic.GenericObjectsTest.class,
