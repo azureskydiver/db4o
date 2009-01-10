@@ -50,14 +50,14 @@ public class ReflectPlatform {
 		return !clazz.isPrimitive();
 	}
 
-	@decaf.ReplaceFirst("return simpleNameForJdksPriorTo5(service);")
-	public static String simpleName(Class service) {
-		return service.getSimpleName();
+	@decaf.ReplaceFirst("return simpleNameForJdksPriorTo5(clazz);")
+	public static String simpleName(Class clazz) {
+		return clazz.getSimpleName();
     }
 	
 	@SuppressWarnings("unused")
-    private static String simpleNameForJdksPriorTo5(Class service) {
-		final String name = service.getName();
+    private static String simpleNameForJdksPriorTo5(Class clazz) {
+		final String name = clazz.getName();
 		final int lastDot = name.lastIndexOf('.');
 		return lastDot < 0
 			? name
