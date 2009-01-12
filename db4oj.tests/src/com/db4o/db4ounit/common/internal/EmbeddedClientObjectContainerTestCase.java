@@ -237,7 +237,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     public void testKnownClasses(){
         ReflectClass[] knownClasses = _client1.knownClasses();
         ReflectClass itemClass = _client1.reflector().forClass(Item.class);
-        ArrayAssert.contains(knownClasses, new ReflectClass[]{itemClass});
+        ArrayAssert.containsByIdentity(knownClasses, new ReflectClass[]{itemClass});
     }
     
     public void testLock(){
@@ -338,7 +338,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         storeItemToClient1AndCommit();
         StoredClass[] storedClasses = _client1.storedClasses();
         StoredClass storedClass = _client1.storedClass(Item.class);
-        ArrayAssert.contains(storedClasses, new Object[]{storedClass});
+        ArrayAssert.containsByEquals(storedClasses, new Object[]{storedClass});
     }
     
     public void testSystemInfo(){
