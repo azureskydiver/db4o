@@ -56,4 +56,15 @@ public class BloatUtil {
 		return new LoadStoreInstructions(Opcode.opc_aload, Opcode.opc_astore);
 	}
 
+	public static boolean implementsDirectly(ClassEditor ce, Class markerInterface) {
+		Type[] interfaces = ce.interfaces();
+		for (int idx = 0; idx < interfaces.length; idx++) {
+			Type type = interfaces[idx];
+			if(normalizeClassName(type).equals(markerInterface.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
