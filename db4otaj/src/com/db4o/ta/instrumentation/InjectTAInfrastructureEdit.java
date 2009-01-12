@@ -22,11 +22,14 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 	}
 	
 	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
+		if(isAlreadyInstrumented(ce)) {
+			return InstrumentationStatus.FAILED;
+		}
 		try {
 			Class activatableClazz = origLoader.loadClass(Activatable.class.getName());
 			Class clazz = BloatUtil.classForEditor(ce, origLoader);
 			if(activatableClazz.isAssignableFrom(clazz)) {
-				return InstrumentationStatus.FAILED;
+				return InstrumentationStatus.NOT_INSTRUMENTED;
 			}
 			if(!_instrumentedClassesFilter.accept(clazz)) {
 				return InstrumentationStatus.NOT_INSTRUMENTED;
@@ -45,6 +48,10 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 		} catch (ClassNotFoundException exc) {
 			return InstrumentationStatus.FAILED;
 		}
+	}
+
+	private boolean isAlreadyInstrumented(ClassEditor ce) {
+		return BloatUtil.implementsDirectly(ce, Activatable.class);
 	}
 
 	private void createActivatorField(ClassEditor ce) {

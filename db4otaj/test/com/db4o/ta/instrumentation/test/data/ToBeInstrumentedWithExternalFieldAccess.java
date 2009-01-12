@@ -1,4 +1,4 @@
-package com.db4o.ta.instrumentation.test;
+package com.db4o.ta.instrumentation.test.data;
 
 public class ToBeInstrumentedWithExternalFieldAccess {
 
