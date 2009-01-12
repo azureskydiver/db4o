@@ -34,7 +34,7 @@ public class IndexedNodeCollector {
 				OrIndexedLeaf current = (OrIndexedLeaf) node;
 				OrIndexedLeaf other = findJoinOnSameFieldAtSameLevel(current);
 				if (null != other) {
-					nodes[Arrays4.indexOf(nodes, other)] = null;
+					nodes[Arrays4.indexOfIdentity(nodes, other)] = null;
 					collectImplicitAnd(current.getConstraint(), current, other);
 				}
 			}

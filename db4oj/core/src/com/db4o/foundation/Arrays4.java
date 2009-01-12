@@ -9,13 +9,22 @@ package com.db4o.foundation;
  */
 public class Arrays4 {
 
-	public static int indexOf(Object[] array, Object element) {
+	public static int indexOfIdentity(Object[] array, Object element) {
 		for (int i = 0; i < array.length; i++) {
 			if (array[i] == element) {
 				return i;
 			}
 		}
 		return -1;
+	}
+
+	public static int indexOfEquals(Object[] array, Object expected) {
+	    for (int i = 0; i < array.length; ++i) {                
+	        if (expected.equals(array[i])) {
+	            return i;
+	        }
+	    }
+	    return -1;
 	}
 
 	public static boolean areEqual(final byte[] x, final byte[] y) {
