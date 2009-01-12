@@ -16,19 +16,23 @@ public class ArrayAssert {
 		Assert.fail("Expecting '" + expected + "'.");
 	}
 	
-    public static void contains(Object[] array, Object[] expected){
+    public static void containsByIdentity(Object[] array, Object[] expected){
         for (int i = 0; i < expected.length; i++) {
-            if (-1 == indexOf(array, expected[i])) {
+            if (-1 == Arrays4.indexOfIdentity(array, expected[i])) {
                 Assert.fail("Expecting contains '" + expected[i] + "'.");
             }
         }
     }
-    
-    public static int indexOf(Object[] array, Object expected) {
-        return Arrays4.indexOf(array, expected);
+
+    public static void containsByEquals(Object[] array, Object[] expected){
+        for (int i = 0; i < expected.length; i++) {
+            if (-1 == Arrays4.indexOfEquals(array, expected[i])) {
+                Assert.fail("Expecting contains '" + expected[i] + "'.");
+            }
+        }
     }
-	
-	public static void areEqual(Object[] expected, Object[] actual) {
+
+    public static void areEqual(Object[] expected, Object[] actual) {
 		areEqualImpl(expected, actual);
 	}
 
