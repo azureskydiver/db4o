@@ -28,7 +28,7 @@ public class KnownClassesMigrationTestCase extends FormatMigrationTestCaseBase {
 		Assert.isGreater(2, knownClasses.length);
 		
 		ReflectClass type = objectContainer.reflector().forClass(TCollection.class);
-		Assert.isGreaterOrEqual(0, Arrays4.indexOf(knownClasses, type));
+		Assert.isGreaterOrEqual(0, Arrays4.indexOfIdentity(knownClasses, type));
 	}
 
 	private boolean isVersionWithoutTCollection() {
