@@ -1,70 +1,27 @@
 package com.db4o.omplus.ui.customisedcontrols.queryResult;
 
-import java.util.HashMap;
+import java.util.*;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerEditor;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.nebula.widgets.cdatetime.CDT;
-import org.eclipse.nebula.widgets.cdatetime.CDateTimeCellEditor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.jface.action.*;
+import org.eclipse.jface.dialogs.*;
+import org.eclipse.jface.resource.*;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.nebula.widgets.cdatetime.*;
+import org.eclipse.swt.*;
+import org.eclipse.swt.custom.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
 
-import com.db4o.foundation.NotImplementedException;
-import com.db4o.omplus.datalayer.DbInterfaceImpl;
-import com.db4o.omplus.datalayer.ImageUtility;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.queryBuilder.OMQuery;
-import com.db4o.omplus.datalayer.queryBuilder.QueryBuilderConstants;
-import com.db4o.omplus.datalayer.queryresult.QueryResultList;
-import com.db4o.omplus.datalayer.queryresult.QueryResultRow;
-import com.db4o.omplus.datalayer.queryresult.QueryResultTableModifiedList;
-import com.db4o.omplus.ui.interfaces.IChildModifier;
-import com.db4o.omplus.ui.interfaces.IViewUpdatorForQueryResults;
-import com.db4o.omplus.ui.listeners.queryResult.ResultTableCellModifier;
-import com.db4o.omplus.ui.listeners.queryResult.ResultTableSelectionListener;
-import com.db4o.omplus.ui.model.queryResults.QueryResultPage;
-import com.db4o.omplus.ui.model.queryResults.QueryResultsContentProvider;
-import com.db4o.omplus.ui.model.queryResults.QueryResultsLabelProvider;
-import com.db4o.omplus.ui.model.queryResults.TableColumnComparator;
+import com.db4o.foundation.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.datalayer.queryBuilder.*;
+import com.db4o.omplus.datalayer.queryresult.*;
+import com.db4o.omplus.ui.interfaces.*;
+import com.db4o.omplus.ui.listeners.queryResult.*;
+import com.db4o.omplus.ui.model.queryResults.*;
 
 public class QueryResultTab extends CTabItem implements IChildModifier
 {
@@ -133,7 +90,6 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 		queryResultList = qList;
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void initForResultPages() {
 		resultPage = new QueryResultPage();
 		int size = queryResultList.size();

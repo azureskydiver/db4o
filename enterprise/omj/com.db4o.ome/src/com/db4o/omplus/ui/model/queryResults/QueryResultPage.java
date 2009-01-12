@@ -68,8 +68,9 @@ public class QueryResultPage
 	}
 
 	private void refreshObj(Object obj) {
-		if(refresh)
+		if(refresh) {
 			db.refreshObj(obj);
+		}
 	}
 
 	// currently changed to public. Check refresh in result table
