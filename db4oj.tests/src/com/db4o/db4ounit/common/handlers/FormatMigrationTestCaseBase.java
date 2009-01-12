@@ -117,7 +117,10 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 		    updateDatabaseFile(testFileName);
 		    
 		    checkUpdatedDatabaseFile(testFileName);
-		    
+
+			runDefrag(testFileName);
+
+		    checkUpdatedDatabaseFile(testFileName);
 		    
 		}else{
 		    
