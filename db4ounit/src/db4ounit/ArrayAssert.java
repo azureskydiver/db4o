@@ -24,7 +24,7 @@ public class ArrayAssert {
         }
     }
 
-    public static void containsByEquals(Object[] array, Object[] expected){
+    public static void containsByEquality(Object[] array, Object[] expected){
         for (int i = 0; i < expected.length; i++) {
             if (-1 == Arrays4.indexOfEquals(array, expected[i])) {
                 Assert.fail("Expecting contains '" + expected[i] + "'.");
