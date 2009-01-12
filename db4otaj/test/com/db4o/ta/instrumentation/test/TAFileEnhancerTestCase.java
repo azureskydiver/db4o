@@ -13,6 +13,7 @@ import com.db4o.instrumentation.main.*;
 import com.db4o.internal.Reflection4;
 import com.db4o.ta.*;
 import com.db4o.ta.instrumentation.*;
+import com.db4o.ta.instrumentation.test.data.*;
 
 import db4ounit.*;
 

@@ -20,6 +20,7 @@ import com.db4o.activation.*;
 import com.db4o.foundation.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.util.*;
+import com.db4o.ta.*;
 
 /**
  * @exclude
@@ -32,7 +33,14 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 		_filter = filter;
 	}
 	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
+		if(isAlreadyInstrumented(ce)) {
+			return InstrumentationStatus.FAILED;
+		}
 		return instrumentAllMethods(ce, origLoader, loaderContext);
+	}
+	
+	private boolean isAlreadyInstrumented(ClassEditor ce) {
+		return BloatUtil.implementsDirectly(ce, ActivatableInstrumented.class);
 	}
 
 	private InstrumentationStatus instrumentAllMethods(final ClassEditor ce, final ClassLoader origLoader, final BloatLoaderContext loaderContext) {
@@ -42,6 +50,7 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 		ce.visit(new EditorVisitor() {
 
 			public void visitClassEditor(ClassEditor editor) {
+				editor.addInterface(ActivatableInstrumented.class);
 			}
 
 			public void visitFieldEditor(FieldEditor editor) {

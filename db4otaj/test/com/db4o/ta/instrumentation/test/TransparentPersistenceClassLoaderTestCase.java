@@ -13,6 +13,7 @@ import com.db4o.instrumentation.main.*;
 import com.db4o.internal.Reflection4;
 import com.db4o.ta.*;
 import com.db4o.ta.instrumentation.*;
+import com.db4o.ta.instrumentation.test.data.*;
 
 import db4ounit.*;
 
@@ -28,6 +29,10 @@ public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle 
 	private static final String NI_CLASS_NAME = NI_CLASS.getName();
 	private static final Class CNI_CLASS = CanNotBeInstrumented.class;
 	private static final String CNI_CLASS_NAME = CNI_CLASS.getName();
+	private static final Class AI_CLASS = AlreadyInstrumentedSuper.class;
+	private static final String AI_CLASS_NAME = AI_CLASS.getName();
+	private static final Class AI_SUB_CLASS = SubOfAlreadyInstrumented.class;
+	private static final String AI_SUB_CLASS_NAME = AI_SUB_CLASS.getName();
 
 	private ClassLoader _loader;
 
@@ -57,6 +62,16 @@ public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle 
 		assertMethodInstrumentation(clazz, "barSub", true);
 		assertMethodInstrumentation(clazz, "bazSub", true);
 		assertMethodInstrumentation(clazz, "booSub", true);
+	}
+
+	public void testSubOfAlreadyInstrumentedIsInstrumented() throws Exception {
+		Class clazz = _loader.loadClass(AI_SUB_CLASS_NAME);
+		Assert.areEqual(AI_SUB_CLASS_NAME, clazz.getName());
+		Assert.areNotSame(AI_SUB_CLASS, clazz);
+		assertNoActivatorField(clazz);
+		assertNoMethod(clazz, TransparentActivationInstrumentationConstants.BIND_METHOD_NAME, new Class[]{ ObjectContainer.class });
+		assertNoMethod(clazz, TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Class[]{});
+		assertMethodInstrumentation(clazz, "toString", true);
 	}
 
 	public void testFieldAccessIsInstrumented() throws Exception {
@@ -252,7 +267,7 @@ public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle 
 	public void setUp() throws Exception {
 		ClassLoader baseLoader = ORIG_CLASS.getClassLoader();
 		URL[] urls = {};
-		ClassFilter filter = new ByNameClassFilter(new String[]{ CLASS_NAME, SUB_CLASS_NAME, FA_CLASS_NAME, CNI_CLASS_NAME });
+		ClassFilter filter = new ByNameClassFilter(new String[]{ CLASS_NAME, SUB_CLASS_NAME, FA_CLASS_NAME, CNI_CLASS_NAME, AI_CLASS_NAME, AI_SUB_CLASS_NAME });
 		_loader = new BloatInstrumentingClassLoader(urls, baseLoader, new AcceptAllClassesFilter(), new InjectTransparentActivationEdit(filter));
 	}
 
