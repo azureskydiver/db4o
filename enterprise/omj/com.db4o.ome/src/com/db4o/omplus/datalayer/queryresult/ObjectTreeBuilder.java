@@ -1,22 +1,11 @@
 package com.db4o.omplus.datalayer.queryresult;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 
-import com.db4o.ObjectContainer;
-import com.db4o.omplus.datalayer.DbInterfaceImpl;
-import com.db4o.omplus.datalayer.ModifyObject;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.ReflectHelper;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.Reflector;
-import com.db4o.reflect.generic.GenericObject;
+import com.db4o.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 
 
 public class ObjectTreeBuilder {
@@ -39,7 +28,6 @@ public class ObjectTreeBuilder {
 	
 	private ArrayList<Object> modifiedObjList = new ArrayList<Object>();
 	private HashMap<Object, Integer> updateDepth = new HashMap<Object, Integer>();
-	private ModifyObject modify = new ModifyObject();
 
 	public ObjectTreeNode getObjectTreeRootNode(String className, Object resultObj){
 		ObjectTreeNode newNode = new ObjectTreeNode();
@@ -104,12 +92,11 @@ public class ObjectTreeBuilder {
 			String type = node.getType();
 			String name = getFieldName(node.getName());
 			ReflectClass claz = getReflectClazz(parentObj);
-			ReflectField field = null;
+			ReflectField field = getReflectField(claz, name);
 			if(type.equals(Date.class.getName()))
 			{ 
 				if(value != null )
 				{
-					field =getReflectField(claz, name);
 					field.set(parentObj, value);
 					node.setValue(value);
 					if(fieldNames != null && values != null)
@@ -128,14 +115,17 @@ public class ObjectTreeBuilder {
 				}
 			} else 
 			{
-				if(!OMPlusConstants.NULL_VALUE.equals(prev.toString()))
-					modify.updateValue(prev, value, type);
-				else {
-					Object nObj = modify.createNewValue(value, type);
-					if(field == null)
-						field =getReflectField(claz, name);
-					field.set(parentObj, nObj);
-				}
+//				if(!OMPlusConstants.NULL_VALUE.equals(prev.toString())) {
+//					modify.updateValue(prev, value, type);
+//				}
+//				else {
+//					Object nObj = modify.createNewValue(value, type);
+//					if(field == null)
+//						field =getReflectField(claz, name);
+//					field.set(parentObj, nObj);
+//				}
+				field.set(parentObj, new Converter().getValue(type, value.toString()));
+				node.setValue(value);
 			}
 			if( parentObj != null && !modifiedObjList.contains(parentObj))
 			{
@@ -365,7 +355,6 @@ public class ObjectTreeBuilder {
 		return ReflectHelper.getReflectClazz(obj);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void setNodeToNull(ObjectTreeNode node)
 	{
 		if(node == null)

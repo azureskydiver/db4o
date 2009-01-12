@@ -1,5 +1,7 @@
 package com.db4o.omplus;
 
+import omplus.debug.*;
+
 import org.eclipse.jface.resource.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
@@ -35,6 +37,8 @@ public class Activator extends AbstractUIPlugin {
 	{
 		super.start(context);
 		plugin = this;
+		
+		//OMEDebugItem.createDebugDatabase();
 		
 		Display.getDefault().asyncExec(new Runnable() 
 		{
