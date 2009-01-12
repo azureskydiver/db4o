@@ -191,7 +191,7 @@ public class HashtableUpdateTestCase extends HandlerUpdateTestCaseBase {
         while(i.hasNext()){
             array[idx++] = i.next();
         }
-        ArrayAssert.containsByEquals(DATA, array);
+        ArrayAssert.containsByEquality(DATA, array);
         Assert.areEqual(DATA.length, array.length);
         for (int j = 0; j < DATA.length; j++) {
         	Object mapValue = map.get(DATA[j]);

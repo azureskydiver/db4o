@@ -338,7 +338,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         storeItemToClient1AndCommit();
         StoredClass[] storedClasses = _client1.storedClasses();
         StoredClass storedClass = _client1.storedClass(Item.class);
-        ArrayAssert.containsByEquals(storedClasses, new Object[]{storedClass});
+        ArrayAssert.containsByEquality(storedClasses, new Object[]{storedClass});
     }
     
     public void testSystemInfo(){
