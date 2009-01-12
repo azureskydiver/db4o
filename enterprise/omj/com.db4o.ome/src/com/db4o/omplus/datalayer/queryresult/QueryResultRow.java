@@ -87,6 +87,7 @@ public class QueryResultRow {
 					}*/
 				}
 			}else {
+				// FIXME same code as in OMJ-135 - just call field#set() here, too?
 				ModifyObject modify = new ModifyObject();
 				if(obj != null){
 					modify.updateValue(obj, newValue, type);

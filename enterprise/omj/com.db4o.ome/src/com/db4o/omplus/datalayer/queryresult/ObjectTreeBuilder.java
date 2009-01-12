@@ -113,41 +113,33 @@ public class ObjectTreeBuilder {
 						}
 					}
 				}
-			} else 
-			{
-//				if(!OMPlusConstants.NULL_VALUE.equals(prev.toString())) {
-//					modify.updateValue(prev, value, type);
-//				}
-//				else {
-//					Object nObj = modify.createNewValue(value, type);
-//					if(field == null)
-//						field =getReflectField(claz, name);
-//					field.set(parentObj, nObj);
-//				}
+			} 
+			else {
 				field.set(parentObj, new Converter().getValue(type, value.toString()));
 				node.setValue(value);
 			}
-			if( parentObj != null && !modifiedObjList.contains(parentObj))
+			if( parentObj == null || modifiedObjList.contains(parentObj))
 			{
-				// added this code for updating primitive arrays.
-				int count = 1;
-				if( parentNode.getType().startsWith(PRMITVE_ARRAY) ) 
-				{ 
-					int index = getIndex(node.getName());
-					if(index > -1) // move this to DBInterface
-						db.getDB().ext().reflector().array().set(parentObj, index, prev);
-				}
-				while(parentNode != null && parentNode.getNodeType() != 3)
-				{
-					parentNode = parentNode.getParent();
-					parentObj = parentNode.getValue();
-					count++;
-				}
-				if(count > 1){
-					updateDepth.put(parentObj, count);
-				}
-				modifiedObjList.add(parentObj);
+				return;
 			}
+			// added this code for updating primitive arrays.
+			int count = 1;
+			if( parentNode.getType().startsWith(PRMITVE_ARRAY) ) 
+			{ 
+				int index = getIndex(node.getName());
+				if(index > -1) // move this to DBInterface
+					db.getDB().ext().reflector().array().set(parentObj, index, prev);
+			}
+			while(parentNode != null && parentNode.getNodeType() != 3)
+			{
+				parentNode = parentNode.getParent();
+				parentObj = parentNode.getValue();
+				count++;
+			}
+			if(count > 1){
+				updateDepth.put(parentObj, count);
+			}
+			modifiedObjList.add(parentObj);
 		}
 	}
 	
