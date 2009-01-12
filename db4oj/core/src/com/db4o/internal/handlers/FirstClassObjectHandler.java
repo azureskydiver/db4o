@@ -33,13 +33,19 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
 
     public void defragment(final DefragmentContext context) {
         TraverseAspectCommand command = new TraverseAspectCommand() {
+            @Override
             public int aspectCount(ClassMetadata classMetadata, ByteArrayBuffer reader) {
                 return context.readInt();
             }
+            @Override
             public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
                 if (!isNull) {
                     aspect.defragAspect(context);
                 } 
+            }
+            @Override
+            public boolean accept(ClassAspect aspect) {
+            	return aspect.enabled(context);
             }
         };
         traverseAllAspects(context, command);
