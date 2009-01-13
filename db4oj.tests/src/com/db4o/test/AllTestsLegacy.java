@@ -2,7 +2,6 @@
 
 package com.db4o.test;
 
-import com.db4o.db4ounit.common.assorted.*;
 import com.db4o.test.legacy.*;
 import com.db4o.test.legacy.soda.*;
 
@@ -25,8 +24,6 @@ public class AllTestsLegacy extends AllTests {
 	}
     
     public Class[] tests(){
-        if (true) return new Class[] {KnownClassesTestCase.class};
-        
     	return new Class[] {
         		ArrayNOrder.class,
         		Book.class,
