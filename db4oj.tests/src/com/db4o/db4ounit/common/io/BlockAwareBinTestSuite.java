@@ -18,7 +18,7 @@ public class BlockAwareBinTestSuite extends FixtureTestSuiteDescription {
 		
 		private final MockBin _mockBin = new MockBin();
 		private final BlockSize _mockBlockSize = new BlockSize() {
-			public void register(Listener<Integer> listener) {
+			public void register(Listener4<Integer> listener) {
 				throw new NotImplementedException();
             }
 

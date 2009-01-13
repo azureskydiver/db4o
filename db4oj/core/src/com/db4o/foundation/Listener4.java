@@ -5,7 +5,7 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public interface Listener<E> {
+public interface Listener4<E> {
 	
 	public void onEvent(E event);
 

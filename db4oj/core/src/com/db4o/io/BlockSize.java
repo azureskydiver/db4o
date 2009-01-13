@@ -12,7 +12,7 @@ import com.db4o.foundation.*;
  */
 public interface BlockSize {
 
-	void register(Listener<Integer> listener);
+	void register(Listener4<Integer> listener);
 
 	void set(int newValue);
 

@@ -31,7 +31,7 @@ public class BlockSizeDependentBinTestCase extends TestWithTempFile{
 		public Bin open(BinConfiguration config) throws Db4oIOException {
 			Bin bin = super.open(config);
 			
-			my(BlockSize.class).register((Listener<Integer>) bin);
+			my(BlockSize.class).register((Listener4<Integer>) bin);
 			
 			return bin;
 		}
@@ -41,7 +41,7 @@ public class BlockSizeDependentBinTestCase extends TestWithTempFile{
 			return new BlockSizeDependentBin(bin, _blockSize);
 		}
 		
-		private static class BlockSizeDependentBin extends BinDecorator implements Listener<Integer> {
+		private static class BlockSizeDependentBin extends BinDecorator implements Listener4<Integer> {
 			
 			private final IntByRef _blockSize;
 
