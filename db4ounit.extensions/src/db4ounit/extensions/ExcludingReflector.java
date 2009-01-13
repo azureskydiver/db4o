@@ -1,8 +1,7 @@
 /* Copyright (C) 2009   db4objects Inc.   http://www.db4o.com */
 package db4ounit.extensions;
 
-import java.util.*;
-
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.jdk.*;
 
@@ -11,7 +10,7 @@ import com.db4o.reflect.jdk.*;
  */
 public class ExcludingReflector extends JdkReflector {
 
-	private final Set<String> _excludedClasses;
+	private final Collection4 _excludedClasses;
 	
 	/**
 	 * @sharpen.remove.first
@@ -19,7 +18,7 @@ public class ExcludingReflector extends JdkReflector {
 	public ExcludingReflector(Class<?>... excludedClasses) {
 		super(ExcludingReflector.class.getClassLoader());
 		
-		_excludedClasses = new HashSet();
+		_excludedClasses = new Collection4();
 		for(Class<?> claxx : excludedClasses) {
 			_excludedClasses.add(claxx.getName());
 		}
