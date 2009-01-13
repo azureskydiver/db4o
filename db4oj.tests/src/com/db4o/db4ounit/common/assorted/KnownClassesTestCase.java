@@ -65,7 +65,7 @@ public class KnownClassesTestCase extends AbstractDb4oTestCase {
 	}
 
 	private boolean isKnownClass(final Class<?> klass) {
-	    return isKnownClass(klass.getName());
+	    return isKnownClass(ReflectPlatform.fullyQualifiedName(klass));
     }
 
 	private boolean isKnownClass(final String expected) {
