@@ -27,7 +27,7 @@ public class IoAdapterStorage implements Storage {
 		return bin;
 	}
 	
-	static  class IoAdapterBin implements Bin, Listener<Integer>{
+	static  class IoAdapterBin implements Bin, Listener4<Integer>{
 
 		private final IoAdapter _io;
 

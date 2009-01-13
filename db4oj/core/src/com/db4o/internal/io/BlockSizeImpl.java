@@ -8,7 +8,7 @@ public class BlockSizeImpl implements BlockSize {
 	private final ListenerRegistry<Integer> _listenerRegistry = ListenerRegistry.newInstance();
 	private int _value;
 
-	public void register(Listener<Integer> listener) {
+	public void register(Listener4<Integer> listener) {
 		_listenerRegistry.register(listener);
 	}
 

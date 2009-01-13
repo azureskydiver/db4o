@@ -24,7 +24,7 @@ public class KnownClassesCollector {
 	}
 	
 	private void collectKnownClasses(final Collection4 classes) {
-		final Listener<ReflectClass> collectingListener = newCollectingClassListener(classes);
+		final Listener4<ReflectClass> collectingListener = newCollectingClassListener(classes);
 		_repository.addListener(collectingListener);
 		try { 
 			collectKnownClasses(classes, Iterators.copy(_repository.classes()));
@@ -33,8 +33,8 @@ public class KnownClassesCollector {
 		}
 	}
 
-	private Listener<ReflectClass> newCollectingClassListener(final Collection4 classes) {
-		return new Listener<ReflectClass>() {		
+	private Listener4<ReflectClass> newCollectingClassListener(final Collection4 classes) {
+		return new Listener4<ReflectClass>() {		
 			public void onEvent(ReflectClass addedClass) {
 				collectKnownClass(classes, addedClass);
 			}

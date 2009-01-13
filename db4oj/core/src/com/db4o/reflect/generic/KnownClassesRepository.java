@@ -284,11 +284,11 @@ public class KnownClassesRepository {
 		return baseClass;
 	}
 
-	public void addListener(Listener<ReflectClass> listener) {
+	public void addListener(Listener4<ReflectClass> listener) {
 		_listeners.register(listener);
 	}
 
-	public void removeListener(Listener<ReflectClass> listener) {
+	public void removeListener(Listener4<ReflectClass> listener) {
 		_listeners.remove(listener);
 	}
 }

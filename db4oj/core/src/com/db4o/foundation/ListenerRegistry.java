@@ -14,7 +14,7 @@ public class ListenerRegistry <E>{
 
 	private IdentitySet4 _listeners;
 	
-	public void register(Listener<E> listener){
+	public void register(Listener4<E> listener){
 		if(_listeners == null){
 			_listeners = new IdentitySet4();
 		}
@@ -27,11 +27,11 @@ public class ListenerRegistry <E>{
 		}
 		Iterator4 i = _listeners.iterator();
 		while(i.moveNext()){
-			((Listener)i.current()).onEvent(event);
+			((Listener4)i.current()).onEvent(event);
 		}
 	}
 
-	public void remove(Listener<E> listener) {
+	public void remove(Listener4<E> listener) {
 		if (_listeners == null) {
 			return;
 		}
