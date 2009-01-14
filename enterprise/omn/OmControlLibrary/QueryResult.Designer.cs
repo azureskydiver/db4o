@@ -40,7 +40,7 @@ namespace OMControlLibrary
 			this.btnFirst = new System.Windows.Forms.Button();
 			this.lblof = new System.Windows.Forms.Label();
 			this.btnPrevious = new System.Windows.Forms.Button();
-			this.txtObjectNumber = new System.Windows.Forms.TextBox();
+			this.txtCurrentPage = new System.Windows.Forms.TextBox();
 			this.btnNext = new System.Windows.Forms.Button();
 			this.panelLeft = new System.Windows.Forms.Panel();
 			this.btnDelete = new System.Windows.Forms.Button();
@@ -122,7 +122,7 @@ namespace OMControlLibrary
 			this.panelRight.Controls.Add(this.btnFirst);
 			this.panelRight.Controls.Add(this.lblof);
 			this.panelRight.Controls.Add(this.btnPrevious);
-			this.panelRight.Controls.Add(this.txtObjectNumber);
+			this.panelRight.Controls.Add(this.txtCurrentPage);
 			this.panelRight.Controls.Add(this.btnNext);
 			this.panelRight.Dock = System.Windows.Forms.DockStyle.Right;
 			this.panelRight.Location = new System.Drawing.Point(712, 0);
@@ -203,17 +203,17 @@ namespace OMControlLibrary
 			this.btnPrevious.UseVisualStyleBackColor = true;
 			this.btnPrevious.Click += new System.EventHandler(this.btnPrevious_Click);
 			// 
-			// txtObjectNumber
+			// txtCurrentPage
 			// 
-			this.txtObjectNumber.Font = new System.Drawing.Font("Tahoma", 8F);
-			this.txtObjectNumber.Location = new System.Drawing.Point(209, 1);
-			this.txtObjectNumber.MaxLength = 6;
-			this.txtObjectNumber.Name = "txtObjectNumber";
-			this.txtObjectNumber.Size = new System.Drawing.Size(54, 20);
-			this.txtObjectNumber.TabIndex = 21;
-			this.txtObjectNumber.TextChanged += new System.EventHandler(this.txtObjectNumber_TextChanged);
-			this.txtObjectNumber.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtObjectNumber_KeyDown);
-			this.txtObjectNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtObjectNumber_KeyPress);
+			this.txtCurrentPage.Font = new System.Drawing.Font("Tahoma", 8F);
+			this.txtCurrentPage.Location = new System.Drawing.Point(209, 1);
+			this.txtCurrentPage.MaxLength = 6;
+			this.txtCurrentPage.Name = "txtCurrentPage";
+			this.txtCurrentPage.Size = new System.Drawing.Size(54, 20);
+			this.txtCurrentPage.TabIndex = 21;
+			this.txtCurrentPage.TextChanged += new System.EventHandler(this.txtObjectNumber_TextChanged);
+			this.txtCurrentPage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtObjectNumber_KeyDown);
+			this.txtCurrentPage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtObjectNumber_KeyPress);
 			// 
 			// btnNext
 			// 
@@ -334,7 +334,7 @@ namespace OMControlLibrary
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Button buttonSaveResult;
 		private System.Windows.Forms.Label lblof;
-		private System.Windows.Forms.TextBox txtObjectNumber;
+		private System.Windows.Forms.TextBox txtCurrentPage;
 		private System.Windows.Forms.Button btnLast;
 		private System.Windows.Forms.Button btnNext;
 		private System.Windows.Forms.Button btnPrevious;
