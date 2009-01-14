@@ -15,6 +15,7 @@ namespace OMControlLibrary
 		{
 			try
 			{
+				Helper.DbInteraction.CreateDemoDb(demoFilePath);
 			    ConnParams conparam = new ConnParams(demoFilePath, null, null, null, 0);
 
 				RecentQueries currRecentConnection = new RecentQueries(conparam);

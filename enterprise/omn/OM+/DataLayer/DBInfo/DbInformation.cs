@@ -1,24 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Collections; 
-using System.Text;
+using System.Collections;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Ext ;
-using Db4objects.Db4o.Reflect;
-using Db4objects.Db4o.Reflect.Generic;
-using OManager.BusinessLayer.QueryManager;
 using OManager.DataLayer.Connection;
-using OManager.BusinessLayer.Login;
-
 using OME.Logging.Common;
-using OME.Logging.Tracing;
+
 namespace OManager.DataLayer.Modal
 {
     public class DbInformation
     {
-        
-
-       
         public Hashtable GetAllStoredClasses()
         {
             IObjectContainer objectContainer = Db4oClient.Client; ;
