@@ -14,6 +14,7 @@ import com.db4o.reflect.generic.*;
 @decaf.Ignore(decaf.Platform.JDK11)
 public abstract class NetSimpleTypeHandler extends NetTypeHandler implements GenericConverter{
 	
+	private final Reflector _reflector;
 	private final String _name;
 	private final int _typeID;
 	private final int _byteCount;
@@ -23,10 +24,13 @@ public abstract class NetSimpleTypeHandler extends NetTypeHandler implements Gen
         _name = dotNetClassName();
         _typeID = typeID;
         _byteCount = byteCount;
-        _classReflector = reflector.forName(_name);
+        _reflector = reflector;
     }
 	
     public ReflectClass classReflector(){
+    	if(_classReflector == null){
+    		_classReflector = _reflector.forName(_name);		
+    	}
     	return _classReflector;  
     }
 	
