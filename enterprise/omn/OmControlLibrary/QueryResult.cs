@@ -60,15 +60,9 @@ namespace OMControlLibrary
 		private const int m_pagingStartIndex = 0;
 		private int m_pageCount = 1;
 
-		WindowVisibilityEvents windowsVisEvents = null;
-		WindowEvents _windowsEvents;
+		readonly WindowVisibilityEvents windowsVisEvents;
+		readonly WindowEvents _windowsEvents;
 
-
-		//internal long[] Objectid
-		//{
-		//    get { return objectid; }
-		//    set { objectid = value; }
-		//}
 		List<long> lstObjIdLong;
 
 		#endregion
@@ -241,7 +235,7 @@ namespace OMControlLibrary
 
 					int pageNumber = m_pagingStartIndex + 1;
 					lblPageCount.Text = pagingData.GetPageCount().ToString();
-					txtObjectNumber.Text = pageNumber.ToString();
+					txtCurrentPage.Text = pageNumber.ToString();
 					labelNoOfObjects.Text = pagingData.ObjectId.Count.ToString();
 					if (lstObjIdLong.Count > 0)
 					{
@@ -483,8 +477,6 @@ namespace OMControlLibrary
 							else return;
 
 							RegisterTreeviewEvents();
-							//if(dbDataGridViewQueryResult.CurrentCell.OwningColumn.SortMode==DataGridViewColumnSortMode.NotSortable)
-							//if (dt==null)
 							// This check helps in avoding recusrrion.
 							if (dbDataGridViewQueryResult.SortOrder == SortOrder.None)
 							{
@@ -611,8 +603,8 @@ namespace OMControlLibrary
 							//long[] objectid = Helper.DbInteraction.ExecuteQueryResults(omQuery, 0);
 
 
-							int m_pageCount = Convert.ToInt32(txtObjectNumber.Text);
-							int startIndex = (Convert.ToInt32(txtObjectNumber.Text) * m_defaultPageSize) - m_defaultPageSize;
+							int m_pageCount = Convert.ToInt32(txtCurrentPage.Text);
+							int startIndex = (Convert.ToInt32(txtCurrentPage.Text) * m_defaultPageSize) - m_defaultPageSize;
 							int endIndex = startIndex + m_defaultPageSize;
 							labelNoOfObjects.Text = lstObjIdLong.Count.ToString();
 
@@ -1015,7 +1007,7 @@ namespace OMControlLibrary
 			try
 			{
 				OMETrace.WriteFunctionStart();
-				int m_pageCount = Convert.ToInt32(txtObjectNumber.Text);
+				int m_pageCount = Convert.ToInt32(txtCurrentPage.Text);
 				long deletedId;
 				dbInteraction dbI = new dbInteraction();
 				if (dbDataGridViewQueryResult.SelectedRows.Count > 0)
@@ -1078,7 +1070,7 @@ namespace OMControlLibrary
 					pagData.ObjectId = lstObjIdLong;
 
 					lblPageCount.Text = pagData.GetPageCount().ToString();
-					txtObjectNumber.Text = pageNumber.ToString();
+					txtCurrentPage.Text = pageNumber.ToString();
 					labelNoOfObjects.Text = pagData.ObjectId.Count.ToString();
 
 					dbDataGridViewQueryResult.Rows.Clear();
@@ -1203,9 +1195,9 @@ namespace OMControlLibrary
 				if (m_pageCount <= 0)
 					m_pageCount = m_pagingStartIndex + 1;
 
-				txtObjectNumber.Text = m_pageCount.ToString();
+				txtCurrentPage.Text = m_pageCount.ToString();
 				KeyEventArgs keyArgs = new KeyEventArgs(Keys.Enter);
-				txtObjectNumber_KeyDown(txtObjectNumber, keyArgs);
+				txtObjectNumber_KeyDown(txtCurrentPage, keyArgs);
 
 				if (m_pageCount == 1)
 				{
@@ -1236,10 +1228,10 @@ namespace OMControlLibrary
 			{
 
 				m_pageCount = Convert.ToInt32(lblPageCount.Text);
-				txtObjectNumber.Text = lblPageCount.Text;
+				txtCurrentPage.Text = lblPageCount.Text;
 
 				KeyEventArgs keyArgs = new KeyEventArgs(Keys.Enter);
-				txtObjectNumber_KeyDown(txtObjectNumber, keyArgs);
+				txtObjectNumber_KeyDown(txtCurrentPage, keyArgs);
 
 				if (m_pageCount == Convert.ToInt32(lblPageCount.Text))
 				{
@@ -1271,9 +1263,9 @@ namespace OMControlLibrary
 
 				m_pageCount++;
 
-				txtObjectNumber.Text = m_pageCount.ToString();
+				txtCurrentPage.Text = m_pageCount.ToString();
 				KeyEventArgs keyArgs = new KeyEventArgs(Keys.Enter);
-				txtObjectNumber_KeyDown(txtObjectNumber, keyArgs);
+				txtObjectNumber_KeyDown(txtCurrentPage, keyArgs);
 
 				if (m_pageCount >= Convert.ToInt32(lblPageCount.Text))
 				{
@@ -1434,10 +1426,10 @@ namespace OMControlLibrary
 
 
 				m_pageCount = m_pagingStartIndex + 1;
-				txtObjectNumber.Text = m_pageCount.ToString();
+				txtCurrentPage.Text = m_pageCount.ToString();
 
 				KeyEventArgs keyArgs = new KeyEventArgs(Keys.Enter);
-				txtObjectNumber_KeyDown(txtObjectNumber, keyArgs);
+				txtObjectNumber_KeyDown(txtCurrentPage, keyArgs);
 
 
 				if (m_pageCount == 1)
@@ -1483,17 +1475,17 @@ namespace OMControlLibrary
 
 					RefreshPaging(ref check, ref dialogRes, ref checkforValueChanged, dbDataGridViewQueryResult);
 
-					if (Convert.ToInt32(txtObjectNumber.Text) > Convert.ToInt32(lblPageCount.Text))
-						txtObjectNumber.Text = lblPageCount.Text;
-					else if (Convert.ToInt32(txtObjectNumber.Text) == 0)
-						txtObjectNumber.Text = m_pagingStartIndex.ToString();
+					if (Convert.ToInt32(txtCurrentPage.Text) > Convert.ToInt32(lblPageCount.Text))
+						txtCurrentPage.Text = lblPageCount.Text;
+					else if (Convert.ToInt32(txtCurrentPage.Text) == 0)
+						txtCurrentPage.Text = m_pagingStartIndex.ToString();
 
 
-					if (!string.IsNullOrEmpty(txtObjectNumber.Text.Trim()) &&
-						Convert.ToInt32(txtObjectNumber.Text) <= Convert.ToInt32(lblPageCount.Text))
+					if (!string.IsNullOrEmpty(txtCurrentPage.Text.Trim()) &&
+						Convert.ToInt32(txtCurrentPage.Text) <= Convert.ToInt32(lblPageCount.Text))
 					{
-						m_pageCount = Convert.ToInt32(txtObjectNumber.Text);
-						int startIndex = (Convert.ToInt32(txtObjectNumber.Text) * m_defaultPageSize) - m_defaultPageSize;
+						m_pageCount = Convert.ToInt32(txtCurrentPage.Text);
+						int startIndex = (Convert.ToInt32(txtCurrentPage.Text) * m_defaultPageSize) - m_defaultPageSize;
 						int endIndex = startIndex + m_defaultPageSize;
 						//objectid = Helper.DbInteraction.ExecuteQueryResults(omQuery,1);
 						pagingData = new PagingData(startIndex, endIndex);
@@ -1579,68 +1571,84 @@ namespace OMControlLibrary
 
 		void tabControlObjHierarchy_TabStripItemSelectionChanged(TabStripItemChangedEventArgs e)
 		{
+			FinishPendingEdits();
+
+			if (IsEmptySelectionChange(e))
+				return;
+
+			OMETabStripItem item = e.Item;
+			if (string.IsNullOrEmpty(item.Title))
+				return;
+
 			try
 			{
-				OMETabStripItem item = e.Item;
+				int objectIndex = ObjectIndexInMasterViewFor(item);
+				EnsureCurrentPageIs(PageNumberFor(objectIndex));
 
-				dbDataGridViewQueryResult.EndEdit();
-				treeview.EndEdit();
-
-				if (item != null && (e.ChangeType == OMETabStripItemChangeTypes.SelectionChanged))
+				//This check helps avaoiding recurssion.
+				if (dbDataGridViewQueryResult.SortOrder == SortOrder.None)
 				{
-
-					if (!string.IsNullOrEmpty(item.Title))
-					{
-						int rowIndex = Convert.ToInt32(item.Title.Split(CONST_SPACE)[1].ToString());
-
-						int pageIndex = rowIndex % m_defaultPageSize;
-						if (pageIndex == 0)
-							pageIndex = m_defaultPageSize;
-
-						double pageNumber = (double)rowIndex / (double)m_defaultPageSize;
-
-						int pageNo = 0;
-
-						pageNo = Convert.ToInt32(Math.Ceiling(pageNumber));
-
-						if (pageNo == 0)
-							pageNo = pageNo + 1;
-
-						if (Convert.ToInt32(txtObjectNumber.Text) != pageNo)
-						{
-							txtObjectNumber.Text = pageNo.ToString();
-							KeyEventArgs erg = new KeyEventArgs(Keys.Enter);
-							txtObjectNumber_KeyDown(txtObjectNumber, erg);
-						}
-
-						//This check helps avaoiding recurssion.
-						if (dbDataGridViewQueryResult.SortOrder == SortOrder.None)
-						{
-							dbDataGridViewQueryResult.Rows[pageIndex - 1].Selected = true;
-							dbDataGridViewQueryResult.Rows[pageIndex - 1].Cells[1].Selected = true;
-						}
-						else
-						{
-							//if (dbDataGridViewQueryResult.SortedColumn.  != null)
-							//{
-							//    dbDataGridViewQueryResult.Rows[dbDataGridViewQueryResult.SortedColumn.DisplayIndex].Selected = true;
-							//    dbDataGridViewQueryResult.Rows[dbDataGridViewQueryResult.SortedColumn.DisplayIndex].Cells[1].Selected = true;
-							//}
-
-						}
-					}
-					// DataGridViewColumn dt = dbDataGridViewQueryResult.SortedColumn;
-
-					//Refresh Properties Pane
-					//propertiesTab = PropertiesTab.Instance;
-					//propertiesTab.ShowObjectPropertiesTab = true;
-					//propertiesTab.RefreshPropertiesTab(item.Tag);
+					SetSelectedObjectInMasterView(objectIndex);
 				}
 			}
 			catch (Exception oEx)
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
+		}
+
+		private void SetSelectedObjectInMasterView(int objectIndex)
+		{
+			DataGridViewRow row = dbDataGridViewQueryResult.Rows[OffsetInCurrentPageFor(objectIndex) - 1];
+			row.Selected = true;
+			row.Cells[1].Selected = true;
+		}
+
+		private void EnsureCurrentPageIs(int pageNumber)
+		{
+			if (CurrentPageNumber() != pageNumber)
+			{
+				SetCurrentPageTo(pageNumber);
+			}
+		}
+
+		private void SetCurrentPageTo(int pageNumber)
+		{
+			txtCurrentPage.Text = pageNumber.ToString();
+			txtObjectNumber_KeyDown(txtCurrentPage, new KeyEventArgs(Keys.Enter));
+		}
+
+		private int CurrentPageNumber()
+		{
+			return Convert.ToInt32(txtCurrentPage.Text);
+		}
+
+		private static int PageNumberFor(int masterObjectIndex)
+		{
+			double pageNumber = (double) masterObjectIndex / m_defaultPageSize;
+			return Math.Max(Convert.ToInt32(Math.Ceiling(pageNumber)), 1);
+		}
+
+		private static int OffsetInCurrentPageFor(int masterViewObjectIndex)
+		{
+			int offset = masterViewObjectIndex % m_defaultPageSize;
+			return offset == 0 ? m_defaultPageSize : offset;
+		}
+
+		private static int ObjectIndexInMasterViewFor(OMETabStripItem item)
+		{
+			return Convert.ToInt32(item.Title.Split(CONST_SPACE)[1]);
+		}
+
+		private static bool IsEmptySelectionChange(TabStripItemChangedEventArgs e)
+		{
+			return e.Item == null || (e.ChangeType != OMETabStripItemChangeTypes.SelectionChanged);
+		}
+
+		private void FinishPendingEdits()
+		{
+			dbDataGridViewQueryResult.EndEdit();
+			treeview.EndEdit();
 		}
 
 		private void panelResultGridOptions_SizeChanged(object sender, EventArgs e)
@@ -1657,24 +1665,24 @@ namespace OMControlLibrary
 			try
 			{
 				int result = 0;
-				if (!Int32.TryParse(txtObjectNumber.Text.Trim(), out result))
+				if (!Int32.TryParse(txtCurrentPage.Text.Trim(), out result))
 				{
 					if (result <= 0)
 					{
 						int pageNo = result + 1;
-						txtObjectNumber.Text = pageNo.ToString();
+						txtCurrentPage.Text = pageNo.ToString();
 					}
 					else
-						txtObjectNumber.Text = result.ToString();
+						txtCurrentPage.Text = result.ToString();
 
-					txtObjectNumber.SelectAll();
+					txtCurrentPage.SelectAll();
 				}
 
-				if (string.IsNullOrEmpty(txtObjectNumber.Text) || txtObjectNumber.Text == "0")
+				if (string.IsNullOrEmpty(txtCurrentPage.Text) || txtCurrentPage.Text == "0")
 				{
 					int pageNumber = m_pagingStartIndex + 1;
-					txtObjectNumber.Text = pageNumber.ToString();
-					txtObjectNumber.SelectAll();
+					txtCurrentPage.Text = pageNumber.ToString();
+					txtCurrentPage.SelectAll();
 				}
 			}
 			catch (Exception oEx)
