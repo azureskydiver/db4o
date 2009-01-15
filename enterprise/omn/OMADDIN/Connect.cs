@@ -141,6 +141,7 @@ namespace OMAddin
 		/// <summary>Implements the constructor for the Add-in object. Place your initialization code within this method.</summary>
 		public Connect()
 		{
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 			try
 			{
 				OMETrace.Initialize();
@@ -168,7 +169,32 @@ namespace OMAddin
 				ex.ToString();//ignore
 			}
 		}
-		#endregion
+
+        Assembly AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string omnAssembliesPath = Path.Combine(myDocuments, "Db4o/OMNAssemblies");
+            if(! Directory.Exists(omnAssembliesPath))
+            {
+                return null;
+            }
+            string assemblyPath = Path.Combine(omnAssembliesPath, args.Name);
+            string exePath = assemblyPath + ".exe";
+            string dllPath = assemblyPath + ".dll";
+            Assembly assembly = TryLoadAssembly(exePath);
+            return assembly != null ? assembly : TryLoadAssembly(dllPath);
+        }
+
+	    private Assembly TryLoadAssembly(string path)
+	    {
+	        if (File.Exists(path))
+	        {
+	            return Assembly.LoadFrom(path);
+	        }
+	        return null;
+	    }
+
+	    #endregion
 		DTEEvents eve;
 		#region Connect Event Handlers
 
