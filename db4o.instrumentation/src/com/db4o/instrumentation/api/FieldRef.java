@@ -3,7 +3,7 @@
 package com.db4o.instrumentation.api;
 
 /**
- * A reference to a field. See {@link ReferenceProvider#forField}. 
+ * A reference to a field.. 
  */
 public interface FieldRef {
 
