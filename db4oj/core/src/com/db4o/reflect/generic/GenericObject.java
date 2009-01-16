@@ -6,7 +6,8 @@ package com.db4o.reflect.generic;
 /**
  * @exclude
  */
-public class GenericObject {
+@decaf.IgnoreImplements(decaf.Platform.JDK11)
+public class GenericObject implements Comparable {
 
     final GenericClass _class;
     
@@ -47,4 +48,8 @@ public class GenericObject {
 	public GenericClass getGenericClass(){
 		return _class;
 	}
+
+	public int compareTo(Object o) {
+		return 0;
+    }
 }

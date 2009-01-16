@@ -59,6 +59,7 @@ public class AllTests extends Db4oTestSuite {
             SimplestPossibleTestCase.class,
             SimplestPossibleParentChildTestCase.class,
             SystemInfoTestCase.class,
+            UnavailableClassAsTreeSetElementTestCase.class,
             UpdateDepthTestCase.class,
 		};
 	}

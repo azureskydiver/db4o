@@ -31,4 +31,12 @@ public class ExcludingReflector extends JdkReflector {
 		}
 		return super.forName(className);
 	}
+	
+	@Override
+	public ReflectClass forClass(Class clazz) {
+		if (_excludedClasses.contains(clazz.getName())) {
+			return null;
+		}
+		return super.forClass(clazz);
+	}
 }
