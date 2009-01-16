@@ -21,7 +21,7 @@ public class ExcludingClassLoader extends URLClassLoader {
     private Collection4 _excludedNames;
     private Collection4 _delegatedNames;
 
-    public ExcludingClassLoader(ClassLoader parent, Class[] excludedClasses) {
+    public ExcludingClassLoader(ClassLoader parent, Class... excludedClasses) {
         this(parent, collectNames(excludedClasses), new Collection4());
     }
 
