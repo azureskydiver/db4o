@@ -16,10 +16,6 @@ import com.db4o.reflect.jdk.*;
 @decaf.Ignore
 class JDK_5 extends JDK_1_4 {
 
-	private static final String ENUM_CLASSNAME = "java.lang.Enum";
-
-	private static ReflectClass enumClass;
-
 	public Config4Class extendConfiguration(ReflectClass clazz,
 			Configuration config, Config4Class classConfig) {
 		Class javaClazz = JdkReflector.toNative(clazz);
@@ -50,14 +46,7 @@ class JDK_5 extends JDK_1_4 {
 			return false;
 		}
 
-		if (enumClass == null) {
-			try {
-				enumClass = reflector.forClass(Class.forName(ENUM_CLASSNAME));
-			} catch (ClassNotFoundException e) {
-				return false;
-			}
-		}
-
+		final ReflectClass enumClass = reflector.forClass(java.lang.Enum.class);
 		return enumClass.isAssignableFrom(claxx);
 	}
 	
