@@ -22,7 +22,8 @@ public class AllTests extends Db4oTestSuite {
 		    InterfaceQueryTestCase.class,
 			LazyQueryDeleteTestCase.class,
             PingTestCase.class,
-			SODAClassTypeDescend.class,			
+			SODAClassTypeDescend.class,
+			UnavailableEnumTestCase.class
 		};
 	}
 }
