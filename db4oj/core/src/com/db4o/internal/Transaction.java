@@ -51,11 +51,10 @@ public abstract class Transaction {
     }
     
     /**
-     * Transaction local variables.
+     * Retrieves the value of a transaction local variables.
      * 
-     * @param <T>
-     * @param local
-     * @return
+     * If this is the first time the variable is accessed {@link TransactionLocal#initialValueFor(Transaction)}
+     * will provide the initial value.
      */
     public <T> ByRef<T> get(TransactionLocal<T> local) {
     	final ByRef<T> existing = (ByRef<T>) _locals.get(local);
