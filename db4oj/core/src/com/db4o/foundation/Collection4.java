@@ -237,8 +237,6 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	/**
 	 * Removes all the elements from this collection that are returned by
 	 * iterator.
-	 * 
-	 * @param iterable
 	 */
 	public void removeAll(Iterator4 iterator) {
 		while (iterator.moveNext()) {
