@@ -77,6 +77,11 @@ public class StoredClassImpl implements StoredClass {
         }
         return _classMetadata.equals(((StoredClassImpl) obj)._classMetadata);
     }
+    
+    @Override
+    public String toString() {
+        return "StoredClass(" + _classMetadata + ")";
+    }
 
 	public int instanceCount() {
 		return _classMetadata.instanceCount(_transaction);
