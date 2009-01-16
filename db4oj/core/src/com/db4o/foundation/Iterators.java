@@ -211,8 +211,7 @@ public class Iterators {
 	 * Yields a flat sequence of elements. Any {@link Iterable4} or {@link Iterator4}
 	 * found in the original sequence is recursively flattened.
 	 * 
-	 * @param iterable original sequence
-	 * @return
+	 * @param iterator original sequence
 	 */
 	public static Iterator4 flatten(Iterator4 iterator) {
 		return new FlatteningIterator(iterator);

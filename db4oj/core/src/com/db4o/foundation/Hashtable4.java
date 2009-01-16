@@ -115,8 +115,8 @@ public class Hashtable4 extends HashtableBase implements DeepClone, Map4 {
 	 * Iterates through all the {@link Entry4 entries}.
 	 *   
 	 * @return {@link Entry4} iterator
-	 * @see #values();
-	 * @see #keys();
+	 * @see #values()
+	 * @see #keys()
 	 * #see {@link #valuesIterator()}
 	 */
 	public Iterator4 iterator(){
