@@ -5,6 +5,10 @@ import decaf.tests.*;
 
 public class CollectionsTestCase extends DecafTestCaseBase {
 	
+	public void testHashSetUsage() throws Exception {
+		runPlatformTestCase("HashSetUsage");
+	}
+	
 	public void testExtendsList() throws Exception {
 		runPlatformTestCase("ExtendsList");
 	}
