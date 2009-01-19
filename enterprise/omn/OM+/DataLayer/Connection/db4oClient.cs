@@ -202,8 +202,6 @@ namespace OManager.DataLayer.Connection
                         objectContainer.Close();
                         objectContainer = null;
                         objContainerRecentConn = null;
-                      //  Thread.SetData(slot, objectContainer);
-
                     }
 
                   
@@ -215,11 +213,13 @@ namespace OManager.DataLayer.Connection
                 }
             }
 
-            //public static IObjectContainer ReturnObjContainerFromSlot()
-            //{
-            //    LocalDataStoreSlot slot = Thread.GetNamedDataSlot(WindowsIdentity.GetCurrent().Name);
-            //    IObjectContainer objectContainer = (IObjectContainer)Thread.GetData(slot);
-            //}
+        	public static IObjectContainer OpenConfigDatabase(string path)
+        	{
+				Db4oFactory.Configure().UpdateDepth(int.MaxValue);
+                Db4oFactory.Configure().ActivationDepth(int.MaxValue);
+                Db4oFactory.Configure().LockDatabaseFile(false);
+                
+				return Db4oFactory.OpenFile(path);
+        	}
         }
-   
 }

@@ -1,51 +1,43 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using OManager.BusinessLayer.Config;
 using OManager.BusinessLayer.Login;
 using Db4objects.Db4o;
-using Db4objects.Db4o.Query;
 using OME.Logging.Common;
-using System.IO;
 
 namespace  OManager.DataLayer.Connection
 {
     public class ProxyAuthenticator
     {
-
         [Transient]
-        IObjectContainer container = null;
-        ProxyAuthentication proxyAuthObj;
+        IObjectContainer _container;
+        ProxyAuthentication _proxyAuthObj;
 
         public ProxyAuthentication ProxyAuthObj
         {
-            get { return proxyAuthObj; }
-            set { proxyAuthObj = value; }
+            get { return _proxyAuthObj; }
+            set { _proxyAuthObj = value; }
         }
 
         public void AddProxyInfoToDb(ProxyAuthentication proxyAuthObj)
         {
             if (Db4oClient.RecentConnFile == null)
             {
-                string RecentConnFileName = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects" + Path.DirectorySeparatorChar + "ObjectManagerEnterprise" + Path.DirectorySeparatorChar + "ObjectManagerPlus.yap";
-                Db4oClient.RecentConnFile = RecentConnFileName;
+            	Db4oClient.RecentConnFile = Config.OMNConfigDatabasePath();
             }
-            this.proxyAuthObj = proxyAuthObj;
-            container = Db4oClient.RecentConn;
+            _proxyAuthObj = proxyAuthObj;
+            _container = Db4oClient.RecentConn;
             ProxyAuthenticator proxyobj = ReturnProxyAuthenticationInfo();
             if (proxyobj == null)
             {
-                container.Set(this);
+                _container.Store(this);
             }
             else
             {
-                proxyobj.proxyAuthObj = proxyAuthObj;
-               
-                container.Set(proxyobj);
+                proxyobj._proxyAuthObj = proxyAuthObj;
+                _container.Store(proxyobj);
             }
-            container.Commit();
-            container.Ext().Refresh(proxyobj, 1);
-            //container.Close();
-
+            _container.Commit();
+            _container.Ext().Refresh(proxyobj, 1);
         }
 
         public ProxyAuthenticator ReturnProxyAuthenticationInfo()
@@ -54,19 +46,12 @@ namespace  OManager.DataLayer.Connection
             {
                 if (Db4oClient.RecentConnFile == null)
                 {
-                    string RecentConnFileName = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "db4objects" + Path.DirectorySeparatorChar + "ObjectManagerEnterprise" + Path.DirectorySeparatorChar + "ObjectManagerPlus.yap";
-                    Db4oClient.RecentConnFile = RecentConnFileName;
+                	Db4oClient.RecentConnFile = Config.OMNConfigDatabasePath();
                 }
-                container = Db4oClient.RecentConn;
-                IObjectSet ObjSet = container.Get(typeof(ProxyAuthenticator));
-                if (ObjSet.Count >0)
-                {
-                    ProxyAuthenticator proxyobj = (ProxyAuthenticator)ObjSet.Next();
-                    return proxyobj;
-                }
-                else
-                    return null;
-         
+                _container = Db4oClient.RecentConn;
+                IObjectSet ObjSet = _container.QueryByExample(typeof(ProxyAuthenticator));
+            	
+				return ObjSet.Count > 0 ? (ProxyAuthenticator) ObjSet.Next() : null;
             }
             catch (Exception e)
             {

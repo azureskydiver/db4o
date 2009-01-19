@@ -396,7 +396,6 @@ namespace OMControlLibrary
 
 		private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			// CreateQueryResultToolWindow();
 			try
 			{
 				CreateQueryResultToolWindow();
@@ -404,10 +403,7 @@ namespace OMControlLibrary
 				PropertiesTab.Instance.Enabled = true;
 				Instance.Enabled = true;
 
-				SafeSetEnabled(Login.m_cmdBarCtrlBackup, false);
-				SafeSetEnabled(Login.m_cmdBarCtrlDefrag, false);
-				SafeSetEnabled(Login.m_cmdBarCtrlConnect, false);
-				SafeSetEnabled(Login.m_cmdBarBtnConnect, false);
+				EnableDisableDatabaseConnection(true);
 
 				isrunning = false;
 				bw.CancelAsync();
@@ -422,6 +418,14 @@ namespace OMControlLibrary
 				ClearStatusBar();
 				LoggingHelper.ShowMessage(oEx);
 			}
+		}
+
+		private static void EnableDisableDatabaseConnection(bool enabled)
+		{
+			SafeSetEnabled(Login.m_cmdBarCtrlBackup, enabled);
+			SafeSetEnabled(Login.m_cmdBarCtrlDefrag, enabled);
+			SafeSetEnabled(Login.m_cmdBarCtrlConnect, enabled);
+			SafeSetEnabled(Login.m_cmdBarBtnConnect, enabled);
 		}
 
 		private void ExecuteQuery()
@@ -452,10 +456,7 @@ namespace OMControlLibrary
 					PropertiesTab.Instance.Enabled = false;
 					Instance.Enabled = false;
 
-					SafeSetEnabled(Login.m_cmdBarCtrlBackup, false);
-					SafeSetEnabled(Login.m_cmdBarCtrlDefrag, false);
-					SafeSetEnabled(Login.m_cmdBarCtrlConnect, false);
-					SafeSetEnabled(Login.m_cmdBarBtnConnect, false);
+					EnableDisableDatabaseConnection(false);
 
 					bw = new BackgroundWorker();
 					bw.WorkerReportsProgress = true;

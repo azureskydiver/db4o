@@ -257,7 +257,7 @@ namespace OManager.DataLayer.QueryParser
         {
             try
             {
-                query.Constrain(DataLayerCommon.returnReflectClass(classname));
+                query.Constrain(DataLayerCommon.ReturnReflectClass(classname));
                 
                 
             }

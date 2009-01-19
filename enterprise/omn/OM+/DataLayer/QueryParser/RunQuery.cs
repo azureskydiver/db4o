@@ -1,19 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Db4objects.Db4o;
 using System.Collections;
 using OManager.BusinessLayer.QueryManager;
-using OManager.BusinessLayer.pagingData;
-using OManager.DataLayer.QueryParser;
+using OManager.BusinessLayer.UIHelper;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
 
 namespace OManager.DataLayer.QueryParser
 {
     public class RunQuery
     {
-        
         private OMQuery m_omQuery;
 
         public OMQuery OmQuery
@@ -70,8 +66,6 @@ namespace OManager.DataLayer.QueryParser
         {
             try
             {
-
-
                 IobjectsetConverter objSetConvertor = new IobjectsetConverter(baseclass, refresh);
 
                 if (pgData.ObjectId.Count > 0)

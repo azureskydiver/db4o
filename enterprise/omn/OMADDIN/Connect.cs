@@ -10,11 +10,12 @@ using System.IO;
 using System.Reflection;
 using System.Drawing;
 using System.ComponentModel;
+using OManager.BusinessLayer.Config;
+using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.CommonDatalayer;
 using OMControlLibrary;
 using OMControlLibrary.Common;
 using OMControlLibrary.LoginToSalesForce;
-using OManager.BusinessLayer.QueryManager;
 using OManager.BusinessLayer.Login;
 
 using OME.Logging.Common;
@@ -52,10 +53,8 @@ namespace OMAddin
 		private CommandBarEvents omQueryBuilderControlHandler;
 		private CommandBarEvents omPropertiesControlHandler;
 
-
-
 		private CommandBarControl dbCreateDemoDbControl;
-		private CommandBarControl dbConnectControl;
+		private CommandBarControl connectDatabaseMenu;
 		private CommandBarControl omDefragControl;
 		private CommandBarControl omProxyConfigControl;
 		private CommandBarControl omBackupControl;
@@ -70,12 +69,13 @@ namespace OMAddin
 		private CommandBarControl omHelpControl;
 		private CommandBarControl omAboutControl;
 
-		private CommandBarButton omButton;
+		private CommandBarButton connectDatabaseButton;
 		private CommandBarButton db4oHelpControlButton;
 		private CommandBarButton salesForceControlButton;
 		private CommandBarButton reqConsultationControlButton;
 		private CommandBarControl salesForceControl;
-		private CommandBarControl db4oControl;
+		
+		private CommandBarEvents omAssemblySearchPathHandler;
 
 		private Window windb4oHome;
 		private Window windb4oDownloads;
@@ -115,6 +115,7 @@ namespace OMAddin
 		private const string MAINTAINANCE = "Maintainance";
 		private const string OPTIONS = "Options";
 		private const string PROXYCONFIGURATIONS = "Proxy Configurations";
+		private const string ASSEMBLY_SEARCH_PATH_CONFIG = "Assembly search path...";
 
 		private const string DEFRAG = "Defrag";
 		private const string BACKUP = "Backup";
@@ -127,9 +128,8 @@ namespace OMAddin
 
 		private const string CREATE_DEMO_DB = "Create Demo Database";
 
-		private const char CHAR_FORWORD_SLASH = '/';
 		private const string CONTACT_SALES = @"/ContactSales/ContactSales.htm";
-		private const string FAQ = @"/FAQ/FAQ.htm";
+		private const string FAQ_PATH = @"FAQ/FAQ.htm";
 
 		private const string URL_DB4O_DEVELOPER = "http://developer.db4o.com";
 		private const string URL_DB4O_DOWNLOADS = "http://developer.db4o.com/files/default.aspx";
@@ -141,7 +141,10 @@ namespace OMAddin
 		/// <summary>Implements the constructor for the Add-in object. Place your initialization code within this method.</summary>
 		public Connect()
 		{
-            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
+			AppDomain.CurrentDomain.AssemblyResolve += delegate(object sender, ResolveEventArgs e)
+			                                           	{
+			                                           		return AssemblyResolver.Resolve(Config.Instance.AssemblySearchPath, e.Name);
+			                                           	};
 			try
 			{
 				OMETrace.Initialize();
@@ -170,30 +173,6 @@ namespace OMAddin
 			}
 		}
 
-        Assembly AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string omnAssembliesPath = Path.Combine(myDocuments, "Db4o/OMNAssemblies");
-            if(! Directory.Exists(omnAssembliesPath))
-            {
-                return null;
-            }
-            string assemblyPath = Path.Combine(omnAssembliesPath, args.Name);
-            string exePath = assemblyPath + ".exe";
-            string dllPath = assemblyPath + ".dll";
-            Assembly assembly = TryLoadAssembly(exePath);
-            return assembly != null ? assembly : TryLoadAssembly(dllPath);
-        }
-
-	    private Assembly TryLoadAssembly(string path)
-	    {
-	        if (File.Exists(path))
-	        {
-	            return Assembly.LoadFrom(path);
-	        }
-	        return null;
-	    }
-
 	    #endregion
 		DTEEvents eve;
 		#region Connect Event Handlers
@@ -214,7 +193,6 @@ namespace OMAddin
 				if (connectMode == ext_ConnectMode.ext_cm_AfterStartup ||
 					connectMode == ext_ConnectMode.ext_cm_Startup)
 				{
-					//This function creates menu
 					CreateMenu();
 
 					try
@@ -232,7 +210,6 @@ namespace OMAddin
 						}
 						omToolbar.Visible = true;
 
-						//This function creates Toolbar
 						CreateToolBar();
 					}
 					catch (Exception oEx)
@@ -265,12 +242,12 @@ namespace OMAddin
 
 						ViewBase.ApplicationObject = _applicationObject;
 						//enable disable connect button while checking cfredentials
-						dbConnectControl.Enabled = false;
-						omButton.Enabled = false;
+						connectDatabaseMenu.Enabled = false;
+						connectDatabaseButton.Enabled = false;
 						Cursor.Current = Cursors.WaitCursor;
 						Cursor.Current = Cursors.Default;
-						dbConnectControl.Enabled = true;
-						omButton.Enabled = true;
+						connectDatabaseMenu.Enabled = true;
+						connectDatabaseButton.Enabled = true;
 					}
 					catch (Exception oEx)
 					{
@@ -285,6 +262,8 @@ namespace OMAddin
 
 		}
 
+		//FIXME: Ignore only VS WIndows? What about other addins windows (for instance Resharper) ?
+		//		 Why not keep a list of OMN windows?
 		void eve_ModeChanged(vsIDEMode LastMode)
 		{
 			try
@@ -369,10 +348,6 @@ namespace OMAddin
 
 
 		}
-
-
-
-
 
 
 		#endregion
@@ -626,7 +601,7 @@ namespace OMAddin
 		{
 			Cursor.Current = Cursors.WaitCursor;
 
-			ConnectToDatabaseOrServer((CommandBarControl)CommandBarControl);
+			ConnectToDatabaseOrServer((_CommandBarButton)CommandBarControl);
 			Cursor.Current = Cursors.Default;
 
 		}
@@ -824,32 +799,25 @@ namespace OMAddin
 		#region Private Methods
 
 		#region AddSubMenu
-	    private int AddSubMenu(ref CommandBarControl Ctrl, CommandBarPopup Popup, ref CommandBarEvents ControlHandler, int position, string Caption, string ImagePath, string MaskedImagePath)
+		private int AddSubMenu(out CommandBarControl menuItem, CommandBarPopup parent, out CommandBarEvents eventHandler, int position, string caption)
 		{
-			try
+			return AddSubMenu(out menuItem, parent, out eventHandler, position, caption, string.Empty, string.Empty);
+		}
+
+	    private int AddSubMenu(out CommandBarControl menuItem, CommandBarPopup parent, out CommandBarEvents eventHandler, int position, string caption, string imagePath, string maskedImagePath)
+		{
+			menuItem = parent.Controls.Add(MsoControlType.msoControlButton, Missing.Value, Missing.Value, position, true);
+            menuItem.Caption = caption;
+
+			eventHandler = (CommandBarEvents)_applicationObject.Events.get_CommandBarEvents(menuItem);
+
+			if (!string.IsNullOrEmpty(imagePath))
 			{
-				Assembly ThisAssembly = Assembly.GetExecutingAssembly();
-				Ctrl = Popup.Controls.Add(MsoControlType.msoControlButton, Missing.Value, Missing.Value, position, true);
-				Ctrl.Caption = Caption;
-
-				ControlHandler = (CommandBarEvents)_applicationObject.Events.get_CommandBarEvents(Ctrl);
-
-				if (!string.IsNullOrEmpty(ImagePath))
-				{
-                    SetPicture(ThisAssembly, (CommandBarButton) Ctrl.Control, ImagePath, MaskedImagePath);
-				}
-				if (string.Equals(Caption, Helper.GetResourceString("Login")) || string.Equals(Caption, "Logout"))
-				{
-					Helper.m_AddIn_Assembly = Assembly.GetExecutingAssembly();
-				}
-				else if (string.Equals(Caption, DB4O_HOMEPAGE))
-				{
-					Ctrl.BeginGroup = true;
-				}
+				SetPicture(Assembly.GetExecutingAssembly(), (CommandBarButton) menuItem.Control, imagePath, maskedImagePath);
 			}
-			catch (Exception oEx)
+			else if (string.Equals(caption, DB4O_HOMEPAGE))
 			{
-				LoggingHelper.HandleException(oEx);
+				menuItem.BeginGroup = true;
 			}
 
 		    return position + 1;
@@ -879,17 +847,17 @@ namespace OMAddin
 				#endregion
 
 				#region Creates submenu for Connect/Disconnect
-				int position = AddSubMenu(ref dbConnectControl, oPopup, ref dbConnectControlHandler, 1, CONNECT, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
+				int position = AddSubMenu(out connectDatabaseMenu, oPopup, out dbConnectControlHandler, 1, CONNECT, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
 				dbConnectControlHandler.Click += dbConnectControlHandler_Click;
 				#endregion
 
 				#region Creates submenu for XtremeConnect
-                position = AddSubMenu(ref reqConsultationControl, oPopup, ref reqConsultationControlHandler, position, XTREME_CONNECT, IMAGE_XTREMECONNECT, IMAGE_XTREMECONNECT_MASKED);
+                position = AddSubMenu(out reqConsultationControl, oPopup, out reqConsultationControlHandler, position, XTREME_CONNECT, IMAGE_XTREMECONNECT, IMAGE_XTREMECONNECT_MASKED);
 			    reqConsultationControlHandler.Click += reqConsultationControlHandler_Click;
 				#endregion
 
 				#region Creates submenu for Support Cases
-				position = AddSubMenu(ref salesForceControl, oPopup, ref salesForceControlHandler, position, SUPPORT_CASES, IMAGE_SUPPORTCASES, IMAGE_SUPPORTCASES_MASKED);
+				position = AddSubMenu(out salesForceControl, oPopup, out salesForceControlHandler, position, SUPPORT_CASES, IMAGE_SUPPORTCASES, IMAGE_SUPPORTCASES_MASKED);
 				salesForceControlHandler.Click += salesForceControlHandler_Click;
 				#endregion
 
@@ -902,44 +870,46 @@ namespace OMAddin
 				#endregion
 
 				#region Creates submenu for Defrag under Maintainance
-				AddSubMenu(ref omDefragControl, oPopupMaintainance, ref omDefragControlHandler, 1, DEFRAG, string.Empty, string.Empty);
+				AddSubMenu(out omDefragControl, oPopupMaintainance, out omDefragControlHandler, 1, DEFRAG);
 				omDefragControlHandler.Click += omDefragControlHandler_Click;
 				omDefragControl.Enabled = false;
 				#endregion
 
 				#region Creates submenu for Backup under Maintainance
-				AddSubMenu(ref omBackupControl, oPopupMaintainance, ref omBackupControlHandler, 2, BACKUP, string.Empty, string.Empty);
+				AddSubMenu(out omBackupControl, oPopupMaintainance, out omBackupControlHandler, 2, BACKUP);
 				omBackupControlHandler.Click += omBackupControlHandler_Click;
 				omBackupControl.Enabled = false;
 				#endregion
 
 				#region Creates submenu for db4objects Homepage
-				position = AddSubMenu(ref db4oControl, oPopup, ref db4oControlHandler, position, DB4O_HOMEPAGE, string.Empty, string.Empty);
+				
+				CommandBarControl db4oHomePageControl;
+				position = AddSubMenu(out db4oHomePageControl, oPopup, out db4oControlHandler, position, DB4O_HOMEPAGE);
 				db4oControlHandler.Click += db4oControlHandler_Click;
 				#endregion
 
 				#region Creates submenu for db4objects Developer Community
-				position = AddSubMenu(ref db4oDeveloperControl, oPopup, ref db4oDeveloperControlHandler, position, DB4O_DEVELOPER_COMMUNITY, string.Empty, string.Empty);
+				position = AddSubMenu(out db4oDeveloperControl, oPopup, out db4oDeveloperControlHandler, position, DB4O_DEVELOPER_COMMUNITY);
 				db4oDeveloperControlHandler.Click += db4oDeveloperControlHandler_Click;
 				#endregion
 
 				#region Creates submenu for db4objects Downloads
-				position = AddSubMenu(ref db4oDnldControl, oPopup, ref db4oDnldControlHandler, position, DB4O_DOWNLOADS, string.Empty, string.Empty);
+				position = AddSubMenu(out db4oDnldControl, oPopup, out db4oDnldControlHandler, position, DB4O_DOWNLOADS);
 				db4oDnldControlHandler.Click += db4oDnldControlHandler_Click;
 				#endregion
 
 				#region Creates submenu for Help
-				position = AddSubMenu(ref omHelpControl, oPopup, ref omHelpControlHandler, position, DB4O_HELP, IMAGE_HELP, IMAGE_HELP_MASKED);
+				position = AddSubMenu(out omHelpControl, oPopup, out omHelpControlHandler, position, DB4O_HELP, IMAGE_HELP, IMAGE_HELP_MASKED);
 				omHelpControlHandler.Click += omHelpControlHandler_Click;
 				#endregion
 
 				#region Creates submenu for ObjectManager Enterprise About Box
-				position = AddSubMenu(ref omAboutControl, oPopup, ref omAboutControlHandler, position, ABOUT_OME, string.Empty, string.Empty);
+				position = AddSubMenu(out omAboutControl, oPopup, out omAboutControlHandler, position, ABOUT_OME);
 				omAboutControlHandler.Click += omAboutControlHandler_Click;
 				#endregion
 
 				#region Creates submenu for Creating demo db
-				position = AddSubMenu(ref dbCreateDemoDbControl, oPopup, ref dbCreateDemoDbControlHandler, position, CREATE_DEMO_DB, string.Empty, string.Empty);
+				position = AddSubMenu(out dbCreateDemoDbControl, oPopup, out dbCreateDemoDbControlHandler, position, CREATE_DEMO_DB);
 				dbCreateDemoDbControlHandler.Click += dbCreateDemoDbControlHandler_Click;
 				dbCreateDemoDbControl.Enabled = true;
 				#endregion
@@ -953,9 +923,17 @@ namespace OMAddin
 				#endregion
 
 				#region Creates submenu for Proxy Configurations under Maintainance
-				AddSubMenu(ref omProxyConfigControl, oPopupOptions, ref omProxyConfigHandler, 1, PROXYCONFIGURATIONS, string.Empty, string.Empty);
+				AddSubMenu(out omProxyConfigControl, oPopupOptions, out omProxyConfigHandler, 1, PROXYCONFIGURATIONS);
 				omProxyConfigHandler.Click += omProxyConfigHandler_Click;
 				omProxyConfigControl.Enabled = true;
+				#endregion
+				
+				#region Creates submenu for Assembly Search Path configuration
+
+				CommandBarControl omAssemblySearchPathControl;
+
+				AddSubMenu(out omAssemblySearchPathControl, oPopupOptions, out omAssemblySearchPathHandler, 2, ASSEMBLY_SEARCH_PATH_CONFIG);
+				omAssemblySearchPathHandler.Click += ShowAssemblySearchPathDialog;
 				#endregion
 			}
 			catch (Exception oEx)
@@ -964,7 +942,18 @@ namespace OMAddin
 			}
 		}
 
-	    static void omProxyConfigHandler_Click(object CommandBarControl, ref bool Handled, ref bool CancelDefault)
+		void ShowAssemblySearchPathDialog(object CommandBarControl, ref bool Handled, ref bool CancelDefault)
+		{
+			using (SearchPathDialog spd = new SearchPathDialog())
+ 			{
+ 				if (spd.ShowDialog() ==  DialogResult.OK)
+ 				{
+ 					Config.Instance.SaveAssemblySearchPath();
+ 				}
+ 			}
+		}
+
+		static void omProxyConfigHandler_Click(object CommandBarControl, ref bool Handled, ref bool CancelDefault)
 		{
 			try
 			{
@@ -988,7 +977,6 @@ namespace OMAddin
 			{
 				LoggingHelper.HandleException(oEx);
 			}
-
 		}
 
 		#region Creating demo db handler click
@@ -1015,7 +1003,6 @@ namespace OMAddin
 				isrunning = true;
 				bw.RunWorkerAsync();
 
-				// while(isrunning)
 				for (double i = 1; i < 10000; i++)
 				{
 					i++;
@@ -1023,7 +1010,6 @@ namespace OMAddin
 
 					if (isrunning == false)
 						break;
-
 				}
 
 			}
@@ -1033,8 +1019,6 @@ namespace OMAddin
 				bw = null;
 				LoggingHelper.HandleException(oEx);
 			}
-
-
 		}
 
 		#region Function to create demo db
@@ -1051,8 +1035,8 @@ namespace OMAddin
 		{
 			try
 			{
-				dbConnectControl.Enabled = false;
-				omButton.Enabled = false;
+				connectDatabaseMenu.Enabled = false;
+				connectDatabaseButton.Enabled = false;
 				dbCreateDemoDbControl.Enabled = false;
 
 				ViewBase.ApplicationObject = _applicationObject;
@@ -1060,8 +1044,8 @@ namespace OMAddin
 				CloseAllToolWindows();
 
 				DemoDb.Create();
-				dbConnectControl.Enabled = true;
-				omButton.Enabled = true;
+				connectDatabaseMenu.Enabled = true;
+				connectDatabaseButton.Enabled = true;
 				dbCreateDemoDbControl.Enabled = true;
 
 
@@ -1120,19 +1104,17 @@ namespace OMAddin
 				PropertyPaneToolWin.CreatePropertiesPaneToolWindow(true);
 				PropertyPaneToolWin.PropWindow.Visible = true;
 				dbCreateDemoDbControl.Enabled = false;
-				dbConnectControl.Caption = OMControlLibrary.Common.Constants.TOOLBAR_DISCONNECT;
-				((CommandBarButton)dbConnectControl).State = MsoButtonState.msoButtonDown;
+				connectDatabaseMenu.Caption = OMControlLibrary.Common.Constants.TOOLBAR_DISCONNECT;
+				((CommandBarButton)connectDatabaseMenu).State = MsoButtonState.msoButtonDown;
 
-				omButton.Caption = OMControlLibrary.Common.Constants.TOOLBAR_DISCONNECT;
-				omButton.TooltipText = OMControlLibrary.Common.Constants.TOOLBAR_DISCONNECT;
-				omButton.State = MsoButtonState.msoButtonDown;
-				
+				connectDatabaseButton.Caption = OMControlLibrary.Common.Constants.TOOLBAR_DISCONNECT;
+				connectDatabaseButton.TooltipText = OMControlLibrary.Common.Constants.TOOLBAR_DISCONNECT;
+				connectDatabaseButton.State = MsoButtonState.msoButtonDown;
                 
-                SetPicture(ThisAssembly, omButton, IMAGE_DISCONNECT, IMAGE_DISCONNECT_MASKED);
+                SetPicture(ThisAssembly, connectDatabaseButton, IMAGE_DISCONNECT, IMAGE_DISCONNECT_MASKED);
 
 				omBackupControl.Enabled = true;
 				omDefragControl.Enabled = true;
-				Helper.m_AddIn_Assembly = Assembly.GetExecutingAssembly();
 			}
 			catch (Exception oEx)
 			{
@@ -1185,9 +1167,9 @@ namespace OMAddin
 						oEx.ToString();
 					}
 
-                    AddToolBarButton(ref omButton, MsoButtonStyle.msoButtonIcon, CONNECT, CONNECT, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
-					omButton.Click += omButton_Click;
-					omButton.BeginGroup = true;
+                    AddToolBarButton(ref connectDatabaseButton, MsoButtonStyle.msoButtonIcon, CONNECT, CONNECT, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
+					connectDatabaseButton.Click += omButton_Click;
+					connectDatabaseButton.BeginGroup = true;
 
 					AddToolBarButton(ref reqConsultationControlButton, MsoButtonStyle.msoButtonIcon, XTREME_CONNECT, XTREME_CONNECT, IMAGE_XTREMECONNECT, IMAGE_XTREMECONNECT_MASKED);
 					reqConsultationControlButton.Click += reqConsultationControlButton_Click;
@@ -1213,43 +1195,36 @@ namespace OMAddin
 	    #endregion
 
 		#region ConnectToDatabaseOrServer
-		private void ConnectToDatabaseOrServer(CommandBarControl Ctrl)
+		private void ConnectToDatabaseOrServer(_CommandBarButton Ctrl)
 		{
 			try
 			{
-				Assembly ThisAssembly = Assembly.GetExecutingAssembly();
-
+				Assembly assembly = Assembly.GetExecutingAssembly();
 				if (Ctrl.Caption.Equals(CONNECT))
 				{
 					ViewBase.ApplicationObject = _applicationObject;
-					try
+					if (Helper.LoginToolWindow == null || Helper.LoginToolWindow.Visible == false)
 					{
-						if (Helper.LoginToolWindow == null || Helper.LoginToolWindow.Visible == false)
-						{
-							Login.CreateLoginToolWindow(Ctrl, omButton, ThisAssembly, omDefragControl, omBackupControl, dbCreateDemoDbControl);
-						}
+						Login.CreateLoginToolWindow(connectDatabaseMenu, connectDatabaseButton, assembly, omDefragControl, omBackupControl, dbCreateDemoDbControl);
 					}
-					catch (Exception) { }
 				}
 				else
 				{
 					SaveData();
+					try
+					{
+                        SetPicture(assembly, (CommandBarButton) connectDatabaseMenu.Control, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
+					}
+					catch (Exception) { }
+					try
+					{
+                        SetPicture(assembly, connectDatabaseButton, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
+					}
+					catch (Exception) { }
 
-					Ctrl.Caption = CONNECT;
-					((CommandBarButton)Ctrl).State = MsoButtonState.msoButtonUp;
-					omButton.Caption = CONNECT;
-					omButton.TooltipText = CONNECT;
-					omButton.State = MsoButtonState.msoButtonUp;
-					try
-					{
-                        SetPicture(ThisAssembly, (CommandBarButton) Ctrl.Control, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
-					}
-					catch (Exception) { }
-					try
-					{
-					    SetPicture(ThisAssembly, omButton, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
-					}
-					catch (Exception) { }
+					connectDatabaseMenu.Caption = connectDatabaseButton.Caption = CONNECT;
+					connectDatabaseMenu.TooltipText = connectDatabaseButton.TooltipText = CONNECT;
+					connectDatabaseButton.State = ((CommandBarButton)connectDatabaseMenu).State = MsoButtonState.msoButtonUp;
 
 					dbCreateDemoDbControl.Enabled = true;
 					omDefragControl.Enabled = false;
@@ -1257,9 +1232,7 @@ namespace OMAddin
 
 					CloseAllToolWindows();
 					Helper.DbInteraction.SetCurrentRecentConnection(null);
-
 				}
-
 			}
 			catch (Exception oEx)
 			{
@@ -1267,66 +1240,16 @@ namespace OMAddin
 			}
 		}
 
-	    private static void SetPicture(Assembly assembly, _CommandBarButton button, string resource, string masked)
-	    {
-            using (Stream imageStream = assembly.GetManifestResourceStream(resource))
-            {
-                using (Stream imageStreamMask = assembly.GetManifestResourceStream(masked))
-                {
-                    button.Picture = (StdPicture) MyHost.IPictureDisp(Image.FromStream(imageStream));
-                    button.Mask = (StdPicture) MyHost.IPictureDisp(Image.FromStream(imageStreamMask));
-                }
-            }
-	    }
-
-	    #endregion
-
-		#region ConnectToDatabaseOrServer
-		private void ConnectToDatabaseOrServer(CommandBarButton Ctrl)
+		private static void SetPicture(Assembly assembly, _CommandBarButton button, string resource, string masked)
 		{
-			try
+			using (Stream imageStream = assembly.GetManifestResourceStream(resource))
 			{
-				Assembly ThisAssembly = Assembly.GetExecutingAssembly();
-				if (Ctrl.Caption.Equals(CONNECT))
+				using (Stream imageStreamMask = assembly.GetManifestResourceStream(masked))
 				{
-					ViewBase.ApplicationObject = _applicationObject;
-					if (Helper.LoginToolWindow == null || Helper.LoginToolWindow.Visible == false)
-					{
-						Login.CreateLoginToolWindow(dbConnectControl, Ctrl, ThisAssembly, omDefragControl, omBackupControl, dbCreateDemoDbControl);
-					}
-				}
-				else
-				{
-					SaveData();
-					try
-					{
-                        SetPicture(ThisAssembly, (CommandBarButton) dbConnectControl.Control, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
-					}
-					catch (Exception) { }
-					try
-					{
-                        SetPicture(ThisAssembly, Ctrl, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
-					}
-					catch (Exception) { }
-
-					Ctrl.Caption = CONNECT;
-					Ctrl.TooltipText = CONNECT;
-					Ctrl.State = MsoButtonState.msoButtonUp;
-					dbConnectControl.Caption = CONNECT;
-					((CommandBarButton)dbConnectControl).State = MsoButtonState.msoButtonUp;
-					dbCreateDemoDbControl.Enabled = true;
-					omDefragControl.Enabled = false;
-					omBackupControl.Enabled = false;
-
-					CloseAllToolWindows();
-					Helper.DbInteraction.SetCurrentRecentConnection(null);
+					button.Picture = (StdPicture)MyHost.IPictureDisp(Image.FromStream(imageStream));
+					button.Mask = (StdPicture)MyHost.IPictureDisp(Image.FromStream(imageStreamMask));
 				}
 			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.HandleException(oEx);
-			}
-
 		}
 
 		private static void SaveData()
@@ -1335,7 +1258,6 @@ namespace OMAddin
 			{
 				if (Helper.HashClassGUID != null)
 				{
-					// string winCaption = Window.Caption;
 					IDictionaryEnumerator eNum = Helper.HashClassGUID.GetEnumerator();
 
 					if (eNum != null)
@@ -1379,8 +1301,6 @@ namespace OMAddin
 		{
 			try
 			{
-				// Helper.ResponseTicket = null;
-				//Helper.SetAppSettingForToolWindows(); // set 'reset toolwin seting' to false
 				RecentQueries recQueries = Helper.DbInteraction.GetCurrentRecentConnection();
 				if (recQueries != null)
 				{
@@ -1545,14 +1465,14 @@ namespace OMAddin
 		{
 			try
 			{
-				dbConnectControl.Enabled = false;
-				omButton.Enabled = false;
+				connectDatabaseMenu.Enabled = false;
+				connectDatabaseButton.Enabled = false;
 				omDefragControl.Enabled = false;
 				omBackupControl.Enabled = false;
 				_applicationObject.StatusBar.Animate(true, vsStatusAnimation.vsStatusAnimationBuild);
 				ThreadForDefrag();
-				dbConnectControl.Enabled = true;
-				omButton.Enabled = true;
+				connectDatabaseMenu.Enabled = true;
+				connectDatabaseButton.Enabled = true;
 				omDefragControl.Enabled = true;
 				omBackupControl.Enabled = true;
 				_applicationObject.StatusBar.Animate(false, vsStatusAnimation.vsStatusAnimationBuild);
@@ -1567,8 +1487,6 @@ namespace OMAddin
 			}
 
 		}
-
-
 
 		void bwForDefrag_ProgressChanged(object sender, ProgressChangedEventArgs e)
 		{
@@ -1635,19 +1553,17 @@ namespace OMAddin
 		#endregion
 
 		#region OpenHelp
+
 		private void OpenHelp()
 		{
-			string filepath = string.Empty; ;
+			string filepath = string.Empty;
 			try
 			{
-				//Attach Html file
 				filepath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-				int index = filepath.LastIndexOf(CHAR_FORWORD_SLASH);
-				filepath = filepath.Remove(index);
-				filepath = filepath + FAQ;
+				filepath = Path.Combine(Path.GetDirectoryName(filepath), FAQ_PATH);
+
 				if (winHelp == null || winHelp.Visible == false)
 				{
-
 					winHelp = _applicationObject.DTE.ItemOperations.Navigate(filepath, vsNavigateOptions.vsNavigateOptionsNewWindow);
 				}
 				else

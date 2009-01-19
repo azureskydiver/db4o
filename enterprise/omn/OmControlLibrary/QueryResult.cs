@@ -7,8 +7,8 @@ using System.Windows.Forms;
 using System.Collections;
 using EnvDTE;
 using EnvDTE80;
+using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
-using OManager.BusinessLayer.pagingData;
 using OManager.BusinessLayer.QueryManager;
 using System.Runtime.InteropServices;
 using OME.AdvancedDataGridView;
@@ -90,11 +90,11 @@ namespace OMControlLibrary
 				this.listQueryAttributes = omQuery.AttributeList;
 
 				EnvDTE.Events events = ApplicationObject.Events;
-				_windowsEvents = (EnvDTE.WindowEvents)events.get_WindowEvents(null);
-				_windowsEvents.WindowActivated += new _dispWindowEvents_WindowActivatedEventHandler(_windowsEvents_WindowActivated);
-				EnvDTE80.Events2 event_1 = (EnvDTE80.Events2)ApplicationObject.Events;
-				windowsVisEvents = (WindowVisibilityEvents)event_1.get_WindowVisibilityEvents(Helper.QueryResultToolWindow);
-				windowsVisEvents.WindowHiding += new _dispWindowVisibilityEvents_WindowHidingEventHandler(windowsVisEvents_WindowHiding);
+				_windowsEvents = events.get_WindowEvents(null);
+				_windowsEvents.WindowActivated += _windowsEvents_WindowActivated;
+				EnvDTE80.Events2 event_1 = (Events2)ApplicationObject.Events;
+				windowsVisEvents = event_1.get_WindowVisibilityEvents(Helper.QueryResultToolWindow);
+				windowsVisEvents.WindowHiding += windowsVisEvents_WindowHiding;
 			}
 			catch (Exception oEx)
 			{
@@ -930,28 +930,6 @@ namespace OMControlLibrary
 					strstoreTreeValue = cell.Value.ToString();
 				else
 					strstoreTreeValue = string.Empty;
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-		}
-
-		void treeview_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-		{
-			try
-			{
-				if (e.Node.Tag != null)
-				{
-					Helper.SelectedObject = e.Node.Tag;
-					Helper.Depth = e.Node.Level;
-					Helper.CreatePropertiesPaneToolWindow(false);
-				}
-				else
-				{
-					Helper.SelectedObject = null;
-					Helper.ClassName = null;
-				}
 			}
 			catch (Exception oEx)
 			{

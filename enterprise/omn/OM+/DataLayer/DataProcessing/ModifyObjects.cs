@@ -64,7 +64,7 @@ namespace OManager.DataLayer.ObjectsModification
                 IReflectClass rclass = DataLayerCommon.returnReflectClassfromObject(subObject);
                 if (rclass != null)
                 {
-                    IReflectField rfield = DataLayerCommon.getDeclaredFieldInHeirarchy(rclass, attribName);
+                    IReflectField rfield = DataLayerCommon.GetDeclaredFieldInHeirarchy(rclass, attribName);
                     if (rfield != null)
                     {
                         if (!(rfield is GenericVirtualField))
@@ -233,7 +233,7 @@ namespace OManager.DataLayer.ObjectsModification
                 IReflectClass rclass = DataLayerCommon.returnReflectClassfromObject(obj);// objectContainer.Ext().Reflector().ForObject(obj);
                 if (rclass != null)
                 {
-                    IReflectField[] fieldArr = DataLayerCommon.getDeclaredFieldsInHeirarchy(rclass);
+                    IReflectField[] fieldArr = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rclass);
                     if (fieldArr != null)
                     {
                         foreach (IReflectField field in fieldArr)

@@ -169,8 +169,6 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				Helper.m_AddIn_Assembly = m_AddIn_Assembly;
-
 				string assemblypath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
 			    string caption = Helper.GetResourceString(Common.Constants.QUERY_BUILDER_CAPTION);
 				object ctlobj = null;

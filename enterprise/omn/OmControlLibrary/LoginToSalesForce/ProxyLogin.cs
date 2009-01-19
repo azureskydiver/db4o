@@ -1,8 +1,8 @@
 using System;
 using System.Windows.Forms;
-using OManager.BusinessLayer.QueryManager;
 using OManager.BusinessLayer.Login;
 using System.Net;
+using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
 using OME.Logging.Common;
 

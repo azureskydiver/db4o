@@ -140,7 +140,7 @@ namespace OManager.DataLayer.ObjectsModification
             IReflectClass refClass = DataLayerCommon.returnReflectClassfromObject(parent);
             if (refClass != null)
             {
-                IReflectField rfield = DataLayerCommon.getDeclaredField(refClass, field);
+                IReflectField rfield = DataLayerCommon.GetDeclaredField(refClass, field);
                 if (refClass != null)
                 {
                     rfield.Set(parent, null);
@@ -157,7 +157,7 @@ namespace OManager.DataLayer.ObjectsModification
                 IReflectClass rclass = DataLayerCommon.returnReflectClassfromObject(currObject);// objectContainer.Ext().Reflector().ForObject(currObject);
                 if (rclass != null)
                 {
-                    IReflectField rfield = DataLayerCommon.getDeclaredFieldInHeirarchy(rclass, attribName);
+                    IReflectField rfield = DataLayerCommon.GetDeclaredFieldInHeirarchy(rclass, attribName);
                     if (rfield != null)
                     {
                         if (!(rfield is GenericVirtualField))
@@ -308,7 +308,7 @@ namespace OManager.DataLayer.ObjectsModification
             try
             {
                 IReflectClass rclass = DataLayerCommon.returnReflectClassfromObject(currObject);// objectContainer.Ext().Reflector().ForObject(currObject);
-                IReflectField rfield = DataLayerCommon.getDeclaredFieldInHeirarchy(rclass, attribName);
+                IReflectField rfield = DataLayerCommon.GetDeclaredFieldInHeirarchy(rclass, attribName);
                 if (rfield != null && !(rfield is GenericVirtualField))
                 {
                     string fieldType = rfield.GetFieldType().GetName();

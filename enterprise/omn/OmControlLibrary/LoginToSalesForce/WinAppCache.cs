@@ -85,8 +85,6 @@ namespace OMControlLibrary.LoginToSalesForce
 		private void linkLabelForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			System.Diagnostics.Process.Start("https://www.db4o.com/users/retrievePassword.aspx");
-			//ApplicationObject.DTE.ItemOperations.Navigate("http://www.db4o.com/users/retrievePassword.aspx", vsNavigateOptions.vsNavigateOptionsNewWindow);
-			// this.Close();
 		}
 
 		private void linkLabelPurchase_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
