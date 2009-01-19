@@ -1,18 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
-using System.ComponentModel;
 using System.Reflection;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.ObjectExplorer;
-using OManager.DataLayer.PropertyTable;
-using OManager.DataLayer.QueryParser;
-
 using OME.Logging.Common;
 using OME.Logging.Tracing;
 
@@ -27,7 +21,6 @@ namespace OMControlLibrary.Common
 		private string SHOW_ALL_COLUMN = "SHOW_ALL_COLUMN";
 		private bool m_CellClick = false;
 		private int m_CurrentRowNumber = 0;
-		private int m_CurrentColumnNumber = 0;
 
 
 		public event System.EventHandler<dbDataGridViewEventArgs> OnDBGridCellClick;
@@ -146,8 +139,6 @@ namespace OMControlLibrary.Common
 				}
 
 				this.m_CurrentRowNumber = hitTestInfo.RowIndex;
-				this.m_CurrentColumnNumber = hitTestInfo.ColumnIndex;
-
 				if (hitTestInfo.RowIndex == Common.Constants.INVALID_INDEX_VALUE)
 					return;
 
@@ -599,27 +590,32 @@ namespace OMControlLibrary.Common
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
+		
 		internal void SetDataGridColumnHeader(List<Hashtable> resultList, string className, Hashtable hashAttributes)
 		{
 			this.Rows.Clear();
 			this.Columns.Clear();
-
-			Hashtable hColumn = new Hashtable();
-			int countAttributes = 0;
-			for (int listCount = 0; listCount < resultList.Count; listCount++)
-			{
-				Hashtable hTable = new Hashtable();
-				hTable = resultList[listCount];
-				if (countAttributes < hTable.Count)
-				{
-					countAttributes = hTable.Count;
-					hColumn = hTable;
-				}
-			}
-			SetDataGridColumnHeader(hColumn, className, hashAttributes);
-			//SetDataGridColumnsWidth();
+			SetDataGridColumnHeader(BiggestFieldList(resultList), className, hashAttributes);
 		}
 
+		private static Hashtable BiggestFieldList(IList<Hashtable> resultList)
+		{
+			if (resultList.Count == 0)
+			{
+				return new Hashtable();
+			}
+
+			Hashtable hColumn = resultList[0];
+			foreach (Hashtable current in resultList)
+			{
+				if (current.Count < hColumn.Count)
+				{
+					hColumn = current;
+				}
+			}
+			
+			return hColumn;
+		}
 
 
 		internal void SetDatagridRowsWithIndex(List<Hashtable> resultList, string className, Hashtable hashAttributes, int index)
@@ -630,8 +626,7 @@ namespace OMControlLibrary.Common
 
 				for (int listCount = 0; listCount < resultList.Count; listCount++)
 				{
-					Hashtable hTable = new Hashtable();
-					hTable = resultList[listCount];
+					Hashtable hTable = resultList[listCount];
 					IDictionaryEnumerator eNum = hTable.GetEnumerator();
 					DataGridViewRow newRow = new DataGridViewRow();
 
@@ -640,7 +635,7 @@ namespace OMControlLibrary.Common
 					this.Rows[listCount].Cells[COLUMN_NO_NAME].ReadOnly = true;
 
 					// For checking if row is edited or not
-					this.Rows[listCount].Cells[Common.Constants.QUERY_GRID_ISEDITED_HIDDEN].Value = Convert.ToBoolean(false);
+					this.Rows[listCount].Cells[Common.Constants.QUERY_GRID_ISEDITED_HIDDEN].Value = false;
 
 
 					if (eNum != null)
@@ -650,7 +645,6 @@ namespace OMControlLibrary.Common
 							if (!eNum.Key.ToString().Equals(BusinessConstants.DB4OBJECTS_REF))
 							{
 								string dataType = null;
-
 								if (hashAttributes.Count == 0)
 								{
 									dataType = Helper.DbInteraction.GetDatatype(className, eNum.Key.ToString());
@@ -669,7 +663,6 @@ namespace OMControlLibrary.Common
 								{
 									if (Helper.IsPrimitive(dataType))
 									{
-
 										if (eNum.Value != null)
 										{
 											this.Rows[listCount].Cells[eNum.Key.ToString()].Value = Helper.GetValue(dataType, eNum.Value);
@@ -1411,7 +1404,7 @@ namespace OMControlLibrary.Common
 					if (tempTreeNode.Parent.Tag.ToString().Contains(","))
 						className = tempTreeNode.Parent.Tag.ToString();
 					else
-						className = tempTreeNode.Parent.Name.ToString();
+						className = tempTreeNode.Parent.Name;
 				}
 
 				//If field is not selected and Query Group has no clauses then reset the base class.
@@ -1438,10 +1431,7 @@ namespace OMControlLibrary.Common
 				return false;
 			}
 
-			if (this.Rows.Count > 0)
-				return true;
-			else
-				return false;
+			return Rows.Count > 0;
 		}
 
 		internal bool AddAllItemsOfClassToQueryBuilder(TreeNode tempTreeNode, QueryBuilder queryBuilder)
@@ -1468,9 +1458,6 @@ namespace OMControlLibrary.Common
 				if (storedfields != null)
 				{
 					IDictionaryEnumerator eNum = storedfields.GetEnumerator();
-
-
-
 					if (eNum != null)
 					{
 						while (eNum.MoveNext())
@@ -1503,10 +1490,7 @@ namespace OMControlLibrary.Common
 				return false;
 			}
 
-			if (this.Rows.Count > 0)
-				return true;
-			else
-				return false;
+			return Rows.Count > 0;
 		}
 
 
@@ -1521,13 +1505,13 @@ namespace OMControlLibrary.Common
 				DataGridViewComboBoxColumn conditionColumn = (DataGridViewComboBoxColumn)this.Columns[1];
 				int index = this.Rows.Count - 1;
 				this.Rows[index].Cells[0].Value = parentName;
-				this.Rows[index].Cells[Common.Constants.QUERY_GRID_CALSSNAME_HIDDEN].Value = className;
-				this.Rows[index].Cells[Common.Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value = typeOfNode;
-				if (typeOfNode == OManager.BusinessLayer.Common.BusinessConstants.BOOLEAN)
+				this.Rows[index].Cells[Constants.QUERY_GRID_CALSSNAME_HIDDEN].Value = className;
+				this.Rows[index].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value = typeOfNode;
+				if (typeOfNode == BusinessConstants.BOOLEAN)
 				{
 					this.Rows[index].Cells[2].Value = "True";
 				}
-				if (typeOfNode == OManager.BusinessLayer.Common.BusinessConstants.DATETIME)
+				if (typeOfNode == BusinessConstants.DATETIME)
 				{
 					this.Rows[index].Cells[2].Value = DateTime.Now.ToString();
 				}

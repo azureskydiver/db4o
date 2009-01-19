@@ -42,7 +42,7 @@ namespace OManager.DataLayer.QueryParser
 
             try
             {
-                IReflectClass rclass = DataLayerCommon.returnReflectClass(classname);
+                IReflectClass rclass = DataLayerCommon.ReturnReflectClass(classname);
                 string strValue = string.Empty;  
                 if (rclass != null)
                 {
@@ -87,7 +87,7 @@ namespace OManager.DataLayer.QueryParser
         {
             string type1 = string.Empty;
             container = Db4oClient.Client;
-            IReflectClass refClass = DataLayerCommon.returnReflectClass(classname); //container.Ext().Reflector().ForName(classname); //get reflect class
+            IReflectClass refClass = DataLayerCommon.ReturnReflectClass(classname); //container.Ext().Reflector().ForName(classname); //get reflect class
             if (refClass != null)
             {
                 type1 = refClass.ToString(); //to filter Generic class
@@ -118,7 +118,7 @@ namespace OManager.DataLayer.QueryParser
                         if (refClass != null)
                         {
 
-                            IReflectField[] fieldArr = DataLayerCommon.getDeclaredFieldsInHeirarchy(refClass);
+                            IReflectField[] fieldArr = DataLayerCommon.GetDeclaredFieldsInHeirarchy(refClass);
                             if (fieldArr != null)
                             {
                                 foreach (IReflectField field in fieldArr)

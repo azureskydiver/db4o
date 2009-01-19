@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using EnvDTE;
 using EnvDTE80;
 using System.Reflection;
+using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.QueryManager;
@@ -1220,7 +1221,6 @@ namespace OMControlLibrary
 				OMETrace.WriteFunctionStart();
 
 				string assemblypath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-				string className = "OMControlLibrary.QueryResult";
 
 				string guidpos = Helper.GetClassGUID(Helper.BaseClass);
 
@@ -1238,22 +1238,13 @@ namespace OMControlLibrary
 				EnvDTE80.Windows2 wins2obj = (Windows2)ApplicationObject.Windows;
 
 				// Creates Tool Window and inserts the user control in it.
-				Helper.QueryResultToolWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath,
-												 className, caption, guidpos, ref ctlobj);
+				Helper.QueryResultToolWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath, "OMControlLibrary.QueryResult", caption, guidpos, ref ctlobj);
 
+				//FIXME: Why not simply call the method?
 				QueryResult queryResult = ctlobj as QueryResult;
-				delPassData del = new delPassData(queryResult.Setobjectid);
-
+				delPassData del = queryResult.Setobjectid;
 				del(objectid);
 
-				//     Stream imgageStream = Helper.m_AddIn_Assembly.GetManifestResourceStream(OMControlLibrary.Common.Constants.DB4OICON);
-
-
-				//stdole.IPictureDisp Pic;
-
-				//Pic = MyHost.IPictureDisp(Image.FromStream(imgageStream));
-
-				//Helper.QueryResultToolWindow.SetTabPicture(imgageStream);
 				Helper.QueryResultToolWindow.IsFloating = false;
 				Helper.QueryResultToolWindow.Linkable = false;
 				if (Helper.QueryResultToolWindow.AutoHides == true)

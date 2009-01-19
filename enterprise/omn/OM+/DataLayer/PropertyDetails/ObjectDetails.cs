@@ -79,7 +79,7 @@ namespace OManager.DataLayer.Modal
             IReflectClass rclass = DataLayerCommon.returnReflectClassfromObject(obj);// objectContainer.Ext().Reflector().ForObject(obj);
                 if (rclass != null)
                 {
-                    IReflectField[] fieldArr = DataLayerCommon.getDeclaredFieldsInHeirarchy(rclass);
+                    IReflectField[] fieldArr = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rclass);
                     if (fieldArr != null)
                     {
                         foreach (IReflectField field in fieldArr)

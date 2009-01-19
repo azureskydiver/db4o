@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Collections;
-using OManager.BusinessLayer.QueryManager;
+using OManager.BusinessLayer.UIHelper;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
 using OManager.BusinessLayer.Login;

@@ -46,8 +46,8 @@ namespace OManager.DataLayer.Modal
         {
             try
             {
-                IReflectClass rClass = DataLayerCommon.returnReflectClass(m_className);//objectContainer.Ext().Reflector().ForName(className);
-                IReflectField[] rFields = DataLayerCommon.getDeclaredFieldsInHeirarchy(rClass);
+                IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_className);//objectContainer.Ext().Reflector().ForName(className);
+                IReflectField[] rFields = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rClass);
                 Hashtable FieldList = new Hashtable();
 
                 foreach (IReflectField field in rFields)
@@ -74,7 +74,7 @@ namespace OManager.DataLayer.Modal
 
 
 
-                IReflectClass rClass = DataLayerCommon.returnReflectClass(m_className);
+                IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_className);
                 if (rClass != null)
                 {
 
@@ -85,7 +85,7 @@ namespace OManager.DataLayer.Modal
                     type1 = type1.Trim(arr);
                     if (!CommonValues.IsPrimitive(type1) && !type1.Contains(BusinessConstants.DB4OBJECTS_SYS))
                     {
-                        IReflectField[] rFields = DataLayerCommon.getDeclaredFieldsInHeirarchy(rClass);
+                        IReflectField[] rFields = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rClass);
                         return rFields.Length;
                     }
                 }
@@ -104,8 +104,8 @@ namespace OManager.DataLayer.Modal
             {
 
 
-                IReflectClass rClass = DataLayerCommon.returnReflectClass(m_className); //objectContainer.Ext().Reflector().ForName(className);
-                IReflectField[] rFields = DataLayerCommon.getDeclaredFieldsInHeirarchy(rClass);
+                IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_className); //objectContainer.Ext().Reflector().ForName(className);
+                IReflectField[] rFields = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rClass);
                 return rFields;
             }
             catch (Exception oEx)

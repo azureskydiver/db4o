@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Reflect;
@@ -17,7 +18,7 @@ namespace OManager.DataLayer.CommonDatalayer
 			get { return Db4oFactory.Version(); }
     	}
 
-        public static IReflectField getDeclaredFieldInHeirarchy(IReflectClass aClass, string attribute)
+        public static IReflectField GetDeclaredFieldInHeirarchy(IReflectClass aClass, string attribute)
         {
             try
             {
@@ -28,7 +29,7 @@ namespace OManager.DataLayer.CommonDatalayer
                 while (aClass != null)
                 {
 
-                    refField = getDeclaredField(aClass, attribute);
+                    refField = GetDeclaredField(aClass, attribute);
                     if (refField != null)
                         break;
                     aClass = aClass.GetSuperclass();
@@ -44,7 +45,7 @@ namespace OManager.DataLayer.CommonDatalayer
 
         }
 
-        public static IStoredField getDeclaredStoredFieldInHeirarchy(IStoredClass aClass, string attribute)
+        public static IStoredField GetDeclaredStoredFieldInHeirarchy(IStoredClass aClass, string attribute)
         {
             try
             {
@@ -71,7 +72,7 @@ namespace OManager.DataLayer.CommonDatalayer
 
         }
 
-        public static IReflectField getDeclaredField(IReflectClass aClass, string attribute)
+        public static IReflectField GetDeclaredField(IReflectClass aClass, string attribute)
         {
 
             try
@@ -86,20 +87,11 @@ namespace OManager.DataLayer.CommonDatalayer
             return null;
         }
 
-        public static IReflectField[] getDeclaredFieldsInHeirarchy(IReflectClass aClass) //67
+        public static IReflectField[] GetDeclaredFieldsInHeirarchy(IReflectClass aClass) //67
         {
             try
             {
-				
-                ArrayList ret = getDeclaredFieldsListInHeirarchy(aClass);
-                Object[] refFieldArr = ret.ToArray();
-                IReflectField[] fieldArr = new IReflectField[refFieldArr.Length];
-                for (int i = 0; i < refFieldArr.Length; i++)
-                {
-                    fieldArr[i] = (IReflectField)refFieldArr[i];
-                }
-                return fieldArr;
-
+                return GetDeclaredFieldsListInHeirarchy(aClass).ToArray();
             }
             catch (Exception e)
             {
@@ -108,17 +100,19 @@ namespace OManager.DataLayer.CommonDatalayer
             return null;
         }
 
-        public static ArrayList getDeclaredFieldsListInHeirarchy(IReflectClass aClass)
+        public static List<IReflectField> GetDeclaredFieldsListInHeirarchy(IReflectClass aClass)
         {
             try
             {
                 if (aClass == null)
                     return null;
-                ArrayList ret = getDeclaredFieldsList(aClass);
+
+                List<IReflectField> ret = GetDeclaredFieldsList(aClass);
                 IReflectClass parent = aClass.GetSuperclass();
                 if (parent != null && !(parent.GetName().StartsWith("System.")))
-                    ret.AddRange(getDeclaredFieldsListInHeirarchy(parent));
-                return ret;
+                    ret.AddRange(GetDeclaredFieldsListInHeirarchy(parent));
+
+				return ret;
             }
             catch (Exception e)
             {
@@ -127,19 +121,16 @@ namespace OManager.DataLayer.CommonDatalayer
             return null;
         }
 
-        public static ArrayList getDeclaredFieldsList(IReflectClass aClass)
+        public static List<IReflectField> GetDeclaredFieldsList(IReflectClass aClass)
         {
             try
             {
-                ArrayList ret = new ArrayList();
-                IReflectField[] fields = aClass.GetDeclaredFields();
-                for (int i = 0; i < fields.Length; i++)
-                {
-                    IReflectField field = fields[i];
-                    if (!(field is GenericVirtualField))
-                        ret.Add(field);
-                }
-
+                List<IReflectField> ret = new List<IReflectField>();
+            	foreach (IReflectField field in aClass.GetDeclaredFields())
+            	{
+					if (!(field is GenericVirtualField))
+						ret.Add(field);
+            	}
                 return ret;
             }
             catch (Exception e)
@@ -155,7 +146,7 @@ namespace OManager.DataLayer.CommonDatalayer
 			return name.Contains("(G) ") ? name.Replace("(G) ", "") : name;
         }
 
-        public static IReflectClass returnReflectClass(string classname)
+        public static IReflectClass ReturnReflectClass(string classname)
         {
             try
             {
@@ -213,8 +204,6 @@ namespace OManager.DataLayer.CommonDatalayer
         {
             try
             {
-              
-                //IReflectClass refClass = container.Ext().Reflector().ForObject(expandedObj);
                 if (expandedObj != null)
                 {
                     IReflectClass refClass = returnReflectClassfromObject(expandedObj);

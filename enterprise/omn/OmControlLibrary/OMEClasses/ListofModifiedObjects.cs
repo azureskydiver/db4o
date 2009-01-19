@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Collections;
+using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
 using System.Windows.Forms;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
-using OManager.BusinessLayer.QueryManager;
 
 namespace OMControlLibrary
 {

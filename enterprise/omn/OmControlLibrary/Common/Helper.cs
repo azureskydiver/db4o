@@ -9,8 +9,7 @@ using Microsoft.Win32;
 using OManager.BusinessLayer.QueryManager;
 using OManager.BusinessLayer.Login;
 using EnvDTE;
-using EnvDTE80;
-using System.Reflection;
+using OManager.BusinessLayer.UIHelper;
 using sforce;
 using System.Net;
 
@@ -58,7 +57,6 @@ namespace OMControlLibrary.Common
 		static readonly string m_ddnPassword = string.Empty;
 		static string m_sessionId = string.Empty;
 		public static CommandBarButton m_statusLabel;
-		public static Assembly m_AddIn_Assembly;
 		private static bool m_IsQueryResultUpdated;
 
 		private static bool m_checkforIfAlreadyLoggedIn;
@@ -373,33 +371,6 @@ namespace OMControlLibrary.Common
 				classGUID = null;
 			}
 			return classGUID;
-		}
-
-		public static void CreatePropertiesPaneToolWindow(bool DbDetails)
-		{
-			try
-			{
-				string assemblypath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-			    string caption = DbDetails 
-                                        ? GetResourceString(Constants.PROPERTIES_TAB_DATABASE_CAPTION)
-                                        : ClassName + GetResourceString(Constants.PROPERTIES_TAB_CAPTION);
-				
-                object ctlobj = null;
-				AddIn addinobj = ViewBase.ApplicationObject.AddIns.Item(1);
-				EnvDTE80.Windows2 wins2obj = (Windows2)ViewBase.ApplicationObject.Windows;
-
-				Window objectBrowserToolWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath, CLASS_NAME_PROPERTIES, caption, m_guidposForClassDetails, ref ctlobj);
-				if (objectBrowserToolWindow.AutoHides)
-				{
-					objectBrowserToolWindow.AutoHides = false;
-				}
-				objectBrowserToolWindow.Visible = true;
-
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
 		}
 
 		public static void PopulateRecentQueries(ComboBox comboboxRecentQueries, object obj)

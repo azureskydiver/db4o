@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace OManager.BusinessLayer.Common
 {
     public static class CommonValues
@@ -66,7 +62,7 @@ namespace OManager.BusinessLayer.Common
 
         public static bool IsPrimitive(string type)
         {
-            bool isPrimitive = false;
+            bool isPrimitive;
 
             switch (type)
             {
@@ -100,7 +96,7 @@ namespace OManager.BusinessLayer.Common
 
         public static bool IsDateTimeOrString(string type)
         {
-            bool isDateTimeOrString = false;
+            bool isDateTimeOrString;
 
             switch (type)
             {

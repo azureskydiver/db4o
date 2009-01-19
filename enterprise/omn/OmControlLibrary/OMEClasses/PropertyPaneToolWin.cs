@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using EnvDTE;
 using EnvDTE80;
 using System.Reflection;
@@ -19,8 +17,7 @@ namespace OMControlLibrary
 			{
 				if (propWindow == null)
 				{
-					//propWindow
-					PropertyPaneToolWin.CreatePropertiesPaneToolWindow(false);
+					CreatePropertiesPaneToolWindow(false);
 					PropertyPaneToolWin.propWindow.Visible = false;
 				}
 				return propWindow;
@@ -48,29 +45,24 @@ namespace OMControlLibrary
 				{
 					caption = Helper.ClassName + Helper.GetResourceString(Common.Constants.PROPERTIES_TAB_CAPTION);
 				}
-				object ctlobj = null;
+				
+				//FIXME: Always get index 1? What happens if this addins is not OMN?
 				AddIn addinobj = ViewBase.ApplicationObject.AddIns.Item(1);
 				EnvDTE80.Windows2 wins2obj = (Windows2)ViewBase.ApplicationObject.Windows;
 
-				PropertyPaneToolWin.PropWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath,
-									className, caption, guidpos, ref ctlobj);
-				if (PropertyPaneToolWin.PropWindow.AutoHides == true)
+				object ctlobj = null;
+				PropWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath, className, caption, guidpos, ref ctlobj);
+				if (PropWindow.AutoHides)
 				{
-					PropertyPaneToolWin.PropWindow.AutoHides = false;
+					PropWindow.AutoHides = false;
 				}
-				PropertyPaneToolWin.PropWindow.Visible = true;
-
-				//PropertyPaneToolWin.PropWindow.IsFloating = false;
-				//PropertyPaneToolWin.PropWindow.Linkable = false;
+				PropWindow.Visible = true;
 			}
 			catch (Exception oEx)
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
-
-
-
 	}
 
 	public class ObjectBrowserToolWin
@@ -83,8 +75,8 @@ namespace OMControlLibrary
 			{
 				if (objBrowserWindow == null)
 				{
-					ObjectBrowserToolWin.CreateObjectBrowserToolWindow();
-					ObjectBrowserToolWin.ObjBrowserWindow.Visible = false;
+					CreateObjectBrowserToolWindow();
+					ObjBrowserWindow.Visible = false;
 				}
 				return objBrowserWindow;
 			}
@@ -97,28 +89,23 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				// Helper.m_AddIn_Assembly = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8); 
-
-				string assemblypath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-				string className = Common.Constants.CLASS_NAME_OBJECTBROWSER;
-				// string guidpos = Helper.GetClassGUID(Helper.BaseClass);
-				string guidpos = Common.Constants.GUID_OBJECTBROWSER;
-				string caption = Helper.GetResourceString(Common.Constants.DB4O_BROWSER_CAPTION);
 				object ctlobj = null;
 				AddIn addinobj = ViewBase.ApplicationObject.AddIns.Item(1);
 				EnvDTE80.Windows2 wins2obj = (Windows2)ViewBase.ApplicationObject.Windows;
 
 				// Creates Tool Window and inserts the user control in it.
-				ObjectBrowserToolWin.objBrowserWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath,
-									className, caption, guidpos, ref ctlobj);
+				objBrowserWindow = wins2obj.CreateToolWindow2(
+										addinobj, 
+										Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8), 
+										Common.Constants.CLASS_NAME_OBJECTBROWSER, 
+										Helper.GetResourceString(Common.Constants.DB4O_BROWSER_CAPTION), 
+										Common.Constants.GUID_OBJECTBROWSER, ref ctlobj);
 
-				//objectBrowserToolWindow.IsFloating = false;
-				//objectBrowserToolWindow.Linkable = false;
-				if (ObjectBrowserToolWin.objBrowserWindow.AutoHides == true)
+				if (objBrowserWindow.AutoHides)
 				{
-					ObjectBrowserToolWin.objBrowserWindow.AutoHides = false;
+					objBrowserWindow.AutoHides = false;
 				}
-				ObjectBrowserToolWin.objBrowserWindow.Visible = true;
+				objBrowserWindow.Visible = true;
 			}
 			catch (Exception oEx)
 			{

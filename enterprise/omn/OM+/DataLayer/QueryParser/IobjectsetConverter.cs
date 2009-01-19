@@ -1,31 +1,25 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Reflect;
-using Db4objects.Db4o.Reflect.Generic;
-using OManager.DataLayer.Modal;
-using OManager.BusinessLayer.QueryManager;
+using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.Connection;
 using OManager.BusinessLayer.Common;
-using OManager.BusinessLayer.pagingData;
 using OManager.DataLayer.CommonDatalayer;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
 
 namespace OManager.DataLayer.QueryParser
 {
     
     public class IobjectsetConverter
     {
-       
-        private List<Hashtable> m_lstRowContent = new List<Hashtable>();
+        private readonly List<Hashtable> m_lstRowContent = new List<Hashtable>();
         private Hashtable m_hashRowContent;
-        private IObjectContainer objectContainer;
-        private bool m_refresh;
+        private readonly IObjectContainer objectContainer;
+        private readonly bool m_refresh;
 
-        private string m_classname;
+        private readonly string m_classname;
 
         public IobjectsetConverter( string classname, bool refresh)
         {
@@ -33,15 +27,13 @@ namespace OManager.DataLayer.QueryParser
             this.m_classname = classname;
             this.m_refresh = refresh;
             objectContainer=Db4oClient.Client;
-            
         }
-
-
+        
         public List<Hashtable> convertObjectIDToUIObjects(PagingData pgdata, Hashtable attribList)
         {
             try
             {
-                Hashtable hashFieldValue=null;
+                Hashtable hashFieldValue;
                 object rowObj=null ;
                 if (pgdata.ObjectId.Count < pgdata.EndIndex )
                 {
@@ -49,13 +41,11 @@ namespace OManager.DataLayer.QueryParser
                 }
                 if (attribList.Count == 0)
                 {
-                    hashFieldValue = new Hashtable();
-
-                    IReflectClass rClass = DataLayerCommon.returnReflectClass(m_classname);// objectContainer.Ext().Reflector().ForName(classname);
+                	IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_classname);// objectContainer.Ext().Reflector().ForName(classname);
 
                     if (rClass != null)
                     {
-                        IReflectField[] reff = DataLayerCommon.getDeclaredFieldsInHeirarchy(rClass);
+                        IReflectField[] reff = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rClass);
                        
 
                         if (reff != null)
@@ -85,8 +75,6 @@ namespace OManager.DataLayer.QueryParser
                         }
                     }
                 }
-
-
                 else
                 {
                     int length = 0;
@@ -99,12 +87,10 @@ namespace OManager.DataLayer.QueryParser
                         }
                     }
                     
-                    //m_levelofObject = length;
                     for (int i = pgdata.StartIndex; i < pgdata.EndIndex; i++)
                     {
                         hashFieldValue = new Hashtable();
                         m_hashRowContent = new Hashtable();
-
 
                         foreach (string attribute in attribList.Keys)
                         {
@@ -125,9 +111,9 @@ namespace OManager.DataLayer.QueryParser
                         }
                         if (hashFieldValue.Count != 0)
                         {
-                            if (!hashFieldValue.ContainsKey(OManager.BusinessLayer.Common.BusinessConstants.DB4OBJECTS_REF))
+                            if (!hashFieldValue.ContainsKey(BusinessConstants.DB4OBJECTS_REF))
                             {
-                                hashFieldValue.Add(OManager.BusinessLayer.Common.BusinessConstants.DB4OBJECTS_REF, rowObj);
+                                hashFieldValue.Add(BusinessConstants.DB4OBJECTS_REF, rowObj);
                             }
                             m_lstRowContent.Add(hashFieldValue);
                         }
@@ -192,20 +178,16 @@ namespace OManager.DataLayer.QueryParser
         {
             try
             {
-                IReflectClass rclass = DataLayerCommon.returnReflectClassfromObject(subObject);// objectContainer.Ext().Reflector().ForObject(subObject);
+                IReflectClass rclass = DataLayerCommon.returnReflectClassfromObject(subObject);
                 if (rclass != null)
                 {
-                    IReflectField rfield = DataLayerCommon.getDeclaredFieldInHeirarchy(rclass, attribName);
+                    IReflectField rfield = DataLayerCommon.GetDeclaredFieldInHeirarchy(rclass, attribName);
                     if (rfield != null)
                     {
 
                         string fieldType = rfield.GetFieldType().GetName();
                         int index = fieldType.IndexOf(',');
                         fieldType = fieldType.Substring(0, index);
-                        //if (m_levelofObject > 0)
-                        //{
-                        //    objectContainer.Ext().Refresh(subObject, m_levelofObject);
-                        //}
                         if (m_hashRowContent == null)
                         {
                             m_hashRowContent = new Hashtable();
@@ -257,16 +239,15 @@ namespace OManager.DataLayer.QueryParser
                         hash = UpdateResults(obj, attribute);
                     }
                     if (hash != null)
-                        hash.Add(OManager.BusinessLayer.Common.BusinessConstants.DB4OBJECTS_REF, obj);
+                        hash.Add(BusinessConstants.DB4OBJECTS_REF, obj);
                 }
                 else
                 {
 
-                    IReflectClass rClass = DataLayerCommon.returnReflectClass(m_classname); 
-                    //objectContainer.Ext().Reflector().ForName(classname);
+                    IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_classname); 
                     if (rClass != null)
                     {
-                        IReflectField[] reff = DataLayerCommon.getDeclaredFieldsInHeirarchy(rClass);
+                        IReflectField[] reff = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rClass);
                         if (reff != null)
                         {
                             hash = checkforprimitives(reff, obj);
