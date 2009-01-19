@@ -54,7 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusinessLayer\Common\Comman.cs" />
+    <Compile Include="BusinessLayer\Common\Common.cs" />
     <Compile Include="BusinessLayer\Common\Constants.cs" />
     <Compile Include="BusinessLayer\Config\AssemblyResolver.cs" />
     <Compile Include="BusinessLayer\Config\ISearchPath.cs" />
