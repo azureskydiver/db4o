@@ -79,8 +79,7 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				this.SetStyle(ControlStyles.CacheText |
-						  ControlStyles.OptimizedDoubleBuffer, true);
+				SetStyle(ControlStyles.CacheText | ControlStyles.OptimizedDoubleBuffer, true);
 
 				InitializeComponent();
 
@@ -115,18 +114,10 @@ namespace OMControlLibrary
 				PropertiesTab.Instance.ShowObjectPropertiesTab = false;
 				SelectTreeNodeInObjBrowser(GotFocus.Caption);
 			}
-			else
-			{
-
-
-			}
-
-
-
 		}
 
 
-		private void SelectTreeNodeInObjBrowser(string winCaptionArg)
+		private static void SelectTreeNodeInObjBrowser(string winCaptionArg)
 		{
 
 			string winCaption = winCaptionArg;

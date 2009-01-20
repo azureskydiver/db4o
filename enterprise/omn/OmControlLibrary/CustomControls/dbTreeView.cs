@@ -2,14 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Collections;
 using OManager.BusinessLayer.UIHelper;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
 using OManager.BusinessLayer.Login;
 
 namespace OMControlLibrary.Common
@@ -18,16 +15,16 @@ namespace OMControlLibrary.Common
 	{
 		#region Member Variables
 		private bool m_useInbuiltDragDrop = true;
-		private ImageList imageListDrag;
+		private readonly ImageList imageListDrag;
 		private TreeNode dragNode;
-		private ImageList imageListTreeView;
+		private readonly ImageList imageListTreeView;
 
 		Hashtable m_hashtableAssmblyNodes = new Hashtable();
 		Hashtable m_hashtableClassNodes = new Hashtable();
 
 		private TreeNode m_PreviousTreeNode = new TreeNode();
 		private TreeNode m_TreeNode = new TreeNode();
-		TreeNode treenode = null;
+		TreeNode treenode;
 
 		private ContextMenuStrip m_tvViewObjectsContextMenuStrip;
 		private ContextMenuStrip m_tvAddtoQueryContextMenuStrip;
@@ -432,51 +429,6 @@ namespace OMControlLibrary.Common
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
-			//try
-			//{
-			//    if (this.SelectedNode != null && (e.KeyCode == Keys.Q && e.Control))
-			//    {
-			//        this.ContextMenuStrip = null;
-
-			//        QueryBuilder queryBuilder = QueryBuilder.Instance;
-
-			//        List<string> list = queryBuilder.GetAllQueryGroups();
-			//        this.BuildContextMenu(list);
-
-			//        if (m_hashtableClassNodes.Contains(this.SelectedNode.Name) ||
-			//            m_hashtableAssmblyNodes.Contains(this.SelectedNode.Name))
-			//        {
-			//            this.ContextMenuStrip = m_tvViewObjectsContextMenuStrip;
-			//        }
-			//        else
-			//        {
-			//            string className = string.Empty;
-			//            string typeOfObject = string.Empty;
-
-			//            if (this.SelectedNode.Tag != null)
-			//            {
-			//                typeOfObject = Helper.GetTypeOfObject(this.SelectedNode.Tag.ToString());
-
-			//                if (Helper.IsPrimitive(typeOfObject))
-			//                {
-			//                    if (!Helper.IsArrayOrCollection(typeOfObject))
-			//                        this.ContextMenuStrip = m_tvAddtoQueryContextMenuStrip;
-			//                }
-			//            }
-			//        }
-
-			//        if (this.ContextMenuStrip != null)
-			//            this.ContextMenuStrip.Show(this, new Point(this.SelectedNode.Bounds.X + this.SelectedNode.ToString().Length,
-			//                this.SelectedNode.Bounds.Y + 5));
-			//    }
-
-			//    base.OnKeyDown(e);
-			//}
-			//catch (Exception oEx)
-			//{
-			//    LoggingHelper.ShowMessage(oEx);
-			//}
-
 		}
 
 		protected void MainMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -487,13 +439,14 @@ namespace OMControlLibrary.Common
 
 				if (tsItem.Tag != null)
 				{
-					DBContextItemClickedEventArg arg = new DBContextItemClickedEventArg(this.SelectedNode, e.ClickedItem.Tag);
+					DBContextItemClickedEventArg arg = new DBContextItemClickedEventArg(SelectedNode, e.ClickedItem.Tag);
 					arg.Item = e.ClickedItem;
 
 					if (OnContextMenuItemClicked != null)
 						OnContextMenuItemClicked(sender, arg);
+
 					if (ContextMenuStrip != null)
-						this.ContextMenuStrip.Dispose();
+						ContextMenuStrip.Dispose();
 				}
 			}
 			catch (Exception oEx)
@@ -507,7 +460,7 @@ namespace OMControlLibrary.Common
 		{
 			try
 			{
-				DBContextItemClickedEventArg arg = new DBContextItemClickedEventArg(this.SelectedNode, e.ClickedItem.Tag);
+				DBContextItemClickedEventArg arg = new DBContextItemClickedEventArg(SelectedNode, e.ClickedItem.Tag);
 
 				arg.Item = e.ClickedItem;
 				if (OnContextMenuItemClicked != null)
@@ -566,27 +519,17 @@ namespace OMControlLibrary.Common
 									TreeNode child = new TreeNode(str);
 									string strValue;
 									int index = str.LastIndexOf(',');
-									if (index == -1)
-									{
-										strValue = str;
-									}
-									else
-									{
-										strValue = str.Substring(0, index);
-									}
+									strValue = index == -1 ? str : str.Substring(0, index);
 									child.Tag = strValue;
 									child.Name = str;
-									child.ImageIndex =
-											child.SelectedImageIndex = 1;
+									child.ImageIndex = child.SelectedImageIndex = 1;
 									ParentFolder.Nodes.Add(child);
 
 									AddDummyChildNode(child);
 								}
 							}
-							ParentFolder.ImageIndex =
-							   ParentFolder.SelectedImageIndex = 5;
-							this.Nodes.Add(ParentFolder);
-
+							ParentFolder.ImageIndex = ParentFolder.SelectedImageIndex = 5;
+							Nodes.Add(ParentFolder);
 						}
 					}
 				}
@@ -597,106 +540,74 @@ namespace OMControlLibrary.Common
 			}
 		}
 
-
-		public void AddTreeNode(Hashtable list, TreeNode treenodeparent)
+		public void AddTreeNode(Hashtable classes, TreeNode treenodeparent)
 		{
-			string typeofObject = string.Empty;
 			try
 			{
-				if (list != null)
+				if (classes == null)
 				{
-					IDictionaryEnumerator enumerator =
-						 list.GetEnumerator();
+					return;
+				}
 
-					TreeNode treeNodeNew = null;
-					bool isPrimitiveType = false;
+				TreeNode treeNodeNew = null;
+
+				if (treenodeparent == null)
+					m_hashtableClassNodes.Clear();
+
+				BeginUpdate();
+
+				foreach (DictionaryEntry entry in classes)
+				{
+					Application.DoEvents();
+
+					string nodevalue = entry.Key.ToString();
+					string nodetype = entry.Value.ToString();
+
+					if (!string.IsNullOrEmpty(nodevalue))
+						treeNodeNew = new TreeNode(nodevalue);
+
+					treeNodeNew.Name = nodevalue;
+					treeNodeNew.Tag = nodetype;
 
 					if (treenodeparent == null)
-						m_hashtableClassNodes.Clear();
-
-					this.BeginUpdate();
-
-					while (enumerator.MoveNext())
 					{
+						treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 1;
 
-						string nodevalue = string.Empty;
-						string nodetype = string.Empty;
+						if (!HashtableClassNodes.ContainsKey(treeNodeNew.Name))
+							HashtableClassNodes.Add(treeNodeNew.Name, treeNodeNew);
 
-						Application.DoEvents();
+						Nodes.Add(treeNodeNew);
+						AddDummyChildNode(treeNodeNew);
+						continue;
+					}
 
-						nodevalue = enumerator.Key.ToString();
-						nodetype = enumerator.Value.ToString();
+					string typeofObject = Helper.GetTypeOfObject(nodetype);
+					treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = SetImageIndex(typeofObject);
 
-						if (!string.IsNullOrEmpty(nodevalue))
-							treeNodeNew = new TreeNode(nodevalue);
+					treenodeparent.Nodes.Add(treeNodeNew);
 
-						treeNodeNew.Name = nodevalue;
-						treeNodeNew.Tag = nodetype;
+					if (!Helper.IsPrimitive(typeofObject))
+					{
+						string parentClassName = ClassNameFor(treenodeparent);
 
-						if (treenodeparent == null)
+						bool collection = Helper.DbInteraction.CheckForCollection(parentClassName, nodevalue);
+						bool isarray = Helper.DbInteraction.CheckForArray(parentClassName, nodevalue);
+						if (Helper.DbInteraction.GetFieldCount(ClassNameFor(treeNodeNew)) > 0)
 						{
-							treeNodeNew.ImageIndex =
-							treeNodeNew.SelectedImageIndex = 1; //Classes
-
-							if (!this.HashtableClassNodes.ContainsKey(treeNodeNew.Name))
-								this.HashtableClassNodes.Add(treeNodeNew.Name, treeNodeNew);
-
-							this.Nodes.Add(treeNodeNew);
-							AddDummyChildNode(treeNodeNew);
-							continue;
+							if (!collection || !isarray)
+							{
+								AddDummyChildNode(treeNodeNew);
+								treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 1; //Classes;
+							}
 						}
 						else
 						{
-							typeofObject = Helper.GetTypeOfObject(nodetype);
-							treeNodeNew.ImageIndex =
-							   treeNodeNew.SelectedImageIndex = SetImageIndex(typeofObject);
-
-							isPrimitiveType = Helper.IsPrimitive(typeofObject);
-							treenodeparent.Nodes.Add(treeNodeNew);
-						}
-
-						if (!isPrimitiveType)
-						{
-							string param = string.Empty;
-
-							if (treeNodeNew.Name.LastIndexOf(",") == -1)
-								param = treeNodeNew.Tag.ToString();
-							else
-								param = treeNodeNew.Name;
-
-							string className = string.Empty;
-
-							if (treenodeparent.Name.LastIndexOf(',') > 0)
+							if (collection || isarray)
 							{
-								className = treenodeparent.Name;
-							}
-							else
-							{
-								className = treenodeparent.Tag.ToString();
-							}
-
-							bool collection = Helper.DbInteraction.CheckForCollection(className, nodevalue);
-							bool isarray = Helper.DbInteraction.CheckForArray(className, nodevalue);
-							if (Helper.DbInteraction.GetFieldCount(param) > 0)
-							{
-								if (!collection || !isarray)
-								{
-									AddDummyChildNode(treeNodeNew);
-									treeNodeNew.ImageIndex =
-											treeNodeNew.SelectedImageIndex = 1; //Classes;
-								}
-							}
-							else
-							{
-								if (collection || isarray)
-								{
-									treeNodeNew.ImageIndex =
-											treeNodeNew.SelectedImageIndex = 3; //Classes;
-								}
+								treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 3; //Classes;
 							}
 						}
 					}
-
 				}
 			}
 
@@ -706,12 +617,21 @@ namespace OMControlLibrary.Common
 			}
 			finally
 			{
-				//this.Sort();
-				this.EndUpdate();
+				EndUpdate();
 			}
 		}
 
-		private int SetImageIndex(string type)
+		private static string ClassNameFor(TreeNode node)
+		{
+			return IsClass(node) ? node.Name : node.Tag.ToString();
+		}
+
+		private static bool IsClass(TreeNode node)
+		{
+			return node.Name.LastIndexOf(',') > 0;
+		}
+
+		private static int SetImageIndex(string type)
 		{
 			int imageIndex = 0;
 
@@ -747,8 +667,8 @@ namespace OMControlLibrary.Common
 				//instead, when the group is expanded, childs are retrieved.
 				if (treenodeParent != null)
 				{
-					TreeNode treenodeDummyChildNode =
-							new TreeNode(Constants.DUMMY_NODE_TEXT);
+					TreeNode treenodeDummyChildNode = new TreeNode(Constants.DUMMY_NODE_TEXT);
+
 					treenodeDummyChildNode.Name = Constants.DUMMY_NODE_TEXT;
 					treenodeParent.Nodes.Add(treenodeDummyChildNode);
 				}
@@ -768,9 +688,6 @@ namespace OMControlLibrary.Common
 
 				TreeNode treeNodeNew = null;
 
-				string nodevalue = string.Empty;
-				string nodetype = string.Empty;
-
 				this.BeginUpdate();
 
 				this.Nodes.Clear();
@@ -779,7 +696,7 @@ namespace OMControlLibrary.Common
 				while (enumerator.MoveNext())
 				{
 
-					nodevalue = enumerator.Key.ToString();
+					string nodevalue = enumerator.Key.ToString();
 					List<string> classes = (List<string>)enumerator.Value;
 
 					if (!string.IsNullOrEmpty(nodevalue))
@@ -794,14 +711,14 @@ namespace OMControlLibrary.Common
 					{
 						for (int i = 0; i < classes.Count; i++)
 						{
-							TreeNode newClassesTreeNodes = new TreeNode(classes[i].ToString());
-							newClassesTreeNodes.Name = classes[i].ToString();
-							newClassesTreeNodes.Tag = classes[i].ToString();
+							TreeNode newClassesTreeNodes = new TreeNode(classes[i]);
+							newClassesTreeNodes.Name = classes[i];
+							newClassesTreeNodes.Tag = classes[i];
 							newClassesTreeNodes.ImageIndex =
 								newClassesTreeNodes.SelectedImageIndex = 1; //Classes
 
-							if (!this.HashtableAssmblyNodes.ContainsKey(newClassesTreeNodes.Name))
-								this.HashtableAssmblyNodes.Add(newClassesTreeNodes.Name, newClassesTreeNodes);
+							if (!HashtableAssmblyNodes.ContainsKey(newClassesTreeNodes.Name))
+								HashtableAssmblyNodes.Add(newClassesTreeNodes.Name, newClassesTreeNodes);
 
 							treeNodeNew.Nodes.Add(newClassesTreeNodes);
 							AddDummyChildNode(newClassesTreeNodes);
@@ -869,13 +786,12 @@ namespace OMControlLibrary.Common
 					treeNodeNew.Text = "New Folder";
 				}
 				treeNodeNew.Tag = "Fav Folder";
-				treeNodeNew.ImageIndex =
-					treeNodeNew.SelectedImageIndex = 5;
+				treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 5;
 
-				this.Nodes.Insert(0, treeNodeNew);
-				this.SelectedNode = treeNodeNew;
-				this.LabelEdit = true;
-				this.SelectedNode.BeginEdit();
+				Nodes.Insert(0, treeNodeNew);
+				SelectedNode = treeNodeNew;
+				LabelEdit = true;
+				SelectedNode.BeginEdit();
 			}
 			catch (Exception oEx)
 			{
@@ -1448,10 +1364,9 @@ namespace OMControlLibrary.Common
 							m_tvViewObjectsContextMenuStrip.Items.Add(objMainMenu1);
 
 						}
-						m_tvViewObjectsContextMenuStrip.ItemClicked += new ToolStripItemClickedEventHandler(MainMenu_ItemClicked);
-						m_tvViewObjectsContextMenuStrip.Opening += new CancelEventHandler(ContextMenuStrip_Opening);
+						m_tvViewObjectsContextMenuStrip.ItemClicked += MainMenu_ItemClicked;
+						m_tvViewObjectsContextMenuStrip.Opening += ContextMenuStrip_Opening;
 					}
-
 				}
 			}
 			catch (Exception oEx)
