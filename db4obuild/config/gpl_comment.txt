@@ -1,14 +1,14 @@
-/* Copyright (C) 2004 - 2008  db4objects Inc.  http://www.db4o.com
+/* This file is part of the db4o object database http://www.db4o.com
 
-This file is part of the db4o open source object database.
+Copyright (C) 2004 - 2009  Versant Corporation http://www.versant.com
 
 db4o is free software; you can redistribute it and/or modify it under
 the terms of version 2 of the GNU General Public License as published
-by the Free Software Foundation and as clarified by db4objects' GPL 
+by the Free Software Foundation and as clarified by Versants' GPL 
 interpretation policy, available at
 http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
-Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
-Suite 350, San Mateo, CA 94403, USA.
+Alternatively you can write to Versant Corporation
+255 Shoreline Drive, Suite 450, Redwood City, CA 94065, USA
 
 db4o is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or
