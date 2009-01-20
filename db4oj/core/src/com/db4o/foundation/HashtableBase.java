@@ -118,12 +118,16 @@ public class HashtableBase {
 	}
 	
 	private void reposition(HashtableIntEntry entry) {
-		if (entry != null) {
-			reposition(entry._next);
-			entry._next = _table[entryIndex(entry)];
-			_table[entryIndex(entry)] = entry;
-		}
-	}		
+        HashtableIntEntry currentEntry = entry; 
+        HashtableIntEntry nextEntry = null; 
+        while (currentEntry != null) 
+        { 
+            nextEntry = currentEntry._next; 
+            currentEntry._next = _table[entryIndex(currentEntry)]; 
+            _table[entryIndex(currentEntry)] = currentEntry; 
+            currentEntry = nextEntry; 
+        } 
+	}
 	
 	public Iterator4 keys() {
 		return Iterators.map(hashtableIterator(), new Function4() {
