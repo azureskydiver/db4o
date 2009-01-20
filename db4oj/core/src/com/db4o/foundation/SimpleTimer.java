@@ -33,16 +33,24 @@ public final class SimpleTimer implements Runnable {
 
 	public void stop() {
 		stopped = true;
-		synchronized (_lock) {
-			_lock.awake();
-		}
+		
+		_lock.run(new Closure4() { 
+			public Object run() {
+				_lock.awake();
+				return null;
+				}
+		});
 	}
 
 	public void run() {
 		while (!stopped) {
-			synchronized (_lock) {
-				_lock.snooze(_interval);
-			}
+			_lock.run(new Closure4() { 
+				public Object run() {
+					_lock.snooze(_interval);
+					return null;
+				}
+			});
+
 			if (!stopped) {
 				_runnable.run();
 			}
