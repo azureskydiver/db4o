@@ -17,7 +17,7 @@ namespace OMControlLibrary.Common
 
 		public const string RESOURCE_NAME = "OMControlLibrary.Resources.Resource";
 		public const string RESOURCE_NAME_JP = "OMControlLibrary.Resources.Resource.jp";
-		public const string DB4OICON = "OMAddin.Images.db4oicon.bmp";
+		public const string DB4OICON = "OMControlLibrary.Images.db4o.ico";
 
 		#region Global Constants
 		public const string VIEW_CLASSPOPERTY = "ClassProperty";

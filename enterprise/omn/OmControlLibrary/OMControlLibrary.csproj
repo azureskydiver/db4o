@@ -279,6 +279,7 @@
       <SubType>Designer</SubType>
       <DependentUpon>AboutOME.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Images\db4o.ico" />
     <EmbeddedResource Include="Images\defrag1.gif" />
     <EmbeddedResource Include="ProgressBar.resx">
       <DependentUpon>ProgressBar.cs</DependentUpon>
@@ -291,7 +292,7 @@
     <None Include="Images\show_querybuilder.gif" />
     <None Include="Images\hide_querybuilder.png" />
     <None Include="Images\show_querybuilder.png" />
-    <Content Include="Images\Browse.png" />
+    <EmbeddedResource Include="Images\Browse.png" />
     <Content Include="Images\Closefolder.gif" />
     <Content Include="Images\filter.png" />
     <Content Include="Images\next_filter.png" />

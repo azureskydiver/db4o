@@ -93,18 +93,19 @@ namespace OMAddin
 		#region Private Constants
 
 		private const string IMAGE_CONNECT = "OMAddin.Images.DBconnect.gif";
-		private const string IMAGE_DISCONNECT = "OMAddin.Images.DB_DISCONNECT2_a.GIF";
-		private const string IMAGE_XTREMECONNECT = "OMAddin.Images.XtremeConnct_2.gif";
-		private const string IMAGE_SUPPORTCASES = "OMAddin.Images.SupportCases.gif";
-		private const string IMAGE_HELP = "OMAddin.Images.support1.gif";
-
-		//Masked
 		private const string IMAGE_CONNECT_MASKED = "OMAddin.Images.DBconnect_Masked.bmp";
+		
+		private const string IMAGE_DISCONNECT = "OMAddin.Images.DB_DISCONNECT2_a.GIF";
 		private const string IMAGE_DISCONNECT_MASKED = "OMAddin.Images.DB_DISCONNECT2_b.BMP";
+		
+		private const string IMAGE_XTREMECONNECT = "OMAddin.Images.XtremeConnct_2.gif";
 		private const string IMAGE_XTREMECONNECT_MASKED = "OMAddin.Images.XtremeConnct_2_Masked.bmp";
-		private const string IMAGE_SUPPORTCASES_MASKED = "OMAddin.Images.SupportCases_Masked.bmp";//Mask.bmp";
+		
+		private const string IMAGE_SUPPORTCASES = "OMAddin.Images.SupportCases.gif";
+		private const string IMAGE_SUPPORTCASES_MASKED = "OMAddin.Images.SupportCases_Masked.bmp";
+	
+		private const string IMAGE_HELP = "OMAddin.Images.support1.gif";
 		private const string IMAGE_HELP_MASKED = "OMAddin.Images.support1_Masked.bmp";
-		//Masked
 
 		private const string COMMAND_NAME = "OMAddin.Connect.ObjectManager Enterprise";
 		private const string DB4O_HOMEPAGE = "db4objects Homepage";

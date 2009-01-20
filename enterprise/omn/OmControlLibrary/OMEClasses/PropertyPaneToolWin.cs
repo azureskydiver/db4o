@@ -33,9 +33,9 @@ namespace OMControlLibrary
 			try
 			{
 				string assemblypath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-				string className = Common.Constants.CLASS_NAME_PROPERTIES;
-				string caption = string.Empty;
-				string guidpos = Common.Constants.GUID_PROPERTIES;
+				const string className = Common.Constants.CLASS_NAME_PROPERTIES;
+				string caption;
+				const string guidpos = Common.Constants.GUID_PROPERTIES;
 
 				if (DbDetails)
 				{
@@ -52,6 +52,8 @@ namespace OMControlLibrary
 
 				object ctlobj = null;
 				PropWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath, className, caption, guidpos, ref ctlobj);
+				SetTabPicture(PropWindow, Common.Constants.DB4OICON);
+
 				if (PropWindow.AutoHides)
 				{
 					PropWindow.AutoHides = false;
@@ -62,6 +64,11 @@ namespace OMControlLibrary
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
+		}
+
+		private static void SetTabPicture(Window window, string iconResource)
+		{
+			window.SetTabPicture(Helper.GetResourceImage(iconResource));
 		}
 	}
 
@@ -101,6 +108,7 @@ namespace OMControlLibrary
 										Helper.GetResourceString(Common.Constants.DB4O_BROWSER_CAPTION), 
 										Common.Constants.GUID_OBJECTBROWSER, ref ctlobj);
 
+				objBrowserWindow.SetTabPicture(Helper.GetResourceImage(Common.Constants.DB4OICON));
 				if (objBrowserWindow.AutoHides)
 				{
 					objBrowserWindow.AutoHides = false;

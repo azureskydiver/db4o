@@ -1,4 +1,6 @@
 using System;
+using System.Drawing;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.Collections;
@@ -20,6 +22,7 @@ using System.Data;
 using OME.Crypto;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
+using stdole;
 
 namespace OMControlLibrary.Common
 {
@@ -259,44 +262,34 @@ namespace OMControlLibrary.Common
 
 		#endregion
 
-		#region Get Resource String
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="key"></param>
-		/// <returns></returns>
 		public static string GetResourceString(string key)
 		{
-			string resourceValue = string.Empty;
-			Dictionary<string, string> m_dictionaryResourceString = new Dictionary<string, string>();
 			try
 			{
-				if (m_dictionaryResourceString.ContainsKey(key))
-				{
-					resourceValue = m_dictionaryResourceString[key];
-				}
-				else
-				{
-					resourceValue = ApplicationManager.LanguageResource.GetString(key);
-					m_dictionaryResourceString.Add(key, resourceValue);
-				}
+				return ApplicationManager.ResourceManager.GetString(key);
 			}
 			catch (ArgumentNullException objargEx)
 			{
 				objargEx.ToString();
 			}
-			catch (Exception objException)
-			{
-				string strsg = "RESOURCE_KEY_NOT_PRESENT";
-				if (strsg.Contains(PLACEHOLDER_KEY))
-					strsg = strsg.Replace(PLACEHOLDER_KEY, key);
-				objException.ToString();
-
-			}
-			return resourceValue;
+			return string.Empty;
 		}
 
-		#endregion Get Resource String
+		public static StdPicture GetResourceImage(string key)
+		{
+			try
+			{
+				using (Stream imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(key))
+				{
+					return (StdPicture)MyHost.IPictureDisp(Image.FromStream(imageStream));
+				}
+			}
+			catch
+			{
+				return null;
+			}
+		}
+
 
 		#region public static bool RegisterAssembly(Path asmPath)
 		/// <summary>

@@ -1,11 +1,8 @@
 using System;
-using System.Text;
 using System.Resources;
 using System.Threading;
 using System.Globalization;
-using System.Collections.Generic;
 using OMControlLibrary.Common;
-using System.Windows.Forms;
 
 namespace OMControlLibrary
 {
@@ -23,7 +20,7 @@ namespace OMControlLibrary
 
 		#region Properties
 
-		public static ResourceManager LanguageResource
+		public static ResourceManager ResourceManager
 		{
 			get
 			{
@@ -43,9 +40,8 @@ namespace OMControlLibrary
 			{
 				if (CultureInfo.CurrentCulture.Name.Equals(Common.Constants.JAPANESE_CULTURE))
 					return SetLanguage(LanguageCodes.Japanese);
-				else
-					return SetLanguage(LanguageCodes.English);
-
+				
+				return SetLanguage(LanguageCodes.English);
 			}
 			catch (Exception)
 			{
@@ -63,28 +59,26 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				bool languageStatus = false;
-				string languageCulture = Common.Constants.ENGLISH_CULTURE;
+				string languageCulture;
 				if (lngCode == LanguageCodes.English)
 				{
-					m_ResourceManager = new ResourceManager(Common.Constants.RESOURCE_NAME, typeof(OMControlLibrary.ViewBase).Assembly);
+					m_ResourceManager = new ResourceManager(Constants.RESOURCE_NAME, typeof(ViewBase).Assembly);
 					languageCulture = Common.Constants.ENGLISH_CULTURE;
 				}
 				else if (lngCode == LanguageCodes.Japanese)
 				{
-					m_ResourceManager = new ResourceManager(Common.Constants.RESOURCE_NAME_JP, typeof(OMControlLibrary.ViewBase).Assembly);
+					m_ResourceManager = new ResourceManager(Constants.RESOURCE_NAME_JP, typeof(ViewBase).Assembly);
 					languageCulture = Common.Constants.JAPANESE_CULTURE;
 				}
 				else
 				{
-					m_ResourceManager = new ResourceManager(Common.Constants.RESOURCE_NAME, typeof(OMControlLibrary.ViewBase).Assembly);
+					m_ResourceManager = new ResourceManager(Constants.RESOURCE_NAME, typeof(ViewBase).Assembly);
 					languageCulture = Common.Constants.ENGLISH_CULTURE;
 				}
 
-				languageStatus = true;
+				const bool languageStatus = true;
 				Thread.CurrentThread.CurrentCulture = new CultureInfo(languageCulture, true);
-				System.Threading.Thread.CurrentThread.CurrentUICulture =
-					new CultureInfo(languageCulture, true);
+				Thread.CurrentThread.CurrentUICulture = new CultureInfo(languageCulture, true);
 
 				m_SelectedLanguage = lngCode;
 				return languageStatus;

@@ -15,41 +15,39 @@ using OME.Logging.Tracing;
 
 namespace OMControlLibrary
 {
-	public partial class ObjectBrowser : ViewBase
+	public partial class ObjectBrowser
 	{
 		#region Private Member Variables
 
-		string typeOfNode = string.Empty;
-		RecentQueries recConnection = null;
-		dbInteraction dbInteractionObject = null;
-		dbTreeView dbAssemblyTreeView = null;
+		RecentQueries recConnection;
+		dbInteraction dbInteractionObject;
+		dbTreeView dbAssemblyTreeView;
 
 		internal dbTreeView DbAssemblyTreeView
 		{
 			get { return dbAssemblyTreeView; }
 			set { dbAssemblyTreeView = value; }
 		}
-		Hashtable storedclasses = null;
-		Hashtable storedAssemblies = null;
-		private static int classCount = 0;
+
+		Hashtable storedclasses;
+		Hashtable storedAssemblies;
+		private static int classCount;
 		string filterString = string.Empty;
 
 		//internal
-		internal OMQuery omQuery = null;
-		internal Hashtable listQueryAttributes = null;
-		internal List<string> listSearchStrings = null;
+		internal OMQuery omQuery;
+		internal Hashtable listQueryAttributes;
+		internal List<string> listSearchStrings;
 
 		//Controls
-		QueryBuilder queryBuilder = null;
-		PropertiesTab propertiesTab = null;
+		QueryBuilder queryBuilder;
+		PropertiesTab propertiesTab;
 
 		//Constants
 		private const char CONST_COMMA_CHAR = ',';
 		private const char CONST_DOT_CHAR = '.';
 		private const char CONST_BACK_SLASH_CHAR = '\\';
 		private const string CONST_COMMA_STRING = ",";
-		private const string CONST_DOT_STRING = ".";
-		private const string CONST_BACK_SLASH_STRING = "\\";
 		private const string CONST_FILTER_DEFAULT_STRING = "<Search>";
 
 		#endregion
@@ -119,11 +117,10 @@ namespace OMControlLibrary
 			try
 			{
 				OMETrace.WriteFunctionStart();
-				ObjectBrowser.CheckForIllegalCrossThreadCalls = false;
-				this.SetLiterals();
+				CheckForIllegalCrossThreadCalls = false;
+				SetLiterals();
 				Helper.ClassName = null;
 				dbInteractionObject = new dbInteraction();
-				//Fetch All stored classes 
 
 				storedclasses = dbInteractionObject.FetchAllStoredClasses();
 
@@ -139,30 +136,18 @@ namespace OMControlLibrary
 				dbtreeviewObject.AddFavouritFolderFromDatabase();
 				dbtreeviewObject.AddTreeNode(storedclasses, null);
 
-				//Set Images for treeView
 				SetObjectBrowserImages();
 
-				//Set the Selected Class
-				if (dbtreeviewObject.Nodes.Count > 0)
-				{
-					TreeNode node = dbtreeviewObject.Nodes[0];
-					while (node != null && node.Tag != null && node.Tag.ToString() == "Fav Folder")
-					{
-						node = node.NextNode;
+				SelectFirstClassNode();
 
-					}
-					if (node != null)
-						SetClassName(new TreeViewEventArgs(node));
-				}
-				//Register contextmenu event for class treeview
-				dbtreeviewObject.OnContextMenuItemClicked += new EventHandler<DBContextItemClickedEventArg>(TreeView_OnContextMenuItemClicked);
-				dbtreeviewObject.MouseDown += new MouseEventHandler(TreeView_MouseDown);
+				dbtreeviewObject.OnContextMenuItemClicked += TreeView_OnContextMenuItemClicked;
+				dbtreeviewObject.MouseDown += TreeView_MouseDown;
+
 				propertiesTab = PropertiesTab.Instance;
 				if (classCount == 0)
 				{
 					propertiesTab.ShowClassProperties = false;
-					toolStripButtonAssemblyView.Enabled =
-						toolStripButtonFlatView.Enabled = false;
+					toolStripButtonAssemblyView.Enabled = toolStripButtonFlatView.Enabled = false;
 				}
 				recConnection = dbInteractionObject.GetCurrentRecentConnection();
 				listSearchStrings = dbInteractionObject.GetSearchString(recConnection.ConnParam);
@@ -172,9 +157,6 @@ namespace OMControlLibrary
 				OMETrace.WriteFunctionEnd();
 				toolStripButtonFlatView.Checked = true;
 				instance = this;
-
-
-
 			}
 			catch (Exception oEx)
 			{
@@ -182,41 +164,25 @@ namespace OMControlLibrary
 			}
 		}
 
-
-		#region WindowEvents
-		void _windowsEvents_WindowActivated(Window GotFocus, Window LostFocus)
+		private void SelectFirstClassNode()
 		{
-			if (LostFocus.Caption == "Closed")
+			if (dbtreeviewObject.Nodes.Count == 0)
+			{
 				return;
-			if (GotFocus.Caption != "Query Builder" && GotFocus.Caption != "db4o Browser" && GotFocus.Caption != "DataBase Properties" && GotFocus.Caption != "")
-			{
-				PropertiesTab.Instance.ShowObjectPropertiesTab = false;
-			}
-			else
-			{
-				if (toolStripButtonAssemblyView.Checked)
-				{
-					dbAssemblyTreeView.FindTreeNodesAssemblyView(storedAssemblies, GotFocus.Caption);
-				}
-				else
-				{
-					dbtreeviewObject.FindTreeNodesClasses(storedclasses, null, GotFocus.Caption);
-				}
-				SetObjectBrowserImages();
 			}
 
-
+			TreeNode node = FindFirstClassNode(dbtreeviewObject.Nodes[0]);
+			if (node != null)
+				SetClassName(node);
 		}
-		#endregion
 
-		/// <summary>
-		/// Clear Search funtionality
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void buttonClear_Click(object sender, EventArgs e)
+		private static TreeNode FindFirstClassNode(TreeNode node)
 		{
-			ClearSearch();
+			while (node != null && node.Tag != null && node.Tag.ToString() == "Fav Folder")
+			{
+				node = node.NextNode;
+			}
+			return node;
 		}
 
 		/// <summary>
@@ -226,21 +192,13 @@ namespace OMControlLibrary
 		/// <param name="e"></param>
 		private void dbtreeviewObject_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			// string nodeName = string.Empty;
 			try
 			{
 				dbTreeView dbTreeviewObj = sender as dbTreeView;
 				OMETrace.WriteFunctionStart();
 
-				//if (e.Node.Name.LastIndexOf(CONST_COMMA_CHAR) == -1 && e.Node.Tag != null)
-				//    nodeName = e.Node.Tag.ToString();
-				//else
-				//{
-				//    nodeName = e.Node.Name;
-				//}
-
 				//Set the class name to get the result 
-				SetClassName(e);
+				SetClassName(e.Node);
 
 				Helper.SelectedObject = null;
 
@@ -254,13 +212,8 @@ namespace OMControlLibrary
 
 				propertiesTab.RefreshPropertiesTab(null);
 
-				//Heightlight the selected node
-				//To do change the code
-
 				((dbTreeView)sender).UpdateTreeNodeSelection(e.Node, toolStripButtonAssemblyView.Checked);
-
-
-
+				
 				OMETrace.WriteFunctionEnd();
 			}
 			catch (Exception oEx)
@@ -277,29 +230,23 @@ namespace OMControlLibrary
 		/// <param name="e"></param>
 		private void dbtreeviewObject_AfterExpand(object sender, TreeViewEventArgs e)
 		{
-			Hashtable storedfields = null;
-
-			string nodeName = string.Empty;
-
 			try
 			{
 				OMETrace.WriteFunctionStart();
 
 				//After adding child nodes dont add again
-				if (((TreeNode)e.Node).Parent != null && ((TreeNode)e.Node).Parent.Tag != null && ((TreeNode)e.Node).Parent.Tag.ToString() == "Fav Folder")
+				if (e.Node.Parent != null && e.Node.Parent.Tag != null && e.Node.Parent.Tag.ToString() == "Fav Folder")
 				{
-					((TreeNode)e.Node).TreeView.SelectedNode = e.Node;
+					e.Node.TreeView.SelectedNode = e.Node;
 				}
+
 				if (!Helper.OnTreeViewAfterExpand(sender, e))
 					return;
 
 				//Get the name of selected item with the namespace
-				if (e.Node.Name.LastIndexOf(CONST_COMMA_CHAR) == -1)
-					nodeName = e.Node.Tag.ToString();
-				else
-					nodeName = e.Node.Name;
+				string nodeName = e.Node.Name.LastIndexOf(CONST_COMMA_CHAR) == -1 ? e.Node.Tag.ToString() : e.Node.Name;
 
-				storedfields = Helper.DbInteraction.FetchStoredFields(nodeName);
+				Hashtable storedfields = Helper.DbInteraction.FetchStoredFields(nodeName);
 
 				dbtreeviewObject.AddTreeNode(storedfields, e.Node);
 
@@ -311,7 +258,7 @@ namespace OMControlLibrary
 			}
 			finally
 			{
-				SetClassName(e);
+				SetClassName(e.Node);
 			}
 		}
 
@@ -328,7 +275,7 @@ namespace OMControlLibrary
 				{
 					if (!Helper.ClassName.Equals(e.Node.FullPath.Split('\\')[0]))
 					{
-						SetClassName(e);
+						SetClassName(e.Node);
 					}
 				}
 			}
@@ -336,69 +283,6 @@ namespace OMControlLibrary
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
-		}
-
-		/// <summary>
-		/// Excecutes the query
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void buttonRunQuery_Click(object sender, EventArgs e)
-		{
-			try
-			{
-				OMETrace.WriteFunctionStart();
-				ExecuteQuery(sender, e);
-				OMETrace.WriteFunctionEnd();
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-		}
-
-		private void ExecuteQuery(object sender, EventArgs e)
-		{
-			try
-			{
-
-				//objectBrowser_OnRunQueryClick(sender, e);
-
-
-				if (Helper.IsValidQuery)
-				{
-
-					if (Helper.HashList.Count > 0)
-					{
-						// Remove base class from helper base class hashtable
-						// so that next time it will set for the new class
-						//if (Helper.BaseClass != null)
-						//Helper.HashTableBaseClass.Clear();
-
-						CreateQueryResultToolWindow();
-
-						//Clear all expression/query group after running the query each time.
-						//queryBuilder = QueryBuilder.Instance;
-						//queryBuilder.ClearAllQueries();
-					}
-					else
-					{
-						MessageBox.Show(Helper.GetResourceString(Common.Constants.OBJECTMANAGER_MSG_RESULT_NOT_FOUND),
-										Helper.GetResourceString(Common.Constants.PRODUCT_CAPTION),
-										MessageBoxButtons.OK,
-										MessageBoxIcon.Information);
-					}
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-
-		}
-		private void listBoxAttributes_DragOver(object sender, DragEventArgs e)
-		{
-			e.Effect = DragDropEffects.Move;
 		}
 
 		private void toolStripComboBoxFilter_KeyDown(object sender, KeyEventArgs e)
@@ -575,10 +459,6 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				//if (toolStripButtonFlatView.Checked)
-				//    toolStripButtonFlatView.Checked = false;
-				//else
-				//    toolStripButtonFlatView.Checked = true;
 				if (toolStripButtonAssemblyView.Checked == false)
 				{
 					toolStripButtonAssemblyView.Checked = true;
@@ -615,25 +495,8 @@ namespace OMControlLibrary
 
 		}
 
-		private void toolStripTextBoxFind_KeyPress(object sender, KeyPressEventArgs e)
-		{
-			try
-			{
-				char c = e.KeyChar;
-
-				//Allow only alphanumeric charaters in filter textbox.
-				if (!Helper.IsAlphaNumeric(c.ToString()))
-					e.Handled = true;
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-		}
-
 		private void TreeView_OnContextMenuItemClicked(object sender, DBContextItemClickedEventArg e)
 		{
-
 			try
 			{
 				queryBuilder = QueryBuilder.Instance;
@@ -775,9 +638,7 @@ namespace OMControlLibrary
 			{
 				if (e.Button == MouseButtons.Right)
 				{
-
-
-					TreeNode treenode = null;
+					TreeNode treenode;
 					queryBuilder = QueryBuilder.Instance;
 					List<string> list = null;
 					if (dbtreeviewObject != null && dbtreeviewObject.Visible)
@@ -821,71 +682,6 @@ namespace OMControlLibrary
 			}
 		}
 
-		private void toolStripButtonPrevFilter_Click(object sender, EventArgs e)
-		{
-			try
-			{
-				if (listSearchStrings == null || (listSearchStrings != null && listSearchStrings.Count == 0))
-					return;
-
-				if (toolStripComboBoxFilter.SelectedIndex > 1)
-				{
-					toolStripComboBoxFilter.Text = listSearchStrings[toolStripComboBoxFilter.SelectedIndex - 2];
-					toolStripButtonNext.Enabled = true;
-					if (toolStripComboBoxFilter.SelectedIndex == 1)
-						toolStripButtonPrevious.Enabled = false;
-				}
-
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-		}
-
-		private void toolStripButtonNextFilter_Click(object sender, EventArgs e)
-		{
-			try
-			{
-				if (listSearchStrings == null || (listSearchStrings != null && listSearchStrings.Count == 0))
-					return;
-				if (toolStripComboBoxFilter.SelectedIndex <= 0)
-				{
-					try
-					{
-						if (toolStripComboBoxFilter.Items.IndexOf(toolStripComboBoxFilter.Text) != -1)
-						{
-							toolStripComboBoxFilter.SelectedIndex = toolStripComboBoxFilter.Items.IndexOf(toolStripComboBoxFilter.Text);
-							// toolStripComboBoxFilter.SelectedIndex=toolStripComboBoxFilter.Items[toolStripComboBoxFilter.Text]
-						}
-					}
-					catch (ArgumentException)
-					{
-					}
-				}
-				if (toolStripComboBoxFilter.SelectedIndex >= 0)
-				{
-					if (toolStripComboBoxFilter.SelectedIndex < listSearchStrings.Count - 1)
-					{
-						toolStripComboBoxFilter.Text = listSearchStrings[toolStripComboBoxFilter.SelectedIndex + 1 - 1];
-						toolStripButtonPrevious.Enabled = true;
-					}
-					else
-					{
-						toolStripComboBoxFilter.Text = listSearchStrings[listSearchStrings.Count - 1];
-						toolStripButtonNext.Enabled = false;
-					}
-				}
-
-
-
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-		}
-
 		#endregion
 
 		#region Helper Methods
@@ -906,9 +702,6 @@ namespace OMControlLibrary
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
-
-
-
 
 		/// <summary>
 		/// Show the result for selected class in both case Run Query/View Objects
@@ -1083,21 +876,21 @@ namespace OMControlLibrary
 
 				dbAssemblyTreeView.SetTreeViewImages();
 
-				this.dbAssemblyTreeView.Visible = false;
-				this.dbAssemblyTreeView.Dock = DockStyle.Fill;
-				this.dbAssemblyTreeView.AllowDrop = true;
-				this.dbAssemblyTreeView.Location = new System.Drawing.Point(0, 0);
-				this.dbAssemblyTreeView.Name = "dbtreeviewObject";
-				this.dbAssemblyTreeView.Size = new System.Drawing.Size(1234, 740);
-				this.dbAssemblyTreeView.Font = new System.Drawing.Font("Tahoma", 8F);
-				this.dbAssemblyTreeView.TabIndex = 2;
-				this.dbAssemblyTreeView.AfterCollapse += new TreeViewEventHandler(dbtreeviewObject_AfterCollapse);
-				this.dbAssemblyTreeView.AfterSelect += new TreeViewEventHandler(dbtreeviewObject_AfterSelect);
-				this.dbAssemblyTreeView.AfterExpand += new TreeViewEventHandler(dbtreeviewObject_AfterExpand);
-				this.dbAssemblyTreeView.OnContextMenuItemClicked += new EventHandler<DBContextItemClickedEventArg>(TreeView_OnContextMenuItemClicked);
-				this.dbAssemblyTreeView.MouseDown += new MouseEventHandler(TreeView_MouseDown);
+				dbAssemblyTreeView.Visible = false;
+				dbAssemblyTreeView.Dock = DockStyle.Fill;
+				dbAssemblyTreeView.AllowDrop = true;
+				dbAssemblyTreeView.Location = new System.Drawing.Point(0, 0);
+				dbAssemblyTreeView.Name = "dbtreeviewObject";
+				dbAssemblyTreeView.Size = new System.Drawing.Size(1234, 740);
+				dbAssemblyTreeView.Font = new System.Drawing.Font("Tahoma", 8F);
+				dbAssemblyTreeView.TabIndex = 2;
+				dbAssemblyTreeView.AfterCollapse += dbtreeviewObject_AfterCollapse;
+				dbAssemblyTreeView.AfterSelect += dbtreeviewObject_AfterSelect;
+				dbAssemblyTreeView.AfterExpand += dbtreeviewObject_AfterExpand;
+				dbAssemblyTreeView.OnContextMenuItemClicked += TreeView_OnContextMenuItemClicked;
+				dbAssemblyTreeView.MouseDown += TreeView_MouseDown;
 
-				this.tableLayoutPanelObjectTreeView.Controls.Add(this.dbAssemblyTreeView, 0, 1);
+				tableLayoutPanelObjectTreeView.Controls.Add(dbAssemblyTreeView, 0, 1);
 
 				//dbAssemblyTreeView.BuildContextMenu(null);
 			}
@@ -1145,14 +938,9 @@ namespace OMControlLibrary
 				}
 				else
 				{
-					//if (dbtreeviewObject.Nodes.Count < storedclasses.Count)
-					//{
-					//Clear all the nodes added to the Class Treeview
 					dbtreeviewObject.Nodes.Clear();
-					//Repopulate Class Treeview
 					dbtreeviewObject.AddFavouritFolderFromDatabase();
 					dbtreeviewObject.AddTreeNode(storedclasses, null);
-					//}
 				}
 
 				//Reset the treeview images
@@ -1169,51 +957,6 @@ namespace OMControlLibrary
 			}
 		}
 
-		//private void CreateQueryResultToolWindow()
-		//{
-		//    try
-		//    {
-		//        OMETrace.WriteFunctionStart();
-
-		//        string assemblypath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-		//        string className = "OMControlLibrary.QueryResult";
-
-		//        string guidpos = Helper.GetClassGUID(Helper.BaseClass);
-
-		//        int index = Helper.BaseClass.LastIndexOf(CONST_COMMA_CHAR);
-		//        string strClassName = Helper.BaseClass.Remove(0, index);
-
-		//        string str = Helper.BaseClass.Remove(index);
-
-		//        index = str.LastIndexOf(CONST_DOT_CHAR);
-		//        string caption = str.Remove(0, index + 1) + strClassName;
-
-		//        object ctlobj = null;
-		//        AddIn addinobj = ApplicationObject.AddIns.Item(1);
-		//        EnvDTE80.Windows2 wins2obj = (Windows2)ApplicationObject.Windows;
-
-		//        // Creates Tool Window and inserts the user control in it.
-		//        Helper.QueryResultToolWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath,
-		//                                         className, caption, guidpos, ref ctlobj);
-
-		//        QueryResult queryResult = new QueryResult();
-		//        queryResult.omQuery = this.omQuery;
-
-		//        Helper.QueryResultToolWindow.IsFloating = false;
-		//        Helper.QueryResultToolWindow.Linkable = false;
-		//        if (Helper.QueryResultToolWindow.AutoHides == true)
-		//        {
-		//            Helper.QueryResultToolWindow.AutoHides = false;
-		//        }
-		//        Helper.QueryResultToolWindow.Visible = true;
-
-		//        OMETrace.WriteFunctionEnd();
-		//    }
-		//    catch (Exception oEx)
-		//    {
-		//        LoggingHelper.ShowMessage(oEx);
-		//    }
-		//}
 		private void CreateQueryResultToolWindow()
 		{
 			try
@@ -1232,18 +975,17 @@ namespace OMControlLibrary
 				index = str.LastIndexOf(CONST_DOT_CHAR);
 				string caption = str.Remove(0, index + 1) + strClassName;
 
-				object ctlobj = null;
 				AddIn addinobj = ApplicationObject.AddIns.Item(1);
 
 				EnvDTE80.Windows2 wins2obj = (Windows2)ApplicationObject.Windows;
 
 				// Creates Tool Window and inserts the user control in it.
+				object ctlobj = null;
 				Helper.QueryResultToolWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath, "OMControlLibrary.QueryResult", caption, guidpos, ref ctlobj);
 
 				//FIXME: Why not simply call the method?
 				QueryResult queryResult = ctlobj as QueryResult;
-				delPassData del = queryResult.Setobjectid;
-				del(objectid);
+				queryResult.Setobjectid(objectid);
 
 				Helper.QueryResultToolWindow.IsFloating = false;
 				Helper.QueryResultToolWindow.Linkable = false;
@@ -1263,52 +1005,50 @@ namespace OMControlLibrary
 		/// <summary>
 		/// Set ClassName when the treenode selected
 		/// </summary>
-		/// <param name="e"></param>
-		private void SetClassName(TreeViewEventArgs e)
+		/// <param name="node"></param>
+		private void SetClassName(TreeNode node)
 		{
 			try
 			{
 				OMETrace.WriteFunctionStart();
 
-				if (e.Node.Parent == null && e.Node.Tag != null && (e.Node.Tag.ToString() == "Fav Folder" || e.Node.Tag.ToString() == "Assembly View"))
+				if (node.Parent == null && node.Tag != null && (node.Tag.ToString() == "Fav Folder" || node.Tag.ToString() == "Assembly View"))
 				{
 					PropertiesTab.Instance.ShowClassProperties = false;
 					return;
 				}
-				else
-				{
-					PropertiesTab.Instance.ShowClassProperties = true;
-				}
+				
+				PropertiesTab.Instance.ShowClassProperties = true;
 
 				//Check Selected view and set the class name accordingly
-				if (toolStripButtonAssemblyView.Checked || (e.Node.Parent != null) && (e.Node.Parent.Tag.ToString() == "Fav Folder" || e.Node.Tag.ToString() == "Assembly View"))
+				if (toolStripButtonAssemblyView.Checked || (node.Parent != null) && (node.Parent.Tag.ToString() == "Fav Folder" || node.Tag.ToString() == "Assembly View"))
 				{
-					if (e.Node.FullPath.IndexOf(CONST_BACK_SLASH_CHAR) != -1)
+					if (node.FullPath.IndexOf(CONST_BACK_SLASH_CHAR) != -1)
 					{
-						string className = e.Node.FullPath.Split(CONST_BACK_SLASH_CHAR)[1];
+						string className = node.FullPath.Split(CONST_BACK_SLASH_CHAR)[1];
 
 						if (className.IndexOf(CONST_BACK_SLASH_CHAR) != -1)
 							className = className.Split(CONST_BACK_SLASH_CHAR)[0];
 
 						Helper.ClassName = className;
 					}
-					else Helper.ClassName = e.Node.FullPath;
+					else Helper.ClassName = node.FullPath;
 
-					dbAssemblyTreeView.SelectedNode = e.Node;
+					dbAssemblyTreeView.SelectedNode = node;
 				}
 				else
 				{
 					if (Helper.ClassName != null)
 					{
-						if (!Helper.ClassName.Equals(e.Node.FullPath.Split(CONST_BACK_SLASH_CHAR)[0]))
+						if (!Helper.ClassName.Equals(node.FullPath.Split(CONST_BACK_SLASH_CHAR)[0]))
 						{
-							Helper.ClassName = e.Node.FullPath.Split(CONST_BACK_SLASH_CHAR)[0];
+							Helper.ClassName = node.FullPath.Split(CONST_BACK_SLASH_CHAR)[0];
 						}
 					}
 					else
-						Helper.ClassName = e.Node.FullPath.Split(CONST_BACK_SLASH_CHAR)[0];
+						Helper.ClassName = node.FullPath.Split(CONST_BACK_SLASH_CHAR)[0];
 
-					dbtreeviewObject.SelectedNode = e.Node;
+					dbtreeviewObject.SelectedNode = node;
 				}
 
 				OMETrace.WriteFunctionEnd();
@@ -1324,7 +1064,6 @@ namespace OMControlLibrary
 		/// </summary>
 		private void ShowAssemblyTreeView()
 		{
-			TreeNode selectedTreeNode = null;
 			try
 			{
 				//Check if Assembly button is selected
@@ -1367,21 +1106,15 @@ namespace OMControlLibrary
 					//Get the filtered node and populate the class treeview
 					if (!string.IsNullOrEmpty(filterString) && filterString == toolStripComboBoxFilter.Text.Trim().ToLower())
 					{
-						dbtreeviewObject.FindTreeNodesClasses(storedclasses, null,
-							toolStripComboBoxFilter.Text.Trim().ToLower());
+						dbtreeviewObject.FindTreeNodesClasses(storedclasses, null, toolStripComboBoxFilter.Text.Trim().ToLower());
 					}
 					else
 					{
 						//If user clears the filter value and switched to class view
-						//if (storedclasses.Count > dbAssemblyTreeView.Nodes.Count)
-						//{
-						//clear all nodes
-						//dbtreeviewObject.Nodes.Clear();
-						//repopulate the tree view
 						dbtreeviewObject.AddTreeNode(storedclasses, null);
-						//}
 					}
 
+					TreeNode selectedTreeNode;
 					if (dbAssemblyTreeView.SelectedNode != null && dbAssemblyTreeView.SelectedNode.Tag == null)
 					{
 						if (dbtreeviewObject.Nodes.Count > 0)
@@ -1407,25 +1140,20 @@ namespace OMControlLibrary
 
 		}
 
-		private void FillFilterComboBox(List<string> listSearchString)
+		private void FillFilterComboBox(IEnumerable<string> listSearchString)
 		{
 			try
 			{
 				toolStripComboBoxFilter.Items.Clear();
 				toolStripComboBoxFilter.Items.Add(CONST_FILTER_DEFAULT_STRING);
-				//toolStripComboBoxFilter.Items.Add("<Clear Search>");
-				List<string> listfilterString = listSearchString;
 
-				if (listfilterString != null)
+				if (listSearchString != null)
 				{
-					for (int i = 0; i < listfilterString.Count; i++)
+					foreach (string searchItem in listSearchString)
 					{
-						string strSearch = listfilterString[i];
-						toolStripComboBoxFilter.Items.Add(strSearch);
+						toolStripComboBoxFilter.Items.Add(searchItem);
 					}
 				}
-
-
 			}
 			catch (Exception oEx)
 			{
