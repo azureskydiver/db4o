@@ -19,19 +19,19 @@ get it to work with Transparent Activation.
 As a first step we should fill up our database with Car, Pilot and SensorReadout ._
 objects, so we have some objects to work with.
 
-.s com.db4o.f1.chapter7.TransparentActivationExample#storeCarAndSnapshots -out ..
+.s com.db4odoc.f1.chapter8.TransparentActivationExample#storeCarAndSnapshots -out ..
 
 If we now rerun the code to traverse all cars and their sensor readings, ._
 we are again confronted with the same problem that we had before, we end ._
 up with some leaves of our object graph being null.  
 
-.s com.db4o.f1.chapter7.TransparentActivationExample#retrieveSnapshotsSequentially ..
+.s com.db4odoc.f1.chapter8.TransparentActivationExample#retrieveSnapshotsSequentially ..
 
 .1 Turning On Transparent Activation ..
 
 Let's configure db4o to run in Transparent Activation mode and let's try again:
 
-.s com.db4o.f1.chapter7.TransparentActivationExample#retrieveSnapshotsSequentiallyTA ..
+.s com.db4odoc.f1.chapter8.TransparentActivationExample#retrieveSnapshotsSequentiallyTA ..
 
 Wow it worked! Is it really that easy? Principally yes. When db4o is run in ._
 Transparent Activation mode there are no surprises with null members that ._
@@ -61,7 +61,7 @@ by hand.
 
 Let's take a look at the 'Activatable' version of our Car class:
 
-.s com.db4o.f1.chapter7.Car ..
+.s com.db4odoc.f1.chapter8.Car ..
 
 Can you spot the member _activator, all the # .? net  A ..? .? java  a ..?ctivate() calls and the two ._
 methods # .? net  A ..? .? java  a ..?ctivate() and # .? net  B ..? .? java  b ..?ind( .? net  I ..?Activator) at the end?
@@ -76,7 +76,7 @@ If it is not, activation will happen at this time.
 We have added the  .? java #getPilotWithoutActivation() method ..? .? net PilotWithoutActivation property ..? to the Car class ._
 to be able to demonstrate.
 
-.s com.db4o.f1.chapter7.TransparentActivationExample#demonstrateTransparentActivation  ..
+.s com.db4odoc.f1.chapter8.TransparentActivationExample#demonstrateTransparentActivation  ..
 
 .1 Where Enhancement can help ..
 
@@ -87,7 +87,7 @@ chapter on  .l Enhancement ..  .
 
 As a final step we should clean up the database again.
 
-.s com.db4o.f1.Util#deleteAll -out ..
+.s com.db4odoc.f1.Util#deleteAll -out ..
 
 .1 Conclusion ..
 
@@ -98,4 +98,4 @@ your offline copy of the Reference documentation.
 
 .1 Full source ..
 
-.s com.db4o.f1.chapter7.TransparentActivationExample ..
+.s com.db4odoc.f1.chapter8.TransparentActivationExample ..

@@ -7,9 +7,9 @@ are prepared to tackle concurrently executing transactions.
 
 We start by preparing our database in the familiar way.
 
-.s com.db4o.f1.chapter5.ClientServerExample#setFirstCar -out ..
+.s com.db4odoc.f1.chapter6.ClientServerExample#setFirstCar -out ..
 
-.s com.db4o.f1.chapter5.ClientServerExample#setSecondCar -out ..
+.s com.db4odoc.f1.chapter6.ClientServerExample#setSecondCar -out ..
 
 .1 Embedded server ..
 
@@ -20,12 +20,12 @@ a single  .? java  VM ..?  .? net runtime ..? , we just open a db4o server on ou
 directing it to run on port 0, thereby declaring that no networking ._
 will take place.
 
-.s com.db4o.f1.chapter5.ClientServerExample#accessLocalServer -run ..
+.s com.db4odoc.f1.chapter6.ClientServerExample#accessLocalServer -run ..
 
 Again, we will delegate opening and closing the server to our ._
 environment to focus on client interactions.
 
-.s com.db4o.f1.chapter5.ClientServerExample#queryLocalServer ..
+.s com.db4odoc.f1.chapter6.ClientServerExample#queryLocalServer ..
 
 The transaction level in db4o is  .i read committed ..  . However, each ._
 client container maintains its own weak reference cache of already known ._
@@ -33,13 +33,13 @@ objects. To make all changes committed by other clients immediately, we ._
 have to explicitly refresh known objects from the server. We will delegate ._
 this task to a specialized version of our .x listResult() .. method.
 
-.s com.db4o.f1.Util#listRefreshedResult +{} -run ..
+.s com.db4odoc.f1.Util#listRefreshedResult +{} -run ..
 
-.s com.db4o.f1.chapter5.ClientServerExample#demonstrateLocalReadCommitted ..
+.s com.db4odoc.f1.chapter6.ClientServerExample#demonstrateLocalReadCommitted ..
 
 Simple rollbacks just work as you might expect now.
 
-.s com.db4o.f1.chapter5.ClientServerExample#demonstrateLocalRollback ..
+.s com.db4odoc.f1.chapter6.ClientServerExample#demonstrateLocalRollback ..
 
 .1 Networking ..
 
@@ -47,17 +47,17 @@ From here it's only a small step towards operating db4o over a TCP/IP network. .
 We just specify a port number greater than zero ._
 and set up one or more accounts for our client(s).
 
-.s com.db4o.f1.chapter5.ClientServerExample#accessRemoteServer -run ..
+.s com.db4odoc.f1.chapter6.ClientServerExample#accessRemoteServer -run ..
 
 The client connects providing host, port, user name and password.
 
-.s com.db4o.f1.chapter5.ClientServerExample#queryRemoteServer ..
+.s com.db4odoc.f1.chapter6.ClientServerExample#queryRemoteServer ..
 
 Everything else is absolutely identical to the local server examples above.
 
-.s com.db4o.f1.chapter5.ClientServerExample#demonstrateRemoteReadCommitted ..
+.s com.db4odoc.f1.chapter6.ClientServerExample#demonstrateRemoteReadCommitted ..
 
-.s com.db4o.f1.chapter5.ClientServerExample#demonstrateRemoteRollback ..
+.s com.db4odoc.f1.chapter6.ClientServerExample#demonstrateRemoteRollback ..
 
 .? java
 .1 Native Queries in Client/Server mode ..1
@@ -92,18 +92,18 @@ down gracefully.
 This is configured by calling .x setMessageRecipient() .. , passing the object ._
 that will process client-initiated messages.
 
-.s com.db4o.f1.chapter5.StartServer#run -run +{} ..s
+.s com.db4odoc.f1.chapter6.StartServer#run -run +{} ..s
 
 The message is received and processed by a .x processMessage() .. method:
 
-.s com.db4o.f1.chapter5.StartServer#processMessage -run +{} ..s
+.s com.db4odoc.f1.chapter6.StartServer#processMessage -run +{} ..s
 
 Db4o allows a client to send an arbitrary signal or message to a server ._
 by sending a plain object to the server.  The server will receive ._
 a callback message, including the object that came from the client. ._
 The server can interpret this message however it wants.
 
-.s com.db4o.f1.chapter5.StopServer#main -run +{} ..s
+.s com.db4odoc.f1.chapter6.StopServer#main -run +{} ..s
 
 .1 Putting it all together: a simple but complete db4o server ..
 
@@ -114,15 +114,15 @@ to shut itself down gracefully on demand.
 First, both the client and the server need some shared configuration ._
 information.  We will provide this using an interface:
 
-.s com.db4o.f1.chapter5.ServerConfiguration ..s
+.s com.db4odoc.f1.chapter6.ServerConfiguration ..s
 
 Now we'll create the server:
 
-.s com.db4o.f1.chapter5.StartServer ..s
+.s com.db4odoc.f1.chapter6.StartServer ..s
 
 And last but not least, the client that stops the server.
 
-.s com.db4o.f1.chapter5.StopServer ..s
+.s com.db4odoc.f1.chapter6.StopServer ..s
 
 .1 Conclusion ..
 
@@ -156,4 +156,4 @@ forums at  .l http://forums.db4o.com/forums/ .. .
 
 .1 Full source ..
 
-.s com.db4o.f1.chapter5.ClientServerExample ..
+.s com.db4odoc.f1.chapter6.ClientServerExample ..

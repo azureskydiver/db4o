@@ -37,7 +37,7 @@ database. Classes with no persistent fields should be removed ._
 from the database in order to avoid the overhead for the ._
 maintenance of class indexes.
 Let's look at the following example:
-.c package com.tutorial.f1.chapter31;
+.c package com.tutorial.f1.chapter41;
 
 import java.util.Calendar;
 import java.text.DateFormat;
@@ -65,7 +65,7 @@ public class Empty {
   	Empty empty = new Empty();
     db.set(empty);
 } ..
-.s com.tutorial.f1.chapter31.DiagnosticExample#testEmpty ..
+.s com.tutorial.f1.chapter41.DiagnosticExample#testEmpty ..
 
 Diagnostic message is produced when the execution point reaches 
 .c	db.set(empty); ..
@@ -85,7 +85,7 @@ objects of the candidate class. Try to simplify your query ._
 expression.
 For an example let's look at a predicate using 2 different ._
 unrelated clauses.
-.c package com.tutorial.f1.chapter31;
+.c package com.tutorial.f1.chapter41;
 import com.db4o.query.Predicate;
 
 public class ArbitraryQuery extends Predicate{    
@@ -111,7 +111,7 @@ public class ArbitraryQuery extends Predicate{
     	ObjectSet result = db.query(new ArbitraryQuery(i));
     	listResult(result);
 } ..
-.s com.tutorial.f1.chapter31.DiagnosticExample#testArbitrary ..
+.s com.tutorial.f1.chapter41.DiagnosticExample#testArbitrary ..
 
 
 .1 UpdateDepthGreaterOne ..
@@ -141,7 +141,7 @@ considerably reduce storage and update performance.
 
 In order to get rid of all unnecessary diagnostic information and ._
 concentrate on indexes let's create special diagnostic listener:
-.c package com.tutorial.f1.chapter31;
+.c package com.tutorial.f1.chapter41;
 
 import com.db4o.diagnostic.*;
 
@@ -157,7 +157,7 @@ The following command will install the new listener:
 .c Db4o.Configure().Diagnostic().AddListener(new IndexDiagListener()); ..
 We can check the efficacy of IndexDiagListener using queries from ._
 the previous paragraphs:
-.s com.tutorial.f1.chapter31.DiagnosticExample#testIndexDiagnostics ..
+.s com.tutorial.f1.chapter41.DiagnosticExample#testIndexDiagnostics ..
 Potentially this piece of code triggers all the diagnostic objects, ._
 but we are getting only index warning messages due to ._
 IndexDiagListener.

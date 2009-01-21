@@ -83,7 +83,8 @@ public class Doctor extends Task {
         setShowCodeExecutionResults(true);
         setWorkspace(workspace);
         
-        setInputSource(workspace + "/db4o.net/Db4oTutorial/Db4objects.Db4o.Tutorial.Chapters");
+        setInputSource(workspace + "/db4o.net/Db4oTutorial/Db4odoc.Tutorial.Chapters");
+        setSourcePathResolver("com.yetac.doctor.cmd.DotNetTutorialSourcePathResolver");
         setSourceExtension("cs");
         setArchive("doctor-applets.jar, db4o-4.5-java1.4.jar, f1.jar");
         setVariable("java", false);

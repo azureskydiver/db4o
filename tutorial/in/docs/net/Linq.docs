@@ -14,15 +14,15 @@ LINQ resources on  .l http://msdn2.microsoft.com/en-us/library/bb397926.aspx MSD
 
 .2 Linq Examples ..
 Let's prepare some objects in our database to query against:
-.s com.db4o.f1.chapter9.LinqExample#storeObjects -run ..
+.s com.db4odoc.f1.chapter10.LinqExample#storeObjects -run ..
 
 The simplest LINQ query will look like this:
-.s com.db4o.f1.chapter9.LinqExample#retrievePilot -run ..
+.s com.db4odoc.f1.chapter10.LinqExample#retrievePilot -run ..
 You can see that we are using db4o object container as a datasource, ._
 the rest of the syntax is generic to all LINQ queries.
 
 Now let's try a bit more complex selection:
-.s com.db4o.f1.chapter9.LinqExample#retrievePilotByCar -run ..
+.s com.db4odoc.f1.chapter10.LinqExample#retrievePilotByCar -run ..
 So we can constrain on one object and retrieve a list of others. You can ._
 even create completely new objects based on the retrieved information ._
 using  .i select new MyObject(field1, field2...) .. . Try to experiment with ._
@@ -34,7 +34,7 @@ and converted to SODA syntax in the runtime. However, in some cases this ._
 conversion is not possible. This can happen when query is constrained ._
 against aggregates or projections of a field value and in other cases ._
 when SODA equivalent does not exists. For example:
-.s com.db4o.f1.chapter9.LinqExample#retrievePilotUnoptimized -run ..
+.s com.db4odoc.f1.chapter10.LinqExample#retrievePilotUnoptimized -run ..
 The query still works, but it requires instantiation of all candidate ._
 objects, which is much less performant than SODA query. 
 

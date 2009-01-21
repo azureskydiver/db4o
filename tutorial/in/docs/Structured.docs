@@ -6,19 +6,19 @@ It's time to extend our business domain with another class and ._
 see how db4o handles object interrelations. Let's give our pilot ._
 a vehicle.
 
-.s com.db4o.f1.chapter2.Car ..
+.s com.db4odoc.f1.chapter2.Car ..
 
 .1 Storing structured objects ..
 
 To store a car with its pilot, we just call .x store() .. on our top level object, ._
 the car. The pilot will be stored implicitly.
 
-.s com.db4o.f1.chapter2.StructuredExample#storeFirstCar -out ..
+.s com.db4odoc.f1.chapter2.StructuredExample#storeFirstCar -out ..
 
 Of course, we need some competition here. This time we explicitly store ._
 the pilot before entering the car - this makes no difference.
 
-.s com.db4o.f1.chapter2.StructuredExample#storeSecondCar -out ..
+.s com.db4odoc.f1.chapter2.StructuredExample#storeSecondCar -out ..
 
 .1 Retrieving structured objects ..
 
@@ -26,16 +26,16 @@ the pilot before entering the car - this makes no difference.
 
 To retrieve all cars, we simply provide a 'blank' prototype.
 
-.s com.db4o.f1.chapter2.StructuredExample#retrieveAllCarsQBE ..
+.s com.db4odoc.f1.chapter2.StructuredExample#retrieveAllCarsQBE ..
 
 We can also query for all pilots, of course.
 
-.s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilotsQBE ..
+.s com.db4odoc.f1.chapter2.StructuredExample#retrieveAllPilotsQBE ..
 
 Now let's initialize our prototype to specify all cars driven by ._
 Rubens Barrichello.
 
-.s com.db4o.f1.chapter2.StructuredExample#retrieveCarByPilotQBE ..
+.s com.db4odoc.f1.chapter2.StructuredExample#retrieveCarByPilotQBE ..
 
 What about retrieving a pilot by car? We simply don't need that - ._
 if we already know the car, we can simply access the pilot field ._
@@ -50,8 +50,8 @@ other code.
 Let's constrain our query to only those cars driven by a Pilot ._
 with a specific name:
 
-.? net  .s com.db4o.f1.chapter2.StructuredExample#retrieveCarsByPilotNamePredicate +{} -run ..s  ..?
-.s com.db4o.f1.chapter2.StructuredExample#retrieveCarsByPilotNameNative ..
+.? net  .s com.db4odoc.f1.chapter2.StructuredExample#retrieveCarsByPilotNamePredicate +{} -run ..s  ..?
+.s com.db4odoc.f1.chapter2.StructuredExample#retrieveCarsByPilotNameNative ..
 
 .? net Using .NET 2.0 syntax this is a lot simpler:
 
@@ -68,12 +68,12 @@ listResults(results); ..c  ..?
 In order to use SODA for querying for a car given its pilot's name we have ._
 to descend two levels into our query.
 
-.s com.db4o.f1.chapter2.StructuredExample#retrieveCarByPilotNameQuery ..
+.s com.db4odoc.f1.chapter2.StructuredExample#retrieveCarByPilotNameQuery ..
 
 We can also constrain the pilot field with a prototype to achieve ._
 the same result.
 
-.s com.db4o.f1.chapter2.StructuredExample#retrieveCarByPilotProtoQuery ..
+.s com.db4odoc.f1.chapter2.StructuredExample#retrieveCarByPilotProtoQuery ..
 
 We have seen that descending into a query provides us with another ._
 query. Starting out from a query root we can descend in multiple directions. ._
@@ -83,7 +83,7 @@ one-directional references in our objects into true relations. ._
 Here is an example that queries for "a Pilot that is being referenced ._
 by a Car, where the Car model is 'Ferrari'":
 
-.s com.db4o.f1.chapter2.StructuredExample#retrievePilotByCarModelQuery ..
+.s com.db4odoc.f1.chapter2.StructuredExample#retrievePilotByCarModelQuery ..
 
 .g querygraph/3.gif ..
 
@@ -91,22 +91,22 @@ by a Car, where the Car model is 'Ferrari'":
 
 To update structured objects in db4o, we simply call .x store() .. on them again.
 
-.s com.db4o.f1.chapter2.StructuredExample#updateCar ..
+.s com.db4odoc.f1.chapter2.StructuredExample#updateCar ..
 
 Let's modify the pilot, too.
 
-.s com.db4o.f1.chapter2.StructuredExample#updatePilotSingleSession ..
+.s com.db4odoc.f1.chapter2.StructuredExample#updatePilotSingleSession ..
 
 Nice and easy, isn't it? But wait, there's something evil lurking ._
 right behind the corner. Let's see what happens if we split this ._
 task in two separate db4o sessions: In the first we modify our ._
 pilot and update his car:
 
-.s com.db4o.f1.chapter2.StructuredExample#updatePilotSeparateSessionsPart1 -out ..
+.s com.db4odoc.f1.chapter2.StructuredExample#updatePilotSeparateSessionsPart1 -out ..
 
 And in the second, we'll double-check our modification:
 
-.s com.db4o.f1.chapter2.StructuredExample#updatePilotSeparateSessionsPart2 ..
+.s com.db4odoc.f1.chapter2.StructuredExample#updatePilotSeparateSessionsPart2 ..
 
 Looks like we're in trouble: Why did the Pilot's points not change? ._
 What's happening here and what can we do to fix it?
@@ -137,9 +137,9 @@ db4o provides means to control update depth with very fine granularity. ._
 For our current problem we'll advise db4o to update the full graph for ._
 Car objects by setting cascadeOnUpdate() for this class accordingly.
 
-.s com.db4o.f1.chapter2.StructuredExample#updatePilotSeparateSessionsImprovedPart1 -out ..
+.s com.db4odoc.f1.chapter2.StructuredExample#updatePilotSeparateSessionsImprovedPart1 -out ..
 
-.s com.db4o.f1.chapter2.StructuredExample#updatePilotSeparateSessionsImprovedPart2 ..
+.s com.db4odoc.f1.chapter2.StructuredExample#updatePilotSeparateSessionsImprovedPart2 ..
 
 This looks much better.
 
@@ -153,11 +153,11 @@ chapter.
 
 As we have already seen, we call .x delete() .. on objects to get rid of them.
 
-.s com.db4o.f1.chapter2.StructuredExample#deleteFlat ..
+.s com.db4odoc.f1.chapter2.StructuredExample#deleteFlat ..
 
 Fine, the car is gone. What about the pilots?
 
-.s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilotsQBE ..
+.s com.db4odoc.f1.chapter2.StructuredExample#retrieveAllPilotsQBE ..
 
 Ok, this is no real surprise - we don't expect a pilot to vanish when his ._
 car is disposed of in real life, too. But what if we want an object's children ._
@@ -169,22 +169,22 @@ You may already suspect that the problem of recursive deletion (and ._
 perhaps its solution, too) is quite similar to our little update problem, and you're ._
 right. Let's configure db4o to delete a car's pilot, too, when the car is deleted.
 
-.s com.db4o.f1.chapter2.StructuredExample#deleteDeep ..
+.s com.db4odoc.f1.chapter2.StructuredExample#deleteDeep ..
 
 Again: Note that configuration should be passed to the call opening ObjectContainer.
 
 Let's have a look at our pilots again.
 
-.s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilots ..
+.s com.db4odoc.f1.chapter2.StructuredExample#retrieveAllPilots ..
 
 .2 Recursive deletion revisited ..
 
 But wait - what happens if the children of a removed object are still referenced by ._
 other objects?
 
-.s com.db4o.f1.chapter2.StructuredExample#deleteDeepRevisited ..
+.s com.db4odoc.f1.chapter2.StructuredExample#deleteDeepRevisited ..
 
-.s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilots ..
+.s com.db4odoc.f1.chapter2.StructuredExample#retrieveAllPilots ..
 
 Houston, we have a problem - and there's no simple solution at hand. Currently ._
 db4o does  .b not ..  check whether objects to be deleted are referenced anywhere ._
@@ -192,7 +192,7 @@ else, so please be very careful when using this feature.
 
 Let's clear our database for the next chapter.
 
-.s com.db4o.f1.Util#deleteAll -out ..
+.s com.db4odoc.f1.Util#deleteAll -out ..
 
 .1 Conclusion ..
 
@@ -203,4 +203,4 @@ the  .l Collections next chapter ..l .
 
 .1 Full source ..
 
-.s com.db4o.f1.chapter2.StructuredExample ..
+.s com.db4odoc.f1.chapter2.StructuredExample ..
