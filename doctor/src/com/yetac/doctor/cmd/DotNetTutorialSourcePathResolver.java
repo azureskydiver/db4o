@@ -6,7 +6,7 @@ package com.yetac.doctor.cmd;
 public class DotNetTutorialSourcePathResolver implements SourcePathResolver {
 
 	private final static String PACKAGEPATH="F1";
-	public final static String DEFAULT_PACKAGE_PATH="com/db4o/f1";
+	public final static String DEFAULT_PACKAGE_PATH="com/db4odoc/f1";
 
 	
 	

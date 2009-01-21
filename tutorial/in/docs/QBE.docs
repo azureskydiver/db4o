@@ -8,7 +8,7 @@ non-default field values. This is done via reflecting all of the fields ._
 and building a query expression where all non-default-value fields are ._
 combined with AND expressions. Here's an example from the previous chapter:
 
-.s com.db4o.f1.chapter1.FirstStepsExample#retrievePilotByName -run ..
+.s com.db4odoc.f1.chapter1.FirstStepsExample#retrievePilotByName -run ..
 
 Querying this way has some obvious limitations:
 - db4o must reflect all members of your example object.

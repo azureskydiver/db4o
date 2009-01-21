@@ -39,7 +39,7 @@ persistent classes, so if we want to use Transparent Persistence, we should ._
 make them "visible" to Transparent Persistence by ._
 implementing  .? java .i Activatable ..i ..? .? net .i IActivatable ..i ..?  interface.
 
-.s com.db4o.f1.chapter8.Car ..
+.s com.db4odoc.f1.chapter9.Car ..
 
 Note, that we've added an  .? java .i activator ..i  ..? .? net .i _activator ..i ..?  field, ._
  .? java .i bind ..i  ..? .? net .i Bind ..i ..?  and ._
@@ -50,14 +50,14 @@ with a corresponding purpose.
 Similar modifications should be done to the SensorReadout class.
 Now we are ready to test how Transparent Persistence work. First we should ._
 configure the database to use TransparentPersistenceSupport before storing objects:        
-.s com.db4o.f1.chapter8.TransparentPersistenceExample#storeCarAndSnapshots -out ..
+.s com.db4odoc.f1.chapter9.TransparentPersistenceExample#storeCarAndSnapshots -out ..
 Ok, all the objects are stored. 
 Now, let's retrieve all the stored objects and modify them:
-.s com.db4o.f1.chapter8.TransparentPersistenceExample#modifySnapshotHistory -out ..
+.s com.db4odoc.f1.chapter9.TransparentPersistenceExample#modifySnapshotHistory -out ..
 You can see that we do not have to call  .i #store ..  any more - all the objects are ._
 stored when  .i #commit ..  is called.
 Let's test that the modifications actually reached the database:
-.s com.db4o.f1.chapter8.TransparentPersistenceExample#readSnapshotHistory -out ..
+.s com.db4odoc.f1.chapter9.TransparentPersistenceExample#readSnapshotHistory -out ..
 Yes, it is all as it should be. If you want to see the difference without Transparent ._
 Persistence, run the same examples without calling  .i configureTransparentPersistence ..  .
 
@@ -77,10 +77,10 @@ your offline copy of the Reference documentation.
 
 .1 Full source ..
 
-.s com.db4o.f1.chapter8.TransparentPersistenceExample ..
-.s com.db4o.f1.chapter8.Car ..
-.s com.db4o.f1.chapter8.SensorReadout ..
-.s com.db4o.f1.chapter8.TemperatureSensorReadout ..
+.s com.db4odoc.f1.chapter9.TransparentPersistenceExample ..
+.s com.db4odoc.f1.chapter9.Car ..
+.s com.db4odoc.f1.chapter9.SensorReadout ..
+.s com.db4odoc.f1.chapter9.TemperatureSensorReadout ..
 
 
 

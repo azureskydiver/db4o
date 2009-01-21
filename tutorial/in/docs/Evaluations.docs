@@ -49,15 +49,15 @@ us into trouble: Collections are transparent to the query API, it just ._
 So how can we get this done? Let's implement an Evaluation that expects the ._
 objects passed in to be instances of type Car and checks their history size.
 
-.s com.db4o.f1.chapter6.EvenHistoryEvaluation ..
+.s com.db4odoc.f1.chapter7.EvenHistoryEvaluation ..
 
 To test it, let's add two cars with history sizes of one, respectively two:
 
-.s com.db4o.f1.chapter6.EvaluationExample#storeCars -out ..
+.s com.db4odoc.f1.chapter7.EvaluationExample#storeCars -out ..
 
 and run our evaluation against them:
 
-.s com.db4o.f1.chapter6.EvaluationExample#queryWithEvaluation ..
+.s com.db4odoc.f1.chapter7.EvaluationExample#queryWithEvaluation ..
 
 .1 Drawbacks ..
 
@@ -91,4 +91,4 @@ however, they come at a price.
 
 .1 Full source ..
 
-.s com.db4o.f1.chapter6.EvaluationExample ..
+.s com.db4odoc.f1.chapter7.EvaluationExample ..

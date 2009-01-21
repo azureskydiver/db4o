@@ -10,7 +10,7 @@ he has already gained this season.
 
 First we create a class to hold our data. It looks like this:
 
-.s com.db4o.f1.chapter1.Pilot ..
+.s com.db4odoc.f1.chapter1.Pilot ..
 
 Notice that this class does not contain any db4o-related code.
 
@@ -23,7 +23,7 @@ and will be your primary ._
 interface to db4o. Closing the .x ObjectContainer .. with the .x #close() .. method will close the ._
 database file and release all resources associated with it.
 
-.s com.db4o.f1.chapter1.FirstStepsExample#accessDb4o -run ..
+.s com.db4odoc.f1.chapter1.FirstStepsExample#accessDb4o -run ..
 
 .? java DB4OFILENAME ..?  .? net Db4oFileName ..?  is just a string value ._
 representing any filename. If the file with this name already exists, it will be opened ._
@@ -37,11 +37,11 @@ reference in a variable named 'db'.
 To store an object, we simply call .x store() .. on our database, passing ._
 any object as a parameter.
 
-.s com.db4o.f1.chapter1.FirstStepsExample#storeFirstPilot ..
+.s com.db4odoc.f1.chapter1.FirstStepsExample#storeFirstPilot ..
 
 We'll need a second pilot, too.
 
-.s com.db4o.f1.chapter1.FirstStepsExample#storeSecondPilot ..
+.s com.db4odoc.f1.chapter1.FirstStepsExample#storeSecondPilot ..
 
 .1 Retrieving objects ..
 
@@ -57,18 +57,18 @@ same (non-default) field values as the example. The results will be returned as 
 .x ObjectSet .. instance. We will use a convenience method .x #listResult() .. to display the contents ._
 of our result .x ObjectSet .. :
 
-.s com.db4o.f1.Util#listResult +{} -run ..
+.s com.db4odoc.f1.Util#listResult +{} -run ..
 
 To retrieve all pilots from our database, we provide an 'empty' prototype:
 
-.s com.db4o.f1.chapter1.FirstStepsExample#retrieveAllPilotQBE ..
+.s com.db4odoc.f1.chapter1.FirstStepsExample#retrieveAllPilotQBE ..
 
 Note that we specify 0 points, but our results were not constrained to only those Pilots ._
 with 0 points; 0 is the default value for int fields.
 
 db4o also supplies a shortcut to retrieve all instances of a class:
 
-.s com.db4o.f1.chapter1.FirstStepsExample#retrieveAllPilots ..
+.s com.db4odoc.f1.chapter1.FirstStepsExample#retrieveAllPilots ..
 
 For  .? java JDK 5 ..? .? net .NET 2.0 ..?  there also is a generics shortcut, using the ._
 query method:
@@ -78,11 +78,11 @@ query method:
 
 To query for a pilot by name:
 
-.s com.db4o.f1.chapter1.FirstStepsExample#retrievePilotByName ..
+.s com.db4odoc.f1.chapter1.FirstStepsExample#retrievePilotByName ..
 
 And to query for Pilots with a specific number of points:
 
-.s com.db4o.f1.chapter1.FirstStepsExample#retrievePilotByExactPoints ..
+.s com.db4odoc.f1.chapter1.FirstStepsExample#retrievePilotByExactPoints ..
 
 
 Of course there's much more to db4o queries. They will be covered in more depth in later chapters.
@@ -92,7 +92,7 @@ Of course there's much more to db4o queries. They will be covered in more depth 
 Updating objects is just as easy as storing them. In fact, you use the same .x store() .. method to update ._
 your objects: just call .x store() .. again after modifying any object.
 
-.s com.db4o.f1.chapter1.FirstStepsExample#updatePilot ..
+.s com.db4odoc.f1.chapter1.FirstStepsExample#updatePilot ..
 
 Notice that we query for the object first. This is an importaint point. When you call .x store() .. to modify a ._
 stored object, if the object is not 'known' (having been previously stored or retrieved during the current session), ._
@@ -107,11 +107,11 @@ examples above and run them again.
 
 Objects are removed from the database using the .x delete() .. method.
 
-.s com.db4o.f1.chapter1.FirstStepsExample#deleteFirstPilotByName ..
+.s com.db4odoc.f1.chapter1.FirstStepsExample#deleteFirstPilotByName ..
 
 Let's delete the other one, too.
 
-.s com.db4o.f1.chapter1.FirstStepsExample#deleteSecondPilotByName ..
+.s com.db4odoc.f1.chapter1.FirstStepsExample#deleteSecondPilotByName ..
 
 Please check the deletion with the retrieval examples above.
 
@@ -121,10 +121,9 @@ to provide a prototype object with the same field values.
 .1 Conclusion ..
 
 That was easy, wasn't it? We have stored, retrieved, updated and ._
-deleted objects with a few lines of code. But what about complex ._
-queries? Let's have a look at the restrictions of QBE and alternative ._
-approaches in the  .l Query next chapter ..l .
+deleted objects with a few lines of code. Now you are probably interested to see ._
+how the database looks like. Let's have a look using db4o graphical tool - Object Manager in the .l ObjectManagerOverview next chapter ..l .
 
 .1 Full source ..
 
-.s com.db4o.f1.chapter1.FirstStepsExample ..
+.s com.db4odoc.f1.chapter1.FirstStepsExample ..

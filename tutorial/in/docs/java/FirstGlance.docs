@@ -1,3 +1,4 @@
+.a FirstGlance ..
 .0 First Glance ..
 Before diving straight into the first source code samples ._
 let's get you familiar with some basics.
@@ -32,6 +33,12 @@ statistic tools etc can be added by including db4o optional library:
 .b db4o- .p version .. -optional-java1.1.jar ..
 .b db4o- .p version .. -optional-java1.2.jar ..
 .b db4o- .p version .. -optional-java5.jar ..
+
+You can also get all of the above in a single jar:
+
+.b db4o- .p version .. -full-java1.1.jar ..
+.b db4o- .p version .. -full-java1.2.jar ..
+.b db4o- .p version .. -full-java5.jar ..
    
 .1 Installation ..
 If you add one of the above db4o-*.jar files to your CLASSPATH ._
@@ -40,8 +47,20 @@ environment like  .l http://www.eclipse.org Eclipse ..  you would ._
 copy the db4o-*.jar to the /lib/ ._
 folder under your project and add db4o to your project as a library.
 
+.1 Object Manager Enterprise installation ..
+Object Manager Enterprise (OME) is an object browser for db4o databases. OME installation ._
+can be found in /ome folder of the distribution. The zip ._
+file in this folder contains the Eclipse plugin version of OME. 
+To install the plugin, you need to have a version of Eclipse >= 3.3 installed. Unzip ._
+the file to a folder of your choice. Then open Eclipse, ._
+select 'Help' -> 'Software Updates...' -> 'Available Software' from the menu. Choose ._
+'Add Site...' -> 'Local...' and select the unzipped folder. Follow the Eclipse ._
+Update Manager instructions for the OME feature from here on.
+The actual menu structure may vary over Eclipse versions. (The above applies ._
+to Eclipse 3.4 Ganymede.) When in doubt, please refer to the Eclipse documentation ._
+on Software Updates.
+Alternatively, you can install the plugin manually by simply copying the contents ._
+of the 'plugins' and 'features' folders from the unzipped folder to the corresponding ._
+subfolders in the root folder of your Eclipse installation. 
 
-
-
-.< ObjectManagerIntro ..
 .< APIOverview ..

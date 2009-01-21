@@ -1,3 +1,4 @@
+.a FirstGlance ..
 .0 First Glance ..
 Before diving straight into the first source code samples ._
 let's get you familiar with some basics.
@@ -27,5 +28,11 @@ is built for the .NET 3.5 CompactFramework.
 .1 Installation ..
 To use db4o in a development project, you only need to add one ._
 of the above Db4objects.Db4o.dll files to your project references.
+
+.1 Object Manager Enterprise installation ..
+Object Manager Enterprise (OME) is an object browser for db4o databases. OME ._
+provided with this installation comes as Visual Studio 2005/2008 plugin. OME ._
+will be installed as part of db4o setup. Alternatively, if you opt out, you can ._
+install it later by running the same installation again.
 
 .< APIOverview ..

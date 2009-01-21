@@ -13,9 +13,9 @@ IO benchmark consists of db4o_bench.jar, with the source code in the db4otools p
 The code can be compiled with JDK 1.3 and higher.
 Benchmark runs in 3 stages: 
 1.	Run a target application and log its I/O access pattern using LoggingIoAdapter:
-.s com.db4o.f1.chapter10.BenchmarkExample#runTargetApplication -run ..
+.s com.db4odoc.f1.chapter11.BenchmarkExample#runTargetApplication -run ..
 2.	Replay the recorded I/O operations once to prepare a database file.
-.s com.db4o.f1.chapter10.BenchmarkExample#prepareDbFile -run .. 
+.s com.db4odoc.f1.chapter11.BenchmarkExample#prepareDbFile -run .. 
 This step is necessary to ensure that during the grouped replay in the next step, ._
 none of the accesses will go beyond the currently existing file.
 
@@ -26,13 +26,13 @@ to avoid micro-benchmarking effects and to get time values above timer resolutio
 We divide the numbers collected in stage 3 by the respective number of ._
 operations and we calculate the  average time a particular command takes ._
 on the given system.
-.s com.db4o.f1.chapter10.BenchmarkExample#runBenchmark -run ..
+.s com.db4odoc.f1.chapter11.BenchmarkExample#runBenchmark -run ..
  
 
 .1 Benchmark Application ..
 IO Benchmark can be used with any custom application. Here we will look at it on ._
 an example of a simple CRUD application.
-.s com.db4o.f1.chapter10.CrudApplication ..
+.s com.db4odoc.f1.chapter11.CrudApplication ..
 Please, pay attention to prepare method, which configures the use of ._ 
 LoggingIoAdapter - this is the only change that is required on your application's ._
 side to make it available for benchmarking. LoggingIoAdapter will ensure that all IO access operations ._
@@ -43,7 +43,7 @@ for this specific pattern on different environments.
 .1 Benchmark Example .. 
 You can try to run the benchmark immediately on our sample application. We use ._
 a very small number of objects (10) for this example to make it faster:
-.s com.db4o.f1.chapter10.BenchmarkExample#runNormal ..
+.s com.db4odoc.f1.chapter11.BenchmarkExample#runNormal ..
 You can use the above mentioned sequence of operations to benchmark any ._
 db4o application:
 - make sure that your application uses LoggingIoAdapter for the benchmark run;
@@ -73,7 +73,7 @@ and target device results are defined in the benchmark example as:
 private static final String _resultsFile1 = "db4o-IoBenchmark-results-10.log"; .. 
 Note, that the order of files does not matter - the delays will be calculated ._
 to match the slower one.
-.s com.db4o.f1.chapter10.BenchmarkExample#runDelayed ..
+.s com.db4odoc.f1.chapter11.BenchmarkExample#runDelayed ..
 Now you are supposed to get slower results (be patient - it can take a while). The example in this tutorial might be a bit confusing ._
 as it operates on very little amount of objects (thus time adjustments can be largely rounded), ._
 and the slow results file contains ._
