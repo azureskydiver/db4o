@@ -6,8 +6,20 @@
 			<Path>doc/tutorial/Db4oTutorial.exe</Path>
 		</KnownId>
 	</KnownIds>
+
+	<Features>
+	  <Feature Title="Db4o Runtime">
+		<Description>Db4o core libraries and documentation</Description>
+		<Content Include="**/*.*" Exclude="bin/OMESetup.*"/>
+	  </Feature>
+    
+	  <Feature Title="ObjectManager Enterprise">
+		<Description>Visual Studio plugin with support for db4o databse object browsing.</Description>
+		<Content Include="bin/OMESetup.*" />
+	  </Feature>
+	 </Features>
 	
-	<Shortcuts>
+	 <Shortcuts>
 		
 		<WixShortcut>
 			<Path>doc/tutorial/Db4oTutorial.exe</Path>
