@@ -18,7 +18,7 @@ using System.Runtime.InteropServices;
 /// 
 /// [1] http://wix.sf.net/
 /// </summary>
-public class WixBuilder
+public class WixScriptBuilder
 {
 	readonly string _basePath;
 	readonly XmlTextWriter _writer;
@@ -27,7 +27,7 @@ public class WixBuilder
 	readonly WixBuilderParameters _parameters;
 	readonly Dictionary<string, string> _fileIdMapping = new Dictionary<string, string>();
 
-	public WixBuilder(TextWriter writer, string basePath, WixBuilderParameters parameters)
+	public WixScriptBuilder(TextWriter writer, string basePath, WixBuilderParameters parameters)
 	{
 		_writer = new XmlTextWriter(writer);
 		_writer.Formatting = Formatting.Indented;
@@ -69,7 +69,13 @@ public class WixBuilder
 		_writer.WriteStartElement("Feature");
 		_writer.WriteAttributeString("Id", "ApplicationFiles");
 		_writer.WriteAttributeString("Level", "1");
-		_writer.WriteAttributeString("ConfigurableDirectory", "TARGETDIR");
+		_writer.WriteAttributeString("ConfigurableDirectory", "INSTALLDIR");
+		
+		_writer.WriteAttributeString("Description", "Install Db4objects core assemblies and debug information.");
+		_writer.WriteAttributeString("Title", "Db4objects Core");
+		
+		_writer.WriteAttributeString("TypicalDefault", "install");
+		_writer.WriteAttributeString("InstallDefault", "local");	
 
 		foreach (string component in _components)
 		{
@@ -199,7 +205,9 @@ public class WixBuilder
 	{
 		string existing;
 		if (_fileIdMapping.TryGetValue(path, out existing))
+		{
 			return existing;
+		}
 
 		string newId = "_" + NewGuid().Replace('-', '_');
 		_fileIdMapping.Add(path, newId);
@@ -249,7 +257,7 @@ public class WixBuilder
 
 		using (StreamWriter stream = new StreamWriter(targetFile))
 		{
-			WixBuilder builder = new WixBuilder(stream,
+			WixScriptBuilder builder = new WixScriptBuilder(stream,
 											srcDir,
 											WixBuilderParameters.Load(parametersFile));
 			builder.Run();
