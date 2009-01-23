@@ -31,6 +31,13 @@ public class JDK {
 	    return null;
 	}
     
+	/**
+	 * always call super if you override
+	 */
+	public void commonConfigurations(Config4Impl config) {
+		
+	}
+	
     Class constructorClass(){
         return null;
     }
@@ -181,5 +188,6 @@ public class JDK {
 	public boolean useNativeSerialization() {
 		return true;
 	}
+
 
 }

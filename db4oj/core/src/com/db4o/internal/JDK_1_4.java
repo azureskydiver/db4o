@@ -11,7 +11,6 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
 /**
- * 
  * @sharpen.ignore
  */
 @decaf.Ignore(decaf.Platform.JDK11)

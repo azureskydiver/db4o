@@ -12,9 +12,6 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 
-/**
- * @exclude
- */
 public class VectorTestCase extends AbstractDb4oTestCase {
     
     private static final String VALUE_TWO = "two";
