@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import java.io.*;
 import java.lang.reflect.*;
+import java.math.*;
 import java.text.*;
 import java.util.*;
 
@@ -14,13 +15,19 @@ import com.db4o.reflect.jdk.*;
 
 
 /**
- * 
  * package and class name are hard-referenced in JavaOnly#jdk()
- * 
- * TODO: may need to use this on instead of JDK on .NET. Check!
  * @sharpen.ignore
  */
 public class JDKReflect extends JDK {
+	
+	/**
+	 * always call super if you override
+	 */
+	public void commonConfigurations(Config4Impl config) {
+		super.commonConfigurations(config);
+		config.objectClass(BigDecimal.class).storeTransientFields(true);
+	}
+
     Class constructorClass(){
         return Constructor.class;
     }

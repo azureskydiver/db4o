@@ -3,7 +3,6 @@
 package com.db4o.internal;
 
 /**
- * 
  * @sharpen.ignore
  */
 @decaf.Ignore(decaf.Platform.JDK11)

@@ -14,6 +14,8 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 			com.db4o.db4ounit.jre11.types.arrays.AllTests.class,
 			com.db4o.db4ounit.jre11.types.collections.AllTests.class,
+			BigIntegerTestCase.class,
+			BigDecimalTestCase.class,
 		};
 	}
 }
