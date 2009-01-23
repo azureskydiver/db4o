@@ -12,7 +12,7 @@
 	
 	<property name="output.dir" location="bin" />
 	
-	<target name="build" depends="configure-net2">
+	<target name="build" depends="configure-net35">
 		<mkdir dir="${output.dir}" />
 		
 		<!--
