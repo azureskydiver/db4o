@@ -321,7 +321,7 @@
 	<target name="build-net-installer-standalone" depends="init, configure, build-net-installer" />
 	
 	<target name="build-net-installer"  depends="prepare-package-structure" unless="mono">
-		<ant antfile="build-net-installer.xml">
+		<ant antfile="build-net-installer.xml" inheritall="false">
 			<property name="installer.msi" location="${dir.dist}/${db4o.file}${installer.package.suffix}.msi" />
 			<property name="installer.package.guid" value="${installer.package.guid}" />
 			<property name="installer.upgrade.guid" value="${installer.upgrade.guid}" />
