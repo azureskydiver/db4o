@@ -45,7 +45,11 @@ We'll need a second pilot, too.
 
 .1 Retrieving objects ..
 
-db4o supplies three different quering systems,  .i Query by Example ..  (QBE), ._
+The easiest way to see the content of our database is to use Object Manager ._
+Enterprise, which will be introduced ._
+in the  .l ObjectManagerOverview next chapter ..l . ._
+For now let's continue with the API overview and learn how to build db4o queries.
+db4o supplies three different querying systems,  .i Query by Example ..  (QBE), ._
 .i Native Queries ..  (NQ) and the  .i SODA Query API ..  (SODA). In this ._
 first example we will introduce QBE. Once you are familiar with storing ._
 objects, we encourage you to use  .l NativeQueries Native Queries .. , the main ._
@@ -122,7 +126,7 @@ to provide a prototype object with the same field values.
 
 That was easy, wasn't it? We have stored, retrieved, updated and ._
 deleted objects with a few lines of code. Now you are probably interested to see ._
-how the database looks like. Let's have a look using db4o graphical tool - Object Manager in the .l ObjectManagerOverview next chapter ..l .
+how the database looks like. Let's have a look using db4o graphical tool - Object Manager in the  .l ObjectManagerOverview next chapter ..l .
 
 .1 Full source ..
 

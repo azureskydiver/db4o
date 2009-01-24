@@ -71,3 +71,11 @@ When you are done working with the database in OME, you can close the connection
 by using Tools->Object Manager Enterprise-> Disconnect menu command or by using ._
 the equivalent button on the toolbar. 
 
+In the  .l Query next chapter ..l  we will explore more about db4o ._
+querying capabilities. You can continue using OME while going ._
+through the rest of this tutorial. If you are using the interactive ._
+version you will find the database in formula1.db4o file in your ._
+Local Application Data folder (normally it is C:\Documents and Settings\[user name]\Local ._
+Settings\Application Data on Windows XP/2000, c:/Users/[user name]/AppData/Local on Windows Vista) ._
+Please, remember to disconnect OME before running any of the tutorial ._
+examples, as only one active connection is allowed to the database file.  
