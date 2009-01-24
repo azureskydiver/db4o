@@ -12,28 +12,27 @@ namespace WixBuilder
 			_root = root;
 		}
 
-		public IEnumerable<IFile> FindAll(InclusionPattern pattern)
+		public IEnumerable<IFile> FindAll(System.Predicate<string> pattern)
 		{
-			return from file in AllFilesStartingAt(_root) where pattern.Matches(file) select file;
+			return FindAllIn(_root.GetAllFilesRecursively(), pattern);
 		}
 
-		private static IEnumerable<IFile> AllFilesStartingAt(IFolder root)
+		public IEnumerable<IFile> FindAllIn(IEnumerable<IFile> fileSet, System.Predicate<string> pattern)
 		{
-			foreach (var item in root.Children)
-			{
-				IFile file = item as IFile;
-				if (null != file)
-				{
-					yield return file;
-					continue;
-				}
+			return from file in fileSet where pattern(RelativePathFor(file)) select file;
+		}
 
-				IFolder folder = (IFolder)item;
-				foreach (var subFile in AllFilesStartingAt(folder))
-				{
-					yield return subFile;
-				}
+		public string RelativePathFor(IFileSystemItem file)
+		{
+			Stack<string> path = new Stack<string>();
+			IFileSystemItem current = file;
+			do
+			{
+				path.Push(current.Name);
+				current = current.Parent;
 			}
+			while (current != _root);
+			return path.Skip(1).Aggregate(path.Peek(), (acc, item) => acc + @"\" + item);
 		}
 	}
 }
