@@ -66,3 +66,10 @@ When you are done working with the database in OME, you can close the connection
 by using OME->Connect/Disconnect DB menu command or by using the equivalent ._
 button on the toolbar. 
 
+In the  .l Query next chapter ..l  we will explore more about db4o ._
+querying capabilities. You can continue using OME while going ._
+through the rest of this tutorial. If you are using the interactive ._
+version you will find the database in formula1.db4o file in your user folder. (normally it ._
+is c:/Documents and Settings/[user name] on Windows XP/2000, c:/Users/[user name] on Windows Vista and /home/[user_name] on *nix systems). ._
+Please, remember to disconnect OME before running any of the tutorial ._
+examples, as only one active connection is allowed to the database file.  
