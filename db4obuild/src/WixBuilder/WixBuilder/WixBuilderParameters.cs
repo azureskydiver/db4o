@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -15,10 +16,19 @@ public class KnownId
 
 public class Feature
 {
-	[XmlAttribute]
-	public string Title;
-	public string Description;
+	[XmlAttribute] public string Id;
+	[XmlAttribute] public string Title;
+	[XmlAttribute] public string Description;
 	public Content Content;
+
+	public void Validate()
+	{
+		if (string.IsNullOrEmpty(Id))
+			throw new ArgumentException("Expecting Id for feature '" + Title + "'");
+		if (null == Content)
+			throw new ArgumentException("Expecting content definition for feature '" + Id + "'");
+	
+	}
 }
 
 public class Content
@@ -29,18 +39,24 @@ public class Content
 
 public class WixBuilderParameters
 {
-	public WixShortcut[] Shortcuts;
+	public WixShortcut[] Shortcuts = new WixShortcut[0];
 
-	public KnownId[] KnownIds;
+	public KnownId[] KnownIds = new KnownId[0];
 
-	public Feature[] Features;
+	public Feature[] Features = new Feature[0];
 
-	public static WixBuilderParameters Load(string fname)
+	public static WixBuilderParameters FromFile(string fname)
 	{
 		using (TextReader reader = File.OpenText(fname))
 		{
 			XmlSerializer serializer = new XmlSerializer(typeof(WixBuilderParameters));
 			return (WixBuilderParameters)serializer.Deserialize(reader);
 		}
+	}
+
+	public void Validate()
+	{
+		foreach (Feature feature in Features)
+			feature.Validate();
 	}
 }

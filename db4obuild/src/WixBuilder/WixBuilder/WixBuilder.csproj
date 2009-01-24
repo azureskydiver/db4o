@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{79DA6CF7-3520-4CDE-87D2-01A1AB48CAEA}</ProjectGuid>
     <OutputType>Exe</OutputType>
@@ -58,11 +58,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileFinder.cs" />
-    <Compile Include="IFileSystemItem.cs" />
+    <Compile Include="NativeFileSystem.cs" />
+    <Compile Include="FileSystem.cs" />
     <Compile Include="InclusionPattern.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegularExpressionBuilder.cs" />
     <Compile Include="WixBuilderParameters.cs" />
+    <Compile Include="WixScriptBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
