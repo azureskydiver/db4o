@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<WixBuilderParameters>
+	<KnownIds>
+		<KnownId>
+			<Id>doc.tutorial.Db4oTutorial.exe</Id>
+			<Path>doc/tutorial/Db4oTutorial.exe</Path>
+		</KnownId>
+	</KnownIds>
+
+	<Features>
+	  <Feature Title="Db4o Runtime">
+		<Description>Db4o core libraries and documentation</Description>
+		<Content Include="**/*.*" Exclude="bin/OMESetup.*"/>
+	  </Feature>
+    
+	  <Feature Title="ObjectManager Enterprise">
+		<Description>Visual Studio plugin with support for db4o databse object browsing.</Description>
+		<Content Include="bin/OMESetup.*" />
+	  </Feature>
+	 </Features>
+	
+	 <Shortcuts>
+		
+		<WixShortcut>
+			<Path>doc/tutorial/Db4oTutorial.exe</Path>
+			<Name>Db4o Tutorial</Name>
+		</WixShortcut>
+		
+		<WixShortcut>
+			<Path>doc/api/db4o.chm</Path>
+			<Name>Db4o API</Name>
+		</WixShortcut>
+		
+		<!--
+		<WixShortcut>
+			<Path>doc/reference/default.htm</Path>
+			<Name>Db4o Reference</Name>
+		</WixShortcut>
+		-->
+		
+		<!--		
+		<WixShortcut>
+			<Path>src/core/db4o-net.sln</Path>
+			<Name>db4o core .NET  (VS Solution)</Name>
+		</WixShortcut>
+
+		<WixShortcut>
+			<Path>src/core/db4o-compact.sln</Path>
+			<Name>db4o core CompactFramework (VS Solution)</Name>
+		</WixShortcut>
+
+		<WixShortcut>
+			<Path>src/tools/db4o-net-tools.sln</Path>
+			<Name>db4o tools .NET (VS Solution)</Name>
+		</WixShortcut>
+
+		<WixShortcut>
+			<Path>src/tools/db4o-compact-tools.sln</Path>
+			<Name>db4o tools CompactFramework (VS Solution)</Name>
+		</WixShortcut>
+
+		<WixShortcut>
+			<Path>src/test/db4o-net-test.sln</Path>
+			<Name>db4o tests .NET (VS Solution)</Name>
+		</WixShortcut>
+
+		<WixShortcut>
+			<Path>src/test/db4o-compact-test.sln</Path>
+			<Name>db4o tests CompactFramework (VS Solution)</Name>
+		</WixShortcut>
+
+		-->
+	</Shortcuts>	
+</WixBuilderParameters>
+		
