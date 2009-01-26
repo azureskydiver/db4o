@@ -30,7 +30,7 @@
 		</jar>
 		<signjar keystore="${file.keystore}" jar="${file.doctor.applets.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
 		<jar destfile="${file.tutorial.jar}">
-			<fileset dir="${dir.dist.classes.tutorial}" includes="com/db4o/f1/**/*.class" />
+			<fileset dir="${dir.dist.classes.tutorial}" includes="com/db4odoc/f1/**/*.class" />
 		</jar>
 		<signjar keystore="${file.keystore}" jar="${file.tutorial.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
 <!--
