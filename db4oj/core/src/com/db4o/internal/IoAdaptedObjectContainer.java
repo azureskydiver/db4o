@@ -81,6 +81,11 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 	        byte[] buffer = new byte[8192];
 	        while (true) {
 				synchronized (_lock) {
+					
+					// Let the database engine continue to do 
+					// some work if it likes to.
+					Cool.sleepIgnoringInterruption(1);
+					
 					int read = _file.read(pos, buffer);
 					if (read <= 0) {
 						break;
@@ -89,8 +94,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 					pos += read;
 				}
 			}
-	        
-			Cool.sleepIgnoringInterruption(1);
 	
 	        synchronized (_lock) {
 				_backupFile.close();
