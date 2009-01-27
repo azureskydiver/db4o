@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Xml;
 using WixBuilder;
 using System.Linq;
@@ -12,10 +9,12 @@ public class WixScriptBuilder
 {
 	public const string WixNamespace = "http://schemas.microsoft.com/wix/2003/01/wi";
 
+	private readonly IDictionary<string, IList<string>> _featureComponents = new Dictionary<string, IList<string>>();
+
 	readonly IFolder _basePath;
 	readonly XmlWriter _writer;
 	string _currentDirectoryId;
-	readonly ArrayList _components;
+	IList<string> _components;
 	readonly WixBuilderParameters _parameters;
 	readonly Dictionary<string, string> _fileIdMapping = new Dictionary<string, string>();
 	private Predicate<string> _currentFeatureFilePredicate;
@@ -34,7 +33,7 @@ public class WixScriptBuilder
 		parameters.Validate();
 		_writer = writer;
 		_basePath = basePath;
-		_components = new ArrayList();
+		_components = new List<string>();
 		_parameters = parameters;
 		InitializeFileIdMappings(parameters);
 	}
@@ -54,8 +53,7 @@ public class WixScriptBuilder
 
 	private static XmlTextWriter XmlTextWriterFor(TextWriter writer)
 	{
-		var text = new XmlTextWriter(writer);
-		text.Formatting = Formatting.Indented;
+		var text = new XmlTextWriter(writer) {Formatting = Formatting.Indented};
 		return text;
 	}
 
@@ -83,12 +81,29 @@ public class WixScriptBuilder
 
 	void WriteApplicationFilesFeature()
 	{
+		WriteDirectoryStructure();
 		foreach (var feature in _parameters.Features)
 		{
-			_currentFeatureFilePredicate = PredicateFor(feature);
-			WriteRootDirectory();
-			WriteFeature(feature, _components.Cast<string>());
+			WriteFeature(feature, _featureComponents[feature.Id]);
 		}
+	}
+
+	private void WriteDirectoryStructure()
+	{
+		_writer.WriteStartElement("Directory");
+		_writer.WriteAttributeString("Id", "TARGETDIR");
+		_writer.WriteAttributeString("Name", "SourceDir");
+
+		foreach (var feature in _parameters.Features)
+		{
+			_components = new List<string>();
+
+			_currentFeatureFilePredicate = PredicateFor(feature);
+			WriteFeatureFiles();
+			_featureComponents[feature.Id] = _components;
+		}
+
+		_writer.WriteEndElement();
 	}
 
 	private void WriteFeature(Feature feature, IEnumerable<string> componentIds)
@@ -112,7 +127,7 @@ public class WixScriptBuilder
 		_writer.WriteEndElement();
 	}
 
-	private Predicate<string> PredicateFor(Feature feature)
+	private static Predicate<string> PredicateFor(Feature feature)
 	{
 		var content = feature.Content;
 		if (content.Include != null)
@@ -127,27 +142,10 @@ public class WixScriptBuilder
 			: Patterns.Exclude(content.Exclude);
 	}
 
-	void WriteRootDirectory()
+	void WriteFeatureFiles()
 	{
-		_writer.WriteStartElement("Directory");
-		_writer.WriteAttributeString("Id", "TARGETDIR");
-		_writer.WriteAttributeString("Name", "SourceDir");
-
 		WriteDirectoryComponent("c_" + GetIdFromPath(_basePath), _basePath);
 		WriteSubDirectories(_basePath);
-
-		_writer.WriteEndElement();
-	}
-
-	void WriteDirectory(IFolder path)
-	{
-		_writer.WriteStartElement("Directory");
-		_currentDirectoryId = WriteIdNameAndLongName(path);
-
-		WriteDirectoryComponent("c_" + _currentDirectoryId, path);
-		WriteSubDirectories(path);
-
-		_writer.WriteEndElement();
 	}
 
 	void WriteDirectoryComponent(string id, IFolder path)
@@ -191,7 +189,37 @@ public class WixScriptBuilder
 		}
 	}
 
-	void WriteFile(IFile file)
+	void WriteDirectory(IFolder path)
+	{
+		//var fileCount = FilesForCurrentFeatureFrom(path.Children.OfType<IFile>()).Count();
+		//if (fileCount > 0)
+		if (FeatureContainsFilesIn(path))
+		{
+			_writer.WriteStartElement("Directory");
+
+			_currentDirectoryId = WriteIdNameAndLongName(path);
+
+			WriteDirectoryComponent("c_" + _currentDirectoryId, path);
+			WriteSubDirectories(path);
+
+			_writer.WriteEndElement();
+		}
+	}
+
+	private bool FeatureContainsFilesIn(IFolder path)
+	{
+		IEnumerable<IFileSystemItem> many = path.Children.SelectMany(item =>
+		                                            	{
+		                                            		IFolder folder = item as IFolder;
+		                                            		return folder != null
+		                                            		       	? folder.Children
+		                                            		       	: new[] {item};
+		                                            	});
+
+		return FilesForCurrentFeatureFrom(many.OfType<IFile>()).Count() > 0;
+	}
+
+	void WriteFile(IFileSystemItem file)
 	{
 		_writer.WriteStartElement("File");
 		string id = WriteIdNameAndLongName(file);

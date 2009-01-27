@@ -30,6 +30,16 @@ namespace WixBuilder.Tests.Wix
 		{
 			return new WixComponent(SelectElements("//wix:Component[@Id = '" + componentRef + "']").AssertSingle());
 		}
+
+		public IEnumerable<WixElement> ResolveDirectoryById(string id)
+		{
+			return SelectElements("//wix:Directory[@Id='" + id + "']").Select(element => new WixElement(element));
+		}
+
+		public IEnumerable<WixElement> ResolveDirectoryByName(string name)
+		{
+			return SelectElements("//wix:Directory[@LongName='" + name + "']").Select(element => new WixElement(element));
+		}
 	}
 
 
@@ -82,6 +92,11 @@ namespace WixBuilder.Tests.Wix
 	{
 		public WixFile(XmlElement element) : base(element)
 		{
+		}
+
+		public string Name
+		{
+			get { return GetAttribute("Name"); }
 		}
 	}
 
