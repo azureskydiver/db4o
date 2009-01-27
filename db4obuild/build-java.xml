@@ -1267,7 +1267,7 @@
 				<pathelement location="${file.decaf.annotations}" />
 			</classpath>
 			
-			<bottom><![CDATA[<i>Copyright 2007 db4objects Inc. All rights reserved.</i>]]></bottom>
+			<bottom><![CDATA[<i>Copyright 2008 Versant Corporation. All rights reserved.</i>]]></bottom>
 			<fileset dir="${dir.j.core.src}" includes="com/db4o/**/*.java">
 				<exclude name="com/db4o/internal/**/*.java" />
 				<exclude name="com/db4o/foundation/**/*.java" />
@@ -1310,7 +1310,7 @@
         		<pathelement location="${file.decaf.annotations}" />
         	</classpath>
         						
-        	<bottom><![CDATA[<i>Copyright 2007 db4objects Inc. All rights reserved.</i>]]></bottom>
+        	<bottom><![CDATA[<i>Copyright 2008 Versant Corporation. All rights reserved.</i>]]></bottom>
             <fileset dir="${dir.osgi.src}" includes="com/db4o/**/*.java"/>
             <group title="OSGi Services" packages="com.db4o.osgi" />
         </javadoc>
