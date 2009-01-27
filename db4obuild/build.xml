@@ -160,7 +160,7 @@
 			<arg value="-SkipNamespacesWithoutSummaries=True" />
 			<arg value="-SdkLinksOnWeb=False" />
             <arg value="-AssemblyVersionInfo=AssemblyVersion" />
-			<arg value="-CopyrightText=Copyright (C) 2004 - 2005  db4objects Inc." />
+			<arg value="-CopyrightText=Copyright (C) 2004 - 2008  Versant Corporation" />
             <arg value="-CopyrightHref=http://www.db4o.com/" />
 			<arg value="-CleanIntermediates=True" />
 		</exec>
@@ -183,7 +183,7 @@
 			<arg value="-SkipNamespacesWithoutSummaries=True" />
 			<arg value="-SdkLinksOnWeb=False" />
             <arg value="-AssemblyVersionInfo=AssemblyVersion" />
-			<arg value="-CopyrightText=Copyright (C) 2004 - 2005  db4objects Inc." />
+			<arg value="-CopyrightText=Copyright (C) 2004 - 2008  Versant Corporation" />
             <arg value="-CopyrightHref=http://www.db4o.com/" />
 			<arg value="-IncludeFavorites=True" />			
 		</exec>
@@ -208,7 +208,7 @@
 			<arg value="-SkipNamespacesWithoutSummaries=True" />
 			<arg value="-SdkLinksOnWeb=False" />
             <arg value="-AssemblyVersionInfo=AssemblyVersion" />
-			<arg value="-CopyrightText=Copyright (C) 2004 - 2005  db4objects Inc." />
+			<arg value="-CopyrightText=Copyright (C) 2004 - 2008  Versant Corporation" />
             <arg value="-CopyrightHref=http://www.db4o.com/" />
 			<arg value="-IncludeFavorites=True" />
 			<!--
