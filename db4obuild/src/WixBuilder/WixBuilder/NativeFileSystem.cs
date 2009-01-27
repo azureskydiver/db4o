@@ -189,7 +189,7 @@ namespace WixBuilder
 
 		static string GetShortPathName(string name)
 		{
-			var builder = new StringBuilder(new string(' ', name.Length));
+			var builder = new StringBuilder(new string(' ', name.Length+1));
 			int cch = GetShortPathName(name, builder, builder.Capacity);
 			if (cch > builder.Capacity)
 			{

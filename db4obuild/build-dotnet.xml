@@ -344,7 +344,7 @@
 	
 	</target>
 
-	<target name="build-all" depends="check-dependencies, build-core, build-admin, build-tutorial">
+	<target name="build-all" depends="check-dependencies, build-core, build-admin, build-tutorial, build-omn">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
@@ -401,6 +401,13 @@
 
 	<target name="build-tutorial" unless="mono">
 		<ant antfile="build-dotnet-tutorial.xml">
+		</ant>
+	</target>
+	
+	<target name="build-omn" unless="mono">
+		<ant antfile="build-omn.xml" target="build-omn" dir="${dir.build}">
+			<property name="svn.revision" value="${db4oj.svn.revision}" />
+			<property name="dir.base" value="${dir.working}" />
 		</ant>
 	</target>
 	

@@ -120,6 +120,120 @@ namespace WixBuilder.Tests
 			WixAssert.AssertDirectoryComponent((IFolder) root["Doc"], docComponent);
 		}
 
+		//[Test]
+		public void TestMultipleFeaturesReferencesFilesInCommonFolder()
+		{
+			var parameters = new WixBuilderParameters
+			{
+				Features = new[]
+				{
+					new Feature
+					{
+						Id = "CHM_FILES",
+						Title = "Documentation",
+						Description = "Windows Help Files",
+						Content = new Content
+						{
+							Include = @"Doc\*.chm"
+						}
+					},
+
+					new Feature
+					{
+						Id = "TXT_Files",
+						Title = "Text Files",
+						Description = "Text Files",
+						Content = new Content
+						{
+							Include= @"Doc\*.TXT"
+						}
+					}
+				}
+			};
+			
+			WixDocument wix = WixDocumentFor(parameters);
+			wix.ResolveDirectoryByName("Doc").AssertSingle();
+		}
+
+		[Test]
+		public void TestMultipleFeaturesSingleTARGETDIR()
+		{
+			WixDocument wix = WixDocumentFor(ParametersForMultipleFeaturesTest());
+			Assert.AreEqual(2, wix.Features.Count());
+			wix.ResolveDirectoryById("TARGETDIR").AssertSingle();
+		}
+		
+		[Test]
+		public void TestMultipleFeaturesFileAddedOnlyOnce()
+		{
+			WixDocument wix = WixDocumentFor(ParametersForMultipleFeaturesTest());
+			Assert.AreEqual(2, wix.Features.Count());
+
+			Assert.AreEqual(1, wix.Files.Where(file => file.Id == "foo_exe").Count());
+		}
+
+		[Test]
+		public void TestMultipleFeaturesDirectoriesAppearOnlyOnce()
+		{
+			WixDocument wix = WixDocumentFor(ParametersForMultipleFeaturesTest());
+			Assert.AreEqual(2, wix.Features.Count());
+
+			wix.ResolveDirectoryByName("Doc").AssertSingle();
+		}
+
+		[Test]
+		public void TestFeaturesReferencesCorrectComponents()
+		{
+			WixDocument wix = WixDocumentFor(ParametersForMultipleFeaturesTest());
+			Assert.AreEqual(2, wix.Features.Count());
+
+			WixFeature wixFeature = wix.Features.Where(feature => feature.Id == "Documentation").AssertSingle();
+			string componentRef = wixFeature.ComponentReferences.AssertSingle();
+			WixComponent component = wix.ResolveComponentReference(componentRef);
+
+			WixAssert.AssertDirectoryComponent((IFolder) root["Doc"], component);
+		}
+
+		private static WixBuilderParameters ParametersForMultipleFeaturesTest()
+		{
+			return new WixBuilderParameters
+			       	{
+			       		Features = new[]
+			       		           	{
+			       		           		new Feature
+			       		           			{
+			       		           				Id = "Documentation",
+			       		           				Title = "Documentation",
+			       		           				Description = "all the docs",
+			       		           				Content = new Content
+			       		           				          	{
+			       		           				          		Include = @"Doc\*.*"
+			       		           				          	}
+			       		           			},
+
+			       		           		new Feature
+			       		           			{
+			       		           				Id="ApplicationFiles",
+			       		           				Title = "Visual Studio 2005 Plugin",
+			       		           				Description = "Visual Studio 2005 Plugin",
+			       		           				Content = new Content
+			       		           				          	{
+			       		           				          		Include=@"Bin\*.*"
+			       		           				          	}
+			       		           			}
+			       		           	},
+
+			       		KnownIds = new []
+			       		           	{
+			       		           		new KnownId
+			       		           			{
+			       		           				Id = "foo_exe",
+			       		           				Path = @"Bin\foo.exe"
+			       		           			}
+			       		           	}
+			       	};
+		}
+
 		[Test]
 		public void TestWixNamespace()
 		{
