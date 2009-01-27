@@ -10,8 +10,8 @@ import com.db4o.internal.cs.config.*;
  * Factory class to open db4o servers and to connect db4o clients
  * to them.
  * <br><br>
- * <b>Note:<b><br>
- * This class is made available in db4o-X.x-cs-java.jar / Db4objects.Db4o.CS.dll
+ * <b>Note:<br>
+ * This class is made available in db4o-X.x-cs-java.jar / Db4objects.Db4o.CS.dll</b>
  * @since 7.5
  */
 public class Db4oClientServer {
