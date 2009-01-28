@@ -15,7 +15,14 @@ namespace WixBuilder.Tests
 		internal static void AssertWixDirectory(IFileSystemItem expected, XmlElement actual)
 		{
 			Assert.AreEqual("Directory", actual.Name);
-			Assert.AreEqual(expected.Name, actual.GetAttribute("LongName"));
+			if (expected.Name == expected.ShortPathName)
+			{
+				Assert.AreEqual(string.Empty, actual.GetAttribute("LongName"));
+			}
+			else
+			{
+				Assert.AreEqual(expected.Name, actual.GetAttribute("LongName"));
+			}
 			Assert.AreEqual(expected.ShortPathName, actual.GetAttribute("Name"));
 		}
 

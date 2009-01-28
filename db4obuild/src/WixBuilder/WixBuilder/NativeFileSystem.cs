@@ -159,7 +159,7 @@ namespace WixBuilder
 
 			public IFileSystemItem this[string name]
 			{
-				get { return (from item in Children where item.Name == name select item).Single();  }
+				get { return (from item in Children where item.Name == name select item).FirstOrDefault(); }
 			}
 
 			public IEnumerable<IFileSystemItem> Children

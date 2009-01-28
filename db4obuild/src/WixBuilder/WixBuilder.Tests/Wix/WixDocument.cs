@@ -6,19 +6,14 @@ namespace WixBuilder.Tests.Wix
 {
 	public class WixDocument : WixElement
 	{
-		public WixDocument(XmlDocument document)
-			: base(document.DocumentElement)
-		{
-		}
-
 		public IEnumerable<WixFeature> Features
 		{
-			get { return SelectElements("//wix:Feature").Select(element => new WixFeature(element)); }
+			get { return SelectElements("//wix:Feature").Select(element => element.ToWix<WixFeature>()); }
 		}
 
 		public IEnumerable<WixComponent> Components
 		{
-			get { return SelectElements("//wix:Component").Select(element => new WixComponent(element)); }
+			get { return SelectElements("//wix:Component").Select(element => element.ToWix<WixComponent>()); }
 		}
 
 		public IEnumerable<WixFile> Files
@@ -28,31 +23,55 @@ namespace WixBuilder.Tests.Wix
 
 		public WixComponent ResolveComponentReference(string componentRef)
 		{
-			return new WixComponent(SelectElements("//wix:Component[@Id = '" + componentRef + "']").AssertSingle());
+			return SelectElements("//wix:Component[@Id = '" + componentRef + "']").AssertSingle().ToWix<WixComponent>();
 		}
 
-		public IEnumerable<WixElement> ResolveDirectoryById(string id)
+		public WixDirectory ResolveDirectoryById(string id)
 		{
-			return SelectElements("//wix:Directory[@Id='" + id + "']").Select(element => new WixElement(element));
+			return SelectElements("//wix:Directory[@Id='" + id + "']").AssertSingle().ToWix<WixDirectory>();
 		}
 
-		public IEnumerable<WixElement> ResolveDirectoryByName(string name)
+		public IEnumerable<WixDirectory> ResolveDirectoryByName(string name)
 		{
-			return SelectElements("//wix:Directory[@LongName='" + name + "']").Select(element => new WixElement(element));
+			return SelectElements("//wix:Directory[@LongName='" + name + "' or @Name='" + name + "']").Select(element => element.ToWix<WixDirectory>());
+		}
+
+		public WixDirectory ResolveDirectoryRef(string id)
+		{
+			return SelectElements("//wix:DirectoryRef[@Id='" + id + "']").AssertSingle().ToWix<WixDirectory>();
+		}
+
+		public WixFeature FeatureById(string id)
+		{
+			return Features.Where(f => f.Id == id).AssertSingle();
 		}
 	}
 
+	static class XmlElementExtensions
+	{
+		public static T ToWix<T>(this XmlElement source) where T : WixElement, new()
+		{
+			return new T {XmlElement = source};
+		}
+	}
 
 	public class WixElement
 	{
-		private readonly XmlElement _element;
-		private readonly XmlNamespaceManager namespaces;
+		private XmlElement _element;
+		private XmlNamespaceManager namespaces;
 
-		public WixElement(XmlElement element)
+		public WixElement()
+		{	
+		}
+
+		internal XmlElement XmlElement
 		{
-			_element = element;
-			namespaces = new XmlNamespaceManager(element.OwnerDocument.NameTable);
-			namespaces.AddNamespace("wix", WixScriptBuilder.WixNamespace);
+			set
+			{
+				_element = value;
+				namespaces = new XmlNamespaceManager(value.OwnerDocument.NameTable);
+				namespaces.AddNamespace("wix", WixScriptBuilder.WixNamespace);
+			}
 		}
 
 		public XmlElement ParentElement
@@ -78,10 +97,6 @@ namespace WixBuilder.Tests.Wix
 
 	public class WixReferenceableElement : WixElement
 	{
-		public WixReferenceableElement(XmlElement element) : base(element)
-		{
-		}
-
 		public string Id
 		{
 			get { return GetAttribute("Id"); }
@@ -90,23 +105,38 @@ namespace WixBuilder.Tests.Wix
 
 	public class WixFile : WixReferenceableElement
 	{
-		public WixFile(XmlElement element) : base(element)
-		{
-		}
-
 		public string Name
 		{
 			get { return GetAttribute("Name"); }
 		}
 	}
 
-	public class WixFeature : WixReferenceableElement
+	public class WixDirectory : WixReferenceableElement
 	{
-		public WixFeature(XmlElement element)
-			: base(element)
+		public IEnumerable<WixShortcut> Shortcuts
 		{
+			get
+			{
+				return SelectElements("wix:Component/wix:Shortcut").Select(element => element.ToWix<WixShortcut>());
+			}
+		}
+	}
+
+	public class WixShortcut : WixReferenceableElement
+	{
+		public string Target
+		{
+			get { return GetAttribute("Target"); }
 		}
 
+		public string WorkingDirectory
+		{
+			get { return GetAttribute("WorkingDirectory"); }
+		}
+	}
+
+	public class WixFeature : WixReferenceableElement
+	{
 		public IEnumerable<string> ComponentReferences
 		{
 			get { return SelectNodes("wix:ComponentRef/@Id").Cast<XmlAttribute>().Select(attr => attr.Value);  }
@@ -125,14 +155,9 @@ namespace WixBuilder.Tests.Wix
 
 	public class WixComponent : WixReferenceableElement
 	{
-		public WixComponent(XmlElement element)
-			: base(element)
-		{
-		}
-
 		public IEnumerable<WixFile> Files
 		{
-			get { return SelectElements("wix:File").Select(e => new WixFile(e)); }
+			get { return SelectElements("wix:File").Select(e => e.ToWix<WixFile>()); }
 		}
 
 		public override string ToString()

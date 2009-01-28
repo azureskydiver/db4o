@@ -90,7 +90,7 @@ namespace WixBuilder.Tests
 
 		public IFileSystemItem this[string name]
 		{
-			get { return (from item in _items where item.Name == name select item).Single(); }
+			get { return (from item in _items where item.Name == name select item).FirstOrDefault(); }
 		}
 
 		public override string ToString()

@@ -17,11 +17,22 @@ class Program
 {
 	static int Main(string[] argv)
 	{
-		if (3 != argv.Length)
+		try
 		{
-			Console.WriteLine("WixBuilder <src dir> <wix parameters file> <target file>");
+			RunWixScriptBuilder(argv);
+		}
+		catch (Exception x)
+		{
+			System.Console.Error.WriteLine(x);
 			return -1;
 		}
+		return 0;
+	}
+
+	private static void RunWixScriptBuilder(string[] argv)
+	{
+		if (3 != argv.Length)
+			throw new ArgumentException("WixBuilder <src dir> <wix parameters file> <target file>");
 
 		string srcDir = argv[0];
 		string parametersFile = argv[1];
@@ -30,11 +41,10 @@ class Program
 		using (StreamWriter stream = new StreamWriter(targetFile))
 		{
 			WixScriptBuilder builder = new WixScriptBuilder(stream,
-											srcDir,
-											WixBuilderParameters.FromFile(parametersFile));
+			                                                srcDir,
+			                                                WixBuilderParameters.FromFile(parametersFile));
 			builder.Build();
 		}
-		return 0;
 	}
 }
 
