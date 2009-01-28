@@ -11,18 +11,32 @@ namespace WixBuilder.Tests
 	[TestFixture]
 	public class WixScriptBuilderTestCase
 	{
-		private readonly IFolder root = new FolderMock("root")
-			.EnterFolder("Bin")
-				.AddFiles("foo.exe", "bar.dll")
-			.LeaveFolder()
-			.EnterFolder("Doc")
-				.AddFiles("foo.chm", "README.TXT")
-			.LeaveFolder()
-			.GetFolder();
+		private IFolder root; 
+
+		[SetUp]
+		public void SetUpFolderLayout()
+		{
+			root = CreateFolderBuilder()
+				.EnterFolder("Bin")
+					.AddFiles("foo.exe", "bar.dll")
+				.LeaveFolder()
+				.EnterFolder("Doc")
+					.AddFiles("foo.chm", "README.TXT")
+				.LeaveFolder()
+				.EnterFolder("Src")
+					.AddFiles("foo.boo", "foo.booproj")
+				.LeaveFolder()
+				.GetFolder();
+		}
+
+		protected virtual IFolderBuilder CreateFolderBuilder()
+		{
+			return new FolderMock("root");
+		}
 
 		private WixDocument WixDocumentFor(WixBuilderParameters parameters)
 		{
-			return new WixDocument(RunScriptBuilderWith(parameters));
+			return RunScriptBuilderWith(parameters).DocumentElement.ToWix<WixDocument>();
 		}
 
 		private XmlDocument RunScriptBuilderWith(WixBuilderParameters parameters)
@@ -32,7 +46,7 @@ namespace WixBuilder.Tests
 			return LoadXml(resultingDocument.ToString());
 		}
 
-		private XmlDocument LoadXml(string xmlString)
+		private static XmlDocument LoadXml(string xmlString)
 		{
 			var document = new XmlDocument();
 			document.LoadXml(xmlString);
@@ -43,21 +57,21 @@ namespace WixBuilder.Tests
 		[ExpectedException(typeof(ArgumentException))]
 		public void TestEmptyFeatureId()
 		{
-			RunScriptBuilderWith(new WixBuilderParameters { Features = new[] {new Feature { Id = "", Content = new Content() }}});
+			RunScriptBuilderWith(new WixBuilderParameters { Features = new[] { new Feature { Id = "", Content = new Content() } } });
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentException))]
 		public void TestNullFeatureId()
 		{
-			RunScriptBuilderWith(new WixBuilderParameters { Features = new[] { new Feature { Id = null, Content = new Content() }}});
+			RunScriptBuilderWith(new WixBuilderParameters { Features = new[] { new Feature { Id = null, Content = new Content() } } });
 		}
 
 		[Test]
 		[ExpectedException(typeof(ArgumentException))]
 		public void TestNullFeatureContent()
 		{
-			RunScriptBuilderWith(new WixBuilderParameters { Features = new[] { new Feature { Id = "id", Content = null }}});
+			RunScriptBuilderWith(new WixBuilderParameters { Features = new[] { new Feature { Id = "id", Content = null } } });
 		}
 
 		[Test]
@@ -86,15 +100,15 @@ namespace WixBuilder.Tests
 
 			var document = WixDocumentFor(parameters);
 			var fileWithKnownId = (from file in document.Files where file.Id == "foo" select file).AssertSingle();
-			WixAssert.AssertFile((root["Bin"] as IFolder)["foo.exe"], fileWithKnownId);
+			WixAssert.AssertFile(DirectoryFromRoot("Bin")["foo.exe"], fileWithKnownId);
 		}
 
 		[Test]
 		public void TestSingleFeatureComponents()
 		{
 			var parameters = new WixBuilderParameters
-			                 {
-			                 	Features = new[]
+							 {
+								 Features = new[]
 			                 	           {
 			                 	           	new Feature
 			                 	           	{
@@ -107,7 +121,7 @@ namespace WixBuilder.Tests
 			                 	           		          }
 			                 	           	}
 			                 	           }
-			                 };
+							 };
 
 			WixDocument wix = WixDocumentFor(parameters);
 
@@ -117,10 +131,11 @@ namespace WixBuilder.Tests
 
 			string componentRef = featureElement.ComponentReferences.AssertSingle();
 			WixComponent docComponent = wix.ResolveComponentReference(componentRef);
-			WixAssert.AssertDirectoryComponent((IFolder) root["Doc"], docComponent);
+			WixAssert.AssertDirectoryComponent(DirectoryFromRoot("Doc"), docComponent);
 		}
 
-		//[Test]
+		[Test]
+		[Ignore("Still considering the feature")]
 		public void TestMultipleFeaturesReferencesFilesInCommonFolder()
 		{
 			var parameters = new WixBuilderParameters
@@ -150,7 +165,7 @@ namespace WixBuilder.Tests
 					}
 				}
 			};
-			
+
 			WixDocument wix = WixDocumentFor(parameters);
 			wix.ResolveDirectoryByName("Doc").AssertSingle();
 		}
@@ -160,9 +175,9 @@ namespace WixBuilder.Tests
 		{
 			WixDocument wix = WixDocumentFor(ParametersForMultipleFeaturesTest());
 			Assert.AreEqual(2, wix.Features.Count());
-			wix.ResolveDirectoryById("TARGETDIR").AssertSingle();
+			wix.ResolveDirectoryById("TARGETDIR");
 		}
-		
+
 		[Test]
 		public void TestMultipleFeaturesFileAddedOnlyOnce()
 		{
@@ -191,14 +206,194 @@ namespace WixBuilder.Tests
 			string componentRef = wixFeature.ComponentReferences.AssertSingle();
 			WixComponent component = wix.ResolveComponentReference(componentRef);
 
-			WixAssert.AssertDirectoryComponent((IFolder) root["Doc"], component);
+			WixAssert.AssertDirectoryComponent(DirectoryFromRoot("Doc"), component);
+		}
+
+		[Test]
+		public void MissingFolderForShortcut()
+		{
+			var parameters = new WixBuilderParameters
+			{
+				Features = new[]
+					{
+             	           	new Feature
+             	           	{
+             	           		Id = "Documentation",
+             	           		Title = "Documentation",
+             	           		Description = "all the docs",
+             	           		Content = new Content
+             	           		          {
+             	           		          	Include = @"Doc\*.*"
+             	           		          },
+
+             	           		Shortcuts = new[]
+             	           		            {
+             	           		            	new Shortcut
+             	           		            	{
+             	           		            		Name = "Foo documentation",
+             	           		            		Path = @"Doc/Bar/bar.chm"
+             	           		            	}
+             	           		            }
+             	           	},
+             	           },
+			};
+
+			try
+			{
+				RunScriptBuilderWith(parameters);
+			}
+			catch (ArgumentException x)
+			{
+				Assert.AreEqual("Could not find file 'Doc/Bar/bar.chm' required by shortcut 'Foo documentation'", x.Message);
+			}
+		}
+
+		[Test]
+		public void MissingFileForShortcut()
+		{
+			var parameters = new WixBuilderParameters
+			 {
+				 Features = new[]
+					{
+             	           	new Feature
+             	           	{
+             	           		Id = "Documentation",
+             	           		Title = "Documentation",
+             	           		Description = "all the docs",
+             	           		Content = new Content
+             	           		          {
+             	           		          	Include = @"Doc\*.*"
+             	           		          },
+
+             	           		Shortcuts = new[]
+             	           		            {
+             	           		            	new Shortcut
+             	           		            	{
+             	           		            		Name = "Foo documentation",
+             	           		            		Path = @"Doc/bar.chm"
+             	           		            	}
+             	           		            }
+             	           	},
+             	           },
+			 };
+
+			try
+			{
+				RunScriptBuilderWith(parameters);
+			}
+			catch (ArgumentException x)
+			{
+				Assert.AreEqual("Could not find file 'Doc/bar.chm' required by shortcut 'Foo documentation'", x.Message);
+			}
+		}
+
+		[Test]
+		public void TestShortcuts()
+		{
+			var parameters = new WixBuilderParameters
+			{
+				Features = new[]
+				{
+					new Feature
+					{
+						Id = "Documentation",
+						Title = "Documentation",
+						Description = "all the docs",
+						Content = new Content
+						{
+							Include = @"Doc\*.*"
+						},
+						
+						Shortcuts = new[]
+						{
+							new Shortcut
+							{
+                                Name = "Foo documentation",
+								Path = @"Doc/foo.chm"
+							}
+						}
+					},
+
+					new Feature
+					{
+						Id = "SourceFiles",
+						Title = "Source Files",
+						Description = "all the source files",
+						Content = new Content
+						{
+							Include = @"Src\*.*"
+						},
+						
+						Shortcuts = new[]
+						{
+							new Shortcut
+							{
+                                Name = "Foo Project File",
+								Path = @"Src/foo.booproj"
+							}
+						}
+					},
+
+					
+					new Feature
+					{
+						Id="ApplicationFiles",
+						Title = "Visual Studio 2005 Plugin",
+						Description = "Visual Studio 2005 Plugin",
+						Content = new Content
+						{
+							Include=@"Bin\*.*"
+						}
+					}
+				},
+
+				KnownIds = new[]
+				{
+					new KnownId
+					{
+						Id = "foo_help",
+						Path = @"Doc/foo.chm"
+					},
+					new KnownId
+					{
+						Id = "foo_project",
+						Path = @"Src/foo.booproj"
+					}
+				}
+			};
+
+			var wixDocument = WixDocumentFor(parameters);
+			var targetMenuFolder = wixDocument.ResolveDirectoryRef("TargetMenuFolder");
+
+			var shortcutsByTarget = targetMenuFolder.Shortcuts.ToLookup(s => s.Target);
+			var knownIdsByPath = parameters.KnownIds.ToLookup(ki => ki.Path);
+			foreach (var feature in parameters.Features)
+			{
+				var wixFeature = wixDocument.FeatureById(feature.Id);
+				foreach (var shortcut in feature.Shortcuts)
+				{
+					var shortcutId = knownIdsByPath[shortcut.Path].AssertSingle();
+					var shortcutTarget = "[#" + shortcutId.Id + "]";
+					var wixShortcut = shortcutsByTarget[shortcutTarget].AssertSingle();
+
+					var parentComponentId = wixShortcut.ParentElement.ToWix<WixComponent>().Id;
+					Assert.IsTrue(
+						wixFeature.ComponentReferences.Contains(parentComponentId),
+						"Shortcut '" + shortcut.Name + "' is not referenced from feature '" + feature.Id + "'.");
+				}
+			}
+		}
+
+		private IFolder DirectoryFromRoot(string name)
+		{
+			return (IFolder)root[name];
 		}
 
 		private static WixBuilderParameters ParametersForMultipleFeaturesTest()
 		{
 			return new WixBuilderParameters
-			       	{
-			       		Features = new[]
+					{
+						Features = new[]
 			       		           	{
 			       		           		new Feature
 			       		           			{
@@ -223,7 +418,7 @@ namespace WixBuilder.Tests
 			       		           			}
 			       		           	},
 
-			       		KnownIds = new []
+						KnownIds = new[]
 			       		           	{
 			       		           		new KnownId
 			       		           			{
@@ -231,7 +426,7 @@ namespace WixBuilder.Tests
 			       		           				Path = @"Bin\foo.exe"
 			       		           			}
 			       		           	}
-			       	};
+					};
 		}
 
 		[Test]

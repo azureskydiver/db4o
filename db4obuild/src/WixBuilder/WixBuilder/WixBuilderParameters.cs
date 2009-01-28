@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Xml.Serialization;
 
-public class WixShortcut
+public class Shortcut
 {
 	public string Path;
 	public string Name;
@@ -20,6 +20,7 @@ public class Feature
 	[XmlAttribute] public string Title;
 	[XmlAttribute] public string Description;
 	public Content Content;
+	public Shortcut[] Shortcuts = new Shortcut[0];
 
 	public void Validate()
 	{
@@ -39,8 +40,6 @@ public class Content
 
 public class WixBuilderParameters
 {
-	public WixShortcut[] Shortcuts = new WixShortcut[0];
-
 	public KnownId[] KnownIds = new KnownId[0];
 
 	public Feature[] Features = new Feature[0];

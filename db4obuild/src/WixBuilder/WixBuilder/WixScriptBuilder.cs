@@ -14,7 +14,7 @@ public class WixScriptBuilder
 	readonly IFolder _basePath;
 	readonly XmlWriter _writer;
 	string _currentDirectoryId;
-	IList<string> _components;
+	private readonly IList<string> _components = new List<string>();
 	readonly WixBuilderParameters _parameters;
 	readonly Dictionary<string, string> _fileIdMapping = new Dictionary<string, string>();
 	private Predicate<string> _currentFeatureFilePredicate;
@@ -33,7 +33,6 @@ public class WixScriptBuilder
 		parameters.Validate();
 		_writer = writer;
 		_basePath = basePath;
-		_components = new List<string>();
 		_parameters = parameters;
 		InitializeFileIdMappings(parameters);
 	}
@@ -60,71 +59,125 @@ public class WixScriptBuilder
 	public void Build()
 	{
 		_writer.WriteStartDocument();
-		_writer.WriteStartElement("Wix");
-		_writer.WriteAttributeString("xmlns", WixNamespace);
-		_writer.WriteStartElement("Fragment");
-		_writer.WriteAttributeString("Id", "DirectoriesFilesAndComponents");
+		StartElement("Wix");
+		WriteAttribute("xmlns", WixNamespace);
+		StartElement("Fragment");
+		WriteAttribute("Id", "DirectoriesFilesAndComponents");
 
 		WriteApplicationFilesFeature();
 
-		_writer.WriteEndElement();
-		_writer.WriteEndElement();
+		EndElement();
+		EndElement();
 		_writer.WriteEndDocument();
 	}
 
 	void WriteComponentRef(string component)
 	{
-		_writer.WriteStartElement("ComponentRef");
-		_writer.WriteAttributeString("Id", component);
+		StartElement("ComponentRef");
+		WriteAttribute("Id", component);
+		EndElement();
+	}
+
+	private void WriteAttribute(string attributeName, string attributeValue)
+	{
+		_writer.WriteAttributeString(attributeName, attributeValue);
+	}
+
+	private void EndElement()
+	{
 		_writer.WriteEndElement();
+	}
+
+	private void StartElement(string elementName)
+	{
+		_writer.WriteStartElement(elementName);
 	}
 
 	void WriteApplicationFilesFeature()
 	{
 		WriteDirectoryStructure();
+
+		WriteShortcuts();
+
+		WriteFeatures(_featureComponents);
+	}
+
+	private void WriteShortcuts()
+	{
+		StartElement("DirectoryRef");
+		WriteAttribute("Id", "TargetMenuFolder");
+
 		foreach (var feature in _parameters.Features)
 		{
-			WriteFeature(feature, _featureComponents[feature.Id]);
+			var writtenComponentId = WriteNonEmptyFeatureShortcutList(feature);
+			if (writtenComponentId == null)
+				continue;
+
+			_featureComponents[feature.Id].Add(writtenComponentId);
+		}
+
+		EndElement();
+	}
+
+	private string WriteNonEmptyFeatureShortcutList(Feature feature)
+	{
+		if (feature.Shortcuts.Length == 0)
+			return null;
+		
+		var componentId = feature.Id + "_Shortcuts";
+		StartComponent(componentId);
+		foreach (var shortcut in feature.Shortcuts)
+		{
+			WriteShortcut(shortcut);
+		}
+		EndComponent();
+		return componentId;
+	}
+
+	private void WriteFeatures(IDictionary<string, IList<string>> componentsByFeatureId)
+	{
+		foreach (var feature in _parameters.Features)
+		{
+			WriteFeature(feature, componentsByFeatureId[feature.Id]);
 		}
 	}
 
 	private void WriteDirectoryStructure()
 	{
-		_writer.WriteStartElement("Directory");
-		_writer.WriteAttributeString("Id", "TARGETDIR");
-		_writer.WriteAttributeString("Name", "SourceDir");
+		StartElement("Directory");
+		WriteAttribute("Id", "TARGETDIR");
+		WriteAttribute("Name", "SourceDir");
 
 		foreach (var feature in _parameters.Features)
 		{
-			_components = new List<string>();
-
+			_components.Clear();
 			_currentFeatureFilePredicate = PredicateFor(feature);
 			WriteFeatureFiles();
-			_featureComponents[feature.Id] = _components;
+			_featureComponents[feature.Id] = _components.ToList();
 		}
 
-		_writer.WriteEndElement();
+		EndElement();
 	}
 
 	private void WriteFeature(Feature feature, IEnumerable<string> componentIds)
 	{
-		_writer.WriteStartElement("Feature");
-		_writer.WriteAttributeString("Id", feature.Id);
-		_writer.WriteAttributeString("Level", "1");
-		_writer.WriteAttributeString("ConfigurableDirectory", "INSTALLDIR");
+		StartElement("Feature");
+		WriteAttribute("Id", feature.Id);
+		WriteAttribute("Level", "1");
+		WriteAttribute("ConfigurableDirectory", "INSTALLDIR");
 		
-		_writer.WriteAttributeString("Description", feature.Description);
-		_writer.WriteAttributeString("Title", feature.Title);
+		WriteAttribute("Description", feature.Description);
+		WriteAttribute("Title", feature.Title);
 		
-		_writer.WriteAttributeString("TypicalDefault", "install");
-		_writer.WriteAttributeString("InstallDefault", "local");
+		WriteAttribute("TypicalDefault", "install");
+		WriteAttribute("InstallDefault", "local");
 
 		foreach (string componentId in componentIds)
 		{
 			WriteComponentRef(componentId);
 		}
 
-		_writer.WriteEndElement();
+		EndElement();
 	}
 
 	private static Predicate<string> PredicateFor(Feature feature)
@@ -166,14 +219,24 @@ public class WixScriptBuilder
 
 	private void WriteComponent(IEnumerable<IFile> fileSet, string id)
 	{
-		_writer.WriteStartElement("Component");
-		_writer.WriteAttributeString("Id", id);
-		_writer.WriteAttributeString("Guid", NewGuid());
+		StartComponent(id);
 		foreach (var file in fileSet)
 		{
 			WriteFile(file);
 		}
-		_writer.WriteEndElement();
+		EndComponent();
+	}
+
+	private void EndComponent()
+	{
+		EndElement();
+	}
+
+	private void StartComponent(string id)
+	{
+		StartElement("Component");
+		WriteAttribute("Id", id);
+		WriteAttribute("Guid", NewGuid());
 	}
 
 	private IEnumerable<IFile> FilesForCurrentFeatureFrom(IEnumerable<IFile> fileSet)
@@ -191,18 +254,16 @@ public class WixScriptBuilder
 
 	void WriteDirectory(IFolder path)
 	{
-		//var fileCount = FilesForCurrentFeatureFrom(path.Children.OfType<IFile>()).Count();
-		//if (fileCount > 0)
 		if (FeatureContainsFilesIn(path))
 		{
-			_writer.WriteStartElement("Directory");
+			StartElement("Directory");
 
 			_currentDirectoryId = WriteIdNameAndLongName(path);
 
 			WriteDirectoryComponent("c_" + _currentDirectoryId, path);
 			WriteSubDirectories(path);
 
-			_writer.WriteEndElement();
+			EndElement();
 		}
 	}
 
@@ -221,58 +282,81 @@ public class WixScriptBuilder
 
 	void WriteFile(IFileSystemItem file)
 	{
-		_writer.WriteStartElement("File");
+		StartElement("File");
 		string id = WriteIdNameAndLongName(file);
-		_writer.WriteAttributeString("src", file.FullPath);
-		_writer.WriteAttributeString("DiskId", "1");
-		_writer.WriteAttributeString("Vital", "yes");
+		WriteAttribute("src", file.FullPath);
+		WriteAttribute("DiskId", "1");
+		WriteAttribute("Vital", "yes");
 
 		string shortcut = GetShortcutName(id);
 		if (null != shortcut)
 		{
 			WriteShortcut(shortcut, file, _currentDirectoryId);
 		}
-		_writer.WriteEndElement();
+		EndElement();
 	}
 
 	string GetShortcutName(string id)
 	{
-		if (null != _parameters)
-		{
-			foreach (WixShortcut item in _parameters.Shortcuts)
-			{
-				if (id == GetIdFromRelativePath(item.Path))
-				{
-					return item.Name;
-				}
-			}
-		}
+		//if (null != _parameters)
+		//{
+		//    foreach (Shortcut item in _parameters.Shortcuts)
+		//    {
+		//        if (id == GetIdFromRelativePath(item.Path))
+		//        {
+		//            return item.Name;
+		//        }
+		//    }
+		//}
 		return null;
+	}
+
+	private void WriteShortcut(Shortcut shortcut)
+	{
+		IFileSystemItem shortcutTarget = ResolveFile(shortcut.Path);
+		if (shortcutTarget == null)
+			throw new ArgumentException(string.Format("Could not find file '{0}' required by shortcut '{1}'", shortcut.Path, shortcut.Name));
+		WriteShortcut(shortcut.Name, shortcutTarget, GetIdFromPath(shortcutTarget.Parent));
+	}
+
+	private IFileSystemItem ResolveFile(string filePath)
+	{
+		IFolder path = _basePath;
+		string[] pathComponents = filePath.Split(new [] {'/','\\'});
+		foreach(var part in pathComponents.Take(pathComponents.Length - 1))
+		{
+			path = (IFolder) path[part];
+			if (path == null)
+				return null;
+		}
+
+		return path[pathComponents[pathComponents.Length - 1]];
 	}
 
 	void WriteShortcut(string displayName, IFileSystemItem fileSystemItem, string workingDirectory)
 	{
 		string fileId = GetIdFromPath(fileSystemItem);
 
-		_writer.WriteStartElement("Shortcut");
-		_writer.WriteAttributeString("Id", "s_" + fileId);
+		StartElement("Shortcut");
+		WriteAttribute("Id", "s_" + fileId);
 
 		string ext = Path.GetExtension(fileSystemItem.Name).Substring(1).ToLower();
-		_writer.WriteAttributeString("Icon", ext + ".ico");
-		_writer.WriteAttributeString("IconIndex", "0");
-		_writer.WriteAttributeString("Directory", "TargetMenuFolder");
-		_writer.WriteAttributeString("Name", fileSystemItem.ShortPathName);
-		_writer.WriteAttributeString("LongName", displayName);
-		_writer.WriteAttributeString("Description", displayName);
-		_writer.WriteAttributeString("Show", "normal");
-		_writer.WriteAttributeString("WorkingDirectory", workingDirectory);
-		_writer.WriteEndElement();
+		WriteAttribute("Icon", ext + ".ico");
+		WriteAttribute("IconIndex", "0");
+		WriteAttribute("Directory", "TargetMenuFolder");
+		WriteAttribute("Name", fileSystemItem.ShortPathName);
+		WriteAttribute("LongName", displayName);
+		WriteAttribute("Description", displayName);
+		WriteAttribute("Show", "normal");
+		WriteAttribute("WorkingDirectory", workingDirectory);
+		WriteAttribute("Target", "[#" + fileId + "]");
+		EndElement();
 	}
 
 	string WriteIdNameAndLongName(IFileSystemItem path)
 	{
 		string id = GetIdFromPath(path);
-		_writer.WriteAttributeString("Id", id);
+		WriteAttribute("Id", id);
 		WriteNameAndLongName(path);
 		return id;
 	}
@@ -281,10 +365,10 @@ public class WixScriptBuilder
 	{
 		string name = path.Name;
 		string shortName = path.ShortPathName;
-		_writer.WriteAttributeString("Name", shortName);
+		WriteAttribute("Name", shortName);
 		if (name != shortName)
 		{
-			_writer.WriteAttributeString("LongName", name);
+			WriteAttribute("LongName", name);
 		}
 	}
 

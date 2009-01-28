@@ -35,11 +35,8 @@
 	  
       <Directory Id="ProgramMenuFolder" Name=".">
         <Directory Id="db4objectsMenuFolder" Name="db4o" LongName="db4objects">
-          <Directory Id="TargetMenuFolder" Name="db4o" LongName="db4o @db4o.version.dotted@">
-            <Component Id="Shortcuts" Guid="6D25106C-C6A6-410F-91A5-E2515FD8896C">
-              <Shortcut Id="TutorialShortcut" Directory="TargetMenuFolder" Name="db4otut" LongName="Db4o Tutorial" Show="normal" WorkingDirectory="TARGETDIR" Target="[#doc.tutorial.Db4oTutorial.exe]" />
-            </Component>
-          </Directory>
+          <Directory Id="TargetMenuFolder" Name="db4o" LongName="db4o @db4o.version.dotted@" />
+		 
         </Directory>
       </Directory>
     </DirectoryRef>
@@ -95,7 +92,6 @@
         <Show Dialog="ProgressDialog" After="WelcomeDialog" />
         <Show Dialog="UserExit" OnExit="cancel" />
         <Show Dialog="ExitDialog" OnExit="success" />
-		<Show Dialog="InstallOMNInstructions" OnExit="success">&amp;OMN_2005 = 3</Show>
         <Show Dialog="FatalError" OnExit="error" />
         <Show Dialog="WelcomeDialog" After="MigrateFeatureStates"><![CDATA[NOT Installed]]></Show>
         <Show Dialog="MaintenanceWelcomeDialog" After="WelcomeDialog"><![CDATA[Installed AND NOT RESUME AND NOT Preselected]]></Show>
@@ -160,7 +156,8 @@
       <UIText Id="VolumeCostRequired">Required</UIText>
       <UIText Id="VolumeCostSize">Disk Size</UIText>
       <UIText Id="VolumeCostVolume">Volume</UIText>
-      <Dialog Id="WelcomeDialog" Width="370" Height="270" Title="[ProductName] [Setup]">
+      
+	  <Dialog Id="WelcomeDialog" Width="370" Height="270" Title="[ProductName] [Setup]">
         <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[Button_Next]">
           <Publish Event="NewDialog" Value="SetupTypeDlg">1</Publish>
         </Control>
@@ -177,7 +174,9 @@
           <Text>[BigFont]Welcome to the [ProductName] installation</Text>
         </Control>
       </Dialog>
+	  
       <Dialog Id="MaintenanceWelcomeDialog" Width="370" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes">
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="374" Height="44" FixedSize="yes" TabSkip="no" Text="banner.bmp" />
         <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[Button_Next]">
           <Publish Event="NewDialog" Value="MaintenanceTypeDialog"><![CDATA[1]]></Publish>
         </Control>
@@ -228,7 +227,9 @@
         </Control>
         <Control Id="FolderLabel" Type="Text" X="20" Y="114" Width="348" Height="12" Text="&amp;Folder:" />
       </Dialog>
+	  
       <Dialog Id="CustomizeDialog" Width="370" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes" TrackDiskSpace="yes">
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="374" Height="44" FixedSize="yes" TabSkip="no" Text="banner.bmp" />
         <Control Id="Tree" Type="SelectionTree" X="25" Y="85" Width="175" Height="95" Property="_BrowseProperty" Sunken="yes" TabSkip="no" Text="Tree of selections" />
         <Control Id="Browse" Type="PushButton" X="304" Y="200" Width="56" Height="17" Text="[Button_Browse]">
           <Publish Event="SelectionBrowse" Value="BrowseDialog"><![CDATA[1]]></Publish>
@@ -282,7 +283,9 @@
           <Condition Action="hide"><![CDATA[Installed]]></Condition>
         </Control>
       </Dialog>
+	  
       <Dialog Id="VerifyReadyDialog" Width="370" Height="270" Title="[ProductName]" NoMinimize="yes" TrackDiskSpace="yes">
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="374" Height="44" FixedSize="yes" TabSkip="no" Text="banner.bmp" />
         <Control Id="Install" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[Button_Install]">
           <Publish Event="EndDialog" Value="Return"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
           <Publish Event="SpawnDialog" Value="OutOfRbDiskDlg"><![CDATA[OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND (PROMPTROLLBACKCOST="P" OR NOT PROMPTROLLBACKCOST)]]></Publish>
@@ -293,7 +296,6 @@
         <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
           <Publish Event="SpawnDialog" Value="CancelDialog"><![CDATA[1]]></Publish>
         </Control>
-        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="374" Height="44" TabSkip="no" Text="[BannerBitmap]" />
         <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[Button_Back]">
           <Publish Event="NewDialog" Value="CustomizeDialog"><![CDATA[InstallMode = "Custom" OR InstallMode = "Change"]]></Publish>
           <Publish Event="NewDialog" Value="MaintenanceTypeDialog"><![CDATA[InstallMode = "Repair"]]></Publish>
@@ -339,7 +341,9 @@
           <Text>[DlgTitleFont]Remove [ProductName]</Text>
         </Control>
       </Dialog>
+	  
       <Dialog Id="VerifyRepairDlg" Width="370" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes" TrackDiskSpace="yes">
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="374" Height="44" FixedSize="yes" TabSkip="no" Text="banner.bmp" />
         <Control Id="Repair" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[Button_Repair]">
           <Publish Event="ReinstallMode" Value="ecmus"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
           <Publish Event="Reinstall" Value="All"><![CDATA[OutOfDiskSpace <> 1]]></Publish>
@@ -352,7 +356,6 @@
         <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
           <Publish Event="SpawnDialog" Value="CancelDialog"><![CDATA[1]]></Publish>
         </Control>
-        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="374" Height="44" TabSkip="no" Text="[BannerBitmap]" />
         <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[Button_Back]">
           <Publish Event="NewDialog" Value="MaintenanceTypeDialog"><![CDATA[1]]></Publish>
         </Control>
@@ -391,7 +394,9 @@
         </Control>
         <Control Id="StatusLabel" Type="Text" X="35" Y="100" Width="35" Height="10" Text="Status:" />
       </Dialog>
+	  
       <Dialog Id="SetupTypeDlg" Width="370" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes">
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="374" Height="44" FixedSize="yes" TabSkip="no" Text="banner.bmp" />
         <Control Id="TypicalLabel" Type="Text" X="105" Y="65" Width="100" Height="10" TabSkip="no">
           <Text>[DlgTitleFont]&amp;Typical</Text>
         </Control>
@@ -423,7 +428,6 @@
         <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
           <Publish Event="SpawnDialog" Value="CancelDialog"><![CDATA[1]]></Publish>
         </Control>
-        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="374" Height="44" TabSkip="no" Text="[BannerBitmap]" />
         <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
         <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="374" Height="0" />
         <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes">
@@ -442,7 +446,9 @@
           <Text>Installs the most common program features. Recommended for most users.</Text>
         </Control>
       </Dialog>
+	  
       <Dialog Id="MaintenanceTypeDialog" Width="370" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes">
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="374" Height="44" FixedSize="yes" TabSkip="no" Text="banner.bmp" />
         <Control Id="ChangeLabel" Type="Text" X="105" Y="65" Width="100" Height="10" TabSkip="no">
           <Text>[DlgTitleFont]&amp;Modify</Text>
         </Control>
@@ -477,7 +483,6 @@
         <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
           <Publish Event="SpawnDialog" Value="CancelDialog"><![CDATA[1]]></Publish>
         </Control>
-        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="374" Height="44" TabSkip="no" Text="[BannerBitmap]" />
         <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
         <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="374" Height="0" />
         <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="20" Transparent="yes" NoPrefix="yes">
@@ -496,6 +501,7 @@
           <Text>Repairs errors in the most recent installation state - fixes missing or corrupt files, shortcuts and registry entries.</Text>
         </Control>
       </Dialog>
+	  
       <Dialog Id="CancelDialog" Width="260" Height="85" Title="[ProductName] [Setup]" NoMinimize="yes">
         <Control Id="Text" Type="Text" X="48" Y="15" Width="194" Height="30">
           <Text>Are you sure you want to cancel [ProductName] installation?</Text>
@@ -508,6 +514,7 @@
         </Control>
         <Control Id="Icon" Type="Icon" X="15" Y="15" Width="24" Height="24" FixedSize="yes" IconSize="32" Text="info.bmp" />
       </Dialog>
+	  
       <Dialog Id="BrowseDialog" Width="370" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes">
         <Control Id="PathEdit" Type="PathEdit" X="84" Y="202" Width="261" Height="18" Property="_BrowseProperty" Indirect="yes" />
         <Control Id="OK" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Text="[Button_OK]">
@@ -540,6 +547,7 @@
           <Text>[TitleFont]Change current destination folder</Text>
         </Control>
       </Dialog>
+	  
       <Dialog Id="UserExit" Width="370" Height="270" Title="[ProductName] [Setup]">
         <Control Id="Finish" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[Button_Finish]">
           <Publish Event="EndDialog" Value="Exit">1</Publish>
@@ -558,10 +566,12 @@
           <Text>Click the Finish button to exit.</Text>
         </Control>
       </Dialog>
+	  
       <Dialog Id="ExitDialog" Width="370" Height="270" Title="[ProductName]" NoMinimize="yes">
         <Control Id="Finish" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[Button_Finish]">
-          <Publish Event="EndDialog" Value="Return">1</Publish>
-          <Publish Event="DoAction" Value="Launch_Tutorial">(NOT Installed) AND (1 = LAUNCHTUTORIAL)</Publish>
+          <Publish Event="EndDialog" Value="Return">(NOT (&amp;OMN_2005 = 3))</Publish>
+          <Publish Event="DoAction" Value="Launch_Tutorial"><![CDATA[(NOT Installed) AND (1 = LAUNCHTUTORIAL) AND (&ApplicationFiles = 3)]]></Publish>
+		  <Publish Event="NewDialog" Value="InstallOMNInstructions"><![CDATA[((&OMN_2005 = 3) OR (&OMN_2008 = 3)) AND (NOT Installed)]]></Publish>
         </Control>
         <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Disabled="yes" Text="[Button_Cancel]" />
         <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" FixedSize="yes" TabSkip="no" Text="dialog.bmp" />
@@ -577,13 +587,14 @@
           <Text>[BigFont]Completing the [ProductName] installation.</Text>
         </Control>
         <Control Id="Launch" Type="CheckBox" X="135" Y="120" Width="10" Height="10" Property="LAUNCHTUTORIAL" CheckBoxValue="1">
-          <Condition Action="hide">Installed</Condition>
+          <Condition Action="hide"><![CDATA[(Installed) OR (&ApplicationFiles <> 3)]]></Condition>
         </Control>
         <Control Id="LaunchLabel" Type="Text" X="148" Y="120" Width="140" Height="16" Transparent="yes" NoPrefix="yes">
           <Text>Launch the tutorial</Text>
-          <Condition Action="hide">Installed</Condition>
+          <Condition Action="hide"><![CDATA[(Installed) OR (&ApplicationFiles <> 3)]]></Condition>
         </Control>
       </Dialog>
+	  
       <Dialog Id="OutOfDiskDlg" Width="370" Height="270" Title="[ProductName] [Setup]" NoMinimize="yes">
         <Control Id="OK" Type="PushButton" X="304" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="[Button_OK]">
           <Publish Event="EndDialog" Value="Return">1</Publish>
@@ -652,11 +663,12 @@
 	  
       <Dialog Width="370" Height="100" Id="InstallOMNInstructions" Title="Install ObjectManager Enterprise">
         <Control Type="Text" Width="332" Height="58" X="17" Y="11" Id="lblInstructions">
-          <Text>{\TahomaBold10}
-To launch OMN setup please, go to [INSTALLDIR]\omn200x folder and run the 
-containing msi.</Text>
+          <Text>{\TahomaBold10}To proceed with the installation of the Object Manager Enterprise plugin for Visual Studio please choose the appropriate shortcut from your db4objects Start menu
+		  </Text>
         </Control>
-        <Control Type="PushButton" Width="50" Height="17" X="304" Y="75" Id="Finish" Text="Finish" />
+        <Control Type="PushButton" Width="50" Height="17" X="304" Y="75" Id="Finish" Text="Finish">
+			<Publish Event="EndDialog" Value="Return">1</Publish>
+		</Control>
       </Dialog>	  
       <!-- END DIALOG DEFINITION -->
     </UI>
@@ -674,5 +686,6 @@ containing msi.</Text>
 	<Icon Id="exe.ico" src="$(env.resources.dir)/exe.ico" />
     <Icon Id="sln.ico" src="$(env.resources.dir)/sln.ico" />
     <Icon Id="chm.ico" src="$(env.resources.dir)/chm.ico" />
+	<Icon Id="msi.ico" src="$(env.resources.dir)/insticon.ico" />
   </Product>
 </Wix>

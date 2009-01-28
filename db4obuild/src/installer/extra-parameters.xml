@@ -8,12 +8,12 @@
 		
 		<KnownId>
 			<Id>omn.ObjectManagerEnterprise_vs2005</Id>
-			<Path>omn2005/ObjectManagerEnterprise-vs2005-7.8.msi</Path>
+			<Path>omn2005/ObjectManagerEnterprise-vs2005-@db4o.version.dotted@.msi</Path>
 		</KnownId>
 		
 		<KnownId>
 			<Id>omn.ObjectManagerEnterprise_vs2008</Id>
-			<Path>omn2008/ObjectManagerEnterprise-vs2008-7.8.msi</Path>
+			<Path>omn2008/ObjectManagerEnterprise-vs2008-@db4o.version.dotted@.msi</Path>
 		</KnownId>	
 	</KnownIds>
 
@@ -23,6 +23,19 @@
 		Title="Db4o Runtime"
 	  	Description="Db4o core libraries and documentation">
 		<Content Include="**/*.*" Exclude="omn*/*.*"/>
+		
+		<Shortcuts>		
+			<Shortcut>
+				<Path>doc/tutorial/Db4oTutorial.exe</Path>
+				<Name>Db4o Tutorial</Name>
+			</Shortcut>
+			
+			<Shortcut>
+				<Path>doc/api/db4o.chm</Path>
+				<Name>Db4o API</Name>
+			</Shortcut>
+		</Shortcuts>
+		
 	  </Feature>
     
 	  <Feature 
@@ -30,6 +43,13 @@
 		Title="ObjectManager Enterprise VS 2005"
 		Description ="Visual Studio 2005 plugin with support for db4o databse object browsing">
 		<Content Include="omn2005/ObjectManagerEnterprise-vs2005*.*" />
+		
+		<Shortcuts>		
+			<Shortcut>
+				<Path>omn2005/ObjectManagerEnterprise-vs2005-@db4o.version.dotted@.msi</Path>
+				<Name>Install VS 2005 ObjectManager plugin</Name>
+			</Shortcut>
+		</Shortcuts>
 	  </Feature>	  
 	 
 	  <Feature 
@@ -37,61 +57,16 @@
 		Title="ObjectManager Enterprise VS 2008"
 		Description ="Visual Studio 2008 plugin with support for db4o databse object browsing">
 		<Content Include="omn2008/ObjectManagerEnterprise-vs2008*.*" />
+		
+		<Shortcuts>		
+			<Shortcut>
+				<Path>omn2008/ObjectManagerEnterprise-vs2008-@db4o.version.dotted@.msi</Path>
+				<Name>Install VS 2008 ObjectManager plugin</Name>
+			</Shortcut>
+		</Shortcuts>		
 	  </Feature>	  	  
 	 
-	 </Features>
-	
-	 <Shortcuts>
-		
-		<WixShortcut>
-			<Path>doc/tutorial/Db4oTutorial.exe</Path>
-			<Name>Db4o Tutorial</Name>
-		</WixShortcut>
-		
-		<WixShortcut>
-			<Path>doc/api/db4o.chm</Path>
-			<Name>Db4o API</Name>
-		</WixShortcut>
-		
-		<!--
-		<WixShortcut>
-			<Path>doc/reference/default.htm</Path>
-			<Name>Db4o Reference</Name>
-		</WixShortcut>
-		-->
-		
-		<!--		
-		<WixShortcut>
-			<Path>src/core/db4o-net.sln</Path>
-			<Name>db4o core .NET  (VS Solution)</Name>
-		</WixShortcut>
+	 </Features>	
 
-		<WixShortcut>
-			<Path>src/core/db4o-compact.sln</Path>
-			<Name>db4o core CompactFramework (VS Solution)</Name>
-		</WixShortcut>
-
-		<WixShortcut>
-			<Path>src/tools/db4o-net-tools.sln</Path>
-			<Name>db4o tools .NET (VS Solution)</Name>
-		</WixShortcut>
-
-		<WixShortcut>
-			<Path>src/tools/db4o-compact-tools.sln</Path>
-			<Name>db4o tools CompactFramework (VS Solution)</Name>
-		</WixShortcut>
-
-		<WixShortcut>
-			<Path>src/test/db4o-net-test.sln</Path>
-			<Name>db4o tests .NET (VS Solution)</Name>
-		</WixShortcut>
-
-		<WixShortcut>
-			<Path>src/test/db4o-compact-test.sln</Path>
-			<Name>db4o tests CompactFramework (VS Solution)</Name>
-		</WixShortcut>
-
-		-->
-	</Shortcuts>	
 </WixBuilderParameters>
 		
