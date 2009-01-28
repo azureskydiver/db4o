@@ -404,6 +404,9 @@
 		</ant>
 	</target>
 	
+	<target name="build-tutorial-standalone" depends="configure, build-tutorial">
+	</target>
+	
 	<target name="build-omn" unless="mono">
 		<ant antfile="build-omn.xml" target="build-omn" dir="${dir.build}">
 			<property name="svn.revision" value="${db4oj.svn.revision}" />
