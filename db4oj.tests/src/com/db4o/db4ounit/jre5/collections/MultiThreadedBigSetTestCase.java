@@ -9,6 +9,7 @@ import com.db4o.db4ounit.jre12.collections.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
+@decaf.Remove
 public class MultiThreadedBigSetTestCase extends AbstractDb4oTestCase {
 	
 	static class Item {
