@@ -32,9 +32,7 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	};
 
 	public static class Holder <E> {
-		
 		public Set<E> _set;
-		
 	}
 	
 	public static class Item {
