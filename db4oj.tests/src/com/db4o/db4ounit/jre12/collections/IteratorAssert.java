@@ -34,6 +34,10 @@ public class IteratorAssert {
         areEqual(v.iterator(), iterator);
     }
     
+    public static void sameContent(Iterable expected, Iterable actual) {
+    	sameContent(expected.iterator(), actual.iterator());
+    }	
+    
 	public static void sameContent(Iterator expected, Iterator actual) {
 		final Collection4 allExpected = new Collection4();
 		while(expected.hasNext()){

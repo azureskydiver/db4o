@@ -4,8 +4,6 @@ package com.db4o.db4ounit.jre5.collections;
 
 import db4ounit.extensions.*;
 
-/**
- */
 @decaf.Ignore
 public class AllTests extends Db4oTestSuite {
     
