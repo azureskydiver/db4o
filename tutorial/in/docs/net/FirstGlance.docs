@@ -29,10 +29,16 @@ is built for the .NET 3.5 CompactFramework.
 To use db4o in a development project, you only need to add one ._
 of the above Db4objects.Db4o.dll files to your project references.
 
+.n
 .1 Object Manager Enterprise installation ..
 Object Manager Enterprise (OME) is an object browser for db4o databases. OME ._
 provided with this installation comes as Visual Studio 2005/2008 plugin. OME ._
-will be installed as part of db4o setup. Alternatively, if you opt out, you can ._
-install it later by running the same installation again.
+can be installed as part of db4o setup. 
+.g OMN_Setup.jpg .. 
+Alternatively, if you opt out, you can ._
+install it later by running the installation from the shortcut provided in ._
+the db4objects Start menu folder.
+If you've downloaded .NET distribution as a zip archive, you will find OME ._
+installation in omn-2005 or omn-2008 folder of the distribution.
 
 .< APIOverview ..

@@ -19,6 +19,8 @@ In the OME perspective you can see:
 or the properties of the selected database class
 -	Build Query: windows allowing to build a query using drag&drop functionality
 -	Query Results: window to browse the results of the query execution
+
+.1 Browsing the database ..
 In the  .l First previous chapter ..  we've learned how to create a new database ._
 and store objects in it. Let's create a new database and store some objects in it now:
 .s com.db4odoc.f1.chapter3.OMEExample#storePilots ..
@@ -36,7 +38,8 @@ database by pressing "Save Index" button.
 The filter panel on the top of the view allows easier navigation through the database ._
 with lots of different classes. You can use wildcard searches and benefit from the ._
 search history to make the selection faster.
-.n
+
+.1 Querying ..
 It is easy to retrieve all of the Pilot instances from the database: just right-click ._
 the Pilot class in db4o Browser and select "View All Objects". The list of the Pilot ._
 objects will be shown in the Query Result view:

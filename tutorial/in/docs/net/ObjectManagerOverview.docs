@@ -9,7 +9,8 @@ Visual Studio Tools menu:
  
 You should also be able to see OME toolbar icons:
 .g OMN_Tool.jpg ..
- 
+
+.1 Browsing the database .. 
 In the  .l First previous chapter ..  we've learned how to create a new database ._
 and store objects in it. Let's create a new database and store some objects in it now:
 .s com.db4odoc.f1.chapter3.OMEExample#storePilots ..
@@ -27,6 +28,7 @@ In this view you can see:
 or the properties of the selected database class
 -	Build Query: windows allowing to build a query using drag&drop functionality
 -	Query Results: window to browse the results of the query execution
+ 
 The Db4o Browser window shows that there is 1 class in the database (Pilot), ._
 which contains 2 fields: _name and _points. In the Property Viewer you can see more ._
 information about the class fields. You can also change "Indexed" field and add the ._
@@ -39,6 +41,7 @@ experience, you can create favourite folders and drag&drop frequently used ._
 classes into these folders.
 .g OMN_Fav.jpg .. 
 .n 
+.1 Querying .. 
 It is easy to retrieve all of the Pilot instances from the database: just right-click ._
 the Pilot class in Db4o Browser and select "Show All Objects". The list of the Pilot ._
 objects will be shown in the Query Result view:
