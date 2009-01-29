@@ -5,19 +5,23 @@ package com.db4o.db4ounit.jre12.collections;
 import java.util.*;
 
 import com.db4o.collections.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.collections.*;
+import com.db4o.query.*;
 import com.db4o.typehandlers.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-/**
- */
 @decaf.Ignore(decaf.Platform.JDK11)
 public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
+	
+	public static void main(String[] args) {
+		new BigSetTestCase().runSolo("testBigSetAfterCommit");
+	}
 	
 	private static final Item ITEM_ONE = new Item("one");
 	
@@ -50,8 +54,91 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 			}
 			return _name.equals(other._name);
 		}
+		
+		@Override
+		public String toString() {
+		    return "Item(" + _name + ")";
+		}
 	}
 	
+	public void testRefreshBigSet() {
+		final Holder<Item> holder = newHolderWithBigSet(new Item("1"), new Item("2"));
+		storeAndCommit(holder);
+		db().refresh(holder, Integer.MAX_VALUE);
+		Assert.areEqual(2, holder._set.size());
+	}
+	
+	public void testAddAfterCommit() {
+		runTestAfterCommit(new Procedure4() {
+			public void apply(Object set) {
+				((Set<Item>)set).add(new Item("3"));
+			}
+		});
+	}
+
+	private void runTestAfterCommit(final Procedure4 setOperations) {
+	    final Holder<Item> holder = newHolderWithBigSet(new Item("1"), new Item("2"));
+		storeAndCommit(holder);
+		
+		final Set<Item> set = holder._set;
+		Assert.areEqual(2, set.size());
+		setOperations.apply(set);
+		
+		purgeAll(holder, holder._set);
+		
+		final Holder<Item> resurrected = (Holder<Item>)retrieveOnlyInstance(holder.getClass());
+		IteratorAssert.sameContent(set.iterator(), resurrected._set.iterator());
+    }
+	
+	public void testClearAfterCommit() {
+		runTestAfterCommit(new Procedure4() {
+			public void apply(Object set) {
+				((Set<Item>)set).clear();
+            }
+		});
+	}
+	
+	public void testRemoveAfterCommit() {
+		runTestAfterCommit(new Procedure4() {
+			public void apply(Object set) {
+				((Set<Item>)set).remove(queryItem("1"));
+            }
+		});
+	}
+
+	protected Item queryItem(String name) {
+		final Query query = newQuery(Item.class);
+		query.descend("_name").constrain(name);
+		return (Item) query.execute().get(0);
+    }
+
+	private void storeAndCommit(final Holder<Item> holder) {
+	    store(holder);
+		db().commit();
+    }
+	
+	public void testPurgeBeforeCommit() {
+		Holder<Item> holder = newHolderWithBigSet(new Item("foo"));
+		store(holder);
+		
+		purgeAll(holder, holder._set);
+		
+		holder = (Holder<Item>)retrieveOnlyInstance(holder.getClass());
+		Assert.areEqual(1, holder._set.size());
+	}
+
+	private Holder<Item> newHolderWithBigSet(final Item... item) {
+	    Holder<Item> holder = new Holder<Item>();
+		holder._set = newBigSet(item);
+	    return holder;
+    }
+	
+	private void purgeAll(Object... objects) {
+		for (Object object : objects) {
+			db().purge(object);
+		}
+	}
+
 	public void testTypeHandlerInstalled(){
 		TypeHandler4 typeHandler = container().handlers().configuredTypeHandler(reflector().forClass(newBigSet().getClass()));
 		Assert.isInstanceOf(BigSetTypeHandler.class, typeHandler);
@@ -215,8 +302,10 @@ public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
 		Assert.isNotNull(bTree);
 	}
 	
-	private Set<Item> newBigSet() {
-		return CollectionFactory.forObjectContainer(db()).<Item>newBigSet();
+	private Set<Item> newBigSet(Item... initialSet) {
+		Set<Item> set = CollectionFactory.forObjectContainer(db()).<Item>newBigSet();
+		set.addAll(Arrays.asList(initialSet));
+		return set;
 	}
 
 	public static BTree bTree(Set<Item> set) throws IllegalAccessException{
