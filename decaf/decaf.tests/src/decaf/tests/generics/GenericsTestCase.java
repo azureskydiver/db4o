@@ -4,6 +4,10 @@ import decaf.tests.*;
 
 public class GenericsTestCase extends DecafTestCaseBase {
 	
+	public void testSuperMethodErasure() throws Exception {
+		runResourceTestCase("SuperMethodErasure");
+	}
+	
 	public void testNestedTypeErasure() throws Exception {
 		runResourceTestCase("NestedTypeErasure");
 	}
