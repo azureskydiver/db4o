@@ -98,6 +98,15 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 		return runAll(true);
 	}
 	
+	public int runSolo(final String testLabelSubstring) {
+		return new ConsoleTestRunner(
+				Iterators.filter(soloSuite(true), new Predicate4<Test>() {
+					public boolean match(Test candidate) {
+						return candidate.label().contains(testLabelSubstring);
+					}
+				})).run();
+	}
+	
 	private int runAll(final boolean independentConfig) {
 		return new ConsoleTestRunner(Iterators.concat(new Iterable4[] {
 				soloSuite(independentConfig),
