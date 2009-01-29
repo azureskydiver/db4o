@@ -524,7 +524,7 @@
 		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
 			<fileset dir="${dir.j.core.src}">
 				<include name="com/db4o/collections/*.java" />
-				<include name="com/db4o/internal/collections/*.java" />
+				<include name="com/db4o/internal/collections/BigSet.java" />
 				<include name="com/db4o/config/annotations/Indexed.java" />
 			</fileset>
 		</copy>		

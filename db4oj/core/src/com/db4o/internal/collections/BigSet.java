@@ -7,7 +7,6 @@ import java.util.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
-import com.db4o.internal.handlers.*;
 import com.db4o.marshall.*;
 
 /**
@@ -26,11 +25,7 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 			return;
 		}
 		_transaction = db.transaction();
-		_bTree = newBTree(0);
-	}
-
-	private BTree newBTree(int id) {
-		return new BTree(systemTransaction(), id, new IntHandler());
+		_bTree = bTreeManager().newBTree();
 	}
 	
 	private ObjectContainerBase container(){
@@ -55,7 +50,7 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
     }
 
 	private void add(int id) {
-	    bTree().add(_transaction, new Integer(id));
+	    bTreeForUpdate().add(_transaction, new Integer(id));
     }
 
 	private int getID(Object obj) {
@@ -81,7 +76,7 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
     }
 
 	public void clear() {
-		bTree().clear(transaction());
+		bTreeForUpdate().clear(transaction());
 	}
 	
 	public boolean contains(Object obj) {
@@ -128,6 +123,7 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 	 * @sharpen.ignore
 	 */
 	private Iterator4 elements() {
+		
 	    return new MappingIterator(bTreeIterator()) {
 			protected Object map(Object current) {
 				int id = ((Integer)current).intValue();
@@ -145,7 +141,7 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 			return false;
 		}
 		int id = getID(obj);
-		bTree().remove(transaction(), new Integer(id));
+		bTreeForUpdate().remove(transaction(), new Integer(id));
 		return true;
 	}
 
@@ -187,23 +183,32 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 	public void write(WriteContext context) {
 		int id = bTree().getID();
 		if(id == 0){
-			bTree().write(container().systemTransaction());
+			bTree().write(systemTransaction());
 		}
 		context.writeInt(bTree().getID());
 	}
-
 	/* (non-Javadoc)
      * @see com.db4o.internal.collections.BigSetPersistence#read(com.db4o.marshall.ReadContext)
      */
 	public void read(ReadContext context) {
 		int id = context.readInt();
-		if(_transaction == null){
-			_transaction = context.transaction();
+		if(_bTree != null){
+			assertCurrentBTreeId(id);
+			return;
 		}
-		if(_bTree == null){
-			_bTree = newBTree(id);
-		}
+		_transaction = context.transaction();
+		_bTree = bTreeManager().produceBTree(id);
 	}
+
+	private BigSetBTreeManager bTreeManager() {
+	    return new BigSetBTreeManager(_transaction);
+    }
+
+	private void assertCurrentBTreeId(int id) {
+	    if (id != _bTree.getID()) {
+			throw new IllegalStateException();
+		}
+    }
 	
 	private Transaction transaction(){
 		return _transaction;
@@ -226,12 +231,16 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 		}
 		return _bTree;
 	}
+	
+	private BTree bTreeForUpdate() {
+		final BTree bTree = bTree();
+		bTreeManager().ensureIsManaged(bTree);
+		return bTree;
+	}
 
 	private Object element(int id) {
 	    Object obj = container().getByID(transaction(), id);
 	    container().activate(obj);
 	    return obj;
     }
-	
-
 }
