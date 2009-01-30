@@ -11,7 +11,23 @@ public class MixedArrayTestCase extends ItemTestCaseBase {
 	}
 	
 	protected Object createItem() throws Exception {
-		return new MixedArrayItem(42);
+		return new MixedArrayItem(depth());
+	}
+
+	/**
+	 * @sharpen.if !CF
+	 */
+	private int depth() {
+		return 42;
+	}
+	
+	/**
+	 * @sharpen.if CF
+	 * @sharpen.rename Depth
+	 */
+	@SuppressWarnings("unused")
+	private int depthCF() {
+		return 10;
 	}
 
 	protected void assertItemValue(Object obj) throws Exception {
