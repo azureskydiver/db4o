@@ -33,8 +33,8 @@ public class MixedArrayTestCase extends ItemTestCaseBase {
 	protected void assertItemValue(Object obj) throws Exception {
 		MixedArrayItem item = (MixedArrayItem) obj;
 		Object[] objects = item.objects;
-		Assert.areEqual(42, ((TItem)objects[1]).value());
-		Assert.areEqual(42, ((TItem)objects[3]).value());		
+		Assert.areEqual(depth(), ((TItem)objects[1]).value());
+		Assert.areEqual(depth(), ((TItem)objects[3]).value());		
 	}
 
 	protected void assertRetrievedItem(Object obj) throws Exception {
@@ -44,9 +44,9 @@ public class MixedArrayTestCase extends ItemTestCaseBase {
 		for (int i = 0; i < objects.length; ++i) {
 			Assert.isNotNull(objects[i]);
 		}
-		Assert.areEqual(LinkedList.newList(42), objects[0]);
+		Assert.areEqual(LinkedList.newList(depth()), objects[0]);
 		Assert.areEqual(0, ((TItem)objects[1]).value);
-		Assert.areEqual(LinkedList.newList(42), objects[2]);
+		Assert.areEqual(LinkedList.newList(depth()), objects[2]);
 		Assert.areEqual(0, ((TItem)objects[3]).value);
 	}
 	
