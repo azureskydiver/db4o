@@ -33,16 +33,18 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 	}
 
 	public boolean add(E obj) {
-		final int id = getID(obj);
-		if(id == 0){
-			add(store(obj));
+		synchronized(lock()){
+			final int id = getID(obj);
+			if(id == 0){
+				add(store(obj));
+				return true;
+			}
+			if (contains(id)) {
+				return false;
+			}
+			add(id);
 			return true;
 		}
-		if (contains(id)) {
-			return false;
-		}
-		add(id);
-		return true;
 	}
 
 	private int store(E obj) {
@@ -76,7 +78,9 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
     }
 
 	public void clear() {
-		bTreeForUpdate().clear(transaction());
+		synchronized(lock()){
+			bTreeForUpdate().clear(transaction());
+		}
 	}
 	
 	public boolean contains(Object obj) {
@@ -88,8 +92,10 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 	}
 
 	private boolean contains(int id) {
-	    BTreeRange range = bTree().search(transaction(), new Integer(id));
-		return ! range.isEmpty();
+		synchronized(lock()){
+		    BTreeRange range = bTree().search(transaction(), new Integer(id));
+			return ! range.isEmpty();
+		}
     }
 	
 	/**
@@ -123,7 +129,6 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 	 * @sharpen.ignore
 	 */
 	private Iterator4 elements() {
-		
 	    return new MappingIterator(bTreeIterator()) {
 			protected Object map(Object current) {
 				int id = ((Integer)current).intValue();
@@ -133,16 +138,18 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
     }
 
 	private Iterator4 bTreeIterator() {
-	    return bTree().iterator(transaction());
+	    return new SynchronizedIterator4(bTree().iterator(transaction()), lock());
     }
 
 	public boolean remove(Object obj) {
-		if(!contains(obj)){
-			return false;
+		synchronized(lock()){
+			if(!contains(obj)){
+				return false;
+			}
+			int id = getID(obj);
+			bTreeForUpdate().remove(transaction(), new Integer(id));
+			return true;
 		}
-		int id = getID(obj);
-		bTreeForUpdate().remove(transaction(), new Integer(id));
-		return true;
 	}
 
 	/**
@@ -166,7 +173,9 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 	}
 
 	public int size() {
-		return bTree().size(transaction());
+		synchronized(lock()){
+			return bTree().size(transaction());
+		}
 	}
 
 	public Object[] toArray() {
@@ -243,4 +252,8 @@ public class BigSet<E> implements Set<E>, BigSetPersistence {
 	    container().activate(obj);
 	    return obj;
     }
+	
+	private Object lock(){
+		return container().lock();
+	}
 }
