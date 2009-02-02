@@ -56,7 +56,7 @@ public class CommonConfigurationImpl implements CommonConfiguration {
 	}
 
 	public void callConstructors(boolean flag) {
-		_config.callConstructors(false);
+		_config.callConstructors(flag);
 	}
 
 	public void detectSchemaChanges(boolean flag) {
