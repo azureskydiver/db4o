@@ -38,24 +38,22 @@ namespace LinqTuning
 
 		}
 
-		private static void ReportTime<T>(string label, Func<IObjectContainer, IEnumerable<T>> query)
+		private static void ReportTime<T>(string label, Func<ISodaQueryFactory, IEnumerable<T>> query)
 		{
 			System.Console.WriteLine("{0}: {1}", label, Time(query));
 		}
 
-		static TimeSpan Time<T>(Func<IObjectContainer, IEnumerable<T>> query)
+		static TimeSpan Time<T>(Func<ISodaQueryFactory, IEnumerable<T>> query)
 		{
-			using (IObjectContainer container = OpenInMemoryContainer())
-			{
-				var stopWatch = new StopWatch();
-				stopWatch.Start();
+			var queryFactory = new NullSodaQueryFactory();
+			var stopWatch = new StopWatch();
+			stopWatch.Start();
 
-				for (int i = 0; i < 10000; ++i)
-					Assert.AreEqual(0, query(container).Count());
+			for (int i = 0; i < 10000; ++i)
+				Assert.AreEqual(0, query(queryFactory).Count());
 
-				stopWatch.Stop();
-				return stopWatch.Elapsed();
-			}
+			stopWatch.Stop();
+			return stopWatch.Elapsed();
 		}
 
 		private static IObjectContainer OpenInMemoryContainer()

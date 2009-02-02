@@ -45,19 +45,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NullSodaQueryFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Db4objects.Db4o.Linq\Db4objects.Db4o.Linq-2008.csproj">
+    <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o.Linq\Db4objects.Db4o.Linq-2008.csproj">
       <Project>{23531440-0922-43EB-A483-6592FFC2F093}</Project>
       <Name>Db4objects.Db4o.Linq-2008</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Db4objects.Db4o\Db4objects.Db4o-2008.csproj">
+    <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2008.csproj">
       <Project>{600CD3BF-2ED2-4183-87F7-ADD78A968AE0}</Project>
       <Name>Db4objects.Db4o-2008</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Db4oUnit\Db4oUnit-2008.csproj">
+    <ProjectReference Include="..\..\db4o.net\Db4oUnit\Db4oUnit-2008.csproj">
       <Project>{8F82F8B0-95B6-4553-BDA8-BD9A954E682F}</Project>
       <Name>Db4oUnit-2008</Name>
     </ProjectReference>
