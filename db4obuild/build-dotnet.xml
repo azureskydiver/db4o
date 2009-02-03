@@ -754,13 +754,25 @@
 			<sources dir="${dir.n.linq}">
 				<include name="**/*.cs" />
 			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.linq}/Db4objects.Db4o.Linq-CF-2008.csproj">
+			<sources dir="${dir.n.linq}">
+				<include name="**/*.cs" />
+			</sources>
 		</updatecsharpproject>			
 		
 		<updatecsharpproject projectfile="${dir.n.linq.tests}/Db4objects.Db4o.Linq.Tests-2008.csproj">
 			<sources dir="${dir.n.linq.tests}">
 				<include name="**/*.cs" />
 			</sources>
-		</updatecsharpproject>	
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.linq.tests}/Db4objects.Db4o.Linq.Tests-CF-2008.csproj">
+			<sources dir="${dir.n.linq.tests}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
 	</target>
 
 	
