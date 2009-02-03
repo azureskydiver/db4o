@@ -9,26 +9,23 @@ import com.db4o.reflect.*;
 
 /**
  * @exclude
+ * 
  */
 public class KnownClassesRepository {
 	
-	// FIXME very java-centric, what about .NET?
 	private final static Hashtable4 PRIMITIVES;
 	
 	static {
 		PRIMITIVES=new Hashtable4();
-		registerPrimitive(Boolean.class,boolean.class);
-		registerPrimitive(Byte.class,byte.class);
-		registerPrimitive(Short.class,short.class);
-		registerPrimitive(Character.class,char.class);
-		registerPrimitive(Integer.class,int.class);
-		registerPrimitive(Long.class,long.class);
-		registerPrimitive(Float.class,float.class);
-		registerPrimitive(Double.class,double.class);
+		
+		for(Class primitive : Platform4.primitiveTypes())
+		{
+			registerPrimitive(primitive);
+		}		
 	}
 
-	private static void registerPrimitive(Class wrapper,Class primitive) {
-		PRIMITIVES.put(wrapper.getName(),primitive);
+	private static void registerPrimitive(Class primitive) {
+		PRIMITIVES.put(ReflectPlatform.fullyQualifiedName(Platform4.nullableTypeFor(primitive)),primitive);
 	}
 	
 	private ObjectContainerBase _stream;

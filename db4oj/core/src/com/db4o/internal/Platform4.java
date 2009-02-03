@@ -724,4 +724,18 @@ public final class Platform4 {
 
 	private static Hashtable4 _nullValues;
 
+	public static Class[] primitiveTypes() {
+		return new Class[] 
+		                 {
+							boolean.class,
+							byte.class,
+							short.class,
+							char.class,
+							int.class,
+							long.class,
+							float.class,
+							double.class,
+						};		
+	}
+
 }
