@@ -33,7 +33,6 @@ namespace OManager.DataLayer.QueryParser
         
         public IObjectSet ExecuteOMQueryList()
         {
-
             try
             {
                 

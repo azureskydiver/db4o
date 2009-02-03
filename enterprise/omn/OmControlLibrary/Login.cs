@@ -1,4 +1,3 @@
-#region Namespaces
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,8 +11,6 @@ using Microsoft.VisualStudio.CommandBars;
 using System.IO;
 using stdole;
 using OME.Logging.Common;
-
-#endregion
 
 namespace OMControlLibrary
 {
@@ -32,7 +29,6 @@ namespace OMControlLibrary
 		internal static CommandBarControl m_cmdBarCtrlBackup;
 		internal static CommandBarButton m_cmdBarBtnConnect;
 		private static Assembly m_AddIn_Assembly;
-		private static WindowVisibilityEvents windowsVisEvents;
 		//Private variables
 		private IList<RecentQueries> m_recentConnections;
 
@@ -126,18 +122,13 @@ namespace OMControlLibrary
 				m_cmdBarCtrlBackup = cmdBarCtrlBackup;
 				m_cmdBarCtrlCreateDemoDb = dbCreateDemoDbControl;
 
-				string assemblyPath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-			    string guidPos = Guid.NewGuid().ToString(Helper.GetResourceString(Common.Constants.GUID_FORMATTER_STRING));//"{426E8D27-3D33-4fc8-B3E9-9883AADC679F}";
-				string caption = string.Empty;
-				object ctlObj = null;
-				AddIn addinObj = ApplicationObject.AddIns.Item(1);
-				EnvDTE80.Windows2 wins2Obj = (Windows2)ApplicationObject.Windows;
 
 				if (Helper.LoginToolWindow != null)
 					Helper.LoginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
 
-				// Creates Tool Window and inserts the user control in it.
-				Helper.LoginToolWindow = wins2Obj.CreateToolWindow2(addinObj, assemblyPath, Common.Constants.CLASS_NAME_LOGIN, caption, guidPos, ref ctlObj);
+				object ctlObj;
+				Helper.LoginToolWindow = CreateToolWindow(Common.Constants.CLASS_NAME_LOGIN, string.Empty, NewFormattedGuid(), out ctlObj);
+
 				if (Helper.LoginToolWindow.AutoHides)
 				{
 					Helper.LoginToolWindow.AutoHides = false;
@@ -145,9 +136,6 @@ namespace OMControlLibrary
 				Helper.LoginToolWindow.Visible = true;
 				Helper.LoginToolWindow.Width = 425;
 				Helper.LoginToolWindow.Height = 170;
-				EnvDTE80.Events2 event_1 = (Events2)ApplicationObject.Events;
-				windowsVisEvents = event_1.get_WindowVisibilityEvents(Helper.QueryResultToolWindow);
-				windowsVisEvents.WindowHiding += windowsVisEvents_WindowHiding;
 			}
 			catch (Exception oEx)
 			{
@@ -155,12 +143,11 @@ namespace OMControlLibrary
 			}
 		}
 
-		static void windowsVisEvents_WindowHiding(Window Window)
+		private static string NewFormattedGuid()
 		{
-			//if (Helper.LoginToolWindow != null)
-			//    if(Window==Helper.LoginToolWindow )
-			//    Helper.LoginToolWindow.Caption = "Closed";
+			return Guid.NewGuid().ToString(Helper.GetResourceString(Common.Constants.GUID_FORMATTER_STRING));
 		}
+
 		#endregion
 
 
@@ -169,18 +156,16 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				string assemblypath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-			    string caption = Helper.GetResourceString(Common.Constants.QUERY_BUILDER_CAPTION);
-				object ctlobj = null;
-				AddIn addinobj = ApplicationObject.AddIns.Item(1);
-				EnvDTE80.Windows2 wins2obj = (Windows2)ApplicationObject.Windows;
+				string caption = Helper.GetResourceString(Common.Constants.QUERY_BUILDER_CAPTION);
+				object ctlobj;
 
 				// Creates Tool Window and inserts the user control in it.
-				queryBuilderToolWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath, Common.Constants.CLASS_NAME_QUERYBUILDER, caption, Common.Constants.GUID_QUERYBUILDER, ref ctlobj);
+				queryBuilderToolWindow = CreateToolWindow(Common.Constants.CLASS_NAME_QUERYBUILDER, caption, Common.Constants.GUID_QUERYBUILDER, out ctlobj);
 				if (queryBuilderToolWindow.AutoHides)
 				{
 					queryBuilderToolWindow.AutoHides = false;
 				}
+
 				queryBuilderToolWindow.Visible = true;
 				queryBuilderToolWindow.IsFloating = false;
 				queryBuilderToolWindow.Linkable = false;

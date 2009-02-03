@@ -1,27 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Reflect;
 using Db4objects.Db4o.Reflect.Generic;
-using OManager.DataLayer.Modal;
-using OManager.BusinessLayer.QueryManager;
 using OManager.DataLayer.Connection;
 using OManager.BusinessLayer.Common;
 using OManager.DataLayer.CommonDatalayer;
-
+using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
 
 namespace OManager.DataLayer.ObjectsModification
 {
     class ModifyObjects
     {
 
-        private IObjectContainer objectContainer;
+        private readonly IObjectContainer objectContainer;
         private List<object> m_listforCascadeDelete;
-        private object m_objectToProcess;
+        private readonly object m_objectToProcess;
 
         public ModifyObjects(object MainObjects)
         {
@@ -34,7 +30,7 @@ namespace OManager.DataLayer.ObjectsModification
             try
             {
                 string fieldName = attribute;
-                int intIndexof = fieldName.ToString().IndexOf('.') + 1;
+                int intIndexof = fieldName.IndexOf('.') + 1;
                 fieldName = fieldName.Substring(intIndexof, fieldName.Length - intIndexof);
 
                 string[] splitstring = fieldName.Split('.');
@@ -42,7 +38,6 @@ namespace OManager.DataLayer.ObjectsModification
 
                 foreach (string str in splitstring)
                 {
-
                     holdParentObject = SetField(str, holdParentObject, fieldName, value);
                 }
 
@@ -54,40 +49,34 @@ namespace OManager.DataLayer.ObjectsModification
                 return null;
             }
         }
-      
-       
        
         public object SetField(string attribName, object subObject, string fullattribName, string fieldValue)
         {
             try
             {
-                IReflectClass rclass = DataLayerCommon.returnReflectClassfromObject(subObject);
-                if (rclass != null)
-                {
-                    IReflectField rfield = DataLayerCommon.GetDeclaredFieldInHeirarchy(rclass, attribName);
-                    if (rfield != null)
-                    {
-                        if (!(rfield is GenericVirtualField))
-                        {
-                            string fieldType = rfield.GetFieldType().GetName();
-                            fieldType = DataLayerCommon.PrimitiveType(fieldType);
-                            if (!CommonValues.IsPrimitive(fieldType))
-                            {
-                                if (!rfield.GetFieldType().IsCollection() && !rfield.GetFieldType().IsArray())
-                                    return rfield.Get(subObject);
-                            }
-                            else
-                            {
-                                if (subObject != null)
-                                {
-                                    setObject(rfield, subObject, fieldType, fieldValue);
-                                }
-                            }
-                        }
-                    }
-                }
-                return null;
+            	IReflectClass rclass = DataLayerCommon.ReflectClassFor(subObject);
+            	if (rclass == null)
+            		return null;
 
+            	IReflectField rfield = DataLayerCommon.GetDeclaredFieldInHeirarchy(rclass, attribName);
+            	if (rfield == null)
+            		return null;
+
+            	if (rfield is GenericVirtualField)
+            		return null;
+
+            	IType fieldType = Db4oClient.TypeResolver.Resolve(rfield.GetFieldType());
+            	if (!fieldType.IsPrimitive)
+            	{
+					if (!fieldType.IsCollection && !fieldType.IsArray)
+            			return rfield.Get(subObject);
+            	}
+            	else if (subObject != null)
+				{
+					SetObject(rfield, subObject, fieldType, fieldValue);
+            	}
+
+            	return null;
             }
             catch (Exception oEx)
             {
@@ -95,68 +84,20 @@ namespace OManager.DataLayer.ObjectsModification
                 return null;
             }
         }
-        public void setObject(IReflectField rfield, object subObject, string fieldType, object fieldValue)
+
+        public void SetObject(IReflectField rfield, object containingObject, IType fieldType, object newValue)
         {
             try
             {
-                switch (fieldType)
-                {
-
-                    case BusinessConstants.INT32:
-                        rfield.Set(subObject, Convert.ToInt32(fieldValue));
-                        break;
-                    case BusinessConstants.INT64:
-                        rfield.Set(subObject, Convert.ToInt64(fieldValue));
-                        break;
-                    case BusinessConstants.DOUBLE:
-                        rfield.Set(subObject, Convert.ToDouble(fieldValue));
-                        break;
-                    case BusinessConstants.DECIMAL:
-                        rfield.Set(subObject, Convert.ToDecimal(fieldValue));
-                        break;
-                    case BusinessConstants.INT16:
-                        rfield.Set(subObject, Convert.ToInt16(fieldValue));
-                        break;
-                    case BusinessConstants.CHAR:
-                        rfield.Set(subObject, Convert.ToChar(fieldValue));
-                        break;
-                    case BusinessConstants.BYTE:
-                        rfield.Set(subObject, Convert.ToByte(fieldValue));
-                        break;
-                    case BusinessConstants.DATETIME:
-                        rfield.Set(subObject, Convert.ToDateTime(fieldValue));
-                        break;
-                    case BusinessConstants.BOOLEAN:
-                        rfield.Set(subObject, Convert.ToBoolean(fieldValue));
-                        break;
-                    case BusinessConstants.SINGLE:
-                        rfield.Set(subObject, Convert.ToSingle(fieldValue));
-                        break;
-                    case BusinessConstants.SBYTE:
-                        rfield.Set(subObject, Convert.ToSByte(fieldValue));
-                        break;
-                    case BusinessConstants.UINT16:
-                        rfield.Set(subObject, Convert.ToUInt16(fieldValue));
-                        break;
-                    case BusinessConstants.UINT32:
-                        rfield.Set(subObject, Convert.ToUInt32(fieldValue));
-                        break;
-                    case BusinessConstants.UINT64:
-                        rfield.Set(subObject, Convert.ToUInt64(fieldValue));
-                        break;
-                    default:
-                        rfield.Set(subObject, fieldValue);
-                        break;
-                }
+				rfield.Set(containingObject, fieldType.Cast(newValue));
             }
-
             catch (Exception oEx)
             {
                 objectContainer.Rollback();
                 LoggingHelper.HandleException(oEx);
-
             }
         }
+
         public void DeleteObjects()
         {
             if (m_objectToProcess != null)
@@ -173,7 +114,7 @@ namespace OManager.DataLayer.ObjectsModification
             {
                 if (m_objectToProcess != null)
                 {
-                    objectContainer.Set(m_objectToProcess);
+                    objectContainer.Store(m_objectToProcess);
                     objectContainer.Commit();
                 }
                
@@ -230,7 +171,7 @@ namespace OManager.DataLayer.ObjectsModification
         {
             try
             {
-                IReflectClass rclass = DataLayerCommon.returnReflectClassfromObject(obj);// objectContainer.Ext().Reflector().ForObject(obj);
+                IReflectClass rclass = DataLayerCommon.ReflectClassFor(obj);// objectContainer.Ext().Reflector().ForObject(obj);
                 if (rclass != null)
                 {
                     IReflectField[] fieldArr = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rclass);

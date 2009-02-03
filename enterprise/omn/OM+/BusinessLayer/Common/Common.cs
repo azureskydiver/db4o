@@ -1,8 +1,9 @@
+using Sharpen.Lang;
+
 namespace OManager.BusinessLayer.Common
 {
     public static class CommonValues
     {
-         
         public enum PrimitiveTypes
         {
             
@@ -128,5 +129,25 @@ namespace OManager.BusinessLayer.Common
 
             return isDateTimeOrString;
         }
+
+    	//TODO: Remove
+		public static bool IsNullable(string typeName)
+    	{
+    		return typeName.StartsWith("System.Nullable") || typeName.StartsWith("Nullable<");
+    	}
+
+    	public static string DecorateNullableName(string nullableTypeName)
+    	{
+			GenericTypeReference typeRef = (GenericTypeReference) TypeReference.FromString(nullableTypeName);
+    		TypeReference wrappedType = typeRef.GenericArguments[0];
+    		
+			return "Nullable<" + wrappedType.SimpleName + ">";
+    	}
+
+    	public static string UndecorateFieldName(string fieldName)
+    	{
+    		int index = fieldName.IndexOf('(');
+    		return index >= 0 ? fieldName.Remove(index - 1, fieldName.Length - index + 1) : fieldName;
+    	}
     }
 }

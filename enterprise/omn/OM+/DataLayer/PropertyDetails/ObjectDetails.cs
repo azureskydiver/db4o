@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Db4objects.Db4o; 
 using Db4objects.Db4o.Ext ;
 using Db4objects.Db4o.Reflect;
 using Db4objects.Db4o.Reflect.Generic;
 using OManager.DataLayer.CommonDatalayer;
 using OManager.DataLayer.Connection;
-using Db4objects.Db4o.Internal;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
 using System.Collections;
 using OManager.BusinessLayer.Common;
 
@@ -17,15 +14,17 @@ namespace OManager.DataLayer.Modal
 {
     public class ObjectDetails 
     {
-        private IObjectContainer objectContainer;
-        int level=0;
-        private object m_genObject;
+        private readonly IObjectContainer objectContainer;
+
+		int level;
+        private readonly object m_genObject;
+		private readonly List<object> m_listforObjects = new List<object>();
+
         public ObjectDetails(object genObject)
         {
-            this.m_genObject = genObject;
+            m_genObject = genObject;
             objectContainer = Db4oClient.Client;
         }
-        private List<object> m_listforObjects= new List<object>();
         public string GetUUID()
         {
             try
@@ -34,22 +33,16 @@ namespace OManager.DataLayer.Modal
                 if (objInfo != null)
                 {
                     Db4oUUID uuid = objInfo.GetUUID() ;
-                    if (uuid != null)
-                        return uuid.GetLongPart().ToString()  ;
-                    else
-                        return "NA";
-                   
+                    return uuid != null ? uuid.GetLongPart().ToString() : "NA";
                 }
-                else
-                    return "NA";
+            	
+				return "NA";
             }
             catch (Exception oEx)
             {
                 LoggingHelper.HandleException(oEx);
                 return "NA";
-
             }
-            
         }
 
         public long GetLocalID()
@@ -57,26 +50,20 @@ namespace OManager.DataLayer.Modal
             try
             {
                 IObjectInfo objInfo = objectContainer.Ext().GetObjectInfo(m_genObject);
-                if (objInfo != null)
-                {
-                    return objInfo.GetInternalID();
-                }
-                return 0;
+				return objInfo != null ? objInfo.GetInternalID() : 0;
             }
             catch (Exception oEx)
             {
                 LoggingHelper.HandleException(oEx);
                 return 0;
-
             }
-
         }
 
         public int GetDepth(object obj)
         {
             try{
             level++;
-            IReflectClass rclass = DataLayerCommon.returnReflectClassfromObject(obj);// objectContainer.Ext().Reflector().ForObject(obj);
+            IReflectClass rclass = DataLayerCommon.ReflectClassFor(obj);
                 if (rclass != null)
                 {
                     IReflectField[] fieldArr = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rclass);
@@ -170,42 +157,27 @@ namespace OManager.DataLayer.Modal
         {
             IObjectContainer objectContainer = Db4oClient.Client;
             return objectContainer.Ext().GetByID(id);
-
         }
 
         public bool checkReference(int objectId)
         {
             //not clear how to implemet now will be discussed later.
-            
             return false ;
-
         }
 
         public long GetVersion()
         {
-            
-            long version=0;
+            const long version = 0;
             try
             {
-                IObjectInfo objInfo = objectContainer.Ext().GetObjectInfo(m_genObject);
-                if (objInfo != null)
-                {
-                    version = objInfo.GetVersion();
-                }
-                else
-                    return version;
+            	IObjectInfo objInfo = objectContainer.Ext().GetObjectInfo(m_genObject);
+            	return objInfo != null ? objInfo.GetVersion() : version;
             }
             catch (Exception oEx)
             {
                 LoggingHelper.HandleException(oEx);
                 return 0;
             }
-
-            return version; ;
-           
         }
-
-       
-
     }
 }

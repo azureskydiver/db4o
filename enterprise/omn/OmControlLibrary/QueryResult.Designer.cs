@@ -99,7 +99,6 @@ namespace OMControlLibrary
 			this.tableLayoutPanelResultGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
 			this.tableLayoutPanelResultGrid.Size = new System.Drawing.Size(1201, 364);
 			this.tableLayoutPanelResultGrid.TabIndex = 0;
-			this.tableLayoutPanelResultGrid.Resize += new System.EventHandler(this.tableLayoutPanelResultGrid_Resize);
 			// 
 			// panelResultGridOptions
 			// 
@@ -306,7 +305,6 @@ namespace OMControlLibrary
 			this.Name = "QueryResult";
 			this.Size = new System.Drawing.Size(1201, 809);
 			this.Load += new System.EventHandler(this.QueryResult_Load);
-			this.Resize += new System.EventHandler(this.QueryResult_Resize);
 			this.splitContainerLeftPane.Panel1.ResumeLayout(false);
 			this.splitContainerLeftPane.Panel2.ResumeLayout(false);
 			this.splitContainerLeftPane.ResumeLayout(false);

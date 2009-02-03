@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Db4objects.Db4o.Reflect;
 using OManager.BusinessLayer.QueryManager;
 using OManager.DataLayer.ObjectsModification;
 using OManager.DataLayer.Modal;
@@ -10,6 +11,7 @@ using OManager.BusinessLayer.Login;
 using OManager.DataLayer.PropertyTable;
 using System.Windows.Forms;
 using OManager.DataLayer.Maintanence;
+using OManager.DataLayer.Reflection;
 using OME.AdvancedDataGridView;
 using OManager.DataLayer.CommonDatalayer;
 using OManager.DataLayer.DemoDBCreation;
@@ -64,13 +66,13 @@ namespace OManager.BusinessLayer.UIHelper
 			modObj.RefreshObjects(level);
 		}
 
-		public void UpdateCollection(ArrayList objList, ArrayList offsetList, ArrayList name, ArrayList type, object value)
+		public void UpdateCollection(IList objList, IList<int> offsetList, IList<string> names, IList<IType> type, object value)
 		{
 			try
 			{
 				ModifyCollections modColl = new ModifyCollections();
 
-				modColl.EditCollections(objList, offsetList, name, type, value);
+				modColl.EditCollections(objList, offsetList, names, type, value);
 			}
 			catch (Exception oEx)
 			{
@@ -78,13 +80,21 @@ namespace OManager.BusinessLayer.UIHelper
 			}
 		}
 
-		public  void SetCollectionsToNull(object parent, string field)
+		public  void SetFieldToNull(object obj, string fieldName)
 		{
 			try
 			{
-				ModifyCollections modColl = new ModifyCollections();
-
-				modColl.SetFieldToNull(parent,field);
+				IReflectClass klass = DataLayerCommon.ReflectClassFor(obj);
+				if (klass != null)
+				{
+					IReflectField field = DataLayerCommon.GetDeclaredField(klass, fieldName);
+					if (field == null)
+						return;
+					
+					field.Set(obj, null);
+					Db4oClient.Client.Store(obj);
+					Db4oClient.Client.Commit();
+				}
 			}
 			catch (Exception oEx)
 			{
@@ -173,8 +183,8 @@ namespace OManager.BusinessLayer.UIHelper
 			proxyAuth = proxyAuth.ReturnProxyAuthenticationInfo();
 			if (proxyAuth != null)
 				return proxyAuth.ProxyAuthObj;
-			else
-				return null;
+			
+			return null;
 		}
 
 		public List<string> GetSearchString(ConnParams conn)
@@ -218,22 +228,20 @@ namespace OManager.BusinessLayer.UIHelper
 		{
 			FavouriteList lstFav = new FavouriteList(conn);
 			lstFav = lstFav.FindFolderWithClassesByFolderName(folderName);
-			List<FavouriteFolder> fav = lstFav.lstFavFolder;
-			return fav[0]; 
+			return lstFav.lstFavFolder[0]; 
 		}
        
 
-		public void ExpandTreeNode(TreeGridNode node,bool checkVal)
+		public void ExpandTreeNode(TreeGridNode node,bool activate)
 		{
 			if (IsCollection(node.Tag))
 				clsRenderHierarchy.ExpandCollectionNode(node);
 			else if (IsArray(node.Tag))
 				clsRenderHierarchy.ExpandArrayNode(node);
-
 			else if (IsPrimitive(node.Tag))
 				return;
 			else
-				clsRenderHierarchy.ExpandObjectNode(node,checkVal);
+				clsRenderHierarchy.ExpandObjectNode(node, activate);
 		}
 
 		public bool IsCollection(object expandedObject)
@@ -272,9 +280,9 @@ namespace OManager.BusinessLayer.UIHelper
 		}
 
 
-		public TreeGridView GetObjectHierarchy(object selectedObj,string classname,bool check )
+		public TreeGridView GetObjectHierarchy(object selectedObj,string classname,bool activate )
 		{
-			return clsRenderHierarchy.ReturnHierarchy(selectedObj, classname, check);
+			return clsRenderHierarchy.ReturnHierarchy(selectedObj, classname, activate);
 		}
 
 		public long[] ExecuteQueryResults(OMQuery omQuery)

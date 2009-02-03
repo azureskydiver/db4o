@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Reflection;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
-
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.ObjectExplorer;
 using OME.Logging.Common;
@@ -18,12 +17,12 @@ namespace OMControlLibrary.Common
 
 		private ContextMenuStrip m_columnContextMenuStrip; //column context menu
 		private ContextMenuStrip m_rowContextMenuStrip; //Row context menu
-		private string SHOW_ALL_COLUMN = "SHOW_ALL_COLUMN";
-		private bool m_CellClick = false;
-		private int m_CurrentRowNumber = 0;
+		private const string SHOW_ALL_COLUMN = "SHOW_ALL_COLUMN";
+		private bool m_CellClick;
+		private int m_CurrentRowNumber;
 
 
-		public event System.EventHandler<dbDataGridViewEventArgs> OnDBGridCellClick;
+		public event EventHandler<dbDataGridViewEventArgs> OnDBGridCellClick;
 
 		//Constants
 		private const string MENU_SEPARATOR = "MENU_SEPARATOR";
@@ -35,11 +34,7 @@ namespace OMControlLibrary.Common
 
 		public dbDataGridView()
 		{
-			this.SetStyle(ControlStyles.CacheText |
-				 ControlStyles.AllPaintingInWmPaint |
-				 ControlStyles.UserPaint |
-				 ControlStyles.OptimizedDoubleBuffer |
-				 ControlStyles.Opaque, true);
+			SetStyle(ControlStyles.CacheText | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.Opaque, true);
 			SetDefaultProperties();
 
 		}
@@ -54,7 +49,7 @@ namespace OMControlLibrary.Common
 			{
 				base.OnDragDrop(e);
 
-				Point ptToClient = this.PointToClient(new Point(e.X, e.Y));
+				Point ptToClient = PointToClient(new Point(e.X, e.Y));
 
 				DragHelper.ImageList_DragMove(ptToClient.X, ptToClient.Y);
 				e.Effect = DragDropEffects.Move;
@@ -97,10 +92,10 @@ namespace OMControlLibrary.Common
 				m_CellClick = false;
 				base.OnMouseDown(e);
 
-				this.DoubleBuffered = false;
+				DoubleBuffered = false;
 
 				//set to false for users to receive visual feedback when when reordering columns.
-				DataGridView.HitTestInfo hitTestInfo = this.HitTest(e.X, e.Y);
+				HitTestInfo hitTestInfo = HitTest(e.X, e.Y);
 
 				//setting member variable IsHeaderClicked = true, to set cancel 
 				// contextmenu on ColumnHeader.
@@ -110,17 +105,17 @@ namespace OMControlLibrary.Common
 					hitTestType == DataGridViewHitTestType.RowHeader ||
 					hitTestType == DataGridViewHitTestType.TopLeftHeader)
 				{
-					this.ContextMenuStrip = m_columnContextMenuStrip;
+					ContextMenuStrip = m_columnContextMenuStrip;
 				}
 				else if (hitTestType == DataGridViewHitTestType.Cell)
 				{
-					this.ContextMenuStrip = m_rowContextMenuStrip;
+					ContextMenuStrip = m_rowContextMenuStrip;
 				}
 
-				if (this.Rows.Count < 1)
+				if (Rows.Count < 1)
 				{
-					if (this.ContextMenuStrip != null)
-						this.ContextMenuStrip = null;
+					if (ContextMenuStrip != null)
+						ContextMenuStrip = null;
 
 					return;
 				}
@@ -128,39 +123,37 @@ namespace OMControlLibrary.Common
 				//If user clicks on blank space below grid, then remove the context menu
 				if (hitTestInfo.Type == DataGridViewHitTestType.None)
 				{
-					this.ContextMenuStrip = null;
+					ContextMenuStrip = null;
 					return;
 				}
 
-				if (hitTestInfo.Type != DataGridViewHitTestType.Cell && this.CurrentRow != null)
+				if (hitTestInfo.Type != DataGridViewHitTestType.Cell && CurrentRow != null)
 				{
-					this.m_CurrentRowNumber = this.CurrentRow.Index;
+					m_CurrentRowNumber = CurrentRow.Index;
 					return;
 				}
 
-				this.m_CurrentRowNumber = hitTestInfo.RowIndex;
-				if (hitTestInfo.RowIndex == Common.Constants.INVALID_INDEX_VALUE)
+				m_CurrentRowNumber = hitTestInfo.RowIndex;
+				if (hitTestInfo.RowIndex == Constants.INVALID_INDEX_VALUE)
 					return;
 
 				if (e.Button == MouseButtons.Right)
 				{
-					if (this.SelectedRows.Count < 2)
-						this.ClearSelection();
-					if (this.SelectedRows.Count < 1)
-						this.Rows[hitTestInfo.RowIndex].Selected = true;
+					if (SelectedRows.Count < 2)
+						ClearSelection();
+					if (SelectedRows.Count < 1)
+						Rows[hitTestInfo.RowIndex].Selected = true;
 				}
 
-				if (this.CurrentRow != null)
-					this.CurrentRow.Visible = true;
+				if (CurrentRow != null)
+					CurrentRow.Visible = true;
 
 				//fireing OnDBCellClick event.
 				if (!m_CellClick && e.Button == MouseButtons.Left)
 				{
 					if (OnDBGridCellClick != null)
 					{
-						dbDataGridViewEventArgs objCurrentRowData;
-						objCurrentRowData = new dbDataGridViewEventArgs(this.CurrentCell);
-						OnDBGridCellClick(this, objCurrentRowData);
+						OnDBGridCellClick(this, new dbDataGridViewEventArgs(CurrentCell));
 					}
 				}
 			}
@@ -178,28 +171,26 @@ namespace OMControlLibrary.Common
 			//fireing OnDBCellClick event.
 			try
 			{
-				if (this.CurrentCell == null)
+				if (CurrentCell == null)
 					return;
 
 				//Does not fire OnAICellClick event if current row is not 
 				//chage for the cell or cell is header cell.
-				if (this.CurrentCell.RowIndex == Constants.INVALID_INDEX_VALUE ||
-					this.CurrentCell.RowIndex == this.m_CurrentRowNumber)
+				if (CurrentCell.RowIndex == Constants.INVALID_INDEX_VALUE ||
+					CurrentCell.RowIndex == m_CurrentRowNumber)
 				{
 					return;
 				}
 
-				this.m_CurrentRowNumber = this.CurrentCell.RowIndex;
+				m_CurrentRowNumber = CurrentCell.RowIndex;
 
-				this.CurrentRow.Visible = true;
+				CurrentRow.Visible = true;
 
 				if (!m_CellClick)
 				{
 					if (OnDBGridCellClick != null)
 					{
-						dbDataGridViewEventArgs objCurrentRowData;
-						objCurrentRowData = new dbDataGridViewEventArgs(this.CurrentCell);
-						OnDBGridCellClick(this, objCurrentRowData);
+						OnDBGridCellClick(this, new dbDataGridViewEventArgs(CurrentCell));
 					}
 					m_CellClick = true;
 				}
@@ -218,18 +209,13 @@ namespace OMControlLibrary.Common
 		/// <summary>
 		/// Build context menu for column to set column visibility.
 		/// </summary>
-		/// <param name="columnName">Name of column, allways visible</param>
-		/// <param name="showAllMenuText">Text for show all column.</param>
-		public void BuildColumnContextMenu(string[] columnName, string showAllMenuText)
+		public void BuildColumnContextMenu(string showAllMenuText, params string[] alwaysVisibleColumns)
 		{
 			DataGridViewColumn column;
-			int colCount = this.ColumnCount;
+			int colCount = ColumnCount;
 			int visibaleColumnCount = 0;
 
 			m_columnContextMenuStrip = new ContextMenuStrip();
-
-			string menuName = string.Empty;
-			string menuText = string.Empty;
 
 			string showAllColumnText = showAllMenuText;
 			ToolStripMenuItem objMenu;
@@ -238,9 +224,11 @@ namespace OMControlLibrary.Common
 			{
 				OMETrace.WriteFunctionStart();
 
+				string menuText;
+				string menuName;
 				for (int colIndex = 0; colIndex < colCount; ++colIndex)
 				{
-					column = this.Columns[colIndex];
+					column = Columns[colIndex];
 					menuText = column.HeaderText;
 					menuName = column.Name;
 
@@ -263,16 +251,16 @@ namespace OMControlLibrary.Common
 				}
 
 				//disable menu item for column 
-				for (int count = 0; count < columnName.Length; count++)
+				for (int count = 0; count < alwaysVisibleColumns.Length; count++)
 				{
-					if (m_columnContextMenuStrip.Items.ContainsKey(columnName[count]))
-						m_columnContextMenuStrip.Items[columnName[count]].Enabled = false;
+					if (m_columnContextMenuStrip.Items.ContainsKey(alwaysVisibleColumns[count]))
+						m_columnContextMenuStrip.Items[alwaysVisibleColumns[count]].Enabled = false;
 				}
 
 				if (m_columnContextMenuStrip.Items.Count > 0)
 				{
 					//add separator before showall menu item
-					ToolStripSeparator toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+					ToolStripSeparator toolStripSeparator = new ToolStripSeparator();
 					toolStripSeparator.Name = MENU_SEPARATOR;
 					m_columnContextMenuStrip.Items.Add(toolStripSeparator);
 
@@ -284,9 +272,8 @@ namespace OMControlLibrary.Common
 					m_columnContextMenuStrip.Items.Add(objMenu);
 				}
 
-				this.ContextMenuStrip = m_columnContextMenuStrip;
-				this.ContextMenuStrip.ItemClicked +=
-					new ToolStripItemClickedEventHandler(ContextMenuStrip_ItemClicked);
+				ContextMenuStrip = m_columnContextMenuStrip;
+				ContextMenuStrip.ItemClicked += ContextMenuStrip_ItemClicked;
 
 				OMETrace.WriteFunctionEnd();
 			}
@@ -313,12 +300,12 @@ namespace OMControlLibrary.Common
 				for (int iMenuIndex = 0; iMenuIndex < menuCount; ++iMenuIndex)
 				{
 					objMenuItem =
-						this.m_columnContextMenuStrip.Items[iMenuIndex] as ToolStripMenuItem;
+						m_columnContextMenuStrip.Items[iMenuIndex] as ToolStripMenuItem;
 
 					if (objMenuItem != null && objMenuItem.Enabled &&
 						objMenuItem.Name != SHOW_ALL_COLUMN)
 					{
-						column = this.Columns[objMenuItem.Name];
+						column = Columns[objMenuItem.Name];
 						if (objMenuItem.Checked)
 						{
 							column.Visible = true;
@@ -359,9 +346,8 @@ namespace OMControlLibrary.Common
 
 				m_rowContextMenuStrip.Items.Add(objMenu);
 
-				this.ContextMenuStrip = m_rowContextMenuStrip;
-				this.ContextMenuStrip.ItemClicked +=
-					new ToolStripItemClickedEventHandler(ContextMenuStrip_ItemClicked);
+				ContextMenuStrip = m_rowContextMenuStrip;
+				ContextMenuStrip.ItemClicked += ContextMenuStrip_ItemClicked;
 			}
 			catch (Exception oEx)
 			{
@@ -380,14 +366,13 @@ namespace OMControlLibrary.Common
 
 			try
 			{
-				if (this.Columns.Contains(menuItemName))
+				if (Columns.Contains(menuItemName))
 				{
-					column = this.Columns[menuItemName];
+					column = Columns[menuItemName];
 
 					//do not process if column index is zero.
 					//making sure atleast one column should be visible.
-					ToolStripMenuItem menuItem =
-						this.ContextMenuStrip.Items[menuItemName] as ToolStripMenuItem;
+					ToolStripMenuItem menuItem = ContextMenuStrip.Items[menuItemName] as ToolStripMenuItem;
 
 					if (column.Visible)
 					{
@@ -411,28 +396,26 @@ namespace OMControlLibrary.Common
 					ToolStripMenuItem menuItem = (ToolStripMenuItem)ContextMenuStrip.Items[0];
 					menuItem.Checked = false;
 
-					this.ContextMenuStrip.Dispose();
-					//m_rowContextMenuStrip.Dispose();
-
-					if (this.SelectedRows.Count > 1)
+					ContextMenuStrip.Dispose();
+					if (SelectedRows.Count > 1)
 					{
 						List<DataGridViewRow> selectedRows = new List<DataGridViewRow>();
 
-						int rowCount = this.Rows.Count;
+						int rowCount = Rows.Count;
 						for (int i = 0; i < rowCount; i++)
 						{
-							if (this.Rows[i].Selected)
-								selectedRows.Add(this.Rows[i]);
+							if (Rows[i].Selected)
+								selectedRows.Add(Rows[i]);
 						}
 
 						for (int i = 0; i < selectedRows.Count; i++)
 						{
-							this.Rows.Remove(selectedRows[i]);
+							Rows.Remove(selectedRows[i]);
 						}
 						selectedRows.Clear();
 					}
 					else
-						this.Rows.RemoveAt(m_CurrentRowNumber);
+						Rows.RemoveAt(m_CurrentRowNumber);
 				}
 			}
 			catch (Exception oEx)
@@ -441,8 +424,8 @@ namespace OMControlLibrary.Common
 			}
 			finally
 			{
-				this.ContextMenu = null;
-				this.ContextMenuStrip = null;
+				ContextMenu = null;
+				ContextMenuStrip = null;
 			}
 		}
 
@@ -460,19 +443,18 @@ namespace OMControlLibrary.Common
 			{
 				if (m_columnContextMenuStrip == null)
 					return;
-				string containerForm = string.Empty;
+
 				DataGridViewColumn column;
 				int menuCount = m_columnContextMenuStrip.Items.Count;
 				ToolStripMenuItem objMenuItem;
 				for (int iMenuIndex = 0; iMenuIndex < menuCount; iMenuIndex++)
 				{
-					objMenuItem =
-						this.m_columnContextMenuStrip.Items[iMenuIndex] as ToolStripMenuItem;
+					objMenuItem = m_columnContextMenuStrip.Items[iMenuIndex] as ToolStripMenuItem;
 
 					if (objMenuItem != null && objMenuItem.Enabled &&
 						objMenuItem.Name != SHOW_ALL_COLUMN)
 					{
-						column = this.Columns[objMenuItem.Name];
+						column = Columns[objMenuItem.Name];
 						column.Visible = true;
 						objMenuItem.Checked = true;
 					}
@@ -490,26 +472,26 @@ namespace OMControlLibrary.Common
 		/// </summary>
 		private void SetDefaultProperties()
 		{
-			this.BackgroundColor = Color.White;
-			this.RowHeadersVisible = false;
-			this.AutoGenerateColumns = false;
-			this.AllowUserToResizeRows = false;
-			this.AllowUserToAddRows = false;
-			this.AllowUserToOrderColumns = false;
-			this.AllowDrop = true;
-			this.MultiSelect = false;
-			this.EditMode = DataGridViewEditMode.EditOnEnter;
-			this.ScrollBars = ScrollBars.Both;
-			this.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.AllowUserToDeleteRows = false;
-			this.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-			this.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
-			this.Visible = true;
-			this.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-			this.AutoGenerateColumns = false;
-			this.EnableHeadersVisualStyles = false;
-			this.DefaultCellStyle.Alignment = DataGridViewContentAlignment.TopLeft;
+			BackgroundColor = Color.White;
+			RowHeadersVisible = false;
+			AutoGenerateColumns = false;
+			AllowUserToResizeRows = false;
+			AllowUserToAddRows = false;
+			AllowUserToOrderColumns = false;
+			AllowDrop = true;
+			MultiSelect = false;
+			EditMode = DataGridViewEditMode.EditOnEnter;
+			ScrollBars = ScrollBars.Both;
+			ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+			AllowUserToDeleteRows = false;
+			AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+			AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+			Visible = true;
+			AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+			AutoGenerateColumns = false;
+			EnableHeadersVisualStyles = false;
+			DefaultCellStyle.Alignment = DataGridViewContentAlignment.TopLeft;
 			DataGridViewCellStyle cellstyle = new DataGridViewCellStyle();
 			cellstyle.BackColor = Color.FromArgb(218, 232, 241);
 			SetColumnHeaderStyle();
@@ -520,17 +502,17 @@ namespace OMControlLibrary.Common
 			try
 			{
 				DataGridViewCellStyle headerCellStyle = new DataGridViewCellStyle();
-				float fontSize = 8;
+				const float fontSize = 8;
 				Font headerFont = new Font("Tahoma", fontSize, FontStyle.Regular);
 				headerCellStyle.ForeColor = Color.Black;
 				headerCellStyle.BackColor = SystemColors.Control;
 				headerCellStyle.Font = headerFont;
-				this.ColumnHeadersHeight = 20;
-				this.ColumnHeadersDefaultCellStyle = headerCellStyle;
+				ColumnHeadersHeight = 20;
+				ColumnHeadersDefaultCellStyle = headerCellStyle;
 
 				DataGridViewCellStyle cellstyle = new DataGridViewCellStyle();
 				cellstyle.Font = headerFont;
-				this.DefaultCellStyle = cellstyle;
+				DefaultCellStyle = cellstyle;
 			}
 			catch (Exception oEx)
 			{
@@ -552,38 +534,33 @@ namespace OMControlLibrary.Common
 		{
 			try
 			{
-				this.Columns.Add(Common.Constants.QUERY_GRID_ISEDITED_HIDDEN, Common.Constants.QUERY_GRID_ISEDITED_HIDDEN);
-				this.Columns.Add(COLUMN_NO_NAME, COLUMN_NO_NAME);
-				this.Columns[Common.Constants.QUERY_GRID_ISEDITED_HIDDEN].Visible = false;
-				this.Columns[Common.Constants.QUERY_GRID_ISEDITED_HIDDEN].Width = 0;
-				this.Columns[COLUMN_NO_NAME].Width = 100;
+				Columns.Add(Constants.QUERY_GRID_ISEDITED_HIDDEN, Constants.QUERY_GRID_ISEDITED_HIDDEN);
+				Columns.Add(COLUMN_NO_NAME, COLUMN_NO_NAME);
+				Columns[Constants.QUERY_GRID_ISEDITED_HIDDEN].Visible = false;
+				Columns[Constants.QUERY_GRID_ISEDITED_HIDDEN].Width = 0;
+				Columns[COLUMN_NO_NAME].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
 
-				IDictionaryEnumerator eNum = hashColumn.GetEnumerator();
-				if (eNum != null)
+				foreach (DictionaryEntry entry in hashColumn)
 				{
-					while (eNum.MoveNext())
-					{
-						if (!eNum.Key.ToString().Equals(BusinessConstants.DB4OBJECTS_REF))
-						{
-							dbDataGridViewDateTimePickerColumn valueTextBoxColumn =
-							CreateDateTimeAndComboBoxColumn(eNum.Key.ToString(), eNum.Key.ToString(), DataGridViewColumnSortMode.Automatic);
-							this.Columns.Add(valueTextBoxColumn);
+					if (entry.Key.ToString().Equals(BusinessConstants.DB4OBJECTS_REF)) 
+						continue;
 
-							if (hashAttributes.Count != 0)
-							{
-								string strTag = hashAttributes[eNum.Key.ToString()] as string;
-								this.Columns[eNum.Key.ToString()].Tag = strTag;
-							}
-							else
-							{
-								this.Columns[eNum.Key.ToString()].Tag = className;
-							}
-						}
+					dbDataGridViewDateTimePickerColumn valueTextBoxColumn = CreateDateTimeAndComboBoxColumn(entry.Key.ToString(), entry.Key.ToString(), DataGridViewColumnSortMode.Automatic);
+					Columns.Add(valueTextBoxColumn);
+
+					if (hashAttributes.Count != 0)
+					{
+						string strTag = hashAttributes[entry.Key.ToString()] as string;
+						Columns[entry.Key.ToString()].Tag = strTag;
+					}
+					else
+					{
+						Columns[entry.Key.ToString()].Tag = className;
 					}
 
-					string[] colNames = new string[] { COLUMN_NO_NAME };
-					this.BuildColumnContextMenu(colNames, Helper.GetResourceString(Constants.GRID_SHOW_ALL_COLUMN));
+					BuildColumnContextMenu(Helper.GetResourceString(Constants.GRID_SHOW_ALL_COLUMN), COLUMN_NO_NAME);
 				}
+				Columns[Columns.Count - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 			}
 			catch (Exception oEx)
 			{
@@ -593,8 +570,8 @@ namespace OMControlLibrary.Common
 		
 		internal void SetDataGridColumnHeader(List<Hashtable> resultList, string className, Hashtable hashAttributes)
 		{
-			this.Rows.Clear();
-			this.Columns.Clear();
+			Rows.Clear();
+			Columns.Clear();
 			SetDataGridColumnHeader(BiggestFieldList(resultList), className, hashAttributes);
 		}
 
@@ -617,85 +594,70 @@ namespace OMControlLibrary.Common
 			return hColumn;
 		}
 
-
 		internal void SetDatagridRowsWithIndex(List<Hashtable> resultList, string className, Hashtable hashAttributes, int index)
 		{
 			try
 			{
-				this.Rows.Clear();
+				Rows.Clear();
 
 				for (int listCount = 0; listCount < resultList.Count; listCount++)
 				{
 					Hashtable hTable = resultList[listCount];
-					IDictionaryEnumerator eNum = hTable.GetEnumerator();
 					DataGridViewRow newRow = new DataGridViewRow();
 
-					this.Rows.Add(newRow);
-					this.Rows[listCount].Cells[COLUMN_NO_NAME].Value = index++;
-					this.Rows[listCount].Cells[COLUMN_NO_NAME].ReadOnly = true;
+					Rows.Add(newRow);
+					Rows[listCount].Cells[COLUMN_NO_NAME].Value = index++;
+					Rows[listCount].Cells[COLUMN_NO_NAME].ReadOnly = true;
 
 					// For checking if row is edited or not
-					this.Rows[listCount].Cells[Common.Constants.QUERY_GRID_ISEDITED_HIDDEN].Value = false;
+					Rows[listCount].Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value = false;
 
-
-					if (eNum != null)
+					foreach (DictionaryEntry entry in hTable)
 					{
-						while (eNum.MoveNext())
+						if (!entry.Key.ToString().Equals(BusinessConstants.DB4OBJECTS_REF))
 						{
-							if (!eNum.Key.ToString().Equals(BusinessConstants.DB4OBJECTS_REF))
+							string dataType = null;
+							if (hashAttributes.Count == 0)
 							{
-								string dataType = null;
-								if (hashAttributes.Count == 0)
+								dataType = Helper.DbInteraction.GetDatatype(className, entry.Key.ToString());
+							}
+							else
+							{
+								int intIndex = entry.Key.ToString().LastIndexOf('.');
+								string strAttribName = entry.Key.ToString().Substring(intIndex + 1);
+								string clsName = Columns[entry.Key.ToString()].Tag.ToString();
+								if (clsName != null && strAttribName != null)
 								{
-									dataType = Helper.DbInteraction.GetDatatype(className, eNum.Key.ToString());
+									dataType = Helper.DbInteraction.GetDatatype(clsName, strAttribName);
 								}
-								else
+							}
+							if (dataType != null)
+							{
+								if (Helper.IsPrimitive(dataType))
 								{
-									int intIndex = eNum.Key.ToString().LastIndexOf('.');
-									string strAttribName = eNum.Key.ToString().Substring(intIndex + 1);
-									string clsName = this.Columns[eNum.Key.ToString()].Tag.ToString();
-									if (clsName != null && strAttribName != null)
+									if (entry.Value != null)
 									{
-										dataType = Helper.DbInteraction.GetDatatype(clsName, strAttribName);
-									}
-								}
-								if (dataType != null)
-								{
-									if (Helper.IsPrimitive(dataType))
-									{
-										if (eNum.Value != null)
-										{
-											this.Rows[listCount].Cells[eNum.Key.ToString()].Value = Helper.GetValue(dataType, eNum.Value);
-											this.Rows[listCount].Cells[eNum.Key.ToString()].Tag = dataType;
-											this.Rows[listCount].Cells[eNum.Key.ToString()].ReadOnly = false;
-
-										}
-										else
-										{
-											this.Rows[listCount].Cells[eNum.Key.ToString()].Value = VALUE_NULL;
-											this.Rows[listCount].Cells[eNum.Key.ToString()].ReadOnly = true;
-										}
+										Rows[listCount].Cells[entry.Key.ToString()].Value = Helper.GetValue(dataType, entry.Value);
+										Rows[listCount].Cells[entry.Key.ToString()].Tag = dataType;
+										Rows[listCount].Cells[entry.Key.ToString()].ReadOnly = false;
 									}
 									else
 									{
-										if (eNum.Value != null)
-										{
-											this.Rows[listCount].Cells[eNum.Key.ToString()].Value = eNum.Value.ToString();
-										}
-										else
-										{
-											this.Rows[listCount].Cells[eNum.Key.ToString()].Value = VALUE_NULL;
-										}
-										this.Rows[listCount].Cells[eNum.Key.ToString()].ReadOnly = true;
+										Rows[listCount].Cells[entry.Key.ToString()].Value = VALUE_NULL;
+										Rows[listCount].Cells[entry.Key.ToString()].ReadOnly = true;
 									}
 								}
+								else
+								{
+									Rows[listCount].Cells[entry.Key.ToString()].Value = entry.Value != null ? entry.Value.ToString() : VALUE_NULL;
+									Rows[listCount].Cells[entry.Key.ToString()].ReadOnly = true;
+								}
 							}
-							else
-								this.Rows[listCount].Tag = eNum.Value;
 						}
+						else
+							Rows[listCount].Tag = entry.Value;
 					}
 				}
-				//this.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
 			}
 			catch (Exception oEx)
 			{
@@ -726,7 +688,6 @@ namespace OMControlLibrary.Common
 		//Class Property Table for Objects
 		private string m_UUIDHeaderText;
 		private string m_LocalIDHeaderText;
-		private string m_ObjectDepthHeaderText;
 		private string m_VersionHeaderText;
 
 		private string m_AttributesHeaderText;
@@ -749,39 +710,39 @@ namespace OMControlLibrary.Common
 		{
 			try
 			{
-				//Set header text for the Properties grid columns
 				SetLiteralsClassPropertyColumn();
 
-				//Clear all the columns before creating columns
-				this.Columns.Clear();
+				Columns.Clear();
 
-				this.AutoGenerateColumns = false;
-				this.AllowUserToDeleteRows = false;
-				//  this.ReadOnly = true;
+				AutoGenerateColumns = false;
+				AllowUserToDeleteRows = false;
 
-				DataGridViewTextBoxColumn fieldNameTextBoxColumn =
-					CreateTextBoxColumn(m_FieldNameHeaderText, m_FieldNameHeaderText, DataGridViewColumnSortMode.NotSortable);
+				DataGridViewColumn fieldNameTextBoxColumn = New<DataGridViewTextBoxColumn>(
+																	m_FieldNameHeaderText, 
+																	m_FieldNameHeaderText, 
+																	DataGridViewColumnSortMode.NotSortable, 
+																	DataGridViewAutoSizeColumnMode.Fill);
 				fieldNameTextBoxColumn.ReadOnly = true;
-				DataGridViewTextBoxColumn dataTypeTextBoxColumn =
-					 CreateTextBoxColumn(m_DataTypeHeaderText, m_DataTypeHeaderText, DataGridViewColumnSortMode.NotSortable);
+				DataGridViewColumn dataTypeTextBoxColumn = New<DataGridViewTextBoxColumn>(
+																	m_DataTypeHeaderText, 
+																	m_DataTypeHeaderText, 
+																	DataGridViewColumnSortMode.NotSortable, 
+																	DataGridViewAutoSizeColumnMode.Fill);
 				dataTypeTextBoxColumn.ReadOnly = true;
 
-				DataGridViewCheckBoxColumn isIndexedCheckBoxColumn =
-					 CreateCheckBoxColumn(m_IsIndexedHeaderText, m_IsIndexedHeaderText, DataGridViewColumnSortMode.NotSortable);
+				DataGridViewCheckBoxColumn isIndexedCheckBoxColumn = CreateCheckBoxColumn(
+																			m_IsIndexedHeaderText, 
+																			m_IsIndexedHeaderText, 
+																			DataGridViewColumnSortMode.NotSortable);
 				isIndexedCheckBoxColumn.ReadOnly = false;
 
-
-				DataGridViewCheckBoxColumn isPublicCheckBoxColumn =
-					CreateCheckBoxColumn(m_IsPublicHeaderText, m_IsPublicHeaderText, DataGridViewColumnSortMode.NotSortable);
+				DataGridViewCheckBoxColumn isPublicCheckBoxColumn = CreateCheckBoxColumn(
+																			m_IsPublicHeaderText, 
+																			m_IsPublicHeaderText, 
+																			DataGridViewColumnSortMode.NotSortable);
 				isPublicCheckBoxColumn.ReadOnly = true;
 
-				this.Columns.AddRange(
-					new DataGridViewColumn[] {
-                    fieldNameTextBoxColumn, 
-                    dataTypeTextBoxColumn,
-                    isIndexedCheckBoxColumn,
-                    isPublicCheckBoxColumn
-                });
+				Columns.AddRange( new DataGridViewColumn[] { fieldNameTextBoxColumn, dataTypeTextBoxColumn, isIndexedCheckBoxColumn, isPublicCheckBoxColumn });
 
 			}
 			catch (Exception oEx)
@@ -801,11 +762,11 @@ namespace OMControlLibrary.Common
 				SetLiteralsQueryGridColumn();
 
 				//Clear all the columns before creating columns
-				this.Columns.Clear();
+				Columns.Clear();
 
-				this.AutoGenerateColumns = false;
-				this.AllowUserToAddRows = false;
-				this.AllowUserToDeleteRows = false;
+				AutoGenerateColumns = false;
+				AllowUserToAddRows = false;
+				AllowUserToDeleteRows = false;
 
 				DataGridViewTextBoxColumn fieldNameTextBoxColumn =
 					CreateTextBoxColumn(m_FieldHeaderText, m_FieldHeaderText, DataGridViewColumnSortMode.NotSortable);
@@ -831,7 +792,7 @@ namespace OMControlLibrary.Common
 				valueTextBoxColumn.Width = 210;
 				operatorComboBoxColumn.Width = 97;
 
-				this.Columns.AddRange(
+				Columns.AddRange(
 					new DataGridViewColumn[] {
                     fieldNameTextBoxColumn, 
                     conditionComboBoxColumn,
@@ -861,17 +822,17 @@ namespace OMControlLibrary.Common
 				SetLitralsAdttributesColumn();
 
 				//Clear all the columns before creating columns
-				this.Columns.Clear();
+				Columns.Clear();
 
-				this.AutoGenerateColumns = false;
+				AutoGenerateColumns = false;
 				//this.AllowUserToAddRows = false;
-				this.AllowUserToDeleteRows = true;
-				this.ReadOnly = true;
+				AllowUserToDeleteRows = true;
+				ReadOnly = true;
 
 				DataGridViewTextBoxColumn fieldNameTextBoxColumn =
 					CreateTextBoxColumn(m_AttributesHeaderText, m_AttributesHeaderText, DataGridViewColumnSortMode.NotSortable);
 
-				this.Columns.Add(fieldNameTextBoxColumn);
+				Columns.Add(fieldNameTextBoxColumn);
 			}
 			catch (Exception oEx)
 			{
@@ -886,15 +847,13 @@ namespace OMControlLibrary.Common
 		{
 			try
 			{
-				//Set header text for the Database grid column
 				SetLitralsDatabasePropertiesColumn();
 
-				//Clear all the columns before creating columns
-				this.Columns.Clear();
+				Columns.Clear();
 
-				this.AutoGenerateColumns = false;
-				this.AllowUserToDeleteRows = false;
-				this.ReadOnly = true;
+				AutoGenerateColumns = false;
+				AllowUserToDeleteRows = false;
+				ReadOnly = true;
 
 				DataGridViewTextBoxColumn databaseSizeTextBoxColumn =
 					CreateTextBoxColumn(m_DataBaseSizeHeaderText, m_DataBaseSizeHeaderText,
@@ -904,11 +863,13 @@ namespace OMControlLibrary.Common
 					CreateTextBoxColumn(m_NumberOfClassesHeaderText, m_NumberOfClassesHeaderText,
 										DataGridViewColumnSortMode.NotSortable);
 
-				DataGridViewTextBoxColumn freeSpaceTextBoxColumn =
-				   CreateTextBoxColumn(m_FreeSpaceHeaderText, m_FreeSpaceHeaderText,
-									   DataGridViewColumnSortMode.NotSortable);
+				DataGridViewTextBoxColumn freeSpaceTextBoxColumn = New<DataGridViewTextBoxColumn>(
+																		m_FreeSpaceHeaderText, 
+																		m_FreeSpaceHeaderText,
+																		DataGridViewColumnSortMode.NotSortable,
+																		DataGridViewAutoSizeColumnMode.Fill);
 
-				this.Columns.AddRange(
+				Columns.AddRange(
 				   new DataGridViewColumn[] {
                     databaseSizeTextBoxColumn, 
                     noOfClasessTextBoxColumn,
@@ -928,31 +889,31 @@ namespace OMControlLibrary.Common
 		{
 			try
 			{
-				//Set header text for the Object grid column
 				SetLitralsObjectProperties();
 
-				//Clear all the columns before creating columns
-				this.Columns.Clear();
+				Columns.Clear();
 
-				this.AutoGenerateColumns = false;
-				this.AllowUserToDeleteRows = false;
-				this.ReadOnly = true;
+				AutoGenerateColumns = false;
+				AllowUserToDeleteRows = false;
+				ReadOnly = true;
 
-				DataGridViewTextBoxColumn uuidTextBoxColumn =
-					CreateTextBoxColumn(m_UUIDHeaderText, m_UUIDHeaderText, DataGridViewColumnSortMode.NotSortable);
+				DataGridViewTextBoxColumn uuidTextBoxColumn =New<DataGridViewTextBoxColumn>(
+																m_UUIDHeaderText, 
+																m_UUIDHeaderText, 
+																DataGridViewColumnSortMode.NotSortable, 
+																DataGridViewAutoSizeColumnMode.Fill);
 
-				DataGridViewTextBoxColumn localIDTextBoxColumn =
-					CreateTextBoxColumn(m_LocalIDHeaderText, m_LocalIDHeaderText, DataGridViewColumnSortMode.NotSortable);
+				DataGridViewTextBoxColumn localIDTextBoxColumn = CreateTextBoxColumn(
+																	m_LocalIDHeaderText, 
+																	m_LocalIDHeaderText, 
+																	DataGridViewColumnSortMode.NotSortable);
 
-				DataGridViewTextBoxColumn versionTextBoxColumn =
-					CreateTextBoxColumn(m_VersionHeaderText, m_VersionHeaderText, DataGridViewColumnSortMode.NotSortable);
+				DataGridViewTextBoxColumn versionTextBoxColumn = CreateTextBoxColumn(
+																	m_VersionHeaderText, 
+																	m_VersionHeaderText, 
+																	DataGridViewColumnSortMode.NotSortable);
 
-				this.Columns.AddRange(
-				   new DataGridViewColumn[] {
-                    uuidTextBoxColumn, 
-                    localIDTextBoxColumn,
-                    versionTextBoxColumn
-                });
+				Columns.AddRange(new DataGridViewColumn[]  { uuidTextBoxColumn, localIDTextBoxColumn, versionTextBoxColumn });
 			}
 			catch (Exception oEx)
 			{
@@ -1026,7 +987,6 @@ namespace OMControlLibrary.Common
 			{
 				m_UUIDHeaderText = Helper.GetResourceString(Constants.OBJECT_PROPERTY_UUID);
 				m_LocalIDHeaderText = Helper.GetResourceString(Constants.OBJECT_PROPERTY_LOCALID);
-				m_ObjectDepthHeaderText = Helper.GetResourceString(Constants.OBJECT_PROPERTY_DEPTH);
 				m_VersionHeaderText = Helper.GetResourceString(Constants.OBJECT_PROPERTY_VERSION);
 			}
 			catch (Exception oEx)
@@ -1040,93 +1000,45 @@ namespace OMControlLibrary.Common
 		/// <param name="headertext"></param>
 		/// <param name="name"></param>
 		/// <param name="sortMode"></param>
-		/// <returns></returns>
-		internal DataGridViewTextBoxColumn CreateTextBoxColumn
-			(
-				string headertext,
-				string name,
-				DataGridViewColumnSortMode sortMode)
+		/// <returns></returns> 
+		internal static DataGridViewTextBoxColumn CreateTextBoxColumn(string headertext, string name, DataGridViewColumnSortMode sortMode)
 		{
-
-			DataGridViewTextBoxColumn newDataGridViewTextBoxColumn;
-			newDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			newDataGridViewTextBoxColumn.HeaderText = headertext;
-			newDataGridViewTextBoxColumn.AutoSizeMode =
-				DataGridViewAutoSizeColumnMode.None;
-			newDataGridViewTextBoxColumn.SortMode = sortMode;
-			newDataGridViewTextBoxColumn.Name = name;
-			return newDataGridViewTextBoxColumn;
+			return New<DataGridViewTextBoxColumn>(headertext, name, sortMode, DataGridViewAutoSizeColumnMode.None);
 		}
 
-		/// <summary>
-		/// Create a new data grid view column of type AIDataGridViewImageComboxColumn
-		/// </summary>
-		/// <param name="headertext"></param>
-		/// <param name="name"></param>
-		/// <returns></returns>
-		internal DataGridViewComboBoxColumn CreateComboBoxColumn(
-			string headertext, string name, DataGridViewColumnSortMode sortMode)
+		internal static T New<T>(string headertext, string name, DataGridViewColumnSortMode sortMode, DataGridViewAutoSizeColumnMode autoSizeMode) where T : DataGridViewColumn, new()
 		{
+			T newColumn = new T();
+			newColumn.HeaderText = headertext;
+			newColumn.AutoSizeMode = autoSizeMode;
+			newColumn.SortMode = sortMode;
+			newColumn.Name = name;
+			
+			return newColumn;
+		}
 
-			DataGridViewComboBoxColumn newDataGridViewComboBoxColumn;
-			newDataGridViewComboBoxColumn = new DataGridViewComboBoxColumn();
-			newDataGridViewComboBoxColumn.HeaderText = headertext;
-			newDataGridViewComboBoxColumn.AutoSizeMode =
-				DataGridViewAutoSizeColumnMode.None;
-			newDataGridViewComboBoxColumn.SortMode = sortMode;
-			newDataGridViewComboBoxColumn.Name = name;
-			newDataGridViewComboBoxColumn.Resizable = DataGridViewTriState.True;
-			newDataGridViewComboBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-			newDataGridViewComboBoxColumn.FlatStyle = FlatStyle.Popup;
-			return newDataGridViewComboBoxColumn;
+		internal static DataGridViewComboBoxColumn CreateComboBoxColumn(string headertext, string name, DataGridViewColumnSortMode sortMode)
+		{
+			DataGridViewComboBoxColumn newColumn = New<DataGridViewComboBoxColumn>(headertext, name, sortMode, DataGridViewAutoSizeColumnMode.None);
+			newColumn.Resizable = DataGridViewTriState.True;
+			newColumn.FlatStyle = FlatStyle.Popup;
+
+			return newColumn;
+		}
+
+		internal static DataGridViewCheckBoxColumn CreateCheckBoxColumn(string headertext, string name, DataGridViewColumnSortMode sortMode)
+		{
+			return New<DataGridViewCheckBoxColumn>(headertext, name, sortMode, DataGridViewAutoSizeColumnMode.ColumnHeader);
 		}
 
 
-		/// <summary>
-		/// Create a new data grid view column of type AIDataGridViewImageComboxColumn
-		/// </summary>
-		/// <param name="headertext"></param>
-		/// <param name="name"></param>
-		/// <returns></returns>
-		internal DataGridViewCheckBoxColumn CreateCheckBoxColumn(
-			string headertext, string name, DataGridViewColumnSortMode sortMode)
+		internal static DataGridViewImageColumn CreateImageColumn(string headertext, string name, DataGridViewColumnSortMode sortMode)
 		{
-
-			DataGridViewCheckBoxColumn newDataGridViewCheckBoxColumn;
-			newDataGridViewCheckBoxColumn = new DataGridViewCheckBoxColumn();
-			newDataGridViewCheckBoxColumn.HeaderText = headertext;
-			newDataGridViewCheckBoxColumn.AutoSizeMode =
-				DataGridViewAutoSizeColumnMode.None;
-			newDataGridViewCheckBoxColumn.SortMode = sortMode;
-			newDataGridViewCheckBoxColumn.Name = name;
-			return newDataGridViewCheckBoxColumn;
-		}
-
-
-		/// <summary>
-		/// Create a new data grid view column of type DataGridViewTextboxColumn
-		/// </summary>
-		/// <param name="headertext"></param>
-		/// <param name="name"></param>
-		/// <param name="sortMode"></param>
-		/// <returns></returns>
-		internal DataGridViewImageColumn CreateImageColumn
-			(
-				string headertext,
-				string name,
-				DataGridViewColumnSortMode sortMode)
-		{
-
-			DataGridViewImageColumn newDataGridViewImageColumn;
-			newDataGridViewImageColumn = new DataGridViewImageColumn();
-			newDataGridViewImageColumn.HeaderText = headertext;
-			newDataGridViewImageColumn.AutoSizeMode =
-				DataGridViewAutoSizeColumnMode.None;
+			DataGridViewImageColumn newDataGridViewImageColumn = New<DataGridViewImageColumn>(headertext, name, sortMode, DataGridViewAutoSizeColumnMode.None);
 			newDataGridViewImageColumn.Resizable = DataGridViewTriState.False;
-			newDataGridViewImageColumn.SortMode = sortMode;
-			newDataGridViewImageColumn.Name = name;
 			newDataGridViewImageColumn.Image = dbImages.Delete;
 			newDataGridViewImageColumn.Width = dbImages.Delete.Width + 5;
+			
 			return newDataGridViewImageColumn;
 		}
 
@@ -1137,21 +1049,9 @@ namespace OMControlLibrary.Common
 		/// <param name="name"></param>
 		/// <param name="sortMode"></param>
 		/// <returns></returns>
-		internal dbDataGridViewDateTimePickerColumn CreateDateTimeAndComboBoxColumn
-			(
-				string headertext,
-				string name,
-				DataGridViewColumnSortMode sortMode)
+		internal static dbDataGridViewDateTimePickerColumn CreateDateTimeAndComboBoxColumn(string headertext, string name, DataGridViewColumnSortMode sortMode)
 		{
-
-			dbDataGridViewDateTimePickerColumn newDataGridViewTextBoxColumn;
-			newDataGridViewTextBoxColumn = new dbDataGridViewDateTimePickerColumn();
-			newDataGridViewTextBoxColumn.HeaderText = headertext;
-			newDataGridViewTextBoxColumn.AutoSizeMode =
-				DataGridViewAutoSizeColumnMode.None;
-			newDataGridViewTextBoxColumn.SortMode = sortMode;
-			newDataGridViewTextBoxColumn.Name = name;
-			return newDataGridViewTextBoxColumn;
+			return New<dbDataGridViewDateTimePickerColumn>(headertext, name, sortMode, DataGridViewAutoSizeColumnMode.None);
 		}
 		#endregion
 
@@ -1162,7 +1062,7 @@ namespace OMControlLibrary.Common
 
 			try
 			{
-				if (this.Columns.Count < 1)
+				if (Columns.Count < 1)
 				{
 					switch (viewName)
 					{
@@ -1188,10 +1088,10 @@ namespace OMControlLibrary.Common
 
 				if (dataSource != null)
 				{
-					this.DataSource = null;
+					DataSource = null;
 
-					if (!this.AutoGenerateColumns)
-						SetData(viewName, dataSource);
+					if (!AutoGenerateColumns)
+						SetData(dataSource);
 				}
 
 			}
@@ -1206,53 +1106,37 @@ namespace OMControlLibrary.Common
 		/// </summary>
 
 		/// <param name="data">ArrayList : arryaList of entity object</param>
-		/// <param name="name">string: entity type, it is used to get corresponding image</param>
-		private void SetData(string name, ArrayList data)
+		private void SetData(IList data)
 		{
 			try
 			{
-				int colCount = this.Columns.Count;
-				if (colCount > 0)
+				int colCount = Columns.Count;
+				if (colCount <= 0)
+					return;
+
+				if (null == data)
+					return;
+
+				for (int dataIndex = 0; dataIndex < data.Count; dataIndex++)
 				{
-					//HideGridColumns(dataGridView);
+					object dataobject = data[dataIndex];
+					Rows.Add(new DataGridViewRow());
 
-					if (data != null)
+					for (int colIndex = 0; colIndex < colCount; colIndex++)
 					{
-						object dataobject;
-						string colname;
-						int dataCount = data.Count;
-						//int orderColumnStartValue = Controller.GetPageSize *
-						//    (Controller.CurrentPageNumber - 1);
-						for (int dataIndex = 0; dataIndex < dataCount; dataIndex++)
+						DataGridViewColumn col = Columns[colIndex];
+
+						Type dataobjectType = dataobject.GetType();
+						PropertyInfo pi = dataobjectType.GetProperty(col.Name);
+						if (pi != null)
 						{
-							dataobject = data[dataIndex];
-							this.Rows.Add(new DataGridViewRow());
-
-							for (int colIndex = 0; colIndex < colCount; colIndex++)
-							{
-								DataGridViewColumn col = this.Columns[colIndex];
-								colname = col.Name;
-
-								System.Type coltype = col.GetType();
-								System.Type dataobjectType = dataobject.GetType();
-								PropertyInfo pi = dataobjectType.GetProperty(colname);
-								if (pi != null)
-								{
-									FillDataIntoDataGridCell(name,
-										dataobject,
-										colname,
-										dataIndex,
-										coltype,
-										pi);
-								}
-							}
-
-							//Adjust the height of specified row
-							if (this.Rows[dataIndex] != null &&
-								dataIndex != -1)
-								this.AutoResizeRow(dataIndex);
+							FillDataIntoDataGridCell(dataobject, col.Name, dataIndex, col.GetType(), pi);
 						}
 					}
+
+					//Adjust the height of specified row
+					if (Rows[dataIndex] != null && dataIndex != -1)
+						AutoResizeRow(dataIndex);
 				}
 			}
 			catch (Exception oEx)
@@ -1261,12 +1145,7 @@ namespace OMControlLibrary.Common
 			}
 		}
 
-		private void FillDataIntoDataGridCell(string name,
-			object dataobject,
-			string colname,
-			int dataIndex,
-			System.Type coltype,
-			PropertyInfo pi)
+		private void FillDataIntoDataGridCell(object dataobject, string colname, int dataIndex, Type coltype, PropertyInfo pi)
 		{
 			try
 			{
@@ -1276,39 +1155,26 @@ namespace OMControlLibrary.Common
 				//Check for the object type.
 				if (dataObjectValue != null)
 				{
-					string val = string.Empty;
 					switch (coltypename)
 					{
 						//case Constants.DBDATAGRIDVIEW_TEXTBOX_COLUMN:
 						//     break;
 						case Constants.DBDATAGRIDVIEW_COMBOBOX_COLUMN:
 							#region Image Combobox
-							DataGridViewComboBoxCell dataGridViewComboBoxCell =
-								this.Rows[dataIndex].Cells[colname] as DataGridViewComboBoxCell;
 							#endregion Image Combobox
 							break;
 						case Constants.DBDATAGRIDVIEW_CHECKBOX_COLUMN:
 							#region Checkbox column
-							val = string.Empty;
-							if (dataObjectValue != null)
-								val = dataObjectValue.ToString();
-
-							this.Rows[dataIndex].Cells[colname].Value = val;
+							Rows[dataIndex].Cells[colname].Value = dataObjectValue.ToString();
 							#endregion Checkbox column
 							break;
 						default:
 							#region Text without image
 							//only text to be displayed in the cell
-							val = string.Empty;
-							if (dataObjectValue != null)
-							{
-								val = dataObjectValue.ToString();
-							}
-							this.Rows[dataIndex].Cells[colname].Style.WrapMode =
-							   DataGridViewTriState.True;
-							//Adjust the height of specified row
-							this.AutoResizeRow(dataIndex);
-							this.Rows[dataIndex].Cells[colname].Value = val;
+							Rows[dataIndex].Cells[colname].Style.WrapMode = DataGridViewTriState.True;
+							
+							AutoResizeRow(dataIndex);
+							Rows[dataIndex].Cells[colname].Value = dataObjectValue.ToString();
 							#endregion Text without image
 							break;
 					}
@@ -1326,21 +1192,17 @@ namespace OMControlLibrary.Common
 
 		internal void FillConditionsCombobox(string typeofnode, int selectedrowindex)
 		{
-			DataGridViewComboBoxCell conditionColumn = null;
-			string conditionColumnName = string.Empty;
-			string[] conditionList = null;
-
 			try
 			{
 				QueryHelper qHelper = new QueryHelper(typeofnode);
-				conditionList = qHelper.GetConditions();
-				conditionColumnName = Helper.GetResourceString(Constants.QUERY_GRID_CONDITION);
-				conditionColumn = (DataGridViewComboBoxCell)this.Rows[selectedrowindex].Cells[conditionColumnName];
+				string[] conditionList = qHelper.GetConditions();
+				string conditionColumnName = Helper.GetResourceString(Constants.QUERY_GRID_CONDITION);
+				DataGridViewComboBoxCell conditionColumn = (DataGridViewComboBoxCell)Rows[selectedrowindex].Cells[conditionColumnName];
 				conditionColumn.OwningColumn.MinimumWidth = 40;
 				conditionColumn.MaxDropDownItems = conditionList.Length;
 				conditionColumn.Items.Clear();
 				conditionColumn.Items.AddRange(conditionList);
-				this.Rows[selectedrowindex].Cells[conditionColumnName].Value = conditionList.GetValue(0);
+				Rows[selectedrowindex].Cells[conditionColumnName].Value = conditionList.GetValue(0);
 			}
 			catch (Exception oEx)
 			{
@@ -1350,16 +1212,12 @@ namespace OMControlLibrary.Common
 
 		public void FillOperatorComboBox()
 		{
-			DataGridViewComboBoxColumn operatorColumn = null;
-			string operatorColumnName = string.Empty;
-			string[] opratorList = null;
-
 			try
 			{
-				opratorList = QueryHelper.GetOperators();
+				string[] opratorList = QueryHelper.GetOperators();
 
-				operatorColumnName = Helper.GetResourceString(Constants.QUERY_GRID_OPERATOR);
-				operatorColumn = (DataGridViewComboBoxColumn)this.Columns[operatorColumnName];
+				string operatorColumnName = Helper.GetResourceString(Constants.QUERY_GRID_OPERATOR);
+				DataGridViewComboBoxColumn operatorColumn = (DataGridViewComboBoxColumn)Columns[operatorColumnName];
 				operatorColumn.MaxDropDownItems = opratorList.Length;
 				operatorColumn.Items.Clear();
 				operatorColumn.Items.AddRange(opratorList);
@@ -1377,22 +1235,13 @@ namespace OMControlLibrary.Common
 
 		#endregion
 
-		/// <summary>
-		/// Adds the selected field to DataGridView while Dragged to QueryBuilder or by selecting the
-		/// context menu "Add to Query" option.
-		/// </summary>
-		/// <param name="datagridObject"></param>
-		/// <param name="tempTreeNode"></param>
 		internal bool AddToQueryBuilder(TreeNode tempTreeNode, QueryBuilder queryBuilder)
 		{
-			string typeOfNode = string.Empty;
-			string fullpath = string.Empty;
 			string className = string.Empty;
-			//QueryBuilder queryBuilder = new QueryBuilder(); 
 			try
 			{
 				//Get the type of sselected item from tree view
-				typeOfNode = Helper.GetTypeOfObject(tempTreeNode.Tag.ToString());
+				string typeOfNode = Helper.GetTypeOfObject(tempTreeNode.Tag.ToString());
 
 				//If selected item is not a primitive type than dont allow to drage item
 				if (!Helper.IsPrimitive(typeOfNode))
@@ -1400,21 +1249,17 @@ namespace OMControlLibrary.Common
 
 				if (tempTreeNode.Parent != null)
 				{
-					//Get the class name including the assembly information
-					if (tempTreeNode.Parent.Tag.ToString().Contains(","))
-						className = tempTreeNode.Parent.Tag.ToString();
-					else
-						className = tempTreeNode.Parent.Name;
+					className = FullyQualifiedClassNameFor(tempTreeNode.Parent);
 				}
 
 				//If field is not selected and Query Group has no clauses then reset the base class.
-				if (queryBuilder.QueryGroupCount == 0 && this.Rows.Count == 0 && queryBuilder.AttributeCount == 0)
+				if (queryBuilder.QueryGroupCount == 0 && Rows.Count == 0 && queryBuilder.AttributeCount == 0)
 				{
 					Helper.HashTableBaseClass.Clear();
 				}
 
 				//Get full path of selected node
-				fullpath = Helper.GetFullPath(tempTreeNode);
+				string fullpath = Helper.GetFullPath(tempTreeNode);
 
 				//Chech whether dragged item is from same class or not,
 				//if not dont allow to drop that item in query builder
@@ -1434,12 +1279,13 @@ namespace OMControlLibrary.Common
 			return Rows.Count > 0;
 		}
 
+		private static string FullyQualifiedClassNameFor(TreeNode node)
+		{
+			return node.Tag.ToString().Contains(",") ? node.Tag.ToString() : node.Name;
+		}
+
 		internal bool AddAllItemsOfClassToQueryBuilder(TreeNode tempTreeNode, QueryBuilder queryBuilder)
 		{
-			string typeOfNode = string.Empty;
-			string fullpath = string.Empty;
-			string className = string.Empty;
-			//QueryBuilder queryBuilder = new QueryBuilder(); 
 			try
 			{
 				//Get the type of sselected item from tree view
@@ -1449,38 +1295,27 @@ namespace OMControlLibrary.Common
 					if (!Helper.HashTableBaseClass.Contains(Helper.BaseClass))
 						return false;
 
-				if (tempTreeNode.Tag.ToString().Contains(","))
-					className = tempTreeNode.Tag.ToString();
-				else
-					className = tempTreeNode.Name.ToString();
-
+				string className = FullyQualifiedClassNameFor(tempTreeNode);
 				Hashtable storedfields = Helper.DbInteraction.FetchStoredFields(className);
 				if (storedfields != null)
 				{
 					IDictionaryEnumerator eNum = storedfields.GetEnumerator();
-					if (eNum != null)
+					while (eNum.MoveNext())
 					{
-						while (eNum.MoveNext())
+						string typeOfNode = Helper.GetTypeOfObject(eNum.Value.ToString());
+						if (!Helper.IsPrimitive(typeOfNode))
+							continue;
+							
+						if (queryBuilder.QueryGroupCount == 0 && Rows.Count == 0 && queryBuilder.AttributeCount == 0)
 						{
-							typeOfNode = Helper.GetTypeOfObject(eNum.Value.ToString());
-							if (!Helper.IsPrimitive(typeOfNode))
-								continue;
-							else
-							{
-								if (queryBuilder.QueryGroupCount == 0 && this.Rows.Count == 0 && queryBuilder.AttributeCount == 0)
-								{
-									Helper.HashTableBaseClass.Clear();
-								}
-
-								//Chech whether dragged item is from same class or not,
-								//if not dont allow to drop that item in query builder
-								string parentName = Helper.FormulateParentName(tempTreeNode, eNum);
-								AddRowsToGrid(typeOfNode, className, parentName);
-							}
-
+							Helper.HashTableBaseClass.Clear();
 						}
-					}
 
+						//Chech whether dragged item is from same class or not,
+						//if not dont allow to drop that item in query builder
+						string parentName = Helper.FormulateParentName(tempTreeNode, eNum);
+						AddRowsToGrid(typeOfNode, className, parentName);
+					}
 				}
 
 			}
@@ -1501,43 +1336,42 @@ namespace OMControlLibrary.Common
 		{
 			try
 			{
-				this.Rows.Add(1);
-				DataGridViewComboBoxColumn conditionColumn = (DataGridViewComboBoxColumn)this.Columns[1];
-				int index = this.Rows.Count - 1;
-				this.Rows[index].Cells[0].Value = parentName;
-				this.Rows[index].Cells[Constants.QUERY_GRID_CALSSNAME_HIDDEN].Value = className;
-				this.Rows[index].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value = typeOfNode;
+				Rows.Add(1);
+				int index = Rows.Count - 1;
+				Rows[index].Cells[0].Value = parentName;
+				Rows[index].Cells[Constants.QUERY_GRID_CALSSNAME_HIDDEN].Value = className;
+				Rows[index].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value = typeOfNode;
 				if (typeOfNode == BusinessConstants.BOOLEAN)
 				{
-					this.Rows[index].Cells[2].Value = "True";
+					Rows[index].Cells[2].Value = "True";
 				}
 				if (typeOfNode == BusinessConstants.DATETIME)
 				{
-					this.Rows[index].Cells[2].Value = DateTime.Now.ToString();
+					Rows[index].Cells[2].Value = DateTime.Now.ToString();
 				}
-				this.ClearSelection();
-				this.Rows[index].Cells[0].Selected = true;
+				ClearSelection();
+				Rows[index].Cells[0].Selected = true;
 
 
 				if (!Helper.HashTableBaseClass.Contains(Helper.BaseClass))
 					Helper.HashTableBaseClass.Add(Helper.BaseClass, string.Empty);
 
 				//Fill the Conditions depending upon the field name
-				this.FillConditionsCombobox(typeOfNode, index);
+				FillConditionsCombobox(typeOfNode, index);
 
 				//Select the Default operator for Query
-				this.Rows[index].Cells[3].Value = CommonValues.LogicalOperators.AND.ToString();
+				Rows[index].Cells[3].Value = CommonValues.LogicalOperators.AND.ToString();
 
 				//OM MISHRA: disable operator cell for other than fist row 
 				if (index > 0)
 				{
-					this.Rows[index].Cells[3].Value = this.Rows[0].Cells[3].Value;
-					this.Rows[index].Cells[3].ReadOnly = true;
+					Rows[index].Cells[3].Value = Rows[0].Cells[3].Value;
+					Rows[index].Cells[3].ReadOnly = true;
 				}
 				else
 				{
 					//Select the Default operator for Query
-					this.Rows[index].Cells[3].Value = CommonValues.LogicalOperators.AND.ToString();
+					Rows[index].Cells[3].Value = CommonValues.LogicalOperators.AND.ToString();
 				}
 			}
 
@@ -1555,9 +1389,9 @@ namespace OMControlLibrary.Common
 		/// 
 
 	}
-	public class dbDataGridViewEventArgs : System.EventArgs
+	public class dbDataGridViewEventArgs : EventArgs
 	{
-		private object m_data = string.Empty;
+		private readonly object m_data = string.Empty;
 
 		public object Data
 		{

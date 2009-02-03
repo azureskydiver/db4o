@@ -32,7 +32,6 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				string assemblypath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
 				const string className = Common.Constants.CLASS_NAME_PROPERTIES;
 				string caption;
 				const string guidpos = Common.Constants.GUID_PROPERTIES;
@@ -46,15 +45,11 @@ namespace OMControlLibrary
 					caption = Helper.ClassName + Helper.GetResourceString(Common.Constants.PROPERTIES_TAB_CAPTION);
 				}
 				
-				//FIXME: Always get index 1? What happens if this addins is not OMN?
-				AddIn addinobj = ViewBase.ApplicationObject.AddIns.Item(1);
-				EnvDTE80.Windows2 wins2obj = (Windows2)ViewBase.ApplicationObject.Windows;
-
-				object ctlobj = null;
-				PropWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath, className, caption, guidpos, ref ctlobj);
+				object ctlobj;
+				PropWindow = ViewBase.CreateToolWindow(className, caption, guidpos, out ctlobj);
 				SetTabPicture(PropWindow, Common.Constants.DB4OICON);
 
-				if (PropWindow.AutoHides)
+				//if (PropWindow.AutoHides)
 				{
 					PropWindow.AutoHides = false;
 				}
@@ -96,17 +91,11 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				object ctlobj = null;
-				AddIn addinobj = ViewBase.ApplicationObject.AddIns.Item(1);
-				EnvDTE80.Windows2 wins2obj = (Windows2)ViewBase.ApplicationObject.Windows;
-
-				// Creates Tool Window and inserts the user control in it.
-				objBrowserWindow = wins2obj.CreateToolWindow2(
-										addinobj, 
-										Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8), 
+				object ctlobj;
+				objBrowserWindow = ViewBase.CreateToolWindow(
 										Common.Constants.CLASS_NAME_OBJECTBROWSER, 
 										Helper.GetResourceString(Common.Constants.DB4O_BROWSER_CAPTION), 
-										Common.Constants.GUID_OBJECTBROWSER, ref ctlobj);
+										Common.Constants.GUID_OBJECTBROWSER, out ctlobj);
 
 				objBrowserWindow.SetTabPicture(Helper.GetResourceImage(Common.Constants.DB4OICON));
 				if (objBrowserWindow.AutoHides)

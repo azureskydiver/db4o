@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Reflection;
 using System.Windows.Forms;
 using EnvDTE;
-using EnvDTE80;
 using Microsoft.VisualStudio.CommandBars;
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.Login;
@@ -56,7 +54,6 @@ namespace OMControlLibrary
 		private ToolTip recentQueriesToolTip;
 
 		//Constants 
-		private const string CONST_DOT_STRING = ".";
 		private const char CONST_DOT_CHAR = '.';
 
 		private const string CONST_COMMA_STRING = ",";
@@ -181,7 +178,7 @@ namespace OMControlLibrary
 			}
 		}
 
-		private void _windowsEvents_WindowActivated(Window GotFocus, Window LostFocus)
+		private static void _windowsEvents_WindowActivated(Window GotFocus, Window LostFocus)
 		{
 			if (GotFocus.Caption == "Query Builder")
 			{
@@ -271,25 +268,22 @@ namespace OMControlLibrary
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void dataGridViewGroup_OnDataGridViewComboBoxIndexChanged(object sender, DbEventArgs e)
+		private static void dataGridViewGroup_OnDataGridViewComboBoxIndexChanged(object sender, DbEventArgs e)
 		{
 			dbDataGridView datagrid = e.Data as dbDataGridView;
-			string operatorValue = string.Empty;
-			string operatorColumnName = string.Empty;
-			int operatorColumnIndex = 0;
 
 			try
 			{
 				OMETrace.WriteFunctionStart();
 
-				operatorColumnName = Helper.GetResourceString(Constants.QUERY_GRID_OPERATOR);
-				operatorColumnIndex = datagrid.Columns[operatorColumnName].Index;
+				string operatorColumnName = Helper.GetResourceString(Constants.QUERY_GRID_OPERATOR);
+				int operatorColumnIndex = datagrid.Columns[operatorColumnName].Index;
 
 				if (datagrid.CurrentCell.ColumnIndex == operatorColumnIndex)
 				{
 					if (datagrid.Rows.Count > 1)
 					{
-						operatorValue = ((ComboBox)sender).SelectedItem.ToString();
+						string operatorValue = ((ComboBox)sender).SelectedItem.ToString();
 
 						for (int i = 1; i < datagrid.Rows.Count; i++)
 						{
@@ -491,8 +485,6 @@ namespace OMControlLibrary
 			{
 				OMETrace.WriteFunctionStart();
 
-				string assemblypath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-
 				string guidpos = Helper.GetClassGUID(Helper.BaseClass);
 
 				int index = Helper.BaseClass.LastIndexOf(CONST_COMMA_CHAR);
@@ -503,17 +495,10 @@ namespace OMControlLibrary
 				index = str.LastIndexOf(CONST_DOT_CHAR);
 				string caption = str.Remove(0, index + 1) + strClassName;
 
-				object ctlobj = null;
-				AddIn addinobj = ApplicationObject.AddIns.Item(1);
-				Windows2 wins2obj = (Windows2)ApplicationObject.Windows;
+				QueryResult queryResult;
+				Helper.QueryResultToolWindow = CreateToolWindow("OMControlLibrary.QueryResult", caption, guidpos, out queryResult);
 
-				// Creates Tool Window and inserts the user control in it.
-				Helper.QueryResultToolWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath,
-																		  "OMControlLibrary.QueryResult", caption, guidpos, ref ctlobj);
-
-				QueryResult queryResult = ctlobj as QueryResult;
 				delPassData del = queryResult.Setobjectid;
-
 				del(objectid);
 
 				Helper.QueryResultToolWindow.IsFloating = false;
@@ -726,10 +711,7 @@ namespace OMControlLibrary
 								return;
 							if (tempTreeNode.Parent != null)
 							{
-								if (tempTreeNode.Parent.Tag.ToString().Contains(CONST_COMMA_STRING))
-									className = tempTreeNode.Parent.Tag.ToString();
-								else
-									className = tempTreeNode.Parent.Name;
+								className = tempTreeNode.Parent.Tag.ToString().Contains(CONST_COMMA_STRING) ? tempTreeNode.Parent.Tag.ToString() : tempTreeNode.Parent.Name;
 							}
 							//Add a new row and assing required values.
 							AddElementToAttributeGrid(className, fullpath);
@@ -744,12 +726,6 @@ namespace OMControlLibrary
 
 		private void AddAllTheElementsofClassIntoAttributeList(TreeNode tempTreeNode)
 		{
-			string className = string.Empty;
-			if (tempTreeNode.Tag.ToString().Contains(","))
-				className = tempTreeNode.Tag.ToString();
-			else
-				className = tempTreeNode.Name;
-
 			if (dbDataGridAttributes.Rows.Count == 0)
 			{
 				CheckForDataGridViewQueryRows();
@@ -762,28 +738,28 @@ namespace OMControlLibrary
 			if (!Helper.HashTableBaseClass.Contains(Helper.BaseClass))
 				Helper.HashTableBaseClass.Add(Helper.BaseClass, string.Empty);
 
-			Hashtable storedfields = Helper.DbInteraction.FetchStoredFields(className);
-			if (storedfields != null)
+			string tempClassName = tempTreeNode.Tag.ToString().Contains(CONST_COMMA_STRING) ? tempTreeNode.Tag.ToString() : tempTreeNode.Name;
+			Hashtable storedfields = Helper.DbInteraction.FetchStoredFields(tempClassName);
+			if (storedfields == null) 
+				return;
+
+
+			IDictionaryEnumerator eNum = storedfields.GetEnumerator();
+			if (eNum != null)
 			{
-				IDictionaryEnumerator eNum = storedfields.GetEnumerator();
-
-				if (eNum != null)
+				while (eNum.MoveNext())
 				{
-					while (eNum.MoveNext())
-					{
-						typeOfNode = Helper.GetTypeOfObject(eNum.Value.ToString());
-						if (!Helper.IsPrimitive(typeOfNode))
-							continue;
-						else
-						{
-							//Check whether attributes is allready added in list, if yes dont allow to added again. 
+					typeOfNode = Helper.GetTypeOfObject(eNum.Value.ToString());
+					if (!Helper.IsPrimitive(typeOfNode))
+						continue;
+						
+					//Check whether attributes is allready added in list, if yes dont allow to added again. 
 
-							string parentName = Helper.FormulateParentName(tempTreeNode, eNum);
-							if (!Helper.CheckUniqueNessAttributes(parentName, dbDataGridAttributes))
-								continue;
-							AddElementToAttributeGrid(typeOfNode, parentName);
-						}
-					}
+					string parentName = Helper.FormulateParentName(tempTreeNode, eNum);
+					if (!Helper.CheckUniqueNessAttributes(parentName, dbDataGridAttributes))
+						continue;
+
+					AddElementToAttributeGrid(typeOfNode, parentName);
 				}
 			}
 		}
@@ -801,10 +777,10 @@ namespace OMControlLibrary
 
 		internal void AddToAttributeList(ref dbDataGridView dataGridAttributes, TreeNode tempTreeNode)
 		{
-			string className = string.Empty;
-
 			try
 			{
+				string tempClassName = string.Empty;
+
 				//If field is not selected and Query Group has no clauses then reset the base class.
 				if (dataGridAttributes.Rows.Count == 0)
 				{
@@ -813,13 +789,9 @@ namespace OMControlLibrary
 
 				//Get the full path of the selected item
 				string fullpath = Helper.GetFullPath(tempTreeNode);
-
 				if (tempTreeNode.Parent != null)
 				{
-					if (tempTreeNode.Parent.Tag.ToString().Contains(CONST_COMMA_STRING))
-						className = tempTreeNode.Parent.Tag.ToString();
-					else
-						className = tempTreeNode.Parent.Name;
+					tempClassName = tempTreeNode.Parent.Tag.ToString().Contains(CONST_COMMA_STRING) ? tempTreeNode.Parent.Tag.ToString() : tempTreeNode.Parent.Name;
 				}
 
 				//Check if dragged item is from same class or not, if not then dont allow to drag item
@@ -832,7 +804,7 @@ namespace OMControlLibrary
 					return;
 
 				//Add a new row and assing required values.
-				AddElementToAttributeGrid(className, fullpath);
+				AddElementToAttributeGrid(tempClassName, fullpath);
 
 				if (!Helper.HashTableBaseClass.Contains(Helper.BaseClass))
 					Helper.HashTableBaseClass.Add(Helper.BaseClass, string.Empty);
@@ -911,7 +883,6 @@ namespace OMControlLibrary
 
 					//Get the OMQuery for selected query expression
 					OMQuery omQuery = (OMQuery)comboboxRecentQueries.SelectedValue;
-					//(OMQuery)((dbDataGridView)sender).SelectedRows[0].Tag;
 
 					//Reset the OMQuery
 					SetOMQuery(omQuery);
@@ -928,9 +899,7 @@ namespace OMControlLibrary
 
 					if (OnRecentQueryChanged != null)
 					{
-						DbEventArgs eventArgs = new DbEventArgs();
-						eventArgs.Data = omQuery.BaseClass;
-						OnRecentQueryChanged(sender, eventArgs);
+						OnRecentQueryChanged(sender, new DbEventArgs(omQuery.BaseClass));
 					}
 				}
 			}
@@ -1318,8 +1287,8 @@ namespace OMControlLibrary
 								errorMessage = Helper.GetResourceString(Constants.VALIDATION_MESSAGE_VALUE_NOT_SPECIFIED);
 								return false;
 							}
-
-							else if (string.IsNullOrEmpty(datagridView.Rows[j].Cells[valueColumn].Value.ToString()))
+							
+							if (string.IsNullOrEmpty(datagridView.Rows[j].Cells[valueColumn].Value.ToString()))
 							{
 								errorMessage = Helper.GetResourceString(Constants.VALIDATION_MESSAGE_VALUE_NOT_SPECIFIED);
 								return false;
