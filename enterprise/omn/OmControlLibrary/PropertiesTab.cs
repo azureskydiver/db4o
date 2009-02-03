@@ -1,14 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using OMControlLibrary.Common;
 using System.Collections;
 using OManager.DataLayer.PropertyTable;
-using OManager.DataLayer.Connection;
 using OManager.BusinessLayer.Login;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
@@ -20,7 +14,7 @@ namespace OMControlLibrary
 	{
 		#region Member Variables
 
-		dbDataGridView dbGridViewProperties;
+		readonly dbDataGridView dbGridViewProperties;
 
 		private bool m_showObjectPropertiesTab;
 		private bool m_showClassProperties;
@@ -34,7 +28,7 @@ namespace OMControlLibrary
 
 		public void SelectDefaultTab()
 		{
-			tabStripProperties.SelectedItem = (OMETabStripItem)tabStripProperties.Items[0];
+			tabStripProperties.SelectedItem = tabStripProperties.Items[0];
 		}
 
 		public static PropertiesTab Instance
@@ -55,8 +49,7 @@ namespace OMControlLibrary
 			set
 			{
 				m_showObjectPropertiesTab = value;
-				tabItemObjectProperties.Visible =
-						m_showObjectPropertiesTab;
+				tabItemObjectProperties.Visible = m_showObjectPropertiesTab;
 			}
 		}
 
@@ -79,6 +72,7 @@ namespace OMControlLibrary
 			InitializeComponent();
 			tabStripProperties.HideMenuGlyph = true;
 			dbGridViewProperties = new dbDataGridView();
+			dbGridViewProperties.Dock = DockStyle.Fill;
 
 			tabStripProperties.AlwaysShowMenuGlyph = false;
 
@@ -176,7 +170,7 @@ namespace OMControlLibrary
 
 							if (!panelForClassPropTable.Controls.Contains(dbGridViewProperties))
 								this.panelForClassPropTable.Controls.Add(dbGridViewProperties);
-							dbGridViewProperties.Dock = DockStyle.Left;
+							dbGridViewProperties.Dock = DockStyle.Fill;
 						}
 				}
 				else
@@ -222,8 +216,7 @@ namespace OMControlLibrary
 					dbGridViewProperties.Columns.Clear();
 					dbGridViewProperties.Size = panelDatabaseProperties.Size;
 
-					dbGridViewProperties.PopulateDisplayGrid(Common.Constants.VIEW_OBJECTPROPERTIES
-						, objectProperties);
+					dbGridViewProperties.PopulateDisplayGrid(Common.Constants.VIEW_OBJECTPROPERTIES, objectProperties);
 
 					if (!panelObjectProperties.Controls.Contains(dbGridViewProperties))
 						this.panelObjectProperties.Controls.Add(dbGridViewProperties);
@@ -265,8 +258,9 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				PropertiesTab.CheckForIllegalCrossThreadCalls = false;
+				CheckForIllegalCrossThreadCalls = false;
 				dbGridViewProperties.Dock = DockStyle.Fill;
+
 				tabItemObjectProperties.Visible = instance.m_showObjectPropertiesTab;
 				if (!tabItemClassProperties.Visible)
 					tabItemClassProperties.Visible = instance.m_showClassProperties;
@@ -284,7 +278,7 @@ namespace OMControlLibrary
 					DisplayObjectProperties();
 				}
 
-				tabStripProperties.SelectedItem = (OMETabStripItem)tabStripProperties.Items[Helper.Tab_index];
+				tabStripProperties.SelectedItem = tabStripProperties.Items[Helper.Tab_index];
 
 				instance = this;
 			}

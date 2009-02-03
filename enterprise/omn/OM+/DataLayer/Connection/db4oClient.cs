@@ -1,225 +1,193 @@
 using System;
-using System.Threading;
-using System.Security.Principal;
-using System.Collections.Generic;
-using System.Text;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Ext;
-using Db4objects.Db4o.Internal;
-using Db4objects.Db4o.Config ;
+using Db4objects.Db4o.Config;
 using OManager.BusinessLayer.Login;
 using System.IO;
-
+using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
 
 namespace OManager.DataLayer.Connection
 {
-    
-        public class Db4oClient
-        {
-            private static IObjectContainer objContainer;
-            private static IObjectContainer objContainerRecentConn;
-            public static ConnParams conn;
-            public static string RecentConnFile;
-            public static string exceptionConnection = "";
-            //public static bool boolException=false;
-            public static bool boolExceptionForRecentConn = false;
+	public class Db4oClient
+	{
+		private static TypeResolver typeResolver;
+		private static IObjectContainer objContainer;
+		private static IObjectContainer userConfigDatabase;
+		public static ConnParams conn;
+		public static string RecentConnFile;
+		public static string exceptionConnection = "";
+		public static bool boolExceptionForRecentConn;
 
-            private static RecentQueries currentRecentConnection;
-            public static RecentQueries CurrentRecentConnection
-            {
-                get
-                {
-                    return currentRecentConnection;
-                }
-                set
-                {
-                    currentRecentConnection = value;
-                }
+		public static TypeResolver TypeResolver
+		{
+			get
+			{
+				return typeResolver;
+			}
+		}
 
+		private static RecentQueries currentRecentConnection;
+		public static RecentQueries CurrentRecentConnection
+		{
+			get
+			{
+				return currentRecentConnection;
+			}
+			set
+			{
+				currentRecentConnection = value;
+			}
+		}
 
-            }
+		/// <summary>
+		/// Static property which either returns a new object container for a specific logon identity or returns the object container already 
+		/// allocated to the logon identity.
+		/// </summary>
+		public static IObjectContainer Client
+		{
+			get
+			{
+				exceptionConnection = "";
+				Db4oFactory.Configure().Queries().EvaluationMode(QueryEvaluationMode.Lazy);
+				Db4oFactory.Configure().ActivationDepth(1);
+				Db4oFactory.Configure().AllowVersionUpdates(true);
+				Db4oFactory.Configure().BlockSize(8);
 
-            
-            /// <summary>
-            /// Static property which either returns a new object container for a specific logon identity or returns the object container already 
-            /// allocated to the logon identity.
-            /// </summary>
-            public static IObjectContainer Client
-            {
-                get
-                {
-                    exceptionConnection = "";
-                    Db4oFactory.Configure().Queries().EvaluationMode(QueryEvaluationMode.Lazy);
-                    //Db4oFactory.Configure().UpdateDepth(int.MaxValue);
-                    Db4oFactory.Configure().ActivationDepth(1);
-                    Db4oFactory.Configure().AllowVersionUpdates(true);
-                    Db4oFactory.Configure().BlockSize(8);   
-                    // Retrieve the object container for the current identity.
-                   // LocalDataStoreSlot slot = Thread.GetNamedDataSlot(WindowsIdentity.GetCurrent().Name);
-                    //IObjectContainer objectContainer = (IObjectContainer)Thread.GetData(slot);
+				try
+				{
+					if (objContainer == null)
+					{
+						// Prior to opening the objectContainer set all required Db4o configurations.
+						// Db4oConfiguration.SetConfiguration();
+						if (conn != null)
+						{
+							// Retrieve an objectContainer for this client. 
+							if (conn.Host != null)
+							{
+								objContainer = Db4oFactory.OpenClient(conn.Host, conn.Port, conn.UserName, conn.PassWord);
+								typeResolver = new TypeResolver(objContainer.Ext().Reflector());
+							}
+							else
+							{
+								if (File.Exists(conn.Connection))
+								{
+									objContainer = Db4oFactory.OpenFile(conn.Connection);
+									typeResolver = new TypeResolver(objContainer.Ext().Reflector());
+								}
+								else
+								{
+									exceptionConnection = "File does not exist!";
+								}
+							}
+						}
+					}
+				}
+				catch (InvalidPasswordException)
+				{
+					exceptionConnection = "Incorrect Credentials. Please enter again.";
+				}
+				catch (DatabaseFileLockedException)
+				{
+					exceptionConnection = "Database is locked and is used by another application.";
+				}
+				catch (IncompatibleFileFormatException ex)
+				{
+					exceptionConnection = ex.Message;
+				}
+				catch (System.Net.Sockets.SocketException)
+				{
+					exceptionConnection = "No connection could be made because the target machine actively refused it.";
+				}
+				catch (InvalidCastException)
+				{
+					exceptionConnection = "Java Database is not supproted.";
+				}
+				catch (Exception oEx)
+				{
+					exceptionConnection = oEx.Message;
+				}
 
-                    try
-                    {
-                        if (objContainer == null)
-                        {
-                            // Prior to opening the objectContainer set all required Db4o configurations.
-                            // Db4oConfiguration.SetConfiguration();
-                            if (conn != null)
-                            {
-                                // Retrieve an objectContainer for this client. 
-                                if (conn.Host != null)
-                                {
+				return objContainer;
+			}
 
-                                    objContainer = Db4oFactory.OpenClient(conn.Host, (int)conn.Port,
-                                                      conn.UserName, conn.PassWord);
-                                }
-                                else
-                                {
-                                    if (File.Exists(conn.Connection))
-                                    {
+		}
 
+		public static IObjectContainer RecentConn
+		{
+			get
+			{
+				try
+				{
+					if (userConfigDatabase == null && RecentConnFile != null)
+					{
+						Db4oFactory.Configure().UpdateDepth(int.MaxValue);
+						Db4oFactory.Configure().ActivationDepth(int.MaxValue);
+						Db4oFactory.Configure().LockDatabaseFile(false);
+						userConfigDatabase = Db4oFactory.OpenFile(RecentConnFile);
+					}
+				}
+				catch (Exception oEx)
+				{
+					LoggingHelper.HandleException(oEx);
+					boolExceptionForRecentConn = true;
+				}
 
-                                        objContainer = Db4oFactory.OpenFile(conn.Connection);
-                                    }
-                                    else
-                                    {
-                                        exceptionConnection = "File does not exist!";
-                                    }
-                                }
-
-                                // Store the allocated object container for this current logon identity.  
-                               // Thread.SetData(slot, objectContainer);
-                            }
-                        }
-                       
-                    }
-                    catch (InvalidPasswordException)
-                    {
-                        exceptionConnection = "Incorrect Credentials. Please enter again.";
-                    }
-                    catch (DatabaseFileLockedException)
-                    {
-                        exceptionConnection = "Database is locked and is used by another application.";
-                    }
-                    //catch (Db4objects.Db4o.Ext.Db4oException ex)
-                    //{
-                    //    //File format incompatible.
-                    //    exceptionConnection = ex.Message;
-                    //}
-                    catch (Db4objects.Db4o.Ext.IncompatibleFileFormatException ex)
-                    {
-                        exceptionConnection = ex.Message;
-                    }
-                    catch (System.Net.Sockets.SocketException)
-                    {
-                        exceptionConnection = "No connection could be made because the target machine actively refused it.";
-                    }
-                    catch (System.InvalidCastException)
-                    {
-                        exceptionConnection = "Java Database is not supproted.";
-                    }
-                   
-                    catch (Exception oEx)
-                    {
-                        exceptionConnection = oEx.Message;
-                        //return null;
-                    }
-                    return objContainer;
-                }
-
-            }
-
-            public static IObjectContainer RecentConn
-            {
-                get
-                {
-
-                   // LocalDataStoreSlot slot = Thread.GetNamedDataSlot("RecentConnections");
-                  //  IObjectContainer objectContainer = (IObjectContainer)Thread.GetData(slot);
-                    //IObjectContainer objectContainer = null;
-
-                    try
-                    {
-                        if (objContainerRecentConn == null && RecentConnFile != null)
-                        {
-                            //Db4oFactory.Configure().ObjectClass(typeof(RecentQueries)).UpdateDepth(10);
-                            //Db4oFactory.Configure().ObjectClass(typeof(RecentQueries)).MinimumActivationDepth(10); 
-                            Db4oFactory.Configure().UpdateDepth(int.MaxValue);
-                            Db4oFactory.Configure().ActivationDepth(int.MaxValue);
-                            Db4oFactory.Configure().LockDatabaseFile(false);
-                            objContainerRecentConn = Db4oFactory.OpenFile(RecentConnFile);                            
-                            //Thread.SetData(slot, objectContainer);
-                        }
-                    }
-                    catch (Exception oEx)
-                    {
-                        LoggingHelper.HandleException(oEx);
-                        boolExceptionForRecentConn = true;
-                    }
-
-                    return objContainerRecentConn;
-                }
-            }
+				return userConfigDatabase;
+			}
+		}
 
 
-            /// <summary>
-            /// Static property which closes the corresponding object container for the current logon identity.
-            /// </summary>
-            public static void CloseConnection(IObjectContainer objectContainer)
-            {
-                //LocalDataStoreSlot slot = Thread.GetNamedDataSlot(WindowsIdentity.GetCurrent().Name);
-                objectContainer = Client;
+		/// <summary>
+		/// Static property which closes the corresponding object container for the current logon identity.
+		/// </summary>
+		public static void CloseConnection(IObjectContainer objectContainer)
+		{
+			objectContainer = Client;
+			try
+			{
+				if (objectContainer != null)
+				{
+					objectContainer.Close();
+					objectContainer = null;
+					objContainer = null;
+				}
+				conn = null;
 
-                try
-                {
-                    if (objectContainer != null)
-                    {
-                        objectContainer.Close();
-                        objectContainer = null;
-                        objContainer = null;
-                    }
-                    conn = null;
-                   
-                }
-                catch (Exception oEx)
-                {
-                    LoggingHelper.HandleException(oEx);
-                    
-                }
-            }
+			}
+			catch (Exception oEx)
+			{
+				LoggingHelper.HandleException(oEx);
+			}
+		}
 
-            public static void CloseRecentConnectionFile(IObjectContainer objectContainer)
-            {
-               // LocalDataStoreSlot slot = Thread.GetNamedDataSlot("RecentConnections");
-                objectContainer = RecentConn;
+		public static void CloseRecentConnectionFile(IObjectContainer objectContainer)
+		{
+			objectContainer = RecentConn;
+			try
+			{
+				if (objectContainer != null)
+				{
+					objectContainer.Close();
+					objectContainer = null;
+					userConfigDatabase = null;
+				}
 
-                try
-                {
-                    if (objectContainer != null)
-                    {
-                        objectContainer.Close();
-                        objectContainer = null;
-                        objContainerRecentConn = null;
-                    }
+			}
+			catch (Exception oEx)
+			{
+				LoggingHelper.HandleException(oEx);
 
-                  
-                }
-                catch (Exception oEx)
-                {
-                    LoggingHelper.HandleException(oEx);
-                   
-                }
-            }
+			}
+		}
 
-        	public static IObjectContainer OpenConfigDatabase(string path)
-        	{
-				Db4oFactory.Configure().UpdateDepth(int.MaxValue);
-                Db4oFactory.Configure().ActivationDepth(int.MaxValue);
-                Db4oFactory.Configure().LockDatabaseFile(false);
-                
-				return Db4oFactory.OpenFile(path);
-        	}
-        }
+		public static IObjectContainer OpenConfigDatabase(string path)
+		{
+			Db4oFactory.Configure().UpdateDepth(int.MaxValue);
+			Db4oFactory.Configure().ActivationDepth(int.MaxValue);
+			Db4oFactory.Configure().LockDatabaseFile(false);
+
+			return Db4oFactory.OpenFile(path);
+		}
+	}
 }

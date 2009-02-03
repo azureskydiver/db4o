@@ -42,7 +42,7 @@ namespace OME.AdvancedDataGridView
         private bool _virtualNodes = false;
 
         private ContextMenuStrip m_deleteContextMenuStrip;
-        private const string CONTEXTMENU_CAPTION_DELETE = "Set to Null";
+        private const string CONTEXTMENU_CAPTION_SETTONULL = "Set to Null";
         private const string CONTEXTMENU_NAME_DELETE = "MenuDelete";
 
         public event EventHandler<ContextItemClickedEventArg> OnContextMenuItemClicked;
@@ -654,11 +654,6 @@ namespace OME.AdvancedDataGridView
                     // identify the expanding column.			
                     _expandableColumn = (TreeGridColumn)e.Column;
                 }
-                else
-                {
-                   // this.Columns.Remove(e.Column);
-                    //throw new InvalidOperationException("Only one TreeGridColumn per TreeGridView is supported.");
-                }
             }
 
             // Expandable Grid doesn't support sorting. This is just a limitation of the sample.
@@ -739,14 +734,14 @@ namespace OME.AdvancedDataGridView
             {
                 m_deleteContextMenuStrip = new ContextMenuStrip();
 
-                objMainMenu = new ToolStripMenuItem(CONTEXTMENU_CAPTION_DELETE);
+                objMainMenu = new ToolStripMenuItem(CONTEXTMENU_CAPTION_SETTONULL);
                 objMainMenu.Name = CONTEXTMENU_NAME_DELETE;
                 objMainMenu.Tag = CONTEXTMENU_NAME_DELETE;
 
                 m_deleteContextMenuStrip.Items.Add(objMainMenu);
 
-                m_deleteContextMenuStrip.ItemClicked += new ToolStripItemClickedEventHandler(m_deleteContextMenuStrip_ItemClicked);
-                m_deleteContextMenuStrip.Opening += new CancelEventHandler(m_deleteContextMenuStrip_Opening);
+                m_deleteContextMenuStrip.ItemClicked += m_deleteContextMenuStrip_ItemClicked;
+                m_deleteContextMenuStrip.Opening += m_deleteContextMenuStrip_Opening;
             }
             catch(Exception oEx)
             {

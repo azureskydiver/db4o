@@ -41,7 +41,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Db4objects.Db4o, Version=7.7.78.12406, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o, Version=7.8.80.12552, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Dependencies\Db4objects.Db4o.dll</HintPath>
     </Reference>
@@ -86,7 +86,7 @@
     <Compile Include="DataLayer\PropertyTable\ClassPropertiesTable.cs" />
     <Compile Include="DataLayer\PropertyTable\FieldProperties.cs" />
     <Compile Include="DataLayer\PropertyTable\ObjectPropertiesTable.cs" />
-    <Compile Include="DataLayer\QueryParser\IobjectsetConverter.cs" />
+    <Compile Include="DataLayer\QueryParser\IObjectsetConverter.cs" />
     <Compile Include="DataLayer\QueryParser\QueryParser.cs" />
     <Compile Include="DataLayer\PropertyDetails\ClassDetails.cs" />
     <Compile Include="DataLayer\Connection\DBConnect.cs" />
@@ -97,6 +97,7 @@
     <Compile Include="BusinessLayer\QueryManager\OMQuery.cs" />
     <Compile Include="DataLayer\QueryParser\RenderHierarchy.cs" />
     <Compile Include="DataLayer\QueryParser\RunQuery.cs" />
+    <Compile Include="DataLayer\Reflection\Reflection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resource.Designer.cs">
       <AutoGen>True</AutoGen>

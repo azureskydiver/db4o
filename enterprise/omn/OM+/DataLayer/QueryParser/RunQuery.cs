@@ -55,26 +55,21 @@ namespace OManager.DataLayer.QueryParser
         {
             QueryParser qParser = new QueryParser(m_omQuery);
             IObjectSet objSet = qParser.ExecuteOMQueryList();
-            if (objSet != null)
-                return objSet.Ext().GetIDs();
-
-            return null;
-            //return this;
+            
+			return objSet != null ? objSet.Ext().GetIDs() : null;
         }
 
         public List<Hashtable> ReturnResults(PagingData pgData, bool refresh,string baseclass,Hashtable AttributeList)
         {
             try
             {
-                IobjectsetConverter objSetConvertor = new IobjectsetConverter(baseclass, refresh);
+                IObjectsetConverter objSetConvertor = new IObjectsetConverter(baseclass, refresh);
 
                 if (pgData.ObjectId.Count > 0)
                 {
-                    m_hashResults = objSetConvertor.convertObjectIDToUIObjects(pgData, AttributeList);
+                    m_hashResults = objSetConvertor.ObjectIDToUIObjects(pgData, AttributeList);
                     return m_hashResults;
-                    //return objSetConvertor.convertObjectSetToUIObjects(objSet);
                 }
-
 
                 return null;
             }
@@ -89,7 +84,7 @@ namespace OManager.DataLayer.QueryParser
             try
             {
                 Hashtable hash = new Hashtable();
-                IobjectsetConverter objSetConvertor = new IobjectsetConverter(m_omQuery.BaseClass, refresh);
+                IObjectsetConverter objSetConvertor = new IObjectsetConverter(m_omQuery.BaseClass, refresh);
                 if (obj != null)
                 {
                     m_hashPerRow = objSetConvertor.resultsWithAttributes(obj, attributeList);

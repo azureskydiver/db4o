@@ -1,12 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Collections;
 using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
 using System.Windows.Forms;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
 
 namespace OMControlLibrary
 {
@@ -22,85 +19,78 @@ namespace OMControlLibrary
 				if (hash == null)
 				{
 					hash = new Hashtable();
-
 				}
 				return hash;
 			}
-
 		}
 
 		public static void AddDatagrid(string strClassName, dbDataGridView dbDataGridViewQueryResult)
 		{
-			if (ListofModifiedObjects.Instance.ContainsKey(strClassName))
+			if (Instance.ContainsKey(strClassName))
 			{
-				ListofModifiedObjects.Instance.Remove(strClassName);
-				ListofModifiedObjects.Instance.Add(strClassName, dbDataGridViewQueryResult);
+				Instance.Remove(strClassName);
+				Instance.Add(strClassName, dbDataGridViewQueryResult);
 			}
 			else
 			{
-				ListofModifiedObjects.Instance.Add(strClassName, dbDataGridViewQueryResult);
+				Instance.Add(strClassName, dbDataGridViewQueryResult);
 			}
 		}
-		public static void SaveBeforeWindowHiding(ref bool check, ref DialogResult dialogRes, ref bool checkforValueChanged, string Caption, dbDataGridView db, int hierarchyLevel)
+		
+		public static DialogResult SaveBeforeWindowHiding(ref bool check, ref bool checkforValueChanged, string Caption, dbDataGridView db, int hierarchyLevel)
 		{
+			DialogResult result = DialogResult.Cancel;
 			try
 			{
 				foreach (DataGridViewRow row in db.Rows)
 				{
-
-
-					if (Convert.ToBoolean(row.Cells[OMControlLibrary.Common.Constants.QUERY_GRID_ISEDITED_HIDDEN].Value) == true)
+					if (Convert.ToBoolean(row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value))
 					{
 						checkforValueChanged = true;
 						break;
 					}
 				}
-				if (checkforValueChanged == true)
+
+				if (!checkforValueChanged)
+					return result;
+				
+				result = MessageBox.Show("'" + Caption + "' contains some modified objects. Do you want to save changes?",
+				                         Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.YesNo,
+				                         MessageBoxIcon.Question);
+
+				if (result == DialogResult.Yes)
 				{
-					dialogRes = MessageBox.Show("'" + Caption + "' contains some modified objects, Do you want to save changes?", Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-					if (dialogRes == DialogResult.Yes)
+					foreach (DataGridViewRow row in db.Rows)
 					{
-						foreach (DataGridViewRow row in db.Rows)
+						if (Convert.ToBoolean(row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value))
 						{
+							dbInteraction dbInt = new dbInteraction();
+							if (hierarchyLevel == -1)
+								hierarchyLevel = dbInt.GetDepth(row.Tag);
 
-
-							if (Convert.ToBoolean(row.Cells[OMControlLibrary.Common.Constants.QUERY_GRID_ISEDITED_HIDDEN].Value) == true)
-							{
-								dbInteraction dbInt = new dbInteraction();
-								if (hierarchyLevel == -1)
-									hierarchyLevel = dbInt.GetDepth(row.Tag);
-
-								Helper.DbInteraction.SaveCollection(row.Tag, hierarchyLevel);
-								//}
-								//else
-								//{
-								//    int calLevel = CalculateLevel(row.Tag);
-								//    Helper.DbInteraction.SaveCollection(row.Tag, calLevel);
-								//}
-
-							}
+							Helper.DbInteraction.SaveCollection(row.Tag, hierarchyLevel);
 						}
-					}
-					else
-					{
-						foreach (DataGridViewRow row in db.Rows)
-						{
-							if (Convert.ToBoolean(row.Cells[OMControlLibrary.Common.Constants.QUERY_GRID_ISEDITED_HIDDEN].Value) == true)
-							{
-								Helper.DbInteraction.RefreshObject(row.Tag, 1);
-							}
-						}
-
 					}
 				}
-
+				else
+				{
+					foreach (DataGridViewRow row in db.Rows)
+					{
+						if (Convert.ToBoolean(row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value))
+						{
+							Helper.DbInteraction.RefreshObject(row.Tag, 1);
+						}
+					}
+				}
 			}
 			catch (Exception ex)
 			{
 				LoggingHelper.ShowMessage(ex);
 			}
 
+			return result;
 		}
+
 		public static int CalculateLevel(object obj)
 		{
 			dbInteraction dbI = new dbInteraction();
@@ -108,6 +98,4 @@ namespace OMControlLibrary
 
 		}
 	}
-
-
 }

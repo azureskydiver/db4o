@@ -317,25 +317,6 @@ namespace OMControlLibrary.Common
 
 		#region Listing Helper Methods
 
-		public static string GetConfigFolderPath()
-		{
-			string filePath = Application.StartupPath;
-
-			try
-			{
-				int seperatorLastIndex = filePath.LastIndexOf(Path.DirectorySeparatorChar);
-				filePath = filePath.Remove(seperatorLastIndex);
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-
-			return filePath;
-		}
-
-		// public static void Add
-
 		public static string GetClassGUID(string className)
 		{
 			if (className.Contains(GENERIC_TEXT))
@@ -613,12 +594,12 @@ namespace OMControlLibrary.Common
 
 			return resultValue;
 		}
+
 		public static string FormulateParentName(TreeNode tempTreeNode, IDictionaryEnumerator eNum)
 		{
 			string parentName;
 			if (tempTreeNode.Parent == null || tempTreeNode.Parent.Tag.ToString() == "Fav Folder")
 			{
-
 				parentName = tempTreeNode.Text.Split(',')[0];
 				parentName = parentName.Split('.')[1] + '.' + eNum.Key;
 			}

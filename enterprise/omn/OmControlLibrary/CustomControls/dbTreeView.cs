@@ -1,35 +1,36 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using System.Collections;
+using System.Windows.Forms;
+using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.UIHelper;
 using OME.Logging.Common;
-using OManager.BusinessLayer.Login;
 
 namespace OMControlLibrary.Common
 {
 	public partial class dbTreeView : TreeView
 	{
 		#region Member Variables
+
 		private bool m_useInbuiltDragDrop = true;
 		private readonly ImageList imageListDrag;
 		private TreeNode dragNode;
 		private readonly ImageList imageListTreeView;
 
-		Hashtable m_hashtableAssmblyNodes = new Hashtable();
-		Hashtable m_hashtableClassNodes = new Hashtable();
+		private Hashtable m_hashtableAssmblyNodes = new Hashtable();
+		private Hashtable m_hashtableClassNodes = new Hashtable();
 
 		private TreeNode m_PreviousTreeNode = new TreeNode();
 		private TreeNode m_TreeNode = new TreeNode();
-		TreeNode treenode;
+		private TreeNode treenode;
 
 		private ContextMenuStrip m_tvViewObjectsContextMenuStrip;
 		private ContextMenuStrip m_tvAddtoQueryContextMenuStrip;
 		private ContextMenuStrip m_tvFavFolderContexMenu;
-		string folderName;
+		private string folderName;
 		//Events
 
 		internal event EventHandler<DBContextItemClickedEventArg> OnContextMenuItemClicked;
@@ -37,6 +38,7 @@ namespace OMControlLibrary.Common
 		#endregion
 
 		#region Properties
+
 		/// <summary>
 		/// Gets a value indicating whether drag drop in build feature is use to the tree view control. 
 		/// [Default value is true].It is useful when you want to write your own drag drop event for the 
@@ -58,6 +60,7 @@ namespace OMControlLibrary.Common
 			get { return m_hashtableAssmblyNodes; }
 			set { m_hashtableAssmblyNodes = value; }
 		}
+
 		#endregion
 
 		#region Constructor
@@ -66,14 +69,14 @@ namespace OMControlLibrary.Common
 		{
 			imageListDrag = new ImageList();
 			imageListTreeView = new ImageList();
-			this.AllowDrop = true;
-			this.LabelEdit = true;
-
+			AllowDrop = true;
+			LabelEdit = true;
 		}
 
 		#endregion
 
 		#region Event Handler
+
 		/// <summary>
 		/// DragEnter event.
 		/// </summary>
@@ -85,8 +88,8 @@ namespace OMControlLibrary.Common
 
 			try
 			{
-				DragHelper.ImageList_DragEnter(this.Handle, e.X - this.Left,
-										   e.Y - this.Top);
+				DragHelper.ImageList_DragEnter(Handle, e.X - Left,
+				                               e.Y - Top);
 
 				e.Effect = DragDropEffects.Move;
 			}
@@ -106,7 +109,7 @@ namespace OMControlLibrary.Common
 			{
 				base.OnDragOver(e);
 
-				Point formP = this.PointToClient(new Point(e.X, e.Y));
+				Point formP = PointToClient(new Point(e.X, e.Y));
 				DragHelper.ImageList_DragMove(formP.X, formP.Y);
 
 				e.Effect = DragDropEffects.Move;
@@ -123,15 +126,15 @@ namespace OMControlLibrary.Common
 			{
 				base.OnDragDrop(e);
 				e.Effect = DragDropEffects.Move;
-				Point pos = this.PointToClient(new Point(e.X, e.Y));
-				TreeNode parentTreeNode = this.GetNodeAt(pos);
+				Point pos = PointToClient(new Point(e.X, e.Y));
+				TreeNode parentTreeNode = GetNodeAt(pos);
 				if (parentTreeNode != null)
 				{
-					TreeNode dragNode = new TreeNode(Helper.FindRootNode(this.SelectedNode));
+					TreeNode dragNode = new TreeNode(Helper.FindRootNode(SelectedNode));
 					dragNode.Tag = dragNode.Text;
 					dragNode.Name = dragNode.Text;
 					dragNode.ImageIndex =
-						 dragNode.SelectedImageIndex = 1;
+						dragNode.SelectedImageIndex = 1;
 					if (dragNode.Tag != null && dragNode.Tag.ToString() != "Fav Folder")
 					{
 						//dragNode.Tag = this.SelectedNode.Text;
@@ -158,14 +161,12 @@ namespace OMControlLibrary.Common
 								List<string> lststr = new List<string>();
 								foreach (TreeNode tnode in parentTreeNode.Nodes)
 								{
-
 									lststr.Add(tnode.Text);
 								}
 								Fav.ListClass = lststr;
 							}
 
 							dbI.SaveFavourite(dbI.GetCurrentRecentConnection().ConnParam, Fav);
-
 						}
 					}
 				}
@@ -191,7 +192,7 @@ namespace OMControlLibrary.Common
 			if (e.Node.Parent == null && e.Node.Tag != null && e.Node.Tag.ToString() == "Fav Folder")
 			{
 				e.Node.ImageIndex =
-				  e.Node.SelectedImageIndex = 4;
+					e.Node.SelectedImageIndex = 4;
 			}
 		}
 
@@ -202,7 +203,7 @@ namespace OMControlLibrary.Common
 			if (e.Node.Parent == null && e.Node.Tag != null && e.Node.Tag.ToString() == "Fav Folder")
 			{
 				e.Node.ImageIndex =
-				  e.Node.SelectedImageIndex = 5;
+					e.Node.SelectedImageIndex = 5;
 			}
 		}
 
@@ -213,14 +214,12 @@ namespace OMControlLibrary.Common
 		/// <param name="e"></param>
 		protected override void OnItemDrag(ItemDragEventArgs e)
 		{
-
-
 			try
 			{
 				string nodeName = null;
-				TreeNode tNode = ((TreeNode)e.Item);
+				TreeNode tNode = ((TreeNode) e.Item);
 				tNode.TreeView.SelectedNode = tNode;
-				((TreeNode)e.Item).TreeView.SelectedNode = tNode;
+				((TreeNode) e.Item).TreeView.SelectedNode = tNode;
 				if (tNode.Tag != null && tNode.Tag.ToString() == "Fav Folder" || tNode.Tag.ToString() == "Assembly View")
 				{
 					DoDragDrop(e.Item, DragDropEffects.None);
@@ -234,7 +233,7 @@ namespace OMControlLibrary.Common
 				if (tNode.Name.LastIndexOf(',') == -1 && tNode.Tag != null)
 				{
 					if (tNode.Parent.Tag.ToString().LastIndexOf(',') == -1)
-						nodeName = tNode.Parent.Text.ToString();
+						nodeName = tNode.Parent.Text;
 					else
 						nodeName = tNode.Parent.Tag.ToString();
 				}
@@ -246,8 +245,8 @@ namespace OMControlLibrary.Common
 				{
 					dbInteraction dbI = new dbInteraction();
 					if (Helper.IsArrayOrCollection(typeOfObject)
-						|| dbI.CheckForArray(nodeName, tNode.Text)
-						|| dbI.CheckForCollection(nodeName, tNode.Text))
+					    || dbI.CheckForArray(nodeName, tNode.Text)
+					    || dbI.CheckForCollection(nodeName, tNode.Text))
 					{
 						DoDragDrop(e.Item, DragDropEffects.None);
 						return;
@@ -255,54 +254,53 @@ namespace OMControlLibrary.Common
 				}
 
 
-
 				//// Get drag node and select it
-				this.dragNode = (TreeNode)e.Item;
-				this.SelectedNode = this.dragNode;
+				dragNode = (TreeNode) e.Item;
+				SelectedNode = dragNode;
 
 				// Reset image list used for drag image
-				this.imageListDrag.Images.Clear();
+				imageListDrag.Images.Clear();
 
 				//Check for the max image width 
-				int imageWidth = this.dragNode.Bounds.Width + this.Indent;
+				int imageWidth = dragNode.Bounds.Width + Indent;
 				if (imageWidth > Constants.MAX_IMAGE_WIDTH)
 					imageWidth = Constants.MAX_IMAGE_WIDTH;
 
-				this.imageListDrag.ImageSize = new Size(imageWidth, this.dragNode.Bounds.Height);
+				imageListDrag.ImageSize = new Size(imageWidth, dragNode.Bounds.Height);
 
 				// Create new bitmap
 				// This bitmap will contain the tree node image to be dragged
 
 
-				Bitmap bmp = new Bitmap(imageWidth, this.dragNode.Bounds.Height);
+				Bitmap bmp = new Bitmap(imageWidth, dragNode.Bounds.Height);
 
 				//// Get graphics from bitmap
 				Graphics gfx = Graphics.FromImage(bmp);
 
 				//// Draw node icon into the bitmap
-				gfx.DrawImage(this.ImageList.Images[dragNode.ImageIndex], 0, 0);
+				gfx.DrawImage(ImageList.Images[dragNode.ImageIndex], 0, 0);
 
 				//// Draw node label into bitmap
-				gfx.DrawString(this.dragNode.Text,
-					this.Font,
-					new SolidBrush(this.ForeColor),
-					(float)this.Indent, 1.0f);
+				gfx.DrawString(dragNode.Text,
+				               Font,
+				               new SolidBrush(ForeColor),
+				               Indent, 1.0f);
 
 				//// Add bitmap to imagelist
-				this.imageListDrag.Images.Add(bmp);
+				imageListDrag.Images.Add(bmp);
 
 				//// Get mouse position in client coordinates
-				Point p = this.PointToClient(Control.MousePosition);
+				Point p = PointToClient(MousePosition);
 
 				//// Compute delta between mouse position and node bounds
-				int dx = p.X + this.Indent - this.dragNode.Bounds.Left;
-				int dy = p.Y - this.dragNode.Bounds.Top;
+				int dx = p.X + Indent - dragNode.Bounds.Left;
+				int dy = p.Y - dragNode.Bounds.Top;
 
 				//// Begin dragging image
-				if (DragHelper.ImageList_BeginDrag(this.imageListDrag.Handle, 0, dx, dy))
+				if (DragHelper.ImageList_BeginDrag(imageListDrag.Handle, 0, dx, dy))
 				{
 					// Begin dragging
-					this.DoDragDrop(bmp, DragDropEffects.Move);
+					DoDragDrop(bmp, DragDropEffects.Move);
 					// End dragging image
 					DragHelper.ImageList_EndDrag();
 				}
@@ -320,7 +318,7 @@ namespace OMControlLibrary.Common
 		{
 			try
 			{
-				treenode = this.GetNodeAt(e.X, e.Y);
+				treenode = GetNodeAt(e.X, e.Y);
 				if (treenode != null)
 				{
 					if (treenode.Tag != null && treenode.Tag.ToString() != "Assembly View")
@@ -328,50 +326,36 @@ namespace OMControlLibrary.Common
 						base.OnMouseDown(e);
 						if (treenode != null && e.Button == MouseButtons.Right)
 						{
-							this.SelectedNode = treenode;
-							this.ContextMenuStrip = null;
+							SelectedNode = treenode;
+							ContextMenuStrip = null;
 							List<string> list = null;
 							QueryBuilder queryBuilder = QueryBuilder.Instance;
 
 							if (m_hashtableClassNodes.Contains(treenode.Name) ||
-							m_hashtableAssmblyNodes.Contains(treenode.Name))
+							    m_hashtableAssmblyNodes.Contains(treenode.Name))
 							{
-								this.ContextMenuStrip = m_tvViewObjectsContextMenuStrip;
+								ContextMenuStrip = m_tvViewObjectsContextMenuStrip;
 							}
 							else
 							{
-								string className = string.Empty;
 								string typeOfObject = string.Empty;
-
 								if (treenode.Tag != null)
 								{
 									typeOfObject = Helper.GetTypeOfObject(treenode.Tag.ToString());
-
 									if (Helper.IsPrimitive(typeOfObject))
 									{
 										if (!Helper.IsArrayOrCollection(typeOfObject))
-											this.ContextMenuStrip = m_tvAddtoQueryContextMenuStrip;
+											ContextMenuStrip = m_tvAddtoQueryContextMenuStrip;
 									}
 								}
 							}
 							if (treenode.Tag != null && treenode.Tag.ToString() == "Fav Folder")
 							{
-								list = queryBuilder.GetAllQueryGroups();
-								//this.BuildContextMenu(list);
-								this.BuildContextMenu(null, false, false);
-								this.ContextMenuStrip = m_tvFavFolderContexMenu;
+								queryBuilder.GetAllQueryGroups();
+								BuildContextMenu(null, false, false);
+								ContextMenuStrip = m_tvFavFolderContexMenu;
 							}
-							//else
-							//{
-							////else if (treenode.Tag.ToString() != "Fav Folder" && treenode.Parent.Tag.ToString() == "Fav Folder")
-							////{
-							//    //this.BuildContextMenu(null);
-							//    //this.BuildContextMenu(null,false);
-							//    this.ContextMenuStrip = m_tvViewObjectsContextMenuStrip;
-							//}
-
 						}
-
 					}
 				}
 			}
@@ -382,8 +366,6 @@ namespace OMControlLibrary.Common
 		}
 
 
-
-
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			try
@@ -392,21 +374,17 @@ namespace OMControlLibrary.Common
 				{
 					dbInteraction dbI = new dbInteraction();
 					FavouriteFolder Fav = null;
-					if (this.SelectedNode.Tag != null && this.SelectedNode.Tag.ToString() == "Fav Folder")
+					if (SelectedNode.Tag != null && SelectedNode.Tag.ToString() == "Fav Folder")
 					{
-
-
-						Fav = new FavouriteFolder(null, this.SelectedNode.Text);
+						Fav = new FavouriteFolder(null, SelectedNode.Text);
 						dbI.UpdateFavourite(dbI.GetCurrentRecentConnection().ConnParam, Fav);
-						this.Nodes.Remove(this.SelectedNode);
-
-
+						Nodes.Remove(SelectedNode);
 					}
-					else if (this.SelectedNode.Parent != null && this.SelectedNode.Parent.Tag != null && this.SelectedNode.Parent.Tag.ToString() == "Fav Folder")
+					else if (SelectedNode.Parent != null && SelectedNode.Parent.Tag != null &&
+					         SelectedNode.Parent.Tag.ToString() == "Fav Folder")
 					{
-
-						TreeNode tNode = this.SelectedNode;
-						TreeNode parentNode = this.SelectedNode.Parent;
+						TreeNode tNode = SelectedNode;
+						TreeNode parentNode = SelectedNode.Parent;
 
 
 						if (parentNode.Nodes.Count > 0)
@@ -417,12 +395,10 @@ namespace OMControlLibrary.Common
 								lststr.Add(tempNode.Text);
 							}
 							Fav = new FavouriteFolder(lststr, tNode.Parent.Text);
-
 						}
 						dbI.SaveFavourite(dbI.GetCurrentRecentConnection().ConnParam, Fav);
-						this.SelectedNode.Remove();
+						SelectedNode.Remove();
 					}
-
 				}
 			}
 			catch (Exception oEx)
@@ -453,7 +429,6 @@ namespace OMControlLibrary.Common
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
-
 		}
 
 		protected void SubMenu_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -466,7 +441,7 @@ namespace OMControlLibrary.Common
 				if (OnContextMenuItemClicked != null)
 					OnContextMenuItemClicked(sender, arg);
 
-				this.ContextMenuStrip.Dispose();
+				ContextMenuStrip.Dispose();
 			}
 			catch (Exception oEx)
 			{
@@ -486,16 +461,17 @@ namespace OMControlLibrary.Common
 				imageListTreeView.Images.Add(dbImages.TreeViewClass); //1 Classes
 				imageListTreeView.Images.Add(dbImages.TreeViewPrimitive); //2 Primitive
 				imageListTreeView.Images.Add(dbImages.TreeViewCollection); //3 Primitive
-				imageListTreeView.Images.Add(dbImages.openFolder);// 4 open Folder
-				imageListTreeView.Images.Add(dbImages.closedFolder);// 5 closed Folder
+				imageListTreeView.Images.Add(dbImages.openFolder); // 4 open Folder
+				imageListTreeView.Images.Add(dbImages.closedFolder); // 5 closed Folder
 
-				this.ImageList = imageListTreeView;
+				ImageList = imageListTreeView;
 			}
 			catch (Exception oEx)
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
+
 		public void AddFavouritFolderFromDatabase()
 		{
 			try
@@ -684,20 +660,19 @@ namespace OMControlLibrary.Common
 			try
 			{
 				IDictionaryEnumerator enumerator =
-					 list.GetEnumerator();
+					list.GetEnumerator();
 
 				TreeNode treeNodeNew = null;
 
-				this.BeginUpdate();
+				BeginUpdate();
 
-				this.Nodes.Clear();
+				Nodes.Clear();
 				HashtableAssmblyNodes.Clear();
 
 				while (enumerator.MoveNext())
 				{
-
 					string nodevalue = enumerator.Key.ToString();
-					List<string> classes = (List<string>)enumerator.Value;
+					List<string> classes = (List<string>) enumerator.Value;
 
 					if (!string.IsNullOrEmpty(nodevalue))
 						treeNodeNew = new TreeNode(nodevalue);
@@ -730,7 +705,7 @@ namespace OMControlLibrary.Common
 					if (!m_hashtableAssmblyNodes.ContainsKey(treeNodeNew.Name))
 						m_hashtableAssmblyNodes.Add(treeNodeNew.Name, treeNodeNew);
 
-					this.Nodes.Add(treeNodeNew);
+					Nodes.Add(treeNodeNew);
 					treeNodeNew.Expand();
 				}
 			}
@@ -740,10 +715,10 @@ namespace OMControlLibrary.Common
 			}
 			finally
 			{
-				this.EndUpdate();
+				EndUpdate();
 			}
-
 		}
+
 		public void AddFavoriteFolder()
 		{
 			TreeNode treeNodeNew = new TreeNode();
@@ -751,9 +726,9 @@ namespace OMControlLibrary.Common
 			int count = 0;
 			try
 			{
-				for (int i = 0; i < this.Nodes.Count; i++)
+				for (int i = 0; i < Nodes.Count; i++)
 				{
-					TreeNode tNode = this.Nodes[i];
+					TreeNode tNode = Nodes[i];
 					if (tNode.Tag != null && tNode.Tag.ToString() == "Fav Folder")
 					{
 						count++;
@@ -765,15 +740,14 @@ namespace OMControlLibrary.Common
 					//dbInteraction dbI = new dbInteraction();
 					//dbI.GetFolderfromDatabaseByFoldername(dbI.GetCurrentRecentConnection().ConnParam, "New Folder " + count.ToString());   
 					bool checkUnique;
-					treeNodeNew.Text = "New Folder " + count.ToString();
+					treeNodeNew.Text = "New Folder " + count;
 					while (true)
 					{
-
 						checkUnique = CheckUniqueFolderName(treeNodeNew, favFolderList, count);
 						if (checkUnique == false)
 						{
 							count++;
-							treeNodeNew.Text = "New Folder " + count.ToString();
+							treeNodeNew.Text = "New Folder " + count;
 						}
 						else
 						{
@@ -810,7 +784,6 @@ namespace OMControlLibrary.Common
 					{
 						return false;
 					}
-
 				}
 			}
 			catch (Exception oEx)
@@ -819,16 +792,16 @@ namespace OMControlLibrary.Common
 			}
 			return true;
 		}
+
 		protected override void OnBeforeLabelEdit(NodeLabelEditEventArgs e)
 		{
 			try
 			{
 				base.OnBeforeLabelEdit(e);
-				folderName = this.SelectedNode.Text;
+				folderName = SelectedNode.Text;
 				if (e.Node.Tag != null && e.Node.Tag.ToString() != "Fav Folder")
 				{
-					this.LabelEdit = false;
-
+					LabelEdit = false;
 				}
 			}
 			catch (Exception oEx)
@@ -845,9 +818,9 @@ namespace OMControlLibrary.Common
 				if (!string.IsNullOrEmpty(e.Label))
 				{
 					bool checkSameNode = false;
-					for (int i = 0; i < this.Nodes.Count; i++)
+					for (int i = 0; i < Nodes.Count; i++)
 					{
-						TreeNode tNode = this.Nodes[i];
+						TreeNode tNode = Nodes[i];
 						if (tNode.Text == e.Label)
 						{
 							checkSameNode = true;
@@ -860,16 +833,16 @@ namespace OMControlLibrary.Common
 					}
 					else
 					{
-						MessageBox.Show("The Foldername already exist, Please use some other name.", Helper.GetResourceString(Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.OK, MessageBoxIcon.Error);
+						MessageBox.Show("The Foldername already exist, Please use some other name.",
+						                Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.OK, MessageBoxIcon.Error);
 						e.CancelEdit = true;
-
 					}
 				}
 				else if (e.Label == string.Empty)
 				{
-					MessageBox.Show("The Foldername cannot be empty.", Helper.GetResourceString(Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show("The Foldername cannot be empty.", Helper.GetResourceString(Constants.PRODUCT_CAPTION),
+					                MessageBoxButtons.OK, MessageBoxIcon.Error);
 					e.CancelEdit = true;
-
 				}
 				if (e.Node.Text != folderName)
 				{
@@ -889,7 +862,6 @@ namespace OMControlLibrary.Common
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
-
 		}
 
 
@@ -899,20 +871,19 @@ namespace OMControlLibrary.Common
 			try
 			{
 				IDictionaryEnumerator enumerator =
-					 list.GetEnumerator();
+					list.GetEnumerator();
 
 				TreeNode treeNodeNew = null;
 				bool isPrimitiveType = false;
 
-				if (this.Nodes.Count > 0)
-					this.Nodes.Clear();
+				if (Nodes.Count > 0)
+					Nodes.Clear();
 
 				m_hashtableClassNodes.Clear();
-				this.BeginUpdate();
+				BeginUpdate();
 
 				while (enumerator.MoveNext())
 				{
-
 					string nodevalue = string.Empty;
 					string nodetype = string.Empty;
 
@@ -930,13 +901,13 @@ namespace OMControlLibrary.Common
 						if (treenodeparent == null)
 						{
 							treeNodeNew.ImageIndex =
-							treeNodeNew.SelectedImageIndex = 1; //Classes
+								treeNodeNew.SelectedImageIndex = 1; //Classes
 
 							if (!m_hashtableClassNodes.ContainsKey(treeNodeNew.Name))
 							{
 								m_hashtableClassNodes.Add(treeNodeNew.Name, treeNodeNew);
 							}
-							this.Nodes.Add(treeNodeNew);
+							Nodes.Add(treeNodeNew);
 
 							AddDummyChildNode(treeNodeNew);
 							continue;
@@ -945,7 +916,7 @@ namespace OMControlLibrary.Common
 						{
 							typeofObject = Helper.GetTypeOfObject(nodetype);
 							treeNodeNew.ImageIndex =
-							   treeNodeNew.SelectedImageIndex = SetImageIndex(typeofObject);
+								treeNodeNew.SelectedImageIndex = SetImageIndex(typeofObject);
 
 							isPrimitiveType = Helper.IsPrimitive(typeofObject);
 							treenodeparent.Nodes.Add(treeNodeNew);
@@ -979,7 +950,7 @@ namespace OMControlLibrary.Common
 								{
 									AddDummyChildNode(treeNodeNew);
 									treeNodeNew.ImageIndex =
-											treeNodeNew.SelectedImageIndex = 1; //Classes;
+										treeNodeNew.SelectedImageIndex = 1; //Classes;
 								}
 							}
 							else
@@ -989,7 +960,7 @@ namespace OMControlLibrary.Common
 								if (collection || isarray)
 								{
 									treeNodeNew.ImageIndex =
-											treeNodeNew.SelectedImageIndex = 3; //Classes;
+										treeNodeNew.SelectedImageIndex = 3; //Classes;
 								}
 							}
 						}
@@ -1004,7 +975,7 @@ namespace OMControlLibrary.Common
 			finally
 			{
 				//this.Sort();
-				this.EndUpdate();
+				EndUpdate();
 			}
 		}
 
@@ -1018,16 +989,16 @@ namespace OMControlLibrary.Common
 			try
 			{
 				IDictionaryEnumerator enumerator =
-					 list.GetEnumerator();
+					list.GetEnumerator();
 
-				this.BeginUpdate();
-				this.Nodes.Clear();
+				BeginUpdate();
+				Nodes.Clear();
 				m_hashtableAssmblyNodes.Clear();
 
 				while (enumerator.MoveNext())
 				{
 					nodevalue = enumerator.Key.ToString();
-					List<string> classes = (List<string>)enumerator.Value;
+					List<string> classes = (List<string>) enumerator.Value;
 
 					if (!string.IsNullOrEmpty(nodevalue))
 						treeNodeNew = new TreeNode(nodevalue);
@@ -1040,11 +1011,11 @@ namespace OMControlLibrary.Common
 					{
 						for (int i = 0; i < classes.Count; i++)
 						{
-							TreeNode newClassesTreeNodes = new TreeNode(classes[i].ToString());
-							newClassesTreeNodes.Name = classes[i].ToString();
+							TreeNode newClassesTreeNodes = new TreeNode(classes[i]);
+							newClassesTreeNodes.Name = classes[i];
 							if (newClassesTreeNodes.Name.ToLower().Contains(strToFind))
 							{
-								newClassesTreeNodes.Tag = classes[i].ToString();
+								newClassesTreeNodes.Tag = classes[i];
 								newClassesTreeNodes.ImageIndex =
 									newClassesTreeNodes.SelectedImageIndex = 1; //Classes
 
@@ -1058,7 +1029,7 @@ namespace OMControlLibrary.Common
 					}
 
 					treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 0; //Assembly
-					this.Nodes.Add(treeNodeNew);
+					Nodes.Add(treeNodeNew);
 					treeNodeNew.Expand();
 				}
 			}
@@ -1068,9 +1039,8 @@ namespace OMControlLibrary.Common
 			}
 			finally
 			{
-				this.EndUpdate();
+				EndUpdate();
 			}
-
 		}
 
 		protected override void OnAfterSelect(TreeViewEventArgs e)
@@ -1089,7 +1059,6 @@ namespace OMControlLibrary.Common
 				//bool foundNode = false;
 				if (Node != null && Node.Tag != null)
 				{
-
 					if (Node.Tag.Equals(className) || Node.Tag.Equals(strClassName))
 					{
 						dbtree.SelectedNode = Node;
@@ -1098,7 +1067,7 @@ namespace OMControlLibrary.Common
 					else
 					{
 						if (Node.Parent != null
-							&& Node.Parent.Tag != null)
+						    && Node.Parent.Tag != null)
 						{
 							if (Node.Nodes.Count >= 1)
 							{
@@ -1106,13 +1075,11 @@ namespace OMControlLibrary.Common
 								{
 									if (Node.Nodes[i].Nodes.Count > 0)
 									{
-
 										if (Node.Nodes[i].Tag.Equals(className) || Node.Nodes[i].Tag.Equals(strClassName))
 										{
 											dbtree.SelectedNode = Node.Nodes[i];
 											//foundNode = true;
 											return;
-
 										}
 										else
 										{
@@ -1128,12 +1095,10 @@ namespace OMControlLibrary.Common
 						{
 							if (Node.Nodes != null && Node.Nodes.Count > 0)
 								Node = Node.Nodes[0];
-
 						}
 						FindNSelectNode(Node, className, dbtree);
 					}
 				}
-
 			}
 			catch (Exception oEx)
 			{
@@ -1147,7 +1112,6 @@ namespace OMControlLibrary.Common
 		/// <param name="tagName">Tag assigned to a treenode</param>
 		public void UpdateTreeNodeSelection(TreeNode selectedNode, bool isAssemblyView)
 		{
-
 			string selectedNodeName = string.Empty;
 			TreeNode parentNode = new TreeNode();
 			Hashtable m_htnodes = new Hashtable();
@@ -1158,15 +1122,15 @@ namespace OMControlLibrary.Common
 
 				//Check whether tree node with given tag exists.
 				if (isAssemblyView)
-					m_htnodes = this.HashtableAssmblyNodes;
+					m_htnodes = HashtableAssmblyNodes;
 				else
-					m_htnodes = this.HashtableClassNodes;
+					m_htnodes = HashtableClassNodes;
 
 
 				parentNode = selectedNode.Parent;
 				selectedNodeName = selectedNode.Text;
 				while (parentNode != null && parentNode.Tag != null
-					 && parentNode.Tag.ToString() != "Assembly View" && parentNode.Tag.ToString() != "Fav Folder")
+				       && parentNode.Tag.ToString() != "Assembly View" && parentNode.Tag.ToString() != "Fav Folder")
 				{
 					selectedNodeName = parentNode.Name;
 
@@ -1188,12 +1152,12 @@ namespace OMControlLibrary.Common
 							m_TreeNode.Text.Trim();
 							//Select the node.
 							if (selectedNode.Name.LastIndexOf(",") != -1)
-								this.SelectedNode = m_TreeNode;
+								SelectedNode = m_TreeNode;
 							else
-								this.SelectedNode = selectedNode;
+								SelectedNode = selectedNode;
 
 							m_TreeNode.Text += "            ";
-							Font fontTree = new Font(this.Font.Name, this.Font.Size, FontStyle.Bold);
+							Font fontTree = new Font(Font.Name, Font.Size, FontStyle.Bold);
 							m_TreeNode.NodeFont = fontTree;
 							m_TreeNode.Text = m_TreeNode.Text.Trim();
 						}
@@ -1201,7 +1165,7 @@ namespace OMControlLibrary.Common
 						if (m_PreviousTreeNode != null && m_PreviousTreeNode != m_TreeNode)
 						{
 							//Set previously selected treenode as regular font.
-							Font preFont = new Font(this.Font.Name, this.Font.Size, FontStyle.Regular);
+							Font preFont = new Font(Font.Name, Font.Size, FontStyle.Regular);
 							m_PreviousTreeNode.NodeFont = preFont;
 							m_PreviousTreeNode = m_TreeNode;
 							m_PreviousTreeNode.Text = m_PreviousTreeNode.Text.Trim();
@@ -1219,17 +1183,15 @@ namespace OMControlLibrary.Common
 		{
 			try
 			{
-				foreach (TreeNode node in this.Nodes)
+				foreach (TreeNode node in Nodes)
 				{
 					if (node.Tag != null && node.Tag.ToString() == "Fav Folder")
 					{
 						foreach (TreeNode tNode in node.Nodes)
 						{
-							Font preFont = new Font(this.Font.Name, this.Font.Size, FontStyle.Regular);
+							Font preFont = new Font(Font.Name, Font.Size, FontStyle.Regular);
 							tNode.NodeFont = preFont;
-
 						}
-
 					}
 				}
 			}
@@ -1246,7 +1208,7 @@ namespace OMControlLibrary.Common
 				if (parentNode.Tag != null && parentNode.Tag.ToString() == "Fav Folder")
 				{
 					string FavFol = parentNode.Text;
-					foreach (TreeNode node in this.Nodes)
+					foreach (TreeNode node in Nodes)
 					{
 						if (node.Text == FavFol)
 						{
@@ -1254,23 +1216,20 @@ namespace OMControlLibrary.Common
 							{
 								if (tNode.Text == selectedNodeName)
 								{
-									Font fontTree = new Font(this.Font.Name, this.Font.Size, FontStyle.Bold);
+									Font fontTree = new Font(Font.Name, Font.Size, FontStyle.Bold);
 									tNode.NodeFont = fontTree;
 									tNode.Text = tNode.Text.Trim();
-
 								}
 								else
 								{
-									Font preFont = new Font(this.Font.Name, this.Font.Size, FontStyle.Regular);
+									Font preFont = new Font(Font.Name, Font.Size, FontStyle.Regular);
 									tNode.NodeFont = preFont;
 								}
 							}
-
-
 						}
 						else
 						{
-							Font preFont = new Font(this.Font.Name, this.Font.Size, FontStyle.Regular);
+							Font preFont = new Font(Font.Name, Font.Size, FontStyle.Regular);
 							node.NodeFont = preFont;
 						}
 					}
@@ -1284,8 +1243,7 @@ namespace OMControlLibrary.Common
 
 		public void BuildContextMenu(List<string> contextmenulist, bool FavChild, bool showDeleteClass)
 		{
-			string menuName = string.Empty;
-			string menuText = string.Empty;
+			string menuName;
 
 			ToolStripMenuItem objSubMenu;
 			ToolStripMenuItem objMainMenu;
@@ -1295,10 +1253,8 @@ namespace OMControlLibrary.Common
 				if (FavChild == false)
 				{
 					m_tvFavFolderContexMenu = new ContextMenuStrip();
-					//m_tvAddtoQueryContextMenuStrip = new ContextMenuStrip();
 
-
-					m_tvFavFolderContexMenu.Name = this.Name;
+					m_tvFavFolderContexMenu.Name = Name;
 					objMainMenu = new ToolStripMenuItem("Rename");
 					objMainMenu.Name = "Rename";
 					objMainMenu.Tag = "Rename";
@@ -1308,8 +1264,8 @@ namespace OMControlLibrary.Common
 					objMainMenu1.Name = "Delete Folder";
 					objMainMenu1.Tag = "Delete Folder";
 					m_tvFavFolderContexMenu.Items.Add(objMainMenu1);
-					m_tvFavFolderContexMenu.ItemClicked += new ToolStripItemClickedEventHandler(MainMenu_ItemClicked);
-					m_tvFavFolderContexMenu.Opening += new CancelEventHandler(ContextMenuStrip_Opening);
+					m_tvFavFolderContexMenu.ItemClicked += MainMenu_ItemClicked;
+					m_tvFavFolderContexMenu.Opening += ContextMenuStrip_Opening;
 
 					//TreeView_OnContextMenuItemClicked
 				}
@@ -1317,44 +1273,41 @@ namespace OMControlLibrary.Common
 				{
 					m_tvViewObjectsContextMenuStrip = new ContextMenuStrip();
 					m_tvAddtoQueryContextMenuStrip = new ContextMenuStrip();
-					m_tvViewObjectsContextMenuStrip.Name = this.Name;
+					m_tvViewObjectsContextMenuStrip.Name = Name;
 
 					if (contextmenulist != null)
 					{
-						menuName = Common.Constants.CONTEXT_MENU_ADD_TO_ATTRIBUTE;
-						objMainMenu = new ToolStripMenuItem(Helper.GetResourceString(Common.Constants.CONTEXT_MENU_ADD_TO_ATTRIBUTE));
+						menuName = Constants.CONTEXT_MENU_ADD_TO_ATTRIBUTE;
+						objMainMenu = new ToolStripMenuItem(Helper.GetResourceString(Constants.CONTEXT_MENU_ADD_TO_ATTRIBUTE));
 						objMainMenu.Name = menuName;
-						objMainMenu.Tag = (object)menuName;
-						//objMainMenu.Enabled = !(Helper.HashTableBaseClass.Count > 0 && !Helper.HashTableBaseClass.Contains(selectedNodeName));
+						objMainMenu.Tag = menuName;
 
 						m_tvAddtoQueryContextMenuStrip.Items.Add(objMainMenu);
 
-						objMainMenu = new ToolStripMenuItem(Helper.GetResourceString(Common.Constants.CONTEXT_MENU_ADD_TO_QUERY));
-						objMainMenu.Name = Common.Constants.CONTEXT_MENU_ADD_TO_QUERY;
+						objMainMenu = new ToolStripMenuItem(Helper.GetResourceString(Constants.CONTEXT_MENU_ADD_TO_QUERY));
+						objMainMenu.Name = Constants.CONTEXT_MENU_ADD_TO_QUERY;
 						objMainMenu.Tag = null;
-						//objMainMenu.Enabled = !(Helper.HashTableBaseClass.Count > 0 && !Helper.HashTableBaseClass.Contains(selectedNodeName));
 
 						for (int i = 0; i < contextmenulist.Count; i++)
 						{
 							objSubMenu = new ToolStripMenuItem();
-							objSubMenu.Text = contextmenulist[i].ToString();
-							objSubMenu.Name = Common.Constants.CONTEXT_MENU_EXPRESSION_GROUP + i.ToString();
-							objSubMenu.Tag = Common.Constants.CONTEXT_MENU_EXPRESSION_GROUP;
+							objSubMenu.Text = contextmenulist[i];
+							objSubMenu.Name = Constants.CONTEXT_MENU_EXPRESSION_GROUP + i;
+							objSubMenu.Tag = Constants.CONTEXT_MENU_EXPRESSION_GROUP;
 							objMainMenu.DropDownItems.Add(objSubMenu);
-
 						}
 						m_tvAddtoQueryContextMenuStrip.Items.Add(objMainMenu);
 
 
-						objMainMenu.DropDownItemClicked += new ToolStripItemClickedEventHandler(SubMenu_DropDownItemClicked);
-						m_tvAddtoQueryContextMenuStrip.ItemClicked += new ToolStripItemClickedEventHandler(MainMenu_ItemClicked);
-						m_tvAddtoQueryContextMenuStrip.Opening += new CancelEventHandler(ContextMenuStrip_Opening);
+						objMainMenu.DropDownItemClicked += SubMenu_DropDownItemClicked;
+						m_tvAddtoQueryContextMenuStrip.ItemClicked += MainMenu_ItemClicked;
+						m_tvAddtoQueryContextMenuStrip.Opening += ContextMenuStrip_Opening;
 					}
 					else
 					{
-						objMainMenu = new ToolStripMenuItem(Helper.GetResourceString(Common.Constants.CONTEXT_MENU_SHOW_ALL_OBJECTS));
-						objMainMenu.Name = Common.Constants.CONTEXT_MENU_SHOW_ALL_OBJECTS;
-						objMainMenu.Tag = Common.Constants.CONTEXT_MENU_SHOW_ALL_OBJECTS;
+						objMainMenu = new ToolStripMenuItem(Helper.GetResourceString(Constants.CONTEXT_MENU_SHOW_ALL_OBJECTS));
+						objMainMenu.Name = Constants.CONTEXT_MENU_SHOW_ALL_OBJECTS;
+						objMainMenu.Tag = Constants.CONTEXT_MENU_SHOW_ALL_OBJECTS;
 						m_tvViewObjectsContextMenuStrip.Items.Add(objMainMenu);
 						if (showDeleteClass)
 						{
@@ -1362,7 +1315,6 @@ namespace OMControlLibrary.Common
 							objMainMenu1.Name = "Delete Class";
 							objMainMenu1.Tag = "Delete Class";
 							m_tvViewObjectsContextMenuStrip.Items.Add(objMainMenu1);
-
 						}
 						m_tvViewObjectsContextMenuStrip.ItemClicked += MainMenu_ItemClicked;
 						m_tvViewObjectsContextMenuStrip.Opening += ContextMenuStrip_Opening;
@@ -1375,7 +1327,7 @@ namespace OMControlLibrary.Common
 			}
 		}
 
-		void ContextMenuStrip_Opening(object sender, CancelEventArgs e)
+		private void ContextMenuStrip_Opening(object sender, CancelEventArgs e)
 		{
 			try
 			{
@@ -1389,15 +1341,16 @@ namespace OMControlLibrary.Common
 				{
 					string selectedNodeName = string.Empty;
 
-					if (this.SelectedNode != null)
+					if (SelectedNode != null)
 					{
-						if (this.SelectedNode.Name.LastIndexOf(",") == -1)
+						if (SelectedNode.Name.LastIndexOf(",") == -1)
 						{
 							TreeNode parentNode = new TreeNode();
 
-							parentNode = this.SelectedNode.Parent;
+							parentNode = SelectedNode.Parent;
 
-							while (parentNode != null && parentNode.Tag != null && parentNode.Tag.ToString() != "Fav Folder" && parentNode.Tag.ToString() != "Assembly View")
+							while (parentNode != null && parentNode.Tag != null && parentNode.Tag.ToString() != "Fav Folder" &&
+							       parentNode.Tag.ToString() != "Assembly View")
 							{
 								selectedNodeName = parentNode.Name;
 								parentNode = parentNode.Parent;
@@ -1422,11 +1375,11 @@ namespace OMControlLibrary.Common
 	/// <summary>
 	/// DBContextItemClickedEventArg : For handling the contextmenu click
 	/// </summary>
-	public class DBContextItemClickedEventArg : System.EventArgs
+	public class DBContextItemClickedEventArg : EventArgs
 	{
-		private object m_data = null;
-		private object m_tag = null;
-		private object m_item = null;
+		private object m_data;
+		private object m_tag;
+		private object m_item;
 
 		public object Item
 		{
@@ -1467,7 +1420,7 @@ namespace OMControlLibrary.Common
 
 		[DllImport("comctl32.dll", CharSet = CharSet.Auto)]
 		public static extern bool ImageList_BeginDrag(IntPtr himlTrack, int
-			iTrack, int dxHotspot, int dyHotspot);
+		                                                                	iTrack, int dxHotspot, int dyHotspot);
 
 		[DllImport("comctl32.dll", CharSet = CharSet.Auto)]
 		public static extern bool ImageList_DragMove(int x, int y);

@@ -151,6 +151,10 @@ namespace OMControlLibrary
 					}
 				}
 			}
+			else
+			{
+				selectedItem = null;
+			}
 		}
 
 		/// <summary>
@@ -827,9 +831,7 @@ namespace OMControlLibrary
 					OMETabStripItem itm = Items[0];
 					if (itm.Visible)
 					{
-						selectedItem = itm;
-						selectedItem.Selected = true;
-						selectedItem.Dock = DockStyle.Fill;
+						SelectItem(itm);
 					}
 				}
 				else
@@ -842,7 +844,6 @@ namespace OMControlLibrary
 					if (itm == selectedItem)
 					{
 						SelectItem(itm);
-						itm.Dock = DockStyle.Fill;
 						itm.Show();
 					}
 					else
@@ -861,8 +862,7 @@ namespace OMControlLibrary
 					Invalidate();
 				}
 
-				OnTabStripItemChanged(
-					new TabStripItemChangedEventArgs(selectedItem, OMETabStripItemChangeTypes.SelectionChanged));
+				OnTabStripItemChanged(new TabStripItemChangedEventArgs(selectedItem, OMETabStripItemChangeTypes.SelectionChanged));
 			}
 		}
 

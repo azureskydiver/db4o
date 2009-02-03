@@ -28,13 +28,12 @@ namespace OManager.DataLayer.CommonDatalayer
 
                 while (aClass != null)
                 {
-
                     refField = GetDeclaredField(aClass, attribute);
                     if (refField != null)
                         break;
                     aClass = aClass.GetSuperclass();
-
                 }
+
                 return refField;
             }
             catch (Exception e)
@@ -91,7 +90,7 @@ namespace OManager.DataLayer.CommonDatalayer
         {
             try
             {
-                return GetDeclaredFieldsListInHeirarchy(aClass).ToArray();
+                return GetFieldList(aClass).ToArray();
             }
             catch (Exception e)
             {
@@ -100,17 +99,17 @@ namespace OManager.DataLayer.CommonDatalayer
             return null;
         }
 
-        public static List<IReflectField> GetDeclaredFieldsListInHeirarchy(IReflectClass aClass)
+        public static List<IReflectField> GetFieldList(IReflectClass aClass)
         {
             try
             {
                 if (aClass == null)
                     return null;
 
-                List<IReflectField> ret = GetDeclaredFieldsList(aClass);
+                List<IReflectField> ret = NonVirtualFieldsFor(aClass);
                 IReflectClass parent = aClass.GetSuperclass();
                 if (parent != null && !(parent.GetName().StartsWith("System.")))
-                    ret.AddRange(GetDeclaredFieldsListInHeirarchy(parent));
+                    ret.AddRange(GetFieldList(parent));
 
 				return ret;
             }
@@ -121,7 +120,7 @@ namespace OManager.DataLayer.CommonDatalayer
             return null;
         }
 
-        public static List<IReflectField> GetDeclaredFieldsList(IReflectClass aClass)
+        public static List<IReflectField> NonVirtualFieldsFor(IReflectClass aClass)
         {
             try
             {
@@ -163,7 +162,7 @@ namespace OManager.DataLayer.CommonDatalayer
             }
             return null;
         }
-        public static IReflectClass returnReflectClassfromObject(object obj)
+		public static IReflectClass ReflectClassFor(object obj)
         {
             try
             {
@@ -206,7 +205,7 @@ namespace OManager.DataLayer.CommonDatalayer
             {
                 if (expandedObj != null)
                 {
-                    IReflectClass refClass = returnReflectClassfromObject(expandedObj);
+                    IReflectClass refClass = ReflectClassFor(expandedObj);
                     if (refClass != null)
                     {
                         return refClass.IsArray();
@@ -227,7 +226,7 @@ namespace OManager.DataLayer.CommonDatalayer
         {
             try
             {
-               IReflectClass refClass = returnReflectClassfromObject(expandedObj);// objectContainer.Ext().Reflector().ForObject(expandedObj);              
+               IReflectClass refClass = ReflectClassFor(expandedObj);// objectContainer.Ext().Reflector().ForObject(expandedObj);              
                if (refClass != null)
                {
                    string type = PrimitiveType(refClass.GetName());
@@ -245,7 +244,7 @@ namespace OManager.DataLayer.CommonDatalayer
         {
             try
             {
-                IReflectClass refClass = returnReflectClassfromObject(expandedObj);// objectContainer.Ext().Reflector().ForObject(expandedObj);              
+                IReflectClass refClass = ReflectClassFor(expandedObj);// objectContainer.Ext().Reflector().ForObject(expandedObj);              
                 if (refClass != null)
                 {
                     string type = PrimitiveType(refClass.GetName());

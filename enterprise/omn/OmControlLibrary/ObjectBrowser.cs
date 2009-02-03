@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using EnvDTE;
-using EnvDTE80;
-using System.Reflection;
 using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
 using OManager.BusinessLayer.Login;
@@ -75,13 +73,10 @@ namespace OMControlLibrary
 		#region Constructor
 		public ObjectBrowser()
 		{
-			this.SetStyle(ControlStyles.CacheText |
-			   ControlStyles.OptimizedDoubleBuffer, true);
+			SetStyle(ControlStyles.CacheText | ControlStyles.OptimizedDoubleBuffer, true);
 
 			InitializeComponent();
 			SetLiterals();
-
-
 		}
 		#endregion
 
@@ -501,7 +496,6 @@ namespace OMControlLibrary
 			{
 				queryBuilder = QueryBuilder.Instance;
 				dbInteraction dbI = new dbInteraction();
-				FavouriteFolder Fav = null;
 				switch (e.Tag.ToString())
 				{
 					case Common.Constants.CONTEXT_MENU_SHOW_ALL_OBJECTS:
@@ -535,13 +529,14 @@ namespace OMControlLibrary
 
 						ApplicationObject.ToolWindows.DTE.Windows.Item("Query Builder").Activate();
 						break;
+
 					case "Rename":
 						dbtreeviewObject.LabelEdit = true;
 						dbtreeviewObject.SelectedNode.BeginEdit();
 						break;
-					case "Delete Folder":
 
-						Fav = new FavouriteFolder(null, dbtreeviewObject.SelectedNode.Text);
+					case "Delete Folder":
+						FavouriteFolder Fav = new FavouriteFolder(null, dbtreeviewObject.SelectedNode.Text);
 						dbI.UpdateFavourite(dbI.GetCurrentRecentConnection().ConnParam, Fav);
 						dbtreeviewObject.Nodes.Remove(dbtreeviewObject.SelectedNode);
 						break;
@@ -598,10 +593,9 @@ namespace OMControlLibrary
 
 				if (tempTreeNode.Parent != null)
 				{
-					if (tempTreeNode.Parent.Tag.ToString().Contains(CONST_COMMA_STRING))
-						className = tempTreeNode.Parent.Tag.ToString();
-					else
-						className = tempTreeNode.Parent.Name.ToString();
+					className = tempTreeNode.Parent.Tag.ToString().Contains(CONST_COMMA_STRING) 
+												? tempTreeNode.Parent.Tag.ToString() 
+												: tempTreeNode.Parent.Name;
 				}
 
 				//Check if dragged item is from same class or not, if not then dont allow to drag item
@@ -640,7 +634,7 @@ namespace OMControlLibrary
 				{
 					TreeNode treenode;
 					queryBuilder = QueryBuilder.Instance;
-					List<string> list = null;
+					List<string> list;
 					if (dbtreeviewObject != null && dbtreeviewObject.Visible)
 					{
 						treenode = dbtreeviewObject.GetNodeAt(e.X, e.Y);
@@ -712,30 +706,20 @@ namespace OMControlLibrary
 			{
 				queryBuilder = QueryBuilder.Instance;
 
-				//if (Helper.ListQueryAttributes == null)
-				//    Helper.ListQueryAttributes = new Hashtable();
+				if (listQueryAttributes == null)
+					listQueryAttributes = new Hashtable();
 
-				if (this.listQueryAttributes == null)
-					this.listQueryAttributes = new Hashtable();
-
-				this.listQueryAttributes = queryBuilder.GetSelectedAttributes();
+				listQueryAttributes = queryBuilder.GetSelectedAttributes();
 
 				//Only Set BaseClass with current class
 
 				if (toolStripButtonAssemblyView.Checked)
 				{
-					if (dbAssemblyTreeView.SelectedNode.Parent != null)
-						Helper.BaseClass = dbAssemblyTreeView.SelectedNode.Text;
-					else
-						Helper.BaseClass = Helper.ClassName;
+					Helper.BaseClass = dbAssemblyTreeView.SelectedNode.Parent != null ? dbAssemblyTreeView.SelectedNode.Text : Helper.ClassName;
 				}
 				else
 				{
-					if (dbtreeviewObject.SelectedNode.Parent != null)
-						Helper.BaseClass = dbtreeviewObject.SelectedNode.Text;
-					else
-						Helper.BaseClass = Helper.ClassName;
-
+					Helper.BaseClass = dbtreeviewObject.SelectedNode.Parent != null ? dbtreeviewObject.SelectedNode.Text : Helper.ClassName;
 				}
 
 
@@ -743,7 +727,7 @@ namespace OMControlLibrary
 				omQuery = new OMQuery(Helper.BaseClass, DateTime.Now);
 
 				if (Helper.HashTableBaseClass.Contains(Helper.BaseClass))
-					omQuery.AttributeList = this.listQueryAttributes;//this.GetQueryAttributes();
+					omQuery.AttributeList = listQueryAttributes;
 
 				//Need to fectch attribute list in query result for same OMQuery
 				if (Helper.OMResultedQuery.Contains(omQuery.BaseClass))
@@ -759,10 +743,10 @@ namespace OMControlLibrary
 				bw = new BackgroundWorker();
 				bw.WorkerReportsProgress = true;
 				bw.WorkerSupportsCancellation = true;
-				bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
-				bw.DoWork += new DoWorkEventHandler(bw_DoWork);
-				bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
-				ViewBase.ApplicationObject.StatusBar.Animate(true, vsStatusAnimation.vsStatusAnimationBuild);
+				bw.ProgressChanged += bw_ProgressChanged;
+				bw.DoWork += bw_DoWork;
+				bw.RunWorkerCompleted += bw_RunWorkerCompleted;
+				ApplicationObject.StatusBar.Animate(true, vsStatusAnimation.vsStatusAnimationBuild);
 				bw.RunWorkerAsync();
 
 				for (double i = 1; i < 10000; i++)
@@ -792,9 +776,9 @@ namespace OMControlLibrary
 
 		#region Background worker for showing all objects
 
-		void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
+		static void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
 		{
-			ViewBase.ApplicationObject.StatusBar.Progress(true, "Running Query ... ", e.ProgressPercentage * 10, 10000);
+			ApplicationObject.StatusBar.Progress(true, "Running Query ... ", e.ProgressPercentage * 10, 10000);
 
 		}
 
@@ -807,7 +791,7 @@ namespace OMControlLibrary
 
 			try
 			{
-				ObjectBrowser.Instance.Enabled = false;
+				Instance.Enabled = false;
 				PropertiesTab.Instance.Enabled = false;
 				QueryBuilder.Instance.Enabled = false;
 				objectid = Helper.DbInteraction.ExecuteQueryResults(omQuery);
@@ -829,9 +813,8 @@ namespace OMControlLibrary
 		{
 			bw.CancelAsync();
 			bw = null;
-			ViewBase.ApplicationObject.StatusBar.Clear();
-			ViewBase.ApplicationObject.StatusBar.Animate(false, vsStatusAnimation.vsStatusAnimationBuild);
-
+			ApplicationObject.StatusBar.Clear();
+			ApplicationObject.StatusBar.Animate(false, vsStatusAnimation.vsStatusAnimationBuild);
 		}
 
 		void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -842,16 +825,16 @@ namespace OMControlLibrary
 				CreateQueryResultToolWindow();
 				//Refresh Object Browser window after runnig the query each time.
 				queryBuilder.ClearAllQueries();
-				ObjectBrowser.Instance.Enabled = true;
+				Instance.Enabled = true;
 				PropertiesTab.Instance.Enabled = true;
 				QueryBuilder.Instance.Enabled = true;
 				isrunning = false;
 				bw.CancelAsync();
 				bw = null;
-				ViewBase.ApplicationObject.StatusBar.Clear();
-				ViewBase.ApplicationObject.StatusBar.Progress(false, "Query run successfully!", 0, 0);
-				ViewBase.ApplicationObject.StatusBar.Text = "Query run successfully!";
-				ViewBase.ApplicationObject.StatusBar.Animate(false, vsStatusAnimation.vsStatusAnimationBuild);
+				ApplicationObject.StatusBar.Clear();
+				ApplicationObject.StatusBar.Progress(false, "Query run successfully!", 0, 0);
+				ApplicationObject.StatusBar.Text = "Query run successfully!";
+				ApplicationObject.StatusBar.Animate(false, vsStatusAnimation.vsStatusAnimationBuild);
 			}
 			catch (Exception oEx)
 			{
@@ -963,8 +946,6 @@ namespace OMControlLibrary
 			{
 				OMETrace.WriteFunctionStart();
 
-				string assemblypath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-
 				string guidpos = Helper.GetClassGUID(Helper.BaseClass);
 
 				int index = Helper.BaseClass.LastIndexOf(CONST_COMMA_CHAR);
@@ -975,21 +956,14 @@ namespace OMControlLibrary
 				index = str.LastIndexOf(CONST_DOT_CHAR);
 				string caption = str.Remove(0, index + 1) + strClassName;
 
-				AddIn addinobj = ApplicationObject.AddIns.Item(1);
+				QueryResult queryResult;
+				Helper.QueryResultToolWindow = CreateToolWindow("OMControlLibrary.QueryResult", caption, guidpos, out queryResult);
 
-				EnvDTE80.Windows2 wins2obj = (Windows2)ApplicationObject.Windows;
-
-				// Creates Tool Window and inserts the user control in it.
-				object ctlobj = null;
-				Helper.QueryResultToolWindow = wins2obj.CreateToolWindow2(addinobj, assemblypath, "OMControlLibrary.QueryResult", caption, guidpos, ref ctlobj);
-
-				//FIXME: Why not simply call the method?
-				QueryResult queryResult = ctlobj as QueryResult;
 				queryResult.Setobjectid(objectid);
 
 				Helper.QueryResultToolWindow.IsFloating = false;
 				Helper.QueryResultToolWindow.Linkable = false;
-				if (Helper.QueryResultToolWindow.AutoHides == true)
+				if (Helper.QueryResultToolWindow.AutoHides)
 				{
 					Helper.QueryResultToolWindow.AutoHides = false;
 				}
@@ -1167,7 +1141,7 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				if (listSearchStrings == null || (listSearchStrings != null && listSearchStrings.Count == 0))
+				if (!HasItems(listSearchStrings))
 					return;
 
 				if (toolStripComboBoxFilter.SelectedIndex > 1)
@@ -1189,8 +1163,9 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				if (listSearchStrings == null || (listSearchStrings != null && listSearchStrings.Count == 0))
+				if (!HasItems(listSearchStrings))
 					return;
+
 				if (toolStripComboBoxFilter.SelectedIndex <= 0)
 				{
 					try
@@ -1198,34 +1173,36 @@ namespace OMControlLibrary
 						if (toolStripComboBoxFilter.Items.IndexOf(toolStripComboBoxFilter.Text) != -1)
 						{
 							toolStripComboBoxFilter.SelectedIndex = toolStripComboBoxFilter.Items.IndexOf(toolStripComboBoxFilter.Text);
-							// toolStripComboBoxFilter.SelectedIndex=toolStripComboBoxFilter.Items[toolStripComboBoxFilter.Text]
 						}
 					}
 					catch (ArgumentException)
 					{
 					}
 				}
-				if (toolStripComboBoxFilter.SelectedIndex >= 0)
+
+				if (toolStripComboBoxFilter.SelectedIndex < 0)
+					return;
+				
+				if (toolStripComboBoxFilter.SelectedIndex < listSearchStrings.Count - 1)
 				{
-					if (toolStripComboBoxFilter.SelectedIndex < listSearchStrings.Count - 1)
-					{
-						toolStripComboBoxFilter.Text = listSearchStrings[toolStripComboBoxFilter.SelectedIndex + 1 - 1];
-						toolStripButtonPrevious.Enabled = true;
-					}
-					else
-					{
-						toolStripComboBoxFilter.Text = listSearchStrings[listSearchStrings.Count - 1];
-						toolStripButtonNext.Enabled = false;
-					}
+					toolStripComboBoxFilter.Text = listSearchStrings[toolStripComboBoxFilter.SelectedIndex + 1 - 1];
+					toolStripButtonPrevious.Enabled = true;
 				}
-
-
-
+				else
+				{
+					toolStripComboBoxFilter.Text = listSearchStrings[listSearchStrings.Count - 1];
+					toolStripButtonNext.Enabled = false;
+				}
 			}
 			catch (Exception oEx)
 			{
 				LoggingHelper.ShowMessage(oEx);
 			}
+		}
+
+		private static bool HasItems<T>(ICollection<T> list)
+		{
+			return list != null && list.Count > 0;
 		}
 
 		private void toolStripButtonFolder_Click(object sender, EventArgs e)
@@ -1234,7 +1211,7 @@ namespace OMControlLibrary
 		}
 
 	}
-	public class MyHost : System.Windows.Forms.AxHost
+	public class MyHost : AxHost
 	{
 
 
@@ -1245,7 +1222,7 @@ namespace OMControlLibrary
 
 		public static stdole.IPictureDisp IPictureDisp(System.Drawing.Image Image)
 		{
-			return (stdole.IPictureDisp)AxHost.GetIPictureDispFromPicture(Image);
+			return (stdole.IPictureDisp) GetIPictureDispFromPicture(Image);
 		}
 
 	}

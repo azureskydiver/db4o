@@ -24,8 +24,8 @@ namespace OManager.DataLayer.Modal
             m_classname = DataLayerCommon.RemoveGFromClassName(classname);
             m_fieldname = CorrectfieldName;
             objectContainer = Db4oClient.Client; 
-
         }
+
         public bool IsIndexed()
         {
             try

@@ -1,14 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
-using OMControlLibrary.Common;
 using OManager.BusinessLayer.ObjectExplorer;
-
+using OMControlLibrary.Common;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
 
@@ -21,8 +16,8 @@ namespace OMControlLibrary
 	{
 		#region Member Variable
 
-		private bool m_removable = false;
-		private bool m_enableOperator = false;
+		private bool m_removable;
+		private bool m_enableOperator;
 		private string m_queryGroupOperator = string.Empty;
 		private string m_typeOfObject = string.Empty;
 		private string m_previousCellValue = string.Empty;
@@ -143,12 +138,11 @@ namespace OMControlLibrary
 
 				//Populate the Query Group operator combobox
 				string[] operatorList = QueryHelper.GetOperators();
-				dbDataGridView.PopulateDisplayGrid(Common.Constants.VIEW_QUERYBUILDER, null);
+				dbDataGridView.PopulateDisplayGrid(Constants.VIEW_QUERYBUILDER, null);
 				comboBoxOperator.Items.AddRange(operatorList);
 				comboBoxOperator.SelectedIndex = 0;
 				dbDataGridView.MultiSelect = true;
-				dbDataGridView.OnDBGridCellClick +=
-					new EventHandler<dbDataGridViewEventArgs>(dbDataGridView_OnDBGridCellClick);
+				dbDataGridView.OnDBGridCellClick += dbDataGridView_OnDBGridCellClick;
 
 				//Build context menu specific to rows
 				dbDataGridView.BuildRowContextMenu();
@@ -170,12 +164,12 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				DataGridViewCell cell = e.Data as DataGridViewCell;
+				DataGridViewCell cell = (DataGridViewCell) e.Data;
 				int rowIndex = cell.RowIndex;
 
-				if (rowIndex == Common.Constants.INVALID_INDEX_VALUE)
+				if (rowIndex == Constants.INVALID_INDEX_VALUE)
 				{
-					OMETrace.WriteTraceInvalidCondition(Common.Constants.TRACEMESSAGE_INVALIDROW_INDEX);
+					OMETrace.WriteTraceInvalidCondition(Constants.TRACEMESSAGE_INVALIDROW_INDEX);
 					return;
 				}
 
@@ -276,17 +270,12 @@ namespace OMControlLibrary
 		/// <param name="e"></param>
 		private void dbDataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
 		{
-			ComboBox operatorComboBox = null;
-
 			try
 			{
-				if (operatorComboBox == null)
+				if (e.Control is ComboBox)
 				{
-					if (e.Control is ComboBox)
-					{
-						operatorComboBox = (ComboBox)e.Control;
-						operatorComboBox.SelectedIndexChanged += new EventHandler(operatorComboBox_SelectedIndexChanged);
-					}
+					ComboBox operatorComboBox = (ComboBox)e.Control;
+					operatorComboBox.SelectedIndexChanged += operatorComboBox_SelectedIndexChanged;
 				}
 			}
 			catch (Exception oEx)
@@ -306,9 +295,7 @@ namespace OMControlLibrary
 			{
 				if (OnDataGridViewComboBoxIndexChanged != null)
 				{
-					DbEventArgs eventArgs = new DbEventArgs();
-					eventArgs.Data = dbDataGridView;
-					OnDataGridViewComboBoxIndexChanged(sender, eventArgs);
+					OnDataGridViewComboBoxIndexChanged(sender, new DbEventArgs(dbDataGridView));
 				}
 			}
 			catch (Exception oEx)
@@ -330,13 +317,11 @@ namespace OMControlLibrary
 				string valueColumn = Helper.GetResourceString(Constants.QUERY_GRID_VALUE);
 
 				object value = dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value;
-				string type = dbDataGridView.Rows[e.RowIndex].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value.ToString();
-
 				if (dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value != null
 					&& !string.IsNullOrEmpty(dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value.ToString()))
 				{
 					//Validate the entered value
-					bool isValid = Validations.ValidateDataType(type, ref value);
+					bool isValid = Validations.ValidateDataType(QueryResult.FieldTypeForObjectInRow(dbDataGridView.CurrentCell.OwningRow), ref value);
 
 					if (!isValid)
 					{
@@ -368,7 +353,7 @@ namespace OMControlLibrary
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void dbDataGridView_DataError(object sender, System.Windows.Forms.DataGridViewDataErrorEventArgs e)
+		private void dbDataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
 		{
 			e.Cancel = true;
 		}
@@ -412,21 +397,21 @@ namespace OMControlLibrary
 				else //set the opertator column of the first row readonly false
 					dbDataGridView.Rows[0].Cells[3].ReadOnly = false;
 
-				if (this.dbDataGridView.RowCount > 0)
+				if (dbDataGridView.RowCount > 0)
 				{
-					int height = this.dbDataGridView.ColumnHeadersHeight + this.dbDataGridView.RowTemplate.Height +
-						(this.dbDataGridView.RowTemplate.Height * this.dbDataGridView.RowCount);
+					int height = dbDataGridView.ColumnHeadersHeight + dbDataGridView.RowTemplate.Height +
+						(dbDataGridView.RowTemplate.Height * dbDataGridView.RowCount);
 
-					if (this.dbDataGridView.Height > 106)
+					if (dbDataGridView.Height > 106)
 					{
-						this.dbDataGridView.Height = height;
-						this.Height = panelTop.Height + height;
+						dbDataGridView.Height = height;
+						Height = panelTop.Height + height;
 					}
 				}
 				else
 				{
-					this.dbDataGridView.Height = 106;
-					this.Height = panelTop.Height + this.dbDataGridView.Height;
+					dbDataGridView.Height = 106;
+					Height = panelTop.Height + dbDataGridView.Height;
 				}
 
 				OMETrace.WriteFunctionEnd();
@@ -449,15 +434,15 @@ namespace OMControlLibrary
 			{
 				OMETrace.WriteFunctionStart();
 
-				if (this.dbDataGridView.RowCount > 0)
+				if (dbDataGridView.RowCount > 0)
 				{
-					int height = this.dbDataGridView.ColumnHeadersHeight + this.dbDataGridView.RowTemplate.Height +
-						(this.dbDataGridView.RowTemplate.Height * this.dbDataGridView.RowCount);
+					int height = dbDataGridView.ColumnHeadersHeight + dbDataGridView.RowTemplate.Height +
+						(dbDataGridView.RowTemplate.Height * dbDataGridView.RowCount);
 
 					if (height > 106)
 					{
-						this.dbDataGridView.Height = height;
-						this.Height = panelTop.Height + height;
+						dbDataGridView.Height = height;
+						Height = panelTop.Height + height;
 					}
 				}
 
@@ -556,8 +541,7 @@ namespace OMControlLibrary
 			{
 				if (OnRemoveClick != null)
 				{
-					DbEventArgs eventArg = new DbEventArgs();
-					eventArg.Data = this;
+					DbEventArgs eventArg = new DbEventArgs(this);
 					OnRemoveClick(sender, eventArg);
 				}
 			}
@@ -575,7 +559,7 @@ namespace OMControlLibrary
 	/// </summary>
 	public class DbEventArgs : EventArgs
 	{
-		private object m_data = null;
+		private object m_data;
 
 		public object Data
 		{

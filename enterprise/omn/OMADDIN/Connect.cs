@@ -1,3 +1,5 @@
+/* Copyright (C) 2004 - 2009  db4objects Inc.  http://www.db4o.com */
+
 using System;
 using System.Text.RegularExpressions;
 using Extensibility;
@@ -189,6 +191,8 @@ namespace OMAddin
 			_applicationObject = (DTE2)application;
 			_addInInstance = (AddIn)addInInst;
 
+			OutputWindow.Initialize(_applicationObject);
+
 			try
 			{
 				if (connectMode == ext_ConnectMode.ext_cm_AfterStartup ||
@@ -281,8 +285,8 @@ namespace OMAddin
 					{
 						propertiesPane = true;
 					}
-
 				}
+
 				if (loginPresent && propertiesPane == false)
 				{
 					foreach (Window w in _applicationObject.ToolWindows.DTE.Windows)
@@ -302,7 +306,6 @@ namespace OMAddin
 				else if (!loginPresent)
 				{
 
-					//Helper.LoginToolWindow.Visible = false;
 					foreach (Window w in _applicationObject.ToolWindows.DTE.Windows)
 					{
 						if (w.Type == vsWindowType.vsWindowTypeToolWindow)
@@ -310,7 +313,6 @@ namespace OMAddin
 							if (CheckIfWinISVSWin(w))
 							{
 								w.Visible = false;
-
 							}
 						}
 						if (Helper.LoginToolWindow != null)
@@ -346,8 +348,6 @@ namespace OMAddin
 			{
 				LoggingHelper.HandleException(ex);
 			}
-
-
 		}
 
 
@@ -943,7 +943,7 @@ namespace OMAddin
 			}
 		}
 
-		void ShowAssemblySearchPathDialog(object CommandBarControl, ref bool Handled, ref bool CancelDefault)
+		static void ShowAssemblySearchPathDialog(object CommandBarControl, ref bool Handled, ref bool CancelDefault)
 		{
 			using (SearchPathDialog spd = new SearchPathDialog())
  			{
@@ -1032,6 +1032,7 @@ namespace OMAddin
 
 			_applicationObject.StatusBar.Text = "Creation successful!";
 		}
+
 		void createdemo()
 		{
 			try
@@ -1259,33 +1260,25 @@ namespace OMAddin
 			{
 				if (Helper.HashClassGUID != null)
 				{
-					IDictionaryEnumerator eNum = Helper.HashClassGUID.GetEnumerator();
-
-					if (eNum != null)
+					foreach (DictionaryEntry entry in Helper.HashClassGUID)
 					{
-						while (eNum.MoveNext())
+						string enumwinCaption = entry.Key.ToString();
+						int index = enumwinCaption.LastIndexOf(',');
+						string strClassName = enumwinCaption.Remove(0, index);
+
+						string str = enumwinCaption.Remove(index);
+
+						index = str.IndexOf('.');
+						string caption = str.Remove(0, index + 1) + strClassName;
+
+
+						dbDataGridView db = ListofModifiedObjects.Instance[enumwinCaption] as dbDataGridView;
+						if (db != null)
 						{
-
-							string enumwinCaption = eNum.Key.ToString();
-							int index = enumwinCaption.LastIndexOf(',');
-							string strClassName = enumwinCaption.Remove(0, index);
-
-							string str = enumwinCaption.Remove(index);
-
-							index = str.IndexOf('.');
-							string caption = str.Remove(0, index + 1) + strClassName;
-
-
-							dbDataGridView db = ListofModifiedObjects.Instance[enumwinCaption] as dbDataGridView;
-							if (db != null)
-							{
-								bool check = false;
-								DialogResult dialogRes = DialogResult.Ignore;
-								bool checkforValueChanged = false;
-								ListofModifiedObjects.SaveBeforeWindowHiding(ref check, ref dialogRes, ref checkforValueChanged, caption, db, -1);
-								ListofModifiedObjects.Instance.Remove(enumwinCaption);
-							}
-
+							bool check = false;
+							bool checkforValueChanged = false;
+							ListofModifiedObjects.SaveBeforeWindowHiding(ref check, ref checkforValueChanged, caption, db, -1);
+							ListofModifiedObjects.Instance.Remove(enumwinCaption);
 						}
 					}
 				}
@@ -1555,25 +1548,29 @@ namespace OMAddin
 
 		#region OpenHelp
 
+		private WindowVisibilityEvents helpWindowEvents;
+
 		private void OpenHelp()
 		{
-			string filepath = string.Empty;
-			try
-			{
-				filepath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
-				filepath = Path.Combine(Path.GetDirectoryName(filepath), FAQ_PATH);
+			string filepath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
+			filepath = Path.Combine(Path.GetDirectoryName(filepath), FAQ_PATH);
 
-				if (winHelp == null || winHelp.Visible == false)
-				{
-					winHelp = _applicationObject.DTE.ItemOperations.Navigate(filepath, vsNavigateOptions.vsNavigateOptionsNewWindow);
-				}
-				else
-					winHelp.Visible = true;
-
-			}
-			catch
+			if (winHelp == null || winHelp.Visible == false)
 			{
 				winHelp = _applicationObject.DTE.ItemOperations.Navigate(filepath, vsNavigateOptions.vsNavigateOptionsNewWindow);
+
+				helpWindowEvents = ((Events2) _applicationObject.Events).get_WindowVisibilityEvents(null);
+				helpWindowEvents.WindowHiding += helpWindowEvents_WindowHiding;
+			}
+			else
+				winHelp.Visible = true;
+		}
+
+		void helpWindowEvents_WindowHiding(Window window)
+		{
+			if (winHelp == window)
+			{
+				winHelp = null;
 			}
 		}
 		#endregion
