@@ -76,7 +76,7 @@ public class FileHeader0 extends FileHeader {
         if (_configBlock._bootRecordID <= 0) {
             return;
         }
-        Object bootRecord = Debug.readBootRecord ? getBootRecord(file) : null;
+        Object bootRecord = Debug4.readBootRecord ? getBootRecord(file) : null;
         
         if (! (bootRecord instanceof PBootRecord)) {
             initBootRecord(file);
@@ -142,7 +142,7 @@ public class FileHeader0 extends FileHeader {
         writer.writeInt((int)timeToWrite(_configBlock.openTime(), shuttingDown));
         writer.writeInt(file.systemData().classCollectionID());
         writer.writeInt(freespaceID);
-        if (Debug.xbytes && Deploy.overwrite) {
+        if (Debug4.xbytes && Deploy.overwrite) {
             writer.setID(Const4.IGNORE_ID);
         }
         writer.write();

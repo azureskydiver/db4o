@@ -103,7 +103,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
                 write(Msg.CLOSE);
             }
         } catch (Exception e) {
-            if (Debug.atHome) {
+            if (Debug4.atHome) {
                 e.printStackTrace();
             }
         }
@@ -113,7 +113,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 		try {
             _server.removeThread(this);
         } catch (Exception e) {
-            if (Debug.atHome) {
+            if (Debug4.atHome) {
                 e.printStackTrace();
             }
         }
@@ -125,7 +125,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 				_socket.close();
 			}
         } catch (Db4oIOException e) {
-            if (Debug.atHome) {
+            if (Debug4.atHome) {
                 e.printStackTrace();
             }
         }
@@ -202,7 +202,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
             	_transactionHandle.acquireTransactionForFile(fileName);
                 write(Msg.OK);
             } catch (Exception e) {
-                if (Debug.atHome) {
+                if (Debug4.atHome) {
                     System.out.println("Msg.SWITCH_TO_FILE failed.");
                     e.printStackTrace();
                 }

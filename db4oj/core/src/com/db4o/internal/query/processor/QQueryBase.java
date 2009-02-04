@@ -467,7 +467,7 @@ public abstract class QQueryBase implements Unversioned {
         boolean topLevel = r.topLevel;
         List4 candidateCollection = r.candidateCollection;
         
-        if (Debug.queries) {
+        if (Debug4.queries) {
         	logConstraints();
         }
         
@@ -549,7 +549,7 @@ public abstract class QQueryBase implements Unversioned {
     }
 
 	private void logConstraints() {
-		if (Debug.queries) {
+		if (Debug4.queries) {
 			Iterator4 i = iterateConstraints();
 			while (i.moveNext()) {
 			    ((QCon)i.current()).log("");

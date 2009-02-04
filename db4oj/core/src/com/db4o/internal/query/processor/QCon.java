@@ -209,7 +209,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         if(DTrace.enabled){
             DTrace.DONOTINCLUDE.log(i_id);
         }
-        if (Debug.queries) {
+        if (Debug4.queries) {
             System.out.println("QCon.doNotInclude " + i_id /*+ " " + getYapClass()*/
             );
         }
@@ -503,7 +503,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     }
 
     void log(String indent) {
-        if (Debug.queries) {
+        if (Debug4.queries) {
 
             final String childIndent = "   " + indent;
             String name = getClass().getName();
@@ -721,7 +721,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         // all possible keepOnNull issues when starting
         // evaluation.
 
-        if (Debug.queries) {
+        if (Debug4.queries) {
             System.out.println("QCon.visitOnNull " + i_id);
         }
         

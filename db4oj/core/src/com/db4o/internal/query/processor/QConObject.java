@@ -120,7 +120,7 @@ public class QConObject extends QCon {
         try {
             return a_candidate.evaluate(this, i_evaluator);
         } catch (Exception e) {
-        	if (Debug.atHome) {
+        	if (Debug4.atHome) {
 				e.printStackTrace();
 			}
             return false;
@@ -244,13 +244,13 @@ public class QConObject extends QCon {
     }
 
     void log(String indent) {
-        if (Debug.queries) {
+        if (Debug4.queries) {
             super.log(indent);
         }
     }
 
     String logObject() {
-        if (Debug.queries) {
+        if (Debug4.queries) {
             if (i_object != null) {
                 return i_object.toString();
             }

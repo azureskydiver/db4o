@@ -21,7 +21,7 @@ public final class MReadMultipleObjects extends MsgD implements ServerSideMessag
 						length += ret[i]._payLoad.length();
 					}
 				} catch (Exception e) {
-					if(Debug.atHome){
+					if(Debug4.atHome){
 						e.printStackTrace();
 					}
 				}

@@ -46,7 +46,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		}
 		
 		boolean readOnly = configImpl().isReadOnly();
-		boolean lockFile = Debug.lockFile && configImpl().lockFile()
+		boolean lockFile = Debug4.lockFile && configImpl().lockFile()
 				&& (!readOnly);
 		if (needsLockFileThread()) {
 			Bin fileBin = storage.open(new BinConfiguration(fileName(), false, 0, false));
@@ -165,7 +165,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     public void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
 
-        if (Debug.xbytes && Deploy.overwrite) {
+        if (Debug4.xbytes && Deploy.overwrite) {
             checkXBytes(newAddress, newAddressOffset, length);
         }
 
@@ -191,7 +191,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     }
 
     private void checkXBytes(int newAddress, int newAddressOffset, int length) {
-        if (Debug.xbytes && Deploy.overwrite) {
+        if (Debug4.xbytes && Deploy.overwrite) {
             try {
                 byte[] checkXBytes = new byte[length];
                 _file.blockRead(newAddress, newAddressOffset, checkXBytes);
@@ -281,7 +281,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			return;
 		}
 
-		if (Debug.xbytes && Deploy.overwrite) {
+		if (Debug4.xbytes && Deploy.overwrite) {
 
 			boolean doCheck = true;
 			if (buffer instanceof StatefulBuffer) {
@@ -334,7 +334,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 	}
 	
 	private FreespaceFiller createFreespaceFiller() {
-		if(Debug.xbytes) {
+		if(Debug4.xbytes) {
 			return new XByteFreespaceFiller();
 		}
 		return config().freespaceFiller();

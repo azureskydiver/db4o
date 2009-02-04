@@ -74,7 +74,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
         if(id == 0){
             _key = candidates.generateCandidateId();
         }
-        if(Debug.queries){
+        if(Debug4.queries){
             System.out.println("Candidate identified ID:" + _key );
         }
 	}
@@ -251,7 +251,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 							if (!innerRes[0]) {
 
-								if (Debug.queries) {
+								if (Debug4.queries) {
 									System.out
 											.println("  Array evaluation false. Constraint:"
 													+ qcon.i_id);
@@ -388,7 +388,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 	boolean evaluate(QPending a_pending) {
 
-		if (Debug.queries) {
+		if (Debug4.queries) {
 			System.out.println("Pending arrived Join: " + a_pending._join.i_id
 					+ " Constraint:" + a_pending._constraint.i_id + " res:"
 					+ a_pending._result);
@@ -479,7 +479,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		// TODO:
 		// Internal and external flag may need to be handled seperately.
 		_include = flag;
-		if(Debug.queries){
+		if(Debug4.queries){
 		    System.out.println("Candidate include " + flag + " ID: " + _key);
 	    }
 

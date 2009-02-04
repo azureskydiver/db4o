@@ -54,7 +54,7 @@ public final class CharHandler extends PrimitiveHandler {
 
     public Object read(ReadContext context) {
         if (Deploy.debug) {
-            Debug.readBegin(context, Const4.YAPCHAR);
+            Debug4.readBegin(context, Const4.YAPCHAR);
         }
         
         byte b1 = context.readByte();
@@ -62,7 +62,7 @@ public final class CharHandler extends PrimitiveHandler {
         char charValue = (char) ((b1 & 0xff) | ((b2 & 0xff) << 8));
         
         if (Deploy.debug) {
-            Debug.readEnd(context);
+            Debug4.readEnd(context);
         }
         
         return new Character(charValue);
@@ -70,7 +70,7 @@ public final class CharHandler extends PrimitiveHandler {
 
     public void write(WriteContext context, Object obj) {
         if (Deploy.debug) {
-            Debug.writeBegin(context, Const4.YAPCHAR);
+            Debug4.writeBegin(context, Const4.YAPCHAR);
         }
         
         char charValue = ((Character) obj).charValue();
@@ -81,7 +81,7 @@ public final class CharHandler extends PrimitiveHandler {
         });
         
         if (Deploy.debug) {
-            Debug.writeEnd(context);
+            Debug4.writeEnd(context);
         }
     }
     

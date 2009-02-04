@@ -188,7 +188,7 @@ public abstract class Msg implements Cloneable {
 	public static final Msg readMessage(MessageDispatcher messageDispatcher, Transaction trans, Socket4 sock) throws Db4oIOException {
 		StatefulBuffer reader = readMessageBuffer(trans, sock);
 		Msg message = _messages[reader.readInt()].readPayLoad(messageDispatcher, trans, sock, reader);
-		if (Debug.messages) {
+		if (Debug4.messages) {
 			System.out.println(message + " arrived at " + trans.container());
 		}
 		return message;
@@ -236,7 +236,7 @@ public abstract class Msg implements Cloneable {
 		}
 		synchronized (sock) {
 			try {
-				if (Debug.messages) {
+				if (Debug4.messages) {
 					System.out.println(this +" sent by " + Thread.currentThread().getName());
 				}
 				sock.write(payLoad()._buffer);

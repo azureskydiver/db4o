@@ -108,7 +108,7 @@ public final class Const4
 	public static final int LOCK_TIME_INTERVAL = 1000;
 	
 	// 10 minutes until clients are disconnected, (5 minutes until they get pinged) 
-	public static final int SERVER_SOCKET_TIMEOUT = Debug.longTimeOuts ? 1000000: 600000;    
+	public static final int SERVER_SOCKET_TIMEOUT = Debug4.longTimeOuts ? 1000000: 600000;    
 	public static final int CLIENT_SOCKET_TIMEOUT = SERVER_SOCKET_TIMEOUT;  
 		
 	// TODO: Consider to make configurable

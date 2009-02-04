@@ -294,7 +294,7 @@ public class LocalTransaction extends Transaction {
         if (Deploy.debug) {
             i_pointerIo.writeEnd();
         }
-        if (Debug.xbytes && Deploy.overwrite) {
+        if (Debug4.xbytes && Deploy.overwrite) {
             i_pointerIo.setID(Const4.IGNORE_ID);
         }
         i_pointerIo.write();

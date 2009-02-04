@@ -66,7 +66,7 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         for (int i = 0; i < INTS_IN_SLOT; i++) {
             writer.writeInt(0);
         }
-        if (Debug.xbytes) {
+        if (Debug4.xbytes) {
             writer.setID(Const4.IGNORE_ID);  // no XBytes check
         }
         writer.writeEncrypt();

@@ -338,7 +338,7 @@ public final class Platform4 {
     }
 
     public static final boolean hasNio() {
-        if (!Debug.nio) {
+        if (!Debug4.nio) {
             return false;
         }
         if (nioCheck.isUnspecified()) {
@@ -366,7 +366,7 @@ public final class Platform4 {
     }
 
     static final boolean hasWeakReferences() {
-        if (!Debug.weakReferences) {
+        if (!Debug4.weakReferences) {
             return false;
         }
         if (weakReferenceCheck.isUnspecified()) {

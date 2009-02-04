@@ -73,7 +73,7 @@ public final class QCandidates implements Visitor4 {
     }
 
     public QCandidate add(QCandidate candidate) {
-        if(Debug.queries){
+        if(Debug4.queries){
             System.out.println("Candidate added ID: " + candidate._key);
         }
         i_root = Tree.add(i_root, candidate);

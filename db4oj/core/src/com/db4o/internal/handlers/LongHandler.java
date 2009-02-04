@@ -50,7 +50,7 @@ public class LongHandler extends PrimitiveHandler {
 	
 	public static final void writeLong(WriteBuffer buffer, long val){
 		if(Deploy.debug){
-		    Debug.writeBegin(buffer, Const4.YAPLONG);
+		    Debug4.writeBegin(buffer, Const4.YAPLONG);
 		}
 		if(Deploy.debug && Deploy.debugLong){
 			String l_s = "                                " + val;
@@ -61,14 +61,14 @@ public class LongHandler extends PrimitiveHandler {
 			}
 		}
 		if(Deploy.debug){
-		    Debug.writeEnd(buffer);
+		    Debug4.writeEnd(buffer);
 		}
 	}
 	
 	public static final long readLong(ReadBuffer buffer){
         long ret = 0;
         if (Deploy.debug){
-            Debug.readBegin(buffer, Const4.YAPLONG);
+            Debug4.readBegin(buffer, Const4.YAPLONG);
         }
         if(Deploy.debug && Deploy.debugLong){
             ret = Long.parseLong(new LatinStringIO().read(buffer, Const4.LONG_BYTES).trim()); 
@@ -78,7 +78,7 @@ public class LongHandler extends PrimitiveHandler {
             }
         }
         if (Deploy.debug){
-            Debug.readEnd(buffer);
+            Debug4.readEnd(buffer);
         }
         
         return ret;

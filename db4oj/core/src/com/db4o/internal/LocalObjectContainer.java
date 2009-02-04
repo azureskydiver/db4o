@@ -296,7 +296,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		int reservedBlocks = bytesToBlocks(reservedStorageSpace);
 		int reservedBytes = blocksToBytes(reservedBlocks);
 		Slot slot = new Slot(_blockEndAddress, reservedBlocks);
-        if (Debug.xbytes && Deploy.overwrite) {
+        if (Debug4.xbytes && Deploy.overwrite) {
             overwriteDeletedBlockedSlot(slot);
         }else{
 			writeBytes(new ByteArrayBuffer(reservedBytes), _blockEndAddress, 0);
@@ -312,7 +312,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         checkBlockedAddress(blockedEndAddress);
         _blockEndAddress = blockedEndAddress;
         Slot slot = new Slot(blockedStartAddress, blockCount);
-        if (Debug.xbytes && Deploy.overwrite) {
+        if (Debug4.xbytes && Deploy.overwrite) {
             overwriteDeletedBlockedSlot(slot);
         }
         return slot; 
@@ -341,7 +341,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 	// for instance if a slot was allocated and freed without ever being
 	// written to file.
     void ensureLastSlotWritten(){
-        if (!Debug.xbytes){
+        if (!Debug4.xbytes){
             if(Deploy.overwrite){
                 if(_blockEndAddress > bytesToBlocks(fileLength())){
                     StatefulBuffer writer = getWriter(systemTransaction(), _blockEndAddress - 1, blockSize());

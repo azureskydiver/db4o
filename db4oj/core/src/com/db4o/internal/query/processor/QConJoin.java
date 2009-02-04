@@ -63,7 +63,7 @@ public class QConJoin extends QCon {
 			Iterator4 i = iterateJoins();
 			while (i.moveNext()) {
 				QConJoin qcj = (QConJoin) i.current();
-				if (Debug.queries) {
+				if (Debug4.queries) {
 					System.out.println(
 						"QConJoin creates pending this:"
 							+ i_id
@@ -76,7 +76,7 @@ public class QConJoin extends QCon {
 			}
 		} else {
 			if (!res) {
-				if (Debug.queries) {
+				if (Debug4.queries) {
 					System.out.println(
 						"QConJoin evaluatePending FALSE "
 							+ i_id
@@ -88,7 +88,7 @@ public class QConJoin extends QCon {
 				i_constraint1.doNotInclude(a_root);
 				i_constraint2.doNotInclude(a_root);
 			}else{
-				if (Debug.queries) {
+				if (Debug4.queries) {
 					System.out.println(
 						"QConJoin evaluatePending TRUE "
 							+ i_id
@@ -112,7 +112,7 @@ public class QConJoin extends QCon {
 	}
 	
 	String logObject(){
-		if (Debug.queries) {
+		if (Debug4.queries) {
 			String msg = i_and ? "&" : "|";
 			return " " + i_constraint1.i_id + msg + i_constraint2.i_id;
 		}
