@@ -56,7 +56,7 @@ public class Config4Field extends Config4Abstract implements ObjectField, DeepCl
         if (!anyStream.maintainsIndices()) {
         	return;
         }
-        if(Debug.indexAllFields){
+        if(Debug4.indexAllFields){
             indexed(true);
         }
         if (! yapField.supportsIndex()) {

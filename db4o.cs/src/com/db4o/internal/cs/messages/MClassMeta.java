@@ -34,7 +34,7 @@ public class MClassMeta extends MsgObject implements ServerSideMessage {
     			}
 			}
 		}catch(Exception e){
-			if(Debug.atHome){
+			if(Debug4.atHome){
 				e.printStackTrace();
 			}
 		}

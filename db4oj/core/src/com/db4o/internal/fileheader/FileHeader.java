@@ -91,7 +91,7 @@ public abstract class FileHeader {
         bytes.moveForward(offset);
         bytes.writeInt(transactionAddress);
         bytes.writeInt(transactionAddress);
-        if (Debug.xbytes && Deploy.overwrite) {
+        if (Debug4.xbytes && Deploy.overwrite) {
             bytes.setID(Const4.IGNORE_ID);
         }
         bytes.write();

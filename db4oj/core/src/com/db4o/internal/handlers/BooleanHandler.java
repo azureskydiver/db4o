@@ -75,13 +75,13 @@ public final class BooleanHandler extends PrimitiveHandler {
 
 	public Object read(ReadContext context) {
         if (Deploy.debug) {
-            Debug.readBegin(context, Const4.YAPBOOLEAN);
+            Debug4.readBegin(context, Const4.YAPBOOLEAN);
         }
         
 		byte ret = context.readByte();
 		
         if (Deploy.debug) {
-            Debug.readEnd(context);
+            Debug4.readEnd(context);
         }
 		if(ret == TRUE){
 			return new Boolean(true);
@@ -94,11 +94,11 @@ public final class BooleanHandler extends PrimitiveHandler {
 	
 	public void write(WriteContext context, Object obj) {
         if (Deploy.debug) {
-            Debug.writeBegin(context, Const4.YAPBOOLEAN);
+            Debug4.writeBegin(context, Const4.YAPBOOLEAN);
         }
 		context.writeByte(getEncodedByteValue(obj));
         if (Deploy.debug) {
-            Debug.writeEnd(context);
+            Debug4.writeEnd(context);
         }
 	}
 	

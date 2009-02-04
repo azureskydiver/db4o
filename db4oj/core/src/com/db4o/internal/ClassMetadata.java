@@ -631,7 +631,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 dp.deletionFailed();
             }
             
-            if(Debug.atHome){
+            if(Debug4.atHome){
                 e.printStackTrace();
             }
         }
@@ -1319,7 +1319,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	public final int readAspectCount(ReadBuffer buffer) {
         int count = buffer.readInt();
         if (count > _aspects.length) {
-            if (Debug.atHome) {
+            if (Debug4.atHome) {
                 System.out.println(
                     "ClassMetadata.readFieldCount "
                         + getName()

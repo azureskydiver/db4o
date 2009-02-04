@@ -53,13 +53,13 @@ public final class ByteHandler extends PrimitiveHandler {
 					
     public Object read(ReadContext context) {
         if (Deploy.debug) {
-            Debug.readBegin(context, Const4.YAPBYTE);
+            Debug4.readBegin(context, Const4.YAPBYTE);
         }
         
         byte byteValue = context.readByte();
         
         if (Deploy.debug) {
-            Debug.readEnd(context);
+            Debug4.readEnd(context);
         }
         
         return new Byte(byteValue);
@@ -67,13 +67,13 @@ public final class ByteHandler extends PrimitiveHandler {
 
     public void write(WriteContext context, Object obj) {
         if (Deploy.debug) {
-            Debug.writeBegin(context, Const4.YAPBYTE);
+            Debug4.writeBegin(context, Const4.YAPBYTE);
         }
         
         context.writeByte(((Byte)obj).byteValue());
         
         if (Deploy.debug) {
-            Debug.writeEnd(context);
+            Debug4.writeEnd(context);
         }
     }
     

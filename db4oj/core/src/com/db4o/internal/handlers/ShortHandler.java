@@ -58,18 +58,18 @@ public class ShortHandler extends PrimitiveHandler {
 	
     public Object read(ReadContext context) {
         if (Deploy.debug) {
-            Debug.readBegin(context, Const4.YAPSHORT);
+            Debug4.readBegin(context, Const4.YAPSHORT);
         }
         int value = ((context.readByte() & 0xff) << 8) + (context.readByte() & 0xff);
         if (Deploy.debug) {
-            Debug.readEnd(context);
+            Debug4.readEnd(context);
         }
         return new Short((short) value);
     }
 
     public void write(WriteContext context, Object obj) {
         if (Deploy.debug) {
-            Debug.writeBegin(context, Const4.YAPSHORT);
+            Debug4.writeBegin(context, Const4.YAPSHORT);
         }
         int shortValue = ((Short)obj).shortValue();
         context.writeBytes(new byte [] {
@@ -77,7 +77,7 @@ public class ShortHandler extends PrimitiveHandler {
             (byte) shortValue
         });
         if (Deploy.debug) {
-            Debug.writeEnd(context);
+            Debug4.writeEnd(context);
         }
     }
     

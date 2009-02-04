@@ -93,7 +93,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
                     return;
                 }
                 if (Deploy.debug) {
-                    Debug.readBegin(context, identifier());
+                    Debug4.readBegin(context, identifier());
                 }
                 if(isUntypedByteArray(context)) {
                     return;
@@ -235,7 +235,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             info.reflectClass(classReflector(container(trans)));
             detectDimensionsPreVersion0Format(buffer, info, classID);
         }
-        if(Debug.exceedsMaximumArrayEntries(info.elementCount(), _usePrimitiveClassReflector)){
+        if(Debug4.exceedsMaximumArrayEntries(info.elementCount(), _usePrimitiveClassReflector)){
             info.elementCount(0);
         }
     }
@@ -302,7 +302,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 
     public final void defragmentSlot(DefragmentContext context) {
 		if (Deploy.debug) {
-			Debug.readBegin(context, Const4.YAPARRAY);
+			Debug4.readBegin(context, Const4.YAPARRAY);
 		}
         if(isUntypedByteArray(context)) {
             return;
@@ -325,7 +325,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             context.defragment(_handler);
         }
         if (Deploy.debug) {
-        	Debug.readEnd(context);
+        	Debug4.readEnd(context);
         }
     }
 
@@ -356,13 +356,13 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 
     public Object read(ReadContext context) {
         if (Deploy.debug) {
-            Debug.readBegin(context, identifier());
+            Debug4.readBegin(context, identifier());
         }
         ArrayInfo info = newArrayInfo();
         Object array = readCreate(context.transaction(), context, info);
 		readElements(context, info, array);
         if (Deploy.debug) {
-            Debug.readEnd(context);
+            Debug4.readEnd(context);
         }
         return array;
     }
@@ -406,7 +406,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 
 	public void write(WriteContext context, Object obj) {
         if (Deploy.debug) {
-            Debug.writeBegin(context, identifier());
+            Debug4.writeBegin(context, identifier());
         }
         ArrayInfo info = newArrayInfo();
         analyze(container(context), obj, info);
@@ -414,7 +414,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         
         writeElements(context, obj, info);
         if (Deploy.debug) {
-            Debug.writeEnd(context);
+            Debug4.writeEnd(context);
         }
     }
 

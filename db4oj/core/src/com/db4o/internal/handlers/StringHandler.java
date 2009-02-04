@@ -171,11 +171,11 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
     
     protected static void internalWrite(InternalObjectContainer objectContainer, WriteBuffer buffer, String str){
         if (Deploy.debug) {
-            Debug.writeBegin(buffer, Const4.YAPSTRING);
+            Debug4.writeBegin(buffer, Const4.YAPSTRING);
         }
         stringIo(objectContainer).writeLengthAndString(buffer, str);
         if (Deploy.debug) {
-            Debug.writeEnd(buffer);
+            Debug4.writeEnd(buffer);
         }
     }
     
@@ -195,11 +195,11 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
 
     public static String readString(Context context, ReadBuffer buffer) {
         if (Deploy.debug) {
-            Debug.readBegin(buffer, Const4.YAPSTRING);
+            Debug4.readBegin(buffer, Const4.YAPSTRING);
         }
         String str = readStringNoDebug(context, buffer);
         if (Deploy.debug) {
-            Debug.readEnd(buffer);
+            Debug4.readEnd(buffer);
         }
         return str;
     }

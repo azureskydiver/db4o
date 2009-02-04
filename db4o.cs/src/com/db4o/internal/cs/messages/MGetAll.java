@@ -20,7 +20,7 @@ public final class MGetAll extends MsgQuery implements ServerSideMessage {
 		try {
 			return file().getAll(transaction(), mode);
 		} catch (Exception e) {
-			if(Debug.atHome){
+			if(Debug4.atHome){
 				e.printStackTrace();
 			}
 		}

@@ -15,7 +15,7 @@ public class MProcessDeletes extends Msg implements ServerSideMessage {
 				transaction().processDeletes();
 			} catch (Db4oException e) {
 				// Don't send the exception to the user because delete is asynchronous
-				if(Debug.atHome){
+				if(Debug4.atHome){
 					e.printStackTrace();
 				}
 			}

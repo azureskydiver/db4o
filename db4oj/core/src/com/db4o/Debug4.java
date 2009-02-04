@@ -10,7 +10,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public abstract class Debug {
+public final class Debug4 {
     
     /**
      * indexes all fields
@@ -193,5 +193,8 @@ public abstract class Debug {
             }
             buffer.writeByte(Const4.YAPEND);
         }
+    }
+    
+    private Debug4() {
     }
 }

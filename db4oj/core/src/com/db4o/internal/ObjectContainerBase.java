@@ -916,7 +916,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
 
     public final StatefulBuffer getWriter(Transaction a_trans, int a_address, int a_length) {
-        if (Debug.exceedsMaximumBlockSize(a_length)) {
+        if (Debug4.exceedsMaximumBlockSize(a_length)) {
             return null;
         }
         return new StatefulBuffer(a_trans, a_address, a_length);
@@ -1026,7 +1026,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
 
     public boolean needsLockFileThread() {
-        if(! Debug.lockFile){
+        if(! Debug4.lockFile){
 			return false;
 		}
         if (!Platform4.hasLockFileThread()) {
@@ -1110,7 +1110,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
 
     void initializeEssentialClasses(){
-        if(Debug.staticIdentity){
+        if(Debug4.staticIdentity){
             return;
         }
         for (int i = 0; i < Const4.ESSENTIAL_CLASSES.length; i++) {

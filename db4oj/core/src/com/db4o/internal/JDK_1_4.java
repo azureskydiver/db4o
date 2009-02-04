@@ -91,7 +91,7 @@ class JDK_1_4 extends JDK_1_3 {
 					.getDeclaredConstructor((Class[]) null);
 			return true;
 		} catch (Exception e) {
-			if (Debug.atHome) {
+			if (Debug4.atHome) {
 				e.printStackTrace();
 			}
 			return false;

@@ -627,7 +627,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		    return;
 		}
         _config = containingClass.config().configField(name);
-        if (Debug.configureAllFields  && _config == null) {
+        if (Debug4.configureAllFields  && _config == null) {
             _config = (Config4Field) containingClass.config().objectField(_name);
         }
 	}
@@ -936,7 +936,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		ObjectContainerBase stream = systemTrans.container();
 		Indexable4 indexHandler = indexHandler(stream);
 		if(indexHandler==null) {
-			if(Debug.atHome) {
+			if(Debug4.atHome) {
 				System.err.println("Could not create index for "+this+": No index handler found");
 			}
 			return null;

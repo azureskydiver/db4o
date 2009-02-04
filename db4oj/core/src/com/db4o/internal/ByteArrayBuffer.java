@@ -74,7 +74,7 @@ public class ByteArrayBuffer implements ReadWriteBuffer {
 	
     public final void readBegin(byte identifier) {
 		if (Deploy.debug) {
-		    Debug.readBegin(this, identifier);
+		    Debug4.readBegin(this, identifier);
 		}
 	}
     
@@ -116,7 +116,7 @@ public class ByteArrayBuffer implements ReadWriteBuffer {
 
     public void readEnd() {
         if(Deploy.debug){
-            Debug.readEnd(this);
+            Debug4.readEnd(this);
         }
     }
 

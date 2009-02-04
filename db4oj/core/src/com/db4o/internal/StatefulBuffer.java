@@ -60,7 +60,7 @@ public final class StatefulBuffer extends ByteArrayBuffer {
 
 
     public void debugCheckBytes() {
-        if (Debug.xbytes) {
+        if (Debug4.xbytes) {
             if (_offset != i_length) {
                 // Db4o.log("!!! YapBytes.debugCheckBytes not all bytes used");
                 // This is normal for writing The FreeSlotArray, becauce one
@@ -221,7 +221,7 @@ public final class StatefulBuffer extends ByteArrayBuffer {
     }
     
     public void write() {
-        if (Debug.xbytes) {
+        if (Debug4.xbytes) {
             debugCheckBytes();
         }
         file().writeBytes(this, i_address, _addressOffset);
@@ -309,7 +309,7 @@ public final class StatefulBuffer extends ByteArrayBuffer {
     }
     
     public void noXByteCheck() {
-        if(Debug.xbytes && Deploy.overwrite){
+        if(Debug4.xbytes && Deploy.overwrite){
             setID(Const4.IGNORE_ID);
         }
     }
