@@ -39,10 +39,9 @@ public class MagnycoursRunner extends AbstractDb4oVersionsRaceRunner {
 	
 	public Team[] teams(){
 		return new Team [] {
-				db4oTeam(Db4oVersions.JAR57, new int[]{Db4oOptions.NORMAL_COLLECTION}),		
-				db4oTeam(Db4oVersions.JAR57, new int[]{Db4oOptions.P1FAST_COLLECTION}),
-				db4oTeam(Db4oVersions.JAR62, new int[]{Db4oOptions.NORMAL_COLLECTION}),
-				db4oTeam(Db4oVersions.JAR62, new int[]{Db4oOptions.P1FAST_COLLECTION}),
+				db4oTeam(Db4oVersions.JAR74, new int[]{Db4oOptions.NORMAL_COLLECTION}),		
+				db4oTeam(Db4oVersions.JAR74, new int[]{Db4oOptions.P1FAST_COLLECTION}),
+				db4oTeam(Db4oVersions.JAR78, new int[]{Db4oOptions.NORMAL_COLLECTION}),
 		};
 	}
 
