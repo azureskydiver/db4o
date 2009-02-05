@@ -40,7 +40,7 @@ public class IndianapolisRunner extends AbstractDb4oVersionsRaceRunner {
 	public Team[] teams(){
 		return new Team [] {
 				db4oTeam(Db4oVersions.JAR74),		
-				db4oTeam(),
+				db4oTeam(Db4oVersions.JAR78),
 		};
 	}
 
