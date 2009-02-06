@@ -19,6 +19,7 @@ public class AllTests extends Db4oTestSuite {
 			ArrayListInHashMapTestCase.class,
 			ArrayListCandidatesTestCase.class,
 			BigSetTestCase.class,
+			ByteArrayAsMapValueTestCase.class,
 			CascadeDeleteCollectionTestCase.class,
 			CascadeDeleteSubClassTestCase.class,
         	CollectionActivationTestCase.class, 

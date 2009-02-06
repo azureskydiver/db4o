@@ -51,6 +51,14 @@ public class CallbackTestCase extends AbstractDb4oTestCase {
     public void testInheritedPackageCallback() {
     	runTest(new InheritedPackageCallback());
     }
+    
+    public void testThrowingCallback(){
+    	Assert.expect(RuntimeException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				store(new ThrowingCallback());
+			}
+		});
+    }
 
 	private void runTest(Item item) {
 		store(item);
@@ -72,6 +80,13 @@ public class CallbackTestCase extends AbstractDb4oTestCase {
             _objectContainer = container;
         }
     }
+    
+    public static class ThrowingCallback extends Item {
+        void objectOnNew(ObjectContainer container) {
+            throw new RuntimeException();
+        }
+    }
+    
     
     public static class InheritedPackageCallback extends PackageCallback {
     }
