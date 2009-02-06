@@ -1,21 +1,19 @@
-/* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
+/* Copyright (C) 2009  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.jre5.enums;
+package com.db4o.db4ounit.jre5.staging;
+
+import com.db4o.db4ounit.jre5.enums.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-
-
 /**
+ * COR-465
+ * merge into SimpleEnumTestCase when fixed
  */
 @decaf.Ignore
-public class SimpleEnumTestCase extends AbstractDb4oTestCase {
-    
-    public static void main(String[] arguments) {
-        new SimpleEnumTestCase().runEmbeddedClientServer();
-    }
-    
+public class EnumPeekPersistedTestCase extends AbstractDb4oTestCase{
+	
     public static final class Item {
         
         public TypeCountEnum a;
@@ -28,13 +26,14 @@ public class SimpleEnumTestCase extends AbstractDb4oTestCase {
         }
     }
     
-    public void testRetrieve() throws Exception{
+    public void testPeekPersisted() throws Exception{
         Item storedItem = new Item(TypeCountEnum.A);
         store(storedItem);
         db().commit();
         reopen();
         Item retrievedItem = (Item) retrieveOnlyInstance(Item.class);
-        Assert.areSame(retrievedItem.a, TypeCountEnum.A);
+        Item peekedItem = db().peekPersisted(retrievedItem, Integer.MAX_VALUE, true);
+        Assert.areSame(retrievedItem.a, peekedItem.a);
     }
     
 }
