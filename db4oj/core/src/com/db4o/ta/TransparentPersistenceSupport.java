@@ -6,20 +6,38 @@ import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 
 /**
- * Enables the Transparent Update and Transparent Activation behaviors.
+ * Enables Transparent Persistence and Transparent Activation behaviours for
+ * the current session.
+ * <br><br>
+ * configuration.add(new TransparentPersistenceSupport());
+ * @see TransparentActivationSupport
  */
 public class TransparentPersistenceSupport extends TransparentActivationSupport {
 	
 	private final RollbackStrategy _rollbackStrategy;
 
+	/**
+	 * Creates a new instance of TransparentPersistenceSupport class
+	 *  
+	 * @param rollbackStrategy RollbackStrategy interface implementation, which
+	 * defines the actions to be taken on the object when the transaction is rolled back.
+	 */
 	public TransparentPersistenceSupport(RollbackStrategy rollbackStrategy) {
 		_rollbackStrategy = rollbackStrategy;
 	}
 	
+	/**
+	 * Creates a new instance of TransparentPersistenceSupport class 
+	 * with no rollback strategies defined.
+	 */
 	public TransparentPersistenceSupport() {
 		this(null);
 	}
 
+	/**
+	 * Configures current ObjectContainer to support Transparent Activation and Transparent Persistence
+	 * @see TransparentActivationSupport#apply(InternalObjectContainer) 
+	 */
 	@Override
 	public void apply(InternalObjectContainer container) {
 		super.apply(container);
