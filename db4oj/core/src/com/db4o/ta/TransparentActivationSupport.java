@@ -12,12 +12,26 @@ import com.db4o.internal.diagnostic.*;
 import com.db4o.reflect.*;
 
 // TODO: unbindOnClose should be configurable
+/**
+ * Configuration item that enables Transparent Activation Mode for this
+ * session. TA mode should be switched on explicitly for manual TA implementation:
+ * <br><br>
+ * configuration.add(new TransparentActivationSupport());
+ * @see TransparentPersistenceSupport  
+ */
 public class TransparentActivationSupport implements ConfigurationItem {
 
 	public void prepare(Configuration configuration) {
 		// Nothing to do...
 	}
 	
+	/**
+	 * Configures the just opened ObjectContainer by setting event listeners,
+	 * which will be triggered when activation or de-activation is required.
+	 * 
+	 * @param container the ObjectContainer to configure
+	 * @see TransparentPersistenceSupport#apply(InternalObjectContainer)
+	 */
 	public void apply(final InternalObjectContainer container) {
 		
 		if (activationProvider(container) instanceof TransparentActivationDepthProvider)
