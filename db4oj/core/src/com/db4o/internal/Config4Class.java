@@ -228,18 +228,6 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
         _config.put(PERSIST_STATIC_FIELD_VALUES_KEY, true);
     }
 
-    boolean queryEvaluation(String fieldName) {
-    	Hashtable4 exceptionalFields=exceptionalFieldsOrNull();
-        if (exceptionalFields != null) {
-            Config4Field field = (Config4Field) exceptionalFields
-                .get(fieldName);
-            if (field != null) {
-                return field.queryEvaluation();
-            }
-        }
-        return true;
-    }
-
     /**
      * @deprecated
      */

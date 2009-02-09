@@ -115,15 +115,4 @@ public interface ObjectField {
      */
     public void rename (String newName);
 
-
-    /**
-	 * toggles query evaluation.
-	 * <br><br>All fields are evaluated by default. Use this method to turn query
-	 * evaluation off for specific fields.<br><br>
-	 * In client-server environment this setting should be used on both 
-     * client and server. <br><br>
-     * @param flag specify <code>false</code> to ignore this field during query evaluation.
-     */
-    public void queryEvaluation (boolean flag);
-
 }

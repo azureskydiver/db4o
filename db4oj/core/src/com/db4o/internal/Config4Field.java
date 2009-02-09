@@ -11,8 +11,6 @@ public class Config4Field extends Config4Abstract implements ObjectField, DeepCl
     
     private final Config4Class _configClass;
     
-	private final static KeySpec QUERY_EVALUATION_KEY=new KeySpec(true);
-    
 	private final static KeySpec INDEXED_KEY=new KeySpec(TernaryBool.UNSPECIFIED);
     
 	protected Config4Field(Config4Class a_class, KeySpecHashtable4 config) {
@@ -35,10 +33,6 @@ public class Config4Field extends Config4Abstract implements ObjectField, DeepCl
 
     public Object deepClone(Object param) {
         return new Config4Field((Config4Class)param, _config);
-    }
-
-    public void queryEvaluation(boolean flag) {
-    	_config.put(QUERY_EVALUATION_KEY, flag);
     }
 
     public void rename(String newName) {
@@ -84,8 +78,5 @@ public class Config4Field extends Config4Abstract implements ObjectField, DeepCl
 	    return yapField.getIndex(systemTrans) != null;
 	}
 	
-	boolean queryEvaluation() {
-		return _config.getAsBoolean(QUERY_EVALUATION_KEY);
-	}
 
 }
