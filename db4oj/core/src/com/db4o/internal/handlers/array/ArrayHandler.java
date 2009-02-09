@@ -263,7 +263,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 	public static Iterator4 iterator(ReflectClass claxx, Object obj) {
 		ReflectArray reflectArray = claxx.reflector().array();
         if (reflectArray.isNDimensional(claxx)) {
-		    return MultidimensionalArrayHandler.allElements(reflectArray, obj);
+		    return MultidimensionalArrayHandler.allElementsMultidimensional(reflectArray, obj);
 		}
 		return ArrayHandler.allElements(reflectArray, obj);
 	}

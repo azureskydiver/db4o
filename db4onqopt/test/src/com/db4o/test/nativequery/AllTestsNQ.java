@@ -28,6 +28,7 @@ public class AllTestsNQ {
 		Iterable4 db4oTests=new Db4oTestSuiteBuilder(new Db4oSolo(),
 					new Class[] {
 						NativeQueryOptimizerDiagnosticsTestCase.class,
+						NQGreaterOrEqualTestCase.class,
 						NQRegressionTestCase.class,
 						NQCatConsistencyTestCase.class,
 					}

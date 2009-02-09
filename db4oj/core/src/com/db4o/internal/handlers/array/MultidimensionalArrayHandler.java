@@ -24,10 +24,10 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
     }
     
     public final Iterator4 allElements(ObjectContainerBase container, Object array) {
-		return allElements(arrayReflector(container), array);
+		return allElementsMultidimensional(arrayReflector(container), array);
     }
 
-	public static Iterator4 allElements(final ReflectArray reflectArray, Object array) {
+	public static Iterator4 allElementsMultidimensional(final ReflectArray reflectArray, Object array) {
 	    return new MultidimensionalArrayIterator(reflectArray, (Object[])array);
 	}
 
