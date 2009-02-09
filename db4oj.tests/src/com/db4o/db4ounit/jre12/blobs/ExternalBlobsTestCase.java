@@ -11,13 +11,12 @@ import com.db4o.types.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.*;
 
 /**
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class ExternalBlobsTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
+public class ExternalBlobsTestCase extends AbstractDb4oTestCase  {
 
 	public static void main(String[] args) {
 		new ExternalBlobsTestCase().runClientServer();
