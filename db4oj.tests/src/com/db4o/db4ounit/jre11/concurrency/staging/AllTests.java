@@ -15,6 +15,10 @@ public class AllTests extends Db4oConcurrencyTestSuite {
 			ComparatorSortTestCase.class,
 			CustomActivationDepthTestCase.class,
 			SwitchingFilesFromClientTestCase.class,
+			CascadeDeleteArrayTestCase.class,
+			CascadeToHashtableTestCase.class,
+			CascadeToExistingVectorMemberTestCase.class,
+		
 		};
 	}
 
