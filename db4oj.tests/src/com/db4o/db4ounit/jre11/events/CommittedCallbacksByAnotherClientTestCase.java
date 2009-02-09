@@ -19,7 +19,7 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new CommittedCallbacksByAnotherClientTestCase().runEmbeddedClientServer();
+		new CommittedCallbacksByAnotherClientTestCase().runAll();
 	}
 	
 	private static final ObjectInfo[] NONE = new ObjectInfo[0];
@@ -78,7 +78,7 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 		
 		_anotherClient.commit();
 	
-		assertCommittedEvent(new ObjectInfo[] { info4, info5 }, NONE, NONE);
+		assertAddedDeletedUpdated(new ObjectInfo[] { info4, info5 }, NONE, NONE);
 	}
 	
 	public void testCommittedAddedDeleted() {
@@ -98,7 +98,19 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 		assertNoEvents();
 		
 		_anotherClient.commit();
-		assertCommittedEvent(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1, info2 }, NONE);
+		assertAddedDeletedUpdated(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1, info2 }, NONE);
+	}
+	
+	public void _testCommittedForItemAddedAndImmediatelyDeleted() {
+		
+		Item item4 = new Item(4);
+		_anotherClient.store(item4);
+		ObjectInfo info4 = getInfo(_anotherClient, 4);
+		_anotherClient.delete(item4);
+		
+		assertNoEvents();
+		_anotherClient.commit();
+		assertAddedDeletedUpdated(NONE, NONE, NONE);
 	}
 	
 	public void testCommittedAddedUpdatedDeleted() {
@@ -118,7 +130,7 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 		assertNoEvents();
 		
 		_anotherClient.commit();
-		assertCommittedEvent(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1 }, new ObjectInfo[] { info2 });
+		assertAddedDeletedUpdated(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1 }, new ObjectInfo[] { info2 });
 	}
 	
 	public void testCommittedDeleted(){
@@ -131,7 +143,7 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 		
 		_anotherClient.commit();
 		
-		assertCommittedEvent(NONE, new ObjectInfo[] { info1 }, NONE);
+		assertAddedDeletedUpdated(NONE, new ObjectInfo[] { info1 }, NONE);
 	}
 	
 	public void testObjectSetTwiceShouldStillAppearAsAdded() {
@@ -142,7 +154,7 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 		ObjectInfo info4 = getInfo(_anotherClient, 4);
 		
 		_anotherClient.commit();
-		assertCommittedEvent(new ObjectInfo[] { info4 }, NONE, NONE);
+		assertAddedDeletedUpdated(new ObjectInfo[] { info4 }, NONE, NONE);
 	}
 	
 	private Item getItem(ExtObjectContainer oc, int id) {
@@ -158,7 +170,7 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 		return new FrozenObjectInfo(trans, trans.referenceForObject(item));
 	}
 
-	private void assertCommittedEvent(
+	private void assertAddedDeletedUpdated(
 			final ObjectInfo[] expectedAdded,
 			final ObjectInfo[] expectedDeleted,
 			final ObjectInfo[] expectedUpdated) {

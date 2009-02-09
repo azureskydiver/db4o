@@ -39,7 +39,8 @@ public class EventAssert {
 	private static String toObjectString(ObjectInfoCollection actualItems) {
 		return Iterators.toString(Iterators.map(actualItems.iterator(), new Function4() {
 			public Object apply(Object arg) {
-				return ((ObjectInfo)arg).getObject();
+				final ObjectInfo info = (ObjectInfo)arg;
+				return "ObjectInfo(internalID=" + info.getInternalID() + ", object=" + info.getObject() + ")";
 			}
 		}));
 	}
