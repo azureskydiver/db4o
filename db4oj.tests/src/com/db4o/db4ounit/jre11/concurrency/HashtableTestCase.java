@@ -1,6 +1,6 @@
 /* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.jre11.concurrency.staging;
+package com.db4o.db4ounit.jre11.concurrency;
 
 import java.util.*;
 
@@ -13,7 +13,9 @@ import db4ounit.extensions.*;
 public class HashtableTestCase extends Db4oClientServerTestCase {
 
 	public static void main(String[] args) {
-		new HashtableTestCase().runEmbeddedConcurrency();
+		for (int i=0; i<50; ++i) {
+			new HashtableTestCase().runEmbeddedConcurrency();
+		}
 	}
 	
 	private static long _id;
