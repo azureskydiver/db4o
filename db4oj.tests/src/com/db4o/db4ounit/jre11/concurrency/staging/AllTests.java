@@ -17,7 +17,6 @@ public class AllTests extends Db4oConcurrencyTestSuite {
 			SwitchingFilesFromClientTestCase.class,
 			CascadeDeleteArrayTestCase.class,
 			CascadeToHashtableTestCase.class,
-			CascadeToExistingVectorMemberTestCase.class,
 		
 		};
 	}

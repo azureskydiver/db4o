@@ -13,6 +13,7 @@ public class AllTests extends Db4oConcurrencyTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 			com.db4o.db4ounit.common.concurrency.AllTests.class,
+			CascadeToExistingVectorMemberTestCase.class,
 			Circular2TestCase.class,
 			HashtableTestCase.class,
 			HashtableModifiedUpdateDepthTestCase.class,
