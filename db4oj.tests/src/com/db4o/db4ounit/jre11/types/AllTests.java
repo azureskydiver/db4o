@@ -12,8 +12,10 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-			com.db4o.db4ounit.jre11.types.arrays.AllTests.class,
-			com.db4o.db4ounit.jre11.types.collections.AllTests.class,
+				BigDecimalTestCase.class,
+				BigIntegerTestCase.class,
+				com.db4o.db4ounit.jre11.types.arrays.AllTests.class,
+				com.db4o.db4ounit.jre11.types.collections.AllTests.class,
 		};
 	}
 }
