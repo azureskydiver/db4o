@@ -26,6 +26,7 @@ public class JDKReflect extends JDK {
 	public void commonConfigurations(Config4Impl config) {
 		super.commonConfigurations(config);
 		config.objectClass(BigDecimal.class).storeTransientFields(true);
+		config.objectClass(BigInteger.class).storeTransientFields(true);
 	}
 
     Class constructorClass(){
