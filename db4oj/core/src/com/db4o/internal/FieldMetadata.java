@@ -457,6 +457,9 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
         try {
             removeIndexEntry(context);
+            if(isUpdate){
+            	return;
+            }
             StatefulBuffer buffer = (StatefulBuffer) context.buffer();
             final DeleteContextImpl childContext = new DeleteContextImpl(context, getStoredType(), _config);
             context.slotFormat().doWithSlotIndirection(buffer, _handler, new Closure4() {

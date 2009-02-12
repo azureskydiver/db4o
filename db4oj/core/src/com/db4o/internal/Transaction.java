@@ -18,7 +18,7 @@ import com.db4o.reflect.*;
 public abstract class Transaction {
 	
     // contains DeleteInfo nodes
-    protected Tree _delete;
+    Tree _delete;
 
     protected final Transaction _systemTransaction;
 
@@ -260,7 +260,7 @@ public abstract class Transaction {
         return container().toString();
     }
 
-    public abstract void writeUpdateDeleteMembers(int id, ClassMetadata clazz, int typeInfo, int cascade);
+    public abstract void writeUpdateAdjustIndexes(int id, ClassMetadata clazz, int typeInfo, int cascade);
 
     public final ObjectContainerBase container() {
         return _container;
@@ -364,5 +364,15 @@ public abstract class Transaction {
 			reference.deactivate(this, activationDepth);
 		}
 	}
+	
+	protected void traverseDelete(Visitor4 deleteVisitor) {
+		if (_delete == null) {
+			return;
+        }
+		_delete.traverse(deleteVisitor);
+        _delete = null;
+	}
+    
+
 
 }

@@ -168,7 +168,7 @@ public class DTrace {
 			TRANS_FLUSH = new DTrace(true, true, "trans flush", true);
 			WRITE_BYTES = new DTrace(true, true, "writeBytes", true);
 			WRITE_POINTER = new DTrace(true, true, "write pointer", true);
-			WRITE_UPDATE_DELETE_MEMBERS = new DTrace(true, true,
+			WRITE_UPDATE_ADJUST_INDEXES = new DTrace(true, true,
 					"trans writeUpdateDeleteMembers", true);
 			WRITE_XBYTES = new DTrace(true, true, "writeXBytes", true);
 			configure();
@@ -274,7 +274,7 @@ public class DTrace {
     public static DTrace WRITE_BYTES;
     public static DTrace WRITE_POINTER;
     public static DTrace WRITE_XBYTES;
-    public static DTrace WRITE_UPDATE_DELETE_MEMBERS;
+    public static DTrace WRITE_UPDATE_ADJUST_INDEXES;
     
     static{
     	init();

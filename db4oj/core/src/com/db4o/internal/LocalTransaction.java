@@ -26,7 +26,7 @@ public class LocalTransaction extends Transaction {
 
     private final LockedTree _slotChanges = new LockedTree();
 	
-    private Tree _writtenUpdateDeletedMembers;
+    Tree _writtenUpdateAdjustedIndexes;
     
 	protected final LocalObjectContainer _file;
 	
@@ -560,7 +560,7 @@ public class LocalTransaction extends Transaction {
 	
 	public void processDeletes() {
 		if (_delete == null) {
-			_writtenUpdateDeletedMembers = null;
+			_writtenUpdateAdjustedIndexes = null;
 			return;
 		}
 
@@ -605,54 +605,12 @@ public class LocalTransaction extends Transaction {
 				}
 			});
 		}
-		_writtenUpdateDeletedMembers = null;
+		_writtenUpdateAdjustedIndexes = null;
 	}
-
-    public void writeUpdateDeleteMembers(int id, ClassMetadata clazz, int typeInfo, int cascade) {
-
-    	checkSynchronization();
-    	
-        if(DTrace.enabled){
-            DTrace.WRITE_UPDATE_DELETE_MEMBERS.log(id);
-        }
-        
-        TreeInt newNode = new TreeInt(id);
-        _writtenUpdateDeletedMembers = Tree.add(_writtenUpdateDeletedMembers, newNode);
-        if(! newNode.wasAddedToTree()){
-        	return;
-        }
-        
-        if(clazz.canUpdateFast()){
-        	Slot currentSlot = getCurrentSlotOfID(id);
-        	if(currentSlot == null || currentSlot.address() == 0){
-        	    clazz.addToIndex(this, id);
-        	}else{
-        	    slotFreeOnCommit(id, currentSlot);
-        	}
-        	return;
-        }
-        
-        StatefulBuffer objectBytes = container().readWriterByID(this, id);
-        if(objectBytes == null){
-            clazz.addToIndex(this, id);
-            return;
-        }
-        
-        ObjectHeader oh = new ObjectHeader(container(), clazz, objectBytes);
-        
-        DeleteInfo info = (DeleteInfo)TreeInt.find(_delete, id);
-        if(info != null){
-            if(info._cascade > cascade){
-                cascade = info._cascade;
-            }
-        }
-        
-        objectBytes.setCascadeDeletes(cascade);
-        
-        DeleteContextImpl context = new DeleteContextImpl(objectBytes, oh, clazz.classReflector(), null);
-        clazz.deleteMembers(context, typeInfo, true);
-        
-        slotFreeOnCommit(id, new Slot(objectBytes.getAddress(), objectBytes.length()));
+	
+	
+	public void writeUpdateAdjustIndexes(int id, ClassMetadata clazz, int typeInfo, int cascade) {
+    	new WriteUpdateProcessor(this, id, clazz, typeInfo, cascade).run();
     }
     
 	private Callbacks callbacks(){
