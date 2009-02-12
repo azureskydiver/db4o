@@ -413,7 +413,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		
 		setStateClean();
 
-		transaction.writeUpdateDeleteMembers(getID(), _class, container._handlers.arrayType(obj), 0);
+		transaction.writeUpdateAdjustIndexes(getID(), _class, container._handlers.arrayType(obj), 0);
 		
         MarshallingContext context = new MarshallingContext(transaction, this, updatedepth, false);
         _class.write(context, obj);

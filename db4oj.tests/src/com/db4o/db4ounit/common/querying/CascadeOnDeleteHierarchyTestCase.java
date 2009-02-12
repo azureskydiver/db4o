@@ -17,6 +17,7 @@ public class CascadeOnDeleteHierarchyTestCase extends AbstractDb4oTestCase {
 	}
 
 	public static class SubItem extends Item {
+		
 		public Data data;
 
 		public SubItem() {
@@ -44,4 +45,12 @@ public class CascadeOnDeleteHierarchyTestCase extends AbstractDb4oTestCase {
 		db().commit();
 		assertOccurrences(Data.class, 0);
 	}
+	
+	public void testMultipleStoreCalls(){
+		SubItem item = retrieveOnlyInstance(SubItem.class);
+		store(item);
+		assertOccurrences(Data.class, 1);
+	}
+	
+	
 }
