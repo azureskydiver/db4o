@@ -80,29 +80,26 @@ final class ClientTransaction extends Transaction {
         return HardObjectReference.INVALID;
     }
     
-    
     public void processDeletes() {
-        if (_delete != null) {
-            _delete.traverse(new Visitor4() {
-                public void visit(Object a_object) {
-                    DeleteInfo info = (DeleteInfo) a_object;
-                    if (info._reference != null) {
-                        i_yapObjectsToGc = Tree.add(i_yapObjectsToGc, new TreeIntObject(info._key, info._reference));
-                    }
+        Visitor4 deleteVisitor = new Visitor4() {
+            public void visit(Object a_object) {
+                DeleteInfo info = (DeleteInfo) a_object;
+                if (info._reference != null) {
+                    i_yapObjectsToGc = Tree.add(i_yapObjectsToGc, new TreeIntObject(info._key, info._reference));
                 }
-            });
-        }
-        _delete = null;
+            }
+        };
+        traverseDelete(deleteVisitor);
 		i_client.writeBatchedMessage(Msg.PROCESS_DELETES);
     }
-    
+
     public void rollback() {
         i_yapObjectsToGc = null;
         rollBackTransactionListeners();
         clearAll();
     }
 
-    public void writeUpdateDeleteMembers(int a_id, ClassMetadata a_yc, int a_type,
+    public void writeUpdateAdjustIndexes(int a_id, ClassMetadata a_yc, int a_type,
         int a_cascade) {
     	MsgD msg = Msg.WRITE_UPDATE_DELETE_MEMBERS.getWriterForInts(this,
 				new int[] { a_id, a_yc.getID(), a_type, a_cascade });
