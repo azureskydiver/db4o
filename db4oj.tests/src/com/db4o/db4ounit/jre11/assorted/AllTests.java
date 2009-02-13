@@ -12,13 +12,14 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-			ClientServerThrowsOnCommitTestCase.class,
-			NanoTimeTestCase.class,
-            NullWrapperTestCase.class,
-            ObjectNotStorableExceptionTestCase.class,
-            StoreNumberTestCase.class,
-            SyntheticStaticClassFieldTestCase.class,
-            UUIDMigrationTestCase.class,
+				CascadeToHashtableTestCase.class,
+				ClientServerThrowsOnCommitTestCase.class,
+				NanoTimeTestCase.class,
+	            NullWrapperTestCase.class,
+	            ObjectNotStorableExceptionTestCase.class,
+	            StoreNumberTestCase.class,
+	            SyntheticStaticClassFieldTestCase.class,
+	            UUIDMigrationTestCase.class,
 		};
 	}
 }

@@ -31,7 +31,6 @@ public class AllTestsConfAll extends TestSuite{
 	    	Backup.class,
             BasicClusterTest.class,
 	    	BindFileSize.class,
-	        CascadeToHashtable.class,
 	        CascadeToVector.class,
 	        CascadeToExistingVectorMember.class,
             CallbackCanDelete.class,
