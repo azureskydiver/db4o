@@ -46,13 +46,13 @@ namespace OManager.BusinessLayer.UIHelper
 			modObj.cascadeonDelete(boolcascadeOnDelete);  
 
 		}
-		public string GetDatatype(string classname, string fieldName)
-		{
-			FieldDetails fDetails = new FieldDetails(classname, fieldName);
-			return fDetails.GetDataType();  
-		}
 
-		public object SaveObjects(object parentobjm)
+        public IType GetFieldType(string declaringClassName, string name)
+        {
+            return new FieldDetails(declaringClassName, name).GetFieldType();
+        }
+
+	    public object SaveObjects(object parentobjm)
 		{
 			ModifyObjects modObj = new ModifyObjects(parentobjm);
 			modObj.SaveObjects();

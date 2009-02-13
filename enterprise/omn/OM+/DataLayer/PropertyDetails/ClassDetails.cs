@@ -1,30 +1,23 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using Db4objects.Db4o;
-using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Reflect;
-using Db4objects.Db4o.Reflect.Generic;
-using OManager.BusinessLayer.QueryManager;
 using OManager.DataLayer.Connection;
-using OManager.BusinessLayer.Login;
-
 using OManager.DataLayer.CommonDatalayer;
 using OManager.BusinessLayer.Common;
 
 using OME.Logging.Common;
-using OME.Logging.Tracing;
 
 namespace OManager.DataLayer.Modal
 {
     class ClassDetails 
     {
-        private IObjectContainer objectContainer;
-        private string m_className;
+        private readonly IObjectContainer objectContainer;
+        private readonly string m_className;
+
         public  ClassDetails(string className)
         {
-            this.m_className = DataLayerCommon.RemoveGFromClassName(className);
+            m_className = DataLayerCommon.RemoveGFromClassName(className);
             objectContainer = Db4oClient.Client; 
         }
 
@@ -46,7 +39,7 @@ namespace OManager.DataLayer.Modal
         {
             try
             {
-                IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_className);//objectContainer.Ext().Reflector().ForName(className);
+                IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_className);
                 IReflectField[] rFields = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rClass);
                 Hashtable FieldList = new Hashtable();
 
@@ -71,9 +64,6 @@ namespace OManager.DataLayer.Modal
         {
             try
             {
-
-
-
                 IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_className);
                 if (rClass != null)
                 {
@@ -81,7 +71,6 @@ namespace OManager.DataLayer.Modal
                     string type1 = rClass.ToString();
                     type1 = DataLayerCommon.PrimitiveType(type1);
                     char[] arr = CommonValues.charArray;
-                        //new char[] { 'G', 'e', 'n', 'e', 'r', 'i', 'c', 'C', 'l', 'a', 's', 's' };
                     type1 = type1.Trim(arr);
                     if (!CommonValues.IsPrimitive(type1) && !type1.Contains(BusinessConstants.DB4OBJECTS_SYS))
                     {
@@ -102,9 +91,7 @@ namespace OManager.DataLayer.Modal
         {
             try
             {
-
-
-                IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_className); //objectContainer.Ext().Reflector().ForName(className);
+                IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_className); 
                 IReflectField[] rFields = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rClass);
                 return rFields;
             }

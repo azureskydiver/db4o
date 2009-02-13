@@ -254,14 +254,10 @@ namespace OMControlLibrary
 				DataGridViewCell cell = masterView[e.ColumnIndex, e.RowIndex];
 				object currObj = cell.OwningRow.Tag;
 				string headerText = masterView.Columns[e.ColumnIndex].HeaderText;
-				string strclass = masterView.Columns[e.ColumnIndex].Tag.ToString();
-				string strAttribName = Helper.ReturnAttributeName(headerText);
-				string dataType = Helper.DbInteraction.GetDatatype(strclass, strAttribName);
 				object value = cell.Value;
 
-				bool check = Validations.ValidateDataType(FieldTypeForObjectInRow(cell.OwningRow), ref value);
-
-				if (check)
+			    IType type = (IType) cell.Tag;
+			    if (Validations.ValidateDataType(type, ref value))
 				{
 					if (strstoreValue != value.ToString())
 					{
@@ -270,7 +266,7 @@ namespace OMControlLibrary
 							UpdateMasterViewObjectEditedStatus(masterView.Rows[e.RowIndex], true);
 							Helper.DbInteraction.EditObject(currObj, headerText, value.ToString());
 
-							masterView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = Helper.GetValue(dataType, cell.Value);
+                            masterView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = type.Cast(cell.Value);
 							cellUpdated = new Hashtable();
 							cellUpdated.Add(headerText, value);
 
@@ -293,7 +289,7 @@ namespace OMControlLibrary
 				}
 				else
 				{
-					masterView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = Helper.GetValue(dataType, strstoreValue);
+                    masterView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = type.Cast(strstoreValue);
 					strstoreValue = string.Empty;
 					cell.Style.ForeColor = Color.Black;
 					cell.Style.SelectionForeColor = Color.White;
@@ -318,9 +314,9 @@ namespace OMControlLibrary
 				DataGridViewCell cell = ((DataGridView) sender).CurrentCell;
 
 				dbInteraction db = new dbInteraction();
-				string dataType = db.GetDatatype(cell.OwningColumn.Tag.ToString(), cell.OwningColumn.HeaderText);
+			    IType fieldType = db.GetFieldType(cell.OwningColumn.Tag.ToString(), cell.OwningColumn.HeaderText);
 
-				if (dataType != typeof (string).ToString() && (cell.Value != null && cell.Value.ToString() == "null"))
+			    if (!fieldType.IsEditable || HasNullValue(cell))
 				{
 					e.Cancel = true;
 					return;
@@ -341,7 +337,12 @@ namespace OMControlLibrary
 			}
 		}
 
-		private void masterView_SelectionChanged(object sender, EventArgs e)
+	    private static bool HasNullValue(DataGridViewCell cell)
+	    {
+	        return "null".Equals(cell.Value);
+	    }
+
+	    private void masterView_SelectionChanged(object sender, EventArgs e)
 		{
 			try
 			{
@@ -1718,30 +1719,5 @@ namespace OMControlLibrary
 		}
 
 		#endregion
-
-		//private void tableLayoutPanelResultGrid_Resize(object sender, EventArgs e)
-		//{
-		//    ResizeColumnWidth();
-		//}
-
-		//private void ResizeColumnWidth()
-		//{
-		//    //if (masterView != null)
-		//    //{
-		//    //    int w = tableLayoutPanelResultGrid.Width;
-		//    //    if (masterView.Columns.Count > 0)
-		//    //    {
-		//    //        if (masterView.Columns[2].Width * (masterView.Columns.Count - 2) < masterView.Width)
-		//    //        {
-		//    //            for (int i = 2; i < masterView.Columns.Count; i++)
-		//    //            {
-		//    //                masterView.Columns[i].Width = (w + 100) / masterView.Columns.Count - 2;
-		//    //            }
-		//    //        }
-		//    //    }
-
-		//    //    masterView.ScrollBars = ScrollBars.Both;
-		//    //}
-		//}
 	}
 }
