@@ -1,34 +1,35 @@
 /* Copyright (C) 2009  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.jre11.types;
+package com.db4o.db4ounit.jre12.types;
 
 import java.math.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class BigIntegerTestCase extends AbstractDb4oTestCase {
+public class BigDecimalTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
-		new BigIntegerTestCase().runAll();
+		new BigDecimalTestCase().runAll();
 	}
 	
-	static String DATA = "1234567891011121314151617181920";
+	static String DATA = "123456789.1011121314151617181920";
 	
 	public static class Item {
-		public BigInteger _bigInt;
+		public BigDecimal _bigDecimal;
 	}
 	
 	@Override
 	protected void store() throws Exception {
 		Item item = new Item();
-		item._bigInt = new BigInteger(DATA);
+		item._bigDecimal = new BigDecimal(DATA);
 		store(item);
 	}
 	
 	public void test(){
 		Item item = retrieveOnlyInstance(Item.class);
-		Assert.areEqual(DATA, item._bigInt.toString());
+		Assert.areEqual(DATA, item._bigDecimal.toString());
 	}
+
 
 }
