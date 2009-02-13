@@ -28,6 +28,7 @@ public class AllTestsLegacy extends AllTests {
         		ArrayNOrder.class,
         		Book.class,
         		ByteArray.class,
+        		CascadeToHashtable.class,
         		CreateIndex.class,
         		GetByUUID.class,
         		MultiDelete.class,
