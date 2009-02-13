@@ -10,15 +10,18 @@ public final class MWriteUpdate extends MsgObject implements ServerSideMessage {
 	
 	public final boolean processAtServer() {
 	    int yapClassId = _payLoad.readInt();
+	    int arrayTypeValue = _payLoad.readInt();
+	    ArrayType arrayType = ArrayType.forValue(arrayTypeValue);
 	    LocalObjectContainer stream = (LocalObjectContainer)stream();
 	    unmarshall(_payLoad._offset);
 	    synchronized(streamLock()){
-	        ClassMetadata yc = stream.classMetadataForId(yapClassId);
+	        ClassMetadata classMetadata = stream.classMetadataForId(yapClassId);
 			int id = _payLoad.getID();
+			transaction().writeUpdateAdjustIndexes(id, classMetadata, arrayType, 0);
 			transaction().dontDelete(id);
             Slot oldSlot = ((LocalTransaction)transaction()).getCommittedSlotOfID(id);
             stream.getSlotForUpdate(_payLoad);
-			yc.addFieldIndices(_payLoad, oldSlot);
+			classMetadata.addFieldIndices(_payLoad, oldSlot);
             _payLoad.writeEncrypt();
             deactivateCacheFor(id);            
 		}

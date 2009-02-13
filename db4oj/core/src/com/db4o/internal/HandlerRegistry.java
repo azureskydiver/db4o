@@ -320,15 +320,15 @@ public final class HandlerRegistry {
         return _handlerVersions.correctHandlerVersion(handler, version);
     }
 
-    int arrayType(Object obj) {
+    ArrayType arrayType(Object obj) {
     	ReflectClass claxx = reflector().forObject(obj);
         if (! claxx.isArray()) {
-            return 0;
+            return ArrayType.NONE;
         }
         if (reflector().array().isNDimensional(claxx)) {
-            return Const4.TYPE_NARRAY;
+        	return ArrayType.MULTIDIMENSIONAL_ARRAY;
         } 
-        return Const4.TYPE_ARRAY;
+        return ArrayType.PLAIN_ARRAY;
     }
 	
 	public final void decrypt(ByteArrayBuffer reader) {

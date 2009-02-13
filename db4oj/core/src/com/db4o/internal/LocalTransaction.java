@@ -609,7 +609,7 @@ public class LocalTransaction extends Transaction {
 	}
 	
 	
-	public void writeUpdateAdjustIndexes(int id, ClassMetadata clazz, int typeInfo, int cascade) {
+	public void writeUpdateAdjustIndexes(int id, ClassMetadata clazz, ArrayType typeInfo, int cascade) {
     	new WriteUpdateProcessor(this, id, clazz, typeInfo, cascade).run();
     }
     

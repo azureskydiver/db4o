@@ -594,19 +594,19 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         
         Transaction trans = buffer.transaction();
         int id = buffer.getID();
-        int typeId = trans.container()._handlers.arrayType(obj);
+        ArrayType arrayType = trans.container()._handlers.arrayType(obj);
         
         removeFromIndex(trans, id);
         
         DeleteContextImpl context = new DeleteContextImpl(buffer,oh,  classReflector(), null);
-        deleteMembers(context, typeId, false);
+        deleteMembers(context, arrayType, false);
     }
 
     public void delete(DeleteContext context) throws Db4oIOException {
         correctHandlerVersion(context).delete(context);
     }
     
-    void deleteMembers(DeleteContextImpl context, int a_type, boolean isUpdate) {
+    void deleteMembers(DeleteContextImpl context, ArrayType arrayType, boolean isUpdate) {
         StatefulBuffer buffer = (StatefulBuffer) context.buffer();
         int preserveCascade = context.cascadeDeleteDepth();
         try{

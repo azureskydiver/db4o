@@ -1971,7 +1971,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
     public abstract void writeTransactionPointer(int address);
 
-    public abstract void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, ByteArrayBuffer buffer);
+    public abstract void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, ArrayType arrayType, ByteArrayBuffer buffer);
 
     public Callbacks callbacks() {
     	return _callbacks;

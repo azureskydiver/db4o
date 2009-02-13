@@ -743,8 +743,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		// do nothing
 	}
 
-	public final void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, ByteArrayBuffer buffer) {
-		MsgD msg = Msg.WRITE_UPDATE.getWriter(trans, pointer, classMetadata, buffer);
+	public final void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, ArrayType arrayType, ByteArrayBuffer buffer) {
+		MsgD msg = Msg.WRITE_UPDATE.getWriter(trans, pointer, classMetadata, arrayType.value(), buffer);
 		writeBatchedMessage(msg);
 	}
 

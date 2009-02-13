@@ -99,11 +99,9 @@ final class ClientTransaction extends Transaction {
         clearAll();
     }
 
-    public void writeUpdateAdjustIndexes(int a_id, ClassMetadata a_yc, int a_type,
-        int a_cascade) {
-    	MsgD msg = Msg.WRITE_UPDATE_DELETE_MEMBERS.getWriterForInts(this,
-				new int[] { a_id, a_yc.getID(), a_type, a_cascade });
-		i_client.writeBatchedMessage(msg);
+    public void writeUpdateAdjustIndexes(int id, ClassMetadata classMetadata, ArrayType arrayType,
+        int cascade) {
+    	// do nothing
     }
 
 }

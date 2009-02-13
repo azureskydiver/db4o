@@ -260,7 +260,7 @@ public abstract class Transaction {
         return container().toString();
     }
 
-    public abstract void writeUpdateAdjustIndexes(int id, ClassMetadata clazz, int typeInfo, int cascade);
+    public abstract void writeUpdateAdjustIndexes(int id, ClassMetadata clazz, ArrayType typeInfo, int cascade);
 
     public final ObjectContainerBase container() {
         return _container;

@@ -413,9 +413,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		
 		setStateClean();
 		
-		if(! container.isClient()){
-			transaction.writeUpdateAdjustIndexes(getID(), _class, container._handlers.arrayType(obj), 0);
-		}
+		transaction.writeUpdateAdjustIndexes(getID(), _class, container._handlers.arrayType(obj), 0);
 
         MarshallingContext context = new MarshallingContext(transaction, this, updatedepth, false);
         _class.write(context, obj);
@@ -423,18 +421,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
         Pointer4 pointer = context.allocateSlot();
         ByteArrayBuffer buffer = context.ToWriteBuffer(pointer);
         
-
-        // FIXME: In C/S mode, if we sent writeUpdateAdjustIndexes in two messages, 
-        //        we get inconsistent state between the two. We should send the 
-        //        information as one message. This is also a small performance 
-        //        improvement.
-        
-        if(container.isClient()){
-			transaction.writeUpdateAdjustIndexes(getID(), _class, container._handlers.arrayType(obj), 0);
-		}
-        
-		
-        container.writeUpdate(transaction, pointer, classMetadata(), buffer);
+        container.writeUpdate(transaction, pointer, _class, container._handlers.arrayType(obj), buffer);
         
         if (isActive()) {
             setStateClean();

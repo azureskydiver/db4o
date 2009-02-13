@@ -64,19 +64,11 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
     		context.defragmentRecommended();
     	}
     }
-
-    void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, int a_type, boolean isUpdate) {
-        if (a_type == Const4.TYPE_ARRAY) {
-            new ArrayHandler(this, true).deletePrimitiveEmbedded(a_bytes, this);
-        } else if (a_type == Const4.TYPE_NARRAY) {
-            new MultidimensionalArrayHandler(this, true).deletePrimitiveEmbedded(a_bytes, this);
-        }
-    }
     
-    void deleteMembers(DeleteContextImpl context, int a_type, boolean isUpdate) {
-        if (a_type == Const4.TYPE_ARRAY) {
+    void deleteMembers(DeleteContextImpl context, ArrayType arrayType, boolean isUpdate) {
+        if (arrayType == ArrayType.PLAIN_ARRAY) {
             new ArrayHandler(this, true).deletePrimitiveEmbedded((StatefulBuffer) context.buffer(), this);
-        } else if (a_type == Const4.TYPE_NARRAY) {
+        } else if (arrayType == ArrayType.MULTIDIMENSIONAL_ARRAY) {
             new MultidimensionalArrayHandler(this, true).deletePrimitiveEmbedded((StatefulBuffer) context.buffer(), this);
         }
     }

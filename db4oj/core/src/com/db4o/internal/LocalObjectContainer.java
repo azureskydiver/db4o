@@ -783,7 +783,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return slot;
     }
 
-    public final void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, ByteArrayBuffer buffer) {
+    public final void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, ArrayType arrayType, ByteArrayBuffer buffer) {
         int address = pointer.address();
         if(address == 0){
             address = getSlotForUpdate(trans, pointer.id(), pointer.length()).address();
