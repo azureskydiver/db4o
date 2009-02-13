@@ -359,22 +359,6 @@ namespace OManager.DataLayer.QueryParser
 
         }
 
-        public string ConvertToValue(string clauseClass, string clausefield)
-        {
-            try
-            {
-
-                FieldDetails fDetails = new FieldDetails(clauseClass, clausefield);
-                return fDetails.GetDataType();
-                
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.HandleException(oEx);
-                return null;
-            }
-
-        }
         public IQuery AddAsDescends(IQuery query, string[] str)
         {
             try

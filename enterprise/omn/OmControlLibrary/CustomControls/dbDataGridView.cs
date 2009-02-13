@@ -6,8 +6,10 @@ using System.Reflection;
 using System.Windows.Forms;
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.ObjectExplorer;
+using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
+using Type=System.Type;
 
 namespace OMControlLibrary.Common
 {
@@ -616,43 +618,46 @@ namespace OMControlLibrary.Common
 					{
 						if (!entry.Key.ToString().Equals(BusinessConstants.DB4OBJECTS_REF))
 						{
-							string dataType = null;
-							if (hashAttributes.Count == 0)
-							{
-								dataType = Helper.DbInteraction.GetDatatype(className, entry.Key.ToString());
-							}
-							else
-							{
-								int intIndex = entry.Key.ToString().LastIndexOf('.');
-								string strAttribName = entry.Key.ToString().Substring(intIndex + 1);
-								string clsName = Columns[entry.Key.ToString()].Tag.ToString();
-								if (clsName != null && strAttribName != null)
-								{
-									dataType = Helper.DbInteraction.GetDatatype(clsName, strAttribName);
-								}
-							}
-							if (dataType != null)
-							{
-								if (Helper.IsPrimitive(dataType))
-								{
-									if (entry.Value != null)
-									{
-										Rows[listCount].Cells[entry.Key.ToString()].Value = Helper.GetValue(dataType, entry.Value);
-										Rows[listCount].Cells[entry.Key.ToString()].Tag = dataType;
-										Rows[listCount].Cells[entry.Key.ToString()].ReadOnly = false;
-									}
-									else
-									{
-										Rows[listCount].Cells[entry.Key.ToString()].Value = VALUE_NULL;
-										Rows[listCount].Cells[entry.Key.ToString()].ReadOnly = true;
-									}
-								}
-								else
-								{
-									Rows[listCount].Cells[entry.Key.ToString()].Value = entry.Value != null ? entry.Value.ToString() : VALUE_NULL;
-									Rows[listCount].Cells[entry.Key.ToString()].ReadOnly = true;
-								}
-							}
+						    IType fieldType = null;
+						    if (hashAttributes.Count == 0)
+						    {
+						        fieldType = Helper.DbInteraction.GetFieldType(className, entry.Key.ToString());
+						    }
+						    else
+						    {
+						        int intIndex = entry.Key.ToString().LastIndexOf('.');
+						        string strAttribName = entry.Key.ToString().Substring(intIndex + 1);
+						        string clsName = Columns[entry.Key.ToString()].Tag.ToString();
+						        if (clsName != null && strAttribName != null)
+						        {
+						            fieldType = Helper.DbInteraction.GetFieldType(clsName, strAttribName);
+						        }
+						    }
+
+						    if (fieldType == null)
+						        continue;
+						    
+                            if (fieldType.IsPrimitive)
+						    {
+						        if (entry.Value != null)
+						        {
+						            Rows[listCount].Cells[entry.Key.ToString()].Value = fieldType.Cast(entry.Value);
+						            Rows[listCount].Cells[entry.Key.ToString()].Tag = fieldType;
+						            Rows[listCount].Cells[entry.Key.ToString()].ReadOnly = false;
+						        }
+						        else
+						        {
+						            Rows[listCount].Cells[entry.Key.ToString()].Value = VALUE_NULL;
+						            Rows[listCount].Cells[entry.Key.ToString()].ReadOnly = true;
+						        }
+						    }
+						    else
+						    {
+						        Rows[listCount].Cells[entry.Key.ToString()].Value = entry.Value != null
+						                                                                ? entry.Value.ToString()
+						                                                                : VALUE_NULL;
+						        Rows[listCount].Cells[entry.Key.ToString()].ReadOnly = true;
+						    }
 						}
 						else
 							Rows[listCount].Tag = entry.Value;

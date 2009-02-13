@@ -5,6 +5,7 @@ using Db4objects.Db4o.Reflect;
 using Db4objects.Db4o.Reflect.Generic;
 using OManager.DataLayer.Connection;
 using OManager.DataLayer.CommonDatalayer;
+using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 
 namespace OManager.DataLayer.Modal
@@ -129,40 +130,15 @@ namespace OManager.DataLayer.Modal
             }
         }       
 
-        public string GetDataType()
+
+        public IType GetFieldType()
         {
-            try
-            {              
-            
-                if (m_classname != string.Empty)
-                {
-                    GenericReflector gen = objectContainer.Ext().Reflector();
-                    if (gen != null)
-                    {
+            GenericReflector reflecotr = objectContainer.Ext().Reflector();
+            IReflectClass klass = reflecotr.ForName(m_classname);
 
-                        IReflectClass rclass = gen.ForName(m_classname);
-                        if (rclass != null)
-                        {
-                            IReflectField rfield = DataLayerCommon.GetDeclaredFieldInHeirarchy(rclass, m_fieldname);
+            IReflectField rfield = DataLayerCommon.GetDeclaredFieldInHeirarchy(klass, m_fieldname);
 
-                            if (rfield != null)
-                            {
-                                string str=rfield.GetFieldType().GetName();
-                                return DataLayerCommon.PrimitiveType(str);
-                                
-                            }
-                        }
-                    }
-                }
-                return string.Empty; 
-
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.HandleException(oEx);
-                return string.Empty; 
-            }
-            
-        }     
+            return Db4oClient.TypeResolver.Resolve(rfield.GetFieldType());
+        }
     }
 }
