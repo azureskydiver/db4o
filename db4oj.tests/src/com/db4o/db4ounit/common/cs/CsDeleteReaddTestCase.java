@@ -2,12 +2,13 @@
 
 package com.db4o.db4ounit.common.cs;
 
+import com.db4o.config.*;
 import com.db4o.ext.*;
 
 import db4ounit.extensions.*;
 
 
-public class DeleteReaddTestCase extends Db4oClientServerTestCase {
+public class CsDeleteReaddTestCase extends Db4oClientServerTestCase {
     
     public static class ItemParent {
         
@@ -20,6 +21,14 @@ public class DeleteReaddTestCase extends Db4oClientServerTestCase {
         public Item(String name_){
             name = name_;
         }
+    }
+    
+    
+    @Override
+    protected void configure(Configuration config) throws Exception {
+    	config.generateUUIDs(ConfigScope.GLOBALLY);
+    	config.generateVersionNumbers(ConfigScope.GLOBALLY);
+    	config.objectClass(Item.class).objectField("name").indexed(true);
     }
     
     protected void store() throws Exception {
@@ -41,12 +50,14 @@ public class DeleteReaddTestCase extends Db4oClientServerTestCase {
         client2.commit();
         client2.close();
         
-        retrieveOnlyInstance(client1, Item.class);
-        retrieveOnlyInstance(client1, ItemParent.class);
+        Item item3 = retrieveOnlyInstance(client1, Item.class);
+        final long idAfterUpdate = client1.getID(item3);
+        
+        new FieldIndexAssert(Item.class, "name").assertSingleEntry(fileSession(), idAfterUpdate);
     }
     
     public static void main(String[] arguments) {
-        new DeleteReaddTestCase().runClientServer();
+        new CsDeleteReaddTestCase().runAll();
     }
 
 }

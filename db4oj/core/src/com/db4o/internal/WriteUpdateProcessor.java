@@ -46,18 +46,24 @@ class WriteUpdateProcessor {
         	return;
         }
         
-        if(handledWithNoChildIndexModification()){
+        Slot slot = _localTransaction.getCurrentSlotOfID(_id);
+        if(handledAsReAdd(slot)){
         	return;
         }
         
-        StatefulBuffer objectBytes = _localTransaction.container().readWriterByID(localTransaction(), _id);
-        if(handledAsReAdd(objectBytes)){
+        if(handledWithNoChildIndexModification(slot)){
         	return;
         }
+        
+        StatefulBuffer objectBytes = (StatefulBuffer)container().readReaderOrWriterBySlot(localTransaction(), _id, false, slot);
         
         updateChildIndexes(objectBytes);
         
         freeSlotOnCommit(objectBytes);
+	}
+
+	private LocalObjectContainer container() {
+		return _localTransaction.file();
 	}
 
 	private void freeSlotOnCommit(StatefulBuffer objectBytes) {
@@ -65,7 +71,7 @@ class WriteUpdateProcessor {
 	}
 
 	private void updateChildIndexes(StatefulBuffer objectBytes) {
-		ObjectHeader oh = new ObjectHeader(_localTransaction.container(), _clazz, objectBytes);
+		ObjectHeader oh = new ObjectHeader(container(), _clazz, objectBytes);
         
         DeleteInfo info = (DeleteInfo)TreeInt.find(_localTransaction._delete, _id);
         if(info != null){
@@ -80,8 +86,8 @@ class WriteUpdateProcessor {
         _clazz.deleteMembers(context, _typeInfo, true);
 	}
 
-	private boolean handledAsReAdd(StatefulBuffer objectBytes) {
-		if(objectBytes != null){
+	private boolean handledAsReAdd(Slot slot) {
+		if(slot != null  && slot.address() > 0){
 			return false;
 		}
         _clazz.addToIndex(localTransaction(), _id);
@@ -94,16 +100,11 @@ class WriteUpdateProcessor {
         return ! newNode.wasAddedToTree();
 	}
 	
-	private boolean handledWithNoChildIndexModification() {
+	private boolean handledWithNoChildIndexModification(Slot slot) {
 		if(! _clazz.canUpdateFast()){
 			return false;
 		}
-    	Slot currentSlot = _localTransaction.getCurrentSlotOfID(_id);
-    	if(currentSlot == null || currentSlot.address() == 0){
-    	    _clazz.addToIndex(localTransaction(), _id);
-    	}else{
-    	    _localTransaction.slotFreeOnCommit(_id, currentSlot);
-    	}
+    	_localTransaction.slotFreeOnCommit(_id, slot);
     	return true;
 	}
 

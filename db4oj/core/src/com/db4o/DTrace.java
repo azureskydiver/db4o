@@ -41,9 +41,9 @@ public class DTrace {
         if(enabled){
         
             
-            breakOnEvent(395);
+            // breakOnEvent(395);
             
-//            breakOnEvent(10);
+            breakOnEvent(57);
             
             // addRange(4874);
             
@@ -52,29 +52,14 @@ public class DTrace {
             // breakOnEvent(5);
             
             
-            //addRangeWithLength(122866, 1);
-            addRangeWithLength(122405, 1);
-            //addRangeWithLength(139520, 1);
-            // addRangeWithLength(119190, 1);
+            addRangeWithLength(1068, 1);
             
-//        	 addRangeWithLength(139520,1);
-//        	 
-//        	 addRangeWithLength(122866, 265);
-        	 
-        	 
-//        	addRangeWithLength(17673,1);
-            
-//            addRangeWithLength(455404,1);
-//            
-//            addRangeWithLength(455570,1);
-//            
-//            addRangeWithLength(455926,1);
-//
-            
-//            addRangeWithLength(1647603457,1);
+            // addRangeWithLength(1722, 1);
             
             
-            trackEventsWithoutRange();
+            
+            
+//            trackEventsWithoutRange();
             
 //            turnAllOffExceptFor(new DTrace[] {WRITE_BYTES});
         	
@@ -82,11 +67,11 @@ public class DTrace {
 //                PERSISTENT_OWN_LENGTH,
 //                });
             
-            turnAllOffExceptFor(new DTrace[] {
-                GET_SLOT,
-                FILE_FREE,
-                TRANS_COMMIT,
-                });
+//            turnAllOffExceptFor(new DTrace[] {
+//                GET_SLOT,
+//                FILE_FREE,
+//                TRANS_COMMIT,
+//                });
         	
 //          turnAllOffExceptFor(new DTrace[] {BTREE_NODE_COMMIT_OR_ROLLBACK });
 //            turnAllOffExceptFor(new DTrace[] {BTREE_NODE_REMOVE, BTREE_NODE_COMMIT_OR_ROLLBACK YAPMETA_SET_ID});

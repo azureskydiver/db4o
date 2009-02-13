@@ -461,12 +461,13 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			DTrace.READ_ID.log(a_id);
 		}
 
-		Slot slot = null;
-		if(!lastCommitted){
-			slot = ((LocalTransaction) a_ta).getCurrentSlotOfID(a_id);
-		}else{
-			slot = ((LocalTransaction) a_ta).getCommittedSlotOfID(a_id);
-		}
+		Slot slot = lastCommitted ? ((LocalTransaction) a_ta).getCommittedSlotOfID(a_id) :  
+			((LocalTransaction) a_ta).getCurrentSlotOfID(a_id);
+		
+		return readReaderOrWriterBySlot(a_ta, a_id, useReader, slot);
+	}
+
+	ByteArrayBuffer readReaderOrWriterBySlot(Transaction a_ta, int a_id, boolean useReader, Slot slot) {
 		if (slot == null) {
 			return null;
 		}

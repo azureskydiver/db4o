@@ -11,7 +11,7 @@ import db4ounit.extensions.*;
 public class ReAddCascadedDeleteTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
-		new ReAddCascadedDeleteTestCase().runClientServer();
+		new ReAddCascadedDeleteTestCase().runAll();
 	}
     
     public static class Item {
@@ -35,6 +35,7 @@ public class ReAddCascadedDeleteTestCase extends AbstractDb4oTestCase {
     
     protected void configure(Configuration config){
         config.objectClass(Item.class).cascadeOnDelete(true);
+        config.objectClass(Item.class).objectField("_name").indexed(true);
     }
     
     protected void store() {
@@ -55,6 +56,8 @@ public class ReAddCascadedDeleteTestCase extends AbstractDb4oTestCase {
         db().delete(i);
         db().store(i._member);
         db().commit();
+        long id = db().getID(i._member);
+        new FieldIndexAssert(Item.class, "_name").assertSingleEntry(fileSession(), id);
 	}
     
     private Item query(String name){
@@ -64,4 +67,5 @@ public class ReAddCascadedDeleteTestCase extends AbstractDb4oTestCase {
         }
         return (Item) objectSet.next();
     }
+
 }
