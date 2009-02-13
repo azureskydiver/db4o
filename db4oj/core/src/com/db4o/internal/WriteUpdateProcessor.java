@@ -19,14 +19,14 @@ class WriteUpdateProcessor {
 	
 	private final ClassMetadata _clazz;
 	
-	private final int _typeInfo;
+	private final ArrayType _typeInfo;
 	
 	private int _cascade;
 
 	public WriteUpdateProcessor(LocalTransaction localTransaction, 
 			int id, 
 			ClassMetadata clazz, 
-			int typeInfo,
+			ArrayType typeInfo,
 			int cascade) {
 		_localTransaction = localTransaction;
 		_id = id;
