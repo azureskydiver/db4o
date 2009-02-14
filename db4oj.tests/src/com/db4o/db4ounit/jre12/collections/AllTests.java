@@ -22,6 +22,7 @@ public class AllTests extends Db4oTestSuite {
 			ByteArrayAsMapValueTestCase.class,
 			CascadeDeleteCollectionTestCase.class,
 			CascadeDeleteSubClassTestCase.class,
+			CascadeToHashMapTestCase.class,
         	CollectionActivationTestCase.class, 
         	CollectionUuidTest.class,
         	EmbeddedClientObjectContainerJre12TestCase.class,
