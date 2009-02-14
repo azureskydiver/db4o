@@ -44,6 +44,7 @@
 		</copy>		
 		
 		<copy file="${dir.dist.dll}/Db4objects.Db4o.dll" todir="${dir.omn.dist.src}/OM+/bin/Dependencies" overwrite="true"/>
+		<copy file="${dir.dist.dll}/Db4objects.Db4o.CS.dll" todir="${dir.omn.dist.src}/OM+/bin/Dependencies" overwrite="true"/>
 			
 		<updateAssemblyInfo version="${db4o.version.iteration.revision}">
 			<fileset dir="${dir.omn.dist.src}">
