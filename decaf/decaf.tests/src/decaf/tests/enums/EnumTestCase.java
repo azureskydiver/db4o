@@ -14,7 +14,11 @@ public class EnumTestCase extends DecafTestCaseBase {
 	public void testComplexEnum() throws Exception {
 		runResourceTestCase("ComplexEnum");
 	}	
-	
+
+	public void testPublicEnum() throws Exception {
+		runResourceTestCase("PublicEnum");
+	}	
+
 	protected String packagePath() {
 		return "enums";
 	}
