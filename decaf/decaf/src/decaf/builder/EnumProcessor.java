@@ -135,7 +135,9 @@ public class EnumProcessor {
 	private TypeDeclaration newConcreteEnumClass(final EnumDeclaration originalEnum) {
 		final TypeDeclaration enumType = builder().newTypeDeclaration(originalEnum.getName());		
 		enumType.setSuperclassType(builder().newSimpleType("com.db4o.foundation.Enum4"));
-		enumType.modifiers().addAll(originalEnum.modifiers());
+		for (Modifier modifier : (List<Modifier>)originalEnum.modifiers()) {
+			enumType.modifiers().add(clone(modifier));
+		}
 		return enumType;
 	}	
 	
