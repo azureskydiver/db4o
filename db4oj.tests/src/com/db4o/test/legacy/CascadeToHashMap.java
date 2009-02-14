@@ -1,11 +1,12 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.test;
+package com.db4o.test.legacy;
 
 import java.util.*;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.test.*;
 
 /**
  */
@@ -61,6 +62,6 @@ public class CascadeToHashMap {
 		Test.reOpen();
 		
 		Test.deleteAllInstances(this);
-		Test.ensureOccurrences(new Atom(), 1);
+		Test.ensureOccurrences(new Atom(), 2);
 	}
 }
