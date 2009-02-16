@@ -361,38 +361,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
         
         final TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(context, _handler);
-        
-        if(! (Handlers4.isFirstClass(handler))){
-        	incrementOffset(context.buffer());
-            return;
-        }
-
-        if (Handlers4.isClassMetadata(handler)) {
-            context.addId();
-            return;
-        } 
-        
-        LocalObjectContainer container = (LocalObjectContainer) context.container();
-        final SlotFormat slotFormat = context.slotFormat();
-        
-        if(Handlers4.handleAsObject(handler)){
-            // TODO: Code is similar to QCandidate.readArrayCandidates. Try to refactor to one place.
-            int collectionID = context.readInt();
-            ByteArrayBuffer collectionBuffer = container.readReaderByID(context.transaction(), collectionID);
-            ObjectHeader objectHeader = new ObjectHeader(container, collectionBuffer);
-            QueryingReadContext subContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), collectionBuffer, collectionID, context.collector());
-            objectHeader.classMetadata().collectIDs(subContext);
-            return;
-        }
-        
-        final QueryingReadContext queryingReadContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), context.buffer(), 0, context.collector());
-        slotFormat.doWithSlotIndirection(queryingReadContext, handler, new Closure4() {
-            public Object run() {
-                ((FirstClassHandler) handler).collectIDs(queryingReadContext);
-                return null;
-            }
-        });
-            
+        Handlers4.collectIdsInternal(context, handler, linkLength());
     }
 
     void configure(ReflectClass clazz, boolean isPrimitive) {

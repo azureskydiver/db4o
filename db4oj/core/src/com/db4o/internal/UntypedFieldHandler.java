@@ -154,6 +154,26 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         context.seek(savedOffSet);
         return obj;
     }
+
+    @Override
+    public void collectIDs(QueryingReadContext readContext) {
+        InternalReadContext context = (InternalReadContext) readContext;
+        int payloadOffset = context.readInt();
+        if(payloadOffset == 0){
+            return;
+        }
+        int savedOffSet = context.offset();
+        TypeHandler4 typeHandler = readTypeHandler(context, payloadOffset);
+        if(typeHandler == null){
+            context.seek(savedOffSet);
+            return;
+        }
+        seekSecondaryOffset(context, typeHandler);
+        
+        CollectIdContext collectIdContext = new CollectIdContext(readContext.transaction(), readContext.collector(), null, readContext.buffer());
+        Handlers4.collectIdsInternal(collectIdContext, context.container().handlers().correctHandlerVersion(typeHandler, context.handlerVersion()), 0);
+        context.seek(savedOffSet);
+    }
     
     public TypeHandler4 readTypeHandlerRestoreOffset(InternalReadContext context){
         int savedOffset = context.offset();
