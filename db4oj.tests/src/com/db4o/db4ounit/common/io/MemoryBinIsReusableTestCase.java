@@ -31,7 +31,7 @@ public class MemoryBinIsReusableTestCase implements TestCase {
 		byte[] data = origBin.data();
 		Assert.areEqual(data.length, origBin.length());
 		
-		MemoryBin newBin = new MemoryBin(data);
+		MemoryBin newBin = new MemoryBin(data, new DoublingGrowthStrategy());
 		MemoryStorage newStorage = new MemoryStorage();
 		newStorage.bin(BIN_URI, newBin);
 		ObjectContainer newDb = Db4oEmbedded.openFile(config(newStorage), BIN_URI);

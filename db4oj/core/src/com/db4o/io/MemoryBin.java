@@ -5,17 +5,22 @@ import com.db4o.ext.*;
 
 public class MemoryBin implements Bin {
 	
-	private static final int GROW_BY = 10000;
 	private byte[] _bytes;
 	private int _length;
+	private GrowthStrategy _growthStrategy;
 
-	public MemoryBin(byte[] bytes) {
+	public MemoryBin(byte[] bytes, GrowthStrategy growthStrategy) {
 		_bytes = bytes;
 		_length = bytes.length;
+		_growthStrategy = growthStrategy;
     }
 	
 	public long length() {
 		return _length;
+	}
+	
+	public long bufferSize() {
+		return _bytes.length;
 	}
 	
 	public int read(long pos, byte[] bytes, int length) throws Db4oIOException {
@@ -52,11 +57,11 @@ public class MemoryBin implements Bin {
 	 */
 	public void write(long pos, byte[] buffer, int length) throws Db4oIOException {
 		if (pos + length > _bytes.length) {
-			long growBy = GROW_BY;
-			if (pos + length > growBy) {
-				growBy = pos + length;
+			long newSize = _growthStrategy.newSize(_bytes.length);
+			if (pos + length > newSize) {
+				newSize = pos + length;
 			}
-			byte[] temp = new byte[(int)(_bytes.length + growBy)];
+			byte[] temp = new byte[(int)newSize];
 			System.arraycopy(_bytes, 0, temp, 0, _length);
 			_bytes = temp;
 		}
