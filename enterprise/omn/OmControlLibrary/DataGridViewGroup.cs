@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using OManager.BusinessLayer.ObjectExplorer;
+using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
@@ -320,8 +321,9 @@ namespace OMControlLibrary
 				if (dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value != null
 					&& !string.IsNullOrEmpty(dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value.ToString()))
 				{
-					//Validate the entered value
-					bool isValid = Validations.ValidateDataType(QueryResult.FieldTypeForObjectInRow(dbDataGridView.CurrentCell.OwningRow), ref value);
+					//gridQuery.Rows[j].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value
+                    //Validate the entered value
+					bool isValid = Validations.ValidateDataType(FieldTypeForConstraint(dbDataGridView.CurrentCell.OwningRow), ref value);
 
 					if (!isValid)
 					{
@@ -348,7 +350,12 @@ namespace OMControlLibrary
 
 		}
 
-		/// <summary>
+	    private static IType FieldTypeForConstraint(DataGridViewRow constraint)
+	    {
+	        return (IType) constraint.Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value;
+	    }
+
+	    /// <summary>
 		/// Handles the Data Error if occured
 		/// </summary>
 		/// <param name="sender"></param>

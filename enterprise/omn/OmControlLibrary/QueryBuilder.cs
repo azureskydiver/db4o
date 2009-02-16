@@ -9,6 +9,8 @@ using Microsoft.VisualStudio.CommandBars;
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.QueryManager;
+using OManager.DataLayer.Connection;
+using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
@@ -1083,11 +1085,8 @@ namespace OMControlLibrary
 			string conditionColumnName = Helper.GetResourceString(Constants.QUERY_GRID_CONDITION);
 			string valueColumnName = Helper.GetResourceString(Constants.QUERY_GRID_VALUE);
 			string operatorColumnName = Helper.GetResourceString(Constants.QUERY_GRID_OPERATOR);
-			const string classColumnName = Constants.QUERY_GRID_CALSSNAME_HIDDEN;
-			const string fieldTypeColumnName = Constants.QUERY_GRID_FIELDTYPE_HIDDEN;
 
-
-			OMQueryGroup objectManagerQueryGroup = null;
+		    OMQueryGroup objectManagerQueryGroup = null;
 
 			try
 			{
@@ -1103,8 +1102,8 @@ namespace OMControlLibrary
 					{
 						string fieldName = datagridview.Rows[i].Cells[fieldColumnName].Value.ToString();
 						string stringCondition = datagridview.Rows[i].Cells[conditionColumnName].Value.ToString();
-						string className = datagridview.Rows[i].Cells[classColumnName].Value.ToString();
-						string fieldType = datagridview.Rows[i].Cells[fieldTypeColumnName].Value.ToString();
+						string className = datagridview.Rows[i].Cells[Constants.QUERY_GRID_CALSSNAME_HIDDEN].Value.ToString();
+						string fieldType = FieldNameFor(datagridview.Rows[i]);
 
 						//get the value for each expression if value not specified then return null
 						string stringValue;
@@ -1113,8 +1112,7 @@ namespace OMControlLibrary
 						else
 							return null;
 
-						OMQueryClause queryClause = new OMQueryClause(className, fieldName, stringCondition, stringValue, clauseOperator,
-																	  fieldType);
+						OMQueryClause queryClause = new OMQueryClause(className, fieldName, stringCondition, stringValue, clauseOperator, fieldType);
 						objectManagerQueryGroup.AddOMQueryClause(queryClause);
 					}
 				}
@@ -1129,7 +1127,13 @@ namespace OMControlLibrary
 			return objectManagerQueryGroup;
 		}
 
-		/// <summary>
+	    private static string FieldNameFor(DataGridViewRow row)
+	    {
+	        IType fieldType = (IType) row.Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value;
+	        return fieldType.FullName;
+	    }
+
+	    /// <summary>
 		/// Initialise the Attribute DataGrid
 		/// </summary>
 		private void InitializeAttributesDataGrid()
@@ -1426,22 +1430,23 @@ namespace OMControlLibrary
 							dbDataGridView gridQuery = group.DataGridViewQuery;
 							gridQuery.Rows.Add(1);
 
-							//Fill the Conditions depending upon the field name
-							gridQuery.FillConditionsCombobox(omQueryClause.FieldType, j);
+                            IType fieldType = Db4oClient.TypeResolver.Resolve(omQueryClause.FieldType);
+                            
+                            //Fill the Conditions depending upon the field name
+							gridQuery.FillConditionsCombobox(fieldType, j);
 							gridQuery.FillOperatorComboBox();
 
 							gridQuery.Rows[j].Cells[Helper.GetResourceString(Constants.QUERY_GRID_FIELD)].Value = omQueryClause.Fieldname;
 							gridQuery.Rows[j].Cells[Helper.GetResourceString(Constants.QUERY_GRID_CONDITION)].Value = omQueryClause.Operator;
 							gridQuery.Rows[j].Cells[Helper.GetResourceString(Constants.QUERY_GRID_VALUE)].Value = omQueryClause.Value;
-							gridQuery.Rows[j].Cells[Helper.GetResourceString(Constants.QUERY_GRID_OPERATOR)].Value =
-								omQueryClause.ClauseLogicalOperator.ToString();
+							gridQuery.Rows[j].Cells[Helper.GetResourceString(Constants.QUERY_GRID_OPERATOR)].Value = omQueryClause.ClauseLogicalOperator.ToString();
 
 							//Make the operator cell readonly for other than 1st Rows
 							if (j > 0)
 								gridQuery.Rows[j].Cells[Helper.GetResourceString(Constants.QUERY_GRID_OPERATOR)].ReadOnly = true;
 
 							gridQuery.Rows[j].Cells[Constants.QUERY_GRID_CALSSNAME_HIDDEN].Value = omQueryClause.Classname;
-							gridQuery.Rows[j].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value = omQueryClause.FieldType;
+						    gridQuery.Rows[j].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value = fieldType;
 						}
 
 						//Set the logical operator for Query Group

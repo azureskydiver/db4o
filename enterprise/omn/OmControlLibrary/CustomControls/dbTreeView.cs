@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.UIHelper;
+using OManager.DataLayer.Connection;
+using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 
 namespace OMControlLibrary.Common
