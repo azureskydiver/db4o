@@ -101,7 +101,9 @@
     <Compile Include="BusinessLayer\QueryManager\OMQuery.cs" />
     <Compile Include="DataLayer\QueryParser\RenderHierarchy.cs" />
     <Compile Include="DataLayer\QueryParser\RunQuery.cs" />
+    <Compile Include="DataLayer\Reflection\IType.cs" />
     <Compile Include="DataLayer\Reflection\Reflection.cs" />
+    <Compile Include="DataLayer\Reflection\TypeImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resource.Designer.cs">
       <AutoGen>True</AutoGen>

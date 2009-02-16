@@ -1,5 +1,6 @@
 ﻿/* Copyright (C) 2004 - 2009  db4objects Inc.  http://www.db4o.com */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Db4objects.Db4o.Reflect.Net;
@@ -33,11 +34,13 @@ namespace OMNUnitTest
 			Assert.IsTrue(Resolve(typeof(int)).IsEditable);
 			Assert.IsTrue(Resolve(typeof(string)).IsEditable);
 			Assert.IsTrue(Resolve(typeof(bool)).IsEditable);
+            Assert.IsTrue(Resolve(typeof(bool?)).IsEditable);
 
 			Assert.IsFalse(Resolve(typeof(List<int>)).IsEditable);
 			Assert.IsFalse(Resolve(typeof(ReflectionTestCase)).IsEditable);
 			Assert.IsFalse(Resolve(typeof(object)).IsEditable);
-		}
+            Assert.IsFalse(Resolve(typeof(SimpleStruct?)).IsEditable);
+        }
 
 		[Test]
 		public void TestIsPrimitive()
@@ -79,7 +82,9 @@ namespace OMNUnitTest
 		public void TestIsNullable()
 		{
 			Assert.IsTrue(Resolve(typeof(int?)).IsNullable);
-			//Assert.IsTrue(Resolve(typeof(EnumTest?)).IsNullable);
+
+			//TODO: Only nullable primitive types are preserved as nullable.
+            //Assert.IsTrue(Resolve(typeof(EnumTest?)).IsNullable);
 			//Assert.IsTrue(Resolve(typeof(DateTime?)).IsNullable);
 
 			Assert.IsFalse(Resolve(FakeNullableType()).IsNullable);
@@ -135,7 +140,43 @@ namespace OMNUnitTest
 			Assert.IsFalse(Resolve(typeof(SimpleStruct)).HasIdentity);
 		}
 
-		private static string UnversionedNameFor<T>()
+        [Test]
+        public void TestIsSameAs()
+        {
+            AssertIsSameAs(typeof(bool));
+            AssertIsSameAs(typeof(DateTime));
+            AssertIsSameAs(typeof(DateTime[]));
+            AssertIsSameAs(typeof(ReflectionTestCase));
+            AssertIsSameAs(typeof(ReflectionTestCase[]));
+            AssertIsSameAs(typeof(ReflectionTestCase[,]));
+            AssertIsSameAs(typeof(ReflectionTestCase[][]));
+            AssertIsSameAs(typeof(Action<int>));
+            
+            //TODO: Nullables are resolved to "primitive" types?
+            //AssertIsSameAs(typeof(DateTime?));
+            //AssertIsSameAs(typeof(SimpleStruct?));
+        }
+
+        [Test]
+        public void TestUnderlyingType()
+        {
+            Assert.AreEqual(Resolve(typeof(int)), Resolve(typeof(int?)).UnderlyingType);
+            Assert.AreEqual(Resolve(typeof(bool)), Resolve(typeof(bool?)).UnderlyingType);
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TestNonNullableUnderlyingType()
+        {
+            Assert.AreEqual(Resolve(typeof(int)), Resolve(typeof(int[])).UnderlyingType);
+        }
+
+	    private void AssertIsSameAs(Type type)
+	    {
+	        Assert.IsTrue(Resolve(type).IsSameAs(type));
+	    }
+
+	    private static string UnversionedNameFor<T>()
 		{
 			return TypeReference.FromType(typeof(T)).GetUnversionedName();
 		}

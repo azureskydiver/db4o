@@ -66,7 +66,7 @@ namespace OManager.DataLayer.ObjectsModification
             		return null;
 
             	IType fieldType = Db4oClient.TypeResolver.Resolve(rfield.GetFieldType());
-            	if (!fieldType.IsPrimitive)
+            	if (!fieldType.IsEditable)
             	{
 					if (!fieldType.IsCollection && !fieldType.IsArray)
             			return rfield.Get(subObject);

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.ObjectExplorer;
+using OManager.DataLayer.Connection;
 using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
@@ -601,67 +602,9 @@ namespace OMControlLibrary.Common
 			try
 			{
 				Rows.Clear();
-
-				for (int listCount = 0; listCount < resultList.Count; listCount++)
-				{
-					Hashtable hTable = resultList[listCount];
-					DataGridViewRow newRow = new DataGridViewRow();
-
-					Rows.Add(newRow);
-					Rows[listCount].Cells[COLUMN_NO_NAME].Value = index++;
-					Rows[listCount].Cells[COLUMN_NO_NAME].ReadOnly = true;
-
-					// For checking if row is edited or not
-					Rows[listCount].Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value = false;
-
-					foreach (DictionaryEntry entry in hTable)
-					{
-						if (!entry.Key.ToString().Equals(BusinessConstants.DB4OBJECTS_REF))
-						{
-						    IType fieldType = null;
-						    if (hashAttributes.Count == 0)
-						    {
-						        fieldType = Helper.DbInteraction.GetFieldType(className, entry.Key.ToString());
-						    }
-						    else
-						    {
-						        int intIndex = entry.Key.ToString().LastIndexOf('.');
-						        string strAttribName = entry.Key.ToString().Substring(intIndex + 1);
-						        string clsName = Columns[entry.Key.ToString()].Tag.ToString();
-						        if (clsName != null && strAttribName != null)
-						        {
-						            fieldType = Helper.DbInteraction.GetFieldType(clsName, strAttribName);
-						        }
-						    }
-
-						    if (fieldType == null)
-						        continue;
-						    
-                            if (fieldType.IsPrimitive)
-						    {
-						        if (entry.Value != null)
-						        {
-						            Rows[listCount].Cells[entry.Key.ToString()].Value = fieldType.Cast(entry.Value);
-						            Rows[listCount].Cells[entry.Key.ToString()].Tag = fieldType;
-						            Rows[listCount].Cells[entry.Key.ToString()].ReadOnly = false;
-						        }
-						        else
-						        {
-						            Rows[listCount].Cells[entry.Key.ToString()].Value = VALUE_NULL;
-						            Rows[listCount].Cells[entry.Key.ToString()].ReadOnly = true;
-						        }
-						    }
-						    else
-						    {
-						        Rows[listCount].Cells[entry.Key.ToString()].Value = entry.Value != null
-						                                                                ? entry.Value.ToString()
-						                                                                : VALUE_NULL;
-						        Rows[listCount].Cells[entry.Key.ToString()].ReadOnly = true;
-						    }
-						}
-						else
-							Rows[listCount].Tag = entry.Value;
-					}
+			    foreach (Hashtable fields in resultList)
+			    {
+				    AddFields(fields, className, index++, hashAttributes);
 				}
 			}
 			catch (Exception oEx)
@@ -670,7 +613,81 @@ namespace OMControlLibrary.Common
 			}
 		}
 
-		#endregion
+	    private void AddFields(Hashtable fields, string containingClass, int index, Hashtable hashAttributes)
+	    {
+	        DataGridViewRow row = NewRow(index);
+	        foreach (DictionaryEntry entry in fields)
+	        {
+	            string fieldName = entry.Key.ToString();
+	            if (!fieldName.Equals(BusinessConstants.DB4OBJECTS_REF))
+	            {
+	                IType fieldType = FieldTypeFor(containingClass, fieldName, hashAttributes);
+	                if (fieldType == null)
+	                    continue;
+
+	                DataGridViewCell cell = row.Cells[fieldName];
+	                cell.Tag = fieldType;
+
+	                cell.ReadOnly = !fieldType.IsEditable;
+	                if (fieldType.IsEditable)
+	                {
+	                    cell.Value = CastedValueOrNullConstant(entry.Value, fieldType);
+	                }
+	                else
+	                {
+	                    cell.Value = entry.Value != null 
+	                                     ? entry.Value.ToString()
+	                                     : VALUE_NULL;
+	                }
+	            }
+	            else
+	                row.Tag = entry.Value;
+	        }
+	    }
+
+	    private IType FieldTypeFor(string className, string fieldName, Hashtable hashAttributes)
+	    {
+	        IType fieldType = null;
+	        if (hashAttributes.Count == 0)
+	        {
+	            fieldType = Helper.DbInteraction.GetFieldType(className, fieldName);
+	        }
+	        else
+	        {
+	            int intIndex = fieldName.LastIndexOf('.');
+	            string strAttribName = fieldName.Substring(intIndex + 1);
+	            string clsName = Columns[fieldName].Tag.ToString();
+	            if (clsName != null && strAttribName != null)
+	            {
+	                fieldType = Helper.DbInteraction.GetFieldType(clsName, strAttribName);
+	            }
+	        }
+	        return fieldType;
+	    }
+
+	    private DataGridViewRow NewRow(int index)
+	    {
+	        int rowIndex = Rows.Add(1);
+
+	        DataGridViewRow row = Rows[rowIndex];
+
+	        row.Cells[COLUMN_NO_NAME].Value = index;
+            row.Cells[COLUMN_NO_NAME].ReadOnly = true;
+            
+            // For checking if row is edited or not
+            row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value = false;
+
+	        return row;
+	    }
+
+	    private static object CastedValueOrNullConstant(object value, IType fieldType)
+	    {
+	        return value != null  && VALUE_NULL != (string) value
+	                   ? fieldType.Cast(value) 
+	                   : VALUE_NULL;
+	    }
+
+	    #endregion
 
 		#region Listing Helper Class
 
@@ -1195,19 +1212,23 @@ namespace OMControlLibrary.Common
 
 		#region Query Helper Methods
 
-		internal void FillConditionsCombobox(string typeofnode, int selectedrowindex)
+		internal void FillConditionsCombobox(IType type, int selectedrowindex)
 		{
 			try
 			{
-				QueryHelper qHelper = new QueryHelper(typeofnode);
-				string[] conditionList = qHelper.GetConditions();
+                string typeName = type.IsNullable 
+                                            ? type.UnderlyingType.DisplayName 
+                                            : type.DisplayName;
+
+			    string[] conditionList = QueryHelper.ConditionsFor(typeName);
+
 				string conditionColumnName = Helper.GetResourceString(Constants.QUERY_GRID_CONDITION);
 				DataGridViewComboBoxCell conditionColumn = (DataGridViewComboBoxCell)Rows[selectedrowindex].Cells[conditionColumnName];
 				conditionColumn.OwningColumn.MinimumWidth = 40;
 				conditionColumn.MaxDropDownItems = conditionList.Length;
 				conditionColumn.Items.Clear();
 				conditionColumn.Items.AddRange(conditionList);
-				Rows[selectedrowindex].Cells[conditionColumnName].Value = conditionList.GetValue(0);
+				Rows[selectedrowindex].Cells[conditionColumnName].Value = conditionList[0];
 			}
 			catch (Exception oEx)
 			{
@@ -1245,11 +1266,8 @@ namespace OMControlLibrary.Common
 			string className = string.Empty;
 			try
 			{
-				//Get the type of sselected item from tree view
-				string typeOfNode = Helper.GetTypeOfObject(tempTreeNode.Tag.ToString());
-
-				//If selected item is not a primitive type than dont allow to drage item
-				if (!Helper.IsPrimitive(typeOfNode))
+			    IType itemType = Db4oClient.TypeResolver.Resolve(tempTreeNode.Tag.ToString());
+				if (!itemType.IsEditable)
 					return false;
 
 				if (tempTreeNode.Parent != null)
@@ -1268,12 +1286,10 @@ namespace OMControlLibrary.Common
 
 				//Chech whether dragged item is from same class or not,
 				//if not dont allow to drop that item in query builder
-				if (Helper.HashTableBaseClass.Count > 0)
-					if (!Helper.HashTableBaseClass.Contains(Helper.BaseClass))
+				if (Helper.HashTableBaseClass.Count > 0 && !Helper.HashTableBaseClass.Contains(Helper.BaseClass))
 						return false;
 
-				//add a new row to Query Grid
-				AddRowsToGrid(typeOfNode, className, fullpath);
+				AddRowsToGrid(itemType, className, fullpath);
 			}
 			catch (Exception oEx)
 			{
@@ -1307,8 +1323,8 @@ namespace OMControlLibrary.Common
 					IDictionaryEnumerator eNum = storedfields.GetEnumerator();
 					while (eNum.MoveNext())
 					{
-						string typeOfNode = Helper.GetTypeOfObject(eNum.Value.ToString());
-						if (!Helper.IsPrimitive(typeOfNode))
+					    IType itemType = Db4oClient.TypeResolver.Resolve(eNum.Value.ToString());
+						if (!itemType.IsPrimitive)
 							continue;
 							
 						if (queryBuilder.QueryGroupCount == 0 && Rows.Count == 0 && queryBuilder.AttributeCount == 0)
@@ -1319,10 +1335,9 @@ namespace OMControlLibrary.Common
 						//Chech whether dragged item is from same class or not,
 						//if not dont allow to drop that item in query builder
 						string parentName = Helper.FormulateParentName(tempTreeNode, eNum);
-						AddRowsToGrid(typeOfNode, className, parentName);
+						AddRowsToGrid(itemType, className, parentName);
 					}
 				}
-
 			}
 			catch (Exception oEx)
 			{
@@ -1333,11 +1348,7 @@ namespace OMControlLibrary.Common
 			return Rows.Count > 0;
 		}
 
-
-
-
-
-		private void AddRowsToGrid(string typeOfNode, string className, string parentName)
+		private void AddRowsToGrid(IType type, string className, string parentName)
 		{
 			try
 			{
@@ -1345,24 +1356,23 @@ namespace OMControlLibrary.Common
 				int index = Rows.Count - 1;
 				Rows[index].Cells[0].Value = parentName;
 				Rows[index].Cells[Constants.QUERY_GRID_CALSSNAME_HIDDEN].Value = className;
-				Rows[index].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value = typeOfNode;
-				if (typeOfNode == BusinessConstants.BOOLEAN)
+				Rows[index].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value = type;
+				if (type.IsSameAs(typeof(Boolean)))
 				{
 					Rows[index].Cells[2].Value = "True";
 				}
-				if (typeOfNode == BusinessConstants.DATETIME)
+				if (type.IsSameAs(typeof(DateTime)))
 				{
 					Rows[index].Cells[2].Value = DateTime.Now.ToString();
 				}
+
 				ClearSelection();
 				Rows[index].Cells[0].Selected = true;
-
 
 				if (!Helper.HashTableBaseClass.Contains(Helper.BaseClass))
 					Helper.HashTableBaseClass.Add(Helper.BaseClass, string.Empty);
 
-				//Fill the Conditions depending upon the field name
-				FillConditionsCombobox(typeOfNode, index);
+				FillConditionsCombobox(type, index);
 
 				//Select the Default operator for Query
 				Rows[index].Cells[3].Value = CommonValues.LogicalOperators.AND.ToString();
@@ -1379,14 +1389,10 @@ namespace OMControlLibrary.Common
 					Rows[index].Cells[3].Value = CommonValues.LogicalOperators.AND.ToString();
 				}
 			}
-
 			catch (Exception ex)
 			{
-
 				LoggingHelper.ShowMessage(ex);
-
 			}
-
 		}
 		/// <summary>
 		/// dbDataGridViewEventArgs : For handling all  custom events of AIDataGridView

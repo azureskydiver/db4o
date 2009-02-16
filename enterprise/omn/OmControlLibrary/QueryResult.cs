@@ -315,8 +315,7 @@ namespace OMControlLibrary
 
 				dbInteraction db = new dbInteraction();
 			    IType fieldType = db.GetFieldType(cell.OwningColumn.Tag.ToString(), cell.OwningColumn.HeaderText);
-
-			    if (!fieldType.IsEditable || HasNullValue(cell))
+                if (!fieldType.IsEditable)
 				{
 					e.Cancel = true;
 					return;
@@ -374,7 +373,11 @@ namespace OMControlLibrary
 							return;
 						}
 
-						bool activate = IsObjectInMasterViewEdited(masterView.CurrentRow);
+						//TODO: we should either consider all current row object's subobjects
+						//      or try to get rid with this dependency (Activating/Refreshing)
+                        //      otherwise we will set activate to false which causes
+                        //      the object (and all subjobjects) to be refreshed.
+                        bool activate = IsObjectInMasterViewEdited(masterView.CurrentRow);
 						treeview = Helper.DbInteraction.GetObjectHierarchy(row.Tag, ClassName, activate);
 						treeview.Dock = DockStyle.Fill;
 
