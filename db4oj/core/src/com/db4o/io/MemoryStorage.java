@@ -13,7 +13,16 @@ import com.db4o.ext.*;
 public class MemoryStorage implements Storage {
 
 	private final Map<String, MemoryBin> _storages = new HashMap<String, MemoryBin>();
+	private final GrowthStrategy _growthStrategy;
 
+	public MemoryStorage() {
+		this(new DoublingGrowthStrategy());
+	}
+
+	public MemoryStorage(GrowthStrategy growthStrategy) {
+		_growthStrategy = growthStrategy;
+	}
+	
 	/**
 	 * returns true if a MemoryBin with the given URI name already exists
 	 * in this Storage.
@@ -49,7 +58,7 @@ public class MemoryStorage implements Storage {
 		if (null != storage) {
 			return storage;
 		}
-		final MemoryBin newStorage = new MemoryBin(new byte[(int)config.initialLength()]);
+		final MemoryBin newStorage = new MemoryBin(new byte[(int)config.initialLength()], _growthStrategy);
 		_storages.put(config.uri(), newStorage);
 		return newStorage;
     }
