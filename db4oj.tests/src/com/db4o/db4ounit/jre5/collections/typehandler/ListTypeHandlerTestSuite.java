@@ -42,7 +42,7 @@ public class ListTypeHandlerTestSuite extends FixtureBasedTestSuite implements D
 		};
 	}
 
-	public static class ListTypeHandlerTestUnit extends TypeHandlerUnitTest {
+	public static class ListTypeHandlerTestUnit extends CollectionTypeHandlerUnitTest {
 		
 		protected AbstractItemFactory itemFactory() {
 			return (AbstractItemFactory) ListTypeHandlerTestVariables.LIST_IMPLEMENTATION.value();

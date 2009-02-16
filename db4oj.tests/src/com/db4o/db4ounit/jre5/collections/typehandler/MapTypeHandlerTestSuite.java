@@ -32,7 +32,7 @@ public class MapTypeHandlerTestSuite extends FixtureBasedTestSuite implements Db
 		};
 	}
 	
-	public static class MapTypeHandlerUnitTestCase extends TypeHandlerUnitTest {
+	public static class MapTypeHandlerUnitTestCase extends CollectionTypeHandlerUnitTest {
 		
 		protected void fillItem(Object item) {
 			fillMapItem(item);

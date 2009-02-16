@@ -9,7 +9,7 @@ import db4ounit.extensions.*;
 /**
  */
 @decaf.Ignore
-public abstract class TypeHandlerUnitTest extends TypeHandlerTestUnitBase {
+public abstract class CollectionTypeHandlerUnitTest extends TypeHandlerTestUnitBase {
 
 	protected abstract void assertCompareItems(Object element, boolean successful);
 
@@ -79,11 +79,10 @@ public abstract class TypeHandlerUnitTest extends TypeHandlerTestUnitBase {
 		assertQueryResult(q, true);
 	}
 
-	// TODO
-	public void _testSubQuery() {
+	public void testSubQuery() {
 		Query q = newQuery(itemFactory().itemClass());
 		Query qq = q.descend(itemFactory().fieldName());
-		Constraint constraint = qq.constrain(elements()[0]);
+		qq.constrain(elements()[0]);
 		ObjectSet set = qq.execute();
     	Assert.areEqual(1, set.size());
     	assertPlainContent(set.next());

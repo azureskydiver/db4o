@@ -14,11 +14,11 @@ public class CollectIdContext extends ObjectHeaderContext {
     
     private final IdObjectCollector _collector;
     
-    private CollectIdContext(Transaction transaction, IdObjectCollector collector, ObjectHeader oh, ReadBuffer buffer) {
+    public CollectIdContext(Transaction transaction, IdObjectCollector collector, ObjectHeader oh, ReadBuffer buffer) {
     	super(transaction, buffer, oh);
     	_collector = collector;
     }
-    
+
     public CollectIdContext(Transaction transaction, ObjectHeader oh, ReadBuffer buffer) {
         this(transaction, new IdObjectCollector(), oh, buffer);
     }
