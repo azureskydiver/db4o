@@ -44,7 +44,6 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 	private String targetDir;	
 	
 	public void setUp() throws Exception {
-		deleteFiles();
 		srcDir = IO.mkTempDir("tafileinstr/source");
 		targetDir = IO.mkTempDir("tafileinstr/target");
 		copyClassFilesTo(
@@ -135,10 +134,17 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 	}
 
 	private void deleteFiles() {
-		Directory4.delete(srcDir, true);
-		Directory4.delete(targetDir, true);
+		deleteDirectory(srcDir);
+		deleteDirectory(targetDir);
 	}
 
+	private void deleteDirectory(String dirPath) {
+		if(!File4.exists(dirPath)) {
+			return;
+		}
+		Directory4.delete(dirPath, true);
+	}
+	
 	private void copyClassFilesTo(final Class[] classes, final String toDir)
 			throws IOException {
 		for (int i = 0; i < classes.length; i++) {
