@@ -22,7 +22,7 @@ public class JavaServices {
     
 	public static String javac(String srcFile) throws IOException, InterruptedException
 	{
-			String[] classPath =
+			String[] javacArgs =
 				new String[]{
 					"-classpath",
 					IOServices.joinArgs(
@@ -33,9 +33,11 @@ public class JavaServices {
 	        						db4oJarPath("-optional"),
 	        						db4oJarPath("-cs"),
 	        				}, runningOnWindows()),
+	        		"-source", "1.5",
+	        		"-target", "1.5",
 	        		srcFile};
 
-			return IOServices.exec(WorkspaceServices.javacPath(),classPath);
+			return IOServices.exec(WorkspaceServices.javacPath(),javacArgs);
 	}
 	
 	private static void assertJarExists(String path){
