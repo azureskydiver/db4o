@@ -50,7 +50,7 @@ public class Iterator4Assert {
 				unexpected(current);
 			}
 		}
-		Assert.isTrue(allExpected.isEmpty(), allExpected.toString());
+		Assert.isTrue(allExpected.isEmpty(), "Still missing: " + allExpected.toString());
 	}
 
 	public static void areInstanceOf(Class expectedType, final Iterable4 values) {
