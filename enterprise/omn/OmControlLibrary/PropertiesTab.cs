@@ -1,12 +1,13 @@
 using System;
-using System.Windows.Forms;
-using OMControlLibrary.Common;
 using System.Collections;
-using OManager.DataLayer.PropertyTable;
+using System.Windows.Forms;
+using EnvDTE;
 using OManager.BusinessLayer.Login;
+using OManager.DataLayer.PropertyTable;
+using OMControlLibrary.Common;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
-using EnvDTE;
+using Constants=OMControlLibrary.Common.Constants;
 
 namespace OMControlLibrary
 {
@@ -94,7 +95,7 @@ namespace OMControlLibrary
 				dbGridViewProperties.Rows.Clear();
 				dbGridViewProperties.Columns.Clear();
 
-				dbGridViewProperties.PopulateDisplayGrid(Common.Constants.VIEW_DBPROPERTIES, null);
+				dbGridViewProperties.PopulateDisplayGrid(Constants.VIEW_DBPROPERTIES, null);
 
 				dbGridViewProperties.Rows.Add(1);
 				if (Helper.DbInteraction.GetTotalDbSize() == -1)
@@ -103,7 +104,7 @@ namespace OMControlLibrary
 				}
 				else
 				{
-					dbGridViewProperties.Rows[0].Cells[0].Value = Helper.DbInteraction.GetTotalDbSize().ToString() + " bytes";
+					dbGridViewProperties.Rows[0].Cells[0].Value = Helper.DbInteraction.GetTotalDbSize() + " bytes";
 				}
 
 				dbGridViewProperties.Rows[0].Cells[1].Value = Helper.DbInteraction.NoOfClassesInDb().ToString();
@@ -113,11 +114,11 @@ namespace OMControlLibrary
 				}
 				else
 				{
-					dbGridViewProperties.Rows[0].Cells[2].Value = Helper.DbInteraction.GetFreeSizeOfDb().ToString() + " bytes";
+					dbGridViewProperties.Rows[0].Cells[2].Value = Helper.DbInteraction.GetFreeSizeOfDb() + " bytes";
 				}
 
-				if (!this.panelDatabaseProperties.Controls.Contains(dbGridViewProperties))
-					this.panelDatabaseProperties.Controls.Add(dbGridViewProperties);
+				if (!panelDatabaseProperties.Controls.Contains(dbGridViewProperties))
+					panelDatabaseProperties.Controls.Add(dbGridViewProperties);
 
 				OMETrace.WriteFunctionEnd();
 			}
@@ -138,18 +139,16 @@ namespace OMControlLibrary
 					if (Helper.DbInteraction.GetCurrentRecentConnection() != null)
 						if (Helper.DbInteraction.GetCurrentRecentConnection().ConnParam != null)
 						{
-							if (Helper.DbInteraction.GetCurrentRecentConnection().ConnParam.Host != null)
-								buttonSaveIndex.Enabled = false;
-							else
-								buttonSaveIndex.Enabled = true;
-							labelNoOfObjects.Text = "Number of objects : " + Helper.DbInteraction.NoOfObjectsforAClass(Helper.ClassName).ToString();
-							dbGridViewProperties.Size = this.Size;
+							buttonSaveIndex.Enabled = Helper.DbInteraction.GetCurrentRecentConnection().ConnParam.Host == null;
+
+							labelNoOfObjects.Text = "Number of objects : " + Helper.DbInteraction.NoOfObjectsforAClass(Helper.ClassName);
+							dbGridViewProperties.Size = Size;
 							dbGridViewProperties.Rows.Clear();
 							dbGridViewProperties.Columns.Clear();
 
 							ArrayList fieldPropertiesList = GetFieldsForAllClass();
 							dbGridViewProperties.ReadOnly = false;
-							dbGridViewProperties.PopulateDisplayGrid(Common.Constants.VIEW_CLASSPOPERTY
+							dbGridViewProperties.PopulateDisplayGrid(Constants.VIEW_CLASSPOPERTY
 								, fieldPropertiesList);
 
 							//Enable Disable IsIndexed Checkboxes
@@ -169,7 +168,7 @@ namespace OMControlLibrary
 							}
 
 							if (!panelForClassPropTable.Controls.Contains(dbGridViewProperties))
-								this.panelForClassPropTable.Controls.Add(dbGridViewProperties);
+								panelForClassPropTable.Controls.Add(dbGridViewProperties);
 							dbGridViewProperties.Dock = DockStyle.Fill;
 						}
 				}
@@ -184,7 +183,7 @@ namespace OMControlLibrary
 			}
 		}
 
-		private ArrayList GetFieldsForAllClass()
+		private static ArrayList GetFieldsForAllClass()
 		{
 			ClassPropertiesTable classPropTable = null;
 
@@ -216,10 +215,10 @@ namespace OMControlLibrary
 					dbGridViewProperties.Columns.Clear();
 					dbGridViewProperties.Size = panelDatabaseProperties.Size;
 
-					dbGridViewProperties.PopulateDisplayGrid(Common.Constants.VIEW_OBJECTPROPERTIES, objectProperties);
+					dbGridViewProperties.PopulateDisplayGrid(Constants.VIEW_OBJECTPROPERTIES, objectProperties);
 
 					if (!panelObjectProperties.Controls.Contains(dbGridViewProperties))
-						this.panelObjectProperties.Controls.Add(dbGridViewProperties);
+						panelObjectProperties.Controls.Add(dbGridViewProperties);
 
 					dbGridViewProperties.Refresh();
 				}
@@ -240,11 +239,11 @@ namespace OMControlLibrary
 			try
 			{
 				if (dbGridViewProperties != null)
-					this.dbGridViewProperties.Size = this.Size;
+					dbGridViewProperties.Size = Size;
 				if (panelDataGrid != null)
 				{
-					this.panelDataGrid.Height = this.Height - tableLayoutPanelClassProp.Height;
-					this.panelDataGrid.Width = this.Width;
+					panelDataGrid.Height = Height - tableLayoutPanelClassProp.Height;
+					panelDataGrid.Width = Width;
 				}
 			}
 			catch (Exception oEx)
@@ -310,23 +309,23 @@ namespace OMControlLibrary
 			{
 				m_selectedObject = selectedObject;
 
-				if (tabItemDatabaseProperties.Visible == true &&
+				if (tabItemDatabaseProperties.Visible &&
 					tabStripProperties.SelectedItem.Equals(tabItemDatabaseProperties))
 				{
 					DisplayDatabaseProperties();
 				}
-				else if (tabItemClassProperties.Visible == true &&
+				else if (tabItemClassProperties.Visible &&
 					tabStripProperties.SelectedItem.Equals(tabItemClassProperties))
 				{
 					DisplayClassProperties();
 				}
-				else if (tabItemObjectProperties.Visible == true &&
+				else if (tabItemObjectProperties.Visible &&
 					tabStripProperties.SelectedItem.Equals(tabItemObjectProperties))
 				{
 					DisplayObjectProperties();
 				}
 				else
-					tabStripProperties.SelectedItem = (OMETabStripItem)tabStripProperties.Items[0];
+					tabStripProperties.SelectedItem = tabStripProperties.Items[0];
 
 				Helper.Tab_index = Convert.ToInt32(tabStripProperties.SelectedItem.Tag.ToString());
 			}
@@ -352,40 +351,30 @@ namespace OMControlLibrary
 					bool boolValue = Convert.ToBoolean(row.Cells[2].Value);
 					saveIndexInstance.Fieldname.Add(row.Cells[0].Value.ToString());
 					saveIndexInstance.Indexed.Add(boolValue);
-
 				}
+
 				foreach (Window w in ApplicationObject.ToolWindows.DTE.Windows)
 				{
 					if (Helper.HashClassGUID != null)
 					{
 						IDictionaryEnumerator eNum = Helper.HashClassGUID.GetEnumerator();
-						if (eNum != null)
+						while (eNum.MoveNext())
 						{
-							while (eNum.MoveNext())
+							string winId = w.ObjectKind.ToLower();
+							string enumwinId = eNum.Value.ToString().ToLower();
+							if (winId == enumwinId)
 							{
-								string winId = w.ObjectKind.ToLower();
-								string enumwinId = eNum.Value.ToString().ToLower();
-								if (winId == enumwinId)
-								{
-									w.Close(vsSaveChanges.vsSaveChangesNo);
-									break;
-								}
+								w.Close(vsSaveChanges.vsSaveChangesNo);
+								break;
 							}
-
 						}
 					}
 				}
-				// 
+				
 				ConnParams conparam = Helper.DbInteraction.GetCurrentRecentConnection().ConnParam;
 				Helper.DbInteraction.CloseCurrDb();
 				saveIndexInstance.SaveIndex();
-				//string clsName = Helper.ClassName;
 
-				//foreach (DataGridViewRow row in dbGridViewProperties.Rows)
-				//{
-				//    bool boolValue = Convert.ToBoolean(row.Cells[2].Value);
-				//    Helper.DbInteraction.SetIndexedConfiguration(row.Cells[0].Value.ToString(), clsName, boolValue);
-				//}
 				RecentQueries currRecentConnection = new RecentQueries(conparam);
 				RecentQueries tempRc = currRecentConnection.ChkIfRecentConnIsInDb();
 				if (tempRc != null)
@@ -396,16 +385,14 @@ namespace OMControlLibrary
 
 				if (ObjectBrowser.Instance.ToolStripButtonAssemblyView.Checked)
 					ObjectBrowser.Instance.DbtreeviewObject.FindNSelectNode(ObjectBrowser.Instance.DbAssemblyTreeView.Nodes[0], saveIndexInstance.Classname, ObjectBrowser.Instance.DbAssemblyTreeView);
-
 				else
 					ObjectBrowser.Instance.DbtreeviewObject.FindNSelectNode(ObjectBrowser.Instance.DbtreeviewObject.Nodes[0], saveIndexInstance.Classname, ObjectBrowser.Instance.DbtreeviewObject);
 
 				tabStripProperties.SelectedItem = tabItemClassProperties;
-				MessageBox.Show("Index Saved Successfully!", Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.OK);
+				MessageBox.Show("Index Saved Successfully!", Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.OK);
 			}
 			catch (Exception oEx)
 			{
-
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
@@ -417,7 +404,7 @@ namespace OMControlLibrary
 			{
 				if (ListofModifiedObjects.Instance.Count > 0)
 				{
-					DialogResult dialogRes = MessageBox.Show("This will close all the Query result windows. Do you want to continue?", Helper.GetResourceString(OMControlLibrary.Common.Constants.PRODUCT_CAPTION), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+					DialogResult dialogRes = MessageBox.Show("This will close all the Query result windows. Do you want to continue?", Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 					if (dialogRes == DialogResult.Yes)
 					{
 						SaveIndex();

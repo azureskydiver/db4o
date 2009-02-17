@@ -21,7 +21,7 @@ namespace OManager.BusinessLayer.UIHelper
 {
 	public class dbInteraction
 	{
-		DbInformation  dbInfo;
+		readonly DbInformation  dbInfo;
 		readonly RenderHierarchy clsRenderHierarchy;      
 		ModifyObjects modObj;
 		public RunQuery runQuery;
@@ -66,13 +66,12 @@ namespace OManager.BusinessLayer.UIHelper
 			modObj.RefreshObjects(level);
 		}
 
-		public void UpdateCollection(IList objList, IList<int> offsetList, IList<string> names, IList<IType> type, object value)
+		public void UpdateCollection(IList objList, IList<int> offsetList, IList<string> names, IList<IType> types, object value)
 		{
 			try
 			{
 				ModifyCollections modColl = new ModifyCollections();
-
-				modColl.EditCollections(objList, offsetList, names, type, value);
+				modColl.EditCollections(objList, offsetList, names, types, value);
 			}
 			catch (Exception oEx)
 			{
@@ -413,14 +412,13 @@ namespace OManager.BusinessLayer.UIHelper
 		public  void ReopenCurrDb()
 		{
 			string t=Db4oClient.Client.ToString();
-           
 		}
 
 		public RecentQueries GetCurrentRecentConnection()
 		{
-			//Db4oClient.RecentConn.Activate(Db4oClient.CurrentRecentConnection, 4);
 			return Db4oClient.CurrentRecentConnection;
 		}
+
 		public void SetCurrentRecentConnection(RecentQueries conn)
 		{
 			Db4oClient.CurrentRecentConnection = conn;

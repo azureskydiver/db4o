@@ -336,12 +336,7 @@ namespace OMControlLibrary
 			}
 		}
 
-	    private static bool HasNullValue(DataGridViewCell cell)
-	    {
-	        return "null".Equals(cell.Value);
-	    }
-
-	    private void masterView_SelectionChanged(object sender, EventArgs e)
+		private void masterView_SelectionChanged(object sender, EventArgs e)
 		{
 			try
 			{
@@ -663,8 +658,7 @@ namespace OMControlLibrary
 
 				object editValue = cell.Value;
 
-				bool check = Validations.ValidateDataType(FieldTypeForObjectInRow(cell.OwningRow), ref editValue);
-				if (check)
+				if (Validations.ValidateDataType(FieldTypeForObjectInRow(cell.OwningRow), ref editValue))
 				{
 					if (strstoreTreeValue != editValue.ToString())
 					{
@@ -711,7 +705,7 @@ namespace OMControlLibrary
 							nameList.Reverse();
 							typeList.Reverse();
 							offset.Reverse();
-							Helper.DbInteraction.UpdateCollection(hierarchy, offset, nameList, typeList, editValue);
+							Helper.DbInteraction.UpdateCollection(hierarchy, offset, nameList, typeList, ValueType(typeList).Cast(editValue));
 
 							tabControlObjHierarchy.SelectedItem.Name = CONST_TRUE;
 							tabControlObjHierarchy.SelectedItem.Tag = ((TreeGridView) sender).Parent.Tag;
@@ -995,10 +989,7 @@ namespace OMControlLibrary
 					{
 						if (pg.Name.Equals(CONST_TRUE))
 						{
-							if (hierarchy != null)
-								Helper.DbInteraction.SaveCollection(pg.Tag, hierarchy.Count);
-							else
-								Helper.DbInteraction.SaveCollection(pg.Tag, 1);
+							Helper.DbInteraction.SaveCollection(pg.Tag, hierarchy != null ? hierarchy.Count : 1);
 
 							PaintBlack((TreeGridView) pg.Controls[0]);
 							pg.Name = CONST_FALSE;
@@ -1110,8 +1101,8 @@ namespace OMControlLibrary
 				if (m_pageCount >= PageCount())
 				{
 					btnPrevious.Enabled = true;
-					btnLast.Enabled = false;
 					btnFirst.Enabled = true;
+					btnLast.Enabled = false;
 					btnNext.Enabled = false;
 				}
 				else
@@ -1719,6 +1710,11 @@ namespace OMControlLibrary
 			}
 
 			return fillpathString;
+		}
+
+		private static IType ValueType(IList<IType> types)
+		{
+			return types[types.Count - 1];
 		}
 
 		#endregion

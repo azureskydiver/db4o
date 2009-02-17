@@ -74,41 +74,25 @@ namespace OManager.DataLayer.ObjectsModification
                 				{
                 					obj = objList[i - 1];
                 				}
-                				SaveValues(obj, names[i], value, offsetList[i], types[i]);
+                				
+								SaveValues(obj, names[i], value, offsetList[i], types[i]);
                 				break;
                 			}
 
                 		}
                 		else if (col is Hashtable || col is IDictionary)
                 		{
-                			if (col is Hashtable)
-                			{
-                				DictionaryEntry dict = (DictionaryEntry)objList[i + 1];
-                				SaveDictionary(objList[i - 1], names[i], value, dict.Key);
-                				break;
-
-                			}
-
-                			if (col is IDictionary)
-                			{
-                				object dictKey = null;
-                				foreach (DictionaryEntry entry in (IDictionary)col)
-                				{
-                					dictKey = entry.Key;
-                					break;
-                				}
-
-                				SaveDictionary(objList[i - 1], names[i], value, dictKey);
-                			}
+                			object key = col is Hashtable
+                			             	? ((DictionaryEntry) objList[i + 1]).Key
+                			             	: KeyAtIndex((IDictionary) col, offset);
+                			
+							SaveDictionary(objList[i - 1], names[i], value, key);
                 		}
                 	}
-                	else
+                	else if (types[i].IsEditable)
                 	{
-                		if (types[i].IsEditable)
-                		{
-                			obj = objList[i - 1];
-                			SaveValues(obj, names[i], value, offsetList[i - 1], types[i]);
-                		}
+                		obj = objList[i - 1];
+                		SaveValues(obj, names[i], value, offsetList[i - 1], types[i]);
                 	}
                 }
             }
@@ -117,6 +101,19 @@ namespace OManager.DataLayer.ObjectsModification
                 LoggingHelper.HandleException(oEx);
             }
         }
+
+    	private static object KeyAtIndex(IDictionary dictionary, int index)
+    	{
+    		foreach (DictionaryEntry entry in dictionary)
+    		{
+				if (index == 0)
+    				return entry.Key;
+    			
+				index--;
+    		}
+    		
+			return null;
+    	}
 
     	public void SaveDictionary(object targetObject, string attribName, object newValue, object key)
         {
