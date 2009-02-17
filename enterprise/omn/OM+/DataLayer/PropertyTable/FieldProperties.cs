@@ -1,26 +1,31 @@
+/* Copyright (C) 2004 - 2009  db4objects Inc.  http://www.db4o.com */
+
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Db4objects.Db4o.Reflect;
+using OManager.DataLayer.Connection;
 using OManager.DataLayer.Modal;
 using System.Collections;
 using Db4objects.Db4o.Reflect.Generic;
-
+using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
+
 namespace OManager.DataLayer.PropertyTable
 {
     public class FieldProperties
     {
-        string m_fieldName;
-        string m_dataType;
-        bool m_isIndexed;
-        bool m_isPublic;
-        string m_classname;
-        public FieldProperties(string classname)
-        {
-            this.m_classname = classname;  
-        }
+		private string m_fieldName;
+		private bool m_isIndexed;
+		private bool m_isPublic;
+		private readonly string m_dataType;
+
+		public FieldProperties(string fieldName, string fieldType)
+		{
+			m_fieldName = fieldName;
+			
+			IType type = Db4oClient.TypeResolver.Resolve(fieldType);
+			m_dataType = type.DisplayName;
+		}
+
         public bool Indexed
         {
             get { return m_isIndexed; }
@@ -42,34 +47,20 @@ namespace OManager.DataLayer.PropertyTable
         public string DataType
         {
             get { return m_dataType; }
-            set { m_dataType = value; }
         }
 
-        public ArrayList GetAllFieldsForTheClass()
+		public static ArrayList FieldsFrom(string className)
         {
             try
             {
-                
                 ArrayList listFieldProperties = new ArrayList();
-                ClassDetails clDetails = new ClassDetails(m_classname);
-                IReflectField[] reflectFields = clDetails.GetFieldList();
-                foreach (IReflectField field in reflectFields)
+                ClassDetails clDetails = new ClassDetails(className);
+            	foreach (IReflectField field in clDetails.GetFieldList())
                 {
                     if (!(field is GenericVirtualField))
                     {
-                        FieldProperties fp = new FieldProperties(m_classname);
-
-                        string fieldDataType = field.GetFieldType().GetName();
-                        if (fieldDataType.Contains(","))
-                        {
-                            int index = fieldDataType.IndexOf(',');
-                            fp.DataType = fieldDataType.Substring(0, index);
-                        }
-                        fp.Field = field.GetName();
-                        FieldDetails fd = new FieldDetails(m_classname, fp.Field);
-                        fp.m_isPublic = fd.GetModifier();//field.IsPublic();
-                        fp.m_isIndexed = fd.IsIndexed();
-                        listFieldProperties.Add(fp);
+                    	FieldProperties fp = FieldPropertiesFor(className, field);
+                    	listFieldProperties.Add(fp);
                     }
                 }
                 return listFieldProperties;
@@ -80,6 +71,16 @@ namespace OManager.DataLayer.PropertyTable
                 return null;
             }
         }
+
+    	private static FieldProperties FieldPropertiesFor(string className, IReflectField field)
+    	{
+    		FieldProperties fp = new FieldProperties(field.GetName(), field.GetFieldType().GetName());
+    		FieldDetails fd = new FieldDetails(className, fp.Field);
+    		fp.m_isPublic = fd.GetModifier();
+    		fp.m_isIndexed = fd.IsIndexed();
+    		
+			return fp;
+    	}
     }
 
 }

@@ -1081,7 +1081,6 @@ namespace OMControlLibrary.Common
 
 		internal void PopulateDisplayGrid(string viewName, ArrayList dataSource)
 		{
-
 			try
 			{
 				if (Columns.Count < 1)
