@@ -1,16 +1,16 @@
 package com.db4o.ta.instrumentation.test;
 
 import java.io.*;
-import java.net.MalformedURLException;
+import java.net.*;
 
 import EDU.purdue.cs.bloat.editor.*;
 
-import com.db4o.db4ounit.common.ta.MockActivator;
+import com.db4o.db4ounit.common.ta.*;
 import com.db4o.foundation.io.*;
 import com.db4o.instrumentation.classfilter.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.main.*;
-import com.db4o.internal.Reflection4;
+import com.db4o.internal.*;
 import com.db4o.ta.*;
 import com.db4o.ta.instrumentation.*;
 import com.db4o.ta.instrumentation.test.data.*;
@@ -24,16 +24,31 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 	private final static Class NOT_INSTRUMENTED_CLAZZ = NotToBeInstrumented.class;
 
 	private final static Class EXTERNAL_INSTRUMENTED_CLAZZ = ToBeInstrumentedWithExternalFieldAccess.class;
+	
+	private final static Class INSTRUMENTED_OUTER_CLAZZ = ToBeInstrumentedOuter.class;
+	private final static Class INSTRUMENTED_INNER_CLAZZ = getAnonymousInnerClass(INSTRUMENTED_OUTER_CLAZZ);
+
+	private final static Class[] INPUT_CLASSES = new Class[] { INSTRUMENTED_CLAZZ, NOT_INSTRUMENTED_CLAZZ, EXTERNAL_INSTRUMENTED_CLAZZ, INSTRUMENTED_OUTER_CLAZZ, INSTRUMENTED_INNER_CLAZZ };
+	
+	private static Class getAnonymousInnerClass(Class clazz) {
+		try {
+			return Class.forName(clazz.getName() + "$1");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	private String srcDir;
 	
 	private String targetDir;	
 	
 	public void setUp() throws Exception {
+		deleteFiles();
 		srcDir = IO.mkTempDir("tafileinstr/source");
 		targetDir = IO.mkTempDir("tafileinstr/target");
 		copyClassFilesTo(
-			new Class[] { INSTRUMENTED_CLAZZ, NOT_INSTRUMENTED_CLAZZ, EXTERNAL_INSTRUMENTED_CLAZZ },
+			INPUT_CLASSES,
 			srcDir);
 	}
 	
@@ -44,15 +59,24 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		AssertingClassLoader loader = newAssertingClassLoader();
 		loader.assertAssignableFrom(Activatable.class, INSTRUMENTED_CLAZZ);
 		loader.assertNotAssignableFrom(Activatable.class, NOT_INSTRUMENTED_CLAZZ);
+		loader.assertAssignableFrom(Activatable.class, INSTRUMENTED_OUTER_CLAZZ);
+		loader.assertAssignableFrom(Activatable.class, INSTRUMENTED_INNER_CLAZZ);
+		instantiateInnerClass(loader);
+	}
+
+	private void instantiateInnerClass(AssertingClassLoader loader) throws Exception {
+		Class outerClazz = loader.loadClass(INSTRUMENTED_OUTER_CLAZZ);
+		Object outerInst = outerClazz.newInstance();
+		outerClazz.getDeclaredMethod("foo", new Class[]{}).invoke(outerInst, new Object[]{});
 	}
 
 	private AssertingClassLoader newAssertingClassLoader()
 			throws MalformedURLException {
-		return new AssertingClassLoader(new File(targetDir), new Class[] { INSTRUMENTED_CLAZZ, NOT_INSTRUMENTED_CLAZZ, EXTERNAL_INSTRUMENTED_CLAZZ });
+		return new AssertingClassLoader(new File(targetDir), INPUT_CLASSES);
 	}
 
 	private void enhance() throws Exception {
-		ClassFilter filter = new ByNameClassFilter(new String[]{ INSTRUMENTED_CLAZZ.getName(), EXTERNAL_INSTRUMENTED_CLAZZ.getName() });
+		ClassFilter filter = new ByNameClassFilter(new String[]{ INSTRUMENTED_CLAZZ.getName(), EXTERNAL_INSTRUMENTED_CLAZZ.getName(), INSTRUMENTED_OUTER_CLAZZ.getName(), INSTRUMENTED_INNER_CLAZZ.getName() });
 		Db4oFileInstrumentor enhancer = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(filter));
 		enhancer.enhance(srcDir, targetDir, new String[]{});
 	}
@@ -107,6 +131,10 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 	}
 	
 	public void tearDown() throws Exception {
+		deleteFiles();
+	}
+
+	private void deleteFiles() {
 		Directory4.delete(srcDir, true);
 		Directory4.delete(targetDir, true);
 	}

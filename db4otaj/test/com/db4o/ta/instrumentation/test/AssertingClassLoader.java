@@ -60,7 +60,7 @@ public class AssertingClassLoader {
 		return expected.isAssignableFrom(loaded);
 	}
 
-	private Class loadClass(Class actual) throws ClassNotFoundException {
+	public Class loadClass(Class actual) throws ClassNotFoundException {
 		return _loader.loadClass(actual.getName());
 	}
 

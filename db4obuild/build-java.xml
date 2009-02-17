@@ -646,7 +646,7 @@
 		</sequential>
 	</macrodef>
 	
-	<target name="build.db4ounitjdk1.5" depends="build.db4ojdk1.5, decaf.db4ounit">
+	<target name="build.db4ounitjdk1.5" depends="build.db4ojdk1.5">
 		
 		<build-db4ounit
 				source="1.5"
@@ -1211,10 +1211,28 @@
 	</target>
 
 	<target name="run.tests.taj" depends="build.taj.tests">
-		<java taskname="ta/j15" classname="com.db4o.ta.instrumentation.test.AllTests"
+		<java taskname="ta/j13" classname="com.db4o.ta.instrumentation.test.AllTests"
 			jvmargs="${java.vmargs}"
 			fork="true"
 			jvm="${file.jvm.jdk1.3}"
+			failonerror="true"
+			timeout="1800000">
+			<classpath>
+	            <pathelement location="${file.bloat.jar}"/>
+				<pathelement location="${file.jdk1.2.jar}"/>
+	        	<pathelement location="${file.jdk1.2.cs.jar}" />
+	        	<pathelement location="${file.jdk1.2.optional.jar}" />
+				<pathelement location="${file.jdk1.2.db4ounit.jar}" />
+			    <pathelement location="${file.instrumentation.jar}"/>
+				<pathelement location="${file.taj.jar}"/>
+				<pathelement location="${dir.dist.classes.test.jdk1.2}" />
+				<pathelement location="${dir.dist.classes.test.taj}"/>
+			</classpath>
+		</java>
+		<java taskname="ta/j15" classname="com.db4o.ta.instrumentation.test.AllTests"
+			jvmargs="${java.vmargs}"
+			fork="true"
+			jvm="${file.jvm.jdk1.5}"
 			failonerror="true"
 			timeout="1800000">
 			<classpath>
@@ -1525,7 +1543,7 @@
         </ftp>
 	</target>
 
-	<target name="build.omej" depends="build.db4ojava.tests">
+	<target name="build.omej" depends="build.db4ojdk1.5.tests">
 		<ant antfile="build-omj.xml" target="cleanzip" />
 		<copy todir="${dir.dist.java.build}">
 			<fileset dir="${dir.dist.ome}">
