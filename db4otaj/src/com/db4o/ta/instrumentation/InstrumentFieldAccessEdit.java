@@ -73,16 +73,17 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 				for(int codeIdx = 0; codeIdx < editor.codeLength(); codeIdx++) {
 					Object curCode = editor.codeElementAt(codeIdx);
 					MemberRef fieldRef = fieldRef(curCode);
-					if(fieldRef != null && accept(fieldRef)) {
-						boolean writeAccess = ((Instruction)curCode).origOpcode() == Opcode.opc_putfield;						
-						fieldAccessIndexes.put(
-								new Integer(codeIdx),
-								new FieldAccess(
-										fieldRef,
-										writeAccess
-											? ActivationPurpose.WRITE
-											: ActivationPurpose.READ));
+					if(fieldRef == null || !accept(fieldRef)) {
+						continue;
 					}
+					boolean writeAccess = ((Instruction)curCode).origOpcode() == Opcode.opc_putfield;						
+					fieldAccessIndexes.put(
+							new Integer(codeIdx),
+							new FieldAccess(
+									fieldRef,
+									writeAccess
+										? ActivationPurpose.WRITE
+										: ActivationPurpose.READ));
 				}
 				if(fieldAccessIndexes.isEmpty()) {
 					return;
@@ -116,6 +117,11 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 				ClassEditor fieldParentClassEditor = loaderContext.classEditor(fieldRef.declaringClass());
 				if (!isPersistentField(loaderContext, fieldParentClassEditor, fieldRef)) {
 					return false;
+				}
+				if(editor.isConstructor()) {
+					if(editor.declaringClass().name().equals(fieldParentClassEditor.name())) {
+						return false;
+					}
 				}
 				
 				final MemberRef targetActivateMethod = createMethodReference(fieldRef.declaringClass(),  TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{ Type.getType(ActivationPurpose.class)}, Type.VOID);
