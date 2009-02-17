@@ -1,3 +1,5 @@
+/* Copyright (C) 2004 - 2009  db4objects Inc.  http://www.db4o.com */
+
 using System;
 using System.Collections;
 using System.Windows.Forms;
@@ -76,10 +78,7 @@ namespace OMControlLibrary
 			dbGridViewProperties.Dock = DockStyle.Fill;
 
 			tabStripProperties.AlwaysShowMenuGlyph = false;
-
 		}
-
-
 
 		#endregion
 
@@ -148,8 +147,7 @@ namespace OMControlLibrary
 
 							ArrayList fieldPropertiesList = GetFieldsForAllClass();
 							dbGridViewProperties.ReadOnly = false;
-							dbGridViewProperties.PopulateDisplayGrid(Constants.VIEW_CLASSPOPERTY
-								, fieldPropertiesList);
+							dbGridViewProperties.PopulateDisplayGrid(Constants.VIEW_CLASSPOPERTY, fieldPropertiesList);
 
 							//Enable Disable IsIndexed Checkboxes
 							foreach (DataGridViewRow row in dbGridViewProperties.Rows)

@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Collections;
+using Db4objects.Db4o;
 using OManager.DataLayer.Modal;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
+
 namespace OManager.DataLayer.PropertyTable
 {
 
@@ -16,7 +15,7 @@ namespace OManager.DataLayer.PropertyTable
 
         public ClassPropertiesTable(string classname)
         {
-            this.m_className = classname;  
+            m_className = classname;  
         }
         public string ClassName
         {
@@ -41,11 +40,10 @@ namespace OManager.DataLayer.PropertyTable
         {
             try
             {
-                FieldProperties fieldProp = new FieldProperties(m_className);
                 ClassDetails clsDetails = new ClassDetails(m_className);
 
-                this.m_fieldEntries = fieldProp.GetAllFieldsForTheClass();
-                this.m_noOfObjects = clsDetails.GetNumberOfObjects();
+				m_fieldEntries = FieldProperties.FieldsFrom(m_className);
+                m_noOfObjects = clsDetails.GetNumberOfObjects();
                 return this;
             }
             catch (Exception oEx)
@@ -59,7 +57,7 @@ namespace OManager.DataLayer.PropertyTable
         public void SetIndex(string fieldname, string className, bool isIndexed)
         {
             
-            Db4objects.Db4o.Db4oFactory.Configure().ObjectClass(className).ObjectField(fieldname).Indexed(isIndexed);
+            Db4oFactory.Configure().ObjectClass(className).ObjectField(fieldname).Indexed(isIndexed);
         }
 
     }
