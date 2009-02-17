@@ -33,8 +33,8 @@ public class JavaServices {
 	        						db4oJarPath("-optional"),
 	        						db4oJarPath("-cs"),
 	        				}, runningOnWindows()),
-	        		"-source", "1.5",
-	        		"-target", "1.5",
+	        		"-source", "1.3",
+	        		"-target", "1.3",
 	        		srcFile};
 
 			return IOServices.exec(WorkspaceServices.javacPath(),javacArgs);
