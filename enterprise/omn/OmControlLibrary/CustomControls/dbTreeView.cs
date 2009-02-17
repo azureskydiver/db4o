@@ -7,8 +7,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.UIHelper;
-using OManager.DataLayer.Connection;
-using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 
 namespace OMControlLibrary.Common
@@ -869,14 +867,11 @@ namespace OMControlLibrary.Common
 
 		public void FindTreeNodesClasses(Hashtable list, TreeNode treenodeparent, string strToFind)
 		{
-			string typeofObject = string.Empty;
 			try
 			{
-				IDictionaryEnumerator enumerator =
-					list.GetEnumerator();
+				IDictionaryEnumerator enumerator = list.GetEnumerator();
 
 				TreeNode treeNodeNew = null;
-				bool isPrimitiveType = false;
 
 				if (Nodes.Count > 0)
 					Nodes.Clear();
@@ -914,15 +909,12 @@ namespace OMControlLibrary.Common
 							AddDummyChildNode(treeNodeNew);
 							continue;
 						}
-						else
-						{
-							typeofObject = Helper.GetTypeOfObject(nodetype);
-							treeNodeNew.ImageIndex =
-								treeNodeNew.SelectedImageIndex = SetImageIndex(typeofObject);
+						
+						string typeofObject = Helper.GetTypeOfObject(nodetype);
+						treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = SetImageIndex(typeofObject);
 
-							isPrimitiveType = Helper.IsPrimitive(typeofObject);
-							treenodeparent.Nodes.Add(treeNodeNew);
-						}
+						bool isPrimitiveType = Helper.IsPrimitive(typeofObject);
+						treenodeparent.Nodes.Add(treeNodeNew);
 
 						if (!isPrimitiveType)
 						{

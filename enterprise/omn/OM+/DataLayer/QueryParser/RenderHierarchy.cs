@@ -113,7 +113,7 @@ namespace OManager.DataLayer.QueryParser
 					}
 						
 					IReflectField[] fieldArr = DataLayerCommon.GetDeclaredFieldsInHeirarchy(refClass);
-					rootNode = TraverseFields(rootNode, currObj, fieldArr, activate);
+					rootNode = TraverseFields(rootNode, currObj, fieldArr);
 				}
 
 				catch (Exception oEx)
@@ -123,7 +123,7 @@ namespace OManager.DataLayer.QueryParser
 			}
 		}
 
-		private TreeGridNode TraverseFields(TreeGridNode rootNode, object obj, IEnumerable<IReflectField> fields, bool activate)
+		private TreeGridNode TraverseFields(TreeGridNode rootNode, object obj, IEnumerable<IReflectField> fields)
 		{
 			if (fields == null) 
 				return rootNode;
@@ -140,11 +140,11 @@ namespace OManager.DataLayer.QueryParser
 				}
 				else if (fieldType.IsCollection)
 				{
-					RenderCollection(rootNode, obj, field, activate);
+					RenderCollection(rootNode, obj, field);
 				}
 				else if (fieldType.IsArray)
 				{
-					RenderArray(rootNode, obj, field, activate);
+					RenderArray(rootNode, obj, field);
 				}
 				else if (fieldType.IsNullable)
 				{
@@ -152,24 +152,19 @@ namespace OManager.DataLayer.QueryParser
 				}
 				else
 				{
-					RenderSubObject(rootNode, obj, field, activate);
+					RenderSubObject(rootNode, obj, field);
 				}
 			}
 			return rootNode;
 		}
 
-		private void RenderArray(TreeGridNode rootNode, object currObj, IReflectField field, bool activate)
+		private void RenderArray(TreeGridNode rootNode, object currObj, IReflectField field)
 		{
 			container = Db4oClient.Client;
 			object obj = field.Get(currObj);
-			if (activate)
-			{
-				container.Ext().Activate(obj, 2);
-			}
-			else
-			{
-				container.Ext().Refresh(obj, 2);
-			}
+			
+			container.Ext().Activate(obj, 2);
+
 			if (obj != null)
 			{
 				int length = container.Ext().Reflector().Array().GetLength(obj);
@@ -181,18 +176,12 @@ namespace OManager.DataLayer.QueryParser
 			}
 		}
 
-		private void RenderCollection(TreeGridNode rootNode, object currObj, IReflectField field, bool activate)
+		private void RenderCollection(TreeGridNode rootNode, object currObj, IReflectField field)
 		{
 			container = Db4oClient.Client;
 			object obj = field.Get(currObj);
-			if (activate)
-			{
-				container.Ext().Activate(obj, 2);
-			}
-			else
-			{
-				container.Ext().Refresh(obj, 2);
-			}
+			container.Ext().Activate(obj, 2);
+
 			if (obj != null)
 			{
 				ICollection coll = (ICollection) obj;
@@ -204,7 +193,7 @@ namespace OManager.DataLayer.QueryParser
 			}
 		}
 
-		private void RenderSubObject(TreeGridNode rootNode, object currObj, IReflectField reflectField, bool check)
+		private void RenderSubObject(TreeGridNode rootNode, object currObj, IReflectField reflectField)
 		{
 			try
 			{
@@ -219,20 +208,13 @@ namespace OManager.DataLayer.QueryParser
 				objectNode.Cells[1].Value = reflectField.Get(currObj) != null ? reflectField.Get(currObj).ToString() : BusinessConstants.DB4OBJECTS_NULL;
 
 				SetFieldType(objectNode, fieldType);
-				if (check)
-				{
-					container.Ext().Activate(obj, 2);
-				}
-				else
-				{
-					container.Ext().Refresh(obj, 2);
-				}
+				
+				container.Ext().Activate(obj, 2);
 
 				objectNode.Tag = obj;
 
 				if (rootNode.Tag is DictionaryEntry && reflectField.GetName() == BusinessConstants.DB4OBJECTS_KEY)
 					objectNode.Cells[1].ReadOnly = true;
-
 				else if (rootNode.Tag is DictionaryEntry && reflectField.GetName() == BusinessConstants.DB4OBJECTS_VALUE)
 					objectNode.Cells[1].ReadOnly = false;
 				else if (reflectField.Get(currObj) == null)
