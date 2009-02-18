@@ -12,30 +12,29 @@ namespace OManager.DataLayer.Modal
     {
         public Hashtable GetAllStoredClasses()
         {
-            IObjectContainer objectContainer = Db4oClient.Client; ;
-          
-            try
+            IObjectContainer objectContainer = Db4oClient.Client;
+
+        	try
             {
                 IStoredClass[] storedClasses = objectContainer.Ext().StoredClasses();
                 Hashtable storedClassHashtable = new Hashtable();
 
                 foreach (IStoredClass stored in storedClasses)
                 {
-                    string CheckUserDefinedClasses = stored.GetName().ToString();
+                    string className = stored.GetName();
 
-                    if (!(CheckUserDefinedClasses.IndexOf("Db4objects") > -1) && !(CheckUserDefinedClasses.IndexOf("com.db4o") > -1)
-                           && !(CheckUserDefinedClasses.IndexOf("System") > -1) && !(CheckUserDefinedClasses.IndexOf("db4o") > -1))
+					if (!ExcludeClass(className))
                     {
                         char[] ch = new char[] { ',' };
-                        int intIndexof = CheckUserDefinedClasses.LastIndexOfAny(ch);
+                        int intIndexof = className.LastIndexOfAny(ch);
                         if (intIndexof > 0)
                         {
-                            string strValue = CheckUserDefinedClasses.Substring(0, intIndexof);
-                            storedClassHashtable.Add(CheckUserDefinedClasses, strValue);
+                            string strValue = className.Substring(0, intIndexof);
+                            storedClassHashtable.Add(className, strValue);
                         }
                         else
                         {
-                            storedClassHashtable.Add(CheckUserDefinedClasses, CheckUserDefinedClasses);
+                            storedClassHashtable.Add(className, className);
                         }
                     }
                 }
@@ -48,40 +47,46 @@ namespace OManager.DataLayer.Modal
             }
         }
 
-        public Hashtable GetAllStoredClassesAssemblyWise()
+    	private static bool ExcludeClass(string className)
+    	{
+    		Type type = Type.GetType(className);
+			return type != null 
+							? typeof(IInternal4).IsAssignableFrom(type) 
+							: false;
+    	}
+
+    	public Hashtable GetAllStoredClassesAssemblyWise()
         {
-            IObjectContainer objectContainer = Db4oClient.Client; ;
-            try
+            IObjectContainer objectContainer = Db4oClient.Client;
+        	try
             {
                 IStoredClass[] storedClasses = objectContainer.Ext().StoredClasses();
                 Hashtable storedClassHashtable = new Hashtable();
                 Hashtable sortedHashtable = new Hashtable();
                 List<string> classListforAssembly;
 
-
                 foreach (IStoredClass stored in storedClasses)
                 {
-                    string CheckUserDefinedClasses = stored.GetName().ToString();
+                    string className = stored.GetName();
 
-                    if (!(CheckUserDefinedClasses.IndexOf("Db4objects") > -1) && !(CheckUserDefinedClasses.IndexOf("com.db4o") > -1)
-                           && !(CheckUserDefinedClasses.IndexOf("System") > -1) && !(CheckUserDefinedClasses.IndexOf("db4o") > -1))
+                    if (!ExcludeClass(className))
                     {
                         char[] ch = new char[] { ',' };
 
-                        int intIndexof = CheckUserDefinedClasses.LastIndexOfAny(ch) + 1;
+                        int intIndexof = className.LastIndexOfAny(ch) + 1;
 
-                        string strValue = CheckUserDefinedClasses.Substring(intIndexof, CheckUserDefinedClasses.Length - intIndexof);
+                        string strValue = className.Substring(intIndexof, className.Length - intIndexof);
 
                         classListforAssembly = storedClassHashtable[strValue] as List<string>;
                         if (classListforAssembly == null)
                         {
                             classListforAssembly = new List<string>();
-                            classListforAssembly.Add(CheckUserDefinedClasses);
+                            classListforAssembly.Add(className);
                             storedClassHashtable.Add(strValue, classListforAssembly);
                         }
                         else
                         {
-                            classListforAssembly.Add(CheckUserDefinedClasses);
+                            classListforAssembly.Add(className);
                             storedClassHashtable.Remove(strValue);
                             storedClassHashtable.Add(strValue, classListforAssembly);
                         }
@@ -105,21 +110,15 @@ namespace OManager.DataLayer.Modal
             }
         }
 
-        public IList<string> SortKeys(List<string> arr)
+    	public long GetFreeSizeofDatabase()
         {
-            return null;
-        }
-
-
-        public long GetFreeSizeofDatabase()
-        {
-            IObjectContainer objectContainer = Db4oClient.Client; ;
-            long freeSizeOfDB = 0;
+            IObjectContainer objectContainer = Db4oClient.Client;
+        	long freeSizeOfDB;
             try
             {
                 freeSizeOfDB = objectContainer.Ext().SystemInfo().FreespaceSize();
             }
-            catch (NotImplementedException e)
+            catch (NotImplementedException)
             {
                 freeSizeOfDB = - 1;
                
@@ -141,8 +140,8 @@ namespace OManager.DataLayer.Modal
 
         public long getTotalDatabaseSize()
         {
-            IObjectContainer objectContainer = Db4oClient.Client; ;
-            try
+            IObjectContainer objectContainer = Db4oClient.Client;
+        	try
             {
                 return objectContainer.Ext().SystemInfo().TotalSize();
             }
@@ -152,12 +151,10 @@ namespace OManager.DataLayer.Modal
             }
             catch (Exception oEx)
             {
-                return -2;
                 LoggingHelper.HandleException(oEx);
-            }
-
+				return -2;
+			}
         }
-
 
         public int GetNumberOfClassesinDB()
         {
@@ -172,11 +169,9 @@ namespace OManager.DataLayer.Modal
             }
             catch (Exception oEx)
             {
-                return -2;
-                LoggingHelper.HandleException(oEx);
+				LoggingHelper.HandleException(oEx);
+				return -2;
             }
-
-
         }
     }
 }
