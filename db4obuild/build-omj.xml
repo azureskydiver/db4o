@@ -27,7 +27,7 @@
 		<element name="additionaljarcontent" optional="true" />
 		
 		<sequential>
-			<echo message="${filename.db4o.jar} / ${file.db4o.jar} / ${omej.version} / ${eclipse.home}" />
+			<echo message="${filename.db4o.nodep.jar} / ${file.db4o.nodep.jar} / ${omej.version} / ${eclipse.home}" />
 			
 			<mkdir dir="@{classesdir}" />
 			
@@ -61,8 +61,7 @@
 						
 					</fileset>
 					
-					<pathelement location="${file.db4o.jar}" />
-					<pathelement location="${file.db4o.optional.jar}" />
+					<pathelement location="${file.db4o.nodep.jar}" />
 
 					<additionalclasspath />
 				</classpath>
@@ -103,9 +102,7 @@
 					<include name="lib/**/*.jar" />
 					<exclude name="lib/**/db4o-*-java5.jar" />
 				</fileset>
-				<fileset file="${file.db4o.jar}" />
-				<fileset file="${file.db4o.cs.jar}" />
-				<fileset file="${file.db4o.optional.jar}" />
+				<fileset file="${file.db4o.nodep.jar}" />
 			</additionaljarcontent>
 		</build-plugin>
 		<build-plugin name="com.db4o.ome.help" basedir="${dir.project.ome.help}">
@@ -151,14 +148,12 @@
 		<mkdir dir="${dir.dist.ome.jars}" />
 		<mkdir dir="${dir.dist.ome.temp}" />
 
-		<property name="filename.db4o.jar" value="${filename.jdk1.5.jar}" />
-		<property name="file.db4o.jar" value="${file.jdk1.5.jar}" />
-		<property name="file.db4o.cs.jar" value="${file.jdk1.5.cs.jar}" />
-		<property name="file.db4o.optional.jar" value="${file.jdk1.5.optional.jar}" />
-
+		<property name="filename.db4o.nodep.jar" value="${filename.jdk1.5.nodep.jar}" />
+		<property name="file.db4o.nodep.jar" value="${file.jdk1.5.nodep.jar}" />
+		
 		<filterset id="filterset.ome">
 			<filter token="OMEJ_VERSION" value="${omej.version}" />
-			<filter token="DB4O_JAR_NAME" value="${filename.db4o.jar}" />
+			<filter token="DB4O_JAR_NAME" value="${filename.db4o.nodep.jar}" />
 		</filterset>
 		
 		<echo message="OMJ version is ${omej.version}" />
