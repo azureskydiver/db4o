@@ -2,8 +2,7 @@ package com.db4o.omplus.datalayer;
 
 import java.util.TreeSet;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
+import com.db4o.*;
 import com.db4o.ext.StoredClass;
 import com.db4o.ext.SystemInfo;
 import com.db4o.internal.ObjectContainerBase;
@@ -50,17 +49,25 @@ public class DbInterfaceImpl implements IDbInterface {
 		}
 		TreeSet<String> temp = new TreeSet<String>();
 		if(classes != null){
-			for(StoredClass clazz: classes){
-				String className = clazz.getName();
-				if( className.startsWith(JAVA_LANG) || className.startsWith(DB4O_PACK) ||
-						className.startsWith(DB4O_NET)) {
-					continue;
-				}else{
+			for(StoredClass claxx: classes){
+				String className = claxx.getName();
+				if (! excludeClass(className)){
 					temp.add(className);
 				}
+				
 			}
 		}
 		return temp.toArray();
+	}
+
+	private boolean excludeClass(String className) {
+		try {
+			Class clazz = Class.forName(className);
+			return Internal4.class.isAssignableFrom(clazz);
+		} catch (ClassNotFoundException e) {
+			// Can happen if the class definition is not available.
+		}
+		return false;
 	}
 	
 	public ObjectContainer getDB(){

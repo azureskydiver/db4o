@@ -1,7 +1,7 @@
 package com.db4o.omplus.connection;
 
 import com.db4o.Db4o;
-import com.db4o.config.Configuration;
+import com.db4o.config.*;
 
 public abstract class ConnectionParams {
 	
@@ -16,6 +16,7 @@ public abstract class ConnectionParams {
 		Configuration config = Db4o.newConfiguration();
 		config.allowVersionUpdates(allowUpdates);
 		config.activationDepth(0);
+		config.add(new DotnetSupport(true));
 		return config;
 	}
 	public void configureUpdates() {
