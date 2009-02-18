@@ -2,6 +2,7 @@
 
 package com.db4o.internal.marshall;
 
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.convert.conversions.*;
 
@@ -102,10 +103,17 @@ public class MarshallerFamily {
     }
 
     public static MarshallerFamily version(int n) {
+    	checkIfVersionIsTooNew(n);
         return allVersions[n];
     }
 
-    public static MarshallerFamily current() {
+    private static void checkIfVersionIsTooNew(int n) {
+    	if(n > allVersions.length){
+    		throw new IncompatibleFileFormatException("Databasefile was created with a newer db4o version. Marshaller version: " + n);
+    	}
+	}
+
+	public static MarshallerFamily current() {
         if(CURRENT_VERSION < FamilyVersion.BTREE_FIELD_INDEXES){
             throw new IllegalStateException("Using old marshaller versions to write database files is not supported, source code has been removed.");
         }
@@ -113,6 +121,7 @@ public class MarshallerFamily {
     }
     
     public static MarshallerFamily forConverterVersion(int n){
+    	checkIfVersionIsTooNew(n);
         MarshallerFamily result = allVersions[0];
         for (int i = 1; i < allVersions.length; i++) {
             if(allVersions[i]._converterVersion > n){

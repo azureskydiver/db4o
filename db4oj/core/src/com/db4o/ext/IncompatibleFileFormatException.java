@@ -8,4 +8,12 @@ package com.db4o.ext;
  */
 public class IncompatibleFileFormatException extends Db4oException {
 
+	public IncompatibleFileFormatException(){
+		super();
+	}
+	
+	public IncompatibleFileFormatException(String message) {
+		super(message);
+	}
+
 }
