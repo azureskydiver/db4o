@@ -2,8 +2,10 @@
 
 package com.db4o.foundation;
 
+import com.db4o.*;
 
-public class No4 {
+
+public class No4 implements Internal4 {
     
     public final static No4 INSTANCE = new No4();
     
