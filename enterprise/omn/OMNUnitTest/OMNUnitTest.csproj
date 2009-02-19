@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DbInformationTestCase.cs" />
     <Compile Include="OMNUnitTestExtensions.cs" />
     <Compile Include="ReflectionTestCase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

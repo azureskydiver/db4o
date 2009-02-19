@@ -141,15 +141,13 @@ namespace OManager.DataLayer.Connection
 		/// <summary>
 		/// Static property which closes the corresponding object container for the current logon identity.
 		/// </summary>
-		public static void CloseConnection(IObjectContainer objectContainer)
+		public static void CloseConnection()
 		{
-			objectContainer = Client;
 			try
 			{
-				if (objectContainer != null)
+				if (objContainer != null)
 				{
-					objectContainer.Close();
-					objectContainer = null;
+					objContainer.Close();
 					objContainer = null;
 				}
 				conn = null;

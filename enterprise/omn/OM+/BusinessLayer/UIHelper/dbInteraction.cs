@@ -108,18 +108,15 @@ namespace OManager.BusinessLayer.UIHelper
 			modColl.SaveCollections(obj, level);
 
 		}
+
 		public Hashtable FetchAllStoredClasses()
 		{
-            
-			return dbInfo.GetAllStoredClasses();
-
+			return dbInfo.StoredClasses();
 		}
 
 		public Hashtable FetchAllStoredClassesForAssembly()
 		{
-
-			return dbInfo.GetAllStoredClassesAssemblyWise(); 
-
+			return dbInfo.StoredClassesByAssembly(); 
 		}
 		public Hashtable FetchStoredFields(string classname)
 		{
@@ -127,22 +124,18 @@ namespace OManager.BusinessLayer.UIHelper
 			return clsDetails.GetFields();
 		}
 
-
 		public int NoOfClassesInDb()
 		{
-           
 			return dbInfo.GetNumberOfClassesinDB();
 		}
 
 		public long GetFreeSizeOfDb()
 		{
-         
 			return dbInfo.GetFreeSizeofDatabase();
 		}
 
 		public long GetTotalDbSize()
 		{
-          
 			return dbInfo.getTotalDatabaseSize();
 		}
 
@@ -389,13 +382,13 @@ namespace OManager.BusinessLayer.UIHelper
 				Db4oClient.RecentConnFile = Config.Config.OMNConfigDatabasePath();
 			}
 			SaveRecentConnection(Db4oClient.CurrentRecentConnection);
-			Db4oClient.CloseConnection(Db4oClient.Client);
+			Db4oClient.CloseConnection();
 			Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
 		}
 
 		public void CloseCurrDb()
 		{
-			Db4oClient.CloseConnection(Db4oClient.Client);
+			Db4oClient.CloseConnection();
 		}
 
 		public void CloseRecentConn()

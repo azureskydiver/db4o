@@ -10,98 +10,52 @@ namespace OManager.DataLayer.Modal
 {
     public class DbInformation
     {
-        public Hashtable GetAllStoredClasses()
+        public Hashtable StoredClasses()
         {
-            IObjectContainer objectContainer = Db4oClient.Client;
-
+			Hashtable storedClassHashtable = new Hashtable();
         	try
             {
-                IStoredClass[] storedClasses = objectContainer.Ext().StoredClasses();
-                Hashtable storedClassHashtable = new Hashtable();
-
+                IStoredClass[] storedClasses = Db4oClient.Client.Ext().StoredClasses();
                 foreach (IStoredClass stored in storedClasses)
                 {
                     string className = stored.GetName();
-
-					if (!ExcludeClass(className))
-                    {
-                        char[] ch = new char[] { ',' };
-                        int intIndexof = className.LastIndexOfAny(ch);
-                        if (intIndexof > 0)
-                        {
-                            string strValue = className.Substring(0, intIndexof);
-                            storedClassHashtable.Add(className, strValue);
-                        }
-                        else
-                        {
-                            storedClassHashtable.Add(className, className);
-                        }
-                    }
+					if (ExcludeClass(className))
+						continue;
+                	
+                    storedClassHashtable.Add(className, SimpleName(className));
                 }
-                return storedClassHashtable;
             }
             catch (Exception oEx)
             {
                 LoggingHelper.HandleException(oEx);
-                return null;
             }
-        }
+			
+			return storedClassHashtable;
+		}
 
-    	private static bool ExcludeClass(string className)
-    	{
-    		Type type = Type.GetType(className);
-			return type != null 
-							? typeof(IInternal4).IsAssignableFrom(type) 
-							: false;
-    	}
-
-    	public Hashtable GetAllStoredClassesAssemblyWise()
+    	public Hashtable StoredClassesByAssembly()
         {
-            IObjectContainer objectContainer = Db4oClient.Client;
-        	try
+    		try
             {
-                IStoredClass[] storedClasses = objectContainer.Ext().StoredClasses();
+                IStoredClass[] storedClasses = Db4oClient.Client.Ext().StoredClasses();
                 Hashtable storedClassHashtable = new Hashtable();
-                Hashtable sortedHashtable = new Hashtable();
-                List<string> classListforAssembly;
-
                 foreach (IStoredClass stored in storedClasses)
                 {
                     string className = stored.GetName();
-
                     if (!ExcludeClass(className))
                     {
-                        char[] ch = new char[] { ',' };
-
-                        int intIndexof = className.LastIndexOfAny(ch) + 1;
-
-                        string strValue = className.Substring(intIndexof, className.Length - intIndexof);
-
-                        classListforAssembly = storedClassHashtable[strValue] as List<string>;
-                        if (classListforAssembly == null)
+                        string assemblyName = GetAssemblyName(className);
+                    	if (!storedClassHashtable.ContainsKey(assemblyName))
                         {
-                            classListforAssembly = new List<string>();
-                            classListforAssembly.Add(className);
-                            storedClassHashtable.Add(strValue, classListforAssembly);
+							storedClassHashtable.Add(assemblyName, new List<string>());
                         }
-                        else
-                        {
-                            classListforAssembly.Add(className);
-                            storedClassHashtable.Remove(strValue);
-                            storedClassHashtable.Add(strValue, classListforAssembly);
-                        }
+
+						List<string> assemblyClasses = storedClassHashtable[assemblyName] as List<string>;
+						assemblyClasses.Add(className);
                     }
                 }
 
-                ArrayList hashKeys = new ArrayList(storedClassHashtable.Keys);
-                hashKeys.Sort();
-
-                foreach (string key in hashKeys)
-                {
-                    sortedHashtable.Add(key, storedClassHashtable[key]);
-                }
-
-                return sortedHashtable;
+            	return SortHashtable(storedClassHashtable);
             }
             catch (Exception oEx)
             {
@@ -137,7 +91,6 @@ namespace OManager.DataLayer.Modal
             return 0;
         }
 
-
         public long getTotalDatabaseSize()
         {
             IObjectContainer objectContainer = Db4oClient.Client;
@@ -160,7 +113,7 @@ namespace OManager.DataLayer.Modal
         {
             try
             {
-                Hashtable countforClasses = GetAllStoredClasses();
+                Hashtable countforClasses = StoredClasses();
                 return countforClasses.Count;
             }
             catch (NotImplementedException)
@@ -173,5 +126,38 @@ namespace OManager.DataLayer.Modal
 				return -2;
             }
         }
-    }
+
+		private static string GetAssemblyName(string className)
+		{
+			int intIndexof = className.LastIndexOf(',') + 1;
+			return className.Substring(intIndexof, className.Length - intIndexof).Trim();
+		}
+
+		private static string SimpleName(string className)
+		{
+			int intIndexof = className.LastIndexOf(',');
+			return intIndexof >= 0 ? className.Substring(0, intIndexof) : className;
+		}
+
+		private static bool ExcludeClass(string className)
+		{
+			Type type = Type.GetType(className);
+			return type != null
+							? typeof(IInternal4).IsAssignableFrom(type)
+							: false;
+		}
+
+		private static Hashtable SortHashtable(IDictionary original)
+		{
+			ArrayList hashKeys = new ArrayList(original.Keys);
+			hashKeys.Sort();
+
+			Hashtable sortedHashtable = new Hashtable();
+			foreach (string key in hashKeys)
+			{
+				sortedHashtable.Add(key, original[key]);
+			}
+			return sortedHashtable;
+		}
+	}
 }

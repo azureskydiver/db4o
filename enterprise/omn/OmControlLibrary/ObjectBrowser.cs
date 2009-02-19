@@ -1047,22 +1047,15 @@ namespace OMControlLibrary
 					if (dbAssemblyTreeView.Nodes.Count < 1)
 					{
 						storedAssemblies = Helper.DbInteraction.FetchAllStoredClassesForAssembly();
-						//dbAssemblyTreeView.PopulateAssemblyTreeView( storedAssemblies);
 					}
 
-					//If user specified filtervalue in class view and switched to assembly view
-					//if (!string.IsNullOrEmpty(toolStripComboBoxFilter.Text.Trim()) 
-					//    && toolStripComboBoxFilter.Text.Trim() != CONST_FILTER_DEFAULT_STRING)
 					if (!string.IsNullOrEmpty(filterString) && filterString == toolStripComboBoxFilter.Text.Trim().ToLower())
 					{
 						//Get the filtered node for given filter value
-						dbAssemblyTreeView.FindTreeNodesAssemblyView(storedAssemblies,
-							toolStripComboBoxFilter.Text.Trim().ToLower());
+						dbAssemblyTreeView.FindTreeNodesAssemblyView(storedAssemblies, toolStripComboBoxFilter.Text.Trim().ToLower());
 					}
 					else
 					{
-						//Clear and Polulate the tree view for assemblies allready fetched from the database
-						//dbAssemblyTreeView.Nodes.Clear();
 						dbAssemblyTreeView.PopulateAssemblyTreeView(storedAssemblies);
 					}
 

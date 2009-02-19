@@ -1,16 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace OManager.BusinessLayer.Login
 {
     public class ConnParams
     {
-        private string m_connection;
-        private string m_host;
-        private int m_port;
-        private string m_userName;
-        private string m_passWord;
+        private readonly string m_connection;
+        private readonly string m_host;
+        private readonly int m_port;
+        private readonly string m_userName;
+        private readonly string m_passWord;
+
+		public ConnParams(string connection) : this(connection, null, null, null, 0)
+		{
+		}
 
         public ConnParams(string connection, string host, string username, string password, int port)
         {
@@ -23,27 +23,27 @@ namespace OManager.BusinessLayer.Login
         }
         public string Connection
         {
-            get { return this.m_connection; }
+            get { return m_connection; }
         }
 
         public string Host
         {
-            get { return this.m_host; }           
+            get { return m_host; }           
 
         }
         public int Port
         {
-            get { return this.m_port; }           
+            get { return m_port; }           
         }
 
         public string UserName
         {
-            get { return this.m_userName; }            
+            get { return m_userName; }            
         }
         public string PassWord
         {
 
-            get { return this.m_passWord; }
+            get { return m_passWord; }
         }        
     }
 }

@@ -20,7 +20,7 @@ namespace OMControlLibrary.Common
 		private TreeNode dragNode;
 		private readonly ImageList imageListTreeView;
 
-		private Hashtable m_hashtableAssmblyNodes = new Hashtable();
+		private Hashtable m_hashtableAssemblyNodes = new Hashtable();
 		private Hashtable m_hashtableClassNodes = new Hashtable();
 
 		private TreeNode m_PreviousTreeNode = new TreeNode();
@@ -57,8 +57,8 @@ namespace OMControlLibrary.Common
 
 		public Hashtable HashtableAssmblyNodes
 		{
-			get { return m_hashtableAssmblyNodes; }
-			set { m_hashtableAssmblyNodes = value; }
+			get { return m_hashtableAssemblyNodes; }
+			set { m_hashtableAssemblyNodes = value; }
 		}
 
 		#endregion
@@ -332,7 +332,7 @@ namespace OMControlLibrary.Common
 							QueryBuilder queryBuilder = QueryBuilder.Instance;
 
 							if (m_hashtableClassNodes.Contains(treenode.Name) ||
-							    m_hashtableAssmblyNodes.Contains(treenode.Name))
+							    m_hashtableAssemblyNodes.Contains(treenode.Name))
 							{
 								ContextMenuStrip = m_tvViewObjectsContextMenuStrip;
 							}
@@ -655,58 +655,29 @@ namespace OMControlLibrary.Common
 			}
 		}
 
-		public void PopulateAssemblyTreeView(Hashtable list)
+		public void PopulateAssemblyTreeView(Hashtable classes)
 		{
 			try
 			{
-				IDictionaryEnumerator enumerator =
-					list.GetEnumerator();
-
-				TreeNode treeNodeNew = null;
-
 				BeginUpdate();
 
 				Nodes.Clear();
 				HashtableAssmblyNodes.Clear();
 
-				while (enumerator.MoveNext())
+				foreach (DictionaryEntry entry in classes)
 				{
-					string nodevalue = enumerator.Key.ToString();
-					List<string> classes = (List<string>) enumerator.Value;
-
-					if (!string.IsNullOrEmpty(nodevalue))
-						treeNodeNew = new TreeNode(nodevalue);
-					else
+					string nodevalue = entry.Key.ToString();
+					if (string.IsNullOrEmpty(nodevalue))
 						return;
 
-					treeNodeNew.Name = nodevalue;
-					treeNodeNew.Tag = "Assembly View";
+					TreeNode node = NewTreeNode(nodevalue, "Assembly View", 0);
+					AddAssemblyClassesNodesTo(node, (List<string>) entry.Value);
 
-					if (classes.Count > 0)
-					{
-						for (int i = 0; i < classes.Count; i++)
-						{
-							TreeNode newClassesTreeNodes = new TreeNode(classes[i]);
-							newClassesTreeNodes.Name = classes[i];
-							newClassesTreeNodes.Tag = classes[i];
-							newClassesTreeNodes.ImageIndex =
-								newClassesTreeNodes.SelectedImageIndex = 1; //Classes
+					if (!m_hashtableAssemblyNodes.ContainsKey(node.Name))
+						m_hashtableAssemblyNodes.Add(node.Name, node);
 
-							if (!HashtableAssmblyNodes.ContainsKey(newClassesTreeNodes.Name))
-								HashtableAssmblyNodes.Add(newClassesTreeNodes.Name, newClassesTreeNodes);
-
-							treeNodeNew.Nodes.Add(newClassesTreeNodes);
-							AddDummyChildNode(newClassesTreeNodes);
-						}
-					}
-
-					treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 0; //Assembly
-
-					if (!m_hashtableAssmblyNodes.ContainsKey(treeNodeNew.Name))
-						m_hashtableAssmblyNodes.Add(treeNodeNew.Name, treeNodeNew);
-
-					Nodes.Add(treeNodeNew);
-					treeNodeNew.Expand();
+					Nodes.Add(node);
+					node.Expand();
 				}
 			}
 			catch (Exception oEx)
@@ -717,6 +688,28 @@ namespace OMControlLibrary.Common
 			{
 				EndUpdate();
 			}
+		}
+
+		private void AddAssemblyClassesNodesTo(TreeNode parent, IEnumerable<string> classes)
+		{
+			foreach (string className in classes)
+			{
+				TreeNode classNode = NewTreeNode(className, className, 1);
+				if (!HashtableAssmblyNodes.ContainsKey(className))
+					HashtableAssmblyNodes.Add(className, classNode);
+                
+				parent.Nodes.Add(classNode);
+				AddDummyChildNode(classNode);
+			}
+		}
+
+		private static TreeNode NewTreeNode(string name, string tag, int imageIndex)
+		{
+			TreeNode node = new TreeNode(name, imageIndex, imageIndex);
+			node.Name = name;
+			node.Tag = tag;
+
+			return node;
 		}
 
 		public void AddFavoriteFolder()
@@ -987,7 +980,7 @@ namespace OMControlLibrary.Common
 
 				BeginUpdate();
 				Nodes.Clear();
-				m_hashtableAssmblyNodes.Clear();
+				m_hashtableAssemblyNodes.Clear();
 
 				while (enumerator.MoveNext())
 				{
@@ -1013,8 +1006,8 @@ namespace OMControlLibrary.Common
 								newClassesTreeNodes.ImageIndex =
 									newClassesTreeNodes.SelectedImageIndex = 1; //Classes
 
-								if (!m_hashtableAssmblyNodes.ContainsKey(newClassesTreeNodes.Name))
-									m_hashtableAssmblyNodes.Add(newClassesTreeNodes.Name, newClassesTreeNodes);
+								if (!m_hashtableAssemblyNodes.ContainsKey(newClassesTreeNodes.Name))
+									m_hashtableAssemblyNodes.Add(newClassesTreeNodes.Name, newClassesTreeNodes);
 
 								treeNodeNew.Nodes.Add(newClassesTreeNodes);
 								AddDummyChildNode(newClassesTreeNodes);
@@ -1106,30 +1099,25 @@ namespace OMControlLibrary.Common
 		/// <param name="tagName">Tag assigned to a treenode</param>
 		public void UpdateTreeNodeSelection(TreeNode selectedNode, bool isAssemblyView)
 		{
-			string selectedNodeName = string.Empty;
-			TreeNode parentNode = new TreeNode();
-			Hashtable m_htnodes = new Hashtable();
+			TreeNode parentNode;
+			Hashtable m_htnodes;
 			try
 			{
 				if (selectedNode == null)
 					return;
 
 				//Check whether tree node with given tag exists.
-				if (isAssemblyView)
-					m_htnodes = HashtableAssmblyNodes;
-				else
-					m_htnodes = HashtableClassNodes;
-
+				m_htnodes = isAssemblyView ? HashtableAssmblyNodes : HashtableClassNodes;
 
 				parentNode = selectedNode.Parent;
-				selectedNodeName = selectedNode.Text;
+				string selectedNodeName = selectedNode.Text;
 				while (parentNode != null && parentNode.Tag != null
 				       && parentNode.Tag.ToString() != "Assembly View" && parentNode.Tag.ToString() != "Fav Folder")
 				{
 					selectedNodeName = parentNode.Name;
-
 					parentNode = parentNode.Parent;
 				}
+
 				UnHighlightAllFavFolders();
 				if (parentNode != null && parentNode.Tag != null && parentNode.Tag.ToString() != "Assembly View")
 				{
@@ -1144,11 +1132,7 @@ namespace OMControlLibrary.Common
 						if (m_TreeNode != null)
 						{
 							m_TreeNode.Text.Trim();
-							//Select the node.
-							if (selectedNode.Name.LastIndexOf(",") != -1)
-								SelectedNode = m_TreeNode;
-							else
-								SelectedNode = selectedNode;
+							SelectedNode = selectedNode.Name.LastIndexOf(",") != -1 ? m_TreeNode : selectedNode;
 
 							m_TreeNode.Text += "            ";
 							Font fontTree = new Font(Font.Name, Font.Size, FontStyle.Bold);
