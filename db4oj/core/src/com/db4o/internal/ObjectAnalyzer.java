@@ -2,7 +2,6 @@
 
 package com.db4o.internal;
 
-import com.db4o.internal.fieldhandlers.*;
 import com.db4o.reflect.*;
 
 
@@ -50,10 +49,7 @@ class ObjectAnalyzer {
     private boolean detectClassMetadata(Transaction trans, ReflectClass claxx) {
         _classMetadata = _container.getActiveClassMetadata(claxx);
         if (_classMetadata == null) {
-            FieldHandler fieldHandler = _container.fieldHandlerForClass(claxx);
-            if(Handlers4.isSecondClass(fieldHandler)){
-                notStorable(_obj, claxx);
-            }
+        	
             _classMetadata = _container.produceClassMetadata(claxx);
             if ( _classMetadata == null){
                 notStorable(_obj, claxx);
@@ -79,7 +75,8 @@ class ObjectAnalyzer {
     }
     
     private final boolean isPlainObjectOrPrimitive(ClassMetadata classMetadata) {
-        return classMetadata.getID() == Handlers4.UNTYPED_ID  || classMetadata.isPrimitive();
+        return classMetadata.getID() == Handlers4.UNTYPED_ID 
+        	|| classMetadata.isSecondClass();
     }
 
     ObjectReference objectReference() {

@@ -5,6 +5,7 @@ package com.db4o.internal.marshall;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
+import com.db4o.marshall.*;
 import com.db4o.typehandlers.*;
 
 
@@ -13,7 +14,7 @@ import com.db4o.typehandlers.*;
  * 
  * @exclude
  */
-public class UnmarshallingContext extends ObjectReferenceContext implements HandlerVersionContext{
+public class UnmarshallingContext extends ObjectReferenceContext implements HandlerVersionContext, FirstClassReadContext {
     
     private Object _object;
     

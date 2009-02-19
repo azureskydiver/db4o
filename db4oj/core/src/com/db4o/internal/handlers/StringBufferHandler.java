@@ -11,7 +11,7 @@ import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
 public final class StringBufferHandler implements TypeHandler4, BuiltinTypeHandler,
-        SecondClassTypeHandler, VariableLengthTypeHandler, EmbeddedTypeHandler {
+        VariableLengthTypeHandler, EmbeddedTypeHandler {
 
     private ReflectClass _classReflector;
     

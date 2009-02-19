@@ -949,7 +949,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         	return null;
         }
         TypeHandler4 typeHandler = _handlers.typeHandlerForClass(claxx);
-        if (Handlers4.hasID(typeHandler)){
+        if (Handlers4.isClassAware(typeHandler)){
         	return typeHandler;
         }
         ClassMetadata classMetadata = _classCollection.produceClassMetadata(claxx);
