@@ -29,7 +29,7 @@ import com.db4o.typehandlers.*;
  */
 public final class HandlerRegistry {
     
-    public static final byte HANDLER_VERSION = (byte)5;
+    public static final byte HANDLER_VERSION = (byte)6;
     
     private final ObjectContainerBase _container;  // this is the master container and not valid
 	                                   // for TransportObjectContainer
@@ -227,6 +227,7 @@ public final class HandlerRegistry {
         registerHandlerVersion(arrayHandler, 0, new ArrayHandler0());
         registerHandlerVersion(arrayHandler, 2, new ArrayHandler2());
         registerHandlerVersion(arrayHandler, 3, new ArrayHandler3());
+        registerHandlerVersion(arrayHandler, 5, new ArrayHandler5());
         
         MultidimensionalArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler();
         registerHandlerVersion(multidimensionalArrayHandler, 0, new MultidimensionalArrayHandler0());

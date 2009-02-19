@@ -11,7 +11,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class ArrayVersionHelper3 extends ArrayVersionHelper {
+public class ArrayVersionHelper3 extends ArrayVersionHelper5 {
     
     public int classIDFromInfo(ObjectContainerBase container, ArrayInfo info){
         ClassMetadata classMetadata = container.produceClassMetadata(info.reflectClass());

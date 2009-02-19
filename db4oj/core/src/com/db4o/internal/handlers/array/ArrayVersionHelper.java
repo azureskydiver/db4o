@@ -37,6 +37,9 @@ public class ArrayVersionHelper {
     }
     
     public boolean hasNullBitmap(ArrayInfo info) {
+    	if(info.nullable()){
+    		return true;
+    	}
         return ! info.primitive();
     }
     
