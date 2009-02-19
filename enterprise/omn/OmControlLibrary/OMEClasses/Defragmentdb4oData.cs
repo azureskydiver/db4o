@@ -56,11 +56,8 @@ namespace OMControlLibrary
 			// System.Threading.Thread t = null;
 			try
 			{
-				//  t = new System.Threading.Thread(new ThreadStart(ShowDialogforProgressBar));
-				//  t.Start();
-				//Helper.DbInteraction.closedb(Helper.DbInteraction.GetCurrentRecentConnection());
 				bool checkExecption = Helper.DbInteraction.DefragDatabase(strLocation);
-				ConnParams conparam = new ConnParams(strLocation, null, null, null, 0);
+				ConnParams conparam = new ConnParams(strLocation);
 				RecentQueries currRecentConnection = new RecentQueries(conparam);
 				RecentQueries tempRc = currRecentConnection.ChkIfRecentConnIsInDb();
 				if (tempRc != null)
@@ -68,19 +65,17 @@ namespace OMControlLibrary
 				currRecentConnection.Timestamp = DateTime.Now;
 				Helper.DbInteraction.ConnectoToDB(currRecentConnection);
 				Helper.DbInteraction.SetCurrentRecentConnection(currRecentConnection);
-				//    t.Abort();
 
-				if (checkExecption == true)
+				if (checkExecption)
 				{
-					MessageBox.Show(Helper.GetResourceString(Common.Constants.ERROR_MSG_DEFRAGMENT),
-						Helper.GetResourceString(Common.Constants.PRODUCT_CAPTION),
+					MessageBox.Show(Helper.GetResourceString(Constants.ERROR_MSG_DEFRAGMENT),
+						Helper.GetResourceString(Constants.PRODUCT_CAPTION),
 						MessageBoxButtons.OK,
 						MessageBoxIcon.Error);
 				}
 			}
 			catch (Exception e)
 			{
-				//    t.Abort();
 				LoggingHelper.ShowMessage(e);
 			}
 		}

@@ -444,7 +444,7 @@ namespace OMControlLibrary
 						return;
 					try
 					{
-						conparam = new ConnParams(textBoxConnection.Text.Trim(), null, null, null, 0);
+						conparam = new ConnParams(textBoxConnection.Text.Trim());
 					}
 					catch (Exception oEx)
 					{
