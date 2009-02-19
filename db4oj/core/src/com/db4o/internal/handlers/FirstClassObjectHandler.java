@@ -101,31 +101,13 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
     
     public Object read(ReadContext context) {
         UnmarshallingContext unmarshallingContext = (UnmarshallingContext) context;
-        
-// FIXME: Commented out code below is the implementation plan to let
-//        FirstClassObjectHandler take responsibility of fieldcount
-//        and null Bitmap.        
-       
-        
-//        BitMap4 nullBitMap = unmarshallingContext.readBitMap(fieldCount);
-//        int fieldCount = context.readInt();
-
         instantiateAspects(unmarshallingContext);
-        
         return unmarshallingContext.persistentObject();
     }
 
     public void write(final WriteContext context, Object obj) {
-
-//        int fieldCount = _classMetadata.fieldCount();
-//        context.writeInt(fieldCount);
-//        final BitMap4 nullBitMap = new BitMap4(fieldCount);
-//        ReservedBuffer bitMapBuffer = context.reserve(nullBitMap.marshalledLength());
-        
+    	
         marshallAspects(obj, (MarshallingContext)context);
-        
-//        bitMapBuffer.writeBytes(nullBitMap.bytes());
-        
     }
     
     public void marshallAspects(final Object obj, final MarshallingContext context) {

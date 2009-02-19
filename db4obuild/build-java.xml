@@ -16,6 +16,8 @@
 		
 		<property name="java.src.bench" value="${dir.dist.java}/src/bench"/>
 		<property name="java.src.tools" value="${dir.dist.java}/src/tools"/>
+		
+		<property name="easymock.jar" location="${dir.j.tests}/lib/easymock/easymock.jar" />
 	</target>
 	
 	<target name="init" depends="db4oj.properties">
@@ -147,6 +149,9 @@
 
 				<arg value="-targetPlatform" />
 				<arg value="jdk12" />
+				
+				<arg value="-cp" />
+				<arg file="${easymock.jar}" />
 			</args>
 		</decaf>
 
@@ -724,6 +729,15 @@
 	</target>
 	
 	<target name="build.db4ojdk1.5.tests" depends="build.db4ojdk1.5, build.db4ounitjdk1.5">
+		
+		<path id="tests.jdk1.5.cp">
+	    	<pathelement location="${file.jdk1.5.jar}" />
+			<pathelement location="${file.jdk1.5.optional.jar}" />
+			<pathelement location="${file.jdk1.5.cs.jar}" />
+			<pathelement location="${file.jdk1.5.db4ounit.jar}" />
+			<pathelement location="${easymock.jar}" />
+		</path>
+		
 		<mkdir dir="${dir.dist.classes.test.jdk1.5}" />
 		<javac destdir="${dir.dist.classes.test.jdk1.5}" 
 			fork="true" 
@@ -733,10 +747,7 @@
 			encoding="UTF-8">
 			<classpath>
 				<pathelement location="${file.decaf.annotations}" />
-				<pathelement location="${file.jdk1.5.jar}" />
-				<pathelement location="${file.jdk1.5.optional.jar}" />
-				<pathelement location="${file.jdk1.5.cs.jar}" />
-				<pathelement location="${file.jdk1.5.db4ounit.jar}" />
+				<path refid="tests.jdk1.5.cp" />
 			</classpath>
 			<src path="${dir.j.tests.src}"/>
 			<src path="${dir.j.tools.src}" />
@@ -1025,12 +1036,9 @@
 	</target>
 	
 	<target name="run.tests.jdk1.5" depends="init, build.db4ojdk1.5.tests">
-        <path id="tests.jdk1.5.cp">
+        <path id="tests.jdk1.5.runtime.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.5}" />
-        	<pathelement location="${file.jdk1.5.jar}" />
-            <pathelement location="${file.jdk1.5.cs.jar}" />
-            <pathelement location="${file.jdk1.5.optional.jar}" />
-			<pathelement location="${file.jdk1.5.db4ounit.jar}" />
+        	<path refid="tests.jdk1.5.cp" />
         </path>
         
 		<java taskname="core/j15" jvm="${file.jvm.jdk1.5}" 
@@ -1041,7 +1049,7 @@
 			timeout="10000000">
 			<jvmarg value="-Xmx512m"/>
 			<sysproperty key="dir.workspace" value="${dir.base}" />
-			<classpath refid="tests.jdk1.5.cp" />
+			<classpath refid="tests.jdk1.5.runtime.cp" />
 		</java>
 
 		<java taskname="opt/j15" jvm="${file.jvm.jdk1.5}" 
@@ -1052,7 +1060,7 @@
 			timeout="10000000">
 			<jvmarg value="-Xmx512m"/>
 			<sysproperty key="dir.workspace" value="${dir.base}" />
-			<classpath refid="tests.jdk1.5.cp"/>
+			<classpath refid="tests.jdk1.5.runtime.cp"/>
 		</java>
 
         <java taskname="legacy/j15" jvm="${file.jvm.jdk1.5}" 
@@ -1061,7 +1069,7 @@
         	classname="com.db4o.test.AllTestsJdk5" 
         	failonerror="true" 
         	timeout="3600000">
-			<classpath refid="tests.jdk1.5.cp" />
+			<classpath refid="tests.jdk1.5.runtime.cp" />
 			<arg value="-withExceptions" />
 		</java>
 		<java taskname="tests defrag/jdk1.5" jvm="${file.jvm.jdk1.5}" 
@@ -1071,7 +1079,7 @@
 			failonerror="true" 
 			timeout="3000000">
 			<sysproperty key="dir.workspace" value="${dir.base}" />
-			<classpath refid="tests.jdk1.5.cp" />
+			<classpath refid="tests.jdk1.5.runtime.cp" />
 		</java>
 		<java taskname="core+ta/j15" jvm="${file.jvm.jdk1.5}" 
 			jvmargs="${java.vmargs}"
@@ -1080,7 +1088,7 @@
 			failonerror="true" 
 			timeout="3000000">
 			<sysproperty key="dir.workspace" value="${dir.base}" />
-			<classpath refid="tests.jdk1.5.cp" />
+			<classpath refid="tests.jdk1.5.runtime.cp" />
 		</java>
 		<java taskname="legacy2/j15" jvm="${file.jvm.jdk1.5}" 
 			jvmargs="${java.vmargs}"
@@ -1088,7 +1096,7 @@
 			classname="com.db4o.test.AllTestsJdk1_2Legacy" 
 			failonerror="true" 
 			timeout="3600000">
-			<classpath refid="tests.jdk1.5.cp" />
+			<classpath refid="tests.jdk1.5.runtime.cp" />
 			<arg value="-withExceptions" />
 		</java>
 

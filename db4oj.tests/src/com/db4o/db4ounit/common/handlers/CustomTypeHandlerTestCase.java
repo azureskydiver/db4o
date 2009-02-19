@@ -89,7 +89,7 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
         }
 
         public Object read(ReadContext context) {
-            ItemGrandChild item = (ItemGrandChild)((UnmarshallingContext) context).persistentObject();
+            ItemGrandChild item = (ItemGrandChild)((FirstClassReadContext) context).persistentObject();
             item.age = context.readInt();
             int check = context.readInt();
             if(check != 100){

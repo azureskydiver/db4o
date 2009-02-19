@@ -93,6 +93,9 @@ public class TypeHandlerAspect extends ClassAspect {
 			public Object run() {
 		        Object readObject = _typeHandler.read(context);
 		        if(readObject != null && oldObject != readObject){
+		        	if (!Handlers4.isEmbedded(_typeHandler)) {
+		        		throw new IllegalStateException("First class handler can only return the object in the context.");
+		        	}
 		        	context.persistentObject(readObject);
 		        }
 				return null;

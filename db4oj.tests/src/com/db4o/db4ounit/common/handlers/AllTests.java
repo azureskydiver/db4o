@@ -11,6 +11,7 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
+			com.db4o.db4ounit.common.handlers.framework.AllTests.class,
 		    ArrayHandlerTestCase.class,
             BooleanHandlerTestCase.class,
             ByteHandlerTestCase.class,

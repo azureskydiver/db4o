@@ -23,10 +23,6 @@ public class SecondClassTestCase extends AbstractDb4oTestCase{
         
     }
     
-    public static class CustomSecondClassItem{
-        
-    }
-    
     public static class CustomFirstClassItem{
         
     }
@@ -42,7 +38,6 @@ public class SecondClassTestCase extends AbstractDb4oTestCase{
         register(new Date[] {new Date()}, false);
         register(new Item[] {new Item()}, false);
         register(new CustomFirstClassItem(), false);
-        register(new CustomSecondClassItem(), true);
     }
 
     private static void register(Object obj, boolean isSecondClass) {
@@ -53,25 +48,15 @@ public class SecondClassTestCase extends AbstractDb4oTestCase{
         
     }
     
-    public static class SecondClassTypeHandler extends FirstClassObjectHandler implements EmbeddedTypeHandler{
-        
-    }
-
-    
     protected void configure(Configuration config) throws Exception {
         config.registerTypeHandler(
             new SingleClassTypeHandlerPredicate(CustomFirstClassItem.class), 
             new FirstClassTypeHandler());
-        config.registerTypeHandler(
-            new SingleClassTypeHandlerPredicate(CustomSecondClassItem.class), 
-            new SecondClassTypeHandler());
     }
     
     protected void store() throws Exception {
         store(new Item());
         store(new CustomFirstClassItem());
-        store(new CustomSecondClassItem());
-        
     }
     
     public void test(){
@@ -82,9 +67,6 @@ public class SecondClassTestCase extends AbstractDb4oTestCase{
             ClassMetadata classMetadata = container().classMetadataForObject(currentObject);
             Assert.areEqual(isSecondClass, classMetadata.isSecondClass());
         }
-        
-        
-        
     }
 
 }

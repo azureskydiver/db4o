@@ -4,7 +4,6 @@ package com.db4o.internal;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
-import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
@@ -46,8 +45,7 @@ public class Handlers4 {
     
     public static boolean handlerCanHold(TypeHandler4 handler, Reflector reflector, ReflectClass claxx){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler);
-        if (handler instanceof TypeFamilyTypeHandler)
-        {
+        if (handler instanceof TypeFamilyTypeHandler) {
             return ((TypeFamilyTypeHandler)handler).canHold(claxx);
         }
         if(handlesSimple(baseTypeHandler)){
@@ -78,7 +76,7 @@ public class Handlers4 {
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler); 
         return (baseTypeHandler instanceof PrimitiveHandler)
         	|| (baseTypeHandler instanceof StringHandler)
-        	|| (baseTypeHandler instanceof SecondClassTypeHandler)
+        	|| (baseTypeHandler instanceof StringBufferHandler)
         	|| (baseTypeHandler instanceof TypeFamilyTypeHandler && ((TypeFamilyTypeHandler)baseTypeHandler).isSimple());
     }
     
@@ -122,7 +120,7 @@ public class Handlers4 {
         return clazz;
     }
 
-	public static boolean hasID(TypeHandler4 typeHandler){
+	public static boolean isClassAware(TypeHandler4 typeHandler){
 		return 	typeHandler instanceof BuiltinTypeHandler || 
 				typeHandler instanceof ClassMetadata || 
 				typeHandler instanceof PlainObjectHandler;
@@ -191,10 +189,6 @@ public class Handlers4 {
 	
 	public static boolean isPrimitive(TypeHandler4 handler) {
 		return handler instanceof PrimitiveHandler;
-	}
-	
-	public static boolean isSecondClass(FieldHandler handler) {
-		return handler instanceof SecondClassTypeHandler;
 	}
 	
 	public static boolean isUntyped(TypeHandler4 handler) {
