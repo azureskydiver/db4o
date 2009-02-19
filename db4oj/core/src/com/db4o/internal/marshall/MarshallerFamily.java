@@ -121,7 +121,6 @@ public class MarshallerFamily {
     }
     
     public static MarshallerFamily forConverterVersion(int n){
-    	checkIfVersionIsTooNew(n);
         MarshallerFamily result = allVersions[0];
         for (int i = 1; i < allVersions.length; i++) {
             if(allVersions[i]._converterVersion > n){
