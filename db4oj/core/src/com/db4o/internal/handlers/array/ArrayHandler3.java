@@ -6,7 +6,7 @@ package com.db4o.internal.handlers.array;
 /**
  * @exclude
  */
-public class ArrayHandler3 extends ArrayHandler {
+public class ArrayHandler3 extends ArrayHandler5 {
     
     protected ArrayVersionHelper createVersionHelper() {
         return new ArrayVersionHelper3();
