@@ -12,13 +12,14 @@ import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
+import com.db4o.reflect.*;
 
 
 /**
  * Typehandler for classes that implement java.util.Map.
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler{
+public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, VariableLengthTypeHandler{
     
     public PreparedComparison prepareComparison(Context context, Object obj) {
         // TODO Auto-generated method stub
@@ -126,4 +127,8 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, CanHold
 		TypeHandler4 untypedHandler = container.handlers().untypedObjectHandler();
 		return new KeyValueHandlerPair(untypedHandler, untypedHandler);
 	}
+
+	public boolean canHold(ReflectClass type) {
+		return true;
+    }
 }

@@ -521,6 +521,10 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     
     private static final int HASHCODE_FOR_NULL = 9141078;
 
+	public boolean canHold(ReflectClass type) {
+		return _handler.canHold(type);
+    }
+
 
     
 }

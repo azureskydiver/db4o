@@ -9,6 +9,7 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
+import com.db4o.reflect.*;
 
 /**
  * Typehandler that ignores all fields on a class
@@ -46,5 +47,9 @@ public class IgnoreFieldsTypeHandler implements TypeHandler4, FirstClassHandler{
 	public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
 		return null;
 	}
+
+	public boolean canHold(ReflectClass type) {
+		return true;
+    }
 
 }

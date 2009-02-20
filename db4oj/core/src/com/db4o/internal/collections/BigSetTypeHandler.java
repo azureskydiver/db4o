@@ -10,6 +10,7 @@ import com.db4o.internal.btree.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
+import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
 /**
@@ -73,5 +74,11 @@ public class BigSetTypeHandler implements TypeHandler4{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public boolean canHold(ReflectClass type) {
+		// FIXME: for .net generics we can actually
+		// know
+		return true;
+    }
 
 }

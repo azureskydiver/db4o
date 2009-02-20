@@ -44,6 +44,11 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
         return new ArrayHandler(classMetadata.typeHandler(), isPrimitive);
     }
     
+    public void testCanHold() {
+    	Assert.isTrue(intArrayHandler().canHold(reflectClass(int.class)));
+    	Assert.isFalse(intArrayHandler().canHold(reflectClass(long.class)));
+    }
+    
     public void testIntArrayReadWrite() {
         MockWriteContext writeContext = new MockWriteContext(db());
         int[] expected = new int[]{7, 8, 9};

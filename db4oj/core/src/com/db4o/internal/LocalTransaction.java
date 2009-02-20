@@ -7,9 +7,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.caching.*;
 import com.db4o.internal.callbacks.*;
-import com.db4o.internal.delete.*;
 import com.db4o.internal.freespace.*;
-import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.internal.transactionlog.*;
 

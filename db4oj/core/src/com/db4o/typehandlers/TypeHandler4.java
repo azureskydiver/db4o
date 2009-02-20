@@ -8,6 +8,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.fieldhandlers.*;
 import com.db4o.marshall.*;
+import com.db4o.reflect.*;
 
 
 /**
@@ -50,5 +51,7 @@ public interface TypeHandler4 extends FieldHandler, Comparable4 {
 	 * @param obj the object
 	 */
     void write(WriteContext context, Object obj);
+
+	boolean canHold(ReflectClass type);
 	
 }

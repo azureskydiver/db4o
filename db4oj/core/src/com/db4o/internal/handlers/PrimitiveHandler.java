@@ -44,6 +44,11 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
         return Platform4.nullableTypeFor(primitiveJavaClass());
     }
     
+    public boolean canHold(ReflectClass type) {
+    	return type.equals(classReflector())
+			|| type.equals(primitiveClassReflector());
+    }
+    
     protected Object primitiveNull() {
     	if(_primitiveNull == null) {
         	ReflectClass claxx = (_primitiveClassReflector == null ? _classReflector : _primitiveClassReflector);

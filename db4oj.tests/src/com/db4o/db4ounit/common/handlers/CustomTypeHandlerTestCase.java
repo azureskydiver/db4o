@@ -9,6 +9,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.internal.reflect.*;
 import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
@@ -69,6 +70,10 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
         public void defragment(DefragmentContext context) {
       
         }
+
+		public boolean canHold(ReflectClass type) {
+			return ReflectClasses.areEqual(Item.class, type);
+        }
     }
     
     
@@ -105,6 +110,10 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
 
         public void defragment(DefragmentContext context) {
       
+        }
+
+		public boolean canHold(ReflectClass type) {
+			return ReflectClasses.areEqual(ItemGrandChild.class, type);
         }
     }
 

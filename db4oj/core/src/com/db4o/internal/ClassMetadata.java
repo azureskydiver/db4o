@@ -2018,4 +2018,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return _container.instanceCount(this, trans);
 	}
 
+	public boolean canHold(ReflectClass type) {
+		 ReflectClass classReflector = classReflector();
+       if(classReflector.isCollection()){
+           return true;
+       }
+       return classReflector.isAssignableFrom(type);
+    }
+
 }

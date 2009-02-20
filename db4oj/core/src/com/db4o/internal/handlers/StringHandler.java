@@ -36,6 +36,10 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
         return Const4.YAPSTRING;
     }
 
+	public boolean canHold(ReflectClass type) {
+		return type.equals(classReflector());
+    }
+
     public final Object indexEntryToObject(Context context, Object indexEntry){
         if(indexEntry instanceof Slot){
             Slot slot = (Slot)indexEntry;
