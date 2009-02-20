@@ -8,9 +8,10 @@ import com.db4o.typehandlers.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 @decaf.Remove
-public class FirstClassHandlerSemanticsTestCase extends AbstractInMemoryDb4oTestCase {
+public class FirstClassHandlerSemanticsTestCase extends AbstractInMemoryDb4oTestCase implements OptOutDefragSolo {
 	
 	public static class Item {
 	}
