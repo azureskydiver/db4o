@@ -1,224 +1,448 @@
 <?xml version="1.0"?>
 <doc>
-  <type name="Db4objects.Db4o.Db4oEmbedded">
-    <doc>
-      <summary>Factory class to open db4o instances in embedded mode.</summary>
-      <remarks>
-        Factory class to open db4o instances in embedded mode.
-      </remarks>
-      <seealso cref="Db4objects.Db4o.CS.Db4oClientServer">
-        Db4objects.Db4o.CS.Db4oClientServer
-        in Db4objects.Db4o.CS.dll for methods to open db4o servers and db4o clients.
-      </seealso>
-      <since>7.5</since>
-
-
-    </doc>
-    <member name="OpenFile(IEmbeddedConfiguration, string)">
-      <doc>
-        <summary>
-          opens an
-          <see cref="Db4objects.Db4o.IObjectContainer">IObjectContainer</see>
-          on the specified database file for local use.
-          <br /><br />A database file can only be opened once, subsequent attempts to open
-          another
-          <see cref="Db4objects.Db4o.IObjectContainer">IObjectContainer</see>
-          against the same file will result in
-          a
-          <see cref="Db4objects.Db4o.Ext.DatabaseFileLockedException">
-            DatabaseFileLockedException
-          </see>
-          .<br /><br />
-          Database files can only be accessed for readwrite access from one process
-          at one time. All versions except for db4o mobile edition use an
-          internal mechanism to lock the database file for other processes.
-          <br /><br />
-        </summary>
-        <param name="config">
-          a custom
-          <see cref="Db4objects.Db4o.Config.IConfiguration">IConfiguration</see>
-          instance to be obtained via
-          <see cref="newConfiguration">newConfiguration</see>
-        </param>
-        <param name="databaseFileName">an absolute or relative path to the database file</param>
-        <returns>
-          an open
-          <see cref="Db4objects.Db4o.IObjectContainer">IObjectContainer</see>
-        </returns>
-        <seealso cref="Db4objects.Db4o.Config.IConfiguration.ReadOnly">
-          Db4objects.Db4o.Config.IConfiguration.ReadOnly
-        </seealso>
-        <seealso cref="Db4objects.Db4o.Config.IConfiguration.Encrypt">
-          Db4objects.Db4o.Config.IConfiguration.Encrypt
-        </seealso>
-        <seealso cref="Db4objects.Db4o.Config.IConfiguration.Password">
-          Db4objects.Db4o.Config.IConfiguration.Password
-        </seealso>
-        <exception cref="Db4objects.Db4o.Ext.Db4oIOException">
-          I/O operation failed or was unexpectedly interrupted.
-        </exception>
-        <exception cref="Db4objects.Db4o.Ext.DatabaseFileLockedException">
-          the required database file is locked by
-          another process.
-        </exception>
-        <exception cref="Db4objects.Db4o.Ext.IncompatibleFileFormatException">
-          runtime
-          <see cref="Db4objects.Db4o.Config.IConfiguration">configuration</see>
-          is not compatible
-          with the configuration of the database file.
-        </exception>
-        <exception cref="Db4objects.Db4o.Ext.OldFormatException">
-          open operation failed because the database file
-          is in old format and
-          <see cref="Db4objects.Db4o.Config.IConfiguration.AllowVersionUpdates">
-            Db4objects.Db4o.Config.IConfiguration.AllowVersionUpdates
-          </see>
-
-          is set to false.
-        </exception>
-        <exception cref="Db4objects.Db4o.Ext.DatabaseReadOnlyException">
-          database was configured as read-only.
-        </exception>
-      </doc>
-    </member>
-  </type>
-
-  <type name="Db4objects.Db4o.Diagnostic.IDiagnosticConfiguration">
-    <doc>
-      <summary>provides methods to configure the behaviour of db4o diagnostics.</summary>
-      <remarks>
-        provides methods to configure the behaviour of db4o diagnostics.
-        <br /><br />Diagnostic system can be enabled on a running db4o database
-        to notify a user about possible problems or misconfigurations.
-        Diagnostic listeners can be be added and removed with calls
-        to this interface.
-        To install the most basic listener call:<br />
-        <code>Db4oFactory.Configure().Diagnostic().AddListener(new DiagnosticToConsole());</code>
-      </remarks>
-      <seealso cref="IConfiguration.Diagnostic">IConfiguration.Diagnostic</seealso>
-      <seealso cref="IDiagnosticListener">IDiagnosticListener</seealso>
-    </doc>
-  </type>
-
-  <type name="Db4objects.Db4o.Defragment.Defragment">
-    <doc>
-      <summary>defragments database files.</summary>
-      <remarks>
-        defragments database files.
-        <br /><br />db4o structures storage inside database files as free and occupied slots, very
-        much like a file system - and just like a file system it can be fragmented.<br /><br />
-        The simplest way to defragment a database file:<br /><br />
-        <code>Defragment.Defrag("sample.yap");</code><br /><br />
-        This will move the file to "sample.yap.backup", then create a defragmented
-        version of this file in the original position, using a temporary file
-        "sample.yap.mapping". If the backup file already exists, this will throw an
-        exception and no action will be taken.<br /><br />
-        For more detailed configuration of the defragmentation process, provide a
-        DefragmentConfig instance:<br /><br />
-        <code>
-          DefragmentConfig config=new DefragmentConfig("sample.yap","sample.bap",new BTreeIDMapping("sample.map"));<br />
-          config.ForceBackupDelete(true);<br />
-          config.StoredClassFilter(new AvailableClassFilter());<br />
-          config.Db4oConfig(db4oConfig);<br />
-          Defragment.Defrag(config);
-        </code><br /><br />
-        This will move the file to "sample.bap", then create a defragmented version
-        of this file in the original position, using a temporary file "sample.map" for BTree mapping.
-        If the backup file already exists, it will be deleted. The defragmentation
-        process will skip all classes that have instances stored within the yap file,
-        but that are not available on the class path (through the current
-        classloader). Custom db4o configuration options are read from the
-        <see cref="IConfiguration">IConfiguration</see>
-        passed as db4oConfig.
-        <strong>Note:</strong> For some specific, non-default configuration settings like
-        UUID generation, etc., you <strong>must</strong> pass an appropriate db4o configuration,
-        just like you'd use it within your application for normal database operation.
-      </remarks>
-    </doc>
-  </type>
-
-  <type name="Db4objects.Db4o.Config.IConfiguration">
-    <doc>
-      <member name="ActivationDepth(int)">
-        <doc>
-          <summary>sets the activation depth to the specified value.</summary>
-          <remarks>
-            sets the activation depth to the specified value.
-            <br /><br /><b>Why activation?</b><br />
-            When objects are instantiated from the database, the instantiation of member
-            objects needs to be limited to a certain depth. Otherwise a single object
-            could lead to loading the complete database into memory, if all objects where
-            reachable from a single root object.<br /><br />
-            db4o uses the concept "depth", the number of field-to-field hops an object
-            is away from another object. <b>
-              The preconfigured "activation depth" db4o uses
-              in the default setting is 5.
-            </b>
-            <br /><br />Whenever an application iterates through the
-            <see cref="IObjectSet">IObjectSet</see>
-            of a query result, the result objects
-            will be activated to the configured activation depth.<br /><br />
-            A concrete example with the preconfigured activation depth of 5:<br />
-            <pre>
-              Object foo is the result of a query, it is delivered by the ObjectSet
-              object foo = objectSet.Next();
-            </pre>
-            foo.member1.member2.member3.member4.member5 will be a valid object<br />
-            foo, member1, member2, member3 and member4 will be activated<br />
-            member5 will be deactivated, all of it's members will be null<br />
-            member5 can be activated at any time by calling
-            <see cref="IObjectContainer.Activate">ObjectContainer#activate(member5, depth)</see>
-            .
-            <br /><br />
-            Note that raising the global activation depth will consume more memory and
-            have negative effects on the performance of first-time retrievals. Lowering
-            the global activation depth needs more individual activation work but can
-            increase performance of queries.<br /><br />
-            <see cref="IObjectContainer.Deactivate">
-              ObjectContainer#deactivate(Object, depth)
-            </see>
-            can be used to manually free memory by deactivating objects.<br /><br />
-          </remarks>
-          <param name="depth">the desired global activation depth.</param>
-          <seealso cref="IObjectClass.MaximumActivationDepth">
-            configuring classes individually
-          </seealso>
-
-        </doc>
-      </member>
-      <member name="AddAlias(IAlias)">
-        <doc>
-          <summary>adds a new Alias for a class, namespace or package.</summary>
-          <remarks>
-            adds a new Alias for a class, namespace or package.
-            <br /><br />Aliases can be used to persist classes in the running
-            application to different persistent classes in a database file
-            or on a db4o server.
-            <br /><br />Two simple Alias implementations are supplied along with
-            db4o:<br />
-            -
-            <see cref="TypeAlias">TypeAlias</see>
-            provides an #equals() resolver to match
-            names directly.<br />
-            -
-            <see cref="WildcardAlias">WildcardAlias</see>
-            allows simple pattern matching
-            with one single '*' wildcard character.<br />
-            <br />
-            It is possible to create
-            own complex
-            <see cref="IAlias">IAlias</see>
-            constructs by creating own resolvers
-            that implement the
-            <see cref="IAlias">IAlias</see>
-            interface.
-            <br /><br />
-            Four examples of concrete usecases:
-            <br /><br />
-            <code>
-              <b>// Creating an Alias for a single class</b><br />
-              Db4oFactory.Configure().AddAlias(<br />
-              &#160;&#160;new TypeAlias("Tutorial.F1.Pilot", "Tutorial.F1.Driver"));<br />
+	<type name="Db4objects.Db4o.Db4oEmbedded">
+		<doc>
+			<summary>Factory class to open db4o instances in embedded
+				mode.</summary>
+			<remarks> Factory class to open db4o instances in embedded mode.
+			</remarks>
+			<seealso cref="Db4objects.Db4o.CS.Db4oClientServer"> Db4objects.Db4o.CS.Db4oClientServer in
+				Db4objects.Db4o.CS.dll for methods to open db4o servers and db4o
+				clients.</seealso>
+			<since>7.5</since>
+		</doc>
+		<member name="OpenFile(IEmbeddedConfiguration, string)">
+			<doc>
+				<summary>
+					opens an
+					<see cref="Db4objects.Db4o.IObjectContainer">IObjectContainer</see>
+					on the specified database file for local use.
+					<br />
+					<br />
+					A database file can only be opened once, subsequent attempts to
+					open another
+					<see cref="Db4objects.Db4o.IObjectContainer">IObjectContainer</see>
+					against the same file will result in a
+					<see cref="Db4objects.Db4o.Ext.DatabaseFileLockedException"> DatabaseFileLockedException</see>
+					.
+					<br />
+					<br />
+					Database files can only be accessed for readwrite access from one
+					process at one time. All versions except for db4o mobile edition
+					use an internal mechanism to lock the database file for other
+					processes.
+					<br />
+					<br />
+				</summary>
+				<param name="config">
+					a custom
+					<see cref="Db4objects.Db4o.Config.IConfiguration">IConfiguration</see>
+					instance to be obtained via
+					<see cref="newConfiguration">newConfiguration</see>
+				</param>
+				<param name="databaseFileName">an absolute or relative path to the database
+					file</param>
+				<returns>
+					an open
+					<see cref="Db4objects.Db4o.IObjectContainer">IObjectContainer</see>
+				</returns>
+				<seealso cref="Db4objects.Db4o.Config.IConfiguration.ReadOnly">
+					Db4objects.Db4o.Config.IConfiguration.ReadOnly</seealso>
+				<seealso cref="Db4objects.Db4o.Config.IConfiguration.Encrypt"> Db4objects.Db4o.Config.IConfiguration.Encrypt
+				</seealso>
+				<seealso cref="Db4objects.Db4o.Config.IConfiguration.Password">
+					Db4objects.Db4o.Config.IConfiguration.Password</seealso>
+				<exception cref="Db4objects.Db4o.Ext.Db4oIOException"> I/O operation failed or was unexpectedly
+					interrupted.</exception>
+				<exception cref="Db4objects.Db4o.Ext.DatabaseFileLockedException"> the required database file is locked by
+					another process.</exception>
+				<exception cref="Db4objects.Db4o.Ext.IncompatibleFileFormatException">
+					runtime
+					<see cref="Db4objects.Db4o.Config.IConfiguration">configuration</see>
+					is not compatible with the configuration of the database file.
+				</exception>
+				<exception cref="Db4objects.Db4o.Ext.OldFormatException">
+					open operation failed because the database file is in old format
+					and
+					<see cref="Db4objects.Db4o.Config.IConfiguration.AllowVersionUpdates">
+						Db4objects.Db4o.Config.IConfiguration.AllowVersionUpdates</see>
+					is set to false.
+				</exception>
+				<exception cref="Db4objects.Db4o.Ext.DatabaseReadOnlyException"> database was configured as read-only.
+				</exception>
+			</doc>
+		</member>
+	</type>
+	<type name="Db4objects.Db4o.Collections.ArrayDictionary4">
+		<doc>
+			<summary>Transparent activatable IDictionary implementation.
+			</summary>
+			<remarks>
+				Transparent activatable IDictionary implementation. Implements IDictionary interface
+				using two arrays to store keys and values.
+				<br />
+				<br />
+				When instantiated as a result of a query, all the internal members
+				are NOT activated at all. When internal members are required to
+				perform an operation, the instance transparently activates all the
+				members.
+			</remarks>
+			<seealso cref="System.Collections.Generic.IDictionary">System.Collections.IDictionary
+			</seealso>
+			<seealso cref="Db4objects.Db4o.TA.IActivatable">Db4objects.Db4o.TA.IActivatable
+			</seealso>
+		</doc>
+		<member name="ctor()">
+			<doc>
+				<summary>
+					Initializes a new collection with the initial capacity = 16.
+				</summary>
+			</doc>
+		</member>
+		<member name="ctor(int)">
+			<doc>
+				<summary>
+					Initializes a collection of the specified initial capacity.
+				</summary>
+			</doc>
+		</member>
+		<member name="Clear()">
+			<doc>
+				<summary> System.Collections.Generic.IDictionary implementation but transparently activates
+					the members as required.</summary>
+				<remarks> System.Collections.Generic.IDictionary implementation but transparently activates
+					the members as required.</remarks>
+				<seealso cref="System.Collections.Generic.IDictionary"></seealso>
+				<seealso cref="Db4objects.Db4o.TA.IActivatable">Db4objects.Db4o.TA.IActivatable
+				</seealso>
+			</doc>
+		</member>
+		<member name="Count">
+			<doc>
+				<summary> Returns the number of elements in the collection.</summary>
+				<remarks> Returns the number of elements in the collection. The collection gets activated. </remarks>
+				<seealso cref="System.Collections.Generic.IDictionary"></seealso>
+				<seealso cref="Db4objects.Db4o.TA.IActivatable">Db4objects.Db4o.TA.IActivatable
+				</seealso>
+			</doc>
+		</member>
+		<member name="Values">
+			<doc>
+				<summary> Returns the values of the collection.</summary>
+				<remarks> Returns the values of the collection. The collection gets activated.</remarks>
+				<seealso cref="System.Collections.Generic.IDictionary"></seealso>
+				<seealso cref="Db4objects.Db4o.TA.IActivatable">Db4objects.Db4o.TA.IActivatable
+				</seealso>
+			</doc>
+		</member>
+		<member name="GetHashCode()">
+			<doc>
+				<summary> Returns the hash code of the collection.</summary>
+				<remarks> Returns the hash code of the collection. Collection members
+				get activated as required.</remarks>
+				<seealso cref="System.Collections.Generic.IDictionary"></seealso>
+				<seealso cref="Db4objects.Db4o.TA.IActivatable">Db4objects.Db4o.TA.IActivatable
+				</seealso>
+			</doc>
+		</member>
+	</type>
+	<type name="Db4objects.Db4o.Collections.ArrayList4">
+		<doc>
+			<summary>Transparent activatable ArrayList implementation.
+			</summary>
+			<remarks>
+				Transparent activatable ArrayList implementation. Implements IList
+				interface using an array to store elements. Each ArrayList4 instance
+				has a capacity, which indicates the size of the internal array.
+				<br />
+				<br />
+				When instantiated as a result of a query, all the internal members
+				are NOT activated at all. When internal members are required to
+				perform an operation, the instance transparently activates all the
+				members.
+			</remarks>
+			<seealso cref="System.Collections.ArrayList">System.Collections.ArrayList
+			</seealso>
+			<seealso cref="Db4objects.Db4o.TA.IActivatable">Db4objects.Db4o.TA.IActivatable
+			</seealso>
+		</doc>
+		<member name="ctor()">
+			<doc>
+				<summary>
+				Initializes a new collection with the initial capacity = 10.
+				</summary>
+			</doc>
+		</member>
+		<member name="ctor(ICollection)">
+				<doc>
+					<summary>
+					Initializes a collection with the members of the parameter collection.
+					</summary>
+				</doc>
+		</member>
+		<member name="ctor(int)">
+			<doc>
+				<summary>
+				Initializes a collection of the specified initial capacity.
+				</summary>
+			</doc>
+		</member>
+		<member name="Add(int, E)">
+			<doc>
+				<summary> Inserts an element into the collection 
+				at the specified index. </summary>
+				<remarks> Inserts an element into the collection 
+				at the specified index.</remarks>
+				<seealso cref="Db4objects.Db4o.TA.IActivatable">Db4objects.Db4o.TA.IActivatable
+				</seealso>
+			</doc>
+		</member>
+		<member name="Clear()">
+			<doc>
+				<summary> Removes all elements from the collection.</summary>
+				<remarks> Removes all elements from the collection.</remarks>
+				<seealso cref="Db4objects.Db4o.TA.IActivatable">Db4objects.Db4o.TA.IActivatable
+				</seealso>
+			</doc>
+		</member>
+		<member name="EnsureCapacity(int)">
+			<doc>
+				<summary> Resizes the collection capacity to the specified size if the 
+				current capacity is less than the parameter value.</summary>
+				<remarks> Resizes the collection capacity to the specified size if the 
+				current capacity is less than the parameter value.</remarks>
+				<seealso cref="Db4objects.Db4o.TA.IActivatable">Db4objects.Db4o.TA.IActivatable
+				</seealso>
+			</doc>
+		</member>
+		<member name="Get(int)">
+			<doc>
+				<summary> Returns the collection element at the specified index.</summary>
+				<remarks> Returns the collection element at the specified index.</remarks>
+				<seealso cref="Db4objects.Db4o.TA.IActivatable">Db4objects.Db4o.TA.IActivatable
+				</seealso>
+			</doc>
+		</member>
+		<member name="RemoveImpl(int)">
+			<doc>
+				<summary> Removes the collection element at the specified index.</summary>
+				<remarks> Removes the collection element at the specified index.</remarks>
+				<seealso cref="Db4objects.Db4o.TA.IActivatable">Db4objects.Db4o.TA.IActivatable
+				</seealso>
+			</doc>
+		</member>
+		<member name="Set(int, E)">
+			<doc>
+				<summary> Replaces the collection element with the specified object at the specified index.</summary>
+				<remarks> Replaces the collection element with the specified object at the specified index.</remarks>
+				<seealso cref="Db4objects.Db4o.TA.IActivatable">Db4objects.Db4o.TA.IActivatable
+				</seealso>
+			</doc>
+		</member>
+		<member name="Count">
+			<doc>
+				<summary> Returns the size of the collection.</summary>
+				<remarks> Returns the size of the collection.</remarks>
+				<seealso cref="Db4objects.Db4o.TA.IActivatable">Db4objects.Db4o.TA.IActivatable
+				</seealso>
+			</doc>
+		</member>
+		<member name="TrimExcess()">
+			<doc>
+				<summary> Resizes the collection to its actual size.</summary>
+				<remarks> Resizes the collection to its actual size.</remarks>
+				<seealso cref="Db4objects.Db4o.TA.IActivatable">Db4objects.Db4o.TA.IActivatable
+				</seealso>
+			</doc>
+		</member>
+	</type>
+	<type name="Db4objects.Db4o.Diagnostic.IDiagnosticConfiguration">
+		<doc>
+			<summary>provides methods to configure the behaviour of db4o
+				diagnostics.</summary>
+			<remarks>
+				provides methods to configure the behaviour of db4o diagnostics.
+				<br />
+				<br />
+				Diagnostic system can be enabled on a running db4o database to
+				notify a user about possible problems or misconfigurations.
+				Diagnostic listeners can be be added and removed with calls to this
+				interface. To install the most basic listener call:
+				<br />
+				<code>Db4oFactory.Configure().Diagnostic().AddListener(new
+					DiagnosticToConsole());</code>
+			</remarks>
+			<seealso cref="IConfiguration.Diagnostic">IConfiguration.Diagnostic
+			</seealso>
+			<seealso cref="IDiagnosticListener">IDiagnosticListener
+			</seealso>
+		</doc>
+	</type>
+	<type name="Db4objects.Db4o.Defragment.Defragment">
+		<doc>
+			<summary>defragments database files.</summary>
+			<remarks>
+				defragments database files.
+				<br />
+				<br />
+				db4o structures storage inside database files as free and occupied
+				slots, very much like a file system - and just like a file system it
+				can be fragmented.
+				<br />
+				<br />
+				The simplest way to defragment a database file:
+				<br />
+				<br />
+				<code>Defragment.Defrag("sample.yap");
+				</code>
+				<br />
+				<br />
+				This will move the file to "sample.yap.backup", then create a
+				defragmented version of this file in the original position, using a
+				temporary file "sample.yap.mapping". If the backup file already
+				exists, this will throw an exception and no action will be taken.
+				<br />
+				<br />
+				For more detailed configuration of the defragmentation process,
+				provide a DefragmentConfig instance:
+				<br />
+				<br />
+				<code>
+					DefragmentConfig config=new
+					DefragmentConfig("sample.yap","sample.bap",new
+					BTreeIDMapping("sample.map"));
+					<br />
+					config.ForceBackupDelete(true);
+					<br />
+					config.StoredClassFilter(new AvailableClassFilter());
+					<br />
+					config.Db4oConfig(db4oConfig);
+					<br />
+					Defragment.Defrag(config);
+				</code>
+				<br />
+				<br />
+				This will move the file to "sample.bap", then create a defragmented
+				version of this file in the original position, using a temporary
+				file "sample.map" for BTree mapping. If the backup file already
+				exists, it will be deleted. The defragmentation process will skip
+				all classes that have instances stored within the yap file, but that
+				are not available on the class path (through the current
+				classloader). Custom db4o configuration options are read from the
+				<see cref="IConfiguration">IConfiguration</see>
+				passed as db4oConfig.
+				<strong>Note:</strong>
+				For some specific, non-default configuration settings like UUID
+				generation, etc., you
+				<strong>must</strong>
+				pass an appropriate db4o configuration, just like you'd use it
+				within your application for normal database operation.
+			</remarks>
+		</doc>
+	</type>
+	<type name="Db4objects.Db4o.Config.IConfiguration">
+		<doc>
+			<member name="ActivationDepth(int)">
+				<doc>
+					<summary>sets the activation depth to the specified value.
+					</summary>
+					<remarks>
+						sets the activation depth to the specified value.
+						<br />
+						<br />
+						<b>Why activation?</b>
+						<br />
+						When objects are instantiated from the database, the instantiation
+						of member objects needs to be limited to a certain depth.
+						Otherwise a single object could lead to loading the complete
+						database into memory, if all objects where reachable from a single
+						root object.
+						<br />
+						<br />
+						db4o uses the concept "depth", the number of field-to-field hops
+						an object is away from another object.
+						<b> The preconfigured "activation depth" db4o uses in the default
+							setting is 5.</b>
+						<br />
+						<br />
+						Whenever an application iterates through the
+						<see cref="IObjectSet">IObjectSet</see>
+						of a query result, the result objects will be activated to the
+						configured activation depth.
+						<br />
+						<br />
+						A concrete example with the preconfigured activation depth of 5:
+						<br />
+						<pre> Object foo is the result of a query, it is delivered by the
+							ObjectSet object foo = objectSet.Next();</pre>
+						foo.member1.member2.member3.member4.member5 will be a valid object
+						<br />
+						foo, member1, member2, member3 and member4 will be activated
+						<br />
+						member5 will be deactivated, all of it's members will be null
+						<br />
+						member5 can be activated at any time by calling
+						<see cref="IObjectContainer.Activate">ObjectContainer#activate(member5,
+							depth)</see>
+						.
+						<br />
+						<br />
+						Note that raising the global activation depth will consume more
+						memory and have negative effects on the performance of first-time
+						retrievals. Lowering the global activation depth needs more
+						individual activation work but can increase performance of
+						queries.
+						<br />
+						<br />
+						<see cref="IObjectContainer.Deactivate"> ObjectContainer#deactivate(Object, depth)</see>
+						can be used to manually free memory by deactivating objects.
+						<br />
+						<br />
+					</remarks>
+					<param name="depth">the desired global activation depth.</param>
+					<seealso cref="IObjectClass.MaximumActivationDepth"> configuring classes individually</seealso>
+				</doc>
+			</member>
+			<member name="AddAlias(IAlias)">
+				<doc>
+					<summary>adds a new Alias for a class, namespace or package.
+					</summary>
+					<remarks>
+						adds a new Alias for a class, namespace or package.
+						<br />
+						<br />
+						Aliases can be used to persist classes in the running application
+						to different persistent classes in a database file or on a db4o
+						server.
+						<br />
+						<br />
+						Two simple Alias implementations are supplied along with db4o:
+						<br />
+						-
+						<see cref="TypeAlias">TypeAlias</see>
+						provides an #equals() resolver to match names directly.
+						<br />
+						-
+						<see cref="WildcardAlias">WildcardAlias</see>
+						allows simple pattern matching with one single '*' wildcard
+						character.
+						<br />
+						<br />
+						It is possible to create own complex
+						<see cref="IAlias">IAlias</see>
+						constructs by creating own resolvers that implement the
+						<see cref="IAlias">IAlias</see>
+						interface.
+						<br />
+						<br />
+						Four examples of concrete usecases:
+						<br />
+						<br />
+						<code>
+							<b>// Creating an Alias for a single class</b>
+							<br />
+							Db4oFactory.Configure().AddAlias(
+							<br />&#160;&#160;new TypeAlias("Tutorial.F1.Pilot", "Tutorial.F1.Driver"));<br />
               <br /><br />
               <b>// Accessing a Java package from a .NET assembly</b><br />
               Db4o.configure().addAlias(<br />
