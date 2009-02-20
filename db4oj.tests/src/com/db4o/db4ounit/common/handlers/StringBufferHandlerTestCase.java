@@ -59,14 +59,25 @@ public class StringBufferHandlerTestCase extends AbstractDb4oTestCase {
             }
         });
     }
+    
+    public void _testStringBufferQuery() {
+    	final Query query = newItemQuery();
+		query.descend("buffer").constrain(_bufferValue);
+		Assert.areEqual(1, query.execute().size());
+    }
 
     public void testDelete() {
         Item item = retrieveItem();
         Assert.areEqual(_bufferValue, item.buffer.toString());
         db().delete(item);
-        Query query = newQuery();
-        query.constrain(Item.class);
+        Query query = newItemQuery();
         Assert.areEqual(0, query.execute().size());
+    }
+
+	private Query newItemQuery() {
+	    Query query = newQuery();
+        query.constrain(Item.class);
+	    return query;
     }
 
     public void testPrepareComparison() {
