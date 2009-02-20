@@ -15,7 +15,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class ArrayHandler0 extends ArrayHandler2 {
+public class ArrayHandler0 extends ArrayHandler1 {
     
     protected ArrayVersionHelper createVersionHelper() {
         return new ArrayVersionHelper0();

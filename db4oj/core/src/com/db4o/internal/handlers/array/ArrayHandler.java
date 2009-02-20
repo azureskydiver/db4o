@@ -345,7 +345,7 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return Handlers4.isUntyped(_handler) && handleAsByteArray(context);
     }
     
-    private boolean handleAsByteArray(BufferContext context){
+    protected boolean handleAsByteArray(BufferContext context){
         int offset = context.offset();
         ArrayInfo info = newArrayInfo();
         readInfo(context.transaction(), context, info);

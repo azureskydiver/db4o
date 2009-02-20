@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.handlers;
 
+import com.db4o.*;
 import com.db4o.db4ounit.util.*;
 import com.db4o.ext.*;
 
@@ -47,9 +48,17 @@ public class ByteHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
             // arrays.
             assertWrapperArray((Byte[]) itemArrays._primitiveArrayInObject);
         } else {
-            // FIXME: Bug of store/retrieve byte[] as object.
-            // assertPrimitiveArray((byte[])
-            // itemArrays._primitiveArrayInObject);
+        	if(db4oHandlerVersion() == 1  && db4oHeaderVersion() == 100 && itemArrays._primitiveArrayInObject == null){
+        		
+        		// do nothing
+        		
+        		// We started treating byte[] in untyped variables differently
+        		// but we forgot to update the handler version.
+        		// Concerns only 6.3.500: Updates are not possible.
+        		
+        	}else{
+        		assertPrimitiveArray((byte[])itemArrays._primitiveArrayInObject);
+        	}
         }
         assertWrapperArray(itemArrays._typedWrapperArray);
         assertUntypedObjectArray(itemArrays);
@@ -125,13 +134,25 @@ public class ByteHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 
         byte[] primitiveArray = new byte[data.length];
         System.arraycopy(data, 0, primitiveArray, 0, data.length);
-        itemArrays._primitiveArrayInObject = primitiveArray;
+
+        if(primitiveArrayInUntypedVariableSupported()){
+        	itemArrays._primitiveArrayInObject = primitiveArray;
+        }
 
         Byte[] wrapperArray = new Byte[data.length + 1];
         System.arraycopy(dataWrapper, 0, wrapperArray, 0, dataWrapper.length);
-        itemArrays._wrapperArrayInObject = wrapperArray;
+        if( primitiveArrayInUntypedVariableSupported() || ! Deploy.csharp){
+        	itemArrays._wrapperArrayInObject = wrapperArray;
+        }
         return itemArrays;
     }
+
+	private boolean primitiveArrayInUntypedVariableSupported() {
+    	// We can't convert primitive arrays in object variables in 6.3
+    	// Keeping the member to null value helps to identify the exact version.
+
+		return ! (db4oMajorVersion() == 6 && db4oMinorVersion() == 3);
+	}
 
     /**
      * @sharpen.remove Cannot convert 'Byte[]' to 'object[]'
