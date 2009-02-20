@@ -225,7 +225,7 @@ public final class HandlerRegistry {
         
         ArrayHandler arrayHandler = new ArrayHandler();
         registerHandlerVersion(arrayHandler, 0, new ArrayHandler0());
-        registerHandlerVersion(arrayHandler, 2, new ArrayHandler2());
+        registerHandlerVersion(arrayHandler, 1, new ArrayHandler1());
         registerHandlerVersion(arrayHandler, 3, new ArrayHandler3());
         registerHandlerVersion(arrayHandler, 5, new ArrayHandler5());
         

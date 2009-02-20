@@ -89,8 +89,8 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
         TypeHandler4 arrayHandler = fieldMetadata.getHandler();
         Assert.isInstanceOf(ArrayHandler.class, arrayHandler);
         assertCorrectedHandlerVersion(arrayHandler, 0, ArrayHandler0.class);
-        assertCorrectedHandlerVersion(arrayHandler, 1, ArrayHandler2.class);
-        assertCorrectedHandlerVersion(arrayHandler, 2, ArrayHandler2.class);
+        assertCorrectedHandlerVersion(arrayHandler, 1, ArrayHandler1.class);
+        assertCorrectedHandlerVersion(arrayHandler, 2, ArrayHandler3.class);
         assertCorrectedHandlerVersion(arrayHandler, 3, ArrayHandler3.class);
         assertCorrectedHandlerVersion(arrayHandler, HandlerRegistry.HANDLER_VERSION, ArrayHandler.class);
     }
