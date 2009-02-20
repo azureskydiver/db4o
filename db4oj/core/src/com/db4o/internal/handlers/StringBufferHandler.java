@@ -57,4 +57,8 @@ public final class StringBufferHandler implements TypeHandler4, BuiltinTypeHandl
 	public void registerReflector(Reflector reflector) {
         _classReflector = reflector.forClass(StringBuffer.class);
 	}
+
+	public boolean canHold(ReflectClass type) {
+		return type.equals(classReflector());
+    }
 }

@@ -44,32 +44,7 @@ public class Handlers4 {
     public static final int ANY_ARRAY_N_ID = 13;
     
     public static boolean handlerCanHold(TypeHandler4 handler, Reflector reflector, ReflectClass claxx){
-        TypeHandler4 baseTypeHandler = baseTypeHandler(handler);
-        if (handler instanceof TypeFamilyTypeHandler) {
-            return ((TypeFamilyTypeHandler)handler).canHold(claxx);
-        }
-        if(handlesSimple(baseTypeHandler)){
-        	if(baseTypeHandler instanceof PrimitiveHandler){
-        		return claxx.equals(((BuiltinTypeHandler)baseTypeHandler).classReflector())
-        		|| claxx.equals(((PrimitiveHandler)baseTypeHandler).primitiveClassReflector());
-        	}
-            return claxx.equals(((BuiltinTypeHandler)baseTypeHandler).classReflector());
-        }
-        
-        if(baseTypeHandler instanceof UntypedFieldHandler){
-            return true;
-        }
-        
-        if(handler instanceof CanHoldAnythingHandler){
-        	return true;
-        }
-        
-        ClassMetadata classMetadata = (ClassMetadata) baseTypeHandler;
-        ReflectClass classReflector = classMetadata.classReflector();
-        if(classReflector.isCollection()){
-            return true;
-        }
-        return classReflector.isAssignableFrom(claxx);
+    	return handler.canHold(claxx);
     }
     
     public static boolean handlesSimple(TypeHandler4 handler){

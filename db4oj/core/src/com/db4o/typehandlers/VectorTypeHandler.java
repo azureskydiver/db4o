@@ -12,17 +12,22 @@ import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
+import com.db4o.reflect.*;
 
 /**
  * TypeHandler for java.util.Vector for JDKs without the 
  * collection framework.
  * @sharpen.ignore
  */
-public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, CanHoldAnythingHandler, VariableLengthTypeHandler {
+public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, VariableLengthTypeHandler {
 
     public PreparedComparison prepareComparison(Context context, Object obj) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+	public boolean canHold(ReflectClass type) {
+		return true;
     }
 
     public void write(WriteContext context, Object obj) {

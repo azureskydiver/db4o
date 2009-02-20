@@ -12,7 +12,9 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.internal.reflect.*;
 import com.db4o.marshall.*;
+import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
 import db4ounit.*;
@@ -41,6 +43,10 @@ public class FieldsToTypeHandlerMigrationTestCase implements TestLifeCycle{
 		private int _writeCalls;
 		
 		private int _readCalls;
+		
+		public boolean canHold(ReflectClass type) {
+			return ReflectClasses.areEqual(Item.class, type);
+		}
 
 		public void defragment(DefragmentContext context) {
 			throw new NotImplementedException();

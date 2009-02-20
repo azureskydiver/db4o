@@ -17,7 +17,7 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
+public class FirstClassObjectHandler implements FieldAwareTypeHandler {
     
     private static final int HASHCODE_FOR_NULL = 72483944; 
     
@@ -431,6 +431,10 @@ public class FirstClassObjectHandler  implements FieldAwareTypeHandler {
         };
         traverseAllAspects(context, command);
         return found.value;
+    }
+
+	public boolean canHold(ReflectClass type) {
+		return _classMetadata.canHold(type);
     }
 
 }
