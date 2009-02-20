@@ -73,7 +73,15 @@ public class StringBufferHandlerTestCase extends AbstractDb4oTestCase {
         StringBufferHandler handler = new StringBufferHandler();
         PreparedComparison preparedComparison = handler.prepareComparison(trans().context(), _bufferValue);
         Assert.isGreater(preparedComparison.compareTo("43"), 0); //$NON-NLS-1$
-        
+    }
+    
+    public void testStoringStringBufferDirectly(){
+    	Assert.expect(ObjectNotStorableException.class, new CodeBlock() {
+			public void run() throws Throwable {
+		    	StringBuffer stringBuffer = new StringBuffer(_bufferValue);
+		    	store(stringBuffer);
+			}
+		});
     }
 
     private Item retrieveItem() {
