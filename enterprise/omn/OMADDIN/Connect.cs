@@ -126,8 +126,6 @@ namespace OMAddin
 		private const string DB4O_DOWNLOADS = "db4objects Downloads";
 		private const string DB4O_HELP = "Help";
 		private const string ABOUT_OME = "About ObjectManager Enterprise";
-		internal const string STATUS_FULLFUNCTIONALITYMODE = "Connected - All OME functionality available";
-		internal const string STATUS_REDUCEDMODELOGGEDIN = "Connected -  OME Functionality is limited";
 
 		private const string CREATE_DEMO_DB = "Create Demo Database";
 
