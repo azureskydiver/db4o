@@ -5,7 +5,6 @@ package com.db4o.collections;
 import java.util.*;
 
 import com.db4o.activation.*;
-import com.db4o.internal.*;
 import com.db4o.ta.*;
 
 /**
