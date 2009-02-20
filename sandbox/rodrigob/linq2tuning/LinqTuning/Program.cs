@@ -49,18 +49,11 @@ namespace LinqTuning
 			var stopWatch = new StopWatch();
 			stopWatch.Start();
 
-			for (int i = 0; i < 10000; ++i)
+			for (int i = 0; i < 100000; ++i)
 				Assert.AreEqual(0, query(queryFactory).Count());
 
 			stopWatch.Stop();
 			return stopWatch.Elapsed();
-		}
-
-		private static IObjectContainer OpenInMemoryContainer()
-		{
-			var configuration = Db4oEmbedded.NewConfiguration();
-			configuration.File.Storage = new MemoryStorage();
-			return Db4oEmbedded.OpenFile(configuration, "");
 		}
 	}
 }
