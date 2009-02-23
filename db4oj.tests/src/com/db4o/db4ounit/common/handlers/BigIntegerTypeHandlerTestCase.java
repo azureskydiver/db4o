@@ -84,8 +84,9 @@ public class BigIntegerTypeHandlerTestCase extends AbstractInMemoryDb4oTestCase 
 		query.descend("_typed").constrain(LARGE);
 		ObjectSet<Item> result = query.execute();
 		Assert.areEqual(1, result.size());
-		Assert.areEqual(LARGE, result.next()._typed);
-		Assert.areEqual(LARGE, result.next()._untyped);
+		final Item found = result.next();
+		Assert.areEqual(LARGE, found._typed);
+		Assert.areEqual(LARGE, found._untyped);
 	}
 	
 	public void testDelete() throws Exception {

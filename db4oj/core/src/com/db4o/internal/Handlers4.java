@@ -49,10 +49,10 @@ public class Handlers4 {
     
     public static boolean handlesSimple(TypeHandler4 handler){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler); 
-        return (baseTypeHandler instanceof PrimitiveHandler)
-        	|| (baseTypeHandler instanceof StringHandler)
-        	|| (baseTypeHandler instanceof StringBufferHandler)
-        	|| (baseTypeHandler instanceof TypeFamilyTypeHandler && ((TypeFamilyTypeHandler)baseTypeHandler).isSimple());
+        if (!(baseTypeHandler instanceof QueryableTypeHandler)) {
+        	return false;
+        }
+        return ((QueryableTypeHandler)baseTypeHandler).isSimple();
     }
     
     public static boolean handlesArray(TypeHandler4 handler){

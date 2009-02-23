@@ -6,9 +6,7 @@ package com.db4o.typehandlers;
 /**
  * @exclude
  */
-public interface TypeFamilyTypeHandler extends TypeHandler4{
-	
-    public boolean isSimple();
+public interface TypeFamilyTypeHandler extends QueryableTypeHandler {
 
     public int linkLength();
 

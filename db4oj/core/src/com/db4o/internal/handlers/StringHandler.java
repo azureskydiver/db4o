@@ -19,7 +19,7 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, VariableLengthTypeHandler, EmbeddedTypeHandler{
+public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, VariableLengthTypeHandler, QueryableTypeHandler, EmbeddedTypeHandler{
     
     private ReflectClass _classReflector;
     
@@ -34,6 +34,10 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
     
     byte getIdentifier() {
         return Const4.YAPSTRING;
+    }
+    
+    public boolean isSimple() {
+    	return true;
     }
 
 	public boolean canHold(ReflectClass type) {

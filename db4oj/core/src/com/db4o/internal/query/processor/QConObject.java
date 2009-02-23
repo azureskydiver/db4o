@@ -154,17 +154,10 @@ public class QConObject extends QCon {
         }
         if (i_yapClass != null) {
             if (!(i_yapClass instanceof PrimitiveFieldHandler)) {
-                if (!i_evaluator.identity()) {
-//                	TODO: consider another strategy to avoid reevaluating the class constraint when
-//                	the candidate collection is loaded from the class index
-//                    if (i_yapClass == i_candidates.i_yapClass) {
-//                        if (i_evaluator.isDefault() && (! hasJoins())) {
-//                            return;
-//                        }
-//                    }
-                    i_selfComparison = true;
-                }
-                Object transactionalObject = i_yapClass.wrapWithTransactionContext(transaction(), i_object);
+            	if (!i_evaluator.identity()) {
+            		i_selfComparison = true;
+            	}
+            	Object transactionalObject = i_yapClass.wrapWithTransactionContext(transaction(), i_object);
                 _preparedComparison = i_yapClass.prepareComparison(context(), transactionalObject);
             }
         }
