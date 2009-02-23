@@ -1,9 +1,11 @@
 /**
  * @exclude
  */
-package com.db4o.typehandlers;
+package com.db4o.typehandlers.internal;
 
-class KeyValueHandlerPair {
+import com.db4o.typehandlers.*;
+
+public class KeyValueHandlerPair {
 	public final TypeHandler4 _keyHandler;
 	public final TypeHandler4 _valueHandler;
 	

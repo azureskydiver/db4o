@@ -16,7 +16,7 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinTypeHandler, EmbeddedTypeHandler {
+public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinTypeHandler, EmbeddedTypeHandler, QueryableTypeHandler {
     
     protected ReflectClass _classReflector;
     
@@ -42,6 +42,10 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     
     protected Class javaClass(){
         return Platform4.nullableTypeFor(primitiveJavaClass());
+    }
+    
+    public boolean isSimple() {
+    	return true;
     }
     
     public boolean canHold(ReflectClass type) {

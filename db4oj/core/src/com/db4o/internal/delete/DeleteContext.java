@@ -22,8 +22,6 @@ public interface DeleteContext extends Context, ReadBuffer, HandlerVersionContex
 	public void deleteObject();
 
 	boolean isLegacyHandlerVersion();
-
-	int handlerVersion();
 	
 	void defragmentRecommended();
 

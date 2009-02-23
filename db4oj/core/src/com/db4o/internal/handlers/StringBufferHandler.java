@@ -11,7 +11,7 @@ import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
 public final class StringBufferHandler implements TypeHandler4, BuiltinTypeHandler,
-        VariableLengthTypeHandler, EmbeddedTypeHandler {
+        VariableLengthTypeHandler, EmbeddedTypeHandler, QueryableTypeHandler {
 
     private ReflectClass _classReflector;
     
@@ -56,6 +56,10 @@ public final class StringBufferHandler implements TypeHandler4, BuiltinTypeHandl
 
 	public void registerReflector(Reflector reflector) {
         _classReflector = reflector.forClass(StringBuffer.class);
+	}
+	
+	public boolean isSimple() {
+		return true;
 	}
 
 	public boolean canHold(ReflectClass type) {

@@ -14,7 +14,7 @@ import com.db4o.typehandlers.*;
 /**
  * @sharpen.ignore
  */
-public class BigIntegerTypeHandler implements EmbeddedTypeHandler {
+public class BigIntegerTypeHandler implements EmbeddedTypeHandler, QueryableTypeHandler {
 
 	public void defragment(DefragmentContext context) {
 		skip(context);
@@ -25,10 +25,14 @@ public class BigIntegerTypeHandler implements EmbeddedTypeHandler {
 	}
 
 	public Object read(ReadContext context) {
-		byte[] data = new byte[context.readInt()];
-		context.readBytes(data);
-		return new BigInteger(data);
+		return unmarshall(context);
 	}
+
+	private BigInteger unmarshall(final ReadBuffer buffer) {
+	    byte[] data = new byte[buffer.readInt()];
+		buffer.readBytes(data);
+		return new BigInteger(data);
+    }
 
 	public void write(WriteContext context, Object obj) {
 		byte[] data = ((BigInteger)obj).toByteArray();
@@ -37,9 +41,36 @@ public class BigIntegerTypeHandler implements EmbeddedTypeHandler {
 	}
 
 	public PreparedComparison prepareComparison(Context context, Object obj) {
-		return null;
+		final BigInteger value = obj instanceof TransactionContext
+			? bigIntegerFrom(((TransactionContext)obj)._object)
+			: bigIntegerFrom(obj);
+//		if (value == null) {
+//			return new PreparedComparison() {
+//				public int compareTo(Object obj) {
+//					if (obj == null) {
+//						return 0;
+//					}
+//					return -1;
+//                }
+//			};
+//		}
+		return new PreparedComparison() {
+			public int compareTo(Object obj) {
+				BigInteger valueToCompareAgainst = (BigInteger) obj;
+				if (valueToCompareAgainst == null) {
+					return 1;
+				}
+			    return value.compareTo(valueToCompareAgainst);
+			}
+		};
 	}
 
+	private BigInteger bigIntegerFrom(Object obj) {
+	    return obj instanceof BigInteger
+			? (BigInteger)obj
+			: unmarshall((ReadBuffer)obj);
+    }
+	
 	private void skip(ReadBuffer context) {
 		int numBytes = context.readInt();
 		context.seek(context.offset() + numBytes);
@@ -47,6 +78,15 @@ public class BigIntegerTypeHandler implements EmbeddedTypeHandler {
 
 	public boolean canHold(ReflectClass type) {
 		return ReflectClasses.areEqual(BigInteger.class, type);
+    }
+
+	public boolean isSimple() {
+		return true;
+    }
+
+	public int linkLength() {
+	    // TODO Auto-generated method stub
+	    return 0;
     }
 
 }
