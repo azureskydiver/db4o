@@ -36,6 +36,7 @@ public class AllTests extends Db4oTestSuite {
             IndexCreateDropTestCase.class,
             IndexedBlockSizeQueryTestCase.class,
             InMemoryObjectContainerTestCase.class,
+            InvalidOffsetInDeleteTestCase.class,
             KnownClassesTestCase.class,
             LazyObjectReferenceTestCase.class,
             LockedTreeTestCase.class,

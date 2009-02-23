@@ -427,6 +427,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         try {
             removeIndexEntry(context);
             if(isUpdate){
+            	incrementOffset(context);
             	return;
             }
             StatefulBuffer buffer = (StatefulBuffer) context.buffer();
