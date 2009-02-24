@@ -1,4 +1,4 @@
-package com.db4o.db4ounit.common.handlers;
+package com.db4o.db4ounit.optional.handlers;
 
 import java.math.*;
 
@@ -15,15 +15,15 @@ import db4ounit.extensions.*;
 /**
  * @sharpen.remove
  */
-public class BigIntegerTypeHandlerTestCase extends AbstractInMemoryDb4oTestCase {
+public class BigDecimalTypeHandlerTestCase extends AbstractInMemoryDb4oTestCase {
 
-	private static final BigInteger ZERO = new BigInteger("0");
-	private static final BigInteger ONE = new BigInteger("1");
-	private static final BigInteger LONG_MAX = new BigInteger(String.valueOf(Long.MAX_VALUE));
-	private static final BigInteger LONG_MIN = new BigInteger(String.valueOf(Long.MIN_VALUE));
-	private static final BigInteger LARGE = LONG_MAX.multiply(new BigInteger("2"));
+	private static final BigDecimal ZERO = new BigDecimal("0");
+	private static final BigDecimal ONE = new BigDecimal("1");
+	private static final BigDecimal LONG_MAX = new BigDecimal(String.valueOf(Long.MAX_VALUE));
+	private static final BigDecimal LONG_MIN = new BigDecimal(String.valueOf(Long.MIN_VALUE));
+	private static final BigDecimal LARGE = LONG_MAX.multiply(new BigDecimal("2"));
 	
-	private static final BigInteger[] VALUES = {
+	private static final BigDecimal[] VALUES = {
 		ZERO,
 		ONE,
 		LONG_MAX,
@@ -33,10 +33,10 @@ public class BigIntegerTypeHandlerTestCase extends AbstractInMemoryDb4oTestCase 
 	
 	public static class Item {
 		public int _id;
-		public BigInteger _typed;
+		public BigDecimal _typed;
 		public Object _untyped;
 		
-		public Item(int id, BigInteger value) {
+		public Item(int id, BigDecimal value) {
 			_id = id;
 			_typed = value;
 			_untyped = value;
@@ -45,13 +45,13 @@ public class BigIntegerTypeHandlerTestCase extends AbstractInMemoryDb4oTestCase 
 	
 	@Override
 	protected void configure(Configuration config) throws Exception {
-		config.registerTypeHandler(new SingleClassTypeHandlerPredicate(BigInteger.class), new BigIntegerTypeHandler());
+		config.registerTypeHandler(new SingleClassTypeHandlerPredicate(BigDecimal.class), new BigDecimalTypeHandler());
 	}
 
 	@Override
 	protected void store() throws Exception {
 		int idx = 0;
-		for (BigInteger bi : VALUES) {
+		for (BigDecimal bi : VALUES) {
 			store(new Item(idx, bi));
 			idx++;
 		}
@@ -72,7 +72,7 @@ public class BigIntegerTypeHandlerTestCase extends AbstractInMemoryDb4oTestCase 
 		reopen();
 		assertRetrieved(new Procedure4<Item>() {
 			public void apply(Item item) {
-				BigInteger expectedBase = VALUES[item._id];
+				BigDecimal expectedBase = VALUES[item._id];
 				Assert.areEqual(expectedBase.multiply(expectedBase), item._typed);
 				Assert.areEqual(item._typed.add(ONE), item._untyped);
 			}
@@ -112,7 +112,7 @@ public class BigIntegerTypeHandlerTestCase extends AbstractInMemoryDb4oTestCase 
 	private void assertRetrievedAsStored() {
 		assertRetrieved(new Procedure4<Item>() {
 			public void apply(Item item) {
-				BigInteger expected = VALUES[item._id];
+				BigDecimal expected = VALUES[item._id];
 				Assert.areEqual(expected, item._typed);
 				Assert.areEqual(expected, item._untyped);
 			}

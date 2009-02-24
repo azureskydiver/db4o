@@ -13,8 +13,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 			com.db4o.db4ounit.common.handlers.framework.AllTests.class,
 		    ArrayHandlerTestCase.class,
-		    BigIntegerTypeHandlerTestCase.class,
-            BooleanHandlerTestCase.class,
+		    BooleanHandlerTestCase.class,
             ByteHandlerTestCase.class,
             CharHandlerTestCase.class,
 		    ClassHandlerTestCase.class,
