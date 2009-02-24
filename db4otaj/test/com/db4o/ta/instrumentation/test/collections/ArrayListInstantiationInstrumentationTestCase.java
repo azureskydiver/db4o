@@ -34,6 +34,6 @@ public class ArrayListInstantiationInstrumentationTestCase implements TestCase {
 	}
 
 	private Class instrument(Class clazz) throws ClassNotFoundException {
-		return InstrumentationEnvironment.enhance(clazz, new ArrayListInstantiationEdit());
+		return InstrumentationEnvironment.enhance(clazz, new ReplaceClassOnInstantiationEdit(ArrayList.class, ActivatableArrayList.class));
 	}
 }
