@@ -184,6 +184,12 @@ public class ActivatableListTestCase extends AbstractDb4oTestCase {
 		return ids[0];
 	}
 	
+	public void testCreation() {
+		new ActivatableArrayList<Object>();
+		new ActivatableArrayList<Object>(42);
+		new ActivatableArrayList<String>((Collection<String>)new ActivatableArrayList<String>());
+	}
+	
 	public void testAdd() throws Exception{
 		singleList().add(new Element("four"));
 		reopen();
