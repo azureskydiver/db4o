@@ -1,18 +1,40 @@
 package com.db4o.ta.instrumentation;
 
-import java.io.*;
 import java.util.*;
 
-import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.inline.*;
-import EDU.purdue.cs.bloat.tree.*;
 
 import com.db4o.collections.*;
 import com.db4o.instrumentation.core.*;
 
-public class ArrayListInstantiationEdit implements BloatClassEdit {
+public class ReplaceClassOnInstantiationEdit implements BloatClassEdit {
+
+	private final Type origType;
+	private final Type replacementType;
 	
+	public ReplaceClassOnInstantiationEdit(Class origClazz, Class replacementClazz) {
+		// TODO get type from runtime bloat environment and pass qualified names instead?
+		origType = Type.getType(origClazz);
+		replacementType = Type.getType(replacementClazz);
+	}
+	
+	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
+		ArrayListInstantiationMethodVisitor methodVisitor = new ArrayListInstantiationMethodVisitor();
+		try {
+			ce.visit(methodVisitor);
+		}
+		catch(Exception exc) {
+			exc.printStackTrace();
+			return InstrumentationStatus.FAILED;
+		}
+		if (methodVisitor.instrumented()) {
+			ce.commit();
+			return InstrumentationStatus.INSTRUMENTED;
+		}
+		return InstrumentationStatus.NOT_INSTRUMENTED;
+	}
+
 	private final class ArrayListInstantiationMethodVisitor implements EditorVisitor {
 		private boolean _instrumented;
 
@@ -23,8 +45,6 @@ public class ArrayListInstantiationEdit implements BloatClassEdit {
 		}
 
 		public void visitMethodEditor(MethodEditor editor) {
-			final Type origType = Type.getType(ArrayList.class);
-			final Type replacementType = Type.getType(ActivatableArrayList.class);
 			final StackHeightCounter shc = new StackHeightCounter(editor);
 			final LinkedList newStackHeights = new LinkedList();
 			boolean instrumented = false;
@@ -130,22 +150,6 @@ public class ArrayListInstantiationEdit implements BloatClassEdit {
 		public boolean instrumented() {
 			return _instrumented;
 		}
-	}
-
-	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
-		ArrayListInstantiationMethodVisitor methodVisitor = new ArrayListInstantiationMethodVisitor();
-		try {
-			ce.visit(methodVisitor);
-		}
-		catch(Exception exc) {
-			exc.printStackTrace();
-			return InstrumentationStatus.FAILED;
-		}
-		if (methodVisitor.instrumented()) {
-			ce.commit();
-			return InstrumentationStatus.INSTRUMENTED;
-		}
-		return InstrumentationStatus.NOT_INSTRUMENTED;
 	}
 
 }
