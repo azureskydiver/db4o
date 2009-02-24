@@ -18,6 +18,17 @@ public class ActivatableArrayList <E> extends ArrayList<E> implements Activatabl
 	
 	private Activator _activator;
 
+	public ActivatableArrayList() {
+	}
+
+	public ActivatableArrayList(int size) {
+		super(size);
+	}
+
+	public ActivatableArrayList(Collection<E> list) {
+		super(list);
+	}
+
 	public void activate(ActivationPurpose purpose) {
 		if(_activator != null) {
 			_activator.activate(purpose);

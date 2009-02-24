@@ -15,10 +15,19 @@ public class ArrayListInstantiationInstrumentationTestCase implements TestCase {
 		Class instrumented = instrument(ArrayListHolder.class);
 		Object instance = instrumented.newInstance();
 		assertReturnsActivatableList(instance, "createArrayList");
-		// TODO: constructors with arguments
-		// assertReturnsActivatableList(instance, "createSizedArrayList");
+		assertReturnsActivatableList(instance, "createSizedArrayList");
+		assertReturnsActivatableList(instance, "createNestedArrayList");
+		assertReturnsActivatableList(instance, "createMethodArgArrayList");
+		assertReturnsActivatableList(instance, "createConditionalArrayList");
 	}
 
+	public void testCustomArrayList() throws Exception {
+		Class instrumented = instrument(MyArrayList.class);
+		List list = (List)instrumented.newInstance();
+		List delegateList = (List)instrumented.getField("_delegate").get(list);
+		Assert.isInstanceOf(ActivatableArrayList.class, delegateList);
+	}
+	
 	private void assertReturnsActivatableList(Object instance, String methodName) {
 		List list = (List)Reflection4.invoke(instance, methodName);
 		Assert.isInstanceOf(ActivatableArrayList.class, list);

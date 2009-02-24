@@ -1,8 +1,12 @@
 package com.db4o.ta.instrumentation;
 
+import java.io.*;
 import java.util.*;
 
+import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.inline.*;
+import EDU.purdue.cs.bloat.tree.*;
 
 import com.db4o.collections.*;
 import com.db4o.instrumentation.core.*;
@@ -19,6 +23,67 @@ public class ArrayListInstantiationEdit implements BloatClassEdit {
 		}
 
 		public void visitMethodEditor(MethodEditor editor) {
+			final Type origType = Type.getType(ArrayList.class);
+			final Type replacementType = Type.getType(ActivatableArrayList.class);
+			final StackHeightCounter shc = new StackHeightCounter(editor);
+			final LinkedList newStackHeights = new LinkedList();
+			boolean instrumented = false;
+			for(int codeIdx = 0; codeIdx < editor.codeLength(); codeIdx++) {
+				final Object instructionOrLabel = editor.codeElementAt(codeIdx);
+				if(instructionOrLabel instanceof Label) {
+					shc.handle((Label)instructionOrLabel);
+					continue;
+				}
+				if(!(instructionOrLabel instanceof Instruction)) {
+					throw new IllegalStateException();
+				}
+				final Instruction instruction = (Instruction)instructionOrLabel;
+				shc.handle(instruction);
+				
+				int lastHeight = newStackHeights.isEmpty() ? -1 : ((Integer)newStackHeights.getLast()).intValue();
+				switch(instruction.origOpcode()) {
+					case Instruction.opc_new:
+						if(!instruction.operand().equals(origType)) {
+							break;
+						}
+						instruction.setOperand(replacementType);
+						newStackHeights.addLast(new Integer(shc.height()));
+						break;
+					case Instruction.opc_dup:
+						if(shc.height() != lastHeight + 1) {
+							break;
+						}
+						newStackHeights.removeLast();
+						newStackHeights.addLast(new Integer(lastHeight + 1));
+						break;
+					case Instruction.opc_invokespecial:
+						MemberRef methodRef = (MemberRef) instruction.operand();
+						if(!methodRef.declaringClass().equals(origType)) {
+							break;
+						}
+						if(shc.height() != lastHeight - 1) {
+							break;
+						}
+						newStackHeights.removeLast();
+						instruction.setOperand(new MemberRef(replacementType, methodRef.nameAndType()));
+						instrumented = true;
+						break;
+					default:
+						// do nothing
+				}
+			}
+			if(!newStackHeights.isEmpty()) {
+				throw new IllegalStateException();
+			}
+			if(instrumented) {
+				_instrumented = true;
+				editor.commit();
+			}
+			
+		}
+
+		// initial version, kept for reference, delete if not needed
+		public void _visitMethodEditor(MethodEditor editor) {
 			boolean instrumented = false;
 			for(int codeIdx = 0; codeIdx < editor.codeLength(); codeIdx++) {
 				Instruction newInstruction = match(editor.codeElementAt(codeIdx), Instruction.opc_new, Type.getType(ArrayList.class));
@@ -43,12 +108,9 @@ public class ArrayListInstantiationEdit implements BloatClassEdit {
 				_instrumented = true;
 				editor.commit();
 			}
-			
 		}
 
-		private Instruction match(Object instructionOrLabel, int expectedOpcode,
-				Object expectedOperand) {
-			
+		private Instruction match(Object instructionOrLabel, int expectedOpcode, Object expectedOperand) {
 			Instruction instruction = match(instructionOrLabel, expectedOpcode);
 			if (instruction == null) {
 				return null;
@@ -71,12 +133,12 @@ public class ArrayListInstantiationEdit implements BloatClassEdit {
 	}
 
 	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
-		
 		ArrayListInstantiationMethodVisitor methodVisitor = new ArrayListInstantiationMethodVisitor();
 		try {
 			ce.visit(methodVisitor);
 		}
 		catch(Exception exc) {
+			exc.printStackTrace();
 			return InstrumentationStatus.FAILED;
 		}
 		if (methodVisitor.instrumented()) {
