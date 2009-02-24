@@ -1,5 +1,8 @@
 package com.db4o.ta.instrumentation;
 
+import java.util.*;
+
+import com.db4o.collections.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.ta.*;
 
@@ -13,7 +16,8 @@ public class InjectTransparentActivationEdit extends CompositeBloatClassEdit {
 		super(new BloatClassEdit[] {
 				new CheckApplicabilityEdit(),
 				new InjectTAInfrastructureEdit(filter), 
-				new InstrumentFieldAccessEdit(filter)
+				new InstrumentFieldAccessEdit(filter),
+				new ReplaceClassOnInstantiationEdit(ArrayList.class, ActivatableArrayList.class),
 		});
 	}
 }

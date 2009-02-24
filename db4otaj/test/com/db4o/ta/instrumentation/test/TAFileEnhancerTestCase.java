@@ -2,10 +2,12 @@ package com.db4o.ta.instrumentation.test;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 import EDU.purdue.cs.bloat.editor.*;
 
 import com.db4o.db4ounit.common.ta.*;
+import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 import com.db4o.instrumentation.classfilter.*;
 import com.db4o.instrumentation.core.*;
@@ -20,15 +22,25 @@ import db4ounit.*;
 public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
     
 	private final static Class INSTRUMENTED_CLAZZ = ToBeInstrumentedWithFieldAccess.class;
-	
 	private final static Class NOT_INSTRUMENTED_CLAZZ = NotToBeInstrumented.class;
-
 	private final static Class EXTERNAL_INSTRUMENTED_CLAZZ = ToBeInstrumentedWithExternalFieldAccess.class;
-	
 	private final static Class INSTRUMENTED_OUTER_CLAZZ = ToBeInstrumentedOuter.class;
 	private final static Class INSTRUMENTED_INNER_CLAZZ = getAnonymousInnerClass(INSTRUMENTED_OUTER_CLAZZ);
+	private final static Class LIST_CLIENT_CLAZZ = ArrayListClient.class;
 
-	private final static Class[] INPUT_CLASSES = new Class[] { INSTRUMENTED_CLAZZ, NOT_INSTRUMENTED_CLAZZ, EXTERNAL_INSTRUMENTED_CLAZZ, INSTRUMENTED_OUTER_CLAZZ, INSTRUMENTED_INNER_CLAZZ };
+	private final static Class[] INSTRUMENTED_CLASSES = new Class[] { 
+		INSTRUMENTED_CLAZZ, 
+		EXTERNAL_INSTRUMENTED_CLAZZ, 
+		INSTRUMENTED_OUTER_CLAZZ, 
+		INSTRUMENTED_INNER_CLAZZ, 
+		LIST_CLIENT_CLAZZ,
+	};
+
+	private final static Class[] NOT_INSTRUMENTED_CLASSES = new Class[] { 
+		NOT_INSTRUMENTED_CLAZZ, 
+	};
+
+	private final static Class[] INPUT_CLASSES = (Class[])Arrays4.merge(INSTRUMENTED_CLASSES, NOT_INSTRUMENTED_CLASSES, Class.class);
 	
 	private static Class getAnonymousInnerClass(Class clazz) {
 		try {
@@ -52,32 +64,16 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 	}
 	
 	public void test() throws Exception {
-		
 		enhance();
 		
 		AssertingClassLoader loader = newAssertingClassLoader();
-		loader.assertAssignableFrom(Activatable.class, INSTRUMENTED_CLAZZ);
-		loader.assertNotAssignableFrom(Activatable.class, NOT_INSTRUMENTED_CLAZZ);
-		loader.assertAssignableFrom(Activatable.class, INSTRUMENTED_OUTER_CLAZZ);
-		loader.assertAssignableFrom(Activatable.class, INSTRUMENTED_INNER_CLAZZ);
+		for (int instrumentedIdx = 0; instrumentedIdx < INSTRUMENTED_CLASSES.length; instrumentedIdx++) {
+			loader.assertAssignableFrom(Activatable.class, INSTRUMENTED_CLASSES[instrumentedIdx]);
+		}
+		for (int notInstrumentedIdx = 0; notInstrumentedIdx < NOT_INSTRUMENTED_CLASSES.length; notInstrumentedIdx++) {
+			loader.assertNotAssignableFrom(Activatable.class, NOT_INSTRUMENTED_CLASSES[notInstrumentedIdx]);
+		}
 		instantiateInnerClass(loader);
-	}
-
-	private void instantiateInnerClass(AssertingClassLoader loader) throws Exception {
-		Class outerClazz = loader.loadClass(INSTRUMENTED_OUTER_CLAZZ);
-		Object outerInst = outerClazz.newInstance();
-		outerClazz.getDeclaredMethod("foo", new Class[]{}).invoke(outerInst, new Object[]{});
-	}
-
-	private AssertingClassLoader newAssertingClassLoader()
-			throws MalformedURLException {
-		return new AssertingClassLoader(new File(targetDir), INPUT_CLASSES);
-	}
-
-	private void enhance() throws Exception {
-		ClassFilter filter = new ByNameClassFilter(new String[]{ INSTRUMENTED_CLAZZ.getName(), EXTERNAL_INSTRUMENTED_CLAZZ.getName(), INSTRUMENTED_OUTER_CLAZZ.getName(), INSTRUMENTED_INNER_CLAZZ.getName() });
-		Db4oFileInstrumentor enhancer = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(filter));
-		enhancer.enhance(srcDir, targetDir, new String[]{});
 	}
 	
 	public void testMethodInstrumentation() throws Exception {
@@ -88,8 +84,7 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		Activatable instrumented = (Activatable) loader.newInstance(INSTRUMENTED_CLAZZ);
 		MockActivator activator = MockActivator.activatorFor(instrumented);
 		Reflection4.invoke(instrumented, "setInt", Integer.TYPE, new Integer(42));
-		Assert.areEqual(1, activator.writeCount());
-		Assert.areEqual(0, activator.readCount());
+		assertReadsWrites(0, 1, activator);
 	}
 	
 	public void testExternalFieldAccessInstrumentation() throws Exception {
@@ -101,8 +96,7 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		Object client = loader.newInstance(EXTERNAL_INSTRUMENTED_CLAZZ);
 		MockActivator activator = MockActivator.activatorFor(server);
 		Reflection4.invoke(client, "accessExternalField", server.getClass(), server);
-		Assert.areEqual(1, activator.writeCount());
-		Assert.areEqual(0, activator.readCount());
+		assertReadsWrites(0, 1, activator);
 	}
 	
 	
@@ -128,9 +122,75 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		Assert.areSame(exception, thrown);
 			
 	}
-	
+
+	public void testArrayListActivationWithException() throws Exception {
+		enhance();
+		AssertingClassLoader loader = newAssertingClassLoader();		
+		Activatable client = (Activatable) loader.newInstance(LIST_CLIENT_CLAZZ);
+		MockActivator clientActivator = MockActivator.activatorFor(client);
+		final List list = (List)Reflection4.invoke(client, "list");
+		assertReadsWrites(1, 0, clientActivator);
+		MockActivator listActivator = MockActivator.activatorFor((Activatable)list);
+		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				list.get(0);
+			}
+		});
+		assertReadsWrites(1, 0, listActivator);
+	}
+
+	public void testArrayListActivation() throws Exception {
+		enhance();
+		AssertingClassLoader loader = newAssertingClassLoader();		
+		Activatable client = (Activatable) loader.newInstance(LIST_CLIENT_CLAZZ);
+		MockActivator clientActivator = MockActivator.activatorFor(client);
+		final List list = (List)Reflection4.invoke(client, "list");
+		assertReadsWrites(1, 0, clientActivator);
+		MockActivator listActivator = MockActivator.activatorFor((Activatable)list);
+		list.iterator();
+		assertReadsWrites(1, 0, listActivator);
+	}
+
+	public void testArrayListPersistence() throws Exception {
+		enhance();
+		AssertingClassLoader loader = newAssertingClassLoader();		
+		Activatable client = (Activatable) loader.newInstance(LIST_CLIENT_CLAZZ);
+		MockActivator clientActivator = MockActivator.activatorFor(client);
+		List list = (List)Reflection4.invoke(client, "list");
+		assertReadsWrites(1, 0, clientActivator);
+		MockActivator listActivator = MockActivator.activatorFor((Activatable)list);
+		list.add("foo");
+		assertReadsWrites(0, 1, listActivator);
+	}
+
 	public void tearDown() throws Exception {
 		deleteFiles();
+	}
+
+	private void instantiateInnerClass(AssertingClassLoader loader) throws Exception {
+		Class outerClazz = loader.loadClass(INSTRUMENTED_OUTER_CLAZZ);
+		Object outerInst = outerClazz.newInstance();
+		outerClazz.getDeclaredMethod("foo", new Class[]{}).invoke(outerInst, new Object[]{});
+	}
+
+	private AssertingClassLoader newAssertingClassLoader() throws MalformedURLException {
+		return new AssertingClassLoader(new File(targetDir), INPUT_CLASSES);
+	}
+
+	private void enhance() throws Exception {
+		
+		String[] filterClassNames = new String[INSTRUMENTED_CLASSES.length];
+		for (int instrumentedIdx = 0; instrumentedIdx < INSTRUMENTED_CLASSES.length; instrumentedIdx++) {
+			filterClassNames[instrumentedIdx] = INSTRUMENTED_CLASSES[instrumentedIdx].getName();
+		}
+		ClassFilter filter = new ByNameClassFilter(filterClassNames);
+		Db4oFileInstrumentor enhancer = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(filter));
+		enhancer.enhance(srcDir, targetDir, new String[]{});
+	}
+
+	private void assertReadsWrites(int expectedReads, int expectedWrites, MockActivator activator) {
+		Assert.areEqual(expectedReads, activator.readCount());
+		Assert.areEqual(expectedWrites, activator.writeCount());
 	}
 
 	private void deleteFiles() {
