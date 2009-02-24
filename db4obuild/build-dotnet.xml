@@ -588,6 +588,7 @@
         <copy todir="${dir.sharpen}/db4oj/tests/src" overwrite="true">
             <fileset dir="${dir.dist.decaf.jdk1.2.test.src}">
                 <include name="**/db4ounit/common/**/*.java" />
+                <include name="**/db4ounit/optional/**/*.java" />
                 <include name="**/db4ounit/util/**/*.java" />
                 <include name="**/db4ounit/common/ta/**/*.java" />
                 <include name="**/db4ounit/util/*.java" />
