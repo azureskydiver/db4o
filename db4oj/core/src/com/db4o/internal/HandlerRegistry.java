@@ -29,7 +29,7 @@ import com.db4o.typehandlers.*;
  */
 public final class HandlerRegistry {
     
-    public static final byte HANDLER_VERSION = (byte)6;
+    public static final byte HANDLER_VERSION = (byte)7;
     
     private final ObjectContainerBase _container;  // this is the master container and not valid
 	                                   // for TransportObjectContainer

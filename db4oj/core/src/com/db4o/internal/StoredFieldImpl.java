@@ -24,6 +24,10 @@ public class StoredFieldImpl implements StoredField {
     public void createIndex() {
         _fieldMetadata.createIndex();
     }
+    
+    public void dropIndex() {
+    	_fieldMetadata.dropIndex();
+    }
 
     public FieldMetadata fieldMetadata(){
         return _fieldMetadata;

@@ -11,7 +11,7 @@ import com.db4o.internal.convert.conversions.*;
  */
 public class Converter {
     
-    public static final int VERSION = ClassAspects_7_4.VERSION;
+    public static final int VERSION = ReindexNetDateTime_7_8.VERSION;
     
     private static Converter _converter;
     

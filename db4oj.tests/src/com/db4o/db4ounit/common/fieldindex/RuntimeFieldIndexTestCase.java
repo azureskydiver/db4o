@@ -28,15 +28,32 @@ public class RuntimeFieldIndexTestCase extends AbstractDb4oTestCase implements O
 	}
 	
 	public void testCreateIndexAtRuntime() {
-		StoredField field = db().storedClass(Data.class).storedField(FIELDNAME,null);
+		StoredField field = storedField();
 		Assert.isFalse(field.hasIndex());
 		field.createIndex();
 		Assert.isTrue(field.hasIndex());
+		assertQuery();
+		field.createIndex(); // ensure that second call is ignored
+	}
+
+	private void assertQuery() {
 		Query query = newQuery(Data.class);
 		query.descend(FIELDNAME).constrain(new Integer(2));
 		ObjectSet result = query.execute();
 		Assert.areEqual(1, result.size());
-		field.createIndex(); // ensure that second call is ignored
+	}
+	
+	public void testDropIndex(){
+		StoredField field = storedField();
+		field.createIndex();
+		assertQuery();
+		field.dropIndex();
+		Assert.isFalse(field.hasIndex());
+		assertQuery();
+	}
+
+	private StoredField storedField() {
+		return db().storedClass(Data.class).storedField(FIELDNAME,null);
 	}
 
 }

@@ -16,6 +16,12 @@ public interface StoredField {
      */
     public void createIndex();
     
+    
+    /**
+     * drops an existing index on this field at runtime.
+     */
+    public void dropIndex();
+    
 	/**
 	 * returns the field value on the passed object.
 	 * <br><br>This method will also work, if the field is not present in the current
