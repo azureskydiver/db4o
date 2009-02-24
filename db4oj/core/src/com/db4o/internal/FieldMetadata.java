@@ -235,7 +235,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return Handlers4.handlerCanHold(_handler, reflector(), claxx);
     }
 
-    private GenericReflector reflector() {
+    public GenericReflector reflector() {
         ObjectContainerBase container = container();
         if (container == null) {
             return null;
@@ -1058,6 +1058,9 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 	public boolean canBeDisabled() {
 		return true;
 	}
-	
+
+	public void dropIndex() {
+		dropIndex(container().systemTransaction());
+	}
 
 }
