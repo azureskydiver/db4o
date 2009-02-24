@@ -20,17 +20,32 @@ public class ArrayListInstantiationInstrumentationTestCase implements TestCase {
 		assertReturnsActivatableList(instance, "createMethodArgArrayList");
 		assertReturnsActivatableList(instance, "createConditionalArrayList");
 	}
-
-	public void testCustomArrayList() throws Exception {
+	
+	public void testBaseTypeIsExchanged() throws Exception {
 		Class instrumented = instrument(MyArrayList.class);
 		List list = (List)instrumented.newInstance();
+		assertActivatableList(list);
 		List delegateList = (List)instrumented.getField("_delegate").get(list);
-		Assert.isInstanceOf(ActivatableArrayList.class, delegateList);
+		assertActivatableList(delegateList);
 	}
+	
+	public void testBaseInvocationIsExchanged() throws Exception {
+		Class instrumented = instrument(MyArrayList.class);
+		List list = (List)instrumented.newInstance();
+		list.add("foo");
+		Assert.isTrue(list.contains("foo"));
+		
+		List delegateList = (List)instrumented.getField("_delegate").get(list);
+		Assert.isTrue(delegateList.contains("foo"));
+	}
+	
+	private void assertActivatableList(List delegateList) {
+	    Assert.isInstanceOf(ActivatableArrayList.class, delegateList);
+    }
 	
 	private void assertReturnsActivatableList(Object instance, String methodName) {
 		List list = (List)Reflection4.invoke(instance, methodName);
-		Assert.isInstanceOf(ActivatableArrayList.class, list);
+		assertActivatableList(list);
 	}
 
 	private Class instrument(Class clazz) throws ClassNotFoundException {

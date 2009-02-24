@@ -548,4 +548,8 @@ public class ClassEditor {
 		return (this.type().toString());
 	}
 
+	public void setSuperclass(Type newSuperclass) {
+		superclass = newSuperclass;
+    }
+
 }

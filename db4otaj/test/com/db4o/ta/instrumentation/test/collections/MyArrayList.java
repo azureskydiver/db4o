@@ -11,4 +11,8 @@ public class MyArrayList extends ArrayList {
 		_delegate = new ArrayList();
 	}
 	
+	public boolean add(Object element) {
+		super.add(element);
+		return _delegate.add(element);
+	}
 }
