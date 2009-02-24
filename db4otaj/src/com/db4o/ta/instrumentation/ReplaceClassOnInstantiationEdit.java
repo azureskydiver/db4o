@@ -66,6 +66,7 @@ public class ReplaceClassOnInstantiationEdit implements BloatClassEdit {
 						instruction.setOperand(_replacementType);
 						break;
 					case Instruction.opc_invokespecial:
+						// TODO check for <init>
 						MemberRef methodRef = (MemberRef) instruction.operand();
 						if(!methodRef.declaringClass().equals(_origType)) {
 							break;
