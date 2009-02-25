@@ -11,11 +11,12 @@ import com.db4o.typehandlers.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.fixtures.*;
 
 /**
  * @sharpen.remove
  */
-public class BigDecimalTypeHandlerTestCase extends AbstractInMemoryDb4oTestCase {
+public class BigDecimalTypeHandlerTestCase extends AbstractDb4oTestCase {
 
 	private static final BigDecimal ZERO = new BigDecimal("0");
 	private static final BigDecimal ONE = new BigDecimal("1");
@@ -45,6 +46,9 @@ public class BigDecimalTypeHandlerTestCase extends AbstractInMemoryDb4oTestCase 
 	
 	@Override
 	protected void configure(Configuration config) throws Exception {
+		if (SubjectFixtureProvider.<Boolean>value()) {
+			indexField(config, Item.class, "_typed");
+		}
 		config.registerTypeHandler(new SingleClassTypeHandlerPredicate(BigDecimal.class), new BigDecimalTypeHandler());
 	}
 

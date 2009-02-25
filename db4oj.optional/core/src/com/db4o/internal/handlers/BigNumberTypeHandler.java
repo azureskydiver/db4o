@@ -11,7 +11,7 @@ import com.db4o.typehandlers.*;
  * @sharpen.ignore
  * @exclude
  */
-public abstract class BigNumberTypeHandler implements EmbeddedTypeHandler, QueryableTypeHandler {
+public abstract class BigNumberTypeHandler<TBigNumber> implements EmbeddedTypeHandler, VariableLengthTypeHandler, QueryableTypeHandler {
 
 	public void defragment(DefragmentContext context) {
 		skip(context);
@@ -25,51 +25,44 @@ public abstract class BigNumberTypeHandler implements EmbeddedTypeHandler, Query
 		return unmarshall(context);
 	}
 
-	private Comparable unmarshall(final ReadBuffer buffer) {
+	private TBigNumber unmarshall(final ReadBuffer buffer) {
 	    byte[] data = new byte[buffer.readInt()];
 		buffer.readBytes(data);
 		return fromByteArray(data);
     }
 	
-	protected abstract Comparable fromByteArray(byte[] data);
+	protected abstract TBigNumber fromByteArray(byte[] data);
 	
-	protected abstract byte[] toByteArray(Object obj);
+	protected abstract byte[] toByteArray(TBigNumber obj);
+	
+	protected abstract int compare(TBigNumber x, TBigNumber y);
 
 	public void write(WriteContext context, Object obj) {
-		byte[] data = toByteArray(obj);
+		byte[] data = toByteArray((TBigNumber)obj);
 		context.writeInt(data.length);
 		context.writeBytes(data);
 	}
 
-	public PreparedComparison prepareComparison(Context context, Object obj) {
-		final Comparable value = obj instanceof TransactionContext
-			? comparableFrom(((TransactionContext)obj)._object)
-			: comparableFrom(obj);
-//		if (value == null) {
-//			return new PreparedComparison() {
-//				public int compareTo(Object obj) {
-//					if (obj == null) {
-//						return 0;
-//					}
-//					return -1;
-//                }
-//			};
-//		}
-		return new PreparedComparison() {
-			public int compareTo(Object obj) {
-				Comparable valueToCompareAgainst = (Comparable) obj;
-				if (valueToCompareAgainst == null) {
+	public PreparedComparison<TBigNumber> prepareComparison(Context context, Object obj) {
+		final TBigNumber value = obj instanceof TransactionContext
+			? bigNumberFrom(((TransactionContext)obj)._object)
+			: bigNumberFrom(obj);
+			
+		return new PreparedComparison<TBigNumber>() {
+			public int compareTo(TBigNumber other) {
+				if (other == null) {
 					return 1;
 				}
-			    return value.compareTo(valueToCompareAgainst);
+			    return compare(value, other);
 			}
 		};
 	}
 
-	private Comparable comparableFrom(Object obj) {
-	    return obj instanceof ReadBuffer
+	private TBigNumber bigNumberFrom(Object obj) {
+		if (true) return (TBigNumber)obj;
+		return obj instanceof ReadBuffer
 			? unmarshall((ReadBuffer)obj)
-			: (Comparable)obj;
+			: (TBigNumber)obj;
     }
 	
 	private void skip(ReadBuffer context) {

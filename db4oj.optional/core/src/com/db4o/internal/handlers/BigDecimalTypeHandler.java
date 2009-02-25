@@ -9,19 +9,24 @@ import com.db4o.reflect.*;
  * @sharpen.ignore
  * @exclude
  */
-public class BigDecimalTypeHandler extends BigNumberTypeHandler {
+public class BigDecimalTypeHandler extends BigNumberTypeHandler<BigDecimal> {
 	
 	public boolean canHold(ReflectClass type) {
 		return ReflectClasses.areEqual(BigDecimal.class, type);
     }
 
 	@Override
-	protected Comparable fromByteArray(byte[] data) {
+	protected BigDecimal fromByteArray(byte[] data) {
 	    return new BigDecimal(new String(data));
     }
 	
 	@Override
-	protected byte[] toByteArray(Object obj) {
-		return ((BigDecimal)obj).toString().getBytes();
+	protected byte[] toByteArray(BigDecimal value) {
+		return value.toString().getBytes();
 	}
+
+	@Override
+    protected int compare(BigDecimal x, BigDecimal y) {
+		return x.compareTo(y);
+    }
 }
