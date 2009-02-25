@@ -8,6 +8,7 @@ import java.util.*;
 import EDU.purdue.cs.bloat.editor.*;
 
 import com.db4o.db4ounit.common.ta.*;
+import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 import com.db4o.instrumentation.classfilter.*;
 import com.db4o.instrumentation.core.*;
@@ -40,7 +41,7 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		NOT_INSTRUMENTED_CLAZZ, 
 	};
 
-	private final static Class[] INPUT_CLASSES = (Class[])merge(INSTRUMENTED_CLASSES, NOT_INSTRUMENTED_CLASSES, Class.class);
+	private final static Class[] INPUT_CLASSES = (Class[])Arrays4.merge(INSTRUMENTED_CLASSES, NOT_INSTRUMENTED_CLASSES, Class.class);
 	
 	private static Class getAnonymousInnerClass(Class clazz) {
 		try {
@@ -219,11 +220,4 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		File4.copy(file.getCanonicalPath(), targetPath);
 	}
 	
-	private static Object[] merge(Object[] a, Object[] b, Class arrayType) {
-		Object[] merged = (Object[])Array.newInstance(arrayType, a.length + b.length);
-		System.arraycopy(a, 0, merged, 0, a.length);
-		System.arraycopy(b, 0, merged, a.length, b.length);
-		return merged;
-	}
-
 }

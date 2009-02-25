@@ -18,7 +18,16 @@ public class TAAntClassEditFactory extends ProjectComponent implements AntClassE
 
 	private final List _regExp = new ArrayList();
 	private final List _filters = new ArrayList();
+	private final boolean _withCollections;
 
+	public TAAntClassEditFactory() {
+		this(true);
+	}
+
+	public TAAntClassEditFactory(boolean withCollections) {
+		_withCollections = withCollections;
+	}
+	
 	public RegularExpression createRegexp() {
         RegularExpression regExp = new RegularExpression();
         _regExp.add(regExp);
@@ -58,7 +67,7 @@ public class TAAntClassEditFactory extends ProjectComponent implements AntClassE
 		if(clazzFilter != null) {
 			userClassFilter = new CompositeAndClassFilter(new ClassFilter[]{ clazzFilter, userClassFilter });
 		}
-		return new InjectTransparentActivationEdit(userClassFilter);
+		return new InjectTransparentActivationEdit(userClassFilter, _withCollections);
 	}
 
 }
