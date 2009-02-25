@@ -607,6 +607,9 @@
 			<fileset dir="${dir.dist.classes.taj}">
 				<include name="**/*.class"/>
 			</fileset>
+			<fileset dir="${dir.dist.classes.db4otools}">
+				<include name="**/*.class"/>
+			</fileset>
 			<fileset dir="${nodep.dir.classes.bloat}">
 				<include name="**/*.class"/>
 			</fileset>
@@ -1033,8 +1036,24 @@
 			<arg value="-withExceptions" />
 		</java>
 
+		<antcall target="run.tests.taj.integration" />
+		
 	</target>
-	
+
+	<target name="run.tests.taj.integration" depends="build.db4ojava">
+		<delete dir="${dir.j.taj.tests.integration}/lib">
+			<include name="**/*.jar" />
+		</delete>
+		<copy file="${file.jdk1.2.nodep.jar}" todir="${dir.j.taj.tests.integration}/lib" />
+		<copy file="${file.jdk1.2.db4ounit.jar}" todir="${dir.j.taj.tests.integration}/lib" />
+		<ant antfile="${dir.j.taj.tests.integration}/build.xml" dir="${dir.j.taj.tests.integration}"/>
+	</target>
+
+	<!-- TODO temporary task for testing, remove -->
+	<target name="run.tests.taj.integration.standalone">
+		<ant antfile="${dir.j.taj.tests.integration}/build.xml" dir="${dir.j.taj.tests.integration}"/>
+	</target>
+
 	<target name="run.tests.jdk1.5" depends="init, build.db4ojdk1.5.tests">
         <path id="tests.jdk1.5.runtime.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.5}" />
