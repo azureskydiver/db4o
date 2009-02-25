@@ -46,6 +46,9 @@ the Transparent Activation Framework for Java
 .b db4o-7.0-tools.jar ..
 the tools interface that provides the top level enhancer tasks.
 
+Alternatively you can add  .b db4o-7.0-all-java5.jar .. instead, which contains the classes from all
+the libraries listed above.
+
 .a EnhancementCompileTime ..
 .1 Enhancing at Compile Time  ..
 
@@ -79,9 +82,13 @@ For all possibilities of using this task see ._
 the  .l http://developer.db4o.com/Resources/view.aspx/Reference/Object_Lifecycle/Activation/Transparent_Activation_Framework/TA_Enhanced_Example/TA_Enhancement_At_Build_Time  topic on build time enhancement ..  in ._
 the reference documentation.
 
-The simplest enhancer task does both: It optimizes Native Queries ._
-and it adds the Activatable interface to your classes, making sure ._
+The simplest enhancer task can do the following: 
+
+1. optimize Native Queries ._
+2. add the Activatable interface to your classes, making sure ._
 a persistent object is activated whenever any field is read.
+3. replace constructor invocation for platform collections (ArrayList,...) ._
+with a custom activatable version derived from the platform collection
 
 Here is an example of how an  .l http://ant.apache.org/ Ant ..  script ._
 could look like. This script enhances all class files and jar files ._
@@ -103,7 +110,7 @@ of your project:
 		classpathref="project.classpath" />
 	
 	<target name="enhance">
-		<db4o-enhance classtargetdir="${basedir}/bin" jartargetdir="${basedir}/lib">
+		<db4o-enhance classtargetdir="${basedir}/bin" jartargetdir="${basedir}/lib" nq="true" ta="true" collections="true">
 			<classpath refid="project.classpath" />		
 			<sources dir="${basedir}/bin" />
 			<jars dir="${basedir}/lib">
@@ -116,6 +123,14 @@ of your project:
 	</target>
 	
 </project> ..
+
+The instrumentation process can be configured with the ollowing attributes:
+
+nq: switch for native query optimization enhancement
+ta: switch for transparent activation/persistence enhancement
+collections: switch for enhancement of platform collections for transparent activation/persistence (only effective if ta is switched on)
+
+By default, these all are set to true.
 
 If you use Eclipse, there is a very convenient way to make ._
 sure an  .l http://ant.apache.org/ Ant ..  script ._

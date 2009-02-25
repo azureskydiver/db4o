@@ -19,14 +19,23 @@ public class Db4oEnhancerAntTask extends Db4oFileEnhancerAntTask {
 	public Db4oEnhancerAntTask(){
     }
 
+	/**
+	 * @param nq true if native query optimization instrumentation should take place, false otherwise
+	 */
     public void setNq(boolean nq) {
     	_nq = nq;
     }
     
+	/**
+	 * @param ta true if transparent activation/persistence instrumentation should take place, false otherwise
+	 */
     public void setTa(boolean ta) {
     	_ta = ta;
     }
 
+	/**
+	 * @param collections true if native collections should be instrumented for transparent activation/persistence, false otherwise
+	 */
     public void setCollections(boolean collections) {
     	_collections = collections;
     }
