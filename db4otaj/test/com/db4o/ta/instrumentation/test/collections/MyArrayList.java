@@ -8,7 +8,7 @@ public class MyArrayList extends ArrayList {
 	
 	public MyArrayList() {
 		super();
-		_delegate = new ArrayList();
+		_delegate = new ArrayList(super.size());
 	}
 	
 	public boolean add(Object element) {

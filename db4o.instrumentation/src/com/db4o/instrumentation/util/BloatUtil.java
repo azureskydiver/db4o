@@ -2,6 +2,8 @@ package com.db4o.instrumentation.util;
 
 import java.io.*;
 
+import com.db4o.instrumentation.core.*;
+
 import EDU.purdue.cs.bloat.editor.*;
 
 /**
@@ -54,6 +56,16 @@ public class BloatUtil {
 			}
 		}
 		return new LoadStoreInstructions(Opcode.opc_aload, Opcode.opc_astore);
+	}
+
+	public static boolean implementsInHierarchy(ClassEditor ce, Class markerInterface, BloatLoaderContext context) throws ClassNotFoundException {
+		while(ce != null) {
+			if(implementsDirectly(ce, markerInterface)) {
+				return true;
+			}
+			ce = context.classEditor(ce.superclass());
+		}
+		return false;
 	}
 
 	public static boolean implementsDirectly(ClassEditor ce, Class markerInterface) {

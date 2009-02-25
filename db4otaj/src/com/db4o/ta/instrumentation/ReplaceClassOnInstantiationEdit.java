@@ -2,7 +2,9 @@ package com.db4o.ta.instrumentation;
 
 import java.util.*;
 
+import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.tree.*;
 
 import com.db4o.instrumentation.core.*;
 
@@ -65,8 +67,8 @@ public class ReplaceClassOnInstantiationEdit implements BloatClassEdit {
 						}
 						instruction.setOperand(_replacementType);
 						break;
+					// invokespecial covers instance initializer, super class method and private method invocations
 					case Instruction.opc_invokespecial:
-						// TODO check for <init>
 						MemberRef methodRef = (MemberRef) instruction.operand();
 						if(!methodRef.declaringClass().equals(_origType)) {
 							break;
