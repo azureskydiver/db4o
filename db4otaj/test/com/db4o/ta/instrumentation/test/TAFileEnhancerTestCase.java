@@ -16,6 +16,7 @@ import com.db4o.instrumentation.main.*;
 import com.db4o.internal.*;
 import com.db4o.ta.*;
 import com.db4o.ta.instrumentation.*;
+import com.db4o.ta.instrumentation.test.collections.*;
 import com.db4o.ta.instrumentation.test.data.*;
 
 import db4ounit.*;
@@ -28,6 +29,7 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 	private final static Class INSTRUMENTED_OUTER_CLAZZ = ToBeInstrumentedOuter.class;
 	private final static Class INSTRUMENTED_INNER_CLAZZ = getAnonymousInnerClass(INSTRUMENTED_OUTER_CLAZZ);
 	private final static Class LIST_CLIENT_CLAZZ = ArrayListClient.class;
+	private final static Class CUSTOM_LIST_CLAZZ = MyArrayList.class;
 
 	private final static Class[] INSTRUMENTED_CLASSES = new Class[] { 
 		INSTRUMENTED_CLAZZ, 
@@ -35,6 +37,7 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		INSTRUMENTED_OUTER_CLAZZ, 
 		INSTRUMENTED_INNER_CLAZZ, 
 		LIST_CLIENT_CLAZZ,
+		CUSTOM_LIST_CLAZZ,
 	};
 
 	private final static Class[] NOT_INSTRUMENTED_CLASSES = new Class[] { 
