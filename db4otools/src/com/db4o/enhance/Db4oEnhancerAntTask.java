@@ -12,9 +12,32 @@ import com.db4o.ta.instrumentation.ant.*;
  */
 public class Db4oEnhancerAntTask extends Db4oFileEnhancerAntTask {
     
-    public Db4oEnhancerAntTask(){
-        add(new NQAntClassEditFactory());
-        add(new TAAntClassEditFactory());
+    private boolean _nq = true;
+	private boolean _ta = true;
+	private boolean _collections = true;
+
+	public Db4oEnhancerAntTask(){
     }
 
+    public void setNq(boolean nq) {
+    	_nq = nq;
+    }
+    
+    public void setTa(boolean ta) {
+    	_ta = ta;
+    }
+
+    public void setCollections(boolean collections) {
+    	_collections = collections;
+    }
+    
+    public void execute() {
+    	if(_nq) {
+            add(new NQAntClassEditFactory());
+    	}
+    	if(_ta) {
+            add(new TAAntClassEditFactory(_collections));
+    	}
+    	super.execute();
+    }
 }

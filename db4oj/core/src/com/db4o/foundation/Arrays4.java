@@ -64,4 +64,15 @@ public class Arrays4 {
 			array[i] = value;
 		}
     }
+
+	/**
+	 * @sharpen.ignore
+	 */
+	public static Object[] merge(Object[] a, Object[] b, Class arrayType) {
+		Object[] merged = (Object[])Array.newInstance(arrayType, a.length + b.length);
+		System.arraycopy(a, 0, merged, 0, a.length);
+		System.arraycopy(b, 0, merged, a.length, b.length);
+		return merged;
+	}
+
 }
