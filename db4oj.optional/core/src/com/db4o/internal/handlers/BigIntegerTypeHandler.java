@@ -9,19 +9,24 @@ import com.db4o.reflect.*;
  * @sharpen.ignore
  * @exclude
  */
-public class BigIntegerTypeHandler extends BigNumberTypeHandler {
+public class BigIntegerTypeHandler extends BigNumberTypeHandler<BigInteger> {
 
 	@Override
-	protected Comparable fromByteArray(byte[] data) {
+	protected BigInteger fromByteArray(byte[] data) {
 	    return new BigInteger(data);
     }
 
 	@Override
-	protected byte[] toByteArray(Object obj) {
-	    return ((BigInteger)obj).toByteArray();
+	protected byte[] toByteArray(BigInteger value) {
+	    return value.toByteArray();
     }
 
 	public boolean canHold(ReflectClass type) {
 		return ReflectClasses.areEqual(BigInteger.class, type);
+    }
+
+	@Override
+    protected int compare(BigInteger x, BigInteger y) {
+		return x.compareTo(y);
     }
 }

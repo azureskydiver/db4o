@@ -11,11 +11,12 @@ import com.db4o.typehandlers.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.fixtures.*;
 
 /**
  * @sharpen.remove
  */
-public class BigIntegerTypeHandlerTestCase extends AbstractInMemoryDb4oTestCase {
+public class BigIntegerTypeHandlerTestCase extends AbstractDb4oTestCase {
 
 	private static final BigInteger ZERO = new BigInteger("0");
 	private static final BigInteger ONE = new BigInteger("1");
@@ -24,11 +25,12 @@ public class BigIntegerTypeHandlerTestCase extends AbstractInMemoryDb4oTestCase 
 	private static final BigInteger LARGE = LONG_MAX.multiply(new BigInteger("2"));
 	
 	private static final BigInteger[] VALUES = {
+		LONG_MIN,
 		ZERO,
 		ONE,
 		LONG_MAX,
-		LONG_MIN,
-		LARGE
+		LARGE,
+		null,
 	};
 	
 	public static class Item {
@@ -45,6 +47,10 @@ public class BigIntegerTypeHandlerTestCase extends AbstractInMemoryDb4oTestCase 
 	
 	@Override
 	protected void configure(Configuration config) throws Exception {
+		if (SubjectFixtureProvider.<Boolean>value()) {
+			// FIXME: indices are simply being ignored
+			indexField(config, Item.class, "_typed");
+		}
 		config.registerTypeHandler(new SingleClassTypeHandlerPredicate(BigInteger.class), new BigIntegerTypeHandler());
 	}
 
@@ -65,29 +71,61 @@ public class BigIntegerTypeHandlerTestCase extends AbstractInMemoryDb4oTestCase 
 		ObjectSet<Item> result = db().query(Item.class);
 		while (result.hasNext()) {
 			Item item = result.next();
-			item._typed = item._typed.multiply(item._typed);
-			item._untyped = item._typed.add(ONE);
+			item._typed = typedUpdateValueFor(item._typed);
+			item._untyped = untypedUpdateValueFor(item._untyped);
 			store(item);
 		}
 		reopen();
 		assertRetrieved(new Procedure4<Item>() {
 			public void apply(Item item) {
 				BigInteger expectedBase = VALUES[item._id];
-				Assert.areEqual(expectedBase.multiply(expectedBase), item._typed);
-				Assert.areEqual(item._typed.add(ONE), item._untyped);
+				Assert.areEqual(typedUpdateValueFor(expectedBase), item._typed);
+				Assert.areEqual(untypedUpdateValueFor(expectedBase), item._untyped);
 			}
 		});
 	}
 
-	public void testDescendTyped() {
-		Query query = newQuery(Item.class);
-		query.descend("_typed").constrain(LARGE);
-		ObjectSet<Item> result = query.execute();
-		Assert.areEqual(1, result.size());
-		final Item found = result.next();
-		Assert.areEqual(LARGE, found._typed);
-		Assert.areEqual(LARGE, found._untyped);
+	private BigInteger untypedUpdateValueFor(Object object) {
+		return null == object ? ONE : ((BigInteger)object).add(ONE);
+    }
+
+	private BigInteger typedUpdateValueFor(BigInteger value) {
+	    return null == value ? ONE : value.multiply(value);
+    }
+	
+	public void testOrderAscendingByTypedField() {
+		final Query query = newItemQuery();
+		query.descend("_typed").orderAscending();
+		Iterator4Assert.areEqual(VALUES, typedValuesFrom(query.execute()));
 	}
+
+	private Iterator4 typedValuesFrom(ObjectSet<?> objectSet) {
+		final Collection4 result = new Collection4();
+		while (objectSet.hasNext()) {
+			result.add(((Item)objectSet.next())._typed);
+		}
+		return result.iterator();
+    }
+
+	public void testDescendTypedField() {
+		for (BigInteger value : VALUES) {
+			assertTypedQuery(value);
+		}
+	}
+
+	private void assertTypedQuery(BigInteger value) {
+	    Query query = newItemQuery();
+	    query.descend("_typed").constrain(value);
+	    ObjectSet<Item> result = query.execute();
+	    Assert.areEqual(1, result.size());
+	    final Item found = result.next();
+	    Assert.areEqual(value, found._typed);
+	    Assert.areEqual(value, found._untyped);
+    }
+
+	private Query newItemQuery() {
+	    return newQuery(Item.class);
+    }
 	
 	public void testDelete() throws Exception {
 		deleteAll(Item.class);
@@ -100,7 +138,7 @@ public class BigIntegerTypeHandlerTestCase extends AbstractInMemoryDb4oTestCase 
 	}
 	
 	private void assertRetrieved(Procedure4<Item> check) {
-		Query query = newQuery(Item.class);
+		Query query = newItemQuery();
 		query.descend("_id").orderAscending();
 		ObjectSet<Item> result = query.execute();
 		Assert.areEqual(VALUES.length, result.size());

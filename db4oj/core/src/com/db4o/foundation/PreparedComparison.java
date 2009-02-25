@@ -6,7 +6,7 @@ package com.db4o.foundation;
  * TODO: rename to Comparable4 as soon we find
  * a smart name for the current Comparable4.
  */
-public interface PreparedComparison {
+public interface PreparedComparison<T> {
 	
 	/**
 	 * return a negative int, zero or a positive int if
@@ -15,6 +15,6 @@ public interface PreparedComparison {
 	 * 
 	 * Typical implementation: return this.object - obj;
 	 */
-	public int compareTo(Object obj);
+	public int compareTo(T obj);
 
 }
