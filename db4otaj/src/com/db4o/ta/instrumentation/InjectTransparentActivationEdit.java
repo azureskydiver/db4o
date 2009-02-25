@@ -22,17 +22,21 @@ public class InjectTransparentActivationEdit extends CompositeBloatClassEdit {
 	}
 	
 	private static BloatClassEdit[] createEdits(ClassFilter filter, boolean withCollections) {
-		BloatClassEdit[] edits = new BloatClassEdit[] {
+		BloatClassEdit[] firstSet = new BloatClassEdit[] {
 				new CheckApplicabilityEdit(),
+		};
+		BloatClassEdit[] secondSet = new BloatClassEdit[] {
 				new InjectTAInfrastructureEdit(filter), 
 				new InstrumentFieldAccessEdit(filter),
 		};
+		BloatClassEdit[] edits = firstSet;
 		if(withCollections) {
 			BloatClassEdit[] collectionEdit = new BloatClassEdit[]{
 					new ReplaceClassOnInstantiationEdit(ArrayList.class, ActivatableArrayList.class),
 			};
 			edits = (BloatClassEdit[]) Arrays4.merge(edits, collectionEdit, BloatClassEdit.class);
 		}
+		edits = (BloatClassEdit[]) Arrays4.merge(edits, secondSet, BloatClassEdit.class);
 		return edits;
 	}
 }
