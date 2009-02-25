@@ -34,7 +34,7 @@ public class TransparentActivationSupport implements ConfigurationItem {
 	 */
 	public void apply(final InternalObjectContainer container) {
 		
-		if (activationProvider(container) instanceof TransparentActivationDepthProvider)
+		if (isTransparentActivationAlreadyEnabled(container))
 			return;
 				
 		final TransparentActivationDepthProviderImpl provider = new TransparentActivationDepthProviderImpl();
@@ -70,6 +70,10 @@ public class TransparentActivationSupport implements ConfigurationItem {
 			}
 		});
 	}
+
+	private boolean isTransparentActivationAlreadyEnabled(final InternalObjectContainer container) {
+	    return activationProvider(container) instanceof TransparentActivationDepthProvider;
+    }
 
 	private void setActivationDepthProvider(final InternalObjectContainer container,
             final ActivationDepthProvider provider) {
