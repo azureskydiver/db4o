@@ -18,7 +18,7 @@ public class UnitTestMain {
 		new ConsoleTestRunner(build(args), false).run();
 	}
 	
-	protected TestSuiteBuilder builder(Class clazz) {
+	protected Iterable4 builder(Class clazz) {
 		return new ReflectionTestSuiteBuilder(clazz);
 	}
 
