@@ -27,6 +27,7 @@ public class ClientServerFactoryImpl implements ClientServerFactory{
 		if (user == null || password == null) {
 			throw new InvalidPasswordException();
 		}
+		Config4Impl.assertIsNotTainted(config);
 		NetworkSocket networkSocket = new NetworkSocket(socketFactory, hostName, port);
 		return new ClientObjectContainer(config, networkSocket, user, password, true);
 	}

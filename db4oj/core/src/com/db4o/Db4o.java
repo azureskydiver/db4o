@@ -256,13 +256,17 @@ public class Db4o {
 			String databaseFileName) throws Db4oIOException,
 			DatabaseFileLockedException, IncompatibleFileFormatException,
 			OldFormatException, DatabaseReadOnlyException {
-				return ObjectContainerFactory.openObjectContainer(config, databaseFileName);
-			}
+
+		return ObjectContainerFactory.openObjectContainer(config, databaseFileName);
+	}
 
 	protected static final ObjectContainer openMemoryFile1(
 			Configuration config, MemoryFile memoryFile)
 			throws Db4oIOException, DatabaseFileLockedException,
 			OldFormatException {
+		
+		Config4Impl.assertIsNotTainted(config);
+		
 		if(memoryFile == null){
 			memoryFile = new MemoryFile();
 		}

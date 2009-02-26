@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 
@@ -45,18 +46,6 @@ public class GlobalVsNonStaticConfigurationTestCase implements Db4oTestCase, Tes
 				Db4o.openFile(config1, FILENAME);
 			}
 		});
-		config1.readOnly(false);
-		final ObjectContainer db1 = Db4o.openFile(config1, FILENAME);
-		config1.readOnly(true);
-		try {
-			Assert.expect(DatabaseReadOnlyException.class, new CodeBlock() {
-				public void run() throws Throwable {
-					db1.store(new Data(1));
-				}
-			});
-		} finally {
-			db1.close();
-		}
 
 		Configuration config2 = Db4o.newConfiguration();
 		ObjectContainer db2 = Db4o.openFile(config2, FILENAME);

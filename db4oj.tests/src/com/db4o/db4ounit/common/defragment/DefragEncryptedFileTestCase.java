@@ -25,8 +25,6 @@ public class DefragEncryptedFileTestCase implements TestLifeCycle {
     private static final String ORIGINAL = Path4.getTempFileName();
     
     private static final String DEFGARED = ORIGINAL + ".bk";
-
-    Configuration db4oConfig;
     
     public void setUp() throws Exception {
     	cleanup();
@@ -90,16 +88,13 @@ public class DefragEncryptedFileTestCase implements TestLifeCycle {
     }
 
     private Configuration getConfiguration() {
-        if (db4oConfig == null) {
-            db4oConfig = Db4o.newConfiguration();
+        final Configuration config = Db4o.newConfiguration();
 
-            db4oConfig.activationDepth(Integer.MAX_VALUE);
-            db4oConfig.callConstructors(true);
-            Storage storage = new MockStorage(
-                    new FileStorage(), "db4o");
-            db4oConfig.storage(storage);
-        }
-        return db4oConfig;
+        config.activationDepth(Integer.MAX_VALUE);
+        config.callConstructors(true);
+        config.storage(new MockStorage(new FileStorage(), "db4o"));
+        
+        return config;
     }
 
     public static class Item {

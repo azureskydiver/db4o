@@ -271,29 +271,29 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		return _container;
 	}
 
-    /**
-     * @deprecated
-     */
 	public ObjectContainer openClient() {
-		return openClient(Db4o.cloneConfiguration());
+		return openClient(null);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public synchronized ObjectContainer openClient(Configuration config) {
 		checkClosed();
+		checkConfigAndTaint(config);
 		synchronized (_container._lock) {
 		    return new EmbeddedClientObjectContainer(_container);
 		}
- 	    
-//      The following uses old embedded C/S mode:      
-
-//		ClientObjectContainer client = new ClientObjectContainer(config,
-//				openClientSocket(), Const4.EMBEDDED_CLIENT_USER
-//						+ (i_threadIDGen - 1), "", false);
-//		client.blockSize(_container.blockSize());
-//		return client;
- 	    
 	}
-	
+
+	private void checkConfigAndTaint(Configuration config) {
+		if (config == null)
+			return;
+		
+	    Config4Impl internalConfig = (Config4Impl) config;
+		Config4Impl.assertIsNotTainted(internalConfig);
+		internalConfig.taint();
+    }
 
 	void removeThread(ServerMessageDispatcherImpl dispatcher) {
 		synchronized (_dispatchers) {

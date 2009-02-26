@@ -11,18 +11,21 @@ public class ObjectContainerFactory {
 	
 	public static ObjectContainer openObjectContainer(Configuration config,
 			String databaseFileName) throws OldFormatException {		
-		if (Deploy.debug) {
-			System.out.println("db4o Debug is ON");
-			if (!Deploy.flush) {
-				System.out.println("Debug option set NOT to flush file.");
-			}
-		}		
+		
+		Config4Impl.assertIsNotTainted(config);
+		
+		emitDebugInfo();		
 		ObjectContainer oc = new IoAdaptedObjectContainer(config, databaseFileName);	
 		Messages.logMsg(config, 5, databaseFileName);
 		return oc;
 	}
-	
-	
 
-	
+	private static void emitDebugInfo() {
+	    if (Deploy.debug) {
+			System.out.println("db4o Debug is ON");
+			if (!Deploy.flush) {
+				System.out.println("Debug option set NOT to flush file.");
+			}
+		}
+    }
 }
