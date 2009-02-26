@@ -1,5 +1,7 @@
 package db4ounit.extensions;
 
+import com.db4o.foundation.*;
+
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
@@ -14,8 +16,12 @@ public class Db4oUnitTestMain extends UnitTestMain {
 
 	private final Db4oFixture _fixture=new Db4oSolo();
 	
-	protected TestSuiteBuilder builder(Class clazz) {
-		return new Db4oTestSuiteBuilder(_fixture,clazz);
+	@Override
+	protected Iterable4 builder(Class clazz) {
+		return Iterators.concat(
+			new Db4oTestSuiteBuilder(_fixture, clazz),
+			new Db4oTestSuiteBuilder(Db4oFixtures.newEmbeddedCS(true), clazz),
+			new Db4oTestSuiteBuilder(Db4oFixtures.newNetworkingCS(true), clazz));
 	}
 	
 	protected Test testMethod(String className, String methodName)

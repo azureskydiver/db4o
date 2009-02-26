@@ -5,6 +5,7 @@ package com.db4o.db4ounit.jre5.defrag;
 import com.db4o.db4ounit.common.defragment.*;
 
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 
 /**
@@ -28,7 +29,7 @@ public class RunTestsDefrag extends AbstractDb4oDefragTestCase {
 
 			protected Db4oTestSuiteBuilder soloSuite(boolean independentConfig) {
 		        return new Db4oTestSuiteBuilder(
-	                new Db4oDefragSolo(configSource(independentConfig)), testCases());			}
+	                new Db4oDefragSolo(Db4oFixtures.configSource(independentConfig)), testCases());			}
 			
 		};
 		

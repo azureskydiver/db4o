@@ -193,35 +193,27 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 
     protected Db4oTestSuiteBuilder soloSuite(boolean independentConfig) {
 		return new Db4oTestSuiteBuilder(
-				new Db4oSolo(configSource(independentConfig)), testCases());
+				Db4oFixtures.newSolo(independentConfig), testCases());
 	}
 
 	protected Db4oTestSuiteBuilder clientServerSuite(boolean independentConfig) {
 		return new Db4oTestSuiteBuilder(
-		        new Db4oClientServer(configSource(independentConfig), false, "C/S"), 
+		        Db4oFixtures.newNetworkingCS(independentConfig), 
 		        testCases());
 	}
-	
+
 	protected Db4oTestSuiteBuilder embeddedClientServerSuite(boolean independentConfig) {
 		return new Db4oTestSuiteBuilder(
-		        new Db4oClientServer(configSource(independentConfig), true, "C/S EMBEDDED"), 
+		        Db4oFixtures.newEmbeddedCS(independentConfig), 
 		        testCases());
 	}
 
 	protected Db4oTestSuiteBuilder concurrenyClientServerSuite(boolean independentConfig, boolean embedded, String label) {
 		return new Db4oConcurrencyTestSuiteBuilder(
-		        new Db4oClientServer(configSource(independentConfig), embedded, label), 
+		        new Db4oClientServer(Db4oFixtures.configSource(independentConfig), embedded, label), 
 		        testCases());
 	}
 	
-    protected ConfigurationSource configSource(boolean independentConfig) {
-    	ConfigurationSource configSource = new IndependentConfigurationSource();
-    	if(!independentConfig) {
-    		configSource = new CachingConfigurationSource(configSource);
-    	}
-    	return configSource;
-    }
-
     protected InternalObjectContainer stream() {
         return (InternalObjectContainer) db();
     }
