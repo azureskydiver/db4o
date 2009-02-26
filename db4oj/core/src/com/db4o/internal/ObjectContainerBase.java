@@ -1069,6 +1069,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		impl.stream(this);
 		impl.reflector().setTransaction(systemTransaction());
 		impl.reflector().configuration(new ReflectorConfigurationImpl(impl));
+		impl.taint();
 		return impl;
 	}
 

@@ -19,7 +19,7 @@ public class FreespaceManagerTypeChangeSlotCountTestCase implements TestCase {
 
     private static final int SIZE = 10000;
     private LocalObjectContainer _container;
-    private Configuration _currentConfig;
+    private Closure4<Configuration> _currentConfig;
     private String _fileName;
     
     public static void main(String[] args) {
@@ -72,7 +72,7 @@ public class FreespaceManagerTypeChangeSlotCountTestCase implements TestCase {
     }
 
     private void open() {
-        _container = (LocalObjectContainer)Db4o.openFile(_currentConfig, _fileName);
+        _container = (LocalObjectContainer)Db4o.openFile(_currentConfig.run(), _fileName);
     }
 
     private void createFreeSpace() {
@@ -88,8 +88,11 @@ public class FreespaceManagerTypeChangeSlotCountTestCase implements TestCase {
 
 
     private void configureBTreeManager() {
-        _currentConfig = Db4o.newConfiguration();
-        _currentConfig.freespace().useBTreeSystem();
+    	_currentConfig = new Closure4<Configuration>() { public Configuration run() {
+         	final Configuration config = Db4o.newConfiguration();
+         	config.freespace().useBTreeSystem();
+         	return config;
+         }};
     }
     
     private void migrateToRam() throws Exception {
@@ -100,8 +103,11 @@ public class FreespaceManagerTypeChangeSlotCountTestCase implements TestCase {
 
 
     private void configureRamManager() {
-        _currentConfig = Db4o.newConfiguration();
-        _currentConfig.freespace().useRamSystem();
+        _currentConfig = new Closure4<Configuration>() { public Configuration run() {
+        	final Configuration config = Db4o.newConfiguration();
+        	config.freespace().useRamSystem();
+        	return config;
+        }};
     }
     
     private List getSlots(FreespaceManager freespaceManager) {

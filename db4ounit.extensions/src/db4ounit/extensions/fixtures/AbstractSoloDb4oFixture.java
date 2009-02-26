@@ -20,7 +20,7 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 	
 	public final void open(Class testCaseClass) {
 		Assert.isNull(_db);
-		final Configuration config = config();
+		final Configuration config = cloneConfiguration();
 		applyFixtureConfiguration(testCaseClass, config);
 		_db=createDatabase(config).ext();
 	}

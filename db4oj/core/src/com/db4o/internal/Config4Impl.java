@@ -33,7 +33,7 @@ import com.db4o.typehandlers.*;
  */
 public final class Config4Impl implements Configuration, DeepClone,
 		MessageSender, FreespaceConfiguration, QueryConfiguration,
-		ClientServerConfiguration{
+		ClientServerConfiguration {
     
 	private KeySpecHashtable4 _config=new KeySpecHashtable4(50);
 	
@@ -157,6 +157,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private static final KeySpec MAX_BATCH_QUEUE_SIZE_KEY = new KeySpec(Integer.MAX_VALUE);
 	
 	private static final KeySpec SLOT_CACHE_SIZE_KEY = new KeySpec(30);
+	
+	private final static KeySpec TAINTED_KEY = new KeySpec(false);
 
 	//  is null in the global configuration until deepClone is called
 	private ObjectContainerBase        i_stream;
@@ -1043,6 +1045,20 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public void fileBasedTransactionLog(boolean flag) {
 		_config.put(FILE_BASED_TRANSACTION_LOG_KEY, flag);
 	}
+
+	public boolean isTainted() {
+		return _config.getAsBoolean(TAINTED_KEY);
+    }
+
+	public void taint() {
+		_config.put(TAINTED_KEY, true);
+    }
+
+	public static void assertIsNotTainted(Configuration config) {
+        if (((Config4Impl)config).isTainted()) {
+        	throw new IllegalArgumentException("Configuration already used.");
+        }
+    }
 
 	
 
