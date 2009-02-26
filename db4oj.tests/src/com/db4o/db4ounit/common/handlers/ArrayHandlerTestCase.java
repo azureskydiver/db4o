@@ -17,13 +17,17 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
     	public float[][] _jaggedFloats;
     	public Float[][] _jaggedFloatWrappers;
     	
+    	public FloatArrayHolder() {
+			// for jres that require instantiation through the constructor
+    	}
+    	
     	public FloatArrayHolder(float... floats) {
     		_floats = floats;
     		_jaggedFloats = new float[][] { floats };
-    		_jaggedFloatWrappers = new Float[][] { wrap(floats) };
+    		_jaggedFloatWrappers = new Float[][] { lift(floats) };
     	}
     	
-    	public static Float[] wrap(float[] floats) {
+    	public static Float[] lift(float[] floats) {
     		final Float[] wrappers = new Float[floats.length];
     		for (int i=0; i<floats.length; ++i) {
 	            wrappers[i] = floats[i];
@@ -76,7 +80,7 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
 		final FloatArrayHolder stored = retrieveOnlyInstance(FloatArrayHolder.class);
 		ArrayAssert.areEqual(expected, stored.jaggedFloats());
 		ArrayAssert.areEqual(expected, stored.floats());
-		ArrayAssert.areEqual(FloatArrayHolder.wrap(expected), stored.jaggedWrappers());
+		ArrayAssert.areEqual(FloatArrayHolder.lift(expected), stored.jaggedWrappers());
     }
     
     public void testCanHold() {
