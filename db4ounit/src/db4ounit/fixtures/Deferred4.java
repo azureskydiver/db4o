@@ -3,8 +3,8 @@
 package db4ounit.fixtures;
 
 
-public interface Deferred4 {
+public interface Deferred4<T> {
 	
-	Object value();
+	T value();
 
 }
