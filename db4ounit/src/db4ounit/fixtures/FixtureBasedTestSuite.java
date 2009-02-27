@@ -86,7 +86,11 @@ public abstract class FixtureBasedTestSuite implements TestSuiteBuilder {
     }
 
 	private Iterable4 tests() {
-		return new ReflectionTestSuiteBuilder(testUnits());
+		final Class[] units = testUnits();
+		if (units == null || units.length == 0) {
+			throw new IllegalStateException(getClass() + " has no TestUnits.");
+		}
+		return new ReflectionTestSuiteBuilder(units);
 	}
 	
 	private Test decorate(Test test, Iterator4 decorators) {
