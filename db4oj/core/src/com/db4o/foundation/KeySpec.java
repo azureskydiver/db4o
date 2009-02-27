@@ -31,7 +31,7 @@ public class KeySpec {
 
 	public Object defaultValue() {
 		if (_defaultValue instanceof Deferred) {
-			_defaultValue = ((Deferred)_defaultValue).evaluate();
+			return ((Deferred)_defaultValue).evaluate();
 		}
 		return _defaultValue;
 	}		

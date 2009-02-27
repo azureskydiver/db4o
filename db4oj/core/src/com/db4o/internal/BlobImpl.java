@@ -133,7 +133,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         if (!copied) {
             copy(file, serverFile(checkExt(file), true));
         }
-        synchronized (i_stream._lock) {
+        synchronized (i_stream.lock()) {
             i_stream.storeInternal(i_trans, this, false);
         }
         i_status = Status.COMPLETED;
@@ -144,7 +144,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
     }
 
     public File serverFile(String promptName, boolean writeToServer) throws IOException {
-        synchronized (i_stream._lock) {
+        synchronized (i_stream.lock()) {
             i_stream.activate(i_trans, this, new FixedActivationDepth(2));
         }
         String path = serverPath();
@@ -167,7 +167,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
                     }
                 }
                 fileName = tryPath;
-                synchronized (i_stream._lock) {
+                synchronized (i_stream.lock()) {
                     i_stream.storeInternal(i_trans, this, false);
                 }
             }
@@ -242,7 +242,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         i_ext = null;
         i_length = 0;
         setStatus(Status.UNUSED);
-        synchronized (i_stream._lock) {
+        synchronized (i_stream.lock()) {
             i_stream.storeInternal(i_trans, this, false);
         }
     } 

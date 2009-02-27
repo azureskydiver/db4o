@@ -688,7 +688,7 @@ public abstract class QQueryBase implements Unversioned {
     }
     
 	protected Object streamLock() {
-        return stream()._lock;
+        return stream().lock();
     }
 
 	public Query sortBy(QueryComparator comparator) {

@@ -482,7 +482,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		if (container == null) {
 			return null;
 		}
-		synchronized (container._lock) {
+		synchronized (container.lock()) {
 		    
             // FIXME: The following is not really transactional.
             //        This will work OK for normal C/S and for

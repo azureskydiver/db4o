@@ -49,15 +49,11 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     
     private Tree            _justPeeked;
 
-    public final Object            _lock;
+    protected Object            _lock;
 
     // currently used to resolve self-linking concurrency problems
     // in cylic links, stores only YapClass objects
     private List4           _pendingClassUpdates;
-
-    //  the parent ObjectContainer for TransportObjectContainer or this for all
-    //  others. Allows identifying the responsible Objectcontainer for IDs
-    final ObjectContainerBase         _parent;
 
     // a value greater than 0 indicates class implementing the
     // "Internal" interface are visible in queries and can
@@ -106,9 +102,8 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	
 	private final Environment _environment = Environments.newConventionBasedEnvironment();
 	
-	protected ObjectContainerBase(Configuration config, ObjectContainerBase parent) {
-    	_parent = parent == null ? this : parent;
-    	_lock = parent == null ? new Object() : parent._lock;
+	protected ObjectContainerBase(Configuration config) {
+    	_lock = new Object();
     	_config = (Config4Impl)config;
     }
 

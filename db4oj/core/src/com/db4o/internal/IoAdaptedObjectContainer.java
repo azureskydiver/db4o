@@ -28,7 +28,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     private final FreespaceFiller _freespaceFiller;
 
     IoAdaptedObjectContainer(Configuration config, String fileName) throws OldFormatException {
-        super(config,null);
+        super(config);
         _fileLock = new Object();
         _fileName = fileName;
         _freespaceFiller=createFreespaceFiller();

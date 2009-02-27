@@ -16,19 +16,28 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 	private final MemoryFile _memoryFile;
 	private int _length = 0;
 
-	protected InMemoryObjectContainer(Configuration config,
-			ObjectContainerBase parent, MemoryFile memoryFile)
+	public InMemoryObjectContainer(Configuration config, MemoryFile memoryFile)
 			throws OldFormatException {
-		super(config, parent);
+		super(config);
 		_memoryFile = memoryFile;
+		open();
+	}	
+	
+	protected static final class ConstructionMode {
+	}
+	
+	protected static final ConstructionMode DEFERRED_OPEN_MODE = new ConstructionMode();
+	
+    protected InMemoryObjectContainer(Config4Impl config, MemoryFile memoryFile, ConstructionMode ignored) {
+    	super(config);
+    	_memoryFile = memoryFile;
+    }
+    
+    public void deferredOpen() {
 		open();
 	}
 
-    public InMemoryObjectContainer(Configuration config, MemoryFile memoryFile) {
-        this(config, null, memoryFile);
-    }
-    
-    protected final void openImpl() throws OldFormatException {
+	protected final void openImpl() throws OldFormatException {
 		byte[] bytes = _memoryFile.getBytes();
 		if (bytes == null || bytes.length == 0) {
 			_memoryFile.setBytes(new byte[_memoryFile.getInitialSize()]);

@@ -40,8 +40,8 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     private SystemData          _systemData;
         
-    LocalObjectContainer(Configuration config,ObjectContainerBase parentContainer) {
-        super(config, parentContainer);
+    LocalObjectContainer(Configuration config) {
+        super(config);
     }
     
     public Transaction newTransaction(Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {

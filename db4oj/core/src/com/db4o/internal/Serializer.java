@@ -23,12 +23,19 @@ public class Serializer {
         MemoryFile memoryFile = new MemoryFile();
         memoryFile.setInitialSize(223);
         memoryFile.setIncrementSizeBy(300);
-    	TransportObjectContainer carrier = new TransportObjectContainer(serviceProvider, memoryFile);
+    	TransportObjectContainer carrier = newTransportObjectContainer(serviceProvider, memoryFile);
     	carrier.produceClassMetadata(carrier.reflector().forObject(obj));
 		carrier.store(obj);
 		int id = (int)carrier.getID(obj);
 		carrier.close();
 		return new SerializedGraph(id, memoryFile.getBytes());
+    }
+
+	private static TransportObjectContainer newTransportObjectContainer(ObjectContainerBase serviceProvider,
+            MemoryFile memoryFile) {
+	    final TransportObjectContainer container = new TransportObjectContainer(serviceProvider, memoryFile);
+	    container.deferredOpen();
+		return container;
     }
     
     public static Object unmarshall(ObjectContainerBase serviceProvider, StatefulBuffer yapBytes) {
@@ -44,7 +51,7 @@ public class Serializer {
 			return null;
 		}
         MemoryFile memoryFile = new MemoryFile(bytes);
-		TransportObjectContainer carrier = new TransportObjectContainer(serviceProvider, memoryFile);
+		TransportObjectContainer carrier = newTransportObjectContainer(serviceProvider, memoryFile);
 		Object obj = carrier.getByID(id);
 		carrier.activate(carrier.transaction(), obj, new FullActivationDepth());
 		carrier.close();

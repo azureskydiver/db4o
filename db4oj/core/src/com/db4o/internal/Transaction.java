@@ -67,7 +67,7 @@ public abstract class Transaction {
 
 	public final void checkSynchronization() {
 		if(Debug4.checkSychronization){
-            container()._lock.notify();
+            container().lock().notify();
         }
 	}
 

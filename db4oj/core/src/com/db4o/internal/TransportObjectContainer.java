@@ -22,10 +22,14 @@ import com.db4o.types.*;
  */
 public class TransportObjectContainer extends InMemoryObjectContainer {
 	
-	public TransportObjectContainer (ObjectContainerBase serviceProvider, MemoryFile memoryFile) {
-	    super(serviceProvider.config(),serviceProvider, memoryFile);
-	    _showInternalClasses = serviceProvider._showInternalClasses;
-	}
+	private final ObjectContainerBase _parent;   
+	
+	public TransportObjectContainer(ObjectContainerBase parent, MemoryFile memoryFile) {
+	    super(parent.config(), memoryFile, DEFERRED_OPEN_MODE);
+	    _parent = parent;
+	    _lock = parent.lock();
+	    _showInternalClasses = parent._showInternalClasses;
+	} 
 	
 	protected void initialize1(Configuration config){
 	    _handlers = _parent._handlers;
@@ -117,6 +121,11 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
 	
 	public boolean maintainsIndices(){
 		return false;
+	}
+	
+	@Override
+	public long generateTimeStampId() {
+		return _parent.generateTimeStampId();
 	}
 	
 	void message(String msg){
