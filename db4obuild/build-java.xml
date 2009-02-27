@@ -1040,13 +1040,18 @@
 		
 	</target>
 
-	<target name="run.tests.taj.integration" depends="build.db4ojava">
-		<delete dir="${dir.j.taj.tests.integration}/lib">
+	<target name="run.tests.taj.integration" depends="build.db4ojava, build.db4ojava.tests">
+		<copy todir="${dir.dist.taj.tests.integration}">
+			<fileset dir="${dir.j.taj.tests.integration}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		<delete dir="${dir.dist.taj.tests.integration}/lib">
 			<include name="**/*.jar" />
 		</delete>
-		<copy file="${file.jdk1.2.nodep.jar}" todir="${dir.j.taj.tests.integration}/lib" />
-		<copy file="${file.jdk1.2.db4ounit.jar}" todir="${dir.j.taj.tests.integration}/lib" />
-		<ant antfile="${dir.j.taj.tests.integration}/build.xml" dir="${dir.j.taj.tests.integration}"/>
+		<copy file="${file.jdk1.2.nodep.jar}" todir="${dir.dist.taj.tests.integration}/lib" />
+		<copy file="${file.jdk1.2.db4ounit.jar}" todir="${dir.dist.taj.tests.integration}/lib" />
+		<ant antfile="${dir.dist.taj.tests.integration}/build.xml" dir="${dir.dist.taj.tests.integration}"/>
 	</target>
 
 	<!-- TODO temporary task for testing, remove -->
