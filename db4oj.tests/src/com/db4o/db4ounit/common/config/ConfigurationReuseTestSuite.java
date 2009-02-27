@@ -34,8 +34,9 @@ public class ConfigurationReuseTestSuite extends FixtureTestSuiteDescription {
 				new Function4<Configuration, Runnable>() { public Runnable apply(Configuration config) {
 					final Configuration serverConfig = Db4o.newConfiguration();
 					serverConfig.storage(new MemoryStorage());
-					final ObjectServer server = Db4o.openServer(serverConfig, ".", 0);
-					final ObjectContainer client = server.openClient(config);
+					final ObjectServer server = Db4o.openServer(serverConfig, ".", -1);
+					server.grantAccess("user", "password");
+					final ObjectContainer client = Db4o.openClient(config, "localhost", server.ext().port(), "user", "password");
 					return new Runnable() { public void run() {
 						client.close();
 						server.close();
@@ -53,7 +54,7 @@ public class ConfigurationReuseTestSuite extends FixtureTestSuiteDescription {
 				new Procedure4<Configuration>() { public void apply(Configuration config) {
 					final ObjectServer server = Db4o.openServer(newInMemoryConfiguration(), "..", 0);
 					try {
-						server.openClient(config);
+						Db4o.openClient(config, "localhost", server.ext().port(), "user", "password");
 					} finally {
 						server.close();
 					}
