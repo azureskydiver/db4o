@@ -47,11 +47,14 @@ public class Db4oClientServerDrsFixture extends Db4oDrsFixture {
 	public void open(){
 		config().messageLevel(-1);
 		
-		Configuration clientConfig = (Configuration) ((DeepClone)config()).deepClone(config());
-		_server = Db4o.openServer(config(), testFile.getPath(), _port);
+		_server = Db4o.openServer(cloneConfiguration(), testFile.getPath(), _port);
 		_server.grantAccess(USERNAME, PASSWORD);
-		_db = (ExtObjectContainer) Db4o.openClient(clientConfig, HOST, _port, USERNAME, PASSWORD);
+		_db = (ExtObjectContainer) Db4o.openClient(cloneConfiguration(), HOST, _port, USERNAME, PASSWORD);
 		
 		_provider = Db4oProviderFactory.newInstance(_db, _name);
 	}
+
+	private Configuration cloneConfiguration() {
+	    return (Configuration) ((DeepClone)config()).deepClone(config());
+    }
 }

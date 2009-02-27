@@ -27,6 +27,7 @@ import com.db4o.config.*;
 import com.db4o.drs.db4o.*;
 import com.db4o.drs.inside.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 
 public class Db4oDrsFixture implements DrsFixture {
 	static final File RAM_DRIVE = new File("w:");
@@ -69,9 +70,13 @@ public class Db4oDrsFixture implements DrsFixture {
 		//	MemoryIoAdapter memoryIoAdapter = new MemoryIoAdapter();
 		//	Db4o.configure().io(memoryIoAdapter);
 		
-		_db = Db4o.openFile(config(), testFile.getPath()).ext();
+		_db = Db4o.openFile(cloneConfiguration(), testFile.getPath()).ext();
 		_provider = Db4oProviderFactory.newInstance(_db, _name);
 	}
+
+	private Configuration cloneConfiguration() {
+	    return (Configuration) ((DeepClone)config()).deepClone(null);
+    }
 	
 	public Configuration config() {
 		if(_config == null) {
