@@ -17,8 +17,8 @@ import com.db4o.types.*;
  */
 public abstract class ExternalObjectContainer extends ObjectContainerBase {
     
-    public ExternalObjectContainer(Configuration config,ObjectContainerBase parentContainer) {
-        super(config, parentContainer);
+    public ExternalObjectContainer(Configuration config) {
+        super(config);
     }
     
     public final void activate(Object obj){

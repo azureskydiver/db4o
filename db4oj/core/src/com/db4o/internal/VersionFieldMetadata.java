@@ -35,7 +35,7 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
     void marshall(Transaction trans, ObjectReference ref, WriteBuffer buffer, boolean isMigrating, boolean isNew) {
         VirtualAttributes attr = ref.virtualAttributes();
         if (! isMigrating) {
-            attr.i_version = trans.container()._parent.generateTimeStampId();
+            attr.i_version = trans.container().generateTimeStampId();
         }
         if(attr == null){
             buffer.writeLong(0);

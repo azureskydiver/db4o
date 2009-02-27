@@ -83,7 +83,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	}
 
 	public ClientObjectContainer(Configuration config,Socket4 socket, String user, String password, boolean login) {
-		super(config, null);
+		super(config);
 		_userName = user;
 		_password = password;
 		_login = login;

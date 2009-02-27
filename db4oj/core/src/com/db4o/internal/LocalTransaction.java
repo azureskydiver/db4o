@@ -86,7 +86,7 @@ public class LocalTransaction extends Transaction {
     }
     
     public void commit(CommittedCallbackDispatcher dispatcher) {
-        synchronized (container()._lock) {
+        synchronized (container().lock()) {
         	
         	dispatchCommittingCallback();   
         	
@@ -238,7 +238,7 @@ public class LocalTransaction extends Transaction {
 	}
 	
     public void rollback() {
-        synchronized (container()._lock) {
+        synchronized (container().lock()) {
             
             rollbackParticipants();
             
@@ -445,7 +445,7 @@ public class LocalTransaction extends Transaction {
     }
 	
 	final void completeInterruptedTransaction() {
-        synchronized (container()._lock) {
+        synchronized (container().lock()) {
         	_transactionLogHandler.completeInterruptedTransaction(this);
         }
     }

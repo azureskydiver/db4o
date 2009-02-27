@@ -648,7 +648,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     }
 
     protected Object streamLock() {
-        return i_trans.container()._lock;
+        return i_trans.container().lock();
     }
 
     boolean supportsOrdering() {
