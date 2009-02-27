@@ -58,15 +58,4 @@ public interface ObjectServer {
      * 
      */
     public ObjectContainer openClient();
-    
-    /**
-     * See {@link #openClient()}
-     * 
-     * @param config not used
-     * @return an open {@link ObjectContainer ObjectContainer}
-     * 
-     * @deprecated Use {@link #openClient()}
-     */
-    public ObjectContainer openClient(Configuration config);
-
 }

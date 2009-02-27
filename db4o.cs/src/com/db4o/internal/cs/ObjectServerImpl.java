@@ -271,30 +271,13 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		return _container;
 	}
 
-	public ObjectContainer openClient() {
-		return openClient(null);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public synchronized ObjectContainer openClient(Configuration config) {
+	public synchronized ObjectContainer openClient() {
 		checkClosed();
-		checkConfigAndTaint(config);
 		synchronized (_container._lock) {
 		    return new EmbeddedClientObjectContainer(_container);
 		}
 	}
-
-	private void checkConfigAndTaint(Configuration config) {
-		if (config == null)
-			return;
-		
-	    Config4Impl internalConfig = (Config4Impl) config;
-		Config4Impl.assertIsNotTainted(internalConfig);
-		internalConfig.taint();
-    }
-
+	
 	void removeThread(ServerMessageDispatcherImpl dispatcher) {
 		synchronized (_dispatchers) {
 			_dispatchers.remove(dispatcher);

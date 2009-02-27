@@ -134,7 +134,7 @@ public class Db4oClientServer extends
 	}
 	
 	private ObjectContainer openEmbeddedClient() {
-		return _server.openClient(cloneConfiguration());
+		return _server.openClient();
 	}
 	
 	public String label() {
