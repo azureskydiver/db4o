@@ -797,6 +797,8 @@
 				<arg value="${file.tests.jdk1.5.jar}" />
 				<arg value="-cp" />
 				<arg value="${file.ant.jar}" />
+				<arg value="-cp" />
+				<arg value="${file.decaf.annotations}" />
 			</args>
 		</decaf>
 	</target>
