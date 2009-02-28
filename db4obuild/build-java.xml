@@ -51,8 +51,8 @@
 			build.nqopt,
 			build.taj,
 		    build.db4otools,
-			build.osgi,
-			build.nodep" 
+			build.nodep,
+			build.osgi" 
 	/>
 	
 	<target name="decaf.core" depends="decaf.workspace, install-decaf-plugin">
@@ -522,18 +522,12 @@
 		</jar>
 	</target>
 	
-	<target name="build.osgi" depends="build.nqopt, build.db4otools">
+	<target name="build.osgi" depends="build.nqopt, build.db4otools, build.nodep">
 		<delete dir="${dir.dist.classes.osgi}"/>
 		<delete dir="${dir.dist.classes.osgi.lib}"/>
 		<mkdir dir="${dir.dist.classes.osgi}"/>
 		<mkdir dir="${dir.dist.classes.osgi.lib}"/>
-		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.jdk1.2.jar}"/>
-		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.jdk1.2.cs.jar}"/>
-		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.jdk1.2.optional.jar}"/>
-		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.nqopt.jar}"/>
-		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.bloat.jar}"/>
-		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.instrumentation.jar}"/>
-		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.db4otools.jar}"/>
+		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.jdk1.2.nodep.jar}"/>
 		<javac destdir="${dir.dist.classes.osgi}" fork="true" debug="on" encoding="UTF-8" target="1.2" source="1.2">
 			<classpath>
 				<fileset dir="${dir.build.lib}">
