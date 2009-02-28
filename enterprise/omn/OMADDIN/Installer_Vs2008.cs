@@ -16,6 +16,14 @@ namespace OMAddin
 			InitializeComponent();
 		}
 
+		protected override void OnAfterUninstall(IDictionary savedState)
+		{
+			base.OnAfterUninstall(savedState);
+			
+			DeleteApplicationDataFolder();
+			RemoveVSVersionFromAddinFile(Context.Parameters["version"]);
+		}
+
 		protected override void OnAfterInstall(IDictionary savedState)
 		{
 			base.OnAfterInstall(savedState);
@@ -27,7 +35,7 @@ namespace OMAddin
 				string addinPath = Context.Parameters["assemblypath"];
 
 				UpdateAddinFile(yearVersion, addinPath);
-				CopyWindowsPRFFile(yearVersion);
+				CopyWindowsPRFFile(InstallFolderFrom(addinPath), yearVersion);
 				InvokeReadMe(Path.GetDirectoryName(addinPath));
 			}
 			catch (Exception ex)
@@ -36,47 +44,113 @@ namespace OMAddin
 			}
 		}
 
-		private static void UpdateAddinFile(string yearVersion, string addinAssemblyPath)
+		private static void RemoveVSVersionFromAddinFile(string yearVersion)
 		{
-			string addinFilePath = AddinFileFor(yearVersion);
+			XmlDocument addinDoc = OpenAddinFile(TargetAddinFilePath());
+			if (addinDoc != null)
+			{
+				XmlNode toBeRemoved = addinDoc.SelectSingleNode(HostApplicationPathForVersion(VSVersionNumberFor(yearVersion)), NameSpaceManagerFor(addinDoc, ""));
+				toBeRemoved.ParentNode.RemoveChild(toBeRemoved);
 
-			XmlDocument addinFile = new XmlDocument();
-			addinFile.Load(addinFilePath);
-
-			XmlNamespaceManager nsmgr = NameSpaceManagerFor(addinFile, "");
-
-			UpdateNode(addinFile, nsmgr, "/ns:Extensibility/ns:Addin/ns:Assembly", addinAssemblyPath);
-			UpdateNode(addinFile, nsmgr, "/ns:Extensibility/ns:HostApplication/ns:Version", VSVersionNumberFor(yearVersion));
-
-			addinFile.Save(addinFilePath);
+				SaveAddinFile(addinDoc);
+			}
 		}
 
-		private static XmlNamespaceManager NameSpaceManagerFor(XmlDocument addinFile, string prefix)
+		private static string InstallFolderFrom(string path)
 		{
-			XmlNamespaceManager nsmgr = new XmlNamespaceManager(addinFile.NameTable);
-			nsmgr.AddNamespace("ns", addinFile.DocumentElement.GetNamespaceOfPrefix(prefix));
+			return Path.GetDirectoryName(path);
+		}
+
+		private static void UpdateAddinFile(string yearVersion, string addinAssemblyPath)
+		{
+			XmlDocument addinDoc = OpenAddinFile(addinAssemblyPath);
+
+			UpdateNode(addinDoc, "/ns:Extensibility/ns:Addin/ns:Assembly", addinAssemblyPath);
+
+			AddVisualStudioVersion(addinDoc, VSVersionNumberFor(yearVersion));
+
+			SaveAddinFile(addinDoc);
+		}
+
+		private static XmlDocument OpenAddinFile(string addinAssemblyPath)
+		{
+			string addinFileToLoad = File.Exists(TargetAddinFilePath()) ? TargetAddinFilePath() : InstalledAddinFilePath(addinAssemblyPath);
+			if (!File.Exists(addinFileToLoad))
+				return null;
+
+			XmlDocument addinDoc = new XmlDocument();
+
+			addinDoc.Load(addinFileToLoad);
+
+			return addinDoc;
+		}
+
+		private static void SaveAddinFile(XmlDocument addinDoc)
+		{
+			string addinFilePath = TargetAddinFilePath();
+			Directory.CreateDirectory(Path.GetDirectoryName(addinFilePath));
+			addinDoc.Save(addinFilePath);
+		}
+
+		private static string InstalledAddinFilePath(string path)
+		{
+			return Path.Combine(InstallFolderFrom(path), "OMAddin.addin");
+		}
+
+		private static XmlNamespaceManager NameSpaceManagerFor(XmlDocument addinDoc, string prefix)
+		{
+			XmlNamespaceManager nsmgr = new XmlNamespaceManager(addinDoc.NameTable);
+			nsmgr.AddNamespace("ns", addinDoc.DocumentElement.GetNamespaceOfPrefix(prefix));
 
 			return nsmgr;
 		}
 
-		private static void UpdateNode(XmlDocument addinFile, XmlNamespaceManager nsmgr, string nodePath, string value)
+		private static void AddVisualStudioVersion(XmlDocument addinDoc, string version)
 		{
-			XmlNode node = addinFile.SelectSingleNode(nodePath, nsmgr);
+			XmlNamespaceManager nsmgr = NameSpaceManagerFor(addinDoc, "");
+			XmlNode node = addinDoc.SelectSingleNode(HostApplicationPathForVersion(version), nsmgr);
+			if (node == null)
+			{
+				XmlNode addinNode = addinDoc.SelectSingleNode("/ns:Extensibility", nsmgr);
+
+				XmlNode hostApplicationNode = AddElementTo(addinNode, "HostApplication");
+
+				AddElementTo(hostApplicationNode, "Name", "Microsoft Visual Studio");
+				AddElementTo(hostApplicationNode, "Version", version);
+			}
+		}
+
+		private static string HostApplicationPathForVersion(string version)
+		{
+			return String.Format("/ns:Extensibility/ns:HostApplication[ns:Version[text()={0}]]", version);
+		}
+
+		private static XmlNode AddElementTo(XmlNode targetNode, string nodeName)
+		{
+			XmlElement node = targetNode.OwnerDocument.CreateElement(nodeName, targetNode.NamespaceURI);
+			targetNode.AppendChild(node);
+
+			return node;
+		}
+
+		private static void AddElementTo(XmlNode targetNode, string nodeName, string nodeValue)
+		{
+			XmlNode node = AddElementTo(targetNode, nodeName);
+			node.InnerText = nodeValue;
+		}
+
+		private static void UpdateNode(XmlDocument addinDoc, string nodePath, string value)
+		{
+			XmlNode node = addinDoc.SelectSingleNode(nodePath, NameSpaceManagerFor(addinDoc, ""));
 			node.FirstChild.Value = value;
 		}
 
-		protected override void OnAfterUninstall(IDictionary savedState)
-		{
-			base.OnAfterUninstall(savedState);
-			DeleteApplicationDataFolder();
-		}
-
-		internal static void CopyWindowsPRFFile(string yearVersion)
+		internal static void CopyWindowsPRFFile(string installFolder, string yearVersion)
 		{
 			string currentVSConfigFile = Path.Combine(VSProfilePathFor(yearVersion), "windows.prf");
 			if (File.Exists(currentVSConfigFile))
 			{
-				string addinWindowConfigFile = Path.Combine(VSUserHomeFor(yearVersion), @"Addins\windows.prf");
+				string addinWindowConfigFile = Path.Combine(installFolder, "windows.prf");
 				if (File.Exists(addinWindowConfigFile))
 				{
 					File.Copy(addinWindowConfigFile, currentVSConfigFile, true);
@@ -112,9 +186,9 @@ namespace OMAddin
 			}
 		}
 
-		private static string VSUserHomeFor(string yearVersion)
+		private static string VSGlobalAddinConfigurationFolder()
 		{
-			return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Visual Studio " + yearVersion);
+			return Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 		}
 
 		private static string VSProfilePathFor(string version)
@@ -132,9 +206,9 @@ namespace OMAddin
 			throw new ArgumentException("Unsuported Visual Studio version: " + yearVersion, "yearVersion");
 		}
 
-		private static string AddinFileFor(string yearVersion)
+		private static string TargetAddinFilePath()
 		{
-			return Path.Combine(VSUserHomeFor(yearVersion), @"Addins\OMAddin.addin");
+			return Path.Combine(VSGlobalAddinConfigurationFolder(), @"Microsoft\MSEnvShared\Addins\OMAddin.addin");
 		}
 	}
 }
