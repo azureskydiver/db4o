@@ -104,7 +104,8 @@ public class TreeSetTestSuite extends FixtureTestSuiteDescription implements Db4
         }
 
 		private String[] sortedBy(String[] elements, Comparator comparator) {
-			final String[] copy = Arrays.copyOf(elements, elements.length);
+			final String[] copy = new String[elements.length];
+			System.arraycopy(elements, 0, copy, 0, elements.length);
 			Arrays.sort(copy, comparator);
 			return copy;
         }
