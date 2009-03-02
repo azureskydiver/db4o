@@ -11,6 +11,8 @@ public class Config4Field extends Config4Abstract implements ObjectField, DeepCl
     
     private final Config4Class _configClass;
     
+    private boolean _used;
+    
 	private final static KeySpec INDEXED_KEY=new KeySpec(TernaryBool.UNSPECIFIED);
     
 	protected Config4Field(Config4Class a_class, KeySpecHashtable4 config) {
@@ -77,6 +79,16 @@ public class Config4Field extends Config4Abstract implements ObjectField, DeepCl
 	private boolean useExistingIndex(Transaction systemTrans, FieldMetadata yapField) {
 	    return yapField.getIndex(systemTrans) != null;
 	}
+
+	public void used(boolean flag) {
+		_used = flag;
+	}
+	
+	public boolean used(){
+		return _used;
+	}
+	
+	
 	
 
 }
