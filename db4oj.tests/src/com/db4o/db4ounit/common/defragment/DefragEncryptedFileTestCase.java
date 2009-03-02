@@ -9,6 +9,7 @@ import com.db4o.config.*;
 import com.db4o.defragment.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
+import com.db4o.internal.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
@@ -93,6 +94,7 @@ public class DefragEncryptedFileTestCase implements TestLifeCycle {
         config.activationDepth(Integer.MAX_VALUE);
         config.callConstructors(true);
         config.storage(new MockStorage(new FileStorage(), "db4o"));
+        config.reflectWith(Platform4.reflectorForType(Item.class));
         
         return config;
     }
