@@ -106,7 +106,9 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
         if (exceptionalFields == null) {
             return null;
         }
-        return (Config4Field) exceptionalFields.get(fieldName);
+        Config4Field config4Field = (Config4Field) exceptionalFields.get(fieldName);
+        config4Field.used(true);
+		return config4Field;
     }
     
     public Object deepClone(Object param){
@@ -200,9 +202,8 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
         return _config.getAsTernaryBool(CALL_CONSTRUCTOR_KEY);
     }
 
-    private Hashtable4 exceptionalFieldsOrNull() {
+    Hashtable4 exceptionalFieldsOrNull() {
     	return (Hashtable4)_config.get(EXCEPTIONAL_FIELDS_KEY);
-
     }
     
     private Hashtable4 exceptionalFields() {

@@ -994,23 +994,37 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return;
         }
         
-        if (_aspects == null) {
-            return;
+        if (_aspects != null) {
+	        for (int i = 0; i < _aspects.length; i++) {
+	            if(_aspects[i] instanceof FieldMetadata){
+	                FieldMetadata field = (FieldMetadata) _aspects[i];
+	                String fieldName = field.getName();
+	    			if(!field.hasConfig()&&extendedConfig!=null&&extendedConfig.configField(fieldName)!=null) {
+	                	field.initIndex(this,fieldName);
+	                }
+	    			field.initConfigOnUp(systemTrans);
+	            }
+	        }
         }
         
-        for (int i = 0; i < _aspects.length; i++) {
-            if(_aspects[i] instanceof FieldMetadata){
-                FieldMetadata field = (FieldMetadata) _aspects[i];
-                String fieldName = field.getName();
-    			if(!field.hasConfig()&&extendedConfig!=null&&extendedConfig.configField(fieldName)!=null) {
-                	field.initIndex(this,fieldName);
-                }
-    			field.initConfigOnUp(systemTrans);
-            }
-        }
+        checkAllConfiguredFieldsExist(extendedConfig);
     }
 
-    void initOnUp(Transaction systemTrans) {
+    private void checkAllConfiguredFieldsExist(Config4Class config) {
+    	Hashtable4 exceptionalFields = config.exceptionalFieldsOrNull();
+        if (exceptionalFields == null) {
+            return;
+        }
+        Iterator4 i = exceptionalFields.valuesIterator();
+        while(i.moveNext()){
+        	Config4Field fieldConfig = (Config4Field) i.current();
+        	if(! fieldConfig.used()){
+        		configImpl().diagnosticProcessor().objectFieldDoesNotExist(getName(), fieldConfig.getName());
+        	}
+        }
+	}
+
+	void initOnUp(Transaction systemTrans) {
         if (! stateOK()) {
             return;
         }
@@ -1219,7 +1233,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if(i_name == null){
             return "";
         }
-        return _container.configImpl().resolveAliasRuntimeName(i_name);
+        return configImpl().resolveAliasRuntimeName(i_name);
     }
     
     public final boolean callConstructor() {
@@ -1228,8 +1242,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		if(!specialized.isUnspecified()){
 		    return specialized.definiteYes();
 		}
-		return _container.configImpl().callConstructors().definiteYes();
+		return configImpl().callConstructors().definiteYes();
     }
+
+	private Config4Impl configImpl() {
+		return _container.configImpl();
+	}
     
     private final TernaryBool callConstructorSpecialized(){
         if(i_config!= null){
@@ -1420,7 +1438,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         ReflectClass claxx,
         String name) {
         i_name = name;
-        setConfig(_container.configImpl().configClass(i_name));
+        setConfig(configImpl().configClass(i_name));
         if (claxx == null) {
             createConstructor(_container, i_name);
         } else {
@@ -1438,7 +1456,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
         if (i_nameBytes != null) {
         	String name = _container.stringIO().read(i_nameBytes);
-        	return _container.configImpl().resolveAliasStoredName(name);
+        	return configImpl().resolveAliasStoredName(name);
         }
         throw new IllegalStateException();
     }

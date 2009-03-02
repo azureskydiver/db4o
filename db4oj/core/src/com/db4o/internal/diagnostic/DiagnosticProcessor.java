@@ -99,6 +99,10 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     public void nativeQueryOptimizerNotLoaded(int reason, Exception e) {
         onDiagnostic(new NativeQueryOptimizerNotLoaded(reason, e));
     }
+    
+    public void objectFieldDoesNotExist(String className, String fieldName){
+    	onDiagnostic(new ObjectFieldDoesNotExist(className, fieldName));
+    }
 
     public void onDiagnostic(Diagnostic d) {
         if(_listeners == null){
