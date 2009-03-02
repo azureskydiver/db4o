@@ -39,7 +39,6 @@ public class ReindexNetDateTime_7_8 extends Conversion {
 	 */
 	private void reindexDateTimeField(FieldMetadata field) {
 		// do nothing, code is in partial class in .NET.
-		System.err.println("Reindexing");
 	}
 
 }
