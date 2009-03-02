@@ -124,11 +124,12 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	}
 
 	private int internalCopyID(boolean flipNegative, boolean lenient, int id) {
-		if(flipNegative&&id<0) {
+		boolean flipped = flipNegative && (id < 0);
+		if(flipped) {
 			id=-id;
 		}
 		int mapped=_services.mappedID(id,lenient);
-		if(flipNegative&&id<0) {
+		if(flipped) {
 			mapped=-mapped;
 		}
 		_target.writeInt(mapped);
