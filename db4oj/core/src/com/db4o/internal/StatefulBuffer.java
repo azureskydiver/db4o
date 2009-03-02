@@ -5,7 +5,6 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.slots.*;
 
 /**
@@ -25,16 +24,10 @@ public final class StatefulBuffer extends ByteArrayBuffer {
 
     private int i_id;
 
-    // carries instantiation depth through the reading process
-    private ActivationDepth i_instantionDepth;
     private int i_length;
 
     Transaction i_trans;
 
-    // carries updatedepth depth through the update process
-    // and carries instantiation information through the reading process 
-    private int i_updateDepth = 1;
-    
     public int _payloadOffset;
     
 
@@ -73,16 +66,8 @@ public final class StatefulBuffer extends ByteArrayBuffer {
         return i_address;
     }
     
-    public int addressOffset(){
-        return _addressOffset;
-    }
-
     public int getID() {
         return i_id;
-    }
-
-    public ActivationDepth getInstantiationDepth() {
-        return i_instantionDepth;
     }
 
     public int length() {
@@ -101,45 +86,14 @@ public final class StatefulBuffer extends ByteArrayBuffer {
         return i_trans;
     }
 
-    public int getUpdateDepth() {
-        return i_updateDepth;
-    }
-    
     public byte[] getWrittenBytes(){
         byte[] bytes = new byte[_offset];
         System.arraycopy(_buffer, 0, bytes, 0, _offset);
         return bytes;
     }
     
-    public int preparePayloadRead() {
-        int newPayLoadOffset = readInt();
-        int length = readInt();
-        int linkOffSet = _offset;
-        _offset = newPayLoadOffset;
-        _payloadOffset += length;
-        return linkOffSet;
-    }
-
     public void read() throws Db4oIOException {
         container().readBytes(_buffer, i_address,_addressOffset, i_length);
-    }
-
-    public final StatefulBuffer readEmbeddedObject() throws Db4oIOException {
-        int id = readInt();
-        int length = readInt();
-        if(id == 0){
-            return null;
-        }
-        StatefulBuffer bytes = null;
-            bytes = container().readWriterByAddress(i_trans, id, length);
-            if (bytes != null) {
-                bytes.setID(id);
-            }
-        if(bytes != null){
-            bytes.setUpdateDepth(getUpdateDepth());
-            bytes.setInstantiationDepth(getInstantiationDepth());
-        }
-        return bytes;
     }
 
     public final StatefulBuffer readYapBytes() {
@@ -172,29 +126,14 @@ public final class StatefulBuffer extends ByteArrayBuffer {
         i_id = a_id;
     }
 
-    public void setInstantiationDepth(ActivationDepth a_depth) {
-        i_instantionDepth = a_depth;
-    }
-
     public void setTransaction(Transaction aTrans) {
         i_trans = aTrans;
-    }
-
-    public void setUpdateDepth(int a_depth) {
-        i_updateDepth = a_depth;
     }
 
     public void slotDelete() {
         i_trans.slotDelete(i_id, slot());
     }
     
-    public void trim4(int a_offset, int a_length) {
-        byte[] temp = new byte[a_length];
-        System.arraycopy(_buffer, a_offset, temp, 0, a_length);
-        _buffer = temp;
-        i_length = a_length;
-    }
-
     public void useSlot(int a_adress) {
         i_address = a_adress;
         _offset = 0;
@@ -227,55 +166,13 @@ public final class StatefulBuffer extends ByteArrayBuffer {
         file().writeBytes(this, i_address, _addressOffset);
     }
 
-    public void writeEmbeddedNull() {
-        writeInt(0);
-        writeInt(0);
-    }
-
     public void writeEncrypt() {
         if (Deploy.debug) {
             debugCheckBytes();
         }
         file().writeEncrypt(this, i_address, _addressOffset);
     }
-    
-    /* Only used for Strings, topLevel therefore means aligning blocksize, so
-     * index will be possible.
-     */
-    public void writePayload(StatefulBuffer payLoad, boolean topLevel){
-        checkMinimumPayLoadOffsetAndWritePointerAndLength(payLoad.length(), topLevel);
-        System.arraycopy(payLoad._buffer, 0, _buffer, _payloadOffset, payLoad._buffer.length);
-        transferPayLoadAddress(payLoad, _payloadOffset);
-        _payloadOffset += payLoad._buffer.length;
-    }
-    
-    private void checkMinimumPayLoadOffsetAndWritePointerAndLength(int length, boolean alignToBlockSize){
-        if(_payloadOffset <= _offset + (Const4.INT_LENGTH * 2)){
-            _payloadOffset = _offset + (Const4.INT_LENGTH * 2);
-        }
-        if(alignToBlockSize){
-            _payloadOffset = container().blockAlignedBytes(_payloadOffset);
-        }
-        writeInt(_payloadOffset);
         
-        // TODO: This length is here for historical reasons. 
-        //       It's actually never really needed during reading.
-        //       It's only necessary because array and string used
-        //       to consist of a double pointer in marshaller family 0
-        //       and it was not considered a good idea to change
-        //       their linkLength() values for compatibility reasons
-        //       with marshaller family 0.
-        writeInt(length);
-    }
-    
-    public int reserveAndPointToPayLoadSlot(int length){
-        checkMinimumPayLoadOffsetAndWritePointerAndLength(length, false);
-        int linkOffset = _offset;
-        _offset = _payloadOffset;
-        _payloadOffset += length;
-        return linkOffset;
-    }
-    
     public ByteArrayBuffer readPayloadWriter(int offset, int length){
         StatefulBuffer payLoad = new StatefulBuffer(i_trans, 0, length);
         System.arraycopy(_buffer,offset, payLoad._buffer, 0, length);
@@ -290,18 +187,8 @@ public final class StatefulBuffer extends ByteArrayBuffer {
         toWriter._addressOffset = _addressOffset;
     }
 
-    void writeShortString(String a_string) {
-        writeShortString(i_trans, a_string);
-    }
-
     public void moveForward(int length) {
         _addressOffset += length;
-    }
-    
-    public final void writeForward() {
-        write();
-        _addressOffset += i_length;
-        _offset = 0;
     }
     
     public String toString(){

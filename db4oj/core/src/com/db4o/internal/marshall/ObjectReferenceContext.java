@@ -34,13 +34,4 @@ public class ObjectReferenceContext extends ObjectHeaderContext{
         return (ByteArrayBuffer)buffer();
     }
 
-    public StatefulBuffer statefulBuffer() {
-        StatefulBuffer statefulBuffer = new StatefulBuffer(transaction(), byteArrayBuffer().length());
-        statefulBuffer.setID(objectID());
-        statefulBuffer.setInstantiationDepth(activationDepth());
-        byteArrayBuffer().copyTo(statefulBuffer, 0, 0, byteArrayBuffer().length());
-        statefulBuffer.seek(byteArrayBuffer().offset());
-        return statefulBuffer;
-    }
-
 }
