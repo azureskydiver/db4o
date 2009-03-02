@@ -29,6 +29,7 @@ public class AllTests extends Db4oTestSuite {
             IndexedQueriesTestCase.class,
             LazyQueryResultTestCase.class,
             MultiFieldIndexQueryTestCase.class,
+            NullConstraintQueryTestCase.class,
             ObjectSetTestCase.class,
             OrderedQueryTestCase.class,
             QueryByExampleTestCase.class,

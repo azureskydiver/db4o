@@ -1912,7 +1912,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	        obj = ((TransactionContext)obj)._object;
     	    }
     	    if(obj == null){
-    	    	return 1;
+    	    	return _id == 0 ? 0 : 1;
     	    }
     	    if(obj instanceof Integer){
     			int targetInt = ((Integer)obj).intValue();
