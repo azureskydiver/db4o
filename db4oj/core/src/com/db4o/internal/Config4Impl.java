@@ -74,7 +74,11 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec DETECT_SCHEMA_CHANGES_KEY=new KeySpec(true);
     
-    private final static KeySpec DIAGNOSTIC_KEY=new KeySpec(new DiagnosticProcessor());
+    private final static KeySpec DIAGNOSTIC_KEY=new KeySpec(new KeySpec.Deferred() { 
+    	public Object evaluate() { 
+    		return new DiagnosticProcessor(); 
+    	}
+    });
     
     private final static KeySpec DISABLE_COMMIT_RECOVERY_KEY=new KeySpec(false);
     
