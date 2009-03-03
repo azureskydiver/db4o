@@ -585,7 +585,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
     
     public boolean hasIndex() {
-        // alive needs to be checked by all callers: Done
         return _index != null;
     }
 

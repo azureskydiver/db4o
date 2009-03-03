@@ -2,8 +2,6 @@
 
 package com.db4o.db4ounit.common.internal;
 
-import com.db4o.internal.marshall.*;
-
 import db4ounit.extensions.*;
 
 
@@ -15,6 +13,8 @@ public class AllTests extends Db4oTestSuite {
 	
 	protected Class[] testCases() {
 		return new Class[] {
+			ClassMetadataIntegrationTestCase.class,
+			ClassMetadataTestCase.class,
 			Comparable4TestCase.class,
 			DeactivateTestCase.class,
 		    EmbeddedClientObjectContainerTestCase.class,

@@ -19,7 +19,6 @@ public class AllTests extends Db4oTestSuite {
             CascadeDeleteDeletedTestCase.class,
             CascadedDeleteReadTestCase.class,
             ChangeIdentity.class,
-            ClassMetadataTestCase.class,
             CloseUnlocksFileTestCase.class,
             ComparatorSortTestCase.class,
             DatabaseGrowthSizeTestCase.class,

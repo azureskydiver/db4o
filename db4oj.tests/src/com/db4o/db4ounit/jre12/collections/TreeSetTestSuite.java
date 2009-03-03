@@ -15,7 +15,7 @@ import db4ounit.fixtures.*;
 /**
  * @exclude
  */
-@decaf.Ignore(decaf.Platform.JDK11)
+@decaf.Remove(decaf.Platform.JDK11)
 public class TreeSetTestSuite extends FixtureTestSuiteDescription implements Db4oTestCase {
 	
 	{
@@ -67,15 +67,30 @@ public class TreeSetTestSuite extends FixtureTestSuiteDescription implements Db4
 		private TreeSet subject() {
 	        return SubjectFixtureProvider.value();
         }
+		
+		public void testIdentity() throws Exception {
+			final TreeSet existingTreeSet = retrieveOnlyInstance(Item.class).treeSet;
+			store(new Item(existingTreeSet));
+			reopen();
+			
+			final ObjectSet<Item> items = db().query(Item.class);
+			Assert.areEqual(2, items.size());
+			assertTreeSetContent(items.get(0).treeSet);
+			Assert.areSame(items.get(0).treeSet, items.get(1).treeSet);
+		}
 
 		public void testRoundtrip() {
 			final Item item = retrieveOnlyInstance(Item.class);
-			final Comparator comparator = subject().comparator();
+			assertTreeSetContent(item.treeSet);
+		}
+
+		private void assertTreeSetContent(final TreeSet treeSet) {
+	        final Comparator comparator = subject().comparator();
 			final Object[] expected = comparator == null
 				? ELEMENTS
 				: sortedBy(ELEMENTS, comparator);
-			IteratorAssert.areEqual(expected, item.treeSet.iterator());
-		}
+			IteratorAssert.areEqual(expected, treeSet.iterator());
+        }
 		
 		public void testTransparentDescendOnElement() {
 			
@@ -99,8 +114,7 @@ public class TreeSetTestSuite extends FixtureTestSuiteDescription implements Db4
 		private ObjectSet<Object> itemByTreeSetElement(String element) {
 	        final Query query = newQuery(Item.class);
 	        query.descend("treeSet").constrain(element);
-	        final ObjectSet<Object> found = query.execute();
-	        return found;
+	        return query.<Object>execute();
         }
 
 		private String[] sortedBy(String[] elements, Comparator comparator) {

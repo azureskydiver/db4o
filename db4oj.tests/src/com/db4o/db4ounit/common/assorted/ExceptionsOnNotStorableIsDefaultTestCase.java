@@ -35,12 +35,10 @@ public class ExceptionsOnNotStorableIsDefaultTestCase extends AbstractDb4oTestCa
     }
     
     public void testObjectContainerAliveAfterObjectNotStorableException(){
-        final Item item = Item.newItem();
         Assert.expect(ObjectNotStorableException.class,new CodeBlock() {
             public void run() throws Throwable {
-                store(item);
+                store(Item.newItem());
             }
         });
     }
-
 }

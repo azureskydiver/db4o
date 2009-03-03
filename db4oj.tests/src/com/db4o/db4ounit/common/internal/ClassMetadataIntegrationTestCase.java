@@ -1,6 +1,6 @@
 /* Copyright (C) 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.common.assorted;
+package com.db4o.db4ounit.common.internal;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -8,7 +8,7 @@ import com.db4o.internal.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class ClassMetadataTestCase extends AbstractDb4oTestCase {
+public class ClassMetadataIntegrationTestCase extends AbstractDb4oTestCase {
 	
 	public static class SuperClazz {
 		public int _id;
@@ -33,5 +33,5 @@ public class ClassMetadataTestCase extends AbstractDb4oTestCase {
 			}
 		});
 		Assert.isTrue(expectedNames.isEmpty());
-	}
+	} 
 }

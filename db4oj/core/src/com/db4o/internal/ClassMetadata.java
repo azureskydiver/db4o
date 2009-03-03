@@ -477,11 +477,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         Handlers4.collectIDs(context, correctHandlerVersion(context));
     }
 
-	public boolean customizedNewInstance(){
-        return configInstantiates();
-    }
-    
-    public Config4Class config() {
+	public Config4Class config() {
     	return i_config;
     }
 
@@ -495,16 +491,16 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return null;
     }
 
-    private boolean createConstructor(ObjectContainerBase container, String className) {
-        ReflectClass claxx = container.reflector().forName(className);
-        return createConstructor(container, claxx , className, true);
+    private void createConstructor(String className) {
+        ReflectClass claxx = _container.reflector().forName(className);
+        createConstructor(claxx , className, true);
     }
 
-    public boolean createConstructor(ObjectContainerBase container, ReflectClass claxx, String name, boolean errMessages) {
-        
+    public void createConstructor(ReflectClass claxx, String className, boolean errMessages) {
+	           
         classReflector(claxx);
         
-        _eventDispatcher = EventDispatcher.forClass(container, claxx);
+        _eventDispatcher = EventDispatcher.forClass(_container, claxx);
         
         if(! Deploy.csharp){
             if(claxx != null){
@@ -512,42 +508,32 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             }
         }
         
-        if(customizedNewInstance()){
-            return true;
+        if(hasObjectConstructor()){
+            return;
         }
         
-        if(claxx != null){
-            if(container._handlers.isTransient(claxx)) {
-                claxx = null;
-            }
-        }
-        if (claxx == null) {
-            if(name == null || !Platform4.isDb4oClass(name)){
-                if(errMessages){
-                    container.logMsg(23, name);
-                }
+        if (claxx == null || _container._handlers.isTransient(claxx)) {
+            if(errMessages){
+            	_container.logMsg(23, className);
             }
             setStateDead();
-            return false;
+            return;
         }
         
         if(claxx.isAbstract() || claxx.isInterface()) {
-        	return true;
+        	return;
         }
         
 	    if(claxx.ensureCanBeInstantiated()) {
-	        return true;
+	        return;
+        }
+        if (_container.configImpl().exceptionsOnNotStorable()) {
+            throw new ObjectNotStorableException(claxx);
         }
         setStateDead();
         if(errMessages){
-            container.logMsg(7, name);
+            _container.logMsg(7, className);
         }
-        
-        if (container.configImpl().exceptionsOnNotStorable()) {
-            throw new ObjectNotStorableException(claxx);
-        }
-
-        return false;
     }
 
 	protected void classReflector(ReflectClass claxx) {
@@ -956,7 +942,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     final boolean init( ObjectContainerBase a_stream, ClassMetadata a_ancestor,ReflectClass claxx) {
-        
+    
+    	if (a_stream != _container)
+			throw new IllegalStateException("" + a_stream + " != " + _container);
+    
         if(DTrace.enabled){
             DTrace.CLASSMETADATA_INIT.log(getID());
         }
@@ -967,9 +956,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         String className = claxx.getName();		
 		setConfig(config.configClass(className));
         
-        if(! createConstructor(a_stream, claxx, className, false)){
-            return false;
-        }
+		// FIXME: ensure all error conditions in createConstructor throw
+		// exceptions and catch them here
+	    createConstructor(claxx, className, false);
+	    if (stateDead()) {
+	    	return false;
+	    }
         
         checkType();
         if (allowsQueries()) {
@@ -994,20 +986,25 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return;
         }
         
-        if (_aspects != null) {
-	        for (int i = 0; i < _aspects.length; i++) {
-	            if(_aspects[i] instanceof FieldMetadata){
-	                FieldMetadata field = (FieldMetadata) _aspects[i];
-	                String fieldName = field.getName();
-	    			if(!field.hasConfig()&&extendedConfig!=null&&extendedConfig.configField(fieldName)!=null) {
-	                	field.initIndex(this,fieldName);
-	                }
-	    			field.initConfigOnUp(systemTrans);
-	            }
-	        }
-        }
+        initializeFieldsConfiguration(systemTrans, extendedConfig);
         
         checkAllConfiguredFieldsExist(extendedConfig);
+    }
+
+	private void initializeFieldsConfiguration(Transaction systemTrans, Config4Class extendedConfig) {
+	    if (_aspects == null) {
+        	return;
+        }
+        for (int i = 0; i < _aspects.length; i++) {
+            if(_aspects[i] instanceof FieldMetadata){
+                FieldMetadata field = (FieldMetadata) _aspects[i];
+                String fieldName = field.getName();
+    			if(!field.hasConfig()&&extendedConfig!=null&&extendedConfig.configField(fieldName)!=null) {
+                	field.initIndex(this,fieldName);
+                }
+    			field.initConfigOnUp(systemTrans);
+            }
+        }
     }
 
     private void checkAllConfiguredFieldsExist(Config4Class config) {
@@ -1112,12 +1109,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return obj;
     }
 	
-    private boolean configInstantiates(){
-        return config() != null && config().instantiates();
+    public boolean hasObjectConstructor(){
+    	if (true) return config() != null && config().getTranslator() instanceof ObjectConstructor;
+        return _translator != null && _translator.isObjectConstructor();
     }
 	
 	private Object instantiateObject(UnmarshallingContext context) {
-	    Object obj = configInstantiates() ? instantiateFromConfig(context) : instantiateFromReflector(context.container());
+	    Object obj = hasObjectConstructor() ? instantiateFromConfig(context) : instantiateFromReflector(context.container());
 	    context.persistentObject(obj);
         return obj;
 	}
@@ -1435,14 +1433,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     final void createConfigAndConstructor(
         Hashtable4 a_byteHashTable,
-        ReflectClass claxx,
-        String name) {
-        i_name = name;
+        ReflectClass claxx) {
+    	i_name = resolveName(claxx);
         setConfig(configImpl().configClass(i_name));
         if (claxx == null) {
-            createConstructor(_container, i_name);
+            createConstructor(i_name);
         } else {
-            createConstructor(_container, claxx, i_name, true);
+            createConstructor(claxx, i_name, true);
         }
         if (i_nameBytes != null) {
             a_byteHashTable.remove(i_nameBytes);
@@ -1480,12 +1477,14 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
         
         bitTrue(Const4.READING);
-        
-        MarshallerFamily.forConverterVersion(_container.converterVersion())._class.read(_container, this, i_reader);
+        try {
+        	MarshallerFamily.forConverterVersion(_container.converterVersion())._class.read(_container, this, i_reader);
        
-        i_nameBytes = null;
-        i_reader = null;
-        bitFalse(Const4.READING);
+	        i_nameBytes = null;
+	        i_reader = null;
+        } finally {
+        	bitFalse(Const4.READING);
+        }
     }	
 
     public void readThis(Transaction a_trans, ByteArrayBuffer a_reader) {
@@ -1494,7 +1493,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     public void refresh() {
         if (!stateUnread()) {
-            createConstructor(_container, i_name);
+            createConstructor(i_name);
             bitFalse(Const4.CHECKED_CHANGES);
             checkChanges();
             forEachDeclaredField(new Procedure4() {

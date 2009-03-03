@@ -107,6 +107,9 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
             return null;
         }
         Config4Field config4Field = (Config4Field) exceptionalFields.get(fieldName);
+        if (config4Field == null) {
+        	return null;
+        }
         config4Field.used(true);
 		return config4Field;
     }
@@ -173,10 +176,6 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	
     Object instantiate(ObjectContainerBase a_stream, Object a_toTranslate) {
         return ((ObjectConstructor) _config.get(TRANSLATOR_KEY)).onInstantiate(a_stream, a_toTranslate);
-    }
-
-    boolean instantiates() {
-        return getTranslator() instanceof ObjectConstructor;
     }
     
     public void maximumActivationDepth(int depth) {

@@ -51,8 +51,7 @@ public abstract class ClassMarshaller {
     protected abstract int indexIDForWriting(int indexID);
 
     public final byte[] readName(Transaction trans, ByteArrayBuffer reader) {
-        byte[] name = readName(trans.container().stringIO(), reader);
-        return name;
+        return readName(trans.container().stringIO(), reader);
     }
     
     public final int readMetaClassID(ByteArrayBuffer reader) {
@@ -76,7 +75,7 @@ public abstract class ClassMarshaller {
             // The logic further down checks the ancestor YapClass, whether
             // or not it is allowed, not to call constructors. The ancestor
             // YapClass may possibly have not been loaded yet.
-            clazz.createConstructor(stream, clazz.classReflector(), clazz.getName(), true);
+            clazz.createConstructor(clazz.classReflector(), clazz.getName(), true);
         }
         
         clazz.checkType();
