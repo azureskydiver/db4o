@@ -161,7 +161,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	private void objectOnNew(Transaction transaction, Object obj) {
 		ObjectContainerBase container = transaction.container();
 		container.callbacks().objectOnNew(transaction, obj);
-		_class.dispatchEvent(transaction, obj, EventDispatcher.NEW);
+		_class.dispatchEvent(transaction, obj, EventDispatchers.NEW);
 	}
 
 	public void deactivate(Transaction trans, ActivationDepth depth) {
@@ -429,14 +429,14 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
         endProcessing();
         
         container.callbacks().objectOnUpdate(transaction, obj);
-        classMetadata().dispatchEvent(transaction, obj, EventDispatcher.UPDATE);
+        classMetadata().dispatchEvent(transaction, obj, EventDispatchers.UPDATE);
 		
 	}
 
 	private boolean objectCanUpdate(Transaction transaction, Object obj) {
 		ObjectContainerBase container = transaction.container();
 		return container.callbacks().objectCanUpdate(transaction, obj)
-			&& _class.dispatchEvent(transaction, obj, EventDispatcher.CAN_UPDATE);
+			&& _class.dispatchEvent(transaction, obj, EventDispatchers.CAN_UPDATE);
 	}
 
 	public void ref_init() {

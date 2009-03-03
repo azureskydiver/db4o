@@ -31,8 +31,8 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
         _id = handlerID;
     }
     
-    public PrimitiveFieldHandler(){
-        super(null, null);
+    public PrimitiveFieldHandler(ObjectContainerBase container){
+        super(container);
         _handler = null;
     }
 
@@ -186,7 +186,7 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
     }
     
     public TypeHandler4 unversionedTemplate() {
-        return new PrimitiveFieldHandler(null, null, 0, null);
+        return new PrimitiveFieldHandler(container(), null, 0, null);
     }
     
     public boolean equals(Object obj) {

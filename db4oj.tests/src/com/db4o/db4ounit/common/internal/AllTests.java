@@ -18,6 +18,7 @@ public class AllTests extends Db4oTestSuite {
 			Comparable4TestCase.class,
 			DeactivateTestCase.class,
 		    EmbeddedClientObjectContainerTestCase.class,
+		    EventDispatchersTestCase.class,
 		    InternalObjectContainerAPITestCase.class,
 		    MarshallerFamilyTestCase.class,
 		    MarshallingBufferTestCase.class,
