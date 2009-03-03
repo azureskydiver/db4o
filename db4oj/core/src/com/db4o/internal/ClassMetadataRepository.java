@@ -42,7 +42,11 @@ public final class ClassMetadataRepository extends PersistentBase {
         }else{
             _classMetadataByClass.put(clazz.classReflector(), clazz);
         }
-        if (clazz.getID() == 0) {
+        registerClassMetadataById(clazz);
+    }
+
+	private void registerClassMetadataById(ClassMetadata clazz) {
+	    if (clazz.getID() == 0) {
             clazz.write(_systemTransaction);
         }
         _classMetadataByID.put(clazz.getID(), clazz);
@@ -90,16 +94,22 @@ public final class ClassMetadataRepository extends PersistentBase {
     }
     
     final boolean createClassMetadata(ClassMetadata clazz, ReflectClass reflectClazz) {
-        _classMetadataCreationDepth++;
-        ReflectClass parentReflectClazz = reflectClazz.getSuperclass();
-        ClassMetadata parentClazz = null;
-        if (parentReflectClazz != null && ! parentReflectClazz.equals(container()._handlers.ICLASS_OBJECT)) {
-            parentClazz = produceClassMetadata(parentReflectClazz);
+    	boolean result = false;
+    	
+    	_classMetadataCreationDepth++;
+        try {
+	        ReflectClass parentReflectClazz = reflectClazz.getSuperclass();
+	        ClassMetadata parentClazz = null;
+	        if (parentReflectClazz != null && ! parentReflectClazz.equals(container()._handlers.ICLASS_OBJECT)) {
+	            parentClazz = produceClassMetadata(parentReflectClazz);
+	        }
+	        result = container().createClassMetadata(clazz, reflectClazz, parentClazz);
+        } finally {
+        	_classMetadataCreationDepth--;
         }
-        boolean ret = container().createClassMetadata(clazz, reflectClazz, parentClazz);
-        _classMetadataCreationDepth--;
         initClassMetadataOnUp();
-        return ret;
+        
+        return result;
     }
 
 	private void ensureAllClassesRead() {
@@ -185,57 +195,48 @@ public final class ClassMetadataRepository extends PersistentBase {
 
     ClassMetadata produceClassMetadata(ReflectClass reflectClazz) {
     	
-    	ClassMetadata classMetadata = classMetadataForReflectClass(reflectClazz);
-    	
+    	final ClassMetadata classMetadata = classMetadataForReflectClass(reflectClazz);
         if (classMetadata != null ) {
             return classMetadata;
         }
         
-        classMetadata = (ClassMetadata)_creating.get(reflectClazz);
-        
-        if(classMetadata != null){
-            return classMetadata;
+        final ClassMetadata classBeingCreated = (ClassMetadata)_creating.get(reflectClazz);
+        if(classBeingCreated != null){
+            return classBeingCreated;
         }
         
-        classMetadata = new ClassMetadata(container(), reflectClazz);
+        final ClassMetadata newClassMetadata = new ClassMetadata(container(), reflectClazz);
+        _creating.put(reflectClazz, newClassMetadata);
         
-        _creating.put(reflectClazz, classMetadata);
-        
-        if(! createClassMetadata(classMetadata, reflectClazz)){
-            _creating.remove(reflectClazz);
-            return null;
+        try {
+	        if(! createClassMetadata(newClassMetadata, reflectClazz)){
+	            return null;
+	        }
+	
+	        // ObjectContainerBase#createClassMetadata may add the ClassMetadata already,
+	        // so we have to check again
+	        
+	        if (!isRegistered(reflectClazz)) {
+	            addClassMetadata(newClassMetadata);
+	            _classInits.process(newClassMetadata);
+	        } else {
+	        	registerClassMetadataById(newClassMetadata);
+				if (newClassMetadata.aspectsAreNull()) {
+	        		_classInits.process(newClassMetadata);
+	        	}
+	        }
+	        
+	        container().setDirtyInSystemTransaction(this);
+	        
+        } finally {
+        	_creating.remove(reflectClazz);
         }
+        
+        return newClassMetadata;
+    }
 
-        // ObjectContainerBase#createClassMetadata may add the ClassMetadata already,
-        // so we have to check again
-        
-        boolean addMembers = false;
-        
-        if (_classMetadataByClass.get(reflectClazz) == null) {
-            addClassMetadata(classMetadata);
-            addMembers = true;
-        }
-        
-        int id = classMetadata.getID();
-        if(id == 0){
-            classMetadata.write(container().systemTransaction());
-            id = classMetadata.getID();
-        }
-        
-        if(_classMetadataByID.get(id) == null){
-            _classMetadataByID.put(id, classMetadata);
-            addMembers = true;
-        }
-        
-        if(addMembers || classMetadata.aspectsAreNull()){
-			_classInits.process(classMetadata);
-        }
-        
-        _creating.remove(reflectClazz);
-        
-        container().setDirtyInSystemTransaction(this);
-        
-        return classMetadata;
+	private boolean isRegistered(ReflectClass reflectClazz) {
+	    return _classMetadataByClass.get(reflectClazz) != null;
     }    
     
 	ClassMetadata classMetadataForId(int id) {
@@ -306,8 +307,8 @@ public final class ClassMetadataRepository extends PersistentBase {
 	        }
         } finally {
         	systemTrans.container().showInternalClasses(false);
+        	_classMetadataCreationDepth--;
         }
-        _classMetadataCreationDepth--;
         initClassMetadataOnUp();
     }
 
@@ -324,12 +325,14 @@ public final class ClassMetadataRepository extends PersistentBase {
     }
     
     private void initClassMetadataOnUp() {
-        if(_classMetadataCreationDepth == 0){
-            ClassMetadata clazz = (ClassMetadata)_initClassMetadataOnUp.next();
-            while(clazz != null){
-                clazz.initOnUp(_systemTransaction);
-                clazz = (ClassMetadata)_initClassMetadataOnUp.next();
-            }
+        if(_classMetadataCreationDepth != 0){
+        	return;
+        }
+        
+        ClassMetadata clazz = (ClassMetadata)_initClassMetadataOnUp.next();
+        while(clazz != null){
+            clazz.initOnUp(_systemTransaction);
+            clazz = (ClassMetadata)_initClassMetadataOnUp.next();
         }
     }
     
@@ -430,18 +433,18 @@ public final class ClassMetadataRepository extends PersistentBase {
             return classMetadata;
         }
         _classMetadataCreationDepth++;
-        
-        String name = classMetadata.resolveName(clazz);
-        
-        classMetadata.createConfigAndConstructor(_classMetadataByBytes, clazz, name);
-        ReflectClass claxx = classMetadata.classReflector();
-        if(claxx != null){
-            _classMetadataByClass.put(claxx, classMetadata);
-            classMetadata.readThis();
-            classMetadata.checkChanges();
-            _initClassMetadataOnUp.add(classMetadata);
+        try {
+	        classMetadata.createConfigAndConstructor(_classMetadataByBytes, clazz);
+	        ReflectClass claxx = classMetadata.classReflector();
+	        if(claxx != null){
+	            _classMetadataByClass.put(claxx, classMetadata);
+	            classMetadata.readThis();
+	            classMetadata.checkChanges();
+	            _initClassMetadataOnUp.add(classMetadata);
+	        }
+        } finally {
+        	_classMetadataCreationDepth--;
         }
-        _classMetadataCreationDepth--;
         initClassMetadataOnUp();
         return classMetadata;
     }

@@ -7,8 +7,7 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 
 
-final class TranslatedAspect extends FieldMetadata
-{
+final class TranslatedAspect extends FieldMetadata {
 	private final ObjectTranslator _translator;
 
 	TranslatedAspect(ClassMetadata containingClass, ObjectTranslator translator){
@@ -93,6 +92,10 @@ final class TranslatedAspect extends FieldMetadata
 	
     public AspectType aspectType() {
         return AspectType.TRANSLATOR;
+    }
+
+	public boolean isObjectConstructor() {
+		return _translator instanceof ObjectConstructor;
     }
 
 }

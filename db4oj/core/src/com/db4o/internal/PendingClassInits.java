@@ -22,33 +22,31 @@ class PendingClassInits {
         _systemTransaction = systemTransaction;
 	}
 	
-	void process(ClassMetadata newYapClass) {
+	void process(ClassMetadata newClassMetadata) {
 		
-		if(_pending.contains(newYapClass)) {
+		if(_pending.contains(newClassMetadata)) {
 			return;
 		}
 		
-        ClassMetadata ancestor = newYapClass.getAncestor();
+        final ClassMetadata ancestor = newClassMetadata.getAncestor();
         if (ancestor != null) {
             process(ancestor);
         }
 		
-		_pending.add(newYapClass);
-        
-        _members.add(newYapClass);
-        
+		_pending.add(newClassMetadata);
+        _members.add(newClassMetadata);
 		
 		if(_running) {
 			return;
 		}
 		
 		_running = true;
-		
-		checkInits();
-		
-		_pending = new Collection4();
-		
-		_running = false;
+		try {
+			checkInits();
+			_pending = new Collection4();
+		} finally {
+			_running = false;
+		}
 	}
 
 	
