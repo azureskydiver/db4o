@@ -56,7 +56,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     private boolean _isEnum;
     
-    private EventDispatcher _eventDispatcher;
+    private ByRef<EventDispatcher> _eventDispatcher;
     
     private boolean _internal;
     
@@ -107,11 +107,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return new BTreeClassIndexStrategy(this);
 	}
 
-    public ClassMetadata(ObjectContainerBase container, ReflectClass claxx){
-    	_typeHandler =  createDefaultTypeHandler();
+    public ClassMetadata(ObjectContainerBase container, ReflectClass classReflector){
+    	classReflector(classReflector);
     	_container = container;
-    	_classReflector = claxx;
-        _index = createIndexStrategy();
+    	_index = createIndexStrategy();
         _classIndexed = true;       
        
         if (_container == null || _container.config().exceptionsOnNotStorable()) {
@@ -500,8 +499,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	           
         classReflector(claxx);
         
-        _eventDispatcher = EventDispatcher.forClass(_container, claxx);
-        
         if(! Deploy.csharp){
             if(claxx != null){
                 _isEnum = Platform4.isEnum(reflector(), claxx);
@@ -536,7 +533,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
     }
 
-	protected void classReflector(ReflectClass claxx) {
+	private void classReflector(ReflectClass claxx) {
 	    _classReflector = claxx;
 	    if(claxx == null){
 	        _typeHandler = null;
@@ -658,21 +655,31 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	if(!dispatchingEvents(trans)){
     		return true;
     	}
-        return _eventDispatcher.dispatch(trans, obj, message);
+        return eventDispatcher().dispatch(trans, obj, message);
     }
 
 	private boolean dispatchingEvents(Transaction trans) {
-		return _eventDispatcher != null && trans.container().dispatchsEvents();
+		return eventDispatcher() != null && trans.container().dispatchsEvents();
 	}
     
     public final boolean hasEventRegistered(Transaction trans, int eventID) {
     	if(!dispatchingEvents(trans)){
     		return false;
     	}
-    	return _eventDispatcher.hasEventRegistered(eventID);
+    	return eventDispatcher().hasEventRegistered(eventID);
     }
     
-    public final int declaredAspectCount(){
+    private EventDispatcher eventDispatcher() {
+    	if (null != _eventDispatcher) {
+    		return _eventDispatcher.value;
+    	}
+	    
+	    final EventDispatcher newEventDispatcher = EventDispatcher.forClass(_container, classReflector());
+	    _eventDispatcher = ByRef.newInstance(newEventDispatcher);
+		return newEventDispatcher;
+    }
+
+	public final int declaredAspectCount(){
     	if(_aspects == null){
     		return 0;
     	}
