@@ -24,7 +24,6 @@ public class ClassMetadataTestCase extends AbstractInMemoryDb4oTestCase {
 	
 	public void testInitialization() {
 		
-		
 		final ReflectClass reflectClass = reflectClass(NonStorable.class);
 		final ClassMetadata subject = new ClassMetadata(container(), reflectClass);
 		

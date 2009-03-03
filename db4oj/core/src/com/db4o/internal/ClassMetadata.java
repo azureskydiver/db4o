@@ -56,7 +56,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     private boolean _isEnum;
     
-    private ByRef<EventDispatcher> _eventDispatcher;
+    private EventDispatcher _eventDispatcher;
     
     private boolean _internal;
     
@@ -106,14 +106,27 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     private ClassIndexStrategy createIndexStrategy() {
 		return new BTreeClassIndexStrategy(this);
 	}
+    
+    protected ClassMetadata(ObjectContainerBase container){
+    	if (null == container) {
+    		throw new ArgumentNullException();
+    	}
+    	_container = container;
+    	_index = createIndexStrategy();
+        _classIndexed = true;
+        _fieldAccessor = new StrictFieldAccessor();
+    }  
 
     public ClassMetadata(ObjectContainerBase container, ReflectClass classReflector){
+    	if (null == container) {
+    		throw new ArgumentNullException();
+    	}
     	classReflector(classReflector);
     	_container = container;
     	_index = createIndexStrategy();
         _classIndexed = true;       
        
-        if (_container == null || _container.config().exceptionsOnNotStorable()) {
+        if (_container.config().exceptionsOnNotStorable()) {
         	_fieldAccessor = new StrictFieldAccessor();	
         }
         else {
@@ -552,13 +565,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	private void objectOnDeactivate(Transaction transaction, Object obj) {
 		ObjectContainerBase container = transaction.container();
 		container.callbacks().objectOnDeactivate(transaction, obj);
-		dispatchEvent(transaction, obj, EventDispatcher.DEACTIVATE);
+		dispatchEvent(transaction, obj, EventDispatchers.DEACTIVATE);
 	}
 
 	private boolean objectCanDeactivate(Transaction transaction, Object obj) {
 		ObjectContainerBase container = transaction.container();
 		return container.callbacks().objectCanDeactivate(transaction, obj)
-			&& dispatchEvent(transaction, obj, EventDispatcher.CAN_DEACTIVATE);
+			&& dispatchEvent(transaction, obj, EventDispatchers.CAN_DEACTIVATE);
 	}
 
     final void deactivateFields(final Transaction trans, final Object obj, final ActivationDepth depth) {
@@ -652,31 +665,20 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
     public final boolean dispatchEvent(Transaction  trans, Object obj, int message) {
-    	if(!dispatchingEvents(trans)){
-    		return true;
-    	}
-        return eventDispatcher().dispatch(trans, obj, message);
+    	return eventDispatcher().dispatch(trans, obj, message);
     }
-
-	private boolean dispatchingEvents(Transaction trans) {
-		return eventDispatcher() != null && trans.container().dispatchsEvents();
-	}
     
     public final boolean hasEventRegistered(Transaction trans, int eventID) {
-    	if(!dispatchingEvents(trans)){
-    		return false;
-    	}
     	return eventDispatcher().hasEventRegistered(eventID);
     }
     
     private EventDispatcher eventDispatcher() {
     	if (null != _eventDispatcher) {
-    		return _eventDispatcher.value;
+    		return _eventDispatcher;
     	}
 	    
-	    final EventDispatcher newEventDispatcher = EventDispatcher.forClass(_container, classReflector());
-	    _eventDispatcher = ByRef.newInstance(newEventDispatcher);
-		return newEventDispatcher;
+	    _eventDispatcher = EventDispatchers.forClass(_container, classReflector());
+		return _eventDispatcher;
     }
 
 	public final int declaredAspectCount(){
@@ -1175,13 +1177,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	private void objectOnActivate(Transaction transaction, Object obj) {
 		ObjectContainerBase container = transaction.container();
 		container.callbacks().objectOnActivate(transaction, obj);
-		dispatchEvent(transaction, obj, EventDispatcher.ACTIVATE);
+		dispatchEvent(transaction, obj, EventDispatchers.ACTIVATE);
 	}
 
 	private boolean objectCanActivate(Transaction transaction, Object obj) {
 		ObjectContainerBase container = transaction.container();
 		return container.callbacks().objectCanActivate(transaction, obj)
-			&& dispatchEvent(transaction, obj, EventDispatcher.CAN_ACTIVATE);
+			&& dispatchEvent(transaction, obj, EventDispatchers.CAN_ACTIVATE);
 	}
 
     Object instantiateFields(UnmarshallingContext context) {

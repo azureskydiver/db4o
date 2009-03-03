@@ -233,7 +233,7 @@ public final class HandlerRegistry {
         registerHandlerVersion(multidimensionalArrayHandler, 0, new MultidimensionalArrayHandler0());
         registerHandlerVersion(multidimensionalArrayHandler, 3, new MultidimensionalArrayHandler3());
         
-        PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler();
+        PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler(container());
         registerHandlerVersion(primitiveFieldHandler, 0, primitiveFieldHandler);  // same handler, but making sure versions get cascaded
         registerHandlerVersion(primitiveFieldHandler, 2, primitiveFieldHandler);  // same handler, but making sure versions get cascaded
     }

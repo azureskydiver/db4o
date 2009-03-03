@@ -52,6 +52,15 @@ public class Iterators {
 		};
 	}
 	
+	public static boolean any(Iterator4 iterator, Predicate4 condition) {
+		while (iterator.moveNext()) {
+			if (condition.match(iterator.current())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public static Iterator4 concat(Iterator4... array) {
 		return concat(iterate((Object[])array));
 	}

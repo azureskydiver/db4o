@@ -40,7 +40,7 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
         assertCorrectedHandlerVersion(FirstClassObjectHandler0.class, firstClassObjectHandler, 0);
         assertCorrectedHandlerVersion(FirstClassObjectHandler.class, firstClassObjectHandler, 2);
         
-        PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler(null, untypedFieldHandler,0, null );
+        PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler(container(), untypedFieldHandler,0, null );
         assertPrimitiveFieldHandlerDelegate(UntypedFieldHandler0.class, primitiveFieldHandler,0);
         assertPrimitiveFieldHandlerDelegate(UntypedFieldHandler2.class, primitiveFieldHandler,1);
         assertPrimitiveFieldHandlerDelegate(UntypedFieldHandler2.class, primitiveFieldHandler,2);

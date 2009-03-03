@@ -587,22 +587,22 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     
     private boolean caresAboutDeleting(ClassMetadata yc) {
     	return this._callbacks.caresAboutDeleting()
-    		|| yc.hasEventRegistered(systemTransaction(), EventDispatcher.CAN_DELETE);
+    		|| yc.hasEventRegistered(systemTransaction(), EventDispatchers.CAN_DELETE);
     }
     
     private boolean caresAboutDeleted(ClassMetadata yc) {
     	return this._callbacks.caresAboutDeleted()
-    		|| yc.hasEventRegistered(systemTransaction(), EventDispatcher.DELETE);
+    		|| yc.hasEventRegistered(systemTransaction(), EventDispatchers.DELETE);
     }
     
 	private boolean objectCanDelete(Transaction transaction, ClassMetadata yc, Object obj) {
 		return callbacks().objectCanDelete(transaction, obj)
-			&& yc.dispatchEvent(transaction, obj, EventDispatcher.CAN_DELETE);
+			&& yc.dispatchEvent(transaction, obj, EventDispatchers.CAN_DELETE);
 	}
 	
 	private void objectOnDelete(Transaction transaction, ClassMetadata yc, Object obj) {
 		callbacks().objectOnDelete(transaction, obj);
-		yc.dispatchEvent(transaction, obj, EventDispatcher.DELETE);
+		yc.dispatchEvent(transaction, obj, EventDispatchers.DELETE);
 	}
 	
     public abstract boolean delete4(Transaction ta, ObjectReference yapObject, int a_cascade, boolean userCall);
@@ -1679,7 +1679,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
 	private boolean objectCanNew(Transaction transaction, ClassMetadata yc, Object obj) {
 		return callbacks().objectCanNew(transaction, obj)
-			&& yc.dispatchEvent(transaction, obj, EventDispatcher.CAN_NEW);
+			&& yc.dispatchEvent(transaction, obj, EventDispatchers.CAN_NEW);
 	}
 
     public abstract void setDirtyInSystemTransaction(PersistentBase a_object);
