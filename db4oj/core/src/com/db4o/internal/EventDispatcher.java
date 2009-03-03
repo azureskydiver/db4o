@@ -2,6 +2,7 @@
 
 package com.db4o.internal;
 
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 
@@ -60,21 +61,21 @@ public final class EventDispatcher {
 		return true;
 	}
 	
-	static EventDispatcher forClass(ObjectContainerBase a_stream, ReflectClass classReflector){
+	static EventDispatcher forClass(ObjectContainerBase container, ReflectClass classReflector){
         
-        if(a_stream == null || classReflector == null){
-            return null;
+        if(container == null || classReflector == null){
+           throw new ArgumentNullException();
         }
         
 		EventDispatcher dispatcher = null;
 	    int count = 0;
-	    if(a_stream.configImpl().callbacks()){
+	    if(container.configImpl().callbacks()){
 	        count = COUNT;
-	    }else if(a_stream.configImpl().isServer()){
+	    }else if(container.configImpl().isServer()){
 	        count = SERVER_COUNT;
 	    }
 	    if(count > 0){
-			ReflectClass[] parameterClasses = {a_stream._handlers.ICLASS_OBJECTCONTAINER};
+			ReflectClass[] parameterClasses = {container._handlers.ICLASS_OBJECTCONTAINER};
 			ReflectMethod[] methods = new ReflectMethod[COUNT];
 			for (int i = COUNT - 1; i >= 0; i--) {
 				ReflectMethod method = classReflector.getMethod(events[i],
