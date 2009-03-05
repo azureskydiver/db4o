@@ -1401,12 +1401,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		return activationDepthProvider().activationDepth(depth, ActivationMode.REFRESH);
 	}
 
-    public final void refreshClasses() {
-        synchronized (_lock) {
-            _classCollection.refreshClasses();
-        }
-    }
-
     public abstract void releaseSemaphore(String name);
     
     public void flagAsHandled(ObjectReference ref){

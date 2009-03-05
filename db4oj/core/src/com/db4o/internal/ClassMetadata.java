@@ -506,7 +506,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return null;
     }
 
-    private void createConstructor(String className) {
+    private void resolveClassReflector(String className) {
         final ReflectClass reflectClass = _container.reflector().forName(className);
         if (null == reflectClass) {
         	throw new IllegalStateException("Cannot initialize ClassMetadata for '" + className + "'.");
@@ -1415,21 +1415,21 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
     
     public void rename(String newName){
-        if (!_container.isClient()) {
-            int tempState = _state;
-            setStateOK();
-            setName(newName);
-            i_nameBytes = asBytes(i_name);
-            setStateDirty();
-            write(_container.systemTransaction());
-            ReflectClass oldReflector = _classReflector;
-            classReflector(container().reflector().forName(newName));
-            container().classCollection().refreshClassCache(this, oldReflector);
-            refresh();
-            _state = tempState;
-        }else{
-            Exceptions4.throwRuntimeException(58);
+        if (_container.isClient()) {
+        	Exceptions4.throwRuntimeException(58);
         }
+        
+        int tempState = _state;
+        setStateOK();
+        setName(newName);
+        i_nameBytes = asBytes(i_name);
+        setStateDirty();
+        write(_container.systemTransaction());
+        ReflectClass oldReflector = _classReflector;
+        classReflector(container().reflector().forName(newName));
+        container().classCollection().refreshClassCache(this, oldReflector);
+        refresh();
+        _state = tempState;
     }
 
     //TODO: duplicates ClassMetadataRepository#asBytes
@@ -1443,7 +1443,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	setName(resolveName(claxx));
         setConfig(configImpl().configClass(getName()));
         if (claxx == null) {
-            createConstructor(getName());
+            resolveClassReflector(getName());
         } else {
         	classReflector(claxx);
 //            createConstructor(true);
@@ -1500,7 +1500,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     public void refresh() {
         if (!stateUnread()) {
-            createConstructor(i_name);
+            resolveClassReflector(i_name);
             bitFalse(Const4.CHECKED_CHANGES);
             checkChanges();
             forEachDeclaredField(new Procedure4() {

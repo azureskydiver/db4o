@@ -51,7 +51,6 @@ public class StoredClassImpl implements StoredClass {
         return _classMetadata.hasClassIndex();
     }
 
-    // TODO: Write test case.
     public void rename(String newName) {
         _classMetadata.rename(newName);
     }

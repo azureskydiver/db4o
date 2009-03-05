@@ -31,7 +31,6 @@ public class ClassRenameByStoredClassTestCase extends AbstractDb4oTestCase imple
 		}
     }
     
-    
     protected void store() throws Exception {
     	store(new Original(NAME));
     }

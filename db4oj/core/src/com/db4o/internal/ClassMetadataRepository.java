@@ -473,7 +473,7 @@ public final class ClassMetadataRepository extends PersistentBase {
         }
     }
 
-	public void refreshClass(ClassMetadata clazz) {
+	private void refreshClass(ClassMetadata clazz) {
 		if (_classMetadataByID.get(clazz.getID()) == null) {
 		    _classes.add(clazz);
 			_classMetadataByID.put(clazz.getID(), clazz);

@@ -555,9 +555,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void refreshClasses() {
-        if (i_stream != null) {
-            i_stream.refreshClasses();
-        }
+        throw new NotImplementedException();
     }
 
     void rename(Rename a_rename) {

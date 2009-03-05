@@ -654,15 +654,9 @@ public interface Configuration {
     public void reflectWith(Reflector reflector);
 
     /**
-     * forces analysis of all Classes during a running session.
-     * <br><br>
-     * This method may be useful in combination with a modified ClassLoader and
-     * allows exchanging classes during a running db4o session.<br><br>
-     * Calling this method on the global Configuration context will refresh
-     * the classes in all db4o sessions in the running VM. Calling this method
-     * in an ObjectContainer Configuration context, only the classes of the
-     * respective ObjectContainer will be refreshed.<br><br>
-     * @see #setClassLoader
+     * This method is no longer supported and will be removed.
+     * 
+     * @deprecated 
      */
     public void refreshClasses();
     

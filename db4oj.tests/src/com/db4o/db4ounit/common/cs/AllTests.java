@@ -34,6 +34,7 @@ public class AllTests extends Db4oTestSuite {
 	            SetSemaphoreTestCase.class,
 	            SwitchingFilesFromClientTestCase.class,
 	            SwitchingFilesFromMultipleClientsTestCase.class,
+	            SwitchingToFileWithDifferentClassesTestCase.class,
 	            CsSchemaUpdateTestCase.class,
 		};
 	}

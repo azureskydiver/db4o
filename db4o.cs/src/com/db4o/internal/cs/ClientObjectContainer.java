@@ -588,9 +588,11 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		write(Msg.GET_CLASSES.getWriter(systemTransaction()));
 		ByteArrayBuffer bytes = expectedByteResponse(Msg.GET_CLASSES);
 		classCollection().setID(bytes.readInt());
-		createStringIO(bytes.readByte());
+		
+		final byte stringEncoding = bytes.readByte();
+		createStringIO(stringEncoding);
+		
 		classCollection().read(systemTransaction());
-		classCollection().refreshClasses();
 	}
 
 	public void releaseSemaphore(String name) {
@@ -612,6 +614,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		initialize1(config);
 		initializeTransactions();
 		readThis();
+		// FIXME: remove this comments after the build is green
+//		classCollection().refreshClasses();
 	}
 
 	public final void rollback1(Transaction trans) {
