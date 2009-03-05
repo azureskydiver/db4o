@@ -18,22 +18,25 @@ public class CrudApplication {
 	private static final String DATABASE_FILE = "simplecrud.db4o";
 	
 	public void run(final int itemCount) {
-		Configuration config = prepare(itemCount);
-		create(itemCount, config);
-		read(config);
-		update(config);
-		delete(config);
+		deleteDbFile();
+		
+		final String logFileName = logFileName(itemCount);
+		
+		create(itemCount, newConfigWithLogging(logFileName));
+		read(newConfigWithLogging(logFileName));
+		update(newConfigWithLogging(logFileName));
+		delete(newConfigWithLogging(logFileName));
+		
 		deleteDbFile();
 	}
 
-	private Configuration prepare(int itemCount) {
-		deleteDbFile();
-		RandomAccessFileAdapter rafAdapter = new RandomAccessFileAdapter();
-		IoAdapter ioAdapter = new LoggingIoAdapter(rafAdapter, logFileName(itemCount));
-		Configuration config = Db4o.cloneConfiguration();
+	private Configuration newConfigWithLogging(final String logFileName) {
+	    RandomAccessFileAdapter rafAdapter = new RandomAccessFileAdapter();
+		IoAdapter ioAdapter = new LoggingIoAdapter(rafAdapter, logFileName);
+		Configuration config = Db4o.newConfiguration();
 		config.io(ioAdapter);
 		return config;
-	}
+    }
 
 	private void create(int itemCount, Configuration config) {
 		ObjectContainer oc = open(config);
