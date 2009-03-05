@@ -522,7 +522,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		System.arraycopy(reader._buffer, 0, a_bytes, 0, a_length);
 	}
 
-	protected boolean rename1(Config4Impl config) {
+	protected boolean applyRenames(Config4Impl config) {
 		logMsg(58, null);
 		return false;
 	}
