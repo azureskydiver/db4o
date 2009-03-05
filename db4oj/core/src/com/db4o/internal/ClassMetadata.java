@@ -970,13 +970,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         
         setAncestor(ancestor);
         
-		// FIXME: ensure all error conditions in createConstructor throw
-		// exceptions and catch them here
-//	    createConstructor(false);
-//	    if (stateDead()) {
-//	    	return false;
-//	    }
-        
         checkType();
         
         if (allowsQueries()) {
