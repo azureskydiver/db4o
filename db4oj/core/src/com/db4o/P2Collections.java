@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.types.*;
 
@@ -21,48 +22,32 @@ public class P2Collections implements Db4oCollections{
     }
 
     public Db4oList newLinkedList() {
-        synchronized(lock()) {
-        	if(canCreateCollection(container())){
-	            Db4oList l = new P2LinkedList();
-	            container().store(_transaction, l);
-	            return l;
-	        }
-	        return null;
-        }
+        return container().syncExec(new Closure4<Db4oList>() { public Db4oList run() {
+            Db4oList l = new P2LinkedList();
+            container().store(_transaction, l);
+            return l;
+	    }});
     }
 
-    public Db4oMap newHashMap(int a_size) {
-        synchronized(lock()) {
-        	if(canCreateCollection(container())){
-	            return new P2HashMap(a_size);
-	        }
-	        return null;
-        }
+    public Db4oMap newHashMap(final int a_size) {
+    	return container().syncExec(new Closure4<Db4oMap>() { public Db4oMap run() {
+    		
+    		return new P2HashMap(a_size);
+    		
+    	}});
     }
     
-    public Db4oMap newIdentityHashMap(int a_size) {
-        synchronized(lock()) {
-	        if(canCreateCollection(container())){
-	            P2HashMap m = new P2HashMap(a_size);
-	            m.i_type = 1;
-	            container().store(_transaction, m);
-	            return m;
-	        }
-	        return null;
-        }
-    }
-    
-    private Object lock(){
-        return container().lock();
+    public Db4oMap newIdentityHashMap(final int a_size) {
+    	return container().syncExec(new Closure4<Db4oMap>() { public Db4oMap run() {
+            P2HashMap m = new P2HashMap(a_size);
+            m.i_type = 1;
+            container().store(_transaction, m);
+            return m;
+    	}});
     }
     
     private ObjectContainerBase container(){
         return _transaction.container();
     }
-    
-	private boolean canCreateCollection(ObjectContainerBase container){
-	    container.checkClosed();
-	    return ! container.isInstantiating();
-	}
 
 }

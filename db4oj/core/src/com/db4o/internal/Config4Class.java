@@ -174,10 +174,6 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 		return _config.getAsBoolean(CLASS_INDEXED_KEY);
 	}
 	
-    Object instantiate(ObjectContainerBase a_stream, Object a_toTranslate) {
-        return ((ObjectConstructor) _config.get(TRANSLATOR_KEY)).onInstantiate(a_stream, a_toTranslate);
-    }
-    
     public void maximumActivationDepth(int depth) {
     	_config.put(MAXIMUM_ACTIVATION_DEPTH_KEY,depth);
     }
@@ -242,7 +238,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
    }
 
     public void rename(String newName) {
-        config().rename(Rename.forClass(getName(), newName));
+        config().rename(Renames.forClass(getName(), newName));
         setName(newName);
     }
 

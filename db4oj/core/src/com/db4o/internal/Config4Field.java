@@ -38,7 +38,7 @@ public class Config4Field extends Config4Abstract implements ObjectField, DeepCl
     }
 
     public void rename(String newName) {
-        classConfig().config().rename(Rename.forField(className(), getName(), newName));
+        classConfig().config().rename(Renames.forField(className(), getName(), newName));
         setName(newName);
     }
 

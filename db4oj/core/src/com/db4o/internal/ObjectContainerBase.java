@@ -70,11 +70,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
     // used for Objects
     protected Transaction             _transaction;
-
-    // This is a hack for P2Collection
-    // Remove when P2Collection is no longer used.
-    private boolean         _instantiating;
-
+    
     // all the per-YapStream references that we don't
     // want created in YapobjectCarrier
     public HandlerRegistry             _handlers;
@@ -1114,9 +1110,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
     }
 
-    final void instantiating(boolean flag) {
-        _instantiating = flag;
-    }
+//    final void instantiating(boolean flag) {
+//        _instantiating = flag;
+//    }
 
     final boolean isActive(Transaction trans, Object obj) {
         synchronized (_lock) {
@@ -1151,10 +1147,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         synchronized (_lock) {
             return _classCollection == null;
         }
-    }
-
-    public final boolean isInstantiating() {
-        return _instantiating;
     }
 
     boolean isServer() {
@@ -1516,7 +1508,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
 
 	private ObjectSet queryInverseRenames(Rename ren) {
-	    return queryByExample(systemTransaction(), Rename.forInverseQBE(ren));
+	    return queryByExample(systemTransaction(), Renames.forInverseQBE(ren));
     }
 
 	private boolean alreadyApplied(Rename ren) {
@@ -2071,8 +2063,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	}
 
     
-    public Object syncExec(Closure4 block) {
+    public <R> R syncExec(Closure4<R> block) {
     	synchronized(_lock) {
+    		checkClosed();
     		return block.run();
     	}
     }
