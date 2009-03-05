@@ -654,7 +654,9 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
      */
 	 public void switchToFile(String fileName) {
 		synchronized (_lock) {
-			commit();
+			if(! _config.isReadOnly()){
+				commit();
+			}
 			MsgD msg = Msg.SWITCH_TO_FILE.getWriterForString(_transaction, fileName);
 			write(msg);
 			expectedResponse(Msg.OK);
@@ -669,7 +671,9 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
      */
 	 public void switchToMainFile() {
 		synchronized (_lock) {
-			commit();
+			if(! _config.isReadOnly()){
+				commit();
+			}
 			write(Msg.SWITCH_TO_MAIN_FILE);
 			expectedResponse(Msg.OK);
 			// FIXME NSC
