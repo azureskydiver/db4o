@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -42,7 +41,7 @@ namespace WixBuilder.Tests
 		private XmlDocument RunScriptBuilderWith(WixBuilderParameters parameters)
 		{
 			var resultingDocument = new StringWriter();
-			new WixScriptBuilder(resultingDocument, root, parameters).Build();
+			new WixScriptBuilder(resultingDocument, root, parameters, "1.0").Build();
 			return LoadXml(resultingDocument.ToString());
 		}
 

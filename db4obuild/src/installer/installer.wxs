@@ -26,13 +26,6 @@
     <FragmentRef Id="DirectoriesFilesAndComponents" />
 	
     <DirectoryRef Id="TARGETDIR">
-      <Directory Id="ProgramFilesFolder" Name="PFiles">
-        <Directory Id="PFiles.Db4objects" Name="Db4o" LongName="Db4objects">
-          <Directory Id="INSTALLDIR" Name="db4o-@db4o.version.dotted@">
-          </Directory>
-        </Directory>
-      </Directory>
-	  
       <Directory Id="ProgramMenuFolder" Name=".">
         <Directory Id="db4objectsMenuFolder" Name="db4o" LongName="db4objects">
           <Directory Id="TargetMenuFolder" Name="db4o" LongName="db4o @db4o.version.dotted@" />
@@ -301,9 +294,14 @@
           <Publish Event="NewDialog" Value="MaintenanceTypeDialog"><![CDATA[InstallMode = "Repair"]]></Publish>
           <Publish Event="NewDialog" Value="SetupTypeDlg"><![CDATA[InstallMode = "Typical" OR InstallMode = "Complete"]]></Publish>
         </Control>
-        <Control Id="Text" Type="Text" X="25" Y="70" Width="320" Height="20">
-          <Text>Click Install to begin the installation to [TARGETDIR]. If you want to review or change any of your installation settings, click Back.  Click Cancel to exit the wizard.</Text>
-        </Control>
+        <Control Id="InstallFolderText" Type="Text" X="25" Y="70" Width="320" Height="20">
+		  <Text>Click Install to begin the installation to [INSTALLDIR].</Text>
+		</Control>
+
+		<Control Id="Text" Type="Text" X="25" Y="90" Width="320" Height="20">
+		  <Text>If you want to review or change any of your installation settings, click Back.  Click Cancel to exit the wizard.</Text>
+		 </Control>
+		
         <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
         <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="374" Height="0" />
         <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes">
