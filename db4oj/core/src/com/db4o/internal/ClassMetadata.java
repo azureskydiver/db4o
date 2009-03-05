@@ -67,6 +67,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     private ModificationAware _modificationChecker = AlwaysModified.INSTANCE;
     
     private FieldAccessor _fieldAccessor;
+
+	private Function4<UnmarshallingContext, Object> _constructor;
     
     public final ObjectContainerBase stream() {
     	return _container;
@@ -233,7 +235,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			_aspects = new FieldMetadata[0];
 		}
 
-		createConstructor(true);
+		createConstructor();
 		if (stateDead()) {
 			return;
 		}
@@ -510,20 +512,22 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         	throw new IllegalStateException("Cannot initialize ClassMetadata for '" + className + "'.");
         }
 		classReflector(reflectClass);
-//        createConstructor(true);
     }
 
-    public void createConstructor(boolean errMessages) {
+    private void createConstructor() {
         
-        if(hasObjectConstructor()){
+        if (hasObjectConstructor()){
+        	_constructor = new Function4<UnmarshallingContext, Object>() {
+        		public Object apply(UnmarshallingContext context) {
+        			return instantiateFromTranslator(context);
+                }
+        	};
             return;
         }
         
         final ReflectClass claxx = classReflector();
         if (_container._handlers.isTransient(claxx)) {
-            if(errMessages){
-            	_container.logMsg(23, getName());
-            }
+            _container.logMsg(23, getName());
             setStateDead();
             return;
         }
@@ -533,16 +537,19 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
         
 	    if(claxx.ensureCanBeInstantiated()) {
+	    	_constructor = new Function4<UnmarshallingContext, Object>() {
+        		public Object apply(UnmarshallingContext context) {
+        			return instantiateFromReflector(context.container());
+                }
+        	};
 	        return;
         }
 	    
-	    if(errMessages){
-	    	_container.logMsg(7, getName());
-	    }
 	    notStorable(claxx);
     }
 
 	private void notStorable(final ReflectClass claxx) {
+		_container.logMsg(7, getName());
 	    setStateDead();
         if (configImpl().exceptionsOnNotStorable()) {
             throw new ObjectNotStorableException(claxx);
@@ -1120,7 +1127,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 	
 	private Object instantiateObject(UnmarshallingContext context) {
-	    Object obj = hasObjectConstructor() ? instantiateFromConfig(context) : instantiateFromReflector(context.container());
+		Object obj = _constructor.apply(context);
 	    context.persistentObject(obj);
         return obj;
 	}
@@ -1129,33 +1136,24 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		transaction.container().callbacks().objectOnInstantiate(transaction, instance);
 	}
 
-	public final Object instantiateFromReflector(ObjectContainerBase stream) {
+	private Object instantiateFromReflector(ObjectContainerBase stream) {
 		if (_classReflector == null) {
-		    return null;
+		    throw new IllegalStateException();
 		}
-
-		stream.instantiating(true);
+		
 		try {
 		    return _classReflector.newInstance();
 		} catch (NoSuchMethodError e) {
-		    stream.logMsg(7, classReflector().getName());
+		    stream().logMsg(7, classReflector().getName());
 		    return null;
 		} catch (Exception e) {
 		    // TODO: be more helpful here
 		    return null;
-		} finally {
-			stream.instantiating(false);
 		}
 	}
 
-	private Object instantiateFromConfig(ObjectReferenceContext context) {
-       ContextState contextState = context.saveState();
-       boolean fieldHasValue = seekToField(context, _translator);
-        try {
-            return i_config.instantiate(context.container(), fieldHasValue ? _translator.read(context) : null);                      
-        } finally {
-            context.restoreState(contextState);
-        }
+	private Object instantiateFromTranslator(ObjectReferenceContext context) {
+       return _translator.construct(context);
     }
 
 	private void shareObjectReference(Object obj, ObjectReference ref) {

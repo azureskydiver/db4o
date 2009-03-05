@@ -98,4 +98,16 @@ final class TranslatedAspect extends FieldMetadata {
 		return _translator instanceof ObjectConstructor;
     }
 
+	public Object construct(ObjectReferenceContext context) {
+		ContextState contextState = context.saveState();
+		boolean fieldHasValue = containingClass().seekToField(context, this);
+        try {
+            return ((ObjectConstructor)_translator).onInstantiate(
+            			context.container(),
+            			fieldHasValue ? read(context) : null);                      
+        } finally {
+            context.restoreState(contextState);
+        }
+    }
+
 }
