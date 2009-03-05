@@ -34,15 +34,34 @@ public class ObjectNotStorableExceptionTestCase extends AbstractDb4oTestCase{
     }
     
     public void testObjectContainerAliveAfterObjectNotStorableException(){
-        
-        final Item item = Item.newItem();
-        
-        Assert.expect(ObjectNotStorableException.class,new CodeBlock() {
+        assertNotStorableException(Item.newItem());
+    }
+    
+    public void testPlainObjectCantBeStored() {
+    	assertNotStorableException(new Object());
+    }
+    
+    public void testPrimitiveCantBeStored() {
+    	assertNotStorableException(42);
+    }
+    
+    public void testStringCantBeStored() {
+    	assertNotStorableException("42");
+    }
+    
+    private void assertNotStorableException(final Object object) {
+	    Assert.expect(ObjectNotStorableException.class,new CodeBlock() {
             public void run() throws Throwable {
-                store(item);
+                store(object);
             }
         });
         
+        Assert.expect(ObjectNotStorableException.class,new CodeBlock() {
+            public void run() throws Throwable {
+                store(object);
+            }
+        });
     }
+    
 
 }

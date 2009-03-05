@@ -242,7 +242,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
    }
 
     public void rename(String newName) {
-        config().rename(new Rename("", getName(), newName));
+        config().rename(Rename.forClass(getName(), newName));
         setName(newName);
     }
 

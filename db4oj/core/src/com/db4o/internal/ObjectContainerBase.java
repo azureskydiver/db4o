@@ -423,7 +423,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     public abstract long currentVersion();
     
     public boolean createClassMetadata(ClassMetadata classMeta, ReflectClass clazz, ClassMetadata superClassMeta) {
-        return classMeta.init(this, superClassMeta, clazz);
+        return classMeta.init(superClassMeta);
     }
 
     /**
@@ -1437,7 +1437,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     void rename(Config4Impl config) {
         boolean renamedOne = false;
         if (config.rename() != null) {
-            renamedOne = rename1(config);
+            renamedOne = applyRenames(config);
         }
         _classCollection.checkChanges();
         if (renamedOne) {
@@ -1445,52 +1445,83 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
     }
 
-    protected boolean rename1(Config4Impl config) {
-		boolean renamedOne = false;
-		Iterator4 i = config.rename().iterator();
+    protected boolean applyRenames(Config4Impl config) {
+		boolean renamed = false;
+		final Iterator4 i = config.rename().iterator();
 		while (i.moveNext()) {
-			Rename ren = (Rename) i.current();
-			if (queryByExample(systemTransaction(), ren).size() == 0) {
-				boolean renamed = false;
-				boolean isField = ren.rClass.length() > 0;
-				ClassMetadata yapClass = _classCollection
-						.getClassMetadata(isField ? ren.rClass : ren.rFrom);
-				if (yapClass != null) {
-					if (isField) {
-						renamed = yapClass.renameField(ren.rFrom, ren.rTo);
-					} else {
-						ClassMetadata existing = _classCollection
-								.getClassMetadata(ren.rTo);
-						if (existing == null) {
-							yapClass.setName(ren.rTo);
-							renamed = true;
-						} else {
-							logMsg(9, "class " + ren.rTo);
-						}
-					}
-				}
-				if (renamed) {
-					renamedOne = true;
-					setDirtyInSystemTransaction(yapClass);
-
-					logMsg(8, ren.rFrom + " to " + ren.rTo);
-
-					// delete all that rename from the new name
-					// to allow future backswitching
-					ObjectSet backren = queryByExample(systemTransaction(), new Rename(ren.rClass, null,
-							ren.rFrom));
-					while (backren.hasNext()) {
-						delete(systemTransaction(), backren.next());
-					}
-
-					// store the rename, so we only do it once
-					store(systemTransaction(), ren);
-				}
+			final Rename ren = (Rename) i.current();
+			if (alreadyApplied(ren)) {
+				continue;
+			}
+			if (applyRename(ren)) {
+				renamed = true;
 			}
 		}
 
-		return renamedOne;
+		return renamed;
 	}
+
+	private boolean applyRename(Rename ren) {		
+		if (ren.isField()) {
+			return applyFieldRename(ren);
+		}
+		return applyClassRename(ren);
+    }
+
+	private boolean applyClassRename(Rename ren) {
+	    final ClassMetadata classToRename = _classCollection.getClassMetadata(ren.rFrom);
+		if (classToRename == null) {
+			return false;
+		}
+		ClassMetadata existing = _classCollection.getClassMetadata(ren.rTo);
+		if (existing != null) {
+			logMsg(9, "class " + ren.rTo);
+			return false;
+		}
+		classToRename.setName(ren.rTo);
+		commitRenameFor(ren, classToRename);
+		return true;
+    }
+
+	private boolean applyFieldRename(Rename ren) {
+	    final ClassMetadata parentClass = _classCollection.getClassMetadata(ren.rClass);
+	    if (parentClass == null) {
+	    	return false;
+	    }
+	    if (!parentClass.renameField(ren.rFrom, ren.rTo)) {
+	    	return false;
+	    }
+	    commitRenameFor(ren, parentClass);
+	    return true;
+    }
+
+	private void commitRenameFor(Rename rename, ClassMetadata classMetadata) {
+	    setDirtyInSystemTransaction(classMetadata);
+
+	    logMsg(8, rename.rFrom + " to " + rename.rTo);
+
+	    deleteInverseRenames(rename);
+
+	    // store the rename, so we only do it once
+	    store(systemTransaction(), rename);
+    }
+
+	private void deleteInverseRenames(Rename rename) {
+	    // delete all that rename from the new name
+	    // to allow future backswitching
+	    ObjectSet inverseRenames = queryInverseRenames(rename);
+	    while (inverseRenames.hasNext()) {
+	    	delete(systemTransaction(), inverseRenames.next());
+	    }
+    }
+
+	private ObjectSet queryInverseRenames(Rename ren) {
+	    return queryByExample(systemTransaction(), Rename.forInverseQBE(ren));
+    }
+
+	private boolean alreadyApplied(Rename ren) {
+	    return queryByExample(systemTransaction(), ren).size() != 0;
+    }
     
     public final boolean handledInCurrentTopLevelCall(ObjectReference ref){
     	return ref.isFlaggedAsHandled(_topLevelCallId);
@@ -1636,10 +1667,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         
 		if (ref == null) {
             ClassMetadata classMetadata = analyzer.classMetadata();
-            if(classMetadata.isSecondClass()){
-            	analyzer.notStorable();
-            	return 0;
-            }
             if (!objectCanNew(trans, classMetadata, obj)) {
                 return 0;
             }

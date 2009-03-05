@@ -43,7 +43,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     private final ClassIndexStrategy _index;
     
-    protected String i_name;
+    private String i_name;
 
     private final ObjectContainerBase _container;
 
@@ -53,8 +53,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     private boolean _classIndexed;
     
     private ReflectClass _classReflector;
-    
-    private boolean _isEnum;
     
     private EventDispatcher _eventDispatcher;
     
@@ -128,8 +126,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
        
         if (_container.config().exceptionsOnNotStorable()) {
         	_fieldAccessor = new StrictFieldAccessor();	
-        }
-        else {
+        } else {
         	_fieldAccessor = new LenientFieldAccessor();
         }        
     }
@@ -236,6 +233,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			_aspects = new FieldMetadata[0];
 		}
 
+		createConstructor(true);
+		if (stateDead()) {
+			return;
+		}
 		_container.callbacks().classOnRegistered(this);
 		setStateOK();
 	}
@@ -504,27 +505,24 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     private void createConstructor(String className) {
-        ReflectClass claxx = _container.reflector().forName(className);
-        createConstructor(claxx , className, true);
+        final ReflectClass reflectClass = _container.reflector().forName(className);
+        if (null == reflectClass) {
+        	throw new IllegalStateException("Cannot initialize ClassMetadata for '" + className + "'.");
+        }
+		classReflector(reflectClass);
+//        createConstructor(true);
     }
 
-    public void createConstructor(ReflectClass claxx, String className, boolean errMessages) {
-	           
-        classReflector(claxx);
-        
-        if(! Deploy.csharp){
-            if(claxx != null){
-                _isEnum = Platform4.isEnum(reflector(), claxx);
-            }
-        }
+    public void createConstructor(boolean errMessages) {
         
         if(hasObjectConstructor()){
             return;
         }
         
-        if (claxx == null || _container._handlers.isTransient(claxx)) {
+        final ReflectClass claxx = classReflector();
+        if (_container._handlers.isTransient(claxx)) {
             if(errMessages){
-            	_container.logMsg(23, className);
+            	_container.logMsg(23, getName());
             }
             setStateDead();
             return;
@@ -537,12 +535,17 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	    if(claxx.ensureCanBeInstantiated()) {
 	        return;
         }
-        if (_container.configImpl().exceptionsOnNotStorable()) {
+	    
+	    if(errMessages){
+	    	_container.logMsg(7, getName());
+	    }
+	    notStorable(claxx);
+    }
+
+	private void notStorable(final ReflectClass claxx) {
+	    setStateDead();
+        if (configImpl().exceptionsOnNotStorable()) {
             throw new ObjectNotStorableException(claxx);
-        }
-        setStateDead();
-        if(errMessages){
-            _container.logMsg(7, className);
         }
     }
 
@@ -881,7 +884,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     public String getName() {
         if(i_name == null){
             if(_classReflector != null){
-                i_name = _classReflector.getName();
+                setName(_classReflector.getName());
             }
         }
         return i_name;
@@ -950,34 +953,28 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
     }
 
-    final boolean init( ObjectContainerBase a_stream, ClassMetadata a_ancestor,ReflectClass claxx) {
-    
-    	if (a_stream != _container)
-			throw new IllegalStateException("" + a_stream + " != " + _container);
-    
-        if(DTrace.enabled){
+    final boolean init(ClassMetadata ancestor) {
+    	
+    	if(DTrace.enabled){
             DTrace.CLASSMETADATA_INIT.log(getID());
         }
+    	
+    	setConfig(configImpl().configClass(getName()));
         
-        setAncestor(a_ancestor);
-        
-        Config4Impl config = a_stream.configImpl();
-        String className = claxx.getName();		
-		setConfig(config.configClass(className));
+        setAncestor(ancestor);
         
 		// FIXME: ensure all error conditions in createConstructor throw
 		// exceptions and catch them here
-	    createConstructor(claxx, className, false);
-	    if (stateDead()) {
-	    	return false;
-	    }
+//	    createConstructor(false);
+//	    if (stateDead()) {
+//	    	return false;
+//	    }
         
         checkType();
+        
         if (allowsQueries()) {
-            _index.initialize(a_stream);
+            _index.initialize(_container);
         }
-        i_name = className;
-        i_ancestor = a_ancestor;
         bitTrue(Const4.CHECKED_CHANGES);
         
         return true;
@@ -1119,7 +1116,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 	
     public boolean hasObjectConstructor(){
-    	if (true) return config() != null && config().getTranslator() instanceof ObjectConstructor;
         return _translator != null && _translator.isObjectConstructor();
     }
 	
@@ -1205,8 +1201,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return super.isDirty();
     }
     
-    boolean isEnum(){
-        return _isEnum;
+    boolean isEnum() {
+    	if (!Deploy.csharp) {
+    		return Platform4.isEnum(reflector(), classReflector());
+    	}
+    	return false;
     }
     
     public boolean isPrimitive(){
@@ -1263,7 +1262,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 return res;
             }
         }
-        if(_isEnum){
+        if(isEnum()){
             return TernaryBool.NO;
         }
         if(i_ancestor != null){
@@ -1421,7 +1420,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if (!_container.isClient()) {
             int tempState = _state;
             setStateOK();
-            i_name = newName;
+            setName(newName);
             i_nameBytes = asBytes(i_name);
             setStateDirty();
             write(_container.systemTransaction());
@@ -1443,12 +1442,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     final void createConfigAndConstructor(
         Hashtable4 a_byteHashTable,
         ReflectClass claxx) {
-    	i_name = resolveName(claxx);
-        setConfig(configImpl().configClass(i_name));
+    	setName(resolveName(claxx));
+        setConfig(configImpl().configClass(getName()));
         if (claxx == null) {
-            createConstructor(i_name);
+            createConstructor(getName());
         } else {
-            createConstructor(claxx, i_name, true);
+        	classReflector(claxx);
+//            createConstructor(true);
         }
         if (i_nameBytes != null) {
             a_byteHashTable.remove(i_nameBytes);
@@ -1708,7 +1708,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		if (trans.container().isClient()) {
 			return;
 		}
-		StaticClass sc = new StaticClass(i_name, toStaticFieldArray(staticReflectFieldsToStaticFields()));
+		StaticClass sc = new StaticClass(getName(), toStaticFieldArray(staticReflectFieldsToStaticFields()));
 		setStaticClass(trans, sc);
 	}
 
@@ -1812,7 +1812,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	private StaticClass queryStaticClass(Transaction trans) {
 		Query q = trans.container().query(trans);
 		q.constrain(Const4.CLASS_STATICCLASS);
-		q.descend("name").constrain(i_name);
+		q.descend("name").constrain(getName());
 		ObjectSet os = q.execute();
 		return os.size() > 0
 			? (StaticClass)os.next()

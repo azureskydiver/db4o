@@ -27,41 +27,47 @@ class ObjectAnalyzer {
     
     void analyze(Transaction trans){
         _ref = trans.referenceForObject(_obj);
-        if (_ref == null) {
-            ReflectClass claxx = _container.reflector().forObject(_obj);
-            if(claxx == null){
-                notStorable(_obj, claxx);
-                return;
-            }
-            if(!detectClassMetadata(trans, claxx)){
-                return;
-            }
-        } else {
-            _classMetadata = _ref.classMetadata();
+        if (_ref != null) {
+        	_classMetadata = _ref.classMetadata();
+        	return;
         }
         
-        if (isPlainObjectOrPrimitive(_classMetadata) ) {
-            notStorable(_obj, _classMetadata.classReflector());
+        ReflectClass claxx = _container.reflector().forObject(_obj);
+        if(claxx == null){
+            notStorable(_obj, claxx);
+            return;
         }
-        
+        if(!detectClassMetadata(trans, claxx)){
+            return;
+        }
+        if (isPlainObjectOrSecondClass(_classMetadata) ) {
+        	notStorable(_obj, _classMetadata.classReflector());
+        }
     }
 
     private boolean detectClassMetadata(Transaction trans, ReflectClass claxx) {
         _classMetadata = _container.getActiveClassMetadata(claxx);
-        if (_classMetadata == null) {
-        	
-            _classMetadata = _container.produceClassMetadata(claxx);
-            if ( _classMetadata == null){
-                notStorable(_obj, claxx);
-                return false;
-            }
-            
-            // The following may return a reference if the object is held
-            // in a static variable somewhere ( often: Enums) that gets
-            // stored or associated on initialization of the ClassMetadata.
-            
-            _ref = trans.referenceForObject(_obj);
+        if (_classMetadata != null) {
+        	if (_classMetadata.stateDead()) {
+        		notStorable(_obj, claxx);
+        		return false;
+        	}
+        	return true;
         }
+        	
+        _classMetadata = _container.produceClassMetadata(claxx);
+        if ( _classMetadata == null
+        	|| _classMetadata.stateDead()){
+            notStorable(_obj, claxx);
+            return false;
+        }
+        
+        // The following may return a reference if the object is held
+        // in a static variable somewhere ( often: Enums) that gets
+        // stored or associated on initialization of the ClassMetadata.
+        
+        _ref = trans.referenceForObject(_obj);
+        
         return true;
     }
 
@@ -74,7 +80,7 @@ class ObjectAnalyzer {
         return _notStorable;
     }
     
-    private final boolean isPlainObjectOrPrimitive(ClassMetadata classMetadata) {
+    private final boolean isPlainObjectOrSecondClass(ClassMetadata classMetadata) {
         return classMetadata.getID() == Handlers4.UNTYPED_ID 
         	|| classMetadata.isSecondClass();
     }
