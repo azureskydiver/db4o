@@ -1110,10 +1110,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
     }
 
-//    final void instantiating(boolean flag) {
-//        _instantiating = flag;
-//    }
-
     final boolean isActive(Transaction trans, Object obj) {
         synchronized (_lock) {
             trans = checkTransaction(trans);
