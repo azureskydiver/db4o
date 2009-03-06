@@ -525,18 +525,17 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return;
         }
         
-        final ReflectClass claxx = classReflector();
-        if (_container._handlers.isTransient(claxx)) {
+        if (isTransient()) {
             _container.logMsg(23, getName());
             setStateDead();
             return;
         }
         
-        if(claxx.isAbstract() || claxx.isInterface()) {
+        if(classReflector().isAbstract() || classReflector().isInterface()) {
         	return;
         }
         
-	    if(claxx.ensureCanBeInstantiated()) {
+	    if(classReflector().ensureCanBeInstantiated()) {
 	    	_constructor = new Function4<UnmarshallingContext, Object>() {
         		public Object apply(UnmarshallingContext context) {
         			return instantiateFromReflector(context.container());
@@ -545,15 +544,16 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	        return;
         }
 	    
-	    notStorable(claxx);
+	    notStorable();
     }
 
-	private void notStorable(final ReflectClass claxx) {
-		_container.logMsg(7, getName());
-	    setStateDead();
-        if (configImpl().exceptionsOnNotStorable()) {
-            throw new ObjectNotStorableException(claxx);
-        }
+	private void notStorable() {
+	    _container.logMsg(7, getName());
+        setStateDead();
+    }
+
+	private boolean isTransient() {
+	    return _container._handlers.isTransient(classReflector());
     }
 
 	private void classReflector(ReflectClass claxx) {
@@ -2041,6 +2041,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
            return true;
        }
        return classReflector.isAssignableFrom(type);
+    }
+
+	public boolean isStorable() {
+		return !stateDead() || isTransient();
     }
 
 }
