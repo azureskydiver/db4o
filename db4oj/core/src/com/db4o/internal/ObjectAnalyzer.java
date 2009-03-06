@@ -48,7 +48,7 @@ class ObjectAnalyzer {
     private boolean detectClassMetadata(Transaction trans, ReflectClass claxx) {
         _classMetadata = _container.getActiveClassMetadata(claxx);
         if (_classMetadata != null) {
-        	if (_classMetadata.stateDead()) {
+        	if (!_classMetadata.isStorable()) {
         		notStorable(_obj, claxx);
         		return false;
         	}
@@ -57,7 +57,7 @@ class ObjectAnalyzer {
         	
         _classMetadata = _container.produceClassMetadata(claxx);
         if ( _classMetadata == null
-        	|| _classMetadata.stateDead()){
+        	|| !_classMetadata.isStorable()){
             notStorable(_obj, claxx);
             return false;
         }

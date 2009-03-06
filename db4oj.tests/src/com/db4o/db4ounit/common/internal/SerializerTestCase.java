@@ -13,7 +13,7 @@ public class SerializerTestCase extends AbstractDb4oTestCase {
 		new SerializerTestCase().runAll();
 	}
 	
-	public void testMarshall() throws Exception {
+	public void testExceptionMarshalling() throws Exception {
 		ReflectException e = new ReflectException(new NullPointerException());
 		SerializedGraph marshalled = Serializer.marshall(stream().container(), e);
 		Assert.isTrue(marshalled.length() > 0);
