@@ -19,24 +19,22 @@ public class WixScriptBuilder
 	readonly WixBuilderParameters _parameters;
 	readonly Dictionary<string, string> _fileIdMapping = new Dictionary<string, string>();
 	private Predicate<string> _currentFeatureFilePredicate;
-	private readonly string _db4oVersion;
 
-	public WixScriptBuilder(TextWriter writer, string basePath, WixBuilderParameters parameters, string db4oVersion) : this(writer, NativeFileSystem.GetFolder(basePath), parameters, db4oVersion)
+	public WixScriptBuilder(TextWriter writer, string basePath, WixBuilderParameters parameters) : this(writer, NativeFileSystem.GetFolder(basePath), parameters)
 	{
 	}
 
-	public WixScriptBuilder(TextWriter writer, IFolder basePath, WixBuilderParameters parameters, string db4oVersion)
-		: this(XmlTextWriterFor(writer), basePath, parameters, db4oVersion)
+	public WixScriptBuilder(TextWriter writer, IFolder basePath, WixBuilderParameters parameters)
+		: this(XmlTextWriterFor(writer), basePath, parameters)
 	{
 	}
 
-	public WixScriptBuilder(XmlWriter writer, IFolder basePath, WixBuilderParameters parameters, string db4oVersion)
+	public WixScriptBuilder(XmlWriter writer, IFolder basePath, WixBuilderParameters parameters)
 	{
 		parameters.Validate();
 		_writer = writer;
 		_basePath = basePath;
 		_parameters = parameters;
-		_db4oVersion = db4oVersion;
 		InitializeFileIdMappings(parameters);
 	}
 
@@ -150,8 +148,7 @@ public class WixScriptBuilder
 		StartElement("Directory");
 		WriteAttribute("Id", "TARGETDIR");
 		WriteAttribute("Name", "SourceDir");
-
-		var dirEnd = StartDirectory(@"PFiles[ProgramFilesFolder]\Db4objects[PFiles.Db4objects]\db4o-{0}[INSTALLDIR]", _db4oVersion);
+		var dirEnd = StartDirectory(_parameters.InstallationFolder);
 
 		foreach (var feature in _parameters.Features)
 		{
@@ -179,13 +176,8 @@ public class WixScriptBuilder
 		WriteAttribute("Name", name);
 	}
 
-	private Func<int> StartDirectory(string dirStruct, params object[] args)
+	private Func<int> StartDirectory(string dirStruct)
 	{
-		if (args != null)
-		{
-			dirStruct = String.Format(dirStruct, args);
-		}
-
 		MatchCollection directoryMatches = Regex.Matches(dirStruct, @"(?:\\?(?<folderName>[^\[]*)\[(?<id>[^\]]*)\])");
 		int n = directoryMatches.Count;
 		foreach (Match directoryMatch in directoryMatches)

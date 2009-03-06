@@ -41,7 +41,7 @@ namespace WixBuilder.Tests
 		private XmlDocument RunScriptBuilderWith(WixBuilderParameters parameters)
 		{
 			var resultingDocument = new StringWriter();
-			new WixScriptBuilder(resultingDocument, root, parameters, "1.0").Build();
+			new WixScriptBuilder(resultingDocument, root, parameters).Build();
 			return LoadXml(resultingDocument.ToString());
 		}
 
