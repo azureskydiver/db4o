@@ -641,16 +641,6 @@ public final class Platform4 {
 		return evaluation;
 	}
 
-	public static boolean isDb4oClass(String className) {
-        if (className.indexOf(".test.") > 0) {
-            return false;
-        }
-        if (className.indexOf(".db4ounit.") > 0) {
-            return false;
-        }
-		return className.indexOf("com.db4o") == 0;
-	}
-
     /** @param claxx */
     public static boolean isTransient(ReflectClass claxx) {
         return false;

@@ -77,15 +77,15 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
         return _listeners != null;
     }
     
-    private boolean isDb4oClass(ClassMetadata yc){
-        return Platform4.isDb4oClass(yc.getName());
+    private boolean isDb4oClass(ClassMetadata classMetadata){
+    	return classMetadata.isInternal();
     }
 
-    public void loadedFromClassIndex(ClassMetadata yc) {
-        if(isDb4oClass(yc)){
+    public void loadedFromClassIndex(ClassMetadata classMetadata) {
+        if(isDb4oClass(classMetadata)){
             return;
         }
-        onDiagnostic(new LoadedFromClassIndex(yc.getName()));
+        onDiagnostic(new LoadedFromClassIndex(classMetadata.getName()));
     }
 
     public void descendIntoTranslator(ClassMetadata parent,String fieldName) {
