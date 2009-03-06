@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<WixBuilderParameters>
+<WixBuilderParameters InstallationFolder="PFiles[ProgramFilesFolder]\Db4objects[PFiles.Db4objects]\db4o-@db4o.version.dotted@[INSTALLDIR]">
 	<KnownIds>
 		<KnownId>
 			<Id>doc.tutorial.Db4oTutorial.exe</Id>

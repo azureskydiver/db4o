@@ -44,6 +44,8 @@ public class WixBuilderParameters
 
 	public Feature[] Features = new Feature[0];
 
+	[XmlAttribute] public string InstallationFolder = string.Empty;
+
 	public static WixBuilderParameters FromFile(string fname)
 	{
 		using (TextReader reader = File.OpenText(fname))
