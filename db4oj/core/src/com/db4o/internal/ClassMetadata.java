@@ -99,7 +99,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return ! hasIndex.value;
 	}
 
-	boolean isInternal() {
+	public boolean isInternal() {
     	return _internal;
     }
 
