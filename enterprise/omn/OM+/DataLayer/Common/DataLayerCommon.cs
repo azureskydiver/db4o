@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Ext;
@@ -22,19 +21,14 @@ namespace OManager.DataLayer.CommonDatalayer
         {
             try
             {
-                IReflectField refField = null;
-                if (aClass == null)
-                    return null;
-
                 while (aClass != null)
                 {
-                    refField = GetDeclaredField(aClass, attribute);
+					IReflectField refField = GetDeclaredField(aClass, attribute);
                     if (refField != null)
-                        break;
+                        return refField;
+
                     aClass = aClass.GetSuperclass();
                 }
-
-                return refField;
             }
             catch (Exception e)
             {
@@ -73,11 +67,9 @@ namespace OManager.DataLayer.CommonDatalayer
 
         public static IReflectField GetDeclaredField(IReflectClass aClass, string attribute)
         {
-
             try
             {
-                IReflectField fields = aClass.GetDeclaredField(attribute);
-                return fields;
+            	return aClass.GetDeclaredField(attribute);
             }
             catch (Exception e)
             {
@@ -145,7 +137,7 @@ namespace OManager.DataLayer.CommonDatalayer
 			return name.Contains("(G) ") ? name.Replace("(G) ", "") : name;
         }
 
-        public static IReflectClass ReturnReflectClass(string classname)
+        public static IReflectClass ReflectClassForName(string classname)
         {
             try
             {

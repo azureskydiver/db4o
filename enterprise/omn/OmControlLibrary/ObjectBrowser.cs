@@ -66,10 +66,6 @@ namespace OMControlLibrary
 		}
 		#endregion
 
-
-		#region Public Properties
-		#endregion
-
 		#region Constructor
 		public ObjectBrowser()
 		{
@@ -144,8 +140,8 @@ namespace OMControlLibrary
 					propertiesTab.ShowClassProperties = false;
 					toolStripButtonAssemblyView.Enabled = toolStripButtonFlatView.Enabled = false;
 				}
-				recConnection = dbInteractionObject.GetCurrentRecentConnection();
-				listSearchStrings = dbInteractionObject.GetSearchString(recConnection.ConnParam);
+				recConnection = dbInteraction.GetCurrentRecentConnection();
+				listSearchStrings = dbInteraction.GetSearchString(recConnection.ConnParam);
 				FillFilterComboBox(listSearchStrings);
 				toolStripComboBoxFilter.SelectedIndex = 0;
 				dbtreeviewObject.Focus();
@@ -162,9 +158,7 @@ namespace OMControlLibrary
 		private void SelectFirstClassNode()
 		{
 			if (dbtreeviewObject.Nodes.Count == 0)
-			{
 				return;
-			}
 
 			TreeNode node = FindFirstClassNode(dbtreeviewObject.Nodes[0]);
 			if (node != null)
@@ -194,8 +188,6 @@ namespace OMControlLibrary
 
 				//Set the class name to get the result 
 				SetClassName(e.Node);
-
-				Helper.SelectedObject = null;
 
 				//Refresh Properties Pane for selected class
 				propertiesTab = PropertiesTab.Instance;
@@ -241,7 +233,7 @@ namespace OMControlLibrary
 				//Get the name of selected item with the namespace
 				string nodeName = e.Node.Name.LastIndexOf(CONST_COMMA_CHAR) == -1 ? e.Node.Tag.ToString() : e.Node.Name;
 
-				Hashtable storedfields = Helper.DbInteraction.FetchStoredFields(nodeName);
+				Hashtable storedfields = dbInteraction.FetchStoredFields(nodeName);
 
 				dbtreeviewObject.AddTreeNode(storedfields, e.Node);
 
@@ -373,7 +365,7 @@ namespace OMControlLibrary
 				}
 
 				SeachString searchString = new SeachString(DateTime.Now, toolStripComboBoxFilter.Text.Trim());
-				dbInteractionObject.SaveSearchString(recConnection.ConnParam, searchString);
+				dbInteraction.SaveSearchString(recConnection.ConnParam, searchString);
 
 				SetObjectBrowserImages();
 
@@ -384,7 +376,7 @@ namespace OMControlLibrary
 			}
 			finally
 			{
-				listSearchStrings = dbInteractionObject.GetSearchString(recConnection.ConnParam);
+				listSearchStrings = dbInteraction.GetSearchString(recConnection.ConnParam);
 				FillFilterComboBox(listSearchStrings);
 				if (toolStripComboBoxFilter.Text != "")
 					EnableDisablePrevNextButtons();
@@ -495,7 +487,6 @@ namespace OMControlLibrary
 			try
 			{
 				queryBuilder = QueryBuilder.Instance;
-				dbInteraction dbI = new dbInteraction();
 				switch (e.Tag.ToString())
 				{
 					case Common.Constants.CONTEXT_MENU_SHOW_ALL_OBJECTS:
@@ -537,7 +528,7 @@ namespace OMControlLibrary
 
 					case "Delete Folder":
 						FavouriteFolder Fav = new FavouriteFolder(null, dbtreeviewObject.SelectedNode.Text);
-						dbI.UpdateFavourite(dbI.GetCurrentRecentConnection().ConnParam, Fav);
+						dbInteraction.UpdateFavourite(dbInteraction.GetCurrentRecentConnection().ConnParam, Fav);
 						dbtreeviewObject.Nodes.Remove(dbtreeviewObject.SelectedNode);
 						break;
 					case "Delete Class":
@@ -560,7 +551,7 @@ namespace OMControlLibrary
 								Fav.ListClass = lststr;
 							}
 
-							dbI.SaveFavourite(dbI.GetCurrentRecentConnection().ConnParam, Fav);
+							dbInteraction.SaveFavourite(dbInteraction.GetCurrentRecentConnection().ConnParam, Fav);
 						}
 						break;
 					default:
@@ -706,13 +697,9 @@ namespace OMControlLibrary
 			{
 				queryBuilder = QueryBuilder.Instance;
 
-				if (listQueryAttributes == null)
-					listQueryAttributes = new Hashtable();
-
 				listQueryAttributes = queryBuilder.GetSelectedAttributes();
 
 				//Only Set BaseClass with current class
-
 				if (toolStripButtonAssemblyView.Checked)
 				{
 					Helper.BaseClass = dbAssemblyTreeView.SelectedNode.Parent != null ? dbAssemblyTreeView.SelectedNode.Text : Helper.ClassName;
@@ -755,17 +742,11 @@ namespace OMControlLibrary
 					if (bw.IsBusy)
 						bw.ReportProgress((int)i * 100 / 10000);
 
-
 					if (isrunning == false)
 						break;
 					if (i == 9999)
 						i = 1;
 				}
-
-
-				////CreateQueryResultToolWindow();
-
-
 			}
 			catch (Exception oEx)
 			{
@@ -794,7 +775,7 @@ namespace OMControlLibrary
 				Instance.Enabled = false;
 				PropertiesTab.Instance.Enabled = false;
 				QueryBuilder.Instance.Enabled = false;
-				objectid = Helper.DbInteraction.ExecuteQueryResults(omQuery);
+				objectid = dbInteraction.ExecuteQueryResults(omQuery);
 				e.Result = objectid;
 				bw.ReportProgress(1000);
 				isrunning = false;
@@ -819,7 +800,6 @@ namespace OMControlLibrary
 
 		void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			// CreateQueryResultToolWindow();
 			try
 			{
 				CreateQueryResultToolWindow();
@@ -874,8 +854,6 @@ namespace OMControlLibrary
 				dbAssemblyTreeView.MouseDown += TreeView_MouseDown;
 
 				tableLayoutPanelObjectTreeView.Controls.Add(dbAssemblyTreeView, 0, 1);
-
-				//dbAssemblyTreeView.BuildContextMenu(null);
 			}
 			catch (Exception oEx)
 			{
@@ -1206,10 +1184,7 @@ namespace OMControlLibrary
 	}
 	public class MyHost : AxHost
 	{
-
-
-		public MyHost()
-			: base("59EE46BA-677D-4d20-BF10-8D8067CB8B33")
+		public MyHost() : base("59EE46BA-677D-4d20-BF10-8D8067CB8B33")
 		{
 		}
 
@@ -1217,6 +1192,5 @@ namespace OMControlLibrary
 		{
 			return (stdole.IPictureDisp) GetIPictureDispFromPicture(Image);
 		}
-
 	}
 }

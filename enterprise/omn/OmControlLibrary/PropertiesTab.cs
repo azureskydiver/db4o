@@ -5,6 +5,7 @@ using System.Collections;
 using System.Windows.Forms;
 using EnvDTE;
 using OManager.BusinessLayer.Login;
+using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.PropertyTable;
 using OMControlLibrary.Common;
 using OME.Logging.Common;
@@ -135,12 +136,12 @@ namespace OMControlLibrary
 
 				if (Helper.ClassName != null)
 				{
-					if (Helper.DbInteraction.GetCurrentRecentConnection() != null)
-						if (Helper.DbInteraction.GetCurrentRecentConnection().ConnParam != null)
+					if (dbInteraction.GetCurrentRecentConnection() != null)
+						if (dbInteraction.GetCurrentRecentConnection().ConnParam != null)
 						{
-							buttonSaveIndex.Enabled = Helper.DbInteraction.GetCurrentRecentConnection().ConnParam.Host == null;
+							buttonSaveIndex.Enabled = dbInteraction.GetCurrentRecentConnection().ConnParam.Host == null;
 
-							labelNoOfObjects.Text = "Number of objects : " + Helper.DbInteraction.NoOfObjectsforAClass(Helper.ClassName);
+							labelNoOfObjects.Text = "Number of objects : " + dbInteraction.NoOfObjectsforAClass(Helper.ClassName);
 							dbGridViewProperties.Size = Size;
 							dbGridViewProperties.Rows.Clear();
 							dbGridViewProperties.Columns.Clear();
@@ -184,10 +185,9 @@ namespace OMControlLibrary
 		private static ArrayList GetFieldsForAllClass()
 		{
 			ClassPropertiesTable classPropTable = null;
-
 			try
 			{
-				classPropTable = Helper.DbInteraction.GetClassProperties(Helper.ClassName);
+				classPropTable = dbInteraction.GetClassProperties(Helper.ClassName);
 			}
 			catch (Exception oEx)
 			{
@@ -206,7 +206,7 @@ namespace OMControlLibrary
 				if (m_selectedObject != null)
 				{
 					ArrayList objectProperties = new ArrayList();
-					ObjectPropertiesTable objTable = Helper.DbInteraction.GetObjectProperties(m_selectedObject);
+					ObjectPropertiesTable objTable = dbInteraction.GetObjectProperties(m_selectedObject);
 					objectProperties.Add(objTable);
 
 					dbGridViewProperties.Rows.Clear();
@@ -369,8 +369,8 @@ namespace OMControlLibrary
 					}
 				}
 				
-				ConnParams conparam = Helper.DbInteraction.GetCurrentRecentConnection().ConnParam;
-				Helper.DbInteraction.CloseCurrDb();
+				ConnParams conparam = dbInteraction.GetCurrentRecentConnection().ConnParam;
+				dbInteraction.CloseCurrDb();
 				saveIndexInstance.SaveIndex();
 
 				RecentQueries currRecentConnection = new RecentQueries(conparam);
@@ -378,8 +378,8 @@ namespace OMControlLibrary
 				if (tempRc != null)
 					currRecentConnection = tempRc;
 				currRecentConnection.Timestamp = DateTime.Now;
-				Helper.DbInteraction.ConnectoToDB(currRecentConnection);
-				Helper.DbInteraction.SetCurrentRecentConnection(currRecentConnection);
+				dbInteraction.ConnectoToDB(currRecentConnection);
+				dbInteraction.SetCurrentRecentConnection(currRecentConnection);
 
 				if (ObjectBrowser.Instance.ToolStripButtonAssemblyView.Checked)
 					ObjectBrowser.Instance.DbtreeviewObject.FindNSelectNode(ObjectBrowser.Instance.DbAssemblyTreeView.Nodes[0], saveIndexInstance.Classname, ObjectBrowser.Instance.DbAssemblyTreeView);

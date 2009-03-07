@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="Windows-1252" standalone="no"?>
 <Extensibility xmlns="http://schemas.microsoft.com/AutomationExtensibility">
-	<HostApplication>
-		<Name>Microsoft Visual Studio</Name>
-		<Version>__SETUP_WILL_SET__</Version>
-	</HostApplication>
 	<Addin>
 		<FriendlyName>OMAddin</FriendlyName>
 		<Description>OMAddin - OM+ Add-in for Visual Studio</Description>

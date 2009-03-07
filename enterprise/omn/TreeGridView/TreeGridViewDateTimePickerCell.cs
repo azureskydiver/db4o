@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 
 namespace OME.AdvancedDataGridView
@@ -20,12 +18,7 @@ namespace OME.AdvancedDataGridView
 
         #region Constructor
 
-        public TreeGridViewDateTimePickerCell()
-            : base()
-        {
-
-        }
-        #endregion Constructor
+    	#endregion Constructor
 
         #region Override methods
 
@@ -45,43 +38,39 @@ namespace OME.AdvancedDataGridView
                     initialFormattedValue,
                     dataGridViewCellStyle);
 
-                string typeOfValue = this.DataGridView.Rows[rowIndex].Cells[2].Value.ToString();
+                string typeOfValue = DataGridView.Rows[rowIndex].Cells[2].Value.ToString();
 
-                if (typeOfValue == typeof(System.DateTime).ToString())
+                if (typeOfValue == typeof(DateTime).ToString())
                 {
-                    TreeGridViewDateTimePickerEditingControl ctl =
-                        DataGridView.EditingControl as TreeGridViewDateTimePickerEditingControl;
+                    TreeGridViewDateTimePickerEditingControl ctl = DataGridView.EditingControl as TreeGridViewDateTimePickerEditingControl;
 
-                    if (this.Value != null && this.Value != this.OwningColumn.DefaultCellStyle)
+                    if (Value != null && Value != OwningColumn.DefaultCellStyle)
                     {
                         try
                         {
-                            ctl.Value = Convert.ToDateTime(this.Value.ToString());
+                            ctl.Value = Convert.ToDateTime(Value.ToString());
                         }
                         catch (Exception ex)
                         {
                             ex.ToString();
-                            ctl.Value = System.DateTime.Now;
+                            ctl.Value = DateTime.Now;
                         }
                     }
                 }
-                else if (typeOfValue == typeof(System.Boolean).ToString())
+                else if (typeOfValue == typeof(Boolean).ToString())
                 {
-                    //intializing editing control (DataGridViewComboBoxEditingControl)
-                    DataGridViewComboBoxEditingControl ctl =
-                        this.DataGridView.EditingControl as DataGridViewComboBoxEditingControl;
+                    DataGridViewComboBoxEditingControl ctl = DataGridView.EditingControl as DataGridViewComboBoxEditingControl;
 
                     //setting combox style
                     ctl.DropDownStyle = ComboBoxStyle.DropDownList;
                     ctl.FlatStyle = FlatStyle.Popup;
-                    //ctl.DropDownWidth = this.Value.ToString().Length;
                     FillBoolColumnValue(ctl);
 
-                    if (this.Value != null && this.Value != this.OwningColumn.DefaultCellStyle)
+                    if (Value != null && Value != OwningColumn.DefaultCellStyle)
                     {
                         try
                         {
-                            ctl.EditingControlFormattedValue  = this.Value.ToString();
+                            ctl.EditingControlFormattedValue  = Value.ToString();
                         }
                         catch (Exception ex)
                         {
@@ -89,7 +78,7 @@ namespace OME.AdvancedDataGridView
                             ctl.SelectedItem = ctl.Items[0].ToString();
                         }
                     }
-                    ctl.Width = this.OwningColumn.Width;
+                    ctl.Width = OwningColumn.Width;
                 }
             }
             catch (Exception oEx)
@@ -103,27 +92,18 @@ namespace OME.AdvancedDataGridView
         {
             get
             {
-                // Return the type of the editing contol that AIDataGridViewDateTimePickerCell uses.
-                
-                Type controlType = typeof(DataGridViewTextBoxEditingControl);
+            	Type controlType = typeof (DataGridViewTextBoxEditingControl);
+            	string typeOfValue = DataGridView.Rows[RowIndex].Cells[2].Value.ToString();
 
-                try
-                {
-                    string typeOfValue  = this.DataGridView.Rows[this.RowIndex].Cells[2].Value.ToString();
-                    
-                    if (typeOfValue == typeof(System.DateTime).ToString())
-                    {
-                        controlType = typeof(TreeGridViewDateTimePickerEditingControl);
-                    }
-                    else if (typeOfValue == typeof(System.Boolean).ToString())
-                    {
-                        controlType = typeof(DataGridViewComboBoxEditingControl);
-                    }
-                }
-                catch (Exception oEx)
-                {
-                }
-                return controlType;
+            	if (typeOfValue == typeof (DateTime).ToString())
+            	{
+            		controlType = typeof (TreeGridViewDateTimePickerEditingControl);
+            	}
+            	else if (typeOfValue == typeof (Boolean).ToString())
+            	{
+            		controlType = typeof (DataGridViewComboBoxEditingControl);
+            	}
+				return controlType;
             }
         }
 

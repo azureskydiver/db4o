@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 using System.ComponentModel;
 
@@ -10,11 +8,8 @@ namespace OME.AdvancedDataGridView
     /// <summary>
     /// This class is used as a editing control for cell dbDataGridViewDateTimePickerCell.
     /// </summary>
-    internal class TreeGridViewDateTimePickerEditingControl : 
-        DateTimePicker, 
-        IDataGridViewEditingControl
+    internal class TreeGridViewDateTimePickerEditingControl : DateTimePicker, IDataGridViewEditingControl
     {
-        
         #region Member Variables
 
         private DataGridView m_DataGridView;
@@ -61,6 +56,7 @@ namespace OME.AdvancedDataGridView
                     return cellValue;
                 }
             }
+
             set
             {
                 //TODO: need to be change as per the control

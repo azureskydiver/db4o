@@ -5,6 +5,7 @@ namespace OManager.DataLayer.Reflection
     public interface IType
     {
         object Cast(object value);
+    	void SetField(object onObject, string fieldName, object value);
 
         string DisplayName { get; }
         string FullName { get; }
@@ -15,6 +16,6 @@ namespace OManager.DataLayer.Reflection
         bool IsArray { get; }
         bool IsNullable { get; }
         bool IsSameAs(System.Type other);
-        IType UnderlyingType { get; }
+		IType UnderlyingType { get; }
     }
 }

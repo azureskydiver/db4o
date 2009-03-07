@@ -7,6 +7,7 @@ using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.Connection;
 using OManager.BusinessLayer.Common;
 using OManager.DataLayer.CommonDatalayer;
+using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 
 namespace OManager.DataLayer.QueryParser
@@ -41,7 +42,7 @@ namespace OManager.DataLayer.QueryParser
                 }
                 if (attribList.Count == 0)
                 {
-                	IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_classname);
+                	IReflectClass rClass = DataLayerCommon.ReflectClassForName(m_classname);
                     if (rClass != null)
                     {
                         IReflectField[] reff = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rClass);
@@ -216,7 +217,7 @@ namespace OManager.DataLayer.QueryParser
             return null;
         }
 
-        public Hashtable resultsWithAttributes(object obj,Hashtable attributeList)
+        public Hashtable ResultsWithAttributes(object obj,Hashtable attributeList)
         {
             try
             {
@@ -235,7 +236,7 @@ namespace OManager.DataLayer.QueryParser
                 else
                 {
 
-                    IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_classname); 
+                    IReflectClass rClass = DataLayerCommon.ReflectClassForName(m_classname); 
                     if (rClass != null)
                     {
                         IReflectField[] reff = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rClass);
@@ -261,17 +262,17 @@ namespace OManager.DataLayer.QueryParser
             {
             	Hashtable hash = new Hashtable();
                 hash.Add(BusinessConstants.DB4OBJECTS_REF, obj);
-                foreach (IReflectField rfields in reff)
+                foreach (IReflectField reflectField in reff)
                 {
-                    string name = rfields.GetName();
-                    object value = rfields.Get(obj);                  
-  
+                    string name = reflectField.GetName();
+                    object value = reflectField.Get(obj);
+
+                	IType type = Db4oClient.TypeResolver.Resolve(reflectField.GetFieldType());
                     if (value != null)
                     {
-                        if (!DataLayerCommon.IsPrimitive(value))
+                        if (!type.IsEditable)
                         {
-                            value = rfields.GetFieldType();
-
+                            value = reflectField.GetFieldType();
                         }
                         
 						if (!hash.ContainsKey(name))
@@ -295,7 +296,6 @@ namespace OManager.DataLayer.QueryParser
                 LoggingHelper.HandleException(oEx);
                 return null;
             }
-
         }
     }
 }

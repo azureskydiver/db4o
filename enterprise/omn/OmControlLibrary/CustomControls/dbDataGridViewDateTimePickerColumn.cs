@@ -35,8 +35,7 @@ namespace OMControlLibrary.Common
 
 		#region Contructor
 
-		public dbDataGridViewDateTimePickerColumn()
-			: base(new dbDataGridViewDateTimePickerCell())
+		public dbDataGridViewDateTimePickerColumn() : base(new dbDataGridViewDateTimePickerCell())
 		{
 			m_Rules = new ArrayList();
 		}

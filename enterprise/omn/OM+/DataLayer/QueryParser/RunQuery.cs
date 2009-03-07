@@ -10,87 +10,23 @@ namespace OManager.DataLayer.QueryParser
 {
     public class RunQuery
     {
-        private OMQuery m_omQuery;
-
-        public OMQuery OmQuery
+    	public static long[] ExecuteQuery(OMQuery query)
         {
-            get { return m_omQuery; }
-            set { m_omQuery = value; }
-        }        
-        private List<Hashtable> m_hashResults;
-
-        public List<Hashtable> HashResults
-        {
-            get { return m_hashResults; }
-            set { m_hashResults = value; }
-        }
-        private Hashtable m_hashPerRow;
-
-        public Hashtable HashPerRow
-        {
-            get { return m_hashPerRow; }
-            set { m_hashPerRow = value; }
-        }
-        private int m_startIndex;
-
-        public int StartIndex
-        {
-            get { return m_startIndex; }
-            set { m_startIndex = value; }
-        }
-        private int m_endIndex;
-
-        public int EndIndex
-        {
-            get { return m_endIndex; }
-            set { m_endIndex = value; }
-        }
-
-        public RunQuery(OMQuery omQuery)
-        {            
-            m_omQuery = omQuery;
-        }
-
-        public long[] ExecuteQuery()
-        {
-            QueryParser qParser = new QueryParser(m_omQuery);
+            QueryParser qParser = new QueryParser(query);
             IObjectSet objSet = qParser.ExecuteOMQueryList();
             
 			return objSet != null ? objSet.Ext().GetIDs() : null;
         }
 
-        public List<Hashtable> ReturnResults(PagingData pgData, bool refresh,string baseclass,Hashtable AttributeList)
+        public static List<Hashtable> ReturnResults(PagingData pgData, bool refresh,string baseclass,Hashtable AttributeList)
         {
             try
             {
-                IObjectsetConverter objSetConvertor = new IObjectsetConverter(baseclass, refresh);
+            	if (pgData.ObjectId.Count <= 0)
+            		return null;
 
-                if (pgData.ObjectId.Count > 0)
-                {
-                    m_hashResults = objSetConvertor.ObjectIDToUIObjects(pgData, AttributeList);
-                    return m_hashResults;
-                }
-
-                return null;
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.HandleException(oEx);
-                return null;
-            }
-        }
-        public Hashtable ReturnResultsforEachRow(object obj, bool refresh,Hashtable attributeList)
-        {
-            try
-            {
-                Hashtable hash = new Hashtable();
-                IObjectsetConverter objSetConvertor = new IObjectsetConverter(m_omQuery.BaseClass, refresh);
-                if (obj != null)
-                {
-                    m_hashPerRow = objSetConvertor.resultsWithAttributes(obj, attributeList);
-                }
-
-                return m_hashPerRow;
+            	IObjectsetConverter objSetConvertor = new IObjectsetConverter(baseclass, refresh);
+            	return objSetConvertor.ObjectIDToUIObjects(pgData, AttributeList);
             }
             catch (Exception oEx)
             {

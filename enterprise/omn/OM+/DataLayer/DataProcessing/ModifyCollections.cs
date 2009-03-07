@@ -1,3 +1,5 @@
+/* Copyright (C) 2004 - 2009  db4objects Inc.  http://www.db4o.com */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,16 +33,16 @@ namespace OManager.DataLayer.ObjectsModification
             }
         }
 
-        public void SaveCollections(object topObject, int level)
+        public static void SaveCollections(object topObject, int level)
         {
             try
             {
-                objectContainer.Ext().Set(topObject, level);
-                objectContainer.Commit();
+                Db4oClient.Client.Ext().Store(topObject, level);
+				Db4oClient.Client.Commit();
             }
             catch (Exception oEx)
             {
-                objectContainer.Rollback();
+				Db4oClient.Client.Rollback();
                 LoggingHelper.HandleException(oEx);
 
             }
@@ -176,7 +178,7 @@ namespace OManager.DataLayer.ObjectsModification
                     }
                     else
                     {
-						SetObject(rfield, targetObject, type, newValue);
+						SetObject(rfield, targetObject, newValue);
                     }
                 }
             }
@@ -200,11 +202,11 @@ namespace OManager.DataLayer.ObjectsModification
             }
         }
 
-        public void SetObject(IReflectField rfield, object containingObject, IType fieldType, object newValue)
+        public void SetObject(IReflectField rfield, object containingObject, object newValue)
         {
             try
             {
-				rfield.Set(containingObject, fieldType.Cast(newValue));
+				rfield.Set(containingObject, newValue);
             }
             catch (Exception oEx)
             {

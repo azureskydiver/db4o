@@ -7,17 +7,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.IO;
-using Microsoft.Win32;
 using OManager.BusinessLayer.QueryManager;
 using OManager.BusinessLayer.Login;
 using EnvDTE;
 using OManager.BusinessLayer.UIHelper;
 using sforce;
-using System.Net;
-
-using OMControlLibrary.LoginToSalesForce;
 using Microsoft.VisualStudio.CommandBars;
-using System.Threading;
 using System.Data;
 using OME.Crypto;
 using OME.Logging.Common;
@@ -34,13 +29,7 @@ namespace OMControlLibrary.Common
 		private static string m_className;
 		private static string m_baseClass;
 		private static List<OMQuery> m_listOMQueries;
-		private static object m_selectedObject;
-		private static bool m_isSameOMQuery;
 		private static Hashtable m_OMResultedQuery = new Hashtable();
-		private static SeatAuthorization m_responseTicket;
-		static readonly string m_guidposForClassDetails = Guid.NewGuid().ToString("B");
-		static string m_guidposForQueryResult = Guid.NewGuid().ToString("B");
-		private static int m_depth;
 		private static int m_tabIndex;
 
 		private static Window loginToolWindow;
@@ -49,63 +38,35 @@ namespace OMControlLibrary.Common
 		public static Window winSalesPage;
 		private static List<Hashtable> m_hashList;
 		private static Hashtable m_hashClassGUID;
-		private static string m_selectedClass;
-		private static bool m_isValidQuery;
 		private static Hashtable m_hashTableBaseClass = new Hashtable();
 		static System.Threading.Thread SessionThread;
 		private static bool checkObjectBrowser;
 
 		public static AccountManagementService serviceProxy;
-	    static readonly string m_ddnUsername = string.Empty;
-		static readonly string m_ddnPassword = string.Empty;
-		static string m_sessionId = string.Empty;
 		public static CommandBarButton m_statusLabel;
-		private static bool m_IsQueryResultUpdated;
 
-		private static bool m_checkforIfAlreadyLoggedIn;
-
-	    #endregion
+		#endregion
 
 		#region Constant
 
-	    private const string PLACEHOLDER_KEY = "<<KEY>>";
 		private const string GENERIC_TEXT = "(G) ";
-		private const string CLASS_NAME_PROPERTIES = "OMControlLibrary.PropertiesTab";
 		private const string RECENT_QUERY_QUERY_COLUMN = "Query";
 		private const string RECENT_QUERY_OMQUERY_COLUMN = "OMQuery";
 		private const char CONST_COMMA = ',';
 		private const char CONST_DOT = '.';
-		private const char CONST_TILD = '~';
-		private const string CONST_SYSTEM = "System";
 		private const string CONST_COLLECTION = "Collections";
-		private const string CONST_BACKSLASH = "\\";
-		private const string CONST_NULL = "null";
 		internal const string STATUS_FULLFUNCTIONALITYMODE = "Connected - All OME functionality available";
 		internal const string STATUS_REDUCEDMODELOGGEDIN = "Connected -  OME Functionality is limited";
 
 		internal const string STATUS_LOGGEDOUT = "Not Connected -All Functionality is limited";
-		private const string PROXYCONFIG_LOCATION = "under Tools -> ObjectManager Enterprise -> Options -> Proxy Configurations ";
 
 		#endregion
 
 		#region Static Properties
 
-		public static bool CheckForIfAlreadyLoggedIn
-		{
-			get { return m_checkforIfAlreadyLoggedIn; }
-			set { m_checkforIfAlreadyLoggedIn = value; }
-		}
-
 		public static bool CheckObjectBrowser
 		{
 			get { return checkObjectBrowser; }
-			set { checkObjectBrowser = value; }
-		}
-
-		public static bool IsValidQuery
-		{
-			get { return m_isValidQuery; }
-			set { m_isValidQuery = value; }
 		}
 
 		public static Hashtable HashTableBaseClass
@@ -114,28 +75,10 @@ namespace OMControlLibrary.Common
 			set { m_hashTableBaseClass = value; }
 		}
 
-		public static bool IsSameOMQuery
-		{
-			get { return m_isSameOMQuery; }
-			set { m_isSameOMQuery = value; }
-		}
-
-		public static SeatAuthorization ResponseTicket
-		{
-			get { return m_responseTicket; }
-			set { m_responseTicket = value; }
-		}
-
 		public static Hashtable OMResultedQuery
 		{
 			get { return m_OMResultedQuery; }
 			set { m_OMResultedQuery = value; }
-		}
-
-		public static string SelectedClass
-		{
-			get { return m_selectedClass; }
-			set { m_selectedClass = value; }
 		}
 
 		public static Hashtable HashClassGUID
@@ -154,18 +97,6 @@ namespace OMControlLibrary.Common
 		{
 			get { return m_tabIndex; }
 			set { m_tabIndex = value; }
-		}
-
-		public static int Depth
-		{
-			get { return m_depth; }
-			set { m_depth = value; }
-		}
-
-		public static string GuidposForQueryResult
-		{
-			get { return m_guidposForQueryResult; }
-			set { m_guidposForQueryResult = value; }
 		}
 
 		public static Window QueryResultToolWindow
@@ -233,7 +164,7 @@ namespace OMControlLibrary.Common
 		{
 			get
 			{
-				RecentQueries recQueries = DbInteraction.GetCurrentRecentConnection();
+				RecentQueries recQueries = dbInteraction.GetCurrentRecentConnection();
 				if (recQueries != null)
 				{
 					m_listOMQueries = recQueries.QueryList;
@@ -246,18 +177,6 @@ namespace OMControlLibrary.Common
 				return m_listOMQueries;
 			}
 			set { m_listOMQueries = value; }
-		}
-
-		public static object SelectedObject
-		{
-			get { return m_selectedObject; }
-			set { m_selectedObject = value; }
-		}
-
-		public static bool IsQueryResultUpdated
-		{
-			get { return m_IsQueryResultUpdated; }
-			set { m_IsQueryResultUpdated = value; }
 		}
 
 		#endregion
@@ -291,29 +210,6 @@ namespace OMControlLibrary.Common
 		}
 
 
-		#region public static bool RegisterAssembly(Path asmPath)
-		/// <summary>
-		/// Registers asembly in Registry.
-		/// </summary>
-		/// <param name="asmPath"></param>
-		/// <returns></returns>
-		public static bool RegisterAssembly(string asmPath)
-		{
-			bool isRegistered = false;
-			try
-			{
-				RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\.NETFramework\\AssemblyFolders", true);
-				RegistryKey newkey = key.CreateSubKey("Db4Objects");
-				newkey.SetValue("", asmPath);//@"E:\DB4Objects\Read Material\db4o-6.1\bin\net-2.0"
-				isRegistered = true;
-			}
-			catch
-			{
-				isRegistered = false;
-			}
-			return isRegistered;
-		}
-		#endregion
 
 		#region Listing Helper Methods
 
@@ -345,27 +241,6 @@ namespace OMControlLibrary.Common
 				classGUID = null;
 			}
 			return classGUID;
-		}
-
-		public static void PopulateRecentQueries(ComboBox comboboxRecentQueries, object obj)
-		{
-			try
-			{
-				if (obj is ObjectBrowser)
-				{
-					PopulateRecentQueryComboBox(ListOMQueries, comboboxRecentQueries);
-				}
-				else
-				{
-					QueryResult qres = (QueryResult)obj;
-					string className = qres.ClassName;
-					List<OMQuery> qrylist = Helper.DbInteraction.GetCurrentRecentConnection().FetchQueriesForAClass(className);
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
 		}
 
 		public static void PopulateRecentQueryComboBox(List<OMQuery> qrylist, ComboBox comboboxRecentQueries)
@@ -421,25 +296,14 @@ namespace OMControlLibrary.Common
 
 		public static bool OnTreeViewAfterExpand(object sender, TreeViewEventArgs e)
 		{
-			try
+			TreeNode treenode = e.Node;
+			if (treenode.Nodes.Count >= 1 && treenode.Nodes[0].Name == Constants.DUMMY_NODE_TEXT)
 			{
-				if (e.Node.Nodes.Count < 1)
-					return false;
-			    TreeNode treenode = e.Node;
-
-				if (treenode.Nodes[0].Name == Constants.DUMMY_NODE_TEXT)
-					treenode.Nodes[Constants.DUMMY_NODE_TEXT].Remove();
-				else
-					return false;
-
+				treenode.Nodes[Constants.DUMMY_NODE_TEXT].Remove();
+				return true;
 			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-
-		    return true;
-
+			
+			return false;
 		}
 
 		/// <summary>
@@ -582,82 +446,6 @@ namespace OMControlLibrary.Common
 			return isArrayOrCollection;
 		}
 
-		public static void ListClassAttributes(dbTreeView dbtreeview, TreeNode tn)
-		{
-			TreeNode treeNodeNew = null;
-			TreeNode treeNodeParent;
-
-			try
-			{
-			    bool isPrimitiveType = false;
-
-				string treenodeparent = tn.Name;
-
-				if (!OnTreeViewAfterExpand(dbtreeview, null))
-					return;
-
-				string nodeName = tn.Name.IndexOf(CONST_COMMA.ToString()) == -1 ? tn.Tag.ToString() : tn.Name;
-
-				Hashtable list = DbInteraction.FetchStoredFields(nodeName);
-
-				dbtreeview.BeginUpdate();
-
-				IDictionaryEnumerator enumerator = list.GetEnumerator();
-				while (enumerator.MoveNext())
-				{
-				    string nodevalue = enumerator.Key.ToString();
-					string nodetype = enumerator.Value.ToString();
-
-					if (!string.IsNullOrEmpty(nodevalue))
-						treeNodeNew = new TreeNode(nodevalue);
-
-					treeNodeNew.Name = nodevalue;
-					treeNodeNew.Tag = nodetype;
-
-					if (string.IsNullOrEmpty(treenodeparent))
-						dbtreeview.Nodes.Add(treeNodeNew);
-					else
-					{
-						int indexof = nodetype.IndexOf(CONST_COMMA);
-						string typeofObject = string.Empty;
-
-						if (indexof != -1)
-
-							typeofObject = nodetype.Substring(0, indexof);
-
-						else if (!nodetype.StartsWith(CONST_SYSTEM))
-						{
-							typeofObject = nodetype;
-						}
-						isPrimitiveType = IsPrimitive(typeofObject);
-
-						treeNodeParent = dbtreeview.Nodes[treenodeparent];
-						treeNodeParent.Nodes.Add(treeNodeNew);
-					}
-
-					if (!isPrimitiveType)
-					{
-						ListClassAttributes(dbtreeview, treeNodeNew);
-					}
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-			finally
-			{
-				dbtreeview.EndUpdate();
-			}
-		}
-
-		public static string ReturnAttributeName(string type)
-		{
-			int intIndex = type.LastIndexOf(CONST_DOT);
-			string type1 = type.Substring(intIndex + 1);
-			return type1;
-		}
-
 		public static bool CheckUniqueNessAttributes(string fullpath, dbDataGridView datagridAttributeList)
 		{
 			try
@@ -683,12 +471,6 @@ namespace OMControlLibrary.Common
 
 		#region Public  Methods
 
-		public static bool IsAlphaNumeric(string strToCheck)
-		{
-			Regex objAlphaNumericPattern = new Regex(Constants.VALIDATION_REGX_ALPHANUMERIC);
-			return !objAlphaNumericPattern.IsMatch(strToCheck);
-		}
-
 		public static bool IsNumeric(string strToCheck)
 		{
 			Regex objAlphaNumericPattern = new Regex(Constants.VALIDATION_REGX_NUMERIC);
@@ -703,8 +485,6 @@ namespace OMControlLibrary.Common
 				checkObjectBrowser = false;
 				ClassName = string.Empty;
 				DbInteraction = null;
-				Depth = 0;
-				GuidposForQueryResult = string.Empty;
 				if (HashClassGUID != null)
 					HashClassGUID.Clear();
 
@@ -713,10 +493,6 @@ namespace OMControlLibrary.Common
 
 				if (HashTableBaseClass != null)
 					HashTableBaseClass.Clear();
-
-				IsQueryResultUpdated = false;
-				IsSameOMQuery = false;
-				IsValidQuery = false;
 
 				LoginToolWindow = null;
 
@@ -728,8 +504,6 @@ namespace OMControlLibrary.Common
 				if (ListOMQueries != null)
 					ListOMQueries.Clear();
 
-				SelectedClass = string.Empty;
-				SelectedObject = null;
 				Tab_index = 0;
 				ListofModifiedObjects.Instance.Clear();
 			}
@@ -782,59 +556,6 @@ namespace OMControlLibrary.Common
 			return info;
 		}
 
-
-		public static bool ReleaseSeat()
-		{
-			try
-			{
-				NetworkCredential cred = (NetworkCredential)serviceProxy.Proxy.Credentials;
-				serviceProxy.ReleaseSeat(m_sessionId, Environment.MachineName, cred.Domain + CONST_BACKSLASH + cred.UserName);
-
-				serviceProxy.Logout(m_sessionId);
-				serviceProxy.Credentials = null;
-				serviceProxy.Proxy = null;
-				serviceProxy.CookieContainer = null;
-				serviceProxy.Dispose();
-				ResponseTicket = null;
-				serviceProxy = null;
-				m_sessionId = string.Empty;
-				AbortSession();
-				return true;
-			}
-			catch (WebException e)
-			{
-				if (e.Message.Contains("407) Proxy Authentication Required"))
-				{
-					return HandleProxyException();
-				}
-				else if (e.Message.Contains("The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel."))
-				{
-					m_checkforIfAlreadyLoggedIn = false;
-					DialogResult dialogRes = MessageBox.Show("Connecting to network has failed due to an expired authentication certificate.  The common cause of this expired certificate is due to time differences between your computer and the network. Please verify your computer's clock settings are correct and then press Retry Or press cancel to continue without logging out ", GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
-					return (dialogRes == DialogResult.Retry) ? ReleaseSeat() : false;
-				}
-				else if (e.Message.Contains("The remote name could not be resolved") || e.Message.Contains("Unable to connect to the remote server") || e.Message.Contains("The remote server returned an error: (500) Internal Server Error"))
-				{
-
-					MessageBox.Show("Error in Network Connection. Please check the proxy configurations " + PROXYCONFIG_LOCATION,
-						GetResourceString(Constants.PRODUCT_CAPTION),
-						MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-					return false;
-
-				}
-				else
-				{
-					LoggingHelper.ShowMessage(e);
-					return false;
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-				return false;
-			}
-		}
-
 		public static void AbortSession()
 		{
 			try
@@ -850,153 +571,6 @@ namespace OMControlLibrary.Common
 			}
 		}
 
-	    private static bool CheckProxyAuthetication()
-		{
-	        try
-			{
-				OMETrace.WriteFunctionStart();
-
-				GetResponseFromWebservice(m_ddnUsername, m_ddnPassword);
-
-				SessionThread = new System.Threading.Thread(KeepSessionAlive);
-				SessionThread.IsBackground = true;
-				SessionThread.Start();
-				return true;
-			}
-			catch (WebException e)
-			{
-				if (e.Message.Contains("407) Proxy Authentication Required"))
-				{
-					return HandleProxyException();
-				}
-				
-                throw;
-			}
-			catch (Exception)
-			{
-				if (SessionThread != null)
-					SessionThread.Abort();
-				throw;
-			}
-		}
-
-		private static bool HandleProxyException()
-		{
-			CustomCookies cookies = new CustomCookies();
-			ProxyLogin plogin = new ProxyLogin();
-			plogin.Text = "Proxy Login ";
-			plogin.buttonLogin.Text = "&Ok";
-			plogin.ShowDialog();
-			if (plogin.DialogResult == DialogResult.OK)
-			{
-				dbInteraction dbint = new dbInteraction();
-				ProxyAuthentication pAuth = new ProxyAuthentication();
-				pAuth.Port = plogin.textBoxPort.Text;
-				pAuth.ProxyAddress = plogin.textBoxProxy.Text;
-				pAuth.UserName = plogin.textBoxUserID.Text;
-				pAuth.PassWord = Helper.EncryptPass(plogin.textBoxPassword.Text);
-				dbint.SetProxyInfo(pAuth);
-
-				string username = string.Empty;
-				string domain = string.Empty;
-				string[] stringArr = pAuth.UserName.Split('\\');
-				if (stringArr.Length > 1)
-				{
-					username = stringArr[1].Replace("\\", "");
-					domain = stringArr[0];
-				}
-				WebProxy selectedProxy = new WebProxy(pAuth.ProxyAddress + ":" + pAuth.Port);
-				selectedProxy.Credentials = new NetworkCredential(username, DecryptPass(pAuth.PassWord), domain);
-				serviceProxy.Proxy = selectedProxy;
-				return CheckProxyAuthetication();
-			}
-			else
-			{
-				cookies.SetCookies(null);
-				if (SessionThread != null)
-					SessionThread.Abort();
-				return false;
-			}
-		}
-
-		private static void KeepSessionAlive()
-		{
-			try
-			{
-				OMETrace.WriteFunctionStart();
-
-				while (true)
-				{
-					serviceProxy.SeatKeepAlive(m_sessionId);
-					System.Threading.Thread.Sleep(3600000);
-				}
-			}
-			catch (ThreadAbortException ex)
-			{
-				System.Threading.Thread.ResetAbort();
-				OMETrace.WriteLine(ex.Message);
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-
-			OMETrace.WriteFunctionEnd();
-		}
-
-		private static void GetResponseFromWebservice(string ddnUsername, string ddnPassword)
-		{
-		    WebProxy selectedProxy;
-		    dbInteraction dbInt = new dbInteraction();
-		    ProxyAuthentication proxy = dbInt.RetrieveProxyInfo();
-		    if (proxy != null)
-		    {
-		        string[] stringArr = proxy.UserName.Split('\\');
-		        string username = string.Empty;
-		        string domain = string.Empty;
-		        if (stringArr.Length > 1)
-		        {
-		            username = stringArr[1].Replace("\\", "");
-
-		            domain = stringArr[0];
-		        }
-		        selectedProxy = new WebProxy(proxy.ProxyAddress + ":" + proxy.Port);
-		        selectedProxy.Credentials = new NetworkCredential(username, DecryptPass(proxy.PassWord), domain);
-		    }
-		    else
-		    {
-		        selectedProxy = (WebProxy)GlobalProxySelection.Select;
-		        selectedProxy.UseDefaultCredentials = true;
-		    }
-
-		    serviceProxy.Proxy = selectedProxy;
-
-		    serviceProxy.CookieContainer = new CookieContainer();
-		    m_sessionId = serviceProxy.Login(ddnUsername, ddnPassword);
-
-		    SeatAuthorization response = serviceProxy.ReserveSeat();
-		    ResponseTicket = response;
-
-		    // Response ticket is null for invalid credentials
-		    if (ResponseTicket == null)
-		    {
-		        throw new Exception(GetResourceString(Constants.VALIDATION_MSG_INVALID_CREDENTIALS));
-		    }
-
-		    LoginNotification();
-		}
-
-		public static void LoginNotification()
-		{
-			LoginNotice str = serviceProxy.GetLoginNotice();
-			if (str != null)
-			{
-				MessageBox.Show(str.Message,
-					GetResourceString(Constants.PRODUCT_CAPTION),
-					MessageBoxButtons.OK,
-					MessageBoxIcon.Information);
-			}
-		}
 		#endregion
 
 		internal static string GetFullPath(TreeNode treenode)
@@ -1029,10 +603,7 @@ namespace OMControlLibrary.Common
 						parentName = parentName.Substring(classIndex + 1, parentName.Length - classIndex - 1);
 					}
 					else if (treenodeParent.Tag != null) //get name of patent in class view
-						if (treenodeParent.Name != "")
-							parentName = treenodeParent.Name;
-						else
-							parentName = treenodeParent.Text;
+						parentName = treenodeParent.Name != "" ? treenodeParent.Name : treenodeParent.Text;
 					else
 						parentName = string.Empty;
 

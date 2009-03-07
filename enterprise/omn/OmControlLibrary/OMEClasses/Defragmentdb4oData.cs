@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.Connection;
 using OMControlLibrary.Common;
 using OManager.BusinessLayer.Login;
@@ -56,15 +57,15 @@ namespace OMControlLibrary
 			// System.Threading.Thread t = null;
 			try
 			{
-				bool checkExecption = Helper.DbInteraction.DefragDatabase(strLocation);
+				bool checkExecption = dbInteraction.DefragDatabase(strLocation);
 				ConnParams conparam = new ConnParams(strLocation);
 				RecentQueries currRecentConnection = new RecentQueries(conparam);
 				RecentQueries tempRc = currRecentConnection.ChkIfRecentConnIsInDb();
 				if (tempRc != null)
 					currRecentConnection = tempRc;
 				currRecentConnection.Timestamp = DateTime.Now;
-				Helper.DbInteraction.ConnectoToDB(currRecentConnection);
-				Helper.DbInteraction.SetCurrentRecentConnection(currRecentConnection);
+				dbInteraction.ConnectoToDB(currRecentConnection);
+				dbInteraction.SetCurrentRecentConnection(currRecentConnection);
 
 				if (checkExecption)
 				{

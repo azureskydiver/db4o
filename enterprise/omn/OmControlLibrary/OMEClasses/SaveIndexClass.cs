@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
 using System.Collections;
 
@@ -34,7 +35,7 @@ namespace OMControlLibrary
 		{
 			for (int i = 0; i < fieldname.Count; i++)
 			{
-				Helper.DbInteraction.SetIndexedConfiguration(fieldname[i].ToString(), classname, Convert.ToBoolean(indexed[i]));
+				dbInteraction.SetIndexedConfiguration(fieldname[i].ToString(), classname, Convert.ToBoolean(indexed[i]));
 			}
 		}
 	}

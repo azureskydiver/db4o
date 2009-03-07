@@ -459,9 +459,6 @@ namespace OME.AdvancedDataGridView
 						Debug.Assert(childNode.RowIndex == -1, "Row is already in the grid.");
 
 						this.SiteNode(childNode);
-						//this.BaseRows.Insert(rowIndex + 1, childRow);
-						//TODO : remove -- just a test.
-						//childNode.Cells[0].Value = "child";
 					}
 
 					ExpandedEventArgs exped = new ExpandedEventArgs(node);

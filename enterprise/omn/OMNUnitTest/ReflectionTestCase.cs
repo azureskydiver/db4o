@@ -35,6 +35,8 @@ namespace OMNUnitTest
 			Assert.IsTrue(Resolve(typeof(string)).IsEditable);
 			Assert.IsTrue(Resolve(typeof(bool)).IsEditable);
             Assert.IsTrue(Resolve(typeof(bool?)).IsEditable);
+			Assert.IsTrue(Resolve(typeof(EnumTest)).IsEditable);
+			Assert.IsTrue(Resolve(typeof(EnumTest?)).IsEditable);
 
 			Assert.IsFalse(Resolve(typeof(List<int>)).IsEditable);
 			Assert.IsFalse(Resolve(typeof(ReflectionTestCase)).IsEditable);
@@ -119,6 +121,10 @@ namespace OMNUnitTest
 			Assert.AreEqual(10, Resolve(typeof (int)).Cast("10"));
 			Assert.AreEqual(10, Resolve(typeof(int)).Cast(10.0));
 			Assert.AreEqual(true, Resolve(typeof(bool)).Cast("true"));
+			Assert.AreEqual(ConsoleColor.Yellow, Resolve(typeof(ConsoleColor)).Cast(ConsoleColor.Yellow.ToString()));
+			Assert.AreEqual(ConsoleColor.Yellow, Resolve(typeof(ConsoleColor)).Cast((int)ConsoleColor.Yellow));
+			Assert.AreEqual(EnumAsByte.Second, Resolve(typeof(EnumAsByte)).Cast((int)EnumAsByte.Second));
+
 			object trueValue = true;
 			Assert.AreEqual(true, Resolve(typeof(bool)).Cast(trueValue));
 			Assert.AreEqual(42, Resolve(typeof(int?)).Cast(42));
@@ -209,5 +215,12 @@ namespace OMNUnitTest
 
 	internal struct SimpleStruct
 	{
+	}
+
+	internal enum EnumAsByte : byte
+	{
+		First,
+		Second,
+		Last
 	}
 }
