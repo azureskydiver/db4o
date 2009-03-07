@@ -1,15 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using OManager.BusinessLayer.QueryManager;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Query;
 using OManager.DataLayer.Connection;
-using OManager.DataLayer.Modal;
 using OManager.BusinessLayer.Common;
 using OManager.DataLayer.CommonDatalayer;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
 
 
 namespace OManager.DataLayer.QueryParser
@@ -17,18 +13,13 @@ namespace OManager.DataLayer.QueryParser
     // change name to QueryParser
     public class QueryParser
     {
-        
-
-        
-        //OMQueryClause qmclause = new OMQueryClause();
         IObjectContainer objectContainer;
-        OMQuery m_OmQuery;
-
+    	readonly OMQuery m_OmQuery;
 
         public QueryParser(OMQuery OmQuery)
         {
             objectContainer = Db4oClient.Client;
-            this.m_OmQuery = OmQuery;
+            m_OmQuery = OmQuery;
         }
         
         public IObjectSet ExecuteOMQueryList()
@@ -37,9 +28,8 @@ namespace OManager.DataLayer.QueryParser
             {
                 
                 IConstraint ConCatClauses = null;
-                IConstraint buildClause = null;
-                IConstraint buildGroup = null;
-                IConstraint conCatGroup = null; 
+                IConstraint buildClause;
+            	IConstraint conCatGroup = null; 
 
                 objectContainer = Db4oClient.Client;
                 IQuery query = objectContainer.Query();
@@ -95,17 +85,7 @@ namespace OManager.DataLayer.QueryParser
                         }           
                     }
 
-                    if (ConCatClauses != null)
-                    {
-                        buildGroup = ConCatClauses;
-                    }
-                    else
-                    {
-                        buildGroup = buildClause;
-
-                    }
-
-
+                	IConstraint buildGroup = ConCatClauses ?? buildClause;
                     if (qmGroup.GroupLogicalOperator != CommonValues.LogicalOperators.EMPTY)
                     {
                         if (qmGroup.GroupLogicalOperator == CommonValues.LogicalOperators.OR)
@@ -256,7 +236,7 @@ namespace OManager.DataLayer.QueryParser
         {
             try
             {
-                query.Constrain(DataLayerCommon.ReturnReflectClass(classname));
+                query.Constrain(DataLayerCommon.ReflectClassForName(classname));
                 
                 
             }

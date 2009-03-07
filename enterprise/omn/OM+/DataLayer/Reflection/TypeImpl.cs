@@ -2,6 +2,7 @@
 
 using System;
 using Db4objects.Db4o.Reflect;
+using Db4objects.Db4o.Reflect.Net;
 using Sharpen.Lang;
 
 namespace OManager.DataLayer.Reflection
@@ -17,9 +18,18 @@ namespace OManager.DataLayer.Reflection
             _parentResolver = parentResolver;
         }
 
-        public object Cast(object value)
+        public void SetField(object onObject, string fieldName, object value)
         {
-            System.Type type = Type.GetType(FullName);
+        	IReflectField field = _type.GetDeclaredField(fieldName);
+			if (field == null)
+				throw new ArgumentException("No field '" + fieldName + "' found in '" + FullName + "'");
+
+			field.Set(onObject, value);
+        }
+
+    	public object Cast(object value)
+        {
+    		System.Type type = NetReflector.ToNative(_type);
             if (null == type)
                 return null;
 
@@ -28,10 +38,17 @@ namespace OManager.DataLayer.Reflection
                 type = type.GetGenericArguments()[0];
             }
 
-            return Convert.ChangeType(value, type);
+            return type.IsEnum 
+							? ConvertEnum(type, value)
+							: Convert.ChangeType(value, type);
         }
 
-        public string DisplayName
+    	private static object ConvertEnum(Type type, object value)
+    	{
+    		return (value is int) ? Enum.ToObject(type, value) : Enum.Parse(type, (string) value);
+    	}
+
+    	public string DisplayName
         {
             get
             {
@@ -51,7 +68,7 @@ namespace OManager.DataLayer.Reflection
         {
             get
             {
-                System.Type type = Type.GetType(_type.GetName());
+				System.Type type = NetReflector.ToNative(_type);
                 return type == null || (!type.IsValueType && !IsString());
             }
         }
@@ -60,11 +77,11 @@ namespace OManager.DataLayer.Reflection
         {
             get
             {
-                return IsPrimitive || IsNullable;
+            	return IsPrimitive || IsNullable || IsEnum;
             }
         }
 
-        public bool IsPrimitive
+    	public bool IsPrimitive
         {
             get { return _type.IsPrimitive() || IsString(); }
         }
@@ -110,7 +127,16 @@ namespace OManager.DataLayer.Reflection
             }
         }
 
-        private bool IsString()
+		private bool IsEnum
+		{
+			get
+			{
+				Type type = NetReflector.ToNative(_type);
+				return type != null ? type.IsEnum : false;
+			}
+		}
+		
+		private bool IsString()
         {
             return _type.GetName().StartsWith(typeof(string).FullName);
         }

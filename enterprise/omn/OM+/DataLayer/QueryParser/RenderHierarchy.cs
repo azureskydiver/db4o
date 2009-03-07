@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Reflect;
@@ -29,16 +30,17 @@ namespace OManager.DataLayer.QueryParser
 			container = Db4oClient.Client;
 		}
 
-		public TreeGridView ReturnHierarchy(object currObj, string classname, bool activate)
+		public TreeGridView ReturnHierarchy(object currObj, string classname)
 		{
 			InitializeImageList();
 			TreeGridView treegrid = InitializeTreeGridView();
-			TreeGridNode rootNode = new TreeGridNode();
-			treegrid.Nodes.Add(rootNode);
 
 			try
 			{
-				IReflectClass rclass = DataLayerCommon.ReturnReflectClass(classname);
+				TreeGridNode rootNode = new TreeGridNode();
+				treegrid.Nodes.Add(rootNode);
+
+				IReflectClass rclass = DataLayerCommon.ReflectClassForName(classname);
 				IType type = ResolveType(rclass);
 
 				rootNode.Cells[0].Value = AppendIDTo(type.FullName, GetLocalID(currObj), type);
@@ -50,7 +52,7 @@ namespace OManager.DataLayer.QueryParser
 				rootNode.ImageIndex = 0;
 				classname = DataLayerCommon.RemoveGFromClassName(classname);
 
-				TraverseObjTree(ref rootNode, currObj, classname, activate);
+				TraverseObjTree(ref rootNode, currObj, classname);
 			}
 			catch (Exception oEx)
 			{
@@ -85,10 +87,10 @@ namespace OManager.DataLayer.QueryParser
 			}
 		}
 
-		public void TraverseObjTree(ref TreeGridNode rootNode, object currObj, string classname, bool activate)
+		public void TraverseObjTree(ref TreeGridNode rootNode, object currObj, string classname)
 		{
 			container = Db4oClient.Client;
-			IReflectClass refClass = DataLayerCommon.ReturnReflectClass(classname);
+			IReflectClass refClass = DataLayerCommon.ReflectClassForName(classname);
 			if (refClass == null) 
 				return;
 
@@ -123,39 +125,35 @@ namespace OManager.DataLayer.QueryParser
 			}
 		}
 
-		private TreeGridNode TraverseFields(TreeGridNode rootNode, object obj, IEnumerable<IReflectField> fields)
+		private TreeGridNode TraverseFields(TreeGridNode parentNode, object parentObject, IEnumerable<IReflectField> fields)
 		{
-			if (fields == null) 
-				return rootNode;
+			if (fields == null)
+				return parentNode;
 
 			foreach (IReflectField field in fields)
 			{
 				IType fieldType = ResolveFieldType(field);
-				if (fieldType == null) 
-				    continue;
+				if (fieldType == null)
+					continue;
 
-				if (fieldType.IsPrimitive) //if leaf node
+				if (fieldType.IsEditable) 
 				{
-					CreatePrimitiveNode(field.GetName(), field.Get(obj), ref rootNode, fieldType);
+					CreatePrimitiveNode(field.GetName(), field.Get(parentObject), ref parentNode, fieldType);
 				}
 				else if (fieldType.IsCollection)
 				{
-					RenderCollection(rootNode, obj, field);
+					RenderCollection(parentNode, parentObject, field);
 				}
 				else if (fieldType.IsArray)
 				{
-					RenderArray(rootNode, obj, field);
-				}
-				else if (fieldType.IsNullable)
-				{
-					CreatePrimitiveNode(field.GetName(), field.Get(obj), ref rootNode, fieldType);
+					RenderArray(parentNode, parentObject, field);
 				}
 				else
 				{
-					RenderSubObject(rootNode, obj, field);
+					RenderSubObject(parentNode, parentObject, field);
 				}
 			}
-			return rootNode;
+			return parentNode;
 		}
 
 		private void RenderArray(TreeGridNode rootNode, object currObj, IReflectField field)
@@ -179,51 +177,50 @@ namespace OManager.DataLayer.QueryParser
 		private void RenderCollection(TreeGridNode rootNode, object currObj, IReflectField field)
 		{
 			container = Db4oClient.Client;
-			object obj = field.Get(currObj);
-			container.Ext().Activate(obj, 2);
+			object value = field.Get(currObj);
+			container.Ext().Activate(value, 2);
 
-			if (obj != null)
+			if (value != null)
 			{
-				ICollection coll = (ICollection) obj;
-				CreateCollectionNode(field, obj, ref rootNode, coll.Count.ToString());
+				ICollection coll = (ICollection) value;
+				CreateCollectionNode(field, value, ref rootNode, coll.Count.ToString());
 			}
 			else
 			{
-				CreateCollectionNode(field, obj, ref rootNode, "0");
+				CreateCollectionNode(field, value, ref rootNode, "0");
 			}
 		}
 
-		private void RenderSubObject(TreeGridNode rootNode, object currObj, IReflectField reflectField)
+		private void RenderSubObject(TreeGridNode parentNode, object parentObj, IReflectField field)
 		{
 			try
 			{
-				container = Db4oClient.Client;
 				TreeGridNode objectNode = new TreeGridNode();
-				rootNode.Nodes.Add(objectNode);
-				object obj = reflectField.Get(currObj);
+				parentNode.Nodes.Add(objectNode);
+				object value = field.Get(parentObj);
+				objectNode.Tag = value;
 
-				IType fieldType = ResolveFieldType(reflectField);
-				objectNode.Cells[0].Value = AppendIDTo(reflectField.GetName(), GetLocalID(obj), fieldType);
+				IType fieldType = ResolveFieldType(field);
+				objectNode.Cells[0].Value = AppendIDTo(field.GetName(), GetLocalID(value), fieldType);
 
-				objectNode.Cells[1].Value = reflectField.Get(currObj) != null ? reflectField.Get(currObj).ToString() : BusinessConstants.DB4OBJECTS_NULL;
+				objectNode.Cells[1].Value = value != null ? value.ToString() : BusinessConstants.DB4OBJECTS_NULL;
 
 				SetFieldType(objectNode, fieldType);
-				
-				container.Ext().Activate(obj, 2);
 
-				objectNode.Tag = obj;
+				container = Db4oClient.Client;
+				container.Ext().Activate(value, 2);
 
-				if (rootNode.Tag is DictionaryEntry && reflectField.GetName() == BusinessConstants.DB4OBJECTS_KEY)
+				if (parentNode.Tag is DictionaryEntry && field.GetName() == BusinessConstants.DB4OBJECTS_KEY)
 					objectNode.Cells[1].ReadOnly = true;
-				else if (rootNode.Tag is DictionaryEntry && reflectField.GetName() == BusinessConstants.DB4OBJECTS_VALUE)
+				else if (parentNode.Tag is DictionaryEntry && field.GetName() == BusinessConstants.DB4OBJECTS_VALUE)
 					objectNode.Cells[1].ReadOnly = false;
-				else if (reflectField.Get(currObj) == null)
+				else if (field.Get(parentObj) == null)
 					objectNode.Cells[1].ReadOnly = true;
 				else
 					objectNode.Cells[1].ReadOnly = true;
 
 				objectNode.ImageIndex = 0; //class
-				if (obj != null)
+				if (value != null)
 				{
 					TreeGridNode treenodeDummyChildNode = new TreeGridNode();
 					objectNode.Nodes.Add(treenodeDummyChildNode);
@@ -240,6 +237,11 @@ namespace OManager.DataLayer.QueryParser
 		{
 			node.Cells[2].Value = type.DisplayName;
 			node.Cells[2].Tag= type;
+		}
+
+		private static IType FieldTypeFor(TreeGridNode node)
+		{
+			return (IType) node.Cells[2].Tag;
 		}
 
 		private static string ClassNameFor(string type)
@@ -308,6 +310,7 @@ namespace OManager.DataLayer.QueryParser
 
 		private void ExpandCollectionNode(TreeGridNode parentNode, ICollection collection)
 		{
+			container = Db4oClient.Client;
 			foreach (object item in collection)
 			{
 				if (item == null)
@@ -315,7 +318,7 @@ namespace OManager.DataLayer.QueryParser
 
 				IType itemType = ResolveType(DataLayerCommon.ReflectClassFor(item));
 				if (itemType.IsPrimitive)
-					TraverseObjTree(ref parentNode, item, container.Ext().Reflector().ForObject(item).GetName(), false);
+					TraverseObjTree(ref parentNode, item, container.Ext().Reflector().ForObject(item).GetName());
 				else
 				{
 					container.Ext().Activate(item, 1);
@@ -328,7 +331,7 @@ namespace OManager.DataLayer.QueryParser
 					collNode.Tag = item;
 					collNode.ImageIndex = 0;
 					collNode.Cells[1].ReadOnly = true;
-					TraverseObjTree(ref collNode, item, itemType.FullName, false);
+					TraverseObjTree(ref collNode, item, itemType.FullName);
 				}
 			}
 		}
@@ -337,18 +340,18 @@ namespace OManager.DataLayer.QueryParser
 		{
 			try
 			{
-				object nodeObject = node.Tag;
-				if (nodeObject != null)
+				object obj= node.Tag;
+				if (obj == null)
+					return;
+				
+				IReflectClass rclass = DataLayerCommon.ReflectClassFor(obj);
+				if (rclass == null)
+					return;
+
+				string classname = rclass.GetName();
+				if (classname != string.Empty)
 				{
-					IReflectClass rclass = DataLayerCommon.ReflectClassFor(nodeObject);
-					if (rclass != null)
-					{
-						string classname = rclass.GetName();
-						if (classname != string.Empty)
-						{
-							TraverseObjTree(ref node, nodeObject, classname, activate);
-						}
-					}
+					TraverseObjTree(ref node, obj, classname);
 				}
 			}
 			catch (Exception oEx)
@@ -376,14 +379,14 @@ namespace OManager.DataLayer.QueryParser
 				TreeGridNode primitiveNode = new TreeGridNode();
 				rootNode.Nodes.Add(primitiveNode);
 				primitiveNode.Cells[0].Value = fieldName;
-				SetFieldType(primitiveNode, type);
 				primitiveNode.Cells[1].ReadOnly = false;
+				primitiveNode.Cells[1].Value = value != null ? value.ToString() : BusinessConstants.DB4OBJECTS_NULL;
+				SetFieldType(primitiveNode, type);
+
 				if (rootNode.Parent.Tag is IDictionary)
 				{
 					primitiveNode.Cells[1].ReadOnly = fieldName != BusinessConstants.DB4OBJECTS_VALUE1;
 				}
-
-				primitiveNode.Cells[1].Value = value != null ? value.ToString() : BusinessConstants.DB4OBJECTS_NULL;
 
 				primitiveNode.Tag = value;
 				primitiveNode.ImageIndex = 2; //Primitive
@@ -394,12 +397,83 @@ namespace OManager.DataLayer.QueryParser
 			}
 		}
 
+		internal class ValueTypeChange
+		{
+			public ValueTypeChange(object targetObject)
+			{
+				TargetObject = targetObject;
+				FieldPath = new List<FieldInfo>();
+			}
+
+			public object TargetObject;
+			public List<FieldInfo> FieldPath;
+		}
+
+		/**
+		 * Each node in "details view" holds a reference for its corresponding
+		 * object in the object model. While this works fine with reference
+		 * types, it fails miserably with nested value types. 
+		 * 
+		 * For more details see OMNUnitTest.RenderHierarchyTestCase.
+		 */
+		public static bool TryUpdateValueType(TreeGridNode node, object newValue)
+		{
+			if (node == null || node.Parent == null)
+				return false;
+
+			ValueTypeChange change = ValueTypeChangeFor(node.Parent, 0);
+			if (change == null)
+				return false;
+
+			FieldInfo fieldInfo = FieldInfoFor(node);
+			if (fieldInfo == null)
+				return false;
+
+			fieldInfo.SetValueDirect(TypedReference.MakeTypedReference(change.TargetObject, change.FieldPath.ToArray()), newValue);
+			return true;
+		}
+
+		private static ValueTypeChange ValueTypeChangeFor(TreeGridNode node, int depth)
+		{
+			IType omnType = FieldTypeFor(node);
+			if (omnType.IsCollection || omnType.IsArray)
+				return null;
+
+			Type type = Type.GetType(omnType.FullName);
+			if (type == null)
+				return null;
+
+			if (type.IsValueType)
+			{
+				ValueTypeChange change = ValueTypeChangeFor(node.Parent, depth + 1);
+				if (change != null) 
+					change.FieldPath.Add(FieldInfoFor(node));
+
+				return change;
+			}
+
+			return depth == 0 ? null : new ValueTypeChange(node.Tag);
+		}
+
+
+		private static FieldInfo FieldInfoFor(TreeGridNode node)
+		{
+			Type parentType = Type.GetType(FieldTypeFor(node.Parent).FullName);
+			return (parentType != null)
+			       	? parentType.GetField(FieldNameFor(node), BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
+			       	: null;
+		}
+
+		private static string FieldNameFor(TreeGridNode node)
+		{
+			return (string) node.Cells[0].Value;
+		}
+
 		public long GetLocalID(object obj)
 		{
 			ObjectDetails objDetails = new ObjectDetails(obj);
 			return objDetails.GetLocalID();
 		}
-
 
 		public IType ResolveFieldType(IReflectField field)
 		{
@@ -423,6 +497,8 @@ namespace OManager.DataLayer.QueryParser
 				m_treeGridView.Name = BusinessConstants.DB4OBJECTS_TREEGRIDVIEW;
 				m_treeGridView.RowHeadersVisible = false;
 				m_treeGridView.ShowLines = true;
+				m_treeGridView.Dock = DockStyle.Fill;
+				m_treeGridView.Visible = true;
 
 				//Column Intialization
 
@@ -460,7 +536,6 @@ namespace OManager.DataLayer.QueryParser
 				m_treeGridView.ScrollBars = ScrollBars.Both;
 
 				return m_treeGridView;
-
 			}
 			catch (Exception oEx)
 			{

@@ -323,19 +323,17 @@ namespace OMControlLibrary
 				{
 					//gridQuery.Rows[j].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value
                     //Validate the entered value
-					bool isValid = Validations.ValidateDataType(FieldTypeForConstraint(dbDataGridView.CurrentCell.OwningRow), ref value);
+					bool isValid = Validations.ValidateDataType(FieldTypeForConstraint(dbDataGridView.CurrentCell.OwningRow), value);
 
 					if (!isValid)
 					{
 						//reset the previous value if value is not valid
 						dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value = m_previousCellValue;
-						Helper.IsQueryResultUpdated = false;
 					}
 					else
 					{
 						//set the changed value if value is valid
 						dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value = value.ToString();
-						Helper.IsQueryResultUpdated = true;
 					}
 
 					m_previousCellValue = string.Empty;

@@ -141,7 +141,7 @@ namespace OManager.DataLayer.Modal
 
 		private static bool ExcludeClass(string className)
 		{
-			Type type = Type.GetType(className);
+			Type type = Type.GetType(className, false);
 			return type != null
 							? typeof(IInternal4).IsAssignableFrom(type)
 							: false;

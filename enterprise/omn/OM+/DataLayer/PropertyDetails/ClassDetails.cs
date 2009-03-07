@@ -25,7 +25,6 @@ namespace OManager.DataLayer.Modal
         {
             try
             {
-                              
                 return objectContainer.Ext().StoredClass(m_className).GetIDs().Length;
             }
             catch (Exception oEx)
@@ -35,11 +34,11 @@ namespace OManager.DataLayer.Modal
             }
         }
 
-        public Hashtable  GetFields()
+        public Hashtable GetFields()
         {
             try
             {
-                IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_className);
+                IReflectClass rClass = DataLayerCommon.ReflectClassForName(m_className);
                 IReflectField[] rFields = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rClass);
                 Hashtable FieldList = new Hashtable();
 
@@ -47,8 +46,9 @@ namespace OManager.DataLayer.Modal
                 {
                     if (!FieldList.ContainsKey(field.GetName()))
                     {
-                        string stringType = field.GetFieldType().GetName();
-                        FieldList.Add(field.GetName(), stringType);
+                    	FieldList.Add(
+							field.GetName(), 
+							field.GetFieldType().GetName());
                     }
                 }
                 return FieldList;
@@ -64,10 +64,9 @@ namespace OManager.DataLayer.Modal
         {
             try
             {
-                IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_className);
+                IReflectClass rClass = DataLayerCommon.ReflectClassForName(m_className);
                 if (rClass != null)
                 {
-
                     string type1 = rClass.ToString();
                     type1 = DataLayerCommon.PrimitiveType(type1);
                     char[] arr = CommonValues.charArray;
@@ -87,11 +86,11 @@ namespace OManager.DataLayer.Modal
             }
         }
 
-        public  IReflectField[] GetFieldList()
+        public IReflectField[] GetFieldList()
         {
             try
             {
-                IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_className); 
+                IReflectClass rClass = DataLayerCommon.ReflectClassForName(m_className); 
                 IReflectField[] rFields = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rClass);
                 return rFields;
             }

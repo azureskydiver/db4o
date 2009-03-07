@@ -3,62 +3,24 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using Db4objects.Db4o;
 using NUnit.Framework;
-using OManager.BusinessLayer.Login;
-using OManager.DataLayer.Connection;
 using OManager.DataLayer.Modal;
 using Sharpen.Lang;
 
 namespace OMNUnitTest
 {
 	[TestFixture]
-	public class DbInformationTestCase
+	public class DbInformationTestCase : OMNTestCaseBase
 	{
-		[SetUp]
-		public void Setup()
-		{
-			GenerateDatabase();
-		}
-
-		[TearDown]
-		public void TearDown()
-		{
-			IObjectContainer client = Db4oClient.Client;
-			if (null != client)
-			{
-				string connection = Db4oClient.conn.Connection;
-				Db4oClient.CloseConnection();
-				File.Delete(connection);
-			}
-		}
-
-		private void GenerateDatabase()
-		{
-			string databaseFile = Path.GetTempFileName();
-			Db4oClient.conn = new ConnParams(databaseFile);
-
-			Store(new Item("foo"), new Element("bar"), new Item("baz"), new ArrayList(new[] {1, 2, 3}));
-		}
-
-		protected virtual void Store(params object[] items)
-		{
-			foreach (object item in items)
-			{
-				Db4oClient.Client.Store(item);
-			}
-		}
-
 		[Test]
-		public void TestGetAllClasses()
+		public void TestStoredClasses()
 		{
 			Hashtable classes = new DbInformation().StoredClasses();
 			CollectionAssert.AreEqual(ClassesCollection(typeof(Item), typeof(Element), typeof(ArrayList)), classes);
 		}
 
 		[Test]
-		public void TestClassesCollectionByAssembly()
+		public void TestStoredClassesByAssembly()
 		{
 			Hashtable classesByAssembly = new DbInformation().StoredClassesByAssembly();
 
@@ -98,9 +60,28 @@ namespace OMNUnitTest
 
 			return coll;
 		}
+
+		protected override void Store()
+		{
+			foreach (object item in Items())
+			{
+				Store(item);
+			}
+		}
+
+		private static IEnumerable Items()
+		{
+			return new object[]
+				{
+					new Item("foo"),
+					new Element("bar"),
+					new Item("baz"),
+					new ArrayList(new[] {1, 2, 3})
+				};
+		}
 	}
 
-	internal class Element : Item
+	public class Element : Item
 	{
 		public Element(string name) : base(name)
 		{

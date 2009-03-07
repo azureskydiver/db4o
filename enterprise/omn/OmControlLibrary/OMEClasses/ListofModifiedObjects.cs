@@ -64,9 +64,8 @@ namespace OMControlLibrary
 					{
 						if (Convert.ToBoolean(row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value))
 						{
-							dbInteraction dbInt = new dbInteraction();
 							if (hierarchyLevel == -1)
-								hierarchyLevel = dbInt.GetDepth(row.Tag);
+								hierarchyLevel = dbInteraction.GetDepth(row.Tag);
 
 							Helper.DbInteraction.SaveCollection(row.Tag, hierarchyLevel);
 						}
@@ -78,7 +77,7 @@ namespace OMControlLibrary
 					{
 						if (Convert.ToBoolean(row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value))
 						{
-							Helper.DbInteraction.RefreshObject(row.Tag, 1);
+							dbInteraction.RefreshObject(row.Tag, 1);
 						}
 					}
 				}
@@ -93,9 +92,7 @@ namespace OMControlLibrary
 
 		public static int CalculateLevel(object obj)
 		{
-			dbInteraction dbI = new dbInteraction();
-			return dbI.GetDepth(obj);
-
+			return dbInteraction.GetDepth(obj);
 		}
 	}
 }

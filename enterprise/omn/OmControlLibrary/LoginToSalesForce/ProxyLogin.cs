@@ -16,8 +16,7 @@ namespace OMControlLibrary.LoginToSalesForce
 			InitializeComponent();
 			try
 			{
-				dbInteraction dbInt = new dbInteraction();
-				ProxyAuthentication proxy = dbInt.RetrieveProxyInfo();
+				ProxyAuthentication proxy = dbInteraction.RetrieveProxyInfo();
 				if (proxy != null)
 				{
 					textBoxUserID.Text = proxy.UserName;

@@ -152,7 +152,6 @@ namespace OMControlLibrary.Common
 						}
 						if (checkSameNode == false && parentTreeNode.Tag != null && parentTreeNode.Tag.ToString() == "Fav Folder")
 						{
-							dbInteraction dbI = new dbInteraction();
 							parentTreeNode.Nodes.Add(dragNode);
 							FavouriteFolder Fav = new FavouriteFolder(null, parentTreeNode.Text);
 							Fav.FolderName = parentTreeNode.Text;
@@ -166,7 +165,7 @@ namespace OMControlLibrary.Common
 								Fav.ListClass = lststr;
 							}
 
-							dbI.SaveFavourite(dbI.GetCurrentRecentConnection().ConnParam, Fav);
+							dbInteraction.SaveFavourite(dbInteraction.GetCurrentRecentConnection().ConnParam, Fav);
 						}
 					}
 				}
@@ -243,10 +242,9 @@ namespace OMControlLibrary.Common
 				}
 				if (tNode.Nodes.Count == 0)
 				{
-					dbInteraction dbI = new dbInteraction();
 					if (Helper.IsArrayOrCollection(typeOfObject)
-					    || dbI.CheckForArray(nodeName, tNode.Text)
-					    || dbI.CheckForCollection(nodeName, tNode.Text))
+					    || dbInteraction.CheckForArray(nodeName, tNode.Text)
+						|| dbInteraction.CheckForCollection(nodeName, tNode.Text))
 					{
 						DoDragDrop(e.Item, DragDropEffects.None);
 						return;
@@ -372,12 +370,11 @@ namespace OMControlLibrary.Common
 			{
 				if (e.KeyCode == Keys.Delete)
 				{
-					dbInteraction dbI = new dbInteraction();
 					FavouriteFolder Fav = null;
 					if (SelectedNode.Tag != null && SelectedNode.Tag.ToString() == "Fav Folder")
 					{
 						Fav = new FavouriteFolder(null, SelectedNode.Text);
-						dbI.UpdateFavourite(dbI.GetCurrentRecentConnection().ConnParam, Fav);
+						dbInteraction.UpdateFavourite(dbInteraction.GetCurrentRecentConnection().ConnParam, Fav);
 						Nodes.Remove(SelectedNode);
 					}
 					else if (SelectedNode.Parent != null && SelectedNode.Parent.Tag != null &&
@@ -396,7 +393,7 @@ namespace OMControlLibrary.Common
 							}
 							Fav = new FavouriteFolder(lststr, tNode.Parent.Text);
 						}
-						dbI.SaveFavourite(dbI.GetCurrentRecentConnection().ConnParam, Fav);
+						dbInteraction.SaveFavourite(dbInteraction.GetCurrentRecentConnection().ConnParam, Fav);
 						SelectedNode.Remove();
 					}
 				}
@@ -476,8 +473,7 @@ namespace OMControlLibrary.Common
 		{
 			try
 			{
-				dbInteraction dbI = new dbInteraction();
-				List<FavouriteFolder> lstfavFolder = dbI.GetFavourites(dbI.GetCurrentRecentConnection().ConnParam);
+				List<FavouriteFolder> lstfavFolder = dbInteraction.GetFavourites(dbInteraction.GetCurrentRecentConnection().ConnParam);
 
 				if (lstfavFolder != null)
 				{
@@ -566,9 +562,9 @@ namespace OMControlLibrary.Common
 					{
 						string parentClassName = ClassNameFor(treenodeparent);
 
-						bool collection = Helper.DbInteraction.CheckForCollection(parentClassName, nodevalue);
-						bool isarray = Helper.DbInteraction.CheckForArray(parentClassName, nodevalue);
-						if (Helper.DbInteraction.GetFieldCount(ClassNameFor(treeNodeNew)) > 0)
+						bool collection = dbInteraction.CheckForCollection(parentClassName, nodevalue);
+						bool isarray = dbInteraction.CheckForArray(parentClassName, nodevalue);
+						if (dbInteraction.GetFieldCount(ClassNameFor(treeNodeNew)) > 0)
 						{
 							if (!collection || !isarray)
 							{
@@ -839,16 +835,14 @@ namespace OMControlLibrary.Common
 				}
 				if (e.Node.Text != folderName)
 				{
-					dbInteraction dbI = new dbInteraction();
 					FavouriteFolder oldfav = new FavouriteFolder(null, folderName);
 					FavouriteFolder newFav = new FavouriteFolder(null, e.Node.Text);
-					dbI.RenameFolderInDatabase(dbI.GetCurrentRecentConnection().ConnParam, oldfav, newFav);
+					dbInteraction.RenameFolderInDatabase(dbInteraction.GetCurrentRecentConnection().ConnParam, oldfav, newFav);
 				}
 				else
 				{
-					dbInteraction dbI = new dbInteraction();
 					FavouriteFolder newFav = new FavouriteFolder(null, e.Node.Text);
-					dbI.SaveFavourite(dbI.GetCurrentRecentConnection().ConnParam, newFav);
+					dbInteraction.SaveFavourite(dbInteraction.GetCurrentRecentConnection().ConnParam, newFav);
 				}
 			}
 			catch (Exception oEx)
@@ -929,25 +923,23 @@ namespace OMControlLibrary.Common
 								className = treenodeparent.Tag.ToString();
 							}
 
-							if (Helper.DbInteraction.GetFieldCount(param) > 0)
+							if (dbInteraction.GetFieldCount(param) > 0)
 							{
-								bool collection = Helper.DbInteraction.CheckForCollection(className, nodevalue);
-								bool isarray = Helper.DbInteraction.CheckForArray(className, nodevalue);
+								bool collection = dbInteraction.CheckForCollection(className, nodevalue);
+								bool isarray = dbInteraction.CheckForArray(className, nodevalue);
 								if (!collection || !isarray)
 								{
 									AddDummyChildNode(treeNodeNew);
-									treeNodeNew.ImageIndex =
-										treeNodeNew.SelectedImageIndex = 1; //Classes;
+									treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 1; //Classes;
 								}
 							}
 							else
 							{
-								bool collection = Helper.DbInteraction.CheckForCollection(className, nodevalue);
-								bool isarray = Helper.DbInteraction.CheckForArray(className, nodevalue);
+								bool collection = dbInteraction.CheckForCollection(className, nodevalue);
+								bool isarray = dbInteraction.CheckForArray(className, nodevalue);
 								if (collection || isarray)
 								{
-									treeNodeNew.ImageIndex =
-										treeNodeNew.SelectedImageIndex = 3; //Classes;
+									treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 3; //Classes;
 								}
 							}
 						}

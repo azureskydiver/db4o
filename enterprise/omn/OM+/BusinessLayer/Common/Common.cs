@@ -130,12 +130,6 @@ namespace OManager.BusinessLayer.Common
             return isDateTimeOrString;
         }
 
-    	//TODO: Remove
-		public static bool IsNullable(string typeName)
-    	{
-    		return typeName.StartsWith("System.Nullable") || typeName.StartsWith("Nullable<");
-    	}
-
     	public static string DecorateNullableName(string nullableTypeName)
     	{
 			GenericTypeReference typeRef = (GenericTypeReference) TypeReference.FromString(nullableTypeName);

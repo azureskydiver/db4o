@@ -1,4 +1,5 @@
 using System;
+using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
 using OManager.BusinessLayer.Login;
 using OME.Logging.Common;
@@ -15,7 +16,7 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				Helper.DbInteraction.CreateDemoDb(demoFilePath);
+				dbInteraction.CreateDemoDb(demoFilePath);
 			    ConnParams conparam = new ConnParams(demoFilePath);
 
 				RecentQueries currRecentConnection = new RecentQueries(conparam);
@@ -23,8 +24,8 @@ namespace OMControlLibrary
 				if (tempRc != null)
 					currRecentConnection = tempRc;
 				currRecentConnection.Timestamp = DateTime.Now;
-				Helper.DbInteraction.ConnectoToDB(currRecentConnection);
-				Helper.DbInteraction.SetCurrentRecentConnection(currRecentConnection);
+				dbInteraction.ConnectoToDB(currRecentConnection);
+				dbInteraction.SetCurrentRecentConnection(currRecentConnection);
 
 
 			}

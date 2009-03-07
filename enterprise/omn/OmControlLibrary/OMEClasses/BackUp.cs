@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
@@ -22,7 +23,7 @@ namespace OMControlLibrary
 				dialog.ShowDialog();
 
 				string filepath = dialog.FileName;
-				bool checkForException = Helper.DbInteraction.BackUpDatabase(filepath);
+				bool checkForException = dbInteraction.BackUpDatabase(filepath);
 				if (checkForException == false)
 				{
 					MessageBox.Show("Backup Successful!", "ObjectManager Enterprise");

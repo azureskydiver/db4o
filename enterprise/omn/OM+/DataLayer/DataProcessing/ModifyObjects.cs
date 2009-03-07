@@ -14,7 +14,6 @@ namespace OManager.DataLayer.ObjectsModification
 {
     class ModifyObjects
     {
-
         private readonly IObjectContainer objectContainer;
         private List<object> m_listforCascadeDelete;
         private readonly object m_objectToProcess;
@@ -25,7 +24,7 @@ namespace OManager.DataLayer.ObjectsModification
             m_objectToProcess = MainObjects;
         }
 
-        public object EditObjects(string attribute, string value)
+        public static object EditObjects(object obj, string attribute, string value)
         {
             try
             {
@@ -34,14 +33,14 @@ namespace OManager.DataLayer.ObjectsModification
                 fieldName = fieldName.Substring(intIndexof, fieldName.Length - intIndexof);
 
                 string[] splitstring = fieldName.Split('.');
-                object holdParentObject = m_objectToProcess;
+                object holdParentObject = obj;
 
                 foreach (string str in splitstring)
                 {
                     holdParentObject = SetField(str, holdParentObject, fieldName, value);
                 }
 
-                return m_objectToProcess;
+                return obj;
             }
             catch (Exception oEx)
             {
@@ -50,7 +49,7 @@ namespace OManager.DataLayer.ObjectsModification
             }
         }
        
-        public object SetField(string attribName, object subObject, string fullattribName, string fieldValue)
+        private static object SetField(string attribName, object subObject, string fullattribName, string fieldValue)
         {
             try
             {
@@ -85,7 +84,7 @@ namespace OManager.DataLayer.ObjectsModification
             }
         }
 
-        public void SetObject(IReflectField rfield, object containingObject, IType fieldType, object newValue)
+		public static void SetObject(IReflectField rfield, object containingObject, IType fieldType, string newValue)
         {
             try
             {
@@ -93,31 +92,21 @@ namespace OManager.DataLayer.ObjectsModification
             }
             catch (Exception oEx)
             {
-                objectContainer.Rollback();
+                Db4oClient.Client.Rollback();
                 LoggingHelper.HandleException(oEx);
             }
         }
 
-        public void DeleteObjects()
+        public static object SaveObjects(object obj)
         {
-            if (m_objectToProcess != null)
+        	IObjectContainer objectContainer = Db4oClient.Client;
+			try
             {
-                objectContainer.Delete(m_objectToProcess);
-                objectContainer.Commit();
-            }
-
-        }
-
-        public object SaveObjects()
-        {
-            try
-            {
-                if (m_objectToProcess != null)
-                {
-                    objectContainer.Store(m_objectToProcess);
-                    objectContainer.Commit();
-                }
-               
+            	if (obj == null)
+            		return obj;
+            	
+				objectContainer.Store(obj);
+            	objectContainer.Commit();
             }
             catch (Exception oEx)
             {
@@ -125,17 +114,10 @@ namespace OManager.DataLayer.ObjectsModification
                 LoggingHelper.HandleException(oEx);
 
             }
-            return m_objectToProcess;
+            return obj;
         }
 
-
-        public void RefreshObjects(int intLevel)
-        {
-
-            objectContainer.Ext().Refresh(m_objectToProcess, intLevel);
-        }
-
-        public void cascadeonDelete( bool checkforCascade)
+    	public void CascadeonDelete( bool checkforCascade)
         {
             try
             {
@@ -144,7 +126,7 @@ namespace OManager.DataLayer.ObjectsModification
                     if (m_objectToProcess != null)
                     {
                         m_listforCascadeDelete = new List<object>();
-                        checkForHierarchy(m_objectToProcess);
+                        CheckForHierarchy(m_objectToProcess);
                         objectContainer.Delete(m_objectToProcess);
                         objectContainer.Commit();
                     }
@@ -167,11 +149,11 @@ namespace OManager.DataLayer.ObjectsModification
             }
         }
 
-        public void checkForHierarchy(object obj)
+        private void CheckForHierarchy(object obj)
         {
             try
             {
-                IReflectClass rclass = DataLayerCommon.ReflectClassFor(obj);// objectContainer.Ext().Reflector().ForObject(obj);
+                IReflectClass rclass = DataLayerCommon.ReflectClassFor(obj);
                 if (rclass != null)
                 {
                     IReflectField[] fieldArr = DataLayerCommon.GetDeclaredFieldsInHeirarchy(rclass);
@@ -202,7 +184,7 @@ namespace OManager.DataLayer.ObjectsModification
                                                     if (!m_listforCascadeDelete.Contains(colObject))
                                                     {
                                                         m_listforCascadeDelete.Add(colObject);
-                                                        checkForHierarchy(colObject);
+                                                        CheckForHierarchy(colObject);
                                                         objectContainer.Delete(colObject);
                                                     }
                                                 }
@@ -211,7 +193,6 @@ namespace OManager.DataLayer.ObjectsModification
                                     }
                                     else if (field.GetFieldType().IsArray())
                                     {
-
                                         int length = objectContainer.Ext().Reflector().Array().GetLength(field.Get(obj));
                                         for (int i = 0; i < length; i++)
                                         {
@@ -223,11 +204,10 @@ namespace OManager.DataLayer.ObjectsModification
                                                     if (!m_listforCascadeDelete.Contains(arrObject))
                                                     {
                                                         m_listforCascadeDelete.Add(arrObject);
-                                                        checkForHierarchy(arrObject);
+                                                        CheckForHierarchy(arrObject);
                                                         objectContainer.Delete(arrObject);
                                                     }
                                                 }
-
                                             }
                                         }
                                     }
@@ -236,13 +216,11 @@ namespace OManager.DataLayer.ObjectsModification
                                         if (!m_listforCascadeDelete.Contains(getObject))
                                         {
                                             m_listforCascadeDelete.Add(getObject);
-                                            checkForHierarchy(getObject);
+                                            CheckForHierarchy(getObject);
                                             objectContainer.Delete(getObject);
                                         }
-
                                     }
                                 }
-
                             }
                         }
                     }
@@ -252,9 +230,7 @@ namespace OManager.DataLayer.ObjectsModification
             {
                 objectContainer.Rollback();
                 LoggingHelper.HandleException(oEx);
-
             }
-            
         }
     }
 }

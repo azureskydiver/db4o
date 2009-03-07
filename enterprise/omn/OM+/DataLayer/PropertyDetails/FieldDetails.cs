@@ -51,7 +51,7 @@ namespace OManager.DataLayer.Modal
         {
             try
             {             
-                IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_classname);
+                IReflectClass rClass = DataLayerCommon.ReflectClassForName(m_classname);
                 IReflectField rField = DataLayerCommon.GetDeclaredFieldInHeirarchy(rClass, m_fieldname);
                 return rField.GetFieldType().IsPrimitive();
             }
@@ -66,7 +66,7 @@ namespace OManager.DataLayer.Modal
         {
             try
             {
-                IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_classname);
+                IReflectClass rClass = DataLayerCommon.ReflectClassForName(m_classname);
                 if (rClass != null)
                 {
                     IReflectField rField = DataLayerCommon.GetDeclaredFieldInHeirarchy(rClass, m_fieldname);
@@ -90,7 +90,7 @@ namespace OManager.DataLayer.Modal
         {
             try
             {
-            	IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_classname);
+            	IReflectClass rClass = DataLayerCommon.ReflectClassForName(m_classname);
                 if (rClass != null)
                 {
                     IReflectField rField = DataLayerCommon.GetDeclaredFieldInHeirarchy(rClass, m_fieldname);
@@ -112,7 +112,7 @@ namespace OManager.DataLayer.Modal
         {
             try
             {
-                IReflectClass rClass = DataLayerCommon.ReturnReflectClass(m_classname);
+                IReflectClass rClass = DataLayerCommon.ReflectClassForName(m_classname);
                 if (rClass != null)
                 {
                     IReflectField rField = DataLayerCommon.GetDeclaredFieldInHeirarchy(rClass, m_fieldname);

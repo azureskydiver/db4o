@@ -7,7 +7,7 @@ namespace OMControlLibrary.Common
 {
 	class Validations
 	{
-		public static bool ValidateDataType(IType objectType, ref object data)
+		public static bool ValidateDataType(IType objectType, object data)
 		{
 			if (null == data) 
 				return true;

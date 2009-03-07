@@ -131,15 +131,11 @@ namespace OManager.DataLayer.Modal
                                         {
                                             m_listforObjects.Add(getObject);
                                              level=GetDepth(getObject);
-                                           
                                         }
-
                                     }
                                 }
-
                             }
                         }
-                       
                     }
                 }
             }

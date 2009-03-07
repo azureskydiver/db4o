@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.ObjectExplorer;
+using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.Connection;
 using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
@@ -597,7 +598,7 @@ namespace OMControlLibrary.Common
 			return hColumn;
 		}
 
-		internal void SetDatagridRowsWithIndex(List<Hashtable> resultList, string className, Hashtable hashAttributes, int index)
+		internal void SetDatagridRows(List<Hashtable> resultList, string className, Hashtable hashAttributes, int index)
 		{
 			try
 			{
@@ -650,7 +651,7 @@ namespace OMControlLibrary.Common
 	        IType fieldType = null;
 	        if (hashAttributes.Count == 0)
 	        {
-	            fieldType = Helper.DbInteraction.GetFieldType(className, fieldName);
+	            fieldType = dbInteraction.GetFieldType(className, fieldName);
 	        }
 	        else
 	        {
@@ -659,7 +660,7 @@ namespace OMControlLibrary.Common
 	            string clsName = Columns[fieldName].Tag.ToString();
 	            if (clsName != null && strAttribName != null)
 	            {
-	                fieldType = Helper.DbInteraction.GetFieldType(clsName, strAttribName);
+	                fieldType = dbInteraction.GetFieldType(clsName, strAttribName);
 	            }
 	        }
 	        return fieldType;
@@ -1316,7 +1317,7 @@ namespace OMControlLibrary.Common
 						return false;
 
 				string className = FullyQualifiedClassNameFor(tempTreeNode);
-				Hashtable storedfields = Helper.DbInteraction.FetchStoredFields(className);
+				Hashtable storedfields = dbInteraction.FetchStoredFields(className);
 				if (storedfields != null)
 				{
 					IDictionaryEnumerator eNum = storedfields.GetEnumerator();

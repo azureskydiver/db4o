@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using EnvDTE;
-using EnvDTE80;
 using System.Reflection;
+using OManager.BusinessLayer.UIHelper;
 using OMControlLibrary.Common;
 using OManager.BusinessLayer.Login;
 using Microsoft.VisualStudio.CommandBars;
@@ -292,7 +292,7 @@ namespace OMControlLibrary
 			List<RecentQueries> recentConnections = new List<RecentQueries>();
 			try
 			{
-				recentConnections = Helper.DbInteraction.FetchRecentQueries();
+				recentConnections = dbInteraction.FetchRecentQueries();
 				if (recentConnections != null)
 				{
 					CompareTimestamps comparator = new CompareTimestamps();
@@ -472,7 +472,7 @@ namespace OMControlLibrary
 					RecentQueries tempRecentQueries = currRecentQueries.ChkIfRecentConnIsInDb();
 					if (tempRecentQueries != null)
 						currRecentQueries = tempRecentQueries;
-					exceptionString = Helper.DbInteraction.ConnectoToDB(currRecentQueries);
+					exceptionString = dbInteraction.ConnectoToDB(currRecentQueries);
 				}
 				catch (Exception oEx)
 				{
@@ -480,8 +480,8 @@ namespace OMControlLibrary
 				}
 				if (exceptionString == string.Empty)
 				{
-					Helper.DbInteraction.SetCurrentRecentConnection(currRecentQueries);
-					Helper.DbInteraction.SaveRecentConnection(currRecentQueries);
+					dbInteraction.SetCurrentRecentConnection(currRecentQueries);
+					dbInteraction.SaveRecentConnection(currRecentQueries);
 					AfterSuccessfullyConnected();
 					ObjectBrowserToolWin.CreateObjectBrowserToolWindow();
 					ObjectBrowserToolWin.ObjBrowserWindow.Visible = true;

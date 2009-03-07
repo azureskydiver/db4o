@@ -35,8 +35,7 @@ namespace OME.AdvancedDataGridView
 
         #region Contructor
 
-        public TreeGridViewDateTimePickerColumn()
-            : base(new TreeGridViewDateTimePickerCell())
+        public TreeGridViewDateTimePickerColumn() : base(new TreeGridViewDateTimePickerCell())
         {
             m_Rules = new ArrayList();
         }
@@ -75,6 +74,7 @@ namespace OME.AdvancedDataGridView
             {
                 return base.CellTemplate;
             }
+
             set
             {
                 // Ensure that the cell used for the template is a AIDataGridViewDateTimePickerCell.

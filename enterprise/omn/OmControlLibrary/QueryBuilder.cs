@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.CommandBars;
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.QueryManager;
+using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.Connection;
 using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
@@ -365,7 +366,7 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				objectid = Helper.DbInteraction.ExecuteQueryResults(omQuery);
+				objectid = dbInteraction.ExecuteQueryResults(omQuery);
 				e.Result = objectid;
 				bw.ReportProgress(1000);
 				isrunning = false;
@@ -432,44 +433,40 @@ namespace OMControlLibrary
 				string errorMessage;
 
 				//Check the for valid query. user must specifies the values for each query expression
-				Helper.IsValidQuery = IsValidQuery(out errorMessage);
-
-				if (!Helper.IsValidQuery)
+				bool isValidQuery = IsValidQuery(out errorMessage);
+				if (!isValidQuery)
 				{
 					MessageBox.Show(errorMessage,
-									Helper.GetResourceString(Constants.PRODUCT_CAPTION),
-									MessageBoxButtons.OK, MessageBoxIcon.Information);
+					                Helper.GetResourceString(Constants.PRODUCT_CAPTION),
+					                MessageBoxButtons.OK, MessageBoxIcon.Information);
 					return;
 				}
 
 				omQuery = PrepareOMQuery();
 
 				AddQueryToCurrentConnection(omQuery);
+				
+				ObjectBrowser.Instance.Enabled = false;
+				PropertiesTab.Instance.Enabled = false;
+				Instance.Enabled = false;
 
-				if (Helper.IsValidQuery)
+				EnableDisableDatabaseConnection(false);
+
+				bw = new BackgroundWorker();
+				bw.WorkerReportsProgress = true;
+				bw.WorkerSupportsCancellation = true;
+				bw.ProgressChanged += bw_ProgressChanged;
+				bw.DoWork += bw_DoWork;
+				bw.RunWorkerCompleted += bw_RunWorkerCompleted;
+				ApplicationObject.StatusBar.Animate(true, vsStatusAnimation.vsStatusAnimationBuild);
+				isrunning = true;
+
+				bw.RunWorkerAsync();
+
+				for (double i = 1; i < 10000 && isrunning; i = (i + 1)%1000)
 				{
-					ObjectBrowser.Instance.Enabled = false;
-					PropertiesTab.Instance.Enabled = false;
-					Instance.Enabled = false;
-
-					EnableDisableDatabaseConnection(false);
-
-					bw = new BackgroundWorker();
-					bw.WorkerReportsProgress = true;
-					bw.WorkerSupportsCancellation = true;
-					bw.ProgressChanged += bw_ProgressChanged;
-					bw.DoWork += bw_DoWork;
-					bw.RunWorkerCompleted += bw_RunWorkerCompleted;
-					ApplicationObject.StatusBar.Animate(true, vsStatusAnimation.vsStatusAnimationBuild);
-					isrunning = true;
-
-					bw.RunWorkerAsync();
-
-					for (double i = 1; i < 10000 && isrunning; i = (i + 1) % 1000)
-					{
-						if (bw.IsBusy)
-							bw.ReportProgress((int)i * 100 / 10000);
-					}
+					if (bw.IsBusy)
+						bw.ReportProgress((int) i*100/10000);
 				}
 			}
 			catch (Exception oEx)
@@ -741,7 +738,7 @@ namespace OMControlLibrary
 				Helper.HashTableBaseClass.Add(Helper.BaseClass, string.Empty);
 
 			string tempClassName = tempTreeNode.Tag.ToString().Contains(CONST_COMMA_STRING) ? tempTreeNode.Tag.ToString() : tempTreeNode.Name;
-			Hashtable storedfields = Helper.DbInteraction.FetchStoredFields(tempClassName);
+			Hashtable storedfields = dbInteraction.FetchStoredFields(tempClassName);
 			if (storedfields == null) 
 				return;
 
@@ -880,8 +877,6 @@ namespace OMControlLibrary
 				{
 					//Set tooltip for selected recent query
 					recentQueriesToolTip.SetToolTip(comboboxRecentQueries, comboboxRecentQueries.SelectedText);
-
-					Helper.IsQueryResultUpdated = true;
 
 					//Get the OMQuery for selected query expression
 					OMQuery omQuery = (OMQuery)comboboxRecentQueries.SelectedValue;
@@ -1040,9 +1035,9 @@ namespace OMControlLibrary
 				else
 				{
 					//Get the recent queries from the repositary
-					List<OMQuery> qrylist = Helper.DbInteraction.GetCurrentRecentConnection().FetchQueriesForAClass(Helper.ClassName);
+					List<OMQuery> qrylist = dbInteraction.GetCurrentRecentConnection().FetchQueriesForAClass(Helper.ClassName);
 					Helper.PopulateRecentQueryComboBox(qrylist, comboboxRecentQueries);
-					Helper.DbInteraction.CloseRecentConn();
+					dbInteraction.CloseRecentConn();
 				}
 
 				comboboxRecentQueries.DropdownItemSelected += comboboxRecentQueries_DropdownItemSelected;
@@ -1063,7 +1058,7 @@ namespace OMControlLibrary
 			{
 				if (!string.IsNullOrEmpty(query.QueryString))
 				{
-					RecentQueries currentConnection = Helper.DbInteraction.GetCurrentRecentConnection();
+					RecentQueries currentConnection = dbInteraction.GetCurrentRecentConnection();
 					currentConnection.AddQueryToList(query);
 				}
 			}

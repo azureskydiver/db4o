@@ -27,8 +27,6 @@ using stdole;
 
 namespace OMAddin
 {
-	/// <summary>The object for implementing an Add-in.</summary>
-	/// <seealso class='IDTExtensibility2' />
 	public class Connect : IDTExtensibility2, IDTCommandTarget
 	{
 		#region Private Variables
@@ -193,8 +191,7 @@ namespace OMAddin
 
 			try
 			{
-				if (connectMode == ext_ConnectMode.ext_cm_AfterStartup ||
-					connectMode == ext_ConnectMode.ext_cm_Startup)
+				if (connectMode == ext_ConnectMode.ext_cm_AfterStartup || connectMode == ext_ConnectMode.ext_cm_Startup)
 				{
 					CreateMenu();
 
@@ -208,7 +205,6 @@ namespace OMAddin
 						}
 						catch (ArgumentException)
 						{
-							//Try to find existing CommandBar
 							omToolbar = toolBarCommandBars[toolbarName];
 						}
 						omToolbar.Visible = true;
@@ -222,13 +218,9 @@ namespace OMAddin
 
 					try
 					{
-						//Get the DTE Events object.
 						EnvDTE.Events events = _applicationObject.Events;
-
-						//Get the WindowEvents object.
 						_windowsEvents = events.get_WindowEvents(null);
-
-						//Set the WindowActivated event delegate.
+						
 						_windowsEvents.WindowActivated += _windowsEvents_WindowActivated;
 
 						eve = _applicationObject.Events.DTEEvents;
@@ -239,6 +231,7 @@ namespace OMAddin
 					{
 						LoggingHelper.HandleException(oEx);
 					}
+					
 					try
 					{
 						//This function checks whether user already logged in.
@@ -360,11 +353,9 @@ namespace OMAddin
 		{
 			try
 			{
-
 				//This function Aborts the current session
 				Helper.AbortSession();
 				Helper.ClearAllCachedAttributes();
-
 			}
 			catch (Exception oEx)
 			{
@@ -751,7 +742,7 @@ namespace OMAddin
 			try
 			{
 				Cursor.Current = Cursors.WaitCursor;
-				Helper.DbInteraction.ConnectoToDB(Helper.DbInteraction.GetCurrentRecentConnection());
+				dbInteraction.ConnectoToDB(dbInteraction.GetCurrentRecentConnection());
 				ObjectBrowserToolWin.CreateObjectBrowserToolWindow();
 				Cursor.Current = Cursors.Default;
 			}
@@ -766,7 +757,7 @@ namespace OMAddin
 			try
 			{
 				Cursor.Current = Cursors.WaitCursor;
-				Helper.DbInteraction.ConnectoToDB(Helper.DbInteraction.GetCurrentRecentConnection());
+				dbInteraction.ConnectoToDB(dbInteraction.GetCurrentRecentConnection());
 				Login.CreateQueryBuilderToolWindow();
 				Cursor.Current = Cursors.Default;
 			}
@@ -781,7 +772,7 @@ namespace OMAddin
 			try
 			{
 				Cursor.Current = Cursors.WaitCursor;
-				Helper.DbInteraction.ConnectoToDB(Helper.DbInteraction.GetCurrentRecentConnection());
+				dbInteraction.ConnectoToDB(dbInteraction.GetCurrentRecentConnection());
 				PropertyPaneToolWin.CreatePropertiesPaneToolWindow(true);
 				Cursor.Current = Cursors.Default;
 			}
@@ -962,14 +953,12 @@ namespace OMAddin
 				pLoginwin.ShowDialog();
 				if (pLoginwin.DialogResult == DialogResult.OK)
 				{
-					dbInteraction dbint = new dbInteraction();
 					ProxyAuthentication pAuth = new ProxyAuthentication();
 					pAuth.Port = pLoginwin.textBoxPort.Text;
 					pAuth.ProxyAddress = pLoginwin.textBoxProxy.Text;
 					pAuth.UserName = pLoginwin.textBoxUserID.Text;
 					pAuth.PassWord = Helper.EncryptPass(pLoginwin.textBoxPassword.Text);
-					dbint.SetProxyInfo(pAuth);
-
+					dbInteraction.SetProxyInfo(pAuth);
 				}
 			}
 			catch (Exception oEx)
@@ -1231,7 +1220,7 @@ namespace OMAddin
 					omBackupControl.Enabled = false;
 
 					CloseAllToolWindows();
-					Helper.DbInteraction.SetCurrentRecentConnection(null);
+					dbInteraction.SetCurrentRecentConnection(null);
 				}
 			}
 			catch (Exception oEx)
@@ -1293,10 +1282,10 @@ namespace OMAddin
 		{
 			try
 			{
-				RecentQueries recQueries = Helper.DbInteraction.GetCurrentRecentConnection();
+				RecentQueries recQueries = dbInteraction.GetCurrentRecentConnection();
 				if (recQueries != null)
 				{
-					Helper.DbInteraction.closedb(recQueries);
+					dbInteraction.Closedb(recQueries);
 				}
 				Helper.ClearAllCachedAttributes();
 
@@ -1388,7 +1377,7 @@ namespace OMAddin
 		}
 		#endregion
 
-		#region Opendb4oDeveloper
+		//FIXME: Add the window to OM window list. See ViewBase.CreateToolWindow() for details.
 		private void Opendb4oDeveloper()
 		{
 			try
@@ -1404,7 +1393,6 @@ namespace OMAddin
 				windb4oDeveloper = _applicationObject.DTE.ItemOperations.Navigate(URL_DB4O_DEVELOPER, vsNavigateOptions.vsNavigateOptionsNewWindow);
 			}
 		}
-		#endregion
 
 		#region BackupDatabase
 		private void BackupDatabase()
@@ -1537,7 +1525,7 @@ namespace OMAddin
 
 		void ThreadForDefrag()
 		{
-			RecentQueries recConn = Helper.DbInteraction.GetCurrentRecentConnection();
+			RecentQueries recConn = dbInteraction.GetCurrentRecentConnection();
 			string strDatabaseLocation = recConn.ConnParam.Connection;
 			CloseAllToolWindows();
 			Defragmentdb4oData d = new Defragmentdb4oData(strDatabaseLocation);
@@ -1548,6 +1536,7 @@ namespace OMAddin
 
 		private WindowVisibilityEvents helpWindowEvents;
 
+		//FIXME: Add the window to OM window list. See ViewBase.CreateToolWindow() for details.
 		private void OpenHelp()
 		{
 			string filepath = Assembly.GetExecutingAssembly().CodeBase.Remove(0, 8);
@@ -1573,7 +1562,6 @@ namespace OMAddin
 		}
 		#endregion
 
-		#region SupportCases
 		private void SupportCases()
 		{
 			try
@@ -1586,6 +1574,7 @@ namespace OMAddin
 			}
 		}
 
+		//FIXME: Add the window to OM window list. See ViewBase.CreateToolWindow() for details.
 		private void ConnectToSupport()
 		{
 			try
@@ -1601,8 +1590,6 @@ namespace OMAddin
 			}
 		}
 
-		#endregion
-
 		#region XtremeConnect
 		private void XtremeConnect()
 		{
@@ -1616,6 +1603,7 @@ namespace OMAddin
 			}
 		}
 
+		//FIXME: Add the window to OM window list. See ViewBase.CreateToolWindow() for details.
 		private void ConnectToXtremeConnect()
 		{
 			try
@@ -1632,7 +1620,7 @@ namespace OMAddin
 		}
 		#endregion
 
-		#region Opendb4oDownloads
+		//FIXME: Add the window to OM window list. See ViewBase.CreateToolWindow() for details.
 		private void Opendb4oDownloads()
 		{
 			try
@@ -1648,9 +1636,8 @@ namespace OMAddin
 				windb4oDownloads = _applicationObject.DTE.ItemOperations.Navigate(URL_DB4O_DOWNLOADS, vsNavigateOptions.vsNavigateOptionsNewWindow);
 			}
 		}
-		#endregion
 
-		#region Opendb4oHomepage
+		//FIXME: Add the window to OM window list. See ViewBase.CreateToolWindow() for details.
 		private void Opendb4oHomepage()
 		{
 			try
@@ -1665,8 +1652,6 @@ namespace OMAddin
 				windb4oHome = _applicationObject.DTE.ItemOperations.Navigate(URL_DB4O_HOMEPAGE, vsNavigateOptions.vsNavigateOptionsNewWindow);
 			}
 		}
-
-		#endregion
 
 		#endregion
 	}
