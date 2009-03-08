@@ -4,6 +4,7 @@ import java.math.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.jre12.collections.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.query.*;
@@ -47,10 +48,10 @@ public class BigIntegerTypeHandlerTestCase extends AbstractDb4oTestCase {
 	
 	@Override
 	protected void configure(Configuration config) throws Exception {
-		if (SubjectFixtureProvider.<Boolean>value()) {
+//		if (SubjectFixtureProvider.<Boolean>value()) {
 			// FIXME: indices are simply being ignored
 			indexField(config, Item.class, "_typed");
-		}
+//		}
 		config.registerTypeHandler(new SingleClassTypeHandlerPredicate(BigInteger.class), new BigIntegerTypeHandler());
 	}
 
@@ -107,10 +108,33 @@ public class BigIntegerTypeHandlerTestCase extends AbstractDb4oTestCase {
 		return result.iterator();
     }
 
+	public void testSingleDescendTypedField() {
+		assertTypedQuery(VALUES[0]);
+	}
+
 	public void testDescendTypedField() {
 		for (BigInteger value : VALUES) {
 			assertTypedQuery(value);
 		}
+	}
+
+	public void testSingleDescendTypedFieldRange() {
+	    Query query = newItemQuery();
+	    query.descend("_typed").constrain(VALUES[0]).greater();
+	    ObjectSet<Item> result = query.execute();
+	    Assert.areEqual(VALUES.length - 2, result.size());
+	}
+
+	// FIXME
+	public void _testSingleDescendTypedFieldRangeSub() {
+	    Query query = newItemQuery();
+	    Query sub = query.descend("_typed");
+		sub.constrain(VALUES[0]).greater();
+	    ObjectSet<Item> result = sub.execute();
+	    System.out.println(result.size());
+	    Object[] expected = new Object[VALUES.length - 2];
+	    System.arraycopy(VALUES, 1, expected, 0, expected.length);
+	    ObjectSetAssert.sameContent(result, expected);
 	}
 
 	private void assertTypedQuery(BigInteger value) {
