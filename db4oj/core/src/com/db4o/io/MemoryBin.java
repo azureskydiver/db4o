@@ -45,6 +45,9 @@ public class MemoryBin implements Bin {
 
 	/**
 	 * Returns a copy of the raw data contained in this bin for external processing.
+	 * Access to the data is not guarded by synchronisation. If this method is called
+	 * while the MemoryBin is in use, it is possible that the returned byte array is
+	 * not consistent.
 	 */
 	public byte[] data() {
 		byte[] data = new byte[_length];
