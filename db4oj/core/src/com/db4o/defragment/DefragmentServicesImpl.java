@@ -336,7 +336,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 				public void apply(Object arg) {
 					FieldMetadata curField = (FieldMetadata)arg;
 					if (curField.hasIndex()
-							&& (curField.getHandler() instanceof StringHandler)) {
+							&& Handlers4.isIndirectedIndexed(curField.getHandler())) {
 						hasFieldIndex.value = true;
 					}
 				}
