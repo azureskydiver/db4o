@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import javax.swing.tree.*;
+
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.handlers.*;
@@ -263,37 +265,42 @@ public class Handlers4 {
 	}
 
 	public static void collectIdsInternal(CollectIdContext context, final TypeHandler4 handler, int linkLength) {
-	        if(! (isFirstClass(handler))){
-	        	ReadBuffer buffer = context.buffer();
-				buffer.seek(buffer.offset() + linkLength);
-	            return;
-	        }
-	
-	        if (handler.getClass() == ClassMetadata.class) {
-	            context.addId();
-	            return;
-	        } 
-	        
-	        LocalObjectContainer container = (LocalObjectContainer) context.container();
-	        final SlotFormat slotFormat = context.slotFormat();
-	        
-	        if(handleAsObject(handler)){
-	            // TODO: Code is similar to QCandidate.readArrayCandidates. Try to refactor to one place.
-	            int collectionID = context.readInt();
-	            ByteArrayBuffer collectionBuffer = container.readReaderByID(context.transaction(), collectionID);
-	            ObjectHeader objectHeader = new ObjectHeader(container, collectionBuffer);
-	            QueryingReadContext subContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), collectionBuffer, collectionID, context.collector());
-	            objectHeader.classMetadata().collectIDs(subContext);
-	            return;
-	        }
-	        
-	        final QueryingReadContext queryingReadContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), context.buffer(), 0, context.collector());
-	        slotFormat.doWithSlotIndirection(queryingReadContext, handler, new Closure4() {
-	            public Object run() {
-	                ((FirstClassHandler) handler).collectIDs(queryingReadContext);
-	                return null;
-	            }
-	        });
-	    }
+        if(! (isFirstClass(handler))){
+        	ReadBuffer buffer = context.buffer();
+			buffer.seek(buffer.offset() + linkLength);
+            return;
+        }
 
+        if (handler.getClass() == ClassMetadata.class) {
+            context.addId();
+            return;
+        } 
+        
+        LocalObjectContainer container = (LocalObjectContainer) context.container();
+        final SlotFormat slotFormat = context.slotFormat();
+        
+        if(handleAsObject(handler)){
+            // TODO: Code is similar to QCandidate.readArrayCandidates. Try to refactor to one place.
+            int collectionID = context.readInt();
+            ByteArrayBuffer collectionBuffer = container.readReaderByID(context.transaction(), collectionID);
+            ObjectHeader objectHeader = new ObjectHeader(container, collectionBuffer);
+            QueryingReadContext subContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), collectionBuffer, collectionID, context.collector());
+            objectHeader.classMetadata().collectIDs(subContext);
+            return;
+        }
+        
+        final QueryingReadContext queryingReadContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), context.buffer(), 0, context.collector());
+        slotFormat.doWithSlotIndirection(queryingReadContext, handler, new Closure4() {
+            public Object run() {
+                ((FirstClassHandler) handler).collectIDs(queryingReadContext);
+                return null;
+            }
+        });
+    }
+
+	public static boolean isIndirectedIndexed(TypeHandler4 handler) {
+		return (handler instanceof EmbeddedTypeHandler)
+			&& (handler instanceof VariableLengthTypeHandler)
+			&& (handler instanceof IndexableTypeHandler);
+	}
 }
