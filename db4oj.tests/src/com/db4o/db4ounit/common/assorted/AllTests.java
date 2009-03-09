@@ -23,6 +23,7 @@ public class AllTests extends Db4oTestSuite {
             ComparatorSortTestCase.class,
             DatabaseGrowthSizeTestCase.class,
             DatabaseUnicityTest.class,
+            DbPathDoesNotExistTestCase.class,
             // FIXME: COR-1060
 //            DeleteSetTestCase.class,
             DeleteUpdateTestCase.class,
