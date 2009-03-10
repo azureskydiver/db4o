@@ -39,7 +39,7 @@ public class CommittedCallbackRefreshTestCase extends Db4oClientServerTestCase {
 			Assert.isNotNull(_name);
 			Assert.areEqual(_name, _subItem._name);
 			Assert.areEqual(_updates, _subItem._updates);
-			System.out.println(_updates);
+			// System.out.println(_updates);
 		}
 		
 	}
