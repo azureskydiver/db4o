@@ -491,14 +491,15 @@ namespace OManager.DataLayer.QueryParser
 			try
 			{
 				//TreeGridView Initialization
-				TreeGridView m_treeGridView = new TreeGridView();
-				m_treeGridView.Size = new Size(530, 442);
-				m_treeGridView.Location = new Point(2, 2);
-				m_treeGridView.Name = BusinessConstants.DB4OBJECTS_TREEGRIDVIEW;
-				m_treeGridView.RowHeadersVisible = false;
-				m_treeGridView.ShowLines = true;
-				m_treeGridView.Dock = DockStyle.Fill;
-				m_treeGridView.Visible = true;
+				TreeGridView treeGridView = new TreeGridView();
+				treeGridView.Size = new Size(530, 442);
+				treeGridView.Location = new Point(2, 2);
+				treeGridView.Name = BusinessConstants.DB4OBJECTS_TREEGRIDVIEW;
+				treeGridView.RowHeadersVisible = false;
+				treeGridView.ShowLines = true;
+				treeGridView.Dock = DockStyle.Fill;
+				treeGridView.Visible = true;
+				treeGridView.AllowDrop = true;
 
 				//Column Intialization
 
@@ -530,12 +531,12 @@ namespace OManager.DataLayer.QueryParser
 				m_typeColumn.ReadOnly = true;
 				m_typeColumn.Width = 150;
 
-				m_treeGridView.Columns.AddRange(new DataGridViewColumn[] {m_fieldColumn, m_valueColumn, m_typeColumn});
+				treeGridView.Columns.AddRange(new DataGridViewColumn[] {m_fieldColumn, m_valueColumn, m_typeColumn});
 
-				m_treeGridView.ImageList = m_imageListTreeGrid;
-				m_treeGridView.ScrollBars = ScrollBars.Both;
+				treeGridView.ImageList = m_imageListTreeGrid;
+				treeGridView.ScrollBars = ScrollBars.Both;
 
-				return m_treeGridView;
+				return treeGridView;
 			}
 			catch (Exception oEx)
 			{
