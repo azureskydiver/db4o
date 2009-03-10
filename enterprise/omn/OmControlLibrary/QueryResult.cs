@@ -28,25 +28,6 @@ namespace OMControlLibrary
 	[ComVisible(true)]
 	public partial class QueryResult : ViewBase
 	{
-		#region Member Variables
-
-		private string strstoreValue;
-		private string strstoreTreeValue;
-		internal string ClassName = Helper.BaseClass;
-
-		internal ArrayList hierarchy;
-
-		private dbDataGridView masterView;
-		//TODO: Get rid of this instance variable.
-		private TreeGridView treeview = new TreeGridView();
-		private OMETabStrip detailsTabs;
-
-		internal OMQuery omQuery;
-		internal long[] objectid;
-
-		private Hashtable cellUpdated;
-
-		//Constants
 		private const string COLUMN_NUMBER = "No.";
 		private const string CONST_DOT = ".";
 		private const char CONST_SPACE = ' ';
@@ -54,6 +35,19 @@ namespace OMControlLibrary
 		private const string CONST_TRUE = "true";
 		private const string CONST_FALSE = "false";
 		private const string CONST_COMMA = ",";
+		
+		#region Member Variables
+
+		private string strstoreValue;
+		private string strstoreTreeValue;
+		internal readonly string ClassName = Helper.BaseClass;
+
+		private dbDataGridView masterView;
+		private OMETabStrip detailsTabs;
+
+		internal OMQuery omQuery;
+		internal long[] objectid;
+		private List<long> lstObjIdLong;
 
 		private const int m_pagingStartIndex = 0;
 		private int m_pageCount = 1;
@@ -61,13 +55,11 @@ namespace OMControlLibrary
 		private readonly WindowVisibilityEvents windowsVisEvents;
 		private readonly WindowEvents _windowsEvents;
 
-		private List<long> lstObjIdLong;
-
 		#endregion
 
-		public void Setobjectid(long[] objectid)
+		public void Setobjectid(long[] objectIds)
 		{
-			this.objectid = objectid;
+			objectid = objectIds;
 		}
 
 		#region Constructor
@@ -81,8 +73,6 @@ namespace OMControlLibrary
 				SetStyle(ControlStyles.CacheText | ControlStyles.OptimizedDoubleBuffer, true);
 
 				InitializeComponent();
-
-				treeview.AllowDrop = true;
 
 				omQuery = (OMQuery) Helper.OMResultedQuery[ClassName];
 				
@@ -247,12 +237,11 @@ namespace OMControlLibrary
 			{
 				OMETrace.WriteFunctionStart();
 
-				if (treeview.SelectedRows.Count > 0)
-					treeview.SelectedRows[0].Selected = false;
+				EnsureDetailViewItemNotSelected();
 
 				DataGridViewCell cell = masterView[e.ColumnIndex, e.RowIndex];
 				object currObj = cell.OwningRow.Tag;
-				string headerText = masterView.Columns[e.ColumnIndex].HeaderText;
+				string fieldName = masterView.Columns[e.ColumnIndex].HeaderText;
 				object value = cell.Value;
 
 			    IType type = (IType) cell.Tag;
@@ -263,14 +252,10 @@ namespace OMControlLibrary
 						if (currObj != null)
 						{
 							UpdateMasterViewObjectEditedStatus(masterView.Rows[e.RowIndex], true);
-							dbInteraction.EditObject(currObj, headerText, value.ToString());
+							dbInteraction.EditObject(currObj, fieldName, value.ToString());
 
                             masterView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = type.Cast(cell.Value);
-							//FIXME: What is the catch here? We don't use cellUpdated? 
-							//	    Consider removing.
-							cellUpdated = new Hashtable();
-							cellUpdated.Add(headerText, value);
-
+							//TODO: Why double check the condition bellow here? 
 							if (strstoreValue != value.ToString())
 							{
 								cell.Style.ForeColor = Color.Red;
@@ -302,6 +287,13 @@ namespace OMControlLibrary
 			}
 		}
 
+		private void EnsureDetailViewItemNotSelected()
+		{
+			TreeGridView treeview = TreeViewFor(detailsTabs.SelectedItem);
+			if (treeview.SelectedRows.Count > 0)
+				treeview.SelectedRows[0].Selected = false;
+		}
+
 		private static void UpdateMasterViewObjectEditedStatus(DataGridViewRow row, bool edited)
 		{
 			row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value = edited;
@@ -322,8 +314,7 @@ namespace OMControlLibrary
 				}
 
 				btnSave.Enabled = true;
-				if (treeview.SelectedRows.Count > 0)
-					treeview.SelectedRows[0].Selected = false;
+				EnsureDetailViewItemNotSelected();
 
 				if (cell.Value != null)
 					strstoreValue = cell.Value.ToString();
@@ -340,54 +331,48 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				OMETrace.WriteFunctionStart();
 				if (masterView.SelectedRows.Count > 0 && detailsTabs.SelectedItem != null)
 				{
-					if (masterView.SelectedRows[0].Tag != null &&
-					    masterView.SelectedRows[0].Tag.Equals(ReferencedObjectFor(detailsTabs.SelectedItem)))
+					object selectedObject = masterView.SelectedRows[0].Tag;
+					if (selectedObject != null && selectedObject.Equals(ReferencedObjectFor(detailsTabs.SelectedItem)))
 					{
 						PropertiesTab.Instance.ShowObjectPropertiesTab = true;
-						PropertiesTab.Instance.RefreshPropertiesTab(masterView.SelectedRows[0].Tag);
-
+						PropertiesTab.Instance.RefreshPropertiesTab(selectedObject);
 						return;
 					}
 				}
-				if (masterView.SelectedRows.Count > 0)
+
+				if (masterView.SelectedRows.Count <= 0)
+					return;
+
+				DataGridViewRow row = masterView.SelectedRows[0];
+				if (null == row)
+					return;
+
+				if (row.Tag != null)
 				{
-					DataGridViewRow row = masterView.SelectedRows[0];
-					if (null == row)
-						return;
-					
-					if (row.Tag != null)
+					OMETabStripItem foundTab = FindDetailsTabForObjectIndex(DetailsTabCaptionFor(row));
+					if (null != foundTab)
 					{
-						OMETabStripItem foundTab = FindDetailsTabForObjectIndex(DetailsTabCaptionFor(row));
-						if (null != foundTab)
-						{
-							detailsTabs.SelectedItem = foundTab;
-							return;
-						}
-
-						treeview = dbInteraction.GetObjectHierarchy(row.Tag, ClassName);
-
-						OMETabStripItem tabPage = new OMETabStripItem(DetailsTabCaptionFor(row), treeview);
-						//FIXME: We don't need to keep track of the object in the tab.
-						//       We can use it's child TreeGridView.Tag instead
-						SetReferencedObjectInDetailView(tabPage, treeview.Nodes[0].Tag);
-						tabPage.Name = tabPage.Title;
-						detailsTabs.AddTab(tabPage);
-
-						RegisterTreeviewEvents();
-						// This check helps in avoding recusrrion.
-						if (masterView.SortOrder == SortOrder.None)
-						{
-							detailsTabs.SelectedItem = tabPage;
-						}
+						detailsTabs.SelectedItem = foundTab;
+						return;
 					}
-					else
-						row.Selected = false;
-				}
 
-				OMETrace.WriteFunctionEnd();
+					TreeGridView treeview = dbInteraction.GetObjectHierarchy(row.Tag, ClassName);
+
+					OMETabStripItem tabPage = new OMETabStripItem(DetailsTabCaptionFor(row), treeview);
+					tabPage.Name = tabPage.Title;
+					detailsTabs.AddTab(tabPage);
+
+					RegisterTreeviewEvents(treeview);
+					// This check helps in avoding recusrrion.
+					if (masterView.SortOrder == SortOrder.None)
+					{
+						detailsTabs.SelectedItem = tabPage;
+					}
+				}
+				else
+					row.Selected = false;
 			}
 			catch (Exception oEx)
 			{
@@ -395,16 +380,9 @@ namespace OMControlLibrary
 			}
 		}
 
-		private static void SetReferencedObjectInDetailView(OMETabStripItem tabPage, object obj)
-		{
-			tabPage.Tag = obj;
-		}
-
 		private static object ReferencedObjectFor(OMETabStripItem item)
 		{
-			//TODO: Track objects through treeview instead 
-			//return TreeViewFor(item).Nodes[0].Tag;
-			return item.Tag ;
+			return TreeViewFor(item).Nodes[0].Tag;
 		}
 
 		private static string DetailsTabCaptionFor(DataGridViewRow row)
@@ -429,7 +407,7 @@ namespace OMControlLibrary
 			return null;
 		}
 
-		private void RegisterTreeviewEvents()
+		private void RegisterTreeviewEvents(TreeGridView treeview)
 		{
 			treeview.NodeExpanded += treeview_NodeExpanded;
 			treeview.CellBeginEdit += treeview_CellBeginEdit;
@@ -444,6 +422,7 @@ namespace OMControlLibrary
 
 		private void treeview_Click(object sender, EventArgs e)
 		{
+			TreeGridView treeview = (TreeGridView) sender;
 			CheckForObjectPropertiesTab(treeview.Nodes[0].Tag);
 		}
 
@@ -451,89 +430,88 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				if (treeview.SelectedRows.Count > 0)
+				TreeGridView treeview = (TreeGridView) e.Data;
+				if (treeview.SelectedRows.Count <= 0)
+					return;
+
+				treeview.ContextMenuStrip.Dispose();
+				DialogResult dialogRes =
+					MessageBox.Show("This will set the value to null in the database. Do you want to continue?",
+					                Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.YesNo,
+					                MessageBoxIcon.Question);
+
+				if (dialogRes != DialogResult.Yes)
+					return;
+				
+				TreeGridNode node = (TreeGridNode) treeview.SelectedCells[0].OwningRow;
+
+				long id = dbInteraction.GetLocalID(treeview.Nodes[0].Tag);
+
+				dbInteraction.SetFieldToNull(
+					ParentObjectFor(node),
+					CommonValues.UndecorateFieldName(node.Cells[0].Value.ToString()));
+
+				object obj = null;
+				if (id != 0)
 				{
-					treeview = e.Data as TreeGridView;
-					treeview.ContextMenuStrip.Dispose();
-					DialogResult dialogRes =
-						MessageBox.Show("This will set the value to null in the database. Do you want to continue?",
-						                Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.YesNo,
-						                MessageBoxIcon.Question);
+					obj = dbInteraction.GetObjById(id);
+				}
+				else
+				{
+					MessageBox.Show("This object is already deleted.", Helper.GetResourceString(Constants.PRODUCT_CAPTION),
+					                MessageBoxButtons.OK, MessageBoxIcon.Information);
+				}
 
-					if (dialogRes == DialogResult.Yes)
+				if (obj != null)
+				{
+					dbInteraction.RefreshObject(obj, DepthFor(node));
+
+					UpdateResultTable(treeview.SelectedCells[0].OwningRow.Cells[0],
+					                  "null",
+					                  (TreeGridNode) treeview.SelectedCells[0].OwningRow.Cells[0].OwningRow,
+					                  (OMETabStripItem) treeview.Parent, true);
+
+					treeview = dbInteraction.GetObjectHierarchy(obj, FieldTypeNameFor(treeview.Nodes[0]));
+					detailsTabs.SelectedItem.Controls.Clear();
+					detailsTabs.SelectedItem.Controls.Add(treeview);
+					RegisterTreeviewEvents(treeview);
+				}
+				else //delete tab as teh obj is deleted and delete it from db grid view
+				{
+					int index = OffsetInCurrentPageFor(ObjectIndexInMasterViewFor((OMETabStripItem) treeview.Parent));
+					detailsTabs.RemoveTab(detailsTabs.SelectedItem);
+					masterView.Rows.RemoveAt(index - 1);
+
+					detailsTabs.SelectedItem.Controls.Clear();
+					lstObjIdLong.Remove(id);
+
+					int m_pageCount = CurrentPageNumber();
+					int startIndex = (CurrentPageNumber()*PagingData.PAGE_SIZE) - PagingData.PAGE_SIZE;
+					int endIndex = startIndex + PagingData.PAGE_SIZE;
+					labelNoOfObjects.Text = lstObjIdLong.Count.ToString();
+
+					PagingData pgData = new PagingData(startIndex, endIndex);
+					pgData.ObjectId = lstObjIdLong;
+					if (lstObjIdLong.Count > 0)
 					{
-						TreeGridNode node = (TreeGridNode)treeview.SelectedCells[0].OwningRow;
+						List<Hashtable> hashListResult = dbInteraction.ReturnQueryResults(pgData, false, omQuery.BaseClass,
+						                                                                  omQuery.AttributeList);
+						Hashtable hAttributes = null;
 
-
-						long id = dbInteraction.GetLocalID(treeview.Nodes[0].Tag);
-
-						dbInteraction.SetFieldToNull(
-								ParentObjectFor(node), 
-								CommonValues.UndecorateFieldName(node.Cells[0].Value.ToString()));
-
-						object obj = null;
-						if (id != 0)
+						if (omQuery != null)
 						{
-							obj = dbInteraction.GetObjById(id);
+							hAttributes = omQuery.AttributeList;
 						}
-						else
-						{
-							MessageBox.Show("This object is already deleted.", Helper.GetResourceString(Constants.PRODUCT_CAPTION),
-											MessageBoxButtons.OK, MessageBoxIcon.Information);
-						}
-
-						if (obj != null)
-						{
-							dbInteraction.RefreshObject(obj, DepthFor(node));
-
-							UpdateResultTable(treeview.SelectedCells[0].OwningRow.Cells[0],
-							                  "null",
-							                  (TreeGridNode) treeview.SelectedCells[0].OwningRow.Cells[0].OwningRow,
-							                  (OMETabStripItem) treeview.Parent, true);
-
-							treeview = dbInteraction.GetObjectHierarchy(obj, FieldTypeNameFor(treeview.Nodes[0]));
-							detailsTabs.SelectedItem.Controls.Clear();
-							detailsTabs.SelectedItem.Controls.Add(treeview);
-							RegisterTreeviewEvents();
-						}
-						else //delete tab as teh obj is deleted and delete it from db grid view
-						{
-							int index = OffsetInCurrentPageFor(ObjectIndexInMasterViewFor((OMETabStripItem) treeview.Parent));
-							detailsTabs.RemoveTab(detailsTabs.SelectedItem);
-							masterView.Rows.RemoveAt(index - 1);
-
-							detailsTabs.SelectedItem.Controls.Clear();
-							lstObjIdLong.Remove(id);
-
-							int m_pageCount = CurrentPageNumber();
-							int startIndex = (CurrentPageNumber()*PagingData.PAGE_SIZE) - PagingData.PAGE_SIZE;
-							int endIndex = startIndex + PagingData.PAGE_SIZE;
-							labelNoOfObjects.Text = lstObjIdLong.Count.ToString();
-
-							PagingData pgData = new PagingData(startIndex, endIndex);
-							pgData.ObjectId = lstObjIdLong;
-							if (lstObjIdLong.Count > 0)
-							{
-								List<Hashtable> hashListResult = dbInteraction.ReturnQueryResults(pgData, false, omQuery.BaseClass,
-								                                                                  omQuery.AttributeList);
-								Hashtable hAttributes = null;
-
-								if (omQuery != null)
-								{
-									hAttributes = omQuery.AttributeList;
-								}
-								masterView.SetDatagridRows(hashListResult, ClassName, hAttributes, 1);
-							}
-
-							treeview = dbInteraction.GetObjectHierarchy(ReferencedObjectFor(detailsTabs.SelectedItem), ClassName);
-
-							detailsTabs.SelectedItem.Controls.Add(treeview);
-							RegisterTreeviewEvents();
-
-							int delIndex = ObjectIndexInMasterViewFor(detailsTabs.SelectedItem);
-							UpdateObjectDetailTablCaptions(delIndex);
-						}
+						masterView.SetDatagridRows(hashListResult, ClassName, hAttributes, 1);
 					}
+
+					treeview = dbInteraction.GetObjectHierarchy(ReferencedObjectFor(detailsTabs.SelectedItem), ClassName);
+
+					detailsTabs.SelectedItem.Controls.Add(treeview);
+					RegisterTreeviewEvents(treeview);
+
+					int delIndex = ObjectIndexInMasterViewFor(detailsTabs.SelectedItem);
+					UpdateObjectDetailTablCaptions(delIndex);
 				}
 			}
 			catch (Exception oEx)
@@ -560,6 +538,7 @@ namespace OMControlLibrary
 				depth++;
 				node = node.Parent;
 			}
+
 			return depth;
 		}
 
@@ -568,11 +547,11 @@ namespace OMControlLibrary
 			return node.Parent.Tag;
 		}
 
-		private void treeview_OnContextMenuOpening(object sender, ContextItemClickedEventArg e)
+		private static void treeview_OnContextMenuOpening(object sender, ContextItemClickedEventArg e)
 		{
 			try
 			{
-				treeview = e.Data as TreeGridView;
+				TreeGridView treeview = (TreeGridView) e.Data;
 				treeview.EndEdit();
 
 				CancelEventArgs args = e.CancelEventArguments;
@@ -647,7 +626,7 @@ namespace OMControlLibrary
 			{
 				if (strstoreTreeValue != cell.Value.ToString())
 				{
-					hierarchy = new ArrayList();
+					ArrayList hierarchy = new ArrayList();
 					List<int> offset = new List<int>();
 					List<string> nameList = new List<string>();
 					List<IType> typeList = new List<IType>();
@@ -696,12 +675,8 @@ namespace OMControlLibrary
 						}
 
 						OMETabStripItem pg = (OMETabStripItem)((TreeGridView)sender).Parent;
-						//FIXME: if pg and detailsTab.SelectedItem are not the same
-						//		 this will mess up with the objects. Why is this required?
-						//       See OMN-158
-						SetReferencedObjectInDetailView(detailsTabs.SelectedItem, pg.Tag);
-
 						pg.Name = CONST_TRUE;
+						UpdateDeepestFieldChanged(pg, hierarchy.Count);
 
 						UpdateResultTable(cell, cell.Value, currNode, pg, false);
 						cell.OwningRow.Selected = true;
@@ -721,6 +696,45 @@ namespace OMControlLibrary
 			}
 
 			OMETrace.WriteFunctionEnd();
+		}
+
+		private OMETabStripItem FindDetailsTabFor(object candidate)
+		{
+			foreach(OMETabStripItem current in detailsTabs.Controls)
+			{
+				if (ReferencedObjectFor(current) == candidate)
+				{
+					return current;
+				}
+			}
+
+			return null;
+		}
+
+		private int UpdateDethForObject(object obj)
+		{
+			OMETabStripItem detailsPage = FindDetailsTabFor(obj);
+			return UpdateDethFor(detailsPage);
+		}
+
+		private static int UpdateDethFor(OMETabStripItem detailsTab)
+		{
+			return detailsTab.Tag != null ?  (int) detailsTab.Tag : 0;
+		}
+
+		private static void UpdateDeepestFieldChanged(Control detailsTab, int depth)
+		{
+			if (detailsTab.Tag == null)
+			{
+				detailsTab.Tag = depth;
+				return;
+			}
+
+			int currentDepth = (int) detailsTab.Tag;
+			if (depth > currentDepth)
+			{
+				detailsTab.Tag = depth;
+			}
 		}
 
 		private void UpdateResultTable(DataGridViewCell cell, object editValue, TreeGridNode currNode, OMETabStripItem pg, bool updateToNull)
@@ -914,13 +928,10 @@ namespace OMControlLibrary
 
 		private void RemoveObjectFromDetailsView(object obj)
 		{
-			foreach (OMETabStripItem pg in detailsTabs.Items)
+			OMETabStripItem found = FindDetailsTabFor(obj);
+			if (found != null)
 			{
-				if (ReferencedObjectFor(pg) == obj)
-				{
-					detailsTabs.RemoveTab(pg);
-					break;
-				}
+				detailsTabs.RemoveTab(found);
 			}
 		}
 
@@ -978,17 +989,16 @@ namespace OMControlLibrary
 
 		private void SaveDetailsViewChangedObjects(OMETabStrip detailTabs)
 		{
-			foreach (OMETabStripItem pg in detailTabs.Items)
+			foreach (OMETabStripItem detailsPage in detailTabs.Items)
 			{
-				if (pg.Name.Equals(CONST_TRUE))
+				if (detailsPage.Name.Equals(CONST_TRUE))
 				{
-					//FIXME: This can lead to data loss (see OMN-157)
-					Helper.DbInteraction.SaveCollection(ReferencedObjectFor(pg), hierarchy != null ? hierarchy.Count : 1);
+					Helper.DbInteraction.SaveCollection(ReferencedObjectFor(detailsPage), UpdateDethFor(detailsPage));
 
-					PaintBlack(TreeViewFor(pg));
-					pg.Name = CONST_FALSE;
+					PaintBlack(TreeViewFor(detailsPage));
+					detailsPage.Name = CONST_FALSE;
 
-					int pageIndex = OffsetInCurrentPageFor(ObjectIndexInMasterViewFor(pg));
+					int pageIndex = OffsetInCurrentPageFor(ObjectIndexInMasterViewFor(detailsPage));
 					
 					UpdateMasterViewObjectEditedStatus(masterView.Rows[pageIndex - 1], false);
 				}
@@ -997,7 +1007,7 @@ namespace OMControlLibrary
 
 		private static TreeGridView TreeViewFor(OMETabStripItem pg)
 		{
-			return (TreeGridView) pg.Controls[0];
+			return pg != null ? (TreeGridView) pg.Controls[0] : null;
 		}
 
 		private void btnPrevious_Click(object sender, EventArgs e)
@@ -1015,9 +1025,9 @@ namespace OMControlLibrary
 				if (m_pageCount == 1)
 				{
 					btnPrevious.Enabled = false;
-					btnLast.Enabled = true;
 					btnFirst.Enabled = false;
 					btnNext.Enabled = true;
+					btnLast.Enabled = true;
 				}
 				else
 				{
@@ -1096,19 +1106,18 @@ namespace OMControlLibrary
 		}
 
 
-		private void RefreshPaging(ref bool check, ref DialogResult dialogRes, ref bool checkforValueChanged, DataGridView db)
+		private void RefreshPaging(DataGridView db)
 		{
 			try
 			{
-				checkforValueChanged = HasChangedData(db);
-				if (checkforValueChanged)
+				if (HasChangedData(db))
 				{
-					dialogRes = MessageBox.Show("Do you want to save modified objects on this page, else they will be discarded.",
-					                            Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.YesNo,
-					                            MessageBoxIcon.Question);
+					DialogResult dialogRes = MessageBox.Show("Do you want to save modified objects on this page, else they will be discarded.",
+					                                         Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.YesNo,
+					                                         MessageBoxIcon.Question);
+
 					if (dialogRes == DialogResult.Yes)
 					{
-						check = true;
 						buttonSaveResult_Click(buttonSaveResult, null);
 					}
 					else
@@ -1117,8 +1126,7 @@ namespace OMControlLibrary
 						{
 							if (IsObjectInMasterViewEdited(row))
 							{
-								//FIXME: This can lead to data loss (see OMN-157)
-								dbInteraction.RefreshObject(row.Tag, hierarchy == null ? 1 : hierarchy.Count);
+								dbInteraction.RefreshObject(row.Tag, UpdateDethForObject(row.Tag));
 								UpdateDataTreeView(row.Tag, row);
 							}
 						}
@@ -1179,11 +1187,8 @@ namespace OMControlLibrary
 			try
 			{
 				Hashtable hAttributes = null;
-				bool check = false;
-				DialogResult dialogRes = DialogResult.Ignore;
 				PagingData pagingData;
-				bool checkforValueChanged = false;
-
+				
 				if (e.Modifiers == Keys.Control)
 				{
 					e.Handled = true;
@@ -1194,7 +1199,7 @@ namespace OMControlLibrary
 					if (masterView.SortedColumn != null)
 						masterView.SortedColumn.HeaderCell.SortGlyphDirection = SortOrder.None;
 
-					RefreshPaging(ref check, ref dialogRes, ref checkforValueChanged, masterView);
+					RefreshPaging(masterView);
 
 					if (CurrentPageNumber() > PageCount())
 						txtCurrentPage.Text = lblPageCount.Text;
@@ -1367,7 +1372,10 @@ namespace OMControlLibrary
 		private void FinishPendingEdits()
 		{
 			masterView.EndEdit();
-			treeview.EndEdit();
+			
+			TreeGridView treeview = TreeViewFor(detailsTabs.SelectedItem);
+			if (treeview != null)
+				treeview.EndEdit();
 		}
 
 		private void panelResultGridOptions_SizeChanged(object sender, EventArgs e)
@@ -1574,11 +1582,11 @@ namespace OMControlLibrary
 					OMETabStripItem detailsTab = FindDetailsTabForObjectIndex(DetailsTabCaptionFor(row));
 					if (detailsTab != null)
 					{
-						treeview = dbInteraction.GetObjectHierarchy(objUpdated, ClassName);
+						TreeGridView treeview = dbInteraction.GetObjectHierarchy(objUpdated, ClassName);
 
 						detailsTab.Controls.Clear();
 						detailsTab.Controls.Add(treeview);
-						RegisterTreeviewEvents();
+						RegisterTreeviewEvents(treeview);
 						detailsTab.Name = CONST_TRUE;
 					}
 				}
