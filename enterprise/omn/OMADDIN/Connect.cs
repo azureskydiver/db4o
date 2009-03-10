@@ -136,6 +136,7 @@ namespace OMAddin
 
 		#endregion
 
+		//FIXME: Do not catch "Exception" everywhere.
 		#region Connect Constructor
 		/// <summary>Implements the constructor for the Add-in object. Place your initialization code within this method.</summary>
 		public Connect()
@@ -259,7 +260,8 @@ namespace OMAddin
 		}
 
 		//FIXME: Ignore only VS WIndows? What about other addins windows (for instance Resharper) ?
-		//		 Why not keep a list of OMN windows?
+		//		 Why not keep a list of OMN windows? We already started to do this. 
+		//		 Take a look in ViewBase.CreateToolWindow() method
 		void eve_ModeChanged(vsIDEMode LastMode)
 		{
 			try
@@ -510,6 +512,8 @@ namespace OMAddin
 		{
 			try
 			{
+				//TODO: Move this code closer to window instantiation.
+
 				//Object Browser Windows Menu
 				if (GotFocus != null &&
 					GotFocus.ObjectKind.Equals(OMControlLibrary.Common.Constants.GUID_OBJECTBROWSER.ToUpper())
@@ -1329,6 +1333,8 @@ namespace OMAddin
 						{
 							if (w.Object is QueryResult || w.Object == null)
 							{
+								//FIXME: Remove dependency on Caption being equal to "Closed"
+								//       Consider introducing a field like "_closing"
 								w.Caption = "Closed";
 								w.Close(vsSaveChanges.vsSaveChangesNo);
 							}
