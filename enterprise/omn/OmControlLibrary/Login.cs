@@ -159,7 +159,6 @@ namespace OMControlLibrary
 				string caption = Helper.GetResourceString(Common.Constants.QUERY_BUILDER_CAPTION);
 				object ctlobj;
 
-				// Creates Tool Window and inserts the user control in it.
 				queryBuilderToolWindow = CreateToolWindow(Common.Constants.CLASS_NAME_QUERYBUILDER, caption, Common.Constants.GUID_QUERYBUILDER, out ctlobj);
 				if (queryBuilderToolWindow.AutoHides)
 				{
@@ -169,7 +168,6 @@ namespace OMControlLibrary
 				queryBuilderToolWindow.Visible = true;
 				queryBuilderToolWindow.IsFloating = false;
 				queryBuilderToolWindow.Linkable = false;
-
 			}
 			catch (Exception oEx)
 			{
