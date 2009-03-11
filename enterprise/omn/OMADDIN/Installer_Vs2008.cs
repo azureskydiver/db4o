@@ -26,15 +26,16 @@ namespace OMAddin
 
 		protected override void OnAfterInstall(IDictionary savedState)
 		{
-			base.OnAfterInstall(savedState);
-			DeleteApplicationDataFolder();
-
 			try
 			{
+				base.OnAfterInstall(savedState);
+				DeleteApplicationDataFolder();
+
 				string yearVersion = Context.Parameters["version"];
 				string addinPath = Context.Parameters["assemblypath"];
-
+				
 				UpdateAddinFile(yearVersion, addinPath);
+
 				CopyWindowsPRFFile(InstallFolderFrom(addinPath), yearVersion);
 				InvokeReadMe(Path.GetDirectoryName(addinPath));
 			}
@@ -147,15 +148,12 @@ namespace OMAddin
 
 		internal static void CopyWindowsPRFFile(string installFolder, string yearVersion)
 		{
-			string currentVSConfigFile = Path.Combine(VSProfilePathFor(yearVersion), "windows.prf");
-			if (File.Exists(currentVSConfigFile))
+			string targetFile = Path.Combine(VSProfilePathFor(yearVersion), "windows.prf");
+			string sourceFile = Path.Combine(installFolder, "windows.prf");
+			if (File.Exists(sourceFile))
 			{
-				string addinWindowConfigFile = Path.Combine(installFolder, "windows.prf");
-				if (File.Exists(addinWindowConfigFile))
-				{
-					File.Copy(addinWindowConfigFile, currentVSConfigFile, true);
-					File.Delete(addinWindowConfigFile);
-				}
+				File.Copy(sourceFile, targetFile, true);
+				File.Delete(sourceFile);
 			}
 		}
 
@@ -171,18 +169,11 @@ namespace OMAddin
 
 		private static void DeleteApplicationDataFolder()
 		{
-			try
+			string path = Folder.DB4OHome;
+			Folder.Delete(path);
+			if (!Directory.Exists(Folder.OMNHome))
 			{
-				string path = Folder.DB4OHome;
-				Folder.Delete(path);
-				if (!Directory.Exists(Folder.OMNHome))
-				{
-					Directory.CreateDirectory(Folder.OMNHome);
-				}
-			}
-			catch (Exception oEx)
-			{
-
+				Directory.CreateDirectory(Folder.OMNHome);
 			}
 		}
 
