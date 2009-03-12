@@ -1,7 +1,7 @@
+/* Copyright (C) 2004 - 2009  db4objects Inc.  http://www.db4o.com */
+
 using System;
 using EnvDTE;
-using EnvDTE80;
-using System.Reflection;
 using OMControlLibrary.Common;
 using OME.Logging.Common;
 

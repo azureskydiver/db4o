@@ -1,3 +1,5 @@
+/* Copyright (C) 2004 - 2009  db4objects Inc.  http://www.db4o.com */
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -584,8 +586,9 @@ namespace OMControlLibrary
 				textBoxConnection.Clear();
 				textBoxPassword.Clear();
 				textBoxUserName.Clear();
-				Helper.LoginToolWindow.Caption = "Closed";
 				Helper.LoginToolWindow.Close(vsSaveChanges.vsSaveChangesNo);
+				//FIXME: Find a way to get rid of the dependency on Caption being equal to "Close"
+				Helper.LoginToolWindow.Caption = "Closed";
 			}
 			catch (Exception oEx)
 			{
