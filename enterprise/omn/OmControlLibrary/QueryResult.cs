@@ -93,6 +93,7 @@ namespace OMControlLibrary
 
 		#region WindowEvents
 
+		//FIXME: Find a way to get rid of the dependency on Caption being equal to "Close"
 		private static void _windowsEvents_WindowActivated(Window GotFocus, Window LostFocus)
 		{
 			if (LostFocus.Caption == "Closed")

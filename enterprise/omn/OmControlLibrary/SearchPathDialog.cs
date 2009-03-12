@@ -112,8 +112,8 @@ namespace OMControlLibrary
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
-		
 		private readonly ISearchPath _searchPath = Config.Instance.AssemblySearchPath;
+
 		private const string LIST_EMPTY__CHECK_PROPERTY_NAME = "IsSearchPathListEmpty";
 	}
 }
