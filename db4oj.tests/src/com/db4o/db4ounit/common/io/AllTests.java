@@ -13,15 +13,17 @@ public class AllTests extends ReflectionTestSuite {
 		return new Class[] {
 			BlockAwareBinTestSuite.class,
 			BlockSizeDependentBinTestCase.class,
+			DiskFullTestCase.class,
 			IoAdapterTestSuite.class,
+			RandomAccessFileFactoryTestCase.class,
 			MemoryBinGrowthTestCase.class,
 			MemoryBinIsReusableTestCase.class,
 			MemoryIoAdapterTestCase.class,
+			NonFlushingStorageTestCase.class,
 			RandomAccessFileStorageFactoryTestCase.class,
 			StorageTestSuite.class,
-			NonFlushingStorageTestCase.class,
-			DiskFullTestCase.class,
 			StackBasedDiskFullTestCase.class,
+			
 		};
 	}
 
