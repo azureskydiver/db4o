@@ -26,14 +26,11 @@ public class RandomAccessFileAdapter extends IoAdapter {
 		boolean ok = false;
 		try {
 			_path = new File(path).getCanonicalPath();
-			_delegate = new RandomAccessFile(_path, readOnly ? "r" : "rw");
+			_delegate = RandomAccessFileFactory.newRandomAccessFile(_path, readOnly, lockFile); 
 			if (initialLength > 0) {
 				_delegate.seek(initialLength - 1);
 				_delegate.write(new byte[] { 0 });
 			}
-			if (lockFile) {
-				Platform4.lockFile(_path, _delegate);
-			} 
 			ok = true;
 		} catch (IOException e) {
 			throw new Db4oIOException(e);

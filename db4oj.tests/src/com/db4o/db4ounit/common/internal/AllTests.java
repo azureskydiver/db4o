@@ -23,6 +23,7 @@ public class AllTests extends Db4oTestSuite {
 		    MarshallingBufferTestCase.class,
 		    MarshallingContextTestCase.class,
 		    PartialObjectContainerTestCase.class,
+		    Platform4TestCase.class,
 			SerializerTestCase.class,
 			TransactionLocalTestCase.class,
 			TransactionTestCase.class,

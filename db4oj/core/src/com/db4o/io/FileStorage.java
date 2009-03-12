@@ -39,13 +39,10 @@ public class FileStorage implements Storage {
 			boolean ok = false;
 			try {
 				_path = new File(config.uri()).getCanonicalPath();
-				_file = new RandomAccessFile(_path, config.readOnly() ? "r" : "rw");
+				_file = RandomAccessFileFactory.newRandomAccessFile(_path, config.readOnly(), config.lockFile());
 				if (config.initialLength() > 0) {
 					write(config.initialLength() - 1, new byte[] { 0 }, 1);
 				}
-				if (config.lockFile()) {
-					Platform4.lockFile(_path, _file);
-				} 
 				ok = true;
 			} catch (IOException e) {
 				throw new Db4oIOException(e);

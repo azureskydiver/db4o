@@ -42,9 +42,10 @@ class JDK_1_4 extends JDK_1_3 {
 		
 		Object lock = null;
 		Object channel = Reflection4.invoke(file, "getChannel");
-		lock = Reflection4.invoke(channel, "tryLock");
-		if(lock == null){
-			throw new DatabaseFileLockedException(canonicalPath);
+		try {
+			lock = Reflection4.invoke(channel, "tryLock");
+		}catch(ReflectException rex){
+			throw new DatabaseFileLockedException(canonicalPath, rex);
 		}
 		fileLocks.put(canonicalPath, lock);
 	}
