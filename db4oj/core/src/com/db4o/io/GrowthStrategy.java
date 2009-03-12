@@ -6,9 +6,14 @@ package com.db4o.io;
  * Strategy for file/byte array growth.
  */
 public interface GrowthStrategy {
+	
 	/**
-	 * @param curSize The current size of the entity
-	 * @return The new size of the entity, must be bigger than curSize
+	 * returns the incremented size after the growth 
+	 * strategy has been applied
+	 * @param curSize the original size
+	 * @return the new size, after the growth strategy has been
+	 * applied, must be bigger than curSize
 	 */
+
 	long newSize(long curSize);
 }

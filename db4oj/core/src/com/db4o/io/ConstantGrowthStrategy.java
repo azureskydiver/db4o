@@ -15,6 +15,12 @@ public class ConstantGrowthStrategy implements GrowthStrategy {
 		_growth = growth;
 	}
 	
+	/**
+	 * returns the incremented size after the growth 
+	 * strategy has been applied
+	 * @param curSize the original size
+	 * @return the new size
+	 */
 	public long newSize(long curSize) {
 		return curSize + _growth;
 	}

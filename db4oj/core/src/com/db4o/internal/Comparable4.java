@@ -7,10 +7,18 @@ import com.db4o.marshall.*;
 
 
 /**
- * @exclude
+ * Interface for comparison support in queries.
  */
 public interface Comparable4 {
 	
+	/**
+	 * creates a prepared comparison to compare multiple objects
+	 * against one single object.
+	 * @param context the context of the comparison 
+	 * @param obj the object that is to be compared 
+	 * against multiple other objects
+	 * @return the prepared comparison
+	 */
 	PreparedComparison prepareComparison(Context context, Object obj);
 	
 }

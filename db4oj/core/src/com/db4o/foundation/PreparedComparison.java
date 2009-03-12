@@ -3,8 +3,8 @@
 package com.db4o.foundation;
 
 /**
- * TODO: rename to Comparable4 as soon we find
- * a smart name for the current Comparable4.
+ * a prepared comparison, to compare multiple objects 
+ * with one single object. 
  */
 public interface PreparedComparison<T> {
 	
