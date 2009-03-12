@@ -1,7 +1,14 @@
+/* Copyright (C) 2009   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.reflect.core;
 
 import com.db4o.foundation.*;
 
+/**
+ * a spec holding a constructor, it's arguments
+ * and information, if the constructor can instantiate
+ * objects.
+ */
 public class ReflectConstructorSpec {
 	private ReflectConstructor _constructor;
 	private Object[] _args;
@@ -24,6 +31,10 @@ public class ReflectConstructorSpec {
 		_constructor = null;
 	}
 	
+	/**
+	 * creates a new instance.
+	 * @return the newly created instance.
+	 */
 	public Object newInstance() {
 		if(_constructor == null) {
 			return null;
@@ -31,6 +42,10 @@ public class ReflectConstructorSpec {
 		return _constructor.newInstance(_args);
 	}
 	
+	/**
+	 * returns true if an instance can be instantiated
+	 * with the constructor, otherwise false.
+	 */
 	public TernaryBool canBeInstantiated(){
 		return _canBeInstantiated;
 	}
