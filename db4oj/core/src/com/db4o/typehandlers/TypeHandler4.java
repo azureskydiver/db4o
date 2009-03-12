@@ -26,6 +26,14 @@ import com.db4o.reflect.*;
 public interface TypeHandler4 extends FieldHandler, Comparable4 {
 	
 	/**
+	 * gets called to check whether a TypeHandler can hold
+	 * a specific type
+	 * @param type the type
+	 * @return true, if this Typehandler can hold a type
+	 */
+	boolean canHold(ReflectClass type);
+	
+	/**
 	 * gets called when an object gets deleted.
 	 * @param context 
 	 * @throws Db4oIOException
@@ -52,6 +60,6 @@ public interface TypeHandler4 extends FieldHandler, Comparable4 {
 	 */
     void write(WriteContext context, Object obj);
 
-	boolean canHold(ReflectClass type);
+	
 	
 }
