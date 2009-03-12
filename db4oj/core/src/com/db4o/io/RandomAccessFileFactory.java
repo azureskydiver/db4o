@@ -17,7 +17,7 @@ public class RandomAccessFileFactory {
 		RandomAccessFile raf = null;
 		try {
 			raf = new RandomAccessFile(path, readOnly ? "r" : "rw");
-			if (lockFile && ! lockFile) {
+			if (lockFile && ! readOnly) {
 				Platform4.lockFile(path, raf);
 			} 
 			ok = true;
