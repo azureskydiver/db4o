@@ -76,8 +76,8 @@ public class TimerFileLockEnabled extends TimerFileLock{
 	}
     
     public void close() throws Db4oIOException {
-        writeAccessTime(true);
         synchronized (_timerLock) {
+        	writeAccessTime(true);
 			_closed = true;
 		}
     }
