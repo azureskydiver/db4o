@@ -1,10 +1,12 @@
-/**
- * @exclude
- */
+/* Copyright (C) 2009  db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.typehandlers.internal;
 
 import com.db4o.typehandlers.*;
 
+/**
+ * @exclude
+ */
 public class KeyValueHandlerPair {
 	public final TypeHandler4 _keyHandler;
 	public final TypeHandler4 _valueHandler;
