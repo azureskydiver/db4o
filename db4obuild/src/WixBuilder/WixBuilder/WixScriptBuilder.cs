@@ -305,15 +305,9 @@ public class WixScriptBuilder
 
 	private bool FeatureContainsFilesIn(IFolder path)
 	{
-		IEnumerable<IFileSystemItem> many = path.Children.SelectMany(item =>
-		                                            	{
-		                                            		IFolder folder = item as IFolder;
-		                                            		return folder != null
-		                                            		       	? folder.Children
-		                                            		       	: new[] {item};
-		                                            	});
+	    var many = path.GetAllFilesRecursively();
 
-		return FilesForCurrentFeatureFrom(many.OfType<IFile>()).Count() > 0;
+	    return FilesForCurrentFeatureFrom(many).FirstOrDefault() != null;
 	}
 
 	void WriteFile(IFileSystemItem file)
@@ -357,19 +351,12 @@ public class WixScriptBuilder
 
 	private IFileSystemItem ResolveFile(string filePath)
 	{
-		IFolder path = _basePath;
-		string[] pathComponents = filePath.Split(new [] {'/','\\'});
-		foreach(var part in pathComponents.Take(pathComponents.Length - 1))
-		{
-			path = (IFolder) path[part];
-			if (path == null)
-				return null;
-		}
-
-		return path[pathComponents[pathComponents.Length - 1]];
+	    return _basePath.GetItem(filePath);
 	}
 
-	void WriteShortcut(string displayName, IFileSystemItem fileSystemItem, string workingDirectory)
+    
+
+    void WriteShortcut(string displayName, IFileSystemItem fileSystemItem, string workingDirectory)
 	{
 		string fileId = GetIdFromPath(fileSystemItem);
 
