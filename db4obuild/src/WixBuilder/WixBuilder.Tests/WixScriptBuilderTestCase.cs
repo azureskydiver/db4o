@@ -25,6 +25,13 @@ namespace WixBuilder.Tests
 				.EnterFolder("Src")
 					.AddFiles("foo.boo", "foo.booproj")
 				.LeaveFolder()
+                .EnterFolder("native")
+                    .EnterFolder("Db4objects.Db4o")
+                        .EnterFolder("Config")
+                            .AddFiles("JavaSupport.cs")
+                        .LeaveFolder()
+                    .LeaveFolder()
+                .LeaveFolder()
 				.GetFolder();
 		}
 
@@ -132,6 +139,44 @@ namespace WixBuilder.Tests
 			WixComponent docComponent = wix.ResolveComponentReference(componentRef);
 			WixAssert.AssertDirectoryComponent(DirectoryFromRoot("Doc"), docComponent);
 		}
+
+        [Test]
+        public void TestMultipleEmptyFolders()
+        {
+            var parameters = new WixBuilderParameters
+            {
+                Features = new[]
+			                 	           {
+			                 	           	new Feature
+			                 	           	{
+			                 	           		Id = "ApplicationFiles",
+			                 	           		Title = "Documentation",
+			                 	           		Description = "all the docs",
+			                 	           		Content = new Content
+			                 	           		          {
+			                 	           		          	Include = @"native\**\*.*"
+			                 	           		          }
+			                 	           	}
+			                 	           }
+            };
+
+            WixDocument wix = WixDocumentFor(parameters);
+
+            WixFeature featureElement = wix.Features.AssertSingle();
+            Feature expectedFeature = parameters.Features[0];
+            WixAssert.AssertFeature(expectedFeature, featureElement);
+
+            string componentRef = featureElement.ComponentReferences.AssertSingle();
+            WixComponent configComponent = wix.ResolveComponentReference(componentRef);
+            WixAssert.AssertDirectoryComponent(DirectoryFromRoot("native/Db4objects.Db4o/Config"), configComponent);
+
+            WixDirectory configDirectory = configComponent.ParentElement.ToWix<WixDirectory>();
+            Assert.AreEqual(DirectoryFromRoot("native/Db4objects.Db4o/Config").ShortPathName, configDirectory.Name);
+            Assert.AreEqual(DirectoryFromRoot("native/Db4objects.Db4o").ShortPathName, configDirectory.ParentElement.ToWix<WixDirectory>().Name);
+            Assert.AreEqual(DirectoryFromRoot("native").ShortPathName, configDirectory.ParentElement.ToWix<WixDirectory>().ParentElement.ToWix<WixDirectory>().Name);
+
+        }
+
 
 		[Test]
 		[Ignore("Still considering the feature")]
@@ -385,7 +430,7 @@ namespace WixBuilder.Tests
 
 		private IFolder DirectoryFromRoot(string name)
 		{
-			return (IFolder)root[name];
+			return (IFolder)root.GetItem(name);
 		}
 
 		private static WixBuilderParameters ParametersForMultipleFeaturesTest()

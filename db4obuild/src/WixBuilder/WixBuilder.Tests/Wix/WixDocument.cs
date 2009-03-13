@@ -120,6 +120,12 @@ namespace WixBuilder.Tests.Wix
 				return SelectElements("wix:Component/wix:Shortcut").Select(element => element.ToWix<WixShortcut>());
 			}
 		}
+
+        public string Name
+        {
+            get { return GetAttribute("Name"); }
+        }
+
 	}
 
 	public class WixShortcut : WixReferenceableElement
