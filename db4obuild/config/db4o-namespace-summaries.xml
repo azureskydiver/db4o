@@ -15,6 +15,7 @@
 	<namespace name="Db4objects.Db4o.Messaging">Messaging package.</namespace>
 	<namespace name="Db4objects.Db4o.Query">Query package.</namespace>
 	<namespace name="Db4objects.Db4o.Reflect">Reflection support package.</namespace>
+	<namespace name="Db4objects.Db4o.Reflect.Core">Reflection core package.</namespace>
 	<namespace name="Db4objects.Db4o.Reflect.Generic">Generic reflection support (makes it possible to query database files when the original classes are not available).</namespace>
 	<namespace name="Db4objects.Db4o.Reflect.Net">.NET reflection support.</namespace>
 	<namespace name="Db4objects.Db4o.Replication">Replication support package</namespace>
