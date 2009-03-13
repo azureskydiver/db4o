@@ -214,8 +214,10 @@
 		<copy todir="${dir.dist.net.build}/src">
 			<fileset dir="../db4o.net">
 				<include name="**/*.cs" />
+				<include name="**/*.vb" />
 				<include name="**/*.csproj" />
 				<include name="**/*.csdproj" />
+				<include name="**/*.vbproj" />
 				<include name="**/*.sln" />
 				<include name="**/*.html" />
 				
