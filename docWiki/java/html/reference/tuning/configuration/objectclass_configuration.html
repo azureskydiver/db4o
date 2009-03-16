@@ -1,0 +1,388 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>ObjectClass Configuration</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>ObjectClass Configuration</h1>
+
+
+<p>ObjectClass/IObjectClass provides an
+interface for class configuration. </p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>ObjectClass oc =
+Db4o.configure().objectClass(clazz);</code></p>
+
+</span>
+
+
+
+<p>clazz parameter here can be one of
+the following:</p>
+
+<ul>
+<li>a fully qualified classname as a
+String.</li>
+
+<li>a Class object.</li>
+
+<li>any other object to be used as a
+template.</li>
+</ul>
+
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void
+callConstructor(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>advises db4o to try instantiating
+objects of this class with/without calling constructors. For more information
+see <a href="../../object_lifecycle/object_construction.html" class="wikiLink">Object Construction</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void
+cascadeOnActivate(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>sets cascaded activation behavior for
+this class. For more information see <a href="../../object_lifecycle/activation.html" class="wikiLink">Activation</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void
+cascadeOnDelete(boolean flag);</code></p>
+
+</span>
+
+
+
+
+<p>sets cascaded delete behavior for
+this class. For more information see <a href="../../object_lifecycle/delete_behavior.html" class="wikiLink">Delete Behavior</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void
+cascadeOnUpdate(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>sets cascaded update behavior for
+this class. For more information see <a href="../../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void
+compare(ObjectAttribute attributeProvider);</code></p>
+
+</span>
+
+
+
+<p>registers an attribute provider for
+special query behavior. </p>
+
+<p>The query processor will compare the
+object returned by the attribute provider instead of the actual object, both
+for the constraint and the candidate persistent object. For more information see <a href="../../object_lifecycle/querying/custom_query_comparator.html" class="wikiLink">Custom Query Comparator</a>.<br></p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void
+enableReplication(boolean setting);</code></p>
+
+</span>
+
+
+
+<p>enable replication of the specified
+class. Must be called before databases are created or opened so that db4o will
+control versions and generate UUIDs for objects of this class, which is
+required for using replication. For more information see <a href="../../db4o_replication_system_drs.html" class="wikiLink">db4o Replication System (dRS)</a><br></p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void
+generateUUIDs(boolean setting);</code></p>
+
+</span>
+
+
+
+<p>generate UUIDs for stored objects of
+this class. For more information see
+<a href="../../implementation_strategies/ids_and_uuids/unique_universal_ids.html" class="wikiLink">Unique Universal IDs</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void
+generateVersionNumbers(boolean setting);</code></p>
+
+</span>
+
+
+
+<p>generate version numbers for stored
+objects of this class. For more information see <a href="../../db4o_replication_system_drs.html" class="wikiLink">db4o Replication System (dRS)</a> </p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java: <br></p>
+
+<p><code>public void indexed(boolean
+flag);</code></p>
+
+</span>
+
+
+
+<p>turns the class index on or off.</p>
+
+<p>db4o maintains an index for each
+class to be able to deliver all instances of a class in a query. If the class
+index is never needed, it can be turned off with this method to improve the
+performance on creation and deletion of the class objects.</p>
+
+<p>Common cases where a class index is
+not needed:</p>
+
+<ul>
+<li>The application always works with
+subclasses or superclasses.</li>
+
+<li>There are convenient field indexes
+that will always find instances of a class.</li>
+
+<li>The application always works with
+IDs. </li>
+</ul>
+
+
+<p>For more information see <a href="../performance_hints/no_class_index.html" class="wikiLink">No Class Index</a>.<br></p>
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void
+maximumActivationDepth (int depth);</code></p>
+
+</span>
+
+
+
+<p>sets the maximum activation depth for
+this class to the desired value. For more information see
+<a href="../../object_lifecycle/activation.html" class="wikiLink">Activation</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void
+minimumActivationDepth (int depth);</code></p>
+
+</span>
+
+
+
+<p>sets the minimum activation depth to
+the desired value. For more information see
+<a href="../../object_lifecycle/activation.html" class="wikiLink">Activation</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public ObjectField objectField
+(String fieldName);</code></p>
+
+</span>
+
+
+
+<p>returns an ObjectField object to
+configure the specified field. For more information see
+<a href="objectfield_configuration.html" class="wikiLink">ObjectField Configuration</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void
+persistStaticFieldValues();</code></p>
+
+</span>
+
+
+
+<p>turns on storing static field values
+for this class. For more information see
+<a href="../../implementation_strategies/type_handling/static_fields_and_enums.html" class="wikiLink">Static Fields And Enums</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void readAs(Object
+clazz);</code></p>
+
+</span>
+
+
+
+<p>creates a temporary mapping of a
+persistent class to a different class.</p>
+
+<p>If the meta-information for this
+ObjectClass has been stored to the database file, it will be read from the
+database file as if it was representing the class specified by the clazz
+parameter passed to this method. </p>
+
+<p>The clazz parameter can be any of the
+following:</p>
+
+<ul>
+<li>a fully qualified classname as a
+String.</li>
+
+<li>a Class object.</li>
+
+<li>any other object to be used as a
+template.</li>
+</ul>
+
+
+<p>This method will be ignored if the
+database file already contains meta-information for clazz.</p>
+
+<p>This method is deprecated, use <a href="../../implementation_strategies/aliases.html" class="wikiLink">Aliases</a> instead.<br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void rename (String
+newName);</code></p>
+
+</span>
+
+
+
+<p>renames a stored class. For more
+information see
+<a href="../../implementation_strategies/refactoring_and_schema_evolution.html" class="wikiLink">Refactoring and Schema Evolution</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void
+storeTransientFields (boolean flag);</code></p>
+
+</span>
+
+
+
+<p>allows to specify if transient fields
+are to be stored. The default for every class is <code>false</code>.</p>
+<p>For more information see <a href="../selective_persistence/storing_transient_fields.html" class="wikiLink">Storing Transient Fields</a>.&nbsp;</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void translate
+(ObjectTranslator translator);</code></p>
+
+</span>
+
+
+
+<p>registers a translator for this
+class. For more information see <a href="../../implementation_strategies/translators.html" class="wikiLink">Translators</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void updateDepth (int
+depth);</code></p>
+
+</span>
+
+
+
+<p>specifies the updateDepth for this
+class. For more information see <a href="../../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a>.</p></div>
+    </div>
+    <div id="footer">
+					This revision (10) was last Modified 2008-04-14T16:32:18 by Tetyana.
+				</div>
+  </body>
+</html>

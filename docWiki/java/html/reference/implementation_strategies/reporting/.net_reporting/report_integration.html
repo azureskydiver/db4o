@@ -1,0 +1,40 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Report Integration</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Report Integration</h1><p><font color="#990000">This topic applies to .NET version only</font>&nbsp;</p><p>Now the existing report should be integrated into the
+application.</p>
+
+<p>Select the application form (Form1) in design view and drag
+ReportViewer icon from the toolbox onto the form.</p>
+
+<p>Select the ReportViewer control, and open the smart tags
+panel by clicking the triangle on the top right corner. Click the "Choose
+Report" drop-down list and select the PilotReport. A BindingSource
+(PilotBindingSource) is automatically created corresponding to the Pilot data
+source used in the report.</p>
+
+<p>Open the code view for the Form1. Find Form1_Load function
+and add the following code:</p>
+
+
+
+
+
+
+<p>Db4oManager takes care of opening db4o connection on the
+first request. However the connection should be closed manually on the
+application termination:</p>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-05-23T18:14:12 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Native Query Optimization</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Native Query Optimization</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Optimization Theory&nbsp;">Optimization Theory&nbsp;</a></li><li><a href ="#NQ Optimization for .NET">NQ Optimization for .NET</a></li></ul></li></ul></div></div></div> 
+
+<P>Native Queries will run out of the box in any environment. If optimization is turned on (default) Native Queries will be converted to <a href="../object_lifecycle/querying/soda_query.html" class="wikiLink">SODA</a> where this is possible, allowing db4o to use indexes and optimized internal comparison algorithms.Otherwise Native Query may be executed by instantiating all objects, using <a href="../object_lifecycle/querying/soda_evaluations.html" class="wikiLink">SODA Evaluations</a>. Naturally performance will not be as good in this case.</P>
+<a name="Optimization Theory&nbsp;"></a><H2>Optimization Theory&nbsp;</H2>
+
+<P>For Native Query Java bytecode and .NET IL code are analyzed to create an AST-like expression tree. Then the flow graph of the expression tree is analyzed and converted to a SODA query graph.</P>
+<P>For example:</P>
+
+<span name="cs_wiki_filter" csw_filters="net">
+<P>.NET:&nbsp;</P>
+<P><code>IList&lt;Pilot&gt; pilots = container.Query&lt;Pilot&gt;(delegate(Pilot pilot) {</code></P>
+<P><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return pilot.Name.equals("Michael Schumacher")</code></P>
+<P><code>&amp;&amp; pilot.Points == 100;</code></P>
+<P><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</code></P>
+</span>
+<P>First of all the following code will be extracted:</P>
+<P>query#constrain(Pilot)</P>
+<P>Then a more complex analysis will be run to convert the contents of the #match method into a SODA-understandable syntax. On a simple example it is easy to see what will happen:</P>
+
+<span name="cs_wiki_filter" csw_filters="net">
+<P>.NET:</P>
+<P><code>return pilot.Name.equals("Michael Schumacher") &amp;&amp; pilot.Points == 100;</code></P>
+</span>
+<P>easily converts into:</P>
+<P><code>CANDIDATE.name == "Michael Schumacher"</code></P>
+<P><code>CANDIDATE.points == 100</code></P>
+
+<span name="cs_wiki_filter" csw_filters="net">
+<a name="NQ Optimization for .NET"></a><H2>NQ Optimization for .NET</H2>
+<P>Native Query optimizer for .NET requires the following libraries to work:</P>
+<UL>
+<LI><SPAN id=ctl00_ctl00_bcr_topicView___TopicBody><SPAN class=net>Db4obects.Db4o.Instrumentation.dll</SPAN></SPAN></LI>
+<LI><SPAN><SPAN class=net>Db4objects.Db4o.NativeQueries.dll</SPAN></SPAN></LI>
+<LI><SPAN><SPAN class=net>Mono.Cecil.dll</SPAN></SPAN></LI>
+<LI><SPAN><SPAN class=net>Cecil.FlowAnalysis.dll</SPAN></SPAN></LI></UL>
+<P><SPAN><SPAN class=net>&nbsp;These assemblies must be available in your project for successful NQ optimization.<BR></P></SPAN></SPAN>
+<P>The Native Query optimizer is still under development to eventually "understand" all valid C# constructs. Current optimization supports the following constructs well:</P>
+<UL>
+<LI>compile-time constants</LI>
+<LI>simple member access</LI>
+<LI>primitive comparisons</LI>
+<LI>equality operator</LI>
+<LI>#Contains()/#StartsWith()/#EndsWith() for Strings</LI>
+<LI>boolean expressions</LI>
+<LI>arbitrary method calls (including property accessors) on predicate fields (without any arguments)</LI>
+<LI>candidate methods composed of the above</LI>
+<LI>chained combinations of the above<BR></LI></UL>
+<P>This list will constantly grow with the latest versions of db4o.</P>
+<P>Note that the current implementation doesn't support polymorphism yet.</P>
+<P>The specifics of Compact Framework platform are explained in <a href="native_query_optimization/nq_optimization_on_cf2.0.html" class="wikiLink">NQ Optimization On CF2.0</a>. </P>
+<P>An alternative optimization practice can be found in <a href="native_query_optimization/build-time_optimization_for_.net.html" class="wikiLink">Build-time Optimization For .NET</a> article.<BR></P>
+</span>
+<P>For more information on NQ optimization see <a href="native_query_optimization/monitoring_optimization.html" class="wikiLink">Monitoring Optimization</a>.<BR></P></div>
+    </div>
+    <div id="footer">
+					This revision (22) was last Modified 2008-04-25T19:28:42 by Tetyana.
+				</div>
+  </body>
+</html>

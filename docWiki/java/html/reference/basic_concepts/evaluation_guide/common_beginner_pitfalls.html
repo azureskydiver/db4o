@@ -1,0 +1,53 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Common Beginner Pitfalls</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Common Beginner Pitfalls</h1>
+
+<p>The biggest trouble for users starting to use db4o is to
+realize that it is not a relational database. In db4o object identity and links
+between objects are managed thought the object model and are actually memory
+references to instantiated objects. The idea of a primary key is not necessary
+for db4o as any object can be present in memory only once and thus is
+identified by the variable holding the reference. For more information about
+the differences between db4o and relational databases see <a href="../database_models/object_and_relational_model_comparison.html" class="wikiLink">Object And Relational Model Comparison</a>.</p>
+
+<p>Another concept that should be well understood by the db4o
+beginners is the concept of activation, i.e. object loading into the memory.
+When an object is loaded into the memory after the query was executed its field
+objects should be available to the user as well. However it might be a recipe
+for a trouble if an object has a deep structure, for example if it is a linked
+list. In this case it makes sense to load only the objects that will be
+accessed by the user. For more information about it see <a href="../../object_lifecycle/activation.html" class="wikiLink">Activation</a>.</p>
+
+<p>Related to activation is the problem of update. When an
+object is restored to the database, it is important to store the modifications
+in the field objects, as they might be the only values that were changed.
+However, it can produce a serious performance penalty if the actual
+modification was only in the top-level and the object contains a deep field
+structure (i.e. all objects in the graph will have to be updated). This problem
+is solved similarly to activation problem. For more information see <a href="../../object_lifecycle/transparent_persistence.html" class="wikiLink">Transparent Persistence</a>.</p>
+
+<p>Another common beginner's mistake is overuse of commit. Commit
+is an important database operation, which ensures that all the changes were
+actually written to a physical storage and are safe there, however commit is also
+one of the most common performance bottlenecks. Db4o uses commit to physically
+write data to the physical storage. This operation requires several cycles of
+disk access, which ensure ACID transaction, and can be very slow depending on
+your storage hardware. For more information see <a href="../../tuning/performance_hints/commit_strategies.html" class="wikiLink">Commit Strategies</a>.</p>
+
+<p>Other common db4o pitfalls are listed in <a href="../../usage_pitfalls.html" class="wikiLink">Usage Pitfalls</a>
+chapter of db4o documentation.</p>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2008-06-10T16:13:10 by Tetyana.
+				</div>
+  </body>
+</html>

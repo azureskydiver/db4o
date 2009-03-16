@@ -1,0 +1,37 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>TA Implementation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>TA Implementation</h1> 
+<p>The basic idea for Transparent Activation: </p>
+<ul>
+<li>Classes can be modified to activate objects on demand by implementing the Activatable interface. 
+</li><li>To add the Activatable code to classes you can choose from one of the following three options: 
+<ul>
+<li>Let db4o tools add the code to your persistent classes at compile time. 
+</li><li>Use a special ClassLoader to add the code to persistent classes at load time. 
+</li><li>Write the Activatable code by hand.</li></ul>
+</li><li>To instruct db4o to operate in Transparent Activation mode, call:<br>Db4o.configure().add(new TransparentActivationSupport()); 
+</li><li>In Transparent Activation mode when objects are returned from a query: 
+<ul>
+<li>objects that implement the Activatable interface will not be activated immediately 
+</li><li>objects that do not implement the Activatable interface will be fully activated. Activatable objects along the graph of members break activation.</li></ul>
+</li><li>Whenever a field is accessed on an Activatable object, the first thing that is done before returning the field value is checking it's activation state and activating the parent object if it is not activated. Similar as in querying, members that implement Activatable will not be activated themselves. Members that do not implement Activatable will be fully activated until Activatable objects are found.</li></ul>
+<p>With Transparent Activation the user does not have to worry about manual activation at all. Activatable objects will be activated on demand. Objects that&nbsp;do not implement Activatable will always be fully activated.</p>
+<p>The basic sequence of actions to get this scheme to work is the following:</p>
+<ol>
+<li>Whenever an object is instantiated from db4o, the database registers itself with this object. To enable this on the database level <code>TransparentActivationSupport</code> has to be registered with the db4o configuration.On the object level an object is made available for TA by implementing the <code>Activatable/IActivatable</code> interface and providing the according <code>bind(activator)</code> method. The default implementation of the bind method stores the given <code>activator</code> reference for later use. Note, that only one activator can be associated with an object: trying to bind a different activator (from another object container) will result in an exception. More on this in <a href="../../../usage_pitfalls/transparent_activation/migrating_between_databases.html" class="wikiLink">Migrating Between Databases</a>. 
+</li><li>All methods that are supposed to require activated object fields should call <code>activate(ActivationPurpose)/Activate(ActivationPurpose)</code> at the beginning of the message body. This method will check whether the object is already activated and if this is not the case, it will act depending on which activation reason was supplied.</li><li>The ActivationPurpose can be READ or WRITE. READ is used when an object field is requested for viewing by an application. In this case Activate method will request the container to activate the object to level 1 and set the activated flag accordingly (more on this case in the following chapters). WRITE activation purpose is used when an object is about to be changed; a simple example is setter methods. In this case the object is activated to depth 1 and registered for update. More on ActivationPurpose.Write in <a href="../../transparent_persistence.html" class="wikiLink">Transparent Persistence</a>.<br> </li></ol>
+<p>This implementation requires quite many modifications to the objects. That is why db4o provides an automated TA implementation through bytecode instrumentation. With this approach all the work for TA is done behind the scenes. </p>
+<p>Automatic and manual TA approaches are discussed in detail in the following examples.</p><ul><li><a href="ta_enhanced_example.html" class="wikiLink">TA Enhanced Example</a> <br></li><li><a href="detailed_example.html" class="wikiLink">Detailed Example</a></li><li><a href="collection_example.html" class="wikiLink">Collection Example</a><br></li></ul></div>
+    </div>
+    <div id="footer">
+					This revision (20) was last Modified 2008-01-12T10:54:17 by Tetyana.
+				</div>
+  </body>
+</html>

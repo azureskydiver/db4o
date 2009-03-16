@@ -1,0 +1,93 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Client-Server Timeouts</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Client-Server Timeouts</h1>Every client/server application has to face a problem of
+network communications. Luckily modern protocols screen the end-application
+from all fixable problems; however there are still physical reasons that can't
+be fixed by a protocol: disconnections, power failures, crash of a system on
+the other end of communication channel etc. In these cases it is still the
+responsibility of the client-server application to exit the connection
+gracefully, releasing all resources and protecting data. 
+
+<p>In order to achieve an efficient client/server communication
+and handling of connection problems the following requirements were defined for
+db4o:</p>
+
+<ul><li>The connection should not
+     be terminated when both client and server are still alive, even if either
+     of the machines is running under heavy load. </li><li>Whenever a client dies,
+     peacefully or with a crash, the server should clean up all resources that
+     were reserved for the client. </li><li>Whenever a server goes
+     offline, it should be possible for the client to detect that there is a problem.
+     </li><li>Since many clients may be
+     connected at the same time, it makes sense to be careful with the
+     resources the server reserves for each client. </li><li>A client can be a very
+     small machine, so it would be good if the client application can work with
+     a single thread.</li></ul>
+
+<p>Unfortunately all the requirements are difficult to achieve
+for a cross-platform application, as Java and .NET sockets behave differently.</p>
+
+<p>The initial db4o CS implementation used one-thread clients
+and connection was terminated when there was a timeout and a post-timeout check-up
+message could not get a response from the other side. However this approach
+failed for .NET implementation, as .NET sockets upon timeout continue to send
+and receive messages, but timeout settings are not respected anymore, which in
+fact leads to a very high CPU usage.</p>
+
+<p>The next approach was to create a separate housekeeping thread
+on the server, which will send messages to the client regularly, thus checking
+if the client is still alive and in the same time giving the client information
+about the server. Unfortunately, the problem described above can occur to the
+housekeeping thread too.</p>
+
+<p>The current approach tries to keep things as simple as
+possible: any connection is closed immediately upon a timeout. In order to
+prevent closing connections when there is no communication between client and
+server due to reasons different from connection problems a separate timer
+thread was created to send messages to the server at a regular basis. The
+server must reply to the thread immediately, if this does not happen the
+communication channel gets closed. </p>
+
+<p>This approach works effectively for both client and server side, however
+there are two small downsides:</p>
+
+<p>1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Clients
+are not single-threaded anymore</p>
+
+<p>2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If
+an action on the server takes longer than the socket timeout, the connection
+will be closed. </p>
+
+<p>In the latter case you can adjust the behaviour of db4o with the following
+configuration settings:</p>
+
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
+
+<p><code>configuration.clientServer().timeoutServerSocket(int
+milliseconds)</code></p>
+
+<p><code>configuration.clientServer().timeoutClientSocket(int
+milliseconds)</code></p>
+
+</span>
+
+
+
+<p>An easy rule of thumb:<br></p><ul><li>
+If you experience clients disconnecting, raise the timeout value.</li><li>
+If you have a system where clients crash frequently or where the network is
+very instable, lower the values, so resources for disconnected clients are
+freed faster.</li></ul></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-12-06T15:46:10 by Tetyana.
+				</div>
+  </body>
+</html>

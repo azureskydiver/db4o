@@ -1,0 +1,63 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Collections Update Depth</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Collections Update Depth</h1>
+<p>When you work with collections you should pay a special
+attention to your update depth setting, as the performance impact of this
+setting increases with the number of objects in the collection.</p>
+
+<p>For example let’s consider a class like this:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java:&nbsp;</p>
+
+
+<p><code>class ListObject {</code></p>
+
+<p><code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; List
+&lt;DataObject&gt; data;</code></p>
+
+<p><code>}</code></p>
+</span>
+</p>
+
+
+
+
+
+
+
+<p>Let’s assume that ListObject has a data list of 1000 DataObjects.</p><p><b>Update depth = 1</b></p>
+
+
+
+
+<p>data field object (List) will be updated if ListObject is saved.</p><p><b>Update depth = 2</b></p>
+
+
+
+
+
+<p>data object (List) and all 1000 DataObjects in the list will be updated if
+ListObject is saved.</p><p>It is easy to see that after a certain update depth value
+all the list objects are getting updated, which produces a serious performance
+penalty. The following examples show how to avoid the performance drop
+and still get the expected results.</p>
+
+<p><div class="childTopicList">More Reading:<ul>
+<li><p><a href="collections_update_depth/insert_and_remove.html" class="wikiLink">Insert And Remove</a></p></li>
+<li><p><a href="collections_update_depth/updating_list_objects.html" class="wikiLink">Updating List Objects</a></p></li>
+</ul></div>
+</p></div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2007-02-22T13:06:38 by Tetyana.
+				</div>
+  </body>
+</html>

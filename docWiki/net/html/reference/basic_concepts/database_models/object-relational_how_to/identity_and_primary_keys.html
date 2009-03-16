@@ -1,0 +1,80 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Identity And Primary Keys</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Identity And Primary Keys</h1>
+
+<p>One of the most important concepts to understand working
+with a database system is the identification strategy. </p>
+
+<p>In RDBMS separate entities are distinguished with the help
+of primary keys. Effectively, objects are compared on their field contents and
+a constrain is used prohibiting 2 different rows in a table to have the same
+value in a column marked as a primary key. </p>
+
+<p>In the object world, the concept is quite different - any
+object is unique, independently of the data it holds. For example:</p>
+
+<p><code>class Car </code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;
+model</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp; year</code></p>
+
+
+
+<p><code>car1 = new Car("BMW","1999") </code></p>
+
+<p><code>car2 = new Car("BMW","1999") </code></p>
+
+<p><code>car1</code> and <code>car2</code> objects consist of
+the same data, but they are not equal.</p>
+
+<p>On the other hand we can create any amount of references to
+the object and they will all be equal:</p>
+
+<p><code>car1 = new Car("BMW","1999") </code></p>
+
+<p><code>car2 = car1</code></p>
+
+<p><code>car3 = car1</code></p>
+
+<p>In this example <code>car2</code> is equal to
+<code>car1</code> and <code>car3</code> and all these variables actually
+reference the same object.</p>
+
+<p>Object database task is to ensure that independently of the
+way the object was accessed (by different queries or through different navigation
+access paths) the database must return a reference to the one single object.
+For a detailed explanation how it is achieved in db4o, please see <a href="../../object_identity/unique_identity_concept.html" class="wikiLink">Unique identity concept</a>.</p>
+
+<p>If you are moving from a relational database to db4o it is
+very important to understand db4o identity concept. Instead of tying objects to
+the database reference key you should use the objects, obtained from the
+database directly without additional worries about their identity.</p>
+
+<p>Unfortunately, there still are some cases, when additional
+identification system is necessary. This can happen when an object must be
+referenced out of the application memory boundaries: objects referenced between
+sessions, objects passed to another application, partially connected applications
+etc. In these cases, you are encouraged to use db4o internal IDs or Unique
+Universal IDs (UUID). Internal IDs are unique within one database file and do
+change after defragment. UUIDs are unique between all db4o databases and do not
+change. For more information see <a href="../../../implementation_strategies/ids_and_uuids.html" class="wikiLink">IDs and UUIDs</a>.</p>
+
+If your application requires autoincremented ID
+generation you can look at an example implementation in <a href="../../../implementation_strategies/callbacks/possible_usecases/autoincrement.html" class="wikiLink">Autoincrement</a>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-06-02T20:21:13 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,135 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Building SODA Queries</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Building SODA Queries</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script><p>Let's see how simple QBE queries are expressed with SODA. A new Query 
+object is created through the #query() method of the ObjectContainer and we can 
+add Constraint instances to it. To find all Pilot instances, we constrain 
+the query with the Pilot class object.</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">QueryExample.java: <span class="fscMemberName">retrieveAllPilots</span></span></div><div class="fscCode"><pre ID="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_40_284_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_40_284_Open_Text').style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_40_284_Closed_Image').style.display='inline'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_40_284_Closed_Text').style.display='inline';"/><img id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_40_284_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_40_284_Closed_Text').style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_40_284_Open_Image').style.display='inline'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_40_284_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> retrieveAllPilots() </span><span id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_40_284_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_40_284_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    ObjectContainer container </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4o.openFile(DB4O_FILE_NAME);
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_109_245_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_109_245_Open_Text').style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_109_245_Closed_Image').style.display='inline'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_109_245_Closed_Text').style.display='inline';"/><img id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_109_245_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_109_245_Closed_Text').style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_109_245_Open_Image').style.display='inline'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_109_245_Open_Text').style.display='inline';"/>    </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> </span><span id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_109_245_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_109_245_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      Query query </span><span style="color: #000000;">=</span><span style="color: #000000;"> container.query();
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      query.constrain(Pilot.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">);
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      ObjectSet result </span><span style="color: #000000;">=</span><span style="color: #000000;"> query.execute();
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      listResult(result);
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_254_281_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_254_281_Open_Text').style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_254_281_Closed_Image').style.display='inline'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_254_281_Closed_Text').style.display='inline';"/><img id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_254_281_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_254_281_Closed_Text').style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_254_281_Open_Image').style.display='inline'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_254_281_Open_Text').style.display='inline';"/>    }</span></span><span style="color: #000000;"> </span><span style="color: #0000FF;">finally</span><span style="color: #000000;"> </span><span id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_254_281_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrieveAllPilots_330_71_254_281_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      container.close();
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>    }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+</span>
+
+
+
+
+
+<p>Basically, we are exchanging our 'real' prototype for a meta description of the 
+objects we'd like to hunt down: a <b>query graph</b> made up of query nodes and 
+constraints. A query node is a placeholder for a candidate object, a constraint 
+decides whether to add or exclude candidates from the result.</p>
+
+<p>Our first 
+simple graph looks like this.</p>
+
+<p><img src="../graph1.gif"/></p>
+
+<p>We're just asking any candidate object (here: any object in the database) to be 
+of type Pilot to aggregate our result.</p>
+
+<p>To retrieve a pilot by name, we 
+have to further constrain the candidate pilots by descending to their name field 
+and constraining this with the respective candidate String.</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">QueryExample.java: <span class="fscMemberName">retrievePilotByName</span></span></div><div class="fscCode"><pre ID="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByName_1198_73"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByName_1198_73_67_255_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByName_1198_73_67_255_Open_Text').style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByName_1198_73_67_255_Closed_Image').style.display='inline'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByName_1198_73_67_255_Closed_Text').style.display='inline';"/><img id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByName_1198_73_67_255_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByName_1198_73_67_255_Closed_Text').style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByName_1198_73_67_255_Open_Image').style.display='inline'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByName_1198_73_67_255_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> retrievePilotByName(ObjectContainer container) </span><span id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByName_1198_73_67_255_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByName_1198_73_67_255_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    Query query </span><span style="color: #000000;">=</span><span style="color: #000000;"> container.query();
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    query.constrain(Pilot.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">);
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    query.descend(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">name</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">).constrain(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Michael Schumacher</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    ObjectSet result </span><span style="color: #000000;">=</span><span style="color: #000000;"> query.execute();
+</span><span style="color: #008080;">6</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    listResult(result);
+</span><span style="color: #008080;">7</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+</span>
+
+
+
+
+
+<p>What does 'descend' mean here? Well, just as we did in our 'real' prototypes, we 
+can attach constraints to child members of our candidates.</p>
+
+<p><img src="../graph2.gif"/></p>
+
+<p>So a candidate needs to be of type Pilot and have a member named 'name'that is 
+equal to the given String to be accepted for the result.</p>
+
+<p>Note that the 
+class constraint is not required: If we left it out, we would query for all 
+objects that contain a 'name' member with the given value. In most cases this 
+will not be the desired behavior, though.</p>
+
+<p>Finding a pilot by exact points 
+is analogous.We just have to cross the Java primitive/object divide.</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">QueryExample.java: <span class="fscMemberName">retrievePilotByExactPoints</span></span></div><div class="fscCode"><pre ID="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByExactPoints_2019_80"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> retrievePilotByExactPoints(
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByExactPoints_2019_80_78_264_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByExactPoints_2019_80_78_264_Open_Text').style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByExactPoints_2019_80_78_264_Closed_Image').style.display='inline'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByExactPoints_2019_80_78_264_Closed_Text').style.display='inline';"/><img id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByExactPoints_2019_80_78_264_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByExactPoints_2019_80_78_264_Closed_Text').style.display='none'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByExactPoints_2019_80_78_264_Open_Image').style.display='inline'; document.getElementById('....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByExactPoints_2019_80_78_264_Open_Text').style.display='inline';"/>      ObjectContainer container) </span><span id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByExactPoints_2019_80_78_264_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="....QueriesJava.ZipsQueryExample.Java_QueryExample.Java_RetrievePilotByExactPoints_2019_80_78_264_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    Query query </span><span style="color: #000000;">=</span><span style="color: #000000;"> container.query();
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    query.constrain(Pilot.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">);
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    query.descend(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">points</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">).constrain(</span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Integer(</span><span style="color: #000000;">100</span><span style="color: #000000;">));
+</span><span style="color: #008080;">6</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    ObjectSet result </span><span style="color: #000000;">=</span><span style="color: #000000;"> query.execute();
+</span><span style="color: #008080;">7</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    listResult(result);
+</span><span style="color: #008080;">8</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+</span>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2008-03-02T14:25:40 by Tetyana.
+				</div>
+  </body>
+</html>

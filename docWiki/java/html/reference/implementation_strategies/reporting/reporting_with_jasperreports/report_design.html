@@ -1,0 +1,94 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Report Design</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Report Design</h1>
+
+<p>Let's create a report representing pilots in a table. The
+table will have 2 fields: "Name" and "Points". The fields should be defined
+like this:</p>
+
+<p><code>&lt;field name="Name"
+class="java.lang.String"/&gt;</code></p>
+
+<p><code>&lt;field name="Points"
+class="java.lang.Integer"/&gt;</code></p>
+
+<p>The field values - $F{Name} and $F{Points} -
+can be used in the table part of the report:</p>
+
+
+
+<p><code>&lt;detail&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;
+&lt;band height="15"&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;
+&lt;textField bookmarkLevel="2"&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;reportElement x="150" y="0"
+width="175" height="15"/&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;box leftBorder="Thin" bottomBorder="Thin"
+leftPadding="10" rightPadding="10"/&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;textElement textAlignment="Left"/&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;textFieldExpression
+class="java.lang.String"&gt;$F{Name}&lt;/textFieldExpression&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;anchorNameExpression&gt;$F{Name} + " (" + $F{Points} +
+")"&lt;/anchorNameExpression&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;
+&lt;/textField&gt;</code></p>
+
+
+
+<p><code>&nbsp;&nbsp;&nbsp;
+&lt;textField isStretchWithOverflow="true"&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;reportElement positionType="Float" x="325"
+y="0" width="50" height="15"/&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;box leftBorder="Thin" bottomBorder="Thin"
+rightBorder="Thin" leftPadding="10"
+rightPadding="10"/&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;textElement textAlignment="Right"/&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;textFieldExpression
+class="java.lang.Integer"&gt;$F{Points}&lt;/textFieldExpression&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;
+&lt;/textField&gt;</code></p>
+
+<p><code> &lt;/band&gt;</code></p>
+
+<p><code>&lt;/detail&gt;</code></p>
+
+The full report design can be downloaded from
+<a href="the-pilot-report.jrxml.html" class="wikiLink">the-pilot-report.jrxml</a>.
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-04-27T16:49:22 by Tetyana.
+				</div>
+  </body>
+</html>

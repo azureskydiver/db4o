@@ -1,0 +1,37 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Scalability</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Scalability</h1>
+
+<p>Db4o can potentially be used for
+rather large databases - up to 254 GB per database file. One of the biggest
+benefits is that db4o query performance does not decrease with the growth of
+the database file. However it can be affected by the amount of the same type
+objects in the database. </p>
+
+<p>If you want to make sure that your
+application can grow and scale with db4o database you may take the following
+steps:</p>
+
+<ul><li>Write performance tests to accommodate for performance requirements
+     of the growing application</li><li>Use database clusters to spread the load between several
+     database files.</li><li>Use client-server version to enable many clients using
+     data at the same time</li><li>Use in-memory database to improve performance</li></ul>
+
+<p>Another important factor for performance and scalability is
+fragmentation. That is why it is important to run db4o <a href="../../tuning/performance_hints/defragment.html" class="wikiLink">Defragment</a>
+regularly. The physical disk fragmentation also plays an important role, so
+disk defragment should be also scheduled on a regular basis to improve the
+performance.</p></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2008-06-10T16:15:57 by Tetyana.
+				</div>
+  </body>
+</html>

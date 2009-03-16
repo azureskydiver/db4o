@@ -1,0 +1,29 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Getting Started</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Getting Started</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Download Contents&nbsp;">Download Contents&nbsp;</a><ul><li><a href ="#Java Platform&nbsp;">Java Platform&nbsp;</a></li></ul></li><li><a href ="#Requirements&nbsp;">Requirements&nbsp;</a><ul><li><a href ="#Java version">Java version</a></li><li><a href ="#.NET version&nbsp;">.NET version&nbsp;</a></li></ul></li><li><a href ="#Installation&nbsp;">Installation&nbsp;</a><ul><li><a href ="#Java Platform Installation">Java Platform Installation</a></li></ul></li></ul></li></ul></div></div></div><p>This topic will give you some initial information about dRS and will help to get your environment ready to work with dRS.</p><a name="Download Contents&nbsp;"></a><h2>Download Contents&nbsp;</h2><p></p><p><span name="cs_wiki_filter" csw_filters="java">&nbsp;</p><a name="Java Platform&nbsp;"></a><h3>Java Platform&nbsp;</h3><p>The distribution comes as a zip archive. The contents need to be extracted to any folder before you start to use the dRS.</p><p>You can find the offline version of this documentation in <b>/doc/reference</b> folder.<br>
+</p><p>The API documentation in located in <b>/doc/api</b> folder.&nbsp;</p><p>&nbsp;</p>
+
+<p>db4o and <a href="http://developer.db4o.com/Resources/view.aspx/Reference/Db4o_Replication_System_DRS">dRS online</a> documentation resources are located in the <a href="http://developer.db4o.com/Resources/edit.aspx/Reference">reference documentation</a>. </p><p><br><br></span></p><a name="Requirements&nbsp;"></a><h2>Requirements&nbsp;</h2><a name="Java version"></a><h3>Java version</h3><p>dRS is dependent on the JDK 5 version of db4o object database. You will also need a corresponding db4o version (compatible db4o and dRS have the same version number).<br>To use the Hibernate Replication functionality, the Hibernate core version 3.1 files are required. These files and their dependencies have been included in the /lib folder for your convenience. If you require more complicated Hibernate mapping configurations, you may wish to download the full Hibernate documentation from the <a href="http://www.hibernate.org/">Hibernate project website</a>.<br>To run the provided build scripts dRS requires <a href="http://ant.apache.org/">Apache Ant</a> 1.6 or later.<br>
+<br>
+</p><a name=".NET version&nbsp;"></a><h3>.NET version&nbsp;</h3><p>dRS requires Microsoft .NET framework version 2.0 to work. A compatible version of db4o database should be used (compatible db4o and dRS have the same version number).</p><p>To work with the source code and examples you will need Microsoft Visual Studio 2005.<br></p><a name="Installation&nbsp;"></a><h2>Installation&nbsp;</h2><span name="cs_wiki_filter" csw_filters="java"><a name="Java Platform Installation"></a><h3>Java Platform Installation</h3><p><span id="ctl00_ctl00_bcr_topicView___TopicBody"><span class="java"><p>dRS functionality is delivered in a single jar file. If
+you add dRS.jar to your CLASSPATH, dRS is installed. For using db4o replication to another database (RDBMS) you will also need hibernate library, which is included in the /lib folder in the distribution.<br> </p><p>In case you work with an integrated development environment
+like <a href="http://www.eclipse.org/" target="_blank">Eclipse</a>&nbsp;
+you can copy the dRS jar to a /lib/ folder under your project and
+add dRS to your project as a library. <br></p>
+
+<p>Here is how to add the dRS library to an Eclipse project</p>
+
+<ul><li>create a folder named "lib" under your project directory, if it doesn't exist yet</li><li>copy dRS.jar to this folder</li><li>Right-click on your project in the Package Explorer and choose "refresh"</li><li>Right-click on your project in the Package Explorer again and choose "properties"</li><li>select "Java Build Path" in the treeview on the left</li><li>select the "Libraries" tabpage.</li><li>click "Add Jar"</li><li>the "lib" folder should appear below your project</li><li>choose dRS.jar in this folder</li><li>hit OK twice&nbsp; </li></ul></span></span>You might need to repeat the same for hibernate3.jar<br></p></span><p>&nbsp;</p></div>
+    </div>
+    <div id="footer">
+					This revision (7) was last Modified 2007-07-10T10:00:41 by Tetyana.
+				</div>
+  </body>
+</html>

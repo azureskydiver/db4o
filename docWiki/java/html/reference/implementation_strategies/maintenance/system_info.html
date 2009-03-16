@@ -1,0 +1,136 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>System Info</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>System Info</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script><p>SystemInfo is a utility class, providing system information
+about db4o database. </p>
+
+<p>Currently SystemInfo includes the following methods:</p>
+
+<table border="1" cellpadding="0" cellspacing="0">
+ <tr>
+  <td valign="top">
+  <p><b>Method </b></p>
+  </td>
+  <td valign="top">
+  <p><b>Functionality</b></p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>freespaceSize</p>
+  </td>
+  <td valign="top">
+  <p>returns the freespace size in the database
+  in bytes. When db4o stores modified objects, it allocates a new slot for it.
+  During commit the old slot is freed. Free slots are collected in the
+  <a href="../freespace_management_system.html" class="wikiLink">freespace manager</a>, so they can be reused for other objects.</p>
+  <p>This method returns a sum of the size of all
+  free slots in the database file.</p>
+  <p>To reclaim
+  freespace run <a href="defragment.html" class="wikiLink">Defragment</a>.</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>freespaceEntryCount</p>
+  </td>
+  <td valign="top">
+  <p>returns the number
+  of entries in the <a href="../freespace_management_system.html" class="wikiLink">Freespace Manager</a>.A high value for the number of
+  freespace entries is an indication that the database is fragmented and that
+  <a href="defragment.html" class="wikiLink">Defragment</a> should be run.&nbsp; </p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>totalSize</p>
+  </td>
+  <td valign="top">
+  <p>Returns the total
+  size of the database on disk.</p>
+  </td>
+ </tr>
+</table>
+
+
+
+<p>In order to get SystemInfo instance you must issue the
+following call:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>SystemInfo info = container.ext().systemInfo();</code></p>
+
+</span>
+
+
+
+
+
+<p>SystemInfo can be used for different maintenance services.
+The example below presents a simple program, which can be scheduled to run
+automatically at certain intervals for a database check up. (To download the
+complete example, please press "download" button in the right upper corner of
+the code block).</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">SystemInfoExample.java: <span class="fscMemberName">testSystemInfo</span></span></div><div class="fscCode"><pre ID="ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_37_631_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_37_631_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_37_631_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_37_631_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_37_631_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_37_631_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_37_631_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_37_631_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> testSystemInfo() </span><span id="ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_37_631_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_37_631_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">long</span><span style="color: #000000;"> dbSize </span><span style="color: #000000;">=</span><span style="color: #000000;"> _container.ext().systemInfo().totalSize();
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">long</span><span style="color: #000000;"> fsSize </span><span style="color: #000000;">=</span><span style="color: #000000;"> _container.ext().systemInfo().freespaceSize();
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img id="ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_189_290_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_189_290_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_189_290_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_189_290_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_189_290_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_189_290_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_189_290_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_189_290_Open_Text').style.display='inline';"/>    </span><span style="color: #0000FF;">if</span><span style="color: #000000;"> (dbSize </span><span style="color: #000000;">&gt;</span><span style="color: #000000;"> MAX_DB_SIZE) </span><span id="ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_189_290_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_189_290_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Attention! Database file size is over the limit. Maintenance required</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>    }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    _logPS.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Total database size: </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> dbSize);
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img id="ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_371_468_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_371_468_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_371_468_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_371_468_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_371_468_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_371_468_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_371_468_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_371_468_Open_Text').style.display='inline';"/>    </span><span style="color: #0000FF;">if</span><span style="color: #000000;"> (fsSize </span><span style="color: #000000;">&gt;</span><span style="color: #000000;"> MAX_FS_SIZE) </span><span id="ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_371_468_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceImplementation_StrategiesMaintenanceSystem_InfoSystemInfoJava.ZipsSystemInfoExample.Java_SystemInfoExample.Java_TestSystemInfo_2038_70_371_468_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Attention! Freespace size is over the limit. Maintenance required</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>    }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    _logPS.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Database freespace size: </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> fsSize);
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    _logPS.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Database freespace entries: </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> _container.ext().systemInfo().freespaceEntryCount());
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+</span>
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-08-17T20:21:30 by Tetyana.
+				</div>
+  </body>
+</html>

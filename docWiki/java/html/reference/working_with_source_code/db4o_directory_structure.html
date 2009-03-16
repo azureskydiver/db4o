@@ -1,0 +1,148 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Db4o Directory Structure</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Db4o Directory Structure</h1>
+
+<p>This topic will explain the directory structure of the db4o
+project.</p>
+
+<p><span name="cs_wiki_filter" csw_filters="java"></p>
+
+<p>Note: Java version of db4o is separated into 3 projects:</p>
+
+<p>db4oj - db4o version for JDK1.1</p>
+
+<p>db4ojdk1.2 - db4o version for JDK1.2-1.4, depends on db4oj</p>
+
+<p>db4ojdk5 - db4o version for JDK5-6, depends on db4oj</p>
+
+<p>db4ojdk1.2 and db4ojdk5 contain only those folders, where
+functionality is different from db4oj.</p>
+
+
+
+<p></span><br></p>
+
+<p>The following folders are used within the db4o core project.</p><p><b>Activation</b> - Transparent Activation support classes.&nbsp;</p>
+
+<p><b>Cluster </b>- contains cluster source code, which allows
+queries against several databases. Work in progress.</p>
+
+<p><b>Config</b> - contains configuration interface and other
+classes and interfaces used for db4o tuning and configuration.</p>
+
+<p><b>Constraints </b>-unique constraints code.</p>
+
+<p><b>Defragment</b> - defragmentation code and related service
+classes and interfaces.</p>
+
+<p><b>Diagnostic </b>- diagnostics classes and interfaces.</p>
+
+<p><b>Events </b>- external events implementation.</p>
+
+<p><b>Ext </b>- extended db4o functionality .</p>
+
+<p><b>Foundation </b>- db4o base classes and interfaces. </p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Io </b>-
+file system related code.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Network </b>-
+classes for network communications (buffer, socket).</p>
+
+<p><b>Internal </b>- internal db4o logic.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Btree</b>
+- b-Tree implementation. Used for indexing, freespace, defragment etc.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Callbacks
+</b>- callbacks definitions.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>ClassIndex</b>
+- class index implementation.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Cluster </b>-
+internal cluster code.</p><p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;  <b>Collections</b> - fast collections development classes.<br></p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Convert </b>-
+version converter.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>CS</b> -
+client/server code</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Diagnostic
+</b>- diagnostic processor.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Events</b>
+- internal events implementation.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Fieldindex
+</b>- field index logic</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Fileheader
+</b>- classes for handling db4o file header.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Freespace
+</b>- freespace management code.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Handlers
+</b>- different type handlers (array, byte, char etc).</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Ix </b>-
+old indexing logic.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Mapping </b>-
+internal mapping implementation for defragment.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Marshall
+</b>- different type marshallers.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Query </b>-
+query logic implementation.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Replication
+</b>- deprecated replication logic.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Slots </b>-
+classes dealing with slots in db4o file.</p>
+
+<p><b>IO</b> - db4o IoAdapter implementations.</p>
+
+<p><b>Marshal</b> - marchalling interfaces. <br></p><p><b>Messaging </b>- messaging interfaces for client/server
+communications.</p>
+
+<p><b>Query</b> - classes and interfaces for different query
+types.</p>
+
+<p><b>Reflect </b>- reflection interfaces, generic reflector
+implementation.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Core </b>-
+abstract reflect classes.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Generic </b>-
+generic reflector implementation.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Jdk </b>-
+wrapper classes to JDK reflection.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Self </b>-
+reflector implementations for JDK platforms without reflection support.</p><p>
+
+<b>Replication</b><b> </b>-
+db4o replication code</p><p><b>Ta</b> - transparent activation code&nbsp;</p><p>
+
+<b>Types </b>-
+db4o specific types <br></p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-10-28T10:33:47 by Tetyana.
+				</div>
+  </body>
+</html>
