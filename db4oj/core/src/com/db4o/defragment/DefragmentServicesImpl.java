@@ -147,7 +147,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 
 	public ByteArrayBuffer bufferByAddress(DbSelector selector,int address,int length) {
-		return selector.db(this).bufferByAddress(address,length);
+		return selector.db(this).decryptedBufferByAddress(address,length);
 	}
 
 	public StatefulBuffer targetStatefulBufferByAddress(int address,int length) throws IllegalArgumentException {
@@ -311,7 +311,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 	
 	private Slot readPointer(DbSelector selector,int id) {
-		ByteArrayBuffer reader=bufferByAddress(selector, id, Const4.POINTER_LENGTH);
+		ByteArrayBuffer reader=selector.db(this).rawBufferByAddress(id,Const4.POINTER_LENGTH);
         if(Deploy.debug){
             reader.readBegin(Const4.YAPPOINTER);    
         }

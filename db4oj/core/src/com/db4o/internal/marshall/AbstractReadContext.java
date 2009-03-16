@@ -111,7 +111,7 @@ public abstract class AbstractReadContext extends AbstractBufferContext implemen
         if(address == 0){
             return null;
         }
-        return container().bufferByAddress(address, length);
+        return container().decryptedBufferByAddress(address, length);
     }
 
 }

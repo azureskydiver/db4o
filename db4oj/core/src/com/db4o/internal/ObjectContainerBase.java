@@ -1341,14 +1341,19 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     public abstract void readBytes(byte[] a_bytes, int a_address, int a_length) throws Db4oIOException;
 
     public abstract void readBytes(byte[] bytes, int address, int addressOffset, int length) throws Db4oIOException;
+    
 
-    public final ByteArrayBuffer bufferByAddress(int address, int length)
+    public final ByteArrayBuffer decryptedBufferByAddress(int address, int length)
 			throws Db4oIOException {
-		checkAddress(address);
+		ByteArrayBuffer reader = rawBufferByAddress(address, length);
+		_handlers.decrypt(reader);
+		return reader;
+	}
 
+	public ByteArrayBuffer rawBufferByAddress(int address, int length) {
+		checkAddress(address);
 		ByteArrayBuffer reader = new ByteArrayBuffer(length);
 		readBytes(reader._buffer, address, length);
-		_handlers.decrypt(reader);
 		return reader;
 	}
 
