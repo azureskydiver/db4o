@@ -28,7 +28,7 @@ public class ArrayHandler0 extends ArrayHandler1 {
             return;
         }
         ReadBuffer temp = context.buffer();
-        ByteArrayBuffer indirectedBuffer = container(context).bufferByAddress(address, length);
+        ByteArrayBuffer indirectedBuffer = container(context).decryptedBufferByAddress(address, length);
         context.buffer(indirectedBuffer);
         runnable.run();
         context.buffer(temp);

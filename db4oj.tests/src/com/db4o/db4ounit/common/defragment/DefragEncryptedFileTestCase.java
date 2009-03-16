@@ -95,6 +95,8 @@ public class DefragEncryptedFileTestCase implements TestLifeCycle {
         config.callConstructors(true);
         config.storage(new MockStorage(new FileStorage(), "db4o"));
         config.reflectWith(Platform4.reflectorForType(Item.class));
+        config.password("encrypted");
+        config.encrypt(true);
         
         return config;
     }

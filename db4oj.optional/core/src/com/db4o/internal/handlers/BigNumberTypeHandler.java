@@ -127,7 +127,7 @@ public abstract class BigNumberTypeHandler<TBigNumber> implements EmbeddedTypeHa
 	protected abstract int compare(TBigNumber x, TBigNumber y);
 
 	private ByteArrayBuffer bufferFromSlot(Context context, Slot slot) {
-		return context.transaction().container().bufferByAddress(slot.address(), slot.length());
+		return context.transaction().container().decryptedBufferByAddress(slot.address(), slot.length());
 	}
 
 	private TBigNumber bigNumberFrom(Object obj, Context context) {

@@ -47,7 +47,7 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
     public final Object indexEntryToObject(Context context, Object indexEntry){
         if(indexEntry instanceof Slot){
             Slot slot = (Slot)indexEntry;
-            indexEntry = context.transaction().container().bufferByAddress(slot.address(), slot.length());
+            indexEntry = context.transaction().container().decryptedBufferByAddress(slot.address(), slot.length());
         }
         return readStringNoDebug(context, (ReadBuffer)indexEntry);
     }
@@ -125,7 +125,7 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
         }
         if (obj instanceof Slot) {
 			Slot s = (Slot) obj;
-			return oc.bufferByAddress(s.address(), s.length());
+			return oc.decryptedBufferByAddress(s.address(), s.length());
 		}
         
 		return null;

@@ -106,7 +106,7 @@ public class ByteArrayBuffer implements ReadWriteBuffer {
 	    if(address == 0){
 	        return null;
 	    }
-		return trans.container().bufferByAddress(address, length);
+		return trans.container().decryptedBufferByAddress(address, length);
 	}
 	
 	public void readEncrypt(ObjectContainerBase stream, int address) throws Db4oIOException {
