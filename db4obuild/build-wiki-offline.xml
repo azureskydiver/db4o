@@ -17,9 +17,9 @@
         <delete dir="${dir.wikioffline.java}" />
         
         <exec executable="${tool.wikioffline}"
-            dir="${dir.tool.wikioffline}">
+            dir="${dir.tool.wikioffline}" failonerror="true">
             <arg line="-filter:&quot;java&quot;" />
-            <arg line="-out:&quot;${dir.wikioffline.java}&quot;" />
+            <arg line="-out:&quot;${dir.wikioffline.java}&quot;"  />
         </exec>
     </target>
     
@@ -27,7 +27,7 @@
         <delete dir="${dir.wikioffline.net}" />
         
         <exec executable="${tool.wikioffline}"
-            dir="${dir.tool.wikioffline}">
+            dir="${dir.tool.wikioffline}" failonerror="true">
             <arg line="-filter:&quot;net,cs,vb&quot;" />
             <arg line="-out:&quot;${dir.wikioffline.net}&quot;" />
         </exec>
