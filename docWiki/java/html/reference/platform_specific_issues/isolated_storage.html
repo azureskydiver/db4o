@@ -1,0 +1,43 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Isolated Storage</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Isolated Storage</h1>
+<p><font color="#990000">This topic applies to .NET version only.</font></p>
+
+<p>Isolated Storage is a special data storage mechanism
+provided by .NET framework. </p>
+
+<p>Isolated Storage can allocate storage space for each user
+and each .NET assembly on the system. It solves the problem of finding a disk
+location with sufficient privileges for the application data storage. The code
+using Isolated Storage is only required to have <code>IsolatedStorageFilePermission</code>. Though
+Isolation Storage can allocate space for any user, special quotas exist for its
+size, which can be configured by system administrator.</p>
+
+<p>You can make use of Isolated Storage as a location for your
+db4o database.</p>
+
+<p>The
+following topics will discuss the usage of db4o over Isolated Storage, its
+benefits and limitations.</p>
+<div class="childTopicList">More Reading:<ul>
+<li><p><a href="isolated_storage/isolated_storage_io_adapter.html" class="wikiLink">Isolated Storage IO Adapter</a></p></li>
+<li><p><a href="isolated_storage/isolated_storage_example.html" class="wikiLink">Isolated Storage Example</a></p></li>
+<li><p><a href="isolated_storage/benefits_and_limitations.html" class="wikiLink">Benefits And Limitations</a></p></li>
+<li><p><a href="isolated_storage/db4oisolatedstoragefile.html" class="wikiLink">Db4oIsolatedStorageFile</a></p></li>
+<li><p><a href="isolated_storage/isolatedstoragefileadapter.html" class="wikiLink">IsolatedStorageFileAdapter</a></p></li>
+</ul></div>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-08-19T13:00:47 by Tetyana.
+				</div>
+  </body>
+</html>

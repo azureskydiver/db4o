@@ -1,0 +1,99 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Using Sample Code</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Using Sample Code</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Variables">Variables</a></li><li><a href ="#Embedded Code">Embedded Code</a></li></ul></li></ul></div></div></div><p>Db4o reference documentation accompanies theoretical
+material with example code, which can be used for the material evaluation and
+better understanding.</p>
+
+<p>The examples are provided in java, c# and VB.NET. In the
+online version, you can use filters on the right pane to display the relevant
+content. Offline version provides the content depending on the downloaded
+version of db4o.</p>
+
+<p>Most of the examples are console applications except for
+those clearly mentioning the environment (web-applications, windows forms etc.).</p>
+
+
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java examples are JDK5 compatible.</p>
+
+</span>
+
+
+
+<a name="Variables"></a><h2>Variables</h2>
+
+<p>The in-text code snippets are mainly used to show the syntax
+of a particular method. The following variables are used:</p>
+
+<p><code>objectContainer</code> - references and open
+ObjectContainer/IObjectContainer or ObjectClient/IobjectClient. For more
+information see <a href="object_lifecycle/object_container.html" class="wikiLink">Object Container</a> and
+<a href="client-server/embedded.html" class="wikiLink">Embedded</a>.</p><code>configuration</code> variable is used to reflect
+Configuration object. See <a href="tuning/configuration.html" class="wikiLink">Configuration</a>.
+
+
+
+<a name="Embedded Code"></a><h2>Embedded Code</h2>
+
+<p>The examples usually show only the method code demonstrating
+the functionality discussed. In this case, additional code (opening and closing
+database methods, listing results, global variable definitions) and persistent
+class definitions are not visible. In order to see them you can download the
+whole example as a *.zip file using the button in the top-right corner of the
+example code block. Note: usually the *.zip file contains all the examples for
+the current topic.</p>
+
+
+
+<p>In the majority of the examples, objectContainer is opened
+and closed in each method. This is done to keep examples atomic. In the
+real-world application, the best technique would be to open an objectContainer
+on the first request and keep it open for the application lifetime.</p>The downloaded code can be easily used to run the examples.
+
+
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>In Eclipse (using JDK5):</p>
+
+<ul><li>unzip the contents in /Example/com/db4odoc/[example_name]
+folder (check the correct package name in the code files);</li><li>select File/New/Project/Java Project;</li><li>choose the project name as "ExampleProject";</li><li>select "Create project from existing source" and browse to the
+/Example folder;</li><li>press "Next";</li><li>in the "Libraries" tab add the required db4o libraries
+(db4o-x.x-java5.dll, db4o-x.x-nqopt.jar, db4o-x.x-db4ounit.jar, bloat.jar);</li><li>press "Finish";</li><li>run the example.</li></ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</span>
+
+
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2007-11-28T15:27:54 by Tetyana.
+				</div>
+  </body>
+</html>

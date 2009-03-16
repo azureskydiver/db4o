@@ -1,0 +1,49 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>.NET Enumerations</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>.NET Enumerations</h1>
+
+<p>.NET
+enumerations are value types, just like integers, numbers, Booleans etc. Value
+types are different from reference types in the way they are allocated:
+reference types are allocated on the common language runtime (CLR) heap,
+whereas value types are allocated in the stack or as a part of the reference
+type.</p>
+
+<p>.NET enumerations are based on an underlying type, which can
+be Byte, SByte, Int32, UInt32, Int16, UInt16, Int64, and UInt64 (i.e. values of
+these types will be enumerated). When underlying type is not specified in the
+Enum declaration, Int32(c#) or Integer (VB.NET) is used by default. </p>
+
+<p>Originally db4o was treating Enums as reference types, as the
+abilities of db4o typehandlers were limited. With the introduction of the new <a href="../../typehandlers.html" class="wikiLink">TypeHandlers</a>,
+it became possible to align the persistence strategy with the runtime handling
+strategy. Enums are now handled with a special EnumTypeHandler, which
+implements IEmbeddedTypeHandler interface. It means that the enum object does
+not have a database identity and will be stored together with its parent object
+in the same slot. This handling is similar to the handling of a normal integer
+field value with a limited value range. </p>
+
+<p>EnumTypeHandler ensures that the new value of the Enum field
+does not constitute a creation of a new database object. It also fixes the bug
+of the previous handler when the "0" value was treated as "any" value of the
+current enumeration.</p>
+
+
+<div class="childTopicList">More Reading:<ul>
+<li><p><a href=".net_enumerations/enums_example.html" class="wikiLink">Enums Example</a></p></li>
+<li><p><a href=".net_enumerations/viewing_enum_values_in_ome.html" class="wikiLink">Viewing Enum Values In OME</a></p></li>
+</ul></div>
+ <br></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2009-02-12T12:13:53 by Tetyana.
+				</div>
+  </body>
+</html>

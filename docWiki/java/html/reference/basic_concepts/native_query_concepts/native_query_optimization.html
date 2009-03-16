@@ -1,0 +1,35 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Native Query Optimization</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Native Query Optimization</h1>
+
+<p>Though Native Query API discussed in the
+<a href="native_query_implementation.html" class="wikiLink">previous paragraph</a> is simple and
+straightforward, the real challenge is to provide a performant solution.</p>
+
+<p>If the NQ code is run as is, it requires instantiation of
+all the members of a class. This is very slow in most cases. In order to
+improve the performance a special optimizer is used by db4o. The idea of the
+optimization is to analyze the code in a Native Query and provide an
+alternative in a database query language. This can be done in runtime or build
+time.</p>
+
+<p>Obviously, optimization is not possible in cases, when a
+native query does not have a database query alternative. To reveal those cases
+<a href="../../tuning/diagnostics/nativequerynotoptimized.html" class="wikiLink">db4o Diagnostic</a> system
+should be used.</p>
+
+<p>For more information see
+<a href="../../tuning/native_query_optimization.html" class="wikiLink">Native Query Optimization</a>.</p></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-06-02T18:41:28 by Tetyana.
+				</div>
+  </body>
+</html>

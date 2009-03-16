@@ -1,0 +1,42 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Update Depth</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Update Depth</h1> 
+
+<p>Update depth term is used to determine a number of levels of member objects down the hierarchy, which will be updated automatically, when the top-level object is updated. Understanding of update depth and its performance impact is especially important for working with deep object graphs and collections. </p>
+<p>The default update depth value is 0, which means that objectContainer#set(object) method will only update the object passed as a parameter and any changes to its member objects will be lost.</p>
+<p>Update depth can be changed globally or for a specific class.</p>
+<p>Global update depth settings:</p>
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java:&nbsp;</p>
+<p><code>configuration.updateDepth(depth)</code></p>
+</span>
+
+
+<p>Class-specific update settings:</p>
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java:&nbsp;</p>
+<p><code>configuration.objectClass(ListObject.class).cascadeOnUpdate(flag);</code></p>
+<p><code>configuration.objectClass(ListObject.class).updateDepth(depth);</code></p>
+</span>
+
+
+<p>Here depth parameter specifies the number of member object levels down the hierarchy, which will be updated when the top-level object is saved.</p>
+<p>Flag parameter determines whether update operation should be cascaded to all the member objects.</p>
+
+<p>Further reading:</p>
+<p><a href="working_with_structured_objects/updating_structured_objects.html" class="wikiLink">Update Depth for Structured Objects</a></p>
+<p><a href="update_depth/collections_update_depth.html" class="wikiLink">Collections Update Depth</a></p>
+<p><br>&nbsp;</p></div>
+    </div>
+    <div id="footer">
+					This revision (7) was last Modified 2008-03-29T10:29:38 by Tetyana.
+				</div>
+  </body>
+</html>

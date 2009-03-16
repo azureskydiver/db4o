@@ -1,0 +1,46 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>SODA Query Graph</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>SODA Query Graph</h1><p><br><br>SODA
+allows to create a query graph of any complexity by joining field object
+constraints. SODA
+usage is very generic and can be applied to any objects and conditions. The
+following 5 steps can be used (all steps are optional and can be repeated
+logically):</p>
+
+<ul class="unIndentedList"><li>
+create a root of a query object<br><span name="cs_wiki_filter" csw_filters="java"><br>Java:<br><code>Query queryRootNode = db.query();</code><br></span><br><br>
+<br></li><li>
+add constraints to any node anywhere<br><span name="cs_wiki_filter" csw_filters="java"><br>Java:<br><code>queryRootNode.constrain(Foo.class);</code><br></span><br><br><br></li><li>
+navigate from any query node to any subordinate
+node<br><span name="cs_wiki_filter" csw_filters="java"><br>Java:<br><code>Query barNode = queryRootNode.descend("bar");</code><br></span><br><br><br></li><li>
+add further constraints to any node<br><span name="cs_wiki_filter" csw_filters="java"><br>Java:<br><code>Constraint barConstraint = barNode.constrain(5);</code><br></span><br><br>
+<br></li><li>
+set the evaluation mode of a node<br><span name="cs_wiki_filter" csw_filters="java"><br>Java:<br><code>barConstraint().greater();</code><br></span><br><br><br></li></ul>
+
+
+
+
+
+
+
+
+
+<p>The
+API is very powerful with a small number of method calls.</p>
+
+<p>The
+"backward" order to add constraints first and to specify the
+evaluation mode as a second step allows plugging complex objects into a query.</p><br></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2008-03-02T14:48:05 by Tetyana.
+				</div>
+  </body>
+</html>

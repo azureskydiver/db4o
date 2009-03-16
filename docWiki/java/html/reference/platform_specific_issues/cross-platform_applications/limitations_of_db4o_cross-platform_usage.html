@@ -1,0 +1,44 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Limitations Of Db4o Cross-Platform Usage</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Limitations Of Db4o Cross-Platform Usage</h1><p><br></p><p>db4o cross-platform functionality is work in progress.
+Currently, it provides the basic features that enable you to use Java database
+on .NET and vice versa. However, it is recommended to familiarize yourself with
+the current limitations:</p>
+
+<p>1. Some objects are treated differently in Java and .NET and
+could not be translated cleanly. This includes:</p>
+
+<ul><li>Enumerations. In Java enumerations are similar to classes
+whereas in .NET enumeration is just a primitive type. For more information on
+how db4o treats both types see <a href="../../implementation_strategies/type_handling/static_fields_and_enums.html" class="wikiLink">Static Fields And Enums</a></li><li>Final Fields in Java behave differently in different
+platforms, which does not correspond to .NET readonly or const members. See
+<a href="../../implementation_strategies/type_handling/final_fields.html" class="wikiLink">Final Fields</a></li><li>Collections. Please, keep an eye on <a href="http://tracker.db4o.com/browse/COR-766">COR-766</a> Jira issue to see
+when collections cross-platfrom handling will be fixed.</li></ul>
+
+
+
+
+
+<p>2. Cross-platform client/server usage (Java server, .NET
+client or vice versa) is currently out of order (<a href="http://tracker.db4o.com/browse/COR-765">COR-765</a>).</p><p>In general using db4o in cross-platform environment, you
+must try to keep your persistent class definitions simple and unambiguously
+interpreted on both platforms. Avoid constructs that exist only on Java or only
+on .NET platform.</p>
+
+Please, keep an eye on db4o <a href="http://tracker.db4o.com/">Jira</a> and <a href="http://developer.db4o.com/blogs">news</a> to stay informed about the
+latest progress on db4o cross-platform functionality.
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-08-12T19:59:31 by Tetyana.
+				</div>
+  </body>
+</html>

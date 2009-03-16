@@ -1,0 +1,39 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Db4o Integration</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Db4o Integration</h1><p><font color="#990000">This topic applies to .NET version only</font>&nbsp;</p><p>We will use a separate module to maintain a database
+connection and perform db4o operations: <a href="db4o_manager.html" class="wikiLink">Db4o Manager</a>. </p>
+
+<p>The following function will add several Pilot objects to the
+database:</p>
+
+
+
+
+
+
+<p>Report's data source can accept a single object (Textbox
+control) or a list of objects (Table, List, Chart etc.). In this example we use
+a table, so a list of objects is needed:</p>
+
+
+
+
+
+
+<p>This function will return a list of pilot object IDs.
+Please, note, that the actual objects will be instantiated only as they are
+being retrieved from the list, which means that db4o connection should be kept
+open while the report is being created. </p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-05-23T18:15:07 by Tetyana.
+				</div>
+  </body>
+</html>

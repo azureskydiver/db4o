@@ -1,0 +1,70 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Storing MemoryBin Data</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Storing MemoryBin Data</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+<p>In the <a href="simple_example.html" class="wikiLink">previous
+example</a> we've learned how to use a MemoryStorage to create a database and run
+queries in it. However, in most of the cases you will still need a backup of
+the data in memory earlier or later. To get it, you will need to close the
+object container and store the contents of the MemoryBin to a normal file. </p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">MemoryStorageExample.java: <span class="fscMemberName">storeMemoryBin</span></span></div><div class="fscCode"><pre ID="..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_StoreMemoryBin_411_79"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_StoreMemoryBin_411_79_55_787_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_StoreMemoryBin_411_79_55_787_Open_Text').style.display='none'; document.getElementById('..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_StoreMemoryBin_411_79_55_787_Closed_Image').style.display='inline'; document.getElementById('..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_StoreMemoryBin_411_79_55_787_Closed_Text').style.display='inline';"/><img id="..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_StoreMemoryBin_411_79_55_787_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_StoreMemoryBin_411_79_55_787_Closed_Text').style.display='none'; document.getElementById('..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_StoreMemoryBin_411_79_55_787_Open_Image').style.display='inline'; document.getElementById('..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_StoreMemoryBin_411_79_55_787_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> storeMemoryBin() </span><span style="color: #0000FF;">throws</span><span style="color: #000000;"> IOException </span><span id="..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_StoreMemoryBin_411_79_55_787_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_StoreMemoryBin_411_79_55_787_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    MemoryStorage origStorage </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> MemoryStorage();
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    EmbeddedConfiguration origConfig </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4oEmbedded.newConfiguration();
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    origConfig.file().storage(origStorage);
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    ObjectContainer origDb </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4oEmbedded.openFile(origConfig, DB4O_URI);
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    origDb.store(</span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Book(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Alice in Wonderland</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">));
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    origDb.close();
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    MemoryBin origBin </span><span style="color: #000000;">=</span><span style="color: #000000;"> origStorage.bin(DB4O_URI);
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">byte</span><span style="color: #000000;">[] data </span><span style="color: #000000;">=</span><span style="color: #000000;"> origBin.data();
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    OutputStream out </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> FileOutputStream(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">memory.db4o</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    out.write(data, </span><span style="color: #000000;">0</span><span style="color: #000000;">, data.length);
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    out.close();
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    ObjectContainer newDb </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4oEmbedded.openFile(Db4oEmbedded
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        .newConfiguration(), </span><span style="color: #000000;">&quot;</span><span style="color: #000000;">memory.db4o</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    Book book </span><span style="color: #000000;">=</span><span style="color: #000000;"> (Book) newDb
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        .queryByExample(</span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Book(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Alice in Wonderland</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">)).get(</span><span style="color: #000000;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    System.out.println(book);
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    newDb.close();
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+</span>
+
+<p>Note, that the result
+file can be used as a normal db4o database.</p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2009-03-16T15:32:45 by Tetyana.
+				</div>
+  </body>
+</html>

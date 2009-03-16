@@ -1,0 +1,73 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Activation Depth</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Activation Depth</h1><p>In order to work effectively with db4o
+you must understand the concept of
+<a href="../object_lifecycle/activation.html" class="wikiLink">Activation</a>. Activation controls the amount
+of referenced objects loaded into the memory. There are 2 main
+pitfalls that you must be aware about:</p>
+
+<ol>
+<li>
+<p>An object retrieved from the
+	database is null.</p>
+	
+<p>This happens if the activation level
+	is lower than needed. For example:</p>
+	
+<p>class Pilot has field Car:</p>
+	
+<p><code>Pilot {</code></p>
+	
+<p><code>Car car;</code></p>
+	
+<p><code>}</code></p>
+	
+<p>and is saved to a database. Then
+	<code>pilot</code> object us retrieved from the database with the
+	activation depth is set to 0. In this case <code>pilot.car</code>
+	will be equal to null and can be incorrectly interpreted.</p>
+	
+	</li>
+<li>
+<p>Activation depth is set
+	<a href="../object_lifecycle/activation/global_activation_settings.html" class="wikiLink">globally</a>
+	to a high value or is set to
+	<a href="../object_lifecycle/activation/object-specific_activation.html" class="wikiLink">cascadeOnActivate</a>
+	for a heavily used object with a deep structure. This will result in
+	a huge performance penalty and should be avoided.</p>
+	
+<p>The automatic solution of the
+	Activation issues is provided by
+	<a href="../object_lifecycle/activation/transparent_activation_framework.html" class="wikiLink">Transparent Activation Framework</a>.
+	However, understanding of Activation is still important.</p>
+</li>
+</ol>
+
+<ul>
+<p>For more information on activation
+	see:</p>
+<li>
+<p><a href="../object_lifecycle/activation/global_activation_settings.html" class="wikiLink">Global Activation Settings</a></p>
+	</li>
+<li>
+<p><a href="../object_lifecycle/activation/object-specific_activation.html" class="wikiLink">Object-Specific Activation</a></p>
+	</li><li>
+<p><a href="../object_lifecycle/activation/transparent_activation_framework.html" class="wikiLink">Transparent Activation Framework</a></p>
+	</li>
+<li>
+<p><a href="../tuning/performance_hints/activation_strategies.html" class="wikiLink">Activation strategies</a></p>
+</li>
+</ul></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2007-11-05T16:30:34 by Tetyana.
+				</div>
+  </body>
+</html>

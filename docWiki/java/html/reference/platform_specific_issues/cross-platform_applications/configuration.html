@@ -1,0 +1,80 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Configuration</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Configuration</h1><p>In order to use the same database in Java and .NET
+application you will need to configure
+<a href="../../implementation_strategies/aliases.html" class="wikiLink">Aliases</a>. This is necessary due to the
+<a href="../../object_lifecycle/class_name_format_in_.net.html" class="wikiLink">difference in Java and .NET</a>
+class name format (it can be also helpful if you do not want to give the same
+names to the classes in different applications).</p>
+
+<p>First of all you will need to alias the database itself:</p>
+
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
+
+<p><code>Configuration configuration = Db4o.newConfiguration();</code></p>
+
+
+
+
+
+<p><code>configuration.addAlias(new TypeAlias("Db4objects.Db4o.Ext.Db4oDatabase,
+Db4objects.Db4o","com.db4o.ext.Db4oDatabase"));</code></p>
+
+</span>
+
+
+
+
+
+<p>Then you will need to alias the persisted classes. If your
+class names match in Java and .NET, you can use a <a href="../../implementation_strategies/aliases/wildcardalias.html" class="wikiLink">WildcardAlias</a>,
+which allows to alias all the classes in a package/namespace at once:</p>
+
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
+
+
+
+<p><code>configuration.addAlias(new WildcardAlias("Db4objects.Db4odoc.Aliases.*,
+Db4objects.Db4odoc","com.db4odoc.aliases.*"));</code></p>
+
+</span>
+
+
+
+
+
+<p>If you want to alias only specific classes you can use
+<a href="../../implementation_strategies/aliases/typealias.html" class="wikiLink">TypeAlias</a>.</p>
+
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
+
+
+
+
+
+<p><code>configuration.addAlias(new TypeAlias("Db4objects.Db4odoc.Aliases.Pilot,
+Db4objects.Db4odoc","com.db4odoc.aliases.Pilot"));</code></p>
+
+</span>
+
+
+
+Remember that the configuration should be created and
+supplied to the object container on opening.
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-08-12T19:57:22 by Tetyana.
+				</div>
+  </body>
+</html>

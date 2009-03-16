@@ -1,0 +1,33 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Isolation Level For Db4o</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Isolation Level For Db4o</h1>
+
+<p>The default isolation level for db4o is read-committed. In
+your transaction, you can see the committed changes from the other
+transactions. However, don't forget that db4o uses object reference cache to
+speed up the retrieval. This means that if the object was already retrieved in
+the current transaction you will need to call
+<code>extObjectContainer.refresh(object)</code> to obtain the most recent value
+of the object. </p>
+
+<p>Another interesting feature to point out: when using Lazy or
+Snapshot queries phantom reads can occur if the other transaction commits
+during the current transaction query execution. For more information see <a href="../../object_lifecycle/querying/query_modes.html" class="wikiLink">Query Modes</a>.</p>
+
+<p>Please, note that the isolation level is only applicable for
+client-server version of db4o. If you are sharing the same object container
+between several users, you are actually working within one transaction. If you
+need to have isolation, you can implement it on your application level.</p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-06-15T10:06:26 by Tetyana.
+				</div>
+  </body>
+</html>

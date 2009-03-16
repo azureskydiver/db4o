@@ -1,0 +1,31 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Including Db4oTool In The Build</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Including Db4oTool In The Build</h1>
+<p><font color="#990000">This topic applies to .NET version only.</font></p>
+<p>The easiest way to use Db4oTools is to include it directly into the build process. This will enable you to get a processed assembly immediately after a successful build. If you are using Visual Studio Compact Framework emulator, you will get the processed assembly straight into the emulator.</p>
+<p>Use the following steps to enable Db4oTool in VS2005 project:</p>
+<ul>
+<li>Make sure that Db4oTool.exe together with the other libraries from the bin folder in the distribution are accessible to your project.</li>
+<li>Open Project Properties page and select "Build Events" tab.</li>
+<li>In the "Post-build event command line:" enter the required Db4oTool command:</li>
+<ul>
+<li><code>[path_to_Db4oTool_folder]/Db4oTools.exe [options] $(TargetPath)</code><br>if Db4oTool is included in your project's references, <code>[path_to_Db4oTool_folder]</code> should be skipped.<br></li></ul>
+<li>In the "Run the post-build event:" select "On successful build"</li>
+<li>Run the build. The resulting assembly will contain all the modifications made by Db4oTool.</li></ul>
+<p>An example of this is included in the distribution in src/Db4oTool/Db4oTool.Example folder.</p><p>Possible usages:</p><ol><li>Native Query optimization:<br><code>[path_to_Db4oTool_folder]/Db4oTools.exe -nq $(TargetPath)</code></li><li>Transparent Activation support for the whole assembly:<br><code>[path_to_Db4oTool_folder]/Db4oTools.exe -ta $(TargetPath)</code></li><li>Transparent Activation support for MyClass objects:<br>
+<code>[path_to_Db4oTool_folder]/Db4oTools.exe -ta <span id="ctl00_ctl00_bcr_topicView___TopicBody">-byname:MyClass </span>$(TargetPath)</code></li><li>Transparent Activation and Transparent Persistence support:<br>
+
+<code>[path_to_Db4oTool_folder]/Db4oTools.exe -tp<span id="ctl00_ctl00_bcr_topicView___TopicBody"> </span>$(TargetPath)</code></li></ol>For more Db4oTool options please refer to <a href="db4otool_usage.html" class="wikiLink">Db4oTool Usage</a>.<br></div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2008-01-20T09:07:54 by Tetyana.
+				</div>
+  </body>
+</html>

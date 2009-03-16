@@ -1,0 +1,26 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>TP Example Code</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>TP Example Code</h1><p><font color="#990000">This topic applies to .NET version only </font></p><p>Let's
+look at Transparent Persistence example. We will use <a href="sensorpanel.html" class="wikiLink">SensorPanel</a> class from <a href="../../../../object_lifecycle.html" class="wikiLink">Activation</a>
+example, which represents a simple linked list.</p><p>First of all we must configure the database to use TP:</p><p>Now, we should explicitly store the objects that we want to be persistent:</p>
+
+<p>In order to test if TP actually works, we will select all the SensorPanel objects from the database, modify them and commit the transaction. If TP took place the objects will be modified in the database:</p>
+
+
+
+<p>The code above is ready to accommodate TP, however TP is not possible now as SensorPanel does not implement IActivatable interface. In the <a href="example_enhancement.html" class="wikiLink">following chapter</a> we will learn how to enable TP for the project classes in the build time. </p><p>The
+whole project code can be downloaded here: <a href="tp_example_code/tpexamplescs.zip.html" class="wikiLink">c#</a>&nbsp; <a href="tp_example_code/tpexamplesvb.zip.html" class="wikiLink">vb</a></p><p><br>&nbsp;</p>
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2008-01-20T10:09:50 by Tetyana.
+				</div>
+  </body>
+</html>

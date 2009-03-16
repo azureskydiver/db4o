@@ -1,0 +1,89 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Configuration</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Configuration</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Working With Configuration">Working With Configuration</a><ul><li><a href ="#Global Configuration">Global Configuration</a></li><li><a href ="#Object Container Configuration">Object Container Configuration</a></li></ul></li><li><a href ="#Further Reading">Further Reading</a></li></ul></li></ul></div></div></div> 
+
+<P>db4o provides a wide range of configuration methods to request special behaviour. </P>
+<P>For a complete list of all available methods see <a href="configuration/general_configuration.html" class="wikiLink">Configuration</a>, <a href="configuration/clientserver_configuration.html" class="wikiLink">ClientServerConfiguration</a>, <a href="configuration/objectclass_configuration.html" class="wikiLink">ObjectClass</a> and <a href="configuration/objectfield_configuration.html" class="wikiLink">ObjectField</a> interfaces, and API documentation for the com.db4o.config package/namespace.</P>
+<P>The following paragraphs contain some useful hints around using configuration calls.</P>
+<a name="Working With Configuration"></a><H2>Working With Configuration<BR></H2>
+<P>Configuration can be obtained using the following methods:</P>
+<span name="cs_wiki_filter" csw_filters="java">
+<P>Java:</P>
+<P><code>Configuration configuration = Db4o.newConfiguration();</code></P>
+</span>
+
+<P>To apply the configuration to an ObjectContainer/Client/Server use one of the following methods:</P>
+<span name="cs_wiki_filter" csw_filters="java">
+<P>Java:</P>
+<P><code>Db4o.openFile(configuration, databaseFileName)</code> </P>
+<P><code>Db4o.openServer(configuration, databaseFileName, port)</code></P>
+<P><code>Db4o.openClient(configuration, hostName, port, user, password)</code></P>
+</span>
+
+<P>Configuration settings are <B>not</B> stored in db4o database files. Accordingly you will need to pass the same configuration object <B>every time</B> you open an ObjectContainer/Client/Server. <BR>For using db4o in client/server mode it is recommended to use the same configuration on the server and on the client. To set this up nicely it makes sense to create one application class with one method that returns the required configuration and to deploy this class both to the server and to all clients.&nbsp; <BR></P>
+<P>Client/Server specific configuration calls reside in ClientServerConfiguration interface (.NET conventional name IClientServerConfiguration). These settings are accessed with:</P>
+<span name="cs_wiki_filter" csw_filters="java">
+<P>Java: </P>
+<P><code>ClientServerConfiguration configuration = Db4o.newConfiguration().clientServer();</code></P>
+</span>
+
+<P>For db4o versions before 6.0 the above-mentioned method of working with the configuration was not available. Instead, you could use:</P>
+<UL>
+<LI>global db4o configuration context;</LI>
+<LI>object container instance configuration.</LI></UL>
+<P>These methods are still available, however their usage is not advised due to their limitations.</P>
+
+<a name="Global Configuration"></a><H3>Global Configuration</H3>
+<P>Global configuration can be set using:</P>
+<span name="cs_wiki_filter" csw_filters="java">
+<P>Java:</P>
+<P><code>Db4o.configure()</code></P>
+</span>
+
+<P>Starting from version 6.0 you can obtain a clone of the global configuration:</P>
+<span name="cs_wiki_filter" csw_filters="java">
+<P>Java:</P>
+<P><code>Configuration configuration = Db4o.cloneConfiguration()</code></P>
+</span>
+
+<P>When an ObjectContainer/ObjectServer is opened, the global configuration context is cloned and copied into the newly opened ObjectContainer/ObjectServer. Subsequent calls against the global context with Db4o.configure() have no effect on open ObjectContainers/ObjectServers.</P>
+<P>&nbsp;Global configuration has a number of disadvantages:</P>
+<UL>
+<LI>the settings apply to all the object containers in the current VM/runtime</LI>
+<LI>the settings can't be reset.</LI></UL>
+<P><BR></P>
+<a name="Object Container Configuration"></a><H3>Object Container Configuration</H3>
+<P>Object Container instance configuration can be used for an open ObjectContainer/Client/Server:</P>
+<span name="cs_wiki_filter" csw_filters="java">
+<P>Java:</P>
+<P><code>objectContainer.ext().configure() </code><BR><code>objectServer.ext().configure()</code></P>
+</span>
+
+<P>Closing the container will erase all the settings.</P>
+<P>The obvious disadvantages are:</P>
+<UL>
+<LI>configuration can not be created before the container is opened;</LI>
+<LI>
+<P>some configuration methods effect the way the system works on opening an object container therefore have no influence on the open object container;</P></LI>
+<LI>
+<P>some configuration methods only effect the creation of a database;</P></LI>
+<LI>configuration settings will need to be repeated as many times as the new container gets opened. </LI></UL><BR>
+<a name="Further Reading"></a><H2>Further Reading</H2>
+<P>Some configuration switches are discussed in more detail in the following chapters:</P>
+<UL>
+<LI><a href="performance_hints.html" class="wikiLink">Performance Hints</a></LI>
+<LI><a href="indexing.html" class="wikiLink">Indexing</a></LI>
+<LI><a href="../implementation_strategies/encryption.html" class="wikiLink">Encryption</a></LI></UL></div>
+    </div>
+    <div id="footer">
+					This revision (25) was last Modified 2007-09-23T16:40:28 by Eric Falsken.
+				</div>
+  </body>
+</html>

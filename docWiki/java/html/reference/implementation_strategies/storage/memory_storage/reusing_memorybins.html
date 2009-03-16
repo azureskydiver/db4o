@@ -1,0 +1,85 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Reusing MemoryBins</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Reusing MemoryBins</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+<p>In the <a href="storing_memorybin_data.html" class="wikiLink">previous
+example</a> we saw how a MemoryBin can be stored to a normal disk file. You can
+also transfer it to the other parts of an application as a normal variable (byte
+array).</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">MemoryStorageExample.java: <span class="fscMemberName">reuseMemoryBin</span></span></div><div class="fscCode"><pre ID="..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_ReuseMemoryBin_277_79"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_ReuseMemoryBin_277_79_36_1302_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_ReuseMemoryBin_277_79_36_1302_Open_Text').style.display='none'; document.getElementById('..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_ReuseMemoryBin_277_79_36_1302_Closed_Image').style.display='inline'; document.getElementById('..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_ReuseMemoryBin_277_79_36_1302_Closed_Text').style.display='inline';"/><img id="..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_ReuseMemoryBin_277_79_36_1302_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_ReuseMemoryBin_277_79_36_1302_Closed_Text').style.display='none'; document.getElementById('..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_ReuseMemoryBin_277_79_36_1302_Open_Image').style.display='inline'; document.getElementById('..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_ReuseMemoryBin_277_79_36_1302_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> reuseMemoryBin() </span><span id="..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_ReuseMemoryBin_277_79_36_1302_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..MemoryStorageJava.ZipsMemoryStorageExample.Java_MemoryStorageExample.Java_ReuseMemoryBin_277_79_36_1302_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Create original storage</span><span style="color: #008000;">
+</span><span style="color: #008080;">03</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    MemoryStorage origStorage </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> MemoryStorage();
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    EmbeddedConfiguration origConfig </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4oEmbedded.newConfiguration();
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    origConfig.file().storage(origStorage);
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> A new MemoryBin identified by DB4O_URI will be created</span><span style="color: #008000;">
+</span><span style="color: #008080;">07</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    ObjectContainer origDb </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4oEmbedded.openFile(origConfig, DB4O_URI);
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    origDb.store(</span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Book(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Alice in Wonderland</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">));
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    origDb.close();
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Retrieve original bin by its URI</span><span style="color: #008000;">
+</span><span style="color: #008080;">12</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    MemoryBin origBin </span><span style="color: #000000;">=</span><span style="color: #000000;"> origStorage.bin(DB4O_URI);
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> This bin contains the database data</span><span style="color: #008000;">
+</span><span style="color: #008080;">14</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    </span><span style="color: #0000FF;">byte</span><span style="color: #000000;">[] data </span><span style="color: #000000;">=</span><span style="color: #000000;"> origBin.data();
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Create a new bin, using the data from the original bin</span><span style="color: #008000;">
+</span><span style="color: #008080;">17</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    MemoryBin newBin </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> MemoryBin(data, </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> DoublingGrowthStrategy());
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    MemoryStorage newStorage </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> MemoryStorage();
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Assign the new bin to a new MemoryStorage using the same DB4O_URI</span><span style="color: #008000;">
+</span><span style="color: #008080;">20</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    newStorage.bin(DB4O_URI, newBin);
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    EmbeddedConfiguration newConfig </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4oEmbedded.newConfiguration();
+</span><span style="color: #008080;">22</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    newConfig.file().storage(origStorage);
+</span><span style="color: #008080;">23</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Open object container using the new bin with the original data</span><span style="color: #008000;">
+</span><span style="color: #008080;">24</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    ObjectContainer newDb </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4oEmbedded.openFile(newConfig, DB4O_URI);
+</span><span style="color: #008080;">25</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> test that the data is still there</span><span style="color: #008000;">
+</span><span style="color: #008080;">26</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    Book book </span><span style="color: #000000;">=</span><span style="color: #000000;"> (Book) newDb
+</span><span style="color: #008080;">27</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        .queryByExample(</span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Book(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Alice in Wonderland</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">)).get(</span><span style="color: #000000;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">28</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    System.out.println(book);
+</span><span style="color: #008080;">29</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    newDb.close();
+</span><span style="color: #008080;">30</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+</span>
+
+
+
+
+
+<p>From this and <a href="storing_memorybin_data.html" class="wikiLink">previous
+example</a>, you can see that MemoryBin API gives you lots of flexibility:
+combining persistence and exchange strategies you can achieve more complex
+functionalities, such as synchronization, archiving, versioning, disconnected remote
+mode etc.</p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2009-03-16T15:33:42 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,70 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Enhancement Tools</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Enhancement Tools</h1>
+
+<p>Enhancement tools provide a convenient framework for application (jar, dll, exe) or classes modification to support db4o-specific functionality. Enhancement tools can work on a ready application or library and apply the improvements at load or build time. &nbsp;</p><p>The tools functionality is provided through bytecode Instrumentation (BI). Bytecode instrumentation&nbsp; is a process of inserting of special, usually
+short, sequences of bytecode at designated points of Java or .NET class. BI is
+typically used for profiling or monitoring, however the range of use of
+bytecode instrumentation is not limited by this tasks: BI can be applied
+anywhere where a specific functionality should be plugged into the ready built
+classes.</p>
+
+<p>db4o Enhamncement Tools currently have 2 usecases for bytecode instrumentation:</p>
+
+<ul><li><a href="../tuning/native_query_optimization.html" class="wikiLink">Native Query Optimization</a>;</li><li><a href="../object_lifecycle/activation/transparent_activation_framework.html" class="wikiLink">Transparent
+Activation</a></li><li><a href="../object_lifecycle/transparent_persistence.html" class="wikiLink">Transparent Persistence</a></li></ul>
+
+
+
+<p>In NQ optimization case bytecode
+instrumentation is used as a more performant alternative to a run-time
+optimization. When an NQ is optimized the user and compiler-friendly syntax of
+NQ predicate is replaced with a query-processor-friendly code (bytecode in the
+case of BI). Obviously, optimization process can take some time, therefore it
+can be a good choice to use pre-instrumented classes, then to let the
+optimization be executed each time it is required by application.</p>
+
+<p>In TA case, classes are required
+to implement Activatable interface to support transparent activation. In many
+cases you won't want to "pollute" your proprietary classes with some additional
+interface, or even won't be able to do so if you use a third party classes
+library. That's where BI comes handy: Activatable interface will be implemented
+on your existing classes by applying bytecode instrumentation. Another
+advantage of this approach - you can still work on your "clean" classes, just
+do not forget to run BI afterwards.</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Bytecode
+instrumentation in Java can be run at build time (also known as static
+instrumentation). In this case a special (build) script calls BI on the classes
+before packaging them to jar, or on the jar itself (classes are extracted,
+instrumented and jarred again). This is the fastest solution as no time is
+spent on bytecode instrumentation at runtime. </p>
+
+<p>Another method is to use BI at load time. In this case
+instrumenting information is inserted into the classes by a specific
+instrumenting classloader just before they are loaded into the VM.</p>
+
+</span>
+
+<p>The following topics discuss BI implementation for db4o
+needs in more detail and explain the tools and API that should be used for BI
+tasks.</p>
+
+
+
+<ul><li><a href="enhancement_tools/enhancement_for_java.html" class="wikiLink">Enhancement For Java</a></li><li><a href="enhancement_tools/enhancement_for_.net.html" class="wikiLink">Enhancement For .NET</a></li></ul></div>
+    </div>
+    <div id="footer">
+					This revision (7) was last Modified 2008-01-20T09:25:47 by Tetyana.
+				</div>
+  </body>
+</html>

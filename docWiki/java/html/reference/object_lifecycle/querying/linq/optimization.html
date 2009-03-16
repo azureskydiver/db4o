@@ -1,0 +1,40 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Optimization</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Optimization</h1><p>Those of you who are familiar with db4o query processor may
+already suspect that LINQ queries as well as NQ and QueryByExample queries are
+converted to <a href="../soda_query.html" class="wikiLink">SODA Query</a> under the hood. And that is true. The downside of this is
+that some of the queries cannot be converted to SODA and will run against all
+instances of matching class objects. Some of the cases when conversion is not possible: </p>
+
+<ul><li>there is no SODA alternative available</li><li>constraints on aggregates (avg(List) = constant)</li><li>constraints to values that are not available before
+query executions (Pilot.Points = Pilot.Name.Length)</li></ul>
+
+
+
+
+
+
+
+
+
+
+
+<p>In the cases when optimization is not possible db4o query processor
+will need the class definitions to be able to run the LINQ query. If
+these definitions are not available the query will throw an exception.
+For more information see
+<a href="../../../client-server/server_without_persistent_classes_deployed/linq.html" class="wikiLink">Server
+Without Persistent Classes</a>. <br></p></div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2008-07-13T18:16:22 by Tetyana.
+				</div>
+  </body>
+</html>
