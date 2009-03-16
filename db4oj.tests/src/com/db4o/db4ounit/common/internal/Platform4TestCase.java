@@ -23,11 +23,13 @@ public class Platform4TestCase extends TestWithTempFile{
 		try {
 			raf = new RandomAccessFile(tempFile(), "r");
 			final RandomAccessFile finalRaf = raf;
-			Assert.expect(DatabaseFileLockedException.class, new CodeBlock() {
-				public void run() throws Throwable {
-					Platform4.lockFile(tempFile(), finalRaf);
-				}
-			});
+			if(Platform4.hasNio()){
+				Assert.expect(DatabaseFileLockedException.class, new CodeBlock() {
+					public void run() throws Throwable {
+						Platform4.lockFile(tempFile(), finalRaf);
+					}
+				});
+			}
 		} finally {
 			if (raf != null){
 				try {

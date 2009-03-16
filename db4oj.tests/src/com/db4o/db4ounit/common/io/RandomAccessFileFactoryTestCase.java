@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.api.*;
 import com.db4o.ext.*;
+import com.db4o.internal.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
@@ -26,11 +27,13 @@ public class RandomAccessFileFactoryTestCase extends TestWithTempFile{
 
 	public void testLockDatabaseFileTrue() throws IOException{
 		ObjectContainer container = openObjectContainer(true);
-		Assert.expect(DatabaseFileLockedException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				RandomAccessFileFactory.newRandomAccessFile(tempFile(), false, true);
-			}
-		});
+		if(Platform4.hasNio()){
+			Assert.expect(DatabaseFileLockedException.class, new CodeBlock() {
+				public void run() throws Throwable {
+					RandomAccessFileFactory.newRandomAccessFile(tempFile(), false, true);
+				}
+			});
+		}
 		container.close();
 	}
 
