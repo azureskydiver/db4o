@@ -24,12 +24,9 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 	 * @throws Throwable
 	 */
 	public void test() throws Throwable {
-		final Configuration config = Db4o.configure();
-		configure(config);
-		
 		String fileName = databaseFile();
 		File4.delete(fileName);
-		final ObjectServer server = Db4o.openServer(fileName, -1);
+		final ObjectServer server = Db4o.openServer(createConfiguration(), fileName, -1);
 		_port = server.ext().port();
 		try {
 			server.grantAccess("db4o", "db4o");
@@ -42,6 +39,12 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 		}
 	}
 
+	private Configuration createConfiguration() {
+		final Configuration config = Db4o.newConfiguration();
+		configure(config);
+		return config;
+	}
+
 	protected void withClient(ContainerBlock block) throws Throwable {
 		ContainerServices.withContainer(openClient(), block);
 	}
@@ -50,7 +53,7 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 	 * @deprecated using deprecated api
 	 */
 	protected ClientObjectContainer openClient() {
-		return (ClientObjectContainer)Db4o.openClient("localhost", _port, "db4o", "db4o");
+		return (ClientObjectContainer)Db4o.openClient(createConfiguration(), "localhost", _port, "db4o", "db4o");
 	}
 
 	protected int port() {
