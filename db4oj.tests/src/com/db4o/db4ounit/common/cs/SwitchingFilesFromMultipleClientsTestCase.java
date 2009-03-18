@@ -22,7 +22,6 @@ public class SwitchingFilesFromMultipleClientsTestCase extends StandaloneCSTestC
 	
 	protected void configure(Configuration config) {
 		config.reflectWith(Platform4.reflectorForType(Data.class));
-		config.encrypt(false);
 	}
 
 	/**

@@ -51,7 +51,6 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             CharHandlerUpdateTestCase.class,
             DateHandlerUpdateTestCase.class,
             DoubleHandlerUpdateTestCase.class,
-            EncrytedFileMigrationTestCase.class,
             FloatHandlerUpdateTestCase.class,
             IntHandlerUpdateTestCase.class,
             InterfaceHandlerUpdateTestCase.class,
@@ -63,12 +62,14 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             ShortHandlerUpdateTestCase.class,
             StringHandlerUpdateTestCase.class,
             
-            // Order to run freespace tests last is
+            // Order to run freespace/Encrypted tests last is
             // deliberate. Global configuration Db4o.configure()
             // is changed in the #setUp call and reused.
             
             IxFreespaceMigrationTestCase.class,
             FreespaceManagerMigrationTestCase.class,
+            
+            EncrytedFileMigrationTestCase.class,
 
 		};
 	    return addJavaTestCases(classes);

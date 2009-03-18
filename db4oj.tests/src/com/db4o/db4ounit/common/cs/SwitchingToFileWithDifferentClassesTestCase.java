@@ -39,7 +39,6 @@ public class SwitchingToFileWithDifferentClassesTestCase extends StandaloneCSTes
 	
 	@Override
 	protected void configure(Configuration config) {	
-		config.encrypt(false);
 	}
 
 	@Override
