@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.exceptions;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.db4ounit.util.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
@@ -35,26 +36,31 @@ public class OldFormatExceptionTestCase implements TestCase, OptOutNoFileSystemD
         }
 
 		
-		Db4o.configure().reflectWith(Platform4.reflectorForType(OldFormatExceptionTestCase.class));
-		
-		Db4o.configure().allowVersionUpdates(false);
 		final String oldDatabaseFilePath = oldDatabaseFilePath();
 		
 		Assert.expect(OldFormatException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				Db4o.openFile(oldDatabaseFilePath);
+				Db4o.openFile(newConfiguration(false), oldDatabaseFilePath);
 			}
 		});
 		
-		Db4o.configure().allowVersionUpdates(true);
 		ObjectContainer container = null;
 		try {
-			container = Db4o.openFile(oldDatabaseFilePath);
+			container = Db4o.openFile(newConfiguration(true), oldDatabaseFilePath);
 		} finally {
 			if (container != null) {
 				container.close();
 			}
 		}
+	}
+
+	private Configuration newConfiguration(final boolean allowVersionUpdates) {
+		final Configuration config = Db4o.newConfiguration();
+		config.reflectWith(Platform4.reflectorForType(OldFormatExceptionTestCase.class));
+		
+		config.allowVersionUpdates(allowVersionUpdates);
+		
+		return config;
 	}
 
 	protected String oldDatabaseFilePath() throws IOException {
