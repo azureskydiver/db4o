@@ -322,7 +322,7 @@ public class LinkCheckTask extends Task {
 				index++;
 				String remaining = content.substring(index);
 
-				StringTokenizer st = new StringTokenizer(remaining, "\t\n\r\">");
+				StringTokenizer st = new StringTokenizer(remaining, "\t\n\r\"'>");
 				String strLink = st.nextToken();
 				if (isMailTo(strLink)) {
 					continue;
@@ -344,8 +344,7 @@ public class LinkCheckTask extends Task {
 					urlLink = new URL(strLink);
 					strLink = urlLink.toString();
 				} catch (MalformedURLException e) {
-
-					brokenLinks.add(strURL + ": " + strLink);
+					brokenLinks.add(strURL + ": " + strLink + " Exception caught: " + e);
 					continue;
 				}
 
@@ -381,12 +380,12 @@ public class LinkCheckTask extends Task {
 					}
 
 				} catch (IOException e) {
-					brokenLinks.add(strURL + ": " + strLink);
+					brokenLinks.add(strURL + ": " + strLink + "\r\nException caught:" + e);
 					continue;
 				}
 			}
 		} catch (IOException e) {
-			brokenLinks.add(strURL + ": " + strURL);
+			brokenLinks.add(strURL + "\r\nException caught:" + e);
 		}
 
 	}
