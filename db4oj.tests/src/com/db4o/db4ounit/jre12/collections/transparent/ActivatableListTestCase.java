@@ -29,90 +29,6 @@ public class ActivatableListTestCase extends AbstractDb4oTestCase {
 		
 	}
 	
-	public static interface CollectionElement{
-		
-	}
-	
-	public static class Element implements CollectionElement{
-		
-		public String _name;
-		
-		public Element(String name){
-			_name = name;
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			if(! (obj instanceof Element)){
-				return false;
-			}
-			Element other = (Element)obj;
-			return _name.equals(other._name);
-		}
-		
-		@Override
-		public String toString() {
-			return "Element " + _name;
-		}
-		
-		@Override
-		public int hashCode() {
-			return _name.hashCode();
-		}
-		
-	}
-	
-	public static class ActivatableElement implements Activatable, CollectionElement{
-		
-		private Activator _activator;
-
-		public void activate(ActivationPurpose purpose) {
-			if(_activator != null) {
-				_activator.activate(purpose);
-			}
-		}
-
-		public void bind(Activator activator) {
-	    	if (_activator == activator) {
-	    		return;
-	    	}
-	    	if (activator != null && _activator != null) {
-	            throw new IllegalStateException();
-	        }
-			_activator = activator;
-		}
-		
-		public String _name;
-		
-		public ActivatableElement(String name){
-			_name = name;
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			if(! (obj instanceof ActivatableElement)){
-				return false;
-			}
-			activate(ActivationPurpose.READ);
-			ActivatableElement other = (ActivatableElement)obj;
-			other.activate(ActivationPurpose.READ);
-			return _name.equals(other._name);
-		}
-		
-		@Override
-		public int hashCode() {
-			activate(ActivationPurpose.READ);
-			return _name.hashCode();
-		}
-		
-		@Override
-		public String toString() {
-			activate(ActivationPurpose.READ);
-			return "ActivatableElement " + _name;
-		}
-		
-	}
-	
 	@Override
 	protected void configure(Configuration config) throws Exception {
 		config.add(new TransparentPersistenceSupport());
@@ -172,18 +88,11 @@ public class ActivatableListTestCase extends AbstractDb4oTestCase {
 		// all elements that are not Activatable
 		singleList().iterator();
 		
-		long id = anyActivatableElementId();
+		long id = ActivatableCollectionTestUtil.anyActivatableElementId(db());
 		Object element = db().getByID(id);
 		Assert.isFalse(db().isActive(element));
 	}
 
-	private long anyActivatableElementId() {
-		Query q = newQuery(ActivatableElement.class);
-		ObjectSet<Object> objectSet = q.execute();
-		long[] ids = objectSet.ext().getIDs();
-		return ids[0];
-	}
-	
 	public void testCreation() {
 		new ActivatableArrayList<Object>();
 		new ActivatableArrayList<Object>(42);
