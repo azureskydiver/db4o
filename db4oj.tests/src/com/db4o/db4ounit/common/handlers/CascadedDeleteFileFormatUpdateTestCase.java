@@ -31,6 +31,10 @@ public class CascadedDeleteFileFormatUpdateTestCase extends FormatMigrationTestC
 		});
 	}
 	
+	@Override
+	protected void deconfigureForStoreAndTest(Configuration config) {
+		config.diagnostic().removeAllListeners();
+	}
 	public static class ParentItem {
 
 		public ChildItem[] _children;

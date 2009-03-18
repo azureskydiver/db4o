@@ -8,7 +8,7 @@ import com.db4o.ext.*;
 
 import db4ounit.*;
 
-public class EncrytedFileMigrationTestCase extends HandlerUpdateTestCaseBase{
+public class EncryptedFileMigrationTestCase extends HandlerUpdateTestCaseBase{
 	
 	public static class Item{
 		public String _name;
@@ -62,5 +62,9 @@ public class EncrytedFileMigrationTestCase extends HandlerUpdateTestCaseBase{
 		
 	}
 	
-
+	@Override
+	protected void deconfigureForStoreAndTest(Configuration config) {
+		config.encrypt(false);
+	}
+	
 }
