@@ -63,6 +63,11 @@ public class FreespaceManagerMigrationTestCase extends FormatMigrationTestCaseBa
         commonConfigure(config);
         config.freespace().useBTreeSystem();
     }
+    
+    @Override
+    protected void deconfigureForStoreAndTest(Configuration config) {
+    	config.freespace().useRamSystem();
+    }
 
     private void commonConfigure(Configuration config) {
         // config.blockSize(8);

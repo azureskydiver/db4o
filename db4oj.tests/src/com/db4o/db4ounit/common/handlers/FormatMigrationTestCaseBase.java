@@ -28,7 +28,13 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         config.allowVersionUpdates(true);
         configureForTest(config);
     }
-    
+
+    private final void deconfigure(){
+        Configuration config = Db4o.configure();
+        config.allowVersionUpdates(false);
+        deconfigureForStoreAndTest(config);
+    }
+
     /**
      * @sharpen.ignore
      */
@@ -153,7 +159,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 	}
     
     public void tearDown() throws Exception {
-        // do nothing
+    	deconfigure();
     }
     
     private void checkDatabaseFile(String testFile) {
@@ -229,7 +235,11 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     protected void configureForStore(Configuration config){
     	// Override for special storage configuration.
     }
-    
+
+    protected void deconfigureForStoreAndTest(Configuration config){
+    	// Override for special storage deconfiguration.
+    }
+
     protected abstract void store(ExtObjectContainer objectContainer);
     
     protected void storeObject(ExtObjectContainer objectContainer, Object obj){

@@ -51,6 +51,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             CharHandlerUpdateTestCase.class,
             DateHandlerUpdateTestCase.class,
             DoubleHandlerUpdateTestCase.class,
+            EncryptedFileMigrationTestCase.class,
             FloatHandlerUpdateTestCase.class,
             IntHandlerUpdateTestCase.class,
             InterfaceHandlerUpdateTestCase.class,
@@ -68,8 +69,6 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             
             IxFreespaceMigrationTestCase.class,
             FreespaceManagerMigrationTestCase.class,
-            
-            EncrytedFileMigrationTestCase.class,
 
 		};
 	    return addJavaTestCases(classes);
