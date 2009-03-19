@@ -2,7 +2,7 @@ package com.db4o.ta.instrumentation.test.collections;
 
 import java.util.*;
 
-public class ArrayListHolder {
+public class ArrayListFactory {
 
 	public List createArrayList() {
 		return new ArrayList();
