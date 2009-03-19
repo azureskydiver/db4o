@@ -12,7 +12,7 @@ import db4ounit.*;
 public class ArrayListInstantiationInstrumentationTestCase implements TestCase {
 
 	public void testConstructorIsExchanged() throws Exception {
-		Class instrumented = instrument(ArrayListHolder.class);
+		Class instrumented = instrument(ArrayListFactory.class);
 		Object instance = instrumented.newInstance();
 		assertReturnsActivatableList(instance, "createArrayList");
 		assertReturnsActivatableList(instance, "createSizedArrayList");
@@ -20,7 +20,7 @@ public class ArrayListInstantiationInstrumentationTestCase implements TestCase {
 		assertReturnsActivatableList(instance, "createMethodArgArrayList");
 		assertReturnsActivatableList(instance, "createConditionalArrayList");
 	}
-	
+
 	public void testBaseTypeIsExchanged() throws Exception {
 		Class instrumented = instrument(MyArrayList.class);
 		List list = (List)instrumented.newInstance();
@@ -44,8 +44,12 @@ public class ArrayListInstantiationInstrumentationTestCase implements TestCase {
     }
 	
 	private void assertReturnsActivatableList(Object instance, String methodName) {
-		List list = (List)Reflection4.invoke(instance, methodName);
+		List list = invokeForListCreation(instance, methodName);
 		assertActivatableList(list);
+	}
+
+	private List invokeForListCreation(Object instance, String methodName) {
+		return (List)Reflection4.invoke(instance, methodName);
 	}
 
 	private Class instrument(Class clazz) throws ClassNotFoundException {

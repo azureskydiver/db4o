@@ -3,15 +3,16 @@ package com.db4o.ta.instrumentation.test.data;
 
 import java.util.*;
 
-public class ArrayListClient implements CollectionClient {
+public class HashMapClient implements CollectionClient {
 
-	private List _list;
+	private Map _map;
 	
-	public ArrayListClient() {
-		_list = new ArrayList();
+	public HashMapClient() {
+		_map = new HashMap();
+	}
+	
+	public Object collectionInstance() {
+		return _map;
 	}
 
-	public Object collectionInstance() {
-		return _list;
-	}
 }

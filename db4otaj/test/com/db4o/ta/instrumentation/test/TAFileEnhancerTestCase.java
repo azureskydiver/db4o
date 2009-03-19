@@ -1,3 +1,4 @@
+/* Copyright (C) 2009  db4objects Inc.   http://www.db4o.com */
 package com.db4o.ta.instrumentation.test;
 
 import java.io.*;
@@ -22,12 +23,14 @@ import db4ounit.*;
 
 public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
     
+	private static final String INSTANCE_FACTORY_METHOD_NAME = "collectionInstance";
 	private final static Class INSTRUMENTED_CLAZZ = ToBeInstrumentedWithFieldAccess.class;
 	private final static Class NOT_INSTRUMENTED_CLAZZ = NotToBeInstrumented.class;
 	private final static Class EXTERNAL_INSTRUMENTED_CLAZZ = ToBeInstrumentedWithExternalFieldAccess.class;
 	private final static Class INSTRUMENTED_OUTER_CLAZZ = ToBeInstrumentedOuter.class;
 	private final static Class INSTRUMENTED_INNER_CLAZZ = getAnonymousInnerClass(INSTRUMENTED_OUTER_CLAZZ);
 	private final static Class LIST_CLIENT_CLAZZ = ArrayListClient.class;
+	private final static Class MAP_CLIENT_CLAZZ = HashMapClient.class;
 	private final static Class CUSTOM_LIST_CLAZZ = CustomArrayList.class;
 
 	private final static Class[] INSTRUMENTED_CLASSES = new Class[] { 
@@ -36,6 +39,7 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		INSTRUMENTED_OUTER_CLAZZ, 
 		INSTRUMENTED_INNER_CLAZZ, 
 		LIST_CLIENT_CLAZZ,
+		MAP_CLIENT_CLAZZ,
 		CUSTOM_LIST_CLAZZ,
 		MyArrayList.class,
 	};
@@ -132,7 +136,7 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		AssertingClassLoader loader = newAssertingClassLoader();		
 		Activatable client = (Activatable) loader.newInstance(LIST_CLIENT_CLAZZ);
 		MockActivator clientActivator = MockActivator.activatorFor(client);
-		final List list = (List)Reflection4.invoke(client, "list");
+		final List list = (List)Reflection4.invoke(client, INSTANCE_FACTORY_METHOD_NAME);
 		assertReadsWrites(1, 0, clientActivator);
 		MockActivator listActivator = MockActivator.activatorFor((Activatable)list);
 		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
@@ -144,32 +148,60 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 	}
 
 	public void testArrayListActivation() throws Exception {
-		enhance();
-		AssertingClassLoader loader = newAssertingClassLoader();		
-		Activatable client = (Activatable) loader.newInstance(LIST_CLIENT_CLAZZ);
-		MockActivator clientActivator = MockActivator.activatorFor(client);
-		final List list = (List)Reflection4.invoke(client, "list");
-		assertReadsWrites(1, 0, clientActivator);
-		MockActivator listActivator = MockActivator.activatorFor((Activatable)list);
-		list.iterator();
-		assertReadsWrites(1, 0, listActivator);
+		Proc proc = new Proc() {
+			public void apply(Object arg) {
+				((List)arg).iterator();
+			}
+		};
+		assertActivatorInvocations(LIST_CLIENT_CLAZZ, proc, 1,0);
 	}
 
 	public void testArrayListPersistence() throws Exception {
-		enhance();
-		AssertingClassLoader loader = newAssertingClassLoader();		
-		Activatable client = (Activatable) loader.newInstance(LIST_CLIENT_CLAZZ);
-		MockActivator clientActivator = MockActivator.activatorFor(client);
-		List list = (List)Reflection4.invoke(client, "list");
-		assertReadsWrites(1, 0, clientActivator);
-		MockActivator listActivator = MockActivator.activatorFor((Activatable)list);
-		list.add("foo");
-		assertReadsWrites(0, 1, listActivator);
+		Proc proc = new Proc() {
+			public void apply(Object arg) {
+				((List)arg).add("foo");
+			}
+		};
+		assertActivatorInvocations(LIST_CLIENT_CLAZZ, proc, 0,1);
+	}
+
+	public void testHashMapActivation() throws Exception {
+		Proc proc = new Proc() {
+			public void apply(Object arg) {
+				((Map)arg).keySet();
+			}
+		};
+		assertActivatorInvocations(MAP_CLIENT_CLAZZ, proc, 1,0);
+	}
+
+	public void testHashMapPersistence() throws Exception {
+		Proc proc = new Proc() {
+			public void apply(Object arg) {
+				((Map)arg).put("foo", "bar");
+			}
+		};
+		assertActivatorInvocations(MAP_CLIENT_CLAZZ, proc, 0,1);
 	}
 
 	public void tearDown() throws Exception {
 		deleteFiles();
 	}
+
+	private void assertActivatorInvocations(Class clientClass, Proc proc,
+			int expectedReads, int expectedWrites) throws Exception,
+			MalformedURLException, InstantiationException,
+			IllegalAccessException, ClassNotFoundException {
+		enhance();
+		AssertingClassLoader loader = newAssertingClassLoader();		
+		Activatable client = (Activatable) loader.newInstance(clientClass);
+		MockActivator clientActivator = MockActivator.activatorFor(client);
+		final Object collection = Reflection4.invoke(client, INSTANCE_FACTORY_METHOD_NAME);
+		assertReadsWrites(1, 0, clientActivator);
+		MockActivator collectionActivator = MockActivator.activatorFor((Activatable)collection);
+		proc.apply(collection);
+		assertReadsWrites(expectedReads, expectedWrites, collectionActivator);
+	}
+
 
 	private void instantiateInnerClass(AssertingClassLoader loader) throws Exception {
 		Class outerClazz = loader.loadClass(INSTRUMENTED_OUTER_CLAZZ);
@@ -221,6 +253,11 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		String targetPath = Path4.combine(toDir, ClassFiles.classNameAsPath(clazz));
 		File4.delete(targetPath);
 		File4.copy(file.getCanonicalPath(), targetPath);
+	}
+	
+	// FIXME replace with Procedure4
+	private static interface Proc {
+		void apply(Object arg);
 	}
 	
 }
