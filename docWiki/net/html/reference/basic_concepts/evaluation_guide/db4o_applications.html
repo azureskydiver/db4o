@@ -104,15 +104,10 @@ environment:</p>
 
 
 
-<p>However, applications with a simple
-and flat data model, primarily used for reporting might be not the best fit for
-db4o.&nbsp; Simple table-like models with many
-millions of records are better supported by RDBMS. For evaluating your
-applications suitability for db4o, please refer to
-<a href="../../tuning/main_operations_performance.html" class="wikiLink">Main Operations Performance</a>.</p></div>
+<p>However, other applications might not be well suited for db4o.</p><p>For example, in situations where you have increasing amounts of data ( over 10 Gigabytes ) and high concurrency ( over 20 concurrent users/processes ) along with your complex models.&nbsp; In these cases, the <a href="http://www.versant.com/en_US/products/objectdatabase?referrer=vsnt1">Versant database</a> is likely a more appropriate choice.&nbsp; Versant's customer applications span a wide range of use including those exhibiting 1000's of current transactions ( 100's of thousands of concurrent tx per second ) to 100's of gigabytes with some Versant customers in the 25T+ sized database.&nbsp;&nbsp;&nbsp; For more information visit <a href="http://www.versant.com/en_US/products/objectdatabase?referrer=limits1">http://www.versant.com/</a></p><p>Another case is when you have simple and flat data model, primarily used for reporting.&nbsp; Simple table-like models of tuple records may be better supported by an RDBMS.&nbsp; In this case, adhoc data access would be more important to your application than well defined use cases using an object model.&nbsp; Typically this is complimented with the need let your users to be able to grab one of the plethora of commercial tools to poke at the database in an adhoc fashion. <br></p></div>
     </div>
     <div id="footer">
-					This revision (1) was last Modified 2008-06-10T16:08:31 by Tetyana.
+					This revision (3) was last Modified 2009-03-19T18:02:29 by Tetyana.
 				</div>
   </body>
 </html>
