@@ -664,8 +664,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			MsgD msg = Msg.SWITCH_TO_FILE.getWriterForString(_transaction, fileName);
 			write(msg);
 			expectedResponse(Msg.OK);
-			// FIXME NSC
-			reReadAll(Db4o.cloneConfiguration());
+			reReadAll((Configuration) _config.deepClone(_config));
 			switchedToFile = fileName;
 		}
 	}
@@ -680,8 +679,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			}
 			write(Msg.SWITCH_TO_MAIN_FILE);
 			expectedResponse(Msg.OK);
-			// FIXME NSC
-			reReadAll(Db4o.cloneConfiguration());
+			reReadAll((Configuration) _config.deepClone(_config));
 			switchedToFile = null;
 		}
 	}
