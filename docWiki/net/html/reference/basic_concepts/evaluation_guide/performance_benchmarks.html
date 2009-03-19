@@ -15,13 +15,7 @@ reference documentation provides some simple benchmarks on insert, delete,
 update and query operations. You can use those tests and adjust them to your
 application environment.</p>
 
-<p>To get the best picture of the expected performance, replace
-the classes used in the benchmark with your own object model classes, use the
-appropriate amount of them and calculate the times of the most frequently used
-operations. For example, if the primary use of your application is caching, you
-will be mostly interested in insert performance (The cache might not be ever
-read after all). If you require rapid access to the data in the database - use
-query benchmarks to evaluate the general performance. </p>
+<p>To get the best picture of the expected performance, replace the classes used in the benchmark with your own object model classes.&nbsp; Populate the appropriate amount of instances to get the database size you expect and calculate the times of the most frequently used operations. For example, if the primary use of your application is caching, you will be mostly interested in insert performance (The cache might not be ever read after all). If you require rapid access to the data in the database - use query benchmarks to evaluate the general performance.<br></p>
 
 <p>It is also a good idea to run benchmarks on the hardware,
 which is going to be used in production. That might be not so critical for
@@ -38,7 +32,7 @@ improving db4o performance for different environments can be found in <a href=".
 chapter. It also reveals the common mistakes that lead to poor performance. </p></div>
     </div>
     <div id="footer">
-					This revision (1) was last Modified 2008-06-10T16:14:37 by Tetyana.
+					This revision (2) was last Modified 2009-03-19T15:21:28 by Tetyana.
 				</div>
   </body>
 </html>
