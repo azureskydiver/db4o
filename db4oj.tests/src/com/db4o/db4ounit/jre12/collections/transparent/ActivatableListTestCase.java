@@ -4,12 +4,10 @@ package com.db4o.db4ounit.jre12.collections.transparent;
 
 import java.util.*;
 
-import com.db4o.*;
 import com.db4o.activation.*;
 import com.db4o.collections.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.jre12.collections.*;
-import com.db4o.query.*;
 import com.db4o.ta.*;
 
 import db4ounit.*;
@@ -136,7 +134,17 @@ public class ActivatableListTestCase extends AbstractDb4oTestCase {
 		reopen();
 		IteratorAssert.areEqual(new ArrayList().iterator(), singleList().iterator());		
 	}
-	
+
+	public void testClone() throws Exception{
+		ActivatableArrayList cloned = (ActivatableArrayList) ((ArrayList)singleList()).clone();
+		// assert that activator is null - should throw IllegalStateException if it isn't
+		cloned.bind(new Activator() {
+			public void activate(ActivationPurpose purpose) {
+			}
+		});
+		IteratorAssert.areEqual(elements().iterator(), cloned.iterator());
+	}
+
 	public void testContains(){
 		Assert.isTrue(singleList().contains(new Element("one")));
 		Assert.isFalse(singleList().contains(new Element("four")));
@@ -169,7 +177,8 @@ public class ActivatableListTestCase extends AbstractDb4oTestCase {
 		List<CollectionElement> list = singleList();
 		list.add(2, new Element("one"));
 		reopen();
-		Assert.areEqual(2, singleList().lastIndexOf(new Element("one")));
+		List<CollectionElement> retrieved = singleList();
+		Assert.areEqual(2, retrieved.lastIndexOf(new Element("one")));
 	}
 	
 	public void testListIterator(){
@@ -264,4 +273,59 @@ public class ActivatableListTestCase extends AbstractDb4oTestCase {
 		assertAreEqual(elements(), singleList);
 	}
 
+	public void testIteratorRemove() throws Exception {
+		List<CollectionElement> list = singleList();
+		for (Iterator iter = list.iterator(); iter.hasNext();) {
+			iter.next();
+			iter.remove();
+		}
+		reopen();
+		List<CollectionElement> retrieved = singleList();
+		Assert.isTrue(retrieved.isEmpty());
+	}
+
+	public void testListIteratorAdd() throws Exception {
+		Element added = new Element("added");
+		List<CollectionElement> list = singleList();
+		for (ListIterator iter = list.listIterator(); iter.hasNext();) {
+			iter.next();
+			if(!iter.hasNext()) {
+				iter.add(added);
+			}
+		}
+		reopen();
+		List<CollectionElement> retrieved = singleList();
+		Assert.areEqual(elements().size() + 1, retrieved.size());
+		Assert.isTrue(retrieved.contains(added));
+		Assert.areEqual(added, retrieved.get(retrieved.size() - 1));
+	}
+
+	public void testListIteratorSet() throws Exception {
+		Element replaced = new Element("replaced");
+		List<CollectionElement> list = singleList();
+		for (ListIterator iter = list.listIterator(); iter.hasNext();) {
+			iter.next();
+			if(iter.previousIndex() == 0) {
+				iter.set(replaced);
+			}
+		}
+		reopen();
+		List<CollectionElement> retrieved = singleList();
+		Assert.areEqual(elements().size(), retrieved.size());
+		Assert.isTrue(retrieved.contains(replaced));
+		Assert.isFalse(retrieved.contains(new Element(NAMES[0])));
+		Assert.areEqual(replaced, retrieved.get(0));
+	}
+
+	public void testRepeatedAdd() throws Exception {
+		Element four = new Element("four");
+		Element five = new Element("five");
+		singleList().add(four);
+		db().purge();
+		singleList().add(five);
+		reopen();
+		List<CollectionElement> retrieved = singleList();
+		Assert.isTrue(retrieved.contains(four));
+		Assert.isTrue(retrieved.contains(five));
+	}
 }
