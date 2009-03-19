@@ -32,7 +32,7 @@ public class CascadedDeleteFileFormatUpdateTestCase extends FormatMigrationTestC
 	}
 	
 	@Override
-	protected void deconfigureForStoreAndTest(Configuration config) {
+	protected void deconfigureForTest(Configuration config) {
 		config.diagnostic().removeAllListeners();
 	}
 	public static class ParentItem {

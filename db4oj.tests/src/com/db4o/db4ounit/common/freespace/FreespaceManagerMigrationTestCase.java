@@ -65,7 +65,15 @@ public class FreespaceManagerMigrationTestCase extends FormatMigrationTestCaseBa
     }
     
     @Override
-    protected void deconfigureForStoreAndTest(Configuration config) {
+    protected void deconfigureForStore(Configuration config) {
+        if(notApplicableForDb4oVersion()){
+            return;
+        }
+    	config.freespace().useRamSystem();
+    }
+
+    @Override
+    protected void deconfigureForTest(Configuration config) {
     	config.freespace().useRamSystem();
     }
 
