@@ -32,7 +32,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     private final void deconfigure(){
         Configuration config = Db4o.configure();
         config.allowVersionUpdates(false);
-        deconfigureForStoreAndTest(config);
+        deconfigureForTest(config);
     }
 
     /**
@@ -82,7 +82,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         	createDatabase(fileName(versionName));
         }
         finally {
-        	deconfigureForStoreAndTest(config);
+        	deconfigureForStore(config);
         }
     }
 
@@ -241,7 +241,11 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     	// Override for special storage configuration.
     }
 
-    protected void deconfigureForStoreAndTest(Configuration config){
+    protected void deconfigureForStore(Configuration config){
+    	// Override for special storage deconfiguration.
+    }
+
+    protected void deconfigureForTest(Configuration config){
     	// Override for special storage deconfiguration.
     }
 

@@ -63,7 +63,16 @@ public class EncryptedFileMigrationTestCase extends HandlerUpdateTestCaseBase{
 	}
 	
 	@Override
-	protected void deconfigureForStoreAndTest(Configuration config) {
+	protected void deconfigureForStore(Configuration config) {
+		deconfigureInternal(config);
+	}
+
+	@Override
+	protected void deconfigureForTest(Configuration config) {
+		deconfigureInternal(config);
+	}
+
+	private void deconfigureInternal(Configuration config) {
 		config.encrypt(false);
 	}
 	

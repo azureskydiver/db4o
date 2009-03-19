@@ -86,7 +86,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 	    };
 	}
 	
-   protected Class[] addJavaTestCases(Class[] classes){
+	protected Class[] addJavaTestCases(Class[] classes){
         Class[] javaTestCases = javaOnlyTestCases(); 
         if(javaTestCases == null){
             return classes;
