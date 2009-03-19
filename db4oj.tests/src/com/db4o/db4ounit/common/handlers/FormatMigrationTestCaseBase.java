@@ -78,7 +78,12 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         	
         	// System.out.println("Exception in configureForStore for " + versionName + " in " + getClass().getName());
         }
-    	createDatabase(fileName(versionName));
+        try {
+        	createDatabase(fileName(versionName));
+        }
+        finally {
+        	deconfigureForStoreAndTest(config);
+        }
     }
 
 	private void createDatabase(String file) {
