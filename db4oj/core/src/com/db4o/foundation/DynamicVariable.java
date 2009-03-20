@@ -14,44 +14,16 @@ public class DynamicVariable<T> {
 		return new DynamicVariable();
 	}
 	
-	private static class ThreadSlot {
-		public final Thread thread;
-		public final Object value;
-		public ThreadSlot next;
-		
-		public ThreadSlot(Object value_, ThreadSlot next_) {
-			thread = Thread.currentThread();
-			value = value_;
-			next = next_;
-		}
-	}
-	
-	private final Class _expectedType;
-	private ThreadSlot _values = null;
-	
-	public DynamicVariable() {
-		this(null);
-	}
-	
-	public DynamicVariable(Class<T> expectedType) {
-		_expectedType = expectedType;
-	}
+	private final ThreadLocal<T> _value = new ThreadLocal<T>();
 	
 	/**
 	 * @sharpen.property
 	 */
 	public T value() {
-		final Thread current = Thread.currentThread();
-		synchronized (this) {
-			ThreadSlot slot = _values;
-			while (null != slot) {
-				if (slot.thread == current) {
-					return (T)slot.value;
-				}
-				slot = slot.next;
-			}
-		}
-		return defaultValue();
+		final T value = _value.get();
+		return value == null
+			? defaultValue()
+			: value;
 	}
 	
 	protected T defaultValue() {
@@ -59,56 +31,22 @@ public class DynamicVariable<T> {
 	}
 	
 	public Object with(T value, Closure4 block) {
-		validate(value);
-		
-		ThreadSlot slot = pushValue(value);
+		T previous = _value.get();
+		_value.set(value);
 		try {
 			return block.run();
 		} finally {
-			popValue(slot);
+			_value.set(previous);
 		}
 	}
 	
-	public void with(T value, final Runnable block) {
-		with(value, new Closure4() {
-			public Object run() {
-				block.run();
-				return null;
-			}
-		});
-	}
-
-	private void validate(Object value) {
-		if (value == null || _expectedType == null) {
-			return;
+	public void with(T value, Runnable block) {
+		T previous = _value.get();
+		_value.set(value);
+		try {
+			block.run();
+		} finally {
+			_value.set(previous);
 		}
-		if (_expectedType.isInstance(value)) {
-			return;
-		}
-		throw new IllegalArgumentException("Expecting instance of '" + _expectedType + "' but got '" + value + "'");
-	}
-
-	private synchronized void popValue(ThreadSlot slot) {
-		if (slot == _values) {
-			_values = _values.next;
-			return;
-		}
-		
-		ThreadSlot previous = _values;
-		ThreadSlot current = _values.next;
-		while (current != null) {
-			if (current == slot) {
-				previous.next = current.next;
-				return;
-			}
-			previous = current;
-			current = current.next;
-		}
-	}
-
-	private synchronized ThreadSlot pushValue(Object value) {
-		final ThreadSlot slot = new ThreadSlot(value, _values);
-		_values = slot;
-		return slot;
 	}
 }
