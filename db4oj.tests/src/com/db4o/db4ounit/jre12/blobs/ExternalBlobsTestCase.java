@@ -59,10 +59,7 @@ public class ExternalBlobsTestCase extends AbstractDb4oTestCase  {
 		Data data = (Data) retrieveOnlyInstance(Data.class);
 		Assert.isTrue(new File(BLOB_PATH).exists());
 		char[] chout = new char[] { 'H', 'i', ' ', 'f', 'o', 'l', 'k', 's' };
-		FileWriter fw = new FileWriter(BLOB_FILE_IN);
-		fw.write(chout);
-		fw.flush();
-		fw.close();
+		writeFile(BLOB_FILE_IN, chout);
 		data.blob().readFrom(new File(BLOB_FILE_IN));
 		double status = data.blob().getStatus();
 		while (status > Status.COMPLETED) {
@@ -79,16 +76,27 @@ public class ExternalBlobsTestCase extends AbstractDb4oTestCase  {
 		File resultingFile = new File(BLOB_FILE_OUT);
 		Assert.isTrue(resultingFile.exists());
 
-		FileReader fr = new FileReader(resultingFile);
 		char[] chin = new char[chout.length];
-		fr.read(chin);
-		fr.close();
+		readFileInto(resultingFile, chin);
 		ArrayAssert.areEqual(chout, chin);
 		
 		Assert.areEqual(Status.COMPLETED, data.blob().getStatus());
 		data.blob().deleteFile();
 		Assert.areEqual(Status.UNUSED, data.blob().getStatus());
 	}
+
+	private void readFileInto(File fname, char[] buffer) throws FileNotFoundException, IOException {
+	    FileReader fr = new FileReader(fname);
+		fr.read(buffer);
+		fr.close();
+    }
+
+	private void writeFile(final String fname, char[] contents) throws IOException {
+	    FileWriter fw = new FileWriter(fname);
+		fw.write(contents);
+		fw.flush();
+		fw.close();
+    }
 
 	private void deleteFiles() throws IOException {
 		IOUtil.deleteDir(BLOB_PATH);
