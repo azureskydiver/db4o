@@ -49,9 +49,6 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 		ContainerServices.withContainer(openClient(), block);
 	}
 
-	/**
-	 * @deprecated using deprecated api
-	 */
 	protected ClientObjectContainer openClient() {
 		return (ClientObjectContainer)Db4o.openClient(createConfiguration(), "localhost", _port, "db4o", "db4o");
 	}
