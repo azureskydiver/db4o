@@ -114,7 +114,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         checkExt(file);
         if (i_stream.isClient()) {
             i_file = file;
-            ((BlobTransport)i_stream).readBlobFrom(i_trans, this, file);
+            ((BlobTransport)i_stream).readBlobFrom(i_trans, this);
         } else {
             readLocal(file);
         }
@@ -215,7 +215,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         if (i_stream.isClient()) {
             i_file = file;
             i_status = Status.QUEUED;
-            ((BlobTransport)i_stream).writeBlobTo(i_trans, this, file);
+            ((BlobTransport)i_stream).writeBlobTo(i_trans, this);
         } else {
             writeLocal(file);
         }
