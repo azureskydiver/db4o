@@ -6,9 +6,9 @@ package com.db4o.config;
  * interface to configure the freespace system to be used.
  * <br><br>All methods should be called before opening database files.
  * If db4o is instructed to exchange the system 
- * ( {@link #useIndexSystem()} , {@link #useRamSystem()} )
+ * ( {@link #useBTreeSystem()} , {@link #useRamSystem()} )
  * this will happen on opening the database file.<br><br>
- * By default the index-based system will be used.  
+ * By default the ram based system will be used.  
  */
 public interface FreespaceConfiguration {
     
