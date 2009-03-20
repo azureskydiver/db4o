@@ -14,9 +14,16 @@ class BlobProcessor extends Thread{
 	
 	BlobProcessor(ClientObjectContainer aStream){
 		stream = aStream;
-		setPriority(MIN_PRIORITY);
+		adjustThreadPriority();
 	}
-	
+
+	/**
+	 * @sharpen.remove
+	 */
+	private void adjustThreadPriority() {
+	    setPriority(MIN_PRIORITY);
+    }
+
 	void add(MsgBlob msg){
 		synchronized(queue){
 			queue.add(msg);

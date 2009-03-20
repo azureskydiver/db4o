@@ -785,13 +785,13 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     }
 
 	
-    public void writeBlobTo(Transaction trans, BlobImpl blob, File file) throws IOException {
+    public void writeBlobTo(Transaction trans, BlobImpl blob) throws IOException {
         MsgBlob msg = (MsgBlob) Msg.READ_BLOB.getWriterForInt(trans, (int) getID(blob));
         msg._blob = blob;
         processBlobMessage(msg);
     }
     
-    public void readBlobFrom(Transaction trans, BlobImpl blob, File file) throws IOException {
+    public void readBlobFrom(Transaction trans, BlobImpl blob) throws IOException {
         MsgBlob msg = null;
         synchronized (lock()) {
             store(blob);
