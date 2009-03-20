@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.cs;
 
 import com.db4o.config.*;
+import com.db4o.internal.*;
 import com.db4o.internal.cs.*;
 
 import db4ounit.extensions.*;
@@ -38,7 +39,8 @@ public class SwitchingToFileWithDifferentClassesTestCase extends StandaloneCSTes
 	}
 	
 	@Override
-	protected void configure(Configuration config) {	
+	protected void configure(Configuration config) {
+		config.reflectWith(Platform4.reflectorForType(Data1.class));
 	}
 
 	@Override
