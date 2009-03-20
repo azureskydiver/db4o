@@ -47,6 +47,8 @@ public class DecafConfiguration {
 		mapping.put(Set.class.getName(), "com.db4o.foundation.Set4");
 		mapping.put(HashSet.class.getName(), "com.db4o.foundation.HashSet4");
 		
+		mapping.put(ThreadLocal.class.getName(), "com.db4o.foundation.ThreadLocal4");
+		
 		return create(mapping);
 	}
 
