@@ -57,7 +57,9 @@ public class ActivatableHashMap<K,V> extends HashMap<K,V> implements Activatable
 	@Override
 	public Object clone() {
 		activate(ActivationPurpose.READ);
-		return super.clone();
+		ActivatableHashMap cloned = (ActivatableHashMap) super.clone();
+		cloned._activator = null;
+		return cloned;
 	}
 	
 	@Override
