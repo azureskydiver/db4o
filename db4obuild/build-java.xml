@@ -59,234 +59,64 @@
 			build.osgi" 
 	/>
 	
-	<target name="decaf.core" depends="decaf.workspace, install-decaf-plugin">
+	<target name="decaf.all" depends="decaf.workspace, install-decaf-plugin">
 
-		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4o">
+		<decaf workspace="${dir.dist.decaf.workspace}" resource="${name.project.decaf.all}">
 			<args>
-				<arg value="-targetPlatform" />
-				<arg value="jdk11" />
-
-				<arg value="-targetPlatform" />
-				<arg value="jdk12" />
-			</args>
-		</decaf>
-
-		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4oj.optional">
-			<args>
-				<arg value="-projectReference" />
-				<arg value="db4o" />
-
-				<arg value="-targetPlatform" />
-				<arg value="jdk11" />
-
-				<arg value="-targetPlatform" />
-				<arg value="jdk12" />
-			</args>
-		</decaf>
-
-		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4o.cs">
-			<args>
-				<arg value="-projectReference" />
-				<arg value="db4o" />
-
-				<arg value="-targetPlatform" />
-				<arg value="jdk11" />
-
-				<arg value="-targetPlatform" />
-				<arg value="jdk12" />
-			</args>
-		</decaf>
-	</target>
-	
-	<target name="decaf.db4ounit" depends="decaf.core">
-
-		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4ounit">
-			<args>
-				<arg value="-projectReference" />
-				<arg value="db4o" />
+				<arg value="-srcFolder" />
+				<arg value="${path.decaf.core.src}" />
+				<arg value="-srcFolder" />
+				<arg value="${path.decaf.core.cs.src}" />
+				<arg value="-srcFolder" />
+				<arg value="${path.decaf.core.optional.src}" />
+				<arg value="-srcFolder" />
+				<arg value="${path.decaf.db4ounit.src}" />
+				<arg value="-srcFolder" />
+				<arg value="${path.decaf.db4ounit.extensions.src}" />
+				<arg value="-srcFolder" />
+				<arg value="${path.decaf.test.src}" />
+				<arg value="-srcFolder" />
+				<arg value="${path.decaf.instrumentation.src}" />
+				<arg value="-srcFolder" />
+				<arg value="${path.decaf.instrumentation.test.src}" />
+				<arg value="-srcFolder" />
+				<arg value="${path.decaf.nqopt.src}" />
+				<arg value="-srcFolder" />
+				<arg value="${path.decaf.nqopt.test.src}" />
+				<arg value="-srcFolder" />
+				<arg value="${path.decaf.taj.src}" />
+				<arg value="-srcFolder" />
+				<arg value="${path.decaf.taj.test.src}" />
+				<arg value="-srcFolder" />
+				<arg value="${path.decaf.tools.src}" />
+				<arg value="-srcFolder" />
+				<arg value="${path.decaf.tools.test.src}" />
 				
 				<arg value="-targetPlatform" />
 				<arg value="jdk11" />
 
 				<arg value="-targetPlatform" />
 				<arg value="jdk12" />
-			</args>
-		</decaf>
-		
-		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4ounit.extensions">
-			<args>
-				<arg value="-projectReference" />
-				<arg value="db4ounit" />
-				
-				<arg value="-projectReference" />
-				<arg value="db4o" />
-				
-				<arg value="-projectReference" />
-				<arg value="db4o.cs" />
-				
-				<arg value="-targetPlatform" />
-				<arg value="jdk11" />
 
-				<arg value="-targetPlatform" />
-				<arg value="jdk12" />
-			</args>
-		</decaf>
-	</target>
-	
-	<target name="decaf.tests" depends="decaf.core, decaf.db4ounit">
-	
-		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4o.tests">
-			<args>
-				<arg value="-projectReference" />
-				<arg value="db4o" />
-				<arg value="-projectReference" />
-				<arg value="db4oj.optional" />
-				<arg value="-projectReference" />
-				<arg value="db4o.cs" />
-				<arg value="-projectReference" />
-				<arg value="db4ounit" />
-				<arg value="-projectReference" />
-				<arg value="db4ounit.extensions" />
-				
-				<arg value="-targetPlatform" />
-				<arg value="jdk11" />
-
-				<arg value="-targetPlatform" />
-				<arg value="jdk12" />
-				
+				<arg value="-cp" />
+				<arg path="${file.bloat.jar}" />
+				<arg value="-cp" />
+				<arg path="${file.ant.jar}" />
+				<arg value="-cp" />
+				<arg path="${file.decaf.annotations}" />
 				<arg value="-cp" />
 				<arg file="${easymock.jar}" />
 			</args>
 		</decaf>
 
-	</target>
 
-	<!-- target name="decaf.instrumentation" depends="decaf.workspace.instrumentation" -->
-	<target name="decaf.instrumentation" depends="decaf.workspace.instrumentation, decaf.core, decaf.db4ounit, decaf.tests">
-
-		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4o.instrumentation">
-			<args>
-				<arg value="-projectReference" />
-				<arg value="db4o" />
-				<arg value="-projectReference" />
-				<arg value="db4ounit" />
-				<arg value="-projectReference" />
-				<arg value="db4ounit.extensions" />
-				
-				<arg value="-srcFolder" />
-				<arg value="src" />
-				<arg value="-srcFolder" />
-				<arg value="test" />
-
-				<arg value="-targetPlatform" />
-				<arg value="jdk12" />
-
-				<arg value="-cp" />
-				<arg path="${file.bloat.jar}" />
-				<arg value="-cp" />
-				<arg path="${file.ant.jar}" />
-				<arg value="-cp" />
-				<arg path="${file.decaf.annotations}" />
-
-			</args>
-		</decaf>
-
-		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4otaj">
-			<args>
-				<arg value="-projectReference" />
-				<arg value="db4o" />
-				<arg value="-projectReference" />
-				<arg value="db4ounit" />
-				<arg value="-projectReference" />
-				<arg value="db4ounit.extensions" />
-				<arg value="-projectReference" />
-				<arg value="db4o.instrumentation" />
-				<arg value="-projectReference" />
-				<arg value="db4o.tests" />
-
-				<arg value="-srcFolder" />
-				<arg value="src" />
-				<arg value="-srcFolder" />
-				<arg value="test" />
-
-				<arg value="-targetPlatform" />
-				<arg value="jdk12" />
-
-				<arg value="-cp" />
-				<arg path="${file.bloat.jar}" />
-				<arg value="-cp" />
-				<arg path="${file.ant.jar}" />
-				<arg value="-cp" />
-				<arg path="${file.decaf.annotations}" />
-			</args>
-		</decaf>
-
-		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4onqopt">
-			<args>
-				<arg value="-projectReference" />
-				<arg value="db4o" />
-				<arg value="-projectReference" />
-				<arg value="db4ounit" />
-				<arg value="-projectReference" />
-				<arg value="db4ounit.extensions" />
-				<arg value="-projectReference" />
-				<arg value="db4o.instrumentation" />
-
-				<arg value="-srcFolder" />
-				<arg value="core/src" />
-				<arg value="-srcFolder" />
-				<arg value="test/src" />
-
-				<arg value="-targetPlatform" />
-				<arg value="jdk12" />
-
-				<arg value="-cp" />
-				<arg path="${file.bloat.jar}" />
-				<arg value="-cp" />
-				<arg path="${file.ant.jar}" />
-				<arg value="-cp" />
-				<arg path="${file.decaf.annotations}" />
-			</args>
-		</decaf>
-
-		<decaf workspace="${dir.dist.decaf.workspace}" resource="db4otools">
-			<args>
-				<arg value="-projectReference" />
-				<arg value="db4o" />
-				<arg value="-projectReference" />
-				<arg value="db4ounit" />
-				<arg value="-projectReference" />
-				<arg value="db4ounit.extensions" />
-				<arg value="-projectReference" />
-				<arg value="db4o.instrumentation" />
-				<arg value="-projectReference" />
-				<arg value="db4otaj" />
-				<arg value="-projectReference" />
-				<arg value="db4onqopt" />
-
-				<arg value="-srcFolder" />
-				<arg value="src" />
-				<arg value="-srcFolder" />
-				<arg value="test" />
-
-				<arg value="-targetPlatform" />
-				<arg value="jdk12" />
-
-				<arg value="-cp" />
-				<arg path="${file.bloat.jar}" />
-				<arg value="-cp" />
-				<arg path="${file.ant.jar}" />
-				<arg value="-cp" />
-				<arg path="${file.decaf.annotations}" />
-			</args>
-		</decaf>
 	</target>
 
 	
 	
 	<target name="decaf.workspace" depends="init">
-		<reset-dir dir="${dir.dist.decaf.workspace}"/>
-		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4o">
+		<reset-dir dir="${dir.dist.decaf.project.source}"/>
+		<prepare-workspace dir="${dir.dist.decaf.project.source}" project="${name.project.j}">
 			<sources>
 				<fileset dir="${dir.j.core}">
 					<include name="**/*.java"  />
@@ -294,7 +124,7 @@
 			</sources>
 		</prepare-workspace>
 
-		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4oj.optional">
+		<prepare-workspace dir="${dir.dist.decaf.project.source}" project="${name.project.j.optional}">
 			<sources>
 				<fileset dir="${dir.j.optional.core}">
 					<include name="**/*.java"  />
@@ -305,7 +135,7 @@
 			</sources>
 		</prepare-workspace>
 
-		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4o.cs">
+		<prepare-workspace dir="${dir.dist.decaf.project.source}" project="${name.project.j.cs}">
 			<sources>
 				<fileset dir="${dir.j.cs}">
 					<include name="**/*.java" />
@@ -313,7 +143,7 @@
 			</sources>
 		</prepare-workspace>
 		
-		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4ounit">
+		<prepare-workspace dir="${dir.dist.decaf.project.source}" project="${name.project.db4ounit}">
 			<sources>
 				<fileset dir="${dir.db4ounit}">
 					<include name="**/*.java" />
@@ -321,7 +151,7 @@
 			</sources>
 		</prepare-workspace>
 		
-		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4ounit.extensions">
+		<prepare-workspace dir="${dir.dist.decaf.project.source}" project="${name.project.db4ounit.extensions}">
 			<sources>
 				<fileset dir="${dir.db4ounit.extensions}">
 					<include name="**/*.java" />
@@ -329,7 +159,7 @@
 			</sources>
 		</prepare-workspace>
 
-		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4o.tests">
+		<prepare-workspace dir="${dir.dist.decaf.project.source}" project="${name.project.j.tests}">
 			<sources>
 				<fileset dir="${dir.j.tests}">
 					<include name="**/*.java" />
@@ -337,11 +167,7 @@
 			</sources>
 		</prepare-workspace>
 
-	</target>
-
-	<target name="decaf.workspace.instrumentation" depends="decaf.workspace">
-	<!-- target name="decaf.workspace.instrumentation" depends="init" -->
-		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4o.instrumentation">
+		<prepare-workspace dir="${dir.dist.decaf.project.source}" project="${name.project.j.instrumentation}">
 			<sources>
 				<fileset dir="${dir.j.instrumentation}">
 					<include name="**/*.java"  />
@@ -349,7 +175,7 @@
 			</sources>
 		</prepare-workspace>
 
-		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4otaj">
+		<prepare-workspace dir="${dir.dist.decaf.project.source}" project="${name.project.taj}">
 			<sources>
 				<fileset dir="${dir.taj}">
 					<include name="**/*.java"  />
@@ -357,7 +183,7 @@
 			</sources>
 		</prepare-workspace>
 
-		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4onqopt">
+		<prepare-workspace dir="${dir.dist.decaf.project.source}" project="${name.project.nqopt}">
 			<sources>
 				<fileset dir="${dir.j.nqopt}">
 					<include name="**/*.java"  />
@@ -366,7 +192,7 @@
 			</sources>
 		</prepare-workspace>
 
-		<prepare-workspace dir="${dir.dist.decaf.workspace}" project="db4otools">
+		<prepare-workspace dir="${dir.dist.decaf.project.source}" project="${name.project.j.db4otools}">
 			<sources>
 				<fileset dir="${dir.j.db4otools}">
 					<include name="**/*.java"  />
@@ -376,7 +202,7 @@
 		</prepare-workspace>
 	</target>
 
-	<target name="build.db4ojdk1.1" depends="decaf.core">
+	<target name="build.db4ojdk1.1" depends="decaf.all">
 		<mkdir dir="${dir.dist.classes.jdk1.1}" />
 		<javac compiler="classic"
 			fork="yes"
@@ -427,7 +253,7 @@
 
 	</target>
 	
-	<target name="build.db4ojdk1.2" depends="init, decaf.core">
+	<target name="build.db4ojdk1.2" depends="init, decaf.all">
 		<mkdir dir="${dir.dist.classes.jdk1.2}" />
 		<javac srcdir="${dir.dist.decaf.jdk1.2.core.src}" 
             fork="true" 
@@ -537,7 +363,7 @@
 
 	</target>
 	
-	<target name="build.instrumentation1.2" depends="build.db4ojdk1.2, decaf.instrumentation">
+	<target name="build.instrumentation1.2" depends="build.db4ojdk1.2, decaf.all">
 	    <mkdir dir="${dir.dist.classes.jdk1.2.instrumentation}" />
 		<javac srcdir="${dir.dist.decaf.jdk1.2.instrumentation.src}" 
 	        fork="true" 
@@ -590,7 +416,7 @@
 		</fileset>
 	</path>
 
-	<target name="build.db4otools1.2" depends="build.db4ojdk1.2, build.instrumentation1.2, build.nqopt1.2, build.taj1.2, decaf.instrumentation">
+	<target name="build.db4otools1.2" depends="build.db4ojdk1.2, build.instrumentation1.2, build.nqopt1.2, build.taj1.2, decaf.all">
 	    <mkdir dir="${dir.dist.classes.jdk1.2.db4otools}" />
 		<javac srcdir="${dir.dist.decaf.jdk1.2.tools.src}" 
 	        fork="true" 
@@ -685,7 +511,7 @@
 		</jar>
 	</target>
 
-	<target name="build.nqopt1.2" depends="build.db4ojdk1.2, build.instrumentation1.2, decaf.instrumentation">
+	<target name="build.nqopt1.2" depends="build.db4ojdk1.2, build.instrumentation1.2, decaf.all">
         <mkdir dir="${dir.dist.classes.jdk1.2.nqopt}" />
 		<javac srcdir="${dir.dist.decaf.jdk1.2.nqopt.src}" 
             fork="true" 
@@ -740,7 +566,7 @@
 		</jar>
 	</target>
 
-	<target name="build.taj1.2" depends="build.db4ojdk1.2, build.instrumentation1.2, decaf.instrumentation" >
+	<target name="build.taj1.2" depends="build.db4ojdk1.2, build.instrumentation1.2, decaf.all" >
         <mkdir dir="${dir.dist.classes.jdk1.2.taj}" />
 		<javac fork="true" 
             destdir="${dir.dist.classes.jdk1.2.taj}" 
@@ -967,7 +793,7 @@
 		
 	</target>
 		
-	<target name="build.db4ounitjdk1.2" depends="build.db4ojdk1.2, decaf.db4ounit">
+	<target name="build.db4ounitjdk1.2" depends="build.db4ojdk1.2, decaf.all">
 		
 		<build-db4ounit
 				source="1.3"
@@ -976,7 +802,7 @@
 				extensions="${dir.dist.decaf.jdk1.2.db4ounit.extensions.src}" />
 	</target>
 		
-	<target name="build.db4ounitjdk1.1" depends="build.db4ojdk1.1, decaf.db4ounit">
+	<target name="build.db4ounitjdk1.1" depends="build.db4ojdk1.1, decaf.all">
 			
 		<build-db4ounit
 				source="1.3"
@@ -986,7 +812,7 @@
 		
 	</target>
 	
-	<target name="build.db4ojdk1.1.tests" depends="build.db4ojdk1.1, build.db4ounitjdk1.1, decaf.tests">
+	<target name="build.db4ojdk1.1.tests" depends="build.db4ojdk1.1, build.db4ounitjdk1.1, decaf.all">
 		<mkdir dir="${dir.dist.classes.test.jdk1.1}" />
 		<javac executable="${file.compiler.jdk1.3}" 
             destdir="${dir.dist.classes.test.jdk1.1}" 
@@ -1008,7 +834,7 @@
 		</copy>
 	</target>
 	
-	<target name="build.db4ojdk1.2.tests" depends="build.db4ojdk1.2, build.db4ounitjdk1.2, decaf.tests">
+	<target name="build.db4ojdk1.2.tests" depends="build.db4ojdk1.2, build.db4ounitjdk1.2, decaf.all">
 		<mkdir dir="${dir.dist.classes.test.jdk1.2}" />
 		<javac destdir="${dir.dist.classes.test.jdk1.2}" 
 			fork="true" 
@@ -1108,7 +934,7 @@
 	</target>
 -->
 	
-	<target name="build.nqopt.tests" depends="build.nqopt1.2, build.nqopt1.5, build.db4ojdk1.2.tests">
+	<target name="build.nqopt.tests" depends="build.nqopt1.2, build.nqopt1.5, build.db4ojdk1.2.tests, build.db4ojdk1.5.tests">
 		<mkdir dir="${dir.dist.classes.test.nq.jdk1.2}" />
 		<mkdir dir="${dir.dist.classes.test.nq.jdk1.5}" />
 		<javac
