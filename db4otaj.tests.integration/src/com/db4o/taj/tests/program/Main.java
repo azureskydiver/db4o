@@ -18,9 +18,13 @@ public class Main {
 	private static final class TAJActivationListener implements EventListener4 {
 		private int _pilotActivationCount = 0;
 		private int _listActivationCount = 0;
+		private int _mapActivationCount = 0;
 		
 		public void onEvent(Event4 event, EventArgs args) {
 			Object obj = ((ObjectEventArgs) args).object();
+			if(obj instanceof HashMap) {
+				_mapActivationCount++;
+			}
 			if(obj instanceof ArrayList) {
 				_listActivationCount++;
 			}
@@ -36,7 +40,8 @@ public class Main {
 		final Team ferrari = new Team("Ferrari");
 		Pilot raikkonen = new Pilot("Raikkonen", 100);
 		ferrari.addPilot(raikkonen);
-
+		ferrari.addSponsor("Versant", 1000);
+		
 		deleteDatabase();
 
 		try {
@@ -55,13 +60,17 @@ public class Main {
 						ObjectSet result = db.query(Team.class);
 						Team ferrari = (Team) result.next();
 						Assert.isNull(Reflection4.getFieldValue(ferrari, "_pilots"));
-						assertActivationCount(listener, 0, 0);
+						Assert.isNull(Reflection4.getFieldValue(ferrari, "_sponsors"));
+						assertActivationCount(listener, 0, 0, 0);
 						List pilots = ferrari.pilots();
-						assertActivationCount(listener, 0, 0);
+						assertActivationCount(listener, 0, 0, 0);
 						Pilot raikkonen = (Pilot) pilots.get(0);
-						assertActivationCount(listener, 1, 0);
+//						assertActivationCount(listener, 0, 1, 0);
 						Assert.areEqual("Raikkonen", raikkonen.name());
-						assertActivationCount(listener, 1, 1);
+//						assertActivationCount(listener, 1, 1, 0);
+						int amountSponsored = ferrari.amountSponsored("Versant");
+						assertActivationCount(listener, 1, 1, 1);
+						Assert.areEqual(1000, amountSponsored);
 						System.out.println(raikkonen);
 					}
 					catch(Exception exc) {
@@ -80,9 +89,10 @@ public class Main {
 		new File(DB_PATH).delete();
 	}
 
-	private static void assertActivationCount(TAJActivationListener listener, int expectedListCount, int expectedPilotCount) {
-		Assert.areEqual(expectedListCount, listener._listActivationCount);
+	private static void assertActivationCount(TAJActivationListener listener, int expectedPilotCount, int expectedListCount, int expectedMapCount) {
 		Assert.areEqual(expectedPilotCount, listener._pilotActivationCount);
+		Assert.areEqual(expectedListCount, listener._listActivationCount);
+		Assert.areEqual(expectedMapCount, listener._mapActivationCount);
 	}
 	
 	private static EmbeddedConfiguration config() {
