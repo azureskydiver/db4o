@@ -13,6 +13,7 @@ import com.db4o.internal.*;
 import com.db4o.test.util.*;
 
 import db4ounit.*;
+import db4ounit.extensions.util.*;
 
 /**
  * @sharpen.ignore

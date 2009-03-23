@@ -5,9 +5,8 @@ package com.db4o.ta.instrumentation.test;
 import java.io.*;
 import java.net.*;
 
-import com.db4o.test.util.*;
-
 import db4ounit.*;
+import db4ounit.extensions.util.*;
 
 /**
  * Creates a separate environment to load classes ({@link ExcludingClassLoader}

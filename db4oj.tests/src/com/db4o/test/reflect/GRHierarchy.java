@@ -12,6 +12,8 @@ import com.db4o.test.*;
 import com.db4o.test.Test;
 import com.db4o.test.util.*;
 
+import db4ounit.extensions.util.*;
+
 // TODO: Works for solo mode only currently
 /**
  * @sharpen.ignore
