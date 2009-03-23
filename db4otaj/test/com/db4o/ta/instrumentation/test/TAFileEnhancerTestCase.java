@@ -125,10 +125,10 @@ public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
 
 	public void testArrayListActivationWithException() throws Exception {
 		enhance();
-		AssertingClassLoader loader = newAssertingClassLoader();		
-		Activatable client = (Activatable) loader.newInstance(LIST_CLIENT_CLAZZ);
-		MockActivator clientActivator = MockActivator.activatorFor(client);
-		final List list = (List)Reflection4.invoke(client, INSTANCE_FACTORY_METHOD_NAME);
+		AssertingClassLoader loader = newAssertingClassLoader( new Class[] { CollectionClient.class });		
+		CollectionClient client = (CollectionClient) loader.newInstance(LIST_CLIENT_CLAZZ);
+		MockActivator clientActivator = MockActivator.activatorFor((Activatable)client);
+		final List list = (List)client.collectionInstance();
 		assertReadsWrites(1, 0, clientActivator);
 		MockActivator listActivator = MockActivator.activatorFor((Activatable)list);
 		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
@@ -138,58 +138,6 @@ public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
 		});
 		assertReadsWrites(1, 0, listActivator);
 	}
-
-	public void testArrayListActivation() throws Exception {
-		Procedure4<Object> proc = new Procedure4<Object>() {
-			public void apply(Object arg) {
-				((List)arg).iterator();
-			}
-		};
-		assertActivatorInvocations(LIST_CLIENT_CLAZZ, proc, 1,0);
-	}
-
-	public void testArrayListPersistence() throws Exception {
-		Procedure4<Object> proc = new Procedure4<Object>() {
-			public void apply(Object arg) {
-				((List)arg).add("foo");
-			}
-		};
-		assertActivatorInvocations(LIST_CLIENT_CLAZZ, proc, 0,1);
-	}
-
-	public void testHashMapActivation() throws Exception {
-		Procedure4<Object> proc = new Procedure4<Object>() {
-			public void apply(Object arg) {
-				((Map)arg).keySet();
-			}
-		};
-		assertActivatorInvocations(MAP_CLIENT_CLAZZ, proc, 1,0);
-	}
-
-	public void testHashMapPersistence() throws Exception {
-		Procedure4<Object> proc = new Procedure4<Object>() {
-			public void apply(Object arg) {
-				((Map)arg).put("foo", "bar");
-			}
-		};
-		assertActivatorInvocations(MAP_CLIENT_CLAZZ, proc, 0,1);
-	}
-
-	private void assertActivatorInvocations(Class clientClass, Procedure4<Object> proc,
-			int expectedReads, int expectedWrites) throws Exception,
-			MalformedURLException, InstantiationException,
-			IllegalAccessException, ClassNotFoundException {
-		enhance();
-		AssertingClassLoader loader = newAssertingClassLoader();		
-		Activatable client = (Activatable) loader.newInstance(clientClass);
-		MockActivator clientActivator = MockActivator.activatorFor(client);
-		final Object collection = Reflection4.invoke(client, INSTANCE_FACTORY_METHOD_NAME);
-		assertReadsWrites(1, 0, clientActivator);
-		MockActivator collectionActivator = MockActivator.activatorFor((Activatable)collection);
-		proc.apply(collection);
-		assertReadsWrites(expectedReads, expectedWrites, collectionActivator);
-	}
-
 
 	private void instantiateInnerClass(AssertingClassLoader loader) throws Exception {
 		Class outerClazz = loader.loadClass(INSTRUMENTED_OUTER_CLAZZ);
