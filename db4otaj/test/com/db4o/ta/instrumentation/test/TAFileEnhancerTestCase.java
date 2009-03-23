@@ -140,7 +140,7 @@ public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
 	}
 
 	public void testArrayListActivation() throws Exception {
-		Proc proc = new Proc() {
+		Procedure4<Object> proc = new Procedure4<Object>() {
 			public void apply(Object arg) {
 				((List)arg).iterator();
 			}
@@ -149,7 +149,7 @@ public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
 	}
 
 	public void testArrayListPersistence() throws Exception {
-		Proc proc = new Proc() {
+		Procedure4<Object> proc = new Procedure4<Object>() {
 			public void apply(Object arg) {
 				((List)arg).add("foo");
 			}
@@ -158,7 +158,7 @@ public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
 	}
 
 	public void testHashMapActivation() throws Exception {
-		Proc proc = new Proc() {
+		Procedure4<Object> proc = new Procedure4<Object>() {
 			public void apply(Object arg) {
 				((Map)arg).keySet();
 			}
@@ -167,7 +167,7 @@ public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
 	}
 
 	public void testHashMapPersistence() throws Exception {
-		Proc proc = new Proc() {
+		Procedure4<Object> proc = new Procedure4<Object>() {
 			public void apply(Object arg) {
 				((Map)arg).put("foo", "bar");
 			}
@@ -175,7 +175,7 @@ public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
 		assertActivatorInvocations(MAP_CLIENT_CLAZZ, proc, 0,1);
 	}
 
-	private void assertActivatorInvocations(Class clientClass, Proc proc,
+	private void assertActivatorInvocations(Class clientClass, Procedure4<Object> proc,
 			int expectedReads, int expectedWrites) throws Exception,
 			MalformedURLException, InstantiationException,
 			IllegalAccessException, ClassNotFoundException {
