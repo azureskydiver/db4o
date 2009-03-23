@@ -39,7 +39,11 @@ public abstract class TAFileEnhancerTestCaseBase implements TestCase, TestLifeCy
 	}
 
 	protected AssertingClassLoader newAssertingClassLoader() throws MalformedURLException {
-		return new AssertingClassLoader(new File(targetDir), inputClasses());
+		return newAssertingClassLoader(new Class[0]);
+	}
+
+	protected AssertingClassLoader newAssertingClassLoader(Class[] delegatedClasses) throws MalformedURLException {
+		return new AssertingClassLoader(new File(targetDir), inputClasses(), delegatedClasses);
 	}
 
 	protected void enhance() throws Exception {
