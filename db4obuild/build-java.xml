@@ -185,6 +185,8 @@
 				<arg path="${file.bloat.jar}" />
 				<arg value="-cp" />
 				<arg path="${file.ant.jar}" />
+				<arg value="-cp" />
+				<arg path="${file.decaf.annotations}" />
 
 			</args>
 		</decaf>
@@ -214,6 +216,8 @@
 				<arg path="${file.bloat.jar}" />
 				<arg value="-cp" />
 				<arg path="${file.ant.jar}" />
+				<arg value="-cp" />
+				<arg path="${file.decaf.annotations}" />
 			</args>
 		</decaf>
 
@@ -240,6 +244,8 @@
 				<arg path="${file.bloat.jar}" />
 				<arg value="-cp" />
 				<arg path="${file.ant.jar}" />
+				<arg value="-cp" />
+				<arg path="${file.decaf.annotations}" />
 			</args>
 		</decaf>
 
@@ -270,6 +276,8 @@
 				<arg path="${file.bloat.jar}" />
 				<arg value="-cp" />
 				<arg path="${file.ant.jar}" />
+				<arg value="-cp" />
+				<arg path="${file.decaf.annotations}" />
 			</args>
 		</decaf>
 	</target>
