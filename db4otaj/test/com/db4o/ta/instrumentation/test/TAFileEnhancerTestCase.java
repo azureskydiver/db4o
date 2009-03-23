@@ -1,7 +1,6 @@
 /* Copyright (C) 2009  db4objects Inc.   http://www.db4o.com */
 package com.db4o.ta.instrumentation.test;
 
-import java.io.*;
 import java.net.*;
 import java.util.*;
 
@@ -9,19 +8,16 @@ import EDU.purdue.cs.bloat.editor.*;
 
 import com.db4o.db4ounit.common.ta.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.io.*;
-import com.db4o.instrumentation.classfilter.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.main.*;
 import com.db4o.internal.*;
 import com.db4o.ta.*;
-import com.db4o.ta.instrumentation.*;
 import com.db4o.ta.instrumentation.test.collections.*;
 import com.db4o.ta.instrumentation.test.data.*;
 
 import db4ounit.*;
 
-public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
+public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
     
 	private static final String INSTANCE_FACTORY_METHOD_NAME = "collectionInstance";
 	private final static Class INSTRUMENTED_CLAZZ = ToBeInstrumentedWithFieldAccess.class;
@@ -33,7 +29,7 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 	private final static Class MAP_CLIENT_CLAZZ = HashMapClient.class;
 	private final static Class CUSTOM_LIST_CLAZZ = CustomArrayList.class;
 
-	private final static Class[] INSTRUMENTED_CLASSES = new Class[] { 
+	final static Class[] INSTRUMENTED_CLASSES = new Class[] { 
 		INSTRUMENTED_CLAZZ, 
 		EXTERNAL_INSTRUMENTED_CLAZZ, 
 		INSTRUMENTED_OUTER_CLAZZ, 
@@ -59,18 +55,14 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		}
 	}
 
-	private String srcDir;
-	
-	private String targetDir;	
-	
-	public void setUp() throws Exception {
-		srcDir = IO.mkTempDir("tafileinstr/source");
-		targetDir = IO.mkTempDir("tafileinstr/target");
-		copyClassFilesTo(
-			INPUT_CLASSES,
-			srcDir);
+	protected Class[] inputClasses() {
+		return INPUT_CLASSES;
 	}
-	
+
+	protected Class[] instrumentedClasses() {
+		return INSTRUMENTED_CLASSES;
+	}
+
 	public void test() throws Exception {
 		enhance();
 		
@@ -183,10 +175,6 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		assertActivatorInvocations(MAP_CLIENT_CLAZZ, proc, 0,1);
 	}
 
-	public void tearDown() throws Exception {
-		deleteFiles();
-	}
-
 	private void assertActivatorInvocations(Class clientClass, Proc proc,
 			int expectedReads, int expectedWrites) throws Exception,
 			MalformedURLException, InstantiationException,
@@ -207,57 +195,6 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		Class outerClazz = loader.loadClass(INSTRUMENTED_OUTER_CLAZZ);
 		Object outerInst = outerClazz.newInstance();
 		outerClazz.getDeclaredMethod("foo", new Class[]{}).invoke(outerInst, new Object[]{});
-	}
-
-	private AssertingClassLoader newAssertingClassLoader() throws MalformedURLException {
-		return new AssertingClassLoader(new File(targetDir), INPUT_CLASSES);
-	}
-
-	private void enhance() throws Exception {
-		
-		String[] filterClassNames = new String[INSTRUMENTED_CLASSES.length];
-		for (int instrumentedIdx = 0; instrumentedIdx < INSTRUMENTED_CLASSES.length; instrumentedIdx++) {
-			filterClassNames[instrumentedIdx] = INSTRUMENTED_CLASSES[instrumentedIdx].getName();
-		}
-		ClassFilter filter = new ByNameClassFilter(filterClassNames);
-		Db4oFileInstrumentor enhancer = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(filter));
-		enhancer.enhance(srcDir, targetDir, new String[]{});
-	}
-
-	private void assertReadsWrites(int expectedReads, int expectedWrites, MockActivator activator) {
-		Assert.areEqual(expectedReads, activator.readCount());
-		Assert.areEqual(expectedWrites, activator.writeCount());
-	}
-
-	private void deleteFiles() {
-//		deleteDirectory(srcDir);
-//		deleteDirectory(targetDir);
-	}
-
-	private void deleteDirectory(String dirPath) {
-		if(!File4.exists(dirPath)) {
-			return;
-		}
-		Directory4.delete(dirPath, true);
-	}
-	
-	private void copyClassFilesTo(final Class[] classes, final String toDir)
-			throws IOException {
-		for (int i = 0; i < classes.length; i++) {
-			copyClassFile(classes[i], toDir);
-		}
-	}	
-
-	private void copyClassFile(Class clazz, String toDir) throws IOException {
-		File file = ClassFiles.fileForClass(clazz);
-		String targetPath = Path4.combine(toDir, ClassFiles.classNameAsPath(clazz));
-		File4.delete(targetPath);
-		File4.copy(file.getCanonicalPath(), targetPath);
-	}
-	
-	// FIXME replace with Procedure4
-	private static interface Proc {
-		void apply(Object arg);
 	}
 	
 }

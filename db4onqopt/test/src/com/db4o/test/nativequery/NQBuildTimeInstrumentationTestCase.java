@@ -12,7 +12,6 @@ import com.db4o.instrumentation.main.*;
 import com.db4o.nativequery.instrumentation.*;
 import com.db4o.nativequery.main.*;
 import com.db4o.query.*;
-import com.db4o.test.util.*;
 
 import db4ounit.*;
 import db4ounit.extensions.util.*;

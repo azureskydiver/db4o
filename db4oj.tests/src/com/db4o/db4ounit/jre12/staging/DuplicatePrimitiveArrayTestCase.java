@@ -12,6 +12,7 @@ import com.db4o.reflect.jdk.*;
 import com.db4o.test.util.*;
 
 import db4ounit.*;
+import db4ounit.extensions.util.*;
 
 // OMR-70
 /**

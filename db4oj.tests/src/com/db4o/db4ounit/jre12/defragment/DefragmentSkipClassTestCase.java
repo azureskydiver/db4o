@@ -10,6 +10,7 @@ import com.db4o.foundation.*;
 import com.db4o.test.util.*;
 
 import db4ounit.*;
+import db4ounit.extensions.util.*;
 
 /**
  * This one tests common, non-jdk1.2 specific functionality, but requires an

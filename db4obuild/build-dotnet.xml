@@ -538,7 +538,7 @@
 		</copy>	
 
 		<copy todir="${dir.sharpen}/db4oj/nq/src">
-			<fileset dir="${dir.j.nqopt.src}">
+			<fileset dir="${dir.dist.decaf.jdk1.2.nqopt.src}">
 				<include name="com/db4o/nativequery/expr/**/*.java" />
 				<include name="com/db4o/nativequery/optimization/NativeQueriesPlatform.java" />
 				<include name="com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
