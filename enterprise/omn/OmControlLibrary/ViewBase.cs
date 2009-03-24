@@ -51,16 +51,18 @@ namespace OMControlLibrary
 
 		#endregion
 
+		//TODO: Use the window caption as soon as we fix the dependency on Caption being equal
+		//      to "Closed".
 		private static WindowVisibilityEvents events;
-		private static readonly IList<Window> _omnWindows = new List<Window>();
+		private static readonly IDictionary<Window, bool> _omnWindows = new Dictionary<Window, bool>();
 
-		public static IList<Window> PluginWindows
+		public static Dictionary<Window, bool> PluginWindows
 		{
 			get
 			{
 				lock(_omnWindows)
 				{
-					return new List<Window>(_omnWindows);
+					return new Dictionary<Window, bool>(_omnWindows);
 				}
 			}
 		}
@@ -83,7 +85,7 @@ namespace OMControlLibrary
 
 			control = (T) ctlobj;
 
-			_omnWindows.Add(window);
+			_omnWindows[window] = true;
 
 			return window;
 		}
@@ -102,11 +104,16 @@ namespace OMControlLibrary
 		{
 			lock (_omnWindows)
 			{
-				if (_omnWindows.Contains(window))
+				if (_omnWindows.ContainsKey(window))
 				{
-					_omnWindows.Remove(window);
+					_omnWindows[window] = false;
 				}
 			}
+		}
+
+		public static bool IsOMNWindow(Window window)
+		{
+			return window != null ? _omnWindows.ContainsKey(window) : false;
 		}
 
 		private static AddIn FindAddin(AddIns addins)
