@@ -53,6 +53,12 @@ public class ObjectSetListAPITestCase extends AbstractDb4oTestCase {
 		});
 	}
 
+	public void testToArray() {
+		Assert.areEqual(NUMDATA, result().toArray().length);
+		Assert.areEqual(NUMDATA, result().toArray(new Data[0]).length);
+		Assert.areEqual(NUMDATA, result().toArray(new Data[NUMDATA]).length);
+	}
+
 	private ObjectSet result() {
 		Query query = newQuery(Data.class);
 		query.descend("_id").constrain(new Integer(Integer.MAX_VALUE)).not();
