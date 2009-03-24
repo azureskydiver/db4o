@@ -226,7 +226,7 @@ namespace OMAddin
 
 						eve = _applicationObject.Events.DTEEvents;
 
-						eve.ModeChanged += eve_ModeChanged;
+						eve.ModeChanged += DesignDebugModeChanged;
 					}
 					catch (Exception oEx)
 					{
@@ -259,90 +259,45 @@ namespace OMAddin
 
 		}
 
-		//FIXME: Ignore only VS WIndows? What about other addins windows (for instance Resharper) ?
-		//		 Why not keep a list of OMN windows? We already started to do this. 
-		//		 Take a look in ViewBase.CreateToolWindow() method
-		void eve_ModeChanged(vsIDEMode LastMode)
+		void DesignDebugModeChanged(vsIDEMode LastMode)
 		{
-			try
+			if (IsConnected())
 			{
-				bool loginPresent = false, propertiesPane = false;
-
-				foreach (Window win in _applicationObject.Windows)
-				{
-					if (win.Equals(Helper.LoginToolWindow))
-					{
-						loginPresent = true;
-					}
-					if (win.Caption.Equals("Properties") || win.Caption.Equals("DataBase Properties"))
-					{
-						propertiesPane = true;
-					}
-				}
-
-				if (loginPresent && propertiesPane == false)
-				{
-					foreach (Window w in _applicationObject.ToolWindows.DTE.Windows)
-					{
-						if (w.Type == vsWindowType.vsWindowTypeToolWindow)
-						{
-							if (CheckIfWinISVSWin(w))
-							{
-								w.Visible = false;
-							}
-						}
-					}
-					if (Helper.LoginToolWindow != null)
-						if (Helper.LoginToolWindow.Caption != "Closed")
-							Helper.LoginToolWindow.Visible = true;
-				}
-				else if (!loginPresent)
-				{
-
-					foreach (Window w in _applicationObject.ToolWindows.DTE.Windows)
-					{
-						if (w.Type == vsWindowType.vsWindowTypeToolWindow)
-						{
-							if (CheckIfWinISVSWin(w))
-							{
-								w.Visible = false;
-							}
-						}
-						if (Helper.LoginToolWindow != null)
-							Helper.LoginToolWindow.Visible = false;
-					}
-				}
-				else
-				{
-					foreach (Window w in _applicationObject.ToolWindows.DTE.Windows)
-					{
-						if (w.Type == vsWindowType.vsWindowTypeToolWindow)
-						{
-
-							if (CheckIfWinISVSWin(w))
-							{
-								if (w.Object == null || w.Caption != "Connect to db4o database" || w.Caption != "Closed"
-									 || w.Caption != "Connect to db4o server")
-									w.Visible = true;
-								if (w.Caption == "Connect to db4o server" || w.Caption == "Connect to db4o database" || w.Caption == "Closed")
-									w.Visible = false;
-
-							}
-						}
-					}
-
-
-				}
+				ForEachOMNWindow(delegate(Window window)
+								{
+									window.Visible = (window.Caption != "Connect to db4o database" && window.Caption != "Closed" && window.Caption != "Connect to db4o server");
+								});
 			}
-			catch (System.Runtime.InteropServices.COMException)
+			else
 			{
-			}
-			catch (Exception ex)
-			{
-				LoggingHelper.HandleException(ex);
+				ForEachOMNWindow(delegate(Window window) { window.Visible = false; });
+				if (Helper.LoginToolWindow != null)
+				{
+					bool loginPresent = ViewBase.IsOMNWindow(Helper.LoginToolWindow);
+					Helper.LoginToolWindow.Visible = loginPresent && Helper.LoginToolWindow.Caption != "Closed";
+				}
 			}
 		}
 
+		private bool IsConnected()
+		{
+			foreach (Window win in ViewBase.PluginWindows.Keys)
+			{
+				if (win.Caption.Equals("Properties") || win.Caption.Equals("DataBase Properties"))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private static void ForEachOMNWindow(Action<Window> action)
+		{
+			foreach (Window w in ViewBase.PluginWindows.Keys)
+			{
+				action(w);
+			}
+		}
 
 		#endregion
 
@@ -453,7 +408,6 @@ namespace OMAddin
 						status = vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
 						return;
 					}
-				    
                     status = vsCommandStatus.vsCommandStatusUnsupported;
 				}
 			}
@@ -506,70 +460,53 @@ namespace OMAddin
 		/// When db4o Browser opens for first time, it creates menu option under ObjectManager Enterprise menu.
 		/// Using this menu option, user can get back to db4o Browser if he has closed it before.
 		/// </summary>
-		/// <param name="GotFocus"></param>
-		/// <param name="LostFocus"></param>
-		void _windowsEvents_WindowActivated(Window GotFocus, Window LostFocus)
+		/// <param name="gotFocus"></param>
+		/// <param name="lostFocus"></param>
+		void _windowsEvents_WindowActivated(Window gotFocus, Window lostFocus)
 		{
 			try
 			{
+				if (gotFocus == null || lostFocus.Caption == "Closed")
+					return;
+
 				//TODO: Move this code closer to window instantiation.
-
-				//Object Browser Windows Menu
-				if (GotFocus != null &&
-					GotFocus.ObjectKind.Equals(OMControlLibrary.Common.Constants.GUID_OBJECTBROWSER.ToUpper())
-					&& LostFocus.Caption != "Closed")
+				if (gotFocus.ObjectKind.Equals(OMControlLibrary.Common.Constants.GUID_OBJECTBROWSER.ToUpper()) && omObjectBrowserControl == null)
 				{
-					//db4o Browser Submenu
-					if (omObjectBrowserControl == null)
-					{
-						omObjectBrowserControl = oPopup.Controls.Add(MsoControlType.msoControlButton,
-													Missing.Value,
-													Missing.Value,
-													11, true);
+					omObjectBrowserControl = oPopup.Controls.Add(MsoControlType.msoControlButton,
+					                                             Missing.Value,
+					                                             Missing.Value,
+					                                             11, true);
 
-						omObjectBrowserControl.BeginGroup = true;
-						omObjectBrowserControl.Caption = Helper.GetResourceString(OMControlLibrary.Common.Constants.DB4O_BROWSER_CAPTION);
+					omObjectBrowserControl.BeginGroup = true;
+					omObjectBrowserControl.Caption = Helper.GetResourceString(OMControlLibrary.Common.Constants.DB4O_BROWSER_CAPTION);
 
-						omObjectBrowserControlHandler =
-							(CommandBarEvents)_applicationObject.Events.get_CommandBarEvents(omObjectBrowserControl);
-						omObjectBrowserControlHandler.Click += omObjectBrowserControlHandler_Click;
-					}
+					omObjectBrowserControlHandler =
+						(CommandBarEvents) _applicationObject.Events.get_CommandBarEvents(omObjectBrowserControl);
+					omObjectBrowserControlHandler.Click += omObjectBrowserControlHandler_Click;
 				}
-				else if (GotFocus != null &&
-					GotFocus.ObjectKind.Equals(OMControlLibrary.Common.Constants.GUID_QUERYBUILDER.ToUpper())
-					 && LostFocus.Caption != "Closed")
+				else if (gotFocus.ObjectKind.Equals(OMControlLibrary.Common.Constants.GUID_QUERYBUILDER.ToUpper()) && omQueryBuilderControl == null)
 				{
-					if (omQueryBuilderControl == null)
-					{
-						omQueryBuilderControl = oPopup.Controls.Add(MsoControlType.msoControlButton,
-													Missing.Value,
-													Missing.Value,
-													12, true);
+					omQueryBuilderControl = oPopup.Controls.Add(MsoControlType.msoControlButton,
+					                                            Missing.Value,
+					                                            Missing.Value,
+					                                            12, true);
 
-						omQueryBuilderControl.Caption = Helper.GetResourceString(OMControlLibrary.Common.Constants.QUERY_BUILDER_CAPTION);
+					omQueryBuilderControl.Caption = Helper.GetResourceString(OMControlLibrary.Common.Constants.QUERY_BUILDER_CAPTION);
 
-						omQueryBuilderControlHandler =
-							(CommandBarEvents)_applicationObject.Events.get_CommandBarEvents(omQueryBuilderControl);
-						omQueryBuilderControlHandler.Click += omQueryBuilderControlHandler_Click;
-					}
+					omQueryBuilderControlHandler = (CommandBarEvents) _applicationObject.Events.get_CommandBarEvents(omQueryBuilderControl);
+					omQueryBuilderControlHandler.Click += omQueryBuilderControlHandler_Click;
 				}
-				else if (GotFocus != null &&
-				  GotFocus.ObjectKind.Equals(OMControlLibrary.Common.Constants.GUID_PROPERTIES.ToUpper())
-			   && LostFocus.Caption != "Closed")
+				else if (gotFocus.ObjectKind.Equals(OMControlLibrary.Common.Constants.GUID_PROPERTIES.ToUpper()) && omPropertiesControl == null)
 				{
-					if (omPropertiesControl == null)
-					{
-						omPropertiesControl = oPopup.Controls.Add(MsoControlType.msoControlButton,
-													Missing.Value,
-													Missing.Value,
-													13, true);
+					omPropertiesControl = oPopup.Controls.Add(MsoControlType.msoControlButton,
+					                                          Missing.Value,
+					                                          Missing.Value,
+					                                          13, true);
 
-						//omPropertiesControl.BeginGroup = true;
-						omPropertiesControl.Caption = Helper.GetResourceString(OMControlLibrary.Common.Constants.PROPERTIES_TAB_CAPTION).Trim();
+					omPropertiesControl.Caption = Helper.GetResourceString(OMControlLibrary.Common.Constants.PROPERTIES_TAB_CAPTION).Trim();
 
-						omPropertiesControlHandler = (CommandBarEvents)_applicationObject.Events.get_CommandBarEvents(omPropertiesControl);
-						omPropertiesControlHandler.Click += omPropertiesControlHandler_Click;
-					}
+					omPropertiesControlHandler = (CommandBarEvents) _applicationObject.Events.get_CommandBarEvents(omPropertiesControl);
+					omPropertiesControlHandler.Click += omPropertiesControlHandler_Click;
 				}
 			}
 			catch (System.Runtime.InteropServices.COMException)
@@ -1323,25 +1260,14 @@ namespace OMAddin
 				catch (ArgumentException)
 				{
 				}
-				ToolWindows tw = _applicationObject.ToolWindows;
 
-				foreach (Window w in tw.DTE.Windows)
-				{
-					if (w.Type == vsWindowType.vsWindowTypeToolWindow)
-					{
-						if (CheckIfWinISVSWin(w))
-						{
-							if (w.Object is QueryResult || w.Object == null)
-							{
-								//FIXME: Remove dependency on Caption being equal to "Closed"
-								//       Consider introducing a field like "_closing"
-								w.Caption = "Closed";
-								w.Close(vsSaveChanges.vsSaveChangesNo);
-							}
-						}
-					}
-				}
-
+				//FIXME: Remove dependency on Caption being equal to "Closed"
+				//       Consider introducing a field like "_closing"
+				ForEachOMNWindow(delegate(Window window)
+				                 	{
+				                 		window.Caption = "Closed";
+				                 		window.Close(vsSaveChanges.vsSaveChangesNo);
+				                 	});
 			}
 			catch (System.Runtime.InteropServices.COMException)
 			{
@@ -1350,26 +1276,6 @@ namespace OMAddin
 			{
 				LoggingHelper.HandleException(oEx);
 			}
-		}
-		#endregion
-
-		#region Method for checking if window is a VS window
-		private static bool CheckIfWinISVSWin(Window w)
-		{
-			if (!w.Caption.Contains("Bookmarks") && !w.Caption.Equals("Properties") && !w.Caption.Contains("Object Browser")
-			&& !w.Caption.Contains("Document Outline") && !w.Caption.Contains("Code Definition Window")
-			&& !w.Caption.Contains("Resource View") && !w.Caption.Contains("Object Test Bench") && !w.Caption.Contains("Output")
-			&& !w.Caption.Contains("Find") && !w.Caption.Contains("Class View") && !w.Caption.Contains("Macro Explorer") && !w.Caption.Contains("Start Page")
-			&& !w.Caption.Contains("Watch") && !w.Caption.Contains("Autos") && !w.Caption.Contains("Locals") && !w.Caption.Contains("Threads") && !w.Caption.Contains("Call Stack")
-			&& !w.Caption.Contains("Immediate") && !w.Caption.Contains("Breakpoints") && !w.Caption.Contains("Script Explorer") && !w.Caption.Contains("Modules")
-			&& !w.Caption.Contains("Processes") && !w.Caption.Contains("Memory") && !w.Caption.Contains("Disassembly") && !w.Caption.Contains("Registers") && !w.Caption.Contains("Server Explorer")
-			&& !w.Caption.Contains("Solution Explorer") && !w.Caption.Contains("Error List") && !w.Caption.Contains("Task List") && !w.Caption.Contains("Toolbox") && !w.Caption.Contains("Command")
-			&& !w.Caption.Contains("Property Manager") && !w.Caption.Contains("Web Browser") && !w.Caption.Contains("Data Sources"))
-
-				return true;
-			else
-				return false;
-
 		}
 		#endregion
 
