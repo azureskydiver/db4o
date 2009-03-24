@@ -27,6 +27,7 @@ public class AllTests extends Db4oTestSuite {
             IndexedJoinQueriesTestCase.class,
 			IndexOnParentFieldTestCase.class,
             IndexedQueriesTestCase.class,
+            InvalidFieldNameConstraintTestCase.class,
             LazyQueryResultTestCase.class,
             MultiFieldIndexQueryTestCase.class,
             NullConstraintQueryTestCase.class,
