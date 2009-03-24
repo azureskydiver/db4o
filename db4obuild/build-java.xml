@@ -115,7 +115,7 @@
 	
 	
 	<target name="decaf.workspace" depends="init">
-		<reset-dir dir="${dir.dist.decaf.project.source}"/>
+		<reset-dir dir="${dir.dist.decaf.workspace}"/>
 		<prepare-workspace dir="${dir.dist.decaf.project.source}" project="${name.project.j}">
 			<sources>
 				<fileset dir="${dir.j.core}">
