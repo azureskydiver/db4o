@@ -5,11 +5,13 @@ import java.lang.reflect.*;
 import java.net.*;
 import java.util.*;
 
+import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.ta.collections.*;
 import com.db4o.instrumentation.classfilter.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.main.*;
+import com.db4o.query.*;
 import com.db4o.reflect.jdk.*;
 import com.db4o.ta.*;
 import com.db4o.ta.instrumentation.*;
@@ -51,8 +53,8 @@ public class TransparentActivationInstrumentationIntegrationTestCase extends Abs
 	}
 	
 	public void test() throws Exception {
-		final Object project = retrieveOnlyInstance(Project.class);
-
+		// can't use #retrieveSingleInstance() here, since decaf will introduce casts that are incompatible with the app cl
+		final Object project = retrieveSingleProject();
 		Method getPriorityMethod = project.getClass().getDeclaredMethod("getPriority", new Class[]{});
 		getPriorityMethod.setAccessible(true);
 		Integer priority = (Integer) getPriorityMethod.invoke(project, new Object[]{});
@@ -62,5 +64,13 @@ public class TransparentActivationInstrumentationIntegrationTestCase extends Abs
 		totalTimeSpentMethod.setAccessible(true);
 		Long totalTimeSpent = (Long) totalTimeSpentMethod.invoke(project, new Object[]{});
 		Assert.areEqual(1000, totalTimeSpent.intValue());
+	}
+
+	private Object retrieveSingleProject() {
+		Query query = db().query();
+		query.constrain(Project.class);
+		ObjectSet<Object> result = query.execute();
+		Assert.areEqual(1, result.size());
+		return result.next();
 	}
 }
