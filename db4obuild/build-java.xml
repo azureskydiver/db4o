@@ -920,9 +920,9 @@
 				<arg value="-cp" />
 				<arg value="${file.jdk1.5.db4ounit.jar}" />
 				<arg value="-cp" />
-				<arg value="${file.instrumentation.jar}" />
+				<arg value="${file.jdk1.5.instrumentation.jar}" />
 				<arg value="-cp" />
-				<arg value="${file.nqopt.jar}" />
+				<arg value="${file.jdk1.5.nqopt.jar}" />
 				<arg value="-cp" />
 				<arg value="${file.tests.jdk1.5.jar}" />
 				<arg value="-cp" />
@@ -1301,9 +1301,9 @@
 				timeout="320000">
 			<classpath>
 				<pathelement location="${dir.dist.classes.test.nq.jdk1.5}" />
-                <pathelement location="${file.nqopt.jar}" />
+                <pathelement location="${file.jdk1.5.nqopt.jar}" />
 				<pathelement location="${file.bloat.jar}" />
-				<pathelement location="${file.instrumentation.jar}" />
+				<pathelement location="${file.jdk1.5.instrumentation.jar}" />
                 <path refid="tests.nqopt.jdk1.5.cp" />
 			</classpath>
 		</java>
@@ -1316,9 +1316,9 @@
 				timeout="320000">
 			<classpath>
 				<pathelement location="${dir.dist.classes.test.nq.jdk1.2}" />
-                <pathelement location="${file.nqopt.jar}" />
+                <pathelement location="${file.jdk1.2.nqopt.jar}" />
 				<pathelement location="${file.bloat.jar}" />
-				<pathelement location="${file.instrumentation.jar}" />
+				<pathelement location="${file.jdk1.2.instrumentation.jar}" />
                 <path refid="tests.nqopt.jdk1.2.cp" />
 			</classpath>
 		</java>
@@ -1404,10 +1404,10 @@
 	        	<pathelement location="${file.jdk1.2.cs.jar}" />
 	        	<pathelement location="${file.jdk1.2.optional.jar}" />
 				<pathelement location="${file.jdk1.2.db4ounit.jar}" />
-			    <pathelement location="${file.instrumentation.jar}"/>
-				<pathelement location="${file.taj.jar}"/>
+			    <pathelement location="${file.jdk1.2.instrumentation.jar}"/>
+				<pathelement location="${file.jdk1.2.taj.jar}"/>
 				<pathelement location="${dir.dist.classes.test.jdk1.2}" />
-				<pathelement location="${dir.dist.classes.test.taj}"/>
+				<pathelement location="${dir.dist.classes.jdk1.2.test.taj}"/>
 			</classpath>
 		</java>
 		<java taskname="ta/j15" classname="com.db4o.ta.instrumentation.test.AllTests"
@@ -1418,14 +1418,14 @@
 			timeout="1800000">
 			<classpath>
 	            <pathelement location="${file.bloat.jar}"/>
-				<pathelement location="${file.jdk1.2.jar}"/>
-	        	<pathelement location="${file.jdk1.2.cs.jar}" />
-	        	<pathelement location="${file.jdk1.2.optional.jar}" />
-				<pathelement location="${file.jdk1.2.db4ounit.jar}" />
-			    <pathelement location="${file.instrumentation.jar}"/>
-				<pathelement location="${file.taj.jar}"/>
-				<pathelement location="${dir.dist.classes.test.jdk1.2}" />
-				<pathelement location="${dir.dist.classes.test.taj}"/>
+				<pathelement location="${file.jdk1.5.jar}"/>
+	        	<pathelement location="${file.jdk1.5.cs.jar}" />
+	        	<pathelement location="${file.jdk1.5.optional.jar}" />
+				<pathelement location="${file.jdk1.5.db4ounit.jar}" />
+			    <pathelement location="${file.jdk1.5.instrumentation.jar}"/>
+				<pathelement location="${file.jdk1.5.taj.jar}"/>
+				<pathelement location="${dir.dist.classes.test.jdk1.5}" />
+				<pathelement location="${dir.dist.classes.jdk1.5.test.taj}"/>
 			</classpath>
 		</java>
 	</target>
