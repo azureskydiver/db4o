@@ -1013,7 +1013,7 @@
 		</jar>
 	</target>
 	
-	<target name="build.taj.tests" depends="build.taj1.2, build.taj1.5, build.db4ojdk1.2.tests">
+	<target name="build.taj.tests" depends="build.taj1.2, build.taj1.5, build.db4ojdk1.2.tests, build.db4ojdk1.5.tests">
 		<mkdir dir="${dir.dist.classes.jdk1.2.test.taj}" />
 		<javac fork="true" 
             destdir="${dir.dist.classes.jdk1.2.test.taj}" 
