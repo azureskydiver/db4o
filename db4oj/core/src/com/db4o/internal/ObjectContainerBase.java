@@ -201,7 +201,11 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             }
         }
     }
-    
+
+    public void backup(String path) throws DatabaseClosedException, Db4oIOException {
+    	backup(configImpl().storage(), path);
+    }
+	
     public final void bind(Transaction trans, Object obj, long id) throws ArgumentNullException, IllegalArgumentException {
         synchronized (_lock) {
             if(obj == null){

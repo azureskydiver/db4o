@@ -5,6 +5,7 @@ package com.db4o.internal;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.io.*;
 
 
 /**
@@ -50,10 +51,10 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 		}
 	}
     
-    public void backup(String path) throws NotSupportedException {
+    public void backup(Storage targetStorage, String path) throws NotSupportedException {
         throw new NotSupportedException();
     }
-    
+
     public void blockSize(int size){
         // do nothing, blocksize is always 1
     }

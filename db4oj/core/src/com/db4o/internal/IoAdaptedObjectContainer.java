@@ -66,8 +66,8 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			readThis();
 		}
 	}
-    
-    public void backup(final String path) throws DatabaseClosedException, Db4oIOException {
+
+    public void backup(final Storage targetStorage, final String path) throws DatabaseClosedException, Db4oIOException {
         withEnvironment(new Runnable() { public void run() {
         	
 	    	synchronized (_lock) {
@@ -75,7 +75,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 				if (_backupFile != null) {
 					throw new BackupInProgressException();
 				}
-				_backupFile = new BlockAwareBin(configImpl().storage().open(new BinConfiguration(path, true,_file.length(), false)));
+				_backupFile = new BlockAwareBin(targetStorage.open(new BinConfiguration(path, true,_file.length(), false)));
 			}
 	        long pos = 0;
 	        byte[] buffer = new byte[8192];

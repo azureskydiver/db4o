@@ -5,6 +5,7 @@ package com.db4o.ext;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
+import com.db4o.io.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.replication.*;
@@ -55,6 +56,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * the open ObjectContainer and to the backup.<br><br>
      * While the backup is running, the ObjectContainer should not be closed.<br><br>
      * If a file already exists at the specified path, it will be overwritten.<br><br>
+     * The {@link Storage} used for backup is the one configured for this container.
      * @param path a fully qualified path
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      * @throws NotSupportedException is thrown when the operation is not supported in current 
@@ -65,6 +67,25 @@ public interface ExtObjectContainer extends ObjectContainer {
 			DatabaseClosedException, NotSupportedException;
 
 
+    /**
+     * backs up a database file of an open ObjectContainer.
+     * <br><br>While the backup is running, the ObjectContainer can continue to be
+     * used. Changes that are made while the backup is in progress, will be applied to
+     * the open ObjectContainer and to the backup.<br><br>
+     * While the backup is running, the ObjectContainer should not be closed.<br><br>
+     * If a file already exists at the specified path, it will be overwritten.<br><br>
+     * This method is intended for cross-storage backups, i.e. backup from an in-memory
+     * database to a file.
+     * @param storage the {@link Storage} to be used for backup
+     * @param path a fully qualified path
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
+     * @throws NotSupportedException is thrown when the operation is not supported in current 
+     * configuration/environment
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     */
+    public void backup(Storage targetStorage, String path) throws Db4oIOException,
+			DatabaseClosedException, NotSupportedException;
+    
     /**
      * binds an object to an internal object ID.
      * <br><br>This method uses the ID parameter to load the 
