@@ -1,7 +1,7 @@
 <project>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.db4o</groupId>
-	<artifactId>db4o-taj</artifactId>
+	<artifactId>db4o-taj-java1.2</artifactId>
 	<version>@VERSION@</version>
 	<packaging>jar</packaging>
 	<name>instrumentation classes for Transparent Activation</name>
@@ -24,7 +24,12 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.db4o</groupId>
-			<artifactId>db4o-instrumentation</artifactId>
+			<artifactId>db4o-java1.2</artifactId>
+			<version>@VERSION@</version>
+		</dependency>
+		<dependency>
+			<groupId>com.db4o</groupId>
+			<artifactId>db4o-instrumentation-java1.2</artifactId>
 			<version>@VERSION@</version>
 		</dependency>
 	</dependencies>

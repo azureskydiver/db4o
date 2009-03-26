@@ -1,14 +1,11 @@
 <project>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.db4o</groupId>
-	<artifactId>db4o-nqopt</artifactId>
+	<artifactId>db4o-instrumentation-java1.5</artifactId>
 	<version>@VERSION@</version>
 	<packaging>jar</packaging>
-	<name>Native Query optimization library</name>
-	<description>
-		Native Query optimization library. This library should be
-		available in the classpath for NQ optimization
-	</description>
+	<name>Instrumentation layer</name>
+	<description>Instrumentation layer on top of bloat</description>
 	<url>http://www.db4o.com</url>
 	<licenses>
 		<license>
@@ -25,8 +22,18 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.db4o</groupId>
-			<artifactId>db4o-instrumentation</artifactId>
+			<artifactId>db4o-java1.5</artifactId>
 			<version>@VERSION@</version>
+		</dependency>		
+		<dependency>
+			<groupId>edu.purdue.cs</groupId>
+			<artifactId>bloat</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>1.7.1</version>
 		</dependency>
 	</dependencies>
 </project>
