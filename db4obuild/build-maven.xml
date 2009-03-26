@@ -65,8 +65,8 @@
 		
 		<deployArtifact repositoryId="${repositoryId}" file="${file.bloat.jar}" pom="bloat.xml" />
 		
-		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.instrumentation.jar}" pom="db4o-instrumentation-java-1.2.xml"/>		
-		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.instrumentation.jar}" pom="db4o-instrumentation-java-1.5.xml"/>		
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.instrumentation.jar}" pom="db4o-instrumentation-java1.2.xml"/>		
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.instrumentation.jar}" pom="db4o-instrumentation-java1.5.xml"/>		
 		
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.1.jar}" pom="db4o-java1.1.xml"/>
 		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.jar}" pom="db4o-java1.2.xml" />
