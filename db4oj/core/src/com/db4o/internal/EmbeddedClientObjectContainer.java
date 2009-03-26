@@ -12,6 +12,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.query.*;
+import com.db4o.io.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -44,8 +45,13 @@ public class EmbeddedClientObjectContainer implements InternalObjectContainer, T
 
     /** @param path */
     public void backup(String path) throws Db4oIOException, DatabaseClosedException,
-        NotSupportedException {
+        	NotSupportedException {
         throw new NotSupportedException();
+    }
+
+    public void backup(Storage storage, String path) throws Db4oIOException, DatabaseClosedException,
+    		NotSupportedException {
+    	throw new NotSupportedException();
     }
 
     public void bind(Object obj, long id) throws InvalidIDException, DatabaseClosedException {

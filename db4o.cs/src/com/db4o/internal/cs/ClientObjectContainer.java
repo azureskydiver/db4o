@@ -17,6 +17,7 @@ import com.db4o.internal.encoding.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.slots.*;
+import com.db4o.io.*;
 import com.db4o.reflect.*;
 
 /**
@@ -128,10 +129,10 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		_messageDispatcher.startDispatcher();
 	}
 
-	public void backup(String path) throws NotSupportedException {
+	public void backup(Storage targetStorage, String path) throws NotSupportedException {
 		throw new NotSupportedException();
 	}
-	
+
 	@Override
 	protected void closeSystemTransaction() {
 		// do nothing for clients

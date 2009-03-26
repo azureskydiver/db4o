@@ -7,6 +7,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
+import com.db4o.io.*;
 import com.db4o.query.*;
 import com.db4o.replication.*;
 import com.db4o.types.*;
@@ -169,9 +170,9 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase {
         return storedClasses(null);
     }
     
-    public abstract void backup(String path) throws Db4oIOException, DatabaseClosedException,
-        NotSupportedException;
-    
+    public abstract void backup(Storage targetStorage, String path) throws Db4oIOException, DatabaseClosedException,
+    	NotSupportedException;
+
     public abstract Db4oDatabase identity();
     
     /**
