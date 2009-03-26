@@ -1,7 +1,7 @@
 <project>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.db4o</groupId>
-	<artifactId>db4o-instrumentation</artifactId>
+	<artifactId>db4o-instrumentation-java1.2</artifactId>
 	<version>@VERSION@</version>
 	<packaging>jar</packaging>
 	<name>Instrumentation layer</name>
@@ -20,6 +20,11 @@
 		<url>https://source.db4o.com/db4o/trunk</url>
 	</scm>
 	<dependencies>
+		<dependency>
+			<groupId>com.db4o</groupId>
+			<artifactId>db4o-java1.2</artifactId>
+			<version>@VERSION@</version>
+		</dependency>		
 		<dependency>
 			<groupId>edu.purdue.cs</groupId>
 			<artifactId>bloat</artifactId>

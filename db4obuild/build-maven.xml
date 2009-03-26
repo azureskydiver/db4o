@@ -1,4 +1,4 @@
-<project name="db4o-loader" xmlns:artifact="urn:maven-artifact-ant">
+<project name="db4o Maven Deployment" xmlns:artifact="urn:maven-artifact-ant">
 
 	<import file="common.xml" />	
 	<property name="tmpDir" location="tmpPoms"/>
@@ -63,59 +63,53 @@
 		
 		<replace dir="${tmpDir}/poms" token="@VERSION@" value="${versionName}" />
 		
-		<artifact:deploy file="${file.bloat.jar}">			
-			<remoteRepository refid="${repositoryId}"/>
-			<pom file="${tmpDir}/poms/bloat.xml" />
-			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
-		</artifact:deploy>	
+		<deployArtifact repositoryId="${repositoryId}" file="${file.bloat.jar}" pom="bloat.xml" />
 		
-		<artifact:deploy file="${file.instrumentation.jar}">
-			<remoteRepository refid="${repositoryId}"/>
-			<pom file="${tmpDir}/poms/db4o-instrumentation.xml" />
-			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
-		</artifact:deploy>
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.instrumentation.jar}" pom="db4o-instrumentation-java-1.2.xml"/>		
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.instrumentation.jar}" pom="db4o-instrumentation-java-1.5.xml"/>		
 		
-		<artifact:deploy file="${file.jdk1.1.jar}">
-			<remoteRepository refid="${repositoryId}"/>
-			<pom file="${tmpDir}/poms/db4o-java1.1.xml" />
-			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
-		</artifact:deploy>
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.1.jar}" pom="db4o-java1.1.xml"/>
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.jar}" pom="db4o-java1.2.xml" />
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.jar}" pom="db4o-java1.5.xml" />
+
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.1.nodep.jar}" pom="db4o-full-java1.1.xml" />		
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.nodep.jar}" pom="db4o-full-java1.2.xml" />			
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.nodep.jar}" pom="db4o-full-java1.5.xml" />
 		
-		<artifact:deploy file="${file.jdk1.2.jar}">
-			<remoteRepository refid="${repositoryId}"/>
-			<pom file="${tmpDir}/poms/db4o-java1.2.xml" />
-			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
-		</artifact:deploy>
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.nqopt.jar}" pom="db4o-nqopt-java1.2.xml" />
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.nqopt.jar}" pom="db4o-nqopt-java1.5.xml" />
 		
-		<artifact:deploy file="${file.jdk1.5.jar}">
-			<remoteRepository refid="${repositoryId}"/>
-			<pom file="${tmpDir}/poms/db4o-java5.xml" />		
-			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
-		</artifact:deploy>
+		<deployArtifact repositoryId="${repositoryId}" file="${file.osgi.jar}" pom="db4o-osgi.xml" />
 		
-		<artifact:deploy file="${file.nqopt.jar}">
-			<remoteRepository refid="${repositoryId}"/>
-			<pom file="${tmpDir}/poms/db4o-nqopt.xml" />
-			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
-		</artifact:deploy>	
-		<artifact:deploy file="${file.osgi.jar}">
-			<remoteRepository refid="${repositoryId}"/>
-			<pom file="${tmpDir}/poms/db4o-osgi.xml" />
-			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
-		</artifact:deploy>		
-		<artifact:deploy file="${file.taj.jar}">
-			<remoteRepository refid="${repositoryId}"/>
-			<pom file="${tmpDir}/poms/db4o-taj.xml" />
-			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
-		</artifact:deploy>
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.taj.jar}" pom="db4o-taj-java1.2.xml" />
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.taj.jar}" pom="db4o-taj-java1.5.xml" />
 		
-		<artifact:deploy file="${file.db4otools.jar}">
-			<remoteRepository refid="${repositoryId}"/>
-			<pom file="${tmpDir}/poms/db4o-tools.xml" />
-			<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
-		</artifact:deploy>
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.db4otools.jar}" pom="db4o-tools-java1.2.xml" />
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.db4otools.jar}" pom="db4o-tools-java1.5.xml" />
+		
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.1.cs.jar}" pom="db4o-cs-java1.1.xml" />	
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.cs.jar}" pom="db4o-cs-java1.2.xml" />		
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.cs.jar}" pom="db4o-cs-java1.5.xml" />	
+			
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.1.optional.jar}" pom="db4o-optional-java1.1.xml" />		
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.2.optional.jar}" pom="db4o-optional-java1.2.xml" />			
+		<deployArtifact repositoryId="${repositoryId}" file="${file.jdk1.5.optional.jar}" pom="db4o-optional-java1.5.xml" />
 		
 		<delete dir="${tmpDir}" />
 	</target>
+	
+	<macrodef name="deployArtifact">
+		<attribute name="repositoryId" />
+		<attribute name="file" />
+		<attribute name="pom" />
+		
+		<sequential>
+			<artifact:deploy file="@{file}">
+				<remoteRepository refid="@{repositoryId}"/>
+				<pom file="${tmpDir}/poms/@{pom}" />
+				<!--<attach file="jars/${jar-core-1.5-src}" classifier="sources" />-->
+			</artifact:deploy>
+		</sequential>
+	</macrodef>
 
 </project>
