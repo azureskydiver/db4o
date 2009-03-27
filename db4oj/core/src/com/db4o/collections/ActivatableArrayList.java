@@ -66,7 +66,7 @@ public class ActivatableArrayList<E> extends ArrayList<E> implements Activatable
 	}
 
 	@Override
-	public ActivatableArrayList<E> clone() {
+	public Object clone() {
 		activate(ActivationPurpose.READ);
 		ActivatableArrayList<E> cloned = (ActivatableArrayList<E>) super.clone();
 		cloned._activator = null;

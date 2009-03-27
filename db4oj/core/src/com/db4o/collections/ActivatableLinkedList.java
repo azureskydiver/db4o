@@ -62,7 +62,7 @@ public class ActivatableLinkedList<E> extends LinkedList<E> implements Activatab
 	}
 
 	@Override
-	public ActivatableLinkedList<E> clone() {
+	public Object clone() {
 		activate(ActivationPurpose.READ);
 		ActivatableLinkedList<E> cloned = (ActivatableLinkedList<E>) super.clone();
 		cloned._activator = null;

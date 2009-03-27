@@ -1,8 +1,14 @@
 /* Copyright (C) 2009  db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.collections;
 
 import com.db4o.activation.*;
 
+/**
+ * @exclude
+ * @sharpen.ignore
+ */
+@decaf.Remove(decaf.Platform.JDK11)
 public final class ActivatableSupport {
 
 	public static void activate(Activator activator, ActivationPurpose purpose) {
