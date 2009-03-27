@@ -6,6 +6,13 @@ import java.util.*;
 
 import com.db4o.activation.*;
 
+/**
+ * extends LinkedList with Transparent Activation and
+ * Transparent Persistence support
+ * @exclude
+ * @sharpen.ignore
+ */
+@decaf.Remove(decaf.Platform.JDK11)
 public class ActivatableLinkedList<E> extends LinkedList<E> implements ActivatableList<E> {
 
 	private transient Activator _activator;
