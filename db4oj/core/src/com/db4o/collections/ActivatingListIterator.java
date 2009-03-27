@@ -1,3 +1,5 @@
+/* Copyright (C) 2009  db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.collections;
 
 import java.util.*;
@@ -5,6 +7,11 @@ import java.util.*;
 import com.db4o.activation.*;
 import com.db4o.ta.*;
 
+/**
+ * @exclude
+ * @sharpen.ignore
+ */
+@decaf.Remove(decaf.Platform.JDK11)
 public class ActivatingListIterator<E> extends ActivatingIterator<E> implements ListIterator<E> {
 
 	public ActivatingListIterator(Activatable activatable, Iterator<E> iterator) {

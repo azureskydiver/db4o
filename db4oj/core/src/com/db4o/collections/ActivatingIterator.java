@@ -1,3 +1,5 @@
+/* Copyright (C) 2009  db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.collections;
 
 import java.util.*;
@@ -5,7 +7,11 @@ import java.util.*;
 import com.db4o.activation.*;
 import com.db4o.ta.*;
 
-/* Copyright (C) 2009  db4objects Inc.   http://www.db4o.com */
+/**
+ * @exclude
+ * @sharpen.ignore
+ */
+@decaf.Remove(decaf.Platform.JDK11)
 public class ActivatingIterator<E> implements Iterator<E> {
 
 	private final Activatable _activatable;
