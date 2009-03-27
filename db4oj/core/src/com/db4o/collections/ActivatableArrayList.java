@@ -5,7 +5,6 @@ package com.db4o.collections;
 import java.util.*;
 
 import com.db4o.activation.*;
-import com.db4o.ta.*;
 
 /**
  * extends ArrayList with Transparent Activation and
@@ -14,7 +13,7 @@ import com.db4o.ta.*;
  * @sharpen.ignore
  */
 @decaf.Remove(decaf.Platform.JDK11)
-public class ActivatableArrayList <E> extends ArrayList<E> implements Activatable {
+public class ActivatableArrayList<E> extends ArrayList<E> implements ActivatableList<E> {
 	
 	private transient Activator _activator;
 
@@ -30,19 +29,11 @@ public class ActivatableArrayList <E> extends ArrayList<E> implements Activatabl
 	}
 
 	public void activate(ActivationPurpose purpose) {
-		if(_activator != null) {
-			_activator.activate(purpose);
-		}
+		ActivatableSupport.activate(_activator, purpose);
 	}
 
 	public void bind(Activator activator) {
-    	if (_activator == activator) {
-    		return;
-    	}
-    	if (activator != null && _activator != null) {
-            throw new IllegalStateException();
-        }
-		_activator = activator;
+		_activator = ActivatableSupport.validateForBind(_activator, activator);
 	}
 	
 	@Override
@@ -75,7 +66,7 @@ public class ActivatableArrayList <E> extends ArrayList<E> implements Activatabl
 	}
 
 	@Override
-	public Object clone() {
+	public ActivatableArrayList<E> clone() {
 		activate(ActivationPurpose.READ);
 		ActivatableArrayList<E> cloned = (ActivatableArrayList<E>) super.clone();
 		cloned._activator = null;
@@ -121,7 +112,7 @@ public class ActivatableArrayList <E> extends ArrayList<E> implements Activatabl
 	@Override
 	public Iterator<E> iterator() {
 		activate(ActivationPurpose.READ);
-		return new ActivatingIterator(super.iterator());
+		return new ActivatingIterator(this, super.iterator());
 	}
 	
 	@Override
@@ -139,13 +130,13 @@ public class ActivatableArrayList <E> extends ArrayList<E> implements Activatabl
 	@Override
 	public ListIterator<E> listIterator() {
 		activate(ActivationPurpose.READ);
-		return new ActivatingListIterator(super.listIterator());
+		return new ActivatingListIterator(this, super.listIterator());
 	}
 	
 	@Override
 	public ListIterator<E> listIterator(int index) {
 		activate(ActivationPurpose.READ);
-		return new ActivatingListIterator(super.listIterator(index));
+		return new ActivatingListIterator(this, super.listIterator(index));
 	}
 	
 	@Override
@@ -190,62 +181,17 @@ public class ActivatableArrayList <E> extends ArrayList<E> implements Activatabl
 		return super.removeAll(c);
 	}
 
-	private class ActivatingIterator implements Iterator<E> {
 
-		protected final Iterator<E> _iterator;
-		
-		public ActivatingIterator(Iterator<E> iterator) {
-			_iterator = iterator;
-		}
-		
-		public boolean hasNext() {
-			return _iterator.hasNext();
-		}
-
-		public E next() {
-			return _iterator.next();
-		}
-
-		public void remove() {
-			activate(ActivationPurpose.WRITE);
-			_iterator.remove();
-		}
+	@Override
+	public void ensureCapacity(int minCapacity) {
+		activate(ActivationPurpose.READ);
+		super.ensureCapacity(minCapacity);
 	}
-
-	private class ActivatingListIterator extends ActivatingIterator implements ListIterator<E> {
-
-		public ActivatingListIterator(Iterator<E> iterator) {
-			super(iterator);
-		}
-
-		public void add(E o) {
-			activate(ActivationPurpose.WRITE);
-			listIterator().add(o);
-		}
-
-		public boolean hasPrevious() {
-			return listIterator().hasPrevious();
-		}
-
-		public int nextIndex() {
-			return listIterator().nextIndex();
-		}
-
-		public E previous() {
-			return listIterator().previous();
-		}
-
-		public int previousIndex() {
-			return listIterator().previousIndex();
-		}
-
-		public void set(E o) {
-			activate(ActivationPurpose.WRITE);
-			listIterator().set(o);
-		}
-		
-		private ListIterator<E> listIterator() {
-			return (ListIterator<E>) _iterator;
-		}
+	
+	@Override
+	public void trimToSize() {
+		activate(ActivationPurpose.READ);
+		super.trimToSize();
 	}
+	
 }

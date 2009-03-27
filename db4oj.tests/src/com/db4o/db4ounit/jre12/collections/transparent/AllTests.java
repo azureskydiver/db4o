@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.jre12.collections.transparent;
 
+import com.db4o.db4ounit.jre12.collections.transparent.list.*;
+
 import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {
@@ -12,7 +14,9 @@ public class AllTests extends Db4oTestSuite {
 	
 	protected Class[] testCases() {
 		return new Class[] {
-				ActivatableListTestCase.class,
+				ActivatableArrayListTestCase.class,
+				ActivatableLinkedListTestCase.class,
+				ActivatableListAPITestSuite.class,
 				ActivatableMapTestCase.class
 		};
 	}
