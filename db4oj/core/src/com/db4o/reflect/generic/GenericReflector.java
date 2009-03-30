@@ -207,16 +207,20 @@ public class GenericReflector implements Reflector, DeepClone {
 	 * @return a ReflectClass instance for the specified class name
 	 * @see com.db4o.reflect.ReflectClass
 	 */
-    public ReflectClass forName(String className) {
-        ReflectClass clazz = _repository.lookupByName(className);
-        if(clazz != null){
-            return clazz;
-        }
-        clazz = _delegate.forName(className);
-        if(clazz != null){
-            return ensureDelegate(clazz);
-        }
-    	return _repository.forName(className);
+    public ReflectClass forName(final String className) {
+    	return withLock(new Closure4<ReflectClass>() {
+			public ReflectClass run() {
+		        ReflectClass clazz = _repository.lookupByName(className);
+		        if(clazz != null){
+		            return clazz;
+		        }
+		        clazz = _delegate.forName(className);
+		        if(clazz != null){
+		            return ensureDelegate(clazz);
+		        }
+		    	return _repository.forName(className);
+			}
+    	});
     }
 
     /**
@@ -334,11 +338,16 @@ public class GenericReflector implements Reflector, DeepClone {
 	 * Register a class
 	 * @param clazz class
 	 */
-    public void register(GenericClass clazz) {
-    	String name = clazz.getName();
-    	if(_repository.lookupByName(name) == null){
-    		_repository.register(clazz);
-    	}
+    public void register(final GenericClass clazz) {
+    	withLock(new Closure4<Object>() {
+			public Object run() {
+		    	String name = clazz.getName();
+		    	if(_repository.lookupByName(name) == null){
+		    		_repository.register(clazz);
+		    	}
+		    	return null;
+			}
+    	});
     }
     
     /**
@@ -346,7 +355,11 @@ public class GenericReflector implements Reflector, DeepClone {
      * @return an array of classes known to the reflector
      */
 	public ReflectClass[] knownClasses() {
-		return new KnownClassesCollector(_stream, _repository).collect();	
+    	return withLock(new Closure4<ReflectClass[]>() {
+			public ReflectClass[] run() {
+	    		return new KnownClassesCollector(_stream, _repository).collect();	
+			}
+    	});
 	}
 	
 	/**
@@ -355,30 +368,35 @@ public class GenericReflector implements Reflector, DeepClone {
 	 * @param name class name
 	 * @param converter class converter
 	 */
-	public void registerPrimitiveClass(int id, String name, GenericConverter converter) {
-        GenericClass existing = (GenericClass)_repository.lookupByID(id);
-		if (existing != null) {
-			if (null != converter) {
-				existing.setSecondClass();
-			} else {
-				existing.setConverter(null);
+	public void registerPrimitiveClass(final int id, final String name, final GenericConverter converter) {
+    	withLock(new Closure4<Object>() {
+			public Object run() {
+		        GenericClass existing = (GenericClass)_repository.lookupByID(id);
+				if (existing != null) {
+					if (null != converter) {
+						existing.setSecondClass();
+					} else {
+						existing.setConverter(null);
+					}
+					return null;
+				}
+				ReflectClass clazz = _delegate.forName(name);
+				
+				GenericClass claxx = null;
+				if(clazz != null) {
+			        claxx = ensureDelegate(clazz);
+				}else {
+			        claxx = new GenericClass(GenericReflector.this, null, name, null);
+			        register(claxx);
+				    claxx.initFields(new GenericField[] {new GenericField(null, null, true)});
+				    claxx.setConverter(converter);
+				}
+			    claxx.setSecondClass();
+			    claxx.setPrimitive();
+			    _repository.register(id,claxx);
+			    return null;
 			}
-			return;
-		}
-		ReflectClass clazz = _delegate.forName(name);
-		
-		GenericClass claxx = null;
-		if(clazz != null) {
-	        claxx = ensureDelegate(clazz);
-		}else {
-	        claxx = new GenericClass(this, null, name, null);
-	        register(claxx);
-		    claxx.initFields(new GenericField[] {new GenericField(null, null, true)});
-		    claxx.setConverter(converter);
-		}
-	    claxx.setSecondClass();
-	    claxx.setPrimitive();
-	    _repository.register(id,claxx);
+    	});
 	}
 
 	/**
@@ -392,6 +410,13 @@ public class GenericReflector implements Reflector, DeepClone {
 		if(_delegate != null) {
 			_delegate.configuration(config);
 		}
+	}
+	
+	private <T> T withLock(Closure4<T> block) {
+		if(_stream == null || _stream.isClosed()) {
+			return block.run();
+		}
+		return _stream.syncExec(block);
 	}
 	
 }
