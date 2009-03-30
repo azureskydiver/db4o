@@ -10,7 +10,7 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-			BackupFromMemoryBinIsAccessibleThroughStorage.class,
+			BackupFromMemoryBinIsAccessibleThroughStorageTestCase.class,
 			BackupMemoryToFileTestCase.class,
             BackupStressTestCase.class,
 		};

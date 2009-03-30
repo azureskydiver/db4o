@@ -5,7 +5,7 @@ package com.db4o.db4ounit.common.backup;
 import com.db4o.internal.*;
 import com.db4o.io.*;
 
-public class BackupFromMemoryBinIsAccessibleThroughStorage extends MemoryBackupTestCaseBase {
+public class BackupFromMemoryBinIsAccessibleThroughStorageTestCase extends MemoryBackupTestCaseBase {
 
 	protected MemoryStorage _storage = new MemoryStorage();
 
