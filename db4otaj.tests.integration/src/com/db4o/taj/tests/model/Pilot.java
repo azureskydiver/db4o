@@ -1,17 +1,12 @@
 package com.db4o.taj.tests.model;
 
-public class Pilot {
+public class Pilot extends Person {
 
-	private String _name;
 	private int _points;
 	
 	public Pilot(String name, int points) {
-		_name = name;
+		super(name);
 		_points = points;
-	}
-	
-	public String name() {
-		return _name;
 	}
 	
 	public int points() {
@@ -23,7 +18,7 @@ public class Pilot {
 	}
 	
 	public String toString() {
-		return _name + ": " + _points;
+		return super.toString() + ": " + _points;
 	}
 	
 }
