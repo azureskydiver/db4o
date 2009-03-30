@@ -19,6 +19,7 @@ public class AllTests extends Db4oTestSuite {
 			HashMapInstantiationInstrumentationTestCase.class,
 			TransparentPersistenceClassLoaderTestCase.class,
 			TransparentActivationInstrumentationIntegrationTestCase.class,
+			TACollectionFileEnhancerTestSuite.class,
 			TAFileEnhancerTestCase.class,
 		};
 	}

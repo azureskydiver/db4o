@@ -58,8 +58,8 @@ public abstract class TAFileEnhancerTestCaseBase implements TestCase, TestLifeCy
 	}
 
 	protected void assertReadsWrites(int expectedReads, int expectedWrites, MockActivator activator) {
-		Assert.areEqual(expectedReads, activator.readCount());
-		Assert.areEqual(expectedWrites, activator.writeCount());
+		Assert.isGreaterOrEqual(expectedReads, activator.readCount());
+		Assert.isGreaterOrEqual(expectedWrites, activator.writeCount());
 	}
 
 	private void deleteFiles() {

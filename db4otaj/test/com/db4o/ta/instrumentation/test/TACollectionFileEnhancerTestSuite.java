@@ -15,7 +15,7 @@ import db4ounit.fixtures.*;
 public class TACollectionFileEnhancerTestSuite  extends FixtureBasedTestSuite {
 
 	private static FixtureVariable<CollectionSpec> COLLECTION_SPEC = new FixtureVariable<CollectionSpec>("coll");
-
+				
 	private static class CollectionSpec implements Labeled {
 		public final Class<? extends CollectionClient> _clientClass;
 		public final Procedure4<Object> _closure;
@@ -33,20 +33,23 @@ public class TACollectionFileEnhancerTestSuite  extends FixtureBasedTestSuite {
 			return ReflectPlatform.simpleName(_clientClass) + "/" + (_expectedReads > 0 ? "R" : "W");
 		}
 	}
-	
+
+	private static final Procedure4<Object> LIST_READ_CLOSURE = new Procedure4<Object>() {
+		public void apply(Object arg) {
+			((List)arg).iterator();
+		}
+	};
+	private static final Procedure4<Object> LIST_WRITE_CLOSURE = new Procedure4<Object>() {
+		public void apply(Object arg) {
+			((List)arg).add("foo");
+		}
+	};
+
 	public FixtureProvider[] fixtureProviders() {
 		return new FixtureProvider[] {
 			new SimpleFixtureProvider(COLLECTION_SPEC,
-				new CollectionSpec(ArrayListClient.class, 1, 0, new Procedure4<Object>() {
-					public void apply(Object arg) {
-						((List)arg).iterator();
-					}
-				}),
-				new CollectionSpec(ArrayListClient.class, 0, 1, new Procedure4<Object>() {
-					public void apply(Object arg) {
-						((List)arg).add("foo");
-					}
-				}),
+				new CollectionSpec(ArrayListClient.class, 1, 0, LIST_READ_CLOSURE),
+				new CollectionSpec(ArrayListClient.class, 0, 1, LIST_WRITE_CLOSURE),
 				new CollectionSpec(HashMapClient.class, 1, 0, new Procedure4<Object>() {
 					public void apply(Object arg) {
 						((Map)arg).keySet();
@@ -56,7 +59,9 @@ public class TACollectionFileEnhancerTestSuite  extends FixtureBasedTestSuite {
 					public void apply(Object arg) {
 						((Map)arg).put("foo", "bar");
 					}
-				})
+				}),
+				new CollectionSpec(LinkedListClient.class, 1, 0, LIST_READ_CLOSURE),
+				new CollectionSpec(LinkedListClient.class, 0, 1, LIST_WRITE_CLOSURE)
 			),
 		};
 	}
