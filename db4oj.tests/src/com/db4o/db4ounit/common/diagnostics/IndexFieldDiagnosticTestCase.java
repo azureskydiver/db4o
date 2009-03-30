@@ -60,11 +60,16 @@ public class IndexFieldDiagnosticTestCase extends AbstractDb4oTestCase {
 		});
 	}
 	
-	public void test(){
+	public void testNonIndexedFieldQuery(){
 		Query query = newQuery(Car.class);
 		query.descend("model").constrain("BMW");
-		ObjectSet results = query.execute();
+		query.execute();
 		Assert.isTrue(_diagnosticsCalled);
+	}
+
+	public void testClassQuery(){
+		db().query(Car.class);
+		Assert.isFalse(_diagnosticsCalled);
 	}
 
 }

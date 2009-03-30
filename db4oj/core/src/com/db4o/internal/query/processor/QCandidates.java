@@ -28,13 +28,13 @@ public final class QCandidates implements Visitor4 {
     public Tree i_root;
 
     // collection of all constraints
-    private List4 i_constraints;
+    private List4 _constraints;
 
     // possible class information
     ClassMetadata i_yapClass;
 
     // possible field information
-    private QField i_field;
+    private QField _field;
 
     // current executing constraint, only set where needed
     QCon i_currentConstraint;
@@ -52,7 +52,7 @@ public final class QCandidates implements Visitor4 {
     QCandidates(LocalTransaction a_trans, ClassMetadata a_yapClass, QField a_field) {
     	i_trans = a_trans;
     	i_yapClass = a_yapClass;
-    	i_field = a_field;
+    	_field = a_field;
    
     	if (a_field == null
     			|| a_field.i_yapField == null
@@ -93,7 +93,7 @@ public final class QCandidates implements Visitor4 {
     }
 
     void addConstraint(QCon a_constraint) {
-        i_constraints = new List4(i_constraints, a_constraint);
+        _constraints = new List4(_constraints, a_constraint);
     }
 
     void addOrder(QOrder a_order) {
@@ -327,7 +327,7 @@ public final class QCandidates implements Visitor4 {
 	}
 
 	private FieldIndexProcessorResult processFieldIndexes() {
-		if(i_constraints == null){
+		if(_constraints == null){
 			return FieldIndexProcessorResult.NO_INDEX_FOUND;
 		}
 		return new FieldIndexProcessor(this).run();
@@ -335,7 +335,7 @@ public final class QCandidates implements Visitor4 {
 
     void evaluate() {
     	
-    	if (i_constraints == null) {
+    	if (_constraints == null) {
     		return;
     	}
     	
@@ -421,10 +421,10 @@ public final class QCandidates implements Visitor4 {
     }
     
     public Iterator4 iterateConstraints(){
-        if(i_constraints == null){
+        if(_constraints == null){
             return Iterators.EMPTY_ITERATOR;
         }
-        return new Iterator4Impl(i_constraints);
+        return new Iterator4Impl(_constraints);
     }
     
     final static class TreeIntBuilder {
@@ -451,7 +451,7 @@ public final class QCandidates implements Visitor4 {
 		i_root = result.tree;
         
         DiagnosticProcessor dp = i_trans.container()._handlers._diagnosticProcessor;
-        if (dp.enabled()){
+        if (dp.enabled() && !isClassOnlyQuery()){
             dp.loadedFromClassIndex(i_yapClass);
         }
         
@@ -482,10 +482,10 @@ public final class QCandidates implements Visitor4 {
     //        QQueryBase#createQCandidatesList
     boolean tryAddConstraint(QCon a_constraint) {
 
-        if (i_field != null) {
+        if (_field != null) {
             QField qf = a_constraint.getField();
             if (qf != null) {
-                if (i_field.i_name!=null&&!i_field.i_name.equals(qf.i_name)) {
+                if (_field.i_name!=null&&!_field.i_name.equals(qf.i_name)) {
                     return false;
                 }
             }
@@ -549,10 +549,10 @@ public final class QCandidates implements Visitor4 {
 	}
 
 	public boolean fitsIntoExistingConstraintHierarchy(QCon constraint) {
-        if (i_field != null) {
+        if (_field != null) {
             QField qf = constraint.getField();
             if (qf != null) {
-                if (i_field.i_name!=null&&!i_field.i_name.equals(qf.i_name)) {
+                if (_field.i_name!=null&&!_field.i_name.equals(qf.i_name)) {
                     return false;
                 }
             }
@@ -571,5 +571,15 @@ public final class QCandidates implements Visitor4 {
         }
         i_yapClass = classMetadata;
         return true;
+	}
+	
+	private boolean isClassOnlyQuery() {
+		if(_constraints._next != null) {
+			return false;
+		}
+		if(!(_constraints._element instanceof QConClass)) {
+			return false;
+		}
+		return ((QCon)_constraints._element)._children == null;
 	}
 }
