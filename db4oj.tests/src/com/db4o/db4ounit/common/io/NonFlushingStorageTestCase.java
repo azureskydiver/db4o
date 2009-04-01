@@ -1,5 +1,7 @@
 package com.db4o.db4ounit.common.io;
 
+import java.io.*;
+
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.io.*;
@@ -24,6 +26,14 @@ public class NonFlushingStorageTestCase implements TestCase {
 				mock.record(new MethodCall("open", config));
 				return mock;
             }
+
+			public void delete(String uri) throws IOException {
+				throw new NotImplementedException();
+			}
+
+			public void rename(String oldUri, String newUri) throws IOException {
+				throw new NotImplementedException();
+			}
 			
 		}).open(binConfig);
 		

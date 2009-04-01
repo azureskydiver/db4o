@@ -2,6 +2,8 @@
 
 package com.db4o.defragment;
 
+import java.io.*;
+
 /**
  * The ID mapping used internally during a defragmentation run.
  * 
@@ -32,7 +34,7 @@ public interface ContextIDMapping {
 	/**
 	 * Prepares the mapping for use.
 	 */
-	void open();	
+	void open() throws IOException;	
 	
 	/**
 	 * Shuts down the mapping after use.

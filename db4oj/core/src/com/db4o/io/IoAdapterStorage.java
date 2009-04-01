@@ -3,6 +3,8 @@ package com.db4o.io;
 
 import static com.db4o.foundation.Environments.*;
 
+import java.io.*;
+
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 /**
@@ -68,5 +70,13 @@ public class IoAdapterStorage implements Storage {
 		public void onEvent(Integer event) {
 			blockSize(event);
 		}
+	}
+
+	public void delete(String uri) throws IOException {
+		_io.delete(uri);
+	}
+
+	public void rename(String oldUri, String newUri) throws IOException {
+		throw new NotImplementedException();
 	}
 }

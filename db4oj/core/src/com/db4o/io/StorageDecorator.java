@@ -1,6 +1,8 @@
 /* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
 package com.db4o.io;
 
+import java.io.*;
+
 import com.db4o.ext.*;
 
 /**
@@ -28,4 +30,12 @@ public class StorageDecorator implements Storage {
 	protected Bin decorate(Bin bin) {
 		return bin;
     }
+
+	public void delete(String uri) throws IOException {
+		_storage.delete(uri);
+	}
+
+	public void rename(String oldUri, String newUri) throws IOException {
+		_storage.rename(oldUri, newUri);
+	}
 }

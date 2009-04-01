@@ -2,6 +2,8 @@
 
 package com.db4o.defragment;
 
+import java.io.*;
+
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
@@ -101,8 +103,8 @@ public class BTreeIDMapping extends AbstractContextIDMapping {
 		}
 	}
 
-	public void open() {
-		_mappingDb = DefragmentServicesImpl.freshYapFile(_fileName,1);
+	public void open() throws IOException {
+		_mappingDb = DefragmentServicesImpl.freshTempFile(_fileName,1);
 		Indexable4 handler = new MappedIDPairHandler();
 		_idTree = (_treeSpec==null ? new BTree(trans(), 0, handler) : new BTree(trans(), 0, handler, _treeSpec.nodeSize()));
 	}

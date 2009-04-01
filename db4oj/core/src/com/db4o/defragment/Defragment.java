@@ -13,6 +13,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.internal.mapping.*;
+import com.db4o.io.*;
 
 /**
  * defragments database files.
@@ -109,16 +110,18 @@ public class Defragment {
 	 *             if the original file cannot be moved to the backup location
 	 */
 	public static void defrag(DefragmentConfig config, DefragmentListener listener) throws IOException {
-		ensureFileExists(config.origPath());
-		File backupFile = new File(config.backupPath());
-		if (backupFile.exists()) {
+		Storage storage = config.db4oConfig().storage();
+		ensureFileExists(storage, config.origPath());
+		Storage backupStorage = config.backupStorage();
+		if (backupStorage.exists(config.backupPath())) {
 			if (!config.forceBackupDelete()) {
 				throw new IOException("Could not use '" + config.backupPath()
 						+ "' as backup path - file exists.");
 			}
-			backupFile.delete();
 		}
-		File4.rename(config.origPath(), config.backupPath());
+		// Always delete, because !exists can indicate length == 0
+		backupStorage.delete(config.backupPath());
+		moveToBackup(config);
 		
 		if(config.fileNeedsUpgrade()) {
 			upgradeFile(config);
@@ -153,19 +156,52 @@ public class Defragment {
 		}
 	}
 
-	private static void ensureFileExists(String origPath) throws IOException {
-		File file = new File(origPath);
-		if(!file.exists() || file.length() == 0) {
+	private static void moveToBackup(DefragmentConfig config) throws IOException {
+		Storage origStorage = config.db4oConfig().storage();
+		if(origStorage == config.backupStorage()) {
+			origStorage.rename(config.origPath(), config.backupPath());
+			return;
+		}
+		copyBin(origStorage, config.backupStorage(), config.origPath(), config.backupPath());
+		origStorage.delete(config.origPath());
+	}
+
+	private static void copyBin(Storage sourceStorage, Storage targetStorage,
+			String sourcePath, String targetPath) throws IOException {
+		Bin origBin = sourceStorage.open(new BinConfiguration(sourcePath, true, 0, true));
+		try {
+			Bin backupBin = targetStorage.open(new BinConfiguration(targetPath, true, origBin.length(), false));
+			try {
+				byte[] buffer = new byte[4096];
+				int bytesRead = -1;
+				int pos = 0;
+				while((bytesRead = origBin.read(pos, buffer, buffer.length)) >= 0) {
+					backupBin.write(pos, buffer, bytesRead);
+					pos += bytesRead;
+				}
+			}
+			finally {
+				backupBin.close();
+			}
+		}
+		finally {
+			origBin.close();
+		}
+	}
+
+	private static void ensureFileExists(Storage storage, String origPath) throws IOException {
+		if(!storage.exists(origPath)) {
 			throw new IOException("Source database file '" + origPath
-					+ "' does not exist or is empty.");			
+					+ "' does not exist.");			
 		}
 	}
 
 	private static void upgradeFile(DefragmentConfig config) throws IOException {
-		File4.copy(config.backupPath(),config.tempPath());
+		copyBin(config.backupStorage(), config.backupStorage(), config.backupPath(), config.tempPath());
 		Configuration db4oConfig=(Configuration)((Config4Impl)config.db4oConfig()).deepClone(null);
+		db4oConfig.storage(config.backupStorage());
 		db4oConfig.allowVersionUpdates(true);
-		ObjectContainer db=Db4o.openFile(db4oConfig,config.tempPath());
+		ObjectContainer db=Db4o.openFile(db4oConfig, config.tempPath());
 		db.close();
 	}
 

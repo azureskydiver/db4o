@@ -5,14 +5,13 @@ package com.db4o.defragment;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.internal.encoding.*;
-import com.db4o.internal.handlers.*;
 import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
@@ -59,12 +58,12 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	private DefragmentConfig _defragConfig;
 	
 
-	public DefragmentServicesImpl(DefragmentConfig defragConfig,DefragmentListener listener) {
+	public DefragmentServicesImpl(DefragmentConfig defragConfig,DefragmentListener listener) throws IOException {
 		_listener=listener;
 		Config4Impl originalConfig =  (Config4Impl) defragConfig.db4oConfig();
 		Config4Impl sourceConfig=(Config4Impl) originalConfig.deepClone(null);
 		sourceConfig.weakReferences(false);
-		Storage storage = sourceConfig.storage();
+		Storage storage = defragConfig.backupStorage();
 		if(defragConfig.readOnly()){
 			storage = new NonFlushingStorage(storage); 
 		}
@@ -72,19 +71,22 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		sourceConfig.readOnly(defragConfig.readOnly());
 		_sourceDb=(LocalObjectContainer)Db4o.openFile(sourceConfig,defragConfig.tempPath()).ext();
 		_sourceDb.showInternalClasses(true);
-		_targetDb = freshYapFile(defragConfig);
+		_targetDb = freshTargetFile(defragConfig);
 		_mapping=defragConfig.mapping();
 		_mapping.open();
 		_defragConfig = defragConfig;
 	}
 	
-	static LocalObjectContainer freshYapFile(String fileName,int blockSize) {
-		File4.delete(fileName);
-		return (LocalObjectContainer)Db4o.openFile(DefragmentConfig.vanillaDb4oConfig(blockSize),fileName).ext();
+	static LocalObjectContainer freshTempFile(String fileName,int blockSize) throws IOException {
+		FileStorage storage = new FileStorage();
+		storage.delete(fileName);
+		Configuration db4oConfig = DefragmentConfig.vanillaDb4oConfig(blockSize);
+		db4oConfig.storage(storage);
+		return (LocalObjectContainer)Db4o.openFile(db4oConfig,fileName).ext();
 	}
 	
-	static LocalObjectContainer freshYapFile(DefragmentConfig  config) {
-		File4.delete(config.origPath());
+	static LocalObjectContainer freshTargetFile(DefragmentConfig  config) throws IOException {
+		config.db4oConfig().storage().delete(config.origPath());
 		return (LocalObjectContainer)Db4o.openFile(config.clonedDb4oConfig(),config.origPath()).ext();
 	}
 	
@@ -190,21 +192,6 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	
 	public int sourceClassCollectionID() {
 		return _sourceDb.classCollection().getID();
-	}
-
-	public static void targetClassCollectionID(String file,int id) throws IOException {
-		RandomAccessFile raf=new RandomAccessFile(file,"rw");
-		try {
-			ByteArrayBuffer reader=new ByteArrayBuffer(Const4.INT_LENGTH);
-
-			raf.seek(CLASSCOLLECTION_POINTER_ADDRESS);			
-			reader._offset=0;
-			reader.writeInt(id);
-			raf.write(reader._buffer);
-		}
-		finally {
-			raf.close();
-		}
 	}
 
 	private Hashtable4 _classIndices=new Hashtable4(16);
