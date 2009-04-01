@@ -1,6 +1,7 @@
 /* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
 package com.db4o.io;
 
+import java.io.*;
 import java.util.*;
 
 import com.db4o.ext.*;
@@ -12,7 +13,7 @@ import com.db4o.ext.*;
  */
 public class MemoryStorage implements Storage {
 
-	private final Map<String, MemoryBin> _storages = new HashMap<String, MemoryBin>();
+	private final Map<String, MemoryBin> _bins = new HashMap<String, MemoryBin>();
 	private final GrowthStrategy _growthStrategy;
 
 	public MemoryStorage() {
@@ -28,7 +29,7 @@ public class MemoryStorage implements Storage {
 	 * in this Storage.
 	 */
 	public boolean exists(String uri) {
-		return _storages.containsKey(uri);
+		return _bins.containsKey(uri);
 	}
 
 	/**
@@ -43,14 +44,14 @@ public class MemoryStorage implements Storage {
 	 * Returns the memory bin for the given URI for external use.
 	 */
 	public MemoryBin bin(String uri) {
-		return _storages.get(uri);
+		return _bins.get(uri);
 	}
 
 	/**
 	 * Registers the given bin for this storage with the given URI.
 	 */
 	public void bin(String uri, MemoryBin bin) {
-		_storages.put(uri, bin);
+		_bins.put(uri, bin);
 	}
 
 	private Bin produceStorage(BinConfiguration config) {
@@ -59,8 +60,21 @@ public class MemoryStorage implements Storage {
 			return storage;
 		}
 		final MemoryBin newStorage = new MemoryBin(new byte[(int)config.initialLength()], _growthStrategy);
-		_storages.put(config.uri(), newStorage);
+		_bins.put(config.uri(), newStorage);
 		return newStorage;
     }
+
+	public void delete(String uri) throws IOException {
+		_bins.remove(uri);
+	}
+
+	public void rename(String oldUri, String newUri) throws IOException {
+		MemoryBin bin = _bins.remove(oldUri);
+		if(bin == null) {
+			throw new IOException("Bin not found: " + oldUri);
+		}
+		_bins.put(newUri, bin);
+		
+	}
 
 }

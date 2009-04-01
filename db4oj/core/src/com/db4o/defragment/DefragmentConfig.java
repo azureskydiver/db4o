@@ -6,6 +6,8 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.config.*;
+import com.db4o.io.*;
 
 /**
  * Configuration for a defragmentation run.
@@ -32,6 +34,8 @@ public class DefragmentConfig {
 	
 	
 	private int _objectCommitFrequency;
+
+	private Storage _backupStorage;
 
 	/**
 	 * Creates a configuration for a defragmentation run. The backup and mapping
@@ -161,11 +165,21 @@ public class DefragmentConfig {
 	/**
 	 * @param config The db4o {@link com.db4o.config.Configuration Configuration} to be applied
 	 * during the defragment process.
+	 * @deprecated since 7.9: use {@link DefragmentConfig#db4oConfig(EmbeddedConfiguration)} instead
 	 */
 	public void db4oConfig(Configuration config) {
 		_config=config;
 	}
-	
+
+	/**
+	 * @param config The db4o {@link com.db4o.config.EmbeddedConfiguration EmbeddedConfiguration} to be applied
+	 * during the defragment process.
+	 * @since 7.9
+	 */
+	public void db4oConfig(EmbeddedConfiguration config) {
+		_config = ((EmbeddedConfigurationImpl)config).legacy();
+	}
+
 	public int objectCommitFrequency() {
 		return _objectCommitFrequency;
 	}
@@ -218,5 +232,15 @@ public class DefragmentConfig {
 	public Configuration clonedDb4oConfig() {
 		return (Configuration) ((Config4Impl)db4oConfig()).deepClone(null);
 	}
+
+	public void backupStorage(Storage backupStorage) {
+		_backupStorage = backupStorage;
+	}
 	
+	public Storage backupStorage() {
+		if(_backupStorage != null) {
+			return _backupStorage;
+		}
+		return _config.storage();
+	}
 }

@@ -18,9 +18,8 @@ public class ExceptionSimulatingStorage extends StorageDecorator {
 	public void delete(String path) {
 		if (exception) {
 			return;
-		} else {
-			_delegate.delete(path);
-		}
+		} 
+		_delegate.delete(path);
 	}
 
 	public boolean exists(String path) {

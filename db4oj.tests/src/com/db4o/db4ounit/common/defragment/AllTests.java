@@ -15,6 +15,7 @@ public class AllTests extends Db4oTestSuite {
 			BlockSizeDefragTestCase.class,
 			DefragEncryptedFileTestCase.class,
 			DefragInheritedFieldIndexTestCase.class,
+			DefragInMemoryTestSuite.class,
 			SlotDefragmentTestCase.class,
 			StoredClassFilterTestCase.class,
 			TranslatedDefragTestCase.class,

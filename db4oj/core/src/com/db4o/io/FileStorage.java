@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 
 /**
@@ -122,5 +123,13 @@ public class FileStorage implements Storage {
 				throw new Db4oIOException(e);
 			}
 		}
+	}
+
+	public void delete(String uri) throws IOException {
+		File4.delete(uri);
+	}
+
+	public void rename(String oldUri, String newUri) throws IOException {
+		File4.rename(oldUri, newUri);
 	}
 }
