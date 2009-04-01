@@ -90,15 +90,17 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 			return;
 		}
 		
+		if (_class == null || obj == null) {
+			return;
+		}
+		
 	    ObjectContainerBase container = ta.container();
 	    if (depth.mode().isRefresh()){
 			logActivation(container, "refresh");
 	    } else {
 			if (isActive()) {
-				if (obj != null) {
-				    _class.activateFields(ta, obj, depth);
-					return;
-				}
+				_class.activateFields(ta, obj, depth);
+				return;
 			}
 			logActivation(container, "activate");
 	    }

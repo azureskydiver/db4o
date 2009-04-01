@@ -14,6 +14,7 @@ public class AllCommonTATests extends Db4oTestSuite {
 		return new Class[] {
 				
 			ActivatableTestCase.class,
+			ActivationBasedOnConcreteTypeTestCase.class,
 			TransparentActivationSupportTestCase.class,
 			TAWithGCBeforeCommitTestCase.class,
 			com.db4o.db4ounit.common.ta.events.AllTests.class,

@@ -280,9 +280,13 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
         
         ensureObjectIsActive(trans, cascadeTo, depth);
+        final ClassMetadata classMetadata = container().classMetadataForObject(cascadeTo);
+        if (classMetadata == null) {
+        	return;
+        }
         
         ActivationContext4 context = new ActivationContext4(trans, cascadeTo, depth);
-        Handlers4.cascadeActivation(context, _handler);
+        classMetadata.cascadeActivation(context);
     }
 
     private void ensureObjectIsActive(Transaction trans, Object cascadeTo, ActivationDepth depth) {
