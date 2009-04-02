@@ -36,6 +36,7 @@ public class InjectTransparentActivationEdit extends CompositeBloatClassEdit {
 							new ClassReplacementSpec(ArrayList.class, ActivatableArrayList.class),
 							new ClassReplacementSpec(HashMap.class, ActivatableHashMap.class),
 							new ClassReplacementSpec(LinkedList.class, ActivatableLinkedList.class),
+							new ClassReplacementSpec(Stack.class, ActivatableStack.class),
 					}),
 			};
 			edits = (BloatClassEdit[]) Arrays4.merge(edits, collectionEdit, BloatClassEdit.class);

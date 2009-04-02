@@ -38,6 +38,14 @@ public class ActivatableListAPITestSuite extends FixtureBasedTestSuite implement
 				}
 		};
 	}
+	
+	private static Closure4<ActivatableStack<CollectionElement>> activatableStackFactory() {
+		return new Closure4<ActivatableStack<CollectionElement>>() {
+			public ActivatableStack<CollectionElement> run() {
+				return new ActivatableStack<CollectionElement>();
+			}			
+		};
+	}
 
 	@Override
 	public FixtureProvider[] fixtureProviders() {
@@ -45,7 +53,8 @@ public class ActivatableListAPITestSuite extends FixtureBasedTestSuite implement
 				new Db4oFixtureProvider(),
 				new SimpleFixtureProvider(LIST_SPEC,
 						new ListSpec<ActivatableArrayList<CollectionElement>>(ActivatableArrayList.class, activatableArrayListFactory()),
-						new ListSpec<ActivatableLinkedList<CollectionElement>>(ActivatableLinkedList.class, activatableLinkedListFactory())
+						new ListSpec<ActivatableLinkedList<CollectionElement>>(ActivatableLinkedList.class, activatableLinkedListFactory()),
+						new ListSpec<ActivatableStack<CollectionElement>>(ActivatableStack.class, activatableStackFactory())
 				),
 		};
 	}
@@ -282,7 +291,7 @@ public class ActivatableListAPITestSuite extends FixtureBasedTestSuite implement
 			Assert.isTrue(retrieved.contains(five));
 		}
 
-		protected ActivatableList<CollectionElement> newActivatableList() {
+		protected List<CollectionElement> newActivatableList() {
 			return currentListSpec().newActivatableList();
 		}
 

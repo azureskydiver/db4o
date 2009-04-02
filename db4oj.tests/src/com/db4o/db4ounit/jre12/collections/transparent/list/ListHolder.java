@@ -8,7 +8,7 @@ import java.util.*;
  * @sharpen.remove
  */
 @decaf.Remove(decaf.Platform.JDK11)
-public class ListItem <E>{
+public class ListHolder <E>{
 	public List<E> _list;
 }
 

@@ -4,7 +4,6 @@ package com.db4o.db4ounit.jre12.collections.transparent.list;
 
 import java.util.*;
 
-import com.db4o.collections.*;
 import com.db4o.db4ounit.jre12.collections.transparent.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -15,7 +14,7 @@ import db4ounit.fixtures.*;
  * @sharpen.remove
  */
 @decaf.Remove(decaf.Platform.JDK11)
-public class ListSpec<L extends ActivatableList<CollectionElement>> implements Labeled {
+public class ListSpec<L extends List<CollectionElement>> implements Labeled {
 
 	private static String[] NAMES = new String[] {"one", "two", "three"};
 	

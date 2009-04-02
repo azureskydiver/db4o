@@ -31,27 +31,33 @@ public class Main {
 			Object obj = ((ObjectEventArgs) args).object();
 			Class curClazz = obj.getClass();
 			while(curClazz != Object.class) {
+				
 				_activations.put(curClazz, new Integer(activationCount(curClazz) + 1));
 				curClazz = curClazz.getSuperclass();
 			}
+		}
+		
+		public void reset() {
+			_activations.clear();
 		}
 	}
 
 	private static final String DB_PATH = "pilots.db4o";
 
 	public static void main(String[] args) throws Throwable {
-		final Team ferrari = new Team("Ferrari");
-		Pilot raikkonen = new Pilot("Raikkonen", 100);
-		ferrari.addPilot(raikkonen);
-		ferrari.addMechanic(new Person("John Doe"));
-		ferrari.addSponsor("Versant", 1000);
+		final CollectionHolder holder = new CollectionHolder("Ferrari");
+		Item item = new Item("Item");
+		holder.arrayList().add(item);
+		holder.linkedList().add(new Item("Item"));
+		holder.hashMap().put("Key", new Item("Item"));
+		holder.stack().push(new Item("Item"));
 		
 		deleteDatabase();
 
 		try {
 			withDatabase(new Procedure4() {
 				public void apply(Object obj) {
-					((ObjectContainer)obj).store(ferrari);
+					((ObjectContainer)obj).store(holder);
 				}
 			});
 	
@@ -61,37 +67,19 @@ public class Main {
 						ObjectContainer db = (ObjectContainer) obj;
 						TAJActivationListener listener = new TAJActivationListener();
 						EventRegistryFactory.forObjectContainer(db).activated().addListener(listener);
-						ObjectSet result = db.query(Team.class);
-						Team ferrari = (Team) result.next();
-						Assert.isNull(Reflection4.getFieldValue(ferrari, "_pilots"));
-						Assert.isNull(Reflection4.getFieldValue(ferrari, "_mechanics"));
-						Assert.isNull(Reflection4.getFieldValue(ferrari, "_sponsors"));
-						assertNoActivation(listener, new Class[] { Person.class, ArrayList.class, HashMap.class, LinkedList.class });
-						List pilots = ferrari.pilots();
-						assertNoActivation(listener, new Class[] { Person.class, ArrayList.class, HashMap.class, LinkedList.class });
-						Pilot raikkonen = (Pilot) pilots.get(0);
-						assertActivationCount(listener, ArrayList.class, 1);
-						assertNoActivation(listener, new Class[] { Person.class, HashMap.class, LinkedList.class });
-						Assert.areEqual("Raikkonen", raikkonen.name());
-						assertActivationCount(listener, ArrayList.class, 1);
-						assertActivationCount(listener, Pilot.class, 1);
-						assertNoActivation(listener, new Class[] { HashMap.class, LinkedList.class });
-						int amountSponsored = ferrari.amountSponsored("Versant");
-						assertActivationCount(listener, ArrayList.class, 1);
-						assertActivationCount(listener, Pilot.class, 1);
-						assertActivationCount(listener, HashMap.class, 1);
-						assertNoActivation(listener, new Class[] { LinkedList.class });
-						Assert.areEqual(1000, amountSponsored);
-						System.out.println(raikkonen);
-						List mechanics = ferrari.mechanics();
-						assertActivationCount(listener, Person.class, 1);
-						assertActivationCount(listener, LinkedList.class, 0);
-						Person mechanic = (Person) mechanics.get(0);
-						assertActivationCount(listener, LinkedList.class, 1);
-						assertActivationCount(listener, Person.class, 1);
-						mechanic.name();
-						assertActivationCount(listener, Person.class, 2);
-						System.out.println(mechanic);
+						
+						CollectionHolder holder = retrieveHolder(db);
+						
+						assertCollectionsAreNull(holder);
+						
+						assertListItemActivation(listener, holder, hashMapExtractor(), mapItemExtractor(), HashMap.class);
+						
+						assertListItemActivation(listener, holder, arrayListExtractor(), listItemExtractor(), ArrayList.class);
+						
+						assertListItemActivation(listener, holder, linkedListExtractor(), listItemExtractor(), LinkedList.class);
+						
+						assertListItemActivation(listener, holder, stackExtractor(), listItemExtractor(), Stack.class);						
+						
 					}
 					catch(Exception exc) {
 						Assert.fail("", exc);
@@ -102,7 +90,102 @@ public class Main {
 		finally {
 			deleteDatabase();
 		}
+	}
+	
+	private static CollectionHolder retrieveHolder(ObjectContainer db) {
+		ObjectSet result = db.query(CollectionHolder.class);
+		CollectionHolder holder = (CollectionHolder) result.next();
+		return holder;
+	}
+	
+	private static Function4 listItemExtractor() {
+		return new Function4() {
+			public Object apply(Object arg) {
+				List list = (List) arg;
+				return list.get(0);
+			}							
+		};
+	}
 
+	private static Function4 mapItemExtractor() {
+		return new Function4() {
+			public Object apply(Object arg) {
+				Map map = (Map) arg;
+				return map.get("Key");
+			}							
+		};
+	}
+	
+	private static Function4 stackExtractor() {
+		return new Function4() {
+			public Object apply(Object arg) {
+				CollectionHolder holder = (CollectionHolder) arg;
+				return holder.stack();
+			}							
+		};
+	}
+
+	private static Function4 hashMapExtractor() {
+		return new Function4() {
+			public Object apply(Object arg) {
+				CollectionHolder holder = (CollectionHolder) arg;
+				return holder.hashMap();
+			}							
+		};
+	}
+	
+	private static Function4 linkedListExtractor() {
+		return new Function4() {
+
+			public Object apply(Object arg) {
+				CollectionHolder holder = (CollectionHolder) arg;
+				return holder.linkedList();
+			}							
+		};
+	}
+
+	private static Function4 arrayListExtractor() {
+		return new Function4() {
+
+			public Object apply(Object arg) {
+				CollectionHolder holder = (CollectionHolder) arg;
+				return holder.arrayList();
+			}							
+		};
+	}
+
+	private static void assertCollectionsAreNull(CollectionHolder holder) throws IllegalAccessException {
+		assertCollectionIsNull(holder, "_arrayList");
+		assertCollectionIsNull(holder, "_linkedList");
+		assertCollectionIsNull(holder, "_hashMap");
+		assertCollectionIsNull(holder, "_stack");
+	}
+
+	private static void assertListItemActivation(
+						TAJActivationListener listener,
+						final CollectionHolder holder,
+						Function4 collectionExtractor,
+						Function4 itemExtractor,
+						final Class clazz) {
+		
+		listener.reset();
+		
+		assertNoActivation(listener, new Class[] { ArrayList.class, LinkedList.class, Stack.class });
+		
+		assertActivationCount(listener, Item.class, 0);
+		assertActivationCount(listener, clazz, 0);
+		Item item = (Item) itemExtractor.apply(collectionExtractor.apply(holder));
+		
+		assertActivationCount(listener, clazz, 1);
+		assertActivationCount(listener, Item.class, 0);
+		Assert.areEqual("Item", item.name());					
+		assertActivationCount(listener, Item.class, 1);
+	}
+
+	private static void assertCollectionIsNull(CollectionHolder holder,
+			final String collectionFieldName)
+			throws IllegalAccessException {
+		Assert.isNull(Reflection4.getFieldValue(holder, collectionFieldName));
 	}
 
 	private static void deleteDatabase() {
