@@ -66,6 +66,13 @@ public class DefragInMemoryTestSuite extends FixtureBasedTestSuite {
 			}
 		}
 
+		public static class EvenIdItemsPredicate extends Predicate<Item> {
+			@Override
+			public boolean match(Item item) {
+				return (item._id % 2) == 0;
+			}
+		}
+
 		private static final int NUM_ITEMS = 100;
 		protected static final String URI = "database";
 	
@@ -118,12 +125,7 @@ public class DefragInMemoryTestSuite extends FixtureBasedTestSuite {
 				db.store(new Item(itemId));
 			}
 			db.commit();
-			ObjectSet<Item> result = db.query(new Predicate<Item>() {
-				@Override
-				public boolean match(Item item) {
-					return (item._id % 2) == 0;
-				}
-			});
+			ObjectSet<Item> result = db.query(new EvenIdItemsPredicate());
 			while(result.hasNext()) {
 				db.delete(result.next());
 			}
