@@ -18,7 +18,7 @@ public class AllTests extends Db4oTestSuite {
 				ActivatableLinkedListTestCase.class,
 				ActivatableListAPITestSuite.class,
 				ActivatableMapTestCase.class,
-				ActivatableStackTestCase.class,
+				ActivatableStackTestCase.class
 		};
 	}
 }
