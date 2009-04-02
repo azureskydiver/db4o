@@ -26,7 +26,7 @@ public class ActivatableLinkedListTestCase extends ActivatableListTestCaseBase {
 		}
 	});
 	
-	public ActivatableList<CollectionElement> newActivatableList() {
+	public List<CollectionElement> newActivatableList() {
 		return _spec.newActivatableList();
 	}
 	

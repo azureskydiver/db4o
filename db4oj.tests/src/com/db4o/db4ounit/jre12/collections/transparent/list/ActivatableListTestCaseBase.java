@@ -30,7 +30,7 @@ public abstract class ActivatableListTestCaseBase extends AbstractDb4oTestCase {
 	@Override
 	protected void store() throws Exception {
 		List<CollectionElement> list = newActivatableList();
-		ListItem<CollectionElement> item = new ListItem<CollectionElement>();
+		ListHolder<CollectionElement> item = new ListHolder<CollectionElement>();
 		item._list = list;
 		store(item);
 	}
@@ -39,13 +39,13 @@ public abstract class ActivatableListTestCaseBase extends AbstractDb4oTestCase {
 		IteratorAssert.areEqual(elements.iterator(), singleList.iterator());
 	}
 
-	protected ListItem singleItem() {
-		return retrieveOnlyInstance(ListItem.class);
+	protected ListHolder singleHolder() {
+		return retrieveOnlyInstance(ListHolder.class);
 	}
 
 	protected List<CollectionElement> singleList() {
-		return singleItem()._list;
+		return singleHolder()._list;
 	}
 
-	protected abstract ActivatableList<CollectionElement> newActivatableList();
+	protected abstract List<CollectionElement> newActivatableList();
 }
