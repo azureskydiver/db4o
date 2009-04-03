@@ -13,7 +13,7 @@ import com.db4o.ta.*;
  * @sharpen.ignore
  */
 @decaf.Remove(decaf.Platform.JDK11)
-public class ActivatableStack<E> extends Stack<E> implements Activatable{
+public class ActivatableStack<E> extends Stack<E> implements ActivatableList<E> {
 
 	private transient Activator _activator;
 
