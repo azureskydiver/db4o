@@ -44,24 +44,32 @@ public class TACollectionFileEnhancerTestSuite  extends FixtureBasedTestSuite {
 			((List)arg).add("foo");
 		}
 	};
+	
+	private static final Procedure4<Object> MAP_READ_CLOSURE = new Procedure4<Object>() {
+		public void apply(Object arg) {
+			((Map)arg).keySet();
+		}
+	};
+	
+	private static final Procedure4<Object> MAP_WRITE_CLOSURE = new Procedure4<Object>() {
+		public void apply(Object arg) {
+			((Map)arg).put("foo", "bar");
+		}
+	};
 
 	public FixtureProvider[] fixtureProviders() {
 		return new FixtureProvider[] {
 			new SimpleFixtureProvider(COLLECTION_SPEC,
 				new CollectionSpec(ArrayListClient.class, 1, 0, LIST_READ_CLOSURE),
 				new CollectionSpec(ArrayListClient.class, 0, 1, LIST_WRITE_CLOSURE),
-				new CollectionSpec(HashMapClient.class, 1, 0, new Procedure4<Object>() {
-					public void apply(Object arg) {
-						((Map)arg).keySet();
-					}
-				}),
-				new CollectionSpec(HashMapClient.class, 0, 1, new Procedure4<Object>() {
-					public void apply(Object arg) {
-						((Map)arg).put("foo", "bar");
-					}
-				}),
+				new CollectionSpec(HashMapClient.class, 1, 0, MAP_READ_CLOSURE),
+				new CollectionSpec(HashMapClient.class, 0, 1, MAP_WRITE_CLOSURE),
+				new CollectionSpec(HashtableClient.class, 1, 0, MAP_READ_CLOSURE),
+				new CollectionSpec(HashtableClient.class, 0, 1, MAP_WRITE_CLOSURE),
 				new CollectionSpec(LinkedListClient.class, 1, 0, LIST_READ_CLOSURE),
-				new CollectionSpec(LinkedListClient.class, 0, 1, LIST_WRITE_CLOSURE)
+				new CollectionSpec(LinkedListClient.class, 0, 1, LIST_WRITE_CLOSURE),
+				new CollectionSpec(StackClient.class, 1, 0, LIST_READ_CLOSURE),
+				new CollectionSpec(StackClient.class, 0, 1, LIST_WRITE_CLOSURE)
 			),
 		};
 	}

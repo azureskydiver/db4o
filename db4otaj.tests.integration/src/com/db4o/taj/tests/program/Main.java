@@ -45,11 +45,12 @@ public class Main {
 	private static final String DB_PATH = "pilots.db4o";
 
 	public static void main(String[] args) throws Throwable {
-		final CollectionHolder holder = new CollectionHolder("Ferrari");
+		final CollectionHolder holder = new CollectionHolder("Holder");
 		Item item = new Item("Item");
 		holder.arrayList().add(item);
 		holder.linkedList().add(new Item("Item"));
 		holder.hashMap().put("Key", new Item("Item"));
+		holder.hashtable().put("Key", new Item("Item"));
 		holder.stack().push(new Item("Item"));
 		
 		deleteDatabase();
@@ -73,6 +74,8 @@ public class Main {
 						assertCollectionsAreNull(holder);
 						
 						assertListItemActivation(listener, holder, hashMapExtractor(), mapItemExtractor(), HashMap.class);
+						
+						assertListItemActivation(listener, holder, hashtableExtractor(), mapItemExtractor(), Hashtable.class);
 						
 						assertListItemActivation(listener, holder, arrayListExtractor(), listItemExtractor(), ArrayList.class);
 						
@@ -134,6 +137,15 @@ public class Main {
 		};
 	}
 	
+	private static Function4 hashtableExtractor() {
+		return new Function4() {
+			public Object apply(Object arg) {
+				CollectionHolder holder = (CollectionHolder) arg;
+				return holder.hashtable();
+			}							
+		};
+	}
+	
 	private static Function4 linkedListExtractor() {
 		return new Function4() {
 
@@ -158,6 +170,7 @@ public class Main {
 		assertCollectionIsNull(holder, "_arrayList");
 		assertCollectionIsNull(holder, "_linkedList");
 		assertCollectionIsNull(holder, "_hashMap");
+		assertCollectionIsNull(holder, "_hashtable");
 		assertCollectionIsNull(holder, "_stack");
 	}
 
@@ -170,7 +183,7 @@ public class Main {
 		
 		listener.reset();
 		
-		assertNoActivation(listener, new Class[] { ArrayList.class, LinkedList.class, Stack.class });
+		assertNoActivation(listener, new Class[] { ArrayList.class, HashMap.class, Hashtable.class, LinkedList.class, Stack.class });
 		
 		assertActivationCount(listener, Item.class, 0);
 		assertActivationCount(listener, clazz, 0);
@@ -185,7 +198,9 @@ public class Main {
 	private static void assertCollectionIsNull(CollectionHolder holder,
 			final String collectionFieldName)
 			throws IllegalAccessException {
-		Assert.isNull(Reflection4.getFieldValue(holder, collectionFieldName));
+		
+		Object fieldValue = Reflection4.getFieldValue(holder, collectionFieldName);
+		Assert.isNull(fieldValue);
 	}
 
 	private static void deleteDatabase() {

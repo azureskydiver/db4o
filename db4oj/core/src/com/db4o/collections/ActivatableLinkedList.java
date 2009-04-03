@@ -9,7 +9,7 @@ import com.db4o.activation.*;
 /**
  * extends LinkedList with Transparent Activation and
  * Transparent Persistence support
- * @exclude
+ * @since 7.9
  * @sharpen.ignore
  */
 @decaf.Remove(decaf.Platform.JDK11)

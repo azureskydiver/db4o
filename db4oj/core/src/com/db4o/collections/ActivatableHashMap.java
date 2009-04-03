@@ -4,16 +4,15 @@ package com.db4o.collections;
 import java.util.*;
 
 import com.db4o.activation.*;
-import com.db4o.ta.*;
 
 /**
  * extends HashMap with Transparent Activation and
  * Transparent Persistence support
- * @exclude
+ * @since 7.9
  * @sharpen.ignore
  */
 @decaf.Remove(decaf.Platform.JDK11)
-public class ActivatableHashMap<K,V> extends HashMap<K,V> implements Activatable {
+public class ActivatableHashMap<K,V> extends HashMap<K,V> implements ActivatableMap<K,V> {
 
 	private transient Activator _activator;
 
@@ -28,24 +27,16 @@ public class ActivatableHashMap<K,V> extends HashMap<K,V> implements Activatable
 		super(initialCapacity, loadFactor);
 	}
 
-	public ActivatableHashMap(Map<K,V> map) {
+	public ActivatableHashMap(Map<? extends K, ? extends V> map) {
 		super(map);
 	}
 
 	public void activate(ActivationPurpose purpose) {
-		if(_activator != null) {
-			_activator.activate(purpose);
-		}
+		ActivatableSupport.activate(_activator, purpose);
 	}
 
 	public void bind(Activator activator) {
-    	if (_activator == activator) {
-    		return;
-    	}
-    	if (activator != null && _activator != null) {
-            throw new IllegalStateException();
-        }
-		_activator = activator;
+		_activator = ActivatableSupport.validateForBind(_activator, activator);
 	}
 
 	@Override
@@ -94,7 +85,7 @@ public class ActivatableHashMap<K,V> extends HashMap<K,V> implements Activatable
 	
 	/**
 	 * This method directly returns the set as provided by the super class.
-	 * It relies on all modfications going through the public interface of the HashMap
+	 * It relies on all modifications going through the public interface of the HashMap
 	 * itself. If this is not the case, updates will get lost.
 	 */
 	@Override
