@@ -7,6 +7,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.defragment.*;
 import com.db4o.foundation.io.*;
+import com.db4o.internal.*;
 import com.db4o.io.*;
 import com.db4o.query.*;
 
@@ -110,6 +111,7 @@ public class DefragInMemoryTestSuite extends FixtureBasedTestSuite {
 
 		private EmbeddedConfiguration config(Storage storage) {
 			EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+			config.common().reflectWith(Platform4.reflectorForType(Item.class));
 			config.file().storage(storage);
 			return config;
 		}
