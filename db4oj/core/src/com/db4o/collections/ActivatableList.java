@@ -9,7 +9,6 @@ import com.db4o.ta.*;
 /**
  * extends List with Transparent Activation and
  * Transparent Persistence support
- * @exclude
  * @sharpen.ignore
  * @since 7.9
  */

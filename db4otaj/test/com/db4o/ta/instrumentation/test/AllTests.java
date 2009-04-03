@@ -17,6 +17,8 @@ public class AllTests extends Db4oTestSuite {
 			ArrayListInstantiationInstrumentationTestCase.class,
 			Db4oJarEnhancerTestCase.class,
 			HashMapInstantiationInstrumentationTestCase.class,
+			HashtableInstantiationInstrumentationTestCase.class,
+			StackInstantiationInstrumentationTestCase.class,
 			TransparentPersistenceClassLoaderTestCase.class,
 			TransparentActivationInstrumentationIntegrationTestCase.class,
 			TACollectionFileEnhancerTestSuite.class,

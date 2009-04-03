@@ -4,13 +4,12 @@ package com.db4o.collections;
 import java.util.*;
 
 import com.db4o.activation.*;
-import com.db4o.ta.*;
 
 /**
  * extends Stack with Transparent Activation and
  * Transparent Persistence support.
- * @exclude
  * @sharpen.ignore
+ * @since 7.9
  */
 @decaf.Remove(decaf.Platform.JDK11)
 public class ActivatableStack<E> extends Stack<E> implements ActivatableList<E> {
