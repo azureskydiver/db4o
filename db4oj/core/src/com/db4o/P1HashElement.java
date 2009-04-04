@@ -8,6 +8,8 @@ import com.db4o.internal.*;
  * @exclude 
  * @persistent
  * @deprecated since 7.0
+ * 
+ * @sharpen.if !SILVERLIGHT
  */
 public class P1HashElement extends P1ListElement {
     

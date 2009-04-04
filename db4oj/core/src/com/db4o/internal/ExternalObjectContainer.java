@@ -40,6 +40,8 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase {
    
     /**
      * @deprecated
+     * 
+     * @sharpen.if !SILVERLIGHT
      */
     public Db4oCollections collections() {
         return collections(null);

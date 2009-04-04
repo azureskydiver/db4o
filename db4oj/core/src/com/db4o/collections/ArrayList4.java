@@ -25,6 +25,7 @@ import com.db4o.ta.*;
  * @sharpen.partial
  * @sharpen.ignore.implements
  * @sharpen.ignore.extends
+ * @sharpen.if !SILVERLIGHT
  */
 
 @decaf.Ignore

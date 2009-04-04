@@ -17,6 +17,8 @@ import com.db4o.types.*;
  * 
  * @moveto com.db4o.internal.blobs
  * @exclude
+ * 
+ * @sharpen.if !SILVERLIGHT
  */
 public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
 	

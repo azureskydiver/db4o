@@ -9,6 +9,8 @@ import com.db4o.internal.*;
 
 /**
  * @exclude
+ * 
+ * @sharpen.if !SILVERLIGHT
  */
 public interface BlobTransport {
 

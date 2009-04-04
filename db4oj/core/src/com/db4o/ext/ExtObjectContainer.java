@@ -114,8 +114,10 @@ public interface ExtObjectContainer extends ObjectContainer {
      * collections for this {@link ObjectContainer}.<br><br>
      * @return the {@link Db4oCollections} interface for this {@link ObjectContainer}.
      * @deprecated since 7.0. Use of old internal collections is discouraged. Please use 
-     * com.db4o.collections.ArrayList4 and com.db4o.collections.ArrayMap4 instead. 
-     */
+     * com.db4o.collections.ArrayList4 and com.db4o.collections.ArrayMap4 instead.
+     * 
+     *   @sharpen.if !SILVERLIGHT
+     */    
     public Db4oCollections collections();
     
 
