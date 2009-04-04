@@ -60,6 +60,8 @@ public class EmbeddedClientObjectContainer implements InternalObjectContainer, T
 
     /**
      * @deprecated
+     * 
+     * @sharpen.if !SILVERLIGHT
      */
     public Db4oCollections collections() {
         return _server.collections(_transaction);

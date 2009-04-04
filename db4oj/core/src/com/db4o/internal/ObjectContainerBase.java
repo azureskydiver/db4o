@@ -364,6 +364,8 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	
 	/**
 	 * @deprecated
+	 * 
+	 * @sharpen.if !SILVERLIGHT
 	 */
     public Db4oCollections collections(Transaction trans) {
         synchronized (_lock) {

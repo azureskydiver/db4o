@@ -9,6 +9,8 @@ import com.db4o.internal.*;
  * @exclude 
  * @persistent
  * @deprecated since 7.0
+ * 
+ * @sharpen.if !SILVERLIGHT
  */
 public class P1ListElement extends P1Object{
     
