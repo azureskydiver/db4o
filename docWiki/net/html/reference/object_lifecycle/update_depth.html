@@ -36,14 +36,20 @@
 </span>
 <p>Here depth parameter specifies the number of member object levels down the hierarchy, which will be updated when the top-level object is saved.</p>
 <p>Flag parameter determines whether update operation should be cascaded to all the member objects.</p>
-
+<p>Note, that the recommended setting for the update depth is 0, i.e. the default one. Setting update depth to a higher value inevitably leads to performance downgrade. Storing the required amount of levels can instead be achieved by using a special <code>store</code> method: </p>
+<span name="cs_wiki_filter" csw_filters="cs">
+<p>с#:&nbsp;</p>
+<p><code>objectContainer.Ext().Store(object, updateDepth);</code></p></span>
+<span name="cs_wiki_filter" csw_filters="vb">
+<p>VB:&nbsp;</p>
+<p><code>objectContainer.Ext().Store(object, updateDepth)</code></p></span>
 <p>Further reading:</p>
 <p><a href="working_with_structured_objects/updating_structured_objects.html" class="wikiLink">Update Depth for Structured Objects</a></p>
 <p><a href="update_depth/collections_update_depth.html" class="wikiLink">Collections Update Depth</a></p>
 <p><br>&nbsp;</p></div>
     </div>
     <div id="footer">
-					This revision (7) was last Modified 2008-03-29T10:29:38 by Tetyana.
+					This revision (8) was last Modified 2009-03-30T17:25:01 by Tetyana.
 				</div>
   </body>
 </html>
