@@ -4,6 +4,7 @@ import java.util.*;
 
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
+import org.omg.stub.java.rmi.*;
 
 import sharpen.core.framework.*;
 import decaf.core.*;
@@ -306,6 +307,17 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		if (null != erasure) {
 			rewrite().replace(node.getArray(), erasure);
 		}
+	}
+
+	@Override
+	public void endVisit(ArrayInitializer node) {
+		ListRewrite listRewrite = rewrite().getListRewrite(node, ArrayInitializer.EXPRESSIONS_PROPERTY);
+		List rewrittenList = listRewrite.getRewrittenList();
+		if(!rewrittenList.isEmpty()) {
+			return;
+		}
+		ArrayInitializer emptyInitializer = builder().newArrayInitializer();
+		rewrite().replace(node, emptyInitializer);
 	}
 	
 	@Override
