@@ -705,11 +705,13 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     private TypeHandler4 fieldHandlerForClass(ObjectContainerBase container, ReflectClass fieldType) {
-        container.showInternalClasses(true);
-        TypeHandler4 handlerForClass = 
-            (TypeHandler4) container.fieldHandlerForClass(Handlers4.baseType(fieldType));
-        container.showInternalClasses(false);
-        return handlerForClass;
+        try {
+        	container.showInternalClasses(true);
+        	return (TypeHandler4) container.fieldHandlerForClass(Handlers4.baseType(fieldType));
+        }
+        finally {
+        	container.showInternalClasses(false);
+        }        
     }
 
     private void checkCorrectHandlerForField() {
