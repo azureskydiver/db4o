@@ -15,16 +15,20 @@ def compile(fname as string) as ProjectTemplate:
 	compiledType = result.GeneratedAssembly.GetType(compiler.TemplateClassName)
 	return compiledType()
 	
-if len(argv) != 1:
-	print "generate-vs-project <PROJECT NAME>"
+if len(argv) < 1:
+	print "generate-vs-project <PROJECT NAME> [TARGET PLATFORM]"
 	return
 	
-projectName, = argv
+if len(argv) == 1:
+	projectName, = argv
+	target = "*.csproj"
+else:
+	projectName, target= argv
 
 outputFolder = "../../db4o.net/${projectName}"
 Directory.CreateDirectory(outputFolder) if not Directory.Exists(outputFolder) 
 
-for templateName in Directory.GetFiles("templates", "*.csproj"):
+for templateName in Directory.GetFiles("templates", target):
 	template = compile(templateName)
 	template.projectName = projectName
 	template.Output = StringWriter()
