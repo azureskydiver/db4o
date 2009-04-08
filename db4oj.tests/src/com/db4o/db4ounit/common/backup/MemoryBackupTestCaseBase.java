@@ -25,14 +25,14 @@ public abstract class MemoryBackupTestCaseBase implements TestCase {
 	public void testMemoryBackup() throws Exception {
 		LocalObjectContainer origDb = (LocalObjectContainer) Db4oEmbedded.openFile(config(origStorage()), DB_PATH);
 		store(origDb);
-		String backupPath = BACKUP_PATH;
-		backup(origDb, backupPath);
+		backup(origDb, BACKUP_PATH);
 		origDb.close();
 	
-		ObjectContainer backupDb = Db4oEmbedded.openFile(config(backupStorage()), backupPath);
+		ObjectContainer backupDb = Db4oEmbedded.openFile(config(backupStorage()), BACKUP_PATH);
 		ObjectSet<Item> result = backupDb.query(Item.class);
 		Assert.areEqual(NUM_ITEMS, result.size());
 		backupDb.close();
+		backupStorage().delete(BACKUP_PATH);
 	}
 
 	protected abstract void backup(LocalObjectContainer origDb, String backupPath);
