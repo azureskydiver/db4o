@@ -16,8 +16,6 @@
 		
 		<property name="java.src.bench" value="${dir.dist.java}/src/bench"/>
 		<property name="java.src.tools" value="${dir.dist.java}/src/tools"/>
-		
-		<property name="easymock.jar" location="${dir.j.tests}/lib/easymock/easymock.jar" />
 	</target>
 	
 	<target name="init" depends="db4oj.properties">
@@ -105,7 +103,7 @@
 				<arg value="-cp" />
 				<arg path="${file.decaf.annotations}" />
 				<arg value="-cp" />
-				<arg file="${easymock.jar}" />
+				<arg file="${file.easymock.jar}" />
 			</args>
 		</decaf>
 
@@ -867,7 +865,7 @@
 			<pathelement location="${file.jdk1.5.optional.jar}" />
 			<pathelement location="${file.jdk1.5.cs.jar}" />
 			<pathelement location="${file.jdk1.5.db4ounit.jar}" />
-			<pathelement location="${easymock.jar}" />
+			<pathelement location="${file.easymock.jar}" />
 		</path>
 		
 		<mkdir dir="${dir.dist.classes.test.jdk1.5}" />
@@ -1751,6 +1749,10 @@
 		</zip>
 	</target>
 	
+	<target name="run.tests.jdk1.5.instrumented">
+		<ant antfile="run-tests-java-instrumented.xml" />
+	</target>
+	
 	<target name="cc.step.1" depends="build.db4ojava, build.db4ojava.tests, run.tests.jdk1.5" />
 	<target name="cc.step.3" 
 		depends="run.tests.jdk1.1, 
@@ -1759,5 +1761,6 @@
 				run.tests.taj,
 				run.tests.concurrency, 
 				run.tests.osgi,
+				run.tests.jdk1.5.instrumented,
 				package.java" />
 </project>
