@@ -51,6 +51,16 @@ public class ActivatableListAPITestSuite extends FixtureBasedTestSuite implement
 	
 	public static class ActivatableListAPITestUnit extends ActivatableCollectionAPITestUnit<List<CollectionElement>> {
 		
+		public void testActivatableElementsAreNotActivated(){
+			// trigger activation of Collection and
+			// all elements that are not Activatable
+			singleCollection().iterator();
+			
+			long id = ActivatableCollectionTestUtil.anyActivatableElementId(db());
+			Object element = db().getByID(id);
+			Assert.isFalse(db().isActive(element));
+		}
+
 		public void testAddAtIndex() throws Exception{
 			singleCollection().add(0, new Element("four"));
 			reopen();

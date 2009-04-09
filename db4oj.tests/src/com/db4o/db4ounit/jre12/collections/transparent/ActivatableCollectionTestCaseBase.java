@@ -30,7 +30,7 @@ public abstract class ActivatableCollectionTestCaseBase<C extends Collection<Col
 	}
 
 	protected void assertAreEqual(C elements, C singleList) {
-		IteratorAssert.areEqual(elements.iterator(), singleList.iterator());
+		IteratorAssert.sameContent(elements.iterator(), singleList.iterator());
 	}
 
 	protected CollectionHolder<C> singleHolder() {
