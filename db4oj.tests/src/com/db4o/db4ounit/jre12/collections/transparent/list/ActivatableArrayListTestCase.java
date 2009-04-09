@@ -8,9 +8,6 @@ import com.db4o.activation.*;
 import com.db4o.collections.*;
 import com.db4o.db4ounit.jre12.collections.*;
 import com.db4o.db4ounit.jre12.collections.transparent.*;
-import com.db4o.foundation.*;
-
-/* Copyright (C) 2009  db4objects Inc.   http://www.db4o.com */
 
 import db4ounit.*;
 
@@ -18,22 +15,21 @@ import db4ounit.*;
  * @sharpen.remove
  */
 @decaf.Remove(decaf.Platform.JDK11)
-public class ActivatableArrayListTestCase extends ActivatableListTestCaseBase {
+public class ActivatableArrayListTestCase extends ActivatableCollectionTestCaseBase<ArrayList<CollectionElement>> {
 	
-	private ListSpec<ActivatableArrayList<CollectionElement>> _spec = 
-			new ListSpec<ActivatableArrayList<CollectionElement>>(ActivatableArrayList.class,
-					new Closure4<ActivatableArrayList<CollectionElement>>() {
-		public ActivatableArrayList<CollectionElement> run() {
-			return new ActivatableArrayList();
-		}
-	});
+	private CollectionSpec<ArrayList<CollectionElement>> _spec = 
+			new CollectionSpec<ArrayList<CollectionElement>>(
+					ArrayList.class,
+					CollectionFactories.activatableArrayListFactory(),
+					CollectionFactories.plainArrayListFactory()
+			);
 	
-	public List<CollectionElement> newActivatableList() {
-		return _spec.newActivatableList();
+	public ArrayList<CollectionElement> newActivatableCollection() {
+		return _spec.newActivatableCollection();
 	}
 	
-	private List<CollectionElement> newPlainList(){
-		return _spec.newPlainList();
+	private ArrayList<CollectionElement> newPlainList(){
+		return _spec.newPlainCollection();
 	}
 	
 	public void testCreation() {
@@ -43,7 +39,7 @@ public class ActivatableArrayListTestCase extends ActivatableListTestCaseBase {
 	}
 	
 	public void testClone() throws Exception{
-		ActivatableArrayList cloned = (ActivatableArrayList) ((ArrayList)singleList()).clone();
+		ActivatableArrayList cloned = (ActivatableArrayList) singleCollection().clone();
 		// assert that activator is null - should throw IllegalStateException if it isn't
 		cloned.bind(new Activator() {
 			public void activate(ActivationPurpose purpose) {
@@ -53,18 +49,18 @@ public class ActivatableArrayListTestCase extends ActivatableListTestCaseBase {
 	}
 
 	public void testToString(){
-		Assert.areEqual(newPlainList().toString(), singleList().toString());
+		Assert.areEqual(newPlainList().toString(), singleCollection().toString());
 	}
 	
 	public void testTrimToSize() throws Exception{
-		List<CollectionElement> singleList = singleList();
-		((ArrayList)singleList).trimToSize();
+		ArrayList<CollectionElement> singleList = singleCollection();
+		singleList.trimToSize();
 		assertAreEqual(newPlainList(), singleList);
 	}
 	
 	public void testEnsureCapacity(){
-		List<CollectionElement> singleList = singleList();
-		((ArrayList)singleList).ensureCapacity(10);
+		ArrayList<CollectionElement> singleList = singleCollection();
+		singleList.ensureCapacity(10);
 		assertAreEqual(newPlainList(), singleList);
 	}
 

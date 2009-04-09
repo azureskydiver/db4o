@@ -10,6 +10,10 @@ import com.db4o.internal.*;
 
 import db4ounit.fixtures.*;
 
+/**
+ * @sharpen.remove
+ */
+@decaf.Remove(decaf.Platform.JDK11)
 public class MapSpec <T extends Map<CollectionElement, CollectionElement>> implements Labeled{
 
 	private final Closure4<T> _activatableMapFactory;

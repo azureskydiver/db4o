@@ -1,10 +1,11 @@
 /* Copyright (C) 2009   db4objects Inc.   http://www.db4o.com */
-package com.db4o.db4ounit.jre12.collections.transparent;
+package com.db4o.db4ounit.jre12.collections.transparent.list;
 
 import java.util.*;
 
 import com.db4o.collections.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.jre12.collections.transparent.*;
 import com.db4o.ta.*;
 
 import db4ounit.*;
