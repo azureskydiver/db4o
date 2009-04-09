@@ -44,7 +44,7 @@
 				<exclude name="**/collections/transparent/**" />
 				<exclude name="**/typehandler/**" /> <!-- why? -->
 				<exclude name="**/migration/**" />
-				<exclude name="**/StandaloneNativeReflectorTestCase.class" />
+				<exclude name="**/StandaloneNativeReflectorTestCase*.class" />
 			</sources>
 		</db4o-enhance>
 	</target>
