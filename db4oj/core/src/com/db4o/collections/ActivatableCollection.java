@@ -4,13 +4,15 @@ package com.db4o.collections;
 
 import java.util.*;
 
+import com.db4o.ta.*;
+
 /**
- * extends List with Transparent Activation and
+ * extends Collection with Transparent Activation and
  * Transparent Persistence support
  * @sharpen.ignore
  * @since 7.9
  */
 @decaf.Remove(decaf.Platform.JDK11)
-public interface ActivatableList<T> extends List<T>, ActivatableCollection<T> {
+public interface ActivatableCollection<T> extends Collection<T>, Activatable {
 
 }

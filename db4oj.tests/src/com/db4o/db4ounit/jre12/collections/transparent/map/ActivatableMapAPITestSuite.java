@@ -10,6 +10,7 @@ import com.db4o.db4ounit.jre12.collections.transparent.*;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
@@ -17,7 +18,7 @@ import db4ounit.fixtures.*;
  * @sharpen.remove
  */
 @decaf.Remove(decaf.Platform.JDK11)
-public class ActivatableMapAPITestSuite extends FixtureBasedTestSuite{
+public class ActivatableMapAPITestSuite extends FixtureBasedTestSuite implements Db4oTestCase {
 	
 	private static FixtureVariable<MapSpec<ActivatableMap<CollectionElement, CollectionElement>>> MAP_SPEC =
 		new FixtureVariable<MapSpec<ActivatableMap<CollectionElement, CollectionElement>>>("map");

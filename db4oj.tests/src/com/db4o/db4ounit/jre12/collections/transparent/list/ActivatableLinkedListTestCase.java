@@ -8,7 +8,6 @@ import com.db4o.activation.*;
 import com.db4o.collections.*;
 import com.db4o.db4ounit.jre12.collections.*;
 import com.db4o.db4ounit.jre12.collections.transparent.*;
-import com.db4o.foundation.*;
 
 import db4ounit.*;
 
@@ -16,22 +15,21 @@ import db4ounit.*;
  * @sharpen.remove
  */
 @decaf.Remove(decaf.Platform.JDK11)
-public class ActivatableLinkedListTestCase extends ActivatableListTestCaseBase {
+public class ActivatableLinkedListTestCase extends ActivatableCollectionTestCaseBase<LinkedList<CollectionElement>> {
 	
-	private ListSpec<ActivatableLinkedList<CollectionElement>> _spec = 
-			new ListSpec<ActivatableLinkedList<CollectionElement>>(ActivatableLinkedList.class,
-					new Closure4<ActivatableLinkedList<CollectionElement>>() {
-		public ActivatableLinkedList<CollectionElement> run() {
-			return new ActivatableLinkedList();
-		}
-	});
+	private CollectionSpec<LinkedList<CollectionElement>> _spec = 
+			new CollectionSpec<LinkedList<CollectionElement>>(
+					LinkedList.class,
+					CollectionFactories.activatableLinkedListFactory(),
+					CollectionFactories.plainLinkedListFactory()
+			);
 	
-	public List<CollectionElement> newActivatableList() {
-		return _spec.newActivatableList();
+	public LinkedList<CollectionElement> newActivatableCollection() {
+		return _spec.newActivatableCollection();
 	}
 	
-	private List<CollectionElement> newPlainList(){
-		return _spec.newPlainList();
+	private LinkedList<CollectionElement> newPlainList(){
+		return _spec.newPlainCollection();
 	}
 	
 	public void testCreation() {
@@ -40,7 +38,7 @@ public class ActivatableLinkedListTestCase extends ActivatableListTestCaseBase {
 	}
 	
 	public void testClone() throws Exception{
-		ActivatableLinkedList cloned = (ActivatableLinkedList) ((LinkedList)singleList()).clone();
+		ActivatableLinkedList cloned = (ActivatableLinkedList) singleCollection().clone();
 		// assert that activator is null - should throw IllegalStateException if it isn't
 		cloned.bind(new Activator() {
 			public void activate(ActivationPurpose purpose) {
@@ -50,7 +48,7 @@ public class ActivatableLinkedListTestCase extends ActivatableListTestCaseBase {
 	}
 
 	public void testToString(){
-		Assert.areEqual(newPlainList().toString(), singleList().toString());
+		Assert.areEqual(newPlainList().toString(), singleCollection().toString());
 	}
 
 }
