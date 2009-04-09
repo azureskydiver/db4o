@@ -16,18 +16,8 @@ public abstract class ActivatableCollectionAPITestUnit<C extends Collection<Coll
 		assertAreEqual(newPlainCollection(), singleCollection());
 	}
 
-	public void testListIsNotActivated(){
+	public void testCollectionIsNotActivated(){
 		Assert.isFalse(db().isActive(singleCollection()));
-	}
-
-	public void testActivatableElementsAreNotActivated(){
-		// trigger activation of Collection and
-		// all elements that are not Activatable
-		singleCollection().iterator();
-		
-		long id = ActivatableCollectionTestUtil.anyActivatableElementId(db());
-		Object element = db().getByID(id);
-		Assert.isFalse(db().isActive(element));
 	}
 
 	public void testAdd() throws Exception{
@@ -35,7 +25,7 @@ public abstract class ActivatableCollectionAPITestUnit<C extends Collection<Coll
 		reopen();
 		C elements = newPlainCollection();
 		elements.add(new Element("four"));
-		IteratorAssert.areEqual(elements.iterator(), singleCollection().iterator());		
+		IteratorAssert.sameContent(elements.iterator(), singleCollection().iterator());		
 	}
 	
 	public void testAddAll() throws Exception{
@@ -43,13 +33,13 @@ public abstract class ActivatableCollectionAPITestUnit<C extends Collection<Coll
 		reopen();
 		C elements = newPlainCollection();
 		elements.addAll(newPlainCollection());
-		IteratorAssert.areEqual(elements.iterator(), singleCollection().iterator());		
+		IteratorAssert.sameContent(elements.iterator(), singleCollection().iterator());		
 	}
 	
 	public void testClear() throws Exception{
 		singleCollection().clear();
 		reopen();
-		IteratorAssert.areEqual(new ArrayList().iterator(), singleCollection().iterator());		
+		IteratorAssert.sameContent(new ArrayList().iterator(), singleCollection().iterator());		
 	}
 
 	public void testContains(){
@@ -82,7 +72,7 @@ public abstract class ActivatableCollectionAPITestUnit<C extends Collection<Coll
 		reopen();
 		C list = newPlainCollection();
 		list.remove(element);
-		IteratorAssert.areEqual(list.iterator(), singleCollection().iterator());
+		IteratorAssert.sameContent(list.iterator(), singleCollection().iterator());
 	}
 	
 	public void testRemoveAll(){

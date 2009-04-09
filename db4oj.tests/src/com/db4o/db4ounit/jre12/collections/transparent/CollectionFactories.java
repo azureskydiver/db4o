@@ -63,4 +63,21 @@ public final class CollectionFactories {
 			}			
 		};
 	}
+
+	public static Closure4<HashSet<CollectionElement>> plainHashSetFactory() {
+		return new Closure4<HashSet<CollectionElement>>() {
+				public HashSet<CollectionElement> run() {
+					return new HashSet<CollectionElement>();
+				}
+		};
+	}
+
+	public static Closure4<HashSet<CollectionElement>> activatableHashSetFactory() {
+		return new Closure4<HashSet<CollectionElement>>() {
+			public HashSet<CollectionElement> run() {
+				return new ActivatableHashSet<CollectionElement>();
+			}			
+		};
+	}
+
 }
