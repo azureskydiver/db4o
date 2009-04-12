@@ -11,12 +11,11 @@
 
 <p>ObjectField/IObjectField is an
 interface providing configuration methods for class fields. ObjectField
-instance can be obtained through:</p>
+instance can be obtained from <a href="objectclass_configuration.html" class="wikiLink">ObjectClass/IObjectClass</a> instance:</p>
 
 <span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
 
-<p><code>ObjectField of =
-Db4o.configure().objectClass(clazz).objectField("fieldName");</code></p>
+<p><code>ObjectField of = configuration.objectClass(clazz).objectField("fieldName");</code></p>
 
 </span>
 
@@ -93,26 +92,10 @@ newName);</code></p>
 For more information see
 <a href="../../implementation_strategies/refactoring_and_schema_evolution.html" class="wikiLink">Refactoring and Schema Evolution</a>.</p>
 
-<p><br></p>
-
-<span name="cs_wiki_filter" csw_filters="java">
-
-<p>Java:</p><p><code>public void queryEvaluation
-(boolean flag);</code></p>
-
-</span>
-
-
-
-<p>toggles query evaluation.</p>
-
-<p>All fields are evaluated by default.
-Use this method to turn query evaluation off for specific fields.&nbsp;&nbsp;&nbsp; </p>
-
 </div>
     </div>
     <div id="footer">
-					This revision (5) was last Modified 2007-06-04T18:09:17 by Tetyana.
+					This revision (6) was last Modified 2009-04-05T15:35:28 by Tetyana.
 				</div>
   </body>
 </html>

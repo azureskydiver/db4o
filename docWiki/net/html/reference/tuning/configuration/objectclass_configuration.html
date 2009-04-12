@@ -11,7 +11,7 @@
 
 
 <p>ObjectClass/IObjectClass provides an
-interface for class configuration. </p>
+interface for class configuration.ObjectClass access is implemented in common configuration, thus it is accessible in embedded and client/server mode, both on the client and on the server.<br></p>
 
 
 
@@ -19,8 +19,7 @@ interface for class configuration. </p>
 
 <p>.NET:</p>
 
-<p><code>IObjectClass oc =
-Db4oFactory.Configure().ObjectClass(clazz);</code></p>
+<p><code>IObjectClass oc = configuration.ObjectClass(clazz);</code></p>
 
 </span>
 
@@ -382,7 +381,7 @@ depth);</code></p>
 class. For more information see <a href="../../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a>.</p></div>
     </div>
     <div id="footer">
-					This revision (10) was last Modified 2008-04-14T16:32:18 by Tetyana.
+					This revision (11) was last Modified 2009-04-05T15:30:04 by Tetyana.
 				</div>
   </body>
 </html>
