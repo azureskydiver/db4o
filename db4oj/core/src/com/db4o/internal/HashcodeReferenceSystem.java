@@ -110,4 +110,23 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
 		_hashCodeTree.hc_traverse(visitor);
 	}
 	
+	@Override
+	public String toString() {
+		final BooleanByRef found = new BooleanByRef();
+		final StringBuffer str = new StringBuffer("HashcodeReferenceSystem {");
+		traverseReferences(new Visitor4() {
+			public void visit(Object obj) {
+				ObjectReference ref = (ObjectReference) obj;
+				str.append(ref.getID());
+				str.append(", ");
+				found.value = true;
+			}
+		});
+		if(found.value){
+			str.delete(str.length() - 2, str.length());
+		}
+		str.append("}");
+		return str.toString();
+	}
+	
 }
