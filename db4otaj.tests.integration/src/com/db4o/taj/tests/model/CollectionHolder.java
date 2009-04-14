@@ -12,6 +12,7 @@ public class CollectionHolder {
 	private Map _hashMap;
 	private Map _hashtable;
 	private Stack _stack;
+	private HashSet _hashSet;
 	
 	public CollectionHolder(){
 		// db4o creation constructor
@@ -24,6 +25,7 @@ public class CollectionHolder {
 		_hashMap = new HashMap();
 		_hashtable = new Hashtable();
 		_stack = new Stack();
+		_hashSet = new HashSet();
 	}
 
 	public List arrayList() {
@@ -37,7 +39,11 @@ public class CollectionHolder {
 	public Stack stack() {
 		return _stack;
 	}
-	
+
+	public Set hashSet() {
+		return _hashSet;
+	}
+
 	public Map hashMap() {
 		return _hashMap;
 	}

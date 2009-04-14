@@ -52,6 +52,7 @@ public class Main {
 		holder.hashMap().put("Key", new Item("Item"));
 		holder.hashtable().put("Key", new Item("Item"));
 		holder.stack().push(new Item("Item"));
+		holder.hashSet().add(new Item("Item"));
 		
 		deleteDatabase();
 
@@ -73,16 +74,17 @@ public class Main {
 						
 						assertCollectionsAreNull(holder);
 						
-						assertListItemActivation(listener, holder, hashMapExtractor(), mapItemExtractor(), HashMap.class);
+						assertItemActivation(listener, holder, hashMapExtractor(), mapItemExtractor(), HashMap.class);
 						
-						assertListItemActivation(listener, holder, hashtableExtractor(), mapItemExtractor(), Hashtable.class);
+						assertItemActivation(listener, holder, hashtableExtractor(), mapItemExtractor(), Hashtable.class);
 						
-						assertListItemActivation(listener, holder, arrayListExtractor(), listItemExtractor(), ArrayList.class);
+						assertItemActivation(listener, holder, arrayListExtractor(), collectionItemExtractor(), ArrayList.class);
 						
-						assertListItemActivation(listener, holder, linkedListExtractor(), listItemExtractor(), LinkedList.class);
+						assertItemActivation(listener, holder, linkedListExtractor(), collectionItemExtractor(), LinkedList.class);
 						
-						assertListItemActivation(listener, holder, stackExtractor(), listItemExtractor(), Stack.class);						
+						assertItemActivation(listener, holder, stackExtractor(), collectionItemExtractor(), Stack.class);						
 						
+						assertItemActivation(listener, holder, hashSetExtractor(), collectionItemExtractor(), HashSet.class);						
 					}
 					catch(Exception exc) {
 						Assert.fail("", exc);
@@ -101,11 +103,11 @@ public class Main {
 		return holder;
 	}
 	
-	private static Function4 listItemExtractor() {
+	private static Function4 collectionItemExtractor() {
 		return new Function4() {
 			public Object apply(Object arg) {
-				List list = (List) arg;
-				return list.get(0);
+				Collection collection = (Collection) arg;
+				return collection.iterator().next();
 			}							
 		};
 	}
@@ -124,6 +126,15 @@ public class Main {
 			public Object apply(Object arg) {
 				CollectionHolder holder = (CollectionHolder) arg;
 				return holder.stack();
+			}							
+		};
+	}
+
+	private static Function4 hashSetExtractor() {
+		return new Function4() {
+			public Object apply(Object arg) {
+				CollectionHolder holder = (CollectionHolder) arg;
+				return holder.hashSet();
 			}							
 		};
 	}
@@ -172,9 +183,10 @@ public class Main {
 		assertCollectionIsNull(holder, "_hashMap");
 		assertCollectionIsNull(holder, "_hashtable");
 		assertCollectionIsNull(holder, "_stack");
+		assertCollectionIsNull(holder, "_hashSet");
 	}
 
-	private static void assertListItemActivation(
+	private static void assertItemActivation(
 						TAJActivationListener listener,
 						final CollectionHolder holder,
 						Function4 collectionExtractor,
@@ -183,7 +195,7 @@ public class Main {
 		
 		listener.reset();
 		
-		assertNoActivation(listener, new Class[] { ArrayList.class, HashMap.class, Hashtable.class, LinkedList.class, Stack.class });
+		assertNoActivation(listener, new Class[] { ArrayList.class, HashMap.class, Hashtable.class, LinkedList.class, Stack.class, HashSet.class });
 		
 		assertActivationCount(listener, Item.class, 0);
 		assertActivationCount(listener, clazz, 0);
