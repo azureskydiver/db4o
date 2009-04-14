@@ -116,15 +116,14 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
 		final StringBuffer str = new StringBuffer("HashcodeReferenceSystem {");
 		traverseReferences(new Visitor4() {
 			public void visit(Object obj) {
+				if(found.value){
+					str.append(", ");
+				}
 				ObjectReference ref = (ObjectReference) obj;
 				str.append(ref.getID());
-				str.append(", ");
 				found.value = true;
 			}
 		});
-		if(found.value){
-			str.delete(str.length() - 2, str.length());
-		}
 		str.append("}");
 		return str.toString();
 	}
