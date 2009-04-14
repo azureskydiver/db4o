@@ -1,7 +1,6 @@
 /* Copyright (C) 2009  db4objects Inc.   http://www.db4o.com */
 package com.db4o.ta.instrumentation.test;
 
-import java.net.*;
 import java.util.*;
 
 import com.db4o.db4ounit.common.ta.*;
@@ -18,40 +17,38 @@ public class TACollectionFileEnhancerTestSuite  extends FixtureBasedTestSuite {
 				
 	private static class CollectionSpec implements Labeled {
 		public final Class<? extends CollectionClient> _clientClass;
-		public final Procedure4<Object> _closure;
-		public final int _expectedReads;
-		public final int _expectedWrites;
+		public final Procedure4<Object> _activateClosure;
+		public final Procedure4<Object> _updateClosure;
 
-		public CollectionSpec(Class<? extends CollectionClient> clientClass, int expectedReads, int expectedWrites, Procedure4<Object> closure) {
+		public CollectionSpec(Class<? extends CollectionClient> clientClass, Procedure4<Object> activateClosure, Procedure4<Object> updateClosure) {
 			_clientClass = clientClass;
-			_closure = closure;
-			_expectedReads = expectedReads;
-			_expectedWrites = expectedWrites;
+			_activateClosure = activateClosure;
+			_updateClosure = updateClosure;
 		}
 
 		public String label() {
-			return ReflectPlatform.simpleName(_clientClass) + "/" + (_expectedReads > 0 ? "R" : "W");
+			return ReflectPlatform.simpleName(_clientClass);
 		}
 	}
 
-	private static final Procedure4<Object> LIST_READ_CLOSURE = new Procedure4<Object>() {
+	private static final Procedure4<Object> COLLECTION_ACTIVATE_CLOSURE = new Procedure4<Object>() {
 		public void apply(Object arg) {
-			((List)arg).iterator();
+			((Collection)arg).iterator();
 		}
 	};
-	private static final Procedure4<Object> LIST_WRITE_CLOSURE = new Procedure4<Object>() {
+	private static final Procedure4<Object> COLLECTION_UPDATE_CLOSURE = new Procedure4<Object>() {
 		public void apply(Object arg) {
-			((List)arg).add("foo");
+			((Collection)arg).add("foo");
 		}
 	};
 	
-	private static final Procedure4<Object> MAP_READ_CLOSURE = new Procedure4<Object>() {
+	private static final Procedure4<Object> MAP_ACTIVATE_CLOSURE = new Procedure4<Object>() {
 		public void apply(Object arg) {
 			((Map)arg).keySet();
 		}
 	};
 	
-	private static final Procedure4<Object> MAP_WRITE_CLOSURE = new Procedure4<Object>() {
+	private static final Procedure4<Object> MAP_UPDATE_CLOSURE = new Procedure4<Object>() {
 		public void apply(Object arg) {
 			((Map)arg).put("foo", "bar");
 		}
@@ -60,18 +57,22 @@ public class TACollectionFileEnhancerTestSuite  extends FixtureBasedTestSuite {
 	public FixtureProvider[] fixtureProviders() {
 		return new FixtureProvider[] {
 			new SimpleFixtureProvider(COLLECTION_SPEC,
-				new CollectionSpec(ArrayListClient.class, 1, 0, LIST_READ_CLOSURE),
-				new CollectionSpec(ArrayListClient.class, 0, 1, LIST_WRITE_CLOSURE),
-				new CollectionSpec(HashMapClient.class, 1, 0, MAP_READ_CLOSURE),
-				new CollectionSpec(HashMapClient.class, 0, 1, MAP_WRITE_CLOSURE),
-				new CollectionSpec(HashtableClient.class, 1, 0, MAP_READ_CLOSURE),
-				new CollectionSpec(HashtableClient.class, 0, 1, MAP_WRITE_CLOSURE),
-				new CollectionSpec(LinkedListClient.class, 1, 0, LIST_READ_CLOSURE),
-				new CollectionSpec(LinkedListClient.class, 0, 1, LIST_WRITE_CLOSURE),
-				new CollectionSpec(StackClient.class, 1, 0, LIST_READ_CLOSURE),
-				new CollectionSpec(StackClient.class, 0, 1, LIST_WRITE_CLOSURE)
+				collectionSpec(ArrayListClient.class),
+				mapSpec(HashMapClient.class),
+				mapSpec(HashtableClient.class),
+				collectionSpec(LinkedListClient.class),
+				collectionSpec(StackClient.class),
+				collectionSpec(HashSetClient.class)
 			),
 		};
+	}
+
+	private CollectionSpec collectionSpec(Class<? extends CollectionClient> clientClass) {
+		return new CollectionSpec(clientClass, COLLECTION_ACTIVATE_CLOSURE, COLLECTION_UPDATE_CLOSURE);
+	}
+
+	private CollectionSpec mapSpec(Class<? extends CollectionClient> clientClass) {
+		return new CollectionSpec(clientClass, MAP_ACTIVATE_CLOSURE, MAP_UPDATE_CLOSURE);
 	}
 
 	public Class[] testUnits() {
@@ -86,18 +87,33 @@ public class TACollectionFileEnhancerTestSuite  extends FixtureBasedTestSuite {
 			assertActivatorInvocations(collectionSpec());
 		}
 		
-		private void assertActivatorInvocations(CollectionSpec collectionSpec) throws Exception,
-				MalformedURLException, InstantiationException,
-				IllegalAccessException, ClassNotFoundException {
+		private void assertActivatorInvocations(CollectionSpec collectionSpec) throws Exception {
 			enhance();
+			assertActivation(collectionSpec);
+			assertUpdate(collectionSpec);
+		}
+
+		private void assertActivation(CollectionSpec collectionSpec) throws Exception {
+			final Object collection = retrieveCollectionMember(collectionSpec);
+			MockActivator collectionActivator = MockActivator.activatorFor((Activatable)collection);
+			collectionSpec._activateClosure.apply(collection);
+			assertReadsWrites(1, 0, collectionActivator);
+		}
+
+		private void assertUpdate(CollectionSpec collectionSpec) throws Exception {
+			final Object collection = retrieveCollectionMember(collectionSpec);
+			MockActivator collectionActivator = MockActivator.activatorFor((Activatable)collection);
+			collectionSpec._updateClosure.apply(collection);
+			assertReadsWrites(0, 1, collectionActivator);
+		}
+
+		private Object retrieveCollectionMember(CollectionSpec collectionSpec) throws Exception {
 			AssertingClassLoader loader = newAssertingClassLoader(new Class[] { CollectionClient.class });		
 			CollectionClient client = (CollectionClient) loader.newInstance(collectionSpec._clientClass);
 			MockActivator clientActivator = MockActivator.activatorFor((Activatable)client);
 			final Object collection = client.collectionInstance();
 			assertReadsWrites(1, 0, clientActivator);
-			MockActivator collectionActivator = MockActivator.activatorFor((Activatable)collection);
-			collectionSpec._closure.apply(collection);
-			assertReadsWrites(collectionSpec._expectedReads, collectionSpec._expectedWrites, collectionActivator);
+			return collection;
 		}
 
 		protected Class[] inputClasses() {
