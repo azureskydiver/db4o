@@ -631,11 +631,6 @@
 			</classpath>
 			<src path="${dir.osgi.src}"/>
 		</javac>
-		<copy tofile="${dir.dist.classes.osgi}/build.properties" file="${dir.osgi}/build.properties.TM" overwrite="true">
-			<filterset>
-				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
-			</filterset>
-		</copy>
 		<listPackages property="db4o.osgi.exported.packages" extension=".class">
 			<dir path="${dir.dist.classes.jdk1.2}" />
 			<dir path="${dir.dist.classes.jdk1.2.cs}" />
