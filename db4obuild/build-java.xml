@@ -648,7 +648,10 @@
 			</filterset>
 		</copy>
 		<jar destfile="${file.osgi.jar}" manifest="${dir.dist.classes.osgi}/META-INF/MANIFEST.MF">
-			<fileset dir="${dir.dist.classes.osgi}"></fileset>
+			<fileset dir="${dir.dist.classes.osgi}" />
+			<fileset dir="${dir.osgi}">
+				<include name="src/**/*.java" />
+			</fileset>
 		</jar>
 
 	</target>
