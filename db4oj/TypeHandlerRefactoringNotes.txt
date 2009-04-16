@@ -50,12 +50,8 @@ Definitions
 TODO
 ====
 
-* replace type handler ID by class metadata ID everywhere
-
 * remove the need to initialize StandardReferenceTypeHandler with its ClassMetadata for correctHandlerVersion
 
-* 
-	
 * multiple InstantiatingTypeHandlers in the hierarchy
 
 * test case for two types implementing the same interface, one with value type semantics and the other
