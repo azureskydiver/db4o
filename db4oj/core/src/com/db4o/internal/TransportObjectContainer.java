@@ -59,8 +59,8 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
         return false;
     }
     
-    public ClassMetadata classMetadataForId(int id) {
-    	return _parent.classMetadataForId(id);
+    public ClassMetadata classMetadataForID(int id) {
+    	return _parent.classMetadataForID(id);
     }
     
 	void configureNewFile() {
@@ -113,6 +113,11 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
 	
 	public Slot getSlot(int length){
         return appendBlocks(length);
+	}
+	
+	@Override
+	protected boolean isValidPointer(int id) {
+		return id != 0 && super.isValidPointer(id);
 	}
 	
 	public Db4oDatabase identity() {

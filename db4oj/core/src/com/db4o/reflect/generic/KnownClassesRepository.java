@@ -195,16 +195,16 @@ public class KnownClassesRepository {
 			 return virtualFieldByName(fieldInfo.name()).classReflector(reflector);
 		}
 		
-		final int handlerID = fieldInfo.handlerID();
+		final int fieldTypeID = fieldInfo.fieldTypeID();
 		
 		// need to take care of special handlers here
-		switch (handlerID){
+		switch (fieldTypeID){
 		    case Handlers4.UNTYPED_ID:
 		        return objectClass();
 		    case Handlers4.ANY_ARRAY_ID:
 		        return arrayClass(objectClass());
 		    default:
-		    	ReflectClass fieldClass=forID(handlerID);
+		    	ReflectClass fieldClass=forID(fieldTypeID);
 		    	if (null != fieldClass) {
 		    		return normalizeFieldClass(fieldInfo, fieldClass);
 		    	}

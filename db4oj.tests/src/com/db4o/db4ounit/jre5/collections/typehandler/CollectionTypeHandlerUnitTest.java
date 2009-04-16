@@ -64,12 +64,12 @@ public abstract class CollectionTypeHandlerUnitTest extends TypeHandlerTestUnitB
 	}
 
 	public void testDeletion() throws Exception {
-	    assertFirstClassElementCount(elements().length);
+	    assertReferenceTypeElementCount(elements().length);
 	    Object item = retrieveOnlyInstance(itemFactory().itemClass());
 	    db().delete(item);
 	    db().purge();
 	    Db4oAssert.persistedCount(0, itemFactory().itemClass());
-	    assertFirstClassElementCount(0);
+	    assertReferenceTypeElementCount(0);
 	}
 
 	public void testJoin() {
@@ -88,15 +88,15 @@ public abstract class CollectionTypeHandlerUnitTest extends TypeHandlerTestUnitB
     	assertPlainContent(set.next());
 	}
 	
-	protected void assertFirstClassElementCount(int expected) {
-		if(!isFirstClass(elementClass())) {
+	protected void assertReferenceTypeElementCount(int expected) {
+		if(!isReferenceElement(elementClass())) {
 			return;
 		}
 		Db4oAssert.persistedCount(expected, elementClass());
 	}
 
-	private boolean isFirstClass(Class elementClass) {
-		return ListTypeHandlerTestVariables.FirstClassElement.class == elementClass;
+	private boolean isReferenceElement(Class elementClass) {
+		return ListTypeHandlerTestVariables.ReferenceElement.class == elementClass;
 	}
 
 }

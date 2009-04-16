@@ -20,8 +20,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
             + 1 // Marshaller Version
             + Const4.INT_LENGTH; // number of fields
     
-    private static final int NO_INDIRECTION = 3; // and number above 2 
-    
     private final Transaction _transaction;
     
     private final ObjectReference _reference;
@@ -35,8 +33,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     private final MarshallingBuffer _writeBuffer;
     
     private MarshallingBuffer _currentBuffer;
-    
-    private int _fieldWriteCount;
     
     private ByteArrayBuffer _debugPrepend;
     
@@ -108,7 +104,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     }
     
 
-    public ByteArrayBuffer ToWriteBuffer(Pointer4 pointer) {
+    public ByteArrayBuffer toWriteBuffer(Pointer4 pointer) {
         
         ByteArrayBuffer buffer = new ByteArrayBuffer(pointer.length());
         _writeBuffer.mergeChildren(this, pointer.address(), writeBufferOffset());
@@ -210,7 +206,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     }
     
 	private void preWrite() {
-        _fieldWriteCount++;
         if(Deploy.debug){
             if(_debugPrepend != null){
                 for (int i = 0; i < _debugPrepend.offset(); i++) {
@@ -229,17 +224,13 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
 	    }
 	}
 
-    public void createChildBuffer(boolean transferLastWrite, boolean storeLengthInLink) {
+    public void createChildBuffer(boolean storeLengthInLink) {
         MarshallingBuffer childBuffer = _currentBuffer.addChild(false, storeLengthInLink);
-        if(transferLastWrite){
-            _currentBuffer.transferLastWriteTo(childBuffer, storeLengthInLink);
-        }
         _currentBuffer.reserveChildLinkSpace(storeLengthInLink);
         _currentBuffer = childBuffer;
     }
 
     public void beginSlot(){
-        _fieldWriteCount = 0;
         _currentBuffer = _writeBuffer;
     }
     
@@ -266,35 +257,29 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     
     public void writeObject(TypeHandler4 handler, Object obj){
         MarshallingContextState state = currentState();
-        if(Handlers4.useDedicatedSlot(this, handler)){
+        writeObjectWithCurrentState(handler, obj);
+        restoreState(state);
+    }
+
+	public void writeObjectWithCurrentState(TypeHandler4 handler, Object obj) {
+		if(Handlers4.useDedicatedSlot(this, handler)){
             writeObject(obj);
         }else{
             if(obj == null){
-                
-                // TODO: This should never happen. All handlers should take care
-                //       of nulls on a higher level, otherwise primitive wrappers
-                //       default to their primitive values.
-                
-                //       Consider to throw an IllegalArgumentException here to
-                //       prevent users from calling with null arguments.
-                
-                writeNullObject(handler);
-                
+                writeNullReference(handler);
             } else{
                 createIndirectionWithinSlot(handler);
                 handler.write(this, obj);
             }
         }
-        restoreState(state);
-    }
+	}
     
-    private void writeNullObject(TypeHandler4 handler){
+    private void writeNullReference(TypeHandler4 handler){
         if( isIndirectedWithinSlot(handler)){
-            doNotIndirectWrites();
             writeNullLink();
             return;
         }
-        handler.write(this, Handlers4.nullRepresentationInUntypedArrays(handler));
+        Handlers4.write(handler, this, Handlers4.nullRepresentationInUntypedArrays(handler));
     }
     
     private void writeNullLink(){
@@ -315,10 +300,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         return _reference;
     }
     
-    public void doNotIndirectWrites(){
-        _fieldWriteCount = NO_INDIRECTION;
-    }
-    
     public void createIndirectionWithinSlot(TypeHandler4 handler) {
         if(isIndirectedWithinSlot(handler)){
         	createIndirectionWithinSlot();
@@ -326,8 +307,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     }
     
     public void createIndirectionWithinSlot() {
-    	createChildBuffer(false, true);
-    	doNotIndirectWrites();
+    	createChildBuffer(true);
     }
 
     private boolean isIndirectedWithinSlot(TypeHandler4 handler) {
@@ -341,12 +321,11 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     }
     
     public MarshallingContextState currentState(){
-        return new MarshallingContextState(_currentBuffer, _fieldWriteCount);
+        return new MarshallingContextState(_currentBuffer);
     }
     
     public void restoreState(MarshallingContextState state){
         _currentBuffer = state._buffer;
-        _fieldWriteCount = state._fieldWriteCount;
     }
 
     public ReservedBuffer reserve(final int length) {

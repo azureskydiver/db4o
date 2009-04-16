@@ -446,8 +446,8 @@ public class EmbeddedClientObjectContainer implements InternalObjectContainer, T
         return _server.classMetadataForName(name);
     }
 
-    public ClassMetadata classMetadataForId(int id) {
-        return _server.classMetadataForId(id);
+    public ClassMetadata classMetadataForID(int id) {
+        return _server.classMetadataForID(id);
     }
 
     public HandlerRegistry handlers(){

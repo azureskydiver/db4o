@@ -1,7 +1,8 @@
 /* Copyright (C) 2008  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.internal;
+package com.db4o.internal.handlers.versions;
 
+import com.db4o.internal.*;
 import com.db4o.marshall.*;
 import com.db4o.typehandlers.*;
 
@@ -9,9 +10,9 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public class UntypedFieldHandler2 extends UntypedFieldHandler {
+public class OpenTypeHandler2 extends OpenTypeHandler7 {
     
-    public UntypedFieldHandler2(ObjectContainerBase container) {
+    public OpenTypeHandler2(ObjectContainerBase container) {
         super(container);
     }
     

@@ -4,7 +4,7 @@ package com.db4o.reflect.jdk;
 
 import java.lang.reflect.*;
 
-import com.db4o.foundation.ArgumentNullException;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.core.*;
@@ -164,14 +164,12 @@ public class JdkClass implements JavaReflectClass{
     }
     
     public ReflectConstructor getSerializableConstructor() {
-		Constructor<?> serializableConstructor = Platform4.jdk()
-			.serializableConstructor(_clazz);
-		if (serializableConstructor == null) {
+    	Constructor<?> serializableConstructor = Platform4.jdk().serializableConstructor(_clazz);
+		if (null == serializableConstructor) {
 			return null;
 		}
 		return new JdkConstructor(_reflector, serializableConstructor);
     }
-	
 
 	public Object nullValue() {
 		return _jdkReflector.nullValue(this);

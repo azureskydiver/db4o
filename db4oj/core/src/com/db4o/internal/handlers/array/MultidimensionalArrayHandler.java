@@ -23,6 +23,7 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         // required for reflection cloning
     }
     
+    @Override
     public final Iterator4 allElements(ObjectContainerBase container, Object array) {
 		return allElementsMultidimensional(arrayReflector(container), array);
     }
@@ -58,10 +59,6 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         }
         ((MultidimensionalArrayInfo)info).dimensions(dim);
         info.elementCount(elementCount(dim));
-    }
-    
-    protected void detectDimensionsPreVersion0Format(ReadBuffer buffer, ArrayInfo info, int classID) {
-        readDimensions(info, buffer, classID);
     }
 
     protected void readElements(ReadContext context, ArrayInfo info, Object array) {

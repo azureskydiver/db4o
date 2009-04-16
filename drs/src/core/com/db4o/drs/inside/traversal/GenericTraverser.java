@@ -96,7 +96,7 @@ public class GenericTraverser implements Traverser {
 		}
 
 		ReflectClass claxx = _reflector.forObject(object);
-		if (isSecondClass(claxx) || Platform4.isTransient(claxx)) {
+		if (isValueTypeOrArrayOfValueType(claxx) || Platform4.isTransient(claxx)) {
 			return;
 		}
 
@@ -117,10 +117,10 @@ public class GenericTraverser implements Traverser {
 		_queue.add(object);
 	}
 
-	protected boolean isSecondClass(ReflectClass claxx) {
+	protected boolean isValueTypeOrArrayOfValueType(ReflectClass claxx) {
 		//      TODO Optimization: Compute this lazily in ReflectClass;
-		if (_reflector.isSecondClass(claxx)) return true;
-		return claxx.isArray() && _reflector.isSecondClass(claxx.getComponentType());
+		if (_reflector.isValueType(claxx)) return true;
+		return claxx.isArray() && _reflector.isValueType(claxx.getComponentType());
 	}
 
 	public void extendTraversalTo(Object disconnected) {

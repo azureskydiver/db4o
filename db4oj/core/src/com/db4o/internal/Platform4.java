@@ -77,9 +77,6 @@ public final class Platform4 {
         shutDownRunnable.ensure(container);
     }
 
-    /**
-     * @deprecated
-     */
     public static final boolean canSetAccessible() {
         if (setAccessibleCheck.isUnspecified()) {
             if (jdk().ver() >= 2) {
@@ -646,10 +643,6 @@ public final class Platform4 {
         return false;
     }
     
-    public static boolean isTransient(Class claxx) {
-    	return false;
-    }
-
 	public static Reflector reflectorForType(Class clazz) {
 		return jdk().reflectorForType(clazz);
 	}
@@ -663,8 +656,7 @@ public final class Platform4 {
 	}
 
     public static void registerPlatformHandlers(ObjectContainerBase container) {
-        ReflectClass claxx = container.reflector().forClass(java.lang.Number.class);
-        container.handlers().mapFieldHandler(claxx, container.handlers().untypedFieldHandler());
+        container.handlers().treatAsOpenType(java.lang.Number.class);
     }
 
     public static Class nullableTypeFor(Class primitiveJavaClass) {

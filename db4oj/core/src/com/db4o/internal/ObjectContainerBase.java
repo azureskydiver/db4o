@@ -13,7 +13,6 @@ import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.encoding.*;
-import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.*;
@@ -114,6 +113,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		        	openImpl();
 					initializePostOpen();
 					ok = true;
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//					throw new Db4oException(e);
 				} finally {
 					if(!ok) {
 						shutdownObjectContainer();
@@ -160,7 +162,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             trans = checkTransaction(trans);
         	beginTopLevelCall();
             try {
-                stillToActivate(trans, obj, depth);
+                stillToActivate(activationContextFor(trans, obj, depth));
                 activatePending(trans);
                 completeTopLevelCall();
             } catch(Db4oException e){
@@ -196,16 +198,21 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
                 if (obj == null) {
                     ta.removeReference(ref);
                 } else {
-                    ref.activateInternal(ta, obj, item.depth);
+                    ref.activateInternal(activationContextFor(ta, obj, item.depth));
                 }
             }
         }
     }
 
-    public void backup(String path) throws DatabaseClosedException, Db4oIOException {
+	public void backup(String path) throws DatabaseClosedException, Db4oIOException {
     	backup(configImpl().storage(), path);
     }
-	
+
+	public ActivationContext4 activationContextFor(Transaction ta,
+			final Object obj, final ActivationDepth depth) {
+		return new ActivationContext4(ta, obj, depth);
+	}
+    
     public final void bind(Transaction trans, Object obj, long id) throws ArgumentNullException, IllegalArgumentException {
         synchronized (_lock) {
             if(obj == null){
@@ -244,7 +251,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
 
 	public ClassMetadata classMetadataForObject(Object obj) {
-		return classMetadataForReflectClass(reflectorForObject(obj));
+		return produceClassMetadata(reflectorForObject(obj));
 	}
     
     public abstract byte blockSize();
@@ -519,7 +526,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             return;
         }
         
-        if(obj instanceof SecondClass){
+        if(obj instanceof Entry){
         	if(! flagForDelete(ref)){
         		return;
         	}
@@ -938,24 +945,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         return _classCollection.classMetadataForReflectClass(claxx);
     }
     
-    public final TypeHandler4 typeHandlerForReflectClass(ReflectClass claxx){
-        if(hideClassForExternalUse(claxx)){
-            return null;
-        }
-        if (Platform4.isTransient(claxx)) {
-        	return null;
-        }
-        TypeHandler4 typeHandler = _handlers.typeHandlerForClass(claxx);
-        if (Handlers4.isClassAware(typeHandler)){
-        	return typeHandler;
-        }
-        ClassMetadata classMetadata = _classCollection.produceClassMetadata(claxx);
-        if(classMetadata == null){
-            return null;
-        }
-        return classMetadata;
-    }
-    
     // TODO: Some ReflectClass implementations could hold a 
     // reference to ClassMetadata to improve lookup performance here.
     public ClassMetadata produceClassMetadata(ReflectClass claxx) {
@@ -1001,10 +990,10 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
 
     public ClassMetadata classMetadataForName(String name) {
-    	return classMetadataForId(classMetadataIdForName(name));
+    	return classMetadataForID(classMetadataIdForName(name));
     }
     
-    public ClassMetadata classMetadataForId(int id) {
+    public ClassMetadata classMetadataForID(int id) {
     	if(DTrace.enabled){
     		DTrace.CLASSMETADATA_BY_ID.log(id);
     	}
@@ -1176,39 +1165,25 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
     }
     
-    public FieldHandler fieldHandlerForId(int id) {
-        if (id < 1) {
-            return null;
-        }
-        if (_handlers.isSystemHandler(id)) {
-            return _handlers.fieldHandlerForId(id);
-        } 
-        return classMetadataForId(id);
-    }
-    
-    public FieldHandler fieldHandlerForClass(ReflectClass claxx) {
+    public TypeHandler4 typeHandlerForClass(ReflectClass claxx) {
         if(hideClassForExternalUse(claxx)){
             return null;
         }
-        FieldHandler fieldHandler = _handlers.fieldHandlerForClass(claxx);
-        if(fieldHandler != null){
-            return fieldHandler;
+        TypeHandler4 typeHandler = _handlers.typeHandlerForClass(claxx);
+        if(typeHandler != null){
+            return typeHandler;
         }
-        return _classCollection.produceClassMetadata(claxx);
+        return _classCollection.produceClassMetadata(claxx).typeHandler();
     }
     
-    public TypeHandler4 typeHandlerForId(int id) {
+    public TypeHandler4 typeHandlerForClassMetadataID(int id) {
         if (id < 1) {
             return null;
         }
-        if (_handlers.isSystemHandler(id)) {
-            return _handlers.typeHandlerForID(id);
-        } 
-        ClassMetadata classMetadata = classMetadataForId(id);
+        ClassMetadata classMetadata = classMetadataForID(id);
         if(classMetadata == null){
             return null;
         }
-        // TODO: consider to return classMetadata
         return classMetadata.typeHandler();
     }
 
@@ -1782,7 +1757,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         return still;
     }
     
-    public final void stillToActivate(Transaction trans, Object obj, ActivationDepth depth) {
+    public final void stillToActivate(ActivationContext context) {
 
         // TODO: We don't want the simple classes to search the hc_tree
         // Kick them out here.
@@ -1791,21 +1766,21 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         //			Class clazz = a_object.getClass();
         //			if(! clazz.isPrimitive()){
         
-        if(processedByImmediateActivation(trans, obj, depth)){
+        if(processedByImmediateActivation(context)){
             return;
         }
 
-        _stillToActivate = stillTo1(trans, _stillToActivate, obj, depth, false);
+        _stillToActivate = stillTo1(context.transaction(), _stillToActivate, context.targetObject(), context.depth(), false);
     }
 
-    private boolean processedByImmediateActivation(Transaction trans, Object obj, ActivationDepth depth) {
+    private boolean processedByImmediateActivation(ActivationContext context) {
         if(! stackIsSmall()){
             return false;
         }
-        if (obj == null || !depth.requiresActivation()) {
+        if (!context.depth().requiresActivation()) {
             return true;
         }
-        ObjectReference ref = trans.referenceForObject(obj);
+        ObjectReference ref = context.transaction().referenceForObject(context.targetObject());
         if(ref == null){
             return false;
         }
@@ -1815,7 +1790,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         flagAsHandled(ref);
         _stackDepth++;
         try{
-            ref.activateInternal(trans, obj, depth);
+            ref.activateInternal(context);
         } finally {
             _stackDepth--;
         }

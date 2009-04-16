@@ -15,7 +15,7 @@ public interface FieldMarshaller {
 
     RawFieldSpec readSpec(ObjectContainerBase stream,ByteArrayBuffer reader);
     
-    FieldMetadata read(ObjectContainerBase stream, FieldMetadata field, ByteArrayBuffer reader);
+    FieldMetadata read(ObjectContainerBase stream, ClassMetadata clazz, ByteArrayBuffer reader);
 
     int marshalledLength(ObjectContainerBase stream, ClassAspect aspect);
 

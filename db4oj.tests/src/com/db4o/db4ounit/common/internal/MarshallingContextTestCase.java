@@ -46,34 +46,34 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
     
     public void testStringItem() {
         StringItem writtenItem = new StringItem("one");
-        StringItem readItem = (StringItem) writeRead(writtenItem);
+        StringItem readItem = (StringItem) writeAndRead(writtenItem);
         Assert.areEqual(writtenItem._name, readItem._name);
     }
     
     public void testStringIntItem() {
         StringIntItem writtenItem = new StringIntItem("one", 777);
-        StringIntItem readItem = (StringIntItem) writeRead(writtenItem);
+        StringIntItem readItem = (StringIntItem) writeAndRead(writtenItem);
         Assert.areEqual(writtenItem._name, readItem._name);
         Assert.areEqual(writtenItem._int, readItem._int);
     }
 
     public void testStringIntBooleanItem() {
         StringIntBooleanItem writtenItem = new StringIntBooleanItem("one", 777, true);
-        StringIntBooleanItem readItem = (StringIntBooleanItem) writeRead(writtenItem);
+        StringIntBooleanItem readItem = (StringIntBooleanItem) writeAndRead(writtenItem);
         Assert.areEqual(writtenItem._name, readItem._name);
         Assert.areEqual(writtenItem._int, readItem._int);
         Assert.areEqual(writtenItem._bool, readItem._bool);
     }
 
-    private Object writeRead(Object obj) {
+    private Object writeAndRead(Object obj) {
         int imaginativeID = 500;
         ObjectReference ref = new ObjectReference(classMetadataForObject(obj), imaginativeID);
         ref.setObject(obj);
         MarshallingContext marshallingContext = new MarshallingContext(trans(), ref, Integer.MAX_VALUE, true);
-        ref.classMetadata().write(marshallingContext, obj);
+        Handlers4.write(ref.classMetadata().typeHandler(), marshallingContext, obj);
         
         Pointer4 pointer = marshallingContext.allocateSlot();
-        ByteArrayBuffer buffer = marshallingContext.ToWriteBuffer(pointer);
+        ByteArrayBuffer buffer = marshallingContext.toWriteBuffer(pointer);
         
         
         buffer.seek(0);

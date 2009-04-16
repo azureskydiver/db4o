@@ -11,15 +11,10 @@ import db4ounit.extensions.*;
 /**
  * @exclude
  */
-/**
- */
 @decaf.Ignore(decaf.Platform.JDK11)
 public class NestedListTestCase extends AbstractDb4oTestCase{
     
-    /**
- */
-@decaf.Ignore(decaf.Platform.JDK11)
-public class Item {
+	public static class Item {
         
         public List list;
         

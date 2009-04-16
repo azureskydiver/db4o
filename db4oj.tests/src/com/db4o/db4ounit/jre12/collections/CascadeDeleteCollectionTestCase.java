@@ -14,9 +14,7 @@ import db4ounit.extensions.*;
 public class CascadeDeleteCollectionTestCase extends AbstractDb4oTestCase{
 	
 	public static class Item {
-		
 		public List _list;
-		
 	}
 	
 	public class Element{

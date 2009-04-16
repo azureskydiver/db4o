@@ -56,6 +56,7 @@ public class ShortHandler extends PrimitiveHandler {
 		}
 	}
 	
+	@Override
     public Object read(ReadContext context) {
         if (Deploy.debug) {
             Debug4.readBegin(context, Const4.YAPSHORT);

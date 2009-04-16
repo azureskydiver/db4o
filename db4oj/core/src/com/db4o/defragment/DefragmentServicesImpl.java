@@ -187,7 +187,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 	
 	public TypeHandler4 sourceHandler(int id) {
-	    return _sourceDb.typeHandlerForId(id);
+	    return _sourceDb.typeHandlerForClassMetadataID(id);
 	}
 	
 	public int sourceClassCollectionID() {
@@ -282,7 +282,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 	
 	public ClassMetadata classMetadataForId(int id) {
-		return _sourceDb.classMetadataForId(id);
+		return _sourceDb.classMetadataForID(id);
 	}
 	
 	public void registerUnindexed(int id) {

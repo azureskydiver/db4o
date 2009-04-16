@@ -249,7 +249,7 @@ public abstract class QQueryBase implements Unversioned {
         }
     }
 
-    private boolean descend1(final QQuery query, final String a_field, IntByRef run) {
+    private boolean descend1(final QQuery query, final String fieldName, IntByRef run) {
         if (run.value == 2 || i_constraints.size() == 0) {
 
             // On the second run we are really creating a second independant
@@ -259,40 +259,43 @@ public abstract class QQueryBase implements Unversioned {
 
             run.value = 0; // prevent a double run of this code
 
-            final BooleanByRef anyClassCollected = new BooleanByRef(false);
-
-            stream().classCollection().attachQueryNode(a_field, new Visitor4() {
+            stream().classCollection().attachQueryNode(fieldName, new Visitor4() {
+            	
+            	boolean untypedFieldConstraintCollected = false;
 
                 public void visit(Object obj) {
 
                     Object[] pair = ((Object[]) obj);
-                    ClassMetadata parentYc = (ClassMetadata)pair[0];
-                    FieldMetadata yf = (FieldMetadata)pair[1];
-                    ClassMetadata childYc = yf.handlerClassMetadata(stream());
-
-                    boolean take = true;
-
-                    if (Handlers4.isUntyped(childYc)) {
-                        if (anyClassCollected.value) {
-                            take = false;
-                        } else {
-                            anyClassCollected.value = true;
-                        }
+                    ClassMetadata containingClass = (ClassMetadata)pair[0];
+                    FieldMetadata field = (FieldMetadata)pair[1];
+                    
+                    if (isTyped(field)) {
+                    	addFieldConstraint(containingClass, field);
+                    	return;
                     }
-
-                    if (take) {
-
-                        QConClass qcc =
-                            new QConClass(
-                                _trans,
-                                null,
-                                yf.qField(_trans),
-                                parentYc.classReflector());
-                        addConstraint(qcc);
-                        toConstraint(i_constraints).or(qcc);
-                    }
-
+                    
+                    if (untypedFieldConstraintCollected)
+                    	return;
+                    
+                    addFieldConstraint(containingClass, field);
+                    untypedFieldConstraintCollected = true;
                 }
+
+				private boolean isTyped(FieldMetadata field) {
+					return !Handlers4.isUntyped(field.getHandler());
+				}
+
+				private void addFieldConstraint(ClassMetadata containingClass,
+						FieldMetadata field) {
+					QConClass qcc =
+					    new QConClass(
+					        _trans,
+					        null,
+					        field.qField(_trans),
+					        containingClass.classReflector());
+					addConstraint(qcc);
+					toConstraint(i_constraints).or(qcc);
+				}
 
             });
 
@@ -303,7 +306,7 @@ public abstract class QQueryBase implements Unversioned {
         final BooleanByRef foundClass = new BooleanByRef(false);
         Iterator4 i = iterateConstraints();
         while (i.moveNext()) {
-            if (((QCon)i.current()).attach(query, a_field)) {
+            if (((QCon)i.current()).attach(query, fieldName)) {
                 foundClass.value = true;
             }
         }

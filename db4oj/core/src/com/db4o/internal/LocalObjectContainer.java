@@ -116,8 +116,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return _systemData.converterVersion();
     }
     
-    public abstract void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length);
-    
     public long currentVersion() {
         return _timeStampIdGenerator.lastTimeStampId();
     }
@@ -160,14 +158,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
             // FIXME: What if obj is null here ?
             
             yc.delete(reader, obj);
-
-            // The following will not work with this approach.
-            // Free blocks are identified in the Transaction by their ID.
-            // TODO: Add a second tree specifically to free pointers.
-
-            //			if(SecondClass.class.isAssignableFrom(yc.getJavaClass())){
-            //				ta.freePointer(id);
-            //			}
 
             return true;
         }
@@ -240,18 +230,16 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return queryResult;
     }
 
-    public final int getPointerSlot() {
+    public int getPointerSlot() {
+    	
         int id = getSlot(Const4.POINTER_LENGTH).address();
+        if(!isValidPointer(id)){
+        	return getPointerSlot();
+        }
 
         // write a zero pointer first
         // to prevent delete interaction trouble
-        ((LocalTransaction)systemTransaction()).writeZeroPointer(id);
-        
-        // We have to make sure that object IDs do not collide
-        // with built-in type IDs.
-        if(_handlers.isSystemHandler(id)){
-            return getPointerSlot();
-        }
+        writeZeroPointer(id);
         
         if(DTrace.enabled){
             DTrace.GET_POINTER_SLOT.log(id);
@@ -259,6 +247,16 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
             
         return id;
     }
+
+	protected boolean isValidPointer(int id) {
+		// We have to make sure that object IDs do not collide
+        // with built-in type IDs.
+		return ! _handlers.isSystemHandler(id);
+	}
+
+	private void writeZeroPointer(int id) {
+		((LocalTransaction)systemTransaction()).writeZeroPointer(id);
+	}
     
     public Slot getSlot(int length){
     	int blocks = bytesToBlocks(length);

@@ -16,7 +16,7 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinTypeHandler, EmbeddedTypeHandler, QueryableTypeHandler {
+public abstract class PrimitiveHandler implements ValueTypeHandler, IndexableTypeHandler, BuiltinTypeHandler, QueryableTypeHandler {
     
     protected ReflectClass _classReflector;
     
@@ -25,7 +25,7 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     private Object _primitiveNull;
     
     public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
-        return Handlers4.handlerCanHold(this, reflector, claxx) ? obj : No4.INSTANCE;
+        return Handlers4.handlerCanHold(this, claxx) ? obj : No4.INSTANCE;
     }
     
     public abstract Object defaultValue();
@@ -46,6 +46,10 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     
     public boolean isSimple() {
     	return true;
+    }
+    
+    public boolean descendsIntoMembers() {
+    	return false;
     }
     
     public boolean canHold(ReflectClass type) {

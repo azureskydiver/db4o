@@ -3,7 +3,6 @@
 package com.db4o.internal;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
@@ -11,6 +10,7 @@ import com.db4o.internal.replication.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
+import com.db4o.typehandlers.*;
 
 
 /**
@@ -25,9 +25,16 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     
     private ReflectClass _classReflector;
 
-    VirtualFieldMetadata(int handlerID, BuiltinTypeHandler handler) {
-        super(handlerID, handler);
-        
+	private BuiltinTypeHandler _handler;
+
+    VirtualFieldMetadata(int fieldTypeID, BuiltinTypeHandler handler) {
+        super(fieldTypeID);
+        _handler = handler;
+    }
+    
+    @Override
+    public TypeHandler4 getHandler() {
+    	return _handler;
     }
     
     public abstract void addFieldIndex(ObjectIdContextImpl context, Slot oldSlot)  throws FieldIndexException ;
@@ -64,7 +71,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         
     }
     
-    public void deactivate(Transaction a_trans, Object a_onObject, ActivationDepth a_depth) {
+    public void deactivate(ActivationContext context) {
         // do nothing
     }
     
@@ -81,23 +88,18 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         return false;
     }
 
-    public boolean needsHandlerId(){
-        return false;
-    }
-
-    public void instantiate(UnmarshallingContext context) {
+    public void activate(UnmarshallingContext context) {
         context.objectReference().produceVirtualAttributes();
         instantiate1(context);
     }
 
     abstract void instantiate1(ObjectReferenceContext context);
     
-    public void loadHandlerById(ObjectContainerBase container){
+    public void loadFieldTypeById(){
     	// do nothing
     }
     
     public void marshall(MarshallingContext context, Object obj){
-        context.doNotIndirectWrites();
         marshall(context.transaction(), context.reference(), context, context.isNew());
     }
 
@@ -158,6 +160,6 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     }
     
     protected Indexable4 indexHandler(ObjectContainerBase stream) {
-    	return (Indexable4)_handler;
+    	return (Indexable4)getHandler();
     }
 }

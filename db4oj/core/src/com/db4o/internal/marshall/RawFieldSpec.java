@@ -6,17 +6,17 @@ import com.db4o.foundation.*;
 public class RawFieldSpec {
     private final AspectType _type;
 	private final String _name;
-	private final int _handlerID;
+	private final int _fieldTypeID;
 	private final boolean _isPrimitive;
 	private final boolean _isArray;
 	private final boolean _isNArray;
 	private final boolean _isVirtual;
 	private int _indexID;
 
-	public RawFieldSpec(AspectType aspectType, final String name, final int handlerID, final byte attribs) {
+	public RawFieldSpec(AspectType aspectType, final String name, final int fieldTypeID, final byte attribs) {
         _type = aspectType;
         _name = name;
-		_handlerID = handlerID;
+		_fieldTypeID = fieldTypeID;
 		BitMap4 bitmap = new BitMap4(attribs);
         _isPrimitive = bitmap.isTrue(0);
         _isArray = bitmap.isTrue(1);
@@ -28,7 +28,7 @@ public class RawFieldSpec {
 	public RawFieldSpec(AspectType aspectType, final String name) {
 	    _type = aspectType;
 		_name = name;
-		_handlerID = 0;
+		_fieldTypeID = 0;
         _isPrimitive = false;
         _isArray = false;
         _isNArray = false;
@@ -40,8 +40,8 @@ public class RawFieldSpec {
 		return _name;
 	}
 	
-	public int handlerID() {
-		return _handlerID;
+	public int fieldTypeID() {
+		return _fieldTypeID;
 	}
 	
 	public boolean isPrimitive() {
@@ -64,7 +64,7 @@ public class RawFieldSpec {
 		return isVirtual() && isField();
 	}
 	
-	private boolean isField() {
+	public boolean isField() {
 		return _type.isField();
 	}
 
@@ -83,4 +83,8 @@ public class RawFieldSpec {
     public boolean isFieldMetadata() {
         return _type.isFieldMetadata();
     }
+
+	public boolean isTranslator() {
+		return _type.isTranslator();
+	}
 }

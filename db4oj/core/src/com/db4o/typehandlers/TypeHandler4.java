@@ -6,7 +6,6 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.delete.*;
-import com.db4o.internal.fieldhandlers.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
@@ -18,20 +17,9 @@ import com.db4o.reflect.*;
  * behaviour of storing all non-transient fields of an object.<br><br>
  * @see {@link Configuration#registerTypeHandler(com.db4o.typehandlers.TypeHandlerPredicate, TypeHandler4)} 
  */
-
-// 	TODO: Not all TypeHandlers can implement Comparable4.
-// Consider to change the hierarchy, not to extend Comparable4
-// and to have callers check, if Comparable4 is implemented by 
-// a TypeHandler.
-public interface TypeHandler4 extends FieldHandler, Comparable4 {
+public interface TypeHandler4 {
 	
-	/**
-	 * gets called to check whether a TypeHandler can hold
-	 * a specific type
-	 * @param type the type
-	 * @return true, if this Typehandler can hold a type
-	 */
-	boolean canHold(ReflectClass type);
+	
 	
 	/**
 	 * gets called when an object gets deleted.
@@ -45,21 +33,21 @@ public interface TypeHandler4 extends FieldHandler, Comparable4 {
 	 * @param context
 	 */
 	void defragment(DefragmentContext context);
-
-	/**
-	 * gets called when an object is read from the database.
-	 * @param context
-	 * @return the instantiated object
-	 */
-	Object read(ReadContext context);
 	
 	/**
 	 * gets called when an object is to be written to the database.
+
 	 * @param context
 	 * @param obj the object
 	 */
     void write(WriteContext context, Object obj);
 
-	
+    /**
+	 * gets called to check whether a TypeHandler can hold
+	 * a specific type
+	 * @param type the type
+	 * @return true, if this Typehandler can hold a type
+	 */
+	boolean canHold(ReflectClass type);
 	
 }

@@ -48,7 +48,7 @@ public class GenericStringTestCase extends AbstractDb4oTestCase {
 		}
 	}
 
-	class StringWrapper2<T extends Comparable> {
+	static class StringWrapper2<T extends Comparable> {
 		public T str;
 		
 		public StringWrapper2() {

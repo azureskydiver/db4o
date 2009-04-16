@@ -9,6 +9,7 @@ import com.db4o.io.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
 	
@@ -34,14 +35,24 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testDbNotClosedOnOutOfMemory(){
-		Class expectedException = isClientServer() && ! isEmbeddedClientServer() 
-		? InvalidIDException.class : OutOfMemoryError.class;
+		final Class expectedException = isNetworkingClientServer() || isInMemory()
+			? InvalidIDException.class
+			: OutOfMemoryError.class;
+		
 		Assert.expect(expectedException, new CodeBlock(){
 			public void run() throws Throwable {
 				db().getByID(OUT_OF_MEMORY_ID);
 			}
 		});
 		Assert.isFalse(db().isClosed());
+	}
+
+	private boolean isInMemory() {
+		return fixture() instanceof Db4oInMemory;
+	}
+
+	private boolean isNetworkingClientServer() {
+		return isClientServer() && ! isEmbeddedClientServer();
 	}
 	
 	public static class A{

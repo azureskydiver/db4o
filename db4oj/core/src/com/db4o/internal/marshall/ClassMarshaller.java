@@ -69,7 +69,7 @@ public abstract class ClassMarshaller {
     }
 
     public final void read(ObjectContainerBase stream, ClassMetadata clazz, ByteArrayBuffer reader) {
-        clazz.setAncestor(stream.classMetadataForId(reader.readInt()));
+        clazz.setAncestor(stream.classMetadataForID(reader.readInt()));
         
 //        if(clazz.callConstructor()){
 //            // The logic further down checks the ancestor YapClass, whether
@@ -82,25 +82,18 @@ public abstract class ClassMarshaller {
         
         readIndex(stream, clazz, reader);
         
-        clazz._aspects = createFields(clazz, reader.readInt());
-        readFields(stream, reader, clazz._aspects);        
+        clazz._aspects = readAspects(stream, reader, clazz);        
     }
 
     protected abstract void readIndex(ObjectContainerBase stream, ClassMetadata clazz, ByteArrayBuffer reader) ;
 
-	private ClassAspect[] createFields(ClassMetadata clazz, final int fieldCount) {
-		final ClassAspect[] aspects = new ClassAspect[fieldCount];
-        for (int i = 0; i < aspects.length; i++) {
-            aspects[i] = new FieldMetadata(clazz);
+	private ClassAspect[] readAspects(ObjectContainerBase stream, ByteArrayBuffer reader, final ClassMetadata clazz) {
+		ClassAspect[] aspects = new ClassAspect[reader.readInt()];
+		for (int i = 0; i < aspects.length; i++) {
+            aspects[i] = _family._field.read(stream, clazz, reader);
             aspects[i].setHandle(i);
         }
 		return aspects;
-	}
-
-	private void readFields(ObjectContainerBase stream, ByteArrayBuffer reader, final ClassAspect[] fields) {
-		for (int i = 0; i < fields.length; i++) {
-            fields[i] = _family._field.read(stream, (FieldMetadata)fields[i], reader);
-        }
 	}
 
     public int marshalledLength(final ObjectContainerBase stream, final ClassMetadata clazz) {

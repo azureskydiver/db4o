@@ -22,7 +22,7 @@ public class TAVirtualFieldTestCase implements TestLifeCycle {
 	
 	private static String FILEPATH = Path4.getTempFileName();
 	
-private Db4oUUID _uuid;
+	private Db4oUUID _uuid;
 	
 	public static class Item {
 		public Item _next;

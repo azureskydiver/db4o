@@ -8,9 +8,9 @@ import db4ounit.extensions.*;
 public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
-		return new Class[] { 
-				InterfaceArrayTestCase.class,
-				InterfaceTestCase.class,
+		return new Class[] {
+			InterfaceArrayTestCase.class,
+			QueryByInterfaceTestCase.class
 		};
 	} 
 

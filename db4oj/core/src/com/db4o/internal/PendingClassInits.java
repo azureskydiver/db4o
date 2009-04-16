@@ -11,10 +11,10 @@ class PendingClassInits {
 	
 	private Collection4 _pending = new Collection4();
 
-	private Queue4 _members = new NonblockingQueue();
-	private Queue4 _statics = new NonblockingQueue();
-    private Queue4 _writes = new NonblockingQueue();
-    private Queue4 _inits = new NonblockingQueue();
+	private Queue4<ClassMetadata> _members = new NonblockingQueue();
+	private Queue4<ClassMetadata> _statics = new NonblockingQueue();
+    private Queue4<ClassMetadata> _writes = new NonblockingQueue();
+    private Queue4<ClassMetadata> _inits = new NonblockingQueue();
 	
 	private boolean _running = false;
 	
@@ -50,35 +50,31 @@ class PendingClassInits {
 	}
 
 	
-	private void checkMembers() {
+	private void initializeAspects() {
 		while(_members.hasNext()) {
-			ClassMetadata classMetadata = (ClassMetadata)_members.next();
-			classMetadata.addMembers(stream());
+			ClassMetadata classMetadata = _members.next();
+			classMetadata.initializeAspects();
             _statics.add(classMetadata);
 		}
 	}
-
-    private ObjectContainerBase stream() {
-        return _systemTransaction.container();
-    }
 	
 	private void checkStatics() {
-		checkMembers();
+		initializeAspects();
 		while(_statics.hasNext()) {
-			ClassMetadata yc = (ClassMetadata)_statics.next();
-			yc.storeStaticFieldValues(_systemTransaction, true);
-			_writes.add(yc);
-			checkMembers();
+			ClassMetadata classMetadata = _statics.next();
+			classMetadata.storeStaticFieldValues(_systemTransaction, true);
+			_writes.add(classMetadata);
+			initializeAspects();
 		}
 	}
 	
 	private void checkWrites() {
 		checkStatics();
 		while(_writes.hasNext()) {
-			ClassMetadata yc = (ClassMetadata)_writes.next();
-	        yc.setStateDirty();
-	        yc.write(_systemTransaction);
-            _inits.add(yc);
+			ClassMetadata classMetadata = _writes.next();
+	        classMetadata.setStateDirty();
+	        classMetadata.write(_systemTransaction);
+            _inits.add(classMetadata);
 			checkStatics();
 		}
 	}
@@ -86,8 +82,8 @@ class PendingClassInits {
     private void checkInits() {
         checkWrites();
         while(_inits.hasNext()) {
-            ClassMetadata yc = (ClassMetadata)_inits.next();
-            yc.initConfigOnUp(_systemTransaction);
+            ClassMetadata classMetadata = _inits.next();
+            classMetadata.initConfigOnUp(_systemTransaction);
             checkWrites();
         }
     }

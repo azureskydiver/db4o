@@ -8,7 +8,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 
-public class InterfaceTestCase extends AbstractDb4oTestCase {
+public class QueryByInterfaceTestCase extends AbstractDb4oTestCase {
 	
 	protected void store(){
         store(new ThreeSomeParent());

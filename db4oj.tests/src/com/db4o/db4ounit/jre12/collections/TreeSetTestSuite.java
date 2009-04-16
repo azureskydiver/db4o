@@ -18,6 +18,12 @@ import db4ounit.fixtures.*;
 @decaf.Remove(decaf.Platform.JDK11)
 public class TreeSetTestSuite extends FixtureTestSuiteDescription implements Db4oTestCase {
 	
+	static final Comparator<String> comparator = new Comparator<String>() {
+		public int compare(String x, String y) {
+			return y.compareTo(x);
+        }
+	};
+	
 	{
 		fixtureProviders(
 			new Db4oFixtureProvider(),
@@ -29,11 +35,7 @@ public class TreeSetTestSuite extends FixtureTestSuiteDescription implements Db4
 				}},
 				new Deferred4<TreeSet>() { public TreeSet value() {
 					
-					return new TreeSet(new Comparator<String>() {
-						public int compare(String x, String y) {
-							return y.compareTo(x);
-                        }
-					});
+					return new TreeSet(comparator);
 					
 				}}
 			)
@@ -110,7 +112,44 @@ public class TreeSetTestSuite extends FixtureTestSuiteDescription implements Db4
 				ObjectSetAssert.sameContent(found, item, copy);
 			}
 		}
+		
+		static class NamedItem {
 
+			public String name;
+
+			public NamedItem(String name) {
+				this.name = name;
+			}
+			
+		}
+		
+		public void testTransparentDescendOnElementMember() {
+			
+			deleteAll(Item.class);
+			
+			final Item item1 = new Item(new TreeSet(Arrays.asList(
+										new NamedItem("foo"))));
+			final Item item2 = new Item(new TreeSet(Arrays.asList(
+										new NamedItem("bar"))));
+			
+			final Item[] items = { item1, item2 };
+			for (Item item : items)
+				store(item);
+			
+			for (Item item : items) {
+				final NamedItem firstNamedItem = (NamedItem)item.treeSet.first();
+				final ObjectSet<Object> found = itemByNamedItem(firstNamedItem.name);
+				ObjectSetAssert.sameContent(found, item);
+			}
+		}
+
+		private ObjectSet<Object> itemByNamedItem(final String namedItemName) {
+			final Query query = newQuery(Item.class);
+			query.descend("treeSet").descend("name").constrain(namedItemName);
+			final ObjectSet<Object> found = query.<Object>execute();
+			return found;
+		}
+		
 		private ObjectSet<Object> itemByTreeSetElement(String element) {
 	        final Query query = newQuery(Item.class);
 	        query.descend("treeSet").constrain(element);

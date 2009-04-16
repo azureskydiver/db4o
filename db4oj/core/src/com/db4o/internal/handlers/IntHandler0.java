@@ -10,6 +10,7 @@ import com.db4o.marshall.*;
  */
 public class IntHandler0 extends IntHandler {
 
+	@Override
     public Object read(ReadContext context) {
         int i = context.readInt();
         if (i == Integer.MAX_VALUE) {

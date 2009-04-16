@@ -10,7 +10,7 @@ public final class MGetInternalIDs extends MsgD implements ServerSideMessage {
 		long[] ids;
 		synchronized (streamLock()) {
 			try {
-				ids = stream().classMetadataForId(bytes.readInt()).getIDs(transaction());
+				ids = stream().classMetadataForID(bytes.readInt()).getIDs(transaction());
 			} catch (Exception e) {
 				ids = new long[0];
 			}

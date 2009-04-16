@@ -9,9 +9,7 @@ import db4ounit.*;
 
 public class InterfaceHandlerUpdateTestCase extends HandlerUpdateTestCaseBase{
     
-    
     public static interface ItemInterface {
-        
     }
     
     public static class ItemContainer {
@@ -36,13 +34,11 @@ public class InterfaceHandlerUpdateTestCase extends HandlerUpdateTestCaseBase{
         private static ItemInterface[] newItemInterfaceArray() {
             return new ItemInterface[]{ storedItem() };
         }
-        
     }
     
     public static class Item implements ItemInterface {
         
         public String _name;
-        
         
         public Item(String name) {
             _name = name;
@@ -58,7 +54,6 @@ public class InterfaceHandlerUpdateTestCase extends HandlerUpdateTestCaseBase{
         public String toString() {
             return "Item " + _name;
         }
-        
     }
     
     protected Object[] createValues() {

@@ -6,6 +6,7 @@ import com.db4o.marshall.*;
 
 public class DoubleHandler0 extends DoubleHandler {
 
+	@Override
 	public Object read(ReadContext context) {
 		Double value = (Double)super.read(context);
 		if (value.isNaN()) {

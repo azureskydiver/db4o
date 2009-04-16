@@ -3,7 +3,6 @@
 package com.db4o.internal;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.fieldhandlers.*;
 import com.db4o.typehandlers.*;
 
 
@@ -20,7 +19,7 @@ public class HandlerVersionRegistry {
         _registry = registry;
     }
 
-    public void put(FieldHandler handler, int version, TypeHandler4 replacement) {
+    public void put(TypeHandler4 handler, int version, TypeHandler4 replacement) {
         _versions.put(new HandlerVersionKey(handler, version), replacement);
     }
 
@@ -50,11 +49,11 @@ public class HandlerVersionRegistry {
     
     private class HandlerVersionKey {
         
-        private final FieldHandler _handler;
+        private final TypeHandler4 _handler;
         
         private final int _version;
         
-        public HandlerVersionKey(FieldHandler handler, int version){
+        public HandlerVersionKey(TypeHandler4 handler, int version){
             _handler = handler;
             _version = version;
         }

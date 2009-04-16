@@ -35,12 +35,12 @@ public class STInnerClasses implements STClass
 	}
 
 
-	public class FirstClass
+	public class Child
 	{
 		public Object childFirst;
-		public FirstClass(Object o ) { childFirst = o; }
-		public String toString() { return "First[" + childFirst + "]"; }
-		public FirstClass() {}
+		public Child(Object o ) { childFirst = o; }
+		public String toString() { return "Child[" + childFirst + "]"; }
+		public Child() {}
 	}
 
 	public STInnerClasses ()
@@ -50,8 +50,8 @@ public class STInnerClasses implements STClass
 	public Object[] store() {
 		return new Object[]
 			{
-				new Parent(new FirstClass("Example")),
-				new Parent(new FirstClass("no Example")),
+				new Parent(new Child("Example")),
+				new Parent(new Child("no Example")),
 			};
 	}
 

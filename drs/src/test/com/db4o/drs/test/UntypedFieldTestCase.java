@@ -51,7 +51,7 @@ public class UntypedFieldTestCase extends DrsTestCase {
 		assertJaggedArray("42");
 	}
 	
-	public void testUntypedFirstClassJaggedArray() {
+	public void testUntypedReferenceTypeJaggedArray() {
 		assertJaggedArray(new Data(42));
 	}
 	
@@ -90,17 +90,17 @@ public class UntypedFieldTestCase extends DrsTestCase {
 		assertNotSame(data, actualValue);
 	}
 
-	private void assertNotSame(Object expectedFirstClass, Object actual) {
-		if (isFirstClass(expectedFirstClass.getClass())) {
-			Assert.areNotSame(expectedFirstClass, actual);
+	private void assertNotSame(Object expectedReference, Object actual) {
+		if (!isPrimitive(expectedReference.getClass())) {
+			Assert.areNotSame(expectedReference, actual);
 		}
 	}
 
-	private boolean isFirstClass(Class klass) {
-		if (klass.isPrimitive()) return false;
-		if (klass == String.class) return false;
-		if (klass == Date.class) return false;
-		return true;
+	private boolean isPrimitive(Class klass) {
+		if (klass.isPrimitive()) return true;
+		if (klass == String.class) return true;
+		if (klass == Date.class) return true;
+		return false;
 	}
 	
 	private void assertEquals(Object expected, Object actual) {

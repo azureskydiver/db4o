@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.handlers;
 
+import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.reflect.*;
@@ -83,6 +84,19 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
 		ArrayAssert.areEqual(FloatArrayHolder.lift(expected), stored.jaggedWrappers());
     }
     
+    public void testArraysHaveNoIdentity() throws Exception {
+    	
+    	final float[] expected = new float[] { Float.MIN_VALUE, Float.MIN_VALUE + 1, 0.0f, Float.MAX_VALUE - 1, Float.MAX_VALUE};
+		store(new FloatArrayHolder(expected));
+		store(new FloatArrayHolder(expected));
+		reopen();
+		
+		final ObjectSet<FloatArrayHolder> stored = db().query(FloatArrayHolder.class);
+		final FloatArrayHolder first = stored.next();
+		final FloatArrayHolder second = stored.next();
+		Assert.areNotSame(first._floats, second._floats);
+    }
+    
     public void testCanHold() {
     	Assert.isTrue(intArrayHandler().canHold(reflectClass(int.class)));
     	Assert.isFalse(intArrayHandler().canHold(reflectClass(long.class)));
@@ -92,7 +106,7 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
         IntArrayHolder intArrayHolder = new IntArrayHolder(new int[0]);
         store(intArrayHolder);
         ReflectClass claxx = reflector().forObject(intArrayHolder);
-        ClassMetadata classMetadata = (ClassMetadata) container().typeHandlerForReflectClass(claxx);
+        ClassMetadata classMetadata = (ClassMetadata) container().produceClassMetadata(claxx);
         FieldMetadata fieldMetadata = classMetadata.fieldMetadataForName("_ints");
         TypeHandler4 arrayHandler = fieldMetadata.getHandler();
         Assert.isInstanceOf(ArrayHandler.class, arrayHandler);
@@ -159,3 +173,4 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
     }
 
 }
+   

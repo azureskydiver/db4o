@@ -7,7 +7,6 @@ import java.util.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
@@ -19,7 +18,7 @@ import com.db4o.reflect.*;
  * collection framework.
  * @sharpen.ignore
  */
-public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, VariableLengthTypeHandler {
+public class VectorTypeHandler implements ReferenceTypeHandler, CascadingTypeHandler, VariableLengthTypeHandler {
 
     public PreparedComparison prepareComparison(Context context, Object obj) {
         // TODO Auto-generated method stub
@@ -30,15 +29,15 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, Vari
 		return true;
     }
 
-    public void write(WriteContext context, Object obj) {
+	public void write(WriteContext context, Object obj) {
         Vector vector = (Vector)obj;
         TypeHandler4 elementHandler = detectElementTypeHandler(container(context), vector);
-        writeElementTypeHandlerId(context, elementHandler);
+        writeElementClassMetadataId(context, elementHandler);
         writeElementCount(context, vector);
         writeElements(context, vector, elementHandler);
     }
     
-	public Object read(ReadContext context) {
+	public void activate(ReferenceActivationContext context) {
         Vector vector = (Vector)((UnmarshallingContext) context).persistentObject();
         vector.removeAllElements();
         TypeHandler4 elementHandler = readElementTypeHandler(context, context);
@@ -46,7 +45,6 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, Vari
         for (int i = 0; i < elementCount; i++) {
             vector.addElement(context.readObject(elementHandler));
         }
-        return vector;
     }
     
 	private void writeElementCount(WriteContext context, Vector vector) {
@@ -83,7 +81,7 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, Vari
         }
     }
     
-    public final void cascadeActivation(ActivationContext4 context) {
+    public final void cascadeActivation(ActivationContext context) {
         Enumeration all = ((Vector) context.targetObject()).elements();
         while (all.hasMoreElements()) {
             context.cascadeActivationToChild(all.nextElement());
@@ -102,17 +100,17 @@ public class VectorTypeHandler implements TypeHandler4 , FirstClassHandler, Vari
         }
     }
 
-	private void writeElementTypeHandlerId(WriteContext context, TypeHandler4 elementHandler) {
+	private void writeElementClassMetadataId(WriteContext context, TypeHandler4 elementHandler) {
 		context.writeInt(0);
 	}
 
 	private TypeHandler4 readElementTypeHandler(ReadBuffer buffer, Context context) {
 		buffer.readInt();
-		return container(context).handlers().untypedObjectHandler();
+		return (TypeHandler4) container(context).handlers().openTypeHandler();
 	}
 
 	private TypeHandler4 detectElementTypeHandler(InternalObjectContainer container, Vector vector) {
-		return container.handlers().untypedObjectHandler();
+		return (TypeHandler4) container.handlers().openTypeHandler();
 	}
 
 }

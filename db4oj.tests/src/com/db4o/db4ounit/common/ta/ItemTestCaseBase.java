@@ -54,7 +54,7 @@ public abstract class ItemTestCaseBase
     			continue;
     		}
     		ReflectClass type = field.getFieldType();
-    		if(container().classMetadataForReflectClass(type).isSecondClass()) {
+    		if(container().classMetadataForReflectClass(type).isValueType()) {
     			continue;
     		}
     		Object value = field.get(obj);

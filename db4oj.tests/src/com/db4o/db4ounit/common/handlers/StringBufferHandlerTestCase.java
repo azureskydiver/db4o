@@ -9,7 +9,6 @@ import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.query.*;
 import com.db4o.typehandlers.*;
-import com.db4o.types.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -20,7 +19,7 @@ public class StringBufferHandlerTestCase extends AbstractDb4oTestCase {
         new StringBufferHandlerTestCase().runAll();
     }
 
-    public static class Item implements SecondClass {
+    public static class Item {
         public StringBuffer buffer;
 
         public Item(StringBuffer contents) {

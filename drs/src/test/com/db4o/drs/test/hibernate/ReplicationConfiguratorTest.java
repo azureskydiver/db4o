@@ -120,7 +120,7 @@ public class ReplicationConfiguratorTest implements TestCase {
 		session.close();
 	}
 
-	public void tstFirstClass() {
+	public void tstReferenceType() {
 		CollectionHolder ch = new CollectionHolder();
 
 		Session session = openSession();
@@ -185,7 +185,7 @@ public class ReplicationConfiguratorTest implements TestCase {
 		Session session = sessionFactory.openSession();
 		session.close();
 
-		tstFirstClass();
+		tstReferenceType();
 		tstCollectionUpdate();
 		tstCollectionRemove();
 	}

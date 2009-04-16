@@ -34,33 +34,15 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         config.allowVersionUpdates(false);
         deconfigureForTest(config);
     }
-
     /**
      * @sharpen.ignore
      */
 	private static String getTempPath() {
 		return Path4.getTempPath();
 	}
-	
-	/**
-	 * @sharpen.property
-	 */
-	private String databasePath() {
-		return Path4.combine(getTempPath(), "test/db4oVersions");
-	}
-
-    protected String fileName(){
-        _db4oVersion = Db4oVersion.NAME;
-        return fileName(_db4oVersion);
-    }
     
-    protected String fileName(String versionName){
-        return oldVersionFileName(versionName) + ".yap";
-    }
+    private byte _db4oHeaderVersion;
     
-    protected String oldVersionFileName(String versionName){
-        return Path4.combine(databasePath(), fileNamePrefix() + versionName.replace(' ', '_'));
-    }
     
     public void createDatabase() {
         createDatabase(fileName());
@@ -85,19 +67,6 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         	deconfigureForStore(config);
         }
     }
-
-	private void createDatabase(String file) {
-		File4.mkdirs(databasePath());
-        if(File4.exists(file)){
-            File4.delete(file);
-        }
-        ExtObjectContainer objectContainer = Db4o.openFile(file).ext();
-        try {
-            store(objectContainer);
-        } finally {
-            objectContainer.close();
-        }
-	}
     
     public void setUp() throws Exception {
         configure();
@@ -113,13 +82,16 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 
 	public void test(final String versionName) throws IOException {
 	    _db4oVersion = versionName;
+	    if (!isApplicableForDb4oVersion()) {
+			return;
+		}
 		String testFileName = fileName(versionName); 
 		if(File4.exists(testFileName)){
 //		    System.out.println("Check database: " + testFileName);
 			
 		    investigateFileHeaderVersion(testFileName);
 		    
-			runDefrag(testFileName);
+//			runDefrag(testFileName);
 
 		    checkDatabaseFile(testFileName);
 		    // Twice, to ensure everything is fine after opening, converting and closing.
@@ -143,8 +115,62 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 		    // Assert.fail("Version upgrade check failed. File not found:" + testFileName);
 		}
 	}
+    
+	/**
+	 * Can be overriden to disable the test for specific db4o versions.
+	 */
+    protected boolean isApplicableForDb4oVersion() {
+    	return true;
+	}
 
-	private void runDefrag(String testFileName) throws IOException {
+	private void checkDatabaseFile(String testFile) {
+        withDatabase(testFile, new Function4() {
+            public Object apply(Object objectContainer) {
+                assertObjectsAreReadable((ExtObjectContainer) objectContainer);
+                return null;
+            }
+        });
+    }
+    
+    private void checkUpdatedDatabaseFile(String testFile) {
+        withDatabase(testFile, new Function4() {
+            public Object apply(Object objectContainer) {
+                assertObjectsAreUpdated((ExtObjectContainer) objectContainer);
+                return null;
+            }
+        });
+    }
+
+	private void createDatabase(String file) {
+		
+		if (!isApplicableForDb4oVersion()) {
+			return;
+		}
+		
+		File4.mkdirs(databasePath());
+        if(File4.exists(file)){
+            File4.delete(file);
+        }
+        ExtObjectContainer objectContainer = Db4o.openFile(file).ext();
+        try {
+            store(objectContainer);
+        } finally {
+            objectContainer.close();
+        }
+	}
+
+	/**
+	 * @sharpen.property
+	 */
+	private String databasePath() {
+		return Path4.combine(getTempPath(), "test/db4oVersions");
+	}
+    
+    private void investigateFileHeaderVersion(String testFile) throws IOException{
+        _db4oHeaderVersion = VersionServices.fileHeaderVersion(testFile); 
+    }
+    
+    private void runDefrag(String testFileName) throws IOException {
 		Configuration config = Db4o.newConfiguration();
 		config.allowVersionUpdates(true);
 		configureForTest(config);
@@ -167,15 +193,6 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     	deconfigure();
     }
     
-    private void checkDatabaseFile(String testFile) {
-        withDatabase(testFile, new Function4() {
-            public Object apply(Object objectContainer) {
-                assertObjectsAreReadable((ExtObjectContainer) objectContainer);
-                return null;
-            }
-        });
-    }
-    
     private void updateDatabaseFile(String testFile) {
         withDatabase(testFile, new Function4() {
             public Object apply(Object objectContainer) {
@@ -185,17 +202,6 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 
         });
     }
-    
-    private void checkUpdatedDatabaseFile(String testFile) {
-        withDatabase(testFile, new Function4() {
-            public Object apply(Object objectContainer) {
-                assertObjectsAreUpdated((ExtObjectContainer) objectContainer);
-                return null;
-            }
-        });
-    }
-    
-
     
     private void withDatabase(String file, Function4 function){
         configure();
@@ -207,15 +213,24 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         }
     }
     
-    private void investigateFileHeaderVersion(String testFile) throws IOException{
-        _db4oHeaderVersion = VersionServices.fileHeaderVersion(testFile); 
+
+    
+    protected abstract void assertObjectsAreReadable(ExtObjectContainer objectContainer);
+    
+    protected void assertObjectsAreUpdated(ExtObjectContainer objectContainer) {
+        // Override to check updates also
     }
     
-    protected int db4oMinorVersion(){
-        if(_db4oVersion != null){
-            return new Integer (_db4oVersion.substring(2, 3)).intValue();
-        }
-        return new Integer(Db4o.version().substring(7, 8)).intValue();
+    protected void configureForStore(Configuration config){
+    	// Override for special storage configuration.
+    }
+    
+    protected void configureForTest(Configuration config){
+    	// Override for special testing configuration.
+    }
+    
+    protected byte db4oHeaderVersion() {
+        return _db4oHeaderVersion;
     }
     
     protected int db4oMajorVersion(){
@@ -225,20 +240,27 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         return new Integer(Db4o.version().substring(5, 6)).intValue();
     }
     
-    private byte _db4oHeaderVersion;
-    
-    protected String[] versionNames(){
-        return new String[] { Db4o.version().substring(5) };
+    protected int db4oMinorVersion(){
+        if(_db4oVersion != null){
+            return new Integer (_db4oVersion.substring(2, 3)).intValue();
+        }
+        return new Integer(Db4o.version().substring(7, 8)).intValue();
     }
-    
-    protected abstract String fileNamePrefix();
 
-    protected void configureForTest(Configuration config){
-    	// Override for special testing configuration.
+    /**
+     * override and return true for database updates that produce changed class metadata 
+     */
+    protected boolean defragmentInReadWriteMode() {
+        return false;
     }
     
-    protected void configureForStore(Configuration config){
-    	// Override for special storage configuration.
+    protected String fileName(){
+        _db4oVersion = Db4oVersion.NAME;
+        return fileName(_db4oVersion);
+    }
+    
+    protected String fileName(String versionName){
+        return oldVersionFileName(versionName) + ".yap";
     }
 
     protected void deconfigureForStore(Configuration config){
@@ -249,6 +271,12 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     	// Override for special storage deconfiguration.
     }
 
+    protected abstract String fileNamePrefix();
+    
+    protected String oldVersionFileName(String versionName){
+        return Path4.combine(databasePath(), fileNamePrefix() + versionName.replace(' ', '_'));
+    }
+
     protected abstract void store(ExtObjectContainer objectContainer);
     
     protected void storeObject(ExtObjectContainer objectContainer, Object obj){
@@ -257,25 +285,12 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     	objectContainer.set(obj);
     }
     
-    protected abstract void assertObjectsAreReadable(ExtObjectContainer objectContainer);
-
-    protected byte db4oHeaderVersion() {
-        return _db4oHeaderVersion;
-    }
-    
     protected void update(ExtObjectContainer objectContainer) {
         // Override to do updates also
     }
     
-    protected void assertObjectsAreUpdated(ExtObjectContainer objectContainer) {
-        // Override to check updates also
-    }
-    
-    /**
-     * override and return true for database updates that produce changed class metadata 
-     */
-    protected boolean defragmentInReadWriteMode() {
-        return false;
+    protected String[] versionNames(){
+        return new String[] { Db4o.version().substring(5) };
     }
     
 }

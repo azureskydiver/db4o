@@ -1,16 +1,17 @@
 /* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
 package com.db4o.foundation;
 
-public interface Queue4 {
 
-	void add(Object obj);
+public interface Queue4<E> {
 
-	Object next();
+	void add(E obj);
+
+	E next();
 
 	boolean hasNext();
 	
 	/**
-	 * Returns the next object in the queue that matches the specified condition.
+	 * Returns tQueue4<ClassMetadata>he next object in the queue that matches the specified condition.
 	 * 
 	 * The operation is always NON-BLOCKING.
 	 *  
@@ -18,7 +19,7 @@ public interface Queue4 {
 	 * 
 	 * @return the object satisfying the condition or null if none does
 	 */
-	Object nextMatching(Predicate4 condition);
+	E nextMatching(Predicate4<E> condition);
 
 	Iterator4 iterator();
 }

@@ -48,10 +48,6 @@ public class CollectIdContext extends ObjectHeaderContext {
         _collector.addId(id);
     }
     
-    public void addPrimitiveObject(Object obj){
-    	_collector.add(obj);
-    }
-    
     public ClassMetadata classMetadata() {
         return _objectHeader.classMetadata();
     }

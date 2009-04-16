@@ -3,29 +3,75 @@
 package com.db4o.internal;
 
 import com.db4o.config.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.reflect.*;
+import com.db4o.typehandlers.*;
 
 
-final class TranslatedAspect extends FieldMetadata {
-	private final ObjectTranslator _translator;
+public final class TranslatedAspect extends FieldMetadata {
+	private ObjectTranslator _translator;
 
-	TranslatedAspect(ClassMetadata containingClass, ObjectTranslator translator){
-	    super(containingClass, translator);
+	public TranslatedAspect(ClassMetadata containingClass, String name){
+	    this(containingClass);
+	    init(name);
+	}
+	
+	public TranslatedAspect(ClassMetadata containingClass, ObjectTranslator translator) {
+		this(containingClass);
+		initializeTranslator(translator);
+	}
+
+	private TranslatedAspect(ClassMetadata containingClass) {
+		super(containingClass);
+		setAvailable();
+	}
+
+	public void initializeTranslator(ObjectTranslator translator) {
 		_translator = translator;
-		ObjectContainerBase stream = containingClass.container();
-		configure(stream.reflector().forClass(translatorStoredClass(translator)), false);
+		initializeFieldName();
+		initializeFieldType();
+	}
+	
+	public boolean alive() {
+		return true;
+	}
+
+	private void initializeFieldName() {
+		init(fieldNameFor(_translator));
+	}
+
+	private void initializeFieldType() {
+		ObjectContainerBase stream = containingClass().container();
+		
+		ReflectClass storedClass = stream.reflector().forClass(translatorStoredClass(_translator));
+		configure(storedClass, false);
+		
+		ReflectClass baseType = Handlers4.baseType(storedClass);
+		stream.showInternalClasses(true);
+		try {
+			_fieldType = stream.produceClassMetadata(baseType);
+		} finally {
+			stream.showInternalClasses(false);
+		}
+		if (null == _fieldType) {
+			throw new IllegalStateException("Cannot produce class metadata for " + baseType + "!");
+		}
+	}
+
+	public static String fieldNameFor(ObjectTranslator translator) {
+		return translator.getClass().getName();
 	}
     
     public boolean canUseNullBitmap(){
         return false;
     }
 
-	public void deactivate(Transaction trans, Object onObject, ActivationDepth depth){
-		if(depth.requiresActivation()){
-			cascadeActivation(trans, onObject, depth);
+    @Override
+	public void deactivate(ActivationContext context){
+		if(context.depth().requiresActivation()){
+			cascadeActivation(context);
 		}
-		setOn(trans, onObject, null);
+		setOn(context.transaction(), context.targetObject(), null);
 	}
 
 	public Object getOn(Transaction a_trans, Object a_OnObject) {
@@ -42,7 +88,7 @@ final class TranslatedAspect extends FieldMetadata {
 		return getOn(a_trans, a_OnObject);
 	}
 
-	public void instantiate(UnmarshallingContext context) {
+	public void activate(UnmarshallingContext context) {
 	    
         Object obj = read(context);
 
@@ -50,7 +96,9 @@ final class TranslatedAspect extends FieldMetadata {
         // Classes like Hashtable need fully activated members
         // to be able to calculate hashCode()
         
-        context.container().activate(context.transaction(), obj, context.activationDepth());
+        if (obj != null) {
+        	context.container().activate(context.transaction(), obj, context.activationDepth());
+        }
 
         setOn(context.transaction(), context.persistentObject(), obj);
 	}
@@ -72,7 +120,7 @@ final class TranslatedAspect extends FieldMetadata {
 	}
 	
 	protected Indexable4 indexHandler(ObjectContainerBase stream) {
-		return (Indexable4)_handler;
+		return (Indexable4)getHandler();
 	}
 	
 	public boolean equals(Object obj) {

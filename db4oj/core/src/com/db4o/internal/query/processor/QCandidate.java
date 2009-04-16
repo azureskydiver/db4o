@@ -302,12 +302,15 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			if (_yapField != null) {
 				TypeHandler4 handler = _yapField.getHandler();
 				if (Handlers4.isUntyped(handler)){
-					handler = candidate.readYapClass();
+					ClassMetadata classMetadata = candidate.readYapClass();
+					if (classMetadata != null) {
+						handler = classMetadata.typeHandler();
+					}
 				}
                 if(handler == null){
                     return false;
                 }
-                if(! Handlers4.handlerCanHold(handler, container().reflector(), a_candidates.i_yapClass.classReflector())){
+                if(! Handlers4.handlerCanHold(handler, a_candidates.i_yapClass.classReflector())){
                     return false;
                 }
 			}
@@ -317,13 +320,13 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		return true;
 	}
 
-	private void readArrayCandidates(TypeHandler4 fieldHandler, final ReadBuffer buffer,
+	private void readArrayCandidates(TypeHandler4 typeHandler, final ReadBuffer buffer,
         final TypeHandler4 arrayElementHandler, final QCandidates candidates) {
-        if(! Handlers4.isFirstClass(arrayElementHandler)){
+        if(! Handlers4.isCascading(arrayElementHandler)){
             return;
         }
         final SlotFormat slotFormat = SlotFormat.forHandlerVersion(_handlerVersion);
-        slotFormat.doWithSlotIndirection(buffer, fieldHandler, new Closure4() {
+        slotFormat.doWithSlotIndirection(buffer, typeHandler, new Closure4() {
             public Object run() {
                 
                 QueryingReadContext context = null;
@@ -338,7 +341,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
                     
                 }else{
                     context = new QueryingReadContext(transaction(), candidates, _handlerVersion, buffer, 0);
-                    ((FirstClassHandler)arrayElementHandler).collectIDs(context);
+                    ((CascadingTypeHandler)arrayElementHandler).collectIDs(context);
                 }
                 
                 Tree.traverse(context.ids(), new Visitor4() {

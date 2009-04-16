@@ -52,7 +52,7 @@ public class KnownClassesCollector {
 		if(isInternalClass(clazz))
 			return;
 		
-		if(isSecondClass(clazz))
+		if(isValueType(clazz))
 			return;
 		
 		if(clazz.isArray())
@@ -65,8 +65,8 @@ public class KnownClassesCollector {
 		return _container._handlers.ICLASS_INTERNAL.isAssignableFrom(clazz);
 	}
 
-	private boolean isSecondClass(ReflectClass clazz) {
+	private boolean isValueType(ReflectClass clazz) {
 		ClassMetadata clazzMeta = _container.classMetadataForReflectClass(clazz);
-		return clazzMeta != null && clazzMeta.isSecondClass();
+		return clazzMeta != null && clazzMeta.isValueType();
 	}
 }

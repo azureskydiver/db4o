@@ -3,31 +3,44 @@
 package com.db4o.internal;
 
 import com.db4o.ext.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
-import com.db4o.internal.fieldhandlers.*;
+import com.db4o.internal.handlers.*;
+import com.db4o.internal.handlers.versions.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
 
-public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHandler, FieldHandler{
+public class OpenTypeHandler implements ReferenceTypeHandler, ValueTypeHandler, BuiltinTypeHandler, CascadingTypeHandler{
     
     private static final int HASHCODE = 1003303143;
+	private ObjectContainerBase _container;
     
-	public UntypedFieldHandler(ObjectContainerBase container){
-		super(container, container._handlers.ICLASS_OBJECT);
+	public OpenTypeHandler(ObjectContainerBase container){
+		_container = container;
 	}
+	
+	ObjectContainerBase container() {
+		return _container;
+	}
+	
+	public ReflectClass classReflector() {
+		return container().handlers().ICLASS_OBJECT;
+	}
+	
+	public boolean canHold(ReflectClass type) {
+		return true;
+   }
 
-	public void cascadeActivation(ActivationContext4 context){
-	    TypeHandler4 typeHandler = typeHandlerForObject(context.targetObject());
+	public void cascadeActivation(ActivationContext context){
+	    Object targetObject = context.targetObject();
+	    if(isPlainObject(targetObject)){
+	    	return;
+	    }
+		TypeHandler4 typeHandler = typeHandlerForObject(targetObject);
 	    Handlers4.cascadeActivation(context, typeHandler);
 	}
-
-    private HandlerRegistry handlerRegistry() {
-        return container()._handlers;
-    }
     
 	public void delete(DeleteContext context) throws Db4oIOException {
         int payLoadOffset = context.readInt();
@@ -41,10 +54,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         int linkOffset = context.offset();
         context.seek(payLoadOffset);
         int classMetadataID = context.readInt();
-        TypeHandler4 typeHandler = configuredHandler(container().classMetadataForId(classMetadataID).classReflector());
-        if(typeHandler == null){
-        	typeHandler = ((ObjectContainerBase)context.objectContainer()).typeHandlerForId(classMetadataID);
-        }
+        TypeHandler4 typeHandler = container().classMetadataForID(classMetadataID).typeHandler();
         if(typeHandler != null){
             context.delete(typeHandler);
         }
@@ -58,18 +68,6 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 	public boolean hasField(ObjectContainerBase a_stream, String a_path) {
 		return a_stream.classCollection().fieldExists(a_path);
 	}
-	
-	public boolean hasClassIndex() {
-	    return false;
-	}
-    
-	public boolean holdsAnyClass() {
-		return true;
-	}
-    
-    public boolean isStrongTyped(){
-		return false;
-	}
     
 	public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
         int payLoadOffSet = context.readInt();
@@ -78,7 +76,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         }
         context.seek(payLoadOffSet);
         int classMetadataID = context.readInt();
-        ClassMetadata classMetadata = context.container().classMetadataForId(classMetadataID);
+        ClassMetadata classMetadata = context.container().classMetadataForID(classMetadataID);
         if(classMetadata == null){
         	return null;
         }
@@ -113,19 +111,26 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         }
         int savedOffSet = context.offset();
         context.seek(payLoadOffSet);
-        
-        int typeHandlerId = context.copyIDReturnOriginalID();
-		TypeHandler4 typeHandler = context.typeHandlerForId(typeHandlerId);
-		if(typeHandler != null){
+        try{
+	        int classMetadataId = context.copyIDReturnOriginalID();
+			TypeHandler4 typeHandler = context.typeHandlerForId(classMetadataId);
+			if(typeHandler == null){
+				return;
+			}
 			seekSecondaryOffset(context, typeHandler);
-		    context.defragment(typeHandler);
-		}
-        context.seek(savedOffSet);
+			if(isPlainObject(typeHandler)){
+				context.defragment(new PlainObjectHandler());
+			}else{
+				context.defragment(typeHandler);
+			}
+        }finally{
+        	context.seek(savedOffSet);
+        }
     }
 
-    private TypeHandler4 readTypeHandler(InternalReadContext context, int payloadOffset) {
+    protected TypeHandler4 readTypeHandler(InternalReadContext context, int payloadOffset) {
         context.seek(payloadOffset);
-        TypeHandler4 typeHandler = container().typeHandlerForId(context.readInt());
+        TypeHandler4 typeHandler = container().typeHandlerForClassMetadataID(context.readInt());
         return HandlerRegistry.correctHandlerVersion(context, typeHandler);
     }
 
@@ -144,18 +149,26 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
             return null;
         }
         int savedOffSet = context.offset();
-        TypeHandler4 typeHandler = readTypeHandler(context, payloadOffset);
-        if(typeHandler == null){
-            context.seek(savedOffSet);
-            return null;
+        try{
+	        TypeHandler4 typeHandler = readTypeHandler(context, payloadOffset);
+	        if(typeHandler == null){
+	            return null;
+	        }
+
+	        seekSecondaryOffset(context, typeHandler);
+	        if(isPlainObject(typeHandler)){
+	        	return context.readAtCurrentSeekPosition(new PlainObjectHandler());
+	        }
+	        return context.readAtCurrentSeekPosition(typeHandler);
+        } finally{
+        	context.seek(savedOffSet);
         }
-        seekSecondaryOffset(context, typeHandler);
-        Object obj = context.readAtCurrentSeekPosition(typeHandler);
-        context.seek(savedOffSet);
-        return obj;
+    }
+    
+    public void activate(ReferenceActivationContext context) {
+//    	throw new IllegalStateException();
     }
 
-    @Override
     public void collectIDs(QueryingReadContext readContext) {
         InternalReadContext context = (InternalReadContext) readContext;
         int payloadOffset = context.readInt();
@@ -182,30 +195,38 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         context.seek(savedOffset);
         return typeHandler;
     }
-
-    public void write(WriteContext context, Object obj) {
-        if(obj == null) {
+      
+	public void write(WriteContext context, Object obj) {
+	    if(obj == null) {
             context.writeInt(0);
             return;
         }
+        
         MarshallingContext marshallingContext = (MarshallingContext) context;
-        TypeHandler4 typeHandler = typeHandlerForObject(obj);
-        if(typeHandler == null){
-            context.writeInt(0);
-            return;
-        }
-        int id = handlerRegistry().typeHandlerID(typeHandler);
+        ClassMetadata classMetadata = classMetadataFor(obj);
         MarshallingContextState state = marshallingContext.currentState();
-        marshallingContext.createChildBuffer(false, false);
-        context.writeInt(id);
-        if(!Handlers4.handlesPrimitiveArray(typeHandler)){
-            marshallingContext.doNotIndirectWrites();
-        }
-        writeObject(context, typeHandler, obj);
+        
+        marshallingContext.createChildBuffer(false);
+        
+        context.writeInt(classMetadata.getID());
+        writeObject(context, classMetadata.typeHandler(), obj);
+        
         marshallingContext.restoreState(state);
     }
 
-    private void writeObject(WriteContext context, TypeHandler4 typeHandler, Object obj) {
+	private ClassMetadata classMetadataFor(Object obj) {
+		final ClassMetadata metadata = container().classMetadataForObject(obj);
+    	if (metadata == null) {
+    		throw new IllegalArgumentException("obj: " + obj);
+    	}
+		return metadata;
+	}
+
+	private void writeObject(WriteContext context, TypeHandler4 typeHandler, Object obj) {
+		if(isPlainObject(obj)){
+			context.writeObject(new PlainObjectHandler(), obj);
+			return;
+		}
         if(Handlers4.useDedicatedSlot(context, typeHandler)){
             context.writeObject(obj);
         }else {
@@ -213,26 +234,27 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         }
     }
 
-    public TypeHandler4 typeHandlerForObject(Object obj) {
-        ReflectClass claxx = reflector().forObject(obj);
-        if(claxx.isArray()){
-            return handlerRegistry().untypedArrayHandler(claxx);
-        }
-        return container().typeHandlerForReflectClass(claxx);
-    }
-
-	private TypeHandler4 configuredHandler(ReflectClass claxx) {
-		TypeHandler4 configuredHandler =
-		    container().configImpl().typeHandlerForClass(claxx, HandlerRegistry.HANDLER_VERSION);
-		return configuredHandler;
+    private boolean isPlainObject(Object obj) {
+    	if(obj == null){
+    		return false;
+    	}
+		return obj.getClass() == Const4.CLASS_OBJECT;
+	}
+    
+    public static boolean isPlainObject(TypeHandler4 typeHandler) {
+		return typeHandler.getClass() == OpenTypeHandler.class
+			|| typeHandler.getClass() == OpenTypeHandler0.class
+			|| typeHandler.getClass() == OpenTypeHandler2.class
+			|| typeHandler.getClass() == OpenTypeHandler7.class;
 	}
 
-    public ReflectClass classReflector() {
-        return super.classReflector();
+	public TypeHandler4 typeHandlerForObject(Object obj) {
+        return classMetadataFor(obj).typeHandler();
     }
     
     public boolean equals(Object obj) {
-        return obj instanceof UntypedFieldHandler;
+    	return obj instanceof OpenTypeHandler
+    		&& !(obj instanceof InterfaceTypeHandler);
     }
     
     public int hashCode() {
@@ -242,5 +264,5 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 	public void registerReflector(Reflector reflector) {
 		// nothing to do
 	}
-
+	
 }

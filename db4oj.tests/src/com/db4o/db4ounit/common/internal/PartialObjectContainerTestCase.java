@@ -8,6 +8,7 @@ import com.db4o.internal.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 
 /**
@@ -15,7 +16,7 @@ import db4ounit.extensions.*;
  */
 public class PartialObjectContainerTestCase
 	extends AbstractDb4oTestCase
-	implements OptOutTA {
+	implements OptOutTA, OptOutInMemory {
     
     public static void main(String[] arguments) {
         new PartialObjectContainerTestCase().runSolo();

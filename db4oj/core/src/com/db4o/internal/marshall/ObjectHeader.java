@@ -40,7 +40,7 @@ public final class ObjectHeader {
         
         classID=normalizeID(classID);
 
-        _classMetadata=(yc!=null ? yc : stream.classMetadataForId(classID));
+        _classMetadata=(yc!=null ? yc : stream.classMetadataForID(classID));
 
         if (Deploy.debug) {
         	// This check has been added to cope with defragment in debug mode: SlotDefragment#setIdentity()

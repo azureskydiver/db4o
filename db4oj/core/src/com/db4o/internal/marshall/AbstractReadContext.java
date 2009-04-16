@@ -29,6 +29,9 @@ public abstract class AbstractReadContext extends AbstractBufferContext implemen
     }
     
     public final Object readObject(TypeHandler4 handlerType) {
+    	if (null == handlerType) {
+    		throw new ArgumentNullException();
+    	}
         final TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(this, handlerType);
         return slotFormat().doWithSlotIndirection(this, handler, new Closure4() {
             public Object run() {
@@ -39,25 +42,19 @@ public abstract class AbstractReadContext extends AbstractBufferContext implemen
     }
     
     public Object readAtCurrentSeekPosition(TypeHandler4 handler){
-        if(handler instanceof ClassMetadata){
-            ClassMetadata classMetadata = (ClassMetadata) handler;
-            if(classMetadata.isValueType()){
-                return classMetadata.readAndActivate(transaction(), readInt(), activationDepth().descend(classMetadata));
-            }
-        }
         if(Handlers4.useDedicatedSlot(this, handler)){
             return readObject();
         }
-        return handler.read(this);
+        return Handlers4.readValueType(this, handler);
     }
 
 	public final Object readObject() {
-        int id = readInt();
-        if (id == 0) {
+        int objectId = readInt();
+        if (objectId == 0) {
         	return null;
         }
         
-        final ClassMetadata classMetadata = classMetadataForId(id);
+        final ClassMetadata classMetadata = classMetadataForObjectId(objectId);
         if (null == classMetadata) {
         	// TODO: throw here
         	return null;
@@ -65,27 +62,27 @@ public abstract class AbstractReadContext extends AbstractBufferContext implemen
         
 		ActivationDepth depth = activationDepth().descend(classMetadata);
         if (peekPersisted()) {
-            return container().peekPersisted(transaction(), id, depth, false);
+            return container().peekPersisted(transaction(), objectId, depth, false);
         }
 
-        Object obj = container().getByID2(transaction(), id);
+        Object obj = container().getByID2(transaction(), objectId);
         if (null == obj) {
         	return null;
         }
 
-        // this is OK for primitive YapAnys. They will not be added
+        // this is OK for boxed value types. They will not be added
         // to the list, since they will not be found in the ID tree.
-        container().stillToActivate(transaction(), obj, depth);
+        container().stillToActivate(container().activationContextFor(transaction(), obj, depth));
 
         return obj;
     }
 
-    private ClassMetadata classMetadataForId(int id) {
+    private ClassMetadata classMetadataForObjectId(int objectId) {
         
         // TODO: This method is *very* costly as is, since it reads
         //       the whole slot once and doesn't reuse it. Optimize.
         
-    	HardObjectReference hardRef = container().getHardObjectReferenceById(transaction(), id);
+    	HardObjectReference hardRef = container().getHardObjectReferenceById(transaction(), objectId);
     	if (null == hardRef || hardRef._reference == null) {
     		// com.db4o.db4ounit.common.querying.CascadeDeleteDeleted
     		return null;

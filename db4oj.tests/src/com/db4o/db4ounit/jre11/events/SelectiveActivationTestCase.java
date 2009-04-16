@@ -73,6 +73,10 @@ public class SelectiveActivationTestCase
                     if (a.object() instanceof Item) {
                         Item item = ((Item) a.object());
                         print("Activated item: " + item.id);
+                        if (item.child == null) {
+                        	print("skipping null child...");
+                        	return;
+                        }
                         boolean isChildActive = db().isActive(item.child);
                         print("child is active? " + isChildActive);
                         if (!isChildActive) {

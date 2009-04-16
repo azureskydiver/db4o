@@ -2,10 +2,7 @@
 
 package com.db4o.internal;
 
-import javax.swing.tree.*;
-
 import com.db4o.foundation.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
@@ -45,7 +42,7 @@ public class Handlers4 {
     
     public static final int ANY_ARRAY_N_ID = 13;
     
-    public static boolean handlerCanHold(TypeHandler4 handler, Reflector reflector, ReflectClass claxx){
+    public static boolean handlerCanHold(TypeHandler4 handler, ReflectClass claxx){
     	return handler.canHold(claxx);
     }
     
@@ -66,7 +63,7 @@ public class Handlers4 {
     }
     
     public static boolean handlesClass(TypeHandler4 handler){
-        return baseTypeHandler(handler) instanceof FirstClassHandler;
+        return baseTypeHandler(handler) instanceof CascadingTypeHandler;
     }
     
     public static ReflectClass primitiveClassReflector(TypeHandler4 handler, Reflector reflector){
@@ -81,8 +78,8 @@ public class Handlers4 {
         if(handler instanceof ArrayHandler){
             return ((ArrayHandler)handler).delegateTypeHandler();
         }
-        if(handler instanceof PrimitiveFieldHandler){
-            return ((PrimitiveFieldHandler)handler).typeHandler();
+        if(handler instanceof PrimitiveTypeMetadata){
+            return ((PrimitiveTypeMetadata)handler).typeHandler();
         }
         return handler;
     }
@@ -99,29 +96,34 @@ public class Handlers4 {
 
 	public static boolean isClassAware(TypeHandler4 typeHandler){
 		return 	typeHandler instanceof BuiltinTypeHandler || 
-				typeHandler instanceof ClassMetadata || 
-				typeHandler instanceof PlainObjectHandler;
+				typeHandler instanceof StandardReferenceTypeHandler;
 	}
 
-	public static int calculateLinkLength(TypeHandler4 _handler){
-	    if (_handler == null) {
+	public static int calculateLinkLength(TypeHandler4 handler){
+	    if (handler == null) {
 	        // must be ClassMetadata
 	        return Const4.ID_LENGTH;
 	    }
-	    if(_handler instanceof TypeFamilyTypeHandler){
-	        return ((TypeFamilyTypeHandler) _handler).linkLength();
+	    if(handler instanceof TypeFamilyTypeHandler){
+	        return ((TypeFamilyTypeHandler) handler).linkLength();
 	    }
-	    if(_handler instanceof PersistentBase){
-	        return ((PersistentBase)_handler).linkLength();
+	    if(handler instanceof PersistentBase){
+	        return ((PersistentBase)handler).linkLength();
 	    }
-	    if(_handler instanceof PrimitiveHandler){
-	        return ((PrimitiveHandler)_handler).linkLength();
+	    if(handler instanceof PrimitiveHandler){
+	        return ((PrimitiveHandler)handler).linkLength();
 	    }
-	    if(_handler instanceof VariableLengthTypeHandler){
-	        if(_handler instanceof EmbeddedTypeHandler){
+	    if(handler instanceof VariableLengthTypeHandler){
+	        if(isValueType(handler)){
 	            return Const4.INDIRECTION_LENGTH;    
 	        }
 	        return Const4.ID_LENGTH;
+	    }
+	    if (isUntyped(handler)) {
+	    	return Const4.ID_LENGTH;
+	    }
+	    if (handler instanceof StandardReferenceTypeHandler) {
+	    	return Const4.ID_LENGTH;
 	    }
 	    
 	    // TODO: For custom handlers there will have to be a way 
@@ -135,33 +137,19 @@ public class Handlers4 {
 	    //        (3) Add a way to test the custom handler when it
 	    //            is installed and remember the length there. 
 	    
-	    throw new NotImplementedException();
+	    throw new NotImplementedException("Unknown type handler type: " + handler);
 	}
 
-	public static ReflectClass classReflectorForHandler(HandlerRegistry handlerRegistry, TypeHandler4 handler) {
-		if(handler instanceof BuiltinTypeHandler){
-	        return ((BuiltinTypeHandler)handler).classReflector();
-	    }
-	    if(handler instanceof ClassMetadata){
-	        return ((ClassMetadata)handler).classReflector();
-	    }
-		return handlerRegistry.classReflectorForHandler(handler);
-	}
-
-	public static boolean holdsEmbedded(TypeHandler4 handler) {
-		return isEmbedded(baseTypeHandler(handler));
+	public static boolean holdsValueType(TypeHandler4 handler) {
+		return isValueType(baseTypeHandler(handler));
 	}
 	
-	public static boolean isClassMetadata(TypeHandler4 handler){
-		return handler instanceof ClassMetadata;
+	public static boolean isValueType(TypeHandler4 handler) {
+	    return !(handler instanceof ReferenceTypeHandler);
 	}
 	
-	public static boolean isEmbedded(TypeHandler4 handler) {
-	    return handler instanceof EmbeddedTypeHandler;
-	}
-	
-	public static boolean isFirstClass(TypeHandler4 handler) {
-	    return handler instanceof FirstClassHandler;
+	public static boolean isCascading(TypeHandler4 handler) {
+	    return handler instanceof CascadingTypeHandler;
 	}
 	
 	public static boolean isPrimitive(TypeHandler4 handler) {
@@ -169,7 +157,7 @@ public class Handlers4 {
 	}
 	
 	public static boolean isUntyped(TypeHandler4 handler) {
-		return handler instanceof UntypedFieldHandler;
+		return handler instanceof OpenTypeHandler;
 	}
 	
 	public static boolean isVariableLength(TypeHandler4 handler) {
@@ -185,30 +173,27 @@ public class Handlers4 {
 
 	public static void collectIDs(final QueryingReadContext context,
 			TypeHandler4 typeHandler) {
-		if(typeHandler instanceof FirstClassHandler){
-	    	((FirstClassHandler)typeHandler).collectIDs(context);	
+		if(typeHandler instanceof CascadingTypeHandler){
+	    	((CascadingTypeHandler)typeHandler).collectIDs(context);	
 	    }
 	}
 
 	public static boolean useDedicatedSlot(Context context, TypeHandler4 handler) {
-	    if (handler instanceof EmbeddedTypeHandler) {
+	    if (isValueType(handler)) {
 	        return false;
 	    }
-	    if (handler instanceof UntypedFieldHandler) {
+	    if (isUntyped(handler)) {
 	        return false;
-	    }
-	    if (handler instanceof ClassMetadata) {
-	        return useDedicatedSlot(context, ((ClassMetadata) handler).delegateTypeHandler(context));
 	    }
 	    return true;
 	}
 
 	public static TypeHandler4 arrayElementHandler(TypeHandler4 handler, QueryingReadContext queryingReadContext) {
-		if(! (handler instanceof FirstClassHandler)){
+		if(! (handler instanceof CascadingTypeHandler)){
 			return null;
 		}
-	    FirstClassHandler firstClassHandler = (FirstClassHandler) HandlerRegistry.correctHandlerVersion(queryingReadContext, handler); 
-	    return HandlerRegistry.correctHandlerVersion(queryingReadContext, firstClassHandler.readCandidateHandler(queryingReadContext));
+	    CascadingTypeHandler cascadingHandler = (CascadingTypeHandler) HandlerRegistry.correctHandlerVersion(queryingReadContext, handler); 
+	    return HandlerRegistry.correctHandlerVersion(queryingReadContext, cascadingHandler.readCandidateHandler(queryingReadContext));
 	}
 	
 	public static Object nullRepresentationInUntypedArrays(TypeHandler4 handler){
@@ -219,59 +204,57 @@ public class Handlers4 {
 	}
 
 	public static boolean handleAsObject(TypeHandler4 typeHandler){
-	    if(isEmbedded(typeHandler)){
+	    if(isValueType(typeHandler)){
 	        return false;
 	    }
-	    if(typeHandler instanceof UntypedFieldHandler){
+	    if(isUntyped(typeHandler)){
 	        return false;
 	    }
 	    return true;
 	}
 
-	public static void cascadeActivation(ActivationContext4 context, TypeHandler4 handler) {
-    	if(! (handler instanceof FirstClassHandler)){
+	public static void cascadeActivation(ActivationContext context, TypeHandler4 handler) {
+    	if(! (handler instanceof CascadingTypeHandler)){
     		return;
     	}
-    	((FirstClassHandler)handler).cascadeActivation(context);
+    	((CascadingTypeHandler)handler).cascadeActivation(context);
 	}
 
-	public static boolean handlesPrimitiveArray(TypeHandler4 classMetadata) {
-	    return classMetadata instanceof PrimitiveFieldHandler && ((PrimitiveFieldHandler)classMetadata).isArray();
+	public static boolean handlesPrimitiveArray(TypeHandler4 typeHandler) {
+	    return typeHandler instanceof ArrayHandler;
+//	    	&& isPrimitive(((ArrayHandler)typeHandler).delegateTypeHandler());
 	}
 
 	public static boolean hasClassIndex(TypeHandler4 typeHandler) {
-	    if(typeHandler instanceof ClassMetadata){
-	        return ((ClassMetadata)typeHandler).hasClassIndex();
+	    if(typeHandler instanceof StandardReferenceTypeHandler){
+	        return ((StandardReferenceTypeHandler)typeHandler).classMetadata().hasClassIndex();
 	    }
 	    return false;
 	}
 
 	public static boolean canLoadFieldByIndex(TypeHandler4 handler) {
-		if (handler instanceof ClassMetadata) {
-	        ClassMetadata yc = (ClassMetadata) handler;
-	        if(yc.isArray()){
-	            return false;
-	        }
+		if (handler instanceof QueryableTypeHandler) {
+	        return !((QueryableTypeHandler)handler).descendsIntoMembers();
 	    }
 	    return true;
 	}
 
 	public static Object wrapWithTransactionContext(Transaction transaction,
 			Object value, TypeHandler4 handler) {
-		if(handler instanceof ClassMetadata){
-		    value = ((ClassMetadata)handler).wrapWithTransactionContext(transaction, value);
+		if(isValueType(handler)) {
+			return value;
 		}
-	    return value;
+		return transaction.wrap(value);
 	}
 
 	public static void collectIdsInternal(CollectIdContext context, final TypeHandler4 handler, int linkLength) {
-        if(! (isFirstClass(handler))){
+        if(! (isCascading(handler))){
         	ReadBuffer buffer = context.buffer();
 			buffer.seek(buffer.offset() + linkLength);
             return;
         }
 
-        if (handler.getClass() == ClassMetadata.class) {
+        if (handler instanceof StandardReferenceTypeHandler) {
             context.addId();
             return;
         } 
@@ -292,15 +275,56 @@ public class Handlers4 {
         final QueryingReadContext queryingReadContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), context.buffer(), 0, context.collector());
         slotFormat.doWithSlotIndirection(queryingReadContext, handler, new Closure4() {
             public Object run() {
-                ((FirstClassHandler) handler).collectIDs(queryingReadContext);
+                ((CascadingTypeHandler) handler).collectIDs(queryingReadContext);
                 return null;
             }
         });
     }
 
 	public static boolean isIndirectedIndexed(TypeHandler4 handler) {
-		return (handler instanceof EmbeddedTypeHandler)
+		return isValueType(handler)
 			&& (handler instanceof VariableLengthTypeHandler)
 			&& (handler instanceof IndexableTypeHandler);
+	}
+
+	public static PreparedComparison prepareComparisonFor(TypeHandler4 handler,
+			Context context, Object obj) {
+		if (!(handler instanceof Comparable4)) {
+	    	return null;
+	    }
+	    return ((Comparable4)handler).prepareComparison(context, obj);
+	}
+
+	public static ReflectClass primitiveClassReflector(ClassMetadata classMetadata, Reflector reflector) {
+		
+		if(classMetadata instanceof PrimitiveTypeMetadata){
+            return primitiveClassReflector(((PrimitiveTypeMetadata)classMetadata).typeHandler(), reflector);
+        }
+		return null;
+	}
+
+	public static void activate(UnmarshallingContext context, TypeHandler4 handler) {
+		if (handler instanceof ReferenceTypeHandler) {
+	    	((ReferenceTypeHandler)handler).activate(context);
+	    }
+	}
+
+	public static void write(TypeHandler4 handler, WriteContext context, Object obj) {
+		handler.write(context, obj);
+	}
+
+	public static Object readValueType(ReadContext context, TypeHandler4 handler) {
+		return ((ValueTypeHandler)handler).read(context);
+	}
+
+	public static boolean isStandaloneTypeHandler(TypeHandler4 customTypeHandler) {
+		return isValueType(customTypeHandler) || customTypeHandler instanceof OpenTypeHandler;
+	}
+
+	public static ClassMetadata erasedFieldType(final ObjectContainerBase container,
+			final ReflectClass fieldType) {
+		return fieldType.isInterface()
+			? container.classMetadataForID(UNTYPED_ID)
+			: container.produceClassMetadata(baseType(fieldType));
 	}
 }

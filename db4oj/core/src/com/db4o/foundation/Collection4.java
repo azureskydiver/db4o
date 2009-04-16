@@ -159,6 +159,17 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
         }
         return null;
     }
+    
+    private List4 findByIdentity(Object obj){
+        List4 current = _first;
+        while (current != null) {
+            if (current._element == obj) {
+                return current;
+            }
+            current = current._next;
+        }
+        return null;
+    }
 
 
 	/**
@@ -266,6 +277,13 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	
     public void replace(Object oldObject, Object newObject) {
         List4 list = find(oldObject);
+        if(list != null){
+            list._element = newObject;
+        }
+    }
+    
+    public void replaceByIdentity(Object oldObject, Object newObject) {
+        List4 list = findByIdentity(oldObject);
         if(list != null){
             list._element = newObject;
         }

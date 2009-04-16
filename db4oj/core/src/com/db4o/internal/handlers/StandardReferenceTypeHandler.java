@@ -2,6 +2,7 @@
 
 package com.db4o.internal.handlers;
 
+import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -17,56 +18,61 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public class FirstClassObjectHandler implements FieldAwareTypeHandler {
+public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, IndexableTypeHandler, ReadsObjectIds {
     
     private static final int HASHCODE_FOR_NULL = 72483944; 
     
     private ClassMetadata _classMetadata;
 
-    public FirstClassObjectHandler(ClassMetadata classMetadata) {
-        _classMetadata = classMetadata;
+    public StandardReferenceTypeHandler(ClassMetadata classMetadata) {
+        classMetadata(classMetadata);
     }
     
-    public FirstClassObjectHandler(){
-        
+    public StandardReferenceTypeHandler(){
     }
 
     public void defragment(final DefragmentContext context) {
-        TraverseAspectCommand command = new TraverseAspectCommand() {
+        traverseAllAspects(context, new TraverseAspectCommand() {
+        	
             @Override
             public int aspectCount(ClassMetadata classMetadata, ByteArrayBuffer reader) {
                 return context.readInt();
             }
+            
             @Override
             public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
                 if (!isNull) {
                     aspect.defragAspect(context);
                 } 
             }
+            
             @Override
             public boolean accept(ClassAspect aspect) {
-            	return aspect.enabled(context);
+            	return aspect.isEnabledOn(context);
             }
-        };
-        traverseAllAspects(context, command);
+        });
     }
 
     public void delete(DeleteContext context) throws Db4oIOException {
         context.deleteObject();
     }
 
-    public final void instantiateAspects(final UnmarshallingContext context) {
-        
+    public final void activateAspects(final UnmarshallingContext context) {
+    	
         final BooleanByRef schemaUpdateDetected = new BooleanByRef();
         
         ContextState savedState = context.saveState();
         
         TraverseAspectCommand command = new TraverseAspectCommand() {
+        	
+        	@Override
+        	public boolean accept(ClassAspect aspect) {
+        		return aspect.isEnabledOn(context);
+        	}
+        	
             public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
-				if(! aspect.enabled(context)){
-					return;
-				}
-                if(aspect instanceof FieldMetadata){
+            	
+			    if(aspect instanceof FieldMetadata){
                     FieldMetadata field = (FieldMetadata) aspect;
                     if(field.updating()){
                         schemaUpdateDetected.value = true;
@@ -79,8 +85,9 @@ public class FirstClassObjectHandler implements FieldAwareTypeHandler {
                         return;
                     }
                 }
+			    
 
-                aspect.instantiate(context);
+                aspect.activate(context);
             }
         };
         traverseAllAspects(context, command);
@@ -99,31 +106,31 @@ public class FirstClassObjectHandler implements FieldAwareTypeHandler {
         
     }
     
-    public Object read(ReadContext context) {
-        UnmarshallingContext unmarshallingContext = (UnmarshallingContext) context;
-        instantiateAspects(unmarshallingContext);
-        return unmarshallingContext.persistentObject();
+    public void activate(ReferenceActivationContext context) {
+        activateAspects((UnmarshallingContext) context);
     }
 
-    public void write(final WriteContext context, Object obj) {
-    	
+	public void write(WriteContext context, Object obj) {
         marshallAspects(obj, (MarshallingContext)context);
     }
     
     public void marshallAspects(final Object obj, final MarshallingContext context) {
-       final Transaction trans = context.transaction();
-        TraverseAspectCommand command = new TraverseAspectCommand() {
-             
+    	final Transaction trans = context.transaction();
+        final TraverseAspectCommand command = new TraverseAspectCommand() {
             public int aspectCount(ClassMetadata classMetadata, ByteArrayBuffer buffer) {
                 int fieldCount = classMetadata._aspects.length;
                 context.fieldCount(fieldCount);
                 return fieldCount;
             }
+            
+            @Override
+            public boolean accept(ClassAspect aspect) {
+            	return aspect.isEnabledOn(context);
+            }
+            
             public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
-                if(! aspect.enabled(context)){
-                	return;
-                }
-                Object marshalledObject = obj;
+               
+            	Object marshalledObject = obj;
                 if(aspect instanceof FieldMetadata){
                     FieldMetadata field = (FieldMetadata) aspect;
                     marshalledObject = field.getOrCreate(trans, obj);
@@ -153,23 +160,36 @@ public class FirstClassObjectHandler implements FieldAwareTypeHandler {
                     }
                     return -1;
                 }
-            
             };
         }
-        int id = 0;
-        ReflectClass claxx = null;
+        
         if(source instanceof Integer){
-            id = ((Integer)source).intValue();
-        } else if(source instanceof TransactionContext){
+            int id = ((Integer)source).intValue();
+            return new PreparedComparisonImpl(id, null);
+        } 
+        
+        if(source instanceof TransactionContext){
             TransactionContext tc = (TransactionContext)source;
             Object obj = tc._object;
-            id = _classMetadata.stream().getID(tc._transaction, obj);
-            claxx = _classMetadata.reflector().forObject(obj);
-        }else{
-            throw new IllegalComparisonException();
+            Transaction transaction = tc._transaction;
+			int id = idFor(obj, transaction);
+            return new PreparedComparisonImpl(id, reflectClassFor(obj));
         }
-        return new ClassMetadata.PreparedComparisonImpl(id, claxx);
+        
+        throw new IllegalComparisonException();
     }
+
+	private ReflectClass reflectClassFor(Object obj) {
+		return classMetadata().reflector().forObject(obj);
+	}
+
+	private int idFor(Object object, Transaction inTransaction) {
+		return stream().getID(inTransaction, object);
+	}
+
+	private ObjectContainerBase stream() {
+		return classMetadata().container();
+	}
     
     public abstract static class TraverseAspectCommand {
         
@@ -202,18 +222,52 @@ public class FirstClassObjectHandler implements FieldAwareTypeHandler {
         }
     }
     
-    protected final void traverseAllAspects(MarshallingInfo context, TraverseAspectCommand command) {
+    public final static class PreparedComparisonImpl implements PreparedComparison {
+		
+		private final int _id;
+		
+		private final ReflectClass _claxx;
+	
+		public PreparedComparisonImpl(int id, ReflectClass claxx) {
+			_id = id;
+			_claxx = claxx;
+		}
+	
+		public int compareTo(Object obj) {
+		    if(obj instanceof TransactionContext){
+		        obj = ((TransactionContext)obj)._object;
+		    }
+		    if(obj == null){
+		    	return _id == 0 ? 0 : 1;
+		    }
+		    if(obj instanceof Integer){
+				int targetInt = ((Integer)obj).intValue();
+				return _id == targetInt ? 0 : (_id < targetInt ? - 1 : 1); 
+		    }
+		    if(_claxx != null){
+		    	if(_claxx.isAssignableFrom(_claxx.reflector().forObject(obj))){
+		    		return 0;
+		    	}
+		    }
+		    throw new IllegalComparisonException();
+		}
+	}
+
+	protected final void traverseAllAspects(MarshallingInfo context, TraverseAspectCommand command) {
     	int currentSlot = 0;
-        ClassMetadata classMetadata = classMetadata();
+        
+    	ClassMetadata classMetadata = classMetadata();
+        assertClassMetadata(context.classMetadata());
+        
         while(classMetadata != null){
-            int fieldCount=command.aspectCount(classMetadata, ((ByteArrayBuffer)context.buffer()));
-			context.aspectCount(fieldCount);
-			for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
+            int aspectCount=command.aspectCount(classMetadata, ((ByteArrayBuffer)context.buffer()));
+			context.aspectCount(aspectCount);
+			for (int i = 0; i < aspectCount && !command.cancelled(); i++) {
 			    if(command.accept(classMetadata._aspects[i])){
 			        command.processAspect(
 			        		classMetadata._aspects[i],
 			        		currentSlot,
-			        		isNull(context,currentSlot), classMetadata);
+			        		isNull(context, currentSlot), classMetadata);
 			    }
 			    context.beginSlot();
 			    currentSlot++;
@@ -224,6 +278,12 @@ public class FirstClassObjectHandler implements FieldAwareTypeHandler {
             classMetadata = classMetadata.i_ancestor;
         }
     }
+
+	private void assertClassMetadata(final ClassMetadata contextMetadata) {
+//		if (contextMetadata != classMetadata()) {
+//        	throw new IllegalStateException("expecting '" + classMetadata() + "', got '" + contextMetadata + "'");
+//        }
+	}
     
     protected boolean isNull(FieldListInfo fieldList,int fieldIndex) {
         return fieldList.isNull(fieldIndex);
@@ -238,33 +298,33 @@ public class FirstClassObjectHandler implements FieldAwareTypeHandler {
     }
     
     public boolean equals(Object obj) {
-        if(! (obj instanceof FirstClassObjectHandler)){
+        if(! (obj instanceof StandardReferenceTypeHandler)){
             return false;
         }
-        FirstClassObjectHandler other = (FirstClassObjectHandler) obj;
-        if(_classMetadata == null){
-            return other._classMetadata == null;
+        StandardReferenceTypeHandler other = (StandardReferenceTypeHandler) obj;
+        if(classMetadata() == null){
+            return other.classMetadata() == null;
         }
-        return _classMetadata.equals(other._classMetadata);
+        return classMetadata().equals(other.classMetadata());
     }
     
     public int hashCode() {
-        if(_classMetadata != null){
-            return _classMetadata.hashCode();
+        if(classMetadata() != null){
+            return classMetadata().hashCode();
         }
         return HASHCODE_FOR_NULL;
     }
     
     public TypeHandler4 unversionedTemplate() {
-        return new FirstClassObjectHandler(null);
+        return new StandardReferenceTypeHandler(null);
     }
 
     public Object deepClone(Object context) {
         TypeHandlerCloneContext typeHandlerCloneContext = (TypeHandlerCloneContext) context;
-        FirstClassObjectHandler cloned = (FirstClassObjectHandler) Reflection4.newInstance(this);
-        if(typeHandlerCloneContext.original instanceof FirstClassObjectHandler){
-            FirstClassObjectHandler original = (FirstClassObjectHandler) typeHandlerCloneContext.original;
-            cloned._classMetadata = original._classMetadata;
+        StandardReferenceTypeHandler cloned = (StandardReferenceTypeHandler) Reflection4.newInstance(this);
+        if(typeHandlerCloneContext.original instanceof StandardReferenceTypeHandler){
+            StandardReferenceTypeHandler original = (StandardReferenceTypeHandler) typeHandlerCloneContext.original;
+            cloned.classMetadata(original.classMetadata());
         }else{
 
         	// New logic: ClassMetadata takes the responsibility in 
@@ -275,7 +335,7 @@ public class FirstClassObjectHandler implements FieldAwareTypeHandler {
 //                throw new IllegalStateException();
 //            }
         	
-            cloned._classMetadata = _classMetadata;
+            cloned.classMetadata(_classMetadata);
         }
         return cloned;
     }
@@ -297,15 +357,16 @@ public class FirstClassObjectHandler implements FieldAwareTypeHandler {
         traverseAllAspects(context, command);
     }
 
-    public void cascadeActivation(ActivationContext4 context) {
-        context.cascadeActivationToTarget(classMetadata(), classMetadata().descendOnCascadingActivation());
+    public void cascadeActivation(ActivationContext context) {
+    	assertClassMetadata(context.classMetadata());
+        context.cascadeActivationToTarget();
     }
 
     public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
-        if (classMetadata().isArray()) {
-            return classMetadata();
-        }
-        return null;
+    	if (classMetadata().isArray()) {
+    		return this;
+    	}
+    	return null;
     }
 
     public void collectIDs(final QueryingReadContext context) throws Db4oIOException {
@@ -341,7 +402,7 @@ public class FirstClassObjectHandler implements FieldAwareTypeHandler {
     		return false;
     	}
     	TypeHandler4 typehandler = ((TypeHandlerAspect)aspect)._typeHandler;
-    	return  Handlers4.isFirstClass(typehandler);
+    	return  Handlers4.isCascading(typehandler);
     }
     
     private void collectIDsByInstantiatingCollection(final QueryingReadContext context) throws Db4oIOException {
@@ -415,11 +476,17 @@ public class FirstClassObjectHandler implements FieldAwareTypeHandler {
         traverseAllAspects(context, command);
     }
 
-    public boolean seekToField(final ObjectHeaderContext context, final FieldMetadata field) {
+    public boolean seekToField(final ObjectHeaderContext context, final ClassAspect aspect) {
         final BooleanByRef found = new BooleanByRef(false);
         TraverseAspectCommand command=new TraverseAspectCommand() {
+        	
+        	@Override
+        	public boolean accept(ClassAspect aspect) {
+        		return aspect.isEnabledOn(context);
+        	}
+        	
             public void processAspect(ClassAspect curField, int currentSlot, boolean isNull, ClassMetadata containingClass) {
-                if (curField == field) {
+                if (curField == aspect) {
                     found.value = !isNull;
                     cancel();
                     return;
@@ -434,7 +501,52 @@ public class FirstClassObjectHandler implements FieldAwareTypeHandler {
     }
 
 	public boolean canHold(ReflectClass type) {
-		return _classMetadata.canHold(type);
+		return classMetadata().canHold(type);
+    }
+	
+   public final Object indexEntryToObject(Context context, Object indexEntry){
+        if(indexEntry == null){
+            return null;
+        }
+        int id = ((Integer)indexEntry).intValue();
+        return ((ObjectContainerBase)context.objectContainer()).getByID2(context.transaction(), id);
     }
 
+	public final void defragIndexEntry(DefragmentContextImpl context) {
+		context.copyID();
+	}	
+
+    public final Object readIndexEntry(ByteArrayBuffer a_reader) {
+        return new Integer(a_reader.readInt());
+    }
+    
+    public final Object readIndexEntryFromObjectSlot(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
+        return readIndexEntry(a_writer);
+    }
+    
+    public Object readIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException{
+        return new Integer(context.readInt());
+    }
+    
+    public int linkLength() {
+    	return Const4.ID_LENGTH;
+    }
+
+    public void writeIndexEntry(ByteArrayBuffer a_writer, Object a_object) {
+        
+        if(a_object == null){
+            a_writer.writeInt(0);
+            return;
+        }
+        
+        a_writer.writeInt(((Integer)a_object).intValue());
+    }
+    
+    public TypeHandler4 delegateTypeHandler(Context context){
+    	return classMetadata().delegateTypeHandler(context);
+    }
+    
+    public ObjectID readObjectID(InternalReadContext context){
+        return ObjectID.read(context);
+    }
 }

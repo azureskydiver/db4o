@@ -5,7 +5,6 @@ package com.db4o.internal.handlers;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
@@ -35,7 +34,7 @@ public class NullFieldAwareTypeHandler implements FieldAwareTypeHandler{
 	public void readVirtualAttributes(ObjectReferenceContext context) {
 	}
 
-	public boolean seekToField(ObjectHeaderContext context, FieldMetadata field) {
+	public boolean seekToField(ObjectHeaderContext context, ClassAspect aspect) {
 		return false;
 	}
 
@@ -45,8 +44,7 @@ public class NullFieldAwareTypeHandler implements FieldAwareTypeHandler{
 	public void delete(DeleteContext context) throws Db4oIOException {
 	}
 
-	public Object read(ReadContext context) {
-		return null;
+	public void activate(ReferenceActivationContext context) {
 	}
 
 	public void write(WriteContext context, Object obj) {
@@ -64,7 +62,7 @@ public class NullFieldAwareTypeHandler implements FieldAwareTypeHandler{
 		return null;
 	}
 
-	public void cascadeActivation(ActivationContext4 context) {
+	public void cascadeActivation(ActivationContext context) {
 		
 	}
 
@@ -79,5 +77,4 @@ public class NullFieldAwareTypeHandler implements FieldAwareTypeHandler{
 	public boolean canHold(ReflectClass type) {
 	    return false;
     }
-
 }

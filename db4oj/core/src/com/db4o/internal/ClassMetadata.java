@@ -11,14 +11,11 @@ import com.db4o.internal.classindex.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.encoding.*;
-import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
-import com.db4o.internal.reflect.FieldAccessor;
-import com.db4o.internal.reflect.LenientFieldAccessor;
-import com.db4o.internal.reflect.StrictFieldAccessor;
+import com.db4o.internal.reflect.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.query.*;
@@ -31,9 +28,18 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass, FieldHandler , ReadsObjectIds{
-    
-	private TypeHandler4 _typeHandler;
+public class ClassMetadata extends PersistentBase implements StoredClass {
+	
+	
+    /**
+     * For reference types, _typeHandler always holds a StandardReferenceTypeHandler
+     * that will use the _aspects of this class to take care of its business. A custom
+     * type handler would appear as a TypeHandlerAspect in that case.
+     * 
+     * For value types, _typeHandler always holds the actual value type handler be it
+     * a custom type handler or a builtin one.
+     */
+	protected TypeHandler4 _typeHandler;
     
 	public ClassMetadata i_ancestor;
 
@@ -69,12 +75,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     private FieldAccessor _fieldAccessor;
 
 	private Function4<UnmarshallingContext, Object> _constructor;
+
+	private TypeHandlerAspect _customTypeHandlerAspect;
     
-    public final ObjectContainerBase stream() {
-    	return _container;
-    }
-    
-    public final boolean canUpdateFast(){
+    final boolean canUpdateFast(){
         if(_canUpdateFast == TernaryBool.UNSPECIFIED){
             _canUpdateFast = TernaryBool.forBoolean(checkCanUpdateFast());
         }
@@ -121,8 +125,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	if (null == container) {
     		throw new ArgumentNullException();
     	}
-    	classReflector(classReflector);
     	_container = container;
+    	classReflector(classReflector);
     	_index = createIndexStrategy();
         _classIndexed = true;       
        
@@ -137,22 +141,25 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	return _fieldAccessor;
     }
 
-    private FieldAwareTypeHandler createDefaultTypeHandler() {
-        return new FirstClassObjectHandler(this);
+    private TypeHandler4 createDefaultTypeHandler() {
+    	// TODO: make sure initializeAspects has been executed
+    	// before the actual type handler is required
+    	// and remove this method
+    	return new StandardReferenceTypeHandler(this);
     }
     
-    public void activateFields(final Transaction trans, final Object obj, final ActivationDepth depth) {
-        if(objectCanActivate(trans, obj)){
+    public void cascadeActivation(final ActivationContext context) {
+        if(objectCanActivate(context.transaction(), context.targetObject())){
             forEachAspect(new Procedure4() {
                 public void apply(Object arg) {
-                    ((ClassAspect)arg).cascadeActivation(trans, obj, depth);
+                    ((ClassAspect)arg).cascadeActivation(context);
                 }
             });
         }
     }
 
     public final void addFieldIndices(StatefulBuffer buffer, Slot slot) {
-        if(! firstClassObjectHandlerIsUsed()){
+        if(! standardReferenceTypeHandlerIsUsed()){
             return;
         }
         if(hasClassIndex() || hasVirtualAttributes()){
@@ -163,12 +170,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     // FIXME: This method wants to be removed.
-    private boolean firstClassObjectHandlerIsUsed(){
-        return _typeHandler instanceof FirstClassObjectHandler;
+    private boolean standardReferenceTypeHandlerIsUsed(){
+        return _typeHandler instanceof StandardReferenceTypeHandler;
     }
     
-    void addMembers(ObjectContainerBase container) {
-		bitTrue(Const4.CHECKED_CHANGES);
+    void initializeAspects() {
+    	bitTrue(Const4.CHECKED_CHANGES);
 
 		Collection4 aspects = new Collection4();
 
@@ -176,7 +183,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			aspects.addAll(_aspects);
 		}
 		
-		TypeHandler4 customTypeHandler = container.handlers().configuredTypeHandler(classReflector());
+		final TypeHandler4 customTypeHandler = container().handlers().configuredTypeHandler(classReflector());
 
 		boolean dirty = isDirty();
 		
@@ -184,17 +191,17 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			dirty = true;
 		}
 
-		if (container.detectSchemaChanges()) {
+		if (container().detectSchemaChanges()) {
 
 			if (generateVersionNumbers()) {
 				if (!hasVersionField()) {
-					aspects.add(container.versionIndex());
+					aspects.add(container().versionIndex());
 					dirty = true;
 				}
 			}
 			if (generateUUIDs()) {
 				if (!hasUUIDField()) {
-					aspects.add(container.uUIDIndex());
+					aspects.add(container().uUIDIndex());
 					dirty = true;
 				}
 			}
@@ -206,10 +213,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		
 		boolean defaultFieldBehaviour = _translator == null  &&  customTypeHandler == null; 
 
-		if (container.detectSchemaChanges()) {
+		if (container().detectSchemaChanges()) {
 
-			if ( defaultFieldBehaviour) {
-				dirty = collectReflectFields(container, aspects) | dirty;
+			if (defaultFieldBehaviour) {
+				if (collectReflectFields(aspects)) {
+					dirty = true;
+				}
 			}
 
 			if (dirty) {
@@ -219,11 +228,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		}
 
 		if (dirty || ! defaultFieldBehaviour) {
-			_aspects = new ClassAspect[aspects.size()];
-			aspects.toArray(_aspects);
-			for (int i = 0; i < _aspects.length; i++) {
-				_aspects[i].setHandle(i);
-			}
+			_aspects = toClassAspectArray(aspects);
 		}
 
 		DiagnosticProcessor dp = _container._handlers._diagnosticProcessor;
@@ -235,7 +240,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			_aspects = new FieldMetadata[0];
 		}
 
-		createConstructor();
+		initializeConstructor(customTypeHandler);
 		if (stateDead()) {
 			return;
 		}
@@ -243,24 +248,36 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		setStateOK();
 	}
 
+	private ClassAspect[] toClassAspectArray(Collection4 aspects) {
+		final ClassAspect[] array = new ClassAspect[aspects.size()];
+		aspects.toArray(array);
+		for (int i = 0; i < array.length; i++) {
+			array[i].setHandle(i);
+		}
+		return array;
+	}
+
 	private boolean installCustomTypehandler(Collection4 aspects, TypeHandler4 customTypeHandler) {
 		if (customTypeHandler == null) {
 			return false;
 		}
-		if(Handlers4.isEmbedded(customTypeHandler)){
-			_typeHandler = customTypeHandler;	
-		}
 		if(customTypeHandler instanceof ModificationAware){
 			_modificationChecker = (ModificationAware) customTypeHandler;
 		}
+		if(Handlers4.isStandaloneTypeHandler(customTypeHandler)){
+			_typeHandler = customTypeHandler;
+			return false;
+		}
 		boolean dirty = false;
-		TypeHandlerAspect typeHandlerAspect = new TypeHandlerAspect(
-				customTypeHandler);
+		TypeHandlerAspect typeHandlerAspect = new TypeHandlerAspect(this, customTypeHandler);
 		if (!replaceAspectByName(aspects, typeHandlerAspect)) {
 			aspects.add(typeHandlerAspect);
 			dirty = true;
 		}
 		disableAspectsBefore(aspects, typeHandlerAspect);
+		
+		_customTypeHandlerAspect = typeHandlerAspect;
+		
 		return dirty;
 	}
 
@@ -281,66 +298,98 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	if( i_config == null){
     		return false;
     	}
-		ObjectTranslator ot = i_config.getTranslator();
-		if (ot == null) {
+		ObjectTranslator translator = i_config.getTranslator();
+		if (translator == null) {
 			return false;
 		}
-		TranslatedAspect translator = new TranslatedAspect(this, ot);
-		if (replaceAspectByName(aspects, translator)) {
-			_translator = translator;
-			return false;
+		ClassAspect existingAspect = aspectByName(aspects, TranslatedAspect.fieldNameFor(translator));
+		if (null != existingAspect) {
+			return installTranslatorOnExistingAspect(translator, existingAspect, aspects);
 		}
+		
 		if(customTypeHandler == null){
-			aspects.add(translator);
-			_translator = translator;
-			return true;
+			return installTranslatorOnNewAspect(translator, aspects);
 		}
 		return false;
 	}
 
+	private boolean installTranslatorOnNewAspect(ObjectTranslator translator,
+			Collection4 aspects) {
+		TranslatedAspect translatedAspect = new TranslatedAspect(this, translator);
+		aspects.add(translatedAspect);
+		_translator = translatedAspect;
+		return true;
+	}
+
+	private boolean installTranslatorOnExistingAspect(
+			ObjectTranslator translator, ClassAspect existingAspect,
+			Collection4 aspects) {
+		if (existingAspect instanceof TranslatedAspect) {
+			TranslatedAspect translatedAspect = (TranslatedAspect) existingAspect;
+			translatedAspect.initializeTranslator(translator);
+			_translator = translatedAspect;
+			return false;
+		}
+		
+		// older versions didn't store the aspect type properly
+		_translator = new TranslatedAspect(this, translator);
+		aspects.replaceByIdentity(existingAspect, _translator);
+		
+		return true;
+	}
+
     private boolean replaceAspectByName(Collection4 aspects, ClassAspect aspect) {
+    	ClassAspect existing = aspectByName(aspects, aspect.getName());
+        if (existing == null) {
+        	return false;
+        }
+        aspects.replaceByIdentity(existing, aspect);
+        return true;
+    }
+
+	private ClassAspect aspectByName(Collection4 aspects,
+			final String aspectName) {
         Iterator4 i = aspects.iterator();
         while (i.moveNext()) {
             ClassAspect current = (ClassAspect) i.current();
-            if (current.getName().equals(aspect.getName())) {
-                aspects.replace(current, aspect);
-                return true;
+			if (current.getName().equals(aspectName)) {
+            	return current;
             }
         }
-        return false;
-    }
+		return null;
+	}
 
-    private boolean collectReflectFields(ObjectContainerBase container, Collection4 collectedAspects) {
+    private boolean collectReflectFields(Collection4 collectedAspects) {
 		boolean dirty=false;
-		ReflectField[] fields = reflectFields();
-		for (int i = 0; i < fields.length; i++) {
-		    if (storeField(fields[i])) {
-	            ReflectClass fieldType = Handlers4.baseType(fields[i].getFieldType());
-                FieldHandler fieldHandler = container.fieldHandlerForClass(fieldType);
-                if (fieldHandler == null) {
-                    continue;
-                }
-                int fieldHandlerId = container.handlers().typeHandlerID(fieldHandler);
-                FieldMetadata field = new FieldMetadata(this, fields[i], (TypeHandler4)fieldHandler, fieldHandlerId);
-		        boolean found = false;
-		        Iterator4 aspectIterator = collectedAspects.iterator();
-		        while (aspectIterator.moveNext()) {
-		            if (((ClassAspect)aspectIterator.current()).equals(field)) {
-		                found = true;
-		                break;
-		            }
-		        }
-		        if (found) {
-		            continue;
-		        }
-		        dirty = true;
-		        collectedAspects.add(field);
-		    }
+		for (ReflectField reflectField : reflectFields()) {
+			if (!storeField(reflectField)) {
+				continue;
+			}
+            final ClassMetadata classMetadata = Handlers4.erasedFieldType(container(), reflectField.getFieldType());
+            if (classMetadata == null) {
+                continue;
+            }
+            FieldMetadata field = new FieldMetadata(this, reflectField, classMetadata);
+	        if (contains(collectedAspects, field)) {
+	            continue;
+	        }
+	        dirty = true;
+	        collectedAspects.add(field);
 		}
 		return dirty;
 	}
-    
-    void addToIndex(Transaction trans, int id) {
+
+	private boolean contains(Collection4 collectedAspects, FieldMetadata field) {
+        Iterator4 aspectIterator = collectedAspects.iterator();
+        while (aspectIterator.moveNext()) {
+            if (((ClassAspect)aspectIterator.current()).equals(field)) {
+            	return true;
+            }
+        }
+        return false;
+	}
+
+	void addToIndex(Transaction trans, int id) {
         if (! trans.container().maintainsIndices()) {
             return;
         }
@@ -360,14 +409,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return hasClassIndex();
     }
     
-    public void cascadeActivation(ActivationContext4 context) {
-    	fieldAwareTypeHandler().cascadeActivation(context);
-    }
-
-    private FieldAwareTypeHandler fieldAwareTypeHandler() {
-    	return Handlers4.fieldAwareTypeHandler(_typeHandler);
-	}
-    
     public boolean descendOnCascadingActivation() {
         return true;
     }
@@ -382,10 +423,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                     // correctly
                 }
                 if (_classReflector != null) {
-                    addMembers(_container);
-                    Transaction trans = _container.systemTransaction();
-                    if (!_container.isClient() && !isReadOnlyContainer(trans)) {
-						write(trans);
+                    initializeAspects();
+                    if (!_container.isClient() && !isReadOnlyContainer()) {
+						write(_container.systemTransaction());
                     }
                 }
             }
@@ -470,7 +510,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         forEachField(new Procedure4() {
             public void apply(Object arg) {
                 FieldMetadata fieldMetadata = (FieldMetadata)arg;
-                if(fieldMetadata.enabled(AspectVersionContextImpl.CHECK_ALWAYS_ENABLED)){
+                if(fieldMetadata.isEnabledOn(AspectVersionContextImpl.CHECK_ALWAYS_ENABLED)){
                 	fieldMetadata.collectConstraints(trans, parentConstraint, obj, visitor);
                 }
             }
@@ -478,15 +518,15 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public final void collectIDs(CollectIdContext context, String fieldName) {
-        if(! firstClassObjectHandlerIsUsed()){
+        if(! standardReferenceTypeHandlerIsUsed()){
             throw new IllegalStateException();
         }
-        ((FirstClassObjectHandler)correctHandlerVersion(context)).collectIDs(context, fieldName);
+        ((StandardReferenceTypeHandler)correctHandlerVersion(context)).collectIDs(context, fieldName);
         
     }
     
     public void collectIDs(final QueryingReadContext context) {
-        if(! firstClassObjectHandlerIsUsed()){
+        if(! standardReferenceTypeHandlerIsUsed()){
             throw new IllegalStateException();
         }
         Handlers4.collectIDs(context, correctHandlerVersion(context));
@@ -514,38 +554,63 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		classReflector(reflectClass);
     }
 
-    private void createConstructor() {
-        
-        if (hasObjectConstructor()){
-        	_constructor = new Function4<UnmarshallingContext, Object>() {
-        		public Object apply(UnmarshallingContext context) {
-        			return instantiateFromTranslator(context);
-                }
-        	};
-            return;
-        }
-        
-        if (isTransient()) {
+    private void initializeConstructor(final TypeHandler4 customTypeHandler) {
+    	
+    	if (isTransient()) {
             _container.logMsg(23, getName());
             setStateDead();
             return;
         }
+    	
+    	if (isInterface() || isAbstract()) {
+    		return;
+        }
+    	
+    	Function4<UnmarshallingContext, Object> constructor = createConstructor(customTypeHandler);
+	    if (constructor != null) {
+	    	_constructor = constructor;
+	    	return;
+	    }
+	    
+	    notStorable();
+    }
+
+	private boolean isAbstract() {
+		return classReflector().isAbstract();
+	}
+
+	private boolean isInterface() {
+		return classReflector().isInterface();
+	}
+
+	private Function4<UnmarshallingContext, Object> createConstructor(
+			final TypeHandler4 customTypeHandler) {
+		
+		if (customTypeHandler instanceof InstantiatingTypeHandler) {
+    		return new Function4<UnmarshallingContext, Object>() {
+        		public Object apply(UnmarshallingContext context) {
+					return instantiateWithCustomTypeHandlerIfEnabled(context);
+                }
+        	};
+    	}
         
-        if(classReflector().isAbstract() || classReflector().isInterface()) {
-        	return;
+        if (hasObjectConstructor()) {
+        	return new Function4<UnmarshallingContext, Object>() {
+        		public Object apply(UnmarshallingContext context) {
+        			return _translator.construct(context);
+                }
+        	};
         }
         
 	    if(classReflector().ensureCanBeInstantiated()) {
-	    	_constructor = new Function4<UnmarshallingContext, Object>() {
+	    	return new Function4<UnmarshallingContext, Object>() {
         		public Object apply(UnmarshallingContext context) {
         			return instantiateFromReflector(context.container());
                 }
         	};
-	        return;
         }
-	    
-	    notStorable();
-    }
+		return null;
+	}
 
 	private void notStorable() {
 	    _container.logMsg(7, getName());
@@ -567,7 +632,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     public void deactivate(Transaction trans, Object obj, ActivationDepth depth) {
         if(objectCanDeactivate(trans, obj)){
-            deactivateFields(trans, obj, depth);
+            deactivateFields(trans.container().activationContextFor(trans, obj, depth));
             objectOnDeactivate(trans, obj);
         }
     }
@@ -584,12 +649,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			&& dispatchEvent(transaction, obj, EventDispatchers.CAN_DEACTIVATE);
 	}
 
-    final void deactivateFields(final Transaction trans, final Object obj, final ActivationDepth depth) {
+    final void deactivateFields(final ActivationContext context) {
         forEachAspect(new Procedure4() {
             public void apply(Object arg) {
                 ClassAspect classAspect = (ClassAspect)arg;
-                if(classAspect.enabled(AspectVersionContextImpl.CHECK_ALWAYS_ENABLED)){
-                	classAspect.deactivate(trans, obj, depth);
+                if(classAspect.isEnabledOn(AspectVersionContextImpl.CHECK_ALWAYS_ENABLED)){
+                	classAspect.deactivate(context);
                 }
             }
         });
@@ -713,7 +778,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if (buffer == null) {
             return HandlerVersion.INVALID;
         }
-        if(! firstClassObjectHandlerIsUsed()){
+        if(! standardReferenceTypeHandlerIsUsed()){
             return HandlerVersion.INVALID;
         }
         buffer.seek(0);
@@ -725,7 +790,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return new HandlerVersion(oh.handlerVersion());
     }
     
-    public final boolean seekToField(ObjectHeaderContext context, FieldMetadata field){
+    public final boolean seekToField(ObjectHeaderContext context, ClassAspect field){
         return Handlers4.fieldAwareTypeHandler(correctHandlerVersion(context)).seekToField(context, field);
     }
 
@@ -834,7 +899,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if(! _classIndexed){
             return false;
         }
-        return firstClassObjectHandlerIsUsed() || !  (Handlers4.isEmbedded(_typeHandler)); 
+        return standardReferenceTypeHandlerIsUsed() || !  (Handlers4.isValueType(_typeHandler)); 
     }
     
     private boolean ancestorHasUUIDField(){
@@ -876,14 +941,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return _index.entryCount(ta);
     }
     
-    public final Object indexEntryToObject(Context context, Object indexEntry){
-        if(indexEntry == null){
-            return null;
-        }
-        int id = ((Integer)indexEntry).intValue();
-        return container().getByID2(context.transaction(), id);
-    }    
-
+ 
     public ReflectClass classReflector(){
         return _classReflector;
     }
@@ -918,7 +976,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
     }
 
-    final ObjectContainerBase container() {
+    public final ObjectContainerBase container() {
         return _container;
     }
 
@@ -1005,8 +1063,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             if(_aspects[i] instanceof FieldMetadata){
                 FieldMetadata field = (FieldMetadata) _aspects[i];
                 String fieldName = field.getName();
-    			if(!field.hasConfig()&&extendedConfig!=null&&extendedConfig.configField(fieldName)!=null) {
-                	field.initIndex(this,fieldName);
+    			if(!field.hasConfig()
+    				&& extendedConfig !=null
+    				&& extendedConfig.configField(fieldName) != null) {
+                	field.initConfiguration(fieldName);
                 }
     			field.initConfigOnUp(systemTrans);
             }
@@ -1037,7 +1097,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	
     public Object instantiate(UnmarshallingContext context) {
         
-        // overridden in YapClassPrimitive
+        // overridden in PrimitiveTypeMetadata
         // never called for primitive YapAny
         
     	// FIXME: [TA] no longer necessary?
@@ -1055,11 +1115,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             shareTransaction(obj, context.transaction());
             shareObjectReference(obj, context.objectReference());
             
-            context.setObjectWeak(obj);
-            
-            context.transaction().referenceSystem().addExistingReference(context.objectReference());
-            
-            objectOnInstantiate(context.transaction(), obj);
+            onInstantiate(context, obj);
 
             if (!context.activationDepth().requiresActivation()) {
                 context.objectReference().setStateDeactivated();
@@ -1070,7 +1126,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             if (activatingActiveObject(context.activationDepth().mode(), context.objectReference())) {
             	ActivationDepth child = context.activationDepth().descend(this);
                 if (child.requiresActivation()) {
-                    activateFields(context.transaction(), obj, child);
+                    cascadeActivation(new ActivationContext4(context.transaction(), obj, child));
                 }
             } else {
                 obj = activate(context);
@@ -1078,20 +1134,28 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
         return obj;
     }
+
+	protected final void onInstantiate(UnmarshallingContext context, Object obj) {
+		
+		context.setObjectWeak(obj);
+		context.transaction().referenceSystem().addExistingReference(context.objectReference());
+		objectOnInstantiate(context.transaction(), obj);
+		
+	}
     
     public Object instantiateTransient(UnmarshallingContext context) {
 
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
 
-        Object obj = instantiateObject(context);
+        final Object obj = instantiateObject(context);
         if (obj == null) {
             return null;
         }
         context.container().peeked(context.objectID(), obj);
         
         if(context.activationDepth().requiresActivation()){
-            obj = instantiateFields(context);
+            instantiateFields(context);
         }
         return obj;
         
@@ -1102,14 +1166,14 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
    private Object activate(UnmarshallingContext context) {
-        Object obj = context.persistentObject();
+        final Object obj = context.persistentObject();
         if(! objectCanActivate(context.transaction(), obj)){
             context.objectReference().setStateDeactivated();
             return obj;
         }
         context.objectReference().setStateClean();
         if (context.activationDepth().requiresActivation()/* || cascadeOnActivate()*/) {
-            obj = instantiateFields(context);
+           instantiateFields(context);
         }
         objectOnActivate(context.transaction(), obj);
         return obj;
@@ -1137,17 +1201,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		try {
 		    return _classReflector.newInstance();
 		} catch (NoSuchMethodError e) {
-		    stream().logMsg(7, classReflector().getName());
+		    container().logMsg(7, classReflector().getName());
 		    return null;
 		} catch (Exception e) {
 		    // TODO: be more helpful here
 		    return null;
 		}
 	}
-
-	private Object instantiateFromTranslator(ObjectReferenceContext context) {
-       return _translator.construct(context);
-    }
 
 	private void shareObjectReference(Object obj, ObjectReference ref) {
 		if (obj instanceof Db4oTypeImpl) {
@@ -1173,11 +1233,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			&& dispatchEvent(transaction, obj, EventDispatchers.CAN_ACTIVATE);
 	}
 
-    Object instantiateFields(UnmarshallingContext context) {
-        return read(context);
+    void instantiateFields(UnmarshallingContext context) {
+        TypeHandler4 handler = correctHandlerVersion((HandlerVersionContext)context);
+        Handlers4.activate(context, handler);
     }
 
-    public boolean isArray() {
+	public boolean isArray() {
         return classReflector().isCollection(); 
     }
     
@@ -1212,11 +1273,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public boolean isValueType(){
-        if (!firstClassObjectHandlerIsUsed())
-        {
-            return false;
-        }
-        return Platform4.isValueType(classReflector());
+       return Handlers4.holdsValueType(_typeHandler);
     }
     
     private final Object lock(){
@@ -1307,8 +1364,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
         TypeHandler4 typeHandler = correctHandlerVersion(context);
-        if(typeHandler instanceof FirstClassHandler){
-        	return ((FirstClassHandler)typeHandler).readCandidateHandler(context);	
+        if(typeHandler instanceof CascadingTypeHandler){
+        	return ((CascadingTypeHandler)typeHandler).readCandidateHandler(context);	
         }
         return null;
     }
@@ -1325,10 +1382,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             }
         }
         return null;
-    }
-    
-    public ObjectID readObjectID(InternalReadContext context){
-        return ObjectID.read(context);
     }
 
 	public final int readAspectCount(ReadBuffer buffer) {
@@ -1349,20 +1402,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return count;
     }
 	
-	
-
-    public final Object readIndexEntry(ByteArrayBuffer a_reader) {
-        return new Integer(a_reader.readInt());
-    }
-    
-    public final Object readIndexEntryFromObjectSlot(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
-        return readIndexEntry(a_writer);
-    }
-    
-    public Object readIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException{
-        return new Integer(context.readInt());
-    }
-    
     byte[] readName(Transaction a_trans) {
         i_reader = a_trans.container().readReaderByID(a_trans, getID());
         return readName1(a_trans, i_reader);
@@ -1592,9 +1631,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             && bitIsFalse(Const4.READING);
     }
 
-    /**
-     * @deprecated
-     */
     boolean storeField(ReflectField a_field) {
         if (a_field.isStatic()) {
             return false;
@@ -1662,13 +1698,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
 	private boolean shouldStoreStaticFields(Transaction trans) {
-		return !isReadOnlyContainer(trans) 
+		return !isReadOnlyContainer() 
 					&&  (staticFieldValuesArePersisted()
         			|| Platform4.storeStaticFieldValues(trans.reflector(), classReflector()));
 	}
 
-	private boolean isReadOnlyContainer(Transaction trans) {
-		return trans.container().config().isReadOnly();
+	private boolean isReadOnlyContainer() {
+		return container().config().isReadOnly();
 	}
 
 	private void updateStaticClass(final Transaction trans, final StaticClass sc) {
@@ -1830,23 +1866,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
         return super.writeObjectBegin();
     }
-
-    public void writeIndexEntry(ByteArrayBuffer a_writer, Object a_object) {
-        
-        if(a_object == null){
-            a_writer.writeInt(0);
-            return;
-        }
-        
-        a_writer.writeInt(((Integer)a_object).intValue());
-    }
     
     public final void writeThis(Transaction trans, ByteArrayBuffer writer) {
         MarshallerFamily.current()._class.write(trans, this, writer);
     }
 
 	public PreparedComparison prepareComparison(Context context, Object source) {
-		return _typeHandler.prepareComparison(context, source);
+		return Handlers4.prepareComparisonFor(_typeHandler, context, source);
 	}
 	
     public static void defragObject(DefragmentContextImpl context) {
@@ -1875,10 +1901,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	public boolean isAssignableFrom(ClassMetadata other) {
 		return classReflector().isAssignableFrom(other.classReflector());
 	}
-
-	public final void defragIndexEntry(DefragmentContextImpl context) {
-		context.copyID();
-	}
 	
 	public void setAncestor(ClassMetadata ancestor){
 		if(ancestor == this){
@@ -1893,57 +1915,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
         return new TransactionContext(transaction, value);
     }
-    
-    public Object read(ReadContext context) {
-        return correctHandlerVersion((HandlerVersionContext)context).read(context);
-    }
 
-    public void write(WriteContext context, Object obj) {
-        _typeHandler.write(context, obj);
-    }
-    
-    /*
-     * FIXME: Nononono. Please fix this method by removing
-     *        it and handling in callers. Don't give out
-     *        the _typeHandler here. 
-     *        Note that this was done for the overridden
-     *        version in PrimitiveFieldHandler
-     */
     public TypeHandler4 typeHandler(){
-        return this;
+        return _typeHandler;
     }
     
-    public final static class PreparedComparisonImpl implements PreparedComparison {
-    	
-    	private final int _id;
-    	
-    	private final ReflectClass _claxx;
-
-    	public PreparedComparisonImpl(int id, ReflectClass claxx) {
-    		_id = id;
-    		_claxx = claxx;
-    	}
-
-    	public int compareTo(Object obj) {
-    	    if(obj instanceof TransactionContext){
-    	        obj = ((TransactionContext)obj)._object;
-    	    }
-    	    if(obj == null){
-    	    	return _id == 0 ? 0 : 1;
-    	    }
-    	    if(obj instanceof Integer){
-    			int targetInt = ((Integer)obj).intValue();
-    			return _id == targetInt ? 0 : (_id < targetInt ? - 1 : 1); 
-    	    }
-    	    if(_claxx != null){
-    	    	if(_claxx.isAssignableFrom(_claxx.reflector().forObject(obj))){
-    	    		return 0;
-    	    	}
-    	    }
-    	    throw new IllegalComparisonException();
-    	}
-    }
-
     public TypeHandler4 delegateTypeHandler(Context context){
     	if(context instanceof HandlerVersionContext){
     		return correctHandlerVersion((HandlerVersionContext)context);
@@ -1951,15 +1927,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return _typeHandler;
     }
 
-    public boolean isSecondClass() {
-        return Handlers4.holdsEmbedded(_typeHandler);
-    }
-    
-    private TypeHandler4 correctHandlerVersion(HandlerVersionContext context){
+    protected TypeHandler4 correctHandlerVersion(HandlerVersionContext context){
         TypeHandler4 typeHandler = HandlerRegistry.correctHandlerVersion(context, _typeHandler);
         if(typeHandler != _typeHandler){
-            if(typeHandler instanceof FirstClassObjectHandler){
-                ((FirstClassObjectHandler) typeHandler).classMetadata(this);
+            if(typeHandler instanceof StandardReferenceTypeHandler){
+                ((StandardReferenceTypeHandler) typeHandler).classMetadata(this);
             }
         }
     	return typeHandler;
@@ -2047,4 +2019,35 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return !stateDead() || isTransient();
     }
 
+	private Object instantiateWithCustomTypeHandlerIfEnabled(final UnmarshallingContext context) {
+		if (!_customTypeHandlerAspect.isEnabledOn(context)) {
+			return instantiateForVersionWithoutCustomTypeHandler(context);
+    	}
+		return instantiateWithCustomTypeHandler(context);
+	}
+
+	private Object instantiateForVersionWithoutCustomTypeHandler(final UnmarshallingContext context) {
+		final Function4<UnmarshallingContext, Object> oldVersionConstructor = createConstructor(null);
+		if (null == oldVersionConstructor) {
+			throw new IllegalStateException();
+		}
+		return oldVersionConstructor.apply(context);
+	}
+
+	private Object instantiateWithCustomTypeHandler(final UnmarshallingContext context) {
+		final ContextState contextState = context.saveState();
+        try {
+        	final boolean fieldHasValue = seekToField(context, _customTypeHandlerAspect);
+        	if (!fieldHasValue) {
+        		context.restoreState(contextState);
+        		return instantiateForVersionWithoutCustomTypeHandler(context);
+        	}
+        	final InstantiatingTypeHandler customTypeHandler = (InstantiatingTypeHandler)_customTypeHandlerAspect._typeHandler;
+        	return context.slotFormat().doWithSlotIndirection(context, new Closure4<Object>() { public Object run() {
+        		return customTypeHandler.instantiate(context);
+        	}});
+        } finally {
+            context.restoreState(contextState);
+        }
+	}
 }

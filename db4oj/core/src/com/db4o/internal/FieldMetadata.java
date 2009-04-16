@@ -29,7 +29,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 
     private String         _name;
     
-    private boolean          _isArray;
+    protected boolean          _isArray;
 
     private boolean          _isNArray;
 
@@ -37,9 +37,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     
     private ReflectField     _reflectField;
 
-    TypeHandler4              _handler;
-    
-    protected int              _handlerID;
 
     private FieldMetadataState              _state = FieldMetadataState.NOT_LOADED;
 
@@ -51,20 +48,14 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     
     private BTree _index;
 
+	protected ClassMetadata _fieldType;
+
+	protected int _fieldTypeID;
+	
     static final FieldMetadata[]  EMPTY_ARRAY = new FieldMetadata[0];
 
     public FieldMetadata(ClassMetadata classMetadata) {
         _containingClass = classMetadata;
-    }
-    
-    FieldMetadata(ClassMetadata containingClass, ObjectTranslator translator) {
-        // for TranslatedFieldMetadata only
-    	this(containingClass);
-        init(containingClass, translator.getClass().getName());
-        _state = FieldMetadataState.AVAILABLE;
-        ObjectContainerBase stream =container(); 
-        ReflectClass claxx = stream.reflector().forClass(translatorStoredClass(translator));
-        _handler = fieldHandlerForClass(stream, claxx);
     }
 
 	protected final Class translatorStoredClass(ObjectTranslator translator) {
@@ -75,29 +66,42 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		}
 	}
 
-    FieldMetadata(ClassMetadata containingClass, ReflectField field, TypeHandler4 handler, int handlerID) {
+    FieldMetadata(ClassMetadata containingClass, ReflectField field, ClassMetadata fieldType) {
     	this(containingClass);
-        init(containingClass, field.getName());
+        init(field.getName());
         _reflectField = field;
-        _handler = handler;
-        _handlerID = handlerID;
+        _fieldType = fieldType;
+        _fieldTypeID = fieldType.getID();
         
         // TODO: beautify !!!  possibly pull up isPrimitive to ReflectField
-        boolean isPrimitive = false;
-        if(field instanceof GenericField){
-            isPrimitive  = ((GenericField)field).isPrimitive();
-        }
-        configure( field.getFieldType(), isPrimitive);
+        boolean isPrimitive = field instanceof GenericField
+        	? ((GenericField)field).isPrimitive()
+        	: false;
+        configure(field.getFieldType(), isPrimitive);
         checkDb4oType();
-        _state = FieldMetadataState.AVAILABLE;
+        setAvailable();
+    }
+
+	protected void setAvailable() {
+		_state = FieldMetadataState.AVAILABLE;
+	}
+    
+    protected FieldMetadata(int fieldTypeID){
+        _fieldTypeID = fieldTypeID;
     }
     
-    protected FieldMetadata(int handlerID, TypeHandler4 handler){
-        _handlerID = handlerID;
-        _handler = handler;
-    }
-    
-    public void addFieldIndex(ObjectIdContextImpl context, Slot oldSlot)  throws FieldIndexException {
+    public FieldMetadata(ClassMetadata containingClass, String name,
+			int fieldTypeID, boolean primitive, boolean isArray, boolean isNArray) {
+    	this(containingClass);
+    	init(name, fieldTypeID, primitive, isArray, isNArray);
+	}
+
+	public FieldMetadata(ClassMetadata containingClass, String name) {
+		this(containingClass);
+		init(name);
+	}
+
+	public void addFieldIndex(ObjectIdContextImpl context, Slot oldSlot)  throws FieldIndexException {
         if (! hasIndex()) {
             incrementOffset(context);
             return;
@@ -143,7 +147,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
     
     public final Object readIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException {
-        IndexableTypeHandler indexableTypeHandler = (IndexableTypeHandler) HandlerRegistry.correctHandlerVersion(context, _handler);
+        IndexableTypeHandler indexableTypeHandler = (IndexableTypeHandler) HandlerRegistry.correctHandlerVersion(context, getHandler());
         return indexableTypeHandler.readIndexEntry(context);
     }
     
@@ -163,60 +167,61 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             return true;
         }
         if (_state == FieldMetadataState.NOT_LOADED) {
-
-            if (_handler == null) {
-
-                // this may happen if the local ClassMetadataRepository
-                // has not been updated from the server and presumably 
-                // in some refactoring cases. 
-
-                // We try to heal the problem by re-reading the class.
-
-                // This could be dangerous, if the class type of a field
-                // has been modified.
-
-                // TODO: add class refactoring features
-
-                _handler = detectHandlerForField();
-                checkHandlerID();
-            }
-
-            checkCorrectHandlerForField();
-
-            // TODO: This part is not quite correct.
-            // We are using the old array information read from file to wrap.
-
-            // If a schema evolution changes an array to a different variable,
-            // we are in trouble here.
-            _handler = wrapHandlerToArrays(_handler);
-            
-            if(_handler == null || _reflectField == null){
-                _state = FieldMetadataState.UNAVAILABLE;
-                _reflectField = null;
-            } else {
-                if(! updating()){
-                    _state = FieldMetadataState.AVAILABLE;
-                    checkDb4oType();
-                }
-            }
+            return load();
         }
         return _state == FieldMetadataState.AVAILABLE;
     }
+
+	private boolean load() {
+		if (_fieldType == null) {
+
+		    // this may happen if the local ClassMetadataRepository
+		    // has not been updated from the server and presumably 
+		    // in some refactoring cases. 
+
+		    // We try to heal the problem by re-reading the class.
+
+		    // This could be dangerous, if the class type of a field
+		    // has been modified.
+
+		    // TODO: add class refactoring features
+
+		    _fieldType = detectFieldType();
+		    checkFieldTypeID();
+		}
+
+		checkCorrectTypeForField();
+
+		if(_fieldType == null || _reflectField == null){
+		    _state = FieldMetadataState.UNAVAILABLE;
+		    _reflectField = null;
+		    return false;
+		}
+		
+		if(updating()){
+			return false;
+		}
+		
+		setAvailable();
+		checkDb4oType();
+		return true;
+	}
 
     public boolean updating() {
         return _state == FieldMetadataState.UPDATING;
     }
 
-    private void checkHandlerID() {
-        int id = container().handlers().typeHandlerID(_handler);
-        if (_handlerID == 0) {
-            _handlerID = id;
+    private void checkFieldTypeID() {
+    	
+        int id = _fieldType != null ? _fieldType.getID() : 0;
+        if (_fieldTypeID == 0) {
+            _fieldTypeID = id;
             return;
         }
-        if(id > 0 && id != _handlerID){
+        if(id > 0 && id != _fieldTypeID){
             // wrong type, refactoring, field should be turned off
         	// TODO: it would be cool to log something here
-            _handler = null;
+            _fieldType = null;
         }
     }
 
@@ -232,7 +237,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         if (claxx == null) {
             return !_isPrimitive;
         }
-        return Handlers4.handlerCanHold(_handler, reflector(), claxx);
+        return Handlers4.handlerCanHold(getHandler(), claxx);
     }
 
     public GenericReflector reflector() {
@@ -250,8 +255,8 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             return _isPrimitive ? No4.INSTANCE : obj;
         }
         
-        if(_handler instanceof PrimitiveHandler){
-            return ((PrimitiveHandler)_handler).coerce(reflector(), claxx, obj);
+        if(getHandler() instanceof PrimitiveHandler){
+            return ((PrimitiveHandler)getHandler()).coerce(reflector(), claxx, obj);
         }
 
         if(! canHold(claxx)){
@@ -262,59 +267,50 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     public final boolean canLoadByIndex() {
-        return Handlers4.canLoadFieldByIndex(_handler);
+        return Handlers4.canLoadFieldByIndex(getHandler());
     }
 
-	public final void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth) {
+	public final void cascadeActivation(ActivationContext context) {
         if (! alive()) {
             return;
         }
         
-        if(! Handlers4.isFirstClass(_handler)){
-            return;
-        }
-        
-        Object cascadeTo = cascadingTarget(trans, depth, onObject);
+        Object cascadeTo = cascadingTarget(context);
         if (cascadeTo == null) {
         	return;
         }
         
-        ensureObjectIsActive(trans, cascadeTo, depth);
-        final ClassMetadata classMetadata = container().classMetadataForObject(cascadeTo);
-        if (classMetadata == null) {
-        	return;
-        }
-        
-        ActivationContext4 context = new ActivationContext4(trans, cascadeTo, depth);
-        classMetadata.cascadeActivation(context);
+        final ActivationContext cascadeContext = context.forObject(cascadeTo);
+        ensureObjectIsActive(cascadeContext);
+        Handlers4.cascadeActivation(cascadeContext, cascadeContext.classMetadata().typeHandler());
     }
 
-    private void ensureObjectIsActive(Transaction trans, Object cascadeTo, ActivationDepth depth) {
-        if(!depth.mode().isActivate()){
+    private void ensureObjectIsActive(ActivationContext context) {
+        if(!context.depth().mode().isActivate()){
             return;
         }
-        if(Handlers4.isEmbedded(_handler)){
+        if(Handlers4.isValueType(getHandler())){
             return;
         }
-        ObjectContainerBase container = trans.container();
-        ClassMetadata classMetadata = container.classMetadataForObject(cascadeTo);
+        ObjectContainerBase container = context.container();
+        ClassMetadata classMetadata = container.classMetadataForObject(context.targetObject());
         if(classMetadata == null || classMetadata.isPrimitive()){
             return;
         }
-        if(container.isActive(cascadeTo)){
+        if(container.isActive(context.targetObject())){
             return;
         }
-        container.stillToActivate(trans, cascadeTo, depth.descend(classMetadata));
+        container.stillToActivate(context.descend());
     }
 
-	protected Object cascadingTarget(Transaction trans, ActivationDepth depth, Object onObject) {
-		if (depth.mode().isDeactivate()) {
+	protected final Object cascadingTarget(ActivationContext context) {
+		if (context.depth().mode().isDeactivate()) {
 			if (null == _reflectField) {
 				return null;
 			}
-			return fieldAccessor().get( _reflectField, onObject);
+			return fieldAccessor().get( _reflectField, context.targetObject());
 		}
-		return getOrCreate(trans, onObject);
+		return getOrCreate(context.transaction(), context.targetObject());
 	}
 
     private void checkDb4oType() {
@@ -336,7 +332,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
                 if (obj != null) {
                     
                     if (_isPrimitive) {
-                        if (Handlers4.isPrimitive(_handler)) {
+                        if (Handlers4.isPrimitive(getHandler())) {
                             Object nullValue = _reflectField.getFieldType().nullValue();
 							if (obj.equals(nullValue)) {
                                 return;
@@ -364,7 +360,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             return ;
         }
         
-        final TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(context, _handler);
+        final TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(context, getHandler());
         Handlers4.collectIdsInternal(context, handler, linkLength());
     }
 
@@ -374,13 +370,12 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             ReflectArray reflectArray = reflector().array();
             _isNArray = reflectArray.isNDimensional(clazz);
             _isPrimitive = reflectArray.getComponentType(clazz).isPrimitive();
-            _handler = wrapHandlerToArrays(_handler);
         } else {
         	_isPrimitive = isPrimitive | clazz.isPrimitive();
         }
     }
     
-    private final TypeHandler4 wrapHandlerToArrays(TypeHandler4 handler) {
+    protected final TypeHandler4 wrapHandlerToArrays(TypeHandler4 handler) {
         if(handler == null){
             return null;
         }
@@ -397,7 +392,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     	return _isPrimitive;
     }
 
-    public void deactivate(Transaction trans, Object onObject, ActivationDepth depth) {
+    public void deactivate(ActivationContext context) {
         
     	if (!alive()) {
             return;
@@ -407,15 +402,15 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		if (_isPrimitive && !_isArray) {
 			if (!isEnumClass) {
 				Object nullValue = _reflectField.getFieldType().nullValue();
-				fieldAccessor().set(_reflectField, onObject, nullValue);
+				fieldAccessor().set(_reflectField, context.targetObject(), nullValue);
 			}
 			return;
 		}
-		if (depth.requiresActivation()) {
-			cascadeActivation(trans, onObject, depth);
+		if (context.depth().requiresActivation()) {
+			cascadeActivation(context);
 		}
 		if (!isEnumClass) {
-			fieldAccessor().set(_reflectField, onObject, null);
+			fieldAccessor().set(_reflectField, context.targetObject(), null);
 		}
     }
 
@@ -436,9 +431,9 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             }
             StatefulBuffer buffer = (StatefulBuffer) context.buffer();
             final DeleteContextImpl childContext = new DeleteContextImpl(context, getStoredType(), _config);
-            context.slotFormat().doWithSlotIndirection(buffer, _handler, new Closure4() {
+            context.slotFormat().doWithSlotIndirection(buffer, getHandler(), new Closure4() {
                 public Object run() {
-                    childContext.delete(_handler);
+                    childContext.delete(getHandler());
                     return null;
                 }
             });
@@ -466,7 +461,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         other.alive();
         alive();
         return other._isPrimitive == _isPrimitive
-            && ((_handler == null && other._handler == null) || other._handler.equals(_handler))
+            && other._fieldType == _fieldType
             && other._name.equals(_name);
     }
 
@@ -519,26 +514,26 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         // alive needs to be checked by all callers: Done
         TypeHandler4 handler = baseTypeHandler();
         if(Handlers4.handlesSimple(handler)){
-            return container._handlers.classMetadataForId(handlerID());
-        }
-        if(handler instanceof ClassMetadata) {
-        	return (ClassMetadata)handler;
+            return container._handlers.classMetadataForId(fieldTypeID());
         }
         return container.classMetadataForReflectClass(_reflectField.getFieldType());
     }
 
     private TypeHandler4 baseTypeHandler() {
-        return Handlers4.baseTypeHandler(_handler);
+        return Handlers4.baseTypeHandler(getHandler());
     }
     
     public TypeHandler4 getHandler() {
+    	if (_fieldType == null) {
+    		return null;
+    	}
         // alive needs to be checked by all callers: Done
-        return _handler;
+        return wrapHandlerToArrays(_fieldType.typeHandler());
     }
     
-    public int handlerID(){
+    public int fieldTypeID(){
         // alive needs to be checked by all callers: Done
-        return _handlerID;
+        return _fieldTypeID;
     }
 
     /** @param trans */
@@ -592,39 +587,46 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return _index != null;
     }
 
-    public final void init(ClassMetadata containingClass, String name) {
-        _containingClass = containingClass;
+    public final void init(String name) {
         _name = name;
-        initIndex(containingClass, name);
+        initConfiguration(name);
     }
 
-	final void initIndex(ClassMetadata containingClass, String name) {
-		if (containingClass.config() == null) {
+	final void initConfiguration(String name) {
+		final Config4Class containingClassConfig = _containingClass.config();
+		if (containingClassConfig == null) {
 		    return;
 		}
-        _config = containingClass.config().configField(name);
+        _config = containingClassConfig.configField(name);
         if (Debug4.configureAllFields  && _config == null) {
-            _config = (Config4Field) containingClass.config().objectField(_name);
+            _config = (Config4Field) containingClassConfig.objectField(_name);
         }
 	}
     
-    public void init(int handlerID, boolean isPrimitive, boolean isArray, boolean isNArray) {
-        _handlerID = handlerID;
+    public void init(String name, int fieldTypeID, boolean isPrimitive, boolean isArray, boolean isNArray) {
+        _fieldTypeID = fieldTypeID;
         _isPrimitive = isPrimitive;
         _isArray = isArray;
         _isNArray = isNArray;
+        
+        init(name);
+        loadFieldTypeById();
+        alive();
     }
 
     private boolean _initialized=false;
 
     final void initConfigOnUp(Transaction trans) {
-        if (_config != null&&!_initialized) {
-        	_initialized=true;
+    	if (_initialized) {
+    		return;
+    	}
+    	_initialized = true;
+        if (_config != null) {
             _config.initOnUp(trans, this);
         }
     }
 
-    public void instantiate(UnmarshallingContext context) {
+    public void activate(UnmarshallingContext context) {
         if(! checkAlive(context)) {
             return;
         }
@@ -640,7 +642,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
         int savedOffset = context.offset();
         try{
-            Object toSet = context.read(_handler);
+            Object toSet = context.read(getHandler());
             if(toSet != null){
                 set(context.persistentObject(), toSet);
             }
@@ -685,14 +687,14 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
     
     private int calculateLinkLength(){
-    	return Handlers4.calculateLinkLength(_handler);
+    	return Handlers4.calculateLinkLength(getHandler());
     }
     
-    public void loadHandlerById(ObjectContainerBase container) {
-        _handler=(TypeHandler4) container.fieldHandlerForId(_handlerID);
+    public void loadFieldTypeById() {
+        _fieldType = container().classMetadataForID(_fieldTypeID);
     }
     
-    private TypeHandler4 detectHandlerForField() {
+    private ClassMetadata detectFieldType() {
         ReflectClass claxx = _containingClass.classReflector();
         if (claxx == null) {
             return null;
@@ -701,32 +703,38 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         if (_reflectField == null) {
             return null;
         }
-        return fieldHandlerForClass(container(), _reflectField.getFieldType());
+        return Handlers4.erasedFieldType(container(), _reflectField.getFieldType());
     }
 
-    private TypeHandler4 fieldHandlerForClass(ObjectContainerBase container, ReflectClass fieldType) {
-        try {
-        	container.showInternalClasses(true);
-        	return (TypeHandler4) container.fieldHandlerForClass(Handlers4.baseType(fieldType));
-        }
-        finally {
+	protected TypeHandler4 typeHandlerForClass(ObjectContainerBase container, ReflectClass fieldType) {
+        container.showInternalClasses(true);
+        try{
+        	return container.typeHandlerForClass(Handlers4.baseType(fieldType));
+        }finally{
         	container.showInternalClasses(false);
-        }        
+        }
     }
 
-    private void checkCorrectHandlerForField() {
-        TypeHandler4 handler = detectHandlerForField();
-        if (handler == null){
+    private void checkCorrectTypeForField() {
+        ClassMetadata currentFieldType = detectFieldType();
+        if (currentFieldType == null){
             _reflectField = null;
             _state = FieldMetadataState.UNAVAILABLE;
             return;
         }
-        if(!handler.equals(_handler)) {
-            
-            // FIXME: COR-547 Diagnostics here please.
-            
-            _state = FieldMetadataState.UPDATING;
+        if (currentFieldType == _fieldType) {
+        	return;
         }
+    	// special case when migrating from type handler ids
+    	// to class metadata ids which caused
+    	// any interface metadata id to be mapped to UNTYPED_ID
+        if (Handlers4.isUntyped(currentFieldType.typeHandler())
+        	&& Handlers4.isUntyped(_fieldType.typeHandler())) {
+        	return;
+        }	
+        	
+        // FIXME: COR-547 Diagnostics here please.
+        _state = FieldMetadataState.UPDATING;
     }
 
     private int adjustUpdateDepthForCascade(Object obj, int updateDepth) {
@@ -752,13 +760,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         if (obj != null && cascadeOnUpdate(context.classConfiguration())) {
             context.updateDepth(adjustUpdateDepthForCascade(obj, updateDepth));
         }
-        if(Handlers4.useDedicatedSlot(context, _handler)){
-            context.writeObject(_handler, obj);
-        }else {
-            context.createIndirectionWithinSlot(_handler);
-            _handler.write(context, obj);
-        }
-        
+        context.writeObjectWithCurrentState(getHandler(), obj);
         context.updateDepth(updateDepth);
         
         if(hasIndex()){
@@ -769,19 +771,15 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     public boolean needsArrayAndPrimitiveInfo(){
         return true;
     }
-
-    public boolean needsHandlerId(){
-        return true;
-    }
     
     public PreparedComparison prepareComparison(Context context, Object obj) {
         if (!alive()) {
         	return null;
         }
-        return _handler.prepareComparison(context, obj);
+        return Handlers4.prepareComparisonFor(getHandler(), context, obj);
     }
-    
-    public QField qField(Transaction a_trans) {
+
+	public QField qField(Transaction a_trans) {
         int yapClassID = 0;
         if(_containingClass != null){
             yapClassID = _containingClass.getID();
@@ -794,11 +792,11 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 			incrementOffset(context);
             return null;
         }
-        return context.read(_handler);
+        return context.read(getHandler());
     }
 
 	private boolean canReadFromSlot(AspectVersionContext context) {
-    	if(! enabled(context)){
+    	if(! isEnabledOn(context)){
     		return false;
     	}
     	if(alive()) {
@@ -806,20 +804,11 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     	}
 		return _state != FieldMetadataState.NOT_LOADED;
 	}
-
-    /** never called but keep for Rickie */
-    public void refreshActivated() {
-    	_state = FieldMetadataState.AVAILABLE;
-    	refresh();
-    }
     
     void refresh() {
-        TypeHandler4 handler = detectHandlerForField();
-        if (handler != null) {
-            handler = wrapHandlerToArrays(handler);
-            if (handler.equals(_handler)) {
-                return;
-            }
+        ClassMetadata newFieldType = detectFieldType();
+        if (newFieldType != null && newFieldType.equals(_fieldType)) {
+        	return;
         }
         _reflectField = null;
         _state = FieldMetadataState.UNAVAILABLE;
@@ -849,8 +838,8 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 
     boolean supportsIndex() {
         return alive() && 
-            (_handler instanceof Indexable4)  && 
-            (! Handlers4.isUntyped(_handler));
+            (getHandler() instanceof Indexable4)  && 
+            (! Handlers4.isUntyped(getHandler()));
     }
     
     public final void traverseValues(final Visitor4 userVisitor) {
@@ -874,7 +863,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             _index.traverseKeys(transaction, new Visitor4() {
                 public void visit(Object obj) {
                     FieldIndexKey key = (FieldIndexKey) obj;
-                    userVisitor.visit(((IndexableTypeHandler)_handler).indexEntryToObject(context, key.value()));
+                    userVisitor.visit(((IndexableTypeHandler)getHandler()).indexEntryToObject(context, key.value()));
                 }
             });
         }
@@ -927,7 +916,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		    return null;
 		}
 		ReflectClass indexType = _reflectField.indexType();
-		TypeHandler4 classHandler = fieldHandlerForClass(stream,indexType);
+		TypeHandler4 classHandler = typeHandlerForClass(stream,indexType);
 		if(! (classHandler instanceof Indexable4)){
 		    return null;
 		}
@@ -949,7 +938,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 	
 	public BTreeRange search(Transaction transaction, Object value) {
 		assertHasIndex();
-		Object transActionalValue = Handlers4.wrapWithTransactionContext(transaction, value, _handler);
+		Object transActionalValue = Handlers4.wrapWithTransactionContext(transaction, value, getHandler());
 		BTreeNodeSearchResult lowerBound = searchLowerBound(transaction, transActionalValue);
 	    BTreeNodeSearchResult upperBound = searchUpperBound(transaction, transActionalValue);	    
 		return lowerBound.createIncludingRange(upperBound);
@@ -1024,7 +1013,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }    
     
     public void defragAspect(final DefragmentContext context) {
-    	final TypeHandler4 typeHandler = HandlerRegistry.correctHandlerVersion(context, _handler);
+    	final TypeHandler4 typeHandler = HandlerRegistry.correctHandlerVersion(context, getHandler());
         context.slotFormat().doWithSlotIndirection(context, typeHandler, new Closure4() {
             public Object run() {
                 context.defragment(typeHandler);

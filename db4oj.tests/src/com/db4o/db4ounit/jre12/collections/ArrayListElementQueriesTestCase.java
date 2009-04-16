@@ -67,6 +67,9 @@ public class ArrayListElementQueriesTestCase extends AbstractDb4oTestCase{
 	public void testStringQBE(){
 		ObjectSet objectSet = db().queryByExample(createStringHolder());
 		assertStringHolder(objectSet);
+	}
+	
+	public void testStringSodaQBE() {
 		Query q = db().query();
 		q.constrain(createStringHolder()).byExample();
 		assertStringHolder(q.execute());
@@ -75,6 +78,9 @@ public class ArrayListElementQueriesTestCase extends AbstractDb4oTestCase{
 	public void testItemQBE(){
 		ObjectSet objectSet = db().queryByExample(createItemHolder());
 		assertItemHolder(objectSet);
+	}
+	
+	public void testItemSodaQBE() {
 		Query q = db().query();
 		q.constrain(createItemHolder()).byExample();
 		assertItemHolder(q.execute());

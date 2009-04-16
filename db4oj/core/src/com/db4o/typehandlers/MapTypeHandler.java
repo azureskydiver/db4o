@@ -7,7 +7,6 @@ import java.util.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
@@ -20,22 +19,22 @@ import com.db4o.typehandlers.internal.*;
  * Typehandler for classes that implement java.util.Map.
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, VariableLengthTypeHandler{
+public class MapTypeHandler implements ReferenceTypeHandler, CascadingTypeHandler, VariableLengthTypeHandler{
     
     public PreparedComparison prepareComparison(Context context, Object obj) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public void write(WriteContext context, Object obj) {
+	public void write(WriteContext context, Object obj) {
         Map map = (Map)obj;
         KeyValueHandlerPair handlers = detectKeyValueTypeHandlers(container(context), map);
-        writeTypeHandlerIds(context, handlers);
+        writeClassMetadataIds(context, handlers);
         writeElementCount(context, map);
         writeElements(context, map, handlers);
     }
     
-    public Object read(ReadContext context) {
+    public void activate(ReferenceActivationContext context) {
     	UnmarshallingContext unmarshallingContext = (UnmarshallingContext) context; 
         Map map = (Map)unmarshallingContext.persistentObject();
         map.clear();
@@ -48,7 +47,6 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, Variabl
             	map.put(key, value);
             }
         }
-        return map;
     }
     
     private void writeElementCount(WriteContext context, Map map) {
@@ -89,7 +87,7 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, Variabl
         }
     }
     
-    public final void cascadeActivation(ActivationContext4 context) {
+    public final void cascadeActivation(ActivationContext context) {
         Map map = (Map) context.targetObject();
         Iterator keys = (map).keySet().iterator();
         while (keys.hasNext()) {
@@ -112,7 +110,7 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, Variabl
         }
     }
 
-	private void writeTypeHandlerIds(WriteContext context, KeyValueHandlerPair handlers) {
+	private void writeClassMetadataIds(WriteContext context, KeyValueHandlerPair handlers) {
 		context.writeInt(0);
 		context.writeInt(0);
 	}
@@ -120,12 +118,12 @@ public class MapTypeHandler implements TypeHandler4 , FirstClassHandler, Variabl
 	private KeyValueHandlerPair readKeyValueTypeHandlers(ReadBuffer buffer, Context context) {
 		buffer.readInt();
 		buffer.readInt();
-		TypeHandler4 untypedHandler = container(context).handlers().untypedObjectHandler();
+		TypeHandler4 untypedHandler = (TypeHandler4) container(context).handlers().openTypeHandler();
 		return new KeyValueHandlerPair(untypedHandler, untypedHandler);
 	}
 
 	private KeyValueHandlerPair detectKeyValueTypeHandlers(InternalObjectContainer container, Map map) {
-		TypeHandler4 untypedHandler = container.handlers().untypedObjectHandler();
+		TypeHandler4 untypedHandler = (TypeHandler4) container.handlers().openTypeHandler();
 		return new KeyValueHandlerPair(untypedHandler, untypedHandler);
 	}
 

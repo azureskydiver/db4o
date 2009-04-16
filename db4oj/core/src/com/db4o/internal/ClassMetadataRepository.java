@@ -184,14 +184,21 @@ public final class ClassMetadataRepository extends PersistentBase {
         return (ClassMetadata)_classMetadataByClass.get(reflectClazz);
     }
     
-    ClassMetadata classMetadataForReflectClass (ReflectClass reflectClazz) {
-    	ClassMetadata clazz = (ClassMetadata)_classMetadataByClass.get(reflectClazz);
-        if (clazz != null) {
-        	return clazz;
+    ClassMetadata classMetadataForReflectClass(ReflectClass reflectClazz) {
+    	ClassMetadata cached = (ClassMetadata)_classMetadataByClass.get(reflectClazz);
+        if (cached != null) {
+        	return cached;
         }
-        clazz = (ClassMetadata)_classMetadataByBytes.remove(getNameBytes(reflectClazz.getName()));
-        return readClassMetadata(clazz, reflectClazz);
+        return readClassMetadata(reflectClazz);
     }
+
+	private ClassMetadata readClassMetadata(ReflectClass reflectClazz) {
+		ClassMetadata clazz = (ClassMetadata)_classMetadataByBytes.remove(getNameBytes(reflectClazz.getName()));
+        if (clazz == null) {
+        	return null;
+        }
+        return readClassMetadata(clazz, reflectClazz);
+	}
 
     ClassMetadata produceClassMetadata(ReflectClass reflectClazz) {
     	
@@ -201,9 +208,9 @@ public final class ClassMetadataRepository extends PersistentBase {
         }
         
         final ClassMetadata classBeingCreated = (ClassMetadata)_creating.get(reflectClazz);
-        if(classBeingCreated != null){
-            return classBeingCreated;
-        }
+    	if(classBeingCreated != null){
+    		return classBeingCreated;
+    	}
         
         final ClassMetadata newClassMetadata = new ClassMetadata(container(), reflectClazz);
         _creating.put(reflectClazz, newClassMetadata);
@@ -240,7 +247,11 @@ public final class ClassMetadataRepository extends PersistentBase {
     }    
     
 	ClassMetadata classMetadataForId(int id) {
-        return readClassMetadata((ClassMetadata)_classMetadataByID.get(id), null);
+        final ClassMetadata classMetadata = (ClassMetadata)_classMetadataByID.get(id);
+        if (null == classMetadata) {
+        	return null;
+        }
+		return readClassMetadata(classMetadata, null);
     }
 	
 	public int classMetadataIdForName(String name) {
@@ -427,7 +438,7 @@ public final class ClassMetadataRepository extends PersistentBase {
 
     public ClassMetadata readClassMetadata(ClassMetadata classMetadata, ReflectClass clazz) {
     	if(classMetadata == null){
-    		return null;
+    		throw new ArgumentNullException();
     	}
         if (! classMetadata.stateUnread()) {
             return classMetadata;

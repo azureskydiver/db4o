@@ -4,7 +4,6 @@ import java.math.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.db4ounit.jre12.collections.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.query.*;
@@ -12,7 +11,6 @@ import com.db4o.typehandlers.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.fixtures.*;
 
 /**
  * @sharpen.remove

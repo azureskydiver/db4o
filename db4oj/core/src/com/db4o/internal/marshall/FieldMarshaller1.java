@@ -40,10 +40,10 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
     	return spec;
     }
     
-    protected FieldMetadata fromSpec(RawFieldSpec spec, ObjectContainerBase stream, FieldMetadata field) {
-		FieldMetadata actualField = super.fromSpec(spec, stream, field);
+    protected FieldMetadata fromSpec(RawFieldSpec spec, ObjectContainerBase stream, ClassMetadata containingClass) {
+		FieldMetadata actualField = super.fromSpec(spec, stream, containingClass);
 		if(spec==null) {
-			return field;
+			return null;
 		}
 		if (spec.indexID() != 0) {
 			actualField.initIndex(stream.systemTransaction(), spec.indexID());

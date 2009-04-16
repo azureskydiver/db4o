@@ -2,10 +2,10 @@
 
 package com.db4o.internal;
 
-import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
+import com.db4o.typehandlers.*;
 
 
 /**
@@ -22,7 +22,7 @@ public abstract class ClassAspect {
     
     public abstract String getName();
     
-    public abstract void cascadeActivation(Transaction trans, Object obj, ActivationDepth depth);
+    public abstract void cascadeActivation(ActivationContext context);
     
     public abstract int linkLength();
     
@@ -40,14 +40,14 @@ public abstract class ClassAspect {
         _handle = handle;
     }
 
-    public abstract void instantiate(UnmarshallingContext context);
+    public abstract void activate(UnmarshallingContext context);
 
 	public abstract void delete(DeleteContextImpl context, boolean isUpdate);
 	
 	public abstract boolean canBeDisabled();
 	
     protected boolean checkEnabled(AspectVersionContext context){
-    	if(! enabled(context)){
+    	if(! isEnabledOn(context)){
     		incrementOffset((ReadBuffer)context);
     		return false;
     	}
@@ -64,10 +64,10 @@ public abstract class ClassAspect {
 		}
 	}
 	
-	public boolean enabled(AspectVersionContext context){
+	public final boolean isEnabledOn(AspectVersionContext context){
 		return _disabledFromAspectCountVersion  > context.aspectCount();	
 	}
 
-	public abstract void deactivate(Transaction trans, Object obj, ActivationDepth depth);
+	public abstract void deactivate(ActivationContext context);
 
 }
