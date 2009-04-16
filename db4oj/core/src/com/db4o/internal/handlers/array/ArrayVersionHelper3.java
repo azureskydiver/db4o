@@ -51,8 +51,8 @@ public class ArrayVersionHelper3 extends ArrayVersionHelper5 {
         }
         return claxx.isPrimitive();
     }
-    
-    public ReflectClass reflectClassFromElementsEntry(ObjectContainerBase container, ArrayInfo info, int classID) {
+
+	public ReflectClass reflectClassFromElementsEntry(ObjectContainerBase container, ArrayInfo info, int classID) {
 
         
         if(classID == Const4.IGNORE_ID){
@@ -72,7 +72,7 @@ public class ArrayVersionHelper3 extends ArrayVersionHelper5 {
         }
         classID = - classID;
         
-        ClassMetadata classMetadata = container.classMetadataForId(classID);
+        ClassMetadata classMetadata = container.classMetadataForID(classID);
         if (classMetadata != null) {
             return classReflector(container.reflector(), classMetadata, info.primitive());
         }

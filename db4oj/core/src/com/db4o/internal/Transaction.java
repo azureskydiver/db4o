@@ -372,7 +372,11 @@ public abstract class Transaction {
 		_delete.traverse(deleteVisitor);
         _delete = null;
 	}
-    
 
-
+	public Object wrap(Object value) {
+		 if(value instanceof Integer){
+			 return value;
+		}
+		return new TransactionContext(this, value);
+	}
 }

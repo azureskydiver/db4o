@@ -3,7 +3,6 @@
 package com.db4o.internal;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.typehandlers.*;
@@ -15,12 +14,17 @@ import com.db4o.typehandlers.*;
 public class TypeHandlerAspect extends ClassAspect {
     
     public final TypeHandler4 _typeHandler;
+	private final ClassMetadata _ownerMetadata;
     
-    public TypeHandlerAspect(TypeHandler4 typeHandler){
+    public TypeHandlerAspect(ClassMetadata classMetadata, TypeHandler4 typeHandler) {
+    	if(Handlers4.isValueType(typeHandler)){
+    		throw new IllegalStateException();
+    	}
+    	_ownerMetadata = classMetadata;
         _typeHandler = typeHandler;
-    }
-    
-    public boolean equals(Object obj) {
+	}
+
+	public boolean equals(Object obj) {
         if(obj == this){
             return true;
         }
@@ -39,23 +43,22 @@ public class TypeHandlerAspect extends ClassAspect {
         return _typeHandler.getClass().getName();
     }
 
-    public void cascadeActivation(Transaction trans, Object obj, ActivationDepth depth) {
-    	if(! Handlers4.isFirstClass(_typeHandler)){
+    public void cascadeActivation(ActivationContext context) {
+    	if(! Handlers4.isCascading(_typeHandler)){
     		return;
     	}
-    	ActivationContext4 context = new ActivationContext4(trans, obj, depth);
     	Handlers4.cascadeActivation(context, _typeHandler);
     }
 
     public void collectIDs(final CollectIdContext context) {
-    	if(! Handlers4.isFirstClass(_typeHandler)){
+    	if(! Handlers4.isCascading(_typeHandler)){
     		incrementOffset(context);
     		return;
     	}
     	context.slotFormat().doWithSlotIndirection(context, new Closure4() {
 			public Object run() {
 		    	QueryingReadContext queryingReadContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), context.buffer(), 0, context.collector());
-		    	((FirstClassHandler)_typeHandler).collectIDs(queryingReadContext);
+		    	((CascadingTypeHandler)_typeHandler).collectIDs(queryingReadContext);
 				return null;
 			}
     	});
@@ -77,27 +80,36 @@ public class TypeHandlerAspect extends ClassAspect {
 
     public void marshall(MarshallingContext context, Object obj) {
     	context.createIndirectionWithinSlot();
-        _typeHandler.write(context, obj);
+    	
+    	if (isNotHandlingConcreteType(context)) {
+    		_typeHandler.write(context, obj);
+    		return;
+    	}
+    	
+    	if (_typeHandler instanceof InstantiatingTypeHandler) {
+			InstantiatingTypeHandler instantiating = (InstantiatingTypeHandler) _typeHandler;
+			instantiating.writeInstantiation(context, obj);
+			instantiating.write(context, obj);
+		} else {
+			_typeHandler.write(context, obj);
+		}
     }
 
-    public AspectType aspectType() {
+	private boolean isNotHandlingConcreteType(MarshallingContext context) {
+		return context.classMetadata() != _ownerMetadata;
+	}
+
+	public AspectType aspectType() {
         return AspectType.TYPEHANDLER;
     }
 
-    public void instantiate(final UnmarshallingContext context) {
+    public void activate(final UnmarshallingContext context) {
     	if(! checkEnabled(context)){
     		return;
     	}
-    	final Object oldObject = context.persistentObject();
     	context.slotFormat().doWithSlotIndirection(context, new Closure4() {
 			public Object run() {
-		        Object readObject = _typeHandler.read(context);
-		        if(readObject != null && oldObject != readObject){
-		        	if (!Handlers4.isEmbedded(_typeHandler)) {
-		        		throw new IllegalStateException("First class handler can only return the object in the context.");
-		        	}
-		        	context.persistentObject(readObject);
-		        }
+		        Handlers4.activate(context, _typeHandler);
 				return null;
 			}
 		});
@@ -112,8 +124,8 @@ public class TypeHandlerAspect extends ClassAspect {
 		});
 	}
 
-	public void deactivate(Transaction trans, Object obj, ActivationDepth depth) {
-		cascadeActivation(trans, obj, depth);
+	public void deactivate(ActivationContext context) {
+		cascadeActivation(context);
 	}
 
 	public boolean canBeDisabled() {

@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
@@ -18,7 +17,7 @@ import com.db4o.typehandlers.*;
  * This is the latest version, the one that should be used.
  * @exclude
  */
-public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler4, VariableLengthTypeHandler, EmbeddedTypeHandler, VersionedTypeHandler{
+public class ArrayHandler implements CascadingTypeHandler, Comparable4, ValueTypeHandler, VariableLengthTypeHandler, VersionedTypeHandler, QueryableTypeHandler{
     
 	private TypeHandler4 _handler;
 	
@@ -40,10 +39,6 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return new ArrayVersionHelper();
     }
 
-    protected ArrayHandler(ArrayHandler template, HandlerRegistry registry, int version) {
-        this(registry.correctHandlerVersion(template._handler, version), template._usePrimitiveClassReflector);
-    }
-
     protected ReflectArray arrayReflector(ObjectContainerBase container){
         return container.reflector().array();
     }
@@ -56,8 +51,8 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 		return new ReflectArrayIterator(reflectArray, array);
 	}
     
-    public final void cascadeActivation(ActivationContext4 context){
-        if (! Handlers4.isClassMetadata(_handler)) {
+    public final void cascadeActivation(ActivationContext context){
+        if (! Handlers4.isCascading(_handler)) {
             return;
         }
         ObjectContainerBase container = context.container();
@@ -71,10 +66,6 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
         return trans.container();
     }
     
-    protected ReflectClass classReflector(ObjectContainerBase container){
-        return Handlers4.classReflectorForHandler(container.handlers(), _handler);
-    }
-
 	public void collectIDs(final QueryingReadContext context) {
         final TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(context, _handler);
         forEachElement(context, new Runnable() {
@@ -83,7 +74,6 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
             }
         });
     }
-
     
     protected ArrayInfo forEachElement(final AbstractBufferContext context, final Runnable elementRunnable){
         final ArrayInfo info = newArrayInfo();
@@ -142,7 +132,8 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     }
 
     private boolean cascadeDelete(DeleteContext context) {
-        return context.cascadeDelete() && Handlers4.isClassMetadata(_handler);
+    	// FIXME: ValueType could reference objects, shouldn't they be deleted too?
+        return context.cascadeDelete() && Handlers4.isCascading(_handler);
     }
 
     
@@ -153,15 +144,10 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
     /** @param classPrimitive */
     public final void deletePrimitiveEmbedded(
         StatefulBuffer buffer,
-        PrimitiveFieldHandler classPrimitive) {
+        PrimitiveTypeMetadata classPrimitive) {
         
 		buffer.readInt(); //int address = a_bytes.readInt();
 		buffer.readInt(); //int length = a_bytes.readInt();
-
-        if(true){
-            return;
-        }        
-        
     }
 
     public boolean equals(Object obj) {
@@ -227,21 +213,16 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 
     protected void readInfo(Transaction trans, ReadBuffer buffer, ArrayInfo info){
         int classID = buffer.readInt();
-        if (! isPreVersion0Format(classID)) {
+        if (isPreVersion0Format(classID)) {
+        	throw new UnsupportedOldFormatException(); 
+        } else {
             _versionHelper.readTypeInfo(trans, buffer, info, classID);
             reflectClassFromElementsEntry(container(trans), info, classID);
             readDimensions(info, buffer);
-        } else {
-            info.reflectClass(classReflector(container(trans)));
-            detectDimensionsPreVersion0Format(buffer, info, classID);
         }
         if(Debug4.exceedsMaximumArrayEntries(info.elementCount(), _usePrimitiveClassReflector)){
             info.elementCount(0);
         }
-    }
-
-    protected void detectDimensionsPreVersion0Format(ReadBuffer buffer, ArrayInfo info, int classID) {
-        info.elementCount(classID);
     }
 
     protected void readDimensions(ArrayInfo info, ReadBuffer buffer) {
@@ -524,7 +505,17 @@ public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler
 	public boolean canHold(ReflectClass type) {
 		return _handler.canHold(type);
     }
+	
+	@Override
+	public String toString() {
+		return "ArrayHandler(isPrimitive=" + _usePrimitiveClassReflector + ", handler=" + _handler + ")";
+	}
 
+	public boolean descendsIntoMembers() {
+		return true;
+	}
 
-    
+	public boolean isSimple() {
+		return false;
+	}    
 }

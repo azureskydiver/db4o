@@ -374,7 +374,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		        GenericClass existing = (GenericClass)_repository.lookupByID(id);
 				if (existing != null) {
 					if (null != converter) {
-						existing.setSecondClass();
+//						existing.setSecondClass();
 					} else {
 						existing.setConverter(null);
 					}
@@ -391,10 +391,11 @@ public class GenericReflector implements Reflector, DeepClone {
 				    claxx.initFields(new GenericField[] {new GenericField(null, null, true)});
 				    claxx.setConverter(converter);
 				}
-			    claxx.setSecondClass();
+//			    claxx.setSecondClass();
 			    claxx.setPrimitive();
 			    _repository.register(id,claxx);
 			    return null;
+
 			}
     	});
 	}

@@ -20,8 +20,14 @@ public interface Db4oTypeImpl extends TransactionAware {
 	
 	void setObjectReference(ObjectReference ref);
 	
+	/**
+	 * @deprecated should no longer be called
+	 */
 	Object storedTo(Transaction trans);
 	
+	/**
+	 * @deprecated should no longer be called
+	 */
 	void preDeactivate();
 	
 }

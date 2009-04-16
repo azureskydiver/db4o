@@ -9,7 +9,6 @@ import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
-import com.db4o.typehandlers.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -62,7 +61,7 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 		int smallerID = Math.min(id1, id2);
 		int biggerID = Math.max(id1, id2);
 		ClassMetadata classMetadata = new ClassMetadata(container(), reflector().forClass(Item.class));
-		assertHandlerComparison(classMetadata, new Integer(smallerID), new Integer(biggerID));
+		assertHandlerComparison((Comparable4)classMetadata.typeHandler(), new Integer(smallerID), new Integer(biggerID));
 	}
 
 	private int storeItem() {
@@ -83,11 +82,11 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 	}
 	
 	private void assertHandlerComparison(Class handlerClass, Object smaller, Object greater) {
-		TypeHandler4 handler = (TypeHandler4) newInstance(handlerClass);
+		Comparable4 handler = (Comparable4) newInstance(handlerClass);
 		assertHandlerComparison(handler, smaller, greater);
 	}
 
-    private void assertHandlerComparison(TypeHandler4 handler, Object smaller, Object greater) {
+    private void assertHandlerComparison(Comparable4 handler, Object smaller, Object greater) {
         PreparedComparison comparable = handler.prepareComparison(context(), smaller);
 		Assert.isNotNull(comparable);
 		Assert.areEqual(0, comparable.compareTo(smaller));

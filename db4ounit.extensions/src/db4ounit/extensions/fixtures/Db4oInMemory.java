@@ -22,6 +22,17 @@ public class Db4oInMemory extends AbstractSoloDb4oFixture {
 		this();
 		fixtureConfiguration(fc);
 	}
+	
+	@Override
+	public boolean accept(Class clazz) {
+		if (!super.accept(clazz)) {
+			return false;
+		}
+		if (OptOutInMemory.class.isAssignableFrom(clazz)) {
+			return false;
+		}
+		return true;
+	}
 
 	private MemoryFile _memoryFile;
 	

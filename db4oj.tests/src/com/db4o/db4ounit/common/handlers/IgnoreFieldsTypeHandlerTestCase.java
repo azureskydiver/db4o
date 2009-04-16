@@ -41,8 +41,8 @@ public class IgnoreFieldsTypeHandlerTestCase extends AbstractDb4oTestCase {
 	}
 	
 	protected void configure(Configuration config) throws Exception {
-		config.registerTypeHandler(new SingleClassTypeHandlerPredicate(Item2.class), new IgnoreFieldsTypeHandler());
-		config.registerTypeHandler(new SingleClassTypeHandlerPredicate(Item4.class), new IgnoreFieldsTypeHandler());
+		config.registerTypeHandler(new SingleClassTypeHandlerPredicate(Item2.class), IgnoreFieldsTypeHandler.INSTANCE);
+		config.registerTypeHandler(new SingleClassTypeHandlerPredicate(Item4.class), IgnoreFieldsTypeHandler.INSTANCE);
 	}
 	
 	protected void store() throws Exception {

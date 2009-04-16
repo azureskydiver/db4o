@@ -8,7 +8,6 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
@@ -83,7 +82,7 @@ public class TranslatorToTypehandlerMigrationTestCase implements TestLifeCycle{
 		
 	}
 	
-	public static class ItemTypeHandler implements TypeHandler4 , FirstClassHandler, VariableLengthTypeHandler{
+	public static class ItemTypeHandler implements ReferenceTypeHandler, CascadingTypeHandler, VariableLengthTypeHandler{
 		
 		private int _writeCalls;
 		
@@ -96,12 +95,10 @@ public class TranslatorToTypehandlerMigrationTestCase implements TestLifeCycle{
 		public void delete(DeleteContext context) throws Db4oIOException {
 			throw new NotImplementedException();
 		}
-
-		public Object read(ReadContext context) {
+		
+		public void activate(ReferenceActivationContext context) {
 			_readCalls ++;
-			Item item = (Item) ((UnmarshallingContext) context).persistentObject();
-			item._id = context.readInt() - 42;
-			return item;
+			((Item)context.persistentObject())._id = context.readInt() - 42;
 		}
 
 		public void write(WriteContext context, Object obj) {
@@ -114,7 +111,7 @@ public class TranslatorToTypehandlerMigrationTestCase implements TestLifeCycle{
 			throw new NotImplementedException();
 		}
 
-		public void cascadeActivation(ActivationContext4 context) {
+		public void cascadeActivation(ActivationContext context) {
 			throw new NotImplementedException();
 			
 		}

@@ -8,7 +8,7 @@ import com.db4o.internal.marshall.*;
 /**
  * @exclude
  */
-public class FirstClassObjectHandler0 extends FirstClassObjectHandler{
+public class StandardReferenceTypeHandler0 extends StandardReferenceTypeHandler{
 
     protected boolean isNull(FieldListInfo fieldList,int fieldIndex) {
         return false;

@@ -233,7 +233,7 @@ public class P2LinkedList extends P1Collection implements Db4oList {
         int idx = 0;
         // TODO: may need to check for primitive wrappers to use
         // equals also.
-        if (getTrans() != null && (! getTrans().container().handlers().isSecondClass(o))) {
+        if (getTrans() != null) {
             long id = getIDOf(o);
             if (id > 0) {
                 P2ListElementIterator i = iterator4();

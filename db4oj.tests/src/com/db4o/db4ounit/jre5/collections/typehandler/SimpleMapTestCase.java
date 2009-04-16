@@ -22,11 +22,11 @@ public class SimpleMapTestCase extends AbstractDb4oTestCase{
 		public Map map;
 	}
 	
-	public static class FirstClassElement {
+	public static class ReferenceTypeElement {
 		
 		public String name;
 		
-		public FirstClassElement(String name_){
+		public ReferenceTypeElement(String name_){
 			name = name_;
 		}
 		
@@ -43,7 +43,7 @@ public class SimpleMapTestCase extends AbstractDb4oTestCase{
 		Item item = new Item();
 		item.map = new HashMap();
 		item.map.put("zero", "zero");
-		item.map.put(new FirstClassElement("one"), "one");
+		item.map.put(new ReferenceTypeElement("one"), "one");
 		store(item);
 	}
 	
@@ -63,10 +63,10 @@ public class SimpleMapTestCase extends AbstractDb4oTestCase{
 	}
 	
 	public void testDeletion() {
-		assertObjectCount(FirstClassElement.class, 1);
+		assertObjectCount(ReferenceTypeElement.class, 1);
 		Item item = (Item) retrieveOnlyInstance(Item.class);
 		db().delete(item);
-		assertObjectCount(FirstClassElement.class, 0);
+		assertObjectCount(ReferenceTypeElement.class, 0);
 	}
 
 	private void assertObjectCount(Class clazz, int count) {

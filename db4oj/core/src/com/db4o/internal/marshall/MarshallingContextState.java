@@ -10,13 +10,10 @@ import com.db4o.internal.*;
  */
 public class MarshallingContextState {
     
-    public final MarshallingBuffer _buffer;
-    
-    public final int _fieldWriteCount;
+    final MarshallingBuffer _buffer;
 
-    public MarshallingContextState(MarshallingBuffer buffer, int fieldWriteCount) {
+    public MarshallingContextState(MarshallingBuffer buffer) {
         _buffer = buffer;
-        _fieldWriteCount = fieldWriteCount;
     }
 
 }

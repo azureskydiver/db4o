@@ -40,7 +40,7 @@ class ObjectAnalyzer {
         if(!detectClassMetadata(trans, claxx)){
             return;
         }
-        if (isPlainObjectOrSecondClass(_classMetadata) ) {
+        if (isValueType(_classMetadata) ) {
         	notStorable(_obj, _classMetadata.classReflector());
         }
     }
@@ -80,9 +80,8 @@ class ObjectAnalyzer {
         return _notStorable;
     }
     
-    private final boolean isPlainObjectOrSecondClass(ClassMetadata classMetadata) {
-        return classMetadata.getID() == Handlers4.UNTYPED_ID 
-        	|| classMetadata.isSecondClass();
+    private final boolean isValueType(ClassMetadata classMetadata) {
+        return classMetadata.isValueType();
     }
 
     ObjectReference objectReference() {

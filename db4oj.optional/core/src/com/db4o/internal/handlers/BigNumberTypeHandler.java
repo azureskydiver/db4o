@@ -14,7 +14,7 @@ import com.db4o.typehandlers.*;
  * @sharpen.ignore
  * @exclude
  */
-public abstract class BigNumberTypeHandler<TBigNumber> implements EmbeddedTypeHandler, VariableLengthTypeHandler, QueryableTypeHandler, IndexableTypeHandler {
+public abstract class BigNumberTypeHandler<TBigNumber> implements ValueTypeHandler, VariableLengthTypeHandler, QueryableTypeHandler, IndexableTypeHandler {
 
 	public void defragment(DefragmentContext context) {
 		skip(context);
@@ -55,6 +55,10 @@ public abstract class BigNumberTypeHandler<TBigNumber> implements EmbeddedTypeHa
 	public boolean isSimple() {
 		return true;
     }
+	
+	public boolean descendsIntoMembers() {
+		return false;
+	}
 	
 	public void defragIndexEntry(DefragmentContextImpl context) {
 		context.copyID(false,true);

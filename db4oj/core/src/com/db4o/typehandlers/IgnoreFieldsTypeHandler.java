@@ -5,7 +5,6 @@ package com.db4o.typehandlers;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
@@ -14,7 +13,12 @@ import com.db4o.reflect.*;
 /**
  * Typehandler that ignores all fields on a class
  */
-public class IgnoreFieldsTypeHandler implements TypeHandler4, FirstClassHandler{
+public class IgnoreFieldsTypeHandler implements ReferenceTypeHandler, CascadingTypeHandler{
+	
+	public static final TypeHandler4 INSTANCE = new IgnoreFieldsTypeHandler();
+	
+	private IgnoreFieldsTypeHandler() {
+	}
 
 	public void defragment(DefragmentContext context) {
 		// do nothing
@@ -24,19 +28,17 @@ public class IgnoreFieldsTypeHandler implements TypeHandler4, FirstClassHandler{
 		// do nothing
 	}
 
-	public Object read(ReadContext context) {
-		return null;
+	public void activate(ReferenceActivationContext context) {
 	}
 
 	public void write(WriteContext context, Object obj) {
-		// do nothing
 	}
 
 	public PreparedComparison prepareComparison(Context context, Object obj) {
 		return null;
 	}
 
-	public void cascadeActivation(ActivationContext4 context) {
+	public void cascadeActivation(ActivationContext context) {
 		// do nothing
 	}
 

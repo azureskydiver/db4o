@@ -1,10 +1,8 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.delete.*;
-import com.db4o.internal.marshall.*;
 import com.db4o.internal.reflect.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -14,59 +12,21 @@ import com.db4o.typehandlers.*;
 /**
  * Tyehandler for naked plain objects (java.lang.Object).
  */
-public class PlainObjectHandler implements TypeHandler4, ReadsObjectIds, EmbeddedTypeHandler{
+public class PlainObjectHandler implements ReferenceTypeHandler {
 
     public void defragment(DefragmentContext context) {
-        context.copySlotlessID();
     }
 
     public void delete(DeleteContext context) throws Db4oIOException {
-        // do nothing
     }
-
-    public Object read(ReadContext context) {
-        int id = context.readInt();
-        Transaction transaction = context.transaction();
-        Object obj = transaction.objectForIdFromCache(id);
-        if(obj != null){
-            return obj;
-        }
-        obj = new Object();
-        addReference(context, obj, id);
-        return obj;
+    
+    public void activate(ReferenceActivationContext context) {
     }
-
+    
     public void write(WriteContext context, Object obj) {
-        Transaction transaction = context.transaction();
-        ObjectContainerBase container = transaction.container();
-        int id = container.getID(transaction, obj);
-        if(id <= 0){
-            id = container.newUserObject();
-            
-            // TODO: Free on rollback
-            
-            addReference(context, obj, id);
-        }
-        context.writeInt(id);
-    }
-
-    private void addReference(Context context, Object obj, int id) {
-        Transaction transaction = context.transaction();
-        ObjectReference ref = new ObjectReference(id);
-        ref.setObjectWeak(transaction.container(), obj);
-        transaction.addNewReference(ref);
-    }
-
-    public PreparedComparison prepareComparison(Context context, Object obj) {
-        throw new NotImplementedException();
-    }
-
-    public ObjectID readObjectID(InternalReadContext context) {
-        return ObjectID.read(context);
     }
 
 	public boolean canHold(ReflectClass type) {
 		return ReflectClasses.areEqual(Object.class, type);
     }
-
 }

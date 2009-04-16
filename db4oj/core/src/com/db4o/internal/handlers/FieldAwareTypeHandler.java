@@ -12,7 +12,7 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public interface FieldAwareTypeHandler extends TypeHandler4, VersionedTypeHandler, FirstClassHandler, VirtualAttributeHandler{
+public interface FieldAwareTypeHandler extends ReferenceTypeHandler, VersionedTypeHandler, CascadingTypeHandler, VirtualAttributeHandler{
     
     public void addFieldIndices(ObjectIdContextImpl context, Slot oldSlot);
 
@@ -24,6 +24,6 @@ public interface FieldAwareTypeHandler extends TypeHandler4, VersionedTypeHandle
     
     public void classMetadata(ClassMetadata classMetadata);
 
-    public boolean seekToField(ObjectHeaderContext context, FieldMetadata field);
+    public boolean seekToField(ObjectHeaderContext context, ClassAspect aspect);
 
 }

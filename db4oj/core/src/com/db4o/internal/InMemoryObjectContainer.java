@@ -15,6 +15,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 
 	private boolean _closed = false;
 	private final MemoryFile _memoryFile;
+	private int _capacity = 0;
 	private int _length = 0;
 
 	public InMemoryObjectContainer(Configuration config, MemoryFile memoryFile)
@@ -46,7 +47,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 			commitTransaction();
 			writeHeader(false, false);
 		} else {
-			_length = bytes.length;
+			_length = _capacity = bytes.length;
 			readThis();
 		}
 	}
@@ -70,8 +71,8 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 
     protected void shutdownDataStorage() {
 		if (!_closed) {
-			byte[] temp = new byte[_length];
-			System.arraycopy(_memoryFile.getBytes(), 0, temp, 0, _length);
+			byte[] temp = new byte[_capacity];
+			System.arraycopy(_memoryFile.getBytes(), 0, temp, 0, _capacity);
 			_memoryFile.setBytes(temp);
 		}
 		_closed = true;
@@ -81,13 +82,6 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
     protected void dropReferences() {
     	// do nothing
     }
-
-	public void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
-		int fullNewAddress = newAddress + newAddressOffset;
-		ensureMemoryFileSize(fullNewAddress + length);
-		byte[] bytes = _memoryFile.getBytes();
-		System.arraycopy(bytes, oldAddress + oldAddressOffset, bytes, fullNewAddress, length);
-	}
 
     public long fileLength() {
         return _length;
@@ -125,14 +119,15 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 		int length = buffer.length();
 		ensureMemoryFileSize(fullAddress + length);   
 		System.arraycopy(buffer._buffer, 0, _memoryFile.getBytes(), fullAddress , length);
+		_length = Math.max(_length, fullAddress + length + 1);
 	}
 
     private void ensureMemoryFileSize(int last) {
-		if (last < _length) return;
+		if (last < _capacity) return;
 		
 		byte[] bytes = _memoryFile.getBytes();
 		if (last < bytes.length) {
-			_length = last;
+			_capacity = last;
 			return;
 		}
 		
@@ -144,7 +139,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 		byte[] newBytes = new byte[bytes.length + increment];
 		System.arraycopy(bytes, 0, newBytes, 0, bytes.length);
 		_memoryFile.setBytes(newBytes);
-		_length = newBytes.length;
+		_capacity = newBytes.length;
 	}
 
     public void overwriteDeletedBytes(int a_address, int a_length) {

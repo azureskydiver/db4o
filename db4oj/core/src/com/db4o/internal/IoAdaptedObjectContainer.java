@@ -163,33 +163,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         super.commit1(trans);
     }
 
-    public void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
-
-        if (Debug4.xbytes && Deploy.overwrite) {
-            checkXBytes(newAddress, newAddressOffset, length);
-        }
-
-        try {
-
-            if (_backupFile == null) {
-                _file
-                    .blockCopy(oldAddress, oldAddressOffset, newAddress, newAddressOffset, length);
-                return;
-            }
-
-            final byte[] copyBytes = new byte[length];
-            _file.blockRead(oldAddress, oldAddressOffset, copyBytes);
-            _file.blockWrite(newAddress, newAddressOffset, copyBytes);
-            if (_backupFile != null) {
-                _backupFile.blockWrite(newAddress, newAddressOffset, copyBytes);
-            }
-
-        } catch (Exception e) {
-            Exceptions4.throwRuntimeException(16, e);
-        }
-
-    }
-
     private void checkXBytes(int newAddress, int newAddressOffset, int length) {
         if (Debug4.xbytes && Deploy.overwrite) {
             try {

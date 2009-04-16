@@ -21,11 +21,11 @@ public class SimpleListTestCase extends AbstractDb4oTestCase{
 		public List list;
 	}
 	
-	public static class FirstClassElement {
+	public static class ReferenceTypeElement {
 		
 		public String name;
 		
-		public FirstClassElement(String name_){
+		public ReferenceTypeElement(String name_){
 			name = name_;
 		}
 		
@@ -39,7 +39,7 @@ public class SimpleListTestCase extends AbstractDb4oTestCase{
 		Item item = new Item();
 		item.list = new ArrayList();
 		item.list.add("zero");
-		item.list.add(new FirstClassElement("one"));
+		item.list.add(new ReferenceTypeElement("one"));
 		store(item);
 	}
 	
@@ -49,7 +49,7 @@ public class SimpleListTestCase extends AbstractDb4oTestCase{
 		Assert.areEqual("zero", item.list.get(0));
 	}
 	
-    public void testActivation(){
+    public void testCascadingActivation(){
     	Item item = (Item) retrieveOnlyInstance(Item.class);
         List list = item.list;
         Assert.areEqual(2, list.size());
@@ -73,10 +73,10 @@ public class SimpleListTestCase extends AbstractDb4oTestCase{
 	}
 	
 	public void testDeletion() {
-		assertObjectCount(FirstClassElement.class, 1);
+		assertObjectCount(ReferenceTypeElement.class, 1);
 		Item item = (Item) retrieveOnlyInstance(Item.class);
 		db().delete(item);
-		assertObjectCount(FirstClassElement.class, 0);
+		assertObjectCount(ReferenceTypeElement.class, 0);
 	}
 
 	private void assertObjectCount(Class clazz, int count) {

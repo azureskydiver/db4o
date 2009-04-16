@@ -68,13 +68,17 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
     }
     
     public void add(Object obj) {
-        int id = container().getID(transaction(), obj);
+        int id = getID(obj);
         if(id > 0){
             addId(id);
             return;
         }
         addObjectWithoutId(obj);
     }
+
+	private int getID(Object obj) {
+		return container().getID(transaction(), obj);
+	}
     
     public void readId(TypeHandler4 handler) {
         ObjectID objectID = ObjectID.NOT_POSSIBLE;
@@ -89,9 +93,17 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
             }
             if(objectID == ObjectID.NOT_POSSIBLE){
                 seek(offset);
+                // FIXME: there's no point in activating the object
+                // just find its id
+                // type handlers know how to do it
                 Object obj = read(handler);
                 if(obj != null){
-                    addObjectWithoutId(obj);
+                	int id = (int) getID(obj);
+                	if (id > 0) {
+                		addId(id);
+                	} else {
+                		addObjectWithoutId(obj);
+                	}
                 }
             }
             

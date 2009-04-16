@@ -8,6 +8,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.fieldindex.*;
+import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.typehandlers.*;
 
@@ -56,12 +57,12 @@ public final class QCandidates implements Visitor4 {
    
     	if (a_field == null
     			|| a_field.i_yapField == null
-				|| !(a_field.i_yapField.getHandler() instanceof ClassMetadata)
+				|| !(a_field.i_yapField.getHandler() instanceof StandardReferenceTypeHandler)
     	) {
     		return;
     	}
 
-    	ClassMetadata yc = (ClassMetadata) a_field.i_yapField.getHandler();
+    	ClassMetadata yc = ((StandardReferenceTypeHandler) a_field.i_yapField.getHandler()).classMetadata();
     	if (i_yapClass == null) {
     		i_yapClass = yc;
     	} else {
@@ -137,7 +138,7 @@ public final class QCandidates implements Visitor4 {
                 context.seek(offset);
                 Object obj = context.read(handler);
                 if(obj != null){
-                    return new QCandidate(this, obj, 0);
+                    return new QCandidate(this, obj, context.container().getID(context.transaction(), obj));
                 }
             }
             

@@ -40,7 +40,7 @@ public abstract class TypeHandlerConfiguration {
 
     
     protected void ignoreFieldsOn(Class clazz){
-    	_config.registerTypeHandler(new SingleClassTypeHandlerPredicate(clazz), new IgnoreFieldsTypeHandler());
+    	_config.registerTypeHandler(new SingleClassTypeHandlerPredicate(clazz), IgnoreFieldsTypeHandler.INSTANCE);
     }
     
     private void registerListTypeHandlerFor(Class clazz){

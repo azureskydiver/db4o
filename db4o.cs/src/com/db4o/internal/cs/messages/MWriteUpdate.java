@@ -15,7 +15,7 @@ public final class MWriteUpdate extends MsgObject implements ServerSideMessage {
 	    LocalObjectContainer stream = (LocalObjectContainer)stream();
 	    unmarshall(_payLoad._offset);
 	    synchronized(streamLock()){
-	        ClassMetadata classMetadata = stream.classMetadataForId(yapClassId);
+	        ClassMetadata classMetadata = stream.classMetadataForID(yapClassId);
 			int id = _payLoad.getID();
 			transaction().writeUpdateAdjustIndexes(id, classMetadata, arrayType, 0);
 			transaction().dontDelete(id);

@@ -28,7 +28,7 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
         new CustomTypeHandlerTestCase().runSolo();
     }
     
-    private final class CustomItemTypeHandler implements TypeHandler4, VariableLengthTypeHandler {
+    private final class CustomItemTypeHandler implements ReferenceTypeHandler, CascadingTypeHandler, VariableLengthTypeHandler {
 
         public PreparedComparison prepareComparison(Context context, Object obj) {
             return new PreparedComparison() {
@@ -38,7 +38,7 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
             };
         }
 
-        public void write(WriteContext context, Object obj) {
+    	public void write(WriteContext context, Object obj) {
             Item item = (Item)obj;
             if(item.numbers == null){
                 context.writeInt(-1);
@@ -50,17 +50,16 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
             }
         }
 
-        public Object read(ReadContext context) {
+        public void activate(ReferenceActivationContext context) {
             Item item = (Item)((UnmarshallingContext) context).persistentObject();
             int elementCount = context.readInt();
             if(elementCount == -1){
-                return item;
+                return;
             }
             item.numbers = new int[elementCount];
             for (int i = 0; i < item.numbers.length; i++) {
                 item.numbers[i] = context.readInt();
             }
-            return item;
         }
 
         public void delete(DeleteContext context) throws Db4oIOException {
@@ -74,10 +73,20 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
 		public boolean canHold(ReflectClass type) {
 			return ReflectClasses.areEqual(Item.class, type);
         }
+
+		public void cascadeActivation(ActivationContext context) {
+		}
+
+		public void collectIDs(QueryingReadContext context) {
+		}
+
+		public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
+			return null;
+		}
     }
     
     
-    private final class CustomItemGrandChildTypeHandler implements TypeHandler4, VariableLengthTypeHandler {
+    private final class CustomItemGrandChildTypeHandler implements ReferenceTypeHandler, CascadingTypeHandler, VariableLengthTypeHandler {
 
         public PreparedComparison prepareComparison(Context context, Object obj) {
             return new PreparedComparison() {
@@ -87,20 +96,19 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
             };
         }
 
-        public void write(WriteContext context, Object obj) {
+    	public void write(WriteContext context, Object obj) {
             ItemGrandChild item = (ItemGrandChild)obj;
             context.writeInt(item.age);
             context.writeInt(100);
         }
 
-        public Object read(ReadContext context) {
-            ItemGrandChild item = (ItemGrandChild)((FirstClassReadContext) context).persistentObject();
+        public void activate(ReferenceActivationContext context) {
+            ItemGrandChild item = (ItemGrandChild)((ReferenceActivationContext) context).persistentObject();
             item.age = context.readInt();
             int check = context.readInt();
             if(check != 100){
                 throw new IllegalStateException();
             }
-            return item;
         }
 
 
@@ -115,6 +123,21 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
 		public boolean canHold(ReflectClass type) {
 			return ReflectClasses.areEqual(ItemGrandChild.class, type);
         }
+
+		public void cascadeActivation(ActivationContext context) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void collectIDs(QueryingReadContext context) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
+			// TODO Auto-generated method stub
+			return null;
+		}
     }
 
 

@@ -25,16 +25,15 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 	}
 
 	private String[] libraries() {
+		
 		if (true) {
 			return Db4oMigrationSuiteBuilder.ALL;
 		}
 		
 		if (false) {
 			// run against specific libraries + the current one
-			
-			String netPath = "db4o.archives/net-2.0/7.2/Db4objects.Db4o.dll";
-			String javaPath = "db4o.archives/java1.2/db4o-6.4-java1.2.jar";
-			
+			String javaPath = "db4o.archives/java1.2/db4o-7.1.27.9108-java1.2.jar";
+			String netPath = "db4o.archives/net-2.0/7.4/Db4objects.Db4o.dll";
 			return new String[] {
 				WorkspaceServices.workspacePath(javaPath),
 			};
@@ -43,8 +42,8 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 	}
 
 	protected Class[] testCases() {
-	    Class[] classes = 
-		new Class[] {
+		
+	    final Class[] classes = new Class[] {
             BooleanHandlerUpdateTestCase.class,
             ByteHandlerUpdateTestCase.class,
             CascadedDeleteFileFormatUpdateTestCase.class,
@@ -59,6 +58,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             MultiDimensionalArrayHandlerUpdateTestCase.class,
             NestedArrayUpdateTestCase.class,
             ObjectArrayUpdateTestCase.class,
+            PlainObjectUpdateTestCase.class,
             QueryingMigrationTestCase.class,
             ShortHandlerUpdateTestCase.class,
             StringHandlerUpdateTestCase.class,
@@ -82,6 +82,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             ArrayListUpdateTestCase.class,
             HashtableUpdateTestCase.class,
             KnownClassesMigrationTestCase.class,
+            TreeSetHandlerUpdateTestCase.class,
             VectorUpdateTestCase.class,
 	    };
 	}

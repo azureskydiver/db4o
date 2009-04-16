@@ -17,7 +17,7 @@ import com.db4o.typehandlers.*;
  * @exclude
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class BigSetTypeHandler implements TypeHandler4{
+public class BigSetTypeHandler implements ReferenceTypeHandler, CascadingTypeHandler {
 
 	public void defragment(DefragmentContext context) {
 		int pos = context.offset();
@@ -59,12 +59,6 @@ public class BigSetTypeHandler implements TypeHandler4{
 		return new BTree(systemTransaction(context), id, new IDHandler());
 	}
 
-	public Object read(ReadContext context) {
-		BigSetPersistence bigSet = (BigSetPersistence)((UnmarshallingContext)context).persistentObject();
-		bigSet.read(context);
-		return bigSet;
-	}
-
 	public void write(WriteContext context, Object obj) {
 		BigSetPersistence bigSet = (BigSetPersistence) obj;
 		bigSet.write(context);
@@ -80,5 +74,25 @@ public class BigSetTypeHandler implements TypeHandler4{
 		// know
 		return true;
     }
+
+	public void activate(ReferenceActivationContext context) {
+		BigSetPersistence bigSet = (BigSetPersistence) context.persistentObject();
+		bigSet.read(context);
+	}
+
+	public void cascadeActivation(ActivationContext context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void collectIDs(QueryingReadContext context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

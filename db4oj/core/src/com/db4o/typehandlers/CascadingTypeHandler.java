@@ -2,22 +2,19 @@
 
 package com.db4o.typehandlers;
 
-import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 
-
 /**
- * TypeHandler for objects with own identity that support
- * activation and querying on members.
+ * TypeHandler for objects with members.
  */
-public interface FirstClassHandler extends TypeHandler4{
+public interface CascadingTypeHandler extends TypeHandler4{
     
 	/**
 	 * will be called during activation if the handled
 	 * object is already active 
 	 * @param context
 	 */
-    void cascadeActivation(ActivationContext4 context);
+    void cascadeActivation(ActivationContext context);
     
     /**
      * will be called during querying to ask for the handler
@@ -32,6 +29,6 @@ public interface FirstClassHandler extends TypeHandler4{
      * objects of the handled object.
      * @param context
      */
-    public void collectIDs(QueryingReadContext context);
+    void collectIDs(QueryingReadContext context);
 
 }

@@ -14,12 +14,10 @@ import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
-
-
 /**
  * @exclude
  */
-public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, VariableLengthTypeHandler, QueryableTypeHandler, EmbeddedTypeHandler{
+public class StringHandler implements ValueTypeHandler, IndexableTypeHandler, BuiltinTypeHandler, VariableLengthTypeHandler, QueryableTypeHandler {
     
     private ReflectClass _classReflector;
     
@@ -38,6 +36,10 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
     
     public boolean isSimple() {
     	return true;
+    }
+    
+    public boolean descendsIntoMembers() {
+    	return false;
     }
 
 	public boolean canHold(ReflectClass type) {
@@ -110,7 +112,7 @@ public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, 
     }
     
 	public final void writeShort(Transaction trans, String str, ByteArrayBuffer buffer) {
-		trans.container().handlers().stringIO().writeLengthAndString(buffer, str);
+		stringIo(trans.container()).writeLengthAndString(buffer, str);
 	}
 
     ByteArrayBuffer val(Object obj, Context context) {

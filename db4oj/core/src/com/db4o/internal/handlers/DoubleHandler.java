@@ -41,6 +41,7 @@ public class DoubleHandler extends LongHandler {
 		a_bytes.writeLong(Platform4.doubleToLong(((Double)a_object).doubleValue()));
 	}
 	
+	@Override
     public Object read(ReadContext context) {
         Long l = (Long)super.read(context);
         return new Double(Platform4.longToDouble(l.longValue()));

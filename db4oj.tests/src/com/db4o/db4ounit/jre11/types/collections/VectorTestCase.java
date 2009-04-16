@@ -18,9 +18,9 @@ public class VectorTestCase extends AbstractDb4oTestCase {
     
     private static final String VALUE_ONE = "one";
 
-    private static final FirstClassElement FIRST_CLASS_ELEMENT_ONE = new FirstClassElement(VALUE_ONE);
+    private static final ReferenceTypeElement REFERENCE_TYPE_ELEMENT_ONE = new ReferenceTypeElement(VALUE_ONE);
     
-    private static final FirstClassElement FIRST_CLASS_ELEMENT_TWO = new FirstClassElement(VALUE_TWO);
+    private static final ReferenceTypeElement REFERENCE_TYPE_ELEMENT_TWO = new ReferenceTypeElement(VALUE_TWO);
 
     public static class Item {
         
@@ -30,11 +30,11 @@ public class VectorTestCase extends AbstractDb4oTestCase {
         
     }
     
-    public static class FirstClassElement {
+    public static class ReferenceTypeElement {
         
         public String name;
         
-        public FirstClassElement(String name_) {
+        public ReferenceTypeElement(String name_) {
             name = name_;
         }
         
@@ -45,7 +45,7 @@ public class VectorTestCase extends AbstractDb4oTestCase {
             if(obj.getClass() != getClass()){
                 return false;
             }
-            FirstClassElement other = (FirstClassElement) obj;
+            ReferenceTypeElement other = (ReferenceTypeElement) obj;
             if(name == null){
                 return other.name == null;
             }
@@ -57,8 +57,8 @@ public class VectorTestCase extends AbstractDb4oTestCase {
     protected void store() throws Exception {
         storeItem(1, new Object[] {VALUE_ONE});
         storeItem(2, new Object[] {VALUE_TWO});
-        storeItem(3, new Object[] {FIRST_CLASS_ELEMENT_ONE});
-        storeItem(4, new Object[] {FIRST_CLASS_ELEMENT_TWO});
+        storeItem(3, new Object[] {REFERENCE_TYPE_ELEMENT_ONE});
+        storeItem(4, new Object[] {REFERENCE_TYPE_ELEMENT_TWO});
     }
 
     private void storeItem(int id, Object[] values) {
@@ -84,8 +84,7 @@ public class VectorTestCase extends AbstractDb4oTestCase {
 
     private Vector retrieveFirstVector() {
         Item item = retrieveFirstItem();
-        Vector vector = item.vector;
-        return vector;
+        return item.vector;
     }
 
     public void testUpdate() throws Exception{
@@ -120,15 +119,15 @@ public class VectorTestCase extends AbstractDb4oTestCase {
 
     }
     
-    public void testFirstClassElementQuery(){
+    public void testReferenceTypeElementQuery(){
         assertVectorQuery(new Procedure4() {
             public void apply(Object arg) {
                 ((Query) arg).descend("vector").descend("name").constrain(VALUE_ONE);
             }
-        }, new Object[]{FIRST_CLASS_ELEMENT_ONE});
+        }, new Object[]{REFERENCE_TYPE_ELEMENT_ONE});
     }
     
-    public void testQueryOrFirstClassMember(){
+    public void testQueryOrReferenceTypeMember(){
         assertVectorQuery(new Procedure4() {
             public void apply(Object arg) {
                 Query query = ((Query) arg).descend("vector");
@@ -136,7 +135,7 @@ public class VectorTestCase extends AbstractDb4oTestCase {
                 Constraint twoConstraint = query.descend("name").constrain(VALUE_TWO);
                 oneConstraint.or(twoConstraint);
             }
-        }, new Object[]{FIRST_CLASS_ELEMENT_ONE, FIRST_CLASS_ELEMENT_TWO});
+        }, new Object[]{REFERENCE_TYPE_ELEMENT_ONE, REFERENCE_TYPE_ELEMENT_TWO});
     }
     
     public void testQueryOrString(){
@@ -167,10 +166,10 @@ public class VectorTestCase extends AbstractDb4oTestCase {
             public void apply(Object arg) {
                 Query query = ((Query) arg).descend("vector");
                 Constraint nameConstraint = query.constrain(VALUE_ONE);
-                Constraint firstClassNameConstraint = query.descend("name").constrain(VALUE_ONE);
-                nameConstraint.or(firstClassNameConstraint);
+                Constraint referenceNameConstraint = query.descend("name").constrain(VALUE_ONE);
+                nameConstraint.or(referenceNameConstraint);
             }
-        }, new Object[]{VALUE_ONE, FIRST_CLASS_ELEMENT_ONE});
+        }, new Object[]{VALUE_ONE, REFERENCE_TYPE_ELEMENT_ONE});
     }
 
     private void assertVectorQuery(Procedure4 constraint, Object[] expectedItems) {

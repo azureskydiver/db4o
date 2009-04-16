@@ -45,28 +45,23 @@ public class FreespaceManagerMigrationTestCase extends FormatMigrationTestCaseBa
     }
     
     protected void configureForStore(Configuration config) {
-        if(notApplicableForDb4oVersion()){
-            return;
-        }
         commonConfigure(config);
         config.freespace().useIndexSystem();
     }
 
-    private boolean notApplicableForDb4oVersion() {
-        return db4oMajorVersion() < 5;
+    @Override
+    protected boolean isApplicableForDb4oVersion() {
+        return db4oMajorVersion() >= 5;
     }
     
     protected void configureForTest(Configuration config) {
-        if(notApplicableForDb4oVersion()){
-            return;
-        }
         commonConfigure(config);
         config.freespace().useBTreeSystem();
     }
     
     @Override
     protected void deconfigureForStore(Configuration config) {
-        if(notApplicableForDb4oVersion()){
+        if(!isApplicableForDb4oVersion()){
             return;
         }
     	config.freespace().useRamSystem();
@@ -74,7 +69,7 @@ public class FreespaceManagerMigrationTestCase extends FormatMigrationTestCaseBa
 
     @Override
     protected void deconfigureForTest(Configuration config) {
-        if(notApplicableForDb4oVersion()){
+        if(!isApplicableForDb4oVersion()){
             return;
         }
     	config.freespace().useRamSystem();
@@ -90,9 +85,6 @@ public class FreespaceManagerMigrationTestCase extends FormatMigrationTestCaseBa
     }
 
     protected void assertObjectsAreReadable(ExtObjectContainer objectContainer) {
-        if(notApplicableForDb4oVersion()){
-            return;
-        }
         ObjectSet objectSet = objectContainer.query(StClass.class);
         for (int i = 0; i < 2; i++) {
             StClass cls = (StClass) objectSet.next();
@@ -112,10 +104,7 @@ public class FreespaceManagerMigrationTestCase extends FormatMigrationTestCaseBa
     }
 
     protected void store(ExtObjectContainer objectContainer) {
-        if(notApplicableForDb4oVersion()){
-            return;
-        }
-        for( int i=0; i< 10; i++){
+       for( int i=0; i< 10; i++){
             StClass cls = new StClass();
             Vector v = new Vector(10);
             v.add(INT_ARRAY_DATA);

@@ -10,6 +10,7 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.reflect.*;
+import com.db4o.typehandlers.*;
 
 /**
  * A weak reference to an known object.
@@ -81,34 +82,35 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 
 	public void activate(Transaction ta, Object obj, ActivationDepth depth) {
-	    activateInternal(ta, obj, depth);
-		ta.container().activatePending(ta);
+		final ObjectContainerBase container = ta.container();
+	    activateInternal(container.activationContextFor(ta, obj, depth));
+		container.activatePending(ta);
 	}
 	
-	void activateInternal(Transaction ta, Object obj, ActivationDepth depth) {
-		if (!depth.requiresActivation()) {
+	void activateInternal(ActivationContext context) {
+		if (null == context) {
+			throw new ArgumentNullException();
+		}
+		
+		if (!context.depth().requiresActivation()) {
 			return;
 		}
 		
-		if (_class == null || obj == null) {
-			return;
-		}
-		
-	    ObjectContainerBase container = ta.container();
-	    if (depth.mode().isRefresh()){
+		ObjectContainerBase container = context.container();
+	    if (context.depth().mode().isRefresh()){
 			logActivation(container, "refresh");
 	    } else {
 			if (isActive()) {
-				_class.activateFields(ta, obj, depth);
+				_class.cascadeActivation(context);
 				return;
 			}
 			logActivation(container, "activate");
 	    }
-		readForActivation(ta, obj, depth);
+		readForActivation(context);
 	}
 
-	private void readForActivation(Transaction ta, Object obj, ActivationDepth depth) {
-		read(ta, null, obj, depth, Const4.ADD_MEMBERS_TO_ID_TREE_ONLY, false);
+	private void readForActivation(ActivationContext context) {
+		read(context.transaction(), null, context.targetObject(), context.depth(), Const4.ADD_MEMBERS_TO_ID_TREE_ONLY, false);
 	}
 	
 	private void logActivation(ObjectContainerBase container, String event) {
@@ -139,10 +141,10 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
         
         MarshallingContext context = new MarshallingContext(trans, this, updateDepth, true);
         
-        classMetadata().write(context, getObject());
+        Handlers4.write(classMetadata().typeHandler(), context, getObject());
         
         Pointer4 pointer = context.allocateSlot();
-        ByteArrayBuffer buffer = context.ToWriteBuffer(pointer);
+        ByteArrayBuffer buffer = context.toWriteBuffer(pointer);
 
         ObjectContainerBase container = trans.container();
 		container.writeNew(trans, pointer, _class, buffer);
@@ -418,10 +420,10 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		transaction.writeUpdateAdjustIndexes(getID(), _class, container._handlers.arrayType(obj), 0);
 
         MarshallingContext context = new MarshallingContext(transaction, this, updatedepth, false);
-        _class.write(context, obj);
+        Handlers4.write(_class.typeHandler(), context, obj);
         
         Pointer4 pointer = context.allocateSlot();
-        ByteArrayBuffer buffer = context.ToWriteBuffer(pointer);
+        ByteArrayBuffer buffer = context.toWriteBuffer(pointer);
         
         container.writeUpdate(transaction, pointer, _class, container._handlers.arrayType(obj), buffer);
         
@@ -435,7 +437,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		
 	}
 
-	private boolean objectCanUpdate(Transaction transaction, Object obj) {
+	protected boolean objectCanUpdate(Transaction transaction, Object obj) {
 		ObjectContainerBase container = transaction.container();
 		return container.callbacks().objectCanUpdate(transaction, obj)
 			&& _class.dispatchEvent(transaction, obj, EventDispatchers.CAN_UPDATE);

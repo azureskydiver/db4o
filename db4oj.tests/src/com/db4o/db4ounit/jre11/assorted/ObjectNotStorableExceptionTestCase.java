@@ -37,10 +37,6 @@ public class ObjectNotStorableExceptionTestCase extends AbstractDb4oTestCase{
         assertNotStorableException(Item.newItem());
     }
     
-    public void testPlainObjectCantBeStored() {
-    	assertNotStorableException(new Object());
-    }
-    
     public void testPrimitiveCantBeStored() {
     	assertNotStorableException(42);
     }

@@ -15,9 +15,8 @@ public abstract class FileSizeTestCaseBase
     
     protected int databaseFileSize() {
         LocalObjectContainer localContainer = fixture().fileSession();
-        IoAdaptedObjectContainer container = (IoAdaptedObjectContainer) localContainer;
-        container.syncFiles();
-        long length = new File(container.fileName()).length();
+        localContainer.syncFiles();
+        long length = new File(localContainer.fileName()).length();
         return (int)length;
     }
     

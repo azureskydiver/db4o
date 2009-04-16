@@ -395,11 +395,11 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return i_socket != null;
 	}
 
-	public ClassMetadata classMetadataForId(int clazzId) {
+	public ClassMetadata classMetadataForID(int clazzId) {
 		if(clazzId == 0) {
 			return null;
 		}
-		ClassMetadata yc = super.classMetadataForId(clazzId);
+		ClassMetadata yc = super.classMetadataForID(clazzId);
 		if (yc != null) {
 			return yc;
 		}

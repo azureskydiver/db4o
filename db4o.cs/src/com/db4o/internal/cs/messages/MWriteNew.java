@@ -12,7 +12,7 @@ public final class MWriteNew extends MsgObject implements ServerSideMessage {
         LocalObjectContainer stream = (LocalObjectContainer)stream();
         unmarshall(_payLoad._offset);
         synchronized (streamLock()) {
-            ClassMetadata classMetadata = yapClassId == 0 ? null : stream.classMetadataForId(yapClassId);
+            ClassMetadata classMetadata = yapClassId == 0 ? null : stream.classMetadataForID(yapClassId);
             
             int id = _payLoad.getID();
             stream.prefetchedIDConsumed(id);

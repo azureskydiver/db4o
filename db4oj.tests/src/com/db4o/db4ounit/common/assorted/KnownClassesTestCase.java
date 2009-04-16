@@ -40,18 +40,18 @@ public class KnownClassesTestCase extends AbstractDb4oTestCase {
     	}
     }
     
-    public void testNoSecondClass() {
+    public void testNoValueTypes() {
     	for (ReflectClass knownClass : container().knownClasses()) {
-			Assert.isFalse(isSecondClass(knownClass));
+			Assert.isFalse(isValueType(knownClass));
     	}
     }
     
-    private boolean isSecondClass(ReflectClass knownClass) {
+    private boolean isValueType(ReflectClass knownClass) {
     	if (container().handlers().isTransient(knownClass))
 			return false;
 		
         final ClassMetadata classMetadata = container().produceClassMetadata(knownClass);
-        return classMetadata.isSecondClass();
+        return classMetadata.isValueType();
     }
 
 	public void testInternalClassesAreNotVisible() {

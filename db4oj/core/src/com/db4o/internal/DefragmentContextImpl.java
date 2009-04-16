@@ -277,7 +277,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	}
 
 	public TypeHandler4 typeHandlerForId(int id) {
-		return container().typeHandlerForId(id);
+		return container().typeHandlerForClassMetadataID(id);
 	}
 	
 	public int handlerVersion(){

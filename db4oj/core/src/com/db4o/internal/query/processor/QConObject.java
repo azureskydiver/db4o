@@ -96,7 +96,7 @@ public class QConObject extends QCon {
     }
     
     public boolean canBeIndexLeaf(){
-        return i_object == null || ((i_yapClass != null && i_yapClass.isSecondClass()) || evaluator().identity());
+        return i_object == null || ((i_yapClass != null && i_yapClass.isValueType()) || evaluator().identity());
     }
     
     public boolean canLoadByIndex(){
@@ -153,7 +153,7 @@ public class QConObject extends QCon {
             DTrace.EVALUATE_SELF.log(i_id);
         }
         if (i_yapClass != null) {
-            if (!(i_yapClass instanceof PrimitiveFieldHandler)) {
+            if (!(i_yapClass instanceof PrimitiveTypeMetadata)) {
             	if (!i_evaluator.identity()) {
             		i_selfComparison = true;
             	}
@@ -321,7 +321,7 @@ public class QConObject extends QCon {
                 _preparedComparison = Null.INSTANCE;
             }
             if (i_yapClassID != 0) {
-                i_yapClass = trans.container().classMetadataForId(i_yapClassID);
+                i_yapClass = trans.container().classMetadataForID(i_yapClassID);
             }
             if (i_field != null) {
                 i_field.unmarshall(trans);

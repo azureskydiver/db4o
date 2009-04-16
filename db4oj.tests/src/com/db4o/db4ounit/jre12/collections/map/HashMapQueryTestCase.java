@@ -17,11 +17,11 @@ public class HashMapQueryTestCase extends AbstractDb4oTestCase {
 		HashMap _map = new HashMap(); 
 	}
 	
-	public static class FirstClassElement {
+	public static class ReferenceTypeElement {
 
 		public int _id;
 		
-		public FirstClassElement(int id) {
+		public ReferenceTypeElement(int id) {
 			_id = id;
 		}
 		
@@ -32,7 +32,7 @@ public class HashMapQueryTestCase extends AbstractDb4oTestCase {
 			if(obj == null || getClass() != obj.getClass()) {
 				return false;
 			}
-			FirstClassElement other = (FirstClassElement) obj;
+			ReferenceTypeElement other = (ReferenceTypeElement) obj;
 			return _id == other._id;
 		}
 		
@@ -56,8 +56,8 @@ public class HashMapQueryTestCase extends AbstractDb4oTestCase {
 	
 	private Object[] keys() {
 		return new Object[]{
-				new FirstClassElement(0),
-				new FirstClassElement(1),
+				new ReferenceTypeElement(0),
+				new ReferenceTypeElement(1),
 		};
 	}
 	

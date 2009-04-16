@@ -34,23 +34,19 @@ public class STInnerClassesTestCase extends com.db4o.db4ounit.common.soda.util.S
 	}
 
 
-	public class FirstClass
+	public class Child
 	{
 		public Object childFirst;
-		public FirstClass(Object o ) { childFirst = o; }
-		public String toString() { return "First[" + childFirst + "]"; }
-		public FirstClass() {}
-	}
-
-	public STInnerClassesTestCase ()
-	{
+		public Child(Object o ) { childFirst = o; }
+		public String toString() { return "Child[" + childFirst + "]"; }
+		public Child() {}
 	}
 
 	public Object[] createData() {
 		return new Object[]
 			{
-				new Parent(new FirstClass("Example")),
-				new Parent(new FirstClass("no Example")),
+				new Parent(new Child("Example")),
+				new Parent(new Child("no Example")),
 			};
 	}
 

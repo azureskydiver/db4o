@@ -5,8 +5,11 @@ import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 
-public class BackupDb4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
+public class BackupDb4oIOExceptionTestCase
+	extends Db4oIOExceptionTestCaseBase
+	implements OptOutInMemory {
 	
 	public static void main(String[] args) {
 		new BackupDb4oIOExceptionTestCase().runAll();

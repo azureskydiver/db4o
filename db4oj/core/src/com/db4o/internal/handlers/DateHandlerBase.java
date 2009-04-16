@@ -17,7 +17,7 @@ import com.db4o.reflect.*;
 public abstract class DateHandlerBase extends LongHandler {
 	
     public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
-        return Handlers4.handlerCanHold(this, reflector, claxx) ? obj : No4.INSTANCE;
+        return Handlers4.handlerCanHold(this, claxx) ? obj : No4.INSTANCE;
     }
 
 	public abstract Object copyValue(Object from, Object to);	
@@ -54,6 +54,7 @@ public abstract class DateHandlerBase extends LongHandler {
 		return Platform4.format(Platform4.now(), true);
 	}
 	
+	@Override
     public Object read(ReadContext context) {
         long milliseconds = ((Long)super.read(context)).longValue();
         return new Date(milliseconds);

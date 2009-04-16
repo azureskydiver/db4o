@@ -31,8 +31,7 @@ public class ActivationExceptionBubblesUpTestCase extends AbstractDb4oTestCase {
 			throw new ItemException();
 		}
 
-		public Object onStore(ObjectContainer container,
-				Object applicationObject) {
+		public Object onStore(ObjectContainer container, Object applicationObject) {
 			return applicationObject;
 		}
 

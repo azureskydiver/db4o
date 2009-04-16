@@ -7,7 +7,7 @@ public class MInstanceCount extends MsgD implements ServerSideMessage {
 	public boolean processAtServer() {
 		MsgD writer = null;
 		synchronized(streamLock()) {
-			ClassMetadata clazz = file().classMetadataForId(readInt());
+			ClassMetadata clazz = file().classMetadataForID(readInt());
 			writer = Msg.INSTANCE_COUNT.getWriterForInt(transaction(), clazz.indexEntryCount(transaction()));
 		}
 		write(writer);

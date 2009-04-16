@@ -6,6 +6,7 @@ import com.db4o.marshall.*;
 
 public class FloatHandler0 extends FloatHandler {
 
+	@Override
 	public Object read(ReadContext context) {
 		Float value = (Float)super.read(context);
 		if (value.isNaN()) {

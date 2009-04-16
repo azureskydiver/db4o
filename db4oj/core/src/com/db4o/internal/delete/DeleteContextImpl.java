@@ -57,13 +57,13 @@ public class DeleteContextImpl extends ObjectHeaderContext implements DeleteCont
 	}
 
 	public void delete(TypeHandler4 handler){
-        final TypeHandler4 fieldHandler = HandlerRegistry.correctHandlerVersion(this, handler);
+        final TypeHandler4 correctHandlerVersion = HandlerRegistry.correctHandlerVersion(this, handler);
 	    int preservedCascadeDepth = cascadeDeleteDepth();
 	    cascadeDeleteDepth(adjustedDepth());
-        if(Handlers4.handleAsObject(fieldHandler)){
+        if(Handlers4.handleAsObject(correctHandlerVersion)){
             deleteObject();
         }else{
-            fieldHandler.delete(DeleteContextImpl.this);    
+            correctHandlerVersion.delete(DeleteContextImpl.this);    
         }
         cascadeDeleteDepth(preservedCascadeDepth);
 	}

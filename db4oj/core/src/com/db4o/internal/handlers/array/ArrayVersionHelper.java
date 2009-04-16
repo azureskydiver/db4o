@@ -55,7 +55,7 @@ public class ArrayVersionHelper {
         if(classID == 0){
             return null;
         }
-        ClassMetadata classMetadata = container.classMetadataForId(classID);
+        ClassMetadata classMetadata = container.classMetadataForID(classID);
         if (classMetadata == null) {
             return null;
         }

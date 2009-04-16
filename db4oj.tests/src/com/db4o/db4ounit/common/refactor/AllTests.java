@@ -8,11 +8,12 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-				AccessOldFieldVersionsTestCase.class,
-				AccessRemovedFieldTestCase.class,
-				ClassRenameByConfigTestCase.class,
-				ClassRenameByStoredClassTestCase.class,
-				RemoveArrayFieldTestCase.class,
+			AccessOldFieldVersionsTestCase.class,
+			AccessRemovedFieldTestCase.class,
+			ClassRenameByConfigTestCase.class,
+			ClassRenameByStoredClassTestCase.class,
+			ReAddFieldTestCase.class,
+			RemoveArrayFieldTestCase.class,
 		};
 	}
 }

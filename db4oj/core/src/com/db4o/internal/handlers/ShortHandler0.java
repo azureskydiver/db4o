@@ -6,6 +6,7 @@ import com.db4o.marshall.*;
 
 public class ShortHandler0 extends ShortHandler {
 
+	@Override
 	public Object read(ReadContext context) {
 		Short value = (Short)super.read(context);
 		if (value.shortValue() == Short.MAX_VALUE) {

@@ -322,8 +322,7 @@ class InstanceReplicationPreparer implements Visitor {
 	private Object emptyClone(ReplicationProviderInside sourceProvider, Object obj) {
 		if (obj == null) return null;
 		ReflectClass claxx = reflectClass(obj);
-//		if (claxx.isSecondClass()) return obj;
-		if (_reflector.isSecondClass(claxx)) throw new RuntimeException("IllegalState");
+		if (_reflector.isValueType(claxx)) throw new RuntimeException("IllegalState");
 //		if (claxx.isArray()) return arrayClone(obj, claxx, sourceProvider); //Copy arrayClone() from GenericReplicationSession if necessary.
 		if (claxx.isArray())  throw new RuntimeException("IllegalState"); //Copy arrayClone() from GenericReplicationSession if necessary.
 		if (_collectionHandler.canHandleClass(claxx)) {

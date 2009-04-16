@@ -30,7 +30,7 @@ public interface InternalObjectContainer extends ExtObjectContainer {
 
     public ClassMetadata classMetadataForName(String name);
     
-    public ClassMetadata classMetadataForId(int id);
+    public ClassMetadata classMetadataForID(int id);
 
     public HandlerRegistry handlers();
     

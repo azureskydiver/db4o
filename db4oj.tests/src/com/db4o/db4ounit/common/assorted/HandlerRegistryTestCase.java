@@ -3,9 +3,9 @@
 package com.db4o.db4ounit.common.assorted;
 
 import com.db4o.internal.*;
-import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
+import com.db4o.internal.handlers.versions.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
@@ -27,26 +27,26 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testCorrectHandlerVersion(){
-	    UntypedFieldHandler untypedFieldHandler = new UntypedFieldHandler(container());
+	    OpenTypeHandler openTypeHandler = new OpenTypeHandler(container());
 	    
-        assertCorrectedHandlerVersion(UntypedFieldHandler0.class, untypedFieldHandler, -1);
-        assertCorrectedHandlerVersion(UntypedFieldHandler0.class, untypedFieldHandler, 0);
-        assertCorrectedHandlerVersion(UntypedFieldHandler2.class, untypedFieldHandler, 1);
-        assertCorrectedHandlerVersion(UntypedFieldHandler2.class, untypedFieldHandler, 2);
-        assertCorrectedHandlerVersion(UntypedFieldHandler.class, untypedFieldHandler, HandlerRegistry.HANDLER_VERSION);
-        assertCorrectedHandlerVersion(UntypedFieldHandler.class, untypedFieldHandler, HandlerRegistry.HANDLER_VERSION + 1);
+        assertCorrectedHandlerVersion(OpenTypeHandler0.class, openTypeHandler, -1);
+        assertCorrectedHandlerVersion(OpenTypeHandler0.class, openTypeHandler, 0);
+        assertCorrectedHandlerVersion(OpenTypeHandler2.class, openTypeHandler, 1);
+        assertCorrectedHandlerVersion(OpenTypeHandler2.class, openTypeHandler, 2);
+        assertCorrectedHandlerVersion(OpenTypeHandler.class, openTypeHandler, HandlerRegistry.HANDLER_VERSION);
+        assertCorrectedHandlerVersion(OpenTypeHandler.class, openTypeHandler, HandlerRegistry.HANDLER_VERSION + 1);
         
-        FirstClassObjectHandler firstClassObjectHandler = new FirstClassObjectHandler(itemClassMetadata());
-        assertCorrectedHandlerVersion(FirstClassObjectHandler0.class, firstClassObjectHandler, 0);
-        assertCorrectedHandlerVersion(FirstClassObjectHandler.class, firstClassObjectHandler, 2);
+        StandardReferenceTypeHandler stdReferenceHandler = new StandardReferenceTypeHandler(itemClassMetadata());
+        assertCorrectedHandlerVersion(StandardReferenceTypeHandler0.class, stdReferenceHandler, 0);
+        assertCorrectedHandlerVersion(StandardReferenceTypeHandler.class, stdReferenceHandler, 2);
         
-        PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler(container(), untypedFieldHandler,0, null );
-        assertPrimitiveFieldHandlerDelegate(UntypedFieldHandler0.class, primitiveFieldHandler,0);
-        assertPrimitiveFieldHandlerDelegate(UntypedFieldHandler2.class, primitiveFieldHandler,1);
-        assertPrimitiveFieldHandlerDelegate(UntypedFieldHandler2.class, primitiveFieldHandler,2);
-        assertPrimitiveFieldHandlerDelegate(UntypedFieldHandler.class, primitiveFieldHandler,HandlerRegistry.HANDLER_VERSION);
+        PrimitiveTypeMetadata primitiveMetadata = new PrimitiveTypeMetadata(container(), openTypeHandler,0, null );
+        assertPrimitiveHandlerDelegate(OpenTypeHandler0.class, primitiveMetadata,0);
+        assertPrimitiveHandlerDelegate(OpenTypeHandler2.class, primitiveMetadata,1);
+        assertPrimitiveHandlerDelegate(OpenTypeHandler2.class, primitiveMetadata,2);
+        assertPrimitiveHandlerDelegate(OpenTypeHandler.class, primitiveMetadata,HandlerRegistry.HANDLER_VERSION);
         
-        ArrayHandler arrayHandler = new ArrayHandler(untypedFieldHandler, false);
+        ArrayHandler arrayHandler = new ArrayHandler(openTypeHandler, false);
         assertCorrectedHandlerVersion(ArrayHandler0.class, arrayHandler, 0);
         assertCorrectedHandlerVersion(ArrayHandler1.class, arrayHandler, 1);
         assertCorrectedHandlerVersion(ArrayHandler3.class, arrayHandler, 2);
@@ -54,7 +54,7 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
         
         assertCorrectedHandlerVersion(ArrayHandler.class, arrayHandler, HandlerRegistry.HANDLER_VERSION);
         
-        ArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler(untypedFieldHandler, false);
+        ArrayHandler multidimensionalArrayHandler = new MultidimensionalArrayHandler(openTypeHandler, false);
         assertCorrectedHandlerVersion(MultidimensionalArrayHandler0.class, multidimensionalArrayHandler, 0);
         assertCorrectedHandlerVersion(MultidimensionalArrayHandler3.class, multidimensionalArrayHandler, 1);
         assertCorrectedHandlerVersion(MultidimensionalArrayHandler3.class, multidimensionalArrayHandler, 2);
@@ -64,10 +64,10 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
 	    
 	}
 
-    private void assertPrimitiveFieldHandlerDelegate(Class fieldHandlerClass,
-        PrimitiveFieldHandler primitiveFieldHandler, int version) {
-        PrimitiveFieldHandler primitiveFieldHandler0 = (PrimitiveFieldHandler) correctHandlerVersion(primitiveFieldHandler, version);
-        Assert.areSame(fieldHandlerClass,primitiveFieldHandler0.delegateTypeHandler(null).getClass());
+    private void assertPrimitiveHandlerDelegate(Class expectedClass,
+        PrimitiveTypeMetadata primitiveMetadata, int version) {
+        TypeHandler4 correctTypeHandler = (TypeHandler4) correctHandlerVersion(primitiveMetadata.typeHandler(), version);
+        Assert.areSame(expectedClass,correctTypeHandler.getClass());
     }
 
     private ClassMetadata itemClassMetadata() {
@@ -82,39 +82,21 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
         return handlers().correctHandlerVersion(typeHandler, version);
     }
 
-	public void testInterfaceHandlerIsSameAsObjectHandler() {
-		Assert.areSame(
-				handlerForClass(Object.class),
-				handlerForClass(FooInterface.class));
-	}
-
-	private TypeHandler4 handlerForClass(Class clazz) {
-	    return (TypeHandler4) container().fieldHandlerForClass(reflectClass(clazz));
-	}
-
 	private HandlerRegistry handlers() {
 		return stream().handlers();
 	}
 	
 	public void testTypeHandlerForID(){
-	    assertTypeHandlerClass(Handlers4.INT_ID, IntHandler.class);
-	    assertTypeHandlerClass(Handlers4.UNTYPED_ID, PlainObjectHandler.class);
+	    assertTypeHandler(IntHandler.class, Handlers4.INT_ID);
+	    assertTypeHandler(OpenTypeHandler.class, Handlers4.UNTYPED_ID);
+	    assertTypeHandler(IntHandler.class, Handlers4.INT_ID);
+	    assertTypeHandler(ArrayHandler.class, Handlers4.ANY_ARRAY_ID);
+	    assertTypeHandler(MultidimensionalArrayHandler.class, Handlers4.ANY_ARRAY_N_ID);
 	}
 
-    private void assertTypeHandlerClass(int id, Class clazz) {
-        TypeHandler4 typeHandler = handlers().typeHandlerForID(id);
-        Assert.isInstanceOf(clazz, typeHandler);
-    }
-	
-	public void testTypeHandlerID(){
-	    assertTypeHandlerID(Handlers4.INT_ID, integerClassReflector());
-	    assertTypeHandlerID(Handlers4.UNTYPED_ID, objectClassReflector());
-	}
-
-    private void assertTypeHandlerID(int handlerID, ReflectClass integerClassReflector) {
-        TypeHandler4 typeHandler = handlers().typeHandlerForClass(integerClassReflector);
-	    int id = handlers().typeHandlerID(typeHandler);
-        Assert.areEqual(handlerID, id);
+    private void assertTypeHandler(Class expectedHandlerClass, int classMetadataID) {
+        TypeHandler4 handler = container().classMetadataForID(classMetadataID).typeHandler();
+        Assert.isInstanceOf(expectedHandlerClass, handler);
     }
 	
 	public void testTypeHandlerForClass(){
@@ -122,21 +104,11 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
 	        IntHandler.class, 
 	        handlers().typeHandlerForClass(integerClassReflector()));
 	    Assert.isInstanceOf(
-                PlainObjectHandler.class, 
+                OpenTypeHandler.class, 
                 handlers().typeHandlerForClass(objectClassReflector()));
 	}
 	
-	public void testFieldHandlerForID(){
-	    assertFieldHandler(Handlers4.INT_ID, IntHandler.class);
-	    assertFieldHandler(Handlers4.ANY_ARRAY_ID, UntypedArrayFieldHandler.class);
-	    assertFieldHandler(Handlers4.ANY_ARRAY_N_ID, UntypedMultidimensionalArrayFieldHandler.class);
-	}
 
-    private void assertFieldHandler(int handlerID, Class fieldHandlerClass) {
-        FieldHandler fieldHandler = handlers().fieldHandlerForId(handlerID);
-        Assert.isInstanceOf(fieldHandlerClass, fieldHandler);
-    }
-	
 	public void testClassForID(){
 	    ReflectClass byReflector = integerClassReflector();
 	    ReflectClass byID = handlers().classForID(Handlers4.INT_ID);

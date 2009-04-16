@@ -25,6 +25,6 @@ public class LegacyActivationDepthProvider implements ActivationDepthProvider {
 	}
 
 	private Config4Impl configImpl(ClassMetadata classMetadata) {
-		return classMetadata.stream().configImpl();
+		return classMetadata.container().configImpl();
 	}
 }

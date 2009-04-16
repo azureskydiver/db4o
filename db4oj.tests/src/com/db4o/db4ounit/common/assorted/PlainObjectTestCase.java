@@ -35,7 +35,6 @@ public class PlainObjectTestCase extends AbstractDb4oTestCase{
         Object plainObject = new Object();
         Item item = new Item("one", plainObject);
         store(item);
-        retrieveItem("one");
         Assert.isTrue(db().isStored(item._plainObject));
         store(new Item("two", plainObject));
     }

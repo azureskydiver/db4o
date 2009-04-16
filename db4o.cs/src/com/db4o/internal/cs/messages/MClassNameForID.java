@@ -13,7 +13,7 @@ public final class MClassNameForID extends MsgD implements ServerSideMessage{
         int id = _payLoad.readInt();
         String name = "";
         synchronized (streamLock()) {
-			ClassMetadata yapClass = stream().classMetadataForId(id);
+			ClassMetadata yapClass = stream().classMetadataForID(id);
 			if (yapClass != null) {
 				name = yapClass.getName();
 			}

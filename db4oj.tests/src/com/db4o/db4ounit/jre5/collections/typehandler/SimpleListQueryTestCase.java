@@ -21,19 +21,19 @@ public class SimpleListQueryTestCase extends AbstractDb4oTestCase {
 		public List list;
 	}
 	
-	public static class FirstClassElement {
+	public static class ReferenceTypeElement {
 		
 		public String name;
 		
-		public FirstClassElement(String name_){
+		public ReferenceTypeElement(String name_){
 			name = name_;
 		}
 		
 		public boolean equals(Object obj) {
-			if(! (obj instanceof FirstClassElement)){
+			if(! (obj instanceof ReferenceTypeElement)){
 				return false;
 			}
-			FirstClassElement other = (FirstClassElement) obj;
+			ReferenceTypeElement other = (ReferenceTypeElement) obj;
 			if(name == null){
 				return other.name == null;
 			}
@@ -48,8 +48,8 @@ public class SimpleListQueryTestCase extends AbstractDb4oTestCase {
 		new Integer(1),
 		new Integer(2),
 		new Integer(42),
-		new FirstClassElement("one"),
-		new FirstClassElement("fortytwo"),
+		new ReferenceTypeElement("one"),
+		new ReferenceTypeElement("fortytwo"),
 		
 	};
 	

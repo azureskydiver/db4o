@@ -23,7 +23,11 @@ public class ObjectReferenceContext extends ObjectHeaderContext{
     }
 
     public ClassMetadata classMetadata() {
-        return _reference.classMetadata();
+        final ClassMetadata classMetadata = _reference.classMetadata();
+        if (classMetadata == null) {
+        	throw new IllegalStateException();
+        }
+		return classMetadata;
     }
 
     public ObjectReference objectReference() {

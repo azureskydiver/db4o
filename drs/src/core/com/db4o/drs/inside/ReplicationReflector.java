@@ -84,12 +84,12 @@ public class ReplicationReflector {
 		return arrayReflector().shape(a_flat, a_flatElement, a_shaped, a_dimensions, a_currentDimension);
 	}
 
-	public boolean isSecondClass(ReflectClass clazz) {
+	public boolean isValueType(ReflectClass clazz) {
 		ClassMetadata classMetadata = _container.classMetadataForReflectClass(clazz);
 		if(classMetadata == null) {
 			return false;
 		}
-		return classMetadata.isSecondClass();
+		return classMetadata.isValueType();
 	}
 	
 	private InternalObjectContainer containerFrom(ReplicationProvider provider) {

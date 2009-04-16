@@ -60,8 +60,7 @@ public class JdkField implements ReflectField {
     public void set(Object onObject, Object attribute) {
     	try {
 			field.set(onObject, attribute);
-		} 
-    	catch (Exception exc) {
+		} catch (Exception exc) {
 			handleException(exc);
 		}
     }

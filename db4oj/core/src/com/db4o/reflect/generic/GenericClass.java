@@ -20,7 +20,6 @@ public class GenericClass implements ReflectClass, DeepClone {
     
     private GenericClass _array;
     
-    private boolean _isSecondClass;
     private boolean _isPrimitive;
     
     private int _isCollection;
@@ -48,7 +47,6 @@ public class GenericClass implements ReflectClass, DeepClone {
             return _array;
         }
         _array = new GenericArrayClass(_reflector, this, _name, _superclass);
-        _array._isSecondClass = _isSecondClass;
         return _array;
     }
 
@@ -59,7 +57,6 @@ public class GenericClass implements ReflectClass, DeepClone {
             _superclass = (GenericClass)reflector.forName(_superclass.getName());
         }
         GenericClass ret = new GenericClass(reflector, _delegate, _name, superClass);
-        ret._isSecondClass = _isSecondClass;
         GenericField[] fields = new GenericField[_fields.length];
         for (int i = 0; i < fields.length; i++) {
             fields[i] = (GenericField)_fields[i].deepClone(reflector);
@@ -270,10 +267,6 @@ public class GenericClass implements ReflectClass, DeepClone {
     
     void setPrimitive() {
     	_isPrimitive = true;
-    }
-
-    void setSecondClass(){
-        _isSecondClass = true;
     }
     
     public String toString(){

@@ -7,5 +7,7 @@ public interface QueryableTypeHandler extends TypeHandler4 {
 	 */
     public boolean isSimple();
 
+	public boolean descendsIntoMembers();
+
 
 }

@@ -20,7 +20,7 @@ public class FieldMarshaller0 extends AbstractFieldMarshaller {
             if(field.needsArrayAndPrimitiveInfo()){
                 len += 1;
             }
-            if(field.needsHandlerId()){
+            if(!(field instanceof VirtualFieldMetadata)){
                 len += Const4.ID_LENGTH;
             }
         }
@@ -37,35 +37,35 @@ public class FieldMarshaller0 extends AbstractFieldMarshaller {
                 return new RawFieldSpec(aspectType, name);
         	}
         }
-        int handlerID = reader.readInt();
+        int fieldTypeID = reader.readInt();
         byte attribs=reader.readByte();
-        return new RawFieldSpec(aspectType, name,handlerID,attribs);
+        return new RawFieldSpec(aspectType, name,fieldTypeID,attribs);
     }
     
-    public final FieldMetadata read(ObjectContainerBase stream, FieldMetadata field, ByteArrayBuffer reader) {
+    public final FieldMetadata read(ObjectContainerBase stream, ClassMetadata containingClass, ByteArrayBuffer reader) {
     	RawFieldSpec spec=readSpec(stream, reader);
-    	return fromSpec(spec, stream, field);
+    	return fromSpec(spec, stream, containingClass);
     }
     
-    protected FieldMetadata fromSpec(RawFieldSpec spec,ObjectContainerBase stream, FieldMetadata field) {
+    protected FieldMetadata fromSpec(RawFieldSpec spec,ObjectContainerBase stream, ClassMetadata containingClass) {
     	if(spec==null) {
-    		return field;
+    		return null;
     	}
-        String name=spec.name();
-    	if(! spec.isFieldMetadata()){
-    	    field.init(field.containingClass(), name);
-    	    return field;
+    	
+    	final String name=spec.name();
+    	if(spec.isVirtualField()) {
+    		return stream._handlers.virtualFieldByName(name);
     	}
-        if (spec.isVirtualField()) {
-        	return stream._handlers.virtualFieldByName(name);
-        }
-        
-        field.init(field.containingClass(), name);
-        field.init(spec.handlerID(), spec.isPrimitive(), spec.isArray(), spec.isNArray());
-        field.loadHandlerById(stream);
-        field.alive();
-        
-        return field;
+    	
+    	if(spec.isTranslator()){
+    		return new TranslatedAspect(containingClass, name);
+    	}
+    	
+    	if (spec.isField()) {
+    		return new FieldMetadata(containingClass, name, spec.fieldTypeID(), spec.isPrimitive(), spec.isArray(), spec.isNArray());
+    	}
+    	
+    	return new FieldMetadata(containingClass, name);
     }
 
 
@@ -87,14 +87,14 @@ public class FieldMarshaller0 extends AbstractFieldMarshaller {
         
         TypeHandler4 handler = field.getHandler();
         
-        if (handler instanceof ClassMetadata) {
+        if (handler instanceof StandardReferenceTypeHandler) {
             
             // TODO: ensure there is a test case, to make this happen 
-            if ( ((ClassMetadata)handler).getID() == 0) {
+            if ( ((StandardReferenceTypeHandler)handler).classMetadata().getID() == 0) {
                 trans.container().needsUpdate(clazz);
             }
         }
-        writer.writeInt(field.handlerID());
+        writer.writeInt(field.fieldTypeID());
         BitMap4 bitmap = new BitMap4(3);
         bitmap.set(0, field.isPrimitive());
         bitmap.set(1, Handlers4.handlesArray(handler));

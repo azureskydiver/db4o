@@ -14,7 +14,7 @@ import com.db4o.typehandlers.*;
  * 
  * @exclude
  */
-public class UnmarshallingContext extends ObjectReferenceContext implements HandlerVersionContext, FirstClassReadContext {
+public class UnmarshallingContext extends ObjectReferenceContext implements HandlerVersionContext, ReferenceActivationContext {
     
     private Object _object;
     

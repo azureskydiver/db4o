@@ -64,9 +64,12 @@ public class FileHeaderVariablePart1 extends PersistentBase{
     private void readIdentity(LocalTransaction trans, int identityID) {
         LocalObjectContainer file = trans.file();
         Db4oDatabase identity = Debug4.staticIdentity ? Db4oDatabase.STATIC_IDENTITY : (Db4oDatabase) file.getByID(trans, identityID);
-        file.activate(trans, identity, new FixedActivationDepth(2));
+        if (null != identity) {
+        	// TODO: what?
+        	file.activate(trans, identity, new FixedActivationDepth(2));
+        	_systemData.identity(identity);
+        }
        
-        _systemData.identity(identity);
     }
 
 }

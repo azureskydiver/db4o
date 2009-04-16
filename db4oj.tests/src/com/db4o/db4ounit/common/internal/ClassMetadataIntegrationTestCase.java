@@ -33,12 +33,10 @@ public class ClassMetadataIntegrationTestCase extends AbstractDb4oTestCase {
 			}
 		});
 		Assert.isTrue(expectedNames.isEmpty());
-	} 
-		
-	public void testPrimitiveArrayMetadataIsPrimitiveFieldHandler() {
-		
+	}
+	
+	public void testPrimitiveArrayMetadataIsPrimitiveTypeMetadata() {
 		ClassMetadata byteArrayMetadata = container().produceClassMetadata(reflectClass(byte[].class));
-		Assert.isInstanceOf(PrimitiveFieldHandler.class, byteArrayMetadata);
-		
+		Assert.isInstanceOf(PrimitiveTypeMetadata.class, byteArrayMetadata);
 	}
 }
