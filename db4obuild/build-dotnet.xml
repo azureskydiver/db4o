@@ -382,10 +382,29 @@
 	<target name="build-core" depends="sharpen-all, prepare-csproject-all" unless="mono">
 	    <reset-dir dir="${dir.dist.dll.net}" />
 	    <reset-dir dir="${dir.dist.dll.compact}" />
+		<reset-dir dir="${dir.dist.dll.silverlight}" />
 	    
 		<msb solution="${dir.n.v6}/Db4o" />
 		<msb solution="${dir.n.v6}/Db4o-CF" outputPath="${dir.dist.dll.compact}" />
-	</target>	
+		<antcall target="build-silverlight" />
+	</target>
+	
+	<target name="build-silverlight">
+		<if>
+			<equals arg1="${target.framework.version}" arg2="2.0" />
+			<then>
+				<echo message="Silverlight builds only on .Net Framework 3.5 or greater." />
+			</then>
+			<else>
+				<msb solution="${dir.n.v6}/Db4o-Silverlight" outputPath="${dir.dist.dll.silverlight}" />
+			</else>
+		</if>
+	</target>
+	
+	
+	<target name="build-core-silverlight-standalone" depends="configure-net35">
+		<antcall target="build-silverlight" />
+	</target>
 	
 	<target name="run-linq-tests" depends="build-core">
 		<exec taskname="linq" dir="${dir.dist.dll}" executable="${dir.dist.dll}/Db4objects.Db4o.Linq.Tests.exe" failonerror="true"/>
@@ -505,7 +524,7 @@
 		<updateAssemblyKey keyfile="${dir.n.v6}/db4objects.snk">
 			<projectFiles dir="${dir.n.v6}">
 				<include name="**/*-2005.csproj" />
-				<include name="**/*-2008.csproj" />
+				<include name="**/*-2008.csproj" />				
 				<exclude name="Db4oTutorial/**" />
 				<exclude name="**/*Tests*.csproj" />
 			</projectFiles>
@@ -571,7 +590,7 @@
                 <include name="**/*.java" />
             </fileset>
         </copy>
-
+		
 		<!--copy db4ounit.extension src-->
         <copy todir="${dir.sharpen}/db4oj/extensions/src">
             <fileset dir="${dir.dist.decaf.jdk1.2.db4ounit.extensions.src}">
@@ -645,6 +664,10 @@
 			</updatecsharpproject>
 			
 			<updatecsharpproject projectFile="@{project}-CF-2008.csproj">
+				<sources refid="@{sources}" />
+			</updatecsharpproject>
+			
+			<updatecsharpproject projectFile="@{project}-Silverlight-2008.csproj" ignoreNonExisting="true">
 				<sources refid="@{sources}" />
 			</updatecsharpproject>
 		</sequential>
