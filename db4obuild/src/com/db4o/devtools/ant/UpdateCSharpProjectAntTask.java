@@ -17,6 +17,7 @@ public class UpdateCSharpProjectAntTask extends Task {
 	private final List<FileSet> _resources = new ArrayList<FileSet>();
 	private File _projectFile;
 	private URI _baseDir;
+	private boolean _ignoreNonExisting;
 	
 	public UpdateCSharpProjectAntTask() {
 	}
@@ -38,10 +39,19 @@ public class UpdateCSharpProjectAntTask extends Task {
 		_baseDir = srcFile.getParentFile().toURI();
 	}
 	
+	public void setIgnoreNonExisting(boolean ignore) {
+		_ignoreNonExisting = ignore;
+	}
+	
 	@Override
 	public void execute() throws BuildException {
 		try {
 			log("loading '" + _projectFile + "'");
+			if (_ignoreNonExisting && !_projectFile.exists()) {
+				log("ignoring non existing project '" + _projectFile + "'");
+				return;
+			}
+			
 			CSharpProject project = CSharpProject.load(_projectFile);
 			
 			for (FileSet fs : _sources) {
