@@ -12,7 +12,6 @@ import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
-import com.db4o.types.*;
 
 /**
  * @exclude
@@ -22,13 +21,6 @@ public class JDK {
 	
 	Thread addShutdownHook(Runnable runnable){
 		return null;
-	}
-	
-	/**
-	 * @deprecated
-	 **/
-	Db4oCollections collections(Transaction transaction){
-	    return null;
 	}
     
 	/**

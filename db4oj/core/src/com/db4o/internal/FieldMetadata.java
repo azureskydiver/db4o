@@ -510,17 +510,9 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return _name;
     }
 
-    public final ClassMetadata handlerClassMetadata(ObjectContainerBase container) {
+    public final ClassMetadata fieldType() {
         // alive needs to be checked by all callers: Done
-        TypeHandler4 handler = baseTypeHandler();
-        if(Handlers4.handlesSimple(handler)){
-            return container._handlers.classMetadataForId(fieldTypeID());
-        }
-        return container.classMetadataForReflectClass(_reflectField.getFieldType());
-    }
-
-    private TypeHandler4 baseTypeHandler() {
-        return Handlers4.baseTypeHandler(getHandler());
+    	return _fieldType;
     }
     
     public TypeHandler4 getHandler() {

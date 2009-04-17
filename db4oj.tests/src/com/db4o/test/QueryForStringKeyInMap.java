@@ -27,7 +27,7 @@ public class QueryForStringKeyInMap {
         ExtObjectContainer oc = Test.objectContainer();
         QueryForStringKeyInMap holder = new QueryForStringKeyInMap();
         oc.store(holder);
-        holder.map = oc.collections().newHashMap(1);
+        holder.map = new HashMap(1);
         holder.map.put("somethingelse", "somethingelse");
         holder.map.put(key, key);
         holder.name = key;

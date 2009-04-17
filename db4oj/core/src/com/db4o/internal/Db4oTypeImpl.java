@@ -12,22 +12,10 @@ import com.db4o.*;
  */
 public interface Db4oTypeImpl extends TransactionAware {
 	
-    boolean canBind();
-	
 	Object createDefault(Transaction trans);
 	
 	boolean hasClassIndex();
 	
 	void setObjectReference(ObjectReference ref);
-	
-	/**
-	 * @deprecated should no longer be called
-	 */
-	Object storedTo(Transaction trans);
-	
-	/**
-	 * @deprecated should no longer be called
-	 */
-	void preDeactivate();
 	
 }

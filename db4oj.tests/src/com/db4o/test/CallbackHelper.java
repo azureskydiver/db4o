@@ -11,7 +11,7 @@ public class CallbackHelper {
 		
 		public void objectOnActivate(ObjectContainer container){
 		    CallbacksTestCase.called[CallbacksTestCase.ACTIVATE] = true;
-			container.activate(parent, 3);
+		    container.activate(parent, 3);
 		}
 		
 		public void objectOnDeactivate(ObjectContainer container){

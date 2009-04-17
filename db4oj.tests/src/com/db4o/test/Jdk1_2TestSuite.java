@@ -14,15 +14,12 @@ public class Jdk1_2TestSuite extends TestSuite{
     public Class[] tests(){
         return new Class[] {
             ClusterQueryImplementsList.class,
-            DeleteRemovedMapElements.class,
             DiscreteArrayInMap.class,
             GenericObjects.class,
-            HashMapClearUnsaved.class,
             JdkComparatorSort.class,
             MultipleEvaluationGetObjectCalls.class,
             ObjectSetAsList.class,
             OrClassConstraintInList.class,
-            PrimitivesInCollection.class,
             QueryForList.class,
             Reflection.class,
             RefreshList.class,
@@ -31,7 +28,6 @@ public class Jdk1_2TestSuite extends TestSuite{
             SortedSameOrder.class,
             StoreBigDecimal.class,
             StringCaseInsensitive.class,
-            StringInLists.class,
             TestHashMap.class,
             TestStringBuffer.class,
             TestTreeMap.class,

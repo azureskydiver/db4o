@@ -15,7 +15,6 @@ public class FileHeaderTestSuite extends TestSuite{
     public Class[] tests() {
         return new Class[] {
             SimplestPossible.class,
-            UpdatingDb4oVersions.class
         };
     }
 

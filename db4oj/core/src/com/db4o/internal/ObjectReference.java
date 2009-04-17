@@ -176,9 +176,6 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		if (obj == null) {
 			return;
 		}
-	    if(obj instanceof Db4oTypeImpl){
-	        ((Db4oTypeImpl)obj).preDeactivate();
-	    }
 	    ObjectContainerBase container = trans.container();
 		logActivation(container, "deactivate");
 		setStateDeactivated();

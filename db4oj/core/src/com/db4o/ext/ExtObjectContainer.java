@@ -10,7 +10,6 @@ import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.replication.*;
 import com.db4o.ta.*;
-import com.db4o.types.*;
 
 /**
  * extended functionality for the
@@ -107,19 +106,6 @@ public interface ExtObjectContainer extends ObjectContainer {
      * database IDs.
      */
     public void bind(Object obj, long id) throws InvalidIDException, DatabaseClosedException;
-    
-    
-    /**
-     * returns the {@link Db4oCollections} interface to create or modify database-aware
-     * collections for this {@link ObjectContainer}.<br><br>
-     * @return the {@link Db4oCollections} interface for this {@link ObjectContainer}.
-     * @deprecated since 7.0. Use of old internal collections is discouraged. Please use 
-     * com.db4o.collections.ArrayList4 and com.db4o.collections.ArrayMap4 instead.
-     * 
-     *   @sharpen.if !SILVERLIGHT
-     */    
-    public Db4oCollections collections();
-    
 
     /**
      * returns the Configuration context for this ObjectContainer.

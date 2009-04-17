@@ -69,7 +69,7 @@ public class QField implements Visitor4, Unversioned{
 	
 	ClassMetadata getYapClass(){
 		if(i_yapField != null){
-			return i_yapField.handlerClassMetadata(i_trans.container());
+			return i_yapField.fieldType();
 		}
 		return null;
 	}

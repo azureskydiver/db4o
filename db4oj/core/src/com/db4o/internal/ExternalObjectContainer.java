@@ -10,7 +10,6 @@ import com.db4o.internal.activation.*;
 import com.db4o.io.*;
 import com.db4o.query.*;
 import com.db4o.replication.*;
-import com.db4o.types.*;
 
 
 /**
@@ -36,15 +35,6 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase {
     
     public final void bind(Object obj, long id) throws ArgumentNullException, IllegalArgumentException {
         bind(null, obj, id);
-    }
-   
-    /**
-     * @deprecated
-     * 
-     * @sharpen.if !SILVERLIGHT
-     */
-    public Db4oCollections collections() {
-        return collections(null);
     }
     
     public final void commit() throws DatabaseReadOnlyException, DatabaseClosedException {

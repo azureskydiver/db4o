@@ -22,7 +22,7 @@ public class IndexedPath extends IndexedNodeBase {
 		final FieldMetadata conField = getYapField(con);
 		if (null == conField) return false;
 		return parentField.hasIndex() &&
-		    parentField.handlerClassMetadata(con.transaction().container()).isAssignableFrom(conField.containingClass());
+		    parentField.fieldType().isAssignableFrom(conField.containingClass());
 	}
 	
 	private static FieldMetadata getYapField(QCon con) {

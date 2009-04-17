@@ -290,16 +290,12 @@ public final class Config4Impl implements Configuration, DeepClone,
         return config;
     }
 
-    /**
-     * @deprecated using deprecated api
-     */
 	private boolean isIgnoredClass(String className) {
 		Class[] ignore = ignoredClasses();
 		for (int i = 0; i < ignore.length; i++) {
 		    if (ignore[i].getName().equals(className)) {
 		        return true;
 		    }
-
 		}
 		return false;
 	}
@@ -308,17 +304,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 	 * @sharpen.ignore 
 	 */
 	private Class[] ignoredClasses() {
-		return new Class[] { 
-				P1HashElement.class, 
-				P1ListElement.class, 
-				P1Object.class, 
-				P1Collection.class,
-
-		    // XXX You may need the following for indexing tests. 
-
-		    //                        P2HashMap.class,
-		    //                        P2LinkedList.class,
-
+		return new Class[] {
 				StaticClass.class, 
 				StaticField.class
 		};

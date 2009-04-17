@@ -46,8 +46,6 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		}
 	};
 
-	private static final long CLASSCOLLECTION_POINTER_ADDRESS = 2+2*Const4.INT_LENGTH;
-	
 	public final LocalObjectContainer _sourceDb;
 	final LocalObjectContainer _targetDb;
 	private final ContextIDMapping _mapping;

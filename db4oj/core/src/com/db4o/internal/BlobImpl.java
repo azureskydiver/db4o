@@ -39,10 +39,6 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
     public int adjustReadDepth(int depth) {
         return 1;
     }
-    
-    public boolean canBind() {
-        return true;
-    }
 
     private String checkExt(File file) {
         String name = file.getName();
@@ -140,10 +136,6 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         }
         i_status = Status.COMPLETED;
     }
-    
-    public void preDeactivate(){
-        // do nothing
-    }
 
     public File serverFile(String promptName, boolean writeToServer) throws IOException {
         synchronized (i_stream.lock()) {
@@ -221,10 +213,6 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         } else {
             writeLocal(file);
         }
-    }
-    
-    public Object storedTo(Transaction a_trans){
-        return this;
     }
     
     public void setObjectReference(ObjectReference a_yapObject) {

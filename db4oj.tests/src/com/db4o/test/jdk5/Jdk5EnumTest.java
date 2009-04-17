@@ -106,18 +106,13 @@ public class Jdk5EnumTest {
     }    
     
     public void testEnumsInCollections() {
-    	final boolean withDb4oCollections=true;
-
     	ObjectContainer db=reopen();
 
     	class CollectionHolder {
     		public List<Jdk5Enum> list; 
-    		public List<Jdk5Enum> db4olist;
     		public Set<Jdk5Enum> set; 
     		public Map<Jdk5Enum,String> keymap; 
     		public Map<String,Jdk5Enum> valmap; 
-    		public Map<Jdk5Enum,String> db4okeymap; 
-    		public Map<String,Jdk5Enum> db4ovalmap; 
     		public Jdk5Enum[] array; 
     	}
 
@@ -132,15 +127,10 @@ public class Jdk5EnumTest {
     	holder.keymap=new HashMap<Jdk5Enum,String>(NUMRUNS);
     	holder.valmap=new HashMap<String,Jdk5Enum>(NUMRUNS);
     	holder.array=new Jdk5Enum[NUMRUNS];
-    	holder.db4olist=db.ext().collections().newLinkedList();
-    	holder.db4okeymap=db.ext().collections().newHashMap(2);
-    	holder.db4ovalmap=db.ext().collections().newHashMap(2);
+    	
     	for(int i=0;i<NUMRUNS;i++) {
     		Jdk5Enum curenum=nthEnum(i);
 			holder.list.add(curenum);
-    		if(withDb4oCollections) {
-        		holder.db4olist.add(curenum);
-    		}
     		holder.array[i]=curenum;
     	}
 		holder.set.add(Jdk5Enum.A);
@@ -149,12 +139,7 @@ public class Jdk5EnumTest {
 		holder.keymap.put(Jdk5Enum.B,Jdk5Enum.B.name());
 		holder.valmap.put(Jdk5Enum.A.name(),Jdk5Enum.A);
 		holder.valmap.put(Jdk5Enum.B.name(),Jdk5Enum.B);	
-		if(withDb4oCollections) {
-			holder.db4okeymap.put(Jdk5Enum.A,Jdk5Enum.A.name());
-			holder.db4okeymap.put(Jdk5Enum.B,Jdk5Enum.B.name());
-			holder.db4ovalmap.put(Jdk5Enum.A.name(),Jdk5Enum.A);
-			holder.db4ovalmap.put(Jdk5Enum.B.name(),Jdk5Enum.B);
-		}
+		
     	db.store(holder);
     	
     	db=reopen();
@@ -167,11 +152,7 @@ public class Jdk5EnumTest {
     	Test.ensure(holder.keymap.size()==2);
     	Test.ensure(holder.valmap.size()==2);
     	Test.ensure(holder.array.length==NUMRUNS);
-    	if(withDb4oCollections) {
-    		Test.ensure(holder.db4olist.size()==NUMRUNS);
-        	Test.ensure(holder.db4okeymap.size()==2);
-        	Test.ensure(holder.db4ovalmap.size()==2);
-    	}
+    	
     	ensureEnumInstancesInDB(db);
     	
     	Test.deleteAllInstances(CollectionHolder.class);

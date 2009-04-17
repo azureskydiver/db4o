@@ -20,27 +20,31 @@ public class OrClassConstraintInList {
     
     public void store(){
         OrClassConstraintInList occ = new OrClassConstraintInList();
-        occ.list = Test.objectContainer().collections().newLinkedList();
+        occ.list = newLinkedList();
         occ.cnt = 0;
         occ.list.add(new Atom());
         Test.store(occ);
         occ = new OrClassConstraintInList();
-        occ.list = Test.objectContainer().collections().newLinkedList();
+        occ.list = newLinkedList();
         occ.cnt = 1;
         occ.list.add(new Atom());
         Test.store(occ);
         occ = new OrClassConstraintInList();
         occ.cnt = 1;
-        occ.list = Test.objectContainer().collections().newLinkedList();
+        occ.list = newLinkedList();
         Test.store(occ);
         occ = new OrClassConstraintInList();
         occ.cnt = 2;
-        occ.list = Test.objectContainer().collections().newLinkedList();
+        occ.list = newLinkedList();
         occ.list.add(new OrClassConstraintInList());
         Test.store(occ);
     }
     
-    public void test(){
+    private List newLinkedList() {
+    	return new LinkedList();
+    }
+
+	public void test(){
         Query q = Test.query();
         q.constrain(OrClassConstraintInList.class);
         Constraint c1 = q.descend("list").constrain(Atom.class);

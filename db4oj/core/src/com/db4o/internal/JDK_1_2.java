@@ -4,14 +4,12 @@ package com.db4o.internal;
 
 import java.lang.ref.*;
 
-import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.net.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
-import com.db4o.types.*;
 
 /**
  * @sharpen.ignore
@@ -39,14 +37,7 @@ class JDK_1_2 extends JDKReflect {
 	    new TTreeMap();
 	    new TTreeSet();
 	}
-
-	/**
-	 * @deprecated uses deprecated api
-	 */
-    Db4oCollections collections(Transaction transaction){
-        return new P2Collections(transaction);
-    }
-
+	
     Object createReferenceQueue() {
         return new ReferenceQueue4();
     }
