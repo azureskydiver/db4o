@@ -832,6 +832,7 @@
 	
 	<target name="build.db4ojdk1.2.tests" depends="build.db4ojdk1.2, build.db4ounitjdk1.2, decaf.all">
 		<mkdir dir="${dir.dist.classes.test.jdk1.2}" />
+		<echo message="${java.version}"/>
 		<javac destdir="${dir.dist.classes.test.jdk1.2}" 
 			fork="true" 
 			debug="on" 
