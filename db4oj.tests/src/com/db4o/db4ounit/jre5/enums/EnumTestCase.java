@@ -68,12 +68,9 @@ public class EnumTestCase extends AbstractDb4oTestCase {
 
 	private static class CollectionHolder {
 		public List<TypeCountEnum> list; 
-		public List<TypeCountEnum> db4olist;
 		public Set<TypeCountEnum> set; 
 		public Map<TypeCountEnum,String> keymap; 
 		public Map<String,TypeCountEnum> valmap; 
-		public Map<TypeCountEnum,String> db4okeymap; 
-		public Map<String,TypeCountEnum> db4ovalmap; 
 		public TypeCountEnum[] array; 
 	}
         
@@ -82,8 +79,6 @@ public class EnumTestCase extends AbstractDb4oTestCase {
 	 */
     @SuppressWarnings("unchecked")    
 	public void testEnumsInCollections() throws Exception {
-    	final boolean withDb4oCollections=true;
-
     	CollectionHolder holder=new CollectionHolder();
     	holder.list=new ArrayList<TypeCountEnum>(NUMRUNS);
     	Comparator<TypeCountEnum> comp=new TypeCountEnumComparator();
@@ -91,15 +86,10 @@ public class EnumTestCase extends AbstractDb4oTestCase {
     	holder.keymap=new HashMap<TypeCountEnum,String>(NUMRUNS);
     	holder.valmap=new HashMap<String,TypeCountEnum>(NUMRUNS);
     	holder.array=new TypeCountEnum[NUMRUNS];
-    	holder.db4olist=db().ext().collections().newLinkedList();
-    	holder.db4okeymap=db().ext().collections().newHashMap(2);
-    	holder.db4ovalmap=db().ext().collections().newHashMap(2);
     	for(int i=0;i<NUMRUNS;i++) {
     		TypeCountEnum curenum=nthEnum(i);
 			holder.list.add(curenum);
-    		if(withDb4oCollections) {
-        		holder.db4olist.add(curenum);
-    		}
+    		
     		holder.array[i]=curenum;
     	}
 		holder.set.add(TypeCountEnum.A);
@@ -108,12 +98,6 @@ public class EnumTestCase extends AbstractDb4oTestCase {
 		holder.keymap.put(TypeCountEnum.B,TypeCountEnum.B.name());
 		holder.valmap.put(TypeCountEnum.A.name(),TypeCountEnum.A);
 		holder.valmap.put(TypeCountEnum.B.name(),TypeCountEnum.B);	
-		if(withDb4oCollections) {
-			holder.db4okeymap.put(TypeCountEnum.A,TypeCountEnum.A.name());
-			holder.db4okeymap.put(TypeCountEnum.B,TypeCountEnum.B.name());
-			holder.db4ovalmap.put(TypeCountEnum.A.name(),TypeCountEnum.A);
-			holder.db4ovalmap.put(TypeCountEnum.B.name(),TypeCountEnum.B);
-		}
     	db().store(holder);
     	
     	reopen();
@@ -126,11 +110,6 @@ public class EnumTestCase extends AbstractDb4oTestCase {
     	Assert.areEqual(2, holder.keymap.size());
     	Assert.areEqual(2, holder.valmap.size());
     	Assert.areEqual(NUMRUNS, holder.array.length);
-    	if(withDb4oCollections) {
-    		Assert.areEqual(NUMRUNS, holder.db4olist.size());
-    		Assert.areEqual(2, holder.db4okeymap.size());
-    		Assert.areEqual(2, holder.db4ovalmap.size());
-    	}
     	ensureEnumInstancesInDB(db());
     }
     

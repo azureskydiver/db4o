@@ -34,7 +34,7 @@ public final class HandlerRegistry {
     private final ObjectContainerBase _container;  // this is the master container and not valid
 	                                   // for TransportObjectContainer
 
-    private static final Db4oTypeImpl[]   _db4oTypes     = { new BlobImpl()};
+    private static final Db4oTypeImpl[]   _db4oTypes = { new BlobImpl() };
 
     private TypeHandler4 _openArrayHandler;
     

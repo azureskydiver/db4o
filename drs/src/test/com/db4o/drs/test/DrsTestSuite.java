@@ -59,7 +59,6 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 				// Collection
 				ComplexListTestCase.class,
 				ListTest.class, 
-				Db4oListTest.class, 
 
 				// Complex
 				R0to4Runner.class, 	

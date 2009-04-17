@@ -204,6 +204,11 @@ public class OpenTypeHandler implements ReferenceTypeHandler, ValueTypeHandler, 
         
         MarshallingContext marshallingContext = (MarshallingContext) context;
         ClassMetadata classMetadata = classMetadataFor(obj);
+        if (classMetadata == null) {
+        	context.writeInt(0);
+        	return;
+        }
+        
         MarshallingContextState state = marshallingContext.currentState();
         
         marshallingContext.createChildBuffer(false);
@@ -215,11 +220,7 @@ public class OpenTypeHandler implements ReferenceTypeHandler, ValueTypeHandler, 
     }
 
 	private ClassMetadata classMetadataFor(Object obj) {
-		final ClassMetadata metadata = container().classMetadataForObject(obj);
-    	if (metadata == null) {
-    		throw new IllegalArgumentException("obj: " + obj);
-    	}
-		return metadata;
+		return container().classMetadataForObject(obj);
 	}
 
 	private void writeObject(WriteContext context, TypeHandler4 typeHandler, Object obj) {

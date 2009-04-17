@@ -57,15 +57,6 @@ public class EmbeddedClientObjectContainer implements InternalObjectContainer, T
     public void bind(Object obj, long id) throws InvalidIDException, DatabaseClosedException {
         _server.bind(_transaction, obj, id);
     }
-
-    /**
-     * @deprecated
-     * 
-     * @sharpen.if !SILVERLIGHT
-     */
-    public Db4oCollections collections() {
-        return _server.collections(_transaction);
-    }
     
     public Config4Impl configImpl() {
     	// internal interface method doesn't need to lock

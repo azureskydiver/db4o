@@ -7,14 +7,6 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.query.*;
 
-
-
-/**
- * 
- */
-
-/**
- */
 @decaf.Ignore
 public class CallConstructors {
     
@@ -67,9 +59,8 @@ public class CallConstructors {
         q.constrain(obj.getClass());
         ObjectSet os = q.execute();
         Test.ensure(os.hasNext());
-        while(os.hasNext()){
-            os.next();
-        }
+        Test.ensureEquals(obj.getClass(), os.next().getClass());
+        Test.ensure(!os.hasNext());
         boolean called = constructorCalledByClass.get(obj.getClass()) != null;
         Test.ensure(called == expected);
     }

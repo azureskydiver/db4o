@@ -368,17 +368,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	protected abstract void closeSystemTransaction();
 
 	protected abstract void shutdownDataStorage();
-	
-	/**
-	 * @deprecated
-	 * 
-	 * @sharpen.if !SILVERLIGHT
-	 */
-    public Db4oCollections collections(Transaction trans) {
-        synchronized (_lock) {
-            return Platform4.collections(checkTransaction(trans));
-        }
-    }
     
     public final void commit(Transaction trans) throws DatabaseReadOnlyException, DatabaseClosedException {
         synchronized (_lock) {
@@ -935,6 +924,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
     
     public final ClassMetadata classMetadataForReflectClass(ReflectClass claxx){
+    	if (null == claxx) {
+    		throw new ArgumentNullException();
+    	}
     	if(hideClassForExternalUse(claxx)){
     		return null;
     	}
@@ -948,6 +940,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     // TODO: Some ReflectClass implementations could hold a 
     // reference to ClassMetadata to improve lookup performance here.
     public ClassMetadata produceClassMetadata(ReflectClass claxx) {
+    	if (null == claxx) {
+    		throw new ArgumentNullException();
+    	}
     	if(hideClassForExternalUse(claxx)){
     		return null;
     	}
@@ -976,9 +971,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
     
     private final boolean hideClassForExternalUse(ReflectClass claxx){
-        if (claxx == null) {
-            return true;
-        }
         if ((!showInternalClasses()) && _handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)) {
             return true;
         }
@@ -1619,10 +1611,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     public final int store3(Transaction trans, Object obj, int updateDepth, boolean checkJustSet) {
         if (obj == null || (obj instanceof TransientClass)) {
             return 0;
-        }
-        	
-        if (obj instanceof Db4oTypeImpl) {
-            ((Db4oTypeImpl) obj).storedTo(trans);
         }
         
         ObjectAnalyzer analyzer = new ObjectAnalyzer(this, obj);

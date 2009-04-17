@@ -14,7 +14,7 @@ public class AllTestsConfSingle extends TestSuite{
     
     public Class[] tests(){
         return new Class[] {
-            SimplestPossible.class,
+        	CallConstructors.class,
     	};
     }
 
@@ -31,17 +31,17 @@ public class AllTestsConfSingle extends TestSuite{
     /**
       * run the tests stand-alone 
       */
-    public boolean SOLO = true;
+    public boolean SOLO = false;
     
     /**
       * run the tests in client/server mode 
       */
-    public boolean CLIENT_SERVER = false;
+    public boolean CLIENT_SERVER = true;
     
     /**
      * use ObjectServer#openClient() instead of Db4o.openClient()
      */
-    public static boolean EMBEDDED_CLIENT = false;
+    public static boolean EMBEDDED_CLIENT = true;
 
     /**
      * run the test against a memory file instead of disc file

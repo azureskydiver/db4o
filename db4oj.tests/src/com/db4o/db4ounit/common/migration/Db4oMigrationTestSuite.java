@@ -30,9 +30,9 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 			return Db4oMigrationSuiteBuilder.ALL;
 		}
 		
-		if (false) {
+		if (true) {
 			// run against specific libraries + the current one
-			String javaPath = "db4o.archives/java1.2/db4o-7.1.27.9108-java1.2.jar";
+			String javaPath = "db4o.archives/java1.2/db4o-5.7-java1.2.jar";
 			String netPath = "db4o.archives/net-2.0/7.4/Db4objects.Db4o.dll";
 			return new String[] {
 				WorkspaceServices.workspacePath(javaPath),

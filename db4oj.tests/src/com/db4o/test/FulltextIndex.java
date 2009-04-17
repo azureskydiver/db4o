@@ -73,7 +73,7 @@ public class FulltextIndex implements MessageRecipient{
             }
             indexEntries.clear();
         }else{
-            indexEntries = objectContainer.ext().collections().newLinkedList();
+            indexEntries = new LinkedList();
         }
         String[] strings = toIndex.split(" ");
         for (int i = 0; i < strings.length; i++) {
@@ -87,7 +87,7 @@ public class FulltextIndex implements MessageRecipient{
             }else{
                 FullTextIndexEntry ftie = new FullTextIndexEntry();
                 ftie.text = strings[i];
-                ftie.objects = objectContainer.ext().collections().newLinkedList();
+                ftie.objects = new LinkedList();
                 ftie.objects.add(this);
                 objectContainer.store(ftie);
             }

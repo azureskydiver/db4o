@@ -139,9 +139,6 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
                         field.addIndexEntry(trans, context.objectID(), null);
                         return;
                     }
-                    if (marshalledObject instanceof Db4oTypeImpl) {
-                    	marshalledObject = ((Db4oTypeImpl) marshalledObject).storedTo(trans);
-                    }
                 }
                 
                 aspect.marshall(context, marshalledObject);

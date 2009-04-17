@@ -62,19 +62,39 @@ public class Test extends AllTests {
     }
 
     public static void close() {
-		if (null != oc) {
-	        while (!oc.close()) {
-	        }
-			oc = null;
-		}
-		if(memoryFile != null) {
-            memoryFileContent = memoryFile.getBytes();
-        }
-        if(_replica != null){
+		closeClient();
+		closeServer();
+		closeMemoryFile();
+        closeReplica();
+    }
+
+	private static void closeReplica() {
+	    if(_replica != null){
             while(!_replica.close()) {
             }
             _replica = null;
         }
+    }
+
+	private static void closeMemoryFile() {
+	    if(memoryFile != null) {
+            memoryFileContent = memoryFile.getBytes();
+        }
+    }
+
+	private static void closeServer() {
+	    if (null != objectServer) {
+			objectServer.close();
+			objectServer = null;
+		}
+    }
+
+	private static void closeClient() {
+	    if (null != oc) {
+	        while (!oc.close()) {
+	        }
+			oc = null;
+		}
     }
 
     public static void commit() {

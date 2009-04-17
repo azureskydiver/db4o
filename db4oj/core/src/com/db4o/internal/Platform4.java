@@ -14,7 +14,6 @@ import com.db4o.internal.query.processor.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
-import com.db4o.types.*;
 
 /**
  * @exclude
@@ -97,13 +96,6 @@ public final class Platform4 {
      */
     static final boolean classIsAvailable(String className) {
     	return ReflectPlatform.forName(className) != null;
-    }
-    
-    /**
-     * @deprecated
-     */
-    static Db4oCollections collections(Transaction transaction){
-        return jdk().collections(transaction);
     }
     
     static final Reflector createReflector(Object classLoader){
@@ -262,19 +254,8 @@ public final class Platform4 {
         }
         netReadAsJava(config, "ext.Db4oDatabase");
         netReadAsJava(config, "P1Object");
-        netReadAsJava(config, "P1Collection");
-        netReadAsJava(config, "P1HashElement");
-        netReadAsJava(config, "P1ListElement");
-        netReadAsJava(config, "P2HashMap");
-        netReadAsJava(config, "P2LinkedList");
         netReadAsJava(config, "StaticClass");
         netReadAsJava(config, "StaticField");
-        
-        maximumActivationDepth(config, "P1ListElement", 1);
-        activationDepth(config, "P2LinkedList", 1);
-        
-        activationDepth(config, "P2HashMap", 2);
-        activationDepth(config, "P1HashElement", 1);
         
         jdk().commonConfigurations(config);
         jdk().extendConfiguration(config);
@@ -293,22 +274,6 @@ public final class Platform4 {
                 return original;
             }
         });
-	}
-
-	private static void activationDepth(Config4Impl config, String className, int depth) {
-		final ObjectClass classConfig = db4oClassConfig(config, className);
-		classConfig.minimumActivationDepth(depth);
-		classConfig.maximumActivationDepth(depth);
-	}
-
-	private static void maximumActivationDepth(Config4Impl config,
-			final String className, int depth) {
-		db4oClassConfig(config, className).maximumActivationDepth(depth);
-	}
-
-	private static ObjectClass db4oClassConfig(Config4Impl config,
-			final String className) {
-		return config.objectClass(db4oClass(className));
 	}
     
     public static Object getTypeForClass(Object obj){
@@ -539,16 +504,8 @@ public final class Platform4 {
     }
     
 	public static void registerCollections(GenericReflector reflector) {
-		registerDeprecatedCollection(reflector);
 		jdk().registerCollections(reflector);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	private static void registerDeprecatedCollection(GenericReflector reflector) {
-		reflector.registerCollection(P1Collection.class);
-	}
+	}	
 
     synchronized static final void removeShutDownHook(ObjectContainerBase container) {
         if (!hasShutDownHook() || shutDownRunnable == null) {

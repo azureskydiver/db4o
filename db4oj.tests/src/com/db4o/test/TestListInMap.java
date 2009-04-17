@@ -15,10 +15,10 @@ public class TestListInMap {
 	
 	public void storeOne() {
 	    ExtObjectContainer db = Test.objectContainer();
-		List list = db.collections().newLinkedList();
+		List list = new LinkedList();
 		list.add("ListEntry 1");
 		db.store(list);
-		map = db.collections().newHashMap(0); 			
+		map = new HashMap(); 			
 		map.put("1", list);
 	}
 	

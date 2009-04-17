@@ -32,15 +32,7 @@ public class PBootRecord extends P1Object implements Internal4{
     }
 
     public void write(LocalObjectContainer file) {
-        SystemData systemData = file.systemData();
-        i_versionGenerator = systemData.lastTimeStampID();
-        i_db = systemData.identity();
-        file.showInternalClasses(true);
-        try {
-        	store(2);
-        } finally {
-        	file.showInternalClasses(false);
-        }
+       throw new IllegalStateException();
     }
 
 }

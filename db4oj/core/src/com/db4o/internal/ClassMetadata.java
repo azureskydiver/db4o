@@ -1647,10 +1647,12 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         return Platform4.canSetAccessible() || a_field.isPublic();
     }
     
-    public StoredField storedField(final String name, final Object clazz) {
+    public StoredField storedField(final String fieldName, final Object fieldType) {
         synchronized(lock()){
         	
-            final ClassMetadata classMetadata = _container.classMetadataForReflectClass(ReflectorUtils.reflectClassFor(reflector(), clazz));
+            final ClassMetadata fieldTypeFilter = fieldType == null 
+            	? null
+            	: _container.classMetadataForReflectClass(ReflectorUtils.reflectClassFor(reflector(), fieldType));
             
             final ByRef foundField = new ByRef();
             forEachField(new Procedure4() {
@@ -1659,8 +1661,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
                         return;
                     }
                     FieldMetadata field = (FieldMetadata)arg;
-                    if(field.getName().equals(name)){
-                        if(classMetadata == null || classMetadata == field.handlerClassMetadata(_container)){
+                    if(field.getName().equals(fieldName)){
+                        if(fieldTypeFilter == null || fieldTypeFilter == field.fieldType()){
                             foundField.value = field;
                         }
                     }
