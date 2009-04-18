@@ -4,7 +4,6 @@ package com.db4o.instrumentation.main;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
@@ -34,14 +33,12 @@ public class Db4oFileInstrumentor {
 		enhance(new DefaultClassSource(), sources, targetDir, classpath);
 	}
 
-	private void enhance(ClassSource classSource, FilePathRoot sources,String targetDir,String[] classpath) throws Exception {
+	public void enhance(ClassSource classSource, FilePathRoot sources,String targetDir,String[] classpath) throws Exception {
+		enhance(classSource, sources, targetDir, classpath, ClassLoader.getSystemClassLoader());
+	}
+
+	public void enhance(ClassSource classSource, FilePathRoot sources,String targetDir,String[] classpath, ClassLoader parentClassLoader) throws Exception {
 		File fTargetDir = new File(targetDir);
-		
-		String[] sourceRoots = sources.rootDirs();
-		for (int rootIdx = 0; rootIdx < sourceRoots.length; rootIdx++) {
-			File rootFile = new File(sourceRoots[rootIdx]);
-			assertSourceDir(rootFile);
-		}
 		
 		ClassFileLoader fileLoader=new ClassFileLoader(classSource);
 		String[] fullClasspath = fullClasspath(sources, classpath);
@@ -49,7 +46,7 @@ public class Db4oFileInstrumentor {
 		setClasspath(fileLoader, fullClasspath);
 		
 		URL[] urls = classpathToURLs(fullClasspath);	
-		URLClassLoader classLoader=new URLClassLoader(urls,ClassLoader.getSystemClassLoader());
+		URLClassLoader classLoader=new URLClassLoader(urls,parentClassLoader);
 		enhance(sources,fTargetDir,classLoader,new BloatLoaderContext(fileLoader));
 		
 		fileLoader.done();
@@ -60,8 +57,7 @@ public class Db4oFileInstrumentor {
 			File target,
 			ClassLoader classLoader,
 			BloatLoaderContext bloatUtil) throws Exception {
-		for (Iterator sourceFileIter = sources.files(); sourceFileIter.hasNext();) {
-			InstrumentationClassSource file = (InstrumentationClassSource) sourceFileIter.next();
+		for (InstrumentationClassSource file : sources) {
 			enhanceFile(file, target, classLoader, bloatUtil);
 		}
 	}
@@ -123,12 +119,6 @@ public class Db4oFileInstrumentor {
 
 	private void setOutputDir(ClassFileLoader fileLoader, File fTargetDir) {
 		fileLoader.setOutputDir(fTargetDir);
-	}
-
-	private void assertSourceDir(File fSourceDir) throws IOException {
-		if(!fSourceDir.isDirectory()) {
-			//throw new IOException("No directory: "+fSourceDir.getCanonicalPath());
-		}
 	}
 
 	private void setClasspath(ClassFileLoader fileLoader, String[] classPath) {
