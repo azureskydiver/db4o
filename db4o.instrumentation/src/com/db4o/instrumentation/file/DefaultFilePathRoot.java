@@ -20,7 +20,7 @@ public class DefaultFilePathRoot implements FilePathRoot {
 		_extension = extension;
 	}
 
-	public Iterator files() {
+	public Iterator iterator() {
 		return new FileSystemIterator(_rootDirs, _extension);
 	}
 

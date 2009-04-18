@@ -29,7 +29,7 @@ class AntFileSetPathRoot implements FilePathRoot, ClassFilter {
 		}
 	}
 	
-	public Iterator files() {
+	public Iterator iterator() {
 		return new FileSetIterator(_fileSets);
 	}
 
