@@ -6,7 +6,7 @@ import java.util.*;
 /**
  * @exclude
  */
-public interface FilePathRoot {
+public interface FilePathRoot extends Iterable<InstrumentationClassSource> {
 	String[] rootDirs() throws IOException;
-	Iterator files();
+	Iterator<InstrumentationClassSource> iterator();
 }

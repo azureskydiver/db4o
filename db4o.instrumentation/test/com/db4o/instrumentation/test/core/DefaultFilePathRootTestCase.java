@@ -26,7 +26,7 @@ public class DefaultFilePathRootTestCase implements TestLifeCycle {
 		FilePathRoot root = new DefaultFilePathRoot(rootDirs, ".txt");
 		ArrayAssert.areEqual(rootDirs, root.rootDirs());
 		List files = new ArrayList();
-		for(Iterator fileIter = root.files(); fileIter.hasNext(); ) {
+		for(Iterator fileIter = root.iterator(); fileIter.hasNext(); ) {
 			files.add(fileIter.next());
 		}
 		Collections.sort(files);
