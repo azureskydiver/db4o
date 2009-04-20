@@ -2,11 +2,8 @@ package com.db4o.db4ounit.common.migration;
 
 import java.util.*;
 
-import com.db4o.config.*;
 import com.db4o.db4ounit.common.handlers.*;
 import com.db4o.ext.*;
-import com.db4o.typehandlers.*;
-import com.db4o.typehandlers.internal.*;
 
 import db4ounit.*;
 
@@ -54,13 +51,6 @@ public class TreeSetHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 			_untyped = treeSet;
 			_interface = treeSet;
 		}
-	}
-	
-	@Override
-	protected void configureForTest(Configuration config) {
-		 config.registerTypeHandler(
-		    		new SingleClassTypeHandlerPredicate(TreeSet.class),
-		    		new TreeSetTypeHandler());
 	}
 
 	@Override

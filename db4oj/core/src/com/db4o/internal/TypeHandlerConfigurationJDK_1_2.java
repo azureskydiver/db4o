@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.db4o.internal.collections.*;
 import com.db4o.typehandlers.*;
+import com.db4o.typehandlers.internal.*;
 
 /**
  * @exclude
@@ -38,6 +39,7 @@ public class TypeHandlerConfigurationJDK_1_2 extends TypeHandlerConfiguration{
 		ignoreFieldsOn(WeakHashMap.class);
 		
 		registerTypeHandlerFor(BigSet.class, new BigSetTypeHandler());
+		registerTypeHandlerFor(TreeSet.class, new TreeSetTypeHandler());
 	}
 
 }

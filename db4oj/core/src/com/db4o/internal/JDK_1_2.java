@@ -26,17 +26,6 @@ class JDK_1_2 extends JDKReflect {
 		}
 		return Class.forName(className, false, (ClassLoader)loader);
 	}
-
-	public static void link(){
-	    // link standard translators, so they won't get deleted
-	    // by deployment
-	    
-	    new TCollection();
-	    new TMap();
-	    new TSerializable();
-	    new TTreeMap();
-	    new TTreeSet();
-	}
 	
     Object createReferenceQueue() {
         return new ReferenceQueue4();
