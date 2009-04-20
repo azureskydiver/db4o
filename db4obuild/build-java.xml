@@ -876,6 +876,9 @@
 			debug="on" 
 			target="1.5" 
 			source="1.5" 
+			memoryinitialsize="128m"
+			memorymaximumsize="512m"
+			executable="${file.compiler.jdk1.5}"
 			encoding="UTF-8">
 			<classpath>
 				<pathelement location="${file.decaf.annotations}" />
