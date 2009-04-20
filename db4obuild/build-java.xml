@@ -841,6 +841,7 @@
 			encoding="UTF-8"
 			memoryinitialsize="128m"
 			memorymaximumsize="512m"
+			executable="${file.compiler.jdk1.5}"
 			srcdir="${dir.dist.decaf.jdk1.2.test.src}">
 			<classpath>
 				<pathelement location="${file.jdk1.2.jar}" />
