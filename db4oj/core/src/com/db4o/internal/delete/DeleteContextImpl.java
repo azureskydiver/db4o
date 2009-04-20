@@ -76,7 +76,7 @@ public class DeleteContextImpl extends ObjectHeaderContext implements DeleteCont
     }
 	
 	private int adjustedDepth(){
-        if(Platform4.isValueType(_fieldClass)){
+        if(Platform4.isStruct(_fieldClass)){
             return 1;
         }
 	    if(_fieldConfig == null){
