@@ -6,6 +6,8 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.query.*;
+import com.db4o.typehandlers.*;
+import com.db4o.typehandlers.internal.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -85,6 +87,16 @@ public class TreeSetTestSuite extends FixtureTestSuiteDescription implements Db4
 			final Item item = retrieveOnlyInstance(Item.class);
 			assertTreeSetContent(item.treeSet);
 		}
+		
+		public void testTypeHandler() {
+			Assert.isInstanceOf(
+					TreeSetTypeHandler.class,
+					configuredTypeHandlerFor(TreeSet.class));
+		}
+
+		private TypeHandler4 configuredTypeHandlerFor(final Class<?> clazz) {
+	        return container().handlers().configuredTypeHandler(reflectClass(clazz));
+        }
 
 		private void assertTreeSetContent(final TreeSet treeSet) {
 	        final Comparator comparator = subject().comparator();
