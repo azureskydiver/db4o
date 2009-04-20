@@ -356,8 +356,13 @@ public final class Platform4 {
         return jdk().isConnected(socket);
     }   
     
-    /** @param claxx */
-    public static final boolean isValueType(ReflectClass claxx){
+    /**
+     * Returns true if claxx represents a .net struct (a value type with
+     * members in the type handler jargon).
+     * 
+     * @param claxx
+     **/
+    public static final boolean isStruct(ReflectClass claxx){
     	return false;
     }
     
