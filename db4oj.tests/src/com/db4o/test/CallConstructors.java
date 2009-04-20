@@ -7,7 +7,7 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.query.*;
 
-@decaf.Ignore
+@decaf.Remove
 public class CallConstructors {
     
     static Hashtable constructorCalledByClass = new Hashtable();
