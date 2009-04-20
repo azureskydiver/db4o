@@ -1669,8 +1669,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
                 }
             });
     		
-    		//TODO: implement field creation
-    		
+    		// TODO: implement field creation
 	        return (StoredField) foundField.value;
         }
     }

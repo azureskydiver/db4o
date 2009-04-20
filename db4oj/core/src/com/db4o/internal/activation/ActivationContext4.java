@@ -57,7 +57,7 @@ public class ActivationContext4 implements ActivationContext {
         } else {
             // FIXME: [TA] do we really need to check for isValueType here?
         	final ClassMetadata classMetadata = context.classMetadata();
-            if(classMetadata.isValueType()){
+            if(Platform4.isStruct(classMetadata.classReflector())){
                 classMetadata.cascadeActivation(context);
             }else{
                 container().stillToActivate(context);
