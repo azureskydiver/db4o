@@ -32,7 +32,10 @@ public class PBootRecord extends P1Object implements Internal4{
     }
 
     public void write(LocalObjectContainer file) {
-       throw new IllegalStateException();
+    	// write is still called when storing objects to old
+    	// database files (CLI1.ObjectInfoMigration52TestCase
+    	// and CLI1.ObjectInfoMigration57)
+    
     }
 
 }
