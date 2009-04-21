@@ -978,11 +978,11 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 	private final Object readIndexEntryForRebuild(StatefulBuffer writer, ObjectHeader oh) {
 	    ClassMetadata classMetadata = oh.classMetadata();
         if(classMetadata == null){
-            return null;
+            return defaultValueForFieldType();
         }
         ObjectIdContextImpl context = new ObjectIdContextImpl(writer.transaction(), writer, oh, writer.getID());
         if(! classMetadata.seekToField(context, this)){
-            return null;
+            return defaultValueForFieldType();
         }
         try {
             return readIndexEntry(context);
@@ -990,6 +990,10 @@ public class FieldMetadata extends ClassAspect implements StoredField {
             throw new FieldIndexException(exc,this);
         } 
 	}
+
+	private Object defaultValueForFieldType() {
+	    return Handlers4.nullRepresentationInUntypedArrays(_fieldType.typeHandler());
+    }
 
     public void dropIndex(Transaction systemTrans) {
         if(_index == null){
