@@ -192,6 +192,9 @@ public class LinkCheckTask extends Task {
 		} catch (ParserConfigurationException e) {
 			throw new BuildException(e);
 		}
+		catch(IOException ioe) {
+			throw new BuildException(ioe);
+		}
 	}
 
 	/**
@@ -199,8 +202,9 @@ public class LinkCheckTask extends Task {
 	 * 
 	 * @throws BuildException
 	 *             when broken links are found
+	 * @throws IOException 
 	 */
-	private void writeProtocol() throws BuildException {
+	private void writeProtocol() throws BuildException, IOException {
 		try {
 			Document doc = db.newDocument();
 			Element root = doc.createElement("linkcheckresults");
@@ -253,8 +257,21 @@ public class LinkCheckTask extends Task {
 			System.err.println(e);
 		}
 		if (brokenLinks.size() > 0) {
+			System.err.println(readFile(protocolFilename));
 			throw new BuildException("Broken links exist. See report file: " + protocolFilename);
 		}
+	}
+
+	private String readFile(String fileName) throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(fileName));
+		StringBuffer sb = new StringBuffer();
+		String line = reader.readLine();
+		while (line != null) {
+			sb.append(line);
+			line = reader.readLine();			
+		}
+		
+		return sb.toString();
 	}
 
 	/**
