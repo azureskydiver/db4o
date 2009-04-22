@@ -15,9 +15,11 @@ import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
+import javax.xml.xpath.*;
 
 import org.apache.tools.ant.*;
 import org.w3c.dom.*;
+import org.xml.sax.*;
 
 /**
  * @author $Author: Tetyana Loskutova $
@@ -192,19 +194,20 @@ public class LinkCheckTask extends Task {
 		} catch (ParserConfigurationException e) {
 			throw new BuildException(e);
 		}
-		catch(IOException ioe) {
-			throw new BuildException(ioe);
+		catch(Exception e) {
+			throw new BuildException(e);
 		}
 	}
 
 	/**
 	 * Writes the protocol of the task to the file specified as ProtocolFilename
 	 * 
-	 * @throws BuildException
-	 *             when broken links are found
+	 * @throws BuildException when broken links are found
 	 * @throws IOException 
+	 * @throws TransformerException 
+	 * @throws TransformerFactoryConfigurationError 
 	 */
-	private void writeProtocol() throws BuildException, IOException {
+	private void writeProtocol() throws BuildException, XPathExpressionException, SAXException, IOException, TransformerFactoryConfigurationError, TransformerException {
 		try {
 			Document doc = db.newDocument();
 			Element root = doc.createElement("linkcheckresults");
@@ -262,16 +265,21 @@ public class LinkCheckTask extends Task {
 		}
 	}
 
-	private String readFile(String fileName) throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(fileName));
-		StringBuffer sb = new StringBuffer();
-		String line = reader.readLine();
-		while (line != null) {
-			sb.append(line);
-			line = reader.readLine();			
+	private String readFile(String fileName) throws SAXException, XPathExpressionException, IOException, TransformerFactoryConfigurationError, TransformerException {
+		final Document doc = db.parse(fileName);
+		final XPath xpath = XPathFactory.newInstance().newXPath();
+		final Node brokenLinksNode = (Node) xpath.evaluate("linkcheckresults/brokenlinks", doc, XPathConstants.NODE);
+		
+		if (brokenLinksNode == null) {
+			return "";
 		}
 		
-		return sb.toString();
+		final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+		StringWriter sw = new StringWriter();
+		transformer.transform(new DOMSource(brokenLinksNode), new StreamResult(sw));
+		
+		return sw.toString();
 	}
 
 	/**
