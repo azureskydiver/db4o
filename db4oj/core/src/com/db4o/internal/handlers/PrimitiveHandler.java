@@ -57,7 +57,7 @@ public abstract class PrimitiveHandler implements ValueTypeHandler, IndexableTyp
 			|| type.equals(primitiveClassReflector());
     }
     
-    protected Object primitiveNull() {
+    public Object primitiveNull() {
     	if(_primitiveNull == null) {
         	ReflectClass claxx = (_primitiveClassReflector == null ? _classReflector : _primitiveClassReflector);
         	_primitiveNull = claxx.nullValue();
