@@ -260,9 +260,10 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
             int aspectCount=command.aspectCount(classMetadata, ((ByteArrayBuffer)context.buffer()));
 			context.aspectCount(aspectCount);
 			for (int i = 0; i < aspectCount && !command.cancelled(); i++) {
-			    if(command.accept(classMetadata._aspects[i])){
+			    final ClassAspect currentAspect = classMetadata._aspects[i];
+				if(command.accept(currentAspect)){
 			        command.processAspect(
-			        		classMetadata._aspects[i],
+			        		currentAspect,
 			        		currentSlot,
 			        		isNull(context, currentSlot), classMetadata);
 			    }
