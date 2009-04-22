@@ -47,9 +47,9 @@
     
 	<target name="generate.pdf.all" depends="generate.pdf.java, generate.pdf.net" />
 
-    <taskdef name="checklinks" classname="com.wu.checklinks.LinkCheckTask">
+    <taskdef name="checklinks" classname="com.db4o.devtools.ant.LinkCheckTask">
 	    <classpath>
-	        <pathelement path="${dir.build.lib}/vlink.jar"/>
+			<pathelement location="${dir.build.bin}" />
 	    </classpath>
 	</taskdef>
 
