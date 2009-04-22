@@ -1631,20 +1631,28 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
             && bitIsFalse(Const4.READING);
     }
 
-    boolean storeField(ReflectField a_field) {
-        if (a_field.isStatic()) {
+    boolean storeField(ReflectField field) {
+		if (field.isStatic()) {
             return false;
         }
-        if (a_field.isTransient()) {
-            Config4Class config = configOrAncestorConfig();
-            if (config == null) {
-                return false;
-            }
-            if (!config.storeTransientFields()) {
-                return false;
+        if (isTransient(field)) {
+        	if (!shouldStoreTransientFields()) {
+            	return false;
             }
         }
-        return Platform4.canSetAccessible() || a_field.isPublic();
+        return Platform4.canSetAccessible() || field.isPublic();
+    }
+
+	private boolean shouldStoreTransientFields() {
+	    Config4Class config = configOrAncestorConfig();
+	    if (config == null) {
+	        return false;
+	    }
+	    return config.storeTransientFields();
+    }
+
+	private boolean isTransient(ReflectField field) {
+	    return field.isTransient() || Platform4.isTransient(field.getFieldType());
     }
     
     public StoredField storedField(final String fieldName, final Object fieldType) {
