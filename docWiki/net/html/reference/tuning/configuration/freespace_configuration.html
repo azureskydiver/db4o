@@ -39,7 +39,7 @@ lists in RAM&nbsp;</li>
 </p>
 </span>
 
-<p>This method allows to specify a way to overwrite the freed space in the database. This may be desirable when the information needs to be reliably erased. A custom FreespaceFiller implementation can be created. Alternatively you can use XByteFreespaceFiller, which will overwrite the free space with "XXXX" symbols.&nbsp;</p>
+<p>This method allows to specify a way to overwrite the freed space in the database. This may be desirable when the information needs to be reliably erased. A <a href="freespace_configuration/freespacefiller_example.html" class="wikiLink">custom FreespaceFiller</a> implementation can be created. For an example of db4o implementation of FreespaceFiller you can have a look at XByteFreespaceFiller in the db4o source code (IoAdaptedObjectContainer class). XByteFreespaceFiller overwrites the free space with "XXXX" symbols and is switched on by rebuilding db4o core with debug = true in Deploy class. <br></p>
 <p>Note, that using freespace filler will slow down IO operations on the database.</p>
 <br><br><br><br><br>
 <p>The following settings allow to select how the freespace information will be kept: </p>
@@ -53,7 +53,7 @@ lists in RAM&nbsp;</li>
 <p>When BTree system is used to keep freespace information, the performance is worse as the information is written to disk at each commit, but the memory consumption is lower. With the RAM system, all freespace information is kept in RAM, which allows the best performance, however this information is lost on abnormal system termination. <br></p></div>
     </div>
     <div id="footer">
-					This revision (5) was last Modified 2009-04-05T17:25:16 by Tetyana.
+					This revision (7) was last Modified 2009-04-19T16:21:15 by Tetyana.
 				</div>
   </body>
 </html>
