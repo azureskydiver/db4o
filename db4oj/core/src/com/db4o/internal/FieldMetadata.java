@@ -992,7 +992,10 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 	}
 
 	private Object defaultValueForFieldType() {
-	    return Handlers4.nullRepresentationInUntypedArrays(_fieldType.typeHandler());
+	    final TypeHandler4 handler = _fieldType.typeHandler();
+	    return (handler instanceof PrimitiveHandler)
+	    	? ((PrimitiveHandler)handler).primitiveNull()
+	    	: null;
     }
 
     public void dropIndex(Transaction systemTrans) {
