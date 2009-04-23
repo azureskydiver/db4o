@@ -100,20 +100,11 @@ public class MagnycoursDb4o extends Db4oDriver implements
 	}
 
 	private void generateList() {
-		if (isP1FastCollection()) {
-			_list = db().collections().newLinkedList();
-		} else {
-			_list = new ArrayList<MagnycoursItem>();
-		}
+		_list = new ArrayList<MagnycoursItem>();
 		for (int i = 0; i < setup().getObjectCount(); ++i) {
 			_list.add(new MagnycoursItem(i));
 		}
 	}
 
-	private boolean isP1FastCollection() {
-		Db4oCar car = (Db4oCar) car();
-		return Db4oOptions.containsOption(car.options(),
-				Db4oOptions.P1FAST_COLLECTION);
-	}
 
 }
