@@ -26,10 +26,10 @@ public class FieldIndexKeyHandler implements Indexable4{
         return _valueHandler.linkLength() + Const4.INT_LENGTH;
     }
 
-    public Object readIndexEntry(ByteArrayBuffer a_reader) {
+    public Object readIndexEntry(Context context, ByteArrayBuffer a_reader) {
         // TODO: could read int directly here with a_reader.readInt()
-        int parentID = readParentID(a_reader);
-        Object objPart = _valueHandler.readIndexEntry(a_reader);
+        int parentID = readParentID(context, a_reader);
+        Object objPart = _valueHandler.readIndexEntry(context, a_reader);
         if (parentID < 0){
             objPart = null;
             parentID = - parentID;
@@ -37,11 +37,11 @@ public class FieldIndexKeyHandler implements Indexable4{
         return new FieldIndexKey(parentID, objPart);
     }
 
-	private int readParentID(ByteArrayBuffer a_reader) {
-		return ((Integer)_parentIdHandler.readIndexEntry(a_reader)).intValue();
+	private int readParentID(Context context, ByteArrayBuffer a_reader) {
+		return ((Integer)_parentIdHandler.readIndexEntry(context, a_reader)).intValue();
 	}
 
-    public void writeIndexEntry(ByteArrayBuffer writer, Object obj) {
+    public void writeIndexEntry(Context context, ByteArrayBuffer writer, Object obj) {
         FieldIndexKey composite = (FieldIndexKey)obj;
         int parentID = composite.parentID();
         Object value = composite.value();
@@ -49,7 +49,7 @@ public class FieldIndexKeyHandler implements Indexable4{
             parentID = - parentID;
         }
         _parentIdHandler.write(parentID, writer);
-        _valueHandler.writeIndexEntry(writer, composite.value());
+        _valueHandler.writeIndexEntry(context, writer, composite.value());
     }
     
     public Indexable4 valueHandler() {

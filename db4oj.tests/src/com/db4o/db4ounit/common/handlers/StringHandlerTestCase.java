@@ -44,9 +44,9 @@ public class StringHandlerTestCase extends TypeHandlerTestCaseBase {
 	public void testIndexMarshalling() {
 		ByteArrayBuffer reader=new ByteArrayBuffer(2*Const4.INT_LENGTH);
 		final Slot original = new Slot(0xdb,0x40);
-		stringHandler().writeIndexEntry(reader,original);
+		stringHandler().writeIndexEntry(context(),reader, original);
 		reader._offset=0;
-		Slot retrieved = (Slot) stringHandler().readIndexEntry(reader);
+		Slot retrieved = (Slot) stringHandler().readIndexEntry(context(), reader);
 		Assert.areEqual(original.address(), retrieved.address());
 		Assert.areEqual(original.length(), retrieved.length());
 	}

@@ -103,11 +103,7 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 		Assert.isSmaller(0, comparable.compareTo(smaller));
     }
 
-    private Context context() {
-        return stream().transaction().context();
-    }
-	
-	private Object newInstance (Class clazz){
+    private Object newInstance (Class clazz){
 		ReflectClass classReflector = reflector().forClass(clazz);
 		Object obj = classReflector.newInstance();
 		if(obj == null) {

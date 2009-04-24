@@ -5,6 +5,7 @@ package com.db4o.internal.freespace;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
+import com.db4o.marshall.*;
 
 
 /**
@@ -22,11 +23,11 @@ public abstract class SlotHandler implements Indexable4{
 		return Slot.MARSHALLED_LENGTH;
 	}
 
-	public Object readIndexEntry(ByteArrayBuffer reader) {
+	public Object readIndexEntry(Context context, ByteArrayBuffer reader) {
 		return new Slot(reader.readInt(), reader.readInt());
 	}
 
-	public void writeIndexEntry(ByteArrayBuffer writer, Object obj) {
+	public void writeIndexEntry(Context context, ByteArrayBuffer writer, Object obj) {
 		Slot slot = (Slot) obj;
 		writer.writeInt(slot.address());
 		writer.writeInt(slot.length());

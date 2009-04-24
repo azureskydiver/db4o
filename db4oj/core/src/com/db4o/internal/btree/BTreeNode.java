@@ -5,6 +5,7 @@ package com.db4o.internal.btree;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.marshall.*;
 
 /**
  * We work with BTreeNode in two states:
@@ -94,7 +95,7 @@ public final class BTreeNode extends CacheablePersistentBase{
     public BTreeNode add(Transaction trans, PreparedComparison preparedComparison, Object obj){
         
         ByteArrayBuffer reader = prepareRead(trans);        
-        Searcher s = search(preparedComparison, reader);
+        Searcher s = search(trans, preparedComparison, reader);
         
         if(_isLeaf){
             
@@ -173,7 +174,7 @@ public final class BTreeNode extends CacheablePersistentBase{
     
     BTreeNodeSearchResult searchLeaf(Transaction trans, PreparedComparison preparedComparison, SearchTarget target) {
         ByteArrayBuffer reader = prepareRead(trans);
-        Searcher s = search(preparedComparison, reader, target);
+        Searcher s = search(trans, preparedComparison, reader, target);
         if(! _isLeaf){
             return child(reader, s.cursor()).searchLeaf(trans, preparedComparison, target);
         }
@@ -201,7 +202,7 @@ public final class BTreeNode extends CacheablePersistentBase{
 	private BTreeNodeSearchResult findLowestLeafMatch(Transaction trans, PreparedComparison preparedComparison, ByteArrayBuffer reader, int index){
         
         if(index >= 0){
-            if(!compareEquals(preparedComparison, reader, index)){
+            if(!compareEquals(preparedComparison, trans, reader, index)){
                 return null;
             }
             if(index > 0){
@@ -229,11 +230,11 @@ public final class BTreeNode extends CacheablePersistentBase{
         return createMatchingSearchResult(trans, reader, index);
     }
 
-	private boolean compareEquals(PreparedComparison preparedComparison, final ByteArrayBuffer reader, int index) {
+	private boolean compareEquals(PreparedComparison preparedComparison, Transaction trans, final ByteArrayBuffer reader, int index) {
 		if(canWrite()){
 			return compareInWriteMode(preparedComparison, index) == 0;
 		}
-		return compareInReadMode(preparedComparison, reader, index) == 0;
+		return compareInReadMode(trans, preparedComparison, reader, index) == 0;
 	}
 
     private BTreeNodeSearchResult createMatchingSearchResult(Transaction trans, ByteArrayBuffer reader, int index) {
@@ -470,9 +471,9 @@ public final class BTreeNode extends CacheablePersistentBase{
         return - preparedComparison.compareTo(key(index));
     }
     
-    private int compareInReadMode(PreparedComparison preparedComparison, ByteArrayBuffer reader, int index){
+    private int compareInReadMode(Transaction trans, PreparedComparison preparedComparison, ByteArrayBuffer reader, int index){
         seekKey(reader, index);
-        return - preparedComparison.compareTo(keyHandler().readIndexEntry(reader));
+        return - preparedComparison.compareTo(keyHandler().readIndexEntry(trans.context(), reader));
     }
     
     public int count() {
@@ -572,7 +573,7 @@ public final class BTreeNode extends CacheablePersistentBase{
             return internalKey(trans, index);
         }
         seekKey(reader, index);
-        return keyHandler().readIndexEntry(reader);
+        return keyHandler().readIndexEntry(trans.context(), reader);
     }
     
     private Object internalKey(Transaction trans, int index){
@@ -711,7 +712,7 @@ public final class BTreeNode extends CacheablePersistentBase{
 
         boolean isInner = ! _isLeaf;
         for (int i = 0; i < _count; i++) {
-            _keys[i] = keyHandler().readIndexEntry(reader);
+            _keys[i] = keyHandler().readIndexEntry(trans.context(), reader);
             if(isInner){
                 _children[i] = new Integer(reader.readInt());
             }
@@ -847,11 +848,11 @@ public final class BTreeNode extends CacheablePersistentBase{
         commitOrRollback(trans, false);
     }
     
-    private Searcher search(PreparedComparison preparedComparison, ByteArrayBuffer reader){
-        return search(preparedComparison, reader, SearchTarget.ANY);
+    private Searcher search(Transaction trans, PreparedComparison preparedComparison, ByteArrayBuffer reader){
+        return search(trans, preparedComparison, reader, SearchTarget.ANY);
     }
     
-    private Searcher search(PreparedComparison preparedComparison, ByteArrayBuffer reader, SearchTarget target){
+    private Searcher search(Transaction trans, PreparedComparison preparedComparison, ByteArrayBuffer reader, SearchTarget target){
         Searcher s = new Searcher(target, _count);
         if(canWrite()){
             while(s.incomplete()){
@@ -859,7 +860,7 @@ public final class BTreeNode extends CacheablePersistentBase{
             }
         }else{
             while(s.incomplete()){
-            	s.resultIs( compareInReadMode(preparedComparison, reader, s.cursor()));
+            	s.resultIs( compareInReadMode(trans, preparedComparison, reader, s.cursor()));
             }
         }
         return s;
@@ -1066,6 +1067,7 @@ public final class BTreeNode extends CacheablePersistentBase{
         int count = 0;
         int startOffset = a_writer._offset;
         
+        final Context context = trans.context();
         a_writer.incrementOffset(COUNT_LEAF_AND_3_LINK_LENGTH);
 
         if(_isLeaf){
@@ -1073,7 +1075,7 @@ public final class BTreeNode extends CacheablePersistentBase{
                 Object obj = internalKey(trans, i);
                 if(obj != No4.INSTANCE){
                     count ++;
-                    keyHandler().writeIndexEntry(a_writer, obj);
+					keyHandler().writeIndexEntry(context, a_writer, obj);
                 }
             }
         }else{
@@ -1083,12 +1085,12 @@ public final class BTreeNode extends CacheablePersistentBase{
                     Object childKey = child.firstKey(trans);
                     if(childKey != No4.INSTANCE){
                         count ++;
-                        keyHandler().writeIndexEntry(a_writer, childKey);
+                        keyHandler().writeIndexEntry(context, a_writer, childKey);
                         a_writer.writeIDOf(trans, child);
                     }
                 }else{
                     count ++;
-                    keyHandler().writeIndexEntry(a_writer, key(i));
+                    keyHandler().writeIndexEntry(context, a_writer, key(i));
                     a_writer.writeIDOf(trans, _children[i]);
                 }
             }

@@ -24,11 +24,11 @@ public class Null implements Indexable4, PreparedComparison{
         return 0;
     }
 
-    public Object readIndexEntry(ByteArrayBuffer a_reader) {
+    public Object readIndexEntry(Context context, ByteArrayBuffer a_reader) {
         return null;
     }
 
-    public void writeIndexEntry(ByteArrayBuffer a_writer, Object a_object) {
+    public void writeIndexEntry(Context context, ByteArrayBuffer a_writer, Object a_object) {
         // do nothing
     }
 

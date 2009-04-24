@@ -28,20 +28,20 @@ public class MappedIDPairHandler implements Indexable4 {
 		return _origHandler.linkLength()+_mappedHandler.linkLength();
 	}
 
-	public Object readIndexEntry(ByteArrayBuffer reader) {
-		int origID=readID(reader);
-		int mappedID=readID(reader);
+	public Object readIndexEntry(Context context, ByteArrayBuffer reader) {
+		int origID=readID(context, reader);
+		int mappedID=readID(context, reader);
         return new MappedIDPair(origID,mappedID);
 	}
 
-	public void writeIndexEntry(ByteArrayBuffer reader, Object obj) {
+	public void writeIndexEntry(Context context, ByteArrayBuffer reader, Object obj) {
 		MappedIDPair mappedIDs=(MappedIDPair)obj;
-		_origHandler.writeIndexEntry(reader, new Integer(mappedIDs.orig()));
-		_mappedHandler.writeIndexEntry(reader, new Integer(mappedIDs.mapped()));
+		_origHandler.writeIndexEntry(context, reader, new Integer(mappedIDs.orig()));
+		_mappedHandler.writeIndexEntry(context, reader, new Integer(mappedIDs.mapped()));
 	}
 
-	private int readID(ByteArrayBuffer a_reader) {
-		return ((Integer)_origHandler.readIndexEntry(a_reader)).intValue();
+	private int readID(Context context, ByteArrayBuffer a_reader) {
+		return ((Integer)_origHandler.readIndexEntry(context, a_reader)).intValue();
 	}
 
 	public PreparedComparison prepareComparison(Context context, Object source) {
