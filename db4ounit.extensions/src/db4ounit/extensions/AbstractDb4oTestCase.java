@@ -8,6 +8,7 @@ import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -368,5 +369,9 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 
 	protected EventRegistry serverEventRegistry() {
 		return eventRegistryFor(fileSession());
+	}
+
+	protected Context context() {
+		return trans().context();
 	}
 }

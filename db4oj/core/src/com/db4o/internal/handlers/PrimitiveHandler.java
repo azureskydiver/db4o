@@ -83,7 +83,7 @@ public abstract class PrimitiveHandler implements ValueTypeHandler, IndexableTyp
 
     abstract Object read1(ByteArrayBuffer reader) throws CorruptionException;
 
-    public Object readIndexEntry(ByteArrayBuffer buffer) {
+    public Object readIndexEntry(Context context, ByteArrayBuffer buffer) {
         try {
             return read1(buffer);
         } catch (CorruptionException e) {
@@ -91,8 +91,8 @@ public abstract class PrimitiveHandler implements ValueTypeHandler, IndexableTyp
         return null;
     }
     
-    public final Object readIndexEntryFromObjectSlot(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
-        return read(mf, a_writer, true);
+    public final Object readIndexEntryFromObjectSlot(MarshallerFamily mf, StatefulBuffer statefulBuffer) throws CorruptionException{
+        return read(mf, statefulBuffer, true);
     }
     
     public Object readIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException{
@@ -117,7 +117,7 @@ public abstract class PrimitiveHandler implements ValueTypeHandler, IndexableTyp
 
     public abstract void write(Object a_object, ByteArrayBuffer a_bytes);
     
-    public void writeIndexEntry(ByteArrayBuffer a_writer, Object a_object) {
+    public void writeIndexEntry(Context context, ByteArrayBuffer a_writer, Object a_object) {
         if (a_object == null) {
             a_object = primitiveNull();
         }

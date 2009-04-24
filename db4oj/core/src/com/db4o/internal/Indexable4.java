@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import com.db4o.marshall.*;
+
 /**
  * @exclude
  */
@@ -9,9 +11,9 @@ public interface Indexable4 extends Comparable4{
     
     int linkLength();
     
-    Object readIndexEntry(ByteArrayBuffer reader);
+    Object readIndexEntry(Context context, ByteArrayBuffer reader);
     
-    void writeIndexEntry(ByteArrayBuffer writer, Object obj);
+    void writeIndexEntry(Context context, ByteArrayBuffer writer, Object obj);
     
 	void defragIndexEntry(DefragmentContextImpl context);
 	

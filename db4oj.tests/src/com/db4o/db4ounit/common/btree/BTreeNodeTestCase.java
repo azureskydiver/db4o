@@ -2,11 +2,9 @@
 
 package com.db4o.db4ounit.common.btree;
 
-import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
-import com.db4o.marshall.*;
 
 import db4ounit.*;
 
@@ -90,18 +88,6 @@ public class BTreeNodeTestCase extends BTreeTestCaseBase {
 
 	private PreparedComparison prepareComparison(Object key) {
 		return _btree.keyHandler().prepareComparison(context(), key);
-	}
-
-	private Context context() {
-		return new Context() {
-			public Transaction transaction() {
-				return trans();
-			}
-		
-			public ObjectContainer objectContainer() {
-				return db();
-			}
-		};
 	}
 	
 

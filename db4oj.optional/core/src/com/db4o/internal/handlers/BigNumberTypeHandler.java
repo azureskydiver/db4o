@@ -69,7 +69,7 @@ public abstract class BigNumberTypeHandler<TBigNumber> implements ValueTypeHandl
         return Const4.INDIRECTION_LENGTH;
     }
 
-	public Object readIndexEntry(ByteArrayBuffer reader) {
+	public Object readIndexEntry(Context context, ByteArrayBuffer reader) {
     	Slot s = new Slot(reader.readInt(), reader.readInt());
     	if (isInvalidSlot(s)){
     		return null;
@@ -77,7 +77,7 @@ public abstract class BigNumberTypeHandler<TBigNumber> implements ValueTypeHandl
     	return s; 
 	}
 
-	public void writeIndexEntry(ByteArrayBuffer writer, Object entry) {
+	public void writeIndexEntry(Context context, ByteArrayBuffer writer, Object entry) {
         if(entry == null){
             writer.writeInt(0);
             writer.writeInt(0);

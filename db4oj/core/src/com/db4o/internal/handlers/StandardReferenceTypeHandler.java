@@ -514,12 +514,12 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
 		context.copyID();
 	}	
 
-    public final Object readIndexEntry(ByteArrayBuffer a_reader) {
+    public final Object readIndexEntry(Context context, ByteArrayBuffer a_reader) {
         return new Integer(a_reader.readInt());
     }
     
-    public final Object readIndexEntryFromObjectSlot(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
-        return readIndexEntry(a_writer);
+    public final Object readIndexEntryFromObjectSlot(MarshallerFamily mf, StatefulBuffer statefulBuffer) throws CorruptionException{
+        return readIndexEntry(statefulBuffer.transaction().context(), statefulBuffer);
     }
     
     public Object readIndexEntry(ObjectIdContext context) throws CorruptionException, Db4oIOException{
@@ -530,7 +530,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
     	return Const4.ID_LENGTH;
     }
 
-    public void writeIndexEntry(ByteArrayBuffer a_writer, Object a_object) {
+    public void writeIndexEntry(Context context, ByteArrayBuffer a_writer, Object a_object) {
         
         if(a_object == null){
             a_writer.writeInt(0);

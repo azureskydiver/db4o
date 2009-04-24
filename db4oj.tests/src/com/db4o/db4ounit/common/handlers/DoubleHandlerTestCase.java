@@ -27,10 +27,10 @@ public class DoubleHandlerTestCase extends TypeHandlerTestCaseBase {
 		final Double expected = new Double(1.1);
 		
 		ByteArrayBuffer buffer = new ByteArrayBuffer(_handler.linkLength());		
-		_handler.writeIndexEntry(buffer, expected);
+		_handler.writeIndexEntry(context(), buffer, expected);
 		
 		buffer.seek(0);
-		final Object actual = _handler.readIndexEntry(buffer);
+		final Object actual = _handler.readIndexEntry(context(), buffer);
 		Assert.areEqual(expected, actual);
 	}
 
