@@ -4,8 +4,10 @@ Before diving straight into the first source code samples ._
 let's get you familiar with some basics.
 
 .1 The db4o engine ..
-The db4o object database engine consists of one single DLL. ._
-This is all that you need to program against. The versions ._
+The db4o object database engine consists of one single core DLL. ._
+This is all that you need to program against. ._
+In addition you may want to use client/server library or optional components. ._
+The versions ._
 supplied with the distribution can be found in /db4o- .p version .. /bin/.
 
 db4o is available in multiple distributions for Microsoft .NET. ._
