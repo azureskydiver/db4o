@@ -4,10 +4,9 @@ Before diving straight into the first source code samples ._
 let's get you familiar with some basics.
 
 .1 The db4o engine ..
-The db4o object database engine consists of one single jar file. ._
-This is all that you need to program against. The versions ._
-supplied with the distribution can be found in /db4o- .p version .. /lib/. You ._
-will only need one of the following libraries, not all of them.
+The db4o object database engine consists of one single core jar file. ._
+In addition you may want to use client/server library or optional components. ._
+You may also get it all in a single jar "db4o-all": 
 
 .b db4o- .p version .. -core-java1.1.jar ..
 will run with most Java JDKs that supply JDK 1.1.x functionality ._
