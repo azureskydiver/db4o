@@ -36,13 +36,14 @@ statistic tools etc can be added by including db4o optional library:
 
 You can also get all of the above in a single jar:
 
-.b db4o- .p version .. -full-java1.1.jar ..
-.b db4o- .p version .. -full-java1.2.jar ..
-.b db4o- .p version .. -full-java5.jar ..
+.b db4o- .p version .. -all-java1.1.jar ..
+.b db4o- .p version .. -all-java1.2.jar ..
+.b db4o- .p version .. -all-java5.jar ..
    
 .1 Installation ..
 If you add one of the above db4o-*.jar files to your CLASSPATH ._
-db4o is installed. In case you work with an integrated development ._
+db4o is installed. For beginners it is recommended to use "db4o-all" library ._
+to avoid confusion with the location of certain classes. In case you work with an integrated development ._
 environment like  .l http://www.eclipse.org Eclipse ..  you would ._
 copy the db4o-*.jar to the /lib/ ._
 folder under your project and add db4o to your project as a library.
