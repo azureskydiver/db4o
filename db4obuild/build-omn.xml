@@ -7,6 +7,7 @@
 			name="devenv.executable.vs2008" 
 			location="${env.ProgramFiles}/Microsoft Visual Studio 9.0/Common7/IDE/devenv.exe" />
 	
+		<echo message="Going go build omn" />
 		<exec executable="${devenv.executable.vs2008}" resultproperty="omn-build-result">
 			<arg file ="${file.omn-solution}"/>
 			<arg value="/Rebuild" />
@@ -18,6 +19,7 @@
 		<if >
 			<not><equals arg1="${omn-build-result}" arg2="0"/></not>
 			<then>
+				<echo message="OMN Result: ${omn-build-result}" />
 				<loadfile property="omn-buil-log" srcfile="${file.omn-build-log}" />
 				<echo message="${omn-buil-log}" />
 				<fail message="OMN build failed. Check this log to find out the reason." />
@@ -36,6 +38,7 @@
 		<reset-dir dir="${dir.dist.net.build}/omn2005" />
 		<reset-dir dir="${dir.dist.net.build}/omn2008" />
 		<reset-dir dir="${dir.omn.dist.src}" />
+		<reset-dir dir="${dir.omn.dist}" />
 		
 		<copy todir="${dir.omn.dist.src}" description="copy omn sources to build...">
             <fileset dir="${dir.omn.src}">
