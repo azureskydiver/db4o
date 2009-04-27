@@ -3,7 +3,7 @@ package com.db4odoc.f1.chapter6;
 /**
  * Configuration used for {@link StartServer} and {@link StopServer}.
  */
-public interface ServerConfiguration {
+public interface ServerInfo {
   
   /**
    * the host to be used.

@@ -9,15 +9,18 @@ import com.db4odoc.f1.*;
 
 public class TransparentActivationExample extends Util {
 
-	final static String DB4OFILENAME = System.getProperty("user.home") + "/formula1.db4o";
+	final static String DB4OFILENAME = System.getProperty("user.home")
+			+ "/formula1.db4o";
 
 	public static void main(String[] args) throws Exception {
 		new File(DB4OFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(DB4OFILENAME);
+		ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded
+				.newConfiguration(), DB4OFILENAME);
 		try {
 			storeCarAndSnapshots(db);
 			db.close();
-			db = Db4o.openFile(DB4OFILENAME);
+			db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(),
+					DB4OFILENAME);
 			retrieveSnapshotsSequentially(db);
 			db.close();
 			retrieveSnapshotsSequentiallyTA();
@@ -49,9 +52,9 @@ public class TransparentActivationExample extends Util {
 	}
 
 	public static void retrieveSnapshotsSequentiallyTA() {
-		Configuration config = Db4o.newConfiguration();
-		config.add(new TransparentActivationSupport());
-		ObjectContainer db = Db4o.openFile(config, DB4OFILENAME);
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.common().add(new TransparentActivationSupport());
+		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
 		ObjectSet result = db.queryByExample(Car.class);
 		if (result.hasNext()) {
 			Car car = (Car) result.next();
@@ -65,9 +68,9 @@ public class TransparentActivationExample extends Util {
 	}
 
 	public static void demonstrateTransparentActivation() {
-		Configuration config = Db4o.newConfiguration();
-		config.add(new TransparentActivationSupport());
-		ObjectContainer db = Db4o.openFile(config, DB4OFILENAME);
+		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+		config.common().add(new TransparentActivationSupport());
+		ObjectContainer db = Db4oEmbedded.openFile(config, DB4OFILENAME);
 
 		ObjectSet result = db.queryByExample(Car.class);
 		if (result.hasNext()) {

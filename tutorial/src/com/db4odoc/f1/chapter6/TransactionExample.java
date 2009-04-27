@@ -11,15 +11,15 @@ public class TransactionExample extends Util {
 	
     public static void main(String[] args) {
         new File(DB4OFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(DB4OFILENAME);
+        ObjectContainer db=Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), DB4OFILENAME);
         try {
             storeCarCommit(db);
             db.close();
-            db=Db4o.openFile(DB4OFILENAME);
+            db=Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), DB4OFILENAME);
             listAllCars(db);
             storeCarRollback(db);
             db.close();
-            db=Db4o.openFile(DB4OFILENAME);
+            db=Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), DB4OFILENAME);
             listAllCars(db);
             carSnapshotRollback(db);
             carSnapshotRollbackRefresh(db);

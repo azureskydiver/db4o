@@ -48,18 +48,18 @@ Although we wont get any surprises with null objects when we work in this mode, 
 access to the root of a deep graph may load the entire graph into memory and that ._
 can take a long time and use a lot of memory.
 
-To prevent immediate activation of a class you can implement the 'Activatable' ._
+To prevent immediate activation of a class you can implement the .x Activatable ..  ._
 interface. Whenever db4o comes across ._
-an 'Activatable' object while activating a graph of objects it will stop ._
+an Activatable object while activating a graph of objects it will stop ._
 traversing the graph any deeper. db4o will "know" that it can activate ._
-'Activatable objects on demand, so there is no reason to continue activation ._
+Activatable objects on demand, so there is no reason to continue activation ._
 until these objects are really needed. 
 
 For demonstration purposes we have made all classes used in this example ._
-'Activatable' and we have also added all the code required to activate ._
+Activatable and we have also added all the code required to activate ._
 by hand.
 
-Let's take a look at the 'Activatable' version of our Car class:
+Let's take a look at the Activatable version of our Car class:
 
 .s com.db4odoc.f1.chapter8.Car ..
 
@@ -80,7 +80,7 @@ to be able to demonstrate.
 
 .1 Where Enhancement can help ..
 
-If all this 'Activatable' code in a persistent class looked like a lot of ._
+If all this Activatable code in a persistent class looked like a lot of ._
 typing work, do not worry: db4o comes with a tool to add this code ._
 automatically to all of your persistent classes. Read more about it in the ._
 chapter on  .l Enhancement ..  .  

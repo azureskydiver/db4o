@@ -19,17 +19,17 @@ version 7.1 and was named Transparent Persistence. So how does it work?
 
 1. Database should be configured to use TransparentPersistenceSupport.
 2. Persistent classes available for Transparent Persistence must implement ._
- .? java .i Activatable ..i ..? .? .i netIActivatable ..i ..?  interface. This interface provides a bind  ._
+ .x Activatable .. interface. This interface provides a .x #bind() ..  ._
 method to bind an object to the object container's activator.
-3. The object is bound to the object container when it is first stored or ._
+3. The object is bound to the .x ObjectContainer ..  when it is first stored or ._
 instantiated from the database.
 4. When an object field is modified in the ._
-runtime,  .? java .i activate() ..i ..? .? net .i Activate() ..i ..?  method is ._
+runtime,  .x #activate() ..  method is ._
 called to register the object to be stored with the next commit. The difference ._
 from  .l TransparentActivation Transparent Activation ..  is in the activation purpose: ._
  .? java .i ActivationPurpose.WRITE ..i ..? .? net .i ActivationPurpose.Write ..i ..? is used for TP.
 5. When the transaction is committed or the database is closed, db4o traverses ._
-the list of modified 'Activatable' objects and persists them.
+the list of modified Activatable objects and persists them.
 Well, that's enough of theory, let's look at an example.
 
 .1 Transparent Persistence Example ..
@@ -59,7 +59,7 @@ stored when  .i #commit ..  is called.
 Let's test that the modifications actually reached the database:
 .s com.db4odoc.f1.chapter9.TransparentPersistenceExample#readSnapshotHistory -out ..
 Yes, it is all as it should be. If you want to see the difference without Transparent ._
-Persistence, run the same examples without calling  .i configureTransparentPersistence ..  .
+Persistence, run the same examples without .i TransparentPersistenceSupport ..  .
 
 .1 Transparent Persistence Enhancement ..
 As we saw  .l TransparentActivation before ..  enhancement tools can simplify the ._

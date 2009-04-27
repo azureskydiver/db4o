@@ -11,7 +11,8 @@ public class NQExample extends Util {
 	final static String DB4OFILENAME = System.getProperty("user.home") + "/formula1.db4o";
 	
     public static void main(String[] args) {
-        ObjectContainer db=Db4o.openFile(DB4OFILENAME);
+        ObjectContainer db=Db4oEmbedded.openFile(Db4oEmbedded
+				.newConfiguration(), DB4OFILENAME);
         try {
             storePilots(db);
             retrieveComplexSODA(db);

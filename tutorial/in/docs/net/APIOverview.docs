@@ -12,13 +12,15 @@ are all that you need to worry about.
 
 The Db4objects.Db4o namespace ._
 contains most of the functionality you will commonly ._
-need when you work with db4o. Two classes of special interest are ._
-Db4objects.Db4o.Db4oFactory and Db4objects.Db4o.IObjectContainer.
+need when you work with db4o. Two objects of note are ._
+Db4objects.Db4o.Db4oEmbedded and Db4objects.Db4o.IObjectContainer.
 
-The Db4oFactory is your starting point. Static methods in ._
+The Db4oEmbedded is your starting point. Static methods in ._
 this class ._
-allow you to open a database file, start a server, or connect to an existing server. ._
-It also lets you configure the db4o environment before opening a database.
+allow you to open a database file. For client/server environment you will need ._
+to use Db4objects.Db4o.CS.dll and Db4oClientServer factory class to ._
+start a server, or connect to an existing server, but this will be discussed  .l ClientServer later ..l. ._
+Factory classes also let you configure the db4o environment before opening a database.
 
 The most important interface, and the one that you will be using 99% of the time is 
 IObjectContainer: This is your db4o database.
@@ -39,7 +41,7 @@ to objects in RAM will be discarded.
 In case you wonder why you only see very few methods in an IObjectContainer, ._
 here is why: The db4o interface is supplied in two steps in two namespaces, ._
 Db4objects.Db4o and Db4objects.Db4o.Ext for the following reasons:
-- It's easier to get started, because the important methods are emphasized.
+- It's easier to get started, because the important methods are emphasised.
 - It will be easier for other products to copy the basic db4o interface.
 - It is an example of how a lightweight version of db4o could look.
 
@@ -58,4 +60,8 @@ within are discussed in the  .l Configuration Configuration ..  section.
 The Db4objects.Db4o.Query namespace contains ._
 the Predicate class to construct  .l Query Native Queries .. . The Native Query ._
 interface is the primary db4o querying interface and should be preferred over ._
-the Soda Query API . 
+the Soda Query API. 
+
+.b Db4objects.Db4o.Linq ..
+Another query alternative interface. Combines the benefits of the db4o Native Queries ._
+and wide database support.   

@@ -16,7 +16,8 @@ public class OMEExample extends Util {
     }
     
     public static void storePilots() {
-    	ObjectContainer db=Db4o.openFile(DB4OFILENAME);
+    	ObjectContainer db=Db4oEmbedded.openFile(Db4oEmbedded
+				.newConfiguration(), DB4OFILENAME);
         try {
         	Pilot pilot1=new Pilot("Michael Schumacher",100);
             db.store(pilot1);

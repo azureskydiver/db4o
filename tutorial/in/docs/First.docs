@@ -16,8 +16,9 @@ Notice that this class does not contain any db4o-related code.
 
 .1 Opening the database ..
 
-To access a db4o database file or create a new one, call .x Db4o.openFile() .. and ._
-provide the path to your database file as the parameter, to obtain ._
+To access a db4o database file or create a new one, call .x Db4oEmbedded.openFile() .. and ._
+provide Db4oEmbedded.newConfiguration() as a configuration template and ._
+the path to your database file as the second parameter, to obtain ._
 an .x ObjectContainer .. instance. .x ObjectContainer .. represents "The Database", ._
 and will be your primary ._
 interface to db4o. Closing the .x ObjectContainer .. with the .x #close() .. method will close the ._
@@ -34,7 +35,7 @@ reference in a variable named 'db'.
 
 .1 Storing objects ..
 
-To store an object, we simply call .x store() .. on our database, passing ._
+To store an object, we simply call .x #store() .. on our database, passing ._
 any object as a parameter.
 
 .s com.db4odoc.f1.chapter1.FirstStepsExample#storeFirstPilot ..
@@ -49,11 +50,10 @@ The easiest way to see the content of our database is to use Object Manager ._
 Enterprise, which will be introduced ._
 in the  .l ObjectManagerOverview next chapter ..l . ._
 For now let's continue with the API overview and learn how to build db4o queries.
-db4o supplies three different querying systems,  .i Query by Example ..  (QBE), ._
-.i Native Queries ..  (NQ) and the  .i SODA Query API ..  (SODA). In this ._
+db4o supplies several different querying systems,  .i Query by Example ..  (QBE), ._
+.? net  .i LINQ ..  ..?,  .i Native Queries ..  (NQ) and the  .i SODA Query API ..  (SODA). In this ._
 first example we will introduce QBE. Once you are familiar with storing ._
-objects, we encourage you to use  .l NativeQueries Native Queries .. , the main ._
-db4o querying interface.
+objects, we encourage you to use  .? Java .l NativeQueries Native Queries .. ..?  .? net .l LINQ LINQ ..  ..? .
 
 When using Query-By-Example, you create a prototypical object for db4o to use as an example of what ._
 you wish to retrieve. db4o will retrieve all objects of the given type that contain the ._
@@ -74,7 +74,7 @@ db4o also supplies a shortcut to retrieve all instances of a class:
 
 .s com.db4odoc.f1.chapter1.FirstStepsExample#retrieveAllPilots ..
 
-For  .? java JDK 5 ..? .? net .NET 2.0 ..?  there also is a generics shortcut, using the ._
+For  .? java JDK 5 ..? .? net .NET ..?  there also is a generics shortcut, using the ._
 query method:
 
 .? java .c List <Pilot> pilots = db.query(Pilot.class); ..c ..?
@@ -93,12 +93,12 @@ Of course there's much more to db4o queries. They will be covered in more depth 
 
 .1 Updating objects ..
 
-Updating objects is just as easy as storing them. In fact, you use the same .x store() .. method to update ._
-your objects: just call .x store() .. again after modifying any object.
+Updating objects is just as easy as storing them. In fact, you use the same .x #store() .. method to update ._
+your objects: just call .x #store() .. again after modifying any object.
 
 .s com.db4odoc.f1.chapter1.FirstStepsExample#updatePilot ..
 
-Notice that we query for the object first. This is an importaint point. When you call .x store() .. to modify a ._
+Notice that we query for the object first. This is an importaint point. When you call .x #store() .. to modify a ._
 stored object, if the object is not 'known' (having been previously stored or retrieved during the current session), ._
 db4o will insert a new object. db4o does this because it does not automatically match up objects to be ._
 stored, with objects previously stored. It assumes you are inserting a second object which happens to have ._
@@ -109,7 +109,7 @@ examples above and run them again.
 
 .1 Deleting objects ..
 
-Objects are removed from the database using the .x delete() .. method.
+Objects are removed from the database using the .x #delete() .. method.
 
 .s com.db4odoc.f1.chapter1.FirstStepsExample#deleteFirstPilotByName ..
 

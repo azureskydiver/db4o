@@ -9,12 +9,13 @@ you were briefly introduced to  .i Query By Example .. (QBE).
 Query-By-Example (QBE) is appropriate as a quick start for users ._
 who are still acclimating to storing and retrieving objects with db4o.
 
-Native Queries (NQ) are the main db4o query interface, recommended ._
-for general use.
+.? java Native Queries (NQ) are the main db4o query interface, recommended ._
+for general use. ..? 
+.? net LINQ is the recommended db4o querying interface for .NET platforms. ..? 
 
 SODA is the underlying internal API. It is provided for backward ._
 compatibility and it can be useful for dynamic generation ._
-of queries, where NQ are too strongly typed.
+of queries, where  .? net LINQ and ..?  NQ are too strongly typed.
 
 .< QBE ..
 
@@ -53,7 +54,7 @@ Let's look at how a simple native query ._
 will look like in some of the programming languages and dialects that db4o ._
 supports:
 
-.b C# .NET 2.0 ..
+.b C# .NET (using generics) ..
 .c IList <Pilot> pilots = db.Query <Pilot> (delegate(Pilot pilot) {
     return pilot.Points == 100;
 }); ..c 
@@ -81,7 +82,7 @@ public static class PilotHundredPoints extends Predicate {
     }
 } ..c
 
-.b C# .NET 1.1 ..
+.b C# .NET (not using generics) ..
 .c IList pilots = db.Query(new PilotHundredPoints());
 
 public class PilotHundredPoints : Predicate {
@@ -90,7 +91,7 @@ public class PilotHundredPoints : Predicate {
     }
 } ..c
 
-.b VB .NET 1.1 ..
+.b VB .NET (not using generics) ..
 .c Dim pilots As IList = db.Query(new PilotHundredPoints())
 
 Public Class PilotHundredPoints 
@@ -116,7 +117,7 @@ class extent:
 When using native queries, don't forget that modern integrated ._
 development environments (IDEs) can do all the typing ._
 work around the native query expression for you, if you use ._
-templates and autocompletion.
+templates and auto-completion.
 
 .< Snippet ..
 
@@ -204,7 +205,7 @@ to nodes of query graphs. Since SODA uses strings to identify fields, it is ._
 neither perfectly typesafe nor compile-time checked and it also is quite ._
 verbose to write.
 
-For most applications  .l NativeQueries Native Queries ..  will be the better ._
+For most applications  .? net  .l LINQ LINQ  ..  and ..?  .l NativeQueries Native Queries ..  will be the better ._
 querying interface.
 
 However there can be applications where dynamic generation of queries ._
@@ -237,16 +238,17 @@ respective candidate String.
 
 .s com.db4odoc.f1.chapter1.QueryExample#retrievePilotByName ..
 
-What does 'descend' mean here? Well, just as we did in our 'real' prototypes, ._
+What does  .x #descend ..  mean here? Well, just as we did in our 'real' prototypes, ._
 we can attach constraints to child members of our candidates.
 
-.g querygraph/2.gif ..
+.? java  .g querygraph/2.gif ..  ..?
+.? net  .g querygraph/2net.gif ..  ..?
 
-So a candidate needs to be of type Pilot and have a member named 'name' ._
+So a candidate needs to be of type Pilot and have a member named .? java  'name' ..?  .? net '_name' ..? ._
 that is equal to the given String to be accepted for the result.
 
 Note that the class constraint is not required: If we left it out, we would ._
-query for all objects that contain a 'name' member with the given value. In ._
+query for all objects that contain a .? java  'name' ..?  .? net '_name' ..?  member with the given value. In ._
 most cases this will not be the desired behavior, though.
 
 Finding a pilot by exact points is analogous. .? java We just have to cross ._
@@ -294,13 +296,15 @@ To prepare for the next chapter, let's clear the database.
 .s com.db4odoc.f1.chapter1.QueryExample#clearDatabase ..
 
 .2 Conclusion ..
-Now you have been provided with three alternative approaches to query ._
-db4o databases: Query-By-Example, Native Queries, SODA.
+Now you have been provided with the following alternative approaches to query ._
+db4o databases: Query-By-Example,.? net  LINQ, ..?  Native Queries, SODA.
 
 Which one is the best to use? Some hints:
-- Native queries are targetted to be the primary interface for db4o, so they ._
+.? net - LINQ is a standard typesafe queries for .NET languages and ._
+is recommended for use with .NET version of db4o. ..?
+- Native queries are targeted to be the primary interface for db4o, so they ._
 should be preferred.
-- With the current state of the native query optimizer there may be queries ._
+- With the current state of the db4o query optimizer there may be queries ._
 that will execute faster in SODA style, so it can be used to tune applications. ._
 SODA can also be more convenient for constructing dynamic queries at runtime.
 - Query-By-Example is nice for simple one-liners, but restricted in ._

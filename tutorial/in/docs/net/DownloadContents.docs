@@ -21,9 +21,7 @@ experienced db4o users. It is maintained ._
 
 .b db4o- .p version .. /doc/tutorial/Db4objects.Db4o.Tutorial.exe .. 
 This is the interactive tutorial application for .NET. Examples can ._
-be run "live" against a db4o database from within the application. If you experience ._
-problems using the interactive functionality, please ._
-refer to  .l Troubleshooting Tutorial Troubleshooting .. .
+be run "live" against a db4o database from within the application. 
 
 .b db4o- .p version .. /doc/tutorial/db4o- .p version .. -tutorial.pdf .. 
 The PDF version of the tutorial allows best fulltext ._
