@@ -38,7 +38,6 @@
 		<reset-dir dir="${dir.dist.net.build}/omn2005" />
 		<reset-dir dir="${dir.dist.net.build}/omn2008" />
 		<reset-dir dir="${dir.omn.dist.src}" />
-		<reset-dir dir="${dir.omn.dist}" />
 		
 		<copy todir="${dir.omn.dist.src}" description="copy omn sources to build...">
             <fileset dir="${dir.omn.src}">
