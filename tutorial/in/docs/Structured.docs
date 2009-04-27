@@ -10,7 +10,7 @@ a vehicle.
 
 .1 Storing structured objects ..
 
-To store a car with its pilot, we just call .x store() .. on our top level object, ._
+To store a car with its pilot, we just call .x #store() .. on our top level object, ._
 the car. The pilot will be stored implicitly.
 
 .s com.db4odoc.f1.chapter2.StructuredExample#storeFirstCar -out ..
@@ -53,9 +53,9 @@ with a specific name:
 .? net  .s com.db4odoc.f1.chapter2.StructuredExample#retrieveCarsByPilotNamePredicate +{} -run ..s  ..?
 .s com.db4odoc.f1.chapter2.StructuredExample#retrieveCarsByPilotNameNative ..
 
-.? net Using .NET 2.0 syntax this is a lot simpler:
+.? net Using generics syntax this is a lot simpler:
 
-.b C# .NET 2.0 ..
+.b C# Generics ..
 .c // retrieveCarsByPilotNameNative
 string pilotName = "Rubens Barrichello";
 List<Car> results = db.Query<Car>(delegate(Car car) {
@@ -85,11 +85,12 @@ by a Car, where the Car model is 'Ferrari'":
 
 .s com.db4odoc.f1.chapter2.StructuredExample#retrievePilotByCarModelQuery ..
 
-.g querygraph/3.gif ..
+.? net .g querygraph/3net.gif .. ..?
+.? java .g querygraph/3.gif .. ..?
 
 .1 Updating structured objects ..
 
-To update structured objects in db4o, we simply call .x store() .. on them again.
+To update structured objects in db4o, we simply call .x #store() .. on them again.
 
 .s com.db4odoc.f1.chapter2.StructuredExample#updateCar ..
 
@@ -122,7 +123,7 @@ So, in our previous update example, we were modifying the Pilot child of a Car .
 object. When we saved the change, we told db4o to save our Car object and assumed ._
 that the modified Pilot would be updated. But we were modifying and saving in the ._
 same manner as we were in the first update sample, so why did it work before? The ._
-first time we made the modification, db4o never actually had to retreive the modified ._
+first time we made the modification, db4o never actually had to retrieve the modified ._
 Pilot ... it returned the same one that was still in memory that we modified, but ._
 it never actually updated the database. The fact that we saw the modified value was, ._
 in fact, a bug. Restarting the application would show that the value was unchanged.
@@ -135,7 +136,7 @@ members will not be reflected.
 
 db4o provides means to control update depth with very fine granularity. ._
 For our current problem we'll advise db4o to update the full graph for ._
-Car objects by setting cascadeOnUpdate() for this class accordingly.
+Car objects by setting  .x #cascadeOnUpdate() ..  for this class accordingly.
 
 .s com.db4odoc.f1.chapter2.StructuredExample#updatePilotSeparateSessionsImprovedPart1 -out ..
 
@@ -151,7 +152,7 @@ chapter.
 
 .1 Deleting structured objects ..
 
-As we have already seen, we call .x delete() .. on objects to get rid of them.
+As we have already seen, we call .x #delete() .. on objects to get rid of them.
 
 .s com.db4odoc.f1.chapter2.StructuredExample#deleteFlat ..
 

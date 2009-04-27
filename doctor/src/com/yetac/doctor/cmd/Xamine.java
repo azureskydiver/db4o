@@ -52,6 +52,9 @@ public class Xamine extends Command {
 		"ObjectClass",
 		"ObjectField",
 		"ExtObjectContainer",
+		"Activatable",
+		"Evaluation",
+		"Candidate",
 		
 	};
 	
@@ -63,6 +66,9 @@ public class Xamine extends Command {
 		"IObjectClass",
 		"IObjectField",
 		"IExtObjectContainer",
+		"IActivatable",
+		"IEvaluation",
+		"ICandidate",
 	};
 
 }

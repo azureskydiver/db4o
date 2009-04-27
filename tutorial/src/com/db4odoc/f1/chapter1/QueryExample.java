@@ -1,8 +1,6 @@
 package com.db4odoc.f1.chapter1;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
+import com.db4o.*;
 import com.db4o.query.Constraint;
 import com.db4o.query.Query;
 import com.db4odoc.f1.*;
@@ -13,7 +11,8 @@ public class QueryExample extends Util {
 	final static String DB4OFILENAME = System.getProperty("user.home") + "/formula1.db4o";
 	
     public static void main(String[] args) {
-        ObjectContainer db=Db4o.openFile(DB4OFILENAME);
+        ObjectContainer db=Db4oEmbedded.openFile(Db4oEmbedded
+				.newConfiguration(), DB4OFILENAME);
         try {
             storeFirstPilot(db);
             storeSecondPilot(db);

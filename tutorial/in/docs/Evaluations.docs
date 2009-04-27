@@ -8,31 +8,37 @@ arbitrary code in a SODA query. Let's have a closer look.
 
 .1 Evaluation API ..
 
-The evaluation API consists of two interfaces,  .i Evaluation ..  and  .i Candidate ..  . ._
+The evaluation API consists of two interfaces,  .x Evaluation ..  and  .x Candidate ..  . ._
 Evaluation implementations are implemented by the user and injected into a query. ._
 During a query, they will be called from db4o with a candidate instance ._
 in order to decide whether to include it into the current (sub-)result.
 
 
-The Evaluation interface contains a single method only:
+The .x Evaluation ..  interface contains a single method only:
 
-.c public void evaluate(Candidate candidate); ..
+.? java .c public void evaluate(Candidate candidate); .. ..?
+.? net .c public void Evaluate(ICandidate candidate); .. ..?
 
 This will be called by db4o to check whether the object encapsulated by this ._
 candidate should be included into the current candidate set.
 
 
-The Candidate interface provides three methods:
+The .x Candidate ..  interface provides three methods:
 
-.c public Object getObject();
+.? java  .c public Object getObject();
 public void include(boolean flag);
 public ObjectContainer objectContainer();
-..
+..  ..?
 
-An Evaluation implementation may call getObject() to retrieve the actual object ._
-instance to be evaluated, it may call include() to instruct db4o whether or not ._
+.? net  .c public object GetObject();
+public void Include(bool flag);
+public IObjectContainer ObjectContainer();
+..  ..?
+
+An Evaluation implementation may call .x #getObject() ..  to retrieve the actual object ._
+instance to be evaluated, it may call .x #include() ..  to instruct db4o whether or not ._
 to include this object in the current candidate set, and finally it may access ._
-the current database directly by calling objectContainer().
+the current database directly by calling .x #objectContainer() .. .
 
 
 .1 Example ..

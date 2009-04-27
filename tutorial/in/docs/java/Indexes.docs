@@ -13,7 +13,7 @@ class Foo{
   String bar;
 }
 
-Db4o.configure().objectClass(Foo.class).objectField("bar").indexed(true); ..
+CommonConfiguration#objectClass(Foo.class).objectField("bar").indexed(true); ..
 
 If the configuration is set in this way, an index on the Foo#bar field ._
 will be created (if not present already) the next time you open an
@@ -26,13 +26,13 @@ call is not issued before opening an ObjectContainer/ObjectServer.
 
 To drop an index you would also issue a configuration call in your db4o ._
 configuration method:
-.c Db4o.configure().objectClass(Foo.class).objectField("bar").indexed(false); ..
+.c CommonConfiguration#objectClass(Foo.class).objectField("bar").indexed(false); ..
 Actually dropping the index will take place the next time the respective ._
 class is used.
 
 db4o will tell you when it creates and drops indexes, if you choose a ._
 message level of 1 or higher:
-.c Db4o.configure().messageLevel(1); ..
+.c CommonConfiguration#messageLevel(1); ..
 
 For creating and dropping indexes on large amounts of objects there are ._
 two possible strategies:

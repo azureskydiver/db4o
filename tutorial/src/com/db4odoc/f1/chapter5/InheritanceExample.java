@@ -13,7 +13,8 @@ public class InheritanceExample extends Util {
 	
     public static void main(String[] args) {
         new File(DB4OFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(DB4OFILENAME);
+        ObjectContainer db=Db4oEmbedded.openFile(Db4oEmbedded
+				.newConfiguration(), DB4OFILENAME);
         try {
             storeFirstCar(db);
             storeSecondCar(db);

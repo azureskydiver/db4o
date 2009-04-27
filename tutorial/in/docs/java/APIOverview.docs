@@ -12,12 +12,15 @@ that you need to worry about.
 
 The com.db4o java package contains almost all of the functionality ._
 you will commonly need when using db4o. Two objects of note are ._
-com.db4o.Db4o, and the com.db4o.ObjectContainer interface.
+com.db4o.Db4oEmbedded, and the com.db4o.ObjectContainer interface.
 
 The com.db4o.Db4o factory is your starting point. Static methods in ._
 this class ._
-allow you to open a database file, start a server, or connect to an existing server. ._
-It also lets you configure the db4o environment before opening a database.
+allow you to open a database file and create an initial configuration. ._
+For client/server environment you will need ._
+to use com.db4o.cs.Db4oClientServer factory class to ._
+start a server, or connect to an existing server, but this will be discussed  .l ClientServer later ..l. ._
+, start a server, or connect to an existing server. ._
 
 The most important interface, and the one that you will be using 99% of the time is 
 com.db4o.ObjectContainer: This is your db4o database.

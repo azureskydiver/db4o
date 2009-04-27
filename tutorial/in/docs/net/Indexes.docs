@@ -14,8 +14,8 @@ class Foo
   String bar;
 }
 
-Db4oFactory.Configure().ObjectClass(typeof(Foo)).ObjectField("bar").Indexed(true); ..
-
+ICommonConfiguration#ObjectClass(typeof(Foo)).ObjectField("bar").Indexed(true); ..
+ 
 If the configuration is set in this way, an index on the Foo#bar field ._
 will be created (if not present already) the next time you open an
 IObjectContainer/IObjectServer and you use the Foo class the first time
@@ -27,13 +27,13 @@ call is not issued before opening an IObjectContainer/IObjectServer.
 
 To drop an index you would also issue a configuration call in your db4o ._
 configuration method:
-.c Db4oFactory.Configure().ObjectClass(typeof(Foo)).ObjectField("bar").Indexed(false); ..
+.c ICommonConfiguration#ObjectClass(typeof(Foo)).ObjectField("bar").Indexed(false); ..
 Actually dropping the index will take place the next time the respective ._
 class is used.
 
 db4o will tell you when it creates and drops indexes, if you choose a ._
 message level of 1 or higher:
-.c Db4oFactory.Configure().MessageLevel(1); ..
+.c ICommonConfiguration#MessageLevel(1); ..
 
 For creating and dropping indexes on large amounts of objects there are ._
 two possible strategies:
