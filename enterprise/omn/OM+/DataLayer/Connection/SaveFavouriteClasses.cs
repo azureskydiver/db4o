@@ -25,13 +25,22 @@ namespace OManager.DataLayer.Connection
             get { return m_connParam; }
             set { m_connParam = value; }
         }
+        private long m_TimeOfCreation;
+        public long TimeOfCreation
+        {
+            get { return m_TimeOfCreation; }
+            set { m_TimeOfCreation = value; }
+        }
+
         [Transient]
         IObjectContainer container = null;
 
+       
         public FavouriteList(ConnParams connParam)
         {
             m_connParam = connParam;           
-            m_lstFavfolder = new List<FavouriteFolder>(); 
+            m_lstFavfolder = new List<FavouriteFolder>();
+            
         }
         internal void AddFolderToDatabase(FavouriteFolder favFolder)
         {
@@ -46,7 +55,7 @@ namespace OManager.DataLayer.Connection
                     {
                         favList = new FavouriteList(m_connParam);
                         List<FavouriteFolder> lstFavfolder = new List<FavouriteFolder>();
-
+                        favList.m_TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis();   
                         lstFavfolder.Add(favFolder);
                         container.Set(favList);
                         container.Commit();
@@ -246,6 +255,24 @@ namespace OManager.DataLayer.Connection
             return FavList;
         }
 
+        internal long ReturnTimeWhenFavouriteListCreated()
+        {
+            FavouriteList Fav = null;
+
+            try
+            {
+
+                Fav = FetchAllFavouritesForAConnection();
+                if (Fav != null)
+                    return Fav.TimeOfCreation > 0 ? Fav.TimeOfCreation : 0;
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.HandleException(oEx);
+            }
+
+            return 0;
+        }
         internal void RemoveFavouritFolderForAConnection()
         {
 
@@ -254,21 +281,18 @@ namespace OManager.DataLayer.Connection
                 FavouriteList Fav = FetchAllFavouritesForAConnection();
                 if (Fav != null)
                 {
-                    //foreach (FavouriteFolder favFolder in Fav.lstFavFolder)
-                    //{
-
-                    for (int i = 0; i < Fav.lstFavFolder.Count; i++)
+                   for (int i = 0; i < Fav.lstFavFolder.Count; i++)
                     {
                         FavouriteFolder favFolder = Fav.lstFavFolder[i];
                         if (favFolder != null)
-                        {
-                            //Fav.lstFavFolder.Remove(favFolder);
-                            //chkCount = Fav.lstFavFolder.Count;
+
                             container.Delete(favFolder);
-                        }
+
 
                     }
-                    Fav.lstFavFolder.Clear();                      
+                    Fav.lstFavFolder.Clear();
+                    Fav.m_TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis();
+                    container.Delete(Fav);
                     container.Ext().Set(Fav, 5);
                     container.Commit();
                 }

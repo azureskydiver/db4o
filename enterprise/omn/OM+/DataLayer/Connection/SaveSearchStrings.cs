@@ -30,6 +30,12 @@ namespace OManager.DataLayer.Connection
             get { return m_SearchStringList; }
             
         }
+        private long m_TimeOfCreation;
+        public long TimeOfCreation
+        {
+            get { return m_TimeOfCreation; }
+            set { m_TimeOfCreation = value; }
+        }
 
         public GroupofSearchStrings(ConnParams connParam)
         {           
@@ -52,6 +58,7 @@ namespace OManager.DataLayer.Connection
                         List<SeachString> l=new List<SeachString>();
                         l.Add(strToAdd);
                         groupSearchString.m_SearchStringList = l;
+                        groupSearchString.m_TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis(); 
                         container.Set(groupSearchString);
                         container.Commit();
                         return; 
@@ -166,6 +173,22 @@ namespace OManager.DataLayer.Connection
             return grpSearchStrings;
         }
 
+        public long ReturnTimeWhenSearchStringCreated()
+        {
+            try
+            {
+
+                GroupofSearchStrings grpSearchStrings = FetchAllSearchStringsForAConnection();
+                if (grpSearchStrings != null)
+                    return grpSearchStrings.TimeOfCreation > 0 ? grpSearchStrings.TimeOfCreation : 0;
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.HandleException(oEx);
+            }
+            return 0;
+            
+        }
         internal List<string> ReturnStringList()
         {
             List<string> stringList = null;
@@ -211,7 +234,8 @@ namespace OManager.DataLayer.Connection
                         }
 
                     }
-                    grpSearchString.m_SearchStringList.Clear(); 
+                    grpSearchString.m_SearchStringList.Clear();
+                    grpSearchString.m_TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis();
                     container.Ext().Set(grpSearchString, 5);  
                     container.Commit();
                 }
