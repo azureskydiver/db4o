@@ -71,6 +71,7 @@ namespace OManager.DataLayer.Modal
             try
             {
                 freeSizeOfDB = objectContainer.Ext().SystemInfo().FreespaceSize();
+               
             }
             catch (NotImplementedException)
             {
@@ -159,5 +160,12 @@ namespace OManager.DataLayer.Modal
 			}
 			return sortedHashtable;
 		}
+
+        public  long getDatabaseCreationTime()
+        {
+            IObjectContainer objectContainer = Db4oClient.Client;
+            Db4oDatabase db = objectContainer.Ext().Identity();
+            return  db.GetCreationTime();
+        }
 	}
 }
