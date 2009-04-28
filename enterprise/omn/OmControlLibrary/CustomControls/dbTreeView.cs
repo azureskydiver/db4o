@@ -471,45 +471,60 @@ namespace OMControlLibrary.Common
 
 		public void AddFavouritFolderFromDatabase()
 		{
-			try
-			{
-				List<FavouriteFolder> lstfavFolder = dbInteraction.GetFavourites(dbInteraction.GetCurrentRecentConnection().ConnParam);
+            try
+            {
+                long TimeforFavCreation =
+                    dbInteraction.GetTimeforFavCreation(dbInteraction.GetCurrentRecentConnection().ConnParam);
+                long TimeforDbCreation = Helper.DbInteraction.dbCreationTime();
+                if (TimeforFavCreation != 0)
+                {
+                if (TimeforFavCreation > TimeforDbCreation  )
+                {
+                    List<FavouriteFolder> lstfavFolder =
+                        dbInteraction.GetFavourites(dbInteraction.GetCurrentRecentConnection().ConnParam);
 
-				if (lstfavFolder != null)
-				{
-					foreach (FavouriteFolder fav in lstfavFolder)
-					{
-						if (fav != null)
-						{
-							TreeNode ParentFolder = new TreeNode(fav.FolderName);
-							ParentFolder.Name = fav.FolderName;
-							ParentFolder.Tag = "Fav Folder";
-							if (fav.ListClass != null)
-							{
-								foreach (string str in fav.ListClass)
-								{
-									TreeNode child = new TreeNode(str);
-									string strValue;
-									int index = str.LastIndexOf(',');
-									strValue = index == -1 ? str : str.Substring(0, index);
-									child.Tag = strValue;
-									child.Name = str;
-									child.ImageIndex = child.SelectedImageIndex = 1;
-									ParentFolder.Nodes.Add(child);
+                    if (lstfavFolder != null)
+                    {
+                        foreach (FavouriteFolder fav in lstfavFolder)
+                        {
+                            if (fav != null)
+                            {
+                                TreeNode ParentFolder = new TreeNode(fav.FolderName);
+                                ParentFolder.Name = fav.FolderName;
+                                ParentFolder.Tag = "Fav Folder";
+                                if (fav.ListClass != null)
+                                {
+                                    foreach (string str in fav.ListClass)
+                                    {
+                                        TreeNode child = new TreeNode(str);
+                                        string strValue;
+                                        int index = str.LastIndexOf(',');
+                                        strValue = index == -1 ? str : str.Substring(0, index);
+                                        child.Tag = strValue;
+                                        child.Name = str;
+                                        child.ImageIndex = child.SelectedImageIndex = 1;
+                                        ParentFolder.Nodes.Add(child);
 
-									AddDummyChildNode(child);
-								}
-							}
-							ParentFolder.ImageIndex = ParentFolder.SelectedImageIndex = 5;
-							Nodes.Add(ParentFolder);
-						}
-					}
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
+                                        AddDummyChildNode(child);
+                                    }
+                                }
+                                ParentFolder.ImageIndex = ParentFolder.SelectedImageIndex = 5;
+                                Nodes.Add(ParentFolder);
+                            }
+                        }
+                    }
+                }
+                else
+
+                {
+                    dbInteraction.RemoveFavFolder(dbInteraction.GetCurrentRecentConnection().ConnParam);
+                }
+                    }
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.ShowMessage(oEx);
+            }
 		}
 
 		public void AddTreeNode(Hashtable classes, TreeNode treenodeparent)
@@ -726,8 +741,7 @@ namespace OMControlLibrary.Common
 				}
 				if (count > 0)
 				{
-					//dbInteraction dbI = new dbInteraction();
-					//dbI.GetFolderfromDatabaseByFoldername(dbI.GetCurrentRecentConnection().ConnParam, "New Folder " + count.ToString());   
+					 
 					bool checkUnique;
 					treeNodeNew.Text = "New Folder " + count;
 					while (true)
