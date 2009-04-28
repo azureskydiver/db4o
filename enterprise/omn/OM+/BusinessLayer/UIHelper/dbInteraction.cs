@@ -125,6 +125,10 @@ namespace OManager.BusinessLayer.UIHelper
 		{
 			return dbInfo.getTotalDatabaseSize();
 		}
+        public long  dbCreationTime()
+        {
+            return dbInfo.getDatabaseCreationTime();
+        }
 
 		public static int NoOfObjectsforAClass(string classname)
 		{
@@ -185,7 +189,16 @@ namespace OManager.BusinessLayer.UIHelper
 			FavouriteList lstFav = new FavouriteList(conn);
 			return lstFav.ReturnFavouritFolderList(); 
 		}
-
+        public static long GetTimeforFavCreation(ConnParams conn)
+        {
+            FavouriteList lstFav = new FavouriteList(conn);
+            return lstFav.ReturnTimeWhenFavouriteListCreated(); 
+        }
+        public static long GetTimeforSearchStringCreation(ConnParams conn)
+        {
+            GroupofSearchStrings lstsearchstring = new GroupofSearchStrings(conn);
+            return lstsearchstring.ReturnTimeWhenSearchStringCreated();
+        }
 		public static void SaveFavourite(ConnParams conn, FavouriteFolder FavFolder)
 		{
 			FavouriteList lstFav = new FavouriteList(conn);
@@ -406,5 +419,16 @@ namespace OManager.BusinessLayer.UIHelper
 				return false;
 			}
 		}
+
+        public static void RemoveFavFolder(ConnParams conn)
+        {
+            FavouriteList favouriteList = new FavouriteList(conn);
+            favouriteList.RemoveFavouritFolderForAConnection();
+        }
+        public static void RemoveSearchString(ConnParams conn)
+        {
+            GroupofSearchStrings SearchStringList = new GroupofSearchStrings(conn);
+            SearchStringList.RemovesSearchStringsForAConnection();
+        }
 	}
 }
