@@ -62,7 +62,8 @@ public class TACollectionFileEnhancerTestSuite  extends FixtureBasedTestSuite {
 				mapSpec(HashtableClient.class),
 				collectionSpec(LinkedListClient.class),
 				collectionSpec(StackClient.class),
-				collectionSpec(HashSetClient.class)
+				collectionSpec(HashSetClient.class),
+				collectionSpec(TreeSetClient.class)
 			),
 		};
 	}

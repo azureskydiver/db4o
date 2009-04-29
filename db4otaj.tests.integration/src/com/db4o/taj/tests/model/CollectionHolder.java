@@ -13,6 +13,7 @@ public class CollectionHolder {
 	private Map _hashtable;
 	private Stack _stack;
 	private HashSet _hashSet;
+	private TreeSet _treeSet;
 	
 	public CollectionHolder(){
 		// db4o creation constructor
@@ -26,6 +27,7 @@ public class CollectionHolder {
 		_hashtable = new Hashtable();
 		_stack = new Stack();
 		_hashSet = new HashSet();
+		_treeSet = new TreeSet();
 	}
 
 	public List arrayList() {
@@ -50,6 +52,10 @@ public class CollectionHolder {
 	
 	public Map hashtable(){
 		return _hashtable;
+	}
+	
+	public Set treeSet(){
+		return _treeSet;
 	}
 	
 	public String toString() {

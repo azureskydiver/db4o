@@ -24,6 +24,7 @@ public class AllTests extends Db4oTestSuite {
 			CascadeDeleteSubClassTestCase.class,
 			CascadeToHashMapTestCase.class,
         	CollectionUuidTest.class,
+        	HashMapActivationTestCase.class,
         	HashMapUpdateFileSizeTestCase.class,
         	Iterator4JdkIteratorTestCase.class,
         	JdkCollectionIterator4TestCase.class,
