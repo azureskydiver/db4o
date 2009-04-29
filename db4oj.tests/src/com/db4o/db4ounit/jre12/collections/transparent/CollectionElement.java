@@ -8,4 +8,6 @@ package com.db4o.db4ounit.jre12.collections.transparent;
 @decaf.Remove(decaf.Platform.JDK11)
 public interface CollectionElement{
 	
+	public String name();
+	
 }

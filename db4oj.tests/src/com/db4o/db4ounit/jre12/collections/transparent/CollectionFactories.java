@@ -79,5 +79,22 @@ public final class CollectionFactories {
 			}			
 		};
 	}
+	
+	public static Closure4<TreeSet<CollectionElement>> plainTreeSetFactory() {
+		return new Closure4<TreeSet<CollectionElement>>() {
+				public TreeSet<CollectionElement> run() {
+					return new TreeSet<CollectionElement>();
+				}
+		};
+	}
+
+	public static Closure4<TreeSet<CollectionElement>> activatableTreeSetFactory() {
+		return new Closure4<TreeSet<CollectionElement>>() {
+			public TreeSet<CollectionElement> run() {
+				return new ActivatableTreeSet<CollectionElement>();
+			}			
+		};
+	}
+
 
 }

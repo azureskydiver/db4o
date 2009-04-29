@@ -53,6 +53,7 @@ public class Main {
 		holder.hashtable().put("Key", new Item("Item"));
 		holder.stack().push(new Item("Item"));
 		holder.hashSet().add(new Item("Item"));
+		holder.treeSet().add(new Item("Item"));
 		
 		deleteDatabase();
 
@@ -84,7 +85,9 @@ public class Main {
 						
 						assertItemActivation(listener, holder, stackExtractor(), collectionItemExtractor(), Stack.class);						
 						
-						assertItemActivation(listener, holder, hashSetExtractor(), collectionItemExtractor(), HashSet.class);						
+						assertItemActivation(listener, holder, hashSetExtractor(), collectionItemExtractor(), HashSet.class);
+						
+						assertItemActivation(listener, holder, treeSetExtractor(), collectionItemExtractor(), TreeSet.class);						
 					}
 					catch(Exception exc) {
 						Assert.fail("", exc);
@@ -166,6 +169,15 @@ public class Main {
 			}							
 		};
 	}
+	
+	private static Function4 treeSetExtractor() {
+		return new Function4() {
+			public Object apply(Object arg) {
+				CollectionHolder holder = (CollectionHolder) arg;
+				return holder.treeSet();
+			}							
+		};
+	}
 
 	private static Function4 arrayListExtractor() {
 		return new Function4() {
@@ -184,6 +196,7 @@ public class Main {
 		assertCollectionIsNull(holder, "_hashtable");
 		assertCollectionIsNull(holder, "_stack");
 		assertCollectionIsNull(holder, "_hashSet");
+		assertCollectionIsNull(holder, "_treeSet");
 	}
 
 	private static void assertItemActivation(

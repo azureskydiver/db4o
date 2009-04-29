@@ -11,9 +11,6 @@ import com.db4o.ta.instrumentation.test.*;
 
 import db4ounit.*;
 
-/**
- * @exclude
- */
 public class HashtableInstantiationInstrumentationTestCase implements TestCase {
 
 	public void testConstructorIsExchanged() throws Exception {

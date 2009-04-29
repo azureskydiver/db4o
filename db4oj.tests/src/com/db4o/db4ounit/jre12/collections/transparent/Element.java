@@ -6,7 +6,7 @@ package com.db4o.db4ounit.jre12.collections.transparent;
  * @sharpen.remove
  */
 @decaf.Remove(decaf.Platform.JDK11)
-public class Element implements CollectionElement{
+public class Element implements CollectionElement, Comparable{
 	
 	public String _name;
 	
@@ -31,6 +31,22 @@ public class Element implements CollectionElement{
 	@Override
 	public int hashCode() {
 		return _name.hashCode();
+	}
+
+	public int compareTo(Object o) {
+		CollectionElement other = (CollectionElement) o;
+		if(_name == null){
+			if(other.name() == null){
+				return 0;
+			}else{
+				return -1;
+			}
+		}
+		return _name.compareTo(other.name());
+	}
+
+	public String name() {
+		return _name;
 	}
 	
 }

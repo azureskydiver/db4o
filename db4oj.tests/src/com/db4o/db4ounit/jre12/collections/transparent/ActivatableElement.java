@@ -9,7 +9,7 @@ import com.db4o.ta.*;
  * @sharpen.remove
  */
 @decaf.Remove(decaf.Platform.JDK11)
-public class ActivatableElement implements Activatable, CollectionElement{
+public class ActivatableElement implements Activatable, CollectionElement, Comparable{
 	
 	private Activator _activator;
 
@@ -56,6 +56,24 @@ public class ActivatableElement implements Activatable, CollectionElement{
 	public String toString() {
 		activate(ActivationPurpose.READ);
 		return "ActivatableElement " + _name;
+	}
+
+	public int compareTo(Object o) {
+		activate(ActivationPurpose.READ);
+		CollectionElement other = (CollectionElement) o;
+		if(_name == null){
+			if(other.name() == null){
+				return 0;
+			}else{
+				return -1;
+			}
+		}
+		return _name.compareTo(other.name());
+	}
+
+	public String name() {
+		activate(ActivationPurpose.READ);
+		return _name;
 	}
 	
 }
