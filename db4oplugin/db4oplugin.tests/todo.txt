@@ -1,0 +1,3 @@
+- port test project infrastructure to scala
+- unify nature handling
+- test instrumented class files
