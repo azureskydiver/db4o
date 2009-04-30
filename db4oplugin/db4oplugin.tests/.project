@@ -30,7 +30,7 @@
 		<link>
 			<name>scala-bin</name>
 			<type>2</type>
-			<location>/home/patrick/workspaces/db4o/db4oplugin.tests/bin</location>
+			<location>/home/patrick/git/db4oplugin/db4oplugin.tests/bin</location>
 		</link>
 	</linkedResources>
 </projectDescription>

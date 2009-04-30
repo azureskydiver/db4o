@@ -15,7 +15,7 @@ import org.eclipse.jdt.core._
 import java.net._
 
 
-class BuilderTestCase {
+class InstrumentSingleClassTestCase {
 
   val ACTIVATABLE_CLASS = classOf[com.db4o.ta.Activatable]
 

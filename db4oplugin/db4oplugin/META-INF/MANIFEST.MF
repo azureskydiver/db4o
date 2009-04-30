@@ -13,7 +13,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/db4o-all-java5.jar,
  .,
- lib/scala-library.jar
+ lib/scala-library.jar,
+ scala-bin/
 Export-Package: com.db4o.eclipse,
  com.db4o.eclipse.builder,
  com.db4o.eclipse.nature,
