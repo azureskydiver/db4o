@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: db4o Instrumentation Plugin
+Bundle-SymbolicName: db4oplugin; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: com.db4o.eclipse.Db4oPluginActivator
+Bundle-Vendor: Versant
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.jdt.core;bundle-version="3.4.4"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/db4o-all-java5.jar,
+ .,
+ lib/scala-library.jar
+Export-Package: com.db4o.eclipse,
+ com.db4o.eclipse.builder,
+ com.db4o.eclipse.nature,
+ com.db4o.eclipse.preferences,
+ com.db4o.eclipse.ui,
+ com.db4o.ta
