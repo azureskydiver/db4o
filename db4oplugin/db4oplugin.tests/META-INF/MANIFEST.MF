@@ -13,4 +13,5 @@ Require-Bundle: org.junit4;bundle-version="4.3.1",
  org.eclipse.jdt.launching;bundle-version="3.4.1",
  org.eclipse.text;bundle-version="3.4.0"
 Bundle-ClassPath: lib/scala-library.jar,
- .
+ .,
+ scala-bin/
