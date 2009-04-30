@@ -7,27 +7,21 @@
 			name="devenv.executable.vs2008" 
 			location="${env.ProgramFiles}/Microsoft Visual Studio 9.0/Common7/IDE/devenv.exe" />
 	
-		<echo message="Going go build omn" />
-		<exec executable="${devenv.executable.vs2008}" resultproperty="omn-build-result" outputproperty="omn-build-output-stream" errorproperty="omn-build-error-stream">
+		<echo message="Going go build omn: ${devenv.executable.vs2008}" />
+		<exec executable="${devenv.executable.vs2008}" resultproperty="omn-build-result">
 			<arg file ="${file.omn-solution}"/>
 			<arg value="/Rebuild" />
 			<arg value="Release" />
-			<!--
 			<arg value="/out" />
 			<arg file="${file.omn-build-log}" />
-			-->
 		</exec>
 		
 		<if >
 			<not><equals arg1="${omn-build-result}" arg2="0"/></not>
 			<then>
 				<echo message="OMN Result: ${omn-build-result}" />
-				<!--
 				<loadfile property="omn-buil-log" srcfile="${file.omn-build-log}" />
 				<echo message="${omn-buil-log}" />
-				-->
-				<echo message="${omn-build-output-stream}" />
-				<echo message="${omn-build-error-stream}" />
 				<fail message="OMN build failed. Check this log to find out the reason." />
 			</then>
 		</if>
