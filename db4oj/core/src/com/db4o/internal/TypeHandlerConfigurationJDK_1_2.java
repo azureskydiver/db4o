@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import java.util.*;
 
+import com.db4o.collections.ActivatableTreeSet;
 import com.db4o.internal.collections.*;
 import com.db4o.typehandlers.*;
 import com.db4o.typehandlers.internal.*;
@@ -39,7 +40,18 @@ public class TypeHandlerConfigurationJDK_1_2 extends TypeHandlerConfiguration{
 		ignoreFieldsOn(WeakHashMap.class);
 		
 		registerTypeHandlerFor(BigSet.class, new BigSetTypeHandler());
-		registerTypeHandlerFor(TreeSet.class, new TreeSetTypeHandler());
+		registerTypeHandlerFor(TreeSet.class, new TreeSetTypeHandler() {
+			@Override
+			protected TreeSet create(Comparator comparator) {
+				return new TreeSet(comparator);
+			}
+		});
+		registerTypeHandlerFor(ActivatableTreeSet.class, new TreeSetTypeHandler() {
+			@Override
+			protected TreeSet create(Comparator comparator) {
+				return new ActivatableTreeSet(comparator);
+			}
+		});
 	}
 
 }

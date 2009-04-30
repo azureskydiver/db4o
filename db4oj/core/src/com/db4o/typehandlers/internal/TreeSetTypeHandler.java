@@ -16,7 +16,7 @@ import com.db4o.typehandlers.*;
  * @sharpen.ignore
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class TreeSetTypeHandler implements InstantiatingTypeHandler {
+public abstract class TreeSetTypeHandler implements InstantiatingTypeHandler {
 	
 	public void writeInstantiation(WriteContext context, Object obj) {
 		final Comparator comparator = ((TreeSet)obj).comparator();
@@ -25,8 +25,10 @@ public class TreeSetTypeHandler implements InstantiatingTypeHandler {
 	
 	public Object instantiate(ReadContext context) {
 		final Comparator comparator = (Comparator)context.readObject();
-		return new TreeSet(comparator);
+		return create(comparator);
 	}
+
+	protected abstract TreeSet create(final Comparator comparator);
 
 	public void activate(ReferenceActivationContext context) {
 		// already handled by CollectionTypeHandler
