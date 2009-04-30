@@ -15,7 +15,6 @@ import org.eclipse.core.runtime._
 import org.eclipse.jdt.core._
 
 import scala.collection._
-import scala.collection.immutable._
 
 import java.io._
 import java.util.regex._
@@ -65,11 +64,9 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
   }
 
   private def partitionBy[T,K](iterable: Iterable[T], selector: ((T) => K)) = {
-    val agg = HashMap[K, Iterable[T]]().withDefaultValue(HashSet[T]())
-    iterable.foldLeft(agg)((map, t) => {
-      val key = selector(t)
-      map + ((key, map.get(key).getOrElse(HashSet[T]()) ++ List(t)))
-    })
+    val agg = new mutable.HashMap[K, mutable.Set[T]]() with mutable.MultiMap[K,T]
+    iterable.foreach((t) => agg.add(selector(t), t))
+    agg
   }
   
   private def collectClassPathRoots(classFiles: Iterable[SelectionClassSource]) = {
