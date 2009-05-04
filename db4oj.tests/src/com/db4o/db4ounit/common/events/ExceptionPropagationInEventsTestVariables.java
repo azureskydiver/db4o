@@ -32,7 +32,7 @@ public class ExceptionPropagationInEventsTestVariables {
 							}			
 						}),
 		
-		new EventInfo("delete", // 2
+		new EventInfo("delete", false, // 2
 						new Procedure4<EventRegistry>(){
 							public void apply(EventRegistry eventRegistry) {
 								eventRegistry.deleted().addListener(new EventListener4() {
@@ -43,7 +43,7 @@ public class ExceptionPropagationInEventsTestVariables {
 							}					
 						}),
 		
-		new EventInfo("delete", // 3
+		new EventInfo("delete", false, // 3
 						new Procedure4<EventRegistry>(){
 							public void apply(EventRegistry eventRegistry) {
 								eventRegistry.deleting().addListener(new EventListener4() {
@@ -54,7 +54,7 @@ public class ExceptionPropagationInEventsTestVariables {
 							}
 						}),
 
-		new EventInfo("insert", // 4
+		new EventInfo("insert", false, // 4
 						new Procedure4<EventRegistry>() {
 							public void apply(EventRegistry eventRegistry) {
 								eventRegistry.committing().addListener(new EventListener4() {
@@ -70,7 +70,7 @@ public class ExceptionPropagationInEventsTestVariables {
 							}
 						}),
 			
-		new EventInfo("insert", // 5
+		new EventInfo("insert", false, // 5
 						new Procedure4<EventRegistry>() {
 							public void apply(EventRegistry eventRegistry) {
 								eventRegistry.committed().addListener(new EventListener4() {

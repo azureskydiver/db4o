@@ -14,7 +14,7 @@ public class BTreeRemove extends BTreeUpdate {
     }
     
     protected void committed(BTree btree){
-        btree.notifyRemoveListener(getObject());
+        btree.notifyRemoveListener(new TransactionContext(_transaction, getObject()));
     }
     
     public String toString() {

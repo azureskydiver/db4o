@@ -19,7 +19,7 @@ public class ReferenceSystemRegistry {
 			}
     	});
     }
-    
+
     public void removeObject(final Object obj){
     	removeReference(new ReferenceSource() {
 			public ObjectReference referenceFrom(ReferenceSystem referenceSystem) {

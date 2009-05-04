@@ -56,12 +56,12 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	}
 
 	private Iterator4 suiteFor(Class clazz) {
+		if (TestSuiteBuilder.class.isAssignableFrom(clazz)) {
+			return ((TestSuiteBuilder)newInstance(clazz)).iterator();
+		}
 		if(!isApplicable(clazz)) {
 			TestPlatform.emitWarning("DISABLED: " + clazz.getName());
 			return Iterators.EMPTY_ITERATOR;
-		}
-		if (TestSuiteBuilder.class.isAssignableFrom(clazz)) {
-			return ((TestSuiteBuilder)newInstance(clazz)).iterator();
 		}
 		if (Test.class.isAssignableFrom(clazz)) {
 			return Iterators.singletonIterator(newInstance(clazz));

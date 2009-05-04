@@ -815,7 +815,7 @@ public final class BTreeNode extends CacheablePersistentBase{
     }
 
 	private void cancelAdding(Transaction trans, int index) {
-		_btree.notifyRemoveListener(keyPatch(index).getObject());
+		_btree.notifyRemoveListener(new TransactionContext(trans, keyPatch(index).getObject()));
 		if(freeIfEmpty(trans, _count-1)){
 			sizeDecrement(trans);
 			return;
