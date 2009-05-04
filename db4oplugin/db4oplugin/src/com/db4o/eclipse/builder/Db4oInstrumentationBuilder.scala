@@ -40,7 +40,15 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
   }
 
   private def fullBuild(monitor: IProgressMonitor) {
-    getProject.accept(new InstrumentationFullBuildVisitor)
+    val javaProject = JavaCore.create(getProject)
+    if(javaProject == null) {
+      return
+    }
+    roots(javaProject).foreach((root) => {
+      val fileRoot = new FullFilePathRoot(javaProject.getProject, root)
+      val classPath = PDEUtil.binaryRoots(javaProject).map(PDEUtil.workspacePath(_).toOSString)
+      enhance(fileRoot, classPath, javaProject.getProject, PDEUtil.workspacePath(root).toOSString)
+    })
   }
 
   private def incrementalBuild(delta: IResourceDelta, monitor: IProgressMonitor) {
@@ -52,23 +60,28 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
     val partitioned = partitionBy(classSources, (source: SelectionClassSource) => source.binaryRoot)
     val classPathRootsArr = classPathRoots.toList.toArray
     partitioned.keys.foreach((binaryRoot) => {
-      val instrumentor = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(new RegExpFilter(binaryRoot.javaProject.getProject)))
       val instrumentationRoot = new SelectionFilePathRoot(classPathRoots, partitioned.get(binaryRoot).get.toList.removeDuplicates)
+      enhance(instrumentationRoot, classPathRootsArr, binaryRoot.javaProject.getProject, PDEUtil.workspacePath(binaryRoot.path).toOSString)
+    })
+  }
+
+  private def enhance(root: FilePathRoot, classPathRoots: Array[String], project: IProject, outPath: String) {
+      val instrumentor = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(new RegExpFilter(project)))
       try {
-        instrumentor.enhance(new BundleClassSource, instrumentationRoot, PDEUtil.workspacePath(binaryRoot.path).toOSString, classPathRootsArr, getClass.getClassLoader)
+        instrumentor.enhance(new BundleClassSource, root, outPath, classPathRoots, getClass.getClassLoader)
       }
       catch {
         case e => e.printStackTrace
       }
-    })
   }
-
+  
   private def partitionBy[T,K](iterable: Iterable[T], selector: ((T) => K)) = {
     val agg = new mutable.HashMap[K, mutable.Set[T]]() with mutable.MultiMap[K,T]
     iterable.foreach((t) => agg.add(selector(t), t))
     agg
   }
   
+  // FIXME we're in a single project, anyway
   private def collectClassPathRoots(classFiles: Iterable[SelectionClassSource]) = {
     classFiles.foldLeft(scala.collection.mutable.HashSet[IPath]())((roots, classSource) => {
         val javaProject = classSource.binaryRoot.javaProject
@@ -80,16 +93,46 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
     def loadClass(name: String) = Db4oPluginActivator.getDefault.getBundle.loadClass(name)
   }
   
-  private class InstrumentationFullBuildVisitor extends IResourceVisitor {
-    override def visit(resource: IResource) = true
-  }
-    
   private class SelectionFilePathRoot(roots: Iterable[String], sources: Iterable[_ <: InstrumentationClassSource]) extends FilePathRoot {
 	override def rootDirs = roots.toList.toArray
 	override def iterator = java.util.Arrays.asList(sources.toList.toArray: _*).iterator
     override def toString = roots.toString + ": " + sources.toString
   }
   
+  private class FullFilePathRoot(project: IProject, path: IPath) extends FilePathRoot {
+    override def rootDirs = List(path.toOSString).toArray
+
+    override def iterator =
+      java.util.Arrays.asList(classSources.toArray: _*).iterator
+    
+    private def classSources(): List[InstrumentationClassSource] = {
+      val folderFile = PDEUtil.workspaceFile(path)
+      allClassFiles(project.getFolder(path.removeFirstSegments(1)))
+          .map((resource) => PDEUtil.workspaceFile(resource.getFullPath))
+          .map(new FileInstrumentationClassSource(folderFile, _))
+    }
+    
+    private def allClassFiles(folder: IFolder) = {
+      var files: List[IResource] = Nil
+      folder.accept(new IResourceVisitor() {
+        override def visit(resource: IResource) = {
+          if(resource.getType == IResource.FILE && "class".equals(resource.getFileExtension)) {
+            files ++= List(resource)
+          }
+          true
+        }
+      })
+      files
+    }
+    
+  }
+  
+  private def roots(project: IJavaProject) = 
+    project.getPackageFragmentRoots
+        .filter(_.getKind == IPackageFragmentRoot.K_SOURCE)
+        .filter(_.getRawClasspathEntry.getOutputLocation != null)
+        .map(_.getRawClasspathEntry.getOutputLocation).toList.removeDuplicates ++ List(project.getOutputLocation)
+
   private class RegExpFilter(project: IProject) extends ClassFilter {
 
     override def accept(clazz: Class[_]) = {

@@ -1,3 +1,4 @@
 - full build
 - notify PDE about changed class files
+- export configuration for use by ant build
 - go more functional
