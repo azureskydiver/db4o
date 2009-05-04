@@ -60,12 +60,19 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
         _btreeIndex = ((LocalObjectContainer)stream).createBTreeClassIndex(btreeID);
         _btreeIndex.setRemoveListener(new Visitor4() {
             public void visit(Object obj) {
-                int id = ((Integer)obj).intValue();
-                stream.referenceSystemRegistry().removeId(id);
+            	removeId((TransactionContext)obj);
             }
         });
     }
 	
+    private void removeId(TransactionContext context) {
+    	ReferenceSystem referenceSystem = context._transaction.referenceSystem();
+        ObjectReference reference = referenceSystem.referenceForId((Integer)context._object);
+        if(reference != null){
+            referenceSystem.removeReference(reference);
+        }
+    }
+
 	private void readBTreeIndex(ObjectContainerBase stream, int indexId) {
 		if(! stream.isClient() && _btreeIndex == null){
             createBTreeIndex(stream, indexId);

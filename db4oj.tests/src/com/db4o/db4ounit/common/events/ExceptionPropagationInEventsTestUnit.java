@@ -27,9 +27,12 @@ public class ExceptionPropagationInEventsTestUnit extends EventsTestCaseBase {
 	
 	public void testEvents() {
 		final EventInfo event = (EventInfo) ExceptionPropagationInEventsTestVariables.EVENT_SELECTOR.value();
+		if(isClientServer() && !event.isClientServerEvent()) {
+			return;
+		}
 		assertEventThrows(_eventFirer.get(event.eventFirerName()), event.listenerSetter());
 	}	
-	
+
 	private void assertEventThrows(final CodeBlock codeBlock, final Procedure4<EventRegistry> listenerSetter) {
 		final EventRegistry eventRegistry = EventRegistryFactory.forObjectContainer(db());		
 		listenerSetter.apply(eventRegistry);		

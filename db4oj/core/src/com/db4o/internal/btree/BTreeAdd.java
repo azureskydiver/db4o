@@ -14,7 +14,7 @@ public class BTreeAdd extends BTreePatch{
     }
 
     protected Object rolledBack(BTree btree){
-        btree.notifyRemoveListener(getObject());
+        btree.notifyRemoveListener(new TransactionContext(_transaction, getObject()));
         return No4.INSTANCE;
     }
     

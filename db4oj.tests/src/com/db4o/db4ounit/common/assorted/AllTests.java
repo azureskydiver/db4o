@@ -25,6 +25,7 @@ public class AllTests extends Db4oTestSuite {
             DbPathDoesNotExistTestCase.class,
             // FIXME: COR-1060
 //            DeleteSetTestCase.class,
+            DeleteReaddChildReferenceTestSuite.class,
             DeleteUpdateTestCase.class,
             DescendToNullFieldTestCase.class,
             DualDeleteTestCase.class,
