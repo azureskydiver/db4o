@@ -100,9 +100,12 @@ public class JavaProject extends SimpleProject {
 	}
 	
 	public IPackageFragmentRoot addSourceFolder(String path) throws CoreException {
-		final IPackageFragmentRoot sourceFolder = createSourceFolder(path);
+		return addSourceFolder(path, null);
+	}
+
+	public IPackageFragmentRoot addSourceFolder(String src, String bin) throws CoreException {
+		final IPackageFragmentRoot sourceFolder = createSourceFolder(src, bin);
 		_sourceFolders.add(sourceFolder);
-		
 		return sourceFolder;
 	}
 
@@ -269,10 +272,15 @@ public class JavaProject extends SimpleProject {
 	}
 
 	private IPackageFragmentRoot createSourceFolder(final String path) throws CoreException, JavaModelException {
-		IFolder folder = safeGetFolder(path);
-		IPackageFragmentRoot root = _javaProject.getPackageFragmentRoot(folder);
+		return createSourceFolder(path, null);
+	}
+
+	private IPackageFragmentRoot createSourceFolder(final String src, final String bin) throws CoreException, JavaModelException {
+		IFolder srcFolder = safeGetFolder(src);
+		IPath binPath = bin == null ? null : safeGetFolder(bin).getFullPath();
+		IPackageFragmentRoot root = _javaProject.getPackageFragmentRoot(srcFolder);
 		IClasspathEntry newSourceEntry = JavaCore.newSourceEntry(root.getPath(),
-				new IPath[] {});
+				new IPath[] {}, binPath);
 		addClasspathEntry(newSourceEntry);
 		return root;
 	}
