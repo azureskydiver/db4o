@@ -39,8 +39,7 @@ public class ConfigureIndex {
 			
 		}
 		if (storedType != null) { // primitive arrays return null
-			ClassMetadata classMeta = ((ExternalObjectContainer)db).classMetadataForReflectClass(storedType);
-			if (storedType.isPrimitive() || (classMeta != null && classMeta.isSecondClass())) {
+			if (storedType.isPrimitive() ) {
 				return true;
 			}
 		}
