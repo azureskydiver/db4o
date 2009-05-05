@@ -27,11 +27,11 @@ public class ActivatableSetAPITestSuite extends FixtureBasedTestSuite implements
 						new CollectionSpec<HashSet<CollectionElement>>(
 								HashSet.class, 
 								CollectionFactories.activatableHashSetFactory(),
-								CollectionFactories.plainHashSetFactory()) /* ,
+								CollectionFactories.plainHashSetFactory())  ,
 						new CollectionSpec<TreeSet<CollectionElement>>(
 										TreeSet.class, 
 										CollectionFactories.activatableTreeSetFactory(),
-										CollectionFactories.plainTreeSetFactory())*/
+										CollectionFactories.plainTreeSetFactory())
 				),
 		};
 	}
