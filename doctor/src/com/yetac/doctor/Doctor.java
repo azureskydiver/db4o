@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004   Versant Inc.   http://www.db4o.com */
 
 package com.yetac.doctor;
 
@@ -311,7 +311,7 @@ public class Doctor extends Task {
     }
 
     public String author(){
-        return "db4objects Inc.";
+        return "Versant Inc.";
     }
     
     public String title(){
