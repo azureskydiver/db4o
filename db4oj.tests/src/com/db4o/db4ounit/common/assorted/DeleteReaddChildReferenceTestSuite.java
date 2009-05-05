@@ -2,12 +2,14 @@
 
 package com.db4o.db4ounit.common.assorted;
 
+import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.query.Query;
 
 import db4ounit.Assert;
 import db4ounit.extensions.Db4oClientServerTestCase;
+import db4ounit.extensions.Db4oTestCase;
 import db4ounit.extensions.fixtures.Db4oFixtureProvider;
 import db4ounit.fixtures.FixtureTestSuiteDescription;
 import db4ounit.fixtures.SubjectFixtureProvider;
@@ -15,7 +17,7 @@ import db4ounit.fixtures.SubjectFixtureProvider;
 /**
  * COR-1539  Readding a deleted object from a different client changes database ID in embedded mode
  */
-public class DeleteReaddChildReferenceTestSuite extends FixtureTestSuiteDescription {
+public class DeleteReaddChildReferenceTestSuite extends FixtureTestSuiteDescription implements Db4oTestCase {
 	
 	{
 		fixtureProviders(new SubjectFixtureProvider(true, false), new Db4oFixtureProvider());
@@ -26,6 +28,8 @@ public class DeleteReaddChildReferenceTestSuite extends FixtureTestSuiteDescript
 		
 		
 	    private static final String ITEM_NAME = "child";
+		private ExtObjectContainer client1;
+		private ExtObjectContainer client2;
 	
 		public static class ItemParent {
 	    	
@@ -62,41 +66,89 @@ public class DeleteReaddChildReferenceTestSuite extends FixtureTestSuiteDescript
 			store(parent);
 	    }
 	    
-	    public void testDeleteReadd() {
-	    	if (!isClientServer()){
+	    public void testDeleteReaddFromOtherClient() {
+	    	if(!prepareTest()) {
 	    		return;
 	    	}
-	        ExtObjectContainer client1 = db();
-	        ExtObjectContainer client2 = openNewClient();
-	        
 			ItemParent parent1 = retrieveOnlyInstance(client1, ItemParent.class);
 	        ItemParent parent2 = retrieveOnlyInstance(client2, ItemParent.class);
-	        
 	        client1.delete(parent1.child);        
-	        
-	        assertQuery(0, client1);
-	        assertQuery(1, client2);
-	
+	        assertQueries(0, 1);
 	        client1.commit();
-	        
-	        assertQuery(0, client1);
-	        assertQuery(0, client2);
-	
+	        assertQueries(0, 0);
 	        client2.store(parent2.child);
+	        assertQueries(0, 1);
 	        client2.commit();
-	
-	        assertQuery(1, client1);
-	        assertQuery(1, client2);
-	
-	        client2.close();
-	
-	        ItemParent parent3 = retrieveOnlyInstance(client1, ItemParent.class);
+	        assertQueries(1, 1);
+	        client2.close();	
+	        assertRestoredState();
+	    }
+
+	    public void testDeleteReaddTwiceFromOtherClient() {
+	    	if(!prepareTest()) {
+	    		return;
+	    	}
+			ItemParent parent1 = retrieveOnlyInstance(client1, ItemParent.class);
+	        ItemParent parent2 = retrieveOnlyInstance(client2, ItemParent.class);
+	        client1.delete(parent1.child);        
+	        assertQueries(0, 1);
+	        client1.commit();
+	        assertQueries(0, 0);
+	        client2.store(parent2.child);
+	        assertQueries(0, 1);
+	        client2.store(parent2.child);
+	        assertQueries(0, 1);
+	        client2.commit();
+	        assertQueries(1, 1);
+	        client2.close();	
+	        assertRestoredState();
+	    }
+
+	    public void testDeleteReaddFromBoth() {
+	    	if(!prepareTest()) {
+	    		return;
+	    	}
+			ItemParent parent1 = retrieveOnlyInstance(client1, ItemParent.class);
+	        ItemParent parent2 = retrieveOnlyInstance(client2, ItemParent.class);
+	        client1.delete(parent1.child);        
+	        assertQueries(0, 1);
+	        client2.delete(parent2.child);        
+	        assertQueries(0, 0);
+	        client1.store(parent1.child);
+	        assertQueries(1, 0);
+	        client2.store(parent2.child);
+	        assertQueries(1, 1);
+	        client1.commit();
+	        assertQueries(1, 1);
+	        client2.commit();
+	        assertQueries(1, 1);
+	        client2.close();	
+	        assertRestoredState();
+	    }
+
+		private void assertRestoredState() {
+			ItemParent parent3 = retrieveOnlyInstance(client1, ItemParent.class);
 	        db().refresh(parent3, Integer.MAX_VALUE);
 	        Assert.isNotNull(parent3);
 	        Assert.isNotNull(parent3.child);
-	    }
+		}
+
+		private void assertQueries(int exp1, int exp2) {
+			assertQuery(exp1, client1);
+	        assertQuery(exp2, client2);
+		}
+
+		private boolean prepareTest() {
+			if (!isClientServer()){
+	    		return false;
+	    	}
+	        client1 = db();
+	        client2 = openNewClient();
+	        return true;
+		}
 	
 	    private void assertQuery(int expectedCount, ExtObjectContainer queryClient) {
+	    	assertChildClassOnlyQuery(expectedCount, queryClient);
 	    	assertParentChildQuery(expectedCount, queryClient);
 	    	assertChildQuery(expectedCount, queryClient);
 	    }
@@ -114,7 +166,12 @@ public class DeleteReaddChildReferenceTestSuite extends FixtureTestSuiteDescript
 	        query.descend("name").constrain(ITEM_NAME);
 			Assert.areEqual(expectedCount, query.execute().size());
 		}
-	
+
+		private void assertChildClassOnlyQuery(int expectedCount, ExtObjectContainer queryClient) {
+			ObjectSet<Item> result = queryClient.query(Item.class);
+			Assert.areEqual(expectedCount, result.size());
+		}
+
 	    public static void main(String[] arguments) {
 	        new DeleteReaddChildReferenceTestUnit().runAll();
 	    }
