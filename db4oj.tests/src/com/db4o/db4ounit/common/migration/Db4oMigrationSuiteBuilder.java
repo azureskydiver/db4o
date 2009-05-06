@@ -119,9 +119,7 @@ public class Db4oMigrationSuiteBuilder extends ReflectionTestSuiteBuilder {
 				throw e;
 			} catch (Exception e) {
 				throw new TestException(e);
-			} finally{
-				disposeEnvironment();
-			}
+			} 
 		}
 
 		private void test() throws IOException {
@@ -136,8 +134,5 @@ public class Db4oMigrationSuiteBuilder extends ReflectionTestSuiteBuilder {
 			return _library.environment;
 		}
 		
-		private void disposeEnvironment(){
-			environment().dispose();
-		}
 	}
 }
