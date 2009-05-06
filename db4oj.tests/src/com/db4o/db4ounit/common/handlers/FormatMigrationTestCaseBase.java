@@ -19,7 +19,7 @@ import db4ounit.extensions.fixtures.*;
 /**
  * @sharpen.partial
  */
-public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptOutNoFileSystemData {
+public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptOutNoFileSystemData, OptOutCS {
     
     private String _db4oVersion;
     
