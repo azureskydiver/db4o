@@ -1,4 +1,4 @@
-/* Copyright (C) 2bitbit4 - 2bitbit6  db4objects Inc.  http://www.db4o.com */
+/* Copyright (C) 2bitbit4 - 2bitbit6  Versant Inc.  http://www.db4o.com */
 
 package com.db4o.db4ounit.common.foundation;
 
