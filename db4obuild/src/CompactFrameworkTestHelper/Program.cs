@@ -74,7 +74,7 @@ namespace CompactFrameworkTestHelper
 		    int ret;
 			try
 			{
-			    Console.WriteLine("CompactFrameworkTestHelper v1.1 - Copyright (C) 2004-2008  db4objects Inc.\r\n");
+			    Console.WriteLine("CompactFrameworkTestHelper v1.1 - Copyright (C) 2004-2008  Versant Inc.\r\n");
                 Console.WriteLine("\tCF App: {0}", cfAppName);
                 Console.WriteLine("\tCF Target Version: {0}", targetFrameworkVersion);
                 Console.WriteLine("\tFolder: {0}", db4oDistPath);
