@@ -52,6 +52,7 @@
 	<target name="runalldoctortasks" depends="compileandsign, rundoctors" description="Run all doctor tasks">
 	</target>
 	
+	<target name="rundoctors-standalone" depends="init, rundoctors" />
 	
 	<target name="rundoctors" description="Run all doctor tasks">
 		<doctor 

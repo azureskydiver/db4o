@@ -39,7 +39,7 @@ public class VersionInfoAntTask extends Task {
                 .append(minor).append(".").append(iteration).append(".")
                 .append(revision).toString();
         
-        pr.println("/* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */");
+        pr.println("/* Copyright (C) 2007   Versant Inc.   http://www.db4o.com */");
         pr.println();
         pr.println("package com.db4o;");
         pr.println();

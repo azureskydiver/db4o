@@ -26,7 +26,7 @@ About this software
 The software contained in this distribution is the open source
 object database engine "db4o" supplied by:
 
-db4objects Inc.
+Versant Inc.
 1900 South Norfolk Street
 Suite 350
 San Mateo, CA, 94403
