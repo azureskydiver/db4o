@@ -56,5 +56,10 @@ public class Db4oLibraryEnvironment {
 			classes[i] = args[i].getClass();
 		}
 		return classes;
+	}
+
+	public void dispose() {
+		// do nothing on the Java side
+		
 	}	
 }
