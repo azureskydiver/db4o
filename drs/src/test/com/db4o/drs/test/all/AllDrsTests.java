@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2008  db4objects Inc.  http://www.db4o.com
+/* Copyright (C) 2004 - 2008  Versant Inc.  http://www.db4o.com
 
 This file is part of the db4o open source object database.
 
@@ -36,6 +36,6 @@ public class AllDrsTests {
 		}
 		
 		//TODO: Return failure count in RdbmsTests.main
-		RdbmsTests.main(args);
+//		RdbmsTests.main(args);
 	}
 }
