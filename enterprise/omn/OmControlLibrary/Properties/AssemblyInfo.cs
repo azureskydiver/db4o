@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("OMControlLibrary")]
 [assembly: AssemblyDescription("OmControlLibrary 7.4.1.11182 (.NET)")]
 [assembly: AssemblyConfiguration(".NET")]
-[assembly: AssemblyCompany("db4objects Inc., San Mateo, CA, USA")]
+[assembly: AssemblyCompany("Versant Inc., San Mateo, CA, USA")]
 [assembly: AssemblyProduct("db4o - database for objects")]
 [assembly: AssemblyCopyright("db4o 2005 - 2008")]
 [assembly: AssemblyTrademark("")]
