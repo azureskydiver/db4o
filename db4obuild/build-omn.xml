@@ -34,6 +34,8 @@
 		<property name="dir.omn.dist.src"  value="${dir.dist.net.src.tools}/omn" />
 		<property name="file.omn-build-log" value = "${dir.omn.dist}/omn-build.log" />
 		<property name="file.omn-solution" value = "${dir.omn.dist.src}/OMAddin.sln" />
+		
+		<mkdir dir="${dir.omn.dist}" />
 
 		<reset-dir dir="${dir.dist.net.build}/omn2005" />
 		<reset-dir dir="${dir.dist.net.build}/omn2008" />
