@@ -12,9 +12,9 @@ h2 { font-size: 150%; font-family: Arial, Helvetica, sans-serif}
 
 
 /* Table colors */
-.TableHeadingColor     { background: #EBF5D6; font-family: Arial, Helvetica, sans-serif} /* Dark mauve */
-.TableSubHeadingColor  { background: #ADD65C; font-family: Arial, Helvetica, sans-serif} /* Light mauve */
-.TableRowColor         { background: #FFFFFF; font-family: Arial, Helvetica, sans-serif} /* White */
+.TableHeadingColor     { background: #b87a7c; font-family: Arial, Helvetica, sans-serif} 
+.TableSubHeadingColor  { background: #a12428; font-family: Arial, Helvetica, sans-serif} 
+.TableRowColor         { background: #FFFFFF; font-family: Arial, Helvetica, sans-serif} 
 
 /* Font used in left-hand frame lists */
 .FrameTitleFont   { font-size: 100%; font-family: Arial, Helvetica, sans-serif}
@@ -22,8 +22,8 @@ h2 { font-size: 150%; font-family: Arial, Helvetica, sans-serif}
 .FrameItemFont    { font-size:  90%; font-family: Arial, Helvetica, sans-serif}
 
 /* Navigation bar fonts and colors */
-.NavBarCell1    { background-color:#ADD65C; font-family: Arial, Helvetica, sans-serif} /* Light mauve */
-.NavBarCell1Rev { background-color:#ADD65C; font-family: Arial, Helvetica, sans-serif} /* Dark Blue */
+.NavBarCell1    { background-color:#a12428; font-family: Arial, Helvetica, sans-serif} 
+.NavBarCell1Rev { background-color:#4a4b4b; font-family: Arial, Helvetica, sans-serif} 
 .NavBarFont1    { font-family: Arial, Helvetica, sans-serif; color:#FFFFFF;}
 .NavBarFont1Rev { font-family: Arial, Helvetica, sans-serif; color:#FFFFFF;}
 
@@ -33,11 +33,11 @@ h2 { font-size: 150%; font-family: Arial, Helvetica, sans-serif}
 a
 {
 	text-decoration: none;
-	color:#7BA129;
+	color:#660000;
 }
 
 a:hover
 {
 	text-decoration: none;
-	color:#46610D;
+	color:#442222;
 }
