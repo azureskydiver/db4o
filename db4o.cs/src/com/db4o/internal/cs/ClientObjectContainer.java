@@ -13,13 +13,13 @@ import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.convert.*;
 import com.db4o.internal.cs.messages.*;
+import com.db4o.internal.cs.objectexchange.*;
 import com.db4o.internal.encoding.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.slots.*;
 import com.db4o.io.*;
 import com.db4o.reflect.*;
-
 /**
  * @exclude
  */
@@ -327,7 +327,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		
 	public AbstractQueryResult queryAllObjects(Transaction trans) {
 		int mode = config().queryEvaluationMode().asInt();
-		MsgD msg = Msg.GET_ALL.getWriterForInt(trans, mode);
+		MsgD msg = Msg.GET_ALL.getWriterForInts(trans, mode, prefetchDepth());
 		write(msg);
 		return readQueryResult(trans);
 	}
@@ -581,9 +581,18 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		}else{
 			queryResult = new ClientQueryResult(trans);
 		}
-		queryResult.loadFromIdReader(reader);
+		
+		queryResult.loadFromIdReader(idIteratorFor(trans, reader));
 		return queryResult;
 	}
+
+	public FixedSizeIntIterator4 idIteratorFor(Transaction trans, ByteArrayBuffer reader) {
+		return objectExchangeStrategy().unmarshall(trans, reader);
+    }
+
+	private ObjectExchangeStrategy objectExchangeStrategy() {
+		return ObjectExchangeStrategyFactory.forPrefetchDepth(prefetchDepth());
+    }
 
 	void readThis() {
 		write(Msg.GET_CLASSES.getWriter(systemTransaction()));
@@ -810,15 +819,26 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     }
 
     public long[] getIDsForClass(Transaction trans, ClassMetadata clazz){
-    	MsgD msg = Msg.GET_INTERNAL_IDS.getWriterForInt(trans, clazz.getID());
+    	MsgD msg = Msg.GET_INTERNAL_IDS.getWriterForInts(trans, clazz.getID(), prefetchDepth());
     	write(msg);
+    	
     	ByteArrayBuffer reader = expectedByteResponse(Msg.ID_LIST);
-    	int size = reader.readInt();
-    	final long[] ids = new long[size];
-    	for (int i = 0; i < size; i++) {
-    	    ids[i] = reader.readInt();
+    	FixedSizeIntIterator4 idIterator = idIteratorFor(trans, reader);
+    	
+    	return toLongArray(idIterator);
+    }
+
+	private long[] toLongArray(FixedSizeIntIterator4 idIterator) {
+	    final long[] ids = new long[idIterator.size()];
+    	int i = 0;
+    	while (idIterator.moveNext()) {
+    	    ids[i++] = (Integer)idIterator.current();
     	}
     	return ids;
+    }
+
+	int prefetchDepth() {
+	    return _config.prefetchDepth();
     }
     
     public QueryResult classOnlyQuery(Transaction trans, ClassMetadata clazz){

@@ -6,45 +6,46 @@ import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.*;
+import com.db4o.internal.cs.objectexchange.*;
 import com.db4o.internal.query.result.*;
 
 public abstract class MsgQuery extends MsgObject {
 	
-	private static final int ID_AND_SIZE = 2;
-	
 	private static int nextID;
 	
-	protected final void writeQueryResult(AbstractQueryResult queryResult, QueryEvaluationMode evaluationMode) {
-		
-		int queryResultId = 0;
-		int maxCount = 0;
+	protected final void writeQueryResult(AbstractQueryResult queryResult, QueryEvaluationMode evaluationMode, int prefetchDepth) {
 		
 		if(evaluationMode == QueryEvaluationMode.IMMEDIATE){
-			maxCount = queryResult.size();
+			writeImmediateQueryResult(queryResult, prefetchDepth);
 		} else{
-			queryResultId = generateID();
-			maxCount = config().prefetchObjectCount();  
+			writeLazyQueryResult(queryResult, prefetchDepth);
 		}
-		
-		MsgD message = QUERY_RESULT.getWriterForLength(transaction(), bufferLength(maxCount));
-		StatefulBuffer writer = message.payLoad();
-		writer.writeInt(queryResultId);
-		
-        IntIterator4 idIterator = queryResult.iterateIDs();
-        
-    	writer.writeIDs(idIterator, maxCount);
-        
-        if(queryResultId > 0){
-        	ServerMessageDispatcher serverThread = serverMessageDispatcher();
-			serverThread.mapQueryResultToID(new LazyClientObjectSetStub(queryResult, idIterator), queryResultId);
-        }
-        
-		write(message);
 	}
 
-	private int bufferLength(int maxCount) {
-		return Const4.INT_LENGTH * (maxCount + ID_AND_SIZE);
-	}
+	private void writeLazyQueryResult(AbstractQueryResult queryResult, int prefetchDepth) {
+	    int queryResultId = generateID();
+	    int maxCount = config().prefetchObjectCount();
+	    IntIterator4 idIterator = queryResult.iterateIDs();
+	    MsgD message = buildQueryResultMessage(queryResultId, idIterator, maxCount, prefetchDepth);
+	    ServerMessageDispatcher serverThread = serverMessageDispatcher();
+	    serverThread.mapQueryResultToID(new LazyClientObjectSetStub(queryResult, idIterator), queryResultId);
+	    write(message);
+    }
+
+	private void writeImmediateQueryResult(AbstractQueryResult queryResult, int prefetchDepth) {
+	    IntIterator4 idIterator = queryResult.iterateIDs();
+	    MsgD message = buildQueryResultMessage(0, idIterator, queryResult.size(), prefetchDepth);
+	    write(message);
+    }
+
+	private MsgD buildQueryResultMessage(int queryResultId, IntIterator4 ids, int maxCount, int prefetchDepth) {
+		final ByteArrayBuffer payload = ObjectExchangeStrategyFactory.forPrefetchDepth(prefetchDepth).marshall((LocalTransaction) transaction(), ids, maxCount);
+	    MsgD message = QUERY_RESULT.getWriterForLength(transaction(), Const4.INT_LENGTH + payload.length());
+		StatefulBuffer writer = message.payLoad();
+		writer.writeInt(queryResultId);
+		writer.writeBytes(payload._buffer);
+	    return message;
+    }
 	
 	private static synchronized int generateID(){
 		nextID ++;

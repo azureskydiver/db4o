@@ -4,6 +4,7 @@ package com.db4o.internal.cs.messages;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.cs.objectexchange.*;
 
 
 /**
@@ -14,19 +15,16 @@ public class MObjectSetFetch extends MObjectSet implements ServerSideMessage {
 	public boolean processAtServer() {
 		int queryResultID = readInt();
 		int fetchSize = readInt();
+		int fetchDepth = readInt();
 		MsgD message = null;
 		synchronized(streamLock()) {
 			IntIterator4 idIterator = stub(queryResultID).idIterator();
-			message = ID_LIST.getWriterForLength(transaction(), bufferLength(fetchSize));
-			StatefulBuffer writer = message.payLoad();
-	    	writer.writeIDs(idIterator, fetchSize);
+			ByteArrayBuffer payload = ObjectExchangeStrategyFactory.forPrefetchDepth(fetchDepth).marshall((LocalTransaction) transaction(), idIterator, fetchSize);
+			message = ID_LIST.getWriterForLength(transaction(), payload.length());
+			message.writeBytes(payload._buffer);
 		}
 		write(message);
 		return true;
-	}
-
-	private int bufferLength(int fetchSize) {
-		return Const4.INT_LENGTH * (fetchSize + 1);
 	}
 
 }

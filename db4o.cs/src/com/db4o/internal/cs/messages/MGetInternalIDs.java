@@ -2,27 +2,35 @@
 
 package com.db4o.internal.cs.messages;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.cs.objectexchange.*;
 
 public final class MGetInternalIDs extends MsgD implements ServerSideMessage {
 	public final boolean processAtServer() {
-		ByteArrayBuffer bytes = this.getByteLoad();
-		long[] ids;
-		synchronized (streamLock()) {
-			try {
-				ids = stream().classMetadataForID(bytes.readInt()).getIDs(transaction());
-			} catch (Exception e) {
-				ids = new long[0];
-			}
-		}
-		int size = ids.length;
-		MsgD message = Msg.ID_LIST.getWriterForLength(transaction(), Const4.ID_LENGTH * (size + 1));
-		ByteArrayBuffer writer = message.payLoad();
-		writer.writeInt(size);
-		for (int i = 0; i < size; i++) {
-			writer.writeInt((int) ids[i]);
-		}
+		
+		ByteArrayBuffer bytes = getByteLoad();
+        final int classMetadataID = bytes.readInt();
+        final int prefetchDepth = bytes.readInt();
+        
+		final long[] ids = idsFor(classMetadataID);
+		
+		final ByteArrayBuffer payload = ObjectExchangeStrategyFactory.forPrefetchDepth(prefetchDepth).marshall((LocalTransaction)transaction(), IntIterators.forLongs(ids), ids.length);
+		final MsgD message = Msg.ID_LIST.getWriterForLength(transaction(), payload.length());
+		message.payLoad().writeBytes(payload._buffer);
+		
 		write(message);
+		
 		return true;
 	}
+
+	private long[] idsFor(final int classMetadataID) {
+	    synchronized (streamLock()) {
+			try {
+				return stream().classMetadataForID(classMetadataID).getIDs(transaction());
+			} catch (Exception e) {
+			}
+		}
+		return new long[0];
+    }
 }

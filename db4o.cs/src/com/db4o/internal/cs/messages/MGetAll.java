@@ -10,8 +10,9 @@ public final class MGetAll extends MsgQuery implements ServerSideMessage {
 	
 	public final boolean processAtServer() {
 		QueryEvaluationMode evaluationMode = QueryEvaluationMode.fromInt(readInt());
+		int prefetchDepth = readInt();
 		synchronized(streamLock()) {
-			writeQueryResult(getAll(evaluationMode), evaluationMode);
+			writeQueryResult(getAll(evaluationMode), evaluationMode, prefetchDepth);
 		}
 		return true;
 	}

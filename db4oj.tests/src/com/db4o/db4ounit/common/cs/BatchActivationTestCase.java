@@ -1,0 +1,103 @@
+package com.db4o.db4ounit.common.cs;
+
+import java.util.*;
+
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.foundation.*;
+import com.db4o.internal.cs.messages.*;
+import com.db4o.query.*;
+
+import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
+import db4ounit.fixtures.*;
+
+/**
+ * Options:
+ * 
+ * 1) activate the objects on the server up to prefetchDepth and store them into
+ * the TransportObjectContainer 1.1) connect objects to the local client cache
+ * 
+ * 2) activate the objects on the server up to prefetchDepth, collect all IDs
+ * and send the required slots to the client 2.1) connect the objects to the
+ * local client cache
+ * 
+ * 2') don't activate the objects but traverse slots collecting IDs instead
+ * 
+ * 3) Introduce slot cache in the client and prefetch slots every time objects
+ * are activated and the required slots (prefetchDepth) are not available
+ * 
+ */
+public class BatchActivationTestCase extends FixtureTestSuiteDescription implements OptOutAllButNetworkingCS {
+	
+	
+	{
+		testUnits(BatchActivationTestUnit.class);
+		fixtureProviders(
+			new SubjectFixtureProvider(
+				// first - prefetchDepth
+				// second - expected number of messages exchanged
+				Pair.of(0, 1),
+				Pair.of(1, 0)));
+	}
+	
+
+	public static class BatchActivationTestUnit extends ClientServerTestCaseBase {
+		@Override
+		protected void configure(Configuration config) throws Exception {
+			config.clientServer().prefetchDepth(prefetchDepth());
+		}
+
+		@Override
+		protected void store() throws Exception {
+			store(new Item("foo"));
+		}
+
+		public void testClassOnlyQuery() {
+
+			final Query query = newQuery(Item.class);
+			assertBatchBehaviorFor(query);
+
+		}
+
+		public void testConstrainedQuery() {
+
+			final Query query = newQuery(Item.class);
+			query.descend("name").constrain("foo");
+			assertBatchBehaviorFor(query);
+
+		}
+
+		private void assertBatchBehaviorFor(final Query query) {
+			final ObjectSet<Item> result = query.execute();
+
+			final List<Msg> messages = MessageCollector.forServerDispatcher(serverDispatcher());
+
+			Assert.areEqual("foo", result.next().name);
+
+			Assert.areEqual(expectedMessageCount(), messages.size(), messages.toString());
+		}
+		
+
+		private int prefetchDepth() {
+	        return subject().first;
+        }
+
+		private Pair<Integer, Integer> subject() {
+	        return SubjectFixtureProvider.value();
+        }
+
+		private int expectedMessageCount() {
+	        return subject().second;
+        }
+
+		public static class Item {
+
+			public String name;
+
+			public Item(String name) {
+				this.name = name;
+			}
+		}
+	}
+}

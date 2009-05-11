@@ -133,8 +133,8 @@ public abstract class AbstractQueryResult implements QueryResult {
 		throw new NotImplementedException();
 	}
 
-    /** @param r */
-	public void loadFromIdReader(ByteArrayBuffer r) {
+    /** @param ids */
+	public void loadFromIdReader(Iterator4 ids) {
 		throw new NotImplementedException();
 	}
 

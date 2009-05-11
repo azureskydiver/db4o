@@ -258,7 +258,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	
 	public final Object read(
 		Transaction trans,
-		StatefulBuffer buffer,
+		ByteArrayBuffer buffer,
 		Object obj,
 		ActivationDepth instantiationDepth,
 		int addToIDTree,
@@ -270,9 +270,13 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return context.read();
 	}
 
-	public final Object readPrefetch(Transaction trans, StatefulBuffer buffer) {
-	    return new UnmarshallingContext(trans, buffer, this, Const4.ADD_TO_ID_TREE, false).readPrefetch();
+	public final Object readPrefetch(Transaction trans, ByteArrayBuffer buffer) {
+	    return readPrefetch(trans, buffer, Const4.ADD_TO_ID_TREE);
 	}
+
+	public Object readPrefetch(Transaction trans, ByteArrayBuffer buffer, final int addToIDTree) {
+	    return new UnmarshallingContext(trans, buffer, this, addToIDTree, false).readPrefetch();
+    }
 
 	public final void readThis(Transaction trans, ByteArrayBuffer buffer) {
 		if (Deploy.debug) {

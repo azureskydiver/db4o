@@ -820,6 +820,5 @@ public interface Configuration {
      */
     public void registerTypeHandler(TypeHandlerPredicate predicate, TypeHandler4 typeHandler);
 
-    
-	    
+		    
 }

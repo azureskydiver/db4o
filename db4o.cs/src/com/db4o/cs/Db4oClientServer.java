@@ -61,7 +61,8 @@ public class Db4oClientServer {
 	 * creates a new {@link ClientConfiguration} 
 	 */
 	public static ClientConfiguration newClientConfiguration() {
-		return new ClientConfigurationImpl(newLegacyConfig());
+		final Config4Impl legacy = newLegacyConfig();
+		return new ClientConfigurationImpl((Config4Impl) legacy);
 	}
 	
     @SuppressWarnings("deprecation")

@@ -22,8 +22,8 @@ public class ByteArrayBuffer implements ReadWriteBuffer {
 	ByteArrayBuffer(){
 	}
 	
-	public ByteArrayBuffer(int a_length){
-		_buffer = new byte[a_length];
+	public ByteArrayBuffer(int length){
+		_buffer = new byte[length];
 	}
 	
 	public ByteArrayBuffer(byte[] buffer){
@@ -267,5 +267,9 @@ public class ByteArrayBuffer implements ReadWriteBuffer {
 		}
 		_buffer = new byte[size];
 	}
+
+	public void skip(int length) {
+		seek(_offset + length);
+    }
 
 }

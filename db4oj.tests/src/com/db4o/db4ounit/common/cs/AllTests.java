@@ -12,6 +12,7 @@ public class AllTests extends Db4oTestSuite {
 	
 	protected Class[] testCases() {
 		return new Class[] {
+				BatchActivationTestCase.class,
 		        CallConstructorsConfigTestCase.class,
 		        ClientDisconnectTestCase.class,
 	            ClientTimeOutTestCase.class,
@@ -23,6 +24,7 @@ public class AllTests extends Db4oTestSuite {
 	            IsAliveTestCase.class,
 	            NoTestConstructorsQEStringCmpTestCase.class,
 	            ObjectServerTestCase.class,
+	            PrefetchConfigurationTestCase.class,
 	            PrimitiveMessageTestCase.class,
 	            QueryConsistencyTestCase.class,
 	            SendMessageToClientTestCase.class,

@@ -10,7 +10,6 @@ import com.db4o.foundation.*;
  */
 public interface PrefetchingStrategy {
 
-	int prefetchObjects(ClientObjectContainer container, IntIterator4 ids,
-			Object[] prefetched, int prefetchCount);
+	int prefetchObjects(ClientObjectContainer container, IntIterator4 ids, Object[] prefetched, int prefetchCount);
 
 }
