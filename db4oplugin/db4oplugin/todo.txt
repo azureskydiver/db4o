@@ -1,5 +1,10 @@
-- full build
 - notify PDE about changed class files
 - export configuration for use by ant build
 - go more functional
 - restrict nature applicability to IJavaProject natures
+
+- preferences/package selection
+  * persist package list
+  * disallow duplicates
+  * combine with regexp
+  * recursive filtering vs single package filtering

@@ -14,6 +14,7 @@ import org.eclipse.jdt.core._
 import org.eclipse.jdt.core.search._
 import org.eclipse.jface.viewers._
 import org.eclipse.jface.dialogs._
+import org.eclipse.jface.window._
 
 class Db4oInstrumentationPropertyPage extends PropertyPage {
 
@@ -53,8 +54,24 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
 		val scope= SearchEngine.createWorkspaceScope();
 		val flags= PackageSelectionDialog.F_SHOW_PARENTS | PackageSelectionDialog.F_HIDE_DEFAULT_PACKAGE | PackageSelectionDialog.F_REMOVE_DUPLICATES;
         val dialog = new PackageSelectionDialog(getShell(), context, flags , scope)
-        //val dialog = new ElementListSelectionDialog(getShell, null)
-        dialog.open
+        dialog.setMultipleSelection(true)
+        if(dialog.open != Window.OK) {
+          return
+        }
+        val result = dialog.getResult
+        val packageNames = result.map(_.asInstanceOf[IPackageFragment].getElementName)
+        packageNames.foreach(filterPackageList.add(_))
+      }
+    })
+    
+    removeButton.addListener(SWT.Selection, new Listener() {
+      def handleEvent(event: Event) {
+        val selection = filterPackageList.getSelection
+        if(!selection.isInstanceOf[IStructuredSelection]) {
+          return
+        }
+        val structured = selection.asInstanceOf[IStructuredSelection]
+        filterPackageList.remove(structured.toArray)
       }
     })
     
