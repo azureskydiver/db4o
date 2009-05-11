@@ -70,6 +70,7 @@ final class ClientTransaction extends Transaction {
         int messageLength = Const4.LONG_LENGTH + Const4.INT_LENGTH + a_signature.length;
         MsgD message = Msg.OBJECT_BY_UUID.getWriterForLength(this, messageLength);
         message.writeLong(a_uuid);
+        message.writeInt(a_signature.length);
         message.writeBytes(a_signature);
         i_client.write(message);
         message = (MsgD)i_client.expectedResponse(Msg.OBJECT_BY_UUID);

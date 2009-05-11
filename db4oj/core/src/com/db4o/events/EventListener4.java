@@ -8,7 +8,7 @@ package com.db4o.events;
  * @see Event4
  * @sharpen.ignore
  */
-public interface EventListener4 {
+public interface EventListener4<T extends EventArgs> {
 	
 	/**
 	 * The event was triggered.
@@ -16,5 +16,5 @@ public interface EventListener4 {
 	 * @param e the specific event that was triggered
 	 * @param args the arguments for the specific event
 	 */
-	public void onEvent(Event4 e, EventArgs args);
+	public void onEvent(Event4 e, T args);
 }

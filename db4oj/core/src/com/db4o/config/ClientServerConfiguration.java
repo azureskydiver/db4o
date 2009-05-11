@@ -26,13 +26,22 @@ public interface ClientServerConfiguration {
 	void prefetchIDCount(int prefetchIDCount);
 
 	/**
-	 * Sets the number of objects to be prefetched for an ObjectSet in C/S mode.
-	 * This setting should be used on the server side. In embedded mode this setting
-	 * has no effect.
+	 * Sets the number of objects to be prefetched for an ObjectSet.
+	 * This setting should be used on the server side.
+	 * 
 	 * @param prefetchObjectCount
 	 *            The number of objects to be prefetched
 	 */
 	void prefetchObjectCount(int prefetchObjectCount);
+	
+	/**
+	 * Sets the depth to which prefetched objects are activated.
+	 * This setting should be used on the client side.
+	 * 
+	 * @param prefetchDepth
+	 */
+	void prefetchDepth(int prefetchDepth);    
+
 
 	/**
 	 * sets the MessageRecipient to receive Client Server messages. <br>

@@ -464,6 +464,12 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		
 		return readReaderOrWriterBySlot(a_ta, a_id, useReader, slot);
 	}
+    
+    public ByteArrayBuffer readSlotBuffer(Slot slot) {
+    	ByteArrayBuffer reader = new ByteArrayBuffer(slot.length());
+		reader.readEncrypt(this, slot.address());
+		return reader;
+    }
 
 	ByteArrayBuffer readReaderOrWriterBySlot(Transaction a_ta, int a_id, boolean useReader, Slot slot) {
 		if (slot == null) {

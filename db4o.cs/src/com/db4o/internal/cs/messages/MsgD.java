@@ -56,7 +56,7 @@ public class MsgD extends Msg{
 		return getWriterForLength(trans, 0);
 	}
 	
-	public final MsgD getWriterForInts(Transaction trans, int[] ints) {
+	public final MsgD getWriterForInts(Transaction trans, int... ints) {
         MsgD message = getWriterForLength(trans, Const4.INT_LENGTH * ints.length);
         for (int i = 0; i < ints.length; i++) {
             message.writeInt(ints[i]);
@@ -151,7 +151,6 @@ public class MsgD extends Msg{
 	}
 	
 	public final void writeBytes(byte[] aBytes){
-	    writeInt(aBytes.length);
 	    _payLoad.append(aBytes);
 	}
 

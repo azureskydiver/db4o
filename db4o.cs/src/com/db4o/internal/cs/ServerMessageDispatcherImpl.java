@@ -3,11 +3,13 @@
 package com.db4o.internal.cs;
 
 import com.db4o.*;
+import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.messages.*;
+import com.db4o.internal.events.*;
 
 public final class ServerMessageDispatcherImpl extends Thread implements ServerMessageDispatcher {
 
@@ -36,6 +38,8 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	private final Object _lock = new Object();
 	
 	private final Object _mainLock;
+
+	private final Event4Impl _messageReceived = new Event4Impl();
 	
     ServerMessageDispatcherImpl(ObjectServerImpl server,
 			ClientTransactionHandle transactionHandle, Socket4 socket,
@@ -163,6 +167,9 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
         if(message == null){
             return true;
         }
+        
+        triggerMessageReceived(message);
+        
         if(!_loggedin && !Msg.LOGIN.equals(message)) {
         	return true;
         }
@@ -175,7 +182,11 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
     	return false;
     }
 
-    public ObjectServerImpl server() {
+    private void triggerMessageReceived(Msg message) {
+    	ServerPlatform.triggerMessageEvent(_messageReceived, message);
+    }
+
+	public ObjectServerImpl server() {
     	return _server;
     }
     
@@ -284,4 +295,11 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	public ClassInfoHelper classInfoHelper() {
 		return server().classInfoHelper();
 	}
+
+	/**
+	 * EventArgs => MessageEventArgs
+	 */
+	public Event4 messageReceived() {
+		return _messageReceived;
+    }
 }

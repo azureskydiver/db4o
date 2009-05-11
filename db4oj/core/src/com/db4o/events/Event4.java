@@ -11,17 +11,17 @@ package com.db4o.events;
  * 
  * @sharpen.ignore
  */
-public interface Event4 {
+public interface Event4<T extends EventArgs> {
 	
 	/**
 	 * Adds a new listener to the notification list..
 	 * 
 	 * @sharpen.event.add
 	 */
-	public void addListener(EventListener4 listener);
+	public void addListener(EventListener4<T> listener);
 	
 	/**
 	 * Removes a previously registered listener from the notification list.
 	 */
-	public void removeListener(EventListener4 listener);
+	public void removeListener(EventListener4<T> listener);
 }

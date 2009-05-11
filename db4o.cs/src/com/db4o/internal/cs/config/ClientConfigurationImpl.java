@@ -33,4 +33,8 @@ public class ClientConfigurationImpl extends NetworkingConfigurationProviderImpl
 	public CommonConfiguration common() {
 		return new CommonConfigurationImpl(legacy());
 	}
+
+	public void prefetchDepth(int prefetchDepth) {
+		legacy().prefetchDepth(prefetchDepth);
+    }
 }

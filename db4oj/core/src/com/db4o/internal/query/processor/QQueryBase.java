@@ -40,6 +40,8 @@ public abstract class QQueryBase implements Unversioned {
     
     private transient QueryEvaluationMode _evaluationMode;
     
+    private int _prefetchDepth;
+    
     public int _evaluationModeAsInt;
     
     public QueryComparator _comparator;
@@ -56,6 +58,7 @@ public abstract class QQueryBase implements Unversioned {
         _trans = a_trans;
         i_parent = a_parent;
         i_field = a_field;
+        _prefetchDepth = a_trans.container().config().prefetchDepth();
     }
 
     void addConstraint(QCon a_constraint) {
@@ -792,6 +795,11 @@ public abstract class QQueryBase implements Unversioned {
 		}
 		return false;
 	}
+
+	public int prefetchDepth() {
+		return _prefetchDepth;
+    }
+
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer();

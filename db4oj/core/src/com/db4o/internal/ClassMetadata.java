@@ -1323,7 +1323,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         return MarshallerFamily.current()._class.marshalledLength(_container, this);
     }
     
-    public int prefetchActivationDepth(){
+    public final int prefetchActivationDepth(){
     	return 1;
     }
     

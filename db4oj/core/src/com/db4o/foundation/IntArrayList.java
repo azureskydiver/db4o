@@ -65,7 +65,7 @@ public class IntArrayList implements Iterable4 {
     }
 
 	public IntIterator4 intIterator() {
-		return new IntIterator4Impl(i_content, i_count);
+		return IntIterators.forInts(i_content, i_count);
 	}
 	
 	public Iterator4 iterator() {

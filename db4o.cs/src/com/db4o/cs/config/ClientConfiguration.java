@@ -6,7 +6,8 @@ import com.db4o.config.*;
 import com.db4o.messaging.*;
 
 /**
- * Configuration interface for db4o clients.
+ * Configuration interface for db4o networking clients.
+ * 
  * @since 7.5
  */
 public interface ClientConfiguration extends NetworkingConfigurationProvider, CommonConfigurationProvider {
@@ -14,8 +15,7 @@ public interface ClientConfiguration extends NetworkingConfigurationProvider, Co
 	/**
 	 * Sets the number of IDs to be pre-allocated in the database for new 
 	 * objects created on the client.
-	 * This setting should be used on the client side. In embedded mode this setting
-	 * has no effect.
+	 * 
 	 * @param prefetchIDCount
 	 *            The number of IDs to be prefetched
 	 *            
@@ -24,9 +24,8 @@ public interface ClientConfiguration extends NetworkingConfigurationProvider, Co
 	void prefetchIDCount(int prefetchIDCount);
 
 	/**
-	 * Sets the number of objects to be prefetched for an ObjectSet in C/S mode.
-	 * This setting should be used on the server side. In embedded mode this setting
-	 * has no effect.
+	 * Sets the number of objects to be prefetched for an ObjectSet.
+	 * 
 	 * @param prefetchObjectCount
 	 *            The number of objects to be prefetched
 	 *            
@@ -42,6 +41,13 @@ public interface ClientConfiguration extends NetworkingConfigurationProvider, Co
 	 * @sharpen.property
 	 */
 	public MessageSender messageSender();
+
+	/**
+	 * Sets the depth to which prefetched objects will be activated.
+	 * 
+	 * @param value
+	 */
+	void prefetchDepth(int prefetchDepth);
 
 
 }

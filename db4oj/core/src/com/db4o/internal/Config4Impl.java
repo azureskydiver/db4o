@@ -128,6 +128,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 
 	private static final KeySpec PREFETCH_OBJECT_COUNT_KEY = new KeySpec(10);
 	
+	private static final KeySpec PREFETCH_DEPTH_KEY = new KeySpec(0);
+	
 	private final static KeySpec READ_AS_KEY=new KeySpec(new Hashtable4(16));
 	
 	private final static KeySpec RECOVERY_MODE_KEY=new KeySpec(false);
@@ -1059,6 +1061,11 @@ public final class Config4Impl implements Configuration, DeepClone,
         }
     }
 
+	public void prefetchDepth(int prefetchDepth) {
+		_config.put(PREFETCH_DEPTH_KEY, prefetchDepth);
+    }
 	
-
+	public int prefetchDepth() {
+		return _config.getAsInt(PREFETCH_DEPTH_KEY);
+	}
 }
