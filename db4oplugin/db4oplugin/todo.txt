@@ -8,3 +8,4 @@
   * disallow duplicates
   * combine with regexp
   * recursive filtering vs single package filtering
+  * disable buttons if not applicable
