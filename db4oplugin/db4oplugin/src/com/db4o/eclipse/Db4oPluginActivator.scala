@@ -25,4 +25,5 @@ class Db4oPluginActivator extends AbstractUIPlugin {
 		Db4oPluginActivator.plugin = null;
 		super.stop(context);
 	}
+ 
 }

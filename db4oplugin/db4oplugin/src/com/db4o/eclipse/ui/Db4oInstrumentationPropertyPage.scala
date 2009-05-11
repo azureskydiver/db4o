@@ -11,7 +11,9 @@ import org.eclipse.core.runtime._
 import org.eclipse.core.resources._
 import org.eclipse.core.runtime.preferences._
 import org.eclipse.jdt.core._
+import org.eclipse.jdt.core.search._
 import org.eclipse.jface.viewers._
+import org.eclipse.jface.dialogs._
 
 class Db4oInstrumentationPropertyPage extends PropertyPage {
 
@@ -35,6 +37,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     composite.setLayout(layout)
     composite.setLayoutData(fillGridData)
     composite.setFont(parent.getFont)
+    
     val regExpLabel = createLabel("Regular expression for fully qualified class names to be instrumented", composite, (2,1))
     filterRegExpText = new Text(composite, SWT.SINGLE | SWT.BORDER)
     filterRegExpText.setLayoutData(fillGridData((2,1), fillBothDimensions))
@@ -43,6 +46,18 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     filterPackageList = createTableViewer(composite, (1,2))
     val addButton = createButton("Add", composite)
     val removeButton = createButton("Remove", composite)
+    
+    addButton.addListener(SWT.Selection, new Listener() {
+      def handleEvent(event: Event) {
+        val context = new ProgressMonitorDialog(getShell)
+		val scope= SearchEngine.createWorkspaceScope();
+		val flags= PackageSelectionDialog.F_SHOW_PARENTS | PackageSelectionDialog.F_HIDE_DEFAULT_PACKAGE | PackageSelectionDialog.F_REMOVE_DUPLICATES;
+        val dialog = new PackageSelectionDialog(getShell(), context, flags , scope)
+        //val dialog = new ElementListSelectionDialog(getShell, null)
+        dialog.open
+      }
+    })
+    
     composite
   }
 
