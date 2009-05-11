@@ -56,15 +56,14 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
         val context = new ProgressMonitorDialog(getShell)
 		val scope= SearchEngine.createWorkspaceScope();
 		val flags= PackageSelectionDialog.F_SHOW_PARENTS | PackageSelectionDialog.F_HIDE_DEFAULT_PACKAGE | PackageSelectionDialog.F_REMOVE_DUPLICATES
-        val dialog = new PackageSelectionDialog(getShell(), context, flags , scope, new java.util.ArrayList())
-        System.err.println(filterPackageList.getInput)
+        val dialog = new PackageSelectionDialog(getShell(), context, flags , scope, packages.getPackages.toArray)
         dialog.setMultipleSelection(true)
         if(dialog.open != Window.OK) {
           return
         }
         val result = dialog.getResult
         val packageNames = result.map(_.asInstanceOf[IPackageFragment].getElementName)
-        packageNames.foreach(filterPackageList.add(_))
+        packageNames.foreach(packages.addPackage(_))
       }
     })
     
