@@ -2,6 +2,8 @@ package com.db4o.eclipse.ui
 
 import com.db4o.eclipse.preferences._
 
+import scala.collection.immutable._
+
 import org.eclipse.swt._
 import org.eclipse.swt.graphics._
 import org.eclipse.swt.widgets._
@@ -44,7 +46,8 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     filterRegExpText.setLayoutData(fillGridData((2,1), fillBothDimensions))
     filterRegExpText.setText(Db4oPreferences.getFilterRegExp(project))
     val packageLabel = createLabel("Packages to be instrumented", composite, (2,1))
-    filterPackageList = createTableViewer(composite, (1,2))
+    val packages = new PackageList
+    filterPackageList = createTableViewer(composite, packages, (1,2))
     val addButton = createButton("Add", composite)
     val removeButton = createButton("Remove", composite)
     
@@ -52,8 +55,9 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
       def handleEvent(event: Event) {
         val context = new ProgressMonitorDialog(getShell)
 		val scope= SearchEngine.createWorkspaceScope();
-		val flags= PackageSelectionDialog.F_SHOW_PARENTS | PackageSelectionDialog.F_HIDE_DEFAULT_PACKAGE | PackageSelectionDialog.F_REMOVE_DUPLICATES;
-        val dialog = new PackageSelectionDialog(getShell(), context, flags , scope)
+		val flags= PackageSelectionDialog.F_SHOW_PARENTS | PackageSelectionDialog.F_HIDE_DEFAULT_PACKAGE | PackageSelectionDialog.F_REMOVE_DUPLICATES
+        val dialog = new PackageSelectionDialog(getShell(), context, flags , scope, new java.util.ArrayList())
+        System.err.println(filterPackageList.getInput)
         dialog.setMultipleSelection(true)
         if(dialog.open != Window.OK) {
           return
@@ -66,18 +70,27 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     
     removeButton.addListener(SWT.Selection, new Listener() {
       def handleEvent(event: Event) {
-        val selection = filterPackageList.getSelection
-        if(!selection.isInstanceOf[IStructuredSelection]) {
-          return
-        }
-        val structured = selection.asInstanceOf[IStructuredSelection]
-        filterPackageList.remove(structured.toArray)
+        filterPackageList.remove(selectedPackageNames)
       }
     })
     
     composite
   }
 
+  private def allPackageNames: java.util.List[String] = {
+    val list = new java.util.ArrayList[String]
+    list
+  }
+  
+  private def selectedPackageNames: Array[Object] = {
+    val selection = filterPackageList.getSelection
+    if(!selection.isInstanceOf[IStructuredSelection]) {
+      return Array()
+    }
+    val structured = selection.asInstanceOf[IStructuredSelection]
+    structured.toArray
+  }
+  
   private def createLabel(text: String, parent: Composite, span: (Int, Int)) = {
     val label = new Label(parent, SWT.NONE)
     label.setText(text)
@@ -94,7 +107,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     button
   }
 
-  def createTableViewer(parent: Composite, span: (Int, Int)) = {
+  def createTableViewer(parent: Composite, packages: PackageList, span: (Int, Int)) = {
     val table= new Table(parent, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL)
     table.setFont(parent.getFont())
     table.setLayout(new TableLayout)
@@ -103,6 +116,8 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     gridData.heightHint = 100
     table.setLayoutData(gridData)
     val viewer = new TableViewer(table)
+    viewer.setContentProvider(new PackageListContentProvider(viewer))
+    viewer.setInput(packages)
     viewer
   }	
 
@@ -121,4 +136,62 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
   
   private def project = getElement.asInstanceOf[IJavaProject].getProject
 
+  private trait PackageListChangeListener {
+    def packageAdded(name: String)
+    def packageRemoved(name: String)
+  }
+  
+  private class PackageList {
+    
+    private var packages: ListSet[String] = ListSet.empty
+    private var listeners: ListSet[PackageListChangeListener] = ListSet.empty
+    
+    def addListener(listener: PackageListChangeListener) = listeners += listener
+
+    def removeListener(listener: PackageListChangeListener) = listeners -= listener
+
+    def addPackage(name: String) {
+      packages += name
+      listeners.foreach(_.packageAdded(name))
+    }
+
+    def removePackage(name: String) {
+      packages -= name
+      listeners.foreach(_.packageRemoved(name))
+    }
+    
+    def getPackages = packages
+
+  }
+  
+  private class PackageListContentProvider(view: TableViewer) extends IStructuredContentProvider with PackageListChangeListener {
+    
+    private var packages: Option[PackageList] = None
+    
+    override def getElements(inputElement: Object) = inputElement.asInstanceOf[PackageList].getPackages.toArray
+
+    override def dispose() {
+      packages.map(_.removeListener(this))
+    }
+
+    override def inputChanged(viewer: Viewer, oldInput: Object, newInput: Object) {
+      packagesOption(oldInput).map(_.removeListener(this))
+      packages = packagesOption(newInput)
+      packages.map(_.addListener(this))
+    }
+
+    override def packageAdded(name: String) {
+      view.add(name)
+    }
+    
+    override def packageRemoved(name: String) {
+      view.remove(name)
+    }
+    
+    private def packagesOption(input: Object) =
+      input match {
+        case null => None
+        case p => Some(p.asInstanceOf[PackageList])
+      }
+  }
 }

@@ -13,22 +13,19 @@ package com.db4o.eclipse.ui;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.List;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.search.*;
 import org.eclipse.jdt.core.search.SearchPattern;
+import org.eclipse.jdt.ui.*;
 import org.eclipse.jface.dialogs.*;
 import org.eclipse.jface.operation.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.*;
-import org.eclipse.ui.internal.*;
-import org.eclipse.jdt.ui.*;
-
-import com.db4o.eclipse.*;
 
 /**
  * Dialog to browse for package fragments.
@@ -49,6 +46,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 	private IRunnableContext fContext;
 	private IJavaSearchScope fScope;
 	private int fFlags;
+	private List<String> alreadySelected;
 
 	/**
 	 * Creates a package selection dialog.
@@ -58,11 +56,12 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 	 *  <code>F_HIDE_DEFAULT_PACKAGE</code> and  <code>F_HIDE_EMPTY_INNER</code>
 	 * @param scope the scope defining the available packages.
 	 */
-	public PackageSelectionDialog(Shell parent, IRunnableContext context, int flags, IJavaSearchScope scope) {
+	public PackageSelectionDialog(Shell parent, IRunnableContext context, int flags, IJavaSearchScope scope, List<String> alreadySelected) {
 		super(parent, createLabelProvider(flags));
 		fFlags= flags;
 		fScope= scope;
 		fContext= context;
+		this.alreadySelected = alreadySelected;
 	}
 	
 	private static ILabelProvider createLabelProvider(int dialogFlags) {
@@ -78,7 +77,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 	 * @see org.eclipse.jface.window.Window#open()
 	 */
 	public int open() {
-		final ArrayList packageList= new ArrayList();
+		final List<IPackageFragment> packageList= new ArrayList<IPackageFragment>();
 		
 		IRunnableWithProgress runnable= new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -99,7 +98,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 							String name= enclosingElement.getElementName();
 							if (fAddDefault || name.length() > 0) {
 								if (fDuplicates || fSet.add(name)) {
-									packageList.add(enclosingElement);
+									addPackageFragment((IPackageFragment) enclosingElement);
 									if (fIncludeParents) {
 										addParentPackages(enclosingElement, name);
 									}
@@ -113,7 +112,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 							while (idx != -1) {
 								name= name.substring(0, idx);
 								if (fDuplicates || fSet.add(name)) {
-									packageList.add(root.getPackageFragment(name));
+									addPackageFragment(root.getPackageFragment(name));
 								}
 								idx= name.lastIndexOf('.');
 							}
@@ -158,6 +157,12 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 					packageList.addAll(res);
 				} finally{
 					monitor.done();
+				}
+			}
+			
+			private void addPackageFragment(IPackageFragment fragment) {
+				if(!alreadySelected.contains(fragment.getElementName())) {
+					packageList.add(fragment);
 				}
 			}
 		};
