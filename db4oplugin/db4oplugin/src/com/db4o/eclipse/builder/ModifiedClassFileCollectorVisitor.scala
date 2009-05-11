@@ -23,7 +23,7 @@ private class ModifiedClassFileCollectorVisitor extends IResourceDeltaVisitor {
       return false
     }
     classSources += new SelectionClassSource(classFileOption.get)
-    return false
+    false
   }
   
   def getClassSources: scala.collection.Set[SelectionClassSource] = classSources
