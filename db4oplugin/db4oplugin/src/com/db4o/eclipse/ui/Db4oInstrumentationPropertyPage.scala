@@ -11,10 +11,12 @@ import org.eclipse.core.runtime._
 import org.eclipse.core.resources._
 import org.eclipse.core.runtime.preferences._
 import org.eclipse.jdt.core._
+import _root_.org.eclipse.jdt.internal.ui.preferences._
 
 class Db4oInstrumentationPropertyPage extends PropertyPage {
 
   private var filterRegExpText: Text = null
+
 
   override def createContents(parent: Composite) = {
     noDefaultAndApplyButton
@@ -41,6 +43,10 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     filterRegExpText.setLayoutData(fillGridData)
     filterRegExpText.setText(Db4oPreferences.getFilterRegExp(project))
     composite
+  }
+  
+  private def createPackageListBlock = {
+	new _root_.org.eclipse.jdt.internal.ui.preferences.ImportOrganizeConfigurationBlock(getNewStatusChangedListener(), getProject(), container);
   }
   
   private def fillGridData = {
