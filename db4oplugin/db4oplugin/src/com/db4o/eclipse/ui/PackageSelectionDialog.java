@@ -46,7 +46,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 	private IRunnableContext fContext;
 	private IJavaSearchScope fScope;
 	private int fFlags;
-	private List<String> alreadySelected;
+	private String[] alreadySelected;
 
 	/**
 	 * Creates a package selection dialog.
@@ -56,7 +56,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 	 *  <code>F_HIDE_DEFAULT_PACKAGE</code> and  <code>F_HIDE_EMPTY_INNER</code>
 	 * @param scope the scope defining the available packages.
 	 */
-	public PackageSelectionDialog(Shell parent, IRunnableContext context, int flags, IJavaSearchScope scope, List<String> alreadySelected) {
+	public PackageSelectionDialog(Shell parent, IRunnableContext context, int flags, IJavaSearchScope scope, String[] alreadySelected) {
 		super(parent, createLabelProvider(flags));
 		fFlags= flags;
 		fScope= scope;
@@ -161,9 +161,13 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 			}
 			
 			private void addPackageFragment(IPackageFragment fragment) {
-				if(!alreadySelected.contains(fragment.getElementName())) {
-					packageList.add(fragment);
+				for (String packageName : alreadySelected) {
+					if(packageName.equals(fragment.getElementName())) {
+						System.err.println("ALREADY SELECTED: " + packageName);
+						return;
+					}
 				}
+				packageList.add(fragment);
 			}
 		};
 
