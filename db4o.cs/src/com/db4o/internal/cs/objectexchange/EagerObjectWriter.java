@@ -50,6 +50,10 @@ public class EagerObjectWriter {
 			buffer.writeInt(slot.length());
 			buffer.writeBytes(slotBuffer._buffer);
 		}
+		
+		// TODO: write referenced slots when prefetchDepth > 1
+		//	buffer.writeInt(0); // no referenced slots
+		
 		return buffer;
 	}
 
