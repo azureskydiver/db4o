@@ -826,7 +826,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return ids.asLong();
     }
     
-    public QueryResult classOnlyQuery(Transaction trans, ClassMetadata clazz){
+    public QueryResult classOnlyQuery(QQueryBase query, ClassMetadata clazz){
         if (!clazz.hasClassIndex()) {
         	
         	// TODO: If the class does not have an index, we won't be
@@ -836,7 +836,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			return null;
 		}
 		
-		final AbstractQueryResult queryResult = newQueryResult(trans);
+		final AbstractQueryResult queryResult = newQueryResult(query.getTransaction());
 		queryResult.loadFromClassIndex(clazz);
 		return queryResult;
     }

@@ -62,21 +62,66 @@ public class BatchActivationTestCase extends FixtureTestSuiteDescription impleme
 
 		public void testConstrainedQuery() {
 
-			final Query query = newQuery(Item.class);
-			query.descend("name").constrain("foo");
+			final Query query = newConstrainedQuery();
 			assertBatchBehaviorFor(query);
 
 		}
+		
+		public void testQueryPrefetchDepth0() {
+			
+			final Query query = newConstrainedQuery();
+			
+			client().config().clientServer().prefetchDepth(0);
+			
+			assertBatchBehaviorFor(query, 1);
+		}
+		
+		public void testQueryPrefetchDepth1() {
+			
+			final Query query = newConstrainedQuery();
+			
+			client().config().clientServer().prefetchDepth(1);
+			
+			assertBatchBehaviorFor(query, 0);
+		}
+		
+		public void testQueryPrefetchDepth0ForClassOnlyQuery() {
+			
+			final Query query = newQuery(Item.class);
+			
+			client().config().clientServer().prefetchDepth(0);
+			
+			assertBatchBehaviorFor(query, 1);
+		}
+		
+		public void testQueryPrefetchDepth1ForClassOnlyQuery() {
+			
+			final Query query = newQuery(Item.class);
+			
+			client().config().clientServer().prefetchDepth(1);
+			
+			assertBatchBehaviorFor(query, 0);
+		}
+		
+		private Query newConstrainedQuery() {
+			final Query query = newQuery(Item.class);
+			query.descend("name").constrain("foo");
+			return query;
+		}
 
 		private void assertBatchBehaviorFor(final Query query) {
-			final ObjectSet<Item> result = query.execute();
+			assertBatchBehaviorFor(query, expectedMessageCount());
+		}
+
+		private void assertBatchBehaviorFor(final Query query, final int expectedMessageCount) {
+	        final ObjectSet<Item> result = query.execute();
 
 			final List<Msg> messages = MessageCollector.forServerDispatcher(serverDispatcher());
 
 			Assert.areEqual("foo", result.next().name);
 
-			Assert.areEqual(expectedMessageCount(), messages.size(), messages.toString());
-		}
+			Assert.areEqual(expectedMessageCount, messages.size(), messages.toString());
+        }
 		
 
 		private int prefetchDepth() {

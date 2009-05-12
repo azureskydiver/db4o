@@ -40,10 +40,11 @@ public class EagerObjectReader {
 				if (_available > 0) {
 					int id = _reader.readInt();
 					int length = _reader.readInt(); // slot length
-					
-					ensureObjectIsActive(id, length);
-			    	
-					_reader.skip(length);
+					if (length > 0) {
+						ensureObjectIsActive(id, length);
+				    	
+						_reader.skip(length);
+					}
 			    	
 					--_available;
 					_current = id;

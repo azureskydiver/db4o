@@ -7,15 +7,14 @@ import com.db4o.internal.*;
 
 public class EagerObjectExchangeStrategy implements ObjectExchangeStrategy {
 
-	// TODO: ...
-//	private final int _depth;
+	private ObjectExchangeConfiguration _config;
 
-	public EagerObjectExchangeStrategy(int prefetchDepth) {
-//		_depth = prefetchDepth;
+	public EagerObjectExchangeStrategy(ObjectExchangeConfiguration config) {
+		_config = config;
     }
 
 	public ByteArrayBuffer marshall(LocalTransaction transaction, IntIterator4 ids, int maxCount) {
-	   return new EagerObjectWriter(transaction).write(ids, maxCount);
+	   return new EagerObjectWriter(_config, transaction).write(ids, maxCount);
     }
 
 	public FixedSizeIntIterator4 unmarshall(Transaction transaction, ByteArrayBuffer reader) {

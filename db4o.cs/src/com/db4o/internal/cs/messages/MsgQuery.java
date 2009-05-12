@@ -13,33 +13,33 @@ public abstract class MsgQuery extends MsgObject {
 	
 	private static int nextID;
 	
-	protected final void writeQueryResult(AbstractQueryResult queryResult, QueryEvaluationMode evaluationMode, int prefetchDepth) {
+	protected final void writeQueryResult(AbstractQueryResult queryResult, QueryEvaluationMode evaluationMode, ObjectExchangeConfiguration config) {
 		
 		if(evaluationMode == QueryEvaluationMode.IMMEDIATE){
-			writeImmediateQueryResult(queryResult, prefetchDepth);
+			writeImmediateQueryResult(queryResult, config);
 		} else{
-			writeLazyQueryResult(queryResult, prefetchDepth);
+			writeLazyQueryResult(queryResult, config);
 		}
 	}
 
-	private void writeLazyQueryResult(AbstractQueryResult queryResult, int prefetchDepth) {
+	private void writeLazyQueryResult(AbstractQueryResult queryResult, ObjectExchangeConfiguration config) {
 	    int queryResultId = generateID();
 	    int maxCount = config().prefetchObjectCount();
 	    IntIterator4 idIterator = queryResult.iterateIDs();
-	    MsgD message = buildQueryResultMessage(queryResultId, idIterator, maxCount, prefetchDepth);
+	    MsgD message = buildQueryResultMessage(queryResultId, idIterator, maxCount, config);
 	    ServerMessageDispatcher serverThread = serverMessageDispatcher();
 	    serverThread.mapQueryResultToID(new LazyClientObjectSetStub(queryResult, idIterator), queryResultId);
 	    write(message);
     }
 
-	private void writeImmediateQueryResult(AbstractQueryResult queryResult, int prefetchDepth) {
+	private void writeImmediateQueryResult(AbstractQueryResult queryResult, ObjectExchangeConfiguration config) {
 	    IntIterator4 idIterator = queryResult.iterateIDs();
-	    MsgD message = buildQueryResultMessage(0, idIterator, queryResult.size(), prefetchDepth);
+	    MsgD message = buildQueryResultMessage(0, idIterator, queryResult.size(), config);
 	    write(message);
     }
 
-	private MsgD buildQueryResultMessage(int queryResultId, IntIterator4 ids, int maxCount, int prefetchDepth) {
-		final ByteArrayBuffer payload = ObjectExchangeStrategyFactory.forPrefetchDepth(prefetchDepth).marshall((LocalTransaction) transaction(), ids, maxCount);
+	private MsgD buildQueryResultMessage(int queryResultId, IntIterator4 ids, int maxCount, ObjectExchangeConfiguration config) {
+		final ByteArrayBuffer payload = ObjectExchangeStrategyFactory.forConfig(config).marshall((LocalTransaction) transaction(), ids, maxCount);
 	    MsgD message = QUERY_RESULT.getWriterForLength(transaction(), Const4.INT_LENGTH + payload.length());
 		StatefulBuffer writer = message.payLoad();
 		writer.writeInt(queryResultId);

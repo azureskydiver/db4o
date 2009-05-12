@@ -327,7 +327,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		
 	public AbstractQueryResult queryAllObjects(Transaction trans) {
 		int mode = config().queryEvaluationMode().asInt();
-		MsgD msg = Msg.GET_ALL.getWriterForInts(trans, mode, prefetchDepth());
+		MsgD msg = Msg.GET_ALL.getWriterForInts(trans, mode, prefetchDepth(), prefetchCount());
 		write(msg);
 		return readQueryResult(trans);
 	}
@@ -591,7 +591,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     }
 
 	private ObjectExchangeStrategy objectExchangeStrategy() {
-		return ObjectExchangeStrategyFactory.forPrefetchDepth(prefetchDepth());
+		return ObjectExchangeStrategyFactory.forConfig(new ObjectExchangeConfiguration(prefetchDepth(), prefetchCount()));
     }
 
 	void readThis() {
@@ -819,7 +819,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     }
 
     public long[] getIDsForClass(Transaction trans, ClassMetadata clazz){
-    	MsgD msg = Msg.GET_INTERNAL_IDS.getWriterForInts(trans, clazz.getID(), prefetchDepth());
+    	MsgD msg = Msg.GET_INTERNAL_IDS.getWriterForInts(trans, clazz.getID(), prefetchDepth(), prefetchCount());
     	write(msg);
     	
     	ByteArrayBuffer reader = expectedByteResponse(Msg.ID_LIST);
@@ -840,9 +840,15 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	int prefetchDepth() {
 	    return _config.prefetchDepth();
     }
+	
+	int prefetchCount() {
+	    return _config.prefetchObjectCount();
+    }
     
-    public QueryResult classOnlyQuery(Transaction trans, ClassMetadata clazz){
-        long[] ids = clazz.getIDs(trans); 
+	@Override
+    public QueryResult classOnlyQuery(QQueryBase query, ClassMetadata clazz){
+        final Transaction trans = query.getTransaction();
+		long[] ids = clazz.getIDs(trans); 
         ClientQueryResult resClient = new ClientQueryResult(trans, ids.length);
         for (int i = 0; i < ids.length; i++) {
             resClient.add((int)ids[i]);
@@ -852,7 +858,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     
     public QueryResult executeQuery(QQuery query){
     	Transaction trans = query.getTransaction();
-    	query.evaluationMode(config().queryEvaluationMode());
+    	query.captureQueryResultConfig();
         query.marshall();
 		MsgD msg = Msg.QUERY_EXECUTE.getWriter(Serializer.marshall(trans,query));
 		write(msg);

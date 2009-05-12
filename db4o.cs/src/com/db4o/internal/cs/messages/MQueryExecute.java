@@ -3,6 +3,7 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.ext.*;
+import com.db4o.internal.cs.objectexchange.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 
@@ -15,7 +16,7 @@ public final class MQueryExecute extends MsgQuery implements ServerSideMessage {
 			stream().withTransaction(transaction(), new Runnable() { public void run() {
 				
 				final QQuery query = unmarshallQuery();
-				writeQueryResult(executeFully(query), query.evaluationMode(), query.prefetchDepth());
+				writeQueryResult(executeFully(query), query.evaluationMode(), new ObjectExchangeConfiguration(query.prefetchDepth(), query.prefetchCount()));
 				
 			}});
 		} catch (Db4oException e) {
@@ -26,7 +27,7 @@ public final class MQueryExecute extends MsgQuery implements ServerSideMessage {
 
 	private QQuery unmarshallQuery() {
 	    // TODO: The following used to run outside of the
-        // synchronisation block for better performance but
+        // Synchronization block for better performance but
         // produced inconsistent results, cause unknown.
 
         QQuery query = (QQuery) readObjectFromPayLoad();

@@ -4,6 +4,7 @@ package com.db4o.internal.cs.messages;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.internal.cs.objectexchange.*;
 import com.db4o.internal.query.result.*;
 
 public final class MGetAll extends MsgQuery implements ServerSideMessage {
@@ -11,8 +12,9 @@ public final class MGetAll extends MsgQuery implements ServerSideMessage {
 	public final boolean processAtServer() {
 		QueryEvaluationMode evaluationMode = QueryEvaluationMode.fromInt(readInt());
 		int prefetchDepth = readInt();
+		int prefetchCount = readInt();
 		synchronized(streamLock()) {
-			writeQueryResult(getAll(evaluationMode), evaluationMode, prefetchDepth);
+			writeQueryResult(getAll(evaluationMode), evaluationMode, new ObjectExchangeConfiguration(prefetchDepth, prefetchCount));
 		}
 		return true;
 	}

@@ -1981,7 +1981,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     
     public abstract long[] getIDsForClass(Transaction trans, ClassMetadata clazz);
     
-	public abstract QueryResult classOnlyQuery(Transaction trans, ClassMetadata clazz);
+	public abstract QueryResult classOnlyQuery(QQueryBase queryBase, ClassMetadata clazz);
 	
 	public abstract QueryResult executeQuery(QQuery query);
 	
