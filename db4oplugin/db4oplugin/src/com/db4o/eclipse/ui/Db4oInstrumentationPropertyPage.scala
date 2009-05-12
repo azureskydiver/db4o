@@ -18,11 +18,13 @@ import org.eclipse.jface.viewers._
 import org.eclipse.jface.dialogs._
 import org.eclipse.jface.window._
 
+import AndOrEnum._
+
 class Db4oInstrumentationPropertyPage extends PropertyPage {
 
   private var filterRegExpText: Text = null
   private var filterPackages: PackageList = null
-  //private var filterPackageList: TableViewer = null
+  private var filterCombinator: AndOrEnum = null
 
   override def createContents(parent: Composite) = {
     noDefaultAndApplyButton
@@ -32,6 +34,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
   override def performOk = {
     Db4oPreferences.setFilterRegExp(project, filterRegExpText.getText)
     Db4oPreferences.setPackageList(project, filterPackages.getPackages)
+    Db4oPreferences.setFilterCombinator(project, filterCombinator)
     true
   }
   
@@ -47,6 +50,20 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     filterRegExpText = new Text(composite, SWT.SINGLE | SWT.BORDER)
     filterRegExpText.setLayoutData(fillGridData((2,1), fillBothDimensions))
     filterRegExpText.setText(Db4oPreferences.getFilterRegExp(project))
+    
+    filterCombinator = Db4oPreferences.getFilterCombinator(project)
+    val booleanComposite = new Composite(composite, SWT.NONE)
+    booleanComposite.setLayout(new RowLayout)
+    val andButton = createRadio("AND", booleanComposite, Some(new RadioListener(AndOrEnum.And)))
+    val orButton = createRadio("OR", booleanComposite, Some(new RadioListener(AndOrEnum.Or)))
+    (filterCombinator match {
+      case AndOrEnum.Or => orButton
+      case _ => andButton
+    }).setSelection(true)
+    andButton.addListener(SWT.Selection, new RadioListener(AndOrEnum.And))
+    andButton.addListener(SWT.Selection, new RadioListener(AndOrEnum.And))
+    booleanComposite.setLayoutData(fillGridData((2,1), fillBothDimensions))
+    
     val packageLabel = createLabel("Packages to be instrumented", composite, (2,1))
     filterPackages = new PackageList(Db4oPreferences.getPackageList(project))
     val filterPackageList = createTableViewer(composite, filterPackages, (1,2))
@@ -100,11 +117,22 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     label
   }
 
-  private def createButton(text: String, parent: Composite) = {
-    val button = new Button(parent, SWT.NONE)
+  private def createRadio(text: String, parent: Composite, listener: Option[Listener]): Button = {
+    val radio = createSWTButton(text, parent, SWT.RADIO)
+    listener.map(radio.addListener(SWT.Selection, _))
+    radio
+  }
+
+  private def createButton(text: String, parent: Composite): Button = {
+    val button = createSWTButton(text, parent, SWT.NONE)
+    button.setLayoutData(fillGridData((1,1), (GridData.FILL, GridData.BEGINNING)))
+    button
+  }
+  
+  private def createSWTButton(text: String, parent: Composite, flags: Int) = {
+    val button = new Button(parent, flags)
     button.setText(text)
     button.setFont(parent.getFont)
-    button.setLayoutData(fillGridData((1,1), (GridData.FILL, GridData.BEGINNING)))
     button
   }
 
@@ -194,4 +222,11 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
         case p => Some(p.asInstanceOf[PackageList])
       }
   }
+  
+  private class RadioListener(combinator: AndOrEnum) extends Listener {
+    override def handleEvent(event: Event) {
+      filterCombinator = combinator
+    }
+  }
+
 }
