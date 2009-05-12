@@ -5,8 +5,8 @@ import org.junit.runners.Suite;
 
 @RunWith(classOf[Suite])
 @Suite.SuiteClasses(Array(
-//  classOf[InstrumentSingleClassTestCase],
-//  classOf[FullBuildTestCase],
+  classOf[InstrumentSingleClassTestCase],
+  classOf[FullBuildTestCase],
   classOf[ClassFileChangeNotificationTestCase]
 ))
 class AllTests {
