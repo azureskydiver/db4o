@@ -5,6 +5,7 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.cs.messages.*;
+import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
@@ -15,9 +16,25 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 		Assert.areEqual(0, client().config().prefetchDepth());
 	}
 	
-	public void testEffectivePrefetchCount() {
+	public void testPrefetchingBehaviorForClassOnlyQuery() {
 		
-		queryWarmUp();
+		final Query query = client().query();
+		query.constrain(Item.class);
+		
+		assertPrefetchingBehaviorFor(query, Msg.GET_INTERNAL_IDS);
+	}
+	
+	public void testPrefetchingBehaviorForConstrainedQuery() {
+		
+		final Query query = client().query();
+		query.constrain(Item.class);
+		query.descend("field").constrain(null);
+		
+		assertPrefetchingBehaviorFor(query, Msg.QUERY_EXECUTE);
+	}
+
+	private void assertPrefetchingBehaviorFor(final Query query, final MsgD expectedFirstMessage) {
+	    queryWarmUp();
 		
 		storeFiveItems();
 		
@@ -26,8 +43,8 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 		
 		final List<Msg> messages = MessageCollector.forServerDispatcher(serverDispatcher());
 		
-		final ObjectSet result = client().query(Item.class);
-		assertMessages(messages, Msg.QUERY_EXECUTE);
+		final ObjectSet result = query.execute();
+		assertMessages(messages, expectedFirstMessage);
 		messages.clear();
 		
 		result.next(); // should have been prefetched already
@@ -48,7 +65,7 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 		
 		Assert.isFalse(result.hasNext());
 		assertMessages(messages);
-	}
+    }
 
 	private void assertMessages(List<Msg> actualMessages, MsgD... expectedMessages) {
 		Iterator4Assert.areEqual(expectedMessages, Iterators.iterator(actualMessages));
