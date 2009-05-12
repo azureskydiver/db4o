@@ -633,9 +633,13 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     public void deactivate(Transaction trans, ObjectInfo reference, ActivationDepth depth) {
         final Object obj = reference.getObject();
 		if(objectCanDeactivate(trans, obj)){
-            deactivateFields(trans.container().activationContextFor(trans, obj, depth));
+            forceDeactivation(trans, depth, obj);
             objectOnDeactivate(trans, reference);
         }
+    }
+
+	public void forceDeactivation(Transaction trans, ActivationDepth depth, final Object obj) {
+	    deactivateFields(trans.container().activationContextFor(trans, obj, depth));
     }
 
 	private void objectOnDeactivate(Transaction transaction, ObjectInfo obj) {
