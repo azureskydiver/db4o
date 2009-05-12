@@ -21,6 +21,8 @@
 				<include name="org.eclipse.equinox.common_*.jar" />
 				<include name="org.eclipse.equinox.registry_*.jar" />
 				<include name="org.eclipse.equinox.preferences_*.jar" />
+				<include name="org.eclipse.jdt.core_*.jar" />
+				<include name="org.eclipse.jdt.ui_*.jar" />
 			</fileset>
 		</path>
 	    <property name="scala-library.jar" value="${dir.scala.lib}/scala-library.jar" />
