@@ -4,8 +4,6 @@
 - restrict nature applicability to IJavaProject natures
 
 - preferences/package selection
-  * persist package list
-  * disallow duplicates
-  * combine with regexp
+  * only offer packages from inside the project
   * recursive filtering vs single package filtering
   * disable buttons if not applicable
