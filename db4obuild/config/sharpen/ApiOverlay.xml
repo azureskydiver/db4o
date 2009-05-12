@@ -1358,7 +1358,7 @@
         <code>EventRegistry registry =  EventRegistryFactory.ForObjectContainer(container);</code>
         A new callback can be registered for an event with the following code:
         <code>
-          private static void OnCreated(object sender, ObjectEventArgs args)
+          private static void OnCreated(object sender, ObjectInfoEventArgs args)
           {
           Object obj = args.Object;
           if (obj is Pilot)
@@ -1366,7 +1366,7 @@
           Console.WriteLine(obj.ToString());
           }
           }
-          registry.Created+=new ObjectEventHandler(OnCreated);
+          registry.Created+=new System.EventHandler&lt;ObjectInfoEventArgs&gt;(OnCreated);
         </code>
         <seealso cref="EventRegistryFactory">EventRegistryFactory</seealso>
       </summary>
