@@ -60,6 +60,9 @@ public class Event4Impl implements Event4 {
 		_listeners = listeners;
 	}
 	
+	/**
+	 * @sharpen.meta.method ($target(null, $arguments[0]))
+	 */
 	public final void trigger(EventArgs args) {
 		if (null == _listeners) {
 			return;
@@ -87,6 +90,9 @@ public class Event4Impl implements Event4 {
 		}
 	}
 
+	/**
+	 * @sharpen.meta.method ($target != null)
+	 */
 	public boolean hasListeners() {
 		return _listeners != null;
 	}

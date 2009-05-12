@@ -59,7 +59,7 @@ public interface EventRegistry {
 	 * 	@see CancellableObjectEventArgs
 	 * @see com.db4o.ObjectContainer#activate(Object, int)
 	 */
-	public Event4 activating();
+	public Event4<CancellableObjectEventArgs> activating();
 	
 	/**
 	 * This event is fired before an object is updated.
@@ -104,75 +104,75 @@ public interface EventRegistry {
 
 	/**
 	 * This event is fired after an object is activated.
-	 * The object can be obtained from the {@link ObjectEventArgs}
+	 * The object can be obtained from the {@link ObjectInfoEventArgs}
 	 * event parameter. <br><br>
 	 * The event can be used to trigger some post-activation 
 	 * functionality.
 	 * 
-	 * @sharpen.event com.db4o.events.ObjectEventArgs
+	 * @sharpen.event com.db4o.events.ObjectInfoEventArgs
 	 * @return event
-	 * @see ObjectEventArgs
+	 * @see ObjectInfoEventArgs
 	 * @see com.db4o.ObjectContainer#activate(Object, int)
 	 */
-	public Event4 activated();
+	public Event4<ObjectInfoEventArgs> activated();
 
 	/**
 	 * This event is fired after an object is created (saved for the first time).
-	 * The object can be obtained from the {@link ObjectEventArgs}
+	 * The object can be obtained from the {@link ObjectInfoEventArgs}
 	 * event parameter.<br><br>
 	 * The event can be used to trigger some post-creation
 	 * functionality.
 	 * 
-	 * @sharpen.event com.db4o.events.ObjectEventArgs
+	 * @sharpen.event com.db4o.events.ObjectInfoEventArgs
 	 * @return event
 	 * @see ObjectEventArgs
 	 * @see com.db4o.ObjectContainer#store(Object)
 	 */
-	public Event4 created();
+	public Event4<ObjectInfoEventArgs> created();
 
 	/**
 	 * This event is fired after an object is updated.
-	 * The object can be obtained from the {@link ObjectEventArgs}
+	 * The object can be obtained from the {@link ObjectInfoEventArgs}
 	 * event parameter.<br><br>
 	 * The event can be used to trigger some post-update
 	 * functionality.
 	 * 
-	 * @sharpen.event com.db4o.events.ObjectEventArgs
+	 * @sharpen.event com.db4o.events.ObjectInfoEventArgs
 	 * @return event
-	 * @see ObjectEventArgs
+	 * @see ObjectInfoEventArgs
 	 * @see com.db4o.ObjectContainer#store(Object)
 	 */
-	public Event4 updated();
+	public Event4<ObjectInfoEventArgs> updated();
 
 	/**
 	 * This event is fired after an object is deleted.
-	 * The object can be obtained from the {@link ObjectEventArgs}
+	 * The object can be obtained from the {@link ObjectInfoEventArgs}
 	 * event parameter.<br><br>
 	 * The event can be used to trigger some post-deletion
 	 * functionality.<br><br>
 	 * Note, that this event is not available in networked client/server
 	 * mode and will throw an exception when attached to a client ObjectContainer.
 	 *  
-	 * @sharpen.event com.db4o.events.ObjectEventArgs
+	 * @sharpen.event com.db4o.events.ObjectInfoEventArgs
 	 * @return event
 	 * @see ObjectEventArgs
 	 * @see com.db4o.ObjectContainer#delete(Object)
 	 */
-	public Event4 deleted();
+	public Event4<ObjectInfoEventArgs> deleted();
 
 	/**
 	 * This event is fired after an object is deactivated.
-	 * The object can be obtained from the {@link ObjectEventArgs}
+	 * The object can be obtained from the {@link ObjectInfoEventArgs}
 	 * event parameter.<br><br>
 	 * The event can be used to trigger some post-deactivation
 	 * functionality.
 	 * 
-	 * @sharpen.event com.db4o.events.ObjectEventArgs
+	 * @sharpen.event com.db4o.events.ObjectInfoEventArgs
 	 * @return event
 	 * @see ObjectEventArgs
 	 * @see com.db4o.ObjectContainer#delete(Object)
 	 */
-	public Event4 deactivated();
+	public Event4<ObjectInfoEventArgs> deactivated();
 	
 	/**
 	 * This event is fired just before a transaction is committed.
@@ -205,14 +205,14 @@ public interface EventRegistry {
 
 	/**
 	 * This event is fired when a persistent object is instantiated. 
-	 * The object can be obtained from the {@link ObjectEventArgs}
+	 * The object can be obtained from the {@link ObjectInfoEventArgs}
 	 * event parameter.
 	 * 
-	 * @sharpen.event com.db4o.events.ObjectEventArgs
+	 * @sharpen.event com.db4o.events.ObjectInfoEventArgs
 	 * @return event
-	 * @see ObjectEventArgs
+	 * @see ObjectInfoEventArgs
 	 */
-	public Event4 instantiated();
+	public Event4<ObjectInfoEventArgs> instantiated();
 
 	/**
 	 * This event is fired when a new class is registered with metadata.

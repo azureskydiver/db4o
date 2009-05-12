@@ -4,6 +4,7 @@ package com.db4o.internal.events;
 
 import com.db4o.*;
 import com.db4o.events.*;
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.query.*;
@@ -75,32 +76,32 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _deactivating, obj);
 	}
 	
-	public void objectOnActivate(Transaction transaction, Object obj) {
-		EventPlatform.triggerObjectEvent(transaction, _activated, obj);
+	public void objectOnActivate(Transaction transaction, ObjectInfo obj) {
+		EventPlatform.triggerObjectInfoEvent(transaction, _activated, obj);
 	}
 	
-	public void objectOnNew(Transaction transaction, Object obj) {
-		EventPlatform.triggerObjectEvent(transaction, _created, obj);
+	public void objectOnNew(Transaction transaction, ObjectInfo obj) {
+		EventPlatform.triggerObjectInfoEvent(transaction, _created, obj);
 	}
 	
-	public void objectOnUpdate(Transaction transaction, Object obj) {
-		EventPlatform.triggerObjectEvent(transaction, _updated, obj);
+	public void objectOnUpdate(Transaction transaction, ObjectInfo obj) {
+		EventPlatform.triggerObjectInfoEvent(transaction, _updated, obj);
 	}
 	
-	public void objectOnDelete(Transaction transaction, Object obj) {
-		EventPlatform.triggerObjectEvent(transaction, _deleted, obj);		
+	public void objectOnDelete(Transaction transaction, ObjectInfo obj) {
+		EventPlatform.triggerObjectInfoEvent(transaction, _deleted, obj);		
 	}	
 
 	public void classOnRegistered(ClassMetadata clazz) {
 		EventPlatform.triggerClassEvent(_classRegistered, clazz);		
 	}	
 
-	public void objectOnDeactivate(Transaction transaction, Object obj) {
-		EventPlatform.triggerObjectEvent(transaction, _deactivated, obj);
+	public void objectOnDeactivate(Transaction transaction, ObjectInfo obj) {
+		EventPlatform.triggerObjectInfoEvent(transaction, _deactivated, obj);
 	}
 	
-	public void objectOnInstantiate(Transaction transaction, Object obj) {
-		EventPlatform.triggerObjectEvent(transaction, _instantiated, obj);
+	public void objectOnInstantiate(Transaction transaction, ObjectInfo obj) {
+		EventPlatform.triggerObjectInfoEvent(transaction, _instantiated, obj);
 	}
 	
 	public void commitOnStarted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections) {

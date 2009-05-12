@@ -12,12 +12,14 @@ import com.db4o.internal.*;
  */
 public class CancellableObjectEventArgs extends ObjectEventArgs implements CancellableEventArgs {
 	private boolean _cancelled;
+	private Object _object;
 
 	/**
 	 * Creates a new instance for the specified object.
 	 */
 	public CancellableObjectEventArgs(Transaction transaction, Object obj) {
-		super(transaction, obj);
+		super(transaction);
+		_object = obj;
 	}
 	
 	/**
@@ -33,4 +35,9 @@ public class CancellableObjectEventArgs extends ObjectEventArgs implements Cance
 	public boolean isCancelled() {
 		return _cancelled;
 	}
+
+	@Override
+    public Object object() {
+		return _object;
+    }
 }

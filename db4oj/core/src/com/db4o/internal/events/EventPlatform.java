@@ -4,6 +4,7 @@ package com.db4o.internal.events;
 
 import com.db4o.*;
 import com.db4o.events.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
@@ -41,10 +42,10 @@ public class EventPlatform {
 		});		
 	}
 	
-	public static void triggerObjectEvent(final Transaction transaction, final Event4Impl e, final Object o) {
+	public static void triggerObjectInfoEvent(final Transaction transaction, final Event4Impl e, final ObjectInfo o) {
 		trigger(e, new Runnable() {
 			public void run() {
-				e.trigger(new ObjectEventArgs(transaction, o));
+				e.trigger(new ObjectInfoEventArgs(transaction, o));
 			}
 		});
 	}
