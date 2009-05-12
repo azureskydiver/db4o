@@ -12,10 +12,13 @@ public final class MGetInternalIDs extends MsgD implements ServerSideMessage {
 		ByteArrayBuffer bytes = getByteLoad();
         final int classMetadataID = bytes.readInt();
         final int prefetchDepth = bytes.readInt();
+        final int prefetchCount = bytes.readInt();
         
 		final long[] ids = idsFor(classMetadataID);
 		
-		final ByteArrayBuffer payload = ObjectExchangeStrategyFactory.forPrefetchDepth(prefetchDepth).marshall((LocalTransaction)transaction(), IntIterators.forLongs(ids), ids.length);
+		final ByteArrayBuffer payload = ObjectExchangeStrategyFactory.forConfig(
+				new ObjectExchangeConfiguration(prefetchDepth, prefetchCount)
+			).marshall((LocalTransaction)transaction(), IntIterators.forLongs(ids), ids.length);
 		final MsgD message = Msg.ID_LIST.getWriterForLength(transaction(), payload.length());
 		message.payLoad().writeBytes(payload._buffer);
 		

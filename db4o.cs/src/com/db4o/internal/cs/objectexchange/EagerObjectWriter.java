@@ -11,8 +11,10 @@ import com.db4o.internal.slots.*;
 public class EagerObjectWriter {
 
 	private LocalTransaction _transaction;
+	private ObjectExchangeConfiguration _config;
 
-	public EagerObjectWriter(LocalTransaction transaction) {
+	public EagerObjectWriter(ObjectExchangeConfiguration config, LocalTransaction transaction) {
+		_config = config;
 		_transaction = transaction;
     }
 	
@@ -36,6 +38,13 @@ public class EagerObjectWriter {
 		for (Pair<Integer, Slot> idSlotPair : slots) {
 			final int id = idSlotPair.first;
 			final Slot slot = idSlotPair.second;
+			
+			if (slot == null) {
+				buffer.writeInt(id);
+				buffer.writeInt(0);
+				continue;
+			}
+			
 			final ByteArrayBuffer slotBuffer = _transaction.file().readSlotBuffer(slot);
 			buffer.writeInt(id);
 			buffer.writeInt(slot.length());
@@ -49,26 +58,39 @@ public class EagerObjectWriter {
 		for (Pair<Integer, Slot> idSlotPair : slots) {
 			total += Const4.INT_LENGTH; // id
 			total += Const4.INT_LENGTH; // length
-			total += idSlotPair.second.length();
+			
+			final Slot slot = idSlotPair.second;
+			if (slot != null) {
+				total += slot.length();
+			}
 		}
 		return total;
     }
 
 	private List<Pair<Integer, Slot>> readSlots(IntIterator4 idIterator, int maxCount) {
 	    
+		final int prefetchObjectCount = configuredPrefetchObjectCount();
 		final ArrayList slots = new ArrayList();
 		
         while(idIterator.moveNext()){
             final int id = idIterator.currentInt();
-            final Slot slot = _transaction.getCurrentSlotOfID(id);
             
-            slots.add(Pair.of(id, slot));
+            if (slots.size() < prefetchObjectCount) {
+            	final Slot slot = _transaction.getCurrentSlotOfID(id);
+            	slots.add(Pair.of(id, slot));
+            } else {
+            	slots.add(Pair.of(id, null));
+            }
             
             if(slots.size() >= maxCount){
             	break;
             }
         }
 		return slots;
+    }
+
+	private int configuredPrefetchObjectCount() {
+	    return _config.prefetchCount;
     }
 	
 

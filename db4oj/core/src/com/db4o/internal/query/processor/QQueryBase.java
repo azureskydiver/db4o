@@ -42,6 +42,8 @@ public abstract class QQueryBase implements Unversioned {
     
     private int _prefetchDepth;
     
+    private int _prefetchCount;
+    
     public int _evaluationModeAsInt;
     
     public QueryComparator _comparator;
@@ -58,7 +60,13 @@ public abstract class QQueryBase implements Unversioned {
         _trans = a_trans;
         i_parent = a_parent;
         i_field = a_field;
-        _prefetchDepth = a_trans.container().config().prefetchDepth();
+    }
+
+	public void captureQueryResultConfig() {
+	    final Config4Impl config = _trans.container().config();
+		_evaluationMode = config.queryEvaluationMode();
+		_prefetchDepth = config.prefetchDepth();
+        _prefetchCount = config.prefetchObjectCount();
     }
 
     void addConstraint(QCon a_constraint) {
@@ -362,7 +370,7 @@ public abstract class QQueryBase implements Unversioned {
 			return null;
 		}
 		
-		QueryResult queryResult = stream().classOnlyQuery(_trans, clazz);
+		QueryResult queryResult = stream().classOnlyQuery(this, clazz);
 		if(queryResult == null){
 			return null;
 		}
@@ -799,7 +807,10 @@ public abstract class QQueryBase implements Unversioned {
 	public int prefetchDepth() {
 		return _prefetchDepth;
     }
-
+	
+	public int prefetchCount() {
+		return _prefetchCount;
+    }
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer();

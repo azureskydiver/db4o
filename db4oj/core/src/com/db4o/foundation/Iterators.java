@@ -133,11 +133,15 @@ public class Iterators {
 	}
 	
 	/**
-	 * @sharpen.remove
+	 * @sharpen.ignore
 	 */
 	@decaf.Ignore(decaf.Platform.JDK11)
 	public static <T> Iterator4 iterator(java.util.Collection<T> c) {
 		return new JdkCollectionIterator4(c);
+	}
+	
+	public static Iterator4 iterator(Iterable4 iterable) {
+		return iterable.iterator();
 	}
 	
 	/**

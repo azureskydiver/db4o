@@ -19,7 +19,7 @@ public class MObjectSetFetch extends MObjectSet implements ServerSideMessage {
 		MsgD message = null;
 		synchronized(streamLock()) {
 			IntIterator4 idIterator = stub(queryResultID).idIterator();
-			ByteArrayBuffer payload = ObjectExchangeStrategyFactory.forPrefetchDepth(fetchDepth).marshall((LocalTransaction) transaction(), idIterator, fetchSize);
+			ByteArrayBuffer payload = ObjectExchangeStrategyFactory.forConfig(new ObjectExchangeConfiguration(fetchDepth, fetchSize)).marshall((LocalTransaction) transaction(), idIterator, fetchSize);
 			message = ID_LIST.getWriterForLength(transaction(), payload.length());
 			message.writeBytes(payload._buffer);
 		}
