@@ -565,7 +565,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
         
         if(delete4(trans, ref, cascade, userCall)){
-        	objectOnDelete(trans, yc, obj);
+        	objectOnDelete(trans, yc, ref);
             if (configImpl().messageLevel() > Const4.STATE) {
                 message("" + ref.getID() + " delete " + ref.classMetadata().getName());
             }
@@ -598,9 +598,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 			&& yc.dispatchEvent(transaction, obj, EventDispatchers.CAN_DELETE);
 	}
 	
-	private void objectOnDelete(Transaction transaction, ClassMetadata yc, Object obj) {
-		callbacks().objectOnDelete(transaction, obj);
-		yc.dispatchEvent(transaction, obj, EventDispatchers.DELETE);
+	private void objectOnDelete(Transaction transaction, ClassMetadata yc, ObjectInfo reference) {
+		callbacks().objectOnDelete(transaction, reference);
+		yc.dispatchEvent(transaction, reference.getObject(), EventDispatchers.DELETE);
 	}
 	
     public abstract boolean delete4(Transaction ta, ObjectReference yapObject, int a_cascade, boolean userCall);
@@ -1715,6 +1715,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         	flagAsHandled(ref);
             return new List4(still, new PendingActivation(ref, depth));
         } 
+       
         final ReflectClass clazz = reflectorForObject(obj);
 		if (clazz.isArray()) {
 			if (!clazz.getComponentType().isPrimitive()) {
@@ -1732,15 +1733,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             if (obj instanceof Entry) {
                 still = stillTo1(trans, still, ((Entry) obj).key, depth, false);
                 still = stillTo1(trans, still, ((Entry) obj).value, depth, false);
-            } else {
-                if (forceUnknownDeactivate) {
-                    // Special handling to deactivate Top-Level unknown objects only.
-                    ClassMetadata yc = classMetadataForObject(obj);
-                    if (yc != null) {
-                        yc.deactivate(trans, obj, depth);
-                    }
-                }
-            }
+            } 
         }
         return still;
     }

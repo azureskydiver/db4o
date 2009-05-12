@@ -9,16 +9,13 @@ import com.db4o.internal.*;
  * 
  * @see EventRegistry
  */
-public class ObjectEventArgs extends TransactionalEventArgs {
-	
-	private Object _obj;
+public abstract class ObjectEventArgs extends TransactionalEventArgs {
 
 	/**
 	 * Creates a new instance for the specified object.
 	 */
-	public ObjectEventArgs(Transaction transaction, Object obj) {
+	protected ObjectEventArgs(Transaction transaction) {
 		super(transaction);
-		_obj = obj;
 	}
 
 	/**
@@ -26,7 +23,5 @@ public class ObjectEventArgs extends TransactionalEventArgs {
 	 * 
 	 * @sharpen.property
 	 */
-	public Object object() {
-		return _obj;
-	}
+	public abstract Object object();
 }

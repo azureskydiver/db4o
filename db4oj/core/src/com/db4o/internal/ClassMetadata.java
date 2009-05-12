@@ -630,17 +630,18 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	    _typeHandler = createDefaultTypeHandler();
     }
 
-    public void deactivate(Transaction trans, Object obj, ActivationDepth depth) {
-        if(objectCanDeactivate(trans, obj)){
+    public void deactivate(Transaction trans, ObjectInfo reference, ActivationDepth depth) {
+        final Object obj = reference.getObject();
+		if(objectCanDeactivate(trans, obj)){
             deactivateFields(trans.container().activationContextFor(trans, obj, depth));
-            objectOnDeactivate(trans, obj);
+            objectOnDeactivate(trans, reference);
         }
     }
 
-	private void objectOnDeactivate(Transaction transaction, Object obj) {
+	private void objectOnDeactivate(Transaction transaction, ObjectInfo obj) {
 		ObjectContainerBase container = transaction.container();
 		container.callbacks().objectOnDeactivate(transaction, obj);
-		dispatchEvent(transaction, obj, EventDispatchers.DEACTIVATE);
+		dispatchEvent(transaction, obj.getObject(), EventDispatchers.DEACTIVATE);
 	}
 
 	private boolean objectCanDeactivate(Transaction transaction, Object obj) {
@@ -1139,7 +1140,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 		
 		context.setObjectWeak(obj);
 		context.transaction().referenceSystem().addExistingReference(context.objectReference());
-		objectOnInstantiate(context.transaction(), obj);
+		objectOnInstantiate(context.transaction(), context.objectReference());
 		
 	}
     
@@ -1167,15 +1168,16 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 
    private Object activate(UnmarshallingContext context) {
         final Object obj = context.persistentObject();
-        if(! objectCanActivate(context.transaction(), obj)){
-            context.objectReference().setStateDeactivated();
+        final ObjectReference objectReference = context.objectReference();
+		if(! objectCanActivate(context.transaction(), obj)){
+            objectReference.setStateDeactivated();
             return obj;
         }
-        context.objectReference().setStateClean();
+        objectReference.setStateClean();
         if (context.activationDepth().requiresActivation()/* || cascadeOnActivate()*/) {
            instantiateFields(context);
         }
-        objectOnActivate(context.transaction(), obj);
+        objectOnActivate(context.transaction(), objectReference);
         return obj;
     }
 	
@@ -1189,8 +1191,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         return obj;
 	}
 
-	private void objectOnInstantiate(Transaction transaction, Object instance) {
-		transaction.container().callbacks().objectOnInstantiate(transaction, instance);
+	private void objectOnInstantiate(Transaction transaction, ObjectInfo reference) {
+		transaction.container().callbacks().objectOnInstantiate(transaction, reference);
 	}
 
 	private Object instantiateFromReflector(ObjectContainerBase stream) {
@@ -1221,10 +1223,10 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 		}
 	}
 
-	private void objectOnActivate(Transaction transaction, Object obj) {
+	private void objectOnActivate(Transaction transaction, ObjectInfo obj) {
 		ObjectContainerBase container = transaction.container();
 		container.callbacks().objectOnActivate(transaction, obj);
-		dispatchEvent(transaction, obj, EventDispatchers.ACTIVATE);
+		dispatchEvent(transaction, obj.getObject(), EventDispatchers.ACTIVATE);
 	}
 
 	private boolean objectCanActivate(Transaction transaction, Object obj) {

@@ -3,6 +3,7 @@
 package com.db4o.internal.callbacks;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
 
@@ -34,22 +35,22 @@ public class NullCallbacks implements Callbacks {
 		return true;
 	}
 	
-	public void objectOnNew(Transaction transaction, Object obj) {
+	public void objectOnNew(Transaction transaction, ObjectInfo obj) {
 	}
 	
-	public void objectOnActivate(Transaction transaction, Object obj) {
+	public void objectOnActivate(Transaction transaction, ObjectInfo obj) {
 	}
 
-	public void objectOnUpdate(Transaction transaction, Object obj) {
+	public void objectOnUpdate(Transaction transaction, ObjectInfo obj) {
 	}
 
-	public void objectOnDelete(Transaction transaction, Object obj) {
+	public void objectOnDelete(Transaction transaction, ObjectInfo obj) {
 	}
 
-	public void objectOnDeactivate(Transaction transaction, Object obj) {	
+	public void objectOnDeactivate(Transaction transaction, ObjectInfo obj) {	
 	}
 
-	public void objectOnInstantiate(Transaction transaction, Object obj) {
+	public void objectOnInstantiate(Transaction transaction, ObjectInfo obj) {
 	}
 
 	public void commitOnStarted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections) {

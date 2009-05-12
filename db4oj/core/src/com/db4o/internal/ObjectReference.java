@@ -164,7 +164,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 
 	private void objectOnNew(Transaction transaction, Object obj) {
 		ObjectContainerBase container = transaction.container();
-		container.callbacks().objectOnNew(transaction, obj);
+		container.callbacks().objectOnNew(transaction, this);
 		_class.dispatchEvent(transaction, obj, EventDispatchers.NEW);
 	}
 
@@ -179,7 +179,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	    ObjectContainerBase container = trans.container();
 		logActivation(container, "deactivate");
 		setStateDeactivated();
-		_class.deactivate(trans, obj, depth);
+		_class.deactivate(trans, this, depth);
 	}
 	
 	public byte getIdentifier() {
@@ -433,7 +433,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
         }
         endProcessing();
         
-        container.callbacks().objectOnUpdate(transaction, obj);
+        container.callbacks().objectOnUpdate(transaction, this);
         classMetadata().dispatchEvent(transaction, obj, EventDispatchers.UPDATE);
 		
 	}

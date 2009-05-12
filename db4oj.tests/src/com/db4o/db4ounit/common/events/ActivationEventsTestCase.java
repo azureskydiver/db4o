@@ -16,14 +16,14 @@ public class ActivationEventsTestCase extends EventsTestCaseBase {
 		
 		final EventLog activationLog = new EventLog();
 		
-		eventRegistry().activating().addListener(new EventListener4() {
-			public void onEvent(Event4 e, EventArgs args) {
+		eventRegistry().activating().addListener(new EventListener4<CancellableObjectEventArgs>() {
+			public void onEvent(Event4 e, CancellableObjectEventArgs args) {
 				assertClientTransaction(args);
 				activationLog.xing = true;
 			}
 		});
-		eventRegistry().activated().addListener(new EventListener4() {
-			public void onEvent(Event4 e, EventArgs args) {
+		eventRegistry().activated().addListener(new EventListener4<ObjectInfoEventArgs>() {
+			public void onEvent(Event4 e, ObjectInfoEventArgs args) {
 				assertClientTransaction(args);
 				activationLog.xed = true;
 			}

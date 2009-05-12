@@ -12,11 +12,14 @@ import com.db4o.query.*;
  */
 public class QueryEventArgs extends ObjectEventArgs {
 	
+	private Query _query;
+
 	/**
 	 * Creates a new instance for the specified {@link Query} instance.
 	 */
 	public QueryEventArgs(Transaction transaction, Query q) {
-		super(transaction, q);
+		super(transaction);
+		_query = q;
 	}
 	
 	/**
@@ -25,6 +28,11 @@ public class QueryEventArgs extends ObjectEventArgs {
 	 * @sharpen.property
 	 */
 	public Query query() {
-		return (Query)object();
+		return _query;
 	}
+
+	@Override
+    public Object object() {
+		return _query;
+    }
 }
