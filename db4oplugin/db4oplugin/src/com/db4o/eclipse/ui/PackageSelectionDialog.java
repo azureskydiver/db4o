@@ -163,7 +163,6 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 			private void addPackageFragment(IPackageFragment fragment) {
 				for (String packageName : alreadySelected) {
 					if(packageName.equals(fragment.getElementName())) {
-						System.err.println("ALREADY SELECTED: " + packageName);
 						return;
 					}
 				}

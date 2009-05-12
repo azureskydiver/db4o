@@ -21,7 +21,8 @@ import org.eclipse.jface.window._
 class Db4oInstrumentationPropertyPage extends PropertyPage {
 
   private var filterRegExpText: Text = null
-  private var filterPackageList: TableViewer = null
+  private var filterPackages: PackageList = null
+  //private var filterPackageList: TableViewer = null
 
   override def createContents(parent: Composite) = {
     noDefaultAndApplyButton
@@ -30,6 +31,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
 
   override def performOk = {
     Db4oPreferences.setFilterRegExp(project, filterRegExpText.getText)
+    Db4oPreferences.setPackageList(project, filterPackages.getPackages)
     true
   }
   
@@ -46,8 +48,8 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     filterRegExpText.setLayoutData(fillGridData((2,1), fillBothDimensions))
     filterRegExpText.setText(Db4oPreferences.getFilterRegExp(project))
     val packageLabel = createLabel("Packages to be instrumented", composite, (2,1))
-    val packages = new PackageList
-    filterPackageList = createTableViewer(composite, packages, (1,2))
+    filterPackages = new PackageList(Db4oPreferences.getPackageList(project))
+    val filterPackageList = createTableViewer(composite, filterPackages, (1,2))
     val addButton = createButton("Add", composite)
     val removeButton = createButton("Remove", composite)
     
@@ -56,20 +58,20 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
         val context = new ProgressMonitorDialog(getShell)
 		val scope= SearchEngine.createWorkspaceScope();
 		val flags= PackageSelectionDialog.F_SHOW_PARENTS | PackageSelectionDialog.F_HIDE_DEFAULT_PACKAGE | PackageSelectionDialog.F_REMOVE_DUPLICATES
-        val dialog = new PackageSelectionDialog(getShell(), context, flags , scope, packages.getPackages.toArray)
+        val dialog = new PackageSelectionDialog(getShell(), context, flags , scope, filterPackages.getPackages.toArray)
         dialog.setMultipleSelection(true)
         if(dialog.open != Window.OK) {
           return
         }
         val result = dialog.getResult
         val packageNames = result.map(_.asInstanceOf[IPackageFragment].getElementName)
-        packageNames.foreach(packages.addPackage(_))
+        packageNames.foreach(filterPackages.addPackage(_))
       }
     })
     
     removeButton.addListener(SWT.Selection, new Listener() {
       def handleEvent(event: Event) {
-        filterPackageList.remove(selectedPackageNames)
+        selectedPackageNames(filterPackageList).foreach((packageName) => filterPackages.removePackage(packageName))
       }
     })
     
@@ -81,13 +83,13 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     list
   }
   
-  private def selectedPackageNames: Array[Object] = {
+  private def selectedPackageNames(filterPackageList: TableViewer): Array[String] = {
     val selection = filterPackageList.getSelection
     if(!selection.isInstanceOf[IStructuredSelection]) {
       return Array()
     }
     val structured = selection.asInstanceOf[IStructuredSelection]
-    structured.toArray
+    structured.toArray.map(_.toString)
   }
   
   private def createLabel(text: String, parent: Composite, span: (Int, Int)) = {
@@ -140,9 +142,8 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     def packageRemoved(name: String)
   }
   
-  private class PackageList {
+  private class PackageList(var packages: Set[String]) {
     
-    private var packages: ListSet[String] = ListSet.empty
     private var listeners: ListSet[PackageListChangeListener] = ListSet.empty
     
     def addListener(listener: PackageListChangeListener) = listeners += listener
