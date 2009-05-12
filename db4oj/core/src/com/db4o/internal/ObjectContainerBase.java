@@ -1733,7 +1733,15 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             if (obj instanceof Entry) {
                 still = stillTo1(trans, still, ((Entry) obj).key, depth, false);
                 still = stillTo1(trans, still, ((Entry) obj).value, depth, false);
-            } 
+            } else  {
+	            if (forceUnknownDeactivate) {
+	                // Special handling to deactivate Top-Level unknown objects only.
+	                ClassMetadata yc = classMetadataForObject(obj);
+	                if (yc != null) {
+	                    yc.forceDeactivation(trans, depth, obj);
+	                }
+	            }
+	        }
         }
         return still;
     }
