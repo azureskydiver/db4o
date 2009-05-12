@@ -1,9 +1,14 @@
-- notify PDE about changed class files
+- jar instrumentation support
 - export configuration for use by ant build
-- go more functional
-- restrict nature applicability to IJavaProject natures
+- use file-based filtering instead of IClassFile for incremental build
+- notify PDE about changed class files
 
+- restrict nature applicability to IJavaProject natures
 - preferences/package selection
   * only offer packages from inside the project
   * recursive filtering vs single package filtering
   * disable buttons if not applicable
+  * renderer for package list
+- introduce presentation model (or similar structuring)
+- port package selection dialog to scala
+- fix package filtering (currently by K_SOURCE)

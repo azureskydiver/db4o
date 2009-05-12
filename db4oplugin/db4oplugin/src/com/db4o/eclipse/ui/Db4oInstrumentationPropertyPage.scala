@@ -75,7 +75,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
         val context = new ProgressMonitorDialog(getShell)
 		val scope= SearchEngine.createWorkspaceScope();
 		val flags= PackageSelectionDialog.F_SHOW_PARENTS | PackageSelectionDialog.F_HIDE_DEFAULT_PACKAGE | PackageSelectionDialog.F_REMOVE_DUPLICATES
-        val dialog = new PackageSelectionDialog(getShell(), context, flags , scope, filterPackages.getPackages.toArray)
+        val dialog = new PackageSelectionDialog(getShell(), context, flags , scope, project, filterPackages.getPackages.toArray)
         dialog.setMultipleSelection(true)
         if(dialog.open != Window.OK) {
           return
