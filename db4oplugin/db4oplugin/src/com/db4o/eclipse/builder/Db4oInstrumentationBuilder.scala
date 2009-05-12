@@ -10,6 +10,8 @@ import com.db4o.instrumentation.file._
 import EDU.purdue.cs.bloat.file._
 import com.db4o.instrumentation.util._
 
+import AndOrEnum._
+
 import org.eclipse.core.resources._
 import org.eclipse.core.runtime._
 import org.eclipse.jdt.core._
@@ -66,7 +68,7 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
   }
 
   private def enhance(root: FilePathRoot, classPathRoots: Array[String], project: IProject, outPath: String) {
-      val instrumentor = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(new RegExpFilter(project)))
+      val instrumentor = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(new PreferenceBasedFilter(project)))
       try {
         instrumentor.enhance(new BundleClassSource, root, outPath, classPathRoots, getClass.getClassLoader)
       }
@@ -133,13 +135,23 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
         .filter(_.getRawClasspathEntry.getOutputLocation != null)
         .map(_.getRawClasspathEntry.getOutputLocation).toList.removeDuplicates ++ List(project.getOutputLocation)
 
-  private class RegExpFilter(project: IProject) extends ClassFilter {
+  private class PreferenceBasedFilter(project: IProject) extends ClassFilter {
 
-    override def accept(clazz: Class[_]) = {
-      !BloatUtil.isPlatformClassName(clazz.getName()) && {
-        val regExp = Db4oPreferences.getFilterRegExp(project)
-        Pattern.compile(regExp).matcher(clazz.getName).matches
+    private val regExp = Pattern.compile(Db4oPreferences.getFilterRegExp(project))
+    private val packages = Db4oPreferences.getPackageList(project)
+    // TODO move this to AndOrEnum?
+    private val combinator = Db4oPreferences.getFilterCombinator(project) match {
+      case AndOrEnum.Or => ((a: Boolean, b: Boolean) => a || b)
+      case _ => ((a: Boolean, b: Boolean) => a && b)
+    }
+    
+    override def accept(clazz: Class[_]): Boolean = {
+      if(BloatUtil.isPlatformClassName(clazz.getName())) {
+        return false
       }
+      val matchesRegExp = regExp.matcher(clazz.getName).matches
+      val matchesPackage = packages.foldLeft(false)((agg, cur) => agg || clazz.getName.startsWith(cur))
+      combinator(matchesRegExp, matchesPackage)
     }
   }
 }
