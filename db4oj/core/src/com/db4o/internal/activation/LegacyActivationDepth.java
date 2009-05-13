@@ -28,7 +28,7 @@ public class LegacyActivationDepth extends ActivationDepthImpl {
 
 	private int descendDepth(ClassMetadata metadata) {
 		int depth = configuredActivationDepth(metadata) - 1;
-		if (Platform4.isStruct(metadata.classReflector())) {
+		if (metadata.isStruct()) {
 			// 	We also have to instantiate structs completely every time.
 			return Math.max(1, depth);
 		}
