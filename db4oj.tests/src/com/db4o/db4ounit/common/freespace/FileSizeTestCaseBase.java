@@ -7,11 +7,12 @@ import java.io.*;
 import com.db4o.internal.*;
 
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 
 public abstract class FileSizeTestCaseBase
 	extends AbstractDb4oTestCase
-	implements OptOutTA {
+	implements OptOutTA, OptOutInMemory {
     
     protected int databaseFileSize() {
         LocalObjectContainer localContainer = fixture().fileSession();
