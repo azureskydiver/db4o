@@ -303,8 +303,6 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	}
 	
 	protected void foreach(Class clazz, Visitor4 visitor) {
-        ExtObjectContainer oc = db();
-        oc.deactivate(clazz, Integer.MAX_VALUE);
         ObjectSet set = newQuery(clazz).execute();
         while (set.hasNext()) {
             visitor.visit(set.next());
