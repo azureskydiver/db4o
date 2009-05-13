@@ -22,13 +22,13 @@ class InstrumentSingleClassTestCase extends Db4oPluginTestCaseTrait {
 
   @Test
   def matchingClassIsInstrumented {
-    Db4oPreferences.setFilterRegExp(project.getProject, "foo.Foo")
+    Db4oPreferences.setFilterRegExp(project.getProject, java.util.regex.Pattern.compile("foo\\.Foo"))
     assertInstrumentSingleClass(true)
   }
 
   @Test
   def nonMatchingClassIsNotInstrumented {
-    Db4oPreferences.setFilterRegExp(project.getProject, "fooX.Foo")
+    Db4oPreferences.setFilterRegExp(project.getProject, java.util.regex.Pattern.compile("fooX\\.Foo"))
     assertInstrumentSingleClass(false)
   }
 

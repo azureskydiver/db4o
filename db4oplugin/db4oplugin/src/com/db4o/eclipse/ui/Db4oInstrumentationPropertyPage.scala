@@ -17,6 +17,7 @@ import org.eclipse.jdt.core.search._
 import org.eclipse.jface.viewers._
 import org.eclipse.jface.dialogs._
 import org.eclipse.jface.window._
+import org.eclipse.swt.events._
 
 import AndOrEnum._
 
@@ -25,14 +26,23 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
   private var filterRegExpText: Text = null
   private var filterPackages: PackageList = null
   private var filterCombinator: AndOrEnum = null
-
+  
   override def createContents(parent: Composite) = {
     noDefaultAndApplyButton
     addControl(parent)
   }
 
-  override def performOk = {
-    Db4oPreferences.setFilterRegExp(project, filterRegExpText.getText)
+  override def performOk: Boolean = {
+    try {
+      val pattern = java.util.regex.Pattern.compile(filterRegExpText.getText)
+      Db4oPreferences.setFilterRegExp(project, pattern)
+    }
+    catch {
+      case exc: java.util.regex.PatternSyntaxException => {
+        setErrorMessage("Invalid regular expression")
+        return false
+      }
+    }
     Db4oPreferences.setPackageList(project, filterPackages.getPackages)
     Db4oPreferences.setFilterCombinator(project, filterCombinator)
     true
@@ -49,7 +59,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     val regExpLabel = createLabel("Regular expression for fully qualified class names to be instrumented", composite, (2,1))
     filterRegExpText = new Text(composite, SWT.SINGLE | SWT.BORDER)
     filterRegExpText.setLayoutData(fillGridData((2,1), fillBothDimensions))
-    filterRegExpText.setText(Db4oPreferences.getFilterRegExp(project))
+    filterRegExpText.setText(Db4oPreferences.getFilterRegExp(project).toString)
     
     filterCombinator = Db4oPreferences.getFilterCombinator(project)
     val booleanComposite = new Composite(composite, SWT.NONE)
