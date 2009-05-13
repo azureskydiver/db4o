@@ -73,7 +73,7 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
         instrumentor.enhance(new BundleClassSource, root, outPath, classPathRoots, getClass.getClassLoader)
       }
       catch {
-        case e => e.printStackTrace
+        case exc => throw new CoreException(new Status(IStatus.ERROR, Db4oPluginActivator.PLUGIN_ID, "Error instrumenting folder " + outPath, exc))
       }
   }
   
@@ -137,7 +137,7 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
 
   private class PreferenceBasedFilter(project: IProject) extends ClassFilter {
 
-    private val regExp = Pattern.compile(Db4oPreferences.getFilterRegExp(project))
+    private val regExp = Db4oPreferences.getFilterRegExp(project)
     private val packages = Db4oPreferences.getPackageList(project)
     // TODO move this to AndOrEnum?
     private val combinator = Db4oPreferences.getFilterCombinator(project) match {

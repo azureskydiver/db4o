@@ -4,6 +4,8 @@ import org.eclipse.core.resources._
 
 import scala.collection._
 
+import java.util.regex._
+
 import AndOrEnum._
 
 object Db4oPreferences {
@@ -18,12 +20,12 @@ object Db4oPreferences {
   val FILTER_COMBINATOR_PROPERTY_ID = "filter.combinator"
   val DEFAULT_COMBINATOR = "AND"
   
-  def setFilterRegExp(project: IProject, filterRegExp: String) {
-    setPreference(project, FILTER_REGEXP_PROPERTY_ID, filterRegExp)
+  def setFilterRegExp(project: IProject, filterRegExp: Pattern) {
+    setPreference(project, FILTER_REGEXP_PROPERTY_ID, filterRegExp.toString)
   }
 
   def getFilterRegExp(project: IProject) =
-    getPreference(project, FILTER_REGEXP_PROPERTY_ID, DEFAULT_REGEXP)
+    Pattern.compile(getPreference(project, FILTER_REGEXP_PROPERTY_ID, DEFAULT_REGEXP))
   
   def setPackageList(project: IProject, packages: Set[String]) {
     setPreference(project, PACKAGE_LIST_PROPERTY_ID, packages.mkString(PACKAGE_SEP))
