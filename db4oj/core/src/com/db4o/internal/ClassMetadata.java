@@ -2065,4 +2065,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
             context.restoreState(contextState);
         }
 	}
+
+	public boolean isStruct() {
+		return Platform4.isStruct(classReflector());
+    }
 }

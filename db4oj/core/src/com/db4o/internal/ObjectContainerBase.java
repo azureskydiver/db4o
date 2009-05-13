@@ -1701,7 +1701,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         return true; // overridden to do nothing in YapObjectCarrier
     }
 
-    final List4 stillTo1(Transaction trans, List4 still, Object obj, ActivationDepth depth, boolean forceUnknownDeactivate) {
+    final List4 stillTo1(Transaction trans, List4 still, Object obj, ActivationDepth depth) {
     	
         if (obj == null || !depth.requiresActivation()) {
         	return still;
@@ -1726,19 +1726,20 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
                         continue;
                     }
                     ClassMetadata classMetadata = classMetadataForObject(current);
-                    still = stillTo1(trans, still, current, depth.descend(classMetadata), forceUnknownDeactivate);
+                    still = stillTo1(trans, still, current, depth.descend(classMetadata));
                 }
 			}
+			return still;
         } else {
             if (obj instanceof Entry) {
-                still = stillTo1(trans, still, ((Entry) obj).key, depth, false);
-                still = stillTo1(trans, still, ((Entry) obj).value, depth, false);
+                still = stillTo1(trans, still, ((Entry) obj).key, depth);
+                still = stillTo1(trans, still, ((Entry) obj).value, depth);
             } else  {
-	            if (forceUnknownDeactivate) {
-	                // Special handling to deactivate Top-Level unknown objects only.
-	                ClassMetadata yc = classMetadataForObject(obj);
-	                if (yc != null) {
-	                    yc.forceDeactivation(trans, depth, obj);
+	            if (depth.mode().isDeactivate()) {
+	                // Special handling to deactivate .net structs
+	                ClassMetadata metadata = classMetadataForObject(obj);
+	                if (metadata != null && metadata.isStruct()) {
+	                    metadata.forceDeactivation(trans, depth, obj);
 	                }
 	            }
 	        }
@@ -1759,7 +1760,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             return;
         }
 
-        _stillToActivate = stillTo1(context.transaction(), _stillToActivate, context.targetObject(), context.depth(), false);
+        _stillToActivate = stillTo1(context.transaction(), _stillToActivate, context.targetObject(), context.depth());
     }
 
     private boolean processedByImmediateActivation(ActivationContext context) {
@@ -1788,7 +1789,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
     public final void stillToDeactivate(Transaction trans, Object a_object, ActivationDepth a_depth,
         boolean a_forceUnknownDeactivate) {
-        _stillToDeactivate = stillTo1(trans, _stillToDeactivate, a_object, a_depth, a_forceUnknownDeactivate);
+        _stillToDeactivate = stillTo1(trans, _stillToDeactivate, a_object, a_depth);
     }
     
     static class PendingSet {
