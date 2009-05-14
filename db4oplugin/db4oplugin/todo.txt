@@ -12,3 +12,5 @@
   * renderer for package list
 - introduce presentation model (or similar structuring)
 - port package selection dialog to scala
+
+- replace default stderr instrumentation reporting with listener mechanism
