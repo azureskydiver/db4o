@@ -40,9 +40,9 @@ public abstract class QQueryBase implements Unversioned {
     
     private transient QueryEvaluationMode _evaluationMode;
     
-    private int _prefetchDepth;
+    public int _prefetchDepth;
     
-    private int _prefetchCount;
+    public int _prefetchCount;
     
     public int _evaluationModeAsInt;
     
