@@ -1,3 +1,7 @@
+/* Copyright (C) 2009  Versant Corp.  http://www.db4o.com */
+/**
+ * @sharpen.if !SILVERLIGHT
+ */
 package com.db4o.db4ounit.common.api;
 
 import com.db4o.*;

@@ -1,3 +1,6 @@
+/**
+ * @sharpen.if !SILVERLIGHT
+ */
 package com.db4o.db4ounit.common.acid;
 
 import com.db4o.*;
