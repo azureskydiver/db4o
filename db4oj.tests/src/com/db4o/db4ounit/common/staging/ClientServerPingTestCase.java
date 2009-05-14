@@ -1,5 +1,8 @@
 /* Copyright (C) 2007  Versant Inc.  http://www.db4o.com */
 
+/**
+ * @sharpen.if !SILVERLIGHT
+ */
 package com.db4o.db4ounit.common.staging;
 
 import com.db4o.config.*;

@@ -4,26 +4,35 @@ package com.db4o.db4ounit.common.staging;
 
 import db4ounit.extensions.*;
 
-public class AllTests extends Db4oTestSuite {
+public class AllTests extends ComposibleTestSuite {
 
 	public static void main(String[] args) {
 		new AllTests().runSolo();
     }
 
 	protected Class[] testCases() {
+		return composeTests(
+					new Class[] {			
+							/**
+							 *  When you add a test here, make sure you create a Jira issue. 
+							 */
+							ActivateDepthTestCase.class,
+							InterfaceQueryTestCase.class, // COR-1131
+							LazyQueryDeleteTestCase.class,
+							SODAClassTypeDescend.class,
+							StoredClassUnknownClassQueryTestCase.class, // COR-1542
+							UnavailableEnumTestCase.class
+					});
+	}
+	
+	/**
+	 * @sharpen.if !SILVERLIGHT
+	 */
+	@Override
+	protected Class[] composeWith() {
 		return new Class[] {
-			
-			/**
-			 *  When you add a test here, make sure you create a Jira issue. 
-			 */
-		    ActivateDepthTestCase.class,
-		    ClientServerPingTestCase.class,
-		    InterfaceQueryTestCase.class, // COR-1131
-			LazyQueryDeleteTestCase.class,
-            PingTestCase.class,
-			SODAClassTypeDescend.class,
-			StoredClassUnknownClassQueryTestCase.class, // COR-1542
-			UnavailableEnumTestCase.class
-		};
+						ClientServerPingTestCase.class,
+						PingTestCase.class,
+					};
 	}
 }

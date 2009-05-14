@@ -5,13 +5,21 @@ package com.db4o.db4ounit.common.acid;
 import db4ounit.extensions.*;
 
 
-public class AllTests extends Db4oTestSuite {
+public class AllTests extends ComposibleTestSuite {
 	
 	protected Class[] testCases() {
 		return new Class[] {
-			CrashSimulatingTestCase.class,
-			ReadCommittedIsolationTestCase.class,
-		};
+					CrashSimulatingTestCase.class,
+				};
 	}
-
+	
+	/**
+	 * @sharpen.if !SILVERLIGHT
+	 */
+	@Override
+	protected Class[] composeWith() {
+		return new Class[] {
+					ReadCommittedIsolationTestCase.class,
+				};
+	}
 }
