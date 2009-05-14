@@ -25,15 +25,14 @@ class PropertyPageTestCase extends Db4oPluginTestCaseTrait {
     super.tearDown
   }
   
-  
   @Test
   def testPropertyPage {
     val page = new Db4oInstrumentationPropertyPage()
     page.setElement(project.getJavaProject)
     val parent = new Composite(shell, SWT.NULL)
-    assertNull(page.filterRegExpText)
+    assertFalse(findWidget(page.getControl, Db4oInstrumentationPropertyPage.REGEXP_TEXT_ID).isDefined)
     page.createControl(parent)
-    assertNotNull(page.filterRegExpText)
+    assertTrue(findWidget(page.getControl, Db4oInstrumentationPropertyPage.REGEXP_TEXT_ID).isDefined)
     val regExpText = findWidget(page.getControl, Db4oInstrumentationPropertyPage.REGEXP_TEXT_ID).get.asInstanceOf[Text]
     regExpText.setText("\\")
     assertFalse(page.performOk)
@@ -42,6 +41,9 @@ class PropertyPageTestCase extends Db4oPluginTestCaseTrait {
   }
   
   private def findWidget(root: Widget, id: String): Option[Widget] = {
+    if(root == null) {
+      return None
+    }
     if(root.isInstanceOf[Composite]) {
       root.asInstanceOf[Composite].getChildren.foreach((child) => {
         val curResult = findWidget(child, id)

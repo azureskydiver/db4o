@@ -2,7 +2,7 @@ package com.db4o.eclipse.ui
 
 import com.db4o.eclipse.preferences._
 
-import scala.collection.immutable._
+import scala.collection._
 
 import org.eclipse.swt._
 import org.eclipse.swt.graphics._
@@ -27,9 +27,7 @@ object Db4oInstrumentationPropertyPage {
 
 class Db4oInstrumentationPropertyPage extends PropertyPage {
 
-  var filterRegExpText: Text = null
-  private var filterPackages: PackageList = null
-  private var filterCombinator: AndOrEnum = null
+  var model: Db4oInstrumentationPropertyPageModel = null
   
   override def createContents(parent: Composite) = {
     noDefaultAndApplyButton
@@ -37,22 +35,19 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
   }
 
   override def performOk: Boolean = {
-    try {
-      val pattern = java.util.regex.Pattern.compile(filterRegExpText.getText)
-      Db4oPreferences.setFilterRegExp(project, pattern)
-    }
-    catch {
-      case exc: java.util.regex.PatternSyntaxException => {
-        setErrorMessage("Invalid regular expression")
-        return false
+    model.store(project) match {
+      case StoreStatus(false, msg) => {
+        setErrorMessage(msg)
+        false
       }
+      case _ => true
     }
-    Db4oPreferences.setPackageList(project, filterPackages.getPackages)
-    Db4oPreferences.setFilterCombinator(project, filterCombinator)
-    true
   }
   
   private def addControl(parent: Composite) = {
+    
+    model = new Db4oInstrumentationPropertyPageModel(project)
+    
     val composite = new Composite(parent, SWT.NULL)
     val layout = new GridLayout
     layout.numColumns = 2
@@ -61,12 +56,17 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     composite.setFont(parent.getFont)
     
     val regExpLabel = createLabel("Regular expression for fully qualified class names to be instrumented", composite, (2,1))
-    filterRegExpText = new Text(composite, SWT.SINGLE | SWT.BORDER)
+    val filterRegExpText = new Text(composite, SWT.SINGLE | SWT.BORDER)
     filterRegExpText.setLayoutData(fillGridData((2,1), fillBothDimensions))
-    filterRegExpText.setText(Db4oPreferences.getFilterRegExp(project).toString)
+    filterRegExpText.setText(model.getFilterRegExp.map(_.toString).getOrElse(".*"))
     filterRegExpText.setData(Db4oInstrumentationPropertyPage.REGEXP_TEXT_ID)
+    filterRegExpText.addModifyListener(new ModifyListener() {
+      override def modifyText(event: ModifyEvent) {
+        model.setFilterRegExp(filterRegExpText.getText)
+      }
+    })
     
-    filterCombinator = Db4oPreferences.getFilterCombinator(project)
+    val filterCombinator = model.getFilterCombinator
     val booleanComposite = new Composite(composite, SWT.NONE)
     booleanComposite.setLayout(new RowLayout)
     val andButton = createRadio("AND", booleanComposite, Some(new RadioListener(AndOrEnum.And)))
@@ -80,8 +80,9 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     booleanComposite.setLayoutData(fillGridData((2,1), fillBothDimensions))
     
     val packageLabel = createLabel("Packages to be instrumented", composite, (2,1))
-    filterPackages = new PackageList(Db4oPreferences.getPackageList(project))
-    val filterPackageList = createTableViewer(composite, filterPackages, (1,2))
+    val filterPackageList = createTableViewer(composite, model.getPackages, (1,2))
+    model.setSelectionProvider(filterPackageList)
+    
     val addButton = createButton("Add", composite)
     val removeButton = createButton("Remove", composite)
     
@@ -90,20 +91,20 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
         val context = new ProgressMonitorDialog(getShell)
 		val scope= SearchEngine.createWorkspaceScope();
 		val flags= PackageSelectionDialog.F_SHOW_PARENTS | PackageSelectionDialog.F_HIDE_DEFAULT_PACKAGE | PackageSelectionDialog.F_REMOVE_DUPLICATES
-        val dialog = new PackageSelectionDialog(getShell(), context, flags , scope, project, filterPackages.getPackages.toArray)
+        val dialog = new PackageSelectionDialog(getShell(), context, flags , scope, project, model.getPackages.toArray)
         dialog.setMultipleSelection(true)
         if(dialog.open != Window.OK) {
           return
         }
         val result = dialog.getResult
         val packageNames = result.map(_.asInstanceOf[IPackageFragment].getElementName)
-        packageNames.foreach(filterPackages.addPackage(_))
+        model.addPackages(stringArrayToSet(packageNames))
       }
     })
     
     removeButton.addListener(SWT.Selection, new Listener() {
       def handleEvent(event: Event) {
-        selectedPackageNames(filterPackageList).foreach((packageName) => filterPackages.removePackage(packageName))
+        model.removePackages(selectedPackageNames(filterPackageList))
       }
     })
     
@@ -115,13 +116,17 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     list
   }
   
-  private def selectedPackageNames(filterPackageList: TableViewer): Array[String] = {
+  private def selectedPackageNames(filterPackageList: TableViewer): Set[String] = {
     val selection = filterPackageList.getSelection
     if(!selection.isInstanceOf[IStructuredSelection]) {
-      return Array()
+      return immutable.ListSet()
     }
     val structured = selection.asInstanceOf[IStructuredSelection]
-    structured.toArray.map(_.toString)
+    stringArrayToSet(structured.toArray)
+  }
+
+  private def stringArrayToSet(array: Array[_]) = {
+    array.foldLeft(immutable.ListSet[String, String]())((set, sel) => set + sel.asInstanceOf[String])
   }
   
   private def createLabel(text: String, parent: Composite, span: (Int, Int)) = {
@@ -151,7 +156,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     button
   }
 
-  def createTableViewer(parent: Composite, packages: PackageList, span: (Int, Int)) = {
+  def createTableViewer(parent: Composite, packages: Set[String], span: (Int, Int)) = {
     val table= new Table(parent, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL)
     table.setFont(parent.getFont())
     table.setLayout(new TableLayout)
@@ -180,67 +185,31 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
   
   private def project = getElement.asInstanceOf[IJavaProject].getProject
 
-  private trait PackageListChangeListener {
-    def packageAdded(name: String)
-    def packageRemoved(name: String)
-  }
-  
-  private class PackageList(var packages: Set[String]) {
-    
-    private var listeners: ListSet[PackageListChangeListener] = ListSet.empty
-    
-    def addListener(listener: PackageListChangeListener) = listeners += listener
-
-    def removeListener(listener: PackageListChangeListener) = listeners -= listener
-
-    def addPackage(name: String) {
-      packages += name
-      listeners.foreach(_.packageAdded(name))
-    }
-
-    def removePackage(name: String) {
-      packages -= name
-      listeners.foreach(_.packageRemoved(name))
-    }
-    
-    def getPackages = packages
-
-  }
-  
   private class PackageListContentProvider(view: TableViewer) extends IStructuredContentProvider with PackageListChangeListener {
-    
-    private var packages: Option[PackageList] = None
-    
-    override def getElements(inputElement: Object) = inputElement.asInstanceOf[PackageList].getPackages.toArray
+        
+    model.addPackageListChangeListener(this)
+
+    override def getElements(inputElement: Object) = inputElement.asInstanceOf[Set[String]].toArray
 
     override def dispose() {
-      packages.map(_.removeListener(this))
+      model.removePackageListChangeListener(this)
     }
 
     override def inputChanged(viewer: Viewer, oldInput: Object, newInput: Object) {
-      packagesOption(oldInput).map(_.removeListener(this))
-      packages = packagesOption(newInput)
-      packages.map(_.addListener(this))
     }
 
-    override def packageAdded(name: String) {
-      view.add(name)
+    override def packagesAdded(packageNames: Set[String]) {
+      packageNames.foreach(view.add(_))
     }
     
-    override def packageRemoved(name: String) {
-      view.remove(name)
+    override def packagesRemoved(packageNames: Set[String]) {
+      packageNames.foreach(view.remove(_))
     }
-    
-    private def packagesOption(input: Object) =
-      input match {
-        case null => None
-        case p => Some(p.asInstanceOf[PackageList])
-      }
   }
   
   private class RadioListener(combinator: AndOrEnum) extends Listener {
     override def handleEvent(event: Event) {
-      filterCombinator = combinator
+      model.setFilterCombinator(combinator)
     }
   }
 
