@@ -21,9 +21,13 @@ import org.eclipse.swt.events._
 
 import AndOrEnum._
 
+object Db4oInstrumentationPropertyPage {
+  val REGEXP_TEXT_ID = "regexp.text"
+}
+
 class Db4oInstrumentationPropertyPage extends PropertyPage {
 
-  private var filterRegExpText: Text = null
+  var filterRegExpText: Text = null
   private var filterPackages: PackageList = null
   private var filterCombinator: AndOrEnum = null
   
@@ -60,6 +64,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     filterRegExpText = new Text(composite, SWT.SINGLE | SWT.BORDER)
     filterRegExpText.setLayoutData(fillGridData((2,1), fillBothDimensions))
     filterRegExpText.setText(Db4oPreferences.getFilterRegExp(project).toString)
+    filterRegExpText.setData(Db4oInstrumentationPropertyPage.REGEXP_TEXT_ID)
     
     filterCombinator = Db4oPreferences.getFilterCombinator(project)
     val booleanComposite = new Composite(composite, SWT.NONE)

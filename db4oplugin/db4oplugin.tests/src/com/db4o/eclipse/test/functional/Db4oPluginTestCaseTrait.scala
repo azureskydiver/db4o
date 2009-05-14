@@ -14,7 +14,7 @@ import java.net._
 
 trait Db4oPluginTestCaseTrait {
 
-    val ACTIVATABLE_CLASS = classOf[com.db4o.ta.Activatable]
+  val ACTIVATABLE_CLASS = classOf[com.db4o.ta.Activatable]
 
   val project = new JavaProject("simple_project")
   

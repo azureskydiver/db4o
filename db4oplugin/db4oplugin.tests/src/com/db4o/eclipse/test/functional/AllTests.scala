@@ -7,7 +7,9 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses(Array(
   classOf[InstrumentSingleClassTestCase],
   classOf[FullBuildTestCase],
-  classOf[ClassFileChangeNotificationTestCase]
+  classOf[Db4oPreferencesTestCase],
+  classOf[PropertyPageTestCase]
+  //classOf[ClassFileChangeNotificationTestCase]
 ))
 class AllTests {
 }
