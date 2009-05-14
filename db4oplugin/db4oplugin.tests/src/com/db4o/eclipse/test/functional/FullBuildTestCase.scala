@@ -13,7 +13,7 @@ class FullBuildTestCase extends Db4oPluginTestCaseTrait {
   @Before
   override def setUp {
     super.setUp
-    WorkspaceUtilities.setAutoBuilding(false)    
+    WorkspaceUtilities.setAutoBuilding(false)
   }
   
   @Test

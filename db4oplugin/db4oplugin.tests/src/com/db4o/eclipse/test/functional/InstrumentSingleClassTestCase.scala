@@ -6,7 +6,6 @@ import com.db4o.eclipse.test.util._
 
 import org.junit._
 
-
 class InstrumentSingleClassTestCase extends Db4oPluginTestCaseTrait {
 
   @Before

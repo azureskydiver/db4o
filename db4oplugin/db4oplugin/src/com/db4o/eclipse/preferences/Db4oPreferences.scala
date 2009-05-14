@@ -18,7 +18,7 @@ object Db4oPreferences {
   val PACKAGE_SEP = ","
 
   val FILTER_COMBINATOR_PROPERTY_ID = "filter.combinator"
-  val DEFAULT_COMBINATOR = "AND"
+  val DEFAULT_COMBINATOR = AndOrEnum.Or
   
   def setFilterRegExp(project: IProject, filterRegExp: Pattern) {
     setPreference(project, FILTER_REGEXP_PROPERTY_ID, filterRegExp.toString)
@@ -45,7 +45,7 @@ object Db4oPreferences {
   }
   
   def getFilterCombinator(project: IProject) = 
-    AndOrEnum.valueOf(getPreference(project, FILTER_COMBINATOR_PROPERTY_ID, DEFAULT_COMBINATOR)).getOrElse(AndOrEnum.And)
+    AndOrEnum.valueOf(getPreference(project, FILTER_COMBINATOR_PROPERTY_ID, DEFAULT_COMBINATOR.toString)).getOrElse(DEFAULT_COMBINATOR)
   
   def getPreference(project: IProject, key: String, defaultValue: String) = {
     projectPreferences(project).map(_.get(key, defaultValue))
