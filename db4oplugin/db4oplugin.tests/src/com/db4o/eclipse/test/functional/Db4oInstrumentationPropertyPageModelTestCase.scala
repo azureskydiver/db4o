@@ -5,6 +5,8 @@ import com.db4o.eclipse.ui._
 import org.junit._
 import Assert._
 
+import org.eclipse.jface.viewers._
+
 import scala.collection._
 
 class Db4oInstrumentationPropertyPageModelTestCase extends Db4oPluginTestCaseTrait {
@@ -17,6 +19,7 @@ class Db4oInstrumentationPropertyPageModelTestCase extends Db4oPluginTestCaseTra
     model = new Db4oInstrumentationPropertyPageModel(project.getProject)
   }
 
+  // FIXME: eclipse scalac crashes when moving these classes into test method?!
   abstract case class PackageChange(val packageNames: Set[String])    
   case class PackageAdd(override val packageNames: Set[String]) extends PackageChange(packageNames)
   case class PackageRemove(override val packageNames: Set[String]) extends PackageChange(packageNames)
@@ -74,4 +77,60 @@ class Db4oInstrumentationPropertyPageModelTestCase extends Db4oPluginTestCaseTra
     MockChangeListener.validate
   }
   
+  @Test
+  def testPackageSelectionChanges {
+    
+    object MockSelectionProvider extends ISelectionProvider {
+      var listener: ISelectionChangedListener = null
+      
+      override def addSelectionChangedListener(listener: ISelectionChangedListener) {
+        this.listener = listener
+	  }
+	
+	  override def getSelection = null
+	
+	  override def removeSelectionChangedListener(listener: ISelectionChangedListener) {
+        this.listener = null
+	  }
+	
+	  override def setSelection(selection: ISelection) {}
+   
+	  def getListener = listener
+    }
+        
+    object MockSelectionListener extends PackageSelectionChangeListener {
+      var count = 0
+      var selected = false
+      
+      override def packagesSelected(state: Boolean) {
+        count += 1
+        selected = state
+      }
+      
+      def validate(count: Int, selected: Boolean) {
+        assertEquals(count, this.count)
+        assertEquals(selected, this.selected)
+      }
+    }
+
+    def assertEvent(count: Int, selected: String*) {
+      val selection = new StructuredSelection(selected.toArray[Object])
+      val event = new SelectionChangedEvent(MockSelectionProvider, selection)
+      MockSelectionProvider.getListener.selectionChanged(event)
+      MockSelectionListener.validate(count, selected.length > 0)
+    }
+    
+    model.setSelectionProvider(MockSelectionProvider)
+    model.addPackageSelectionChangeListener(MockSelectionListener)
+    
+    assertEvent(0)
+    assertEvent(1, "foo")
+    assertEvent(1, "foo", "bar")
+    assertEvent(2)
+    assertEvent(2)
+    assertEvent(3, "foo", "bar")
+    assertEvent(3, "foo")
+    assertEvent(4)
+    assertEvent(5, "foo")
+  }
 }
