@@ -55,7 +55,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     composite.setLayoutData(fillGridData)
     composite.setFont(parent.getFont)
     
-    val regExpLabel = createLabel("Regular expression for fully qualified class names to be instrumented", composite, (2,1))
+    createLabel("Regular expression for fully qualified class names to be instrumented", composite, (2,1))
     val filterRegExpText = new Text(composite, SWT.SINGLE | SWT.BORDER)
     filterRegExpText.setLayoutData(fillGridData((2,1), fillBothDimensions))
     filterRegExpText.setText(model.getFilterRegExp.map(_.toString).getOrElse(".*"))
@@ -78,7 +78,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     andButton.addListener(SWT.Selection, new RadioListener(AndOrEnum.And))
     booleanComposite.setLayoutData(fillGridData((2,1), fillBothDimensions))
     
-    val packageLabel = createLabel("Packages to be instrumented", composite, (2,1))
+    createLabel("Packages to be instrumented", composite, (2,1))
     val filterPackageList = createTableViewer(composite, model.getPackages, (1,2))
     model.setSelectionProvider(filterPackageList)
     
@@ -97,7 +97,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
         }
         val result = dialog.getResult
         val packageNames = result.map(_.asInstanceOf[IPackageFragment].getElementName)
-        model.addPackages(stringArrayToSet(packageNames))
+        model.addPackages(immutable.ListSet(packageNames:_*))
       }
     })
     
@@ -121,13 +121,9 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
       return immutable.ListSet()
     }
     val structured = selection.asInstanceOf[IStructuredSelection]
-    stringArrayToSet(structured.toArray)
+    immutable.ListSet(structured.toArray.map(_.asInstanceOf[String]):_*)
   }
 
-  private def stringArrayToSet(array: Array[_]) = {
-    array.foldLeft(immutable.ListSet[String, String]())((set, sel) => set + sel.asInstanceOf[String])
-  }
-  
   private def createLabel(text: String, parent: Composite, span: (Int, Int)) = {
     val label = new Label(parent, SWT.NONE)
     label.setText(text)
@@ -198,11 +194,11 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     }
 
     override def packagesAdded(packageNames: Set[String]) {
-      packageNames.foreach(view.add(_))
+      view.add(packageNames.toArray[Object])
     }
     
     override def packagesRemoved(packageNames: Set[String]) {
-      packageNames.foreach(view.remove(_))
+      view.remove(packageNames.toArray[Object])
     }
   }
   
