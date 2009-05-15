@@ -23,6 +23,8 @@ import AndOrEnum.AndOr
 
 object Db4oInstrumentationPropertyPage {
   val REGEXP_TEXT_ID = "regexp.text"
+  val COMBINATOR_AND_BUTTON_ID = "combinator.and.button"
+  val COMBINATOR_OR_BUTTON_ID = "combinator.or.button"
 }
 
 class Db4oInstrumentationPropertyPage extends PropertyPage {
@@ -69,13 +71,15 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     val booleanComposite = new Composite(composite, SWT.NONE)
     booleanComposite.setLayout(new RowLayout)
     val andButton = createRadio("AND", booleanComposite, Some(new RadioListener(AndOrEnum.And)))
+    andButton.setData(Db4oInstrumentationPropertyPage.COMBINATOR_AND_BUTTON_ID)
     val orButton = createRadio("OR", booleanComposite, Some(new RadioListener(AndOrEnum.Or)))
+    orButton.setData(Db4oInstrumentationPropertyPage.COMBINATOR_OR_BUTTON_ID)
     (model.getFilterCombinator match {
       case AndOrEnum.Or => orButton
       case _ => andButton
     }).setSelection(true)
     andButton.addListener(SWT.Selection, new RadioListener(AndOrEnum.And))
-    andButton.addListener(SWT.Selection, new RadioListener(AndOrEnum.And))
+    orButton.addListener(SWT.Selection, new RadioListener(AndOrEnum.Or))
     booleanComposite.setLayoutData(fillGridData((2,1), fillBothDimensions))
     
     createLabel("Packages to be instrumented", composite, (2,1))
