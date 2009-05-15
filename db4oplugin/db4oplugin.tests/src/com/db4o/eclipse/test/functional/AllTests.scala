@@ -8,7 +8,8 @@ import org.junit.runners.Suite;
   classOf[InstrumentSingleClassTestCase],
   classOf[FullBuildTestCase],
   classOf[Db4oPreferencesTestCase],
-  classOf[PropertyPageTestCase]
+  classOf[PropertyPageTestCase],
+  classOf[Db4oInstrumentationPropertyPageModelTestCase]
   //classOf[ClassFileChangeNotificationTestCase]
 ))
 class AllTests {

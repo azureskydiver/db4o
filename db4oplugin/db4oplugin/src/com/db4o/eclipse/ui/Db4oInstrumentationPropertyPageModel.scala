@@ -22,7 +22,6 @@ class Db4oInstrumentationPropertyPageModel(project: IProject) {
   def addPackageSelectionChangeListener(listener: PackageSelectionChangeListener) = selectionChangeListeners += listener
   def removePackageSelectionChangeListener(listener: PackageSelectionChangeListener) = selectionChangeListeners -= listener
 
-  // TODO: Am I Singleton to the containing class?
   private object PackageSelectionListener extends ISelectionChangedListener {
 	  def selectionChanged(event: SelectionChangedEvent) {
 	    val selection = event.getSelection
