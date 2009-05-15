@@ -42,7 +42,7 @@ object PackageSelector {
 	}
 }
 
-class PackageSelector(parent: Shell, context: IRunnableContext, flags: Int, searchScope: IJavaSearchScope, alreadySelected: Array[String]) 
+class PackageSelector(parent: Shell, context: IRunnableContext, flags: Int, searchScope: IJavaSearchScope, packageFilter: (IPackageFragment) => Boolean) 
 		extends ElementListSelectionDialog(parent, PackageSelector.createLabelProvider(flags)) {
 
 	var dialogLocation: Point = null
@@ -244,9 +244,6 @@ class PackageSelector(parent: Shell, context: IRunnableContext, flags: Int, sear
 			}
 			fSet += name
 			val packageRoot = packageFragmentRootFor(enclosingElement)
-			if(packageRoot.getKind() != IPackageFragmentRoot.K_SOURCE) {
-				return;
-			}
 
 			val packageFragment = enclosingElement.asInstanceOf[IPackageFragment]
 			addPackageFragment(packageFragment)
@@ -280,12 +277,9 @@ class PackageSelector(parent: Shell, context: IRunnableContext, flags: Int, sear
 		}
   
 		private def addPackageFragment(fragment: IPackageFragment) {
-			for (packageName <- alreadySelected) {
-				if(packageName.equals(fragment.getElementName)) {
-					return
-				}
-			}
+		  if(packageFilter(fragment)) {
 			packageList ++= scala.List(fragment)
+		  }
 		}
 	}
 }
