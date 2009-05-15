@@ -11,8 +11,8 @@
 
 package com.db4o.eclipse.ui
 
-import java.util._
-import java.util.List
+import scala._
+import scala.collection._
 
 import org.eclipse.core.runtime._
 import org.eclipse.jdt.core._
@@ -40,7 +40,6 @@ object PackageSelector {
 		}
 		new JavaElementLabelProvider(flags)
 	}
-
 }
 
 class PackageSelector(parent: Shell, context: IRunnableContext, flags: Int, searchScope: IJavaSearchScope, alreadySelected: Array[String]) 
@@ -171,7 +170,7 @@ class PackageSelector(parent: Shell, context: IRunnableContext, flags: Int, sear
  
 	private class PackageSearchRunner extends IRunnableWithProgress {
 	  
-		private var packageList: ArrayList[IPackageFragment] = null
+		private var packageList: scala.List[IPackageFragment] = Nil
    
 		def getPackageList() = packageList
 	  
@@ -195,7 +194,7 @@ class PackageSelector(parent: Shell, context: IRunnableContext, flags: Int, sear
 
 				packageList = requestor.getPackageList
 				if (hideEmpty) {
-					removeEmptyPackages(new SubProgressMonitor(monitor, 1), packageList)
+					packageList = removeEmptyPackages(new SubProgressMonitor(monitor, 1), packageList)
 				}
 			} catch {
 			  	case e: CoreException => throw new java.lang.reflect.InvocationTargetException(e)
@@ -206,34 +205,28 @@ class PackageSelector(parent: Shell, context: IRunnableContext, flags: Int, sear
 			}
 		}
 			
-		private def removeEmptyPackages(monitor: IProgressMonitor, packageList: ArrayList[IPackageFragment]) {
+		private def removeEmptyPackages(monitor: IProgressMonitor, packageList: scala.List[IPackageFragment]) = {
 			monitor.beginTask("Filtering Empty Packages", packageList.size)
 			try {
-				val res = new ArrayList[IPackageFragment](packageList.size)
-				for (i <- 0 until packageList.size) {
-					val pkg = packageList.get(i).asInstanceOf[IPackageFragment]
-					if (pkg.hasChildren || !pkg.hasSubpackages) {
-						res.add(pkg)
-					}
+				packageList.filter((pkg) => {
 					monitor.worked(1)
 					if (monitor.isCanceled()) {
 						throw new InterruptedException()
 					}
-				}
-				packageList.clear()
-				packageList.addAll(res)
+					pkg.hasChildren || !pkg.hasSubpackages
+				})
 			} 
 			finally {
 				monitor.done()
 			}
 		}
 	}
-
  
 	private class PackageSearchRequestor extends SearchRequestor {
-		private val packageList= new ArrayList[IPackageFragment]()
+	  
+		private var packageList: scala.List[IPackageFragment] = Nil
 
-		private val fSet= new HashSet[String]();
+		private val fSet = mutable.HashSet[String]();
 		private val fAddDefault= (flags & PackageSelector.F_HIDE_DEFAULT_PACKAGE) == 0
 		private val fDuplicates= (flags & PackageSelector.F_REMOVE_DUPLICATES) == 0
 		private val fIncludeParents= (flags & PackageSelector.F_SHOW_PARENTS) != 0
@@ -246,9 +239,10 @@ class PackageSelector(parent: Shell, context: IRunnableContext, flags: Int, sear
 			if (!fAddDefault && name.length() == 0) {
 				return
 			}
-			if (!fDuplicates && !fSet.add(name)) {
+			if (!fDuplicates && fSet.contains(name)) {
 				return
 			}
+			fSet += name
 			val packageRoot = packageFragmentRootFor(enclosingElement)
 			if(packageRoot.getKind() != IPackageFragmentRoot.K_SOURCE) {
 				return;
@@ -277,7 +271,8 @@ class PackageSelector(parent: Shell, context: IRunnableContext, flags: Int, sear
 			var idx= nameFragment.lastIndexOf('.')
 			while (idx != -1) {
 				nameFragment = nameFragment.substring(0, idx)
-				if (fDuplicates || fSet.add(nameFragment)) {
+				if (fDuplicates || !fSet.contains(nameFragment)) {
+					fSet += nameFragment
 					addPackageFragment(root.getPackageFragment(nameFragment))
 				}
 				idx = nameFragment.lastIndexOf('.')
@@ -290,7 +285,7 @@ class PackageSelector(parent: Shell, context: IRunnableContext, flags: Int, sear
 					return
 				}
 			}
-			packageList.add(fragment)
+			packageList ++= scala.List(fragment)
 		}
 	}
 }
