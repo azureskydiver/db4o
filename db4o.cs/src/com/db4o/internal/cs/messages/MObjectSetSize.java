@@ -5,7 +5,7 @@ package com.db4o.internal.cs.messages;
 import com.db4o.internal.query.result.*;
 
 
-public class MObjectSetSize extends MObjectSet implements ServerSideMessage {
+public class MObjectSetSize extends MObjectSet implements MessageWithResponse {
 	
 	public boolean processAtServer() {
 		MsgD writer = null;

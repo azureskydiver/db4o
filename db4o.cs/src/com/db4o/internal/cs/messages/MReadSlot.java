@@ -5,7 +5,7 @@ package com.db4o.internal.cs.messages;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
 
-public final class MReadSlot extends MsgD implements ServerSideMessage {
+public final class MReadSlot extends MsgD implements MessageWithResponse {
 	
 	public final ByteArrayBuffer getByteLoad() {
 		int address = _payLoad.readInt();

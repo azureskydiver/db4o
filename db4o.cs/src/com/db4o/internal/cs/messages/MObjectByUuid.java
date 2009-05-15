@@ -9,7 +9,7 @@ import com.db4o.internal.*;
 /**
  * 
  */
-public class MObjectByUuid extends MsgD implements ServerSideMessage {
+public class MObjectByUuid extends MsgD implements MessageWithResponse {
 	public final boolean processAtServer() {
 		long uuid = readLong();
 		byte[] signature = readBytes();

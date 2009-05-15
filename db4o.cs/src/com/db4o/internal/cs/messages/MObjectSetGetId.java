@@ -8,19 +8,15 @@ import com.db4o.internal.query.result.*;
 /**
  * @exclude
  */
-public class MObjectSetGetId extends MObjectSet implements ServerSideMessage {
+public class MObjectSetGetId extends MObjectSet implements MessageWithResponse {
 	
 	public boolean processAtServer() {
 		AbstractQueryResult queryResult = queryResult(readInt());		
-		try {
-			int id = 0;
-			synchronized (streamLock()) {
-				id = queryResult.getId(readInt());
-			}
-			write(Msg.OBJECTSET_GET_ID.getWriterForInt(transaction(), id));
-		} catch (IndexOutOfBoundsException e) {
-			writeException(e);
+		int id = 0;
+		synchronized (streamLock()) {
+			id = queryResult.getId(readInt());
 		}
+		write(Msg.OBJECTSET_GET_ID.getWriterForInt(transaction(), id));
 		return true;
 	}
 

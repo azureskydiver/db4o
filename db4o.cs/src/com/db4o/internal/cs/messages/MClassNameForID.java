@@ -8,7 +8,7 @@ import com.db4o.internal.*;
 /**
  * get the classname for an internal ID
  */
-public final class MClassNameForID extends MsgD implements ServerSideMessage{
+public final class MClassNameForID extends MsgD implements MessageWithResponse {
     public final boolean processAtServer() {
         int id = _payLoad.readInt();
         String name = "";

@@ -2,27 +2,27 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.*;
 
-public final class MCommit extends Msg implements ServerSideMessage {
+public final class MCommit extends Msg implements MessageWithResponse {
 	
 	public final boolean processAtServer() {
+		CallbackObjectInfoCollections committedInfo = null;
+		LocalTransaction serverTransaction = serverTransaction();
+		ServerMessageDispatcher dispatcher = serverMessageDispatcher();
+		synchronized (streamLock()) {
+			serverTransaction.commit(dispatcher);
+			committedInfo = dispatcher.committedInfo();
+		}
+		write(Msg.OK);
 		try {
-			CallbackObjectInfoCollections committedInfo = null;
-			LocalTransaction serverTransaction = serverTransaction();
-			ServerMessageDispatcher dispatcher = serverMessageDispatcher();
-			synchronized (streamLock()) {
-				serverTransaction.commit(dispatcher);
-				committedInfo = dispatcher.committedInfo();
-			}
-			write(Msg.OK);
 			if (committedInfo != null) {
 				addCommittedInfoMsg(committedInfo, serverTransaction);
 			}
-		} catch (Db4oException e) {
-			writeException(e);
+		}
+		catch(Exception exc) {
+			exc.printStackTrace();
 		}
 		return true;
 	}

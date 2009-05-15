@@ -6,7 +6,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.objectexchange.*;
 
-public final class MGetInternalIDs extends MsgD implements ServerSideMessage {
+public final class MGetInternalIDs extends MsgD implements MessageWithResponse {
 	public final boolean processAtServer() {
 		
 		ByteArrayBuffer bytes = getByteLoad();

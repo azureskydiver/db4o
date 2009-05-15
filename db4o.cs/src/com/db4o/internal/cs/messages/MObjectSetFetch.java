@@ -10,7 +10,7 @@ import com.db4o.internal.cs.objectexchange.*;
 /**
  * @exclude
  */
-public class MObjectSetFetch extends MObjectSet implements ServerSideMessage {
+public class MObjectSetFetch extends MObjectSet implements MessageWithResponse {
 	
 	public boolean processAtServer() {
 		int queryResultID = readInt();
