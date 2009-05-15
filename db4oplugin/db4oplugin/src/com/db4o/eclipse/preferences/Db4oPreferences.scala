@@ -6,7 +6,7 @@ import scala.collection._
 
 import java.util.regex._
 
-import AndOrEnum._
+import AndOrEnum.AndOr
 
 object Db4oPreferences {
 
@@ -40,11 +40,11 @@ object Db4oPreferences {
     packages
   }
   
-  def setFilterCombinator(project: IProject, value: AndOrEnum) {
+  def setFilterCombinator(project: IProject, value: AndOr) {
     setPreference(project, FILTER_COMBINATOR_PROPERTY_ID, value.toString)
   }
   
-  def getFilterCombinator(project: IProject) = 
+  def getFilterCombinator(project: IProject): AndOr = 
     AndOrEnum.valueOf(getPreference(project, FILTER_COMBINATOR_PROPERTY_ID, DEFAULT_COMBINATOR.toString)).getOrElse(DEFAULT_COMBINATOR)
   
   def getPreference(project: IProject, key: String, defaultValue: String) = {

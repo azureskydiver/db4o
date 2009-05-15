@@ -2,9 +2,17 @@ package com.db4o.eclipse.preferences
 
 object AndOrEnum extends Enumeration {
 
-  type AndOrEnum = Value
+  abstract class AndOr(name: String) extends Val(name) {
+    def apply(a: Boolean, b: Boolean): Boolean
+  }
   
-  val And = Value("And")
-  val Or = Value("Or")
+  val And = new AndOr("And") {
+    override def apply(a: Boolean, b: Boolean) = a && b
+  }
   
+  val Or = new AndOr("Or") {
+    override def apply(a: Boolean, b: Boolean) = a || b
+  }
+  
+  override def valueOf(name: String) = super.valueOf(name).map(_.asInstanceOf[AndOr])
 }

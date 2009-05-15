@@ -6,7 +6,7 @@ import com.db4o.eclipse.test.util._
 
 import org.junit._
 
-import AndOrEnum._
+import AndOrEnum.AndOr
 
 import scala.collection.immutable._
 
@@ -63,7 +63,7 @@ class InstrumentSingleClassTestCase extends Db4oPluginTestCaseTrait {
     assertInstrumented("^fooX\\..*", "fooX", AndOrEnum.Or, false)
   }
 
-  def assertInstrumented(regEx: String, packageName: String, combinator: AndOrEnum, expected: Boolean) {
+  def assertInstrumented(regEx: String, packageName: String, combinator: AndOr, expected: Boolean) {
     Db4oPreferences.setFilterRegExp(project.getProject, java.util.regex.Pattern.compile(regEx))
     Db4oPreferences.setPackageList(project.getProject, ListSet(packageName))
     Db4oPreferences.setFilterCombinator(project.getProject, combinator)
