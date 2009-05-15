@@ -107,7 +107,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     removeButton.setEnabled(false)
     removeButton.addListener(SWT.Selection, new Listener() {
       def handleEvent(event: Event) {
-        model.removePackages(selectedPackageNames(filterPackageList))
+        model.removePackages(model.getSelectedPackages)
       }
     })
     model.addPackageSelectionChangeListener(new PackageSelectionChangeListener() {
@@ -117,20 +117,6 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     })
     
     composite
-  }
-
-  private def allPackageNames: java.util.List[String] = {
-    val list = new java.util.ArrayList[String]
-    list
-  }
-  
-  private def selectedPackageNames(filterPackageList: TableViewer): Set[String] = {
-    val selection = filterPackageList.getSelection
-    if(!selection.isInstanceOf[IStructuredSelection]) {
-      return immutable.ListSet()
-    }
-    val structured = selection.asInstanceOf[IStructuredSelection]
-    immutable.ListSet(structured.toArray.map(_.asInstanceOf[String]):_*)
   }
 
   private def createLabel(text: String, parent: Composite, span: (Int, Int)) = {

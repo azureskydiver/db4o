@@ -12,7 +12,7 @@ class Db4oInstrumentationPropertyPageModel(project: IProject) {
   private var filterRegExp: String = Db4oPreferences.getFilterRegExp(project).toString
   private var filterPackages: immutable.Set[String] = Db4oPreferences.getPackageList(project)
   private var filterCombinator: AndOr = Db4oPreferences.getFilterCombinator(project)
-  private var selectedPackages: List[String] = List()
+  private var selectedPackages: Set[String] = immutable.ListSet()
   
   private var listChangeListeners: immutable.ListSet[PackageListChangeListener] = immutable.ListSet.empty
   private var selectionChangeListeners: immutable.ListSet[PackageSelectionChangeListener] = immutable.ListSet.empty
@@ -28,14 +28,15 @@ class Db4oInstrumentationPropertyPageModel(project: IProject) {
 	  def selectionChanged(event: SelectionChangedEvent) {
 	    val selection = event.getSelection
 	    if(!selection.isInstanceOf[IStructuredSelection]) {
-	      selectedPackages = List()
-	    }
-	    val structured = selection.asInstanceOf[IStructuredSelection]
-	    val selected = structured.toArray.length > 0
-	    if(selected == this.selected) {
+	      selectedPackages = immutable.ListSet()
 	      return
 	    }
-	    this.selected = selected
+	    val structured = selection.asInstanceOf[IStructuredSelection]
+	    selectedPackages = immutable.ListSet(structured.toArray.map(_.toString):_*)
+	    if(selected == !selectedPackages.isEmpty) {
+	      return
+	    }
+	    selected = !selected
 	    selectionChangeListeners.foreach(_.packagesSelected(selected))
 	  }
   }
