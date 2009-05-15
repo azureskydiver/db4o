@@ -5,13 +5,13 @@ import org.eclipse.core.resources._
 import org.eclipse.jface.viewers._
 import java.util.regex._
 import scala.collection._
-import AndOrEnum._
+import AndOrEnum.AndOr
 
 
 class Db4oInstrumentationPropertyPageModel(project: IProject) {
   private var filterRegExp: String = Db4oPreferences.getFilterRegExp(project).toString
   private var filterPackages: immutable.Set[String] = Db4oPreferences.getPackageList(project)
-  private var filterCombinator: AndOrEnum = Db4oPreferences.getFilterCombinator(project)
+  private var filterCombinator: AndOr = Db4oPreferences.getFilterCombinator(project)
   private var selectedPackages: List[String] = List()
   
   private var listChangeListeners: immutable.ListSet[PackageListChangeListener] = immutable.ListSet.empty
@@ -63,7 +63,7 @@ class Db4oInstrumentationPropertyPageModel(project: IProject) {
 
   def getPackages = filterPackages
 
-  def setFilterCombinator(combinator: AndOrEnum) {
+  def setFilterCombinator(combinator: AndOr) {
     filterCombinator = combinator
   }
   

@@ -10,7 +10,7 @@ import com.db4o.instrumentation.file._
 import EDU.purdue.cs.bloat.file._
 import com.db4o.instrumentation.util._
 
-import AndOrEnum._
+import AndOrEnum.AndOr
 
 import org.eclipse.core.resources._
 import org.eclipse.core.runtime._
@@ -139,11 +139,7 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
 
     private val regExp = Db4oPreferences.getFilterRegExp(project)
     private val packages = Db4oPreferences.getPackageList(project)
-    // TODO move this to AndOrEnum?
-    private val combinator = Db4oPreferences.getFilterCombinator(project) match {
-      case AndOrEnum.Or => ((a: Boolean, b: Boolean) => a || b)
-      case _ => ((a: Boolean, b: Boolean) => a && b)
-    }
+    private val combinator = Db4oPreferences.getFilterCombinator(project)
     
     override def accept(clazz: Class[_]): Boolean = {
       if(BloatUtil.isPlatformClassName(clazz.getName())) {

@@ -19,7 +19,7 @@ import org.eclipse.jface.dialogs._
 import org.eclipse.jface.window._
 import org.eclipse.swt.events._
 
-import AndOrEnum._
+import AndOrEnum.AndOr
 
 object Db4oInstrumentationPropertyPage {
   val REGEXP_TEXT_ID = "regexp.text"
@@ -66,12 +66,11 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
       }
     })
     
-    val filterCombinator = model.getFilterCombinator
     val booleanComposite = new Composite(composite, SWT.NONE)
     booleanComposite.setLayout(new RowLayout)
     val andButton = createRadio("AND", booleanComposite, Some(new RadioListener(AndOrEnum.And)))
     val orButton = createRadio("OR", booleanComposite, Some(new RadioListener(AndOrEnum.Or)))
-    (filterCombinator match {
+    (model.getFilterCombinator match {
       case AndOrEnum.Or => orButton
       case _ => andButton
     }).setSelection(true)
@@ -207,7 +206,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     }
   }
   
-  private class RadioListener(combinator: AndOrEnum) extends Listener {
+  private class RadioListener(combinator: AndOr) extends Listener {
     override def handleEvent(event: Event) {
       model.setFilterCombinator(combinator)
     }
