@@ -10,7 +10,7 @@
   * recursive filtering vs single package filtering
   * renderer for package list
 - port package selection dialog to scala
-- help page
+- help page *
 
-- replace default stderr instrumentation reporting with listener mechanism
-- optionally hook instrumentation reporting into eclipse log
+- replace default stderr instrumentation reporting with listener mechanism *
+- optionally hook instrumentation reporting into eclipse log *
