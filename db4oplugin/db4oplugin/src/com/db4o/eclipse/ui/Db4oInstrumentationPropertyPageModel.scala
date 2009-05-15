@@ -1,10 +1,17 @@
 package com.db4o.eclipse.ui
 
 import com.db4o.eclipse.preferences._
+
 import org.eclipse.core.resources._
 import org.eclipse.jface.viewers._
+import org.eclipse.jdt.core._
+import org.eclipse.jdt.core.search._
+import org.eclipse.swt.widgets._
+import org.eclipse.jface.operation._
+
 import java.util.regex._
 import scala.collection._
+
 import AndOrEnum.AndOr
 
 
@@ -87,7 +94,19 @@ class Db4oInstrumentationPropertyPageModel(project: IProject) {
     Db4oPreferences.setFilterCombinator(project, filterCombinator)
     StoreStatus(true, "OK")
   }
-  
+
+  def getPackageSelectionDialog(shell: Shell, context: IRunnableContext) = {
+	val scope= SearchEngine.createJavaSearchScope(Array[IJavaElement](javaProject), IJavaSearchScope.SOURCES);
+	val flags= PackageSelector.F_SHOW_PARENTS | PackageSelector.F_HIDE_DEFAULT_PACKAGE | PackageSelector.F_REMOVE_DUPLICATES
+	val packageFilter = (pkg: IPackageFragment) => {
+	  javaProject.equals(pkg.getJavaProject) && !getPackages.contains(pkg.getElementName)
+	}
+    val dialog = new PackageSelector(shell, context, flags , scope, packageFilter)
+    dialog.setMultipleSelection(true)
+    dialog
+  }
+
+  private def javaProject() = JavaCore.create(project)
 }
 
 case class StoreStatus(success: Boolean, message: String)
