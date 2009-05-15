@@ -146,6 +146,7 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
         return false
       }
       val matchesRegExp = regExp.matcher(clazz.getName).matches
+      // FIXME should be cur + "."
       val matchesPackage = packages.foldLeft(false)((agg, cur) => agg || clazz.getName.startsWith(cur))
       combinator(matchesRegExp, matchesPackage)
     }
