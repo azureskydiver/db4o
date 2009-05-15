@@ -90,9 +90,9 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     addButton.addListener(SWT.Selection, new Listener() {
       def handleEvent(event: Event) {
         val context = new ProgressMonitorDialog(getShell)
-		val scope= SearchEngine.createWorkspaceScope();
+		val scope= SearchEngine.createJavaSearchScope(Array[IJavaElement](javaProject));
 		val flags= PackageSelectionDialog.F_SHOW_PARENTS | PackageSelectionDialog.F_HIDE_DEFAULT_PACKAGE | PackageSelectionDialog.F_REMOVE_DUPLICATES
-        val dialog = new PackageSelectionDialog(getShell(), context, flags , scope, project, model.getPackages.toArray)
+        val dialog = new PackageSelectionDialog(getShell(), context, flags , scope, model.getPackages.toArray)
         dialog.setMultipleSelection(true)
         if(dialog.open != Window.OK) {
           return
@@ -173,7 +173,8 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
   
   private def fillBothDimensions = (GridData.FILL, GridData.FILL)
   
-  private def project = getElement.asInstanceOf[IJavaProject].getProject
+  private def javaProject = getElement.asInstanceOf[IJavaProject]
+  private def project = javaProject.getProject
 
   private class PackageListContentProvider(view: TableViewer) extends IStructuredContentProvider with PackageListChangeListener {
         

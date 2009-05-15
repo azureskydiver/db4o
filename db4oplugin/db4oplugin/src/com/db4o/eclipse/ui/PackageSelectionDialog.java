@@ -48,7 +48,6 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 	private IJavaSearchScope fScope;
 	private int fFlags;
 	private String[] alreadySelected;
-	private IJavaProject javaProject;
 
 	/**
 	 * Creates a package selection dialog.
@@ -58,13 +57,12 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 	 *  <code>F_HIDE_DEFAULT_PACKAGE</code> and  <code>F_HIDE_EMPTY_INNER</code>
 	 * @param scope the scope defining the available packages.
 	 */
-	public PackageSelectionDialog(Shell parent, IRunnableContext context, int flags, IJavaSearchScope scope, IProject project, String[] alreadySelected) {
+	public PackageSelectionDialog(Shell parent, IRunnableContext context, int flags, IJavaSearchScope scope, String[] alreadySelected) {
 		super(parent, createLabelProvider(flags));
 		fFlags= flags;
 		fScope= scope;
 		fContext= context;
 		this.alreadySelected = alreadySelected;
-		this.javaProject = JavaCore.create(project);
 	}
 	
 	private static ILabelProvider createLabelProvider(int dialogFlags) {
@@ -105,9 +103,6 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 							if (!fDuplicates && !fSet.add(name)) {
 								return;
 							}
-							if(isDefinedInProject(enclosingElement)) {
-								return;
-							}
 							IPackageFragmentRoot packageRoot = packageFragmentRootFor(enclosingElement);
 							if(packageRoot.getKind() != IPackageFragmentRoot.K_SOURCE) {
 								return;
@@ -120,10 +115,6 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 							}
 						}
 
-						private boolean isDefinedInProject(IJavaElement enclosingElement) {
-							return javaProject == null || !javaProject.equals(enclosingElement.getJavaProject());
-						}
-						
 						private IPackageFragmentRoot packageFragmentRootFor(IJavaElement javaElement) {
 							if(javaElement instanceof IPackageFragmentRoot) {
 								return (IPackageFragmentRoot)javaElement;
