@@ -8,9 +8,9 @@
 - preferences/package selection
   * fix package filtering (currently by K_SOURCE)
   * recursive filtering vs single package filtering
-  * disable buttons if not applicable
   * renderer for package list
-- introduce presentation model (or similar structuring)
 - port package selection dialog to scala
+- help page
 
 - replace default stderr instrumentation reporting with listener mechanism
+- optionally hook instrumentation reporting into eclipse log
