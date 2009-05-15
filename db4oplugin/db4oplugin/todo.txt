@@ -12,5 +12,7 @@
 - port package selection dialog to scala
 - help page *
 
+- fix java file compilation issue **
+
 - replace default stderr instrumentation reporting with listener mechanism *
 - optionally hook instrumentation reporting into eclipse log *
