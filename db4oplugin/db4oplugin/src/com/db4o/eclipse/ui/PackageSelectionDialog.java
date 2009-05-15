@@ -15,7 +15,6 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.List;
 
-import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.search.*;
@@ -86,7 +85,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 					monitor= new NullProgressMonitor();
 				}
 				boolean hideEmpty= (fFlags & F_HIDE_EMPTY_INNER) != 0;
-				monitor.beginTask("FIXME progress_search", hideEmpty ? 2 : 1);
+				monitor.beginTask("Collecting Packages", hideEmpty ? 2 : 1);
 				try {
 					SearchRequestor requestor= new SearchRequestor() {
 						private HashSet fSet= new HashSet();
@@ -159,7 +158,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 			}
 			
 			private void removeEmptyPackages(IProgressMonitor monitor) throws JavaModelException, InterruptedException {
-				monitor.beginTask("FIXME progress_findEmpty", packageList.size());
+				monitor.beginTask("Filtering Empty Packages", packageList.size());
 				try {
 					ArrayList res= new ArrayList(packageList.size());
 					for (int i= 0; i < packageList.size(); i++) {
@@ -203,8 +202,8 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 		}
 		
 		if (packageList.isEmpty()) {
-			String title= "FIXME nopackages_title"; 
-			String message= "FIXME nopackages_message"; 
+			String title= "No packages found"; 
+			String message= "There are no packages for this project"; 
 			MessageDialog.openInformation(getShell(), title, message);
 			return CANCEL;
 		}
