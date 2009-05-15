@@ -118,6 +118,7 @@ class Db4oInstrumentationPropertyPageModelTestCase extends Db4oPluginTestCaseTra
       val event = new SelectionChangedEvent(MockSelectionProvider, selection)
       MockSelectionProvider.getListener.selectionChanged(event)
       MockSelectionListener.validate(count, selected.length > 0)
+      assertEquals(immutable.ListSet(selected:_*), model.getSelectedPackages)
     }
     
     model.setSelectionProvider(MockSelectionProvider)
