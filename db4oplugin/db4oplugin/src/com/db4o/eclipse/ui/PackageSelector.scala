@@ -43,132 +43,17 @@ object PackageSelector {
 
 }
 
-class PackageSelector(parent: Shell, fContext: IRunnableContext, fFlags: Int, fScope: IJavaSearchScope, alreadySelected: Array[String]) 
-		extends ElementListSelectionDialog(parent, PackageSelector.createLabelProvider(fFlags)) {
+class PackageSelector(parent: Shell, context: IRunnableContext, flags: Int, searchScope: IJavaSearchScope, alreadySelected: Array[String]) 
+		extends ElementListSelectionDialog(parent, PackageSelector.createLabelProvider(flags)) {
 
-	/** The dialog location. */
-	var fLocation: Point = null
-	/** The dialog size. */
-	var fSize: Point = null
+	var dialogLocation: Point = null
+	var dialogSize: Point = null
 	
 	
 	override def open(): Int = {
-		var packageList= new ArrayList[IPackageFragment]()
-		
-		val runnable= new IRunnableWithProgress() {
-			override def run(withMonitor: IProgressMonitor) {
-				val monitor = withMonitor match {
-				  case null => new NullProgressMonitor()
-				  case _ => withMonitor 
-				}
-				val hideEmpty= (fFlags & PackageSelector.F_HIDE_EMPTY_INNER) != 0
-				monitor.beginTask("Collecting Packages", if(hideEmpty) 2 else 1)
-				try {
-					val requestor= new SearchRequestor() {
-						val fSet= new HashSet[String]();
-						val fAddDefault= (fFlags & PackageSelector.F_HIDE_DEFAULT_PACKAGE) == 0
-						val fDuplicates= (fFlags & PackageSelector.F_REMOVE_DUPLICATES) == 0
-						val fIncludeParents= (fFlags & PackageSelector.F_SHOW_PARENTS) != 0
-
-						override def acceptSearchMatch(searchMatch: SearchMatch) {
-							val enclosingElement = searchMatch.getElement().asInstanceOf[IJavaElement]
-							val name = enclosingElement.getElementName
-							if (!fAddDefault && name.length() == 0) {
-								return
-							}
-							if (!fDuplicates && !fSet.add(name)) {
-								return
-							}
-							val packageRoot = packageFragmentRootFor(enclosingElement)
-							if(packageRoot.getKind() != IPackageFragmentRoot.K_SOURCE) {
-								return;
-							}
-
-							val packageFragment = enclosingElement.asInstanceOf[IPackageFragment]
-							addPackageFragment(packageFragment)
-							if (fIncludeParents) {
-								addParentPackages(enclosingElement, name)
-							}
-						}
-
-						private def packageFragmentRootFor(javaElement: IJavaElement): IPackageFragmentRoot = {
-							if(javaElement.isInstanceOf[IPackageFragmentRoot]) {
-								return javaElement.asInstanceOf[IPackageFragmentRoot]
-							}
-							if(javaElement == null) {
-								return null
-							}
-							packageFragmentRootFor(javaElement.getParent)
-						}
-						
-						private def addParentPackages(enclosingElement: IJavaElement, name: String) {
-							var nameFragment = name
-							val root = enclosingElement.getParent.asInstanceOf[IPackageFragmentRoot]
-							var idx= nameFragment.lastIndexOf('.')
-							while (idx != -1) {
-								nameFragment = nameFragment.substring(0, idx)
-								if (fDuplicates || fSet.add(nameFragment)) {
-									addPackageFragment(root.getPackageFragment(nameFragment))
-								}
-								idx = nameFragment.lastIndexOf('.')
-							}
-						}
-					}
-					val pattern= SearchPattern.createPattern("*", //$NON-NLS-1$
-							IJavaSearchConstants.PACKAGE, IJavaSearchConstants.DECLARATIONS,
-							SearchPattern.R_PATTERN_MATCH | SearchPattern.R_CASE_SENSITIVE)
-					new SearchEngine().search(pattern, Array(SearchEngine.getDefaultSearchParticipant), fScope, requestor, new SubProgressMonitor(monitor, 1))
-					
-					if (monitor.isCanceled()) {
-						throw new InterruptedException()
-					}
-
-					if (hideEmpty) {
-						removeEmptyPackages(new SubProgressMonitor(monitor, 1))
-					}
-				} catch {
-				  	case e: CoreException => throw new java.lang.reflect.InvocationTargetException(e)
-				  	case e: OperationCanceledException => throw new InterruptedException()
-				} 
-				finally {
-					monitor.done()
-				}
-			}
-			
-			private def removeEmptyPackages(monitor: IProgressMonitor) {
-				monitor.beginTask("Filtering Empty Packages", packageList.size)
-				try {
-					val res = new ArrayList[IPackageFragment](packageList.size)
-					for (i <- 0 until packageList.size) {
-						val pkg = packageList.get(i).asInstanceOf[IPackageFragment]
-						if (pkg.hasChildren || !pkg.hasSubpackages) {
-							res.add(pkg)
-						}
-						monitor.worked(1)
-						if (monitor.isCanceled()) {
-							throw new InterruptedException()
-						}
-					}
-					packageList.clear()
-					packageList.addAll(res)
-				} 
-				finally {
-					monitor.done()
-				}
-			}
-			
-			private def addPackageFragment(fragment: IPackageFragment) {
-				for (packageName <- alreadySelected) {
-					if(packageName.equals(fragment.getElementName)) {
-						return
-					}
-				}
-				packageList.add(fragment)
-			}
-		}
-
+		val runnable = new PackageSearchRunner()
 		try {
-			fContext.run(true, true, runnable)
+			context.run(true, true, runnable)
 		} 
 		catch {
 		  case e: java.lang.reflect.InvocationTargetException => {
@@ -184,6 +69,7 @@ class PackageSelector(parent: Shell, fContext: IRunnableContext, fFlags: Int, fS
 		  }
 		}
 		
+		val packageList = runnable.getPackageList
 		if (packageList.isEmpty) {
 			val title= "No packages found"
 			val message= "There are no packages for this project"
@@ -196,125 +82,215 @@ class PackageSelector(parent: Shell, fContext: IRunnableContext, fFlags: Int, fS
 		super.open
 	}
 	
-	
-	/*
-	 * @see org.eclipse.jface.window.Window#configureShell(Shell)
-	 */
 	override def configureShell(newShell: Shell) {
 		super.configureShell(newShell)
 		// FIXME
 		//PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IJavaHelpContextIds.OPEN_PACKAGE_DIALOG);
 	}
 
-	/*
-	 * @see Window#close()
-	 */
 	override def close() = {
 		writeSettings
 		super.close
 	}
 
-	/*
-	 * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
-	 */
 	override def createContents(parent: Composite) = {
 		val control = super.createContents(parent)
 		readSettings
 		control
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.window.Window#getInitialSize()
-	 */
-	override def getInitialSize = {
+	override def getInitialSize(): Point = {
 		val result = super.getInitialSize()
-		if (fSize != null) {
-			result.x= Math.max(result.x, fSize.x)
-			result.y= Math.max(result.y, fSize.y)
-			val display= getShell.getDisplay.getClientArea
-			result.x= Math.min(result.x, display.width)
-			result.y= Math.min(result.y, display.height)
+		if (dialogSize != null) {
+		  return result
 		}
-		result;
+		result.x= Math.max(result.x, dialogSize.x)
+		result.y= Math.max(result.y, dialogSize.y)
+		val display= getShell.getDisplay.getClientArea
+		result.x= Math.min(result.x, display.width)
+		result.y= Math.min(result.y, display.height)
+		result
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.window.Window#getInitialLocation(org.eclipse.swt.graphics.Point)
-	 */
-	override def getInitialLocation(initialSize: Point) = {
+	override def getInitialLocation(initialSize: Point): Point = {
 		val result = super.getInitialLocation(initialSize)
-		if (fLocation != null) {
-			result.x = fLocation.x
-			result.y = fLocation.y
-			val display = getShell.getDisplay.getClientArea
-			val xe = result.x + initialSize.x
-			if (xe > display.width) {
-				result.x -= xe - display.width 
-			}
-			val ye = result.y + initialSize.y
-			if (ye > display.height) {
-				result.y -= ye - display.height
-			}
+		if (dialogLocation == null) {
+		  return result
+		}
+		result.x = dialogLocation.x
+		result.y = dialogLocation.y
+		val display = getShell.getDisplay.getClientArea
+		val xe = result.x + initialSize.x
+		if (xe > display.width) {
+			result.x -= xe - display.width 
+		}
+		val ye = result.y + initialSize.y
+		if (ye > display.height) {
+			result.y -= ye - display.height
 		}
 		result
 	}
 
-
-
-	/**
-	 * Initializes itself from the dialog settings with the same state
-	 * as at the previous invocation.
-	 */
 	def readSettings() {
 		val s = getDialogSettings
 		try {
-			val x = s.getInt("x") //$NON-NLS-1$
-			val y = s.getInt("y") //$NON-NLS-1$
-			fLocation = new Point(x, y)
-			val width = s.getInt("width") //$NON-NLS-1$
-			val height = s.getInt("height") //$NON-NLS-1$
-			fSize = new Point(width, height)
+			val x = s.getInt("x")
+			val y = s.getInt("y")
+			dialogLocation = new Point(x, y)
+			val width = s.getInt("width")
+			val height = s.getInt("height")
+			dialogSize = new Point(width, height)
 		} 
 		catch {
 		  case e: NumberFormatException => {
-			fLocation = null
-			fSize = null
+			dialogLocation = null
+			dialogSize = null
 		  }
 		}
 	}
 
-	/**
-	 * Stores it current configuration in the dialog store.
-	 */
-	def writeSettings {
+	def writeSettings() {
 		val s = getDialogSettings
-
 		val location = getShell.getLocation
-		s.put("x", location.x) //$NON-NLS-1$
-		s.put("y", location.y) //$NON-NLS-1$
-
+		s.put("x", location.x)
+		s.put("y", location.y)
 		val size = getShell.getSize;
-		s.put("width", size.x) //$NON-NLS-1$
-		s.put("height", size.y) //$NON-NLS-1$
+		s.put("width", size.x)
+		s.put("height", size.y)
 	}
 
-	/**
-	 * Returns the dialog settings object used to share state
-	 * between several find/replace dialogs.
-	 *
-	 * @return the dialog settings to be used
-	 */
 	def getDialogSettings() = {
-		new DialogSettings("Workbench")
-		// FIXME: need to port to Scala to be able to access Db4oPluginActivator
-//		IDialogSettings settings= Db4oPluginActivator.getDefault().getDialogSettings();
-//		String sectionName= getClass().getName();
-//		IDialogSettings subSettings= settings.getSection(sectionName);
-//		if (subSettings == null)
-//			subSettings= settings.addNewSection(sectionName);
-//		return subSettings;
+		val settings = Db4oPluginActivator.getDefault.getDialogSettings
+		val sectionName = getClass.getName
+		var subSettings = settings.getSection(sectionName)
+		if (subSettings == null)
+			settings.addNewSection(sectionName)
+		else
+			subSettings
+	}
+ 
+	private class PackageSearchRunner extends IRunnableWithProgress {
+	  
+		private var packageList: ArrayList[IPackageFragment] = null
+   
+		def getPackageList() = packageList
+	  
+		override def run(withMonitor: IProgressMonitor) {
+			val monitor = withMonitor match {
+			  case null => new NullProgressMonitor()
+			  case _ => withMonitor 
+			}
+			val hideEmpty= (flags & PackageSelector.F_HIDE_EMPTY_INNER) != 0
+			monitor.beginTask("Collecting Packages", if(hideEmpty) 2 else 1)
+			try {
+				val requestor= new PackageSearchRequestor()
+				val pattern= SearchPattern.createPattern("*",
+						IJavaSearchConstants.PACKAGE, IJavaSearchConstants.DECLARATIONS,
+						SearchPattern.R_PATTERN_MATCH | SearchPattern.R_CASE_SENSITIVE)
+				new SearchEngine().search(pattern, Array(SearchEngine.getDefaultSearchParticipant), searchScope, requestor, new SubProgressMonitor(monitor, 1))
+				
+				if (monitor.isCanceled()) {
+					throw new InterruptedException()
+				}
+
+				packageList = requestor.getPackageList
+				if (hideEmpty) {
+					removeEmptyPackages(new SubProgressMonitor(monitor, 1), packageList)
+				}
+			} catch {
+			  	case e: CoreException => throw new java.lang.reflect.InvocationTargetException(e)
+			  	case e: OperationCanceledException => throw new InterruptedException()
+			} 
+			finally {
+				monitor.done()
+			}
+		}
+			
+		private def removeEmptyPackages(monitor: IProgressMonitor, packageList: ArrayList[IPackageFragment]) {
+			monitor.beginTask("Filtering Empty Packages", packageList.size)
+			try {
+				val res = new ArrayList[IPackageFragment](packageList.size)
+				for (i <- 0 until packageList.size) {
+					val pkg = packageList.get(i).asInstanceOf[IPackageFragment]
+					if (pkg.hasChildren || !pkg.hasSubpackages) {
+						res.add(pkg)
+					}
+					monitor.worked(1)
+					if (monitor.isCanceled()) {
+						throw new InterruptedException()
+					}
+				}
+				packageList.clear()
+				packageList.addAll(res)
+			} 
+			finally {
+				monitor.done()
+			}
+		}
 	}
 
+ 
+	private class PackageSearchRequestor extends SearchRequestor {
+		private val packageList= new ArrayList[IPackageFragment]()
 
+		private val fSet= new HashSet[String]();
+		private val fAddDefault= (flags & PackageSelector.F_HIDE_DEFAULT_PACKAGE) == 0
+		private val fDuplicates= (flags & PackageSelector.F_REMOVE_DUPLICATES) == 0
+		private val fIncludeParents= (flags & PackageSelector.F_SHOW_PARENTS) != 0
 
+		def getPackageList() = packageList
+  
+		override def acceptSearchMatch(searchMatch: SearchMatch) {
+			val enclosingElement = searchMatch.getElement().asInstanceOf[IJavaElement]
+			val name = enclosingElement.getElementName
+			if (!fAddDefault && name.length() == 0) {
+				return
+			}
+			if (!fDuplicates && !fSet.add(name)) {
+				return
+			}
+			val packageRoot = packageFragmentRootFor(enclosingElement)
+			if(packageRoot.getKind() != IPackageFragmentRoot.K_SOURCE) {
+				return;
+			}
+
+			val packageFragment = enclosingElement.asInstanceOf[IPackageFragment]
+			addPackageFragment(packageFragment)
+			if (fIncludeParents) {
+				addParentPackages(enclosingElement, name)
+			}
+		}
+
+		private def packageFragmentRootFor(javaElement: IJavaElement): IPackageFragmentRoot = {
+			if(javaElement.isInstanceOf[IPackageFragmentRoot]) {
+				return javaElement.asInstanceOf[IPackageFragmentRoot]
+			}
+			if(javaElement == null) {
+				return null
+			}
+			packageFragmentRootFor(javaElement.getParent)
+		}
+		
+		private def addParentPackages(enclosingElement: IJavaElement, name: String) {
+			var nameFragment = name
+			val root = enclosingElement.getParent.asInstanceOf[IPackageFragmentRoot]
+			var idx= nameFragment.lastIndexOf('.')
+			while (idx != -1) {
+				nameFragment = nameFragment.substring(0, idx)
+				if (fDuplicates || fSet.add(nameFragment)) {
+					addPackageFragment(root.getPackageFragment(nameFragment))
+				}
+				idx = nameFragment.lastIndexOf('.')
+			}
+		}
+  
+		private def addPackageFragment(fragment: IPackageFragment) {
+			for (packageName <- alreadySelected) {
+				if(packageName.equals(fragment.getElementName)) {
+					return
+				}
+			}
+			packageList.add(fragment)
+		}
+	}
 }
