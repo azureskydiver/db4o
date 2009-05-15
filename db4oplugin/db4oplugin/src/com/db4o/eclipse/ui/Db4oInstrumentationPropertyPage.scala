@@ -82,9 +82,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     val filterPackageList = createTableViewer(composite, model.getPackages, (1,2))
     model.setSelectionProvider(filterPackageList)
     
-    val addButton = createButton("Add", composite)
-    val removeButton = createButton("Remove", composite)
-    
+    val addButton = createButton("Add", composite)    
     addButton.addListener(SWT.Selection, new Listener() {
       def handleEvent(event: Event) {
         val context = new ProgressMonitorDialog(getShell)
@@ -101,9 +99,16 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
       }
     })
     
+    val removeButton = createButton("Remove", composite)
+    removeButton.setEnabled(false)
     removeButton.addListener(SWT.Selection, new Listener() {
       def handleEvent(event: Event) {
         model.removePackages(selectedPackageNames(filterPackageList))
+      }
+    })
+    model.addPackageSelectionChangeListener(new PackageSelectionChangeListener() {
+      override def packagesSelected(state: Boolean) {
+        removeButton.setEnabled(state)
       }
     })
     

@@ -23,18 +23,24 @@ class Db4oInstrumentationPropertyPageModel(project: IProject) {
   def removePackageSelectionChangeListener(listener: PackageSelectionChangeListener) = selectionChangeListeners -= listener
 
   private object PackageSelectionListener extends ISelectionChangedListener {
+	  private var selected = false
+    
 	  def selectionChanged(event: SelectionChangedEvent) {
 	    val selection = event.getSelection
 	    if(!selection.isInstanceOf[IStructuredSelection]) {
 	      selectedPackages = List()
 	    }
 	    val structured = selection.asInstanceOf[IStructuredSelection]
-	    selectedPackages = structured.toArray.toList.map(_.toString)
-	    selectionChangeListeners.foreach(_.packagesSelected(selectedPackages.isEmpty))
+	    val selected = structured.toArray.length > 0
+	    if(selected == this.selected) {
+	      return
+	    }
+	    this.selected = selected
+	    selectionChangeListeners.foreach(_.packagesSelected(selected))
 	  }
   }
 
-  def setSelectionProvider(provider: IPostSelectionProvider) {
+  def setSelectionProvider(provider: ISelectionProvider) {
     provider.addSelectionChangedListener(PackageSelectionListener)
   }
   
