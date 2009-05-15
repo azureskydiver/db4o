@@ -6,7 +6,7 @@ package com.db4o.internal.cs.messages;
 /**
  * @exclude
  */
-public class MGetThreadID extends Msg implements ServerSideMessage {
+public class MGetThreadID extends Msg implements MessageWithResponse {
 
 	public boolean processAtServer() {
 		respondInt(serverMessageDispatcher().dispatcherID());

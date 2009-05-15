@@ -6,7 +6,7 @@ package com.db4o.internal.cs.messages;
 /**
  * @exclude
  */
-public class MIsAlive extends Msg implements ServerSideMessage{ 
+public class MIsAlive extends Msg implements MessageWithResponse { 
 
     public boolean processAtServer() {
         write(Msg.IS_ALIVE);

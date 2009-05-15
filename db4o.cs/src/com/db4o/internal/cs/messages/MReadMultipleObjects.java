@@ -5,7 +5,7 @@ package com.db4o.internal.cs.messages;
 import com.db4o.*;
 import com.db4o.internal.*;
 
-public final class MReadMultipleObjects extends MsgD implements ServerSideMessage {
+public final class MReadMultipleObjects extends MsgD implements MessageWithResponse {
 	
 	public final boolean processAtServer() {
 		int size = readInt();

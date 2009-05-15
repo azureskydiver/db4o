@@ -2,7 +2,7 @@ package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
 
-public class MInstanceCount extends MsgD implements ServerSideMessage {
+public class MInstanceCount extends MsgD implements MessageWithResponse {
 
 	public boolean processAtServer() {
 		MsgD writer = null;

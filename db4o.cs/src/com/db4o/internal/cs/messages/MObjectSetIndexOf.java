@@ -8,7 +8,7 @@ import com.db4o.internal.query.result.*;
 /**
  * @exclude
  */
-public class MObjectSetIndexOf extends MObjectSet implements ServerSideMessage {
+public class MObjectSetIndexOf extends MObjectSet implements MessageWithResponse {
 	
 	public boolean processAtServer() {
 		AbstractQueryResult queryResult = queryResult(readInt());

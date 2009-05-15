@@ -10,7 +10,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 
 
-public class MWriteBlob extends MsgBlob implements ServerSideMessage {
+public class MWriteBlob extends MsgBlob implements MessageWithResponse {
 	
 	public void processClient(Socket4 sock) throws IOException {
         Msg message = Msg.readMessage(messageDispatcher(), transaction(), sock);

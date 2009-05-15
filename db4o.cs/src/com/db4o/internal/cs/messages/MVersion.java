@@ -7,7 +7,7 @@ import com.db4o.internal.*;
 /**
  * @exclude
  */
-public class MVersion extends Msg implements ServerSideMessage {
+public class MVersion extends Msg implements MessageWithResponse {
 
 	public boolean processAtServer() {
 		long ver = 0;

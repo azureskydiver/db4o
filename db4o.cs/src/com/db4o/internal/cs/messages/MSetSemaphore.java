@@ -4,7 +4,7 @@ package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
 
-public final class MSetSemaphore extends MsgD implements ServerSideMessage {
+public final class MSetSemaphore extends MsgD implements MessageWithResponse {
 	
 	public final boolean processAtServer() {
 		int timeout = readInt();

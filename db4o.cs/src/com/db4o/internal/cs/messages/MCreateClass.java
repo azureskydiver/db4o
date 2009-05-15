@@ -6,7 +6,7 @@ import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
-public final class MCreateClass extends MsgD implements ServerSideMessage {
+public final class MCreateClass extends MsgD implements MessageWithResponse {
 
 	public final boolean processAtServer() {
 		ObjectContainerBase stream = stream();

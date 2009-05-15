@@ -9,7 +9,7 @@ import com.db4o.internal.*;
 /**
  * @exclude
  */
-public class MClassMetadataIdForName extends MsgD implements ServerSideMessage {
+public class MClassMetadataIdForName extends MsgD implements MessageWithResponse {
     
     public final boolean processAtServer() {
         String name = readString();

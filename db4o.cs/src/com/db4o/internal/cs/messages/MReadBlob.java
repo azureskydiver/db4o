@@ -9,7 +9,7 @@ import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 
 
-public class MReadBlob extends MsgBlob implements ServerSideMessage {
+public class MReadBlob extends MsgBlob implements MessageWithResponse {
 	public void processClient(Socket4 sock) throws IOException {
         Msg message = Msg.readMessage(messageDispatcher(), transaction(), sock);
         if (message.equals(Msg.LENGTH)) {

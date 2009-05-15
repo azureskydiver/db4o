@@ -4,7 +4,7 @@ package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
 
-public class MWriteBatchedMessages extends MsgD implements ServerSideMessage {
+public class MWriteBatchedMessages extends MsgD implements MessageWithResponse {
 	public final boolean processAtServer() {
 		int count = readInt();
 		Transaction ta = transaction();

@@ -7,7 +7,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.cs.*;
 import com.db4o.reflect.generic.*;
 
-public class MClassMeta extends MsgObject implements ServerSideMessage {
+public class MClassMeta extends MsgObject implements MessageWithResponse {
 	public boolean processAtServer() {
 		ObjectContainerBase stream = stream();
 		unmarshall();

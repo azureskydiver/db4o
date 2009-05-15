@@ -3,7 +3,7 @@
 package com.db4o.internal.cs.messages;
 
 
-public final class MTaIsDeleted extends MsgD implements ServerSideMessage {
+public final class MTaIsDeleted extends MsgD implements MessageWithResponse {
 	
 	public final boolean processAtServer() {
 		synchronized (streamLock()) {

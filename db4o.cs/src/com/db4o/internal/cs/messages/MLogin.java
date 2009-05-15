@@ -8,7 +8,7 @@ import com.db4o.internal.cs.*;
 /**
  * @exclude
  */
-public class MLogin extends MsgD implements ServerSideMessage {
+public class MLogin extends MsgD implements MessageWithResponse {
 
 	public boolean processAtServer() {
 		synchronized (streamLock()) {
