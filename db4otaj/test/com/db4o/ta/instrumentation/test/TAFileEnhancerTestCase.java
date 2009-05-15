@@ -1,6 +1,7 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.ta.instrumentation.test;
 
+import java.io.*;
 import java.net.*;
 import java.util.*;
 
@@ -9,6 +10,7 @@ import EDU.purdue.cs.bloat.editor.*;
 import com.db4o.db4ounit.common.ta.*;
 import com.db4o.foundation.*;
 import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.file.*;
 import com.db4o.instrumentation.main.*;
 import com.db4o.internal.*;
 import com.db4o.ta.*;
@@ -137,6 +139,44 @@ public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
 			}
 		});
 		assertReadsWrites(1, 0, listActivator);
+	}
+
+	// TODO should go into generic instrumentation test rather than TA
+	public void testListener() throws Exception {		
+		
+		class MockListener implements Db4oInstrumentationListener {
+			
+			private int _count = 0;
+			
+			public void notifyProcessed(InstrumentationClassSource source, InstrumentationStatus status) {
+				if(status == InstrumentationStatus.FAILED) {
+					Assert.fail();
+				}
+				Class[] srcArr = ((status == InstrumentationStatus.INSTRUMENTED) ? INSTRUMENTED_CLASSES : NOT_INSTRUMENTED_CLASSES);
+				boolean found = false;
+				try {
+					for (int srcIdx = 0; srcIdx < srcArr.length; srcIdx++) {
+						if(srcArr[srcIdx].getName().equals(source.className())) {
+							found = true;
+							break;
+						}
+					}
+				} 
+				catch (IOException exc) {
+					Assert.fail("", exc);
+				}
+				Assert.isTrue(found);
+				_count++;
+			}
+			
+			public void validate() {
+				Assert.areEqual(INSTRUMENTED_CLASSES.length + NOT_INSTRUMENTED_CLASSES.length, _count);
+			}
+		}
+		
+		MockListener listener = new MockListener();
+		enhance(listener);
+		listener.validate();
 	}
 
 	private void instantiateInnerClass(AssertingClassLoader loader) throws Exception {

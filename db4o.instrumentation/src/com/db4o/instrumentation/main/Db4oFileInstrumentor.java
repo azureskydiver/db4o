@@ -4,6 +4,7 @@ package com.db4o.instrumentation.main;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
@@ -16,6 +17,7 @@ import com.db4o.instrumentation.file.*;
  */
 public class Db4oFileInstrumentor {
 	private final BloatClassEdit _classEdit;
+	private final Set<Db4oInstrumentationListener> _listeners = new HashSet<Db4oInstrumentationListener>();
 	
 	public Db4oFileInstrumentor(BloatClassEdit classEdit) {
 		_classEdit = classEdit;
@@ -23,6 +25,14 @@ public class Db4oFileInstrumentor {
 	
 	public Db4oFileInstrumentor(BloatClassEdit[] classEdits) {
 		this(new CompositeBloatClassEdit(classEdits));
+	}
+
+	public void addInstrumentationListener(Db4oInstrumentationListener listener) {
+		_listeners.add(listener);
+	}
+
+	public void removeInstrumentationListener(Db4oInstrumentationListener listener) {
+		_listeners.remove(listener);
 	}
 
 	public void enhance(String sourceDir, String targetDir, String[] classpath) throws Exception {
@@ -67,14 +77,19 @@ public class Db4oFileInstrumentor {
 			File target,
 			ClassLoader classLoader, 
 			BloatLoaderContext bloatUtil) throws IOException, ClassNotFoundException {
-		System.err.println("Processing " + source.className());
 		ClassEditor classEditor = bloatUtil.classEditor(source.className());
 		InstrumentationStatus status = _classEdit.enhance(classEditor, classLoader, bloatUtil);
-		System.err.println("enhance " + source.className() + ": " + (status.isInstrumented() ? "ok" : "skipped"));
+		notifyListeners(source, status);
 		if (!status.isInstrumented()) {
 			File targetFile = source.targetPath(target);
 			targetFile.getParentFile().mkdirs();
 			copy(source, targetFile);
+		}
+	}
+	
+	private void notifyListeners(InstrumentationClassSource source, InstrumentationStatus status) {
+		for (Db4oInstrumentationListener listener : _listeners) {
+			listener.notifyProcessed(source, status);
 		}
 	}
 

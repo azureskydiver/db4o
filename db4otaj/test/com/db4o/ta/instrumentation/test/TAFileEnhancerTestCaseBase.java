@@ -47,6 +47,10 @@ public abstract class TAFileEnhancerTestCaseBase implements TestCase, TestLifeCy
 	}
 
 	protected void enhance() throws Exception {
+		enhance(null);
+	}
+
+	protected void enhance(Db4oInstrumentationListener listener) throws Exception {
 		Class[] instrumentedClasses = instrumentedClasses();
 		String[] filterClassNames = new String[instrumentedClasses.length];
 		for (int instrumentedIdx = 0; instrumentedIdx < instrumentedClasses.length; instrumentedIdx++) {
@@ -54,6 +58,9 @@ public abstract class TAFileEnhancerTestCaseBase implements TestCase, TestLifeCy
 		}
 		ClassFilter filter = new ByNameClassFilter(filterClassNames);
 		Db4oFileInstrumentor enhancer = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(filter));
+		if(listener != null) {
+			enhancer.addInstrumentationListener(listener);
+		}
 		enhancer.enhance(srcDir, targetDir, new String[]{});
 	}
 
