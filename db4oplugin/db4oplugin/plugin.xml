@@ -63,5 +63,13 @@
             restorable="true">
       </view>
    </extension>
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            category="db4o"
+            file="doc/toc.xml"
+            primary="true">
+      </toc>
+   </extension>
 
 </plugin>

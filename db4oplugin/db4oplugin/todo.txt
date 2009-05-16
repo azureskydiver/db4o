@@ -4,6 +4,8 @@
 - notify PDE about changed class files
 - export configuration for use by ant build
 
+- distribute package selection dialog responsibilities between model and property page
+
 - restrict nature applicability to IJavaProject natures
 - preferences/package selection
   * recursive filtering vs single package filtering
