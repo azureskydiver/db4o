@@ -6,13 +6,12 @@
 
 - restrict nature applicability to IJavaProject natures
 - preferences/package selection
-  * fix package filtering (currently by K_SOURCE)
   * recursive filtering vs single package filtering
   * renderer for package list
 - port package selection dialog to scala
 - help page *
 
-- fix java file compilation issue **
+- fix deployment JavaElementLabelProvider issue **
 
 - replace default stderr instrumentation reporting with listener mechanism *
 - optionally hook instrumentation reporting into eclipse log *
