@@ -1,8 +1,12 @@
 package com.db4o.eclipse;
 
+import com.db4o.instrumentation.main._
+
 import org.eclipse.jface.resource._;
 import org.eclipse.ui.plugin._;
 import org.osgi.framework._;
+
+import scala.collection._
 
 object Db4oPluginActivator {
 	val PLUGIN_ID = "db4oplugin"
@@ -16,6 +20,8 @@ object Db4oPluginActivator {
 
 class Db4oPluginActivator extends AbstractUIPlugin {
 
+	private var listeners: immutable.ListSet[Db4oInstrumentationListener] = immutable.ListSet.empty 
+  
 	override def start(context: BundleContext) {
 		super.start(context);
 		Db4oPluginActivator.plugin = this;
@@ -26,4 +32,13 @@ class Db4oPluginActivator extends AbstractUIPlugin {
 		super.stop(context);
 	}
  
+	def addInstrumentationListener(listener: Db4oInstrumentationListener) {
+	  listeners += listener
+	}
+
+	def removeInstrumentationListener(listener: Db4oInstrumentationListener) {
+	  listeners -= listener
+	}
+ 
+	def getInstrumentationListeners() = listeners
 }

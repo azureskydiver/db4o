@@ -143,7 +143,7 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     button
   }
 
-  def createTableViewer(parent: Composite, packages: Set[String], span: (Int, Int)) = {
+  private def createTableViewer(parent: Composite, packages: Set[String], span: (Int, Int)) = {
     val table= new Table(parent, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL)
     table.setFont(parent.getFont())
     table.setLayout(new TableLayout)
