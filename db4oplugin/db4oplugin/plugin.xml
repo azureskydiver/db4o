@@ -54,5 +54,14 @@
             <filter name="nature" value="db4oplugin.db4oNature" />
       </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="com.db4o.eclipse.ui.Db4oInstrumentationLogView"
+            id="db4oplugin.logView"
+            name="db4o instrumentation log"
+            restorable="true">
+      </view>
+   </extension>
 
 </plugin>

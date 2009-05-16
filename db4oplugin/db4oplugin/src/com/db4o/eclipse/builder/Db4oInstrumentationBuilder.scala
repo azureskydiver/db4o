@@ -69,6 +69,7 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
 
   private def enhance(root: FilePathRoot, classPathRoots: Array[String], project: IProject, outPath: String) {
       val instrumentor = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(new PreferenceBasedFilter(project)))
+      Db4oPluginActivator.getDefault.getInstrumentationListeners.foreach(instrumentor.addInstrumentationListener(_))
       try {
         instrumentor.enhance(new BundleClassSource, root, outPath, classPathRoots, getClass.getClassLoader)
       }

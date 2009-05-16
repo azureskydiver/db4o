@@ -10,6 +10,7 @@ import org.junit.runners.Suite;
   classOf[Db4oPreferencesTestCase],
   classOf[PropertyPageTestCase],
   classOf[Db4oInstrumentationPropertyPageModelTestCase]
+  //classOf[InstrumentationLogViewTestCase]
   //classOf[ClassFileChangeNotificationTestCase]
 ))
 class AllTests {
