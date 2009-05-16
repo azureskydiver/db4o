@@ -14,7 +14,9 @@
 - fix deployment JavaElementLabelProvider issue **
 
 - replace default stderr instrumentation reporting with listener mechanism *
-- optionally hook instrumentation reporting into eclipse log *
+  * add batch start/end notifications?
+- hook instrumentation reporting into eclipse *
+  * beautify log view
 
 - non-headless tests (log view) :/
 - port test project infrastructure to scala
