@@ -5,5 +5,7 @@ import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.file.*;
 
 public interface Db4oInstrumentationListener {
+	void notifyStartProcessing(FilePathRoot root);
 	void notifyProcessed(InstrumentationClassSource source, InstrumentationStatus status);
+	void notifyEndProcessing(FilePathRoot root);
 }

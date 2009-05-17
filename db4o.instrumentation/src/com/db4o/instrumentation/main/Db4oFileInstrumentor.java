@@ -67,8 +67,14 @@ public class Db4oFileInstrumentor {
 			File target,
 			ClassLoader classLoader,
 			BloatLoaderContext bloatUtil) throws Exception {
+		for (Db4oInstrumentationListener listener : _listeners) {
+			listener.notifyStartProcessing(sources);
+		}
 		for (InstrumentationClassSource file : sources) {
 			enhanceFile(file, target, classLoader, bloatUtil);
+		}
+		for (Db4oInstrumentationListener listener : _listeners) {
+			listener.notifyEndProcessing(sources);
 		}
 	}
 
