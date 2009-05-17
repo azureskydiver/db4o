@@ -23,6 +23,10 @@
 				<include name="org.eclipse.equinox.preferences_*.jar" />
 				<include name="org.eclipse.jdt.core_*.jar" />
 				<include name="org.eclipse.jdt.ui_*.jar" />
+				<include name="org.eclipse.text_*.jar" />
+				<include name="org.eclipse.core.commands_*.jar" />
+				<include name="org.eclipse.help_*.jar" />
+				<include name="org.eclipse.ui.workbench.texteditor_*.jar" />
 			</fileset>
 		</path>
 	    <property name="scala-library.jar" value="${dir.scala.lib}/scala-library.jar" />
@@ -64,6 +68,8 @@
 			<fileset dir="${dir.project.db4oplugin}">
 				<include name="plugin.xml" />
 				<include name="lib/scala*.jar" />
+				<include name="doc/**/*" />
+				<include name="res/**/*" />
 			</fileset>
 			<fileset dir="${dir.classes.db4oplugin}">
 				<include name="**/*.class" />
