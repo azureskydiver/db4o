@@ -30,14 +30,14 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
   override def build(kind: Int, args: java.util.Map[_,_], monitor: IProgressMonitor): Array[IProject] = {
 	if (kind == IncrementalProjectBuilder.FULL_BUILD) {
 	  fullBuild(monitor)
-      return null
+	  return null
 	} 
-    val delta = getDelta(getProject)
+	val delta = getDelta(getProject)
 	if (delta == null) {
 	  fullBuild(monitor)
-      return null
+	  return null
 	}
-    incrementalBuild(delta, monitor)
+	incrementalBuild(delta, monitor)
 	null
   }
 
