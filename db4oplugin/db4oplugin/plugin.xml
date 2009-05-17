@@ -57,11 +57,17 @@
    <extension
          point="org.eclipse.ui.views">
       <view
+            category="db4oplugin.view.category"
             class="com.db4o.eclipse.ui.Db4oInstrumentationLogView"
+            icon="res/db4oicon.png"
             id="db4oplugin.logView"
-            name="db4o instrumentation log"
+            name="db4o log"
             restorable="true">
       </view>
+      <category
+            id="db4oplugin.view.category"
+            name="db4o">
+      </category>
    </extension>
    <extension
          point="org.eclipse.help.toc">
