@@ -8,20 +8,36 @@ import org.eclipse.swt._
 import org.eclipse.ui.part._
 import org.eclipse.swt.widgets._
 import org.eclipse.jface.viewers._
+import org.eclipse.core.resources._
 
 class Db4oInstrumentationLogView extends ViewPart {
 
   private val MAX_ENTRIES = 100
   private var view: TableViewer = null
   
-  private object LogViewListener extends Db4oInstrumentationListener {
+  private object LogViewListener extends Db4oInstrumentationListener with IResourceChangeListener {
+    
+	override def resourceChanged(event: IResourceChangeEvent) {
+		System.err.println("CHANGE!!!")
+		if(event.getType == IResourceChangeEvent.PRE_BUILD) {
+			asyncExec(() => view.getTable.removeAll)
+		}
+	}
+
+	override def notifyStartProcessing(root: FilePathRoot) {
+	}
+ 
+	override def notifyEndProcessing(root: FilePathRoot) {
+	}
+    
     override def notifyProcessed(source: InstrumentationClassSource, status: InstrumentationStatus) {
+    	asyncExec(() => view.add(source + ": " + status))
+    }
+    
+    private def asyncExec(block: () => Unit) {
       Display.getDefault.asyncExec(new Runnable() {
         override def run() {
-	      if(view.getTable.getItemCount > MAX_ENTRIES) {
-	        view.remove(view.getElementAt(0))
-	      }
-	      view.add(source + ": " + status)
+          block()
         }
       })
     }
@@ -33,12 +49,14 @@ class Db4oInstrumentationLogView extends ViewPart {
     table.setLayout(new TableLayout)
     view = new TableViewer(table)
     Db4oPluginActivator.getDefault.addInstrumentationListener(LogViewListener)
+    ResourcesPlugin.getWorkspace.addResourceChangeListener(LogViewListener, IResourceChangeEvent.PRE_BUILD)
   }
 
   override def setFocus() {
   }
 
   override def dispose() {
+    ResourcesPlugin.getWorkspace.removeResourceChangeListener(LogViewListener)
     Db4oPluginActivator.getDefault.removeInstrumentationListener(LogViewListener)
     super.dispose
   }
