@@ -10,10 +10,8 @@
 - preferences/package selection
   * recursive filtering vs single package filtering
   * renderer for package list
-- port package selection dialog to scala
 - help page *
-
-- fix deployment JavaElementLabelProvider issue **
+- show db4o nature state in context menu
 
 - replace default stderr instrumentation reporting with listener mechanism *
   * add batch start/end notifications?

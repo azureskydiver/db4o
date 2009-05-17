@@ -100,7 +100,7 @@ class PackageSelector(parent: Shell, context: IRunnableContext, flags: Int, sear
 	
 	override def getInitialSize(): Point = {
 		val result = super.getInitialSize()
-		if (dialogSize != null) {
+		if (dialogSize == null) {
 		  return result
 		}
 		result.x= Math.max(result.x, dialogSize.x)

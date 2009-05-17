@@ -8,15 +8,13 @@ Bundle-Vendor: Versant
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
- org.eclipse.jdt.core;bundle-version="3.4.4"
+ org.eclipse.jdt.core;bundle-version="3.4.4",
+ org.eclipse.jdt.ui;bundle-version="3.4.2",
+ org.eclipse.text;bundle-version="3.4.0",
+ org.eclipse.help;bundle-version="3.3.102"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/db4o-@db4o.version.iteration.revision@-all-java5.jar,
  .,
- lib/scala-library.jar
-Export-Package: com.db4o.eclipse,
- com.db4o.eclipse.builder,
- com.db4o.eclipse.nature,
- com.db4o.eclipse.preferences,
- com.db4o.eclipse.ui,
- com.db4o.ta
+ lib/scala-library.jar,
+ scala-bin/
