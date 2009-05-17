@@ -2,7 +2,6 @@
 package com.db4o.ta.instrumentation.test;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
 
 import EDU.purdue.cs.bloat.editor.*;
@@ -21,17 +20,16 @@ import db4ounit.*;
 
 public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
     
-	private static final String INSTANCE_FACTORY_METHOD_NAME = "collectionInstance";
-	private final static Class INSTRUMENTED_CLAZZ = ToBeInstrumentedWithFieldAccess.class;
-	private final static Class NOT_INSTRUMENTED_CLAZZ = NotToBeInstrumented.class;
-	private final static Class EXTERNAL_INSTRUMENTED_CLAZZ = ToBeInstrumentedWithExternalFieldAccess.class;
-	private final static Class INSTRUMENTED_OUTER_CLAZZ = ToBeInstrumentedOuter.class;
-	private final static Class INSTRUMENTED_INNER_CLAZZ = getAnonymousInnerClass(INSTRUMENTED_OUTER_CLAZZ);
-	private final static Class LIST_CLIENT_CLAZZ = ArrayListClient.class;
-	private final static Class MAP_CLIENT_CLAZZ = HashMapClient.class;
-	private final static Class CUSTOM_LIST_CLAZZ = CustomArrayList.class;
+	private final static Class<?> INSTRUMENTED_CLAZZ = ToBeInstrumentedWithFieldAccess.class;
+	private final static Class<?> NOT_INSTRUMENTED_CLAZZ = NotToBeInstrumented.class;
+	private final static Class<?> EXTERNAL_INSTRUMENTED_CLAZZ = ToBeInstrumentedWithExternalFieldAccess.class;
+	private final static Class<?> INSTRUMENTED_OUTER_CLAZZ = ToBeInstrumentedOuter.class;
+	private final static Class<?> INSTRUMENTED_INNER_CLAZZ = getAnonymousInnerClass(INSTRUMENTED_OUTER_CLAZZ);
+	private final static Class<?> LIST_CLIENT_CLAZZ = ArrayListClient.class;
+	private final static Class<?> MAP_CLIENT_CLAZZ = HashMapClient.class;
+	private final static Class<?> CUSTOM_LIST_CLAZZ = CustomArrayList.class;
 
-	final static Class[] INSTRUMENTED_CLASSES = new Class[] { 
+	final static Class<?>[] INSTRUMENTED_CLASSES = new Class[] { 
 		INSTRUMENTED_CLAZZ, 
 		EXTERNAL_INSTRUMENTED_CLAZZ, 
 		INSTRUMENTED_OUTER_CLAZZ, 
@@ -42,13 +40,13 @@ public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
 		MyArrayList.class,
 	};
 
-	private final static Class[] NOT_INSTRUMENTED_CLASSES = new Class[] { 
+	private final static Class<?>[] NOT_INSTRUMENTED_CLASSES = new Class[] { 
 		NOT_INSTRUMENTED_CLAZZ, 
 	};
 
-	private final static Class[] INPUT_CLASSES = (Class[])Arrays4.merge(INSTRUMENTED_CLASSES, NOT_INSTRUMENTED_CLASSES, Class.class);
+	private final static Class<?>[] INPUT_CLASSES = (Class[])Arrays4.merge(INSTRUMENTED_CLASSES, NOT_INSTRUMENTED_CLASSES, Class.class);
 	
-	private static Class getAnonymousInnerClass(Class clazz) {
+	private static Class<?> getAnonymousInnerClass(Class<?> clazz) {
 		try {
 			return Class.forName(clazz.getName() + "$1");
 		} catch (ClassNotFoundException e) {
@@ -57,11 +55,11 @@ public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
 		}
 	}
 
-	protected Class[] inputClasses() {
+	protected Class<?>[] inputClasses() {
 		return INPUT_CLASSES;
 	}
 
-	protected Class[] instrumentedClasses() {
+	protected Class<?>[] instrumentedClasses() {
 		return INSTRUMENTED_CLASSES;
 	}
 
@@ -125,12 +123,13 @@ public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
 			
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testArrayListActivationWithException() throws Exception {
 		enhance();
 		AssertingClassLoader loader = newAssertingClassLoader( new Class[] { CollectionClient.class });		
 		CollectionClient client = (CollectionClient) loader.newInstance(LIST_CLIENT_CLAZZ);
 		MockActivator clientActivator = MockActivator.activatorFor((Activatable)client);
-		final List list = (List)client.collectionInstance();
+		final List<Object> list = (List)client.collectionInstance();
 		assertReadsWrites(1, 0, clientActivator);
 		MockActivator listActivator = MockActivator.activatorFor((Activatable)list);
 		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
@@ -147,12 +146,14 @@ public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
 		class MockListener implements Db4oInstrumentationListener {
 			
 			private int _count = 0;
+			private boolean _gotStart = false;
+			private boolean _gotEnd = false;
 			
 			public void notifyProcessed(InstrumentationClassSource source, InstrumentationStatus status) {
 				if(status == InstrumentationStatus.FAILED) {
 					Assert.fail();
 				}
-				Class[] srcArr = ((status == InstrumentationStatus.INSTRUMENTED) ? INSTRUMENTED_CLASSES : NOT_INSTRUMENTED_CLASSES);
+				Class<?>[] srcArr = ((status == InstrumentationStatus.INSTRUMENTED) ? INSTRUMENTED_CLASSES : NOT_INSTRUMENTED_CLASSES);
 				boolean found = false;
 				try {
 					for (int srcIdx = 0; srcIdx < srcArr.length; srcIdx++) {
@@ -170,7 +171,29 @@ public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
 			}
 			
 			public void validate() {
+				assertFinalCount();
+				assertStartEnd(true, true);
+			}
+
+			public void notifyStartProcessing(FilePathRoot root) {
+				Assert.areEqual(0, _count);
+				assertStartEnd(false, false);
+				_gotStart = true;
+			}
+
+			public void notifyEndProcessing(FilePathRoot root) {
+				assertFinalCount();
+				assertStartEnd(true, false);
+				_gotEnd = true;
+			}
+			
+			private void assertFinalCount() {
 				Assert.areEqual(INSTRUMENTED_CLASSES.length + NOT_INSTRUMENTED_CLASSES.length, _count);
+			}
+			
+			private void assertStartEnd(boolean gotStart, boolean gotEnd) {
+				Assert.areEqual(gotStart, _gotStart);
+				Assert.areEqual(gotEnd, _gotEnd);
 			}
 		}
 		
@@ -180,7 +203,7 @@ public class TAFileEnhancerTestCase extends TAFileEnhancerTestCaseBase {
 	}
 
 	private void instantiateInnerClass(AssertingClassLoader loader) throws Exception {
-		Class outerClazz = loader.loadClass(INSTRUMENTED_OUTER_CLAZZ);
+		Class<?> outerClazz = loader.loadClass(INSTRUMENTED_OUTER_CLAZZ);
 		Object outerInst = outerClazz.newInstance();
 		outerClazz.getDeclaredMethod("foo", new Class[]{}).invoke(outerInst, new Object[]{});
 	}
