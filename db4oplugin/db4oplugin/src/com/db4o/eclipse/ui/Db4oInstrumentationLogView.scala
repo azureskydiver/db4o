@@ -18,7 +18,6 @@ class Db4oInstrumentationLogView extends ViewPart {
   private object LogViewListener extends Db4oInstrumentationListener with IResourceChangeListener {
     
 	override def resourceChanged(event: IResourceChangeEvent) {
-		System.err.println("CHANGE!!!")
 		if(event.getType == IResourceChangeEvent.PRE_BUILD) {
 			asyncExec(() => view.getTable.removeAll)
 		}
