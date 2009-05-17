@@ -14,6 +14,7 @@ import org.eclipse.core.resources._
 import org.eclipse.core.runtime.preferences._
 import org.eclipse.jdt.core._
 import org.eclipse.jdt.core.search._
+import org.eclipse.jdt.ui._
 import org.eclipse.jface.viewers._
 import org.eclipse.jface.dialogs._
 import org.eclipse.jface.window._
@@ -154,6 +155,22 @@ class Db4oInstrumentationPropertyPage extends PropertyPage {
     val viewer = new TableViewer(table)
     viewer.setContentProvider(new PackageListContentProvider(viewer))
     viewer.setInput(packages)
+    viewer.setLabelProvider(new ILabelProvider() {
+      private val packageImage = JavaUI.getSharedImages.getImage(ISharedImages.IMG_OBJS_PACKAGE)
+      
+      override def getImage(element: Object) = packageImage
+
+      override def getText(element: Object) = element.toString
+      
+	  override def addListener(listener: ILabelProviderListener) {}
+	
+	  override def dispose() {}
+	
+	  override def isLabelProperty(element: Object, property: String) = false
+	
+	  override def removeListener(listener: ILabelProviderListener) {
+	}
+   })
     viewer
   }	
 
