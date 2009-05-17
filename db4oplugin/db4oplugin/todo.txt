@@ -10,10 +10,8 @@
 - restrict nature applicability to IJavaProject natures
 - preferences/package selection
   * recursive filtering vs single package filtering
-  * renderer for package list
 - help page *
 - show db4o nature state in context menu *
-- db4o icon for log view and context menu entry
 
 - hook instrumentation reporting into eclipse *
   * beautify log view

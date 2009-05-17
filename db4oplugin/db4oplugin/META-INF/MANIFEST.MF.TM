@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core;bundle-version="3.4.4",
  org.eclipse.jdt.ui;bundle-version="3.4.2",
  org.eclipse.text;bundle-version="3.4.0",
- org.eclipse.help;bundle-version="3.3.102"
+ org.eclipse.help;bundle-version="3.3.102",
+ org.eclipse.ui.workbench.texteditor;bundle-version="3.4.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/db4o-@db4o.version.iteration.revision@-all-java5.jar,
