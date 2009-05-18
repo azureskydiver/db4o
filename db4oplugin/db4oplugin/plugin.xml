@@ -35,11 +35,12 @@
             nameFilter="*"
             id="db4oplugin.popup.naturechange">
          <action
-               label="Add/Remove db4o Nature"
                class="com.db4o.eclipse.ui.ToggleDb4oNatureAction"
+               enablesFor="1"
+               id="db4oplugin.addRemoveNatureAction"
+               label="Add/Remove db4o Nature"
                menubarPath="additions"
-               enablesFor="+"
-               id="db4oplugin.addRemoveNatureAction">
+               state="false">
          </action>
       </objectContribution>
    </extension>

@@ -9,36 +9,41 @@ import org.eclipse.jface.action._
 
 class ToggleDb4oNatureAction extends IObjectActionDelegate {
 
-  var selection: ISelection = null
+  private var project: Option[IProject] = None
 
-  def run(action: IAction) {
+  override def run(action: IAction) {
+    project.map(Db4oNature.toggleNature(_))
+  }
+    
+  override def selectionChanged(action: IAction, selection: ISelection) {
     if (!selection.isInstanceOf[IStructuredSelection]) {
+      project = None
       return
 	}
     val selections = selection.asInstanceOf[IStructuredSelection].toArray
-    for(selected <- selections) {
-      var project = asProject(selected)
-      if (project != null) {
-        Db4oNature.toggleNature(project)
-      }
+    if(selections.length != 1) {
+      project = None
+      return
     }
-  }
-  
-  def asProject(obj: Object): IProject = {
-    if (obj.isInstanceOf[IProject]) {
-      return obj.asInstanceOf[IProject]
-    } 
-    if (obj.isInstanceOf[IAdaptable]) {
-      return (obj.asInstanceOf[IAdaptable]).getAdapter(classOf[IProject]).asInstanceOf[IProject]
-    }
-    null
-  }
-  
-  def selectionChanged(action: IAction, selection: ISelection) {
-    this.selection = selection
+    project = asProject(selections(0))
+    action.setEnabled(project.isDefined)
+    action.setChecked(project.map(Db4oNature.hasDb4oNature(_)).getOrElse(false))
   }
 
-  def setActivePart(action: IAction, targetPart: IWorkbenchPart) {
+  override def setActivePart(action: IAction, targetPart: IWorkbenchPart) {
+  }
+
+  private def asProject(obj: Object): Option[IProject] = {
+    if (obj.isInstanceOf[IProject]) {
+      return Some(obj.asInstanceOf[IProject])
+    } 
+    if (obj.isInstanceOf[IAdaptable]) {
+      val adapted = (obj.asInstanceOf[IAdaptable]).getAdapter(classOf[IProject]).asInstanceOf[IProject]
+      if(adapted != null) {
+        return Some(adapted)
+      }
+    }
+    None
   }
 
 }
