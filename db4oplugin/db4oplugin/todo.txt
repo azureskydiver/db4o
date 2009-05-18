@@ -8,13 +8,8 @@
 - distribute package selection dialog responsibilities between model and property page
 
 - restrict nature applicability to IJavaProject natures
-- preferences/package selection
-  * recursive filtering vs single package filtering
-- help page *
-- show db4o nature state in context menu *
-
-- hook instrumentation reporting into eclipse *
-  * beautify log view
+- recursive filtering vs single package filtering
+- beautify log view
 
 - non-headless tests (log view) :/
 - port test project infrastructure to scala

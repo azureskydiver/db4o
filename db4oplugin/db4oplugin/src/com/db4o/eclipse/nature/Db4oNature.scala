@@ -23,6 +23,9 @@ object Db4oNature {
     }
   }
 
+  def hasDb4oNature(project: IProject) =
+	project.getDescription.getBuildSpec.exists(_.getBuilderName.equals(Db4oInstrumentationBuilder.BUILDER_ID))
+
 }
 
 class Db4oNature extends IProjectNature {
@@ -31,16 +34,16 @@ class Db4oNature extends IProjectNature {
   
   def configure {
     try {
-    val desc = project.getDescription
-    val commands = desc.getBuildSpec
-    if(commands.exists(_.getBuilderName.equals(Db4oInstrumentationBuilder.BUILDER_ID))) {
-      return
-    }
-    val newCommand = desc.newCommand
-	newCommand.setBuilderName(Db4oInstrumentationBuilder.BUILDER_ID)
-    val newCommands = commands ++ Array(newCommand)
-    desc.setBuildSpec(newCommands)
-    project.setDescription(desc, null)
+	  if(Db4oNature.hasDb4oNature(project)) {
+		return
+	  }
+	  val desc = project.getDescription
+	  val commands = desc.getBuildSpec
+	  val newCommand = desc.newCommand
+	  newCommand.setBuilderName(Db4oInstrumentationBuilder.BUILDER_ID)
+	  val newCommands = commands ++ Array(newCommand)
+	  desc.setBuildSpec(newCommands)
+	  project.setDescription(desc, null)
     }
     catch {
       case e: Exception => e.printStackTrace
@@ -49,10 +52,10 @@ class Db4oNature extends IProjectNature {
 
   def deconfigure  {
     try {
-    val description = getProject.getDescription
-    val commands = description.getBuildSpec
-    val newCommands = commands.filter(!_.getBuilderName.equals(Db4oInstrumentationBuilder.BUILDER_ID))
-    description.setBuildSpec(newCommands)
+	  val description = getProject.getDescription
+	  val commands = description.getBuildSpec
+	  val newCommands = commands.filter(!_.getBuilderName.equals(Db4oInstrumentationBuilder.BUILDER_ID))
+	  description.setBuildSpec(newCommands)
     }
     catch {
       case e: Exception => e.printStackTrace
