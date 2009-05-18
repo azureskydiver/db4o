@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Versant Inc. - Scala port and minor additions for db4o plugin
  *******************************************************************************/
 
 package com.db4o.eclipse.ui
