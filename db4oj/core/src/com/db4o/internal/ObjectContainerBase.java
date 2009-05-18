@@ -519,14 +519,14 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         	if(! flagForDelete(ref)){
         		return;
         	}
-            delete3(trans, ref, cascade, userCall);
+            delete3(trans, ref, obj, cascade, userCall);
             return;
         }
         
         trans.delete(ref, ref.getID(), cascade);
     }
 
-    final void delete3(Transaction trans, ObjectReference ref, int cascade, boolean userCall) {
+    final void delete3(Transaction trans, ObjectReference ref, Object obj, int cascade, boolean userCall) {
     	
         // The passed reference can be null, when calling from Transaction.
         if(ref == null  || ! ref.beginProcessing()){
@@ -545,8 +545,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
         
         ClassMetadata yc = ref.classMetadata();
-        Object obj = ref.getObject();
-        
+                
         // We have to end processing temporarily here, otherwise the can delete callback
         // can't do anything at all with this object.
         
@@ -564,7 +563,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             DTrace.DELETE.log(ref.getID());
         }
         
-        if(delete4(trans, ref, cascade, userCall)){
+        if(delete4(trans, ref, obj, cascade, userCall)){
         	objectOnDelete(trans, yc, ref);
             if (configImpl().messageLevel() > Const4.STATE) {
                 message("" + ref.getID() + " delete " + ref.classMetadata().getName());
@@ -603,7 +602,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		yc.dispatchEvent(transaction, reference.getObject(), EventDispatchers.DELETE);
 	}
 	
-    public abstract boolean delete4(Transaction ta, ObjectReference yapObject, int a_cascade, boolean userCall);
+    public abstract boolean delete4(Transaction ta, ObjectReference ref, Object obj, int a_cascade, boolean userCall);
     
     Object descend(Transaction trans, Object obj, String[] path){
         synchronized (_lock) {

@@ -140,11 +140,10 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     	return new HybridQueryResult(trans, mode);
     }
 
-    public final boolean delete4(Transaction ta, ObjectReference yo, int a_cascade, boolean userCall) {
+    public final boolean delete4(Transaction ta, ObjectReference yo, Object obj, int a_cascade, boolean userCall) {
         int id = yo.getID();
         StatefulBuffer reader = readWriterByID(ta, id);
         if (reader != null) {
-            Object obj = yo.getObject();
             if (obj != null) {
                 if ((!showInternalClasses())
                     && Const4.CLASS_INTERNAL.isAssignableFrom(obj.getClass())) {
@@ -154,9 +153,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
             reader.setCascadeDeletes(a_cascade);
             reader.slotDelete();
             ClassMetadata yc = yo.classMetadata();
-            
-            // FIXME: What if obj is null here ?
-            
             yc.delete(reader, obj);
 
             return true;
