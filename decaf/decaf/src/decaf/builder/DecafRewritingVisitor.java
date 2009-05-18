@@ -4,7 +4,6 @@ import java.util.*;
 
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
-import org.omg.stub.java.rmi.*;
 
 import sharpen.core.framework.*;
 import decaf.core.*;
@@ -513,6 +512,8 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		switch (binding.getKind()) {
 		case IBinding.TYPE:
 			return imp.isOnDemand() && method.getDeclaringClass() == binding;
+		case IBinding.METHOD:
+			return binding == method.getMethodDeclaration();
 		}
 		return false;
 	}

@@ -5,9 +5,16 @@ class Foo {
 	}
 }
 
+class Environments {	
+	static Object my(Class klass) {
+		return (Object) null;
+	}
+}
+
 class Driver {
 
 	public static void main(String[] args) {
 		decaf.imports.Foo.bar();
+		String myString = ((String) decaf.imports.Environments.my(String.class));
 	}
 }
