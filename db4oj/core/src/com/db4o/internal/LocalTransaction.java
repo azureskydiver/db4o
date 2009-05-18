@@ -599,7 +599,7 @@ public class LocalTransaction extends Transaction {
 						obj = info._reference.getObject();
 					}
 					container().delete3(LocalTransaction.this, info._reference,
-							info._cascade, false);
+							obj, info._cascade, false);
 				}
 			});
 		}
