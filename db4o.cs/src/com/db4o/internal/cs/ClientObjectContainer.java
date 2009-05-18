@@ -285,7 +285,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return ((MsgD) expectedResponse(Msg.ID_LIST)).readLong();
 	}
 
-	public final boolean delete4(Transaction ta, ObjectReference yo, int a_cascade, boolean userCall) {
+	public final boolean delete4(Transaction ta, ObjectReference yo, Object obj, int a_cascade, boolean userCall) {
 		MsgD msg = Msg.DELETE.getWriterForInts(_transaction, new int[] { yo.getID(), userCall ? 1 : 0 });
 		writeBatchedMessage(msg);
 		return true;
