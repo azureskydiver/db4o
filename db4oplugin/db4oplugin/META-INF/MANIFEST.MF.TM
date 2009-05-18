@@ -8,12 +8,12 @@ Bundle-Vendor: Versant
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
- org.eclipse.jdt.core;bundle-version="3.4.4",
- org.eclipse.jdt.ui;bundle-version="3.4.2",
+ org.eclipse.jdt.core;bundle-version="3.4.0",
+ org.eclipse.jdt.ui;bundle-version="3.4.0",
  org.eclipse.text;bundle-version="3.4.0",
- org.eclipse.help;bundle-version="3.3.102",
- org.eclipse.ui.workbench.texteditor;bundle-version="3.4.1"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+ org.eclipse.help;bundle-version="3.3.100",
+ org.eclipse.ui.workbench.texteditor;bundle-version="3.4.0"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/db4o-@db4o.version.iteration.revision@-all-java5.jar,
  .,
