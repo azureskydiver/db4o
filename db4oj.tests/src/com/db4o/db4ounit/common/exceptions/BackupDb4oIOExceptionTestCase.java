@@ -30,7 +30,7 @@ public class BackupDb4oIOExceptionTestCase
 	public void testBackup() {
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				ExceptionSimulatingStorage.exception = true;
+				triggerException(true);
 				db().backup(BACKUP_FILE);
 			}
 		});
