@@ -2,6 +2,7 @@
 package com.db4o.db4ounit.common.exceptions;
 
 import com.db4o.config.*;
+import com.db4o.ext.*;
 import com.db4o.io.*;
 
 import db4ounit.extensions.*;
@@ -11,16 +12,27 @@ public class Db4oIOExceptionTestCaseBase
 	extends AbstractDb4oTestCase
 	implements OptOutCS, OptOutTA {
 	
+	private ExceptionSimulatingStorage _storage;
+	
 	protected void configure(Configuration config) {
 		config.lockDatabaseFile(false);
-		config.storage(new ExceptionSimulatingStorage(new FileStorage()));
+		_storage = new ExceptionSimulatingStorage(new FileStorage(), new ExceptionFactory() {
+			public void throwException() {
+				throw new Db4oIOException();
+			}
+		});
+		config.storage(_storage);
 	}
 	
 	protected void db4oSetupBeforeStore() throws Exception {
-		ExceptionSimulatingStorage.exception = false;
+		triggerException(false);
 	}
 
 	protected void db4oTearDownBeforeClean() throws Exception {
-		ExceptionSimulatingStorage.exception = false;
+		triggerException(false);
+	}
+	
+	protected void triggerException(boolean value) {
+		_storage.triggerException(value);
 	}
 }
