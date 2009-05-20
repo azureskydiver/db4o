@@ -303,7 +303,8 @@
 	<target name="prepare.reference.pdf" unless="no.ftp">
         <ftp server="${ftp.server}"
             userid="${ftp.user}"
-            password="${ftp.password}" 
+            password="${ftp.password}"
+        	passive="true"
             remotedir="${ftp.reference.path}/${db4o.version.dotted}"
             action="get">
             <fileset dir="${dir.dist.net.build}/doc/reference">

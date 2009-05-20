@@ -1720,6 +1720,7 @@
             userid="${ftp.user}"
             password="${ftp.password}" 
             remotedir="${ftp.reference.path}/${db4o.version.dotted}"
+        	passive="true"
             action="get">
             <fileset dir="${dir.dist.java.build}/doc/reference">
                 <include name="db4o-reference-java.pdf" />
