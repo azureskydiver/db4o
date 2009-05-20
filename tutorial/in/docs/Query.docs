@@ -177,7 +177,9 @@ to the minimum.
 The development of the native query optimization processor will ._
 be an ongoing process in a close dialog with the db4o community. ._
 Feel free to contribute your results and your needs by providing ._
-feedback to our  .l http://forums.db4o.com/ db4o forums .. .
+feedback to our  .l http://forums.db4o.com/ db4o forums .. (Forums ._
+are accessible ._
+through  .l http://developer.db4o.com/user/CreateUser.aspx?ReturnUrl=/default.aspx free db4o membership  ..  ).
 .? java The current state of the query optimization process is detailed ._
 in the chapter on  .l NQOptimization Native Query Optimization ..l. ..?
 
