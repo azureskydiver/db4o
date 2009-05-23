@@ -1,16 +1,13 @@
+/* Copyright (C) 2009  Versant Inc.  http://www.db4o.com */
 package com.db4o.db4ounit.common.io;
 
-import java.io.*;
-
-import com.db4o.foundation.io.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.io.*;
 
-import db4ounit.*;
 import db4ounit.fixtures.*;
 
-public class IoAdapterTestUnitBase implements TestLifeCycle {
+public class IoAdapterTestUnitBase extends TestWithTempFile {
 
-	private final String _filename = Path4.getTempFileName();
 	protected IoAdapter _adapter;
 
 	public IoAdapterTestUnitBase() {
@@ -18,20 +15,19 @@ public class IoAdapterTestUnitBase implements TestLifeCycle {
 	}
 
 	public void setUp() throws Exception {
-    	deleteTestFile();
-    	open(false);
+		open(false);
     }
 
 	protected void open(final boolean readOnly) {
 		if (null != _adapter) {
 			throw new IllegalStateException();
 		}
-	    _adapter = factory().open(_filename, false, 0, readOnly);
+	    _adapter = factory().open(tempFile(), false, 0, readOnly);
     }
 
 	public void tearDown() throws Exception {
     	close();
-    	deleteTestFile();
+    	super.tearDown();
     }
 
 	protected void close() {
@@ -43,10 +39,6 @@ public class IoAdapterTestUnitBase implements TestLifeCycle {
 
 	private IoAdapter factory() {
     	return SubjectFixtureProvider.value();
-    }
-
-	private void deleteTestFile() throws Exception {
-    	new File(_filename).delete();
     }
 
 }

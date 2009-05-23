@@ -11,10 +11,12 @@ import db4ounit.*;
  */
 public class Path4TestCase implements TestCase{
 	
+	/**
+	 * @sharpen.if !SILVERLIGHT
+	 */
 	public void testGetTempFileName(){
 		String tempFileName = Path4.getTempFileName();
 		Assert.isTrue(File4.exists(tempFileName));
 	}
-
-
+	
 }

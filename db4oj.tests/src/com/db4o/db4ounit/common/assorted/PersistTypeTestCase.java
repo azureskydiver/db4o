@@ -1,10 +1,12 @@
 /* Copyright (C) 2004 - 2006 Versant Inc. http://www.db4o.com */
 
+/**
+ * @sharpen.if !SILVERLIGHT
+ */
 package com.db4o.db4ounit.common.assorted;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-
 
 public class PersistTypeTestCase extends AbstractDb4oTestCase {
 

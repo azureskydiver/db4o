@@ -5,15 +5,25 @@ package com.db4o.db4ounit.common.regression;
 import db4ounit.extensions.*;
 
 
-public class AllTests extends Db4oTestSuite {
+public class AllTests extends ComposibleTestSuite {
 
 	protected Class[] testCases() {
+		return composeTests(
+				new Class[] {
+						Case1207TestCase.class,
+						COR57TestCase.class,
+						SetRollbackTestCase.class,
+				});
+	}
+	
+	/**
+	 * @sharpen.if !SILVERLIGHT
+	 */
+	@Override
+	protected Class[] composeWith() {
 		return new Class[] {
-			Case1207TestCase.class,
-			COR57TestCase.class,
-			COR234TestCase.class,
-			SetRollbackTestCase.class,
-		};
+					COR234TestCase.class,
+				};
 	}
 	
 	public static void main(String[] args) {

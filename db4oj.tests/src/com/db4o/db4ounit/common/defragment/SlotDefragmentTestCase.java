@@ -5,25 +5,38 @@ package com.db4o.db4ounit.common.defragment;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.defragment.*;
+import com.db4o.foundation.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
 
-public class SlotDefragmentTestCase implements TestLifeCycle {
+public class SlotDefragmentTestCase extends DefragmentTestCaseBase {
 	
 	public void testPrimitiveIndex() throws Exception {
-		SlotDefragmentFixture.assertIndex(SlotDefragmentFixture.PRIMITIVE_FIELDNAME);
+		SlotDefragmentFixture.assertIndex(SlotDefragmentFixture.PRIMITIVE_FIELDNAME, sourceFile(), freshDb4oConfigurationProvider());
 	}
 
 	public void testWrapperIndex() throws Exception {
-		SlotDefragmentFixture.assertIndex(SlotDefragmentFixture.WRAPPER_FIELDNAME);
+	
+		SlotDefragmentFixture.assertIndex(
+								SlotDefragmentFixture.WRAPPER_FIELDNAME, 
+								sourceFile(), 
+								freshDb4oConfigurationProvider());
+	}
+
+	private Closure4<EmbeddedConfiguration> freshDb4oConfigurationProvider() {
+		return new Closure4<EmbeddedConfiguration>() { public EmbeddedConfiguration run() {
+			return newConfiguration();
+		}};
 	}
 
 	public void testTypedObjectIndex() throws Exception {
-		SlotDefragmentFixture.forceIndex();
-		Defragment.defrag(SlotDefragmentTestConstants.FILENAME,SlotDefragmentTestConstants.BACKUPFILENAME);
-		ObjectContainer db=Db4o.openFile(Db4o.newConfiguration(),SlotDefragmentTestConstants.FILENAME);
+		SlotDefragmentFixture.forceIndex(sourceFile(), newConfiguration());
+		
+		Defragment.defrag(newDefragmentConfig(sourceFile(), backupFile()));
+		ObjectContainer db=Db4oEmbedded.openFile(newConfiguration(), sourceFile());
 		Query query=db.query();
 		query.constrain(SlotDefragmentFixture.Data.class);
 		query.descend(SlotDefragmentFixture.TYPEDOBJECT_FIELDNAME).descend(SlotDefragmentFixture.PRIMITIVE_FIELDNAME).constrain(new Integer(SlotDefragmentFixture.VALUE));
@@ -32,21 +45,26 @@ public class SlotDefragmentTestCase implements TestLifeCycle {
 		db.close();
 	}
 
+
 	public void testNoForceDelete() throws Exception {
-		Defragment.defrag(SlotDefragmentTestConstants.FILENAME,SlotDefragmentTestConstants.BACKUPFILENAME);
+		Defragment.defrag(newDefragmentConfig(sourceFile(), backupFile()));
 		Assert.expect(IOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				Defragment.defrag(SlotDefragmentTestConstants.FILENAME,SlotDefragmentTestConstants.BACKUPFILENAME);
+				Defragment.defrag(sourceFile(),backupFile());
 			}
 		});
 	}	
 
 	public void setUp() throws Exception {
-		new File(SlotDefragmentTestConstants.FILENAME).delete();
-		new File(SlotDefragmentTestConstants.BACKUPFILENAME).delete();
-		SlotDefragmentFixture.createFile(SlotDefragmentTestConstants.FILENAME);
+		new File(sourceFile()).delete();
+		new File(backupFile()).delete();
+		SlotDefragmentFixture.createFile(sourceFile(), newConfiguration());
 	}
-
-	public void tearDown() throws Exception {
+	
+	private DefragmentConfig newDefragmentConfig(final String sourceFile, final String backupFile) {
+		final DefragmentConfig config = new DefragmentConfig(sourceFile, backupFile);
+		config.db4oConfig(newConfiguration());
+		
+		return config;
 	}
 }

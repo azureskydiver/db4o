@@ -1,11 +1,11 @@
 /* Copyright (C) 2004   Versant Inc.   http://www.db4o.com */
-
+/**
+ * @sarpen.if !SILVERLIGHT
+ */
 package com.db4o.db4ounit.jre12.regression;
 
-import java.io.*;
-
 import com.db4o.*;
-import com.db4o.foundation.io.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.internal.*;
 
 import db4ounit.*;
@@ -13,13 +13,11 @@ import db4ounit.*;
 /**
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class COR52TestCase implements TestCase {
+public class COR52TestCase extends TestWithTempFile {
 	
 	public static void main(String[] args) {
 		new ConsoleTestRunner(COR52TestCase.class).run();
 	}
-	
-	private static final String TEST_FILE = Path4.getTempFileName();
 	
 	/**
 	 * @deprecated using deprecated api
@@ -28,7 +26,7 @@ public class COR52TestCase implements TestCase {
 		int originalActivationDepth = ((Config4Impl) Db4o.configure())
 				.activationDepth();
 		Db4o.configure().activationDepth(0);
-		ObjectServer server = Db4o.openServer(TEST_FILE, -1);
+		ObjectServer server = Db4o.openServer(tempFile(), -1);
 		try {
 			server.grantAccess("db4o", "db4o");
 			ObjectContainer oc = Db4o.openClient("localhost", server.ext().port(), "db4o",
@@ -37,7 +35,6 @@ public class COR52TestCase implements TestCase {
 		} finally {
 			Db4o.configure().activationDepth(originalActivationDepth);
 			server.close();
-			new File(TEST_FILE).delete();
 		}
 
 	}

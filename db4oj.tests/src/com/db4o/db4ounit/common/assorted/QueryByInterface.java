@@ -44,7 +44,7 @@ public class QueryByInterface extends AbstractDb4oTestCase {
     	
     }
 
-    public class Ferrari implements Car
+    public static class Ferrari implements Car
     {
         public String name;
 
@@ -58,7 +58,7 @@ public class QueryByInterface extends AbstractDb4oTestCase {
         }
     }
 
-    public class Bmw implements Car
+    public static class Bmw implements Car
     {
         public String name;
 

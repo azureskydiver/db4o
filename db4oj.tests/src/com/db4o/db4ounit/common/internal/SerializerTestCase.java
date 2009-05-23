@@ -13,6 +13,9 @@ public class SerializerTestCase extends AbstractDb4oTestCase {
 		new SerializerTestCase().runAll();
 	}
 	
+    /**
+     * @sharpen.if !SILVERLIGHT
+     */
 	public void testExceptionMarshalling() throws Exception {
 		ReflectException e = new ReflectException(new NullPointerException());
 		SerializedGraph marshalled = Serializer.marshall(stream().container(), e);

@@ -16,8 +16,8 @@ public class IndexFieldDiagnosticTestCase extends AbstractDb4oTestCase {
 	private boolean _diagnosticsCalled;
 	
 	public static class Car {
-	    private String model;
-	    private List history;
+	    public String model;
+	    public List history;
 
 	    public Car(String model) {
 	        this(model,new ArrayList());

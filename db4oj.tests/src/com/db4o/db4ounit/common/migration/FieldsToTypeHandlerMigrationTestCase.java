@@ -4,9 +4,9 @@ package com.db4o.db4ounit.common.migration;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.*;
@@ -21,7 +21,11 @@ import db4ounit.*;
 /**
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class FieldsToTypeHandlerMigrationTestCase implements TestLifeCycle{
+public class FieldsToTypeHandlerMigrationTestCase extends Db4oTestWithTempFile {
+	
+	public static void main(String[] args) {
+		new ConsoleTestRunner(FieldsToTypeHandlerMigrationTestCase.class).run();
+	}
 	
 	public static class Item {
 		
@@ -32,8 +36,6 @@ public class FieldsToTypeHandlerMigrationTestCase implements TestLifeCycle{
 		public int _id;
 		
 	}
-	
-	private String _fileName;
 	
 	ItemTypeHandler _typeHandler;
 	
@@ -99,16 +101,6 @@ public class FieldsToTypeHandlerMigrationTestCase implements TestLifeCycle{
 		
 	}
 	
-	
-
-	public void setUp() throws Exception {
-		_fileName = Path4.getTempFileName();
-		File4.delete(_fileName);
-	}
-
-	public void tearDown() throws Exception {
-		File4.delete(_fileName);
-	}
 	
 	public void testMigration(){
 		_typeHandler = null;
@@ -210,12 +202,11 @@ public class FieldsToTypeHandlerMigrationTestCase implements TestLifeCycle{
 		if(_typeHandler != null){
 			_typeHandler.reset();
 		}
-		Configuration configuration = Db4o.newConfiguration();
+		EmbeddedConfiguration configuration = newConfiguration();
 		if(_typeHandler != null){
-			configuration.registerTypeHandler(new SingleClassTypeHandlerPredicate(Item.class), _typeHandler);
+			configuration.common().registerTypeHandler(new SingleClassTypeHandlerPredicate(Item.class), _typeHandler);
 		}
-		ObjectContainer db = Db4o.openFile(configuration, _fileName);
-		return db;
+		return Db4oEmbedded.openFile(configuration, tempFile());
 	}
 
 	public void defragment(DefragmentContext context) {
@@ -242,8 +233,5 @@ public class FieldsToTypeHandlerMigrationTestCase implements TestLifeCycle{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
-
 
 }

@@ -7,10 +7,10 @@ import java.lang.reflect.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.defragment.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
-import com.db4o.test.util.*;
 
 import db4ounit.*;
 import db4ounit.extensions.util.*;
@@ -19,8 +19,12 @@ import db4ounit.extensions.util.*;
  * @sharpen.ignore
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class DefragUnknownClassTestCase implements TestLifeCycle {
+public class DefragUnknownClassTestCase extends TestWithTempFile {
 
+	public static void main(String[] args) {
+		new ConsoleTestRunner(DefragUnknownClassTestCase.class).run();
+	}
+	
 	public static class Unknown {
 	}
 	
@@ -37,8 +41,6 @@ public class DefragUnknownClassTestCase implements TestLifeCycle {
 		}
 	}
 
-	private static final String FILENAME = Path4.getTempFileName();
-	
 	public void testUnknownClassDefrag() throws Exception {
 		store();
 		defragment();
@@ -49,7 +51,7 @@ public class DefragUnknownClassTestCase implements TestLifeCycle {
 		ClassLoader loader = new ExcludingClassLoader(getClass().getClassLoader(), new Class[]{ Unknown.class });
 		Class starterClazz = loader.loadClass(DefragStarter.class.getName());
 		Method defragMethod = starterClazz.getDeclaredMethod("defrag", String.class);
-		defragMethod.invoke(null, FILENAME);
+		defragMethod.invoke(null, tempFile());
 	}
 
 	public static class DefragStarter {
@@ -59,6 +61,7 @@ public class DefragUnknownClassTestCase implements TestLifeCycle {
 			defragConfig.forceBackupDelete(true);
 			defragConfig.readOnly(false);
 			Defragment.defrag(defragConfig);
+			File4.delete(fileName + ".backup");
 		}
 	}
 	
@@ -78,7 +81,7 @@ public class DefragUnknownClassTestCase implements TestLifeCycle {
 	}
 
 	private ObjectContainer openDatabase() {
-		return Db4o.openFile(config(), FILENAME);
+		return Db4o.openFile(config(), tempFile());
 	}
 	
 	public static Configuration config() {
@@ -86,17 +89,4 @@ public class DefragUnknownClassTestCase implements TestLifeCycle {
 		config.reflectWith(Platform4.reflectorForType(ClassHolder.class));
 		return config;
 	}
-
-	public void setUp() throws Exception {
-		deleteDatabaseFile();
-	}
-
-	public void tearDown() throws Exception {
-		deleteDatabaseFile();
-	}
-
-	private void deleteDatabaseFile() {
-		new File(FILENAME).delete();
-	}
-
 }

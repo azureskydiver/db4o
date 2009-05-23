@@ -1,19 +1,19 @@
+/* Copyright (C) 2009 Versant Inc.  http://www.db4o.com */
 package com.db4o.db4ounit.common.defragment;
 
 import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.defragment.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 
 import db4ounit.*;
 
-public class BlockSizeDefragTestCase implements TestCase {
+public class BlockSizeDefragTestCase extends Db4oTestWithTempFile {
 
-	private static final String FILE_NAME = Path4.getTempPath() + "/blocksizedefrag.db4o";
 
 	public static class ItemA {
 		public int _id;
@@ -50,7 +50,7 @@ public class BlockSizeDefragTestCase implements TestCase {
 	}
 
 	private void assertBlockSizeDefrag(int blockSize) throws IOException {
-		String fileName = FILE_NAME;
+		String fileName = tempFile();
 		new File(fileName).delete();
 		createDatabase(fileName, blockSize);
 		defrag(fileName, blockSize);
@@ -59,7 +59,7 @@ public class BlockSizeDefragTestCase implements TestCase {
 	}
 
 	private void createDatabase(String fileName, int blockSize) {
-		ObjectContainer db = Db4o.openFile(config(blockSize), fileName);
+		ObjectContainer db = Db4oEmbedded.openFile(config(blockSize), fileName);
 		Collection4 removed = new Collection4();
 		for(int idx = 0; idx < NUM_ITEMS_PER_CLASS; idx++) {
 			ItemA itemA = new ItemA(idx);
@@ -92,6 +92,9 @@ public class BlockSizeDefragTestCase implements TestCase {
 		db.commit();
 	}
 
+	/**
+	 * @deprecated using deprecated api
+	 */
 	private void defrag(String fileName, int blockSize) throws IOException {
 		DefragmentConfig config = new DefragmentConfig(fileName);
 		config.db4oConfig(config(blockSize));
@@ -100,7 +103,7 @@ public class BlockSizeDefragTestCase implements TestCase {
 	}
 
 	private void assertCanRead(String fileName, int blockSize) {
-		ObjectContainer db = Db4o.openFile(config(blockSize), fileName);
+		ObjectContainer db = Db4oEmbedded.openFile(config(blockSize), fileName);
 		assertResult(db, ItemA.class);
 		assertResult(db, ItemB.class);
 		db.close();
@@ -115,10 +118,10 @@ public class BlockSizeDefragTestCase implements TestCase {
 		}
 	}
 
-	private Configuration config(int blockSize) {
-		Configuration config = Db4o.newConfiguration();
-		config.blockSize(blockSize);
-		config.reflectWith(Platform4.reflectorForType(ItemA.class));
+	private EmbeddedConfiguration config(int blockSize) {
+		EmbeddedConfiguration config = newConfiguration();
+		config.file().blockSize(blockSize);
+		config.common().reflectWith(Platform4.reflectorForType(ItemA.class));
 		return config;
 	}
 	

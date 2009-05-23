@@ -1,3 +1,4 @@
+/* Copyright (C) 2009 Versant Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.defragment;
 
 import java.io.*;
@@ -10,11 +11,7 @@ import com.db4o.reflect.*;
 
 import db4ounit.*;
 
-
-public class StoredClassFilterTestCase implements TestCase {
-
-	private static final String DB4O_BACKUP = buildTempPath("defrag.db4o.backup");
-	private static final String DB4O_FILE = buildTempPath("defrag.db4o");
+public class StoredClassFilterTestCase extends DefragmentTestCaseBase {
 
 	public static class SimpleClass {
 		public String _simpleField;
@@ -27,10 +24,6 @@ public class StoredClassFilterTestCase implements TestCase {
 		new ConsoleTestRunner(StoredClassFilterTestCase.class).run();
 	}
 	
-	private static String buildTempPath(String fname) {
-		return com.db4o.db4ounit.util.IOServices.buildTempPath(fname);
-	}
-
 	public void test() throws Exception {
 		deleteAllFiles();
 		String fname = createDatabase();
@@ -39,12 +32,12 @@ public class StoredClassFilterTestCase implements TestCase {
 	}
 
 	private void deleteAllFiles() {
-		File4.delete(DB4O_FILE);
-		File4.delete(DB4O_BACKUP);		
+		File4.delete(sourceFile());
+		File4.delete(backupFile());		
 	}
 
 	private void assertStoredClasses(String fname) {
-		ObjectContainer db = Db4o.openFile(fname);
+		ObjectContainer db = Db4oEmbedded.openFile(newConfiguration(), fname);
 		try {
 			ReflectClass[] knownClasses = db.ext().knownClasses();
 			assertKnownClasses(knownClasses);
@@ -65,6 +58,7 @@ public class StoredClassFilterTestCase implements TestCase {
 
 	private void defrag(String fname) throws IOException {
 		DefragmentConfig config = new DefragmentConfig(fname);
+		config.db4oConfig(newConfiguration());
 		config.storedClassFilter(ignoreClassFilter(SimpleClass.class));
 		Defragment.defrag(config);
 	}
@@ -78,8 +72,8 @@ public class StoredClassFilterTestCase implements TestCase {
 	}
 
 	private String createDatabase() {
-		String fname = DB4O_FILE;
-		ObjectContainer db = Db4o.openFile(fname);
+		String fname = sourceFile();
+		ObjectContainer db = Db4oEmbedded.openFile(newConfiguration(), fname);
 		try {
 			db.store(new SimpleClass("verySimple"));
 			db.commit();
@@ -87,9 +81,6 @@ public class StoredClassFilterTestCase implements TestCase {
 			db.close();
 		}
 		return fname;
-		
-
-	}
-	
+	}	
 
 }

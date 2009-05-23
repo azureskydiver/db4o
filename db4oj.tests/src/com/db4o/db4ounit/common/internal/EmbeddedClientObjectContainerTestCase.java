@@ -4,21 +4,19 @@ package com.db4o.db4ounit.common.internal;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
 import db4ounit.*;
 
-public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
+public class EmbeddedClientObjectContainerTestCase extends Db4oTestWithTempFile {
 
     private static final String FIELD_NAME = "_name";
 
-    private static final String FILENAME = Path4.getTempFileName();
-    
     private LocalObjectContainer _server;
 
     protected EmbeddedClientObjectContainer _client1;
@@ -374,15 +372,14 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         return retrievedItem;
     }
 
-    public void setUp() throws Exception {
-        File4.delete(FILENAME);
-        Configuration config = Db4o.newConfiguration();
-        config.objectClass(Item.class).generateUUIDs(true);
+	public void setUp() throws Exception {
+    	EmbeddedConfiguration config = newConfiguration();
+        config.common().objectClass(Item.class).generateUUIDs(true);
         
         // ExtObjectServer server = Db4o.openServer(config, FILENAME, 0);
         // EmbeddedClientObjectContainer container = server.openClient();
         
-        _server = (LocalObjectContainer) Db4o.openFile(config, FILENAME);
+        _server = (LocalObjectContainer) Db4oEmbedded.openFile(config, tempFile());
         _client1 = new EmbeddedClientObjectContainer(_server);
         _client2 = new EmbeddedClientObjectContainer(_server);
     }
@@ -391,7 +388,8 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         _client1.close();
         _client2.close();
         _server.close();
-        File4.delete(FILENAME);
+        
+        super.tearDown();
     }
     
 }

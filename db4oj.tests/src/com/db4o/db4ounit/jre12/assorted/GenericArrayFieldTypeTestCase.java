@@ -2,10 +2,9 @@ package com.db4o.db4ounit.jre12.assorted;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.foundation.io.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.jdk.*;
-import com.db4o.test.util.*;
 
 import db4ounit.*;
 import db4ounit.extensions.util.*;
@@ -14,7 +13,7 @@ import db4ounit.extensions.util.*;
  * @sharpen.ignore
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class GenericArrayFieldTypeTestCase implements TestLifeCycle {
+public class GenericArrayFieldTypeTestCase extends TestWithTempFile {
 	
 	public static class SubData {
 		public int _id;
@@ -32,8 +31,6 @@ public class GenericArrayFieldTypeTestCase implements TestLifeCycle {
 		}
 	}
 
-	private static final String FILENAME = Path4.getTempFileName();
-	
 	public void testGenericArrayFieldType() {
 		Class[] excludedClasses = new Class[]{
 				Data.class,
@@ -42,7 +39,7 @@ public class GenericArrayFieldTypeTestCase implements TestLifeCycle {
 		ClassLoader loader = new ExcludingClassLoader(getClass().getClassLoader(), excludedClasses);
 		Configuration config = Db4o.newConfiguration();
 		config.reflectWith(new JdkReflector(loader));
-		ObjectContainer db = Db4o.openFile(config, FILENAME);
+		ObjectContainer db = Db4o.openFile(config, tempFile());
 		try {
 			ReflectClass dataClazz = db.ext().reflector().forName(Data.class.getName());
 			ReflectField field = dataClazz.getDeclaredField("_data");
@@ -57,7 +54,7 @@ public class GenericArrayFieldTypeTestCase implements TestLifeCycle {
 	}
 
 	private void store() {
-		ObjectContainer db = Db4o.openFile(Db4o.newConfiguration(), FILENAME);
+		ObjectContainer db = Db4o.openFile(Db4o.newConfiguration(), tempFile());
 		SubData[] subData = {
 			new SubData(1),
 			new SubData(42),
@@ -67,16 +64,7 @@ public class GenericArrayFieldTypeTestCase implements TestLifeCycle {
 		db.close();
 	}
 
-	private void deleteFile() {
-		File4.delete(FILENAME);
-	}
-
 	public void setUp() throws Exception {
-		deleteFile();
 		store();
-	}
-
-	public void tearDown() throws Exception {
-		deleteFile();
 	}
 }

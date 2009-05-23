@@ -1,4 +1,7 @@
 /* Copyright (C) 2009   Versant Inc.   http://www.db4o.com */
+/**
+ * @sharpen.if !SILVERLIGHT
+ */
 package com.db4o.db4ounit.common.ext;
 
 import java.util.*;
@@ -14,9 +17,6 @@ import db4ounit.extensions.fixtures.*;
 
 public class UnavailableClassesWithTypeHandlerTestCase extends TestWithTempFile implements OptOutNetworkingCS {
 	
-	/**
-	 * @sharpen.if !SILVERLIGHT
-	 */
 	public static class HolderForClassWithTypeHandler {
 		public HolderForClassWithTypeHandler(Stack stack) {
 			_fieldWithTypeHandler = stack;
@@ -25,24 +25,15 @@ public class UnavailableClassesWithTypeHandlerTestCase extends TestWithTempFile 
 		public Stack _fieldWithTypeHandler;
 	}
 	
-	/**
-	 * @sharpen.if !SILVERLIGHT
-	 */
 	public static void main(String[] args) {
 		new ConsoleTestRunner(UnavailableClassesWithTypeHandlerTestCase.class).run();
 	}
 
-	/**
-	 * @sharpen.if !SILVERLIGHT
-	 */
 	public void testStoredClassesWithTypeHandler() {		
 		store(tempFile(), new HolderForClassWithTypeHandler(new Stack()));
 		assertStoredClasses(tempFile());
 	}
 
-	/**
-	 * @sharpen.if !SILVERLIGHT
-	 */
 	private void assertStoredClasses(final String databaseFileName) {
 		ObjectContainer db = Db4oEmbedded.openFile(configExcludingStack(), databaseFileName);
 
@@ -53,9 +44,6 @@ public class UnavailableClassesWithTypeHandlerTestCase extends TestWithTempFile 
 		}
 	}
 
-	/**
-	 * @sharpen.if !SILVERLIGHT
-	 */
 	private void store(final String databaseFileName, Object obj) {
 		ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), databaseFileName);
 		try {
@@ -66,9 +54,6 @@ public class UnavailableClassesWithTypeHandlerTestCase extends TestWithTempFile 
 		}
 	}
 
-	/**
-	 * @sharpen.if !SILVERLIGHT
-	 */
 	private EmbeddedConfiguration configExcludingStack() {
 		final EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();			
 		config.common().reflectWith(new ExcludingReflector(Stack.class));

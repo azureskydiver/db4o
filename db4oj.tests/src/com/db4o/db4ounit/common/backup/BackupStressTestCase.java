@@ -6,21 +6,18 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
 
-
-public class BackupStressTestCase implements Db4oTestCase, TestLifeCycle {
+public class BackupStressTestCase extends Db4oTestWithTempFile  {
     
     private static boolean verbose = false;
     
     private static boolean runOnOldJDK = false;
-    
-    private static final String FILE = Path4.getTempFileName();
     
     private static final int ITERATIONS = 5;
     
@@ -53,14 +50,6 @@ public class BackupStressTestCase implements Db4oTestCase, TestLifeCycle {
 		}
     }
     
-    public void setUp() throws Exception{
-    	deleteFile(FILE);
-    }
-    
-    public void tearDown() throws IOException {
-    	deleteFile(FILE);
-    }
-
     public void test() throws Exception {
     	openDatabase();
     	try {        
@@ -115,9 +104,8 @@ public class BackupStressTestCase implements Db4oTestCase, TestLifeCycle {
 		return thread;
 	}
    
-    private void openDatabase(){
-        deleteFile(FILE);
-        _objectContainer = Db4o.openFile(config(), FILE);
+	private void openDatabase(){
+        _objectContainer = Db4oEmbedded.openFile(config(), tempFile());
     }
     
     private void closeDatabase() throws InterruptedException{
@@ -127,13 +115,13 @@ public class BackupStressTestCase implements Db4oTestCase, TestLifeCycle {
         _objectContainer.close();
     }
     
-    private void checkBackups() throws IOException{
+	private void checkBackups() throws IOException{
         stdout("BackupStressTest");
         stdout("Backups created: " + _backups);
         
         for (int i = 1; i < _backups; i++) {
             stdout("Backup " + i);
-            ObjectContainer container = Db4o.openFile(config(), backupFile(i));
+            ObjectContainer container = Db4oEmbedded.openFile(config(), backupFile(i));
             try {
 	            stdout("Open successful");
 	            Query q = container.query();
@@ -176,7 +164,7 @@ public class BackupStressTestCase implements Db4oTestCase, TestLifeCycle {
     }
     
     private String backupFile(int count){
-        return FILE + count;
+        return tempFile() + count;
     }
 
     private void stdout(String string) {
@@ -185,10 +173,10 @@ public class BackupStressTestCase implements Db4oTestCase, TestLifeCycle {
         }
     }
 
-	private Configuration config() {
-		Configuration config = Db4o.newConfiguration();
-        config.objectClass(BackupStressItem.class).objectField("_iteration").indexed(true);
-        config.reflectWith(Platform4.reflectorForType(BackupStressItem.class));
+	private EmbeddedConfiguration config() {
+		EmbeddedConfiguration config = newConfiguration();
+        config.common().objectClass(BackupStressItem.class).objectField("_iteration").indexed(true);
+        config.common().reflectWith(Platform4.reflectorForType(BackupStressItem.class));
         return config;
 	}
 

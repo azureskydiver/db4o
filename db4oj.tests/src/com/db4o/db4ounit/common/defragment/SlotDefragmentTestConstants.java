@@ -6,8 +6,8 @@ import com.db4o.foundation.io.*;
 
 public abstract class SlotDefragmentTestConstants {
 	
-	public final static String FILENAME = Path4.getTempFileName();
-	public final static String BACKUPFILENAME = FILENAME+".backup";
+	private final static String FILENAME = Path4.getTempFileName();
+	private final static String BACKUPFILENAME = FILENAME+".backup";
 
 	private SlotDefragmentTestConstants() {
 	}

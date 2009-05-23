@@ -1,18 +1,16 @@
+/* Copyright (C) 2009  Versant Inc.  http://www.db4o.com */
 package com.db4o.db4ounit.common.refactor;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.io.*;
 
 import db4ounit.*;
 
-public abstract class AccessFieldTestCaseBase {
-
-	private final String DATABASE_PATH = Path4.getTempFileName();
+public abstract class AccessFieldTestCaseBase extends Db4oTestWithTempFile {
 
 	public void setUp() throws Exception {
-		deleteFile();
 		withDatabase(new DatabaseAction() {
 			public void runWith(ObjectContainer db) {
 				db.store(newOriginalData());
@@ -20,13 +18,9 @@ public abstract class AccessFieldTestCaseBase {
 		});
 	}
 
-	public void tearDown() throws Exception {
-		deleteFile();
-	}
-
 	protected void renameClass(Class origClazz, String targetName) {
-		Configuration config = Db4o.newConfiguration();
-		config.objectClass(origClazz).rename(targetName);
+		EmbeddedConfiguration config = newConfiguration();
+		config.common().objectClass(origClazz).rename(targetName);
 		withDatabase(config, new DatabaseAction() {
 			public void runWith(ObjectContainer db) {
 				// do nothing
@@ -51,20 +45,16 @@ public abstract class AccessFieldTestCaseBase {
 				});
 			}
 
-	private void deleteFile() {
-		File4.delete(DATABASE_PATH);
-	}
-
 	private static interface DatabaseAction {
 		void runWith(ObjectContainer db);
 	}
 
 	private void withDatabase(DatabaseAction action) {
-		withDatabase(Db4o.newConfiguration(), action);
+		withDatabase(newConfiguration(), action);
 	}
 
-	private void withDatabase(Configuration config, DatabaseAction action) {
-		ObjectContainer db = Db4o.openFile(config, DATABASE_PATH);
+	private void withDatabase(EmbeddedConfiguration config, DatabaseAction action) {
+		ObjectContainer db = Db4oEmbedded.openFile(config, tempFile());
 		try {
 			action.runWith(db);
 		}

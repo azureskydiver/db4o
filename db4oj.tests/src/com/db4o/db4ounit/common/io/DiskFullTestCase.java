@@ -68,7 +68,7 @@ public class DiskFullTestCase extends DiskFullTestCaseBase {
 	}
 	
 	private long curFileLength() {
-		return new File(FILENAME).length();
+		return new File(tempFile()).length();
 	}
 
 }

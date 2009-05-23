@@ -15,7 +15,7 @@ import com.db4o.query.*;
 
 import db4ounit.*;
 
-public class SlotDefragmentVectorUUIDTestCase implements TestCase {
+public class SlotDefragmentVectorUUIDTestCase extends DefragmentTestCaseBase {
 
     public static class Holder {
         public Vector _vector;
@@ -42,28 +42,28 @@ public class SlotDefragmentVectorUUIDTestCase implements TestCase {
     }
 
     private void defrag() throws IOException {
-        DefragmentConfig config=new DefragmentConfig(SlotDefragmentTestConstants.FILENAME);
+        DefragmentConfig config=new DefragmentConfig(sourceFile());
         config.forceBackupDelete(true);
         config.db4oConfig(configuration());
         Defragment.defrag(config);
     }
 
     private void store() {
-        new File(SlotDefragmentTestConstants.FILENAME).delete();
+        new File(sourceFile()).delete();
         ObjectContainer db=openDatabase();
         db.store(new Holder(new Vector()));
         db.close();
     }
 
     private ObjectContainer openDatabase() {
-        Configuration config = configuration();
-        config.generateUUIDs(ConfigScope.GLOBALLY);
-        return Db4o.openFile(config,SlotDefragmentTestConstants.FILENAME);
+    	EmbeddedConfiguration config = configuration();
+        config.file().generateUUIDs(ConfigScope.GLOBALLY);
+        return Db4oEmbedded.openFile(config, sourceFile());
     }
     
-    private Configuration configuration() {
-        Configuration config = Db4o.newConfiguration();
-        config.reflectWith(Platform4.reflectorForType(Data.class));
+    private EmbeddedConfiguration configuration() {
+    	EmbeddedConfiguration config = newConfiguration();
+        config.common().reflectWith(Platform4.reflectorForType(Data.class));
         return config;
     }
 

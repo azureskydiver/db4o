@@ -1,3 +1,4 @@
+/* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
 package com.db4o.db4ounit.common.api;
 
 import db4ounit.extensions.*;
@@ -10,11 +11,7 @@ public class AllTests extends ComposibleTestSuite {
 
 	@Override
 	protected Class[] testCases() {
-		return composeTests(
-				new Class[] {
-						Db4oClientServerTestCase.class,
-						Db4oEmbeddedTestCase.class,
-				});
+		return composeWith();
 	}
 
 	/**
@@ -23,6 +20,8 @@ public class AllTests extends ComposibleTestSuite {
 	protected Class[] composeWith() {
 		return new Class[] {
 				CommonAndLocalConfigurationTestSuite.class,
+				Db4oClientServerTestCase.class,
+				Db4oEmbeddedTestCase.class,
 				StoreAllTestCase.class,
 		};
 	}	

@@ -14,7 +14,7 @@ import com.db4o.query.*;
 
 import db4ounit.*;
 
-public class SlotDefragmentVectorTestCase implements TestCase {
+public class SlotDefragmentVectorTestCase extends DefragmentTestCaseBase{
 
     public static class Holder {
         public Vector _vector;
@@ -42,7 +42,7 @@ public class SlotDefragmentVectorTestCase implements TestCase {
     }
 
     private void query() {
-        ObjectContainer db=Db4o.openFile(configuration(),SlotDefragmentTestConstants.FILENAME);
+        ObjectContainer db = Db4oEmbedded.openFile(configuration(), sourceFile());
         Query query=db.query();
         query.constrain(Holder.class);
         ObjectSet result=query.execute();
@@ -50,22 +50,22 @@ public class SlotDefragmentVectorTestCase implements TestCase {
         db.close();
     }
 
-    private Configuration configuration() {
-        Configuration config = Db4o.newConfiguration();
-        config.reflectWith(Platform4.reflectorForType(Data.class));
+    private EmbeddedConfiguration configuration() {
+    	EmbeddedConfiguration config = newConfiguration();
+        config.common().reflectWith(Platform4.reflectorForType(Data.class));
         return config;
     }
 
     private void defrag() throws IOException {
-        DefragmentConfig config=new DefragmentConfig(SlotDefragmentTestConstants.FILENAME);
+        DefragmentConfig config=new DefragmentConfig(sourceFile());
         config.db4oConfig(configuration());
         config.forceBackupDelete(true);
         Defragment.defrag(config);
     }
 
     private void store() {
-        new File(SlotDefragmentTestConstants.FILENAME).delete();
-        ObjectContainer db=Db4o.openFile(configuration(),SlotDefragmentTestConstants.FILENAME);
+        new File(sourceFile()).delete();
+        ObjectContainer db=Db4oEmbedded.openFile(configuration(),sourceFile());
         for(int vectorIdx=0;vectorIdx<NUMVECTORS;vectorIdx++) {
             Vector vector=new Vector(NUMENTRIES);
             for(int entryIdx=0;entryIdx<NUMENTRIES;entryIdx++) {

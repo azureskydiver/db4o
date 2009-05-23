@@ -2,29 +2,27 @@
 
 package com.db4o.db4ounit.common.cs;
 
-import java.io.*;
-
 import com.db4o.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.io.*;
 
 import db4ounit.*;
 
-public class ObjectServerTestCase implements TestLifeCycle {
-    
-    private ExtObjectServer server;
-    
+public class ObjectServerTestCase extends TestWithTempFile {
+	
+    private ExtObjectServer server;    
     private String fileName;
 
     public void setUp() throws Exception {
-        fileName = Path4.getTempFileName();
+        fileName = tempFile();
         server = Db4o.openServer(Db4o.newConfiguration(), fileName, -1).ext();
         server.grantAccess(credentials(), credentials());
     }
 
+    @Override
     public void tearDown() throws Exception {
         server.close();
-        new File(fileName).delete();
+        super.tearDown();
     }
     
     public void testClientCount(){
@@ -51,5 +49,4 @@ public class ObjectServerTestCase implements TestLifeCycle {
     private String credentials(){
         return "DB4O";
     }
-
 }

@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.defragment.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
@@ -21,34 +22,28 @@ import db4ounit.*;
  * below the MockBin and reads open times there directly.
  * The times are then inconsistent with the written times.
  */
-public class DefragEncryptedFileTestCase implements TestLifeCycle {
+public class DefragEncryptedFileTestCase extends Db4oTestWithTempFile {
 
-    private static final String ORIGINAL = Path4.getTempFileName();
-    
-    private static final String DEFGARED = ORIGINAL + ".bk";
+    private static String DEFGARED;
     
     public void setUp() throws Exception {
-    	cleanup();
+    	DEFGARED = tempFile() + ".bk";
 	}
 
 	public void tearDown() throws Exception {
-		cleanup();
-	}
-	
-	private void cleanup() {
-		File4.delete(ORIGINAL);
 		File4.delete(DEFGARED);
+		super.tearDown();
 	}
 
     public static void main(String[] args) {
         new ConsoleTestRunner(DefragEncryptedFileTestCase.class).run();
     }
 
-    public void testCOR775() throws Exception {
+	public void testCOR775() throws Exception {
         prepare();
         verifyDB();
         
-        DefragmentConfig config = new DefragmentConfig(ORIGINAL, DEFGARED);
+        DefragmentConfig config = new DefragmentConfig(tempFile(), DEFGARED);
         config.forceBackupDelete(true);
         //config.storedClassFilter(new AvailableClassFilter());
         config.db4oConfig(getConfiguration());
@@ -58,7 +53,7 @@ public class DefragEncryptedFileTestCase implements TestLifeCycle {
     }
 
     private void prepare() {
-        File file = new File(ORIGINAL);
+        File file = new File(tempFile());
         if (file.exists()) {
             file.delete();
         }
@@ -82,22 +77,22 @@ public class DefragEncryptedFileTestCase implements TestLifeCycle {
         testDB.close();
     }
 
-    private ObjectContainer openDB() {
-        Configuration db4oConfig = getConfiguration();
-        ObjectContainer testDB = Db4o.openFile(db4oConfig, ORIGINAL);
-        return testDB;
+	private ObjectContainer openDB() {
+    	return Db4oEmbedded.openFile(getConfiguration(), tempFile());
     }
 
-    private Configuration getConfiguration() {
-        final Configuration config = Db4o.newConfiguration();
+	private EmbeddedConfiguration getConfiguration() {
+        final EmbeddedConfiguration config = newConfiguration();
 
-        config.activationDepth(Integer.MAX_VALUE);
-        config.callConstructors(true);
-        config.storage(new MockStorage(new FileStorage(), "db4o"));
-        config.reflectWith(Platform4.reflectorForType(Item.class));
-        config.password("encrypted");
-        config.encrypt(true);
-        
+        config.common().activationDepth(Integer.MAX_VALUE);
+        config.common().callConstructors(true);
+        config.file().storage(new MockStorage(config.file().storage(), "db4o"));
+        config.common().reflectWith(Platform4.reflectorForType(Item.class));
+
+        Db4o.configure().password("encrypted");
+        Db4o.configure().encrypt(true);
+     
+        //TODO: CHECK ENCRYPTION
         return config;
     }
 
