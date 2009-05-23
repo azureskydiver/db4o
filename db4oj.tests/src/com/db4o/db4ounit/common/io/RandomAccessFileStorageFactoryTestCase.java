@@ -1,3 +1,4 @@
+/* Copyright (C) 2009  Versant Inc.  http://www.db4o.com */
 package com.db4o.db4ounit.common.io;
 
 import com.db4o.db4ounit.common.api.*;
@@ -7,7 +8,7 @@ import db4ounit.*;
 
 public class RandomAccessFileStorageFactoryTestCase extends TestWithTempFile {
 	
-	private final FileStorage subject = new FileStorage();
+	private final Storage subject = TestPlatform.newPersistentStorage();
 	
 	public void testExistsWithUnexistentFile() {
 		Assert.isFalse(subject.exists(tempFile()));
@@ -17,6 +18,6 @@ public class RandomAccessFileStorageFactoryTestCase extends TestWithTempFile {
 		final Bin storage = subject.open(new BinConfiguration(tempFile(), false, 0, false));
 		storage.close();
 		Assert.isFalse(subject.exists(tempFile()));
-	}
+	}	
 
 }

@@ -4,20 +4,30 @@ package com.db4o.db4ounit.common.freespace;
 
 import db4ounit.extensions.*;
 
-public class AllTests extends Db4oTestSuite {
+public class AllTests extends ComposibleTestSuite {
 
 	public static void main(String[] args) {
 		new AllTests().runSolo();
     }
 
 	protected Class[] testCases() {
-        return new Class[] {
-            BlockConfigurationFileSizeTestCase.class,
-            FileSizeTestCase.class,
-            FreespaceManagerDiscardLimitTestCase.class,
-            FreespaceManagerReopenTestCase.class,
-            FreespaceManagerTestCase.class,
-            FreespaceManagerTypeChangeTestCase.class,
-		};
+        return composeTests(
+        			new Class[] {
+        					FreespaceManagerDiscardLimitTestCase.class,
+        					FreespaceManagerReopenTestCase.class,
+        					FreespaceManagerTestCase.class,
+        					FreespaceManagerTypeChangeTestCase.class,
+        			});
     }
+
+	/**
+	 * @sharpen.if !SILVERLIGHT
+	 */
+	@Override
+	protected Class[] composeWith() {
+		return new Class[] {
+						BlockConfigurationFileSizeTestCase.class,
+						FileSizeTestCase.class,
+				};
+	}
 }

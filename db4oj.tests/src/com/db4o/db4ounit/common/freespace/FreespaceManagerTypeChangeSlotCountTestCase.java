@@ -4,8 +4,8 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
@@ -15,23 +15,16 @@ import db4ounit.*;
 /**
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class FreespaceManagerTypeChangeSlotCountTestCase implements TestCase {
+public class FreespaceManagerTypeChangeSlotCountTestCase extends TestWithTempFile{
 
     private static final int SIZE = 10000;
     private LocalObjectContainer _container;
     private Closure4<Configuration> _currentConfig;
-    private String _fileName;
     
     public static void main(String[] args) {
         new ConsoleTestRunner(FreespaceManagerTypeChangeSlotCountTestCase.class).run();
     }
     
-    public FreespaceManagerTypeChangeSlotCountTestCase() {
-        _fileName = Path4.getTempFileName();
-        File4.delete(_fileName);
-    }
-    
-
     public void testMigrateFromRamToBTree() throws Exception {
         createDatabaseUsingRamManager();
         migrateToBTree();
@@ -72,7 +65,7 @@ public class FreespaceManagerTypeChangeSlotCountTestCase implements TestCase {
     }
 
     private void open() {
-        _container = (LocalObjectContainer)Db4o.openFile(_currentConfig.run(), _fileName);
+        _container = (LocalObjectContainer)Db4o.openFile(_currentConfig.run(), tempFile());
     }
 
     private void createFreeSpace() {

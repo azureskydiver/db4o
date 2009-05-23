@@ -2,30 +2,58 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import java.io.*;
-
+import com.db4o.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.io.*;
+import com.db4o.internal.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 
-public class SystemInfoTestCase extends AbstractDb4oTestCase{
-    
+public class SystemInfoTestCase extends Db4oTestWithTempFile implements OptOutNoFileSystemData {
+
+	private ObjectContainer _db;
+	
     public static class Item {
         
     }
     
     public static void main(String[] arguments) {
-        new SystemInfoTestCase().runSolo();
+        new ConsoleTestRunner(SystemInfoTestCase.class).run();
     }
 
+    public void setUp() throws Exception {
+    	_db = Db4oEmbedded.openFile(newConfiguration(), tempFile());
+    }
+    
+    @Override
+    public void tearDown() throws Exception {
+    	close();
+    	super.tearDown();
+    }
+
+	private void close() {
+		if (_db != null) {
+			_db.close();
+			_db = null;
+		}
+	}
+    
     public void testDefaultFreespaceInfo(){
         assertFreespaceInfo(fileSession().systemInfo());
     }
     
-    private void assertFreespaceInfo(SystemInfo info){
+    private LocalObjectContainer fileSession() {
+		return (LocalObjectContainer) db();
+	}
+
+	private ExtObjectContainer db() {
+		return _db.ext();
+	}
+
+	private void assertFreespaceInfo(SystemInfo info){
         Assert.isNotNull(info);
         Item item = new Item();
         db().store(item);
@@ -37,14 +65,10 @@ public class SystemInfoTestCase extends AbstractDb4oTestCase{
     }
 
     public void testTotalSize(){
-        if(fixture() instanceof AbstractFileBasedDb4oFixture ){
-        	// assuming YapFile only
-            AbstractFileBasedDb4oFixture fixture = (AbstractFileBasedDb4oFixture) fixture();
-            File f = new File(fixture.getAbsolutePath());
-            long expectedSize = f.length();
-            long actual = db().systemInfo().totalSize();
-            Assert.areEqual(expectedSize, actual);
-        }
+        long actual = db().systemInfo().totalSize();
+        close();
+            
+		long expectedSize = File4.size(tempFile());
+        Assert.areEqual(expectedSize, actual);
     }
-
 }

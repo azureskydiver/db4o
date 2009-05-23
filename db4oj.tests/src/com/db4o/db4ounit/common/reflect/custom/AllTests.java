@@ -5,9 +5,16 @@ package com.db4o.db4ounit.common.reflect.custom;
 import db4ounit.extensions.*;
 
 
-public class AllTests extends Db4oTestSuite {
+public class AllTests extends ComposibleTestSuite {
 
 	protected Class[] testCases() {
+		return composeWith();
+	}
+
+	/**
+	 * @sharpen.if !SILVERLIGHT
+	 */
+	protected Class[] composeWith() {
 		return new Class[] {
 			CustomReflectorTestCase.class,
 		};

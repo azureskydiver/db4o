@@ -8,9 +8,7 @@ import db4ounit.extensions.*;
 public class AllTests extends ComposibleTestSuite {
 	
 	protected Class[] testCases() {
-		return new Class[] {
-					CrashSimulatingTestCase.class,
-				};
+		return composeWith();
 	}
 	
 	/**
@@ -19,6 +17,7 @@ public class AllTests extends ComposibleTestSuite {
 	@Override
 	protected Class[] composeWith() {
 		return new Class[] {
+					CrashSimulatingTestCase.class,
 					ReadCommittedIsolationTestCase.class,
 				};
 	}

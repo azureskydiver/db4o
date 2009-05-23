@@ -1,5 +1,8 @@
 /* Copyright (C) 2008  Versant Inc.  http://www.db4o.com */
 
+/**
+ * @sharpen.if !SILVERLIGHT
+ */
 package com.db4o.db4ounit.common.io;
 
 import static com.db4o.foundation.Environments.*;
@@ -16,7 +19,7 @@ import db4ounit.*;
 /**
  * @exclude
  */
-public class BlockSizeDependentBinTestCase extends TestWithTempFile{
+public class BlockSizeDependentBinTestCase extends TestWithTempFile {
 	
 	public static class BlockSizeDependentStorage extends StorageDecorator{
 		
@@ -81,6 +84,5 @@ public class BlockSizeDependentBinTestCase extends TestWithTempFile{
 		config.file().blockSize(configuredBlockSize);
 		return config;
 	}
-
 
 }

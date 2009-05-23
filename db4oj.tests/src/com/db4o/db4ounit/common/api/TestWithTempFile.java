@@ -1,14 +1,24 @@
+/* Copyright (C) 2009  Versant Inc.  http://www.db4o.com */
 package com.db4o.db4ounit.common.api;
 
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
 
-public class TestWithTempFile implements TestLifeCycle{
+/**
+ * @sharpen.partial
+ */
+public class TestWithTempFile implements TestLifeCycle {
 
-	private final String _tempFile = Path4.getTempFileName();
+	private String _tempFile;
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	protected String tempFile() {
+		if (null == _tempFile)
+			 _tempFile = Path4.getTempFileName();
+		
 		return _tempFile;
 	}
 

@@ -4,16 +4,19 @@ package db4ounit.extensions;
 public abstract class ComposibleTestSuite extends Db4oTestSuite {
 
 	protected Class[] composeTests(Class[] testCases) {
-		Class[] otherTests = composeWith();
-		Class[] composedTests = new Class[otherTests.length + testCases.length];
-		System.arraycopy(testCases, 0, composedTests, 0, testCases.length);
-		System.arraycopy(otherTests, 0, composedTests, testCases.length, otherTests.length);
-		
-		return composedTests;
+		return concat(testCases, composeWith());
 	}
+
 	
 	protected Class[] composeWith() {
 		return new Class[0];
 	}
 
+	public static Class[] concat(Class[] testCases, Class[] otherTests) {		
+		Class[] result = new Class[otherTests.length + testCases.length];
+		System.arraycopy(testCases, 0, result, 0, testCases.length);
+		System.arraycopy(otherTests, 0, result, testCases.length, otherTests.length);
+		
+		return result;
+	}
 }

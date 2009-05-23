@@ -1,15 +1,13 @@
+/* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
 package com.db4o.db4ounit.jre12.ta;
-
-import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.io.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.reflect.jdk.*;
 import com.db4o.ta.*;
-import com.db4o.test.util.*;
 
 import db4ounit.*;
 import db4ounit.extensions.util.*;
@@ -18,9 +16,11 @@ import db4ounit.extensions.util.*;
  * @sharpen.ignore
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class TAVirtualFieldTestCase implements TestLifeCycle {
+public class TAVirtualFieldTestCase extends Db4oTestWithTempFile {
 	
-	private static String FILEPATH = Path4.getTempFileName();
+	public static void main(String[] args) {
+		new ConsoleTestRunner(TAVirtualFieldTestCase.class).run();
+	}
 	
 	private Db4oUUID _uuid;
 	
@@ -29,7 +29,7 @@ public class TAVirtualFieldTestCase implements TestLifeCycle {
 	}
 	
 	public void test() {
-		ObjectContainer db = Db4o.openFile(config(true), FILEPATH);
+		ObjectContainer db = Db4oEmbedded.openFile(config(true), tempFile());
 		ObjectSet result = db.query(Item.class);
 		Assert.areEqual(1, result.size());
 		Object obj = result.next();
@@ -39,29 +39,20 @@ public class TAVirtualFieldTestCase implements TestLifeCycle {
 	}
 
 	public void setUp() throws Exception {
-		deleteFile();
-		ObjectContainer db = Db4o.openFile(config(false), FILEPATH);
+		ObjectContainer db = Db4oEmbedded.openFile(config(false), tempFile());
 		Item obj = new Item();
 		db.store(obj);
 		_uuid = db.ext().getObjectInfo(obj).getUUID();
 		db.close();
 	}
 
-	public void tearDown() throws Exception {
-		deleteFile();
-	}
-
-	private void deleteFile() {
-		new File(FILEPATH).delete();
-	}
-	
-	private Configuration config(boolean withCL) {
-		Configuration config = Db4o.newConfiguration();
-		config.generateUUIDs(ConfigScope.GLOBALLY);
-		config.add(new TransparentActivationSupport());
+	private EmbeddedConfiguration config(boolean withCL) {
+		EmbeddedConfiguration config = newConfiguration();
+		config.file().generateUUIDs(ConfigScope.GLOBALLY);
+		config.common().add(new TransparentActivationSupport());
 		if(withCL) {
 			ClassLoader cl = new ExcludingClassLoader(Item.class.getClassLoader(), new Class[] { Item.class });
-			config.reflectWith(new JdkReflector(cl));
+			config.common().reflectWith(new JdkReflector(cl));
 		}
 		return config;
 	}

@@ -1,3 +1,4 @@
+/* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
 package com.db4o.db4ounit.common.assorted;
 
 import com.db4o.*;
@@ -8,7 +9,7 @@ import com.db4o.query.*;
 
 import db4ounit.*;
 
-public class InvalidOffsetInDeleteTestCase extends TestWithTempFile implements DiagnosticListener{
+public class InvalidOffsetInDeleteTestCase extends Db4oTestWithTempFile implements DiagnosticListener{
 	
 	public static class Item extends Parent{
 		public String _itemName;
@@ -19,17 +20,17 @@ public class InvalidOffsetInDeleteTestCase extends TestWithTempFile implements D
 	}
 	
 	public void test(){
-		Configuration config = Db4o.newConfiguration();
+		EmbeddedConfiguration config = newConfiguration();
 		configure(config);
-		ObjectContainer objectContainer = Db4o.openFile(config, tempFile());
+		ObjectContainer objectContainer = Db4oEmbedded.openFile(config, tempFile());
 		Item item = new Item();
 		item._itemName = "item";
 		item._parentName = "parent";
 		objectContainer.store(item);
 		objectContainer.close();
-		config = Db4o.newConfiguration();
+		config = newConfiguration();
 		configure(config);
-		objectContainer = Db4o.openFile(config, tempFile());
+		objectContainer = Db4oEmbedded.openFile(config, tempFile());
 		Query query = objectContainer.query();
 		query.constrain(Item.class);
 		ObjectSet objectSet = query.execute();
@@ -38,12 +39,12 @@ public class InvalidOffsetInDeleteTestCase extends TestWithTempFile implements D
 		objectContainer.close();
 	}
 
-	private void configure(Configuration config) {
-		config.diagnostic().addListener(this);
-		config.generateVersionNumbers(ConfigScope.GLOBALLY);
-		config.generateUUIDs(ConfigScope.GLOBALLY);
-		config.objectClass(Item.class).objectField("_itemName").indexed(true);
-		config.objectClass(Parent.class).objectField("_parentName").indexed(true);
+	private void configure(EmbeddedConfiguration config) {
+		config.common().diagnostic().addListener(this);
+		config.file().generateVersionNumbers(ConfigScope.GLOBALLY);
+		config.file().generateUUIDs(ConfigScope.GLOBALLY);
+		config.common().objectClass(Item.class).objectField("_itemName").indexed(true);
+		config.common().objectClass(Parent.class).objectField("_parentName").indexed(true);
 	}
 
 	public void onDiagnostic(Diagnostic d) {

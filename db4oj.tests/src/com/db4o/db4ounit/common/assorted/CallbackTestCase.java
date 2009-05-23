@@ -21,6 +21,7 @@ public class CallbackTestCase extends AbstractDb4oTestCase {
     }
 
     /**
+     * @sharpen.if !SILVERLIGHT
      */
     @decaf.Ignore(decaf.Platform.JDK11)
     public void testPrivateCallback() {
@@ -28,6 +29,7 @@ public class CallbackTestCase extends AbstractDb4oTestCase {
     }
     
     /**
+     * @sharpen.if !SILVERLIGHT
      */
     @decaf.Ignore(decaf.Platform.JDK11)
     public void testPackageCallback() {
@@ -39,6 +41,8 @@ public class CallbackTestCase extends AbstractDb4oTestCase {
     }
 
     /**
+     * @sharpen.if !SILVERLIGHT
+     * @see testPrivateCallback()
      */
     @decaf.Ignore(decaf.Platform.JDK11)
     public void testInheritedPrivateCallback() {
@@ -46,6 +50,8 @@ public class CallbackTestCase extends AbstractDb4oTestCase {
     }
     
     /**
+     * @sharpen.if !SILVERLIGHT
+     * @see testPackageCallback()
      */
     @decaf.Ignore(decaf.Platform.JDK11)
     public void testInheritedPackageCallback() {

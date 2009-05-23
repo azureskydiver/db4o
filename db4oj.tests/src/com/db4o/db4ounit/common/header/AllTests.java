@@ -4,18 +4,27 @@ package com.db4o.db4ounit.common.header;
 
 import db4ounit.extensions.*;
 
-public class AllTests extends Db4oTestSuite {
+public class AllTests extends ComposibleTestSuite {
 
 	public static void main(String[] args) {
 		new AllTests().runSolo();
     }
 
 	protected Class[] testCases() {
-		return new Class[] {
-            OldHeaderTest.class,
-            ConfigurationSettingsTestCase.class,
-            IdentityTestCase.class,
-            SimpleTimeStampIdTestCase.class
-		};
+		return composeTests(new Class[] {
+					            	ConfigurationSettingsTestCase.class,
+					            	IdentityTestCase.class,
+					            	SimpleTimeStampIdTestCase.class
+					           	});
     }
+	
+	/**
+	 * @sharpen.if !SILVERLIGHT
+	 */
+	@Override
+	protected Class[] composeWith() {
+		return new Class[] {
+						OldHeaderTest.class,
+					};
+	}
 }

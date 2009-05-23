@@ -38,4 +38,9 @@ public class BinConfiguration {
 	public boolean readOnly(){
 		return _readOnly;
 	}
+	
+	@Override
+	public String toString() {
+		return "BinConfiguration(Uri: " + _uri + ", Locked: " + _lockFile + ", ReadOnly: " + _readOnly + ")";
+	}
 }

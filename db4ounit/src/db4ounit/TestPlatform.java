@@ -3,6 +3,8 @@ package db4ounit;
 import java.io.*;
 import java.lang.reflect.*;
 
+import com.db4o.io.*;
+
 /**
  * @sharpen.ignore
  */
@@ -48,4 +50,9 @@ public class TestPlatform {
 	public static Writer openTextFile(String fname) throws IOException {
 		return new java.io.FileWriter(fname);
 	}
+	
+	public static Storage newPersistentStorage() {
+		return new FileStorage();
+	}
+	
 }

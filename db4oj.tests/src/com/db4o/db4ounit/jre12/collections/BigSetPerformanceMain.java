@@ -7,9 +7,8 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.collections.*;
 import com.db4o.config.*;
-import com.db4o.foundation.io.*;
+import com.db4o.db4ounit.common.api.*;
 
-import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.fixtures.*;
 
@@ -37,7 +36,7 @@ public class BigSetPerformanceMain extends FixtureTestSuiteDescription {
 
 	
 
-	public static class BigSetPerformance implements TestLifeCycle {
+	public static class BigSetPerformance extends TestWithTempFile {
 
 		private static final int ADD_RUNS = 50;
 
@@ -52,8 +51,6 @@ public class BigSetPerformanceMain extends FixtureTestSuiteDescription {
 
 		private ObjectContainer _container;
 
-		static final String FILENAME = Path4.getTempFileName();
-
 		public void setUp() throws Exception {
 			_container = openFile();
 			System.out.println("Element count: " + count());
@@ -63,12 +60,12 @@ public class BigSetPerformanceMain extends FixtureTestSuiteDescription {
 		private ObjectContainer openFile() {
 	        final Configuration config = Db4o.newConfiguration();
 			config.bTreeNodeSize(1000);
-			return Db4o.openFile(config, FILENAME);
+			return Db4o.openFile(config, tempFile());
         }
 
-		public void tearDown() {
+		public void tearDown() throws Exception {
 			_container.close();
-			File4.delete(FILENAME);
+			super.tearDown();
 		}
 
 		public void testTimePlainList() {

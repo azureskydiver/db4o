@@ -5,6 +5,8 @@ package com.db4o.db4ounit.common.backup;
 import com.db4o.internal.*;
 import com.db4o.io.*;
 
+import db4ounit.*;
+
 public class BackupMemoryToFileTestCase extends MemoryBackupTestCaseBase {
 
 	@Override
@@ -14,7 +16,7 @@ public class BackupMemoryToFileTestCase extends MemoryBackupTestCaseBase {
 
 	@Override
 	protected Storage backupStorage() {
-		return new FileStorage();
+		return TestPlatform.newPersistentStorage();
 	}
 
 	@Override

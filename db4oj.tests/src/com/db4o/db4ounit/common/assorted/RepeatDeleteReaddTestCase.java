@@ -1,19 +1,22 @@
+/* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
 package com.db4o.db4ounit.common.assorted;
 
 import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 
 import db4ounit.*;
 
-public class RepeatDeleteReaddTestCase implements TestCase {
+public class RepeatDeleteReaddTestCase extends Db4oTestWithTempFile {
 
-	private static final String FILE_NAME = Path4.getTempPath() + "/readddelete.db4o";
-
+	public static void main(String[] args) {
+		new ConsoleTestRunner(RepeatDeleteReaddTestCase.class).run();
+	}
+	
 	public static class ItemA {
 		public int _id;
 
@@ -49,7 +52,7 @@ public class RepeatDeleteReaddTestCase implements TestCase {
 	}
 
 	private void assertRun() throws IOException {
-		String fileName = FILE_NAME;
+		String fileName = tempFile();
 		new File(fileName).delete();
 		createDatabase(fileName);
 		assertCanRead(fileName);
@@ -57,7 +60,7 @@ public class RepeatDeleteReaddTestCase implements TestCase {
 	}
 
 	private void createDatabase(String fileName) {
-		ObjectContainer db = Db4o.openFile(config(), fileName);
+		ObjectContainer db = Db4oEmbedded.openFile(config(), fileName);
 		Collection4 removed = new Collection4();
 		for(int idx = 0; idx < NUM_ITEMS_PER_CLASS; idx++) {
 			ItemA itemA = new ItemA(idx);
@@ -92,7 +95,7 @@ public class RepeatDeleteReaddTestCase implements TestCase {
 	}
 
 	private void assertCanRead(String fileName) {
-		ObjectContainer db = Db4o.openFile(config(), fileName);
+		ObjectContainer db = Db4oEmbedded.openFile(config(), fileName);
 		assertResults(db);
 		db.close();
 	}
@@ -111,9 +114,9 @@ public class RepeatDeleteReaddTestCase implements TestCase {
 		}
 	}
 
-	private Configuration config() {
-		Configuration config = Db4o.newConfiguration();
-		config.reflectWith(Platform4.reflectorForType(ItemA.class));
+	private EmbeddedConfiguration config() {
+		EmbeddedConfiguration config = newConfiguration();
+		config.common().reflectWith(Platform4.reflectorForType(ItemA.class));
 		return config;
 	}
 	

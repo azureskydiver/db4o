@@ -32,7 +32,7 @@ public class TransparentActivationSupportTestCase extends TransparentActivationT
 	 * @sharpen.partial
 	 *
 	 */
-	public final class Item extends ActivatableImpl {
+	public static final class Item extends ActivatableImpl {
 		public void update() {
 			activate(ActivationPurpose.WRITE);
 		}

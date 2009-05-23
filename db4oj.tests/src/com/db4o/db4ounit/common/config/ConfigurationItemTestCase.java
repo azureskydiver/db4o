@@ -3,12 +3,14 @@ package com.db4o.db4ounit.common.config;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
+import com.db4o.internal.config.*;
 
 import db4ounit.*;
 
-public class ConfigurationItemTestCase implements TestCase {
+public class ConfigurationItemTestCase extends Db4oTestWithTempFile {
 	
 	static final class ConfigurationItemStub implements ConfigurationItem {
 
@@ -36,23 +38,24 @@ public class ConfigurationItemTestCase implements TestCase {
 	}
 
 	public void test() {
-		Configuration configuration = Db4o.newConfiguration();
+		EmbeddedConfiguration configuration = newConfiguration();
 		
 		ConfigurationItemStub item = new ConfigurationItemStub();
-		configuration.add(item);
+		configuration.common().add(item);
 		
-		Assert.areSame(configuration, item.preparedConfiguration());
+		Assert.areSame(legacyConfigFor(configuration), item.preparedConfiguration());
 		Assert.isNull(item.appliedContainer());
 		
-		File4.delete(databaseFile());
+		File4.delete(tempFile());
 		
-		ObjectContainer container = Db4o.openFile(configuration, databaseFile());
+		ObjectContainer container = Db4oEmbedded.openFile(configuration, tempFile());
 		container.close();
 		
 		Assert.areSame(container, item.appliedContainer());
 	}
 
-	private String databaseFile() {
-		return Path4.combine(Path4.getTempPath(), getClass().getName());
+	private Configuration legacyConfigFor(EmbeddedConfiguration configuration) {
+		EmbeddedConfigurationImpl configImpl = (EmbeddedConfigurationImpl) configuration;
+		return configImpl.legacy();
 	}
 }

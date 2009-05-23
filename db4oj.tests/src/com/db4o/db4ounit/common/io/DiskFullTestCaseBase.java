@@ -1,11 +1,10 @@
+/* Copyright (C) 2009 Versant Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.io;
-
-import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.io.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
@@ -13,10 +12,8 @@ import db4ounit.*;
 /**
  */
 @decaf.Ignore
-public abstract class DiskFullTestCaseBase implements TestLifeCycle {
-
-	protected static final String FILENAME = Path4.getTempFileName();
-
+public abstract class DiskFullTestCaseBase extends Db4oTestWithTempFile {
+	
 	protected abstract ThrowCondition createThrowCondition(Object conditionConfig);
 
 	protected abstract void configureForFailure(ThrowCondition condition);
@@ -28,16 +25,12 @@ public abstract class DiskFullTestCaseBase implements TestLifeCycle {
 		super();
 	}
 
-	public void setUp() throws Exception {
-		new File(FILENAME).delete();
-	}
-
 	public void tearDown() throws Exception {
 		if(_db != null) {
 			_db.close();
 			_db = null;
 		}
-		new File(FILENAME).delete();
+		super.tearDown();
 	}
 
 	protected void storeOneAndFail(Object conditionConfig, boolean doCache) {
@@ -88,21 +81,21 @@ public abstract class DiskFullTestCaseBase implements TestLifeCycle {
 	}
 
 	public void openDatabase(Object conditionConfig, boolean readOnly, boolean doCache) {
-		Configuration config = Db4o.newConfiguration();
+		EmbeddedConfiguration config = newConfiguration();
 		_throwCondition = createThrowCondition(conditionConfig);
-		config.freespace().discardSmallerThan(Integer.MAX_VALUE);
-		config.readOnly(readOnly);
+		config.file().freespace().discardSmallerThan(Integer.MAX_VALUE);
+		config.file().readOnly(readOnly);
 		configureIoAdapter(config, _throwCondition, doCache);
-		_db = Db4o.openFile(config, FILENAME);
+		_db = Db4oEmbedded.openFile(config, tempFile());
 	}
 
-	private void configureIoAdapter(Configuration config, ThrowCondition throwCondition, boolean doCache) {
+	private void configureIoAdapter(EmbeddedConfiguration config, ThrowCondition throwCondition, boolean doCache) {
 		Storage storage = new FileStorage();
 		storage = new ThrowingStorage(storage, throwCondition);
 		if(doCache) {
 			storage = new CachingStorage(storage, 256, 2);
 		}
-		config.storage(storage);
+		config.file().storage(storage);
 	}
 
 	protected void closeDb() {

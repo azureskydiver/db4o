@@ -1,3 +1,4 @@
+/* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
 package com.db4o.db4ounit.common.io;
 
 import com.db4o.db4ounit.common.api.*;
@@ -8,6 +9,9 @@ import db4ounit.fixtures.*;
 
 public class StorageTest extends TestWithTempFile {
 	
+	/**
+	 * @sharpen.if !SILVERLIGHT
+	 */
 	public void testInitialLength() {
 		
 		storage().open(new BinConfiguration(tempFile(), false, 1000, false)).close();

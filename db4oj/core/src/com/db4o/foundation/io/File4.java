@@ -95,4 +95,9 @@ public class File4 {
 	public static void mkdirs(String path) {
 		new File(path).mkdirs();
 	}
+
+	public static long size(final String filePath) {
+		File f = new File(filePath);
+		return f.length();
+	}
 }

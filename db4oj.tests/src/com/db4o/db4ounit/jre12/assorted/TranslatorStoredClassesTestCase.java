@@ -7,17 +7,13 @@ import java.math.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.foundation.io.*;
-
-import db4ounit.*;
+import com.db4o.db4ounit.common.api.*;
 
 /**
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class TranslatorStoredClassesTestCase implements TestCase {
+public class TranslatorStoredClassesTestCase extends Db4oTestWithTempFile {
 
-	private final static String FILENAME=Path4.getTempFileName();
-	
 	public static class DataRawChild implements Serializable {
 		public int _id;
 
@@ -55,23 +51,22 @@ public class TranslatorStoredClassesTestCase implements TestCase {
 		check(translated);
 	}
 
-	private static void createFile(Class translated,Object data) {
-		new File(FILENAME).delete();
+	private void createFile(Class translated,Object data) {
         ObjectContainer server = db(translated,new TSerializable());
         server.store(data);
         server.close();
 	}
 
-	private static void check(Class translated) {
+	private void check(Class translated) {
 		ObjectContainer db=db(translated,null);
 		db.ext().storedClasses();
 		db.close();
 	}
 
-	private static ObjectContainer db(Class translated,ObjectTranslator translator) {
-		Configuration config=Db4o.newConfiguration();
-		config.objectClass(translated).translate(translator);
-		return Db4o.openFile(config,FILENAME);
+	private ObjectContainer db(Class translated,ObjectTranslator translator) {
+		EmbeddedConfiguration config = newConfiguration();
+		config.common().objectClass(translated).translate(translator);
+		return Db4oEmbedded.openFile(config, tempFile());
 	}
 
 }

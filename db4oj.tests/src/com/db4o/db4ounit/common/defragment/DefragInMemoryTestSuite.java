@@ -5,8 +5,8 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.defragment.*;
-import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.io.*;
 import com.db4o.query.*;
@@ -19,12 +19,10 @@ public class DefragInMemoryTestSuite extends FixtureBasedTestSuite {
 	private static class StorageSpec implements Labeled {
 		private final String _label;
 		private final Storage _storage;
-		public final String _path;
 
-		public StorageSpec(String label, Storage storage, String path) {
+		public StorageSpec(String label, Storage storage) {
 			_label = label;
 			_storage = storage;
-			_path = path;
 		}
 		
 		public Storage storage(Storage storage) {
@@ -40,12 +38,10 @@ public class DefragInMemoryTestSuite extends FixtureBasedTestSuite {
 	
 	@Override
 	public FixtureProvider[] fixtureProviders() {
-		String tempFilePath = Path4.getTempFileName();
-		File4.delete(tempFilePath);
 		return new FixtureProvider[] {
 				new SimpleFixtureProvider(STORAGE_SPEC_FIXTURE,
-						new StorageSpec("memory", null, "backup"),
-						new StorageSpec("file", new FileStorage(), tempFilePath)
+						new StorageSpec("memory", null),
+						new StorageSpec("file", TestPlatform.newPersistentStorage())
 				)
 		};
 	}
@@ -57,10 +53,13 @@ public class DefragInMemoryTestSuite extends FixtureBasedTestSuite {
 		};
 	}
 
-	public static class DefragInMemoryTestUnit implements TestLifeCycle {
+	public static class DefragInMemoryTestUnit extends TestWithTempFile {
 
 		public static class Item {
 			public int _id;
+			
+			public Item() {				
+			}
 			
 			public Item(int id) {
 				_id = id;
@@ -87,24 +86,20 @@ public class DefragInMemoryTestSuite extends FixtureBasedTestSuite {
 		}
 
 		private long backupLength() {
-			Bin backupBin = backupStorage().open(new BinConfiguration(backupPath(), true, 0, true));
+			Bin backupBin = backupStorage().open(new BinConfiguration(tempFile(), true, 0, true));
 			long backupLength = backupBin.length();
 			backupBin.close();
 			return backupLength;
 		}
 	
 		private DefragmentConfig defragmentConfig(MemoryStorage storage) {
-			DefragmentConfig defragConfig = new DefragmentConfig(URI, backupPath(), new TreeIDMapping());
+			DefragmentConfig defragConfig = new DefragmentConfig(URI, tempFile(), new TreeIDMapping());
 			defragConfig.db4oConfig(config(storage));
 			defragConfig.backupStorage(backupStorage());
 			return defragConfig;
 		}
 	
 	
-		private String backupPath() {
-			return STORAGE_SPEC_FIXTURE.value()._path;
-		}
-
 		private Storage backupStorage() {
 			return STORAGE_SPEC_FIXTURE.value().storage(_memoryStorage);
 		}
@@ -149,7 +144,8 @@ public class DefragInMemoryTestSuite extends FixtureBasedTestSuite {
 		}
 
 		public void tearDown() throws Exception {
-			backupStorage().delete(backupPath());
+			backupStorage().delete(tempFile());
+			super.tearDown();
 		}
 	}
 

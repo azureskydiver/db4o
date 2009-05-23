@@ -36,7 +36,7 @@ public class DeactivateTestCase extends AbstractDb4oTestCase  {
 		new DeactivateTestCase().runAll();
 	}
 	
-	public class Item {
+	public static class Item {
 		public Item _child;
 		public String _name;
 		

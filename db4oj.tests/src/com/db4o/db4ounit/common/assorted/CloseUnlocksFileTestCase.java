@@ -2,23 +2,31 @@
 
 package com.db4o.db4ounit.common.assorted;
 
+import java.io.*;
+
 import com.db4o.*;
+import com.db4o.db4ounit.common.api.*;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
 
 
-public class CloseUnlocksFileTestCase implements TestCase {
+public class CloseUnlocksFileTestCase extends Db4oTestWithTempFile {
     
-    private static final String FILE = Path4.getTempFileName();
-    
+	/**
+	 * @deprecated
+	 */
     public void test(){
-        File4.delete(FILE);
-        Assert.isFalse(File4.exists(FILE));
-        ObjectContainer oc = Db4o.openFile(Db4o.newConfiguration(), FILE);
+        File4.delete(tempFile());
+        Assert.isFalse(exists(tempFile()));
+        ObjectContainer oc = Db4oEmbedded.openFile(newConfiguration(), tempFile());
         oc.close();
-        File4.delete(FILE);
-        Assert.isFalse(File4.exists(FILE));
+        File4.delete(tempFile());
+        Assert.isFalse(exists(tempFile()));
     }
+
+	private boolean exists(final String fileName) {
+		return new File(fileName).exists();
+	}
 
 }
