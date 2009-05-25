@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 
 public class EagerObjectWriter {
@@ -30,16 +31,66 @@ public class EagerObjectWriter {
 	 */
 	public ByteArrayBuffer write(IntIterator4 idIterator, int maxCount) {
 		
-		List<Pair<Integer, Slot>> slots = readSlots(idIterator, maxCount);
-		int marshalledSize = marshalledSizeFor(slots);
+		List<Pair<Integer, Slot>> rootSlots = readSlots(idIterator, maxCount);
+		List<Pair<Integer, Slot>> childSlots = childSlotsFor(rootSlots);
+		
+		int marshalledSize = marshalledSizeFor(rootSlots) + marshalledSizeFor(childSlots);
 		
 		ByteArrayBuffer buffer = new ByteArrayBuffer(marshalledSize);
-		buffer.writeInt(slots.size());
+		writeIdSlotPairsTo(childSlots, buffer);
+		writeIdSlotPairsTo(rootSlots, buffer);
+		
+		return buffer;
+	}
+
+	private List<Pair<Integer, Slot>> childSlotsFor(List<Pair<Integer, Slot>> slots) {
+		
+		final ArrayList<Pair<Integer, Slot>> result = new ArrayList<Pair<Integer, Slot>>();
+		if (_config.prefetchDepth < 2) {
+			return result;
+		}
+		
+		for (Pair<Integer, Slot> pair : slots) {
+			final Slot slot = pair.second;
+			if (slot == null) {
+				break;
+			}
+			final int id = pair.first;
+			
+			final Iterator4 childIds = collectChildIdsFor(id);
+			while (childIds.moveNext()) {
+				final Integer childId = (Integer)childIds.current();
+				result.add(idSlotPairFor(childId));
+			}
+        }
+		
+		return result;
+    }
+
+	private Iterator4 collectChildIdsFor(final int id) {
+	    final CollectIdContext context = CollectIdContext.forID(_transaction, id);
+	    final ClassMetadata classMetadata = context.classMetadata();
+	    if (null == classMetadata) {
+	    	// most probably ClassMetadata reading
+	    	return Iterators.EMPTY_ITERATOR;
+	    }
+	    if (classMetadata.isPrimitive()) {
+	    	throw new IllegalStateException(classMetadata.toString());
+	    }
+	    if (!Handlers4.isCascading(classMetadata.typeHandler())) {
+	    	return Iterators.EMPTY_ITERATOR;
+	    }
+		classMetadata.collectIDs(context);
+		return new TreeKeyIterator(context.ids());
+    }
+
+	private void writeIdSlotPairsTo(List<Pair<Integer, Slot>> slots, ByteArrayBuffer buffer) {
+	    buffer.writeInt(slots.size());
 		for (Pair<Integer, Slot> idSlotPair : slots) {
 			final int id = idSlotPair.first;
 			final Slot slot = idSlotPair.second;
 			
-			if (slot == null) {
+			if (slot == null || slot.isNull()) {
 				buffer.writeInt(id);
 				buffer.writeInt(0);
 				continue;
@@ -50,12 +101,7 @@ public class EagerObjectWriter {
 			buffer.writeInt(slot.length());
 			buffer.writeBytes(slotBuffer._buffer);
 		}
-		
-		// TODO: write referenced slots when prefetchDepth > 1
-		//	buffer.writeInt(0); // no referenced slots
-		
-		return buffer;
-	}
+    }
 
 	private int marshalledSizeFor(List<Pair<Integer, Slot>> slots) {
 		int total = Const4.INT_LENGTH; // count
@@ -80,8 +126,7 @@ public class EagerObjectWriter {
             final int id = idIterator.currentInt();
             
             if (slots.size() < prefetchObjectCount) {
-            	final Slot slot = _transaction.getCurrentSlotOfID(id);
-            	slots.add(Pair.of(id, slot));
+            	slots.add(idSlotPairFor(id));
             } else {
             	slots.add(Pair.of(id, null));
             }
@@ -91,6 +136,12 @@ public class EagerObjectWriter {
             }
         }
 		return slots;
+    }
+
+	private Pair<Integer, Slot> idSlotPairFor(final int id) {
+	    final Slot slot = _transaction.getCurrentSlotOfID(id);
+	    final Pair<Integer, Slot> pair = Pair.of(id, slot);
+	    return pair;
     }
 
 	private int configuredPrefetchObjectCount() {

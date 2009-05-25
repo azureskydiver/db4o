@@ -12,11 +12,23 @@ public class ObjectID {
     
     public final int _id;
     
-    public static final ObjectID IS_NULL = new ObjectID(-1);
+    public static final ObjectID IS_NULL = new ObjectID(-1) {
+    	public String toString() {
+    		return "ObjectID.IS_NULL";
+    	};
+    };
     
-    public static final ObjectID NOT_POSSIBLE = new ObjectID(-2);
+    public static final ObjectID NOT_POSSIBLE = new ObjectID(-2){
+    	public String toString() {
+    		return "ObjectID.NOT_POSSIBLE";
+    	};
+    };
 
-    public static final ObjectID IGNORE = new ObjectID(-3);
+    public static final ObjectID IGNORE = new ObjectID(-3){
+    	public String toString() {
+    		return "ObjectID.IGNORE";
+    	};
+    };
     
     public ObjectID(int id){
         _id = id;
@@ -29,6 +41,11 @@ public class ObjectID {
     public static ObjectID read(InternalReadContext context) {
         int id = context.readInt();
         return id == 0 ? ObjectID.IS_NULL : new ObjectID(id);
+    }
+    
+    @Override
+    public String toString() {
+    	return "ObjectID(" + _id + ")";
     }
 
 }

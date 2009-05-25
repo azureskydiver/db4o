@@ -171,7 +171,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 							candidates.evaluate();
 
-							final Tree.ByRef pending = new Tree.ByRef();
+							final ByRef<Tree> pending = ByRef.newInstance();
 							final boolean[] innerRes = { isNot };
 							candidates.traverse(new Visitor4() {
 								public void visit(Object obj) {

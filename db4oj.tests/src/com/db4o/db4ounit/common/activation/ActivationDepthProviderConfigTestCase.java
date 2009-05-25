@@ -57,7 +57,6 @@ public class ActivationDepthProviderConfigTestCase
 		resetProvider();
 		queryItem();
 		assertProviderCalled(new MethodCall[] {
-			new MethodCall("activationDepthFor", itemRootMetadata(), ActivationMode.PREFETCH),
 			new MethodCall("activationDepthFor", itemRootMetadata(), ActivationMode.ACTIVATE),
 		});
 	}

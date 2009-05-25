@@ -6,23 +6,11 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public abstract class Tree implements ShallowClone , DeepClone{
-	
-	public static final class ByRef {
-		
-		public ByRef() {			
-		}
-		
-		public ByRef(Tree initialValue) {
-			value = initialValue;
-		}
-
-		public Tree value;
-	}
+public abstract class Tree<T> implements ShallowClone , DeepClone{
     
-	public Tree _preceding;
+	public Tree<T> _preceding;
 	public int _size = 1;
-	public Tree _subsequent;
+	public Tree<T> _subsequent;
 	
 	public static final Tree add(Tree a_old, Tree a_new){
 		if(a_old == null){
@@ -31,7 +19,7 @@ public abstract class Tree implements ShallowClone , DeepClone{
 		return a_old.add(a_new);
 	}
 	
-	public Tree add(final Tree a_new){
+	public Tree<T> add(final Tree<T> a_new){
 	    return add(a_new, compare(a_new));
 	}
 	
@@ -42,7 +30,7 @@ public abstract class Tree implements ShallowClone , DeepClone{
      * prevails in the tree using #duplicateOrThis(). This mechanism
      * allows doing find() and add() in one run.
      */
-	public Tree add(final Tree a_new, final int a_cmp){
+	public Tree<T> add(final Tree<T> a_new, final int a_cmp){
 	    if(a_cmp < 0){
 	        if(_subsequent == null){
 	            _subsequent = a_new;
@@ -234,7 +222,7 @@ public abstract class Tree implements ShallowClone , DeepClone{
 		return findSmaller(a_in._preceding, a_node);
 	}
     
-    public final Tree first(){
+    public final Tree<T> first(){
         if(_preceding == null){
             return this;
         }
@@ -422,11 +410,11 @@ public abstract class Tree implements ShallowClone , DeepClone{
         tree.traverse(visitor);
     }
     
-	public final <T extends Tree> void traverse(final Visitor4<T> a_visitor){
+	public final <V extends Tree<T>> void traverse(final Visitor4<V> a_visitor){
 		if(_preceding != null){
 			_preceding.traverse(a_visitor);
 		}
-		a_visitor.visit((T) this);
+		a_visitor.visit((V)this);
 		if(_subsequent != null){
 			_subsequent.traverse(a_visitor);
 		}
@@ -473,7 +461,7 @@ public abstract class Tree implements ShallowClone , DeepClone{
 		throw new com.db4o.foundation.NotImplementedException();
 	}
 	
-	public abstract Object key();
+	public abstract T key();
 	
 	public Object root() {
 		return this;

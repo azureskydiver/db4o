@@ -12,32 +12,80 @@ public class Environments {
 	private static final DynamicVariable<Environment> _current = DynamicVariable.newInstance();
 	
 	public static <T> T my(Class<T> service) {
-		final Environment environment = _current.value();
+		final Environment environment = current();
 		if (null == environment) {
 			throw new IllegalStateException();
 		}
 		return environment.provide(service);
 	}
+
+	private static Environment current() {
+	    return _current.value();
+    }
 	
 	public static void runWith(Environment environment, Runnable runnable) {
 		_current.with(environment, runnable);
 	}
+	
+	public static Environment newClosedEnvironment(final Object... bindings) {
+		return new Environment() {
 
-	public static Environment newConventionBasedEnvironment() {
-		return new ConventionBasedEnvironment();
+			public <T> T provide(Class<T> service) {
+				for (Object binding : bindings) {
+					if (service.isInstance(binding)) {
+						return service.cast(binding);
+					}
+				}
+				return null;
+            }
+			
+		};
     }
 	
-	private static final class ConventionBasedEnvironment implements Environment {
-	    private final Map<Class<?>, Object> _bindings = new HashMap<Class<?>, Object>();
+	public static Environment newCachingEnvironmentFor(final Environment environment) {
+		return new Environment() {
+			private final Map<Class<?>, Object> _bindings = new HashMap<Class<?>, Object>();
+	
+		    public <T> T provide(Class<T> service) {
+		        final Object existing = _bindings.get(service);
+		        if (null != existing) {
+		        	return service.cast(existing);
+		        }
+		        final T binding = environment.provide(service);
+		        if (null == binding) {
+		        	return null;
+		        }
+		        _bindings.put(service, binding);
+		        return binding;
+		    }
+		};
+	}
+	
+	public static Environment newConventionBasedEnvironment(Object... bindings) {
+		return newCachingEnvironmentFor(compose(newClosedEnvironment(bindings), new ConventionBasedEnvironment()));
+	}
 
-	    public <T> T provide(Class<T> service) {
-	        final Object existing = _bindings.get(service);
-	        if (null != existing) {
-	        	return service.cast(existing);
-	        }
-	        final T binding = resolve(service);
-	        _bindings.put(service, binding);
-	        return binding;
+	public static Environment newConventionBasedEnvironment() {
+		return newCachingEnvironmentFor(new ConventionBasedEnvironment());
+    }
+	
+	public static Environment compose(final Environment... environments) {
+		return new Environment() {
+			public <T> T provide(Class<T> service) {
+				for (Environment e : environments) {
+					final T binding = e.provide(service);
+					if (null != binding) {
+						return binding;
+					}
+				}
+				return null;
+            }
+		};
+	}
+	
+	private static final class ConventionBasedEnvironment implements Environment { 
+		public <T> T provide(Class<T> service) {
+			return resolve(service);
 	    }
 	    
 	    /**
@@ -90,4 +138,5 @@ public class Environments {
 		final String name = qualifiedName.substring(lastDot);
 		return new QualifiedName(qualifier, name);
     }
+
 }

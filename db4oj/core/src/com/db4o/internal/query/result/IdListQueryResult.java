@@ -103,7 +103,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 	public void loadFromClassIndexes(ClassMetadataIterator iter){
 		
         // duplicates because of inheritance hierarchies
-        final Tree.ByRef duplicates = new Tree.ByRef();
+        final ByRef<Tree> duplicates = new ByRef<Tree>();
 
         while (iter.moveNext()) {
 			final ClassMetadata yapClass = iter.currentClass();

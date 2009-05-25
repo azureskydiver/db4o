@@ -12,6 +12,9 @@ public class AllTests extends Db4oTestSuite {
 	
 	protected Class[] testCases() {
 		return new Class[] {
+				
+				com.db4o.db4ounit.common.cs.caching.AllTests.class,
+				
 				BatchActivationTestCase.class,
 		        CallConstructorsConfigTestCase.class,
 		        ClientDisconnectTestCase.class,

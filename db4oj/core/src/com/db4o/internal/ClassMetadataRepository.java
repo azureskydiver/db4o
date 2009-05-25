@@ -385,19 +385,15 @@ public final class ClassMetadataRepository extends PersistentBase {
 		initTables(classCount);
 
 		ObjectContainerBase container = container();
-		int[] ids = new int[classCount];
-
-		for (int i = 0; i < classCount; ++i) {
-			ids[i] = buffer.readInt();
-		}
-		StatefulBuffer[] clazzWriters = container.readWritersByIDs(trans, ids);
+		int[] ids = readMetadataIds(buffer, classCount);
+		ByteArrayBuffer[] metadataSlots = container.readSlotBuffers(trans, ids);
 
 		for (int i = 0; i < classCount; ++i) {
 			ClassMetadata classMetadata = new ClassMetadata(container, null);
 			classMetadata.setID(ids[i]);
 			_classes.add(classMetadata);
 			_classMetadataByID.put(ids[i], classMetadata);
-			byte[] name = classMetadata.readName1(trans, clazzWriters[i]);
+			byte[] name = classMetadata.readName1(trans, metadataSlots[i]);
 			if (name != null) {
 				_classMetadataByBytes.put(name, classMetadata);
 			}
@@ -406,6 +402,15 @@ public final class ClassMetadataRepository extends PersistentBase {
 		applyReadAs();
 
 	}
+
+	private int[] readMetadataIds(ByteArrayBuffer buffer, int classCount) {
+	    int[] ids = new int[classCount];
+
+		for (int i = 0; i < classCount; ++i) {
+			ids[i] = buffer.readInt();
+		}
+	    return ids;
+    }
 
 	Hashtable4 classByBytes(){
     	return _classMetadataByBytes;

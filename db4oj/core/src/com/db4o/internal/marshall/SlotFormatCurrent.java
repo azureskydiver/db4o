@@ -16,6 +16,9 @@ public class SlotFormatCurrent extends SlotFormat {
     }
 
     public boolean isIndirectedWithinSlot(TypeHandler4 handler){
+    	if (Handlers4.isUntyped(handler)) {
+    		return false;
+    	}
         return Handlers4.isVariableLength(handler) && Handlers4.isValueType(handler);
     }
 

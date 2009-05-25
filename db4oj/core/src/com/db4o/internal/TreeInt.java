@@ -11,7 +11,7 @@ import com.db4o.internal.query.processor.*;
  * 
  * @exclude
  */
-public class TreeInt extends Tree implements ReadWriteable {
+public class TreeInt extends Tree<Integer> implements ReadWriteable {
 	
 	public static TreeInt add(TreeInt tree, int value) {
 		return (TreeInt) Tree.add(tree, new TreeInt(value));
@@ -159,7 +159,8 @@ public class TreeInt extends Tree implements ReadWriteable {
 		return Const4.INT_LENGTH + (size() * ownLength());
 	}
 	
-    public Object key(){
+	@Override
+    public Integer key(){
     	return new Integer(_key);
     }
 

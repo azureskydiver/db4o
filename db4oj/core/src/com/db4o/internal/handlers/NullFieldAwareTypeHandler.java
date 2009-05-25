@@ -25,7 +25,7 @@ public class NullFieldAwareTypeHandler implements FieldAwareTypeHandler{
 	public void classMetadata(ClassMetadata classMetadata) {
 	}
 
-	public void collectIDs(CollectIdContext context, String fieldName) {
+	public void collectIDs(CollectIdContext context, Predicate4<ClassAspect> predicate) {
 	}
 
 	public void deleteMembers(DeleteContextImpl deleteContext, boolean isUpdate) {

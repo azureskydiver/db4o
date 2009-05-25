@@ -26,10 +26,6 @@ public final class ObjectHeader {
     public ObjectHeader(ClassMetadata yapClass, ReadWriteBuffer reader){
     	this(null,yapClass,reader);
     }
-
-    public ObjectHeader(StatefulBuffer writer){
-        this(writer.container(), writer);
-    }
     
     public ObjectHeader(ObjectContainerBase stream, ClassMetadata yc, ReadWriteBuffer reader){
         if (Deploy.debug) {
@@ -39,7 +35,7 @@ public final class ObjectHeader {
         _marshallerFamily = readMarshallerFamily(reader, classID);
         
         classID=normalizeID(classID);
-
+        
         _classMetadata=(yc!=null ? yc : stream.classMetadataForID(classID));
 
         if (Deploy.debug) {

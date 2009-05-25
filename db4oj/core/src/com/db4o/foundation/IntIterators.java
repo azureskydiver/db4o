@@ -2,7 +2,7 @@ package com.db4o.foundation;
 
 public class IntIterators {
 
-	public static IntIterator4Impl forInts(final int[] array, final int count) {
+	public static FixedSizeIntIterator4 forInts(final int[] array, final int count) {
 	    return new IntIterator4Impl(array, count);
     }
 

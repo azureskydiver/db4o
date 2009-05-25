@@ -63,7 +63,7 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
         _collector.addId(id);
     }
     
-    public Tree ids() {
+    public TreeInt ids() {
         return _collector.ids();
     }
     

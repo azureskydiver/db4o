@@ -18,7 +18,7 @@ public class OpenTypeHandler2 extends OpenTypeHandler7 {
     
     protected void seekSecondaryOffset(ReadBuffer buffer, TypeHandler4 typeHandler) {
         if(Handlers4.handlesPrimitiveArray(typeHandler)){
-            buffer.seekCurrentInt();
+            buffer.seek(buffer.readInt());
         }
     }
 

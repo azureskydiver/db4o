@@ -9,11 +9,22 @@ import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.fixtures.*;
 
 /**
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class ObjectSetListAPITestCase extends AbstractDb4oTestCase {
+public class ObjectSetListAPITestCase extends FixtureTestSuiteDescription implements Db4oTestCase {
+	
+	{
+		testUnits(TestUnit.class);
+		
+		// TODO: Add QueryEvaluationMode.SNAPSHOT to the fixtures
+		fixtureProviders(
+				new SubjectFixtureProvider(
+					QueryEvaluationMode.LAZY,
+					QueryEvaluationMode.IMMEDIATE));
+	}
 
 	private static final int NUMDATA = 1000;
 	
@@ -28,45 +39,45 @@ public class ObjectSetListAPITestCase extends AbstractDb4oTestCase {
 		private void use(int id) {
 		}
 	}
-
-	protected void configure(Configuration config) throws Exception {
-		config.queries().evaluationMode(QueryEvaluationMode.LAZY);
-	}
 	
-	protected void store() throws Exception {
-		for(int i = 0; i < NUMDATA; i++) {
-			store(new Data(i));
+	public static class TestUnit extends AbstractDb4oTestCase {
+
+		protected void configure(Configuration config) throws Exception {
+			final QueryEvaluationMode evaluationMode = SubjectFixtureProvider.value();
+			config.queries().evaluationMode(evaluationMode);
 		}
-	}
-	
-	public void testOutOfBounds() {
-		final ObjectSet result = result();
-		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				try {
-					result.get(NUMDATA);
-				}
-				catch(Db4oException exc) {
-					exc.printStackTrace();
-				}
+		
+		protected void store() throws Exception {
+			for(int i = 0; i < NUMDATA; i++) {
+				store(new Data(i));
 			}
-		});
-	}
-
-	public void testToArray() {
-		Assert.areEqual(NUMDATA, result().toArray().length);
-		Assert.areEqual(NUMDATA, result().toArray(new Data[0]).length);
-		Assert.areEqual(NUMDATA, result().toArray(new Data[NUMDATA]).length);
-	}
-
-	private ObjectSet result() {
-		Query query = newQuery(Data.class);
-		query.descend("_id").constrain(new Integer(Integer.MAX_VALUE)).not();
-		final ObjectSet result = query.execute();
-		return result;
-	}
+		}
+		
+		public void testOutOfBounds() {
+			final ObjectSet result = result();
+			Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
+				public void run() throws Throwable {
+					try {
+						result.get(NUMDATA);
+					}
+					catch(Db4oException exc) {
+						exc.printStackTrace();
+					}
+				}
+			});
+		}
 	
-	public static void main(String[] args) {
-		new ObjectSetListAPITestCase().runAll();
+		public void testToArray() {
+			Assert.areEqual(NUMDATA, result().toArray().length);
+			Assert.areEqual(NUMDATA, result().toArray(new Data[0]).length);
+			Assert.areEqual(NUMDATA, result().toArray(new Data[NUMDATA]).length);
+		}
+	
+		private ObjectSet result() {
+			Query query = newQuery(Data.class);
+			query.descend("_id").constrain(new Integer(Integer.MAX_VALUE)).not();
+			final ObjectSet result = query.execute();
+			return result;
+		}
 	}
 }

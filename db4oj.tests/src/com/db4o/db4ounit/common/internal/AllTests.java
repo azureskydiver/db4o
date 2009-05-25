@@ -13,7 +13,9 @@ public class AllTests extends Db4oTestSuite {
 	
 	protected Class[] testCases() {
 		return new Class[] {
-			ClassMetadataIntegrationTestCase.class,
+				
+			com.db4o.db4ounit.common.internal.metadata.AllTests.class,
+			
             ClassMetadataTypeHandlerIntegrationTestCase.class,
 			Comparable4TestCase.class,
 			DeactivateTestCase.class,

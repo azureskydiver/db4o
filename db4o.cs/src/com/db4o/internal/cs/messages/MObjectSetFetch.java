@@ -20,8 +20,7 @@ public class MObjectSetFetch extends MObjectSet implements MessageWithResponse {
 		synchronized(streamLock()) {
 			IntIterator4 idIterator = stub(queryResultID).idIterator();
 			ByteArrayBuffer payload = ObjectExchangeStrategyFactory.forConfig(new ObjectExchangeConfiguration(fetchDepth, fetchSize)).marshall((LocalTransaction) transaction(), idIterator, fetchSize);
-			message = ID_LIST.getWriterForLength(transaction(), payload.length());
-			message.writeBytes(payload._buffer);
+			message = ID_LIST.getWriterForBuffer(transaction(), payload);
 		}
 		write(message);
 		return true;

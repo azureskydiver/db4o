@@ -19,7 +19,7 @@ public class IdObjectCollector {
         _ids = (TreeInt) Tree.add(_ids, new TreeInt(id));
     }
     
-    public Tree ids() {
+    public TreeInt ids() {
         return _ids;
     }
     

@@ -50,14 +50,4 @@ public interface ReadBuffer {
      * @param offset the desired position in the buffer
      */
 	void seek(int offset);
-	
-	/**
-	 * reads and int from the current offset position and
-	 * seeks the  
-	 */
-	void seekCurrentInt();
-	
-	
-
-
 }

@@ -169,23 +169,44 @@ public class OpenTypeHandler implements ReferenceTypeHandler, ValueTypeHandler, 
 //    	throw new IllegalStateException();
     }
 
-    public void collectIDs(QueryingReadContext readContext) {
+    public void collectIDs(final QueryingReadContext readContext) {
         InternalReadContext context = (InternalReadContext) readContext;
         int payloadOffset = context.readInt();
         if(payloadOffset == 0){
             return;
         }
         int savedOffSet = context.offset();
-        TypeHandler4 typeHandler = readTypeHandler(context, payloadOffset);
-        if(typeHandler == null){
-            context.seek(savedOffSet);
-            return;
+        try {
+	        TypeHandler4 typeHandler = readTypeHandler(context, payloadOffset);
+	        if(typeHandler == null){
+	            return;
+	        }
+	        seekSecondaryOffset(context, typeHandler);
+	        if (isPlainObject(typeHandler)) {
+	        	readContext.collector().addId(readContext.readInt());
+	        	return;
+	        }
+	        
+	        CollectIdContext collectIdContext = new CollectIdContext(readContext.transaction(), readContext.collector(), null, readContext.buffer()) {
+	        	@Override
+	        	public int handlerVersion() {
+	        		return readContext.handlerVersion();
+	        	}
+	        	
+	        	@Override
+	        	public SlotFormat slotFormat() {
+	        		return new SlotFormatCurrent() {
+	        			@Override
+	        			public boolean isIndirectedWithinSlot(TypeHandler4 handler) {
+	        				return false;
+	        			}
+	        		};
+	        	}
+	        };
+	        Handlers4.collectIdsInternal(collectIdContext, context.container().handlers().correctHandlerVersion(typeHandler, context.handlerVersion()), 0, false);
+        } finally {
+        	context.seek(savedOffSet);
         }
-        seekSecondaryOffset(context, typeHandler);
-        
-        CollectIdContext collectIdContext = new CollectIdContext(readContext.transaction(), readContext.collector(), null, readContext.buffer());
-        Handlers4.collectIdsInternal(collectIdContext, context.container().handlers().correctHandlerVersion(typeHandler, context.handlerVersion()), 0);
-        context.seek(savedOffSet);
     }
     
     public TypeHandler4 readTypeHandlerRestoreOffset(InternalReadContext context){

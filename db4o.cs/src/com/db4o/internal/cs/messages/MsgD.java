@@ -2,6 +2,7 @@
 
 package com.db4o.internal.cs.messages;
 
+import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 
@@ -38,6 +39,12 @@ public class MsgD extends Msg{
 		return msg;
 	}
 	
+	public final MsgD getWriterForBuffer(Transaction trans, ByteArrayBuffer buffer) {
+		final MsgD writer = getWriterForLength(trans, buffer.length());
+		writer.writeBytes(buffer._buffer);
+		return writer;
+	}
+	
 	public final MsgD getWriterForLength(Transaction trans, int length) {
 		MsgD message = (MsgD)publicClone();
 		message.setTransaction(trans);
@@ -65,13 +72,17 @@ public class MsgD extends Msg{
     }
 	
     public final MsgD getWriterForIntArray(Transaction a_trans, int[] ints, int length){
-		MsgD message = getWriterForLength(a_trans, Const4.INT_LENGTH * (length + 1));
+    	return getWriterForIntSequence(a_trans, length, IntIterators.forInts(ints, length));
+	}
+
+	public MsgD getWriterForIntSequence(Transaction trans, int length, final Iterator4 iterator) {
+	    MsgD message = getWriterForLength(trans, Const4.INT_LENGTH * (length + 1));
 		message.writeInt(length);
-		for (int i = 0; i < length; i++) {
-			message.writeInt(ints[i]);
+		while (iterator.moveNext()) {
+			message.writeInt((Integer)iterator.current());
 		}
 		return message;
-	}
+    }
 
 	public final MsgD getWriterForInt(Transaction a_trans, int id) {
 		MsgD message = getWriterForLength(a_trans, Const4.INT_LENGTH);

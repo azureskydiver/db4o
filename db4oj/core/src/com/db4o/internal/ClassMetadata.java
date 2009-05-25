@@ -517,12 +517,31 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         });
     }
     
-    public final void collectIDs(CollectIdContext context, String fieldName) {
-        if(! standardReferenceTypeHandlerIsUsed()){
-            throw new IllegalStateException();
-        }
-        ((StandardReferenceTypeHandler)correctHandlerVersion(context)).collectIDs(context, fieldName);
+    public final void collectIDs(CollectIdContext context, final String fieldName) {
+        collectIDs(context, new Predicate4<ClassAspect>() {
+        	public boolean match(ClassAspect candidate) {
+        		return fieldName.equals(candidate.getName());
+        	}
+        });
         
+    }
+    
+    public final void collectIDs(CollectIdContext context) {
+        collectIDs(context, new Predicate4<ClassAspect>() {
+        	public boolean match(ClassAspect candidate) {
+        		return true;
+        	}
+        });
+        
+    }
+
+	private void collectIDs(CollectIdContext context, final Predicate4<ClassAspect> predicate) {
+	    if(! standardReferenceTypeHandlerIsUsed()){
+        	throw new IllegalStateException();
+        }
+		((StandardReferenceTypeHandler)correctHandlerVersion(context)).collectIDs(
+        		context,
+        		predicate);
     }
     
     public void collectIDs(final QueryingReadContext context) {
@@ -1121,23 +1140,27 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
             shareObjectReference(obj, context.objectReference());
             
             onInstantiate(context, obj);
+            if (context.activationDepth().mode().isPrefetch()) {
+                context.objectReference().setStateDeactivated();
+            	return obj;
+            }
 
             if (!context.activationDepth().requiresActivation()) {
                 context.objectReference().setStateDeactivated();
-            } else {
-                obj = activate(context);
+                return obj;
             }
-        } else {
-            if (activatingActiveObject(context.activationDepth().mode(), context.objectReference())) {
-            	ActivationDepth child = context.activationDepth().descend(this);
-                if (child.requiresActivation()) {
-                    cascadeActivation(new ActivationContext4(context.transaction(), obj, child));
-                }
-            } else {
-                obj = activate(context);
-            }
+            
+            return activate(context);
         }
-        return obj;
+        
+        if (activatingActiveObject(context.activationDepth().mode(), context.objectReference())) {
+        	ActivationDepth child = context.activationDepth().descend(this);
+            if (child.requiresActivation()) {
+                cascadeActivation(new ActivationContext4(context.transaction(), obj, child));
+            }
+            return obj;
+        }
+        return activate(context);
     }
 
 	protected final void onInstantiate(UnmarshallingContext context, Object obj) {
@@ -1327,10 +1350,6 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 
     public int ownLength() {
         return MarshallerFamily.current()._class.marshalledLength(_container, this);
-    }
-    
-    public final int prefetchActivationDepth(){
-    	return 1;
     }
     
     void purge() {

@@ -6,7 +6,7 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public class IntIterator4Impl implements IntIterator4 { 
+public class IntIterator4Impl implements FixedSizeIntIterator4 { 
 	
 	private final int _count;
 	private int[] _content;
@@ -41,5 +41,9 @@ public class IntIterator4Impl implements IntIterator4 {
 	public void reset() {
 		_current = -1;
 	}
+
+	public int size() {
+		return _count;
+    }
 
 }

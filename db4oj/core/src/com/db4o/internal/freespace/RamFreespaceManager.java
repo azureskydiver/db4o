@@ -63,12 +63,11 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
     public void free(final Slot slot) {
     	
     	int address = slot.address();
-    	int length = slot.length();
-        
         if (address <= 0) {
         	throw new IllegalArgumentException();
         }
         
+        int length = slot.length();
         if(DTrace.enabled){
             DTrace.FREESPACEMANAGER_RAM_FREE.logLength(address, length);
         }
@@ -163,7 +162,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
     private void read(StatefulBuffer reader) {
         FreeSlotNode.sizeLimit = blockedDiscardLimit();
         _freeBySize = new TreeReader(reader, new FreeSlotNode(0), true).read();
-        final Tree.ByRef addressTree = new Tree.ByRef();
+        final ByRef<Tree> addressTree = ByRef.newInstance();
         if (_freeBySize != null) {
             _freeBySize.traverse(new Visitor4() {
                 public void visit(Object a_object) {
@@ -176,7 +175,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
     }
     
     void read(Slot slot){
-        if(slot.address() == 0){
+        if(slot.isNull()){
             return;
         }
         StatefulBuffer reader = _file.readWriterByAddress(transaction(), slot.address(), slot.length());

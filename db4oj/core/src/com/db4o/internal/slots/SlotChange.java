@@ -112,7 +112,7 @@ public class SlotChange extends TreeInt {
 	}
 
 	public boolean isDeleted() {
-		return isSetPointer() && (_newSlot.address() == 0);
+		return isSetPointer() && _newSlot.isNull();
 	}
 	
 	public boolean isNew() {

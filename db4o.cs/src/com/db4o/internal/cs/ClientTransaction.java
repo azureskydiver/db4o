@@ -6,7 +6,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.messages.*;
 
-final class ClientTransaction extends Transaction {
+public final class ClientTransaction extends Transaction {
 
     private final ClientObjectContainer i_client;
     

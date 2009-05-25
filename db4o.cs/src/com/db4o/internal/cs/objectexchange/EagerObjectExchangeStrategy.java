@@ -4,6 +4,7 @@ package com.db4o.internal.cs.objectexchange;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.cs.*;
 
 public class EagerObjectExchangeStrategy implements ObjectExchangeStrategy {
 
@@ -17,7 +18,7 @@ public class EagerObjectExchangeStrategy implements ObjectExchangeStrategy {
 	   return new EagerObjectWriter(_config, transaction).write(ids, maxCount);
     }
 
-	public FixedSizeIntIterator4 unmarshall(Transaction transaction, ByteArrayBuffer reader) {
+	public FixedSizeIntIterator4 unmarshall(ClientTransaction transaction, ByteArrayBuffer reader) {
 		return new EagerObjectReader(transaction, reader).iterator();
     }
 

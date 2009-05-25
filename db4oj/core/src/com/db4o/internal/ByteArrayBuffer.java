@@ -257,10 +257,6 @@ public class ByteArrayBuffer implements ReadWriteBuffer {
 		return _offset;
 	}
 	
-	public void seekCurrentInt(){
-	    seek(readInt());
-	}
-	
 	public void ensureSize(int size){
 		if(size == _buffer.length){
 			return;

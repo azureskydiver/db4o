@@ -17,19 +17,11 @@ import com.db4o.query.*;
 public class EventPlatform {
 
 	public static void triggerQueryEvent(final Transaction transaction, final Event4Impl e, final Query q) {
-		trigger(e, new Runnable() {
-			public void run() {
-				e.trigger(new QueryEventArgs(transaction, q));
-			}
-		});
+		e.trigger(new QueryEventArgs(transaction, q));
 	}
 
 	public static void triggerClassEvent(final Event4Impl e, final ClassMetadata clazz) {
-		trigger(e, new Runnable() {
-			public void run() {
-				e.trigger(new ClassEventArgs(clazz));
-			}
-		});
+		e.trigger(new ClassEventArgs(clazz));
 	}
 
 	public static boolean triggerCancellableObjectEventArgs(final Transaction transaction, final Event4Impl e, final Object o) {

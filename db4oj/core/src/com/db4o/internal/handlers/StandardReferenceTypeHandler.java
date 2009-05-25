@@ -250,7 +250,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
 		}
 	}
 
-	protected final void traverseAllAspects(MarshallingInfo context, TraverseAspectCommand command) {
+	public final void traverseAllAspects(MarshallingInfo context, TraverseAspectCommand command) {
     	int currentSlot = 0;
         
     	ClassMetadata classMetadata = classMetadata();
@@ -338,16 +338,15 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
         return cloned;
     }
     
-    public void collectIDs(final CollectIdContext context, final String fieldName) {
+    public void collectIDs(final CollectIdContext context, final Predicate4<ClassAspect> predicate) {
         TraverseAspectCommand command = new TraverseAspectCommand() {
             public void processAspect(ClassAspect aspect, int currentSlot, boolean isNull, ClassMetadata containingClass) {
                 if(isNull) {
                     return;
                 }
-                if (fieldName.equals(aspect.getName())) {
+                if (predicate.match(aspect)) {
                     aspect.collectIDs(context);
-                } 
-                else {
+                } else {
                     aspect.incrementOffset(context);
                 }
             }
