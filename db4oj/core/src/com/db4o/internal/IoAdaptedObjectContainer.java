@@ -15,7 +15,7 @@ import com.db4o.io.*;
 /**
  * @exclude
  */
-public class IoAdaptedObjectContainer extends LocalObjectContainer {
+public class IoAdaptedObjectContainer extends LocalObjectContainer implements EmbeddedObjectContainer{
 
     private final String _fileName;
 

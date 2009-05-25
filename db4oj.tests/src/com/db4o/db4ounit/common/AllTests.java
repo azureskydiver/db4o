@@ -47,6 +47,7 @@ public class AllTests extends ComposibleTestSuite {
 						com.db4o.db4ounit.common.reflect.AllTests.class,
 						com.db4o.db4ounit.common.regression.AllTests.class,
 						com.db4o.db4ounit.common.querying.AllTests.class,
+						com.db4o.db4ounit.common.sessions.AllTests.class,
 						com.db4o.db4ounit.common.set.AllTests.class,
 						com.db4o.db4ounit.common.soda.AllTests.class,
 						com.db4o.db4ounit.common.stored.AllTests.class,

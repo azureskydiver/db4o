@@ -19,7 +19,8 @@ public class SingleMessagePrefetchingStrategy implements PrefetchingStrategy {
 	private SingleMessagePrefetchingStrategy() {
 	}
 
-	public int prefetchObjects(ClientObjectContainer container,
+	public int prefetchObjects(ClientObjectContainer container, 
+			Transaction trans, 
 			IntIterator4 ids, Object[] prefetched, int prefetchCount) {
 		int count = 0;
 
@@ -30,7 +31,7 @@ public class SingleMessagePrefetchingStrategy implements PrefetchingStrategy {
 			}
 			int id = ids.currentInt();
 			if (id > 0) {
-                Object obj = container.transaction().objectForIdFromCache(id);
+                Object obj = trans.objectForIdFromCache(id);
                 if(obj != null){
                     prefetched[count] = obj;
                 }else{
@@ -41,7 +42,6 @@ public class SingleMessagePrefetchingStrategy implements PrefetchingStrategy {
 		}
 
 		if (idsToGet.size() > 0) {
-		    Transaction trans = container.transaction();
 		    final ByteArrayBuffer[] buffers = container.readObjectSlots(trans, idArrayFor(idsToGet));
 		    for (int i=0; i<buffers.length; i++) {
 		    	final Pair<Integer, Integer> pair = idsToGet.get(i);

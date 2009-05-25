@@ -140,7 +140,7 @@ public class TransparentActivationSupport implements ConfigurationItem {
     }
 
 	private boolean isEmbeddedClient(final ObjectContainer objectContainer) {
-	    return objectContainer instanceof EmbeddedClientObjectContainer;
+	    return objectContainer instanceof ObjectContainerSession;
     }
 
 	private final class TADiagnosticProcessor {

@@ -420,7 +420,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	public abstract Transaction newTransaction(Transaction parentTransaction, TransactionalReferenceSystem referenceSystem);
 	
 	public Transaction newUserTransaction(){
-	    return newTransaction(systemTransaction(), null);
+	    return newTransaction(systemTransaction(), createReferenceSystem());
 	}
 	
     public abstract long currentVersion();

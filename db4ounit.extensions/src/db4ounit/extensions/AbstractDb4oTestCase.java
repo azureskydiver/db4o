@@ -44,7 +44,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	//       is part of the core. When it is, all occurences of this 
 	//       method should be replaced with    isEmbeddedClientServer() 
 	protected boolean isMTOC(){
-	    return fixture().db() instanceof EmbeddedClientObjectContainer;
+	    return fixture().db() instanceof ObjectContainerSession;
 	}
     
     protected void reopen() throws Exception{
