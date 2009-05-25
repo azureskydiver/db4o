@@ -5,10 +5,11 @@ import com.db4o.db4ounit.common.api.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
 public class RandomAccessFileStorageFactoryTestCase extends TestWithTempFile {
 	
-	private final Storage subject = TestPlatform.newPersistentStorage();
+	private final Storage subject = Db4oUnitPlatform.newPersistentStorage();
 	
 	public void testExistsWithUnexistentFile() {
 		Assert.isFalse(subject.exists(tempFile()));

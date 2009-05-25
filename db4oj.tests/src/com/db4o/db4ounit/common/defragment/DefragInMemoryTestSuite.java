@@ -12,6 +12,7 @@ import com.db4o.io.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 import db4ounit.fixtures.*;
 
 public class DefragInMemoryTestSuite extends FixtureBasedTestSuite {
@@ -41,7 +42,7 @@ public class DefragInMemoryTestSuite extends FixtureBasedTestSuite {
 		return new FixtureProvider[] {
 				new SimpleFixtureProvider(STORAGE_SPEC_FIXTURE,
 						new StorageSpec("memory", null),
-						new StorageSpec("file", TestPlatform.newPersistentStorage())
+						new StorageSpec("file", Db4oUnitPlatform.newPersistentStorage())
 				)
 		};
 	}
