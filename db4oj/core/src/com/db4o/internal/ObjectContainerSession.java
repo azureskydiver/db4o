@@ -24,7 +24,7 @@ import com.db4o.types.*;
  * @exclude
  * @sharpen.partial
  */
-public class EmbeddedClientObjectContainer implements InternalObjectContainer, TransientClass, ObjectContainerSpec   {
+public class ObjectContainerSession implements InternalObjectContainer, TransientClass, ObjectContainerSpec   {
 
     
     protected final LocalObjectContainer _server;
@@ -33,13 +33,13 @@ public class EmbeddedClientObjectContainer implements InternalObjectContainer, T
     
     private boolean _closed = false;
     
-    public EmbeddedClientObjectContainer(LocalObjectContainer server, Transaction trans) {
+    public ObjectContainerSession(LocalObjectContainer server, Transaction trans) {
         _server = server;
         _transaction = trans;
         _transaction.setOutSideRepresentation(this);
     }
     
-    public EmbeddedClientObjectContainer(LocalObjectContainer server) {
+    public ObjectContainerSession(LocalObjectContainer server) {
         this(server, server.newTransaction(server.systemTransaction(), server.createReferenceSystem()));
     }
 

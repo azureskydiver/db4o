@@ -16,7 +16,7 @@ import db4ounit.extensions.*;
 public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase {
 	
 	public static void main(String[] args) {
-		new FieldIndexProcessorTestCase().runSolo();
+		new FieldIndexProcessorTestCase().runAll();
 	}
 	
 	protected void configure(Configuration config) {
@@ -304,10 +304,6 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 
 	private FieldIndexProcessorResult executeProcessor(final Query query) {
 		return createProcessor(query).run();
-	}
-
-	private Transaction transactionFromQuery(Query query) {
-		return ((QQuery)query).getTransaction();
 	}
 
 	private BTree btree(){

@@ -55,7 +55,7 @@ public class Db4oEmbedded {
 	 * is set to false.
 	 * @throws DatabaseReadOnlyException database was configured as read-only.
 	 */
-	public static final ObjectContainer openFile(EmbeddedConfiguration config,
+	public static final EmbeddedObjectContainer openFile(EmbeddedConfiguration config,
 			String databaseFileName) throws Db4oIOException,
 			DatabaseFileLockedException, IncompatibleFileFormatException,
 			OldFormatException, DatabaseReadOnlyException {

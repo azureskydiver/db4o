@@ -18,7 +18,7 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public abstract class LocalObjectContainer extends ExternalObjectContainer implements InternalObjectContainer{
+public abstract class LocalObjectContainer extends ExternalObjectContainer implements InternalObjectContainer, EmbeddedObjectContainer{
     
     private static final int DEFAULT_FREESPACE_ID = 0;
 
@@ -856,6 +856,10 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		synchronized(lock()) {
 			return clazz.indexEntryCount(trans);
 		}
+	}
+	
+	public ObjectContainer openSession(){
+		return new ObjectContainerSession(this);
 	}
 	
 }

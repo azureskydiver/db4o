@@ -3,6 +3,7 @@
 package com.db4o.internal.cs;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 
 
 /**
@@ -10,6 +11,6 @@ import com.db4o.foundation.*;
  */
 public interface PrefetchingStrategy {
 
-	int prefetchObjects(ClientObjectContainer container, IntIterator4 ids, Object[] prefetched, int prefetchCount);
+	int prefetchObjects(ClientObjectContainer container, Transaction trans, IntIterator4 ids, Object[] prefetched, int prefetchCount);
 
 }

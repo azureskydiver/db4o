@@ -9,13 +9,13 @@ import com.db4o.ext.*;
 
 public class ObjectContainerFactory {
 	
-	public static ObjectContainer openObjectContainer(Configuration config,
+	public static EmbeddedObjectContainer openObjectContainer(Configuration config,
 			String databaseFileName) throws OldFormatException {		
 		
 		Config4Impl.assertIsNotTainted(config);
 		
 		emitDebugInfo();		
-		ObjectContainer oc = new IoAdaptedObjectContainer(config, databaseFileName);	
+		EmbeddedObjectContainer oc = new IoAdaptedObjectContainer(config, databaseFileName);	
 		Messages.logMsg(config, 5, databaseFileName);
 		return oc;
 	}

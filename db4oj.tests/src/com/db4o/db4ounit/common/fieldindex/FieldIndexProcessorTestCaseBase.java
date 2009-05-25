@@ -71,6 +71,7 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 	}
 
 	protected int[] mapToObjectIds(Query itemQuery, int[] foos) {
+		final Transaction trans = transactionFromQuery(itemQuery);
 		int[] lookingFor = IntArrays4.clone(foos);
 		
 		int[] objectIds = new int[foos.length];
@@ -80,7 +81,7 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 			for (int i = 0; i < lookingFor.length; i++) {
 				if(lookingFor[i] == item.getFoo()){
 					lookingFor[i] = -1;
-					objectIds[i] = (int) db().getID(item);
+					objectIds[i] = (int) ((ObjectContainerBase)db()).getID(trans, item);
 					break;
 				}
 			}
@@ -120,5 +121,11 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 		});
 		visitor.assertExpectations();
 	}
+	
+	protected Transaction transactionFromQuery(Query query) {
+		return ((QQuery)query).getTransaction();
+	}
+
+
 
 }

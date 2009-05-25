@@ -225,7 +225,7 @@ public class Defragment {
 		LocalObjectContainer targetDB = (LocalObjectContainer) Db4o.openFile(db4oConfig, config.origPath());
 		try {
 			Db4oDatabase identity = (Db4oDatabase) targetDB
-					.getByID(targetIdentityID);
+					.getByID(targetDB.systemTransaction(), targetIdentityID);
 			targetDB.setIdentity(identity);
 			targetDB.systemData().uuidIndexId(targetUuidIndexID);
 		} finally {

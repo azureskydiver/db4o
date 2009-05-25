@@ -19,9 +19,9 @@ public class EmbeddedClientObjectContainerTestCase extends Db4oTestWithTempFile 
 
     private LocalObjectContainer _server;
 
-    protected EmbeddedClientObjectContainer _client1;
+    protected ExtObjectContainer _client1;
 
-    protected EmbeddedClientObjectContainer _client2;
+    protected ExtObjectContainer _client2;
 
     private static final String ORIGINAL_NAME = "original";
     
@@ -48,6 +48,14 @@ public class EmbeddedClientObjectContainerTestCase extends Db4oTestWithTempFile 
         public Item(String name) {
             _name = name;
         }
+    }
+    
+    public void testReferenceSystemIsolation(){
+    	Item item = new Item("one");
+    	_client1.store(item);
+    	_client1.commit();
+    	Item client2Item = retrieveItemFromClient2();
+    	Assert.areNotSame(item, client2Item);
     }
     
     public void testSetAndCommitIsolation() {
@@ -103,7 +111,7 @@ public class EmbeddedClientObjectContainerTestCase extends Db4oTestWithTempFile 
                 closed.value = true;
             }
         };
-        EmbeddedClientObjectContainer client = new EmbeddedClientObjectContainer(_server, trans);
+        ObjectContainerSession client = new ObjectContainerSession(_server, trans);
         
         // FIXME: close needs to unregister reference system
         //        also for crashed clients 
@@ -350,7 +358,7 @@ public class EmbeddedClientObjectContainerTestCase extends Db4oTestWithTempFile 
         Assert.isGreater(1, _client1.version());
     }
 
-    private void assertItemCount(EmbeddedClientObjectContainer client, int count) {
+    private void assertItemCount(ExtObjectContainer client, int count) {
         Query query = client.query();
         query.constrain(Item.class);
         ObjectSet result = query.execute();
@@ -376,12 +384,9 @@ public class EmbeddedClientObjectContainerTestCase extends Db4oTestWithTempFile 
     	EmbeddedConfiguration config = newConfiguration();
         config.common().objectClass(Item.class).generateUUIDs(true);
         
-        // ExtObjectServer server = Db4o.openServer(config, FILENAME, 0);
-        // EmbeddedClientObjectContainer container = server.openClient();
-        
         _server = (LocalObjectContainer) Db4oEmbedded.openFile(config, tempFile());
-        _client1 = new EmbeddedClientObjectContainer(_server);
-        _client2 = new EmbeddedClientObjectContainer(_server);
+        _client1 = new ObjectContainerSession(_server);
+        _client2 = new ObjectContainerSession(_server);
     }
 
     public void tearDown() throws Exception {

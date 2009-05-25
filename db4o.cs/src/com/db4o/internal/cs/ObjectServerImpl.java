@@ -274,7 +274,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	public synchronized ObjectContainer openClient() {
 		checkClosed();
 		synchronized (_container.lock()) {
-		    return new EmbeddedClientObjectContainer(_container);
+		    return new ObjectContainerSession(_container);
 		}
 	}
 	
