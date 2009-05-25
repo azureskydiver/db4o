@@ -1,8 +1,10 @@
-/* Copyright (C) 2004 - 2006 Versant Inc. http://www.db4o.com */
+/* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
 
 package db4ounit.extensions;
 
 import java.lang.reflect.*;
+
+import com.db4o.io.*;
 
 /**
  * Platform dependent code goes here.
@@ -21,4 +23,7 @@ public class Db4oUnitPlatform {
 		return false;
 	}
 
+	public static Storage newPersistentStorage() {
+		return new FileStorage();
+	}
 }

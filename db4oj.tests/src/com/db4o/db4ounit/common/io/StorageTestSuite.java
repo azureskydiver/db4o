@@ -3,7 +3,7 @@ package com.db4o.db4ounit.common.io;
 
 import com.db4o.io.*;
 
-import db4ounit.*;
+import db4ounit.extensions.*;
 import db4ounit.fixtures.*;
 
 /**
@@ -20,9 +20,9 @@ public class StorageTestSuite extends FixtureTestSuiteDescription {
 		return new FixtureProvider[] {
 				new EnvironmentProvider(),
 				new SubjectFixtureProvider(new Object[] {
-						TestPlatform.newPersistentStorage(),
+						Db4oUnitPlatform.newPersistentStorage(),
 						new MemoryStorage(),
-						new CachingStorage(TestPlatform.newPersistentStorage()),
+						new CachingStorage(Db4oUnitPlatform.newPersistentStorage()),
 						new IoAdapterStorage(new RandomAccessFileAdapter()),
 				})			
 		};
