@@ -52,13 +52,9 @@ public class QueryStatsTestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(0, _stats.activationCount());
 		result.next();
 		
-		if (isClientServer()  && !isMTOC()) {
-			Assert.areEqual(10, _stats.activationCount());
-		} else {
-			Assert.areEqual(1, _stats.activationCount());
-			result.next();
-			Assert.areEqual(2, _stats.activationCount());
-		}
+		Assert.areEqual(1, _stats.activationCount());
+		result.next();
+		Assert.areEqual(2, _stats.activationCount());
 	}
 
 	public void testExecutionTime() {
