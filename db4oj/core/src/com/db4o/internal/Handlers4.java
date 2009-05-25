@@ -101,8 +101,7 @@ public class Handlers4 {
 
 	public static int calculateLinkLength(TypeHandler4 handler){
 	    if (handler == null) {
-	        // must be ClassMetadata
-	        return Const4.ID_LENGTH;
+	        throw new ArgumentNullException();
 	    }
 	    if(handler instanceof TypeFamilyTypeHandler){
 	        return ((TypeFamilyTypeHandler) handler).linkLength();
@@ -247,7 +246,7 @@ public class Handlers4 {
 		return transaction.wrap(value);
 	}
 
-	public static void collectIdsInternal(CollectIdContext context, final TypeHandler4 handler, int linkLength) {
+	public static void collectIdsInternal(CollectIdContext context, final TypeHandler4 handler, int linkLength, boolean doWithSlotIndirection) {
         if(! (isCascading(handler))){
         	ReadBuffer buffer = context.buffer();
 			buffer.seek(buffer.offset() + linkLength);
@@ -273,12 +272,17 @@ public class Handlers4 {
         }
         
         final QueryingReadContext queryingReadContext = new QueryingReadContext(context.transaction(), context.handlerVersion(), context.buffer(), 0, context.collector());
-        slotFormat.doWithSlotIndirection(queryingReadContext, handler, new Closure4() {
+        final Closure4 collectIDsFromQueryingContext = new Closure4() {
             public Object run() {
                 ((CascadingTypeHandler) handler).collectIDs(queryingReadContext);
                 return null;
             }
-        });
+        };
+        if (doWithSlotIndirection) {
+        	slotFormat.doWithSlotIndirection(queryingReadContext, handler, collectIDsFromQueryingContext);
+        } else {
+        	collectIDsFromQueryingContext.run();
+        }
     }
 
 	public static boolean isIndirectedIndexed(TypeHandler4 handler) {

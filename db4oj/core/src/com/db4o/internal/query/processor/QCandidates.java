@@ -303,14 +303,6 @@ public final class QCandidates implements Visitor4 {
                     	return Iterators.SKIP;
                     }
                     context.classMetadata().collectIDs(context, fieldName);
-                    
-//                    Tree idTree = oh.classMetadata().collectFieldIDs(
-//                            oh._marshallerFamily,
-//                            oh._headerAttributes,
-//                            null,
-//                            reader,
-//                            fieldName);
-
 					return new TreeKeyIterator(context.ids());
 				}
 			}));

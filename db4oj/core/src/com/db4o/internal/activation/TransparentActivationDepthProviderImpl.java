@@ -19,7 +19,7 @@ public class TransparentActivationDepthProviderImpl implements ActivationDepthPr
 		if (isTAAware(classMetadata))
 			return new NonDescendingActivationDepth(mode);
 		if (mode.isPrefetch())
-			return new FixedActivationDepth(classMetadata.prefetchActivationDepth(), mode);
+			return new FixedActivationDepth(1, mode);
 		return new DescendingActivationDepth(this, mode);
 	}
 
@@ -43,10 +43,8 @@ public class TransparentActivationDepthProviderImpl implements ActivationDepthPr
 	private void flushOnQueryStarted(InternalObjectContainer container) {
 	    final EventRegistry registry = EventRegistryFactory.forObjectContainer(container);
 		registry.queryStarted().addListener(new EventListener4() {
-			public void onEvent(Event4 e, EventArgs args) {
-				
+			public void onEvent(Event4 e, final EventArgs args) {
 				objectsModifiedIn(transactionFrom(args)).flush();
-				
             }
 		});
     }

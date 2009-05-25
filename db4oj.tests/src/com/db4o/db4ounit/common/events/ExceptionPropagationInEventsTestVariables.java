@@ -144,8 +144,8 @@ public class ExceptionPropagationInEventsTestVariables {
 		new EventInfo("query", // 11
 						new Procedure4<EventRegistry>() {
 							public void apply(EventRegistry eventRegistry) {
-								eventRegistry.queryStarted().addListener(new EventListener4() {
-									public void onEvent(Event4 e, EventArgs args) {
+								eventRegistry.queryStarted().addListener(new EventListener4<QueryEventArgs>() {
+									public void onEvent(Event4 e, QueryEventArgs args) {
 										throw new NotImplementedException();				
 									}			
 								});
@@ -155,8 +155,8 @@ public class ExceptionPropagationInEventsTestVariables {
 		new EventInfo("query", // 12
 						new Procedure4<EventRegistry>() {
 							public void apply(EventRegistry eventRegistry) {
-								eventRegistry.queryFinished().addListener(new EventListener4() {
-									public void onEvent(Event4 e, EventArgs args) {
+								eventRegistry.queryFinished().addListener(new EventListener4<QueryEventArgs>() {
+									public void onEvent(Event4 e, QueryEventArgs args) {
 										throw new NotImplementedException();				
 									}			
 								});

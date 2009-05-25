@@ -87,7 +87,7 @@ public class StringHandler implements ValueTypeHandler, IndexableTypeHandler, Bu
     }
 
 	private boolean isInvalidSlot(Slot slot) {
-		return (slot.address() == 0) && (slot.length() == 0);
+		return slot.isNull();
 	}
     
     public void writeIndexEntry(Context context, ByteArrayBuffer writer, Object entry) {

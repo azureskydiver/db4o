@@ -12,6 +12,9 @@ import com.db4o.marshall.*;
 public class Null implements Indexable4, PreparedComparison{
     
     public static final Null INSTANCE = new Null();
+    
+    private Null() {
+    }
 
     public int compareTo(Object a_obj) {
         if(a_obj == null) {

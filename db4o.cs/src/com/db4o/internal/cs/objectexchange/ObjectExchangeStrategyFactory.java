@@ -2,14 +2,10 @@
 
 package com.db4o.internal.cs.objectexchange;
 
-import com.db4o.foundation.*;
 
 public class ObjectExchangeStrategyFactory {
 
 	public static ObjectExchangeStrategy forConfig(final ObjectExchangeConfiguration config) {
-		if (config.prefetchDepth > 1) {
-			throw new NotImplementedException("config.prefetchDepth must be either 0 or 1");
-		}
         if (config.prefetchDepth > 0) {
     		return new EagerObjectExchangeStrategy(config);
     	}

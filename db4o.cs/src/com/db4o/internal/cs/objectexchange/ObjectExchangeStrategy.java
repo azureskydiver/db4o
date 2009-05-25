@@ -4,12 +4,13 @@ package com.db4o.internal.cs.objectexchange;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.cs.*;
 
 public interface ObjectExchangeStrategy {
 
 	ByteArrayBuffer marshall(LocalTransaction transaction, IntIterator4 ids, int maxCount);
 
-	FixedSizeIntIterator4 unmarshall(Transaction transaction, ByteArrayBuffer reader);
+	FixedSizeIntIterator4 unmarshall(ClientTransaction transaction, ByteArrayBuffer reader);
 
 
 }

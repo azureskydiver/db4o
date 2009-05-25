@@ -42,8 +42,9 @@ public class ObjectSetTestCase extends AbstractDb4oTestCase {
 	public void testObjectsCantBeSeenAfterDelete() {
 		final Transaction trans1 = newTransaction();
 		final Transaction trans2 = newTransaction();
-		final ObjectSet os = queryItems(trans1);
 		deleteItemAndCommit(trans2, "foo");
+		
+		final ObjectSet os = queryItems(trans1);
 		assertItems(new String[] { "bar", "baz" }, os);
 	}
 	

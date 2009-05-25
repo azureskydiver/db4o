@@ -95,12 +95,17 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
 	private boolean _topLevelCallCompleted;
 	
-	private final Environment _environment = Environments.newConventionBasedEnvironment();
+	private final Environment _environment;
 	
 	protected ObjectContainerBase(Configuration config) {
     	_lock = new Object();
     	_config = (Config4Impl)config;
+    	_environment = Environments.newConventionBasedEnvironment(this, config);
     }
+	
+	protected Environment environment() {
+		return _environment;
+	}
 
 	protected final void open() throws OldFormatException {
 		withEnvironment(new Runnable() { public void run() {
@@ -126,7 +131,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		}});
 	}
 	
-	protected void withEnvironment(Runnable runnable) {
+	public void withEnvironment(Runnable runnable) {
 		runWith(_environment, runnable);
 	}
 
@@ -1352,7 +1357,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     
     public abstract ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id, boolean lastCommitted);
     
-    public abstract StatefulBuffer[] readWritersByIDs(Transaction a_ta, int[] ids);
+    public abstract ByteArrayBuffer[] readSlotBuffers(Transaction a_ta, int[] ids);
 
     private void reboot() {
         commit(null);
@@ -1366,8 +1371,12 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     
     public final void refresh(Transaction trans, Object obj, int depth) {
         synchronized (_lock) {
-        	activate(trans, obj, refreshActivationDepth(depth));
+        	refreshInternal(trans, obj, depth);
         }
+    }
+
+	protected void refreshInternal(Transaction trans, Object obj, int depth) {
+	    activate(trans, obj, refreshActivationDepth(depth));
     }
 
 	private ActivationDepth refreshActivationDepth(int depth) {
@@ -1639,6 +1648,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 			stillToSet(trans, ref, updateDepth);
 
         } else {
+        	assertNotInCallback();
             if (canUpdate()) {
                 if(checkJustSet){
                     if( (! ref.isNew())  && handledInCurrentTopLevelCall(ref)){
@@ -1653,6 +1663,12 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
         processPendingClassUpdates();
         return ref.getID();
+    }
+
+	private void assertNotInCallback() {
+	    if(InCallbackState._inCallback.value()) {
+	    	throw new IllegalStateException("Objects must not be updated in callback");
+	    }
     }
 
     private final boolean updateDepthSufficient(int updateDepth){
@@ -1903,7 +1919,10 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     	generateCallIDOnTopLevel();
     	if(_stackDepth == 0){
 	    	if(!_topLevelCallCompleted) {
+	    		
 	    		shutdownObjectContainer();
+	    		
+	    		
 	    	}
     	}
     }

@@ -2,43 +2,27 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.cs.objectexchange.*;
 
-public final class MReadMultipleObjects extends MsgD implements MessageWithResponse {
+public class MReadMultipleObjects extends MsgD implements MessageWithResponse {
 	
 	public final boolean processAtServer() {
-		int size = readInt();
-		MsgD[] ret = new MsgD[size];
-		int length = (1 + size) * Const4.INT_LENGTH;
-		synchronized (streamLock()) {
-			for (int i = 0; i < size; i++) {
-				int id = this._payLoad.readInt();
-				try {
-					StatefulBuffer bytes = stream().readWriterByID(transaction(),id);
-					if(bytes != null){
-						ret[i] = Msg.OBJECT_TO_CLIENT.getWriter(bytes);
-						length += ret[i]._payLoad.length();
-					}
-				} catch (Exception e) {
-					if(Debug4.atHome){
-						e.printStackTrace();
-					}
-				}
+		int prefetchDepth = readInt();
+		int prefetchCount = readInt();
+		IntIterator4 ids = new FixedSizeIntIterator4Base(prefetchCount) {
+			@Override
+			protected int nextInt() {
+				return readInt();
 			}
-		}
+		};
 		
-		MsgD multibytes = Msg.READ_MULTIPLE_OBJECTS.getWriterForLength(transaction(), length);
-		multibytes.writeInt(size);
-		for (int i = 0; i < size; i++) {
-			if(ret[i] == null){
-				multibytes.writeInt(0);
-			}else{
-				multibytes.writeInt(ret[i]._payLoad.length());
-				multibytes._payLoad.append(ret[i]._payLoad._buffer);
-			}
-		}
-		write(multibytes);
+		final ObjectExchangeStrategy strategy = ObjectExchangeStrategyFactory.forConfig(new ObjectExchangeConfiguration(prefetchDepth, prefetchCount));
+		ByteArrayBuffer buffer = strategy.marshall((LocalTransaction) transaction(), ids, prefetchCount);
+		
+		MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForBuffer(transaction(), buffer);
+		write(msg);
 		return true;
 	}
 }

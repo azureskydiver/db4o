@@ -64,9 +64,13 @@ class ClientQueryResultIterator implements Iterator4 {
 	}
 
 	private void prefetch() {
-		ensureObjectCacheAllocated(prefetchCount());
-		_remainingObjects = _prefetchingStrategy.prefetchObjects(stream(), _ids, _prefetchedObjects, prefetchCount());
-		_prefetchRight=_remainingObjects;
+		_client.stream().withEnvironment(new Runnable() { public void run() {
+			
+			ensureObjectCacheAllocated(prefetchCount());
+			_remainingObjects = _prefetchingStrategy.prefetchObjects(stream(), _ids, _prefetchedObjects, prefetchCount());
+			_prefetchRight=_remainingObjects;
+			
+		}});
 	}
 
 	private int prefetchCount() {

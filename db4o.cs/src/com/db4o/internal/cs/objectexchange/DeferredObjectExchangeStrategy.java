@@ -4,6 +4,7 @@ package com.db4o.internal.cs.objectexchange;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.cs.*;
 
 public class DeferredObjectExchangeStrategy implements ObjectExchangeStrategy {
 
@@ -27,7 +28,7 @@ public class DeferredObjectExchangeStrategy implements ObjectExchangeStrategy {
 	   return buffer;
     }
 
-	public FixedSizeIntIterator4 unmarshall(Transaction transaction, final ByteArrayBuffer reader) {
+	public FixedSizeIntIterator4 unmarshall(ClientTransaction transaction, final ByteArrayBuffer reader) {
 		final int size = reader.readInt();
 		return new FixedSizeIntIterator4() {
 			

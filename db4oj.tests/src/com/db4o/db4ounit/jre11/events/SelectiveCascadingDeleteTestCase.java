@@ -49,10 +49,6 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 					
 					// restart from the child
 					container.delete(item.child);
-					
-					// and disconnect it
-					item.child = null;
-					container.store(item);
 				}
 			}
 		});

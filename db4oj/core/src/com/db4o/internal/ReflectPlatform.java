@@ -36,8 +36,7 @@ public class ReflectPlatform {
 		try {
 			return clazz.newInstance();
 		} catch (Throwable t) {
-			// Class.newInstances() propagates any exception thrown by the
-			// nullary constructor, including a checked exception.
+//			throw new RuntimeException(t);
 		}
 		return null;
 	}

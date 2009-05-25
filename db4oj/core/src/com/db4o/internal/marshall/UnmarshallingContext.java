@@ -33,14 +33,6 @@ public class UnmarshallingContext extends ObjectReferenceContext implements Hand
     }
     
     public Object read(){
-        return readInternal(false);
-    }
-    
-    public Object readPrefetch(){
-        return readInternal(true);
-    }
-    
-    private final Object readInternal(boolean doAdjustActivationDepthForPrefetch){
         if(! beginProcessing()){
             return _object;
         }
@@ -61,7 +53,7 @@ public class UnmarshallingContext extends ObjectReferenceContext implements Hand
         
         _reference.classMetadata(classMetadata);
         
-        adjustActivationDepth(doAdjustActivationDepthForPrefetch);
+        adjustActivationDepth();
         
         if(_checkIDTree){
             Object objectInCacheFromClassCreation = transaction().objectForIdFromCache(objectID());
@@ -81,27 +73,19 @@ public class UnmarshallingContext extends ObjectReferenceContext implements Hand
         endProcessing();
         return _object;
     }
-
-	private void invalidSlot() {
+    
+    private void invalidSlot() {
 		if(container().config().recoveryMode()){
 			return;
 		}
 		throw new InvalidSlotException("id: " + objectID());
 	}
 
-	private void adjustActivationDepth(boolean doAdjustActivationDepthForPrefetch) {
-		if(doAdjustActivationDepthForPrefetch){
-            adjustActivationDepthForPrefetch();
-        } else {
-        	if (UnknownActivationDepth.INSTANCE == _activationDepth) {
-        		_activationDepth = container().defaultActivationDepth(classMetadata());
-        	}
+	private void adjustActivationDepth() {
+		if (UnknownActivationDepth.INSTANCE == _activationDepth) {
+			_activationDepth = container().defaultActivationDepth(classMetadata());
         }
 	}
-
-    private void adjustActivationDepthForPrefetch() {
-        activationDepth(activationDepthProvider().activationDepthFor(classMetadata(), ActivationMode.PREFETCH));
-    }
     
     private ActivationDepthProvider activationDepthProvider() {
     	return container().activationDepthProvider();

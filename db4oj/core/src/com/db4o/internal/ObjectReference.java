@@ -228,12 +228,19 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return va.i_version;
     }
 
-
 	public final ClassMetadata classMetadata() {
 		return _class;
 	}
 	
     public void classMetadata(ClassMetadata classMetadata) {
+    	if (_class == classMetadata) {
+    		return;
+    	}
+    	
+    	if (_class != null) {
+    		throw new IllegalStateException("Object types aren't supposed to change!");
+    	}
+    	
         _class = classMetadata;
     }
 
@@ -270,12 +277,10 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return context.read();
 	}
 
-	public final Object readPrefetch(Transaction trans, ByteArrayBuffer buffer) {
-	    return readPrefetch(trans, buffer, Const4.ADD_TO_ID_TREE);
-	}
-
 	public Object readPrefetch(Transaction trans, ByteArrayBuffer buffer, final int addToIDTree) {
-	    return new UnmarshallingContext(trans, buffer, this, addToIDTree, false).readPrefetch();
+	    final UnmarshallingContext context = new UnmarshallingContext(trans, buffer, this, addToIDTree, false);
+	    context.activationDepth(new FixedActivationDepth(1, ActivationMode.PREFETCH));
+		return context.read();
     }
 
 	public final void readThis(Transaction trans, ByteArrayBuffer buffer) {
@@ -387,9 +392,6 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		
 		// preventing recursive
 		if ( !beginProcessing() ) {
-			if(InCallbackState._inCallback.value()) {
-				throw new IllegalStateException("Objects must not be updated in callback");
-			}
 		    return;
 		}
 		    
@@ -803,7 +805,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		    int id = getID();
 		    String str = "ObjectReference\nID=" + id;
 	        Object obj = getObject();
-		    if(_class != null){
+		    if(obj == null && _class != null){
 		        ObjectContainerBase container = _class.container();
 		        if(container != null && id > 0){
 		            obj = container.peekPersisted(container.transaction(), id, container.defaultActivationDepth(classMetadata()), true).toString();

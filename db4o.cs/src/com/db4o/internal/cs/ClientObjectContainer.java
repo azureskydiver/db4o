@@ -2,10 +2,14 @@
 
 package com.db4o.internal.cs;
 
+import static com.db4o.foundation.Environments.*;
+
 import java.io.*;
+import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.cs.caching.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
@@ -74,6 +78,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			// do nothing
 		}
 	};
+
+	private boolean _refreshing = false;
 	
 	public interface MessageListener {
 		public void onMessage(Msg msg);
@@ -535,63 +541,109 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	public final StatefulBuffer readWriterByID(Transaction a_ta, int a_id, boolean lastCommitted) {
 		MsgD msg = Msg.READ_OBJECT.getWriterForInts(a_ta, new int[]{a_id, lastCommitted?1:0});
 		write(msg);
-		StatefulBuffer bytes = ((MsgObject) expectedResponse(Msg.OBJECT_TO_CLIENT))
-				.unmarshall();
+		StatefulBuffer bytes = ((MsgObject) expectedResponse(Msg.OBJECT_TO_CLIENT)).unmarshall();
 		if(bytes != null){
 			bytes.setTransaction(a_ta);
 		}
 		return bytes;
 	}
-
-	public final StatefulBuffer[] readWritersByIDs(Transaction a_ta, int[] ids) {
-		MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(a_ta, ids, ids.length);
-		write(msg);
-		MsgD response = (MsgD) expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
-		int count = response.readInt();
-		StatefulBuffer[] yapWriters = new StatefulBuffer[count];
-		for (int i = 0; i < count; i++) {
-			MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT.publicClone();
-			mso.setTransaction(a_ta);
-			mso.payLoad(response.payLoad().readYapBytes());
-			if (mso.payLoad() != null) {
-				mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH);
-				yapWriters[i] = mso.unmarshall(Const4.MESSAGE_LENGTH);
-				yapWriters[i].setTransaction(a_ta);
-			}
+	
+	@Override
+	protected void refreshInternal(final Transaction trans, final Object obj, final int depth) {
+		_refreshing  = true;
+		try {
+			super.refreshInternal(trans, obj, depth);
+		} finally {
+			_refreshing = false;
 		}
-		return yapWriters;
 	}
 
-	public final ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id, boolean lastCommitted) {
-		MsgD msg = Msg.READ_READER_BY_ID.getWriterForInts(a_ta, new int[]{a_id, lastCommitted?1:0});
-		write(msg);
-		return ((MReadBytes) expectedResponse(Msg.READ_BYTES)).unmarshall();
+	@Override
+	public final ByteArrayBuffer[] readSlotBuffers(final Transaction transaction, final int[] ids) {
+		return readSlotBuffers(transaction, ids, 1);
+	}
+	
+	public final ByteArrayBuffer[] readObjectSlots(final Transaction transaction, final int[] ids) {
+		
+		final int prefetchDepth = config().prefetchDepth();
+		return readSlotBuffers(transaction, ids, prefetchDepth);
+    }
+
+	private ByteArrayBuffer[] readSlotBuffers(final Transaction transaction, final int[] ids, final int prefetchDepth) {
+	    final Map<Integer, ByteArrayBuffer> buffers = new HashMap(ids.length);
+        
+        withEnvironment(new Runnable() { public void run() {
+        	
+        	final ArrayList<Integer> cacheMisses = populateSlotBuffersFromCache(transaction, ids, buffers);
+			fetchMissingSlotBuffers(transaction, cacheMisses, buffers, prefetchDepth);
+        	
+        }});
+        
+        return packSlotBuffers(ids, buffers);
+    }
+
+	public final ByteArrayBuffer readReaderByID(final Transaction transaction, final int id, final boolean lastCommitted) {
+		
+		final ByRef<ByteArrayBuffer> result = ByRef.newInstance();
+		withEnvironment(new Runnable() { public void run() {
+			
+			if (lastCommitted || _refreshing) {
+				result.value = fetchSlotBuffer(transaction, id, lastCommitted);
+				return;
+			}
+			
+			final ClientSlotCache slotCache = my(ClientSlotCache.class);
+			final ByteArrayBuffer cached = slotCache.get(transaction, id);
+			if (cached != null) {
+				result.value = cached;
+				return;
+			}
+			
+			final ByteArrayBuffer slot = fetchSlotBuffer(transaction, id, lastCommitted);
+			slotCache.add(transaction, id, slot);
+			result.value = slot;
+			
+		}});
+		return result.value;
 	}
 
 	public final ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id) {
 		return readReaderByID(a_ta, a_id, false); 
 	}
 
-	private AbstractQueryResult readQueryResult(Transaction trans) {
-		AbstractQueryResult queryResult = null;
-		ByteArrayBuffer reader = expectedByteResponse(Msg.QUERY_RESULT);
-		int queryResultID = reader.readInt();
-		if(queryResultID > 0){
-			queryResult = new LazyClientQueryResult(trans, this, queryResultID);
-		}else{
-			queryResult = new ClientQueryResult(trans);
-		}
+	private AbstractQueryResult readQueryResult(final Transaction trans) {
 		
-		queryResult.loadFromIdReader(idIteratorFor(trans, reader));
-		return queryResult;
+		final ByRef<AbstractQueryResult> result = ByRef.newInstance();
+		
+		withEnvironment(new Runnable() { public void run() {
+			
+			ByteArrayBuffer reader = expectedByteResponse(Msg.QUERY_RESULT);
+			int queryResultID = reader.readInt();
+			AbstractQueryResult queryResult = queryResultFor(trans, queryResultID);
+			
+			queryResult.loadFromIdReader(idIteratorFor(trans, reader));
+			
+			result.value = queryResult;
+			
+		}});
+		return result.value;
 	}
 
 	public FixedSizeIntIterator4 idIteratorFor(Transaction trans, ByteArrayBuffer reader) {
-		return objectExchangeStrategy().unmarshall(trans, reader);
+		return idIteratorFor(objectExchangeStrategy(), trans, reader);
+    }
+
+	private FixedSizeIntIterator4 idIteratorFor(final ObjectExchangeStrategy strategy, Transaction trans,
+            ByteArrayBuffer reader) {
+	    return strategy.unmarshall((ClientTransaction)trans, reader);
     }
 
 	private ObjectExchangeStrategy objectExchangeStrategy() {
-		return ObjectExchangeStrategyFactory.forConfig(new ObjectExchangeConfiguration(prefetchDepth(), prefetchCount()));
+		return ObjectExchangeStrategyFactory.forConfig(defaultObjectExchangeConfiguration());
+    }
+
+	private ObjectExchangeConfiguration defaultObjectExchangeConfiguration() {
+	    return new ObjectExchangeConfiguration(prefetchDepth(), prefetchCount());
     }
 
 	void readThis() {
@@ -818,14 +870,19 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		writeMsg(msg, false);
     }
 
-    public long[] getIDsForClass(Transaction trans, ClassMetadata clazz){
+    public long[] getIDsForClass(final Transaction trans, ClassMetadata clazz){
     	MsgD msg = Msg.GET_INTERNAL_IDS.getWriterForInts(trans, clazz.getID(), prefetchDepth(), prefetchCount());
     	write(msg);
     	
-    	ByteArrayBuffer reader = expectedByteResponse(Msg.ID_LIST);
-    	FixedSizeIntIterator4 idIterator = idIteratorFor(trans, reader);
+    	final ByRef<long[]> result = ByRef.newInstance();
     	
-    	return toLongArray(idIterator);
+    	withEnvironment(new Runnable() { public void run() {
+	    	ByteArrayBuffer reader = expectedByteResponse(Msg.ID_LIST);
+	    	FixedSizeIntIterator4 idIterator = idIteratorFor(trans, reader);
+	    	result.value = toLongArray(idIterator);
+	    }});
+    	
+    	return result.value;
     }
 
 	private long[] toLongArray(FixedSizeIntIterator4 idIterator) {
@@ -967,5 +1024,75 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			_config.batchMessages(configuredBatchMessages);
 		}
 	}
+
+	private void sendReadMultipleObjectsMessage(MReadMultipleObjects message, final Transaction transaction, final int prefetchDepth, final List<Integer> idsToRead) {
+	    MsgD msg = message.getWriterForLength(transaction, Const4.INT_LENGTH + Const4.INT_LENGTH + Const4.ID_LENGTH * idsToRead.size());
+	    msg.writeInt(prefetchDepth);
+	    msg.writeInt(idsToRead.size());
+	    for (int id : idsToRead) {
+	    	msg.writeInt(id);
+	    }
+	    write(msg);
+    }
+
+	private AbstractQueryResult queryResultFor(final Transaction trans, int queryResultID) {
+	    if (queryResultID > 0) { 
+	    	return new LazyClientQueryResult(trans, ClientObjectContainer.this, queryResultID);
+	    }
+	    return new ClientQueryResult(trans);
+    }
+
+	private void fetchMissingSlotBuffers(final Transaction transaction, final ArrayList<Integer> missing,
+            final Map<Integer, ByteArrayBuffer> buffers, int prefetchDepth) {
+	    if (missing.size() == 0) {
+	    	return;
+	    }
+	    
+    	final int safePrefetchDepth = Math.max(1, prefetchDepth);
+    	final ClientSlotCache slotCache = my(ClientSlotCache.class);
+    	
+    	sendReadMultipleObjectsMessage(Msg.READ_MULTIPLE_OBJECTS, transaction, safePrefetchDepth, missing);
+    	
+    	final MsgD response = (MsgD) expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
+    	final FixedSizeIntIterator4 requestedIds = idIteratorFor(ObjectExchangeStrategyFactory.forConfig(new ObjectExchangeConfiguration(safePrefetchDepth, missing.size())), transaction, response.payLoad());
+    	while (requestedIds.moveNext()) {
+    		final int id = requestedIds.currentInt();
+			final ByteArrayBuffer slot = slotCache.get(transaction, id);
+    		if (slot == null) {
+    			throw new IllegalStateException();
+    		}
+    		buffers.put(id, slot);
+    	}
+    }
+	
+	private ByteArrayBuffer[] packSlotBuffers(final int[] ids, final Map<Integer, ByteArrayBuffer> buffers) {
+        final ByteArrayBuffer[] returnValue = new ByteArrayBuffer[buffers.size()];
+    	for (int i=0; i<ids.length; ++i) {
+    		returnValue[i] = buffers.get(ids[i]);
+    	}
+        return returnValue;
+    }
+
+	private ArrayList<Integer> populateSlotBuffersFromCache(final Transaction transaction, final int[] ids,
+            final Map<Integer, ByteArrayBuffer> buffers) {
+	    final ArrayList<Integer> missing = new ArrayList();
+	    
+	    for (int id: ids) {
+	    	final ByteArrayBuffer slot = my(ClientSlotCache.class).get(transaction, id);
+	    	if (null == slot) {
+	    		missing.add(id);
+	    	} else {
+	    		buffers.put(id, slot);
+	    	}
+	    }
+	    return missing;
+    }
+
+	private ByteArrayBuffer fetchSlotBuffer(final Transaction transaction, final int id, final boolean lastCommitted) {
+	    MsgD msg = Msg.READ_READER_BY_ID.getWriterForInts(transaction, new int[]{id, lastCommitted?1:0});
+	    write(msg);
+	    final ByteArrayBuffer buffer = ((MReadBytes) expectedResponse(Msg.READ_BYTES)).unmarshall();
+	    return buffer;
+    }
 
 }

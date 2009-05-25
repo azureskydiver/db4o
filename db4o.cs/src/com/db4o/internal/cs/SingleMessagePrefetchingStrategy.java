@@ -2,9 +2,10 @@
 
 package com.db4o.internal.cs;
 
+import java.util.*;
+
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.messages.*;
 
 /**
  * Prefetchs multiples objects at once (in a single message).
@@ -22,10 +23,7 @@ public class SingleMessagePrefetchingStrategy implements PrefetchingStrategy {
 			IntIterator4 ids, Object[] prefetched, int prefetchCount) {
 		int count = 0;
 
-		int toGet = 0;
-		int[] idsToGet = new int[prefetchCount];
-		int[] position = new int[prefetchCount];
-
+		List<Pair<Integer, Integer>> idsToGet = new ArrayList<Pair<Integer, Integer>>();
 		while (count < prefetchCount) {
 			if (!ids.moveNext()) {
 				break;
@@ -36,37 +34,36 @@ public class SingleMessagePrefetchingStrategy implements PrefetchingStrategy {
                 if(obj != null){
                     prefetched[count] = obj;
                 }else{
-					idsToGet[toGet] = id;
-					position[toGet] = count;
-					toGet++;
+					idsToGet.add(Pair.of(id, count));
 				}
 				count++;
 			}
 		}
 
-		if (toGet > 0) {
+		if (idsToGet.size() > 0) {
 		    Transaction trans = container.transaction();
-			MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(trans, idsToGet, toGet);
-			container.write(msg);
-			MsgD response = (MsgD) container.expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
-			int embeddedMessageCount = response.readInt();
-			for (int i = 0; i < embeddedMessageCount; i++) {
-				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT.publicClone();
-				mso.setTransaction(trans);
-				mso.payLoad(response.payLoad().readYapBytes());
-				if (mso.payLoad() != null) {
-					mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH);
-					StatefulBuffer reader = mso.unmarshall(Const4.MESSAGE_LENGTH);
-                    Object obj = trans.objectForIdFromCache(idsToGet[i]);
-                    if(obj != null){
-                        prefetched[position[i]] = obj;
-                    }else{
-    					prefetched[position[i]] = new ObjectReference(idsToGet[i]).readPrefetch(trans, reader);
-                    }
+		    final ByteArrayBuffer[] buffers = container.readObjectSlots(trans, idArrayFor(idsToGet));
+		    for (int i=0; i<buffers.length; i++) {
+		    	final Pair<Integer, Integer> pair = idsToGet.get(i);
+		    	final int id = pair.first;
+		    	final int position = pair.second;
+				Object obj = trans.objectForIdFromCache(id);
+		    	if(obj != null){
+		    		prefetched[position] = obj;
+		    	}else{
+		    		prefetched[position] = new ObjectReference(id).readPrefetch(trans, buffers[i], Const4.ADD_TO_ID_TREE);
 				}
 			}
 		}
 		return count;
 	}
+
+	private int[] idArrayFor(List<Pair<Integer, Integer>> idsToGet) {
+	    final int[] idArray = new int[idsToGet.size()];
+	    for (int i=0; i<idArray.length; ++i) {
+	    	idArray[i] = idsToGet.get(i).first;
+	    }
+	    return idArray;
+    }
 
 }

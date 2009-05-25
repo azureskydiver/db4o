@@ -155,7 +155,7 @@ public abstract class BigNumberTypeHandler<TBigNumber> implements ValueTypeHandl
 	}
 
 	private boolean isInvalidSlot(Slot slot) {
-		return (slot.address() == 0) && (slot.length() == 0);
+		return slot.isNull();
 	}
 
 	private TBigNumber unmarshall(final ReadBuffer buffer) {

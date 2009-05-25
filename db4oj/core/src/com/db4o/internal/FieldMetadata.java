@@ -361,7 +361,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
         
         final TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(context, getHandler());
-        Handlers4.collectIdsInternal(context, handler, linkLength());
+        Handlers4.collectIdsInternal(context, handler, linkLength(), true);
     }
 
     void configure(ReflectClass clazz, boolean isPrimitive) {

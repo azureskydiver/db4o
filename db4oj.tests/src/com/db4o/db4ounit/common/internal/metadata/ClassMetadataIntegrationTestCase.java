@@ -1,6 +1,6 @@
 /* Copyright (C) 2006  Versant Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.common.internal;
+package com.db4o.db4ounit.common.internal.metadata;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -34,6 +34,7 @@ public class ClassMetadataIntegrationTestCase extends AbstractDb4oTestCase {
 		});
 		Assert.isTrue(expectedNames.isEmpty());
 	}
+	
 	
 	public void testPrimitiveArrayMetadataIsPrimitiveTypeMetadata() {
 		ClassMetadata byteArrayMetadata = container().produceClassMetadata(reflectClass(byte[].class));

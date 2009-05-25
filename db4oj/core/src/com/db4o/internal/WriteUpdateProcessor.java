@@ -87,7 +87,7 @@ class WriteUpdateProcessor {
 	}
 
 	private boolean handledAsReAdd(Slot slot) {
-		if(slot != null  && slot.address() > 0){
+		if(slot != null  && !slot.isNull()){
 			return false;
 		}
         _clazz.addToIndex(localTransaction(), _id);

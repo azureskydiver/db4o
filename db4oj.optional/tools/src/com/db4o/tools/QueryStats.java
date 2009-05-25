@@ -18,15 +18,15 @@ public class QueryStats {
 	
 	protected final StopWatch _watch = new StopWatch();
 	
-	private final EventListener4 _queryStarted = new EventListener4() {			
-		public void onEvent(Event4 e, EventArgs args) {
+	private final EventListener4 _queryStarted = new EventListener4<QueryEventArgs>() {			
+		public void onEvent(Event4 e, QueryEventArgs args) {
 			_activationCount = 0;
 			_watch.start();
 		}			
 	};
 	
-	private final EventListener4 _queryFinished = new EventListener4() {
-		public void onEvent(Event4 e, EventArgs args) {
+	private final EventListener4 _queryFinished = new EventListener4<QueryEventArgs>() {
+		public void onEvent(Event4 e, QueryEventArgs args) {
 			_watch.stop();
 		}
 	};

@@ -2,6 +2,7 @@
 
 package com.db4o.internal.handlers;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
@@ -16,7 +17,7 @@ public interface FieldAwareTypeHandler extends ReferenceTypeHandler, VersionedTy
     
     public void addFieldIndices(ObjectIdContextImpl context, Slot oldSlot);
 
-    public void collectIDs(CollectIdContext context, String fieldName);
+    public void collectIDs(CollectIdContext context, Predicate4<ClassAspect> predicate);
     
     public void deleteMembers(DeleteContextImpl deleteContext, boolean isUpdate);
 

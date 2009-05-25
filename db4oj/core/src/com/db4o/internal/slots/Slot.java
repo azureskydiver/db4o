@@ -88,5 +88,10 @@ public class Slot {
 	public Slot append(Slot slot) {
 		return new Slot(address(), _length + slot.length());
 	}
+
+	public boolean isNull() {
+		return address() == 0
+			|| length() == 0;
+    }
 	
 }

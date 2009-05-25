@@ -165,7 +165,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     public abstract String fileName();
     
     public void free(Slot slot) {
-        if(slot.address() == 0){
+        if(slot.isNull()){
         	return;
         	
         	// TODO: This should really be an IllegalArgumentException but old database files 
@@ -419,19 +419,19 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return readWriterByID(a_ta, a_id, false);
     }
     
-    public StatefulBuffer[] readWritersByIDs(Transaction a_ta, int ids[]) {
-		StatefulBuffer[] yapWriters = new StatefulBuffer[ids.length];
+    @Override
+    public ByteArrayBuffer[] readSlotBuffers(Transaction a_ta, int ids[]) {
+    	ByteArrayBuffer[] yapWriters = new ByteArrayBuffer[ids.length];
 		for (int i = 0; i < ids.length; ++i) {
 			if (ids[i] == 0) {
 				yapWriters[i] = null;
 			} else {
-				yapWriters[i] = (StatefulBuffer) readReaderOrWriterByID(a_ta,
-						ids[i], false);
+				yapWriters[i] = readReaderOrWriterByID(a_ta, ids[i], true);
 			}
 		}
 		return yapWriters;
 	}
-
+    
     public ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id, boolean lastCommitted) {
         return readReaderOrWriterByID(a_ta, a_id, true, lastCommitted);
     }
@@ -464,6 +464,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     public ByteArrayBuffer readSlotBuffer(Slot slot) {
     	ByteArrayBuffer reader = new ByteArrayBuffer(slot.length());
 		reader.readEncrypt(this, slot.address());
+		reader.skip(0);
 		return reader;
     }
 
@@ -472,7 +473,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			return null;
 		}
 
-		if (slot.address() == 0) {
+		if (slot.isNull()) {
 			return null;
 		}
 

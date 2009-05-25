@@ -2,7 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
@@ -52,7 +51,7 @@ public class CollectIdContext extends ObjectHeaderContext {
         return _objectHeader.classMetadata();
     }
 
-    public Tree ids(){
+    public TreeInt ids(){
         return _collector.ids();
     }
 

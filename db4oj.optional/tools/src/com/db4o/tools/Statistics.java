@@ -96,7 +96,7 @@ public class Statistics {
 		printHeader("CLASSES");
 		System.out.println("Number of objects per class:");
 		
-		final Tree.ByRef ids = new Tree.ByRef(new TreeInt(0));
+		final ByRef<Tree<Integer>> ids = ByRef.<Tree<Integer>>newInstance(new TreeInt(0));
 
 		if (internalClasses.length > 0) {
 			Tree all = new TreeStringObject(internalClasses[0].getName(), internalClasses[0]);

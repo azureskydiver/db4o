@@ -10,14 +10,14 @@ import com.db4o.foundation.*;
  * @exclude
  * @sharpen.ignore
  */
-public class Event4Impl implements Event4 {
+public class Event4Impl<T extends EventArgs> implements Event4<T> {
 	
 	private Collection4 _listeners;
 	
 	public Event4Impl() {
 	}
 	
-	public final void addListener(EventListener4 listener) {
+	public final void addListener(EventListener4<T> listener) {
 		validateListener(listener);
 		
 		Collection4 listeners = new Collection4();
@@ -46,7 +46,7 @@ public class Event4Impl implements Event4 {
 	protected void onListenerAdded() {
 	}
 
-	public final void removeListener(EventListener4 listener) {
+	public final void removeListener(EventListener4<T> listener) {
 		validateListener(listener);
 		
 		if (null == _listeners) {
@@ -60,21 +60,18 @@ public class Event4Impl implements Event4 {
 		_listeners = listeners;
 	}
 	
-	/**
-	 * @sharpen.meta.method ($target(null, $arguments[0]))
-	 */
-	public final void trigger(EventArgs args) {
+	public final void trigger(T args) {
 		if (null == _listeners) {
 			return;
 		}
 		Iterator4 iterator = _listeners.iterator();
 		while (iterator.moveNext()) {
-			EventListener4 listener = (EventListener4)iterator.current();
+			EventListener4<T> listener = (EventListener4<T>)iterator.current();
 			onEvent(listener, this, args);
 		}
 	}
 	
-	private void onEvent(EventListener4 listener, Event4 e, EventArgs args) {
+	private void onEvent(EventListener4<T> listener, Event4 e, T args) {
 		try {
 			listener.onEvent(e, args);
 		} catch(Db4oException db4oException) {
@@ -84,7 +81,7 @@ public class Event4Impl implements Event4 {
 		}
 	}
 	
-	private void validateListener(EventListener4 listener) {
+	private void validateListener(EventListener4<T> listener) {
 		if (null == listener) {
 			throw new ArgumentNullException();
 		}

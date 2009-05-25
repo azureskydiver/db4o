@@ -27,7 +27,7 @@ public class ObjectHeaderContext extends AbstractReadContext implements Marshall
         return headerAttributes().isNull(fieldIndex);
     }
 
-    public final int handlerVersion() {
+    public int handlerVersion() {
         return _objectHeader.handlerVersion();
     }
     

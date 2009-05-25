@@ -30,7 +30,7 @@ public class LocalTransaction extends Transaction {
 	
 	private final CommittedCallbackDispatcher _committedCallbackDispatcher;
 	
-	private Cache4<Integer, ByteArrayBuffer> _slotCache;
+	private final Cache4<Integer, ByteArrayBuffer> _slotCache;
 	
 	private TransactionLogHandler _transactionLogHandler = new EmbeddedTransactionLogHandler();
 
@@ -47,17 +47,19 @@ public class LocalTransaction extends Transaction {
     			callbacks().commitOnCompleted(LocalTransaction.this, committedInfo);
     		}
     	};
-    	if(isSystemTransaction()){
-	    	int slotCacheSize = config().slotCacheSize();
-			if(slotCacheSize > 0){
-	    		_slotCache = CacheFactory.new2QCache(slotCacheSize);
-	    	}
-    	}
-    	if(_slotCache == null){
-    		_slotCache = new NullCache4<Integer, ByteArrayBuffer>();
-    	}
+    	_slotCache = createSlotCache();
     	initializeTransactionLogHandler();
 	}
+
+	private Cache4<Integer, ByteArrayBuffer> createSlotCache() {
+	    if(isSystemTransaction()) {
+	    	int slotCacheSize = config().slotCacheSize();
+	    	if (slotCacheSize > 0) {
+	    		return CacheFactory.new2QCache(slotCacheSize);
+	    	}
+    	}
+    	return new NullCache4<Integer, ByteArrayBuffer>();
+    }
 	
 	private void initializeTransactionLogHandler() {
     	if(! isSystemTransaction()){

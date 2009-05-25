@@ -8,15 +8,12 @@ public class ExceptionPropagationInEventsTestSuite extends FixtureBasedTestSuite
 
 	@Override
 	public FixtureProvider[] fixtureProviders() {
-		return new FixtureProvider[] 
-		                           {
-										new Db4oFixtureProvider(),
-										ExceptionPropagationInEventsTestVariables.EventProvider,
-		                           };
+		return new FixtureProvider[] { new Db4oFixtureProvider(),
+		        ExceptionPropagationInEventsTestVariables.EventProvider, };
 	}
 
 	public Class[] testUnits() {
 		return new Class[] { ExceptionPropagationInEventsTestUnit.class };
 	}
-	
+
 }

@@ -336,10 +336,6 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
         _source.incrementOffset(bytes.length);
     }
 
-    public void seekCurrentInt() {
-        seek(readInt());
-    }
-
     public ReadBuffer buffer() {
         return _source;
     }

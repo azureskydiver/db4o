@@ -19,10 +19,21 @@ public class STArrMixedTestCase extends com.db4o.db4ounit.common.soda.util.SodaB
 		return new Object[]{
 			new STArrMixedTestCase(),
 			new STArrMixedTestCase(new Object[0]),
-			new STArrMixedTestCase(new Object[] {new Integer(0), new Integer(0), "foo", new Boolean(false)}),
+			new STArrMixedTestCase(new Object[] {new ReferenceMarker(), new Integer(0), new Integer(0), "foo", new Boolean(false)}),
 			new STArrMixedTestCase(new Object[] {new Integer(1), new Integer(17), new Integer(Integer.MAX_VALUE - 1), "foo", "bar"}),
 			new STArrMixedTestCase(new Object[] {new Integer(3), new Integer(17), new Integer(25), new Integer(Integer.MAX_VALUE - 2)})
 		};
+	}
+	
+	public static class ReferenceMarker {
+	}
+	
+	public void testContainsReference() {
+		Query q = newQuery();
+		
+		q.constrain(STArrMixedTestCase.class);
+		q.descend("arr").constrain(retrieveOnlyInstance(ReferenceMarker.class));
+		expect(q, new int[] { 2 });
 	}
 	
 	public void testDefaultContainsInteger(){

@@ -24,7 +24,7 @@ public interface EventRegistry {
 	 * @return event
 	 * @see QueryEventArgs
 	 */
-	public Event4 queryStarted();
+	public Event4<QueryEventArgs> queryStarted();
 	
 	/**
 	 * This event is fired upon a query end and can be used to gather 
@@ -35,7 +35,7 @@ public interface EventRegistry {
 	 * @return event
 	 * @see QueryEventArgs
 	 */
-	public Event4 queryFinished();
+	public Event4<QueryEventArgs> queryFinished();
 
 	/**
 	 * This event is fired before an object is saved for the first time.

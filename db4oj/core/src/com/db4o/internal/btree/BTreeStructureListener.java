@@ -9,7 +9,7 @@ import com.db4o.internal.*;
  */
 public interface BTreeStructureListener {
 
-	public void notifySplit(Transaction trans, BTreeNode originalNode, BTreeNode newRightNode);
+	void notifySplit(Transaction trans, BTreeNode originalNode, BTreeNode newRightNode);
 
 	void notifyDeleted(Transaction trans, BTreeNode node);
 
