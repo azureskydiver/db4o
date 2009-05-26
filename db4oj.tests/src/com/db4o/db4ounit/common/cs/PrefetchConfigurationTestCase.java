@@ -79,7 +79,7 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 		
 	}
 	
-	public void testMaxPrefetchingDepthBehavior() {
+	public void _testMaxPrefetchingDepthBehavior() {
 		
 		storeAllAndPurge(
 	        new Item(new Item(new Item())),
