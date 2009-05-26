@@ -3,7 +3,7 @@ package com.db4o.db4ounit.common.reflect;
 
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
-import com.db4o.reflect.generic.GenericArrayClass;
+import com.db4o.reflect.generic.*;
 
 import db4ounit.*;
 

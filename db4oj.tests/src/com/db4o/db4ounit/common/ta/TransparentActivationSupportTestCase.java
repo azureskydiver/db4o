@@ -1,16 +1,13 @@
 /* Copyright (C) 2007   Versant Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.ta;
 
-import com.db4o.activation.ActivationPurpose;
-import com.db4o.events.Event4;
-import com.db4o.events.EventArgs;
-import com.db4o.events.EventListener4;
-import com.db4o.events.ObjectEventArgs;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.foundation.Collection4;
-import com.db4o.internal.activation.TransparentActivationDepthProviderImpl;
+import com.db4o.activation.*;
+import com.db4o.events.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 
 /**
  * 

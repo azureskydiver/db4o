@@ -2,17 +2,15 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.Db4oClientServerTestCase;
-import db4ounit.extensions.Db4oTestCase;
-import db4ounit.extensions.fixtures.Db4oFixtureProvider;
-import db4ounit.fixtures.FixtureTestSuiteDescription;
-import db4ounit.fixtures.SubjectFixtureProvider;
+import db4ounit.*;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
+import db4ounit.fixtures.*;
 
 /**
  * COR-1539  Readding a deleted object from a different client changes database ID in embedded mode

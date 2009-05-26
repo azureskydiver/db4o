@@ -6,6 +6,8 @@ import java.util.*;
 
 import com.db4o.ext.*;
 
+import db4ounit.*;
+
 
 /**
  */
@@ -82,6 +84,7 @@ public class TransientClone {
         Test.ensure(tcm.name.equals(tom.name));
         Test.ensure(tc.ht.get("recurse") == tc);
         Test.ensure(to.ht.get("recurse") == to);
+        Assert.areEqual(to.str, tc.str);
         Test.ensure(tc.str.equals(to.str));
         Test.ensure(tc.myInt == to.myInt);
         Test.ensure(tc.molecules.length == to.molecules.length);
@@ -97,7 +100,6 @@ public class TransientClone {
 
 	private TransientClone peekPersisted(boolean committed) {
 		ExtObjectContainer oc = Test.objectContainer();
-        TransientClone tc = (TransientClone)oc.peekPersisted(this, Integer.MAX_VALUE, committed);
-		return tc;
+        return oc.peekPersisted(this, Integer.MAX_VALUE, committed);
 	}
 }

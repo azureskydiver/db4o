@@ -99,7 +99,7 @@ public class CommonAndLocalConfigurationTestSuite extends FixtureBasedTestSuite 
 			Assert.isFalse(common.optimizeNativeQueries());
 			
 			common.queries().evaluationMode(QueryEvaluationMode.LAZY);
-			Assert.areEqual(QueryEvaluationMode.LAZY, legacy.queryEvaluationMode());
+			Assert.areEqual(QueryEvaluationMode.LAZY, legacy.evaluationMode());
 			
 			// TODO: test reflectWith()
 			

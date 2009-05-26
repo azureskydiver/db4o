@@ -5,9 +5,9 @@ package com.db4o.db4ounit.common.cs;
 
 import java.util.*;
 
+import com.db4o.cs.internal.*;
+import com.db4o.cs.internal.messages.*;
 import com.db4o.events.*;
-import com.db4o.internal.cs.*;
-import com.db4o.internal.cs.messages.*;
 
 class MessageCollector  {
 	

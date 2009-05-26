@@ -685,15 +685,14 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
 
     final void delete(StatefulBuffer buffer, Object obj) {
-        ObjectHeader oh = new ObjectHeader(_container, this, buffer);
         
         Transaction trans = buffer.transaction();
         int id = buffer.getID();
-        ArrayType arrayType = trans.container()._handlers.arrayType(obj);
-        
         removeFromIndex(trans, id);
         
-        DeleteContextImpl context = new DeleteContextImpl(buffer,oh,  classReflector(), null);
+        ArrayType arrayType = trans.container()._handlers.arrayType(obj);
+        ObjectHeader oh = new ObjectHeader(_container, this, buffer);
+        DeleteContextImpl context = new DeleteContextImpl(buffer, oh, classReflector(), null);
         deleteMembers(context, arrayType, false);
     }
 

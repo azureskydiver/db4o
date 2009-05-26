@@ -4,11 +4,11 @@
 package com.db4o.db4ounit.common.acid;
 
 import com.db4o.*;
+import com.db4o.cs.internal.*;
 import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 import com.db4o.query.*;
 
 import db4ounit.*;

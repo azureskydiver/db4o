@@ -4,8 +4,8 @@ package com.db4o.test;
 
 import java.io.*;
 
+import com.db4o.cs.internal.*;
 import com.db4o.ext.*;
-import com.db4o.internal.cs.*;
 
 public class ClientDisconnect {
 	public void testDisconnectThenGet() throws IOException {

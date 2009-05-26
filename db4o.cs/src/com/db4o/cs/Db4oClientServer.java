@@ -3,8 +3,8 @@ package com.db4o.cs;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.cs.config.*;
+import com.db4o.cs.internal.config.*;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.config.*;
 
 /**
  * Factory class to open db4o servers and to connect db4o clients

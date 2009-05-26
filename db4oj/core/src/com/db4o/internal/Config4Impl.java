@@ -187,7 +187,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     private static ClientServerFactory defaultClientServerFactory() {
     	try {
     		// FIXME: circular cs dependancy. Improve.
-			 return (ClientServerFactory) Class.forName("com.db4o.internal.cs.config.ClientServerFactoryImpl").newInstance();
+			 return (ClientServerFactory) Class.forName("com.db4o.cs.internal.config.ClientServerFactoryImpl").newInstance();
 		} catch (Exception e) {
 			throw new Db4oException("ClientServer jar db4o-[version]-cs-java.jar not in CLASSPATH", e);
 		}
@@ -946,7 +946,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 		_config.put(QUERY_EVALUATION_MODE_KEY, mode);
 	}
 	
-	public QueryEvaluationMode queryEvaluationMode() {
+	public QueryEvaluationMode evaluationMode() {
 		return (QueryEvaluationMode)_config.get(QUERY_EVALUATION_MODE_KEY);
 	}
 	

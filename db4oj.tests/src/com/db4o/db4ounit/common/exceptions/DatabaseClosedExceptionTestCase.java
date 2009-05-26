@@ -43,7 +43,7 @@ public class DatabaseClosedExceptionTestCase extends AbstractDb4oTestCase {
 		db().close();
 		Assert.expect(DatabaseClosedException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				db().delete(null);
+				db().delete(new Item());
 			}
 		});
 	}
@@ -70,7 +70,7 @@ public class DatabaseClosedExceptionTestCase extends AbstractDb4oTestCase {
 		db().close();
 		Assert.expect(DatabaseClosedException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				db().deactivate(null, 1);
+				db().deactivate(new Item(), 1);
 			}
 		});
 	}
@@ -79,7 +79,7 @@ public class DatabaseClosedExceptionTestCase extends AbstractDb4oTestCase {
 		db().close();
 		Assert.expect(DatabaseClosedException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				db().activate(null, 1);
+				db().activate(new Item(), 1);
 			}
 		});
 	}
@@ -88,7 +88,7 @@ public class DatabaseClosedExceptionTestCase extends AbstractDb4oTestCase {
 		db().close();
 		Assert.expect(DatabaseClosedException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				db().queryByExample(null);
+				db().queryByExample(new Item());
 			}
 		});
 	}

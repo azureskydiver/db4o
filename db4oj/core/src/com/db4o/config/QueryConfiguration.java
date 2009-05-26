@@ -88,5 +88,11 @@ public interface QueryConfiguration {
      */
 	public void evaluationMode(QueryEvaluationMode mode);
 	
+	/**
+	 * @see #evaluationMode(QueryEvaluationMode)
+	 * @return the currently configured query evaluation mode
+	 */
+	public QueryEvaluationMode evaluationMode();
+	
 
 }

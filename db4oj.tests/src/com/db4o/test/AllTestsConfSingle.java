@@ -14,7 +14,8 @@ public class AllTestsConfSingle extends TestSuite{
     
     public Class[] tests(){
         return new Class[] {
-        	CallConstructors.class,
+        	TransientClone.class,
+//        	CallConstructors.class,
     	};
     }
 
@@ -41,7 +42,7 @@ public class AllTestsConfSingle extends TestSuite{
     /**
      * use ObjectServer#openClient() instead of Db4o.openClient()
      */
-    public static boolean EMBEDDED_CLIENT = true;
+    public static boolean EMBEDDED_CLIENT = false;
 
     /**
      * run the test against a memory file instead of disc file

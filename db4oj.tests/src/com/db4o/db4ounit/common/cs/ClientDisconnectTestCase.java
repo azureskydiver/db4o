@@ -2,8 +2,8 @@
 
 package com.db4o.db4ounit.common.cs;
 
+import com.db4o.cs.internal.*;
 import com.db4o.ext.*;
-import com.db4o.internal.cs.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;

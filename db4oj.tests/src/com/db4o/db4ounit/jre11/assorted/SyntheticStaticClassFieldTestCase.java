@@ -2,9 +2,9 @@
 
 package com.db4o.db4ounit.jre11.assorted;
 
-import com.db4o.config.Configuration;
+import com.db4o.config.*;
 
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.*;
 
 public class SyntheticStaticClassFieldTestCase extends AbstractDb4oTestCase {
 

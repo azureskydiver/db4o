@@ -2,7 +2,7 @@
 
 package com.db4o.cs.config;
 
-import com.db4o.messaging.MessageRecipient;
+import com.db4o.messaging.*;
 
 
 
