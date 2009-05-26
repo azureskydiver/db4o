@@ -391,7 +391,6 @@
 	</target>
 	
 	<target name="build-silverlight">
-		<!--
 		<if>
 			<equals arg1="${target.framework.version}" arg2="2.0" />
 			<then>
@@ -401,7 +400,6 @@
 				<msb solution="${dir.n.v6}/Db4o-Silverlight" outputPath="${dir.dist.dll.silverlight}" />
 			</else>
 		</if>
-		-->
 	</target>
 	
 	
