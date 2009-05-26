@@ -3,14 +3,15 @@ package com.db4o.db4ounit.common.cs;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.cs.internal.messages.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.cs.messages.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
+@decaf.Remove(decaf.Platform.JDK11)
 public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase implements OptOutAllButNetworkingCS{
 	
 	@Override
@@ -78,6 +79,47 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 		
 	}
 	
+	public void testMaxPrefetchingDepthBehavior() {
+		
+		storeAllAndPurge(
+	        new Item(new Item(new Item())),
+	        new Item(new Item(new Item())),
+	        new Item(new Item(new Item()))); 
+		
+		client().config().prefetchObjectCount(2);
+		client().config().prefetchDepth(Integer.MAX_VALUE);
+		
+		final Query query = client().query();
+        query.constrain(Item.class);
+        query.descend("child").descend("child").constrain(null).not();
+		
+		assertQueryIterationProtocol(query, Msg.QUERY_EXECUTE, new Stimulus[] {
+			new Depth2Stimulus(),
+			new Depth2Stimulus(),
+			new Depth2Stimulus(Msg.READ_MULTIPLE_OBJECTS)
+		});
+    }
+	
+	public void testPrefetchingWithCycles() {
+		
+		final Item a = new Item();
+		final Item b = new Item(a);
+		final Item c = new Item(b);
+		a.child = b;
+		storeAllAndPurge(a, b, c); 
+		
+		client().config().prefetchObjectCount(2);
+		client().config().prefetchDepth(2);
+		
+		final Query query = queryForItemsWithChild();
+		
+		assertQueryIterationProtocol(query, Msg.QUERY_EXECUTE, new Stimulus[] {
+			new Depth2Stimulus(),
+			new Depth2Stimulus(),
+			new Depth2Stimulus(Msg.READ_MULTIPLE_OBJECTS)
+		});
+    }
+	
 	public void testPrefetchingDepth2Behavior() {
 		
 		storeDepth2Graph(); 
@@ -87,7 +129,6 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 		
 		final Query query = queryForItemsWithChild();
 		
-		// TODO: items to level 3
 		assertQueryIterationProtocol(query, Msg.QUERY_EXECUTE, new Stimulus[] {
 			new Depth2Stimulus(),
 			new Depth2Stimulus(),
@@ -122,8 +163,7 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 	    storeAllAndPurge(
 				new Item(new Item()),
 				new Item(new Item()),
-				new Item(new Item()),
-				new Item());
+				new Item(new Item()));
     }
 
 	private void assertPrefetchingBehaviorFor(final Query query, final MsgD expectedFirstMessage) {
@@ -155,7 +195,9 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 			messages.clear();
         }
 		
-		Assert.isFalse(result.hasNext());
+		if (result.hasNext()) {
+			Assert.fail("Unexpected item: " + result.next());
+		}
 		assertMessages(messages);
     }
 	
@@ -196,8 +238,7 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 		// ensures classmetadata exists for query objects
 	    final Query query = client().query();
 	    query.constrain(Item.class);
-	    query.descend("child").constrain(null).not();
-	    query.descend("child").constrain(null);
+	    query.descend("child").descend("child").constrain(null).not();
 		Assert.areEqual(0, query.execute().size());
     }
 
@@ -211,21 +252,34 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 	}
 	
 	private void storeAllAndPurge(Item... items) {
-	    for (Item item : items) {
-			storeAndPurge(item);
-		}
+	    storeAll(items);
+	    purgeAll(items);
 	    client().commit();
     }
 
-	private void storeAndPurge(Item item) {
-	    client().store(item);
-	    purge(item);
+	private void storeAll(Item... items) {
+	    for (Item item : items) {
+			client().store(item);
+		}
     }
 
-	private void purge(Item item) {
+	private void purgeAll(Item... items) {
+	    final HashSet<Item> purged = new HashSet<Item>();
+	    for (Item item : items) {
+			purge(purged, item);
+	    }
+    }
+
+	private void purge(Set<Item> purged, Item item) {
+		if (purged.contains(item)) {
+			return;
+		}
 	    client().purge(item);
-	    if (null != item.child) {
-	    	purge(item.child);
+	    purged.add(item);
+	    
+	    final Item child = item.child;
+		if (null != child) {;
+	    	purge(purged, child);
 	    }
     }
 	

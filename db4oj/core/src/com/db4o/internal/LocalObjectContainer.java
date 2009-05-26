@@ -130,10 +130,13 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
     
     public final AbstractQueryResult newQueryResult(Transaction trans) {
-    	return newQueryResult(trans, config().queryEvaluationMode());
+    	return newQueryResult(trans, config().evaluationMode());
     }
 
     public final AbstractQueryResult newQueryResult(Transaction trans, QueryEvaluationMode mode) {
+    	if (trans == null) {
+    		throw new ArgumentNullException();
+    	}
     	if(mode == QueryEvaluationMode.IMMEDIATE){
         	return new IdListQueryResult(trans);
     	}
@@ -217,7 +220,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
 
     public AbstractQueryResult queryAllObjects(Transaction trans) {
-        return getAll(trans, config().queryEvaluationMode());
+        return getAll(trans, config().evaluationMode());
     }
     
     public AbstractQueryResult getAll(Transaction trans, QueryEvaluationMode mode) {

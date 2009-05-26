@@ -483,6 +483,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	}
 
     public final void delete(Transaction trans, Object obj) throws DatabaseReadOnlyException, DatabaseClosedException {
+    	if (null == obj) {
+    		throw new ArgumentNullException();
+    	}
         synchronized (_lock) {
         	trans = checkTransaction(trans);
         	checkReadOnly();
@@ -1209,7 +1212,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
     public abstract int newUserObject();
     
-    public final Object peekPersisted(Transaction trans, Object obj, ActivationDepth depth, boolean committed) throws DatabaseClosedException {
+    public Object peekPersisted(Transaction trans, Object obj, ActivationDepth depth, boolean committed) throws DatabaseClosedException {
     	
     	// TODO: peekPersisted is not stack overflow safe, if depth is too high. 
     	

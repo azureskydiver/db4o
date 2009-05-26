@@ -9,11 +9,11 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.cs.internal.*;
+import com.db4o.cs.internal.ClientObjectContainer.*;
+import com.db4o.cs.internal.messages.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
-import com.db4o.internal.cs.ClientObjectContainer.*;
-import com.db4o.internal.cs.messages.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;

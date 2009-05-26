@@ -64,7 +64,7 @@ public abstract class QQueryBase implements Unversioned {
 
 	public void captureQueryResultConfig() {
 	    final Config4Impl config = _trans.container().config();
-		_evaluationMode = config.queryEvaluationMode();
+		_evaluationMode = config.evaluationMode();
 		_prefetchDepth = config.prefetchDepth();
         _prefetchCount = config.prefetchObjectCount();
     }

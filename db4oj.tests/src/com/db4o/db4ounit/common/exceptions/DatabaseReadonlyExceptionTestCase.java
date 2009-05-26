@@ -47,7 +47,7 @@ public class DatabaseReadonlyExceptionTestCase
 		configReadOnly();
 		Assert.expect(DatabaseReadOnlyException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				db().delete(null);
+				db().delete(new Item());
 			}
 		});
 	}

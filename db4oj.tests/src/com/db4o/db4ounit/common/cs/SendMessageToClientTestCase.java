@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.common.cs;
 
-import com.db4o.internal.cs.messages.*;
+import com.db4o.cs.internal.messages.*;
 
 import db4ounit.*;
 

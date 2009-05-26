@@ -83,7 +83,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 		});
 	}
 	
-	public void loadFromClassIndex(ClassMetadata clazz) {
+	public void loadFromClassIndex(final ClassMetadata clazz) {
 		final ClassIndexStrategy index = clazz.index();
 		if(index instanceof BTreeClassIndexStrategy){
 			BTree btree = ((BTreeClassIndexStrategy)index).btree();

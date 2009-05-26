@@ -24,7 +24,7 @@ public class GetAllSoda {
         Test.store(new GetAllSoda("two"));
     }
     
-    public void test(){
+    public void testQuery() {
         Query q = Test.query();
         ObjectSet objectSet = q.execute();
         Test.ensure(objectSet.size() >= 2);

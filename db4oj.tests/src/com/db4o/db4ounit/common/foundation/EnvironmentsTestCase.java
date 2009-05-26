@@ -1,10 +1,10 @@
 package com.db4o.db4ounit.common.foundation;
 
+import static com.db4o.foundation.Environments.*;
+
 import com.db4o.foundation.*;
 
 import db4ounit.*;
-
-import static com.db4o.foundation.Environments.*;
 
 public class EnvironmentsTestCase implements TestCase {
 	

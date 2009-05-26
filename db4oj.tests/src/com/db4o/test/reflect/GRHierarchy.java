@@ -10,7 +10,6 @@ import com.db4o.reflect.generic.*;
 import com.db4o.reflect.jdk.*;
 import com.db4o.test.*;
 import com.db4o.test.Test;
-import com.db4o.test.util.*;
 
 import db4ounit.extensions.util.*;
 
