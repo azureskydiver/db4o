@@ -44,7 +44,7 @@ public class DotnetSupport implements ConfigurationItem {
 		if (_addCSSupport) {
 			ConfigurationItem dotNetCS;
 			try {
-				dotNetCS = (ConfigurationItem) Class.forName("com.db4o.internal.cs.config.DotNetSupportClientServer").newInstance();
+				dotNetCS = (ConfigurationItem) Class.forName("com.db4o.cs.internal.config.DotNetSupportClientServer").newInstance();
 			} catch (Exception e) {
 				throw new Db4oException(e);
 			} 
