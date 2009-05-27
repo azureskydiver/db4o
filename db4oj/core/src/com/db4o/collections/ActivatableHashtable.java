@@ -140,7 +140,7 @@ public class ActivatableHashtable<K,V> extends Hashtable<K,V> implements Activat
 	@Override
 	public Collection<V> values() {
 		activate(ActivationPurpose.READ);
-		return super.values();
+		return new ActivatableCollectionDecorator<V>(super.values(), this);
 	}
 	
 	@Override

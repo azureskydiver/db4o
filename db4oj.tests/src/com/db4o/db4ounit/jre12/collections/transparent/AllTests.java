@@ -16,9 +16,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 				com.db4o.db4ounit.jre12.collections.transparent.list.AllTests.class,
 				com.db4o.db4ounit.jre12.collections.transparent.set.AllTests.class,
-				ActivatableHashMapTestCase.class,
-				ActivatableHashtableTestCase.class,
-				ActivatableMapAPITestSuite.class,
+				com.db4o.db4ounit.jre12.collections.transparent.map.AllTests.class,
 		};
 	}
 }

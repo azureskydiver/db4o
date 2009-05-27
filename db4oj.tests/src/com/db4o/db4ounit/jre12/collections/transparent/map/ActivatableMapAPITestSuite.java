@@ -150,6 +150,22 @@ public class ActivatableMapAPITestSuite extends FixtureBasedTestSuite implements
 			IteratorAssert.sameContent(newFilledMap().values().iterator(), singleMap().values().iterator());
 		}
 		
+		public void testRemoveFromValues() throws Exception{
+			Collection<CollectionElement> expectedValues = newFilledMap().values();
+			Object removedElement = removeFirstFrom(expectedValues);
+			singleMap().values().remove(removedElement);
+			reopen();
+			Collection<CollectionElement> actualValues = singleMap().values();
+			IteratorAssert.sameContent(expectedValues.iterator(), actualValues.iterator());
+		}
+
+		private Object removeFirstFrom(
+				Collection<CollectionElement> collection) {
+			CollectionElement removed = collection.iterator().next();
+			collection.remove(removed);
+			return removed;
+		}
+		
 		public void testEquals() {
 			Map<CollectionElement, CollectionElement> expected = newFilledMap();
 			Map<CollectionElement, CollectionElement> map = singleMap();

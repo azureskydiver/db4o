@@ -122,6 +122,14 @@ public class ActivatableListAPITestSuite extends FixtureBasedTestSuite implement
 			IteratorAssert.areEqual(newPlainCollection().subList(0,1).iterator(), singleCollection().subList(0, 1).iterator());
 		}
 		
+		public void testModifiedSubList() throws Exception{
+			singleCollection().subList(0, 1).clear();
+			reopen();
+			List<CollectionElement> expectedCollection = newPlainCollection();
+			expectedCollection.subList(0,1).clear();
+			IteratorAssert.areEqual(expectedCollection.iterator(), singleCollection().iterator());
+		}
+		
 		public void testListIteratorAdd() throws Exception {
 			Element added = new Element("added");
 			List<CollectionElement> list = singleCollection();
