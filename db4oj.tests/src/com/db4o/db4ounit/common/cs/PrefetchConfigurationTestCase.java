@@ -100,23 +100,51 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 		});
     }
 	
-	public void testPrefetchingWithCycles() {
+	public void testPrefetchingWithCyclesAscending() {
 		
-		final Item a = new Item();
-		final Item b = new Item(a);
-		final Item c = new Item(b);
+		final Item a = new Item(1);
+		final Item b = new Item(2);
+		final Item c = new Item(3);
 		a.child = b;
+		b.child = a;
+		c.child = b;
+		
 		storeAllAndPurge(a, b, c); 
 		
 		client().config().prefetchObjectCount(2);
 		client().config().prefetchDepth(2);
 		
 		final Query query = queryForItemsWithChild();
+		query.descend("order").orderAscending();
 		
 		assertQueryIterationProtocol(query, Msg.QUERY_EXECUTE, new Stimulus[] {
 			new Depth2Stimulus(),
 			new Depth2Stimulus(),
 			new Depth2Stimulus(Msg.READ_MULTIPLE_OBJECTS)
+		});
+    }
+	
+	public void testPrefetchingWithCyclesDescending() {
+		
+		final Item a = new Item(1);
+		final Item b = new Item(2);
+		final Item c = new Item(3);
+		a.child = b;
+		b.child = a;
+		c.child = b;
+		
+		storeAllAndPurge(a, b, c); 
+		
+		client().config().prefetchObjectCount(2);
+		client().config().prefetchDepth(2);
+		
+		final Query query = queryForItemsWithChild();
+		query.descend("order").orderDescending();
+		
+		assertQueryIterationProtocol(query, Msg.QUERY_EXECUTE, new Stimulus[] {
+			new Depth2Stimulus(),
+			new Depth2Stimulus(),
+			new Depth2Stimulus()
 		});
     }
 	
@@ -136,7 +164,7 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 		});
     }
 	
-	public void testDepth2WithPrefetching1() {
+	public void testGraphOfDepth2WithPrefetchDepth1() {
 		
 		storeDepth2Graph(); 
 		
@@ -291,7 +319,12 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 		public Item() {
 		}
 
+		public Item(int order) {
+			this.order = order;
+        }
+
 		public Item child;
+		public int order;
 	}
 	
 	public static class RootItem extends Item {
