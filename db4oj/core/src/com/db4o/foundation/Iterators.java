@@ -292,4 +292,33 @@ public class Iterators {
 	public static Iterator4 copy(final Iterator4 iterator) {
 		return new Collection4(iterator).iterator();
 	}
+
+	public static <T> Iterator4<T> take(final int count, final Iterator4<T> iterator) {
+		return new Iterator4<T>() {
+			private int _taken = 0;
+
+			public T current() {
+				if (_taken > count) {
+					throw new IllegalStateException();
+				}
+				return iterator.current();
+            }
+
+			public boolean moveNext() {
+				if (_taken < count) {
+					if (!iterator.moveNext()) {
+						_taken = count;
+						return false;
+					}
+					++_taken;
+					return true;
+				}
+				return false;
+            }
+
+			public void reset() {
+				throw new NotImplementedException();
+            }
+		};
+	}
 }

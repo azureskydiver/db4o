@@ -4,6 +4,6 @@ import com.db4o.foundation.*;
 
 public interface ReferenceCollector {
 
-	Iterator4 referencesFrom(int id);
+	Iterator4<Integer> referencesFrom(int id);
 
 }

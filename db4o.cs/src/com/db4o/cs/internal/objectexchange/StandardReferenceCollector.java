@@ -12,7 +12,7 @@ public class StandardReferenceCollector implements ReferenceCollector {
 	    _transaction = transaction;
     }
 
-	public Iterator4 referencesFrom(int id) {
+	public Iterator4<Integer> referencesFrom(int id) {
 	    final CollectIdContext context = CollectIdContext.forID(_transaction, id);
 	    final ClassMetadata classMetadata = context.classMetadata();
 	    if (null == classMetadata) {

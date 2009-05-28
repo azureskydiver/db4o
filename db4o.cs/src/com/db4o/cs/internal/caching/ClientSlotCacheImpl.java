@@ -10,7 +10,6 @@ import com.db4o.events.*;
 import com.db4o.internal.*;
 
 // TODO: use Cache4 internally
-// TODO: ensure slot cache doesn't affect refresh behavior
 public class ClientSlotCacheImpl implements ClientSlotCache {
 
 	private final TransactionLocal<Map<Integer, ByteArrayBuffer>> _cache = new TransactionLocal<Map<Integer, ByteArrayBuffer>>() {

@@ -19,7 +19,7 @@ public class EagerObjectExchangeStrategy implements ObjectExchangeStrategy {
     }
 
 	public FixedSizeIntIterator4 unmarshall(ClientTransaction transaction, ByteArrayBuffer reader) {
-		return new EagerObjectReader(transaction, reader).iterator();
+		return new CacheContributingObjectReader(transaction, reader).iterator();
     }
 
 }
