@@ -5,14 +5,14 @@ package com.db4o.foundation;
 /**
  * @sharpen.ignore
  */
-public interface Iterator4 {
+public interface Iterator4<E> {
 
 	public boolean moveNext();
 
 	/**
 	 * @sharpen.property
 	 */
-	public Object current();
+	public E current();
 
 	public void reset();
 }
