@@ -44,9 +44,6 @@ public class ActivatableSetAPITestSuite extends FixtureBasedTestSuite implements
 	}
 	
 	public static class ActivatableSetAPITestUnit extends ActivatableCollectionAPITestUnit<Set<CollectionElement>> {
-
-		
-		
 		@Override
 		protected CollectionSpec<Set<CollectionElement>> currentCollectionSpec() {
 			return SET_SPEC.value();

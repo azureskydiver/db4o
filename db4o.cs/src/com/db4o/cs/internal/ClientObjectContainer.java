@@ -79,7 +79,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		}
 	};
 
-	private boolean _refreshing = false;
+	private boolean _bypassSlotCache = false;
 	
 	public interface MessageListener {
 		public void onMessage(Msg msg);
@@ -551,21 +551,21 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	@Override
 	public Object peekPersisted(Transaction trans, Object obj, ActivationDepth depth, boolean committed)
 	        throws DatabaseClosedException {
-		_refreshing = true;
+		_bypassSlotCache = true;
 		try { 
 			return super.peekPersisted(trans, obj, depth, committed);
 		} finally {
-			_refreshing = false;
+			_bypassSlotCache = false;
 		}
 	}
 	
 	@Override
 	protected void refreshInternal(final Transaction trans, final Object obj, final int depth) {
-		_refreshing  = true;
+		_bypassSlotCache  = true;
 		try {
 			super.refreshInternal(trans, obj, depth);
 		} finally {
-			_refreshing = false;
+			_bypassSlotCache = false;
 		}
 	}
 
@@ -598,7 +598,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		final ByRef<ByteArrayBuffer> result = ByRef.newInstance();
 		withEnvironment(new Runnable() { public void run() {
 			
-			if (lastCommitted || _refreshing) {
+			if (lastCommitted || _bypassSlotCache) {
 				result.value = fetchSlotBuffer(transaction, id, lastCommitted);
 				return;
 			}
@@ -1060,20 +1060,14 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	    }
 	    
     	final int safePrefetchDepth = Math.max(1, prefetchDepth);
-    	final ClientSlotCache slotCache = my(ClientSlotCache.class);
-    	
     	sendReadMultipleObjectsMessage(Msg.READ_MULTIPLE_OBJECTS, transaction, safePrefetchDepth, missing);
     	
     	final MsgD response = (MsgD) expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
     	
-    	final FixedSizeIntIterator4 requestedIds = new EagerObjectReader((ClientTransaction) transaction, response.payLoad()).iterator();
-    	while (requestedIds.moveNext()) {
-    		final int id = requestedIds.currentInt();
-			final ByteArrayBuffer slot = slotCache.get(transaction, id);
-    		if (slot == null) {
-    			throw new IllegalStateException("Slot for id " + id + " not found!");
-    		}
-    		buffers.put(id, slot);
+    	Iterator4<Pair<Integer, ByteArrayBuffer>> slots = new CacheContributingObjectReader((ClientTransaction) transaction, response.payLoad()).buffers();
+    	while (slots.moveNext()) {
+    		final Pair<Integer, ByteArrayBuffer> pair = slots.current();
+			buffers.put(pair.first, pair.second);
     	}
     }
 	

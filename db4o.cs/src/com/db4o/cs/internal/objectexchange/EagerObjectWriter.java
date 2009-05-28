@@ -20,25 +20,31 @@ public class EagerObjectWriter {
 	
 	public ByteArrayBuffer write(IntIterator4 idIterator, int maxCount) {
 		
-		List<Pair<Integer, Slot>> rootSlots = readSlots(idIterator, maxCount);
-		List<Pair<Integer, Slot>> childSlots = childSlotsFor(rootSlots);
+		List<Integer> rootIds = readSlots(idIterator, maxCount);
+		List<Pair<Integer, Slot>> slots = slotsFor(rootIds);
 		
-		int marshalledSize = marshalledSizeFor(rootSlots) + marshalledSizeFor(childSlots);
+		int marshalledSize = marshalledSizeFor(slots) + Const4.INT_LENGTH + rootIds.size() * Const4.INT_LENGTH;
 		
 		ByteArrayBuffer buffer = new ByteArrayBuffer(marshalledSize);
-		writeIdSlotPairsTo(childSlots, buffer);
-		writeIdSlotPairsTo(rootSlots, buffer);
+		writeIdSlotPairsTo(slots, buffer);
+		writeIds(buffer, rootIds);
 		
 		return buffer;
 	}
 
-	private List<Pair<Integer, Slot>> childSlotsFor(List<Pair<Integer, Slot>> rootSlots) {
-	    final Iterator4 ids = Iterators.map(Iterators.iterator(rootSlots), new Function4<Pair<Integer, Slot>, Integer>() {
-			public Integer apply(Pair<Integer, Slot> arg) {
-				return arg.first;
-           }
-		});
-		return new ChildSlotCollector(_config, new StandardReferenceCollector(_transaction), new StandardSlotAccessor(_transaction)).collect(ids);
+	private void writeIds(ByteArrayBuffer buffer, List<Integer> ids) {
+	    buffer.writeInt(ids.size());
+		for (Integer id : ids) {
+			buffer.writeInt(id);
+        }
+    }
+
+	private List<Pair<Integer, Slot>> slotsFor(List<Integer> ids) {
+	    return new SlotCollector(
+	    		_config.prefetchDepth,
+	    		new StandardReferenceCollector(_transaction),
+	    		new StandardSlotAccessor(_transaction)).collect(
+	    				Iterators.take(_config.prefetchCount, Iterators.iterator(ids)));
     }
 
 	private void writeIdSlotPairsTo(List<Pair<Integer, Slot>> slots, ByteArrayBuffer buffer) {
@@ -74,34 +80,17 @@ public class EagerObjectWriter {
 		return total;
     }
 
-	private List<Pair<Integer, Slot>> readSlots(IntIterator4 idIterator, int maxCount) {
+	private List<Integer> readSlots(IntIterator4 idIterator, int maxCount) {
 	    
-		final int prefetchObjectCount = configuredPrefetchObjectCount();
 		final ArrayList slots = new ArrayList();
-		
         while(idIterator.moveNext()){
             final int id = idIterator.currentInt();
-            
-            if (slots.size() < prefetchObjectCount) {
-            	slots.add(idSlotPairFor(id));
-            } else {
-            	slots.add(Pair.of(id, null));
-            }
-            
+            slots.add(id);
             if(slots.size() >= maxCount){
             	break;
             }
         }
 		return slots;
-    }
-
-	private Pair<Integer, Slot> idSlotPairFor(final int id) {
-	    final Slot slot = _transaction.getCurrentSlotOfID(id);
-	    return Pair.of(id, slot);
-    }
-
-	private int configuredPrefetchObjectCount() {
-	    return _config.prefetchCount;
     }
 	
 

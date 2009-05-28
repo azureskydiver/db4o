@@ -685,15 +685,18 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
 
     final void delete(StatefulBuffer buffer, Object obj) {
-        
-        Transaction trans = buffer.transaction();
-        int id = buffer.getID();
-        removeFromIndex(trans, id);
-        
-        ArrayType arrayType = trans.container()._handlers.arrayType(obj);
-        ObjectHeader oh = new ObjectHeader(_container, this, buffer);
+        removeFromIndex(buffer.transaction(), buffer.getID());
+        cascadeDeletion(buffer, obj);
+    }
+
+	private void cascadeDeletion(StatefulBuffer buffer, Object obj) {
+	    ObjectHeader oh = new ObjectHeader(_container, this, buffer);
         DeleteContextImpl context = new DeleteContextImpl(buffer, oh, classReflector(), null);
-        deleteMembers(context, arrayType, false);
+        deleteMembers(context, arrayTypeFor(buffer, obj), false);
+    }
+
+	private ArrayType arrayTypeFor(StatefulBuffer buffer, Object obj) {
+	    return buffer.transaction().container()._handlers.arrayType(obj);
     }
 
     public void delete(DeleteContext context) throws Db4oIOException {
