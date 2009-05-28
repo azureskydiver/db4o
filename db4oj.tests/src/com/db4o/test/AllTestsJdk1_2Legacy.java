@@ -29,6 +29,7 @@ public class AllTestsJdk1_2Legacy extends AllTestsLegacy {
 				    ExternalBlobs.class,
 		            KeepCollectionContent.class,
 
+		            TransientClone.class,
 				    TreeSetCustomComparable.class,
 				};
 			}

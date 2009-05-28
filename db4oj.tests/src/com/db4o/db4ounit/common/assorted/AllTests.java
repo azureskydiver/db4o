@@ -61,6 +61,7 @@ public class AllTests extends ComposibleTestSuite {
 			            SimplestPossibleTestCase.class,
 			            SimplestPossibleParentChildTestCase.class,
 			            SystemInfoTestCase.class,
+			            TransientCloneTestCase.class,
 			            UnavailableClassAsTreeSetElementTestCase.class,
 			            UnknownReferenceDeactivationTestCase.class,
 			            UpdateDepthTestCase.class,

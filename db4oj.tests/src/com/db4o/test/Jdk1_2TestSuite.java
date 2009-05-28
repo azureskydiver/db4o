@@ -4,6 +4,7 @@ package com.db4o.test;
 
 import com.db4o.test.cluster.*;
 import com.db4o.test.collections.*;
+import com.db4o.test.legacy.*;
 import com.db4o.test.reflect.*;
 
 /**
@@ -32,7 +33,6 @@ public class Jdk1_2TestSuite extends TestSuite{
             TestStringBuffer.class,
             TestTreeMap.class,
             TestTreeSet.class,
-            TransientClone.class,
         };
     }
 }
