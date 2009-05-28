@@ -14,8 +14,7 @@ public class AllTestsConfSingle extends TestSuite{
     
     public Class[] tests(){
         return new Class[] {
-        	TransientClone.class,
-//        	CallConstructors.class,
+        	CallConstructors.class,
     	};
     }
 
