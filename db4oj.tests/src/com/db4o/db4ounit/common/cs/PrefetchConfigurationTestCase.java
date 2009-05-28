@@ -3,6 +3,7 @@ package com.db4o.db4ounit.common.cs;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -178,6 +179,53 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 			new Depth2Stimulus(Msg.READ_READER_BY_ID),
 			new Depth2Stimulus(Msg.READ_MULTIPLE_OBJECTS, Msg.READ_READER_BY_ID),
 		});
+    }
+	
+	public void testPrefetchCount1() {
+		
+		storeAllAndPurge(new Item(), new Item(), new Item());
+		
+		client().config().prefetchObjectCount(1);
+		client().config().prefetchDepth(1);
+		
+		final Query query = queryForItemsWithoutChildren();
+		
+		assertQueryIterationProtocol(query, Msg.QUERY_EXECUTE, new Stimulus[] {
+			new Stimulus(),
+			new Stimulus(Msg.READ_MULTIPLE_OBJECTS),
+			new Stimulus(Msg.READ_MULTIPLE_OBJECTS),
+		});
+    }
+	
+	public void _testPrefetchingAfterDeleteFromOtherClient() {
+		
+		storeAllAndPurge(new Item(), new Item(), new Item());
+		
+		client().config().prefetchObjectCount(1);
+		client().config().prefetchDepth(1);
+		
+		Assert.areEqual(QueryEvaluationMode.IMMEDIATE, client().config().queries().evaluationMode());
+		
+		final Query query = queryForItemsWithoutChildren();
+		final ObjectSet<Item> result = query.execute();
+		
+		deleteAllItemsFromSecondClient();
+		
+		Assert.isNotNull(result.next());
+		Assert.isNull(result.next());
+		
+	}
+
+	private Query queryForItemsWithoutChildren() {
+	    final Query query = newQuery(Item.class);
+		query.descend("child").constrain(null);
+	    return query;
+    }
+
+	private void deleteAllItemsFromSecondClient() {
+	    final ExtObjectContainer client = openNewClient();
+		deleteAll(client, Item.class);
+		client.commit();
     }
 
 	private Query queryForItemsWithChild() {
