@@ -317,12 +317,20 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
         }
 	}
 	
+	protected void foreach(ExtObjectContainer oc, Class clazz, Visitor4 visitor) {
+        ObjectSet set = newQuery(oc, clazz).execute();
+        while (set.hasNext()) {
+            visitor.visit(set.next());
+        }
+	}
+
+	
 	protected final void deleteAll(Class clazz) {
 		deleteAll(db(), clazz);
 	}
 	
 	protected final void deleteAll(final ExtObjectContainer oc, Class clazz) {
-		foreach(clazz, new Visitor4() {
+		foreach(oc, clazz, new Visitor4() {
 			public void visit(Object obj) {
 				oc.delete(obj);
 			}
