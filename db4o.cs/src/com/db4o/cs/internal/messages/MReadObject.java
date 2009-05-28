@@ -10,8 +10,10 @@ public final class MReadObject extends MsgD implements MessageWithResponse {
 		StatefulBuffer bytes = null;
 		// readWriterByID may fail in certain cases, for instance if
 		// and object was deleted by another client
+		int id = _payLoad.readInt();
+		int lastCommitted = _payLoad.readInt();
 		synchronized (streamLock()) {
-			bytes = stream().readWriterByID(transaction(), _payLoad.readInt(), _payLoad.readInt()==1);
+			bytes = stream().readWriterByID(transaction(), id, lastCommitted==1);
 		}
 		if (bytes == null) {
 			bytes = new StatefulBuffer(transaction(), 0, 0);

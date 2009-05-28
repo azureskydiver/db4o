@@ -14,17 +14,25 @@ public final class MGetInternalIDs extends MsgD implements MessageWithResponse {
         final int prefetchDepth = bytes.readInt();
         final int prefetchCount = bytes.readInt();
         
-		final long[] ids = idsFor(classMetadataID);
-		
-		final ByteArrayBuffer payload = ObjectExchangeStrategyFactory.forConfig(
-				new ObjectExchangeConfiguration(prefetchDepth, prefetchCount)
-			).marshall((LocalTransaction)transaction(), IntIterators.forLongs(ids), ids.length);
+		final ByteArrayBuffer payload = marshallIDsFor(classMetadataID,
+				prefetchDepth, prefetchCount);
 		final MsgD message = Msg.ID_LIST.getWriterForLength(transaction(), payload.length());
 		message.payLoad().writeBytes(payload._buffer);
 		
 		write(message);
 		
 		return true;
+	}
+
+	private ByteArrayBuffer marshallIDsFor(final int classMetadataID,
+			final int prefetchDepth, final int prefetchCount) {
+		synchronized(streamLock()){
+			final long[] ids = idsFor(classMetadataID);
+			
+			return ObjectExchangeStrategyFactory.forConfig(
+					new ObjectExchangeConfiguration(prefetchDepth, prefetchCount)
+				).marshall((LocalTransaction)transaction(), IntIterators.forLongs(ids), ids.length);
+		}
 	}
 
 	private long[] idsFor(final int classMetadataID) {

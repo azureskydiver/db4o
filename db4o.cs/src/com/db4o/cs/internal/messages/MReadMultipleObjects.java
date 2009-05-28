@@ -17,12 +17,19 @@ public class MReadMultipleObjects extends MsgD implements MessageWithResponse {
 				return readInt();
 			}
 		};
-		
-		final ObjectExchangeStrategy strategy = ObjectExchangeStrategyFactory.forConfig(new ObjectExchangeConfiguration(prefetchDepth, prefetchCount));
-		ByteArrayBuffer buffer = strategy.marshall((LocalTransaction) transaction(), ids, prefetchCount);
+		ByteArrayBuffer buffer = marshallObjects(prefetchDepth, prefetchCount,
+				ids);
 		
 		MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForBuffer(transaction(), buffer);
 		write(msg);
 		return true;
+	}
+
+	private ByteArrayBuffer marshallObjects(int prefetchDepth,
+			int prefetchCount, IntIterator4 ids) {
+		synchronized(streamLock()){
+			final ObjectExchangeStrategy strategy = ObjectExchangeStrategyFactory.forConfig(new ObjectExchangeConfiguration(prefetchDepth, prefetchCount));
+			return strategy.marshall((LocalTransaction) transaction(), ids, prefetchCount);
+		}
 	}
 }
