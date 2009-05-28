@@ -197,7 +197,7 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 		});
     }
 	
-	public void _testPrefetchingAfterDeleteFromOtherClient() {
+	public void testPrefetchingAfterDeleteFromOtherClient() {
 		
 		storeAllAndPurge(new Item(), new Item(), new Item());
 		
@@ -212,8 +212,11 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 		deleteAllItemsFromSecondClient();
 		
 		Assert.isNotNull(result.next());
-		Assert.isNull(result.next());
-		
+		Assert.expect(IllegalStateException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				result.next();
+			}
+		});
 	}
 
 	private Query queryForItemsWithoutChildren() {
