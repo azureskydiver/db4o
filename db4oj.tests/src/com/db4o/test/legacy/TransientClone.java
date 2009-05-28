@@ -1,10 +1,12 @@
 /* Copyright (C) 2004   Versant Inc.   http://www.db4o.com */
 
-package com.db4o.test;
+package com.db4o.test.legacy;
 
 import java.util.*;
 
 import com.db4o.ext.*;
+import com.db4o.test.*;
+import com.db4o.test.Test;
 
 import db4ounit.*;
 

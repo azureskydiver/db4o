@@ -25,20 +25,20 @@ public class AllTestsLegacy extends AllTests {
     
     public Class[] tests(){
     	return new Class[] {
-        		ArrayNOrder.class,
-        		Book.class,
-        		ByteArray.class,
-        		CascadeToHashtable.class,
-        		CreateIndex.class,
-        		GetByUUID.class,
-        		MultiDelete.class,
-        		NestedArrays.class,
-        		PersistStaticFieldValues.class,
-        		SimpleTypeArrayInUntypedVariable.class,
-    	    	Soda.class,
-    	    	SodaNumberCoercion.class,
-        		TypedArrayInObject.class,
-        		TypedDerivedArray.class,
+    		ArrayNOrder.class,
+    		Book.class,
+    		ByteArray.class,
+    		CascadeToHashtable.class,
+    		CreateIndex.class,
+    		GetByUUID.class,
+    		MultiDelete.class,
+    		NestedArrays.class,
+    		PersistStaticFieldValues.class,
+    		SimpleTypeArrayInUntypedVariable.class,
+	    	Soda.class,
+	    	SodaNumberCoercion.class,
+    		TypedArrayInObject.class,
+    		TypedDerivedArray.class,
         };
     }
 
