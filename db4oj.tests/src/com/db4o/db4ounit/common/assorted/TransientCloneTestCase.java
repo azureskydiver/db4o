@@ -102,9 +102,9 @@ public class TransientCloneTestCase extends AbstractDb4oTestCase {
 		Assert.isTrue(tcm.child.name.equals(tom.child.name));
 	}
 
-	private Atom next(Iterator i) {
+	private <T> T next (Iterator  i) {
 		Assert.isTrue(i.hasNext());
-		return (Atom) i.next();
+		return (T)i.next();
 	}
 
 	private Item peekPersisted(boolean committed) {
