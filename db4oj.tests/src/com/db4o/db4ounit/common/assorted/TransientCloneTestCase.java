@@ -75,13 +75,13 @@ public class TransientCloneTestCase extends AbstractDb4oTestCase {
 		Assert.isTrue(tc.list != to);
 		Assert.isTrue(tc.list.size() == to.list.size());
 		Iterator i = tc.list.iterator();
+		Atom tca = next(i);
 		Iterator j = to.list.iterator();
-		Atom tca = (Atom) i.next();
-		Atom tct = (Atom) j.next();
+		Atom tct = next(j);
 		Assert.isTrue(tca != tct);
 		Assert.isTrue(tca.name.equals(tct.name));
-		Assert.areSame(i.next(), tc);
-		Assert.areSame(j.next(), to);
+		Assert.areSame(next(i), tc);
+		Assert.areSame(next(j), to);
 		Assert.isTrue(tc.ht != to.ht);
 		Molecule tcm = (Molecule) tc.ht.get("htc");
 		Molecule tom = (Molecule) to.ht.get("htc");
@@ -100,6 +100,11 @@ public class TransientCloneTestCase extends AbstractDb4oTestCase {
 		Assert.isTrue(tcm.name.equals(tom.name));
 		Assert.isTrue(tcm.child != tom.child);
 		Assert.isTrue(tcm.child.name.equals(tom.child.name));
+	}
+
+	private Atom next(Iterator i) {
+		Assert.isTrue(i.hasNext());
+		return (Atom) i.next();
 	}
 
 	private Item peekPersisted(boolean committed) {
