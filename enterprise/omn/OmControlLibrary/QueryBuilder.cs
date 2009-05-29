@@ -846,7 +846,21 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				Helper.PopulateRecentQueryComboBox(Helper.ListOMQueries, comboboxRecentQueries);
+                //long TimeForRecentQueriesCreation =
+                //    dbInteraction.GetTimeforRecentQueriesCreation(dbInteraction.GetCurrentRecentConnection().ConnParam);
+                //long TimeforDbCreation = Helper.DbInteraction.dbCreationTime();
+                //if (TimeForRecentQueriesCreation != 0)
+                //{
+                    //if (TimeForRecentQueriesCreation > TimeforDbCreation)
+                    //{
+                        Helper.PopulateRecentQueryComboBox(Helper.ListOMQueries, comboboxRecentQueries);
+                    //}
+                //}
+                //else
+                //{
+
+                //    dbInteraction.RemoveRecentQueries(dbInteraction.GetCurrentRecentConnection().ConnParam);
+                //}
 			}
 			catch (Exception oEx)
 			{
@@ -1025,27 +1039,33 @@ namespace OMControlLibrary
 		/// </summary>
 		private void InitializeRecentQueries()
 		{
-			try
-			{
-				if (Helper.ClassName == null)
-				{
-					//Set the recent queries forom cache
-					Helper.PopulateRecentQueryComboBox(Helper.ListOMQueries, comboboxRecentQueries);
-				}
-				else
-				{
-					//Get the recent queries from the repositary
-					List<OMQuery> qrylist = dbInteraction.GetCurrentRecentConnection().FetchQueriesForAClass(Helper.ClassName);
-					Helper.PopulateRecentQueryComboBox(qrylist, comboboxRecentQueries);
-					dbInteraction.CloseRecentConn();
-				}
+            try
+            {
+                comboboxRecentQueries.Items.Add(Helper.GetResourceString(Constants.COMBOBOX_DEFAULT_TEXT));
 
-				comboboxRecentQueries.DropdownItemSelected += comboboxRecentQueries_DropdownItemSelected;
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
+                comboboxRecentQueries.SelectedIndex = 0;
+
+                //if (Helper.ClassName == null)
+                //{
+                //    //Set the recent queries forom cache
+                //    Helper.PopulateRecentQueryComboBox(Helper.ListOMQueries, comboboxRecentQueries);
+                //}
+                //else
+                //{
+                //    //Get the recent queries from the repositary
+                //    List<OMQuery> qrylist =
+                //        dbInteraction.GetCurrentRecentConnection().FetchQueriesForAClass(Helper.ClassName);
+                //    Helper.PopulateRecentQueryComboBox(qrylist, comboboxRecentQueries);
+                //    dbInteraction.CloseRecentConn();
+                //}
+
+                comboboxRecentQueries.DropdownItemSelected += comboboxRecentQueries_DropdownItemSelected;
+
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.ShowMessage(oEx);
+            }
 		}
 
 		/// <summary>
@@ -1125,7 +1145,7 @@ namespace OMControlLibrary
 	    private static string FieldNameFor(DataGridViewRow row)
 	    {
 	        IType fieldType = (IType) row.Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value;
-	        return fieldType.FullName;
+	        return fieldType.DisplayName;
 	    }
 
 	    /// <summary>

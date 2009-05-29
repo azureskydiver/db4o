@@ -23,7 +23,12 @@ namespace OManager.BusinessLayer.Login
         List<OMQuery> m_queryList;
         [Transient]
         IObjectContainer container = null;
-       
+        private long m_TimeOfCreation;
+        public long TimeOfCreation
+        {
+            get { return m_TimeOfCreation; }
+            set { m_TimeOfCreation = value; }
+        }
         #endregion
 
 
@@ -261,7 +266,22 @@ namespace OManager.BusinessLayer.Login
             return qList;
         }
 
-       
+        public long ReturnTimeWhenRecentQueriesCreated()
+        {
+            try
+            {
+
+                RecentQueries rQueries = ChkIfRecentConnIsInDb();
+                if (rQueries != null)
+                    return rQueries.TimeOfCreation > 0 ? rQueries.TimeOfCreation : 0;
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.HandleException(oEx);
+            }
+            return 0;
+
+        }
 
         public RecentQueries ChkIfRecentConnIsInDb()
         {
@@ -328,7 +348,8 @@ namespace OManager.BusinessLayer.Login
                             
                         }
                     }
-                    recQueries.m_queryList.Clear();   
+                    recQueries.m_queryList.Clear();
+                    recQueries.m_TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis();
                     container.Ext().Set(recQueries, 5);   
                     container.Commit();
                 }
@@ -339,6 +360,8 @@ namespace OManager.BusinessLayer.Login
             }
 
         }
+
+      
     }
 
     public class CompareTimestamps : IComparer<RecentQueries>

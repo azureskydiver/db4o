@@ -6,6 +6,7 @@ using Db4objects.Db4o.Query;
 using Db4objects.Db4o;
 using System.IO;
 using OManager.BusinessLayer.Login;
+using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.Connection;
 using OME.Logging.Common;
 
@@ -38,15 +39,29 @@ namespace OManager.BusinessLayer.Config
 				recentQueries.Timestamp = DateTime.Now;
 				RecentQueries r = new RecentQueries(recentQueries.ConnParam);
 				RecentQueries temprc = r.ChkIfRecentConnIsInDb();
-				if (temprc != null)
-				{
-					temprc.Timestamp = DateTime.Now;
-					temprc.QueryList = recentQueries.QueryList;
-				}
-				else
-					temprc = recentQueries;
-
-				IObjectContainer dbrecentConn = Db4oClient.RecentConn;
+                if (temprc != null)
+                {
+                    temprc.Timestamp = DateTime.Now;
+                    temprc.QueryList = recentQueries.QueryList;
+                }
+                else
+                {
+                    temprc = recentQueries;
+                    temprc.TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis(); 
+                }
+                // long TimeForRecentQueriesCreation =
+                //    dbInteraction.GetTimeforRecentQueriesCreation(dbInteraction.GetCurrentRecentConnection().ConnParam);
+                //dbInteraction dbI = new dbInteraction();
+                //long TimeforDbCreation = dbI.dbCreationTime();
+                  
+                //if (TimeForRecentQueriesCreation != 0)
+                //{
+                //    if (TimeForRecentQueriesCreation < TimeforDbCreation)
+                //    {
+                //        temprc.TimeOfCreation = Sharpen.Runtime.CurrentTimeMillis(); 
+                //    }
+                //}
+			    IObjectContainer dbrecentConn = Db4oClient.RecentConn;
 				dbrecentConn.Store(temprc);
 				dbrecentConn.Commit();
 				Db4oClient.CloseRecentConnectionFile(Db4oClient.RecentConn);
