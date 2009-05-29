@@ -23,11 +23,11 @@ namespace OManager.DataLayer.DemoDBCreation
             if (recQueries != null)
             {
                 FavouriteList favList = new FavouriteList(conParams);
-                if (favList != null)
-                    favList.RemoveFavouritFolderForAConnection();
+                favList.RemoveFavouritFolderForAConnection();
+
                 GroupofSearchStrings grpSearchString = new GroupofSearchStrings(conParams);
-                if (grpSearchString != null)
-                    grpSearchString.RemovesSearchStringsForAConnection();
+                grpSearchString.RemovesSearchStringsForAConnection();
+
                 recQueries.deleteRecentQueriesForAConnection();
             }
             if (File.Exists(filepath))

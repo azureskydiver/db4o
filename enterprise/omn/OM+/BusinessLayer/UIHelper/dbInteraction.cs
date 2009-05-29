@@ -199,6 +199,13 @@ namespace OManager.BusinessLayer.UIHelper
             GroupofSearchStrings lstsearchstring = new GroupofSearchStrings(conn);
             return lstsearchstring.ReturnTimeWhenSearchStringCreated();
         }
+
+        public static long GetTimeforRecentQueriesCreation(ConnParams conn)
+        {
+            RecentQueries rQueries = new RecentQueries(conn);
+            return rQueries.ReturnTimeWhenRecentQueriesCreated();
+        }
+        
 		public static void SaveFavourite(ConnParams conn, FavouriteFolder FavFolder)
 		{
 			FavouriteList lstFav = new FavouriteList(conn);
@@ -429,6 +436,12 @@ namespace OManager.BusinessLayer.UIHelper
         {
             GroupofSearchStrings SearchStringList = new GroupofSearchStrings(conn);
             SearchStringList.RemovesSearchStringsForAConnection();
+        }
+
+        public static void RemoveRecentQueries(ConnParams conn)
+        {
+            RecentQueries recentQueries = new RecentQueries(conn);
+            recentQueries.deleteRecentQueriesForAConnection();
         }
 	}
 }

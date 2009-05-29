@@ -975,7 +975,7 @@ namespace OMControlLibrary.Common
 		public void FindTreeNodesAssemblyView(Hashtable list, string strToFind)
 		{
 			TreeNode treeNodeNew = null;
-
+		    bool CheckEntries = false;
 			string nodevalue = string.Empty;
 			string nodetype = string.Empty;
 
@@ -990,16 +990,10 @@ namespace OMControlLibrary.Common
 
 				while (enumerator.MoveNext())
 				{
-					nodevalue = enumerator.Key.ToString();
+					
 					List<string> classes = (List<string>) enumerator.Value;
 
-					if (!string.IsNullOrEmpty(nodevalue))
-						treeNodeNew = new TreeNode(nodevalue);
-					else
-						return;
-
-					treeNodeNew.Name = nodevalue;
-					treeNodeNew.Tag = "Assembly View";
+				 
 					if (classes.Count > 0)
 					{
 						for (int i = 0; i < classes.Count; i++)
@@ -1008,7 +1002,20 @@ namespace OMControlLibrary.Common
 							newClassesTreeNodes.Name = classes[i];
 							if (newClassesTreeNodes.Name.ToLower().Contains(strToFind))
 							{
-								newClassesTreeNodes.Tag = classes[i];
+                                if (CheckEntries == false)
+                                {
+                                    nodevalue = enumerator.Key.ToString();
+                                   
+
+                                    if (!string.IsNullOrEmpty(nodevalue))
+                                        treeNodeNew = new TreeNode(nodevalue);
+                                    else
+                                        return;
+                                    treeNodeNew.Name = nodevalue;
+                                    treeNodeNew.Tag = "Assembly View";
+                                    CheckEntries = true;
+                                }
+							    newClassesTreeNodes.Tag = classes[i];
 								newClassesTreeNodes.ImageIndex =
 									newClassesTreeNodes.SelectedImageIndex = 1; //Classes
 
@@ -1021,9 +1028,13 @@ namespace OMControlLibrary.Common
 						}
 					}
 
-					treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 0; //Assembly
-					Nodes.Add(treeNodeNew);
-					treeNodeNew.Expand();
+				    if (treeNodeNew != null)
+				    {
+				        treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 0; //Assembly
+				        Nodes.Add(treeNodeNew);
+				        treeNodeNew.Expand();
+				    }
+				    CheckEntries = false;
 				}
 			}
 			catch (Exception oEx)

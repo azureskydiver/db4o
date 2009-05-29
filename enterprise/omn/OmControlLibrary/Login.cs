@@ -472,6 +472,8 @@ namespace OMControlLibrary
 					RecentQueries tempRecentQueries = currRecentQueries.ChkIfRecentConnIsInDb();
 					if (tempRecentQueries != null)
 						currRecentQueries = tempRecentQueries;
+                   
+ 
 					exceptionString = dbInteraction.ConnectoToDB(currRecentQueries);
 				}
 				catch (Exception oEx)

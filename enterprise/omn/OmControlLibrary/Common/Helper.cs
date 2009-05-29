@@ -261,19 +261,33 @@ namespace OMControlLibrary.Common
 				newRow[1] = null;
 
 				recentQueriesDatatable.Rows.Add(newRow);
+                long TimeForRecentQueriesCreation =
+			        dbInteraction.GetTimeforRecentQueriesCreation(dbInteraction.GetCurrentRecentConnection().ConnParam);
+                long TimeforDbCreation = DbInteraction.dbCreationTime();
+                if (TimeForRecentQueriesCreation != 0)
+                {
+                    if (TimeForRecentQueriesCreation > TimeforDbCreation)
+                    {
+                        foreach (OMQuery qry in qrylist)
+                        {
+                            if (qry != null)
+                            {
+                                newRow = recentQueriesDatatable.NewRow();
+                                newRow[0] = qry.QueryString;
+                                newRow[1] = qry;
 
-				foreach (OMQuery qry in qrylist)
-				{
-					if (qry != null)
-					{
-						newRow = recentQueriesDatatable.NewRow();
-						newRow[0] = qry.QueryString;
-						newRow[1] = qry;
+                                recentQueriesDatatable.Rows.Add(newRow);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        dbInteraction.RemoveRecentQueries(dbInteraction.GetCurrentRecentConnection().ConnParam);
+                        ListOMQueries.Clear();
+                    }
+                }
 
-						recentQueriesDatatable.Rows.Add(newRow);
-					}
-				}
-				comboboxRecentQueries.DisplayMember = RECENT_QUERY_QUERY_COLUMN;
+			    comboboxRecentQueries.DisplayMember = RECENT_QUERY_QUERY_COLUMN;
 				comboboxRecentQueries.ValueMember = RECENT_QUERY_OMQUERY_COLUMN;
 
 				comboboxRecentQueries.DataSource = recentQueriesDatatable;
