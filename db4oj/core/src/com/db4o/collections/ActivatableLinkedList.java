@@ -55,6 +55,17 @@ public class ActivatableLinkedList<E> extends LinkedList<E> implements Activatab
 		return super.addAll(index, c);
 	}
 	
+	public void addFirst(E e) {
+		activate(ActivationPurpose.WRITE);
+		super.addFirst(e);
+	};
+	
+	public void addLast(E e) {
+		activate(ActivationPurpose.WRITE);
+		super.addLast(e);
+	};
+
+	
 	@Override
 	public void clear() {
 		activate(ActivationPurpose.WRITE);

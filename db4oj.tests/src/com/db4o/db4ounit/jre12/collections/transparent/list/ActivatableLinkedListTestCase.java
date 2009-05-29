@@ -38,7 +38,7 @@ public class ActivatableLinkedListTestCase extends ActivatableCollectionTestCase
 	}
 	
 	public void testClone() throws Exception{
-		ActivatableLinkedList cloned = (ActivatableLinkedList) singleCollection().clone();
+		ActivatableLinkedList cloned = (ActivatableLinkedList) singleLinkedList().clone();
 		// assert that activator is null - should throw IllegalStateException if it isn't
 		cloned.bind(new Activator() {
 			public void activate(ActivationPurpose purpose) {
@@ -49,6 +49,24 @@ public class ActivatableLinkedListTestCase extends ActivatableCollectionTestCase
 
 	public void testToString(){
 		Assert.areEqual(newPlainList().toString(), singleCollection().toString());
+	}
+	
+	public void testAddFirst() throws Exception{
+		Element element = new Element("first");
+		singleLinkedList().addFirst(element);
+		reopen();
+		Assert.isTrue(singleLinkedList().contains(element));
+	}
+	
+	public void testAddLast() throws Exception{
+		Element element = new Element("last");
+		singleLinkedList().addLast(element);
+		reopen();
+		Assert.isTrue(singleLinkedList().contains(element));
+	}
+	
+	private LinkedList singleLinkedList(){
+		return (ActivatableLinkedList) singleCollection();
 	}
 
 }
