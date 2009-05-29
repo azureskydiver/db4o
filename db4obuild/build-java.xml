@@ -603,6 +603,7 @@
                 <pathelement path="${file.bloat.jar}"/>
 				<pathelement path="${file.jdk1.5.jar}"/>
 			    <pathelement path="${file.jdk1.5.instrumentation.jar}"/>
+				<pathelement path="${file.decaf.annotations}"/>
 			</classpath>
 		</javac>
 		
