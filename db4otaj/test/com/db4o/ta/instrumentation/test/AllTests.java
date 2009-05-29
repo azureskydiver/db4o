@@ -16,6 +16,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 			ArrayListInstantiationInstrumentationTestCase.class,
 			Db4oJarEnhancerTestCase.class,
+			EnumTestCase.class,
 			HashMapInstantiationInstrumentationTestCase.class,
 			HashtableInstantiationInstrumentationTestCase.class,
 			StackInstantiationInstrumentationTestCase.class,

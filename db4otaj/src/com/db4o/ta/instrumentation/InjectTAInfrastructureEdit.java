@@ -29,8 +29,11 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 			return InstrumentationStatus.NOT_INSTRUMENTED;
 		}
 		try {
-			Class activatableClazz = origLoader.loadClass(Activatable.class.getName());
 			Class clazz = BloatUtil.classForEditor(ce, origLoader);
+			if (isEnum(clazz)){
+				return InstrumentationStatus.NOT_INSTRUMENTED;
+			}
+			Class activatableClazz = origLoader.loadClass(Activatable.class.getName());
 			if(activatableClazz.isAssignableFrom(clazz)) {
 				return InstrumentationStatus.NOT_INSTRUMENTED;
 			}
@@ -51,6 +54,11 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 		} catch (ClassNotFoundException exc) {
 			return InstrumentationStatus.FAILED;
 		}
+	}
+
+	@decaf.ReplaceFirst("return false;")
+	private boolean isEnum(Class clazz) {
+		return clazz.isEnum();
 	}
 
 	private boolean isActivatableItself(ClassEditor ce) {
