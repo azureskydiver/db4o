@@ -15,6 +15,10 @@ import db4ounit.extensions.*;
  */
 @decaf.Ignore
 public class EnumTestCase extends AbstractDb4oTestCase {
+	
+	public static void main(String[] args) {
+		new EnumTestCase().runAll();
+	}
 	private final static int NUMRUNS=1;
     
     @SuppressWarnings("unchecked")
@@ -53,8 +57,8 @@ public class EnumTestCase extends AbstractDb4oTestCase {
         ObjectSet<EnumHolder> result = query.execute();
         Assert.areEqual(1, result.size());
         data=(EnumHolder)result.next();
-        Assert.areEqual(data.getType(), TypeCountEnum.A);
-        Assert.areEqual(TypeCountEnum.A.name(), data.getType().name());
+        Assert.areSame(TypeCountEnum.A, data.getType());
+        Assert.areEqual(data.getType().name(), TypeCountEnum.A.name());
         Assert.areEqual(1, result.size());
 
         ensureEnumInstancesInDB(db());
@@ -66,7 +70,7 @@ public class EnumTestCase extends AbstractDb4oTestCase {
 		}
 	}
 
-	private static class CollectionHolder {
+	public static class CollectionHolder {
 		public List<TypeCountEnum> list; 
 		public Set<TypeCountEnum> set; 
 		public Map<TypeCountEnum,String> keymap; 
