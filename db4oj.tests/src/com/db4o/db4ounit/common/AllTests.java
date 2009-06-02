@@ -26,6 +26,7 @@ public class AllTests extends ComposibleTestSuite {
 						com.db4o.db4ounit.common.backup.AllTests.class,
 						com.db4o.db4ounit.common.btree.AllTests.class,
 						com.db4o.db4ounit.common.classindex.AllTests.class,
+						com.db4o.db4ounit.common.caching.AllTests.class,
 						com.db4o.db4ounit.common.config.AllTests.class,
 						com.db4o.db4ounit.common.constraints.AllTests.class,
 						com.db4o.db4ounit.common.defragment.AllTests.class,
