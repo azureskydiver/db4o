@@ -1045,6 +1045,7 @@
             <src path="${dir.taj.test.src}" />
 			<classpath>
 				<pathelement location="${file.jdk1.5.taj.jar}"/>
+				<pathelement path="${file.decaf.annotations}" />
 				<pathelement path="${file.jdk1.5.jar}"/>
                 <pathelement path="${file.bloat.jar}"/>
 			    <pathelement path="${file.jdk1.5.instrumentation.jar}"/>
