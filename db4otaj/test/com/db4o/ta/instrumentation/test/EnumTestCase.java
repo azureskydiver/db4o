@@ -12,19 +12,19 @@ import com.db4o.ta.instrumentation.*;
 
 import db4ounit.*;
 
+@decaf.Remove
 public class EnumTestCase implements TestLifeCycle{
 	
-	BloatInstrumentingClassLoader _loader;
+	private BloatInstrumentingClassLoader _loader;
 	
-	public static enum MyEnum{
+	public static enum MyEnum {
 		
 	}
 	
 	public void setUp() throws Exception {
 		ClassLoader baseLoader = MyEnum.class.getClassLoader();
-		URL[] urls = {};
 		ClassFilter filter = new ByNameClassFilter(new String[]{ enumClassName() });
-		_loader = new BloatInstrumentingClassLoader(urls, baseLoader, new AcceptAllClassesFilter(), new InjectTransparentActivationEdit(filter));
+		_loader = new BloatInstrumentingClassLoader(new URL[] {}, baseLoader, new AcceptAllClassesFilter(), new InjectTransparentActivationEdit(filter));
 	}
 
 	private String enumClassName() {
@@ -32,7 +32,7 @@ public class EnumTestCase implements TestLifeCycle{
 	}
 	
 	public void testEnumIsNotActivatable() throws ClassNotFoundException{
-		Class enumClass = _loader.loadClass(enumClassName());
+		Class<?> enumClass = _loader.loadClass(enumClassName());
 		Assert.isFalse(Activatable.class.isAssignableFrom(enumClass));
 	}
 
