@@ -15,7 +15,7 @@ public class CacheFactory {
 		return new LRU2QXCache<K, V>(size);
 	}
 
-	public static <K, V> Cache4<K, V> newLRUCache(int size) {
+	public static <K, V> PurgeableCache4<K, V> newLRUCache(int size) {
 		return new LRUCache<K, V>(size);
 	}
 

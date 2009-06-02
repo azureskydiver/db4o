@@ -3,7 +3,6 @@ package com.db4o.db4ounit.common.cs;
 import java.util.*;
 
 import com.db4o.*;
-import com.db4o.config.*;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -204,8 +203,6 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 		client().config().prefetchObjectCount(1);
 		client().config().prefetchDepth(1);
 		
-		Assert.areEqual(QueryEvaluationMode.IMMEDIATE, client().config().queries().evaluationMode());
-		
 		final Query query = queryForItemsWithoutChildren();
 		final ObjectSet<Item> result = query.execute();
 		
@@ -227,8 +224,12 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 
 	private void deleteAllItemsFromSecondClient() {
 	    final ExtObjectContainer client = openNewClient();
-		deleteAll(client, Item.class);
-		client.commit();
+	    try {
+	    	deleteAll(client, Item.class);
+	    	client.commit();
+	    } finally {
+	    	client.close();
+	    }
     }
 
 	private Query queryForItemsWithChild() {
@@ -353,8 +354,9 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 		if (purged.contains(item)) {
 			return;
 		}
+		purged.add(item);
+		
 	    client().purge(item);
-	    purged.add(item);
 	    
 	    final Item child = item.child;
 		if (null != child) {;

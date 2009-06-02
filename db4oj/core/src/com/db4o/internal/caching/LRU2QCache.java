@@ -31,7 +31,7 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 		_slots = new HashMap<K, V>(maxSize);
 	}
 	
-	public V produce(K key, Function4<K, V> producer, Procedure4<V> onDiscard) {
+	public V produce(K key, Function4<K, V> producer, Procedure4<V> finalizer) {
 		
 		if(key == null){
 			throw new ArgumentNullException();
@@ -48,7 +48,7 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 		}
 		
 		if(_slots.size() >= _maxSize){
-			discardPage(onDiscard);
+			discardPage(finalizer);
 		}
 		
 		final V value = producer.apply(key);
@@ -57,21 +57,21 @@ class LRU2QCache<K,V> implements Cache4<K,V>{
 		return value;
 	}
 
-	private void discardPage(Procedure4<V> onDiscard) {
+	private void discardPage(Procedure4<V> finalizer) {
 	    if(_a1.size() >= _a1_threshold) {
-	    	discardPageFrom(_a1, onDiscard);
+	    	discardPageFrom(_a1, finalizer);
 	    } else {
-	    	discardPageFrom(_am, onDiscard);
+	    	discardPageFrom(_am, finalizer);
 	    }
     }
 
-	private void discardPageFrom(final CircularBuffer4<K> list, Procedure4<V> onDiscard) {
-	    discard(list.removeLast(), onDiscard);
+	private void discardPageFrom(final CircularBuffer4<K> list, Procedure4<V> finalizer) {
+	    discard(list.removeLast(), finalizer);
     }
 
-	private void discard(K key, Procedure4<V> onDiscard) {
-		if (null != onDiscard) {
-			onDiscard.apply(_slots.get(key));
+	private void discard(K key, Procedure4<V> finalizer) {
+		if (null != finalizer) {
+			finalizer.apply(_slots.get(key));
 		}
 	    _slots.remove(key);
     }

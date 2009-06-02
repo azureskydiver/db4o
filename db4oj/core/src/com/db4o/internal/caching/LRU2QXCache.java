@@ -29,7 +29,7 @@ class LRU2QXCache<K,V> implements Cache4<K,V> {
 		_a1out = new CircularBuffer4<K>(_maxSize / 2);
 	}
 	
-	public V produce(K key, Function4<K,V> producer, Procedure4<V> onDiscard) {
+	public V produce(K key, Function4<K,V> producer, Procedure4<V> finalizer) {
 		if(key == null){
 			throw new ArgumentNullException();
 		}
@@ -38,19 +38,19 @@ class LRU2QXCache<K,V> implements Cache4<K,V> {
 			return _slots.get(key);
 		}
 		if(_a1out.contains(key)) {
-			reclaimFor(key, producer, onDiscard);
+			reclaimFor(key, producer, finalizer);
 			_am.addFirst(key);
 			return _slots.get(key);
 		}
 		if(_a1in.contains(key)) {
 			return _slots.get(key);
 		}
-		reclaimFor(key, producer, onDiscard);
+		reclaimFor(key, producer, finalizer);
 		_a1in.addFirst(key);
 		return _slots.get(key);
 	}
 	
-	private void reclaimFor(K key, Function4<K,V> producer, Procedure4<V> onDiscard) {
+	private void reclaimFor(K key, Function4<K,V> producer, Procedure4<V> finalizer) {
 		if(_slots.size() < _maxSize) {
 			_slots.put(key, producer.apply(key));
 			return;
@@ -58,15 +58,14 @@ class LRU2QXCache<K,V> implements Cache4<K,V> {
 
 		if(_a1in.size() > _inSize) {
 			K lastKey = _a1in.removeLast();
-			discard(lastKey, onDiscard);
+			discard(lastKey, finalizer);
 			if(_a1out.isFull()) {
 				_a1out.removeLast();
 			}
 			_a1out.addFirst(lastKey);
-		}
-		else {
+		} else {
 			K lastKey = _am.removeLast();
-			discard(lastKey, onDiscard);
+			discard(lastKey, finalizer);
 		}
 		_slots.put(key, producer.apply(key));
 	}
@@ -79,10 +78,10 @@ class LRU2QXCache<K,V> implements Cache4<K,V> {
 		return "LRU2QXCache(am=" + toString(_am)  + ", a1in=" + toString(_a1in)  + ", a1out=" + toString(_a1out) + ")" + " - " + _slots.size();
 	}
 
-	private void discard(K key, Procedure4<V> onDiscard) {
+	private void discard(K key, Procedure4<V> finalizer) {
 		V removed = _slots.remove(key);
-		if(onDiscard != null) {
-			onDiscard.apply(removed);
+		if(finalizer != null) {
+			finalizer.apply(removed);
 		}
 	}
 
