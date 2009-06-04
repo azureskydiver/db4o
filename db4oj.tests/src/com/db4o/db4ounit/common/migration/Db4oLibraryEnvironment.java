@@ -44,7 +44,7 @@ public class Db4oLibraryEnvironment {
         return method.invoke(null, new Object[] {});
 	}
 	
-	public Object invokeInstanceMethod(Class klass, String methodName, Object[] args) throws Exception {
+	public Object invokeInstanceMethod(Class klass, String methodName, Object... args) throws Exception {
 		Class clazz = _loader.loadClass(klass.getName());
         Method method = clazz.getMethod(methodName, classes(args));
         return method.invoke(clazz.newInstance(), args);

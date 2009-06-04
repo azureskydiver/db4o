@@ -15,6 +15,7 @@ public class AllCommonTests extends Db4oTestSuite {
 		return new Class[]{
 			Db4oMigrationTestSuite.class,
 			FieldsToTypeHandlerMigrationTestCase.class,
+			MigrationHopsTestCase.class,
 			TranslatorToTypehandlerMigrationTestCase.class,
 		};
 	}
