@@ -30,9 +30,6 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 		}
 		try {
 			Class clazz = BloatUtil.classForEditor(ce, origLoader);
-			if (isEnum(clazz)){
-				return InstrumentationStatus.NOT_INSTRUMENTED;
-			}
 			Class activatableClazz = origLoader.loadClass(Activatable.class.getName());
 			if(activatableClazz.isAssignableFrom(clazz)) {
 				return InstrumentationStatus.NOT_INSTRUMENTED;
