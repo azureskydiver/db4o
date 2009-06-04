@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 
 import com.db4o.foundation.*;
+import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.datalayer.queryBuilder.*;
 import com.db4o.omplus.datalayer.queryresult.*;
@@ -749,7 +750,7 @@ public class QueryResultTab extends CTabItem implements IChildModifier
 				tabText = tabText.substring(ObjectViewer.TAB_NAME_BEGINS_WITH.length());
 				int tabIndex = new Integer(tabText).intValue();
 				Object tableObj = resultPage.getObjectById(queryResultList.getLocalIdList().get(tabIndex -1), 
-											DbInterfaceImpl.getInstance());
+											Activator.getDefault().getDatabaseInterface());
 				if(tabObj != tableObj)
 				{
 					tab.dispose();

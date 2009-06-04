@@ -12,19 +12,17 @@ import com.db4o.reflect.*;
  */
 public class DbInterfaceImpl implements IDbInterface {
 	
-	private static ObjectContainer objContainer;
+	private ObjectContainer objContainer;
 	
-	private static String dbPath;
+	private String dbPath;
 	
 	private static DbInterfaceImpl instance;
 	
-	private DbInterfaceImpl(){
-	}
-
 	public static DbInterfaceImpl getInstance(){
-		if(instance == null){
-			return new DbInterfaceImpl();
+		if(instance != null){
+			return instance;
 		}
+		instance = new DbInterfaceImpl();
 		return instance;
 	}
 

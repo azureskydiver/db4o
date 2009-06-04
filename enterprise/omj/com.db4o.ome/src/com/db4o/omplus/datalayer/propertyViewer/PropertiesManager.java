@@ -1,20 +1,15 @@
 package com.db4o.omplus.datalayer.propertyViewer;
 
-import java.util.HashMap;
+import java.util.*;
 
-import com.db4o.ObjectContainer;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.ext.ObjectInfo;
-import com.db4o.ext.StoredClass;
-import com.db4o.ext.StoredField;
-import com.db4o.omplus.datalayer.DbInterfaceImpl;
-import com.db4o.omplus.datalayer.ReflectHelper;
-import com.db4o.omplus.datalayer.propertyViewer.classProperties.ClassProperties;
-import com.db4o.omplus.datalayer.propertyViewer.classProperties.FieldProperties;
-import com.db4o.omplus.datalayer.propertyViewer.dbProperties.DBProperties;
-import com.db4o.omplus.datalayer.propertyViewer.objectProperties.ObjectProperties;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.datalayer.propertyViewer.classProperties.*;
+import com.db4o.omplus.datalayer.propertyViewer.dbProperties.*;
+import com.db4o.omplus.datalayer.propertyViewer.objectProperties.*;
+import com.db4o.reflect.*;
 
 
 public class PropertiesManager {
@@ -39,7 +34,7 @@ public class PropertiesManager {
 	public ObjectProperties getObjectProperties(Object obj){
 		ObjectProperties objProp = null;
 		if(obj != null){
-			ObjectContainer oc = DbInterfaceImpl.getInstance().getDB();
+			ObjectContainer oc = Activator.getDefault().getDatabaseInterface().getDB();
 			if(oc != null){
 				ExtObjectContainer db = oc.ext();
 				objProp = new ObjectProperties();
@@ -65,7 +60,7 @@ public class PropertiesManager {
 				return clsProperties;
 			}
 			else{
-				oc = DbInterfaceImpl.getInstance().getDB();
+				oc = Activator.getDefault().getDatabaseInterface().getDB();
 				clsProperties = buildClassProperties(className);
 				if(clsProperties != null)
 					properties.put(className, clsProperties);
@@ -75,7 +70,7 @@ public class PropertiesManager {
 	}	
 	
 	public DBProperties getDBProperties(){
-		DbInterfaceImpl dbInterface = DbInterfaceImpl.getInstance();
+		IDbInterface dbInterface = Activator.getDefault().getDatabaseInterface();
 		DBProperties dbProperties = new DBProperties();
 		if(dbInterface.getDB() != null){
 			dbProperties.setDbSize(dbInterface.getDBSize());
@@ -146,7 +141,7 @@ public class PropertiesManager {
 	}*/
 
 	private int getNumberOfObj(String className) {
-		DbInterfaceImpl dbInterface = DbInterfaceImpl.getInstance();
+		IDbInterface dbInterface = Activator.getDefault().getDatabaseInterface();
 		return dbInterface.getNumOfObjects(className);
 	}
 	

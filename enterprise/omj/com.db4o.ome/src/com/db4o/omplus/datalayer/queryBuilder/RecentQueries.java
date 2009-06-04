@@ -1,16 +1,16 @@
 package com.db4o.omplus.datalayer.queryBuilder;
 
-import java.util.ArrayList;
+import java.util.*;
 
+import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.*;
 
 public class RecentQueries {
 	
 	private final String KEY_GQ = "GLOBAL_QUERIES";
 
-	@SuppressWarnings("unchecked")
 	public ArrayList<OMQuery> getRecentQueriesForDB() {
-		OMEDataStore data = OMEDataStore.getInstance();
+		OMEDataStore data = Activator.getDefault().getOMEDataStore();
 		ArrayList<OMQuery> queryList = data.getContextLocalEntry(KEY_GQ);
 	    if (queryList == null){
 	    	queryList = new ArrayList<OMQuery>();
@@ -54,7 +54,7 @@ public class RecentQueries {
 	}
 
 	private void saveRecentQueryList(ArrayList<OMQuery> queryList) {
-		OMEDataStore data = OMEDataStore.getInstance();
+		OMEDataStore data = Activator.getDefault().getOMEDataStore();
 		data.setContextLocalEntry(KEY_GQ, queryList);
 	}
 	

@@ -1,14 +1,10 @@
 package com.db4o.omplus.datalayer.classviewer;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.ListIterator;
+import java.util.*;
 
-import com.db4o.omplus.datalayer.DbInterfaceImpl;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.ReflectHelper;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.reflect.*;
 
 public class ClassTreeBuilder {
 	
@@ -164,7 +160,7 @@ public class ClassTreeBuilder {
 
 	public Object [] getStoredClasses() {
 		Object classes[] = null;
-		DbInterfaceImpl db = DbInterfaceImpl.getInstance();
+		IDbInterface db = Activator.getDefault().getDatabaseInterface();
 //		try{
 			classes = db.getStoredClasses();
 	/*	}catch(Exception ex){

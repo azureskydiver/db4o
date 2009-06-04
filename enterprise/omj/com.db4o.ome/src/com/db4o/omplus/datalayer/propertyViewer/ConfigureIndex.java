@@ -1,30 +1,26 @@
 package com.db4o.omplus.datalayer.propertyViewer;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ext.StoredClass;
-import com.db4o.ext.StoredField;
-import com.db4o.internal.*;
-import com.db4o.omplus.datalayer.DbInterfaceImpl;
-import com.db4o.omplus.datalayer.ReflectHelper;
-import com.db4o.omplus.datalayer.propertyViewer.classProperties.ClassProperties;
-import com.db4o.omplus.datalayer.propertyViewer.classProperties.FieldProperties;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.datalayer.propertyViewer.classProperties.*;
+import com.db4o.reflect.*;
 
 public class ConfigureIndex {
 	
-	DbInterfaceImpl db;
+	IDbInterface db;
 	
 	public ConfigureIndex() {
-		db = DbInterfaceImpl.getInstance();
+		db = Activator.getDefault().getDatabaseInterface();
 	}
 	
 	public static boolean isLocal(){
-		return (!DbInterfaceImpl.getInstance().isClient());
+		return (!Activator.getDefault().getDatabaseInterface().isClient());
 	}
 	
 	private void reconnect(){
-		String path = DbInterfaceImpl.getInstance().getDbPath();
+		String path = Activator.getDefault().getDatabaseInterface().getDbPath();
 		db.close();
 		ObjectContainer oc = Db4o.openFile(path);
 		db.setDB(oc);// any error for path call DbInterface.setDbPath

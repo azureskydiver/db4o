@@ -1,30 +1,14 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.omplus.datalayer;
 
-import java.io.*;
 import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
 
 public class OMEDataStore {
-	private final static String USR_HOME_DIR = "user.home";
-	private final static String OME_DATA_DB = "OMEDATA.yap";
 	private final static String SEPARATOR ="/";
 	
-	 private final static String settingsFile = new File(new File(System
-				.getProperty(USR_HOME_DIR)), OME_DATA_DB)
-				.getAbsolutePath();
-	
-	private  static OMEDataStore omeDataStore;
-
-	public synchronized static OMEDataStore getInstance(){
-		if(omeDataStore != null) {
-			return omeDataStore;
-		}
-		return new OMEDataStore(settingsFile, new DatabasePathPrefixProvider());
-	}
-
 	private final String dbPath;
 	private final ContextPrefixProvider prefixProvider;
 	private  OMEData omeData;
@@ -113,10 +97,6 @@ public class OMEDataStore {
 		db.close();
 	}
 
-	private static class DatabasePathPrefixProvider implements ContextPrefixProvider {
-		public String currentPrefix() {
-			String prefix = DbInterfaceImpl.getInstance().getDbPath();
-			return prefix == null ? "" : prefix;
-		}
+	public void close() {
 	}
 }

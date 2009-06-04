@@ -1,18 +1,12 @@
 package com.db4o.omplus.datalayer.queryBuilder;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.omplus.datalayer.Converter;
-import com.db4o.omplus.datalayer.DbInterfaceImpl;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.ReflectHelper;
-import com.db4o.query.Constraint;
-import com.db4o.query.Query;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.Reflector;
+import com.db4o.*;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.query.*;
+import com.db4o.reflect.*;
 
 @SuppressWarnings("unchecked")
 public class QueryParser
@@ -30,7 +24,7 @@ public class QueryParser
         Constraint buildGroup = null;           
         Constraint conCatGroup = null; ;
 
-        ObjectContainer objectContainer = DbInterfaceImpl.getInstance().getDB();
+        ObjectContainer objectContainer = Activator.getDefault().getDatabaseInterface().getDB();
         Query query = objectContainer.query();
         rootConstraint = null;        
         int groupcount = 0;
@@ -198,7 +192,7 @@ public class QueryParser
     }
     
     private ReflectClass getFieldType(String []strArray) {
-		Reflector rf = DbInterfaceImpl.getInstance().reflector();
+		Reflector rf = Activator.getDefault().getDatabaseInterface().reflector();
 		ReflectClass clz = rf.forName(strArray[0]);
 		int length = strArray.length;
 		int count = 1;
@@ -222,7 +216,7 @@ public class QueryParser
 
 	public ObjectSet execute(ReflectClass clazz)
 	{
-		ObjectContainer objectContainer = DbInterfaceImpl.getInstance().getDB();
+		ObjectContainer objectContainer = Activator.getDefault().getDatabaseInterface().getDB();
         Query query = objectContainer.query();
         query.constrain(clazz);
 		return query.execute();

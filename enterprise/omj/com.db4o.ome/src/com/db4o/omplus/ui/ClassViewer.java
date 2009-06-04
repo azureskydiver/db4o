@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.part.*;
 
+import com.db4o.omplus.*;
 import com.db4o.omplus.connection.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.datalayer.classviewer.*;
@@ -668,7 +669,7 @@ public class ClassViewer extends ViewPart
 	public void refreshClassViewerWithNewDB()
 	{
 		boolean refreshClassTree = false;
-		if(DbInterfaceImpl.getInstance().getDB() != null)
+		if(Activator.getDefault().getDatabaseInterface().getDB() != null)
 		{	
 			setCurrentView();
 			int size = setItemsForCombo();

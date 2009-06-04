@@ -1,13 +1,11 @@
 package com.db4o.omplus.ui.model.queryResults;
 
-import java.util.ArrayList;
+import java.util.*;
 
-import com.db4o.omplus.datalayer.DbInterfaceImpl;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.ReflectHelper;
-import com.db4o.omplus.datalayer.queryresult.QueryResultRow;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.datalayer.queryresult.*;
+import com.db4o.reflect.*;
 
 public class QueryResultPage 
 {	
@@ -19,7 +17,7 @@ public class QueryResultPage
 	
 	private boolean refresh;
 	
-	private DbInterfaceImpl db = DbInterfaceImpl.getInstance();
+	private IDbInterface db = Activator.getDefault().getDatabaseInterface();
 
 	public int getNumOfPages() {
 		return numOfPages;
@@ -46,7 +44,7 @@ public class QueryResultPage
 			length = OMPlusConstants.MAX_OBJS_PAGE;
 		ArrayList<QueryResultRow> rowList = new ArrayList<QueryResultRow>(length);
 		int idx = (currentPage - 1) * OMPlusConstants.MAX_OBJS_PAGE;
-		DbInterfaceImpl db = DbInterfaceImpl.getInstance();
+		IDbInterface db = Activator.getDefault().getDatabaseInterface();
 		for(int i = 0; i < length && idx < size ; i++){
 			long objId = ids.get(idx);
 			Object obj = getObjectById(objId, db);
@@ -74,7 +72,7 @@ public class QueryResultPage
 	}
 
 	// currently changed to public. Check refresh in result table
-	public Object getObjectById(long objId, DbInterfaceImpl db) {
+	public Object getObjectById(long objId, IDbInterface db) {
 		try{
 			return db.getObjectById(objId);
 		}catch(Exception ex){
