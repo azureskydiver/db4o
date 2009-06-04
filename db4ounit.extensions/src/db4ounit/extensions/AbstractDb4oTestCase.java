@@ -310,20 +310,16 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 		Assert.areEqual(expected, countOccurences(oc, clazz));
 	}
 	
-	protected void foreach(Class clazz, Visitor4 visitor) {
-        ObjectSet set = newQuery(clazz).execute();
-        while (set.hasNext()) {
-            visitor.visit(set.next());
-        }
-	}
-	
-	protected void foreach(ExtObjectContainer oc, Class clazz, Visitor4 visitor) {
-        ObjectSet set = newQuery(oc, clazz).execute();
-        while (set.hasNext()) {
-            visitor.visit(set.next());
-        }
+	protected <T> void foreach(Class<T> clazz, Visitor4<T> visitor) {
+        foreach(db(), clazz, visitor);
 	}
 
+	protected <T> void foreach(final ExtObjectContainer container, Class<T> clazz, Visitor4<T> visitor) {
+	    ObjectSet<T> set = newQuery(container, clazz).execute();
+        while (set.hasNext()) {
+            visitor.visit(set.next());
+        }
+    }
 	
 	protected final void deleteAll(Class clazz) {
 		deleteAll(db(), clazz);
