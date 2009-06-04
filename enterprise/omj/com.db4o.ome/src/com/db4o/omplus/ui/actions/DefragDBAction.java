@@ -168,7 +168,7 @@ public class DefragDBAction implements IWorkbenchWindowActionDelegate {
 		
 		public void run(){
 			DbMaintenance main = new DbMaintenance();
-			String path = OMEData.getInstance().getDbPath();
+			String path = OMEDataStore.getInstance().getDbPath();
 			
 			DbInterface.getInstance().close();
 			

@@ -2,7 +2,7 @@ package com.db4o.omplus.datalayer.queryBuilder;
 
 import java.util.ArrayList;
 
-import com.db4o.omplus.datalayer.OMEData;
+import com.db4o.omplus.datalayer.*;
 
 public class RecentQueries {
 	
@@ -10,8 +10,8 @@ public class RecentQueries {
 
 	@SuppressWarnings("unchecked")
 	public ArrayList<OMQuery> getRecentQueriesForDB() {
-		OMEData data = OMEData.getInstance();
-		ArrayList<OMQuery> queryList = data.getDataValue(KEY_GQ);
+		OMEDataStore data = OMEDataStore.getInstance();
+		ArrayList<OMQuery> queryList = data.getContextLocalEntry(KEY_GQ);
 	    if (queryList == null){
 	    	queryList = new ArrayList<OMQuery>();
 	    }
@@ -54,8 +54,8 @@ public class RecentQueries {
 	}
 
 	private void saveRecentQueryList(ArrayList<OMQuery> queryList) {
-		OMEData data = OMEData.getInstance();
-		data.setDataValue(KEY_GQ, queryList);
+		OMEDataStore data = OMEDataStore.getInstance();
+		data.setContextLocalEntry(KEY_GQ, queryList);
 	}
 	
 	/*	@SuppressWarnings("unchecked")
