@@ -1,3 +1,5 @@
+/* Copyright (C) 2004   Versant Inc.   http://www.db4o.com */
+
 package com.db4o.cs.internal.caching;
 
 import static com.db4o.foundation.Environments.*;
@@ -9,7 +11,6 @@ import com.db4o.cs.caching.*;
 import com.db4o.events.*;
 import com.db4o.internal.*;
 
-// TODO: use Cache4 internally
 public class ClientSlotCacheImpl implements ClientSlotCache {
 
 	private final TransactionLocal<Map<Integer, ByteArrayBuffer>> _cache = new TransactionLocal<Map<Integer, ByteArrayBuffer>>() {
