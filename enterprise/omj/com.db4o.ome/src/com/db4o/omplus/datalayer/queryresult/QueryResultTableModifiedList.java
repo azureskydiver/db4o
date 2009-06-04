@@ -1,12 +1,10 @@
 package com.db4o.omplus.datalayer.queryresult;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
-import com.db4o.ObjectContainer;
-import com.db4o.omplus.datalayer.DbInterfaceImpl;
-import com.db4o.omplus.datalayer.ModifyObject;
+import com.db4o.*;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.*;
 
 @SuppressWarnings("unchecked")
 public class QueryResultTableModifiedList
@@ -125,6 +123,6 @@ public class QueryResultTableModifiedList
 	
 	private ObjectContainer getOC()
 	{
-		return DbInterfaceImpl.getInstance().getDB();
+		return Activator.getDefault().getDatabaseInterface().getDB();
 	}
 }

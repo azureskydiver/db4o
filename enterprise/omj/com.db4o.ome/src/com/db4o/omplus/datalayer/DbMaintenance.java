@@ -1,12 +1,10 @@
 package com.db4o.omplus.datalayer;
 
-import com.db4o.ext.DatabaseClosedException;
-import com.db4o.ext.Db4oIOException;
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.defragment.Defragment;
-import com.db4o.defragment.DefragmentConfig;
-import com.db4o.foundation.NotSupportedException;
+import com.db4o.*;
+import com.db4o.defragment.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
+import com.db4o.omplus.*;
 
 public class DbMaintenance {
 	
@@ -36,15 +34,15 @@ public class DbMaintenance {
 	}
 		
 	private void setDbPath(String path) {
-		DbInterfaceImpl.getInstance().setDbPath(path);
+		Activator.getDefault().getDatabaseInterface().setDbPath(path);
 	}
 
 	private void closeDB() {
-		DbInterfaceImpl.getInstance().close();
+		Activator.getDefault().getDatabaseInterface().close();
 	}
 	
 	private void setDB(ObjectContainer oc) {
-		DbInterfaceImpl.getInstance().setDB(oc);
+		Activator.getDefault().getDatabaseInterface().setDB(oc);
 	}
 
 	public void backup(String path) throws Exception {
@@ -67,11 +65,11 @@ public class DbMaintenance {
 	}
 
 	public boolean isClient() {
-		return DbInterfaceImpl.getInstance().isClient();
+		return Activator.getDefault().getDatabaseInterface().isClient();
 	}
 
 	private ObjectContainer getObjectContainer(){
-		DbInterfaceImpl dbinterface = DbInterfaceImpl.getInstance();
+		IDbInterface dbinterface = Activator.getDefault().getDatabaseInterface();
 		oc = dbinterface.getDB();
 		return oc;
 	}

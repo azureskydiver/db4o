@@ -1,20 +1,12 @@
 package com.db4o.omplus.datalayer;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import com.db4o.ext.StoredClass;
-import com.db4o.ext.StoredField;
-import com.db4o.omplus.datalayer.queryBuilder.QueryBuilderConstants;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.Reflector;
-import com.db4o.reflect.generic.GenericObject;
-import com.db4o.reflect.generic.GenericVirtualField;
+import com.db4o.ext.*;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.queryBuilder.*;
+import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 
 public class ReflectHelper {
 	 
@@ -40,7 +32,7 @@ public class ReflectHelper {
 	}
 	
 	private static Reflector getReflector(){
-		return DbInterfaceImpl.getInstance().reflector();
+		return Activator.getDefault().getDatabaseInterface().reflector();
 	}
 	
 	public static int getFieldTypeClass(String fieldname){

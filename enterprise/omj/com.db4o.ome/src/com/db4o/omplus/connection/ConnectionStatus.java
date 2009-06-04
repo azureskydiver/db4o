@@ -1,26 +1,27 @@
 package com.db4o.omplus.connection;
 
+import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.DbInterfaceImpl;
 
 public class ConnectionStatus {
 	
 	public boolean isConnected() {
-		if(DbInterfaceImpl.getInstance().getDB() != null){
+		if(Activator.getDefault().getDatabaseInterface().getDB() != null){
 			return true;
 		}
 		return false;
 	}
 	
 	public String getVersion(){
-		return DbInterfaceImpl.getInstance().getVersion();
+		return Activator.getDefault().getDatabaseInterface().getVersion();
 	}
 	
 	public String getCurrentDB(){
-		return DbInterfaceImpl.getInstance().getDbPath();
+		return Activator.getDefault().getDatabaseInterface().getDbPath();
 	}
 	
 	public void closeExistingDB(){
-		DbInterfaceImpl.getInstance().close();
+		Activator.getDefault().getDatabaseInterface().close();
 	}
 
 }

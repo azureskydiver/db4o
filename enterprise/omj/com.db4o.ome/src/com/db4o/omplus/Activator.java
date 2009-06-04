@@ -1,6 +1,6 @@
 package com.db4o.omplus;
 
-import omplus.debug.*;
+import java.io.*;
 
 import org.eclipse.jface.resource.*;
 import org.eclipse.swt.widgets.*;
@@ -12,27 +12,31 @@ import com.db4o.omplus.connection.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.omplus.ui.*;
 
-/**
- * The activator class controls the plug-in life cycle
- */
 public class Activator extends AbstractUIPlugin {
 
-	// The plug-in ID
 	public static final String PLUGIN_ID = OMPlusConstants.PLUGIN_ID;
 
-	// The shared instance
-	private static Activator plugin;
+	private final static String USR_HOME_DIR_PROPERTY = "user.home";
+	private final static String OME_DATA_DB = "OMEDATA.yap";
 	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
+	private final static String settingsFile = new File(new File(System
+				.getProperty(USR_HOME_DIR_PROPERTY)), OME_DATA_DB)
+				.getAbsolutePath();
+
+
+	private static Activator plugin;
+
+	public static Activator getDefault() {
+		return plugin;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-	 */
+	public static ImageDescriptor getImageDescriptor(String path) {
+		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+	}
+
+	private OMEDataStore dataStore = null;
+	private IDbInterface db = null;
+	
 	public void start(BundleContext context) throws Exception 
 	{
 		super.start(context);
@@ -144,41 +148,43 @@ public class Activator extends AbstractUIPlugin {
 		    				});
 		    }
 		
-		});//Thread created as Inner Class ends
+		});
 		
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		if(dataStore != null) {
+			dataStore.close();
+		}
 		ConnectionStatus status = new ConnectionStatus();
 		if(status.isConnected()){
 			status.closeExistingDB();
 		}
 		super.stop(context);
 	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
-
-	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path
-	 *
-	 * @param path the path
-	 * @return the image descriptor
-	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+	
+	public OMEDataStore getOMEDataStore() {
+		if(dataStore != null) {
+			return dataStore;
+		}
+		dataStore = new OMEDataStore(settingsFile, new DatabasePathPrefixProvider());
+		return dataStore;
 	}
 	
+	public IDbInterface getDatabaseInterface() {
+		if(db != null) {
+			return db;
+		}
+		db = new DbInterfaceImpl();
+		return db;
+	}
+	
+	private static class DatabasePathPrefixProvider implements ContextPrefixProvider {
+		public String currentPrefix() {
+			String prefix = Activator.getDefault().getDatabaseInterface().getDbPath();
+			return prefix == null ? "" : prefix;
+		}
+	}
+
 }

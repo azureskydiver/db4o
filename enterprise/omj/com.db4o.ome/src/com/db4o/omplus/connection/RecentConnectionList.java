@@ -1,7 +1,8 @@
 package com.db4o.omplus.connection;
 
-import java.util.ArrayList;
+import java.util.*;
 
+import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.*;
 
 @SuppressWarnings("unchecked")
@@ -11,7 +12,7 @@ public class RecentConnectionList {
 	private final String REMOTE = "REMOTE_CONN";
 	
 	public ArrayList<ConnectionParams> getRecentFileConnections(){
-		OMEDataStore omeData = OMEDataStore.getInstance();
+		OMEDataStore omeData = Activator.getDefault().getOMEDataStore();
 		ArrayList<ConnectionParams> connections = omeData.getGlobalEntry(LOCAL);
 		if(connections == null)
 			connections = new ArrayList<ConnectionParams>();
@@ -19,14 +20,14 @@ public class RecentConnectionList {
 	}
 	
 	private void setRecentFileConnections(ArrayList list){
-		OMEDataStore omeData = OMEDataStore.getInstance();
+		OMEDataStore omeData = Activator.getDefault().getOMEDataStore();
 		if(omeData != null && list != null){
 			omeData.setGlobalEntry(LOCAL, list);
 		}
 	}
 	
 	public ArrayList<ConnectionParams>  getRecentRemoteConnections(){
-		OMEDataStore omeData = OMEDataStore.getInstance();
+		OMEDataStore omeData = Activator.getDefault().getOMEDataStore();
 		ArrayList<ConnectionParams>  connections = omeData.getGlobalEntry(REMOTE);
 		if(connections == null)
 			connections = new ArrayList<ConnectionParams> ();
@@ -34,20 +35,20 @@ public class RecentConnectionList {
 	}
 	
 	private void setRecentRemoteConnections(ArrayList list){
-		OMEDataStore omeData = OMEDataStore.getInstance();
+		OMEDataStore omeData = Activator.getDefault().getOMEDataStore();
 		if(omeData != null && list != null){
 			omeData.setGlobalEntry(REMOTE, list);
 		}
 	}
 	
 	public boolean showRemoteConn(){
-		OMEDataStore omeData = OMEDataStore.getInstance();
+		OMEDataStore omeData = Activator.getDefault().getOMEDataStore();
 		return omeData.getIsLastConnRemote();
 	}
 	
 	 public void addNewConnection(ConnectionParams params)
 	 { // make sure it's not already here
-		 OMEDataStore omeData = OMEDataStore.getInstance();
+		 OMEDataStore omeData = Activator.getDefault().getOMEDataStore();
 		 if(params != null)
 		 {
 			ArrayList<ConnectionParams> connections = null;

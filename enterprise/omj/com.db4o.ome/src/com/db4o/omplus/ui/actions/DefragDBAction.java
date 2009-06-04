@@ -1,26 +1,16 @@
 package com.db4o.omplus.ui.actions;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
-import org.eclipse.ui.progress.IProgressConstants;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.*;
+import org.eclipse.jface.action.*;
+import org.eclipse.jface.dialogs.*;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.ui.*;
+import org.eclipse.ui.progress.*;
 
-import com.db4o.omplus.datalayer.DbInterfaceImpl;
-import com.db4o.omplus.datalayer.DbMaintenance;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.ui.ViewerManager;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.ui.*;
 
 
 public class DefragDBAction implements IWorkbenchWindowActionDelegate {
@@ -63,7 +53,7 @@ public class DefragDBAction implements IWorkbenchWindowActionDelegate {
 						closeOMEPerspective();
 						ViewerManager.resetAllViewsToInitialState();
 						showOMEPerspective();
-						final String path = DbInterfaceImpl.getInstance().getDbPath();
+						final String path = Activator.getDefault().getDatabaseInterface().getDbPath();
 						try {
 //							// background job for derfag
 							Job tDefrag=new Job(DEFRAG_STATUS){
@@ -168,7 +158,7 @@ public class DefragDBAction implements IWorkbenchWindowActionDelegate {
 		
 		public void run(){
 			DbMaintenance main = new DbMaintenance();
-			String path = OMEDataStore.getInstance().getDbPath();
+			String path = Activator.getDefault().getOMEDataStore().getDbPath();
 			
 			DbInterface.getInstance().close();
 			

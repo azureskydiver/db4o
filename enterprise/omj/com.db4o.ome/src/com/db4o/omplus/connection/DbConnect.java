@@ -1,18 +1,11 @@
 package com.db4o.omplus.connection;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 
-import com.db4o.ext.DatabaseFileLockedException;
-
-import com.db4o.Db4o;
-import com.db4o.ext.InvalidPasswordException;
-import com.db4o.ObjectContainer;
-import com.db4o.ext.DatabaseReadOnlyException;
-import com.db4o.ext.Db4oException;
-import com.db4o.ext.IncompatibleFileFormatException;
-import com.db4o.ext.OldFormatException;
-import com.db4o.omplus.datalayer.DbInterfaceImpl;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.*;
 
 public class DbConnect {
 	
@@ -24,7 +17,7 @@ public class DbConnect {
 			String path = params.getPath();
 			ObjectContainer db = Db4o.openClient(params.configure(), params.getHost(), params.getPort(), params.getUser(), params.getPassword());
 			if(db != null){
-				DbInterfaceImpl dbHandle = DbInterfaceImpl.getInstance();
+				IDbInterface dbHandle = Activator.getDefault().getDatabaseInterface();
 				dbHandle.setDB(db);
 				dbHandle.setDbPath(path);
 			}
@@ -44,7 +37,7 @@ public class DbConnect {
 			assertFileExists(path);
 			ObjectContainer db = Db4o.openFile(params.configure(), path);
 			if(db != null) {
-				DbInterfaceImpl dbHandle = DbInterfaceImpl.getInstance();
+				IDbInterface dbHandle = Activator.getDefault().getDatabaseInterface();
 				dbHandle.setDB(db);
 				dbHandle.setDbPath(path);
 			}

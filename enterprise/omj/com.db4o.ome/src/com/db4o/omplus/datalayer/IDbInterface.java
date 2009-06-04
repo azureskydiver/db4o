@@ -1,5 +1,9 @@
 package com.db4o.omplus.datalayer;
 
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.reflect.*;
+
 public interface IDbInterface {
 	
 	/**
@@ -40,5 +44,27 @@ public interface IDbInterface {
 	 * @return 
 	 */
 	public void refreshObj(Object obj);
+
+	void activate(Object resObj, int i);
+
+	ObjectContainer getDB();
+
+	String getDbPath();
+
+	boolean isClient();
+
+	Reflector reflector();
+
+	void setDB(ObjectContainer oc);
+
+	void setDbPath(String path);
+
+	long getDBSize();
+
+	long getFreespaceSize();
+
+	StoredClass getStoredClass(String name);
+
+	String getVersion();
 
 }

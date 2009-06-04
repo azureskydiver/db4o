@@ -3,6 +3,7 @@ package com.db4o.omplus.datalayer.queryresult;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.omplus.*;
 import com.db4o.omplus.datalayer.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -16,12 +17,12 @@ public class ObjectTreeBuilder {
 	private final String KEY = "key";
 	private final String VALUE = "value";
 	
-	private DbInterfaceImpl db;
+	private IDbInterface db;
 	
 	private static Reflector reflector;
 	
 	public ObjectTreeBuilder(){
-		db  = DbInterfaceImpl.getInstance(); 
+		db  = Activator.getDefault().getDatabaseInterface(); 
 		if( reflector == null)
 			reflector = db.reflector();
 	}
@@ -390,7 +391,7 @@ public class ObjectTreeBuilder {
 		{ // equivalent to delete operation in table & tree;
 			if(node.getValue() != null)
 			{
-				DbInterfaceImpl db = DbInterfaceImpl.getInstance();
+				IDbInterface db = Activator.getDefault().getDatabaseInterface();
 				db.getDB().delete(node.getValue());
 			}
 		}
@@ -417,7 +418,7 @@ public class ObjectTreeBuilder {
 	}
 
 	private ObjectContainer getObjContainer() {
-		return DbInterfaceImpl.getInstance().getDB();
+		return Activator.getDefault().getDatabaseInterface().getDB();
 	}
 
 }

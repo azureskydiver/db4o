@@ -1,16 +1,12 @@
 package com.db4o.omplus.datalayer.queryresult;
 
-import java.util.ArrayList;
+import java.util.*;
 
-import com.db4o.ObjectSet;
-import com.db4o.omplus.datalayer.DbInterfaceImpl;
-import com.db4o.omplus.datalayer.OMPlusConstants;
-import com.db4o.omplus.datalayer.ReflectHelper;
-import com.db4o.omplus.datalayer.queryBuilder.OMQuery;
-import com.db4o.omplus.datalayer.queryBuilder.QueryParser;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.Reflector;
+import com.db4o.*;
+import com.db4o.omplus.*;
+import com.db4o.omplus.datalayer.*;
+import com.db4o.omplus.datalayer.queryBuilder.*;
+import com.db4o.reflect.*;
 
 /**
  * Implemented for Query Results Tab or class
@@ -26,7 +22,7 @@ public class QueryResultsManager
 	
 	private OMQuery oMQuery;
 	
-	private Reflector reflector = DbInterfaceImpl.getInstance().reflector();
+	private Reflector reflector = Activator.getDefault().getDatabaseInterface().reflector();
 	
 	public QueryResultsManager() {
 	}
