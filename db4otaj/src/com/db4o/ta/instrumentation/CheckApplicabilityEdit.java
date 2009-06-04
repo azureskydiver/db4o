@@ -20,6 +20,9 @@ class CheckApplicabilityEdit implements BloatClassEdit {
 			if (clazz.isInterface()) {
 				return InstrumentationStatus.FAILED;
 			}
+			if (clazz.isEnum()) {
+				return InstrumentationStatus.FAILED;
+			}
 			if (!isApplicableClass(clazz)) {
 				return InstrumentationStatus.FAILED;
 			}

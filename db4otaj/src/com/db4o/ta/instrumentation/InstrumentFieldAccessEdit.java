@@ -170,7 +170,11 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 				String className = fieldRef.declaringClass().className();
 				String normalizedClassName = BloatUtil.normalizeClassName(className);
 				try {
-					return _filter.accept(origLoader.loadClass(normalizedClassName));
+					final Class<?> clazz = origLoader.loadClass(normalizedClassName);
+					if (clazz.isEnum()) {
+						return false;
+					}
+					return _filter.accept(clazz);
 				} catch (ClassNotFoundException e) {
 					// TODO: sensible error notification.
 					e.printStackTrace();
