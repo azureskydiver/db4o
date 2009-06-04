@@ -2,18 +2,18 @@ package com.db4o.omplus.datalayer.classviewer;
 
 import java.util.ArrayList;
 
-import com.db4o.omplus.datalayer.OMEData;
+import com.db4o.omplus.datalayer.*;
 
 public class RecentSearchKeys {
 
 	private final String SEARCH_KEY = "SEARCH_KEY";
 	
-//	private OMEData data = OMEData.getInstance();
+//	private OMEData data = OMEDataStore.getInstance();
 	
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> getSearchKeysForDB() {
-		OMEData data = OMEData.getInstance();
-		ArrayList<String> queryList = data.getDataValue(SEARCH_KEY);
+		OMEDataStore data = OMEDataStore.getInstance();
+		ArrayList<String> queryList = data.getContextLocalEntry(SEARCH_KEY);
 	    if (queryList == null){
 	    	queryList = new ArrayList<String>(11);
 	    }
@@ -56,8 +56,8 @@ public class RecentSearchKeys {
 	}
 
 	private void saveSearchKeys(ArrayList<String> queryList) {
-		OMEData data = OMEData.getInstance();
-		data.setDataValue(SEARCH_KEY, queryList);
+		OMEDataStore data = OMEDataStore.getInstance();
+		data.setContextLocalEntry(SEARCH_KEY, queryList);
 	}
 	
 /*	public ArrayList<String> getRecentQueriesForClass(String className) {

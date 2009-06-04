@@ -1,22 +1,17 @@
 package com.db4o.omplus.datalayer;
 
-import java.util.TreeSet;
+import java.util.*;
 
 import com.db4o.*;
-import com.db4o.ext.StoredClass;
-import com.db4o.ext.SystemInfo;
-import com.db4o.internal.ObjectContainerBase;
-import com.db4o.reflect.Reflector;
+import com.db4o.ext.*;
+import com.db4o.internal.*;
+import com.db4o.reflect.*;
 
 /**
  * Singleton class
  */
 public class DbInterfaceImpl implements IDbInterface {
 	
-	private static final String JAVA_LANG = "java.";
-	private static final String DB4O_PACK = "com.db4o.";
-	private static final String DB4O_NET = "Db4objects.";
-
 	private static ObjectContainer objContainer;
 	
 	private static String dbPath;
@@ -62,7 +57,7 @@ public class DbInterfaceImpl implements IDbInterface {
 
 	private boolean excludeClass(String className) {
 		try {
-			Class clazz = Class.forName(className);
+			Class<?> clazz = Class.forName(className);
 			return Internal4.class.isAssignableFrom(clazz);
 		} catch (ClassNotFoundException e) {
 			// Can happen if the class definition is not available.
