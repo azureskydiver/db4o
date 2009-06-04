@@ -12,8 +12,6 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 
-/**
- */
 @decaf.Ignore
 public class TAEnumsTestCase extends AbstractDb4oTestCase {
 

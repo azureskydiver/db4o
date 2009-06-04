@@ -3,15 +3,14 @@
 package com.db4o.db4ounit.common.migration;
 
 import java.io.*;
-
-import com.db4o.foundation.*;
+import java.util.*;
 
 /**
  */
 @decaf.Ignore(decaf.Platform.JDK11)
 public class Db4oLibraryEnvironmentProvider {
 	
-	private final Hashtable4 _environments = new Hashtable4();
+	private final Map<String, Db4oLibraryEnvironment> _environments = new HashMap();
 	private final File _classPath;
 	
 	public Db4oLibraryEnvironmentProvider(File classPath) {
@@ -26,7 +25,7 @@ public class Db4oLibraryEnvironmentProvider {
 	}
 
 	private Db4oLibraryEnvironment existingEnvironment(String path) {
-		return (Db4oLibraryEnvironment) _environments.get(path);
+		return _environments.get(path);
 	}
 
 	private Db4oLibraryEnvironment newEnvironment(String path)
@@ -35,5 +34,12 @@ public class Db4oLibraryEnvironmentProvider {
 		_environments.put(path, env);
 		return env;
 	}
+
+	public void disposeAll() {
+		for (Db4oLibraryEnvironment e : _environments.values()) {
+			e.dispose();
+		}
+		_environments.clear();
+    }
 
 }
