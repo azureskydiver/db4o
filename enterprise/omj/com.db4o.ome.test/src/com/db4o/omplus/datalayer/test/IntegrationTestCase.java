@@ -17,12 +17,12 @@ public class IntegrationTestCase {
 	public void testAppDataStore() {
 		OMEDataStore dataStore = Activator.getDefault().getOMEDataStore();
 		IDbInterface db = Activator.getDefault().getDatabaseInterface();
-		db.setDbPath("a");
+		db.setDB(null, "a");
 		dataStore.setContextLocalEntry(KEY, new ArrayList<String>());
 		assertNotNull(dataStore.getContextLocalEntry(KEY));
-		db.setDbPath("b");
+		db.setDB(null, "b");
 		assertNull(dataStore.getContextLocalEntry(KEY));
-		db.setDbPath("a");
+		db.setDB(null, "a");
 		assertNotNull(dataStore.getContextLocalEntry(KEY));
 	}
 	

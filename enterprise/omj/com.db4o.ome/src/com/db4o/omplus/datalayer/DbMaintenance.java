@@ -29,22 +29,13 @@ public class DbMaintenance {
 		Defragment.defrag(defragConfig);
 		
 		ObjectContainer oc = Db4o.openFile(path);
-		setDB(oc);
-		setDbPath(path);
+		Activator.getDefault().getDatabaseInterface().setDB(oc, path);
 	}
 		
-	private void setDbPath(String path) {
-		Activator.getDefault().getDatabaseInterface().setDbPath(path);
-	}
-
 	private void closeDB() {
 		Activator.getDefault().getDatabaseInterface().close();
 	}
 	
-	private void setDB(ObjectContainer oc) {
-		Activator.getDefault().getDatabaseInterface().setDB(oc);
-	}
-
 	public void backup(String path) throws Exception {
 		oc = getObjectContainer();
 		if(oc != null ){
