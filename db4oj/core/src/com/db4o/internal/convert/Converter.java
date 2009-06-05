@@ -2,8 +2,8 @@
 
 package com.db4o.internal.convert;
 
-import com.db4o.foundation.*;
-import com.db4o.internal.*;
+import java.util.*;
+
 import com.db4o.internal.convert.conversions.*;
 
 /**
@@ -13,12 +13,21 @@ public class Converter {
     
     public static final int VERSION = ReindexNetDateTime_7_8.VERSION;
     
-    private static Converter _converter;
+    public static boolean convert(ConversionStage stage) {
+    	if(!needsConversion(stage.converterVersion())) {
+    		return false;
+    	}
+    	return instance().runConversions(stage);
+    }
     
-    private Hashtable4 _conversions;
+    private static Converter _instance;
+    
+    private Map<Integer, Conversion> _conversions;
+
+	private int _minimumVersion = Integer.MAX_VALUE;
     
     private Converter() {
-        _conversions = new Hashtable4();
+        _conversions = new HashMap<Integer, Conversion>();
         
         // TODO: There probably will be Java and .NET conversions
         //       Create Platform4.registerConversions() method ann
@@ -26,37 +35,39 @@ public class Converter {
         CommonConversions.register(this);
     }
 
-    public static boolean convert(ConversionStage stage) {
-    	if(!needsConversion(stage.systemData())) {
-    		return false;
+	public static Converter instance() {
+	    if(_instance == null){
+    		_instance = new Converter();
     	}
-    	if(_converter == null){
-    		_converter = new Converter();
-    	}
-    	return _converter.runConversions(stage);
+    	return _instance;
     }
 
-    private static boolean needsConversion(SystemData systemData) {
-        return systemData.converterVersion() < VERSION;
+	public Conversion conversionFor(int version) {
+	    return _conversions.get(version);
+    }
+	
+	private static boolean needsConversion(final int converterVersion) {
+	    return converterVersion < VERSION;
     }
 
-    public void register(int idx, Conversion conversion) {
-        if(_conversions.get(idx) != null){
+    public void register(int introducedVersion, Conversion conversion) {
+        if(_conversions.containsKey(introducedVersion)){
             throw new IllegalStateException();
         }
-        _conversions.put(idx, conversion);
+        if (introducedVersion < _minimumVersion) {
+        	_minimumVersion  = introducedVersion;
+        }
+        _conversions.put(introducedVersion, conversion);
     }
     
     public boolean runConversions(ConversionStage stage) {
-        SystemData systemData = stage.systemData();
-        if(!needsConversion(systemData)){
-            return false;
-        }
-        for (int i = systemData.converterVersion(); i <= VERSION; i++) {
-            Conversion conversion = (Conversion)_conversions.get(i);
-            if(conversion != null){
-                stage.accept(conversion);
+    	int startingVersion = Math.max(stage.converterVersion() + 1, _minimumVersion);
+        for (int version = startingVersion; version <= VERSION; version++) {
+            Conversion conversion = conversionFor(version);
+            if (conversion == null) {
+            	throw new IllegalStateException("Could not find a conversion for version " + version);
             }
+            stage.accept(conversion);
         }
         return true;
     }

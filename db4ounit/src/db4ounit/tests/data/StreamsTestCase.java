@@ -3,13 +3,12 @@ package db4ounit.tests.data;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
-import db4ounit.data.*;
 
 public class StreamsTestCase implements TestCase {
 	
 	public void testSeries() {
 		final Collection4 calls = new Collection4();
-		final Iterator4 series = Streams.series("", new Function4() {
+		final Iterator4 series = Iterators.series("", new Function4() {
 			public Object apply(Object value) {
 				calls.add(value);
 				return value + "*";

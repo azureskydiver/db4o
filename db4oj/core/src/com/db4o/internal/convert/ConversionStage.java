@@ -38,10 +38,11 @@ public abstract class ConversionStage {
 	public LocalObjectContainer file() {
 		return _file;
 	}
+
+	public int converterVersion() {
+		return _file.systemData().converterVersion();
+	}
 	
-    public SystemData systemData(){
-        return _file.systemData();
-    }
-	
-	public abstract void accept(Conversion conversion);
+    public abstract void accept(Conversion conversion);
+
 }
