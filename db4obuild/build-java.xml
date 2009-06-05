@@ -1464,7 +1464,8 @@
             access="public" 
             windowtitle="db4o - database for objects - documentation" 
             header="db4o ${db4o.version.dotted}" 
-            destdir="${dir.dist.doc.api}">
+            destdir="${dir.dist.doc.api}"
+			useexternalfile="true">
 			
 			<classpath>
 				<pathelement location="${file.jdk1.5.jar}" />
