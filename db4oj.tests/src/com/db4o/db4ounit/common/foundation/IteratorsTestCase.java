@@ -16,6 +16,19 @@ public class IteratorsTestCase implements TestCase {
 		new ConsoleTestRunner(IteratorsTestCase.class).run();
 	}
 	
+	public void testRange() {
+		Iterator4Assert.areEqual(new Object[] {}, Iterators.range(1, 1));
+		Iterator4Assert.areEqual(new Object[] { 1 }, Iterators.range(1, 2));
+		Iterator4Assert.areEqual(new Object[] { 1, 2 }, Iterators.range(1, 3));
+		Iterator4Assert.areEqual(new Object[] { -2, -1, 0, 1, 2 }, Iterators.range(-2, 3));
+		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				Iterators.range(2, 1);
+            }
+		});
+		
+	}
+	
 	public void testIterateSingle() {
 		final Iterator4 i = Iterators.singletonIterator("foo");
 		Assert.isTrue(i.moveNext());

@@ -12,7 +12,7 @@ public class Streams {
 	private static final Random random = new Random();
 	
 	public static Iterable4 randomIntegers() {
-		return series(null, new Function4() {
+		return Iterators.series(null, new Function4() {
 			public Object apply(Object arg) {
 	            return new Integer(random.nextInt());
             }
@@ -20,7 +20,7 @@ public class Streams {
     }
 	
 	public static Iterable4 randomNaturals(final int ceiling) {
-		return series(null, new Function4() {
+		return Iterators.series(null, new Function4() {
 			public Object apply(Object arg) {
 	            return new Integer(random.nextInt(ceiling));
             }
@@ -77,28 +77,5 @@ public class Streams {
 				return new Character((char)((Integer)value).intValue());
 			}
 		});
-    }
-
-	public static Iterable4 series(final Object seed, final Function4 function) {
-	    return new Iterable4() {
-	    	public Iterator4 iterator() {
-	    		return new Iterator4() {
-	    			private Object _current = seed;
-	    			
-					public Object current() {
-						return _current;
-                    }
-
-					public boolean moveNext() {
-						_current = function.apply(_current);
-						return true;
-                    }
-
-					public void reset() {
-						_current = seed;
-                    }
-	    		};
-	    	}
-	    };
     }	
 }

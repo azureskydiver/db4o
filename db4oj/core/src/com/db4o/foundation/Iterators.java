@@ -321,4 +321,38 @@ public class Iterators {
             }
 		};
 	}
+
+	public static Iterator4<Integer> range(int fromInclusive, int toExclusive) {
+		if (toExclusive < fromInclusive) {
+			throw new IllegalArgumentException();
+		}
+		return take(
+					toExclusive - fromInclusive,
+					series(fromInclusive - 1, new Function4<Integer, Integer>() { public Integer apply(Integer i) {
+						return i + 1;
+                    }}).iterator());
+    }
+
+	public static <T> Iterable4<T> series(final T seed, final Function4<T, T> function) {
+        return new Iterable4() {
+        	public Iterator4<T> iterator() {
+        		return new Iterator4<T>() {
+        			private T _current = seed;
+        			
+    				public T current() {
+    					return _current;
+                    }
+    
+    				public boolean moveNext() {
+    					_current = function.apply(_current);
+    					return true;
+                    }
+    
+    				public void reset() {
+    					_current = seed;
+                    }
+        		};
+        	}
+        };
+    }
 }
