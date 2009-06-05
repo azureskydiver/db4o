@@ -7,10 +7,22 @@ import org.eclipse.core.resources._
 import org.eclipse.core.runtime._
 import java.io._
 
+import scala.collection._
+
 object PDEUtil {
-  def binaryRoots(javaProject: IJavaProject) = {
+  def binaryRoots(javaProject: IJavaProject) =
     javaProject.getPackageFragmentRoots.map(outputLocation(_))
-  }
+  
+  def classPath(javaProject: IJavaProject): Set[IPath] =
+	javaProject.getResolvedClasspath(false).foldLeft(immutable.HashSet[IPath]())((set, cpe) =>
+	  cpe.getEntryKind match {
+	    case IClasspathEntry.CPE_SOURCE => {
+	      set + outputLocation(packageFragmentRoot(javaElement(cpe.getPath)))
+       }
+	    case IClasspathEntry.CPE_PROJECT => set ++ classPath(this.javaProject(cpe.getPath))
+	    case _ => set + cpe.getPath
+	  }
+	)
   
   def packageFragmentRoot(javaElement: IJavaElement): IPackageFragmentRoot =
     if(javaElement.isInstanceOf[IPackageFragmentRoot])
@@ -37,4 +49,13 @@ object PDEUtil {
   def workspaceFile(path: IPath) =
     new File(PDEUtil.workspacePath(path).toOSString)
 
-}
+  def containerForPath(path: IPath) = {
+    getWorkspaceRoot.getContainerForLocation(workspacePath(path))
+  }
+  
+  def javaProject(path: IPath) =
+    JavaCore.create(containerForPath(path).getProject)
+
+  def javaElement(path: IPath) =
+    JavaCore.create(containerForPath(path))
+ }
