@@ -23,7 +23,7 @@ public class ConfigureIndex {
 		String path = Activator.getDefault().getDatabaseInterface().getDbPath();
 		db.close();
 		ObjectContainer oc = Db4o.openFile(path);
-		db.setDB(oc);// any error for path call DbInterface.setDbPath
+		db.setDB(oc, path);
 	}
 	
 	private boolean isIndexable(StoredField storedField, ObjectContainer db) {

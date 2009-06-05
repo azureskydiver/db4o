@@ -18,8 +18,7 @@ public class DbConnect {
 			ObjectContainer db = Db4o.openClient(params.configure(), params.getHost(), params.getPort(), params.getUser(), params.getPassword());
 			if(db != null){
 				IDbInterface dbHandle = Activator.getDefault().getDatabaseInterface();
-				dbHandle.setDB(db);
-				dbHandle.setDbPath(path);
+				dbHandle.setDB(db, path);
 			}
 			return true;
 		} catch (OldFormatException e) {
@@ -38,8 +37,7 @@ public class DbConnect {
 			ObjectContainer db = Db4o.openFile(params.configure(), path);
 			if(db != null) {
 				IDbInterface dbHandle = Activator.getDefault().getDatabaseInterface();
-				dbHandle.setDB(db);
-				dbHandle.setDbPath(path);
+				dbHandle.setDB(db, path);
 			}
 			return true;
 		} catch (com.db4o.ext.DatabaseFileLockedException e) {

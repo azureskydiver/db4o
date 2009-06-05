@@ -67,15 +67,11 @@ public class DbInterfaceImpl implements IDbInterface {
 		return objContainer;
 	}
 	
-	public void setDB(ObjectContainer oc){
-		objContainer = oc;
+	public void setDB(ObjectContainer db, String path) {
+		objContainer = db;
+		dbPath = path;
 	}
-	
-	public void setDbPath(String path) {
-		if(path != null)
-			dbPath = path;
-	}
-	
+
 	public String getDbPath() {
 		return dbPath;
 	}
@@ -152,4 +148,5 @@ public class DbInterfaceImpl implements IDbInterface {
 		if(obj != null)
 			objContainer.ext().refresh(obj, 1);
 	}
+
 }
