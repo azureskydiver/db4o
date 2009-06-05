@@ -157,6 +157,9 @@ public class Activator extends AbstractUIPlugin {
 		if(dataStore != null) {
 			dataStore.close();
 		}
+		if(db != null) {
+			db.close();
+		}
 		ConnectionStatus status = new ConnectionStatus();
 		if(status.isConnected()){
 			status.closeExistingDB();

@@ -9,20 +9,17 @@ import com.db4o.config.*;
 public class OMEDataStore {
 	private final static String SEPARATOR ="/";
 	
-	private final String dbPath;
 	private final ContextPrefixProvider prefixProvider;
 	private  OMEData omeData;
+	private ObjectContainer db;
 	
 	public OMEDataStore(String dbPath, ContextPrefixProvider prefixProvider){
-		this.dbPath = dbPath;
 		this.prefixProvider = prefixProvider;
-		ObjectContainer db = getObjectContainer();
+		db = Db4oEmbedded.openFile(configure(), dbPath);
 		omeData = readOMEData(db);
 		if(omeData == null) {
 			omeData = new OMEData();
-			db.store(omeData);
 		}
-		close(db);
 	}
 		
 	@SuppressWarnings("unchecked")
@@ -38,7 +35,7 @@ public class OMEDataStore {
 			return;
 		}
 		omeData.data.put(key, list);
-		writeData(omeData);
+		writeData();
 	}
 	
 	public <T> ArrayList<T> getContextLocalEntry(String key){
@@ -61,22 +58,9 @@ public class OMEDataStore {
 		return prefixProvider.currentPrefix() + SEPARATOR + key;
 	}
 	
-	private synchronized void writeData(OMEData omData) {
-		ObjectContainer db = getObjectContainer();
-		OMEData temp = readOMEData(db);
-		if (temp != null){
-			temp.data = omData.getData();
-			temp.isLastConnRemote = omData.isLastConnRemote;
-		}
-		else {
-			temp = omeData;
-		}
-		db.store(temp);
-		close(db);
-	}
-
-	private ObjectContainer getObjectContainer() {
-		return Db4oEmbedded.openFile(configure(), dbPath);
+	private void writeData() {
+		db.store(omeData);
+		db.commit();
 	}
 
 	private OMEData readOMEData(ObjectContainer db){
@@ -92,11 +76,7 @@ public class OMEDataStore {
 		return config;
 	}
 	
-	private void close(ObjectContainer db){
-		db.commit();
-		db.close();
-	}
-
 	public void close() {
+		db.close();
 	}
 }
