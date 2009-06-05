@@ -26,6 +26,7 @@ public class OMEDataStoreTestCase {
 
 	@After
 	public void tearDown() {
+		dataStore.close();
 		deleteDBFile();
 	}
 	
@@ -68,7 +69,6 @@ public class OMEDataStoreTestCase {
 
 		public String prefix = "";
 		
-		@Override
 		public String currentPrefix() {
 			return prefix;
 		}
