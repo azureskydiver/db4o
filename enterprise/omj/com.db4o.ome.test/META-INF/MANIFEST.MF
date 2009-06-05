@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Test Plug-in
+Bundle-SymbolicName: com.db4o.ome.test
+Bundle-Version: 1.0.0
+Bundle-Vendor: DB4O
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: com.db4o.ome;bundle-version="1.0.4",
+ org.junit4;bundle-version="4.3.1"
