@@ -50,8 +50,8 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
     }
     roots(javaProject).foreach((root) => {
       val fileRoot = new FullFilePathRoot(javaProject.getProject, root)
-      val classPath = PDEUtil.binaryRoots(javaProject).map(PDEUtil.workspacePath(_).toOSString)
-      enhance(fileRoot, classPath, javaProject.getProject, PDEUtil.workspacePath(root).toOSString)
+      val classPath = PDEUtil.classPath(javaProject).map(PDEUtil.workspacePath(_).toOSString)
+      enhance(fileRoot, javaProject, PDEUtil.workspacePath(root).toOSString)
     })
   }
 
@@ -65,18 +65,23 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
     val classPathRootsArr = classPathRoots.toList.toArray
     partitioned.keys.foreach((binaryRoot) => {
       val instrumentationRoot = new SelectionFilePathRoot(classPathRoots, partitioned.get(binaryRoot).get.toList.removeDuplicates)
-      enhance(instrumentationRoot, classPathRootsArr, binaryRoot.javaProject.getProject, PDEUtil.workspacePath(binaryRoot.path).toOSString)
+      enhance(instrumentationRoot, binaryRoot.javaProject, PDEUtil.workspacePath(binaryRoot.path).toOSString)
     })
   }
 
-  private def enhance(root: FilePathRoot, classPathRoots: Array[String], project: IProject, outPath: String) {
+  private def enhance(root: FilePathRoot, javaProject: IJavaProject, outPath: String) {
+	  val project = javaProject.getProject
+	  val classPathRoots = PDEUtil.classPath(javaProject).map(PDEUtil.workspacePath(_).toOSString)
       val instrumentor = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(new PreferenceBasedFilter(project)))
       Db4oPluginActivator.getDefault.getInstrumentationListeners.foreach(instrumentor.addInstrumentationListener(_))
       try {
-        instrumentor.enhance(new BundleClassSource, root, outPath, classPathRoots, getClass.getClassLoader)
+        instrumentor.enhance(new BundleClassSource, root, outPath, classPathRoots.toList.toArray, getClass.getClassLoader)
       }
       catch {
-        case exc => throw new CoreException(new Status(IStatus.ERROR, Db4oPluginActivator.PLUGIN_ID, "Error instrumenting folder " + outPath, exc))
+        case exc => {
+          exc.printStackTrace
+          throw new CoreException(new Status(IStatus.ERROR, Db4oPluginActivator.PLUGIN_ID, "Error instrumenting folder " + outPath, exc))
+        }
       }
   }
   
@@ -93,7 +98,7 @@ class Db4oInstrumentationBuilder extends IncrementalProjectBuilder {
         roots ++ (PDEUtil.binaryRoots(javaProject).map(PDEUtil.workspacePath(_)))
     })
   }
- 
+  
   private class BundleClassSource extends ClassSource {
     def loadClass(name: String) = Db4oPluginActivator.getDefault.getBundle.loadClass(name)
   }

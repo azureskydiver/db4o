@@ -4,6 +4,7 @@
 - notify PDE about changed class files
 - export configuration for use by ant build
 - when adding nature, all classes will be instrumented by default?
+- handle default package (how?)
 
 - distribute package selection dialog responsibilities between model and property page
 

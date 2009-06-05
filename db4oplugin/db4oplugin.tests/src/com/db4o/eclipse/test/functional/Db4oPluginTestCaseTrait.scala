@@ -12,9 +12,25 @@ import org.eclipse.jdt.core._
 
 import java.net._
 
-trait Db4oPluginTestCaseTrait {
+object Db4oPluginTestUtil {
 
   val ACTIVATABLE_CLASS = classOf[com.db4o.ta.Activatable]
+
+  def assertSingleClassInstrumented(root: IPackageFragmentRoot, className: String, expectInstrumentation: Boolean) {
+    val classPathEntry = root.getRawClasspathEntry
+    val outputLocation = 
+      if(classPathEntry.getOutputLocation != null)
+        classPathEntry.getOutputLocation
+      else
+        root.getJavaProject.getOutputLocation
+    val loaderURLs = (PDEUtil.classPath(root.getJavaProject).map(PDEUtil.workspaceFile(_).toURI.toURL)).toList.toArray
+    val loader = new URLClassLoader(loaderURLs, ACTIVATABLE_CLASS.getClassLoader)
+    val clazz = loader.loadClass(className)
+    assertEquals(expectInstrumentation, ACTIVATABLE_CLASS.isAssignableFrom(clazz))
+  }
+}
+
+trait Db4oPluginTestCaseTrait {
 
   val project = new JavaProject("simple_project")
   
@@ -33,17 +49,7 @@ trait Db4oPluginTestCaseTrait {
     assertSingleClassInstrumented(project.getMainSourceFolder, className, expectInstrumentation)
   }
 
-  protected def assertSingleClassInstrumented(root: IPackageFragmentRoot, className: String, expectInstrumentation: Boolean) {
-    val classPathEntry = root.getRawClasspathEntry
-    val outputLocation = 
-      if(classPathEntry.getOutputLocation != null)
-        classPathEntry.getOutputLocation
-      else
-        project.getBinFolder.getFullPath
-    val loaderURLs = Array[URL](PDEUtil.workspaceFile(outputLocation).toURI.toURL)
-    val loader = new URLClassLoader(loaderURLs, ACTIVATABLE_CLASS.getClassLoader)
-    val clazz = loader.loadClass(className)
-    assertEquals(expectInstrumentation, ACTIVATABLE_CLASS.isAssignableFrom(clazz))
-  }
+  protected def assertSingleClassInstrumented(root: IPackageFragmentRoot, className: String, expectInstrumentation: Boolean) =
+    Db4oPluginTestUtil.assertSingleClassInstrumented(root, className, expectInstrumentation)
 
 }
