@@ -1100,12 +1100,4 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	    final ByteArrayBuffer buffer = ((MReadBytes) expectedResponse(Msg.READ_BYTES)).unmarshall();
 	    return buffer;
     }
-
-	/* (non-Javadoc)
-	 * @see com.db4o.internal.ObjectContainerBase#fatalShutdown()
-	 */
-	@Override
-	protected void fatalStorageShutdown() {
-		shutdownDataStorage();
-	}
 }
