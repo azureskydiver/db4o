@@ -437,7 +437,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			ByteArrayBuffer reader = expectedByteResponse(Msg.ID_LIST);
 			showInternalClasses(true);
 			try {
-				i_db = (Db4oDatabase) getByID(reader.readInt());
+				i_db = (Db4oDatabase) getByID(systemTransaction(), reader.readInt());
 				activate(systemTransaction(), i_db, new FixedActivationDepth(3));
 			} finally {
 				showInternalClasses(false);
@@ -1101,4 +1101,11 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	    return buffer;
     }
 
+	/* (non-Javadoc)
+	 * @see com.db4o.internal.ObjectContainerBase#fatalShutdown()
+	 */
+	@Override
+	protected void fatalStorageShutdown() {
+		shutdownDataStorage();
+	}
 }
