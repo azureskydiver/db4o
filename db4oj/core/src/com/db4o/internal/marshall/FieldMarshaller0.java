@@ -65,7 +65,7 @@ public class FieldMarshaller0 extends AbstractFieldMarshaller {
     		return new FieldMetadata(containingClass, name, spec.fieldTypeID(), spec.isPrimitive(), spec.isArray(), spec.isNArray());
     	}
     	
-    	return new FieldMetadata(containingClass, name);
+    	return new UnknownTypeHandlerAspect(containingClass, name);
     }
 
 
@@ -95,6 +95,7 @@ public class FieldMarshaller0 extends AbstractFieldMarshaller {
             }
         }
         writer.writeInt(field.fieldTypeID());
+        
         BitMap4 bitmap = new BitMap4(3);
         bitmap.set(0, field.isPrimitive());
         bitmap.set(1, Handlers4.handlesArray(handler));

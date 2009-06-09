@@ -35,7 +35,7 @@ public class GenericClassBuilder implements ReflectClassBuilder {
         if (isVirtual) {
             return new GenericVirtualField(fieldName);
         }   
-		return new GenericField(fieldName,fieldType, isPrimitive);
+		return new GenericField(fieldName, fieldType, isPrimitive);
 	}
 
 	public void initFields(ReflectClass clazz, ReflectField[] fields) {
