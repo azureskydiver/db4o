@@ -23,6 +23,20 @@ public class ExcludingReflector extends JdkReflector {
 			_excludedClasses.add(claxx.getName());
 		}
 	}
+
+	/**
+	 * @sharpen.remove.first
+	 */
+	public ExcludingReflector(Collection4 excludedClasses) {
+		super(ExcludingReflector.class.getClassLoader());
+		
+		_excludedClasses = excludedClasses;
+    }
+
+	@Override
+	public Object deepClone(Object obj) {
+		return new ExcludingReflector(_excludedClasses);
+	}
 	
 	@Override
 	public ReflectClass forName(String className) {
