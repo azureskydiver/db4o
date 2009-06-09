@@ -148,16 +148,9 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
     }
 
 
-    public PreparedComparison prepareComparison(Context context, Object source) {
+    public PreparedComparison prepareComparison(Context context, final Object source) {
         if(source == null){
-            return new PreparedComparison() {
-                public int compareTo(Object obj) {
-                    if(obj == null){
-                        return 0;
-                    }
-                    return -1;
-                }
-            };
+        	return Null.INSTANCE;
         }
         
         if(source instanceof Integer){
@@ -168,13 +161,27 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
         if(source instanceof TransactionContext){
             TransactionContext tc = (TransactionContext)source;
             Object obj = tc._object;
-            Transaction transaction = tc._transaction;
-			int id = idFor(obj, transaction);
+            int id = idFor(obj, tc._transaction);
             return new PreparedComparisonImpl(id, reflectClassFor(obj));
         }
         
-        throw new IllegalComparisonException();
+        return platformComparisonFor(source);
     }
+
+    @decaf.RemoveFirst(decaf.Platform.JDK11)
+	private PreparedComparison platformComparisonFor(final Object source) {
+		//TODO: Move the comparable wrapping to a .Net specific StandardStructHandler
+    	if (source instanceof Comparable) {
+        	return new PreparedComparison(){
+				public int compareTo(Object obj) {
+					Comparable self = (Comparable) source;
+					return self.compareTo(obj);
+				}        		
+        	};
+        }
+        
+        throw new IllegalComparisonException();
+	}
 
 	private ReflectClass reflectClassFor(Object obj) {
 		return classMetadata().reflector().forObject(obj);
