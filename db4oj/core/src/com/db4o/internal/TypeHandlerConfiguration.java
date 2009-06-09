@@ -37,7 +37,6 @@ public abstract class TypeHandlerConfiguration {
     protected void registerMap(Class clazz){
         registerMapTypeHandlerFor(clazz);    
     }
-
     
     protected void ignoreFieldsOn(Class clazz){
     	_config.registerTypeHandler(new SingleClassTypeHandlerPredicate(clazz), IgnoreFieldsTypeHandler.INSTANCE);

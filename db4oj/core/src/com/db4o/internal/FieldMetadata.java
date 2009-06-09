@@ -96,7 +96,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     	init(name, fieldTypeID, primitive, isArray, isNArray);
 	}
 
-	public FieldMetadata(ClassMetadata containingClass, String name) {
+	protected FieldMetadata(ClassMetadata containingClass, String name) {
 		this(containingClass);
 		init(name);
 	}
@@ -872,8 +872,8 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         if (_containingClass != null) {
             sb.append(_containingClass.getName());
             sb.append(".");
-            sb.append(getName());
         }
+        sb.append(getName());
         return sb.toString();
     }
 
@@ -1012,6 +1012,9 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }    
     
     public void defragAspect(final DefragmentContext context) {
+    	if (!alive()) {
+    		throw new IllegalStateException("Field '" + toString() + "' cannot be defragmented at this time.");
+    	}
     	final TypeHandler4 typeHandler = HandlerRegistry.correctHandlerVersion(context, getHandler());
         context.slotFormat().doWithSlotIndirection(context, typeHandler, new Closure4() {
             public Object run() {

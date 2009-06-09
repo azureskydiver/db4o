@@ -60,8 +60,7 @@ public class KnownClassesRepository {
 	    	if(_stream.handlers().isSystemHandler(id)) {
 	    		return _stream.handlers().classForID(id);
 	    	}
-			ensureClassAvailability(id);
-	        return lookupByID(id);        
+			return ensureClassAvailability(id);
     	}
     }
     
@@ -174,7 +173,17 @@ public class KnownClassesRepository {
 			RawFieldSpec fieldInfo=fieldMarshaller.readSpec(_stream, classreader);
 			String fieldName=fieldInfo.name();
             ReflectClass fieldClass = reflectClassForFieldSpec(fieldInfo, _stream.reflector());
-			fields[i]=_builder.createField(clazz, fieldName, fieldClass, fieldInfo.isVirtual(), fieldInfo.isPrimitive(), fieldInfo.isArray(), fieldInfo.isNArray());
+            if (null == fieldClass
+            	&& (fieldInfo.isField() && !fieldInfo.isVirtual())) {
+            	throw new IllegalStateException("Could not read field type for '" + className + "." + fieldName + "'");
+            }
+			fields[i]=_builder.createField(clazz,
+										fieldName,
+										fieldClass,
+										fieldInfo.isVirtual(),
+										fieldInfo.isPrimitive(),
+										fieldInfo.isArray(),
+										fieldInfo.isNArray());
 		}
 		_builder.initFields(clazz, fields);
 	}
@@ -196,7 +205,6 @@ public class KnownClassesRepository {
 		}
 		
 		final int fieldTypeID = fieldInfo.fieldTypeID();
-		
 		// need to take care of special handlers here
 		switch (fieldTypeID){
 		    case Handlers4.UNTYPED_ID:

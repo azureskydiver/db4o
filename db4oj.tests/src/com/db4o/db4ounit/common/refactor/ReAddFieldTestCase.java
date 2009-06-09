@@ -5,8 +5,9 @@ import com.db4o.internal.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class ReAddFieldTestCase extends AbstractDb4oTestCase {
+public class ReAddFieldTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 	
 	public static class Version1 {
 		public String name;
