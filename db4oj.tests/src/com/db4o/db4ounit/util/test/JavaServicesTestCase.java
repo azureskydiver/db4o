@@ -5,9 +5,9 @@ package com.db4o.db4ounit.util.test;
 import java.io.*;
 
 import com.db4o.db4ounit.util.*;
-import com.db4o.db4ounit.util.IOServices.*;
 
 import db4ounit.*;
+import db4ounit.extensions.util.IOServices.*;
 
 public class JavaServicesTestCase implements TestCase {
     

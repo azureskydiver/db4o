@@ -8,6 +8,7 @@ import java.net.*;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
+import db4ounit.extensions.util.*;
 
 /**
  * @sharpen.ignore

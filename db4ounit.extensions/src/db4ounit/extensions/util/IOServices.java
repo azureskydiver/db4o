@@ -1,6 +1,6 @@
 /* Copyright (C) 2007 Versant Inc. http://www.db4o.com */
 
-package com.db4o.db4ounit.util;
+package db4ounit.extensions.util;
 
 import java.io.*;
 
