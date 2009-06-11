@@ -410,6 +410,7 @@
 	<target name="run-linq-tests" depends="build-core">
 		<exec taskname="linq" dir="${dir.dist.dll}" executable="${dir.dist.dll}/Db4objects.Db4o.Linq.Tests.exe" failonerror="true"/>
 		<exec taskname="linq/vb" dir="${dir.dist.dll}" executable="${dir.dist.dll}/Db4objects.Db4o.Linq.VB.Tests.exe" failonerror="true"/>
+		<exec taskname="linq/astoria" dir="${dir.dist.dll}" executable="${dir.dist.dll}/Db4objects.Db4o.Data.Services.Tests.exe" failonerror="true"/>
 	</target>
 	
 	<target name="run-msbuild-tests" depends="build-admin">
