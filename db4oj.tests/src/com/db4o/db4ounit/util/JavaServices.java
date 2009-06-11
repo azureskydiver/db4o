@@ -9,6 +9,7 @@ import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
+import db4ounit.extensions.util.*;
 
 
 /**

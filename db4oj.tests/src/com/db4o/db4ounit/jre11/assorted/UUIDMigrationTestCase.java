@@ -13,6 +13,7 @@ import com.db4o.foundation.io.*;
 
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.util.*;
 
 /**
  * @exclude

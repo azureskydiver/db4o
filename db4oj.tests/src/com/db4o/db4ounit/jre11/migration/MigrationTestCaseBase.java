@@ -10,6 +10,7 @@ import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.util.*;
 
 public abstract class MigrationTestCaseBase implements TestCase, TestLifeCycle, OptOutNoFileSystemData {
 	

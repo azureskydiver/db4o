@@ -10,6 +10,8 @@ import com.db4o.db4ounit.util.*;
 import com.db4o.foundation.io.*;
 import com.db4o.test.*;
 
+import db4ounit.extensions.util.*;
+
 /**
  */
 @decaf.Ignore(decaf.Platform.JDK11)

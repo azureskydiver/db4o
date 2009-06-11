@@ -7,6 +7,8 @@ import java.io.*;
 import com.db4o.db4ounit.util.*;
 import com.db4o.foundation.io.*;
 
+import db4ounit.extensions.util.*;
+
 
 public class IO {
 
