@@ -104,7 +104,7 @@ public class Iterators {
 		return map(new ArrayIterator4(array), function);
 	}
 	
-	public static Iterator4 filter(Object[] array, Predicate4 predicate) {
+	public static <T> Iterator4<T> filter(T[] array, Predicate4<T> predicate) {
 		return filter(new ArrayIterator4(array), predicate);
 	}
 	
