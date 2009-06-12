@@ -13,6 +13,7 @@ public class AllTests extends ComposibleTestSuite {
         return composeTests(
         		new Class[] {
 			        	ConfigurationItemTestCase.class,
+			        	Config4ImplTestCase.class,
 			        	CustomStringEncodingTestCase.class,
 			        	GlobalVsNonStaticConfigurationTestCase.class,
 			        	LatinStringEncodingTestCase.class,
