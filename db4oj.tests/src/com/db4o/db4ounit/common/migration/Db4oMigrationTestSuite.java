@@ -24,7 +24,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 		return new Db4oMigrationSuiteBuilder(testCases(), libraries()).iterator();
 	}
 
-	private String[] libraries() {
+	protected String[] libraries() {
 		
 		if (true) {
 			return Db4oMigrationSuiteBuilder.ALL;
