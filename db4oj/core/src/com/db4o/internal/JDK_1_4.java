@@ -47,6 +47,9 @@ class JDK_1_4 extends JDK_1_3 {
 		}catch(ReflectException rex){
 			throw new DatabaseFileLockedException(canonicalPath, rex);
 		}
+		if(lock == null){
+			throw new DatabaseFileLockedException(canonicalPath);
+		}
 		fileLocks.put(canonicalPath, lock);
 	}
 	

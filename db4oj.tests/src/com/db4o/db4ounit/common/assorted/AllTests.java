@@ -21,6 +21,7 @@ public class AllTests extends ComposibleTestSuite {
 			            ChangeIdentity.class,
 			            CloseUnlocksFileTestCase.class,
 			            ComparatorSortTestCase.class,
+			            DatabaseFileLockedTestCase.class,
 			            DatabaseGrowthSizeTestCase.class,
 			            DatabaseUnicityTest.class,
 			            DbPathDoesNotExistTestCase.class,
