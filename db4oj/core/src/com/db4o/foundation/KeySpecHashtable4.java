@@ -5,7 +5,7 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public class KeySpecHashtable4 {
+public class KeySpecHashtable4 implements DeepClone {
     
     private SynchronizedHashtable4 _delegate;
     
