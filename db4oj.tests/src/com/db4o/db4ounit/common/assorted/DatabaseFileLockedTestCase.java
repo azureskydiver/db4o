@@ -16,32 +16,40 @@ import db4ounit.*;
 public class DatabaseFileLockedTestCase extends TestWithTempFile{
 	
 	public void testLockedFile() throws IOException{
-		RandomAccessFile raf = new RandomAccessFile(tempFile(), "rw");
-		Object channel = Reflection4.invoke(raf, "getChannel");
-		try {
-			Reflection4.invoke(channel, "tryLock");
-		}catch(ReflectException rex){
-			Assert.fail("File shouldn't be locked already.");
-			rex.printStackTrace();
-		}
-
-		Assert.expect(DatabaseFileLockedException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				EmbeddedObjectContainer objectContainer = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), tempFile());
+		RandomAccessFile raf = null;
+		try{
+			raf = new RandomAccessFile(tempFile(), "rw");
+			Object channel = Reflection4.invoke(raf, "getChannel");
+			try {
+				Reflection4.invoke(channel, "tryLock");
+			}catch(ReflectException rex){
+				Assert.fail("File shouldn't be locked already.");
+				rex.printStackTrace();
 			}
-		});
-		raf.close();
+	
+			Assert.expect(DatabaseFileLockedException.class, new CodeBlock() {
+				public void run() throws Throwable {
+					EmbeddedObjectContainer objectContainer = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), tempFile());
+				}
+			});
+		}finally{
+			raf.close();
+		}
 	}
 	
 	public void test(){
-		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-		EmbeddedObjectContainer objectContainer1 = Db4oEmbedded.openFile(config, tempFile());
-		Assert.expect(DatabaseFileLockedException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				EmbeddedObjectContainer objectContainer2 = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), tempFile());
-			}
-		});
-		objectContainer1.close();
+		EmbeddedObjectContainer objectContainer1 = null;
+		try{
+			EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+			objectContainer1 = Db4oEmbedded.openFile(config, tempFile());
+			Assert.expect(DatabaseFileLockedException.class, new CodeBlock() {
+				public void run() throws Throwable {
+					EmbeddedObjectContainer objectContainer2 = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), tempFile());
+				}
+			});
+		} finally {
+			objectContainer1.close();
+		}
 	}
 
 }
