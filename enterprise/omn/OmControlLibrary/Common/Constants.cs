@@ -152,6 +152,7 @@ namespace OMControlLibrary.Common
 		public const string QUERY_GRID_DELETEROW = "QUERY_GRID_DELETEROW";
 		public const string QUERY_GRID_CALSSNAME_HIDDEN = "CLASSNAME_HIDDEN";
 		public const string QUERY_GRID_FIELDTYPE_HIDDEN = "FIELDTYPE_HIDDEN";
+        public const string QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN = "FIELDTYPE_DISPLAY_HIDDEN";
 
 		//Query Result Grid Column Name 
 		public const string QUERY_GRID_ISEDITED_HIDDEN = "ISEDITED_HIDDEN";

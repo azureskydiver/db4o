@@ -20,7 +20,7 @@ namespace OMControlLibrary.Common
 		private DataGridView m_DataGridView;
 		private bool m_ValueChanged = false;
 		private int m_RowIndex;
-		private const string DATE_FORMAT = "MM/dd/yyyy hh:mm:ss tt";
+        private const string DATE_FORMAT = "MM/dd/yyyy hh:mm:ss tt";
 
 		#endregion Member Variables
 

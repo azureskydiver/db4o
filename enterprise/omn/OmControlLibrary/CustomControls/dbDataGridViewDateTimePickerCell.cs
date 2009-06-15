@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 using OMControlLibrary.Common;
@@ -61,7 +62,11 @@ namespace OMControlLibrary.Common
 					{
 						try
 						{
-							ctl.Value = Convert.ToDateTime(this.Value.ToString());
+							//ctl.Value = Convert.ToDateTime(this.Value.ToString());
+                            DateTimeFormatInfo dateTimeFormatterProvider = DateTimeFormatInfo.CurrentInfo.Clone() as DateTimeFormatInfo;
+                            dateTimeFormatterProvider.ShortDatePattern = "MM/dd/yyyy hh:mm:ss tt";
+                            DateTime dateTime = DateTime.Parse(Value.ToString(), dateTimeFormatterProvider);
+                            ctl.Value = dateTime;
 						}
 						catch (Exception ex)
 						{

@@ -50,7 +50,7 @@ namespace OManager.DataLayer.Connection
                 if (m_lstFavfolder != null)
                 {
                     FavouriteList favList = FetchAllFavouritesForAConnection();
-                    container.Activate(favList, 5);
+                   
                     if (favList == null)
                     {
                         favList = new FavouriteList(m_connParam);
@@ -61,8 +61,9 @@ namespace OManager.DataLayer.Connection
                         container.Commit();
                         return;
                     }
-
+                    container.Activate(favList, 5);
                     List<FavouriteFolder> lstFavFolder = favList.lstFavFolder;
+                   
                     bool check = false;
                     FavouriteFolder temp = null;
                     foreach (FavouriteFolder str in lstFavFolder)

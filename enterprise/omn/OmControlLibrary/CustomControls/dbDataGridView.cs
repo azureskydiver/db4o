@@ -805,6 +805,10 @@ namespace OMControlLibrary.Common
 					CreateTextBoxColumn(string.Empty, Constants.QUERY_GRID_CALSSNAME_HIDDEN, DataGridViewColumnSortMode.NotSortable);
 				classNameTextBoxColumn.Visible = false;
 
+                DataGridViewTextBoxColumn DisplayclassNameTextBoxColumn =
+                    CreateTextBoxColumn(string.Empty, Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN, DataGridViewColumnSortMode.NotSortable);
+                classNameTextBoxColumn.Visible = false;
+
 				DataGridViewTextBoxColumn fieldTypeTextBoxColumn =
 								   CreateTextBoxColumn(string.Empty, Constants.QUERY_GRID_FIELDTYPE_HIDDEN,
 								   DataGridViewColumnSortMode.NotSortable);
@@ -822,6 +826,7 @@ namespace OMControlLibrary.Common
                     valueTextBoxColumn,
                     operatorComboBoxColumn,
                     classNameTextBoxColumn,
+                    DisplayclassNameTextBoxColumn,
                     fieldTypeTextBoxColumn
                 });
 
@@ -1356,14 +1361,16 @@ namespace OMControlLibrary.Common
 				int index = Rows.Count - 1;
 				Rows[index].Cells[0].Value = parentName;
 				Rows[index].Cells[Constants.QUERY_GRID_CALSSNAME_HIDDEN].Value = className;
-				Rows[index].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value = type;
+				Rows[index].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value = type.DisplayName  ;
+
+			    Rows[index].Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value = type;
 				if (type.IsSameAs(typeof(Boolean)))
 				{
 					Rows[index].Cells[2].Value = "True";
 				}
 				if (type.IsSameAs(typeof(DateTime)))
-				{
-					Rows[index].Cells[2].Value = DateTime.Now.ToString();
+                {
+					Rows[index].Cells[2].Value =DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt");
 				}
 
 				ClearSelection();
