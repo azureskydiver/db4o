@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 using EnvDTE;
 using Microsoft.VisualStudio.CommandBars;
@@ -844,28 +845,16 @@ namespace OMControlLibrary
 		/// <param name="e"></param>
 		private void comboboxRecentQueries_Click(object sender, EventArgs e)
 		{
-			try
-			{
-                //long TimeForRecentQueriesCreation =
-                //    dbInteraction.GetTimeforRecentQueriesCreation(dbInteraction.GetCurrentRecentConnection().ConnParam);
-                //long TimeforDbCreation = Helper.DbInteraction.dbCreationTime();
-                //if (TimeForRecentQueriesCreation != 0)
-                //{
-                    //if (TimeForRecentQueriesCreation > TimeforDbCreation)
-                    //{
-                        Helper.PopulateRecentQueryComboBox(Helper.ListOMQueries, comboboxRecentQueries);
-                    //}
-                //}
-                //else
-                //{
+            try
+            {
 
-                //    dbInteraction.RemoveRecentQueries(dbInteraction.GetCurrentRecentConnection().ConnParam);
-                //}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
+                Helper.PopulateRecentQueryComboBox(Helper.ListOMQueries, comboboxRecentQueries);
+
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.ShowMessage(oEx);
+            }
 		}
 
 		/// <summary>
@@ -1110,11 +1099,13 @@ namespace OMControlLibrary
 				int rowCount = datagridview.RowCount;
 				if (rowCount > 0)
 				{
+                   
 					objectManagerQueryGroup = new OMQueryGroup();
 					string stringOperator = datagridview.Rows[0].Cells[operatorColumnName].Value.ToString();
 					CommonValues.LogicalOperators clauseOperator = (CommonValues.LogicalOperators)Enum.Parse(typeof(CommonValues.LogicalOperators), stringOperator);
 					for (int i = 0; i < rowCount; i++)
 					{
+                       // IType type = datagridview.Rows[i].Cells[5].Value as IType;
 						string fieldName = datagridview.Rows[i].Cells[fieldColumnName].Value.ToString();
 						string stringCondition = datagridview.Rows[i].Cells[conditionColumnName].Value.ToString();
 						string className = datagridview.Rows[i].Cells[Constants.QUERY_GRID_CALSSNAME_HIDDEN].Value.ToString();
@@ -1123,7 +1114,24 @@ namespace OMControlLibrary
 						//get the value for each expression if value not specified then return null
 						string stringValue;
 						if (datagridview.Rows[i].Cells[valueColumnName].Value != null)
-							stringValue = datagridview.Rows[i].Cells[valueColumnName].Value.ToString();
+						{
+                            //if (type.IsSameAs(typeof(DateTime)))
+                            //{
+                            //    DateTimeFormatInfo dateTimeFormatterProvider = DateTimeFormatInfo.CurrentInfo.Clone() as DateTimeFormatInfo;
+                            //    dateTimeFormatterProvider.ShortDatePattern = "MM/dd/yyyy hh:mm:ss tt";
+                            //    DateTime dateTime = DateTime.Parse(datagridview.Rows[i].Cells[valueColumnName].Value.ToString(), dateTimeFormatterProvider);
+                            //    //DateTime dt = Convert.ToDateTime(datagridview.Rows[i].Cells[valueColumnName].Value.ToString() );
+                            //    //DateTime dt = DateTime.Parse(Convert.ToDateTime(stringValue).ToString("MM/dd/yyyy hh:mm:ss tt"));
+
+                            //    stringValue = dateTime.ToString("MM/dd/yyyy hh:mm:ss tt");
+                            //}
+                            //else
+                            //{
+                                stringValue = datagridview.Rows[i].Cells[valueColumnName].Value.ToString();
+                           // }
+
+                           
+						}
 						else
 							return null;
 
@@ -1144,7 +1152,7 @@ namespace OMControlLibrary
 
 	    private static string FieldNameFor(DataGridViewRow row)
 	    {
-	        IType fieldType = (IType) row.Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value;
+	        IType fieldType = (IType) row.Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value;
 	        return fieldType.DisplayName;
 	    }
 
@@ -1298,7 +1306,7 @@ namespace OMControlLibrary
 
 					for (int j = 0; j < datagridView.Rows.Count; j++)
 					{
-						string type = datagridView.Rows[j].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value.ToString();
+						string type = datagridView.Rows[j].Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN ].Value.ToString();
 						if (type != BusinessConstants.STRING && type != BusinessConstants.CHAR)
 						{
 							if (datagridView.Rows[j].Cells[valueColumn].Value == null)
@@ -1461,7 +1469,9 @@ namespace OMControlLibrary
 								gridQuery.Rows[j].Cells[Helper.GetResourceString(Constants.QUERY_GRID_OPERATOR)].ReadOnly = true;
 
 							gridQuery.Rows[j].Cells[Constants.QUERY_GRID_CALSSNAME_HIDDEN].Value = omQueryClause.Classname;
-						    gridQuery.Rows[j].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value = fieldType;
+                            gridQuery.Rows[j].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value = fieldType.DisplayName;
+                            gridQuery.Rows[j].Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value = fieldType;
+                            
 						}
 
 						//Set the logical operator for Query Group

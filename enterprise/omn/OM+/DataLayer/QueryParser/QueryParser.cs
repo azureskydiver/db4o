@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using OManager.BusinessLayer.QueryManager;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Query;
@@ -287,7 +288,10 @@ namespace OManager.DataLayer.QueryParser
                     case BusinessConstants.DATETIME:
                         {
                             IConstraint c1=null, c2=null;
-                            DateTime dt = Convert.ToDateTime(clause.Value);
+                            DateTimeFormatInfo dateTimeFormatterProvider = DateTimeFormatInfo.CurrentInfo.Clone() as DateTimeFormatInfo;
+                            dateTimeFormatterProvider.ShortDatePattern = "MM/dd/yyyy hh:mm:ss tt";
+                            DateTime dt = DateTime.Parse(clause.Value.Trim(), dateTimeFormatterProvider);
+
                             DateTime dt1 = dt.AddDays(-1);
                             DateTime dt2 = dt.AddDays(1);
                             if (clause.Operator.Equals(BusinessConstants.CONDITION_EQUALS))

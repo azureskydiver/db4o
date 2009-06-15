@@ -316,8 +316,9 @@ namespace OMControlLibrary
 			{
 				OMETrace.WriteFunctionStart();
 				string valueColumn = Helper.GetResourceString(Constants.QUERY_GRID_VALUE);
-
+			    IType type = dbDataGridView.Rows[e.RowIndex].Cells[5].Value as IType;
 				object value = dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value;
+                
 				if (dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value != null
 					&& !string.IsNullOrEmpty(dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value.ToString()))
 				{
@@ -332,8 +333,17 @@ namespace OMControlLibrary
 					}
 					else
 					{
-						//set the changed value if value is valid
-						dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value = value.ToString();
+					    //set the changed value if value is valid
+					    if (type.IsSameAs(typeof(DateTime)) && e.ColumnIndex ==2)
+					    {
+                            DateTime dt = DateTime.Parse(Convert.ToDateTime(value).ToString("MM/dd/yyyy hh:mm:ss tt"));
+					        dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value = dt.ToString();
+					    }
+					    else
+					    {
+                            dbDataGridView.Rows[e.RowIndex].Cells[valueColumn].Value = value.ToString();    
+					    }
+					    
 					}
 
 					m_previousCellValue = string.Empty;
@@ -350,7 +360,7 @@ namespace OMControlLibrary
 
 	    private static IType FieldTypeForConstraint(DataGridViewRow constraint)
 	    {
-	        return (IType) constraint.Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value;
+            return (IType)constraint.Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value;
 	    }
 
 	    /// <summary>
