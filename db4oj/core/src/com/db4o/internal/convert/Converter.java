@@ -11,7 +11,7 @@ import com.db4o.internal.convert.conversions.*;
  */
 public class Converter {
     
-    public static final int VERSION = ReindexNetDateTime_7_8.VERSION;
+    public static final int VERSION = DropEnumClassIndexes_7_10.VERSION;
     
     public static boolean convert(ConversionStage stage) {
     	if(!needsConversion(stage.converterVersion())) {

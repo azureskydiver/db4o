@@ -47,7 +47,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 
     public ClassAspect[] _aspects;
     
-    private final ClassIndexStrategy _index;
+    private ClassIndexStrategy _index;
     
     private String i_name;
 
@@ -2090,4 +2090,13 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	public boolean isStruct() {
 		return Platform4.isStruct(classReflector());
     }
+
+	public void dropClassIndex() {
+		if(container().isClient()){
+			throw new IllegalStateException();
+		}
+		_index = createIndexStrategy();
+		_index.initialize(container());
+		container().setDirtyInSystemTransaction(this);
+	}
 }
