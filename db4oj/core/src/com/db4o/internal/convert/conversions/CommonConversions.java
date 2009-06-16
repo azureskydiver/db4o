@@ -14,6 +14,7 @@ public class CommonConversions {
         converter.register(FieldIndexesToBTrees_5_7.VERSION, new FieldIndexesToBTrees_5_7());
         converter.register(ClassAspects_7_4.VERSION, new ClassAspects_7_4());
         converter.register(ReindexNetDateTime_7_8.VERSION, new ReindexNetDateTime_7_8());
+        converter.register(DropEnumClassIndexes_7_10.VERSION, new DropEnumClassIndexes_7_10());
     }
     
     

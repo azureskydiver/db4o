@@ -17,7 +17,8 @@ public class AllTests extends Db4oTestSuite {
 			com.db4o.db4ounit.common.internal.convert.AllTests.class,
 			com.db4o.db4ounit.common.internal.metadata.AllTests.class,
 			
-            ClassMetadataTypeHandlerIntegrationTestCase.class,
+            ClassMetadataTestCase.class,
+			ClassMetadataTypeHandlerIntegrationTestCase.class,
 			Comparable4TestCase.class,
 			DeactivateTestCase.class,
 		    EmbeddedClientObjectContainerTestCase.class,
