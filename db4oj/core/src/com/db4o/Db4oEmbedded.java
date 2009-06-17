@@ -65,5 +65,16 @@ public class Db4oEmbedded {
 		return ObjectContainerFactory.openObjectContainer(((LegacyConfigurationProvider)config).legacy(),
 				databaseFileName);
 	}
+	
+	/**
+	 * Same as calling {@link #openFile(EmbeddedConfiguration, String)} with a fresh configuration ({@link #newConfiguration()}).
+	 * @param databaseFileName an absolute or relative path to the database file
+	 * @see #openFile(EmbeddedConfiguration, String)
+	 */
+	public static final EmbeddedObjectContainer openFile(String databaseFileName)
+		throws Db4oIOException, DatabaseFileLockedException, IncompatibleFileFormatException,
+			OldFormatException, DatabaseReadOnlyException {
+		return openFile(newConfiguration(), databaseFileName);
+	}
 
 }
