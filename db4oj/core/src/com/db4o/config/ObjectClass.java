@@ -23,7 +23,7 @@ public interface ObjectClass {
      * calling constructors.
      * <br><br>
      * Not all JDKs / .NET-environments support this feature. db4o will
-     * attempt, to follow the setting as good as the enviroment supports.
+     * attempt, to follow the setting as good as the environment supports.
      * In doing so, it may call implementation-specific features like
      * sun.reflect.ReflectionFactory#newConstructorForSerialization on the
      * Sun Java 1.4.x/5 VM (not available on other VMs) and 
@@ -42,7 +42,7 @@ public interface ObjectClass {
 	
 	
 	/**
-	 * sets cascaded activation behaviour.
+	 * sets cascaded activation behavior.
 	 * <br><br>
 	 * Setting cascadeOnActivate to true will result in the activation
 	 * of all member objects if an instance of this class is activated.
@@ -61,7 +61,7 @@ public interface ObjectClass {
 
 
 	/**
-	 * sets cascaded delete behaviour.
+	 * sets cascaded delete behavior.
 	 * <br><br>
 	 * Setting cascadeOnDelete to true will result in the deletion of
 	 * all member objects of instances of this class, if they are 
@@ -71,7 +71,7 @@ public interface ObjectClass {
 	 * <b>Caution !</b><br>
 	 * This setting will also trigger deletion of old member objects, on
 	 * calls to {@link com.db4o.ObjectContainer#store(Object)}.<br><br>
-	 * An example of the behaviour:<br>
+	 * An example of the behavior:<br>
 	 * <code>
 	 * ObjectContainer con;<br>
 	 * Bar bar1 = new Bar();<br>
@@ -97,7 +97,7 @@ public interface ObjectClass {
 	
 	
 	/**
-	 * sets cascaded update behaviour.
+	 * sets cascaded update behavior.
 	 * <br><br>
 	 * Setting cascadeOnUpdate to true will result in the update
 	 * of all member objects if a stored instance of this class is passed
@@ -229,12 +229,12 @@ public interface ObjectClass {
      * by querying for a class or by loading an instance of a class).<br><br>
      * To update a static field value, once it is stored, you have to the following
      * in this order:<br>
-     * (1) open the database file you are working agains<br>
+     * (1) open the database file you are working against<br>
      * (2) make sure the class metadata is loaded<br>
      * <code>objectContainer.query().constrain(Foo.class); // Java</code><br>
      * <code>objectContainer.Query().Constrain(typeof(Foo)); // C#</code><br>
      * (3) change the static member<br>
-     * (4) store the static member explicitely<br>
+     * (4) store the static member explicitly<br>
      * <code>objectContainer.set(Foo.staticMember); // C#</code>
      * <br><br>The setting will be ignored for simple types.
      * <br><br>Use this setting for constant static object members.
@@ -255,7 +255,7 @@ public interface ObjectClass {
      * was representing the class specified by the clazz parameter passed to
      * this method. 
      * The clazz parameter can be any of the following:<br>
-     * - a fully qualified classname as a String.<br>
+     * - a fully qualified class name as a String.<br>
      * - a Class object.<br>
      * - any other object to be used as a template.<br><br>
      * This method will be ignored if the database file already contains meta
@@ -273,7 +273,7 @@ public interface ObjectClass {
      * <br><br>In client-server environment this setting should be used on both 
      * client and server. <br><br>
      * This setting can NOT be applied to an open object container. <br><br>
-     * @param newName the new fully qualified classname.
+     * @param newName the new fully qualified class name.
      */
     public void rename (String newName);
 
