@@ -16,7 +16,7 @@ import db4ounit.extensions.*;
 public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
-	    new TransparentPersistenceTestCase().runClientServer();
+	    new TransparentPersistenceTestCase().runAll();
     }
 	
 	protected void configure(Configuration config) throws Exception {
@@ -56,6 +56,16 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 		} finally {
 			client2.close();
 		}
+	}
+	
+	public void testObjectGoneAfterUpdateAndDeletion() throws Exception {		
+		Item foo = itemByName("Foo");
+		foo.setName("Foo*");
+		db().delete(foo);
+		
+		reopen();
+		Assert.isNull(itemByName("Foo"));
+		Assert.isNull(itemByName("Foo*"));		
 	}
 
 	public void testTransparentUpdate() throws Exception {

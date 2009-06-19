@@ -1,3 +1,4 @@
+/* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
 package com.db4o.internal.activation;
 
 import com.db4o.*;
@@ -62,6 +63,13 @@ public class TransparentActivationDepthProviderImpl implements ActivationDepthPr
 		objectsModifiedIn(transaction).add(object);
 	}
 	
+	public void removeModified(Object object, Transaction transaction) {
+		if (!_transparentPersistenceIsEnabled)
+			return;
+		
+		objectsModifiedIn(transaction).remove(object);		
+	}
+	
 	private final TransactionLocal<ObjectsModifiedInTransaction> _objectsModifiedInTransaction = new TransactionLocal<ObjectsModifiedInTransaction>() {
 		@Override public ObjectsModifiedInTransaction initialValueFor(final Transaction transaction) {
 			
@@ -87,6 +95,7 @@ public class TransparentActivationDepthProviderImpl implements ActivationDepthPr
 
 	private static final class ObjectsModifiedInTransaction {
 
+		private final IdentitySet4 _removedAfterModified = new IdentitySet4();
 		private final IdentitySet4 _modified = new IdentitySet4();
 		private final Transaction _transaction;
 
@@ -97,8 +106,17 @@ public class TransparentActivationDepthProviderImpl implements ActivationDepthPr
 		public void add(Object object) {
 			if (contains(object))
 				return;
+			
 			_modified.add(object);
 		}
+		
+		public void remove(Object object) {
+			if (!contains(object))
+				return;
+			
+			_modified.remove(object);
+			_removedAfterModified.add(object);
+		}		
 
 		private boolean contains(Object object) {
 			return _modified.contains(object);
@@ -122,8 +140,13 @@ public class TransparentActivationDepthProviderImpl implements ActivationDepthPr
 		private void applyRollbackStrategy(RollbackStrategy rollbackStrategy) {
 			if (null == rollbackStrategy)
 				return;
+			
+			applyRollbackStrategy(rollbackStrategy, _modified.valuesIterator());
+			applyRollbackStrategy(rollbackStrategy, _removedAfterModified.valuesIterator());
+		}
+
+		private void applyRollbackStrategy(RollbackStrategy rollbackStrategy, final Iterator4 values) {
 			final ObjectContainer objectContainer = _transaction.objectContainer();
-			final Iterator4 values = _modified.valuesIterator();
 			while (values.moveNext()) {
 				rollbackStrategy.rollback(objectContainer, values.current());
 			}
