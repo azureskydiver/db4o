@@ -8,21 +8,21 @@ import com.db4o.*;
 import com.db4o.internal.handlers.*;
 
 
-final class Message
+final class MessageOutput
 {
 	final PrintStream stream;
 
-	Message(ObjectContainerBase a_stream, String msg){
+	MessageOutput(ObjectContainerBase a_stream, String msg){
 		stream = a_stream.configImpl().outStream();
 		print(msg, true);
 	}
 
-	Message(String a_StringParam, int a_intParam, PrintStream a_stream, boolean header){
+	MessageOutput(String a_StringParam, int a_intParam, PrintStream a_stream, boolean header){
 		stream = a_stream;
 		print(Messages.get(a_intParam,a_StringParam), header );
 	}
 
-	Message(String a_StringParam, int a_intParam, PrintStream a_stream){
+	MessageOutput(String a_StringParam, int a_intParam, PrintStream a_stream){
 		this(a_StringParam, a_intParam , a_stream, true);
 	}
 

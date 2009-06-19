@@ -10,11 +10,15 @@ import com.db4o.internal.events.*;
  */
 public class ServerPlatform {
 
-	public static void triggerMessageEvent(Event4Impl e, Msg message) {
+	public static void triggerMessageEvent(Event4Impl e, Message message) {
 		if (!e.hasListeners()) {
 			return;
 		}
     	e.trigger(new MessageEventArgs(message));
+    }
+
+	public static void triggerClientConnectionEvent(Event4Impl e, ClientConnection connection) {
+		e.trigger(new ClientConnectionEventArgs(connection));
     }
 
 }

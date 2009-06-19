@@ -5,13 +5,16 @@ import com.db4o.events.*;
 
 public class MessageEventArgs extends EventArgs {
 
-	private Msg _message;
+	private Message _message;
 
-	public MessageEventArgs(Msg message) {
+	public MessageEventArgs(Message message) {
 	    _message = message;
     }
 
-	public Msg message() {
+	/**
+	 * @sharpen.property
+	 */
+	public Message message() {
 		return _message;
     }
 

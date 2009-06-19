@@ -2,9 +2,14 @@
 
 package com.db4o.db4ounit.common.cs;
 
+import java.util.*;
+
 import com.db4o.*;
+import com.db4o.cs.internal.*;
 import com.db4o.db4ounit.common.api.*;
+import com.db4o.events.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 
 import db4ounit.*;
 
@@ -12,7 +17,51 @@ public class ObjectServerTestCase extends TestWithTempFile {
 	
     private ExtObjectServer server;    
     private String fileName;
+   
+    public void testClientCount(){
+        assertClientCount(0);
+        ObjectContainer client1 = openClient();
+        try {
+	        assertClientCount(1);
+	        ObjectContainer client2 = openClient();
+	        try {
+	        	assertClientCount(2);
+	        } finally {
+	        	client2.close();
+	        }
+        } finally {
+        	client1.close();
+        }
+        
+        // closing is asynchronous, relying on completion is hard
+        // That's why there is no test here. 
+        // ClientProcessesTestCase tests closing.
+    }
+    
+    public void testClientConnectedEvent() {
+    	
+    	final ArrayList<ClientConnection> connections = new ArrayList<ClientConnection>();
+    	
+    	final ObjectServerEvents events = (ObjectServerEvents)server;
+		events.clientConnected().addListener(new EventListener4<ClientConnectionEventArgs>() {
+			public void onEvent(Event4 e, ClientConnectionEventArgs args) {
+				connections.add(args.connection());
+            }
+		});
+		
+		final ObjectContainer client = openClient();
+		try {
+			Assert.areEqual(1, connections.size());
+			Iterator4Assert.areEqual(serverMessageDispatchers(), Iterators.iterator(connections));
+		} finally {
+			client.close();
+		}
+    }
 
+	private Iterator4 serverMessageDispatchers() {
+	    return ((ObjectServerImpl)server).iterateDispatchers();
+    }
+    
     public void setUp() throws Exception {
         fileName = tempFile();
         server = Db4o.openServer(Db4o.newConfiguration(), fileName, -1).ext();
@@ -24,18 +73,9 @@ public class ObjectServerTestCase extends TestWithTempFile {
         server.close();
         super.tearDown();
     }
-    
-    public void testClientCount(){
-        assertClientCount(0);
-        ObjectContainer client1 = Db4o.openClient(Db4o.newConfiguration(), "localhost", port(), credentials(), credentials());
-        assertClientCount(1);
-        ObjectContainer client2 = Db4o.openClient(Db4o.newConfiguration(), "localhost", port(), credentials(), credentials());
-        assertClientCount(2);
-        client1.close();
-        client2.close();
-        // closing is asynchronous, relying on completion is hard
-        // That's why there is no test here. 
-        // ClientProcessesTestCase tests closing.
+
+	private ObjectContainer openClient() {
+	    return Db4o.openClient(Db4o.newConfiguration(), "localhost", port(), credentials(), credentials());
     }
 
     private void assertClientCount(int count) {

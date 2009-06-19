@@ -132,11 +132,11 @@ public final class Messages {
 
     public static void logErr (Configuration config, int code, String msg, Throwable t) {
     	final PrintStream ps = ((Config4Impl)safeConfig(config)).errStream();
-    	new Message(msg, code,ps);
+    	new MessageOutput(msg, code,ps);
     	if(t != null){
-    		new Message(null,25,ps);
+    		new MessageOutput(null,25,ps);
     		t.printStackTrace(ps);
-    		new Message(null,26,ps, false);
+    		new MessageOutput(null,26,ps, false);
     	}
     }
 
@@ -160,7 +160,7 @@ public final class Messages {
     	Config4Impl c4i = (Config4Impl)config;
     	
     	if(c4i.messageLevel() > Const4.NONE){
-    		new Message(msg,code,c4i.outStream());
+    		new MessageOutput(msg,code,c4i.outStream());
     	}
     }
 }

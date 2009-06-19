@@ -3,7 +3,6 @@
 package com.db4o.cs.internal;
 
 import com.db4o.cs.internal.messages.*;
-import com.db4o.events.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 
@@ -11,9 +10,7 @@ import com.db4o.internal.*;
 /**
  * @exclude
  */
-public interface ServerMessageDispatcher extends MessageDispatcher, CommittedCallbackDispatcher {
-
-	public String name();
+public interface ServerMessageDispatcher extends ClientConnection, MessageDispatcher, CommittedCallbackDispatcher {
 
 	public void queryResultFinalized(int queryResultID);
 
@@ -48,9 +45,4 @@ public interface ServerMessageDispatcher extends MessageDispatcher, CommittedCal
 	public CallbackObjectInfoCollections committedInfo();
 
 	public ClassInfoHelper classInfoHelper();
-
-	/**
-	 * @sharpen.event MessageEventArgs
-	 */
-	public Event4<MessageEventArgs> messageReceived();
 }

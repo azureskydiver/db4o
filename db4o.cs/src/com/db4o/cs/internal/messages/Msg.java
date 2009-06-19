@@ -12,7 +12,7 @@ import com.db4o.internal.*;
 /**
  * Messages for Client/Server Communication
  */
-public abstract class Msg implements Cloneable {
+public abstract class Msg implements Cloneable, Message {
 
 	static int _messageIdGenerator = 1;
 	private static Msg[] _messages = new Msg[75];

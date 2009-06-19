@@ -14,6 +14,8 @@ import com.db4o.ext.*;
  * that you want to use. 
  * @see Db4o#openServer(java.lang.String, int) Db4o.openServer
  * @see ExtObjectServer ExtObjectServer for extended functionality
+ * 
+ * @sharpen.extends System.IDisposable
  */
 public interface ObjectServer {
     

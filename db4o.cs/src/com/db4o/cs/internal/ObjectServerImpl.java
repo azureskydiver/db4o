@@ -7,12 +7,14 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.cs.internal.messages.*;
+import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
+import com.db4o.internal.events.*;
 
-public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable {
+public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtObjectServer, Runnable {
 	
 	private static final int START_THREAD_WAIT_TIMEOUT = 5000;
 
@@ -44,6 +46,8 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private final boolean _isEmbeddedServer;
 	
 	private final ClassInfoHelper _classInfoHelper = new ClassInfoHelper();
+	
+	private final Event4Impl _clientConnected = new Event4Impl();
 	
 	public ObjectServerImpl(final LocalObjectContainer container, int port, NativeSocketFactory socketFactory) {
 		this(container, (port < 0 ? 0 : port), port == 0, socketFactory);
@@ -140,6 +144,13 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 			Exceptions4.throwRuntimeException(Messages.CLOSED_OR_OPEN_FAILED, _name);
 		}
 		_container.checkClosed();
+	}
+	
+	/**
+	 * System.IDisposable.Dispose()
+	 */
+	public void dispose() {
+		close();
 	}
 
 	public synchronized boolean close() {
@@ -328,12 +339,17 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 				ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, new ClientTransactionHandle(_transactionPool),
 						_serverSocket.accept(), newThreadId(), false, _container.lock());
 				addServerMessageDispatcher(messageDispatcher);
+				triggerClientConnected(messageDispatcher);
 				messageDispatcher.startDispatcher();
 			} catch (Exception e) {
 //				e.printStackTrace();
 			}
 		}
 	}
+
+	private void triggerClientConnected(ServerMessageDispatcher messageDispatcher) {
+		ServerPlatform.triggerClientConnectionEvent(_clientConnected, messageDispatcher);
+    }
 
 	private void notifyThreadStarted() {
 		synchronized (_startupLock) {
@@ -402,4 +418,8 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	public ClassInfoHelper classInfoHelper() {
 		return _classInfoHelper;
 	}
+
+	public Event4<ClientConnectionEventArgs> clientConnected() {
+		return _clientConnected;
+    }
 }
