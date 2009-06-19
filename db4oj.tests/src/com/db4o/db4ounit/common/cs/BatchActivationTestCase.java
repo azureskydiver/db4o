@@ -116,7 +116,7 @@ public class BatchActivationTestCase extends FixtureTestSuiteDescription impleme
 		private void assertBatchBehaviorFor(final Query query, final int expectedMessageCount) {
 	        final ObjectSet<Item> result = query.execute();
 
-			final List<Msg> messages = MessageCollector.forServerDispatcher(serverDispatcher());
+			final List<Message> messages = MessageCollector.forServerDispatcher(serverDispatcher());
 
 			Assert.areEqual("foo", result.next().name);
 

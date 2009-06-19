@@ -203,7 +203,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 		message.writeException((RuntimeException)exc);
 	}
 
-    private void triggerMessageReceived(Msg message) {
+    private void triggerMessageReceived(Message message) {
     	ServerPlatform.triggerMessageEvent(_messageReceived, message);
     }
 

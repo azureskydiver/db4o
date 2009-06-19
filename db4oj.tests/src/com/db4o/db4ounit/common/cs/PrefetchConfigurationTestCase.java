@@ -263,7 +263,7 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
     }
 
 	private void assertQueryIterationProtocol(final Query query, final MsgD expectedResultMessage, Stimulus[] stimuli) {
-	    final List<Msg> messages = MessageCollector.forServerDispatcher(serverDispatcher());
+	    final List<Message> messages = MessageCollector.forServerDispatcher(serverDispatcher());
 		
 		final ObjectSet<Item> result = query.execute();
 		assertMessages(messages, expectedResultMessage);
@@ -310,7 +310,7 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
         }
     }
 
-	private void assertMessages(List<Msg> actualMessages, MsgD... expectedMessages) {
+	private void assertMessages(List<Message> actualMessages, Message... expectedMessages) {
 		Iterator4Assert.areEqual(expectedMessages, Iterators.iterator(actualMessages));
     }
 

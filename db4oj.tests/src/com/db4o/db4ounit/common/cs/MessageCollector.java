@@ -11,8 +11,8 @@ import com.db4o.events.*;
 
 class MessageCollector  {
 	
-	public static List<Msg> forServerDispatcher(ServerMessageDispatcher dispatcher) {
-		final ArrayList<Msg> _messages = new ArrayList<Msg>();
+	public static List<Message> forServerDispatcher(ServerMessageDispatcher dispatcher) {
+		final ArrayList<Message> _messages = new ArrayList<Message>();
 		dispatcher.messageReceived().addListener(new EventListener4<MessageEventArgs>() {		
 			public void onEvent(Event4 e, MessageEventArgs args) {
 				_messages.add(args.message());

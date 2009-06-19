@@ -1209,7 +1209,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
 
     void message(String msg) {
-        new Message(this, msg);
+        new MessageOutput(this, msg);
     }
 
     public final void needsUpdate(ClassMetadata classMetadata) {
