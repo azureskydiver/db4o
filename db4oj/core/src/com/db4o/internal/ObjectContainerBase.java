@@ -486,10 +486,11 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     	if (null == obj) {
     		throw new ArgumentNullException();
     	}
-        synchronized (_lock) {
+        synchronized (lock()) {
         	trans = checkTransaction(trans);
         	checkReadOnly();
             delete1(trans, obj, true);
+        	unregisterFromTransparentPersistence(trans, obj);
             trans.processDeletes();
         }
     }
@@ -580,6 +581,15 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         
         ref.endProcessing();
     }
+
+	private void unregisterFromTransparentPersistence(Transaction trans, Object obj) {
+		if (!(activationDepthProvider() instanceof TransparentActivationDepthProvider)) {
+			return;
+		}
+		
+		final TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) activationDepthProvider();
+    	provider.removeModified(obj, trans);
+	}
 
 	private void activateForDeletionCallback(Transaction trans, ClassMetadata classMetadata, ObjectReference ref, Object obj) {
 		if (!ref.isActive() && (caresAboutDeleting(classMetadata) || caresAboutDeleted(classMetadata))) {

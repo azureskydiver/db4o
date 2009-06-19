@@ -14,5 +14,7 @@ public interface TransparentActivationDepthProvider extends ActivationDepthProvi
 			InternalObjectContainer container, RollbackStrategy withRollbackStrategy);
 
 	void addModified(Object object, Transaction inTransaction);
+	
+	void removeModified(Object object, Transaction inTransaction);
 
 }
