@@ -246,10 +246,10 @@ public interface CommonConfiguration {
      * returns the configuration interface for diagnostics.
      * @return the configuration interface for diagnostics.
      * 
-     * TODO: refactor to use provider?
      * 
      * @sharpen.property
      */
+    // TODO: refactor to use provider?
     public DiagnosticConfiguration diagnostic();
 
     /**
@@ -261,12 +261,12 @@ public interface CommonConfiguration {
      * The first constructor that is successfully tested will
      * be used throughout the running db4o session. If an instance of the class
      * can not be instantiated, the object will not be stored. By default,
-     * execution will continue without any message or error. This method can
-     * be used to configure db4o to throw an
+     * execution will be stopped with an Exception. This method can
+     * be used to configure db4o to not throw an
      * {@link com.db4o.ext.ObjectNotStorableException ObjectNotStorableException}
      * if an object can not be stored.
      * <br><br>
-     * The default for this setting is <b>false</b>.<br><br>
+     * The default for this setting is <b>true</b>.<br><br>
      * In client/server environment this setting should be used on both 
      * client and server.<br><br>
      * @param flag true to throw Exceptions if objects can not be stored.
@@ -439,11 +439,11 @@ public interface CommonConfiguration {
     /**
      * specifies the global updateDepth.
      * <br><br>see the documentation of
-     * {@link com.db4o.ObjectContainer#set }
+     * {@link com.db4o.ObjectContainer#store }
      * for further details.<br><br>
      * The value be may be overridden for individual classes.<br><br>
      * The default setting is 1: Only the object passed to
-     * {@link com.db4o.ObjectContainer#set}
+     * {@link com.db4o.ObjectContainer#store}
      * will be updated.<br><br>
      * In client-server environment this setting should be used on both client and
      * server sides.<br><br>
