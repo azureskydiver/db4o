@@ -5,14 +5,8 @@ package  com.db4o.config;
 /**
  * configuration interface for classes.
  * <br><br>
- * Use the global Configuration object to configure db4o before opening an
- * {@link com.db4o.ObjectContainer ObjectContainer}.<br><br>
- * <b>Example:</b><br>
- * <code>
- * Configuration config = Db4o.configure();<br>
- * ObjectClass oc = config.objectClass("package.className");<br>
- * oc.updateDepth(3);<br>
- * oc.minimumActivationDepth(3);<br>
+ * Use the global {@link CommonConfiguration#objectClass(Object)} to configure 
+ * object class settings.
  * </code>
  */
 public interface ObjectClass {
@@ -23,7 +17,7 @@ public interface ObjectClass {
      * calling constructors.
      * <br><br>
      * Not all JDKs / .NET-environments support this feature. db4o will
-     * attempt, to follow the setting as good as the environment supports.
+     * attempt, to follow the setting as good as the enviroment supports.
      * In doing so, it may call implementation-specific features like
      * sun.reflect.ReflectionFactory#newConstructorForSerialization on the
      * Sun Java 1.4.x/5 VM (not available on other VMs) and 
@@ -42,7 +36,7 @@ public interface ObjectClass {
 	
 	
 	/**
-	 * sets cascaded activation behavior.
+	 * sets cascaded activation behaviour.
 	 * <br><br>
 	 * Setting cascadeOnActivate to true will result in the activation
 	 * of all member objects if an instance of this class is activated.
@@ -61,7 +55,7 @@ public interface ObjectClass {
 
 
 	/**
-	 * sets cascaded delete behavior.
+	 * sets cascaded delete behaviour.
 	 * <br><br>
 	 * Setting cascadeOnDelete to true will result in the deletion of
 	 * all member objects of instances of this class, if they are 
@@ -71,15 +65,15 @@ public interface ObjectClass {
 	 * <b>Caution !</b><br>
 	 * This setting will also trigger deletion of old member objects, on
 	 * calls to {@link com.db4o.ObjectContainer#store(Object)}.<br><br>
-	 * An example of the behavior:<br>
+	 * An example of the behaviour:<br>
 	 * <code>
 	 * ObjectContainer con;<br>
 	 * Bar bar1 = new Bar();<br>
 	 * Bar bar2 = new Bar();<br>
 	 * foo.bar = bar1;<br>
-	 * con.set(foo);  // bar1 is stored as a member of foo<br>
+	 * con.store(foo);  // bar1 is stored as a member of foo<br>
 	 * foo.bar = bar2;<br>
-	 * con.set(foo);  // bar2 is stored as a member of foo
+	 * con.store(foo);  // bar2 is stored as a member of foo
 	 * </code><br>The last statement will <b>also</b> delete bar1 from the
 	 * ObjectContainer, no matter how many other stored objects hold references
 	 * to bar1.
@@ -89,20 +83,21 @@ public interface ObjectClass {
      * client and server. <br><br>
      * This setting can be applied to an open object container. <br><br>
      * @param flag whether deletes are to be cascaded to member objects.
-	 * @see ObjectField#cascadeOnDelete
-	 * @see com.db4o.ObjectContainer#delete
+	 * @see ObjectField#cascadeOnDelete(boolean)
+	 * @see com.db4o.ObjectContainer#delete(Object)
 	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
 	 */
 	public void cascadeOnDelete(boolean flag);
 	
 	
 	/**
-	 * sets cascaded update behavior.
+	 * sets cascaded update behaviour.
 	 * <br><br>
 	 * Setting cascadeOnUpdate to true will result in the update
 	 * of all member objects if a stored instance of this class is passed
 	 * to {@link com.db4o.ObjectContainer#store(Object)}.<br><br>
-	 * The default setting is <b>false</b>.<br><br>
+	 * The default setting is <b>false</b>. Setting it to true 
+	 * may result in serious performance degradation.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
      * This setting can be applied to an open object container. <br><br>
@@ -229,13 +224,13 @@ public interface ObjectClass {
      * by querying for a class or by loading an instance of a class).<br><br>
      * To update a static field value, once it is stored, you have to the following
      * in this order:<br>
-     * (1) open the database file you are working against<br>
+     * (1) open the database file you are working agains<br>
      * (2) make sure the class metadata is loaded<br>
      * <code>objectContainer.query().constrain(Foo.class); // Java</code><br>
      * <code>objectContainer.Query().Constrain(typeof(Foo)); // C#</code><br>
      * (3) change the static member<br>
      * (4) store the static member explicitly<br>
-     * <code>objectContainer.set(Foo.staticMember); // C#</code>
+     * <code>objectContainer.store(Foo.staticMember); // Java</code>
      * <br><br>The setting will be ignored for simple types.
      * <br><br>Use this setting for constant static object members.
      * <br><br>This option will slow down the process of opening database
@@ -255,7 +250,7 @@ public interface ObjectClass {
      * was representing the class specified by the clazz parameter passed to
      * this method. 
      * The clazz parameter can be any of the following:<br>
-     * - a fully qualified class name as a String.<br>
+     * - a fully qualified classname as a String.<br>
      * - a Class object.<br>
      * - any other object to be used as a template.<br><br>
      * This method will be ignored if the database file already contains meta
@@ -273,7 +268,7 @@ public interface ObjectClass {
      * <br><br>In client-server environment this setting should be used on both 
      * client and server. <br><br>
      * This setting can NOT be applied to an open object container. <br><br>
-     * @param newName the new fully qualified class name.
+     * @param newName the new fully qualified classname.
      */
     public void rename (String newName);
 
