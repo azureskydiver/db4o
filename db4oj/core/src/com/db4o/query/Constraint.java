@@ -31,7 +31,7 @@ public interface Constraint {
 	 * will retrieve all pilots with points less than 101 and name as "Test Pilot0"<br>
      * @param with the other {@link Constraint}
      * @return a new {@link Constraint}, that can be used for further calls
-	 * to {@link #and and()} and {@link #or or()}
+	 * to {@link #and(Constraint)} and {@link #or(Constraint)}
      */
     public Constraint and (Constraint with);
 
@@ -44,7 +44,7 @@ public interface Constraint {
 	 * will retrieve all pilots with points more than 101 or pilots with the name "Test Pilot0"<br>
      * @param with the other {@link Constraint}
      * @return a new {@link Constraint}, that can be used for further calls
-     * to {@link #and and()} and {@link #or or()}
+     * to {@link #and(Constraint)} and {@link #or(Constraint)}
      */
     public Constraint or (Constraint with);
 
@@ -88,12 +88,12 @@ public interface Constraint {
      * For example:<br>
      * <code>Pilot pilot = new Pilot("Test Pilot1", 100);</code><br>
 	 * <code>Car car = new Car("BMW", pilot);</code><br>
-	 * <code>container.set(car);</code><br>
+	 * <code>container.store(car);</code><br>
 	 * <code>// Change the name, the pilot instance stays the same</code><br>
 	 * <code>pilot.setName("Test Pilot2");</code><br>
 	 * <code>// create a new car</code><br>
 	 * <code>car = new Car("Ferrari", pilot);</code><br>
-	 * <code>container.set(car);</code><br>
+	 * <code>container.store(car);</code><br>
 	 * <code>Query query = container.query();</code><br>
 	 * <code>query.constrain(Car.class);</code><br>
 	 * <code>// All cars having pilot with the same database identity</code><br>
@@ -116,7 +116,7 @@ public interface Constraint {
      * all objects having the constrain expression somewhere inside the string field.
      * For example:<br>
      * <code>Pilot pilot = new Pilot("Test Pilot1", 100);</code><br>
-	 * <code>container.set(pilot);</code><br>
+	 * <code>container.store(pilot);</code><br>
 	 * <code> ...</code><br>
      * <code>query.constrain(Pilot.class);</code><br>
 	 * <code>// All pilots with the name containing "est" will be retrieved</code><br>
@@ -134,7 +134,7 @@ public interface Constraint {
      * <code>Pilot pilot2 = new Pilot("Test 2", 2);</code><br>
      * <code>list.add(pilot2);</code><br>
      * <code>Team team = new Team("Ferrari", list);</code><br>
-     * <code>container.set(team);</code><br>
+     * <code>container.store(team);</code><br>
      * <code>Query query = container.query();</code><br>
      * <code>query.constrain(Team.class);</code><br>
      * <code>query.descend("pilots").constrain(pilot2).contains();</code><br>
@@ -148,7 +148,7 @@ public interface Constraint {
      * sets the evaluation mode to string startsWith comparison.
      * For example:<br>
      * <code>Pilot pilot = new Pilot("Test Pilot0", 100);</code><br>
-     * <code>container.set(pilot);</code><br>
+     * <code>container.store(pilot);</code><br>
 	 * <code> ...</code><br>
      * <code>query.constrain(Pilot.class);</code><br>
 	 * <code>query.descend("name").constrain("Test").startsWith(true);</code><br>
@@ -161,7 +161,7 @@ public interface Constraint {
      * sets the evaluation mode to string endsWith comparison.
      * For example:<br>
      * <code>Pilot pilot = new Pilot("Test Pilot0", 100);</code><br>
-     * <code>container.set(pilot);</code><br>
+     * <code>container.store(pilot);</code><br>
 	 * <code> ...</code><br>
      * <code>query.constrain(Pilot.class);</code><br>
 	 * <code>query.descend("name").constrain("T0").endsWith(false);</code><br>
@@ -175,7 +175,7 @@ public interface Constraint {
      * turns on not() comparison. All objects not fullfilling the constrain condition will be returned.
      *  For example:<br>
      * <code>Pilot pilot = new Pilot("Test Pilot1", 100);</code><br>
-     * <code>container.set(pilot);</code><br>
+     * <code>container.store(pilot);</code><br>
 	 * <code> ...</code><br>
      * <code>query.constrain(Pilot.class);</code><br>
 	 * <code>query.descend("name").constrain("t0").endsWith(true).not();</code><br>

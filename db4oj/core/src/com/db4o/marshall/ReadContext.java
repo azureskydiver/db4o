@@ -5,7 +5,7 @@ package com.db4o.marshall;
 import com.db4o.typehandlers.*;
 
 /**
- * this interface is passed to internal class com.db4o.internal.TypeHandler4
+ * this interface is passed to internal class {@link com.db4o.internal.TypeHandler4}
  * when instantiating objects.
  */
 public interface ReadContext extends Context, ReadBuffer {
@@ -19,7 +19,7 @@ public interface ReadContext extends Context, ReadBuffer {
 
     
     /**
-     * reads sub-objects, in cases where the TypeHandler4
+     * reads sub-objects, in cases where the {@link com.db4o.internal.TypeHandler4}
      * is known.
      */
     public Object readObject(TypeHandler4 handler);

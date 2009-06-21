@@ -16,10 +16,10 @@ package com.db4o.query;
  * <br><br>Java client/server only:<br>
  * db4o first attempts to use Java Serialization to allow to pass final
  * variables to the server. Please make sure that all variables that are
- * used within the evaluate() method are Serializable. This may include
+ * used within the {@link #evaluate(Candidate)} method are Serializable. This may include
  * the class an anonymous Evaluation object is created in. If db4o is
  * not successful at using Serialization, the Evaluation is transported
- * to the server in a db4o MemoryFile. In this case final variables can
+ * to the server in a db4o {@link com.db4o.io.MemoryBin}. In this case final variables can
  * not be restored. 
  */
 public interface Evaluation extends java.io.Serializable {

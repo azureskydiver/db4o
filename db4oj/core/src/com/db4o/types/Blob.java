@@ -37,17 +37,17 @@ public interface Blob extends Db4oType {
     /**
      * returns the status after the last read- or write-operation.
      * <br><br>The status value returned may be any of the following:<br>
-     * Status.UNUSED  no data was ever stored to the Blob field.<br>
-     * Status.AVAILABLE available data was previously stored to the Blob field.<br>
-     * Status.QUEUED an operation was triggered and is waiting for it's turn in the Blob queue.<br>
-     * Status.COMPLETED the last operation on this field was completed successfully.<br>
-     * Status.PROCESSING for internal use only.<br>
-     * Status.ERROR the last operation failed.<br>
+     * {@link com.db4o.ext.Status#UNUSED}  no data was ever stored to the Blob field.<br>
+     * {@link com.db4o.ext.Status#AVAILABLE} available data was previously stored to the Blob field.<br>
+     * {@link com.db4o.ext.Status#QUEUED} an operation was triggered and is waiting for it's turn in the Blob queue.<br>
+     * {@link com.db4o.ext.Status#COMPLETED} the last operation on this field was completed successfully.<br>
+     * {@link com.db4o.ext.Status#PROCESSING} for internal use only.<br>
+     * {@link com.db4o.ext.Status#ERROR} the last operation failed.<br>
      * or a double between 0 and 1 that signifies the current completion percentage of the currently
-     * running operation.<br><br> the five STATUS constants defined in this interface or a double
+     * running operation.<br><br> the five {@link com.db4o.ext.Status} constants defined in this interface or a double
      * between 0 and 1 that signifies the completion of the currently running operation.<br><br>
      * @return status - the current status
-     * @see com.db4o.ext.Status STATUS constants
+     * @see com.db4o.ext.Status  constants
      */
     public double getStatus();
 

@@ -3,7 +3,7 @@
 package com.db4o.config;
 
 /**
- * a simple Alias for a single Class or Type, using #equals() on
+ * a simple Alias for a single Class or Type, using equals on
  * the names in the resolve method.
  * <br><br>See {@link Alias} for concrete examples.  
  */

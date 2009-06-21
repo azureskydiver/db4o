@@ -183,12 +183,13 @@ public interface FileConfiguration {
     /**
      * turns readOnly mode on and off.
      * <br><br>This method configures the mode in which subsequent calls to
-     * {@link com.db4o.Db4o#openFile Db4o.openFile()} will open files.
+     * {@link com.db4o.Db4oEmbedded#openFile(EmbeddedConfiguration, String)} 
+     * will open files.
      * <br><br>Readonly mode allows to open an unlimited number of reading
      * processes on one database file. It is also convenient
      * for deploying db4o database files on CD-ROM.<br><br>
-     * In client-server environment this setting should be used on the server side 
-     * in embedded mode and ONLY on client side in networked mode.<br><br>
+     * In client-server environment this setting should be used 
+     * ONLY on client side.<br><br>
      * @param flag <code>true</code> for configuring readOnly mode for subsequent
      * calls to {@link com.db4o.Db4o#openFile Db4o.openFile()}.
      * 
