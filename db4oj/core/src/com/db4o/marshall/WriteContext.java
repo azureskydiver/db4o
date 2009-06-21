@@ -6,7 +6,7 @@ import com.db4o.typehandlers.*;
 
 
 /**
- * this interface is passed to internal class com.db4o.internal.TypeHandler4 during marshalling
+ * this interface is passed to internal class {@link com.db4o.internal.TypeHandler4} during marshalling
  * and provides methods to marshal objects. 
  */
 public interface WriteContext extends Context, WriteBuffer {
@@ -23,7 +23,7 @@ public interface WriteContext extends Context, WriteBuffer {
     void writeObject(Object obj);
 
     /**
-     * writes sub-objects, in cases where the TypeHandler4
+     * writes sub-objects, in cases where the {@link com.db4o.internal.TypeHandler4}
      * is known.
      * @param obj the object to write
      */

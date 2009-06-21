@@ -4,15 +4,8 @@ package  com.db4o.config;
 /**
  * configuration interface for fields of classes.
  * <br><br>
- * Use the global Configuration object to configure db4o before opening an
- * {@link com.db4o.ObjectContainer ObjectContainer}.<br><br>
- * <b>Example:</b><br>
- * <code>
- * Configuration config = Db4o.configure();<br>
- * ObjectClass oc = config.objectClass("package.className");<br>
- * ObjectField of = oc.objectField("fieldName");
- * of.rename("newFieldName");
- * of.queryEvaluation(false);
+ * Use 
+ * {@link com.db4o.config.ObjectClass#objectField(String)} to access this setting.<br><br>
  * </code>
  */
 public interface ObjectField {
@@ -47,7 +40,7 @@ public interface ObjectField {
 	 * <br><br>
 	 * <b>Caution !</b><br>
 	 * This setting will also trigger deletion of the old member object, on
-	 * calls to {@link com.db4o.ObjectContainer#set }.
+	 * calls to {@link com.db4o.ObjectContainer#store(Object) }.
 	 * An example of the behaviour can be found in 
 	 * {@link ObjectClass#cascadeOnDelete}
 	 * <br><br>
@@ -69,7 +62,7 @@ public interface ObjectField {
 	 * Setting cascadeOnUpdate to true will result in the update
 	 * of the object attribute stored in this field if the parent object
 	 * is passed to
-	 * {@link com.db4o.ObjectContainer#set}.
+	 * {@link com.db4o.ObjectContainer#store(Object)}.
 	 * <br><br>
 	 * The default setting is <b>false</b>.<br><br>
 	 * In client-server environment this setting should be used on both 

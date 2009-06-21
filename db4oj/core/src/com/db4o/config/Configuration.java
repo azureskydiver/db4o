@@ -50,13 +50,13 @@ public interface Configuration {
      * foo, member1, member2, member3 and member4 will be activated<br>
      * member5 will be deactivated, all of it's members will be null<br>
      * member5 can be activated at any time by calling
-     * {@link com.db4o.ObjectContainer#activate(Object, int) ObjectContainer#activate(member5, depth)}.
+     * {@link com.db4o.ObjectContainer#activate(Object, int)}.
      * <br><br>
      * Note that raising the global activation depth will consume more memory and
      * have negative effects on the performance of first-time retrievals. Lowering
      * the global activation depth needs more individual activation work but can
      * increase performance of queries.<br><br>
-     * {@link com.db4o.ObjectContainer#deactivate(Object, int) ObjectContainer#deactivate(Object, depth)}
+     * {@link com.db4o.ObjectContainer#deactivate(Object, int)}
      * can be used to manually free memory by deactivating objects.<br><br>
      * In client/server environment the same setting should be used on both 
      * client and server<br><br>.

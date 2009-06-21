@@ -12,7 +12,6 @@ import com.db4o.*;
  * <br><br>
  * Before starting a db4o session, translator classes need to be registered. An example:<br>
  * <code>
- * Configuration config = Db4o.configure();<br>
  * ObjectClass oc = config.objectClass("package.className");<br>
  * oc.translate(new FooTranslator());</code><br><br>
  *
@@ -24,7 +23,7 @@ public interface ObjectTranslator {
      * @param container the ObjectContainer used
      * @param applicationObject the Object to be translated
      * @return return the object to store.<br>It needs to be of the class
-	 * {@link #storedClass storedClass()}.
+	 * {@link #storedClass()}.
      */
     public Object onStore(ObjectContainer container, Object applicationObject);
 
@@ -39,7 +38,7 @@ public interface ObjectTranslator {
     /**
 	 * return the Class you are converting to.
      * @return the Class of the object you are returning with the method
-	 * {@link #onStore onStore()}
+	 * {@link #onStore(ObjectContainer, Object)}
 	 */
 	 public Class storedClass ();
 }

@@ -19,14 +19,14 @@ public class QueryEvaluationMode {
 	
 	/**
 	 * Constant for immediate query evaluation. The query is executed fully
-	 * when Query#execute() is called.
+	 * when {@link com.db4o.query.Query#execute()} is called.
 	 * <br><br><b>For detailed documentation please see 
 	 * {@link QueryConfiguration#evaluationMode(QueryEvaluationMode)}</b> 
 	 */
 	public static final QueryEvaluationMode IMMEDIATE = new QueryEvaluationMode("IMMEDIATE");
 
 	/**
-	 * Constant for snapshot query evaluation. When Query#execute() is called,
+	 * Constant for snapshot query evaluation. When {@link com.db4o.query.Query#execute()} is called,
 	 * the query processor chooses the best indexes, does all index processing
 	 * and creates a snapshot of the index at this point in time. Non-indexed
 	 * constraints are evaluated lazily when the application iterates through 
@@ -37,7 +37,7 @@ public class QueryEvaluationMode {
 	public static final QueryEvaluationMode SNAPSHOT = new QueryEvaluationMode("SNAPSHOT");
 	
 	/**
-	 * Constant for lazy query evaluation. When Query#execute() is called, the
+	 * Constant for lazy query evaluation. When {@link com.db4o.query.Query#execute()} is called, the
 	 * query processor only chooses the best index and creates an iterator on 
 	 * this index. Indexes and constraints are evaluated lazily when the 
 	 * application iterates through the {@link com.db4o.ObjectSet} resultset of the query.

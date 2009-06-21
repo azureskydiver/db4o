@@ -4,7 +4,7 @@ package com.db4o.config;
 
 /**
  * allows special comparison behaviour during query evaluation.
- * <br><br>db4o will use the Object returned by the <code>{@link Compare#compare()}</code>
+ * <br><br>db4o will use the Object returned by the {@link Compare#compare()}
  * method for all query comparisons.
  */
 public interface Compare {
