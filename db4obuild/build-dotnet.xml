@@ -58,7 +58,7 @@
 	</target>
 	
 	<target name="run-tests-net35"
-			depends="clean, configure-debug, configure-net35, run-linq-tests, run-tests-net, run-tests-silverlight"
+			depends="clean, configure-debug, configure-net35, run-linq-tests, run-tests-net"
 			description="Builds and runs all the .net 3.5 relevant test cases (including LINQ)">
 	</target>
 	
@@ -383,7 +383,6 @@
 	<target name="build-core" depends="sharpen-all, prepare-csproject-all" unless="mono">
 	    <reset-dir dir="${dir.dist.dll.net}" />
 	    <reset-dir dir="${dir.dist.dll.compact}" />
-		<reset-dir dir="${dir.dist.dll.silverlight}" />
 	    
 		<msb solution="${dir.n.v6}/Db4o" />
 		<msb solution="${dir.n.v6}/Db4o-CF" outputPath="${dir.dist.dll.compact}" />
@@ -397,21 +396,16 @@
 				<echo message="Silverlight builds only on .Net Framework 3.5 or greater." />
 			</then>
 			<else>
+				<reset-dir dir="${dir.dist.dll.silverlight}" />
 				<msb solution="${dir.n.v6}/Db4o-Silverlight" outputPath="${dir.dist.dll.silverlight}" />
 			</else>
 		</if>
 	</target>	
 	
-	<target name="build-silverlight-standalone" depends="configure-net35">
-		<antcall target="build-silverlight" />
-	</target>
-	
-	<target name="run-tests-silverlight" depends="build-core">
-		<!--
+	<target name="run-tests-silverlight" depends="configure-net35, build-core">
 		<exec executable="${dir.dist.dll.silverlight}/Db4objects.Db4o.SilverlightTestHost.exe" failonerror="true" taskname="Run Silverlight Tests">
 			<arg line="${dir.dist.dll.silverlight}"/>
 		</exec>
-		-->
 	</target>
 	
 	<target name="run-linq-tests" depends="build-core">
