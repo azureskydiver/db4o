@@ -21,11 +21,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.db4o.drs.test;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
 /**
  * @sharpen.partial
  */
-public class Db4oTests extends DrsTestSuite {
+public class Db4oTests extends DrsTestSuite implements Db4oTestCase {
+	
 	public static int main(String[] args) {
 		//if (true) return new Db4oTests().runDb4oDb4o();
 		

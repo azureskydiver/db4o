@@ -44,15 +44,15 @@ public class ComplexListTestCase extends DrsTestCase {
 	}
 
 	private void changeInProviderB() {
-		SimpleListHolder SimpleListHolder = (SimpleListHolder) getOneInstance(b(), SimpleListHolder.class);
+		SimpleListHolder simpleListHolder = (SimpleListHolder) getOneInstance(b(), SimpleListHolder.class);
 		
-		SimpleItem fooBaby = new SimpleItem(SimpleListHolder, "foobaby");		
+		SimpleItem fooBaby = new SimpleItem(simpleListHolder, "foobaby");		
 		b().provider().storeNew(fooBaby);
-		SimpleListHolder.add(fooBaby);		
-		SimpleItem foo = getItem(SimpleListHolder, "foo");
+		simpleListHolder.add(fooBaby);		
+		SimpleItem foo = getItem(simpleListHolder, "foo");
 		foo.setChild(fooBaby);
 		b().provider().update(foo);
-		b().provider().update(SimpleListHolder);
+		b().provider().update(simpleListHolder);
 	}
 
 	private void replicateAndTest(DrsFixture source, DrsFixture target) {

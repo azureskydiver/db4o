@@ -24,6 +24,7 @@ import java.util.*;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.activation.*;
 import com.db4o.config.Configuration;
 import com.db4o.drs.inside.*;
 import com.db4o.ext.Db4oDatabase;
@@ -31,8 +32,7 @@ import com.db4o.ext.Db4oUUID;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.ext.VirtualField;
-import com.db4o.foundation.Tree;
-import com.db4o.foundation.Visitor4;
+import com.db4o.foundation.*;
 import com.db4o.internal.ExternalObjectContainer;
 import com.db4o.internal.Transaction;
 import com.db4o.internal.TreeInt;
@@ -40,6 +40,7 @@ import com.db4o.internal.replication.Db4oReplicationReference;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
+import com.db4o.ta.*;
 import com.db4o.types.*;
 
 // TODO: Add additional query methods (whereModified )
@@ -62,6 +63,8 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 
 	private final String _name;
 
+	private final Procedure4 _activationStrategy;
+	
 	public FileReplicationProvider(ObjectContainer objectContainer) {
 		this(objectContainer, "null");
 	}
@@ -75,6 +78,33 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		_stream = (ExternalObjectContainer) objectContainer;
 		_reflector = _stream.reflector();
 		_signatureMap = new Db4oSignatureMap(_stream);
+		_activationStrategy = createActivationStrategy();
+	}
+
+	private Procedure4 createActivationStrategy() {
+		if(isTransparentActivationEnabled()){
+			return new Procedure4() {
+				public void apply(Object obj) {
+					ObjectInfo objectInfo = _stream.getObjectInfo(obj);
+					((Activator)objectInfo).activate(ActivationPurpose.READ);
+				}
+			};
+		}
+		
+		return new Procedure4(){
+			public void apply(Object obj) {
+				if (obj == null) {
+					return;
+				}
+				ReflectClass claxx = _reflector.forObject(obj);
+				int level = claxx.isCollection() ? 3 : 1;
+				_stream.activate(obj, level);
+			}
+		};
+	}
+
+	private boolean isTransparentActivationEnabled() {
+		return TransparentActivationSupport.isTransparentActivationEnabledOn(_stream);
 	}
 
 	public ReadonlyReplicationProviderSignature getSignature() {
@@ -172,17 +202,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 	}
 
 	public void activate(Object obj) {
-
-		if (obj == null) {
-			return;
-		}
-
-		ReflectClass claxx = _reflector.forObject(obj);
-
-		int level = claxx.isCollection() ? 3 : 1;
-
-		_stream.activate(obj, level);
-
+		_activationStrategy.apply(obj);
 	}
 
 	public Db4oReplicationReference referenceFor(Object obj) {

@@ -22,8 +22,10 @@ package com.db4o.drs.test;
 
 import java.util.*;
 
+import com.db4o.config.*;
 import com.db4o.drs.db4o.*;
 import com.db4o.drs.inside.*;
+import com.db4o.ta.*;
 
 import db4ounit.*;
 import db4ounit.fixtures.*;
@@ -31,6 +33,8 @@ import db4ounit.fixtures.*;
 
 public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 	
+	private static final FixtureVariable <Boolean> TRANSPARENT_ACTIVATION_FIXTURE = new FixtureVariable("TransparentActivation");
+
 	@Override
 	public FixtureProvider[] fixtureProviders() {
 		return new FixtureProvider[] {
@@ -39,6 +43,7 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 				collection2(),
 				collection3(),
 			}),
+			new SimpleFixtureProvider(TRANSPARENT_ACTIVATION_FIXTURE, true, false)
 		};
 	}
 
@@ -80,6 +85,13 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 	}
 	
 	public static class TestUnit extends DrsTestCase {
+		
+		@Override
+		protected void configure(Configuration config) {
+			if(TRANSPARENT_ACTIVATION_FIXTURE.value()){
+				config.add(new TransparentActivationSupport());
+			}
+		}
 	
 		public void test() {
 			CollectionHolder h1 = subject();
