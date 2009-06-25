@@ -72,6 +72,7 @@ public abstract class DrsTestSuite extends ReflectionTestSuite {
 				ArrayReplicationTest.class,
 				SingleTypeCollectionReplicationTest.class,
 				MixedTypesCollectionReplicationTest.class,
+				TransparentActivationTestCase.class,
                 
                 //regression
                 DRS42Test.class,

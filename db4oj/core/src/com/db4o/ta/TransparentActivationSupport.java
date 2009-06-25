@@ -34,7 +34,7 @@ public class TransparentActivationSupport implements ConfigurationItem {
 	 */
 	public void apply(final InternalObjectContainer container) {
 		
-		if (isTransparentActivationAlreadyEnabled(container))
+		if (isTransparentActivationEnabledOn(container))
 			return;
 				
 		final TransparentActivationDepthProviderImpl provider = new TransparentActivationDepthProviderImpl();
@@ -70,8 +70,8 @@ public class TransparentActivationSupport implements ConfigurationItem {
 			}
 		});
 	}
-
-	private boolean isTransparentActivationAlreadyEnabled(final InternalObjectContainer container) {
+	
+	public static boolean isTransparentActivationEnabledOn(final InternalObjectContainer container) {
 	    return activationProvider(container) instanceof TransparentActivationDepthProvider;
     }
 
@@ -135,7 +135,7 @@ public class TransparentActivationSupport implements ConfigurationItem {
 	    return (Transaction) ((TransactionalEventArgs)args).transaction();
     }
 
-	protected ActivationDepthProvider activationProvider(InternalObjectContainer container) {
+	protected static ActivationDepthProvider activationProvider(InternalObjectContainer container) {
         return container.configImpl().activationDepthProvider();
     }
 
