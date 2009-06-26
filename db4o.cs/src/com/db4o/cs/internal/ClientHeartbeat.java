@@ -21,7 +21,7 @@ public class ClientHeartbeat implements Runnable {
     }
     
     private int frequency(Config4Impl config){
-        return Math.min(config.timeoutClientSocket(), config.timeoutServerSocket()) / 2;
+        return Math.min(config.timeoutClientSocket(), config.timeoutServerSocket()) / 4;
     }
 
     public void run() {
