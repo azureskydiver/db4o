@@ -33,7 +33,7 @@ import db4ounit.fixtures.*;
 
 public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 	
-	private static final FixtureVariable <Boolean> TRANSPARENT_ACTIVATION_FIXTURE = new FixtureVariable("TransparentActivation");
+	private static final FixtureVariable TRANSPARENT_ACTIVATION_FIXTURE = new FixtureVariable("TransparentActivation");
 
 	@Override
 	public FixtureProvider[] fixtureProviders() {
@@ -88,7 +88,7 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 		
 		@Override
 		protected void configure(Configuration config) {
-			if(TRANSPARENT_ACTIVATION_FIXTURE.value()){
+			if((Boolean)TRANSPARENT_ACTIVATION_FIXTURE.value()){
 				config.add(new TransparentActivationSupport());
 			}
 		}
