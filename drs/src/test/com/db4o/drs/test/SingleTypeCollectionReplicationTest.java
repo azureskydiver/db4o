@@ -43,7 +43,7 @@ public class SingleTypeCollectionReplicationTest extends FixtureBasedTestSuite {
 				collection2(),
 				collection3(),
 			}),
-			new SimpleFixtureProvider(TRANSPARENT_ACTIVATION_FIXTURE, true, false)
+			new SimpleFixtureProvider(TRANSPARENT_ACTIVATION_FIXTURE, new Object[]{true, false})
 		};
 	}
 

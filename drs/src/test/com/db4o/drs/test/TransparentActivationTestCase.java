@@ -48,9 +48,9 @@ public class TransparentActivationTestCase extends DrsTestCase{
 		a().provider().storeNew(item);
 		reopen();
 		replicateAll(a().provider(), b().provider());
-		ObjectSet<Item> items = b().provider().getStoredObjects(Item.class);
+		ObjectSet items = b().provider().getStoredObjects(Item.class);
 		Assert.isTrue(items.hasNext());
-		Item replicatedItem = items.next();
+		Item replicatedItem = (Item) items.next();
 		Assert.areEqual(item.name(), replicatedItem.name());
 	
 		
