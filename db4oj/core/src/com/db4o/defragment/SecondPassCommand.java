@@ -12,7 +12,7 @@ import com.db4o.internal.marshall.*;
 /**
  * Second step in the defragmenting process: Fills in target file pointer slots, copies
  * content slots from source to target and triggers ID remapping therein by calling the
- * appropriate yap/marshaller defrag() implementations. During the process, the actual address
+ * appropriate db4o/marshaller defrag() implementations. During the process, the actual address
  * mappings for the content slots are registered for use with string indices.
  * 
  * @exclude
@@ -28,18 +28,18 @@ final class SecondPassCommand implements PassCommand {
 		_objectCommitFrequency = objectCommitFrequency;
 	}
 
-	public void processClass(final DefragmentServicesImpl services, final ClassMetadata yapClass, int id,final int classIndexID) throws CorruptionException, IOException {
+	public void processClass(final DefragmentServicesImpl services, final ClassMetadata classMetadata, int id,final int classIndexID) throws CorruptionException, IOException {
 		if(services.mappedID(id,-1)==-1) {
 			System.err.println("MAPPING NOT FOUND: "+id);
 		}
 		DefragmentContextImpl.processCopy(services, id, new SlotCopyHandler() {
 			public void processCopy(DefragmentContextImpl context){
-				yapClass.defragClass(context, classIndexID);
+				classMetadata.defragClass(context, classIndexID);
 			}
 		});
 	}
 
-	public void processObjectSlot(final DefragmentServicesImpl services, final ClassMetadata yapClass, int id) throws CorruptionException, IOException {
+	public void processObjectSlot(final DefragmentServicesImpl services, final ClassMetadata classMetadata, int id) throws CorruptionException, IOException {
 		ByteArrayBuffer sourceBuffer = services.sourceBufferByID(id);
 		ObjectHeader objHead = services.sourceObjectHeader(sourceBuffer);
 		sourceBuffer._offset = 0;

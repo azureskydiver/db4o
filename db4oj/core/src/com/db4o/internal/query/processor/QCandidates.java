@@ -32,7 +32,7 @@ public final class QCandidates implements Visitor4 {
     private List4 _constraints;
 
     // possible class information
-    ClassMetadata i_yapClass;
+    ClassMetadata i_classMetadata;
 
     // possible field information
     private QField _field;
@@ -50,25 +50,25 @@ public final class QCandidates implements Visitor4 {
     
     private boolean _loadedFromClassIndex;
 
-    QCandidates(LocalTransaction a_trans, ClassMetadata a_yapClass, QField a_field) {
+    QCandidates(LocalTransaction a_trans, ClassMetadata a_classMetadata, QField a_field) {
     	i_trans = a_trans;
-    	i_yapClass = a_yapClass;
+    	i_classMetadata = a_classMetadata;
     	_field = a_field;
    
     	if (a_field == null
-    			|| a_field.i_yapField == null
-				|| !(a_field.i_yapField.getHandler() instanceof StandardReferenceTypeHandler)
+    			|| a_field._fieldMetadata == null
+				|| !(a_field._fieldMetadata.getHandler() instanceof StandardReferenceTypeHandler)
     	) {
     		return;
     	}
 
-    	ClassMetadata yc = ((StandardReferenceTypeHandler) a_field.i_yapField.getHandler()).classMetadata();
-    	if (i_yapClass == null) {
-    		i_yapClass = yc;
+    	ClassMetadata yc = ((StandardReferenceTypeHandler) a_field._fieldMetadata.getHandler()).classMetadata();
+    	if (i_classMetadata == null) {
+    		i_classMetadata = yc;
     	} else {
-    		yc = i_yapClass.getHigherOrCommonHierarchy(yc);
+    		yc = i_classMetadata.getHigherOrCommonHierarchy(yc);
     		if (yc != null) {
-    			i_yapClass = yc;
+    			i_classMetadata = yc;
     		}
     	}
     }
@@ -275,10 +275,10 @@ public final class QCandidates implements Visitor4 {
     	if(result.foundIndex()){
     		return result.iterateIDs();
     	}
-    	if(i_yapClass.isPrimitive()){
+    	if(i_classMetadata.isPrimitive()){
     		return Iterators.EMPTY_ITERATOR;
     	}
-    	return BTreeClassIndexStrategy.iterate(i_yapClass, i_trans);
+    	return BTreeClassIndexStrategy.iterate(i_classMetadata, i_trans);
     }
 
 	private Iterator4 mapIdsToExecutionPath(Iterator4 singleObjectQueryIterator, Collection4 executionPath) {
@@ -316,7 +316,7 @@ public final class QCandidates implements Visitor4 {
 	}
 
 	public int classIndexEntryCount() {
-		return i_yapClass.indexEntryCount(i_trans);
+		return i_classMetadata.indexEntryCount(i_trans);
 	}
 
 	private FieldIndexProcessorResult processFieldIndexes() {
@@ -434,7 +434,7 @@ public final class QCandidates implements Visitor4 {
     	}
     	
     	final TreeIntBuilder result = new TreeIntBuilder();
-    	final ClassIndexStrategy index = i_yapClass.index();
+    	final ClassIndexStrategy index = i_classMetadata.index();
 		index.traverseAll(i_trans, new Visitor4() {
     		public void visit(Object obj) {
     			result.add(new QCandidate(QCandidates.this, null, ((Integer)obj).intValue()));
@@ -445,7 +445,7 @@ public final class QCandidates implements Visitor4 {
         
         DiagnosticProcessor dp = i_trans.container()._handlers._diagnosticProcessor;
         if (dp.enabled() && !isClassOnlyQuery()){
-            dp.loadedFromClassIndex(i_yapClass);
+            dp.loadedFromClassIndex(i_classMetadata);
         }
         
         _loadedFromClassIndex = true;
@@ -484,15 +484,15 @@ public final class QCandidates implements Visitor4 {
             }
         }
 
-        if (i_yapClass == null || a_constraint.isNullConstraint()) {
+        if (i_classMetadata == null || a_constraint.isNullConstraint()) {
             addConstraint(a_constraint);
             return true;
         }
         ClassMetadata yc = a_constraint.getYapClass();
         if (yc != null) {
-            yc = i_yapClass.getHigherOrCommonHierarchy(yc);
+            yc = i_classMetadata.getHigherOrCommonHierarchy(yc);
             if (yc != null) {
-                i_yapClass = yc;
+                i_classMetadata = yc;
                 addConstraint(a_constraint);
                 return true;
             }
@@ -551,18 +551,18 @@ public final class QCandidates implements Visitor4 {
             }
         }
 
-        if (i_yapClass == null || constraint.isNullConstraint()) {
+        if (i_classMetadata == null || constraint.isNullConstraint()) {
             return true;
         }
         ClassMetadata classMetadata = constraint.getYapClass();
         if (classMetadata == null) {
         	return false;
         }
-        classMetadata = i_yapClass.getHigherOrCommonHierarchy(classMetadata);
+        classMetadata = i_classMetadata.getHigherOrCommonHierarchy(classMetadata);
         if (classMetadata == null) {
         	return false;
         }
-        i_yapClass = classMetadata;
+        i_classMetadata = classMetadata;
         return true;
 	}
 	

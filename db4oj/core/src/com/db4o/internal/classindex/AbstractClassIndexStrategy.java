@@ -10,14 +10,14 @@ import com.db4o.internal.*;
  */
 public abstract class AbstractClassIndexStrategy implements ClassIndexStrategy {
 
-	protected final ClassMetadata _yapClass;
+	protected final ClassMetadata _classMetadata;
 
-	public AbstractClassIndexStrategy(ClassMetadata yapClass) {
-		_yapClass = yapClass;
+	public AbstractClassIndexStrategy(ClassMetadata classMetadata) {
+		_classMetadata = classMetadata;
 	}
 
-	protected int yapClassID() {
-		return _yapClass.getID();
+	protected int classMetadataID() {
+		return _classMetadata.getID();
 	}
 
 	public int ownLength() {

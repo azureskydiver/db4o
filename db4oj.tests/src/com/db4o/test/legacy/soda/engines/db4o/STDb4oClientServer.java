@@ -13,7 +13,7 @@ public class STDb4oClientServer implements STEngine {
 
 	private static final int PORT = 4044;
 	private static final String HOST = "localhost";
-	private static final String FILE = "sodacs.yap";
+	private static final String FILE = "sodacs.db4o";
 	private static final String USER = "S.O.D.A.";
 	private static final String PASS = "rocks";
 

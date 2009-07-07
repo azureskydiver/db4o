@@ -23,11 +23,11 @@ public final class ObjectHeader {
     	this(container,null,reader);
     }
 
-    public ObjectHeader(ClassMetadata yapClass, ReadWriteBuffer reader){
-    	this(null,yapClass,reader);
+    public ObjectHeader(ClassMetadata classMetadata, ReadWriteBuffer reader){
+    	this(null,classMetadata,reader);
     }
     
-    public ObjectHeader(ObjectContainerBase stream, ClassMetadata yc, ReadWriteBuffer reader){
+    public ObjectHeader(ObjectContainerBase stream, ClassMetadata classMetadata, ReadWriteBuffer reader){
         if (Deploy.debug) {
             reader.readBegin(Const4.YAPOBJECT);
         }
@@ -36,12 +36,12 @@ public final class ObjectHeader {
         
         classID=normalizeID(classID);
         
-        _classMetadata=(yc!=null ? yc : stream.classMetadataForID(classID));
+        _classMetadata=(classMetadata!=null ? classMetadata : stream.classMetadataForID(classID));
 
         if (Deploy.debug) {
         	// This check has been added to cope with defragment in debug mode: SlotDefragment#setIdentity()
-        	// will trigger calling this constructor with a source db yap class and a target db stream,
-        	// thus _yapClass==null. There may be a better solution, since this call is just meant to
+        	// will trigger calling this constructor with a source db class metadata and a target db stream,
+        	// thus _classMetadata==null. There may be a better solution, since this call is just meant to
         	// skip the object header.
         	if(_classMetadata!=null) {
 	        	int ycID = _classMetadata.getID();

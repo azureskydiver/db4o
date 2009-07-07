@@ -17,29 +17,29 @@ public class QField implements Visitor4, Unversioned{
 	
 	transient Transaction i_trans;
 	public String i_name;
-	transient FieldMetadata i_yapField;
-	public int i_yapClassID;
+	transient FieldMetadata _fieldMetadata;
+	public int i_classMetadataID;
 	public int _fieldHandle;
 	
 	public QField(){
 		// C/S only	
 	}
 	
-	public QField(Transaction a_trans, String name, FieldMetadata a_yapField, int a_yapClassID, int a_index){
+	public QField(Transaction a_trans, String name, FieldMetadata fieldMetadata, int classMetadataID, int a_index){
 		i_trans = a_trans;
 		i_name = name;
-		i_yapField = a_yapField;
-		i_yapClassID = a_yapClassID;
+		_fieldMetadata = fieldMetadata;
+		i_classMetadataID = classMetadataID;
 		_fieldHandle = a_index;
-		if(i_yapField != null){
-		    if(! i_yapField.alive()){
-		        i_yapField = null;
+		if(_fieldMetadata != null){
+		    if(! _fieldMetadata.alive()){
+		        _fieldMetadata = null;
 		    }
 		}
 	}
     
     boolean canHold(ReflectClass claxx){
-        return i_yapField == null || i_yapField.canHold(claxx);
+        return _fieldMetadata == null || _fieldMetadata.canHold(claxx);
     }
 	
 	Object coerce(Object a_object){
@@ -60,23 +60,23 @@ public class QField implements Visitor4, Unversioned{
 			}
 			
 	    }
-        if(i_yapField == null){
+        if(_fieldMetadata == null){
             return a_object;
         }
-        return i_yapField.coerce(claxx, a_object);
+        return _fieldMetadata.coerce(claxx, a_object);
 	}
     
 	
 	ClassMetadata getYapClass(){
-		if(i_yapField != null){
-			return i_yapField.fieldType();
+		if(_fieldMetadata != null){
+			return _fieldMetadata.fieldType();
 		}
 		return null;
 	}
 	
 	FieldMetadata getYapField(ClassMetadata yc){
-		if(i_yapField != null){
-			return i_yapField;
+		if(_fieldMetadata != null){
+			return _fieldMetadata;
 		}
 		FieldMetadata yf = yc.fieldMetadataForName(i_name);
 		if(yf != null){
@@ -86,24 +86,24 @@ public class QField implements Visitor4, Unversioned{
 	}
 	
 	public FieldMetadata getYapField() {
-		return i_yapField;
+		return _fieldMetadata;
 	}
 	
 	boolean isArray(){
-		return i_yapField != null && Handlers4.handlesArray(i_yapField.getHandler());
+		return _fieldMetadata != null && Handlers4.handlesArray(_fieldMetadata.getHandler());
 	}
 	
 	boolean isClass(){
-		return i_yapField == null ||  Handlers4.handlesClass(i_yapField.getHandler());
+		return _fieldMetadata == null ||  Handlers4.handlesClass(_fieldMetadata.getHandler());
 	}
 	
 	boolean isSimple(){
-		return i_yapField != null &&  Handlers4.handlesSimple(i_yapField.getHandler());
+		return _fieldMetadata != null &&  Handlers4.handlesSimple(_fieldMetadata.getHandler());
 	}
 	
 	PreparedComparison prepareComparison(Context context, Object obj){
-		if(i_yapField != null){
-			return i_yapField.prepareComparison(context, obj);
+		if(_fieldMetadata != null){
+			return _fieldMetadata.prepareComparison(context, obj);
 		}
 		if(obj == null){
 			return Null.INSTANCE;
@@ -118,9 +118,9 @@ public class QField implements Visitor4, Unversioned{
 
 	
 	void unmarshall(Transaction a_trans){
-		if(i_yapClassID != 0){
-			ClassMetadata yc = a_trans.container().classMetadataForID(i_yapClassID);
-			i_yapField = (FieldMetadata) yc._aspects[_fieldHandle];
+		if(i_classMetadataID != 0){
+			ClassMetadata yc = a_trans.container().classMetadataForID(i_classMetadataID);
+			_fieldMetadata = (FieldMetadata) yc._aspects[_fieldHandle];
 		}
 	}
 	
@@ -129,8 +129,8 @@ public class QField implements Visitor4, Unversioned{
 	}
 	
 	public String toString() {
-		if(i_yapField != null){
-			return "QField " + i_yapField.toString();
+		if(_fieldMetadata != null){
+			return "QField " + _fieldMetadata.toString();
 		}
 		return super.toString();
 	}

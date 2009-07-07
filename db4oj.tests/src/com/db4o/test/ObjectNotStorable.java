@@ -9,7 +9,7 @@ import com.db4o.tools.*;
 
 public class ObjectNotStorable implements Runnable{
 	
-	private static final String FILE = "notStorable.yap";
+	private static final String FILE = "notStorable.db4o";
 	private static boolean throwException = false;
 	
 	private String name;

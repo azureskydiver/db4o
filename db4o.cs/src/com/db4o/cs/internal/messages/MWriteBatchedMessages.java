@@ -10,7 +10,7 @@ public class MWriteBatchedMessages extends MsgD implements MessageWithResponse {
 		Transaction ta = transaction();
 		synchronized (streamLock()) {
     		for (int i = 0; i < count; i++) {
-    			StatefulBuffer writer = _payLoad.readYapBytes();
+    			StatefulBuffer writer = _payLoad.readStatefulBuffer();
     			int messageId = writer.readInt();
     			Msg message = Msg.getMessage(messageId);
     			Msg clonedMessage = message.publicClone();

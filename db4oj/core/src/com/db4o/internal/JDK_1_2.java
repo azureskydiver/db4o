@@ -35,8 +35,8 @@ class JDK_1_2 extends JDKReflect {
         return new WeakReference(obj);
     }
     
-    Object createActivateObjectReference(Object a_queue, ObjectReference a_yapObject, Object a_object) {
-        return new ActiveObjectReference(a_queue, a_yapObject, a_object);
+    Object createActivateObjectReference(Object referenceQueue, ObjectReference objectReference, Object obj) {
+        return new ActiveObjectReference(referenceQueue, objectReference, obj);
     }
     
     public void extendConfiguration(Config4Impl config) {
@@ -93,7 +93,7 @@ class JDK_1_2 extends JDKReflect {
             ReferenceQueue4 queue = (ReferenceQueue4) referenceQueue;
             ActiveObjectReference ref;
             synchronized(container.lock()){
-	            while ((ref = queue.yapPoll()) != null) {
+	            while ((ref = queue.pollObjectReference()) != null) {
 	                container.removeFromAllReferenceSystems(ref._referent);
 	            }
             }

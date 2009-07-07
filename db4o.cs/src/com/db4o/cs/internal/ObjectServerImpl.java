@@ -207,7 +207,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 		} catch (Exception e) {
 			if (Deploy.debug) {
 				System.out
-						.println("YapServer.close() ServerSocket failed to close.");
+						.println("ObjectServer.close() ServerSocket failed to close.");
 			}
 		}
 		_serverSocket = null;

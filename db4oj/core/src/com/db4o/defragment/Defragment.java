@@ -22,17 +22,17 @@ import com.db4o.io.*;
  * 
  * The simplest way to defragment a database file:<br><br>
  * 
- * <code>Defragment.defrag("sample.yap");</code><br><br>
+ * <code>Defragment.defrag("sample.db4o");</code><br><br>
  * 
- * This will move the file to "sample.yap.backup", then create a defragmented
+ * This will move the file to "sample.db4o.backup", then create a defragmented
  * version of this file in the original position, using a temporary file
- * "sample.yap.mapping". If the backup file already exists, this will throw an
+ * "sample.db4o.mapping". If the backup file already exists, this will throw an
  * exception and no action will be taken.<br><br>
  * 
  * For more detailed configuration of the defragmentation process, provide a
  * DefragmentConfig instance:<br><br>
  * 
- * <code>DefragmentConfig config=new DefragmentConfig("sample.yap","sample.bap",new BTreeIDMapping("sample.map"));<br>
+ * <code>DefragmentConfig config=new DefragmentConfig("sample.db4o","sample.bap",new BTreeIDMapping("sample.map"));<br>
  *	config.forceBackupDelete(true);<br>
  *	config.storedClassFilter(new AvailableClassFilter());<br>
  * config.db4oConfig(db4oConfig);<br>
@@ -41,7 +41,7 @@ import com.db4o.io.*;
  * This will move the file to "sample.bap", then create a defragmented version
  * of this file in the original position, using a temporary file "sample.map" for BTree mapping.
  * If the backup file already exists, it will be deleted. The defragmentation
- * process will skip all classes that have instances stored within the yap file,
+ * process will skip all classes that have instances stored within the db4o file,
  * but that are not available on the class path (through the current
  * classloader). Custom db4o configuration options are read from the
  * {@link com.db4o.config.Configuration Configuration} passed as db4oConfig.
@@ -252,11 +252,11 @@ public class Defragment {
 		StoredClass[] classes = context
 				.storedClasses(DefragmentServicesImpl.SOURCEDB);
 		for (int classIdx = 0; classIdx < classes.length; classIdx++) {
-			ClassMetadata yapClass = (ClassMetadata) classes[classIdx];
-			if (!config.storedClassFilter().accept(yapClass)) {
+			ClassMetadata classMetadata = (ClassMetadata) classes[classIdx];
+			if (!config.storedClassFilter().accept(classMetadata)) {
 				continue;
 			}
-			processYapClass(context, yapClass, command);
+			processClass(context, classMetadata, command);
 			command.flush(context);
 			if(config.objectCommitFrequency()>0) {
 				context.targetCommit();
@@ -277,14 +277,14 @@ public class Defragment {
 	// deletions appear in the source class index?!?
 	// reproducable with SelectiveCascadingDeleteTestCase and ObjectSetTestCase
 	// - investigate.
-	private static void processYapClass(final DefragmentServicesImpl context,
+	private static void processClass(final DefragmentServicesImpl context,
 			final ClassMetadata curClass, final PassCommand command)
 			throws CorruptionException, IOException {
 		processClassIndex(context, curClass, command);
 		if (!parentHasIndex(curClass)) {
-			processObjectsForYapClass(context, curClass, command);
+			processObjectsForClass(context, curClass, command);
 		}
-		processYapClassAndFieldIndices(context, curClass, command);
+		processClassAndFieldIndices(context, curClass, command);
 	}
 
 	private static boolean parentHasIndex(ClassMetadata curClass) {
@@ -298,7 +298,7 @@ public class Defragment {
 		return false;
 	}
 
-	private static void processObjectsForYapClass(
+	private static void processObjectsForClass(
 			final DefragmentServicesImpl context, final ClassMetadata curClass,
 			final PassCommand command) {
 		context.traverseAll(curClass, new Visitor4() {
@@ -316,7 +316,7 @@ public class Defragment {
 		});
 	}
 
-	private static void processYapClassAndFieldIndices(
+	private static void processClassAndFieldIndices(
 			final DefragmentServicesImpl context, final ClassMetadata curClass,
 			final PassCommand command) throws CorruptionException, IOException {
 		int sourceClassIndexID = 0;

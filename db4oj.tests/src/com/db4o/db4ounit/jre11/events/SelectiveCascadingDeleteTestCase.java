@@ -108,10 +108,10 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 	}
 
 	private BTree btree() {
-		return BTreeClassIndexStrategy.btree(yapClass());
+		return BTreeClassIndexStrategy.btree(classMetadata());
 	}
 
-	private ClassMetadata yapClass() {
+	private ClassMetadata classMetadata() {
 		return fileSession().classMetadataForReflectClass(reflectClass(Item.class));
 	}
 

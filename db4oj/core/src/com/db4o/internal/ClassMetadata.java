@@ -864,36 +864,36 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         return forObject;
     }
 
-    public ClassMetadata getHigherHierarchy(ClassMetadata a_yapClass) {
-        ClassMetadata yc = getHigherHierarchy1(a_yapClass);
+    public ClassMetadata getHigherHierarchy(ClassMetadata a_classMetadata) {
+        ClassMetadata yc = getHigherHierarchy1(a_classMetadata);
         if (yc != null) {
             return yc;
         }
-        return a_yapClass.getHigherHierarchy1(this);
+        return a_classMetadata.getHigherHierarchy1(this);
     }
 
-    private ClassMetadata getHigherHierarchy1(ClassMetadata a_yapClass) {
-        if (a_yapClass == this) {
+    private ClassMetadata getHigherHierarchy1(ClassMetadata a_classMetadata) {
+        if (a_classMetadata == this) {
             return this;
         }
         if (i_ancestor != null) {
-            return i_ancestor.getHigherHierarchy1(a_yapClass);
+            return i_ancestor.getHigherHierarchy1(a_classMetadata);
         }
         return null;
     }
 
-    public ClassMetadata getHigherOrCommonHierarchy(ClassMetadata a_yapClass) {
-        ClassMetadata yc = getHigherHierarchy1(a_yapClass);
+    public ClassMetadata getHigherOrCommonHierarchy(ClassMetadata a_classMetadata) {
+        ClassMetadata yc = getHigherHierarchy1(a_classMetadata);
         if (yc != null) {
             return yc;
         }
         if (i_ancestor != null) {
-            yc = i_ancestor.getHigherOrCommonHierarchy(a_yapClass);
+            yc = i_ancestor.getHigherOrCommonHierarchy(a_classMetadata);
             if (yc != null) {
                 return yc;
             }
         }
-        return a_yapClass.getHigherHierarchy1(this);
+        return a_classMetadata.getHigherHierarchy1(this);
     }
 
     public byte getIdentifier() {

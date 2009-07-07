@@ -58,12 +58,12 @@ public class AllTestsConfSingle extends TestSuite{
     /**
      * the database file to be used for the server.
      */
-    public static String FILE_SERVER = "xt_serv.yap";
+    public static String FILE_SERVER = "xt_serv.db4o";
 
     /**
      * the database file to be used stand-alone.
      */
-    public static String FILE_SOLO = "xt_solo.yap";
+    public static String FILE_SOLO = "xt_solo.db4o";
     
     /**
      * the server host name.

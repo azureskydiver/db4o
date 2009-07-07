@@ -16,7 +16,7 @@ import com.db4o.util.io.win32.Win32IoAdapter;
  */
 public class SimpleIoBenchmark {
 	
-	private static final String DBFILENAME = "SimpleIoBenchmark.yap";
+	private static final String DBFILENAME = "SimpleIoBenchmark.db4o";
 	private static final int ITERATIONS = 10000;
 
 	public static void main(String[] args) {

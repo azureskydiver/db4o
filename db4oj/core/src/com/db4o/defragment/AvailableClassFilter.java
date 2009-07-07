@@ -34,7 +34,7 @@ public class AvailableClassFilter implements StoredClassFilter {
 	 * Will accept only classes whose corresponding platform class is known
 	 * to the configured classloader.
 	 * 
-	 * @param storedClass The YapClass instance to be checked
+	 * @param storedClass The class instance to be checked
 	 * @return true if the corresponding platform class is known to the configured classloader, false otherwise
 	 */
 	public boolean accept(StoredClass storedClass) {

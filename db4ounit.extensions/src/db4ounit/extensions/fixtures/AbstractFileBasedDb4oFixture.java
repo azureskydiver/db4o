@@ -7,19 +7,19 @@ import java.io.*;
 
 public abstract class AbstractFileBasedDb4oFixture extends AbstractSoloDb4oFixture {
 	
-	private final File _yap;
+	private final File _databaseFile;
 
 	public AbstractFileBasedDb4oFixture(ConfigurationSource configSource,String fileName) {
 		super(configSource);
-		_yap = new File(fileName);
+		_databaseFile = new File(fileName);
 	}
 
 	public String getAbsolutePath() {
-		return _yap.getAbsolutePath();
+		return _databaseFile.getAbsolutePath();
 	}
 
 	protected void doClean() {
-		_yap.delete();
+		_databaseFile.delete();
 	}
 
 

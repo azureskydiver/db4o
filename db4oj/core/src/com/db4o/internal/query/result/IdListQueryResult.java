@@ -106,12 +106,12 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
         final ByRef<Tree> duplicates = new ByRef<Tree>();
 
         while (iter.moveNext()) {
-			final ClassMetadata yapClass = iter.currentClass();
-			if (yapClass.getName() != null) {
-				ReflectClass claxx = yapClass.classReflector();
+			final ClassMetadata classMetadata = iter.currentClass();
+			if (classMetadata.getName() != null) {
+				ReflectClass claxx = classMetadata.classReflector();
 				if (claxx == null
 						|| !(stream()._handlers.ICLASS_INTERNAL.isAssignableFrom(claxx))) {
-					final ClassIndexStrategy index = yapClass.index();
+					final ClassIndexStrategy index = classMetadata.index();
 					index.traverseAll(_transaction, new Visitor4() {
 						public void visit(Object obj) {
 							int id = ((Integer)obj).intValue();

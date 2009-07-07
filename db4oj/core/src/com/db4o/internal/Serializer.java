@@ -38,8 +38,8 @@ public class Serializer {
 		return container;
     }
     
-    public static Object unmarshall(ObjectContainerBase serviceProvider, StatefulBuffer yapBytes) {
-        return unmarshall(serviceProvider, yapBytes._buffer, yapBytes.getID());
+    public static Object unmarshall(ObjectContainerBase serviceProvider, StatefulBuffer buffer) {
+        return unmarshall(serviceProvider, buffer._buffer, buffer.getID());
     }
     
     public static Object unmarshall(ObjectContainerBase serviceProvider, SerializedGraph serialized) {

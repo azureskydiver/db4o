@@ -3,7 +3,7 @@
 package com.db4o.internal.mapping;
 
 /**
- * A mapping from yap file source IDs/addresses to target IDs/addresses, used for defragmenting.
+ * A mapping from db4o file source IDs/addresses to target IDs/addresses, used for defragmenting.
  * 
  * @exclude
  */

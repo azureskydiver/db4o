@@ -115,7 +115,7 @@ public class DTrace {
 	        GET_POINTER_SLOT = new DTrace(true, true, "getPointerSlot", true);
 	        GET_SLOT = new DTrace(true, true, "getSlot", true);
 			GET_FREESPACE_RAM = new DTrace(true, true, "getFreespaceRam", true);
-			GET_YAPOBJECT = new DTrace(true, true, "get yapObject", true);
+			GET_YAPOBJECT = new DTrace(true, true, "get ObjectReference", true);
 			ID_TREE_ADD = new DTrace(true, true, "id tree add", true);
 			ID_TREE_REMOVE = new DTrace(true, true, "id tree remove", true);
 			IO_COPY = new DTrace(true, true, "io copy", true);

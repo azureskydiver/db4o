@@ -18,7 +18,7 @@ public class ClusterQueryImplementsList {
     
     public String _name;
     
-    public static final String SECOND_FILE = "second.yap";
+    public static final String SECOND_FILE = "second.db4o";
     
     public ClusterQueryImplementsList(){
     }

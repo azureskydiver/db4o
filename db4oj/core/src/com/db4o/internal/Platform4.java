@@ -110,8 +110,8 @@ public final class Platform4 {
         return jdk().createWeakReference(obj);
     }
 
-    static final Object createActiveObjectReference(Object a_queue, Object a_yapObject, Object a_object) {
-        return jdk().createActivateObjectReference(a_queue, (ObjectReference) a_yapObject, a_object);
+    static final Object createActiveObjectReference(Object referenceQueue, Object objectReference, Object obj) {
+        return jdk().createActivateObjectReference(referenceQueue, (ObjectReference) objectReference, obj);
     }
     
     public static Object deserialize(byte[] bytes) {

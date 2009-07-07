@@ -28,9 +28,9 @@ public class QConClass extends QConObject{
 	QConClass(Transaction a_trans, QCon a_parent, QField a_field, ReflectClass claxx){
 		super(a_trans, a_parent, a_field, null);
 		if(claxx != null){
-			i_yapClass = a_trans.container().produceClassMetadata(claxx);
+			i_classMetadata = a_trans.container().produceClassMetadata(claxx);
 			if(claxx.equals(a_trans.container()._handlers.ICLASS_OBJECT)){
-				i_yapClass = (ClassMetadata)i_yapClass.typeHandler();
+				i_classMetadata = (ClassMetadata)i_classMetadata.typeHandler();
 			}
 		}
 		_claxx = claxx;
@@ -69,8 +69,8 @@ public class QConClass extends QConObject{
 		if(i_candidates.wasLoadedFromClassIndex()){
 			if(i_evaluator.isDefault()){
 				if(! hasOrdering() && ! hasJoins()){
-					if(i_yapClass != null  && i_candidates.i_yapClass != null){
-						if(i_yapClass.getHigherHierarchy(i_candidates.i_yapClass) == i_yapClass){
+					if(i_classMetadata != null  && i_candidates.i_classMetadata != null){
+						if(i_classMetadata.getHigherHierarchy(i_candidates.i_classMetadata) == i_classMetadata){
 							return;
 						}
 					}

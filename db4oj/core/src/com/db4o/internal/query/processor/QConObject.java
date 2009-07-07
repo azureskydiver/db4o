@@ -25,10 +25,10 @@ public class QConObject extends QCon {
     public int                           i_objectID;
 
     // the YapClass
-    transient ClassMetadata            i_yapClass;
+    transient ClassMetadata            i_classMetadata;
 
     // needed for marshalling the request
-    public int                           i_yapClassID;
+    public int                           i_classMetadataID;
 
     public QField                        i_field;
 
@@ -58,7 +58,7 @@ public class QConObject extends QCon {
             //It seems that we need not result the following field
             //i_object = null;
             //i_comparator = Null.INSTANCE;
-            //i_yapClass = null;
+            //i_classMetadata = null;
             
             // FIXME: Setting the YapClass to null will prevent index use
             // If the field is typed we can guess the right one with the
@@ -66,20 +66,20 @@ public class QConObject extends QCon {
             // Revisit!
             
 //            if(i_field != null){
-//                i_yapClass = i_field.getYapClass();
+//                i_classMetadata = i_field.getYapClass();
 //            }
             
         } else {
-            i_yapClass = a_trans.container()
+            i_classMetadata = a_trans.container()
                 .produceClassMetadata(a_trans.reflector().forObject(a_object));
-            if (i_yapClass != null) {
-                i_object = i_yapClass.getComparableObject(a_object);
+            if (i_classMetadata != null) {
+                i_object = i_classMetadata.getComparableObject(a_object);
                 if (a_object != i_object) {
-                    i_attributeProvider = i_yapClass.config().queryAttributeProvider();
-                    i_yapClass = a_trans.container().produceClassMetadata(a_trans.reflector().forObject(i_object));
+                    i_attributeProvider = i_classMetadata.config().queryAttributeProvider();
+                    i_classMetadata = a_trans.container().produceClassMetadata(a_trans.reflector().forObject(i_object));
                 }
-                if (i_yapClass != null) {
-                    i_yapClass.collectConstraints(a_trans, this, i_object,
+                if (i_classMetadata != null) {
+                    i_classMetadata.collectConstraints(a_trans, this, i_object,
                         new Visitor4() {
 
                             public void visit(Object obj) {
@@ -96,24 +96,24 @@ public class QConObject extends QCon {
     }
     
     public boolean canBeIndexLeaf(){
-        return i_object == null || ((i_yapClass != null && i_yapClass.isValueType()) || evaluator().identity());
+        return i_object == null || ((i_classMetadata != null && i_classMetadata.isValueType()) || evaluator().identity());
     }
     
     public boolean canLoadByIndex(){
         if(i_field == null){
             return false;
         }
-        if(i_field.i_yapField == null){
+        if(i_field._fieldMetadata == null){
             return false;
         }
-        if(! i_field.i_yapField.hasIndex()){
+        if(! i_field._fieldMetadata.hasIndex()){
             return false;
         }
         if (!i_evaluator.supportsIndex()) {
         	return false;
         }
         
-        return i_field.i_yapField.canLoadByIndex();
+        return i_field._fieldMetadata.canLoadByIndex();
     }
 
     boolean evaluate(QCandidate a_candidate) {
@@ -152,13 +152,13 @@ public class QConObject extends QCon {
         if(DTrace.enabled){
             DTrace.EVALUATE_SELF.log(i_id);
         }
-        if (i_yapClass != null) {
-            if (!(i_yapClass instanceof PrimitiveTypeMetadata)) {
+        if (i_classMetadata != null) {
+            if (!(i_classMetadata instanceof PrimitiveTypeMetadata)) {
             	if (!i_evaluator.identity()) {
             		i_selfComparison = true;
             	}
-            	Object transactionalObject = i_yapClass.wrapWithTransactionContext(transaction(), i_object);
-                _preparedComparison = i_yapClass.prepareComparison(context(), transactionalObject);
+            	Object transactionalObject = i_classMetadata.wrapWithTransactionContext(transaction(), i_object);
+                _preparedComparison = i_classMetadata.prepareComparison(context(), transactionalObject);
             }
         }
         super.evaluateSelf();
@@ -196,7 +196,7 @@ public class QConObject extends QCon {
     }
 
     ClassMetadata getYapClass() {
-        return i_yapClass;
+        return i_classMetadata;
     }
 
     public QField getField() {
@@ -255,8 +255,8 @@ public class QConObject extends QCon {
     void marshall() {
         super.marshall();
         getObjectID();
-        if (i_yapClass != null) {
-            i_yapClassID = i_yapClass.getID();
+        if (i_classMetadata != null) {
+            i_classMetadataID = i_classMetadata.getID();
         }
     }
     
@@ -320,8 +320,8 @@ public class QConObject extends QCon {
             if (i_object == null) {
                 _preparedComparison = Null.INSTANCE;
             }
-            if (i_yapClassID != 0) {
-                i_yapClass = trans.container().classMetadataForID(i_yapClassID);
+            if (i_classMetadataID != 0) {
+                i_classMetadata = trans.container().classMetadataForID(i_classMetadataID);
             }
             if (i_field != null) {
                 i_field.unmarshall(trans);
@@ -344,7 +344,7 @@ public class QConObject extends QCon {
             ClassMetadata yc = qc.readYapClass();
             if (yc != null) {
                 res = i_evaluator
-                    .not(i_yapClass.getHigherHierarchy(yc) == i_yapClass);
+                    .not(i_classMetadata.getHigherHierarchy(yc) == i_classMetadata);
                 processed = true;
             }
         }
@@ -431,14 +431,14 @@ public class QConObject extends QCon {
         if (id < 0) {
             byExample();
         } else {
-            i_yapClass = i_trans.container().produceClassMetadata(
+            i_classMetadata = i_trans.container().produceClassMetadata(
                     i_trans.reflector().forObject(i_object));
             identity();
         }
     }
     
     boolean evaluationModeAlreadySet(){
-        return i_yapClass != null;
+        return i_classMetadata != null;
     }
     
     public Constraint like() {

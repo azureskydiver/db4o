@@ -260,7 +260,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     }
     
     protected String fileName(String versionName){
-        return oldVersionFileName(versionName) + ".yap";
+        return oldVersionFileName(versionName) + ".db4o";
     }
 
     protected void deconfigureForStore(Configuration config){

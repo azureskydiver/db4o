@@ -88,7 +88,7 @@ public class ClassAliasesTestCase {
 	}
 
 	private String getDotnetDataFilePath() {
-		return buildTempPath("dotnet.yap");
+		return buildTempPath("dotnet.db4o");
 	}
 
 	private String buildTempPath(String fname) {

@@ -25,7 +25,7 @@ public class QConPath extends QConClass {
 	QConPath(Transaction a_trans, QCon a_parent, QField a_field) {
 		super(a_trans, a_parent, a_field, null);
 		if(a_field != null){
-			i_yapClass = a_field.getYapClass();
+			i_classMetadata = a_field.getYapClass();
 		}
 	}
 	

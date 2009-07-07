@@ -68,7 +68,7 @@ public class StringFieldIndexTestCase extends AbstractDb4oTestCase implements Op
     }
     
     public void testTraverseValues() {
-        StoredField field = yapField();
+        StoredField field = storedField();
         ExpectedVisitor visitor = new ExpectedVisitor(2);
         field.traverseValues(visitor);
         for (int i = 0; i < _fooValues.length; i++) {
@@ -76,7 +76,7 @@ public class StringFieldIndexTestCase extends AbstractDb4oTestCase implements Op
         }
     }
 
-    private StoredField yapField() {
+    private StoredField storedField() {
         return classMetadataFor(FieldIndexItem.class).fieldMetadataForName("_foo");
     }
 }

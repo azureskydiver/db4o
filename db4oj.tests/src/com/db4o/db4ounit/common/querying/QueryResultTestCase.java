@@ -54,11 +54,11 @@ public abstract class QueryResultTestCase extends AbstractDb4oTestCase implement
 	
 	private QueryResult classOnlyQuery() {
 		AbstractQueryResult queryResult = newQueryResult();
-		queryResult.loadFromClassIndex(yapClass());
+		queryResult.loadFromClassIndex(classMetadata());
 		return queryResult;
 	}
 
-	private ClassMetadata yapClass() {
+	private ClassMetadata classMetadata() {
 		return classMetadataFor(Item.class);
 	}
 

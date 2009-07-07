@@ -65,7 +65,7 @@ public class OldFormatExceptionTestCase implements TestCase, OptOutNoFileSystemD
 	}
 
 	protected String oldDatabaseFilePath() throws IOException {
-		final String oldFile = IOServices.buildTempPath("old_db.yap");
+		final String oldFile = IOServices.buildTempPath("old_db.db4o");
 		File4.copy(sourceFile(), oldFile);
 		return oldFile;
 	}

@@ -497,7 +497,7 @@ public class Regression {
 	}
 
 	public static final boolean DEACTIVATE = false;
-	public static String FILE = "regression.yap";
+	public static String FILE = "regression.db4o";
 	protected Regression openDelegate;
 	private static String errors = "";
 	private static int openedThreads = 0;

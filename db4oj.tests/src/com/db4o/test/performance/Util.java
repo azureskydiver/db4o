@@ -9,6 +9,6 @@ package com.db4o.test.performance;
 public class Util {
 	public static final String BENCHFILE = "ioadapter.log";
 
-	public static final String DBFILE = "somedata.yap";
+	public static final String DBFILE = "somedata.db4o";
 
 }

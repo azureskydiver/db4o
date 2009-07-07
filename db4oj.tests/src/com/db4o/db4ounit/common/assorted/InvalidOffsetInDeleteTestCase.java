@@ -11,12 +11,12 @@ import db4ounit.*;
 
 public class InvalidOffsetInDeleteTestCase extends Db4oTestWithTempFile implements DiagnosticListener{
 	
-	public static class Item extends Parent{
-		public String _itemName;
-	}
-	
 	public static class Parent {
 		public String _parentName;
+	}
+	
+	public static class Item extends Parent{
+		public String _itemName;
 	}
 	
 	public void test(){

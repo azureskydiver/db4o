@@ -46,7 +46,7 @@ public class Config4Field extends Config4Abstract implements ObjectField, DeepCl
     	putThreeValued(INDEXED_KEY, flag);
     }
 
-    public void initOnUp(Transaction systemTrans, FieldMetadata yapField) {
+    public void initOnUp(Transaction systemTrans, FieldMetadata fieldMetadata) {
     	
         ObjectContainerBase anyStream = systemTrans.container();
         if (!anyStream.maintainsIndices()) {
@@ -55,17 +55,17 @@ public class Config4Field extends Config4Abstract implements ObjectField, DeepCl
         if(Debug4.indexAllFields){
             indexed(true);
         }
-        if (! yapField.supportsIndex()) {
+        if (! fieldMetadata.supportsIndex()) {
             indexed(false);
         }
         
         TernaryBool indexedFlag=_config.getAsTernaryBool(INDEXED_KEY);        
         if (indexedFlag.definiteNo()) {
-            yapField.dropIndex(systemTrans);
+            fieldMetadata.dropIndex(systemTrans);
             return;
         }
         
-        if (useExistingIndex(systemTrans, yapField)) {
+        if (useExistingIndex(systemTrans, fieldMetadata)) {
         	return;
         }
         
@@ -73,11 +73,11 @@ public class Config4Field extends Config4Abstract implements ObjectField, DeepCl
         	return;
         }
         
-        yapField.createIndex();
+        fieldMetadata.createIndex();
     }
 
-	private boolean useExistingIndex(Transaction systemTrans, FieldMetadata yapField) {
-	    return yapField.getIndex(systemTrans) != null;
+	private boolean useExistingIndex(Transaction systemTrans, FieldMetadata fieldMetadata) {
+	    return fieldMetadata.getIndex(systemTrans) != null;
 	}
 
 	public void used(boolean flag) {

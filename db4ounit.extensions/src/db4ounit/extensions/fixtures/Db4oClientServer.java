@@ -16,7 +16,7 @@ import db4ounit.extensions.util.*;
 public class Db4oClientServer extends
 		AbstractDb4oFixture implements Db4oClientServerFixture {
     
-	protected static final String FILE = "Db4oClientServer.yap";
+	protected static final String FILE = "Db4oClientServer.db4o";
     
     public static final String HOST = "127.0.0.1";
 

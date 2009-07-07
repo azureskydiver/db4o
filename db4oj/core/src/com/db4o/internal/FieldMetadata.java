@@ -772,11 +772,11 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
 	public QField qField(Transaction a_trans) {
-        int yapClassID = 0;
+        int classMetadataID = 0;
         if(_containingClass != null){
-            yapClassID = _containingClass.getID();
+            classMetadataID = _containingClass.getID();
         }
-        return new QField(a_trans, _name, this, yapClassID, _handle);
+        return new QField(a_trans, _name, this, classMetadataID, _handle);
     }
 
     public Object read(InternalReadContext context) {
@@ -948,11 +948,11 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 	    return getIndex(transaction).searchLeaf(transaction, createFieldIndexKey(parentID, keyPart), SearchTarget.LOWEST);
 	}
 
-	public boolean rebuildIndexForClass(LocalObjectContainer stream, ClassMetadata yapClass) {
+	public boolean rebuildIndexForClass(LocalObjectContainer stream, ClassMetadata classMetadata) {
 		// FIXME: BTree traversal over index here.
-		long[] ids = yapClass.getIDs();		
+		long[] ids = classMetadata.getIDs();		
 		for (int i = 0; i < ids.length; i++) {
-		    rebuildIndexForObject(stream, yapClass, (int)ids[i]);
+		    rebuildIndexForObject(stream, classMetadata, (int)ids[i]);
 		}
 		return ids.length > 0;
 	}

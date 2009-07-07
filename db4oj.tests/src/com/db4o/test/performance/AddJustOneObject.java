@@ -10,7 +10,7 @@ import com.db4o.*;
 public class AddJustOneObject {
     
     
-    private static final String FILE = "ajoob.yap";
+    private static final String FILE = "ajoob.db4o";
     
     private static final int COUNT = 100000;
     

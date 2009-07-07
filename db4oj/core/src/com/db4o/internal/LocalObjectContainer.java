@@ -424,15 +424,15 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     @Override
     public ByteArrayBuffer[] readSlotBuffers(Transaction a_ta, int ids[]) {
-    	ByteArrayBuffer[] yapWriters = new ByteArrayBuffer[ids.length];
+    	ByteArrayBuffer[] buffers = new ByteArrayBuffer[ids.length];
 		for (int i = 0; i < ids.length; ++i) {
 			if (ids[i] == 0) {
-				yapWriters[i] = null;
+				buffers[i] = null;
 			} else {
-				yapWriters[i] = readReaderOrWriterByID(a_ta, ids[i], true);
+				buffers[i] = readReaderOrWriterByID(a_ta, ids[i], true);
 			}
 		}
-		return yapWriters;
+		return buffers;
 	}
     
     public ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id, boolean lastCommitted) {

@@ -10,7 +10,7 @@ import com.db4o.test.legacy.soda.*;
 
 public class STDb4o implements STEngine {
 	
-	private final String FILE = "soda.yap";
+	private final String FILE = "soda.db4o";
 	
 	public static void main(String[] arguments) {
 		System.out.println(Db4o.version());
