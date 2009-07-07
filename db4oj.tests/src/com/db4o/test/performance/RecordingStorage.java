@@ -12,9 +12,7 @@ import com.db4o.io.*;
  * @exclude
  */
 public class RecordingStorage extends StorageDecorator {
-	// NOTE/FIXME: Ugly hack to prevent YapRandomAccessFile timer file handle from
-	// writing asonchronously to our log file. Very fragile, basically YapRandomAccessFile
-	// timer handles - or IoAdapter design ;P - needs to be fixed.
+
 	private int _runningId;	
 	private String _logPath;
 

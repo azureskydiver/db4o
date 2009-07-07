@@ -72,7 +72,7 @@ public class AllTestsConfAll extends TestSuite{
 			ParameterizedEvaluation.class,
             
             // disabled because it fails due to fix
-            // See comments in: YapClass.deleteEmbedded1()
+            // See comments in: ClassMetadata.deleteEmbedded1()
             
 	        // PrimitiveArrayFileSize.class,
             
