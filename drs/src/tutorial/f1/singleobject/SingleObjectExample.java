@@ -34,13 +34,13 @@ import java.io.File;
 public class SingleObjectExample {
 
 	public static void main(String[] args) {
-		new File("SingleObjectExample.yap").delete();
+		new File("SingleObjectExample.db4o").delete();
 
 		System.out.println("Running SingleObjectExample example.");
 		ExtDb4o.configure().generateUUIDs(Integer.MAX_VALUE);
 		ExtDb4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 
-		ObjectContainer objectContainer = Db4o.openFile("SingleObjectExample.yap");
+		ObjectContainer objectContainer = Db4o.openFile("SingleObjectExample.db4o");
 
 		Pilot pilot = new Pilot();
 		pilot.name = "John";
@@ -62,6 +62,6 @@ public class SingleObjectExample {
 
 		objectContainer.close();
 
-		new File("SingleObjectExample.yap").delete();
+		new File("SingleObjectExample.db4o").delete();
 	}
 }

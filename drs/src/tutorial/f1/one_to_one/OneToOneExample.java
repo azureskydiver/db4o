@@ -33,14 +33,14 @@ import java.io.File;
 
 public class OneToOneExample {
 	public static void main(String[] args) {
-		new File("OneToOneExample.yap").delete();
+		new File("OneToOneExample.db4o").delete();
 
 		System.out.println("Running OneToOneExample example.");
 
 		ExtDb4o.configure().generateUUIDs(Integer.MAX_VALUE);
 		ExtDb4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 
-		ObjectContainer objectContainer = Db4o.openFile("OneToOneExample.yap");
+		ObjectContainer objectContainer = Db4o.openFile("OneToOneExample.db4o");
 
 		Helmet helmet = new Helmet();
 		helmet.model = "Robuster";
@@ -64,6 +64,6 @@ public class OneToOneExample {
 		replication.close();
 		objectContainer.close();
 
-		new File("OneToOneExample.yap").delete();
+		new File("OneToOneExample.db4o").delete();
 	}
 }

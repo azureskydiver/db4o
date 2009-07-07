@@ -38,7 +38,7 @@ public class Db4oWithHibernateExample {
 		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
 		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 
-		ObjectContainer handheld = Db4o.openFile("handheld.yap");
+		ObjectContainer handheld = Db4o.openFile("handheld.db4o");
 
 		handheld.store(pilot1);
 		handheld.store(pilot2);
@@ -59,6 +59,6 @@ public class Db4oWithHibernateExample {
 
 		handheld.close();
 
-		new File("handheld.yap").delete();
+		new File("handheld.db4o").delete();
 	}
 }

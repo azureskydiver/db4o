@@ -34,14 +34,14 @@ import java.io.File;
 
 public class ArrayExample {
 	public static void main(String[] args) {
-		new File("ArrayExample.yap").delete();
+		new File("ArrayExample.db4o").delete();
 
 		System.out.println("Running Array example.");
 
 		ExtDb4o.configure().generateUUIDs(Integer.MAX_VALUE);
 		ExtDb4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 
-		ObjectContainer objectContainer = Db4o.openFile("ArrayExample.yap");
+		ObjectContainer objectContainer = Db4o.openFile("ArrayExample.db4o");
 
 		Pilot pilot = new Pilot();
 		pilot.name = "John";
@@ -72,6 +72,6 @@ public class ArrayExample {
 		replication.close();
 		objectContainer.close();
 
-		new File("ArrayExample.yap").delete();
+		new File("ArrayExample.db4o").delete();
 	}
 }
