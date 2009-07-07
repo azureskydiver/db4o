@@ -10,7 +10,7 @@ public class ExampleRunner {
     private final static String SERVERPASSWORD="password";
     
     private final ClassLoader classLoader;
-    private final File yapFile;
+    private final File databaseFile;
     private final Class db4oClass;
     private final Class objectContainerClass;
     private final Class objectServerClass;
@@ -19,7 +19,7 @@ public class ExampleRunner {
     
     public ExampleRunner(ClassLoader classLoader, File yapFile) throws Exception {
         this.classLoader = classLoader;
-        this.yapFile=yapFile;
+        this.databaseFile=yapFile;
         this.db4oClass = classLoader.loadClass("com.db4o.Db4o");
         this.objectContainerClass = classLoader.loadClass("com.db4o.ObjectContainer");
         this.objectServerClass = classLoader.loadClass("com.db4o.ObjectServer");
@@ -41,8 +41,8 @@ public class ExampleRunner {
     }
 
     public void reset() {
-        boolean result=yapFile.delete();
-        System.err.println("Deleted "+yapFile.getAbsolutePath()+" : "+result);
+        boolean result=databaseFile.delete();
+        System.err.println("Deleted "+databaseFile.getAbsolutePath()+" : "+result);
     }
     
     public void runExample(String exampleClassName,String methodname,OutputStream out) throws Exception {
@@ -129,7 +129,7 @@ public class ExampleRunner {
         protected void executeInternal(Method exampleMethod) throws Exception {
             Object db=null;
             try {
-                db=applyMethod(db4oClass,"openFile",null,new Class[]{String.class},new Object[]{ExampleRunner.this.yapFile.getAbsolutePath()});
+                db=applyMethod(db4oClass,"openFile",null,new Class[]{String.class},new Object[]{ExampleRunner.this.databaseFile.getAbsolutePath()});
                 exampleMethod.invoke(null, new Object[] { db });
             }
             finally {
@@ -154,7 +154,7 @@ public class ExampleRunner {
         protected void executeInternal(Method exampleMethod) throws Exception {
             Object server=null;
             try {
-                server=applyMethod(db4oClass,"openServer",null,new Class[] { String.class,Integer.TYPE },new Object[] { ExampleRunner.this.yapFile.getAbsolutePath(),new Integer(port) });
+                server=applyMethod(db4oClass,"openServer",null,new Class[] { String.class,Integer.TYPE },new Object[] { ExampleRunner.this.databaseFile.getAbsolutePath(),new Integer(port) });
                 if(!isWithNetworking()) {
                     exampleMethod.invoke(null, new Object[] { server });
                 }
