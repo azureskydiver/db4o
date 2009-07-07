@@ -35,14 +35,14 @@ import java.util.HashMap;
 
 public class MapExample {
 	public static void main(String[] args) {
-		new File("MapExample.yap").delete();
+		new File("MapExample.db4o").delete();
 
 		System.out.println("Running Map example.");
 
 		ExtDb4o.configure().generateUUIDs(Integer.MAX_VALUE);
 		ExtDb4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 
-		ObjectContainer objectContainer = Db4o.openFile("MapExample.yap");
+		ObjectContainer objectContainer = Db4o.openFile("MapExample.db4o");
 
 		Pilot pilot = new Pilot();
 		pilot.name = "John";
@@ -74,6 +74,6 @@ public class MapExample {
 		replication.close();
 		objectContainer.close();
 
-		new File("MapExample.yap").delete();
+		new File("MapExample.db4o").delete();
 	}
 }

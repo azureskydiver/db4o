@@ -35,14 +35,14 @@ import java.util.ArrayList;
 
 public class ListExample {
 	public static void main(String[] args) {
-		new File("ListExample.yap").delete();
+		new File("ListExample.db4o").delete();
 
 		System.out.println("Running List example.");
 
 		ExtDb4o.configure().generateUUIDs(Integer.MAX_VALUE);
 		ExtDb4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 
-		ObjectContainer objectContainer = Db4o.openFile("ListExample.yap");
+		ObjectContainer objectContainer = Db4o.openFile("ListExample.db4o");
 
 		Pilot pilot = new Pilot();
 		pilot.name = "John";
@@ -75,6 +75,6 @@ public class ListExample {
 		replication.close();
 		objectContainer.close();
 
-		new File("ListExample.yap").delete();
+		new File("ListExample.db4o").delete();
 	}
 }

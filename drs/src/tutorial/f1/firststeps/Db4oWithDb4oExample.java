@@ -36,12 +36,12 @@ public class Db4oWithDb4oExample {
 		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
 		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 
-		ObjectContainer handheld = Db4o.openFile("handheld.yap");
+		ObjectContainer handheld = Db4o.openFile("handheld.db4o");
 
 		handheld.store(pilot1);
 		handheld.store(pilot2);
 
-		ObjectContainer desktop = Db4o.openFile("desktop.yap");
+		ObjectContainer desktop = Db4o.openFile("desktop.db4o");
 
 		ReplicationSession session = Replication.begin(handheld, desktop);
 
@@ -59,8 +59,8 @@ public class Db4oWithDb4oExample {
 		handheld.close();
 		desktop.close();
 
-		new File("handheld.yap").delete();
-		new File("desktop.yap").delete();
+		new File("handheld.db4o").delete();
+		new File("desktop.db4o").delete();
 	}
 }
 

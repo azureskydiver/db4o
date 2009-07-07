@@ -38,7 +38,7 @@ import org.hibernate.criterion.Restrictions;
 import java.io.File;
 
 public class StepByStepExample {
-	protected String db4oFileName = "StepByStepExample.yap";
+	protected String db4oFileName = "StepByStepExample.db4o";
 	protected final String hibernateConfigurationFileName = "f1/stepbystep/hibernate.cfg.xml";
 
 	public static void main(String[] args) {

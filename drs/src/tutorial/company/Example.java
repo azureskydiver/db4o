@@ -37,7 +37,7 @@ public class Example {
 	public static void main(String[] args) {
 
 		//Open the db4o database
-		ObjectContainer objectContainer = Db4o.openFile("company.yap");
+		ObjectContainer objectContainer = Db4o.openFile("company.db4o");
 
 		//Read the Hibernate Config file (in the classpath)
 		Configuration hibernateConfiguration = new Configuration().configure("hibernate.cfg.xml");

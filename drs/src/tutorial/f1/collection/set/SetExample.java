@@ -35,14 +35,14 @@ import java.util.HashSet;
 
 public class SetExample {
 	public static void main(String[] args) {
-		new File("SetExample.yap").delete();
+		new File("SetExample.db4o").delete();
 
 		System.out.println("Running Set example.");
 
 		ExtDb4o.configure().generateUUIDs(Integer.MAX_VALUE);
 		ExtDb4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 
-		ObjectContainer objectContainer = Db4o.openFile("SetExample.yap");
+		ObjectContainer objectContainer = Db4o.openFile("SetExample.db4o");
 
 		Pilot pilot = new Pilot();
 		pilot.name = "John";
@@ -74,6 +74,6 @@ public class SetExample {
 		replication.close();
 		objectContainer.close();
 
-		new File("SetExample.yap").delete();
+		new File("SetExample.db4o").delete();
 	}
 }
