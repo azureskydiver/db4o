@@ -80,13 +80,6 @@ public class RegressionCS extends Regression {
 	public ObjectContainer openContainer() {
 		configure();
 		try {
-			/*
-			if(com.db4o.Debug.fakeServer){
-				return new YapClient(Regression.file);
-			}else{
-				return Db4o.openClient(HOST_NAME,SERVER_PORT,"db4o","db4o");
-			}
-			*/
 			
 			return server.openClient();
 			

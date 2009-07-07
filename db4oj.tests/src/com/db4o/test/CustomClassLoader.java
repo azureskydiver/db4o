@@ -17,9 +17,6 @@ public class CustomClassLoader extends URLClassLoader{
     }
     
     public Class loadClass(String name) throws ClassNotFoundException {
-        if("com.db4o.YapFieldTranslator".equals(name)){
-            int xxx = 1;
-        }
         System.out.println(name);
         return super.loadClass(name);
     }

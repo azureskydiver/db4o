@@ -10,7 +10,7 @@ import com.db4o.j2me.bloat.testdata.*;
 import com.db4o.reflect.self.*;
 
 public class EnhanceTestMain {
-	private static final String FILENAME = "enhanceddog.yap";
+	private static final String FILENAME = "enhanceddog.db4o";
 
 	public static void main(String[] args) throws Exception {
         Class registryClazz=Class.forName("com.db4o.j2me.bloat.testdata.GeneratedDogSelfReflectionRegistry");

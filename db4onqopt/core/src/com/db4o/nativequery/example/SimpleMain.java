@@ -13,7 +13,7 @@ import com.db4o.query.*;
 
 
 public class SimpleMain {
-	private static final String FILENAME = "simple.yap";
+	private static final String FILENAME = "simple.db4o";
 
 	public static void main(String[] args) {
 		System.setProperty("db4o.dynamicnq","true");
