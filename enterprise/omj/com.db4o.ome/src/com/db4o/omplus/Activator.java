@@ -17,7 +17,7 @@ public class Activator extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = OMPlusConstants.PLUGIN_ID;
 
 	private final static String USR_HOME_DIR_PROPERTY = "user.home";
-	private final static String OME_DATA_DB = "OMEDATA.yap";
+	private final static String OME_DATA_DB = "OMEDATA.db4o";
 	
 	private final static String settingsFile = new File(new File(System
 				.getProperty(USR_HOME_DIR_PROPERTY)), OME_DATA_DB)
