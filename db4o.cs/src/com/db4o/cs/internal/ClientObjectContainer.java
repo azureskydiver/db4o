@@ -63,7 +63,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     
 	private Collection4 _batchedMessages = new Collection4();
 	
-	// initial value of _batchedQueueLength is YapConst.INT_LENGTH, which is
+	// initial value of _batchedQueueLength is
 	// used for to write the number of messages.
 	private int _batchedQueueLength = Const4.INT_LENGTH;
 
