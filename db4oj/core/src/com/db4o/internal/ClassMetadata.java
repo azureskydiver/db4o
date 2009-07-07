@@ -150,9 +150,9 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     
     public void cascadeActivation(final ActivationContext context) {
         if(objectCanActivate(context.transaction(), context.targetObject())){
-            forEachAspect(new Procedure4() {
-                public void apply(Object arg) {
-                    ((ClassAspect)arg).cascadeActivation(context);
+            forEachAspect(new Procedure4<ClassAspect>() {
+                public void apply(ClassAspect aspect) {
+                    aspect.cascadeActivation(context);
                 }
             });
         }
