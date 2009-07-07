@@ -30,7 +30,7 @@ public final class FirstPassCommand implements PassCommand {
         });
 	}
 
-	public void processObjectSlot(DefragmentServicesImpl context, ClassMetadata yapClass, int sourceID) {
+	public void processObjectSlot(DefragmentServicesImpl context, ClassMetadata classMetadata, int sourceID) {
 		_collector.createIDMapping(context,sourceID, false);
 	}
 

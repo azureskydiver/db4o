@@ -31,7 +31,7 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
 	}
     
     public void testTraverseValues(){
-        StoredField field = yapField();
+        StoredField field = storedField();
         ExpectingVisitor expectingVisitor = new ExpectingVisitor(IntArrays4.toObjectArray(FOOS));
         field.traverseValues(expectingVisitor);
         expectingVisitor.assertExpectations();
@@ -48,7 +48,7 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
     }
 
 	public void testAccessingBTree() throws Exception{
-        BTree bTree = yapField().getIndex(trans());
+        BTree bTree = storedField().getIndex(trans());
         Assert.isNotNull(bTree);
         expectKeysSearch(bTree, FOOS);
     }
@@ -82,7 +82,7 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
         return start.createIncludingRange(end);
     }
     
-    private FieldMetadata yapField() {
+    private FieldMetadata storedField() {
         return classMetadataFor(FieldIndexItem.class).fieldMetadataForName("foo");
     }
     

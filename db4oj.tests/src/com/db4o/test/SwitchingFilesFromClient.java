@@ -10,7 +10,7 @@ import com.db4o.query.*;
 
 public class SwitchingFilesFromClient {
 	
-	static final String DB_FILE = "switchedToTest.yap";
+	static final String DB_FILE = "switchedToTest.db4o";
 	
 	public String name;
 	

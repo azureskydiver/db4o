@@ -13,9 +13,9 @@ public final class MClassNameForID extends MsgD implements MessageWithResponse {
         int id = _payLoad.readInt();
         String name = "";
         synchronized (streamLock()) {
-			ClassMetadata yapClass = stream().classMetadataForID(id);
-			if (yapClass != null) {
-				name = yapClass.getName();
+			ClassMetadata classMetadata = stream().classMetadataForID(id);
+			if (classMetadata != null) {
+				name = classMetadata.getName();
 			}
 		}
         write(Msg.CLASS_NAME_FOR_ID.getWriterForString(transaction(), name));

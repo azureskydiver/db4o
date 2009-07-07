@@ -13,21 +13,21 @@ public class MClassMeta extends MsgObject implements MessageWithResponse {
 		unmarshall();
 		try{
 			synchronized (streamLock()) {
-	            ClassInfo classMeta = (ClassInfo) readObjectFromPayLoad();
+	            ClassInfo classInfo = (ClassInfo) readObjectFromPayLoad();
 	            ClassInfoHelper classInfoHelper = serverMessageDispatcher().classInfoHelper();
-	            GenericClass genericClass = classInfoHelper.classMetaToGenericClass(stream().reflector(), classMeta);
+	            GenericClass genericClass = classInfoHelper.classMetaToGenericClass(stream().reflector(), classInfo);
 	            if (genericClass != null) {
 	                
     				Transaction trans = stream.systemTransaction();
     
-    				ClassMetadata yapClass = stream.produceClassMetadata(genericClass);
-    				if (yapClass != null) {
+    				ClassMetadata classMetadata = stream.produceClassMetadata(genericClass);
+    				if (classMetadata != null) {
     					stream.checkStillToSet();
-    					yapClass.setStateDirty();
-    					yapClass.write(trans);
+    					classMetadata.setStateDirty();
+    					classMetadata.write(trans);
     					trans.commit();
     					StatefulBuffer returnBytes = stream
-    							.readWriterByID(trans, yapClass.getID());
+    							.readWriterByID(trans, classMetadata.getID());
     					write(Msg.OBJECT_TO_CLIENT.getWriter(returnBytes));
     					return true;
     				}

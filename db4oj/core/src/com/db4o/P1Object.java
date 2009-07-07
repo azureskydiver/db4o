@@ -27,7 +27,7 @@ public class P1Object implements Db4oTypeImpl{
     public void setTrans(Transaction a_trans){
     }
 
-    public void setObjectReference(ObjectReference a_yapObject) {
+    public void setObjectReference(ObjectReference objectReference) {
     }
     
 }

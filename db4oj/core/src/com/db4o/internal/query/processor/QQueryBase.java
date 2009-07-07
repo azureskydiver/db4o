@@ -205,14 +205,14 @@ public abstract class QQueryBase implements Unversioned {
 		Iterator4 i = classes.iterator();
 		Constraint constr = null;
 		while (i.moveNext()) {
-		    ClassMetadata yapClass = (ClassMetadata)i.current();
-		    ReflectClass yapClassClaxx = yapClass.classReflector();
-		    if(yapClassClaxx != null){
-		        if(! yapClassClaxx.isInterface()){
+		    ClassMetadata classMetadata = (ClassMetadata)i.current();
+		    ReflectClass classMetadataClaxx = classMetadata.classReflector();
+		    if(classMetadataClaxx != null){
+		        if(! classMetadataClaxx.isInterface()){
 		            if(constr == null){
-		                constr = constrain(yapClassClaxx);
+		                constr = constrain(classMetadataClaxx);
 		            }else{
-		                constr = constr.or(constrain(yapClass.classReflector()));
+		                constr = constr.or(constrain(classMetadata.classReflector()));
 		            }
 		        }
 		    }
@@ -362,7 +362,7 @@ public abstract class QQueryBase implements Unversioned {
 			return null;
 		}
 		QConClass clazzconstr=(QConClass)constr;
-		ClassMetadata clazz=clazzconstr.i_yapClass;
+		ClassMetadata clazz=clazzconstr.i_classMetadata;
 		if(clazz==null) {
 			return null;
 		}

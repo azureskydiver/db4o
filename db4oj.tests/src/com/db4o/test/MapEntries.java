@@ -13,7 +13,7 @@ import com.db4o.test.types.*;
 @decaf.Ignore(decaf.Platform.JDK11)
 public class MapEntries {
 	
-	static String FILE = "hm.yap";
+	static String FILE = "hm.db4o";
 	
 	HashMap hm;
 

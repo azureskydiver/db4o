@@ -40,6 +40,6 @@ public class OldHeaderTest implements TestCase, OptOutNoFileSystemData {
     }
 
     private static String dbFilePath() {
-    	return WorkspaceServices.workspaceTestFilePath("db4oVersions/db4o_5.5.2.yap");
+    	return WorkspaceServices.workspaceTestFilePath("db4oVersions/db4o_5.5.2.db4o");
     }
 }

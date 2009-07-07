@@ -40,7 +40,7 @@ public class RegressionCS extends Regression {
 	/**
 	 * the file used. Only relevant if START_IN_PROCESS_SERVER == true
 	 */
-	private static final String SERVER_FILE = "server.yap";
+	private static final String SERVER_FILE = "server.db4o";
 	
 	/**
 	 * the db4o server instance

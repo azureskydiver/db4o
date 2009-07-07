@@ -15,7 +15,7 @@ public class SwitchingFilesFromClientTestCase extends Db4oClientServerTestCase {
 		new SwitchingFilesFromClientTestCase().runConcurrency();
 	}
 	
-	static final String DB_FILE = "switchedToTest.yap";
+	static final String DB_FILE = "switchedToTest.db4o";
 
 	public String name;
 

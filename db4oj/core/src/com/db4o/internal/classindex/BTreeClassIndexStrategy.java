@@ -13,8 +13,8 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 	
 	private BTree _btreeIndex;
 	
-	public BTreeClassIndexStrategy(ClassMetadata yapClass) {
-		super(yapClass);
+	public BTreeClassIndexStrategy(ClassMetadata classMetadata) {
+		super(classMetadata);
 	}	
 	
 	public BTree btree() {

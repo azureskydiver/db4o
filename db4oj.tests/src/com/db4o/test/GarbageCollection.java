@@ -8,11 +8,12 @@ import com.db4o.test.types.*;
 public class GarbageCollection
 {
 	public static void main(String[] args){
-		new java.io.File("tgc.yap").delete();
+		final String fileName = "tgc.db4o";
+		new java.io.File(fileName).delete();
 
 		int strSize = 1;
 		int objectCount = 10000;
-		ObjectContainer con = Db4o.openFile("tgc.yap");
+		ObjectContainer con = Db4o.openFile(fileName);
 		String longString = "String";
 		ObjectSimplePublic osp = null;
 		ArrayTypedPublic atp = null;

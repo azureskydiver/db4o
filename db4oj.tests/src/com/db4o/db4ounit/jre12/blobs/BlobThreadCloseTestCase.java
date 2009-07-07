@@ -46,7 +46,6 @@ public class BlobThreadCloseTestCase extends Db4oClientServerTestCase {
 		}
 		((ExtClient) db()).switchToFile(TEST_FILE);
 		store(new Data());
-//		((ExtClient) db()).switchToFile("test.yap");
 
 		Data data = (Data) retrieveOnlyInstance(Data.class);
 		data.blob().readFrom(

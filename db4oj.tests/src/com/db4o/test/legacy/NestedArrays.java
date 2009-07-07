@@ -18,7 +18,7 @@ public class NestedArrays {
     
     private static final int ELEMENTS = 3;
     
-    private static final String FILE = "nestedArrays.yap";
+    private static final String FILE = "nestedArrays.db4o";
     
     
     public NestedArrays(){

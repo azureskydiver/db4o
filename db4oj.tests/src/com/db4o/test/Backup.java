@@ -13,7 +13,7 @@ public class Backup {
     static int allAtomCount;
     static int specialAtomCount;
     
-    static final String FILE = "backuptest.yap";
+    static final String FILE = "backuptest.db4o";
     static final String NAME = "backuptest";
     
     public void store(){

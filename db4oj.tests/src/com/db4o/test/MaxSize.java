@@ -17,7 +17,7 @@ public class MaxSize {
     private static final int SIZE = 1000000;
     private static final int COMMIT_INTERVAL = 10000;
     private static final int QUERIES = 1000;
-    private static final String FILE = "maxSize.yap"; 
+    private static final String FILE = "maxSize.db4o"; 
     
     public static void main(String[] args) {
         

@@ -8,40 +8,40 @@ import com.db4o.internal.*;
 
 public final class ClientTransaction extends Transaction {
 
-    private final ClientObjectContainer i_client;
+    private final ClientObjectContainer _client;
     
-    protected Tree i_yapObjectsToGc;
+    protected Tree _objectRefrencesToGC;
     
     ClientTransaction(ClientObjectContainer container, Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
         super(container, parentTransaction, referenceSystem);
-        i_client = container;
+        _client = container;
     }
     
     public void commit() {
     	commitTransactionListeners();
         clearAll();
         if(isSystemTransaction()){
-        	i_client.write(Msg.COMMIT_SYSTEMTRANS);
+        	_client.write(Msg.COMMIT_SYSTEMTRANS);
         }else{
-        	i_client.write(Msg.COMMIT);
-        	i_client.expectedResponse(Msg.OK);
+        	_client.write(Msg.COMMIT);
+        	_client.expectedResponse(Msg.OK);
         }
     }
     
     protected void clear() {
-    	removeYapObjectReferences();
+    	removeObjectReferences();
     }
 
-	private void removeYapObjectReferences() {
-		if(i_yapObjectsToGc != null){
-            i_yapObjectsToGc.traverse(new Visitor4() {
+	private void removeObjectReferences() {
+		if(_objectRefrencesToGC != null){
+            _objectRefrencesToGC.traverse(new Visitor4() {
                 public void visit(Object a_object) {
                     ObjectReference yo = (ObjectReference)((TreeIntObject) a_object)._object;
                     ClientTransaction.this.removeReference(yo);
                 }
             });
         }
-        i_yapObjectsToGc = null;
+        _objectRefrencesToGC = null;
 	}
 
     public boolean delete(ObjectReference ref, int id, int cascade) {
@@ -49,7 +49,7 @@ public final class ClientTransaction extends Transaction {
         	return false;
         }
         MsgD msg = Msg.TA_DELETE.getWriterForInts(this, new int[] {id, cascade});
-        i_client.writeBatchedMessage(msg);
+        _client.writeBatchedMessage(msg);
         return true;
     }
 
@@ -61,8 +61,8 @@ public final class ClientTransaction extends Transaction {
 
         // We need a better strategy for C/S concurrency behaviour.
         MsgD msg = Msg.TA_IS_DELETED.getWriterForInt(this, a_id);
-		i_client.write(msg);
-        int res = i_client.expectedByteResponse(Msg.TA_IS_DELETED).readInt();
+		_client.write(msg);
+        int res = _client.expectedByteResponse(Msg.TA_IS_DELETED).readInt();
         return res == 1;
     }
     
@@ -72,8 +72,8 @@ public final class ClientTransaction extends Transaction {
         message.writeLong(a_uuid);
         message.writeInt(a_signature.length);
         message.writeBytes(a_signature);
-        i_client.write(message);
-        message = (MsgD)i_client.expectedResponse(Msg.OBJECT_BY_UUID);
+        _client.write(message);
+        message = (MsgD)_client.expectedResponse(Msg.OBJECT_BY_UUID);
         int id = message.readInt();
         if(id > 0){
             return container().getHardObjectReferenceById(this, id);
@@ -86,16 +86,16 @@ public final class ClientTransaction extends Transaction {
             public void visit(Object a_object) {
                 DeleteInfo info = (DeleteInfo) a_object;
                 if (info._reference != null) {
-                    i_yapObjectsToGc = Tree.add(i_yapObjectsToGc, new TreeIntObject(info._key, info._reference));
+                    _objectRefrencesToGC = Tree.add(_objectRefrencesToGC, new TreeIntObject(info._key, info._reference));
                 }
             }
         };
         traverseDelete(deleteVisitor);
-		i_client.writeBatchedMessage(Msg.PROCESS_DELETES);
+		_client.writeBatchedMessage(Msg.PROCESS_DELETES);
     }
 
     public void rollback() {
-        i_yapObjectsToGc = null;
+        _objectRefrencesToGC = null;
         rollBackTransactionListeners();
         clearAll();
     }

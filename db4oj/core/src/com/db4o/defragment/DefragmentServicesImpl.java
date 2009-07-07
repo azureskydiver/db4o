@@ -194,19 +194,19 @@ public class DefragmentServicesImpl implements DefragmentServices {
 
 	private Hashtable4 _classIndices=new Hashtable4(16);
 
-	public int classIndexID(ClassMetadata yapClass) {
-		return classIndex(yapClass).id();
+	public int classIndexID(ClassMetadata classMetadata) {
+		return classIndex(classMetadata).id();
 	}
 
-	public void traverseAll(ClassMetadata yapClass,Visitor4 command) {
-		if(!yapClass.hasClassIndex()) {
+	public void traverseAll(ClassMetadata classMetadata, Visitor4 command) {
+		if(!classMetadata.hasClassIndex()) {
 			return;
 		}
-		yapClass.index().traverseAll(SOURCEDB.transaction(this), command);
+		classMetadata.index().traverseAll(SOURCEDB.transaction(this), command);
 	}
 	
-	public void traverseAllIndexSlots(ClassMetadata yapClass,Visitor4 command) {
-		Iterator4 slotIDIter=yapClass.index().allSlotIDs(SOURCEDB.transaction(this));
+	public void traverseAllIndexSlots(ClassMetadata classMetadata,Visitor4 command) {
+		Iterator4 slotIDIter=classMetadata.index().allSlotIDs(SOURCEDB.transaction(this));
 		while(slotIDIter.moveNext()) {
 			command.visit(slotIDIter.current());
 		}
@@ -238,11 +238,11 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		return identity.getID(selector.transaction(this));
 	}
 	
-	private ClassIndexStrategy classIndex(ClassMetadata yapClass) {
-		ClassIndexStrategy classIndex=(ClassIndexStrategy)_classIndices.get(yapClass);
+	private ClassIndexStrategy classIndex(ClassMetadata classMetadata) {
+		ClassIndexStrategy classIndex=(ClassIndexStrategy)_classIndices.get(classMetadata);
 		if(classIndex==null) {
-			classIndex=new BTreeClassIndexStrategy(yapClass);
-			_classIndices.put(yapClass,classIndex);
+			classIndex=new BTreeClassIndexStrategy(classMetadata);
+			_classIndices.put(classMetadata,classIndex);
 			classIndex.initialize(_targetDb);
 		}
 		return classIndex;

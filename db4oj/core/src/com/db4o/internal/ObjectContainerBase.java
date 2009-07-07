@@ -309,9 +309,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		}
 		Iterator4 i = new Iterator4Impl(_pendingClassUpdates);
 		while (i.moveNext()) {
-			ClassMetadata yapClass = (ClassMetadata) i.current();
-			yapClass.setStateDirty();
-			yapClass.write(_systemTransaction);
+			ClassMetadata classMetadata = (ClassMetadata) i.current();
+			classMetadata.setStateDirty();
+			classMetadata.write(_systemTransaction);
 		}
 		_pendingClassUpdates = null;
 	}

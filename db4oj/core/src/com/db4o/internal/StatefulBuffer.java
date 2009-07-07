@@ -95,7 +95,7 @@ public final class StatefulBuffer extends ByteArrayBuffer {
         container().readBytes(_buffer, i_address,_addressOffset, i_length);
     }
 
-    public final StatefulBuffer readYapBytes() {
+    public final StatefulBuffer readStatefulBuffer() {
         int length = readInt();
         if (length == 0) {
             return null;

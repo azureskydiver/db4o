@@ -23,7 +23,7 @@ public class MeasureInsertPerformanceScalability {
         
     }
     
-    private static final String FILE = "mips.yap";
+    private static final String FILE = "mips.db4o";
     
     private static final int TOTAL_COUNT = 500000;
     

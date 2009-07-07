@@ -9,7 +9,7 @@ import com.db4o.*;
 
 public class ReadOnly implements Runnable{
 	
-	private static final String FILE = "readonly.yap";
+	private static final String FILE = "readonly.db4o";
 	private static final int COUNT = 100;
 	private static final String MY_STRING = "ReadOnly test instance ";
 	

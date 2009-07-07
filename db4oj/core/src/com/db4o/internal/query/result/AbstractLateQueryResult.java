@@ -46,11 +46,11 @@ public abstract class AbstractLateQueryResult extends AbstractQueryResult {
     	return toIdTree().toIdList();
     }
 
-	public boolean skipClass(ClassMetadata yapClass){
-		if (yapClass.getName() == null) {
+	public boolean skipClass(ClassMetadata classMetadata){
+		if (classMetadata.getName() == null) {
 			return true;
 		}
-		ReflectClass claxx = yapClass.classReflector();
+		ReflectClass claxx = classMetadata.classReflector();
 		if (stream()._handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)){
 			return true; 
 		}
@@ -60,11 +60,11 @@ public abstract class AbstractLateQueryResult extends AbstractQueryResult {
 	protected Iterable4 classIndexesIterable(final ClassMetadataIterator classCollectionIterator) {
 		return Iterators.concatMap(Iterators.iterable(classCollectionIterator), new Function4() {
 			public Object apply(Object current) {
-				final ClassMetadata yapClass = (ClassMetadata)current;
-				if(skipClass(yapClass)){
+				final ClassMetadata classMetadata = (ClassMetadata)current;
+				if(skipClass(classMetadata)){
 					return Iterators.SKIP;
 				}
-				return classIndexIterable(yapClass);
+				return classIndexIterable(classMetadata);
 			}
 		});
 	}

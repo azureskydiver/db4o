@@ -9,13 +9,13 @@ import com.db4o.internal.slots.*;
 public final class MWriteUpdate extends MsgObject implements ServerSideMessage {
 	
 	public final boolean processAtServer() {
-	    int yapClassId = _payLoad.readInt();
+	    int classMetadataID = _payLoad.readInt();
 	    int arrayTypeValue = _payLoad.readInt();
 	    ArrayType arrayType = ArrayType.forValue(arrayTypeValue);
 	    LocalObjectContainer stream = (LocalObjectContainer)stream();
 	    unmarshall(_payLoad._offset);
 	    synchronized(streamLock()){
-	        ClassMetadata classMetadata = stream.classMetadataForID(yapClassId);
+	        ClassMetadata classMetadata = stream.classMetadataForID(classMetadataID);
 			int id = _payLoad.getID();
 			transaction().writeUpdateAdjustIndexes(id, classMetadata, arrayType, 0);
 			transaction().dontDelete(id);

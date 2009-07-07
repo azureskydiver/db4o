@@ -20,8 +20,9 @@ public class LookingAtFileFormat {
     }
 
     public static void main(String[] args) {
-        new File("lff.yap").delete();
-        ObjectContainer con = Db4o.openFile("lff.yap");
+        final String fileName = "lff.db4o";
+		new File(fileName).delete();
+        ObjectContainer con = Db4o.openFile(fileName);
         LookingAtFileFormat laff = new LookingAtFileFormat();
         for (int i = 0; i < 10000; i++) {
             laff.str = "WWWWWWWWWW" + i;

@@ -29,7 +29,7 @@ public class SimplePerformanceBenchmark {
     
     private static boolean TCP = true;
     
-    private static final String FILE = "sip.yap";
+    private static final String FILE = "sip.db4o";
     
     private static final int PORT = 4477;
     

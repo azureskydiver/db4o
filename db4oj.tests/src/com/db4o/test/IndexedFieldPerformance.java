@@ -17,7 +17,7 @@ public class IndexedFieldPerformance implements Serializable {
     public static final int SIZE = 50000;
     public static final int COMMIT_STEP = 5000;
     public static final int QUERIES = 1000;
-    public static final String FILE = "ifp.yap"; 
+    public static final String FILE = "ifp.db4o"; 
     
     public static void main(String[] args){
         new Thread(new Runnable() {

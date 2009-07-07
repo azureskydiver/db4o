@@ -10,7 +10,7 @@ import db4ounit.extensions.util.*;
 
 public class Db4oSolo extends AbstractFileBasedDb4oFixture {
 	
-	private static final String FILE = "db4oSoloTest.yap"; 
+	private static final String FILE = "db4oSoloTest.db4o"; 
 
 	public Db4oSolo() {
 		this(new IndependentConfigurationSource());	

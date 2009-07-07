@@ -44,7 +44,7 @@ public class DefragmentConfig {
 	 * by default.
 	 * 
 	 * @param origPath The path to the file to be defragmented. Must exist and must be
-	 *         a valid yap file.
+	 *         a valid db4o file.
 	 */
 	public DefragmentConfig(String origPath) {
 		this(origPath,origPath+"."+BACKUP_SUFFIX);
@@ -55,7 +55,7 @@ public class DefragmentConfig {
 	 * All properties other than the provided paths are set to FALSE by default.
 	 * 
 	 * @param origPath The path to the file to be defragmented. Must exist and must be
-	 *         a valid yap file.
+	 *         a valid db4o file.
 	 * @param backupPath The path to the backup of the original file. No file should
 	 *         exist at this position, otherwise it will be OVERWRITTEN if forceBackupDelete()
 	 *         is set to true!
@@ -69,7 +69,7 @@ public class DefragmentConfig {
 	 * than the provided paths are set to FALSE by default.
 	 * 
 	 * @param origPath The path to the file to be defragmented. Must exist and must be
-	 *         a valid yap file.
+	 *         a valid db4o file.
 	 * @param backupPath The path to the backup of the original file. No file should
 	 *         exist at this position, otherwise it will be OVERWRITTEN if forceBackupDelete()
 	 *         is set to true!

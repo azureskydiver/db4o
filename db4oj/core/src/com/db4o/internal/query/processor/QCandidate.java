@@ -49,10 +49,10 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	private QCandidate _root;
 
 	// the YapClass of this object
-	ClassMetadata _yapClass;
+	ClassMetadata _classMetadata;
 
-	// temporary yapField and member for one field during evaluation
-	FieldMetadata _yapField; // null denotes null object
+	// temporary field and member for one field during evaluation
+	FieldMetadata _fieldMetadata; // null denotes null object
     
     private int _handlerVersion;
 
@@ -88,8 +88,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		qcan._order = _order;
 		qcan._pendingJoins = _pendingJoins;
 		qcan._root = _root;
-		qcan._yapClass = _yapClass;
-		qcan._yapField = _yapField;
+		qcan._classMetadata = _classMetadata;
+		qcan._fieldMetadata = _fieldMetadata;
 
 		return super.shallowCloneInternal(qcan);
 	}
@@ -102,7 +102,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		if (_member instanceof Compare) {
 			_member = ((Compare) _member).compare();
 			LocalObjectContainer stream = container();
-			_yapClass = stream.classMetadataForReflectClass(stream.reflector().forObject(_member));
+			_classMetadata = stream.classMetadataForReflectClass(stream.reflector().forObject(_member));
 			_key = stream.getID(transaction(), _member);
 			if (_key == 0) {
 				setBytes(null);
@@ -128,8 +128,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			return false;
 		}
 
-		if (_yapField != null) {
-			TypeHandler4 handler = _yapField.getHandler();
+		if (_fieldMetadata != null) {
+			TypeHandler4 handler = _fieldMetadata.getHandler();
 			if (handler != null) {
 			    final QueryingReadContext queryingReadContext = new QueryingReadContext(transaction(), marshallerFamily().handlerVersion(), _bytes); 
 				final TypeHandler4 arrayElementHandler = Handlers4.arrayElementHandler(handler, queryingReadContext);
@@ -148,7 +148,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 						QCon qcon = (QCon) i.current();
 						QField qf = qcon.getField();
-						if (qf == null || qf.i_name.equals(_yapField.getName())) {
+						if (qf == null || qf.i_name.equals(_fieldMetadata.getName())) {
 
 							QCon tempParent = qcon.i_parent;
 							qcon.setParent(null);
@@ -286,21 +286,21 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			}
 		}
         
-        if(_yapField == null || _yapField instanceof NullFieldMetadata){
+        if(_fieldMetadata == null || _fieldMetadata instanceof NullFieldMetadata){
             return false;
         }
         
-        _yapClass.seekToField(transaction(), _bytes, _yapField);
+        _classMetadata.seekToField(transaction(), _bytes, _fieldMetadata);
         QCandidate candidate = readSubCandidate(a_candidates); 
 		if (candidate == null) {
 			return false;
 		}
 
 		// fast early check for ClassMetadata
-		if (a_candidates.i_yapClass != null
-				&& a_candidates.i_yapClass.isStrongTyped()) {
-			if (_yapField != null) {
-				TypeHandler4 handler = _yapField.getHandler();
+		if (a_candidates.i_classMetadata != null
+				&& a_candidates.i_classMetadata.isStrongTyped()) {
+			if (_fieldMetadata != null) {
+				TypeHandler4 handler = _fieldMetadata.getHandler();
 				if (Handlers4.isUntyped(handler)){
 					ClassMetadata classMetadata = candidate.readYapClass();
 					if (classMetadata != null) {
@@ -310,7 +310,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
                 if(handler == null){
                     return false;
                 }
-                if(! Handlers4.handlerCanHold(handler, a_candidates.i_yapClass.classReflector())){
+                if(! Handlers4.handlerCanHold(handler, a_candidates.i_classMetadata.classReflector())){
                     return false;
                 }
 			}
@@ -411,10 +411,10 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 	ReflectClass classReflector() {
 		readYapClass();
-		if (_yapClass == null) {
+		if (_classMetadata == null) {
 			return null;
 		}
-		return _yapClass.classReflector();
+		return _classMetadata.classReflector();
 	}
 	
 	boolean fieldIsAvailable(){
@@ -501,11 +501,11 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	PreparedComparison prepareComparison(ObjectContainerBase container, Object constraint) {
 	    Context context = container.transaction().context();
 	    
-		if (_yapField != null) {
-			return _yapField.prepareComparison(context, constraint);
+		if (_fieldMetadata != null) {
+			return _fieldMetadata.prepareComparison(context, constraint);
 		}
-		if (_yapClass != null) {
-			return _yapClass.prepareComparison(context, constraint);
+		if (_classMetadata != null) {
+			return _classMetadata.prepareComparison(context, constraint);
 		}
 		Reflector reflector = container.reflector();
 		ClassMetadata classMetadata = null;
@@ -557,12 +557,12 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 	private QCandidate readSubCandidate(QCandidates candidateCollection) {
 		read();
-		if (_bytes == null || _yapField == null) {
+		if (_bytes == null || _fieldMetadata == null) {
 		    return null;
 		}
 		final int offset = currentOffSet();
         QueryingReadContext context = newQueryingReadContext();
-        TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(context, _yapField.getHandler());
+        TypeHandler4 handler = HandlerRegistry.correctHandlerVersion(context, _fieldMetadata.getHandler());
         QCandidate subCandidate = candidateCollection.readSubCandidate(context, handler);
 		seek(offset);
 		if (subCandidate != null) {
@@ -594,32 +594,32 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	}
 
 	ClassMetadata readYapClass() {
-		if (_yapClass == null) {
+		if (_classMetadata == null) {
 			read();
 			if (_bytes != null) {
 			    seek(0);
                 ObjectContainerBase stream = container();
                 ObjectHeader objectHeader = new ObjectHeader(stream, _bytes);
-				_yapClass = objectHeader.classMetadata();
+				_classMetadata = objectHeader.classMetadata();
                 
-				if (_yapClass != null) {
+				if (_classMetadata != null) {
 					if (stream._handlers.ICLASS_COMPARE
-							.isAssignableFrom(_yapClass.classReflector())) {
+							.isAssignableFrom(_classMetadata.classReflector())) {
 						readThis(false);
 					}
 				}
 			}
 		}
-		return _yapClass;
+		return _classMetadata;
 	}
 
 	public String toString() {
 		String str = "QCandidate ";
-		if (_yapClass != null) {
-			str += "\n   YapClass " + _yapClass.getName();
+		if (_classMetadata != null) {
+			str += "\n   YapClass " + _classMetadata.getName();
 		}
-		if (_yapField != null) {
-			str += "\n   YapField " + _yapField.getName();
+		if (_fieldMetadata != null) {
+			str += "\n   YapField " + _fieldMetadata.getName();
 		}
 		if (_member != null) {
 			str += "\n   Member " + _member.toString();
@@ -636,26 +636,26 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	void useField(QField a_field) {
 		read();
 		if (_bytes == null) {
-			_yapField = null;
+			_fieldMetadata = null;
             return;
 		} 
 		readYapClass();
 		_member = null;
 		if (a_field == null) {
-			_yapField = null;
+			_fieldMetadata = null;
             return;
 		} 
-		if (_yapClass == null) {
-			_yapField = null;
+		if (_classMetadata == null) {
+			_fieldMetadata = null;
             return;
 		} 
-		_yapField = a_field.getYapField(_yapClass);
-		if(_yapField == null){
+		_fieldMetadata = a_field.getYapField(_classMetadata);
+		if(_fieldMetadata == null){
 		    fieldNotFound();
 		    return;
 		}
         
-		HandlerVersion handlerVersion = _yapClass.seekToField(transaction(), _bytes, _yapField);
+		HandlerVersion handlerVersion = _classMetadata.seekToField(transaction(), _bytes, _fieldMetadata);
         
 		if (handlerVersion == HandlerVersion.INVALID ) {
 		    fieldNotFound();
@@ -666,12 +666,12 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	}
 	
 	private void fieldNotFound(){
-        if (_yapClass.holdsAnyClass()) {
+        if (_classMetadata.holdsAnyClass()) {
             // retry finding the field on reading the value 
-            _yapField = null;
+            _fieldMetadata = null;
         } else {
             // we can't get a value for the field, comparisons should definitely run against null
-            _yapField = new NullFieldMetadata();
+            _fieldMetadata = new NullFieldMetadata();
         }
         _handlerVersion = HandlerRegistry.HANDLER_VERSION;  
 	}
@@ -685,11 +685,11 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	// to be different for collections also.
 	Object value(boolean a_activate) {
 		if (_member == null) {
-			if (_yapField == null) {
+			if (_fieldMetadata == null) {
 				readThis(a_activate);
 			} else {
 				int offset = currentOffSet();
-				_member = _yapField.read(newQueryingReadContext());
+				_member = _fieldMetadata.read(newQueryingReadContext());
 				seek(offset);
 				checkInstanceOfCompare();
 			}

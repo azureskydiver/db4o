@@ -8,11 +8,13 @@ import com.db4o.internal.slots.*;
 public final class MWriteNew extends MsgObject implements ServerSideMessage {
 	
 	public final boolean processAtServer() {
-        int yapClassId = _payLoad.readInt();
+        int classMetadataId = _payLoad.readInt();
         LocalObjectContainer stream = (LocalObjectContainer)stream();
         unmarshall(_payLoad._offset);
         synchronized (streamLock()) {
-            ClassMetadata classMetadata = yapClassId == 0 ? null : stream.classMetadataForID(yapClassId);
+            ClassMetadata classMetadata = classMetadataId == 0
+            					? null
+            					: stream.classMetadataForID(classMetadataId);
             
             int id = _payLoad.getID();
             stream.prefetchedIDConsumed(id);

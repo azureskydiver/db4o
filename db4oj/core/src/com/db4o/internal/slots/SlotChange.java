@@ -165,18 +165,18 @@ public class SlotChange extends TreeInt {
 		return change;
 	}
 
-	public void rollback(LocalObjectContainer yapFile) {
+	public void rollback(LocalObjectContainer container) {
 		if (_shared != null) {
-			yapFile.reduceFreeOnCommitReferences(_shared);
+			container.reduceFreeOnCommitReferences(_shared);
 		}
 		if (isFreeOnRollback()) {
-			yapFile.free(_newSlot);
+			container.free(_newSlot);
 		}
 		if(isFreePointerOnRollback()){
 		    if(DTrace.enabled){
 		        DTrace.FREE_POINTER_ON_ROLLBACK.logLength(_key, Const4.POINTER_LENGTH);
 		    }
-			yapFile.free(_key, Const4.POINTER_LENGTH);
+			container.free(_key, Const4.POINTER_LENGTH);
 		}
 	}
 
