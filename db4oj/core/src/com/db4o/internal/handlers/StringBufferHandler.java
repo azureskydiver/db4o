@@ -8,7 +8,8 @@ public final class StringBufferHandler extends StringBasedValueTypeHandlerBase<S
 	public StringBufferHandler() {
 		super(StringBuffer.class);
 	}
-	
+
+	@Override
 	protected StringBuffer convertString(String str) {
 		return new StringBuffer(str);
 	}
