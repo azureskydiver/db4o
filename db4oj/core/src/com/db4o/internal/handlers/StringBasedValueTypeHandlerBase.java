@@ -1,4 +1,5 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
+
 package com.db4o.internal.handlers;
 
 import com.db4o.ext.*;
@@ -9,15 +10,11 @@ import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
-<<<<<<< HEAD:db4oj/core/src/com/db4o/internal/handlers/StringBasedValueTypeHandlerBase.java
 public abstract class StringBasedValueTypeHandlerBase<T> implements ValueTypeHandler, BuiltinTypeHandler, VariableLengthTypeHandler, QueryableTypeHandler, Comparable4 {
-=======
-public abstract class StringBasedValueTypeHandlerBase<T> implements ValueTypeHandler, BuiltinTypeHandler, VariableLengthTypeHandler, QueryableTypeHandler {
->>>>>>> check in handler base:db4oj/core/src/com/db4o/internal/handlers/StringBasedValueTypeHandlerBase.java
 
-	private final Class<T> _clazz;
-	private ReflectClass _classReflector;
-
+	public final Class<T> _clazz;
+    private ReflectClass _classReflector;
+    
 	public StringBasedValueTypeHandlerBase(Class<T> clazz) {
 		_clazz = clazz;;
 	}
