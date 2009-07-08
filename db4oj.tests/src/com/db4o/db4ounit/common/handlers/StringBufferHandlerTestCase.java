@@ -59,9 +59,9 @@ public class StringBufferHandlerTestCase extends AbstractDb4oTestCase {
         });
     }
     
-    public void _testStringBufferQuery() {
+    public void testStringBufferQuery() {
     	final Query query = newItemQuery();
-		query.descend("buffer").constrain(_bufferValue);
+		query.descend("buffer").constrain(new StringBuffer(_bufferValue));
 		Assert.areEqual(1, query.execute().size());
     }
 

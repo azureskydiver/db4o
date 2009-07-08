@@ -497,6 +497,9 @@ public final class HandlerRegistry {
     		return (TypeHandler4) cachedHandler;
     	}
         TypeHandler4 typeHandler = container().configImpl().typeHandlerForClass(claxx, HANDLER_VERSION);
+        if(typeHandler instanceof BuiltinTypeHandler) {
+        	((BuiltinTypeHandler) typeHandler).registerReflector(reflector());
+        }
         if(Handlers4.isValueType(typeHandler)){
         	mapClassToTypeHandler(claxx, typeHandler);
         }
