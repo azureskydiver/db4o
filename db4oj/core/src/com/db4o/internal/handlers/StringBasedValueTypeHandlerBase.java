@@ -9,7 +9,11 @@ import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
+<<<<<<< HEAD:db4oj/core/src/com/db4o/internal/handlers/StringBasedValueTypeHandlerBase.java
 public abstract class StringBasedValueTypeHandlerBase<T> implements ValueTypeHandler, BuiltinTypeHandler, VariableLengthTypeHandler, QueryableTypeHandler, Comparable4 {
+=======
+public abstract class StringBasedValueTypeHandlerBase<T> implements ValueTypeHandler, BuiltinTypeHandler, VariableLengthTypeHandler, QueryableTypeHandler {
+>>>>>>> check in handler base:db4oj/core/src/com/db4o/internal/handlers/StringBasedValueTypeHandlerBase.java
 
 	private final Class<T> _clazz;
 	private ReflectClass _classReflector;
