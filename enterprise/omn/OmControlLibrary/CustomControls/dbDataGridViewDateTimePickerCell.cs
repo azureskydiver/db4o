@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
+using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
 
 namespace OMControlLibrary.Common
@@ -48,12 +49,12 @@ namespace OMControlLibrary.Common
 					dataGridViewCellStyle);
 
 				string typeOfValue = string.Empty;
-
+			    IType type = this.Tag as IType ;
 				if (this.Tag == null)
 					typeOfValue = this.DataGridView.Rows[rowIndex].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value.ToString();
 
 				if (typeOfValue == typeof(System.DateTime).ToString() ||
-					(this.Tag != null && this.Tag.ToString() == typeof(System.DateTime).ToString()))
+					(type != null && type.IsSameAs(typeof(DateTime))))
 				{
 					dbDataGridViewDateTimePickerEditingControl ctl =
 						DataGridView.EditingControl as dbDataGridViewDateTimePickerEditingControl;
@@ -76,7 +77,7 @@ namespace OMControlLibrary.Common
 					}
 				}
 				else if (typeOfValue == typeof(System.Boolean).ToString() ||
-					(this.Tag != null && this.Tag.ToString() == typeof(System.Boolean).ToString()))
+                    (type != null && type.IsSameAs(typeof(Boolean ))))
 				{
 					//intializing editing control (DataGridViewComboBoxEditingControl)
 					DataGridViewComboBoxEditingControl ctl =

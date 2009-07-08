@@ -683,9 +683,8 @@ namespace OMControlLibrary.Common
 
 	    private static object CastedValueOrNullConstant(object value, IType fieldType)
 	    {
-	        return value != null  && VALUE_NULL != (string) value
-	                   ? fieldType.Cast(value) 
-	                   : VALUE_NULL;
+	        //return value != null  && VALUE_NULL != (string) value
+            return value != null ? fieldType.Cast(value) : VALUE_NULL;
 	    }
 
 	    #endregion
