@@ -1,5 +1,4 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
-
 package com.db4o.internal.handlers;
 
 import com.db4o.ext.*;
@@ -69,7 +68,7 @@ public abstract class StringBasedValueTypeHandlerBase<T> implements ValueTypeHan
 
 	public boolean canHold(ReflectClass type) {
 		return type.equals(classReflector());
-    }
+	}
 
 	protected abstract String convertObject(T obj);
 	protected abstract T convertString(String str);
