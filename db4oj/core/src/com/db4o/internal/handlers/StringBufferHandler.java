@@ -10,11 +10,12 @@ public final class StringBufferHandler extends StringBasedValueTypeHandlerBase<S
 	}
 
 	@Override
-	protected StringBuffer convertString(String str) {
-		return new StringBuffer(str);
-	}
-
 	protected String convertObject(StringBuffer obj) {
 		return obj.toString();
+	}
+
+	@Override
+	protected StringBuffer convertString(String str) {
+		return new StringBuffer(str);
 	}
 }
