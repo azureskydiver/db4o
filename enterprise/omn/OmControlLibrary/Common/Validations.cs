@@ -10,7 +10,7 @@ namespace OMControlLibrary.Common
 		public static bool ValidateDataType(IType objectType, object data)
 		{
 			if (null == data) 
-				return true;
+				return false  ;
 
 			try
 			{
