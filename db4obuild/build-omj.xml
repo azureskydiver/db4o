@@ -8,6 +8,7 @@
 	<property name="dir.project.ome.core" location="${dir.base}/com.db4o.ome" />
 	<property name="dir.project.ome.help" location="${dir.base}/com.db4o.ome.help" />
 	<property name="dir.project.ome.feature" location="${dir.base}/com.db4o.ome.feature" />
+	<property name="dir.project.ome.test" location="${dir.base}/com.db4o.ome.test" />
 	<property name="dir.dist.ome.classes" location="${dir.dist.ome}/classes" />
 	<property name="dir.dist.ome.jars" location="${dir.dist.ome}/jars" />
 	<property name="dir.dist.ome.temp" location="${dir.dist.ome}/temp" />
@@ -16,7 +17,7 @@
 	<property name="dir.dist.ome.temp.zip.features" location="${dir.dist.ome.temp.zip}/features" />
 	<property name="dir.dist.ome.temp.feature" location="${dir.dist.ome.temp}/feature" />
 	<property name="file.omej.manifest.tmp" location="${dir.dist.ome.temp}/MANIFEST.MF" />
-
+	
 	<macrodef name="build-plugin">
 		
 		<attribute name="name" />
@@ -67,7 +68,7 @@
 				</classpath>
 			</javac>
 			
-			<copy file="@{basedir}/META-INF/MANIFEST.MF.TM" tofile="${file.omej.manifest.tmp}" overwrite="true">
+			<copy file="@{basedir}/META-INF/MANIFEST.MF.TM" tofile="${file.omej.manifest.tmp}" overwrite="true" failonerror="false">
 				<filterset refid="filterset.ome" />
 			</copy>
 			
@@ -86,7 +87,6 @@
 	</macrodef>
 
 	<target name="build" depends="init">
-		
 		<build-plugin name="com.db4o.ome" basedir="${dir.project.ome.core}">
 			<additionalclasspath>
 				<fileset dir="${dir.project.ome.core}/lib">
@@ -112,10 +112,21 @@
 					<include name="toc.xml" />
 				</fileset>
 			</additionaljarcontent>
-		</build-plugin>
-		
+		</build-plugin>		
 	</target>
-	
+
+	<target name="build-tests" depends="build">
+		<build-plugin name="com.db4o.ome.test" basedir="${dir.project.ome.test}">
+			<additionalclasspath>
+				<fileset dir="${dir.project.ome.test}">
+					<include name="**/*.jar" />
+				</fileset>
+				<!-- FIXME -->
+				<fileset file="${dir.dist.ome.jars}/com.db4o.ome_${omej.version}.jar" />
+			</additionalclasspath>
+		</build-plugin>
+	</target>
+
 	<target name="zip" depends="build">
 		<mkdir dir="${dir.dist.ome.temp.zip.plugins}" />
 		<copy todir="${dir.dist.ome.temp.zip.plugins}">
