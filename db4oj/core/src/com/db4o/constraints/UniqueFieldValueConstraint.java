@@ -45,12 +45,13 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 			
 			private void ensureSingleOccurence(Transaction trans, ObjectInfoCollection col){
 				final Iterator4 i = col.iterator();
-				while(i.moveNext()){
-					final Object obj = objectFor(trans, (ObjectInfo) i.current());
-					if(!reflectClass().isInstance(obj)) {
+				while(i.moveNext()){					
+					final ObjectInfo objectInfo = (ObjectInfo) i.current();
+		
+					if (reflectClass() != reflectorFor(trans, objectInfo.getObject()))
 						continue;
-					}
 					
+					final Object obj = objectFor(trans, objectInfo);
 					Object fieldValue = fieldMetadata().getOn(trans, obj);
 					if(fieldValue == null) {
 						continue;
@@ -100,5 +101,9 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 		    }
 		});
 		
+	}
+
+	private ReflectClass reflectorFor(Transaction trans, final Object obj) {
+		return trans.container().reflector().forObject(obj);
 	}
 }
