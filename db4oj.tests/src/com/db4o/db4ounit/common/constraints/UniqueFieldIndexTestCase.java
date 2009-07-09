@@ -28,10 +28,19 @@ public class UniqueFieldIndexTestCase extends AbstractDb4oTestCase{
 		}
 	}
 	
+	public static class IHavaNothingToDoWithItemInstances {
+		public static int _constructorCallsCounter = 0;
+		public IHavaNothingToDoWithItemInstances(int value) {
+			_constructorCallsCounter = value == 0xdb40 ? 0 : _constructorCallsCounter + 1; 
+		}
+	}
+	
 	protected void configure(Configuration config) throws Exception {
 		super.configure(config);
 		indexField(config, Item.class, "_str");
 		config.add(new UniqueFieldValueConstraint(Item.class, "_str"));
+		
+		config.objectClass(IHavaNothingToDoWithItemInstances.class).callConstructor(true);
 	}
 	
 	protected void store() throws Exception {
@@ -72,6 +81,25 @@ public class UniqueFieldIndexTestCase extends AbstractDb4oTestCase{
 		db().delete(existing);
 		db().commit();
 	}
+	
+	public void testObjectsAreNotReadUnnecessarily() {
+		addItem("5");
+		store(new IHavaNothingToDoWithItemInstances(0xdb40));
+		db().commit();
+		
+		Assert.areEqual(expectedConstructorsCalls(), IHavaNothingToDoWithItemInstances._constructorCallsCounter);
+	}
+	
+	private int expectedConstructorsCalls() {
+		return isNetworkClientServer()
+									? 3  
+									: 1; // Account for constructor validations 
+	}
+
+	private boolean isNetworkClientServer() {
+		return isClientServer() && !isEmbeddedClientServer();
+	}
+	
 
 	private void deleteItem(String value) {
 		db().delete(queryItem(value));
