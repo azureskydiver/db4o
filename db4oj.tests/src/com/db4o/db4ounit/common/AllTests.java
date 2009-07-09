@@ -36,6 +36,7 @@ public class AllTests extends ComposibleTestSuite {
 						com.db4o.db4ounit.common.ext.AllTests.class,
 						com.db4o.db4ounit.common.fatalerror.AllTests.class,
 						com.db4o.db4ounit.common.fieldindex.AllTests.class,
+						com.db4o.db4ounit.common.filelock.AllTests.class,
 						com.db4o.db4ounit.common.foundation.AllTests.class,
 						com.db4o.db4ounit.common.freespace.AllTests.class,
 						com.db4o.db4ounit.common.handlers.AllTests.class,

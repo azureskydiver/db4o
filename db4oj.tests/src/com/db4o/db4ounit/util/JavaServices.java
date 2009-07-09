@@ -10,6 +10,7 @@ import com.db4o.foundation.io.*;
 
 import db4ounit.*;
 import db4ounit.extensions.util.*;
+import db4ounit.extensions.util.IOServices.*;
 
 
 /**
@@ -20,7 +21,11 @@ public class JavaServices {
     public static String java(String className) throws IOException, InterruptedException{
         return IOServices.exec(javaExecutable(), javaRunArguments(className));
     }
-    
+
+    public static ProcessRunner startJava(String className, String[] args) throws IOException {
+        return IOServices.start(javaExecutable(), javaRunArguments(className, args));
+    }
+
 	public static String javac(String srcFile) throws IOException, InterruptedException
 	{
 			String[] javacArgs =
@@ -60,8 +65,13 @@ public class JavaServices {
     }
     
     private static String[] javaRunArguments(String className) {
-        return new String[] {"-cp",
-                IOServices.joinArgs(
+    	return javaRunArguments(className, new String[0]);
+    }
+
+    private static String[] javaRunArguments(String className, String[] args) {
+    	String[] allArgs = new String[args.length + 3];
+    	allArgs[0] = "-classpath";
+    	allArgs[1] = IOServices.joinArgs(
 						File.pathSeparator,
 						new String[] {
 						JavaServices.javaTempPath(), 
@@ -69,11 +79,13 @@ public class JavaServices {
 						db4oCoreJarPath(), 
 						db4oJarPath("-optional"),
 						db4oJarPath("-cs")
-				}, runningOnWindows())
-        		, className};
+				}, runningOnWindows());
+        allArgs[2] = className;
+        System.arraycopy(args, 0, allArgs, 3, args.length);
+        return allArgs;
         
     }
-    
+
     private static String currentClassPath(){
         return property("java.class.path");
     }

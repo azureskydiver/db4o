@@ -34,7 +34,11 @@ public class IOServices {
 	    runner.waitFor();
 	    return runner.formattedResult();  
 	}
-	
+
+	public static ProcessRunner start(String program, String[] arguments) throws IOException {
+	    return new ProcessRunner(program, arguments);
+	}
+
 	public static String execAndDestroy(String program, String[] arguments, String expectedOutput, long timeout) throws IOException{
         ProcessRunner runner = new ProcessRunner(program, arguments);
         runner.destroy(expectedOutput, timeout);
@@ -47,7 +51,7 @@ public class IOServices {
 	public static class ProcessTerminatedBeforeDestroyException extends RuntimeException{
 	}
 	
-	static class ProcessRunner{
+	public static class ProcessRunner{
 	    
 	    final long _startTime;
 	    
@@ -103,6 +107,14 @@ public class IOServices {
 	    public void destroy(String expectedOutput, long timeout){
 	        try{
     	        checkIfStarted(expectedOutput, timeout);
+	        } 
+	        finally {
+	        	destroy();
+	        }
+	    }
+
+	    public void destroy(){
+	        try{
     	        checkIfTerminated();
     	        
     	        // Race condition: If the process is terminated right here , it may
@@ -114,7 +126,13 @@ public class IOServices {
 	        }
 	    }
 
-        private void checkIfStarted(String expectedOutput, long timeout) {
+	    public void write(String msg) throws IOException {
+	    	OutputStreamWriter out = new OutputStreamWriter(_process.getOutputStream());
+			out.write(msg + "\n");
+			out.flush();
+	    }
+	    
+        public void checkIfStarted(String expectedOutput, long timeout) {
             while(! outputHasStarted()){
 	            checkTimeOut(timeout);
 	        }
