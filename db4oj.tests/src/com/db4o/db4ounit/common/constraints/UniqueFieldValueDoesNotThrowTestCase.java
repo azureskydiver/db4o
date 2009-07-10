@@ -8,10 +8,10 @@ import com.db4o.constraints.*;
 
 import db4ounit.extensions.*;
 
-public class UniqueFieldValueDoesNotThrows extends AbstractDb4oTestCase {
+public class UniqueFieldValueDoesNotThrowTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
-		new UniqueFieldValueDoesNotThrows().runAll();
+		new UniqueFieldValueDoesNotThrowTestCase().runAll();
 	}
 	
 	public static class Item {

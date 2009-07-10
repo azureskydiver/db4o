@@ -14,7 +14,7 @@ public class AllTests extends Db4oTestSuite {
         return new Class[] {
             UniqueFieldIndexTestCase.class,
             UniqueFieldIndexWithVersionNumbersTestCase.class,
-            UniqueFieldValueDoesNotThrows.class,
+            UniqueFieldValueDoesNotThrowTestCase.class,
         };
     }
 }
