@@ -6,5 +6,5 @@ import com.db4o.config.*;
 
 public interface FixtureConfiguration {
 	String getLabel();
-	void configure(Class clazz, Configuration config);
+	void configure(Db4oTestCase testCase, Configuration config);
 }

@@ -48,19 +48,19 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	}
     
     protected void reopen() throws Exception{
-    	fixture().reopen(getClass());
+    	fixture().reopen(this);
     }
 	
 	public final void setUp() throws Exception {
 		final Db4oFixture _fixture = fixture();
         _fixture.clean();
 		configure(_fixture);
-		_fixture.open(getClass());
+		_fixture.open(this);
         db4oSetupBeforeStore();
 		store();
 		_fixture.db().commit();
         _fixture.close();
-        _fixture.open(getClass());
+        _fixture.open(this);
         db4oSetupAfterStore();
 	}
 
@@ -104,122 +104,83 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	}
 	
 	public int runAll() {
-		return runAll(true);
+		return new ConsoleTestRunner(Iterators.concat(new Iterable4[] {
+        		soloSuite(),
+        		clientServerSuite(),
+        		embeddedClientServerSuite(),
+        })).run();
 	}
 	
 	public int runSolo(final String testLabelSubstring) {
 		return new ConsoleTestRunner(
-				Iterators.filter(soloSuite(true), new Predicate4<Test>() {
+				Iterators.filter(soloSuite(), new Predicate4<Test>() {
 					public boolean match(Test candidate) {
 						return candidate.label().contains(testLabelSubstring);
 					}
 				})).run();
 	}
 	
-	private int runAll(final boolean independentConfig) {
-		return new ConsoleTestRunner(Iterators.concat(new Iterable4[] {
-				soloSuite(independentConfig),
-				clientServerSuite(independentConfig),
-				embeddedClientServerSuite(independentConfig),
-		})).run();
-	}
-	
 	public int runSoloAndClientServer() {
-		return runSoloAndClientServer(true);
+		return new ConsoleTestRunner(Iterators.concat(new Iterable4[] {
+        		soloSuite(),
+        		clientServerSuite(),				
+        })).run();
 	}
 
-	private int runSoloAndClientServer(final boolean independentConfig) {
-		return new ConsoleTestRunner(Iterators.concat(new Iterable4[] {
-				soloSuite(independentConfig),
-				clientServerSuite(independentConfig),				
-		})).run();
-	}
-	
 	public int runSoloAndEmbeddedClientServer() {
-		return runSoloAndEmbeddedClientServer(true);
-	}
-
-	private int runSoloAndEmbeddedClientServer(final boolean independentConfig) {
 		return new ConsoleTestRunner(Iterators.concat(new Iterable4[] {
-				soloSuite(independentConfig),
-				embeddedClientServerSuite(independentConfig),				
-		})).run();
+        		soloSuite(),
+        		embeddedClientServerSuite(),				
+        })).run();
 	}
 
 	public int runSolo() {
-		return runSolo(true);
+		return new ConsoleTestRunner(soloSuite()).run();
 	}
 
-	public int runSolo(boolean independentConfig) {
-		return new ConsoleTestRunner(
-					soloSuite(independentConfig)).run();
-	}	
-
-    public int runClientServer() {
-    	return runClientServer(true);
+	public int runClientServer() {
+    	return new ConsoleTestRunner(clientServerSuite()).run();
     }
     
     public int runEmbeddedClientServer() {
-    	return runEmbeddedClientServer(true);
+    	return new ConsoleTestRunner(embeddedClientServerSuite()).run();
     }
 
     public int runConcurrency() {
-    	return runConcurrency(true);
+    	return new ConsoleTestRunner(concurrenyClientServerSuite(false, "CONC")).run();
     }
 
     public int runEmbeddedConcurrency() {
-    	return runEmbeddedConcurrency(true);
+    	return new ConsoleTestRunner(concurrenyClientServerSuite(true, "CONC EMBEDDED")).run();
     }
 
     public int runConcurrencyAll() {
-		return runConcurrencyAll(true);
-	}
-	
-    protected int runEmbeddedClientServer(boolean independentConfig) {
-		return new ConsoleTestRunner(embeddedClientServerSuite(independentConfig)).run();
-	}
-
-	public int runClientServer(boolean independentConfig) {
-        return new ConsoleTestRunner(
-                    clientServerSuite(independentConfig)).run();
-    }
-
-	private int runConcurrency(boolean independentConfig) {
-    	return new ConsoleTestRunner(concurrenyClientServerSuite(independentConfig, false, "CONC")).run();
-	}
-	
-	private int runEmbeddedConcurrency(boolean independentConfig) {
-    	return new ConsoleTestRunner(concurrenyClientServerSuite(independentConfig, true, "CONC EMBEDDED")).run();
-	}
-	
-	private int runConcurrencyAll(final boolean independentConfig) {
 		return new ConsoleTestRunner(Iterators.concat(new Iterable4[] {
-				concurrenyClientServerSuite(independentConfig, false, "CONC"),
-				concurrenyClientServerSuite(independentConfig, true, "CONC EMBEDDED"),
-		})).run();
+        		concurrenyClientServerSuite(false, "CONC"),
+        		concurrenyClientServerSuite(true, "CONC EMBEDDED"),
+        })).run();
 	}
 	
-
-    protected Db4oTestSuiteBuilder soloSuite(boolean independentConfig) {
+    protected Db4oTestSuiteBuilder soloSuite() {
 		return new Db4oTestSuiteBuilder(
-				Db4oFixtures.newSolo(independentConfig), testCases());
+				Db4oFixtures.newSolo(), testCases());
 	}
 
-	protected Db4oTestSuiteBuilder clientServerSuite(boolean independentConfig) {
+	protected Db4oTestSuiteBuilder clientServerSuite() {
 		return new Db4oTestSuiteBuilder(
-		        Db4oFixtures.newNetworkingCS(independentConfig), 
+		        Db4oFixtures.newNetworkingCS(), 
 		        testCases());
 	}
 
-	protected Db4oTestSuiteBuilder embeddedClientServerSuite(boolean independentConfig) {
+	protected Db4oTestSuiteBuilder embeddedClientServerSuite() {
 		return new Db4oTestSuiteBuilder(
-		        Db4oFixtures.newEmbeddedCS(independentConfig), 
+		        Db4oFixtures.newEmbeddedCS(), 
 		        testCases());
 	}
 
-	protected Db4oTestSuiteBuilder concurrenyClientServerSuite(boolean independentConfig, boolean embedded, String label) {
+	protected Db4oTestSuiteBuilder concurrenyClientServerSuite(boolean embedded, String label) {
 		return new Db4oConcurrencyTestSuiteBuilder(
-		        new Db4oClientServer(Db4oFixtures.configSource(independentConfig), embedded, label), 
+		        new Db4oClientServer(embedded, label), 
 		        testCases());
 	}
 	
@@ -358,7 +319,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	protected void defragment() throws Exception{
 		fixture().close();
 		fixture().defragment();
-		fixture().open(getClass());
+		fixture().open(this);
 	}
 	
 	public final int threadCount() {

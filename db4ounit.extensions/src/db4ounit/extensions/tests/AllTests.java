@@ -12,6 +12,7 @@ public class AllTests extends ReflectionTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
+			Db4oClientServerFixtureTestCase.class,
 			DynamicFixtureTestCase.class,
 			ExcludingReflectorTestCase.class,
 			FixtureConfigurationTestCase.class,

@@ -11,11 +11,7 @@ import db4ounit.extensions.*;
 public class Db4oInMemory extends AbstractSoloDb4oFixture {
     
 	public Db4oInMemory() {
-		super(new IndependentConfigurationSource());
-	}
-
-	public Db4oInMemory(ConfigurationSource configSource) {
-		super(configSource);
+		super();
 	}
 	
 	public Db4oInMemory(FixtureConfiguration fc) {

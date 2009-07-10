@@ -5,7 +5,6 @@ package com.db4o.db4ounit.jre.android;
 import com.db4o.db4ounit.jre5.*;
 
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 /**
  * @sharpen.ignore
@@ -21,9 +20,9 @@ public class AllTestsDb4oUnitAndroid extends AllTestsDb4oUnitJdk5{
 				};
 			}
 
-			protected Db4oTestSuiteBuilder soloSuite(boolean independentConfig) {
+			protected Db4oTestSuiteBuilder soloSuite() {
 		        return new Db4oTestSuiteBuilder(
-	                new Db4oAndroid(Db4oFixtures.configSource(independentConfig)), testCases());			}
+	                new Db4oAndroid(), testCases());			}
 			
 		};
 		suite.runSolo();

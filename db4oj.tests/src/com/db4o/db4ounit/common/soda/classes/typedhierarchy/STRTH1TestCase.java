@@ -168,7 +168,7 @@ public class STRTH1TestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseT
 			oc.delete(os.next()); 
 		}
 		db().commit();
-		fixture().reopen(getClass()); 
+		fixture().reopen(this); 
 		oc = fixture().db(); 
 		os = oc.queryByExample(null);
 		Assert.areEqual(0, os.size()); 

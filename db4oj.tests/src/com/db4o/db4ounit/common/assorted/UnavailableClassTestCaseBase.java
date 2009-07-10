@@ -15,7 +15,7 @@ public class UnavailableClassTestCaseBase extends AbstractDb4oTestCase {
     }
 
 	private void open() throws Exception {
-        fixture().open(getClass());
+        fixture().open(this);
     }
 
 	private void closeAndResetConfig() throws Exception {

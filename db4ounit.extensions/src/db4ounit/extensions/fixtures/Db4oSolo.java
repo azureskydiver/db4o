@@ -10,16 +10,12 @@ import db4ounit.extensions.util.*;
 
 public class Db4oSolo extends AbstractFileBasedDb4oFixture {
 	
-	private static final String FILE = "db4oSoloTest.db4o"; 
-
+	private static final String FILE = "db4oSoloTest.db4o";
+	
 	public Db4oSolo() {
-		this(new IndependentConfigurationSource());	
+		super(filePath());
 	}
 
-	public Db4oSolo(ConfigurationSource configSource) {
-		super(configSource, filePath());	
-	}
-    
 	public Db4oSolo(FixtureConfiguration fixtureConfiguration) {
 		this();
 		fixtureConfiguration(fixtureConfiguration);

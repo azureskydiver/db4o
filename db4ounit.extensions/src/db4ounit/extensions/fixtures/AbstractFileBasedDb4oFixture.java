@@ -9,8 +9,7 @@ public abstract class AbstractFileBasedDb4oFixture extends AbstractSoloDb4oFixtu
 	
 	private final File _databaseFile;
 
-	public AbstractFileBasedDb4oFixture(ConfigurationSource configSource,String fileName) {
-		super(configSource);
+	public AbstractFileBasedDb4oFixture(String fileName) {
 		_databaseFile = new File(fileName);
 	}
 

@@ -16,6 +16,16 @@ public class MethodCall {
 		void verify(Object argument);
 	}
 	
+	public static class Conditions {
+		public static ArgumentCondition isA(final Class<?> expectedClass) {
+			return new ArgumentCondition() {
+				public void verify(Object argument) {
+					Assert.isInstanceOf(expectedClass, argument);
+                }
+			};
+		}
+	}
+	
 	public final String methodName;
 	public final Object[] args;
 	

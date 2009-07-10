@@ -20,7 +20,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 	public void testActivate() throws Exception {
 		store(new Item(3));
 		fixture().config().activationDepth(1);
-		fixture().reopen(getClass());
+		fixture().reopen(this);
 		final Item item = (Item) retrieveOnlyInstance(Item.class);
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
@@ -114,11 +114,11 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 
 	public void testGetByUUID() throws Exception {
 		fixture().config().generateUUIDs(ConfigScope.GLOBALLY);
-		fixture().reopen(getClass());
+		fixture().reopen(this);
 		Item item = new Item(1);
 		store(item);
 		final Db4oUUID uuid = db().getObjectInfo(item).getUUID();
-		fixture().reopen(getClass());
+		fixture().reopen(this);
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
 				triggerException(true);

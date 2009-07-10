@@ -7,21 +7,17 @@ import com.db4o.config.*;
 import com.db4o.constraints.*;
 
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class UniqueFieldValueDoesNotThrowTestCase extends AbstractDb4oTestCase {
-	
-	public static void main(String[] args) {
-		new UniqueFieldValueDoesNotThrowTestCase().runAll();
-	}
+public class UniqueFieldValueDoesNotThrowTestCase
+	extends AbstractDb4oTestCase
+	implements CustomClientServerConfiguration {
 	
 	public static class Item {
-		
 		public Long id;
-		
 		public String name;
 		
-		public Item(){
-			
+		public Item() {
 		}
 		
 		public Item(int id, String name) {
@@ -36,13 +32,19 @@ public class UniqueFieldValueDoesNotThrowTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public static class Holder {
-		
-		public HashMap<Item, Long> _items = new HashMap<Item, Long>();		
+		public HashMap<Item, Long> _items = new HashMap<Item, Long>();
 		
 		public void add(Item item) {
 			_items.put(item, item.id);
 		}
 	}
+	
+	public void configureClient(Configuration config) {
+    }
+
+	public void configureServer(Configuration config) throws Exception {
+		configure(config);
+    }	
 	
 	@Override
 	protected void configure(Configuration config) throws Exception {

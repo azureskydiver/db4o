@@ -11,8 +11,8 @@ import com.db4o.ta.*;
  */
 public class TAFixtureConfiguration implements FixtureConfiguration {
 
-	public void configure(Class clazz, Configuration config) {
-		if (OptOutTA.class.isAssignableFrom(clazz)) {
+	public void configure(Db4oTestCase testCase, Configuration config) {
+		if (testCase instanceof OptOutTA) {
 			return;
 		}
 		config.add(new TransparentActivationSupport());
