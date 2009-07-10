@@ -14,9 +14,15 @@ public class UniqueFieldValueDoesNotThrows extends AbstractDb4oTestCase {
 		new UniqueFieldValueDoesNotThrows().runAll();
 	}
 	
-	private static class Item {
+	public static class Item {
+		
 		public Long id;
+		
 		public String name;
+		
+		public Item(){
+			
+		}
 		
 		public Item(int id, String name) {
 			this.id = new Long(id);
@@ -29,7 +35,8 @@ public class UniqueFieldValueDoesNotThrows extends AbstractDb4oTestCase {
 		}
 	}
 	
-	private static class Holder {
+	public static class Holder {
+		
 		public HashMap<Item, Long> _items = new HashMap<Item, Long>();		
 		
 		public void add(Item item) {
