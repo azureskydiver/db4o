@@ -38,6 +38,10 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 	 */
 	public void apply(final InternalObjectContainer objectContainer) {
 		
+		if (objectContainer.isClient()) {
+			throw new IllegalStateException(getClass().getName() + " should be configured on the server.");
+		}
+		
 		EventRegistryFactory.forObjectContainer(objectContainer).committing().addListener(
 				new EventListener4() {
 
@@ -94,8 +98,7 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 			}
 			
 			private Object objectFor(Transaction trans, ObjectInfo info) {
-			    int id = (int)info.getInternalID();
-			    
+				int id = (int)info.getInternalID();
 			    HardObjectReference ref = HardObjectReference.peekPersisted(trans, id, 1);
 			    return ref._object;
 		    }

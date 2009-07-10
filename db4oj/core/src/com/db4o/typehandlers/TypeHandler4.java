@@ -19,8 +19,6 @@ import com.db4o.reflect.*;
  */
 public interface TypeHandler4 {
 	
-	
-	
 	/**
 	 * gets called when an object gets deleted.
 	 * @param context 
