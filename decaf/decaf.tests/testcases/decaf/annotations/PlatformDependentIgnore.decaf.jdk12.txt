@@ -2,3 +2,6 @@ package decaf.annotations;
 
 class IgnoreJdk11 {
 }
+
+class IgnoreAndroid {
+}

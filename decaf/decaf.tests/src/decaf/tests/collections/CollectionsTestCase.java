@@ -22,7 +22,7 @@ public class CollectionsTestCase extends DecafTestCaseBase {
 	}
 
 	public void testForEachCollection() throws Exception {
-		runResourceTestCase("ForEachCollection", TargetPlatform.JDK12);
+		runResourceTestCase("ForEachCollection", TargetPlatform.JDK12, TargetPlatform.ANDROID);
 	}
 
 	public void testForEachList() throws Exception {
@@ -31,7 +31,6 @@ public class CollectionsTestCase extends DecafTestCaseBase {
 	
 	public void testIterableMapping() throws Exception {
 		runPlatformTestCase("IterableMapping");
-		//runResourceTestCase("IterableMapping", TargetPlatform.JDK12);
 	}
 
 	// TODO jdk11 code doesn't compile

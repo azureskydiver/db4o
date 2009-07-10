@@ -154,8 +154,8 @@ public class DecafRewritingServices {
 		return enclosingMethod(parent, binding);
     }
 
-	public Expression erasureForField(final Expression expression,
-			final IVariableBinding field) {
+	public Expression erasureForField(final Expression expression, final IVariableBinding field) {
+		
 		if (builder().isErasedFieldAccess(field)) {
 			return createCastForErasure(expression, field.getType());
 		}

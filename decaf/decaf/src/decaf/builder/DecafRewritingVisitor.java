@@ -7,113 +7,21 @@ import org.eclipse.jdt.core.dom.rewrite.*;
 
 import sharpen.core.framework.*;
 import decaf.core.*;
-import decaf.rewrite.*;
 
 @SuppressWarnings("unchecked")
-public final class DecafRewritingVisitor extends ASTVisitor {
-	
-	private final DecafRewritingContext _context;
+public final class DecafRewritingVisitor extends DecafVisitorBase {
 	
 	public DecafRewritingVisitor(DecafRewritingContext context) {
-		_context = context;
-	}
-	
-	@Override
-	public void endVisit(CompilationUnit node) {
-		if (allTopLevelTypesHaveBeenRemoved(node)) {
-			// imports are removed to avoid possible compilation errors
-			removeImports(node);
-		}
-		super.endVisit(node);
-	}
-
-	private void removeImports(CompilationUnit node) {
-		removeAll(node.imports());
-	}
-
-	private void removeAll(final List nodes) {
-	    for (Object importNode : nodes) {
-			rewrite().remove((ASTNode) importNode);
-		}
-    }
-
-	private boolean allTopLevelTypesHaveBeenRemoved(CompilationUnit node) {
-		return rewrittenTypeListFor(node).isEmpty();
-	}
-
-	private List rewrittenTypeListFor(CompilationUnit node) {
-		return getListRewrite(node, CompilationUnit.TYPES_PROPERTY).getRewrittenList();
+		super(context);
 	}
 	
 	@Override
 	public boolean visit(TypeDeclaration node) {
-		if (handledAsIgnored(node, node.resolveBinding()) || handledAsRemoved(node)) {
+		if (isIgnored(node.resolveBinding()) || isMarkedForRemoval(node.resolveBinding())) {
 			return false;
 		}
 		return true;
 	}
-
-	private boolean handledAsRemoved(TypeDeclaration node) {
-	    if (isMarkedForRemoval(node.resolveBinding())) {
-	    	rewrite().remove(node);
-	    	return true;
-	    }
-	    return false;
-    }
-
-	private boolean isMarkedForRemoval(final IBinding binding) {
-	    return containsAnnotation(binding, decaf.Remove.class);
-    }
-
-	private boolean containsAnnotation(final IBinding binding, String annotation) {
-		final IAnnotationBinding annotationBinding = findAnnotation(binding, annotation);
-		if (annotationBinding == null)
-			return false;
-		
-		return isApplicableToTargetPlatform(annotationBinding);
-	}
-
-	private boolean isApplicableToTargetPlatform(final IAnnotationBinding annotationBinding) {
-		if (targetPlatform().isNone())
-			return true; // annotation is considered to be valid for all platforms
-		
-		final String platform = applicablePlatformFor(annotationBinding);
-		if (platform == null)
-			return false; // not a decaf annotation
-		
-		return platform.equals("ALL")
-        	|| platform.equals(targetPlatform().toString());
-	}
-
-	private IAnnotationBinding findAnnotation(IBinding binding, String annotationQualifiedName) {
-	    for (IAnnotationBinding annotationBinding : binding.getAnnotations()) {
-			final ITypeBinding annotationtype = annotationBinding.getAnnotationType();
-			if (typeHasQualifiedName(annotationtype, annotationQualifiedName))
-				return annotationBinding;
-		}
-		return null;
-    }
-
-	private boolean typeHasQualifiedName(final ITypeBinding type, String qualifiedName) {
-	    return Bindings.qualifiedName(type).equals(qualifiedName);
-    }
-
-	private String applicablePlatformFor(IAnnotationBinding annotationBinding) {
-		for (IMemberValuePairBinding valuePair : annotationBinding.getAllMemberValuePairs()) {
-			final Object value = valuePair.getValue();
-            if (!(value instanceof IVariableBinding))
-            	continue;
-            
-            final IVariableBinding variable = (IVariableBinding)value;
-            if (isDecafPlatform(variable.getType()))
-            	return variable.getName();
-        }
-		return null;
-	}
-
-	private boolean isDecafPlatform(ITypeBinding type) {
-		return typeHasSameQualifiedNameAs(type, decaf.Platform.class);
-    }
 
 	@Override
 	public boolean visit(EnumDeclaration node) {
@@ -123,8 +31,9 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		}
 		
 		final TypeDeclaration enumType = new EnumProcessor(_context).run(node);		
-		rewrite().replace(node, enumType);
+		if (enumType == null) return true;
 		
+		rewrite().replace(node, enumType);
 		return false;
 	}
 	
@@ -134,14 +43,15 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		if (!binding.isEnum()) {
 			return true;
 		}
-		rewrite().replace(node, new EnumProcessor(_context).transformEnumSwitchStatement(node));
+		final SwitchStatement switchStatement = new EnumProcessor(_context).transformEnumSwitchStatement(node);
+		if (switchStatement == null) return true;
+		
+		rewrite().replace(node, switchStatement);
 		return false;
 	}
 
 	@Override
 	public void endVisit(TypeDeclaration node) {
-		processIgnoreExtends(node);
-		processIgnoreImplements(node);
 		processMixins(node);
 	}
 	
@@ -157,19 +67,11 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		return containsAnnotation(type.resolveBinding(), decaf.Mixin.class);
     }
 
-	private boolean containsAnnotation(IBinding binding, Class<?> annotationType) {
-		return containsAnnotation(binding, annotationType.getName());
-    }
-
 	private void processMixin(TypeDeclaration node, TypeDeclaration mixinType) {
 		
 		new MixinProcessor(_context, node, mixinType).run();
 	}
 		
-	private DecafASTNodeBuilder builder() {
-		return _context.builder();
-	}
-
 	@Override
 	public boolean visit(AnnotationTypeDeclaration node) {
 		rewrite().remove(node);
@@ -181,7 +83,8 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		rewrite().remove(node);
 		return false;	
 	}
-	
+
+
 	@Override
 	public boolean visit(SingleMemberAnnotation node) {
 		rewrite().remove(node);
@@ -190,7 +93,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	
 	@Override
 	public boolean visit(NormalAnnotation node) {
-	    rewrite().remove(node);
+		rewrite().remove(node);
 	    return false;
 	}
 	
@@ -436,10 +339,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	    return targetPlatform().iterablePlatformMapping();
     }
 
-	private TargetPlatform targetPlatform() {
-	    return _context.targetPlatform();
-    }
-
 	private void replaceUnwrappedIterable(Expression iterableArg) {
 		Expression unwrapped = iterablePlatformMapping().unwrapIterableExpression(iterableArg);
 		if(unwrapped != iterableArg) {
@@ -572,7 +471,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(MethodDeclaration node) {
-		if (handledAsIgnored(node, node.resolveBinding())) {
+		if (isIgnored(node.resolveBinding())) {
 			return false;
 		}
 		
@@ -591,7 +490,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			handleVarArgsMethod(node);
 		}
 		
-		processRewritingAnnotations(node);
 		processMethodDeclarationErasure(node);
 	}
 	
@@ -611,69 +509,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 			return;
 		
 		eraseMethodDeclaration(node, declaration);
-	}
-
-	private void processRewritingAnnotations(MethodDeclaration node) {
-		
-		if (node.getBody() == null) {
-			return;
-		}
-		
-		final ListRewrite bodyRewrite = bodyListRewriteFor(node);
-		for (IAnnotationBinding annotation : node.resolveBinding().getAnnotations()) {
-			
-			if (!isApplicableToTargetPlatform(annotation))
-				continue;
-			
-			if (isAnnotation(annotation, decaf.InsertFirst.class)) {
-				bodyRewrite.insertFirst(statementFrom(annotation), null);
-			} else if (isAnnotation(annotation, decaf.ReplaceFirst.class)) {
-				bodyRewrite.replace(firstNode(bodyRewrite), statementFrom(annotation), null);
-			} else if (isAnnotation(annotation, decaf.RemoveFirst.class)) {
-				bodyRewrite.remove(firstNode(bodyRewrite), null);
-			}
-		}
-	}
-
-	private ASTNode statementFrom(IAnnotationBinding annotation) {
-	    return statementFrom((String)valueFrom(annotation));
-    }
-
-	private <T> T valueFrom(IAnnotationBinding annotation) {
-	    return (T)memberValueFrom(annotation, "value");
-    }
-
-	private <T> T memberValueFrom(IAnnotationBinding annotation, String memberName) {
-		for (IMemberValuePairBinding valuePair : annotation.getAllMemberValuePairs()) {
-	        if (valuePair.getName().equals(memberName))
-	        	return (T)valuePair.getValue();
-        }
-		throw new IllegalArgumentException("No '" + memberName + "' member in annotation '" + annotation + "'.");
-    }
-
-	private boolean isAnnotation(IAnnotationBinding annotation, Class<?> annotationClass) {
-	    return typeHasSameQualifiedNameAs(annotation.getAnnotationType(), annotationClass);
-    }
-
-	private boolean typeHasSameQualifiedNameAs(final ITypeBinding type, Class<?> classToCompare) {
-	    return typeHasQualifiedName(type, classToCompare.getName());
-    }
-
-	private ASTNode firstNode(final ListRewrite bodyRewrite) {
-		return originalNodeAt(bodyRewrite, 0);
-	}
-
-	private ASTNode originalNodeAt(final ListRewrite bodyRewrite,
-			final int index) {
-		return (ASTNode) bodyRewrite.getOriginalList().get(index);
-	}
-
-	private ASTNode statementFrom(final String code) {
-	    return rewrite().createStringPlaceholder(code, ASTNode.EXPRESSION_STATEMENT);
-    }
-
-	private ListRewrite bodyListRewriteFor(MethodDeclaration node) {
-		return getListRewrite(node.getBody(), Block.STATEMENTS_PROPERTY);
 	}
 
 	public void endVisit(final EnhancedForStatement node) {
@@ -701,8 +536,7 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		eraseIfNeeded(node.getReturnType2(), originalMethodDeclaration.getReturnType());
 	}
 	
-	private void eraseParametersWhereNeeded(
-			MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
+	private void eraseParametersWhereNeeded(MethodDeclaration node, IMethodBinding originalMethodDeclaration) {
 		final ITypeBinding[] parameterTypes = originalMethodDeclaration.getParameterTypes();
 		for (int i = 0; i < parameterTypes.length; i++) {
 			final SingleVariableDeclaration actualParameter = parameterAt(node, i);
@@ -740,78 +574,6 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 		rewrite().set(node, property, value, null);
 	}
 
-	private boolean handledAsIgnored(BodyDeclaration node, IBinding binding) {
-		if (isIgnored(binding)) {
-			rewrite().remove(node);
-			return true;
-		}
-		return false;
-	}
-
-	private boolean isIgnored(IBinding binding) {
-		return containsAnnotation(binding, decaf.Ignore.class);
-	}
-
-	private void processIgnoreExtends(TypeDeclaration node) {
-		if (ignoreExtends(node)) {
-			rewrite().remove(node.getSuperclassType());
-		}
-	}
-
-	public boolean ignoreExtends(TypeDeclaration node) {
-		return containsAnnotation(node, decaf.IgnoreExtends.class);
-	}
-
-	private boolean containsAnnotation(TypeDeclaration node, Class<?> annotationType) {
-	   return containsAnnotation(node.resolveBinding(), annotationType);
-    }
-
-	private void processIgnoreImplements(TypeDeclaration node) {
-		final Set<ITypeBinding> ignoredImplements = ignoredImplements(node);
-		if (ignoredImplements.isEmpty()) {
-			return;
-		}
-		
-		for (Object o : node.superInterfaceTypes()) {
-			final Type type = (Type)o;
-			if (ignoredImplements.contains(type.resolveBinding())) {
-				rewrite().remove(type);
-			}
-		}
-	}	
-	
-	private Set<ITypeBinding> allSuperInterfaceBindings(TypeDeclaration node) {
-		final List superInterfaces = node.superInterfaceTypes();
-		final HashSet<ITypeBinding> set = new HashSet<ITypeBinding>(superInterfaces.size());
-		for (Object o : superInterfaces) {
-			set.add(((Type)o).resolveBinding());
-		}
-		return set;
-	}
-	
-	public Set<ITypeBinding> ignoredImplements(TypeDeclaration node) {
-		final HashSet<ITypeBinding> ignored = new HashSet<ITypeBinding>();
-		for (IAnnotationBinding annotation : node.resolveBinding().getAnnotations()) {
-			if (!isAnnotation(annotation, decaf.IgnoreImplements.class))
-				continue;
-			if (!isApplicableToTargetPlatform(annotation))
-				continue;
-			
-			final Object[] interfaces = memberValuesFrom(annotation, "interfaces");
-			if (interfaces.length == 0)
-				return allSuperInterfaceBindings(node);
-
-			for (Object itf : interfaces)
-				ignored.add((ITypeBinding)itf);
-        }
-		return ignored;
-	}
-	
-	private Object[] memberValuesFrom(IAnnotationBinding annotation, String memberName) {
-		final Object value = memberValueFrom(annotation, memberName);
-		return value instanceof Object[] ? (Object[])value : new Object[] { value };
-    }
-
 	private void rewriteVarArgsArguments(final IMethodBinding method,
 			final List arguments, final ListRewrite argumentListRewrite) {
 		
@@ -837,9 +599,10 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	}
 
 	private void processNameErasure(Name node) {
+		
 		if (isLeftHandSideOfAssignment(node)) {
 			return;
-		}
+		}		
 		
 		final Expression erasure = rewrite().erasureForName(node);
 		if (null != erasure) {
@@ -850,12 +613,4 @@ public final class DecafRewritingVisitor extends ASTVisitor {
 	private boolean isLeftHandSideOfAssignment(ASTNode node) {
 		return node.getLocationInParent() == Assignment.LEFT_HAND_SIDE_PROPERTY;
     }
-
-	private ListRewrite getListRewrite(ASTNode node, ChildListPropertyDescriptor property) {
-		return rewrite().getListRewrite(node, property);
-	}
-	
-	private DecafRewritingServices rewrite() {
-		return _context.rewrite();
-	}
 }

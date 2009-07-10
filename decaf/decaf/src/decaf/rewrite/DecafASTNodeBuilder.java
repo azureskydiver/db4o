@@ -525,8 +525,9 @@ public class DecafASTNodeBuilder {
 	}
 	
 	public Type mapType(Type type) {
-		final ITypeBinding erasure = type.resolveBinding().getErasure();		
-		return (erasure != null) ? safeMapTypeBinding(erasure) : safeMapTypeBinding(type.resolveBinding());
+		final ITypeBinding typeBinding = type.resolveBinding();
+		final ITypeBinding erasure = typeBinding.getErasure();		
+		return (erasure != null) ? safeMapTypeBinding(erasure) : safeMapTypeBinding(typeBinding);
 	}
 
 	public Type safeMapTypeBinding(ITypeBinding binding) {

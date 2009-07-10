@@ -4,9 +4,6 @@ package decaf.core;
 
 import decaf.config.*;
 
-
-
-
 public enum TargetPlatform {
 	
 	NONE {
@@ -29,6 +26,18 @@ public enum TargetPlatform {
 		public IterablePlatformMapping iterablePlatformMapping() {
 			return IterablePlatformMapping.JDK12_ITERABLE_MAPPING;
 		}
+	},
+	ANDROID {
+		@Override
+		public DecafConfiguration defaultConfig() {
+			return NONE.defaultConfig();
+		}
+
+		@Override
+		public IterablePlatformMapping iterablePlatformMapping() {
+			throw new IllegalStateException();
+		}
+		
 	},
 	JDK11 {
 		@Override

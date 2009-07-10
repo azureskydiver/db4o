@@ -1,5 +1,6 @@
 package decaf.tests.integration;
 
+import decaf.core.*;
 import decaf.tests.*;
 
 public class IntegrationTestCase extends DecafTestCaseBase {
@@ -9,23 +10,23 @@ public class IntegrationTestCase extends DecafTestCaseBase {
 	}
 	
 	public void testUnboxingInVarArgs() throws Exception {
-		runResourceTestCase("UnboxingInVarArgs");
+		runResourceTestCase("UnboxingInVarArgs", TargetPlatform.NONE, TargetPlatform.ANDROID);
 	}
 	
 	public void testUnboxingInForEach() throws Exception {
-		runResourceTestCase("UnboxingInForEach");
+		runResourceTestCase("UnboxingInForEach", TargetPlatform.NONE, TargetPlatform.ANDROID);
 	}
 
 	public void testUnboxingForGenerics() throws Exception {
-		runResourceTestCase("UnboxingForGenerics");
+		runResourceTestCase("UnboxingForGenerics", TargetPlatform.NONE, TargetPlatform.ANDROID);
 	}
 
 	public void testErasureInVarArgs() throws Exception {
-		runResourceTestCase("ErasureInVarArgs");
+		runResourceTestCase("ErasureInVarArgs", TargetPlatform.NONE, TargetPlatform.ANDROID);
 	}
 	
 	public void testErasureInForEach() throws Exception {
-		runResourceTestCase("ErasureInForEach");
+		runResourceTestCase("ErasureInForEach", TargetPlatform.NONE, TargetPlatform.ANDROID);
 	}
 	
 	public void testIgnoreMappedInterface() throws Exception {
