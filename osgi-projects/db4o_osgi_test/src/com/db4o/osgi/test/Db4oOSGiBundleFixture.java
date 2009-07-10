@@ -21,11 +21,13 @@ class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 	private final String _fileName;
 	private Configuration _config;
 	
-	
 	public Db4oOSGiBundleFixture(BundleContext context, String fileName) {
-		super(new ServiceConfigurationSource(context));
 		_context = context;
 		_fileName = CrossPlatformServices.databasePath(fileName);
+	}
+	
+	protected Configuration newConfiguration() {
+		return service(_context).newConfiguration();
 	}
 
 	protected ObjectContainer createDatabase(Configuration config) {
@@ -54,19 +56,5 @@ class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 
 	public boolean accept(Class clazz) {
 		return super.accept(clazz)&&(!(OptOutNoFileSystemData.class.isAssignableFrom(clazz)));
-	}
-
-	private static class ServiceConfigurationSource implements ConfigurationSource {
-
-		private BundleContext _context;
-		
-		public ServiceConfigurationSource(BundleContext context) {
-			_context = context;
-		}
-		
-		public Configuration config() {
-			return service(_context).newConfiguration();
-		}
-		
 	}
 }

@@ -14,14 +14,13 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 
 	private ExtObjectContainer _db;
 	
-	protected AbstractSoloDb4oFixture(ConfigurationSource configSource) {
-		super(configSource);
+	protected AbstractSoloDb4oFixture() {
 	}
 	
-	public final void open(Class testCaseClass) {
+	public final void open(Db4oTestCase testInstance) {
 		Assert.isNull(_db);
 		final Configuration config = cloneConfiguration();
-		applyFixtureConfiguration(testCaseClass, config);
+		applyFixtureConfiguration(testInstance, config);
 		_db=createDatabase(config).ext();
 	}
 

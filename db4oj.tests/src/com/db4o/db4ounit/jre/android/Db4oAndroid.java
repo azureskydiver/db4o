@@ -15,10 +15,6 @@ import db4ounit.extensions.fixtures.*;
 @decaf.Ignore
 public class Db4oAndroid extends Db4oSolo{
 	
-	public Db4oAndroid(ConfigurationSource configSource) {
-		super(configSource);	
-	}
-	
 	public Configuration config() {
 		Config4Impl config = (Config4Impl)super.config();
 		if(alreadyConfigured(config)){

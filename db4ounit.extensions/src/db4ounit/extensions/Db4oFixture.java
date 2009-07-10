@@ -10,11 +10,11 @@ import db4ounit.fixtures.*;
 
 public interface Db4oFixture extends Labeled {
     
-	void open(Class testCaseClass) throws Exception;
+	void open(Db4oTestCase testInstance) throws Exception;
     
 	void close() throws Exception;
 	
-	void reopen(Class testCaseClass) throws Exception;
+	void reopen(Db4oTestCase testInstance) throws Exception;
     
     void clean();
     

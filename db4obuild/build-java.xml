@@ -770,6 +770,7 @@
 				<classpath>
 					<pathelement path="${file.jdk@{target}.jar}" />
 					<pathelement path="${file.decaf.annotations}" />
+					<pathelement path="${file.easymock.jar}" />
 				</classpath>
 				<src path="@{src}"/>
 				<src path="@{extensions}" />

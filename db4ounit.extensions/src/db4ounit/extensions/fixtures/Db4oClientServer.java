@@ -37,38 +37,75 @@ public class Db4oClientServer extends
     private int _port;
 
 	private Configuration _serverConfig;
-    
-    
-    public Db4oClientServer(ConfigurationSource configSource,String fileName, boolean embeddedClient, String label) {
-    	super(configSource);
-        _file = new File(fileName);
+	
+	private final ClientServerFactory _csFactory;
+	
+	public Db4oClientServer(ClientServerFactory csFactory, boolean embeddedClient, String label) {
+		_csFactory = csFactory != null ? csFactory : defaultClientServerFactory();
+		_file = new File(filePath());
         _embeddedClient = embeddedClient;
         _label = label;
-    }
-    
-    public Db4oClientServer(ConfigurationSource configSource, boolean embeddedClient, String label){
-        this(configSource,filePath(), embeddedClient, label);
-    }
-    
-    public void open(Class testCaseClass) throws Exception {
-		openServer();
-		final Configuration config = cloneConfiguration();
-		applyFixtureConfiguration(testCaseClass, config);
-		_objectContainer = _embeddedClient ? openEmbeddedClient().ext() : Db4o
-				.openClient(config, HOST, _port, USERNAME, PASSWORD).ext();
 	}
+
+	private ClientServerFactory defaultClientServerFactory() {
+	    return ((Config4Impl)config()).clientServerFactory();
+    }     
+    
+    public Db4oClientServer(boolean embeddedClient, String label){
+    	this(null, embeddedClient, label);
+    }
+    
+    public void open(Db4oTestCase testInstance) throws Exception {
+		openServerFor(testInstance);
+		openClientFor(testInstance);
+	}
+
+	private void openClientFor(Db4oTestCase testInstance) throws Exception {
+	    final Configuration config = clientConfigFor(testInstance);
+		_objectContainer = openClientWith(config);
+    }
+
+	private Configuration clientConfigFor(Db4oTestCase testInstance) throws Exception {
+
+        if (testInstance instanceof CustomClientServerConfiguration) {
+        	final Configuration customServerConfig = newConfiguration();
+			((CustomClientServerConfiguration)testInstance).configureClient(customServerConfig);
+			return customServerConfig;
+        }
+        
+	    final Configuration config = cloneConfiguration();
+		applyFixtureConfiguration(testInstance, config);
+	    return config;
+    }
+
+	private ExtObjectContainer openSocketClient(final Configuration config) {
+	    return _csFactory.openClient(config, HOST, _port, USERNAME, PASSWORD, new PlainSocketFactory()).ext();
+    }
 
 	public ExtObjectContainer openNewClient() {
-		return _embeddedClient ? openEmbeddedClient().ext() : Db4o.openClient(
-				cloneConfiguration(), HOST, _port,
-				USERNAME, PASSWORD).ext();
+		return openClientWith(cloneConfiguration());
 	}
 
-	private void openServer() throws Exception {
-        _serverConfig = cloneConfiguration();
-		_server = Db4o.openServer(_serverConfig,_file.getAbsolutePath(), -1);
+	private ExtObjectContainer openClientWith(final Configuration config) {
+	    return _embeddedClient ? openEmbeddedClient().ext() : openSocketClient(config);
+    }
+
+	private void openServerFor(Db4oTestCase testInstance) throws Exception {
+        _serverConfig = serverConfigFor(testInstance);
+		_server = _csFactory.openServer(_serverConfig,_file.getAbsolutePath(), -1, new PlainSocketFactory());
         _port = _server.ext().port();
         _server.grantAccess(USERNAME, PASSWORD);
+    }
+
+	private Configuration serverConfigFor(Db4oTestCase testInstance) throws Exception {
+		
+        if (testInstance instanceof CustomClientServerConfiguration) {
+        	final Configuration customServerConfig = newConfiguration();
+			((CustomClientServerConfiguration)testInstance).configureServer(customServerConfig);
+			return customServerConfig;
+        }
+        
+        return cloneConfiguration();
     }
     
     public void close() throws Exception {

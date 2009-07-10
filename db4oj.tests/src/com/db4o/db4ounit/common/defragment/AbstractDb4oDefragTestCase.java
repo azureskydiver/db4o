@@ -5,7 +5,6 @@ import com.db4o.foundation.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 public abstract class AbstractDb4oDefragTestCase implements TestSuiteBuilder {
 
@@ -17,6 +16,6 @@ public abstract class AbstractDb4oDefragTestCase implements TestSuiteBuilder {
 
 	public Iterator4 iterator() {
 		return new Db4oTestSuiteBuilder(
-				new Db4oDefragSolo(new IndependentConfigurationSource()), testSuite()).iterator();
+				new Db4oDefragSolo(), testSuite()).iterator();
 	}
 }

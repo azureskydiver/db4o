@@ -12,9 +12,6 @@ import com.db4o.foundation.*;
 import db4ounit.extensions.fixtures.*;
 
 public class Db4oDefragSolo extends Db4oSolo {
-    public Db4oDefragSolo(ConfigurationSource configSource) {
-        super(configSource);
-    }
 
     protected ObjectContainer createDatabase(Configuration config) {
         File origFile = new File(getAbsolutePath());

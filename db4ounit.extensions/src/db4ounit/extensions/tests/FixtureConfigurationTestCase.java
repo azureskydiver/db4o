@@ -3,6 +3,7 @@
 package db4ounit.extensions.tests;
 
 import com.db4o.config.*;
+import static db4ounit.mocking.MethodCall.Conditions.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -15,8 +16,8 @@ public class FixtureConfigurationTestCase implements TestCase {
 		extends MethodCallRecorder
 		implements FixtureConfiguration {
 		
-		public void configure(Class clazz, Configuration config) {
-			record(new MethodCall("configure", clazz, config));
+		public void configure(Db4oTestCase testCase, Configuration config) {
+			record(new MethodCall("configure", testCase, config));
 		}
 
 		public String getLabel() {
@@ -40,10 +41,7 @@ public class FixtureConfigurationTestCase implements TestCase {
 	
 	public void testClientServer() {
 		assertFixtureConfiguration(
-			new Db4oClientServer(
-				new CachingConfigurationSource(new IndependentConfigurationSource()),
-				false,
-				"C/S"));
+			new Db4oClientServer(false, "C/S"));
 	}
 	
 	public void testInMemory() {
@@ -66,10 +64,10 @@ public class FixtureConfigurationTestCase implements TestCase {
 				})).run(new TestResult());
 		
 		configuration.verify(
-			new MethodCall("configure", TestCase1.class, MethodCall.IGNORED_ARGUMENT),
-			new MethodCall("configure", TestCase1.class, MethodCall.IGNORED_ARGUMENT),
-			new MethodCall("configure", TestCase2.class, MethodCall.IGNORED_ARGUMENT),
-			new MethodCall("configure", TestCase2.class, MethodCall.IGNORED_ARGUMENT)
+			new MethodCall("configure", isA(TestCase1.class), MethodCall.IGNORED_ARGUMENT),
+			new MethodCall("configure", isA(TestCase1.class), MethodCall.IGNORED_ARGUMENT),
+			new MethodCall("configure", isA(TestCase2.class), MethodCall.IGNORED_ARGUMENT),
+			new MethodCall("configure", isA(TestCase2.class), MethodCall.IGNORED_ARGUMENT)
 		);
 	}
 }

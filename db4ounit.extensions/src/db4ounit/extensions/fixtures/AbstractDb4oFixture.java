@@ -2,6 +2,7 @@
 
 package db4ounit.extensions.fixtures;
 
+import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.defragment.*;
 import com.db4o.internal.*;
@@ -10,24 +11,24 @@ import db4ounit.extensions.*;
 
 public abstract class AbstractDb4oFixture implements Db4oFixture {
 
-	private final CachingConfigurationSource _configSource;
 	private FixtureConfiguration _fixtureConfiguration;
+	private Configuration _configuration;
 
-	protected AbstractDb4oFixture(ConfigurationSource configSource) {
-		_configSource = new CachingConfigurationSource(configSource);
+	protected AbstractDb4oFixture() {
+		resetConfig();
 	}
 	
 	public void fixtureConfiguration(FixtureConfiguration fc) {
 		_fixtureConfiguration = fc;
 	}
 	
-	public void reopen(Class testCaseClass) throws Exception {
+	public void reopen(Db4oTestCase testInstance) throws Exception {
 		close();
-		open(testCaseClass);
+		open(testInstance);
 	}
 
 	public Configuration config() {
-		return _configSource.config();
+		return _configuration;
 	}
 	
 	public void clean() {
@@ -40,8 +41,17 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 	protected abstract void doClean();	
 	
 	public void resetConfig() {
-		_configSource.reset();
+		_configuration = newConfiguration();
 	}
+
+	/**
+	 * Method can be overridden in subclasses with special instantiation requirements (oSGI for instance).
+	 * 
+	 * @return
+	 */
+	protected Configuration newConfiguration() {
+	    return Db4o.newConfiguration();
+    }
 	
 	protected void defragment(String fileName) throws Exception{
         String targetFile = fileName + ".defrag.backup";
@@ -56,9 +66,9 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 		return label + " - " + _fixtureConfiguration.getLabel();
 	}
 
-	protected void applyFixtureConfiguration(Class testCaseClass, final Configuration config) {
+	protected void applyFixtureConfiguration(Db4oTestCase testInstance, final Configuration config) {
 		if (null == _fixtureConfiguration) return;
-		_fixtureConfiguration.configure(testCaseClass, config);
+		_fixtureConfiguration.configure(testInstance, config);
 	}
 	
 	public String toString() {

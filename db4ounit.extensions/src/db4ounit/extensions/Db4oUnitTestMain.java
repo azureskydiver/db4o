@@ -15,14 +15,14 @@ public class Db4oUnitTestMain extends UnitTestMain {
 	}
 
 	private final Db4oFixture _fixture = 
-		new Db4oSolo();
-		//new Db4oInMemory();
+//		new Db4oSolo();
+		new Db4oInMemory();
 	
 	@Override
 	protected Iterable4 builder(Class clazz) {
-		final Db4oTestSuiteBuilder networkingCS = new Db4oTestSuiteBuilder(Db4oFixtures.newNetworkingCS(true), clazz);
+		final Db4oTestSuiteBuilder networkingCS = new Db4oTestSuiteBuilder(Db4oFixtures.newNetworkingCS(), clazz);
 		final Db4oTestSuiteBuilder inMemory = new Db4oTestSuiteBuilder(_fixture, clazz);
-		final Db4oTestSuiteBuilder embeddedCS = new Db4oTestSuiteBuilder(Db4oFixtures.newEmbeddedCS(true), clazz);
+		final Db4oTestSuiteBuilder embeddedCS = new Db4oTestSuiteBuilder(Db4oFixtures.newEmbeddedCS(), clazz);
 		
 //		if (true) {
 //			return networkingCS;

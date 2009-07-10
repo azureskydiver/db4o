@@ -41,7 +41,7 @@ public class CascadeToHashtableTestCase extends AbstractDb4oTestCase {
 		atom.name = "updated2";
 		store(item);
 		db().commit();
-		fixture().reopen(getClass());
+		fixture().reopen(this);
 		
 		assertOccurrences(Atom.class, 4);
 
@@ -53,7 +53,7 @@ public class CascadeToHashtableTestCase extends AbstractDb4oTestCase {
 
 		// Cascade-On-Delete Test: We only want one atom to remain.
 
-		fixture().reopen(getClass());
+		fixture().reopen(this);
 		deleteAll(Item.class);
 		assertOccurrences(Atom.class, 2);
 	}

@@ -14,29 +14,24 @@ import db4ounit.tests.*;
 
 public class FixtureTestCase implements TestCase {
 	private final class ExcludingInMemoryFixture extends Db4oInMemory {
-		public ExcludingInMemoryFixture(ConfigurationSource source) {
-			super(source);
-		}
-
 		public boolean accept(Class clazz) {
 			return !OptOutFromTestFixture.class.isAssignableFrom(clazz);
 		}
 	}
 
 	public void testSingleTestWithDifferentFixtures() {
-		ConfigurationSource configSource=new IndependentConfigurationSource();
-		assertSimpleDb4o(new Db4oInMemory(configSource));
-		assertSimpleDb4o(new Db4oSolo(configSource));
+		assertSimpleDb4o(new Db4oInMemory());
+		assertSimpleDb4o(new Db4oSolo());
 	}
 	
 	public void testMultipleTestsSingleFixture() {
 		MultipleDb4oTestCase.resetConfigureCalls();
-		FrameworkTestCase.runTestAndExpect(new Db4oTestSuiteBuilder(new Db4oInMemory(new IndependentConfigurationSource()), MultipleDb4oTestCase.class), 2, false);
+		FrameworkTestCase.runTestAndExpect(new Db4oTestSuiteBuilder(new Db4oInMemory(), MultipleDb4oTestCase.class), 2, false);
 		Assert.areEqual(2,MultipleDb4oTestCase.configureCalls());
 	}
 
 	public void testSelectiveFixture() {
-		final Db4oFixture fixture=new ExcludingInMemoryFixture(new IndependentConfigurationSource());
+		final Db4oFixture fixture=new ExcludingInMemoryFixture();
 		final Iterator4 tests = new Db4oTestSuiteBuilder(fixture, new Class[]{AcceptedTestCase.class,NotAcceptedTestCase.class}).iterator();
 		final Test test = nextTest(tests);
 		Assert.isFalse(tests.moveNext());
