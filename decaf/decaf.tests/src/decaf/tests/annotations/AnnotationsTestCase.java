@@ -1,5 +1,6 @@
 package decaf.tests.annotations;
 
+import decaf.core.*;
 import decaf.tests.*;
 
 public class AnnotationsTestCase extends DecafTestCaseBase {
@@ -37,7 +38,7 @@ public class AnnotationsTestCase extends DecafTestCaseBase {
 	}
 	
 	public void testJdk5AnnotationsAreAutomaticallyIgnored() throws Exception {
-		runResourceTestCase("Jdk5AnnotationsAreAutomaticallyIgnored");
+		runResourceTestCase("Jdk5AnnotationsAreAutomaticallyIgnored", TargetPlatform.NONE, TargetPlatform.ANDROID);
 	}
 	
 	public void testIgnoreImplements() throws Exception {

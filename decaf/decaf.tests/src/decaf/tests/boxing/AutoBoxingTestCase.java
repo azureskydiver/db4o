@@ -1,27 +1,28 @@
 package decaf.tests.boxing;
 
+import decaf.core.*;
 import decaf.tests.*;
 
 public class AutoBoxingTestCase extends DecafTestCaseBase {
 	
 	public void testAutoUnboxingInIf() throws Exception {
-		runResourceTestCase("AutoUnboxingInIf");
+		runResourceTestCase("AutoUnboxingInIf", TargetPlatform.NONE, TargetPlatform.ANDROID);
 	}
 	
 	public void testAutoUnboxing() throws Exception {
-		runResourceTestCase("AutoUnboxing");
+		runResourceTestCase("AutoUnboxing", TargetPlatform.NONE, TargetPlatform.ANDROID);
 	}
 	
 	public void testAutoBoxing() throws Exception {
-		runResourceTestCase("AutoBoxing");
+		runResourceTestCase("AutoBoxing", TargetPlatform.NONE, TargetPlatform.ANDROID);
 	}
 
 	public void testMethodArgBoxing() throws Exception {
-		runResourceTestCase("MethodArgBoxing");
+		runResourceTestCase("MethodArgBoxing", TargetPlatform.NONE, TargetPlatform.ANDROID);
 	}
 
 	public void testTernaryOpBoxing() throws Exception {
-		runResourceTestCase("TernaryOpBoxing");
+		runResourceTestCase("TernaryOpBoxing", TargetPlatform.NONE, TargetPlatform.ANDROID);
 	}
 
 	@Override

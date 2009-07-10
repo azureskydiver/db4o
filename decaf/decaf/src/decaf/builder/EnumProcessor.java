@@ -1,38 +1,12 @@
 package decaf.builder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
-import org.eclipse.jdt.core.dom.ArrayCreation;
-import org.eclipse.jdt.core.dom.ArrayInitializer;
-import org.eclipse.jdt.core.dom.ClassInstanceCreation;
-import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
-import org.eclipse.jdt.core.dom.EnumDeclaration;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.PrimitiveType;
-import org.eclipse.jdt.core.dom.ReturnStatement;
-import org.eclipse.jdt.core.dom.SimpleName;
-import org.eclipse.jdt.core.dom.SimpleType;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
-import org.eclipse.jdt.core.dom.SwitchCase;
-import org.eclipse.jdt.core.dom.SwitchStatement;
-import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.rewrite.*;
 
-import sharpen.core.framework.Bindings;
-import sharpen.core.framework.ByRef;
-import decaf.rewrite.DecafASTNodeBuilder;
-import decaf.rewrite.DecafRewritingServices;
+import sharpen.core.framework.*;
+import decaf.rewrite.*;
 
 @SuppressWarnings("unchecked")
 public class EnumProcessor {
@@ -42,7 +16,7 @@ public class EnumProcessor {
 
 	public EnumProcessor(DecafRewritingContext context) {
 		_context = context;
-	}
+	}	
 
 	public TypeDeclaration run(EnumDeclaration enumNode) {
 		final TypeDeclaration newEnumType = newConcreteEnumClass(enumNode);
@@ -55,7 +29,6 @@ public class EnumProcessor {
 		
 		return newEnumType;
 	}
-	
 	
 	public SwitchStatement transformEnumSwitchStatement(SwitchStatement originalSwitch) {
 		final SwitchStatement statement = builder().clone(originalSwitch);

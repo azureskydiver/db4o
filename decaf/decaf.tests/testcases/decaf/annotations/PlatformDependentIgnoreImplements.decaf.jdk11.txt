@@ -9,5 +9,8 @@ class IgnoreJdk11 {
 class IgnoreJdk12 implements Interface {
 }
 
+class IgnoreAndroid implements Interface {
+}
+
 class IgnoreAll {
 }

@@ -79,8 +79,10 @@ public abstract class DecafTestCaseBase extends TestCase {
 		}
 	}
 	
-	protected void runResourceTestCase(String resourceName, TargetPlatform targetPlatform) throws Exception {
-		runResourceTestCaseWithConfig(resourceName, targetPlatform, targetPlatform.defaultConfig());
+	protected void runResourceTestCase(String resourceName, TargetPlatform... targetPlatforms) throws Exception {
+		for(TargetPlatform targetPlatform : targetPlatforms) {
+			runResourceTestCaseWithConfig(resourceName, targetPlatform, targetPlatform.defaultConfig());
+		}
 	}
 
 	protected void runResourceTestCaseWithConfig(String resourceName, TargetPlatform targetPlatform, DecafConfiguration config) throws Exception {

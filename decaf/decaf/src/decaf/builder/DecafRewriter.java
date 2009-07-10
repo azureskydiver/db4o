@@ -22,12 +22,17 @@ public class DecafRewriter {
 		return rewrite(ast, platform, decafConfig);
 	}
 
-	private static ASTRewrite rewrite(final CompilationUnit unit, TargetPlatform targetPlatform, DecafConfiguration decafConfig) {
+	private static ASTRewrite rewrite(final CompilationUnit unit, final TargetPlatform targetPlatform, DecafConfiguration decafConfig) {
 		final ASTRewrite rewrite = ASTRewrite.create(unit.getAST());
 		final DecafRewritingContext context = new DecafRewritingContext(unit, rewrite, targetPlatform, decafConfig);
 		context.run(new Runnable() {
 			public void run() {
-				unit.accept(new DecafRewritingVisitor(context));
+				if (targetPlatform != TargetPlatform.ANDROID) {
+					unit.accept(new DecafRewritingVisitor(context));
+				}
+				
+				unit.accept(new AnnotationRewritingVisitor(context));			
+				
 			}
 		});
 		return rewrite;
