@@ -15,7 +15,6 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 	private Configuration _configuration;
 
 	protected AbstractDb4oFixture() {
-		resetConfig();
 	}
 	
 	public void fixtureConfiguration(FixtureConfiguration fc) {
@@ -28,6 +27,9 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 	}
 
 	public Configuration config() {
+		if (_configuration == null) {
+			_configuration = newConfiguration();
+		}
 		return _configuration;
 	}
 	
@@ -41,7 +43,7 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 	protected abstract void doClean();	
 	
 	public void resetConfig() {
-		_configuration = newConfiguration();
+		_configuration = null;
 	}
 
 	/**
