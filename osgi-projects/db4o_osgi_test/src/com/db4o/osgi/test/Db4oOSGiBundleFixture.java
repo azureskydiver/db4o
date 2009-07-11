@@ -8,10 +8,8 @@ import org.osgi.framework.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.foundation.*;
 import com.db4o.osgi.*;
 
-import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.*;
 
