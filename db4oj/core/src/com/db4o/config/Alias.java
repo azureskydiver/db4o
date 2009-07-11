@@ -19,7 +19,7 @@ package com.db4o.config;
  * own complex {@link Alias} constructs by creating own resolvers
  * that implement the {@link Alias} interface.
  * <br><br>
- * Four examples of concrete usecases:
+ * Examples of concrete usecases:
  * <br><br>
  * <code>
  * <b>// Creating an Alias for a single class</b><br> 
