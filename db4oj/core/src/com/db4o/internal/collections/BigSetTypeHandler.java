@@ -69,12 +69,6 @@ public class BigSetTypeHandler implements ReferenceTypeHandler, CascadingTypeHan
 		return null;
 	}
 
-	public boolean canHold(ReflectClass type) {
-		// FIXME: for .net generics we can actually
-		// know
-		return true;
-    }
-
 	public void activate(ReferenceActivationContext context) {
 		BigSetPersistence bigSet = (BigSetPersistence) context.persistentObject();
 		bigSet.read(context);

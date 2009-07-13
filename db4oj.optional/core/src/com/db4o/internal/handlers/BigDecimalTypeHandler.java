@@ -10,10 +10,6 @@ import com.db4o.reflect.*;
  * @exclude
  */
 public class BigDecimalTypeHandler extends BigNumberTypeHandler<BigDecimal> {
-	
-	public boolean canHold(ReflectClass type) {
-		return ReflectClasses.areEqual(BigDecimal.class, type);
-    }
 
 	@Override
 	protected BigDecimal fromByteArray(byte[] data) {

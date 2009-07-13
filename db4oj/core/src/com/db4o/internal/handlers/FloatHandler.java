@@ -15,7 +15,7 @@ public class FloatHandler extends IntHandler {
     
     private static final Float DEFAULTVALUE = new Float(0);
     
-    public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
+    public Object coerce(ReflectClass claxx, Object obj) {
     	return Coercion4.toFloat(obj);
     }
 

@@ -174,9 +174,9 @@ public abstract class QQueryBase implements Unversioned {
 
 	private Collection4 introduceClassConstrain(ReflectClass claxx) {
 	    final Collection4 newConstraints = new Collection4();
-		final Iterator4 constraintsIterator = iterateConstraints();
-		while (constraintsIterator.moveNext()) {
-		    final QCon existingConstraint = (QConObject)constraintsIterator.current();
+		final Iterator4 existingConstraints = iterateConstraints();
+		while (existingConstraints.moveNext()) {
+		    final QCon existingConstraint = (QConObject)existingConstraints.current();
 		    final BooleanByRef removeExisting = new BooleanByRef(false);
 		    final QCon newConstraint =
 		        existingConstraint.shareParentForClass(claxx, removeExisting);

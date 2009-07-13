@@ -50,8 +50,4 @@ public class IgnoreFieldsTypeHandler implements ReferenceTypeHandler, CascadingT
 		return null;
 	}
 
-	public boolean canHold(ReflectClass type) {
-		return true;
-    }
-
 }

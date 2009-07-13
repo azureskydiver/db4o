@@ -73,8 +73,4 @@ public class NullFieldAwareTypeHandler implements FieldAwareTypeHandler{
 	public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
 		return null;
 	}
-
-	public boolean canHold(ReflectClass type) {
-	    return false;
-    }
 }

@@ -44,10 +44,6 @@ public class FieldsToTypeHandlerMigrationTestCase extends Db4oTestWithTempFile {
 		private int _writeCalls;
 		
 		private int _readCalls;
-		
-		public boolean canHold(ReflectClass type) {
-			return ReflectClasses.areEqual(Item.class, type);
-		}
 
 		public void defragment(DefragmentContext context) {
 			throw new NotImplementedException();

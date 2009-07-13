@@ -132,10 +132,6 @@ public class TranslatorToTypehandlerMigrationTestCase extends Db4oTestWithTempFi
 			_writeCalls = 0;
 			_readCalls = 0;
 		}
-
-		public boolean canHold(ReflectClass type) {
-	        return true;
-        }
 	}
 	
 	

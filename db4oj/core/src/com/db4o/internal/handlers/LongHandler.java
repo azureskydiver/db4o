@@ -19,7 +19,7 @@ public class LongHandler extends PrimitiveHandler {
 
     private static final Long DEFAULTVALUE = new Long(0);
 
-    public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
+    public Object coerce(ReflectClass claxx, Object obj) {
     	return Coercion4.toLong(obj);
     }
     

@@ -30,10 +30,6 @@ public class ClassMetadataTypeHandlerIntegrationTestCase extends AbstractDb4oTes
 		public void activate(ReferenceActivationContext context) {
 		}
 
-		public boolean canHold(ReflectClass type) {
-			return false;
-		}
-
 		public void defragment(DefragmentContext context) {
 		}
 

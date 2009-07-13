@@ -297,9 +297,6 @@ public class QConObject extends QCon {
         if(i_parent == null){
             return null;
         }
-        if (! i_field.canHold(a_class)) {
-            return null;
-        }
         QConClass newConstraint = new QConClass(i_trans, i_parent,i_field, a_class);
         i_parent.addConstraint(newConstraint);
         return newConstraint;
@@ -341,7 +338,7 @@ public class QConObject extends QCon {
         boolean res = true;
         boolean processed = false;
         if (i_selfComparison) {
-            ClassMetadata yc = qc.readYapClass();
+            ClassMetadata yc = qc.readClassMetadata();
             if (yc != null) {
                 res = i_evaluator
                     .not(i_classMetadata.getHigherHierarchy(yc) == i_classMetadata);

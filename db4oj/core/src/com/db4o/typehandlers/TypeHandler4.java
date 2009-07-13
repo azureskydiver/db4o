@@ -7,7 +7,6 @@ import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.delete.*;
 import com.db4o.marshall.*;
-import com.db4o.reflect.*;
 
 
 /**
@@ -39,13 +38,5 @@ public interface TypeHandler4 {
 	 * @param obj the object
 	 */
     void write(WriteContext context, Object obj);
-
-    /**
-	 * gets called to check whether a TypeHandler can hold
-	 * a specific type
-	 * @param type the type
-	 * @return true, if this Typehandler can hold a type
-	 */
-	boolean canHold(ReflectClass type);
 	
 }

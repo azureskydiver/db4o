@@ -25,10 +25,6 @@ public class VectorTypeHandler implements ReferenceTypeHandler, CascadingTypeHan
         return null;
     }
 
-	public boolean canHold(ReflectClass type) {
-		return true;
-    }
-
 	public void write(WriteContext context, Object obj) {
         Vector vector = (Vector)obj;
         TypeHandler4 elementHandler = detectElementTypeHandler(container(context), vector);

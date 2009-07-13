@@ -1299,7 +1299,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	 * no any, primitive, array or other tricks. overriden in YapClassAny and
 	 * YapClassPrimitive
 	 */
-    public boolean isStrongTyped() {
+    public boolean isStronglyTyped() {
         return true;
     }
     
@@ -2042,14 +2042,6 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	public int instanceCount(Transaction trans) {
 		return _container.instanceCount(this, trans);
 	}
-
-	public boolean canHold(ReflectClass type) {
-		 ReflectClass classReflector = classReflector();
-       if(classReflector.isCollection()){
-           return true;
-       }
-       return classReflector.isAssignableFrom(type);
-    }
 
 	public boolean isStorable() {
 		return !stateDead() || isTransient();

@@ -286,8 +286,12 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			}
 		}
         
-        if(_fieldMetadata == null || _fieldMetadata instanceof NullFieldMetadata){
+        if(_fieldMetadata == null) {
             return false;
+        }
+        
+        if (_fieldMetadata instanceof NullFieldMetadata) {
+        	return false;
         }
         
         _classMetadata.seekToField(transaction(), _bytes, _fieldMetadata);
@@ -298,27 +302,28 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 		// fast early check for ClassMetadata
 		if (a_candidates.i_classMetadata != null
-				&& a_candidates.i_classMetadata.isStrongTyped()) {
-			if (_fieldMetadata != null) {
-				TypeHandler4 handler = _fieldMetadata.getHandler();
-				if (Handlers4.isUntyped(handler)){
-					ClassMetadata classMetadata = candidate.readYapClass();
-					if (classMetadata != null) {
-						handler = classMetadata.typeHandler();
-					}
-				}
-                if(handler == null){
-                    return false;
-                }
-                if(! Handlers4.handlerCanHold(handler, a_candidates.i_classMetadata.classReflector())){
-                    return false;
-                }
+				&& a_candidates.i_classMetadata.isStronglyTyped()) {
+			
+			TypeHandler4 handler = _fieldMetadata.getHandler();
+			if (Handlers4.isUntyped(handler)){
+				handler = typeHandlerFor(candidate);
 			}
+            if(handler == null){
+                return false;
+            }
 		}
 
 		addDependant(a_candidates.add(candidate));
 		return true;
 	}
+
+	private TypeHandler4 typeHandlerFor(QCandidate candidate) {
+	    ClassMetadata classMetadata = candidate.readClassMetadata();
+	    if (classMetadata != null) {
+	    	return classMetadata.typeHandler();
+	    }
+	    return null;
+    }
 
 	private void readArrayCandidates(TypeHandler4 typeHandler, final ReadBuffer buffer,
         final TypeHandler4 arrayElementHandler, final QCandidates candidates) {
@@ -410,7 +415,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	}
 
 	ReflectClass classReflector() {
-		readYapClass();
+		readClassMetadata();
 		if (_classMetadata == null) {
 			return null;
 		}
@@ -593,7 +598,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		}
 	}
 
-	ClassMetadata readYapClass() {
+	ClassMetadata readClassMetadata() {
 		if (_classMetadata == null) {
 			read();
 			if (_bytes != null) {
@@ -639,7 +644,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			_fieldMetadata = null;
             return;
 		} 
-		readYapClass();
+		readClassMetadata();
 		_member = null;
 		if (a_field == null) {
 			_fieldMetadata = null;
@@ -649,7 +654,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			_fieldMetadata = null;
             return;
 		} 
-		_fieldMetadata = a_field.getYapField(_classMetadata);
+		_fieldMetadata = fieldMetadataFrom(a_field, _classMetadata);
 		if(_fieldMetadata == null){
 		    fieldNotFound();
 		    return;
@@ -665,6 +670,19 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		_handlerVersion = handlerVersion._number;
 	}
 	
+	private FieldMetadata fieldMetadataFrom(QField qField, ClassMetadata type) {
+		final FieldMetadata existingField = qField.getFieldMetadata();
+		if(existingField != null){
+			return existingField;
+		}
+		FieldMetadata field = type.fieldMetadataForName(qField.i_name);
+		if(field != null){
+		    field.alive();
+		}
+		return field;
+	}
+		
+
 	private void fieldNotFound(){
         if (_classMetadata.holdsAnyClass()) {
             // retry finding the field on reading the value 

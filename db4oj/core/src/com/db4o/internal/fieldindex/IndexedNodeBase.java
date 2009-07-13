@@ -30,7 +30,7 @@ public abstract class IndexedNodeBase  implements IndexedNode {
 	}
 
 	private FieldMetadata getYapField() {
-	    return _constraint.getField().getYapField();
+	    return _constraint.getField().getFieldMetadata();
 	}
 
 	public QCon constraint() {

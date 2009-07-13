@@ -116,7 +116,7 @@ public class PrimitiveTypeMetadata extends ClassMetadata {
     }
     
 	@Override
-	public boolean isStrongTyped(){
+	public boolean isStronglyTyped(){
 		return false;
 	}
     

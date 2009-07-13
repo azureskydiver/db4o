@@ -28,7 +28,7 @@ public class IndexedPath extends IndexedNodeBase {
 	private static FieldMetadata getYapField(QCon con) {
 		QField field = con.getField();
 		if (null == field) return null;
-		return field.getYapField();
+		return field.getFieldMetadata();
 	}
 	
 	private IndexedNode _next;
