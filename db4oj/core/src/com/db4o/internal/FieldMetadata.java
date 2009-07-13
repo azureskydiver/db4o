@@ -232,12 +232,21 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return fieldName.equals(getName())  && containingClass() != null && !containingClass().isInternal(); 
     }
     
-    public boolean canHold(ReflectClass claxx) {
-        // alive() is checked in QField caller
-        if (claxx == null) {
-            return !_isPrimitive;
+    private boolean canHold(ReflectClass type) {
+        if (type == null) {
+        	throw new ArgumentNullException();
         }
-        return Handlers4.handlerCanHold(getHandler(), claxx);
+        final TypeHandler4 typeHandler = getHandler();
+		if (typeHandler instanceof QueryableTypeHandler) {
+        	if (((QueryableTypeHandler)typeHandler).descendsIntoMembers()) {
+        		return true;
+        	}
+        }
+		ReflectClass classReflector = fieldType().classReflector();
+		if (classReflector.isCollection()) {
+			return true;
+		}
+		return classReflector.isAssignableFrom(type);
     }
 
     public GenericReflector reflector() {
@@ -248,22 +257,25 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return container.reflector();
     }
 
-    public Object coerce(ReflectClass claxx, Object obj) {
-        // alive() is checked in QField caller
-        
-        if (claxx == null || obj == null) {
-            return _isPrimitive ? No4.INSTANCE : obj;
-        }
-        
+    public Object coerce(ReflectClass valueClass, Object value) {
+    	
+    	 if (value == null) {
+             return _isPrimitive ? No4.INSTANCE : value;
+         }
+    	
+    	if (valueClass == null) {
+    		throw new ArgumentNullException();
+    	}
+    	
         if(getHandler() instanceof PrimitiveHandler){
-            return ((PrimitiveHandler)getHandler()).coerce(reflector(), claxx, obj);
+            return ((PrimitiveHandler)getHandler()).coerce(valueClass, value);
         }
 
-        if(! canHold(claxx)){
+        if(! canHold(valueClass)){
             return No4.INSTANCE;
         }
         
-        return obj;
+        return value;
     }
 
     public final boolean canLoadByIndex() {

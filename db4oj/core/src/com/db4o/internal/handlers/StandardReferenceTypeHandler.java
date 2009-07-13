@@ -503,10 +503,6 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
         traverseAllAspects(context, command);
         return found.value;
     }
-
-	public boolean canHold(ReflectClass type) {
-		return classMetadata().canHold(type);
-    }
 	
    public final Object indexEntryToObject(Context context, Object indexEntry){
         if(indexEntry == null){

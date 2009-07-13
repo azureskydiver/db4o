@@ -28,10 +28,6 @@ public class OpenTypeHandler implements ReferenceTypeHandler, ValueTypeHandler, 
 	public ReflectClass classReflector() {
 		return container().handlers().ICLASS_OBJECT;
 	}
-	
-	public boolean canHold(ReflectClass type) {
-		return true;
-   }
 
 	public void cascadeActivation(ActivationContext context){
 	    Object targetObject = context.targetObject();

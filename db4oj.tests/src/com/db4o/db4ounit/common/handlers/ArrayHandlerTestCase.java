@@ -96,11 +96,6 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
 		final FloatArrayHolder second = stored.next();
 		Assert.areNotSame(first._floats, second._floats);
     }
-    
-    public void testCanHold() {
-    	Assert.isTrue(intArrayHandler().canHold(reflectClass(int.class)));
-    	Assert.isFalse(intArrayHandler().canHold(reflectClass(long.class)));
-    }
 
     public void testHandlerVersion(){
         IntArrayHolder intArrayHolder = new IntArrayHolder(new int[0]);

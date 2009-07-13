@@ -25,7 +25,7 @@ public class QConPath extends QConClass {
 	QConPath(Transaction a_trans, QCon a_parent, QField a_field) {
 		super(a_trans, a_parent, a_field, null);
 		if(a_field != null){
-			i_classMetadata = a_field.getYapClass();
+			i_classMetadata = a_field.getFieldType();
 		}
 	}
 	
@@ -51,9 +51,6 @@ public class QConPath extends QConClass {
 	@Override
 	QConClass shareParentForClass(ReflectClass a_class, BooleanByRef removeExisting) {
         if (i_parent == null) {
-            return null;
-        }
-		if (! i_field.canHold(a_class)) {
             return null;
         }
 		QConClass newConstraint = new QConClass(i_trans, i_parent, i_field, a_class);

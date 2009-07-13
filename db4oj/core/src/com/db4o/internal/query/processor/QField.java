@@ -37,19 +37,14 @@ public class QField implements Visitor4, Unversioned{
 		    }
 		}
 	}
-    
-    boolean canHold(ReflectClass claxx){
-        return _fieldMetadata == null || _fieldMetadata.canHold(claxx);
-    }
 	
 	Object coerce(Object a_object){
 	    ReflectClass claxx = null;
-	    Reflector reflector = i_trans.reflector();
 	    if(a_object != null){
 	        if(a_object instanceof ReflectClass){
 	            claxx = (ReflectClass)a_object;
 	        }else{
-	            claxx = reflector.forObject(a_object);
+	            claxx = i_trans.reflector().forObject(a_object);
 	        }
 	    }else{
 	        
@@ -67,25 +62,14 @@ public class QField implements Visitor4, Unversioned{
 	}
     
 	
-	ClassMetadata getYapClass(){
+	ClassMetadata getFieldType(){
 		if(_fieldMetadata != null){
 			return _fieldMetadata.fieldType();
 		}
 		return null;
 	}
 	
-	FieldMetadata getYapField(ClassMetadata yc){
-		if(_fieldMetadata != null){
-			return _fieldMetadata;
-		}
-		FieldMetadata yf = yc.fieldMetadataForName(i_name);
-		if(yf != null){
-		    yf.alive();
-		}
-		return yf;
-	}
-	
-	public FieldMetadata getYapField() {
+	public FieldMetadata getFieldMetadata() {
 		return _fieldMetadata;
 	}
 	

@@ -16,8 +16,17 @@ import com.db4o.typehandlers.*;
  * @sharpen.ignore
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public abstract class TreeSetTypeHandler implements InstantiatingTypeHandler {
+public abstract class TreeSetTypeHandler
+	implements InstantiatingTypeHandler, QueryableTypeHandler {
 	
+	public boolean descendsIntoMembers() {
+		return true;
+    }
+
+	public boolean isSimple() {
+	    return false;
+    }
+
 	public void writeInstantiation(WriteContext context, Object obj) {
 		final Comparator comparator = ((TreeSet)obj).comparator();
 		context.writeObject(comparator);
@@ -36,11 +45,6 @@ public abstract class TreeSetTypeHandler implements InstantiatingTypeHandler {
 	
 	public void write(WriteContext context, Object obj) {
 		// already handled by CollectionTypeHandler
-	}
-
-	public boolean canHold(ReflectClass type) {
-		// TODO: must go to QueryableTypeHandler
-		return true;
 	}
 
 	public void defragment(DefragmentContext context) {

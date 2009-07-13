@@ -126,8 +126,4 @@ public class MapTypeHandler implements ReferenceTypeHandler, CascadingTypeHandle
 		TypeHandler4 untypedHandler = (TypeHandler4) container.handlers().openTypeHandler();
 		return new KeyValueHandlerPair(untypedHandler, untypedHandler);
 	}
-
-	public boolean canHold(ReflectClass type) {
-		return true;
-    }
 }

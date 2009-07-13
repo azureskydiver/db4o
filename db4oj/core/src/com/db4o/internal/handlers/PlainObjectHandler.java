@@ -25,8 +25,4 @@ public class PlainObjectHandler implements ReferenceTypeHandler {
     
     public void write(WriteContext context, Object obj) {
     }
-
-	public boolean canHold(ReflectClass type) {
-		return ReflectClasses.areEqual(Object.class, type);
-    }
 }

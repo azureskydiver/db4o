@@ -112,7 +112,10 @@ public class TreeSetTestSuite extends FixtureTestSuiteDescription implements Db4
 			store(new Item(null));
 
 			for (String element : ELEMENTS) {
-				final ObjectSet<Object> found = itemByTreeSetElement(element);
+				final ObjectSet<Item> found = itemByTreeSetElement(element);
+				if (!found.hasNext()) {
+					Assert.fail("Expecting " + item);
+				}
 				Assert.areSame(item, found.next());
 			}
 			
@@ -120,7 +123,7 @@ public class TreeSetTestSuite extends FixtureTestSuiteDescription implements Db4
 			store(copy);
 			
 			for (String element : ELEMENTS) {
-				final ObjectSet<Object> found = itemByTreeSetElement(element);
+				final ObjectSet<Item> found = itemByTreeSetElement(element);
 				ObjectSetAssert.sameContent(found, item, copy);
 			}
 		}
@@ -150,22 +153,21 @@ public class TreeSetTestSuite extends FixtureTestSuiteDescription implements Db4
 			
 			for (Item item : items) {
 				final NamedItem firstNamedItem = (NamedItem)item.treeSet.first();
-				final ObjectSet<Object> found = itemByNamedItem(firstNamedItem.name);
+				final ObjectSet<Item> found = itemByNamedItem(firstNamedItem.name);
 				ObjectSetAssert.sameContent(found, item);
 			}
 		}
 
-		private ObjectSet<Object> itemByNamedItem(final String namedItemName) {
+		private ObjectSet<Item> itemByNamedItem(final String namedItemName) {
 			final Query query = newQuery(Item.class);
 			query.descend("treeSet").descend("name").constrain(namedItemName);
-			final ObjectSet<Object> found = query.<Object>execute();
-			return found;
+			return query.<Item>execute();
 		}
 		
-		private ObjectSet<Object> itemByTreeSetElement(String element) {
+		private ObjectSet<Item> itemByTreeSetElement(String element) {
 	        final Query query = newQuery(Item.class);
 	        query.descend("treeSet").constrain(element);
-	        return query.<Object>execute();
+	        return query.<Item>execute();
         }
 
 		private String[] sortedBy(String[] elements, Comparator comparator) {

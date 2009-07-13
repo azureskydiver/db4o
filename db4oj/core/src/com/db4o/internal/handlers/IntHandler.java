@@ -18,7 +18,7 @@ public class IntHandler extends PrimitiveHandler {
 
 	private static final Integer DEFAULTVALUE = new Integer(0);
     
-    public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
+    public Object coerce(ReflectClass claxx, Object obj) {
     	return Coercion4.toInt(obj);
     }
 

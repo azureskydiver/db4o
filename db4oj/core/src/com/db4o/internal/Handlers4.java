@@ -42,10 +42,6 @@ public class Handlers4 {
     
     public static final int ANY_ARRAY_N_ID = 13;
     
-    public static boolean handlerCanHold(TypeHandler4 handler, ReflectClass claxx){
-    	return handler.canHold(claxx);
-    }
-    
     public static boolean handlesSimple(TypeHandler4 handler){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler); 
         if (!(baseTypeHandler instanceof QueryableTypeHandler)) {

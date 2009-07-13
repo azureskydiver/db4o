@@ -124,8 +124,4 @@ public class HashtableTypeHandler implements ReferenceTypeHandler , CascadingTyp
 		return new KeyValueHandlerPair(untypedHandler, untypedHandler);
 	}
 
-	public boolean canHold(ReflectClass type) {
-		return true;
-    }
-
 }

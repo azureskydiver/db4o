@@ -67,10 +67,6 @@ public abstract class StringBasedValueTypeHandlerBase<T> implements ValueTypeHan
 		return false;
 	}
 
-	public boolean canHold(ReflectClass type) {
-		return type.equals(classReflector());
-	}
-
 	protected abstract String convertObject(T obj);
 	protected abstract T convertString(String str);
 

@@ -501,10 +501,6 @@ public class ArrayHandler implements CascadingTypeHandler, Comparable4, ValueTyp
     }
     
     private static final int HASHCODE_FOR_NULL = 9141078;
-
-	public boolean canHold(ReflectClass type) {
-		return _handler.canHold(type);
-    }
 	
 	@Override
 	public String toString() {

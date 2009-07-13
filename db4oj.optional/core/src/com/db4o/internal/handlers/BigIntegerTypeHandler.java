@@ -21,10 +21,6 @@ public class BigIntegerTypeHandler extends BigNumberTypeHandler<BigInteger> {
 	    return value.toByteArray();
     }
 
-	public boolean canHold(ReflectClass type) {
-		return ReflectClasses.areEqual(BigInteger.class, type);
-    }
-
 	@Override
     protected int compare(BigInteger x, BigInteger y) {
 		return x.compareTo(y);

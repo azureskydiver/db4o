@@ -70,10 +70,6 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
       
         }
 
-		public boolean canHold(ReflectClass type) {
-			return ReflectClasses.areEqual(Item.class, type);
-        }
-
 		public void cascadeActivation(ActivationContext context) {
 		}
 
@@ -118,10 +114,6 @@ public class CustomTypeHandlerTestCase extends AbstractDb4oTestCase{
 
         public void defragment(DefragmentContext context) {
       
-        }
-
-		public boolean canHold(ReflectClass type) {
-			return ReflectClasses.areEqual(ItemGrandChild.class, type);
         }
 
 		public void cascadeActivation(ActivationContext context) {

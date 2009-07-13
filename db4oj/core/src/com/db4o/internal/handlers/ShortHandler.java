@@ -15,7 +15,7 @@ public class ShortHandler extends PrimitiveHandler {
 	
 	private static final Short DEFAULTVALUE = new Short((short)0);
 	
-    public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
+    public Object coerce(ReflectClass claxx, Object obj) {
     	return Coercion4.toShort(obj);
     }
     public Object defaultValue(){

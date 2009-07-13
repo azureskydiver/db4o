@@ -24,8 +24,13 @@ public abstract class PrimitiveHandler implements ValueTypeHandler, IndexableTyp
     
     private Object _primitiveNull;
     
-    public Object coerce(Reflector reflector, ReflectClass claxx, Object obj) {
-        return Handlers4.handlerCanHold(this, claxx) ? obj : No4.INSTANCE;
+    public Object coerce(ReflectClass claxx, Object obj) {
+        return isAssignableFrom(claxx) ? obj : No4.INSTANCE;
+    }
+
+	private boolean isAssignableFrom(ReflectClass claxx) {
+	    return classReflector().isAssignableFrom(claxx)
+        	|| primitiveClassReflector().isAssignableFrom(claxx);
     }
     
     public abstract Object defaultValue();
@@ -50,11 +55,6 @@ public abstract class PrimitiveHandler implements ValueTypeHandler, IndexableTyp
     
     public boolean descendsIntoMembers() {
     	return false;
-    }
-    
-    public boolean canHold(ReflectClass type) {
-    	return type.equals(classReflector())
-			|| type.equals(primitiveClassReflector());
     }
     
     public Object primitiveNull() {
