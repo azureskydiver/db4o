@@ -516,6 +516,7 @@
 	    prepare-csproject-tests,
 		prepare-csproject-tools,
 		prepare-csproject-linq"
+		description="Updates all c# projects (sharpening included)"
 		unless="skip.sharpen">
 		
 		<updateAssemblyInfo version="${assembly.version}">
