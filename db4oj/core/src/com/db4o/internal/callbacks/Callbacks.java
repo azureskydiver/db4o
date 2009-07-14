@@ -11,9 +11,9 @@ public interface Callbacks {
 
 	boolean objectCanNew(Transaction transaction, Object obj);
 	boolean objectCanActivate(Transaction transaction, Object obj);
-	boolean objectCanUpdate(Transaction transaction, Object obj);
-	boolean objectCanDelete(Transaction transaction, Object obj);
-	boolean objectCanDeactivate(Transaction transaction, Object obj);
+	boolean objectCanUpdate(Transaction transaction, ObjectInfo objectInfo);
+	boolean objectCanDelete(Transaction transaction, ObjectInfo objectInfo);
+	boolean objectCanDeactivate(Transaction transaction, ObjectInfo objectInfo);
 
 	void objectOnActivate(Transaction transaction, ObjectInfo obj);
 	void objectOnNew(Transaction transaction, ObjectInfo obj);

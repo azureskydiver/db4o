@@ -442,7 +442,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 
 	protected boolean objectCanUpdate(Transaction transaction, Object obj) {
 		ObjectContainerBase container = transaction.container();
-		return container.callbacks().objectCanUpdate(transaction, obj)
+		return container.callbacks().objectCanUpdate(transaction, this)
 			&& _class.dispatchEvent(transaction, obj, EventDispatchers.CAN_UPDATE);
 	}
 

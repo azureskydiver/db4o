@@ -3,6 +3,7 @@ package com.db4o.db4ounit.common.events;
 
 import com.db4o.config.*;
 import com.db4o.events.*;
+import com.db4o.internal.*;
 
 import db4ounit.*;
 
@@ -16,13 +17,16 @@ public class InstantiationEventsTestCase extends EventsTestCaseBase {
 		
 		final EventLog instantiatedLog = new EventLog();
 		
-		eventRegistry().instantiated().addListener(new EventListener4() {
-			public void onEvent(Event4 e, EventArgs args) {
+		eventRegistry().instantiated().addListener(new EventListener4<ObjectInfoEventArgs>() {
+			public void onEvent(Event4 e, ObjectInfoEventArgs args) {
 				assertClientTransaction(args);
 				
 				instantiatedLog.xed = true;
-				Object obj = ((ObjectEventArgs)args).object();
-				Assert.isNotNull(trans().referenceSystem().referenceForObject(obj));
+				Object obj = args.object();
+				final ObjectReference objectReference = trans().referenceSystem().referenceForObject(obj);
+				
+				Assert.isNotNull(objectReference);
+				Assert.areSame(objectReference, args.info());
 			}
 		});
 		

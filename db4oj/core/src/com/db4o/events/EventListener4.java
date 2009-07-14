@@ -16,5 +16,5 @@ public interface EventListener4<T extends EventArgs> {
 	 * @param e the specific event that was triggered
 	 * @param args the arguments for the specific event
 	 */
-	public void onEvent(Event4 e, T args);
+	public void onEvent(Event4<T> e, T args);
 }

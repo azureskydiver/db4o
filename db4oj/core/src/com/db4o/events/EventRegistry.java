@@ -47,7 +47,7 @@ public interface EventRegistry {
 	 * @see CancellableObjectEventArgs
 	 * @see com.db4o.ObjectContainer#store(Object)
 	 */
-	public Event4 creating();
+	public Event4<CancellableObjectEventArgs> creating();
 
 	/**
 	 * 	This event is fired before an object is activated.
@@ -72,7 +72,7 @@ public interface EventRegistry {
 	 * @see CancellableObjectEventArgs
 	 * @see com.db4o.ObjectContainer#store(Object)
 	 */
-	public Event4 updating();
+	public Event4<CancellableObjectEventArgs> updating();
 	
 	/**
 	 * This event is fired before an object is deleted.
@@ -87,7 +87,7 @@ public interface EventRegistry {
 	 * @see CancellableObjectEventArgs
 	 * @see com.db4o.ObjectContainer#delete(Object)
 	 */
-	public Event4 deleting();
+	public Event4<CancellableObjectEventArgs> deleting();
 	
 	/**
 	 * This event is fired before an object is deactivated.
@@ -187,7 +187,7 @@ public interface EventRegistry {
 	 * @see CommitEventArgs
 	 * @see com.db4o.ObjectContainer#commit()
 	 */
-	public Event4 committing();
+	public Event4<CommitEventArgs> committing();
 	
 	/**
 	 * This event is fired after a transaction has been committed.
@@ -201,7 +201,7 @@ public interface EventRegistry {
 	 * @see CommitEventArgs
 	 * @see com.db4o.ObjectContainer#commit()
 	 */
-	public Event4 committed();
+	public Event4<CommitEventArgs> committed();
 
 	/**
 	 * This event is fired when a persistent object is instantiated. 
@@ -223,7 +223,7 @@ public interface EventRegistry {
 	 * @return event
 	 * @see ClassEventArgs
 	 */
-	public Event4 classRegistered();
+	public Event4<ClassEventArgs> classRegistered();
 	
 	/**
 	 * This event is fired when the {@link com.db4o.ObjectContainer#close} is
@@ -232,5 +232,5 @@ public interface EventRegistry {
 	 * @sharpen.event com.db4o.events.ObjectContainerEventArgs
 	 * @return event
 	 */
-	public Event4 closing();
+	public Event4<ObjectContainerEventArgs> closing();
 }
