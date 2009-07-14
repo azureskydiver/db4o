@@ -1,0 +1,124 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Indexing</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Indexing</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+
+<p>Using indexes is always a good idea to improve query
+performance. The following test illustrates index performance impact:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">QueryPerformanceBenchmark.java: <span class="fscMemberName">runIndexTest</span></span></div><div class="fscCode"><pre ID="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_RunIndexTest_189_85"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_RunIndexTest_189_85_28_946_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_RunIndexTest_189_85_28_946_Open_Text').style.display='none'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_RunIndexTest_189_85_28_946_Closed_Image').style.display='inline'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_RunIndexTest_189_85_28_946_Closed_Text').style.display='inline';"/><img id="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_RunIndexTest_189_85_28_946_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_RunIndexTest_189_85_28_946_Closed_Text').style.display='none'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_RunIndexTest_189_85_28_946_Open_Image').style.display='inline'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_RunIndexTest_189_85_28_946_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> runIndexTest() </span><span id="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_RunIndexTest_189_85_28_946_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_RunIndexTest_189_85_28_946_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    init();
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Storing </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> _count </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> objects with </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> _depth
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> levels of embedded objects:</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    clean();
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> - no index</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    open(configure());
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    store();
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    close();
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    open(configure());
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    startTimer();
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    Query query </span><span style="color: #000000;">=</span><span style="color: #000000;"> objectContainer.query();
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    query.constrain(Item.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">);
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    query.descend(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">_name</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">).constrain(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">level1/2</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    List result </span><span style="color: #000000;">=</span><span style="color: #000000;"> query.execute();
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    Item item </span><span style="color: #000000;">=</span><span style="color: #000000;"> (Item) result.get(</span><span style="color: #000000;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    stopTimer(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Querying object with String field: </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> item._name);
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    close();
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">22</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">23</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> - index on String field</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">24</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> open to create index</span><span style="color: #008000;">
+</span><span style="color: #008080;">25</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    open(configureIndex());
+</span><span style="color: #008080;">26</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    close();
+</span><span style="color: #008080;">27</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    open(configure());
+</span><span style="color: #008080;">28</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    startTimer();
+</span><span style="color: #008080;">29</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    query </span><span style="color: #000000;">=</span><span style="color: #000000;"> objectContainer.query();
+</span><span style="color: #008080;">30</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    query.constrain(Item.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">);
+</span><span style="color: #008080;">31</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    query.descend(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">_name</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">).constrain(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">level1/2</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">32</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    result </span><span style="color: #000000;">=</span><span style="color: #000000;"> query.execute();
+</span><span style="color: #008080;">33</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    item </span><span style="color: #000000;">=</span><span style="color: #000000;"> (Item) result.get(</span><span style="color: #000000;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">34</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    stopTimer(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Querying object with String field: </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> item._name);
+</span><span style="color: #008080;">35</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    close();
+</span><span style="color: #008080;">36</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">QueryPerformanceBenchmark.java: <span class="fscMemberName">initForHardDriveTest</span></span></div><div class="fscCode"><pre ID="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_InitForHardDriveTest_278_93"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_InitForHardDriveTest_278_93_36_134_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_InitForHardDriveTest_278_93_36_134_Open_Text').style.display='none'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_InitForHardDriveTest_278_93_36_134_Closed_Image').style.display='inline'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_InitForHardDriveTest_278_93_36_134_Closed_Text').style.display='inline';"/><img id="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_InitForHardDriveTest_278_93_36_134_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_InitForHardDriveTest_278_93_36_134_Closed_Text').style.display='none'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_InitForHardDriveTest_278_93_36_134_Open_Image').style.display='inline'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_InitForHardDriveTest_278_93_36_134_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> initForHardDriveTest() </span><span id="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_InitForHardDriveTest_278_93_36_134_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_InitForHardDriveTest_278_93_36_134_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    _count </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #000000;">30000</span><span style="color: #000000;">;
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    _depth </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #000000;">3</span><span style="color: #000000;">;
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    _filePath </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #000000;">&quot;</span><span style="color: #000000;">performance.db4o</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">;
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    _isClientServer </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">6</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">7</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">QueryPerformanceBenchmark.java: <span class="fscMemberName">configureRamDrive</span></span></div><div class="fscCode"><pre ID="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_ConfigureRamDrive_375_90"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_ConfigureRamDrive_375_90_42_146_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_ConfigureRamDrive_375_90_42_146_Open_Text').style.display='none'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_ConfigureRamDrive_375_90_42_146_Closed_Image').style.display='inline'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_ConfigureRamDrive_375_90_42_146_Closed_Text').style.display='inline';"/><img id="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_ConfigureRamDrive_375_90_42_146_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_ConfigureRamDrive_375_90_42_146_Closed_Text').style.display='none'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_ConfigureRamDrive_375_90_42_146_Open_Image').style.display='inline'; document.getElementById('..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_ConfigureRamDrive_375_90_42_146_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> Configuration configureRamDrive() </span><span id="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_ConfigureRamDrive_375_90_42_146_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..QueryPerformanceJava.ZipsQueryPerformanceBenchmark.Java_QueryPerformanceBenchmark.Java_ConfigureRamDrive_375_90_42_146_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    Configuration config </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4o.newConfiguration();
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    config.flushFileBuffers(</span><span style="color: #0000FF;">true</span><span style="color: #000000;">);
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">return</span><span style="color: #000000;"> config;
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+</span>
+
+
+
+<p>Results from the test machine:</p>
+
+<p><i>Storing 10000 objects
+with 3 levels of embedded objects:</i></p>
+
+<p><i>&nbsp;- no index</i></p>
+
+<p><i>Store 30000 objects:
+2228ms</i></p>
+
+<p><i>Querying object with
+String field: level1/2: 461ms</i></p>
+
+<p><i>&nbsp;- index on String field</i></p>
+
+<p><i>Querying object with
+String field: level1/2: 460ms</i></p></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2008-06-08T15:56:18 by Tetyana.
+				</div>
+  </body>
+</html>

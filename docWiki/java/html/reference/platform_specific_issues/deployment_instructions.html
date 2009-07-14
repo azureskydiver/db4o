@@ -1,0 +1,155 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Deployment Instructions</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Deployment Instructions</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Java deployment">Java deployment</a></li></ul></li></ul></div></div></div>
+<p>This topic will help you to select
+correct db4o libraries for deployment with your db4o-based application.</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<a name="Java deployment"></a><h2>Java deployment</h2>
+
+<p>For the basic db4o functionality
+you only need to deploy db4o jar itself:</p>
+<table border="1" cellpadding="0" cellspacing="0">
+ 
+<tr>
+  
+<td valign="top">
+  
+<p><b>Application</b></p>
+  </td>
+  
+<td valign="top">
+  
+<p><b>Required libraries</b></p>
+  </td>
+ </tr>
+ 
+<tr>
+  
+<td valign="top">
+  
+<p>Standalone or client/server db4o
+  application for Java 1.1</p>
+  </td>
+  
+<td valign="top">
+  
+<p>db4o-x.x-java1.1.jar</p>
+  
+
+  </td>
+ </tr>
+ 
+<tr>
+  
+<td valign="top">
+  
+<p>Standalone or client/server&nbsp; db4o application for Java 1.2</p>
+  </td>
+  
+<td valign="top">
+  
+<p>db4o-x.x-java1.2.jar</p>
+  </td>
+ </tr>
+ 
+<tr>
+  
+<td valign="top">
+  
+<p>Standalone or client/server&nbsp; db4o application for Java 5</p>
+  </td>
+  
+<td valign="top">
+  
+<p>db4o-x.x-java5.jar</p>
+  </td>
+ </tr>
+</table>
+
+
+
+<p>The following table shows, which
+features can be added to the basic functionality and the libraries that should
+be deployed in addition to the basic library to support these features:</p>
+
+<table border="1" cellpadding="0" cellspacing="0">
+ 
+<tr>
+  
+<td valign="top">
+  
+<p><b>Application features</b></p>
+  </td>
+  
+<td valign="top">
+  
+<p><b>Required libraries</b></p>
+  </td>
+ </tr>
+ 
+<tr>
+  
+<td valign="top">
+  
+<p>Native Queries optimization (for
+  Java &gt; 1.1).</p>
+  
+<p>Note, that the application can
+  be <a href="../tuning/native_query_optimization/nq_optimization_at_build_time.html" class="wikiLink">NQ
+  optimized in compile-time</a>, in which case NQ optimization libraries are not
+  required to be deployed.</p>
+  </td>
+  
+<td valign="top">
+  
+<p>bloat-1.0.jar</p>
+  
+<p>db4o-x.x-nqopt.jar</p>
+  </td>
+ </tr>
+ 
+<tr>
+  
+<td valign="top">
+  
+<p>Transparent Activation support</p>
+  </td>
+  
+<td valign="top">
+  
+<p>db4o-x.x-taj.jar</p><p>bloat.jar&nbsp;</p><p>db4o-x.x-instrumentation.jar&nbsp;</p>
+  </td>
+ </tr>
+ 
+<tr>
+  
+<td valign="top">
+  
+<p>OSGI</p>
+  </td>
+  
+<td valign="top">
+  
+<p>db4o-x.x-osgi.jar</p>
+  </td>
+ </tr>
+</table>
+
+</span>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-11-27T19:24:13 by Tetyana.
+				</div>
+  </body>
+</html>

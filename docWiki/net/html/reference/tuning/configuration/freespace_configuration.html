@@ -1,0 +1,59 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Freespace Configuration</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Freespace Configuration</h1><p><span id="ctl00_ctl00_bcr_topicView___TopicBody">When objects are
+updated or deleted, the space previously occupied in the database file
+is marked as "free". Freespace management system takes care of this space by maintaining two lists in
+RAM, sorted by address and by size. The following configuration methods allow to tune the freespace management system to help you optimize your system:</span></p>
+
+<span name="cs_wiki_filter" csw_filters="net">
+<p>.NET: <br></p>
+<p><code>public void DiscardSmallerThan(int byteCount);</code><br>
+</p>
+</span>
+<span id="ctl00_ctl00_bcr_topicView___TopicBody"></span>
+<p><span id="ctl00_ctl00_bcr_topicView___TopicBody">
+<p>Configures the minimum size of free space slots in the database file that are to 
+be reused. </p>
+
+<p>2 extremes for byteCount value:</p>
+
+<ul>
+<li>Integer.MAX_VALUE/Int32.MaxValue - discard all free slots for the best possible
+startup time. The downside: database files will necessarily grow faster</li>
+<li>0
+- default setting, all freespace is reused. The downside: increased
+memory consumption and performance loss for maintenance of freespace
+lists in RAM&nbsp;</li>
+</ul></span></p>
+
+<span name="cs_wiki_filter" csw_filters="net">
+<p>.NET: <br></p>
+<p><code>public void FreespaceFiller(IFreespaceFiller freespaceFiller);</code><br>
+</p>
+</span>
+
+<p>This method allows to specify a way to overwrite the freed space in the database. This may be desirable when the information needs to be reliably erased. A <a href="freespace_configuration/freespacefiller_example.html" class="wikiLink">custom FreespaceFiller</a> implementation can be created. For an example of db4o implementation of FreespaceFiller you can have a look at XByteFreespaceFiller in the db4o source code (IoAdaptedObjectContainer class). XByteFreespaceFiller overwrites the free space with "XXXX" symbols and is switched on by rebuilding db4o core with debug = true in Deploy class. <br></p>
+<p>Note, that using freespace filler will slow down IO operations on the database.</p>
+<br><br><br><br><br>
+<p>The following settings allow to select how the freespace information will be kept: </p>
+
+<p><span name="cs_wiki_filter" csw_filters="net"> </p>
+<p>.NET: <br></p>
+<p><code>public void UseBTreeSystem();</code></p>
+<p><code>public void UseRamSystem();</code></p>
+<p></span></p>
+
+<p>When BTree system is used to keep freespace information, the performance is worse as the information is written to disk at each commit, but the memory consumption is lower. With the RAM system, all freespace information is kept in RAM, which allows the best performance, however this information is lost on abnormal system termination. <br></p></div>
+    </div>
+    <div id="footer">
+					This revision (7) was last Modified 2009-04-19T16:21:15 by Tetyana.
+				</div>
+  </body>
+</html>

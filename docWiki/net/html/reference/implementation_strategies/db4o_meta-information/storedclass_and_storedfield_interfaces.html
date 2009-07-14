@@ -1,0 +1,155 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>StoredClass and StoredField interfaces</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>StoredClass and StoredField interfaces</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+
+
+<p>(IStoredClass and IStoredField in .NET)</p>
+
+<p>Let's look closer at the class meta-information interfaces.</p>
+
+<p>They look quite similar to reflection API, but unlike reflection there is no information about methods and constructors.</p>
+
+<p>You can only use StoredClass to get the class's fields:</p>
+
+
+
+<span name="cs_wiki_filter" csw_filters="cs">
+
+<p>c#:   <code>IStoredClass#GetStoredFields()</code></p>
+
+</span>
+
+<span name="cs_wiki_filter" csw_filters="vb">
+
+<p>VB:   <code>IStoredClass#GetStoredFields()</code> </p>
+
+</span>
+
+<p>
+returns all stored fields of this stored class.</p>
+
+
+
+<span name="cs_wiki_filter" csw_filters="cs">
+
+<p>c#:   <code>IStoredClass#StoredField(name, type)</code></p>
+
+</span>
+
+<span name="cs_wiki_filter" csw_filters="vb">
+
+<p>VB:   <code>IStoredClass#StoredField(name, type)</code> </p>
+
+</span>
+
+<p>
+returns an existing stored field of this stored class.</p>
+
+<p>You can also use this interface to explore classes hierarchy.</p>
+
+
+
+<span name="cs_wiki_filter" csw_filters="cs">
+
+<p>c#:<code>   IStoredClass#GetParentStoredClass</code> </p>
+
+</span>
+
+<p><span name="cs_wiki_filter" csw_filters="vb"><code>VB:   IStoredClass#GetParentStoredClass </code></p>
+
+<p></span></p>
+
+<p>returns the parent of the class.</p>
+
+<p>
+StoredField interface gives you access to various meta-field information, such as field name, field type. It also provides some helpful methods for manipulating fields accepting their object as a variable (see db4o API for more information).</p>
+
+
+
+<span name="cs_wiki_filter" csw_filters="cs">
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">MetaInfoExample.cs: <span class="fscMemberName">GetMetaObjectsInfo</span></span></div><div class="fscCode"><pre ID="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> GetMetaObjectsInfo()
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_43_769_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_43_769_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_43_769_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_43_769_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_43_769_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_43_769_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_43_769_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_43_769_Open_Text').style.display='inline';"/>    </span><span id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_43_769_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_43_769_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      IObjectContainer container </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4oFactory.OpenFile(Db4oFileName);
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> 
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_124_719_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_124_719_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_124_719_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_124_719_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_124_719_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_124_719_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_124_719_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_124_719_Open_Text').style.display='inline';"/>      </span><span id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_124_719_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_124_719_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        System.Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Retrieve meta information for field: </span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        IStoredClass sc </span><span style="color: #000000;">=</span><span style="color: #000000;"> container.Ext().StoredClass(</span><span style="color: #0000FF;">typeof</span><span style="color: #000000;">(Car));
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        IStoredField sf </span><span style="color: #000000;">=</span><span style="color: #000000;"> sc.StoredField(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">_pilot</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">,</span><span style="color: #0000FF;">typeof</span><span style="color: #000000;">(Pilot));
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        System.Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Field info:  </span><span style="color: #800000;">&quot;</span><span style="color: #000000;">+</span><span style="color: #000000;"> sf.GetName()</span><span style="color: #000000;">+</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">/</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">+</span><span style="color: #000000;">sf.GetStoredType()</span><span style="color: #000000;">+</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">/IsArray=</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">+</span><span style="color: #000000;">sf.IsArray());
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        System.Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Retrieve all fields: </span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        IStoredField[] sfields </span><span style="color: #000000;">=</span><span style="color: #000000;"> sc.GetStoredFields();
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        </span><span style="color: #0000FF;">foreach</span><span style="color: #000000;"> (IStoredField sfield </span><span style="color: #0000FF;">in</span><span style="color: #000000;"> sfields)
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_592_714_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_592_714_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_592_714_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_592_714_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_592_714_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_592_714_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_592_714_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_592_714_Open_Text').style.display='inline';"/>        </span><span id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_592_714_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_592_714_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                    System.Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Stored field:  </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> sfield.GetName() </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;">/</span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> sfield.GetStoredType());
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>        }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>      }</span></span><span style="color: #000000;"> 
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      </span><span style="color: #0000FF;">finally</span><span style="color: #000000;"> 
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_736_765_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_736_765_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_736_765_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_736_765_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_736_765_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_736_765_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_736_765_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_736_765_Open_Text').style.display='inline';"/>      </span><span id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_736_765_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoCS.ZipsMetaInfoExample.Cs_MetaInfoExample.Cs_GetMetaObjectsInfo_1629_66_736_765_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        container.Close();
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>      }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">22</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>    }</span></span></div></pre></div></div>
+
+</span>
+
+<span name="cs_wiki_filter" csw_filters="vb">
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">MetaInfoExample.vb: <span class="fscMemberName">GetMetaObjectsInfo</span></span></div><div class="fscCode"><pre ID="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoVB.ZipsMetaInfoExample.Vb_MetaInfoExample.Vb_GetMetaObjectsInfo_1759_66"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoVB.ZipsMetaInfoExample.Vb_MetaInfoExample.Vb_GetMetaObjectsInfo_1759_66_15_992_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoVB.ZipsMetaInfoExample.Vb_MetaInfoExample.Vb_GetMetaObjectsInfo_1759_66_15_992_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoVB.ZipsMetaInfoExample.Vb_MetaInfoExample.Vb_GetMetaObjectsInfo_1759_66_15_992_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoVB.ZipsMetaInfoExample.Vb_MetaInfoExample.Vb_GetMetaObjectsInfo_1759_66_15_992_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoVB.ZipsMetaInfoExample.Vb_MetaInfoExample.Vb_GetMetaObjectsInfo_1759_66_15_992_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoVB.ZipsMetaInfoExample.Vb_MetaInfoExample.Vb_GetMetaObjectsInfo_1759_66_15_992_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoVB.ZipsMetaInfoExample.Vb_MetaInfoExample.Vb_GetMetaObjectsInfo_1759_66_15_992_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoVB.ZipsMetaInfoExample.Vb_MetaInfoExample.Vb_GetMetaObjectsInfo_1759_66_15_992_Open_Text').style.display='inline';"/><span style="color: #0000FF;">Private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Shared</span><span style="color: #000000;"> </span><span id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoVB.ZipsMetaInfoExample.Vb_MetaInfoExample.Vb_GetMetaObjectsInfo_1759_66_15_992_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">Sub GetMetaObjectsInfo()</span><span id="ResourcesReferenceImplementation_StrategiesDb4o_Meta-InformationmetainfoVB.ZipsMetaInfoExample.Vb_MetaInfoExample.Vb_GetMetaObjectsInfo_1759_66_15_992_Open_Text"><span style="color: #0000FF;">Sub</span><span style="color: #000000;"> GetMetaObjectsInfo()
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> container </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> IObjectContainer </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4oFactory.OpenFile(Db4oFileName)
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Try</span><span style="color: #000000;">
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                System.Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Retrieve meta information for field: </span><span style="color: #800000;">&quot;</span><span style="color: #000000;">)
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> sc </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> IStoredClass </span><span style="color: #000000;">=</span><span style="color: #000000;"> container.Ext().StoredClass(</span><span style="color: #0000FF;">GetType</span><span style="color: #000000;">(Car))
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> sf </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> IStoredField </span><span style="color: #000000;">=</span><span style="color: #000000;"> sc.StoredField(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">_pilot</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">, </span><span style="color: #0000FF;">GetType</span><span style="color: #000000;">(Pilot))
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                System.Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Field info:  </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> sf.GetName() </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;">/</span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> sf.GetStoredType().GetName() </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;">/IsArray=</span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> sf.IsArray().ToString())
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                System.Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Retrieve all fields: </span><span style="color: #800000;">&quot;</span><span style="color: #000000;">)
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> sfields() </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> IStoredField </span><span style="color: #000000;">=</span><span style="color: #000000;"> sc.GetStoredFields()
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> sfield </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> IStoredField
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                </span><span style="color: #0000FF;">For</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Each</span><span style="color: #000000;"> sfield </span><span style="color: #0000FF;">In</span><span style="color: #000000;"> sfields
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                    System.Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Stored field:  </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> sfield.GetName() </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;">/</span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> sfield.GetStoredType().GetName())
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                </span><span style="color: #0000FF;">Next</span><span style="color: #000000;">
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Finally</span><span style="color: #000000;">
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                container.Close()
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">End</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Try</span><span style="color: #000000;">
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        </span><span style="color: #0000FF;">End Sub</span></span></div></pre></div></div>
+
+</span></div>
+    </div>
+    <div id="footer">
+					This revision (9) was last Modified 2007-12-26T13:08:22 by Tetyana.
+				</div>
+  </body>
+</html>

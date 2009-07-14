@@ -1,0 +1,52 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Deployment Instructions</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Deployment Instructions</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#dRS-Java Deployment">dRS-Java Deployment</a></li></ul></li></ul></div></div></div>
+<p>When you deploy dRS with your application, you must first
+ensure that the <a href="http://developer.db4o.com/Resources/view.aspx/Reference/Platform_Specific_Issues/Deployment_Instructions">requirements
+for db4o</a> deployment are met.</p>
+<span name="cs_wiki_filter" csw_filters="java">
+<a name="dRS-Java Deployment"></a><h2>dRS-Java Deployment</h2>
+
+<p>In order to deploy dRS in the most simple db4o-to-db4o
+replication scenario you will only need <b>dRS-x.x-core.jar.</b></p>
+
+<p>For support of replication to relational databases you will
+need <b>hibernate3.jar</b> and its
+dependencies: </p>
+
+<ul>
+<li>antlr-2.7.6.jar</li>
+<li>asm.jar</li>
+<li>asm-attrs.jar</li>
+<li>cglib-2.1.3.jar</li>
+<li>commons-collections-2.1.1.jar</li>
+<li>commons-logging-1.0.4.jar</li>
+<li>dom4j-1.6.1.jar</li>
+<li>ehcache-1.2.jar</li>
+<li>jta.jar</li>
+<li>log4j-1.2.13.jar</li>
+<li>xerces-2.6.2.jar</li>
+</ul>
+
+
+<p>Please, refer to <a href="http://www.hibernate.org/">hibernate</a>
+documentation for an explanation of these dependencies.&nbsp;</p>
+
+<p>If you are going to use dRS with HSQLDB you will need hsqldb-1.8.0.7.jar
+in addition to hibernate.</p>
+</span>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2007-10-01T19:03:25 by Tetyana.
+				</div>
+  </body>
+</html>

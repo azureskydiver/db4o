@@ -1,0 +1,49 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unicode</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Unicode</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div>
+
+
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java:&nbsp;</p>
+
+<p><code>configuration.unicode(false)</code></p>
+
+</span>
+
+
+
+<a name="Advantage"></a><h2>Advantage</h2>
+
+<p>Turning Unicode support off reduces
+the file storage space for strings by factor 2 and improves performance.</p>
+
+<a name="Effect"></a><h2>Effect</h2>
+
+<p>Enables/disables Unicode string
+storage format. Unicode allows you to store string data in any language to
+db4o.</p>
+
+<p>This method needs to be called
+<b>before</b> a database file is created. db4o database files keep
+their string format after creation.</p>
+
+
+<p>The default setting is <code>true</code></p>
+
+<a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
+
+<p>You can create your own string
+marshallers, using TypeHandler4 interface. <br></p></div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2007-11-21T13:35:42 by Tetyana.
+				</div>
+  </body>
+</html>

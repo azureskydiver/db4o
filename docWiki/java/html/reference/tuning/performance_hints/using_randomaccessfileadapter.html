@@ -1,0 +1,46 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Using RandomAccessFileAdapter</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Using RandomAccessFileAdapter</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div><span name="cs_wiki_filter" csw_filters="java"><p>Java: <br></p>
+
+<p><code>Configuration
+config = Db4o.newConfiguration();</code></p>
+
+<p><code>Config.io(new
+RandomAccessFileAdapter);</code></p>
+
+</span>
+
+
+
+<a name="Advantage"></a><h2>Advantage</h2>
+
+<p>Uses less
+memory than default CachedIoAdapter.</p>
+
+<a name="Effect"></a><h2>Effect</h2>
+
+<p>By default
+db4o uses CachedIoAdapter, which allows to improve bulk write performance, by
+creating cached pages in memory and thus reducing the amount of physical disc
+writes.&nbsp; This of course can increase the
+memory consumption, which can be a critical resource in some cases. &nbsp;To free up some additional memory it might be
+reasonable to switch to RandomAccessFileAdapter.</p>
+
+<a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
+
+<p>The default
+CachedIoAdapter and configurable MemoryIoAdapter allow to achieve better performance
+by utilizing RAM instead of hard-drive.</p></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2008-11-08T11:53:22 by Tetyana.
+				</div>
+  </body>
+</html>

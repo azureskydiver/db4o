@@ -1,0 +1,51 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>TA Enhanced Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>TA Enhanced Example</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#TA Enhancement In Java&nbsp;">TA Enhancement In Java&nbsp;</a></li></ul></li></ul></div></div></div>
+As it was mentioned
+<a href="ta_implementation.html" class="wikiLink">before</a> you can inject TA awareness in your persistent classes without modifying their original
+code. In the current scenario this means: 
+
+<ul>
+<li>generate
+the <code>Activatable</code> interface declaration;</li>
+<li>add
+<code>bind(objectContainer)</code> method implementation;</li>
+<li>generate
+a field to keep a reference to the corresponding <code>Activator</code>
+instance;</li>
+<li>generate
+<code>activate()</code> call at the beginning of every method.</li>
+</ul>
+These tasks can be fulfilled in the classes bytecode by using <a href="../../../implementation_strategies/enhancement_tools.html" class="wikiLink">Enhancement Tools</a>.<br>
+
+
+
+
+<span name="cs_wiki_filter" csw_filters="java">
+<a name="TA Enhancement In Java&nbsp;"></a><h2>TA Enhancement In Java&nbsp;</h2>
+<p>TA can be enabled by bytecode injection of the above-mentioned code into the persistent classes when they are
+loaded or built. (Currently persistent classes have to be "tagged" by providing
+an appropriate <code>ClassFilter</code> instance.) In addition to this db4o
+also explicitly needs to be configured to use the Transparent Activation instrumentation
+of the persistent classes (TransparentActivationSupport).</p>
+<p>Transparent Activation functionality requires the following jars:</p>
+<ul>
+<li>bloat-1.0.jar</li>
+<li>db4o-x.x-tools.jar<br></li>
+<li>db4o-x.x-taj.jar <br></li>
+<li>db4o-x.x-instrumentation.jar</li>
+</ul><p>The following topics explain how TA enhancement can be applied to built classes:</p><ul><li><a href="ta_enhanced_example/ta_enhancement_at_load_time.html" class="wikiLink">TA Enhancement At Loading Time</a>&nbsp; <br></li><li><a href="ta_enhanced_example/ta_enhancement_at_build_time.html" class="wikiLink">TA Enhancement At Build Time</a> <br></li></ul></span>
+</div>
+    </div>
+    <div id="footer">
+					This revision (23) was last Modified 2008-01-20T14:03:38 by Tetyana.
+				</div>
+  </body>
+</html>

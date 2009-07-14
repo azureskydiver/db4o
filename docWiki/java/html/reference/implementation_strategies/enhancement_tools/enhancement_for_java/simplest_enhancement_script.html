@@ -1,0 +1,111 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Simplest Enhancement Script</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Simplest Enhancement Script</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+<p>If you are
+not interested in writing complicated ant build scripts for your project, but
+still need to use enhancement, we've created a simplest enhance script that can
+do the job for any java project with only minor changes or without any changes
+at all. Here is the script:</p>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">Build.Xml</span></div><div class="fscCode"><pre ID="ResourcesReferenceImplementation_StrategiesEnhancement_ToolsEnhancement_For_JavaSimplest_Enhancement_Scriptbuild.Xml_292_23"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">&lt;?</span><span style="color: #FF00FF;">xml version=&quot;1.0&quot;</span><span style="color: #0000FF;">?&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">project </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;db4o enhance project&quot;</span><span style="color: #FF0000;"> default</span><span style="color: #0000FF;">=&quot;enhance&quot;</span><span style="color: #FF0000;"> basedir</span><span style="color: #0000FF;">=&quot;.&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">path </span><span style="color: #FF0000;">id</span><span style="color: #0000FF;">=&quot;project.classpath&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">pathelement </span><span style="color: #FF0000;">path</span><span style="color: #0000FF;">=&quot;${basedir}/bin&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">fileset </span><span style="color: #FF0000;">dir</span><span style="color: #0000FF;">=&quot;lib&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>      </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">include </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;**/*.jar&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">fileset</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">path</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">taskdef </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;db4o-enhance&quot;</span><span style="color: #FF0000;"> classname</span><span style="color: #0000FF;">=&quot;com.db4o.enhance.Db4oEnhancerAntTask&quot;</span><span style="color: #FF0000;"> classpathref</span><span style="color: #0000FF;">=&quot;project.classpath&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">target </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;enhance&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">db4o-enhance </span><span style="color: #FF0000;">classtargetdir</span><span style="color: #0000FF;">=&quot;${basedir}/bin&quot;</span><span style="color: #FF0000;"> jartargetdir</span><span style="color: #0000FF;">=&quot;${basedir}/lib&quot;</span><span style="color: #FF0000;"> nq</span><span style="color: #0000FF;">=&quot;true&quot;</span><span style="color: #FF0000;"> ta</span><span style="color: #0000FF;">=&quot;true&quot;</span><span style="color: #FF0000;"> collections</span><span style="color: #0000FF;">=&quot;true&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>      </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">classpath </span><span style="color: #FF0000;">refid</span><span style="color: #0000FF;">=&quot;project.classpath&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>      </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">sources </span><span style="color: #FF0000;">dir</span><span style="color: #0000FF;">=&quot;${basedir}/bin&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>      </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">jars </span><span style="color: #FF0000;">dir</span><span style="color: #0000FF;">=&quot;${basedir}/lib&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>        </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">include </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;*.jar&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>        </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">exclude </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;db4o-*.jar&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>        </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">exclude </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;ant.jar&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>        </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">exclude </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;bloat-1.0.jar&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>      </span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">jars</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">db4o-enhance</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">target</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">22</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">project</span><span style="color: #0000FF;">&gt;</span></div></pre></div></div>
+
+<p>In order to
+use it - just put it in your project's folder. You will also need to put
+db4o-x.x-all-java5.jar (it contains all the required jars) into your lib folder.
+If your project uses non-standard Java layout (web application, maven
+application etc), you will have to correct the paths to bin and lib folders in
+the build.xml.</p>
+
+<p>This
+build.xml file includes TA/TP enhancement (normal and collections) and NQ
+optimization. These are the default options. For a more detailed description of
+Ant instrumentation the following options can be used:</p>
+
+<p><b>nq</b>: switch for
+native query optimization enhancement</p>
+
+<p><b>ta</b>: switch for
+transparent activation/persistence enhancement</p>
+
+<p><b>collections</b>: switch
+for enhancement of platform collections for transparent activation/persistence
+(only effective if ta is switched on)</p>
+
+<p>In order to
+run the enhancement you can just type "ant" in the command line in your project's
+directory. </p>
+
+<p>You can
+also integrate this build in the build process in your IDE. If you are using
+Eclipse follow these steps:</p>
+
+<ul><li>Right-click the project in the Package Explorer
+and select "Properties"</li><li>Select "Builders" in the left pane</li><li>Add new builder after the default Java builder,
+call it "Enhancement"</li><li>Select the build.xml file on the "Main" tab of
+the new builder properties</li></ul>
+
+
+
+
+
+
+
+<p>Now enhancement will be run after the normal
+compilation (you may need to clean and rebuild the project to see the effect).</p>
+
+
+&nbsp;</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2009-05-21T06:14:15 by Tetyana.
+				</div>
+  </body>
+</html>

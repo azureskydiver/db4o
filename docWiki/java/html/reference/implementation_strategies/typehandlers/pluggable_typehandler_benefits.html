@@ -1,0 +1,86 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Pluggable Typehandler Benefits</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Pluggable Typehandler Benefits</h1>
+
+<p>As the name suggests Pluggable Typehandler allows anybody to
+write custom typehandlers, and thus control the way the class objects are
+stored to the database and retrieved in a query. Why would you do this? There
+can be various reasons:</p>
+
+<ul class="unIndentedList"><li>
+You know a more performant way to convert
+objects to byte array or to compare them.</li><li>
+You need to store only part of the object's
+information and want to skip unneeded fields to keep the database smaller. You
+can also do the same using <a href="../../tuning/selective_persistence.html" class="wikiLink">Transient</a>
+marker, but this is only possible for classes with available code. Using custom
+typehandler you can configure partial storage for any third-party class.</li><li>
+You need to keep information that will allow you
+to restore fields that cannot be stored as is, for example: references to
+environmental variables (like time zone), proxy objects or variables of
+temporary state (like current memory usage). Previously, this job was done by
+<a href="../translators.html" class="wikiLink">Translators</a>, but certainly custom Typehandler gives you more control
+and unifies the approach.</li><li>
+You want to customize the way Strings are stored
+(special encodings).</li><li>
+You need to perform a complex refactoring
+on-the-fly (use typehandler versioning)</li><li>
+You want to cipher each object before putting it
+into the database</li><li>
+You want to implement cascade on delete through the
+typehandler </li></ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>Other not so common and more
+difficult in realization behaviours that can be realized with the new
+Typehandler:</p>
+
+<ul class="unIndentedList"><li>
+Custom handling of platform-specific generic
+collections</li><li>
+Fast collection handlers that operate on a lower
+level and scale for large collections </li><li>
+Customary indexes</li><li>
+Versioning of typehandlers (can be used for
+refactoring and db4o version upgrades)</li></ul>
+
+
+
+
+
+
+
+<p>Of course, writing typehandlers
+is not totally simple, but once you understand how to do that - you will also
+gain a much deeper understanding of db4o itself. You can start with a <a href="custom_typehandler_example.html" class="wikiLink">simple
+example</a> provided in this documentation and continue by looking into existing
+db4o typehandler implementations: StringHandler, VariableLengthTypeHandler,
+IndexableTypeHandler etc.</p>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2008-02-03T09:36:04 by Tetyana.
+				</div>
+  </body>
+</html>

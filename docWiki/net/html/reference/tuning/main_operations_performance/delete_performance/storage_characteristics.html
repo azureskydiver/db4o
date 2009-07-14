@@ -1,0 +1,48 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Storage Characteristics</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Storage Characteristics</h1><p><br></p><p>As any other db4o operation delete is dependent on the
+performance of a storage location. This can be easily compared with a database
+stored on a hard drive and in RAM:</p>
+
+<p><i>Delete test: RAM
+disk</i></p>
+
+<p><i>Store 90000
+objects: 5973ms</i></p>
+
+<p><i>Deleting 1
+object of depth 3 on a RAM drive:</i></p>
+
+<p><i>Deleted all
+objects: 5249ms</i></p>
+
+<p><i>Delete test:
+hard drive</i></p>
+
+<p><i>Store 90000
+objects: 5043ms</i></p>
+
+<p><i>Deleting 1
+object of depth 3 on a hard drive:</i></p>
+
+<p><i>Deleted all objects: 7475ms</i></p>
+
+<p>The
+general rule is: the faster the drive is the better is the performance.</p>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2008-05-27T13:45:31 by Tetyana.
+				</div>
+  </body>
+</html>

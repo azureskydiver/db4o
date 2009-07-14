@@ -1,0 +1,37 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>UpdateDepthGreaterOne</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>UpdateDepthGreaterOne</h1>
+
+
+<p>UpdateDepth configuration setting allows you to specify the level of objects' enclosure where update command will still be valid:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java: </p><p><code>configuration.updateDepth(depth)</code></p>
+
+</span>
+
+
+
+<p>This setting has a considerable impact on performance and can make the application very slow. It is recommended to keep the default configuration setting (UpdateDepth(0)) and specify UpdateDepth for selected classes, where cascaded update will be really useful:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java: </p><p><code>configuration.objectClass(Car.class).updateDepth(3)</code></p>
+
+</span>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (8) was last Modified 2008-03-29T10:29:21 by Tetyana.
+				</div>
+  </body>
+</html>

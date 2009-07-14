@@ -1,0 +1,38 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Benefits And Limitations</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Benefits And Limitations</h1>
+<p><font color="#990000">This topic applies to .NET version only</font></p>
+<p>The advantage of using Isolated Storage is in the ability to
+get storage space for any user rights. However, there are serious limitations,
+which should be considered before choosing Isolated Storage:</p>
+
+<ol>
+<li>Isolated
+     Storage quotas can be assigned to a user by system administrator, so the
+     application must be ready to face a situation when the database file has
+     no more space available to grow (in this case db4o switches to the
+     <a href="../../tuning/configuration/general_configuration.html" class="wikiLink">ReadOnly</a> mode automatically).</li>
+<li>Isolated
+     Storage is intended for a per-user use, so it does not make sense to try
+     Isolated Storage for a multi-user access to db4o.</li>
+<li>Code
+     must have the IsolatedStorageFilePermission to work with
+     isolated storage. This can be a problem if your machine is severely locked
+     down by administrative security policies.</li>
+</ol>
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-08-19T13:40:12 by Tetyana.
+				</div>
+  </body>
+</html>

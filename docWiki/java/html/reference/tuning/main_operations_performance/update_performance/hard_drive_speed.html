@@ -1,0 +1,139 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Hard Drive Speed</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Hard Drive Speed</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script><p>Update db4o operation requires disk access and therefore is
+very dependent on the disk speed. To emulate a different drive speed we will
+use a RAMDISK utility, which creates an alternative storage media in the
+memory.</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">UpdatePerformanceBenchmark.java: <span class="fscMemberName">runHardDriveTest</span></span></div><div class="fscCode"><pre ID="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunHardDriveTest_282_91"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunHardDriveTest_282_91_31_344_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunHardDriveTest_282_91_31_344_Open_Text').style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunHardDriveTest_282_91_31_344_Closed_Image').style.display='inline'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunHardDriveTest_282_91_31_344_Closed_Text').style.display='inline';"/><img id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunHardDriveTest_282_91_31_344_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunHardDriveTest_282_91_31_344_Closed_Text').style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunHardDriveTest_282_91_31_344_Open_Image').style.display='inline'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunHardDriveTest_282_91_31_344_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> runHardDriveTest()</span><span id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunHardDriveTest_282_91_31_344_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunHardDriveTest_282_91_31_344_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Update test: hard drive</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">int</span><span style="color: #000000;"> objectsToUpdate </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #000000;">90</span><span style="color: #000000;">;
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      initForHardDriveTest();
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      clean();
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      open(configureDriveTest());
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      store();
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Updating  </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> objectsToUpdate </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> objects on a hard drive:</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      updateItems(objectsToUpdate);
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      close();
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>    }</span></span></div></pre></div></div>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">UpdatePerformanceBenchmark.java: <span class="fscMemberName">initForHardDriveTest</span></span></div><div class="fscCode"><pre ID="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForHardDriveTest_377_95"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForHardDriveTest_377_95_35_156_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForHardDriveTest_377_95_35_156_Open_Text').style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForHardDriveTest_377_95_35_156_Closed_Image').style.display='inline'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForHardDriveTest_377_95_35_156_Closed_Text').style.display='inline';"/><img id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForHardDriveTest_377_95_35_156_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForHardDriveTest_377_95_35_156_Closed_Text').style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForHardDriveTest_377_95_35_156_Open_Image').style.display='inline'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForHardDriveTest_377_95_35_156_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> initForHardDriveTest()</span><span id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForHardDriveTest_377_95_35_156_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForHardDriveTest_377_95_35_156_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      _count </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #000000;">10000</span><span style="color: #000000;">;
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        _depth </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #000000;">3</span><span style="color: #000000;">;
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        _filePath </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #000000;">&quot;</span><span style="color: #000000;">performance.db4o</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">;
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        _isClientServer </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">6</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>    }</span></span></div></pre></div></div>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">UpdatePerformanceBenchmark.java: <span class="fscMemberName">runRamDiskTest</span></span></div><div class="fscCode"><pre ID="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunRamDiskTest_476_89"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunRamDiskTest_476_89_29_332_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunRamDiskTest_476_89_29_332_Open_Text').style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunRamDiskTest_476_89_29_332_Closed_Image').style.display='inline'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunRamDiskTest_476_89_29_332_Closed_Text').style.display='inline';"/><img id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunRamDiskTest_476_89_29_332_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunRamDiskTest_476_89_29_332_Closed_Text').style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunRamDiskTest_476_89_29_332_Open_Image').style.display='inline'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunRamDiskTest_476_89_29_332_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> runRamDiskTest()</span><span id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunRamDiskTest_476_89_29_332_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_RunRamDiskTest_476_89_29_332_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Update test: RAM disk</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">int</span><span style="color: #000000;"> objectsToUpdate </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #000000;">90</span><span style="color: #000000;">;
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      initForRamDriveTest();
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      clean();
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      open(configureDriveTest());
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      store();
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Updating  </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> objectsToUpdate </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> objects on a RAM drive:</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      updateItems(objectsToUpdate);
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      close();
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">UpdatePerformanceBenchmark.java: <span class="fscMemberName">initForRamDriveTest</span></span></div><div class="fscCode"><pre ID="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForRamDriveTest_569_94"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForRamDriveTest_569_94_34_169_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForRamDriveTest_569_94_34_169_Open_Text').style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForRamDriveTest_569_94_34_169_Closed_Image').style.display='inline'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForRamDriveTest_569_94_34_169_Closed_Text').style.display='inline';"/><img id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForRamDriveTest_569_94_34_169_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForRamDriveTest_569_94_34_169_Closed_Text').style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForRamDriveTest_569_94_34_169_Open_Image').style.display='inline'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForRamDriveTest_569_94_34_169_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> initForRamDriveTest()</span><span id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForRamDriveTest_569_94_34_169_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_InitForRamDriveTest_569_94_34_169_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      _count </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #000000;">30000</span><span style="color: #000000;">;
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        _depth </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #000000;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        _filePath </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #000000;">&quot;</span><span style="color: #000000;">r:\\performance.db4o</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">;
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        _isClientServer </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">6</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>          
+</span><span style="color: #008080;">7</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>    }</span></span></div></pre></div></div>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">UpdatePerformanceBenchmark.java: <span class="fscMemberName">configureDriveTest</span></span></div><div class="fscCode"><pre ID="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_ConfigureDriveTest_667_93"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_ConfigureDriveTest_667_93_42_165_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_ConfigureDriveTest_667_93_42_165_Open_Text').style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_ConfigureDriveTest_667_93_42_165_Closed_Image').style.display='inline'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_ConfigureDriveTest_667_93_42_165_Closed_Text').style.display='inline';"/><img id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_ConfigureDriveTest_667_93_42_165_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_ConfigureDriveTest_667_93_42_165_Closed_Text').style.display='none'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_ConfigureDriveTest_667_93_42_165_Open_Image').style.display='inline'; document.getElementById('..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_ConfigureDriveTest_667_93_42_165_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> Configuration configureDriveTest()</span><span id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_ConfigureDriveTest_667_93_42_165_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..UpdatePerformanceJava.ZipsUpdatePerformanceBenchmark.Java_UpdatePerformanceBenchmark.Java_ConfigureDriveTest_667_93_42_165_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      Configuration config </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4o.newConfiguration(); 
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        config.flushFileBuffers(</span><span style="color: #0000FF;">true</span><span style="color: #000000;">);
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        </span><span style="color: #0000FF;">return</span><span style="color: #000000;"> config;
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>    }</span></span></div></pre></div></div>
+
+</span>
+
+
+
+<p>The results:</p>
+
+<p><i>Update test: hard drive</i></p>
+
+<p><i>Store 30000 objects: 2884ms</i></p>
+
+<p><i>Updating&nbsp; 90
+objects on a hard drive:</i></p>
+
+<p><i>Updated 90 items: 250ms</i></p>
+
+<p><i>Update test: RAM disk</i></p>
+
+<p><i>Store 30000 objects: 1910ms</i></p>
+
+<p><i>Updating&nbsp; 90
+objects on a RAM drive:</i></p>
+
+<p><i>Updated 90
+items: 105ms</i></p>
+
+<p><i>The test shows
+that the faster media (RAMDISK) shows better performance on update.</i></p>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2008-06-02T05:29:30 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Prefetching IDs For New Objects</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Prefetching IDs For New Objects</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div>
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
+
+<p><code>void ClientServerConfiguration.prefetchIDCount(int prefetchIDCount);</code></p>
+
+</span>
+
+
+
+
+
+<p>Sets the number of IDs to be pre-allocated in
+the database for new objects created on the client</p>
+
+
+
+<a name="Advantage"></a><h2>Advantage</h2>
+
+<p>Prefetching several IDs for the new objects
+created on the client allows to improve the performance by reducing
+client-server communication.</p>
+
+
+
+<a name="Effect"></a><h2>Effect</h2>
+
+<p>When a new object is
+created on a client, the client should contact the server to get the next
+available object ID. PrefetchIDCount allows to specify how many IDs
+should be pre-allocated on the server and prefetched by the client. This method
+helps to reduce client-server communication.</p>
+
+<p>PrefetchIDCount can
+be tuned to approximately match the usual amount of objects created in one
+operation to improve the performance.</p>
+
+<p>If PrefetchIDCount =1
+a client will have to connect to the server for each new objects created</p>
+
+<p>If PrefetchIDCount is
+bigger than the amount of new objects to be created the database will keep
+unnecessary preallocated space. </p>
+
+<p>The default
+PrefetchIDCount is 10.</p>
+
+
+
+<a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
+
+A possible alternative can be using
+<a href="../../client-server/remote_code_execution/using_messaging_api_for_remote_code_execution.html" class="wikiLink">Messaging</a>
+for bulk inserts on the server. 
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-05-07T16:41:05 by Tetyana.
+				</div>
+  </body>
+</html>

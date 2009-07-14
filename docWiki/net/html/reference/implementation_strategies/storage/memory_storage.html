@@ -1,0 +1,98 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Memory Storage</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Memory Storage</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Growth Strategy">Growth Strategy</a></li><li><a href ="#MemoryBin">MemoryBin</a></li></ul></li></ul></div></div></div>
+
+
+<p>MemoryStorage allows to create
+and use db4o database fully in RAM. This strategy eliminates long disk access
+times making db4o much faster.</p>
+
+<p>MemoryStorage can be used
+both in embedded and client-server modes:</p>
+
+
+
+<span name="cs_wiki_filter" csw_filters="net">
+
+<p>.NET: <br></p>
+
+
+
+
+<p><code>//opening an embedded session</code><br><code>IEmbeddedConfiguration embeddedConfiguration =
+Db4oEmbedded.NewConfiguration();</code><br><code>embeddedConfiguration.File.Storage = new
+MemoryStorage();</code><br><code>Db4oEmbedded.OpenFile(embeddedConfiguration,
+"myEmbeddedDb.db4o");</code></p>
+
+<p><code>// opening a server for a client/server session</code><br><code>IServerConfiguration serverConfiguration =
+Db4oClientServer.NewServerConfiguration();</code><br><code>serverConfiguration.File.Storage = new
+MemoryStorage();</code><br><code>Db4oClientServer.OpenServer(serverConfiguration,
+"myServerDb.db4o", PORT);</code></p>
+
+</span>
+
+<p>MemoryStorage can be
+created without any additional parameters passed to the constructor. In this
+case default configuration values will be used. At present the following
+configuration settings are available for MemoryStorage:</p>
+<a name="Growth Strategy"></a><h2>Growth Strategy</h2>
+
+<p>Growth strategy defines
+how the database storage (reserved disk or memory space) will grow when the
+current space is not enough anymore.</p>
+
+<p>DoublingGrowthStrategy - default
+setting. When the size of the database is not enough, the reserved size will be
+doubled.</p>
+
+<p>ConstantGrowthStrategy -
+a configured amount of bytes will be added to the existing size when necessary.</p>
+
+
+<span name="cs_wiki_filter" csw_filters="net">
+<p>.NET: <br></p>
+
+<p><code>MemoryStorage ms = new
+MemoryStorage(new ConstantGrowthStrategy(growthSize))</code></p>
+</span>
+<p>growthSize - is the size in bytes,
+which will be used to increase the reserved database storage size.</p>
+
+<a name="MemoryBin"></a><h2>MemoryBin</h2>
+
+<p>Each memory storage can contain a collection of memory bins, which are
+actually just names memory storages. You can reuse the MemoryBin created
+earlier for this MemoryStorage (see ReuseMemoryBin). MemoryBins are identified
+by their URI, i.e. when an objectContainer is opened with:</p>
+
+
+<span name="cs_wiki_filter" csw_filters="net">
+<p>.NET: <br></p>
+
+<p><code>Db4oEmbedded.OpenFile(embeddedConfiguration,
+"myEmbeddedDb.db4o");</code></p>
+</span>
+
+<p>A MemoryBin with URI = "myEmbeddedDb.db4o"
+will be used. If this memory bin does not exist in the storage when the
+container is opened, a new MemoryBin will be created and associated with this
+URI.</p>
+<p><div class="childTopicList">More Reading:<ul>
+<li><p><a href="memory_storage/simple_example.html" class="wikiLink">Simple Example</a></p></li>
+<li><p><a href="memory_storage/storing_memorybin_data.html" class="wikiLink">Storing MemoryBin Data</a></p></li>
+<li><p><a href="memory_storage/reusing_memorybins.html" class="wikiLink">Reusing MemoryBins</a></p></li>
+</ul></div>
+</p></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2009-03-16T15:27:19 by Tetyana.
+				</div>
+  </body>
+</html>

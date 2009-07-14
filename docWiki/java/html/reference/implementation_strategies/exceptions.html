@@ -1,0 +1,46 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Exceptions</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Exceptions</h1><p>Db4o versions prior to 6.2 were designed to silently
+"swallow" most of the exceptions. This mode proved to be efficient in the
+situations, when db4o is supposed to work without interruptions under any
+circumstances.</p>
+
+<p>However there are many situations when it is vitally
+important for the user to know what went wrong and to be able to react
+accordingly. Some of the examples:</p>
+
+<ul><li>callbacks;</li><li>opening database file or client connection;</li><li>unsupported schema changes;</li><li>invalid ID format;</li><li>corrupted database file, etc</li></ul>
+
+
+
+
+
+
+
+
+
+
+
+<p>The new approach introduced in the db4o 6.2 allows
+exceptions to "bubble up" to the user level. </p>
+
+
+
+<p><div class="childTopicList">More Reading:<ul>
+<li><p><a href="exceptions/exception_types.html" class="wikiLink">Exception Types</a></p></li>
+<li><p><a href="exceptions/how_to_work_with_db4o_exceptions.html" class="wikiLink">How To Work With Db4o Exceptions</a></p></li>
+</ul></div>
+<br>&nbsp;</p></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-03-27T13:34:36 by Tetyana.
+				</div>
+  </body>
+</html>

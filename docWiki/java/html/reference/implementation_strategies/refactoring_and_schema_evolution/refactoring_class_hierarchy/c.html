@@ -1,0 +1,47 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>C</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>C</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+
+<span name="cs_wiki_filter" csw_filters="java">
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">C.java</span></div><div class="fscCode"><pre ID="..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id="..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_0_62_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_0_62_Open_Text').style.display='none'; document.getElementById('..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_0_62_Closed_Image').style.display='inline'; document.getElementById('..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_0_62_Closed_Text').style.display='inline';"/><img id="..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_0_62_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_0_62_Closed_Text').style.display='none'; document.getElementById('..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_0_62_Open_Image').style.display='inline'; document.getElementById('..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_0_62_Open_Text').style.display='inline';"/><span id="..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_0_62_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">/**/</span><span id="..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_0_62_Open_Text"><span style="color: #008000;">/*</span><span style="color: #008000;"> Copyright (C) 2007  db4objects Inc.  </span><span style="color: #008000; text-decoration: underline;">http://www.db4o.com</span><span style="color: #008000;"> </span><span style="color: #008000;">*/</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">package</span><span style="color: #000000;"> com.db4odoc.refactoring.initial;
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img id="..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_130_134_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_130_134_Open_Text').style.display='none'; document.getElementById('..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_130_134_Closed_Image').style.display='inline'; document.getElementById('..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_130_134_Closed_Text').style.display='inline';"/><img id="..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_130_134_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_130_134_Closed_Text').style.display='none'; document.getElementById('..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_130_134_Open_Image').style.display='inline'; document.getElementById('..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_130_134_Open_Text').style.display='inline';"/></span><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">class</span><span style="color: #000000;"> C </span><span style="color: #0000FF;">extends</span><span style="color: #000000;"> B </span><span id="..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_130_134_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..ComplexRefactoringJava.ZipsinitialC.Java_InitialC.Java_53_58_130_134_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">6</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>}</span></span></div></pre></div></div>
+</span>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-09-30T18:39:02 by Tetyana.
+				</div>
+  </body>
+</html>

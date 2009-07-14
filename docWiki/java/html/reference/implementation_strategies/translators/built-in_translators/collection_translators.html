@@ -1,0 +1,39 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Collection Translators</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Collection Translators</h1>
+
+
+<span name="cs_wiki_filter" csw_filters="java">
+<p>In Java version TVector and THashtable classes represent collection translators. Internally they are used to store&nbsp; Vector and Hashtable classes accordingly.<br></p>
+</span>
+<p>The functionality of these translators is pretty
+straightforward:</p>
+
+<ul>
+<li>OnStore
+     the members of the object are moved to an object array (Entry array for
+     TDictionary and THashtable).</li>
+<li>OnActivate
+     a new collection object is constructed from the array values.</li>
+</ul>
+
+In general you will never need to use any of these
+translators as all the work is done for you under the hood. However you might
+be interested to have a look at their code if you are planning a totally new
+custom collection implementation (not CollectionBase derived). The source code
+for collection translators can be found in Db4objects.Db4o.Config namespace/com.db4o.config package.
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-08-13T17:28:46 by Tetyana.
+				</div>
+  </body>
+</html>

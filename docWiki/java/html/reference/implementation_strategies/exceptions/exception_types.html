@@ -1,0 +1,64 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Exception Types</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Exception Types</h1><p>Using db4o you will have to deal with db4o-specific
+exceptions and system exceptions thrown
+directly out of db4o (like OutOfMemory error in Java or System.Exception in
+.NET).</p>
+
+<p>Db4o-specific exceptions are Unchecked exceptions, which all
+inherit from a single root class Db4oException.</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>In Java Unchecked exceptions are inherited from
+RuntimeExceptions class, while in .NET all exceptions are unchecked.</p>
+
+</span>
+
+<p>Db4o exceptions are chained; you can get the cause of the
+exception using:</p>
+
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
+
+<p><code>db4oException.getCause();</code></p>
+
+</span>
+
+
+
+
+
+<p>In order to see all db4o-specific exceptions you can examine
+the hierarchy of Db4oException class. Currently the following exceptions are
+available:</p>
+
+<p><b>Db4oException </b>- db4o
+exception wrapper: exceptions occurring during internal processing will be
+proliferated to the client calling code encapsulated in an exception of this
+type.</p><p><b>BackupInProgressException</b> - an exception to be thrown when another process is already busy with the backup.<br></p>
+
+<p><b>ConstraintViolationException
+</b>- base class for all
+constraint exceptions.</p>
+
+<p><b>UniqueFieldValueConstraintViolationException</b> - an exception to be used to determine
+constraint violation on commit.</p><p><b>DatabaseClosedException</b> - an exception to be thrown when the database was closed or failed to open.&nbsp;</p><p><b>DatabaseFileLockedException</b> - this exception is thrown during any of db4o open calls if the database file is locked by another process.&nbsp;</p><p><b>DatabaseMaximumSizeReachedException</b> - this exception is thrown if the database size is bigger than possible.&nbsp;</p><p><b>DatabaseReadOnlyException</b> - an exception to be thrown when a write operation was attempted on a database in read-only mode.</p><b>GlobalOnlyConfigException</b> - this exception is thrown when a global-only configuration setting is attempted for the local configuration.&nbsp;<p><b>IncompatibleFileFormatException</b> - an exception to be thrown when an open operation is attempted on a file(database), which format is incompatible with the current version of db4o.</p><p><b>InvalidIDException</b> - an exception to be thrown when an ID format supplied to #bind or #getById methods is incorrect.&nbsp;</p><p><b>InvalidPasswordException</b> - this exception is thrown when the password provided to access an encrypted database is not correct.&nbsp;</p>
+
+<p><b>OldFormatException</b> - an exception to be thrown when an old file
+format was detected and the file could not be open.</p><p><b>ReflectException</b> - an exception to be thrown when a class can not be stored or instantiated by current db4o reflector.<br></p>
+
+<p><b>ReplicationConflictException</b> - an exception to be thrown when a conflict
+occurs and no ReplicationEventListener is specified.</p></div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2007-05-11T09:20:14 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,69 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Transparent Persistence Implementation</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Transparent Persistence Implementation</h1><p>The basic logic of Transparent Persistence (TP) is the
+following:</p>
+
+<ul><li>classes
+     available for Transparent Persistence should implement Activatable
+     interface, which allows to bind an object in the reference cache to the
+     current object container.</li><li>persistent
+     object should be initially explicitly stored to the database:<br>
+     <span name="cs_wiki_filter" csw_filters="java"><br>Java:<br>
+     <code>objectContainer.store(myObject)</code><br>
+     </span><br>
+     <br>
+     myObject can be an object of any complexity including a linked list or a
+     collection (currently you must use db4o-specific implementation for transparent collections: ArrayList4). For complex objects all field objects will be registered with
+     the database with this call as well.</li><li>Stored
+     object are bound to the Transparent Persistent framework when they are
+     instantiated in the reference cache. This happens after the initial
+     store() or when an object is retrieved from the database through one of
+     the querying mechanisms.</li><li>Whenever
+     a commit() call is issued by the user, TP framework scans for modified
+     persistent objects and implicitly calls store() on them before committing
+     the transaction. Implicit commit with the mentioned above changes also occurs when the database is closed.<br></li></ul>
+
+
+
+<p>Note that Transparent Persistence is based on Transparent
+Activation, so it is strongly recommended to study <a href="../activation/transparent_activation_framework.html" class="wikiLink">Transparent Activation</a>
+documentation first.</p>
+
+<p>In order to make use of Transparent Persistence you will
+need:</p>
+
+<ul><ol><li>Enable
+      Transparent Activation (required for binding object instances to the TP
+      framework) on the database level:<br>
+      <span name="cs_wiki_filter" csw_filters="java"><br>Java:<br>
+      <code>configuration.add(new TransparentPersistenceSupport());</code><br>
+      </span><br>
+      <br><br></li><li>Implement
+      Activatable/IActivatable interface for the persistent classes, either
+      manually or through using <a href="../../implementation_strategies/enhancement_tools.html" class="wikiLink">enhancement tools</a>.</li><li>Call
+      activate method at the beginning of all class methods that modify class
+      fields:<br>
+      <span name="cs_wiki_filter" csw_filters="java"><br>Java:<br>
+      <code>activate(ActivationPurpose.WRITE)</code><br>
+      </span><br>
+      <br></li></ol></ul><p>Note that TransparentPersistenceSupport configuration implicitly adds TransparentActivationSupport. The fact is, that before
+modification each field object should be loaded into the reference cache and
+that is the job of TA. So TA should be utilised in any case before TP. You can also note that the way TA and TP links into objects is absolutely identical: TP also uses
+the same <code>activate</code> call, but in this case its purpose is WRITE.</p>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2008-01-20T08:42:21 by Tetyana.
+				</div>
+  </body>
+</html>
