@@ -1,0 +1,68 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Simulating Slow IO On A Fast Machine</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Simulating Slow IO On A Fast Machine</h1><p><font color="#990000">This topic applies to Java version only</font>&nbsp;</p><p>
+The code for this section is located in the com.db4o.bench.delaying package.<br>To run delaying, the <code>System.nanoTime()</code> is needed. This method was introduced with Java 5.<br>If you only have older versions installed, get the latest here: <a href="http://java.sun.com/javase/downloads/">http://java.sun.com/javase/downloads/</a><br>You
+also need a java5 db4o JAR file, otherwise you'll see a
+NotImplementedException when the benchmark tries to access <code>nanoTime()</code>.<br><br>Think
+of the following scenario: You develop software with db4o for a target
+system, that has much slower I/O than your developer system (e.g. an
+embedded device).<br><br>Wouldn't it sometimes be nice getting a feel
+for the expected speed your application will work with on the target
+system without having to deploy to it?<br><br>In particular, if you want to profile your system with a profiler like <a href="http://www.quest.com/jprobe/">JProbe</a>, simulating the expected slow I/O on a device will help you identifying the bottlenecks in your application.<br><br>This
+is where the results of IoBenchmark and a DelayingIoAdapter enter the
+arena. If you run IoBenchmark on both the embedded device and your
+developer machine you get two results files. Copy the file from the
+slower device to the db4otools folder on the faster machine and set
+both filenames in IoBenchmark.properties:
+</p><pre>&nbsp;&nbsp;&nbsp; results.file.1=db4o-IoBenchmark-results-30000_faster.log<br>&nbsp;&nbsp;&nbsp; results.file.2=db4o-IoBenchmark-results-30000_slower.log<br></pre>
+It's not necessary that results.file.1 holds the faster log, any order will work.<br><br>You
+are now set to run the benchmark in delayed mode. The expected result
+of such a run is, that the results of a delayed run on the faster
+machine should be close to those on the slow device.<br>To do a delayed run execute one of the run.delayed.benchmark.* targets of the Ant script.<br>At the beginning of the output - prior to the benchmark results - you'll notice additional information about the delaying:
+
+<pre>    =============================================================<br>    Running db4o IoBenchmark<br>    =============================================================<br>    Delaying:<br>    &gt; machine1 (db4o-IoBenchmark-results-30000_faster.log) is faster!<br>    &gt; Required delays:<br>    &gt; [delays in nanoseconds] read: 8195 | write: 10669 | seek: 10098 | sync: 215121<br>    &gt; Adjusting delay timer to match required delays...<br>    &gt; Adjusted delays:<br>    &gt; [delays in nanoseconds] read: 4934 | write: 7387 | seek: 6849 | sync: 202203<br>    Running target application ...<br>    Preparing DB file ...<br>    Running benchmark ...<br>    [...]<br></pre>
+
+Let's have a look at what exactly is going on when setting up delaying.<br>First
+there is a check for the validity of the two result files for delaying.
+To pass this check, one of the two supplied benchmark results file must
+contain the better values for all the 4 operations. This constraint
+exists because it's not possible to speed things up, only slowing them
+down.<br><br>Once this check is passed, the delays are calculated by
+simply subtracting the numbers found in the result files. The resulting
+numbers tell us, how long each I/O operation should be delayed on the
+faster machine<br>to get the same behaviour as on the slower one.<br>The
+problem is now that just simply waiting for the calculated amount of
+time will make us wait for too long. This is due to additional setup
+time for each wait (method calls) and the "at least" semantics of the<br>wait method itself.<br>&nbsp;&nbsp;&nbsp; <br>To
+cope with this limitation there is a delay adjustment logic. It tries
+to find the actual delay to wait for such that the overall waiting
+time, including the setup method calls, matches the desired delay time.<br>However,
+there's a catch to this adjustment logic: On each machine there's a
+minimum delay that can be achieved with waiting, and this delay is not
+equal to zero (e.g. 400ns)! If the performance of the two machines is
+too close together, it is possible that when trying to adjust a delay,
+the outcome is below the minimum delay achievable.<br>In this case you'll see output like this:
+<pre>&nbsp;&nbsp;&nbsp; &gt;&gt; Smallest achievable delay: 400<br>&nbsp;&nbsp;&nbsp; &gt;&gt; Required delay setting: 260<br>&nbsp;&nbsp;&nbsp; &gt;&gt; Using delay(0) to wait as short as possible.<br>&nbsp;&nbsp;&nbsp; &gt;&gt; Results will not be accurate.<br></pre>
+To find out which delay actually was too small, and hence which results won't be accurate, take a look at the adjusted delays:
+
+<pre>&nbsp;&nbsp;&nbsp; &gt; Adjusted delays:<br>&nbsp;&nbsp;&nbsp; &gt; [delays in nanoseconds] read: 0 | write: 7387 | seek: 6849 | sync: 202203<br></pre>
+Here the read delay was too small and therefore the results for read are expected to be slower than targeted.<br>&nbsp;&nbsp;&nbsp; <br>Once the delays are adjusted, they can be fed to the DelayingIoAdapter (as done in IoBenchmark#delayingIoAdapter):<br><br><code>IoAdapter rafFactory = new RandomAccessFileAdapter();</code><br><code>IoAdapter delFactory = new DelayingIoAdapter(rafFactory, _delays);</code><br><code>IoAdapter io =  delFactory.open(dbFileName, false, 0, false);</code><br><br>If
+you now configure db4o with the IoAdapter io from above, each I/O
+operation will be delayed by the respective delay stored in _delays!<br><br>The
+above IoAdapter setup is also exactly what you need in your own
+application to simulate the slower I/O of your target device on your
+faster machine.
+<br></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2008-02-03T14:23:07 by Tetyana.
+				</div>
+  </body>
+</html>

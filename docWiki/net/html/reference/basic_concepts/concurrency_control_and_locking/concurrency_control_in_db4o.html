@@ -1,0 +1,45 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Concurrency Control In Db4o</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Concurrency Control In Db4o</h1>
+
+<p>Db4o
+uses overly optimistic concurrency control: an object is locked for read and
+write, but no collision detection is used. In the same time, db4o provides you
+with all means to implement a suitable for you concurrency control strategy in
+your application.<br></p><p>In a client-server environment each client obtains a
+transaction from a client transaction pool. The changes are written to a
+temporary transactional space, which can be committed/rolled back when a
+commit/rollback message is received from the client.</p>
+
+<p>When a client object container needs to write (or read)
+something a message with the task is created. If the batchMessages
+configuration setting is set to true, the messages will be collected in a batch
+of certain size before being sent to the server. The client write message
+process is synchronized, i.e. the only one client process can write to the
+server socket at a time.</p>
+
+<p>On the server a message dispatcher loop gets messages from
+the socket and processes them depending on the type of message.</p>
+
+<p>When a client transaction is committed a lock on the
+database file is obtained for physical write of data. The other client
+transactions have to wait till the write is done. To notify the other clients
+about the changes made by the current client commit <a href="../../implementation_strategies/callbacks/commit-time_callbacks.html" class="wikiLink">Commit-Time Callbacks</a>
+are used</p>
+
+
+
+<p>For more information see <a href="../../client-server/concurrency_control.html" class="wikiLink">Concurrency Control</a>.</p></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2008-07-07T19:00:25 by Tetyana.
+				</div>
+  </body>
+</html>

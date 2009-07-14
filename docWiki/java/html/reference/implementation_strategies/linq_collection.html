@@ -1,0 +1,160 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>LINQ Collection</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>LINQ Collection</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Simple Select">Simple Select</a></li><li><a href ="#Database Object Clone">Database Object Clone</a></li><li><a href ="#Select Any Type">Select Any Type</a></li><li><a href ="#Join Query">Join Query</a></li><li><a href ="#Sorting">Sorting</a></li><li><a href ="#Grouping Results">Grouping Results</a></li><li><a href ="#Modified Result">Modified Result</a></li><li><a href ="#Selecting A Result">Selecting A Result</a></li><li><a href ="#Aggregate Functions">Aggregate Functions</a></li></ul></li></ul></div></div></div><p><font color="#990000">This topic applies to .NET version only</font> </p><p>This chapter provides a collection of LINQ examples with
+db4o, which you can use to find different ways to construct your queries. The
+information below covers most of the database querying operations and should be
+enough for the majority of cases. However, it is still advisable to study <a href="http://msdn2.microsoft.com/en-us/library/bb308959.aspx">MSDN</a>
+resources, which explain in detail how LINQ and Extension methods work. For the
+introduction to LINQ queries for db4o please refer to <a href="../object_lifecycle/querying/linq.html" class="wikiLink">LINQ</a>
+chapter.</p><a name="Simple Select"></a><h2>Simple Select</h2>
+
+<p>Let's fill up the database with some data:</p>
+
+
+
+
+
+<p>In order to select objects of only Pilot class we can issue
+the following query:</p>
+
+
+
+
+
+<p>Note, that where clause is optional: if it is not specified
+all objects of Pilot class will be returned.</p>
+
+<p>We can make querying even easier by using anonymous types:</p>
+
+
+
+<a name="Database Object Clone"></a><h2>Database Object Clone</h2>
+
+<p>You can easily use LINQ to create database objects clones:</p>
+
+
+
+
+
+<p>Retrieved objects are not bound to the object container, but
+they duplicate the values from the database. You can use them for an
+"object-readonly" mode.</p><a name="Select Any Type"></a><h2>Select Any Type</h2>
+
+<p>With the selection we are not bound to only one type of
+objects - actually we can select everything that is currently in the database:</p>
+
+
+
+
+
+<p>We can further use this broad selection too. As the query
+result implements IQueryable interface, we can re-use it to retrieve more
+specific objects:</p>
+
+
+
+
+
+<p>In this example we use an all objects selection to find a
+range of pilots and then cars with pilots within the range. Remember, however,
+that the objects in allObjects variable are not actually retrieved from the
+database until they are browsed or used. If you want to get them all into the
+memory for future use, utilize ToList or ToArray methods.</p><a name="Join Query"></a><h2>Join Query</h2>
+
+<p>Above we've already discussed how to select objects of one
+type based on the selection of the other type. However, that way is rather
+cumbersome and most probably you won't need it: you can use join operator
+instead:</p>
+
+
+
+
+
+<p>This simple syntax allows you to join any amount of classes
+using any possible relationship between them. You can also make use of <a href="http://msdn2.microsoft.com/en-us/library/bb308959.aspx">Join</a>
+extension method syntax to get the same result.</p><a name="Sorting"></a><h2>Sorting</h2>
+
+<p>Sorting is added with <code>orderby</code> operator and can
+be ascending(default) or descending.</p>
+
+
+
+<p>We can also use subsequent sorts. For example sort by name
+descending and by points ascending:</p>
+
+
+
+
+
+<p>The same effect can be achieved by using
+<code>OrderBy/OrderByDescending</code> and <code>ThenBy/ThenByDescending</code>
+extension methods.</p><a name="Grouping Results"></a><h2>Grouping Results</h2>
+
+<p>Grouping results can be often useful in different reports.
+For example, we can group the data from the previous example by pilot's name:</p>
+
+
+
+
+
+<p>Here we use <code>GroupBy</code> extension method. The
+parameters specify the grouping property (Points) and the display property
+(Name).</p><a name="Modified Result"></a><h2>Modified Result</h2>
+
+<p>Sometimes we need to apply some calculation on each result -
+with LINQ we can do that directly in the query:</p>
+
+
+
+
+
+
+
+<p>In the example above the query will bring as the calculated
+percentage of maximum for each pilot's points.<br></p>
+
+<a name="Selecting A Result"></a><h2>Selecting A Result</h2>
+
+<p>Though a query usually returns all the candidates matching
+the selected criteria, we can specify which of the results we want:
+<code>First</code>, <code>ElementAt</code>, <code>Any</code>, <code>All</code>.</p>
+
+
+
+
+
+<p>The query above will return <code>true</code> if there are
+any objects in the result set and <code>false</code> otherwise.</p><a name="Aggregate Functions"></a><h2>Aggregate Functions</h2>
+
+<p>Often we are not interested in each and every result, but
+need some statistics about it: sum, aggregate, average, max etc. This can be
+achieved with extension methods.</p>
+
+
+
+
+
+<p>This method returns only the average value of pilot points.</p>
+
+
+
+
+
+<p>In this case we use <code>Aggregate</code> extension method
+to return all the names and a semicolon-separated string. In
+<code>Aggregate</code> function first parameter specify the initial return
+value, second parameter is a function that appends each new value to the
+initial value.</p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2008-02-25T16:06:20 by Tetyana.
+				</div>
+  </body>
+</html>

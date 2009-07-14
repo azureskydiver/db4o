@@ -1,0 +1,59 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>TA Enhancement With Db4oTool</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>TA Enhancement With Db4oTool</h1><p><font color="#990000">This topic applies to .NET version only</font>&nbsp;</p><p>TA instrumentation can be done by appilying<br></p><p> <a href="../../../../implementation_strategies/enhancement_tools/enhancement_for_.net/db4otool.html" class="wikiLink">Db4oTool</a> utility to the ready .NET assemblies:</p>
+
+<p><code>Db4oTool -ta assembly</code></p>
+
+<p>Let's look at a simple example. We will use SensorPanel
+class from <a href="../../../activation.html" class="wikiLink">Activation</a> example: </p>
+
+
+
+
+
+<p>In your code you will need to add Transparent Activation
+support to the configuration:</p>
+
+
+
+
+
+<p>Compile and run the application. Now, you can add TA support by using the following
+command-line:</p>
+
+<p><code>Db4oTool -ta TAExamples.exe</code></p>
+
+<p>use -vv option for verbose output:</p>
+
+<p><code>Db4oTool -ta -vv TAExamples.exe</code></p>
+
+<p>You can also apply type filter to TA enable only selected
+types:</p>
+
+<p><code>Db4oTool.exe -vv -ta -by-name:S* TAExamples.exe</code></p>
+
+
+
+
+
+
+
+
+
+
+
+<p>Db4oTool uses .NET regex to parse the -by-name parameter,
+in the example above all types starting with "S" will be TA enabled.</p><p>Run TA enabled assembly and compare results to the previous run.&nbsp;</p></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-12-03T19:09:19 by Tetyana.
+				</div>
+  </body>
+</html>

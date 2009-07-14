@@ -1,0 +1,145 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Query Structure</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Query Structure</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+
+<p>More complex queries take longer to execute, as they include
+more constrains and can impose some additional operations as sorting,
+aggregate, negation etc.</p>
+
+
+
+<span name="cs_wiki_filter" csw_filters="net">
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">QueryPerformanceBenchmark.cs: <span class="fscMemberName">RunQueryStructureTest</span></span></div><div class="fscCode"><pre ID="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunQueryStructureTest_226_90"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> RunQueryStructureTest()
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunQueryStructureTest_226_90_45_1572_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunQueryStructureTest_226_90_45_1572_Open_Text').style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunQueryStructureTest_226_90_45_1572_Closed_Image').style.display='inline'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunQueryStructureTest_226_90_45_1572_Closed_Text').style.display='inline';"/><img id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunQueryStructureTest_226_90_45_1572_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunQueryStructureTest_226_90_45_1572_Closed_Text').style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunQueryStructureTest_226_90_45_1572_Open_Image').style.display='inline'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunQueryStructureTest_226_90_45_1572_Open_Text').style.display='inline';"/>        </span><span id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunQueryStructureTest_226_90_45_1572_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunQueryStructureTest_226_90_45_1572_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Init();
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Clean();
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            System.Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Storing objects as a bulk:</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Open(Configure());
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Store();
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Close();
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #008000;">//
+</span><span style="color: #008080;">12</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">            Open(Configure());
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            System.Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Simple SODA query:</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            StartTimer();
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            IQuery query </span><span style="color: #000000;">=</span><span style="color: #000000;"> objectContainer.Query();
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            query.Constrain(</span><span style="color: #0000FF;">typeof</span><span style="color: #000000;">(Item));
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            query.Descend(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">_name</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">).Constrain(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">level1/1</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Item item </span><span style="color: #000000;">=</span><span style="color: #000000;"> (Item)query.Execute().Next();
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            StopTimer(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Select 1 object SODA: </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> item._name);
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Close();
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">22</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #008000;">//
+</span><span style="color: #008080;">23</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">            Open(Configure());
+</span><span style="color: #008080;">24</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            System.Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Sorted SODA query:</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">25</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            StartTimer();
+</span><span style="color: #008080;">26</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            query </span><span style="color: #000000;">=</span><span style="color: #000000;"> objectContainer.Query();
+</span><span style="color: #008080;">27</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            query.Constrain(</span><span style="color: #0000FF;">typeof</span><span style="color: #000000;">(Item));
+</span><span style="color: #008080;">28</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            query.Descend(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">_name</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">).OrderDescending();
+</span><span style="color: #008080;">29</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            item </span><span style="color: #000000;">=</span><span style="color: #000000;"> (Item)query.Execute().Next();
+</span><span style="color: #008080;">30</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            StopTimer(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Select 1 object SODA: </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> item._name);
+</span><span style="color: #008080;">31</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Close();
+</span><span style="color: #008080;">32</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">33</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #008000;">//
+</span><span style="color: #008080;">34</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">            Open(Configure());
+</span><span style="color: #008080;">35</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            System.Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">SODA query with joins:</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">36</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            StartTimer();
+</span><span style="color: #008080;">37</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            query </span><span style="color: #000000;">=</span><span style="color: #000000;"> objectContainer.Query();
+</span><span style="color: #008080;">38</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            query.Constrain(</span><span style="color: #0000FF;">typeof</span><span style="color: #000000;">(Item));
+</span><span style="color: #008080;">39</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            IConstraint con </span><span style="color: #000000;">=</span><span style="color: #000000;"> query.Constrain(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">level2/1</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">40</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            query.Descend(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">_name</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">).OrderDescending().Constrain(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">level1/1</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">).Or(con);
+</span><span style="color: #008080;">41</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            IList result </span><span style="color: #000000;">=</span><span style="color: #000000;"> query.Execute();
+</span><span style="color: #008080;">42</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            StopTimer(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Selected </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> result.Count </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;"> objects SODA</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">43</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Close();
+</span><span style="color: #008080;">44</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">45</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        }</span></span></div></pre></div></div>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">QueryPerformanceBenchmark.cs: <span class="fscMemberName">Init</span></span></div><div class="fscCode"><pre ID="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Init_320_73"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> Init()
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Init_320_73_28_238_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Init_320_73_28_238_Open_Text').style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Init_320_73_28_238_Closed_Image').style.display='inline'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Init_320_73_28_238_Closed_Text').style.display='inline';"/><img id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Init_320_73_28_238_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Init_320_73_28_238_Closed_Text').style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Init_320_73_28_238_Open_Image').style.display='inline'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Init_320_73_28_238_Open_Text').style.display='inline';"/>        </span><span id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Init_320_73_28_238_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Init_320_73_28_238_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            _filePath </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;">performance.db4o</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">;
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #008000;">//</span><span style="color: #008000;"> amount of objects</span><span style="color: #008000;">
+</span><span style="color: #008080;">05</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">            _count </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #800080;">10000</span><span style="color: #000000;">;
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #008000;">//</span><span style="color: #008000;"> depth of objects</span><span style="color: #008000;">
+</span><span style="color: #008080;">07</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">            _depth </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #800080;">3</span><span style="color: #000000;">;
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            _isClientServer </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        }</span></span></div></pre></div></div>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">QueryPerformanceBenchmark.cs: <span class="fscMemberName">Configure</span></span></div><div class="fscCode"><pre ID="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Configure_397_78"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> IConfiguration Configure()
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Configure_397_78_43_149_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Configure_397_78_43_149_Open_Text').style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Configure_397_78_43_149_Closed_Image').style.display='inline'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Configure_397_78_43_149_Closed_Text').style.display='inline';"/><img id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Configure_397_78_43_149_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Configure_397_78_43_149_Closed_Text').style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Configure_397_78_43_149_Open_Image').style.display='inline'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Configure_397_78_43_149_Open_Text').style.display='inline';"/>        </span><span id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Configure_397_78_43_149_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_Configure_397_78_43_149_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            IConfiguration config </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4oFactory.NewConfiguration();
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">return</span><span style="color: #000000;"> config;
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        }</span></span></div></pre></div></div>
+
+</span>
+
+<p>Results from the test machine:</p>
+
+<p><i>Storing objects as a
+bulk:</i></p>
+
+<p><i>Store 30000 objects:
+3049ms</i></p>
+
+<p><i>Simple SODA query:</i></p>
+
+<p><i>Select 1 object SODA:
+level1/1: 440ms</i></p>
+
+<p><i>Sorted SODA query:</i></p>
+
+<p><i>Select 1 object SODA:
+level9999/2: 1509ms</i></p>
+
+<p><i>SODA query with joins:</i></p>
+
+<p><i>Selected 1 objects
+SODA: 1735ms</i></p>
+
+<p>From the test results you can see that sorting makes the
+query slower, and adding additional constraints slows things down even more.</p></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2008-06-08T15:46:48 by Tetyana.
+				</div>
+  </body>
+</html>

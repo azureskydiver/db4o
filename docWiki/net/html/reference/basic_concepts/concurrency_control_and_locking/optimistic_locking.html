@@ -1,0 +1,45 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Optimistic Locking</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Optimistic Locking</h1>
+
+<p>In the real world there are many systems where collisions
+are not very frequent. For example if 2 users are processing bank transfers
+they may work with account objects but the accounts are different, so that they
+do not collide.</p>
+
+For the situation described above, optimistic locking
+will be a reasonable solution. When optimistic locking is used, it is accepted
+that collisions may occur, but instead of trying to prevent them, the system
+tries to detect and resolve them. Optimistic locking process flow is shown on
+the figure below.<br><img src="Optimistic_Locking/Flow.Jpg"/><br>
+
+<ol><li>Data
+     is retrieved with a read lock. The lock is released immediately after the
+     retrieval. </li><li>Data
+     modifications are done on unlocked data.</li><li>Before
+     committing the modifications, the system tries to detect a collision. If a
+     collision is detected, it should be handled according to the system rules
+     (for example: the collision information can be logged or displayed to the
+     user, transaction modifications can be merged, rejected or accepted).</li><li>The
+     data is committed to the database or rolled back. The lock is released.</li></ol>
+
+<p>&nbsp;There are different ways to detect a collision.
+For example, you can mark the retrieved objects with a unique identifier,
+timestamp or username. Alternatively, you can store a copy of the originally
+retrieved object and compare it to the object from the database before trying
+to update.</p>
+
+<br></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-05-22T11:48:53 by Tetyana.
+				</div>
+  </body>
+</html>

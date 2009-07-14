@@ -1,0 +1,41 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Pluggable Storage</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Pluggable Storage</h1>
+
+<p>Pluggable nature of db4o Storage adapters allows you to
+implement any persistent storage behind the database engine. It can be memory,
+native IO, encrypted storage, mirrored storage etc.</p>
+
+<p>The implementation is guided by 2 interfaces:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>Storage</code> and <code>Bin</code></p>
+
+</span>
+
+
+
+<p>Storage/IStorage interface defines the presence of this
+particular storage implementation and Bin/IBin implements actual physical access
+to the information stored. To simplify the implementation db4o provides
+StorageDecorator and BinDecorator classes with the base functionality, that can
+be extended/overridded.</p>
+
+<p>To sort out the details of the implementation let's look at
+an <a href="pluggable_storage/logging_storage.html" class="wikiLink">example</a>.</p></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2009-05-09T08:18:26 by Tetyana.
+				</div>
+  </body>
+</html>

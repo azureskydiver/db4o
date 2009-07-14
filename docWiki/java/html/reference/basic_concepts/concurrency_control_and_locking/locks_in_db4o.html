@@ -1,0 +1,51 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Locks In Db4o</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Locks In Db4o</h1>
+
+<p>In db4o locks can be implemented
+with the help of <a href="../../client-server/semaphores.html" class="wikiLink">Semaphores</a>. Though you cannot
+implement page or cluster locking, you can still vary the range of locking by
+using different semaphore names. For example:</p>
+
+<ol>
+<li>The following semaphore will
+lock all the objects of a class:
+
+
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java:</p>
+
+<p><code>extObjectContainer.setSemaphore(Pilot.class.getName,
+3000)</code></p>
+
+</span>
+
+
+
+</li>
+<li>This semaphore will lock a single object
+
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java:&nbsp;</p>
+
+<p><code>extObjectContainer.setSemaphore("LOCK_"+objectContainer.ext().getID(pilot),
+3000)</code></p>
+
+</span>
+
+<p>
+</li>
+</ol></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-05-22T12:02:20 by Tetyana.
+				</div>
+  </body>
+</html>

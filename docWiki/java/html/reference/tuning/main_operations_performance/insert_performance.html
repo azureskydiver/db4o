@@ -1,0 +1,84 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Insert Performance</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Insert Performance</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script><p><br><br>The following chapters provide some performance testing
+examples, revealing the most influential performance factors. Together with the
+examples there are some approximate time measurement values that were achieved on
+a Toshiba Sattelite Pro A120 notebook with 1Gb RAM 120GB ATA drive running on Vista. Please, note that these values are not guaranteed
+and can vary considerably depending on a hardware and software used.</p>
+
+<p>In most of the tests the following simple object was used:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">InsertPerformanceBenchmark.java: <span class="fscMemberName">Item</span></span></div><div class="fscCode"><pre ID="ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_25_264_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_25_264_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_25_264_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_25_264_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_25_264_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_25_264_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_25_264_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_25_264_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">class</span><span style="color: #000000;"> Item </span><span id="ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_25_264_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_25_264_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        </span><span style="color: #0000FF;">public</span><span style="color: #000000;"> String _name;
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        </span><span style="color: #0000FF;">public</span><span style="color: #000000;"> Item _child;
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img id="ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_115_139_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_115_139_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_115_139_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_115_139_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_115_139_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_115_139_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_115_139_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_115_139_Open_Text').style.display='inline';"/>        </span><span style="color: #0000FF;">public</span><span style="color: #000000;"> Item()</span><span id="ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_115_139_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_115_139_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>        }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img id="ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_193_258_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_193_258_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_193_258_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_193_258_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_193_258_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_193_258_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_193_258_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_193_258_Open_Text').style.display='inline';"/>        </span><span style="color: #0000FF;">public</span><span style="color: #000000;"> Item(String name, Item child)</span><span id="ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_193_258_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceTuningMain_Operations_PerformanceInsert_PerformancePerformanceJava.ZipsInsertPerformanceBenchmark.Java_InsertPerformanceBenchmark.Java_Item_564_70_193_258_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            _name </span><span style="color: #000000;">=</span><span style="color: #000000;"> name;
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            _child </span><span style="color: #000000;">=</span><span style="color: #000000;"> child;
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>        }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>    }</span></span></div></pre></div></div>
+
+</span>
+
+
+
+<p>In the tests Item objects were created with 3 levels of
+embedded Item objects. The amount of objects was varied for different tests.</p>
+
+
+
+<p>Please, be cautious to compare results of different tests
+presented as different configurations are used in each test.&nbsp;</p>
+
+<p><div class="childTopicList">More Reading:<ul>
+<li><p><a href="insert_performance/hardware_resources.html" class="wikiLink">Hardware Resources</a></p></li>
+<li><p><a href="insert_performance/local_and_remote_modes.html" class="wikiLink">Local And Remote Modes</a></p></li>
+<li><p><a href="insert_performance/commit_frequency.html" class="wikiLink">Commit Frequency</a></p></li>
+<li><p><a href="insert_performance/object_structure.html" class="wikiLink">Object Structure</a></p></li>
+<li><p><a href="insert_performance/indexes.html" class="wikiLink">Indexes</a></p></li>
+<li><p><a href="insert_performance/inherited_objects.html" class="wikiLink">Inherited Objects</a></p></li>
+<li><p><a href="insert_performance/configuration_options.html" class="wikiLink">Configuration Options</a></p></li>
+</ul></div>
+</p>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-12-30T14:26:32 by Tetyana.
+				</div>
+  </body>
+</html>

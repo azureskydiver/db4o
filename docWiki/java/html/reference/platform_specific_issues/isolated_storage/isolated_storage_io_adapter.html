@@ -1,0 +1,73 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Isolated Storage IO Adapter</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Isolated Storage IO Adapter</h1><p><font color="#990000">This topic applies to .NET version only</font>&nbsp;</p>
+<p>In order to access Isolated Storage you must use <code>IsolatedStorageFileStream</code>,
+which is a class derived from <code>FileStream</code>. db4o by default uses
+<a href="../../tuning/performance_hints/randomaccessfileadapter.html" class="wikiLink">RandomAccessFileAdapter</a> or
+<a href="../../implementation_strategies/io_adapter/cachedioadapter.html" class="wikiLink">CachedIoAdapter</a> (depending on
+version), which under the hood are using <code>FileStream</code> to read and
+write db4o database file. As <code>IsolatedStorageFileStream</code> provides
+the same interface as <code>FileStream</code> we can use it with a custom IO
+adapter to make db4o store its data in the Isolated Storage.</p>
+
+<p>To start with let's take
+<code>Db4objects.Db4o.IO.RandomAccessFileAdapter</code> and <code>Sharpen.IO.RandomAccessFile</code> from db4o
+source code and modify them to meet our needs. Basicly, we must change all
+occurences of <code>FileStream</code> to
+<code>IsolatedStorageFileStream</code>, and modify file system function like
+create or delete to use Isolated Storage semantics.</p>
+
+<p>First of all let's
+create new classes: <code>Db4oIsolatedStorageFile</code> and
+<code>IsolatedStorageFileAdapter</code>, and copy the contents of
+<code>RandomAccessFile</code> and <code>RandomAccessFileAdapter</code>
+accordingly into them.</p>
+
+<p>The constructor for
+the new <code>Db4oIsolatedStorageFile</code> needs to be changed like
+this:</p>
+
+
+
+
+
+
+
+<p>The rest of <code>Db4oIsolatedStorageFile</code> copies the
+syntax of the <code>RandomAccessFile</code>. The result of the modification can be reviewed
+here: <a href="db4oisolatedstoragefile.html" class="wikiLink">Db4oIsolatedStorageFile</a>.</p>
+<p>In the IsolatedStorageFileAdapter we will need to make the
+following changes:</p>
+
+<ul>
+<li>change
+     the references of RandomAccessFile to Db4oIsolatedStorage file
+     (constructor and Open method);</li>
+<li>remove
+     LockFile and UnlockFile method calls (constructor and Close method);</li>
+<li>remove
+     the call to translate file path to canonical path from the constructor;</li>
+<li>modify
+     Delete and Exists methods to use the Isolated Storage instead of file
+     system.</li>
+</ul>
+
+
+<p>The result of the
+modification can be reviewed here: <a href="isolatedstoragefileadapter.html" class="wikiLink">IsolatedStorageFileAdapter</a>.</p>
+<p>The
+<a href="isolated_storage_example.html" class="wikiLink">next topic</a> will show a small example of db4o
+usage over isolated storage.</p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-08-19T13:36:48 by Tetyana.
+				</div>
+  </body>
+</html>

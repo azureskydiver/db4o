@@ -1,0 +1,28 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Using Your Application To Generate The IO Pattern</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Using Your Application To Generate The IO Pattern</h1><p><font color="#990000">This topic applies to Java version only</font>&nbsp;</p>
+When you execute IoBenchmark, it uses a simple CRUD (create, read,
+update, delete) application as the target application. This application
+is located in the com.db4o.bench.crud package.<br><br>If you want to use your own application for generating the I/O access patterns, here's what you have to do:
+
+<ul><li>
+Use a LoggingIoAdapter, delegating to your default IoAdapter:<br><br><code>RandomAccessFileAdapter rafAdapter = new RandomAccessFileAdapter();<br>IoAdapter ioAdapter = new LoggingIoAdapter(rafAdapter, "filename.log");<br>Configuration config = Db4o.cloneConfiguration();<br>config.io(ioAdapter);</code><br>&nbsp;&nbsp;&nbsp;<br>
+You'll also find this code in <code>com.db4o.bench.crud.CrudApplication#prepare()</code>.</li><br><li>
+Change IoBenchmark to call your application by modifying the <code>runTargetApplication()</code> method.<br>You also have to exchange the calls to <code>CrudApplication.logFileName(itemCount)</code> in <code>prepareDbFile()</code> and <code>runBenchmark</code><br>with the file name of the log containing the I/O access pattern of your application.<br>Using the code from above, this log file will be called "filename.log".
+</li></ul>
+
+If you want to generate your log by interacting with your application, rather than having IoBenchmark calling it, do as follows:<br><ul><li>Use a LoggingIoAdapter in your application</li><li>Interact with your application to create the log</li><li>Remove the stage 1 from IoBenchmark and make it start in stage 2 with your log.</li></ul>If you are using your own application to generate the I/O log file, check out the <a href="io_log_file_statistics.html" class="wikiLink">IO Log File Statistics</a> section further down.
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2008-02-03T14:12:38 by Tetyana.
+				</div>
+  </body>
+</html>

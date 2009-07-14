@@ -1,0 +1,58 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Working With Large Amounts Of Data</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Working With Large Amounts Of Data</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Size of Database Files">Size of Database Files</a></li><li><a href ="#Performance">Performance</a></li></ul></li></ul></div></div></div><p>db4o is designed to manage large
+amounts of data. The following paragraphs highlight some information
+important for using db4o with large data.</p>
+<a name="Size of Database Files"></a><h2>Size of Database Files<br></h2>
+<p>In the default setting,
+the maximum database file size is 2GB. <br><br>You can increase this
+value by <a href="../tuning/performance_hints/increasing_the_maximum_database_file_size.html" class="wikiLink">configuring the internal db4o block size</a>:
+</p>
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java:</p>
+<p><code>configuration.blockSize(blockSize)</code> </p>
+</span>
+
+<p>As a parameter you can specify
+any value between 1 and 127. The resulting maximum database file size
+will be a multiple of 2GB. A recommended setting for large database
+files is 8, since internal pointers have this length. <br><br>Using <code>blockSize</code> the maximum database file size will be
+16GB. <br><br>The above method has to be called before an
+ObjectContainer is opened the first time. During the lifetime of an
+ObjectContainer the setting will have to stay the same. Since
+Defragment copies all objects to a new ObjectContainer, it can be
+used to change the blockSize of an existing database:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java:</p>
+<p><code>Defragment.defrag("filename.db4o")</code> </p>
+</span>
+
+
+<a name="Performance"></a><h2>Performance
+</h2>
+<p>Navigation access times
+to objects and the performance of access by internal IDs remains
+constant, no matter how large database files are. <br><br>Query
+performance on unindexed objects drops linearly with an increasing
+number of objects per class. <br><br>Query performance on a large
+number of objects can be dramatically improved by <a href="../tuning/performance_hints/enable_field_indexes.html" class="wikiLink">using indexes</a>:
+</p><span name="cs_wiki_filter" csw_filters="java">
+<p>Java:</p>
+
+<p><code>configuration.objectClass(Foo.class).objectField("bar").indexed(true);
+</code></p></span><p></p>
+<p>db4o storage performance is very good. It is recommended to run your own benchmarks with large amounts of data to check the overall performance on your particular class hierarchy.</p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-09-09T17:00:02 by Tetyana.
+				</div>
+  </body>
+</html>

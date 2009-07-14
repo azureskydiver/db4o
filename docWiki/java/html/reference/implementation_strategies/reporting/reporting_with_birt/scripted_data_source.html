@@ -1,0 +1,89 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Scripted Data Source</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Scripted Data Source</h1><p>At this point we have created the report layout and we've
+filled in the data. Now we need to "teach" the report to understand our data
+source. We can do this using a script.</p>
+
+<p>Open Pilots.rptdesign view and select "Script" tag.</p>
+
+<p>In the Data Explorer window select "Pilot" dataset. Select
+"open" script from the drop-down menu in the script window. Add the following
+script:</p>
+
+<p><code>dataClass =
+new Packages.Db4oModule();</code></p>
+
+<p><code>pilots =
+dataClass.readData();</code></p>
+
+<p><code>totalrows =
+pilots.size();</code></p>
+
+<p><code>currentrow =
+0; </code></p>
+
+<p>This script will prepare the data when the report is opened.
+Save the changes.</p>
+
+<p>Select "fetch" script from the drop-down menu. Add the
+following script:</p>
+
+<p><code>row["Pilot"]
+= currentrow; </code></p>
+
+<p><code>row["Points"]
+= totalrows; </code></p>
+
+<p><code>if (currentrow
+&gt;= totalrows){ </code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return(false); </code></p>
+
+<p><code>}
+</code></p>
+
+<p><code>var pilotsRow
+= pilots.get(currentrow); </code></p>
+
+
+
+<p><code>var Pilot =
+pilotsRow[0]; </code></p>
+
+<p><code>var Points =
+pilotsRow[1]; </code></p>
+
+
+
+<p><code>row["Pilot"]
+= Pilot; </code></p>
+
+<p><code>row["Points"]
+= Points; </code></p>
+
+
+
+<p><code>currentrow =
+currentrow + 1; </code></p>
+
+<p><code>return(true);
+</code></p>
+
+<p>This script fetches the data for the rows in the table.</p>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-02-16T18:37:46 by Tetyana.
+				</div>
+  </body>
+</html>

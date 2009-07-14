@@ -1,0 +1,64 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Identity Vs Equals</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Identity Vs Equals</h1>
+<p>One of the most common questions of db4o users is: why does
+not db4o allow to use equals() and hashcode to identify objects in the
+database. From the first glance it seems like a very attractive contract - let
+the developer decide what should be the base for comparing objects and making
+them unique in the database. For example if the database identity is based on
+the object's field values it will prevent duplicate objects from being stored
+to the database, as they will automatically be considered one object.</p>
+
+<p>Yes, it looks attractive, but there is a huge pitfall: when
+we deal with objects, we deal with their references to each other comprising a
+unique object graph, which can be very complex. Preserving these references
+becomes a task of storing many-to-many relationships. This task can only be
+solved by providing unique identification to each object <b>in memory</b> and not only in the database, which means that it can't
+depend on the information stored in the object (like an aggregate of field values).</p>
+
+<p>To see it clearly, let's look at an example. Suppose we have
+Pilot{string name} and Car{Pilot pilot} classes, and their <code>equals</code>
+method is based on comparing field values:</p>
+
+
+
+<ol><li>Store
+     a pilot1(name="name1") and car1(pilot=pilot1) to the database</li><li>Retrieve
+     pilot1</li><li>change
+     pilot1(name = "name1") to pilot1(name="name2"). Note that though it is the
+     same object from the runtime point of view, these are 2 different objects for
+     the database based on equals comparison.</li><li>Now
+     let's try to retrieve the car object, which has pilot = pilot1. We will
+     get no results as the initial pilot stored with the database is not equal
+     to the pilot1(name="name2"), and there is no car for the updated pilot
+     anymore!</li></ol><p>Now, this was a simple example, and can be solved by
+updating the car object together with the pilot. But what happens if there are
+thousands of objects referencing this pilot instance? They will all have to be
+retrieved and updated. Further, those objects can be also referenced somewhere
+and potentially a single update in a pilot object can trigger the re-write of
+the whole database. </p>
+
+<p>Objects without identity also make Transparent Persistence
+and Activation impossible, as there will be no way to decide which instance is
+the right one for update or activation.</p>
+
+<p>So unique identification of database objects in memory is
+unavoidable and identity based on an object reference is the most
+straightforward way to get this identification.</p>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2008-03-02T17:47:16 by Tetyana.
+				</div>
+  </body>
+</html>

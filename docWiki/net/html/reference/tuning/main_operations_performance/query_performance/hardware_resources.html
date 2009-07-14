@@ -1,0 +1,136 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Hardware Resources</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Hardware Resources</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+
+<p>Effective querying requires enough operating memory and
+quick hard drive access. Hard drive access time is important as the object will
+be read from the physical location into the operating memory. However, hard
+drive speed is not so critical for querying as it is for <a href="../insert_performance.html" class="wikiLink">inserting</a>.</p>
+
+<p>The following test uses a RAM drive to compare test results
+with the hard drive:</p>
+
+
+
+<span name="cs_wiki_filter" csw_filters="net">
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">QueryPerformanceBenchmark.cs: <span class="fscMemberName">RunRamDiskTest</span></span></div><div class="fscCode"><pre ID="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunRamDiskTest_472_83"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> RunRamDiskTest()
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunRamDiskTest_472_83_38_1278_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunRamDiskTest_472_83_38_1278_Open_Text').style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunRamDiskTest_472_83_38_1278_Closed_Image').style.display='inline'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunRamDiskTest_472_83_38_1278_Closed_Text').style.display='inline';"/><img id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunRamDiskTest_472_83_38_1278_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunRamDiskTest_472_83_38_1278_Closed_Text').style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunRamDiskTest_472_83_38_1278_Open_Image').style.display='inline'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunRamDiskTest_472_83_38_1278_Open_Text').style.display='inline';"/>        </span><span id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunRamDiskTest_472_83_38_1278_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_RunRamDiskTest_472_83_38_1278_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            InitForHardDriveTest();
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Clean();
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            System.Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Storing </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> _count </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;"> objects of depth </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> _depth
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                    </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;"> on a hard drive:</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Open(ConfigureRamDrive());
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Store();
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Close();
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Open(ConfigureRamDrive());
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            StartTimer();
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            IQuery query </span><span style="color: #000000;">=</span><span style="color: #000000;"> objectContainer.Query();
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            query.Constrain(</span><span style="color: #0000FF;">typeof</span><span style="color: #000000;">(Item));
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            query.Descend(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">_name</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">).Constrain(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">level1/1</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Item item </span><span style="color: #000000;">=</span><span style="color: #000000;"> (Item)query.Execute().Next();
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            StopTimer(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Select 1 object: </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> item._name);
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Close();
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            InitForRamDriveTest();
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Clean();
+</span><span style="color: #008080;">22</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            System.Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Storing </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> _count </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;"> objects of depth </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> _depth
+</span><span style="color: #008080;">23</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                    </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;"> on a RAM disk:</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">24</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Open(ConfigureRamDrive());
+</span><span style="color: #008080;">25</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Store();
+</span><span style="color: #008080;">26</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Close();
+</span><span style="color: #008080;">27</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Open(ConfigureRamDrive());
+</span><span style="color: #008080;">28</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            StartTimer();
+</span><span style="color: #008080;">29</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            query </span><span style="color: #000000;">=</span><span style="color: #000000;"> objectContainer.Query();
+</span><span style="color: #008080;">30</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            query.Constrain(</span><span style="color: #0000FF;">typeof</span><span style="color: #000000;">(Item));
+</span><span style="color: #008080;">31</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            query.Descend(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">_name</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">).Constrain(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">level1/1</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">32</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            item </span><span style="color: #000000;">=</span><span style="color: #000000;"> (Item)query.Execute().Next();
+</span><span style="color: #008080;">33</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            StopTimer(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Select 1 object: </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> item._name);
+</span><span style="color: #008080;">34</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Close();
+</span><span style="color: #008080;">35</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        }</span></span></div></pre></div></div>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">QueryPerformanceBenchmark.cs: <span class="fscMemberName">InitForHardDriveTest</span></span></div><div class="fscCode"><pre ID="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_InitForHardDriveTest_559_89"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> InitForHardDriveTest()
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_InitForHardDriveTest_559_89_44_189_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_InitForHardDriveTest_559_89_44_189_Open_Text').style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_InitForHardDriveTest_559_89_44_189_Closed_Image').style.display='inline'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_InitForHardDriveTest_559_89_44_189_Closed_Text').style.display='inline';"/><img id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_InitForHardDriveTest_559_89_44_189_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_InitForHardDriveTest_559_89_44_189_Closed_Text').style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_InitForHardDriveTest_559_89_44_189_Open_Image').style.display='inline'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_InitForHardDriveTest_559_89_44_189_Open_Text').style.display='inline';"/>        </span><span id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_InitForHardDriveTest_559_89_44_189_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_InitForHardDriveTest_559_89_44_189_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            _count </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #800080;">10000</span><span style="color: #000000;">;
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            _depth </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #800080;">3</span><span style="color: #000000;">;
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            _filePath </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;">performance.db4o</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">;
+</span><span style="color: #008080;">6</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            _isClientServer </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">7</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">8</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        }</span></span></div></pre></div></div>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">QueryPerformanceBenchmark.cs: <span class="fscMemberName">ConfigureRamDrive</span></span></div><div class="fscCode"><pre ID="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_ConfigureRamDrive_652_86"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> IConfiguration ConfigureRamDrive()
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_ConfigureRamDrive_652_86_51_200_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_ConfigureRamDrive_652_86_51_200_Open_Text').style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_ConfigureRamDrive_652_86_51_200_Closed_Image').style.display='inline'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_ConfigureRamDrive_652_86_51_200_Closed_Text').style.display='inline';"/><img id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_ConfigureRamDrive_652_86_51_200_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_ConfigureRamDrive_652_86_51_200_Closed_Text').style.display='none'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_ConfigureRamDrive_652_86_51_200_Open_Image').style.display='inline'; document.getElementById('..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_ConfigureRamDrive_652_86_51_200_Open_Text').style.display='inline';"/>        </span><span id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_ConfigureRamDrive_652_86_51_200_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..QueryPerformanceCS.ZipsQueryPerformanceBenchmark.Cs_QueryPerformanceBenchmark.Cs_ConfigureRamDrive_652_86_51_200_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            IConfiguration config </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4oFactory.NewConfiguration();
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            config.FlushFileBuffers(</span><span style="color: #0000FF;">true</span><span style="color: #000000;">);
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">return</span><span style="color: #000000;"> config;
+</span><span style="color: #008080;">6</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        }</span></span></div></pre></div></div>
+
+</span>
+
+<p>Test results:</p>
+
+<p><i>Storing 30000 objects
+of depth 3 on a hard drive:</i></p>
+
+<p><i>Store 90000 objects:
+6019ms</i></p>
+
+<p><i>Select 1 object:
+level1/1: 1515ms</i></p>
+
+<p><i>Storing 30000 objects
+of depth 3 on a RAM disk:</i></p>
+
+<p><i>Store 90000 objects:
+5264ms</i></p>
+
+<p><i>Select 1 object:
+level1/1: 1518ms</i></p>
+
+<p>You can see that the difference in query performance is negligible.</p>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2008-06-08T15:53:27 by Tetyana.
+				</div>
+  </body>
+</html>

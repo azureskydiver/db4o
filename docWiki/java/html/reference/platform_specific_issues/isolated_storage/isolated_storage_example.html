@@ -1,0 +1,49 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Isolated Storage Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Isolated Storage Example</h1>
+<p><font color="#990000">This topic applies to .NET version only</font></p>
+<p>In order to use our special
+<a href="isolatedstoragefileadapter.html" class="wikiLink">IsolatedStorageFileAdapter</a> the following configuration method should be
+called. </p>
+
+
+
+
+
+<p>In this example we will use
+<a href="../../tuning/debugging_db4o.html" class="wikiLink">debug message level</a> = 1 to see what is
+happening in the console.</p>
+
+<p>Let's try to save some objects and retrieve them. Remember,
+that the path in the Isolated Storage is not the path on the file system. For
+simplicity you can specify the database file with only the file name. For more
+information about creating directory structure in the Isolated Storage, please
+refer to the appropriate documentation. </p>
+
+<p>Run the following examples and check the output in the
+console to see how the <code>IsolatedStorageFileAdapter</code> works:</p>
+
+
+
+
+
+<p>There is one more thing to remember: delete file operation
+does not belong to db4o API, so if we need to delete the database from within
+the application we will need to use Isolated Storage functions:</p>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-08-19T13:36:31 by Tetyana.
+				</div>
+  </body>
+</html>

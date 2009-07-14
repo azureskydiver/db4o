@@ -1,0 +1,86 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Reserving Storage Space</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Reserving Storage Space</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java: </p>
+
+<p><code>configuration.reserveStorageSpace(byteCount)</code></p>
+
+</span>
+
+
+
+<a name="Advantage"></a><h2>Advantage</h2>
+
+<p>The allocation of a fixed number of bytes at
+one time makes it more likely that the database will be stored in one chunk
+on the mass storage. Less read/write head movement can result in improved
+performance.</p>
+
+<a name="Effect"></a><h2>Effect</h2>
+
+<p>ReserveStorageSpace setting reserves an
+additional space (byteCount) in a database file.</p>
+
+<p>The functionality of this setting depends on
+the context:</p>
+
+<ul>
+<li>global context:
+new database files will be created with an additional amount of bytes reserved;</li>
+<li>ObjectContainer
+context: each call to reserveStorageSpace will allocate an extra space in the
+database file.</li>
+</ul>
+
+<p>Note: Allocated space will be lost on abnormal
+termination of the database engine (hardware crash, VM crash). A Defragment run
+will recover the lost space. For the best possible performance, this method
+should be called before the Defragment run to configure the allocation of
+storage space to be slightly greater than the anticipated database file size.</p>
+
+<a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
+
+<p>An alternative strategy can be to use MemoryIoAdapter:</p>
+
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
+
+<p><code>MemoryIoAdapter
+adapter = new MemoryIoAdapter();</code></p>
+
+<p><code>configuration.io(adapter);</code></p>
+
+</span>
+
+
+
+
+<p>You can control the
+growth of the memory file by:</p>
+
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
+
+<p><code>adapter.growBy(100);</code></p>
+
+</span>
+
+
+
+<p>And you can control
+the size of the file on disk using RandomAccessFile API. For more information
+see <a href="../../implementation_strategies/io_adapter/memoryioadapter.html" class="wikiLink">MemoryIoAdapter</a>.</p></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-05-07T16:36:48 by Tetyana.
+				</div>
+  </body>
+</html>

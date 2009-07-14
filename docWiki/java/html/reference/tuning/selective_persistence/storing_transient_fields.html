@@ -1,0 +1,69 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Storing Transient Fields</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Storing Transient Fields</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+
+
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
+
+<p><code>Db4o.configure().objectClass(clazz).storeTransientFields(true)</code></p>
+
+</span>
+
+
+
+
+
+<p>This setting can be used to turn on storing of transient
+fields to db4o. It can be sometimes useful for debug purposes. </p>
+
+<p>In order to test how it works add the following method to
+the example in <a href="transient_fields_in_java.html" class="wikiLink">Transient Fields In Java</a>/<a href="transient_fields_in_.net.html" class="wikiLink">Transient Fields In .NET</a>:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">MarkTransientExample.java: <span class="fscMemberName">configureSaveTransient</span></span></div><div class="fscCode"><pre ID="ResourcesReferenceTuningSelective_PersistenceselpersistJava.ZipsMarkTransientExample.Java_MarkTransientExample.Java_ConfigureSaveTransient_506_81"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id="ResourcesReferenceTuningSelective_PersistenceselpersistJava.ZipsMarkTransientExample.Java_MarkTransientExample.Java_ConfigureSaveTransient_506_81_53_206_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceTuningSelective_PersistenceselpersistJava.ZipsMarkTransientExample.Java_MarkTransientExample.Java_ConfigureSaveTransient_506_81_53_206_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceTuningSelective_PersistenceselpersistJava.ZipsMarkTransientExample.Java_MarkTransientExample.Java_ConfigureSaveTransient_506_81_53_206_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceTuningSelective_PersistenceselpersistJava.ZipsMarkTransientExample.Java_MarkTransientExample.Java_ConfigureSaveTransient_506_81_53_206_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceTuningSelective_PersistenceselpersistJava.ZipsMarkTransientExample.Java_MarkTransientExample.Java_ConfigureSaveTransient_506_81_53_206_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceTuningSelective_PersistenceselpersistJava.ZipsMarkTransientExample.Java_MarkTransientExample.Java_ConfigureSaveTransient_506_81_53_206_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceTuningSelective_PersistenceselpersistJava.ZipsMarkTransientExample.Java_MarkTransientExample.Java_ConfigureSaveTransient_506_81_53_206_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceTuningSelective_PersistenceselpersistJava.ZipsMarkTransientExample.Java_MarkTransientExample.Java_ConfigureSaveTransient_506_81_53_206_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> Configuration configureSaveTransient()</span><span id="ResourcesReferenceTuningSelective_PersistenceselpersistJava.ZipsMarkTransientExample.Java_MarkTransientExample.Java_ConfigureSaveTransient_506_81_53_206_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceTuningSelective_PersistenceselpersistJava.ZipsMarkTransientExample.Java_MarkTransientExample.Java_ConfigureSaveTransient_506_81_53_206_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    Configuration configuration </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4o.newConfiguration();
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    configuration.objectClass(Test.</span><span style="color: #0000FF;">class</span><span style="color: #000000;">).storeTransientFields(</span><span style="color: #0000FF;">true</span><span style="color: #000000;">);
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">return</span><span style="color: #000000;"> configuration;
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+</span>
+
+
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-03-21T19:12:05 by Tetyana.
+				</div>
+  </body>
+</html>

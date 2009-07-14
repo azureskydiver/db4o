@@ -1,0 +1,30 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Db4oTool</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Db4oTool</h1>
+<p><font color="#990000">This topic applies to .NET version only.</font></p>
+<p>Db4oTool.exe utility is distributed together with db4o .NET version and can be used for Native Query optimization and Transparent Activation Instrumentation.</p>
+<p>The main use-cases for Db4oTool are:</p>
+<ol>
+<li><a href="../../../tuning/native_query_optimization/build-time_optimization_for_.net.html" class="wikiLink">Optimization of NQ</a> at build time. This will improve Native Query performance by cutting of query analyzing time during execution.</li>
+<li><a href="../../../tuning/native_query_optimization/nq_optimization_on_cf2.0.html" class="wikiLink">Optimizing delegate NQ syntax on CF2.0</a>. This optimization can only be done by Db4oTool as CompactFramework 2.0 API does not expose any of the delegate metadata needed for the optimization process.</li>
+<li><a href="../../../object_lifecycle/activation/transparent_activation_framework.html" class="wikiLink">Transparent Activation</a> instrumentation. This will enable you to use TA without modifying your classes or to use TA on third-party classes.</li><li><a href="../../../object_lifecycle/transparent_persistence.html" class="wikiLink">Transparent Persistence</a> instrumentation. This will enable you to use TP without
+modifying your classes or to use TP on third-party classes. TP implicitly includes TA instrumentation for the same classes.<br></li></ol>
+<p>If you use Db4oTool for use-cases 1 and 2 you will be able to distribute your application without Db4objects.Db4o.NativeQueries.dll (the assembly where the Native Query runtime optimizer lives).</p>
+<p><div class="childTopicList">More Reading:<ul>
+<li><p><a href="db4otool/db4otool_usage.html" class="wikiLink">Db4oTool Usage</a></p></li>
+<li><p><a href="db4otool/including_db4otool_in_the_build.html" class="wikiLink">Including Db4oTool In The Build</a></p></li>
+</ul></div>
+</p></div>
+    </div>
+    <div id="footer">
+					This revision (8) was last Modified 2008-01-20T08:46:55 by Tetyana.
+				</div>
+  </body>
+</html>

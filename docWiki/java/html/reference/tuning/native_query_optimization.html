@@ -1,0 +1,69 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Native Query Optimization</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Native Query Optimization</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Optimization Theory&nbsp;">Optimization Theory&nbsp;</a></li><li><a href ="#NQ Optimization For Java">NQ Optimization For Java</a></li></ul></li></ul></div></div></div> 
+
+<P>Native Queries will run out of the box in any environment. If optimization is turned on (default) Native Queries will be converted to <a href="../object_lifecycle/querying/soda_query.html" class="wikiLink">SODA</a> where this is possible, allowing db4o to use indexes and optimized internal comparison algorithms.Otherwise Native Query may be executed by instantiating all objects, using <a href="../object_lifecycle/querying/soda_evaluations.html" class="wikiLink">SODA Evaluations</a>. Naturally performance will not be as good in this case.</P>
+<a name="Optimization Theory&nbsp;"></a><H2>Optimization Theory&nbsp;</H2>
+
+<P>For Native Query Java bytecode and .NET IL code are analyzed to create an AST-like expression tree. Then the flow graph of the expression tree is analyzed and converted to a SODA query graph.</P>
+<P>For example:</P>
+<span name="cs_wiki_filter" csw_filters="java">
+<P>Java:&nbsp;</P>
+<P><code>List&lt;Pilot&gt; pilots = container.query(new Predicate&lt;Pilot&gt;() {</code></P>
+<P><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public boolean match(Pilot pilot) {</code></P>
+<P><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return pilot.getName().equals("Michael Schumacher")</code></P>
+<P><code>&amp;&amp; pilot.getPoints() == 100;</code></P>
+<P><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</code></P>
+<P><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });</code></P>
+</span>
+
+<P>First of all the following code will be extracted:</P>
+<P>query#constrain(Pilot)</P>
+<P>Then a more complex analysis will be run to convert the contents of the #match method into a SODA-understandable syntax. On a simple example it is easy to see what will happen:</P>
+<span name="cs_wiki_filter" csw_filters="java">
+<P>Java:&nbsp;</P>
+<P><code>return pilot.getName().equals("Michael Schumacher") &amp;&amp; pilot.getPoints() == 100;</code></P>
+</span>
+
+<P>easily converts into:</P>
+<P><code>CANDIDATE.name == "Michael Schumacher"</code></P>
+<P><code>CANDIDATE.points == 100</code></P>
+<span name="cs_wiki_filter" csw_filters="java">
+<a name="NQ Optimization For Java"></a><H2>NQ Optimization For Java</H2>
+<P>NQ optimisation on Java requires db4onqopt.jar and bloat.jar to be present in the CLASSPATH.<BR><BR>The Native Query optimizer is still under development to eventually "understand" all Java constructs. Current optimization supports the following constructs well:</P>
+<UL>
+<LI>compile-time constants</LI>
+<LI>simple member access</LI>
+<LI>primitive comparisons</LI>
+<LI>#equals() on primitive wrappers and Strings</LI>
+<LI>#contains()/#startsWith()/#endsWith() for Strings</LI>
+<LI>arithmetic expressions</LI>
+<LI>boolean expressions</LI>
+<LI>static field access</LI>
+<LI>array access for static/predicate fields</LI>
+<LI>arbitrary method calls on static/predicate fields (without candidate based params)</LI>
+<LI>candidate methods composed of the above</LI>
+<LI>chained combinations of the above<BR></LI></UL>
+<P>This list will constantly grow with the latest versions of db4o.</P>
+<P>Note that the current implementation doesn't support polymorphism and multiline methods yet.</P>
+<P>db4o for Java supplies three different possibilities to run optimized native queries, optimization at</P>
+<OL>
+<LI><a href="native_query_optimization/optimization_at_query_execution_time.html" class="wikiLink">query execution time</a></LI>
+<LI><a href="../object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_build_time.html" class="wikiLink">deployment time</a></LI>
+<LI><a href="../object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_load_time.html" class="wikiLink">class loading time</a></LI></OL>
+</span>
+
+<P>For more information on NQ optimization see <a href="native_query_optimization/monitoring_optimization.html" class="wikiLink">Monitoring Optimization</a>.<BR></P></div>
+    </div>
+    <div id="footer">
+					This revision (22) was last Modified 2008-04-25T19:28:42 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Optimizing Native Queries</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Optimizing Native Queries</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies&nbsp;">Alternate Strategies&nbsp;</a></li></ul></li></ul></div></div></div><a name="Advantage"></a><h2>Advantage</h2><p>Optimized Native Queries allow to achieve considerable performance improvements.<br></p><a name="Effect"></a><h2>Effect</h2><p><a href="../../basic_concepts/native_query_concepts.html" class="wikiLink">Native Queries</a> allow to express a database query in a native object-oriented language. This solution is elegant and straightforward as no mixture of concepts (object and relational) occurs. However, the challenge is to make this solution performant.<br></p><p>If the NQ code is run as is, it requires instantiation of
+all the members of a class. This is very slow in most cases. In order to
+improve the performance a special optimizer is used by db4o. The idea of the
+optimization is to analyze the code in a Native Query and provide an
+alternative in a database query language. This can be done in runtime or build
+time.</p><p>For detailed information about optimization strategies, please, see <a href="../native_query_optimization.html" class="wikiLink">Native Query Optimization</a>.<br></p><a name="Alternate Strategies&nbsp;"></a><h2>Alternate Strategies&nbsp;</h2><p>Obviously, optimization is not possible in cases, when a
+native query does not have a database query alternative. To reveal those cases
+<span class="wikiLink"><a href="../diagnostics/nativequerynotoptimized.html" class="wikiLink">db4o Diagnostic</span></a> system
+should be used.</p>
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-08-04T12:08:11 by Tetyana.
+				</div>
+  </body>
+</html>

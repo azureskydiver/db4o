@@ -1,0 +1,89 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Isolation</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Isolation</h1>
+
+<p>Isolation
+imposes rules, which ensure that transactions do not interfere with each other
+even if they are executed at the same time. If 2 (or more) transactions are
+executed at the same time, they must be executed in a way so that transaction N
+won't be impacted by the intermediate data of transaction M. Note, that
+isolation does not dictate the order of the transactions. Another important
+thing to understand about isolation is serializability of transactions. If the
+effect on the database is the same when transactions are executed concurrently
+or when their execution is interleaved, these transactions are called
+serializable.</p>
+
+<p>There are
+several degrees of isolation to be distinguished:</p>
+
+<ul class="unIndentedList">
+<li>
+degree 0: a
+transaction does not overwrite data updated by another user or process
+("dirty data") of other transactions;</li>
+<li>
+degree 1:
+degree 0 plus a transaction does not commit any writes until it completes all
+its writes (until the end of transaction);</li>
+<li>
+degree 2:
+degree 1 plus a transaction does not read dirty data from other transactions;</li>
+<li>
+degree 3:
+degree 2 plus other transactions do not dirty data read by a transaction before
+the transaction commits.</li>
+</ul>
+
+
+
+
+<p>The more
+common classification is by isolation levels:</p>
+
+<ol>
+<li>Serializable</li>
+
+
+<p>In this
+case, transactions are executed serially so that there is no concurrent data
+access. Transactions can also be executed concurrently but only when the
+illusion of serial transactions is maintained (i.e. no concurrent access to
+data occurs).&nbsp; If the system uses locks,
+a lock should be obtained over the whole range of selected data ("WHERE" clause
+in SQL). If the system does not use locks, no lock is acquired; however,
+if the system detects a concurrent transaction in progress, which would violate
+the serializability illusion, it must force that transaction to rollback, and
+the application will have to restart the transaction.</p>
+<li>Repeatable Read</li>
+
+<p>In this case, a lock is acquired
+over all the data retrieved from a database. Phantom reads can occur (i.e. new
+data from the other committed transactions included in the result)</p>
+
+<li>Read Committed</li>
+
+<p>In this case, read locks are
+acquired on the result set, but released immediately. Write locks are acquired
+and released only at the end of the transaction. Non-repeatable reads can occur, i.e. deletions or modifications from the other committed transactions will be visible by the current transaction. Phantom
+reads are also possible.</p>
+
+<li>Read Uncommitted</li>
+
+With this isolation level dirty reads are
+allowed.&nbsp; Uncommitted modifications from
+the other transactions are visible. Both phantom and nonrepeatable reads can
+occur.
+</ol></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-05-22T11:12:33 by Tetyana.
+				</div>
+  </body>
+</html>

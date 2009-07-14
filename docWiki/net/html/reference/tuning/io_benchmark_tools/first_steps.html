@@ -1,0 +1,40 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>First Steps</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>First Steps</h1><p><font color="#990000">This topic applies to Java version only</font>&nbsp;</p><p>
+The main class of the benchmark is com.db4o.bench.IoBenchmark.<br>Let's have a look at its run method to see what it does.<br>&nbsp;&nbsp;&nbsp; <br>    <code>private void run(IoBenchmarkArgumentParser argumentParser) throws IOException {<br>        &nbsp;&nbsp;&nbsp; runTargetApplication(argumentParser.objectCount());<br>&nbsp;&nbsp;&nbsp; prepareDbFile(argumentParser.objectCount());<br>&nbsp;&nbsp;&nbsp; runBenchmark(argumentParser.objectCount());<br>    }</code><br><br>As you can see from this code, the benchmark consists of 3 stages:<br></p><ol><li>Run a target application and log its I/O access pattern</li><li>Replay the recorded I/O operations once to prepare a database file. <br>This
+step is necessary to ensure that during the grouped replay in the next
+step, none of the accesses will go beyond the currently existing file.</li><li>Replay
+the recorded I/O operations a second time. Operations are grouped by
+command type (read, write, seek, sync), and the total time executing
+all operations of a specific command type is measured. Grouping is
+necessary to avoid micro-benchmarking effects and to get time values
+above timer resolution.<br></li></ol>We divide the numbers collected in
+stage 3 by the respective number of operations and we calculate the&nbsp;
+average time a particular command takes on the given system.<br><br>But enough of the theory for the moment, let's see how you can run the benchmark.<br>For this purpose there is the pair of an Ant script and a properties file:<br><ul><li>IoBenchmark.xml: The Ant script</li><li>IoBenchmark.properties: Holding configurations for the Ant script<br></li></ul>Both files are located in the root of db4otools.<br><br>To
+be able to run the benchmark from the Ant script, you have to put a
+db4o JAR file in the lib folder of the db4otools project. Insert the
+name of the JAR in the db4o.jar property in the property file, e.g.&nbsp;<br><pre>&nbsp;&nbsp;&nbsp; db4o.jar=db4o-7.1.27.9109-java5.jar</pre>and you are ready to go!<br><br>To give it a first try, you can run the run.benchmark.small target of the Ant script, which is also the default target.<br>You should get output similar to this:
+
+<pre>    =============================================================<br>    Running db4o IoBenchmark<br>    =============================================================<br>    Running target application ...<br>    Preparing DB file ...<br>    Running benchmark ...<br>    -------------------------------------------------------------<br>    db4o IoBenchmark results with 1000 items<br>    Statistics written to db4o-IoBenchmark-results-1000.log<br>    -------------------------------------------------------------<br>    Results for READ <br>    &gt; operations executed: 14331<br>    &gt; time elapsed: 16 ms<br>    &gt; operations per millisecond: 895.6875<br>    &gt; average duration per operation: 0.001116460819203126 ms<br>    READ 1116 ns<br>     <br>    Results for WRITE <br>    &gt; operations executed: 9508<br>    &gt; time elapsed: 16 ms<br>    &gt; operations per millisecond: 594.25<br>    &gt; average duration per operation: 0.0016827934371055953 ms<br>    WRITE 1682 ns<br>     <br>    Results for SYNC <br>    &gt; operations executed: 7821<br>    &gt; time elapsed: 921 ms<br>    &gt; operations per millisecond: 8.49185667752443<br>    &gt; average duration per operation: 0.11775987725354814 ms<br>    SYNC 117759 ns<br>     <br>    Results for SEEK <br>    &gt; operations executed: 23839<br>    &gt; time elapsed: 16 ms<br>    &gt; operations per millisecond: 1489.9375<br>    &gt; average duration per operation: 6.711690926632829E-4 ms<br>    SEEK 671 ns<br></pre>
+As the output indicates, the results of this benchmark run will also be
+written to a file called db4o-IoBenchmark-results-1000.log. You can
+find this file in the db4otools directory.<br><br>The ns (nanosecond) values are our benchmark standard for the respective operation.&nbsp; Smaller numbers are better.<br><br>Note:
+It may be possible, that you get some zero values for time elapsed, and
+therefore infinity for operations per ms. This can occur if your
+machine is fast enough to execute all operations under 1ms. To overcome
+this you can run the run.benchmark.medium target which operates with
+more objects and takes longer to complete.
+<br></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2008-02-03T14:07:27 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Viewing Enum Values In OME</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Viewing Enum Values In OME</h1><p> <br></p><p>As it was
+mentioned <a href="../.net_enumerations.html" class="wikiLink">before</a> enums do not carry any database identity and are stored in
+their parent object slot. If you open a database with Enum values in OME, you
+will be able to see the enum class in the db4o Browser view, however if you
+proceed and select "Show all objects" from the right-click menu - you will see
+that there are no Enum objects stored in the database.</p>
+
+<p>But don't
+worry - Enum is just an integer, so all we actually need is just values of the
+Enum fields in the database. &nbsp;Please,
+select a class with the Enum field in the db4o Browser view (if you are using
+the database from the previous example - Door class). Right-click it and select
+"Show all objects". </p>
+
+<p><img src="Viewing_Enum_Values_In_OME/OME-Door-Null.Jpg"/></p>
+
+<p>Something
+went wrong here - there are no Enum values and nulls are stored instead. Is the
+information lost? </p>
+
+<p>Here you
+will need to understand how Enum values are stored in the database. In order to
+save space in the database file, db4o stores only the absolutely necessary
+information for the enums:</p>
+
+<ul><li>Enum
+class id</li><li>Enum
+numeric value</li></ul>
+
+
+
+<p>The actual Enum representation will be picked
+up in the runtime using Enum class definition. As OME by default runs without
+class definitions using Generic Reflector, OME can't interprete the Enum field
+value correctly.&nbsp; In order to fix it go
+to "Tools" -&gt; "Object Manager Enterprise" -&gt; "Options" menu and select "Assembly
+Search Path..." and add the path to the assembly, containing the Enum definition.
+Now disconnect and reconnect the database and browse the objects again:</p>
+
+<p><img src="Viewing_Enum_Values_In_OME/OME-Door.Jpg"/></p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2009-02-12T12:33:46 by Tetyana.
+				</div>
+  </body>
+</html>

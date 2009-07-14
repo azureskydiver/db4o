@@ -1,0 +1,59 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Database For OSGi</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Database For OSGi</h1><p><font color="#990000">This topic applies to Java version only</font>&nbsp;</p>
+
+<p>db4o_osgi project (since db4o-6.3) provides a service, which
+allows to use db4o in OSGI environment. Its usage is the usage of an OSGI
+service, which is well documented in the Internet. Short and essential guide to
+OSGI service usage can be found <a href="http://www.knopflerfish.org/osgi_service_tutorial.html">here</a>, but you
+are surely free to use any suitable for you technique to access db4o_osgi
+service.</p>
+
+
+
+<p>The main purpose of db4o_osgi service is to configure an
+OSGi bundle aware reflector for the database instance, so that classes that are
+owned by the client bundle are accessible to the db4o engine. To emulate this
+behavior when using db4o directly through the exported packages of the
+db4o_osgi plugin, db4o can be configured like this:</p>
+
+<p><code>Configuration config = Db4o.newConfiguration();</code></p>
+
+<p><code>config.reflectWith(new
+JdkReflector(SomeData.class.getClassLoader()));</code></p>
+
+<p><code>// ... </code></p>
+
+<p><code>ObjectContainer database =
+Db4o.openFile(config,fileName); </code></p>
+
+<p>&nbsp;Access through the service is recommended
+over the direct usage, though, as the service may implement further OSGi
+specific features in the future.</p>
+
+
+
+<p>db4o_osgi.jar can be found in /lib folder of the Java
+distribution with detailed API documentation in /doc/osgi folder.</p>
+
+<p>If you are comfortable with OSGI and only need a short
+introduction to db4o_osgi service you can read <a href="database_for_osgi/db4o-osgi_usage.html" class="wikiLink">Db4o-Osgi Usage</a>.</p>
+
+<p>For a more detailed explanation and example of db4o-service
+usage in an Eclipse plug-in see <a href="database_for_osgi/eclipse_plug-in_with_db4o_service.html" class="wikiLink">Eclipse Plug-In With Db4o Service</a>. This
+example will be also helpful for those who are new to OSGI.</p>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2007-07-29T14:25:04 by Tetyana.
+				</div>
+  </body>
+</html>

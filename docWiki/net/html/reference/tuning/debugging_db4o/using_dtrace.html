@@ -1,0 +1,119 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Using DTrace</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Using DTrace</h1>
+
+
+<p><font color="#990000">This topic applies to Java version only.</font></p><p>If you are interested in internal db4o
+debugging you can make use of com.db4o.DTrace class. DTrace is basically a
+logging agent, which gets called for db4o core events, which can provide
+information valuable for debugging. The list of currently available events can
+be found in DTrace class, they are represented by DTrace type static variables,
+for example:</p>
+
+<p><code>public
+static DTrace ADD_TO_CLASS_INDEX;</code></p>
+
+<p><code>public
+static DTrace BEGIN_TOP_LEVEL_CALL;</code></p>
+
+
+
+<p>DTrace information is not enabled by default, as it
+can make the system really slow. In order to enable DTrace make the following changes
+in DTrace class and rebuild the core:</p>
+
+<ul>
+<li>set <code>public static final boolean enabled = true</code></li>
+</ul>
+
+<ul class="unIndentedList">
+<li>
+modify the <code>configure</code>
+method to tell DTrace that you are interested in all ranges and IDs </li>
+<ul>
+<li>
+<code>addRangeWithLength(0,Integer.MAX_VALUE);</code></li>
+</ul>
+<li>
+make sure that no <code>turnAllOffExceptFor</code>
+method is called in the <code>configure()</code> method</li>
+</ul>
+
+
+
+<p>With this DTrace setup you will basically
+see everything that is happening logged to the console in detail. However, this
+information can be excessive and difficult to handle. That is why DTrace
+provides different configurations, allowing to limit the range of information
+you are interested in.</p>
+
+<ol>
+<li><code>turnAllOffExceptFor(DTrace[] these)</code><br>
+
+<p>This method
+allows you to pass an array of DTrace events, which you want to see in the
+console. For example:</p>
+
+<p><code>turnAllOffExceptFor(new DTrace[] { ADD_TO_CLASS_INDEX , BEGIN_TOP_LEVEL_CALL
+})</code></p>
+</li>
+<li><code>addRange(long)</code><br>
+
+<p><code>addRangeWithEnd(long start, long
+end) </code></p>
+
+<p><code>addRangeWithLength(long start, long
+length) </code></p>
+
+
+<p>These methods allow to specify a range of
+addresses in a database file that you are interested in. addRange methods are
+especially useful for debugging a database file structure. Note, that in db4o
+internal object ID corresponds to the object's address in the file.</p>
+
+</li>
+<li><code>trackEventsWithoutRange()</code><br>
+
+<p>These method will allow all events with no range specified to log
+their information.</p>
+</li></ol>
+
+
+<p>The format of the output message is the
+following:</p>
+
+<p>: [event number] : [start address] :
+[start address] :[information]</p>
+
+<p><i>event number</i> - sequential event number</p>
+
+<p><i>start address</i> -start of the event address
+range (optional)</p>
+
+<p><i>end address</i> - end of the event address
+range (optional)</p>
+
+<p><i>information</i>&nbsp; - informational message from the event</p>
+<p>If DTrace log messages are not enough for you to
+track the problem, you can use DTrace in debug mode. Use <code>breakOnEvent(long) </code> method to specify on which address DTrace must break and put a
+breakpoint inside <code>breakPoint()</code> method.<br><br>As it was mentioned before DTrace events
+are already created in the most important execution points of db4o core.
+However, if you need more events, feel free to add them, encapsulating the
+calls with <code>if (DTrace.enabled)</code> to make sure that your code is
+removed from distributions by the compiler.</p>
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-09-14T18:09:04 by Tetyana.
+				</div>
+  </body>
+</html>

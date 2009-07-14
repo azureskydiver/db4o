@@ -1,0 +1,89 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Transparent Activation</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Transparent Activation</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Not Activatable Objects">Not Activatable Objects</a><ul><li><a href ="#Problem">Problem</a></li><li><a href ="#Solution">Solution</a></li></ul></li><li><a href ="#Collections Activation">Collections Activation</a><ul><li><a href ="#Problem">Problem</a></li><li><a href ="#Solution">Solution</a></li></ul></li><li><a href ="#Migrating Between Databases">Migrating Between Databases</a><ul><li><a href ="#Problem">Problem</a></li><li><a href ="#Solution">Solution</a></li></ul></li><li><a href ="#Instrumentation Limitations">Instrumentation Limitations</a><ul><li><a href ="#Problem">Problem</a></li><li><a href ="#Solution">Solution</a></li></ul></li><li><a href ="#Debugging Instrumented Classes">Debugging Instrumented Classes</a><ul><li><a href ="#Problem">Problem</a></li><li><a href ="#Solution">Solution</a></li></ul></li></ul></li></ul></div></div></div>
+<p><a href="../object_lifecycle/activation/transparent_activation_framework.html" class="wikiLink">Transparent Activation</a> is a powerful feature that can
+make development much faster, easier and error-proof. But as any power it can
+lead to trouble if used in a wrong way. The aim of this chapter is to point you
+out to typical pitfalls, which can lead to unexpected and undesired results.</p>
+<a name="Not Activatable Objects"></a><h2>Not Activatable Objects</h2>
+<a name="Problem"></a><h3>Problem </h3>
+
+<p>When TA is enabled Activatable objects are activated
+transparently on request, whereas not Activatable objects are fully activated.
+This is done to keep consistency in persistent objects behaviour. However,
+there is a potential danger of activating too many unnecessary objects and
+wasting system resources. You will experience lower performance and in the
+worst case you can end up with OutOfMemory error. </p>
+
+<a name="Solution"></a><h3>Solution</h3>
+
+<p>Make all persistent objects Activatable. This can be done
+through using load time (Java only) or build time Transparent Activation
+Enhancement. For more information see <a href="../object_lifecycle/activation/transparent_activation_framework.html" class="wikiLink">Transparent Activation Framework</a>
+documentation.</p>
+<a name="Collections Activation"></a><h2>Collections Activation</h2>
+<a name="Problem"></a><h3>Problem</h3>
+
+<p>Current implementation of TA Framework does not support lazy
+activation of collection members, i.e. the whole collection will be activated
+as one object on the first request. However, this only applies to collection
+object itself, i.e. Activatable members of the collection will be activated in
+a transparent way.</p>
+
+<a name="Solution"></a><h3>Solution</h3>
+
+<p>Use db4o proprietary collections: com.db4o.collectections
+package in Java and Db4objects.Db4o.Collections in .NET</p><a name="Migrating Between Databases"></a><h2>Migrating Between Databases</h2><a name="Problem"></a><h3>Problem</h3><p>Thansparent Activation is implemented through <code>Activatable/IActivatable</code> interface, which binds an object to the current object container. In a case when an object is stored to more than one object container, this logic won't work, as only one binding (activator) is allowed per object.<br></p><a name="Solution"></a><h3>Solution</h3><p>To allow correct behavior of the object between databases, the object should be unbinded before being stored to the next database. This can be done with the following code:</p><span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p><p><code>myObject.bind(null);</code></p></span><p>For more information see an <a href="transparent_activation/migrating_between_databases.html" class="wikiLink">example</a>.&nbsp;</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<a name="Instrumentation Limitations"></a><h2>Instrumentation Limitations</h2>
+<a name="Problem"></a><h3>Problem</h3>
+
+<p>For Java instrumentation instrumenting classloader must know
+the classes to instrument, i.e. all application classes should be on the
+classpath. </p>
+
+<a name="Solution"></a><h3>Solution</h3>
+
+<p>Make sure that all classes to be instrumented are available
+through the classpath</p>
+
+</span>
+
+<a name="Debugging Instrumented Classes"></a><h2>Debugging Instrumented Classes</h2>
+<a name="Problem"></a><h3>Problem</h3>
+
+<p>Debugging instrumented classes may not work 100% correct
+both on Java and .NET. Some of the observed problems:</p>
+
+<ul>
+<li>In
+     Visual Studio setting a breakpoint in the area effected by instrumentation
+     seems to be not possible</li>
+<li>In
+     Eclipse instrumented bytecode might be not displayed correctly in the
+     debug mode</li>
+</ul>
+
+<a name="Solution"></a><h3>Solution</h3>
+
+<p>You should be able to debug normally anywhere around
+instrumented bytecode. If you still think that the problem occurs in the
+instrumented area, please submit a bug report to <a href="http://tracker.db4o.com/">db4o Jira</a>.</p>
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2008-01-12T11:20:03 by Tetyana.
+				</div>
+  </body>
+</html>

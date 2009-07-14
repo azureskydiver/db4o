@@ -1,0 +1,89 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Application-Report Integration</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Application-Report Integration</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script><p>The last step is to integrate the existing report into our
+java application. This is done with the help of <a href="http://www.eclipse.org/birt/phoenix/deploy/reportEngineAPI.php">Report Engine API</a>.</p>
+
+<p>Add the libraries from BIRT_HOME/lib to the project. Create
+the following method in your main application class:</p>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">ReportMain.java: <span class="fscMemberName">main</span></span></div><div class="fscCode"><pre ID="ResourcesReferenceImplementation_StrategiesReportingReporting_With_BIRTReportsBIRT.ZipssrcReportMain.Java_SrcReportMain.Java_Main_338_54"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="ResourcesReferenceImplementation_StrategiesReportingReporting_With_BIRTReportsBIRT.ZipssrcReportMain.Java_SrcReportMain.Java_Main_338_54_60_1633_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesReportingReporting_With_BIRTReportsBIRT.ZipssrcReportMain.Java_SrcReportMain.Java_Main_338_54_60_1633_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesReportingReporting_With_BIRTReportsBIRT.ZipssrcReportMain.Java_SrcReportMain.Java_Main_338_54_60_1633_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesReportingReporting_With_BIRTReportsBIRT.ZipssrcReportMain.Java_SrcReportMain.Java_Main_338_54_60_1633_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceImplementation_StrategiesReportingReporting_With_BIRTReportsBIRT.ZipssrcReportMain.Java_SrcReportMain.Java_Main_338_54_60_1633_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesReportingReporting_With_BIRTReportsBIRT.ZipssrcReportMain.Java_SrcReportMain.Java_Main_338_54_60_1633_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesReportingReporting_With_BIRTReportsBIRT.ZipssrcReportMain.Java_SrcReportMain.Java_Main_338_54_60_1633_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesReportingReporting_With_BIRTReportsBIRT.ZipssrcReportMain.Java_SrcReportMain.Java_Main_338_54_60_1633_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> main(String[] args) </span><span style="color: #0000FF;">throws</span><span style="color: #000000;"> BirtException </span><span id="ResourcesReferenceImplementation_StrategiesReportingReporting_With_BIRTReportsBIRT.ZipssrcReportMain.Java_SrcReportMain.Java_Main_338_54_60_1633_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceImplementation_StrategiesReportingReporting_With_BIRTReportsBIRT.ZipssrcReportMain.Java_SrcReportMain.Java_Main_338_54_60_1633_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> create engine configuration</span><span style="color: #008000;">
+</span><span style="color: #008080;">03</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    EngineConfig config </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> EngineConfig();
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> specify the path to the BIRT installation </span><span style="color: #008000;">
+</span><span style="color: #008080;">05</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    config.setEngineHome(BIRT_HOME);
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> set the output directory for the logging and set the logging level</span><span style="color: #008000;">
+</span><span style="color: #008080;">07</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    config.setLogConfig(OUTPUT_DIR, Level.FINE);
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> start the Platform to load the plugins</span><span style="color: #008000;">
+</span><span style="color: #008080;">10</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    Platform.startup(config);
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> create a factory, which will supply ReportEngine instance</span><span style="color: #008000;">
+</span><span style="color: #008080;">12</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    IReportEngineFactory factory </span><span style="color: #000000;">=</span><span style="color: #000000;"> (IReportEngineFactory) Platform
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        .createFactoryObject(IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY);
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> there is a significant cost associated with creating a new engine
+</span><span style="color: #008080;">15</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> instance, therefore the application should use only one engine instance 
+</span><span style="color: #008080;">16</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> for its reports</span><span style="color: #008000;">
+</span><span style="color: #008080;">17</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    engine </span><span style="color: #000000;">=</span><span style="color: #000000;"> factory.createReportEngine(config);
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    engine.changeLogLevel(Level.WARNING);
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    IReportRunnable design;
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Open the report design</span><span style="color: #008000;">
+</span><span style="color: #008080;">22</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    design </span><span style="color: #000000;">=</span><span style="color: #000000;"> engine.openReportDesign(REPORT_DESIGN);
+</span><span style="color: #008080;">23</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Create task to run and render the report</span><span style="color: #008000;">
+</span><span style="color: #008080;">24</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    IRunAndRenderTask task </span><span style="color: #000000;">=</span><span style="color: #000000;"> engine.createRunAndRenderTask(design);
+</span><span style="color: #008080;">25</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    
+</span><span style="color: #008080;">26</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Set rendering options - such as file or stream output,
+</span><span style="color: #008080;">27</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> output format, whether it is embeddable, etc</span><span style="color: #008000;">
+</span><span style="color: #008080;">28</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    HTMLRenderOption options </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> HTMLRenderOption();
+</span><span style="color: #008080;">29</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    options.setOutputFileName(OUTPUT_DIR </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #000000;">&quot;</span><span style="color: #000000;">//</span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> REPORT_OUTPUT);
+</span><span style="color: #008080;">30</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> output format can be either html or pdf</span><span style="color: #008000;">
+</span><span style="color: #008080;">31</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    options.setOutputFormat(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">html</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">32</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    task.setRenderOption(options);
+</span><span style="color: #008080;">33</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">34</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> run the report</span><span style="color: #008000;">
+</span><span style="color: #008080;">35</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    task.run();
+</span><span style="color: #008080;">36</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    task.close();
+</span><span style="color: #008080;">37</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">38</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> shutdown the engine and the platform after use
+</span><span style="color: #008080;">39</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> to clean up and unload the extensions</span><span style="color: #008000;">
+</span><span style="color: #008080;">40</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    engine.shutdown();
+</span><span style="color: #008080;">41</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    Platform.shutdown();
+</span><span style="color: #008080;">42</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
+
+<p>Now you can run the report and check the results in the OUTPUT_DIR folder.</p>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-02-16T18:40:55 by Tetyana.
+				</div>
+  </body>
+</html>

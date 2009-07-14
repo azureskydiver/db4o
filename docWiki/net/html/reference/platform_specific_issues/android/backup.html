@@ -1,0 +1,58 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Backup</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Backup</h1>
+
+<p>"Backup" button shows database backup ability.</p>
+
+<p>On db4o a ExtObjectContainer#backup call is used to backup a
+database in use.</p>
+
+<p>SQLite does not support a special API to make a backup.
+However, as you remember SQLite database is stored in a single database file,
+so the backup can be simply a matter of copying the database file.
+Unfortunately, this can't be done if the database is in use. In this case you
+can use <a href="http://code.google.com/android/reference/adb.html">Android
+Debug Bridge</a> (adb) tool to access sqlite3 command-line application, which
+has .dump command for backing up database contents while the database is in
+use:</p>
+
+<p>E:\&gt;adb shell</p>
+
+<p># sqlite3
+/data/data/com.db4odoc.android.compare/databases/android.db</p>
+
+<p>sqlite3
+/data/data/com.db4odoc.android.compare/databases/android.db</p>
+
+<p>SQLite version 3.5.0</p>
+
+<p>Enter ".help" for instructions</p>
+
+<p>sqlite&gt; .dump &gt; android200711.dmp</p>
+
+<p>.dump &gt; android200711.dmp</p>
+
+<p>BEGIN TRANSACTION;</p>
+
+<p>COMMIT;</p>
+
+<p>sqlite&gt;.exit</p>
+
+<p>.exit</p>
+
+<p># ^D</p>
+
+<p>Ctrl+D command is used to close adb session.</p></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-11-26T19:03:40 by Tetyana.
+				</div>
+  </body>
+</html>

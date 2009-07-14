@@ -1,0 +1,224 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Sharpen Command-Line Arguments</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Sharpen Command-Line Arguments</h1><p>Sharpen command-line arguments can be defined in an options
+file</p>
+
+
+
+
+
+
+
+
+
+
+
+<p><i>&lt;sharpen
+workspace="${target.dir}"
+resource="sharpened_examples/src"&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;args&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!-- Sharpen options
+are defined in a separate file --&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg value="@sharpen-all-options"
+/&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/args&gt;<br>&lt;/sharpen&gt;</i></p>
+
+<p>Here sharpen-all-options file contains all command-line
+options needed to convert current project. For an example of command-line
+options file see the <a href="example_conversion.html" class="wikiLink">previous topic</a>.</p>
+
+<p>Command-line arguments can also be specified directly in an
+ant script:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><i>&lt;sharpen
+workspace="${dir.sharpen}" resource="db4oj/core/src"&gt;<br>&nbsp;&nbsp;&nbsp; &lt;args&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg value="-xmldoc"
+/&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg
+file="config/sharpen/ApiOverlay.xml" /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;arg value="@sharpen-all-options" /&gt;<br>&nbsp;&nbsp;&nbsp; &lt;/args&gt;<br>&lt;/sharpen&gt;</i></p>
+
+
+
+<p>The following table shows available command-line options, their
+meaning and example usage:</p>
+
+<table border="1" cellpadding="0" cellspacing="0">
+ <tr>
+  <td valign="top">
+  <p><b>Argument</b></p>
+  </td>
+  <td valign="top">
+  <p><b>Usage</b></p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-pascalCase</p>
+  </td>
+  <td valign="top">
+  <p>Convert Java identifiers to Pascal case</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-pascalCase+</p>
+  </td>
+  <td valign="top">
+  <p>Convert Java indentifiers and package names (namespaces)
+  to Pascal case </p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-cp</p>
+  </td>
+  <td valign="top">
+  <p>Adds a new entry to classpath:</p>
+  <p>&lt;arg
+  value="-cp" /&gt;</p>
+  <p>&lt;arg path="lib/db4o-7.2.37.10417-java5.jar"
+  /&gt;</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-srcfolder</p>
+  </td>
+  <td valign="top">
+  <p>Adds a new source folder for sharpening</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-nativeTypeSystem</p>
+  </td>
+  <td valign="top">
+  <p>Map java classes to .NET classes with a similar
+  functionality. For example: java.lang.Class - System.Type</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-nativeInterfaces</p>
+  </td>
+  <td valign="top">
+  <p>Adds an "I" in front of the interface name</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-organizeUsings</p>
+  </td>
+  <td valign="top">
+  <p>Adds "using" for the types used </p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-fullyQualify</p>
+  </td>
+  <td valign="top">
+  <p>Converts to a fully-qualified name:</p>
+  <p>-fullyQualify File</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-namespaceMapping</p>
+  </td>
+  <td valign="top">
+  <p>Maps a java package name to a .NET namespace. For example:</p>
+  <p>-namespaceMapping com.db4o Db4objects.Db4o</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-methodMapping</p>
+  </td>
+  <td valign="top">
+  <p>Maps a java method name to a .NET method (can be method in
+  another class). For example:</p>
+  <p>-methodMapping java.util.Date.getTime
+  Sharpen.Runtime.ToJavaMilliseconds</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-typeMapping</p>
+  </td>
+  <td valign="top">
+  <p>Maps a java class to .NET type:</p>
+  <p>-typeMapping com.db4o.Db4o Db4objects.Db4o.Db4oFactory</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-propertyMapping</p>
+  </td>
+  <td valign="top">
+  <p>Maps a java method to .NET property:</p>
+  <p>-propertyMapping com.db4odoc.structured.Car.getPilot Pilot</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-runtimeTypeName</p>
+  </td>
+  <td valign="top">
+  <p>&nbsp;Name of the runtime class. The runtime class provides implementation for methods that don't have a direct mapping or that are simpler to map at the language level than at the sharpen level. For instance: String.substring, String.valueOf, Exception.printStackTrace, etc. </p><p>For a complete list of all the method that can be mapped to the runtime class see Configuration#runtimeMethod call hierarchy. <br></p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-header</p>
+  </td>
+  <td valign="top">
+  <p>Header comment to be added to all converted files.</p>
+  <p>&lt;arg
+  value="-header" /&gt;</p>
+  <p>&lt;arg file="config/copyright_comment.txt"
+  /&gt;</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>-xmldoc</p>
+  </td>
+  <td valign="top">
+  <p>Specifies an xml-overlay file, which overrides javadoc
+  documentation for specific classes:</p>
+  <p>&lt;arg
+  value="-xmldoc" /&gt;</p>
+  <p>&lt;arg file="config/sharpen/ApiOverlay.xml"
+  /&gt;</p>
+  </td>
+ </tr>
+</table>
+
+
+
+
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2008-05-13T13:12:31 by Tetyana.
+				</div>
+  </body>
+</html>

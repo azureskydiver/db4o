@@ -1,0 +1,44 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>No Field Evaluation</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>No Field Evaluation</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div>
+
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java: </p>
+
+<p><code>configuration.ObjectClass(clazz).ObjectField("field").queryEvaluation(false)</code></p>
+
+</span>
+
+
+<a name="Advantage"></a><h2>Advantage</h2>
+
+<p>Improves performance by reducing query evaluation volume</p>
+
+<a name="Effect"></a><h2>Effect</h2>
+
+<p>All fields are evaluated by default. Use this
+method to turn query evaluation off for specific fields, which are never used
+in queries. This setting can help you to increase the querying performance by
+reducing the evaluation task.</p>
+
+<a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
+
+<p>Consider marking fields as
+<a href="../selective_persistence.html" class="wikiLink">transient</a> if their persistence is not necessary.</p>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-05-07T16:43:41 by Tetyana.
+				</div>
+  </body>
+</html>
