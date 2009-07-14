@@ -24,10 +24,10 @@ public class EventPlatform {
 		e.trigger(new ClassEventArgs(clazz));
 	}
 
-	public static boolean triggerCancellableObjectEventArgs(final Transaction transaction, final Event4Impl e, final Object o) {
+	public static boolean triggerCancellableObjectEventArgs(final Transaction transaction, final Event4Impl e, final ObjectInfo objectInfo, final Object o) {
 		return trigger(e, new Closure4<Boolean>() {
 			public Boolean run() {
-				CancellableObjectEventArgs args = new CancellableObjectEventArgs(transaction, o);
+				CancellableObjectEventArgs args = new CancellableObjectEventArgs(transaction, objectInfo, o);
 				e.trigger(args);
 				return !args.isCancelled();
 			}

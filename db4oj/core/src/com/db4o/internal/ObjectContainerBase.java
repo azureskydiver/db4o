@@ -562,7 +562,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         
         activateForDeletionCallback(trans, yc, ref, obj);
         
-        if (!objectCanDelete(trans, yc, obj)) {
+        if (!objectCanDelete(trans, yc, ref)) {
             return;
         }
         
@@ -610,9 +610,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     		|| yc.hasEventRegistered(systemTransaction(), EventDispatchers.DELETE);
     }
     
-	private boolean objectCanDelete(Transaction transaction, ClassMetadata yc, Object obj) {
-		return callbacks().objectCanDelete(transaction, obj)
-			&& yc.dispatchEvent(transaction, obj, EventDispatchers.CAN_DELETE);
+	private boolean objectCanDelete(Transaction transaction, ClassMetadata yc, ObjectInfo objectInfo) {
+		return callbacks().objectCanDelete(transaction, objectInfo)
+			&& yc.dispatchEvent(transaction, objectInfo.getObject(), EventDispatchers.CAN_DELETE);
 	}
 	
 	private void objectOnDelete(Transaction transaction, ClassMetadata yc, ObjectInfo reference) {

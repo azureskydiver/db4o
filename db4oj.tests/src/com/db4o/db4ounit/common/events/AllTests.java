@@ -13,6 +13,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 			ActivationEventsTestCase.class,
 			ClassRegistrationEventsTestCase.class,
+			CreationEventsTestCase.class,
 			DeleteOnDeletingCallbackTestCase.class,
 			DeletionEventExceptionTestCase.class,
 			DeletionEventsTestCase.class,

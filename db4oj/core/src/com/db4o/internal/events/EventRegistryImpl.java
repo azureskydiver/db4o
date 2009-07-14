@@ -57,23 +57,23 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	}
 	
 	public boolean objectCanNew(Transaction transaction, Object obj) {
-		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _creating, obj);
+		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _creating, null, obj);
 	}
 	
 	public boolean objectCanActivate(Transaction transaction, Object obj) {
-		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _activating, obj);
+		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _activating, null, obj);
 	}
 	
-	public boolean objectCanUpdate(Transaction transaction, Object obj) {
-		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _updating, obj);
+	public boolean objectCanUpdate(Transaction transaction, ObjectInfo objectInfo) {
+		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _updating, objectInfo, objectInfo.getObject());
 	}
 	
-	public boolean objectCanDelete(Transaction transaction, Object obj) {
-		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _deleting, obj);
+	public boolean objectCanDelete(Transaction transaction, ObjectInfo objectInfo) {
+		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _deleting, objectInfo, objectInfo.getObject());
 	}
 	
-	public boolean objectCanDeactivate(Transaction transaction, Object obj) {
-		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _deactivating, obj);
+	public boolean objectCanDeactivate(Transaction transaction, ObjectInfo objectInfo) {
+		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _deactivating, objectInfo, objectInfo.getObject());
 	}
 	
 	public void objectOnActivate(Transaction transaction, ObjectInfo obj) {

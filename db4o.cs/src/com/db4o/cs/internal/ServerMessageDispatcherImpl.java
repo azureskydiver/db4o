@@ -320,7 +320,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	/**
 	 * EventArgs => MessageEventArgs
 	 */
-	public Event4 messageReceived() {
+	public Event4<MessageEventArgs> messageReceived() {
 		return _messageReceived;
     }
 }

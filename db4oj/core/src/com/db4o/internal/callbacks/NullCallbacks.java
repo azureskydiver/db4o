@@ -23,15 +23,15 @@ public class NullCallbacks implements Callbacks {
 		return true;
 	}
 	
-	public boolean objectCanUpdate(Transaction transaction, Object obj) {
+	public boolean objectCanUpdate(Transaction transaction, ObjectInfo objectInfo) {
 		return true;
 	}
 	
-	public boolean objectCanDelete(Transaction transaction, Object obj) {
+	public boolean objectCanDelete(Transaction transaction, ObjectInfo objectInfo) {
 		return true;
 	}
 	
-	public boolean objectCanDeactivate(Transaction transaction, Object obj) {
+	public boolean objectCanDeactivate(Transaction transaction, ObjectInfo objectInfo) {
 		return true;
 	}
 	

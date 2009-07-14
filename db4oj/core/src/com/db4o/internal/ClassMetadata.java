@@ -651,7 +651,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 
     public void deactivate(Transaction trans, ObjectInfo reference, ActivationDepth depth) {
         final Object obj = reference.getObject();
-		if(objectCanDeactivate(trans, obj)){
+		if(objectCanDeactivate(trans, reference)){
             forceDeactivation(trans, depth, obj);
             objectOnDeactivate(trans, reference);
         }
@@ -667,10 +667,10 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 		dispatchEvent(transaction, obj.getObject(), EventDispatchers.DEACTIVATE);
 	}
 
-	private boolean objectCanDeactivate(Transaction transaction, Object obj) {
+	private boolean objectCanDeactivate(Transaction transaction, ObjectInfo objectInfo) {
 		ObjectContainerBase container = transaction.container();
-		return container.callbacks().objectCanDeactivate(transaction, obj)
-			&& dispatchEvent(transaction, obj, EventDispatchers.CAN_DEACTIVATE);
+		return container.callbacks().objectCanDeactivate(transaction, objectInfo)
+			&& dispatchEvent(transaction, objectInfo.getObject(), EventDispatchers.CAN_DEACTIVATE);
 	}
 
     final void deactivateFields(final ActivationContext context) {

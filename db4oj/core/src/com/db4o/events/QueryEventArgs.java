@@ -10,7 +10,7 @@ import com.db4o.query.*;
  * 
  * @see EventRegistry
  */
-public class QueryEventArgs extends ObjectEventArgs {
+public class QueryEventArgs extends TransactionalEventArgs {
 	
 	private Query _query;
 
@@ -30,9 +30,4 @@ public class QueryEventArgs extends ObjectEventArgs {
 	public Query query() {
 		return _query;
 	}
-
-	@Override
-    public Object object() {
-		return _query;
-    }
 }

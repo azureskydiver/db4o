@@ -2,6 +2,7 @@
 
 package com.db4o.events;
 
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 
 /**
@@ -10,15 +11,15 @@ import com.db4o.internal.*;
  * @see EventRegistry
  * @see CancellableEventArgs
  */
-public class CancellableObjectEventArgs extends ObjectEventArgs implements CancellableEventArgs {
+public class CancellableObjectEventArgs extends ObjectInfoEventArgs implements CancellableEventArgs {
 	private boolean _cancelled;
 	private Object _object;
 
 	/**
 	 * Creates a new instance for the specified object.
 	 */
-	public CancellableObjectEventArgs(Transaction transaction, Object obj) {
-		super(transaction);
+	public CancellableObjectEventArgs(Transaction transaction, ObjectInfo objectInfo, Object obj) {
+		super(transaction, objectInfo);
 		_object = obj;
 	}
 	
@@ -40,4 +41,14 @@ public class CancellableObjectEventArgs extends ObjectEventArgs implements Cance
     public Object object() {
 		return _object;
     }
+	
+	@Override
+	public ObjectInfo info() {
+		final ObjectInfo info = super.info();
+		if (null == info) {
+			throw new IllegalStateException();
+		}
+		
+		return info;
+	}
 }
