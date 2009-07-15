@@ -27,11 +27,13 @@ public class DecafRewriter {
 		final DecafRewritingContext context = new DecafRewritingContext(unit, rewrite, targetPlatform, decafConfig);
 		context.run(new Runnable() {
 			public void run() {
+				
 				if (targetPlatform != TargetPlatform.ANDROID) {
 					unit.accept(new DecafRewritingVisitor(context));
 				}
 				
-				unit.accept(new AnnotationRewritingVisitor(context));			
+				unit.accept(new AnnotationRewritingVisitor(context));	
+				unit.accept(new AccessibilityRewritingVisitor(context));
 				
 			}
 		});
