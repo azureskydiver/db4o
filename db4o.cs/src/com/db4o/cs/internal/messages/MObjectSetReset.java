@@ -9,9 +9,8 @@ package com.db4o.cs.internal.messages;
  */
 public class MObjectSetReset extends MObjectSet implements ServerSideMessage {
 	
-	public boolean processAtServer() {
+	public void processAtServer() {
 		stub(readInt()).reset();
-		return true;
 	}
 
 }

@@ -10,13 +10,12 @@ import com.db4o.internal.query.result.*;
  */
 public class MObjectSetIndexOf extends MObjectSet implements MessageWithResponse {
 	
-	public boolean processAtServer() {
+	public Msg replyFromServer() {
 		AbstractQueryResult queryResult = queryResult(readInt());
 		synchronized(streamLock()) {
 			int id = queryResult.indexOf(readInt()); 
-			write(Msg.OBJECTSET_INDEXOF.getWriterForInt(transaction(), id));
+			return Msg.OBJECTSET_INDEXOF.getWriterForInt(transaction(), id);
 		}
-		return true;
 	}
 
 }

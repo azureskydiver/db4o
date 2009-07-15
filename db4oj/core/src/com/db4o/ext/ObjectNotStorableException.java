@@ -11,7 +11,7 @@ import com.db4o.reflect.*;
  * db4o is configured to throw Exceptions on storage failures.
  * @see com.db4o.config.Configuration#exceptionsOnNotStorable
  */
-public class ObjectNotStorableException extends Db4oException{
+public class ObjectNotStorableException extends Db4oRecoverableException{
 	
 	public ObjectNotStorableException(ReflectClass a_class){
 	    super(Messages.get(a_class.isPrimitive() ? 59: 45, a_class.getName()));

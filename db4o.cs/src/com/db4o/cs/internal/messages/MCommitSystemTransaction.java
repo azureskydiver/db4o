@@ -9,11 +9,10 @@ package com.db4o.cs.internal.messages;
  */
 public class MCommitSystemTransaction extends Msg implements ServerSideMessage {
 	
-	public final boolean processAtServer() {
+	public final void processAtServer() {
 		synchronized (streamLock()) {
 			transaction().systemTransaction().commit();
 		}
-		return true;
 	}
 
 }

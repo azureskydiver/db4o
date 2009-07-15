@@ -9,7 +9,7 @@ import com.db4o.internal.*;
  * get the classname for an internal ID
  */
 public final class MClassNameForID extends MsgD implements MessageWithResponse {
-    public final boolean processAtServer() {
+    public final Msg replyFromServer() {
         int id = _payLoad.readInt();
         String name = "";
         synchronized (streamLock()) {
@@ -18,7 +18,6 @@ public final class MClassNameForID extends MsgD implements MessageWithResponse {
 				name = classMetadata.getName();
 			}
 		}
-        write(Msg.CLASS_NAME_FOR_ID.getWriterForString(transaction(), name));
-        return true;
+        return Msg.CLASS_NAME_FOR_ID.getWriterForString(transaction(), name);
     }
 }

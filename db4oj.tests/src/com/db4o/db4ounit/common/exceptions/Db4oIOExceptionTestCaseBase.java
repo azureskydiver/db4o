@@ -20,6 +20,9 @@ public class Db4oIOExceptionTestCaseBase
 			public void throwException() {
 				throw new Db4oIOException();
 			}
+
+			public void throwOnClose() {
+			}
 		});
 		config.storage(_storage);
 	}

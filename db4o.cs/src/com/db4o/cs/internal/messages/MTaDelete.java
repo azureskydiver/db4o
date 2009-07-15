@@ -6,13 +6,12 @@ import com.db4o.internal.*;
 
 public class MTaDelete extends MsgD implements ServerSideMessage {
 	
-	public final boolean processAtServer() {
+	public final void processAtServer() {
 	    int id = _payLoad.readInt();
 	    int cascade = _payLoad.readInt();
 	    Transaction trans = transaction();
 	    synchronized (streamLock()) {
 	        trans.delete(null, id, cascade);
-	        return true;
 	    }
 	}
 }

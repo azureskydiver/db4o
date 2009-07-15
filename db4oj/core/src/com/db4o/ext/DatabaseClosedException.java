@@ -8,6 +8,6 @@ package com.db4o.ext;
  * @see com.db4o.Db4o#openFile
  * @see com.db4o.ObjectContainer#close
  */
-public class DatabaseClosedException extends Db4oException {
+public class DatabaseClosedException extends Db4oFatalException {
 
 }

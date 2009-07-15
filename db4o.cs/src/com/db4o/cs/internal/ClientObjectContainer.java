@@ -829,6 +829,9 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	public boolean isAlive() {
 		try {
+			if(isClosed()) {
+				return false;
+			}
 			write(Msg.IS_ALIVE);
 			return expectedResponse(Msg.IS_ALIVE) != null;
 		} catch (Db4oException exc) {
@@ -968,7 +971,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	private final void clearBatchedObjects() {
 		_batchedMessages.clear();
-		// initial value of _batchedQueueLength is Const.INT_LENGTH, which is
+		// initial value of _batchedQueueLength is Const4.INT_LENGTH, which is
 		// used for to write the number of messages.
 		_batchedQueueLength = Const4.INT_LENGTH;
 	}
@@ -1100,4 +1103,12 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	    final ByteArrayBuffer buffer = ((MReadBytes) expectedResponse(Msg.READ_BYTES)).unmarshall();
 	    return buffer;
     }
+
+	/* (non-Javadoc)
+	 * @see com.db4o.internal.ObjectContainerBase#fatalShutdown()
+	 */
+	@Override
+	protected void fatalStorageShutdown() {
+		shutdownDataStorage();
+	}
 }

@@ -122,17 +122,6 @@ class CachingBin extends BinDecorator {
 		return _fileLength;
 	}
 
-	/**
-	 * Flushes and closes the file
-	 */
-	public void close() throws Db4oIOException {
-		try {
-			flushAllPages();
-		} finally {
-			super.close();
-		}
-	}
-
 	final Function4<Long, Page> _producerFromDisk = new Function4<Long, Page>() {
 		public Page apply(Long pageAddress) {
 			// in case that page is not found in the cache

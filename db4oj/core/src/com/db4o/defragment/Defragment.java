@@ -180,14 +180,23 @@ public class Defragment {
 				}
 			}
 			finally {
-				backupBin.close();
+				syncAndClose(backupBin);
 			}
 		}
 		finally {
-			origBin.close();
+			syncAndClose(origBin);
 		}
 	}
 
+	private static void syncAndClose(Bin bin) {
+		try {
+			bin.sync();
+		}
+		finally {
+			bin.close();
+		}
+	}
+	
 	private static void ensureFileExists(Storage storage, String origPath) throws IOException {
 		if(!storage.exists(origPath)) {
 			throw new IOException("Source database file '" + origPath

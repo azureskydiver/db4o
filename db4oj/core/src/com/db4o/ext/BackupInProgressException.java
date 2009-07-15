@@ -7,6 +7,6 @@ package com.db4o.ext;
  * {@link com.db4o.ext.ExtObjectContainer#backup(String) backup }
  * process encounters another backup process already running.
  */
-public class BackupInProgressException extends Db4oException {
+public class BackupInProgressException extends Db4oRecoverableException {
 
 }

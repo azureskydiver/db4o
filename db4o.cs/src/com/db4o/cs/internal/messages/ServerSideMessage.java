@@ -7,5 +7,5 @@ package com.db4o.cs.internal.messages;
  * @exclude
  */
 public interface ServerSideMessage {
-	public boolean processAtServer();
+	public void processAtServer();
 }

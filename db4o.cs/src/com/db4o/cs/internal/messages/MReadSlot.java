@@ -23,7 +23,7 @@ public final class MReadSlot extends MsgD implements MessageWithResponse {
 		return message;
 	}
 	
-	public final boolean processAtServer() {
+	public final Msg replyFromServer() {
 		int address = readInt();
 		int length = readInt();
 		synchronized (streamLock()) {
@@ -31,13 +31,12 @@ public final class MReadSlot extends MsgD implements MessageWithResponse {
 				new StatefulBuffer(this.transaction(), address, length);
 			try {
 				stream().readBytes(bytes._buffer, address, length);
-				write(getWriter(bytes));
+				return getWriter(bytes);
 			} catch (Exception e) {
 				// TODO: not nicely handled on the client side yet
-				write(Msg.NULL);
+				return Msg.NULL;
 			}
 		}
-		return true;
 	}
 
 }

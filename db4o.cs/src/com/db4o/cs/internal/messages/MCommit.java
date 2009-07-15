@@ -6,27 +6,30 @@ import com.db4o.cs.internal.*;
 import com.db4o.internal.*;
 
 public final class MCommit extends Msg implements MessageWithResponse {
-	
-	public final boolean processAtServer() {
-		CallbackObjectInfoCollections committedInfo = null;
-		LocalTransaction serverTransaction = serverTransaction();
+
+	private CallbackObjectInfoCollections committedInfo = null;
+
+	public final Msg replyFromServer() {
 		ServerMessageDispatcher dispatcher = serverMessageDispatcher();
 		synchronized (streamLock()) {
-			serverTransaction.commit(dispatcher);
+			serverTransaction().commit(dispatcher);
 			committedInfo = dispatcher.committedInfo();
 		}
-		write(Msg.OK);
+		return Msg.OK;
+	}
+
+	@Override
+	public void postProcessAtServer() {
 		try {
 			if (committedInfo != null) {
-				addCommittedInfoMsg(committedInfo, serverTransaction);
+				addCommittedInfoMsg(committedInfo, serverTransaction());
 			}
 		}
 		catch(Exception exc) {
 			exc.printStackTrace();
 		}
-		return true;
 	}
-
+	
 	private void addCommittedInfoMsg(CallbackObjectInfoCollections committedInfo, LocalTransaction serverTransaction) {
 		synchronized (streamLock()) {
 			Msg.COMMITTED_INFO.setTransaction(serverTransaction);

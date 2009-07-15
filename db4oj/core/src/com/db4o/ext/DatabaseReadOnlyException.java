@@ -7,6 +7,6 @@ package com.db4o.ext;
  * on a database in a read-only mode.
  * @see com.db4o.config.Configuration#readOnly(boolean) 
  */
-public class DatabaseReadOnlyException extends Db4oException {
+public class DatabaseReadOnlyException extends Db4oRecoverableException {
 
 }

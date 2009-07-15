@@ -2,7 +2,7 @@
 
 package com.db4o.internal;
 
-import static com.db4o.foundation.Environments.*;
+import static com.db4o.foundation.Environments.runWith;
 
 import java.util.*;
 
@@ -93,8 +93,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     
     private IntIdGenerator _topLevelCallIdGenerator = new IntIdGenerator();
 
-	private boolean _topLevelCallCompleted;
-	
 	private final Environment _environment;
 	
 	protected ObjectContainerBase(Configuration config) {
@@ -147,14 +145,12 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     
     public final void activate(Transaction trans, Object obj){
         synchronized (_lock) {
-            activate(checkTransaction(trans), obj, defaultActivationDepthForObject(obj));
+            activate(trans, obj, defaultActivationDepthForObject(obj));
         }
     }
     
     public final void deactivate(Transaction trans, Object obj){
-    	synchronized (_lock) {
-            deactivate(checkTransaction(trans), obj, 1);
-        }
+    	deactivate(trans, obj, 1);
     }
     
     private final ActivationDepth defaultActivationDepthForObject(Object obj) {
@@ -162,19 +158,15 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         return defaultActivationDepth(classMetadata);
     }
 
-	public final void activate(Transaction trans, Object obj, ActivationDepth depth) {
+	public final void activate(Transaction trans, final Object obj, final ActivationDepth depth) {
         synchronized (_lock) {
-            trans = checkTransaction(trans);
-        	beginTopLevelCall();
-            try {
-                stillToActivate(activationContextFor(trans, obj, depth));
-                activatePending(trans);
-                completeTopLevelCall();
-            } catch(Db4oException e){
-            	completeTopLevelCall(e);
-            } finally{
-        		endTopLevelCall();
-        	}
+            asTopLevelCall(new Function4<Transaction,Object>() {
+				public Object apply(Transaction trans) {
+	                stillToActivate(activationContextFor(trans, obj, depth));
+	                activatePending(trans);
+					return null;
+				}
+            }, trans);
         }
     }
     
@@ -344,8 +336,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
 
     private void close1() {
-        // this is set to null in close2 and is therefore our check for down.
-        if (_classCollection == null) {
+        if (isClosed()) {
             return;
         }
         processPendingClassUpdates();
@@ -379,21 +370,61 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             if(DTrace.enabled){
                 DTrace.COMMIT.log();
             }
-            trans = checkTransaction(trans);
             checkReadOnly();
-            beginTopLevelCall();
-            try{            	
-            	commit1(trans);
-            	trans.commitReferenceSystem();
-            	completeTopLevelCall();
-            } catch(Db4oException e){
-            	completeTopLevelCall(e);
-            } finally{
-            	endTopLevelCall();
-            }
+            asTopLevelCall(new Function4<Transaction, Object>() {
+				public Object apply(Transaction trans) {
+	            	commit1(trans);
+	            	trans.commitReferenceSystem();
+	            	return null;
+				}
+            }, trans);
         }
     }
-    
+
+    private <R> R asTopLevelSet(Function4<Transaction,R> block, Transaction trans) {
+    	trans = checkTransaction(trans);
+    	R result = asTopLevelCall(block, trans);
+		if(_stackDepth == 0){
+			trans.processDeletes();
+		}
+		return result;
+    }
+
+    /**
+     * @sharpen.ignore
+     */
+    private <R> R asTopLevelCall(Function4<Transaction,R> block, Transaction trans) {
+    	trans = checkTransaction(trans);
+    	beginTopLevelCall();
+        try{            	
+        	return block.apply(trans);
+        } 
+        catch(Db4oRecoverableException exc) {
+        	throw exc;
+        }
+        catch(RuntimeException exc) {
+			fatalShutdown(exc);
+        }
+        finally {
+        	endTopLevelCall();
+        }
+        // should never happen - just to make compiler happy
+		throw new Db4oException();
+    }
+
+	private void fatalShutdown(RuntimeException origExc) {
+		try {
+			stopSession();
+			fatalStorageShutdown();
+		}
+		catch(Throwable exc) {
+			throw new CompositeDb4oException(origExc, exc);
+		}
+		throw origExc;
+	}
+
+	protected abstract void fatalStorageShutdown();
+
 	public abstract void commit1(Transaction trans);
 
     public Configuration configure() {
@@ -451,18 +482,14 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
     }
     
-    public final void deactivate(Transaction trans, Object obj, int depth) throws DatabaseClosedException {
+    public final void deactivate(Transaction trans, final Object obj, final int depth) throws DatabaseClosedException {
         synchronized (_lock) {
-            trans = checkTransaction(trans);
-        	beginTopLevelCall();
-        	try{
-        		deactivateInternal(trans, obj, activationDepthProvider().activationDepth(depth, ActivationMode.DEACTIVATE));
-        		completeTopLevelCall();
-        	} catch(Db4oException e){
-        		completeTopLevelCall(e);
-        	} finally{
-        		endTopLevelCall();
-        	}
+            asTopLevelCall(new Function4<Transaction,Object>() {
+				public Object apply(Transaction trans) {
+	        		deactivateInternal(trans, obj, activationDepthProvider().activationDepth(depth, ActivationMode.DEACTIVATE));
+					return null;
+				}
+            }, trans);
         }
     }
 
@@ -495,26 +522,23 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
     }
 
-    public final void delete1(Transaction trans, Object obj, boolean userCall) {
+    public final void delete1(Transaction trans, final Object obj, final boolean userCall) {
         if (obj == null) {
         	return;
         }
-        ObjectReference ref = trans.referenceForObject(obj);
+        final ObjectReference ref = trans.referenceForObject(obj);
         if(ref == null){
         	return;
         }
         if(userCall){
         	generateCallIDOnTopLevel();
         }
-        try {
-        	beginTopLevelCall();
-        	delete2(trans, ref, obj, 0, userCall);
-        	completeTopLevelCall();
-        } catch(Db4oException e) {
-        	completeTopLevelCall(e);
-        } finally {
-        	endTopLevelCall();
-        }
+    	asTopLevelCall(new Function4<Transaction, Object>() {
+			public Object apply(Transaction trans) {
+	        	delete2(trans, ref, obj, 0, userCall);
+	        	return null;
+			}
+    	}, trans);
     }
     
     public final void delete2(Transaction trans, ObjectReference ref, Object obj, int cascade, boolean userCall) {
@@ -750,19 +774,14 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         _references.pollReferenceQueue();
     }
     
-    public final ObjectSet queryByExample(Transaction trans, Object template) {
+    public final ObjectSet queryByExample(Transaction trans, final Object template) {
         synchronized (_lock) {
             trans = checkTransaction(trans);
-            QueryResult res = null;
-    		try {
-    			beginTopLevelCall();
-    			res = queryByExampleInternal(trans, template);
-    			completeTopLevelCall();
-    		} catch (Db4oException e) {
-    			completeTopLevelCall(e);
-    		} finally {
-    			endTopLevelCall();
-    		}
+            QueryResult res = asTopLevelCall(new Function4<Transaction,QueryResult>() {
+				public QueryResult apply(Transaction trans) {
+	    			return queryByExampleInternal(trans, template);
+				}
+            }, trans);
             return new ObjectSetFacade(res);
         }
     }
@@ -798,24 +817,23 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             ta = checkTransaction(ta);
             beginTopLevelCall();
             try {
-                Object obj = getByID2(ta, (int) id);
-                completeTopLevelCall();
-                return obj;
-            } catch(Db4oException e) {
-            	completeTopLevelCall(new InvalidIDException(e));
-            } catch(ArrayIndexOutOfBoundsException aiobe){
-            	completeTopLevelCall(new InvalidIDException(aiobe));
-            } finally {
-            	
+                return getByID2(ta, (int) id);
+            } 
+            catch(Db4oRecoverableException exc) {
+            	throw exc;
+            }
+            catch(OutOfMemoryError e){
+            	throw new Db4oRecoverableException(e);
+            } 
+            catch(RuntimeException e){
+            	throw new Db4oRecoverableException(e);
+            } 
+            finally {
             	// Never shut down for getById()
             	// There may be OutOfMemoryErrors or similar
             	// The user may want to catch and continue working.
-            	_topLevelCallCompleted = true;
-            	
             	endTopLevelCall();
             }
-            // only to make the compiler happy
-            return null;
         }
     }
     
@@ -840,18 +858,13 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         return obj;
     }
     
-    public final Object readActivatedObjectNotInCache(Transaction ta, int id){
-        Object obj = null;
-    	beginTopLevelCall();
-        try {
-            obj = new ObjectReference(id).read(ta, UnknownActivationDepth.INSTANCE, Const4.ADD_TO_ID_TREE, true);
-            completeTopLevelCall();
-        } catch(Db4oException e) {
-        	completeTopLevelCall(e);
-        } finally{
-        	endTopLevelCall();
-        }
-        activatePending(ta);
+    public final Object readActivatedObjectNotInCache(Transaction trans, final int id){
+        Object obj = asTopLevelCall(new Function4<Transaction,Object>() {
+			public Object apply(Transaction trans) {
+	            return new ObjectReference(id).read(trans, UnknownActivationDepth.INSTANCE, Const4.ADD_TO_ID_TREE, true);
+			}
+        }, trans);
+        activatePending(trans);
         return obj;
     }
     
@@ -1145,6 +1158,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
     public final boolean isClosed() {
         synchronized (_lock) {
+            // this is set to null in close2 and is therefore our check for down.
             return _classCollection == null;
         }
     }
@@ -1222,29 +1236,25 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
     public abstract int newUserObject();
     
-    public Object peekPersisted(Transaction trans, Object obj, ActivationDepth depth, boolean committed) throws DatabaseClosedException {
+    public Object peekPersisted(Transaction trans, final Object obj, final ActivationDepth depth, final boolean committed) throws DatabaseClosedException {
     	
     	// TODO: peekPersisted is not stack overflow safe, if depth is too high. 
     	
         synchronized (_lock) {
         	checkClosed();
-            beginTopLevelCall();
-            try{
-                trans = checkTransaction(trans);
-                ObjectReference ref = trans.referenceForObject(obj);
-                trans = committed ? _systemTransaction : trans;
-                Object cloned = null;
-                if (ref != null) {
-                    cloned = peekPersisted(trans, ref.getID(), depth, true);
-                }
-                completeTopLevelCall();
-                return cloned;
-            } catch(Db4oException e) {
-            	completeTopLevelCall(e);
-            	return null;
-            } finally{
-                endTopLevelCall();
-            }
+        	
+        	return asTopLevelCall(new Function4<Transaction, Object>() {
+				public Object apply(Transaction trans) {
+	                trans = checkTransaction(trans);
+	                ObjectReference ref = trans.referenceForObject(obj);
+	                trans = committed ? _systemTransaction : trans;
+	                Object cloned = null;
+	                if (ref != null) {
+	                    cloned = peekPersisted(trans, ref.getID(), depth, true);
+	                }
+	                return cloned;
+				}
+        	}, trans);
         }
     }
 
@@ -1545,22 +1555,16 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
        return storeInternal(trans, obj, Const4.UNSPECIFIED, checkJustSet);
     }
     
-    public int storeInternal(Transaction trans, Object obj, int depth,
-			boolean checkJustSet) throws DatabaseClosedException,
+    public int storeInternal(final Transaction trans, final Object obj, final int depth,
+			final boolean checkJustSet) throws DatabaseClosedException,
 			DatabaseReadOnlyException {
-    	trans = checkTransaction(trans);
     	checkReadOnly();
-    	beginTopLevelSet();
-    	try{
-	        int id = storeAfterReplication(trans, obj, depth, checkJustSet);
-	        completeTopLevelSet();
-			return id;
-    	} catch(Db4oException e) {
-    		completeTopLevelCall();
-			throw e;
-    	} finally{
-    		endTopLevelSet(trans);
-    	}
+    	
+    	return asTopLevelSet(new Function4<Transaction, Integer>() {
+			public Integer apply(Transaction trans) {
+		        return storeAfterReplication(trans, obj, depth, checkJustSet);
+			}
+    	}, trans);
     }
     
     public final int storeAfterReplication(Transaction trans, Object obj, int depth,  boolean checkJust) {
@@ -1891,37 +1895,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     		DTrace.BEGIN_TOP_LEVEL_CALL.log();
     	}
     	generateCallIDOnTopLevel();
-    	if(_stackDepth == 0){
-    		_topLevelCallCompleted = false;
-    	}
     	_stackDepth++;
-    }
-    
-    public final void beginTopLevelSet(){
-    	beginTopLevelCall();
-    }
-    
-    /*
-	 * This method has to be invoked in the end of top level call to indicate
-	 * it's ended as expected
-	 */
-    public final void completeTopLevelCall() {
-    	if(_stackDepth == 1){
-    		_topLevelCallCompleted = true;
-    	}
-    }
-
-    private void completeTopLevelCall(Db4oException e) throws Db4oException {
-    	completeTopLevelCall();
-		throw e;
-	}
-    
-    /*
-	 * This method has to be invoked in the end of top level of set call to
-	 * indicate it's ended as expected
-	 */
-    public final void completeTopLevelSet() {
-    	completeTopLevelCall();
     }
     
     private final void endTopLevelCall(){
@@ -1930,21 +1904,6 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     	}
     	_stackDepth--;
     	generateCallIDOnTopLevel();
-    	if(_stackDepth == 0){
-	    	if(!_topLevelCallCompleted) {
-	    		
-	    		shutdownObjectContainer();
-	    		
-	    		
-	    	}
-    	}
-    }
-    
-    public final void endTopLevelSet(Transaction trans){
-    	endTopLevelCall();
-    	if(_stackDepth == 0 && _topLevelCallCompleted){
-    		trans.processDeletes();
-    	}
     }
     
     private final void generateCallIDOnTopLevel(){
@@ -2034,7 +1993,8 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     
 	public void deleteByID(Transaction transaction, int id, int cascadeDeleteDepth) {
 		if(id <= 0){
-			return;
+			throw new IllegalArgumentException("ID: " + id);
+//			return;
 		}
         if (cascadeDeleteDepth <= 0) {
         	return;

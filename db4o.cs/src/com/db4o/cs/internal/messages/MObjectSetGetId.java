@@ -10,14 +10,13 @@ import com.db4o.internal.query.result.*;
  */
 public class MObjectSetGetId extends MObjectSet implements MessageWithResponse {
 	
-	public boolean processAtServer() {
+	public Msg replyFromServer() {
 		AbstractQueryResult queryResult = queryResult(readInt());		
 		int id = 0;
 		synchronized (streamLock()) {
 			id = queryResult.getId(readInt());
 		}
-		write(Msg.OBJECTSET_GET_ID.getWriterForInt(transaction(), id));
-		return true;
+		return Msg.OBJECTSET_GET_ID.getWriterForInt(transaction(), id);
 	}
 
 }

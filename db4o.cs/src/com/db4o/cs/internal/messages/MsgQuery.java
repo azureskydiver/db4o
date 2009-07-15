@@ -13,29 +13,28 @@ public abstract class MsgQuery extends MsgObject {
 	
 	private static int nextID;
 	
-	protected final void writeQueryResult(AbstractQueryResult queryResult, QueryEvaluationMode evaluationMode, ObjectExchangeConfiguration config) {
+	protected final MsgD writeQueryResult(AbstractQueryResult queryResult, QueryEvaluationMode evaluationMode, ObjectExchangeConfiguration config) {
 		
 		if(evaluationMode == QueryEvaluationMode.IMMEDIATE){
-			writeImmediateQueryResult(queryResult, config);
-		} else{
-			writeLazyQueryResult(queryResult, config);
-		}
+			return writeImmediateQueryResult(queryResult, config);
+		} 
+		return writeLazyQueryResult(queryResult, config);
 	}
 
-	private void writeLazyQueryResult(AbstractQueryResult queryResult, ObjectExchangeConfiguration config) {
+	private MsgD writeLazyQueryResult(AbstractQueryResult queryResult, ObjectExchangeConfiguration config) {
 	    int queryResultId = generateID();
 	    int maxCount = config().prefetchObjectCount();
 	    IntIterator4 idIterator = queryResult.iterateIDs();
 	    MsgD message = buildQueryResultMessage(queryResultId, idIterator, maxCount, config);
 	    ServerMessageDispatcher serverThread = serverMessageDispatcher();
 	    serverThread.mapQueryResultToID(new LazyClientObjectSetStub(queryResult, idIterator), queryResultId);
-	    write(message);
+	    return message;
     }
 
-	private void writeImmediateQueryResult(AbstractQueryResult queryResult, ObjectExchangeConfiguration config) {
+	private MsgD writeImmediateQueryResult(AbstractQueryResult queryResult, ObjectExchangeConfiguration config) {
 	    IntIterator4 idIterator = queryResult.iterateIDs();
 	    MsgD message = buildQueryResultMessage(0, idIterator, queryResult.size(), config);
-	    write(message);
+	    return message;
     }
 
 	private MsgD buildQueryResultMessage(int queryResultId, IntIterator4 ids, int maxCount, ObjectExchangeConfiguration config) {

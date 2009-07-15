@@ -16,7 +16,7 @@ public class ClientServerThrowsOnCommitTestCase extends AbstractDb4oTestCase imp
 		new ClientServerThrowsOnCommitTestCase().runClientServer();
 	}
 	
-	public static class ExpectedException extends Db4oException{
+	public static class ExpectedException extends Db4oRecoverableException {
 		public ExpectedException() {
 			super("");
 		}

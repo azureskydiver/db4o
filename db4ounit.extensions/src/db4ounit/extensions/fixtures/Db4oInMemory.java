@@ -8,6 +8,7 @@ import com.db4o.ext.*;
 
 import db4ounit.extensions.*;
 
+// TODO implement via MemoryStorage
 public class Db4oInMemory extends AbstractSoloDb4oFixture {
     
 	public Db4oInMemory() {

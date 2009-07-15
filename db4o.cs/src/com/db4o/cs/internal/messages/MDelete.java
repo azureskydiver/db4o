@@ -6,7 +6,7 @@ import com.db4o.*;
 import com.db4o.internal.*;
 
 public final class MDelete extends MsgD implements ServerSideMessage {
-	public final boolean processAtServer() {
+	public final void processAtServer() {
 		ByteArrayBuffer bytes = this.getByteLoad();
 		ObjectContainerBase stream = stream();
 		synchronized (streamLock()) {
@@ -22,6 +22,5 @@ public final class MDelete extends MsgD implements ServerSideMessage {
 				}
 			}
 		}
-		return true;
 	}
 }

@@ -8,7 +8,7 @@ import com.db4o.internal.*;
 import com.db4o.reflect.generic.*;
 
 public class MClassMeta extends MsgObject implements MessageWithResponse {
-	public boolean processAtServer() {
+	public Msg replyFromServer() {
 		ObjectContainerBase stream = stream();
 		unmarshall();
 		try{
@@ -28,8 +28,7 @@ public class MClassMeta extends MsgObject implements MessageWithResponse {
     					trans.commit();
     					StatefulBuffer returnBytes = stream
     							.readWriterByID(trans, classMetadata.getID());
-    					write(Msg.OBJECT_TO_CLIENT.getWriter(returnBytes));
-    					return true;
+    					return Msg.OBJECT_TO_CLIENT.getWriter(returnBytes);
     				}
     			}
 			}
@@ -38,8 +37,7 @@ public class MClassMeta extends MsgObject implements MessageWithResponse {
 				e.printStackTrace();
 			}
 		}
-		write(Msg.FAILED);
-		return true;
+		return Msg.FAILED;
 	}
 
 }

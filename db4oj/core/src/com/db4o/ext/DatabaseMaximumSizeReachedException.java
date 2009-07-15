@@ -10,6 +10,6 @@ package com.db4o.ext;
  * and can reach up to 254GB.
  *@see com.db4o.config.Configuration#blockSize(int)
  */
-public class DatabaseMaximumSizeReachedException extends Db4oException {
+public class DatabaseMaximumSizeReachedException extends Db4oRecoverableException {
 
 }

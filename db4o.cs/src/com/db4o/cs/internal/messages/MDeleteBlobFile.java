@@ -10,7 +10,7 @@ import com.db4o.types.*;
 
 public class MDeleteBlobFile extends MsgBlob implements ServerSideMessage {
 
-	public boolean processAtServer() {
+	public void processAtServer() {
         try {
             Blob blob = this.serverGetBlobImpl();
             if (blob != null) {
@@ -18,7 +18,6 @@ public class MDeleteBlobFile extends MsgBlob implements ServerSideMessage {
             }
         } catch (Exception e) {
         }
-        return true;
 	}
 
     public void processClient(Socket4 sock) throws IOException {

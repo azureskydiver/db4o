@@ -12,7 +12,7 @@ import com.db4o.internal.*;
  * and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)}
  * is set to false.
  */
-public class OldFormatException extends Db4oException {
+public class OldFormatException extends Db4oFatalException {
 	
 	/**
 	 * Constructor with the default message. 

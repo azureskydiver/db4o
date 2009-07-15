@@ -11,26 +11,20 @@ import com.db4o.internal.*;
  */
 public class MClassMetadataIdForName extends MsgD implements MessageWithResponse {
     
-    public final boolean processAtServer() {
+    public final Msg replyFromServer() {
         String name = readString();
         ObjectContainerBase stream = stream();
         Transaction trans = stream.systemTransaction();
-        boolean ok = false;
         try {
             synchronized (streamLock()) {
                 int id = stream.classMetadataIdForName(name);
-                MsgD msg = Msg.CLASS_ID.getWriterForInt(trans, id);
-                write(msg);
-                ok = true;
+                return Msg.CLASS_ID.getWriterForInt(trans, id);
             }
-        } catch (Db4oException e) {
+        } 
+        catch (Db4oException e) {
             // TODO: send the exception to the client
-        } finally {
-            if (!ok) {
-                write(Msg.FAILED);
-            }
-        }
-        return true;
+        } 
+        return Msg.FAILED;
     }
 
 

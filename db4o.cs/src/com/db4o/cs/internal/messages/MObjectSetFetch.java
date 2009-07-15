@@ -12,7 +12,7 @@ import com.db4o.internal.*;
  */
 public class MObjectSetFetch extends MObjectSet implements MessageWithResponse {
 	
-	public boolean processAtServer() {
+	public Msg replyFromServer() {
 		int queryResultID = readInt();
 		int fetchSize = readInt();
 		int fetchDepth = readInt();
@@ -22,8 +22,7 @@ public class MObjectSetFetch extends MObjectSet implements MessageWithResponse {
 			ByteArrayBuffer payload = ObjectExchangeStrategyFactory.forConfig(new ObjectExchangeConfiguration(fetchDepth, fetchSize)).marshall((LocalTransaction) transaction(), idIterator, fetchSize);
 			message = ID_LIST.getWriterForBuffer(transaction(), payload);
 		}
-		write(message);
-		return true;
+		return message;
 	}
 
 }

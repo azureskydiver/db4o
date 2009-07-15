@@ -6,7 +6,7 @@ import com.db4o.internal.*;
 
 public final class MPrefetchIDs extends MsgD implements MessageWithResponse {
 
-	public final boolean processAtServer() {
+	public final Msg replyFromServer() {
 		int prefetchIDCount = readInt();
 		MsgD reply = Msg.ID_LIST.getWriterForLength(transaction(), Const4.INT_LENGTH
 			* prefetchIDCount);
@@ -16,7 +16,6 @@ public final class MPrefetchIDs extends MsgD implements MessageWithResponse {
 				reply.writeInt(((LocalObjectContainer) stream()).prefetchID());
 			}
 		}
-		write(reply);
-		return true;
+		return reply;
 	}
 }

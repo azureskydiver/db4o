@@ -6,6 +6,6 @@ package com.db4o.ext;
  * This exception is thrown when a client tries to connect
  * to a server with a wrong password or null password.
  */
-public class InvalidPasswordException extends Db4oException {
+public class InvalidPasswordException extends Db4oRecoverableException {
 
 }

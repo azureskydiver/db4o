@@ -16,27 +16,27 @@ public class AllTests  extends Db4oTestSuite {
 	protected Class[] testCases() {
 		 
 		return Db4oUnitTestUtil.mergeClasses(new Class[]{
-				HashtableModifiedUpdateDepthTestCase.class,
-				ObjectSetListAPITestCase.class,
-				STArrayListTTestCase.class,
-				STArrayListUTestCase.class,
-				STHashSetTTestCase.class,
-				STHashSetUTestCase.class,
-				STHashtableETTestCase.class,
-				STHashtableEUTestCase.class,
-				STHashtableTTestCase.class,
-				STHashtableUTestCase.class,
-				STLinkedListTTestCase.class,
-				STLinkedListUTestCase.class,
-				STOwnCollectionTTestCase.class,
-				STTreeSetTTestCase.class,
-				STTreeSetUTestCase.class,
-				STVectorTTestCase.class,
-				STVectorUTestCase.class,
-				STOrContainsTestCase.class,
-				STCurrentTestCase.class,
-				STIdentityEvaluationTestCase.class,
-				STNullOnPathTestCase.class,
+//				HashtableModifiedUpdateDepthTestCase.class,
+				ObjectSetListAPITestSuite.class,
+//				STArrayListTTestCase.class,
+//				STArrayListUTestCase.class,
+//				STHashSetTTestCase.class,
+//				STHashSetUTestCase.class,
+//				STHashtableETTestCase.class,
+//				STHashtableEUTestCase.class,
+//				STHashtableTTestCase.class,
+//				STHashtableUTestCase.class,
+//				STLinkedListTTestCase.class,
+//				STLinkedListUTestCase.class,
+//				STOwnCollectionTTestCase.class,
+//				STTreeSetTTestCase.class,
+//				STTreeSetUTestCase.class,
+//				STVectorTTestCase.class,
+//				STVectorUTestCase.class,
+//				STOrContainsTestCase.class,
+//				STCurrentTestCase.class,
+//				STIdentityEvaluationTestCase.class,
+//				STNullOnPathTestCase.class,
 		}, vectorQbeTestCases());
 	}
 	
@@ -63,4 +63,5 @@ public class AllTests  extends Db4oTestSuite {
 
 		};
 	}
+	
 }

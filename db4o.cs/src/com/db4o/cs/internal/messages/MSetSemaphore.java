@@ -6,17 +6,12 @@ import com.db4o.internal.*;
 
 public final class MSetSemaphore extends MsgD implements MessageWithResponse {
 	
-	public final boolean processAtServer() {
+	public final Msg replyFromServer() {
 		int timeout = readInt();
 		String name = readString();
 		LocalObjectContainer stream = (LocalObjectContainer)stream();
 		boolean res = stream.setSemaphore(transaction(), name, timeout);
-		if(res){
-			write(Msg.SUCCESS);
-		}else{
-			write(Msg.FAILED);
-		}
-		return true;
+		return (res ? (Msg)Msg.SUCCESS : Msg.FAILED);
 	}
 
 }

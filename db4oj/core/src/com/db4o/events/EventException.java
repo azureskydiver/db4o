@@ -10,7 +10,7 @@ import com.db4o.ext.*;
  * The exception threw by the client can be retrieved by 
  * calling EventException#getCause().
  */
-public class EventException extends Db4oException {
+public class EventException extends Db4oRecoverableException {
 	public EventException(final Throwable exc) {
 		super(exc);
 	}

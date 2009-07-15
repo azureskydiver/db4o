@@ -8,8 +8,7 @@ package com.db4o.cs.internal.messages;
  */
 public class MGetThreadID extends Msg implements MessageWithResponse {
 
-	public boolean processAtServer() {
-		respondInt(serverMessageDispatcher().dispatcherID());
-		return true;
+	public Msg replyFromServer() {
+		return respondInt(serverMessageDispatcher().dispatcherID());
 	}
 }

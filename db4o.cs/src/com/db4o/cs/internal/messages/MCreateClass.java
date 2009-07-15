@@ -8,10 +8,9 @@ import com.db4o.reflect.*;
 
 public final class MCreateClass extends MsgD implements MessageWithResponse {
 
-	public final boolean processAtServer() {
+	public final Msg replyFromServer() {
 		ObjectContainerBase stream = stream();
 		Transaction trans = stream.systemTransaction();
-		boolean ok = false;
 		try {
 			synchronized (streamLock()) {
 			    ReflectClass claxx = trans.reflector().forName(readString());
@@ -21,18 +20,14 @@ public final class MCreateClass extends MsgD implements MessageWithResponse {
 						stream.checkStillToSet();
 						StatefulBuffer returnBytes = stream.readWriterByID(trans, classMetadata.getID());
 						MsgD createdClass = Msg.OBJECT_TO_CLIENT.getWriter(returnBytes);
-						write(createdClass);
-						ok = true;
+						return createdClass;
 					}
 	            }
 			}
-		} catch (Db4oException e) {
+		} 
+		catch (Db4oException e) {
 			// TODO: send the exception to the client
-		} finally {
-			if (!ok) {
-				write(Msg.FAILED);
-			}
-		}
-		return true;
+		} 
+		return Msg.FAILED;
 	}
 }

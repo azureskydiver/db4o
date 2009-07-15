@@ -2,6 +2,7 @@
 
 package com.db4o.internal.query.result;
 
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
@@ -42,7 +43,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
     
 	public int getId(int index) {
         if (index < 0 || index >= size()) {
-            throw new IndexOutOfBoundsException();
+            throw new Db4oRecoverableException(new IndexOutOfBoundsException());
         }
 		return _ids.get(index);
 	}

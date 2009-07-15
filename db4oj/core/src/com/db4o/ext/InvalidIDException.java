@@ -8,7 +8,7 @@ package com.db4o.ext;
  * @see com.db4o.ext.ExtObjectContainer#bind(Object, long)
  * @see com.db4o.ext.ExtObjectContainer#getByID(long)
  */
-public class InvalidIDException extends Db4oException {
+public class InvalidIDException extends Db4oRecoverableException {
 	
 	/**
 	 * Constructor allowing to specify the exception cause

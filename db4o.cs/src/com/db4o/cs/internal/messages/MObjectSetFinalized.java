@@ -8,9 +8,8 @@ package com.db4o.cs.internal.messages;
  * @exclude
  */
 public class MObjectSetFinalized extends MsgD implements ServerSideMessage {
-	public boolean processAtServer() {
+	public void processAtServer() {
 		int queryResultID = readInt();
     	serverMessageDispatcher().queryResultFinalized(queryResultID);
-    	return true;
     }
 }

@@ -4,4 +4,5 @@ package com.db4o.db4ounit.common.exceptions;
 
 public interface ExceptionFactory {
 	void throwException();
+	void throwOnClose();
 }

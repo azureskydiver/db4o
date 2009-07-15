@@ -27,19 +27,25 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testInvalidSlotException() throws Exception {
-		Assert.expect(InvalidIDException.class, InvalidSlotException.class, new CodeBlock(){
+		Assert.expect(Db4oRecoverableException.class, new CodeBlock(){
 			public void run() throws Throwable {
 				db().getByID(INVALID_ID);		
 			}
 		});
+		Assert.isFalse(db().isClosed());
 	}
 	
-	public void testDbNotClosedOnOutOfMemory(){
-		final Class expectedException = isNetworkingClientServer() || isInMemory()
-			? InvalidIDException.class
-			: OutOfMemoryError.class;
-		
-		Assert.expect(expectedException, new CodeBlock(){
+	public void testDbNotClosedOnOutOfMemory() {
+		// TODO why different behavior with in memory fixture?
+		if(isInMemory()) {
+			Assert.expect(InvalidSlotException.class, new CodeBlock(){
+				public void run() throws Throwable {
+					db().getByID(OUT_OF_MEMORY_ID);
+				}
+			});
+			return;
+		}
+		Assert.expect(Db4oRecoverableException.class, OutOfMemoryError.class, new CodeBlock(){
 			public void run() throws Throwable {
 				db().getByID(OUT_OF_MEMORY_ID);
 			}
@@ -47,14 +53,6 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
 		Assert.isFalse(db().isClosed());
 	}
 
-	private boolean isInMemory() {
-		return fixture() instanceof Db4oInMemory;
-	}
-
-	private boolean isNetworkingClientServer() {
-		return isClientServer() && ! isEmbeddedClientServer();
-	}
-	
 	public static class A{
 		
 		A _a;
@@ -105,6 +103,10 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
 				_deliverInvalidSlot = false;
 			}
 		}
+	}
+
+	private boolean isInMemory() {
+		return fixture() instanceof Db4oInMemory;
 	}
 
 }

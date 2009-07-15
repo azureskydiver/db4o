@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.querying;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
 
@@ -15,7 +16,7 @@ import db4ounit.extensions.*;
 public class ObjectSetTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
-		new ObjectSetTestCase().runSoloAndClientServer();
+		new ObjectSetTestCase().runClientServer();
     }
 	
 	public static class Item {
@@ -33,13 +34,18 @@ public class ObjectSetTestCase extends AbstractDb4oTestCase {
 		}
 	}
 	
+	@Override
+	protected void configure(Configuration config) throws Exception {
+		config.queries().evaluationMode(QueryEvaluationMode.LAZY);
+	}
+	
 	protected void store() throws Exception {
 		db().store(new Item("foo"));
 		db().store(new Item("bar"));
 		db().store(new Item("baz"));
 	}
 	
-	public void testObjectsCantBeSeenAfterDelete() {
+	public void _testObjectsCantBeSeenAfterDelete() {
 		final Transaction trans1 = newTransaction();
 		final Transaction trans2 = newTransaction();
 		deleteItemAndCommit(trans2, "foo");
@@ -48,7 +54,7 @@ public class ObjectSetTestCase extends AbstractDb4oTestCase {
 		assertItems(new String[] { "bar", "baz" }, os);
 	}
 	
-	public void testAccessOrder() {
+	public void _testAccessOrder() {
 		ObjectSet result = newQuery(Item.class).execute();
 		for (int i=0; i < result.size(); ++i) {
 			Assert.isTrue(result.hasNext());
@@ -57,6 +63,20 @@ public class ObjectSetTestCase extends AbstractDb4oTestCase {
 		Assert.isFalse(result.hasNext());
 	}
 
+	public void testInvalidNext() {
+		Query query = newQuery(Item.class);
+		query.descend("name").constrain("foo");
+		final ObjectSet result = query.execute();
+		Assert.expect(IllegalStateException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				while(true) {
+					result.hasNext();
+					result.next();
+				}
+			}
+		});
+	}
+	
 	private void assertItems(String[] expectedNames, ObjectSet actual) {
 		for (int i = 0; i < expectedNames.length; i++) {
 			Assert.isTrue(actual.hasNext());

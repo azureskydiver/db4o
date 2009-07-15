@@ -5,11 +5,10 @@ package com.db4o.cs.internal.messages;
 
 public final class MRollback extends Msg implements ServerSideMessage {
 	
-	public final boolean processAtServer() {
+	public final void processAtServer() {
 		synchronized (streamLock()) {
 			transaction().rollback();
 		}
-		return true;
 	}
 	
 }

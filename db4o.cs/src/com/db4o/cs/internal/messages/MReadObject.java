@@ -6,7 +6,7 @@ import com.db4o.internal.*;
 
 public final class MReadObject extends MsgD implements MessageWithResponse {
 	
-	public final boolean processAtServer() {
+	public final Msg replyFromServer() {
 		StatefulBuffer bytes = null;
 		// readWriterByID may fail in certain cases, for instance if
 		// and object was deleted by another client
@@ -18,7 +18,6 @@ public final class MReadObject extends MsgD implements MessageWithResponse {
 		if (bytes == null) {
 			bytes = new StatefulBuffer(transaction(), 0, 0);
 		}
-		write(Msg.OBJECT_TO_CLIENT.getWriter(bytes));
-		return true;
+		return Msg.OBJECT_TO_CLIENT.getWriter(bytes);
 	}
 }
