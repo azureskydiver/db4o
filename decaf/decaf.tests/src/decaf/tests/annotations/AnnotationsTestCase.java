@@ -5,6 +5,10 @@ import decaf.tests.*;
 
 public class AnnotationsTestCase extends DecafTestCaseBase {
 	
+	public void testPublic() throws Exception {
+		runPlatformTestCase("Public");
+	}
+	
 	public void testRemoveClass() throws Exception {
 		runResourceTestCase("RemoveClass");
 	}
