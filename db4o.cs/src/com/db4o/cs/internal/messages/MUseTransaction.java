@@ -7,9 +7,8 @@ import com.db4o.cs.internal.*;
 
 public final class MUseTransaction extends MsgD implements ServerSideMessage {
 
-	public boolean processAtServer() {
+	public void processAtServer() {
 		ServerMessageDispatcher serverThread = serverMessageDispatcher();
 		serverThread.useTransaction(this);
-		return true;
 	}
 }

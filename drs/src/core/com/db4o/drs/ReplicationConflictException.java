@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs;
 
-import com.db4o.ext.Db4oException;
+import com.db4o.ext.*;
 
 /**
  * Thrown when a conflict occurs and no ReplicationEventListener is specified.
@@ -31,7 +31,7 @@ import com.db4o.ext.Db4oException;
  * @see ReplicationEventListener
  * @since dRS 1.2
  */
-public class ReplicationConflictException extends Db4oException {
+public class ReplicationConflictException extends Db4oRecoverableException {
 	public ReplicationConflictException(String message) {
 		super(message);
 	}

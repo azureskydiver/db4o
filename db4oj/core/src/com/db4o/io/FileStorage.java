@@ -30,11 +30,11 @@ public class FileStorage implements Storage {
 		return file.exists() && file.length() > 0;
     }
 	
-	private static class FileBin implements Bin {
+	static class FileBin implements Bin {
 
 		private final String _path;
 
-		private final RandomAccessFile _file;
+		private RandomAccessFile _file;
 		
 		FileBin(BinConfiguration config) throws Db4oIOException {
 			boolean ok = false;
@@ -55,27 +55,22 @@ public class FileStorage implements Storage {
 		}
 
 		public void close() throws Db4oIOException {
-			
-			// TODO: use separate subclass for Android with the fix
-			// 
-			// FIXME: This is a temporary quickfix for a bug in Android.
-			//        Remove after Android has been fixed.
-			try {
-				if (_file != null) {
-					_file.seek(0);
-				}
-			} catch (IOException e) {
-				// ignore
-			}
-			
 			Platform4.unlockFile(_path, _file);
 			try {
-				if (_file != null) {
+				if (!isClosed()) {
 					_file.close();
 				}
-			} catch (IOException e) {
+			} 
+			catch (IOException e) {
 				throw new Db4oIOException(e);
 			}
+			finally {
+				_file = null;
+			}
+		}
+		
+		boolean isClosed() {
+			return _file == null;
 		}
 		
 		public long length() throws Db4oIOException {
@@ -95,8 +90,7 @@ public class FileStorage implements Storage {
 			}
 		}
 
-		private void seek(long pos) throws IOException {
-
+		void seek(long pos) throws IOException {
 			if (DTrace.enabled) {
 				DTrace.REGULAR_SEEK.log(pos);
 			}

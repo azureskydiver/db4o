@@ -9,7 +9,7 @@ package com.db4o.ext;
  * if the database file is locked by another process.
  * @see com.db4o.Db4o#openFile
  */
-public class DatabaseFileLockedException extends Db4oException {
+public class DatabaseFileLockedException extends Db4oFatalException {
 	
 	/**
 	 * Constructor with a database description message 

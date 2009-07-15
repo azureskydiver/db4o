@@ -10,8 +10,12 @@ import db4ounit.extensions.*;
 public class ClientServerTestCaseBase extends Db4oClientServerTestCase {
 
 	protected ServerMessageDispatcher serverDispatcher() {
-		ObjectServerImpl serverImpl = (ObjectServerImpl) clientServerFixture().server();
+		ObjectServerImpl serverImpl = server();
 		return (ServerMessageDispatcher)Iterators.next(serverImpl.iterateDispatchers());
+	}
+
+	protected ObjectServerImpl server() {
+		return (ObjectServerImpl) clientServerFixture().server();
 	}
 	
 	protected ClientObjectContainer client(){

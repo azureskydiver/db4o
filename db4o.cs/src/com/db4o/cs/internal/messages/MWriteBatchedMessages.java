@@ -2,10 +2,12 @@
 
 package com.db4o.cs.internal.messages;
 
+import com.db4o.cs.internal.*;
 import com.db4o.internal.*;
 
-public class MWriteBatchedMessages extends MsgD implements MessageWithResponse {
-	public final boolean processAtServer() {
+public class MWriteBatchedMessages extends MsgD implements ServerSideMessage {
+	public final void processAtServer() {
+		ServerMessageDispatcher dispatcher = (ServerMessageDispatcher) messageDispatcher();
 		int count = readInt();
 		Transaction ta = transaction();
 		synchronized (streamLock()) {
@@ -23,13 +25,12 @@ public class MWriteBatchedMessages extends MsgD implements MessageWithResponse {
     					msgd.payLoad().incrementOffset(Const4.INT_LENGTH);
     					Transaction t = checkParentTransaction(ta, msgd.payLoad());
     					msgd.setTransaction(t);
-    					((ServerSideMessage)msgd).processAtServer();
+    					dispatcher.processMessage(msgd);
     				}
     			} else {
-    				((ServerSideMessage)clonedMessage).processAtServer();
+    				dispatcher.processMessage(clonedMessage);
     			}
     		}
-    		return true;
 		}
 	}
 

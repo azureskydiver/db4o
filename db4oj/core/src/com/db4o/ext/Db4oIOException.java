@@ -6,7 +6,7 @@ package com.db4o.ext;
  * This exception is thrown when a system IO exception
  * is encounted by db4o process.
   */
-public class Db4oIOException extends Db4oException {
+public class Db4oIOException extends Db4oFatalException {
 
 	/**
 	 * Constructor.

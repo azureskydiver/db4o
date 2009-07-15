@@ -9,13 +9,12 @@ import com.db4o.internal.*;
  */
 public class MVersion extends Msg implements MessageWithResponse {
 
-	public boolean processAtServer() {
+	public Msg replyFromServer() {
 		long ver = 0;
 		ObjectContainerBase stream = stream();
 		synchronized (streamLock()) {
 			ver = stream.currentVersion();
 		}
-		write(Msg.ID_LIST.getWriterForLong(transaction(), ver));
-		return true;
+		return Msg.ID_LIST.getWriterForLong(transaction(), ver);
 	}
 }

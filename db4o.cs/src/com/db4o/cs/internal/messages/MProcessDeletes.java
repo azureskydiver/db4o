@@ -7,7 +7,7 @@ import com.db4o.ext.*;
 
 public class MProcessDeletes extends Msg implements ServerSideMessage {
 	
-	public final boolean processAtServer() {
+	public final void processAtServer() {
 		
 		stream().withTransaction(transaction(), new Runnable() { public void run() {
 			try {
@@ -19,7 +19,6 @@ public class MProcessDeletes extends Msg implements ServerSideMessage {
 				}
 			}
 		}});
-		return true;
 	}
 	
 }

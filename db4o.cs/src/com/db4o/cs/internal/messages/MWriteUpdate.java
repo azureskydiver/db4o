@@ -8,7 +8,7 @@ import com.db4o.internal.slots.*;
 
 public final class MWriteUpdate extends MsgObject implements ServerSideMessage {
 	
-	public final boolean processAtServer() {
+	public final void processAtServer() {
 	    int classMetadataID = _payLoad.readInt();
 	    int arrayTypeValue = _payLoad.readInt();
 	    ArrayType arrayType = ArrayType.forValue(arrayTypeValue);
@@ -25,7 +25,6 @@ public final class MWriteUpdate extends MsgObject implements ServerSideMessage {
             _payLoad.writeEncrypt();
             deactivateCacheFor(id);            
 		}
-		return true;
 	}
 
 	private void deactivateCacheFor(int id) {

@@ -45,4 +45,7 @@ public interface ServerMessageDispatcher extends ClientConnection, MessageDispat
 	public CallbackObjectInfoCollections committedInfo();
 
 	public ClassInfoHelper classInfoHelper();
+
+	public boolean processMessage(Msg message);
+
 }

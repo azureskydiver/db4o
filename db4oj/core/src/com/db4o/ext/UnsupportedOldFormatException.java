@@ -6,6 +6,6 @@ package com.db4o.ext;
  * This exception is thrown while reading old database
  * files for which support has been dropped.
  */
-public class UnsupportedOldFormatException extends Db4oException{
+public class UnsupportedOldFormatException extends Db4oFatalException{
 
 }

@@ -176,21 +176,45 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 
         // TODO: COR-885 - message may process against closed server
         // Checking aliveness just makes the issue less likely to occur. Naive synchronization against main lock is prohibitive.        
-    	if(isMessageDispatcherAlive()) {
-    		try {
-    			return ((ServerSideMessage)message).processAtServer();
-    		}
-			catch (OutOfMemoryError oome){
-				writeException(message, new InternalServerError(oome));
+    	return processMessage(message);
+    }
+
+	public boolean processMessage(Msg message) {
+		if(isMessageDispatcherAlive()) {			
+			if(message instanceof MessageWithResponse) {
+				MessageWithResponse msgWithResp = (MessageWithResponse) message;
+				try {
+					Msg reply = msgWithResp.replyFromServer();
+					write(reply);
+				}
+	    		catch(Db4oRecoverableException exc) {
+					writeException(message, exc);
+					return true;
+	    		}
+	    		catch(Exception exc) {
+	    			exc.printStackTrace();
+	    			write(Msg.ERROR);
+	    			return true;
+	    		}
+				try {
+					msgWithResp.postProcessAtServer();
+					return true;
+	    		}
+	    		catch(Exception exc) {
+	    			exc.printStackTrace();
+	    		}
 				return true;
 			}
-			catch (RuntimeException exc) {
-				writeException(message, exc);
+			try {
+				((ServerSideMessage)message).processAtServer();
 				return true;
-			} 
+    		}
+    		catch(Exception exc) {
+    			exc.printStackTrace();
+    		}
     	}
     	return false;
-    }
+	}
 
 	private void writeException(Msg message, Exception exc) {
 		if(!(message instanceof MessageWithResponse)) {

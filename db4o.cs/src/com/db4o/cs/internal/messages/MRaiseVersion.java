@@ -9,12 +9,11 @@ import com.db4o.internal.*;
  */
 public class MRaiseVersion extends MsgD implements ServerSideMessage {
 
-	public boolean processAtServer() {
+	public void processAtServer() {
 		long minimumVersion = readLong();
 		ObjectContainerBase stream = stream();
 		synchronized (stream) {
 			stream.raiseVersion(minimumVersion);
 		}
-		return true;
 	}
 }

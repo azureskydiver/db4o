@@ -6,7 +6,7 @@ import com.db4o.*;
 import com.db4o.internal.*;
 
 public final class MGetClasses extends MsgD implements MessageWithResponse {
-	public final boolean processAtServer() {
+	public final Msg replyFromServer() {
 	    ObjectContainerBase stream = stream();
 		synchronized (streamLock()) {
 			try {
@@ -26,7 +26,6 @@ public final class MGetClasses extends MsgD implements MessageWithResponse {
 		ByteArrayBuffer writer = message.payLoad();
 		writer.writeInt(stream.classCollection().getID());
 		writer.writeByte(stream.stringIO().encodingByte());
-		write(message);
-		return true;
+		return message;
 	}
 }

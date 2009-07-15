@@ -9,14 +9,13 @@ import com.db4o.internal.query.result.*;
 
 public final class MGetAll extends MsgQuery implements MessageWithResponse {
 	
-	public final boolean processAtServer() {
+	public final Msg replyFromServer() {
 		QueryEvaluationMode evaluationMode = QueryEvaluationMode.fromInt(readInt());
 		int prefetchDepth = readInt();
 		int prefetchCount = readInt();
 		synchronized(streamLock()) {
-			writeQueryResult(getAll(evaluationMode), evaluationMode, new ObjectExchangeConfiguration(prefetchDepth, prefetchCount));
+			return writeQueryResult(getAll(evaluationMode), evaluationMode, new ObjectExchangeConfiguration(prefetchDepth, prefetchCount));
 		}
-		return true;
 	}
 
 	private AbstractQueryResult getAll(QueryEvaluationMode mode) {

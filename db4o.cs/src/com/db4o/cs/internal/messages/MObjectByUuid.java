@@ -10,7 +10,7 @@ import com.db4o.internal.*;
  * 
  */
 public class MObjectByUuid extends MsgD implements MessageWithResponse {
-	public final boolean processAtServer() {
+	public final Msg replyFromServer() {
 		long uuid = readLong();
 		byte[] signature = readBytes();
 		int id = 0;
@@ -27,7 +27,6 @@ public class MObjectByUuid extends MsgD implements MessageWithResponse {
 			    }
 			}
 		}
-		write(Msg.OBJECT_BY_UUID.getWriterForInt(trans, id));
-		return true;
+		return Msg.OBJECT_BY_UUID.getWriterForInt(trans, id);
 	}
 }

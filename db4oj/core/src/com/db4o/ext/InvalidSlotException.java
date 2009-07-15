@@ -7,7 +7,7 @@ package com.db4o.ext;
  * This exception is thrown when db4o reads slot
  * information which is not valid (length or address).
  */
-public class InvalidSlotException extends Db4oException {
+public class InvalidSlotException extends Db4oRecoverableException {
 
 	/**
 	 * Constructor allowing to specify a detailed message.

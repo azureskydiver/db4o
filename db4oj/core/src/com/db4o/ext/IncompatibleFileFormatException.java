@@ -6,7 +6,7 @@ package com.db4o.ext;
  * This exception is thrown when the database file format
  * is not compatible with the applied configuration.
  */
-public class IncompatibleFileFormatException extends Db4oException {
+public class IncompatibleFileFormatException extends Db4oFatalException {
 
 	public IncompatibleFileFormatException(){
 		super();

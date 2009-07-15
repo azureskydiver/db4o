@@ -40,6 +40,7 @@ public class AllTests extends ComposibleTestSuite {
 					IncompatibleFileFormatExceptionTestCase.class, 
 					InvalidSlotExceptionTestCase.class,
 					OldFormatExceptionTestCase.class,
+					com.db4o.db4ounit.common.exceptions.propagation.AllTests.class,
 				};
 	}
 }

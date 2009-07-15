@@ -10,9 +10,8 @@ import com.db4o.cs.internal.*;
  */
 public class MSwitchToFile extends MsgD implements ServerSideMessage {
 
-	public boolean processAtServer() {
+	public void processAtServer() {
 		ServerMessageDispatcher serverThread = serverMessageDispatcher();
 		serverThread.switchToFile(this);
-		return true;
 	}
 }

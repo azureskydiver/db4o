@@ -19,7 +19,7 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new CommittedCallbacksByAnotherClientTestCase().runAll();
+		new CommittedCallbacksByAnotherClientTestCase().runClientServer();
 	}
 	
 	private static final ObjectInfo[] NONE = new ObjectInfo[0];

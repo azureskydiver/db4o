@@ -5,15 +5,14 @@ package com.db4o.cs.internal.messages;
  */
 public class MCloseSocket extends Msg implements ServerSideMessage {
 
-	public boolean processAtServer() {
+	public void processAtServer() {
 		synchronized (stream().lock()) {
 			if (stream().isClosed()) {
-				return true;
+				return;
 			}
 			transaction().commit();
 			logMsg(35, serverMessageDispatcher().name());
 			serverMessageDispatcher().closeConnection();
 		}
-		return true;
 	}
 }

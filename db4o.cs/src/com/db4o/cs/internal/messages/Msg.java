@@ -87,7 +87,8 @@ public abstract class Msg implements Cloneable, Message {
 	public static final MWriteBatchedMessages WRITE_BATCHED_MESSAGES = new MWriteBatchedMessages();
 	public static final MsgBlob DELETE_BLOB_FILE = new MDeleteBlobFile();
 	public static final MInstanceCount INSTANCE_COUNT = new MInstanceCount();
-	public static final MRequestException REQUEST_EXCEPTION = new MRequestException();
+	public static final MRequestExceptionWithResponse REQUEST_EXCEPTION_WITH_RESPONSE = new MRequestExceptionWithResponse();
+	public static final MRequestExceptionWithoutResponse REQUEST_EXCEPTION_WITHOUT_RESPONSE = new MRequestExceptionWithoutResponse();
 
 	Msg() {
 		_msgID = _messageIdGenerator++;
@@ -226,8 +227,8 @@ public abstract class Msg implements Cloneable, Message {
 		write(RUNTIME_EXCEPTION.getWriterForSingleObject(transaction(), e));
 	}
 
-	public void respondInt(int response){
-    	write(ID_LIST.getWriterForInt(transaction(), response));
+	public Msg respondInt(int response){
+    	return ID_LIST.getWriterForInt(transaction(), response);
     }
 	
 	public boolean write(Socket4 sock) {
@@ -284,6 +285,11 @@ public abstract class Msg implements Cloneable, Message {
 	
 	public void logMsg(int msgCode, String msg) {
 		stream().logMsg(msgCode, msg);
+	}
+
+	/** to be overridden by implementors of MessageWithResponse */
+	public void postProcessAtServer() {
+		// do nothing by default
 	}
 
 }

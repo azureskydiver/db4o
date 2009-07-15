@@ -7,7 +7,7 @@ import com.db4o.internal.slots.*;
 
 public final class MWriteNew extends MsgObject implements ServerSideMessage {
 	
-	public final boolean processAtServer() {
+	public final void processAtServer() {
         int classMetadataId = _payLoad.readInt();
         LocalObjectContainer stream = (LocalObjectContainer)stream();
         unmarshall(_payLoad._offset);
@@ -31,6 +31,5 @@ public final class MWriteNew extends MsgObject implements ServerSideMessage {
             stream.writeNew(transaction(), _payLoad.pointer(), classMetadata, _payLoad);
             serverTransaction().writePointer( id, slot);
         }
-        return true;
     }
 }

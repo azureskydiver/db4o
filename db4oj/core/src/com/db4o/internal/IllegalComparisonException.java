@@ -8,6 +8,6 @@ import com.db4o.ext.*;
 /**
  * @exclude
  */
-public class IllegalComparisonException extends Db4oException {
+public class IllegalComparisonException extends Db4oRecoverableException {
 
 }

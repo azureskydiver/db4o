@@ -3,21 +3,22 @@
 package com.db4o.cs.internal.messages;
 
 import com.db4o.cs.internal.objectexchange.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 
 public final class MQueryExecute extends MsgQuery implements MessageWithResponse {
 	
-	public boolean processAtServer() {
+	public Msg replyFromServer() {
 		unmarshall(_payLoad._offset);
-		
+		final ObjectByRef<Msg> result = new ObjectByRef();
 		stream().withTransaction(transaction(), new Runnable() { public void run() {
 			
 			final QQuery query = unmarshallQuery();
-			writeQueryResult(executeFully(query), query.evaluationMode(), new ObjectExchangeConfiguration(query.prefetchDepth(), query.prefetchCount()));
+			result.value = writeQueryResult(executeFully(query), query.evaluationMode(), new ObjectExchangeConfiguration(query.prefetchDepth(), query.prefetchCount()));
 			
 		}});
-		return true;
+		return result.value;
 	}
 
 	private QQuery unmarshallQuery() {

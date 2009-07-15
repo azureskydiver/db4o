@@ -96,8 +96,12 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 			}
 	
 	        synchronized (_lock) {
-				_backupFile.close();
-				_backupFile = null;
+	        	try {
+	        		syncAndClose(_backupFile);
+	        	}
+	        	finally {
+	        		_backupFile = null;
+	        	}
 			}
 	        
         }});
@@ -125,24 +129,25 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 		}
 	}
 
-	 /*
-     * This method swallows IOException,
-     * because it should not affect other close precedures.
-     */
 	private void closeDatabaseFile() {
 		try {
-			if (_file != null) {
-				_file.close();
-			}
+			syncAndClose(_file);
 		} finally {
 			_file = null;
 		}
 	}
+
+	private static void syncAndClose(Bin bin) {
+		if (bin != null) {
+			try {
+				bin.sync();
+			}
+			finally {
+				bin.close();
+			}
+		}
+	}
     
-    /*
-     * This method swallows IOException,
-     * because it should not affect other close precedures.
-     */
 	private void closeFileHeader() {
 		try {
 			if (_fileHeader != null) {
@@ -182,11 +187,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
     }
 
     public long fileLength() {
-        try {
-            return _file.length();
-        } catch (Exception e) {
-            throw new RuntimeException();
-        }
+        return _file.length();
     }
 
     public String fileName() {
@@ -326,5 +327,12 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 	        }
 	        return bytes;
 	    }
+	}
+	
+	@Override
+	protected void fatalStorageShutdown() {
+		if(_file != null) {
+			_file.close();
+		}
 	}
 }

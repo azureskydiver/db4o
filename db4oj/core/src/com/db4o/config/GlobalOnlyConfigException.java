@@ -12,6 +12,6 @@ import com.db4o.ext.*;
  *@see com.db4o.config.Configuration#io(com.db4o.io.IoAdapter)
  *@see com.db4o.config.Configuration#password(String)
  */
-public class GlobalOnlyConfigException extends Db4oException {
+public class GlobalOnlyConfigException extends Db4oRecoverableException {
 	
 }

@@ -10,7 +10,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 
 
-public class MWriteBlob extends MsgBlob implements MessageWithResponse {
+public class MWriteBlob extends MsgBlob implements ServerSideMessage {
 	
 	public void processClient(Socket4 sock) throws IOException {
         Msg message = Msg.readMessage(messageDispatcher(), transaction(), sock);
@@ -43,7 +43,7 @@ public class MWriteBlob extends MsgBlob implements MessageWithResponse {
         }
     }
 
-	public boolean processAtServer() {
+	public void processAtServer() {
         try {
             BlobImpl blobImpl = this.serverGetBlobImpl();
             if (blobImpl != null) {
@@ -57,6 +57,5 @@ public class MWriteBlob extends MsgBlob implements MessageWithResponse {
             }
         } catch (Exception e) {
         }
-        return true;
     }
 }

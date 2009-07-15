@@ -8,16 +8,15 @@ package com.db4o.cs.internal.messages;
  */
 public class MClose extends Msg implements ServerSideMessage, ClientSideMessage {
 	
-	public boolean processAtServer() {
+	public void processAtServer() {
 		synchronized (stream().lock()) {
 			if (stream().isClosed()) {
-				return true;
+				return;
 			}
 			transaction().commit();
 			logMsg(35, serverMessageDispatcher().name());
 			serverMessageDispatcher().close();
 		}
-		return true;
 	}
 	
 	public boolean processAtClient() {

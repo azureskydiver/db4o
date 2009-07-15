@@ -8,8 +8,8 @@ import com.db4o.messaging.*;
 
 public final class MUserMessage extends MsgObject implements ServerSideMessage, ClientSideMessage {
 	
-	public final boolean processAtServer() {
-		return processUserMessage();
+	public final void processAtServer() {
+		processUserMessage();
 	}
 	
 	public boolean processAtClient() {

@@ -5,14 +5,14 @@ package com.db4o.foundation;
 /**
  * Useful as "out" or "by ref" function parameter.
  */
-public final class ObjectByRef {
+public final class ObjectByRef<T> {
 	
-	public Object value;
+	public T value;
 
 	public ObjectByRef() {
 	}
 
-	public ObjectByRef(Object value_) {
+	public ObjectByRef(T value_) {
 		value = value_;
 	}
 }

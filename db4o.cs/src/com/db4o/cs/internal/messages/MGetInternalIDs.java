@@ -7,7 +7,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 public final class MGetInternalIDs extends MsgD implements MessageWithResponse {
-	public final boolean processAtServer() {
+	public final Msg replyFromServer() {
 		
 		ByteArrayBuffer bytes = getByteLoad();
         final int classMetadataID = bytes.readInt();
@@ -19,9 +19,7 @@ public final class MGetInternalIDs extends MsgD implements MessageWithResponse {
 		final MsgD message = Msg.ID_LIST.getWriterForLength(transaction(), payload.length());
 		message.payLoad().writeBytes(payload._buffer);
 		
-		write(message);
-		
-		return true;
+		return message;
 	}
 
 	private ByteArrayBuffer marshallIDsFor(final int classMetadataID,

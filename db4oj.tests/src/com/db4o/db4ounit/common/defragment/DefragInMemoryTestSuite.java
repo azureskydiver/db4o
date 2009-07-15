@@ -89,6 +89,7 @@ public class DefragInMemoryTestSuite extends FixtureBasedTestSuite {
 		private long backupLength() {
 			Bin backupBin = backupStorage().open(new BinConfiguration(tempFile(), true, 0, true));
 			long backupLength = backupBin.length();
+			backupBin.sync();
 			backupBin.close();
 			return backupLength;
 		}

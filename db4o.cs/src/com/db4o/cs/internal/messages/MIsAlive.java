@@ -8,9 +8,8 @@ package com.db4o.cs.internal.messages;
  */
 public class MIsAlive extends Msg implements MessageWithResponse { 
 
-    public boolean processAtServer() {
-        write(Msg.IS_ALIVE);
-        return true;
+    public Msg replyFromServer() {
+        return Msg.IS_ALIVE;
     }
     
 

@@ -8,7 +8,7 @@ import com.db4o.internal.*;
 
 public class MReadMultipleObjects extends MsgD implements MessageWithResponse {
 	
-	public final boolean processAtServer() {
+	public final Msg replyFromServer() {
 		int prefetchDepth = readInt();
 		int prefetchCount = readInt();
 		IntIterator4 ids = new FixedSizeIntIterator4Base(prefetchCount) {
@@ -20,9 +20,7 @@ public class MReadMultipleObjects extends MsgD implements MessageWithResponse {
 		ByteArrayBuffer buffer = marshallObjects(prefetchDepth, prefetchCount,
 				ids);
 		
-		MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForBuffer(transaction(), buffer);
-		write(msg);
-		return true;
+		return Msg.READ_MULTIPLE_OBJECTS.getWriterForBuffer(transaction(), buffer);
 	}
 
 	private ByteArrayBuffer marshallObjects(int prefetchDepth,

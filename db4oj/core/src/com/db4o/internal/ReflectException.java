@@ -10,7 +10,7 @@ import com.db4o.ext.*;
  * 
  * @see com.db4o.reflect
  */
-public class ReflectException extends Db4oException {
+public class ReflectException extends Db4oRecoverableException {
 
 	/**
 	 * Constructor with the cause exception 

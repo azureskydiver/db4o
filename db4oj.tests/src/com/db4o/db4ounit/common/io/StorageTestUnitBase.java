@@ -35,6 +35,7 @@ public class StorageTestUnitBase extends TestWithTempFile {
 
 	protected void close() {
 	    if (null != _bin) {
+	    	_bin.sync();
     		_bin.close();
     		_bin = null;
     	}

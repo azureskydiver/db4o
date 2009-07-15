@@ -73,11 +73,7 @@ public abstract class DiskFullTestCaseBase extends Db4oTestWithTempFile {
 				_db.commit();
 			}
 		});
-		Assert.expect(Db4oIOException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				closeDb();			
-			}
-		});
+		_db = null;
 	}
 
 	public void openDatabase(Object conditionConfig, boolean readOnly, boolean doCache) {

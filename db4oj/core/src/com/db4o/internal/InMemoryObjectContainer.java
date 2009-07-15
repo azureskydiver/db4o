@@ -152,4 +152,9 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 	public byte blockSize() {
 		return 1;
 	}
+	
+	@Override
+	protected void fatalStorageShutdown() {
+		shutdownDataStorage();
+	}
 }

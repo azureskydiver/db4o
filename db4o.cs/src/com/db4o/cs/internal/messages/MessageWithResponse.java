@@ -2,5 +2,7 @@
 
 package com.db4o.cs.internal.messages;
 
-public interface MessageWithResponse extends ServerSideMessage {
+public interface MessageWithResponse {
+	Msg replyFromServer();
+	void postProcessAtServer();
 }

@@ -72,11 +72,20 @@ public class FileBasedTransactionLogHandler extends TransactionLogHandler {
 	}
 
 	private void closeLockFile() {
-		_lockFile.close();
+		syncAndClose(_lockFile);
+	}
+
+	private void syncAndClose(Bin bin) {
+		try {
+			bin.sync();
+		}
+		finally {
+			bin.close();
+		}
 	}
 
 	private void closeLogFile() {
-		_logFile.close();
+		syncAndClose(_logFile);
 	}
 
 	private void deleteLockFile() {

@@ -10,7 +10,7 @@ import com.db4o.cs.internal.*;
  */
 public class MLogin extends MsgD implements MessageWithResponse {
 
-	public boolean processAtServer() {
+	public Msg replyFromServer() {
 		synchronized (streamLock()) {
 		    String userName = readString();
 		    String password = readString();
@@ -22,14 +22,12 @@ public class MLogin extends MsgD implements MessageWithResponse {
     				logMsg(32, userName);
     				int blockSize = stream().blockSize();
     				int encrypt = stream()._handlers.i_encrypt ? 1 : 0;
-    				write(Msg.LOGIN_OK.getWriterForInts(transaction(), new int[] { blockSize, encrypt}));
     				serverMessageDispatcher().login();
-    				return true;
+    				return Msg.LOGIN_OK.getWriterForInts(transaction(), new int[] { blockSize, encrypt});
     			}
     		}
 	    }
-		write(Msg.FAILED);
-		return true;
+		return Msg.FAILED;
 	}
 
 }

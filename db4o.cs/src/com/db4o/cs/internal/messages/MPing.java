@@ -9,9 +9,8 @@ package com.db4o.cs.internal.messages;
  */
 public class MPing extends Msg implements MessageWithResponse {
 
-	public boolean processAtServer() {
-	    write(Msg.PONG);
-		return true;
+	public Msg replyFromServer() {
+	    return Msg.PONG;
 	}
 	
 }

@@ -9,18 +9,20 @@ import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
 /**
  */
 @decaf.Ignore(decaf.Platform.JDK11)
-public class ObjectSetListAPITestCase extends FixtureTestSuiteDescription implements Db4oTestCase {
+public class ObjectSetListAPITestSuite extends FixtureTestSuiteDescription implements Db4oTestCase {
 	
 	{
 		testUnits(TestUnit.class);
 		
 		// TODO: Add QueryEvaluationMode.SNAPSHOT to the fixtures
 		fixtureProviders(
+				new Db4oFixtureProvider(),
 				new SubjectFixtureProvider(
 					QueryEvaluationMode.LAZY,
 					QueryEvaluationMode.IMMEDIATE));
@@ -55,14 +57,9 @@ public class ObjectSetListAPITestCase extends FixtureTestSuiteDescription implem
 		
 		public void testOutOfBounds() {
 			final ObjectSet result = result();
-			Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
+			Assert.expect(Db4oRecoverableException.class, IndexOutOfBoundsException.class, new CodeBlock() {
 				public void run() throws Throwable {
-					try {
-						result.get(NUMDATA);
-					}
-					catch(Db4oException exc) {
-						exc.printStackTrace();
-					}
+					result.get(NUMDATA);
 				}
 			});
 		}

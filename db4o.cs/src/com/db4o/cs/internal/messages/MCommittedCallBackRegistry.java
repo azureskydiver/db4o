@@ -5,10 +5,9 @@ import com.db4o.cs.internal.*;
 
 public class MCommittedCallBackRegistry extends Msg implements ServerSideMessage {
 
-	public boolean processAtServer() {
+	public void processAtServer() {
 		ServerMessageDispatcher dispatcher = serverMessageDispatcher();
 		dispatcher.caresAboutCommitted(true);
-		return true;
 	}
 
 }

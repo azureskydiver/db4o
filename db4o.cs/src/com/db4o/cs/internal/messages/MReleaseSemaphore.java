@@ -5,9 +5,8 @@ package com.db4o.cs.internal.messages;
 import com.db4o.internal.*;
 
 public final class MReleaseSemaphore extends MsgD implements ServerSideMessage {
-	public final boolean processAtServer() {
+	public final void processAtServer() {
 		String name = readString();
 		((LocalObjectContainer)stream()).releaseSemaphore(transaction(),name);
-		return true;
 	}
 }
