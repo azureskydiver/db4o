@@ -1,3 +1,8 @@
+/* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
+
+/**
+ * @sharpen.if !SILVERLIGHT
+ */
 package com.db4o.db4ounit.common.exceptions.propagation.cs;
 
 import db4ounit.extensions.*;
