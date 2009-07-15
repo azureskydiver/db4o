@@ -53,7 +53,7 @@ public class QConPath extends QConClass {
         if (i_parent == null) {
             return null;
         }
-		QConClass newConstraint = new QConClass(i_trans, i_parent, i_field, a_class);
+		QConClass newConstraint = new QConClass(i_trans, i_parent, getField(), a_class);
 		morph(removeExisting,newConstraint, a_class);
 		return newConstraint;
 	}
@@ -63,14 +63,14 @@ public class QConPath extends QConClass {
         if (i_parent == null) {
             return null;
         }
-        Object obj = i_field.coerce(a_object);
+        Object obj = getField().coerce(a_object);
         if(obj == No4.INSTANCE){
         	QCon falseConstraint = new QConUnconditional(i_trans, false);
             morph(removeExisting, falseConstraint, reflectClassForObject(obj));
     		return falseConstraint;
         }
-        QConObject newConstraint = new QConObject(i_trans, i_parent, i_field, obj);
-        newConstraint.i_orderID = i_orderID;
+        QConObject newConstraint = new QConObject(i_trans, i_parent, getField(), obj);
+        newConstraint.setOrdering(ordering());
         morph(removeExisting, newConstraint, reflectClassForObject(obj));
 		return newConstraint;
 	}
@@ -91,7 +91,7 @@ public class QConPath extends QConClass {
         		Iterator4 i = iterateChildren();
         		while (i.moveNext()) {
         			QField qf = ((QCon) i.current()).getField();
-        			if (!yc.hasField(i_trans.container(), qf.i_name)) {
+        			if (!yc.hasField(i_trans.container(), qf.name())) {
         				mayMorph = false;
         				break;
         			}

@@ -151,8 +151,8 @@ public class IndexedNodeCollector {
 	}
 
 	private void collectLeavesFromJoin(Collection4 leaves, QConJoin join) {
-		collectLeavesFromJoinConstraint(leaves, join.i_constraint1);
-		collectLeavesFromJoinConstraint(leaves, join.i_constraint2);
+		collectLeavesFromJoinConstraint(leaves, join.constraint1());
+		collectLeavesFromJoinConstraint(leaves, join.constraint2());
 	}
 
 	private void collectLeavesFromJoinConstraint(Collection4 leaves, QCon constraint) {
@@ -200,7 +200,7 @@ public class IndexedNodeCollector {
 	}
 
 	private void collectTopLevelJoins(Collection4 joins, QCon constraintWithJoins) {
-		final Iterator4 i = constraintWithJoins.i_joins.iterator();
+		final Iterator4 i = constraintWithJoins.iterateJoins();
 		while (i.moveNext()) {
 			QConJoin join = (QConJoin)i.current();
 			if (!join.hasJoins()) {
@@ -214,19 +214,19 @@ public class IndexedNodeCollector {
 	}
 	
 	private IndexedNodeWithRange newNodeForConstraint(QConJoin join) {
-		final IndexedNodeWithRange c1 = nodeForConstraint(join.i_constraint1);
-		final IndexedNodeWithRange c2 = nodeForConstraint(join.i_constraint2);
+		final IndexedNodeWithRange c1 = nodeForConstraint(join.constraint1());
+		final IndexedNodeWithRange c2 = nodeForConstraint(join.constraint2());
 		if (join.isOr()) {
 			return new OrIndexedLeaf(findLeafForJoin(join), c1, c2);
 		}
-		return new AndIndexedLeaf(join.i_constraint1, c1, c2);
+		return new AndIndexedLeaf(join.constraint1(), c1, c2);
 	}
 
 	private QCon findLeafForJoin(QConJoin join) {
-		if (join.i_constraint1 instanceof QConObject) {
-			return join.i_constraint1;
+		if (join.constraint1() instanceof QConObject) {
+			return join.constraint1();
 		}
-		QCon con = join.i_constraint2;
+		QCon con = join.constraint2();
 		if (con instanceof QConObject) {
 			return con;
 		}

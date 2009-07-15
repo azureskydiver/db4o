@@ -2,13 +2,13 @@
 
 package com.db4o.internal.query.processor;
 
-
 /**
  * @exclude
  */
 public class QENot extends QE{
 	
-	public QE i_evaluator;
+	@decaf.Public
+    private QE i_evaluator;
     
     public QENot(){
         // CS
@@ -23,6 +23,10 @@ public class QENot extends QE{
 			i_evaluator = i_evaluator.add(evaluator);
 		}
 		return this;
+	}
+	
+	public QE evaluator() {
+		return i_evaluator;
 	}
 	
 	public boolean identity(){

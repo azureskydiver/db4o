@@ -478,7 +478,7 @@ public final class QCandidates implements Visitor4 {
         if (_field != null) {
             QField qf = a_constraint.getField();
             if (qf != null) {
-                if (_field.i_name!=null&&!_field.i_name.equals(qf.i_name)) {
+                if (_field.name()!=null&&!_field.name().equals(qf.name())) {
                     return false;
                 }
             }
@@ -545,7 +545,7 @@ public final class QCandidates implements Visitor4 {
         if (_field != null) {
             QField qf = constraint.getField();
             if (qf != null) {
-                if (_field.i_name!=null&&!_field.i_name.equals(qf.i_name)) {
+                if (_field.name()!=null&&!_field.name().equals(qf.name())) {
                     return false;
                 }
             }
@@ -573,6 +573,6 @@ public final class QCandidates implements Visitor4 {
 		if(!(_constraints._element instanceof QConClass)) {
 			return false;
 		}
-		return ((QCon)_constraints._element)._children == null;
+		return !((QCon)_constraints._element).hasChildren();
 	}
 }

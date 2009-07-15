@@ -26,31 +26,39 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     // collection of QCandidates to collect children elements and to
     // execute children. For convenience we hold them in the constraint,
     // so we can do collection and execution in two steps
-    public Collection4 i_childrenCandidates;
+    @decaf.Public
+    private Collection4 i_childrenCandidates;
 
     // all subconstraints
-    public List4 _children;
+    @decaf.Public
+    protected List4 _children;
 
     // for evaluation
-    public QE i_evaluator = QE.DEFAULT;
+    @decaf.Public
+    protected QE i_evaluator = QE.DEFAULT;
 
     // ID handling for fast find of QConstraint objects in 
     // pending OR evaluations
-    public int i_id;
+    @decaf.Public
+    private int i_id;
 
     // ANDs and ORs on this constraint
-    public Collection4 i_joins;
+    @decaf.Public
+    Collection4 i_joins;
 
     // positive indicates ascending, negative indicates descending
     // value indicates ID supplied by ID generator.
     // lower IDs are applied first
-    public int i_orderID = 0;
+    @decaf.Public
+    private int i_orderID = 0;
 
     // the parent of this constraint or null, if this is a root
-    public QCon i_parent;
+    @decaf.Public
+    protected QCon i_parent;
 
     // prevents circular calls on removal
-    public  boolean i_removed = false;
+    @decaf.Public
+    private boolean i_removed = false;
 
     // our transaction to get a stream object anywhere
     transient Transaction i_trans;
@@ -207,10 +215,10 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 
     void doNotInclude(QCandidate a_root) {
         if(DTrace.enabled){
-            DTrace.DONOTINCLUDE.log(i_id);
+            DTrace.DONOTINCLUDE.log(id());
         }
         if (Debug4.queries) {
-            System.out.println("QCon.doNotInclude " + i_id /*+ " " + getYapClass()*/
+            System.out.println("QCon.doNotInclude " + id()
             );
         }
         if (i_parent != null) {
@@ -238,7 +246,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 
     void evaluateCollectChildren() {
         if(DTrace.enabled){
-            DTrace.COLLECT_CHILDREN.log(i_id);
+            DTrace.COLLECT_CHILDREN.log(id());
         }
         Iterator4 i = i_childrenCandidates.iterator();
         while (i.moveNext()) {
@@ -322,7 +330,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     	while(i.moveNext()){
     		Object obj = i.current();
     		if (obj instanceof QConObject) {
-    			if (((QConObject) obj).i_field.i_name.equals(name)) {
+    			if (((QConObject) obj).getField().name().equals(name)) {
     				visitor.visit(obj);
     			}
     		}
@@ -423,7 +431,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         return false;
     }
     
-    Iterator4 iterateJoins(){
+    public Iterator4 iterateJoins(){
         if(i_joins == null){
             return Iterators.EMPTY_ITERATOR;
         }
@@ -509,7 +517,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
             String name = getClass().getName();
             int pos = name.lastIndexOf(".") + 1;
             name = name.substring(pos);
-            System.out.println(indent + name + " " + logObject() + "   " + i_id);
+            System.out.println(indent + name + " " + logObject() + "   " + id());
             // System.out.println(indent + "JOINS");
             if (hasJoins()) {
                 Iterator4 i = iterateJoins();
@@ -604,7 +612,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 
     void removeNot() {
         if (isNot()) {
-            i_evaluator = ((QENot) i_evaluator).i_evaluator;
+            i_evaluator = ((QENot) i_evaluator).evaluator();
         }
     }
 
@@ -722,7 +730,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         // evaluation.
 
         if (Debug4.queries) {
-            System.out.println("QCon.visitOnNull " + i_id);
+            System.out.println("QCon.visitOnNull " + id());
         }
         
 		Iterator4 i = iterateChildren();
@@ -757,7 +765,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 		return false;
 	}
 
-	protected boolean hasOrdering() {
+	public boolean hasOrdering() {
 		return i_orderID != 0;
 	}	
 	
@@ -782,5 +790,9 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 	public int childrenCount(){
 		return List4.size(_children);
 	}
+
+	public int id() {
+	    return i_id;
+    }
 
 }

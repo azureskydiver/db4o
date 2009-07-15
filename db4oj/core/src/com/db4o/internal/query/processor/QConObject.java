@@ -19,22 +19,27 @@ import com.db4o.reflect.*;
 public class QConObject extends QCon {
 
     // the constraining object
-    public Object                        i_object;
+	@decaf.Public
+    private Object                        i_object;
 
     // cache for the db4o object ID
-    public int                           i_objectID;
+	@decaf.Public
+    private int                           i_objectID;
 
     // the YapClass
     transient ClassMetadata            i_classMetadata;
 
     // needed for marshalling the request
-    public int                           i_classMetadataID;
+    @decaf.Public
+    private int                           i_classMetadataID;
 
-    public QField                        i_field;
+    @decaf.Public
+    private QField                        i_field;
 
     transient PreparedComparison _preparedComparison;
 
-    public ObjectAttribute               i_attributeProvider;
+    @decaf.Public
+    private ObjectAttribute               i_attributeProvider;
 
     private transient boolean     i_selfComparison = false;
 
@@ -150,7 +155,7 @@ public class QConObject extends QCon {
 
     void evaluateSelf() {
         if(DTrace.enabled){
-            DTrace.EVALUATE_SELF.log(i_id);
+            DTrace.EVALUATE_SELF.log(id());
         }
         if (i_classMetadata != null) {
             if (!(i_classMetadata instanceof PrimitiveTypeMetadata)) {
@@ -375,9 +380,7 @@ public class QConObject extends QCon {
     }
 
     public Object getObject() {
-        synchronized (streamLock()) {
-            return i_object;
-        }
+    	return i_object;
     }
 
     public Constraint greater() {
