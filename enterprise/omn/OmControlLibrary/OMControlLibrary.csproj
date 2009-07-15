@@ -250,7 +250,7 @@
       <SubType>Designer</SubType>
       <DependentUpon>WinAppCache.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Resource.en.resx">
+    <EmbeddedResource Include="Resources\Resource.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Resource.jp.Designer.cs">
