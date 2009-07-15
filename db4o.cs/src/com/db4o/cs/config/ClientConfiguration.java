@@ -46,6 +46,8 @@ public interface ClientConfiguration extends NetworkingConfigurationProvider, Co
 	 * Sets the depth to which prefetched objects will be activated.
 	 * 
 	 * @param value
+	 * 
+	 * @sharpen.property
 	 */
 	void prefetchDepth(int prefetchDepth);
 
