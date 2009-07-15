@@ -28,7 +28,7 @@ class QPending extends Tree{
 	}
 	
 	public int compare(Tree a_to) {
-		return _constraint.i_id - ((QPending)a_to)._constraint.i_id;
+		return _constraint.id() - ((QPending)a_to)._constraint.id();
 	}
 
 	void changeConstraint(){

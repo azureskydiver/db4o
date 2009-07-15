@@ -16,10 +16,17 @@ import com.db4o.types.*;
 public class QField implements Visitor4, Unversioned{
 	
 	transient Transaction i_trans;
-	public String i_name;
+	
+	@decaf.Public
+    private String i_name;
+	
 	transient FieldMetadata _fieldMetadata;
-	public int i_classMetadataID;
-	public int _fieldHandle;
+	
+	@decaf.Public
+    private int i_classMetadataID;
+	
+	@decaf.Public
+    private int _fieldHandle;
 	
 	public QField(){
 		// C/S only	
@@ -38,6 +45,10 @@ public class QField implements Visitor4, Unversioned{
 		}
 	}
 	
+	public String name() {
+	    return i_name;
+    }
+
 	Object coerce(Object a_object){
 	    ReflectClass claxx = null;
 	    if(a_object != null){
@@ -93,7 +104,7 @@ public class QField implements Visitor4, Unversioned{
 			return Null.INSTANCE;
 		}
 		ClassMetadata yc = i_trans.container().produceClassMetadata(i_trans.reflector().forObject(obj));
-		FieldMetadata yf = yc.fieldMetadataForName(i_name);
+		FieldMetadata yf = yc.fieldMetadataForName(name());
 		if(yf != null){
 			return yf.prepareComparison(context, obj);
 		}

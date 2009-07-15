@@ -13,9 +13,11 @@ public class QConEvaluation extends QCon {
 
 	private transient Object i_evaluation;
 
-	public byte[] i_marshalledEvaluation;
+	@decaf.Public
+    private byte[] i_marshalledEvaluation;
 
-	public int i_marshalledID;
+	@decaf.Public
+    private int i_marshalledID;
 
 	public QConEvaluation() {
 		// C/S only

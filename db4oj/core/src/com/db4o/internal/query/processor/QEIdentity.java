@@ -8,7 +8,8 @@ package com.db4o.internal.query.processor;
  */
 public class QEIdentity extends QEEqual
 {
-	public int i_objectID;
+	@decaf.Public
+    private int i_objectID;
 	
 	public boolean identity(){
 		return true;

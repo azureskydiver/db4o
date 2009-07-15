@@ -17,9 +17,14 @@ public class QConJoin extends QCon {
 	
 	// FIELDS MUST BE PUBLIC TO BE REFLECTED ON UNDER JDK <= 1.1
 
-	public boolean i_and;
-	public QCon i_constraint1;
-	public QCon i_constraint2;
+	@decaf.Public
+    private boolean i_and;
+	
+	@decaf.Public
+    private QCon i_constraint1;
+	
+	@decaf.Public
+    private QCon i_constraint2;
 	
 	
 	public QConJoin(){
@@ -33,17 +38,25 @@ public class QConJoin extends QCon {
 		i_and = a_and;
 	}
 
+	public QCon constraint2() {
+	    return i_constraint2;
+    }
+
+	public QCon constraint1() {
+	    return i_constraint1;
+    }
+
 	void doNotInclude(QCandidate a_root) {
-		i_constraint1.doNotInclude(a_root);
-		i_constraint2.doNotInclude(a_root);
+		constraint1().doNotInclude(a_root);
+		constraint2().doNotInclude(a_root);
 	}
 
 	void exchangeConstraint(QCon a_exchange, QCon a_with) {
 		super.exchangeConstraint(a_exchange, a_with);
-		if (a_exchange == i_constraint1) {
+		if (a_exchange == constraint1()) {
 			i_constraint1 = a_with;
 		}
-		if (a_exchange == i_constraint2) {
+		if (a_exchange == constraint2()) {
 			i_constraint2 = a_with;
 		}
 	}
@@ -66,9 +79,9 @@ public class QConJoin extends QCon {
 				if (Debug4.queries) {
 					System.out.println(
 						"QConJoin creates pending this:"
-							+ i_id
+							+ id()
 							+ " Join:"
-							+ qcj.i_id
+							+ qcj.id()
 							+ " res:"
 							+ res);
 				}
@@ -79,23 +92,23 @@ public class QConJoin extends QCon {
 				if (Debug4.queries) {
 					System.out.println(
 						"QConJoin evaluatePending FALSE "
-							+ i_id
+							+ id()
 							+ " doNotInclude: "
-							+ i_constraint1.i_id
+							+ constraint1().id()
 							+ ", "
-							+ i_constraint2.i_id);
+							+ constraint2().id());
 				}
-				i_constraint1.doNotInclude(a_root);
-				i_constraint2.doNotInclude(a_root);
+				constraint1().doNotInclude(a_root);
+				constraint2().doNotInclude(a_root);
 			}else{
 				if (Debug4.queries) {
 					System.out.println(
 						"QConJoin evaluatePending TRUE "
-							+ i_id
+							+ id()
 							+ " keeping constraints: "
-							+ i_constraint1.i_id
+							+ constraint1().id()
 							+ ", "
-							+ i_constraint2.i_id);
+							+ constraint2().id());
 				}
 			}
 
@@ -103,10 +116,10 @@ public class QConJoin extends QCon {
 	}
 
 	public QCon getOtherConstraint(QCon a_constraint) {
-		if (a_constraint == i_constraint1) {
-			return i_constraint2;
-		} else if (a_constraint == i_constraint2) {
-			return i_constraint1;
+		if (a_constraint == constraint1()) {
+			return constraint2();
+		} else if (a_constraint == constraint2()) {
+			return constraint1();
 		}
 		throw new IllegalArgumentException();
 	}
@@ -114,7 +127,7 @@ public class QConJoin extends QCon {
 	String logObject(){
 		if (Debug4.queries) {
 			String msg = i_and ? "&" : "|";
-			return " " + i_constraint1.i_id + msg + i_constraint2.i_id;
+			return " " + constraint1().id() + msg + constraint2().id();
 		}
 		return "";
 	}
@@ -132,11 +145,11 @@ public class QConJoin extends QCon {
 	
 	public String toString(){
 		String str = "QConJoin " + (i_and ? "AND ": "OR");
-		if(i_constraint1 != null){
-			str += "\n   " + i_constraint1;  
+		if(constraint1() != null){
+			str += "\n   " + constraint1();  
 		}
-		if(i_constraint2 != null){
-			str += "\n   " + i_constraint2;  
+		if(constraint2() != null){
+			str += "\n   " + constraint2();  
 		}
 		return str;
 	}
@@ -150,8 +163,8 @@ public class QConJoin extends QCon {
 			return;
 		}
 		super.setProcessedByIndex();
-		i_constraint1.setProcessedByIndex();
-		i_constraint2.setProcessedByIndex();
+		constraint1().setProcessedByIndex();
+		constraint2().setProcessedByIndex();
 	}
 
 }

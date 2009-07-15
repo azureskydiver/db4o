@@ -11,31 +11,17 @@ import com.db4o.types.*;
  */
 public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned {
 	
-	// FIELDS ARE PUBLIC SO THEY CAN BE REFLECTED ON IN JDKs <= 1.1
+	@decaf.Public
+	private List4 _first;
 
-	/**
-	 * first element of the linked list
-	 * 
-	 * @sharpen.private
-	 */
-	public List4 _first;
+	@decaf.Public
+	private List4 _last;
 
-	/**
-	 * @sharpen.private
-	 */
-	public List4 _last;
+	@decaf.Public
+	private int _size;
 
-	/**
-	 * number of elements collected
-	 * 
-	 * @sharpen.private
-	 */
-	public int _size;
-
-	/**
-	 * @sharpen.private
-	 */
-	public int _version;
+	@decaf.Public
+	private int _version;
 	
 	public Collection4() {
 	}

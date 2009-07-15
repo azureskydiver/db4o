@@ -10,7 +10,13 @@ import com.db4o.foundation.*;
  */
 public class QEMulti extends QE{
 	
-	public Collection4 i_evaluators = new Collection4();
+	@decaf.Public
+    private Collection4 i_evaluators = new Collection4();
+	
+	// used by .net LINQ tests
+	public Iterable4 evaluators() {
+		return i_evaluators;
+	}
 	
 	QE add(QE evaluator){
 		i_evaluators.ensure(evaluator);

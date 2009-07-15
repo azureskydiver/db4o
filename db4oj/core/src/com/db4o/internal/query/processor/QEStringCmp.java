@@ -10,7 +10,8 @@ import com.db4o.internal.*;
  */
 public abstract class QEStringCmp extends QEAbstract {
     
-	public boolean caseSensitive;
+	@decaf.Public
+    private boolean caseSensitive;
 
 	/** for C/S messaging only */
 	public QEStringCmp() {
@@ -26,14 +27,14 @@ public abstract class QEStringCmp extends QEAbstract {
                 obj = candidate.readString((ByteArrayBuffer)obj);
 		    }
 		    String candidateStringValue = obj.toString();
-		    String stringConstraint = constraint.i_object.toString();
+		    String stringConstraint = constraint.getObject().toString();
 		    if(!caseSensitive) {
 		    	candidateStringValue=candidateStringValue.toLowerCase();
 		    	stringConstraint=stringConstraint.toLowerCase();
 		    }
 			return compareStrings(candidateStringValue,stringConstraint);
 		}
-		return constraint.i_object==null;
+		return constraint.getObject()==null;
 	}
 	
 	public boolean supportsIndex(){

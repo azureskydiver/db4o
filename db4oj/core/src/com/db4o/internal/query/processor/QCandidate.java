@@ -148,9 +148,9 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 						QCon qcon = (QCon) i.current();
 						QField qf = qcon.getField();
-						if (qf == null || qf.i_name.equals(_fieldMetadata.getName())) {
+						if (qf == null || qf.name().equals(_fieldMetadata.getName())) {
 
-							QCon tempParent = qcon.i_parent;
+							QCon tempParent = qcon.parent();
 							qcon.setParent(null);
 
 							final QCandidates candidates = new QCandidates(
@@ -254,7 +254,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 								if (Debug4.queries) {
 									System.out
 											.println("  Array evaluation false. Constraint:"
-													+ qcon.i_id);
+													+ qcon.id());
 								}
 
 								// Again this could be double triggering.
@@ -397,8 +397,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	boolean evaluate(QPending a_pending) {
 
 		if (Debug4.queries) {
-			System.out.println("Pending arrived Join: " + a_pending._join.i_id
-					+ " Constraint:" + a_pending._constraint.i_id + " res:"
+			System.out.println("Pending arrived Join: " + a_pending._join.id()
+					+ " Constraint:" + a_pending._constraint.id() + " res:"
 					+ a_pending._result);
 		}
 
@@ -675,7 +675,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		if(existingField != null){
 			return existingField;
 		}
-		FieldMetadata field = type.fieldMetadataForName(qField.i_name);
+		FieldMetadata field = type.fieldMetadataForName(qField.name());
 		if(field != null){
 		    field.alive();
 		}

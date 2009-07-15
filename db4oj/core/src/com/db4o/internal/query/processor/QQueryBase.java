@@ -32,21 +32,28 @@ public abstract class QQueryBase implements Unversioned {
 
     transient Transaction _trans;
     
-    public Collection4 i_constraints = new Collection4();
+    @decaf.Public
+    private Collection4 i_constraints = new Collection4();
 
-    public QQuery i_parent;
+    @decaf.Public
+    private QQuery i_parent;
     
-    public String i_field;
+    @decaf.Public
+    private String i_field;
     
     private transient QueryEvaluationMode _evaluationMode;
     
-    public int _prefetchDepth;
+    @decaf.Public
+    private int _prefetchDepth;
     
-    public int _prefetchCount;
+    @decaf.Public
+    private int _prefetchCount;
     
-    public int _evaluationModeAsInt;
+    @decaf.Public
+    private int _evaluationModeAsInt;
     
-    public QueryComparator _comparator;
+    @decaf.Public
+    private QueryComparator _comparator;
     
     private transient final QQuery _this;
     
