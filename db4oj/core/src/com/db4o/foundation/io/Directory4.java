@@ -4,6 +4,8 @@ package com.db4o.foundation.io;
 
 import java.io.*;
 
+import com.db4o.foundation.*;
+
 /**
  * Keep the API compatible with System.IO.Directory
  * 
@@ -14,7 +16,10 @@ public class Directory4 {
 	public static void delete(String path, boolean recurse) {
 		File f = new File(path);
 		if (recurse) {
-			delete(f.listFiles());
+			final File[] files = f.listFiles();
+			if (files != null) {
+				delete(files);
+			}
 		}
 		File4.translateDeleteFailureToException(f);
 	}
