@@ -13,21 +13,28 @@ public class FileSizeOnReopen {
     }
     
     public void testOne(){
-        if(Test.canCheckFileSize()){
-            for (int i = 0; i < 5; i++) {
-                tLength();
-            }
+        if(! Test.canCheckFileSize()){
+        	return;
+        }
+        queryForSingleItem();
+        for (int i = 0; i < 5; i++) {
+            tLength();
         }
     }
     
     public void tLength(){
         int fileLength = Test.fileLength();
         Test.reOpen();
-        Query q = Test.query();
-        q.constrain(this.getClass());
-        FileSizeOnReopen fsor =  (FileSizeOnReopen)q.execute().next();
+        FileSizeOnReopen fsor = queryForSingleItem();
         Test.ensure(fsor.foo.equals("foo"));
         Test.reOpen();
         Test.ensureEquals(fileLength,Test.fileLength());
     }
+
+	private FileSizeOnReopen queryForSingleItem() {
+		Query q = Test.query();
+        q.constrain(this.getClass());
+        FileSizeOnReopen fsor =  (FileSizeOnReopen)q.execute().next();
+		return fsor;
+	}
 }
