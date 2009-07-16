@@ -23,6 +23,7 @@ public class AllTests extends Db4oTestSuite {
 	        CascadeToArray.class,
 	        ConjunctiveQbETestCase.class,
 	        DescendIndexQueryTestCase.class,
+	        IdentityQueryForNotStoredTestCase.class,
 			IdListQueryResultTestCase.class,
             IndexedJoinQueriesTestCase.class,
 			IndexOnParentFieldTestCase.class,
