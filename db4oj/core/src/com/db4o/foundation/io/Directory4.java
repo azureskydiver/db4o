@@ -4,8 +4,6 @@ package com.db4o.foundation.io;
 
 import java.io.*;
 
-import com.db4o.foundation.*;
-
 /**
  * Keep the API compatible with System.IO.Directory
  * 

@@ -2,7 +2,7 @@
 
 package com.db4o.internal.reflect;
 
-import com.db4o.reflect.ReflectField;
+import com.db4o.reflect.*;
 
 /**
  * @since 7.7

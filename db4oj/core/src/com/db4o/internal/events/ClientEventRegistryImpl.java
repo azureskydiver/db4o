@@ -2,8 +2,8 @@
 
 package com.db4o.internal.events;
 
-import com.db4o.events.Event4;
-import com.db4o.internal.InternalObjectContainer;
+import com.db4o.events.*;
+import com.db4o.internal.*;
 
 /**
  * @sharpen.partial

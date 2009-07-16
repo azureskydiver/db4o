@@ -1,8 +1,8 @@
 /* Copyright (C) 2008 Versant Inc.   http://www.db4o.com */
 package com.db4o.internal.reflect;
 
-import com.db4o.ext.Db4oException;
-import com.db4o.reflect.ReflectField;
+import com.db4o.ext.*;
+import com.db4o.reflect.*;
 
 /**
  * @since 7.7

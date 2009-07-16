@@ -12,6 +12,10 @@ import com.db4o.foundation.*;
  */
 public class Event4Impl<T extends EventArgs> implements Event4<T> {
 	
+	public static <T extends EventArgs> Event4<T> newInstance() {
+		return new Event4Impl();
+	}
+	
 	private Collection4 _listeners;
 	
 	public Event4Impl() {
