@@ -10,7 +10,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
-public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite implements Db4oTestCase, OptOutNetworkingCS {
+public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite implements Db4oTestCase, OptOutNetworkingCS, OptOutInMemory {
 
 	public static class ExceptionDuringTopLevelCallTestUnit extends AbstractDb4oTestCase {
 	
