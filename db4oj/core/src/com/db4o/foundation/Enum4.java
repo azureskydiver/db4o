@@ -1,7 +1,6 @@
 package com.db4o.foundation;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 /**
  * @sharpen.ignore

@@ -2,7 +2,7 @@
 
 package com.db4o.internal;
 
-import static com.db4o.foundation.Environments.runWith;
+import static com.db4o.foundation.Environments.*;
 
 import java.util.*;
 
