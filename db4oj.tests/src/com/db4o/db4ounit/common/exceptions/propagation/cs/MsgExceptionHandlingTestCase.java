@@ -22,7 +22,7 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 			Assert.fail();
 		}
 		catch(Db4oRecoverableException exc) {
-			Assert.areEqual(EXCEPTION_MESSAGE, exc.getMessage());
+			assertExceptionMessage(exc);
 		}
 		Assert.isTrue(client().isAlive());
 		assertServerContainerStateClosed(false);
@@ -54,6 +54,12 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 		});
 		Assert.isFalse(client().isAlive());
 	}
+
+	@decaf.RemoveFirst(decaf.Platform.JDK11)
+	private void assertExceptionMessage(Db4oRecoverableException exc) {
+		Assert.areEqual(EXCEPTION_MESSAGE, exc.getMessage());
+	}
+
 
 	private void assertServerContainerStateClosed(boolean expectedClosed) {
 //		Assert.areEqual(expectedClosed, server().objectContainer().ext().isClosed());
