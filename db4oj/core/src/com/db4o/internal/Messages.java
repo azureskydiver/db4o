@@ -106,7 +106,7 @@ public final class Messages {
 					"ObjectTranslator could not be installed: %.",
 					"Not implemented",
 					"% closed by ShutdownHook.", // 50
-					"This constraint is not persistent. It has no database identity.",
+					"",  // removed, can be reused
 					"Add at least one ObjectContainer to the Cluster", 
 					"Unsupported Operation",
 					"Database password does not match user-provided password.",

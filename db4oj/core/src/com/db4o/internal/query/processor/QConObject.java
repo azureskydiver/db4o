@@ -316,24 +316,25 @@ public class QConObject extends QCon {
     }
 
     void unmarshall(Transaction trans) {
-        if (i_trans == null) {
-            super.unmarshall(trans);
+        if (i_trans != null) {
+        	return;
+        }
+        super.unmarshall(trans);
 
-            if (i_object == null) {
-                _preparedComparison = Null.INSTANCE;
-            }
-            if (i_classMetadataID != 0) {
-                i_classMetadata = trans.container().classMetadataForID(i_classMetadataID);
-            }
-            if (i_field != null) {
-                i_field.unmarshall(trans);
-            }
-            
-            if(i_objectID > 0){
-                Object obj = trans.container().tryGetByID(trans, i_objectID);
-                if(obj != null){
-                    i_object = obj;
-                }
+        if (i_object == null) {
+            _preparedComparison = Null.INSTANCE;
+        }
+        if (i_classMetadataID != 0) {
+            i_classMetadata = trans.container().classMetadataForID(i_classMetadataID);
+        }
+        if (i_field != null) {
+            i_field.unmarshall(trans);
+        }
+        
+        if(i_objectID > 0){
+            Object obj = trans.container().tryGetByID(trans, i_objectID);
+            if(obj != null){
+                i_object = obj;
             }
         }
     }
@@ -397,11 +398,7 @@ public class QConObject extends QCon {
         		return this;
         	}
         	
-            int id = getObjectID();
-            if(id <= 0){
-                i_objectID = 0;
-                Exceptions4.throwRuntimeException(51);
-            }
+            getObjectID();
             
             // TODO: this may not be correct for NOT
             // It may be necessary to add an if(i_evaluator.identity())
