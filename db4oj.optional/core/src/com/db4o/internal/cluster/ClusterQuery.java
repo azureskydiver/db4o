@@ -5,7 +5,7 @@ package com.db4o.internal.cluster;
 import java.util.*;
 
 import com.db4o.*;
-import com.db4o.cluster.Cluster;
+import com.db4o.cluster.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.query.*;
 import com.db4o.query.*;
