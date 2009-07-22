@@ -10,27 +10,25 @@ public class MWriteBatchedMessages extends MsgD implements ServerSideMessage {
 		ServerMessageDispatcher dispatcher = (ServerMessageDispatcher) messageDispatcher();
 		int count = readInt();
 		Transaction ta = transaction();
-		synchronized (streamLock()) {
-    		for (int i = 0; i < count; i++) {
-    			StatefulBuffer writer = _payLoad.readStatefulBuffer();
-    			int messageId = writer.readInt();
-    			Msg message = Msg.getMessage(messageId);
-    			Msg clonedMessage = message.publicClone();
-    			clonedMessage.setMessageDispatcher(messageDispatcher());
-    			clonedMessage.setTransaction(ta);
-    			if (clonedMessage instanceof MsgD) {
-    				MsgD msgd = (MsgD) clonedMessage;
-    				msgd.payLoad(writer);
-    				if (msgd.payLoad() != null) {
-    					msgd.payLoad().incrementOffset(Const4.INT_LENGTH);
-    					Transaction t = checkParentTransaction(ta, msgd.payLoad());
-    					msgd.setTransaction(t);
-    					dispatcher.processMessage(msgd);
-    				}
-    			} else {
-    				dispatcher.processMessage(clonedMessage);
-    			}
-    		}
+		for (int i = 0; i < count; i++) {
+			StatefulBuffer writer = _payLoad.readStatefulBuffer();
+			int messageId = writer.readInt();
+			Msg message = Msg.getMessage(messageId);
+			Msg clonedMessage = message.publicClone();
+			clonedMessage.setMessageDispatcher(messageDispatcher());
+			clonedMessage.setTransaction(ta);
+			if (clonedMessage instanceof MsgD) {
+				MsgD msgd = (MsgD) clonedMessage;
+				msgd.payLoad(writer);
+				if (msgd.payLoad() != null) {
+					msgd.payLoad().incrementOffset(Const4.INT_LENGTH);
+					Transaction t = checkParentTransaction(ta, msgd.payLoad());
+					msgd.setTransaction(t);
+					dispatcher.processMessage(msgd);
+				}
+			} else {
+				dispatcher.processMessage(clonedMessage);
+			}
 		}
 	}
 
