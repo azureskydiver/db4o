@@ -9,6 +9,8 @@ public interface Sequence4 extends Iterable4 {
 	
 	boolean add(Object element);
 	
+	void addAll(Iterable4 iterable);
+	
 	boolean isEmpty();
 
 	Object get(int index);

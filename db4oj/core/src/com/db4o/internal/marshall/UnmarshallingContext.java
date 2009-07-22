@@ -91,12 +91,13 @@ public class UnmarshallingContext extends ObjectReferenceContext implements Hand
     	return container().activationDepthProvider();
 	}
     
-	public Object readActivatedObject(TypeHandler4 handler) {
-		ActivationDepth tempDepth = activationDepth();
-		activationDepthProvider().activationDepth(Integer.MAX_VALUE, ActivationMode.ACTIVATE);
+	public Object readFullyActivatedObjectForKeys(TypeHandler4 handler) {
 		Object obj = readObject(handler);
-		container().activate(transaction(), obj, activationDepth());
-		activationDepth(tempDepth);
+		if(obj == null){
+			return obj;
+		}
+		ActivationDepth activationDepth = activationDepthProvider().activationDepth(Integer.MAX_VALUE, ActivationMode.ACTIVATE);
+		container().activate(transaction(), obj, activationDepth);
 		return obj;
 	}
 

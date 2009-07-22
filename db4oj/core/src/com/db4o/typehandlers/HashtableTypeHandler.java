@@ -39,7 +39,7 @@ public class HashtableTypeHandler implements ReferenceTypeHandler , CascadingTyp
     	KeyValueHandlerPair handlers = readKeyValueTypeHandlers(unmarshallingContext, unmarshallingContext);
         int elementCount = unmarshallingContext.readInt();
         for (int i = 0; i < elementCount; i++) {
-            Object key = unmarshallingContext.readActivatedObject(handlers._keyHandler);
+            Object key = unmarshallingContext.readFullyActivatedObjectForKeys(handlers._keyHandler);
             Object value = unmarshallingContext.readObject(handlers._valueHandler);
             hashtable.put(key, value);
         }

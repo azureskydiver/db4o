@@ -32,9 +32,7 @@ public class ReAddFieldTestCase extends AbstractDb4oTestCase implements OptOutDe
 	}
 	
 	public void test() throws Exception {
-		final TypeAlias alias = new TypeAlias(
-				ReflectPlatform.fullyQualifiedName(Version1.class),
-				ReflectPlatform.fullyQualifiedName(Version2.class));
+		final TypeAlias alias = new TypeAlias(Version1.class, Version2.class); 
 		
 		fixture().config().addAlias(alias);
 		reopen();

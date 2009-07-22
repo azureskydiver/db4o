@@ -611,8 +611,8 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
             trans = checkTransaction(trans);
             if (i_semaphores != null && trans == i_semaphores.get(name)) {
                 i_semaphores.remove(name);
-                i_semaphores.notifyAll();
             }
+            i_semaphores.notifyAll();
         }
     }
 
@@ -653,37 +653,42 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
             }
         }
         synchronized (i_semaphores) {
-            trans = checkTransaction(trans);
-            Object obj = i_semaphores.get(name);
-            if (obj == null) {
-                i_semaphores.put(name, trans);
-                return true;
-            }
-            if (trans == obj) {
-                return true;
-            }
-            long endtime = System.currentTimeMillis() + timeout;
-            long waitTime = timeout;
-            while (waitTime > 0) {
-                try {
-					i_semaphores.wait(waitTime);
-				} catch (InterruptedException e) {
-					// ignore
-				}
-                if (classCollection() == null) {
-                    return false;
-                }
-
-                obj = i_semaphores.get(name);
-
-                if (obj == null) {
-                    i_semaphores.put(name, trans);
-                    return true;
-                }
-
-                waitTime = endtime - System.currentTimeMillis();
-            }
-            return false;
+        	try{
+	            trans = checkTransaction(trans);
+	            Object obj = i_semaphores.get(name);
+	            if (obj == null) {
+	                i_semaphores.put(name, trans);
+	                return true;
+	            }
+	            if (trans == obj) {
+	                return true;
+	            }
+	            long endtime = System.currentTimeMillis() + timeout;
+	            long waitTime = timeout;
+	            while (waitTime > 0) {
+	                try {
+	                	i_semaphores.notifyAll();
+						i_semaphores.wait(waitTime);
+					} catch (InterruptedException e) {
+						// ignore
+					}
+	                if (classCollection() == null) {
+	                    return false;
+	                }
+	
+	                obj = i_semaphores.get(name);
+	
+	                if (obj == null) {
+	                    i_semaphores.put(name, trans);
+	                    return true;
+	                }
+	
+	                waitTime = endtime - System.currentTimeMillis();
+	            }
+	            return false;
+        	} finally{
+        		i_semaphores.notifyAll();
+        	}
         }
     }
 

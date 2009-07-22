@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
@@ -14,6 +16,8 @@ import com.db4o.internal.encoding.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.internal.metadata.*;
+import com.db4o.internal.metadata.HierarchyAnalyzer.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.reflect.*;
 import com.db4o.internal.slots.*;
@@ -77,6 +81,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	private Function4<UnmarshallingContext, Object> _constructor;
 
 	private TypeHandlerAspect _customTypeHandlerAspect;
+
+	private AspectTraversalStrategy _aspectTraversalStrategy;
     
     final boolean canUpdateFast(){
         if(_canUpdateFast == TernaryBool.UNSPECIFIED){
@@ -2091,4 +2097,40 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 		_index.initialize(container());
 		container().setDirtyInSystemTransaction(this);
 	}
+
+	public void traverseAllAspects(MarshallingInfo context,
+			TraverseAspectCommand command, FieldListInfo fieldListInfo) {
+		aspectTraversalStrategy().traverseAllAspects(context, command, fieldListInfo);
+	}
+
+	private AspectTraversalStrategy aspectTraversalStrategy() {
+		if(_aspectTraversalStrategy == null){
+			_aspectTraversalStrategy = detectAspectTraversalStrategy();
+		}
+		return _aspectTraversalStrategy;
+	}
+
+	private AspectTraversalStrategy detectAspectTraversalStrategy() {
+		
+// 		
+		
+//		List<HierarchyAnalyzer.Diff> ancestors = compareAncestorHierarchy();
+//		for (Diff diff: ancestors){
+//			if(diff.isRemoved()){
+//				return createRemovedAspectTraversalStrategy(ancestors);
+//			}
+//		}
+		return new StandardAspectTraversalStrategy(this);
+	}
+
+	private AspectTraversalStrategy createRemovedAspectTraversalStrategy(
+			List<Diff> ancestors) {
+		return new ModifiedAspectTraversalStrategy(this, ancestors);
+	}
+
+	private List<HierarchyAnalyzer.Diff> compareAncestorHierarchy() {
+		return new HierarchyAnalyzer(this, classReflector()).analyze();
+	}
+	
+	
 }

@@ -9,6 +9,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.internal.metadata.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -117,6 +118,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
     public void marshallAspects(final Object obj, final MarshallingContext context) {
     	final Transaction trans = context.transaction();
         final TraverseAspectCommand command = new TraverseAspectCommand() {
+        	
             public int aspectCount(ClassMetadata classMetadata, ByteArrayBuffer buffer) {
                 int fieldCount = classMetadata._aspects.length;
                 context.fieldCount(fieldCount);
@@ -142,6 +144,11 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
                 }
                 
                 aspect.marshall(context, marshalledObject);
+            }
+            
+            @Override
+            public void processAspectOnMissingClass(MarshallingInfo context, FieldListInfo fieldListInfo, ClassAspect aspect,int currentSlot){            	
+            	((MarshallingContext)context).isNull(currentSlot, true);
             }
         };
         traverseAllAspects(context, command);
@@ -195,30 +202,6 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
 		return classMetadata().container();
 	}
     
-    public abstract static class TraverseAspectCommand {
-        
-        private boolean _cancelled=false;
-        
-        public int aspectCount(ClassMetadata classMetadata, ByteArrayBuffer reader) {
-            return classMetadata.readAspectCount(reader);
-        }
-
-        public boolean cancelled() {
-            return _cancelled;
-        }
-        
-        protected void cancel() {
-            _cancelled=true;
-        }
-        
-        public boolean accept(ClassAspect aspect){
-            return true;
-        }
-        
-
-        public abstract void processAspect(ClassAspect aspect,int currentSlot, boolean isNull, ClassMetadata containingClass);
-    }
-    
     public abstract static class TraverseFieldCommand extends TraverseAspectCommand{
         
         public boolean accept(ClassAspect aspect){
@@ -258,42 +241,24 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
 	}
 
 	public final void traverseAllAspects(MarshallingInfo context, TraverseAspectCommand command) {
-    	int currentSlot = 0;
         
     	ClassMetadata classMetadata = classMetadata();
         assertClassMetadata(context.classMetadata());
         
-        while(classMetadata != null){
-            int aspectCount=command.aspectCount(classMetadata, ((ByteArrayBuffer)context.buffer()));
-			context.aspectCount(aspectCount);
-			for (int i = 0; i < aspectCount && !command.cancelled(); i++) {
-			    final ClassAspect currentAspect = classMetadata._aspects[i];
-				if(command.accept(currentAspect)){
-			        command.processAspect(
-			        		currentAspect,
-			        		currentSlot,
-			        		isNull(context, currentSlot), classMetadata);
-			    }
-			    context.beginSlot();
-			    currentSlot++;
-			}
-            if(command.cancelled()){
-                return;
-            }
-            classMetadata = classMetadata.i_ancestor;
-        }
+        FieldListInfo fieldListInfo = fieldListFor(context);
+        classMetadata.traverseAllAspects(context, command, fieldListInfo);
+		
     }
+
+	protected FieldListInfo fieldListFor(MarshallingInfo context) {
+		return (FieldListInfo)context;
+	}
 
 	private void assertClassMetadata(final ClassMetadata contextMetadata) {
 //		if (contextMetadata != classMetadata()) {
 //        	throw new IllegalStateException("expecting '" + classMetadata() + "', got '" + contextMetadata + "'");
 //        }
 	}
-    
-    protected boolean isNull(FieldListInfo fieldList,int fieldIndex) {
-        return fieldList.isNull(fieldIndex);
-    }
-
     public ClassMetadata classMetadata() {
         return _classMetadata;
     }

@@ -10,8 +10,13 @@ import com.db4o.internal.marshall.*;
  */
 public class StandardReferenceTypeHandler0 extends StandardReferenceTypeHandler{
 
-    protected boolean isNull(FieldListInfo fieldList,int fieldIndex) {
-        return false;
+	@Override
+	protected FieldListInfo fieldListFor(MarshallingInfo context) {
+		return new FieldListInfo() {
+			public boolean isNull(int fieldIndex) {
+				return false;
+			}
+		};
     }
 
 }
