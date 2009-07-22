@@ -86,7 +86,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 			closeIgnoringExceptions(metadata);
 			
 			// cant use exception chaining here because the
-			// the must run in jdk 1.1
+			// test must run in jdk 1.1
 			throw new Db4oException(e);
 		}
 	}
