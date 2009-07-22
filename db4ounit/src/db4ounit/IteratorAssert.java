@@ -1,12 +1,10 @@
 /* Copyright (C) 2007  Versant Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.jre12.collections;
+package db4ounit;
 
 import java.util.*;
 
 import com.db4o.foundation.*;
-
-import db4ounit.*;
 
 @decaf.Ignore(decaf.Platform.JDK11)
 public class IteratorAssert {
