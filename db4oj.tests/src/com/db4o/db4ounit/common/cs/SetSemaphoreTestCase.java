@@ -11,30 +11,30 @@ import db4ounit.extensions.fixtures.*;
 
 public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements OptOutSolo {
 
-    public static void main(String[] args) {
-        for (int i = 0; i < 100; i++) {
-            new SetSemaphoreTestCase().runClientServer();
-        }
+    private static final String SEMAPHORE_NAME = "hi";
+
+	public static void main(String[] args) {
+		new SetSemaphoreTestCase().runClientServer();
     }
 
-    public void _test() throws InterruptedException {
+    public void test() throws InterruptedException {
 
         final ExtObjectContainer[] clients = new ExtObjectContainer[5];
 
         clients[0] = db();
 
-        Assert.isTrue(clients[0].setSemaphore("hi", 0));
-        Assert.isTrue(clients[0].setSemaphore("hi", 0));
+        Assert.isTrue(clients[0].setSemaphore(SEMAPHORE_NAME, 0));
+        Assert.isTrue(clients[0].setSemaphore(SEMAPHORE_NAME, 0));
 
         for (int i = 1; i < clients.length; i++) {
             clients[i] = openNewClient();
         }
 
-        Assert.isFalse(clients[1].setSemaphore("hi", 0));
-        clients[0].releaseSemaphore("hi");
-        Assert.isTrue(clients[1].setSemaphore("hi", 50));
-        Assert.isFalse(clients[0].setSemaphore("hi", 0));
-        Assert.isFalse(clients[2].setSemaphore("hi", 0));
+        Assert.isFalse(clients[1].setSemaphore(SEMAPHORE_NAME, 0));
+        clients[0].releaseSemaphore(SEMAPHORE_NAME);
+        Assert.isTrue(clients[1].setSemaphore(SEMAPHORE_NAME, 50));
+        Assert.isFalse(clients[0].setSemaphore(SEMAPHORE_NAME, 0));
+        Assert.isFalse(clients[2].setSemaphore(SEMAPHORE_NAME, 0));
 
         Thread[] threads = new Thread[clients.length];
 
@@ -48,7 +48,7 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
         
         ensureMessageProcessed(clients[0]);
 
-        Assert.isTrue(clients[0].setSemaphore("hi", 0));
+        Assert.isTrue(clients[0].setSemaphore(SEMAPHORE_NAME, 0));
         clients[0].close();
 
         threads[2] = startGetAndReleaseThread(clients[2]);
@@ -61,7 +61,8 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
             clients[i].close();
         }
 
-        clients[4].setSemaphore("hi", 1000);
+        clients[4].setSemaphore(SEMAPHORE_NAME, 1000);
+        clients[4].close();
 
     }
 
@@ -87,14 +88,14 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
 
         public void run() {
             long time = System.currentTimeMillis();
-            Assert.isTrue(_client.setSemaphore("hi", 50000));
+            Assert.isTrue(_client.setSemaphore(SEMAPHORE_NAME, 50000));
             time = System.currentTimeMillis() - time;
             // System.out.println("Time to get semaphore: " + time);
 
             ensureMessageProcessed(_client);
 
             // System.out.println("About to release semaphore.");
-            _client.releaseSemaphore("hi");
+            _client.releaseSemaphore(SEMAPHORE_NAME);
         }
      }
 
