@@ -231,10 +231,8 @@ public class ObjectContainerSession implements InternalObjectContainer, Transien
     }
 
     public boolean setSemaphore(String name, int waitForAvailability) {
-        synchronized(lock()){
-            checkClosed();
-            return _server.setSemaphore(_transaction, name, waitForAvailability);
-        }
+        checkClosed();
+        return _server.setSemaphore(_transaction, name, waitForAvailability);
     }
 
     public StoredClass storedClass(Object clazz) {

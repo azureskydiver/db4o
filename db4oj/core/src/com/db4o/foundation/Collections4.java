@@ -17,6 +17,10 @@ public class Collections4 {
 		public boolean add(Object element) {
 			throw new UnsupportedOperationException();
 		}
+		
+		public void addAll(Iterable4 iterable){
+			throw new UnsupportedOperationException();
+		}
 
 		public boolean isEmpty() {
 			return _sequence.isEmpty();

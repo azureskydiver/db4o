@@ -99,7 +99,7 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 			add(iterator.current());
 		}
 	}
-
+	
 	public final void clear() {
 		_first = null;
 		_last = null;

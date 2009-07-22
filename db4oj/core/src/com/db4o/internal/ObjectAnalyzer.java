@@ -9,7 +9,7 @@ import com.db4o.reflect.*;
  * @exclude
  */
 class ObjectAnalyzer {
-    
+	
     private final ObjectContainerBase _container;
     
     private final Object _obj;

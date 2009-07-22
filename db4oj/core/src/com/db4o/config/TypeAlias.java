@@ -2,6 +2,8 @@
 
 package com.db4o.config;
 
+import com.db4o.internal.*;
+
 /**
  * a simple Alias for a single Class or Type, using equals on
  * the names in the resolve method.
@@ -22,6 +24,10 @@ public class TypeAlias implements Alias {
 		_storedType = storedType;
 		_runtimeType = runtimeType;
 	}
+    
+    public TypeAlias(Class storedClass, Class runtimeClass){
+    	this(ReflectPlatform.fullyQualifiedName(storedClass), ReflectPlatform.fullyQualifiedName(runtimeClass));
+    }
 
 	/**
      * returns the stored type name if the alias was written for the passed runtime type name  

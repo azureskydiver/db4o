@@ -40,7 +40,7 @@ public class MapTypeHandler implements ReferenceTypeHandler, CascadingTypeHandle
         KeyValueHandlerPair handlers = readKeyValueTypeHandlers(context, context);
         int elementCount = context.readInt();
         for (int i = 0; i < elementCount; i++) {
-            Object key = unmarshallingContext.readActivatedObject(handlers._keyHandler);
+            Object key = unmarshallingContext.readFullyActivatedObjectForKeys(handlers._keyHandler);
             Object value = context.readObject(handlers._valueHandler);
             if(key != null  && value != null){
             	map.put(key, value);
