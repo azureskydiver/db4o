@@ -2,8 +2,6 @@
 
 package com.db4o.db4ounit.jre12.collections.transparent;
 
-import com.db4o.db4ounit.jre12.collections.transparent.map.*;
-
 import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {

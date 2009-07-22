@@ -2,8 +2,6 @@ package com.db4o.db4ounit.jre12.collections.transparent;
 
 import java.util.*;
 
-import com.db4o.db4ounit.jre12.collections.*;
-
 import db4ounit.*;
 
 /**
