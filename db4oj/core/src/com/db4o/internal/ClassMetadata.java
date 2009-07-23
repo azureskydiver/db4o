@@ -1366,34 +1366,6 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         // TODO: may want to add manual purge to Btree
         //       indexes here
     }
-
-    // FIXME: [TA] ActivationDepth review
-	public Object readAndActivate(Transaction trans, int id, ActivationDepth depth) {
-		
-		// Method for C# value types and for map members:
-		// they need to be instantiated before setting them
-		// on the parent object. 
-		
-		// For value types the set call modifies identity.
-
-		// In maps, adding the object to the map calls #hashCode and #equals,
-		// so the object needs to be activated.
-		
-		// TODO: Question: Do we want value types in the ID tree?
-		// Shouldn't we treat them like strings and update
-		// them every time ???		
-		ObjectReference ref = trans.referenceForId(id);
-		if (ref != null) {
-		    Object obj = ref.getObject();
-		    if(obj == null){
-		        trans.removeReference(ref);
-		    }else{
-		        ref.activate(trans, obj, depth);
-		        return ref.getObject();
-		    }
-		}
-		return new ObjectReference(id).read(trans, depth, Const4.ADD_TO_ID_TREE, false);
-	}
     
     public TypeHandler4 readCandidateHandler(QueryingReadContext context) {
         TypeHandler4 typeHandler = correctHandlerVersion(context);
