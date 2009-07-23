@@ -2,15 +2,18 @@
 
 package db4ounit.extensions.fixtures;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.ext.*;
+import com.db4o.io.*;
 
 import db4ounit.extensions.*;
 
-// TODO implement via MemoryStorage
 public class Db4oInMemory extends AbstractSoloDb4oFixture {
     
+	private static final String DB_URI = "test_db";
+
 	public Db4oInMemory() {
 		super();
 	}
@@ -31,17 +34,25 @@ public class Db4oInMemory extends AbstractSoloDb4oFixture {
 		return true;
 	}
 
-	private MemoryFile _memoryFile;
+	private final MemoryStorage _storage = new MemoryStorage();
 	
 	protected ObjectContainer createDatabase(Configuration config) {
-		if (null == _memoryFile) {
-			_memoryFile = new MemoryFile();
-		}
-		return ExtDb4o.openMemoryFile(config,_memoryFile);
+		return Db4o.openFile(config, DB_URI);
+	}
+
+	protected Configuration newConfiguration() {
+		Configuration config = super.newConfiguration();
+		config.storage(_storage);
+		return config;
 	}
 
     protected void doClean() {
-    	_memoryFile = null;
+    	try {
+			_storage.delete(DB_URI);
+		} 
+    	catch (IOException exc) {
+			exc.printStackTrace();
+		}
     }
 
 	public String label() {

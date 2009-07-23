@@ -10,7 +10,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
-public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite implements Db4oTestCase, OptOutNetworkingCS, OptOutInMemory {
+public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite implements Db4oTestCase, OptOutNetworkingCS {
 
 	public static class ExceptionDuringTopLevelCallTestUnit extends AbstractDb4oTestCase {
 	
@@ -24,7 +24,7 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 		@Override
 		protected void configure(Configuration config) throws Exception {
 			final ExceptionPropagationFixture propagationFixture = curPropagationFixture();
-			_storage = new ExceptionSimulatingStorage(new FileStorage(), new ExceptionFactory() {
+			_storage = new ExceptionSimulatingStorage(config.storage(), new ExceptionFactory() {
 				private boolean _alreadyCalled = false;
 				
 				public void throwException() {
