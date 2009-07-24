@@ -1,5 +1,6 @@
 package db4ounit;
 
+
 /**
  * @sharpen.partial
  */
@@ -7,24 +8,34 @@ public final class Assert {
 	
 	public static Throwable expect(Class exception, CodeBlock block) {
 		Throwable e = getThrowable(block);
-		assertThrowable(exception, e);
+		assertThrowable(exception, e, null);
 		return e;
 	}
 
 	public static Throwable expect(Class exception, Class cause, CodeBlock block) {
-		Throwable e = getThrowable(block);
-		assertThrowable(exception, e);
-		assertThrowable(cause, TestPlatform.getExceptionCause(e));
-		return e;
+		return expect(exception, cause, block, null);
 	}
+
+	public static Throwable expect(Class exception, Class cause, CodeBlock block, String customMessage) {
+		Throwable e = getThrowable(block);
+		assertThrowable(exception, e, customMessage);
+		assertThrowable(cause, TestPlatform.getExceptionCause(e), customMessage);
+		return e;
+    }
 	
-	private static void assertThrowable(Class exception, Throwable e) {
-		if(e == null) {
-			fail("Exception '" + exception.getName() + "' expected");
-		} 
+	private static void assertThrowable(Class exception, Throwable e, String customMessage) {
 		if (exception.isInstance(e)) 
 			return;
-		fail("Expecting '" + exception.getName() + "' but got '" + e.getClass().getName() + "'", e);
+		
+		String messagePrefix = customMessage != null
+			? customMessage + ": "
+			: "";
+		
+		String message = e == null
+			? "Exception '" + exception.getName() + "' expected"
+			: "Expecting '" + exception.getName() + "' but got '" + e.getClass().getName() + "'";
+			
+		fail(messagePrefix + message, e);
 	}
 	
 	private static Throwable getThrowable(CodeBlock block) {
