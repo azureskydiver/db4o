@@ -111,9 +111,16 @@ public class Environments {
 	 * @sharpen.ignore
 	 */
 	static String defaultImplementationFor(Class service) {
+		final String implNameSuffix = "." + ReflectPlatform.simpleName(service) + "Impl";
+		
 		final String packageName = splitQualifiedName(service.getName()).qualifier;
+		if (packageName.contains(".internal.")) {
+			// ignore convention for internal types
+			return packageName + implNameSuffix;
+		}
+		
 		final QualifiedName packageParts = splitQualifiedName(packageName);
-		return packageParts.qualifier + ".internal" + packageParts.name + "." + ReflectPlatform.simpleName(service) + "Impl";
+		return packageParts.qualifier + ".internal" + packageParts.name + implNameSuffix;
 	}
 	
 	/**

@@ -25,4 +25,6 @@ public interface Sequence4 extends Iterable4 {
 	
 	Object[] toArray();
 	
+	Object[] toArray(Object[] array);
+	
 }

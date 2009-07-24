@@ -2,6 +2,8 @@
 
 package db4ounit.extensions;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.events.*;
@@ -76,12 +78,25 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 		try {
 			db4oTearDownBeforeClean();
 		} finally {
+			
 			final Db4oFixture fixture = fixture();
 			fixture.close();
+			
+			List<Throwable> uncaughtExceptions = fixture.uncaughtExceptions();
+			
 	        fixture.clean();
+	        
+	        assertNoUncaughtExceptions(uncaughtExceptions);
+	        
 		}
 		db4oTearDownAfterClean();
 	}
+
+	private void assertNoUncaughtExceptions(List<Throwable> uncaughtExceptions) {
+	    if (uncaughtExceptions.size() > 0) {
+	    	Assert.fail("Uncaught exceptions: " + Iterators.join(Iterators.iterator(uncaughtExceptions), ", "), uncaughtExceptions.get(0));
+	    }
+    }
 	
 	protected void db4oSetupBeforeStore() throws Exception {}
 	protected void db4oSetupAfterStore() throws Exception {}

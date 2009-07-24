@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.threading.*;
 
 import db4ounit.extensions.*;
 import db4ounit.extensions.util.*;
@@ -58,7 +59,19 @@ public class Db4oClientServer extends
     public void open(Db4oTestCase testInstance) throws Exception {
 		openServerFor(testInstance);
 		openClientFor(testInstance);
+		
+		listenToUncaughtExceptions();
 	}
+
+	private void listenToUncaughtExceptions() {
+		listenToUncaughtExceptions(threadPoolFor(_server.ext().objectContainer()));
+		
+		final ThreadPool4 clientThreadPool = threadPoolFor(_objectContainer);
+		if (null != clientThreadPool) {
+			listenToUncaughtExceptions(clientThreadPool);
+		}
+		
+    }
 
 	private void openClientFor(Db4oTestCase testInstance) throws Exception {
 	    final Configuration config = clientConfigFor(testInstance);

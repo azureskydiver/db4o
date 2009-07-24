@@ -17,6 +17,7 @@ public class AllTests extends ReflectionTestSuite {
 			ExcludingReflectorTestCase.class,
 			FixtureConfigurationTestCase.class,
 			FixtureTestCase.class,
+			UnhandledExceptionInThreadTestCase.class,
 		};
 	}
 

@@ -24,13 +24,6 @@ public final class SimpleTimer implements Runnable {
 		_lock = new Lock4();
 	}
 
-	public void start() {
-		Thread thread = new Thread(this);
-		thread.setDaemon(true);
-		thread.setName(_name);
-		thread.start();
-	}
-
 	public void stop() {
 		stopped = true;
 		
@@ -38,12 +31,17 @@ public final class SimpleTimer implements Runnable {
 			public Object run() {
 				_lock.awake();
 				return null;
-				}
+			}
 		});
 	}
 
 	public void run() {
-		while (!stopped) {
+		setThreadName();
+		timerLoop();
+	}
+
+	private void timerLoop() {
+	    while (!stopped) {
 			_lock.run(new Closure4() { 
 				public Object run() {
 					_lock.snooze(_interval);
@@ -55,5 +53,9 @@ public final class SimpleTimer implements Runnable {
 				_runnable.run();
 			}
 		}
-	}
+    }
+
+	private void setThreadName() {
+	    Thread.currentThread().setName(_name);
+    }
 }

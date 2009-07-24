@@ -1,10 +1,9 @@
 package db4ounit.extensions;
 
-import com.db4o.ObjectSet;
-import com.db4o.foundation.Iterator4;
-import com.db4o.foundation.Iterators;
+import com.db4o.*;
+import com.db4o.foundation.*;
 
-import db4ounit.Iterator4Assert;
+import db4ounit.*;
 
 public class ObjectSetAssert {
 

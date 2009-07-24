@@ -18,7 +18,12 @@ public class CommittedCallbacksDispatcher implements Runnable {
 	}
 	
 	public void run () {
-		while(! _stopped){
+		setThreadName();
+		messageLoop();
+	}
+
+	private void messageLoop() {
+	    while(! _stopped){
 			MCommittedInfo committedInfos;
 			try {
 				committedInfos = (MCommittedInfo) _committedInfosQueue.next();
@@ -31,7 +36,11 @@ public class CommittedCallbacksDispatcher implements Runnable {
 				}
 			});
 		}
-	}
+    }
+
+	private void setThreadName() {
+	    Thread.currentThread().setName("committed callback thread");
+    }
 	
 	public void stop(){
 		_committedInfosQueue.stop();

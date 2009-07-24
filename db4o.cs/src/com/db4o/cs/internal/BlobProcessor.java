@@ -6,7 +6,7 @@ import com.db4o.cs.internal.messages.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 
-class BlobProcessor extends Thread{
+class BlobProcessor implements Runnable {
 	
 	private ClientObjectContainer			stream;
 	private Queue4 				queue = new NonblockingQueue();
@@ -14,15 +14,7 @@ class BlobProcessor extends Thread{
 	
 	BlobProcessor(ClientObjectContainer aStream){
 		stream = aStream;
-		adjustThreadPriority();
 	}
-
-	/**
-	 * @sharpen.remove
-	 */
-	private void adjustThreadPriority() {
-	    setPriority(MIN_PRIORITY);
-    }
 
 	void add(MsgBlob msg){
 		synchronized(queue){
@@ -48,7 +40,7 @@ class BlobProcessor extends Thread{
 			while(msg != null){
 				msg.write(socket);
 				msg.processClient(socket);
-				synchronized(stream.blobLock){
+				synchronized(stream._blobLock){
 					synchronized(queue){
 						msg = (MsgBlob)queue.next();
 					}

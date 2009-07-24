@@ -13,6 +13,7 @@ import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 import com.db4o.internal.events.*;
+import com.db4o.internal.threading.*;
 
 public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtObjectServer, Runnable {
 	
@@ -47,7 +48,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	
 	private final ClassInfoHelper _classInfoHelper = new ClassInfoHelper();
 	
-	private final Event4Impl _clientConnected = new Event4Impl();
+	private final Event4Impl<ClientConnectionEventArgs> _clientConnected = Event4Impl.newInstance();
 	
 	public ObjectServerImpl(final LocalObjectContainer container, int port, NativeSocketFactory socketFactory) {
 		this(container, (port < 0 ? 0 : port), port == 0, socketFactory);
@@ -103,11 +104,13 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 
 	private void startServerThread() {
 		synchronized(_startupLock) {
-			final Thread thread = new Thread(this);
-			thread.setDaemon(true);
-			thread.start();
+			threadPool().start(this);
 		}
 	}
+
+	private ThreadPool4 threadPool() {
+	    return _container.threadPool();
+    }
 
 	private void startServerSocket() {
 		try {
@@ -186,7 +189,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 		i = iterateDispatchers();
 		while (i.moveNext()) {
 			try {
-				((Thread) i.current()).join();
+				((ServerMessageDispatcher) i.current()).join();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -323,10 +326,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 			return;
 		}
 		_committedCallbacksDispatcher = new CommittedCallbacksDispatcher(this, committedInfosQueue);
-		Thread thread = new Thread(_committedCallbacksDispatcher);
-		thread.setName("committed callback thread");
-		thread.setDaemon(true);
-		thread.start();
+		threadPool().start(_committedCallbacksDispatcher);
 	}
 
 	private void setThreadName() {
@@ -336,11 +336,12 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	private void listen() {
 		while (_serverSocket != null) {
 			try {
-				ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, new ClientTransactionHandle(_transactionPool),
+				ServerMessageDispatcherImpl messageDispatcher = new ServerMessageDispatcherImpl(this, new ClientTransactionHandle(_transactionPool),
 						_serverSocket.accept(), newThreadId(), false, _container.lock());
 				addServerMessageDispatcher(messageDispatcher);
 				triggerClientConnected(messageDispatcher);
-				messageDispatcher.startDispatcher();
+				
+				threadPool().start(messageDispatcher);
 			} catch (Exception e) {
 //				e.printStackTrace();
 			}
@@ -348,7 +349,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	}
 
 	private void triggerClientConnected(ServerMessageDispatcher messageDispatcher) {
-		ServerPlatform.triggerClientConnectionEvent(_clientConnected, messageDispatcher);
+		_clientConnected.trigger(new ClientConnectionEventArgs(messageDispatcher));
     }
 
 	private void notifyThreadStarted() {

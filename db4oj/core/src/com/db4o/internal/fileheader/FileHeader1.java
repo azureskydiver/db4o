@@ -121,7 +121,7 @@ public class FileHeader1 extends FileHeader {
         writer.write();
         file.syncFiles();
         if(startFileLockingThread){
-        	_timerFileLock.start();
+        	file.threadPool().start(_timerFileLock);
         }
     }
 

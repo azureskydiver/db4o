@@ -4,7 +4,7 @@ package db4ounit.extensions;
 
 import com.db4o.foundation.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 
 
 public class ExpectingVisitor implements Visitor4{

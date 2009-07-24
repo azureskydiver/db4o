@@ -48,72 +48,108 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	}
 
 	// Callbacks implementation
-	public void queryOnFinished(Transaction transaction, Query query) {
-		EventPlatform.triggerQueryEvent(transaction, _queryFinished, query);
+	public void queryOnFinished(final Transaction transaction, final Query query) {
+		if (!_queryFinished.hasListeners())
+			return;
+		
+		withExceptionHandling(new Runnable() { public void run() {
+			_queryFinished.trigger(new QueryEventArgs(transaction, query));
+		}});
 	}
 
-	public void queryOnStarted(Transaction transaction, Query query) {
-		EventPlatform.triggerQueryEvent(transaction, _queryStarted, query);
+	public void queryOnStarted(final Transaction transaction, final Query query) {
+		if (!_queryStarted.hasListeners())
+			return;
+		
+		withExceptionHandling(new Runnable() { public void run() {
+			_queryStarted.trigger(new QueryEventArgs(transaction, query));
+		}});
 	}
 	
 	public boolean objectCanNew(Transaction transaction, Object obj) {
-		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _creating, null, obj);
+		return triggerCancellableObjectEventArgsInCallback(transaction, _creating, null, obj);
 	}
 	
 	public boolean objectCanActivate(Transaction transaction, Object obj) {
-		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _activating, null, obj);
+		return triggerCancellableObjectEventArgsInCallback(transaction, _activating, null, obj);
 	}
 	
 	public boolean objectCanUpdate(Transaction transaction, ObjectInfo objectInfo) {
-		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _updating, objectInfo, objectInfo.getObject());
+		return triggerCancellableObjectEventArgsInCallback(transaction, _updating, objectInfo, objectInfo.getObject());
 	}
 	
 	public boolean objectCanDelete(Transaction transaction, ObjectInfo objectInfo) {
-		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _deleting, objectInfo, objectInfo.getObject());
+		return triggerCancellableObjectEventArgsInCallback(transaction, _deleting, objectInfo, objectInfo.getObject());
 	}
 	
 	public boolean objectCanDeactivate(Transaction transaction, ObjectInfo objectInfo) {
-		return EventPlatform.triggerCancellableObjectEventArgs(transaction, _deactivating, objectInfo, objectInfo.getObject());
+		return triggerCancellableObjectEventArgsInCallback(transaction, _deactivating, objectInfo, objectInfo.getObject());
 	}
 	
 	public void objectOnActivate(Transaction transaction, ObjectInfo obj) {
-		EventPlatform.triggerObjectInfoEvent(transaction, _activated, obj);
+		triggerObjectInfoEventInCallback(transaction, _activated, obj);
 	}
 	
 	public void objectOnNew(Transaction transaction, ObjectInfo obj) {
-		EventPlatform.triggerObjectInfoEvent(transaction, _created, obj);
+		triggerObjectInfoEventInCallback(transaction, _created, obj);
 	}
 	
 	public void objectOnUpdate(Transaction transaction, ObjectInfo obj) {
-		EventPlatform.triggerObjectInfoEvent(transaction, _updated, obj);
+		triggerObjectInfoEventInCallback(transaction, _updated, obj);
 	}
 	
 	public void objectOnDelete(Transaction transaction, ObjectInfo obj) {
-		EventPlatform.triggerObjectInfoEvent(transaction, _deleted, obj);		
+		triggerObjectInfoEventInCallback(transaction, _deleted, obj);		
 	}	
 
-	public void classOnRegistered(ClassMetadata clazz) {
-		EventPlatform.triggerClassEvent(_classRegistered, clazz);		
+	public void classOnRegistered(final ClassMetadata clazz) {
+		if (!_classRegistered.hasListeners())
+			return;
+		
+		withExceptionHandling(new Runnable() { public void run() {
+			_classRegistered.trigger(new ClassEventArgs(clazz));
+		}});
 	}	
 
 	public void objectOnDeactivate(Transaction transaction, ObjectInfo obj) {
-		EventPlatform.triggerObjectInfoEvent(transaction, _deactivated, obj);
+		triggerObjectInfoEventInCallback(transaction, _deactivated, obj);
 	}
 	
 	public void objectOnInstantiate(Transaction transaction, ObjectInfo obj) {
-		EventPlatform.triggerObjectInfoEvent(transaction, _instantiated, obj);
+		triggerObjectInfoEventInCallback(transaction, _instantiated, obj);
 	}
 	
-	public void commitOnStarted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections) {
-		EventPlatform.triggerCommitEvent(transaction, _committing, objectInfoCollections);
+	public void commitOnStarted(final Transaction transaction, final CallbackObjectInfoCollections objectInfoCollections) {
+		if (!_committing.hasListeners())
+			return;
+		
+		withExceptionHandlingInCallback(new Runnable() {
+        	public void run() {
+        		_committing.trigger(new CommitEventArgs(transaction, objectInfoCollections));
+        	}
+        });
 	}
 	
-	public void commitOnCompleted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections) {
-		EventPlatform.triggerCommitEvent(transaction, _committed, objectInfoCollections);
+	public void commitOnCompleted(final Transaction transaction, final CallbackObjectInfoCollections objectInfoCollections) {
+		if (!_committed.hasListeners())
+			return;
+		
+		withExceptionHandlingInCallback(new Runnable() {
+        	public void run() {
+        		_committed.trigger(new CommitEventArgs(transaction, objectInfoCollections));
+        	}
+        });
 	}
 	
-	public void closeOnStarted(ObjectContainer container) {
-		EventPlatform.triggerObjectContainerEvent(container, _closing);
+	public void closeOnStarted(final ObjectContainer container) {
+		if (!_closing.hasListeners())
+			return;
+		
+		withExceptionHandlingInCallback(new Runnable() {
+        	public void run() {
+        		_closing.trigger(new ObjectContainerEventArgs(container));
+        	}
+        });
 	}
 
 	public Event4 queryFinished() {
@@ -194,18 +230,62 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	}
 
 	public boolean caresAboutCommitting() {
-		return EventPlatform.hasListeners(_committing);
+		return _committing.hasListeners();
 	}
 
 	public boolean caresAboutCommitted() {
-		return EventPlatform.hasListeners(_committed);
+		return _committed.hasListeners();
 	}
 	
     public boolean caresAboutDeleting() {
-        return EventPlatform.hasListeners(_deleting);
+        return _deleting.hasListeners();
     }
 
     public boolean caresAboutDeleted() {
-        return EventPlatform.hasListeners(_deleted);
-    }	
+        return _deleted.hasListeners();
+    }
+
+	boolean triggerCancellableObjectEventArgsInCallback(final Transaction transaction, final Event4Impl<CancellableObjectEventArgs> e, final ObjectInfo objectInfo, final Object o) {
+		if (!e.hasListeners())
+			return true;
+		
+		final CancellableObjectEventArgs args = new CancellableObjectEventArgs(transaction, objectInfo, o);
+		withExceptionHandlingInCallback(new Runnable() {
+        	public void run() {
+        		e.trigger(args);
+        	}
+        });		
+    	return !args.isCancelled();
+    }
+
+	void triggerObjectInfoEventInCallback(final Transaction transaction, final Event4Impl<ObjectInfoEventArgs> e, final ObjectInfo o) {
+		if (!e.hasListeners())
+			return;
+		
+    	withExceptionHandlingInCallback(new Runnable() {
+        	public void run() {
+        		e.trigger(new ObjectInfoEventArgs(transaction, o));
+        	}
+        });
+    }
+
+	private void withExceptionHandlingInCallback(final Runnable runnable) {
+	    try {
+        	InCallback.run(runnable);
+	    } catch (Db4oException e) {
+	    	throw e;
+        } catch (Throwable x) {
+        	throw new EventException(x);
+        }
+    }
+	
+	private void withExceptionHandling(final Runnable runnable) {
+	    try {
+        	runnable.run();
+	    } catch (Db4oException e) {
+	    	throw e;
+        } catch (Throwable x) {
+        	throw new EventException(x);
+        }
+    }
 }

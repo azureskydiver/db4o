@@ -4,11 +4,12 @@ package com.db4o.cs.internal;
 
 import com.db4o.cs.internal.messages.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.threading.*;
 
 /**
  * @exclude
  */
-public class ClientAsynchronousMessageProcessor extends Thread {
+public class ClientAsynchronousMessageProcessor implements Runnable {
 	
 	private final BlockingQueue _messageQueue;
 	
@@ -31,15 +32,7 @@ public class ClientAsynchronousMessageProcessor extends Thread {
 		}
 	}
 	
-	public void startProcessing(){
-		start();
-	}
-	
 	public void stopProcessing(){
 		_stopped = true;
 	}
-	
-	
-	
-
 }

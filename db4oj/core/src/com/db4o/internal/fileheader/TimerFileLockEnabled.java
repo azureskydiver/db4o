@@ -91,6 +91,8 @@ public class TimerFileLockEnabled extends TimerFileLock{
     }
 
     public void run() {
+    	setThreadName();
+    	
 		while (true) {
 			synchronized (_timerLock) {
 				if (_closed) {
@@ -102,6 +104,10 @@ public class TimerFileLockEnabled extends TimerFileLock{
 		}
 	}
 
+	private void setThreadName() {
+	    Thread.currentThread().setName("db4o file lock");
+    }
+
     public void setAddresses(int baseAddress, int openTimeOffset, int accessTimeOffset){
         _baseAddress = baseAddress;
         _openTimeOffset = openTimeOffset;
@@ -110,11 +116,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
     
     public void start() throws Db4oIOException{
         writeAccessTime(false);
-        checkOpenTime();
-        Thread thread = new Thread(this);
-        thread.setName("db4o file lock");
-        thread.setDaemon(true);
-        thread.start(); 
+        checkOpenTime(); 
     }
     
     private long uniqueOpenTime(){

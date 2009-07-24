@@ -11,7 +11,7 @@ import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 import com.db4o.internal.events.*;
 
-public final class ServerMessageDispatcherImpl extends Thread implements ServerMessageDispatcher {
+public final class ServerMessageDispatcherImpl implements ServerMessageDispatcher, Runnable {
 
     private String _clientName;
 
@@ -39,7 +39,9 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	
 	private final Object _mainLock;
 
-	private final Event4Impl _messageReceived = new Event4Impl();
+	private final Event4Impl<MessageEventArgs> _messageReceived = Event4Impl.newInstance();
+
+	private Thread _thread;
 	
     ServerMessageDispatcherImpl(ObjectServerImpl server,
 			ClientTransactionHandle transactionHandle, Socket4 socket,
@@ -47,14 +49,10 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 
     	_mainLock = mainLock;
 		_transactionHandle = transactionHandle;
-
-		setDaemon(true);
-
 		_loggedin = loggedIn;
 
 		_server = server;
 		_threadID = threadID;
-		setDispatcherName("" + threadID);
 		_socket = socket;
 		_socket.setSoTimeout(((Config4Impl) server.configure())
 				.timeoutServerSocket());
@@ -140,7 +138,9 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
     }
 
 	public void run() {
+		_thread = Thread.currentThread();
 		try{
+			setDispatcherName("" + _threadID);
 			messageLoop();
 		}finally{
 			close();
@@ -228,7 +228,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	}
 
     private void triggerMessageReceived(Message message) {
-    	ServerPlatform.triggerMessageEvent(_messageReceived, message);
+    	_messageReceived.trigger(new MessageEventArgs(message));
     }
 
 	public ObjectServerImpl server() {
@@ -300,8 +300,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	
 	public void setDispatcherName(String name) {
 		_clientName = name;
-		// set thread name
-		setName("db4o server message dispatcher " + name);
+		thread().setName("db4o server message dispatcher " + name);
 	}
     
     public int dispatcherID() {
@@ -310,10 +309,6 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 
 	public void login() {
 		_loggedin = true;
-	}
-
-	public void startDispatcher() {
-		start();
 	}
 
 	public boolean caresAboutCommitted() {
@@ -346,5 +341,16 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	 */
 	public Event4<MessageEventArgs> messageReceived() {
 		return _messageReceived;
+    }
+
+	public void join() throws InterruptedException {
+		thread().join();
+    }
+
+	private Thread thread() {
+	    if (null == _thread) {
+			throw new IllegalStateException();
+		}
+		return _thread;
     }
 }
