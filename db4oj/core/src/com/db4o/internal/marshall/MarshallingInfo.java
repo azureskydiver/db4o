@@ -9,12 +9,14 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public interface MarshallingInfo extends FieldListInfo, AspectVersionContext {
+public interface MarshallingInfo extends AspectVersionContext {
 
     public ClassMetadata classMetadata();
 
     public ReadBuffer buffer();
     
     public void beginSlot();
+    
+    public boolean isNull(int fieldIndex);
     
 }

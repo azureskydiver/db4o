@@ -13,7 +13,7 @@ import com.db4o.typehandlers.*;
 /**
  * @exclude
  */
-public class MarshallingContext implements FieldListInfo, MarshallingInfo, WriteContext {
+public class MarshallingContext implements MarshallingInfo, WriteContext {
     
     private static final int HEADER_LENGTH = Const4.LEADING_LENGTH 
             + Const4.ID_LENGTH  // YapClass ID
@@ -40,20 +40,20 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     
     private Object _currentIndexEntry;
     
-	private int _aspectCount;
+	private int _declaredAspectCount;
     
 
     public MarshallingContext(Transaction trans, ObjectReference ref, int updateDepth, boolean isNew) {
         _transaction = trans;
         _reference = ref;
-        _nullBitMap = new BitMap4(fieldCount());
+        _nullBitMap = new BitMap4(aspectCount());
         _updateDepth = classMetadata().adjustUpdateDepth(trans, updateDepth);
         _isNew = isNew;
         _writeBuffer = new MarshallingBuffer();
         _currentBuffer = _writeBuffer;
     }
 
-    private int fieldCount() {
+    private int aspectCount() {
         return classMetadata().aspectCount();
     }
 
@@ -115,7 +115,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         
         writeObjectClassID(buffer, classMetadata().getID());
         buffer.writeByte(HandlerRegistry.HANDLER_VERSION);
-        buffer.writeInt(fieldCount());
+        buffer.writeInt(aspectCount());
         buffer.writeBitMap(_nullBitMap);
         
         _writeBuffer.transferContentTo(buffer);
@@ -234,8 +234,8 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         _currentBuffer = _writeBuffer;
     }
     
-    public void fieldCount(int fieldCount) {
-        _writeBuffer.writeInt(fieldCount);
+    public void writeDeclaredAspectCount(int count) {
+        _writeBuffer.writeInt(count);
     }
 
     public void debugPrependNextWrite(ByteArrayBuffer prepend) {
@@ -335,12 +335,12 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         return reservedBuffer;
     }
 
-	public int aspectCount() {
-		return _aspectCount;
+	public int declaredAspectCount() {
+		return _declaredAspectCount;
 	}
 
-	public void aspectCount(int count) {
-		_aspectCount = count;
+	public void declaredAspectCount(int count) {
+		_declaredAspectCount = count;
 	}
     
 

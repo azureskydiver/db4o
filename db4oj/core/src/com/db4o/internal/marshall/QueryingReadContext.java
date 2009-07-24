@@ -22,7 +22,7 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
     
     private IdObjectCollector _collector;
     
-	private int _aspectCount;
+	private int _declaredAspectCount;
 
     
     private QueryingReadContext(Transaction transaction, QCandidates candidates, int handlerVersion, ReadBuffer buffer, int collectionID, IdObjectCollector collector) {
@@ -129,12 +129,12 @@ public class QueryingReadContext extends AbstractReadContext implements HandlerV
         return _collector.objects();
     }
     
-	public int aspectCount() {
-		return _aspectCount;
+	public int declaredAspectCount() {
+		return _declaredAspectCount;
 	}
 
-	public void aspectCount(int count) {
-		_aspectCount = count;
+	public void declaredAspectCount(int count) {
+		_declaredAspectCount = count;
 	}
 	
 	public IdObjectCollector collector(){

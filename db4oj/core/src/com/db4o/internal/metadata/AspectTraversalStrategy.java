@@ -2,14 +2,11 @@
 
 package com.db4o.internal.metadata;
 
-import com.db4o.internal.marshall.*;
-
 /**
  * @exclude
  */
 public interface AspectTraversalStrategy {
 
-	void traverseAllAspects(MarshallingInfo context,
-			TraverseAspectCommand command, FieldListInfo fieldListInfo);
+	void traverseAllAspects(MarshallingInfoTraverseAspectCommand command);
 
 }

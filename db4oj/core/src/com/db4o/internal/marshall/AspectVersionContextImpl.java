@@ -7,17 +7,17 @@ package com.db4o.internal.marshall;
  */
 public class AspectVersionContextImpl implements AspectVersionContext{
 	
-	private final int _aspectCount;
+	private final int _declaredAspectCount;
 
 	private  AspectVersionContextImpl(int count) {
-		_aspectCount = count;
+		_declaredAspectCount = count;
 	}
 
-	public int aspectCount() {
-		return _aspectCount;
+	public int declaredAspectCount() {
+		return _declaredAspectCount;
 	}
 
-	public void aspectCount(int count) {
+	public void declaredAspectCount(int count) {
 		throw new IllegalStateException();
 	}
 	

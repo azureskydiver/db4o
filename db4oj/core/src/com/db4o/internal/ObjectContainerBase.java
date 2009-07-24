@@ -116,11 +116,10 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		        	openImpl();
 					initializePostOpen();
 					ok = true;
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//					throw new Db4oException(e);
 				} finally {
 					if(!ok) {
+						// TODO: This will swallow the causing exception if
+						//       an exception occurs during shutdown.
 						shutdownObjectContainer();
 					}
 				}

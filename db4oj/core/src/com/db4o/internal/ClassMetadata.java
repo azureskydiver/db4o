@@ -1394,11 +1394,11 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         if (count > _aspects.length) {
             if (Debug4.atHome) {
                 System.out.println(
-                    "ClassMetadata.readFieldCount "
+                    "ClassMetadata.readAspectCount "
                         + getName()
                         + " count to high:"
                         + count
-                        + " i_fields:"
+                        + " _aspects:"
                         + _aspects.length);
                 new Exception().printStackTrace();
             }
@@ -2071,8 +2071,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	}
 
 	public void traverseAllAspects(MarshallingInfo context,
-			TraverseAspectCommand command, FieldListInfo fieldListInfo) {
-		aspectTraversalStrategy().traverseAllAspects(context, command, fieldListInfo);
+			MarshallingInfoTraverseAspectCommand command) {
+		aspectTraversalStrategy().traverseAllAspects(command);
 	}
 
 	private AspectTraversalStrategy aspectTraversalStrategy() {
@@ -2083,15 +2083,12 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	}
 
 	private AspectTraversalStrategy detectAspectTraversalStrategy() {
-		
-// 		
-		
-//		List<HierarchyAnalyzer.Diff> ancestors = compareAncestorHierarchy();
-//		for (Diff diff: ancestors){
-//			if(diff.isRemoved()){
-//				return createRemovedAspectTraversalStrategy(ancestors);
-//			}
-//		}
+		List<HierarchyAnalyzer.Diff> ancestors = compareAncestorHierarchy();
+		for (Diff diff: ancestors){
+			if(diff.isRemoved()){
+				return createRemovedAspectTraversalStrategy(ancestors);
+			}
+		}
 		return new StandardAspectTraversalStrategy(this);
 	}
 

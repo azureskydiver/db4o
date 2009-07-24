@@ -12,7 +12,7 @@ public class ObjectHeaderContext extends AbstractReadContext implements Marshall
     
     protected ObjectHeader _objectHeader;
     
-	private int _aspectCount;
+	private int _declaredAspectCount;
     
     public ObjectHeaderContext(Transaction transaction, ReadBuffer buffer, ObjectHeader objectHeader) {
         super(transaction, buffer);
@@ -54,12 +54,12 @@ public class ObjectHeaderContext extends AbstractReadContext implements Marshall
 	    return _objectHeader.classMetadata(); 
 	}
 	
-	public int aspectCount() {
-		return _aspectCount;
+	public int declaredAspectCount() {
+		return _declaredAspectCount;
 	}
 
-	public void aspectCount(int count) {
-		_aspectCount = count;
+	public void declaredAspectCount(int count) {
+		_declaredAspectCount = count;
 	}
 
 }
