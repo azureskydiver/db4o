@@ -28,7 +28,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	
 	private final ObjectHeader _objectHeader;
 	
-	private int _aspectCount;
+	private int _declaredAspectCount;
 	
 	public DefragmentContextImpl(ByteArrayBuffer source, DefragmentContextImpl context) {
 		this(source, context._services, context._objectHeader);
@@ -365,12 +365,12 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
         return _objectHeader._headerAttributes.isNull(fieldIndex);
     }
 
-	public int aspectCount() {
-		return _aspectCount;
+	public int declaredAspectCount() {
+		return _declaredAspectCount;
 	}
 
-	public void aspectCount(int count) {
-		_aspectCount = count;
+	public void declaredAspectCount(int count) {
+		_declaredAspectCount = count;
 	}
 
 	public SlotFormat slotFormat() {

@@ -5,7 +5,6 @@ package com.db4o.internal.metadata;
 import java.util.*;
 
 import com.db4o.internal.*;
-import com.db4o.internal.marshall.*;
 import com.db4o.internal.metadata.HierarchyAnalyzer.*;
 
 /**
@@ -22,18 +21,16 @@ public class ModifiedAspectTraversalStrategy implements AspectTraversalStrategy 
 		_classDiffs.addAll(ancestors);
 	}
 
-	public void traverseAllAspects(MarshallingInfo context,
-			TraverseAspectCommand command, FieldListInfo fieldListInfo) {
+	public void traverseAllAspects(MarshallingInfoTraverseAspectCommand command) {
 		int currentSlot = 0;
 	    for(HierarchyAnalyzer.Diff diff : _classDiffs){
 			ClassMetadata classMetadata = diff.classMetadata();
 			if(diff.isRemoved()){
-		        currentSlot = skipAspectsOf(classMetadata, context, command,
-						fieldListInfo, currentSlot);
+		        currentSlot = skipAspectsOf(classMetadata, command,
+						currentSlot);
 				continue;
 			}
-	        currentSlot = traverseAspectsOf(classMetadata, context, command,
-					fieldListInfo, currentSlot);
+	        currentSlot = traverseAspectsOf(classMetadata, command, currentSlot);
 	        if(command.cancelled()){
 	            return;
 	        }
@@ -41,48 +38,38 @@ public class ModifiedAspectTraversalStrategy implements AspectTraversalStrategy 
 	}
 	
 	static interface TraverseAspectCommandProcessor {
-		void process(TraverseAspectCommand command, ClassAspect currentAspect, int currentSlot);
+		void process(MarshallingInfoTraverseAspectCommand command, ClassAspect currentAspect, int currentSlot);
 	}
 
 	private int traverseAspectsOf(final ClassMetadata classMetadata,
-			MarshallingInfo context, TraverseAspectCommand command,
-			final FieldListInfo fieldListInfo, int currentSlot) {
-		return processAspectsOf(classMetadata, context, command, currentSlot, new TraverseAspectCommandProcessor() {
-			public void process(TraverseAspectCommand command, ClassAspect currentAspect, int currentSlot) {
-				command.processAspect(
-		        		currentAspect,
-		        		currentSlot,
-		        		fieldListInfo.isNull(currentSlot), classMetadata);
+			MarshallingInfoTraverseAspectCommand command, int currentSlot) {
+		return processAspectsOf(classMetadata, command, currentSlot, new TraverseAspectCommandProcessor() {
+			public void process(MarshallingInfoTraverseAspectCommand command, ClassAspect currentAspect, int currentSlot) {
+				command.processAspect(currentAspect,currentSlot);
 		
 			}
 		});
 	}
 
 	private int processAspectsOf(final ClassMetadata classMetadata,
-			MarshallingInfo context, TraverseAspectCommand command,
-			int currentSlot, TraverseAspectCommandProcessor processor) {
-		int aspectCount=command.aspectCount(classMetadata, ((ByteArrayBuffer)context.buffer()));
-		context.aspectCount(aspectCount);
+			MarshallingInfoTraverseAspectCommand command, int currentSlot,
+			TraverseAspectCommandProcessor processor) {
+		int aspectCount=command.declaredAspectCount(classMetadata);
 		for (int i = 0; i < aspectCount && !command.cancelled(); i++) {
-		    final ClassAspect currentAspect = classMetadata._aspects[i];
-			if(command.accept(currentAspect)){
-				processor.process(command, currentAspect, currentSlot);
-		    }
-		    context.beginSlot();
+		    processor.process(command, classMetadata._aspects[i], currentSlot);
 		    currentSlot++;
 		}
 		return currentSlot;
 	}
 	
 	private int skipAspectsOf(ClassMetadata classMetadata,
-			final MarshallingInfo context, TraverseAspectCommand command,
-			final FieldListInfo fieldListInfo, int currentSlot) {
-		return processAspectsOf(classMetadata, context, command, currentSlot, new TraverseAspectCommandProcessor() {
+			MarshallingInfoTraverseAspectCommand command, int currentSlot) {
+		return processAspectsOf(classMetadata, command, currentSlot, new TraverseAspectCommandProcessor() {
 			public void process(
-					TraverseAspectCommand command,
+					MarshallingInfoTraverseAspectCommand command,
 					ClassAspect currentAspect,
 					int currentSlot) {
-				command.processAspectOnMissingClass(context, fieldListInfo, currentAspect, currentSlot);
+				command.processAspectOnMissingClass(currentAspect, currentSlot);
 			}
 		});
 	}

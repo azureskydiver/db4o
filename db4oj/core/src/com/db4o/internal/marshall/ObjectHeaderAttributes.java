@@ -9,7 +9,7 @@ import com.db4o.internal.*;
 /**
  * @exclude
  */
-public class ObjectHeaderAttributes implements FieldListInfo {
+public class ObjectHeaderAttributes {
 
     private final int _fieldCount;
     

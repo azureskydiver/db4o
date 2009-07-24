@@ -16,7 +16,7 @@ public abstract class ClassAspect {
     // used for identification when sending in C/S mode 
 	protected int              _handle;
     
-    private int _disabledFromAspectCountVersion = AspectVersionContextImpl.ALWAYS_ENABLED.aspectCount();
+    private int _disabledFromAspectCountVersion = AspectVersionContextImpl.ALWAYS_ENABLED.declaredAspectCount();
     
     public abstract AspectType aspectType();
     
@@ -65,7 +65,7 @@ public abstract class ClassAspect {
 	}
 	
 	public final boolean isEnabledOn(AspectVersionContext context){
-		return _disabledFromAspectCountVersion  > context.aspectCount();	
+		return _disabledFromAspectCountVersion  > context.declaredAspectCount();	
 	}
 
 	public abstract void deactivate(ActivationContext context);
