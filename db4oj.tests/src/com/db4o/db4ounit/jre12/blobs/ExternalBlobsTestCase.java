@@ -93,9 +93,12 @@ public class ExternalBlobsTestCase extends AbstractDb4oTestCase  {
 
 	private void writeFile(final String fname, char[] contents) throws IOException {
 	    FileWriter fw = new FileWriter(fname);
-		fw.write(contents);
-		fw.flush();
-		fw.close();
+	    try {
+			fw.write(contents);
+			fw.flush();
+	    } finally {
+	    	fw.close();
+	    }
     }
 
 	private void deleteFiles() throws IOException {

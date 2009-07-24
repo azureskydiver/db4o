@@ -81,7 +81,7 @@ public final class ConfigBlock {
         if(! isNew){
             read(address);
         }
-        timerFileLock().start();
+        stream.threadPool().start(timerFileLock());
 	}
     
     private TimerFileLock timerFileLock(){

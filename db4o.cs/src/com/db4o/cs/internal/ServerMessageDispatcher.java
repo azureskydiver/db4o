@@ -48,4 +48,6 @@ public interface ServerMessageDispatcher extends ClientConnection, MessageDispat
 
 	public boolean processMessage(Msg message);
 
+	public void join() throws InterruptedException;
+
 }

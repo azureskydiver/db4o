@@ -2,8 +2,9 @@
 
 package db4ounit.extensions.tests;
 
-import com.db4o.config.*;
 import static db4ounit.mocking.MethodCall.Conditions.*;
+
+import com.db4o.config.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;

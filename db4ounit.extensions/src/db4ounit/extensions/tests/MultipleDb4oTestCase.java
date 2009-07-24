@@ -4,8 +4,8 @@ package db4ounit.extensions.tests;
 
 import com.db4o.config.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 public class MultipleDb4oTestCase extends AbstractDb4oTestCase {
 	private static int configureCalls=0;

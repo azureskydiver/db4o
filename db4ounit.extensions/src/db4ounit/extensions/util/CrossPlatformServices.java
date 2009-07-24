@@ -1,7 +1,7 @@
 package db4ounit.extensions.util;
 
 import com.db4o.foundation.io.*;
-import com.db4o.internal.ReflectPlatform;
+import com.db4o.internal.*;
 
 public class CrossPlatformServices {
 

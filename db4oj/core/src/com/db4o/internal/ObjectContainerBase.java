@@ -20,6 +20,7 @@ import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.replication.*;
 import com.db4o.internal.slots.*;
+import com.db4o.internal.threading.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.core.*;
@@ -1682,7 +1683,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
 
 	private void assertNotInCallback() {
-	    if(InCallbackState._inCallback.value()) {
+	    if(InCallback.value()) {
 	    	throw new IllegalStateException("Objects must not be updated in callback");
 	    }
     }
@@ -2050,5 +2051,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 				_transaction = old;
 			}
 		}
+    }
+
+	public ThreadPool4 threadPool() {
+        return environment().provide(ThreadPool4.class);
     }
 }

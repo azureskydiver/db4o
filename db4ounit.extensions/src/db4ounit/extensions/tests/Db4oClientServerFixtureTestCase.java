@@ -20,10 +20,10 @@ public class Db4oClientServerFixtureTestCase implements TestCase {
 		final int port = 42;
 		
 		final IMocksControl mockery = createControl();
-		mockery.checkOrder(true);
+		mockery.checkOrder(false);
 		
 		final ClientServerFactory clientServerFactoryMock = mockery.createMock("factory", ClientServerFactory.class);
-		final ExtObjectServer objectServerMock = mockery.createMock("server", ExtObjectServer.class);
+		final ExtObjectServer objectServerMock = EasyMock.createNiceMock("server", ExtObjectServer.class);
 		final ExtClient clientMock = mockery.createMock("client", ExtClient.class);
 		final CustomClientServerConfiguration testInstanceMock = mockery.createMock(CustomClientServerConfiguration.class);
 		
@@ -57,6 +57,8 @@ public class Db4oClientServerFixtureTestCase implements TestCase {
 			.anyTimes();
 		
 		mockery.replay();
+		
+		replay(objectServerMock);
 		
 		final Db4oClientServer fixture = new Db4oClientServer(clientServerFactoryMock, false, "C/S");
 		fixture.open(testInstanceMock);

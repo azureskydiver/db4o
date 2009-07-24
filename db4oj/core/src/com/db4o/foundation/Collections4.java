@@ -53,5 +53,9 @@ public class Collections4 {
 		public Object[] toArray() {
 			return _sequence.toArray();
 		}
+		
+		public Object[] toArray(Object[] array) {
+			return _sequence.toArray(array);
+		}
 	}
 }

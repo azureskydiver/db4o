@@ -68,7 +68,7 @@ class WeakReferenceCollector implements Runnable {
         }
         
         _timer = new SimpleTimer(this, _stream.configImpl().weakReferenceCollectionInterval(), "db4o WeakReference collector");
-        _timer.start();
+        _stream.threadPool().start(_timer);
     }
 
     void stopTimer() {

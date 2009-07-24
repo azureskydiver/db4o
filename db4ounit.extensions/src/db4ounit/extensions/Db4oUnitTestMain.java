@@ -15,8 +15,8 @@ public class Db4oUnitTestMain extends UnitTestMain {
 	}
 
 	private final Db4oFixture _fixture = 
-//		new Db4oSolo();
-		new Db4oInMemory();
+		new Db4oSolo();
+//		new Db4oInMemory();
 	
 	@Override
 	protected Iterable4 builder(Class clazz) {
@@ -27,9 +27,9 @@ public class Db4oUnitTestMain extends UnitTestMain {
 //		if (true) {
 //			return networkingCS;
 //		}
-//		if (true) {
-//			return inMemory;
-//		}
+		if (true) {
+			return inMemory;
+		}
 		
 		return Iterators.concat(inMemory, embeddedCS, networkingCS);
 	}

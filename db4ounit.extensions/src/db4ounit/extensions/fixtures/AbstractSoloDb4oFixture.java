@@ -6,8 +6,9 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.threading.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 import db4ounit.extensions.*;
 
 public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
@@ -22,12 +23,21 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 		final Configuration config = cloneConfiguration();
 		applyFixtureConfiguration(testInstance, config);
 		_db=createDatabase(config).ext();
+		listenToUncaughtExceptions(threadPool());
 	}
+
+	private ThreadPool4 threadPool() {
+	    return threadPoolFor(_db);
+    }
 
 	public void close() throws Exception {
 		if (null != _db) {
 			Assert.isTrue(db().close());
-			_db = null;
+			try {
+				threadPool().join(3000);
+			} finally {
+				_db = null;
+			}
 		}
 	}	
 

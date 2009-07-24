@@ -29,7 +29,7 @@ public class ClientHeartbeat implements Runnable {
     }
     
     public void start(){
-        _timer.start();
+    	_container.threadPool().start(_timer);
     }
 
     public void stop() {

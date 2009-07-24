@@ -2,6 +2,8 @@
 
 package db4ounit.extensions;
 
+import java.util.*;
+
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
@@ -33,5 +35,7 @@ public interface Db4oFixture extends Labeled {
 	void fixtureConfiguration(FixtureConfiguration configuration);
 
 	void resetConfig();
+
+	List<Throwable> uncaughtExceptions();
 
 }

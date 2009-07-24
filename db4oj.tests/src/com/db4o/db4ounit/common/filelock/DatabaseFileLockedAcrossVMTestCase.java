@@ -10,10 +10,13 @@ import com.db4o.db4ounit.util.*;
 import com.db4o.ext.*;
 
 import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.IOServices.*;
 
 @decaf.Remove
-public class DatabaseFileLockedAcrossVMTestCase extends TestWithTempFile{
+public class DatabaseFileLockedAcrossVMTestCase
+	extends TestWithTempFile
+	implements OptOutInMemory {
 	
 	public void testLockedFile() throws IOException{
 		ProcessRunner externalVM = JavaServices.startJava(AcquireNativeLock.class.getName(), new String[]{ tempFile() });
@@ -24,13 +27,11 @@ public class DatabaseFileLockedAcrossVMTestCase extends TestWithTempFile{
 					EmbeddedObjectContainer objectContainer = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), tempFile());
 				}
 			});
-		}
-		finally {
+		} finally {
 			externalVM.write("");
 			try {
 				externalVM.waitFor();
-			} 
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}

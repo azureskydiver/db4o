@@ -551,6 +551,12 @@
 				<include name="com/db4o/collections/*.java" />
 				<include name="com/db4o/internal/collections/BigSet.java" />
 				<include name="com/db4o/config/annotations/Indexed.java" />
+				
+				<!-- event mappings need generic types -->
+				<include name="com/db4o/events/*.java" />
+				<include name="com/db4o/internal/events/*.java" />
+				
+				<include name="com/db4o/internal/threading/*.java" />
 			</fileset>
 		</copy>		
 		
@@ -582,6 +588,13 @@
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
+		
+		<copy todir="${dir.sharpen}/db4oj/cs/src" overwrite="true">
+			<fileset dir="${dir.j.cs.src}">
+				<include name="com/db4o/cs/internal/ServerMessageDispatcherImpl.java" />
+				<include name="com/db4o/cs/internal/ObjectServerImpl.java" />
+			</fileset>
+		</copy>		
 
 		<copy todir="${dir.sharpen}/db4oj/instrumentation">
 			<fileset refid="db4o.instrumentation.srcfiles" />

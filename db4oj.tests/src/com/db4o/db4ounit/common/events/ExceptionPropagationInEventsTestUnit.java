@@ -26,17 +26,21 @@ public class ExceptionPropagationInEventsTestUnit extends EventsTestCaseBase {
 	}
 	
 	public void testEvents() {
-		final EventInfo event = (EventInfo) ExceptionPropagationInEventsTestVariables.EVENT_SELECTOR.value();
+		final EventInfo event = eventToTest();
 		if(isClientServer() && !event.isClientServerEvent()) {
 			return;
 		}
-		assertEventThrows(_eventFirer.get(event.eventFirerName()), event.listenerSetter());
-	}	
+		assertEventThrows(event.eventFirerName(), _eventFirer.get(event.eventFirerName()), event.listenerSetter());
+	}
 
-	private void assertEventThrows(final CodeBlock codeBlock, final Procedure4<EventRegistry> listenerSetter) {
+	private EventInfo eventToTest() {
+	    return (EventInfo) ExceptionPropagationInEventsTestVariables.EVENT_SELECTOR.value();
+    }	
+
+	private void assertEventThrows(String eventName, final CodeBlock codeBlock, final Procedure4<EventRegistry> listenerSetter) {
 		final EventRegistry eventRegistry = EventRegistryFactory.forObjectContainer(db());		
 		listenerSetter.apply(eventRegistry);		
-		Assert.expect(EventException.class, NotImplementedException.class, codeBlock);
+		Assert.expect(EventException.class, NotImplementedException.class, codeBlock, eventName);
 	}
 	
 	private CodeBlock newObjectUpdater() {
@@ -87,7 +91,10 @@ public class ExceptionPropagationInEventsTestUnit extends EventsTestCaseBase {
 		
 		Assert.areEqual(1, results.size());
 		
-		return results.next();
+		final Item found = results.next();
+		Assert.areEqual(id, found.id);
+		
+		return found;
 	}	
 	
 	private HashMap<String, CodeBlock> _eventFirer = new HashMap();	

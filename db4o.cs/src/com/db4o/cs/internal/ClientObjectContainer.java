@@ -29,9 +29,9 @@ import com.db4o.reflect.*;
  */
 public class ClientObjectContainer extends ExternalObjectContainer implements ExtClient, BlobTransport, ClientMessageDispatcher {
 	
-	final Object blobLock = new Object();
+	final Object _blobLock = new Object();
 
-	private BlobProcessor blobThread;
+	private BlobProcessor _blobTask;
 
 	private Socket4 i_socket;
 
@@ -127,13 +127,20 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	
 	private void startDispatcherThread(Socket4 socket, String user) {
 		if(! _singleThreaded){
-			_asynchronousMessageProcessor = new ClientAsynchronousMessageProcessor(_asynchronousMessageQueue);
-			_asynchronousMessageProcessor.startProcessing();
+			startAsynchronousMessageProcessor();
 		}
-		_messageDispatcher = new ClientMessageDispatcherImpl(this, socket, _synchronousMessageQueue, _asynchronousMessageQueue);
-		_messageDispatcher.setDispatcherName(user);
-		_messageDispatcher.startDispatcher();
+		
+		final ClientMessageDispatcherImpl dispatcherImpl = new ClientMessageDispatcherImpl(this, socket, _synchronousMessageQueue, _asynchronousMessageQueue);
+		dispatcherImpl.setDispatcherName(user);
+		
+		_messageDispatcher = dispatcherImpl;
+		threadPool().start(dispatcherImpl);
 	}
+
+	private void startAsynchronousMessageProcessor() {
+	    _asynchronousMessageProcessor = new ClientAsynchronousMessageProcessor(_asynchronousMessageQueue);
+	    threadPool().start(_asynchronousMessageProcessor);
+    }
 
 	public void backup(Storage targetStorage, String path) throws NotSupportedException {
 		throw new NotSupportedException();
@@ -501,14 +508,14 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	}
 
 	void processBlobMessage(MsgBlob msg) {
-		synchronized (blobLock) {
-			boolean needStart = blobThread == null || blobThread.isTerminated();
+		synchronized (_blobLock) {
+			boolean needStart = _blobTask == null || _blobTask.isTerminated();
 			if (needStart) {
-				blobThread = new BlobProcessor(this);
+				_blobTask = new BlobProcessor(this);
 			}
-			blobThread.add(msg);
+			_blobTask.add(msg);
 			if (needStart) {
-				blobThread.start();
+				threadPool().startLowPriority(_blobTask);
 			}
 		}
 	}
@@ -993,10 +1000,6 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	public void setDispatcherName(String name) {
 		// do nothing here		
-	}
-
-	public void startDispatcher() {
-		// do nothing here for single thread, ClientObjectContainer is already running
 	}
 	
 	public ClientMessageDispatcher messageDispatcher() {

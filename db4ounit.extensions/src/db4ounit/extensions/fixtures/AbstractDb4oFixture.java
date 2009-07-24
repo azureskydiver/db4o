@@ -2,10 +2,14 @@
 
 package db4ounit.extensions.fixtures;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.defragment.*;
+import com.db4o.events.*;
 import com.db4o.internal.*;
+import com.db4o.internal.threading.*;
 
 import db4ounit.extensions.*;
 
@@ -13,13 +17,34 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 
 	private FixtureConfiguration _fixtureConfiguration;
 	private Configuration _configuration;
+	private List<Throwable> _uncaughtExceptions;
 
 	protected AbstractDb4oFixture() {
+		resetUncaughtExceptions();
 	}
+
+	private void resetUncaughtExceptions() {
+	    _uncaughtExceptions = new ArrayList<Throwable>();
+    }
 	
 	public void fixtureConfiguration(FixtureConfiguration fc) {
 		_fixtureConfiguration = fc;
 	}
+	
+	public List<Throwable> uncaughtExceptions() {
+		return _uncaughtExceptions;
+	}
+
+	protected void listenToUncaughtExceptions(final ThreadPool4 threadPool) {
+		if (null == threadPool)
+			return; // mocks don't have thread pools
+		
+	    threadPool.uncaughtException().addListener(new EventListener4<UncaughtExceptionEventArgs>() {
+	    	public void onEvent(Event4<UncaughtExceptionEventArgs> e, UncaughtExceptionEventArgs args) {
+	    		_uncaughtExceptions.add(args.exception());
+	        }
+	    });
+    }
 	
 	public void reopen(Db4oTestCase testInstance) throws Exception {
 		close();
@@ -36,6 +61,7 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 	public void clean() {
 		doClean();
 		resetConfig();
+		resetUncaughtExceptions();
 	}
 	
 	public abstract boolean accept(Class clazz);
@@ -83,5 +109,12 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 
 	protected Config4Impl cloneDb4oConfiguration(Configuration config) {
     	return (Config4Impl) ((Config4Impl)config).deepClone(this);
+    }
+
+	protected ThreadPool4 threadPoolFor(final ObjectContainer container) {
+		if (container instanceof ObjectContainerBase) {
+			return ((ObjectContainerBase)container).threadPool();
+		}
+		return null;
     }
 }

@@ -15,7 +15,4 @@ public interface MessageDispatcher {
 	
 	public boolean close();
 
-	public void setDispatcherName(String name);
-
-	public void startDispatcher();
-}
+	public void setDispatcherName(String name);}
