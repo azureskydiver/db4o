@@ -1,7 +1,6 @@
 package decaf.builder;
 
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.Modifier.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
 public class AccessibilityRewritingVisitor extends DecafVisitorBase {
@@ -22,8 +21,12 @@ public class AccessibilityRewritingVisitor extends DecafVisitorBase {
 	
 	@Override
 	public void endVisit(FieldDeclaration node) {
-		handlePublicAnnotationOn(node, FieldDeclaration.MODIFIERS2_PROPERTY, ((VariableDeclarationFragment)node.fragments().get(0)).resolveBinding());
+		handlePublicAnnotationOn(node, FieldDeclaration.MODIFIERS2_PROPERTY, firstVariableDeclarationFragmentOf(node).resolveBinding());
 	}
+
+	private VariableDeclarationFragment firstVariableDeclarationFragmentOf(FieldDeclaration fieldDeclaration) {
+	    return (VariableDeclarationFragment)fieldDeclaration.fragments().get(0);
+    }
 	
 	private void handlePublicAnnotationOn(ASTNode node,
 			final ChildListPropertyDescriptor modifiersProperty,
@@ -48,18 +51,19 @@ public class AccessibilityRewritingVisitor extends DecafVisitorBase {
 	private void removeAccessibilityModifier(final ListRewrite modifiers) {
 	    for (Object o : modifiers.getOriginalList()) {
 			
-			if (!(o instanceof Modifier)) {
+			if (!(o instanceof Modifier))
 				continue;
-			}
 			
 			Modifier m = (Modifier) o;
-			if (m.getKeyword() == ModifierKeyword.PUBLIC_KEYWORD
-				|| m.getKeyword() == ModifierKeyword.PROTECTED_KEYWORD
-				|| m.getKeyword() == ModifierKeyword.PRIVATE_KEYWORD) {
-				
-				modifiers.remove(m, null);
-			}
+			if (!isAccessibilityModifier(m))
+				continue;
+			
+			modifiers.remove(m, null);
 		}
+    }
+
+	private boolean isAccessibilityModifier(Modifier m) {
+		return m.isPrivate() || m.isProtected() || m.isPublic();
     }
 
 }
