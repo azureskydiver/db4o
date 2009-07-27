@@ -14,6 +14,7 @@ public class AllTests extends Db4oTestSuite {
 			ClassRenameByStoredClassTestCase.class,
 			ReAddFieldTestCase.class,
 			RemoveArrayFieldTestCase.class,
+			RemovedClassRefactoringTestSuite.class,
 		};
 	}
 }

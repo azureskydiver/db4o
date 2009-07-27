@@ -7,6 +7,6 @@ package com.db4o.internal.metadata;
  */
 public interface AspectTraversalStrategy {
 
-	void traverseAllAspects(MarshallingInfoTraverseAspectCommand command);
+	void traverseAllAspects(TraverseAspectCommand command);
 
 }

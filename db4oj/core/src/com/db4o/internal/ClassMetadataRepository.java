@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.metadata.*;
 import com.db4o.reflect.*;
 
 
@@ -61,13 +62,13 @@ public final class ClassMetadataRepository extends PersistentBase {
         while (i.moveNext()) {
             final ClassMetadata classMetadata = i.currentClass();
             if(! classMetadata.isInternal()){
-                classMetadata.forEachField(new Procedure4() {
-                    public void apply(Object obj) {
-                        FieldMetadata field = (FieldMetadata)obj;
+                classMetadata.traverseAllAspects(new TraverseFieldCommand() {
+					@Override
+					protected void process(FieldMetadata field) {
                         if(field.canAddToQuery(fieldName)){
                             visitor.visit(new Object[] {classMetadata, field});
                         }
-                    }
+					}
                 });
 
             }

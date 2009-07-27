@@ -21,7 +21,7 @@ public class ModifiedAspectTraversalStrategy implements AspectTraversalStrategy 
 		_classDiffs.addAll(ancestors);
 	}
 
-	public void traverseAllAspects(MarshallingInfoTraverseAspectCommand command) {
+	public void traverseAllAspects(TraverseAspectCommand command) {
 		int currentSlot = 0;
 	    for(HierarchyAnalyzer.Diff diff : _classDiffs){
 			ClassMetadata classMetadata = diff.classMetadata();
@@ -38,13 +38,13 @@ public class ModifiedAspectTraversalStrategy implements AspectTraversalStrategy 
 	}
 	
 	static interface TraverseAspectCommandProcessor {
-		void process(MarshallingInfoTraverseAspectCommand command, ClassAspect currentAspect, int currentSlot);
+		void process(TraverseAspectCommand command, ClassAspect currentAspect, int currentSlot);
 	}
 
 	private int traverseAspectsOf(final ClassMetadata classMetadata,
-			MarshallingInfoTraverseAspectCommand command, int currentSlot) {
+			TraverseAspectCommand command, int currentSlot) {
 		return processAspectsOf(classMetadata, command, currentSlot, new TraverseAspectCommandProcessor() {
-			public void process(MarshallingInfoTraverseAspectCommand command, ClassAspect currentAspect, int currentSlot) {
+			public void process(TraverseAspectCommand command, ClassAspect currentAspect, int currentSlot) {
 				command.processAspect(currentAspect,currentSlot);
 		
 			}
@@ -52,7 +52,7 @@ public class ModifiedAspectTraversalStrategy implements AspectTraversalStrategy 
 	}
 
 	private int processAspectsOf(final ClassMetadata classMetadata,
-			MarshallingInfoTraverseAspectCommand command, int currentSlot,
+			TraverseAspectCommand command, int currentSlot,
 			TraverseAspectCommandProcessor processor) {
 		int aspectCount=command.declaredAspectCount(classMetadata);
 		for (int i = 0; i < aspectCount && !command.cancelled(); i++) {
@@ -63,10 +63,10 @@ public class ModifiedAspectTraversalStrategy implements AspectTraversalStrategy 
 	}
 	
 	private int skipAspectsOf(ClassMetadata classMetadata,
-			MarshallingInfoTraverseAspectCommand command, int currentSlot) {
+			TraverseAspectCommand command, int currentSlot) {
 		return processAspectsOf(classMetadata, command, currentSlot, new TraverseAspectCommandProcessor() {
 			public void process(
-					MarshallingInfoTraverseAspectCommand command,
+					TraverseAspectCommand command,
 					ClassAspect currentAspect,
 					int currentSlot) {
 				command.processAspectOnMissingClass(currentAspect, currentSlot);

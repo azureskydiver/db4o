@@ -8,7 +8,7 @@ import com.db4o.internal.marshall.*;
 /**
  * @exclude
  */
-public abstract class MarshallingInfoTraverseAspectCommand {
+public abstract class MarshallingInfoTraverseAspectCommand implements TraverseAspectCommand {
 	
     private boolean _cancelled=false;
     

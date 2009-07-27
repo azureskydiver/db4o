@@ -317,7 +317,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		final BooleanByRef hasFieldIndex = new BooleanByRef(false);
 		ClassMetadata curClazz = clazz;
 		while(!hasFieldIndex.value && curClazz != null) {
-			curClazz.forEachDeclaredField(new Procedure4() {
+			curClazz.traverseDeclaredFields(new Procedure4() {
 				public void apply(Object arg) {
 					FieldMetadata curField = (FieldMetadata)arg;
 					if (curField.hasIndex()

@@ -23,7 +23,7 @@ public class ReindexNetDateTime_7_8 extends Conversion {
 		ClassMetadataIterator i = stage.file().classCollection().iterator();
 		while(i.moveNext()){
 			ClassMetadata classmetadata = i.currentClass();
-			classmetadata.forEachDeclaredField(new Procedure4<FieldMetadata>() {
+			classmetadata.traverseDeclaredFields(new Procedure4<FieldMetadata>() {
 				public void apply(FieldMetadata field) {
 					if(! field.hasIndex()){
 						return;

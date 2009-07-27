@@ -15,6 +15,7 @@ import com.db4o.internal.callbacks.*;
 import com.db4o.internal.encoding.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.internal.metadata.*;
 import com.db4o.internal.query.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
@@ -661,14 +662,16 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
             ClassMetadata classMetadata = ref.classMetadata();
             final ByRef foundField = new ByRef();
             
-            classMetadata.forEachField(new Procedure4() {
-				public void apply(Object arg) {
-                    FieldMetadata fieldMetadata = (FieldMetadata)arg;
-                    if(fieldMetadata.canAddToQuery(fieldName)){
-                    	foundField.value = fieldMetadata;
+            classMetadata.traverseAllAspects(new TraverseFieldCommand() {
+			
+				@Override
+				protected void process(FieldMetadata field) {
+                    if(field.canAddToQuery(fieldName)){
+                    	foundField.value = field;
                     }
 				}
 			});
+            
             FieldMetadata field = (FieldMetadata) foundField.value;
             if(field == null){
                 return null;
