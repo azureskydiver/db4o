@@ -15,7 +15,7 @@ public class StandardAspectTraversalStrategy implements AspectTraversalStrategy 
 		_classMetadata = classMetadata;
 	}
 
-	public void traverseAllAspects(MarshallingInfoTraverseAspectCommand command) {
+	public void traverseAllAspects(TraverseAspectCommand command) {
 		ClassMetadata classMetadata = _classMetadata;
 		int currentSlot = 0;
 	    while(classMetadata != null){

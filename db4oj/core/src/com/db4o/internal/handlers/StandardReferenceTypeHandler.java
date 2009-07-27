@@ -64,13 +64,14 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
         
         ContextState savedState = context.saveState();
         
-        MarshallingInfoTraverseAspectCommand command = new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
+        TraverseAspectCommand command = new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
         	
         	@Override
         	public boolean accept(ClassAspect aspect) {
         		return aspect.isEnabledOn(context);
         	}
         	
+        	@Override
             protected void processAspect(ClassAspect aspect, int currentSlot, boolean isNull) {
             	
 			    if(aspect instanceof FieldMetadata){
@@ -122,7 +123,7 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
     
     public void marshallAspects(final Object obj, final MarshallingContext context) {
     	final Transaction trans = context.transaction();
-        final MarshallingInfoTraverseAspectCommand command = new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
+        final TraverseAspectCommand command = new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
         	
         	@Override
         	protected int internalDeclaredAspectCount(ClassMetadata classMetadata) {
@@ -136,8 +137,8 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
             	return aspect.isEnabledOn(context);
             }
             
+            @Override
             protected void processAspect(ClassAspect aspect, int currentSlot, boolean isNull) {
-               
             	Object marshalledObject = obj;
                 if(aspect instanceof FieldMetadata){
                     FieldMetadata field = (FieldMetadata) aspect;
@@ -239,10 +240,10 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
 		}
 	}
 
-	public final void traverseAllAspects(MarshallingInfo context, MarshallingInfoTraverseAspectCommand command) {
+	public final void traverseAllAspects(MarshallingInfo context, TraverseAspectCommand command) {
     	ClassMetadata classMetadata = classMetadata();
         assertClassMetadata(context.classMetadata());
-        classMetadata.traverseAllAspects(ensureFieldList(context), command);
+        classMetadata.traverseAllAspects(command);
     }
 
 	protected MarshallingInfo ensureFieldList(MarshallingInfo context) {
@@ -306,7 +307,9 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
     }
     
     public void collectIDs(final CollectIdContext context, final Predicate4<ClassAspect> predicate) {
-        MarshallingInfoTraverseAspectCommand command = new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
+        TraverseAspectCommand command = new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
+        	
+        	@Override
             protected void processAspect(ClassAspect aspect, int currentSlot, boolean isNull) {
                 if(isNull) {
                     return;
@@ -343,7 +346,9 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
     private boolean collectIDsByTypehandlerAspect(QueryingReadContext context) throws Db4oIOException {
     	final BooleanByRef aspectFound = new BooleanByRef(false);
     	final CollectIdContext subContext =  CollectIdContext.forID(context.transaction(), context.collector(), context.collectionID());
-        MarshallingInfoTraverseAspectCommand command = new MarshallingInfoTraverseAspectCommand(ensureFieldList(subContext)) {
+        TraverseAspectCommand command = new MarshallingInfoTraverseAspectCommand(ensureFieldList(subContext)) {
+        	
+        	@Override
             protected void processAspect(ClassAspect aspect, int currentSlot, boolean isNull) {
                 if(isNull) {
                     return;
@@ -391,7 +396,9 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
     }
     
     public void readVirtualAttributes(final ObjectReferenceContext context){
-        MarshallingInfoTraverseAspectCommand command = new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
+        TraverseAspectCommand command = new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
+        	
+        	@Override
             protected void processAspect(ClassAspect aspect, int currentSlot, boolean isNull) {
                 if (!isNull) {
                     if(aspect instanceof VirtualFieldMetadata){
@@ -406,7 +413,9 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
     }
 
     public void addFieldIndices(final ObjectIdContextImpl context, final Slot oldSlot) {
-        MarshallingInfoTraverseAspectCommand command = new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
+        TraverseAspectCommand command = new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
+        	
+        	@Override
             protected void processAspect(ClassAspect aspect, int currentSlot, boolean isNull) {
             	if(aspect instanceof FieldMetadata){
 	                FieldMetadata field = (FieldMetadata)aspect;
@@ -424,7 +433,9 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
     }
     
     public void deleteMembers(final DeleteContextImpl context, final boolean isUpdate) {
-        MarshallingInfoTraverseAspectCommand command=new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
+        TraverseAspectCommand command=new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
+        	
+        	@Override
             protected void processAspect(ClassAspect aspect, int currentSlot, boolean isNull) {
                 if(isNull){
                 	if(aspect instanceof FieldMetadata){
@@ -441,13 +452,14 @@ public class StandardReferenceTypeHandler implements FieldAwareTypeHandler, Inde
 
     public boolean seekToField(ObjectHeaderContext context, final ClassAspect aspect) {
         final BooleanByRef found = new BooleanByRef(false);
-        MarshallingInfoTraverseAspectCommand command=new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
+        TraverseAspectCommand command=new MarshallingInfoTraverseAspectCommand(ensureFieldList(context)) {
         	
         	@Override
         	public boolean accept(ClassAspect aspect) {
         		return aspect.isEnabledOn(_marshallingInfo);
         	}
         	
+        	@Override
             protected void processAspect(ClassAspect curField, int currentSlot, boolean isNull) {
                 if (curField == aspect) {
                     found.value = !isNull;

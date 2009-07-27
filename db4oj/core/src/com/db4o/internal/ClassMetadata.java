@@ -99,7 +99,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 			return false;
 		}
 		final BooleanByRef hasIndex = new BooleanByRef(false); 
-		forEachDeclaredField(new Procedure4() {
+		traverseDeclaredFields(new Procedure4() {
             public void apply(Object arg) {
                 if(((FieldMetadata)arg).hasIndex()){
                     hasIndex.value = true;
@@ -155,13 +155,27 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
     
     public void cascadeActivation(final ActivationContext context) {
-        if(objectCanActivate(context.transaction(), context.targetObject())){
-            forEachAspect(new Procedure4<ClassAspect>() {
-                public void apply(ClassAspect aspect) {
-                    aspect.cascadeActivation(context);
-                }
-            });
+        if(! objectCanActivate(context.transaction(), context.targetObject())){
+        	return;
         }
+    	traverseAllAspects(new TraverseAspectCommand() {
+		
+			public void processAspectOnMissingClass(ClassAspect aspect, int currentSlot) {
+				// do nothing
+			}
+		
+			public void processAspect(ClassAspect aspect, int currentSlot) {
+				aspect.cascadeActivation(context);
+			}
+		
+			public int declaredAspectCount(ClassMetadata classMetadata) {
+				return classMetadata.declaredAspectCount();
+			}
+		
+			public boolean cancelled() {
+				return false;
+			}
+		});
     }
 
     public final void addFieldIndices(StatefulBuffer buffer, Slot slot) {
@@ -513,14 +527,15 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         final QConObject parentConstraint,
         final Object obj,
         final Visitor4 visitor) {
-        forEachField(new Procedure4() {
-            public void apply(Object arg) {
-                FieldMetadata fieldMetadata = (FieldMetadata)arg;
-                if(fieldMetadata.isEnabledOn(AspectVersionContextImpl.CHECK_ALWAYS_ENABLED)){
-                	fieldMetadata.collectConstraints(trans, parentConstraint, obj, visitor);
+    	
+    	traverseAllAspects(new TraverseFieldCommand() {
+			@Override
+			protected void process(FieldMetadata field) {
+                if(field.isEnabledOn(AspectVersionContextImpl.CHECK_ALWAYS_ENABLED)){
+                	field.collectConstraints(trans, parentConstraint, obj, visitor);
                 }
-            }
-        });
+			}
+		});
     }
     
     public final void collectIDs(CollectIdContext context, final String fieldName) {
@@ -680,14 +695,27 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	}
 
     final void deactivateFields(final ActivationContext context) {
-        forEachAspect(new Procedure4() {
-            public void apply(Object arg) {
-                ClassAspect classAspect = (ClassAspect)arg;
-                if(classAspect.isEnabledOn(AspectVersionContextImpl.CHECK_ALWAYS_ENABLED)){
-                	classAspect.deactivate(context);
+    	
+    	traverseAllAspects(new TraverseAspectCommand() {
+    		
+			public void processAspectOnMissingClass(ClassAspect aspect, int currentSlot) {
+				// do nothing
+			}
+		
+			public void processAspect(ClassAspect aspect, int currentSlot) {
+                if(aspect.isEnabledOn(AspectVersionContextImpl.CHECK_ALWAYS_ENABLED)){
+                	aspect.deactivate(context);
                 }
-            }
-        });
+			}
+		
+			public int declaredAspectCount(ClassMetadata classMetadata) {
+				return classMetadata.declaredAspectCount();
+			}
+		
+			public boolean cancelled() {
+				return false;
+			}
+		});
     }
 
     final void delete(StatefulBuffer buffer, Object obj) {
@@ -997,7 +1025,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	            return new StoredField[0];
 	        }
 	        final Collection4 storedFields = new Collection4();
-	        forEachDeclaredField(new Procedure4() {
+	        traverseDeclaredFields(new Procedure4() {
 				public void apply(Object field) {
 					storedFields.add(field);
 				}
@@ -1014,10 +1042,12 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 
     public FieldMetadata fieldMetadataForName(final String name) {
         final ByRef byReference = new ByRef();
-        forEachField(new Procedure4() {
-			public void apply(Object arg) {
-                if (name.equals(((FieldMetadata)arg).getName())) {
-                    byReference.value = arg;
+        traverseAllAspects(new TraverseFieldCommand() {
+		
+			@Override
+			protected void process(FieldMetadata field) {
+                if (name.equals(field.getName())) {
+                    byReference.value = field;
                 }
 			}
 		});
@@ -1540,7 +1570,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
             resolveClassReflector(i_name);
             bitFalse(Const4.CHECKED_CHANGES);
             checkChanges();
-            forEachDeclaredField(new Procedure4() {
+            traverseDeclaredFields(new Procedure4() {
                 public void apply(Object arg) {
                     ((FieldMetadata)arg).refresh();
                 }
@@ -1565,7 +1595,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
                 return false;
             }
         }
-        forEachDeclaredField(new Procedure4() {
+        traverseDeclaredFields(new Procedure4() {
             public void apply(Object arg) {
                 FieldMetadata field = (FieldMetadata) arg;
                 if (field.getName().equals(oldName)) {
@@ -1668,19 +1698,21 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
             	: _container.classMetadataForReflectClass(ReflectorUtils.reflectClassFor(reflector(), fieldType));
             
             final ByRef foundField = new ByRef();
-            forEachField(new Procedure4() {
-                public void apply(Object arg) {
+            
+            traverseAllAspects(new TraverseFieldCommand() {
+        		
+    			@Override
+    			protected void process(FieldMetadata field) {
                     if(foundField.value != null){
                         return;
                     }
-                    FieldMetadata field = (FieldMetadata)arg;
                     if(field.getName().equals(fieldName)){
                         if(fieldTypeFilter == null || fieldTypeFilter == field.fieldType()){
                             foundField.value = field;
                         }
                     }
-                }
-            });
+    			}
+    		});
     		
     		// TODO: implement field creation
 	        return (StoredField) foundField.value;
@@ -1951,42 +1983,19 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     	return typeHandler;
     }
 
-    public void forEachField(Procedure4 procedure) {
-        forEachAspect(new SubTypePredicate(FieldMetadata.class), procedure);
-    }
-    
-    public void forEachDeclaredField(Procedure4 procedure) {
-        forEachDeclaredAspect(new SubTypePredicate(FieldMetadata.class), procedure);
-    }
-    
-    public void forEachAspect(Predicate4 predicate, Procedure4 procedure){
-        ClassMetadata classMetadata = this;
-        while(classMetadata != null){
-            classMetadata.forEachDeclaredAspect(predicate, procedure);
-            classMetadata = classMetadata.i_ancestor;
-        }
-    }
-    
-    public void forEachAspect(Procedure4 procedure){
-        ClassMetadata classMetadata = this;
-        while(classMetadata != null){
-            classMetadata.forEachDeclaredAspect(procedure);
-            classMetadata = classMetadata.i_ancestor;
-        }
-    }
-    
-    public void forEachDeclaredAspect(Predicate4 predicate, Procedure4 procedure){
+    public void traverseDeclaredFields(Procedure4 procedure) {
         if(_aspects == null){
             return;
         }
         for (int i = 0; i < _aspects.length; i++) {
-            if(predicate.match(_aspects[i])){
+        	if(_aspects[i] instanceof FieldMetadata){
                 procedure.apply(_aspects[i]);
             }
         }
     }
     
-    public void forEachDeclaredAspect(Procedure4 procedure){
+    
+    public void traverseDeclaredAspects(Procedure4 procedure){
         if(_aspects == null){
             return;
         }
@@ -2070,8 +2079,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 		container().setDirtyInSystemTransaction(this);
 	}
 
-	public void traverseAllAspects(MarshallingInfo context,
-			MarshallingInfoTraverseAspectCommand command) {
+	public void traverseAllAspects(TraverseAspectCommand command) {
 		aspectTraversalStrategy().traverseAllAspects(command);
 	}
 
@@ -2082,7 +2090,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 		return _aspectTraversalStrategy;
 	}
 
-	private AspectTraversalStrategy detectAspectTraversalStrategy() {
+	protected AspectTraversalStrategy detectAspectTraversalStrategy() {
 		List<HierarchyAnalyzer.Diff> ancestors = compareAncestorHierarchy();
 		for (Diff diff: ancestors){
 			if(diff.isRemoved()){
@@ -2100,6 +2108,5 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	private List<HierarchyAnalyzer.Diff> compareAncestorHierarchy() {
 		return new HierarchyAnalyzer(this, classReflector()).analyze();
 	}
-	
 	
 }

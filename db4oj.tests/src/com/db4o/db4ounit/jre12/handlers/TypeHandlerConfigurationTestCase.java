@@ -48,7 +48,7 @@ public class TypeHandlerConfigurationTestCase extends AbstractDb4oTestCase {
 			final Class typeHandlerClass) {
 		final IntByRef aspectCount = new IntByRef(0);
 		ClassMetadata classMetadata = classMetadata(storedClass);
-		classMetadata.forEachDeclaredAspect(new Procedure4() {
+		classMetadata.traverseDeclaredAspects(new Procedure4() {
 			public void apply(Object arg) {
 				aspectCount.value ++;
 				Assert.isSmaller(2, aspectCount.value);

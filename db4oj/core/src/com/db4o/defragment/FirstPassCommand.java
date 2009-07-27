@@ -3,9 +3,9 @@
 package com.db4o.defragment;
 
 import com.db4o.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
+import com.db4o.internal.metadata.*;
 		
 /**
  * First step in the defragmenting process: Allocates pointer slots in the target file for
@@ -20,14 +20,17 @@ public final class FirstPassCommand implements PassCommand {
 	
 	public void processClass(final DefragmentServicesImpl context, ClassMetadata classMetadata,int id,int classIndexID) {
 		_collector.createIDMapping(context,id, true);
-		classMetadata.forEachField(new Procedure4() {
-            public void apply(Object arg) {
-                FieldMetadata field = (FieldMetadata) arg;
+		
+        classMetadata.traverseAllAspects(new TraverseFieldCommand() {
+    		
+			@Override
+			protected void process(FieldMetadata field) {
                 if(!field.isVirtual()&&field.hasIndex()) {
                     processBTree(context,field.getIndex(context.systemTrans()));
                 }
-            }
-        });
+			}
+		});
+
 	}
 
 	public void processObjectSlot(DefragmentServicesImpl context, ClassMetadata classMetadata, int sourceID) {

@@ -7,6 +7,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.delete.*;
 import com.db4o.internal.handlers.array.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.internal.metadata.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
@@ -203,5 +204,13 @@ public class PrimitiveTypeMetadata extends ClassMetadata {
         PrimitiveTypeMetadata original = (PrimitiveTypeMetadata) typeHandlerCloneContext.original;
         TypeHandler4 delegateTypeHandler = typeHandlerCloneContext.correctHandlerVersion(original.delegateTypeHandler(null));
         return new PrimitiveTypeMetadata(original.container(), delegateTypeHandler, original._id, original.classReflector());
+    }
+    
+    protected AspectTraversalStrategy detectAspectTraversalStrategy() {
+    	return new AspectTraversalStrategy() {
+			public void traverseAllAspects(TraverseAspectCommand command) {
+				// do nothing
+			}
+		};
     }
 }

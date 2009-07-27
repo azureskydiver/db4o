@@ -36,7 +36,7 @@ public abstract class ClassMarshaller {
         writeIndex(trans, clazz, writer);
         
         writer.writeInt(clazz.declaredAspectCount());
-        clazz.forEachDeclaredAspect(new Procedure4() {
+        clazz.traverseDeclaredAspects(new Procedure4() {
 			public void apply(Object arg) {
 				 _family._field.write(trans, clazz, (ClassAspect)arg, writer);
 			}
@@ -105,7 +105,7 @@ public abstract class ClassMarshaller {
 
         len.value += clazz.index().ownLength();
         
-        clazz.forEachDeclaredAspect(new Procedure4() {
+        clazz.traverseDeclaredAspects(new Procedure4() {
             public void apply(Object arg) {
                 len.value +=  _family._field.marshalledLength(stream, (ClassAspect)arg);
             }
@@ -133,7 +133,7 @@ public abstract class ClassMarshaller {
 		
 		final IntByRef processedAspectCount = new IntByRef(0);
 		
-		classMetadata.forEachDeclaredAspect(new Procedure4() {
+		classMetadata.traverseDeclaredAspects(new Procedure4() {
 			public void apply(Object arg) {
 				if(processedAspectCount.value >= aspectCount){
 					return;
