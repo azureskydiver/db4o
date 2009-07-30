@@ -58,6 +58,18 @@ public class ObjectServerTestCase extends TestWithTempFile {
 		}
     }
 
+    public void testServerClosedEvent() {
+    	final BooleanByRef receivedEvent = new BooleanByRef(false);
+    	final ObjectServerEvents events = (ObjectServerEvents)server;
+		events.closed().addListener(new EventListener4<ServerClosedEventArgs>() {
+			public void onEvent(Event4 e, ServerClosedEventArgs args) {
+				receivedEvent.value = true;
+            }
+		});
+		server.close();
+		Assert.isTrue(receivedEvent.value);
+    }
+    
 	private Iterator4 serverMessageDispatchers() {
 	    return ((ObjectServerImpl)server).iterateDispatchers();
     }
