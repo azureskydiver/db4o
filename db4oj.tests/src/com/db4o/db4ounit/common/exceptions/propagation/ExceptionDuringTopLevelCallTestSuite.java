@@ -4,7 +4,6 @@ package com.db4o.db4ounit.common.exceptions.propagation;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.exceptions.*;
-import com.db4o.io.*;
 
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
@@ -109,7 +108,7 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 						}
 					},
 					// - no deactivate test, since it doesn't trigger I/O activity
-					// - no getByID test, not refactored to asTopLevelCall, since it has custom, more relaxed exception handling
+					// - no getByID test, not refactored to asTopLevelCall, since it has custom, more relaxed exception handling -> InvalidSlotExceptionTestCase
 					// FIXME doesn't trigger initial exception - deletes are processed in finally block
 //					new TopLevelOperation("delete") {
 //						@Override

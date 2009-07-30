@@ -9,4 +9,9 @@ public interface ObjectServerEvents {
 	 */
 	public Event4<ClientConnectionEventArgs> clientConnected();
 	
+	/**
+	 * @sharpen.event ServerClosedEventArgs
+	 */
+	public Event4<ServerClosedEventArgs> closed();
+
 }

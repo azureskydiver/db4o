@@ -3,6 +3,7 @@
 package com.db4o.cs.internal;
 
 import com.db4o.*;
+import com.db4o.cs.internal.ShutdownMode.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
@@ -55,13 +56,17 @@ public class ClientTransactionPool {
 			}
 		}
 	}
-	
+
 	public void close() {
+		close(ShutdownMode.NORMAL);
+	}
+
+	public void close(ShutdownMode mode) {
 		synchronized(_mainContainer.lock()) {
 			Iterator4 entryIter = _fileName2Container.iterator();
 			while(entryIter.moveNext()) {
 				Entry4 hashEntry = (Entry4) entryIter.current();
-				((ContainerCount)hashEntry.value()).close();
+				((ContainerCount)hashEntry.value()).close(mode);
 			}
 			_closed = true;
 		}
@@ -111,10 +116,18 @@ public class ClientTransactionPool {
 		public String fileName() {
 			return _container.fileName();
 		}
-		
+
 		public void close() {
-			_container.close();
-			_container = null;
+			close(ShutdownMode.NORMAL);
+		}
+
+		public void close(ShutdownMode mode) {
+			if(!mode.isFatal()) {
+				_container.close();
+				_container = null;
+				return;
+			}
+			_container.fatalShutdown(((FatalMode)mode).exc());
 		}
 
 		public int hashCode() {

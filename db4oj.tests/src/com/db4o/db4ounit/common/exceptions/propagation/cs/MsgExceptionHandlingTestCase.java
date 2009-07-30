@@ -4,9 +4,15 @@
  */
 package com.db4o.db4ounit.common.exceptions.propagation.cs;
 
+import java.util.*;
+
+import com.db4o.config.*;
+import com.db4o.cs.internal.*;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.db4ounit.common.cs.*;
+import com.db4o.events.*;
 import com.db4o.ext.*;
+import com.db4o.io.*;
 
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
@@ -15,6 +21,95 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 
 	private static final String EXCEPTION_MESSAGE = "exc";
 
+	private static class CloseAwareBin extends BinDecorator {
+
+		private final CloseAwareStorage _storage;
+		
+		public CloseAwareBin(CloseAwareStorage storage, Bin bin) {
+			super(bin);
+			_storage = storage;
+		}
+
+		@Override
+		public void close() {
+			super.close();
+			_storage.notifyClosed(this);
+		}
+		
+		@Override
+		public void sync() {
+			super.sync();
+			_storage.notifySyncInvocation();
+		}
+	}
+	
+	private static class CloseAwareStorage extends StorageDecorator {
+
+		private final Map<Bin, Bin> _openBins = new HashMap<Bin, Bin>();
+		private boolean _syncAllowed = true;
+		private boolean _illegalSyncInvocation = false;
+		
+		public CloseAwareStorage(Storage storage) {
+			super(storage);
+		}
+
+		@Override
+		protected Bin decorate(Bin bin) {
+			CloseAwareBin decorated = new CloseAwareBin(this, bin);
+			synchronized(_openBins) {
+				_openBins.put(decorated, decorated);
+			}
+			return decorated;
+		}
+		
+		public void notifyClosed(CloseAwareBin bin) {
+			synchronized(_openBins) {
+				_openBins.remove(bin);
+			}
+		}
+		
+		public int numOpenBins() {
+			synchronized(_openBins) {
+				return _openBins.size();
+			}
+		}
+		
+		public void syncAllowed(boolean isAllowed) {
+			_syncAllowed = isAllowed;
+		}
+		
+		public boolean illegalSyncInvocation() {
+			return _illegalSyncInvocation;
+		}
+		
+		public void notifySyncInvocation() {
+			if(!_syncAllowed) {
+				_illegalSyncInvocation = true;
+			}
+		}
+	}
+	
+	private CloseAwareStorage _storage;
+	private boolean _serverClosed;
+	private Class<? extends RuntimeException> _expectedUncaughtExceptionType;
+	
+	@Override
+	protected void db4oSetupAfterStore() throws Exception {
+		_serverClosed = false;
+		ObjectServerEvents events = server();
+		events.closed().addListener(new EventListener4<ServerClosedEventArgs>() {
+			public void onEvent(Event4 e, com.db4o.cs.internal.ServerClosedEventArgs args) {
+				_serverClosed = true;
+			}
+		});
+	}
+	
+	@Override
+	protected void configure(Configuration config) throws Exception {
+		_storage = new CloseAwareStorage(config.storage());
+		config.storage(_storage);
+	}
+	
 	public void testRecoverableExceptionWithResponse() {
 		client().write(Msg.REQUEST_EXCEPTION_WITH_RESPONSE.getWriterForSingleObject(trans(), new Db4oRecoverableException(EXCEPTION_MESSAGE)));
 		try {
@@ -29,6 +124,8 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 	}
 
 	public void testNonRecoverableExceptionWithResponse() {
+		_expectedUncaughtExceptionType = Db4oException.class;
+		_storage.syncAllowed(false);
 		client().write(Msg.REQUEST_EXCEPTION_WITH_RESPONSE.getWriterForSingleObject(trans(), new Db4oException(EXCEPTION_MESSAGE)));
 		assertDatabaseClosedException();
 		assertServerContainerStateClosed(true);
@@ -36,11 +133,12 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 
 	public void testRecoverableExceptionWithoutResponse() {
 		client().write(Msg.REQUEST_EXCEPTION_WITHOUT_RESPONSE.getWriterForSingleObject(trans(), new Db4oRecoverableException(EXCEPTION_MESSAGE)));
-		assertDatabaseClosedException();
 		assertServerContainerStateClosed(false);
 	}
 
 	public void testNonRecoverableExceptionWithoutResponse() {
+		_expectedUncaughtExceptionType = Db4oException.class;
+		_storage.syncAllowed(false);
 		client().write(Msg.REQUEST_EXCEPTION_WITHOUT_RESPONSE.getWriterForSingleObject(trans(), new Db4oException(EXCEPTION_MESSAGE)));
 		assertDatabaseClosedException();
 		assertServerContainerStateClosed(true);
@@ -62,9 +160,45 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 
 
 	private void assertServerContainerStateClosed(boolean expectedClosed) {
-//		Assert.areEqual(expectedClosed, server().objectContainer().ext().isClosed());
-//		ExtObjectContainer otherClient = openNewClient();
-//		otherClient.close();
+		if(expectedClosed) {
+			final long timeout = 1000;
+			final long startTime = System.currentTimeMillis();
+			while(!_serverClosed && (System.currentTimeMillis() - startTime < timeout)) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		Assert.isFalse(_storage.illegalSyncInvocation());
+		Assert.areEqual(expectedClosed, _serverClosed);
+		Assert.areEqual(!expectedClosed, _storage.numOpenBins() > 0);
+		if(!expectedClosed) {
+			tryToOpenNewClient();
+		}
+		else {
+// TODO: fails on .NET
+//			Assert.expect(Db4oIOException.class, new CodeBlock() {
+//				public void run() throws Throwable {
+//					tryToOpenNewClient();
+//				}
+//			});
+		}
 	}
 
+	private void tryToOpenNewClient() {
+		ExtObjectContainer otherClient = openNewClient();
+		otherClient.close();
+	}
+
+	@Override
+	protected void handleUncaughtExceptions(List<Throwable> uncaughtExceptions) {
+		if(_expectedUncaughtExceptionType == null) {
+			Assert.isTrue(uncaughtExceptions.size() == 0);
+			return;
+		}
+		Assert.areEqual(1, uncaughtExceptions.size());
+		Assert.isInstanceOf(_expectedUncaughtExceptionType, uncaughtExceptions.get(0));
+	}
 }

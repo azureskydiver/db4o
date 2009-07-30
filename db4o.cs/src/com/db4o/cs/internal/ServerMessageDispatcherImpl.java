@@ -191,10 +191,11 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 					writeException(message, exc);
 					return true;
 	    		}
-	    		catch(Exception exc) {
+	    		catch(RuntimeException exc) {
 	    			exc.printStackTrace();
 	    			write(Msg.ERROR);
-	    			return true;
+	    			fatalShutDownServer(exc);
+	    			return false;
 	    		}
 				try {
 					msgWithResp.postProcessAtServer();
@@ -209,11 +210,25 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 				((ServerSideMessage)message).processAtServer();
 				return true;
     		}
-    		catch(Exception exc) {
+    		catch(Db4oRecoverableException exc) {
     			exc.printStackTrace();
+        		return true;
+    		}
+    		catch(RuntimeException exc) {
+    			exc.printStackTrace();
+    			fatalShutDownServer(exc);
     		}
     	}
     	return false;
+	}
+
+	private void fatalShutDownServer(RuntimeException exc) {
+//		try {
+			_server.close(ShutdownMode.fatal(exc));
+//		}
+//		catch(RuntimeException recExc) {
+//			recExc.printStackTrace();
+//		}
 	}
 
 	private void writeException(Msg message, Exception exc) {

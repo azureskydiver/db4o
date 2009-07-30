@@ -86,13 +86,13 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 			
 	        fixture.clean();
 	        
-	        assertNoUncaughtExceptions(uncaughtExceptions);
+	        handleUncaughtExceptions(uncaughtExceptions);
 	        
 		}
 		db4oTearDownAfterClean();
 	}
 
-	private void assertNoUncaughtExceptions(List<Throwable> uncaughtExceptions) {
+	protected void handleUncaughtExceptions(List<Throwable> uncaughtExceptions) {
 	    if (uncaughtExceptions.size() > 0) {
 	    	Assert.fail("Uncaught exceptions: " + Iterators.join(Iterators.iterator(uncaughtExceptions), ", "), uncaughtExceptions.get(0));
 	    }

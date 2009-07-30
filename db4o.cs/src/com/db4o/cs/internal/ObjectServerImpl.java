@@ -49,6 +49,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	private final ClassInfoHelper _classInfoHelper = new ClassInfoHelper();
 	
 	private final Event4Impl<ClientConnectionEventArgs> _clientConnected = Event4Impl.newInstance();
+	private final Event4Impl<ServerClosedEventArgs> _closed = Event4Impl.newInstance();
 	
 	public ObjectServerImpl(final LocalObjectContainer container, int port, NativeSocketFactory socketFactory) {
 		this(container, (port < 0 ? 0 : port), port == 0, socketFactory);
@@ -157,10 +158,19 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	}
 
 	public synchronized boolean close() {
-		closeServerSocket();
-		stopCommittedCallbacksDispatcher();
-		closeMessageDispatchers();
-		return closeFile();
+		return close(ShutdownMode.NORMAL);
+	}
+
+	public synchronized boolean close(ShutdownMode mode) {
+		try {
+			closeServerSocket();
+			stopCommittedCallbacksDispatcher();
+			closeMessageDispatchers();
+			return closeFile(mode);
+		}
+		finally {
+			triggerClosed();
+		}
 	}
 
 	private void stopCommittedCallbacksDispatcher() {
@@ -169,9 +179,9 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 		}
 	}
 
-	private boolean closeFile() {
+	private boolean closeFile(ShutdownMode mode) {
 		if (_container != null) {
-			_transactionPool.close();
+			_transactionPool.close(mode);
 			_container = null;
 		}
 		return true;
@@ -352,6 +362,11 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 		_clientConnected.trigger(new ClientConnectionEventArgs(messageDispatcher));
     }
 
+	private void triggerClosed() {
+		_closed.trigger(new ServerClosedEventArgs());
+    }
+
+
 	private void notifyThreadStarted() {
 		synchronized (_startupLock) {
 			_startupLock.notifyAll();
@@ -422,5 +437,9 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 
 	public Event4<ClientConnectionEventArgs> clientConnected() {
 		return _clientConnected;
+    }
+
+	public Event4<ServerClosedEventArgs> closed() {
+		return _closed;
     }
 }
