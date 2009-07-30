@@ -8,8 +8,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.yetac.doctor.Configuration;
-import com.yetac.doctor.applet.ExampleRunner;
-import com.yetac.doctor.cmd.*;
+import com.yetac.doctor.cmd.Anchor;
+import com.yetac.doctor.cmd.Bold;
+import com.yetac.doctor.cmd.Center;
+import com.yetac.doctor.cmd.Command;
+import com.yetac.doctor.cmd.Comment;
+import com.yetac.doctor.cmd.Embed;
+import com.yetac.doctor.cmd.Graphic;
+import com.yetac.doctor.cmd.IgnoreCR;
+import com.yetac.doctor.cmd.Left;
+import com.yetac.doctor.cmd.Link;
+import com.yetac.doctor.cmd.NewPage;
+import com.yetac.doctor.cmd.Outline;
+import com.yetac.doctor.cmd.Right;
+import com.yetac.doctor.cmd.Source;
+import com.yetac.doctor.cmd.Text;
+import com.yetac.doctor.cmd.Variable;
+import com.yetac.doctor.cmd.Xamine;
+import com.yetac.doctor.runner.ExampleRunner;
 import com.yetac.doctor.workers.DocsFile;
 import com.yetac.doctor.workers.Files;
 

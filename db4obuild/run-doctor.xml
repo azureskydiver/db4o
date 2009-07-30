@@ -26,7 +26,10 @@
 			<include name="**/com/yetac/doctor/applet/*.java"/>
 		</javac>
 		<jar destfile="${file.doctor.applets.jar}">
-			<fileset dir="${dir.dist.doctor}" includes="**/com/yetac/doctor/applet/*.class" />
+			<fileset dir="${dir.dist.doctor}">
+				<include name="**/com/yetac/doctor/applet/*.class" />
+				<include name="**/com/yetac/doctor/runners/*.class" />
+			</fileset>
 		</jar>
 		<signjar keystore="${file.keystore}" jar="${file.doctor.applets.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
 		<jar destfile="${file.tutorial.jar}">

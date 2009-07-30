@@ -52,7 +52,7 @@ public class DocsFile extends Configuration implements Comparable {
     
     public int compareTo(Object o) {
         DocsFile other = (DocsFile)o;
-        return name.compareTo(((DocsFile)o).name);
+        return name.compareTo(other.name);
    }
     
     public void resolve() throws Exception {

@@ -255,16 +255,12 @@ public class PDFWriter extends AbstractWriter {
         writeSourceCodeBlock(codeStr, command.getMethodName());
         String methodname = command.getMethodName();
         if (methodname != null && command.getParamValue(Source.CMD_RUN)) {
-            try {
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                runner.runExample(command.getClassName(), command
-                        .getMethodName(), out);
-                out.close();
-                if (command.getParamValue(Source.CMD_OUTPUT)) {
-                    writeOutputBlock(new String(out.toByteArray(),"ISO-8859-1"));
-                }
-            } catch (Exception exc) {
-                exc.printStackTrace();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            runner.runExample(command.getClassName(), command
+                    .getMethodName(), out);
+            out.close();
+            if (command.getParamValue(Source.CMD_OUTPUT)) {
+                writeOutputBlock(new String(out.toByteArray(),"ISO-8859-1"));
             }
         }
     }

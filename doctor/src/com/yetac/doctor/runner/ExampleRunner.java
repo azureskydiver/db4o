@@ -1,11 +1,12 @@
-package com.yetac.doctor.applet;
+package com.yetac.doctor.runner;
 
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
 public class ExampleRunner {
-    private final static int SERVERPORT=0xdb40;
+
+	private final static int SERVERPORT=0xdb40;
     private final static String SERVERUSER="user";
     private final static String SERVERPASSWORD="password";
     
@@ -17,9 +18,9 @@ public class ExampleRunner {
     
     private Map sig2exec;
     
-    public ExampleRunner(ClassLoader classLoader, File yapFile) throws Exception {
+    public ExampleRunner(ClassLoader classLoader, File databaseFile) throws Exception {
         this.classLoader = classLoader;
-        this.databaseFile=yapFile;
+        this.databaseFile = databaseFile;
         this.db4oClass = classLoader.loadClass("com.db4o.Db4o");
         this.objectContainerClass = classLoader.loadClass("com.db4o.ObjectContainer");
         this.objectServerClass = classLoader.loadClass("com.db4o.ObjectServer");
@@ -36,7 +37,46 @@ public class ExampleRunner {
         };
         sig2exec=new HashMap();
         for (int idx=0;idx<executors.length;idx++) {
-            sig2exec.put(executors[idx].getSignature(classLoader),executors[idx]);
+            sig2exec.put(new Signature(executors[idx].getSignature(classLoader)),executors[idx]);
+        }
+    }
+    
+    public final class Signature {
+    	
+		public final Class[] types;
+		
+		private Integer hashCode;
+
+		public Signature(Class[] types) {
+			this.types = types;
+        }
+		
+		public int hashCode() {
+			if (null == hashCode) {
+				hashCode = new Integer(hashCode(types));
+			}
+			return hashCode.intValue();
+        }
+
+		public boolean equals(Object obj) {
+			Signature other = (Signature)obj;
+			if (types.length != other.types.length)
+				return false;
+			for (int i=0; i<types.length; ++i)
+				if (types[i] != other.types[i])
+					return false;
+			return true;
+		}
+		
+		private int hashCode(Object[] array) {
+	        int prime = 31;
+	        if (array == null)
+		        return 0;
+	        int result = 1;
+	        for (int index = 0; index < array.length; index++) {
+		        result = prime * result + (array[index] == null ? 0 : array[index].hashCode());
+	        }
+	        return result;
         }
     }
 
@@ -45,7 +85,7 @@ public class ExampleRunner {
         System.err.println("Deleted "+databaseFile.getAbsolutePath()+" : "+result);
     }
     
-    public void runExample(String exampleClassName,String methodname,OutputStream out) throws Exception {
+    public void runExample(String exampleClassName, String methodname, OutputStream out) throws Exception {
         Class exampleClass= classLoader.loadClass(exampleClassName);
         PrintStream newOut=new PrintStream(out);
         PrintStream origOut=System.out;
@@ -59,28 +99,22 @@ public class ExampleRunner {
         }
     }
 
-    private void execute(Class exampleClass, String methodname)
-            throws Exception {
+    private void execute(Class exampleClass, String methodname) throws Exception {
+    	Method exampleMethod = findMethod(exampleClass, methodname);
+        Executor exec=(Executor)sig2exec.get(new Signature(exampleMethod.getParameterTypes()));
+        exec.execute(exampleMethod);
+    }
+
+	private Method findMethod(Class exampleClass, String methodName) {
         Iterator sigiter=sig2exec.keySet().iterator();
-        boolean found=false;
-        while(sigiter.hasNext()&&!found) {
-            Class[] sig=(Class[])sigiter.next();
-        	try {
-                Method exampleMethod=exampleClass.getMethod(methodname,sig);
-                found=true;
-                Executor exec=(Executor)sig2exec.get(sig);
-                exec.execute(exampleMethod);
-                break;
-            }
-            catch(NoSuchMethodException nsmexc) {
-            }
-            catch(Exception exc) {
-                exc.printStackTrace();
+		while (sigiter.hasNext()) {
+            Signature sig=(Signature)sigiter.next();
+            try {
+	            return exampleClass.getMethod(methodName, sig.types);
+            } catch (NoSuchMethodException e) {
             }
         }
-        if(!found) {
-            System.err.println("Method "+methodname+" not found in "+exampleClass);
-        }
+		throw new IllegalArgumentException("Method '" + methodName + "' not found on " + exampleClass);
     }
 
     private abstract class Executor {

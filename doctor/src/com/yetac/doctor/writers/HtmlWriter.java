@@ -371,7 +371,7 @@ public class HtmlWriter extends AbstractWriter {
         ignoreCRforOutline = true;
     }
 
-    private void writeSourceCodeBlock(String code,Source command) throws UnsupportedEncodingException {
+    private void writeSourceCodeBlock(String code,Source command) throws Exception {
         writeToFile("<table width=\"100%\" cellpadding=\"3\" cellspacing=\"0\" border=\"0\"><tr><td class=\"lg\">\r\n");
         writeToFile("<code>");
         if(command!=null&&command.getMethodName()!=null) {
@@ -411,16 +411,11 @@ public class HtmlWriter extends AbstractWriter {
             if(command!= null && files.task.doShowCodeExecutionResults()){
                 String methodname=command.getMethodName();
                 if(methodname!=null&&command.getParamValue(Source.CMD_RUN)) {
-                    try {
-                        ByteArrayOutputStream out=new ByteArrayOutputStream();
-                        runner.runExample(command.getClassName(),command.getMethodName(),out);
-                        out.close();
-                        if(command.getParamValue(Source.CMD_OUTPUT)) {
-                            writeOutputBlock(new String(out.toByteArray(),"ISO-8859-1"));
-                        }
-                    }
-                    catch(Exception exc) {
-                        exc.printStackTrace();
+                    ByteArrayOutputStream out=new ByteArrayOutputStream();
+                    runner.runExample(command.getClassName(),command.getMethodName(),out);
+                    out.close();
+                    if(command.getParamValue(Source.CMD_OUTPUT)) {
+                        writeOutputBlock(new String(out.toByteArray(),"ISO-8859-1"));
                     }
                 }
             }
