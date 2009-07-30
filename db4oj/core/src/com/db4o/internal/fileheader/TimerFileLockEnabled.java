@@ -98,7 +98,11 @@ public class TimerFileLockEnabled extends TimerFileLock{
 				if (_closed) {
 					return;
 				}
-				writeAccessTime(false);
+				try {
+					writeAccessTime(false);
+				} catch (Db4oIOException e) {
+					return;
+				}
 			}
 			Cool.sleepIgnoringInterruption(Const4.LOCK_TIME_INTERVAL);
 		}

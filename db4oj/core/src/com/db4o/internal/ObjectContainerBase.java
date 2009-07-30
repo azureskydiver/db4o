@@ -1687,7 +1687,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
 	private void assertNotInCallback() {
 	    if(InCallback.value()) {
-	    	throw new IllegalStateException("Objects must not be updated in callback");
+	    	throw new Db4oIllegalStateException("Objects must not be updated in callback");
 	    }
     }
 

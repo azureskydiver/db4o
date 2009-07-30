@@ -110,11 +110,18 @@ public class FileStorage implements Storage {
 		}
 		
 		public void write(long pos, byte[] buffer, int length) throws Db4oIOException {
+			checkClosed();
 			try {
 				seek(pos);
 				_file.write(buffer, 0, length);
 			} catch (IOException e) {
 				throw new Db4oIOException(e);
+			}
+		}
+
+		private void checkClosed() {
+			if (isClosed()) {
+				throw new Db4oIOException();
 			}
 		}
 	}
