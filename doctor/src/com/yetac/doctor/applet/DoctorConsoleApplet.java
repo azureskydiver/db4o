@@ -12,6 +12,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Vector;
 
+import com.yetac.doctor.runner.*;
+
 
 public class DoctorConsoleApplet extends Applet {
     
