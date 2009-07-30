@@ -54,7 +54,7 @@ public class UpdateInCallbackThrowsTestCase extends AbstractDb4oTestCase {
 					return;
 				}
 					
-				Assert.expect(IllegalStateException.class, new CodeBlock() { public final void run() {						
+				Assert.expect(Db4oIllegalStateException.class, new CodeBlock() { public final void run() {						
 					item._child = new Item("baz");				
 					store(item);					
 				}});
@@ -83,7 +83,7 @@ public class UpdateInCallbackThrowsTestCase extends AbstractDb4oTestCase {
 				
 				activateRaised.value = true;
 					
-				Assert.expect(IllegalStateException.class, new CodeBlock() { public final void run() {						
+				Assert.expect(Db4oIllegalStateException.class, new CodeBlock() { public final void run() {						
 					item._child = new Item("baz");				
 					store(item);					
 				}});
@@ -95,13 +95,7 @@ public class UpdateInCallbackThrowsTestCase extends AbstractDb4oTestCase {
 		
 		Assert.isFalse(activateRaised.value);
 		
-		try {
-			items.next();
-		} catch(DatabaseClosedException dce) {
-			if (!isClientServer()) {
-				throw dce;
-			}
-		}
+		items.next();
 	
 		Assert.isTrue(activateRaised.value);		
 	}
