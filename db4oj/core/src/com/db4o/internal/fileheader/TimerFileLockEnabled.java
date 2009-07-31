@@ -10,7 +10,7 @@ import com.db4o.io.*;
 
 
 /**
- * @exclude
+ * @sharpen.ignore
  */
 public class TimerFileLockEnabled extends TimerFileLock{
     
@@ -79,6 +79,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
         synchronized (_timerLock) {
         	writeAccessTime(true);
 			_closed = true;
+			_timerLock.notifyAll();
 		}
     }
     
@@ -103,8 +104,11 @@ public class TimerFileLockEnabled extends TimerFileLock{
 				} catch (Db4oIOException e) {
 					return;
 				}
+				try {
+					_timerLock.wait(Const4.LOCK_TIME_INTERVAL);
+				} catch (Exception e) {
+				}
 			}
-			Cool.sleepIgnoringInterruption(Const4.LOCK_TIME_INTERVAL);
 		}
 	}
 
