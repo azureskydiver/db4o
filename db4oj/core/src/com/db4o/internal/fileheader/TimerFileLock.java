@@ -11,11 +11,15 @@ import com.db4o.internal.*;
  */
 public abstract class TimerFileLock implements Runnable{
     
+	/**
+	 * @sharpen.remove.first
+	 */
     public static TimerFileLock forFile(LocalObjectContainer file){
+    	
         if(file.needsLockFileThread()){
-        	// return file.synchronizedIoAdapter();
             return new TimerFileLockEnabled((IoAdaptedObjectContainer)file);
         }
+        
         return new TimerFileLockDisabled();
     }
 
