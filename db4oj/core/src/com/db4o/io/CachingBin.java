@@ -46,6 +46,8 @@ class CachingBin extends BinDecorator {
 	 * Reads the file into the buffer using pages from cache. If the next page
 	 * is not cached it will be read from the file.
 	 * 
+	 * @param pos 
+	 * 			  start position to read
 	 * @param buffer
 	 *            destination buffer
 	 * @param length
@@ -77,13 +79,15 @@ class CachingBin extends BinDecorator {
 	/**
 	 * Writes the buffer to cache using pages
 	 * 
+	 * @param pos
+	 *            start position to write    
 	 * @param buffer
 	 *            source buffer
 	 * @param length
 	 *            how many bytes to write
 	 */
-	public void write(final long _position, byte[] buffer, int length) throws Db4oIOException {
-		long startAddress = _position;
+	public void write(final long pos, byte[] buffer, int length) throws Db4oIOException {
+		long startAddress = pos;
 		int bytesToWrite = length;
 		int bufferOffset = 0;
 		while (bytesToWrite > 0) {
