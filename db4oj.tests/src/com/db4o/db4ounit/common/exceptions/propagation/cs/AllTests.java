@@ -15,6 +15,7 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
+				ExceptionStackTraceTestCase.class,
 				MsgExceptionHandlingTestCase.class,
 		};
 	}
