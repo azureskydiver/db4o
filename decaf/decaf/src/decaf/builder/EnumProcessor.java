@@ -55,7 +55,7 @@ public class EnumProcessor {
 			final SimpleName originalConstantName = builder().clone((SimpleName) caseStmt.getExpression());
 			
 			ITypeBinding switchExprType = originalSwitch.getExpression().resolveTypeBinding();
-			final String qualifiedName = Bindings.qualifiedName(switchExprType);
+			final String qualifiedName = BindingUtils.qualifiedName(switchExprType);
 			caseStmt.setExpression(
 					builder().newFieldAccess(
 								builder().newFieldAccess(builder().newQualifiedName(qualifiedName), EnumProcessor.concreteEnumClassName(switchExprType.getName(), originalConstantName.getIdentifier())),

@@ -32,7 +32,7 @@ public abstract class DecafVisitorBase extends ASTVisitor {
 	}
 
 	protected boolean typeHasQualifiedName(final ITypeBinding type, String qualifiedName) {
-	    return Bindings.qualifiedName(type).equals(qualifiedName);
+	    return BindingUtils.qualifiedName(type).equals(qualifiedName);
 	}
 
 	private String applicablePlatformFor(IAnnotationBinding annotationBinding) {
