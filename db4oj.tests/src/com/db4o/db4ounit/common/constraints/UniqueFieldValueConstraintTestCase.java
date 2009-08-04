@@ -26,6 +26,13 @@ public class UniqueFieldValueConstraintTestCase
 			_str = str;
 		}
 	}
+	
+	public static class IHaveNothingToDoWithItemInstances {
+		public static int _constructorCallsCounter = 0;
+		public IHaveNothingToDoWithItemInstances(int value) {
+			_constructorCallsCounter = value == 0xdb40 ? 0 : _constructorCallsCounter + 1; 
+		}
+	}	
 
 	public void configureClient(Configuration config) throws Exception {
 		super.configure(config);
@@ -39,6 +46,7 @@ public class UniqueFieldValueConstraintTestCase
 		super.configure(config);
 		indexField(config, Item.class, "_str");
 		config.add(new UniqueFieldValueConstraint(Item.class, "_str"));
+		config.objectClass(IHaveNothingToDoWithItemInstances.class).callConstructor(true);
 	}
 	
 	protected void store() throws Exception {
@@ -107,5 +115,22 @@ public class UniqueFieldValueConstraintTestCase
 		Item item = queryItem(existing);
 		item._str = newValue;
 		store(item);
+	}
+	public void testObjectsAreNotReadUnnecessarily() {
+		addItem("5");
+		store(new IHaveNothingToDoWithItemInstances(0xdb40));
+		db().commit();
+		
+		Assert.areEqual(expectedConstructorsCalls(), IHaveNothingToDoWithItemInstances._constructorCallsCounter);
+	}
+	
+	private int expectedConstructorsCalls() {
+		return isNetworkClientServer()
+									? 2  // Account for constructor validations
+									: 1;  
+	}
+
+	private boolean isNetworkClientServer() {
+		return isClientServer() && !isEmbeddedClientServer();
 	}
 }
