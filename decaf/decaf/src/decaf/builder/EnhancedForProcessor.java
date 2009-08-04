@@ -132,7 +132,7 @@ public class EnhancedForProcessor {
 			final Expression castExpr = builder().newCast(iterNextInvocation, wrapperType);
 			return rewrite().unboxModified(castExpr, wrapperType);
 		} else {
-			if (Bindings.qualifiedName(elementType.getErasure()).equals("java.lang.Object"))
+			if (BindingUtils.qualifiedName(elementType.getErasure()).equals("java.lang.Object"))
 				return iterNextInvocation;
 			return builder().createParenthesizedCast(iterNextInvocation, elementType);
 		}

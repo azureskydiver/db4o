@@ -255,7 +255,7 @@ public final class DecafRewritingVisitor extends DecafVisitorBase {
 	}
 	
 	private boolean mapClassCastIdiom(MethodInvocation node) {
-		if (!Bindings.qualifiedName(node.resolveMethodBinding()).equals("java.lang.Class.cast"))
+		if (!BindingUtils.qualifiedName(node.resolveMethodBinding()).equals("java.lang.Class.cast"))
 			return false;
 		
 		rewrite().replace(
@@ -390,7 +390,7 @@ public final class DecafRewritingVisitor extends DecafVisitorBase {
 			return false;
 		
 		rewrite().replace(node, 
-				builder().newQualifiedName(Bindings.qualifiedName(method)));
+				builder().newQualifiedName(BindingUtils.qualifiedName(method)));
 			
 		return true;
 	}

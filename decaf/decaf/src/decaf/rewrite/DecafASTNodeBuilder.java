@@ -315,7 +315,7 @@ public class DecafASTNodeBuilder {
 		if (method.isConstructor()) {
 			return method;
 		}
-		return Bindings.findMethodDefininition(method, _ast);
+		return BindingUtils.findMethodDefininition(method, _ast);
 	}
 	
 	public ClassInstanceCreation newClassInstanceCreation(Type type) {
