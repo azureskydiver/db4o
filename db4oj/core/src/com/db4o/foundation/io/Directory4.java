@@ -8,6 +8,7 @@ import java.io.*;
  * Keep the API compatible with System.IO.Directory
  * 
  * @sharpen.ignore
+ * @sharpen.rename System.IO.Directory
  */
 public class Directory4 {
 	

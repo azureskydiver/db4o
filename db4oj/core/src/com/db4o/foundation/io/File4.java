@@ -25,6 +25,9 @@ public class File4 {
 		return bytes;
 	}
 
+	/**
+	 * @sharpen.rename System.IO.File.Move
+	 */
 	public static void rename(String oldPath,String newPath) throws IOException {
 		if(!new File(oldPath).renameTo(new File(newPath))) {
 			throw new IOException("Could not rename '"+oldPath+"' to '"+newPath+"'.");
@@ -45,6 +48,9 @@ public class File4 {
 		}
 	}
 
+	/**
+	 * @sharpen.rename System.IO.File.Copy
+	 */
 	public static void copyFile(File source, File target) throws IOException {
 		final int bufferSize = 64000;
 
@@ -88,11 +94,17 @@ public class File4 {
 		}
 	}
     
+	/**
+	 * @sharpen.rename System.IO.File.Exists
+	 */
     public static boolean exists(String fname){
         return new File(fname).exists();
     }
 
-	public static void mkdirs(String path) {
+	/**
+	 * @sharpen.rename System.IO.Directory.CreateDirectory
+	 */
+    public static void mkdirs(String path) {
 		new File(path).mkdirs();
 	}
 

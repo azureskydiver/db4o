@@ -4,7 +4,11 @@ package com.db4o.foundation;
 
 /**
  * @sharpen.ignore
+ * @sharpen.rename System.Collections.IEnumerable
  */
 public interface Iterable4<T> {
+	/**
+	 * @sharpen.rename GetEnumerator
+	 */
 	public Iterator4 iterator();
 }
