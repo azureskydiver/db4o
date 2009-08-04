@@ -43,8 +43,10 @@ public class ExceptionStackTraceTestCase extends TestWithTempFile implements db4
 	}
 
 	private void assertExceptionContainsServerStackTrace(EventException ex) {		
-		final String stackTrace = stackTraceFor(ex);		
-		Assert.isGreaterOrEqual(0, stackTrace.indexOf("MCommit.replyFromServer"));
+		final String stackTrace = stackTraceFor(ex);
+		if (stackTrace.indexOf("MCommit.replyFromServer") < 0) {
+			Assert.fail("Missing server stack trace.\r\n----------------------" + stackTrace + "\r\n-----------------------");
+		}
 	}
 
 	private String stackTraceFor(EventException ex) {
