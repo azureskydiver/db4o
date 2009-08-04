@@ -765,14 +765,6 @@
             <br /><br />This method is obsolete, see the Db4objects.Db4o.CS.Db4oClientServer class in
             Db4objects.Db4o.CS.dll for methods to open db4o servers and db4o clients.
           </summary>
-          <param name="config">
-            a custom
-            <see cref="Db4objects.Db4o.Config.IConfiguration">IConfiguration</see>
-            instance to be obtained via
-            <see cref="Db4objects.Db4o.Db4oEmbedded.NewConfiguration">
-              Db4objects.Db4o.Db4oEmbedded.NewConfiguration
-            </see>
-          </param>
           <param name="databaseFileName">an absolute or relative path to the database file</param>
           <param name="port">
             the port to be used, or 0, if the server should not open a port,
