@@ -430,7 +430,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		return _containingClass.fieldAccessor();
 	}
 
-    /** @param isUpdate */
     public void delete(DeleteContextImpl context, boolean isUpdate) throws FieldIndexException {
         if (! checkAlive(context)) {
             return;
@@ -540,7 +539,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         return _fieldTypeID;
     }
 
-    /** @param trans */
     public Object getOn(Transaction trans, Object onObject) {
 		if (alive()) {
 			return fieldAccessor().get( _reflectField, onObject);
@@ -969,7 +967,6 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		return ids.length > 0;
 	}
 
-	/** @param classMetadata */
 	protected void rebuildIndexForObject(LocalObjectContainer stream, final ClassMetadata classMetadata, final int objectId) throws FieldIndexException {
 		StatefulBuffer writer = stream.readWriterByID(stream.systemTransaction(), objectId);
 		if (writer != null) {
