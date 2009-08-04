@@ -11,11 +11,11 @@ public interface Queue4<E> {
 	boolean hasNext();
 	
 	/**
-	 * Returns tQueue4<ClassMetadata>he next object in the queue that matches the specified condition.
+	 * Returns the next object in the queue that matches the specified condition.
 	 * 
 	 * The operation is always NON-BLOCKING.
 	 *  
-	 * @param predicate condition the object must satisfy to be returned
+	 * @param condition the object must satisfy to be returned
 	 * 
 	 * @return the object satisfying the condition or null if none does
 	 */

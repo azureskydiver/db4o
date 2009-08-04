@@ -10,9 +10,9 @@ import com.db4o.internal.collections.*;
 
 /**
  * Collection factory with methods to create collections with behaviour
- * that is optimized for db4o.<br><br> 
- * Example usage:<br>
- * <code>CollectionFactory.forObjectContainer(objectContainer).newBigSet();<code>
+ * that is optimized for db4o.<br/><br/> 
+ * Example usage:<br/>
+ * <code>CollectionFactory.forObjectContainer(objectContainer).newBigSet();</code>
  */
 @decaf.Ignore(decaf.Platform.JDK11)
 public class CollectionFactory {
@@ -36,12 +36,12 @@ public class CollectionFactory {
 	}
 	
 	/**
-	 * creates a new BigSet.<br><br>
-	 * Characteristics of BigSet:<br>
-	 * - It is optimized by using a BTree of IDs of persistent objects.<br> 
-	 * - It can only hold persistent first class objects (no primitives, no strings, no objects that are not persistent)<br>
+	 * creates a new BigSet.<br/><br/>
+	 * Characteristics of BigSet:<br/>
+	 * - It is optimized by using a BTree of IDs of persistent objects.<br/> 
+	 * - It can only hold persistent first class objects (no primitives, no strings, no objects that are not persistent)<br/>
 	 * - Objects are activated upon getting them from the BigSet.
-	 * <br><br>
+	 * <br/><br/>
 	 * BigSet is recommend whenever one object references a huge number of other objects and sorting is not required.
 	 * @return
 	 */

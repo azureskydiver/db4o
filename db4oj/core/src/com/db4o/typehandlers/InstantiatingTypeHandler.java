@@ -1,3 +1,4 @@
+/* Copyright (C) 2009 Versant Inc.   http://www.db4o.com */
 package com.db4o.typehandlers;
 
 import com.db4o.marshall.*;
@@ -14,7 +15,7 @@ public interface InstantiatingTypeHandler extends ReferenceTypeHandler {
 	 * types that means their complete state.
 	 * 
 	 * Mutable state (only allowed in reference types) must be handled
-	 * during {@link ReferenceTypeHandler#writeActivation(WriteContext)}
+	 * during {@link ReferenceTypeHandler#activate(WriteContext)}
 	 *  
 	 * @param context
 	 * @param obj the object

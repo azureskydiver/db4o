@@ -14,7 +14,7 @@ import com.db4o.marshall.*;
  * comparisons for types of objects.<br><br>
  * Custom Typehandlers can be implemented to alter the default 
  * behaviour of storing all non-transient fields of an object.<br><br>
- * @see {@link Configuration#registerTypeHandler(com.db4o.typehandlers.TypeHandlerPredicate, TypeHandler4)} 
+ * @see {@link Configuration#registerTypeHandler(TypeHandlerPredicate, TypeHandler4)} 
  */
 public interface TypeHandler4 {
 	
