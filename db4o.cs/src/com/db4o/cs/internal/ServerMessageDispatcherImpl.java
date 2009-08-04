@@ -2,6 +2,8 @@
 
 package com.db4o.cs.internal;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.events.*;
@@ -191,11 +193,10 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 					writeException(message, exc);
 					return true;
 	    		}
-	    		catch(RuntimeException exc) {
+	    		catch(Exception exc) {
 	    			exc.printStackTrace();
 	    			write(Msg.ERROR);
-	    			fatalShutDownServer(exc);
-	    			return false;
+	    			return true;
 	    		}
 				try {
 					msgWithResp.postProcessAtServer();
@@ -210,25 +211,11 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 				((ServerSideMessage)message).processAtServer();
 				return true;
     		}
-    		catch(Db4oRecoverableException exc) {
+    		catch(Exception exc) {
     			exc.printStackTrace();
-        		return true;
-    		}
-    		catch(RuntimeException exc) {
-    			exc.printStackTrace();
-    			fatalShutDownServer(exc);
     		}
     	}
     	return false;
-	}
-
-	private void fatalShutDownServer(RuntimeException exc) {
-//		try {
-			_server.close(ShutdownMode.fatal(exc));
-//		}
-//		catch(RuntimeException recExc) {
-//			recExc.printStackTrace();
-//		}
 	}
 
 	private void writeException(Msg message, Exception exc) {
@@ -239,7 +226,19 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 		if(!(exc instanceof RuntimeException)) {
 			exc = new Db4oException(exc);
 		}
+		ensureStackTraceCapture(exc); 
 		message.writeException((RuntimeException)exc);
+	}
+
+	/**
+	 * @sharpen.remove
+	 */
+	private void ensureStackTraceCapture(Exception exc) {
+		exc.printStackTrace(new PrintStream(new OutputStream(){
+			@Override
+			public void write(int b) throws IOException {				
+			}
+		}));
 	}
 
     private void triggerMessageReceived(Message message) {
