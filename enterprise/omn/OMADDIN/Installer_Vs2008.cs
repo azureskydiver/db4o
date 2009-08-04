@@ -21,7 +21,13 @@ namespace OMAddin
 			base.OnAfterUninstall(savedState);
 			
 			DeleteApplicationDataFolder();
-			RemoveVSVersionFromAddinFile(Context.Parameters["version"]);
+			string yearVersion = Context.Parameters["version"];
+			RemoveVSVersionFromAddinFile(yearVersion, TargetAddinFilePath());
+			
+			FixNonLocalizedVSConfig(delegate(string nonLocalizedAddinPath)
+									{
+										RemoveVSVersionFromAddinFile(yearVersion, nonLocalizedAddinPath);
+									});
 		}
 
 		protected override void OnAfterInstall(IDictionary savedState)
@@ -33,8 +39,13 @@ namespace OMAddin
 
 				string yearVersion = Context.Parameters["version"];
 				string addinPath = Context.Parameters["assemblypath"];
-				
-				UpdateAddinFile(yearVersion, addinPath);
+
+				UpdateAddinFile(yearVersion, addinPath, TargetAddinFilePath());
+
+				FixNonLocalizedVSConfig(delegate(string nonLocalizedAddinPath)
+				                        {
+											UpdateAddinFile(yearVersion, addinPath, nonLocalizedAddinPath);
+										});
 
 				CopyWindowsPRFFile(InstallFolderFrom(addinPath), yearVersion);
 				InvokeReadMe(Path.GetDirectoryName(addinPath));
@@ -45,15 +56,37 @@ namespace OMAddin
 			}
 		}
 
-		private static void RemoveVSVersionFromAddinFile(string yearVersion)
+		private static void FixNonLocalizedVSConfig(Action<string> action)
 		{
-			XmlDocument addinDoc = OpenAddinFile(TargetAddinFilePath());
+			string localizedAddinPath = TargetAddinFilePath();
+			string nonLocalizedAddinPath = NonLocalized(localizedAddinPath);
+
+			if (localizedAddinPath != nonLocalizedAddinPath)
+			{
+				action(nonLocalizedAddinPath);
+			}
+		}
+
+		private static string NonLocalized(string localizedAddinPath)
+		{
+			return localizedAddinPath.Replace(LastFolderName(VSGlobalAddinConfigurationFolder()), "Application Data");
+		}
+
+		private static string LastFolderName(string localizedConfigFolder)
+		{
+			int backSlashIndex = localizedConfigFolder.LastIndexOf(Path.DirectorySeparatorChar);
+			return backSlashIndex >= 0 ? localizedConfigFolder.Substring(backSlashIndex + 1) : localizedConfigFolder;
+		}
+
+		private static void RemoveVSVersionFromAddinFile(string yearVersion, string addinFilePath)
+		{
+			XmlDocument addinDoc = OpenAddinFile(addinFilePath, addinFilePath);
 			if (addinDoc != null)
 			{
 				XmlNode toBeRemoved = addinDoc.SelectSingleNode(HostApplicationPathForVersion(VSVersionNumberFor(yearVersion)), NameSpaceManagerFor(addinDoc, ""));
 				toBeRemoved.ParentNode.RemoveChild(toBeRemoved);
 
-				SaveAddinFile(addinDoc);
+				SaveAddinFile(addinDoc, addinFilePath);
 			}
 		}
 
@@ -62,20 +95,20 @@ namespace OMAddin
 			return Path.GetDirectoryName(path);
 		}
 
-		private static void UpdateAddinFile(string yearVersion, string addinAssemblyPath)
+		private static void UpdateAddinFile(string yearVersion, string addinInstallationSourcePath, string addinFilePath)
 		{
-			XmlDocument addinDoc = OpenAddinFile(addinAssemblyPath);
+			XmlDocument addinDoc = OpenAddinFile(addinInstallationSourcePath, addinFilePath);
 
-			UpdateNode(addinDoc, "/ns:Extensibility/ns:Addin/ns:Assembly", addinAssemblyPath);
+			UpdateNode(addinDoc, "/ns:Extensibility/ns:Addin/ns:Assembly", addinInstallationSourcePath);
 
 			AddVisualStudioVersion(addinDoc, VSVersionNumberFor(yearVersion));
 
-			SaveAddinFile(addinDoc);
+			SaveAddinFile(addinDoc, addinFilePath);
 		}
 
-		private static XmlDocument OpenAddinFile(string addinAssemblyPath)
+		private static XmlDocument OpenAddinFile(string addinAssemblyPath, string addinFilePath)
 		{
-			string addinFileToLoad = File.Exists(TargetAddinFilePath()) ? TargetAddinFilePath() : InstalledAddinFilePath(addinAssemblyPath);
+			string addinFileToLoad = File.Exists(addinFilePath) ? addinFilePath : InstalledAddinFilePath(addinAssemblyPath);
 			if (!File.Exists(addinFileToLoad))
 				return null;
 
@@ -86,9 +119,8 @@ namespace OMAddin
 			return addinDoc;
 		}
 
-		private static void SaveAddinFile(XmlDocument addinDoc)
+		private static void SaveAddinFile(XmlDocument addinDoc, string addinFilePath)
 		{
-			string addinFilePath = TargetAddinFilePath();
 			Directory.CreateDirectory(Path.GetDirectoryName(addinFilePath));
 			addinDoc.Save(addinFilePath);
 		}
