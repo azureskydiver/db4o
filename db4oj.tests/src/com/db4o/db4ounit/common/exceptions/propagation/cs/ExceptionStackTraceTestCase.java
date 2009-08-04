@@ -18,7 +18,7 @@ import db4ounit.*;
 /**
  * @sharpen.remove
  */
-public class ExceptionStackTraceTestCase extends TestWithTempFile {
+public class ExceptionStackTraceTestCase extends TestWithTempFile implements db4ounit.extensions.fixtures.OptOutDefragSolo {
 
 	public static class Item {		
 	}
