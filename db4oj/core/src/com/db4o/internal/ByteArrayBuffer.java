@@ -65,8 +65,6 @@ public class ByteArrayBuffer implements ReadWriteBuffer {
     
     /**
      * non-encrypted read, used for indexes
-     * @param a_stream
-     * @param a_address
      */
     public void read(ObjectContainerBase stream, int address, int addressOffset){
         stream.readBytes(_buffer, address, addressOffset, length());
