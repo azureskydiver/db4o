@@ -281,8 +281,8 @@ public interface ObjectContainer {
      * &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br>
      * &#160;&#160;&#160;}<br>
      * });<br>
-      * </code>
-
+     * </code>
+     *
      * <br>
      * Summing up the above:<br>
      * In order to run a Native Query, you can extend the Predicate class for all other language dialects<br><br>
@@ -311,7 +311,7 @@ public interface ObjectContainer {
      * but will sort the resulting {@link com.db4o.ObjectSet} according to the given {@link com.db4o.query.QueryComparator}.
      * 
      * @param predicate the {@link Predicate} containing the native query expression.
-     * @param comparator the {@link QueryComparator} specifiying the sort order of the result
+     * @param comparator the {@link QueryComparator} specifying the sort order of the result
      * @return the {@link ObjectSet} returned by the query.
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
@@ -320,7 +320,7 @@ public interface ObjectContainer {
 
     /**
      * Native Query Interface. Queries as with {@link com.db4o.ObjectContainer#query(com.db4o.query.Predicate)},
-     * but will sort the resulting {@link com.db4o.ObjectSet} according to the given {@link com.db4o.query.QueryComparator}.
+     * but will sort the resulting {@link com.db4o.ObjectSet} according to the given {@link Comparator}.
      * 
      * @param predicate the {@link Predicate} containing the native query expression.
      * @param comparator the java.util.Comparator specifying the sort order of the result
@@ -330,7 +330,7 @@ public interface ObjectContainer {
      * @sharpen.ignore
      */
     @decaf.Ignore(decaf.Platform.JDK11)
-    public <TargetType> ObjectSet <TargetType> query(Predicate<TargetType> predicate,Comparator<TargetType> comparator) throws Db4oIOException, DatabaseClosedException;
+    public <TargetType> ObjectSet <TargetType> query(Predicate<TargetType> predicate, Comparator<TargetType> comparator) throws Db4oIOException, DatabaseClosedException;
 
     /**
      * rolls back the running transaction.

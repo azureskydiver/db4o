@@ -34,7 +34,7 @@ public class Db4oEmbedded {
 	 * <br><br>A database file can only be opened once, subsequent attempts to open
 	 * another {@link ObjectContainer ObjectContainer} against the same file will result in
 	 * a {@link DatabaseFileLockedException DatabaseFileLockedException}.<br><br>
-	 * Database files can only be accessed for readwrite access from one process 
+	 * Database files can only be accessed for read/write access from one process 
 	 * (one Java VM) at one time. All versions except for db4o mobile edition use an
 	 * internal mechanism to lock the database file for other processes. 
 	 * <br><br>

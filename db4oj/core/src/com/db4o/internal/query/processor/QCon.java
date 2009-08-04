@@ -704,7 +704,6 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         visit1(a_root, this, i_evaluator.not(res));
     }
 
-    /** @param reason */
     void visit1(QCandidate root, QCon reason, boolean res) {
 
         // The a_reason parameter makes it eays to distinguish

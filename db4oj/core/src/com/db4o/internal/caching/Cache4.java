@@ -12,7 +12,7 @@ public interface Cache4<K, V> extends Iterable<V> {
 	/**
 	 * Retrieves the value associated to the {@link key} from the cache. If the value is not yet
 	 * cached {@link producer} will be called to produce it. If the cache needs to discard a value
-	 * {@link onDiscard} will be given a chance to process it.
+	 * {@link finalizer} will be given a chance to process it.
 	 * 
 	 * @param key the key for the value - must never change - cannot be null
 	 * @param producer will be called if value not yet in the cache - can only be null when the value is found in the cache

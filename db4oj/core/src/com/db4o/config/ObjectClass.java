@@ -6,8 +6,7 @@ package  com.db4o.config;
  * configuration interface for classes.
  * <br><br>
  * Use the global {@link CommonConfiguration#objectClass(Object)} to configure 
- * object class settings.
- * </code>
+ * object class settings. 
  */
 public interface ObjectClass {
     
@@ -17,7 +16,7 @@ public interface ObjectClass {
      * calling constructors.
      * <br><br>
      * Not all JDKs / .NET-environments support this feature. db4o will
-     * attempt, to follow the setting as good as the enviroment supports.
+     * attempt, to follow the setting as good as the environment supports.
      * In doing so, it may call implementation-specific features like
      * sun.reflect.ReflectionFactory#newConstructorForSerialization on the
      * Sun Java 1.4.x/5 VM (not available on other VMs) and 
@@ -155,7 +154,7 @@ public interface ObjectClass {
      * to improve the performance to create and delete objects of 
      * a class.
      * <br><br>Common cases where a class index is not needed:<br>
-     * - The application always works with subclasses or superclasses.<br>
+     * - The application always works with sub classes or super classes.<br>
      * - There are convenient field indexes that will always find instances
      * of a class.<br>
      * - The application always works with IDs.<br><br>
@@ -206,7 +205,7 @@ public interface ObjectClass {
 	 * returns an {@link ObjectField ObjectField} object
 	 * to configure the specified field.
 	 * <br><br>
-     * @param fieldName the fieldname of the field to be configured.<br><br>
+     * @param fieldName the name of the field to be configured.<br><br>
      * @return an instance of an {@link ObjectField ObjectField}
 	 *  object for configuration.
      */
@@ -224,7 +223,7 @@ public interface ObjectClass {
      * by querying for a class or by loading an instance of a class).<br><br>
      * To update a static field value, once it is stored, you have to the following
      * in this order:<br>
-     * (1) open the database file you are working agains<br>
+     * (1) open the database file you are working against<br>
      * (2) make sure the class metadata is loaded<br>
      * <code>objectContainer.query().constrain(Foo.class); // Java</code><br>
      * <code>objectContainer.Query().Constrain(typeof(Foo)); // C#</code><br>
@@ -250,7 +249,7 @@ public interface ObjectClass {
      * was representing the class specified by the clazz parameter passed to
      * this method. 
      * The clazz parameter can be any of the following:<br>
-     * - a fully qualified classname as a String.<br>
+     * - a fully qualified class name as a String.<br>
      * - a Class object.<br>
      * - any other object to be used as a template.<br><br>
      * This method will be ignored if the database file already contains meta
@@ -268,7 +267,7 @@ public interface ObjectClass {
      * <br><br>In client-server environment this setting should be used on both 
      * client and server. <br><br>
      * This setting can NOT be applied to an open object container. <br><br>
-     * @param newName the new fully qualified classname.
+     * @param newName the new fully qualified class name.
      */
     public void rename (String newName);
 

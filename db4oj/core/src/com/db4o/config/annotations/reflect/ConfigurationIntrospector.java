@@ -53,7 +53,7 @@ public class ConfigurationIntrospector {
 	}
 
 	/**
-	 * the start methode to reflect user class and fields <br>
+	 * the start method to reflect user class and fields <br>
 	 * in order to set appropriate configurations
 	 * 
 	 * @param clazz

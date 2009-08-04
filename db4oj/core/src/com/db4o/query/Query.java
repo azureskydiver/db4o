@@ -9,24 +9,24 @@ import com.db4o.*;
 
 /**
  * handle to a node in a S.O.D.A. query graph.
- * <br><br>
+ * <br/><br/>
  * A node in the query graph can represent multiple 
- * classes, one class or an attribute of a class.<br><br>The graph 
+ * classes, one class or an attribute of a class.<br/><br/>The graph 
  * is automatically extended with attributes of added constraints 
- * (see {@link #constrain(java.lang.Object)}) and upon calls to  {@link #descend(java.lang.String)} that request nodes that do not yet exist.
- * <br><br>
+ * (see {@link #constrain(Object)}) and upon calls to  {@link #descend(java.lang.String)} that request nodes that do not yet exist.
+ * <br/><br/>
  * References to joined nodes in the query graph can be obtained
  * by "walking" along the nodes of the graph with the method 
- * {@link #descend(java.lang.String)}.
- * <br><br>
+ * {@link #descend(String)}.
+ * <br/><br/>
  * {@link #execute()}
  * evaluates the entire graph against all persistent objects. 
- * <br><br>
+ * <br/><br/>
  * {@link #execute()} can be called from any {@link Query} node
  * of the graph. It will return an {@link ObjectSet} filled with
  * objects of the class/classes that the node, it was called from,
- * represents.<br><br>
- * <b>Note:<br>
+ * represents.<br/><br/>
+ * <b>Note:<br/>
  * {@link Predicate Native queries} are the recommended main query 
  * interface of db4o.</b> 
  */
@@ -35,11 +35,11 @@ public interface Query {
 
     /**
 	 * adds a constraint to this node.
-	 * <br><br>
+	 * <br/><br/>
 	 * If the constraint contains attributes that are not yet
 	 * present in the query graph, the query graph is extended
 	 * accordingly.
-	 * <br><br>
+	 * <br/><br/>
 	 * Special behaviour for:
 	 * <ul>
 	 * <li> class {@link Class}: confine the result to objects of one
@@ -65,8 +65,8 @@ public interface Query {
 
     /**
 	 * returns a reference to a descendant node in the query graph.
-	 * <br><br>If the node does not exist, it will be created.
-	 * <br><br>
+	 * <br/><br/>If the node does not exist, it will be created.
+	 * <br/><br/>
 	 * All classes represented in the query node are tested, whether
 	 * they contain a field with the specified field name. The
 	 * descendant Query node will be created from all possible candidate
@@ -92,10 +92,12 @@ public interface Query {
 	 * order of method calls is relevant: criteria created by 'earlier' calls are
 	 * considered more significant, i.e. 'later' criteria only have an effect
 	 * for elements that are considered equal by all 'earlier' criteria.
+	 * </p>
 	 * <p>
 	 * As an example, consider a type with two int fields, and an instance set
 	 * {(a:1,b:3),(a:2,b:2),(a:1,b:2),(a:2,b:3)}. The call sequence [orderAscending(a),
 	 * orderDescending(b)] will result in [(<b>a:1</b>,b:3),(<b>a:1</b>,b:2),(<b>a:2</b>,b:3),(<b>a:2</b>,b:2)].
+	 * </p>
      * @return this {@link Query} object to allow the chaining of method calls.
      */
     public Query orderAscending ();
@@ -104,7 +106,7 @@ public interface Query {
     /**
 	 * adds a descending order criteria to this node of
 	 * the query graph. 
-	 * <br><br>
+	 * <br/><br/>
 	 * For semantics of multiple calls setting ordering criteria, see {@link #orderAscending()}.
      * @return this {@link Query} object to allow the chaining of method calls.
      */
@@ -128,14 +130,5 @@ public interface Query {
      */
     @decaf.Ignore(decaf.Platform.JDK11)
     public Query sortBy(Comparator comparator);
-
-//    /**
-//     * defines a Query node to be represented as a column in the array
-//     * returned in every element of the ObjectSet upon query execution. 
-//     * @param node the Query node to be represented
-//     * @param column the column in the result array 
-//     */
-//    public void result(Query node, int column);
-//
 }
 

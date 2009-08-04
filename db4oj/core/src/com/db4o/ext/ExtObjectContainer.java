@@ -75,7 +75,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * If a file already exists at the specified path, it will be overwritten.<br><br>
      * This method is intended for cross-storage backups, i.e. backup from an in-memory
      * database to a file.
-     * @param storage the {@link Storage} to be used for backup
+     * @param targetStorage the {@link Storage} to be used for backup
      * @param path a fully qualified path
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      * @throws NotSupportedException is thrown when the operation is not supported in current 
@@ -88,7 +88,7 @@ public interface ExtObjectContainer extends ObjectContainer {
     /**
      * binds an object to an internal object ID.
      * <br><br>This method uses the ID parameter to load the 
-     * correspondig stored object into memory and replaces this memory 
+     * corresponding stored object into memory and replaces this memory 
      * reference with the object parameter. The method may be used to replace
      * objects or to reassociate an object with it's stored instance
      * after closing and opening a database file. A subsequent call to 
@@ -243,7 +243,7 @@ public interface ExtObjectContainer extends ObjectContainer {
     public ReflectClass[] knownClasses();
 
     /**
-     * returns the main synchronisation lock.
+     * returns the main synchronization lock.
      * <br><br>
      * Synchronize over this object to ensure exclusive access to
      * the ObjectContainer.<br><br> 
@@ -263,7 +263,7 @@ public interface ExtObjectContainer extends ObjectContainer {
 	 * whether the desired object should contain the committed values or the
 	 * values that were set by the running transaction with 
 	 * {@link ObjectContainer#store(java.lang.Object)}.
-	 * <br><br>A possible usecase for this feature:<br>
+	 * <br><br>A possible use case for this feature:<br>
 	 * An application might want to check all changes applied to an object
 	 * by the running transaction.<br><br>
 	 * @param object the object that is to be cloned
@@ -388,14 +388,14 @@ public interface ExtObjectContainer extends ObjectContainer {
      * in milliseconds to wait for other transactions to release
      * the semaphore, in case the semaphore is already owned by
      * another transaction.<br><br>
-     * Semaphores are released by the first occurence of one of the
+     * Semaphores are released by the first occurrence of one of the
      * following:<br>
      * - the transaction releases the semaphore with 
      * {@link #releaseSemaphore(java.lang.String)}<br> - the transaction is closed with {@link
      * ObjectContainer#close()}<br> - C/S only: the corresponding {@link ObjectServer} is
      * closed.<br> - C/S only: the client {@link ObjectContainer} looses the connection and is timed
      * out.<br><br> Semaphores are set immediately. They are independant of calling {@link
-     * ObjectContainer#commit()} or {@link ObjectContainer#rollback()}.<br><br> <b>Possible usecases
+     * ObjectContainer#commit()} or {@link ObjectContainer#rollback()}.<br><br> <b>Possible use cases
      * for semaphores:</b><br> - prevent other clients from inserting a singleton at the same time.
      * A suggested name for the semaphore:  "SINGLETON_" + Object#getClass().getName().<br>  - lock
      * objects. A suggested name:   "LOCK_" + {@link #getID(java.lang.Object) getID(Object)}<br> -
@@ -419,7 +419,7 @@ public interface ExtObjectContainer extends ObjectContainer {
 	* <br><br>
 	* There are three options how to use this method.<br>
 	* Any of the following parameters are possible:<br>
-	* - a fully qualified classname.<br>
+	* - a fully qualified class name.<br>
 	* - a Class object.<br>
 	* - any object to be used as a template.<br><br>
 	* @param clazz class name, Class object, or example object.<br><br>
