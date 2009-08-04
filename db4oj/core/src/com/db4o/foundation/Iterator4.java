@@ -4,6 +4,7 @@ package com.db4o.foundation;
 
 /**
  * @sharpen.ignore
+ * @sharpen.rename System.Collections.IEnumerator
  */
 public interface Iterator4<E> {
 

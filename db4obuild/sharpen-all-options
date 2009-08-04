@@ -1,6 +1,5 @@
 @sharpen-exceptions-mapping
 @sharpen-collections-mapping
-@sharpen-io-mapping
 @sharpen-bench-mapping
 
 -pascalCase+
@@ -13,12 +12,10 @@
 -fullyQualify Socket
 -fullyQualify ICloneable
 -fullyQualify AllTests
+-fullyQualify Messages
 
 -methodMapping com.db4o.db4ounit.jre5.collections.typehandler.ListTypeHandlerTestUnitBase.itemFactory CreateItemFactory
 
--typeMapping com.db4o.events.EventArgs System.EventArgs
--typeMapping com.db4o.Db4o Db4objects.Db4o.Db4oFactory
--typeMapping com.db4o.ext.ExtDb4o Db4objects.Db4o.Ext.ExtDb4oFactory
 -typeMapping java.lang.Comparable System.IComparable
 -typeMapping java.io.InputStream Sharpen.IO.IInputStream
 -typeMapping java.io.OutputStream Sharpen.IO.IOutputStream

@@ -5,6 +5,7 @@ package com.db4o.foundation;
 /**
  * @exclude
  * @sharpen.ignore
+ * @sharpen.rename System.ArgumentNullException
  */
 public final class ArgumentNullException extends IllegalArgumentException {
     

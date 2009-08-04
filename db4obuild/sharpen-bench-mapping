@@ -1,7 +1,3 @@
--typeMapping java.util.Set Sharpen.Util.ISet
--typeMapping java.util.HashSet Sharpen.Util.HashSet
--typeMapping java.util.Map System.Collections.IDictionary
--typeMapping java.util.HashMap System.Collections.Hashtable
 -typeMapping java.io.BufferedReader System.IO.StreamReader
 -typeMapping java.io.FileReader System.IO.StreamReader
 -typeMapping java.io.Stream System.IO.StreamReader

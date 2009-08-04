@@ -10,6 +10,7 @@ import java.io.*;
  * Just delegates to the platform chaining mechanism.
  * 
  * @sharpen.ignore
+ * @sharpen.rename System.Exception
  */
 public abstract class ChainedRuntimeException extends RuntimeException {
 

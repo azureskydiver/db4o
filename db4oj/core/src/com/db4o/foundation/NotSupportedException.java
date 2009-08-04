@@ -5,6 +5,7 @@ package com.db4o.foundation;
 /**
  * @exclude
  * @sharpen.ignore
+ * @sharpen.rename System.NotSupportedException
  */
 public class NotSupportedException extends RuntimeException {
     

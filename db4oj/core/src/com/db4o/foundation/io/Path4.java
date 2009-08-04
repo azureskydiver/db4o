@@ -11,6 +11,7 @@ import java.io.*;
  * bad things will happen to you.
  * 
  * @sharpen.ignore
+ * @sharpen.rename System.IO.Path
  */
 public class Path4 { 
 	
