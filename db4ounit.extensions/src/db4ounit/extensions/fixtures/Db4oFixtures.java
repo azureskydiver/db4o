@@ -14,4 +14,8 @@ public class Db4oFixtures {
         return new Db4oSolo();
     }
 
+	public static Db4oInMemory newInMemory() {
+        return new Db4oInMemory();
+    }
+
 }

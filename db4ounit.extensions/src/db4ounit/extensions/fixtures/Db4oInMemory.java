@@ -34,7 +34,7 @@ public class Db4oInMemory extends AbstractSoloDb4oFixture {
 		return true;
 	}
 
-	private final MemoryStorage _storage = new MemoryStorage();
+	private final PagingMemoryStorage _storage = new PagingMemoryStorage(63);
 	
 	protected ObjectContainer createDatabase(Configuration config) {
 		return Db4o.openFile(config, DB_URI);
