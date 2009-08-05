@@ -34,8 +34,8 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 	
 	private Db4oOnTheFlyEnhancer(ClassFileLoader loader) {
 		this.loader = loader;
-		this.bloatUtil =new BloatLoaderContext(loader);
 		this.context=new CachingBloatContext(loader,new ArrayList(),false);
+		this.bloatUtil =new BloatLoaderContext(context);
 	}
 	
 	public Object optimize(Query query,Predicate filter) {
@@ -58,7 +58,7 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 	}
 
 	private Expression analyzeInternal(Predicate filter) throws ClassNotFoundException {
-		ClassEditor classEditor=new ClassEditor(context,loader.loadClass(filter.getClass().getName()));
+		ClassEditor classEditor = context.editClass(filter.getClass().getName());
 		return new NativeQueryEnhancer().analyze(bloatUtil,classEditor,PredicatePlatform.PREDICATEMETHOD_NAME,null);
 	}
 	
