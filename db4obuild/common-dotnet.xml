@@ -67,7 +67,7 @@
 		<property name="msbuild.target.configuration" value="Debug" />
 	</target>
 	
-	<target name="configure" depends="configure-debug, configure-net2, configure-mono">
+	<target name="configure" depends="configure-debug, configure-net35, configure-mono">
 	</target>
 	
 	<target name="compiletestsjava">
