@@ -31,7 +31,8 @@ public final class DecafRewritingVisitor extends DecafVisitorBase {
 		}
 		
 		final TypeDeclaration enumType = new EnumProcessor(_context).run(node);		
-		if (enumType == null) return true;
+		if (enumType == null)
+			return true;
 		
 		rewrite().replace(node, enumType);
 		return false;
@@ -40,9 +41,9 @@ public final class DecafRewritingVisitor extends DecafVisitorBase {
 	@Override
 	public boolean visit(SwitchStatement node) {
 		final ITypeBinding binding = node.getExpression().resolveTypeBinding();
-		if (!binding.isEnum()) {
+		if (!binding.isEnum())
 			return true;
-		}
+		
 		final SwitchStatement switchStatement = new EnumProcessor(_context).transformEnumSwitchStatement(node);
 		if (switchStatement == null) return true;
 		
