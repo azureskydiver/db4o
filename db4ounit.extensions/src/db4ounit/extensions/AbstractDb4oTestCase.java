@@ -153,6 +153,10 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 		return new ConsoleTestRunner(soloSuite()).run();
 	}
 
+	public int runInMemory() {
+		return new ConsoleTestRunner(inMemorySuite()).run();
+	}
+
 	public int runClientServer() {
     	return new ConsoleTestRunner(clientServerSuite()).run();
     }
@@ -179,6 +183,11 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
     protected Db4oTestSuiteBuilder soloSuite() {
 		return new Db4oTestSuiteBuilder(
 				Db4oFixtures.newSolo(), testCases());
+	}
+
+    protected Db4oTestSuiteBuilder inMemorySuite() {
+		return new Db4oTestSuiteBuilder(
+				Db4oFixtures.newInMemory(), testCases());
 	}
 
 	protected Db4oTestSuiteBuilder clientServerSuite() {

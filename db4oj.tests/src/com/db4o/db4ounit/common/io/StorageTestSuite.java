@@ -22,6 +22,7 @@ public class StorageTestSuite extends FixtureTestSuiteDescription {
 				new SubjectFixtureProvider(new Object[] {
 						Db4oUnitPlatform.newPersistentStorage(),
 						new MemoryStorage(),
+						new PagingMemoryStorage(63),
 						new CachingStorage(Db4oUnitPlatform.newPersistentStorage()),
 						new IoAdapterStorage(new RandomAccessFileAdapter()),
 				})			
