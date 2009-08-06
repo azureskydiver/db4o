@@ -43,7 +43,7 @@ class InstanceReplicationPreparer implements Visitor {
 	 * Purpose: handle circular references
 	 * TODO Big Refactoring: Evolve this to handle ALL reference logic (!) and remove it from the providers. 
 	 */
-	private final Hashtable4 _objectsPreparedToReplicate = new Hashtable4(10000);
+	private final IdentitySet4 _objectsPreparedToReplicate = new IdentitySet4(1000);
 	/**
 	 * key = object originated from one provider
 	 * value = the counterpart ReplicationReference of the original object
@@ -77,19 +77,15 @@ class InstanceReplicationPreparer implements Visitor {
 
 
 	public final boolean visit(Object obj) {
-		
-		if (_objectsPreparedToReplicate.get(obj) != null) return false;
 		if (isValueType(obj)) return true;
-		
-		_objectsPreparedToReplicate.put(obj, obj);
+		if (_objectsPreparedToReplicate.contains(obj)) return false;
+		_objectsPreparedToReplicate.add(obj);
 		return prepareObjectToBeReplicated(obj, null, null);
 	}
-
 
 	private boolean isValueType(Object o) {
 		return ReplicationPlatform.isValueType(o);
 	}
-
 	
 	private boolean prepareObjectToBeReplicated(Object obj, Object referencingObject, String fieldName) {
 		//TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.

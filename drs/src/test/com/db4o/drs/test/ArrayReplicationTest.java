@@ -56,6 +56,7 @@ public class ArrayReplicationTest extends DrsTestCase {
 		Iterator objects = a().provider().getStoredObjects(ArrayHolder.class).iterator();
 		checkNext(objects);
 		checkNext(objects);
+		Assert.isFalse(objects.hasNext());
 	}
 
 	private void checkNext(Iterator objects) {
