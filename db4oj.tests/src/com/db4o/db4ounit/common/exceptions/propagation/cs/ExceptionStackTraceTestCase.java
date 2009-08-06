@@ -12,6 +12,7 @@ import com.db4o.cs.*;
 import com.db4o.cs.config.*;
 import com.db4o.db4ounit.common.api.*;
 import com.db4o.events.*;
+import com.db4o.internal.Platform4;
 
 import db4ounit.*;
 
@@ -31,6 +32,11 @@ public class ExceptionStackTraceTestCase extends TestWithTempFile implements db4
 	private ObjectContainer _client;	
 	
 	public void testStackTracesContainsServerSideMethods() {
+		if (!testIsSupportedOnCurrentPlatform()) {
+			System.out.println(getClass().getName() + " has been disabled on JDK 1." + jdkVersion());
+			return;
+		}
+		
 		_client.store(new Item());
 		
 		try {
@@ -40,6 +46,13 @@ public class ExceptionStackTraceTestCase extends TestWithTempFile implements db4
 			Assert.isInstanceOf(EventException.class, ex);
 			assertExceptionContainsServerStackTrace(ex);			
 		}
+	}
+
+	/**
+	 * @sharpen.remove true 
+	 */
+	private boolean testIsSupportedOnCurrentPlatform() {
+		return jdkVersion() >= 4;
 	}
 
 	private void assertExceptionContainsServerStackTrace(EventException ex) {		
@@ -98,14 +111,22 @@ public class ExceptionStackTraceTestCase extends TestWithTempFile implements db4
 	public void setUp() throws Exception {
 		super.setUp();
 		
+		if (!testIsSupportedOnCurrentPlatform()) return;
+		
 		openServer();
 		registerForCommitEventOnServer();
 		openClient();		
 	}
+
+	/**
+	 * @sharpen.ignore
+	 */
+	private int jdkVersion() {
+		return Platform4.jdk().ver();
+	}
 	
 	@Override
 	public void tearDown() throws Exception {
-		
 		
 		if (_client != null) {
 			_client.close();
