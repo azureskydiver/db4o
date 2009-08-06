@@ -4,6 +4,7 @@ package com.db4o.db4ounit.common.constraints;
 
 import com.db4o.config.*;
 import com.db4o.constraints.*;
+import com.db4o.internal.Platform4;
 import com.db4o.query.*;
 
 import db4ounit.*;
@@ -125,9 +126,21 @@ public class UniqueFieldValueConstraintTestCase
 	}
 	
 	private int expectedConstructorsCalls() {
-		return isNetworkClientServer()
-									? 2  // Account for constructor validations
-									: 1;  
+		if (isNetworkClientServer()) {
+			return expectedConstructorCallOnCSMode();
+		}
+		
+		return 1;
+	}
+
+	/**
+	 * @sharpen.remove.first
+	 */
+	private int expectedConstructorCallOnCSMode() {
+		if (Platform4.jdk().ver() < 4)
+			return 3;
+		
+		return  2;
 	}
 
 	private boolean isNetworkClientServer() {
