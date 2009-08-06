@@ -39,11 +39,13 @@ namespace CompactFrameworkTestHelper
             deployer.ReceiveFile(@"\db4ounit.log", logFile);
             try
             {
-                StreamReader reader = File.OpenText(logFile);
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                using (StreamReader reader = File.OpenText(logFile))
                 {
-                    Console.Error.WriteLine(line);
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        Console.Error.WriteLine(line);
+                    }
                 }
             }
             catch (FileNotFoundException)

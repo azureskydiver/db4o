@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -18,12 +19,12 @@ namespace CompactFrameworkTestHelper
 		private struct FrameWorkInfo
 		{
 			public readonly ObjectId PackageId;
-			public readonly string packageFullPath;
+			public readonly string PackageFullPath;
 
 			public FrameWorkInfo(ObjectId id, string packageFullPath)
 			{
 				PackageId = id;
-				this.packageFullPath = packageFullPath;
+				PackageFullPath = packageFullPath;
 			}
 		}
 
@@ -35,11 +36,12 @@ namespace CompactFrameworkTestHelper
 		private static readonly string DeviceTestPath = "/Temp/";
 
 		private static readonly int ERROR_BASE = 0;
-		private static readonly int EXCEPTION_RUNNING_TESTS = ERROR_BASE - 1;
-		private static readonly int FAILED_LAUNCHING_TESTS = ERROR_BASE - 2;
-		private static readonly int INVALID_PROGRAM_PARAMETERS = ERROR_BASE - 3;
+		private static readonly int ExceptionRunningTests = ERROR_BASE - 1;
+		private static readonly int FailedLaunchingTests = ERROR_BASE - 2;
+		private static readonly int InvalidProgramParameters = ERROR_BASE - 3;
+        private static readonly int EmulatorProcessKilled =  ERROR_BASE - 4;
 
-		static Program()
+	    static Program()
 		{
 			_deployment = new Dictionary<string, FrameWorkInfo>();
 			_deployment.Add("2.0", new FrameWorkInfo(new ObjectId(new Guid("ABD785F0-CDA7-41c5-8375-2451A7CBFF26")), "NETCFv2.ppc.armv4.cab"));
@@ -60,26 +62,26 @@ namespace CompactFrameworkTestHelper
             if (db4oDistPath == null)
             {
                 Help();
-                return INVALID_PROGRAM_PARAMETERS;
+                return InvalidProgramParameters;
             }
 
 		    string cfAppName = arguments["app.name"];
             if (string.IsNullOrEmpty(cfAppName))
             {
                 Help();
-                return INVALID_PROGRAM_PARAMETERS;
+                return InvalidProgramParameters;
             }
 
 		    string deployFileFilter = AppendExtraFilterForDeploy(arguments["deploy.extra.files"]);
 		    int ret;
 			try
 			{
-			    Console.WriteLine("CompactFrameworkTestHelper v1.1 - Copyright (C) 2004-2008  Versant Inc.\r\n");
-                Console.WriteLine("\tCF App: {0}", cfAppName);
-                Console.WriteLine("\tCF Target Version: {0}", targetFrameworkVersion);
-                Console.WriteLine("\tFolder: {0}", db4oDistPath);
-                Console.WriteLine("\tDeployed File Types: {0}", deployFileFilter);
-                Console.WriteLine("\tArguments: {0}", arguments["app.args"] ?? "no argument");
+			    Console.Error.WriteLine("CompactFrameworkTestHelper v1.2 - Copyright (C) 2009 Versant Inc.\r\n");
+                Console.Error.WriteLine("\tCF App: {0}", cfAppName);
+                Console.Error.WriteLine("\tCF Target Version: {0}", targetFrameworkVersion);
+                Console.Error.WriteLine("\tFolder: {0}", db4oDistPath);
+                Console.Error.WriteLine("\tDeployed File Types: {0}", deployFileFilter);
+                Console.Error.WriteLine("\tArguments: {0}", arguments["app.args"] ?? "no argument");
                 
                 ConfigureEmulator(arguments["dir.storagecard"]);
 
@@ -95,22 +97,18 @@ namespace CompactFrameworkTestHelper
                     RemoteProcess process = device.GetRemoteProcess();
                     if (process.Start(DeviceTestPath + cfAppName, "\"" + arguments["app.args"] ?? String.Empty + "\""))
                     {
-                        while (!process.HasExited())
-                        {
-                            Thread.Sleep(2000);
-                        }
+                        ret = WaitToFinishOrTimeout(process, new TimeSpan(0, 5, 0, 0));
 
                         EmulatorHelper.PublishTestLog(device.GetFileDeployer(), db4oDistPath);
-
-                        ret = process.GetExitCode();
                         if (ret != 0)
                         {
-                            Console.WriteLine("{0} returned: {1}", cfAppName, ret);
+                            Console.Error.WriteLine("{0} returned: {1}", cfAppName, ret);
                         }
                     }
                     else
                     {
-                        ret = FAILED_LAUNCHING_TESTS;
+                        Console.Error.WriteLine("Failled to start application '{0}' in emulator", cfAppName);
+                        ret = FailedLaunchingTests;
                     }
 				}
 				finally
@@ -122,12 +120,33 @@ namespace CompactFrameworkTestHelper
 			}
 			catch(Exception ex)
 			{
-				Console.WriteLine("Error running {0}\r\n{1}", cfAppName, ex);
-				ret = EXCEPTION_RUNNING_TESTS;
+				Console.Error.WriteLine("Error running {0}\r\n{1}", cfAppName, ex);
+				ret = ExceptionRunningTests;
 			}
 
 			return ret;
 		}
+
+	    private static int WaitToFinishOrTimeout(RemoteProcess process, TimeSpan timeout)
+	    {
+	        Stopwatch timer = new Stopwatch();
+	        timer.Start();
+
+	        while (!process.HasExited() && timer.Elapsed < timeout)
+	        {
+	            Thread.Sleep(2000);
+	        }
+
+            return !process.HasExited() ? ForceProcessKill(process) : process.GetExitCode();
+	    }
+
+	    private static int ForceProcessKill(RemoteProcess process)
+	    {
+            Console.Error.WriteLine("Killing applicationon {0} in the emulator...", process.FileName);
+            process.Kill();
+
+	        return EmulatorProcessKilled;
+	    }
 
 	    private static string AppendExtraFilterForDeploy(string deployFileFilter)
 	    {
@@ -137,8 +156,6 @@ namespace CompactFrameworkTestHelper
 	    private static void ConfigureEmulator(string storageCard)
 	    {
             IDeviceEmulatorManagerVMID emulator = EmulatorHelper.GetVirtualDevice();
-
-            //ResetConfiguration(emulator);
 	        ConfigureStorageCard(emulator, storageCard);
 	    }
 
@@ -152,18 +169,11 @@ namespace CompactFrameworkTestHelper
             }
 	    }
 
-	    private static void ResetConfiguration(IDeviceEmulatorManagerVMID emulator)
-	    {
-	        emulator.Connect();
-	        emulator.ClearSaveState();
-	        emulator.Shutdown(DoNotSaveState);
-	    }
-
 	    private static void Help()
 		{
-		    Console.WriteLine("Invalid program parameter count.\r\n" +
-		                        "Use: {0} [-version]=[2.0 | 3.5] <-app.name>=<executable name> <-dir.dll.compact>=<path to db4o .NET Compact Framework distribution> \r\n\r\n", 
-                                Assembly.GetExecutingAssembly().GetName().Name);
+		    Console.Error.WriteLine("Invalid program parameter count.\r\n" +
+		                            "Use: {0} [-version]=[2.0 | 3.5] <-app.name>=<executable name> <-dir.dll.compact>=<path to db4o .NET Compact Framework distribution> \r\n\r\n", 
+                                    Assembly.GetExecutingAssembly().GetName().Name);
 		}
 
 		private static void DeployDotNetFramework(Device device, string version)
@@ -174,11 +184,9 @@ namespace CompactFrameworkTestHelper
 			fd.DownloadPackage(info.PackageId);
 
 			RemoteProcess installer = device.GetRemoteProcess();
-			installer.Start("wceload.exe", String.Format(@"/noui \windows\{0}", info.packageFullPath));
-			while (installer.HasExited() != true)
-			{
-				Thread.Sleep(1000);
-			}
+			installer.Start("wceload.exe", String.Format(@"/noui \windows\{0}", info.PackageFullPath));
+		    
+            WaitToFinishOrTimeout(installer, new TimeSpan(0, 0, 30, 0));
 		}
 	}
 }
