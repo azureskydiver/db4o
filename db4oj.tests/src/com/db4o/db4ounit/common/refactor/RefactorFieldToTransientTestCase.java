@@ -1,5 +1,5 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
-package com.db4o.db4ounit.common.staging;
+package com.db4o.db4ounit.common.refactor;
 
 import com.db4o.config.*;
 import com.db4o.reflect.*;
@@ -40,7 +40,15 @@ public class RefactorFieldToTransientTestCase extends AbstractDb4oTestCase{
 		config.addAlias(alias);
 		reopen();
 		
-		After retrieved = retrieveOnlyInstance(After.class);
-		Assert.areEqual(0, retrieved._id);
+		After after = retrieveOnlyInstance(After.class);
+		Assert.areEqual(0, after._id);
+		
+		config = fixture().config();
+		config.reflectWith(new ExcludingReflector());
+		config.removeAlias(alias);
+		reopen();
+		
+		Before before = retrieveOnlyInstance(Before.class);
+		Assert.areEqual(42, before._id);
 	}
 }
