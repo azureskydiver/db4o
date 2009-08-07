@@ -15,7 +15,7 @@ public class MemoryBinGrowthTestCase implements TestCase {
 			_idx = 0;
 		}
 		
-		public long newSize(long curSize) {
+		public long newSize(long curSize, long requiredSize) {
 			return _values[_idx++];
 		}
 		

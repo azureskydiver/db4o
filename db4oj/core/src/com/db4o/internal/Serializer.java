@@ -2,8 +2,8 @@
 
 package com.db4o.internal;
 
-import com.db4o.ext.*;
 import com.db4o.internal.activation.*;
+import com.db4o.io.*;
 
 
 /**
@@ -20,20 +20,22 @@ public class Serializer {
     }
 
     public static SerializedGraph marshall(ObjectContainerBase serviceProvider, Object obj) {
-        MemoryFile memoryFile = new MemoryFile();
-        memoryFile.setInitialSize(223);
-        memoryFile.setIncrementSizeBy(300);
-    	TransportObjectContainer carrier = newTransportObjectContainer(serviceProvider, memoryFile);
+        MemoryBin memoryBin = new MemoryBin(223, growthStrategy());
+    	TransportObjectContainer carrier = newTransportObjectContainer(serviceProvider, memoryBin);
     	carrier.produceClassMetadata(carrier.reflector().forObject(obj));
 		carrier.store(obj);
 		int id = (int)carrier.getID(obj);
 		carrier.close();
-		return new SerializedGraph(id, memoryFile.getBytes());
+		return new SerializedGraph(id, memoryBin.data());
     }
 
+	private static ConstantGrowthStrategy growthStrategy() {
+		return new ConstantGrowthStrategy(300);
+	}
+
 	private static TransportObjectContainer newTransportObjectContainer(ObjectContainerBase serviceProvider,
-            MemoryFile memoryFile) {
-	    final TransportObjectContainer container = new TransportObjectContainer(serviceProvider, memoryFile);
+            MemoryBin memoryBin) {
+	    final TransportObjectContainer container = new TransportObjectContainer(serviceProvider, memoryBin);
 	    container.deferredOpen();
 		return container;
     }
@@ -50,8 +52,8 @@ public class Serializer {
 		if(id <= 0){
 			return null;
 		}
-        MemoryFile memoryFile = new MemoryFile(bytes);
-		TransportObjectContainer carrier = newTransportObjectContainer(serviceProvider, memoryFile);
+        MemoryBin memoryBin = new MemoryBin(bytes, growthStrategy());
+		TransportObjectContainer carrier = newTransportObjectContainer(serviceProvider, memoryBin);
 		Object obj = carrier.getByID(id);
 		carrier.activate(carrier.transaction(), obj, new FullActivationDepth());
 		carrier.close();

@@ -4,8 +4,10 @@ package com.db4o.internal;
 
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.convert.*;
 import com.db4o.internal.slots.*;
+import com.db4o.io.*;
 import com.db4o.reflect.*;
 import com.db4o.types.*;
 
@@ -20,15 +22,18 @@ import com.db4o.types.*;
  * 
  * @exclude
  */
-public class TransportObjectContainer extends InMemoryObjectContainer {
+public class TransportObjectContainer extends LocalObjectContainer {
+
+	private final ObjectContainerBase _parent;
+	private final MemoryBin _memoryBin;
 	
-	private final ObjectContainerBase _parent;   
-	
-	public TransportObjectContainer(ObjectContainerBase parent, MemoryFile memoryFile) {
-	    super(parent.config(), memoryFile, DEFERRED_OPEN_MODE);
+	public TransportObjectContainer(ObjectContainerBase parent, MemoryBin memoryFile) {
+	    super(parent.config());
+	    _memoryBin = memoryFile;
 	    _parent = parent;
 	    _lock = parent.lock();
 	    _showInternalClasses = parent._showInternalClasses;
+	    open();
 	} 
 	
 	protected void initialize1(Configuration config){
@@ -194,5 +199,92 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
     	
     	return obj;
     }
+
+	public void deferredOpen() {
+		open();
+	}
+
+	protected final void openImpl() throws OldFormatException {
+		if (_memoryBin.length() == 0) {
+			configureNewFile();
+			commitTransaction();
+			writeHeader(false, false);
+		} else {
+			readThis();
+		}
+	}
+
+	public void backup(Storage targetStorage, String path)
+			throws NotSupportedException {
+			    throw new NotSupportedException();
+			}
+
+	public void blockSize(int size) {
+	    // do nothing, blocksize is always 1
+	}
+
+	@Override
+	protected void closeSystemTransaction() {
+		// do nothing
+	}
+
+	protected void freeInternalResources() {
+		// nothing to do here
+	}
+
+	protected void shutdownDataStorage() {
+		dropReferences();
+	}
+
+	public long fileLength() {
+	    return _memoryBin.length();
+	}
+
+	public String fileName() {
+	    return "Memory File";
+	}
+
+	protected boolean hasShutDownHook() {
+	    return false;
+	}
+
+	public final boolean needsLockFileThread() {
+	    return false;
+	}
+
+	public void readBytes(byte[] bytes, int address, int length) {
+		try {
+			_memoryBin.read(address, bytes, length);
+		} catch (Exception e) {
+			Exceptions4.throwRuntimeException(13, e);
+		}
+	}
+
+	public void readBytes(byte[] bytes, int address, int addressOffset, int length) {
+		readBytes(bytes, address + addressOffset, length);
+	}
+
+	public void syncFiles() {
+	}
+
+	public void writeBytes(ByteArrayBuffer buffer, int address, int addressOffset) {
+		_memoryBin.write(address + addressOffset, buffer._buffer, buffer.length());
+	}
+
+	public void overwriteDeletedBytes(int a_address, int a_length) {
+	}
+
+	public void reserve(int byteCount) {
+		throw new NotSupportedException();
+	}
+
+	public byte blockSize() {
+		return 1;
+	}
+
+	@Override
+	protected void fatalStorageShutdown() {
+		shutdownDataStorage();
+	}
 
 }

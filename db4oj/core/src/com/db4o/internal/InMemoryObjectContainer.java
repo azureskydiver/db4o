@@ -10,6 +10,7 @@ import com.db4o.io.*;
 
 /**
  * @exclude
+ * @deprecated since 7.11: Use {@link MemoryStorage} instead
  */
 public class InMemoryObjectContainer extends LocalObjectContainer {
 
