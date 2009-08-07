@@ -192,7 +192,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 
 		checkCorrectTypeForField();
 
-		if(_fieldType == null || _reflectField == null){
+		if(_fieldType == null || _reflectField == null || !shouldStoreField()){
 		    _state = FieldMetadataState.UNAVAILABLE;
 		    _reflectField = null;
 		    return false;
@@ -205,6 +205,10 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		setAvailable();
 		checkDb4oType();
 		return true;
+	}
+
+	private boolean shouldStoreField() {
+		return !_reflectField.isTransient() || (_containingClass != null && _containingClass.shouldStoreTransientFields());
 	}
 
     public boolean updating() {

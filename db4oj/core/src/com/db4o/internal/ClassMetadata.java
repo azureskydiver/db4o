@@ -1678,7 +1678,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         return Platform4.canSetAccessible() || field.isPublic();
     }
 
-	private boolean shouldStoreTransientFields() {
+	boolean shouldStoreTransientFields() {
 	    Config4Class config = configOrAncestorConfig();
 	    if (config == null) {
 	        return false;
