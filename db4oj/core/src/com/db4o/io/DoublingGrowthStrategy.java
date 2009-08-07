@@ -6,7 +6,11 @@ package com.db4o.io;
  * Strategy for file/byte array growth that will always double the current size
  */
 public class DoublingGrowthStrategy implements GrowthStrategy {
-	public long newSize(long curSize) {
-		return curSize * 2;
+	public long newSize(long curSize, long requiredSize) {
+		long newSize = curSize;
+		while(newSize < requiredSize) {
+			newSize *= 2;
+		}
+		return newSize;
 	}
 }

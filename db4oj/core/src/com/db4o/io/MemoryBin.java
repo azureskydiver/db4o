@@ -9,6 +9,10 @@ public class MemoryBin implements Bin {
 	private int _length;
 	private GrowthStrategy _growthStrategy;
 
+	public MemoryBin(int initialSize, GrowthStrategy growthStrategy) {
+		this(new byte[initialSize], growthStrategy);
+    }
+
 	public MemoryBin(byte[] bytes, GrowthStrategy growthStrategy) {
 		_bytes = bytes;
 		_length = bytes.length;
@@ -60,10 +64,10 @@ public class MemoryBin implements Bin {
 	 */
 	public void write(long pos, byte[] buffer, int length) throws Db4oIOException {
 		if (pos + length > _bytes.length) {
-			long newSize = _growthStrategy.newSize(_bytes.length);
-			if (pos + length > newSize) {
-				newSize = pos + length;
-			}
+			long newSize = _growthStrategy.newSize(_bytes.length, pos + length);
+//			if (pos + length > newSize) {
+//				newSize = pos + length;
+//			}
 			byte[] temp = new byte[(int)newSize];
 			System.arraycopy(_bytes, 0, temp, 0, _length);
 			_bytes = temp;

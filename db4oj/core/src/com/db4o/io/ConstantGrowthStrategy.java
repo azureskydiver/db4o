@@ -21,7 +21,11 @@ public class ConstantGrowthStrategy implements GrowthStrategy {
 	 * @param curSize the original size
 	 * @return the new size
 	 */
-	public long newSize(long curSize) {
-		return curSize + _growth;
+	public long newSize(long curSize, long requiredSize) {
+		long newSize = curSize;
+		while(newSize < requiredSize) {
+			newSize += _growth;
+		}
+		return newSize;
 	}
 }

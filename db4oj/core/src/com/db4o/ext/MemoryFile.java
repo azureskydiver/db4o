@@ -11,6 +11,7 @@ package com.db4o.ext;
  * or JVM failures.
  * <br><br>
  * @see ExtDb4o#openMemoryFile
+ * @deprecated since 7.11: Use {@link com.db4o.io.MemoryStorage} instead
  */
 public class MemoryFile {
 

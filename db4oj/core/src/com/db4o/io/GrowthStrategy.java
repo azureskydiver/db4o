@@ -15,5 +15,5 @@ public interface GrowthStrategy {
 	 * applied, must be bigger than curSize
 	 */
 
-	long newSize(long curSize);
+	long newSize(long curSize, long requiredSize);
 }
