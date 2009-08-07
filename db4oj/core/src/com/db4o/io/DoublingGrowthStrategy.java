@@ -7,6 +7,9 @@ package com.db4o.io;
  */
 public class DoublingGrowthStrategy implements GrowthStrategy {
 	public long newSize(long curSize, long requiredSize) {
+		if(curSize == 0) {
+			return requiredSize;
+		}
 		long newSize = curSize;
 		while(newSize < requiredSize) {
 			newSize *= 2;
