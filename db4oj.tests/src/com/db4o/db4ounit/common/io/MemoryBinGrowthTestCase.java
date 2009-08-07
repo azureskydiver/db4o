@@ -28,12 +28,12 @@ public class MemoryBinGrowthTestCase implements TestCase {
 	private static final int INITIAL_SIZE = 20;
 
 	public void testGrowth() {
-		final int[] values = {42, 47, -1};
+		final int[] values = {42, 47, 48};
 		MockGrowthStrategy strategy = new MockGrowthStrategy(values);
 		MemoryBin bin = newBin(INITIAL_SIZE, strategy);
 		write(bin, 0, INITIAL_SIZE + 1, values[0]);
 		write(bin, values[0], 1, values[1]);
-		write(bin, values[1], 1, values[1] + 1);
+		write(bin, values[1], 1, values[2]);
 		strategy.verify();
 	}
 
