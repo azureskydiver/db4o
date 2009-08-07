@@ -11,10 +11,10 @@ import db4ounit.fixtures.*;
 /**
  * Tests all combinations of configuration use/reuse scenarios.
  * 
- * @deprecated tests deprecated api
  */
+@SuppressWarnings("deprecation")
 public class ConfigurationReuseTestSuite extends FixtureTestSuiteDescription {
-	
+
 	{
 		fixtureProviders(
 			new SimpleFixtureProvider(
