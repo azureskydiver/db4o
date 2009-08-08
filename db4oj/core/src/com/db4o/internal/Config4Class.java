@@ -22,9 +22,9 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	
 	private final static KeySpec EXCEPTIONAL_FIELDS_KEY=new KeySpec(null);
 
-	private final static KeySpec GENERATE_UUIDS_KEY=new KeySpec(false);
+	private final static KeySpec GENERATE_UUIDS_KEY=new KeySpec(TernaryBool.UNSPECIFIED);
     
-	private final static KeySpec GENERATE_VERSION_NUMBERS_KEY=new KeySpec(false);
+	private final static KeySpec GENERATE_VERSION_NUMBERS_KEY=new KeySpec(TernaryBool.UNSPECIFIED);
     
     /**
      * We are running into cyclic dependancies on reading the PBootRecord
@@ -124,11 +124,11 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	}
     
     public void generateUUIDs(boolean setting) {
-    	_config.put(GENERATE_UUIDS_KEY, setting);
+    	_config.put(GENERATE_UUIDS_KEY, TernaryBool.forBoolean(setting));
     }
 
     public void generateVersionNumbers(boolean setting) {
-    	_config.put(GENERATE_VERSION_NUMBERS_KEY, setting);
+    	_config.put(GENERATE_VERSION_NUMBERS_KEY, TernaryBool.forBoolean(setting));
     }
     
     public ObjectTranslator getTranslator() {
@@ -264,12 +264,12 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 		return _configImpl;
 	}
 
-	boolean generateUUIDs() {
-		return _config.getAsBoolean(GENERATE_UUIDS_KEY);
+	TernaryBool generateUUIDs() {
+		return (TernaryBool) _config.get(GENERATE_UUIDS_KEY);
 	}
 
-	boolean generateVersionNumbers() {
-		return _config.getAsBoolean(GENERATE_VERSION_NUMBERS_KEY);
+	TernaryBool generateVersionNumbers() {
+		return (TernaryBool) _config.get(GENERATE_VERSION_NUMBERS_KEY);
 	}
 
 	void maintainMetaClass(boolean flag){

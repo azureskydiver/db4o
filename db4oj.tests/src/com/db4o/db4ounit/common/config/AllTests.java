@@ -12,16 +12,17 @@ public class AllTests extends ComposibleTestSuite {
 	protected Class[] testCases() {
         return composeTests(
         		new Class[] {
-			        	ConfigurationItemTestCase.class,
-			        	Config4ImplTestCase.class,
-			        	CustomStringEncodingTestCase.class,
-			        	GlobalVsNonStaticConfigurationTestCase.class,
-			        	LatinStringEncodingTestCase.class,
-			        	ObjectTranslatorTestCase.class,
-			        	TransientConfigurationTestSuite.class,
-			        	UnicodeStringEncodingTestCase.class,
-			        	UTF8StringEncodingTestCase.class,
-			        	VersionNumbersTestCase.class,
+        				ClassConfigOverridesGlobalConfigTestSuite.class,
+//			        	ConfigurationItemTestCase.class,
+//			        	Config4ImplTestCase.class,
+//			        	CustomStringEncodingTestCase.class,
+//			        	GlobalVsNonStaticConfigurationTestCase.class,
+//			        	LatinStringEncodingTestCase.class,
+//			        	ObjectTranslatorTestCase.class,
+//			        	TransientConfigurationTestSuite.class,
+//			        	UnicodeStringEncodingTestCase.class,
+//			        	UTF8StringEncodingTestCase.class,
+//			        	VersionNumbersTestCase.class,
         		});        
     }
 
