@@ -4,17 +4,17 @@ package db4ounit.fixtures;
 
 import com.db4o.foundation.*;
 
-public class SimpleFixtureProvider implements FixtureProvider {
+public class SimpleFixtureProvider<T> implements FixtureProvider {
 
-	private final FixtureVariable _variable;
-	private final Object[] _values;
+	private final FixtureVariable<T> _variable;
+	private final T[] _values;
 
-	public <T> SimpleFixtureProvider(FixtureVariable variable, T... values) {
+	public SimpleFixtureProvider(FixtureVariable<T> variable, T... values) {
 		_variable = variable;
 		_values = values;
 	}
 
-	public FixtureVariable variable() {
+	public FixtureVariable<T> variable() {
 		return _variable;
 	}
 
