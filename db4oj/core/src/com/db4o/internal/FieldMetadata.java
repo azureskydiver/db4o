@@ -192,7 +192,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 
 		checkCorrectTypeForField();
 
-		if(_fieldType == null || _reflectField == null || !shouldStoreField()){
+		if(_fieldType == null || _reflectField == null){
 		    _state = FieldMetadataState.UNAVAILABLE;
 		    _reflectField = null;
 		    return false;
@@ -410,7 +410,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 
     public void deactivate(ActivationContext context) {
         
-    	if (!alive()) {
+    	if (!alive() || !shouldStoreField()) {
             return;
         }
     	
@@ -633,7 +633,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }
 
     public void activate(UnmarshallingContext context) {
-        if(! checkAlive(context)) {
+        if(! checkAlive(context) || !shouldStoreField()) {
             return;
         }
         Object toSet = read(context);
