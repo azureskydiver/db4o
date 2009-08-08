@@ -4,6 +4,8 @@ package com.db4o.config;
 
 import java.io.*;
 
+import com.db4o.foundation.*;
+
 /**
  * Defines a scope of applicability of a config setting.<br><br>
  * Some of the configuration settings can be either: <br><br>
@@ -53,14 +55,14 @@ public final class ConfigScope implements Serializable {
 	 * @return false if disabled, true if globally enabled, default 
 	 * value otherwise
 	 */
-	public boolean applyConfig(boolean defaultValue) {
+	public boolean applyConfig(TernaryBool defaultValue) {
 		switch(_value) {
 			case DISABLED_ID:
 				return false;
 			case GLOBALLY_ID: 
-				return true;
+				return !defaultValue.definiteNo();
 			default:
-				return defaultValue;
+				return defaultValue.definiteYes();
 		}
 	}
 

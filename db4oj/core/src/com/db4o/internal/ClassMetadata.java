@@ -858,7 +858,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         if(! generateVirtual()){
             return false;
         }
-        boolean configValue = (i_config == null) ? false : i_config.generateUUIDs();
+        TernaryBool configValue = (i_config == null) ? TernaryBool.UNSPECIFIED : i_config.generateUUIDs();
         return generate1(_container.config().generateUUIDs(), configValue); 
     }
 
@@ -866,7 +866,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         if(! generateVirtual()){
             return false;
         }
-        boolean configValue = (i_config == null) ? false : i_config.generateVersionNumbers();
+        TernaryBool configValue = (i_config == null) ? TernaryBool.UNSPECIFIED : i_config.generateVersionNumbers();
         return generate1(_container.config().generateVersionNumbers(), configValue); 
     }
     
@@ -880,7 +880,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         return true; 
     }
     
-    private boolean generate1(ConfigScope globalConfig, boolean individualConfig) {
+    private boolean generate1(ConfigScope globalConfig, TernaryBool individualConfig) {
     	return globalConfig.applyConfig(individualConfig);
     }
 
