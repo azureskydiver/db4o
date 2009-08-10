@@ -17,6 +17,8 @@ import db4ounit.extensions.util.*;
 public class Db4oClientServer extends
 		AbstractDb4oFixture implements Db4oClientServerFixture {
     
+	private static final int THREADPOOL_TIMEOUT = 3000;
+
 	protected static final String FILE = "Db4oClientServer.db4o";
     
     public static final String HOST = "127.0.0.1";
@@ -64,14 +66,22 @@ public class Db4oClientServer extends
 	}
 
 	private void listenToUncaughtExceptions() {
-		listenToUncaughtExceptions(threadPoolFor(_server.ext().objectContainer()));
+		listenToUncaughtExceptions(serverThreadPool());
 		
-		final ThreadPool4 clientThreadPool = threadPoolFor(_objectContainer);
+		final ThreadPool4 clientThreadPool = clientThreadPool();
 		if (null != clientThreadPool) {
 			listenToUncaughtExceptions(clientThreadPool);
 		}
 		
     }
+
+	private ThreadPool4 clientThreadPool() {
+		return threadPoolFor(_objectContainer);
+	}
+
+	private ThreadPool4 serverThreadPool() {
+		return threadPoolFor(_server.ext().objectContainer());
+	}
 
 	private void openClientFor(Db4oTestCase testInstance) throws Exception {
 	    final Configuration config = clientConfigFor(testInstance);
@@ -123,16 +133,27 @@ public class Db4oClientServer extends
     
     public void close() throws Exception {
 		if (null != _objectContainer) {
+			ThreadPool4 clientThreadPool = clientThreadPool();
+			
 			_objectContainer.close();
 			_objectContainer = null;
+			
+			if (null != clientThreadPool) {
+				clientThreadPool.join(THREADPOOL_TIMEOUT);
+			}
 		}
 		closeServer();
 	}
 
     private void closeServer() throws Exception {
     	if (null != _server) {
+    		ThreadPool4 serverThreadPool = serverThreadPool();
 	        _server.close();
 	        _server = null;
+			
+	        if (null != serverThreadPool) {
+	        	serverThreadPool.join(THREADPOOL_TIMEOUT);
+	        }
     	}
     }	
 
