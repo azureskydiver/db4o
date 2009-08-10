@@ -18,7 +18,6 @@ import com.db4o.reflect.Reflector;
 
 // only introduced to keep Db4oListFacade clean of Bloat references
 public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
-	private transient ClassFileLoader loader;
 	private transient BloatLoaderContext bloatUtil;
 	private transient EditorContext context;
 	private Reflector reflector;
@@ -33,7 +32,6 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 	}
 	
 	private Db4oOnTheFlyEnhancer(ClassFileLoader loader) {
-		this.loader = loader;
 		this.context=new CachingBloatContext(loader,new ArrayList(),false);
 		this.bloatUtil =new BloatLoaderContext(context);
 	}
