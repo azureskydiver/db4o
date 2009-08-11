@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import java.io.*;
+import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
@@ -91,6 +92,12 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec ENCODING_KEY=new KeySpec(BuiltInStringEncoding.encodingByteForEncoding(DEFAULT_STRING_ENCODING));
 	
 	private final static KeySpec ENCRYPT_KEY=new KeySpec(false);
+	
+	private final static KeySpec ENVIRONMENT_CONTRIBUTIONS_KEY=new KeySpec(new KeySpec.Deferred() {
+		public Object evaluate() {
+			return new ArrayList();
+		}
+	});	
     
 	private final static KeySpec EXCEPTIONAL_CLASSES_KEY=new KeySpec(null);
     
@@ -1071,5 +1078,9 @@ public final class Config4Impl implements Configuration, DeepClone,
 	
 	public int prefetchDepth() {
 		return _config.getAsInt(PREFETCH_DEPTH_KEY);
+	}
+
+	public List environmentContributions() {
+		return (List) _config.get(ENVIRONMENT_CONTRIBUTIONS_KEY);
 	}
 }

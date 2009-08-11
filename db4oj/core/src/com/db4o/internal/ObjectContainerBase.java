@@ -100,8 +100,16 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	protected ObjectContainerBase(Configuration config) {
     	_lock = new Object();
     	_config = (Config4Impl)config;
-    	_environment = Environments.newConventionBasedEnvironment(this, config);
+    	_environment = createEnvironment(_config);
     }
+
+	private Environment createEnvironment(Config4Impl config) {
+		final ArrayList bindings = new ArrayList();
+		bindings.addAll(config.environmentContributions());
+		bindings.add(this); // my(ObjectContainer.class)
+		bindings.add(config); // my(Configuration.class)
+    	return Environments.newConventionBasedEnvironment(bindings.toArray());
+	}
 	
 	protected Environment environment() {
 		return _environment;

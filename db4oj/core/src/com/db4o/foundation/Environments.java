@@ -115,7 +115,8 @@ public class Environments {
 		final String implNameSuffix = "." + ReflectPlatform.simpleName(service) + "Impl";
 		
 		final String packageName = splitQualifiedName(service.getName()).qualifier;
-		if (packageName.contains(".internal.")) {
+		if (packageName.contains(".internal.")
+			|| packageName.endsWith(".internal")) {
 			// ignore convention for internal types
 			return packageName + implNameSuffix;
 		}
