@@ -17,7 +17,7 @@ public class ThrowingStorage extends StorageDecorator {
 	}
 
 	@Override
-	protected Bin decorate(Bin bin) {
+	protected Bin decorate(BinConfiguration config, Bin bin) {
 		return new ThrowingBin(bin, _condition);
 	}
 

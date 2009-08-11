@@ -24,10 +24,10 @@ public class StorageDecorator implements Storage {
     }
 	
 	public Bin open(BinConfiguration config) throws Db4oIOException {
-		return decorate( _storage.open(config));
+		return decorate(config, _storage.open(config));
 	}
 
-	protected Bin decorate(Bin bin) {
+	protected Bin decorate(BinConfiguration config, Bin bin) {
 		return bin;
     }
 

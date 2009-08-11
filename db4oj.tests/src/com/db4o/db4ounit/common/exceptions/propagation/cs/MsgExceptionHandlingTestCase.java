@@ -54,7 +54,7 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 		}
 
 		@Override
-		protected Bin decorate(Bin bin) {
+		protected Bin decorate(BinConfiguration config, Bin bin) {
 			CloseAwareBin decorated = new CloseAwareBin(this, bin);
 			synchronized(_openBins) {
 				_openBins.put(decorated, decorated);

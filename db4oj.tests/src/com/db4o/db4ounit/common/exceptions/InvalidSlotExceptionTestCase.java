@@ -69,7 +69,7 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
 		}
 
 		@Override
-		protected Bin decorate(Bin bin) {
+		protected Bin decorate(BinConfiguration config, Bin bin) {
 			return new MockBin(bin);
 		}
 		

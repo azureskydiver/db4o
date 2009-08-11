@@ -23,7 +23,7 @@ public class RecordingStorage extends StorageDecorator {
 	}
 
 	@Override
-	protected Bin decorate(Bin bin) {
+	protected Bin decorate(BinConfiguration config, Bin bin) {
 		RecordingBin recordingBin = new RecordingBin(bin, _logPath+"." + _runningId);
 		_runningId++;
 		return recordingBin;

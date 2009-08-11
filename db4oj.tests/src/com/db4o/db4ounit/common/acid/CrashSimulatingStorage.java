@@ -19,7 +19,7 @@ public class CrashSimulatingStorage extends StorageDecorator {
     }
     
     @Override
-    protected Bin decorate(Bin bin) {
+    protected Bin decorate(BinConfiguration config, Bin bin) {
     	return new CrashSimulatingBin(bin, _batch, _fileName);
     }
 
