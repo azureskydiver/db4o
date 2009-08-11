@@ -1040,6 +1040,7 @@
 			<arg value="/xsl:${dir.transforms}/ReflectionToChmProject.xsl" />
 			<arg value="${dir.dist.ndoc}/reflection.xml" />
 			<arg value="/out:${dir.dist.ndoc}/Output/test.hhp" />
+			<arg value="/arg:project=Db4o" />
 		</exec>	 
 	
 		<!--  Generate table of contents for HTML help project -->
@@ -1052,14 +1053,14 @@
 		<exec executable="${XslTransform}" dir="${dir.dist.ndoc}" failonerror="true">
 			<arg value="/xsl:${dir.transforms}/TocToChmContents.xsl" />
 			<arg value="${dir.dist.ndoc}/toc.xml" />
-			<arg value="/out:${dir.dist.ndoc}/Output/test.hhc" />
+			<arg value="/out:${dir.dist.ndoc}/Output/Db4o.hhc" />
 		</exec>
 	
 		<!-- Generate Index information -->
 		<exec executable="${XslTransform}" dir="${dir.dist.ndoc}">
 			<arg value="/xsl:${dir.transforms}/ReflectionToChmIndex.xsl" />
 			<arg value="${dir.dist.ndoc}/reflection.xml" />
-			<arg value="/out:${dir.dist.ndoc}/Output/test.hhk" />
+			<arg value="/out:${dir.dist.ndoc}/Output/Db4o.hhk" />
 		</exec>
 	
 		<property name="hhc.home" location="${env.ProgramFiles}/HTML Help Workshop" />
@@ -1067,7 +1068,7 @@
 			<arg value="test.hhp" />
 		</exec>
 	
-		<copy file="${dir.dist.ndoc}/Output/test.chm" tofile="${dir.dist.ndoc}/db4o.chm" />
+		<copy file="${dir.dist.ndoc}/Output/Db4o.chm" tofile="${dir.dist.ndoc}/db4o.chm" />
 	</target>	
 		
 	<target name="ndoc-net" unless="mono">
