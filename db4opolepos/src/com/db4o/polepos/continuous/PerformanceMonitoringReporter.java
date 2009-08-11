@@ -63,12 +63,15 @@ public class PerformanceMonitoringReporter implements Reporter {
 	}
 
 	public void report(Team team, Car car, TurnSetup[] setups, TurnResult[] results) {
-		int turnIdx = 0;
-		for (TurnResult turnResult : results) {
-			for (Result result : turnResult) {
-				registerResult(result, turnIdx);
-			}
-			turnIdx++;
+//		int turnIdx = 0;
+//		for (TurnResult turnResult : results) {
+//			for (Result result : turnResult) {
+//				registerResult(result, turnIdx);
+//			}
+//			turnIdx++;
+//		}
+		for (Result result : results[results.length - 1]) {
+			registerResult(result, results.length - 1);
 		}
 	}
 
