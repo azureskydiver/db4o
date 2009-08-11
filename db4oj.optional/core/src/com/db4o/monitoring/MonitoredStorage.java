@@ -19,7 +19,7 @@ public class MonitoredStorage extends StorageDecorator {
 	
 	private static class MonitoredBin extends BinDecorator {
 
-		private IOStats _ioMBean;
+		private IO _ioMBean;
 
 		public MonitoredBin(String uri, Bin bin) {
 			super(bin);
@@ -38,7 +38,7 @@ public class MonitoredStorage extends StorageDecorator {
 		@Override
 		public void sync() {
 			super.sync();
-			_ioMBean.notifyFlush();
+			_ioMBean.notifySync();
 		}
 		
 		@Override

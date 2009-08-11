@@ -13,13 +13,21 @@ public class Db4oMBeans {
 	
 	public static ObjectName mBeanNameFor(Class<?> mbeanInterface, String uri)
 		throws MalformedObjectNameException {
-		return new ObjectName("Db4oStatsAgent:name=" + mbeanInterface.getSimpleName());
+		return new ObjectName("com.db4o.monitoring:name=" + uri + ",mbean=" + displayName(mbeanInterface));
+	}
+
+	private static String displayName(Class<?> mbeanInterface) {
+		String className = mbeanInterface.getSimpleName();
+		if(! className.endsWith("MBean")){
+			throw new IllegalArgumentException();
+		}
+		return className.substring(0, className.length() - "MBean".length());
 	}
 	
-	static IOStats newIOStatsMBean(String uri) {
+	static IO newIOStatsMBean(String uri) {
 		try {
-			final ObjectName objectName = mBeanNameFor(IOStatsMBean.class, uri);
-			return new IOStats(objectName);
+			final ObjectName objectName = mBeanNameFor(IOMBean.class, uri);
+			return new IO(objectName);
 		} catch (JMException e) {
 			throw new Db4oException(e);
 		}
