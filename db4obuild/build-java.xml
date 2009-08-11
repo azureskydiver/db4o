@@ -53,6 +53,7 @@
 			build.taj1.5,
 		    build.db4otools1.2,
 		    build.db4otools1.5,
+		    build.db4otools.bench,
 			build.nodep,
 			build.osgi" 
 	/>
@@ -453,13 +454,6 @@
 				<exclude name="**/bench/**/*.java"/>
 			</fileset>
 		</copy>
-		<mkdir dir="${java.src.bench}" />
-		<copy todir="${java.src.bench}">
-			<fileset dir="${dir.j.db4otools.src}">
-				<include name="**/bench/**/*.java"/>
-				<exclude name="**/enhance/*.java" />
-			</fileset>
-		</copy>
 	    <mkdir dir="${dir.dist.classes.jdk1.5.db4otools}" />
 		<javac srcdir="${java.src.tools}" 
 	        fork="true" 
@@ -477,6 +471,27 @@
 				<pathelement path="${file.jdk1.5.taj.jar}"/>
 			</classpath>
 		</javac>
+		<copy todir="${dir.dist.classes.jdk1.5.db4otools}">
+			<fileset dir="${dir.j.db4otools.src}">
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+        <jar destfile="${file.jdk1.5.db4otools.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.5.db4otools}" />
+			<manifest>
+				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.jdk1.5.jar} ${filename.jdk1.5.instrumentation.jar} ${filename.jdk1.5.nqopt.jar} ${filename.jdk1.5.taj.jar}"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="build.db4otools.bench" depends="build.db4ojdk1.5, build.instrumentation1.5, build.nqopt1.5, build.taj1.5, build.db4otools1.5">
+		<mkdir dir="${java.src.bench}" />
+		<copy todir="${java.src.bench}">
+			<fileset dir="${dir.j.db4otools.src}">
+				<include name="**/bench/**/*.java"/>
+				<exclude name="**/enhance/*.java" />
+			</fileset>
+		</copy>
 		<mkdir dir="${dir.dist.classes.db4obench}" />
 		<javac srcdir="${java.src.bench}"
 			fork="true" 
@@ -490,17 +505,6 @@
 				<pathelement path="${file.jdk1.2.jar}"/>
 			</classpath>
 		</javac>
-		<copy todir="${dir.dist.classes.jdk1.5.db4otools}">
-			<fileset dir="${dir.j.db4otools.src}">
-				<include name="**/*.properties" />
-			</fileset>
-		</copy>
-        <jar destfile="${file.jdk1.5.db4otools.jar}">
-			<fileset dir="${dir.dist.classes.jdk1.5.db4otools}" />
-			<manifest>
-				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.jdk1.5.jar} ${filename.jdk1.5.instrumentation.jar} ${filename.jdk1.5.nqopt.jar} ${filename.jdk1.5.taj.jar}"/>
-			</manifest>
-		</jar>
 	    <jar destfile="${file.db4obench.jar}">
 			<fileset dir="${dir.dist.classes.db4obench}" />
 			<manifest>
@@ -1441,7 +1445,7 @@
 		<ant antfile="run-doctor.xml" />
 	</target>
 	
-	<target name="build.jtutorial" depends="build.db4ojdk1.5, build.db4otools1.5">
+	<target name="build.jtutorial" depends="build.db4ojdk1.5, build.db4otools1.5, build.db4otools.bench">
 		<mkdir dir="${dir.dist.classes.tutorial}" />
 		<javac fork="true" 
             srcdir="${dir.j.tutorial.src}" 
@@ -1761,6 +1765,17 @@
 	
 	<target name="run.tests.jdk1.5.instrumented">
 		<ant antfile="run-tests-java-instrumented.xml" />
+	</target>
+	
+	<target name="build.jdk1.5.perf" 
+		depends="build.db4ojdk1.5, 
+			build.instrumentation1.5, 
+			build.nqopt1.5,
+			build.taj1.5,
+		    build.db4otools1.5">
+		<antcall target="nodep.jar.generation">
+			<param name="nodep.platform" value="1.5"/>
+		</antcall>
 	</target>
 	
 	<target name="cc.step.1" depends="build.db4ojava, build.db4ojava.tests, run.tests.jdk1.5" />
