@@ -29,6 +29,10 @@ public class TimedReading {
 		_count += count;
 	}
 	
+	public void increment(){
+		_count++;
+	}
+	
 	public double read() {
 		long curTime = currentTimeMillis();
 		long timeDiff = curTime - _lastAccessTime;
@@ -44,5 +48,9 @@ public class TimedReading {
 	
 	private long currentTimeMillis() {
 		return _clock.currentTimeMillis();
+	}
+
+	public static TimedReading newPerSecond() {
+		return new TimedReading(1000);
 	}
 }
