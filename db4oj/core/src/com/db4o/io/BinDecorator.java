@@ -5,7 +5,7 @@ package com.db4o.io;
  * Wrapper baseclass for all classes that wrap Bin.
  * Each class that adds functionality to a Bin must
  * extend this class to allow db4o to access the 
- * delegate instance with {@link StorageDecorator#decorate(Bin)}.
+ * delegate instance with {@link StorageDecorator#decorate(BinConfiguration, Bin)}.
  */
 public class BinDecorator implements Bin {
 
@@ -36,8 +36,8 @@ public class BinDecorator implements Bin {
 	/**
 	 * @see Bin#read(long, byte[], int)
 	 */
-	public int read(long position, byte[] buffer, int bytesToRead) {
-    	return _bin.read(position, buffer, bytesToRead);
+	public int read(long position, byte[] bytes, int bytesToRead) {
+    	return _bin.read(position, bytes, bytesToRead);
     }
 
 	/**

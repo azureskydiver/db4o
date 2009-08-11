@@ -15,7 +15,7 @@ public class NonFlushingStorage extends StorageDecorator {
     }
 
 	@Override
-	protected Bin decorate(Bin storage) {
+	protected Bin decorate(BinConfiguration config, Bin storage) {
 		return new NonFlushingBin(storage);
 	}
 	

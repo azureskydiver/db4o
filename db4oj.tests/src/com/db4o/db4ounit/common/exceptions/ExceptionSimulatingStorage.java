@@ -22,7 +22,7 @@ public class ExceptionSimulatingStorage extends StorageDecorator {
 	}
 	
 	@Override
-	protected Bin decorate(Bin bin) {
+	protected Bin decorate(BinConfiguration config, Bin bin) {
 		resetShutdownState();
 		return new ExceptionSimulatingBin(bin, _exceptionFactory, _triggerCondition);
 	}

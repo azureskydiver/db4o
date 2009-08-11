@@ -40,7 +40,7 @@ public class BlockSizeDependentBinTestCase extends TestWithTempFile {
 		}
 		
 		@Override
-		protected Bin decorate(Bin bin) {
+		protected Bin decorate(BinConfiguration config, Bin bin) {
 			return new BlockSizeDependentBin(bin, _blockSize);
 		}
 		
