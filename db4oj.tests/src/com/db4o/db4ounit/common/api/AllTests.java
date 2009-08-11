@@ -22,6 +22,7 @@ public class AllTests extends ComposibleTestSuite {
 				CommonAndLocalConfigurationTestSuite.class,
 				Db4oClientServerTestCase.class,
 				Db4oEmbeddedTestCase.class,
+				EnvironmentConfigurationTestCase.class,
 				StoreAllTestCase.class,
 		};
 	}	
