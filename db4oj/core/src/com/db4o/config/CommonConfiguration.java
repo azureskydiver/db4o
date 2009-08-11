@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.config.encoding.*;
 import com.db4o.diagnostic.*;
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
@@ -496,4 +497,11 @@ public interface CommonConfiguration {
      * @param typeHandler to be used for the classes that match the predicate.
      */
     public void registerTypeHandler(TypeHandlerPredicate predicate, TypeHandler4 typeHandler);
+
+    /**
+     * @see Environment
+     * @return
+     * @sharpen.property
+     */
+	public EnvironmentConfiguration environment();
 }

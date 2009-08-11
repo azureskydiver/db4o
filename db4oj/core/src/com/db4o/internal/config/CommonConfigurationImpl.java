@@ -132,5 +132,13 @@ public class CommonConfigurationImpl implements CommonConfiguration {
 		_config.registerTypeHandler(predicate, typeHandler);
 	}
 
+	public EnvironmentConfiguration environment() {
+		return new EnvironmentConfiguration() {
+			public void add(Object service) {
+				_config.environmentContributions().add(service);
+			}
+		};
+	}
+
 
 }
