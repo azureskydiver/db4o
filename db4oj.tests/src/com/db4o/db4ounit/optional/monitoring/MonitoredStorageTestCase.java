@@ -19,26 +19,56 @@ public class MonitoredStorageTestCase implements TestLifeCycle {
 	
 	private EmbeddedObjectContainer _container;
 	
-	private IOMBean _mBean;
+	private final ObjectName _beanName = getIOMBeanName();
+
+	private final MBeanServer _platformServer = ManagementFactory.getPlatformMBeanServer();
 
 	public void testNumSyncsPerSecond() {
-		Assert.areEqual(_storage.numberOfSyncCalls(), _mBean.getSyncsPerSecond());		
+		Assert.areEqual(_storage.numberOfSyncCalls(), getSyncsPerSecond());		
+	}
+
+	private double getSyncsPerSecond() {
+		return getAttribute("SyncsPerSecond");
+	}
+
+	private double getAttribute(final String attribute) {
+		try {
+			return (Double)_platformServer.getAttribute(_beanName, attribute);
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	public void testNumBytesReadPerSecond() {
-		Assert.areEqual(_storage.numberOfBytesRead(), _mBean.getBytesReadPerSecond());		
+		Assert.areEqual(_storage.numberOfBytesRead(), getBytesReadPerSecond());		
+	}
+
+	private double getBytesReadPerSecond() {
+		return getAttribute("BytesReadPerSecond");
 	}
 
 	public void testNumBytesWrittenPerSecond() {
-		Assert.areEqual(_storage.numberOfBytesWritten(), _mBean.getBytesWrittenPerSecond());		
+		Assert.areEqual(_storage.numberOfBytesWritten(), getBytesWrittenPerSecond());		
+	}
+
+	private double getBytesWrittenPerSecond() {
+		return getAttribute("BytesWrittenPerSecond");
 	}
 
 	public void testNumReadsPerSecond() {
-		Assert.areEqual(_storage.numberOfReadCalls(), _mBean.getReadsPerSecond());		
+		Assert.areEqual(_storage.numberOfReadCalls(), getReadsPerSecond());		
+	}
+
+	private double getReadsPerSecond() {
+		return getAttribute("ReadsPerSecond");
 	}
 
 	public void testNumWritesPerSecond() {
-		Assert.areEqual(_storage.numberOfWriteCalls(), _mBean.getWritesPerSecond());		
+		Assert.areEqual(_storage.numberOfWriteCalls(), getWritesPerSecond());		
+	}
+
+	private double getWritesPerSecond() {
+		return getAttribute("WritesPerSecond");
 	}
 
 	public void setUp() throws Exception{
@@ -49,9 +79,6 @@ public class MonitoredStorageTestCase implements TestLifeCycle {
 		config.common().environment().add(clock);
 		
 		_container = Db4oEmbedded.openFile(config, null);
-		
-		_mBean = mBeanProxyFor(IOMBean.class);
-		
 		_container.store(new Object());
 		_container.commit();
 		
@@ -59,18 +86,17 @@ public class MonitoredStorageTestCase implements TestLifeCycle {
 	
 	}
 
-	private <T> T mBeanProxyFor(Class<T> mbeanInterface)
-			throws InstanceNotFoundException, MalformedObjectNameException {
-		
-		MBeanServer platformServer = ManagementFactory.getPlatformMBeanServer();
-		ObjectName mBeanName = Db4oMBeans.mBeanNameFor(mbeanInterface, null);
-		return JMX.newMBeanProxy(platformServer, mBeanName, mbeanInterface);
-		
-	}
-
 	public void tearDown() throws Exception {
 		if(null != _container){
 			_container.close();
+		}
+	}
+	
+	private ObjectName getIOMBeanName() {
+		try {
+			return Db4oMBeans.mBeanNameFor(IOMBean.class, null);
+		} catch (MalformedObjectNameException e) {
+			throw new IllegalStateException(e);
 		}
 	}
 
