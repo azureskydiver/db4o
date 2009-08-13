@@ -22,6 +22,7 @@ import com.db4o.internal.query.result.*;
 import com.db4o.internal.replication.*;
 import com.db4o.internal.slots.*;
 import com.db4o.internal.threading.*;
+import com.db4o.internal.weakref.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.core.*;
@@ -83,7 +84,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     int                 _replicationCallState;  
 
     // weak reference management
-    WeakReferenceCollector           _references;
+    WeakReferenceSupport           _references;
 
 	private NativeQueryHandler _nativeQueryHandler;
     
@@ -782,7 +783,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	}
 
     void gc() {
-        _references.pollReferenceQueue();
+        _references.purge();
     }
     
     public final ObjectSet queryByExample(Transaction trans, final Object template) {
@@ -1070,10 +1071,10 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         
         if (_references != null) {
             gc();
-            _references.stopTimer();
+            _references.stop();
         }
 
-        _references = new WeakReferenceCollector(this);
+        _references = WeakReferenceSupportFactory.forObjectContainer(this);
 
         if (hasShutDownHook()) {
             Platform4.addShutDownHook(this);
@@ -1110,7 +1111,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
      */
     void initialize2NObjectCarrier() {
         _classCollection = new ClassMetadataRepository(_systemTransaction);
-        _references.startTimer();
+        _references.start();
     }
 
     private void initializePostOpen() {
@@ -1862,7 +1863,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
         _classCollection = null;
         if(_references != null){
-        	_references.stopTimer();
+        	_references.stop();
         }
         _systemTransaction = null;
         _transaction = null;
@@ -2067,4 +2068,8 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	public ThreadPool4 threadPool() {
         return environment().provide(ThreadPool4.class);
     }
+
+	public Object newWeakReference(ObjectReference referent, Object obj) {
+		return _references.newWeakReference(referent, obj);
+	}
 }

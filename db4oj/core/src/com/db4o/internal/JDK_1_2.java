@@ -89,13 +89,15 @@ class JDK_1_2 extends JDKReflect {
 	}
 
     void pollReferenceQueue(ObjectContainerBase container, Object referenceQueue) {
-        if (referenceQueue != null) {
-            ReferenceQueue4 queue = (ReferenceQueue4) referenceQueue;
-            ActiveObjectReference ref;
-            synchronized(container.lock()){
-	            while ((ref = queue.pollObjectReference()) != null) {
-	                container.removeFromAllReferenceSystems(ref._referent);
-	            }
+        if (referenceQueue == null) {
+        	return;
+        }
+        
+        ReferenceQueue4 queue = (ReferenceQueue4) referenceQueue;
+        ActiveObjectReference ref;
+        synchronized(container.lock()){
+            while ((ref = queue.pollObjectReference()) != null) {
+                container.removeFromAllReferenceSystems(ref._referent);
             }
         }
     }
