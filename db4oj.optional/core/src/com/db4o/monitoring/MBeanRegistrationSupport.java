@@ -16,10 +16,16 @@ class MBeanRegistrationSupport {
 	}
 
 	public void unregister() {
+		if (_objectName == null) {
+			return;
+		}
+		
 		try {
 			platformMBeanServer().unregisterMBean(_objectName);
 		} catch (JMException e) {
 			e.printStackTrace();
+		} finally {
+			_objectName = null;
 		}
 	}
 

@@ -1,6 +1,8 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.monitoring;
 
+import java.io.*;
+
 import javax.management.*;
 
 import com.db4o.ext.*;
@@ -11,9 +13,13 @@ import com.db4o.ext.*;
 @decaf.Ignore
 public class Db4oMBeans {
 	
-	public static ObjectName mBeanNameFor(Class<?> mbeanInterface, String uri)
-		throws MalformedObjectNameException {
-		return new ObjectName("com.db4o.monitoring:name=" + uri + ",mbean=" + displayName(mbeanInterface));
+	public static ObjectName mBeanNameFor(Class<?> mbeanInterface, String uri) {
+		final String name = "com.db4o.monitoring:name=" + (uri != null ? new File(uri).getName() : "") + ",mbean=" + displayName(mbeanInterface);
+		try {
+			return new ObjectName(name);
+		} catch (MalformedObjectNameException e) {
+			throw new IllegalStateException("'" + name + "' is not a valid name.", e);
+		}
 	}
 
 	private static String displayName(Class<?> mbeanInterface) {
