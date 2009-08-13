@@ -20,7 +20,7 @@ public class EmbeddedConfigurationImpl implements EmbeddedConfiguration, LegacyC
 	}
 
 	public CommonConfiguration common() {
-		return new CommonConfigurationImpl(_legacy);
+		return Db4oLegacyConfigurationBridge.asCommonConfiguration(legacy());
 	}
 
 	public Config4Impl legacy() {

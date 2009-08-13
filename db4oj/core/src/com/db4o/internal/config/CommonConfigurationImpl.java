@@ -11,7 +11,7 @@ import com.db4o.internal.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
-public class CommonConfigurationImpl implements CommonConfiguration {
+class CommonConfigurationImpl implements CommonConfiguration {
 
 	private final Config4Impl _config;
 

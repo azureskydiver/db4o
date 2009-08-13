@@ -25,7 +25,7 @@ public class TimedReading {
 		_msFactor = msFactor;
 	}
 	
-	public void add(int count) {
+	public void incrementBy(int count) {
 		_count += count;
 	}
 	
