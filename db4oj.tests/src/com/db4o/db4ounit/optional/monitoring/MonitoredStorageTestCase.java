@@ -66,11 +66,7 @@ public class MonitoredStorageTestCase implements TestLifeCycle {
 
 	
 	private ObjectName getIOMBeanName() {
-		try {
-			return Db4oMBeans.mBeanNameFor(IOMBean.class, null);
-		} catch (MalformedObjectNameException e) {
-			throw new IllegalStateException(e);
-		}
+		return Db4oMBeans.mBeanNameFor(IOMBean.class, null);
 	}
 
 }
