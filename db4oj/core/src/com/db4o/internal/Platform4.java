@@ -102,7 +102,7 @@ public final class Platform4 {
         return jdk().createReflector(classLoader);
     }
 
-    static final Object createReferenceQueue() {
+    public static final Object createReferenceQueue() {
         return jdk().createReferenceQueue();
     }
     
@@ -110,7 +110,7 @@ public final class Platform4 {
         return jdk().createWeakReference(obj);
     }
 
-    static final Object createActiveObjectReference(Object referenceQueue, Object objectReference, Object obj) {
+    public static final Object createActiveObjectReference(Object referenceQueue, Object objectReference, Object obj) {
         return jdk().createActivateObjectReference(referenceQueue, (ObjectReference) objectReference, obj);
     }
     
@@ -327,7 +327,7 @@ public final class Platform4 {
         return shutDownHookCheck.definiteYes();
     }
 
-    static final boolean hasWeakReferences() {
+    public static final boolean hasWeakReferences() {
         if (!Debug4.weakReferences) {
             return false;
         }
@@ -499,7 +499,7 @@ public final class Platform4 {
         }
     }
 
-    static final void pollReferenceQueue(Object a_stream, Object a_referenceQueue) {
+    public static final void pollReferenceQueue(Object a_stream, Object a_referenceQueue) {
         jdk().pollReferenceQueue((ObjectContainerBase) a_stream, a_referenceQueue);
     }
 

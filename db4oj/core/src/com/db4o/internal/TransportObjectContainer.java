@@ -7,6 +7,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.convert.*;
 import com.db4o.internal.slots.*;
+import com.db4o.internal.weakref.*;
 import com.db4o.io.*;
 import com.db4o.reflect.*;
 import com.db4o.types.*;
@@ -40,7 +41,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	    _handlers = _parent._handlers;
         _classCollection = _parent.classCollection();
 		_config = _parent.configImpl();
-		_references = new WeakReferenceCollector(this);
+		_references = WeakReferenceSupportFactory.disabledWeakReferenceSupport();
 		initialize2();
 	}
 	

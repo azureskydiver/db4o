@@ -153,7 +153,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		objectOnNew(trans, obj);
 		
         if(! _class.isPrimitive()){
-            _object = container._references.createYapRef(this, obj);
+            _object = container.newWeakReference(this, obj);
         }
 		
 		setStateClean();
@@ -291,14 +291,10 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 
 	public void setObjectWeak(ObjectContainerBase container, Object obj) {
-		if (container._references._weak) {
-			if(_object != null){
-				Platform4.killYapRef(_object);
-			}
-			_object = Platform4.createActiveObjectReference(container._references._queue, this, obj);
-		} else {
-			_object = obj;
+		if(_object != null){
+			Platform4.killYapRef(_object);
 		}
+		_object = container.newWeakReference(this, obj);
 	}
 
 	public void setObject(Object obj) {
