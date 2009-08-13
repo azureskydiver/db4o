@@ -19,6 +19,7 @@ public class AllTests extends ComposibleTestSuite {
 	 */
 	protected Class[] composeWith() {
 		return new Class[] {
+				ClientConfigurationTestCase.class,
 				CommonAndLocalConfigurationTestSuite.class,
 				Db4oClientServerTestCase.class,
 				Db4oEmbeddedTestCase.class,

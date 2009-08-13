@@ -1,13 +1,13 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.api;
 
+import static com.db4o.foundation.Environments.my;
+
 import com.db4o.config.*;
-import com.db4o.internal.*;
 import com.db4o.internal.config.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import static com.db4o.foundation.Environments.my;
 
 public class EnvironmentConfigurationTestCase extends AbstractInMemoryDb4oTestCase {
 	
@@ -25,14 +25,11 @@ public class EnvironmentConfigurationTestCase extends AbstractInMemoryDb4oTestCa
 	private ServiceInterface _service = new ServiceInterface() {};
 	
 	@Override
-	protected void configure(Configuration config) throws Exception {
-		super.configure(config);
+	protected void configure(Configuration legacy) throws Exception {
+		super.configure(legacy);
 		
-		asCommonConfiguration(config).environment().add(_service);
-	}
-
-	private CommonConfiguration asCommonConfiguration(Configuration config) {
-		return new CommonConfigurationImpl((Config4Impl) config);
+		final CommonConfiguration common = Db4oLegacyConfigurationBridge.asCommonConfiguration(legacy);
+		common.environment().add(_service);
 	}
 
 }

@@ -4,7 +4,6 @@ package com.db4o.cs.internal.config;
 
 import com.db4o.config.*;
 import com.db4o.cs.config.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.config.*;
 import com.db4o.messaging.*;
@@ -16,22 +15,19 @@ public class ClientConfigurationImpl extends NetworkingConfigurationProviderImpl
 	}
 
 	public MessageSender messageSender() {
-		// TODO Auto-generated method stub
-		throw new NotImplementedException();
+		return legacy().getMessageSender();
 	}
 
 	public void prefetchIDCount(int prefetchIDCount) {
-		// TODO Auto-generated method stub
-		throw new NotImplementedException();
+		legacy().prefetchIDCount(prefetchIDCount);
 	}
 
 	public void prefetchObjectCount(int prefetchObjectCount) {
-		// TODO Auto-generated method stub
-		throw new NotImplementedException();
+		legacy().prefetchObjectCount(prefetchObjectCount);
 	}
 
 	public CommonConfiguration common() {
-		return new CommonConfigurationImpl(legacy());
+		return Db4oLegacyConfigurationBridge.asCommonConfiguration(legacy());
 	}
 
 	public void prefetchDepth(int prefetchDepth) {
