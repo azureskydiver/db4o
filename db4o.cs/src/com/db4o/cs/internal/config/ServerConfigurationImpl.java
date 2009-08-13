@@ -18,11 +18,11 @@ public class ServerConfigurationImpl extends NetworkingConfigurationProviderImpl
 	}
 
 	public FileConfiguration file() {
-		return new FileConfigurationImpl(legacy());
+		return Db4oLegacyConfigurationBridge.asFileConfiguration(legacy());
 	}
 
 	public CommonConfiguration common() {
-		return new CommonConfigurationImpl(legacy());
+		return Db4oLegacyConfigurationBridge.asCommonConfiguration(legacy());
 	}
 	
 	
