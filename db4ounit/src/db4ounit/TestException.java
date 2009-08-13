@@ -26,6 +26,8 @@ public class TestException extends RuntimeException {
 	
 	public void printStackTrace(PrintWriter s) {
 		if (null != _reason) {
+			super.printStackTrace(s);
+			s.write(" caused by ");
 			_reason.printStackTrace(s);
 		} else {
 			super.printStackTrace(s);
@@ -36,7 +38,7 @@ public class TestException extends RuntimeException {
 	public String toString() {
 		String s = super.toString();
 		if (null != _reason) {
-			s = s + _reason.toString();
+			s = s + " caused by " + _reason.toString();
 		}
 		
 		return s;

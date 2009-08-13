@@ -119,7 +119,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 		try {
 			return clazz.newInstance();
 		} catch (Exception e) {
-			throw new TestException(e);
+			throw new TestException("Failed to instantiate " + clazz, e);
 		}
 	}
 	
