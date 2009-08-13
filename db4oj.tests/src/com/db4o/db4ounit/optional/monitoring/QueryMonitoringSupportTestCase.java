@@ -14,9 +14,10 @@ import com.db4o.query.Query;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 @decaf.Remove
-public class QueryMonitoringSupportTestCase extends AbstractDb4oTestCase {
+public class QueryMonitoringSupportTestCase extends AbstractDb4oTestCase implements OptOutCS {
 	
 	private final ClockMock _clock = new ClockMock();
 	private MBeanProxy _queriesBean;
