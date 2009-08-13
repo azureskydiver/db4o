@@ -29,9 +29,14 @@ public class UniqueFieldValueConstraintTestCase
 	}
 	
 	public static class IHaveNothingToDoWithItemInstances {
-		public static int _constructorCallsCounter = 0;
+		public static int _constructorCallsCounter;
+		
+		public IHaveNothingToDoWithItemInstances() {
+			_constructorCallsCounter++;
+		}		
+		
 		public IHaveNothingToDoWithItemInstances(int value) {
-			_constructorCallsCounter = value == 0xdb40 ? 0 : _constructorCallsCounter + 1; 
+			_constructorCallsCounter = 0; 
 		}
 	}	
 
@@ -47,7 +52,9 @@ public class UniqueFieldValueConstraintTestCase
 		super.configure(config);
 		indexField(config, Item.class, "_str");
 		config.add(new UniqueFieldValueConstraint(Item.class, "_str"));
+		
 		config.objectClass(IHaveNothingToDoWithItemInstances.class).callConstructor(true);
+		config.weakReferences(false); //Constructor calls is reliable only if we don't use WeakReferences.
 	}
 	
 	protected void store() throws Exception {
