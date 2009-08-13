@@ -1,8 +1,6 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.optional.monitoring;
 
-import java.lang.management.*;
-
 import javax.management.*;
 
 import com.db4o.*;
@@ -18,57 +16,27 @@ public class MonitoredStorageTestCase implements TestLifeCycle {
 	private CountingStorage _storage = new CountingStorage(new MonitoredStorage(new MemoryStorage()));
 	
 	private EmbeddedObjectContainer _container;
+
+	private final MBeanProxy _bean = new MBeanProxy(getIOMBeanName());
 	
-	private final ObjectName _beanName = getIOMBeanName();
-
-	private final MBeanServer _platformServer = ManagementFactory.getPlatformMBeanServer();
-
 	public void testNumSyncsPerSecond() {
-		Assert.areEqual(_storage.numberOfSyncCalls(), getSyncsPerSecond());		
+		Assert.areEqual(_storage.numberOfSyncCalls(), getAttribute("SyncsPerSecond"));		
 	}
-
-	private double getSyncsPerSecond() {
-		return getAttribute("SyncsPerSecond");
-	}
-
-	private double getAttribute(final String attribute) {
-		try {
-			return (Double)_platformServer.getAttribute(_beanName, attribute);
-		} catch (Exception e) {
-			throw new IllegalStateException(e);
-		}
-	}
-
+	
 	public void testNumBytesReadPerSecond() {
-		Assert.areEqual(_storage.numberOfBytesRead(), getBytesReadPerSecond());		
-	}
-
-	private double getBytesReadPerSecond() {
-		return getAttribute("BytesReadPerSecond");
+		Assert.areEqual(_storage.numberOfBytesRead(), getAttribute("BytesReadPerSecond"));		
 	}
 
 	public void testNumBytesWrittenPerSecond() {
-		Assert.areEqual(_storage.numberOfBytesWritten(), getBytesWrittenPerSecond());		
-	}
-
-	private double getBytesWrittenPerSecond() {
-		return getAttribute("BytesWrittenPerSecond");
+		Assert.areEqual(_storage.numberOfBytesWritten(), getAttribute("BytesWrittenPerSecond"));		
 	}
 
 	public void testNumReadsPerSecond() {
-		Assert.areEqual(_storage.numberOfReadCalls(), getReadsPerSecond());		
-	}
-
-	private double getReadsPerSecond() {
-		return getAttribute("ReadsPerSecond");
+		Assert.areEqual(_storage.numberOfReadCalls(), getAttribute("ReadsPerSecond"));		
 	}
 
 	public void testNumWritesPerSecond() {
-		Assert.areEqual(_storage.numberOfWriteCalls(), getWritesPerSecond());		
-	}
-
-	private double getWritesPerSecond() {
-		return getAttribute("WritesPerSecond");
+		Assert.areEqual(_storage.numberOfWriteCalls(), getAttribute("WritesPerSecond"));		
 	}
 
 	public void setUp() throws Exception{
@@ -91,6 +59,11 @@ public class MonitoredStorageTestCase implements TestLifeCycle {
 			_container.close();
 		}
 	}
+
+	private double getAttribute(final String attribute) {
+		return _bean.<Double>getAttribute(attribute);
+	}
+
 	
 	private ObjectName getIOMBeanName() {
 		try {

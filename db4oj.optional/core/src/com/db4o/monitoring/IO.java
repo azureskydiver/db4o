@@ -1,14 +1,12 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.monitoring;
 
-import java.lang.management.*;
-
 import javax.management.*;
 
 import com.db4o.monitoring.internal.*;
 
 @decaf.Ignore
-class IO implements IOMBean {
+class IO extends MBeanRegistrationSupport implements IOMBean {
 
 	private TimedReading _numBytesReadPerSec = TimedReading.newPerSecond();
 	
@@ -20,11 +18,8 @@ class IO implements IOMBean {
 	
 	private TimedReading _numSyncsPerSec = TimedReading.newPerSecond();
 	
-	private ObjectName _objectName;
-	
 	public IO(ObjectName objectName) throws JMException {
-		_objectName = objectName;
-		register();
+		super(objectName);
 	}
 	
 	public double getBytesReadPerSecond() {
@@ -48,34 +43,17 @@ class IO implements IOMBean {
 	}
 
 	public void notifyBytesRead(int numBytesRead) {
-		_numBytesReadPerSec.add(numBytesRead);
+		_numBytesReadPerSec.incrementBy(numBytesRead);
 		_numReadsPerSec.increment();
 	}
 
 	public void notifyBytesWritten(int numBytesWritten) {
-		_numBytesWrittenPerSec.add(numBytesWritten);
+		_numBytesWrittenPerSec.incrementBy(numBytesWritten);
 		_numWritesPerSec.increment();
 	}
 
 	public void notifySync() {
 		_numSyncsPerSec.increment();
-	}
-
-	public void unregister() {
-		try {
-			platformMBeanServer().unregisterMBean(_objectName);
-		} catch (JMException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void register() throws InstanceAlreadyExistsException,
-			MBeanRegistrationException, NotCompliantMBeanException {
-		platformMBeanServer().registerMBean(this, _objectName);
-	}
-
-	private MBeanServer platformMBeanServer() {
-		return ManagementFactory.getPlatformMBeanServer();
 	}
 
 }

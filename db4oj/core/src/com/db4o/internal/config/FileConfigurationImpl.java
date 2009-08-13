@@ -10,7 +10,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.io.*;
 
-public class FileConfigurationImpl implements FileConfiguration {
+class FileConfigurationImpl implements FileConfiguration {
 
 	private final Config4Impl _config;
 
