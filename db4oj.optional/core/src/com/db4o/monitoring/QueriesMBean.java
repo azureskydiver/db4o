@@ -5,6 +5,10 @@ package com.db4o.monitoring;
 public interface QueriesMBean {
 	
 	double getClassIndexScansPerSecond();
-	double getUnoptimizedQueriesPerSecond();
+	
+	double getAverageQueryExecutionTime();
+	double getQueriesPerSecond();
+	double getUnoptimizedNativeQueriesPerSecond();
+	double getNativeQueriesPerSecond();
 
 }

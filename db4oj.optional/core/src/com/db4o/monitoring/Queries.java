@@ -4,6 +4,7 @@ package com.db4o.monitoring;
 import javax.management.*;
 
 import com.db4o.diagnostic.*;
+import com.db4o.internal.query.*;
 import com.db4o.monitoring.internal.*;
 import com.db4o.query.*;
 
@@ -11,7 +12,10 @@ import com.db4o.query.*;
 class Queries extends MBeanRegistrationSupport implements QueriesMBean, NotificationEmitter {
 
 	private final TimedReading _classIndexScans = TimedReading.newPerSecond();
-	private final TimedReading _unoptimizedQueries = TimedReading.newPerSecond();
+	private final TimedReading _unoptimizedNativeQueries = TimedReading.newPerSecond();
+	private final TimedReading _nativeQueries = TimedReading.newPerSecond();
+	private final TimedReading _queries = TimedReading.newPerSecond();
+	private final AveragingTimedReading _queryExecutionTime = new AveragingTimedReading();
 	private final NotificationBroadcasterSupport _notificationSupport = new NotificationBroadcasterSupport();
 
 	public Queries(ObjectName objectName) throws JMException {
@@ -32,9 +36,21 @@ class Queries extends MBeanRegistrationSupport implements QueriesMBean, Notifica
 	public double getClassIndexScansPerSecond() {
 		return _classIndexScans.read();
 	}
+
+	public double getAverageQueryExecutionTime() {
+		return _queryExecutionTime.read();
+	}
+
+	public double getQueriesPerSecond() {
+		return _queries.read();
+	}
 	
-	public double getUnoptimizedQueriesPerSecond() {
-		return _unoptimizedQueries.read();
+	public double getUnoptimizedNativeQueriesPerSecond() {
+		return _unoptimizedNativeQueries.read();
+	}
+	
+	public double getNativeQueriesPerSecond() {
+		return _nativeQueries.read();
 	}
 
 	public void removeNotificationListener(NotificationListener listener,
@@ -73,17 +89,37 @@ class Queries extends MBeanRegistrationSupport implements QueriesMBean, Notifica
 		_notificationSupport.removeNotificationListener(listener);
 	}
 
-	public void notifyUnoptimized(Predicate predicate) {
-		
-		_unoptimizedQueries.increment();
-		sendNotification(unoptimizedQueryNotificationType(), "Unoptimized native query.", predicate.getClass().getName());
-		
-	}
-	
 	public void notifyClassIndexScan(LoadedFromClassIndex d) {
 		
 		_classIndexScans.increment();
 		
 		sendNotification(classIndexScanNotificationType(), d.problem(), d.reason());
+	}
+
+	public void notifyNativeQuery(NQOptimizationInfo info) {
+		
+		if (info.message().equals(NativeQueryHandler.UNOPTIMIZED)) {
+			notifyUnoptimized(info.predicate());
+		}
+		
+		_nativeQueries.increment();
+	}
+	
+	private void notifyUnoptimized(Predicate predicate) {
+		
+		_unoptimizedNativeQueries.increment();
+		sendNotification(unoptimizedQueryNotificationType(), "Unoptimized native query.", predicate.getClass().getName());
+		
+	}
+
+	public void notifyQueryStarted() {
+		_queries.increment();
+		
+		_queryExecutionTime.eventStarted();
+	}	
+	
+	public void notifyQueryFinished() {
+		
+		_queryExecutionTime.eventFinished();
 	}
 }
