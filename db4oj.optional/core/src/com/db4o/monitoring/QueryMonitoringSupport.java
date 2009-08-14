@@ -28,15 +28,25 @@ public class QueryMonitoringSupport implements ConfigurationItem {
 		
 		container.getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
 			public void notifyQueryExecuted(NQOptimizationInfo info) {
-				if (info.message().equals(NativeQueryHandler.UNOPTIMIZED)) {
-					queries.notifyUnoptimized(info.predicate());
-				}
+				queries.notifyNativeQuery(info);
 			}
 		});
 		
-		EventRegistryFactory.forObjectContainer(container).closing().addListener(new EventListener4<ObjectContainerEventArgs>() {
+		final EventRegistry events = EventRegistryFactory.forObjectContainer(container);
+		events.closing().addListener(new EventListener4<ObjectContainerEventArgs>() {
 			public void onEvent(Event4<ObjectContainerEventArgs> e, ObjectContainerEventArgs args) {
 				queries.unregister();
+			}
+		});
+		events.queryStarted().addListener(new EventListener4<QueryEventArgs>() {
+			public void onEvent(Event4<QueryEventArgs> e, QueryEventArgs args) {
+				queries.notifyQueryStarted();
+			}
+		});
+		
+		events.queryFinished().addListener(new EventListener4<QueryEventArgs>() {
+			public void onEvent(Event4<QueryEventArgs> e, QueryEventArgs args) {
+				queries.notifyQueryFinished();
 			}
 		});
 		

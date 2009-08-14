@@ -14,7 +14,7 @@ import com.db4o.ext.*;
 public class Db4oMBeans {
 	
 	public static ObjectName mBeanNameFor(Class<?> mbeanInterface, String uri) {
-		final String name = "com.db4o.monitoring:name=" + (uri != null ? new File(uri).getName() : "") + ",mbean=" + displayName(mbeanInterface);
+		final String name = "com.db4o.monitoring:name=" + new File(uri).getName() + ",mbean=" + displayName(mbeanInterface);
 		try {
 			return new ObjectName(name);
 		} catch (MalformedObjectNameException e) {
