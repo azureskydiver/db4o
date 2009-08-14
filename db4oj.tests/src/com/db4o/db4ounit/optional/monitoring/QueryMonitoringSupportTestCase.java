@@ -7,6 +7,7 @@ import javax.management.*;
 
 import com.db4o.config.*;
 import com.db4o.diagnostic.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.config.*;
 import com.db4o.monitoring.*;
 import com.db4o.query.*;
@@ -17,7 +18,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 @decaf.Remove
-public class QueryMonitoringSupportTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class QueryMonitoringSupportTestCase extends AbstractDb4oTestCase implements CustomClientServerConfiguration {
 	
 	private final ClockMock _clock = new ClockMock();
 	private MBeanProxy _queriesBean;
@@ -30,36 +31,106 @@ public class QueryMonitoringSupportTestCase extends AbstractDb4oTestCase impleme
 		config.environment().add(_clock);
 		
 	}
+
+	public void configureClient(Configuration config) throws Exception {
+	}
+
+	public void configureServer(Configuration config) throws Exception {
+		configure(config);
+	}
 	
 	@Override
 	protected void db4oSetupAfterStore() throws Exception {
-		_queriesBean = new MBeanProxy(Db4oMBeans.mBeanNameFor(QueriesMBean.class, db().toString()));
+		_queriesBean = new MBeanProxy(Db4oMBeans.mBeanNameFor(QueriesMBean.class, fileSession().toString()));
 	}
 	
 	public void testClassIndexScan() throws Exception {
 		
-		Assert.areEqual(0.0, _queriesBean.getAttribute("ClassIndexScansPerSecond"));
-		
-		for (int i=0; i<3; ++i) {
+		exercisePerSecondCounter("ClassIndexScansPerSecond", new Runnable() { public void run() {
 			triggerClassIndexScan();
-			triggerClassIndexScan();
-			_clock.advance(1000);
-			Assert.areEqual(2.0, _queriesBean.getAttribute("ClassIndexScansPerSecond"));
-		}
+		}});
 		
 	}
 	
-	public void testUnoptimizedQueries() {
+	public void testUnoptimizedNativeQueriesPerSecond() {
 		
-		Assert.areEqual(0.0, _queriesBean.getAttribute("UnoptimizedQueriesPerSecond"));
+		exercisePerSecondCounter("UnoptimizedNativeQueriesPerSecond", new Runnable() { public void run() {
+			triggerUnoptimizedQuery();
+		}});
+		
+	}
+	
+	public void testAverageQueryExecutionTime() {
+		
+		Assert.areEqual(0.0, _queriesBean.getAttribute("AverageQueryExecutionTime"));
+		
+		triggerQueryExecutionTime(1000);
+		Assert.areEqual(1000.0, _queriesBean.getAttribute("AverageQueryExecutionTime"));
+		
+		triggerQueryExecutionTime(200);
+		triggerQueryExecutionTime(500);
+		Assert.areEqual(350.0, _queriesBean.getAttribute("AverageQueryExecutionTime"));
+		
+	}
+
+	private void triggerQueryExecutionTime(final int executionTime) {
+		final Query query = newQuery(Item.class);
+		stream().callbacks().queryOnStarted(trans(), query);
+		_clock.advance(executionTime);
+		stream().callbacks().queryOnFinished(trans(), query);
+	}
+	
+	public void testNativeQueriesPerSecond() {
+		
+		final ByRef<Boolean> optimized = ByRef.newInstance(true);
+		
+		exercisePerSecondCounter("NativeQueriesPerSecond", new Runnable() { public void run() {
+			if (optimized.value) {
+				triggerOptimizedQuery();
+			} else {
+				triggerUnoptimizedQuery();
+			}
+			optimized.value = !optimized.value;
+		}});
+		
+	}
+	
+	public void testQueriesPerSecond() {
+		
+		final ByRef<Integer> queryMode = ByRef.newInstance(0);
+		
+		exercisePerSecondCounter("QueriesPerSecond", new Runnable() { public void run() {
+			switch (queryMode.value % 3) {
+			case 0:
+				triggerOptimizedQuery();
+				break;
+			case 1:
+				triggerUnoptimizedQuery();
+				break;
+			case 2:
+				triggerSodaQuery();
+				break;
+			}
+			++queryMode.value;
+		}});
+	}
+
+	protected void triggerOptimizedQuery() {
+		db().query(new Predicate<Item>() { @Override public boolean match(Item candidate) {
+			return candidate._id.equals("foo");
+		}});
+	}
+
+	private void exercisePerSecondCounter(final String beanAttributeName,
+			final Runnable counterIncrementTrigger) {
+		Assert.areEqual(0.0, _queriesBean.getAttribute(beanAttributeName));
 		
 		for (int i=0; i<3; ++i) {
-			triggerUnoptimizedQuery();
-			triggerUnoptimizedQuery();
+			counterIncrementTrigger.run();
+			counterIncrementTrigger.run();
 			_clock.advance(1000);
-			Assert.areEqual(2.0, _queriesBean.getAttribute("UnoptimizedQueriesPerSecond"));
+			Assert.areEqual(2.0, _queriesBean.getAttribute(beanAttributeName));
 		}
-		
 	}
 	
 	public void testUnoptimizedQueryNotification() throws Exception {
@@ -135,6 +206,10 @@ public class QueryMonitoringSupportTestCase extends AbstractDb4oTestCase impleme
 		query.execute().toArray();
 	}
 	
+	private void triggerSodaQuery() {
+		newQuery(Item.class).execute();
+	}
+
 	public static class Item {
 		
 		public Item(String id) {
