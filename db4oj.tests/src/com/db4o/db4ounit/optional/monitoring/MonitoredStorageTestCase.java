@@ -46,7 +46,7 @@ public class MonitoredStorageTestCase implements TestLifeCycle {
 		config.file().storage(_storage);
 		config.common().environment().add(clock);
 		
-		_container = Db4oEmbedded.openFile(config, null);
+		_container = Db4oEmbedded.openFile(config, "");
 		_container.store(new Object());
 		_container.commit();
 		
@@ -66,7 +66,7 @@ public class MonitoredStorageTestCase implements TestLifeCycle {
 
 	
 	private ObjectName getIOMBeanName() {
-		return Db4oMBeans.mBeanNameFor(IOMBean.class, null);
+		return Db4oMBeans.mBeanNameFor(IOMBean.class, "");
 	}
 
 }
