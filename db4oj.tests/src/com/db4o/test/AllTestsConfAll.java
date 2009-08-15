@@ -6,7 +6,6 @@ import com.db4o.test.cluster.*;
 import com.db4o.test.conjunctions.*;
 import com.db4o.test.constraints.*;
 import com.db4o.test.java.*;
-import com.db4o.test.nativequery.*;
 import com.db4o.test.performance.*;
 
 public class AllTestsConfAll extends TestSuite{
@@ -23,7 +22,7 @@ public class AllTestsConfAll extends TestSuite{
 
     @decaf.ReplaceFirst("return;")
 	private void addNativeQueryTestSuite(TestSuite suites) {
-		suites.add(new NativeQueryTestSuite());
+		suites.add(new com.db4o.test.nativequery.NativeQueryTestSuite());
 	}
     
     public Class[] tests(){

@@ -74,11 +74,21 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 		final DecafProject project = DecafProject.create(element.getJavaProject());
 		
 		for (DecafProject.OutputTarget outputTarget : project.targets()) {
-			final ICompilationUnit decaf = decafElementFor(element, outputTarget.targetProject());
-			
 			final ASTRewrite rewrite = DecafRewriter.rewrite(element, monitor, outputTarget.targetPlatform(), outputTarget.config());
+			if (rewrite == null) {
+				deleteDecafFileFor(element, outputTarget, monitor);
+				continue;
+			}
+			final ICompilationUnit decaf = decafElementFor(element, outputTarget.targetProject());
 			safeRewriteFile(decaf, rewrite, monitor);
 		}
+	}
+
+	private void deleteDecafFileFor(final ICompilationUnit element,
+			DecafProject.OutputTarget outputTarget,
+			final IProgressMonitor monitor) throws CoreException {
+		final IFile decafFile = decafFileFor(element, outputTarget.targetProject());
+		if (decafFile.exists()) decafFile.delete(true, monitor);
 	}
 
 	private void safeRewriteFile(final ICompilationUnit decaf, final ASTRewrite rewrite, final IProgressMonitor monitor) {
@@ -99,17 +109,20 @@ public class DecafProjectBuilder extends IncrementalProjectBuilder {
 			ICompilationUnit sourceCompilationUnit,
 			IJavaProject decafJavaProject) throws CoreException,
 			JavaModelException {
-		IFile resource = fileFor(sourceCompilationUnit);
-		
-		IFile decafFile = decafJavaProject.getProject().getFile(resource.getProjectRelativePath());
+		IFile decafFile = decafFileFor(sourceCompilationUnit, decafJavaProject);
 		if (!decafFile.exists()) {
-			copy(resource, decafFile);
+			copy(fileFor(sourceCompilationUnit), decafFile);
 			return compilationUnitFor(decafFile);
 		}
 		
 		ICompilationUnit decafElement = compilationUnitFor(decafFile);
 		updateDecafUnit(sourceCompilationUnit, decafElement);
 		return decafElement;
+	}
+
+	private IFile decafFileFor(ICompilationUnit sourceCompilationUnit,
+			IJavaProject decafJavaProject) {
+		return decafJavaProject.getProject().getFile(fileFor(sourceCompilationUnit).getProjectRelativePath());
 	}
 
 	private void copy(IFile fromFile, IFile toFile) throws CoreException {

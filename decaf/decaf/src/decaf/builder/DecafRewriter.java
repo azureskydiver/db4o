@@ -14,12 +14,25 @@ import decaf.core.*;
 
 public class DecafRewriter {
 
+	/**
+	 * Returns null if the file should be removed from the target project. 
+	 */
 	public static ASTRewrite rewrite(final ICompilationUnit element,
 			IProgressMonitor monitor, TargetPlatform platform, DecafConfiguration decafConfig) {
 		
 		final CompilationUnit ast = parseCompilationUnit(element, monitor);
 		ASTUtility.checkForProblems(ast, true);
-		return rewrite(ast, platform, decafConfig);
+		
+		final ASTRewrite rewrite = rewrite(ast, platform, decafConfig);
+		if (rewrittenCompilationUnitHasNoTypes(ast, rewrite))
+			return null;
+		
+		return rewrite;
+	}
+
+	private static boolean rewrittenCompilationUnitHasNoTypes(
+			final CompilationUnit ast, final ASTRewrite rewrite) {
+		return rewrite.getListRewrite(ast, CompilationUnit.TYPES_PROPERTY).getRewrittenList().isEmpty();
 	}
 
 	private static ASTRewrite rewrite(final CompilationUnit unit, final TargetPlatform targetPlatform, DecafConfiguration decafConfig) {
