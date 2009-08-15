@@ -5,6 +5,8 @@ import java.io.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.dom.rewrite.*;
+
 import sharpen.core.*;
 import decaf.*;
 import decaf.builder.*;
@@ -91,7 +93,12 @@ public abstract class DecafTestCaseBase extends TestCase {
 		try {
 			IFile decafFile = decafFileFor(cu.getResource(), targetPlatform);
 		
-			FileRewriter.rewriteFile(DecafRewriter.rewrite(cu, null, targetPlatform, config), decafFile.getFullPath());
+			final ASTRewrite rewrite = DecafRewriter.rewrite(cu, null, targetPlatform, config);
+			if (rewrite != null) {
+				FileRewriter.rewriteFile(rewrite, decafFile.getFullPath());
+			} else {
+				decafFile.delete(true, null);
+			}
 		
 			resource.assertFile(decafFile);
 		} finally {
