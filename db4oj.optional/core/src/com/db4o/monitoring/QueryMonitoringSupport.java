@@ -9,7 +9,6 @@ import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.config.*;
-import com.db4o.internal.query.*;
 
 @decaf.Ignore
 public class QueryMonitoringSupport implements ConfigurationItem {
@@ -23,12 +22,6 @@ public class QueryMonitoringSupport implements ConfigurationItem {
 				if (d instanceof LoadedFromClassIndex) {
 					queries.notifyClassIndexScan((LoadedFromClassIndex)d);
 				}
-			}
-		});
-		
-		container.getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
-			public void notifyQueryExecuted(NQOptimizationInfo info) {
-				queries.notifyNativeQuery(info);
 			}
 		});
 		

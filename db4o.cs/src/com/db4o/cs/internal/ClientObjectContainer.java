@@ -2,7 +2,7 @@
 
 package com.db4o.cs.internal;
 
-import static com.db4o.foundation.Environments.*;
+import static com.db4o.foundation.Environments.my;
 
 import java.io.*;
 import java.util.*;
@@ -19,10 +19,12 @@ import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.convert.*;
 import com.db4o.internal.encoding.*;
+import com.db4o.internal.query.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.slots.*;
 import com.db4o.io.*;
+import com.db4o.query.*;
 import com.db4o.reflect.*;
 /**
  * @exclude
@@ -81,6 +83,22 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	private boolean _bypassSlotCache = false;
 	
+	public static final class ClientQQuery extends QQuery {
+		public ClientQQuery() {
+		}
+		
+		public ClientQQuery(Transaction aTrans, QQuery aParent, String aField) {
+			super(aTrans, aParent, aField);
+		}
+
+		@Override
+		protected QueryResult executeQuery() {
+			return triggeringQueryEvents(new Closure4<QueryResult>() { public QueryResult run() {
+				return executeQueryImpl();
+			}});
+		}
+	}
+
 	public interface MessageListener {
 		public void onMessage(Msg msg);
 	}
@@ -337,6 +355,11 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			((MRuntimeException)msg).throwPayload();
 		}
 	}
+	
+	@Override
+	public Query query(Transaction ta) {
+        return new ClientQQuery(checkTransaction(ta), null, null);
+    }
 		
 	public AbstractQueryResult queryAllObjects(Transaction trans) {
 		int mode = config().evaluationMode().asInt();

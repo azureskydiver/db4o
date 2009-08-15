@@ -32,6 +32,7 @@ public final class MQueryExecute extends MsgQuery implements MessageWithResponse
     }
 
 	private AbstractQueryResult executeFully(QQuery query) {
+		
 		AbstractQueryResult qr = newQueryResult(query.evaluationMode());
 		qr.loadFromQuery(query);
 		return qr;
