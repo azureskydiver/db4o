@@ -833,12 +833,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     public QueryResult classOnlyQuery(QQueryBase query, ClassMetadata clazz){
         if (!clazz.hasClassIndex()) {
-        	
-        	// TODO: If the class does not have an index, we won't be
-        	//       able to get objects for it, so why not return an
-        	//       empty QueryResult here, to signal that no further
-        	//       processing needs to take place?
-			return null;
+        	return new IdListQueryResult(query.getTransaction());
 		}
 		
 		final AbstractQueryResult queryResult = newQueryResult(query.getTransaction());

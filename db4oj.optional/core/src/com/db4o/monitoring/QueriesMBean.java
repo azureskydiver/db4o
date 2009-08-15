@@ -8,7 +8,6 @@ public interface QueriesMBean {
 	
 	double getAverageQueryExecutionTime();
 	double getQueriesPerSecond();
-	double getUnoptimizedNativeQueriesPerSecond();
-	double getNativeQueriesPerSecond();
+	
 
 }

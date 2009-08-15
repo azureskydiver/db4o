@@ -10,6 +10,7 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 			MonitoredStorageTestCase.class,
+			NativeQueryMonitoringSupportTestCase.class,
 			QueryMonitoringSupportTestCase.class,
 		};
 	}

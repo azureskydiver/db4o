@@ -21,5 +21,5 @@ public class ClientQueryResult extends IdListQueryResult {
     
     public Iterator4 iterator() {
     	return ClientServerPlatform.createClientQueryResultIterator(this);
-    }	
+    }
 }

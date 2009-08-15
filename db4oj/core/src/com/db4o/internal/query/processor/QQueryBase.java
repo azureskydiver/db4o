@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.callbacks.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.*;
 import com.db4o.internal.query.result.*;
@@ -333,102 +332,33 @@ public abstract class QQueryBase implements Unversioned {
 
     public ObjectSet execute() {
         synchronized (streamLock()) {
-    		Callbacks callbacks = stream().callbacks();
-    		callbacks.queryOnStarted(_trans, cast(this));
-    	    QueryResult qresult = getQueryResult();
-    	    callbacks.queryOnFinished(_trans, cast(this));
-    		return new ObjectSetFacade(qresult);
+        	return new ObjectSetFacade(getQueryResult());
         }
 	}
-
-	public QueryResult getQueryResult() {
-		synchronized (streamLock()) {
-	        if(i_constraints.size() == 0){
-	            return stream().queryAllObjects(_trans);
-	        }
-			QueryResult result = classOnlyQuery();
-			if(result != null) {
-				return result;
-			}
-    		optimizeJoins();
-	        return stream().executeQuery(_this);
-	    }
-	}
-
-	protected ObjectContainerBase stream() {
-		return _trans.container();
-	}
-
-	private QueryResult classOnlyQuery() {
-        
-		if(i_constraints.size()!=1||_comparator!=null) {
-			return null;
-		}
-		Constraint constr=singleConstraint(); 
-		if(constr.getClass()!=QConClass.class) {
-			return null;
-		}
-		QConClass clazzconstr=(QConClass)constr;
-		ClassMetadata clazz=clazzconstr.i_classMetadata;
-		if(clazz==null) {
-			return null;
-		}
-		if(clazzconstr.hasChildren() || clazz.isArray()) {
-			return null;
-		}
-		
-		QueryResult queryResult = stream().classOnlyQuery(this, clazz);
-		if(queryResult == null){
-			return null;
-		}
-		sort(queryResult);
-		
-		return queryResult;
-        
-	}
-
-	private Constraint singleConstraint() {
-		return (Constraint)i_constraints.singleElement();
-	}
-
-    public static class CreateCandidateCollectionResult {
-    	public final boolean checkDuplicates;
-        public final boolean topLevel;
-        public final List4 candidateCollection;
-        
-    	public CreateCandidateCollectionResult(List4 candidateCollection_, boolean checkDuplicates_, boolean topLevel_) {
-    		candidateCollection = candidateCollection_;
-    		topLevel = topLevel_;
-    		checkDuplicates = checkDuplicates_;
-		}
-    }
     
-    public Iterator4 executeSnapshot(){
-    	
-		final CreateCandidateCollectionResult r = createCandidateCollection();
-		
-        final Collection4 executionPath = executionPath(r);
-        
-        Iterator4 candidatesIterator = new Iterator4Impl(r.candidateCollection);
-        
-        Collection4 snapshots = new Collection4();
-        while(candidatesIterator.moveNext()){
-        	QCandidates candidates = (QCandidates) candidatesIterator.current(); 
-        	snapshots.add( candidates.executeSnapshot(executionPath));
-        }
-        
-        Iterator4 snapshotsIterator = snapshots.iterator();
-        final CompositeIterator4 resultingIDs = new CompositeIterator4(snapshotsIterator);
-        
-        if(!r.checkDuplicates){
-        	return resultingIDs;
-        }
-        
-		return checkDuplicates(resultingIDs);
+    public void executeLocal(final IdListQueryResult result) {
+    	triggeringQueryEvents(new Closure4<Iterator4>() { public Iterator4 run() {
+    		tryExecuteLocal(result);
+    		return null;
+    	}});
     }
+
+	private void triggerQueryOnFinished() {
+		stream().callbacks().queryOnFinished(_trans, cast(this));
+	}
+
+	private void triggerQueryOnStarted() {
+		stream().callbacks().queryOnStarted(_trans, cast(this));
+	}
     
     public Iterator4 executeLazy(){
-        checkConstraintsEvaluationMode();
+    	return triggeringQueryEvents(new Closure4<Iterator4>() { public Iterator4 run() {
+    		return tryExecuteLazy();
+		}});
+    }
+
+	private Iterator4 tryExecuteLazy() {
+		checkConstraintsEvaluationMode();
         
 		final CreateCandidateCollectionResult r = createCandidateCollection();
 		
@@ -449,7 +379,128 @@ public abstract class QQueryBase implements Unversioned {
         }
         
 		return checkDuplicates(resultingIDs);
+	}
+
+	public QueryResult getQueryResult() {
+		synchronized (streamLock()) {
+	        if(i_constraints.size() == 0){
+	            return executeAllObjectsQuery();
+	        }
+			QueryResult result = executeClassOnlyQuery();
+			if(result != null) {
+				return result;
+			}
+    		optimizeJoins();
+	        return executeQuery();
+	    }
+	}
+
+	protected QueryResult executeQuery() {
+		return executeQueryImpl();
+	}
+
+	protected final QueryResult executeQueryImpl() {
+		return stream().executeQuery(_this);
+	}
+
+	private QueryResult executeAllObjectsQuery() {
+		return triggeringQueryEvents(new Closure4<QueryResult>() { public QueryResult run() {
+			return stream().queryAllObjects(_trans);
+		}});
+	}
+
+	protected ObjectContainerBase stream() {
+		return _trans.container();
+	}
+
+	private QueryResult executeClassOnlyQuery() {
+        
+		final ClassMetadata clazz = singleClassConstraint();
+		if (null == clazz) {
+			return null;
+		}
+		
+		return triggeringQueryEvents(new Closure4<QueryResult>() { public QueryResult run() {
+			QueryResult queryResult = stream().classOnlyQuery(QQueryBase.this, clazz);
+			sort(queryResult);
+			return queryResult;
+		}});
+	}
+
+	private ClassMetadata singleClassConstraint() {
+		if(i_constraints.size()!=1||_comparator!=null) {
+			return null;
+		}
+		Constraint constr=singleConstraint(); 
+		if(constr.getClass()!=QConClass.class) {
+			return null;
+		}
+		QConClass clazzconstr=(QConClass)constr;
+		ClassMetadata clazz=clazzconstr.i_classMetadata;
+		if(clazz==null) {
+			return null;
+		}
+		if(clazzconstr.hasChildren() || clazz.isArray()) {
+			return null;
+		}
+		return clazz;
+	}
+
+	private Constraint singleConstraint() {
+		return (Constraint)i_constraints.singleElement();
+	}
+
+    public static class CreateCandidateCollectionResult {
+    	public final boolean checkDuplicates;
+        public final boolean topLevel;
+        public final List4 candidateCollection;
+        
+    	public CreateCandidateCollectionResult(List4 candidateCollection_, boolean checkDuplicates_, boolean topLevel_) {
+    		candidateCollection = candidateCollection_;
+    		topLevel = topLevel_;
+    		checkDuplicates = checkDuplicates_;
+		}
     }
+    
+    public Iterator4 executeSnapshot(){
+    	return triggeringQueryEvents(new Closure4<Iterator4>() { public Iterator4 run() {
+			return tryExecuteSnapshot();
+		}});
+    }
+    
+    protected <T> T triggeringQueryEvents(Closure4<T> closure) {
+    	triggerQueryOnStarted();
+    	try {
+    		return closure.run();
+    	} finally {
+    		triggerQueryOnFinished();
+    	}
+    }
+
+	private Iterator4 tryExecuteSnapshot() {
+		final CreateCandidateCollectionResult r = createCandidateCollection();
+		
+        final Collection4 executionPath = executionPath(r);
+        
+        Iterator4 candidatesIterator = new Iterator4Impl(r.candidateCollection);
+        
+        Collection4 snapshots = new Collection4();
+        while(candidatesIterator.moveNext()){
+        	QCandidates candidates = (QCandidates) candidatesIterator.current(); 
+        	snapshots.add( candidates.executeSnapshot(executionPath));
+        }
+        
+        Iterator4 snapshotsIterator = snapshots.iterator();
+        final CompositeIterator4 resultingIDs = new CompositeIterator4(snapshotsIterator);
+        
+        if(!r.checkDuplicates){
+        	return resultingIDs;
+        }
+        
+		return checkDuplicates(resultingIDs);
+	}
+    
+    
 
 	private Iterator4 checkDuplicates(CompositeIterator4 executeAllCandidates) {
 		return Iterators.filter(executeAllCandidates, new Predicate4() {
@@ -469,9 +520,6 @@ public abstract class QQueryBase implements Unversioned {
 		return r.topLevel ? null : fieldPathFromTop();
 	}
 
-	/*
-	 * check constraints evaluation mode
-	 */
 	public void checkConstraintsEvaluationMode() {
 	    Iterator4 constraints = iterateConstraints();
         while (constraints.moveNext()) {
@@ -479,8 +527,8 @@ public abstract class QQueryBase implements Unversioned {
         }
 	}
 	
-    public void executeLocal(final IdListQueryResult result) {
-        checkConstraintsEvaluationMode();
+	private void tryExecuteLocal(final IdListQueryResult result) {
+		checkConstraintsEvaluationMode();
 
         CreateCandidateCollectionResult r = createCandidateCollection();
         
@@ -557,7 +605,7 @@ public abstract class QQueryBase implements Unversioned {
             }
         }
         sort(result);
-    }
+	}
     
     private Collection4 fieldPathFromTop(){
         QQueryBase q = this;
