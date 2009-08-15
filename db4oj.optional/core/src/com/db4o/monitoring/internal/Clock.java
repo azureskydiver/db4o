@@ -4,6 +4,7 @@ package com.db4o.monitoring.internal;
 /**
  * @exclude
  */
+@decaf.Ignore
 public interface Clock {
 
 	long currentTimeMillis();
