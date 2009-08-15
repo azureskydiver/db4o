@@ -73,7 +73,7 @@ public class QueryMonitoringSupportTestCase extends MBeanTestCaseBase implements
 		final ByRef<Integer> queryMode = ByRef.newInstance(0);
 		
 		exercisePerSecondCounter("QueriesPerSecond", new Runnable() { public void run() {
-			switch (queryMode.value % 3) {
+			switch (queryMode.value.intValue() % 3) {
 			case 0:
 				triggerOptimizedQuery();
 				break;
@@ -84,7 +84,7 @@ public class QueryMonitoringSupportTestCase extends MBeanTestCaseBase implements
 				triggerSodaQuery();
 				break;
 			}
-			++queryMode.value;
+			queryMode.value = queryMode.value.intValue() + 1;
 		}});
 	}
 
