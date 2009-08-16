@@ -19,7 +19,6 @@ import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.convert.*;
 import com.db4o.internal.encoding.*;
-import com.db4o.internal.query.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.slots.*;
@@ -83,22 +82,6 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	private boolean _bypassSlotCache = false;
 	
-	public static final class ClientQQuery extends QQuery {
-		public ClientQQuery() {
-		}
-		
-		public ClientQQuery(Transaction aTrans, QQuery aParent, String aField) {
-			super(aTrans, aParent, aField);
-		}
-
-		@Override
-		protected QueryResult executeQuery() {
-			return triggeringQueryEvents(new Closure4<QueryResult>() { public QueryResult run() {
-				return executeQueryImpl();
-			}});
-		}
-	}
-
 	public interface MessageListener {
 		public void onMessage(Msg msg);
 	}

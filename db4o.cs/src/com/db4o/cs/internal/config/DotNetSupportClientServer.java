@@ -12,6 +12,7 @@ import com.db4o.query.*;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
 public class DotNetSupportClientServer implements ConfigurationItem {
 
@@ -36,15 +37,16 @@ public class DotNetSupportClientServer implements ConfigurationItem {
 		config.addAlias(new TypeAlias("Db4objects.Db4o.Foundation.List4, Db4objects.Db4o", List4.class.getName()));
 		config.addAlias(new TypeAlias("Db4objects.Db4o.User, Db4objects.Db4o", User.class.getName()));
 
-		config.addAlias(new TypeAlias("Db4objects.Db4o.Internal.CS.ClassInfo, Db4objects.Db4o", ClassInfo.class.getName()));
-		config.addAlias(new TypeAlias("Db4objects.Db4o.Internal.CS.FieldInfo, Db4objects.Db4o", FieldInfo.class.getName()));
+		config.addAlias(new TypeAlias("Db4objects.Db4o.CS.Internal.ClassInfo, Db4objects.Db4o.CS", ClassInfo.class.getName()));
+		config.addAlias(new TypeAlias("Db4objects.Db4o.CS.Internal.FieldInfo, Db4objects.Db4o.CS", FieldInfo.class.getName()));
+		config.addAlias(new TypeAlias("Db4objects.Db4o.CS.Internal.ClientQQuery, Db4objects.Db4o.CS", ClientQQuery.class.getName()));
 
 		config.addAlias(
 				new TypeAlias(
-						"Db4objects.Db4o.Internal.CS.Messages.MUserMessage+UserMessagePayload, Db4objects.Db4o", 
+						"Db4objects.Db4o.CS.Internal.Messages.MUserMessage+UserMessagePayload, Db4objects.Db4o.CS", 
 						MUserMessage.UserMessagePayload.class.getName()));
 		
-		config.addAlias(new WildcardAlias("Db4objects.Db4o.Internal.CS.Messages.*, Db4objects.Db4o", "com.db4o.internal.cs.messages.*"));
+		config.addAlias(new WildcardAlias("Db4objects.Db4o.CS.Internal.Messages.*, Db4objects.Db4o.CS", "com.db4o.cs.internal.messages.*"));
 
 		
 	}
