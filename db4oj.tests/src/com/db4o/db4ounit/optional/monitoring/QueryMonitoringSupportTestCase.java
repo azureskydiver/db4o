@@ -65,10 +65,10 @@ public class QueryMonitoringSupportTestCase extends MBeanTestCaseBase implements
 	
 	public void testQueriesPerSecond() {
 		
-		if (isNetworkingClientServer()) {
-			System.err.println("WARNING: " + getClass().getName() + ".testQueriesPerSecond: Ignored in C/S");
-			return;
-		}
+//		if (isNetworkingClientServer()) {
+//			System.err.println("WARNING: " + getClass().getName() + ".testQueriesPerSecond: Ignored in C/S");
+//			return;
+//		}
 		
 		final ByRef<Integer> queryMode = ByRef.newInstance(0);
 		

@@ -1344,7 +1344,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         return queryByExample(trans, clazz);
     }
 
-    public Query query(Transaction ta) {
+    public final Query query(Transaction ta) {
         return new QQuery(checkTransaction(ta), null, null);
     }
 

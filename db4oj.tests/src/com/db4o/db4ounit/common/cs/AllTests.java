@@ -34,6 +34,7 @@ public class AllTests extends Db4oTestSuite {
             SendMessageToClientTestCase.class,
             ServerClosedTestCase.class,
             ServerPortUsedTestCase.class,
+            ServerQueryEventsTestCase.class,
             ServerRevokeAccessTestCase.class,
             ServerTimeoutTestCase.class,
             ServerToClientTestCase.class,

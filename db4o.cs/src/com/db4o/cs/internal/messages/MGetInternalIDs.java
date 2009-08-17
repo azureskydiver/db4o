@@ -5,6 +5,7 @@ package com.db4o.cs.internal.messages;
 import com.db4o.cs.internal.objectexchange.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.query.processor.*;
 
 public final class MGetInternalIDs extends MsgD implements MessageWithResponse {
 	public final Msg replyFromServer() {
@@ -13,9 +14,11 @@ public final class MGetInternalIDs extends MsgD implements MessageWithResponse {
         final int classMetadataID = bytes.readInt();
         final int prefetchDepth = bytes.readInt();
         final int prefetchCount = bytes.readInt();
+        final boolean triggerQueryEvents = bytes.readInt() == 1;
         
 		final ByteArrayBuffer payload = marshallIDsFor(classMetadataID,
-				prefetchDepth, prefetchCount);
+				prefetchDepth, prefetchCount,
+				triggerQueryEvents);
 		final MsgD message = Msg.ID_LIST.getWriterForLength(transaction(), payload.length());
 		message.payLoad().writeBytes(payload._buffer);
 		
@@ -23,9 +26,9 @@ public final class MGetInternalIDs extends MsgD implements MessageWithResponse {
 	}
 
 	private ByteArrayBuffer marshallIDsFor(final int classMetadataID,
-			final int prefetchDepth, final int prefetchCount) {
+			final int prefetchDepth, final int prefetchCount, boolean triggerQueryEvents) {
 		synchronized(streamLock()){
-			final long[] ids = idsFor(classMetadataID);
+			final long[] ids = getIDs(classMetadataID, triggerQueryEvents);
 			
 			return ObjectExchangeStrategyFactory.forConfig(
 					new ObjectExchangeConfiguration(prefetchDepth, prefetchCount)
@@ -33,13 +36,22 @@ public final class MGetInternalIDs extends MsgD implements MessageWithResponse {
 		}
 	}
 
-	private long[] idsFor(final int classMetadataID) {
-	    synchronized (streamLock()) {
-			try {
-				return stream().classMetadataForID(classMetadataID).getIDs(transaction());
-			} catch (Exception e) {
+	private long[] getIDs(final int classMetadataID, boolean triggerQueryEvents) {
+		synchronized (streamLock()) {
+			final ClassMetadata classMetadata = stream().classMetadataForID(classMetadataID);
+			if (!triggerQueryEvents) {
+				return classMetadata.getIDs(transaction());
 			}
+			return newQuery(classMetadata).triggeringQueryEvents(new Closure4<long[]>() { public long[] run() {
+				return classMetadata.getIDs(transaction());
+			}});
 		}
-		return new long[0];
+			
     }
+
+	private QQuery newQuery(final ClassMetadata classMetadata) {
+		final QQuery query = (QQuery)file().query();
+		query.constrain(classMetadata);
+		return query;
+	}
 }
