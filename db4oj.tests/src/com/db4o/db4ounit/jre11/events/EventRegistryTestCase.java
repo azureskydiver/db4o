@@ -25,9 +25,12 @@ public class EventRegistryTestCase extends AbstractDb4oTestCase {
 		registry.queryStarted().addListener(recorder);
 		registry.queryFinished().addListener(recorder);
 
-		Query q = db().query();
+		
 		Assert.areEqual(0, recorder.size());
+		
+		Query q = db().query();
 		q.execute();
+		
 		Assert.areEqual(2, recorder.size());
 		EventRecord e1 = recorder.get(0);
 		Assert.areSame(registry.queryStarted(), e1.e);

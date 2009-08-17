@@ -31,11 +31,12 @@ public final class MQueryExecute extends MsgQuery implements MessageWithResponse
 	    return query;
     }
 
-	private AbstractQueryResult executeFully(QQuery query) {
-		
-		AbstractQueryResult qr = newQueryResult(query.evaluationMode());
-		qr.loadFromQuery(query);
-		return qr;
+	private AbstractQueryResult executeFully(final QQuery query) {
+		return query.triggeringQueryEvents(new Closure4<AbstractQueryResult>() { public AbstractQueryResult run() {
+			AbstractQueryResult qr = newQueryResult(query.evaluationMode());
+			qr.loadFromQuery(query);
+			return qr;
+		}});
 	}
 	
 }

@@ -332,15 +332,90 @@ public abstract class QQueryBase implements Unversioned {
 
     public ObjectSet execute() {
         synchronized (streamLock()) {
-        	return new ObjectSetFacade(getQueryResult());
+        	return triggeringQueryEvents(new Closure4<ObjectSet>() { public ObjectSet run() {
+        		return new ObjectSetFacade(getQueryResult());
+        	}});
         }
 	}
     
     public void executeLocal(final IdListQueryResult result) {
-    	triggeringQueryEvents(new Closure4<Iterator4>() { public Iterator4 run() {
-    		tryExecuteLocal(result);
-    		return null;
-    	}});
+    	checkConstraintsEvaluationMode();
+		
+		CreateCandidateCollectionResult r = createCandidateCollection();
+		
+		boolean checkDuplicates = r.checkDuplicates;
+		boolean topLevel = r.topLevel;
+		List4 candidateCollection = r.candidateCollection;
+		
+		if (Debug4.queries) {
+			logConstraints();
+		}
+		
+		if (candidateCollection != null) {
+			
+			final Collection4 executionPath = topLevel ? null : fieldPathFromTop();
+		
+			Iterator4 i = new Iterator4Impl(candidateCollection);
+		    while (i.moveNext()) {
+		        ((QCandidates)i.current()).execute();
+		    }
+		
+		    if (candidateCollection._next != null) {
+		        checkDuplicates = true;
+		    }
+		
+		    if (checkDuplicates) {
+		        result.checkDuplicates();
+		    }
+		
+		    final ObjectContainerBase stream = stream();
+		    i = new Iterator4Impl(candidateCollection);
+		    while (i.moveNext()) {
+		        QCandidates candidates = (QCandidates)i.current();
+		        if (topLevel) {
+		            candidates.traverse(result);
+		        } else {
+		            candidates.traverse(new Visitor4() {
+		                public void visit(Object a_object) {
+		                    QCandidate candidate = (QCandidate)a_object;
+		                    if (candidate.include()) {
+		                        TreeInt ids = new TreeInt(candidate._key);
+		                        final ObjectByRef idsNew = new ObjectByRef(null);
+		                        Iterator4 itPath = executionPath.iterator();
+		                        while (itPath.moveNext()) {
+		                            idsNew.value = null;
+		                            final String fieldName = (String) (itPath.current());
+		                            if (ids != null) {
+		                                ids.traverse(new Visitor4() {
+		                                    public void visit(Object treeInt) {
+		                                        int id = ((TreeInt)treeInt)._key;
+		                                        StatefulBuffer reader =
+		                                            stream.readWriterByID(_trans, id);
+		                                        if (reader != null) {
+		                                            ObjectHeader oh = new ObjectHeader(stream, reader);
+		                                            CollectIdContext context = new CollectIdContext(_trans, oh, reader);
+		                                            oh.classMetadata().collectIDs(context, fieldName);
+		                                            idsNew.value = context.ids();
+		                                        }
+		                                    }
+		                                });
+		                            }
+		                            ids = (TreeInt) idsNew.value;
+		                        }
+		                        if(ids != null){
+		                            ids.traverse(new Visitor4() {
+		                                public void visit(Object treeInt) {
+		                                    result.addKeyCheckDuplicates(((TreeInt)treeInt)._key);
+		                                }
+		                            });
+		                        }
+		                    }
+		                }
+		            });
+		        }
+		    }
+		}
+		sort(result);
     }
 
 	private void triggerQueryOnFinished() {
@@ -352,34 +427,28 @@ public abstract class QQueryBase implements Unversioned {
 	}
     
     public Iterator4 executeLazy(){
-    	return triggeringQueryEvents(new Closure4<Iterator4>() { public Iterator4 run() {
-    		return tryExecuteLazy();
-		}});
-    }
-
-	private Iterator4 tryExecuteLazy() {
-		checkConstraintsEvaluationMode();
-        
+    	checkConstraintsEvaluationMode();
+		
 		final CreateCandidateCollectionResult r = createCandidateCollection();
 		
-        final Collection4 executionPath = executionPath(r);
-        
-        Iterator4 candidateCollection = new Iterator4Impl(r.candidateCollection);
-        
-        MappingIterator executeCandidates = new MappingIterator(candidateCollection){
+		final Collection4 executionPath = executionPath(r);
+		
+		Iterator4 candidateCollection = new Iterator4Impl(r.candidateCollection);
+		
+		MappingIterator executeCandidates = new MappingIterator(candidateCollection){
 			protected Object map(Object current) {
 				return ((QCandidates)current).executeLazy(executionPath);
 			}
-        };
-        
-        CompositeIterator4 resultingIDs = new CompositeIterator4(executeCandidates);
-        
-        if(!r.checkDuplicates){
-        	return resultingIDs;
-        }
-        
+		};
+		
+		CompositeIterator4 resultingIDs = new CompositeIterator4(executeCandidates);
+		
+		if(!r.checkDuplicates){
+			return resultingIDs;
+		}
+		
 		return checkDuplicates(resultingIDs);
-	}
+    }
 
 	public QueryResult getQueryResult() {
 		synchronized (streamLock()) {
@@ -404,9 +473,7 @@ public abstract class QQueryBase implements Unversioned {
 	}
 
 	private QueryResult executeAllObjectsQuery() {
-		return triggeringQueryEvents(new Closure4<QueryResult>() { public QueryResult run() {
-			return stream().queryAllObjects(_trans);
-		}});
+		return stream().queryAllObjects(_trans);
 	}
 
 	protected ObjectContainerBase stream() {
@@ -420,11 +487,9 @@ public abstract class QQueryBase implements Unversioned {
 			return null;
 		}
 		
-		return triggeringQueryEvents(new Closure4<QueryResult>() { public QueryResult run() {
-			QueryResult queryResult = stream().classOnlyQuery(QQueryBase.this, clazz);
-			sort(queryResult);
-			return queryResult;
-		}});
+		QueryResult queryResult = stream().classOnlyQuery(QQueryBase.this, clazz);
+		sort(queryResult);
+		return queryResult;
 	}
 
 	private ClassMetadata singleClassConstraint() {
@@ -463,12 +528,29 @@ public abstract class QQueryBase implements Unversioned {
     }
     
     public Iterator4 executeSnapshot(){
-    	return triggeringQueryEvents(new Closure4<Iterator4>() { public Iterator4 run() {
-			return tryExecuteSnapshot();
-		}});
+		final CreateCandidateCollectionResult r = createCandidateCollection();
+		
+		final Collection4 executionPath = executionPath(r);
+		
+		Iterator4 candidatesIterator = new Iterator4Impl(r.candidateCollection);
+		
+		Collection4 snapshots = new Collection4();
+		while(candidatesIterator.moveNext()){
+			QCandidates candidates = (QCandidates) candidatesIterator.current(); 
+			snapshots.add( candidates.executeSnapshot(executionPath));
+		}
+		
+		Iterator4 snapshotsIterator = snapshots.iterator();
+		final CompositeIterator4 resultingIDs = new CompositeIterator4(snapshotsIterator);
+		
+		if(!r.checkDuplicates){
+			return resultingIDs;
+		}
+		
+		return checkDuplicates(resultingIDs);
     }
     
-    protected <T> T triggeringQueryEvents(Closure4<T> closure) {
+    public <T> T triggeringQueryEvents(Closure4<T> closure) {
     	triggerQueryOnStarted();
     	try {
     		return closure.run();
@@ -476,31 +558,6 @@ public abstract class QQueryBase implements Unversioned {
     		triggerQueryOnFinished();
     	}
     }
-
-	private Iterator4 tryExecuteSnapshot() {
-		final CreateCandidateCollectionResult r = createCandidateCollection();
-		
-        final Collection4 executionPath = executionPath(r);
-        
-        Iterator4 candidatesIterator = new Iterator4Impl(r.candidateCollection);
-        
-        Collection4 snapshots = new Collection4();
-        while(candidatesIterator.moveNext()){
-        	QCandidates candidates = (QCandidates) candidatesIterator.current(); 
-        	snapshots.add( candidates.executeSnapshot(executionPath));
-        }
-        
-        Iterator4 snapshotsIterator = snapshots.iterator();
-        final CompositeIterator4 resultingIDs = new CompositeIterator4(snapshotsIterator);
-        
-        if(!r.checkDuplicates){
-        	return resultingIDs;
-        }
-        
-		return checkDuplicates(resultingIDs);
-	}
-    
-    
 
 	private Iterator4 checkDuplicates(CompositeIterator4 executeAllCandidates) {
 		return Iterators.filter(executeAllCandidates, new Predicate4() {
@@ -527,87 +584,7 @@ public abstract class QQueryBase implements Unversioned {
         }
 	}
 	
-	private void tryExecuteLocal(final IdListQueryResult result) {
-		checkConstraintsEvaluationMode();
-
-        CreateCandidateCollectionResult r = createCandidateCollection();
-        
-        boolean checkDuplicates = r.checkDuplicates;
-        boolean topLevel = r.topLevel;
-        List4 candidateCollection = r.candidateCollection;
-        
-        if (Debug4.queries) {
-        	logConstraints();
-        }
-        
-        if (candidateCollection != null) {
-        	
-        	final Collection4 executionPath = topLevel ? null : fieldPathFromTop();
-
-        	Iterator4 i = new Iterator4Impl(candidateCollection);
-            while (i.moveNext()) {
-                ((QCandidates)i.current()).execute();
-            }
-
-            if (candidateCollection._next != null) {
-                checkDuplicates = true;
-            }
-
-            if (checkDuplicates) {
-                result.checkDuplicates();
-            }
-
-            final ObjectContainerBase stream = stream();
-            i = new Iterator4Impl(candidateCollection);
-            while (i.moveNext()) {
-                QCandidates candidates = (QCandidates)i.current();
-                if (topLevel) {
-                    candidates.traverse(result);
-                } else {
-                    candidates.traverse(new Visitor4() {
-                        public void visit(Object a_object) {
-                            QCandidate candidate = (QCandidate)a_object;
-                            if (candidate.include()) {
-                                TreeInt ids = new TreeInt(candidate._key);
-                                final ObjectByRef idsNew = new ObjectByRef(null);
-                                Iterator4 itPath = executionPath.iterator();
-                                while (itPath.moveNext()) {
-                                    idsNew.value = null;
-                                    final String fieldName = (String) (itPath.current());
-                                    if (ids != null) {
-                                        ids.traverse(new Visitor4() {
-                                            public void visit(Object treeInt) {
-                                                int id = ((TreeInt)treeInt)._key;
-                                                StatefulBuffer reader =
-                                                    stream.readWriterByID(_trans, id);
-                                                if (reader != null) {
-                                                    ObjectHeader oh = new ObjectHeader(stream, reader);
-                                                    CollectIdContext context = new CollectIdContext(_trans, oh, reader);
-                                                    oh.classMetadata().collectIDs(context, fieldName);
-                                                    idsNew.value = context.ids();
-                                                }
-                                            }
-                                        });
-                                    }
-                                    ids = (TreeInt) idsNew.value;
-                                }
-                                if(ids != null){
-                                    ids.traverse(new Visitor4() {
-	                                    public void visit(Object treeInt) {
-	                                        result.addKeyCheckDuplicates(((TreeInt)treeInt)._key);
-	                                    }
-	                                });
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-        }
-        sort(result);
-	}
-    
-    private Collection4 fieldPathFromTop(){
+	private Collection4 fieldPathFromTop(){
         QQueryBase q = this;
         final Collection4 fieldPath = new Collection4();
         while (q.i_parent != null) {

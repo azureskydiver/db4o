@@ -39,8 +39,7 @@ public class DotNetSupportClientServer implements ConfigurationItem {
 
 		config.addAlias(new TypeAlias("Db4objects.Db4o.CS.Internal.ClassInfo, Db4objects.Db4o.CS", ClassInfo.class.getName()));
 		config.addAlias(new TypeAlias("Db4objects.Db4o.CS.Internal.FieldInfo, Db4objects.Db4o.CS", FieldInfo.class.getName()));
-		config.addAlias(new TypeAlias("Db4objects.Db4o.CS.Internal.ClientQQuery, Db4objects.Db4o.CS", ClientQQuery.class.getName()));
-
+		
 		config.addAlias(
 				new TypeAlias(
 						"Db4objects.Db4o.CS.Internal.Messages.MUserMessage+UserMessagePayload, Db4objects.Db4o.CS", 

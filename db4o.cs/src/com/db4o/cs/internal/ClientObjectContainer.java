@@ -23,7 +23,6 @@ import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.slots.*;
 import com.db4o.io.*;
-import com.db4o.query.*;
 import com.db4o.reflect.*;
 /**
  * @exclude
@@ -338,11 +337,6 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			((MRuntimeException)msg).throwPayload();
 		}
 	}
-	
-	@Override
-	public Query query(Transaction ta) {
-        return new ClientQQuery(checkTransaction(ta), null, null);
-    }
 		
 	public AbstractQueryResult queryAllObjects(Transaction trans) {
 		int mode = config().evaluationMode().asInt();
@@ -898,7 +892,12 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     }
 
     public long[] getIDsForClass(final Transaction trans, ClassMetadata clazz){
-    	MsgD msg = Msg.GET_INTERNAL_IDS.getWriterForInts(trans, clazz.getID(), prefetchDepth(), prefetchCount());
+    	boolean triggerQueryEvents = false;
+    	return getIDsForClass(trans, clazz, triggerQueryEvents);
+    }
+
+	private long[] getIDsForClass(final Transaction trans, ClassMetadata clazz, boolean triggerQueryEvents) {
+		MsgD msg = Msg.GET_INTERNAL_IDS.getWriterForInts(trans, clazz.getID(), prefetchDepth(), prefetchCount(), triggerQueryEvents ? 1 : 0);
     	write(msg);
     	
     	final ByRef<long[]> result = ByRef.newInstance();
@@ -910,6 +909,17 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	    }});
     	
     	return result.value;
+	}
+
+    @Override
+    public QueryResult classOnlyQuery(QQueryBase query, ClassMetadata clazz){
+    	final Transaction trans = query.getTransaction();
+    	long[] ids = getIDsForClass(trans, clazz, true); 
+    	ClientQueryResult resClient = new ClientQueryResult(trans, ids.length);
+    	for (int i = 0; i < ids.length; i++) {
+    		resClient.add((int)ids[i]);
+    	}
+    	return resClient;
     }
 
 	private long[] toLongArray(FixedSizeIntIterator4 idIterator) {
@@ -929,16 +939,6 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	    return _config.prefetchObjectCount();
     }
     
-	@Override
-    public QueryResult classOnlyQuery(QQueryBase query, ClassMetadata clazz){
-        final Transaction trans = query.getTransaction();
-		long[] ids = clazz.getIDs(trans); 
-        ClientQueryResult resClient = new ClientQueryResult(trans, ids.length);
-        for (int i = 0; i < ids.length; i++) {
-            resClient.add((int)ids[i]);
-        }
-        return resClient;
-    }
     
     public QueryResult executeQuery(QQuery query){
     	Transaction trans = query.getTransaction();
