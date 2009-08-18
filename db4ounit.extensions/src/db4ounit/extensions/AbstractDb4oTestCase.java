@@ -56,6 +56,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	public final void setUp() throws Exception {
 		final Db4oFixture _fixture = fixture();
         _fixture.clean();
+        db4oSetupBeforeConfigure();
 		configure(_fixture.config());
 		_fixture.open(this);
         db4oSetupBeforeStore();
@@ -90,6 +91,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	    }
     }
 	
+	protected void db4oSetupBeforeConfigure() throws Exception {}
 	protected void db4oSetupBeforeStore() throws Exception {}
 	protected void db4oSetupAfterStore() throws Exception {}
 	protected void db4oTearDownBeforeClean() throws Exception {}
