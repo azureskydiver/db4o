@@ -90,7 +90,7 @@ public class Db4oClientServer extends
 
 	private Configuration clientConfigFor(Db4oTestCase testInstance) throws Exception {
 
-        if (testInstance instanceof CustomClientServerConfiguration) {
+        if (requiresCustomConfiguration(testInstance)) {
         	final Configuration customServerConfig = newConfiguration();
 			((CustomClientServerConfiguration)testInstance).configureClient(customServerConfig);
 			return customServerConfig;
@@ -122,7 +122,7 @@ public class Db4oClientServer extends
 
 	private Configuration serverConfigFor(Db4oTestCase testInstance) throws Exception {
 		
-        if (testInstance instanceof CustomClientServerConfiguration) {
+        if (requiresCustomConfiguration(testInstance)) {
         	final Configuration customServerConfig = newConfiguration();
 			((CustomClientServerConfiguration)testInstance).configureServer(customServerConfig);
 			return customServerConfig;
@@ -130,6 +130,16 @@ public class Db4oClientServer extends
         
         return cloneConfiguration();
     }
+
+	private boolean requiresCustomConfiguration(Db4oTestCase testInstance) {
+		if (embeddedClients()) {
+			return false;
+		}
+		if (testInstance instanceof CustomClientServerConfiguration) {
+			return true;
+		}
+		return false;
+	}
     
     public void close() throws Exception {
 		if (null != _objectContainer) {
