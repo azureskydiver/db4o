@@ -21,17 +21,20 @@ public class Db4oUnitTestMain extends UnitTestMain {
 	@Override
 	protected Iterable4 builder(Class clazz) {
 		final Db4oTestSuiteBuilder networkingCS = new Db4oTestSuiteBuilder(Db4oFixtures.newNetworkingCS(), clazz);
-		final Db4oTestSuiteBuilder inMemory = new Db4oTestSuiteBuilder(_fixture, clazz);
+		final Db4oTestSuiteBuilder solo = new Db4oTestSuiteBuilder(_fixture, clazz);
 		final Db4oTestSuiteBuilder embeddedCS = new Db4oTestSuiteBuilder(Db4oFixtures.newEmbeddedCS(), clazz);
 		
 //		if (true) {
 //			return networkingCS;
 //		}
-		if (true) {
-			return inMemory;
-		}
+//		if (true) {
+//			return solo;
+//		}
+//		if (true) {
+//			return embeddedCS;
+//		}
 		
-		return Iterators.concat(inMemory, embeddedCS, networkingCS);
+		return Iterators.concat(solo, embeddedCS, networkingCS);
 	}
 	
 	protected Test testMethod(String className, String methodName)
