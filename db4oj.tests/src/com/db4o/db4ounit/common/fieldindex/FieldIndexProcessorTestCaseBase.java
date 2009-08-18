@@ -123,7 +123,7 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 	}
 	
 	protected Transaction transactionFromQuery(Query query) {
-		return ((QQuery)query).getTransaction();
+		return ((QQuery)query).transaction();
 	}
 
 

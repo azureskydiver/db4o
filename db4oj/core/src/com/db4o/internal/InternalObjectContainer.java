@@ -8,9 +8,9 @@ import com.db4o.internal.callbacks.*;
 import com.db4o.internal.query.*;
 import com.db4o.reflect.*;
 
-
 /**
  * @exclude
+ * @sharpen.partial
  */
 public interface InternalObjectContainer extends ExtObjectContainer {
     
@@ -18,8 +18,14 @@ public interface InternalObjectContainer extends ExtObjectContainer {
     
     public Callbacks callbacks();
     
+    /**
+     * @sharpen.property
+     */
     public ObjectContainerBase container();
     
+    /**
+     * @sharpen.property
+     */
     public Transaction transaction();
     
     public void onCommittedListener();
@@ -32,14 +38,23 @@ public interface InternalObjectContainer extends ExtObjectContainer {
     
     public ClassMetadata classMetadataForID(int id);
 
+    /**
+     * @sharpen.property
+     */
     public HandlerRegistry handlers();
     
+    /**
+     * @sharpen.property
+     */
     public Config4Impl configImpl();
     
     public <R> R syncExec(Closure4<R> block);
     
     public int instanceCount(ClassMetadata clazz, Transaction trans);
     
+    /**
+     * @sharpen.property
+     */
     public boolean isClient();
 
 	public void storeAll(Transaction trans, Iterator4 objects);

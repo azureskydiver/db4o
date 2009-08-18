@@ -47,7 +47,7 @@ public class SimpleMain {
 							||candidate.getSize()<1;
 				}
 			};
-			((ObjectContainerBase)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
+			((InternalObjectContainer)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
 				public void notifyQueryExecuted(NQOptimizationInfo info) {
 					System.err.println(info.message());
 				}
