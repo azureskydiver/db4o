@@ -65,11 +65,6 @@ public class QueryMonitoringSupportTestCase extends MBeanTestCaseBase implements
 	
 	public void testQueriesPerSecond() {
 		
-//		if (isNetworkingClientServer()) {
-//			System.err.println("WARNING: " + getClass().getName() + ".testQueriesPerSecond: Ignored in C/S");
-//			return;
-//		}
-		
 		final ByRef<Integer> queryMode = ByRef.newInstance(0);
 		
 		exercisePerSecondCounter("QueriesPerSecond", new Runnable() { public void run() {
@@ -87,11 +82,7 @@ public class QueryMonitoringSupportTestCase extends MBeanTestCaseBase implements
 			queryMode.value = queryMode.value.intValue() + 1;
 		}});
 	}
-
-	private boolean isNetworkingClientServer() {
-		return isClientServer() && !isEmbeddedClientServer();
-	}
-
+	
 	public void testClassIndexScanNotifications() throws Exception {
 		
 		final List<Notification> notifications = startCapturingNotifications(classIndexScanNotificationType());
