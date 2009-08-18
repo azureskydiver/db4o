@@ -77,6 +77,9 @@ public class NativeQueryMonitoringSupportTestCase extends MBeanTestCaseBase impl
 
 	@Override
 	protected String beanUri() {
+		if (isEmbeddedClientServer()) {
+			return fileSession().toString();
+		}
 		return db().toString();
 	}
 }
