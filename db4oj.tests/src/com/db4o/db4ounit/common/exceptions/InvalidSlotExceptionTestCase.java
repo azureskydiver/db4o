@@ -9,7 +9,6 @@ import com.db4o.io.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
 	
@@ -36,15 +35,6 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testDbNotClosedOnOutOfMemory() {
-		// TODO why different behavior with in memory fixture?
-		if(isInMemory()) {
-			Assert.expect(InvalidSlotException.class, new CodeBlock(){
-				public void run() throws Throwable {
-					db().getByID(OUT_OF_MEMORY_ID);
-				}
-			});
-			return;
-		}
 		Assert.expect(Db4oRecoverableException.class, OutOfMemoryError.class, new CodeBlock(){
 			public void run() throws Throwable {
 				db().getByID(OUT_OF_MEMORY_ID);
@@ -104,9 +94,4 @@ public class InvalidSlotExceptionTestCase extends AbstractDb4oTestCase {
 			}
 		}
 	}
-
-	private boolean isInMemory() {
-		return fixture() instanceof Db4oInMemory;
-	}
-
 }
