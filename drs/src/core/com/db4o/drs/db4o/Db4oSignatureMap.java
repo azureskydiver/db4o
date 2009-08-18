@@ -27,11 +27,11 @@ import com.db4o.internal.*;
 
 class Db4oSignatureMap {
     
-    private final ObjectContainerBase _stream;
+    private final InternalObjectContainer _stream;
     
     private final Hashtable4 _identities;
     
-    Db4oSignatureMap(ObjectContainerBase stream){
+    Db4oSignatureMap(InternalObjectContainer stream){
         _stream = stream;
         _identities = new Hashtable4();
     }

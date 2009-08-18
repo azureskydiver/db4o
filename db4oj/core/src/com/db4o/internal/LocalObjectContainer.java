@@ -833,16 +833,16 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     
     public QueryResult classOnlyQuery(QQueryBase query, ClassMetadata clazz){
         if (!clazz.hasClassIndex()) {
-        	return new IdListQueryResult(query.getTransaction());
+        	return new IdListQueryResult(query.transaction());
 		}
 		
-		final AbstractQueryResult queryResult = newQueryResult(query.getTransaction());
+		final AbstractQueryResult queryResult = newQueryResult(query.transaction());
 		queryResult.loadFromClassIndex(clazz);
 		return queryResult;
     }
     
     public QueryResult executeQuery(QQuery query){
-    	AbstractQueryResult queryResult = newQueryResult(query.getTransaction());
+    	AbstractQueryResult queryResult = newQueryResult(query.transaction());
     	queryResult.loadFromQuery(query);
     	return queryResult;
     }

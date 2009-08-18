@@ -913,7 +913,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
     @Override
     public QueryResult classOnlyQuery(QQueryBase query, ClassMetadata clazz){
-    	final Transaction trans = query.getTransaction();
+    	final Transaction trans = query.transaction();
     	long[] ids = getIDsForClass(trans, clazz, true); 
     	ClientQueryResult resClient = new ClientQueryResult(trans, ids.length);
     	for (int i = 0; i < ids.length; i++) {
@@ -941,7 +941,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     
     
     public QueryResult executeQuery(QQuery query){
-    	Transaction trans = query.getTransaction();
+    	Transaction trans = query.transaction();
     	query.captureQueryResultConfig();
         query.marshall();
 		MsgD msg = Msg.QUERY_EXECUTE.getWriter(Serializer.marshall(trans,query));

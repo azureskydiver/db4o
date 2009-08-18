@@ -148,7 +148,7 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	}
 
 	private ClassMetadata classMetadataForName(String className) {
-		ObjectContainerBase container = (ObjectContainerBase)_provider.dataContainer(_context);
+		InternalObjectContainer container = (InternalObjectContainer)_provider.dataContainer(_context);
 		return container.classMetadataForReflectClass(container.reflector().forName(className));
 	}
 

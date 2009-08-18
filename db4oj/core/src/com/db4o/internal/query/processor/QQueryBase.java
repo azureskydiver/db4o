@@ -25,7 +25,7 @@ import com.db4o.types.*;
  * 
  * @exclude
  */
-public abstract class QQueryBase implements Unversioned {
+public abstract class QQueryBase implements InternalQuery, Unversioned {
 
     private static final transient IDGenerator i_orderingGenerator = new IDGenerator();
 
@@ -479,6 +479,10 @@ public abstract class QQueryBase implements Unversioned {
 	protected ObjectContainerBase stream() {
 		return _trans.container();
 	}
+	
+	public InternalObjectContainer container() {
+		return stream();
+	}
 
 	private QueryResult executeClassOnlyQuery() {
         
@@ -667,7 +671,7 @@ public abstract class QQueryBase implements Unversioned {
 		return false;
 	}
 
-    public final Transaction getTransaction() {
+    public final Transaction transaction() {
         return _trans;
     }
     
