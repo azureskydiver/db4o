@@ -58,8 +58,8 @@
 	</target>
 	
 	<target name="run-tests-net35"
-			depends="clean, configure-debug, configure-net35, run-linq-tests, run-tests-net"
-			description="Builds and runs all the .net 3.5 relevant test cases (including LINQ)">
+			depends="clean, configure-debug, configure-net35, run-additional-linq-tests, run-tests-net"
+			description="Builds and runs all the .net 3.5 relevant test cases (including Visual Basic LINQ and ASTORIA tests)">
 	</target>
 	
 	<target name="run-tests" depends="clean, configure, run-tests-mono, run-tests-net">
@@ -408,8 +408,7 @@
 		</exec>
 	</target>
 	
-	<target name="run-linq-tests" depends="build-core">
-		<exec taskname="linq" dir="${dir.dist.dll}" executable="${dir.dist.dll}/Db4objects.Db4o.Linq.Tests.exe" failonerror="true"/>
+	<target name="run-additional-linq-tests" depends="build-core">
 		<exec taskname="linq/vb" dir="${dir.dist.dll}" executable="${dir.dist.dll}/Db4objects.Db4o.Linq.VB.Tests.exe" failonerror="true"/>
 		<exec taskname="linq/astoria" dir="${dir.dist.dll}" executable="${dir.dist.dll}/Db4objects.Db4o.Data.Services.Tests.exe" failonerror="true"/>
 	</target>
