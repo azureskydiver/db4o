@@ -28,6 +28,10 @@ public class DecafTestCase extends DecafTestCaseBase {
 		runResourceTestCase("VarArgsGenericMethod", TargetPlatform.NONE, TargetPlatform.ANDROID);
 	}
 	
+	public void testVarArgsConstructor() throws Exception {
+		runResourceTestCase("VarArgsConstructor", TargetPlatform.NONE);
+	}
+	
 	public void testPackageDeclaration() throws Exception {
 		runResourceTestCase("PackageDeclaration");
 	}
