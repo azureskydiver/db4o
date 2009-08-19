@@ -583,15 +583,16 @@ public final class DecafRewritingVisitor extends DecafVisitorBase {
 		
 		final ITypeBinding[] parameters = method.getParameterTypes();
 		final List rewrittenArguments = argumentListRewrite.getRewrittenList();
-		final List originalList = argumentListRewrite.getOriginalList();
-		for (int i = parameters.length-1; i < originalList.size(); ++i) {
-			argumentListRewrite.remove((ASTNode)originalList.get(i), null);
-		}
 		
 		ArrayInitializer arrayInitializer = builder().newArrayInitializer();
 		for (int i = parameters.length-1; i < rewrittenArguments.size(); ++i) {
 			final Expression arg = (Expression) rewrittenArguments.get(i);
 			arrayInitializer.expressions().add(rewrite().safeMove(arg));
+		}
+		
+		final List originalList = argumentListRewrite.getOriginalList();
+		for (int i = parameters.length-1; i < originalList.size(); ++i) {
+			argumentListRewrite.remove((ASTNode)originalList.get(i), null);
 		}
 		
 		argumentListRewrite.insertLast(
