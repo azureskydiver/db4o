@@ -45,6 +45,7 @@ public class AllTests extends ComposibleTestSuite {
 			            MultiDeleteTestCase.class,
 			            ObjectUpdateFileSizeTestCase.class,
 			            ObjectConstructorTestCase.class,
+			            ObjectContainerMemberTestCase.class,
 			            PlainObjectTestCase.class,
 			            PeekPersistedTestCase.class,
 			            PersistentIntegerArrayTestCase.class,
