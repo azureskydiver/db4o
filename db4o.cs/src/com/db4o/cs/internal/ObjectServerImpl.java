@@ -165,7 +165,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 		try {
 			closeServerSocket();
 			stopCommittedCallbacksDispatcher();
-			closeMessageDispatchers();
+			closeMessageDispatchers(mode);
 			return closeFile(mode);
 		}
 		finally {
@@ -187,11 +187,11 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 		return true;
 	}
 
-	private void closeMessageDispatchers() {
+	private void closeMessageDispatchers(ShutdownMode mode) {
 		Iterator4 i = iterateDispatchers();
 		while (i.moveNext()) {
 			try {
-				((ServerMessageDispatcher) i.current()).close();
+				((ServerMessageDispatcher) i.current()).close(mode);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

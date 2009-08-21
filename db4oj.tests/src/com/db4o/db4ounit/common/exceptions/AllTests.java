@@ -14,6 +14,7 @@ public class AllTests extends ComposibleTestSuite {
 		return composeTests(new Class[] { 
 								ActivationExceptionBubblesUpTestCase.class,
 								BackupCSExceptionTestCase.class,
+								CompositeDb4oExceptionTestCase.class,
 								DatabaseClosedExceptionTestCase.class,
 								DatabaseReadonlyExceptionTestCase.class,
 								GlobalOnlyConfigExceptionTestCase.class,

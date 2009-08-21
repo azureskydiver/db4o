@@ -44,15 +44,22 @@ public class ClientTransactionPool {
 		}
 	}
 	
-	public void release(Transaction transaction, boolean rollbackOnClose) {
-		transaction.close(rollbackOnClose);
+	public void release(ShutdownMode mode, Transaction transaction, boolean rollbackOnClose) {
+		transaction.close(mode.isFatal() ? false : rollbackOnClose);
 		synchronized(_mainContainer.lock()) {
 			ContainerCount entry = (ContainerCount) _transaction2Container.get(transaction);
 			_transaction2Container.remove(transaction);
 			entry.release();
 			if(entry.isEmpty()) {
 				_fileName2Container.remove(entry.fileName());
-				entry.close();
+				try{
+					entry.close(mode);
+				}catch(Throwable t){
+					// If we are in fatal ShutdownMode close will
+					// throw but we want to continue shutting down
+					// all entries.
+					t.printStackTrace();
+				}
 			}
 		}
 	}
@@ -66,7 +73,15 @@ public class ClientTransactionPool {
 			Iterator4 entryIter = _fileName2Container.iterator();
 			while(entryIter.moveNext()) {
 				Entry4 hashEntry = (Entry4) entryIter.current();
-				((ContainerCount)hashEntry.value()).close(mode);
+				ContainerCount containerCount = (ContainerCount)hashEntry.value();
+				try{
+					containerCount.close(mode);
+				} catch(Throwable t){
+					// If we are in fatal ShutdownMode close will
+					// throw but we want to continue shutting down
+					// all entries.
+					t.printStackTrace();
+				}
 			}
 			_closed = true;
 		}
@@ -115,10 +130,6 @@ public class ClientTransactionPool {
 		
 		public String fileName() {
 			return _container.fileName();
-		}
-
-		public void close() {
-			close(ShutdownMode.NORMAL);
 		}
 
 		public void close(ShutdownMode mode) {

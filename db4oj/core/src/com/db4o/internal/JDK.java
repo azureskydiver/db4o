@@ -181,5 +181,9 @@ public class JDK {
 		return true;
 	}
 
+	public void throwIllegalArgumentException(Throwable origExc) {
+		throw new IllegalArgumentException("Argument " + origExc.getClass().getName() + " not an unchecked Exception.");
+	}
+
 
 }

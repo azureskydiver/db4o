@@ -682,4 +682,14 @@ public final class Platform4 {
 						};		
 	}
 
+	public static void throwUncheckedException(Throwable origExc) {
+		if(origExc instanceof RuntimeException){
+			throw (RuntimeException)origExc;
+		}
+		if(origExc instanceof Error){
+			throw (Error)origExc;
+		}
+		jdk().throwIllegalArgumentException(origExc);
+	}
+	
 }

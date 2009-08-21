@@ -422,7 +422,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		throw new Db4oException();
     }
 
-	public void fatalShutdown(RuntimeException origExc) {
+	public void fatalShutdown(Throwable origExc)  {
 		try {
 			stopSession();
 			fatalStorageShutdown();
@@ -430,7 +430,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		catch(Throwable exc) {
 			throw new CompositeDb4oException(origExc, exc);
 		}
-		throw origExc;
+		Platform4.throwUncheckedException(origExc);
 	}
 
 	protected abstract void fatalStorageShutdown();

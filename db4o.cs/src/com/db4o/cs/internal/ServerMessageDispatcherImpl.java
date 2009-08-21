@@ -65,8 +65,12 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 		// i_socket.setSendBufferSize(100);
 		// i_socket.setTcpNoDelay(true);
 	}
-
+    
     public boolean close() {
+    	return close(ShutdownMode.NORMAL);
+    }
+
+    public boolean close(ShutdownMode mode) {
         synchronized(_lock) {
             if (!isMessageDispatcherAlive()) {
                 return true;
@@ -74,9 +78,11 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
             _isClosed = true;
         }
     	synchronized(_mainLock) {
-			_transactionHandle.releaseTransaction();
-			sendCloseMessage();
-			_transactionHandle.close();
+			_transactionHandle.releaseTransaction(mode);
+			if(! mode.isFatal()){
+				sendCloseMessage();
+			}
+			_transactionHandle.close(mode);
 			closeSocket();
 			removeFromServer();
 			return true;
@@ -195,10 +201,9 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 					writeException(message, exc);
 					return true;
 	    		}
-	    		catch(RuntimeException exc) {
-	    			exc.printStackTrace();
-	    			write(Msg.ERROR);
-	    			fatalShutDownServer(exc);
+	    		catch(Throwable t){
+	    			t.printStackTrace();
+	    			fatalShutDownServer(t);
 	    			return false;
 	    		}
 				try {
@@ -218,21 +223,16 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
     			exc.printStackTrace();
         		return true;
     		}
-    		catch(RuntimeException exc) {
-    			exc.printStackTrace();
-    			fatalShutDownServer(exc);
+    		catch(Throwable t){
+    			t.printStackTrace();
+    			fatalShutDownServer(t);
     		}
     	}
     	return false;
 	}
 
-	private void fatalShutDownServer(RuntimeException exc) {
-//		try {
-			_server.close(ShutdownMode.fatal(exc));
-//		}
-//		catch(RuntimeException recExc) {
-//			recExc.printStackTrace();
-//		}
+	private void fatalShutDownServer(Throwable origExc) {
+		new FatalServerShutdown(_server, origExc);
 	}
 
 	private void writeException(Msg message, Exception exc) {
@@ -286,7 +286,7 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
         synchronized (_mainLock) {
             String fileName = message.readString();
             try {
-                _transactionHandle.releaseTransaction();
+                _transactionHandle.releaseTransaction(ShutdownMode.NORMAL);
             	_transactionHandle.acquireTransactionForFile(fileName);
                 write(Msg.OK);
             } catch (Exception e) {
@@ -294,7 +294,7 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
                     System.out.println("Msg.SWITCH_TO_FILE failed.");
                     e.printStackTrace();
                 }
-                _transactionHandle.releaseTransaction();
+                _transactionHandle.releaseTransaction(ShutdownMode.NORMAL);
                 write(Msg.ERROR);
             }
         }
@@ -302,7 +302,7 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 
     public void switchToMainFile() {
         synchronized (_mainLock) {
-            _transactionHandle.releaseTransaction();
+            _transactionHandle.releaseTransaction(ShutdownMode.NORMAL);
             write(Msg.OK);
         }
     }
