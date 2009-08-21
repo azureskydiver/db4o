@@ -511,7 +511,7 @@ public final class ClassMetadataRepository extends PersistentBase {
 
     void reReadClassMetadata(ClassMetadata clazz){
         if(clazz != null){
-            reReadClassMetadata(clazz.i_ancestor);
+            reReadClassMetadata(clazz._ancestor);
             clazz.readName(_systemTransaction);
             clazz.forceRead();
             clazz.setStateClean();

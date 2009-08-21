@@ -27,7 +27,7 @@ public class StandardAspectTraversalStrategy implements AspectTraversalStrategy 
 	        if(command.cancelled()){
 	            return;
 	        }
-	        classMetadata = classMetadata.i_ancestor;
+	        classMetadata = classMetadata._ancestor;
 	    }
 	}
 	

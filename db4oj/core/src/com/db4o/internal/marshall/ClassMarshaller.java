@@ -31,7 +31,7 @@ public abstract class ClassMarshaller {
         int intFormerlyKnownAsMetaClassID = 0;
         writer.writeInt(intFormerlyKnownAsMetaClassID);
         
-        writer.writeIDOf(trans, clazz.i_ancestor);
+        writer.writeIDOf(trans, clazz._ancestor);
         
         writeIndex(trans, clazz, writer);
         

@@ -46,7 +46,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 
 	private final static KeySpec TRANSLATOR_NAME_KEY=new KeySpec((String)null);
     
-	private final static KeySpec UPDATE_DEPTH_KEY=new KeySpec(0);
+	private final static KeySpec UPDATE_DEPTH_KEY=new KeySpec(-1);
     
 	private final static KeySpec WRITE_AS_KEY=new KeySpec((String)null);
     
