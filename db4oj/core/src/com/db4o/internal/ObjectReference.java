@@ -410,6 +410,12 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 			}
 		}
 		
+		MarshallingContext context = new MarshallingContext(transaction, this, updatedepth, false);
+		if (context.updateDepth() < 0) {
+			endProcessing();
+			return;
+		}
+		
         ObjectContainerBase container = transaction.container();
 		
 		logEvent(container, "update", Const4.STATE);
@@ -418,7 +424,6 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		
 		transaction.writeUpdateAdjustIndexes(getID(), _class, container._handlers.arrayType(obj), 0);
 
-        MarshallingContext context = new MarshallingContext(transaction, this, updatedepth, false);
         Handlers4.write(_class.typeHandler(), context, obj);
         
         Pointer4 pointer = context.allocateSlot();

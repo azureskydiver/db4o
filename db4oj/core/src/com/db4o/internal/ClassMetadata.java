@@ -45,9 +45,9 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
      */
 	protected TypeHandler4 _typeHandler;
     
-	public ClassMetadata i_ancestor;
+	public ClassMetadata _ancestor;
 
-    private Config4Class i_config;
+    private Config4Class _config;
 
     public ClassAspect[] _aspects;
     
@@ -92,10 +92,10 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
     
     private final boolean checkCanUpdateFast() {
-    	if(i_ancestor != null && ! i_ancestor.canUpdateFast()){
+    	if(_ancestor != null && ! _ancestor.canUpdateFast()){
     		return false;
     	}
-		if(i_config != null && i_config.cascadeOnDelete() == TernaryBool.YES) {
+		if(_config != null && _config.cascadeOnDelete() == TernaryBool.YES) {
 			return false;
 		}
 		final BooleanByRef hasIndex = new BooleanByRef(false); 
@@ -315,10 +315,10 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 
 	private boolean installTranslator(Collection4 aspects,
 			TypeHandler4 customTypeHandler) {
-    	if( i_config == null){
+    	if( _config == null){
     		return false;
     	}
-		ObjectTranslator translator = i_config.getTranslator();
+		ObjectTranslator translator = _config.getTranslator();
 		if (translator == null) {
 			return false;
 		}
@@ -417,8 +417,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
 
     final void addToIndex1(Transaction a_trans, int a_id) {
-        if (i_ancestor != null) {
-            i_ancestor.addToIndex1(a_trans, a_id);
+        if (_ancestor != null) {
+            _ancestor.addToIndex1(a_trans, a_id);
         }
         if (hasClassIndex()) {
             _index.add(a_trans, a_id);
@@ -437,8 +437,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         if (stateOK()) {
             if (!bitIsTrue(Const4.CHECKED_CHANGES)) {
                 bitTrue(Const4.CHECKED_CHANGES);
-                if (i_ancestor != null) {
-                    i_ancestor.checkChanges();
+                if (_ancestor != null) {
+                    _ancestor.checkChanges();
                     // Ancestor first, so the object length calculates
                     // correctly
                 }
@@ -466,8 +466,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         if (isDb4oTypeImpl()) {
         	Db4oTypeImpl db4oTypeImpl = (Db4oTypeImpl) claxx.newInstance();
         	_classIndexed = (db4oTypeImpl == null || db4oTypeImpl.hasClassIndex());
-		} else if(i_config != null){
-			_classIndexed = i_config.indexed();
+		} else if(_config != null){
+			_classIndexed = _config.indexed();
 		}
     }
     
@@ -476,14 +476,19 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
 
 	public final int adjustUpdateDepth(Transaction trans, int depth) {
-        Config4Class config = configOrAncestorConfig();
-        if (depth == Const4.UNSPECIFIED) {
+		if (depth == Const4.UNSPECIFIED) {
             depth = checkUpdateDepthUnspecified(trans.container().configImpl());
+            if (depth != Const4.UNSPECIFIED) {
+            	return depth - 1;
+            }
             depth = adjustCollectionDepthToBorders(depth);
         }
+        
+		Config4Class config = configOrAncestorConfig();
         if(config == null){
             return depth - 1;
         }
+        
         boolean cascadeOnDelete = config.cascadeOnDelete() == TernaryBool.YES;
         boolean cascadeOnUpdate = config.cascadeOnUpdate() == TernaryBool.YES;
         
@@ -509,12 +514,13 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	}
 
     private final int checkUpdateDepthUnspecified(Config4Impl config) {
-        int depth = config.updateDepth() + 1;
-        if (i_config != null && i_config.updateDepth() != 0) {
-            depth = i_config.updateDepth() + 1;
-        }
-        if (i_ancestor != null) {
-            int ancestordepth = i_ancestor.checkUpdateDepthUnspecified(config);
+    	if (_config != null && _config.updateDepth() != -1) {
+    		return _config.updateDepth();
+    	}
+    	
+        int depth = config.updateDepth();
+        if (_ancestor != null) {
+            int ancestordepth = _ancestor.checkUpdateDepthUnspecified(config);
             if (ancestordepth > depth) {
                 return ancestordepth;
             }
@@ -573,15 +579,15 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
 
 	public Config4Class config() {
-    	return i_config;
+    	return _config;
     }
 
     public Config4Class configOrAncestorConfig() {
-        if (i_config != null) {
-            return i_config;
+        if (_config != null) {
+            return _config;
         }
-        if (i_ancestor != null) {
-            return i_ancestor.configOrAncestorConfig();
+        if (_ancestor != null) {
+            return _ancestor.configOrAncestorConfig();
         }
         return null;
     }
@@ -789,10 +795,10 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 		if(config != null && (cascadeOnDelete = config.cascadeOnDelete())!= TernaryBool.UNSPECIFIED) {
 			return cascadeOnDelete;
 		}
-		if(i_ancestor == null) {
+		if(_ancestor == null) {
 			return cascadeOnDelete;
 		}
-		return i_ancestor.cascadeOnDeleteTernary();
+		return _ancestor.cascadeOnDeleteTernary();
 	}
 	
 	public boolean cascadeOnDelete() {
@@ -825,8 +831,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     
     public final int aspectCount(){
         int count = declaredAspectCount();
-        if(i_ancestor != null){
-            count += i_ancestor.aspectCount();
+        if(_ancestor != null){
+            count += _ancestor.aspectCount();
         }
         return count;
     }
@@ -858,7 +864,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         if(! generateVirtual()){
             return false;
         }
-        TernaryBool configValue = (i_config == null) ? TernaryBool.UNSPECIFIED : i_config.generateUUIDs();
+        TernaryBool configValue = (_config == null) ? TernaryBool.UNSPECIFIED : _config.generateUUIDs();
         return generate1(_container.config().generateUUIDs(), configValue); 
     }
 
@@ -866,7 +872,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         if(! generateVirtual()){
             return false;
         }
-        TernaryBool configValue = (i_config == null) ? TernaryBool.UNSPECIFIED : i_config.generateVersionNumbers();
+        TernaryBool configValue = (_config == null) ? TernaryBool.UNSPECIFIED : _config.generateVersionNumbers();
         return generate1(_container.config().generateVersionNumbers(), configValue); 
     }
     
@@ -886,13 +892,13 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 
 
     public ClassMetadata getAncestor() {
-        return i_ancestor;
+        return _ancestor;
     }
 
     public Object getComparableObject(Object forObject) {
-        if (i_config != null) {
-            if (i_config.queryAttributeProvider() != null) {
-                return i_config.queryAttributeProvider().attribute(forObject);
+        if (_config != null) {
+            if (_config.queryAttributeProvider() != null) {
+                return _config.queryAttributeProvider().attribute(forObject);
             }
         }
         return forObject;
@@ -910,8 +916,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         if (a_classMetadata == this) {
             return this;
         }
-        if (i_ancestor != null) {
-            return i_ancestor.getHigherHierarchy1(a_classMetadata);
+        if (_ancestor != null) {
+            return _ancestor.getHigherHierarchy1(a_classMetadata);
         }
         return null;
     }
@@ -921,8 +927,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         if (yc != null) {
             return yc;
         }
-        if (i_ancestor != null) {
-            yc = i_ancestor.getHigherOrCommonHierarchy(a_classMetadata);
+        if (_ancestor != null) {
+            yc = _ancestor.getHigherOrCommonHierarchy(a_classMetadata);
             if (yc != null) {
                 return yc;
             }
@@ -963,10 +969,10 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
     
     private boolean ancestorHasUUIDField(){
-        if(i_ancestor == null) {
+        if(_ancestor == null) {
             return false;
         }
-        return i_ancestor.hasUUIDField();
+        return _ancestor.hasUUIDField();
     }
     
     private boolean hasUUIDField() {
@@ -977,10 +983,10 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
     
     private boolean ancestorHasVersionField(){
-        if(i_ancestor == null){
+        if(_ancestor == null){
             return false;
         }
-        return i_ancestor.hasVersionField();
+        return _ancestor.hasVersionField();
     }
     
     private boolean hasVersionField() {
@@ -1101,11 +1107,11 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
     
     final void initConfigOnUp(Transaction systemTrans) {
-        Config4Class extendedConfig=Platform4.extendConfiguration(_classReflector, _container.configure(), i_config);
+        Config4Class extendedConfig=Platform4.extendConfiguration(_classReflector, _container.configure(), _config);
     	if(extendedConfig!=null) {
-    		i_config=extendedConfig;
+    		_config=extendedConfig;
     	}
-        if (i_config == null) {
+        if (_config == null) {
             return;
         }
         if (! stateOK()) {
@@ -1348,8 +1354,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     }
     
     public String nameToWrite() {
-        if(i_config != null && i_config.writeAs() != null){
-            return i_config.writeAs();
+        if(_config != null && _config.writeAs() != null){
+            return _config.writeAs();
         }
         if(i_name == null){
             return "";
@@ -1371,8 +1377,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	}
     
     private final TernaryBool callConstructorSpecialized(){
-        if(i_config!= null){
-            TernaryBool res = i_config.callConstructor();
+        if(_config!= null){
+            TernaryBool res = _config.callConstructor();
             if(!res.isUnspecified()){
                 return res;
             }
@@ -1380,8 +1386,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         if(isEnum()){
             return TernaryBool.NO;
         }
-        if(i_ancestor != null){
-            return i_ancestor.callConstructorSpecialized();
+        if(_ancestor != null){
+            return _ancestor.callConstructorSpecialized();
         }
         return TernaryBool.UNSPECIFIED;
     }
@@ -1407,13 +1413,13 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 
     public TypeHandler4 seekCandidateHandler(QueryingReadContext context) {
         if (isArray()) {
-            if (Platform4.isCollectionTranslator(this.i_config)) {
+            if (Platform4.isCollectionTranslator(this._config)) {
                 context.seek(context.offset() + Const4.INT_LENGTH);
                 return new ArrayHandler(null, false);
             }
             incrementFieldsOffset1((ByteArrayBuffer)context.buffer());
-            if (i_ancestor != null) {
-                return i_ancestor.seekCandidateHandler(context);
+            if (_ancestor != null) {
+                return _ancestor.seekCandidateHandler(context);
             }
         }
         return null;
@@ -1582,8 +1588,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         if (hasClassIndex()) {
             _index.remove(ta, id);
         }
-        if (i_ancestor != null) {
-            i_ancestor.removeFromIndex(ta, id);
+        if (_ancestor != null) {
+            _ancestor.removeFromIndex(ta, id);
         }
     }
 
@@ -1616,8 +1622,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         // The configuration can be set by a ObjectClass#readAs setting
         // from YapClassCollection, right after reading the meta information
         // for the first time. In that case we never change the setting
-        if(i_config == null){
-            i_config = config;
+        if(_config == null){
+            _config = config;
         }
     }
 
@@ -1654,8 +1660,8 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         if(! stateOK()  || _aspects == null){
             return false;
         }
-        if(i_ancestor != null){
-            return i_ancestor.stateOKAndAncestors();
+        if(_ancestor != null){
+            return _ancestor.stateOKAndAncestors();
         }
         return true;
     }
@@ -1869,7 +1875,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	}
 
 	private boolean staticFieldValuesArePersisted() {
-		return (i_config != null && i_config.staticFieldValuesArePersisted());
+		return (_config != null && _config.staticFieldValuesArePersisted());
 	}
 
 	protected StaticField fieldByName(StaticField[] fields, final String fieldName) {
@@ -1952,7 +1958,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 		if(ancestor == this){
 			throw new IllegalStateException();
 		}
-		i_ancestor = ancestor;
+		_ancestor = ancestor;
 	}
 
     public Object wrapWithTransactionContext(Transaction transaction, Object value) {

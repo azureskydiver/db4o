@@ -159,7 +159,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec TIMEOUT_SERVER_SOCKET_KEY=new KeySpec(Const4.SERVER_SOCKET_TIMEOUT);
     
-	private final static KeySpec UPDATE_DEPTH_KEY=new KeySpec(0);
+	private final static KeySpec UPDATE_DEPTH_KEY=new KeySpec(1);
     
 	private final static KeySpec WEAK_REFERENCE_COLLECTION_INTERVAL_KEY=new KeySpec(1000);
     
