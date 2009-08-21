@@ -90,8 +90,8 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 	}
 	
 	private CloseAwareStorage _storage;
+	
 	private boolean _serverClosed;
-	private Class<? extends RuntimeException> _expectedUncaughtExceptionType;
 	
 	@Override
 	protected void db4oSetupAfterStore() throws Exception {
@@ -124,11 +124,7 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 	}
 
 	public void testNonRecoverableExceptionWithResponse() {
-		_expectedUncaughtExceptionType = Db4oException.class;
-		_storage.syncAllowed(false);
-		client().write(Msg.REQUEST_EXCEPTION_WITH_RESPONSE.getWriterForSingleObject(trans(), new Db4oException(EXCEPTION_MESSAGE)));
-		assertDatabaseClosedException();
-		assertServerContainerStateClosed(true);
+		assertNonRecoverableExceptionForMessage(Msg.REQUEST_EXCEPTION_WITH_RESPONSE, new Db4oException(EXCEPTION_MESSAGE));
 	}
 
 	public void testRecoverableExceptionWithoutResponse() {
@@ -137,9 +133,21 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 	}
 
 	public void testNonRecoverableExceptionWithoutResponse() {
-		_expectedUncaughtExceptionType = Db4oException.class;
+		assertNonRecoverableExceptionForMessage(Msg.REQUEST_EXCEPTION_WITHOUT_RESPONSE, new Db4oException(EXCEPTION_MESSAGE));
+	}
+	
+	public void testVmErrorWithResponse(){
+		assertNonRecoverableExceptionForMessage(Msg.REQUEST_EXCEPTION_WITH_RESPONSE, new OutOfMemoryError());
+	}
+	
+	public void testVmErrorWithoutResponse(){
+		assertNonRecoverableExceptionForMessage(Msg.REQUEST_EXCEPTION_WITHOUT_RESPONSE, new OutOfMemoryError());
+	}
+
+	private void assertNonRecoverableExceptionForMessage(
+			MsgD message, Throwable throwable) {
 		_storage.syncAllowed(false);
-		client().write(Msg.REQUEST_EXCEPTION_WITHOUT_RESPONSE.getWriterForSingleObject(trans(), new Db4oException(EXCEPTION_MESSAGE)));
+		client().write(message.getWriterForSingleObject(trans(), throwable));
 		assertDatabaseClosedException();
 		assertServerContainerStateClosed(true);
 	}
@@ -192,13 +200,4 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 		otherClient.close();
 	}
 
-	@Override
-	protected void handleUncaughtExceptions(List<Throwable> uncaughtExceptions) {
-		if(_expectedUncaughtExceptionType == null) {
-			Assert.isTrue(uncaughtExceptions.size() == 0);
-			return;
-		}
-		Assert.areEqual(1, uncaughtExceptions.size());
-		Assert.isInstanceOf(_expectedUncaughtExceptionType, uncaughtExceptions.get(0));
-	}
 }

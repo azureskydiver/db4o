@@ -2,11 +2,14 @@
 
 package com.db4o.cs.internal.messages;
 
+import com.db4o.internal.*;
+
 
 public class MRequestExceptionWithoutResponse extends MsgD implements ServerSideMessage {
 	
 	public void processAtServer() {
-		throw ((RuntimeException)readSingleObject());
+		Platform4.throwUncheckedException((Throwable) readSingleObject());
 	}
+
 
 }

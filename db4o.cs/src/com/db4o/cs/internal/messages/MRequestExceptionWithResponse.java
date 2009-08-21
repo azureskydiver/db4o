@@ -2,11 +2,14 @@
 
 package com.db4o.cs.internal.messages;
 
+import com.db4o.internal.*;
+
 
 public class MRequestExceptionWithResponse extends MsgD implements MessageWithResponse {
 	
 	public Msg replyFromServer() {
-		throw ((RuntimeException)readSingleObject());
+		Platform4.throwUncheckedException((Throwable) readSingleObject());
+		return null;
 	}
 
 }

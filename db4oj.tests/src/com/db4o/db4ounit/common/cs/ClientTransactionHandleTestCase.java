@@ -36,20 +36,20 @@ public class ClientTransactionHandleTestCase implements TestLifeCycle {
 			Assert.areNotEqual(handleA.transaction(), handleB.transaction());
 			Assert.areEqual(handleA.transaction().container(), handleB.transaction().container());
 			
-			handleA.releaseTransaction();
+			handleA.releaseTransaction(ShutdownMode.NORMAL);
 			Assert.areEqual(db, handleA.transaction().container());
 			Assert.areNotEqual(db, handleB.transaction().container());
 			Assert.areEqual(3, pool.openTransactionCount());
 			Assert.areEqual(2, pool.openFileCount());
-			handleB.releaseTransaction();
+			handleB.releaseTransaction(ShutdownMode.NORMAL);
 			Assert.areEqual(db, handleB.transaction().container());
 			Assert.areEqual(2, pool.openTransactionCount());
 			Assert.areEqual(1, pool.openFileCount());
 			
-			handleB.close();
+			handleB.close(ShutdownMode.NORMAL);
 			Assert.areEqual(1, pool.openTransactionCount());
 			
-			handleA.close();
+			handleA.close(ShutdownMode.NORMAL);
 			Assert.areEqual(0, pool.openTransactionCount());
 			
 		}

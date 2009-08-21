@@ -20,9 +20,9 @@ public class ClientTransactionHandle {
         _transaction = _transactionPool.acquire(fileName);
 	}
 	
-    public void releaseTransaction() {
+    public void releaseTransaction(ShutdownMode mode) {
 		if (_transaction != null) {
-			_transactionPool.release(_transaction, _rollbackOnClose);
+			_transactionPool.release(mode, _transaction, _rollbackOnClose);
 			_transaction = null;
 		}
 	}
@@ -31,10 +31,9 @@ public class ClientTransactionHandle {
 		return _transactionPool.isClosed();
 	}
     
-    public void close() {
+    public void close(ShutdownMode mode) {
 		if ((!_transactionPool.isClosed()) && (_mainTransaction != null)) {
-			_transactionPool.release(_mainTransaction, _rollbackOnClose);
-            _mainTransaction.close(_rollbackOnClose);
+			_transactionPool.release(mode, _mainTransaction, _rollbackOnClose);
         }
 	}
 	

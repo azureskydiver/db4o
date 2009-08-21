@@ -34,6 +34,8 @@ public interface ServerMessageDispatcher extends ClientConnection, MessageDispat
 
 	public boolean close();
 	
+	public boolean close(ShutdownMode mode);
+	
 	public void closeConnection();
 
 	public void caresAboutCommitted(boolean care);

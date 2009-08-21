@@ -61,4 +61,9 @@ class JDK_5 extends JDK_1_4 {
 	public int ver() {
 	    return 5;
 	}
+	
+	public void throwIllegalArgumentException(Throwable origExc) {
+		throw new IllegalArgumentException("Argument not an unchecked Exception.", origExc);
+	}
+
 }

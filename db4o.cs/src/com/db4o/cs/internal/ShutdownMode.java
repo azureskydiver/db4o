@@ -15,13 +15,14 @@ public abstract class ShutdownMode {
 	}
 	
 	public static class FatalMode extends ShutdownMode {
-		private RuntimeException _exc;
 		
-		FatalMode(RuntimeException exc) {
+		private Throwable _exc;
+		
+		FatalMode(Throwable exc) {
 			_exc = exc;
 		}
 		
-		public RuntimeException exc() {
+		public Throwable exc() {
 			return _exc;
 		}
 
@@ -33,7 +34,7 @@ public abstract class ShutdownMode {
 	
 	public final static ShutdownMode NORMAL = new NormalMode();
 	
-	public static ShutdownMode fatal(RuntimeException exc) {
+	public static ShutdownMode fatal(Throwable exc) {
 		return new FatalMode(exc);
 	}
 

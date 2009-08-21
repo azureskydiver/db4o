@@ -32,10 +32,10 @@ public class ClientTransactionPoolTestCase implements TestLifeCycle {
 			Assert.areEqual(trans2.container(), trans3.container());
 			Assert.areEqual(3, pool.openTransactionCount());
 			Assert.areEqual(2, pool.openFileCount());
-			pool.release(trans3, true);
+			pool.release(ShutdownMode.NORMAL, trans3, true);
 			Assert.areEqual(2, pool.openTransactionCount());
 			Assert.areEqual(2, pool.openFileCount());
-			pool.release(trans2, true);
+			pool.release(ShutdownMode.NORMAL, trans2, true);
 			Assert.areEqual(1, pool.openTransactionCount());
 			Assert.areEqual(1, pool.openFileCount());
 			
