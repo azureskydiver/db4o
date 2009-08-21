@@ -297,8 +297,12 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         }
         
         final ActivationContext cascadeContext = context.forObject(cascadeTo);
+        ClassMetadata classMetadata = cascadeContext.classMetadata();
+        if(classMetadata == null){
+        	return;
+        }
         ensureObjectIsActive(cascadeContext);
-        Handlers4.cascadeActivation(cascadeContext, cascadeContext.classMetadata().typeHandler());
+		Handlers4.cascadeActivation(cascadeContext, classMetadata.typeHandler());
     }
 
     private void ensureObjectIsActive(ActivationContext context) {
