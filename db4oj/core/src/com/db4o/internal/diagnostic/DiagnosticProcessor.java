@@ -32,7 +32,7 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     }
     
     public void checkClassHasFields(ClassMetadata classMetadata){
-        if( (! classMetadata.aspectsAreNull()) && classMetadata.declaredAspectCount() == 0){
+        if( classMetadata.aspectsAreNull() || classMetadata.declaredAspectCount() == 0){
             String name = classMetadata.getName();
             String[] ignoredPackages = new String[]{
                 "java.util."
