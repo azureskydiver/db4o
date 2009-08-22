@@ -1255,6 +1255,10 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
     public boolean hasObjectConstructor(){
         return _translator != null && _translator.isObjectConstructor();
     }
+
+    public boolean isTranslated() {
+		return _translator != null ;
+	}
 	
 	private Object instantiateObject(UnmarshallingContext context) {
 		Object obj = _constructor.apply(context);
