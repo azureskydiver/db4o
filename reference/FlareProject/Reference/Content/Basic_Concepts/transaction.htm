@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="402" MadCap:lastWidth="1161">
+    <head><title>Transaction</title>
+        <link rel="stylesheet" type="text/css" href="../../style.css" />
+    </head>
+    <body>
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Transaction</h1>
+                <p>All work within db4o ObjectContainer is transactional. A transaction is implicitly started when you open a container, and the current transaction is implicitly committed when you close it again. db4o transaction is tied to an open object container and only one transaction is allowed per object container instance.<br /></p><a name="Commit And Rollback"></a>
+                <h2>Commit And Rollback</h2>
+                <p>You may choose to make a commit explicit or you may leave it for the <code>#close()</code> call:</p>
+                <MadCap:snippetBlock src="../Resources/Snippets/StoreCarCommit.flsnp" />
+                <p>Before transaction is commited all the modifications to a database are written to a <a href="acid_model/acid_properties_for_db4o.htm" class="wikiLink">temporary memory storage</a>. Commit (explicit or implicit) writes the modifications to the disk.</p>
+                <p>Please, remember to always commit or close your ObjectContainer when the work is done, to make sure that the data is saved to the permanent storage. <a href="../tuning/performance_hints/commit_strategies.htm" class="wikiLink">Commit Strategies</a> contains some important information on when and how commit should be used to achieve the best performance.<br /></p>
+                <p>If you do not want to save changes to the database, you can call rollback, resetting the state of our database to the last commit point.</p><a name="Refresh Live Objects"></a>
+                <h2>Refresh Live Objects</h2>
+                <p>There is one thing that you should remember when rolling back: the <code>#rollback()</code> method will cancel the modifications, but it won't change back the state of the objects in your reference cache.</p>
+                <p>You have to explicitly refresh your live objects when their state might become different from the state in the database:</p>
+                <p>The <code>#refresh()</code> method might be also helpful when the changes to the database are done&#160;from different threads. See <a href="../client-server.htm" class="wikiLink">Client-Server</a> for more information.</p>
+            </div>
+        </div>
+        <div id="footer">This revision (14) was last Modified 2008-06-30T15:23:53 by Tetyana.
+				</div>
+    </body>
+</html>

@@ -1,0 +1,67 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Autoincrement</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Autoincrement</h1><p>Db4o does not deliver a field autoincrement feature, which
+is common in RDBMS. If your application logic requires this feature you can
+implement it using External Callbacks. One of the possible solutions is
+presented below.</p>
+
+<p>We will need an object to store the last generated ID and to
+return a new ID on request:</p>
+
+
+
+
+<p>This object generates the simplest ID, which is an
+autoincremented integer value. You can add your own algorithm to generate more
+sophisticated ID sequences, like ABC0001DEF.</p>
+
+<p>When you use external callbacks you are not limited to a
+single object: a callback can apply to any group of objects Thus you can create
+a sequence of classes sharing the same autoincrement. To distinguish the
+objects, which will have an autoincremented field, we will use an abstract
+(MustInherit in VB) class:</p>
+
+<p>Each object extending CountedObject will get an
+autoincremented ID. For example:</p>
+
+
+
+
+
+
+
+<p>It is only left to register the callback with the creating() event:</p>
+
+
+
+
+
+
+
+
+
+<p>You can test the results with the following code:</p>
+
+
+
+
+
+Please,
+note that the suggested implementation <b>cannot be used in a multithreaded
+environment</b>. In such environment you will have to make sure that the IncrementedId class can only be
+saved to the database once, and that 2 threads cannot independently and
+simultaneously increment IncrementedId
+counter.</div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2007-05-07T10:09:51 by Tetyana.
+				</div>
+  </body>
+</html>

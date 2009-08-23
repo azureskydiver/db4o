@@ -1,0 +1,34 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Messaging</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Messaging</h1>
+
+<p>In client/server mode the TCP connection between the client and the server can also be used to send messages from the client to the server.</p>
+<p>Possible usecases could be:</p>
+<ul>
+<li>shutting down and restarting the server</li>
+<li>triggering server backup</li>
+<li>using a customized login strategy to restrict the number of allowed client connections</li>
+</ul>
+<p>Here is some example code how this can be done.</p>
+<p>First we need to decide on a class that we want to use as the message. Any object that is storable in db4o can be used as a message, but strings and other simple types will not be carried (as they are not storable in db4o on their own). Let's create a dedicated class:</p>
+
+
+
+<p>Now we have to add some code to the server to react to arriving messages. This can be done by configuring a MessageRecipient object on the server. Let's simply print out all objects that arrive as messages. For the following we assume that we already have an ObjectServer object, opened with <a href="embedded.htm" class="wikiLink">Db4o.openServer()</a>.</p>
+
+
+
+<p>The MessageSender object on the client can be reused to send multiple messages.</p></div>
+    </div>
+    <div id="footer">
+					This revision (8) was last Modified 2008-04-14T16:05:00 by Tetyana.
+				</div>
+  </body>
+</html>

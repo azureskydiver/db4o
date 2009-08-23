@@ -1,0 +1,16 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Collection Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Collection Example</h1><p>Db4o provides proprietary TA-aware collection implementations:</p><ul><li>ArrayList4 and ArrayMap4 for Java</li><li>ArrayList4 and ArrayDictionary4 for .NET <br></li></ul><p>implementations for Map and List interfaces. Both implementations, when instantiated as a result of a query, are transparently activated when internal members are required to perform an operation. Db4o implementations provide an important advantage over JDK collections when running in transparent activation mode, based on the ability to control their activation. </p><p>ArrayList4 implements the generic list interface using an array to store elements. When an ArrayList4 instanceis activated all the elements of the array are loaded into memory. </p><p>ArrayMap4 and ArryDictionary4 classes implement the Map and IDictionary interface respectively using two arrays to store keys and values. The array values are transparently loaded into memory when ArrayMap4/ArryDictionary4 instance is activated.<br></p><p>For an example, we will use a <code>Team</code> class with a collection of <code>Pilot</code> objects:</p><p> <br><br></p><p></p><p>Store and retrieve.<br><br> <br><br><br><br><br>&nbsp;</p></div>
+    </div>
+    <div id="footer">
+					This revision (13) was last Modified 2009-02-20T16:42:35 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Collection Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Collection Example</h1>
+
+<p>In the <a href="detailed_example.htm" class="wikiLink">previous example</a> we reviewed how Transparent Persistence should be used with simple types. Let's now look how it is done with the collections.</p>
+<p>In order to make collections TP Activatable you will need to use db4o-specific ArrayList4 collection. This collection implements .NET/Java collection interfaces, therefore it can be easily integrated with your code. The following class contains a collection of Pilot objects:</p>
+
+
+
+<p>You can see that except for using ArrayList4, the implementation follows the same rules as in the previous <a href="detailed_example.htm" class="wikiLink">simple example</a>.</p>
+<p>Its usage has no surprises as well:</p>
+
+
+
+
+
+
+<p>So the only thing you should remember when using TP with collections is to use ArrayList4 instead of platform-specific collection.<br></p>
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2008-01-26T16:31:16 by Tetyana.
+				</div>
+  </body>
+</html>

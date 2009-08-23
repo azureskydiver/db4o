@@ -1,0 +1,88 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Custom Typehandler Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Custom Typehandler Example</h1>
+
+<p>For a custom typehandler example we will try to write a very
+simple typehandler for StringBuffer(java) and StringBuilder(.NET). These
+classes are basically just another representation of String, so we can look at
+the StringHandler implementation in db4o source. </p>
+
+<p>To keep it simple we will skip information required for
+indexing - please look at IndexableTypeHandler in db4o sources to get more
+information on how to handle indexes.</p>
+
+<p>The first thing should be #write method, which determines
+how the object is persisted:</p>
+
+
+
+
+
+
+
+<p>As you can see from the code above, there are 3 steps:</p>
+
+<ol><li>Get
+     the buffer from WriteContext/I WriteContext</li><li>Write
+     the length of the StringBuffer/StringBuilder</li><li>Transfer
+     the object to char array and write them in Unicode</li></ol>
+
+
+
+<p>Next step is to read the same from the buffer. It is just
+opposite to the write method:</p>
+
+
+
+
+
+<p>Delete is simple - we just reposition the buffer offset to the end of the
+slot:</p>
+
+
+
+
+
+
+
+<p>Try to experiment with the #delete method by implementing cascade on delete.
+Use FirstClassObjectHandler as an example.</p>
+
+<p>We are done with the read/write operations. But as you remember, in order to
+read an object, we must find it through a query, and that's where we will need
+a #compare method &nbsp;(well, you do not need
+it if your query does not contain any comparison criteria, but this is normally
+not the case):</p>
+
+
+
+
+
+
+
+<p>The last method left: #defragment. This one only moves the offset to the beginning
+of the object data, i.e. skips Id and size information (to be compatible to
+older versions):</p>
+
+
+
+
+
+<p>This Typehandler implementation can be tested with a class below. Please, pay special attention to #configure method, which adds StringBufferHandler/StringBuilderHandler to the database configuration:<br></p>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2008-02-03T11:32:35 by Tetyana.
+				</div>
+  </body>
+</html>

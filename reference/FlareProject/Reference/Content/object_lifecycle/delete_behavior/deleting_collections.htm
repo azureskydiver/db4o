@@ -1,0 +1,32 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Deleting Collections</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Deleting Collections</h1><p>As it was discussed in
+<a href="../working_with_structured_objects/deleting_structured_objects.htm" class="wikiLink">Deleting Structured Objects</a> chapter,
+deleting a top-level object does not mean deleting all of the member objects.
+The same rule applies for collections. The recommendation would be to use
+cascadeOnDelete setting for a collection, which should be deleted with all its
+members.</p><p>For the following example we will use <a href="example_classes.htm" class="wikiLink">DataObject and
+ListObject</a> classes. The database will be filled up with the
+<a href="filling_the_database.htm" class="wikiLink">FillUpDb</a> method. <br></p>
+
+
+
+
+Please, remember that there is no referential
+integrity check on delete: deleted objects might be referenced from elsewhere
+in your code.
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2007-05-04T12:56:43 by Tetyana.
+				</div>
+  </body>
+</html>

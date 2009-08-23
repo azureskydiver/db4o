@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd">
+    <head><title>Basic Concepts</title>
+        <link rel="stylesheet" type="text/css" href="../style.css" />
+    </head>
+    <body>
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Basic Concepts</h1>
+                <p>This topic collection discusses concepts used in the foundation of the db4o system. </p>
+                <p>db4o is an object-oriented database. It provides all the benefits of an OO environment including data abstraction, inheritance, encapsulation. The object model simplifies maintenance and refactoring and seamlessly integrates with the modern programming languages (Java, .NET). One of the valuable benefits of the OO technology is Native Queries - database queries expressed in a native programming language. </p>
+                <p>In .NET version 3.5 the preferred alternative to Native Queries is LINQ - Language Integrates Queries. Though LINQ supports relational databases as well, in the db4o case, query execution does not include Object-Relational mapping which gives db4o better performance.<br /></p>
+                <p>At the same time, db4o provides important database features like ACID transactions and concurrency control.</p>
+                <p>These and other technologies will be discussed in more details below&#160; (work in progress). <br /></p>
+                <p />
+                <div class="childTopicList">More Reading:<ul><li><p><a href="basic_concepts/evaluation_guide.htm" class="wikiLink">Evaluation Guide</a></p></li><li><p><a href="basic_concepts/acid_model.htm" class="wikiLink">ACID Model</a></p></li><li><p><a href="basic_concepts/concurrency_control_and_locking.htm" class="wikiLink">Concurrency Control And Locking</a></p></li><li><p><a href="basic_concepts/object_identity.htm" class="wikiLink">Object Identity</a></p></li><li><p><a href="basic_concepts/transaction.htm" class="wikiLink">Transaction</a></p></li><li><p><a href="basic_concepts/database_models.htm" class="wikiLink">Database Models</a></p></li><li><p><a href="basic_concepts/native_query_concepts.htm" class="wikiLink">Native Query Concepts</a></p></li></ul></div>
+&#160;</div>
+        </div>
+        <div id="footer">
+					This revision (8) was last Modified 2009-03-19T15:08:47 by Tetyana.
+				</div>
+    </body>
+</html>

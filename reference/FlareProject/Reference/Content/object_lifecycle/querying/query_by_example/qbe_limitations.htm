@@ -1,0 +1,39 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>QBE Limitations</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>QBE Limitations</h1><p>As it was mentioned <a href="../query_by_example.htm" class="wikiLink">before</a> QBE has some serious limitations. 
+</p><p>Query-By-Example evaluates all non-null
+fields and all simple type variables that do not hold their default
+values against the stored objects. Check to make sure that you are
+not constraining the resultset by accidentally initializing variables
+on your template objects. Typical places could be: <br></p><ul><li>Constructors
+</li><li>Constructors in ancestors of your class </li><li>Static
+initialization </li><li>Static initialization in ancestors of your
+class.</li></ul><p>The following classes provide an example of classes that cannot be used with QBE:</p><ul><li><a href="qbe_limitations/pilot1.htm" class="wikiLink">Pilot1</a></li><li><a href="qbe_limitations/pilot1derived.htm" class="wikiLink">Pilot1Derived</a> <br></li><li><a href="qbe_limitations/pilot2.htm" class="wikiLink">Pilot2</a></li><li><a href="qbe_limitations/pilot2derived.htm" class="wikiLink">Pilot2Derived</a> <br></li></ul><p>The following examples show the results of QBE usage with the classes above. Note, that there are some differences between Java and .NET behavior: </p><ul><li>in Java QBE does not return any results when static initialization or initialization in a constructor is present;</li><li>in .NET QBE will return results in the above-mentioned cases, but it can't guarantee that the result will be correct if the value was changed in the constructor.<br></li></ul><p>1. QBE used against a class that has arbitrary member initialization in the constructor:&nbsp;</p>
+<p>2. This example is similar to the previous one, but uses a class derived from the class in test1:</p>
+
+
+
+
+
+
+<p>3. This example uses QBE against a class with static member initialization:</p>
+
+
+
+<p>4. This example is similar to test3, but a derived class is used:</p>
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-09-09T10:28:56 by Tetyana.
+				</div>
+  </body>
+</html>

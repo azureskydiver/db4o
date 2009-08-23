@@ -1,0 +1,50 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Query Structure</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Query Structure</h1>
+
+<p>More complex queries take longer to execute, as they include
+more constrains and can impose some additional operations as sorting,
+aggregate, negation etc.</p>
+
+
+
+
+
+<p>Results from the test machine:</p>
+
+<p><i>Storing objects as a
+bulk:</i></p>
+
+<p><i>Store 30000 objects:
+3049ms</i></p>
+
+<p><i>Simple SODA query:</i></p>
+
+<p><i>Select 1 object SODA:
+level1/1: 440ms</i></p>
+
+<p><i>Sorted SODA query:</i></p>
+
+<p><i>Select 1 object SODA:
+level9999/2: 1509ms</i></p>
+
+<p><i>SODA query with joins:</i></p>
+
+<p><i>Selected 1 objects
+SODA: 1735ms</i></p>
+
+<p>From the test results you can see that sorting makes the
+query slower, and adding additional constraints slows things down even more.</p></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2008-06-08T15:46:48 by Tetyana.
+				</div>
+  </body>
+</html>

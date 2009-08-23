@@ -1,0 +1,36 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Remote Execution Through Evaluation API</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Remote Execution Through Evaluation API</h1>
+
+<p>One of the ways to do that is using evaluation API. Evaluation/candidate classes are serialized and sent to the server. That means that if we will put the selection criteria and update code inside evaluation class, we will have that code on the server and executing a query using evaluation on the client side will run the update code on the server side.</p>
+<p>For easier query execution we can use database singleton - a class that have only one instance saved in the database. That actually can be the class calling the query itself.</p>
+<p>Let's fill up our server database:</p>
+
+
+
+
+<p> </p>
+<p>This method has its pros and cons.</p>
+<p>Pros:</p>
+<ul>
+<li>any arbitrary code can be executed;</li>
+<li>the code is executed on the server side;</li>
+</ul>
+<p>Cons:</p>
+<ul>
+<li>the code will have to be serialized and sent over a network connection;</li>
+<li>changing the code will require update of all clients</li>
+</ul></div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2006-11-14T11:50:58 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,84 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Complexity Of Objects</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Complexity Of Objects</h1><p><br></p><p>Unlike other database operations deletion is mostly
+unaffected by the complexity of objects. The delete operation basically marks
+an object as deleted and is the same for any type of object. The main time
+required is to locate the object record in the database. This is demonstrated
+by the following example:</p>
+
+<p>The following classes are used for the test:</p>
+
+
+
+<p>The deletion procedure deletes several items from the whole
+amount of objects in the database:</p>
+
+
+
+<p>Approximate results on the test computer are presented below:</p>
+
+<p><i>Delete test with
+different objects</i></p>
+
+<p><i>Deleting 1 of
+10000 objects with 3 levels of embedded objects:</i></p>
+
+<p><i>&nbsp;- primitive object with int field</i></p>
+
+<p><i>Store 30000
+objects: 1720ms</i></p>
+
+<p><i>Deleted 10
+objects in: 0 ms.</i></p>
+
+<p><i>&nbsp;- object with String field</i></p>
+
+<p><i>Store 30000
+objects: 1690ms</i></p>
+
+<p><i>Deleted 10
+objects in: 1 ms.</i></p>
+
+<p><i>&nbsp;- object with StringBuffer field</i></p>
+
+<p><i>Store 30000
+objects: 4424ms</i></p>
+
+<p><i>Deleted 10
+objects in: 1 ms.</i></p>
+
+<p><i>&nbsp;- object with int array field</i></p>
+
+<p><i>Store 30000
+objects: 2071ms</i></p>
+
+<p><i>Deleted 10
+objects in: 0 ms.</i></p>
+
+<p><i>&nbsp;- object with ArrayList field</i></p>
+
+<p><i>Store 30000
+objects: 4264ms</i></p>
+
+<p><i>Deleted 10
+objects in: 1 ms.</i></p>
+
+<p>You can see that the complexity and structure of an object
+play little or no role in the performance.</p>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2008-05-27T13:30:04 by Tetyana.
+				</div>
+  </body>
+</html>

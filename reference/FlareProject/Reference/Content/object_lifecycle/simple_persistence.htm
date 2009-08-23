@@ -1,0 +1,54 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Simple Persistence</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Simple Persistence</h1>
+
+
+<p>db4o makes your work with persistent objects very simple and 
+straightforward. The only #store(object) method is used for both saving and 
+modification of any object that exists in your model.</p>
+
+
+
+
+
+
+
+<p>Deletion is just as easy:</p>
+
+
+
+
+
+
+
+<p>The objects are identified by their references in an application cache. You do not need to implement any additional identification systems (like primary keys 
+in RDBMS). See <a href="../basic_concepts/object_identity.htm" class="wikiLink">Identity chapter</a> for 
+details. The uniqueness of an object is defined only by its reference, if you 
+will create 2 objects of the same class with exactly the same fields and save 
+them to db4o - you will get 2 objects in your database. As you can see from the 
+examples an object instance should be retrieved from the database 
+before updating or deleting or you can use the newly created object if it was 
+stored in the same session. Creating a new instance identical to the object in the 
+database and saving it, will create a new object in the database.</p>
+
+<p>Db4o does 
+all the "dirty" work of objects transition between your classes and 
+persistent state using <a href="../implementation_strategies/db4o_reflection_api.htm" class="wikiLink">Reflection</a> . No 
+mappings or additional coding is needed from your side. If you will need to 
+change your application model for the next version you will also be surprised 
+with the simplicity: all the changes are done in one place - your code, and the 
+most common operations are done completely automatically (see <a href="../implementation_strategies/refactoring_and_schema_evolution.htm" class="wikiLink">Refactoring 
+And Schema Evolution</a> chapter for details).</p><p>Please, remember that all db4o work is done within <a href="../basic_concepts/transaction.htm" class="wikiLink">Transaction</a>, which can be committed or rolled back depending on the result you want to achieve.&nbsp;</p></div>
+    </div>
+    <div id="footer">
+					This revision (14) was last Modified 2008-01-28T06:11:53 by Tetyana.
+				</div>
+  </body>
+</html>

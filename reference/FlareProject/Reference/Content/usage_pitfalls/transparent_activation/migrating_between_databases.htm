@@ -1,0 +1,82 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Migrating Between Databases</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Migrating Between Databases</h1>
+
+<p>Transparent activation and persistence functionality depends
+on an association between an object and an object container, which is created
+when an activator is bound to the object. Each object allows only one
+activator. Typically this limitation won't show up, however there is a valid
+use case for it: </p>
+
+<p>1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; suppose
+you need to copy one or more objects from one object container to another;</p>
+
+<p>2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; you
+will retrieve the object(s) from the first object container using any suitable
+query syntax;</p>
+
+<p>3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; optionally
+you can close the first object container;</p>
+
+<p>4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; you
+will now save the object to the second object container.</p>
+
+<p>If both object containers were
+using transparent activation or persistence - the 4-th step will throw an
+exception. Let's look at the case in more detail. Typical activatable class
+contains an <code>activator</code> field. When transparent activation
+functionality is used for the first time an object container activator will be
+bound to the object:</p>
+
+
+
+
+
+
+
+<p>If <code>bind</code> method will
+be re-called with the same object container, activator parameter will always be
+the same. However, if another object container tries to bind the object (in our
+case with the <code>store</code> call) activator parameter will be different,
+which will cause an exception. (Exception will be thrown even if the first
+object container is already closed, as activator object still exists in the
+memory.) This behaviour is illustrated with the following example
+(<a href="../../object_lifecycle/activation/transparent_activation_framework/detailed_example.htm" class="wikiLink">SensorPanelTA</a> class from Transparent Activation chapter is used):</p>
+
+
+
+
+
+
+
+<p>The solution to this problem is
+simple: activator should be unbound from the object:</p>
+
+
+
+
+
+
+
+<p>Note, that the object will quit
+being activatable for the first object container. The following example shows
+the described behaviour:</p>
+
+
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2008-01-12T19:40:37 by Tetyana.
+				</div>
+  </body>
+</html>

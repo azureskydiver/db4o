@@ -1,0 +1,60 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Configuration</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Configuration</h1>
+
+<p>db4o provides a wide range of configuration options to help
+you meet your performance and reliability requirements. The following example
+shows how different configurations affect update performance:</p>
+
+
+
+
+
+<p>The results:</p>
+
+<p><i>Update test with different configurations</i></p>
+
+<p><i>Update test: default configurations</i></p>
+
+<p><i>Store 90000 objects: 7869ms</i></p>
+
+<p><i>Updated 90 items: 471ms</i></p>
+
+<p><i>Update test: memory IO adapter</i></p>
+
+<p><i>Store 90000 objects: 6622ms</i></p>
+
+<p><i>Updated 90 items: 289ms</i></p>
+
+<p><i>Update test: cascade on update</i></p>
+
+<p><i>Store 90000 objects: 6848ms</i></p>
+
+<p><i>Updated 90 items: 1531ms</i></p>
+
+<p><i>Update test: Transparent Persistence</i></p>
+
+<p><i>Store 90000 objects: 6604ms</i></p>
+
+<p><i>Updated 90
+items: 1297ms</i></p>
+
+<p>From the results you can see that MemoryIoAdapter allows to
+uprove performance, CascadeOnUpdate option results in a considerable drop of
+performance, and Transparent Persistence makes it better again.</p>
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2008-06-02T05:27:09 by Tetyana.
+				</div>
+  </body>
+</html>

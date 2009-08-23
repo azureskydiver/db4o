@@ -1,0 +1,53 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Initial Setup</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Initial Setup</h1><p>When replicating objects to and from a db4o database, we
+need to enable UUIDs and VersionNumbers. </p>
+
+<p>UUIDs are object IDs that are unique across all databases
+created with&nbsp;db4o. That is achieved by having the database creation
+timestamp as part&nbsp;of its objects UUIDs. The db4o UUID contains two parts.
+The first part contains an object ID. The second part identifies
+the&nbsp;database that originally created this ID.&nbsp; More information on the UUIDs can be found in the <a href="http://developer.db4o.com/Resources/view.aspx/Reference/Implementation_Strategies/IDs_And_UUIDs/Unique_Universal_IDs">db4o
+reference documentation</a>.<br>
+The replication system will use the version number to invisibly tell when an
+object was last replicated,&nbsp;and if any changes have been made to the
+object since it was last replicated. An object's version number&nbsp;indicates
+the last time an object was modified. It is the database version at the moment
+of the modification. </p>
+
+
+
+
+
+
+
+<p>The above settings can also be applied to a specific class
+object, which needs to be replicated. This can help to improve the performance
+if only selected classes need to be replicated:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-07-08T21:16:16 by Tetyana.
+				</div>
+  </body>
+</html>

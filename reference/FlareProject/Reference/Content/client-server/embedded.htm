@@ -1,0 +1,36 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Embedded</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Embedded</h1>
+
+<p>From the API side, there's no real difference between transactions executing concurrently within the same VM and transactions executed against a remote server. To use concurrent transactions within a single VM, we just open a db4o server on our database file, directing it to run on port 0, thereby declaring that no networking will take place.</p>
+
+
+
+<p>Again, we will delegate opening and closing the server to our environment to focus on client interactions.</p>
+
+
+
+<p>The transaction level in db4o is <i>read committed</i>. However, each client container maintains its own weak reference cache of already known objects. To make all changes committed by other clients immediately, we have to explicitly refresh known objects from the server. We will delegate this task to a specialized version of our listResult() method.</p>
+
+
+
+
+
+
+<p>Simple rollbacks just work as you might expect now.</p>
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2006-11-14T11:20:16 by Tetyana.
+				</div>
+  </body>
+</html>

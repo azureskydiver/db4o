@@ -1,0 +1,37 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Field type change</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Field type change</h1> 
+
+<P>The reviewed refactoring types are fairly easy. It gets more difficult when you need to change a field's type.</P>
+<P>If you modify a field's type, db4o internally creates a new field of the same name, but with the new type. The values of the old typed field are still present, but hidden. If you will change the type back to the old type the old values will still be there. </P>
+<P>You can access the values of the previous field data using StoredField API.</P>
+
+
+
+<P>gives you access to the field, which type was changed.</P>
+
+
+
+<P>allows you to get the old field value for the specified object.</P>
+<P>To see how it works on example, let's change Pilot's field name from type string to type Identity:</P>
+
+
+
+<P>Now to access old "name" values and transfer them to the new "name" we can use the following procedure:</P>
+
+
+<P> </P>
+<P>These are the basic refactoring types, which can help with any changes you will need to make. </P></div>
+    </div>
+    <div id="footer">
+					This revision (9) was last Modified 2007-08-15T20:48:35 by Eric Falsken.
+				</div>
+  </body>
+</html>
