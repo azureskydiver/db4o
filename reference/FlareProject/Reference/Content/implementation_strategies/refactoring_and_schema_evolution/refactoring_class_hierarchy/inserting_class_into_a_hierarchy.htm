@@ -1,0 +1,70 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Inserting Class Into A Hierarchy</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Inserting Class Into A Hierarchy</h1>
+
+<p>We will use the same <a href="a.htm" class="wikiLink">A</a>, <a href="b.htm" class="wikiLink">B</a> and <a href="c.htm" class="wikiLink">C</a> classes
+as in the <a href="removing_class_from_a_hierarchy.htm" class="wikiLink">previous example</p>
+
+<p></a>. The goal is to insert a new class with additional members
+between B and C class in the hierarchy.</p>
+
+<p>Let's store some class objects first:</p>
+
+
+
+
+
+
+
+<p>The following class will be inserted:</p>
+
+
+
+
+
+
+
+<p>Now C class must inherit from D. We can't change C class
+itself, because its data will be lost. Therefore we will create a new E class
+to hold C data:</p>
+
+
+
+
+
+
+
+<p>When all the necessary classes are created we can copy C
+data into E class:</p>
+
+
+
+
+
+
+
+<p>Now C classes can be safely removed from the project and all
+the references to it updated to E(or D). We can check that all the values are
+in place:</p>
+
+
+
+
+
+
+
+<p>When performing refactoring on your working application do
+not forget to make a copy of the code and data before making any changes!</p></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-09-30T18:47:14 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Removing Class From A Hierarchy</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Removing Class From A Hierarchy</h1><p><br></p><p>Let's use <a href="a.htm" class="wikiLink">A</a>,<a href="b.htm" class="wikiLink">B</a> and <a href="c.htm" class="wikiLink">C</a> classes and remove B class,
+copying its values to the updated C class. </p>
+
+<p>First of all let's store some class objects to the database:</p>
+
+
+
+
+
+
+
+<p>If we will remove B class and update C class to inherit from
+A, we won't be able to read C data from the database anymore (exception).&nbsp; In order to preserve C data we will need to
+transfer it to another class:</p>
+
+
+
+
+
+
+
+<p>We can also transfer B data into this class.</p>
+
+<p>Once D class is created we can run the data transfer:</p>
+
+
+
+
+
+
+
+<p>Now B and C classes can be safely removed from the project
+and all the references to them updated to D. We can check that all the values
+are in place:</p>
+
+
+
+
+
+
+
+<p>When performing refactoring on your working application do
+not forget to make a copy of the code and data before making any changes!</p></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-09-30T18:40:12 by Tetyana.
+				</div>
+  </body>
+</html>

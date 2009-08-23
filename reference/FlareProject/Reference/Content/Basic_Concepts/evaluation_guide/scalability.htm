@@ -1,0 +1,31 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Scalability</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Scalability</h1>
+
+<p>Db4o can potentially be used for rather large databases - up to 254 GB per database file.&nbsp;&nbsp; However, this would be highly unusual and likely due to having the kind of application that was storing relatively few, but very large objects in the database.&nbsp;&nbsp; As a general rule, if you expect your database to grow beyond 10 gigabytes, you should probably be looking at the Versant object database.&nbsp; For more information, please visit:&nbsp;&nbsp; <a href="http://www.versant.com/en_US/products/objectdatabase?referrer=vsnt2">http://www.versant.com/</a></p>
+
+<p>If you want to make sure that your
+application can grow and scale with db4o database you may take the following
+steps:</p>
+
+<ul><li>Write performance tests to accommodate for performance requirements
+     of the growing application</li><li>Use database clusters to spread the load between several
+     database files.</li><li>Use client-server version to enable many clients using
+     data at the same time</li><li>Use in-memory database to improve performance</li></ul>
+
+<p>Another important factor for performance and scalability is
+fragmentation. Fragmentation occurs when your objects grow in size regularly or when you application deletes lots of objects through normal processing. That is why it is important to run db4o <a href="../../tuning/performance_hints/defragment.htm" class="wikiLink">Defragment</a>
+regularly. The physical disk fragmentation also plays an important role, so disk defragment should be also scheduled on a regular basis to improve the performance.&nbsp;&nbsp; The db4o defragmentation tool is an off-line tool.&nbsp; If you require online administration of actives such as defragmentation, you should probably be considering the Versant object database.&nbsp; For information, please visit:&nbsp;&nbsp; <a href="http://www.versant.com/developer/resources/objectdatabase?referrer=vsnt3">http://www.versant.com/</a></p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2009-03-19T18:06:19 by Tetyana.
+				</div>
+  </body>
+</html>

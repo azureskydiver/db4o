@@ -1,0 +1,52 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Simple Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Simple Example</h1>
+<p>The following example does a simple replication from a
+handheld database to the desktop database:</p>
+
+
+
+
+
+
+We start by opening two ObjectContainers. The next line
+creates the ReplicationSession. This object&nbsp;contains all of the
+replication-related logic.
+
+<p>After creating the session, there is an interesting line:</p>
+
+
+
+
+
+
+This line of code will get the provider associated with the
+first of our sources (the handheld&nbsp;ObjectContainer in this case). Then it
+finds all of the objects that have been updated or created.&nbsp;The
+new/modified objects will be returned in an enumerable ObjectSet.<br>
+<p>
+After that comes a simple loop where the resulting objects are replicated one
+at a time.<br>
+The <code>replication.commit()</code> call at the end is important. This line
+will save all of the changes we have made, and end any needed transactions.
+Forgetting to make this call will result in&nbsp;your replication changes being
+discarded when your application ends, or your ObjectContainers are&nbsp;closed.<br>
+The <code>#commit()</code> calls also mark all objects as replicated.
+Therefore, changed/new objects that are not&nbsp;replicated in this session
+will be marked as replicated.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-07-08T21:19:24 by Tetyana.
+				</div>
+  </body>
+</html>

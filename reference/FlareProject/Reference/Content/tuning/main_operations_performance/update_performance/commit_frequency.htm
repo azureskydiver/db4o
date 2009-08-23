@@ -1,0 +1,42 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Commit Frequency</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Commit Frequency</h1><p>Commit frequency has a direct impact on db4o performance.
+Commit is an expensive operation due to physical disk access. However, commit
+is also the only way to ensure that the whole transaction is stored safely on
+the disk and no data loss will occur in case of unexpected system failure.</p>
+
+<p>The following test shows how commit frequency influences the
+performance on update:</p>
+
+
+
+<p>The results:</p>
+
+<p><i>Update test with different commit frequency</i></p>
+
+<p><i>Test update all:</i></p>
+
+<p><i>Store 30000 objects: 2661ms</i></p>
+
+<p><i>Updated 10000 items: 1402ms</i></p>
+
+<p><i>Test update all with commit after each 1000 objects:</i></p>
+
+<p><i>Store 30000 objects: 2250ms</i></p>
+
+<p><i>Updated 10000 items : 2812ms</i></p>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2008-06-02T05:28:39 by Tetyana.
+				</div>
+  </body>
+</html>

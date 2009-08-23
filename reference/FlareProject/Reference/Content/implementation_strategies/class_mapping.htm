@@ -1,0 +1,79 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Class Mapping</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Class Mapping</h1><p>[This functionality is deprecated]&nbsp;</p><p>db4o provides you with a possibility to create a mapping
+from a class in the database to a runtime class. </p>
+
+
+
+
+
+
+
+<p><code>clazz</code> parameter specifies a runtime class,
+which will be used to instantiate objects from the database.</p>
+
+<p>The use-case is the following:</p>
+
+<ul><li>objects of class A are stored to the database;</li><li>the objects should be retrieved from the database and
+instantiated as objects of class B.</li></ul>
+
+
+
+
+
+
+
+
+
+<p>This configuration should be set before opening a database
+file.</p>
+
+
+
+<p>The mapping functionality is similar to <a href="aliases.htm" class="wikiLink">Aliases</a>, but
+more limited.</p>
+
+
+
+<p>Let's look at an example.</p>
+
+<p>We will use 2 identical classes <a href="class_mapping/pilot.htm" class="wikiLink">Pilot</a> and
+<a href="class_mapping/pilotreplacement.htm" class="wikiLink">PilotReplacement</a>.</p>
+
+<p>Objects of Pilot class will be saved to the database:</p>
+
+
+
+
+
+
+
+<p>Let's try to retrieve the persisted objects using
+PilotReplacement class:</p>
+
+
+
+
+
+
+
+
+
+<p>If meta information
+for this mapping class has been stored before to the database file,
+<code>readAs</code> method will have no effect.</p>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2007-05-07T12:36:22 by Tetyana.
+				</div>
+  </body>
+</html>

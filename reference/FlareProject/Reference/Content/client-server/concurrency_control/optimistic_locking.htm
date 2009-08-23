@@ -1,0 +1,73 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Optimistic Locking</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Optimistic Locking</h1><p>In optimistic locking system no locks are used to prevent
+collision: any user can read an object into the memory and work on it at any
+time. However, before the client can save its modifications back to the database,
+a check should take place verifying that the item did not change since the time
+of initial read (no collision occurred). If a collision is detected it should
+be resolved according to your application logic. Typical solutions are:</p>
+
+<ul><li>Rollback
+</li><li>Display the
+problem and let the user decide<br> </li><li>Merge the
+changes </li><li>Log the
+problem so someone can decide later </li><li>Ignore the
+collision and overwrite</li></ul>
+
+
+
+
+
+
+
+
+
+<p>Let's look at an example realization.</p>
+
+<p>We will use a db4o database containing
+objects of Pilot class and a separate thread to create a client connection to
+the database, retrieve and modify objects.</p>
+
+
+
+<p>A semaphore is used for locking the object
+before saving and the lock is released after commit when the changes become
+visible to the other clients. The semaphore is assigned a name based on object
+ID to make sure that only the modified object will be locked and the other
+clients can work with the other objects of the same class simultaneously.</p>
+
+<p>Locking the object for the update only
+ensures that no changes will be made to the object from the other clients
+during update. However the object might be already changed since the time when
+the current thread retrieved it. In order to check this we will need to
+implement an event handler for the updating event:</p>
+
+<p>In the above case the changes are discarded
+and a message is sent to the user if the object is already modified from
+another thread. You can replace it with your own strategy of collision
+handling.</p>
+
+<p>Note: the supplied example has random delays
+to make the collision happen. You can experiment with the delay values to see
+different behavior.</p>
+
+
+
+
+
+<p><br>
+</p>
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2006-12-18T14:39:30 by Tetyana.
+				</div>
+  </body>
+</html>

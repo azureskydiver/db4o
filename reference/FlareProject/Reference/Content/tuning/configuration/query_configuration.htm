@@ -1,0 +1,32 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Query Configuration</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Query Configuration</h1>
+<p>QueryConfiguration/IQueryConfiguration interface allows to configure query settings to be used by query processor. Query configuration can be accessed by all implementations of CommonComfiguration/ICommonConfiguration inteface:</p>
+
+
+<p>Currently query configuration provide one method:</p>
+
+
+<p>This method allows to configure the way query results will be evaluation. QueryEvaluationMode class defines 3 constant, representing different modes:</p>
+<ul>
+<li>Immediate</li>
+<li>Lazy</li>
+<li>Snapshot</li>
+</ul>
+<p>In Immediate mode, the query is evaluated immediately and the full set of object IDs is returned.</p>
+<p>In Snapshot mode, all indexes constraints are evaluated immediately and a snapshot of indexed results is returned. All non-indexes constraints and all evaluations will be triggered when user iterates through the snapshot result. <br></p>
+<p>In Lazy mode an iterator is created against the best found index. All the constraints evaluations will be done as user iterates through the result.</p>
+<p>For more detailed information see&nbsp; <a href="../../object_lifecycle/querying/query_modes.htm" class="wikiLink">Query Modes</a>.<br></p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2009-04-05T16:09:51 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Native Queries</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Native Queries</h1>
+
+<p>We have checked in the SODA topic that SODA queries
+can work with a server without application classes deployed. So we can expect
+optimized Native Queries (converted to SODA under the hood) to work as well:<br>
+</p>
+<p>
+ </p>
+<p>
+ </p>
+<p>
+</p>
+<p>Unfortunately, if
+the query cannot be optimized to SODA, the server needs to instantiate the
+classes to run the query. This is not possible if the class is not available</p>
+
+<p>This
+query won't work:</p>
+
+<p>
+ </p>
+
+<p>
+ </p>
+
+<p>
+
+</p><p>If you want to use unoptimized Native Queries in a client-server environment, you must make sure, that the Native Query classes are deployed on the server side. You can do so by implementing all predicate classes in a separate library and deploying it on both the client and the server side. See also <a href="../../usage_pitfalls/native_queries.htm" class="wikiLink">Usage Pitfalls</a>.<br></p></div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2008-11-16T07:07:46 by Tetyana.
+				</div>
+  </body>
+</html>
