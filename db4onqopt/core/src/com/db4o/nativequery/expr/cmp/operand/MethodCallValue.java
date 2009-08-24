@@ -67,4 +67,12 @@ public class MethodCallValue extends ComparisonOperandDescendant {
 	public CallingConvention callingConvention() {
 		return _callingConvention;
 	}
+
+	/**
+	 * @sharpen.property
+	 */
+	@Override
+	public TypeRef type() {
+		return _method.returnType();
+	}
 }

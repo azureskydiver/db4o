@@ -6,6 +6,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.activation.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.query.*;
@@ -13,6 +14,7 @@ import com.db4o.nativequery.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.main.*;
 import com.db4o.query.*;
+import com.db4o.ta.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -51,7 +53,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		}
 	}
 	
-	private static class Data extends Base {
+	private static class Data extends Base implements Activatable {
 		boolean bool;
 		float value;
 		String name;
@@ -85,6 +87,12 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 
 		public Data getPrev() {
 			return prev;
+		}
+
+		public void activate(ActivationPurpose purpose) {
+		}
+
+		public void bind(Activator activator) {
 		}	
 	}
 
@@ -530,12 +538,6 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 			}
 		},
 		// non-candidate method calls
-		new ExpectingPredicate<Data>("id==Integer.parseInt('3')") {
-			public int expected() { return 2;}
-			public boolean match(Data candidate) {
-				return candidate.id==Integer.parseInt("3");
-			}
-		},
 		new ExpectingPredicate<Data>("id==P.sum(3,0)") {
 			public int expected() { return 2;}
 			private int sum(int a,int b) {
@@ -588,6 +590,14 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return NQRegressionTestCase.PRIVATE_INTWRAPPER.equals(candidate.idWrap);
+			}
+		},
+		// activate calls
+		new ExpectingPredicate<Data>("act;id2==0") {
+			public int expected() { return 1;}
+			public boolean match(Data candidate) {
+				candidate.activate(ActivationPurpose.READ);
+				return candidate.id2==0;
 			}
 		},
 	};

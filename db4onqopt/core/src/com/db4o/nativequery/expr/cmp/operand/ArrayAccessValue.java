@@ -3,10 +3,13 @@
 package com.db4o.nativequery.expr.cmp.operand;
 
 
+import com.db4o.instrumentation.api.*;
+
+
 public class ArrayAccessValue extends ComparisonOperandDescendant {
 	private ComparisonOperand _index;
 	
-	public ArrayAccessValue(ComparisonOperandAnchor parent,ComparisonOperand index) {
+	public ArrayAccessValue(ComparisonOperandDescendant parent,ComparisonOperand index) {
 		super(parent);
 		_index = index;
 	}
@@ -33,5 +36,13 @@ public class ArrayAccessValue extends ComparisonOperandDescendant {
 	
 	public String toString() {
 		return super.toString()+"["+_index+"]";
+	}
+
+	/**
+	 * @sharpen.property
+	 */
+	@Override
+	public TypeRef type() {
+		return ((ComparisonOperandDescendant)parent()).type().elementType();
 	}
 }

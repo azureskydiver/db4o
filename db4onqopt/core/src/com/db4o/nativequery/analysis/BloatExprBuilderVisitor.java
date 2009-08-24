@@ -8,6 +8,8 @@ import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.tree.*;
 
+import com.db4o.activation.*;
+import com.db4o.foundation.*;
 import com.db4o.instrumentation.api.*;
 import com.db4o.instrumentation.bloat.*;
 import com.db4o.instrumentation.core.*;
@@ -17,6 +19,7 @@ import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.build.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.operand.*;
+import com.db4o.ta.*;
 
 public class BloatExprBuilderVisitor extends TreeVisitor {
 
@@ -59,7 +62,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 					}
 				}
 			}
-			return new ComparisonExpression(fieldValue, valueExpr, op);
+			return comparisonExpression(fieldValue, valueExpr, op);
 		}
 	}
 
@@ -143,7 +146,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	private Map seenBlocks = new HashMap();
 
-	private BloatLoaderContext bloatUtil;
+	private BloatLoaderContext context;
 
 	private LinkedList methodStack = new LinkedList();
 
@@ -153,8 +156,10 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	private int blockCount = 0;
 
+	private Stack4 _statementStates = new Stack4();
+
 	public BloatExprBuilderVisitor(BloatLoaderContext bloatUtil) {
-		this.bloatUtil = bloatUtil;
+		this.context = bloatUtil;
 		localStack.addLast(new ComparisonOperand[] {
 				PredicateFieldRoot.INSTANCE, CandidateFieldRoot.INSTANCE });
 	}
@@ -194,19 +199,20 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return true;
 		}
 		final boolean[] result = { true };
-		ExpressionVisitor visitor = new TraversingExpressionVisitor() {
+		expr.accept(new TraversingExpressionVisitor() {
 			public void visit(ComparisonExpression expression) {
 				if (expression.left().root() != CandidateFieldRoot.INSTANCE) {
 					result[0] = false;
 				}
 			}
-		};
-		expr.accept(visitor);
+		});
 		return result[0];
 	}
 
 	public void visitIfZeroStmt(IfZeroStmt stmt) {
+		enterStatement();
 		stmt.expr().visit(this);
+		exitStatement();
 		Object retval = purgeReturnValue();
 		boolean cmpNull = false;
 		if (retval instanceof FieldValue) {
@@ -220,7 +226,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				if(fieldVal.field().type().isPrimitive()) {
 					constVal=new Integer(0);
 				}
-				retval = new ComparisonExpression(fieldVal,
+				retval = comparisonExpression(fieldVal,
 						new ConstValue(constVal), ComparisonOperator.VALUE_EQUALITY);
 				cmpNull = true;
 			}
@@ -246,27 +252,27 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		switch (comparison) {
 		case IfStmt.EQ:
-			expr = new ComparisonExpression(cmp.left(), cmp.right(),
+			expr = comparisonExpression(cmp.left(), cmp.right(),
 					ComparisonOperator.VALUE_EQUALITY);
 			break;
 		case IfStmt.NE:
-			expr = BUILDER.not(new ComparisonExpression(cmp.left(),
+			expr = BUILDER.not(comparisonExpression(cmp.left(),
 					cmp.right(), ComparisonOperator.VALUE_EQUALITY));
 			break;
 		case IfStmt.LT:
-			expr = new ComparisonExpression(cmp.left(), cmp.right(),
+			expr = comparisonExpression(cmp.left(), cmp.right(),
 					ComparisonOperator.SMALLER);
 			break;
 		case IfStmt.GT:
-			expr = new ComparisonExpression(cmp.left(), cmp.right(),
+			expr = comparisonExpression(cmp.left(), cmp.right(),
 					ComparisonOperator.GREATER);
 			break;
 		case IfStmt.LE:
-			expr = BUILDER.not(new ComparisonExpression(cmp.left(),
+			expr = BUILDER.not(comparisonExpression(cmp.left(),
 					cmp.right(), ComparisonOperator.GREATER));
 			break;
 		case IfStmt.GE:
-			expr = BUILDER.not(new ComparisonExpression(cmp.left(),
+			expr = BUILDER.not(comparisonExpression(cmp.left(),
 					cmp.right(), ComparisonOperator.SMALLER));
 			break;
 		default:
@@ -275,10 +281,35 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		expression(buildComparison(stmt, expr));
 	}
 
+	private void exitStatement() {
+		if(statementState()._topLevelStmtCount > 1) {
+			if(retval != IgnoredExpression.INSTANCE) {
+				throw new EarlyExitException();
+			}
+		}
+		if(retval == IgnoredExpression.INSTANCE) {
+			statementState()._topLevelStmtCount--;
+		}
+		statementState()._stmtDepth--; 
+	}
+
+	private void enterStatement() {
+		if(statementState()._stmtDepth == 0) {
+			statementState()._topLevelStmtCount++;
+		}
+		statementState()._stmtDepth++;
+	}
+	
+	private StatementState statementState() {
+		return (StatementState) _statementStates.peek();
+	}
+
 	public void visitIfCmpStmt(IfCmpStmt stmt) {
+		enterStatement();
 		stmt.left().visit(this);
 		Object left = purgeReturnValue();
 		stmt.right().visit(this);
+		exitStatement();
 		Object right = purgeReturnValue();
 		int op = stmt.comparison();
 		if ((left instanceof ComparisonOperand)
@@ -304,7 +335,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	public void visitExprStmt(ExprStmt stmt) {
+		enterStatement();
 		super.visitExprStmt(stmt);
+		exitStatement();
 	}
 
 	public void visitCallExpr(CallExpr expr) {
@@ -320,20 +353,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return;
 		}
 		// FIXME
-		if (!isStatic && expr.method().name().equals("activate")) {
-			final String activatableName = "com.db4o.ta.Activatable";
-			try {
-				ClassEditor activateClazz = bloatUtil.classEditor(expr.method().declaringClass());
-				Type[] interfaces = activateClazz.interfaces();
-				for (int interfaceIdx = 0; interfaceIdx < interfaces.length; interfaceIdx++) {
-					Type curInterface = interfaces[interfaceIdx];
-					if(activatableName.equals(BloatUtil.normalizeClassName(curInterface))) {
-						return;
-					}
-				}
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+		if (!isStatic && isActivateMethod(expr.method())) {
+			retval(IgnoredExpression.INSTANCE);
+			return;
 		}
 		if(expr.method().declaringClass().equals(Type.STRING)) {
 			if(applyStringHandling(expr)) {
@@ -359,12 +381,13 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		try {
 			List params = new ArrayList(expr.params().length + 1);
 			params.add(rcvRetval);
+			boolean foundCandidateAsArg = false;
 			for (int idx = 0; idx < expr.params().length; idx++) {
 				expr.params()[idx].visit(this);
 				ComparisonOperand curparam = (ComparisonOperand) purgeReturnValue();
 				if ((curparam instanceof ComparisonOperandAnchor)
 						&& (((ComparisonOperandAnchor) curparam).root() == CandidateFieldRoot.INSTANCE)) {
-					throw new EarlyExitException();
+					foundCandidateAsArg = true;
 				}
 				params.add(curparam);
 			}
@@ -372,18 +395,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			localStack.addLast(params.toArray(new ComparisonOperand[params
 					.size()]));
 
-			if (rcvRetval == null
-					|| rcvRetval.root() != CandidateFieldRoot.INSTANCE) {
-				if (rcvRetval == null) {
-					rcvRetval = new StaticFieldRoot(typeRef(expr.method().declaringClass()));
-				}
-				params.remove(0);
-				retval(
-					new MethodCallValue(
-						methodRef(expr.method()),
-						callingConvention(expr),
-						rcvRetval,
-						(ComparisonOperand[]) params.toArray(new ComparisonOperand[params.size()])));
+			if(handledAsSafeMethod(expr, rcvRetval, params)) {
 				return;
 			}
 
@@ -396,7 +408,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 					declaringClass=receiverType;
 				}
 			}
-			FlowGraph flowGraph = bloatUtil.flowGraph(declaringClass.className(), methodRef.name(),methodRef.type().paramTypes());
+			FlowGraph flowGraph = context.flowGraph(declaringClass.className(), methodRef.name(),methodRef.type().paramTypes());
 			if (flowGraph == null) {
 				throw new EarlyExitException();
 			}
@@ -408,6 +420,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			flowGraph.visit(this);
 			Object methodRetval = purgeReturnValue();
 			if(methodRetval==null) {
+				throw new EarlyExitException();
+			}
+			if(foundCandidateAsArg && methodRetval != IgnoredExpression.INSTANCE) {
 				throw new EarlyExitException();
 			}
 			retval(methodRetval);
@@ -425,6 +440,45 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 	}
 
+	private boolean handledAsSafeMethod(CallExpr expr, ComparisonOperandAnchor rcvRetval, List params) {
+//		if (rcvRetval != null && rcvRetval.root() == CandidateFieldRoot.INSTANCE) {
+//			return false;
+//		}
+//		if (rcvRetval == null) {
+//			rcvRetval = new StaticFieldRoot(typeRef(expr.method().declaringClass()));
+//		}
+//		params.remove(0);
+//		retval(
+//			new MethodCallValue(
+//				methodRef(expr.method()),
+//				callingConvention(expr),
+//				rcvRetval,
+//				(ComparisonOperand[]) params.toArray(new ComparisonOperand[params.size()])));
+//		return true;
+		return false;
+	}
+	
+	private boolean isActivateMethod(MemberRef method) {
+		if (!method.name().equals("activate")) {
+			return false;
+		}
+		Type[] params = method.type().paramTypes();
+		if(params.length != 1) {
+			return false;
+		}
+		if(!ActivationPurpose.class.getName().equals(BloatUtil.normalizeClassName(params[0]))) {
+			return false;
+		}
+		try {
+			ClassEditor activateClazz = context.classEditor(method.declaringClass());
+			return BloatUtil.implementsInHierarchy(activateClazz, Activatable.class, context);
+		} 
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	private CallingConvention callingConvention(CallExpr expr) {
 		if (expr instanceof CallStaticExpr) {
 			return CallingConvention.STATIC;
@@ -444,7 +498,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if(declaringClass.className().equals(receiverType.className())) {
 			return false;
 		}
-		ClassEditor receiverEditor=bloatUtil.classEditor(receiverType.className());
+		ClassEditor receiverEditor=context.classEditor(receiverType.className());
 		Type superClass = receiverEditor.superclass();
 		if(superClass!=null) {
 			if(superClass.className().equals(declaringClass.className())) {
@@ -490,7 +544,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if(rcvRetval instanceof FieldValue) {
 			FieldValue fieldval=(FieldValue)rcvRetval;
 			if(isBooleanField(fieldval)) {
-				retval(new ComparisonExpression(fieldval,new ConstValue(Boolean.TRUE),ComparisonOperator.VALUE_EQUALITY));
+				retval(comparisonExpression(fieldval,new ConstValue(Boolean.TRUE),ComparisonOperator.VALUE_EQUALITY, true));
 			}
 			if(fieldval.root().equals(CandidateFieldRoot.INSTANCE)) {
 				return true;
@@ -532,11 +586,16 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		PRIMITIVE_CLASSES.put("D", Double.TYPE);
 	}
 
-	private boolean isPrimitiveWrapper(Type type) {
+	private static boolean isPrimitiveWrapper(Type type) {
 		return Arrays.binarySearch(PRIMITIVE_WRAPPER_NAMES,
 				BloatUtil.normalizeClassName(type)) >= 0;
 	}
-	
+
+	private static boolean isPrimitiveWrapper(TypeRef type) {
+		return Arrays.binarySearch(PRIMITIVE_WRAPPER_NAMES,
+				BloatUtil.normalizeClassName(type.name())) >= 0;
+	}
+
 	private boolean isPrimitiveExpr(Expr expr) {
 		return expr.type().isPrimitive();
 	}
@@ -564,10 +623,10 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if (!isCandidateFieldValue(leftOp) || rightOp == null) {
 			throw new EarlyExitException();
 		}
-		expression(new ComparisonExpression((FieldValue) leftOp, rightOp, op));
+		expression(comparisonExpression((FieldValue) leftOp, rightOp, op));
 	}
 
-	private boolean isCandidateFieldValue(ComparisonOperand op) {
+	private static boolean isCandidateFieldValue(ComparisonOperand op) {
 		return ((op instanceof FieldValue) && ((FieldValue) op).root() == CandidateFieldRoot.INSTANCE);
 	}
 
@@ -583,14 +642,14 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		expr.object().visit(this);
 		Object fieldObj = purgeReturnValue();
 		if (fieldObj instanceof ComparisonOperandAnchor) {
-			retval(new FieldValue((ComparisonOperandAnchor) fieldObj,
+			retval(fieldValue((ComparisonOperandAnchor) fieldObj,
 					fieldRef(expr.field())));
 		}
 	}
 
 	public void visitStaticFieldExpr(StaticFieldExpr expr) {
 		MemberRef field = expr.field();
-		retval(new FieldValue(new StaticFieldRoot(typeRef(field
+		retval(fieldValue(new StaticFieldRoot(typeRef(field
 				.declaringClass())), fieldRef(field)));
 	}
 
@@ -603,7 +662,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	private BloatReferenceProvider references() {
-		return bloatUtil.references();
+		return context.references();
 	}
 
 	public void visitConstantExpr(ConstantExpr expr) {
@@ -621,13 +680,15 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	public void visitBlock(Block block) {
-		if (!seenBlocks.containsKey(block)) {
-			super.visitBlock(block);
-			seenBlocks.put(block, retval);
-			blockCount++;
-		} else {
+		if (seenBlocks.containsKey(block)) {
 			retval(seenBlocks.get(block));
-		}
+			return;
+		} 
+		_statementStates.push(new StatementState());
+		super.visitBlock(block);
+		_statementStates.pop();
+		seenBlocks.put(block, retval);
+		blockCount++;
 	}
 
 	public void visitFlowGraph(FlowGraph graph) {
@@ -639,7 +700,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 					expression(forced);
 				}
 			}
-		} catch (EarlyExitException exc) {
+		} 
+		catch (EarlyExitException exc) {
 			expression(null);
 		}
 	}
@@ -663,7 +725,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if (!isPrimitiveBoolean(fieldType)) {
 			return null;
 		}
-		return new ComparisonExpression(
+		return comparisonExpression(
 						fieldVal,
 						new ConstValue(Boolean.TRUE),
 						ComparisonOperator.VALUE_EQUALITY);
@@ -723,7 +785,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			break;
 		case ArithExpr.XOR:
 			if (left instanceof FieldValue) {
-				retval(BUILDER.not(new ComparisonExpression((FieldValue) left,
+				retval(BUILDER.not(comparisonExpression((FieldValue) left,
 						right, ComparisonOperator.VALUE_EQUALITY)));
 			}
 			break;
@@ -734,7 +796,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	public void visitArrayRefExpr(ArrayRefExpr expr) {
 		expr.array().visit(this);
-		ComparisonOperandAnchor arrayOp = (ComparisonOperandAnchor) purgeReturnValue();
+		ComparisonOperandDescendant arrayOp = (ComparisonOperandDescendant) purgeReturnValue();
 		expr.index().visit(this);
 		ComparisonOperand idxOp = (ComparisonOperand) purgeReturnValue();
 		if (arrayOp == null || idxOp == null
@@ -745,7 +807,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	public void visitReturnExprStmt(ReturnExprStmt stat) {
+		enterStatement();
 		stat.expr().visit(this);
+		exitStatement();
 		retCount++;
 	}
 
@@ -804,6 +868,32 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		super.visitStoreExpr(expr);
 	}
 	
+	private static ComparisonExpression comparisonExpression(FieldValue left, ComparisonOperand right, ComparisonOperator op) {
+		return comparisonExpression(left, right, op, false);
+	}
+
+	private static ComparisonExpression comparisonExpression(FieldValue left, ComparisonOperand right, ComparisonOperator op, boolean lenient) {
+		if (!lenient && !isCandidateFieldValue(left) || right == null) {
+			throw new EarlyExitException();
+		}
+		return new ComparisonExpression((FieldValue) left, right, op);
+	}
+	
+	private static ComparisonOperand fieldValue(ComparisonOperandAnchor parent, FieldRef field) {
+		if(parent instanceof ComparisonOperandDescendant) {
+			ComparisonOperandDescendant descendant = (ComparisonOperandDescendant) parent;
+			if("value".equals(field.name()) && isPrimitiveWrapper(descendant.type())) {
+				return parent;
+			}
+		}
+		return new FieldValue(parent, field);
+	}
+
 	private static class EarlyExitException extends RuntimeException {
+	}
+
+	private static class StatementState {
+		public int _topLevelStmtCount = 0;
+		public int _stmtDepth = 0;
 	}
 }

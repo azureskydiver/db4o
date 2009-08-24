@@ -2,6 +2,8 @@
 
 package com.db4o.nativequery.expr.cmp.operand;
 
+import com.db4o.instrumentation.api.*;
+
 public abstract class ComparisonOperandDescendant implements ComparisonOperandAnchor {
 	private ComparisonOperandAnchor _parent;
 	
@@ -16,6 +18,11 @@ public abstract class ComparisonOperandDescendant implements ComparisonOperandAn
 	public final ComparisonOperandAnchor root() {
 		return _parent.root();
 	}
+	
+	/**
+	 * @sharpen.property
+	 */
+	public abstract TypeRef type();
 	
 	public boolean equals(Object obj) {
 		if(this==obj) {
