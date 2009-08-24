@@ -2,6 +2,9 @@ package com.db4o.test.nativequery.analysis;
 
 import java.util.Date;
 
+import com.db4o.activation.*;
+import com.db4o.ta.*;
+
 class Data extends Base {
 	boolean bool;
 	float value;
@@ -40,5 +43,19 @@ class Data extends Base {
 	
 	public void someMethod() {
 		System.out.println();
+	}
+
+	public void activate(ActivationPurpose purpose) {
+	}
+
+	public void activate() {
+		activate(ActivationPurpose.READ);
+	}
+	
+	public void activate(String str) {
+	}
+	
+	public static void activate(Activatable act) {
+		act.activate(ActivationPurpose.READ);
 	}
 }

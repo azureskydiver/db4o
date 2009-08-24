@@ -44,4 +44,12 @@ public class FieldValue extends ComparisonOperandDescendant {
 	public FieldRef field() {
 		return _field;
 	}
+
+	/**
+	 * @sharpen.property
+	 */
+	@Override
+	public TypeRef type() {
+		return _field.type();
+	}
 }
