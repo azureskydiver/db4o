@@ -71,7 +71,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return true;
 	}
 
-	public void _testTrue() throws Exception {
+	public void testTrue() throws Exception {
 		Assert.areEqual(BoolConstExpression.TRUE,expression("sampleTrue"));
 	}
 
@@ -79,7 +79,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return false;
 	}
 
-	public void _testFalse() throws Exception {
+	public void testFalse() throws Exception {
 		Assert.areEqual(BoolConstExpression.FALSE,expression("sampleFalse"));
 	}
 
@@ -91,7 +91,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.bool;
 	}
 
-	public void _testFieldBooleanComp() throws Exception {
+	public void testFieldBooleanComp() throws Exception {
 		assertComparison("sampleFieldBooleanComp",BOOLEAN_FIELDNAME,Boolean.TRUE,ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -99,7 +99,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.bool==true;
 	}
 
-	public void _testFieldBooleanConstantEqualsComp() throws Exception {
+	public void testFieldBooleanConstantEqualsComp() throws Exception {
 		assertComparison("sampleFieldBooleanConstantEqualsComp",BOOLEAN_FIELDNAME,Boolean.TRUE,ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -110,7 +110,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return false;
 	}
 
-	public void _testUnnecessarilyComplicatedFieldBooleanConstantEqualsComp() throws Exception {
+	public void testUnnecessarilyComplicatedFieldBooleanConstantEqualsComp() throws Exception {
 		assertComparison("sampleUnnecessarilyComplicatedFieldBooleanConstantEqualsComp",BOOLEAN_FIELDNAME,Boolean.TRUE,ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -118,7 +118,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return !data.bool;
 	}
 
-	public void _testFieldBooleanNotComp() throws Exception {
+	public void testFieldBooleanNotComp() throws Exception {
 		assertComparison("sampleFieldBooleanNotComp",BOOLEAN_FIELDNAME,Boolean.FALSE,ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -126,7 +126,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.bool==boolMember;
 	}
 
-	public void _testFieldBooleanEqualsComp() throws Exception {
+	public void testFieldBooleanEqualsComp() throws Exception {
 		assertComparison("sampleFieldBooleanEqualsComp",
 				BOOLEAN_FIELDNAME,
 				fieldValue(PredicateFieldRoot.INSTANCE, "boolMember", Boolean.TYPE),
@@ -138,7 +138,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return boolMember==data.bool;
 	}
 
-	public void _testBooleanFieldEqualsComp() throws Exception {
+	public void testBooleanFieldEqualsComp() throws Exception {
 		assertComparison("sampleBooleanFieldEqualsComp",
 				BOOLEAN_FIELDNAME,
 				fieldValue(PredicateFieldRoot.INSTANCE, "boolMember", Boolean.TYPE),
@@ -150,7 +150,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.bool!=boolMember;
 	}
 
-	public void _testFieldBooleanNotEqualsComp() throws Exception {
+	public void testFieldBooleanNotEqualsComp() throws Exception {
 		assertComparison("sampleFieldBooleanNotEqualsComp",
 				BOOLEAN_FIELDNAME,
 				fieldValue(PredicateFieldRoot.INSTANCE, "boolMember", Boolean.TYPE),
@@ -162,7 +162,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return boolMember!=data.bool;
 	}
 
-	public void _testBooleanFieldNotEqualsComp() throws Exception {
+	public void testBooleanFieldNotEqualsComp() throws Exception {
 		assertComparison("sampleBooleanFieldNotEqualsComp",
 				BOOLEAN_FIELDNAME,
 				fieldValue(PredicateFieldRoot.INSTANCE, "boolMember", Boolean.TYPE),
@@ -176,7 +176,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id==0;
 	}
 
-	public void _testFieldIntZeroEqualsComp() throws Exception {
+	public void testFieldIntZeroEqualsComp() throws Exception {
 		assertComparison("sampleFieldIntZeroEqualsComp",
 				INT_FIELDNAME,
 				new Integer(0),
@@ -188,7 +188,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id==INT_CMPVAL;
 	}
 
-	public void _testFieldIntEqualsComp() throws Exception {
+	public void testFieldIntEqualsComp() throws Exception {
 		assertComparison("sampleFieldIntEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -196,7 +196,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id!=INT_CMPVAL;
 	}
 
-	public void _testFieldIntNotEqualsComp() throws Exception {
+	public void testFieldIntNotEqualsComp() throws Exception {
 		assertComparison("sampleFieldIntNotEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,true);
 	}
 
@@ -204,7 +204,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return INT_CMPVAL==data.id;
 	}
 
-	public void _testIntFieldEqualsComp() throws Exception {
+	public void testIntFieldEqualsComp() throws Exception {
 		assertComparison("sampleIntFieldEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -212,7 +212,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return INT_CMPVAL!=data.id;
 	}
 
-	public void _testIntFieldNotEqualsComp() throws Exception {
+	public void testIntFieldNotEqualsComp() throws Exception {
 		assertComparison("sampleIntFieldNotEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,true);
 	}
 
@@ -222,7 +222,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.value==0.0f;
 	}
 
-	public void _testFieldFloatZeroEqualsComp() throws Exception {
+	public void testFieldFloatZeroEqualsComp() throws Exception {
 		assertComparison("sampleFieldFloatZeroEqualsComp",FLOAT_FIELDNAME,new Float(0.0f),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -230,7 +230,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.value==0;
 	}
 
-	public void _testFieldFloatZeroIntEqualsComp() throws Exception {
+	public void testFieldFloatZeroIntEqualsComp() throws Exception {
 		assertComparison("sampleFieldFloatZeroIntEqualsComp",FLOAT_FIELDNAME,new Float(0.0f),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -238,7 +238,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.value==FLOAT_CMPVAL;
 	}
 
-	public void _testFieldFloatEqualsComp() throws Exception {
+	public void testFieldFloatEqualsComp() throws Exception {
 		assertComparison("sampleFieldFloatEqualsComp",FLOAT_FIELDNAME,new Float(FLOAT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -246,7 +246,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.value!=FLOAT_CMPVAL;
 	}
 
-	public void _testFieldFloatNotEqualsComp() throws Exception {
+	public void testFieldFloatNotEqualsComp() throws Exception {
 		assertComparison("sampleFieldFloatNotEqualsComp",FLOAT_FIELDNAME,new Float(FLOAT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,true);
 	}
 
@@ -254,7 +254,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return FLOAT_CMPVAL==data.value;
 	}
 
-	public void _testFloatFieldEqualsComp() throws Exception {
+	public void testFloatFieldEqualsComp() throws Exception {
 		assertComparison("sampleFloatFieldEqualsComp",FLOAT_FIELDNAME,new Float(FLOAT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -262,7 +262,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return FLOAT_CMPVAL!=data.value;
 	}
 
-	public void _testFloatFieldNotEqualsComp() throws Exception {
+	public void testFloatFieldNotEqualsComp() throws Exception {
 		assertComparison("sampleFloatFieldNotEqualsComp",FLOAT_FIELDNAME,new Float(FLOAT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,true);
 	}
 
@@ -272,7 +272,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data==null;
 	}
 
-	public void _testCandidateNull() throws Exception {
+	public void testCandidateNull() throws Exception {
 		assertInvalid("sampleCandidateNull");
 	}
 
@@ -280,7 +280,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data==predicateData;
 	}
 
-	public void testCandidateIdentity() throws Exception {
+	public void _testCandidateIdentity() throws Exception {
 		assertComparison("sampleCandidateIdentity",new String[]{},new FieldValue(PredicateFieldRoot.INSTANCE, fieldRef("predicateData", Data.class)),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -288,7 +288,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.next==null;
 	}
 
-	public void _testIdentityNullComp() throws Exception {
+	public void testIdentityNullComp() throws Exception {
 		assertComparison("sampleIdentityNullComp",DATA_FIELDNAME,null,ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -296,7 +296,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.next!=null;
 	}
 
-	public void _testNotIdentityNullComp() throws Exception {
+	public void testNotIdentityNullComp() throws Exception {
 		assertComparison("sampleNotIdentityNullComp",DATA_FIELDNAME,null,ComparisonOperator.VALUE_EQUALITY,true);
 	}
 
@@ -304,7 +304,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.next==predicateData;
 	}
 
-	public void _testIdentityComp() throws Exception {
+	public void testIdentityComp() throws Exception {
 		assertComparison("sampleIdentityComp",DATA_FIELDNAME,new FieldValue(PredicateFieldRoot.INSTANCE, fieldRef("predicateData", Data.class)),ComparisonOperator.REFERENCE_EQUALITY,false);
 	}
 
@@ -316,7 +316,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id<INT_CMPVAL;
 	}
 
-	public void _testFieldIntSmallerComp() throws Exception {
+	public void testFieldIntSmallerComp() throws Exception {
 		assertComparison("sampleFieldIntSmallerComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,false);
 	}
 
@@ -324,7 +324,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id>INT_CMPVAL;
 	}
 
-	public void _testFieldIntGreaterComp() throws Exception {
+	public void testFieldIntGreaterComp() throws Exception {
 		assertComparison("sampleFieldIntGreaterComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,false);
 	}
 
@@ -332,7 +332,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id<=INT_CMPVAL;
 	}
 
-	public void _testFieldIntSmallerEqualsComp() throws Exception {
+	public void testFieldIntSmallerEqualsComp() throws Exception {
 		assertComparison("sampleFieldIntSmallerEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,true);
 	}
 
@@ -340,7 +340,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id>=INT_CMPVAL;
 	}
 
-	public void _testFieldIntGreaterEqualsComp() throws Exception {
+	public void testFieldIntGreaterEqualsComp() throws Exception {
 		assertComparison("sampleFieldIntGreaterEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,true);
 	}
 
@@ -348,7 +348,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return INT_CMPVAL<data.id;
 	}
 
-	public void _testIntFieldSmallerComp() throws Exception {
+	public void testIntFieldSmallerComp() throws Exception {
 		assertComparison("sampleIntFieldSmallerComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,false);
 	}
 
@@ -356,7 +356,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return INT_CMPVAL>data.id;
 	}
 
-	public void _testIntFieldGreaterComp() throws Exception {
+	public void testIntFieldGreaterComp() throws Exception {
 		assertComparison("sampleIntFieldGreaterComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,false);
 	}
 
@@ -364,7 +364,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return INT_CMPVAL<=data.id;
 	}
 
-	public void _testIntFieldSmallerEqualsComp() throws Exception {
+	public void testIntFieldSmallerEqualsComp() throws Exception {
 		assertComparison("sampleIntFieldSmallerEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,true);
 	}
 
@@ -372,7 +372,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return INT_CMPVAL>=data.id;
 	}
 
-	public void _testIntFieldGreaterEqualsComp() throws Exception {
+	public void testIntFieldGreaterEqualsComp() throws Exception {
 		assertComparison("sampleIntFieldGreaterEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,true);
 	}
 
@@ -380,7 +380,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.value<FLOAT_CMPVAL;
 	}
 
-	public void _testFieldFloatSmallerComp() throws Exception {
+	public void testFieldFloatSmallerComp() throws Exception {
 		assertComparison("sampleFieldFloatSmallerComp",FLOAT_FIELDNAME,new Float(FLOAT_CMPVAL),ComparisonOperator.SMALLER,false);
 	}
 
@@ -388,7 +388,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.value>FLOAT_CMPVAL;
 	}
 
-	public void _testFieldFloatGreaterComp() throws Exception {
+	public void testFieldFloatGreaterComp() throws Exception {
 		assertComparison("sampleFieldFloatGreaterComp",FLOAT_FIELDNAME,new Float(FLOAT_CMPVAL),ComparisonOperator.GREATER,false);
 	}
 
@@ -396,7 +396,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.value<=FLOAT_CMPVAL;
 	}
 
-	public void _testFieldFloatSmallerEqualsComp() throws Exception {
+	public void testFieldFloatSmallerEqualsComp() throws Exception {
 		assertComparison("sampleFieldFloatSmallerEqualsComp",FLOAT_FIELDNAME,new Float(FLOAT_CMPVAL),ComparisonOperator.GREATER,true);
 	}
 
@@ -404,7 +404,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return intMember<=data.id;
 	}
 
-	public void _testMemberIntSmallerEqualsComp() throws Exception {
+	public void testMemberIntSmallerEqualsComp() throws Exception {
 		assertComparison("sampleMemberIntSmallerEqualsComp",
 				INT_FIELDNAME,
 				fieldValue(PredicateFieldRoot.INSTANCE,"intMember", Integer.TYPE),
@@ -416,7 +416,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return floatMember<=data.value;
 	}
 
-	public void _testMemberFloatSmallerEqualsComp() throws Exception {
+	public void testMemberFloatSmallerEqualsComp() throws Exception {
 		assertComparison("sampleMemberFloatSmallerEqualsComp",
 				FLOAT_FIELDNAME,
 				fieldValue(PredicateFieldRoot.INSTANCE,"floatMember", Float.TYPE),
@@ -430,7 +430,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.name.equals(STRING_CMPVAL);
 	}
 
-	public void _testFieldStringEqualsComp() throws Exception {
+	public void testFieldStringEqualsComp() throws Exception {
 		assertComparison("sampleFieldStringEqualsComp",
 				STRING_FIELDNAME,
 				STRING_CMPVAL,
@@ -442,7 +442,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return STRING_CMPVAL.equals(data.name);
 	}
 
-	public void _testStringFieldEqualsComp() throws Exception {
+	public void testStringFieldEqualsComp() throws Exception {
 		assertComparison("sampleStringFieldEqualsComp",
 				STRING_FIELDNAME,
 				STRING_CMPVAL,
@@ -458,11 +458,11 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	}
 
 	@decaf.Ignore
-	public void _testFieldStringContains() throws Exception {
+	public void testFieldStringContains() throws Exception {
 		assertComparison("sampleFieldStringContains",STRING_FIELDNAME,STRING_CMPVAL,ComparisonOperator.CONTAINS,false);
 	}
 	
-	public void _testFieldStringToLowerCaseStartsWith() throws Exception {
+	public void testFieldStringToLowerCaseStartsWith() throws Exception {
 		assertInvalid("sampleFieldStringToLowerCaseStartsWith");
 	}
 
@@ -472,7 +472,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	}
 
 	@decaf.Ignore
-	public void _testFieldStringContainsWrongWay() throws Exception {
+	public void testFieldStringContainsWrongWay() throws Exception {
 		assertInvalid("sampleFieldStringContainsWrongWay");
 	}
 
@@ -480,7 +480,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.name.startsWith(STRING_CMPVAL);
 	}
 
-	public void _testFieldStringStartsWith() throws Exception {
+	public void testFieldStringStartsWith() throws Exception {
 		assertComparison("sampleFieldStringStartsWith",STRING_FIELDNAME,STRING_CMPVAL,ComparisonOperator.STARTS_WITH,false);
 	}
 
@@ -488,7 +488,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return STRING_CMPVAL.startsWith(data.name);
 	}
 
-	public void _testFieldStringStartsWithWrongWay() throws Exception {
+	public void testFieldStringStartsWithWrongWay() throws Exception {
 		assertInvalid("sampleFieldStringStartsWithWrongWay");
 	}
 
@@ -496,7 +496,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.name.endsWith(STRING_CMPVAL);
 	}
 
-	public void _testFieldStringEndsWith() throws Exception {
+	public void testFieldStringEndsWith() throws Exception {
 		assertComparison("sampleFieldStringEndsWith",STRING_FIELDNAME,STRING_CMPVAL,ComparisonOperator.ENDS_WITH,false);
 	}
 
@@ -504,7 +504,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return STRING_CMPVAL.endsWith(data.name);
 	}
 
-	public void _testFieldStringEndsWithWrongWay() throws Exception {
+	public void testFieldStringEndsWithWrongWay() throws Exception {
 		assertInvalid("sampleFieldStringEndsWithWrongWay");
 	}
 
@@ -518,7 +518,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getDate().equals(dateMember);
 	}
 
-	public void _testFieldDateEqualsComp() throws Exception {
+	public void testFieldDateEqualsComp() throws Exception {
 		assertComparison("sampleFieldDateEqualsComp",DATE_FIELDNAME,
 				fieldValue(PredicateFieldRoot.INSTANCE,"dateMember",java.util.Date.class),
 				ComparisonOperator.VALUE_EQUALITY,
@@ -529,7 +529,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getIdWrapped().equals(intWrapperCmpVal);
 	}
 
-	public void _testFieldIntWrapperEqualsComp() throws Exception {
+	public void testFieldIntWrapperEqualsComp() throws Exception {
 		assertComparison("sampleFieldIntWrapperEqualsComp",INT_WRAPPED_FIELDNAME,
 				fieldValue(PredicateFieldRoot.INSTANCE,"intWrapperCmpVal", java.lang.Integer.class),
 				ComparisonOperator.VALUE_EQUALITY,
@@ -540,7 +540,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return intWrapperCmpVal.equals(data.getIdWrapped());
 	}
 
-	public void _testIntWrapperFieldEqualsComp() throws Exception {
+	public void testIntWrapperFieldEqualsComp() throws Exception {
 		assertComparison("sampleIntWrapperFieldEqualsComp",INT_WRAPPED_FIELDNAME,
 				fieldValue(PredicateFieldRoot.INSTANCE,"intWrapperCmpVal",Integer.class),
 				ComparisonOperator.VALUE_EQUALITY,
@@ -553,7 +553,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.boolWrapper.booleanValue();
 	}
 
-	public void _testFieldBooleanWrapperEqualsComp() throws Exception {
+	public void testFieldBooleanWrapperEqualsComp() throws Exception {
 		assertComparison("sampleFieldBooleanWrapperEqualsComp",
 				BOOLEAN_WRAPPED_FIELDNAME,
 				Boolean.TRUE,
@@ -567,7 +567,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getIdWrapped().intValue()==INT_CMPVAL;
 	}
 
-	public void _testWrapperFieldValueIntSameComp() throws Exception {
+	public void testWrapperFieldValueIntSameComp() throws Exception {
 		assertComparison("sampleWrapperFieldValueIntSameComp",INT_WRAPPED_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
 	}	
 
@@ -575,7 +575,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.boolWrapper.booleanValue();
 	}
 
-	public void _testNotValueBoolWrapperFieldSameComp() throws Exception {
+	public void testNotValueBoolWrapperFieldSameComp() throws Exception {
 		assertComparison("sampleNotValueBoolWrapperFieldSameComp",
 				BOOLEAN_WRAPPED_FIELDNAME,
 				Boolean.TRUE,
@@ -589,7 +589,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getId()==INT_WRAPPER_CMPVAL.intValue();
 	}
 
-	public void _testFieldWrapperIntSameComp() throws Exception {
+	public void testFieldWrapperIntSameComp() throws Exception {
 		assertComparison("sampleFieldWrapperIntSameComp",
 				INT_FIELDNAME,
 				fieldValue(
@@ -608,7 +608,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.bool==BOOLEAN_WRAPPER_CMPVAL.booleanValue();
 	}
 
-	public void _testBoolWrapperFieldSameComp() throws Exception {
+	public void testBoolWrapperFieldSameComp() throws Exception {
 		assertComparison("sampleBoolWrapperFieldSameComp",
 				BOOLEAN_FIELDNAME,
 					fieldValue(
@@ -625,7 +625,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getIdWrapped().compareTo(INT_WRAPPER_CMPVAL)==0;
 	}
 
-	public void _testFieldWrapperIntCompToEquals() throws Exception {
+	public void testFieldWrapperIntCompToEquals() throws Exception {
 		assertComparison("sampleFieldWrapperIntCompToEquals",INT_WRAPPED_FIELDNAME,
 				fieldValue(
 					staticFieldRoot(BloatExprBuilderVisitorTestCase.class),
@@ -638,7 +638,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getIdWrapped().compareTo(INT_WRAPPER_CMPVAL)!=0;
 	}
 
-	public void _testFieldWrapperIntCompToNotEquals() throws Exception {
+	public void testFieldWrapperIntCompToNotEquals() throws Exception {
 		assertComparison("sampleFieldWrapperIntCompToNotEquals",INT_WRAPPED_FIELDNAME,
 				fieldValue(
 					staticFieldRoot(BloatExprBuilderVisitorTestCase.class),
@@ -652,7 +652,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getIdWrapped().compareTo(INT_WRAPPER_CMPVAL)>0;
 	}
 
-	public void _testFieldWrapperIntCompToGreater() throws Exception {
+	public void testFieldWrapperIntCompToGreater() throws Exception {
 		assertComparison("sampleFieldWrapperIntCompToGreater",INT_WRAPPED_FIELDNAME,
 				fieldValue(
 					staticFieldRoot(BloatExprBuilderVisitorTestCase.class),
@@ -666,7 +666,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getIdWrapped().compareTo(INT_WRAPPER_CMPVAL)<=0;
 	}
 
-	public void _testFieldWrapperIntCompToLE() throws Exception {
+	public void testFieldWrapperIntCompToLE() throws Exception {
 		assertComparison("sampleFieldWrapperIntCompToLE",INT_WRAPPED_FIELDNAME,
 				fieldValue(
 					staticFieldRoot(BloatExprBuilderVisitorTestCase.class),
@@ -682,7 +682,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getIdWrapped().equals(INT_WRAPPER_CMPVAL);
 	}
 
-	public void _testStaticFieldIntWrapperEqualsComp() throws Exception {
+	public void testStaticFieldIntWrapperEqualsComp() throws Exception {
 		//assertInvalid("sampleStaticFieldIntWrapperEqualsComp");
 		assertComparison("sampleStaticFieldIntWrapperEqualsComp",INT_WRAPPED_FIELDNAME,
 				fieldValue(
@@ -697,7 +697,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return INT_WRAPPER_CMPVAL.equals(data.getIdWrapped());
 	}
 
-	public void _testStaticIntWrapperFieldEqualsComp() throws Exception {
+	public void testStaticIntWrapperFieldEqualsComp() throws Exception {
 		//assertInvalid("sampleStaticIntWrapperFieldEqualsComp");
 		assertComparison("sampleStaticIntWrapperFieldEqualsComp",INT_WRAPPED_FIELDNAME,
 				fieldValue(
@@ -714,7 +714,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getBool();
 	}
 
-	public void _testGetterBoolComp() throws Exception {
+	public void testGetterBoolComp() throws Exception {
 		assertComparison("sampleGetterBoolComp",BOOLEAN_FIELDNAME,Boolean.TRUE,ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -723,7 +723,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return BOOLEAN_CMPVAL!=data.getBool();
 	}
 
-	public void _testBoolGetterNotEqualsComp() throws Exception {
+	public void testBoolGetterNotEqualsComp() throws Exception {
 		assertComparison("sampleBoolGetterNotEqualsComp",BOOLEAN_FIELDNAME,Boolean.valueOf(!BOOLEAN_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -731,7 +731,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getId()==INT_CMPVAL;
 	}
 
-	public void _testGetterIntEqualsComp() throws Exception {
+	public void testGetterIntEqualsComp() throws Exception {
 		assertComparison("sampleGetterIntEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -739,7 +739,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getName().equals(STRING_CMPVAL);
 	}
 
-	public void _testGetterStringEqualsComp() throws Exception {
+	public void testGetterStringEqualsComp() throws Exception {
 		assertComparison("sampleGetterStringEqualsComp",STRING_FIELDNAME,STRING_CMPVAL,ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -747,7 +747,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getValue()<FLOAT_CMPVAL;
 	}
 
-	public void _testGetterFloatSmallerComp() throws Exception {
+	public void testGetterFloatSmallerComp() throws Exception {
 		assertComparison("sampleGetterFloatSmallerComp",FLOAT_FIELDNAME,new Float(FLOAT_CMPVAL),ComparisonOperator.SMALLER,false);
 	}
 
@@ -757,7 +757,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.next.name.equals(STRING_CMPVAL);
 	}
 
-	public void _testCascadeFieldStringEqualsComp() throws Exception {
+	public void testCascadeFieldStringEqualsComp() throws Exception {
 		assertComparison("sampleCascadeFieldStringEqualsComp",new String[]{DATA_FIELDNAME,STRING_FIELDNAME},STRING_CMPVAL,ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -765,7 +765,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return INT_CMPVAL==data.getNext().getId();
 	}
 
-	public void _testGetterCascadeIntFieldEqualsComp() throws Exception {
+	public void testGetterCascadeIntFieldEqualsComp() throws Exception {
 		assertComparison("sampleGetterCascadeIntFieldEqualsComp",new String[]{DATA_FIELDNAME,INT_FIELDNAME},new Integer(INT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -773,7 +773,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return STRING_CMPVAL.equals(data.next.name);
 	}
 
-	public void _testCascadeStringFieldEqualsComp() throws Exception {
+	public void testCascadeStringFieldEqualsComp() throws Exception {
 		assertComparison("sampleCascadeStringFieldEqualsComp",new String[]{DATA_FIELDNAME,STRING_FIELDNAME},STRING_CMPVAL,ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -781,7 +781,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return STRING_CMPVAL.equals(data.getNext().getName());
 	}
 
-	public void _testGetterCascadeStringFieldEqualsComp() throws Exception {
+	public void testGetterCascadeStringFieldEqualsComp() throws Exception {
 		assertComparison("sampleGetterCascadeStringFieldEqualsComp",new String[]{DATA_FIELDNAME,STRING_FIELDNAME},STRING_CMPVAL,ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -789,7 +789,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return FLOAT_CMPVAL>=data.getNext().getValue();
 	}
 
-	public void _testGetterCascadeFloatFieldGreaterEqualsComp() throws Exception {
+	public void testGetterCascadeFloatFieldGreaterEqualsComp() throws Exception {
 		assertComparison("sampleGetterCascadeFloatFieldGreaterEqualsComp",new String[]{DATA_FIELDNAME,FLOAT_FIELDNAME},new Float(FLOAT_CMPVAL),ComparisonOperator.GREATER,true);
 	}
 
@@ -799,7 +799,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getId()==intMember;
 	}
 
-	public void _testFieldIntMemberEqualsComp() throws Exception {
+	public void testFieldIntMemberEqualsComp() throws Exception {
 		assertComparison("sampleFieldIntMemberEqualsComp",new String[]{INT_FIELDNAME},
 				fieldValue(PredicateFieldRoot.INSTANCE,"intMember",Integer.TYPE),
 				ComparisonOperator.VALUE_EQUALITY,
@@ -810,7 +810,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return intMember>=data.getId();
 	}
 
-	public void _testIntMemberFieldGreaterEqualsComp() throws Exception {
+	public void testIntMemberFieldGreaterEqualsComp() throws Exception {
 		assertComparison("sampleIntMemberFieldGreaterEqualsComp",new String[]{INT_FIELDNAME},
 				fieldValue(PredicateFieldRoot.INSTANCE,"intMember",Integer.TYPE),
 				ComparisonOperator.GREATER,
@@ -821,7 +821,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getName().equals(stringMember);
 	}
 
-	public void _testFieldStringMemberEqualsComp() throws Exception {
+	public void testFieldStringMemberEqualsComp() throws Exception {
 		assertComparison("sampleFieldStringMemberEqualsComp",new String[]{STRING_FIELDNAME},
 				fieldValue(PredicateFieldRoot.INSTANCE,"stringMember",String.class),
 				ComparisonOperator.VALUE_EQUALITY,
@@ -832,7 +832,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getValue()!=floatMember;
 	}
 
-	public void _testFieldFloatMemberNotEqualsComp() throws Exception {
+	public void testFieldFloatMemberNotEqualsComp() throws Exception {
 		assertComparison("sampleFieldFloatMemberNotEqualsComp",new String[]{FLOAT_FIELDNAME},
 				fieldValue(PredicateFieldRoot.INSTANCE,"floatMember",Float.TYPE),
 				ComparisonOperator.VALUE_EQUALITY,
@@ -843,7 +843,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return floatMember!=data.getValue();
 	}
 
-	public void _testFloatMemberFieldNotEqualsComp() throws Exception {
+	public void testFloatMemberFieldNotEqualsComp() throws Exception {
 		assertComparison("sampleFloatMemberFieldNotEqualsComp",new String[]{FLOAT_FIELDNAME},
 				fieldValue(PredicateFieldRoot.INSTANCE,"floatMember",Float.TYPE),
 				ComparisonOperator.VALUE_EQUALITY,
@@ -856,7 +856,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return !STRING_CMPVAL.equals(data.name);
 	}
 	
-	public void _testStringNot() throws Exception {
+	public void testStringNot() throws Exception {
 		assertComparison("sampleStringNot",STRING_FIELDNAME,STRING_CMPVAL,ComparisonOperator.VALUE_EQUALITY,true);
 	}
 
@@ -864,7 +864,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return !(data.id==INT_CMPVAL);
 	}
 	
-	public void _testIntEqualsNot() throws Exception {
+	public void testIntEqualsNot() throws Exception {
 		assertComparison("sampleIntEqualsNot",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,true);
 	}
 
@@ -872,7 +872,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return !(data.id!=INT_CMPVAL);
 	}
 	
-	public void _testIntNotEqualsNot() throws Exception {
+	public void testIntNotEqualsNot() throws Exception {
 		assertComparison("sampleIntNotEqualsNot",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -880,7 +880,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return !(data.id>INT_CMPVAL);
 	}
 	
-	public void _testIntGreaterNot() throws Exception {
+	public void testIntGreaterNot() throws Exception {
 		assertComparison("sampleIntGreaterNot",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,true);
 	}
 
@@ -888,7 +888,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return !(data.id<=INT_CMPVAL);
 	}
 	
-	public void _testIntSmallerEqualsNot() throws Exception {
+	public void testIntSmallerEqualsNot() throws Exception {
 		assertComparison("sampleIntSmallerEqualsNot",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,false);
 	}
 
@@ -896,7 +896,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return !(!(data.id<INT_CMPVAL));
 	}
 	
-	public void _testIntNotNot() throws Exception {
+	public void testIntNotNot() throws Exception {
 		assertComparison("sampleIntNotNot",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,false);
 	}
 
@@ -906,7 +906,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return !data.getBool()&&data.getBool();
 	}
 	
-	public void _testBoolBoolAnd() throws Exception {
+	public void testBoolBoolAnd() throws Exception {
 		AndExpression expr = (AndExpression) expression("sampleBoolBoolAnd");
 		NQOptimizationAssertUtil.assertComparison(expr.left(),new String[]{BOOLEAN_FIELDNAME},Boolean.FALSE,ComparisonOperator.VALUE_EQUALITY,false);
 		NQOptimizationAssertUtil.assertComparison(expr.right(),new String[]{BOOLEAN_FIELDNAME},Boolean.TRUE,ComparisonOperator.VALUE_EQUALITY,false);
@@ -916,7 +916,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return (data.id>42)&&(data.id<100);
 	}
 	
-	public void _testIntIntAnd() throws Exception {
+	public void testIntIntAnd() throws Exception {
 		AndExpression expr = (AndExpression) expression("sampleIntIntAnd");
 		NQOptimizationAssertUtil.assertComparison(expr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.GREATER,false);
 		NQOptimizationAssertUtil.assertComparison(expr.right(),new String[]{"id"},new Integer(100),ComparisonOperator.SMALLER,false);
@@ -926,7 +926,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return (data.name.equals("Foo"))||(data.id==42);
 	}
 
-	public void _testStringIntOr() throws Exception {
+	public void testStringIntOr() throws Exception {
 		OrExpression expr = (OrExpression)expression("sampleStringIntOr");
 		NQOptimizationAssertUtil.assertComparison(expr.left(),new String[]{"name"},"Foo",ComparisonOperator.VALUE_EQUALITY,false);
 		ComparisonExpression right=(ComparisonExpression)expr.right();
@@ -937,7 +937,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return !((data.id==42)||(data.name.equals("Foo")));
 	}
 
-	public void _testIntStringNotOr() throws Exception {
+	public void testIntStringNotOr() throws Exception {
 		AndExpression expr = (AndExpression)expression("sampleIntStringNotOr");
 		NQOptimizationAssertUtil.assertComparison(expr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.VALUE_EQUALITY,true);
 		NQOptimizationAssertUtil.assertComparison(expr.right(),new String[]{"name"},"Foo",ComparisonOperator.VALUE_EQUALITY,true);
@@ -947,7 +947,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return (data.id==42)&&(data.getName().equals("Bar"))||(data.name.equals("Foo"));
 	}
 
-	public void _testOuterOrInnerAnd() throws Exception {
+	public void testOuterOrInnerAnd() throws Exception {
 		OrExpression expr = (OrExpression)expression("sampleOuterOrInnerAnd");
 		NQOptimizationAssertUtil.assertComparison(expr.left(),new String[]{"name"},"Foo",ComparisonOperator.VALUE_EQUALITY,false);
 		AndExpression andExpr=(AndExpression)expr.right();
@@ -959,7 +959,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return ((data.id<42)||(data.getName().equals("Bar")))&&(data.getId()>10);
 	}
 
-	public void _testOuterAndInnerOr() throws Exception {
+	public void testOuterAndInnerOr() throws Exception {
 		AndExpression expr = (AndExpression)expression("sampleOuterAndInnerOr");
 		NQOptimizationAssertUtil.assertComparison(expr.left(),new String[]{"id"},new Integer(10),ComparisonOperator.GREATER,false);
 		OrExpression orExpr=(OrExpression)expr.right();
@@ -973,7 +973,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id<INT_CMPVAL+INT_CMPVAL; // compile time constant!
 	}
 	
-	public void _testSanityIntAdd() throws Exception {
+	public void testSanityIntAdd() throws Exception {
 		assertComparison("sampleSanityIntAdd",INT_FIELDNAME,new Integer(2*INT_CMPVAL),ComparisonOperator.SMALLER,false);
 	}
 
@@ -981,7 +981,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id<2*INT_CMPVAL; // compile time constant!
 	}
 	
-	public void _testSanityIntMultiply() throws Exception {
+	public void testSanityIntMultiply() throws Exception {
 		assertComparison("sampleSanityIntMultiply",INT_FIELDNAME,new Integer(2*INT_CMPVAL),ComparisonOperator.SMALLER,false);
 	}
 
@@ -989,7 +989,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id<2*intMember;
 	}
 	
-	public void _testMemberIntMultiply() throws Exception {
+	public void testMemberIntMultiply() throws Exception {
 		assertComparison("sampleMemberIntMultiply",INT_FIELDNAME,new ArithmeticExpression(new ConstValue(new Integer(2)),intMemberFieldValue(),ArithmeticOperator.MULTIPLY),ComparisonOperator.SMALLER,false);
 	}
 
@@ -1001,7 +1001,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id>intMember/2;
 	}
 	
-	public void _testIntMemberDivide() throws Exception {
+	public void testIntMemberDivide() throws Exception {
 		assertComparison("sampleIntMemberDivide",INT_FIELDNAME,new ArithmeticExpression(intMemberFieldValue(),new ConstValue(new Integer(2)),ArithmeticOperator.DIVIDE),ComparisonOperator.GREATER,false);
 	}
 
@@ -1009,7 +1009,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id==intMember+intMember;
 	}
 	
-	public void _testIntMemberMemberAdd() throws Exception {
+	public void testIntMemberMemberAdd() throws Exception {
 		assertComparison("sampleIntMemberMemberAdd",INT_FIELDNAME,new ArithmeticExpression(intMemberFieldValue(),intMemberFieldValue(),ArithmeticOperator.ADD),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -1019,7 +1019,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id==intArrayMember[0];
 	}
 
-	public void _testIntArrayAccess() throws Exception {
+	public void testIntArrayAccess() throws Exception {
 		final PredicateFieldRoot instance = PredicateFieldRoot.INSTANCE;
 		assertComparison("sampleIntArrayAccess",
 				"id",
@@ -1043,7 +1043,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.next.id==objArrayMember[0].id;
 	}
 
-	public void _testObjectArrayAccess() throws Exception {
+	public void testObjectArrayAccess() throws Exception {
 		assertComparison("sampleObjectArrayAccess",
 				new String[]{"next","id"},
 				fieldValue(
@@ -1063,7 +1063,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getId()==intMemberPlusOne();
 	}
 
-	public void _testIntAddInPredicateMethod() throws Exception {
+	public void testIntAddInPredicateMethod() throws Exception {
 		assertComparison("sampleIntAddInPredicateMethod",
 				INT_FIELDNAME,
 				new ArithmeticExpression(
@@ -1079,7 +1079,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id==Integer.parseInt(stringMember);
 	}
 
-	public void _testStaticMethodCall() throws Exception {
+	public void testStaticMethodCall() throws Exception {
 		assertInvalid("sampleStaticMethodCall");
 	}
 
@@ -1087,7 +1087,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id==sum(intMember,0);
 	}
 
-	public void _testTwoParamMethodCall() throws Exception {
+	public void testTwoParamMethodCall() throws Exception {
 		assertComparison("sampleTwoParamMethodCall",
 				INT_FIELDNAME,
 				new ArithmeticExpression(
@@ -1104,7 +1104,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getValue(INT_CMPVAL)==floatMember;
 	}
 
-	public void _testTimesValueMethodEqualsComp() throws Exception {
+	public void testTimesValueMethodEqualsComp() throws Exception {
 		assertComparison("sampleTimesValueMethodEqualsComp",new String[]{OTHER_FLOAT_FIELDNAME},floatMemberFieldValue(),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -1119,7 +1119,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return stringMember.equals(STRING_CMPVAL);
 	}
 
-	public void _testInvalidOtherMemberEqualsComp() throws Exception {
+	public void testInvalidOtherMemberEqualsComp() throws Exception {
 		assertInvalid("sampleInvalidOtherMemberEqualsComp");
 	}
 
@@ -1128,7 +1128,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return next.bool;
 	}
 	
-	public void _testInvalidLocalVarComp() throws Exception {
+	public void testInvalidLocalVarComp() throws Exception {
 		assertInvalid("sampleInvalidLocalVarComp");
 	}
 
@@ -1137,7 +1137,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return next.bool && data.bool;
 	}
 		
-	public void _testInvalidLocalVarCombinedComp() throws Exception {
+	public void testInvalidLocalVarCombinedComp() throws Exception {
 		assertInvalid("sampleInvalidLocalVarCombinedComp");
 	}
 	
@@ -1145,7 +1145,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getName().indexOf(STRING_CMPVAL)>=0&&data.bool;
 	}
 	
-	public void _testInvalidNotOptimizableMethodCallCombined() throws Exception {
+	public void testInvalidNotOptimizableMethodCallCombined() throws Exception {
 		assertInvalid("sampleInvalidNotOptimizableMethodCallCombined");
 	}
 
@@ -1153,7 +1153,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return stringMember==STRING_CMPVAL;
 	}
 
-	public void _testInvalidOtherMemberSameComp() throws Exception {
+	public void testInvalidOtherMemberSameComp() throws Exception {
 		assertInvalid("sampleInvalidOtherMemberSameComp");
 	}
 
@@ -1161,7 +1161,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id-1==INT_CMPVAL;
 	}
 
-	public void _testInvalidCandidateMemberArithmetic() throws Exception {
+	public void testInvalidCandidateMemberArithmetic() throws Exception {
 		assertInvalid("sampleInvalidCandidateMemberArithmetic");
 	}
 
@@ -1170,7 +1170,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id==val;
 	}
 
-	public void _testInvalidTemporaryStorage() throws Exception {
+	public void testInvalidTemporaryStorage() throws Exception {
 		assertInvalid("sampleInvalidTemporaryStorage");
 	}
 
@@ -1179,7 +1179,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return true;
 	}
 
-	public void _testInvalidMethodCall() throws Exception {
+	public void testInvalidMethodCall() throws Exception {
 		assertInvalid("sampleInvalidMethodCall");
 	}
 
@@ -1187,7 +1187,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.next==new Data().getNext();
 	}
 
-	public void _testInvalidConstructorCall() throws Exception {
+	public void testInvalidConstructorCall() throws Exception {
 		assertInvalid("sampleInvalidConstructorCall");
 	}
 
@@ -1195,7 +1195,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.equals(new Data());
 	}
 
-	public void _testSimpleObjectComparison() throws Exception {
+	public void testSimpleObjectComparison() throws Exception {
 		assertInvalid("sampleSimpleObjectComparison");
 	}
 
@@ -1203,7 +1203,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.next.equals(new Data());
 	}
 
-	public void _testSimpleFieldObjectComparison() throws Exception {
+	public void testSimpleFieldObjectComparison() throws Exception {
 		assertInvalid("sampleSimpleFieldObjectComparison");
 	}
 
@@ -1211,7 +1211,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.next.equals(data.next);
 	}
 
-	public void _testSimpleFieldObjectIdentityComparison() throws Exception {
+	public void testSimpleFieldObjectIdentityComparison() throws Exception {
 		assertInvalid("sampleSimpleFieldObjectIdentityComparison");
 	}
 
@@ -1219,7 +1219,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.equals(null);
 	}
 
-	public void _testCandEqualsNullComparison() throws Exception {
+	public void testCandEqualsNullComparison() throws Exception {
 		assertInvalid("sampleCandEqualsNullComparison");
 	}
 
@@ -1227,7 +1227,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.equals(data);
 	}
 
-	public void _testCandIdentityObjectComparison() throws Exception {
+	public void testCandIdentityObjectComparison() throws Exception {
 		assertInvalid("sampleCandIdentityObjectComparison");
 	}
 
@@ -1235,7 +1235,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return sampleRecursiveCall(data);
 	}
 
-	public void _testRecursiveCall() throws Exception {
+	public void testRecursiveCall() throws Exception {
 		assertInvalid("sampleRecursiveCall");
 	}
 
@@ -1243,7 +1243,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.intArray[0]==0;
 	}
 
-	public void _testCandidateIntArrayAccess() throws Exception {
+	public void testCandidateIntArrayAccess() throws Exception {
 		assertInvalid("sampleCandidateIntArrayAccess");
 	}
 
@@ -1251,7 +1251,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.objArray[0].id==0;
 	}
 
-	public void _testCandidateObjectArrayAccess() throws Exception {
+	public void testCandidateObjectArrayAccess() throws Exception {
 		assertInvalid("sampleCandidateObjectArrayAccess");
 	}
 
@@ -1259,7 +1259,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id==sum(data.id,0);
 	}
 
-	public void _testCandidateParamMethodCall() throws Exception {
+	public void testCandidateParamMethodCall() throws Exception {
 		assertInvalid("sampleCandidateParamMethodCall");
 	}
 
@@ -1267,7 +1267,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id==Integer.parseInt(data.name);
 	}
 
-	public void _testCandidateParamStaticMethodCall() throws Exception {
+	public void testCandidateParamStaticMethodCall() throws Exception {
 		assertInvalid("sampleCandidateParamStaticMethodCall");
 	}
 
@@ -1283,7 +1283,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		}
 	}
 
-	public void _testSwitch() throws Exception {
+	public void testSwitch() throws Exception {
 		assertInvalid("sampleSwitch");
 	}
 
@@ -1291,7 +1291,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.name.equals(stringMember+"X");
 	}
 
-	public void _testStringAppend() throws Exception {
+	public void testStringAppend() throws Exception {
 		assertInvalid("sampleStringAppend");
 	}
 
@@ -1299,7 +1299,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return INT_WRAPPER_CMPVAL.compareTo(INT_WRAPPER_CMPVAL)==0;
 	}
 
-	public void _testExternalWrapperComp() throws Exception {
+	public void testExternalWrapperComp() throws Exception {
 		assertInvalid("sampleExternalWrapperComp");
 	}
 
@@ -1312,7 +1312,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		}
 	}
 
-	public void _testNotApplicableIfCondition() throws Exception {
+	public void testNotApplicableIfCondition() throws Exception {
 		assertInvalid("sampleNotApplicableIfCondition");
 	}
 
@@ -1325,7 +1325,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		}
 	}
 
-	public void _testNotApplicableIfStringAppendCondition() throws Exception {
+	public void testNotApplicableIfStringAppendCondition() throws Exception {
 		assertInvalid("sampleNotApplicableIfStringAppendCondition");
 	}
 
@@ -1339,7 +1339,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		}
 	}
 
-	public void _testIOSideEffect() throws Exception {
+	public void testIOSideEffect() throws Exception {
 		assertInvalid("sampleIOSideEffect");
 	}
 
@@ -1355,7 +1355,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id==INT_CMPVAL;
 	}
 
-	public void _testActivateThenFieldIntEqualsComp() throws Exception {
+	public void testActivateThenFieldIntEqualsComp() throws Exception {
 		assertComparison("sampleActivateThenFieldIntEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -1364,7 +1364,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id==INT_CMPVAL;
 	}
 
-	public void _testOverriddenActivateThenFieldIntEqualsComp() throws Exception {
+	public void testOverriddenActivateThenFieldIntEqualsComp() throws Exception {
 		assertComparison("sampleOverriddenActivateThenFieldIntEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -1373,7 +1373,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id==INT_CMPVAL;
 	}
 
-	public void _testIndirectOverriddenActivateThenFieldIntEqualsComp() throws Exception {
+	public void testIndirectOverriddenActivateThenFieldIntEqualsComp() throws Exception {
 		assertComparison("sampleIndirectOverriddenActivateThenFieldIntEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
@@ -1382,7 +1382,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id==INT_CMPVAL;
 	}
 
-	public void _testWrongActivateThenFieldIntEqualsComp() throws Exception {
+	public void testWrongActivateThenFieldIntEqualsComp() throws Exception {
 		assertInvalid("sampleWrongActivateThenFieldIntEqualsComp");
 	}
 
@@ -1391,7 +1391,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.id==INT_CMPVAL;
 	}
 
-	public void _testStaticIndirectActivateThenFieldIntEqualsComp() throws Exception {
+	public void testStaticIndirectActivateThenFieldIntEqualsComp() throws Exception {
 		assertComparison("sampleStaticIndirectActivateThenFieldIntEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
