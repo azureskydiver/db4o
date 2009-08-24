@@ -69,6 +69,9 @@ public class BloatUtil {
 	}
 
 	public static boolean implementsDirectly(ClassEditor ce, Class markerInterface) {
+		if(markerInterface.getName().equals(normalizeClassName(ce.type()))) {
+			return true;
+		}
 		Type[] interfaces = ce.interfaces();
 		for (int idx = 0; idx < interfaces.length; idx++) {
 			Type type = interfaces[idx];
