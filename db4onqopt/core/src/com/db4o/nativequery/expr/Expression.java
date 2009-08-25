@@ -2,7 +2,7 @@
 
 package com.db4o.nativequery.expr;
 
-public interface Expression {
+public interface Expression extends ExpressionPart {
 	
 	/**
 	 *  

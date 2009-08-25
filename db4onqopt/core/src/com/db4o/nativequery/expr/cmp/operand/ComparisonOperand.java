@@ -2,8 +2,10 @@
 
 package com.db4o.nativequery.expr.cmp.operand;
 
+import com.db4o.nativequery.expr.*;
 
-public interface ComparisonOperand {
+
+public interface ComparisonOperand extends ExpressionPart {
 	void accept(ComparisonOperandVisitor visitor);
 
 }
