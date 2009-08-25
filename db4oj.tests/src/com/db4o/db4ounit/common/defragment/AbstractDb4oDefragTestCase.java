@@ -5,6 +5,7 @@ import com.db4o.foundation.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 public abstract class AbstractDb4oDefragTestCase implements TestSuiteBuilder {
 
