@@ -280,8 +280,9 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data==predicateData;
 	}
 
-	public void _testCandidateIdentity() throws Exception {
-		assertComparison("sampleCandidateIdentity",new String[]{},new FieldValue(PredicateFieldRoot.INSTANCE, fieldRef("predicateData", Data.class)),ComparisonOperator.VALUE_EQUALITY,false);
+	// COR-1745
+	public void testCandidateIdentity() throws Exception {
+		assertInvalid("sampleCandidateIdentity");
 	}
 
 	boolean sampleIdentityNullComp(Data data) {
