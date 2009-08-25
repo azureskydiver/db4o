@@ -9,7 +9,6 @@ import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.tree.*;
 
 import com.db4o.activation.*;
-import com.db4o.foundation.*;
 import com.db4o.instrumentation.api.*;
 import com.db4o.instrumentation.bloat.*;
 import com.db4o.instrumentation.core.*;
@@ -26,172 +25,58 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	// TODO discuss: drop or make configurable
 	private final static int MAX_DEPTH = 10;
 
-	private final static String[] PRIMITIVE_WRAPPER_NAMES = {
-			Boolean.class.getName(), Byte.class.getName(),
-			Short.class.getName(), Character.class.getName(),
-			Integer.class.getName(), Long.class.getName(),
-			Double.class.getName(), Float.class.getName(),
-			String.class.getName(), Date.class.getName() };
+	private final static ExpressionBuilder EXP_BUILDER = new ExpressionBuilder();
+	private final static ComparisonExpressionFactory CMP_BUILDER = new ComparisonExpressionFactory(EXP_BUILDER);
 
-	static {
-		Arrays.sort(PRIMITIVE_WRAPPER_NAMES);
-	}
-
-	private final static ExpressionBuilder BUILDER = new ExpressionBuilder();
-
-	private final static Map BUILDERS = new HashMap();
-
-	private final static Map OP_SYMMETRY = new HashMap();
-
-	private static class ComparisonBuilder {
-		private ComparisonOperator op;
-
-		public ComparisonBuilder(ComparisonOperator op) {
-			this.op = op;
-		}
-
-		public Expression buildComparison(FieldValue fieldValue,
-				ComparisonOperand valueExpr) {
-			if(isBooleanField(fieldValue)) {
-				if(valueExpr instanceof ConstValue) {
-					ConstValue constValue = (ConstValue) valueExpr;
-					if(constValue.value() instanceof Integer) {
-						Integer intValue = (Integer) constValue.value();
-						Boolean boolValue = (intValue.intValue()==0 ? Boolean.FALSE : Boolean.TRUE);
-						valueExpr = new ConstValue(boolValue);
-					}
-				}
-			}
-			return comparisonExpression(fieldValue, valueExpr, op);
-		}
-	}
-
-	private static class NegateComparisonBuilder extends ComparisonBuilder {
-		public NegateComparisonBuilder(ComparisonOperator op) {
-			super(op);
-		}
-
-		public Expression buildComparison(FieldValue fieldValue,
-				ComparisonOperand valueExpr) {
-			return BUILDER.not(super.buildComparison(fieldValue, valueExpr));
-		}
-	}
-
-	private static class BuilderSpec {
-		private int _op;
-		private boolean _primitive;
-
-		public BuilderSpec(int op, boolean primitive) {
-			this._op = op;
-			this._primitive = primitive;
-		}
-
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + _op;
-			result = prime * result + (_primitive ? 1231 : 1237);
-			return result;
-		}
-
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			final BuilderSpec other = (BuilderSpec) obj;
-			if (_op != other._op)
-				return false;
-			if (_primitive != other._primitive)
-				return false;
-			return true;
-		}		
-	}
+	private final Map<Block,ExpressionPart> _seenBlocks = new HashMap<Block,ExpressionPart>();
+	private final BloatLoaderContext _context;
+	private final LinkedList<MemberRef> _methodStack;
+	private final List<ComparisonOperand> _locals;
 	
-	static {
-		BUILDERS.put(new BuilderSpec(IfStmt.EQ,false), new ComparisonBuilder(
-				ComparisonOperator.REFERENCE_EQUALITY));
-		BUILDERS.put(new BuilderSpec(IfStmt.EQ,true), new ComparisonBuilder(
-				ComparisonOperator.VALUE_EQUALITY));
-		BUILDERS.put(new BuilderSpec(IfStmt.NE,false), new NegateComparisonBuilder(
-				ComparisonOperator.REFERENCE_EQUALITY));
-		BUILDERS.put(new BuilderSpec(IfStmt.NE,true), new NegateComparisonBuilder(
-				ComparisonOperator.VALUE_EQUALITY));
-		BUILDERS.put(new BuilderSpec(IfStmt.LT,false), new ComparisonBuilder(
-				ComparisonOperator.SMALLER));
-		BUILDERS.put(new BuilderSpec(IfStmt.LT,true),builder(IfStmt.LT,false));
-		BUILDERS.put(new BuilderSpec(IfStmt.GT,false), new ComparisonBuilder(
-				ComparisonOperator.GREATER));
-		BUILDERS.put(new BuilderSpec(IfStmt.GT,true),builder(IfStmt.GT,false));
-		BUILDERS.put(new BuilderSpec(IfStmt.LE,false), new NegateComparisonBuilder(
-				ComparisonOperator.GREATER));
-		BUILDERS.put(new BuilderSpec(IfStmt.LE,true),builder(IfStmt.LE,false));
-		BUILDERS.put(new BuilderSpec(IfStmt.GE,false), new NegateComparisonBuilder(
-				ComparisonOperator.SMALLER));
-		BUILDERS.put(new BuilderSpec(IfStmt.GE,true),builder(IfStmt.GE,false));
-
-		OP_SYMMETRY.put(new Integer(IfStmt.EQ), new Integer(IfStmt.EQ));
-		OP_SYMMETRY.put(new Integer(IfStmt.NE), new Integer(IfStmt.NE));
-		OP_SYMMETRY.put(new Integer(IfStmt.LT), new Integer(IfStmt.GT));
-		OP_SYMMETRY.put(new Integer(IfStmt.GT), new Integer(IfStmt.LT));
-		OP_SYMMETRY.put(new Integer(IfStmt.LE), new Integer(IfStmt.GE));
-		OP_SYMMETRY.put(new Integer(IfStmt.GE), new Integer(IfStmt.LE));
-	}
-
-	private Expression expr;
-
-	private Object retval;
-
-	private Map seenBlocks = new HashMap();
-
-	private BloatLoaderContext context;
-
-	private LinkedList methodStack = new LinkedList();
-
-	private LinkedList localStack = new LinkedList();
-
-	private int retCount = 0;
-
-	private int blockCount = 0;
-
-	private Stack4 _statementStates = new Stack4();
+	private Expression _expr;
+	private ExpressionPart _retval;
+	private int _retCount = 0;
+	private int _blockCount = 0;
+	private int _topLevelStmtCount = 0;
 
 	public BloatExprBuilderVisitor(BloatLoaderContext bloatUtil) {
-		this.context = bloatUtil;
-		localStack.addLast(new ComparisonOperand[] {
-				PredicateFieldRoot.INSTANCE, CandidateFieldRoot.INSTANCE });
+		this(bloatUtil, new LinkedList<MemberRef>(), Arrays.<ComparisonOperand>asList(PredicateFieldRoot.INSTANCE, CandidateFieldRoot.INSTANCE));
+	}
+
+	private BloatExprBuilderVisitor(BloatLoaderContext bloatUtil, LinkedList<MemberRef> methodStack, List<ComparisonOperand> locals) {
+		_context = bloatUtil;
+		_methodStack = methodStack;
+		_locals = locals;
 	}
 
 	private Object purgeReturnValue() {
-		Object expr = this.retval;
+		Object expr = _retval;
 		retval(null);
 		return expr;
 	}
 
 	private void expression(Expression expr) {
 		retval(expr);
-		this.expr = expr;
+		_expr = expr;
 	}
 
-	private void retval(Object expr) {
-		this.retval = expr;
-	}
-
-    private static ComparisonBuilder builder(int op, boolean primitive) {
-		return (ComparisonBuilder) BUILDERS.get(new BuilderSpec(op,primitive));
+	private void retval(ExpressionPart expr) {
+		_retval = expr;
 	}
 
 	public Expression expression() {
-		if (expr == null && isSingleReturn() && retval instanceof ConstValue) {
-			expression(asExpression(retval));
+		if (_expr == null && isSingleReturn() && _retval instanceof ConstValue) {
+			expression(asExpression(_retval));
 		}
-		return (checkComparisons(expr) ? expr : null);
+		return (checkComparisons(_expr) ? _expr : null);
 	}
 
+	public ExpressionPart returnValue() {
+		return _retval;
+	}
+	
 	private boolean isSingleReturn() {
-		return retCount == 1 && blockCount == 4; // one plus source,init,sink
+		return _retCount == 1 && _blockCount == 4; // one plus source,init,sink
 	}
 
 	private boolean checkComparisons(Expression expr) {
@@ -220,7 +105,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			Expression forced = identityOrBoolComparisonOrNull(retval);
 			if (forced != null) {
 				retval = forced;
-			} else {
+			} 
+			else {
 				FieldValue fieldVal = (FieldValue) retval;
 				Object constVal=null;
 				if(fieldVal.field().type().isPrimitive()) {
@@ -233,9 +119,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		if (retval instanceof Expression) {
 			Expression expr = (Expression) retval;
-			if (stmt.comparison() == IfStmt.EQ && !cmpNull
-					|| stmt.comparison() == IfStmt.NE && cmpNull) {
-				expr = BUILDER.not(expr);
+			if (stmt.comparison() == IfStmt.EQ && !cmpNull || stmt.comparison() == IfStmt.NE && cmpNull) {
+				expr = EXP_BUILDER.not(expr);
 			}
 			expression(buildComparison(stmt, expr));
 			return;
@@ -247,8 +132,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		Expression expr = null;
 		int comparison = stmt.comparison();
 		if (cmp.swapped()) {
-			comparison = ((Integer) OP_SYMMETRY.get(new Integer(comparison)))
-					.intValue();
+			comparison = ((Integer) OpSymmetryUtil.counterpart(comparison)).intValue();
 		}
 		switch (comparison) {
 		case IfStmt.EQ:
@@ -256,7 +140,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 					ComparisonOperator.VALUE_EQUALITY);
 			break;
 		case IfStmt.NE:
-			expr = BUILDER.not(comparisonExpression(cmp.left(),
+			expr = EXP_BUILDER.not(comparisonExpression(cmp.left(),
 					cmp.right(), ComparisonOperator.VALUE_EQUALITY));
 			break;
 		case IfStmt.LT:
@@ -268,11 +152,11 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 					ComparisonOperator.GREATER);
 			break;
 		case IfStmt.LE:
-			expr = BUILDER.not(comparisonExpression(cmp.left(),
+			expr = EXP_BUILDER.not(comparisonExpression(cmp.left(),
 					cmp.right(), ComparisonOperator.GREATER));
 			break;
 		case IfStmt.GE:
-			expr = BUILDER.not(comparisonExpression(cmp.left(),
+			expr = EXP_BUILDER.not(comparisonExpression(cmp.left(),
 					cmp.right(), ComparisonOperator.SMALLER));
 			break;
 		default:
@@ -282,28 +166,20 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	private void exitStatement() {
-		if(statementState()._topLevelStmtCount > 1) {
-			if(retval != IgnoredExpression.INSTANCE) {
+		if(_topLevelStmtCount > 1) {
+			if(_retval != IgnoredExpression.INSTANCE) {
 				throw new EarlyExitException();
 			}
 		}
-		if(retval == IgnoredExpression.INSTANCE) {
-			statementState()._topLevelStmtCount--;
+		if(_retval == IgnoredExpression.INSTANCE) {
+			_topLevelStmtCount--;
 		}
-		statementState()._stmtDepth--; 
 	}
 
 	private void enterStatement() {
-		if(statementState()._stmtDepth == 0) {
-			statementState()._topLevelStmtCount++;
-		}
-		statementState()._stmtDepth++;
+			_topLevelStmtCount++;
 	}
 	
-	private StatementState statementState() {
-		return (StatementState) _statementStates.peek();
-	}
-
 	public void visitIfCmpStmt(IfCmpStmt stmt) {
 		enterStatement();
 		stmt.left().visit(this);
@@ -312,25 +188,23 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		exitStatement();
 		Object right = purgeReturnValue();
 		int op = stmt.comparison();
-		if ((left instanceof ComparisonOperand)
-				&& (right instanceof FieldValue)) {
+		if ((left instanceof ComparisonOperand) && (right instanceof FieldValue)) {
 			FieldValue rightField = (FieldValue) right;
 			if (rightField.root() == CandidateFieldRoot.INSTANCE) {
 				Object swap = left;
 				left = right;
 				right = swap;
-				op = ((Integer) OP_SYMMETRY.get(new Integer(op))).intValue();
+				op = OpSymmetryUtil.counterpart(op);
 			}
 		}
-		if (!(left instanceof FieldValue)
-				|| !(right instanceof ComparisonOperand)) {
+		if (!(left instanceof FieldValue) || !(right instanceof ComparisonOperand)) {
 			throw new EarlyExitException();
 		}
 		FieldValue fieldExpr = (FieldValue) left;
 		ComparisonOperand valueExpr = (ComparisonOperand) right;
 
         boolean isPrimitive = isPrimitiveExpr(stmt.left());
-        Expression cmp = buildComparison(stmt, builder(op,isPrimitive).buildComparison(fieldExpr, valueExpr));
+        Expression cmp = buildComparison(stmt, CMP_BUILDER.buildComparison(op, isPrimitive, fieldExpr, valueExpr));
 		expression(cmp);
 	}
 
@@ -347,12 +221,11 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		if (!isStatic && expr.method().name().equals("equals")) {
 			CallMethodExpr call = (CallMethodExpr) expr;
-			if (isPrimitiveWrapper(call.receiver().type())) {
+			if (TypeRefUtil.isPrimitiveWrapper(call.receiver().type())) {
 				processEqualsCall(call, ComparisonOperator.VALUE_EQUALITY);
 			}
 			return;
 		}
-		// FIXME
 		if (!isStatic && isActivateMethod(expr.method())) {
 			retval(IgnoredExpression.INSTANCE);
 			return;
@@ -367,17 +240,16 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			((CallMethodExpr) expr).receiver().visit(this);
 			rcvRetval = (ComparisonOperandAnchor) purgeReturnValue();
 		}
-		if(isPrimitiveWrapper(expr.method().declaringClass())) {
+		if(TypeRefUtil.isPrimitiveWrapper(expr.method().declaringClass())) {
 			if(applyPrimitiveWrapperHandling(expr,rcvRetval)) {
 				return;
 			}
 		}
 		MemberRef methodRef = expr.method();
-		if (methodStack.contains(methodRef) || methodStack.size() > MAX_DEPTH) {
+		if (_methodStack.contains(methodRef) || _methodStack.size() > MAX_DEPTH) {
 			throw new EarlyExitException();
 		}
-		methodStack.addLast(methodRef);
-		boolean addedLocals=false;
+		_methodStack.addLast(methodRef);
 		try {
 			List params = new ArrayList(expr.params().length + 1);
 			params.add(rcvRetval);
@@ -391,9 +263,6 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				}
 				params.add(curparam);
 			}
-			addedLocals=true;
-			localStack.addLast(params.toArray(new ComparisonOperand[params
-					.size()]));
 
 			if(handledAsSafeMethod(expr, rcvRetval, params)) {
 				return;
@@ -408,7 +277,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 					declaringClass=receiverType;
 				}
 			}
-			FlowGraph flowGraph = context.flowGraph(declaringClass.className(), methodRef.name(),methodRef.type().paramTypes());
+			FlowGraph flowGraph = _context.flowGraph(declaringClass.className(), methodRef.name(),methodRef.type().paramTypes());
 			if (flowGraph == null) {
 				throw new EarlyExitException();
 			}
@@ -417,8 +286,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 						.println("METHOD:" + flowGraph.method().nameAndType());
 				flowGraph.visit(new PrintVisitor());
 			}
-			flowGraph.visit(this);
-			Object methodRetval = purgeReturnValue();
+			BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(_context, _methodStack, params);
+			flowGraph.visit(visitor);
+			ExpressionPart methodRetval = visitor.returnValue();
 			if(methodRetval==null) {
 				throw new EarlyExitException();
 			}
@@ -429,10 +299,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {
-			if(addedLocals) {
-				localStack.removeLast();
-			}
-			Object last = methodStack.removeLast();
+			Object last = _methodStack.removeLast();
 			if (!last.equals(methodRef)) {
 				throw new RuntimeException("method stack inconsistent: push="
 						+ methodRef + " , pop=" + last);
@@ -470,8 +337,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return false;
 		}
 		try {
-			ClassEditor activateClazz = context.classEditor(method.declaringClass());
-			return BloatUtil.implementsInHierarchy(activateClazz, Activatable.class, context);
+			ClassEditor activateClazz = _context.classEditor(method.declaringClass());
+			return BloatUtil.implementsInHierarchy(activateClazz, Activatable.class, _context);
 		} 
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -498,7 +365,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if(declaringClass.className().equals(receiverType.className())) {
 			return false;
 		}
-		ClassEditor receiverEditor=context.classEditor(receiverType.className());
+		ClassEditor receiverEditor=_context.classEditor(receiverType.className());
 		Type superClass = receiverEditor.superclass();
 		if(superClass!=null) {
 			if(superClass.className().equals(declaringClass.className())) {
@@ -543,7 +410,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		retval(rcvRetval);
 		if(rcvRetval instanceof FieldValue) {
 			FieldValue fieldval=(FieldValue)rcvRetval;
-			if(isBooleanField(fieldval)) {
+			if(TypeRefUtil.isBooleanField(fieldval)) {
 				retval(comparisonExpression(fieldval,new ConstValue(Boolean.TRUE),ComparisonOperator.VALUE_EQUALITY, true));
 			}
 			if(fieldval.root().equals(CandidateFieldRoot.INSTANCE)) {
@@ -570,30 +437,6 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return true;
 		}
 		return false;
-	}
-
-	private final static Map PRIMITIVE_CLASSES;
-
-	static {
-		PRIMITIVE_CLASSES = new HashMap();
-		PRIMITIVE_CLASSES.put("Z", Boolean.TYPE);
-		PRIMITIVE_CLASSES.put("B", Byte.TYPE);
-		PRIMITIVE_CLASSES.put("S", Short.TYPE);
-		PRIMITIVE_CLASSES.put("C", Character.TYPE);
-		PRIMITIVE_CLASSES.put("I", Integer.TYPE);
-		PRIMITIVE_CLASSES.put("J", Long.TYPE);
-		PRIMITIVE_CLASSES.put("F", Float.TYPE);
-		PRIMITIVE_CLASSES.put("D", Double.TYPE);
-	}
-
-	private static boolean isPrimitiveWrapper(Type type) {
-		return Arrays.binarySearch(PRIMITIVE_WRAPPER_NAMES,
-				BloatUtil.normalizeClassName(type)) >= 0;
-	}
-
-	private static boolean isPrimitiveWrapper(TypeRef type) {
-		return Arrays.binarySearch(PRIMITIVE_WRAPPER_NAMES,
-				BloatUtil.normalizeClassName(type.name())) >= 0;
 	}
 
 	private boolean isPrimitiveExpr(Expr expr) {
@@ -662,7 +505,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	private BloatReferenceProvider references() {
-		return context.references();
+		return _context.references();
 	}
 
 	public void visitConstantExpr(ConstantExpr expr) {
@@ -672,30 +515,28 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	public void visitLocalExpr(LocalExpr expr) {
 		super.visitLocalExpr(expr);
-		ComparisonOperand[] locals = (ComparisonOperand[]) localStack.getLast();
-		if (expr.index() >= locals.length) {
+		if (expr.index() >= _locals.size()) {
 			throw new EarlyExitException();
 		}
-		retval(locals[expr.index()]);
+		retval(_locals.get(expr.index()));
 	}
 
 	public void visitBlock(Block block) {
-		if (seenBlocks.containsKey(block)) {
-			retval(seenBlocks.get(block));
+		if (_seenBlocks.containsKey(block)) {
+			retval(_seenBlocks.get(block));
 			return;
 		} 
-		_statementStates.push(new StatementState());
+		_topLevelStmtCount = 0;
 		super.visitBlock(block);
-		_statementStates.pop();
-		seenBlocks.put(block, retval);
-		blockCount++;
+		_seenBlocks.put(block, _retval);
+		_blockCount++;
 	}
 
 	public void visitFlowGraph(FlowGraph graph) {
 		try {
 			super.visitFlowGraph(graph);
-			if (expr == null) {
-				Expression forced = identityOrBoolComparisonOrNull(retval);
+			if (_expr == null) {
+				Expression forced = identityOrBoolComparisonOrNull(_retval);
 				if (forced != null) {
 					expression(forced);
 				}
@@ -722,27 +563,13 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return null;
 		}
 		 
-		if (!isPrimitiveBoolean(fieldType)) {
+		if (!TypeRefUtil.isPrimitiveBoolean(fieldType)) {
 			return null;
 		}
 		return comparisonExpression(
 						fieldVal,
 						new ConstValue(Boolean.TRUE),
 						ComparisonOperator.VALUE_EQUALITY);
-	}
-
-	private static boolean isPrimitiveBoolean(TypeRef fieldType) {
-		return isType(fieldType, Boolean.TYPE);
-	}
-
-	private static boolean isType(TypeRef fieldType, final Class type) {
-		return fieldType.name().equals(type.getName());
-	}
-
-	private static boolean isBooleanField(FieldValue fieldVal) {
-		final TypeRef type = fieldVal.field().type();
-		return isPrimitiveBoolean(type)
-			|| isType(type, Boolean.class);
 	}
 
 	public void visitArithExpr(ArithExpr expr) {
@@ -785,7 +612,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			break;
 		case ArithExpr.XOR:
 			if (left instanceof FieldValue) {
-				retval(BUILDER.not(comparisonExpression((FieldValue) left,
+				retval(EXP_BUILDER.not(comparisonExpression((FieldValue) left,
 						right, ComparisonOperator.VALUE_EQUALITY)));
 			}
 			break;
@@ -810,7 +637,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		enterStatement();
 		stat.expr().visit(this);
 		exitStatement();
-		retCount++;
+		_retCount++;
 	}
 
 	private ArithmeticOperator arithmeticOperator(int bloatOp) {
@@ -838,7 +665,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if (trueExpr == null || falseExpr == null) {
 			return null;
 		}
-		return BUILDER.ifThenElse(cmp, trueExpr, falseExpr);
+		return EXP_BUILDER.ifThenElse(cmp, trueExpr, falseExpr);
 	}
 
 	private Expression asExpression(Object obj) {
@@ -882,7 +709,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	private static ComparisonOperand fieldValue(ComparisonOperandAnchor parent, FieldRef field) {
 		if(parent instanceof ComparisonOperandDescendant) {
 			ComparisonOperandDescendant descendant = (ComparisonOperandDescendant) parent;
-			if("value".equals(field.name()) && isPrimitiveWrapper(descendant.type())) {
+			if("value".equals(field.name()) && TypeRefUtil.isPrimitiveWrapper(descendant.type())) {
 				return parent;
 			}
 		}
@@ -890,10 +717,5 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	private static class EarlyExitException extends RuntimeException {
-	}
-
-	private static class StatementState {
-		public int _topLevelStmtCount = 0;
-		public int _stmtDepth = 0;
 	}
 }

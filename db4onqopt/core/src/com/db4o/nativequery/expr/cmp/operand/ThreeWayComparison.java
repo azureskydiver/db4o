@@ -2,8 +2,10 @@
 
 package com.db4o.nativequery.expr.cmp.operand;
 
+import com.db4o.nativequery.expr.*;
 
-public class ThreeWayComparison {
+
+public class ThreeWayComparison implements ExpressionPart {
 	private FieldValue _left;
 	private ComparisonOperand _right;
 	private boolean _swapped;
