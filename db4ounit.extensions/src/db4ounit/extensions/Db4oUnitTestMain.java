@@ -20,21 +20,34 @@ public class Db4oUnitTestMain extends UnitTestMain {
 	
 	@Override
 	protected Iterable4 builder(Class clazz) {
-		final Db4oTestSuiteBuilder networkingCS = new Db4oTestSuiteBuilder(Db4oFixtures.newNetworkingCS(), clazz);
-		final Db4oTestSuiteBuilder solo = new Db4oTestSuiteBuilder(_fixture, clazz);
-		final Db4oTestSuiteBuilder embeddedCS = new Db4oTestSuiteBuilder(Db4oFixtures.newEmbeddedCS(), clazz);
 		
-//		if (true) {
-//			return networkingCS;
-//		}
-//		if (true) {
-//			return solo;
-//		}
-//		if (true) {
-//			return embeddedCS;
-//		}
-		
-		return Iterators.concat(solo, embeddedCS, networkingCS);
+		return Iterators.concat(new Iterable4[] {
+				
+				solo(clazz),
+				embeddedCS(clazz),
+				networkingCS(clazz),
+				
+//				defragSolo(clazz),
+				
+			}
+		);
+	}
+
+	@SuppressWarnings("unused")
+	private Db4oTestSuiteBuilder defragSolo(Class clazz) {
+		return new Db4oTestSuiteBuilder(new Db4oDefragSolo(), clazz);
+	}
+
+	private Db4oTestSuiteBuilder networkingCS(Class clazz) {
+		return new Db4oTestSuiteBuilder(Db4oFixtures.newNetworkingCS(), clazz);
+	}
+
+	private Db4oTestSuiteBuilder embeddedCS(Class clazz) {
+		return new Db4oTestSuiteBuilder(Db4oFixtures.newEmbeddedCS(), clazz);
+	}
+
+	private Db4oTestSuiteBuilder solo(Class clazz) {
+		return new Db4oTestSuiteBuilder(_fixture, clazz);
 	}
 	
 	protected Test testMethod(String className, String methodName)
