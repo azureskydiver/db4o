@@ -49,8 +49,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		_locals = locals;
 	}
 
-	private Object purgeReturnValue() {
-		Object expr = _retval;
+	private ExpressionPart purgeReturnValue() {
+		ExpressionPart expr = _retval;
 		retval(null);
 		return expr;
 	}
@@ -72,7 +72,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	public ExpressionPart returnValue() {
-		return _retval;
+		return purgeReturnValue();
 	}
 	
 	private boolean isSingleReturn() {
@@ -96,9 +96,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	public void visitIfZeroStmt(IfZeroStmt stmt) {
 		enterStatement();
-		stmt.expr().visit(this);
+		ExpressionPart retval = descend(stmt.expr());
 		exitStatement();
-		Object retval = purgeReturnValue();
 		boolean cmpNull = false;
 		if (retval instanceof FieldValue) {
 			// TODO: merge boolean and number primitive handling
@@ -182,16 +181,14 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	
 	public void visitIfCmpStmt(IfCmpStmt stmt) {
 		enterStatement();
-		stmt.left().visit(this);
-		Object left = purgeReturnValue();
-		stmt.right().visit(this);
+		ExpressionPart left = descend(stmt.left());
+		ExpressionPart right = descend(stmt.right());
 		exitStatement();
-		Object right = purgeReturnValue();
 		int op = stmt.comparison();
 		if ((left instanceof ComparisonOperand) && (right instanceof FieldValue)) {
 			FieldValue rightField = (FieldValue) right;
 			if (rightField.root() == CandidateFieldRoot.INSTANCE) {
-				Object swap = left;
+				ExpressionPart swap = left;
 				left = right;
 				right = swap;
 				op = OpSymmetryUtil.counterpart(op);
@@ -235,13 +232,12 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				return;
 			}
 		}
-		ComparisonOperandAnchor rcvRetval = null;
+		ComparisonOperandAnchor receiver = null;
 		if (!isStatic) {
-			((CallMethodExpr) expr).receiver().visit(this);
-			rcvRetval = (ComparisonOperandAnchor) purgeReturnValue();
+			receiver = descend(((CallMethodExpr) expr).receiver());
 		}
 		if(TypeRefUtil.isPrimitiveWrapper(expr.method().declaringClass())) {
-			if(applyPrimitiveWrapperHandling(expr,rcvRetval)) {
+			if(applyPrimitiveWrapperHandling(expr,receiver)) {
 				return;
 			}
 		}
@@ -251,60 +247,85 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		_methodStack.addLast(methodRef);
 		try {
-			List params = new ArrayList(expr.params().length + 1);
-			params.add(rcvRetval);
-			boolean foundCandidateAsArg = false;
-			for (int idx = 0; idx < expr.params().length; idx++) {
-				expr.params()[idx].visit(this);
-				ComparisonOperand curparam = (ComparisonOperand) purgeReturnValue();
-				if ((curparam instanceof ComparisonOperandAnchor)
-						&& (((ComparisonOperandAnchor) curparam).root() == CandidateFieldRoot.INSTANCE)) {
-					foundCandidateAsArg = true;
-				}
-				params.add(curparam);
-			}
+			List<ComparisonOperand> params = collectMethodParams(expr, receiver);
 
-			if(handledAsSafeMethod(expr, rcvRetval, params)) {
+			if(handledAsSafeMethod(expr, receiver, params)) {
 				return;
 			}
 
-			Type declaringClass = methodRef.declaringClass();
-			// Nice try, but doesn't help, since the receiver's type always seems to be reported as java.lang.Object.
-			if(expr instanceof CallMethodExpr) {
-				Expr receiverExpr=((CallMethodExpr)expr).receiver();
-				Type receiverType=receiverExpr.type();
-				if(isSuperType(declaringClass,receiverType)) {
-					declaringClass=receiverType;
-				}
-			}
-			FlowGraph flowGraph = _context.flowGraph(declaringClass.className(), methodRef.name(),methodRef.type().paramTypes());
-			if (flowGraph == null) {
-				throw new EarlyExitException();
-			}
-			if (NQDebug.LOG) {
-				System.out
-						.println("METHOD:" + flowGraph.method().nameAndType());
-				flowGraph.visit(new PrintVisitor());
-			}
-			BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(_context, _methodStack, params);
-			flowGraph.visit(visitor);
-			ExpressionPart methodRetval = visitor.returnValue();
+			ExpressionPart methodRetval = descendIntoMethodCall(expr, params);
 			if(methodRetval==null) {
 				throw new EarlyExitException();
 			}
-			if(foundCandidateAsArg && methodRetval != IgnoredExpression.INSTANCE) {
+			if(methodRetval != IgnoredExpression.INSTANCE && containsCandidateAsParam(params)) {
 				throw new EarlyExitException();
 			}
+			
 			retval(methodRetval);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {
 			Object last = _methodStack.removeLast();
 			if (!last.equals(methodRef)) {
-				throw new RuntimeException("method stack inconsistent: push="
-						+ methodRef + " , pop=" + last);
+				throw new RuntimeException("method stack inconsistent: push=" + methodRef + " , pop=" + last);
 			}
 		}
+	}
+
+	private ExpressionPart descendIntoMethodCall(CallExpr expr, List<ComparisonOperand> params)
+			throws ClassNotFoundException {
+		Type declaringClass = detectDeclaringClass(expr);
+		MemberRef methodRef = expr.method();
+		FlowGraph flowGraph = _context.flowGraph(declaringClass.className(), methodRef.name(),methodRef.type().paramTypes());
+		if (flowGraph == null) {
+			throw new EarlyExitException();
+		}
+		if (NQDebug.LOG) {
+			System.out
+					.println("METHOD:" + flowGraph.method().nameAndType());
+			flowGraph.visit(new PrintVisitor());
+		}
+		BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(_context, _methodStack, params);
+		flowGraph.visit(visitor);
+		return visitor.returnValue();
+	}
+
+	private boolean containsCandidateAsParam(List<ComparisonOperand> params) {
+		boolean containsCandidate = false;
+		for (ComparisonOperand param : excludeReceiverParam(params)) {
+			if ((param instanceof ComparisonOperandAnchor)
+					&& (((ComparisonOperandAnchor) param).root() == CandidateFieldRoot.INSTANCE)) {
+				containsCandidate = true;
+			}
+		}
+		return containsCandidate;
+	}
+
+	private List<ComparisonOperand> excludeReceiverParam(List<ComparisonOperand> params) {
+		return params.subList(1, params.size());
+	}
+
+	private Type detectDeclaringClass(CallExpr expr) throws ClassNotFoundException {
+		Type declaringClass = expr.method().declaringClass();
+		// Nice try, but doesn't help, since the receiver's type always seems to be reported as java.lang.Object.
+		if(expr instanceof CallMethodExpr) {
+			Expr receiverExpr=((CallMethodExpr)expr).receiver();
+			Type receiverType=receiverExpr.type();
+			if(isSuperType(declaringClass,receiverType)) {
+				declaringClass=receiverType;
+			}
+		}
+		return declaringClass;
+	}
+
+	private List<ComparisonOperand> collectMethodParams(CallExpr expr, ComparisonOperandAnchor receiver) {
+		List<ComparisonOperand> params = new ArrayList<ComparisonOperand>(expr.params().length + 1);
+		params.add(receiver);
+		for (int idx = 0; idx < expr.params().length; idx++) {
+			ComparisonOperand curparam = descend(expr.params()[idx]);
+			params.add(curparam);
+		}
+		return params;
 	}
 
 	private boolean handledAsSafeMethod(CallExpr expr, ComparisonOperandAnchor rcvRetval, List params) {
@@ -398,10 +419,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		return false;
 	}
 
-	private boolean handlePrimitiveWrapperCompareToCall(CallExpr expr, ComparisonOperandAnchor rcvRetval) {
-		ComparisonOperand left=rcvRetval;
-		expr.params()[0].visit(this);
-		ComparisonOperand right=(ComparisonOperand) purgeReturnValue();
+	private boolean handlePrimitiveWrapperCompareToCall(CallExpr expr, ComparisonOperandAnchor receiver) {
+		ComparisonOperand left=receiver;
+		ComparisonOperand right = descend(expr.params()[0]);
 		retval(new ThreeWayComparison((FieldValue)left,right,false));
 		return true;
 	}
@@ -449,16 +469,13 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if (!isComparableExprOperand(left) || !isComparableExprOperand(right)) {
 			throw new EarlyExitException();
 		}
-		left.visit(this);
-		Object leftObj = purgeReturnValue();
+		ExpressionPart leftObj = descend(left);
 		if (!(leftObj instanceof ComparisonOperand)) {
 			throw new EarlyExitException();
 		}
 		ComparisonOperand leftOp = (ComparisonOperand) leftObj;
-		right.visit(this);
-		ComparisonOperand rightOp = (ComparisonOperand) purgeReturnValue();
-		if (op.isSymmetric() && isCandidateFieldValue(rightOp)
-				&& !isCandidateFieldValue(leftOp)) {
+		ComparisonOperand rightOp = descend(right);
+		if (op.isSymmetric() && isCandidateFieldValue(rightOp) && !isCandidateFieldValue(leftOp)) {
 			ComparisonOperand swap = leftOp;
 			leftOp = rightOp;
 			rightOp = swap;
@@ -482,8 +499,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	public void visitFieldExpr(FieldExpr expr) {
-		expr.object().visit(this);
-		Object fieldObj = purgeReturnValue();
+		ExpressionPart fieldObj = descend(expr.object());
 		if (fieldObj instanceof ComparisonOperandAnchor) {
 			retval(fieldValue((ComparisonOperandAnchor) fieldObj,
 					fieldRef(expr.field())));
@@ -573,14 +589,12 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	public void visitArithExpr(ArithExpr expr) {
-		expr.left().visit(this);
-		Object leftObj = purgeReturnValue();
+		ExpressionPart leftObj = descend(expr.left());
 		if (!(leftObj instanceof ComparisonOperand)) {
 			throw new EarlyExitException();
 		}
 		ComparisonOperand left = (ComparisonOperand) leftObj;
-		expr.right().visit(this);
-		Object rightObj = purgeReturnValue();
+		ExpressionPart rightObj = descend(expr.right());
 		if (!(rightObj instanceof ComparisonOperand)) {
 			throw new EarlyExitException();
 		}
@@ -622,10 +636,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	public void visitArrayRefExpr(ArrayRefExpr expr) {
-		expr.array().visit(this);
-		ComparisonOperandDescendant arrayOp = (ComparisonOperandDescendant) purgeReturnValue();
-		expr.index().visit(this);
-		ComparisonOperand idxOp = (ComparisonOperand) purgeReturnValue();
+		ComparisonOperandDescendant arrayOp = descend(expr.array());
+		ComparisonOperand idxOp = descend(expr.index());
 		if (arrayOp == null || idxOp == null
 				|| arrayOp.root() == CandidateFieldRoot.INSTANCE) {
 			throw new EarlyExitException();
@@ -657,9 +669,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	private Expression buildComparison(IfStmt stmt, Expression cmp) {
 		stmt.trueTarget().visit(this);
-		Object trueVal = purgeReturnValue();
+		ExpressionPart trueVal = purgeReturnValue();
 		stmt.falseTarget().visit(this);
-		Object falseVal = purgeReturnValue();
+		ExpressionPart falseVal = purgeReturnValue();
 		Expression trueExpr = asExpression(trueVal);
 		Expression falseExpr = asExpression(falseVal);
 		if (trueExpr == null || falseExpr == null) {
@@ -716,6 +728,11 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		return new FieldValue(parent, field);
 	}
 
+	private <T extends ExpressionPart> T descend(Node node) {
+		node.visit(this);
+		return (T)purgeReturnValue();
+	}
+	
 	private static class EarlyExitException extends RuntimeException {
 	}
 }
