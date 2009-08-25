@@ -12,7 +12,7 @@ import com.db4o.diagnostic.Diagnostic;
 import com.db4o.foundation.NativeCollections;
 import com.db4o.foundation.Predicate4;
 import com.db4o.internal.ReflectPlatform;
-import com.db4o.query.Predicate;
+import com.db4o.query.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
@@ -32,12 +32,9 @@ public class DescendIntoTranslatorTestCase extends AbstractDb4oTestCase implemen
 	}
 	
 	public void testDiagnostic() {
-		db().query(new Predicate<Item>(){
-					@Override
-					public boolean match(Item candidate) {
-						return candidate.getName().startsWith("foo");
-					}
-				});
+		Query query = newQuery(Item.class);
+		query.descend("_name").constrain("foo").startsWith(true);
+		query.execute();
 		
 		List<Diagnostic> diagnostics = NativeCollections.filter(
 													_collector.diagnostics(),
