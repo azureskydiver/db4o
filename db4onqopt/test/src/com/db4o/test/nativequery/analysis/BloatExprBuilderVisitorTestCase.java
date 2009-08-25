@@ -724,7 +724,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return BOOLEAN_CMPVAL!=data.getBool();
 	}
 
-	public void testBoolGetterNotEqualsComp() throws Exception {
+	public void _testBoolGetterNotEqualsComp() throws Exception {
 		assertComparison("sampleBoolGetterNotEqualsComp",BOOLEAN_FIELDNAME,Boolean.valueOf(!BOOLEAN_CMPVAL),ComparisonOperator.VALUE_EQUALITY,false);
 	}
 
