@@ -1,26 +1,16 @@
 @sharpen-exceptions-mapping
 @sharpen-collections-mapping
 
--typeMapping com.db4o.foundation.Iterable4 System.Collections.IEnumerable
--typeMapping com.db4o.foundation.Iterator4 System.Collections.IEnumerator
--methodMapping com.db4o.foundation.Iterable4.iterator GetEnumerator
--typeMapping com.db4o.foundation.IterableBase System.Collections.IEnumerable
--methodMapping com.db4o.foundation.IterableBase.iterator GetEnumerator
--propertyMapping com.db4o.foundation.Iterator4.current Current
-
 -pascalCase+
 -nativeTypeSystem
 -nativeInterfaces
 -organizeUsings
 
 -fullyQualify ICollectionHandler
+-fullyQualify Db4oFactory
 	
--typeMapping com.db4o.events.EventArgs System.EventArgs
-
 -namespaceMapping com.db4o.drs.test Db4objects.Drs.Tests
 -namespaceMapping com.db4o.drs Db4objects.Drs
--typeMapping com.db4o.Db4o Db4objects.Db4o.Db4oFactory
--typeMapping com.db4o.ext.ExtDb4o Db4objects.Db4o.Ext.ExtDb4oFactory
 -namespaceMapping com.db4o Db4objects.Db4o
 
 -namespaceMapping db4ounit Db4oUnit
@@ -30,9 +20,4 @@
 -propertyMapping java.lang.System.err Sharpen.Runtime.Err
 
 -propertyMapping db4ounit.fixtures.FixtureVariable.value Value
-
--propertyMapping com.db4o.events.ObjectEventArgs.object Object
--eventAddMapping com.db4o.events.Event4.addListener
--eventMapping com.db4o.events.EventRegistry.created Db4objects.Db4o.Events.ObjectInfoEventArgs
--eventMapping com.db4o.events.EventRegistry.updated Db4objects.Db4o.Events.ObjectInfoEventArgs
 

@@ -144,8 +144,12 @@
 			<args>
 				<arg value="-cp" />
 				<arg value="${dependencies.jar}" />
+				<arg value="-cp" />
+				<arg value="${file.decaf.annotations}" />
 				<arg value="-srcFolder" />
 				<arg value="test" />
+				<arg value="-srcFolder" />
+				<arg value="db4o" />
 				<arg value="@sharpen-dRS-options" />
 			</args>
 		</sharpen>
@@ -156,11 +160,19 @@
 		<property name="dependencies.jar" location="${drs.sharpen.workspace.dir}/lib/dependencies.jar" />
 		
 		<jar destfile="${dependencies.jar}">
+			<!--
             <fileset dir="${dir.dist.classes.jdk1.5}" />
+            -->
             <fileset dir="${dir.dist.classes.jdk1.5.cs}" />
             <fileset dir="${dir.dist.classes.jdk1.5.optional}" />
 			<fileset dir="${dir.dist.classes.db4ounit.jdk1.5}" />
 		</jar>
+    	
+    	<copy todir="${drs.sharpen.workspace.dir}/drs/db4o">
+			<fileset dir="${dir.j.core.src}">
+				<include name="**/*.java" />
+			</fileset>
+    	</copy>
         
 		<copy todir="${drs.sharpen.workspace.dir}/drs">
 			<fileset dir="${drs.src.dir}">
