@@ -66,10 +66,6 @@ public class Db4oDrsFixture implements DrsFixture {
 	}
 
 	public void open() {
-		//	Comment out because MemoryIoAdapter has problems on .net 
-		//	MemoryIoAdapter memoryIoAdapter = new MemoryIoAdapter();
-		//	Db4o.configure().io(memoryIoAdapter);
-		
 		_db = Db4o.openFile(cloneConfiguration(), testFile.getPath()).ext();
 		_provider = Db4oProviderFactory.newInstance(_db, _name);
 	}
