@@ -31,9 +31,9 @@
 	</target>
 		
 	<target name="clean">
-		<delete dir="${dir.dist.java}" />
-		<delete >
-			<fileset dir="${dir.dist}">
+		<delete dir="${dir.dist.java}" failonerror="false"/>
+		<delete failonerror="false">
+			<fileset dir="${dir.dist}" >
 				<include name="db4o-*-java.zip" />
 			</fileset>
 		</delete>
