@@ -40,7 +40,6 @@ public class GenericReflector implements Reflector, DeepClone {
     
     
     private Collection4 _collectionPredicates = new Collection4();
-    private Collection4 _collectionUpdateDepths = new Collection4();
 
 	// todo: Why have this when there is already the _repository by name? Redundant
 	private final Hashtable4 _classByClass = new Hashtable4();
@@ -75,8 +74,6 @@ public class GenericReflector implements Reflector, DeepClone {
 	public Object deepClone(Object obj)  {
         GenericReflector myClone = new GenericReflector(null, (Reflector)_delegate.deepClone(this));
         myClone._collectionPredicates = (Collection4)_collectionPredicates.deepClone(myClone);
-        myClone._collectionUpdateDepths = (Collection4)_collectionUpdateDepths.deepClone(myClone);
-        
         
         // Interesting, adding the following messes things up.
         // Keep the code, since it may make sense to carry the
@@ -126,24 +123,6 @@ public class GenericReflector implements Reflector, DeepClone {
             _array = new GenericArrayReflector(this);
         }
         return _array;
-    }
-
-    /**
-     * Determines collection update depth for the specified class
-     * @param candidate candidate class  
-     * @return collection update depth for the specified class
-     */
-    public int collectionUpdateDepth(ReflectClass candidate) {
-        Iterator4 i = _collectionUpdateDepths.iterator();
-        while(i.moveNext()){
-        	CollectionUpdateDepthEntry entry = (CollectionUpdateDepthEntry) i.current();
-        	if (entry._predicate.match(candidate)) {
-        		return entry._depth;
-        	}
-        }
-        return 2;
-        
-        //TODO: will need knowledge for .NET collections here
     }
 
     GenericClass ensureDelegate(ReflectClass clazz){
@@ -314,24 +293,6 @@ public class GenericReflector implements Reflector, DeepClone {
 			}
 		};
 		return predicate;
-	}
-
-	/**
-	 * Register update depth for a collection class
-	 * @param clazz class
-	 * @param depth update depth
-	 */
-    public void registerCollectionUpdateDepth(Class clazz, int depth) {
-		registerCollectionUpdateDepth(classPredicate(clazz), depth);
-    }
-
-    /**
-     * Register update depth for a collection class
-     * @param predicate class predicate
-     * @param depth update depth
-     */
-	public void registerCollectionUpdateDepth(ReflectClassPredicate predicate, int depth) {
-        _collectionUpdateDepths.add(new CollectionUpdateDepthEntry(predicate, depth));
 	}
     
 	/**

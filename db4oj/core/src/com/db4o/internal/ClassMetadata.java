@@ -506,7 +506,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 	}
 
 	public int adjustDepthToBorders(int depth) {
-		int depthBorder = reflector().collectionUpdateDepth(classReflector());
+		int depthBorder = 2;
 		if (depth > Integer.MIN_VALUE && depth < depthBorder) {
 		    depth = depthBorder;
 		}
@@ -777,13 +777,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 
 
     private int collectionDeleteDepth(DeleteContextImpl context) {
-        int depth = 
-        	reflector().collectionUpdateDepth(classReflector())
-        	- 2;  // Minus two ???  
-        if (depth < 1) {
-            depth = 1;
-        }
-        return depth;
+        return 1;
     }
 
     /*

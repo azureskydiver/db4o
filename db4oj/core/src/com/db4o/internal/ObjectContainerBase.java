@@ -2018,7 +2018,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         cascadeDeleteDepth--;
         ReflectClass claxx = reflectorForObject(obj);
 		if (claxx.isCollection()) {
-            cascadeDeleteDepth += reflector().collectionUpdateDepth(claxx) - 1;
+            cascadeDeleteDepth += 1;
         }
         ObjectReference ref = transaction.referenceForId(id);
         if (ref == null) {
