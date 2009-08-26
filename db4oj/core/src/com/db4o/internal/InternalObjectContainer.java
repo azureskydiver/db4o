@@ -23,6 +23,9 @@ public interface InternalObjectContainer extends ExtObjectContainer {
      */
     public ObjectContainerBase container();
     
+    /**
+     * @sharpen.property
+     */
     public Transaction transaction();
     
     public void onCommittedListener();
@@ -49,6 +52,9 @@ public interface InternalObjectContainer extends ExtObjectContainer {
     
     public int instanceCount(ClassMetadata clazz, Transaction trans);
     
+    /**
+     * @sharpen.property
+     */
     public boolean isClient();
 
 	public void storeAll(Transaction trans, Iterator4 objects);
