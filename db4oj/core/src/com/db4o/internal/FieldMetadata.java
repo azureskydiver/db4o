@@ -750,8 +750,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     private int adjustUpdateDepthForCascade(Object obj, int updateDepth) {
         int minimumUpdateDepth = 1;
         if (_containingClass.isCollection(obj)) {
-            GenericReflector reflector = reflector();
-            minimumUpdateDepth = reflector.collectionUpdateDepth(reflector.forObject(obj));
+            minimumUpdateDepth = 2;
         }
         if (updateDepth < minimumUpdateDepth) {
             return minimumUpdateDepth;
