@@ -55,7 +55,7 @@
 	</target>
 	
 	<target name="run" depends="prepare">
-		<java classname="org.polepos.PerformanceMonitoringRunner" dir="${dir.db4opolepos}" fork="true" failonerror="true">
+		<java classname="org.polepos.PerformanceMonitoringRunner" dir="${dir.db4opolepos}" fork="true" failonerror="false" resultproperty="perf.result">
 			<classpath>
 				<path path="${dir.dist.polepos.classes}" /> 
 				<path refid="poleposition_classpath"/>
@@ -63,7 +63,6 @@
 			<arg path="${dir.polepos.db4ojars}"/>
 			<!-- jvmarg value="-verbose:class"/ -->
 		</java>
-		
 	</target>
 	
 	<target name="clean">
@@ -73,8 +72,8 @@
 	</target>
 	
 	<target name="upload-pdf" >
-		<property name="file.labelled" value="Polepos-${label}.pdf"/>
-		<copy file="${dir.results}/PolePosition.pdf" tofile="${dir.results}/${file.labelled}" overwrite="true"/>
+		<property name="polepos.pdf.labelled" value="Polepos-${label}.pdf"/>
+		<copy file="${dir.results}/PolePosition.pdf" tofile="${dir.results}/${polepos.pdf.labelled}" overwrite="true"/>
         <ftp password="${ftp.password}" 
         	server="${ftp.server}" 
         	userid="${ftp.user}" 
@@ -82,7 +81,7 @@
         	passive="true" 
         	remotedir="${ftp.path}">
             <fileset dir="${dir.results}">
-				<include name="${file.labelled}" />
+				<include name="${polepos.pdf.labelled}" />
 			</fileset>
 		</ftp>
 	</target>
