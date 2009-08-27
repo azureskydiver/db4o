@@ -13,7 +13,6 @@
 			<pathelement location="${dir.build.bin}" />
 		</classpath>
 	</taskdef>
-
 	
 	<target name="init" depends="properties">
 		<path id="poleposition_classpath">
