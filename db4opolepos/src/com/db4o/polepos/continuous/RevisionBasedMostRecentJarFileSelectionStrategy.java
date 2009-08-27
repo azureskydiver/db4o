@@ -22,7 +22,7 @@ public class RevisionBasedMostRecentJarFileSelectionStrategy implements JarFileS
 	public Db4oJarCollection select(File[] files) {
 		File[] jars = filterDb4oJars(files);
 		if(jars.length < (_numOthers + 1)) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("At least " + (_numOthers + 1) + " db4o Jars are required. Found: " + jars.length);
 		}
 		Arrays.sort(jars, new Db4oJarComparator(JAR_NAME_PATTERN, REVISION_GROUP_IDX));
 		if(jars.length > _numOthers + 1) {
