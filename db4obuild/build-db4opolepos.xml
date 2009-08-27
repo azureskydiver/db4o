@@ -4,6 +4,7 @@
 
 	<property name="dir.polepos" value="${dir.base}/polepos"/>
 	<property name="dir.db4opolepos" value="${dir.base}/db4opolepos"/>
+	<property name="dir.results" value="${dir.db4opolepos}/doc/results"/>
 	<property name="dir.dist.polepos" value="${dir.dist}/polepos"/>
 	<property name="dir.dist.polepos.classes" value="${dir.dist.polepos}/classes"/>
 
@@ -70,5 +71,22 @@
 			<include name="**/*"/>
 		</delete>
 	</target>
+	
+	<target name="upload-pdf" >
+		<property name="file.labelled" value="Polepos-${label}.pdf"/>
+		<copy file="${dir.results}/PolePosition.pdf" tofile="${dir.results}/${file.labelled}" overwrite="true"/>
+        <ftp password="${ftp.password}" 
+        	server="${ftp.server}" 
+        	userid="${ftp.user}" 
+        	action="put" 
+        	passive="true" 
+        	remotedir="${ftp.path}">
+            <fileset dir="${dir.results}">
+				<include name="${file.labelled}" />
+			</fileset>
+		</ftp>
+	</target>
+
+
 
 </project>
