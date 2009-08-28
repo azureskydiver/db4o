@@ -24,11 +24,12 @@
 		<mkdir dir="${dir.dist.doctor}" />
 		<javac srcdir="${dir.doctor.src}" destdir="${dir.dist.doctor}" target="5" source="5" fork="true" encoding="UTF-8">			
 			<include name="**/com/yetac/doctor/applet/*.java"/>
+			<include name="**/com/yetac/doctor/runner/*.java" />
 		</javac>
 		<jar destfile="${file.doctor.applets.jar}">
 			<fileset dir="${dir.dist.doctor}">
 				<include name="**/com/yetac/doctor/applet/*.class" />
-				<include name="**/com/yetac/doctor/runners/*.class" />
+				<include name="**/com/yetac/doctor/runner/*.class" />
 			</fileset>
 		</jar>
 		<signjar keystore="${file.keystore}" jar="${file.doctor.applets.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
@@ -36,12 +37,7 @@
 			<fileset dir="${dir.dist.classes.tutorial}" includes="com/db4odoc/f1/**/*.class" />
 		</jar>
 		<signjar keystore="${file.keystore}" jar="${file.tutorial.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
-<!--
-		<jar destfile="${file.reference.jar}">
-			<fileset dir="${dir.dist.classes.reference}" includes="com/db4odoc/f1/**/*.class" />
-		</jar>
-		<signjar keystore="${file.keystore}" jar="${file.reference.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa" />
--->
+		
 		<copy todir="${dir.dist.doctor}" overwrite="true">
 			<fileset file="${file.nqopt.jar}" />
 			<fileset file="${file.bloat.jar}" />
