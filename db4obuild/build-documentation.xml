@@ -15,7 +15,7 @@
 			outputpath="${dir.documentation}/out" 
 			pdfbasefont="${font.pdf.base}" 
 			archive="" 
-			outlineimage="db4objects1.jpg" 
+			outlineimage="db4objects.gif" 
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="true" />
 			<variable name="net" boolean="false" />

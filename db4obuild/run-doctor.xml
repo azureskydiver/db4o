@@ -69,7 +69,7 @@
 			outputpath="${dir.j.tutorial.out.java}" 
 			pdfbasefont="${font.pdf.base}" 
 			archive="${filename.doctor.applets.jar}, ${filename.jdk1.5.jar}, ${filename.jdk1.5.cs.jar}, ${filename.db4obench.jar}, ${filename.tutorial.jar}" 
-			outlineimage="db4objects1.jpg" 
+			outlineimage="db4objects.gif" 
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="true" />
 			<variable name="net" boolean="false" />
@@ -101,7 +101,7 @@
 			outputpath="${dir.j.tutorial.out.net}" 
 			pdfbasefont="${font.pdf.base}" 
 			archive="${filename.doctor.applets.jar}, ${filename.jdk1.5.jar}, ${filename.jdk1.5.cs.jar}, ${filename.db4obench.jar}, ${filename.tutorial.jar}" 
-			outlineimage="db4objects1.jpg" 
+			outlineimage="db4objects.gif" 
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="false" />
 			<variable name="net" boolean="true" />
@@ -124,7 +124,7 @@
 			outputpath="${dir.j.tutorial.out.mono}" 
 			pdfbasefont="${font.pdf.base}" 
 			archive="${filename.doctor.applets.jar}, ${filename.jdk1.5.jar}, ${filename.db4obench.jar}, ${filename.tutorial.jar}" 
-			outlineimage="db4objects1.jpg" 
+			outlineimage="db4objects.gif" 
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="false" />
 			<variable name="net" boolean="false" />
@@ -147,7 +147,7 @@
 			outputpath="${dir.j.tutorial.out.vb}" 
 			pdfbasefont="${font.pdf.base}" 
 			archive="${filename.doctor.applets.jar}, ${filename.jdk1.2.jar}, ${filename.tutorial.jar}" 
-			outlineimage="db4objects1.jpg" 
+			outlineimage="db4objects.gif" 
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="false" />
 			<variable name="net" boolean="true" />
