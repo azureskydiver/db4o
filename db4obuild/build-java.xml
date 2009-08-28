@@ -1521,7 +1521,7 @@
         		<pathelement location="${file.decaf.annotations}" />
         	</classpath>
         						
-        	<bottom><![CDATA[<i>Copyright 2008 Versant Corporation. All rights reserved.</i>]]></bottom>
+        	<bottom><![CDATA[<i>Copyright 2009 Versant Corporation. All rights reserved.</i>]]></bottom>
             <fileset dir="${dir.osgi.src}" includes="com/db4o/**/*.java"/>
             <group title="OSGi Services" packages="com.db4o.osgi" />
         </javadoc>
