@@ -12,6 +12,7 @@ import com.db4o.typehandlers.*;
 
 
 /**
+ * @exclude
  * @sharpen.ignore
  */
 @decaf.Ignore(decaf.Platform.JDK11)
