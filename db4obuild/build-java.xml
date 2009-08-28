@@ -1477,7 +1477,7 @@
 				<pathelement location="${file.decaf.annotations}" />
 			</classpath>
 			
-			<bottom><![CDATA[<i>Copyright 2008 Versant Corporation. All rights reserved.</i>]]></bottom>
+			<bottom><![CDATA[<i>Copyright 2009 Versant Corporation. All rights reserved.</i>]]></bottom>
 			<fileset dir="${dir.j.core.src}" includes="com/db4o/**/*.java">
 				<exclude name="com/db4o/internal/**/*.java" />
 				<exclude name="com/db4o/foundation/**/*.java" />
@@ -1492,6 +1492,7 @@
 			</fileset>
 			<fileset dir="${dir.j.cs.src}" includes="com/db4o/**/*.java">
 				<exclude name="com/db4o/internal/**/*.java" />
+				<exclude name="com/db4o/cs/internal/**/*.java" />
 				<exclude name="com/db4o/foundation/**/*.java" />
 				<not>
 					<contains text="* @exclude" />
