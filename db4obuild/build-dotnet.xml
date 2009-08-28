@@ -332,7 +332,7 @@
 		</ant>
 	</target>
 	
-	<target name="build" depends="init, configure, build-all">
+	<target name="build" depends="init, configure-net2, build-all">
 	</target>
 	
 	<target name="build-net35" depends="init, configure-net35, build-all" description="Builds Db4o for the .net 3.5 framework including LINQ">
