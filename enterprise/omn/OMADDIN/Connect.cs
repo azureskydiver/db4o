@@ -143,7 +143,13 @@ namespace OMAddin
 		{
 			AppDomain.CurrentDomain.AssemblyResolve += delegate(object sender, ResolveEventArgs e)
 			                                           	{
-			                                           		return AssemblyResolver.Resolve(Config.Instance.AssemblySearchPath, e.Name);
+			                                           		//TODO: Investigate why system could not be resolved
+			                                           		if (e.Name == "System")
+			                                           		{
+			                                           			return null;
+			                                           		}
+
+															return AssemblyResolver.Resolve(Config.Instance.AssemblySearchPath, e.Name);
 			                                           	};
 			try
 			{
