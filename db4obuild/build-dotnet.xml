@@ -220,6 +220,7 @@
 				<include name="**/*.vbproj" />
 				<include name="**/*.sln" />
 				<include name="**/*.html" />
+				<include name="**/*.config" />
 				
 				<include name="Libs/**/*" />
 				
