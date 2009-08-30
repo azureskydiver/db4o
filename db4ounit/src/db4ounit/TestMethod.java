@@ -34,17 +34,28 @@ public class TestMethod implements Test {
 	}
 
 	public void run() {
+		boolean exceptionInTest = false;
 		try {
 			setUp();
 			try {
 				invoke();
 			} catch (InvocationTargetException x) {
+				exceptionInTest = true;
 				throw new TestException(x.getTargetException());
 			} catch (Exception x) {
+				exceptionInTest = true;
 				throw new TestException(x);
 			}
 		} finally {
-			tearDown();
+			try {
+				tearDown();
+			}
+			catch(RuntimeException exc) {
+				if(!exceptionInTest) {
+					throw exc;
+				}
+				exc.printStackTrace();
+			}
 		}
 	}
 

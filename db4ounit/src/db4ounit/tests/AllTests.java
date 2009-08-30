@@ -9,6 +9,7 @@ public class AllTests extends ReflectionTestSuite {
 			TestExceptionWithInnerCause.class,
 			AssertTestCase.class,
 			CompositeTestListenerTestCase.class,
+			ExceptionInTearDownDoesNotShadowTestCase.class,
 			FrameworkTestCase.class,
 			ReflectionTestSuiteBuilderTestCase.class,
 			ReinstantiatePerMethodTest.class,
