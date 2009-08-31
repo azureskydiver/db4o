@@ -229,6 +229,7 @@
 				<include name="**/*.resx" />
 				<include name="**/*.ico" />
 				<include name="**/*.PNG" />
+				<include name="Db4oTutorial/Libs/*" />
 				
 				<include name="db4objects.snk" />
 				
