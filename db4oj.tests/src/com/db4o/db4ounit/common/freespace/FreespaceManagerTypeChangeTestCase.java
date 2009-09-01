@@ -10,7 +10,7 @@ import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
 
-public class FreespaceManagerTypeChangeTestCase extends FreespaceManagerTestCaseBase implements OptOutCS, OptOutDefragSolo {
+public class FreespaceManagerTypeChangeTestCase extends FreespaceManagerTestCaseBase implements OptOutMultiSession, OptOutDefragSolo {
     
     private static final boolean VERBOSE = false;
     

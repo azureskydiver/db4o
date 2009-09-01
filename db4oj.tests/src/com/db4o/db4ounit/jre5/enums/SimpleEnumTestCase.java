@@ -13,7 +13,7 @@ import db4ounit.extensions.*;
 public class SimpleEnumTestCase extends AbstractDb4oTestCase {
     
     public static void main(String[] arguments) {
-        new SimpleEnumTestCase().runEmbeddedClientServer();
+        new SimpleEnumTestCase().runEmbedded();
     }
     
     public static final class Item {

@@ -5,15 +5,16 @@ package com.db4o.db4ounit.common.cs;
 import com.db4o.ext.*;
 
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class CloseServerBeforeClientTestCase extends Db4oClientServerTestCase {
+public class CloseServerBeforeClientTestCase extends Db4oClientServerTestCase implements OptOutAllButNetworkingCS{
 
 	public static void main(String[] arguments) {
-		new CloseServerBeforeClientTestCase().runClientServer();
+		new CloseServerBeforeClientTestCase().runNetworking();
 	}
 
 	public void test() throws Exception {
-		ExtObjectContainer client = openNewClient();
+		ExtObjectContainer client = openNewSession();
 		try {
 			clientServerFixture().server().close();
 		} finally {

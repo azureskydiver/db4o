@@ -2,20 +2,29 @@ package db4ounit.extensions.fixtures;
 
 public class Db4oFixtures {
 
-	public static Db4oClientServer newEmbeddedCS() {
-        return new Db4oClientServer(true, "C/S EMBEDDED");
-    }
-
-	public static Db4oClientServer newNetworkingCS() {
-        return new Db4oClientServer(false, "C/S");
-    }
-
 	public static Db4oSolo newSolo() {
-        return new Db4oSolo();
+		return new Db4oSolo();
+	}
+	
+	public static Db4oInMemory newInMemory() {
+		return new Db4oInMemory();
+	}
+	
+	public static MultiSessionFixture newEmbedded() {
+        return new Db4oEmbeddedSessionFixture();
     }
 
-	public static Db4oInMemory newInMemory() {
-        return new Db4oInMemory();
+	public static MultiSessionFixture newEmbedded(String label) {
+		return new Db4oEmbeddedSessionFixture(label);
+	}
+	
+	public static Db4oNetworking newNetworkingCS() {
+        return new Db4oNetworking();
     }
+	
+	public static Db4oNetworking newNetworkingCS(String label) {
+		return new Db4oNetworking(label);
+	}
+
 
 }

@@ -16,9 +16,9 @@ import com.db4o.query.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
-import db4ounit.extensions.fixtures.OptOutCS;
+import db4ounit.extensions.fixtures.OptOutMultiSession;
 
-public class DescendIntoTranslatorTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class DescendIntoTranslatorTestCase extends AbstractDb4oTestCase implements OptOutMultiSession {
 
 	@Override
 	protected void configure(Configuration config) throws Exception {

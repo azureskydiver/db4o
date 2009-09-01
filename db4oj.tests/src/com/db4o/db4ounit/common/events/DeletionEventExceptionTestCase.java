@@ -25,7 +25,7 @@ public class DeletionEventExceptionTestCase extends EventsTestCaseBase implement
 			}
 		});
 		final Object item = retrieveOnlyInstance(Item.class);
-	    if(isMTOC()){
+	    if(isEmbedded()){
 	        Assert.expect( EventException.class, new CodeBlock() {
                 public void run() throws Throwable {
                     db().delete(item);

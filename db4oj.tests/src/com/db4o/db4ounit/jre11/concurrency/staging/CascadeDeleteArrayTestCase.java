@@ -41,7 +41,7 @@ public class CascadeDeleteArrayTestCase extends Db4oClientServerTestCase {
 		ExtObjectContainer container = null;
 		try {
 			for (int i = 0; i < total; i++) {
-				containers[i] = openNewClient();
+				containers[i] = openNewSession();
 				Assert.areEqual(ELEMENT_COUNT, countOccurences(containers[i],
 						SimpleObject.class));
 			}
@@ -50,7 +50,7 @@ public class CascadeDeleteArrayTestCase extends Db4oClientServerTestCase {
 				deleteAll(containers[i], SimpleObject.class);
 			}
 
-			container = openNewClient();
+			container = openNewSession();
 
 			assertOccurrences(container, SimpleObject.class, ELEMENT_COUNT);
 			// ocs[0] deletes all SimpleObject

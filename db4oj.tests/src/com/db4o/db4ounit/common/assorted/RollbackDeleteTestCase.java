@@ -10,7 +10,7 @@ import db4ounit.extensions.*;
 public class RollbackDeleteTestCase extends Db4oClientServerTestCase {
 
 	public static void main(String[] args) {
-		new RollbackDeleteTestCase().runClientServer();
+		new RollbackDeleteTestCase().runNetworking();
 	}
 
 	protected void store() {
@@ -21,9 +21,9 @@ public class RollbackDeleteTestCase extends Db4oClientServerTestCase {
 	 * delete - rollback - delete - commit
 	 */
 	public void testDRDC() {
-		ExtObjectContainer oc1 = openNewClient();
-		ExtObjectContainer oc2 = openNewClient();
-		ExtObjectContainer oc3 = openNewClient();
+		ExtObjectContainer oc1 = openNewSession();
+		ExtObjectContainer oc2 = openNewSession();
+		ExtObjectContainer oc3 = openNewSession();
 		try {
 			SimpleObject o1 = (SimpleObject) retrieveOnlyInstance(oc1,
 					SimpleObject.class);
@@ -60,9 +60,9 @@ public class RollbackDeleteTestCase extends Db4oClientServerTestCase {
 	 * set - rollback - delete - commit
 	 */
 	public void testSRDC() {
-		ExtObjectContainer oc1 = openNewClient();
-		ExtObjectContainer oc2 = openNewClient();
-		ExtObjectContainer oc3 = openNewClient();
+		ExtObjectContainer oc1 = openNewSession();
+		ExtObjectContainer oc2 = openNewSession();
+		ExtObjectContainer oc3 = openNewSession();
 		try {
 			SimpleObject o1 = (SimpleObject) retrieveOnlyInstance(oc1,
 					SimpleObject.class);

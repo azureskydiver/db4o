@@ -43,7 +43,7 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 	public void testRefreshIsUnaffectedByPrefetchingBehavior() {
 		
 		ExtObjectContainer oc1 = db();
-		ExtObjectContainer oc2 = openNewClient();
+		ExtObjectContainer oc2 = openNewSession();
 		
 		oc1.configure().clientServer().prefetchDepth(1);
 		oc2.configure().clientServer().prefetchDepth(1);
@@ -223,7 +223,7 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
     }
 
 	private void deleteAllItemsFromSecondClient() {
-	    final ExtObjectContainer client = openNewClient();
+	    final ExtObjectContainer client = openNewSession();
 	    try {
 	    	deleteAll(client, Item.class);
 	    	client.commit();

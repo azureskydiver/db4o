@@ -17,7 +17,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 @decaf.Ignore(decaf.Platform.JDK11)
-public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutCS{
+public class BigSetTestCase extends AbstractDb4oTestCase implements OptOutMultiSession{
 	
 	public static void main(String[] args) {
 		new BigSetTestCase().runSolo("testBigSetAfterCommit");

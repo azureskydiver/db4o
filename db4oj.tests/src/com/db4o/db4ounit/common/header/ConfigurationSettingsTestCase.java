@@ -10,7 +10,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 public class ConfigurationSettingsTestCase extends AbstractDb4oTestCase
-		implements OptOutCS {
+		implements OptOutMultiSession {
 
 	/**
 	 * @deprecated

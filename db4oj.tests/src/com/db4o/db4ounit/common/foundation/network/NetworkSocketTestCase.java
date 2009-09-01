@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.common.foundation.network;
 
-import com.db4o.config.*;
+import com.db4o.cs.internal.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
@@ -18,21 +18,21 @@ public class NetworkSocketTestCase implements TestLifeCycle {
 
 	private int _port;
 	
-	Socket4 _client;
+	Socket4Adapter _client;
 	
-	Socket4 _server;
+	Socket4Adapter _server;
 
-	private PlainSocketFactory _plainSocketFactory = new PlainSocketFactory();
+	private Socket4Factory _plainSocketFactory = new StandardSocket4Factory();
 
 	public static void main(String[] args) {
 		new ConsoleTestRunner(NetworkSocketTestCase.class).run();
 	}
 
 	public void setUp() throws Exception {
-		_serverSocket = new ServerSocket4(_plainSocketFactory, 0);
+		_serverSocket = _plainSocketFactory.createServerSocket(0);
 		_port = _serverSocket.getLocalPort();
-		_client = new NetworkSocket(_plainSocketFactory, "localhost", _port);
-		_server = _serverSocket.accept();
+		_client = new Socket4Adapter(_plainSocketFactory.createSocket("localhost", _port));
+		_server = new Socket4Adapter(_serverSocket.accept());
 	}
 
 	public void tearDown() throws Exception {
@@ -120,7 +120,7 @@ public class NetworkSocketTestCase implements TestLifeCycle {
 		});
 	}
 	
-	private void assertReadClose(final Socket4 socketToBeClosed,final CodeBlock codeBlock) throws InterruptedException {
+	private void assertReadClose(final Socket4Adapter socketToBeClosed,final CodeBlock codeBlock) throws InterruptedException {
 	    CatchAllThread thread = new CatchAllThread(codeBlock);
 	    thread.ensureStarted();
 		socketToBeClosed.close();
@@ -128,7 +128,7 @@ public class NetworkSocketTestCase implements TestLifeCycle {
 		Assert.isInstanceOf(Db4oIOException.class, thread.caught());
 	}
 	
-	private void assertWriteClose(final Socket4 socketToBeClosed,final CodeBlock codeBlock){
+	private void assertWriteClose(final Socket4Adapter socketToBeClosed,final CodeBlock codeBlock){
 		socketToBeClosed.close();
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
             public void run() throws Throwable {

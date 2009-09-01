@@ -34,22 +34,24 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 		return Db4oFixtureVariable.fixture();
 	}
 	
-	public boolean isClientServer() {
-		return fixture() instanceof Db4oClientServerFixture;
+	public boolean isMultiSession() {
+		return fixture() instanceof MultiSessionFixture;
 	}
 	
-	protected boolean isEmbeddedClientServer() {
-		return isClientServer() && ((Db4oClientServerFixture)fixture()).embeddedClients();
+	protected boolean isEmbedded() {
+		return fixture() instanceof Db4oEmbeddedSessionFixture;
 	}
 	
-	// TODO: The following code is only a temporary addition until MTOC
-	//       is part of the core. When it is, all occurences of this 
-	//       method should be replaced with    isEmbeddedClientServer() 
-	protected boolean isMTOC(){
-	    return fixture().db() instanceof ObjectContainerSession;
+	protected boolean isNetworking() {
+		return fixture() instanceof Db4oNetworking;
 	}
-    
-    protected void reopen() throws Exception{
+	
+	public ExtObjectContainer openNewSession() {
+		MultiSessionFixture fixture = (MultiSessionFixture) fixture();
+        return fixture.openNewSession();
+	}
+	
+	protected void reopen() throws Exception{
     	fixture().reopen(this);
     }
 	
@@ -115,8 +117,8 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	public int runAll() {
 		return new ConsoleTestRunner(Iterators.concat(new Iterable4[] {
         		soloSuite(),
-        		clientServerSuite(),
-        		embeddedClientServerSuite(),
+        		networkingSuite(),
+        		embeddedSuite(),
         })).run();
 	}
 	
@@ -132,14 +134,14 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	public int runSoloAndClientServer() {
 		return new ConsoleTestRunner(Iterators.concat(new Iterable4[] {
         		soloSuite(),
-        		clientServerSuite(),				
+        		networkingSuite(),				
         })).run();
 	}
 
 	public int runSoloAndEmbeddedClientServer() {
 		return new ConsoleTestRunner(Iterators.concat(new Iterable4[] {
         		soloSuite(),
-        		embeddedClientServerSuite(),				
+        		embeddedSuite(),				
         })).run();
 	}
 
@@ -151,12 +153,12 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 		return new ConsoleTestRunner(inMemorySuite()).run();
 	}
 
-	public int runClientServer() {
-    	return new ConsoleTestRunner(clientServerSuite()).run();
+	public int runNetworking() {
+    	return new ConsoleTestRunner(networkingSuite()).run();
     }
     
-    public int runEmbeddedClientServer() {
-    	return new ConsoleTestRunner(embeddedClientServerSuite()).run();
+    public int runEmbedded() {
+    	return new ConsoleTestRunner(embeddedSuite()).run();
     }
 
     public int runConcurrency() {
@@ -184,21 +186,21 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 				Db4oFixtures.newInMemory(), testCases());
 	}
 
-	protected Db4oTestSuiteBuilder clientServerSuite() {
+	protected Db4oTestSuiteBuilder networkingSuite() {
 		return new Db4oTestSuiteBuilder(
 		        Db4oFixtures.newNetworkingCS(), 
 		        testCases());
 	}
 
-	protected Db4oTestSuiteBuilder embeddedClientServerSuite() {
+	protected Db4oTestSuiteBuilder embeddedSuite() {
 		return new Db4oTestSuiteBuilder(
-		        Db4oFixtures.newEmbeddedCS(), 
+		        Db4oFixtures.newEmbedded(), 
 		        testCases());
 	}
 
 	protected Db4oTestSuiteBuilder concurrenyClientServerSuite(boolean embedded, String label) {
 		return new Db4oConcurrencyTestSuiteBuilder(
-		        new Db4oClientServer(embedded, label), 
+		        embedded ? Db4oFixtures.newEmbedded(label) : Db4oFixtures.newNetworkingCS(label), 
 		        testCases());
 	}
 	

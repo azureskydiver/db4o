@@ -1,7 +1,13 @@
+/* Copyright (C) 2007 Versant Inc. http://www.db4o.com */
+/**
+ * @sharpen.if !SILVERLIGHT
+ */
 package com.db4o.db4ounit.common.config;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.cs.*;
+import com.db4o.cs.internal.config.*;
 import com.db4o.foundation.*;
 import com.db4o.io.*;
 
@@ -10,7 +16,6 @@ import db4ounit.fixtures.*;
 
 /**
  * Tests all combinations of configuration use/reuse scenarios.
- * 
  */
 @SuppressWarnings("deprecation")
 public class ConfigurationReuseTestSuite extends FixtureTestSuiteDescription {
@@ -26,7 +31,7 @@ public class ConfigurationReuseTestSuite extends FixtureTestSuiteDescription {
 					}};
 				}},
 				new Function4<Configuration, Runnable>() { public Runnable apply(Configuration config) {
-					final ObjectServer server = Db4o.openServer(config, ".", 0);
+					final ObjectServer server = openServer(config, ".", 0);
 					return new Runnable() { public void run() {
 						server.close();
 					}};
@@ -34,9 +39,9 @@ public class ConfigurationReuseTestSuite extends FixtureTestSuiteDescription {
 				new Function4<Configuration, Runnable>() { public Runnable apply(Configuration config) {
 					final Configuration serverConfig = Db4o.newConfiguration();
 					serverConfig.storage(new MemoryStorage());
-					final ObjectServer server = Db4o.openServer(serverConfig, ".", -1);
+					final ObjectServer server = openServer(serverConfig, ".", -1);
 					server.grantAccess("user", "password");
-					final ObjectContainer client = Db4o.openClient(config, "localhost", server.ext().port(), "user", "password");
+					final ObjectContainer client = openClient(config, "localhost", server.ext().port(), "user", "password");
 					return new Runnable() { public void run() {
 						client.close();
 						server.close();
@@ -49,18 +54,18 @@ public class ConfigurationReuseTestSuite extends FixtureTestSuiteDescription {
 					Db4o.openFile(config, "..");
 				}},
 				new Procedure4<Configuration>() { public void apply(Configuration config) {
-					Db4o.openServer(config, "..", 0);
+					openServer(config, "..", 0);
 				}},
 				new Procedure4<Configuration>() { public void apply(Configuration config) {
-					final ObjectServer server = Db4o.openServer(newInMemoryConfiguration(), "..", 0);
+					final ObjectServer server = openServer(newInMemoryConfiguration(), "..", 0);
 					try {
-						Db4o.openClient(config, "localhost", server.ext().port(), "user", "password");
+						openClient(config, "localhost", server.ext().port(), "user", "password");
 					} finally {
 						server.close();
 					}
 				}},
 				new Procedure4<Configuration>() { public void apply(Configuration config) {
-					Db4o.openClient(config, "localhost", 0xdb40, "user", "password");
+					openClient(config, "localhost", 0xdb40, "user", "password");
 				}}
 			)
 		);
@@ -93,5 +98,14 @@ public class ConfigurationReuseTestSuite extends FixtureTestSuiteDescription {
 		final Configuration config = Db4o.newConfiguration();
 		config.storage(new MemoryStorage());
 		return config;
+	}
+
+	protected ObjectServer openServer(Configuration config, String databaseFileName, int port) {
+		return Db4oClientServer.openServer(Db4oClientServerLegacyConfigurationBridge.asServerConfiguration(config), databaseFileName, port);
+	}
+
+	protected ObjectContainer openClient(Configuration config, String host, int port,
+			String user, String password) {
+		return Db4oClientServer.openClient(Db4oClientServerLegacyConfigurationBridge.asClientConfiguration(config), host, port, user, password);
 	}
 }

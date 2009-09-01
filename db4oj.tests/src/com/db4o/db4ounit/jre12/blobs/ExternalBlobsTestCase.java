@@ -19,7 +19,7 @@ import db4ounit.extensions.util.*;
 public class ExternalBlobsTestCase extends AbstractDb4oTestCase  {
 
 	public static void main(String[] args) {
-		new ExternalBlobsTestCase().runClientServer();
+		new ExternalBlobsTestCase().runNetworking();
 	}
 	
 	private static final String BLOB_PATH = Path4.combine(Path4.getTempPath(), "db4oTestBlobs");

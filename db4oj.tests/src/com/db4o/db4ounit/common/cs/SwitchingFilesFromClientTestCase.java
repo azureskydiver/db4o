@@ -9,7 +9,7 @@ public class SwitchingFilesFromClientTestCase extends ClientServerTestCaseBase {
 	 * @deprecated using deprecated api
 	 */
 	public void testSwitch() {
-        if(isMTOC()){
+        if(isEmbedded()){
             // Cast to ExtClient won't work and switching files is 
             // not supported.
             return;

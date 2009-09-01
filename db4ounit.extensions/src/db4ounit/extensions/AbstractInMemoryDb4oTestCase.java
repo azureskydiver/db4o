@@ -5,7 +5,7 @@ import com.db4o.io.*;
 
 import db4ounit.extensions.fixtures.*;
 
-public class AbstractInMemoryDb4oTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class AbstractInMemoryDb4oTestCase extends AbstractDb4oTestCase implements OptOutMultiSession {
 	
 	@Override
 	protected void configure(Configuration config) throws Exception {

@@ -2,6 +2,7 @@
 
 package com.db4o.cs.internal.messages;
 
+import com.db4o.cs.internal.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
@@ -142,7 +143,7 @@ public class MsgD extends Msg{
 		return Serializer.unmarshall(stream(),_payLoad);
 	}
 
-	final Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4 sock, ByteArrayBuffer reader){
+	final Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4Adapter sock, ByteArrayBuffer reader){
 		int length = reader.readInt();
 		a_trans = checkParentTransaction(a_trans, reader);
 		final MsgD command = (MsgD)publicClone();

@@ -19,7 +19,7 @@ public class SimpleMapTestCase extends AbstractDb4oTestCase{
 	}
 
 	public static void main(String[] args) {
-        new SimpleMapTestCase().runClientServer();
+        new SimpleMapTestCase().runNetworking();
     }
 	
 	public void testGetByUUID() {

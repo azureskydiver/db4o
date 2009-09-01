@@ -196,7 +196,7 @@ public class MsgExceptionHandlingTestCase extends ClientServerTestCaseBase imple
 	}
 
 	private void tryToOpenNewClient() {
-		ExtObjectContainer otherClient = openNewClient();
+		ExtObjectContainer otherClient = openNewSession();
 		otherClient.close();
 	}
 

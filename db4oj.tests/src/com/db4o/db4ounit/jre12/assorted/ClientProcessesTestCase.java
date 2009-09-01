@@ -23,7 +23,7 @@ public class ClientProcessesTestCase extends AbstractDb4oTestCase implements Opt
     public static final String CLIENT_COMPLETED_OK = "[COMPLETED]";
 
     public static void main(String[] args) {
-        new ClientProcessesTestCase().runClientServer();
+        new ClientProcessesTestCase().runNetworking();
     }
     
     public void _testMassiveClientConnect() throws InterruptedException{
@@ -60,7 +60,7 @@ public class ClientProcessesTestCase extends AbstractDb4oTestCase implements Opt
     }
     
     private int connectedClients() {
-        Db4oClientServer csFixture = (Db4oClientServer) fixture();
+        Db4oClientServerFixture csFixture = (Db4oClientServerFixture) fixture();
         return (csFixture.server()).ext().clientCount();
     }
 
@@ -72,7 +72,7 @@ public class ClientProcessesTestCase extends AbstractDb4oTestCase implements Opt
     }
 
     String clientRunnerCommand() {
-        return ClientRunner.class.getName() + " " + ((Db4oClientServer) fixture()).serverPort();
+        return ClientRunner.class.getName() + " " + ((Db4oClientServerFixture) fixture()).serverPort();
     }
     
     public static class ClientRunner {
@@ -92,7 +92,7 @@ public class ClientProcessesTestCase extends AbstractDb4oTestCase implements Opt
         }
 
         private void start() {
-            ObjectContainer oc = Db4o.openClient(Db4o.newConfiguration(), Db4oClientServer.HOST, _port, Db4oClientServer.USERNAME, Db4oClientServer.PASSWORD);
+            ObjectContainer oc = com.db4o.cs.Db4oClientServer.openClient(Db4oNetworking.HOST, _port, Db4oNetworking.USERNAME, Db4oNetworking.PASSWORD);
             oc.store(new Item(0));
             oc.commit();
             print("[0]");

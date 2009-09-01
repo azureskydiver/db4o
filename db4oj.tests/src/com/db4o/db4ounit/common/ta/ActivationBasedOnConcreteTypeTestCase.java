@@ -9,7 +9,7 @@ import db4ounit.*;
 public class ActivationBasedOnConcreteTypeTestCase extends TransparentActivationTestCaseBase {
 	
 	public static void main(String[] args) {
-		new ActivationBasedOnConcreteTypeTestCase().runClientServer();
+		new ActivationBasedOnConcreteTypeTestCase().runNetworking();
 	}
 	
 	public static class NonActivatableParent {

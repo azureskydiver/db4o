@@ -1,10 +1,16 @@
 package db4ounit.extensions.tests;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createControl;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
 
 import org.easymock.*;
 
 import com.db4o.config.*;
+import com.db4o.cs.config.*;
 import com.db4o.ext.*;
 
 import db4ounit.*;
@@ -30,7 +36,7 @@ public class Db4oClientServerFixtureTestCase implements TestCase {
 		testInstanceMock.configureServer(isA(Configuration.class));
 			expectLastCall().once();
 		
-		expect(clientServerFactoryMock.openServer(isA(Configuration.class), isA(String.class), eq(-1), isA(NativeSocketFactory.class)))
+		expect(clientServerFactoryMock.openServer(isA(ServerConfiguration.class), isA(String.class), eq(-1)))
 			.andReturn(objectServerMock)
 			.once();
 		
@@ -48,7 +54,7 @@ public class Db4oClientServerFixtureTestCase implements TestCase {
 		testInstanceMock.configureClient(isA(Configuration.class));
 			expectLastCall().once();
 			
-		expect(clientServerFactoryMock.openClient(isA(Configuration.class), eq("127.0.0.1"), eq(port), eq(userName), eq(password), isA(NativeSocketFactory.class)))
+		expect(clientServerFactoryMock.openClient(isA(ClientConfiguration.class), eq("127.0.0.1"), eq(port), eq(userName), eq(password)))
 			.andReturn(clientMock)
 			.once();
 		
@@ -60,7 +66,7 @@ public class Db4oClientServerFixtureTestCase implements TestCase {
 		
 		replay(objectServerMock);
 		
-		final Db4oClientServer fixture = new Db4oClientServer(clientServerFactoryMock, false, "C/S");
+		final Db4oNetworking fixture = new Db4oNetworking(clientServerFactoryMock, "C/S");
 		fixture.open(testInstanceMock);
 		
 		mockery.verify();

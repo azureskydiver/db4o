@@ -5,11 +5,9 @@ package com.db4o.db4ounit.jre5.collections;
 
 import com.db4o.*;
 import com.db4o.db4ounit.common.ta.*;
-import com.db4o.ext.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
 
 /**
  */
@@ -62,13 +60,5 @@ public class ArrayList4SODATestCase extends TransparentActivationTestCaseBase {
 		}
 		
 		return o;
-	}
-
-	protected Db4oClientServerFixture clientServerFixture() {
-		return (Db4oClientServerFixture) fixture();
-	}
-	
-	protected ExtObjectContainer openNewClient() {
-		return clientServerFixture().openNewClient();
 	}
 }

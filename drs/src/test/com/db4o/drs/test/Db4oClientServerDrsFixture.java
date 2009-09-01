@@ -22,8 +22,9 @@ package com.db4o.drs.test;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.cs.*;
+import com.db4o.cs.internal.config.*;
 import com.db4o.drs.db4o.*;
-import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
 public class Db4oClientServerDrsFixture extends Db4oDrsFixture {
@@ -47,9 +48,9 @@ public class Db4oClientServerDrsFixture extends Db4oDrsFixture {
 	public void open(){
 		config().messageLevel(-1);
 		
-		_server = Db4o.openServer(cloneConfiguration(), testFile.getPath(), _port);
+		_server = Db4oClientServer.openServer(Db4oClientServerLegacyConfigurationBridge.asServerConfiguration(cloneConfiguration()), testFile.getPath(), _port);
 		_server.grantAccess(USERNAME, PASSWORD);
-		_db = (ExtObjectContainer) Db4o.openClient(cloneConfiguration(), HOST, _port, USERNAME, PASSWORD);
+		_db = Db4oClientServer.openClient(Db4oClientServerLegacyConfigurationBridge.asClientConfiguration(cloneConfiguration()), HOST, _port, USERNAME, PASSWORD).ext();
 		
 		_provider = Db4oProviderFactory.newInstance(_db, _name);
 	}

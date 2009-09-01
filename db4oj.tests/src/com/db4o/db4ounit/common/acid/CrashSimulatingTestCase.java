@@ -18,7 +18,7 @@ import db4ounit.extensions.fixtures.*;
 
 // TODO: survives commenting out invocations of IoAdaptedObjectContainer#syncFiles() other
 // than the one in LocalTransaction#flushFile()
-public class CrashSimulatingTestCase implements TestCase, OptOutCS {	
+public class CrashSimulatingTestCase implements TestCase, OptOutMultiSession {	
     
 	public static class CrashData {
 	    public String _name;	    

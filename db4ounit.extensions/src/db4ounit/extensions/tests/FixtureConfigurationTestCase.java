@@ -42,7 +42,7 @@ public class FixtureConfigurationTestCase implements TestCase {
 	
 	public void testClientServer() {
 		assertFixtureConfiguration(
-			new Db4oClientServer(false, "C/S"));
+			Db4oFixtures.newNetworkingCS());
 	}
 	
 	public void testInMemory() {

@@ -11,16 +11,16 @@ import db4ounit.extensions.*;
 public class Case1207TestCase extends Db4oClientServerTestCase {
 
 	public static void main(String[] args) throws Exception {
-		new Case1207TestCase().runClientServer();
+		new Case1207TestCase().runNetworking();
 	}
 
 	/*
 	 * client 1: set and commit client 2: set and rollback
 	 */
 	public void test() throws Exception {
-		ObjectContainer oc1 = openNewClient();
-		ObjectContainer oc2 = openNewClient();
-		ObjectContainer oc3 = openNewClient();
+		ObjectContainer oc1 = openNewSession();
+		ObjectContainer oc2 = openNewSession();
+		ObjectContainer oc3 = openNewSession();
 		try {
 			for (int i = 0; i < 1000; i++) {
 				SimpleObject obj1 = new SimpleObject("oc " + i, i);

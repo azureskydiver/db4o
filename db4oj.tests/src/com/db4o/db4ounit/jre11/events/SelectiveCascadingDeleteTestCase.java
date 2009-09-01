@@ -116,6 +116,6 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 	}
 
 	public static void main(String[] args) {
-		new SelectiveCascadingDeleteTestCase().runClientServer();
+		new SelectiveCascadingDeleteTestCase().runNetworking();
 	}
 }

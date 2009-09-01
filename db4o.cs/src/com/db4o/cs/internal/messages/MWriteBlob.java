@@ -4,6 +4,7 @@ package com.db4o.cs.internal.messages;
 
 import java.io.*;
 
+import com.db4o.cs.internal.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
@@ -12,7 +13,7 @@ import com.db4o.internal.activation.*;
 
 public class MWriteBlob extends MsgBlob implements ServerSideMessage {
 	
-	public void processClient(Socket4 sock) throws IOException {
+	public void processClient(Socket4Adapter sock) throws IOException {
         Msg message = Msg.readMessage(messageDispatcher(), transaction(), sock);
         if (message.equals(Msg.OK)) {
             try {
@@ -49,7 +50,7 @@ public class MWriteBlob extends MsgBlob implements ServerSideMessage {
             if (blobImpl != null) {
                 blobImpl.setTrans(transaction());
                 File file = blobImpl.serverFile(null, true);
-                Socket4 sock = serverMessageDispatcher().socket();
+                Socket4Adapter sock = serverMessageDispatcher().socket();
                 Msg.OK.write(sock);
                 FileOutputStream fout = new FileOutputStream(file);
                 copy(sock,fout,blobImpl.getLength(),false);

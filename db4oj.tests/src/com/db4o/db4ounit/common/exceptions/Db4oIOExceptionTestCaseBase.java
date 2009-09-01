@@ -10,7 +10,7 @@ import db4ounit.extensions.fixtures.*;
 
 public class Db4oIOExceptionTestCaseBase
 	extends AbstractDb4oTestCase
-	implements OptOutCS, OptOutTA {
+	implements OptOutMultiSession, OptOutTA {
 	
 	private ExceptionSimulatingStorage _storage;
 	

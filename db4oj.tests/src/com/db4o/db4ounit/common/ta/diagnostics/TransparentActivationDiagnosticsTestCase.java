@@ -17,7 +17,7 @@ import db4ounit.extensions.util.*;
 @decaf.Ignore(decaf.Platform.JDK11)
 public class TransparentActivationDiagnosticsTestCase
 	extends TransparentActivationTestCaseBase
-	implements OptOutCS, OptOutDefragSolo {
+	implements OptOutMultiSession, OptOutDefragSolo {
 
 	public static class SomeTAAwareData {
 		public int _id;

@@ -10,11 +10,11 @@ import db4ounit.*;
 public class SendMessageToClientTestCase extends ClientServerTestCaseBase {
 
 	public static void main(String[] args) {
-		new SendMessageToClientTestCase().runClientServer();
+		new SendMessageToClientTestCase().runNetworking();
 	}
 	
 	public void test(){
-	    if(isMTOC()){
+	    if(isEmbedded()){
 	        // No sending messages back and forth on MTOC.
 	        return;
 	    }

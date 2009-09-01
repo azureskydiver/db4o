@@ -8,6 +8,7 @@ import com.db4o.ext.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 import db4ounit.fixtures.*;
 
 public class ConcurrencyTestMethod extends TestMethod {
@@ -121,7 +122,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 		void runMethod() {
 			ExtObjectContainer oc = null;
 			try {
-				oc = fixture().openNewClient();
+				oc = fixture().openNewSession();
 				Object[] args;
 				if (showSeq) {
 					args = new Object[2];
@@ -141,8 +142,8 @@ public class ConcurrencyTestMethod extends TestMethod {
 		}
 	}
 
-	Db4oClientServerFixture fixture() {
-		return ((Db4oClientServerFixture)AbstractDb4oTestCase.fixture());
+	MultiSessionFixture fixture() {
+		return ((MultiSessionFixture)AbstractDb4oTestCase.fixture());
 	}
 
 }

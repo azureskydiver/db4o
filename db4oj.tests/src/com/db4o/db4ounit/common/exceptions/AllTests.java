@@ -6,10 +6,6 @@ import db4ounit.extensions.*;
 
 public class AllTests extends ComposibleTestSuite {
 
-	public static void main(String[] args) {
-		new AllTests().runAll();
-	}
-
 	protected Class[] testCases() {
 		return composeTests(new Class[] { 
 								ActivationExceptionBubblesUpTestCase.class,
@@ -18,7 +14,6 @@ public class AllTests extends ComposibleTestSuite {
 								DatabaseClosedExceptionTestCase.class,
 								DatabaseReadonlyExceptionTestCase.class,
 								GlobalOnlyConfigExceptionTestCase.class,
-								InvalidPasswordTestCase.class,
 								ObjectCanActiviateExceptionTestCase.class,
 								ObjectCanDeleteExceptionTestCase.class,
 								ObjectOnDeleteExceptionTestCase.class,
@@ -42,6 +37,7 @@ public class AllTests extends ComposibleTestSuite {
 					InvalidSlotExceptionTestCase.class,
 					OldFormatExceptionTestCase.class,
 					com.db4o.db4ounit.common.exceptions.propagation.AllTests.class,
+					InvalidPasswordTestCase.class
 				};
 	}
 }

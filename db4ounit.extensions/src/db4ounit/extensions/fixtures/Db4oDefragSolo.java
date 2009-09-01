@@ -9,8 +9,6 @@ import com.db4o.config.*;
 import com.db4o.defragment.*;
 import com.db4o.foundation.*;
 
-import db4ounit.extensions.fixtures.*;
-
 public class Db4oDefragSolo extends Db4oSolo {
 
     protected ObjectContainer createDatabase(Configuration config) {

@@ -24,7 +24,7 @@ public class ObjectContainerEventsTestCase extends AbstractDb4oTestCase {
 		});
 		fixture().close();
 		
-		if (isEmbeddedClientServer()) {
+		if (isEmbedded()) {
 			Iterator4Assert.areEqual(new Object[] { container, session }, actual.iterator());
 		} else {
 			Assert.areSame(container, actual.singleElement());

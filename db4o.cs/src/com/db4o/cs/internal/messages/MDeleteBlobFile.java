@@ -4,6 +4,7 @@ package com.db4o.cs.internal.messages;
 
 import java.io.*;
 
+import com.db4o.cs.internal.*;
 import com.db4o.foundation.network.*;
 import com.db4o.types.*;
 
@@ -20,7 +21,8 @@ public class MDeleteBlobFile extends MsgBlob implements ServerSideMessage {
         }
 	}
 
-    public void processClient(Socket4 sock) throws IOException {
+	@Override
+    public void processClient(Socket4Adapter sock) throws IOException {
         // nothing to do here
     }
 

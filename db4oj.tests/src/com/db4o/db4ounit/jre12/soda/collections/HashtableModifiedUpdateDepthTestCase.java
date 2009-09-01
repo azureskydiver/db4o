@@ -16,7 +16,7 @@ import db4ounit.extensions.*;
 public class HashtableModifiedUpdateDepthTestCase extends Db4oClientServerTestCase {
 
 	public static void main(String[] args) {
-		new HashtableModifiedUpdateDepthTestCase().runClientServer();
+		new HashtableModifiedUpdateDepthTestCase().runNetworking();
 	}
 	
 	public static class Item {
@@ -35,8 +35,8 @@ public class HashtableModifiedUpdateDepthTestCase extends Db4oClientServerTestCa
 	}
 
 	public void test() {
-		ExtObjectContainer oc1 = openNewClient();
-		ExtObjectContainer oc2 = openNewClient();
+		ExtObjectContainer oc1 = openNewSession();
+		ExtObjectContainer oc2 = openNewSession();
 		try {
 			Hashtable ht1 = (Hashtable) retrieveOnlyInstance(oc1, Hashtable.class);
 			Hashtable ht2 = (Hashtable) retrieveOnlyInstance(oc2, Hashtable.class);

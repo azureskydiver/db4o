@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.cs.*;
 import com.db4o.defragment.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -318,7 +319,7 @@ public class Test extends AllTests {
 
     public static ExtObjectContainer open() {
         if (runServer && clientServer && objectServer == null) {
-            objectServer = Db4o.openServer(FILE_SERVER, SERVER_PORT);
+            objectServer = Db4oClientServer.openServer(FILE_SERVER, SERVER_PORT);
             
             // Null can happen, for EncryptionWrongPassword            
             if(objectServer != null){
@@ -350,7 +351,7 @@ public class Test extends AllTests {
                     return objectServer.openClient().ext();
                 }
                 
-                return Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).ext();
+                return Db4oClientServer.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).ext();
                 // oc = objectServer.openClient().ext();
             } catch (Exception e) {
                 e.printStackTrace();

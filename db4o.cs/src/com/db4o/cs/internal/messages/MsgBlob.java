@@ -5,6 +5,7 @@ package com.db4o.cs.internal.messages;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.cs.internal.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
@@ -23,7 +24,7 @@ public abstract class MsgBlob extends MsgD implements BlobStatus{
         return Status.ERROR;
     }
 
-    public abstract void processClient(Socket4 sock) throws IOException;
+    public abstract void processClient(Socket4Adapter socket) throws IOException;
 
     BlobImpl serverGetBlobImpl() {
         BlobImpl blobImpl = null;
@@ -36,7 +37,7 @@ public abstract class MsgBlob extends MsgD implements BlobStatus{
         return blobImpl;
     }
 
-    protected void copy(Socket4 sock,OutputStream rawout,int length,boolean update) throws IOException {
+    protected void copy(Socket4Adapter sock,OutputStream rawout,int length,boolean update) throws IOException {
         BufferedOutputStream out = new BufferedOutputStream(rawout);
         byte[] buffer=new byte[BlobImpl.COPYBUFFER_LENGTH];
         int totalread=0;
@@ -59,7 +60,7 @@ public abstract class MsgBlob extends MsgD implements BlobStatus{
         out.close();
     }
 
-    protected void copy(InputStream rawin,Socket4 sock,boolean update) throws IOException {
+    protected void copy(InputStream rawin,Socket4Adapter sock,boolean update) throws IOException {
         BufferedInputStream in = new BufferedInputStream(rawin);
         byte[] buffer=new byte[BlobImpl.COPYBUFFER_LENGTH];
         int bytesread=-1;

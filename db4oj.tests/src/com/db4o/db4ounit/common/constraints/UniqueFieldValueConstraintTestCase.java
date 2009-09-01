@@ -151,6 +151,6 @@ public class UniqueFieldValueConstraintTestCase
 	}
 
 	private boolean isNetworkClientServer() {
-		return isClientServer() && !isEmbeddedClientServer();
+		return isMultiSession() && !isEmbedded();
 	}
 }

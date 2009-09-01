@@ -11,15 +11,15 @@ import db4ounit.extensions.*;
 public class SetRollbackTestCase extends Db4oClientServerTestCase {
 
 	public static void main(String[] args) {
-		new SetRollbackTestCase().runClientServer();
+		new SetRollbackTestCase().runNetworking();
 	}
 	
 	/*
 	 * regression test: http://developer.db4o.com/forums/thread/29298.aspx
 	 */
 	public void testSetRollback() {
-		ExtObjectContainer oc1 = openNewClient();
-		ExtObjectContainer oc2 = openNewClient();
+		ExtObjectContainer oc1 = openNewSession();
+		ExtObjectContainer oc2 = openNewSession();
 		try {
 			for (int i = 0; i < 1000; i++) {
 				SimpleObject obj1 = new SimpleObject("oc " + i, i);

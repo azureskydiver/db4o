@@ -8,7 +8,7 @@ import db4ounit.extensions.fixtures.*;
 /**
  * Tests for COR-1007
  */
-public class STOrderingTestCase extends SodaBaseTestCase implements OptOutCS {
+public class STOrderingTestCase extends SodaBaseTestCase implements OptOutMultiSession {
 
     public static void main(String[] args) {
         new STOrderingTestCase().runSolo();

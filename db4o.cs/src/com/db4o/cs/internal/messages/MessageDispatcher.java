@@ -14,5 +14,4 @@ public interface MessageDispatcher {
 	public boolean write(Msg msg);
 	
 	public boolean close();
-
-	public void setDispatcherName(String name);}
+}

@@ -5,6 +5,7 @@ package com.db4o.test;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.cs.*;
 
 /**
  * Runs the Regression test in client server mode.
@@ -59,7 +60,7 @@ public class RegressionCS extends Regression {
 		if (START_IN_PROCESS_SERVER) {
 			new File(SERVER_FILE).delete();
 			try {
-				server = Db4o.openServer(SERVER_FILE, SERVER_PORT);
+				server = Db4oClientServer.openServer(SERVER_FILE, SERVER_PORT);
 				server.grantAccess(USER, PASSWORD);
 				// wait for server to come online
 				Thread.sleep(3000);

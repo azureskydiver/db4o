@@ -11,7 +11,7 @@ import db4ounit.extensions.fixtures.*;
 /**
  * @exclude
  */
-public class StringIndexTestCase extends StringIndexTestCaseBase implements OptOutCS {
+public class StringIndexTestCase extends StringIndexTestCaseBase implements OptOutMultiSession {
 	
 	public static void main(String[] args) {
 		new StringIndexTestCase().runSolo();

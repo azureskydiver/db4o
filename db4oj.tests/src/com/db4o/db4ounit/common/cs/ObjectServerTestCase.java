@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.cs;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.cs.*;
 import com.db4o.cs.internal.*;
 import com.db4o.db4ounit.common.api.*;
 import com.db4o.events.*;
@@ -76,7 +77,7 @@ public class ObjectServerTestCase extends TestWithTempFile {
     
     public void setUp() throws Exception {
         fileName = tempFile();
-        server = Db4o.openServer(Db4o.newConfiguration(), fileName, -1).ext();
+        server = Db4oClientServer.openServer(fileName, -1).ext();
         server.grantAccess(credentials(), credentials());
     }
 
@@ -87,7 +88,7 @@ public class ObjectServerTestCase extends TestWithTempFile {
     }
 
 	private ObjectContainer openClient() {
-	    return Db4o.openClient(Db4o.newConfiguration(), "localhost", port(), credentials(), credentials());
+	    return Db4oClientServer.openClient("localhost", port(), credentials(), credentials());
     }
 
     private void assertClientCount(int count) {

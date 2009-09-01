@@ -22,7 +22,7 @@ public class CascadedDeleteUpdate extends AbstractDb4oTestCase {
 	
 	public static void main(String[] arguments) {
 //		new CascadedDeleteUpdate().runSolo();
-		new CascadedDeleteUpdate().runClientServer();
+		new CascadedDeleteUpdate().runNetworking();
 	}
 	
 	protected void configure(Configuration config) {

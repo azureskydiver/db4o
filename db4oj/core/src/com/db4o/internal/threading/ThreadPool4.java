@@ -7,6 +7,8 @@ public interface ThreadPool4 {
 	
 	void start(Runnable task);
 
+	void start(String taskName, Runnable task);
+	
 	void startLowPriority(Runnable task);
 	
 	/**
@@ -15,6 +17,4 @@ public interface ThreadPool4 {
 	Event4<UncaughtExceptionEventArgs> uncaughtException();
 
 	void join(int timeoutMilliseconds) throws InterruptedException;
-
-
 }

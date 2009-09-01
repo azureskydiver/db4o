@@ -10,8 +10,9 @@ import com.db4o.messaging.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class PingTestCase extends Db4oClientServerTestCase {
+public class PingTestCase extends Db4oClientServerTestCase implements OptOutAllButNetworkingCS {
 
 	public static void main(String[] args) {
 		new PingTestCase().runAll();
@@ -31,7 +32,7 @@ public class PingTestCase extends Db4oClientServerTestCase {
 		final MessageSender sender = client.configure().clientServer()
 				.getMessageSender();
 		
-		if(isMTOC()){
+		if(isEmbedded()){
 		    Assert.expect(NotSupportedException.class, new CodeBlock(){
                 public void run() throws Throwable {
                     sender.send(new Data());

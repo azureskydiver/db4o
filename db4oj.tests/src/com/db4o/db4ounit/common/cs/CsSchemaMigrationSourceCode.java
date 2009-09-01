@@ -3,7 +3,8 @@ package com.db4o.db4ounit.common.cs;
 import java.io.*;
 
 import com.db4o.*;
-import com.db4o.config.*;
+import com.db4o.cs.*;
+import com.db4o.cs.config.*;
 import com.db4o.query.*;
 
 /**
@@ -36,8 +37,8 @@ public class CsSchemaMigrationSourceCode {
 		//store
 		/*new File(FILE).delete();*/
 		
-		Configuration conf = Db4o.newConfiguration();
-		ObjectServer server = Db4o.openServer(conf, FILE, PORT);
+		ServerConfiguration conf = Db4oClientServer.newServerConfiguration();
+		ObjectServer server = Db4oClientServer.openServer(conf, FILE, PORT);
 		server.grantAccess("db4o", "db4o");
 		
 		//store
@@ -77,7 +78,7 @@ public class CsSchemaMigrationSourceCode {
 	}
 
 	private ObjectContainer openClient() {
-		return Db4o.openClient(Db4o.newConfiguration(), "localhost", PORT, "db4o", "db4o");
+		return Db4oClientServer.openClient("localhost", PORT, "db4o", "db4o");
 	}
 	
 	private void assertItem() {

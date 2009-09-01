@@ -10,7 +10,7 @@ import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
 
-public abstract class FreespaceManagerTestCaseBase extends FileSizeTestCaseBase implements OptOutCS{
+public abstract class FreespaceManagerTestCaseBase extends FileSizeTestCaseBase implements OptOutMultiSession{
 	
 	protected FreespaceManager[] fm;
 	

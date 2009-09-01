@@ -10,7 +10,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class ClassIndexOffTestCase extends AbstractDb4oTestCase implements OptOutCS{
+public class ClassIndexOffTestCase extends AbstractDb4oTestCase implements OptOutMultiSession{
     
     static String NAME = "1";
     

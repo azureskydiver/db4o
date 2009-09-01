@@ -36,12 +36,12 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testConcurrentClientModification() throws Exception {
-		if (!isClientServer()) {
+		if (!isMultiSession()) {
 			return;
 		}
 		
 		final ExtObjectContainer client1 = db();
-		final ExtObjectContainer client2 = openNewClient();
+		final ExtObjectContainer client2 = openNewSession();
 		try {
 			Item foo1 = itemByName(client1, "Foo");
 			Item foo2 = itemByName(client2, "Foo");
@@ -136,10 +136,6 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 			return (Item)result.next();
 		}
 		return null;
-	}
-	
-	private ExtObjectContainer openNewClient() {
-		return ((Db4oClientServerFixture)fixture()).openNewClient();
 	}
 
 }

@@ -8,10 +8,10 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implements OptOutCS{
+public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implements OptOutMultiSession{
 	
 	public static void main(String[] arguments) {
-		new GlobalLifecycleEventsTestCase().runClientServer();
+		new GlobalLifecycleEventsTestCase().runNetworking();
 	}
 	
 	public static final class Item {
@@ -100,7 +100,7 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 			_recorder.cancel(true);
 		}
 		
-		Item expectedItem = isClientServer() ? queryServerItem(item) : item;
+		Item expectedItem = isMultiSession() ? queryServerItem(item) : item;
 		db().delete(item);
 		sync();
 		
@@ -257,7 +257,7 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 	}
 
 	private void sync() {
-		if (!isClientServer()) return;
+		if (!isMultiSession()) return;
 		final String name = "___";
 		db().setSemaphore(name, 0);
 		db().releaseSemaphore(name);

@@ -3,6 +3,7 @@
 package com.db4o.cs.internal.config;
 
 import com.db4o.cs.config.*;
+import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 import com.db4o.messaging.*;
 
@@ -20,7 +21,6 @@ public class NetworkingConfigurationImpl implements NetworkingConfiguration {
 
 	public void batchMessages(boolean flag) {
 		_config.batchMessages(flag);
-		
 	}
 
 	public void maxBatchQueueSize(int maxSize) {
@@ -43,4 +43,32 @@ public class NetworkingConfigurationImpl implements NetworkingConfiguration {
 		_config.setMessageRecipient(messageRecipient);
 	}
 
+	public void clientServerFactory(ClientServerFactory factory) {
+		_config.environmentContributions().add(factory);
+	}
+
+	public ClientServerFactory clientServerFactory() {
+		final ClientServerFactory configuredFactory = my(ClientServerFactory.class);
+		if (null == configuredFactory) {
+			return new StandardClientServerFactory();
+		}
+		return configuredFactory;
+	}
+	
+	public Socket4Factory socketFactory() {
+		final Socket4Factory configuredFactory = my(Socket4Factory.class);
+		if (null == configuredFactory) {
+			return new StandardSocket4Factory();
+		}
+		return configuredFactory;
+	}
+
+	private <T> T my(Class<T> type) {
+		for (Object o : _config.environmentContributions()) {
+			if (type.isInstance(o)) {
+				return type.cast(o);
+			}
+		}
+		return null;
+	}
 }

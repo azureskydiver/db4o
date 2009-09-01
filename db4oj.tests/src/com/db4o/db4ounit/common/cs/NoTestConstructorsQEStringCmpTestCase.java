@@ -70,6 +70,6 @@ public class NoTestConstructorsQEStringCmpTestCase extends AbstractDb4oTestCase 
 	}
 
 	public static void main(String[] args) {
-		new NoTestConstructorsQEStringCmpTestCase().runClientServer();
+		new NoTestConstructorsQEStringCmpTestCase().runNetworking();
 	}
 }

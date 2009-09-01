@@ -26,6 +26,6 @@ public class CollectionUuidTest extends AbstractDb4oTestCase {
 	}
 	
 	public static void main(String[] args) {
-        new CollectionUuidTest().runClientServer();
+        new CollectionUuidTest().runNetworking();
     }
 }

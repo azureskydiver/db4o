@@ -1,3 +1,4 @@
+/* Copyright (C) 2007 Versant Inc. http://www.db4o.com */
 /**
  * @sharpen.if !SILVERLIGHT
  */
@@ -83,8 +84,7 @@ public class ReadCommittedIsolationTestCase extends AbstractDb4oTestCase impleme
     }
     
     protected void db4oSetupAfterStore() throws Exception {
-        Db4oClientServerFixture fixture = (Db4oClientServerFixture) fixture();
-        _client2 = fixture.openNewClient();
+    	_client2 = openNewSession();
     }
     
     protected void db4oTearDownBeforeClean() throws Exception {

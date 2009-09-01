@@ -3,7 +3,6 @@
 package com.db4o.cs.internal;
 
 import com.db4o.cs.internal.messages.*;
-import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 
 
@@ -14,7 +13,7 @@ public interface ServerMessageDispatcher extends ClientConnection, MessageDispat
 
 	public void queryResultFinalized(int queryResultID);
 
-	public Socket4 socket();
+	public Socket4Adapter socket();
 
 	public int dispatcherID();
 
@@ -51,5 +50,7 @@ public interface ServerMessageDispatcher extends ClientConnection, MessageDispat
 	public boolean processMessage(Msg message);
 
 	public void join() throws InterruptedException;
+
+	public void setDispatcherName(String name);
 
 }

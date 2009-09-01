@@ -25,7 +25,7 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 
     private final ObjectServerImpl _server;
 
-    private Socket4 _socket;
+    private Socket4Adapter _socket;
 
     private ClientTransactionHandle _transactionHandle;
     
@@ -48,7 +48,7 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 	private Thread _thread;
 	
     ServerMessageDispatcherImpl(ObjectServerImpl server,
-			ClientTransactionHandle transactionHandle, Socket4 socket,
+			ClientTransactionHandle transactionHandle, Socket4 socket4,
 			int threadID, boolean loggedIn, Object mainLock) throws Exception {
 
     	_mainLock = mainLock;
@@ -57,7 +57,7 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 
 		_server = server;
 		_threadID = threadID;
-		_socket = socket;
+		_socket = new Socket4Adapter(socket4);
 		_socket.setSoTimeout(((Config4Impl) server.configure())
 				.timeoutServerSocket());
 
@@ -322,7 +322,7 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
     	}
     }
     
-    public Socket4 socket(){
+    public Socket4Adapter socket(){
     	return _socket;
     }
 

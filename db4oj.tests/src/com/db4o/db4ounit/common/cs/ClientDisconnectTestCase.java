@@ -13,12 +13,12 @@ public class ClientDisconnectTestCase extends Db4oClientServerTestCase implement
     OptOutAllButNetworkingCS {
 
     public static void main(String[] arguments) {
-        new ClientDisconnectTestCase().runClientServer();
+        new ClientDisconnectTestCase().runNetworking();
     }
 
     public void testDisconnect() {
-        ExtObjectContainer oc1 = openNewClient();
-        ExtObjectContainer oc2 = openNewClient();
+        ExtObjectContainer oc1 = openNewSession();
+        ExtObjectContainer oc2 = openNewSession();
         try {
             final ClientObjectContainer client1 = (ClientObjectContainer) oc1;
             final ClientObjectContainer client2 = (ClientObjectContainer) oc2;

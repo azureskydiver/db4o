@@ -11,7 +11,7 @@ import db4ounit.extensions.*;
 public class DualDeleteTestCase extends Db4oClientServerTestCase {
 
 	public static void main(String[] args) {
-		new DualDeleteTestCase().runClientServer();
+		new DualDeleteTestCase().runNetworking();
 	}
 
 	public Atom atom;
@@ -31,8 +31,8 @@ public class DualDeleteTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void test() {
-		ExtObjectContainer oc1 = openNewClient();
-		ExtObjectContainer oc2 = openNewClient();
+		ExtObjectContainer oc1 = openNewSession();
+		ExtObjectContainer oc2 = openNewSession();
 		try {
 			ObjectSet os1 = oc1.query(DualDeleteTestCase.class);
 			ObjectSet os2 = oc2.query(DualDeleteTestCase.class);

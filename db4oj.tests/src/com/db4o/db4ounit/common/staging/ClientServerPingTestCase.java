@@ -21,7 +21,7 @@ public class ClientServerPingTestCase extends ClientServerTestCaseBase {
 	private static final int	ITEM_COUNT	= 100;
 
 	public static void main(String[] arguments) {
-		new ClientServerPingTestCase().runClientServer();
+		new ClientServerPingTestCase().runNetworking();
 	}
 
 	protected void configure(Configuration config) {
@@ -29,7 +29,7 @@ public class ClientServerPingTestCase extends ClientServerTestCaseBase {
 	}
 
 	public void test() throws Exception {
-	    if(isMTOC()){
+	    if(isEmbedded()){
 	        // This test really doesn't make sense for MTOC, there
 	        // is no client to ping.
 	        return;

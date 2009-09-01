@@ -9,7 +9,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class ClassMetadataCollectIdsTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class ClassMetadataCollectIdsTestCase extends AbstractDb4oTestCase implements OptOutMultiSession {
 	
 	public static class Item {
 		

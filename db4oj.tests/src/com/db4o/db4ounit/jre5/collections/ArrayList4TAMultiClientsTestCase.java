@@ -16,7 +16,7 @@ import db4ounit.extensions.fixtures.*;
 @decaf.Ignore
 public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase implements OptOutSolo {
 	public static void main(String[] args) {
-		new ArrayList4TAMultiClientsTestCase().runEmbeddedClientServer();
+		new ArrayList4TAMultiClientsTestCase().runEmbedded();
 	}
 	
 	
@@ -337,8 +337,8 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 	}
 	
 	private void operateOnClient1And2(ArrayList4Operation <Integer> op1, ArrayList4Operation<Integer> op2) throws Exception {
-		ExtObjectContainer client1 = openNewClient();
-		ExtObjectContainer client2 = openNewClient();
+		ExtObjectContainer client1 = openNewSession();
+		ExtObjectContainer client2 = openNewSession();
 		ArrayList4<Integer> list1 = retrieveAndAssertNullArrayList4(client1);
 		ArrayList4<Integer> list2 = retrieveAndAssertNullArrayList4(client2);
 		op1.operate(list1);

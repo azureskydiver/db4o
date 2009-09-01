@@ -13,7 +13,7 @@ import db4ounit.extensions.util.*;
 public class ClassRenameByConfigTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 
 	public static void main(String[] args) {
-		new ClassRenameByConfigTestCase().runClientServer();
+		new ClassRenameByConfigTestCase().runNetworking();
 	}
 	
 	

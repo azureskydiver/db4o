@@ -4,7 +4,6 @@ import com.db4o.ext.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 public class StoredClassInstanceCountTestCase extends AbstractDb4oTestCase {
 
@@ -33,10 +32,10 @@ public class StoredClassInstanceCountTestCase extends AbstractDb4oTestCase {
 	}
 
 	public void testTransactionalInstanceCount() {
-		if(!isClientServer()) {
+		if(!isMultiSession()) {
 			return;
 		}
-		ExtObjectContainer otherClient = ((Db4oClientServer) fixture()).openNewClient();
+		ExtObjectContainer otherClient = openNewSession();
 		store(new ItemA());
 		deleteAll(ItemB.class);
 		assertInstanceCount(db(), ItemA.class, COUNT_A + 1);

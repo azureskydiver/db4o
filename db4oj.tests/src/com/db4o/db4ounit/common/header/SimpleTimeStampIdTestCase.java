@@ -10,7 +10,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 public class SimpleTimeStampIdTestCase extends AbstractDb4oTestCase implements
-		OptOutCS {
+		OptOutMultiSession {
 
 	public static void main(String[] arguments) {
 		new SimpleTimeStampIdTestCase().runSolo();

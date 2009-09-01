@@ -97,7 +97,7 @@ public class UniqueFieldIndexTestCase extends AbstractDb4oTestCase{
 	}
 
 	private boolean isNetworkClientServer() {
-		return isClientServer() && !isEmbeddedClientServer();
+		return isMultiSession() && !isEmbedded();
 	}
 	
 

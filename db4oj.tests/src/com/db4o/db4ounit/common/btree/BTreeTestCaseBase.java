@@ -10,7 +10,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 public abstract class BTreeTestCaseBase extends AbstractDb4oTestCase implements
-		OptOutCS {
+		OptOutMultiSession {
 
 	protected static final int BTREE_NODE_SIZE = 4;
 

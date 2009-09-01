@@ -9,14 +9,13 @@ import com.db4o.query.*;
 import com.db4o.ta.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 public class MixedTARefreshTestCase extends TransparentActivationTestCaseBase
         implements OptOutSolo {
 
     public static void main(String[] args) {
-        new MixedTARefreshTestCase().runClientServer();
+        new MixedTARefreshTestCase().runNetworking();
     }
     
     private static final int ITEM_DEPTH = 10;
@@ -28,8 +27,8 @@ public class MixedTARefreshTestCase extends TransparentActivationTestCaseBase
     }
     
     public void testRefresh() {
-        ExtObjectContainer client1 = openNewClient();
-        ExtObjectContainer client2 = openNewClient();
+        ExtObjectContainer client1 = openNewSession();
+        ExtObjectContainer client2 = openNewSession();
         Item item1 = retrieveInstance(client1);
         Item item2 = retrieveInstance(client2);
 
@@ -102,10 +101,6 @@ public class MixedTARefreshTestCase extends TransparentActivationTestCaseBase
         query.constrain(Item.class);
         query.descend("_isRoot").constrain(new Boolean(true));
         return (Item)query.execute().next();
-    }
-    
-    private ExtObjectContainer openNewClient() {
-        return ((Db4oClientServerFixture) fixture()).openNewClient();
     }
 
     public static class Item {

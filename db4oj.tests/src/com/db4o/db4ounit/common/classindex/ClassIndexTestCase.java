@@ -7,7 +7,7 @@ import com.db4o.internal.classindex.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class ClassIndexTestCase extends AbstractDb4oTestCase implements OptOutCS{
+public class ClassIndexTestCase extends AbstractDb4oTestCase implements OptOutMultiSession{
 	
 	public static class Item {
 		public String name;

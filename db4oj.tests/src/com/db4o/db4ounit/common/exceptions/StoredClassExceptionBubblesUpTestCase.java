@@ -11,7 +11,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 
-public class StoredClassExceptionBubblesUpTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class StoredClassExceptionBubblesUpTestCase extends AbstractDb4oTestCase implements OptOutMultiSession {
 	
 	public static void main(String[] args) {
 		new StoredClassExceptionBubblesUpTestCase().runSolo();

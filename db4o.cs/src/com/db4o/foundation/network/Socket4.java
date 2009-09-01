@@ -2,28 +2,26 @@
 
 package com.db4o.foundation.network;
 
-import com.db4o.ext.*;
+import java.io.*;
 
 public interface Socket4 {
 
-	public abstract void close() throws Db4oIOException;
+	void close() throws IOException;
 
-	public abstract void flush() throws Db4oIOException;
+	void flush() throws IOException;
     
-    public abstract boolean isConnected();
+	void setSoTimeout(int timeout);
+	
+    boolean isConnected();
 
-	public abstract int read() throws Db4oIOException;
+  	int read(byte[] buffer, int offset, int count) throws IOException;
+  	
+  	int read() throws IOException;
 
-	public abstract int read(byte[] a_bytes, int a_offset, int a_length) throws Db4oIOException;
+  	void write(byte[] bytes, int offset, int count) throws IOException;
+  	
+  	void write(int b) throws IOException;
 
-	public abstract void setSoTimeout(int timeout);
-
-	public abstract void write(byte[] bytes) throws Db4oIOException;
-
-	public abstract void write(byte[] bytes, int off, int len) throws Db4oIOException;
-
-	public abstract void write(int i) throws Db4oIOException;
-
-	public abstract Socket4 openParalellSocket() throws Db4oIOException;
+	Socket4 openParalellSocket() throws IOException;
 
 }
