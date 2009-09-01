@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
@@ -36,13 +37,34 @@ public class UpdateInCallbackThrowsTestCase extends AbstractDb4oTestCase {
 		store(new Item("foo", new Item("bar")));
 	}
 	
+	public void testUpdatingInDeletingCallback() {
+		eventRegistryFor(fileSession()).deleting().addListener(new EventListener4<CancellableObjectEventArgs>() {
+			public void onEvent(Event4 e, CancellableObjectEventArgs args) {
+				final Object obj = args.object();
+				if (! (obj instanceof Item)) {
+					return;
+				}
+				
+				Item foo = (Item)obj;
+				foo._child._name += "*";
+				final Transaction transaction = (Transaction)args.transaction();
+				final ObjectContainer container = transaction.objectContainer();
+				container.store(foo._child);
+				System.out.println("Updating " + foo._child + " on " + container);
+			}
+		});
+		
+		db().delete(itemByName("foo"));
+		
+		Assert.isNotNull(itemByName("bar*"));
+	}
+	
 	public void testReentrantUpdateAfterActivationThrows() {
 		
-		final Item foo = queryItemsByName("foo").next();
+		final Item foo = itemByName("foo");
 		db().deactivate(foo);
 		
-		EventRegistry registry = EventRegistryFactory.forObjectContainer(db());
-		registry.activated().addListener(new EventListener4<ObjectInfoEventArgs>() {
+		eventRegistry().activated().addListener(new EventListener4<ObjectInfoEventArgs>() {
 			public void onEvent(Event4 e, ObjectInfoEventArgs args) {
 				final Object obj = args.object();
 				if (! (obj instanceof Item)) {
@@ -64,12 +86,16 @@ public class UpdateInCallbackThrowsTestCase extends AbstractDb4oTestCase {
 		db().activate(foo, 1);
 	}
 
+	private Item itemByName(final String name) {
+		return queryItemsByName(name).next();
+	}
+
 	public void testReentrantUpdateThrows() {
-		final ByRef<Boolean> activateRaised = new ByRef();
-		activateRaised.value = false;
+		final ByRef<Boolean> updatedTriggered = new ByRef();
+		updatedTriggered.value = false;
 		
 		EventRegistry registry = EventRegistryFactory.forObjectContainer(db());
-		registry.activated().addListener(new EventListener4<ObjectInfoEventArgs>() {
+		registry.updated().addListener(new EventListener4<ObjectInfoEventArgs>() {
 			public void onEvent(Event4 e, ObjectInfoEventArgs args) {
 				final Object obj = args.object();
 				if (! (obj instanceof Item)) {
@@ -81,7 +107,7 @@ public class UpdateInCallbackThrowsTestCase extends AbstractDb4oTestCase {
 					return;
 				}
 				
-				activateRaised.value = true;
+				updatedTriggered.value = true;
 					
 				Assert.expect(Db4oIllegalStateException.class, new CodeBlock() { public final void run() {						
 					item._child = new Item("baz");				
@@ -93,11 +119,11 @@ public class UpdateInCallbackThrowsTestCase extends AbstractDb4oTestCase {
 		ObjectSet items = queryItemsByName("foo");
 		Assert.areEqual(1, items.size());
 		
-		Assert.isFalse(activateRaised.value);
+		Assert.isFalse(updatedTriggered.value);
 		
-		items.next();
+		store(items.next());
 	
-		Assert.isTrue(activateRaised.value);		
+		Assert.isTrue(updatedTriggered.value);		
 	}
 
 	private ObjectSet<Item> queryItemsByName(final String name) {
