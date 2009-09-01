@@ -773,6 +773,7 @@
 				encoding="UTF-8">
 				<classpath>
 					<pathelement path="${file.jdk@{target}.jar}" />
+					<pathelement path="${file.jdk@{target}.cs.jar}" />
 					<pathelement path="${file.decaf.annotations}" />
 					<pathelement path="${file.easymock.jar}" />
 				</classpath>
@@ -1789,4 +1790,15 @@
 				run.tests.osgi,
 				run.tests.jdk1.5.instrumented,
 				package.java" />
+	
+	<target name="update.osgi.tests" depends="build.db4ojdk1.2.tests">
+		<jar
+			destfile="${file.osgi.test.lib.db4o.tests.jar}"
+			basedir="${dir.dist.classes.test.jdk1.2}">
+		</jar>
+		<jar
+			destfile="${file.osgi.test.lib.db4o.tests.nq.jar}"
+			basedir="${dir.dist.classes.test.nq.jdk1.2}">
+		</jar>
+	</target>
 </project>
