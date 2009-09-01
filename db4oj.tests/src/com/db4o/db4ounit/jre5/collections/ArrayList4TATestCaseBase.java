@@ -9,6 +9,7 @@ import com.db4o.db4ounit.common.ta.*;
 import com.db4o.ext.*;
 
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 /**
  * @exclude
@@ -30,14 +31,6 @@ public class ArrayList4TATestCaseBase extends TransparentActivationTestCaseBase 
 	
 	protected ArrayList4<Integer> retrieveAndAssertNullArrayList4(ExtObjectContainer oc) throws Exception{
 		return CollectionsUtil.retrieveAndAssertNullArrayList4(oc, reflector());
-	}
-	
-	protected Db4oClientServerFixture clientServerFixture() {
-		return (Db4oClientServerFixture) fixture();
-	}
-	
-	protected ExtObjectContainer openNewClient() {
-		return clientServerFixture().openNewClient();
 	}
 
 }

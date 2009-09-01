@@ -65,12 +65,6 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec CLASSLOADER_KEY=new KeySpec(null);
 	
-	private final static KeySpec CLIENT_SERVER_FACTORY_KEY=new KeySpec(new KeySpec.Deferred() {
-		public Object evaluate() {
-			return defaultClientServerFactory();
-		}
-	});
-	
 	private final static KeySpec DATABASE_GROWTH_SIZE_KEY=new KeySpec(0);
     
 	private final static KeySpec DETECT_SCHEMA_CHANGES_KEY=new KeySpec(true);
@@ -191,18 +185,6 @@ public final class Config4Impl implements Configuration, DeepClone,
     public int activationDepth() {
     	return _config.getAsInt(ACTIVATION_DEPTH_KEY);
     }
-
-    /**
-     * @sharpen.ignore
-     */
-    private static ClientServerFactory defaultClientServerFactory() {
-    	try {
-    		// FIXME: circular cs dependancy. Improve.
-			 return (ClientServerFactory) Class.forName("com.db4o.cs.internal.config.ClientServerFactoryImpl").newInstance();
-		} catch (Exception e) {
-			throw new Db4oException("ClientServer jar db4o-[version]-cs-java.jar not in CLASSPATH", e);
-		}
-	}
 
 	public void activationDepth(int depth) {
     	_config.put(ACTIVATION_DEPTH_KEY,depth);
@@ -1028,14 +1010,6 @@ public final class Config4Impl implements Configuration, DeepClone,
 			_orig = orig;
 			_cloned = cloned;
 		}
-	}
-
-	public void factory(ClientServerFactory factory) {
-		_config.put(CLIENT_SERVER_FACTORY_KEY, factory);
-	}
-	
-	public ClientServerFactory clientServerFactory(){
-		return (ClientServerFactory) _config.get(CLIENT_SERVER_FACTORY_KEY);
 	}
 	
 	public CacheConfiguration cache() {

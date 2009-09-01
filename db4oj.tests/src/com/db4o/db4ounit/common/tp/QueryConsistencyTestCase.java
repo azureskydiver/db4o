@@ -11,7 +11,7 @@ import db4ounit.extensions.*;
 public class QueryConsistencyTestCase extends AbstractDb4oTestCase {
 
 	public static void main(String[] args) {
-	    new QueryConsistencyTestCase().runClientServer();
+	    new QueryConsistencyTestCase().runNetworking();
     }
 	
 	@Override

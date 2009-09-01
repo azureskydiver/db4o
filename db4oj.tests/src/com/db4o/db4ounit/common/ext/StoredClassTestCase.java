@@ -101,7 +101,7 @@ public class StoredClassTestCase extends AbstractDb4oTestCase{
         Assert.areEqual(reflector().forClass(expectedFieldType), fieldType);
         Assert.areEqual(isArray, storedField.isArray());
         
-        if(isClientServer()){
+        if(isMultiSession()){
             return;
         }
         

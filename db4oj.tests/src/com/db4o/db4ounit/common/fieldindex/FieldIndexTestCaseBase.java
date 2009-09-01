@@ -9,7 +9,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 public abstract class FieldIndexTestCaseBase extends AbstractDb4oTestCase
-		implements OptOutCS {
+		implements OptOutMultiSession {
 
 	public FieldIndexTestCaseBase() {
 		super();

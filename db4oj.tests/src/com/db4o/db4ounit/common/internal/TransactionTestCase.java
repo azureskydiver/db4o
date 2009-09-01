@@ -9,7 +9,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 
-public class TransactionTestCase extends AbstractDb4oTestCase implements OptOutCS{
+public class TransactionTestCase extends AbstractDb4oTestCase implements OptOutMultiSession{
     
     private static final int TEST_ID = 5;
 

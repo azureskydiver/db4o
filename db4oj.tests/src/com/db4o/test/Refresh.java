@@ -45,7 +45,7 @@ public class Refresh extends AllTests {
         if (Test.isClientServer()) {
             ExtObjectContainer oc2 = null;
             try {
-                oc2 = Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER,
+                oc2 = com.db4o.cs.Db4oClientServer.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER,
                         DB4O_PASSWORD).ext();
             } catch (Exception e) {
                 e.printStackTrace();

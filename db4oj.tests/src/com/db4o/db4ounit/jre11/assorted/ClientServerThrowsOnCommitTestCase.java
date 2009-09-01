@@ -13,7 +13,7 @@ import db4ounit.extensions.fixtures.*;
 public class ClientServerThrowsOnCommitTestCase extends AbstractDb4oTestCase implements OptOutSolo{
 	
 	public static void main(String[] arguments) {
-		new ClientServerThrowsOnCommitTestCase().runClientServer();
+		new ClientServerThrowsOnCommitTestCase().runNetworking();
 	}
 	
 	public static class ExpectedException extends Db4oRecoverableException {

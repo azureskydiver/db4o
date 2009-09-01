@@ -13,7 +13,7 @@ import db4ounit.extensions.*;
 public class RollbackUpdateCascadeTestCase extends Db4oClientServerTestCase {
 	
 	public static void main(String[] args) {
-		new RollbackUpdateCascadeTestCase().runClientServer();
+		new RollbackUpdateCascadeTestCase().runNetworking();
 	}
 	
 	protected void configure(Configuration config) {
@@ -29,9 +29,9 @@ public class RollbackUpdateCascadeTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void test() {
-		ExtObjectContainer oc1 = openNewClient();
-		ExtObjectContainer oc2 = openNewClient();
-		ExtObjectContainer oc3 = openNewClient();
+		ExtObjectContainer oc1 = openNewSession();
+		ExtObjectContainer oc2 = openNewSession();
+		ExtObjectContainer oc3 = openNewSession();
 		try {			
 			Query query1 = oc1.query();
 			query1.descend("name").constrain("root");

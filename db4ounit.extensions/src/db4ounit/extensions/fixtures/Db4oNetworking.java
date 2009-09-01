@@ -6,6 +6,8 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.cs.config.*;
+import com.db4o.cs.internal.config.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.threading.*;
@@ -13,8 +15,10 @@ import com.db4o.internal.threading.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.util.*;
 
-
-public class Db4oClientServer extends
+/**
+ * @sharpen.if !SILVERLIGHT
+ */
+public class Db4oNetworking extends
 		AbstractDb4oFixture implements Db4oClientServerFixture {
     
 	private static final int THREADPOOL_TIMEOUT = 3000;
@@ -31,8 +35,6 @@ public class Db4oClientServer extends
 
     private final File _file;
 
-	private boolean _embeddedClient;
-
 	private ExtObjectContainer _objectContainer;
 	
 	private String _label;
@@ -43,19 +45,22 @@ public class Db4oClientServer extends
 	
 	private final ClientServerFactory _csFactory;
 	
-	public Db4oClientServer(ClientServerFactory csFactory, boolean embeddedClient, String label) {
+	public Db4oNetworking(ClientServerFactory csFactory, String label) {
 		_csFactory = csFactory != null ? csFactory : defaultClientServerFactory();
 		_file = new File(filePath());
-        _embeddedClient = embeddedClient;
         _label = label;
 	}
 
 	private ClientServerFactory defaultClientServerFactory() {
-	    return ((Config4Impl)config()).clientServerFactory();
+	    return new StandardClientServerFactory();
     }     
     
-    public Db4oClientServer(boolean embeddedClient, String label){
-    	this(null, embeddedClient, label);
+    public Db4oNetworking(String label){
+    	this(null, label);
+    }
+    
+    public Db4oNetworking() {
+    	this("C/S");
     }
     
     public void open(Db4oTestCase testInstance) throws Exception {
@@ -102,20 +107,20 @@ public class Db4oClientServer extends
     }
 
 	private ExtObjectContainer openSocketClient(final Configuration config) {
-	    return _csFactory.openClient(config, HOST, _port, USERNAME, PASSWORD, new PlainSocketFactory()).ext();
+	    return _csFactory.openClient(asClientConfiguration(config), HOST, _port, USERNAME, PASSWORD).ext();
     }
 
-	public ExtObjectContainer openNewClient() {
+	public ExtObjectContainer openNewSession() {
 		return openClientWith(cloneConfiguration());
 	}
 
 	private ExtObjectContainer openClientWith(final Configuration config) {
-	    return _embeddedClient ? openEmbeddedClient().ext() : openSocketClient(config);
+	    return openSocketClient(config);
     }
 
 	private void openServerFor(Db4oTestCase testInstance) throws Exception {
         _serverConfig = serverConfigFor(testInstance);
-		_server = _csFactory.openServer(_serverConfig,_file.getAbsolutePath(), -1, new PlainSocketFactory());
+		_server = _csFactory.openServer(asServerConfiguration(_serverConfig),_file.getAbsolutePath(), -1);
         _port = _server.ext().port();
         _server.grantAccess(USERNAME, PASSWORD);
     }
@@ -132,9 +137,6 @@ public class Db4oClientServer extends
     }
 
 	private boolean requiresCustomConfiguration(Db4oTestCase testInstance) {
-		if (embeddedClients()) {
-			return false;
-		}
 		if (testInstance instanceof CustomClientServerConfiguration) {
 			return true;
 		}
@@ -179,10 +181,6 @@ public class Db4oClientServer extends
     	return _server;
     }
     
-    public boolean embeddedClients() {
-    	return _embeddedClient;
-    }
-    
     /**
 	 * Does not accept a clazz which is assignable from OptOutCS, or not
 	 * assignable from Db4oTestCase.
@@ -194,13 +192,10 @@ public class Db4oClientServer extends
 		if (!Db4oTestCase.class.isAssignableFrom(clazz)) {
 			return false;
 		}
-		if (OptOutCS.class.isAssignableFrom(clazz)) {
+		if (OptOutMultiSession.class.isAssignableFrom(clazz)) {
 			return false;
 		}
-		if (!_embeddedClient && (OptOutNetworkingCS.class.isAssignableFrom(clazz))) {
-			return false;
-		}
-		if (_embeddedClient && (OptOutAllButNetworkingCS.class.isAssignableFrom(clazz))) {
+		if (OptOutNetworkingCS.class.isAssignableFrom(clazz)) {
 			return false;
 		}
 		return true;
@@ -233,5 +228,13 @@ public class Db4oClientServer extends
 	public void configureAtRuntime(RuntimeConfigureAction action) {
 		action.apply(config());
 		action.apply(_serverConfig);
+	}
+
+	private ClientConfiguration asClientConfiguration(Configuration serverConfig) {
+		return Db4oClientServerLegacyConfigurationBridge.asClientConfiguration(serverConfig);
+	}
+
+	private ServerConfiguration asServerConfiguration(Configuration serverConfig) {
+		return Db4oClientServerLegacyConfigurationBridge.asServerConfiguration(serverConfig);
 	}
 }

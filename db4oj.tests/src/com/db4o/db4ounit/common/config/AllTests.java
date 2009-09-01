@@ -32,8 +32,8 @@ public class AllTests extends ComposibleTestSuite {
 	@Override
 	protected Class[] composeWith() {
 		return new Class[] {				
-						ConfigurationReuseTestSuite.class, // Uses Client/Server
-					};
+			ConfigurationReuseTestSuite.class, // Uses Client/Server
+		};
 	}
 	
 }

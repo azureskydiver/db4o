@@ -35,6 +35,13 @@ public class ThreadPool4Impl implements ThreadPool4 {
 		final Thread thread = threadFor(task);
 		activateThread(thread);
     }
+	
+	public void start(String taskName, final Runnable task) {
+		final Thread thread = threadFor(task);
+		thread.setName(taskName);
+		
+		activateThread(thread);
+    }
 
 	private Thread threadFor(final Runnable task) {
 	    final Thread thread = new Thread(new Runnable() {

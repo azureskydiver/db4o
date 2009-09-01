@@ -14,7 +14,7 @@ import db4ounit.*;
 public class ServerTimeoutTestCase extends ClientServerTestCaseBase {
 
 	public static void main(String[] arguments) {
-		new ServerTimeoutTestCase().runClientServer();
+		new ServerTimeoutTestCase().runNetworking();
 	}
 
 	protected void configure(Configuration config) {

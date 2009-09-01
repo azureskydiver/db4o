@@ -2,6 +2,7 @@
 
 package com.db4o.cs.config;
 
+import com.db4o.foundation.network.*;
 import com.db4o.messaging.*;
 
 
@@ -11,6 +12,16 @@ import com.db4o.messaging.*;
  * @since 7.5
  */
 public interface NetworkingConfiguration {
+	
+	/**
+	 * @sharpen.property
+	 */
+	public void clientServerFactory(ClientServerFactory factory);
+	
+	/**
+	 * @sharpen.property
+	 */
+	ClientServerFactory clientServerFactory();
 	
 	/**
 	 * configures the time a client waits for a message response 
@@ -109,4 +120,9 @@ public interface NetworkingConfiguration {
 	 * @sharpen.property
 	 */
 	void messageRecipient(MessageRecipient messageRecipient);
+
+	/**
+	 * @sharpen.property
+	 */
+	public Socket4Factory socketFactory();
 }

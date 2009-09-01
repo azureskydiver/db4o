@@ -1,7 +1,7 @@
 package com.db4o.db4ounit.common.cs;
 
 import com.db4o.*;
-import com.db4o.config.*;
+import com.db4o.cs.*;
 import com.db4o.cs.internal.*;
 import com.db4o.db4ounit.common.api.*;
 
@@ -29,19 +29,15 @@ public class IsAliveTestCase extends TestWithTempFile {
 		Assert.isFalse(client.isAlive());
 		client.close();
 	}
-
-	private Configuration config() {
-		return Db4o.newConfiguration();
-	}
-
+	
 	private ObjectServer openServer() {
-		ObjectServer server = Db4o.openServer(config(), tempFile(), -1);
+		ObjectServer server = Db4oClientServer.openServer(Db4oClientServer.newServerConfiguration(), tempFile(), -1);
 		server.grantAccess(USERNAME, PASSWORD);
 		return server;
 	}
 
 	private ClientObjectContainer openClient(int port) {
-		ClientObjectContainer client = (ClientObjectContainer) Db4o.openClient(config(), "localhost", port, USERNAME, PASSWORD);
+		ClientObjectContainer client = (ClientObjectContainer) Db4oClientServer.openClient(Db4oClientServer.newClientConfiguration(), "localhost", port, USERNAME, PASSWORD);
 		return client;
 	}
 

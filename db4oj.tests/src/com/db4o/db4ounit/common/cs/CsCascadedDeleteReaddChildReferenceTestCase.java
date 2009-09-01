@@ -41,7 +41,7 @@ public class CsCascadedDeleteReaddChildReferenceTestCase extends Db4oClientServe
     
     public void testDeleteReadd(){
         ExtObjectContainer client1 = db();
-        ExtObjectContainer client2 = openNewClient();
+        ExtObjectContainer client2 = openNewSession();
         
         ItemParent parent1 = retrieveOnlyInstance(client1, ItemParent.class);
         ItemParent parent2 = retrieveOnlyInstance(client2, ItemParent.class);
@@ -59,7 +59,7 @@ public class CsCascadedDeleteReaddChildReferenceTestCase extends Db4oClientServe
 
     public void testRepeatedStore(){
         ExtObjectContainer client1 = db();
-        ExtObjectContainer client2 = openNewClient();
+        ExtObjectContainer client2 = openNewSession();
         
         ItemParent parent1 = retrieveOnlyInstance(client1, ItemParent.class);
         ItemParent parent2 = retrieveOnlyInstance(client2, ItemParent.class);

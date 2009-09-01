@@ -14,7 +14,7 @@ public class AllTestsDb4oUnitJdk5 extends Db4oTestSuite {
 //		System.exit(new AllTestsDb4oUnitJdk5().runSolo());
 //		System.exit(new AllTestsDb4oUnitJdk5().runSoloAndEmbeddedClientServer());
 //		System.exit(new AllTestsDb4oUnitJdk5().runAll());
-		System.exit(new AllTestsDb4oUnitJdk5().runClientServer());
+		System.exit(new AllTestsDb4oUnitJdk5().runNetworking());
 	}
 
 	@Override

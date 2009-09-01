@@ -2,13 +2,13 @@
 
 package com.db4o.db4ounit.common.concurrency;
 
+import com.db4o.db4ounit.common.cs.*;
 import com.db4o.ext.*;
 import com.db4o.messaging.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
 
-public class MessagingTestCase extends Db4oClientServerTestCase {
+public class MessagingTestCase extends ClientServerTestCaseBase {
     
     public static final Object lock = new Object();
 
@@ -27,10 +27,7 @@ public class MessagingTestCase extends Db4oClientServerTestCase {
 	    
 	    // Configuration is not threadsafe.
 	    synchronized(lock){
-    	    if(isMTOC()){
-    	        return;
-    	    }
-    		clientServerFixture().server().ext().configure().clientServer()
+    		server().ext().configure().clientServer()
     				.setMessageRecipient(_recipient);
     		sender = oc.configure().clientServer().getMessageSender();
 	    }
@@ -39,9 +36,6 @@ public class MessagingTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void check(ExtObjectContainer oc) throws Exception {
-       if(isMTOC()){
-            return;
-        }
 		Thread.sleep(1000);
 		_recipient.check();
 	}

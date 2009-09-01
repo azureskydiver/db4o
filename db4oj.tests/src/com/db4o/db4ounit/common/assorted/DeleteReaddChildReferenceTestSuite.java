@@ -137,11 +137,11 @@ public class DeleteReaddChildReferenceTestSuite extends FixtureTestSuiteDescript
 		}
 
 		private boolean prepareTest() {
-			if (!isClientServer()){
+			if (!isMultiSession()){
 	    		return false;
 	    	}
 	        client1 = db();
-	        client2 = openNewClient();
+	        client2 = openNewSession();
 	        return true;
 		}
 	

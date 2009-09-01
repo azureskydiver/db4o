@@ -17,7 +17,7 @@ public class CommittingCallbacksForClientServerTestCase extends AbstractDb4oTest
 	}
 	
 	public static void main(String[] arguments) {
-		new CommittingCallbacksForClientServerTestCase().runClientServer();
+		new CommittingCallbacksForClientServerTestCase().runNetworking();
 	}
 	
 	
@@ -39,7 +39,7 @@ public class CommittingCallbacksForClientServerTestCase extends AbstractDb4oTest
 		EventAssert.assertCommitEvent(serverRecorder, serverEventRegistry().committing(), new ObjectInfo[] { infoFor(item) }, new ObjectInfo[0], new ObjectInfo[0]);
 	    
 		// For MTOC we expect the same events, in a normal client we don't want to see these events. 
-		if(isMTOC()){
+		if(isEmbedded()){
 		    EventAssert.assertCommitEvent(clientRecorder, serverEventRegistry().committing(), new ObjectInfo[] { infoFor(item) }, new ObjectInfo[0], new ObjectInfo[0]);
 		}else{
 		    EventAssert.assertNoEvents(clientRecorder);

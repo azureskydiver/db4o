@@ -37,7 +37,7 @@ public class CsDeleteReaddTestCase extends Db4oClientServerTestCase {
     
     public void testDeleteReadd(){
         ExtObjectContainer client1 = db();
-        ExtObjectContainer client2 = openNewClient();
+        ExtObjectContainer client2 = openNewSession();
         
         Item item1 = (Item) retrieveOnlyInstance(client1, Item.class);
         Item item2 = (Item) retrieveOnlyInstance(client2, Item.class);

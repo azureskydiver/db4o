@@ -13,7 +13,7 @@ import db4ounit.extensions.*;
 public class StoreExceptionBubblesUpTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
-		new StoreExceptionBubblesUpTestCase().runClientServer();
+		new StoreExceptionBubblesUpTestCase().runNetworking();
 	}
 	
 	public static final class ItemTranslator implements ObjectTranslator {

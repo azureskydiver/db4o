@@ -11,7 +11,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class ObjectUpdateFileSizeTestCase extends AbstractDb4oTestCase implements OptOutCS, OptOutDefragSolo{
+public class ObjectUpdateFileSizeTestCase extends AbstractDb4oTestCase implements OptOutMultiSession, OptOutDefragSolo{
 
 	public static void main(String[] args) {
 		new ObjectUpdateFileSizeTestCase().runAll();

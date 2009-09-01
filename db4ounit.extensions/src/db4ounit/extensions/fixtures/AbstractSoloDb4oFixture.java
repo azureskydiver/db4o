@@ -24,6 +24,8 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 		applyFixtureConfiguration(testInstance, config);
 		_db=createDatabase(config).ext();
 		listenToUncaughtExceptions(threadPool());
+		
+		postOpen();
 	}
 
 	private ThreadPool4 threadPool() {
@@ -31,8 +33,11 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
     }
 
 	public void close() throws Exception {
+		
+		preClose();
+		
 		if (null != _db) {
-			Assert.isTrue(db().close());
+			Assert.isTrue(_db.close());
 			try {
 				threadPool().join(3000);
 			} finally {
@@ -49,14 +54,21 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 		return _db;
 	}
 	
-	protected abstract ObjectContainer createDatabase(Configuration config);
-	
 	public LocalObjectContainer fileSession() {
 		return (LocalObjectContainer)_db;
 	}
-
+	
 	public void configureAtRuntime(RuntimeConfigureAction action) {
 		action.apply(config());
 	}
+	
+	protected void preClose() {
+	}
+	
+	protected void postOpen() {
+	}
+	
+	protected abstract ObjectContainer createDatabase(Configuration config);
+	
 
 }

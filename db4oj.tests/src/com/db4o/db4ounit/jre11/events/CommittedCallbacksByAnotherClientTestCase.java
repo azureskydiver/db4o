@@ -19,7 +19,7 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new CommittedCallbacksByAnotherClientTestCase().runClientServer();
+		new CommittedCallbacksByAnotherClientTestCase().runNetworking();
 	}
 	
 	private static final ObjectInfo[] NONE = new ObjectInfo[0];
@@ -55,7 +55,7 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 	protected void db4oSetupAfterStore() throws Exception {
 		_eventRecorder = new EventRecorder(db().lock());
 		committed().addListener(_eventRecorder);
-		_anotherClient = clientServerFixture().openNewClient();
+		_anotherClient = openNewSession();
 	}
 	
 	protected void db4oTearDownBeforeClean() throws Exception {

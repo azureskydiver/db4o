@@ -8,7 +8,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class ObjectOnDeleteExceptionTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class ObjectOnDeleteExceptionTestCase extends AbstractDb4oTestCase implements OptOutMultiSession {
 
 	public static void main(String[] args) {
 		new ObjectOnDeleteExceptionTestCase().runSolo();

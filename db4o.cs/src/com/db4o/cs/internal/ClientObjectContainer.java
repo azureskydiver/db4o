@@ -33,7 +33,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	private BlobProcessor _blobTask;
 
-	private Socket4 i_socket;
+	private Socket4Adapter i_socket;
 
 	private BlockingQueue _synchronousMessageQueue = new BlockingQueue();
 	
@@ -89,7 +89,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		// Db4o.registerClientConstructor(new ClientConstructor());
 	}
 
-	public ClientObjectContainer(Configuration config,Socket4 socket, String user, String password, boolean login) {
+	public ClientObjectContainer(Configuration config, Socket4Adapter socket, String user, String password, boolean login) {
 		super(config);
 		_userName = user;
 		_password = password;
@@ -99,7 +99,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		open();
 	}
 
-	private void setAndConfigSocket(Socket4 socket) {
+	private void setAndConfigSocket(Socket4Adapter socket) {
 		i_socket = socket;
 		i_socket.setSoTimeout(_config.timeoutClientSocket());
 	}
@@ -125,16 +125,15 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	    _heartbeat.start();
 	}
 	
-	private void startDispatcherThread(Socket4 socket, String user) {
+	private void startDispatcherThread(Socket4Adapter socket, String user) {
 		if(! _singleThreaded){
 			startAsynchronousMessageProcessor();
 		}
 		
 		final ClientMessageDispatcherImpl dispatcherImpl = new ClientMessageDispatcherImpl(this, socket, _synchronousMessageQueue, _asynchronousMessageQueue);
-		dispatcherImpl.setDispatcherName(user);
-		
+		String dispatcherName = "db4o client side message dispatcher for " + user;
 		_messageDispatcher = dispatcherImpl;
-		threadPool().start(dispatcherImpl);
+		threadPool().start(dispatcherName, dispatcherImpl);
 	}
 
 	private void startAsynchronousMessageProcessor() {
@@ -220,12 +219,12 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
         return Converter.VERSION;
     }
 	
-	Socket4 createParalellSocket() throws IOException {
+	Socket4Adapter createParalellSocket() throws IOException {
 		write(Msg.GET_THREAD_ID);
 		
 		int serverThreadID = expectedByteResponse(Msg.ID_LIST).readInt();
 
-		Socket4 sock = i_socket.openParalellSocket();
+		Socket4Adapter sock = i_socket.openParalellSocket();
 		loginToServer(sock);
 
 		if (switchedToFile != null) {
@@ -457,7 +456,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return true;
 	}
 
-	private void loginToServer(Socket4 socket) throws InvalidPasswordException {
+	private void loginToServer(Socket4Adapter iSocket) throws InvalidPasswordException {
 		UnicodeStringIO stringWriter = new UnicodeStringIO();
 		int length = stringWriter.length(_userName)
 				+ stringWriter.length(_password);
@@ -465,8 +464,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 				.getWriterForLength(systemTransaction(), length);
 		message.writeString(_userName);
 		message.writeString(_password);
-		message.write(socket);
-		Msg msg = readLoginMessage(socket);
+		message.write(iSocket);
+		Msg msg = readLoginMessage(iSocket);
 		ByteArrayBuffer payLoad = msg.payLoad();
 		_blockSize = payLoad.readInt();
 		int doEncrypt = payLoad.readInt();
@@ -475,10 +474,10 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		}
 	}
 	
-	private Msg readLoginMessage(Socket4 socket){
-       Msg msg = Msg.readMessage(this, systemTransaction(), socket);
+	private Msg readLoginMessage(Socket4Adapter iSocket){
+       Msg msg = Msg.readMessage(this, systemTransaction(), iSocket);
        while(Msg.PONG.equals(msg)){
-           msg = Msg.readMessage(this, systemTransaction(), socket);
+           msg = Msg.readMessage(this, systemTransaction(), iSocket);
        }
        if (!Msg.LOGIN_OK.equals(msg)) {
             throw new InvalidPasswordException();
@@ -846,8 +845,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		}
 	}
 
-	// Remove, for testing purposes only
-	public Socket4 socket() {
+	public Socket4Adapter socket() {
 		return i_socket;
 	}
 	

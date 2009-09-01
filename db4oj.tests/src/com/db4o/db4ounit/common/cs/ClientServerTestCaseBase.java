@@ -6,8 +6,9 @@ import com.db4o.cs.internal.*;
 import com.db4o.foundation.*;
 
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class ClientServerTestCaseBase extends Db4oClientServerTestCase {
+public class ClientServerTestCaseBase extends Db4oClientServerTestCase implements OptOutAllButNetworkingCS {
 
 	protected ServerMessageDispatcher serverDispatcher() {
 		ObjectServerImpl serverImpl = server();

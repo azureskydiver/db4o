@@ -40,8 +40,8 @@ public class RefreshTestCase extends Db4oClientServerTestCase {
 
 	public void test() {
 	    
-		ExtObjectContainer oc1 = openNewClient();
-		ExtObjectContainer oc2 = openNewClient();
+		ExtObjectContainer oc1 = openNewSession();
+		ExtObjectContainer oc2 = openNewSession();
 		
 		try {
 			Item r1 = getRoot(oc1);

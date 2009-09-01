@@ -81,7 +81,7 @@ public class ActivationDepthProviderConfigTestCase
 	}
 	
 	private boolean isNetworkCS() {
-		return isClientServer() && !isMTOC();
+		return isMultiSession() && !isEmbedded();
 	}
 
 	private ClassMetadata itemRootMetadata() {

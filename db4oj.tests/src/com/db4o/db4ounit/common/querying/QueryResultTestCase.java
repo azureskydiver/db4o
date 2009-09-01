@@ -14,7 +14,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 
-public abstract class QueryResultTestCase extends AbstractDb4oTestCase implements OptOutCS, OptOutDefragSolo {
+public abstract class QueryResultTestCase extends AbstractDb4oTestCase implements OptOutMultiSession, OptOutDefragSolo {
 	
 	private static final int[] VALUES = new int[] { 1 , 5, 6 , 7, 9};
 	

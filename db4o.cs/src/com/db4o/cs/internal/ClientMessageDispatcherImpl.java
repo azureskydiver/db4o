@@ -6,22 +6,19 @@ import com.db4o.*;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
-import com.db4o.internal.threading.*;
 
 class ClientMessageDispatcherImpl implements Runnable, ClientMessageDispatcher {
 	
 	private ClientObjectContainer _container;
-	private Socket4 _socket;
+	private Socket4Adapter _socket;
 	private final BlockingQueue _synchronousMessageQueue;
 	private final BlockingQueue _asynchronousMessageQueue;
 	private boolean _isClosed;
-	private String _dispatcherName;
 	
 	ClientMessageDispatcherImpl(
 			ClientObjectContainer client, 
-			Socket4 a_socket, 
+			Socket4Adapter a_socket, 
 			BlockingQueue synchronousMessageQueue, 
 			BlockingQueue asynchronousMessageQueue){
 		_container = client;
@@ -85,10 +82,6 @@ class ClientMessageDispatcherImpl implements Runnable, ClientMessageDispatcher {
 	public boolean write(Msg msg) {
 		_container.write(msg);
 		return true;
-	}
-
-	public void setDispatcherName(String name) {
-		_dispatcherName = "db4o client side message dispatcher for " + name;
 	}
 	
 	private Transaction transaction(){

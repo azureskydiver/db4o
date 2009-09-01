@@ -167,15 +167,15 @@ public abstract class Msg implements Cloneable, Message {
 		return stream().config();
 	}
 	
-    protected static StatefulBuffer readMessageBuffer(Transaction trans, Socket4 sock) throws Db4oIOException {
-		return readMessageBuffer(trans, sock, Const4.MESSAGE_LENGTH);
+    protected static StatefulBuffer readMessageBuffer(Transaction trans, Socket4Adapter socket) throws Db4oIOException {
+		return readMessageBuffer(trans, socket, Const4.MESSAGE_LENGTH);
     }
 
-	protected static StatefulBuffer readMessageBuffer(Transaction trans, Socket4 sock, int length) throws Db4oIOException {
+	protected static StatefulBuffer readMessageBuffer(Transaction trans, Socket4Adapter socket, int length) throws Db4oIOException {
 		StatefulBuffer buffer = new StatefulBuffer(trans, length);		
         int offset = 0;
         while (length > 0) {
-            int read = sock.read(buffer._buffer, offset, length);
+            int read = socket.read(buffer._buffer, offset, length);
 			if(read < 0) {
 				throw new Db4oIOException();
 			}
@@ -186,17 +186,17 @@ public abstract class Msg implements Cloneable, Message {
 	}
 
 
-	public static final Msg readMessage(MessageDispatcher messageDispatcher, Transaction trans, Socket4 sock) throws Db4oIOException {
-		StatefulBuffer reader = readMessageBuffer(trans, sock);
-		Msg message = _messages[reader.readInt()].readPayLoad(messageDispatcher, trans, sock, reader);
+	public static final Msg readMessage(MessageDispatcher messageDispatcher, Transaction trans, Socket4Adapter socket) throws Db4oIOException {
+		StatefulBuffer reader = readMessageBuffer(trans, socket);
+		Msg message = _messages[reader.readInt()].readPayLoad(messageDispatcher, trans, socket, reader);
 		if (Debug4.messages) {
 			System.out.println(message + " arrived at " + trans.container());
 		}
 		return message;
 	}
 
-	/** @param sock */
-	Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4 sock, ByteArrayBuffer reader){
+	/** @param socket */
+	Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4Adapter socket, ByteArrayBuffer reader){
 		Msg msg = publicClone();
 		msg.setMessageDispatcher(messageDispatcher);
 		msg.setTransaction(checkParentTransaction(a_trans, reader));
@@ -231,7 +231,7 @@ public abstract class Msg implements Cloneable, Message {
     	return ID_LIST.getWriterForInt(transaction(), response);
     }
 	
-	public boolean write(Socket4 sock) {
+	public boolean write(Socket4Adapter sock) {
 		if (null == sock) {
 			throw new ArgumentNullException();
 		}

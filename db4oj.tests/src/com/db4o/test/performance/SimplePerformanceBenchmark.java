@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.cs.*;
 import com.db4o.io.*;
 import com.db4o.query.*;
 
@@ -122,9 +123,9 @@ public class SimplePerformanceBenchmark {
         	int port = TCP ? PORT : 0;
         	String user = "db4o";
         	String password = user;
-            objectServer = Db4o.openServer(FILE, port);
+            objectServer = Db4oClientServer.openServer(FILE, port);
             objectServer.grantAccess(user, password);
-            objectContainer = TCP ? Db4o.openClient("localhost", port, user,
+            objectContainer = TCP ? Db4oClientServer.openClient("localhost", port, user,
 					password) : objectServer.openClient();
         } else{
             objectContainer = Db4o.openFile(FILE);

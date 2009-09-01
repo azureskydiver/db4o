@@ -12,7 +12,7 @@ public class DeleteEventOnClientTestCase extends EventsTestCaseBase implements O
 	}
 	
 	public void testAttachingToDeletingEventThrows() {
-		if (isMTOC()) return;
+		if (isEmbedded()) return;
 		
 		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
 			public void run() throws Throwable {
@@ -25,7 +25,7 @@ public class DeleteEventOnClientTestCase extends EventsTestCaseBase implements O
 	}
 	
 	public void testAttachingToDeleteEventThrows() {
-			if (isMTOC()) return;
+			if (isEmbedded()) return;
 				
 			Assert.expect(IllegalArgumentException.class, new CodeBlock() {
 				public void run() throws Throwable {

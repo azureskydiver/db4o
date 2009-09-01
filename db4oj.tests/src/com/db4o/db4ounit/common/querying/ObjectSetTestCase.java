@@ -16,7 +16,7 @@ import db4ounit.extensions.*;
 public class ObjectSetTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
-		new ObjectSetTestCase().runClientServer();
+		new ObjectSetTestCase().runNetworking();
     }
 	
 	public static class Item {

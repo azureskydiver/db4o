@@ -5,6 +5,7 @@ package com.db4o.test.legacy.soda.engines.db4o;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.cs.*;
 import com.db4o.foundation.*;
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
@@ -33,7 +34,7 @@ public class STDb4oClientServer implements STEngine {
 	 */
 	public static void main(String[] args) {
 		new File(FILE).delete();
-		ObjectServer server = Db4o.openServer(FILE, PORT);
+		ObjectServer server = Db4oClientServer.openServer(FILE, PORT);
 		server.grantAccess(USER, PASS);
 		server.ext().configure().messageLevel(-1);
 	}
@@ -50,13 +51,13 @@ public class STDb4oClientServer implements STEngine {
 		Db4o.configure().messageLevel(-1);
 
 		if (IN_PROCESS_SERVER) {
-			server = Db4o.openServer(FILE, PORT);
+			server = Db4oClientServer.openServer(FILE, PORT);
 			server.grantAccess(USER, PASS);
 			// wait for the server to be online
 			Cool.sleepIgnoringInterruption(3000);
 		}
 		try {
-			con = Db4o.openClient(HOST, PORT, USER, PASS);
+			con = Db4oClientServer.openClient(HOST, PORT, USER, PASS);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

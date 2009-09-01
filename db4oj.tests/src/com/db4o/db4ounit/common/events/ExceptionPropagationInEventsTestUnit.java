@@ -27,7 +27,7 @@ public class ExceptionPropagationInEventsTestUnit extends EventsTestCaseBase {
 	
 	public void testEvents() {
 		final EventInfo event = eventToTest();
-		if(isClientServer() && !event.isClientServerEvent()) {
+		if(isEmbedded()) {
 			return;
 		}
 		assertEventThrows(event.eventFirerName(), _eventFirer.get(event.eventFirerName()), event.listenerSetter());

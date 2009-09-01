@@ -9,7 +9,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 public class BTreeSearchTestCase extends AbstractDb4oTestCase implements
-		OptOutDefragSolo, OptOutCS {
+		OptOutDefragSolo, OptOutMultiSession {
 
 	protected static final int BTREE_NODE_SIZE = 4;
 

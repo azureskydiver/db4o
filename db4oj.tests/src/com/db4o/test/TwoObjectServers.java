@@ -3,6 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.*;
+import com.db4o.cs.*;
 import com.db4o.tools.*;
 
 
@@ -19,7 +20,7 @@ public class TwoObjectServers extends AllTests {
         
         if(Test.clientServer){
         
-            ObjectServer server = Db4o.openServer(FILE_SERVER, 0);
+            ObjectServer server = Db4oClientServer.openServer(FILE_SERVER, 0);
             
             ObjectContainer oc = server.openClient();
             

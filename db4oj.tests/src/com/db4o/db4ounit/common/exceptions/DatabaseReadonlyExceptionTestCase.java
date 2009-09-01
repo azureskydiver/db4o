@@ -65,7 +65,7 @@ public class DatabaseReadonlyExceptionTestCase
 
 	public void testReserveStorage() {
 	    configReadOnly();
-		Class exceptionType = isClientServer() && ! isMTOC() ? NotSupportedException.class
+		Class exceptionType = isMultiSession() && ! isEmbedded() ? NotSupportedException.class
 				: DatabaseReadOnlyException.class;
 		Assert.expect(exceptionType, new CodeBlock() {
 			public void run() throws Throwable {

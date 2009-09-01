@@ -16,7 +16,7 @@ import db4ounit.extensions.fixtures.*;
 /**
  * @sharpen.partial 
  */
-public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutCS{
+public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutMultiSession{
 
 	public static void main(String[] args) {
 		new Comparable4TestCase().runAll();

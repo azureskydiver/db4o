@@ -42,7 +42,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
     
     private boolean _caresAboutCommitted;
 
-	private final NativeSocketFactory _socketFactory;
+	private final Socket4Factory _socketFactory;
 
 	private final boolean _isEmbeddedServer;
 	
@@ -51,11 +51,11 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	private final Event4Impl<ClientConnectionEventArgs> _clientConnected = Event4Impl.newInstance();
 	private final Event4Impl<ServerClosedEventArgs> _closed = Event4Impl.newInstance();
 	
-	public ObjectServerImpl(final LocalObjectContainer container, int port, NativeSocketFactory socketFactory) {
-		this(container, (port < 0 ? 0 : port), port == 0, socketFactory);
+	public ObjectServerImpl(final LocalObjectContainer container, Socket4Factory socketFactory, int port) {
+		this(container, socketFactory, (port < 0 ? 0 : port), port == 0);
 	}
 	
-	public ObjectServerImpl(final LocalObjectContainer container, int port, boolean isEmbeddedServer, NativeSocketFactory socketFactory) {
+	private ObjectServerImpl(final LocalObjectContainer container, Socket4Factory socketFactory, int port, boolean isEmbeddedServer) {
 		_isEmbeddedServer = isEmbeddedServer;
 		_socketFactory = socketFactory;
 		_container = container;
@@ -115,7 +115,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 
 	private void startServerSocket() {
 		try {
-			_serverSocket = new ServerSocket4(_socketFactory, _port);
+			_serverSocket = _socketFactory.createServerSocket(_port);
 			_port = _serverSocket.getLocalPort();
 		} catch (IOException e) {
 			throw new Db4oIOException(e);

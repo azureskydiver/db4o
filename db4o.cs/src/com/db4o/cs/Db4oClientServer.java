@@ -1,7 +1,6 @@
 package com.db4o.cs;
 
 import com.db4o.*;
-import com.db4o.config.*;
 import com.db4o.cs.config.*;
 import com.db4o.cs.internal.config.*;
 import com.db4o.internal.*;
@@ -24,16 +23,41 @@ public class Db4oClientServer {
 	}
 
 	/**
-	 * opens a db4o server with the specified configuration on
-	 * the specified database file and provides access through
-	 * the specified port.
-	 * 
-	 * @throws IllegalArgumentException if the configuration passed in has already been used.
+     * opens an {@link ObjectServer ObjectServer}
+	 * on the specified database file and port.
+     * <br><br>
+	 * @param config a custom {@link ServerConfiguration} instance to be obtained via {@link #newServerConfiguration()}
+     * @param databaseFileName an absolute or relative path to the database file
+     * @param port the port to be used or 0 if the server should not open a port, specify a value < 0 if an arbitrary free port should be chosen - see {@link ExtObjectServer#port()}.
+	 * @return an {@link ObjectServer ObjectServer} listening
+	 * on the specified port.
+     * @see Configuration#readOnly
+     * @see Configuration#encrypt
+     * @see Configuration#password
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseFileLockedException the required database file is locked by 
+     * another process.
+     * @throws IncompatibleFileFormatException runtime 
+     * {@link com.db4o.config.Configuration configuration} is not compatible
+     * with the configuration of the database file. 
+     * @throws OldFormatException open operation failed because the database file
+     * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
+     * is set to false.
+     * @throws DatabaseReadOnlyException database was configured as read-only. 
 	 */
 	public static ObjectServer openServer(ServerConfiguration config,
 			String databaseFileName, int port) {
-		final Config4Impl legacy = legacyFrom(config);
-		return legacy.clientServerFactory().openServer(legacy, databaseFileName, port, new PlainSocketFactory());
+		return config.networking().clientServerFactory().openServer(config, databaseFileName, port);
+	}
+
+	/**
+	 * opens a db4o server with a fresh server configuration.
+	 * 
+	 * @see #openServer(ServerConfiguration, String, int)
+	 * @see #newServerConfiguration()
+	 */
+	public static ObjectServer openServer(String databaseFileName, int port) {
+		return openServer(newServerConfiguration(), databaseFileName, port);
 	}
 
 	/**
@@ -49,12 +73,17 @@ public class Db4oClientServer {
 	 */
 	public static ObjectContainer openClient(ClientConfiguration config,
 			String host, int port, String user, String password) {
-		final Config4Impl legacy = legacyFrom(config);
-		return legacy.clientServerFactory().openClient(legacy, host, port, user, password, new PlainSocketFactory());
+		return config.networking().clientServerFactory().openClient(config, host, port, user, password);
 	}
 	
-	private static Config4Impl legacyFrom(NetworkingConfigurationProvider config) {
-		return ((NetworkingConfigurationImpl)config.networking()).config();
+	/**
+	 * opens a db4o client instance with a fresh client configuration.
+	 * 
+	 * @see #openClient(ClientConfiguration, String, int, String, String)
+	 * @see #newClientConfiguration()
+	 */
+	public static ObjectContainer openClient(String host, int port, String user, String password) {
+		return openClient(newClientConfiguration(), host, port, user, password);
 	}
 	
 	/**

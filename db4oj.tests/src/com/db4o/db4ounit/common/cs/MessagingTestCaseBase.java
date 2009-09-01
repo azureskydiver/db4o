@@ -4,6 +4,8 @@ package com.db4o.db4ounit.common.cs;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.cs.config.*;
+import com.db4o.cs.internal.config.*;
 import com.db4o.foundation.*;
 import com.db4o.io.*;
 import com.db4o.messaging.*;
@@ -11,7 +13,7 @@ import com.db4o.messaging.*;
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
-public class MessagingTestCaseBase implements TestCase, OptOutCS {
+public class MessagingTestCaseBase implements TestCase, OptOutMultiSession {
 	
 	public static final class MessageCollector implements MessageRecipient {
 		public final Collection4 messages = new Collection4();
@@ -28,12 +30,12 @@ public class MessagingTestCaseBase implements TestCase, OptOutCS {
 	protected ObjectContainer openClient(String clientId, final ObjectServer server) {
 		server.grantAccess(clientId, "p");
 		
-		return Db4o.openClient(multithreadedClientConfig(), "127.0.0.1", server.ext().port(), clientId, "p");
+		return com.db4o.cs.Db4oClientServer.openClient(multithreadedClientConfig(), "127.0.0.1", server.ext().port(), clientId, "p");
 	}
 
-	private Configuration multithreadedClientConfig() {
-		final Configuration config = Db4o.newConfiguration();
-		config.clientServer().singleThreadedClient(false);
+	private ClientConfiguration multithreadedClientConfig() {
+		final ClientConfiguration config = com.db4o.cs.Db4oClientServer.newClientConfiguration();
+		config.networking().singleThreadedClient(false);
 		return config;
 	}
 
@@ -50,7 +52,7 @@ public class MessagingTestCaseBase implements TestCase, OptOutCS {
 	}
 
 	protected ObjectServer openServer(final Configuration config) {
-		return Db4o.openServer(config, "nofile", 0xdb40);
+		return com.db4o.cs.Db4oClientServer.openServer(Db4oClientServerLegacyConfigurationBridge.asServerConfiguration(config), "nofile", 0xdb40);
 	}
 
 	protected void setMessageRecipient(final ObjectContainer container, final MessageRecipient recipient) {

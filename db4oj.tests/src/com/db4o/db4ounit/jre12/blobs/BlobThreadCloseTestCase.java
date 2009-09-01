@@ -15,7 +15,7 @@ import db4ounit.extensions.util.*;
 public class BlobThreadCloseTestCase extends Db4oClientServerTestCase {
 
 	public static void main(String[] args) {
-		new BlobThreadCloseTestCase().runClientServer();
+		new BlobThreadCloseTestCase().runNetworking();
 	}
 
 	private static final String TEST_FILE = "test.db4o";
@@ -41,7 +41,7 @@ public class BlobThreadCloseTestCase extends Db4oClientServerTestCase {
 	 * @deprecated using deprecated api
 	 */
 	public void test() throws Exception {
-		if (isEmbeddedClientServer()) {
+		if (isEmbedded()) {
 			return;
 		}
 		((ExtClient) db()).switchToFile(TEST_FILE);

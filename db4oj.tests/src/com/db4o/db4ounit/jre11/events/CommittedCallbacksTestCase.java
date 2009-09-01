@@ -64,7 +64,7 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testLocalTransactionIsAvailableToEventListener() {
-		if (isClientServer()) {
+		if (isMultiSession()) {
 			return;
 		}
 		

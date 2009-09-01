@@ -5,7 +5,7 @@ package com.db4o.db4ounit.common.ta;
 import com.db4o.ext.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 import db4ounit.mocking.*;
 
 public class ActivatableTestCase extends TransparentActivationTestCaseBase {
@@ -35,7 +35,7 @@ public class ActivatableTestCase extends TransparentActivationTestCaseBase {
 	}
 
 	public void testUnbindingIsIsolated() {
-		if (!isClientServer()) {
+		if (!isMultiSession()) {
 			return;
 		}
 		
@@ -57,16 +57,12 @@ public class ActivatableTestCase extends TransparentActivationTestCaseBase {
 	}
 
 	private MockActivatable retrieveMockFromNewClientAndClose() {
-		final ExtObjectContainer client = openNewClient();
+		final ExtObjectContainer client = openNewSession();
 		try {
 			return retrieveMock(client);
 		} finally {
 			client.close();
 		}
-	}
-
-	private ExtObjectContainer openNewClient() {
-		return ((Db4oClientServerFixture)fixture()).openNewClient();
 	}
 	
 	private void assertBindUnbindCalls(final MockActivatable mock) {

@@ -15,8 +15,8 @@ public class Db4oUnitTestMain extends UnitTestMain {
 	}
 
 	private final Db4oFixture _fixture = 
-		new Db4oSolo();
-//		new Db4oInMemory();
+//		new Db4oSolo();
+		new Db4oInMemory();
 	
 	@Override
 	protected Iterable4 builder(Class clazz) {
@@ -24,7 +24,7 @@ public class Db4oUnitTestMain extends UnitTestMain {
 		return Iterators.concat(new Iterable4[] {
 				
 				solo(clazz),
-				embeddedCS(clazz),
+				embedded(clazz),
 				networkingCS(clazz),
 				
 //				defragSolo(clazz),
@@ -42,8 +42,8 @@ public class Db4oUnitTestMain extends UnitTestMain {
 		return new Db4oTestSuiteBuilder(Db4oFixtures.newNetworkingCS(), clazz);
 	}
 
-	private Db4oTestSuiteBuilder embeddedCS(Class clazz) {
-		return new Db4oTestSuiteBuilder(Db4oFixtures.newEmbeddedCS(), clazz);
+	private Db4oTestSuiteBuilder embedded(Class clazz) {
+		return new Db4oTestSuiteBuilder(Db4oFixtures.newEmbedded(), clazz);
 	}
 
 	private Db4oTestSuiteBuilder solo(Class clazz) {

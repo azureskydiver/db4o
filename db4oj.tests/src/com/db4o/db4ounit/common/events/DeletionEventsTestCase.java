@@ -15,7 +15,7 @@ public class DeletionEventsTestCase extends EventsTestCaseBase {
 	
 	public void testDeletionEvents() {
 		
-		if (isEmbeddedClientServer()) {
+		if (isEmbedded()) {
 			// TODO: something wrong when embedded c/s is run as part
 			// of the full test suite
 			return;

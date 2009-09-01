@@ -2,7 +2,7 @@
 
 package com.db4o.test;
 
-import com.db4o.*;
+import com.db4o.cs.*;
 import com.db4o.ext.*;
 
 public class Semaphores extends AllTestsConfAll{
@@ -18,7 +18,7 @@ public class Semaphores extends AllTestsConfAll{
 			ExtObjectContainer client2 = null;
 			try {
 				client2 =
-					Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).ext();
+					Db4oClientServer.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).ext();
 				Test.ensure(client2.setSemaphore("SEM", 0) == false);
 				eoc.releaseSemaphore("SEM");
 				Test.ensure(client2.setSemaphore("SEM", 0) == true);

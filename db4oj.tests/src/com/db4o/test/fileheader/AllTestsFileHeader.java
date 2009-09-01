@@ -13,7 +13,7 @@ public class AllTestsFileHeader extends AllTestsJdk1_2 {
 
     public static void main(String[] args) {
         runSolo(new FileHeaderTestSuite());
-        new SimplestPossibleTestCase().runClientServer();
+        new SimplestPossibleTestCase().runNetworking();
     }
 
 }

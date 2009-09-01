@@ -28,7 +28,7 @@ class BlobProcessor implements Runnable {
 	
 	public void run(){
 		try{
-			Socket4 socket = stream.createParalellSocket();
+			Socket4Adapter socket = stream.createParalellSocket();
 			
 			MsgBlob msg = null;
 			

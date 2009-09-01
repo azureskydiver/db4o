@@ -6,6 +6,9 @@ import org.osgi.framework.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.cs.*;
+import com.db4o.cs.config.*;
+import com.db4o.cs.internal.config.*;
 import com.db4o.ext.*;
 import com.db4o.reflect.jdk.*;
 
@@ -28,7 +31,7 @@ class Db4oServiceImpl implements Db4oService {
 	}
 
 	public ObjectContainer openClient(Configuration config, String hostName, int port, String user, String password) throws Db4oException {
-		return Db4o.openClient(config(config), hostName, port, user, password);
+		return Db4oClientServer.openClient(asClientConfiguration(config(config)), hostName, port, user, password);
 	}
 
 	public ObjectContainer openFile(String databaseFileName) throws Db4oException {
@@ -44,7 +47,7 @@ class Db4oServiceImpl implements Db4oService {
 	}
 
 	public ObjectServer openServer(Configuration config, String databaseFileName, int port) throws Db4oException {
-		return Db4o.openServer(config(config), databaseFileName, port);
+		return Db4oClientServer.openServer(asServerConfiguration(config(config)), databaseFileName, port);
 	}
 
 	private Configuration config(Configuration config) {
@@ -57,6 +60,14 @@ class Db4oServiceImpl implements Db4oService {
 
 	private void configureReflector(Configuration config) {
 		config.reflectWith(new JdkReflector(new OSGiLoader(_bundle, new ClassLoaderJdkLoader(getClass().getClassLoader()))));
+	}
+	
+	private ServerConfiguration asServerConfiguration(Configuration config) {
+		return Db4oClientServerLegacyConfigurationBridge.asServerConfiguration(config);
+	}
+	
+	private ClientConfiguration asClientConfiguration(Configuration config) {
+		return Db4oClientServerLegacyConfigurationBridge.asClientConfiguration(config);
 	}
 
 }

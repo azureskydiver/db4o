@@ -9,7 +9,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class RuntimeFieldIndexTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class RuntimeFieldIndexTestCase extends AbstractDb4oTestCase implements OptOutMultiSession {
 	
 	private static final String FIELDNAME = "_id";
 

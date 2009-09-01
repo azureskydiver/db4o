@@ -41,7 +41,7 @@ public class ObjectFieldDoesNotExistTestCase extends AbstractDb4oTestCase{
 	}
 	
 	public static void main(String[] args) {
-		new ObjectFieldDoesNotExistTestCase().runClientServer();
+		new ObjectFieldDoesNotExistTestCase().runNetworking();
 	}
 
 }

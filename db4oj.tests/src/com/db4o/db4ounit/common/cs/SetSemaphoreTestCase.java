@@ -14,7 +14,7 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
     private static final String SEMAPHORE_NAME = "hi";
 
 	public static void main(String[] args) {
-		new SetSemaphoreTestCase().runClientServer();
+		new SetSemaphoreTestCase().runNetworking();
     }
 
     public void test() throws InterruptedException {
@@ -27,7 +27,7 @@ public class SetSemaphoreTestCase extends Db4oClientServerTestCase implements Op
         Assert.isTrue(clients[0].setSemaphore(SEMAPHORE_NAME, 0));
 
         for (int i = 1; i < clients.length; i++) {
-            clients[i] = openNewClient();
+            clients[i] = openNewSession();
         }
 
         Assert.isFalse(clients[1].setSemaphore(SEMAPHORE_NAME, 0));

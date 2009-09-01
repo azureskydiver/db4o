@@ -19,7 +19,7 @@ public class UTF8StringEncodingTestCase extends StringEncodingTestCaseBase {
 	}
 	
 	public static void main(String[] arguments) {
-		new UTF8StringEncodingTestCase().runEmbeddedClientServer();
+		new UTF8StringEncodingTestCase().runEmbedded();
 	}
 	
 	public void testEncodeDecode() {

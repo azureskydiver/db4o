@@ -5,7 +5,6 @@ import com.db4o.db4ounit.common.ta.*;
 import com.db4o.ext.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 
@@ -16,7 +15,7 @@ public class ArrayMap4TAMultiClientsTestCase extends TransparentActivationTestCa
         implements OptOutSolo {
 
     public static void main(String[] args) {
-        new ArrayMap4TAMultiClientsTestCase().runEmbeddedClientServer();
+        new ArrayMap4TAMultiClientsTestCase().runEmbedded();
     }
     
     private final ArrayMap4Operation<String, Integer> _clearOp = new ArrayMap4Operation<String, Integer>() {
@@ -64,14 +63,6 @@ public class ArrayMap4TAMultiClientsTestCase extends TransparentActivationTestCa
         store(map);
     }
 
-    protected ExtObjectContainer openNewClient() {
-        return clientServerFixture().openNewClient();
-    }
-
-    protected Db4oClientServerFixture clientServerFixture() {
-        return (Db4oClientServerFixture) fixture();
-    }
-
     private ArrayMap4<String, Integer> retrieveOnlyInstance(
             ExtObjectContainer db) {
         ArrayMap4<String, Integer> map = CollectionsUtil.retrieveMapFromDB(db,
@@ -109,12 +100,12 @@ public class ArrayMap4TAMultiClientsTestCase extends TransparentActivationTestCa
     }
     
     public void testClearGet() {
-        ExtObjectContainer client1 = openNewClient();
-        ExtObjectContainer client2 = openNewClient();
-        ExtObjectContainer client3 = openNewClient();
-        ExtObjectContainer client4 = openNewClient();
-        ExtObjectContainer client5 = openNewClient();
-        ExtObjectContainer client6 = openNewClient();
+        ExtObjectContainer client1 = openNewSession();
+        ExtObjectContainer client2 = openNewSession();
+        ExtObjectContainer client3 = openNewSession();
+        ExtObjectContainer client4 = openNewSession();
+        ExtObjectContainer client5 = openNewSession();
+        ExtObjectContainer client6 = openNewSession();
 
         ArrayMap4<String, Integer> map1 = retrieveOnlyInstance(client1);
         ArrayMap4<String, Integer> map2 = retrieveOnlyInstance(client2);
@@ -152,8 +143,8 @@ public class ArrayMap4TAMultiClientsTestCase extends TransparentActivationTestCa
     
     @SuppressWarnings("unchecked")
     public void testClearClone() {
-        ExtObjectContainer client1 = openNewClient();
-        ExtObjectContainer client2 = openNewClient();
+        ExtObjectContainer client1 = openNewSession();
+        ExtObjectContainer client2 = openNewSession();
 
         ArrayMap4<String, Integer> map1 = retrieveOnlyInstance(client1);
         ArrayMap4<String, Integer> map2 = retrieveOnlyInstance(client2);
@@ -262,8 +253,8 @@ public class ArrayMap4TAMultiClientsTestCase extends TransparentActivationTestCa
     }
     
     private void operate(ArrayMap4Operation<String, Integer> op1, ArrayMap4Operation<String, Integer> op2) {
-        ExtObjectContainer client1 = openNewClient();
-        ExtObjectContainer client2 = openNewClient();
+        ExtObjectContainer client1 = openNewSession();
+        ExtObjectContainer client2 = openNewSession();
 
         ArrayMap4<String, Integer> map1 = retrieveOnlyInstance(client1);
         ArrayMap4<String, Integer> map2 = retrieveOnlyInstance(client2);

@@ -16,7 +16,7 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 	public CddMember typedMember;
 	
 	public static void main(String[] args) {
-		new CascadeDeleteDeletedTestCase().runClientServer();
+		new CascadeDeleteDeletedTestCase().runNetworking();
 	}
 	
 	public CascadeDeleteDeletedTestCase() {
@@ -65,14 +65,14 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 		ExtObjectContainer oc = null;
 		try {
 			for (int i = 0; i < total; i++) {
-				containers[i] = openNewClient();
+				containers[i] = openNewSession();
 				assertOccurrences(containers[i], CddMember.class,
 						CDD_MEMBER_COUNT);
 			}
 			for (int i = 0; i < total; i++) {
 				deleteAll(containers[i], CddMember.class);
 			}
-			oc = openNewClient();
+			oc = openNewSession();
 			assertOccurrences(oc, CddMember.class, CDD_MEMBER_COUNT);
 			// ocs[0] deleted all CddMember objects, and committed the change
 			containers[0].commit();
