@@ -1677,7 +1677,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 			stillToSet(trans, ref, updateDepth);
 
         } else {
-        	assertNotInCallback();
+        	if (ref.isFlaggedAsHandled(_topLevelCallId)) {
+        		assertNotInCallback();
+        	}
             if (canUpdate()) {
                 if(checkJustSet){
                     if( (! ref.isNew())  && handledInCurrentTopLevelCall(ref)){
