@@ -30,6 +30,10 @@ public class ExceptionPropagationInEventsTestUnit extends EventsTestCaseBase {
 		if(isEmbedded()) {
 			return;
 		}
+		if (isNetworking() && !event.isClientServerEvent()) {
+			return;
+		}
+		
 		assertEventThrows(event.eventFirerName(), _eventFirer.get(event.eventFirerName()), event.listenerSetter());
 	}
 
