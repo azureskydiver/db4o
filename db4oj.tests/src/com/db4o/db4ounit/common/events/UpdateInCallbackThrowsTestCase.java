@@ -38,6 +38,8 @@ public class UpdateInCallbackThrowsTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testUpdatingInDeletingCallback() {
+		final boolean isNetworking = isNetworking();
+		
 		eventRegistryFor(fileSession()).deleting().addListener(new EventListener4<CancellableObjectEventArgs>() {
 			public void onEvent(Event4 e, CancellableObjectEventArgs args) {
 				final Object obj = args.object();
@@ -45,17 +47,20 @@ public class UpdateInCallbackThrowsTestCase extends AbstractDb4oTestCase {
 					return;
 				}
 				
-				Item foo = (Item)obj;
-				foo._child._name += "*";
 				final Transaction transaction = (Transaction)args.transaction();
 				final ObjectContainer container = transaction.objectContainer();
-				container.store(foo._child);
-				System.out.println("Updating " + foo._child + " on " + container);
+				
+				Item foo = (Item)obj;
+				Item child = foo._child;
+				if (isNetworking) {
+					container.activate(child, 1);
+				}				
+				child._name += "*";				
+				container.store(child);
 			}
 		});
 		
 		db().delete(itemByName("foo"));
-		
 		Assert.isNotNull(itemByName("bar*"));
 	}
 	
