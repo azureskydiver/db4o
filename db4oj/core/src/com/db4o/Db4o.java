@@ -78,6 +78,80 @@ public class Db4o {
 	}
 
     /**
+     * Operates just like {@link Db4o#openClient(Configuration, String, int, String, String)}, but uses
+     * the global db4o {@link Configuration Configuration} context.
+     * 
+     * opens an {@link ObjectContainer ObjectContainer}
+	 * client and connects it to the specified named server and port.
+	 * <br><br>
+	 * The server needs to
+	 * {@link ObjectServer#grantAccess allow access} for the specified user and password.
+	 * <br><br>
+	 * A client {@link ObjectContainer ObjectContainer} can be cast to 
+	 * {@link ExtClient ExtClient} to use extended
+	 * {@link ExtObjectContainer ExtObjectContainer} 
+	 * and {@link ExtClient ExtClient} methods.
+	 * <br><br>
+     * @param hostName the host name
+     * @param port the port the server is using
+     * @param user the user name
+     * @param password the user password
+	 * @return an open {@link ObjectContainer ObjectContainer}
+     * @see ObjectServer#grantAccess
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws OldFormatException open operation failed because the database file
+     * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
+     * is set to false.
+     * @throws InvalidPasswordException password supplied for the connection is
+     * invalid.
+     * @deprecated See the <code>com.db4o.cs.Db4oClientServer</code> class in
+     * db4o-X.x-cs-java.jar
+     * for methods to open db4o servers and db4o clients. 
+	 */
+	public static ObjectContainer openClient(String hostName, int port,
+			String user, String password) throws Db4oIOException,
+			OldFormatException, InvalidPasswordException {
+		return openClient(Db4o.cloneConfiguration(), hostName, port, user,
+				password);
+	}
+
+    /**
+     * opens an {@link ObjectContainer ObjectContainer}
+	 * client and connects it to the specified named server and port.
+	 * <br><br>
+	 * The server needs to
+	 * {@link ObjectServer#grantAccess allow access} for the specified user and password.
+	 * <br><br>
+	 * A client {@link ObjectContainer ObjectContainer} can be cast to 
+	 * {@link ExtClient ExtClient} to use extended
+	 * {@link ExtObjectContainer ExtObjectContainer} 
+	 * and {@link ExtClient ExtClient} methods.
+	 * <br><br>
+	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4oEmbedded#newConfiguration()}
+     * @param hostName the host name
+     * @param port the port the server is using
+     * @param user the user name
+     * @param password the user password
+	 * @return an open {@link ObjectContainer ObjectContainer}
+     * @see ObjectServer#grantAccess
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws OldFormatException open operation failed because the database file
+     * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
+     * is set to false.
+     * @throws InvalidPasswordException password supplied for the connection is
+     * invalid.
+     * @deprecated See the <code>com.db4o.cs.Db4oClientServer</code> class in
+     * db4o-X.x-cs-java.jar
+     * for methods to open db4o servers and db4o clients. 
+	 */
+	public static ObjectContainer openClient(Configuration config,
+			String hostName, int port, String user, String password)
+			throws Db4oIOException, OldFormatException,
+			InvalidPasswordException {
+		return ((Config4Impl)config).clientServerFactory().openClient(config, hostName, port, user, password);
+	}
+
+    /**
      * Operates just like {@link Db4oEmbedded#openFile(Configuration, String)}, but uses
      * the global db4o {@link Configuration Configuration} context.
      * 
@@ -167,6 +241,85 @@ public class Db4o {
 		ObjectContainer oc = new InMemoryObjectContainer(config,memoryFile);
 		Messages.logMsg(config, 5, "Memory File");
 		return oc;
+	}
+
+	
+	/**
+     * Operates just like {@link Db4o#openServer(Configuration, String, int)}, but uses
+     * the global db4o {@link Configuration Configuration} context.
+     * 
+     * opens an {@link ObjectServer ObjectServer}
+	 * on the specified database file and port.
+     * <br><br>
+     * If the server does not need to listen on a port because it will only be used
+     * in embedded mode with {@link ObjectServer#openClient}, specify '0' as the
+     * port number.
+     * @param databaseFileName an absolute or relative path to the database file
+     * @param port the port to be used, or 0, if the server should not open a port,
+     * because it will only be used with {@link ObjectServer#openClient()}.
+     * Specify a value < 0 if an arbitrary free port should be chosen - see {@link ExtObjectServer#port()}.
+	 * @return an {@link ObjectServer ObjectServer} listening
+	 * on the specified port.
+     * @see Configuration#readOnly
+     * @see Configuration#encrypt
+     * @see Configuration#password
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseFileLockedException the required database file is locked by 
+     * another process.
+     * @throws IncompatibleFileFormatException runtime 
+     * {@link com.db4o.config.Configuration configuration} is not compatible
+     * with the configuration of the database file. 
+     * @throws OldFormatException open operation failed because the database file
+     * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
+     * is set to false.
+     * @throws DatabaseReadOnlyException database was configured as read-only.
+     * @deprecated See the <code>com.db4o.cs.Db4oClientServer</code> class in
+     * db4o-X.x-cs-java.jar
+     * for methods to open db4o servers and db4o clients. 
+	 */
+	public static final ObjectServer openServer(String databaseFileName,
+			int port) throws Db4oIOException, IncompatibleFileFormatException,
+			OldFormatException, DatabaseFileLockedException,
+			DatabaseReadOnlyException {
+		return openServer(cloneConfiguration(),databaseFileName,port);
+	}
+
+	/**
+     * opens an {@link ObjectServer ObjectServer}
+	 * on the specified database file and port.
+     * <br><br>
+     * If the server does not need to listen on a port because it will only be used
+     * in embedded mode with {@link ObjectServer#openClient}, specify '0' as the
+     * port number.
+	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4oEmbedded#newConfiguration()}
+     * @param databaseFileName an absolute or relative path to the database file
+     * @param port the port to be used, or 0, if the server should not open a port,
+     * because it will only be used with {@link ObjectServer#openClient()}.
+     * Specify a value < 0 if an arbitrary free port should be chosen - see {@link ExtObjectServer#port()}.
+	 * @return an {@link ObjectServer ObjectServer} listening
+	 * on the specified port.
+     * @see Configuration#readOnly
+     * @see Configuration#encrypt
+     * @see Configuration#password
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseFileLockedException the required database file is locked by 
+     * another process.
+     * @throws IncompatibleFileFormatException runtime 
+     * {@link com.db4o.config.Configuration configuration} is not compatible
+     * with the configuration of the database file. 
+     * @throws OldFormatException open operation failed because the database file
+     * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
+     * is set to false.
+     * @throws DatabaseReadOnlyException database was configured as read-only.
+     * @deprecated See the <code>com.db4o.cs.Db4oClientServer</code> class in
+     * db4o-X.x-cs-java.jar 
+     * for methods to open db4o servers and db4o clients. 
+	 */
+	public static final ObjectServer openServer(Configuration config,
+			String databaseFileName, int port) throws Db4oIOException,
+			IncompatibleFileFormatException, OldFormatException,
+			DatabaseFileLockedException, DatabaseReadOnlyException {
+		return ((Config4Impl)config).clientServerFactory().openServer(config, databaseFileName, port);
 	}
 
 	static Reflector reflector(){
