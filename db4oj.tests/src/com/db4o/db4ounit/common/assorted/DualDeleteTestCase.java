@@ -5,8 +5,6 @@ package com.db4o.db4ounit.common.assorted;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
-import com.db4o.test.*;
-import com.db4o.test.Atom;
 
 import db4ounit.extensions.*;
 
