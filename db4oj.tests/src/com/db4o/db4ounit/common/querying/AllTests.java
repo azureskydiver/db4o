@@ -17,7 +17,7 @@ public class AllTests extends Db4oTestSuite {
             CascadeDeleteDeleted.class,
 			CascadeDeleteFalse.class,
 	    	CascadeOnActivate.class,
-	        CascadeOnDelete.class,
+	        CascadeOnDeleteTestCase.class,
 	        CascadeOnDeleteHierarchyTestCase.class,
 	        CascadeOnUpdate.class,
 	        CascadeToArray.class,
