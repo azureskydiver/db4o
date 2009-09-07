@@ -5,9 +5,8 @@ import java.util.List;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
-import decaf.*;
 
-@decaf.Remove(Platform.JDK11)
+@decaf.Remove(decaf.Platform.JDK11)
 public class DefragmentPrimitiveArrayInCollectionTestCase extends AbstractDb4oTestCase {
 
 	private static final int ITEM_SIZE = 42;
