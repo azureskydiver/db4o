@@ -25,7 +25,7 @@ public class ExampleRunnerTestCase extends TestCase {
 //	}
 
 	private void assertExample(IllegalStateException expectedException, String exampleName) throws Exception, MalformedURLException, IOException {
-	    final File db4oArchive = db4oArchive("7.9");
+	    final File db4oArchive = db4oArchive("7.10");
 		assertTrue(db4oArchive.exists());
 		
 		final ExampleRunner runner = new ExampleRunner(new URLClassLoader(new URL[] { db4oArchive.toURL() }, getClass().getClassLoader()), tempFile());

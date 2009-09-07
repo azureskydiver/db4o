@@ -12,7 +12,8 @@ public class ExampleRunner {
     
     private final ClassLoader classLoader;
     private final File databaseFile;
-    private final Class db4oClass;
+    private final Class db4oEmbeddedClass;
+    private final Class db4oClientServerClass;
     private final Class objectContainerClass;
     private final Class objectServerClass;
     
@@ -21,7 +22,8 @@ public class ExampleRunner {
     public ExampleRunner(ClassLoader classLoader, File databaseFile) throws Exception {
         this.classLoader = classLoader;
         this.databaseFile = databaseFile;
-        this.db4oClass = classLoader.loadClass("com.db4o.Db4o");
+        this.db4oEmbeddedClass = classLoader.loadClass("com.db4o.Db4o");
+        this.db4oClientServerClass = classLoader.loadClass("com.db4o.cs.Db4oClientServer");
         this.objectContainerClass = classLoader.loadClass("com.db4o.ObjectContainer");
         this.objectServerClass = classLoader.loadClass("com.db4o.ObjectServer");
         setupExecutors();
@@ -126,7 +128,7 @@ public class ExampleRunner {
         // TODO: setCL() is deprecated, replace with reflectWith() call
         private void configure() throws Exception {
             try {
-				Object configuration = applyMethod(db4oClass, "configure", db4oClass, new Class[] {}, new Object[]{});
+				Object configuration = applyMethod(db4oEmbeddedClass, "configure", db4oEmbeddedClass, new Class[] {}, new Object[]{});
 				Class configurationClass = classLoader.loadClass("com.db4o.config.Configuration");
                 applyMethod(configurationClass, "setClassLoader", configuration, new Class[] { Object.class }, new Object[] { classLoader });
                 applyMethod(configurationClass, "allowVersionUpdates", configuration, new Class[] { boolean.class }, new Object[] { new Boolean(true)});
@@ -163,7 +165,7 @@ public class ExampleRunner {
         protected void executeInternal(Method exampleMethod) throws Exception {
             Object db=null;
             try {
-                db=applyMethod(db4oClass,"openFile",null,new Class[]{String.class},new Object[]{ExampleRunner.this.databaseFile.getAbsolutePath()});
+                db=applyMethod(db4oEmbeddedClass,"openFile",null,new Class[]{String.class},new Object[]{ExampleRunner.this.databaseFile.getAbsolutePath()});
                 exampleMethod.invoke(null, new Object[] { db });
             }
             finally {
@@ -188,7 +190,7 @@ public class ExampleRunner {
         protected void executeInternal(Method exampleMethod) throws Exception {
             Object server=null;
             try {
-                server=applyMethod(db4oClass,"openServer",null,new Class[] { String.class,Integer.TYPE },new Object[] { ExampleRunner.this.databaseFile.getAbsolutePath(),new Integer(port) });
+                server=applyMethod(db4oClientServerClass,"openServer",null,new Class[] { String.class,Integer.TYPE },new Object[] { ExampleRunner.this.databaseFile.getAbsolutePath(),new Integer(port) });
                 if(!isWithNetworking()) {
                     exampleMethod.invoke(null, new Object[] { server });
                 }
