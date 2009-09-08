@@ -77,8 +77,8 @@ public class NetworkSocket implements Socket4 {
 		_out.write(bytes,off,len);
     }
 
-    public void write(int i) throws IOException {
-		_out.write(i);
+    public void write(byte b) throws IOException {
+		_out.write(b);
     }
     
 	public Socket4 openParalellSocket() throws IOException {
@@ -86,5 +86,10 @@ public class NetworkSocket implements Socket4 {
 			throw new IllegalStateException();
 		}
 		return new NetworkSocket(_hostName,_socket.getPort());
+	}
+	
+	@Override
+	public String toString() {
+		return _socket.toString();
 	}
 }

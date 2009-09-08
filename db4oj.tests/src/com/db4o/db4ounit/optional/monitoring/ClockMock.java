@@ -4,7 +4,7 @@ package com.db4o.db4ounit.optional.monitoring;
 import com.db4o.monitoring.internal.*;
 
 @decaf.Remove
-final class ClockMock implements Clock {
+final public class ClockMock implements Clock {
 	
 	private long _currentTime;
 

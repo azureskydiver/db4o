@@ -1,20 +1,17 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.optional.monitoring;
 
-import java.util.*;
-
-import javax.management.*;
-
-import com.db4o.config.*;
-import com.db4o.diagnostic.*;
-import com.db4o.foundation.*;
+import java.util.List;
+import javax.management.Notification;
+import com.db4o.config.Configuration;
+import com.db4o.diagnostic.NativeQueryNotOptimized;
+import com.db4o.foundation.ByRef;
 import com.db4o.monitoring.*;
-
-import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
+import db4ounit.Assert;
+import db4ounit.extensions.fixtures.CustomClientServerConfiguration;
 
 @decaf.Remove
-public class NativeQueryMonitoringSupportTestCase extends MBeanTestCaseBase implements CustomClientServerConfiguration {
+public class NativeQueryMonitoringSupportTestCase extends QueryMonitoringTestCaseBase implements CustomClientServerConfiguration {
 	
 	@Override
 	protected void configure(Configuration config) throws Exception {
@@ -64,7 +61,7 @@ public class NativeQueryMonitoringSupportTestCase extends MBeanTestCaseBase impl
 		Assert.areEqual(unoptimizedQueryNotificationType(), notification.getType());
 		Assert.areEqual(unoptimizableQuery().getClass().getName(), notification.getUserData());
 		
-	}
+	}	
 
 	@Override
 	protected Class<?> beanInterface() {

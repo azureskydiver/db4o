@@ -321,26 +321,7 @@
 		<jar destfile="${file.jdk1.5.jar}">
 			<fileset dir="${dir.dist.classes.jdk1.5}" />
 		</jar>
-
-		<mkdir dir="${dir.dist.classes.jdk1.5.optional}" />
-		<javac  
-            fork="true" 
-            destdir="${dir.dist.classes.jdk1.5.optional}" 
-            debug="${javac.debug.mode}" 
-            target="1.5" 
-            source="1.5" 
-            encoding="UTF-8">
-			<src path="${dir.j.optional.core.src}" />
-			<classpath>
-				<pathelement location="${file.jdk1.5.jar}"/>
-				<pathelement location="${file.decaf.annotations}" />
-			</classpath>
-		</javac>
 		
-		<jar destfile="${file.jdk1.5.optional.jar}">
-			<fileset dir="${dir.dist.classes.jdk1.5.optional}" />
-		</jar>
-
 		<mkdir dir="${dir.dist.classes.jdk1.5.cs}" />
 		<javac  
             fork="true" 
@@ -360,6 +341,25 @@
 			<fileset dir="${dir.dist.classes.jdk1.5.cs}" />
 		</jar>
 
+		<mkdir dir="${dir.dist.classes.jdk1.5.optional}" />
+		<javac  
+            fork="true" 
+            destdir="${dir.dist.classes.jdk1.5.optional}" 
+            debug="${javac.debug.mode}" 
+            target="1.5" 
+            source="1.5" 
+            encoding="UTF-8">
+			<src path="${dir.j.optional.core.src}" />
+			<classpath>
+				<pathelement location="${file.jdk1.5.jar}"/>
+				<pathelement location="${file.decaf.annotations}" />
+				<pathelement location="${file.jdk1.5.cs.jar}" />
+			</classpath>
+		</javac>
+		
+		<jar destfile="${file.jdk1.5.optional.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.5.optional}" />
+		</jar>
 	</target>
 	
 	<target name="build.instrumentation1.2" depends="build.db4ojdk1.2, decaf.all">

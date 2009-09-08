@@ -2,9 +2,8 @@
 
 package com.db4o.cs.config;
 
-import com.db4o.foundation.network.*;
-import com.db4o.messaging.*;
-
+import com.db4o.foundation.network.Socket4Factory;
+import com.db4o.messaging.MessageRecipient;
 
 
 /**
@@ -41,9 +40,9 @@ public interface NetworkingConfiguration {
 	public void timeoutClientSocket(int milliseconds);
 
 	/**
-	 * configures the timeout of the serverside socket. <br>
+	 * configures the timeout of the server side socket. <br>
 	 * <br>
-	 * The serverside handler waits for messages to arrive from the client.
+	 * The server side handler waits for messages to arrive from the client.
 	 * If no more messages arrive for the duration configured in this
 	 * setting, the client will be disconnected.
 	 * <br>  
@@ -78,7 +77,7 @@ public interface NetworkingConfiguration {
      * - <code>false</code> for best asynchronous performance and fast
      * GUI response.
      * <br><br>Default value:<br>
-     * - .NET Compactframework: <code>true</code><br>
+     * - .NET Compact Framework: <code>true</code><br>
      * - all other platforms: <code>false</code><br><br>
      * This setting can be used on both client and server.<br><br>
      * @param flag the desired setting
@@ -122,7 +121,16 @@ public interface NetworkingConfiguration {
 	void messageRecipient(MessageRecipient messageRecipient);
 
 	/**
+	 * @since 7.11
+	 * 
 	 * @sharpen.property
 	 */
 	public Socket4Factory socketFactory();
+
+	/**
+	 * @since 7.11
+	 * 
+	 * @sharpen.ignore
+	 */
+	public void socketFactory(Socket4Factory socket4Factory);
 }

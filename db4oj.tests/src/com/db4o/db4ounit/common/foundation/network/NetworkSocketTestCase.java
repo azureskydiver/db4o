@@ -107,7 +107,7 @@ public class NetworkSocketTestCase implements TestLifeCycle {
 	public void testWriteIntCloseClient() throws Exception {	
 		assertWriteClose(_client, new CodeBlock (){
 			public void run() {
-			    _server.write(0xff);
+			    _server.write((byte) 0xff);
 			}			
 		});
 	}
@@ -115,7 +115,7 @@ public class NetworkSocketTestCase implements TestLifeCycle {
 	public void testWriteIntCloseServer() throws Exception {	
 		assertWriteClose(_server, new CodeBlock (){
 			public void run() {
-			    _client.write(0xff);    
+			    _client.write((byte) 0xff);    
 			}			
 		});
 	}

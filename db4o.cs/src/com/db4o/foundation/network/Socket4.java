@@ -20,7 +20,7 @@ public interface Socket4 {
 
   	void write(byte[] bytes, int offset, int count) throws IOException;
   	
-  	void write(int b) throws IOException;
+  	void write(byte b) throws IOException;
 
 	Socket4 openParalellSocket() throws IOException;
 

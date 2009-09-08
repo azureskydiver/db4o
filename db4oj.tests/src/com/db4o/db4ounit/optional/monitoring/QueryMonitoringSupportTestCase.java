@@ -15,7 +15,7 @@ import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
 @decaf.Remove
-public class QueryMonitoringSupportTestCase extends MBeanTestCaseBase implements CustomClientServerConfiguration {
+public class QueryMonitoringSupportTestCase extends QueryMonitoringTestCaseBase implements CustomClientServerConfiguration {
 	
 	@Override
 	protected void configure(Configuration config) throws Exception {
@@ -45,14 +45,14 @@ public class QueryMonitoringSupportTestCase extends MBeanTestCaseBase implements
 	
 	public void testAverageQueryExecutionTime() {
 		
-		Assert.areEqual(0.0, _bean.getAttribute("AverageQueryExecutionTime"));
+		Assert.areEqual(0.0, bean().getAttribute("AverageQueryExecutionTime"));
 		
 		triggerQueryExecutionTime(1000);
-		Assert.areEqual(1000.0, _bean.getAttribute("AverageQueryExecutionTime"));
+		Assert.areEqual(1000.0, bean().getAttribute("AverageQueryExecutionTime"));
 		
 		triggerQueryExecutionTime(200);
 		triggerQueryExecutionTime(500);
-		Assert.areEqual(350.0, _bean.getAttribute("AverageQueryExecutionTime"));
+		Assert.areEqual(350.0, bean().getAttribute("AverageQueryExecutionTime"));
 		
 	}
 
