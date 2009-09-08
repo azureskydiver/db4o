@@ -4,26 +4,25 @@ package com.db4o.cs.internal;
 
 import static com.db4o.foundation.Environments.my;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.cs.caching.*;
+import com.db4o.cs.caching.ClientSlotCache;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.cs.internal.objectexchange.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
-import com.db4o.internal.convert.*;
-import com.db4o.internal.encoding.*;
+import com.db4o.internal.convert.Converter;
+import com.db4o.internal.encoding.UnicodeStringIO;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
-import com.db4o.internal.slots.*;
-import com.db4o.io.*;
-import com.db4o.reflect.*;
+import com.db4o.internal.slots.Pointer4;
+import com.db4o.io.Storage;
+import com.db4o.reflect.ReflectClass;
 /**
  * @exclude
  */
@@ -33,7 +32,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	private BlobProcessor _blobTask;
 
-	private Socket4Adapter i_socket;
+	private Socket4Adapter _socket;
 
 	private BlockingQueue _synchronousMessageQueue = new BlockingQueue();
 	
@@ -100,8 +99,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	}
 
 	private void setAndConfigSocket(Socket4Adapter socket) {
-		i_socket = socket;
-		i_socket.setSoTimeout(_config.timeoutClientSocket());
+		_socket = socket;
+		_socket.setSoTimeout(_config.timeoutClientSocket());
 	}
 
 	protected final void openImpl() {
@@ -111,10 +110,10 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		// socket.setTcpNoDelay(true);
 		// System.out.println(socket.getSendBufferSize());
 		if (_login) {
-			loginToServer(i_socket);
+			loginToServer(_socket);
 		}
 		if (!_singleThreaded) {
-			startDispatcherThread(i_socket, _userName);
+			startDispatcherThread(_socket, _userName);
 		}
 		logMsg(36, toString());
 		startHeartBeat();
@@ -182,7 +181,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		shutDownCommunicationRessources();
 		
 		try {
-			i_socket.close();
+			_socket.close();
 		} catch (Exception e) {
 			Exceptions4.catchAllExceptDb4oException(e);
 		}
@@ -224,7 +223,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		
 		int serverThreadID = expectedByteResponse(Msg.ID_LIST).readInt();
 
-		Socket4Adapter sock = i_socket.openParalellSocket();
+		Socket4Adapter sock = _socket.openParalellSocket();
 		loginToServer(sock);
 
 		if (switchedToFile != null) {
@@ -364,7 +363,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	private Msg getResponseSingleThreaded() {
 		while (isMessageDispatcherAlive()) {
 			try {
-				final Msg message = Msg.readMessage(this, _transaction, i_socket);
+				final Msg message = Msg.readMessage(this, _transaction, _socket);
 				if(isClientSideMessage(message)) {
 					if(((ClientSideMessage)message).processAtClient()){
 						continue;
@@ -404,7 +403,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	}
 	
 	public boolean isMessageDispatcherAlive() {
-		return i_socket != null;
+		return _socket != null;
 	}
 
 	public ClassMetadata classMetadataForID(int clazzId) {
@@ -771,7 +770,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		// if(i_classCollection != null){
 		// return i_classCollection.toString();
 		// }
-		return "Client Connection " + _userName;
+		return "Client Connection " + _userName + "(" +  _socket + ")";
 	}
 
 	public void shutdown() {
@@ -816,7 +815,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		if(_messageListener != null){
 			_messageListener.onMessage(msg);
 		}
-		return msg.write(i_socket);
+		return msg.write(_socket);
 	}
 	
 	public final void writeNew(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, ByteArrayBuffer buffer) {
@@ -846,7 +845,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	}
 
 	public Socket4Adapter socket() {
-		return i_socket;
+		return _socket;
 	}
 	
 	private void ensureIDCacheAllocated(int prefetchIDCount) {
@@ -1019,7 +1018,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	
 	public int classMetadataIdForName(String name) {
         MsgD msg = Msg.CLASS_METADATA_ID_FOR_NAME.getWriterForString(systemTransaction(), name);
-        msg.write(i_socket);
+        msg.write(_socket);
         MsgD response = (MsgD) expectedResponse(Msg.CLASS_ID);
         return response.readInt();
     }

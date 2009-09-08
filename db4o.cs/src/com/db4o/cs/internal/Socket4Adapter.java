@@ -1,3 +1,4 @@
+/* Copyright (C) 2004   Versant Inc.   http://www.db4o.com */
 package com.db4o.cs.internal;
 
 import java.io.*;
@@ -79,9 +80,9 @@ public class Socket4Adapter {
 		}
 	}
 
-	public void write(int i) throws Db4oIOException {
+	public void write(byte b) throws Db4oIOException {
 		try {
-			_delegate.write(i);
+			_delegate.write(b);
 		} catch (IOException e) {
 			throw new Db4oIOException(e);
 		}
@@ -95,4 +96,8 @@ public class Socket4Adapter {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return _delegate.toString();
+	}
 }

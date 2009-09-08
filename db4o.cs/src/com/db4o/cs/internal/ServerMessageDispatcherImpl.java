@@ -2,18 +2,16 @@
 
 package com.db4o.cs.internal;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 
 import com.db4o.*;
 import com.db4o.cs.internal.messages.*;
-import com.db4o.events.*;
+import com.db4o.events.Event4;
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.foundation.network.*;
+import com.db4o.foundation.Hashtable4;
+import com.db4o.foundation.network.Socket4;
 import com.db4o.internal.*;
-import com.db4o.internal.events.*;
+import com.db4o.internal.events.Event4Impl;
 
 public final class ServerMessageDispatcherImpl implements ServerMessageDispatcher, Runnable {
 
@@ -151,7 +149,10 @@ public final class ServerMessageDispatcherImpl implements ServerMessageDispatche
 		_thread = Thread.currentThread();
 		try{
 			setDispatcherName("" + _threadID);
-			messageLoop();
+			_server.withEnvironment(new Runnable(){ public void run() {
+					messageLoop();
+			}});
+			
 		}finally{
 			close();
 		}

@@ -1,12 +1,12 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.monitoring;
 
-import javax.management.*;
+import javax.management.JMException;
 
 import com.db4o.config.*;
 import com.db4o.events.*;
-import com.db4o.ext.*;
-import com.db4o.internal.*;
+import com.db4o.ext.Db4oIllegalStateException;
+import com.db4o.internal.InternalObjectContainer;
 import com.db4o.internal.query.*;
 
 @decaf.Ignore

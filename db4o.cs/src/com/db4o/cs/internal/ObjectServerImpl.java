@@ -2,18 +2,18 @@
 
 package com.db4o.cs.internal;
 
-import java.io.*;
+import java.io.IOException;
 
 import com.db4o.*;
-import com.db4o.config.*;
+import com.db4o.config.Configuration;
 import com.db4o.cs.internal.messages.*;
-import com.db4o.events.*;
+import com.db4o.events.Event4;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
-import com.db4o.internal.events.*;
-import com.db4o.internal.threading.*;
+import com.db4o.internal.events.Event4Impl;
+import com.db4o.internal.threading.ThreadPool4;
 
 public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtObjectServer, Runnable {
 	
@@ -29,8 +29,8 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 
 	private final Collection4 _dispatchers = new Collection4();
 
-	LocalObjectContainer _container;
-	ClientTransactionPool _transactionPool;
+	private LocalObjectContainer _container;
+	private ClientTransactionPool _transactionPool;
 
 	private final Object _startupLock=new Object();
 	
@@ -134,7 +134,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	private void configureObjectServer() {
 		_config.callbacks(false);
 		_config.isServer(true);
-		// the minium activation depth of com.db4o.User.class should be 1.
+		// the minimum activation depth of com.db4o.User.class should be 1.
 		// Otherwise, we may get null password.
 		_config.objectClass(User.class).minimumActivationDepth(1);
 	}
@@ -345,16 +345,19 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 
 	private void listen() {
 		while (_serverSocket != null) {
-			try {
-				ServerMessageDispatcherImpl messageDispatcher = new ServerMessageDispatcherImpl(this, new ClientTransactionHandle(_transactionPool),
-						_serverSocket.accept(), newThreadId(), false, _container.lock());
-				addServerMessageDispatcher(messageDispatcher);
-				triggerClientConnected(messageDispatcher);
-				
-				threadPool().start(messageDispatcher);
-			} catch (Exception e) {
-//				e.printStackTrace();
-			}
+			withEnvironment(new Runnable() { public void run() {
+				try {
+					ServerMessageDispatcherImpl messageDispatcher = new ServerMessageDispatcherImpl(ObjectServerImpl.this, new ClientTransactionHandle(_transactionPool),
+							_serverSocket.accept(), newThreadId(), false, _container.lock());
+					
+					addServerMessageDispatcher(messageDispatcher);
+					triggerClientConnected(messageDispatcher);
+						
+					threadPool().start(messageDispatcher);
+				} catch (Exception e) {
+					//e.printStackTrace();
+				}
+			}});								
 		}
 	}
 
@@ -442,4 +445,8 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	public Event4<ServerClosedEventArgs> closed() {
 		return _closed;
     }
+	
+	void withEnvironment(Runnable runnable) {
+		_container.withEnvironment(runnable);
+	}	
 }

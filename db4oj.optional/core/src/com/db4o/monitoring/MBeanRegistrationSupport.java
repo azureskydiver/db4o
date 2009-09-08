@@ -6,7 +6,7 @@ import java.lang.management.*;
 import javax.management.*;
 
 @decaf.Ignore
-class MBeanRegistrationSupport {
+public class MBeanRegistrationSupport {
 
 	protected ObjectName _objectName;
 
