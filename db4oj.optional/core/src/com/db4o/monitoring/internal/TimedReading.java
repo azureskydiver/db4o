@@ -49,6 +49,11 @@ public class TimedReading {
 	private long currentTimeMillis() {
 		return _clock.currentTimeMillis();
 	}
+	
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + "(" + _count + ")";
+	}
 
 	public static TimedReading newPerSecond() {
 		return new TimedReading(1000);
