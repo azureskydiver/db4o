@@ -6,7 +6,7 @@ import java.io.*;
 import com.db4o.ext.*;
 
 /**
- * Wrapper baseclass for all classes that wrap Storage.
+ * Wrapper base class for all classes that wrap Storage.
  * Each class that adds functionality to a Storage must
  * extend this class.
  * @see BinDecorator 
