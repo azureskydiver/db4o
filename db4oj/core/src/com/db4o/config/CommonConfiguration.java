@@ -500,7 +500,6 @@ public interface CommonConfiguration {
 
     /**
      * @see Environment
-     * @return
      * @sharpen.property
      */
 	public EnvironmentConfiguration environment();
