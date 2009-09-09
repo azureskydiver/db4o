@@ -1,9 +1,12 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.exceptions.propagation;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.exceptions.*;
+import com.db4o.internal.*;
 
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
@@ -22,7 +25,7 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 		
 		@Override
 		protected void configure(Configuration config) throws Exception {
-			final ExceptionPropagationFixture propagationFixture = curPropagationFixture();
+			final ExceptionPropagationFixture propagationFixture = exceptionPropagationFixture();
 			_storage = new ExceptionSimulatingStorage(config.storage(), new ExceptionFactory() {
 				private boolean _alreadyCalled = false;
 				
@@ -56,15 +59,24 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 			_unactivated = retrieveOnlyInstance(Item.class);
 			db().deactivate(_unactivated);
 			_storage.triggerException(true);
-			curPropagationFixture().assertExecute(new DatabaseContext(db(), _unactivated), curTopLevelFixture());
+			DatabaseContext context = new DatabaseContext(db(), _unactivated);
+			exceptionPropagationFixture().assertExecute(context, operationFixture());
+			if(context.storageIsClosed()){
+				assertIsNotLocked(fileSession().fileName());
+			}
+		}
+		
+		private void assertIsNotLocked(String fileName) {
+			ObjectContainer oc = Db4oEmbedded.openFile(fileName);
+			oc.close();
 		}
 
-		private ExceptionPropagationFixture curPropagationFixture() {
-			return PROPAGATION_FIXTURE.value();
+		private ExceptionPropagationFixture exceptionPropagationFixture() {
+			return EXCEPTION_BEHAVIOUR_FIXTURE.value();
 		}
 
-		private TopLevelOperation curTopLevelFixture() {
-			return TOPLEVEL_FIXTURE.value();
+		private TopLevelOperation operationFixture() {
+			return OPERATION_FIXTURE.value();
 		}
 
 		@Override
@@ -73,14 +85,14 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 		}
 	}
 
-	private static FixtureVariable<ExceptionPropagationFixture> PROPAGATION_FIXTURE = FixtureVariable.<ExceptionPropagationFixture>newInstance("exc");
-	private static FixtureVariable<TopLevelOperation> TOPLEVEL_FIXTURE = FixtureVariable.<TopLevelOperation>newInstance("op");
+	private static FixtureVariable<ExceptionPropagationFixture> EXCEPTION_BEHAVIOUR_FIXTURE = FixtureVariable.<ExceptionPropagationFixture>newInstance("exc");
+	private static FixtureVariable<TopLevelOperation> OPERATION_FIXTURE = FixtureVariable.<TopLevelOperation>newInstance("op");
 	
 	@Override
 	public FixtureProvider[] fixtureProviders() {
 		return new FixtureProvider[] {
 			new Db4oFixtureProvider(),
-			new SimpleFixtureProvider(PROPAGATION_FIXTURE,
+			new SimpleFixtureProvider(EXCEPTION_BEHAVIOUR_FIXTURE,
 					new OutOfMemoryErrorPropagationFixture(),
 					new OneTimeDb4oExceptionPropagationFixture(),
 					new OneTimeRuntimeExceptionPropagationFixture(),
@@ -88,7 +100,7 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 					new RecurringRuntimeExceptionPropagationFixture(),
 					new RecoverableExceptionPropagationFixture()
 			),
-			new SimpleFixtureProvider(TOPLEVEL_FIXTURE,
+			new SimpleFixtureProvider(OPERATION_FIXTURE,
 					new TopLevelOperation("commit") {
 						@Override
 						public void apply(DatabaseContext context) {
