@@ -391,7 +391,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
     }
 
-    private <R> R asTopLevelSet(Function4<Transaction,R> block, Transaction trans) {
+    private <R> R asTopLevelStore(Function4<Transaction,R> block, Transaction trans) {
     	trans = checkTransaction(trans);
     	R result = asTopLevelCall(block, trans);
 		if(_stackDepth == 0){
@@ -1572,7 +1572,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 			DatabaseReadOnlyException {
     	checkReadOnly();
     	
-    	return asTopLevelSet(new Function4<Transaction, Integer>() {
+    	return asTopLevelStore(new Function4<Transaction, Integer>() {
 			public Integer apply(Transaction trans) {
 		        return storeAfterReplication(trans, obj, depth, checkJustSet);
 			}
