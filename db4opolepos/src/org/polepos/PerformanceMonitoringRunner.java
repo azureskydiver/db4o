@@ -80,7 +80,7 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 
     public PerformanceMonitoringRunner(File[] libPaths) {
     	_jarCollection = new FolderBasedDb4oJarRegistry(libPaths == null ? libPaths() : libPaths, new RevisionBasedMostRecentJarFileSelectionStrategy(1)).jarCollection();
-    	_reporter = new PerformanceMonitoringReporter(_jarCollection.currentJar().getName(), new SpeedTicketPerformanceStrategy(30));
+    	_reporter = new PerformanceMonitoringReporter(_jarCollection.currentJar().getName(), new SpeedTicketPerformanceStrategy(20));
     }
     
     @Override
