@@ -4,7 +4,11 @@ package com.db4o.config;
 import com.db4o.*;
 import com.db4o.ext.*;
 
+/**
+ * @exclude
+ */
 public interface LegacyClientServerFactory {
+	
 	public ObjectContainer openClient(
 			   Configuration config,
 			   String hostName, 
