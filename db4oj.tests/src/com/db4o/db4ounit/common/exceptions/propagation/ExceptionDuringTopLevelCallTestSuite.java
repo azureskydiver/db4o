@@ -1,12 +1,9 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.exceptions.propagation;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.exceptions.*;
-import com.db4o.internal.*;
 
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
@@ -25,7 +22,7 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 		
 		@Override
 		protected void configure(Configuration config) throws Exception {
-			final ExceptionPropagationFixture propagationFixture = exceptionPropagationFixture();
+			final ExceptionPropagationFixture propagationFixture = currentExceptionPropagationFixture();
 			_storage = new ExceptionSimulatingStorage(config.storage(), new ExceptionFactory() {
 				private boolean _alreadyCalled = false;
 				
@@ -60,7 +57,7 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 			db().deactivate(_unactivated);
 			_storage.triggerException(true);
 			DatabaseContext context = new DatabaseContext(db(), _unactivated);
-			exceptionPropagationFixture().assertExecute(context, operationFixture());
+			currentExceptionPropagationFixture().assertExecute(context, currentOperationFixture());
 			if(context.storageIsClosed()){
 				assertIsNotLocked(fileSession().fileName());
 			}
@@ -71,11 +68,11 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 			oc.close();
 		}
 
-		private ExceptionPropagationFixture exceptionPropagationFixture() {
+		private ExceptionPropagationFixture currentExceptionPropagationFixture() {
 			return EXCEPTION_BEHAVIOUR_FIXTURE.value();
 		}
 
-		private TopLevelOperation operationFixture() {
+		private TopLevelOperation currentOperationFixture() {
 			return OPERATION_FIXTURE.value();
 		}
 
