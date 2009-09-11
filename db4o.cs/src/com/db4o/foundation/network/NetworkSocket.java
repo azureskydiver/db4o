@@ -46,13 +46,7 @@ public class NetworkSocket implements Socket4 {
     public boolean isConnected() {
         return Platform4.isConnected(_socket);
     }
-    
-    public int read() throws IOException {
-    	int ret = _in.read();
-    	checkEOF(ret);
-    	return ret;
-    }
-
+        
     public int read(byte[] a_bytes, int a_offset, int a_length) throws IOException {
     	int ret = _in.read(a_bytes, a_offset, a_length);
     	checkEOF(ret);
@@ -76,12 +70,8 @@ public class NetworkSocket implements Socket4 {
     public void write(byte[] bytes,int off,int len) throws IOException {
 		_out.write(bytes,off,len);
     }
-
-    public void write(byte b) throws IOException {
-		_out.write(b);
-    }
     
-	public Socket4 openParalellSocket() throws IOException {
+	public Socket4 openParallelSocket() throws IOException {
 		if(_hostName==null) {
 			throw new IllegalStateException();
 		}
