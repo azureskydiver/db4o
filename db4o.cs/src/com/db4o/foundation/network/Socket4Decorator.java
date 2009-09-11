@@ -23,16 +23,12 @@ public class Socket4Decorator implements Socket4 {
 		return _socket.isConnected();
 	}
 
-	public Socket4 openParalellSocket() throws IOException {
-		return _socket.openParalellSocket();
+	public Socket4 openParallelSocket() throws IOException {
+		return _socket.openParallelSocket();
 	}
 
 	public int read(byte[] buffer, int offset, int count) throws IOException {
 		return _socket.read(buffer, offset, count);
-	}
-
-	public int read() throws IOException {
-		return _socket.read();
 	}
 
 	public void setSoTimeout(int timeout) {
@@ -41,10 +37,6 @@ public class Socket4Decorator implements Socket4 {
 
 	public void write(byte[] bytes, int offset, int count) throws IOException {
 		_socket.write(bytes, offset, count);
-	}
-
-	public void write(byte b) throws IOException {
-		_socket.write(b);		
 	}
 	
 	@Override

@@ -44,15 +44,7 @@ public class Socket4Adapter {
 
 	public Socket4Adapter openParalellSocket() throws Db4oIOException {
 		try {
-			return new Socket4Adapter(_delegate.openParalellSocket());
-		} catch (IOException e) {
-			throw new Db4oIOException(e);
-		}
-	}
-
-	public int read() throws Db4oIOException {
-		try {
-			return _delegate.read();
+			return new Socket4Adapter(_delegate.openParallelSocket());
 		} catch (IOException e) {
 			throw new Db4oIOException(e);
 		}
@@ -75,14 +67,6 @@ public class Socket4Adapter {
 			throws Db4oIOException {
 		try {
 			_delegate.write(bytes, offset, count);
-		} catch (IOException e) {
-			throw new Db4oIOException(e);
-		}
-	}
-
-	public void write(byte b) throws Db4oIOException {
-		try {
-			_delegate.write(b);
 		} catch (IOException e) {
 			throw new Db4oIOException(e);
 		}

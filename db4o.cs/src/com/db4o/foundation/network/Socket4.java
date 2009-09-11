@@ -16,12 +16,8 @@ public interface Socket4 {
 
   	int read(byte[] buffer, int offset, int count) throws IOException;
   	
-  	int read() throws IOException;
-
   	void write(byte[] bytes, int offset, int count) throws IOException;
   	
-  	void write(byte b) throws IOException;
-
-	Socket4 openParalellSocket() throws IOException;
+	Socket4 openParallelSocket() throws IOException;
 
 }
