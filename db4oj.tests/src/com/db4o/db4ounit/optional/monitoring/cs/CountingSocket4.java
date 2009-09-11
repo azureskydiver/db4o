@@ -17,21 +17,38 @@ public class CountingSocket4 extends Socket4Decorator {
 
 	public void write(byte[] bytes, int offset, int count) throws IOException {
 		super.write(bytes, offset, count);
+		
 		_bytesSent += count;
+		_messagesSent++;	
 	}
 
-	public void write(byte b) throws IOException {
-		super.write(b);		
-		_bytesSent += 1;
+	@Override
+	public int read(byte[] buffer, int offset, int count) throws IOException {
+		int bytesReceived = super.read(buffer, offset, count);
+		_bytesReceived += bytesReceived;
+		
+		return bytesReceived;
 	}
 	
-	public double getBytesSent() {
+	public double bytesSent() {
 		return _bytesSent;
 	}
 
-	public void resetCount() {
-		_bytesSent = 0.0;
+	public double bytesReceived() {
+		return _bytesReceived;
+	}
+
+	public double messagesSent() {
+		return _messagesSent;
 	}
 	
-	private double _bytesSent = 0.0;
+	public void resetCount() {
+		_bytesSent = 0.0;
+		_bytesReceived = 0.0;
+		_messagesSent = 0.0;
+	}
+	
+	private double _bytesSent;
+	private double _bytesReceived;
+	private double _messagesSent;
 }

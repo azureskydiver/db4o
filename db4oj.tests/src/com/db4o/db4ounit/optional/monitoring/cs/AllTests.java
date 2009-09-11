@@ -10,6 +10,7 @@ public class AllTests extends Db4oTestSuite {
 	@Override
 	protected Class[] testCases() {
 		return new Class[] {
+				ClientConnectionsTestCase.class,
 				MonitoredClientSocket4TestCase.class,
 				MonitoredServerSocket4TestCase.class,
 		};

@@ -2,15 +2,17 @@
 
 package com.db4o.db4ounit.optional.monitoring.cs;
 
-import com.db4o.ObjectContainer;
-import com.db4o.config.Configuration;
-import com.db4o.cs.config.NetworkingConfiguration;
-import com.db4o.cs.internal.config.Db4oClientServerLegacyConfigurationBridge;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.cs.config.*;
+import com.db4o.cs.internal.config.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 
 @decaf.Remove
 public class MonitoredServerSocket4TestCase extends MonitoredSocket4TestCaseBase {
+
+	private static final int PING_TIMEOUT = 10000;
 
 	public void configureClient(Configuration config) throws Exception {
 		configure(config);
@@ -24,23 +26,54 @@ public class MonitoredServerSocket4TestCase extends MonitoredSocket4TestCaseBase
 	@Override
 	protected void configure(Configuration legacy) throws Exception {
 		super.configure(legacy);
+		ensurePingMessagesDontDisturbResults(legacy);  
+	}
+
+	private void ensurePingMessagesDontDisturbResults(Configuration legacy) {
+		legacy.clientServer().timeoutClientSocket(PING_TIMEOUT);  
+		legacy.clientServer().timeoutServerSocket(PING_TIMEOUT);
 	}
 	
-	public void testDefaultClient() {
+	public void testBytesSentDefaultClient() {
+		assertCounter(new BytesSentCounterHandler());
+		//assertCounter(new BytesSentCounterHandler());
+	}
+
+	public void testBytesReceivedDefaultClient() {
+		assertCounter(new BytesReceivedCounterHandler());
+	}
+		
+	public void testMessagesSentDefaultClient() {
+		assertCounter(new MessagesSentCounterHandler());
+	}
+	
+	public void testBytesSentTwoClients() {
+		assertTwoClients(new BytesSentCounterHandler());
+	}
+	
+	public void testBytesReceivedTwoClients() {		
+		assertTwoClients(new BytesReceivedCounterHandler());
+	}
+	
+	public void testMessagesSentTwoClients() {		
+		assertTwoClients(new MessagesSentCounterHandler());
+	}
+	
+	private void assertCounter(CounterHandler handler) {
 		store(new Item("default client"));
 		_clock.advance(1000);
 		
 		NetworkingConfiguration networkConfig = Db4oClientServerLegacyConfigurationBridge.asNetworkingConfiguration(fileSession().config());
 	 	CountingSocket4Factory factory= (CountingSocket4Factory) networkConfig.socketFactory();
-	 	double bytesSent = factory.connectedClients().get(0).getBytesSent();
-		
-		Assert.isGreater(0, (long) bytesSent);
+	 	CountingSocket4 countingSocket = factory.connectedClients().get(0);
+	 	
+		Assert.isGreater(0, (long) handler.expectedValue(countingSocket));
 		Assert.areEqual(
-				bytesSent,				
-				getAttribute(fileSession().toString(), "BytesSentPerSecond"));
-	}
+				handler.expectedValue(countingSocket),				
+				handler.actualValue(fileSession()));
+	}	
 	
-	public void testTwoClients() {		
+	private void assertTwoClients(final CounterHandler handler) {
 		withTwoClients(new TwoClientsAction() { public void apply(ObjectContainer client1, ObjectContainer client2) {
 			CountingSocket4Factory factory = serverCountingSocketFactory();
 			
@@ -49,16 +82,16 @@ public class MonitoredServerSocket4TestCase extends MonitoredSocket4TestCaseBase
 			
 			countingSocket1.resetCount();
 			countingSocket2.resetCount();		 	
-			getBytesSentPerSecond(fileSession()); // reset server
-			resetBeanCounterFor(fileSession());
+			
+			resetBeanCountersFor(fileSession());
 			
 			client1.store(new Item("foo"));			
 			client2.store(new Item("bar"));
-			_clock.advance(1000);
+			_clock.advance(1000);		
 			
 			Assert.areEqual(
-						countingSocket1.getBytesSent() + countingSocket2.getBytesSent(), 
-						getBytesSentPerSecond(fileSession()));
+					handler.expectedValue(countingSocket1) + handler.expectedValue(countingSocket2),
+					handler.actualValue(fileSession()));			
 		}});
 	}
 

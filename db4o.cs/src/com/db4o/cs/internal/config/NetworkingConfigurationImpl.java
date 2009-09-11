@@ -63,9 +63,6 @@ public class NetworkingConfigurationImpl implements NetworkingConfiguration {
 		return configuredFactory;
 	}
 	
-	/**
-	 * @sharpen.ignore
-	 */
 	public void socketFactory(Socket4Factory factory) {
 		_config.environmentContributions().add(factory);
 	}

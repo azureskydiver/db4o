@@ -2,15 +2,14 @@
 
 package com.db4o.monitoring.cs;
 
-import javax.management.JMException;
-import javax.management.ObjectName;
+import javax.management.*;
 
-import com.db4o.monitoring.MBeanRegistrationSupport;
-import com.db4o.monitoring.internal.TimedReading;
+import com.db4o.monitoring.*;
+import com.db4o.monitoring.internal.*;
 
 @decaf.Ignore
 public class Networking extends MBeanRegistrationSupport implements NetworkingMBean {
-	
+
 	public Networking(ObjectName objectName) throws JMException {
 		super(objectName);
 	}
@@ -19,12 +18,41 @@ public class Networking extends MBeanRegistrationSupport implements NetworkingMB
 		return bytesSent().read();
 	}
 
-	public void notifyWrite(int count) {
-		bytesSent().incrementBy(count);
+	public double getBytesReceivedPerSecond() {
+		return bytesReceived().read();
 	}
 	
+	public double getMessagesSentPerSecond() {
+		return messagesSent().read();
+	}
+	
+	public void notifyWrite(int count) {
+		bytesSent().incrementBy(count);
+		messagesSent().incrementBy(1);
+	}
+	
+	public void notifyRead(int count) {
+		bytesReceived().incrementBy(count);
+	}	
+	
+	private TimedReading messagesSent() {
+		if (null == _messagesSent){
+			_messagesSent = TimedReading.newPerSecond();
+		}
+		
+		return _messagesSent;
+	}
+	
+	private TimedReading bytesReceived() {
+		if (null == _bytesReceived) {
+			_bytesReceived = TimedReading.newPerSecond();
+		}
+		
+		return _bytesReceived;
+	}
+
 	private TimedReading bytesSent() {
-		if (_bytesSent == null) {
+		if (null == _bytesSent) {
 			_bytesSent = TimedReading.newPerSecond();
 		}
 		
@@ -36,6 +64,19 @@ public class Networking extends MBeanRegistrationSupport implements NetworkingMB
 		return _objectName.toString();
 	}
 	
-	private TimedReading _bytesSent;
+	public void resetCounters() {
+		reset(_bytesSent);
+		reset(_bytesReceived);
+		reset(_messagesSent);
+	}
+
+	private void reset(TimedReading counter) {
+		if (null != counter) {
+			counter.resetCount();
+		}
+	}
 	
+	private TimedReading _bytesSent;
+	private TimedReading _bytesReceived;
+	private TimedReading _messagesSent;
 }
