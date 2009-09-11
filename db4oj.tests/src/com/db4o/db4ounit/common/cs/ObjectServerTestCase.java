@@ -39,6 +39,42 @@ public class ObjectServerTestCase extends TestWithTempFile {
         // ClientProcessesTestCase tests closing.
     }
     
+    public void testClientDisconnectedEvent() {
+		final ClientObjectContainer client = (ClientObjectContainer) openClient();
+		final String clientName = client.userName();
+    	
+    	final BooleanByRef eventRaised = new BooleanByRef();
+    	final ObjectServerEvents events = (ObjectServerEvents)server;
+		
+    	events.clientDisconnected().addListener(new EventListener4<StringEventArgs>() { public void onEvent(Event4 e, StringEventArgs args) {
+			synchronized (eventRaised) {
+				Assert.areEqual(clientName, args.message());					
+				eventRaised.value = true;					
+				eventRaised.notifyAll();
+			}
+         }});
+    	
+		synchronized (eventRaised) {
+			client.close();
+				
+			long startTime = System.currentTimeMillis();
+			long currentTime = startTime;
+			int timeOut = 1000;
+				
+			long timePassed = currentTime - startTime;
+			while (timePassed < timeOut && !eventRaised.value) {
+				try {
+					eventRaised.wait(timeOut - timePassed);
+				} catch (InterruptedException e1) {
+				}
+					
+				currentTime = System.currentTimeMillis();
+				timePassed = currentTime - startTime;
+			}			
+			Assert.isTrue(eventRaised.value);
+		}
+    }
+    
     public void testClientConnectedEvent() {
     	
     	final ArrayList<ClientConnection> connections = new ArrayList<ClientConnection>();
