@@ -105,7 +105,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	protected final void openImpl() {
 		_singleThreaded = configImpl().singleThreadedClient();
-		// TODO: Experiment with packetsize and noDelay
+		// TODO: Experiment with packet size and noDelay
 		// socket.setSendBufferSize(100);
 		// socket.setTcpNoDelay(true);
 		// System.out.println(socket.getSendBufferSize());
@@ -218,7 +218,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
         return Converter.VERSION;
     }
 	
-	Socket4Adapter createParalellSocket() throws IOException {
+	Socket4Adapter createParallelSocket() throws IOException {
 		write(Msg.GET_THREAD_ID);
 		
 		int serverThreadID = expectedByteResponse(Msg.ID_LIST).readInt();
@@ -1110,11 +1110,15 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	    return buffer;
     }
 
-	/* (non-Javadoc)
-	 * @see com.db4o.internal.ObjectContainerBase#fatalShutdown()
-	 */
 	@Override
 	protected void fatalStorageShutdown() {
 		shutdownDataStorage();
+	}
+	
+	/**
+	 * @sharpen.property
+	 */
+	public String userName() {
+		return _userName;
 	}
 }
