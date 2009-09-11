@@ -25,6 +25,14 @@ public class MBeanProxy {
 			throw new IllegalStateException(e);
 		}
 	}
+	
+	public void resetCounters() {
+		try {
+			_platformServer.invoke(_beanName, "resetCounters", new Object[0], new String[0]);
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
+	}
 
 	public void addNotificationListener(NotificationListener listener, NotificationFilter notificationFilter) throws JMException {
 		_platformServer.addNotificationListener(_beanName, listener, notificationFilter, null);

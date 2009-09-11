@@ -46,6 +46,10 @@ public class TimedReading {
 		return reading;
 	}
 	
+	public int peek() {
+		return _count;
+	}
+	
 	private long currentTimeMillis() {
 		return _clock.currentTimeMillis();
 	}
@@ -58,4 +62,10 @@ public class TimedReading {
 	public static TimedReading newPerSecond() {
 		return new TimedReading(1000);
 	}
+
+	public void resetCount() {
+		_count = 0;
+		_lastAccessTime = currentTimeMillis();
+	}
+
 }

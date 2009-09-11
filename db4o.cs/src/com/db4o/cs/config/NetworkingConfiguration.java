@@ -130,7 +130,7 @@ public interface NetworkingConfiguration {
 	/**
 	 * @since 7.11
 	 * 
-	 * @sharpen.ignore
+	 * @sharpen.property
 	 */
 	public void socketFactory(Socket4Factory socket4Factory);
 }

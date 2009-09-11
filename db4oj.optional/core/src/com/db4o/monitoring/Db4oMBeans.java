@@ -7,7 +7,9 @@ import javax.management.JMException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
-import com.db4o.ObjectContainer;
+import com.db4o.*;
+import com.db4o.cs.internal.*;
+import com.db4o.events.*;
 import com.db4o.ext.Db4oException;
 import com.db4o.monitoring.cs.*;
 
@@ -62,6 +64,26 @@ public class Db4oMBeans {
 		try {
 			final ObjectName objectName = mBeanNameFor(NetworkingMBean.class, container.toString());
 			return new Networking(objectName);
+		} catch (JMException e) {
+			throw new Db4oException(e);
+		}
+	}
+	
+	public static ClientConnections newClientConnectionsStatsMBean(ObjectServer server) {
+		try {
+			ObjectServerImpl serverImpl = (ObjectServerImpl) server;
+			final ObjectName objectName = mBeanNameFor(ClientConnectionsMBean.class, serverImpl.objectContainer().toString());
+			final ClientConnections bean = new ClientConnections(objectName);
+			
+			serverImpl.clientConnected().addListener(new EventListener4<ClientConnectionEventArgs>() { public void onEvent(Event4<ClientConnectionEventArgs> e, ClientConnectionEventArgs args) {
+				bean.notifyClientConnected();
+			}});
+			
+			serverImpl.clientDisconnected().addListener(new EventListener4<StringEventArgs>() { public void onEvent(Event4<StringEventArgs> e, StringEventArgs args) {
+				bean.notifyClientDisconnected();
+			}});
+			
+			return bean;
 		} catch (JMException e) {
 			throw new Db4oException(e);
 		}

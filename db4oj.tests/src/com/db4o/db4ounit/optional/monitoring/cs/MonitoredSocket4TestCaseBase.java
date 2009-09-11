@@ -2,15 +2,15 @@
 
 package com.db4o.db4ounit.optional.monitoring.cs;
 
-import javax.management.ObjectName;
+import javax.management.*;
 
-import com.db4o.ObjectContainer;
-import com.db4o.config.Configuration;
-import com.db4o.cs.config.NetworkingConfiguration;
-import com.db4o.cs.internal.config.Db4oClientServerLegacyConfigurationBridge;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.cs.config.*;
+import com.db4o.cs.internal.config.*;
 import com.db4o.db4ounit.optional.monitoring.*;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.monitoring.Db4oMBeans;
+import com.db4o.ext.*;
+import com.db4o.monitoring.*;
 import com.db4o.monitoring.cs.*;
 
 import db4ounit.extensions.fixtures.*;
@@ -35,17 +35,6 @@ public abstract class MonitoredSocket4TestCaseBase extends MBeanTestCaseBase imp
 		networkConfig.socketFactory(socketFactory);
 		
 		return socketFactory;
-	}
-	
-	protected double observedBytesSent(ObjectContainer container) {
-		CountingSocket4Factory factory = configuredSocketFactoryFor(container);
-		
-		double total = 0.0;
-		for (CountingSocket4 socket :factory.countingSockets()) {
-			total += socket.getBytesSent();
-		}
-		
-		return total;
 	}
 
 	protected CountingSocket4Factory configuredSocketFactoryFor(ObjectContainer container) {
@@ -72,21 +61,83 @@ public abstract class MonitoredSocket4TestCaseBase extends MBeanTestCaseBase imp
 	protected interface TwoClientsAction {
 		void apply(ObjectContainer client1, ObjectContainer client2);
 	}
-
-	protected double getAttribute(String beanUri, String attribute) {
-		ObjectName objectName = Db4oMBeans.mBeanNameFor(NetworkingMBean.class, beanUri);
-		MBeanProxy bean = new MBeanProxy(objectName);
-		return bean.<Double>getAttribute(attribute);		
-	}
-
-	protected double getBytesSentPerSecond(ObjectContainer client) {
-		return getAttribute(client.toString(), "BytesSentPerSecond");
-	}
-
-	protected void resetBeanCounterFor(ObjectContainer...  clients) {
+	
+	protected void resetAllBeanCountersFor(ObjectContainer...  clients) {
 		for(ObjectContainer container : clients) {
-			getBytesSentPerSecond(container); // reading to reset bean counter.
+			resetBeanCountersFor(container);
 		}
+	}
+
+	protected void resetBeanCountersFor(ObjectContainer container) {
+		ObjectName objectName = Db4oMBeans.mBeanNameFor(NetworkingMBean.class, container.toString());
+		MBeanProxy bean = new MBeanProxy(objectName);
+		
+		bean.resetCounters();
+	}
+	
+	protected class BytesSentCounterHandler extends CounterHandlerBase {
+		public double actualValue(ObjectContainer container) {
+			return getAttribute(container.toString(), "BytesSentPerSecond") ;
+		}
+
+		public double expectedValue(CountingSocket4 countingSocket) {
+			return countingSocket.bytesSent();
+		}
+	}
+	
+	protected class BytesReceivedCounterHandler extends CounterHandlerBase {
+		public double actualValue(ObjectContainer container) {
+			return getAttribute(container.toString(), "BytesReceivedPerSecond") ;
+		}
+
+		public double expectedValue(CountingSocket4 countingSocket) {
+			return countingSocket.bytesReceived();
+		}
+	}
+	
+	protected class MessagesSentCounterHandler extends CounterHandlerBase {
+		public double actualValue(ObjectContainer container) {
+			return getAttribute(container.toString(), "MessagesSentPerSecond") ;
+		}
+
+		public double expectedValue(CountingSocket4 countingSocket) {
+			return countingSocket.messagesSent();
+		}
+	}
+	
+	protected abstract class CounterHandlerBase implements CounterHandler {
+		
+		public double expectedValue(ObjectContainer container) {
+			return observedCounter(container);
+		}
+		
+		protected double getAttribute(String beanUri, String attribute) {
+			ObjectName objectName = Db4oMBeans.mBeanNameFor(NetworkingMBean.class, beanUri);
+			MBeanProxy bean = new MBeanProxy(objectName);
+			return bean.<Double>getAttribute(attribute);		
+		}
+		
+		private double observedCounter(ObjectContainer container) {
+			CountingSocket4Factory factory = configuredSocketFactoryFor(container);
+			
+			double total = 0.0;
+			for (CountingSocket4 socket :factory.countingSockets()) {
+				double expectedValue = expectedValue(socket);
+				total += expectedValue;
+			}
+			
+			return total;
+		}
+	}
+	
+	interface CounterHandler {
+		
+		double expectedValue(CountingSocket4 socket);
+		
+		double expectedValue(ObjectContainer container);
+
+		double actualValue(ObjectContainer container);
+
 	}
 
 	protected CountingSocket4Factory _socket4Factory;

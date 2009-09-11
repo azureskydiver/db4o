@@ -2,15 +2,16 @@
 
 package com.db4o.db4ounit.optional.monitoring.cs;
 
+import com.db4o.*;
+import com.db4o.config.*;
 
-import com.db4o.ObjectContainer;
-import com.db4o.config.Configuration;
-
-import db4ounit.Assert;
+import db4ounit.*;
 
 @decaf.Ignore
 public class MonitoredClientSocket4TestCase extends MonitoredSocket4TestCaseBase {
 	
+	private static final int EXERCISES_COUNT = 3;
+
 	public void configureClient(Configuration config) throws Exception {
 		configure(config);		
 	}
@@ -21,62 +22,79 @@ public class MonitoredClientSocket4TestCase extends MonitoredSocket4TestCaseBase
 	@Override
 	protected void configure(Configuration legacy) throws Exception {
 		super.configure(legacy);
-		_socket4Factory = setupNewSocketFactory(legacy);
+		legacy.clientServer().batchMessages(false);
+		legacy.clientServer().prefetchIDCount(1);
+		
+		_socket4Factory = setupNewSocketFactory(legacy);		
+	}
+	
+	public void testBytesReceived() {
+		exerciseSingleClient(new BytesReceivedCounterHandler());
 	}
 	
 	public void testBytesSent() {
-		storeAndAdvanceClock();
-		
-		Assert.isGreater(0, (long) observedBytesSent(db()));
-		Assert.areEqual(observedBytesSent(db()), bean().<Double>getAttribute("BytesSentPerSecond").doubleValue());
+		exerciseSingleClient(new BytesSentCounterHandler());
+	}
+
+	public void testMessagesSent() {
+		exerciseSingleClient(new MessagesSentCounterHandler());
 	}
 
 	public void testBytesSentTwoClients() {
-		withTwoClients(new TwoClientsAction() { public void apply(ObjectContainer client1, ObjectContainer client2) {
-			assertBytesSent(client1, new Item("bar"));
-			assertBytesSent(client2, new Item("foobar"));			
-		}});		
+		exerciseTwoClients(new BytesSentCounterHandler());
+	}
+
+	public void testMessagesSentTwoClients() {
+		exerciseTwoClients(new MessagesSentCounterHandler());
 	}
 	
+	public void testBytesReceivedTwoClients() {
+		exerciseTwoClients(new BytesReceivedCounterHandler());
+	}
+
 	public void testBytesSentTwoClientsInterleaved() {
+		exerciseTwoClientsInterleaved(new BytesSentCounterHandler());
+	}
+
+	public void testBytesReceivedTwoClientsInterleaved() {
+		exerciseTwoClientsInterleaved(new BytesReceivedCounterHandler());
+	}
+
+	private void assertTwoClients(final CounterHandler counterHandler) {
 		withTwoClients(new TwoClientsAction() { public void apply(ObjectContainer client1, ObjectContainer client2) {
-			double clientCount1 = storeAndReturnObservedBytesSent(client1, new Item("bar"));			
-			double clientCount2 = storeAndReturnObservedBytesSent(client2, new Item("foobar"));
+			assertCounter(client1, new Item("bar"), counterHandler);
+			assertCounter(client2, new Item("foobar"), counterHandler);
+		}});
+	}
+	
+	private void assertTwoClientsInterleaved(final CounterHandler counterHandler) {
+		withTwoClients(new TwoClientsAction() { public void apply(ObjectContainer client1, ObjectContainer client2) {
+			double clientCount1 = storeAndReturnObservedCounters(client1, new Item("bar"), counterHandler);			
+			double clientCount2 = storeAndReturnObservedCounters(client2, new Item("foobar"), counterHandler);
 			_clock.advance(1000);
 			
-			Assert.areEqual(clientCount1, getBytesSentPerSecond(client1), "Client 1");
-			Assert.areEqual(clientCount2, getBytesSentPerSecond(client2), "Client 2");					
+			Assert.isGreater(0, (long) clientCount1);
+			Assert.isGreater(0, (long) clientCount2);
+			Assert.areEqual(clientCount1, counterHandler.actualValue(client1), "Client 1");
+			Assert.areEqual(clientCount2, counterHandler.actualValue(client2), "Client 2");					
 		}});
-	}
-
-	@Override
-	protected void withTwoClients(final TwoClientsAction action) {
-		super.withTwoClients(new TwoClientsAction() { public void apply(ObjectContainer client1, ObjectContainer client2) {
-			resetBeanCounterFor(client1, client2);
-			action.apply(client1, client2);			
-		}});
-	}
-
-	private void assertBytesSent(ObjectContainer client, Item item) {
-		resetBeanCounterFor(client); 
-		
-		double expectedCount = storeAndReturnObservedBytesSent(client, item);
-		_clock.advance(1000);
-		
-		Assert.areEqual(expectedCount, getBytesSentPerSecond(client));
 	}
 	
-	private void storeAndAdvanceClock() {
-		store(new Item("foo"));
+	private void assertCounter(ObjectContainer client, Item item, CounterHandler bytesSentHandler) {
+		double expectedCount = storeAndReturnObservedCounters(client, item, bytesSentHandler);
 		_clock.advance(1000);
+		Assert.isGreater(0, (long) expectedCount);
+		Assert.areEqual(expectedCount, bytesSentHandler.actualValue(client));
 	}
-
-	private double storeAndReturnObservedBytesSent(ObjectContainer client, Item item) {		
+	
+	private double storeAndReturnObservedCounters(ObjectContainer client, Item item, CounterHandler handler) {		
+		resetAllBeanCountersFor(client); 
 		resetCountingSocket(client);
+		
 		client.store(item);
-		return observedBytesSent(client);
+		return handler.expectedValue(client);
 	}
-
+	
 	private void resetCountingSocket(ObjectContainer container) {
 		CountingSocket4Factory countingSocketFactory = configuredSocketFactoryFor(container);
 
@@ -84,4 +102,22 @@ public class MonitoredClientSocket4TestCase extends MonitoredSocket4TestCaseBase
 			socket.resetCount();
 		}
 	}
+	
+	private void exerciseSingleClient(CounterHandler handler) {
+		for(int i = 0; i < EXERCISES_COUNT; i++) {
+			assertCounter(db(), new Item("foo"), handler);
+		}
+	}
+	
+	private void exerciseTwoClients(CounterHandler handler) {
+		for(int i=0; i < EXERCISES_COUNT; i++){
+			assertTwoClients(handler);
+		}
+	}	
+	
+	private void exerciseTwoClientsInterleaved(CounterHandler handler) {
+		for (int i=0; i < EXERCISES_COUNT; i++){
+			assertTwoClientsInterleaved(handler);
+		}
+	}	
 }
