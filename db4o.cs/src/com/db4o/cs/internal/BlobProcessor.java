@@ -4,7 +4,6 @@ package com.db4o.cs.internal;
 
 import com.db4o.cs.internal.messages.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.network.*;
 
 class BlobProcessor implements Runnable {
 	
@@ -28,7 +27,7 @@ class BlobProcessor implements Runnable {
 	
 	public void run(){
 		try{
-			Socket4Adapter socket = stream.createParalellSocket();
+			Socket4Adapter socket = stream.createParallelSocket();
 			
 			MsgBlob msg = null;
 			
