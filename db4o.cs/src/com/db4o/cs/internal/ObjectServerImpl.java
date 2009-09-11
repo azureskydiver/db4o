@@ -2,18 +2,18 @@
 
 package com.db4o.cs.internal;
 
-import java.io.IOException;
+import java.io.*;
 
 import com.db4o.*;
-import com.db4o.config.Configuration;
+import com.db4o.config.*;
 import com.db4o.cs.internal.messages.*;
-import com.db4o.events.Event4;
+import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
-import com.db4o.internal.events.Event4Impl;
-import com.db4o.internal.threading.ThreadPool4;
+import com.db4o.internal.events.*;
+import com.db4o.internal.threading.*;
 
 public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtObjectServer, Runnable {
 	
@@ -48,6 +48,7 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	
 	private final ClassInfoHelper _classInfoHelper = new ClassInfoHelper();
 	
+	private final Event4Impl<StringEventArgs> _clientDisconnected = Event4Impl.newInstance();
 	private final Event4Impl<ClientConnectionEventArgs> _clientConnected = Event4Impl.newInstance();
 	private final Event4Impl<ServerClosedEventArgs> _closed = Event4Impl.newInstance();
 	
@@ -307,6 +308,8 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 			_dispatchers.remove(dispatcher);
             checkCaresAboutCommitted();
 		}
+		
+		triggerClientDisconnected(dispatcher.name());
 	}
 
 	public synchronized void revokeAccess(String userName) {
@@ -351,7 +354,6 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 							_serverSocket.accept(), newThreadId(), false, _container.lock());
 					
 					addServerMessageDispatcher(messageDispatcher);
-					triggerClientConnected(messageDispatcher);
 						
 					threadPool().start(messageDispatcher);
 				} catch (Exception e) {
@@ -364,6 +366,10 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	private void triggerClientConnected(ServerMessageDispatcher messageDispatcher) {
 		_clientConnected.trigger(new ClientConnectionEventArgs(messageDispatcher));
     }
+	
+	private void triggerClientDisconnected(String clientName) {
+		_clientDisconnected.trigger(new StringEventArgs(clientName));
+    }	
 
 	private void triggerClosed() {
 		_closed.trigger(new ServerClosedEventArgs());
@@ -384,11 +390,13 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 		return i_threadIDGen++;
 	}
 
-	private void addServerMessageDispatcher(ServerMessageDispatcher thread) {
+	private void addServerMessageDispatcher(ServerMessageDispatcher dispatcher) {
 		synchronized (_dispatchers) {
-			_dispatchers.add(thread);
+			_dispatchers.add(dispatcher);
             checkCaresAboutCommitted();
 		}
+		
+		triggerClientConnected(dispatcher);
 	}
 
 	public void addCommittedInfoMsg(MCommittedInfo message) {
@@ -441,6 +449,10 @@ public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtOb
 	public Event4<ClientConnectionEventArgs> clientConnected() {
 		return _clientConnected;
     }
+	
+	public Event4<StringEventArgs> clientDisconnected() {
+		return _clientDisconnected;
+    }	
 
 	public Event4<ServerClosedEventArgs> closed() {
 		return _closed;
