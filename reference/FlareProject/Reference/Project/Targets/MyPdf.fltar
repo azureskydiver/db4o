@@ -1,4 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<CatapultTarget Version="1" Comment="test pdf target" Type="PDF" Destinations="" GlossaryTermConversion="marked" conditions="" GetLatestBeforeCompile="true" ConditionTagExpression="include[Primary.Print] " PatchHeadingLevels="true" TargetLanguage="en">
-    <DocumentProperties Subject="db4o" Title="Reference" />
-</CatapultTarget>
