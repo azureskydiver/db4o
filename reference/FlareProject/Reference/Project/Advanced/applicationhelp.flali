@@ -1,5 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<CatapultAliasFile conditions="Primary.Print">
-    <Map Name="First" Link="/Content/Basic_Concepts.htm" />
-    <Map Name="Second" Link="/Content/Basic_Concepts/acid_model.htm" />
-</CatapultAliasFile>
