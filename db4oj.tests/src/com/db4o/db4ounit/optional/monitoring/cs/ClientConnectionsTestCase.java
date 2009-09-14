@@ -24,18 +24,17 @@ public class ClientConnectionsTestCase extends TestWithTempFile implements OptOu
 	private ObjectServerImpl _server;
 	private ClientConnections _bean;
 
-	public void testConnectedClients() {
-		
+	public void _testConnectedClients() {
 		for(int i=0; i < 3; i++) {
 			Assert.areEqual(0, connectedClientCount());
 			ExtObjectContainer client1 = openNewSession();
-			Assert.areEqual(1, connectedClientCount(), "client1");
+			Assert.areEqual(1, connectedClientCount(), "client1:" + i);
 			ExtObjectContainer client2 = openNewSession();
-			Assert.areEqual(2, connectedClientCount(), "client1 and client2");
+			Assert.areEqual(2, connectedClientCount(), "client1 and client2: " + i);
 			ensureClose(client1);
-			Assert.areEqual(1, connectedClientCount(), "client2");
+			Assert.areEqual(1, connectedClientCount(), "client2: " + i);
 			ensureClose(client2);
-			Assert.areEqual(0, connectedClientCount());
+			Assert.areEqual(0, connectedClientCount(), "" + i);
 		}		
 	}
 
