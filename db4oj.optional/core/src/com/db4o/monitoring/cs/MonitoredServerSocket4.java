@@ -23,16 +23,17 @@ class MonitoredServerSocket4 extends ServerSocket4Decorator {
 	
 	Networking bean() {
 		if (_bean == null) {
-			_bean = Db4oMBeans.newNetworkingStatsMBean(my(ObjectContainer.class));			
-			unregisterBeanOnServerClose(_bean);			
+			_bean = Db4oMBeans.newServerNetworkingStatsMBean(my(ObjectContainer.class));			
+			unregisterBeanOnServerClose();			
 		}
 		return _bean;
 	}
 
-	private void unregisterBeanOnServerClose(final Networking bean) {
+	private void unregisterBeanOnServerClose() {
 		EventRegistry events = EventRegistryFactory.forObjectContainer(my(ObjectContainer.class));
 		events.closing().addListener(new EventListener4<ObjectContainerEventArgs>() { public void onEvent(Event4<ObjectContainerEventArgs> e, ObjectContainerEventArgs args) {
-			bean.unregister();
+			_bean.unregister();
+			_bean = null;
 		}});
 	}
 	

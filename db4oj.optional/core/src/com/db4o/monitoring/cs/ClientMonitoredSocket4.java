@@ -25,6 +25,6 @@ public class ClientMonitoredSocket4 extends MonitoredSocket4 {
 	
 	@Override
 	protected Networking produceMBean() {
-		return Db4oMBeans.newNetworkingStatsMBean(my(ObjectContainer.class));
+		return Db4oMBeans.newClientNetworkingStatsMBean(my(ObjectContainer.class));
 	}	
 }
