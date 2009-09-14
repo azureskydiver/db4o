@@ -60,17 +60,21 @@ public class MonitoredServerSocket4TestCase extends MonitoredSocket4TestCaseBase
 	}
 	
 	private void assertCounter(CounterHandler handler) {
+		NetworkingConfiguration networkConfig = Db4oClientServerLegacyConfigurationBridge.asNetworkingConfiguration(fileSession().config());
+		CountingSocket4Factory factory= (CountingSocket4Factory) networkConfig.socketFactory();
+		
 		store(new Item("default client"));
+		factory.freezeCounters();
 		_clock.advance(1000);
 		
-		NetworkingConfiguration networkConfig = Db4oClientServerLegacyConfigurationBridge.asNetworkingConfiguration(fileSession().config());
-	 	CountingSocket4Factory factory= (CountingSocket4Factory) networkConfig.socketFactory();
-	 	CountingSocket4 countingSocket = factory.connectedClients().get(0);
+		CountingSocket4 countingSocket = factory.connectedClients().get(0);
 	 	
-		Assert.isGreater(0, (long) handler.expectedValue(countingSocket));
+		double expected = handler.expectedValue(countingSocket);
+		double actual = handler.actualValue(fileSession());
+		Assert.isGreater(0, (long) expected);
 		Assert.areEqual(
-				handler.expectedValue(countingSocket),				
-				handler.actualValue(fileSession()));
+				expected,				
+				actual);
 	}	
 	
 	private void assertTwoClients(final CounterHandler handler) {
@@ -87,11 +91,15 @@ public class MonitoredServerSocket4TestCase extends MonitoredSocket4TestCaseBase
 			
 			client1.store(new Item("foo"));			
 			client2.store(new Item("bar"));
-			_clock.advance(1000);		
 			
+			_clock.advance(1000);		
+			factory.freezeCounters();
+			
+			double expected = handler.expectedValue(countingSocket1) + handler.expectedValue(countingSocket2);
+			double actual = handler.actualValue(fileSession());
 			Assert.areEqual(
-					handler.expectedValue(countingSocket1) + handler.expectedValue(countingSocket2),
-					handler.actualValue(fileSession()));			
+					expected,
+					actual);			
 		}});
 	}
 
