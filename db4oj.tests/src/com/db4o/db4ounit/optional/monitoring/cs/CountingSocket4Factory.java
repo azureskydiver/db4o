@@ -35,6 +35,12 @@ public class CountingSocket4Factory implements Socket4Factory {
 		return _acceptedClients.connectedClients();
 	}
 
+	public void freezeCounters() {
+		for (CountingSocket4 socket : _sockets) {
+			socket.freezeCounters();
+		}
+	}
+	
 	private CountingServerSocket4 _acceptedClients;
 	private Socket4Factory _socketFactory;
 	private List<CountingSocket4> _sockets = new ArrayList<CountingSocket4>();
