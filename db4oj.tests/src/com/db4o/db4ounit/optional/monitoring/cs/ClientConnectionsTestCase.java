@@ -13,9 +13,10 @@ import com.db4o.monitoring.*;
 import com.db4o.monitoring.cs.*;
 
 import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 
 @decaf.Ignore
-public class ClientConnectionsTestCase extends TestWithTempFile {
+public class ClientConnectionsTestCase extends TestWithTempFile implements OptOutAllButNetworkingCS {
 
 	private static final int PORT = 0xDB40;
 	private static final String USER = "db4o";
