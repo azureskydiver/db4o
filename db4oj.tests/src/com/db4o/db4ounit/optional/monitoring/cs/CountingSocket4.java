@@ -17,18 +17,14 @@ public class CountingSocket4 extends Socket4Decorator {
 
 	public void write(byte[] bytes, int offset, int count) throws IOException {
 		super.write(bytes, offset, count);
-		if(!_frozen) {
-			_bytesSent += count;
-			_messagesSent++;	
-		}
+		_bytesSent += count;
+		_messagesSent++;	
 	}
 
 	@Override
 	public int read(byte[] buffer, int offset, int count) throws IOException {
 		int bytesReceived = super.read(buffer, offset, count);
-		if(!_frozen) {
-			_bytesReceived += bytesReceived;
-		}
+		_bytesReceived += bytesReceived;
 		return bytesReceived;
 	}
 	
@@ -50,11 +46,6 @@ public class CountingSocket4 extends Socket4Decorator {
 		_messagesSent = 0.0;
 	}
 	
-	public void freezeCounters() {
-		_frozen = true;
-	}
-	
-	private boolean _frozen = false;
 	private double _bytesSent;
 	private double _bytesReceived;
 	private double _messagesSent;

@@ -60,7 +60,7 @@ public class Db4oMBeans {
 		}
 	}
 
-	public static Networking newNetworkingStatsMBean(ObjectContainer container) {
+	public static Networking newClientNetworkingStatsMBean(ObjectContainer container) {
 		try {
 			final ObjectName objectName = mBeanNameFor(NetworkingMBean.class, container.toString());
 			return new Networking(objectName);
@@ -68,6 +68,16 @@ public class Db4oMBeans {
 			throw new Db4oException(e);
 		}
 	}
+	
+	public static Networking newServerNetworkingStatsMBean(ObjectContainer container) {
+		try {
+			final ObjectName objectName = mBeanNameFor(NetworkingMBean.class, container.toString());
+			return new SynchronizedNetworking(objectName);
+		} catch (JMException e) {
+			throw new Db4oException(e);
+		}
+	}
+	
 	
 	public static ClientConnections newClientConnectionsStatsMBean(ObjectServer server) {
 		try {

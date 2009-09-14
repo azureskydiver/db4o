@@ -5,7 +5,7 @@
  */
 package com.db4o.db4ounit.optional.monitoring.cs;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import com.db4o.foundation.network.*;
@@ -33,12 +33,6 @@ public class CountingSocket4Factory implements Socket4Factory {
 	
 	public List<CountingSocket4> connectedClients() {
 		return _acceptedClients.connectedClients();
-	}
-
-	public void freezeCounters() {
-		for (CountingSocket4 socket : _sockets) {
-			socket.freezeCounters();
-		}
 	}
 	
 	private CountingServerSocket4 _acceptedClients;

@@ -18,6 +18,8 @@ import db4ounit.extensions.fixtures.*;
 @decaf.Ignore
 public abstract class MonitoredSocket4TestCaseBase extends MBeanTestCaseBase implements OptOutAllButNetworkingCS , CustomClientServerConfiguration {
 
+	protected static final int EXERCISES_COUNT = 3;
+
 	@Override
 	protected Class<?> beanInterface() {
 		return NetworkingMBean.class;

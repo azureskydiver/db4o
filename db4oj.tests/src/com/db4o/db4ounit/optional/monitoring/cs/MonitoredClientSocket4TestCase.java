@@ -10,8 +10,6 @@ import db4ounit.*;
 @decaf.Ignore
 public class MonitoredClientSocket4TestCase extends MonitoredSocket4TestCaseBase {
 	
-	private static final int EXERCISES_COUNT = 3;
-
 	public void configureClient(Configuration config) throws Exception {
 		configure(config);		
 	}
@@ -119,5 +117,5 @@ public class MonitoredClientSocket4TestCase extends MonitoredSocket4TestCaseBase
 		for (int i=0; i < EXERCISES_COUNT; i++){
 			assertTwoClientsInterleaved(handler);
 		}
-	}	
+	}
 }
