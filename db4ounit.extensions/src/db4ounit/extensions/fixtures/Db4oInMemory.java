@@ -60,8 +60,7 @@ public class Db4oInMemory extends AbstractSoloDb4oFixture {
 	}
 
 	public void defragment() throws Exception {
-		// do nothing
-		// defragment is file-based for now
+		defragment(DB_URI);
 	}
 	
 }
