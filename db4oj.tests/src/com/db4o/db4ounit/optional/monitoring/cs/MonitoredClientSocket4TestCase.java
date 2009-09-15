@@ -3,27 +3,32 @@
 package com.db4o.db4ounit.optional.monitoring.cs;
 
 import com.db4o.*;
-import com.db4o.config.*;
+import com.db4o.cs.*;
+import com.db4o.cs.config.*;
+import com.db4o.ext.*;
 
 import db4ounit.*;
 
 @decaf.Ignore
 public class MonitoredClientSocket4TestCase extends MonitoredSocket4TestCaseBase {
 	
-	public void configureClient(Configuration config) throws Exception {
-		configure(config);		
+	@Override
+	protected ServerConfiguration serverConfiguration() {
+		ServerConfiguration serverConfig = Db4oClientServer.newServerConfiguration();	
+		return serverConfig;
 	}
 
-	public void configureServer(Configuration config) throws Exception {
-	}
-	
 	@Override
-	protected void configure(Configuration legacy) throws Exception {
-		super.configure(legacy);
-		legacy.clientServer().batchMessages(false);
-		legacy.clientServer().prefetchIDCount(1);
+	protected ClientConfiguration clientConfiguration() {
+		ClientConfiguration clientConfig = Db4oClientServer.newClientConfiguration();
 		
-		_socket4Factory = setupNewSocketFactory(legacy);		
+		clientConfig.networking().batchMessages(false);
+		clientConfig.prefetchIDCount(1);
+
+		_socket4Factory = setupNewSocketFactory(clientConfig.networking());
+		configureClock(clientConfig.common().environment());
+		
+		return clientConfig;
 	}
 	
 	public void testBytesReceived() {
@@ -69,7 +74,7 @@ public class MonitoredClientSocket4TestCase extends MonitoredSocket4TestCaseBase
 		withTwoClients(new TwoClientsAction() { public void apply(ObjectContainer client1, ObjectContainer client2) {
 			double clientCount1 = storeAndReturnObservedCounters(client1, new Item("bar"), counterHandler);			
 			double clientCount2 = storeAndReturnObservedCounters(client2, new Item("foobar"), counterHandler);
-			_clock.advance(1000);
+			advanceClock(1000);
 			
 			Assert.isGreater(0, (long) clientCount1);
 			Assert.isGreater(0, (long) clientCount2);
@@ -80,7 +85,7 @@ public class MonitoredClientSocket4TestCase extends MonitoredSocket4TestCaseBase
 	
 	private void assertCounter(ObjectContainer client, Item item, CounterHandler bytesSentHandler) {
 		double expectedCount = storeAndReturnObservedCounters(client, item, bytesSentHandler);
-		_clock.advance(1000);
+		advanceClock(1000);
 		Assert.isGreater(0, (long) expectedCount);
 		Assert.areEqual(expectedCount, bytesSentHandler.actualValue(client));
 	}
@@ -102,8 +107,14 @@ public class MonitoredClientSocket4TestCase extends MonitoredSocket4TestCaseBase
 	}
 	
 	private void exerciseSingleClient(CounterHandler handler) {
-		for(int i = 0; i < EXERCISES_COUNT; i++) {
-			assertCounter(db(), new Item("foo"), handler);
+		ExtObjectContainer client = openNewSession();
+		try {
+			for(int i = 0; i < EXERCISES_COUNT; i++) {
+				assertCounter(client, new Item("foo"), handler);
+			}
+		}
+		finally {
+			client.close();
 		}
 	}
 	
