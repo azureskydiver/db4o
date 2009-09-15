@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import com.db4o.collections.*;
-import com.db4o.db4ounit.jre12.collections.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;

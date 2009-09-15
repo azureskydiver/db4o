@@ -4,7 +4,6 @@ package com.db4o.db4ounit.jre12.collections.transparent.list;
 
 import java.util.*;
 
-import com.db4o.db4ounit.jre12.collections.*;
 import com.db4o.db4ounit.jre12.collections.transparent.*;
 
 import db4ounit.*;

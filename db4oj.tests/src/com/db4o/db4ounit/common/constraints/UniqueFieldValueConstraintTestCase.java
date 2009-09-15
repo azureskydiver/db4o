@@ -4,7 +4,7 @@ package com.db4o.db4ounit.common.constraints;
 
 import com.db4o.config.*;
 import com.db4o.constraints.*;
-import com.db4o.internal.Platform4;
+import com.db4o.internal.*;
 import com.db4o.query.*;
 
 import db4ounit.*;

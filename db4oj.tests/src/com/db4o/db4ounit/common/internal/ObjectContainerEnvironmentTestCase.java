@@ -1,6 +1,6 @@
 package com.db4o.db4ounit.common.internal;
 
-import static com.db4o.foundation.Environments.*;
+import static com.db4o.foundation.Environments.my;
 
 import com.db4o.*;
 

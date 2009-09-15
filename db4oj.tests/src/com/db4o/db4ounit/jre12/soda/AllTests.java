@@ -4,8 +4,6 @@ package com.db4o.db4ounit.jre12.soda;
 
 import com.db4o.db4ounit.common.util.*;
 import com.db4o.db4ounit.jre12.soda.collections.*;
-import com.db4o.db4ounit.jre12.soda.deepOR.*;
-import com.db4o.db4ounit.jre12.soda.experiments.*;
 
 import db4ounit.extensions.*;
 

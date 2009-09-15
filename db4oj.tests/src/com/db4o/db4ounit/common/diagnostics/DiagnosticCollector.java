@@ -2,11 +2,9 @@
 
 package com.db4o.db4ounit.common.diagnostics;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import com.db4o.diagnostic.Diagnostic;
-import com.db4o.diagnostic.DiagnosticListener;
+import com.db4o.diagnostic.*;
 
 public class DiagnosticCollector implements DiagnosticListener {
 

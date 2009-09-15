@@ -1,6 +1,7 @@
 package com.db4o.db4ounit.common.cs.objectexchange;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createControl;
+import static org.easymock.EasyMock.expect;
 
 import java.util.*;
 

@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.common.cs;
 
-import com.db4o.cs.Db4oClientServer;
+import com.db4o.cs.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
 

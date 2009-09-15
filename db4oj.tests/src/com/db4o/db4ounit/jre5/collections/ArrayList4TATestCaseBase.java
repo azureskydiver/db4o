@@ -8,9 +8,6 @@ import com.db4o.collections.*;
 import com.db4o.db4ounit.common.ta.*;
 import com.db4o.ext.*;
 
-import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
-
 /**
  * @exclude
  * @sharpen.ignore
