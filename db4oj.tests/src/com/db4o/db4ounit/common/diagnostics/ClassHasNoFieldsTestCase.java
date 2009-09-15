@@ -2,18 +2,16 @@
 
 package com.db4o.db4ounit.common.diagnostics;
 
-import java.util.List;
+import java.util.*;
 
-import com.db4o.config.Configuration;
-import com.db4o.diagnostic.ClassHasNoFields;
-import com.db4o.diagnostic.Diagnostic;
-import com.db4o.foundation.NativeCollections;
-import com.db4o.foundation.Predicate4;
-import com.db4o.internal.ReflectPlatform;
+import com.db4o.config.*;
+import com.db4o.diagnostic.*;
+import com.db4o.foundation.*;
+import com.db4o.internal.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
-import db4ounit.extensions.fixtures.CustomClientServerConfiguration;
+import db4ounit.*;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 public class ClassHasNoFieldsTestCase extends AbstractDb4oTestCase implements CustomClientServerConfiguration {
 	

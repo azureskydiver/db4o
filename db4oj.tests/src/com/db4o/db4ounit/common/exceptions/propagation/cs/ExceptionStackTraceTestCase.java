@@ -12,7 +12,7 @@ import com.db4o.cs.*;
 import com.db4o.cs.config.*;
 import com.db4o.db4ounit.common.api.*;
 import com.db4o.events.*;
-import com.db4o.internal.Platform4;
+import com.db4o.internal.*;
 
 import db4ounit.*;
 

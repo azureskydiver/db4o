@@ -5,7 +5,6 @@ package com.db4o.db4ounit.common.ta;
 import com.db4o.ext.*;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
 import db4ounit.mocking.*;
 
 public class ActivatableTestCase extends TransparentActivationTestCaseBase {

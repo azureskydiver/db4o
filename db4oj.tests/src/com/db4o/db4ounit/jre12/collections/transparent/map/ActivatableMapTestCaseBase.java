@@ -5,7 +5,6 @@ package com.db4o.db4ounit.jre12.collections.transparent.map;
 import java.util.*;
 
 import com.db4o.config.*;
-import com.db4o.db4ounit.jre12.collections.*;
 import com.db4o.db4ounit.jre12.collections.transparent.*;
 import com.db4o.db4ounit.jre12.collections.transparent.map.ActivatableHashMapTestCase.*;
 import com.db4o.ta.*;

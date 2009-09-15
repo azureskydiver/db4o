@@ -1,6 +1,6 @@
 package com.db4o.db4ounit.common.cs.caching;
 
-import static com.db4o.foundation.Environments.*;
+import static com.db4o.foundation.Environments.my;
 
 import com.db4o.*;
 import com.db4o.cs.caching.*;

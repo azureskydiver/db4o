@@ -6,7 +6,6 @@ import com.db4o.config.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.fieldindex.*;
-import com.db4o.internal.query.processor.*;
 import com.db4o.query.*;
 
 import db4ounit.*;

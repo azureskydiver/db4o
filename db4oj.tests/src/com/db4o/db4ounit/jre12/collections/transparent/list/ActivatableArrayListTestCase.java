@@ -6,7 +6,6 @@ import java.util.*;
 
 import com.db4o.activation.*;
 import com.db4o.collections.*;
-import com.db4o.db4ounit.jre12.collections.*;
 import com.db4o.db4ounit.jre12.collections.transparent.*;
 
 import db4ounit.*;
