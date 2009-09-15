@@ -1781,6 +1781,7 @@
 	</target>
 	
 	<target name="cc.step.1" depends="build.db4ojava, build.db4ojava.tests, run.tests.jdk1.5" />
+	
 	<target name="cc.step.3" 
 		depends="run.tests.jdk1.1, 
 				run.tests.jdk1.2, 
