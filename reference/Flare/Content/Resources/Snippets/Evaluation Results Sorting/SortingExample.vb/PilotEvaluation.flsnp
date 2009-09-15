@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SortingExample.vb: PilotEvaluation
+1Private Class PilotEvaluationClass PilotEvaluation
+2            Implements IEvaluation
+3
+4            Public Sub Evaluate()Sub Evaluate(ByVal candidate As ICandidate) Implements IEvaluation.Evaluate
+5                Dim pilot As Pilot = CType(candidate.GetObject, Pilot)
+6                candidate.Include(pilot.Points Mod 2 = 0)
+7            End Sub
+8        End Class</div</pre>    </body></html>

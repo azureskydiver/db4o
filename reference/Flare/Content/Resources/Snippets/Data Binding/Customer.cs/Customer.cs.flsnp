@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Customer.cs
+/**//* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+namespace Db4objects.Db4odoc.Binding
+...{
+  /**//// &lt;summary&gt;
+  /// A simple business class.
+  /// &lt;/summary&gt;
+  public class Customer
+  ...{
+    string _name;
+    string _phoneNumber;
+
+    public Customer(string name, string phoneNumber)
+    ...{
+      _name = name;
+      _phoneNumber = phoneNumber;
+    }
+
+    public string Name
+    ...{
+      get
+      ...{
+        return _name;
+      }
+
+      set
+      ...{
+        _name = value;
+      }
+    }
+
+    public string PhoneNumber
+    ...{
+      get
+      ...{
+        return _phoneNumber;
+      }
+
+      set
+      ...{
+        _phoneNumber = value;
+      }
+    }
+  }
+}</pre>    </body></html>

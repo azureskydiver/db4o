@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CallbacksExample.cs: OnDeleted
+1private static void OnDeleted(object sender, ObjectEventArgs args)
+2        ...{
+3            Object obj = args.Object;
+4            if (obj is Car)
+5            ...{
+6                OpenContainer().Delete(((Car)obj).Pilot);
+7            }
+8        }</pre>    </body></html>

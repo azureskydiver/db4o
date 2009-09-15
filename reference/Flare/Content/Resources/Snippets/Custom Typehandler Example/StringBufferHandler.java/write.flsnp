@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBufferHandler.java: write
+1public void write(WriteContext context, Object obj) ...{
+2    String str = ((StringBuffer)obj).toString();
+3    WriteBuffer buffer = context;
+4    buffer.writeInt(str.length());
+5    writeToBuffer(buffer, str);
+6  }</pre>    </body></html>

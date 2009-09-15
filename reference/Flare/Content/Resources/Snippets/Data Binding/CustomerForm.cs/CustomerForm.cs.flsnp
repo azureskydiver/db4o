@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CustomerForm.cs
+1using System;
+2using System.IO;
+3using System.Drawing;
+4using System.Collections;
+5using System.ComponentModel;
+6using System.Windows.Forms;
+7using Db4objects.Db4o;
+8
+9namespace Db4objects.Db4odoc.Binding
+0...{
+1  /**//// &lt;summary&gt;
+2  /// Summary description for CustomerForm.
+3  /// &lt;/summary&gt;
+4  public class CustomerForm : System.Windows.Forms.Form
+5  ...{
+6    internal System.Windows.Forms.TextBox _txtPhoneNumber;
+7    internal System.Windows.Forms.ComboBox _cmbCustomers;
+8
+9    /**//// &lt;summary&gt;
+0    /// Required designer variable.
+1    /// &lt;/summary&gt;
+2    private System.ComponentModel.Container components = null;
+3        
+4    internal System.Windows.Forms.Label _labelPhone;
+5    internal System.Windows.Forms.Label _labelName;
+6
+7    private IObjectContainer _container = null;
+8
+9    private ArrayList _customers = new ArrayList();
+0
+1    public CustomerForm()
+2    ...{
+3      //
+4      // Required for Windows Form Designer support
+5      //
+6      InitializeComponent();
+7
+8      OpenDataFile();
+9      SetUpDataBindings();
+0    }
+1
+2    void OpenDataFile()
+3    ...{
+4      string dataFile = Path.Combine(Application.UserAppDataPath, &quot;data.yap&quot;);
+5      _container = Db4oFactory.OpenFile(dataFile);
+6    }
+7
+8    void SetUpDataBindings()
+9    ...{
+0      ObjectSet os = _container.Get(typeof(Customer));
+1      if (0 == os.Size())
+2      ...{
+3        // Generate some initial data
+4        _customers.Add(new Customer(&quot;John Cleese&quot;, &quot;55-98763333&quot;));
+5        _customers.Add(new Customer(&quot;Herman Hesse&quot;,&quot;32-33335555&quot;));
+6        _customers.Add(new Customer(&quot;Douglas Adams&quot;, &quot;42-42424242&quot;));
+7      }
+8      else
+9      ...{
+0        while (os.HasNext())
+1        ...{
+2          _customers.Add(os.Next());
+3        }
+4      }
+5      _cmbCustomers.DisplayMember = &quot;Name&quot;;
+6      _cmbCustomers.DataSource = _customers;
+7      _txtPhoneNumber.DataBindings.Add(&quot;Text&quot;, _customers, &quot;PhoneNumber&quot;);
+8    }
+9
+0    void PersistChanges()
+1    ...{
+2      foreach (Customer customer in _customers)
+3      ...{
+4        _container.Set(customer);
+5      }
+6    }
+7
+8    protected override void OnClosing(CancelEventArgs e)
+9    ...{
+0      PersistChanges();
+1      _container.Close();
+2      base.OnClosing (e);
+3    }
+4
+5    /**//// &lt;summary&gt;
+6    /// Clean up any resources being used.
+7    /// &lt;/summary&gt;
+8    protected override void Dispose( bool disposing )
+9    ...{
+0      if( disposing )
+1      ...{
+2        if (components != null) 
+3        ...{
+4          components.Dispose();
+5        }
+6      }
+7      base.Dispose( disposing );
+8    }
+9
+0    Windows Form Designer generated code#region Windows Form Designer generated code
+1    /**//// &lt;summary&gt;
+2    /// Required method for Designer support - do not modify
+3    /// the contents of this method with the code editor.
+4    /// &lt;/summary&gt;
+5    private void InitializeComponent()
+6    ...{
+7      this._labelPhone = new System.Windows.Forms.Label();
+8      this._txtPhoneNumber = new System.Windows.Forms.TextBox();
+9      this._labelName = new System.Windows.Forms.Label();
+0      this._cmbCustomers = new System.Windows.Forms.ComboBox();
+1      this.SuspendLayout();
+2      // 
+3      // _labelPhone
+4      // 
+5      this._labelPhone.Location = new System.Drawing.Point(8, 48);
+6      this._labelPhone.Name = &quot;_labelPhone&quot;;
+7      this._labelPhone.Size = new System.Drawing.Size(72, 16);
+8      this._labelPhone.TabIndex = 9;
+9      this._labelPhone.Text = &quot;Phone#:&quot;;
+0      // 
+1      // _txtPhoneNumber
+2      // 
+3      this._txtPhoneNumber.Location = new System.Drawing.Point(96, 48);
+4      this._txtPhoneNumber.Name = &quot;_txtPhoneNumber&quot;;
+5      this._txtPhoneNumber.Size = new System.Drawing.Size(184, 20);
+6      this._txtPhoneNumber.TabIndex = 8;
+7      this._txtPhoneNumber.Text = &quot;&quot;;
+8      // 
+9      // _labelName
+0      // 
+1      this._labelName.Location = new System.Drawing.Point(8, 16);
+2      this._labelName.Name = &quot;_labelName&quot;;
+3      this._labelName.Size = new System.Drawing.Size(72, 16);
+4      this._labelName.TabIndex = 7;
+5      this._labelName.Text = &quot;Customer:&quot;;
+6      // 
+7      // _cmbCustomers
+8      // 
+9      this._cmbCustomers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+0        | System.Windows.Forms.AnchorStyles.Right)));
+1      this._cmbCustomers.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+2      this._cmbCustomers.Location = new System.Drawing.Point(96, 16);
+3      this._cmbCustomers.Name = &quot;_cmbCustomers&quot;;
+4      this._cmbCustomers.Size = new System.Drawing.Size(186, 21);
+5      this._cmbCustomers.TabIndex = 6;
+6      // 
+7      // MainForm
+8      // 
+9      this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+0      this.ClientSize = new System.Drawing.Size(290, 79);
+1      this.Controls.Add(this._labelPhone);
+2      this.Controls.Add(this._txtPhoneNumber);
+3      this.Controls.Add(this._labelName);
+4      this.Controls.Add(this._cmbCustomers);
+5      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+6      this.Name = &quot;MainForm&quot;;
+7      this.Text = &quot;Db4o Data Binding&quot;;
+8      this.ResumeLayout(false);
+9
+0    }
+1    #endregion
+2  }
+3}</pre>    </body></html>

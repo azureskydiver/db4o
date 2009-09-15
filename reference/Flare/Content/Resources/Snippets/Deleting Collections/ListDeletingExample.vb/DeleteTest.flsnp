@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListDeletingExample.vb: DeleteTest
+Private Shared Sub DeleteTest()Sub DeleteTest()
+            ' set cascadeOnDelete in order to delete member objects
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ObjectClass(GetType(ListObject)).CascadeOnDelete(True)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
+            Try
+                Dim result As IList(Of ListObject) = db.Query(Of ListObject)(GetType(ListObject))
+                If result.Count &gt; 0 Then
+                    ' retrieve a ListObject
+                    Dim lo1 As ListObject = result(0)
+                    ' delete the ListObject with all the field objects
+                    db.Delete(lo1)
+                End If
+            Finally
+                db.Close()
+            End Try
+            ' check ListObjects and DataObjects in the database
+            db = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                Dim listObjects As IList(Of ListObject) = db.Query(Of ListObject)(GetType(ListObject))
+                Console.WriteLine(&quot;ListObjects in the database: &quot; + listObjects.Count.ToString())
+                Dim dataObjects As IList(Of DataObject) = db.Query(Of DataObject)(GetType(DataObject))
+                Console.WriteLine(&quot;DataObjects in the database: &quot; + dataObjects.Count.ToString())
+            Finally
+                db.Close()
+            End Try
+        End Sub</pre>    </body></html>

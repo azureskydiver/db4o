@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Pilot2.cs
+/**//* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
+
+namespace Db4objects.Db4odoc.QBE
+...{
+    class Pilot2
+    ...{
+        private string _name;
+        private int _points = 100;
+
+        public Pilot2(string name, int points)
+        ...{
+            _name = name;
+            _points += points;
+        }
+
+        public string Name
+        ...{
+            get
+            ...{
+                return _name;
+            }
+            set
+            ...{
+                _name = value;
+            }
+        }
+
+        public int Points
+        ...{
+            get
+            ...{
+                return _points;
+            }
+        }
+
+        public override string ToString()
+        ...{
+            return string.Format(&quot;{0}/{1}&quot;, _name, _points);
+        }
+    }
+}</pre>    </body></html>

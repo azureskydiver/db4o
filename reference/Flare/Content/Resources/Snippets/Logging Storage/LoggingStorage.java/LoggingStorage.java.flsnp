@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LoggingStorage.java
+/**//* Copyright (C) 2004 - 2009  Versant Corporation http://www.versant.com */
+package com.db4odoc.Storage;
+
+import java.util.logging.*;
+
+import com.db4o.ext.*;
+import com.db4o.io.*;
+
+public class LoggingStorage extends StorageDecorator ...{
+
+  public LoggingStorage()...{
+    // delegate to a normal file storage
+    this(new FileStorage());
+  }
+  
+  public LoggingStorage(Storage storage) ...{
+    // use submitted storage as a delegate
+    super(storage);
+  }
+
+  /** *//**
+   * opens a logging bin for the given URI.
+   */
+  @Override
+  public Bin open(BinConfiguration config) throws Db4oIOException ...{
+    final Bin storage = super.open(config);
+    if (config.readOnly()) ...{
+      return new ReadOnlyBin(new LoggingBin(storage));
+    }
+    return new LoggingBin(storage);
+  }
+
+  /** *//**
+   * LoggingBin implementation. Allows to log information
+   * for each IO operation
+   *
+   */
+  static class LoggingBin extends BinDecorator ...{
+
+    public LoggingBin(Bin bin) ...{
+      super(bin);
+    }
+
+    // delegate to the base class and log a message
+    public void close() throws Db4oIOException ...{
+      super.close();
+      Logger.getLogger(this.getClass().getName()).log(Level.INFO,
+          &quot;File closed&quot;);
+    }
+
+    // log a message, then delegate
+    public int read(long pos, byte[] buffer, int length)
+        throws Db4oIOException ...{
+      Logger.getLogger(this.getClass().getName()).log(
+          Level.INFO,
+          String.format(&quot;Reading %d bytes and %d position&quot;, length,
+              pos));
+      return super.read(pos, buffer, length);
+
+    }
+
+    // log a message, then delegate
+    public void write(long pos, byte[] buffer, int length)
+        throws Db4oIOException ...{
+      Logger.getLogger(this.getClass().getName()).log(
+          Level.INFO,
+          String.format(&quot;Writing %d bytes and %d position&quot;, length,
+              pos));
+      super.write(pos, buffer, length);
+    }
+
+    // log a message, then delegate
+    public void sync() throws Db4oIOException ...{
+      Logger.getLogger(this.getClass().getName()).log(
+          Level.INFO,&quot;Syncing&quot;);
+      super.sync();
+    }
+
+  }
+}</pre>    </body></html>

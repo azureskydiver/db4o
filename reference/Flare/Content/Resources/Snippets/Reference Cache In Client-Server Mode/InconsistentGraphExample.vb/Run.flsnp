@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InconsistentGraphExample.vb: Run
+Public Sub Run()Sub Run()
+            File.Delete(Db4oFileName)
+            Dim server As IObjectServer = Db4oFactory.OpenServer(Db4oFileName, Port)
+            Try
+                server.GrantAccess(User, Password)
+
+                Dim client1 As IObjectContainer = OpenClient()
+                Dim client2 As IObjectContainer = OpenClient()
+
+                If client1 IsNot Nothing AndAlso client2 IsNot Nothing Then
+                    Try
+                        ' wait for the operations to finish
+                        WaitForCompletion()
+
+                        ' save pilot with client1
+                        Dim client1Car As New Car(&quot;Ferrari&quot;, 2006, New Pilot(&quot;Schumacher&quot;))
+                        client1.[Set](client1Car)
+                        client1.Commit()
+                        System.Console.WriteLine(&quot;Client1 version initially: &quot; + client1Car.ToString())
+
+                        WaitForCompletion()
+
+                        ' retrieve the same pilot with client2
+                        Dim client2Car As Car = DirectCast(client2.Query(GetType(Car)).[Next](), Car)
+                        System.Console.WriteLine(&quot;Client2 version initially: &quot; + client2Car.ToString())
+
+                        ' delete the pilot with client1
+                        Dim client1Pilot As Pilot = DirectCast(client1.Query(GetType(Pilot)).[Next](), Pilot)
+                        client1.Delete(client1Pilot)
+                        ' modify the car, add and link a new pilot with client1
+                        client1Car.Model = 2007
+                        client1Car.Pilot = New Pilot(&quot;Hakkinnen&quot;)
+                        client1.[Set](client1Car)
+                        client1.Commit()
+
+                        WaitForCompletion()
+
+                        client1Car = DirectCast(client1.Query(GetType(Car)).[Next](), Car)
+                        System.Console.WriteLine(&quot;Client1 version after update: &quot; + client1Car.ToString())
+
+
+                        System.Console.WriteLine()
+                        System.Console.WriteLine(&quot;client2Car still holds the old object graph in its reference cache&quot;)
+                        client2Car = DirectCast(client2.Query(GetType(Car)).[Next](), Car)
+                        System.Console.WriteLine(&quot;Client2 version after update: &quot; + client2Car.ToString())
+                        Dim result As IObjectSet = client2.Query(GetType(Pilot))
+                        System.Console.WriteLine(&quot;Though the new Pilot is retrieved by a new query: &quot;)
+                        ListResult(result)
+
+
+                        WaitForCompletion()
+                    Catch ex As Exception
+                        System.Console.WriteLine(ex.ToString())
+                    Finally
+                        CloseClient(client1)
+                        CloseClient(client2)
+                    End Try
+                End If
+            Catch ex As Exception
+                System.Console.WriteLine(ex.ToString())
+            Finally
+                server.Close()
+            End Try
+        End Sub</pre>    </body></html>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ExtClientExample.java: switchExtClients
+private static void switchExtClients() ...{
+    new File(DB4O_FILE_NAME).delete();
+    new File(EXTFILENAME).delete();
+    ObjectServer server = Db4oClientServer.openServer(Db4oClientServer
+        .newServerConfiguration(), DB4O_FILE_NAME, 0);
+    try ...{
+      ObjectContainer client = server.openClient();
+      deleteAll(client); // added to solve sticking objects in doctor
+      Car car = new Car(&quot;BMW&quot;);
+      client.set(car);
+      System.out.println(&quot;Objects in the main database file:&quot;);
+      retrieveAll(client);
+
+      System.out.println(&quot;Switching to additional database:&quot;);
+      ExtClient clientExt = (ExtClient) client;
+      clientExt.switchToFile(EXTFILENAME);
+      car = new Car(&quot;Ferrari&quot;);
+      clientExt.set(car);
+      retrieveAll(clientExt);
+      System.out.println(&quot;Main database file again: &quot;);
+      clientExt.switchToMainFile();
+      retrieveAll(clientExt);
+      clientExt.close();
+    } finally ...{
+      server.close();
+    }
+  }</pre>    </body></html>

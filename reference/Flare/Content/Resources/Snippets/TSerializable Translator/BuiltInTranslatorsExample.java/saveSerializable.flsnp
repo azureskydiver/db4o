@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BuiltInTranslatorsExample.java: saveSerializable
+public static void saveSerializable()
+    ...{
+        new File(DB4O_FILE_NAME).delete();
+        Configuration configuration = Db4o.newConfiguration();
+        // configure class as serializable
+        configuration.objectClass(Pilot.class).translate(new TSerializable());
+        ObjectContainer container = database(configuration);
+        if (container != null)
+        ...{
+            try
+            ...{
+                Pilot pilot = new Pilot(&quot;Test Pilot 1&quot;, 99);
+                container.set(pilot);
+                pilot = new Pilot(&quot;Test Pilot 2&quot;, 100);
+                container.set(pilot);
+            }
+            catch (Db4oException ex)
+            ...{
+              ex.printStackTrace();
+            }
+            catch (Exception ex)
+            ...{
+              ex.printStackTrace();
+            }
+            finally
+            ...{
+                closeDatabase();
+            }
+        }
+
+    }</pre>    </body></html>

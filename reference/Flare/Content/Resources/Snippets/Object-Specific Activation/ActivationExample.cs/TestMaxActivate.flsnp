@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ActivationExample.cs: TestMaxActivate
+private static void TestMaxActivate() 
+    ...{
+      StoreSensorPanel();
+      // note that the maximum is applied to the retrieved root object and limits activation
+      // further down the hierarchy
+      IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.Common.ObjectClass(typeof(SensorPanel)).MaximumActivationDepth(2);
+            IObjectContainer db = Db4oEmbedded.OpenFile(configuration, Db4oFileName);
+            try 
+      ...{
+        Console.WriteLine(&quot;Maximum activation depth = 2 (default = 5)&quot;);
+        IObjectSet result = db.QueryByExample(new SensorPanel(1));
+        ListResult(result);
+        if (result.Count &gt; 0) 
+        ...{
+          var sensor = (SensorPanel) result[0];
+          SensorPanel next = sensor.Next;
+          while (next != null) 
+          ...{
+            Console.WriteLine(next);
+            next = next.Next;
+          }
+        }
+      } 
+      finally 
+      ...{
+        db.Close();
+      }
+    
+    }</pre>    </body></html>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Transient Classes	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Transient Classes</h1><p>Some of the classes are not supposed to be persistent. Of
+course you can avoid saving their instances in your code and mark all their
+occurrences in another classes as transient (<a href="transient_fields_in_java.html" class="wikiLink">Java</a>/<a href="transient_fields_in_.net.html" class="wikiLink">.NET</a>). But that needs some attention
+and additional coding. You can achieve the same result in an easier way using
+TransientClass interface:</p>
+
+<p MadCap:conditions="Primary.Java">
+<p>Java:</p>
+
+<p><code>com.db4o.types.TransientClass</code></p>
+</p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<p>c#:</p>
+
+<p><code>Db4objects.Db4o.Types. ITransientClass</code></p>
+</p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<p>VB:</p>
+
+<p><code>Db4objects.Db4o.Types. ITransientClass</code></p>
+
+
+</p><p MadCap:conditions="Primary:vb" />
+<p>TransientClass is a marker interface, which guarantees that
+the classes implementing it will never be added to the class metadata. In fact
+they are just skipped silently by db4o persistence mechanism.</p>
+
+<p>An example of the TransientClass implementation is db4o
+object container (we do not need to save a database into itself).</p>
+
+<p>Let's look how it works on an example. We will create a
+simplest class implementing TransientClass interface:</p>
+
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../Resources/Snippets/Transient Classes/NotStorable.java/NotStorable.java.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Transient Classes/NotStorable.cs/NotStorable.cs.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Transient Classes/NotStorable.vb/NotStorable.vb.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+
+<p>NotStorable class will be used as a field in two test
+objects: <a href="transient_classes/test1.html" class="wikiLink">Test1</a> and <a href="transient_classes/test2.html" class="wikiLink">Test2</a>.</p>
+
+<p>In our example we will use the default configuration and
+save Test1 and Test2 objects just as usual:</p>
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Transient Classes/TransientClassExample.java/saveObjects.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Transient Classes/TransientClassExample.cs/SaveObjects.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Transient Classes/TransientClassExample.vb/SaveObjects.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+
+<p>Now let's try to retrieve the saved objects:</p>
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Transient Classes/TransientClassExample.java/retrieveObjects.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Transient Classes/TransientClassExample.cs/RetrieveObjects.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Transient Classes/TransientClassExample.vb/RetrieveObjects.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+
+If you will run the example code you will see
+that all the instances of NotStorable class are set to null.
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

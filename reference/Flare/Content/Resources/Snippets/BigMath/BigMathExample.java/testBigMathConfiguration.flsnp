@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BigMathExample.java: testBigMathConfiguration
+private static void testBigMathConfiguration() ...{
+    new File(DB4O_FILE_NAME).delete();
+    ObjectContainer db = Db4oEmbedded.openFile(configBigMathSupport(),
+        DB4O_FILE_NAME);
+    Probability p1 = new Probability(&quot;2e-324&quot;);
+    db.store(p1);
+    p1 = new Probability(&quot;3e-324&quot;);
+    db.store(p1);
+    p1 = new Probability(&quot;4e-324&quot;);
+    db.store(p1);
+    db.close();
+
+    db = Db4oEmbedded.openFile(configBigMathSupport(), DB4O_FILE_NAME);
+    Query q = db.query();
+    q.constrain(Probability.class);
+    q.descend(&quot;value&quot;).constrain(new BigDecimal(&quot;3e-324&quot;)).greater();
+    List&lt;Probability&gt; result = q.execute();
+    for (Probability p : result) ...{
+      System.out.println(p);
+    }
+    db.close();
+
+  }</pre>    </body></html>

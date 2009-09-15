@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQExample.java: retrieveComplexSODA
+private static void retrieveComplexSODA(ObjectContainer container) ...{
+    Query query = container.query();
+    query.constrain(Pilot.class);
+    Query pointQuery = query.descend(&quot;points&quot;);
+    query.descend(&quot;name&quot;).constrain(&quot;Rubens Barrichello&quot;).or(
+        pointQuery.constrain(new Integer(99)).greater().and(
+            pointQuery.constrain(new Integer(199))
+                .smaller()));
+    ObjectSet result = query.execute();
+    listResult(result);
+  }</div</pre>    </body></html>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: runConfigurationTest
+private void runConfigurationTest()...{
+      System.out.println(&quot;Update test with different configurations&quot;);
+      
+      //
+      clean();
+      init();
+      System.out.println(&quot;Update test: default configurations&quot;);
+      open(Db4o.newConfiguration());
+      store();
+      updateItems(90);
+      close();  
+      //
+      
+      clean();
+      System.out.println(&quot;Update test: memory IO adapter&quot;);
+      open(configure());
+      store();
+      updateItems(90);
+      close();
+      //
+      clean();
+      System.out.println(&quot;Update test: cascade on update&quot;);
+      open(configureCascade());
+      store();
+      updateTopLevelItems(90);
+      close();
+      
+      //
+      clean();
+      System.out.println(&quot;Update test: Transparent Persistence&quot;);
+      open(configureTP());
+      storeActivatableItems();
+      updateActivatableItems(90);
+      close();
+      
+    }</pre>    </body></html>

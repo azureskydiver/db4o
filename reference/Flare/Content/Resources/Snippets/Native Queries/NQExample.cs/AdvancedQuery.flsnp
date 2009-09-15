@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQExample.cs: AdvancedQuery
+1public static void AdvancedQuery(IObjectContainer db)
+2        ...{
+3            IList&lt;Pilot&gt; result = db.Query&lt;Pilot&gt;(delegate(Pilot pilot)
+4            ...{
+5                return pilot.Points &gt; 99
+6                    &amp;&amp; pilot.Points &lt; 199
+7                    || pilot.Name == &quot;Rubens Barrichello&quot;;
+8            });
+9        }</pre>    </body></html>

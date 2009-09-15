@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Client Configuration	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Client Configuration</h1><p>Client configuration methods are defined in
+ClientConfiguration/IClientConfiguration interface. ClientConfiguration extends CommonConfiguration/ICommonConfiguration interface, which means that all <a href="common_configuration.html" class="wikiLink">Common configuration</a> methods are available.</p><p MadCap:conditions="Primary.Java">
+
+<p>Java:</p><p><code>public MessageSender messageSender();</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:  </p><p><code>IMessageSender MessageSender {get;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" /><p>returns the message sender for this configuration.</p><p MadCap:conditions="Primary.Java">
+
+<p>Java:</p><p><code>void
+prefetchIDCount(int prefetchIDCount);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:  </p><p><code>int
+PrefetchIDCount {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>Sets the number of
+IDs to be prefetched from the server for new objects created on the client. For more information see
+<a href="../performance_hints/prefetching_ids_for_new_objects.html" class="wikiLink">Prefetching IDs For New Objects</a></p>
+
+
+<p> </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p><p><code>void
+prefetchObjectCount(int prefetchObjectCount);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:  </p><p><code>int
+PrefetchObjectCount {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>Sets the number of objects to be prefetched for an ObjectSet in client/server mode. For more information see
+<a href="../performance_hints/prefetching_objects_for_query_results.html" class="wikiLink">Prefetching Objects For Query Results</a>.</p></div>
+    </div>
+    
+  </body></html>

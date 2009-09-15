@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryExample.java: retrieveByDisjunction
+1private static void retrieveByDisjunction(ObjectContainer container) ...{
+2    Query query = container.query();
+3    query.constrain(Pilot.class);
+4    Constraint constr = query.descend(&quot;name&quot;).constrain(
+5        &quot;Michael Schumacher&quot;);
+6    query.descend(&quot;points&quot;).constrain(new Integer(99)).or(constr);
+7    ObjectSet result = query.execute();
+8    listResult(result);
+9  }</pre>    </body></html>

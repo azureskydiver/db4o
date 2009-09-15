@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StartServer.java: processMessage
+/** *//**
+   * messaging callback
+   * 
+   * @see com.db4o.messaging.MessageRecipient#processMessage(ObjectContainer,
+   *      Object)
+   */
+  public void processMessage(MessageContext context, Object message) ...{
+    if (message instanceof StopServer) ...{
+      close();
+    }
+  }</pre>    </body></html>

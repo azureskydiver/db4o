@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Optimistic Locking	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Optimistic Locking</h1><p>In optimistic locking system no locks are used to prevent
+collision: any user can read an object into the memory and work on it at any
+time. However, before the client can save its modifications back to the database,
+a check should take place verifying that the item did not change since the time
+of initial read (no collision occurred). If a collision is detected it should
+be resolved according to your application logic. Typical solutions are:</p>
+
+<ul><li>Rollback
+</li><li>Display the
+problem and let the user decide  </li><li>Merge the
+changes </li><li>Log the
+problem so someone can decide later </li><li>Ignore the
+collision and overwrite</li></ul>
+
+
+
+
+
+
+
+
+
+<p>Let's look at an example realization.</p>
+
+<p>We will use a db4o database containing
+objects of Pilot class and a separate thread to create a client connection to
+the database, retrieve and modify objects.</p>
+
+<p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../Resources/Snippets/Optimistic Locking/OptimisticThread.java/run.flsnp" />p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#"><MadCap:snippetBlock src="../../Resources/Snippets/Optimistic Locking/OptimisticThread.cs/Run.flsnp" />p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET"><MadCap:snippetBlock src="../../Resources/Snippets/Optimistic Locking/OptimisticThread.vb/Run.flsnp" />p><p MadCap:conditions="Primary:vb" /><p>A semaphore is used for locking the object
+before saving and the lock is released after commit when the changes become
+visible to the other clients. The semaphore is assigned a name based on object
+ID to make sure that only the modified object will be locked and the other
+clients can work with the other objects of the same class simultaneously.</p>
+
+<p>Locking the object for the update only
+ensures that no changes will be made to the object from the other clients
+during update. However the object might be already changed since the time when
+the current thread retrieved it. In order to check this we will need to
+implement an event handler for the updating event:</p>
+
+<p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../Resources/Snippets/Optimistic Locking/OptimisticThread.java/registerCallbacks.flsnp" />p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><MadCap:snippetBlock src="../../Resources/Snippets/Optimistic Locking/OptimisticThread.cs/RegisterCallbacks.flsnp" />iv class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">OptimisticThread.cs: <span class="fscMemberName">OnUpdating</span></span></div><div class="fscCode"><pre ID="ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> OnUpdating(</span><span style="color: #0000FF;">object</span><span style="color: #000000;"> sender, CancellableObjectEventArgs args)
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img id="ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_80_1149_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_80_1149_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_80_1149_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_80_1149_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_80_1149_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_80_1149_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_80_1149_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_80_1149_Open_Text').style.display='inline';"/>        </span><span id="ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_80_1149_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_80_1149_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #008000;">//</span><span style="color: #008000;"> callback is called asynchronously, so we'll check first if the container is valid and object is saved</span><span style="color: #008000;">
+</span><span style="color: #008080;">04</span><span style="color: #008000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">            </span><span style="color: #0000FF;">if</span><span style="color: #000000;"> (_container.Ext().IsClosed() </span><span style="color: #000000;">||</span><span style="color: #000000;"> _container.Ext().GetObjectInfo(sender) </span><span style="color: #000000;">==</span><span style="color: #000000;"> </span><span style="color: #0000FF;">null</span><span style="color: #000000;">) </span><span style="color: #0000FF;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            Object obj </span><span style="color: #000000;">=</span><span style="color: #000000;"> sender;
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #008000;">//</span><span style="color: #008000;"> retrieve the object version from the database</span><span style="color: #008000;">
+</span><span style="color: #008080;">07</span><span style="color: #008000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">            </span><span style="color: #0000FF;">long</span><span style="color: #000000;"> currentVersion </span><span style="color: #000000;">=</span><span style="color: #000000;"> _container.Ext().GetObjectInfo(obj).GetVersion();
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">long</span><span style="color: #000000;"> id </span><span style="color: #000000;">=</span><span style="color: #000000;"> _container.Ext().GetID(obj);
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #008000;">//</span><span style="color: #008000;"> get the version saved at the object retrieval</span><span style="color: #008000;">
+</span><span style="color: #008080;">10</span><span style="color: #008000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">            IEnumerator i </span><span style="color: #000000;">=</span><span style="color: #000000;"> _idVersions.GetEnumerator();
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">long</span><span style="color: #000000;"> initialVersion </span><span style="color: #000000;">=</span><span style="color: #000000;"> (</span><span style="color: #0000FF;">long</span><span style="color: #000000;">)_idVersions[id];
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">if</span><span style="color: #000000;"> (initialVersion </span><span style="color: #000000;">!=</span><span style="color: #000000;"> currentVersion)
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img id="ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_769_1055_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_769_1055_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_769_1055_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_769_1055_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_769_1055_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_769_1055_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_769_1055_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_769_1055_Open_Text').style.display='inline';"/>            </span><span id="ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_769_1055_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_769_1055_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                Console.WriteLine(Name </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Collision: </span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                Console.WriteLine(Name </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;">Stored object: version: </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> currentVersion);
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                Console.WriteLine(Name </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;">New object: </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> obj </span><span style="color: #000000;">+</span><span style="color: #000000;"> </span><span style="color: #800000;">&quot;</span><span style="color: #800000;"> version: </span><span style="color: #800000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> initialVersion);
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                args.Cancel();
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>            }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">else</span><span style="color: #000000;">
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img id="ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_1085_1139_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_1085_1139_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_1085_1139_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_1085_1139_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_1085_1139_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_1085_1139_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_1085_1139_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_1085_1139_Open_Text').style.display='inline';"/>            </span><span id="ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_1085_1139_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceClient-ServerConcurrency_ControlConcurrencyCS.ZipsOptimisticThread.Cs_OptimisticThread.Cs_OnUpdating_2176_58_1085_1139_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">22</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                _updateSuccess </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">true</span><span style="color: #000000;">;
+</span><span style="color: #008080;">23</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>            }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">24</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        }</span></span></div></pre></div></div>  </p></p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../Resources/Snippets/Optimistic Locking/OptimisticThread.vb/RegisterCallbacks.flsnp" /><MadCap:snippetBlock src="../../Resources/Snippets/Optimistic Locking/OptimisticThread.vb/OnUpdating.flsnp" />
+</p>
+</p><p MadCap:conditions="Primary:vb" /><p>In the above case the changes are discarded
+and a message is sent to the user if the object is already modified from
+another thread. You can replace it with your own strategy of collision
+handling.</p>
+
+<p>Note: the supplied example has random delays
+to make the collision happen. You can experiment with the delay values to see
+different behavior.</p><p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../Resources/Snippets/Optimistic Locking/OptimisticThread.java/randomWait.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Optimistic Locking/OptimisticThread.cs/RandomWait.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Optimistic Locking/OptimisticThread.vb/RandomWait.flsnp" />
+
+</p><p MadCap:conditions="Primary:vb" />
+
+
+<p> 
+</p>
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="concurrency_controlconcurrencycs.zip">c#</a></MadCap:conditionalText> <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="concurrency_controlconcurrencyjava.zip">Java</a></MadCap:conditionalText> <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="concurrency_controlconcurrencyvb.zip">VB.NET</a></MadCap:conditionalText> </p></body></html>

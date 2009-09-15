@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: UpdateWithCommit
+private void UpdateWithCommit(int count)
+        ...{
+            StartTimer();
+            IObjectSet result = objectContainer.QueryByExample(null);
+            int j = 0;
+            for (int i = 0; i &lt; count; i++)
+            ...{
+                if (result.HasNext())
+                ...{
+                    Item item = (Item)result.Next();
+                    item._name = &quot;Updated&quot;;
+                    Update(item);
+                    if (j &gt;= _commitInterval)
+                    ...{
+                        j = 0;
+                        objectContainer.Commit();
+                    }
+                    else
+                    ...{
+                        j++;
+                    }
+                }
+                else
+                ...{
+                    count = i;
+                    break;
+                }
+            }
+            StopTimer(&quot;Updated &quot; + count + &quot; items &quot;);
+        }</pre>    </body></html>

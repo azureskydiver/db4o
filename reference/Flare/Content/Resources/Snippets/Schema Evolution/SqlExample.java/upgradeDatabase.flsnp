@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SqlExample.java: upgradeDatabase
+1public static void upgradeDatabase(SQLiteDatabase db) ...{
+2    db.execSQL(&quot;create table REG_RECORDS (&quot;
+3        + &quot;id text primary key,&quot; + &quot;year date);&quot;);
+4    db.execSQL(&quot;CREATE INDEX IDX_REG_RECORDS ON REG_RECORDS (id);&quot;);
+5    db.execSQL(&quot;alter table &quot; + DB_TABLE_CAR + &quot; add reg_record text;&quot;);
+6
+7  }</pre>    </body></html>

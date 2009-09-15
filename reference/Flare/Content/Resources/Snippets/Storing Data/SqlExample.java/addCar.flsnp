@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SqlExample.java: addCar
+private static void addCar(SQLiteDatabase db, int number)
+  ...{
+      ContentValues initialValues = new ContentValues();
+        
+      initialValues.put(&quot;id&quot;, number);
+      initialValues.put(&quot;name&quot;, &quot;Tester&quot;);
+        initialValues.put(&quot;points&quot;, number);
+        db.insert(DB_TABLE_PILOT, null, initialValues);
+        
+        initialValues = new ContentValues();
+        
+      initialValues.put(&quot;model&quot;, &quot;BMW&quot;);
+        initialValues.put(&quot;pilot&quot;, number);
+        db.insert(DB_TABLE_CAR, null, initialValues);
+  }</pre>    </body></html>

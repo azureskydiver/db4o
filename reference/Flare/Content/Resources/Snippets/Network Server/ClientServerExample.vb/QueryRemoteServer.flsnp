@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.vb: QueryRemoteServer
+1Public Shared Sub QueryRemoteServer()Sub QueryRemoteServer(ByVal port As Integer, ByVal user As String, ByVal password As String)
+2            Dim client As IObjectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), &quot;localhost&quot;, port, user, password)
+3            ListResult(client.Query(Of Car)())
+4            client.Close()
+5        End Sub</pre>    </body></html>

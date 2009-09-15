@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SerializeExample.cs: ExportToXml
+private static void ExportToXml()
+    ...{
+      XmlSerializer carSerializer = new XmlSerializer(typeof(Car[]));
+      StreamWriter xmlWriter = new StreamWriter(XmlFileName);
+      IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
+      try 
+      ...{
+        IObjectSet result = db.Get(typeof(Car));
+        Car[] cars = new Car[result.Size()];
+        for (int i = 0; i &lt; result.Size(); i++)
+        ...{
+          Car car = (Car)result[i];
+          cars.SetValue(car,i);
+        }
+        carSerializer.Serialize(xmlWriter, cars);
+        xmlWriter.Close();
+      }
+      finally
+      ...{
+        db.Close();
+      }
+    }</pre>    </body></html>

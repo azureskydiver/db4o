@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPExample.cs: ConfigureTA
+1private static IConfiguration ConfigureTA()
+2        ...{
+3            IConfiguration configuration = Db4oFactory.NewConfiguration();
+4            // add TA support
+5            configuration.Add(new TransparentActivationSupport());
+6            return configuration;
+7        }</pre>    </body></html>

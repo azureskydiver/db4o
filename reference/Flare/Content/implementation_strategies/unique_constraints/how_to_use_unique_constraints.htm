@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>How To Use Unique Constraints	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>How To Use Unique Constraints</h1>
+
+<p>In order to work with the unique constraints you will need to remember the
+following 3 steps.</p>
+
+<p>1. Add an index for a field you wish to be unique:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>configuration.objectClass(Item.class).objectField("field").indexed(true);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<p>c#:</p>
+
+<p><code>configuration.ObjectClass(typeof(Item)).ObjectField("field").Indexed(true);</code></p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<p>VB:</p>
+
+<p><code>configuration.ObjectClass(GetType(Item)).ObjectField("field").Indexed(true)</code></p>
+
+<p>[/filter] 
+ 
+2. Configure a unique constraint: 
+<span name="cs_wiki_filter" csw_filters="java"></p>
+
+<p>Java:</p>
+
+<p><code>configuration.add(new UniqueFieldValueConstraint(Item.class,
+"field"));</code></p>
+
+</span>
+
+<span name="cs_wiki_filter" csw_filters="cs">
+
+<p>c#:</p>
+
+<p><code>configuration.Add(new UniqueFieldValueConstraint(typeof(Item),
+"field"));</code></p>
+
+</span>
+
+<span name="cs_wiki_filter" csw_filters="vb">
+
+<p>VB:</p>
+
+<p><code>configuration.Add(New UniqueFieldValueConstraint(GetType(Item),
+"field"))</code></p>
+
+<p></span> 
+ 
+3. Handle unique constraint violation:</p>
+
+<p><span name="cs_wiki_filter" csw_filters="java"></p>
+
+<p>Java: 
+<code>// open objectContainer</code> 
+<code>try {</code> 
+<code>  // do some work and save some objects</code> 
+<code>  objectContainer.commit();</code> 
+<code>} catch(UniqueFieldValueConstraintViolationException ex) {</code></p>
+
+<p><code>  // log the error, notify the
+user</code> 
+<code>  objectContainer.rollback();</code> 
+<code>}</code></p>
+
+</span>
+
+<span name="cs_wiki_filter" csw_filters="cs">
+
+<p>c#: 
+<code>// open objectContainer</code> 
+<code>try {</code> 
+<code>  // do some work and save some objects</code> 
+<code>  objectContainer.Commit();</code> 
+<code>} catch(UniqueFieldValueConstraintViolationException ex) {</code></p>
+
+<p><code>  // log the error, notify the
+user</code> 
+<code>  objectContainer.Rollback();</code> 
+<code>}</code></p>
+
+</span>
+
+<p>[filter=vb]</p>
+
+<p>VB: 
+<code>// open objectContainer</code> 
+<code>Try </code> 
+<code>  // do some work and save some objects</code> 
+<code>  objectContainer.Commit()</code> 
+<code> Catch ex As
+UniqueFieldValueConstraintViolationException </code></p>
+
+<p><code>  // log the error, notify the
+user</code> 
+<code>  objectContainer.Rollback()</code> 
+<code>End Try</code></p>
+
+</p><p MadCap:conditions="Primary:vb" />
+
+</div>
+    </div>
+    
+  </body></html>

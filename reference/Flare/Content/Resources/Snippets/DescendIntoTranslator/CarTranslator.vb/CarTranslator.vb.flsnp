@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CarTranslator.vb
+' Copyright (C) 2009 Versant Inc. http://www.db4o.com
+
+Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
+
+Namespace Db4odocNamespace Db4odoc.Diagnostics
+
+    Public Class CarTranslatorClass CarTranslator
+        Implements IObjectConstructor
+
+        Public Function OnStore()Function OnStore(ByVal container As IObjectContainer, ByVal applicationObject As Object) As Object Implements IObjectConstructor.OnStore
+            Dim car As Car = CType(applicationObject, Car)
+
+            Dim fullModel As String
+            If HasYear(car.Model) Then
+                fullModel = car.Model
+            Else
+                fullModel = car.Model + GetYear(car.Model)
+            End If
+            Return fullModel
+
+        End Function
+
+
+        Private Function GetYear()Function GetYear(ByVal carModel As String) As String
+            If carModel.Equals(&quot;BMW&quot;) Then
+                Return &quot; 2002&quot;
+            Else
+                Return &quot; 1999&quot;
+            End If
+        End Function
+
+        Private Function HasYear()Function HasYear(ByVal carModel As String) As Boolean
+            Return False
+        End Function
+
+        Public Function OnInstantiate()Function OnInstantiate(ByVal container As IObjectContainer, ByVal storedObject As Object) As Object Implements IObjectConstructor.OnInstantiate
+            Dim model As String = DirectCast(storedObject, String)
+            Return New Car(model)
+        End Function
+
+        Public Sub OnActivate()Sub OnActivate(ByVal container As IObjectContainer, ByVal applicationObject As Object, ByVal storedObject As Object) Implements IObjectConstructor.OnActivate
+        End Sub
+
+        Public Function StoredClass()Function StoredClass() As System.Type Implements IObjectConstructor.StoredClass
+            Return GetType(String)
+        End Function
+
+    End Class
+End Namespace</pre>    </body></html>

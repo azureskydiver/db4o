@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Report Structure	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Report Structure</h1>
+
+<p>Report design is defined in an xml file with a conventional
+extension *.jrxml. The xml structure is defined in a DTD file and can be
+downloaded from the <a href="http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">sourceforge</a>.</p>
+
+<p>A simplest table report definition can look like this:</p>
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Report Structure/simple_report.xml/simple_report.xml.flsnp" />
+<p>For a simple example, we will use the following Jasper xml
+elements:</p>
+
+<p><b>parameter</b> - represents the definition of a report
+parameter. </p>
+
+<p>In jrxml file:</p>
+
+<p><code>&lt;parameter
+name="Title" class="java.lang.String"&gt;
+&lt;/parameter&gt;</code></p>
+
+<p>In *.java file:</p>
+
+<p><code>Map parameters = <b>new</b>
+HashMap();</code></p>
+
+<p><code>parameters.put("Title",
+"The Pilot Report");</code></p>
+
+<p>parameters map is
+further passed to the <a href="report_generation.html" class="wikiLink">report filling function</a>.</p>
+
+
+
+<p><b>field</b> - represents the definition of a data
+field that will store values retrieved from the data source of the report.</p>
+
+<p>In *.jrxml file:</p>
+
+<p><code>&lt;field
+name="Name" class="java.lang.String"/&gt;</code></p>
+
+<p>In *.java file fields are handled by classes implementing
+<a href="data_source.html" class="wikiLink">JRDataSource</a> interface.</p>
+
+
+
+For the full description of JasperReports xml elements
+please refer to the <a href="http://jasperforge.org/uploads/publish/jasperreportswebsite/trunk/schema.reference.html">Reference</a>.
+
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

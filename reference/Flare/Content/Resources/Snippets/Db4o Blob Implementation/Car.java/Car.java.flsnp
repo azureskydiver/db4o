@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Car.java
+/**//* Copyright (C) 2004 - 2009 Versant Inc. http://www.db4o.com */
+package com.db4odoc.blobs;
+
+public class Car ...{
+    private String model;
+    private CarImage img;
+    
+   
+    public Car(String model) ...{
+        this.model=model;
+        img=new CarImage();
+        img.setFile(model+&quot;.jpg&quot;);
+    }
+  
+    public CarImage getImage() ...{
+        return img;
+    }
+    
+    public String toString() ...{
+        return model +&quot;(&quot; + img.getFile() + &quot;)&quot; ;
+    }
+}</pre>    </body></html>

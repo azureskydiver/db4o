@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryExample.java: storePilot
+public static void storePilot() ...{
+      new File(YAPFILENAME).delete();
+      ObjectContainer db=Db4o.openFile(YAPFILENAME);
+        try ...{
+          Pilot pilot=new Pilot(&quot;Michael Schumacher&quot;,0);
+          db.set(pilot);
+          System.out.println(&quot;Stored &quot;+pilot);
+          // change pilot and resave updated
+          pilot.addPoints(10);
+          db.set(pilot);
+          System.out.println(&quot;Stored &quot;+pilot);
+        } finally ...{
+          db.close();
+        }
+        retrieveAllPilots();
+    }</pre>    </body></html>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TestFinal.java
+/**//* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
+package com.db4odoc.finalfields;
+import java.io.File;
+
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+
+public class TestFinal
+...{
+  private static final String DB4O_FILE_NAME = &quot;reference.db4o&quot;;
+  // non-final fields
+  public int    _i;
+  public String _s;
+   // final fields storing the same values as above
+  public final  int    _final_i;
+  public final String _final_s;
+  
+   public static void main(String[] args)
+   ...{
+      new File(DB4O_FILE_NAME).delete();
+      ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
+      try ...{
+        TestFinal test = new TestFinal(1,&quot;test&quot;);
+        container.set(test);
+        System.out.println(&quot;Added: &quot; + test);
+      } finally ...{
+        // Close does implicit commit and refreshes the reference cache
+        container.close();
+      }
+      container = Db4o.openFile(DB4O_FILE_NAME);
+      try ...{
+        ObjectSet result = container.get(null);
+        listResult(result);
+      } finally ...{ 
+        container.close();
+      }
+   }
+   // end main
+   
+   public TestFinal(int i, String s)
+   ...{
+     // initialize final and non-final fields with the same values
+      _i       = i;
+      _s       = s;
+      _final_i = i;
+      _final_s = s;
+   }
+   // end TestFinal
+
+   public String toString()
+   ...{
+      return &quot;Int - &quot; + _i + &quot;; String - &quot; + _s + &quot;; FINAL Int - &quot; + _final_i + &quot;; FINAL String - &quot; + _final_s;
+   }
+   // end toString
+   
+   private static void listResult(ObjectSet result)
+   ...{
+      while(result.hasNext()) ...{
+         System.out.println(result.next());
+     }
+   }
+   // end listResult
+}</pre>    </body></html>

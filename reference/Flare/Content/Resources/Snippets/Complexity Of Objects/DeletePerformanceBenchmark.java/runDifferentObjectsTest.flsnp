@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DeletePerformanceBenchmark.java: runDifferentObjectsTest
+private void runDifferentObjectsTest()...{
+      System.out.println(&quot;Delete test with different objects&quot;);
+          
+      configure();
+      init();
+      System.out.println(&quot;Deleting 1 of &quot; + _count + &quot; objects with &quot; + _depth + &quot; levels of embedded objects:&quot;);
+      
+      clean();
+      System.out.println(&quot; - primitive object with int field&quot;);
+      open();
+      storeSimplest();
+      deleteAny(10);
+      close();
+      
+      clean();
+      open();
+      System.out.println(&quot; - object with String field&quot;);
+      store();
+      deleteAny(10);
+      close();
+      
+      clean();
+      open();
+      System.out.println(&quot; - object with StringBuffer field&quot;);
+      storeWithStringBuffer();
+      deleteAny(10);
+      close();
+      
+      clean();
+      open();
+      System.out.println(&quot; - object with int array field&quot;);
+      storeWithArray();
+      deleteAny(10);
+      close();
+      
+      clean();
+      open();
+      System.out.println(&quot; - object with ArrayList field&quot;);
+      storeWithArrayList();
+      deleteAny(10);
+      close();
+      
+    }</pre>    </body></html>

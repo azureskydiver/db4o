@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ServerInfo.vb
+' Copyright (C) 2004 - 2009  Versant Corporation http://www.versant.com 
+
+
+/**/''' &lt;summary&gt;
+''' Configuration used for StartServer and StopServer.
+''' &lt;/summary&gt;
+Public Class ServerInfoClass ServerInfo
+    /**/''' &lt;summary&gt;
+    ''' the host to be used.
+    ''' If you want to run the client server examples on two computers,
+    ''' enter the computer name of the one that you want to use as server. 
+    ''' &lt;/summary&gt;
+    Public Const Host As String = &quot;localhost&quot;
+
+    /**/''' &lt;summary&gt;
+    ''' the database file to be used by the server.
+    ''' &lt;/summary&gt;
+    Public Const FileName As String = &quot;reference.db4o&quot;
+
+    /**/''' &lt;summary&gt;
+    ''' the port to be used by the server.
+    ''' &lt;/summary&gt;
+    Public Const Port As Integer = &amp;HDB40
+
+    /**/''' &lt;summary&gt;
+    ''' the user name for access control.
+    ''' &lt;/summary&gt;
+    Public Const User As String = &quot;db4o&quot;
+
+    /**/''' &lt;summary&gt;
+    ''' the pasword for access control.
+    ''' &lt;/summary&gt;
+    Public Const Password As String = &quot;db4o&quot;
+End Class</pre>    </body></html>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Immediate Queries	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Immediate Queries</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Immediate Mode Pros And Cons">Immediate Mode Pros And Cons</a></li></ul></li></ul></div></div></div>
+
+<p>This is the default query mode:
+the whole query result is evaluated upon query execution and object IDs list is
+produced as a result. </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Immediate Queries/QueryModesExample.java/testImmediateQueries.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Immediate Queries/QueryModesExample.cs/TestImmediateQueries.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Immediate Queries/QueryModesExample.vb/TestImmediateQueries.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+
+<p>Obviously object evaluation
+takes some time and in a case of big resultsets you will have to wait for a long
+time before the first result will be returned. This is especially unpleasant in
+a client-server setup, when query processing can block the server for seconds or even minutes.</p>
+
+<p>This mode makes the whole
+objects result set available at once - ID list is built based on the committed
+state in the database. As soon as a result is delivered it won't be changed
+neither by changes in current transaction neither by committed changes from
+another transactions. </p>
+
+<p>Note, that resultset contains
+only references to objects, you were querying for, which means that if an
+object field has changed by the time of the actual object retrieval from the
+object set - you will get the new field value:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Immediate Queries/QueryModesExample.java/testImmediateChanged.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Immediate Queries/QueryModesExample.cs/TestImmediateChanged.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Immediate Queries/QueryModesExample.vb/TestImmediateChanged.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<a name="Immediate Mode Pros And Cons"></a><h2>Immediate Mode Pros And Cons</h2>
+
+<p>Pros:</p>
+
+<ul>
+<li>If the query is intended to iterate through the entire resulting ObjectSet, this mode will be slightly faster than the
+others.</li>
+
+<li>The query will process without intermediate
+side effects from changed objects (by the caller or by other transactions).</li>
+</ul>
+
+
+<p>Cons:</p>
+
+<ul>
+<li>Query processing can block the server for a long time.</li>
+
+<li>In comparison to the other modes it will take longest until the first
+results are returned.</li>
+
+<li>The ObjectSet will require a considerate amount of memory to hold the
+IDs of all found objects.</li>
+</ul></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

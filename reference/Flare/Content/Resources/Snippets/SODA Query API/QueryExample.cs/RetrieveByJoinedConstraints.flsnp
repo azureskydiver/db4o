@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryExample.cs: RetrieveByJoinedConstraints
+private static void RetrieveByJoinedConstraints(IObjectContainer container)
+        ...{
+            IQuery query = container.Query();
+            query.Constrain(typeof(Pilot));
+            IConstraint constr1 = query.Descend(&quot;_name&quot;).Constrain(
+                    &quot;Michael Schumacher&quot;);
+            IConstraint constr2 = query.Descend(&quot;_points&quot;).Constrain(100).And(constr1);
+
+            IConstraint constr3 = query.Descend(&quot;_name&quot;).Constrain(
+            &quot;Rubens Barrichello&quot;);
+
+            query.Descend(&quot;_points&quot;).Constrain(99).And(constr3).Or(constr2);
+
+            IObjectSet result = query.Execute();
+            ListResult(result);
+        }</pre>    </body></html>

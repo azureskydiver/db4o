@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RecordBook.vb
+' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+Namespace Db4objectsNamespace Db4objects.Db4odoc.NoClasses.Client
+
+    Public Class RecordBookClass RecordBook
+        Private _notes As String(,)
+        Private _recordCounter As Integer
+
+        Public Sub New()Sub New()
+            _notes = New String(20, 3) {}
+            _recordCounter = 0
+        End Sub
+
+        Public Sub AddRecord()Sub AddRecord(ByVal period As String, ByVal pilotName As String, ByVal note As String)
+            _notes(_recordCounter, 0) = period
+            _notes(_recordCounter, 1) = pilotName
+            _notes(_recordCounter, 2) = note
+            System.Math.Min(System.Threading.Interlocked.Increment(_recordCounter), _recordCounter - 1)
+        End Sub
+
+        Public Overloads Overrides Function ToString()Function ToString() As String
+            Dim temp As String
+            temp = &quot;Record book: &quot; &amp; Microsoft.VisualBasic.Chr(10) &amp; &quot;&quot;
+            Dim i As Integer = 0
+            While i &lt; _recordCounter
+                temp = temp + _notes(i, 0) + &quot;/&quot; + _notes(i, 1) + &quot;/&quot; + _notes(i, 2) + &quot;&quot; &amp; Microsoft.VisualBasic.Chr(10) &amp; &quot;&quot;
+                System.Math.Min(System.Threading.Interlocked.Increment(i), i - 1)
+            End While
+            Return temp
+        End Function
+    End Class
+End Namespace</pre>    </body></html>

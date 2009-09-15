@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RefactoringExample.cs: RetrievePilotNew
+private static void RetrievePilotNew()
+    ...{
+      IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
+      try 
+      ...{
+        IQuery q = container.Query();
+        q.Constrain(typeof(PilotNew));
+        IObjectSet result = q.Execute();
+        foreach (object obj in result)
+        ...{
+          PilotNew pilot = (PilotNew)obj;
+          System.Console.WriteLine(&quot;Pilot=&quot;+ pilot);
+        } 
+      }
+      finally 
+      ...{
+        container.Close();
+      }
+    }</pre>    </body></html>

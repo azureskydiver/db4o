@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">refactoringExample.vb: StoreData
+Public Shared Sub StoreData()Sub StoreData()
+            File.Delete(Db4oFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                Dim a As New A()
+                a.name = &quot;A class&quot;
+                container.[Set](a)
+
+                Dim b As New B()
+                b.name = &quot;B class&quot;
+                b.number = 1
+                container.[Set](b)
+
+                Dim c As New C()
+                c.name = &quot;C class&quot;
+                c.number = 2
+                container.[Set](c)
+            Finally
+                container.Close()
+            End Try
+        End Sub</pre>    </body></html>

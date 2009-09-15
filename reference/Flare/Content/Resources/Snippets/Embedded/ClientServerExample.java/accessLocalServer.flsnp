@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.java: accessLocalServer
+private static void accessLocalServer() ...{
+    ObjectServer server = Db4oClientServer.openServer(Db4oClientServer
+        .newServerConfiguration(), DB4O_FILE_NAME, 0);
+    try ...{
+      ObjectContainer client = server.openClient();
+      // Do something with this client, or open more clients
+      client.close();
+    } finally ...{
+      server.close();
+    }
+  }</pre>    </body></html>

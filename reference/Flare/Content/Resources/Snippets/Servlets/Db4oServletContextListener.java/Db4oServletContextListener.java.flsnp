@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Db4oServletContextListener.java
+/**//* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+
+package com.db4odoc.servlets;
+
+import com.db4o.Db4o;
+import com.db4o.ObjectServer;
+import javax.servlet.*;
+
+public class Db4oServletContextListener implements ServletContextListener ...{
+  public static final String KEY_DB4O_FILE_NAME = &quot;db4oFileName&quot;;
+
+  public static final String KEY_DB4O_SERVER = &quot;db4oServer&quot;;
+
+  private ObjectServer server = null;
+
+  public void contextInitialized(ServletContextEvent event) ...{
+    close();
+    ServletContext context = event.getServletContext();
+    String filePath = context.getRealPath(&quot;WEB-INF/db/&quot;
+        + context.getInitParameter(KEY_DB4O_FILE_NAME));
+    server = Db4o.openServer(filePath, 0);
+    context.setAttribute(KEY_DB4O_SERVER, server);
+    context.log(&quot;db4o startup on &quot; + filePath);
+  }
+
+  public void contextDestroyed(ServletContextEvent event) ...{
+    ServletContext context = event.getServletContext();
+    context.removeAttribute(KEY_DB4O_SERVER);
+    close();
+    context.log(&quot;db4o shutdown&quot;);
+  }
+
+  private void close() ...{
+    if (server != null) ...{
+      server.close();
+    }
+    server = null;
+  }
+}</pre>    </body></html>

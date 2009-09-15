@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Data Source	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Data Source</h1>
+
+<p>JasperReports can be built on any data having visual
+representation. In order to make the data "understandable" to the report
+object, it should be supplied through a JRDataSource interface. The
+JasperReports package supplies several implementations, which can be used with
+a RDBMS, xml, csv and object data sources.</p>
+
+<p>In order to represent db4o objects in the most convenient
+way, we will build a special JRDataSource implementation - ObjectDataSource -
+using reflection to obtain object field values. </p>
+
+<p>ObjectDataSource will accept data as a list of objects,
+because this is the way it is returned from a db4o query:</p>
+
+<p><code>List &lt;Pilot&gt; pilots =
+objectContainer.query(pilotPredicate);</code></p>
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Data Source/ObjectDataSource.java/ObjectDataSource.flsnp" />
+<p>ObjectDataSource must implement 2 methods:</p>
+
+<p><code>public boolean next()</code></p>
+
+<p>and</p>
+
+<p><code>public Object getFieldValue(JRField field)</code></p>
+
+<p>The <code>next()</code> implementation is very simple: it
+just moves the current pointer to the next object in the list:</p>
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Data Source/ObjectDataSource.java/next.flsnp" />
+<p><code>getFieldValue</code> method should return the value
+for the specified field. The field is defined in <a href="report_structure.html" class="wikiLink">*.jrxml</a>
+file and is passed to the <code>JRDataSource</code> as a <code>JRField</code>.
+In the case of an object list datasource the objective is to correspond field
+names to the object field values. One of the ways to do this is to correspond
+the name of the field in the report to the name of the getter method in the
+object class. For example:</p>
+
+<p><code>&lt;field
+name="Name" class="java.lang.String"/&gt;</code></p>
+
+<p><code>class Pilot</code></p>
+
+<p><code>{</code></p>
+
+<p><code> ... </code></p>
+
+<p><code>    public
+String getName(){</code></p>
+
+<p><code>        return
+name; </code></p>
+
+<p><code>    }</code></p>
+
+<p><code>}</code></p>
+
+<p>The method name is "get" + JRField#getName() or "get" +
+"Name". Knowing the method name, we can invoke it using reflection and obtain
+the value of the object field:</p>
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Data Source/ObjectDataSource.java/getFieldValue.flsnp" />
+The full code of the class can be downloaded from
+<a href="objectdatasource.html" class="wikiLink">ObjectDataSource</a>.
+
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

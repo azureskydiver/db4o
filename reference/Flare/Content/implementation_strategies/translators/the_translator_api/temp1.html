@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>ObjectConstructor	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>ObjectConstructor</h1>
+
+<p>However, this will only work if the application object's class provides sufficient setters to recreate its state from the information contained in the stored object, which is not the case for our example class.</p>
+<p>For these cases db4o provides an extension to the ObjectTranslator interface, ObjectConstructor, which declares one additional method:</p>
+<p MadCap:conditions="Primary.Java">
+<p>Java:</p>
+<p><code>public Object onInstantiate(ObjectContainer container,Object storedObject);</code></p>
+</p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary.Print">
+<p>.NET:</p>
+<p><code>public object OnInstantiate(IObjectContainer container,Object storedObject);</code></p>
+</p><p MadCap:conditions="Primary:net" />
+<p>If db4o detects a configured translator to be an ObjectConstructor implementation, it will pass the stored class instance to the onInstantiate() method and use the result as a blank application object to be processed by onActivate().</p>
+<p>Note that, while in general configured translators are applied to subclasses, too, ObjectConstructor application object instantiation will not be used for subclasses (which wouldn't make much sense, anyway), so ObjectConstructors have to be configured for the concrete classes.</p></div>
+    </div>
+    
+  </body></html>

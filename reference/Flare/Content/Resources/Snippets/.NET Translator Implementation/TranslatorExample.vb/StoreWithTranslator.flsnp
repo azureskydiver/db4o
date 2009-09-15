@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.vb: StoreWithTranslator
+1Private Shared Sub StoreWithTranslator()Sub StoreWithTranslator()
+2            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+3            configuration.ObjectClass(GetType(CultureInfo)).Translate(New CultureInfoTranslator())
+4            TryStoreAndRetrieve(configuration)
+5        End Sub</pre>    </body></html>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SodaExample.cs: TestLike
+public static void TestLike()
+        ...{
+            File.Delete(Db4oFileName);
+            IObjectContainer container = Database();
+            if (container != null)
+            ...{
+                try
+                ...{
+                    Pilot pilot = new Pilot(&quot;Test Pilot1&quot;, 100);
+                    container.Set(pilot);
+                    pilot = new Pilot(&quot;Test Pilot2&quot;, 102);
+                    container.Set(pilot);
+
+                    // Simple.IQuery
+                    IQuery query1 = container.Query();
+                    query1.Constrain(typeof(Pilot));
+                    query1.Descend(&quot;_name&quot;).Constrain(&quot;est&quot;);
+                    IObjectSet result = query1.Execute();
+                    ListResult(result);
+
+                    // Like.IQuery
+                    IQuery query2 = container.Query();
+                    query2.Constrain(typeof(Pilot));
+                    // All pilots with the name containing &quot;est&quot; will be retrieved
+                    query2.Descend(&quot;_name&quot;).Constrain(&quot;est&quot;).Like();
+                    result = query2.Execute();
+                    ListResult(result);
+                }
+                catch (Db4oException ex)
+                ...{
+                    Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message);
+                }
+                catch (Exception ex)
+                ...{
+                    Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
+                }
+                finally
+                ...{
+                    CloseDatabase();
+                }
+            }
+        }</pre>    </body></html>

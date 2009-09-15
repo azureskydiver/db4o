@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ActivationExample.cs: ActivateDiagnostics
+1private static void ActivateDiagnostics(IConfiguration configuration) 
+2        ...{
+3        // Add diagnostic listener that will show all the classes that are not
+4        // TA aware.
+5        configuration.Diagnostic().AddListener(new TaDiagListener());
+6        }</pre>    </body></html>

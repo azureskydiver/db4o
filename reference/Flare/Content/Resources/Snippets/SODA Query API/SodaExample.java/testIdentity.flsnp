@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SodaExample.java: testIdentity
+public static void testIdentity() ...{
+    new File(DB4O_FILE_NAME).delete();
+    ObjectContainer container = database();
+    if (container != null) ...{
+      try ...{
+        Pilot pilot = new Pilot(&quot;Test Pilot1&quot;, 100);
+        Car car = new Car(&quot;BMW&quot;, pilot);
+        container.set(car);
+        // Change the name, the pilot instance stays the same
+        pilot.setName(&quot;Test Pilot2&quot;);
+        // create a new car
+        car = new Car(&quot;Ferrari&quot;, pilot);
+        container.set(car);
+        
+        // Simple Query: 
+        Query query1 = container.query();
+        query1.constrain(Car.class);
+        query1.descend(&quot;_pilot&quot;).constrain(pilot);
+        ObjectSet result = query1.execute();
+        listResult(result);
+        
+        // identity query:
+        Query query2 = container.query();
+        query2.constrain(Car.class);
+        // All cars having pilot with the same database identity
+        // will be retrieved. As we only created Pilot object once
+        // it should mean all car objects
+        query2.descend(&quot;_pilot&quot;).constrain(pilot).identity();
+        result = query2.execute();
+        listResult(result);
+      } catch (Db4oException ex) ...{
+        System.out.println(&quot;Db4o Exception: &quot; + ex.getMessage());
+      } catch (Exception ex) ...{
+        System.out.println(&quot;System Exception: &quot; + ex.getMessage());
+      } finally ...{
+        closeDatabase();
+      }
+    }
+  }</pre>    </body></html>

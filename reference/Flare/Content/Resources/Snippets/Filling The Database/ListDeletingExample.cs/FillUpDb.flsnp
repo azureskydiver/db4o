@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListDeletingExample.cs: FillUpDb
+private static void FillUpDb(int listCount)
+        ...{
+            int dataCount = 50;
+            Stopwatch sw = new Stopwatch();
+            File.Delete(Db4oFileName);
+            IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
+            try
+            ...{
+                sw.Start();
+
+                for (int i = 0; i &lt; listCount; i++)
+                ...{
+                    ListObject lo = new ListObject();
+                    lo.Name = &quot;list&quot; + i.ToString(&quot;00&quot;);
+                    for (int j = 0; j &lt; dataCount; j++)
+                    ...{
+                        DataObject dataObject = new DataObject();
+                        dataObject.Name = &quot;data&quot; + j.ToString(&quot;00000&quot;);
+                        dataObject.Data = DateTime.Now.ToString() + &quot; ---- Data Object &quot; + j.ToString(&quot;00000&quot;);
+                        lo.Data.Add(dataObject);
+                    }
+                    db.Set(lo);
+                }
+                sw.Stop();
+            }
+            finally
+            ...{
+                db.Close();
+            }
+            Console.WriteLine(&quot;Completed {0} lists of {1} objects each.&quot;, listCount, dataCount);
+            Console.WriteLine(&quot;Elapsed time: {0}&quot;, sw.Elapsed.ToString());
+        }</pre>    </body></html>

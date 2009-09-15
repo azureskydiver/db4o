@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IOExample.vb: GetObjectsInMem
+Private Shared Sub GetObjectsInMem()Sub GetObjectsInMem()
+            System.Console.WriteLine(&quot;Setting up in-memory database&quot;)
+            Dim adapter As MemoryIoAdapter = New MemoryIoAdapter()
+            Try
+                Dim raf As Sharpen.IO.RandomAccessFile = New Sharpen.IO.RandomAccessFile(Db4oFileName, &quot;r&quot;)
+                adapter.GrowBy(100)
+
+                Dim len As Integer = CType(raf.Length(), Integer)
+                Dim b() As Byte = New Byte(len) {}
+                raf.Read(b, 0, len)
+                adapter.Put(Db4oFileName, b)
+                raf.Close()
+            Catch ex As Exception
+                System.Console.WriteLine(&quot;Exception: &quot; + ex.Message)
+            End Try
+
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.Io(adapter)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
+            Try
+                Dim result As IObjectSet = db.Get(GetType(Pilot))
+                System.Console.WriteLine(&quot;Read stored results through memory file&quot;)
+                ListResult(result)
+                Dim pilotNew As Pilot = New Pilot(&quot;Michael Schumacher&quot;)
+                db.Set(pilotNew)
+                System.Console.WriteLine(&quot;New pilot added&quot;)
+            Finally
+                db.Close()
+            End Try
+            System.Console.WriteLine(&quot;Writing the database back to disc&quot;)
+            Dim dbstream() As Byte = adapter.Get(Db4oFileName)
+            Try
+                Dim file As Sharpen.IO.RandomAccessFile = New Sharpen.IO.RandomAccessFile(Db4oFileName, &quot;rw&quot;)
+                file.Write(dbstream)
+                file.Close()
+            Catch ioex As IOException
+                System.Console.WriteLine(&quot;Exception: &quot; + ioex.Message)
+            End Try
+        End Sub</pre>    </body></html>

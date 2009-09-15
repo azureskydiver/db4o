@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>StoredClass and StoredField interfaces	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>StoredClass and StoredField interfaces</h1>
+
+
+<p>(IStoredClass and IStoredField in .NET)</p>
+
+<p>Let's look closer at the class meta-information interfaces.</p>
+
+<p>They look quite similar to reflection API, but unlike reflection there is no information about methods and constructors.</p>
+
+<p>You can only use StoredClass to get the class's fields:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:<code> StoredClass#getStoredFields()</code> </p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<p>c#:   <code>IStoredClass#GetStoredFields()</code></p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<p>VB:   <code>IStoredClass#GetStoredFields()</code> </p>
+
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>
+returns all stored fields of this stored class.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java: <code>StoredClass#storedField(name, type) </code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<p>c#:   <code>IStoredClass#StoredField(name, type)</code></p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<p>VB:   <code>IStoredClass#StoredField(name, type)</code> </p>
+
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>
+returns an existing stored field of this stored class.</p>
+
+<p>You can also use this interface to explore classes hierarchy.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java: <code>StoredClass#getParentStoredClass </code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<p>c#:<code>   IStoredClass#GetParentStoredClass</code> </p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p><p MadCap:conditions="Primary..NET,Primary.VB.NET"><code>VB:   IStoredClass#GetParentStoredClass </code></p>
+
+<p></p><p MadCap:conditions="Primary:vb" /></p>
+
+<p>returns the parent of the class.</p>
+
+<p>
+StoredField interface gives you access to various meta-field information, such as field name, field type. It also provides some helpful methods for manipulating fields accepting their object as a variable (see db4o API for more information).</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<div class="AttachmentInfo">Code attachment not found: /Resources/Reference/Implementation_Strategies/Db4o_Meta-Information/MetainfJava.Zip</div>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/StoredClass and StoredField interfaces/MetaInfoExample.cs/GetMetaObjectsInfo.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/StoredClass and StoredField interfaces/MetaInfoExample.vb/GetMetaObjectsInfo.flsnp" />
+</p><p MadCap:conditions="Primary:vb" /></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

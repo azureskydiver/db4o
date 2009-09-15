@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: UpdateActivatableItems
+private void UpdateActivatableItems(int count)
+        ...{
+            StartTimer();
+            IQuery Query = objectContainer.Query();
+            Query.Constrain(typeof(ActivatableItem));
+            Query.Descend(&quot;_name&quot;).Constrain(&quot;level0&quot;).StartsWith(true);
+            IObjectSet result = Query.Execute();
+
+            for (int i = 0; i &lt; count; i++)
+            ...{
+                if (result.HasNext())
+                ...{
+                    ActivatableItem item = (ActivatableItem)result.Next();
+                    item.Name = &quot;Updated&quot;;
+                    Update(item);
+                }
+                else
+                ...{
+                    count = i;
+                    break;
+                }
+            }
+            StopTimer(&quot;Updated &quot; + count + &quot; items&quot;);
+        }</div</pre>    </body></html>

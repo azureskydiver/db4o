@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: ActivatableItem
+public class ActivatableItem : IActivatable
+        ...{
+
+            private string _name;
+            public ActivatableItem _child;
+
+            [System.NonSerialized]
+            IActivator _activator;
+
+            public void Bind(IActivator activator)
+            ...{
+                if (_activator == activator)
+                ...{
+                    return;
+                }
+                if (activator != null &amp;&amp; _activator != null)
+                ...{
+                    throw new System.InvalidOperationException();
+                }
+                _activator = activator;
+            }
+
+            public void Activate(ActivationPurpose purpose)
+            ...{
+                if (_activator == null) return;
+                _activator.Activate(purpose);
+            }
+
+
+            public ActivatableItem()
+            ...{
+
+            }
+
+            public ActivatableItem(string name, ActivatableItem child)
+            ...{
+                Name = name;
+                _child = child;
+            }
+
+            public string Name
+            ...{
+                get
+                ...{
+                    return _name;
+                }
+                set
+                ...{
+                    _name = value;
+                }
+            }
+
+
+        }</div</pre>    </body></html>

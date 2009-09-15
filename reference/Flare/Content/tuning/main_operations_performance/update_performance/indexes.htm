@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Indexes	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Indexes</h1>
+
+<p>Updating indexed fields always takes longer as the index
+should be updated as well. This is shown in the following test:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/UpdatePerformanceBenchmark.java/runIndexTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/UpdatePerformanceBenchmark.java/init.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/UpdatePerformanceBenchmark.java/configureIndexTest.flsnp" />
+</p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary.Print">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/UpdatePerformanceBenchmark.cs/RunIndexTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/UpdatePerformanceBenchmark.cs/Init.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/UpdatePerformanceBenchmark.cs/ConfigureIndexTest.flsnp" />
+</p><p MadCap:conditions="Primary:net" /><p>The results:</p>
+
+<p><i>Update test for objects with and without indexed
+fields</i></p>
+
+<p><i>Updating 100 of 1000 objects</i></p>
+
+<p><i>Store 90000 objects: 7466ms</i></p>
+
+<p><i>Updated 100 items: 295ms</i></p>
+
+<p><i>Updating 100 of 1000 objects with indexed field</i></p>
+
+<p><i>Store 90000 objects: 6839ms</i></p>
+
+<p><i>Updated 100
+items: 441ms</i></p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

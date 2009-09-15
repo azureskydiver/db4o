@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Db4oIsolatedStorageFile.vb: Db4oIsolatedStorageFile
+Public Class Db4oIsolatedStorageFileClass Db4oIsolatedStorageFile
+        Private _stream As IsolatedStorageFileStream
+
+        &lt;System.Runtime.InteropServices.DllImport(&quot;kernel32.dll&quot;, SetLastError:=True)&gt; _
+        Private Shared Function FlushFileBuffers()Function FlushFileBuffers(ByVal fileHandle As IntPtr) As Integer
+        End Function
+
+        Public Sub New()Sub New(ByVal file As String, ByVal fMode As String)
+            Try
+                Dim isf As IsolatedStorageFile = IsolatedStorageFile.GetUserStoreForAssembly()
+                _stream = New IsolatedStorageFileStream(file, FileMode.OpenOrCreate, IIf(fMode.Equals(&quot;rw&quot;), FileAccess.ReadWrite, FileAccess.Read), isf)
+            Catch x As IOException
+                Throw New DatabaseFileLockedException(file, x)
+            End Try
+        End Sub</pre>    </body></html>

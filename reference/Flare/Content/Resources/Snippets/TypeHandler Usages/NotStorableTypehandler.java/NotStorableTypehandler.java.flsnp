@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NotStorableTypehandler.java
+package com.db4odoc.typehandler.translators;
+
+import com.db4o.internal.handlers.*;
+import com.db4o.internal.marshall.*;
+import com.db4o.marshall.*;
+import com.db4o.typehandlers.*;
+
+public class NotStorableTypehandler extends FirstClassObjectHandler implements TypeHandler4, FirstClassHandler,
+VariableLengthTypeHandler
+...{
+
+  private class Storable
+  ...{
+    private int id;
+    private String name;  
+  }
+  
+  public void write(WriteContext context, Object obj) ...{
+    NotStorable item = (NotStorable)obj;
+    Storable storableItem = new Storable();
+    storableItem.id = item.getId();
+    storableItem.name = item.getName();
+    
+    context.writeObject(storableItem);
+    }
+
+    public Object read(ReadContext context) ...{
+      UnmarshallingContext _context = (UnmarshallingContext) context;
+      NotStorable item = (NotStorable)_context.persistentObject();
+      Storable storableItem = (Storable)context.readObject();
+        item = new NotStorable(storableItem.id, storableItem.name);
+        return item;
+    }
+
+}</pre>    </body></html>

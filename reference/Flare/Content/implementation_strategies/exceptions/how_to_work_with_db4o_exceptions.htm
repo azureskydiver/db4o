@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>How To Work With Db4o Exceptions	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>How To Work With Db4o Exceptions</h1>
+
+<p>Appropriate
+exception handling will help you to create easy to support systems, saving your
+time and efforts in the future. The following hints identify important
+places for exception handling. </p>
+
+<ol>
+<li>Opening a database file can throw a DatabaseFileLockedException:</li>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/How To Work With Db4o Exceptions/ExceptionExample.java/openDatabase.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/How To Work With Db4o Exceptions/ExceptionExample.cs/OpenDatabase.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/How To Work With Db4o Exceptions/ExceptionExample.vb/OpenDatabase.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<li>Opening a client connection
+     can throw IOException:</li>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/How To Work With Db4o Exceptions/ExceptionExample.java/openClient.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/How To Work With Db4o Exceptions/ExceptionExample.cs/OpenClient.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/How To Work With Db4o Exceptions/ExceptionExample.vb/OpenClient.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<li>Working with db4o and
+     committing a transaction can throw various exceptions; the best practice
+     is to surround your db4o interaction with try-catch block.</li>
+
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/How To Work With Db4o Exceptions/ExceptionExample.java/work.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/How To Work With Db4o Exceptions/ExceptionExample.cs/Work.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p><p MadCap:conditions="Primary..NET,Primary.VB.NET"></p>
+
+<MadCap:snippetBlock src="../../Resources/Snippets/How To Work With Db4o Exceptions/ExceptionExample.vb/Work.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+</ol></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

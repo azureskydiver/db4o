@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Inherited Objects	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Inherited Objects</h1>
+
+<p>Inherited objects are stored slower than simple objects.
+That is happening, because parent class indexes are created and stored to the
+database as well.</p>
+
+<p>The following example shows the influence of a simple
+inheritance on the insert performance: </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Inherited Objects/InsertPerformanceBenchmark.java/runInheritanceTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Inherited Objects/InsertPerformanceBenchmark.java/configure.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Inherited Objects/InsertPerformanceBenchmark.java/init.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Inherited Objects/InsertPerformanceBenchmark.java/store.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Inherited Objects/InsertPerformanceBenchmark.java/storeInherited.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Inherited Objects/InsertPerformanceBenchmark.java/ItemDerived.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Inherited Objects/InsertPerformanceBenchmark.cs/RunInheritanceTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Inherited Objects/InsertPerformanceBenchmark.cs/Configure.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Inherited Objects/InsertPerformanceBenchmark.cs/Init.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Inherited Objects/InsertPerformanceBenchmark.cs/Store.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Inherited Objects/InsertPerformanceBenchmark.cs/StoreInherited.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Inherited Objects/InsertPerformanceBenchmark.cs/ItemDerived.flsnp" />
+</p><p MadCap:conditions="Primary:net" />
+
+<p>The following results were achieved for the <a href="../insert_performance.html" class="wikiLink">testing
+configuration</a>:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p>Storing 10000 objects of depth 3</p>
+
+<p>Store 30000 objects: 883ms</p>
+
+<p>Storing 10000 inherited objects of depth 3</p>
+
+<p>Store 30000 objects: 938ms </p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p>Storing 10000 objects of depth 3</p>
+
+<p>Store 30000 objects: 1237ms</p>
+
+<p>Storing 10000 inherited objects of depth 3</p>
+
+<p>Store 30000 objects: 1699ms </p>
+
+</p><p MadCap:conditions="Primary:net" /></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

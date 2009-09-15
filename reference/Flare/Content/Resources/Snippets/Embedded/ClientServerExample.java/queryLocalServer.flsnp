@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.java: queryLocalServer
+1private static void queryLocalServer(ObjectServer server) ...{
+2    ObjectContainer client = server.openClient();
+3    listResult(client.queryByExample(new Car(null)));
+4    client.close();
+5  }</pre>    </body></html>

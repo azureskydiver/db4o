@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: runDifferentObjectsTest
+1private void runDifferentObjectsTest()...{
+2      System.out.println(&quot;Update test with different objects&quot;);
+3      int objectsToUpdate = 90;
+4      int updated = objectsToUpdate;
+5          
+6      initDifferentObjectsTest();
+7      
+8      clean();
+9      System.out.println(&quot; - primitive object with int field&quot;);
+0      open(configure());
+1      storeSimplest();
+2      
+3    ObjectSet result = objectContainer.queryByExample(null);
+4    startTimer();
+5    for (int i = 0; i &lt; objectsToUpdate; i ++)...{
+6      if (result.hasNext())...{
+7        SimplestItem item = (SimplestItem)result.next();
+8        item._id = 1;
+9          update(item);  
+0      } else ...{
+1        updated = i;
+2        break;
+3      }
+4    }
+5      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+6      close();
+7    
+8      clean();
+9      open(configure());
+0      System.out.println(&quot; - object with String field&quot;);
+1      store();
+2      updated = objectsToUpdate;
+3      result = objectContainer.queryByExample(null);
+4      startTimer();
+5      for (int i = 0; i &lt; objectsToUpdate; i ++)...{
+6      if (result.hasNext())...{
+7        Item item = (Item)result.next();
+8        item._name = &quot;Updated&quot;;
+9          update(item);  
+0      } else ...{
+1        updated = i;
+2        break;
+3      }
+4    }
+5      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+6      close();
+7      
+8      clean();
+9      open(configure());
+0      System.out.println(&quot; - object with StringBuffer field&quot;);
+1      storeWithStringBuffer();
+2      
+3      updated = objectsToUpdate;
+4      result = objectContainer.queryByExample(null);
+5      startTimer();
+6      for (int i = 0; i &lt; objectsToUpdate; i ++)...{
+7      if (result.hasNext())...{
+8        ItemWithStringBuffer item = (ItemWithStringBuffer)result.next();
+9        item._name = new StringBuffer(&quot;Updated&quot;);
+0          update(item);  
+1      } else ...{
+2        updated = i;
+3        break;
+4      }
+5    }
+6      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+7      close();
+8      
+9      clean();
+0      open(configure());
+1      System.out.println(&quot; - object with int array field&quot;);
+2      storeWithArray();
+3      updated = objectsToUpdate;
+4      result = objectContainer.queryByExample(null);
+5      startTimer();
+6      for (int i = 0; i &lt; objectsToUpdate; i ++)...{
+7      if (result.hasNext())...{
+8        ItemWithArray item = (ItemWithArray)result.next();
+9        item._id = new int[]...{1,2,3};
+0          update(item);  
+1      } else ...{
+2        updated = i;
+3        break;
+4      }
+5    }
+6      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+7      close();
+8      
+9      clean();
+0      open(configure());
+1      System.out.println(&quot; - object with ArrayList field&quot;);
+2      storeWithArrayList();
+3      updated = objectsToUpdate;
+4      result = objectContainer.queryByExample(null);
+5      startTimer();
+6      for (int i = 0; i &lt; objectsToUpdate; i ++)...{
+7      if (result.hasNext())...{
+8        ItemWithArrayList item = (ItemWithArrayList)result.next();
+9        item._ids = new ArrayList();
+0          update(item);  
+1      } else ...{
+2        updated = i;
+3        break;
+4      }
+5    }
+6      stopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+7      close();
+8    }</pre>    </body></html>

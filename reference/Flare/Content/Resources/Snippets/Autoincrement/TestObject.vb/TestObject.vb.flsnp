@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TestObject.vb
+' Copyright (C) 2009 Versant Inc. http://www.db4o.com 
+Namespace Db4odocNamespace Db4odoc.Autoincrement
+
+    Class TestObjectClass TestObject
+        Inherits CountedObject
+        Private _name As String
+
+        Public Sub New()Sub New(ByVal name As String)
+            _name = name
+        End Sub
+
+        Public Overloads Overrides Function ToString()Function ToString() As String
+            Return _name + &quot;/&quot; + _id.ToString()
+        End Function
+    End Class
+End Namespace</pre>    </body></html>

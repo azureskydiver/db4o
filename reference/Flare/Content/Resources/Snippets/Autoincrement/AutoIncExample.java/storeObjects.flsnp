@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AutoIncExample.java: storeObjects
+1public static void storeObjects(ObjectContainer db)...{
+2    TestObject test;
+3    test = new TestObject(&quot;FirstObject&quot;);
+4    db.store(test);
+5    test = new TestObject(&quot;SecondObject&quot;);
+6    db.store(test);
+7    test = new TestObject(&quot;ThirdObject&quot;);
+8    db.store(test);
+9  }</pre>    </body></html>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Using Evaluations	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Using Evaluations</h1>
+
+
+<p>For a simple example, let's take a Car class keeping a history of SensorReadout instances in a List member. Now imagine that we wanted to retrieve all cars that have assembled an even number of history entries. A quite contrived and seemingly trivial example, however, it gets us into trouble: Collections are transparent to the query API, it just 'looks through' them at their respective members.</p>
+
+<p>So how can we get this done? Let's implement an Evaluation that expects the objects passed in to be instances of type Car and checks their history size.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Using Evaluations/EvenHistoryEvaluation.java/EvenHistoryEvaluation.java.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Using Evaluations/EvenHistoryEvaluation.cs/EvenHistoryEvaluation.cs.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Using Evaluations/EvenHistoryEvaluation.vb/EvenHistoryEvaluation.vb.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>To test it, let's add two cars with history sizes of one and two respectively:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Using Evaluations/EvaluationExample.java/storeCars.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Using Evaluations/EvaluationExample.cs/StoreCars.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Using Evaluations/EvaluationExample.vb/StoreCars.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>and run our evaluation against them:</p>
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Using Evaluations/EvaluationExample.java/queryWithEvaluation.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Using Evaluations/EvaluationExample.cs/QueryWithEvaluation.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Using Evaluations/EvaluationExample.vb/QueryWithEvaluation.flsnp" />
+</p><p MadCap:conditions="Primary:vb" /></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

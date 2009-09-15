@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Pilot.cs
+/**//* Copyright (C) 2004 - 2009  Versant Corporation http://www.versant.com */
+using System;
+
+namespace JavaDotnetClientServer
+...{
+    class Pilot
+    ...{
+        private String name;
+
+        public Pilot(String name)
+        ...{
+            this.name = name;
+        }
+
+        public String getName()
+        ...{
+            return name;
+        }
+
+        public void setName(String pilotName)
+        ...{
+            this.name = pilotName;
+        }
+
+        public override String ToString()
+        ...{
+            return name;
+        }
+    }
+}</pre>    </body></html>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReplicationExample.vb: Replicate
+Public Shared Sub Replicate()Sub Replicate()
+            Dim desktop As IObjectContainer = Db4oFactory.OpenFile(ConfigureReplication(), DtFileName)
+            Dim handheld As IObjectContainer = Db4oFactory.OpenFile(ConfigureReplication(), HhFileName)
+            Dim replic As IReplicationSession = Replication.Begin(handheld, desktop) '
+            ' There is no need to replicate all the objects each time. 
+            ' ObjectsChangedSinceLastReplication methods gives us 
+            ' a list of modified objects
+            Dim changed As IObjectSet = replic.ProviderA().ObjectsChangedSinceLastReplication()
+            'Iterate through the changed objects, replicate them
+            While changed.HasNext()
+                replic.Replicate(changed.Next())
+            End While
+            replic.Commit()
+            handheld.Close()
+            desktop.Close()
+        End Sub</pre>    </body></html>

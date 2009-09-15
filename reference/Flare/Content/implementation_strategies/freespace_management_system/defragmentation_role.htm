@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Defragmentation Role	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Defragmentation Role</h1>
+<p>So we have a reliable freespace manager, which will keep the database file size to the minimum. But do we still need to bother about <a href="../maintenance/defragment.html" class="wikiLink">defragmentation</a>?</p>
+<p>Yes, we do for several reasons:</p>
+<ul>
+<li>When the object is deleted, its space in the database is marked as 'freed'. But 8 bytes of its internal ID stay behind. Defragment cleans all this up by writing all objects to a completely new database file. The resulting file will be smaller and faster.</li>
+<li>Within the database file quite a lot of space is used for transactional processing. Objects are always written to a new slot when they are modified, while their 'old' space is marked as free. Adjacent free slots will be merged on the fly, but free and used slots won't be clustered together unless defragmentation is run. </li>
+</ul>
+</div>
+    </div>
+    
+  </body></html>

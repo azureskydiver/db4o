@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IdentityExample.java: checkUniqueness
+private static void checkUniqueness()...{
+    setObjects();
+    ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
+    try ...{
+      ObjectSet cars = container.query(Car.class);
+      Car car = (Car)cars.get(0);
+      String pilotName = car.getPilot().getName();
+      ObjectSet pilots = container.get(new Pilot(pilotName));
+      Pilot pilot = (Pilot)pilots.get(0);
+      System.out.println(&quot;Retrieved objects are identical: &quot; + (pilot == car.getPilot()));
+    } finally ...{
+      container.close();
+    }
+  }</pre>    </body></html>

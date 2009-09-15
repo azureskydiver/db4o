@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringEncoderExample.java: configure
+protected static Configuration configure() ...{
+    Configuration config = Db4o.newConfiguration();
+    config.stringEncoding(new StringEncoding() ...{
+      public byte[] encode(String str) ...{
+        str = Encryption.encrypt(str);
+        int length = str.length();
+          char[] chars = new char[length];
+          str.getChars(0, length, chars, 0);
+          byte[] bytes = new byte[length * 2];
+          int count = 0;
+          for (int i = 0; i &lt; length; i ++)...{
+            bytes[count++] = (byte) (chars[i] &amp; 0xff);
+            bytes[count++] = (byte) (chars[i] &gt;&gt; 8);
+        }
+        return bytes;
+      }
+    
+      public String decode(byte[] bytes, int start, int length) ...{
+          int stringLength =  length / 2;
+          char[] chars = new char[stringLength];
+          int j = start;
+          for(int ii = 0; ii &lt; stringLength; ii++)...{
+              chars[ii] = (char)((bytes[j++]&amp; 0xff) | ((bytes[j++]&amp; 0xff) &lt;&lt; 8));
+              //j+=2;
+          }
+          return Encryption.decrypt(new String(chars,0,stringLength));
+      }
+  
+    });
+    return config;
+  }</pre>    </body></html>

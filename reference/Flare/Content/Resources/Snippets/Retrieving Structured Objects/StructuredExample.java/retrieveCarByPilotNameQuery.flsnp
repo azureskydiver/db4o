@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.java: retrieveCarByPilotNameQuery
+1private static void retrieveCarByPilotNameQuery(
+2      ObjectContainer container) ...{
+3    Query query = container.query();
+4    query.constrain(Car.class);
+5    query.descend(&quot;pilot&quot;).descend(&quot;name&quot;).constrain(
+6        &quot;Rubens Barrichello&quot;);
+7    ObjectSet result = query.execute();
+8    listResult(result);
+9  }</pre>    </body></html>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.java: deleteFlat
+private static void deleteFlat(ObjectContainer container) ...{
+    ObjectSet result = container.query(new Predicate&lt;Car&gt;() ...{
+      public boolean match(Car car) ...{
+        return car.getModel().equals(&quot;Ferrari&quot;);
+      }
+    });
+    Car found = (Car) result.next();
+    container.delete(found);
+    result = container.get(new Car(null));
+    listResult(result);
+  }</pre>    </body></html>

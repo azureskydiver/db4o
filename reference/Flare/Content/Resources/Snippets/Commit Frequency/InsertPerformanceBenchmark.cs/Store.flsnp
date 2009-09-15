@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.cs: Store
+private void Store()
+        ...{
+            StartTimer();
+            for (int i = 0; i &lt; _count; i++)
+            ...{
+                Item item = new Item(&quot;load&quot;, null);
+                for (int j = 1; j &lt; _depth; j++)
+                ...{
+                    item = new Item(&quot;load&quot;, item);
+                }
+                objectContainer.Set(item);
+            }
+            objectContainer.Commit();
+            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+        }</pre>    </body></html>

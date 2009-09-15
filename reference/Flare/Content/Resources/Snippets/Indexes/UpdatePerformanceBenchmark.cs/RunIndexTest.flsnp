@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: RunIndexTest
+private void RunIndexTest()
+        ...{
+            System.Console.WriteLine(&quot;Update test for objects with and without indexed fields&quot;);
+
+            int objectsToUpdate = 100;
+            Init();
+            System.Console.WriteLine(&quot;Updating &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects&quot;);
+            Clean();
+            Open(Configure());
+            Store();
+            UpdateItems(objectsToUpdate);
+            Close();
+
+            Clean();
+            Init();
+            System.Console.WriteLine(&quot;Updating &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects with indexed field&quot;);
+            Open(ConfigureIndexTest());
+            Store();
+            UpdateItems(objectsToUpdate);
+            Close();
+        }</pre>    </body></html>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CarTranslator.java
+/**//* Copyright (C) 2004 - 2009 Versant Inc. http://www.db4o.com */
+package com.db4odoc.diagnostics;
+
+import com.db4o.*;
+import com.db4o.config.*;
+
+public class CarTranslator 
+    implements ObjectConstructor ...{
+  public Object onStore(ObjectContainer container,
+      Object applicationObject) ...{
+    Car car =(Car)applicationObject;
+
+    String fullModel;
+    if (hasYear(car.getModel()))...{
+      fullModel = car.getModel();
+    } else ...{
+      fullModel = car.getModel() + getYear(car.getModel());
+    }
+    return new Object[]...{fullModel};
+  }
+
+  private String getYear(String carModel)...{
+    if (carModel.equals(&quot;BMW&quot;))...{
+      return &quot; 2002&quot;;
+    } else ...{
+      return &quot; 1999&quot;;
+    }
+    
+  }
+  
+  private boolean hasYear(String carModel)...{
+    return false;
+  }
+  
+  public Object onInstantiate(ObjectContainer container, Object storedObject) ...{
+    Object[] raw=(Object[])storedObject;
+    String model=(String)raw[0];
+    return new Car(model);
+  }
+
+  public void onActivate(ObjectContainer container, 
+      Object applicationObject, Object storedObject) ...{
+  }
+
+  public Class storedClass() ...{
+    return Object[].class;
+  }
+}</pre>    </body></html>

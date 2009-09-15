@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">B.vb
+' Copyright (C) 2007  db4objects Inc.  http://www.db4o.com 
+
+Namespace Db4objectsNamespace Db4objects.Db4odoc.Refactoring.Initial
+    Class BClass B
+        Inherits A
+        Public number As Integer
+
+        Public Overloads Overrides Function ToString()Function ToString() As String
+            Return name + &quot;/&quot; + number.ToString()
+        End Function
+    End Class
+End Namespace</pre>    </body></html>

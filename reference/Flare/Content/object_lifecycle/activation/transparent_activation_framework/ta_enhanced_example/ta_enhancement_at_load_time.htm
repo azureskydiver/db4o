@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>TA Enhancement At Loading Time	<link href="../../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>TA Enhancement At Loading Time</h1><p>TA Instrumentation at loading time is the most convenient as the classes do not have to be modified, only a separate runner class should be created to enable special instrumenting classloader to deal with the classes.</p><p>Let's look at an example. </p>
+
+<p>We will use <a href="sensorpanel.html" class="wikiLink">SensorPanel</a> class from the <a href="../../../activation.html" class="wikiLink">Activation</a> example.</p><p>The following configuration should be
+used (note that reflector set-up is not necessary for the loading time instrumentation):</p>
+
+<MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement At Loading Time/TAInstrumentationExample.java/configureTA.flsnp" />
+<p>The <code>main</code> method should
+provide the testing code:</p>
+
+<MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement At Loading Time/TAInstrumentationExample.java/main.flsnp" />
+<MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement At Loading Time/TAInstrumentationExample.java/storeSensorPanel.flsnp" />
+<MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement At Loading Time/TAInstrumentationExample.java/testActivation.flsnp" />
+<p>A separate class should be used to
+run the instrumented example. This class creates a filter to point to the classes that should be instrumented, in this case ByNameClassFilter is used. You can see other filters in ClassFilter hierarchy. A special BloatClassEdit is created to instruct, which type of instrumentation will be used (InjectTransparentActivationEdit in our case). This configuration together with the path of the classes to be instrumented is passed to Db4oInstrumentationLauncher. </p>
+
+<MadCap:snippetBlock src="../../../../Resources/Snippets/TA Enhancement At Loading Time/TAInstrumentationRunner.java/TAInstrumentationRunner.java.flsnp" />u can run the example by running Db4oInstrumentationLauncher, which will start TAInstrumentationExample in a correct configuration. </div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

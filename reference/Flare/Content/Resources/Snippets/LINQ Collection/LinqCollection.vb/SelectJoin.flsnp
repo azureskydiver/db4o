@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqCollection.vb: SelectJoin
+Private Shared Sub SelectJoin()Sub SelectJoin()
+            Dim container As IObjectContainer = Database()
+            If container IsNot Nothing Then
+                Try
+                    Dim result = From p As Pilot In container _
+                                  From c As Car In container _
+                    Where (p.Points &gt; 25) _
+                                  And c.Pilot.Equals(p) _
+                                  Select c
+                    ListResult(result)
+                Catch ex As Exception
+                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub</pre>    </body></html>

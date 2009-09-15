@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.java: runClientServerTest
+private void runClientServerTest()...{
+      
+      configureClientServer();
+      
+      init();
+      clean();
+      System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth + &quot; locally:&quot;);
+      open();
+      store();
+      close();
+      
+      initForClientServer();
+      clean();
+      System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth + &quot; remotely:&quot;);
+      open();
+      store();
+      close();
+      
+    }</pre>    </body></html>

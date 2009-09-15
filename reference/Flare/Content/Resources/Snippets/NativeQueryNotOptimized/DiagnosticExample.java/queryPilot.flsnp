@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.java: queryPilot
+1private static void queryPilot(ObjectContainer container)...{
+2      int[]  i = new int[]...{19,100};
+3      List result = container.query(new ArbitraryQuery(i));
+4      listResult(result);
+5    }</pre>    </body></html>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NonFlushingExample.java: testNonFlushingAdapter
+private static void testNonFlushingAdapter()...{
+    new File(DB4O_FILE_NAME).delete();
+    EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+    config.file().storage(new NonFlushingStorage(new FileStorage()));
+    ObjectContainer container = Db4oEmbedded.openFile(config, DB4O_FILE_NAME);
+    try ...{
+      Pilot pilot = new Pilot(&quot;Rubens Barrichello&quot;, 99);
+      container.store(pilot);
+      long startTime = System.currentTimeMillis();
+      container.commit();
+      System.out.println(&quot;Commit time with NonFlushingStorage: &quot; + 
+          (System.currentTimeMillis() - startTime) + &quot; ms.&quot;);
+    } finally ...{
+      container.close();
+    }
+    
+    //
+    new File(DB4O_FILE_NAME).delete();
+    container = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), DB4O_FILE_NAME);
+    try ...{
+      Pilot pilot = new Pilot(&quot;Rubens Barrichello&quot;, 99);
+      container.store(pilot);
+      long startTime = System.currentTimeMillis();
+      container.commit();
+      System.out.println(&quot;Commit time with default Storage: &quot; + 
+          (System.currentTimeMillis() - startTime) + &quot; ms.&quot;);
+    } finally ...{
+      container.close();
+    }
+  }</pre>    </body></html>

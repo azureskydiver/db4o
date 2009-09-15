@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryExample.java: updatePilot
+public static void updatePilot() ...{
+      storePilot();
+      ObjectContainer db=Db4o.openFile(YAPFILENAME);
+      try ...{
+        // first retrieve the object from the database
+          ObjectSet result=db.get(new Pilot(&quot;Michael Schumacher&quot;,10));
+          Pilot found=(Pilot)result.next();
+          found.addPoints(10);
+          db.set(found);
+          System.out.println(&quot;Added 10 points for &quot;+found);
+    } finally ...{
+      db.close();
+    }
+    retrieveAllPilots();
+    }</pre>    </body></html>

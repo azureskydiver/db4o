@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.vb: DeleteTest
+Private Shared Sub DeleteTest()Sub DeleteTest()
+            Dim db As IObjectContainer = Database()
+            If db IsNot Nothing Then
+                Try
+                    Console.WriteLine(&quot;Deleting Pilots :&quot;)
+                    Dim result As IObjectSet = db.[Get](GetType(Pilot))
+                    Dim obj As Object
+                    For Each obj In result
+                        Dim pilot As Pilot = DirectCast(obj, Pilot)
+                        db.Delete(pilot)
+                    Next
+                    PrintCategories(db)
+                    Console.WriteLine(&quot;Deleting PilotCategories :&quot;)
+                    result = db.[Get](GetType(PilotCategories))
+                    For Each obj In result
+                        db.Delete(obj)
+                    Next
+                    PrintCategories(db)
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub</div</pre>    </body></html>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBufferHandler.java: writeToBuffer
+1private static void writeToBuffer(WriteBuffer buffer, String str)...{
+2      final int length = str.length();
+3      char[] chars = new char[length];
+4      str.getChars(0, length, chars, 0);
+5      for (int i = 0; i &lt; length; i ++)...{
+6          buffer.writeByte((byte) (chars[i] &amp; 0xff));
+7          buffer.writeByte((byte) (chars[i] &gt;&gt; 8));
+8    }
+9  }</pre>    </body></html>

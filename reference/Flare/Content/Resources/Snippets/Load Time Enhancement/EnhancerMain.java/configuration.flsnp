@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EnhancerMain.java: configuration
+1private static Configuration configuration() ...{
+2    Configuration config = Db4o.newConfiguration();
+3    config.add(new TransparentActivationSupport());
+4    // NOTE: required for load time instrumentation!
+5    config.reflectWith(new JdkReflector(EnhancerMain.class.getClassLoader()));
+6    return config;
+7  }</pre>    </body></html>

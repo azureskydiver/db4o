@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StartServer.vb
+' Copyright (C) 2009 Versant Inc. http://www.db4o.com
+Imports System
+Imports System.Threading
+Imports Db4objects.Db4o.CS.Config
+Imports Db4objects.Db4o.CS
+
+Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
+Imports Db4objects.Db4o.Messaging
+
+Namespace Db4odocNamespace Db4odoc.ClientServer
+    /**/''' &lt;summary&gt;
+    ''' starts a db4o server with the settings from ServerSetup. 
+    ''' This is a typical setup for a long running server.
+    ''' The Server may be stopped from a remote location by running
+    ''' StopServer. The StartServer instance is used as a MessageRecipient 
+    ''' and reacts to receiving an instance of a StopServer object.
+    ''' Note that all user classes need to be present on the server side
+    ''' and that all possible calls to alter the db4o
+    ''' configuration need to be executed on the client and on the server.
+    ''' &lt;/summary&gt;
+    Public Class StartServerClass StartServer
+        Inherits ServerSetup
+        Implements IMessageRecipient
+        /**/''' &lt;summary&gt;
+        ''' setting the value to true denotes that the server should be closed
+        ''' &lt;/summary&gt;
+        Private [stop] As Boolean = False
+
+        /**/''' &lt;summary&gt;
+        ''' starts a db4o server using the configuration from
+        ''' ServerSetup.
+        ''' &lt;/summary&gt;
+        Public Shared Sub Main()Sub Main(ByVal arguments As String())
+            Dim server As New StartServer
+            server.RunServer()
+        End Sub
+        ' end Main
+
+        /**/''' &lt;summary&gt;
+        ''' opens the IObjectServer, and waits forever until Close() is called
+        ''' or a StopServer message is being received.
+        ''' &lt;/summary&gt;
+        Public Sub RunServer()Sub RunServer()
+            ' Using the messaging functionality to redirect all
+            ' messages to this.processMessage
+            Dim configuration As IServerConfiguration = Db4oClientServer.NewServerConfiguration()
+            configuration.Networking.MessageRecipient = Me
+            SyncLock Me
+                Dim db4oServer As IObjectServer = Db4oClientServer.OpenServer(configuration, File, Port)
+                db4oServer.GrantAccess(User, Password)
+                Try
+                    If Not [stop] Then
+                        ' wait forever until Close will change stop variable
+                        Monitor.Wait(Me)
+                    End If
+                Catch e As Exception
+                    Console.WriteLine(e.ToString())
+                End Try
+                db4oServer.Close()
+            End SyncLock
+        End Sub
+        ' end RunServer
+
+        /**/''' &lt;summary&gt;
+        ''' messaging callback
+        ''' see com.db4o.messaging.MessageRecipient#ProcessMessage()
+        ''' &lt;/summary&gt;
+        Public Sub ProcessMessage()Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) Implements IMessageRecipient.ProcessMessage
+            If TypeOf message Is StopServer Then
+                Close()
+            End If
+        End Sub
+        ' end ProcessMessage
+
+        /**/''' &lt;summary&gt;
+        ''' closes this server.
+        ''' &lt;/summary&gt;
+        Public Sub Close()Sub Close()
+            SyncLock Me
+                [stop] = True
+                Monitor.PulseAll(Me)
+            End SyncLock
+        End Sub
+        ' end Close
+    End Class
+End Namespace</pre>    </body></html>

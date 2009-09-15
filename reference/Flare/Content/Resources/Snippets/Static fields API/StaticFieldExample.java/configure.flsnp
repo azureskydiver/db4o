@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.java: configure
+1private static void configure()...{
+2    System.out.println(&quot;Saving static fields can be turned on for individual classes.&quot;);
+3    
+4    _configuration = Db4o.newConfiguration();
+5    _configuration.objectClass(PilotCategories.class)
+6        .persistStaticFieldValues();
+7  }</pre>    </body></html>

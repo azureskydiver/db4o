@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBufferHandler.java: compare
+private final int compare(StringBuffer a_compare, StringBuffer a_with) ...{
+    if (a_compare == null) ...{
+      if (a_with == null) ...{
+        return 0;
+      }
+      return -1;
+    }
+    if (a_with == null) ...{
+      return 1;
+    }
+    char c_compare[] = new char[a_compare.length()];
+    a_compare.getChars(0, a_compare.length() - 1, c_compare, 0);
+    char c_with[] = new char[a_with.length()];
+    a_with.getChars(0, a_with.length() - 1, c_with, 0);
+    
+    return compareChars(c_compare, c_with);
+  }</pre>    </body></html>

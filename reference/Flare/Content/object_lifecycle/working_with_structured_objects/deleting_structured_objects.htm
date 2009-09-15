@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Deleting Structured Objects	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Deleting Structured Objects</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Recursive Deletion ">Recursive Deletion </a></li><li><a href ="#Recursive Deletion Revisited">Recursive Deletion Revisited</a></li></ul></li></ul></div></div></div>
+
+
+<p>As we have already seen, we call delete() on objects to get rid of them.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.java/deleteFlat.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.cs/DeleteFlat.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.vb/DeleteFlat.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Fine, the car is gone. What about the pilots?</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.java/retrieveAllPilotsQBE.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.cs/RetrieveAllPilotsQBE.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.vb/RetrieveAllPilotsQBE.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Ok, this is no real surprise - we don't expect a pilot to vanish when his car is 
+disposed of in real life, too. But what if we want an object's children to be 
+thrown away on deletion, too?</p>
+<a name="Recursive Deletion "></a><h2>Recursive Deletion </h2>
+<p>The problem of recursive deletion (and its 
+solution, too) is quite similar to the <a href="updating_structured_objects.html" class="wikiLink">update</a> problem. Let's configure db4o to delete a car's pilot, too, when the car is deleted.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.java/deleteDeepPart1.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.cs/DeleteDeepPart1.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.vb/DeleteDeepPart1.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.java/deleteDeepPart2.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.cs/DeleteDeepPart2.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.vb/DeleteDeepPart2.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Again: Note that all configuration must take place before the ObjectContainer is 
+opened.</p>
+<p>Another way to organize cascaded deletion is using <a href="../../implementation_strategies/callbacks/possible_usecases/cascaded_behavior.html" class="wikiLink">callbacks</a>. The callbacks allow you to specify explicitly, which objects are to be deleted. </p>
+<a name="Recursive Deletion Revisited"></a><h2>Recursive Deletion Revisited</h2>
+<p>But wait - what happens if the children of a removed object are still referenced 
+by other objects?</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.java/deleteDeepRevisited.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.cs/DeleteDeepRevisited.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.vb/DeleteDeepRevisited.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.java/retrieveAllPilots.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.cs/RetrieveAllPilots.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Structured Objects/StructuredExample.vb/RetrieveAllPilots.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Currently db4o does <b>not</b> check whether objects to be deleted are 
+referenced anywhere else, so please be very careful when using this 
+feature.However it is fairly easy to implement referential checking on 
+deletion using deleting() callback. See <a href="../../implementation_strategies/callbacks.html" class="wikiLink">Callbacks chapter</a> for more 
+information.</p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

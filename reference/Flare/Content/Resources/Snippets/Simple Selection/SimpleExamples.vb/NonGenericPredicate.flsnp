@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: NonGenericPredicate
+Private Class NonGenericPredicateClass NonGenericPredicate
+            Inherits Query.Predicate
+            Public Function Match()Function Match(ByVal obj As Object) As Boolean
+                ' each Pilot is included in the result
+                If TypeOf obj Is Pilot Then
+                    Return True
+                End If
+                Return False
+            End Function
+        End Class</pre>    </body></html>

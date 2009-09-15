@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.vb: Compare
+Private Shared Function Compare()Function Compare(ByVal a_compare As StringBuilder, ByVal a_with As StringBuilder) As Integer
+            If a_compare Is Nothing Then
+                If a_with Is Nothing Then
+                    Return 0
+                End If
+                Return -1
+            End If
+            If a_with Is Nothing Then
+                Return 1
+            End If
+            Dim c_compare As Char() = New Char(a_compare.Length - 1) {}
+            a_compare.CopyTo(0, c_compare, 0, a_compare.Length)
+            Dim c_with As Char() = New Char(a_with.Length - 1) {}
+            a_with.CopyTo(0, c_with, 0, a_with.Length)
+
+            Return CompareChars(c_compare, c_with)
+        End Function</pre>    </body></html>

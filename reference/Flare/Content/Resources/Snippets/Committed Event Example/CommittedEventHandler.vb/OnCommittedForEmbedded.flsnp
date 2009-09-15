@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CommittedEventHandler.vb: OnCommittedForEmbedded
+Public Sub OnCommittedForEmbedded()Sub OnCommittedForEmbedded(ByVal sender As Object, ByVal args As CommitEventArgs)
+            Dim trans As Transaction = (CType(_objectContainer, IInternalObjectContainer)).Transaction()
+            ' get all the updated objects
+            Dim updated As IObjectInfoCollection = args.Updated
+            For Each info As IObjectInfo In updated
+                Dim obj As Object = trans.ObjectForIdFromCache(info.GetInternalID())
+                If (Not obj Is Nothing) Then
+                    ' refresh object on the client
+                    _objectContainer.Ext().Refresh(obj, 2)
+                End If
+            Next
+        End Sub</pre>    </body></html>

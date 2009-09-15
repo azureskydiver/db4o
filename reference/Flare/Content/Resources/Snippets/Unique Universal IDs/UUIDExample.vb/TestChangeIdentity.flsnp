@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UUIDExample.vb: TestChangeIdentity
+Public Shared Sub TestChangeIdentity()Sub TestChangeIdentity()
+
+            File.Delete(Db4oFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
+            Dim db As Db4oDatabase
+            Dim oldSignature() As Byte
+            Dim NewSignature() As Byte
+            Try
+                db = container.Ext().Identity()
+                oldSignature = db.GetSignature()
+                Console.WriteLine(&quot;oldSignature: &quot; + PrintSignature(oldSignature))
+                Dim yf As LocalObjectContainer = DirectCast(container, LocalObjectContainer)
+                yf.GenerateNewIdentity()
+            Finally
+                container.Close()
+            End Try
+            container = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                db = container.Ext().Identity()
+                NewSignature = db.GetSignature()
+                Console.WriteLine(&quot;newSignature: &quot; + PrintSignature(NewSignature))
+            Finally
+                container.Close()
+            End Try
+
+            Dim same As Boolean = True
+
+            Dim i As Integer
+            For i = 0 To oldSignature.Length - 1 Step i + 1
+                If oldSignature(i) &lt;&gt; NewSignature(i) Then
+
+                    same = False
+                End If
+            Next
+
+            If (same) Then
+                Console.WriteLine(&quot;Database signatures are identical&quot;)
+            Else
+                Console.WriteLine(&quot;Database signatures are different&quot;)
+            End If
+        End Sub</pre>    </body></html>

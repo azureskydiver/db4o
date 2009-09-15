@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BuiltInTranslatorsExample.vb: TestSerializable
+Public Shared Sub TestSerializable()Sub TestSerializable()
+            SaveSerializable()
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            ' configure class as serializable to retrieve correctly
+            configuration.ObjectClass(GetType(Pilot)).Translate(New TSerializable())
+            Dim container As IObjectContainer = Database(configuration)
+            If container IsNot Nothing Then
+                Try
+                    System.Console.WriteLine(&quot;Retrieving pilots by name:&quot;)
+                    Dim query As IQuery = container.Query()
+                    query.Constrain(GetType(Pilot))
+                    query.Descend(&quot;_name&quot;).Constrain(&quot;Test Pilot 1&quot;)
+                    Dim resultByName As IObjectSet = query.Execute()
+                    ListResult(resultByName)
+
+                    System.Console.WriteLine(&quot;Retrieve all pilot objects:&quot;)
+                    Dim result As IList(Of Pilot) = container.Query(Of Pilot)()
+                    ListResult(result)
+                Catch ex As Db4oException
+                    System.Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message)
+                Catch ex As Exception
+                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub</pre>    </body></html>

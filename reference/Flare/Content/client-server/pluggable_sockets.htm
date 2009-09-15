@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Pluggable Sockets	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Pluggable Sockets</h1>
+
+<p>db4o allows to customize client-server communication by
+using pluggable socket implementations:</p>
+
+<p MadCap:conditions="Primary.Java"><p>Java: </p>
+
+
+
+<p><code>public static
+ObjectServer openServer(Configuration config, String databaseFileName, int port, NativeSocketFactory
+socketFactory)</code></p>
+
+<p><code>public static ObjectContainer
+OpenClient(Configuration config, String hostName, int port, String user, String
+password, NativeSocketFactory socketFactory)</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print"><p>.NET: </p>
+
+
+
+<p><code>public static
+IObjectServer OpenServer(IConfiguration config, string databaseFileName, int port, INativeSocketFactory
+socketFactory)</code></p>
+
+<p><code>public static
+IObjectContainer OpenClient(IConfiguration config, string hostName, int port, string user, string
+password, INativeSocketFactory socketFactory)</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>Here NativeSocketFactory
+interface should be used to provide client and server sockets, which may
+implement any custom way of communication.</p>
+
+<p>An example of such customary
+implementation can be <a href="pluggable_sockets/using_ssl_for_client-server_communication.html" class="wikiLink">encrypted communication</a>.</p>
+
+<p>Note, that this API is in the
+development stage and is subject to future changes.</p>
+
+
+</div>
+    </div>
+    
+  </body></html>

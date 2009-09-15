@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBufferHandler.java: prepareComparison
+1public PreparedComparison prepareComparison(Context ctx, final Object obj) ...{
+2    return new PreparedComparison() ...{
+3      public int compareTo(Object target) ...{
+4        return compare((StringBuffer)obj, (StringBuffer)target);
+5      }
+6    };
+7  }</pre>    </body></html>

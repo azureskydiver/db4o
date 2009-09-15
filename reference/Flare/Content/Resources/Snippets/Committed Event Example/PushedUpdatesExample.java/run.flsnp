@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.java: run
+public void run() throws IOException, DatabaseFileLockedException ...{
+    new File(DB4O_FILE_NAME).delete();
+    ObjectServer server = Db4oClientServer.openServer(Db4oClientServer
+        .newServerConfiguration(), DB4O_FILE_NAME, PORT);
+    try ...{
+      server.grantAccess(USER, PASSWORD);
+
+      ObjectContainer client1 = openClient();
+      ObjectContainer client2 = openClient();
+
+      if (client1 != null &amp;&amp; client2 != null) ...{
+        try ...{
+          // wait for the operations to finish
+          waitForCompletion();
+
+          // save pilot with client1
+          Car client1Car = new Car(&quot;Ferrari&quot;, 2006, new Pilot(
+              &quot;Schumacher&quot;));
+          client1.store(client1Car);
+          client1.commit();
+
+          waitForCompletion();
+
+          // retrieve the same pilot with client2
+          Car client2Car = (Car) client2.query(Car.class).next();
+          System.out.println(client2Car);
+
+          // modify the pilot with client1
+          client1Car.setModel(2007);
+          client1Car.setPilot(new Pilot(&quot;Hakkinnen&quot;));
+          client1.store(client1Car);
+          client1.commit();
+
+          waitForCompletion();
+
+          // client2Car has been automatically updated in
+          // the committed event handler because of the
+          // modification and the commit by client1
+          System.out.println(client2Car);
+
+          waitForCompletion();
+        } catch (Exception ex) ...{
+          ex.printStackTrace();
+        } finally ...{
+          closeClient(client1);
+          closeClient(client2);
+        }
+      }
+    } catch (Exception ex) ...{
+      ex.printStackTrace();
+    } finally ...{
+      server.close();
+    }
+  }</pre>    </body></html>

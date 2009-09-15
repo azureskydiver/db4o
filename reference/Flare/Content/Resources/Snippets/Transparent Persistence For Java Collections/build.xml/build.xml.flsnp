@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">build.xml
+&lt;project name=&quot;db4o.TP.sample&quot; basedir=&quot;.&quot; default=&quot;run&quot;&gt;
+
+  &lt;property name=&quot;dir.src&quot; value=&quot;${basedir}/src&quot; /&gt;
+  &lt;property name=&quot;dir.bin&quot; value=&quot;${basedir}/bin&quot; /&gt;
+  
+  &lt;path id=&quot;project.classpath&quot;&gt;
+      &lt;fileset dir=&quot;lib&quot;&gt;
+        &lt;include name=&quot;**/*.jar&quot;/&gt;
+      &lt;/fileset&gt;
+  &lt;/path&gt;
+  
+  &lt;taskdef name=&quot;db4o-enhance&quot; 
+    classname=&quot;com.db4o.enhance.Db4oEnhancerAntTask&quot; 
+    classpathref=&quot;project.classpath&quot; /&gt;
+  
+  &lt;target name=&quot;compile&quot;&gt;
+    &lt;mkdir dir=&quot;${dir.bin}&quot; /&gt;
+    &lt;javac srcdir=&quot;${dir.src}&quot; destdir=&quot;${dir.bin}&quot; failonerror=&quot;true&quot;&gt;
+      &lt;classpath refid=&quot;project.classpath&quot; /&gt;
+    &lt;/javac&gt;
+  &lt;/target&gt;
+  
+  &lt;target name=&quot;enhance&quot; depends=&quot;compile&quot;&gt;
+    &lt;db4o-enhance classtargetdir=&quot;${dir.bin}&quot; ta=&quot;true&quot; nq=&quot;true&quot; collections=&quot;true&quot;&gt;
+      &lt;classpath refid=&quot;project.classpath&quot; /&gt;
+      &lt;sources dir=&quot;${dir.bin}&quot;&gt;
+        &lt;include name=&quot;**/*.class&quot; /&gt;
+      &lt;/sources&gt;
+    &lt;/db4o-enhance&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;run&quot; depends=&quot;enhance&quot;&gt;
+    &lt;java classname=&quot;do4odoc.tacollections.TACollectionsExample&quot; failonerror=&quot;true&quot;&gt;
+      &lt;classpath&gt;
+        &lt;pathelement path=&quot;${dir.bin}&quot; /&gt;
+        &lt;path refid=&quot;project.classpath&quot; /&gt;
+      &lt;/classpath&gt;
+    &lt;/java&gt;
+  &lt;/target&gt;
+
+&lt;/project&gt;</pre>    </body></html>

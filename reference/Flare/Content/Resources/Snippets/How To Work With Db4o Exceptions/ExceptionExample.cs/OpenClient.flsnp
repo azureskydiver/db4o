@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ExceptionExample.cs: OpenClient
+private static IObjectContainer OpenClient()
+        ...{
+            IObjectContainer db = null;
+            try
+            ...{
+                db = Db4oFactory.OpenClient(&quot;host&quot;, 0xdb40, &quot;user&quot;, &quot;password&quot;);
+            }
+            catch (Exception ex)
+            ...{
+                //System.Console.WriteLine(ex.Message);
+                // ask the user for new connection details, print
+                // or log the exception message
+                // and close the application,
+                // find and fix the reason
+                // and try again
+            }
+            return db;
+        }</pre>    </body></html>

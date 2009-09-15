@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QBEExample.cs: test2
+private static void Test2()
+        ...{
+            IObjectContainer container = Database();
+            if (container != null)
+            ...{
+                try
+                ...{
+                    // Pilot1Derived derives the constructor with re-initialisation
+                    Pilot1Derived pilot = new Pilot1Derived(&quot;Kimi Raikonnen&quot;, 100);
+                    container.Set(pilot);
+                    container.Commit();
+                    // QBE returns result with wrong points
+                    IObjectSet result = container.Get(new Pilot1Derived(&quot;Kimi Raikonnen&quot;, 100));
+                    System.Console.WriteLine(&quot;Test QBE on class with member re-initialization in ancestor constructor&quot;);
+                    ListResult(result);
+                }
+                catch (Db4oException ex)
+                ...{
+                    System.Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message);
+                }
+                catch (Exception ex)
+                ...{
+                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
+                }
+                finally
+                ...{
+                    CloseDatabase();
+                }
+            }
+        }</pre>    </body></html>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ConnectedUser.java
+1/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
+2
+3package com.db4odoc.semaphores;
+4
+5import java.util.*;
+6import com.db4o.*;
+7import com.db4o.config.*;
+8import com.db4o.ext.*;
+9import com.db4o.query.*;
+0
+1/** *//**
+2 * This class demonstrates how semaphores can be used to rule out race
+3 * conditions when providing exact and up-to-date information about
+4 * all connected clients on a server. The class also can be used to
+5 * make sure that only one login is possible with a give user name and
+6 * ipAddress combination.
+7 */
+8public class ConnectedUser ...{
+9
+0  static final String SEMAPHORE_CONNECTED = &quot;ConnectedUser_&quot;;
+1
+2  static final String SEMAPHORE_LOCK_ACCESS = &quot;ConnectedUser_Lock_&quot;;
+3
+4  static final int TIMEOUT = 10000; // concurrent access timeout
+5
+6  // 10 seconds
+7
+8  String userName;
+9
+0  String ipAddress;
+1
+2  public ConnectedUser(String userName, String ipAddress) ...{
+3    this.userName = userName;
+4    this.ipAddress = ipAddress;
+5  }
+6
+7  // make sure to call this on the server before opening the
+8  // database
+9  // to improve querying speed
+0  public static void configure() ...{
+1    ObjectClass objectClass = Db4o.configure().objectClass(
+2        ConnectedUser.class);
+3    objectClass.objectField(&quot;userName&quot;).indexed(true);
+4    objectClass.objectField(&quot;ipAddress&quot;).indexed(true);
+5  }
+6
+7  // call this on the client to ensure to have a ConnectedUser
+8  // record
+9  // in the database file and the semaphore set
+0  public static void login(ObjectContainer client, String userName,
+1      String ipAddress) ...{
+2    if (!client.ext()
+3        .setSemaphore(SEMAPHORE_LOCK_ACCESS, TIMEOUT)) ...{
+4      throw new RuntimeException(
+5          &quot;Timeout trying to get access to ConnectedUser lock&quot;);
+6    }
+7    Query q = client.query();
+8    q.constrain(ConnectedUser.class);
+9    q.descend(&quot;userName&quot;).constrain(userName);
+0    q.descend(&quot;ipAddress&quot;).constrain(ipAddress);
+1    if (q.execute().size() == 0) ...{
+2      client.set(new ConnectedUser(userName, ipAddress));
+3      client.commit();
+4    }
+5    String connectedSemaphoreName = SEMAPHORE_CONNECTED
+6        + userName + ipAddress;
+7    boolean unique = client.ext().setSemaphore(
+8        connectedSemaphoreName, 0);
+9    client.ext().releaseSemaphore(SEMAPHORE_LOCK_ACCESS);
+0    if (!unique) ...{
+1      throw new RuntimeException(
+2          &quot;Two clients with same userName and ipAddress&quot;);
+3    }
+4  }
+5
+6  // here is your list of all connected users, callable on the
+7  // server
+8  public static List connectedUsers(ObjectServer server) ...{
+9    ExtObjectContainer serverObjectContainer = server.ext()
+0        .objectContainer().ext();
+1    if (serverObjectContainer.setSemaphore(SEMAPHORE_LOCK_ACCESS,
+2        TIMEOUT)) ...{
+3      throw new RuntimeException(
+4          &quot;Timeout trying to get access to ConnectedUser lock&quot;);
+5    }
+6    List list = new ArrayList();
+7    Query q = serverObjectContainer.query();
+8    q.constrain(ConnectedUser.class);
+9    ObjectSet objectSet = q.execute();
+0    while (objectSet.hasNext()) ...{
+1      ConnectedUser connectedUser = (ConnectedUser) objectSet
+2          .next();
+3      String connectedSemaphoreName = SEMAPHORE_CONNECTED
+4          + connectedUser.userName
+5          + connectedUser.ipAddress;
+6      if (serverObjectContainer.setSemaphore(
+7          connectedSemaphoreName, TIMEOUT)) ...{
+8        serverObjectContainer.delete(connectedUser);
+9      } else ...{
+0        list.add(connectedUser);
+1      }
+2    }
+3    serverObjectContainer.commit();
+4    serverObjectContainer.releaseSemaphore(SEMAPHORE_LOCK_ACCESS);
+5    return list;
+6  }
+7}</pre>    </body></html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EqualityExample.vb: StorePilot
+Private Shared Sub StorePilot()Sub StorePilot()
+            Dim container As IObjectContainer = Database()
+            If container IsNot Nothing Then
+                Try
+                    Dim pilot As New Pilot(&quot;Kimi Raikkonnen&quot;, 100)
+                    container.[Set](pilot)
+                Catch ex As Exception
+                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub</pre>    </body></html>

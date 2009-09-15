@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Db4o.Xml
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;Sandbox&gt;
+  &lt;PermissionSet version=&quot;1&quot; class=&quot;System.Security.PermissionSet&quot;&gt;
+    &lt;IPermission version=&quot;1&quot; class=&quot;System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot; Read=&quot;*AllFiles*&quot; PathDiscovery=&quot;*AllFiles*&quot; /&gt;
+    &lt;IPermission version=&quot;1&quot; class=&quot;System.Security.Permissions.ReflectionPermission, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot; Flags=&quot;MemberAccess&quot; /&gt;
+    &lt;IPermission version=&quot;1&quot; class=&quot;System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot; Flags=&quot;UnmanagedCode, Execution, ControlEvidence, SerializationFormatter, ControlAppDomain&quot; /&gt;
+    &lt;IPermission Window=&quot;SafeSubWindows&quot; Clipboard=&quot;OwnClipboard&quot; version=&quot;1&quot; class=&quot;System.Security.Permissions.UIPermission, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot; /&gt;
+    &lt;IPermission version=&quot;1&quot; class=&quot;System.Security.Permissions.KeyContainerPermission, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot; Unrestricted=&quot;true&quot; /&gt;
+  &lt;/PermissionSet&gt;
+&lt;/Sandbox&gt;</pre>    </body></html>

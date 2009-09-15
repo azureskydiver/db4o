@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TransactionExample.cs: CarSnapshotRollback
+1private static void CarSnapshotRollback(IObjectContainer db)
+2        ...{
+3            IObjectSet result = db.Get(new Car(&quot;BMW&quot;));
+4            Car car = (Car)result.Next();
+5            car.Snapshot();
+6            db.Set(car);
+7            db.Rollback();
+8            Console.WriteLine(car);
+9        }</pre>    </body></html>

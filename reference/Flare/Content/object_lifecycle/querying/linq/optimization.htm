@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Optimization	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Optimization</h1><p>Those of you who are familiar with db4o query processor may
+already suspect that LINQ queries as well as NQ and QueryByExample queries are
+converted to <a href="../soda_query.html" class="wikiLink">SODA Query</a> under the hood. And that is true. The downside of this is
+that some of the queries cannot be converted to SODA and will run against all
+instances of matching class objects. Some of the cases when conversion is not possible: </p>
+
+<ul><li>there is no SODA alternative available</li><li>constraints on aggregates (avg(List) = constant)</li><li>constraints to values that are not available before
+query executions (Pilot.Points = Pilot.Name.Length)</li></ul>
+
+
+
+
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Optimization/LinqExample.cs/SelectUnoptimized.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Optimization/LinqExample.vb/SelectUnoptimized.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+
+
+<p>In the cases when optimization is not possible db4o query processor
+will need the class definitions to be able to run the LINQ query. If
+these definitions are not available the query will throw an exception.
+For more information see
+<a href="../../../client-server/server_without_persistent_classes_deployed/linq.html" class="wikiLink">Server
+Without Persistent Classes</a>.  </p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

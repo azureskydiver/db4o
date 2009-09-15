@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CommittedEventHandler.vb: OnCommitted
+1Public Sub OnCommitted()Sub OnCommitted(ByVal sender As Object, ByVal args As CommitEventArgs)
+2            ' get all the updated objects
+3            Dim updated As IObjectInfoCollection = args.Updated
+4            For Each info As IObjectInfo In updated
+5                Dim obj As Object = info.GetObject()
+6                ' refresh object on the client
+7                _objectContainer.Ext().Refresh(obj, 2)
+8            Next
+9        End Sub</pre>    </body></html>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.java: updatePilots
+private static void updatePilots() ...{
+    System.out
+        .println(&quot;Updating PilotCategory in pilot reference:&quot;);
+    ObjectContainer container = database();
+    if (container != null)...{
+      try ...{
+        ObjectSet result = container.query(Pilot.class);
+        for (int x = 0; x &lt; result.size(); x++) ...{
+          Pilot pilot = (Pilot) result.get(x);
+          if (pilot.getCategory() == PilotCategories.WINNER) ...{
+            System.out.println(&quot;Winner pilot: &quot; + pilot);
+            PilotCategories pc = pilot.getCategory();
+            pc.testChange(&quot;WINNER2006&quot;);
+            container.set(pilot);
+          }
+        }
+        printCategories(container);
+      } finally ...{
+        closeDatabase();
+      }
+    }
+  }</pre>    </body></html>

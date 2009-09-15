@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">default.aspx.cs
+using System;
+using System.Collections;
+using Db4objects.Db4odoc.Web.Data;
+
+namespace Db4objects.Db4odoc.Web
+...{
+
+    public partial class _Default : System.Web.UI.Page
+    ...{
+        protected void Page_Load(object sender, EventArgs e)
+        ...{
+
+        }
+
+        public static IList RetrieveAll()
+        ...{
+            return Db4oHttpModule.Client.Get(typeof(Message));
+        }
+        // end RetrieveAll
+
+        public static void DeleteAll()
+        ...{
+            IList messages = Db4oHttpModule.Client.Get(typeof(Message));
+            foreach (Message msg in messages)
+            ...{
+                Db4oHttpModule.Client.Delete(msg);
+            }
+        }
+        // end DeleteAll
+
+        public static void SaveMessage(string username, string text)
+        ...{
+            Message msg = new Message(username, text);
+            Db4oHttpModule.Client.Set(msg);
+        }
+        // end SaveMessage
+
+        public void ButtonGet_Click(Object s, EventArgs e)
+        ...{
+            entries.InnerHtml = &quot;&quot;;
+            IList list = RetrieveAll();
+            foreach (Message msg in list)
+            ...{
+                entries.InnerHtml = &quot;&lt;hr&gt;&quot; + msg.ToString() + entries.InnerHtml;
+            }
+        }
+        // end ButtonGet_Click
+
+        public void ButtonSet_Click(Object s, EventArgs e)
+        ...{
+            SaveMessage(username.Value, message.Value);
+            username.Value = &quot;&quot;;
+            message.Value = &quot;&quot;;
+        }
+        // end ButtonSet_Click
+
+        public void ButtonClear_Click(Object s, EventArgs e)
+        ...{
+            DeleteAll();
+            entries.InnerHtml = &quot;&quot;;
+        }
+        // end ButtonClear_Click
+    }
+}</div</pre>    </body></html>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Update Depth	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Update Depth</h1><p>db4o update behavior is regulated by
+<a href="../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a>. Understanding Update Depth
+will help you to improve performance and avoid unnecessary memory
+usage. 
+</p>
+
+<p>When Update Depth is set to a big value
+on objects with a deep reference hierarchy it will cause each update
+on the top-level object to trigger updates on the lower-level
+objects, which can impose a huge performance penalty. 
+</p>
+
+<p>The following settings should be used
+with a special care and only with a good reason to do so:</p>
+<ol>
+<li>
+<p>Global deep update depth setting:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>configuration.updateDepth(Integer.MaxValue);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>configuration.UpdateDepth(Int32.MAX_VALUE);</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>This setting causes ALL objects in the
+database to be updated to the lowest possible level on each update.</p>
+
+</li>
+<li>
+<p>Cascade on update:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>configuration.objectClass(Item.class).cascadeOnUpdateDepth(true);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>configuration.ObjectClass(typeof(Item)).CascadeOnUpdateDepth(true);</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+</li>
+</ol>
+<p>This setting will cause an update to
+the lowest level for Item class only. This can be unnecessary and
+therefore undesired in order to safe system resources.</p>
+
+<p>For more detailed information, please,
+refer to  <a href="../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a>.</p></div>
+    </div>
+    
+  </body></html>

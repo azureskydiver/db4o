@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Class Name Format In .NET	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Class Name Format In .NET</h1><p><font color="#990000">This topic applies to .NET version only</font> </p>
+<p>Db4o uses full class name to distinguish classes within the database file. In .NET full class name has the following format:</p>
+<p><code>Namespace.ClassName, AssemblyName</code></p>
+<p>Effectively that means that the same class definition within different assemblies (applications or libraries) will be recognized as two different classes by db4o. You should keep this in mind in the following cases:</p>
+<ul>
+<li>2 or more applications working with the same database file;</li>
+<li>client/server application with the classes deployed on both the client and the server;</li>
+<li><a href="../platform_specific_issues/asp.net.html" class="wikiLink">ASP.NET2</a> application with dynamic compilation</li></ul>
+<p>Let's use an example to see what happens in these cases. We will create 2 applications Test1.exe and Test2.exe. Both will have a simplest class definition:</p>
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../Resources/Snippets/Class Name Format In .NET/Test.cs/Test.cs.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../Resources/Snippets/Class Name Format In .NET/Test.vb/Test.vb.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+<p>Test1 application will store one object of Test class to the database:</p>
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../Resources/Snippets/Class Name Format In .NET/ClassNameExample1.cs/StoreObjects.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../Resources/Snippets/Class Name Format In .NET/ClassNameExample1.vb/StoreObjects.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+<p>Another application (Test2) will try to read this object from the same database file. To check how  the Test object was actually stored in the database we will use StoredClass API:</p>
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../Resources/Snippets/Class Name Format In .NET/ClassNameExample2.cs/CheckDatabase.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../Resources/Snippets/Class Name Format In .NET/ClassNameExample2.vb/CheckDatabase.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+<p>From the example we can see that though the class has been stored to the database, it cannot be retrieved from the Test2 application, as the assembly name is different from the original.</p>
+<p>In order to make your classes readable from another assembly you should use one of the existing workarounds:</p>
+<ul>
+<li>keep your persistent classes in a separate class library, which should be available for your application assemblies (for the example above compile the Test class into Persistent.dll);</li>
+<li>use db4o <a href="../implementation_strategies/aliases.html" class="wikiLink">Aliases</a>.</li></ul></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: RetrieveCarByPilotQBE
+1private static void RetrieveCarByPilotQBE(IObjectContainer db)
+2    ...{
+3      Pilot pilotproto = new Pilot(&quot;Rubens Barrichello&quot;,0);
+4      Car carproto = new Car(null);
+5      carproto.Pilot = pilotproto;
+6      IObjectSet result = db.Get(carproto);
+7      ListResult(result);
+8    }</pre>    </body></html>

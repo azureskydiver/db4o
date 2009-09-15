@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Indexes	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Indexes</h1>
+
+<p>One more feature that inevitably decreases the insert performance:
+indexes. When a new object with indexed field is inserted an index should be
+created and written to the database, which consumes additional resources.
+Luckily indexes do not only reduce the performance, actually they will improve
+the performance to a much more valuable degree during querying.</p>
+
+<p>An example below provides a simple comparison of storing
+objects with and without indexes:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/InsertPerformanceBenchmark.java/runIndexTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/InsertPerformanceBenchmark.java/configure.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/InsertPerformanceBenchmark.java/configureIndex.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/InsertPerformanceBenchmark.java/init.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/InsertPerformanceBenchmark.java/store.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/InsertPerformanceBenchmark.cs/RunIndexTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/InsertPerformanceBenchmark.cs/Configure.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/InsertPerformanceBenchmark.cs/ConfigureIndex.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/InsertPerformanceBenchmark.cs/Init.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexes/InsertPerformanceBenchmark.cs/Store.flsnp" />
+</p><p MadCap:conditions="Primary:net" />
+
+<p>The following results were achieved for the
+<a href="../insert_performance.html" class="wikiLink">testing configuration</a>:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p>Storing 10000 objects with 3 levels of embedded objects:</p>
+
+<p> - no index</p>
+
+<p>Store 30000 objects: 877ms</p>
+
+<p> - index on String
+field</p>
+
+<p>Store 30000 objects: 1076ms </p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p>Storing 10000 objects with 3 levels of embedded objects:</p>
+
+<p> - no index</p>
+
+<p>Store 30000 objects: 1235ms</p>
+
+<p> - index on String
+field</p>
+
+<p>Store 30000 objects: 1748ms </p>
+
+</p><p MadCap:conditions="Primary:net" /></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

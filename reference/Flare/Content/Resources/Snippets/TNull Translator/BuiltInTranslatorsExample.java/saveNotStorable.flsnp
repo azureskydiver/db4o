@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BuiltInTranslatorsExample.java: saveNotStorable
+public static void saveNotStorable()
+    ...{
+        new File(DB4O_FILE_NAME).delete();
+        Configuration configuration = Db4o.newConfiguration();
+        // Configure NotStorable class with TNull translator to prevent its storage
+        configuration.objectClass(NotStorable.class).translate(new TNull());
+        ObjectContainer container = database(configuration);
+        if (container != null)
+        ...{
+            try
+            ...{
+                NotStorable ns =  new NotStorable(&quot;test1&quot;);
+                container.set(ns);
+                ns = new NotStorable(&quot;test2&quot;);
+                container.set(ns);
+            }
+            catch (Db4oException ex)
+            ...{
+              ex.printStackTrace();
+            }
+            catch (Exception ex)
+            ...{
+              ex.printStackTrace();
+            }
+            finally
+            ...{
+                closeDatabase();
+            }
+        }
+    }</pre>    </body></html>

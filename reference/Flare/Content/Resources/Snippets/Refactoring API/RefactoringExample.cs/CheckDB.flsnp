@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RefactoringExample.cs: CheckDB
+private static void CheckDB()
+    ...{
+      IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
+      try 
+      ...{
+        IObjectSet result = container.Get(typeof(Pilot));
+        foreach (object obj in result)
+        ...{
+          Pilot pilot = (Pilot)obj;
+          System.Console.WriteLine(&quot;Pilot=&quot;+ pilot);
+        }
+      } 
+      finally 
+      ...{
+        container.Close();
+      }
+    }</pre>    </body></html>

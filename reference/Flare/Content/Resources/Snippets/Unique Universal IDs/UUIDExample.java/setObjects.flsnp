@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UUIDExample.java: setObjects
+private static void setObjects() ...{
+    new File(DB4O_FILE_NAME).delete();
+    Configuration configuration = Db4o.newConfiguration();
+    configuration.objectClass(Pilot.class).generateUUIDs(true);
+    ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
+    try ...{
+      Car car = new Car(&quot;BMW&quot;, new Pilot(&quot;Rubens Barrichello&quot;));
+      container.set(car);
+    } finally ...{
+      container.close();
+    }
+  }</pre>    </body></html>

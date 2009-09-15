@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Client-Server	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Client-Server</h1>
+
+<p>In client-server use the connection speed can play an
+important role in the query performance. </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Client-Server/QueryPerformanceBenchmark.java/runClientServerTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Client-Server/QueryPerformanceBenchmark.java/initForClientServer.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Client-Server/QueryPerformanceBenchmark.java/configureClientServer.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Client-Server/QueryPerformanceBenchmark.cs/RunClientServerTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Client-Server/QueryPerformanceBenchmark.cs/InitForClientServer.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Client-Server/QueryPerformanceBenchmark.cs/ConfigureClientServer.flsnp" />
+</p><p MadCap:conditions="Primary:net" />
+
+
+
+<p>Results from the test machine:</p>
+
+<p><i>Storing 30000 objects
+of depth 3 remotely:</i></p>
+
+<p><i>Store 90000 objects:
+10725ms</i></p>
+
+<p><i>Select 1 object:
+level1/1: 1763ms</i></p>
+
+<p><i>Storing 10000 objects
+of depth 3 locally:</i></p>
+
+<p><i>Store 30000 objects:
+2904ms</i></p>
+
+<p><i>Select 1 object:
+level1/1: 630ms</i></p><p>In order to improve the performance use <a href="../../../object_lifecycle/querying/query_modes.html" class="wikiLink">Lazy or Snapshot
+evaluation modes</a>.</p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.java: configureClientServer
+1private Configuration configureClientServer() ...{
+2    Configuration config = Db4o.newConfiguration();
+3    config.queries().evaluationMode(QueryEvaluationMode.IMMEDIATE);
+4    config.clientServer().singleThreadedClient(true);
+5    return config;
+6  }</pre>    </body></html>

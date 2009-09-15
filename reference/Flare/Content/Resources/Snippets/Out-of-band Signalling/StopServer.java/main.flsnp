@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StopServer.java: main
+/** *//**
+   * stops a db4o Server started with StartServer.
+   * 
+   * @throws Exception
+   */
+  public static void main(String[] args) ...{
+    ObjectContainer objectContainer = null;
+    try ...{
+
+      // connect to the server
+      objectContainer = Db4oClientServer.openClient(Db4oClientServer
+          .newClientConfiguration(), HOST, PORT, USER, PASS);
+
+    } catch (Exception e) ...{
+      e.printStackTrace();
+    }
+
+    if (objectContainer != null) ...{
+
+      // get the messageSender for the ObjectContainer
+      MessageSender messageSender = objectContainer.ext().configure()
+          .clientServer().getMessageSender();
+
+      // send an instance of a StopServer object
+      messageSender.send(new StopServer());
+
+      // close the ObjectContainer
+      objectContainer.close();
+    }
+  }</pre>    </body></html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Running The Tests	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Running The Tests</h1>
+
+<p>The
+TestSuite can be built: </p>
+
+<ul><li>from the list of the arguments supplied to Db4oUnitTestMain class (only for Java
+version) . </li><li>using Db4oTestSuiteBuilder to specify
+test classes to be run.</li></ul>
+
+
+
+<p>If
+you are using java version you can test your class immediately (assuming the
+class is created in TestDb4oUnit package):</p>
+
+<p>java
+-cp db4o-6.0-db4ounit.jar;your_class_folder db4ounit.UnitTestMain
+your_class_package.AssertTestCase</p>
+
+<p>The
+second option is to list the test class in Db4oTestSuiteBuilder argument.  You
+can use db4ounit.extensions.tests.AllTests class. Just add the following
+method:</p>
+
+<p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../Resources/Snippets/Running The Tests/AllTests.java/testCascadeOnUpdate.flsnp" />p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary.Print"><MadCap:snippetBlock src="../Resources/Snippets/Running The Tests/AllTests.cs/TestCascadeOnUpdate.flsnp" />p><p MadCap:conditions="Primary:net" />
+
+Now running the AllTests class will include your
+custom class too. </div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

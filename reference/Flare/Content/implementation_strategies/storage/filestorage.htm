@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>FileStorage	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>FileStorage</h1>
+
+<p>FileStorage is the base storage mechanism, providing the functionality of file access. It is used as the underlying mechanism for other storage implementations provided by db4o. For example:</p>
+<p><code>new NonFlushingStorage(new FileStorage());</code></p>
+<p>Normally the above limits the usage of the FileStorage class. However, you can also use it as the main storage mechanism for your database, if performance is not important to you. </p>
+<p MadCap:conditions="Primary.Java">
+<p>Java:</p>
+<p><code>EmbeddedConfiguration#file().storage(new FileStorage());</code> </p>
+</p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary.Print">
+<p>.NET:</p>
+<p><code>IEmbeddedConfiguration.File.Storage = new FileStorage();</code> 
+</p>
+</p><p MadCap:conditions="Primary:net" />
+<p>The benefit of using FileStorage is in <a href="../../tuning/performance_hints/randomaccessfileadapter.html" class="wikiLink">decreased memory consumption</a>.  </p>
+<p>  </p>
+</div>
+    </div>
+    
+  </body></html>

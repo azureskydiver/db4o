@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SensorPanel.Java
+/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
+
+package com.db4odoc.tpbuildtime;
+
+public class SensorPanel ...{
+
+  private Object _sensor;
+
+  private SensorPanel _next;
+
+  public SensorPanel() ...{
+    // default constructor for instantiation
+  }
+  // end SensorPanel
+
+  public SensorPanel(int value) ...{
+    _sensor = new Integer(value);
+  }
+  // end SensorPanel
+
+  public SensorPanel getNext() ...{
+    return _next;
+  }
+  // end getNext
+  
+  public Object getSensor() ...{
+    return _sensor;
+  }
+  // end getSensor
+  
+  public void setSensor(Object sensor) ...{
+    _sensor = sensor;
+  }
+  // end setSensor
+  
+  public SensorPanel createList(int length) ...{
+    return createList(length, 1);
+  }
+  // end createList
+
+  public SensorPanel createList(int length, int first) ...{
+    int val = first;
+    SensorPanel root = newElement(first);
+    SensorPanel list = root;
+    while (--length &gt; 0) ...{
+      list._next = newElement(++val);
+      list = list._next;
+    }
+    return root;
+  }
+  // end createList
+
+  protected SensorPanel newElement(int value) ...{
+    return new SensorPanel(value);
+  }
+  // end newElement
+
+  public String toString() ...{
+    return &quot;Sensor #&quot; + getSensor();
+  }
+  // end toString
+}</pre>    </body></html>

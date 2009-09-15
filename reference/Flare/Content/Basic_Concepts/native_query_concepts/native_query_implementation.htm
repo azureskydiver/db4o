@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Native Query Implementation	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Native Query Implementation</h1>
+
+<p>So how are Native Queries
+realized in practice?</p>
+
+<p>Let's return to the <a href="../native_query_concepts.html" class="wikiLink">Pilot</a> class.
+Suppose we need to find all pilots with the name starting from "M" and points
+over 100. In a native OO language it would be expressed as:</p>
+
+<p MadCap:conditions="Primary.Java"><p>Java: </p>
+
+<p><code>pilot.getName().startsWith("M")
+&amp;&amp; pilot.getPoints() &gt; 100</code></p>
+
+</p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#"><p>c#: </p><p><code>pilot.Name.StartsWith("M")
+&amp;&amp; pilot.Points &gt; 100</code></p>
+
+</p><p MadCap:conditions="Primary:cs" />In order to pass this condition to a database, collection or
+other query processor a special object is used. In .NET2 it is a delegate, in
+Java5 it is a named method. 
+
+
+
+<p MadCap:conditions="Primary..NET,Primary.c#"><p>c#: </p>
+
+<p><code>delegate(Pilot pilot){</code></p>
+
+<p><code>    return pilot.Name.StartsWith("M")&amp;&amp; student.Points &gt;
+100; </code></p>
+
+<p><code>}</code></p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p><p MadCap:conditions="Primary.Java"></p><p>Java: </p>
+
+<p><code>public abstract class
+Predicate &lt;ExtentType&gt; {</code></p>
+
+<p><code>    public &lt;ExtentType&gt; Predicate (){}</code></p>
+
+<p><code>    public abstract boolean match (ExtentType candidate); </code></p>
+
+<p><code>} </code></p>
+
+
+
+<p><code>new Predicate &lt;Pilot&gt;
+() {</code></p>
+
+<p><code>    public boolean match(Pilot pilot){ </code></p>
+
+<p><code>        return
+pilot.getName().contains("M") &amp;&amp; pilot.getPoints() &gt; 100; </code></p>
+
+<p><code>    } </code></p>
+
+<p><code>} </code></p><p></p><p MadCap:conditions="Primary:java" /> </p>For more information about NQ implementations in the other
+Java and .NET versions see
+<a href="../../object_lifecycle/querying/native_queries/native_query_syntax.html" class="wikiLink">Native Query Syntax</a>.
+
+
+
+</div>
+    </div>
+    
+  </body></html>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Configuration Item	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Configuration Item</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#BigMathSupport">BigMathSupport</a></li><li><a href ="#DotNetSupport">DotNetSupport</a></li><li><a href ="#JavaSupport">JavaSupport</a></li><li><a href ="#PagedListSupport">PagedListSupport</a></li><li><a href ="#TransparentActivationSupport">TransparentActivationSupport</a></li><li><a href ="#TransparentPersistenceSupport">TransparentPersistenceSupport</a></li><li><a href ="#UniqueFieldValueConstraint">UniqueFieldValueConstraint</a></li></ul></li></ul></div></div></div><p>ConfigurationItem/IConfigurationItem interface serves 2 purposes:</p>
+
+<ul>
+<li>it can be used to encapsulate a batch of configuration settings</li>
+
+<li>it can be used for settings that should be applied to an open object container.</li>
+</ul>
+
+<p>Configuration items should be added to <a href="common_configuration.html" class="wikiLink">Common Configuration</a> instance:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>configuration.add(configurationItem);</code> </p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>configuration.Add(configurationItem);</code> 
+</p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+
+
+<p>Below is the description of currently available implementations.</p>
+
+<p MadCap:conditions="Primary.Java">
+<a name="BigMathSupport"></a><h2>BigMathSupport</h2>
+<p>Registers special typehandlers for BigInteger and BigDecimal support. Using BigMathSupport provides better performance and query support for the values of these types. However, using BigMathSupport only makes sense if you are planning to use BigInteger and/or BigDecimal types.</p>
+</p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary.Print">
+<a name="DotNetSupport"></a><h2>DotNetSupport </h2>
+<p>Adds basic configuration settings that allow to access .NET generated object container. Normally, additional <a href="../../implementation_strategies/aliases.html" class="wikiLink">Alias</a> configuration will be required to query for specific classes.</p>
+</p><p MadCap:conditions="Primary:net" />
+<p MadCap:conditions="Primary.Java">
+<a name="JavaSupport"></a><h2>JavaSupport</h2>
+<p>Adds basic configuration settings that allow to access Java generated
+object container. Normally, additional <a href="../../implementation_strategies/aliases.html" class="wikiLink">Alias</a> configuration will be required to
+query for specific classes.  </p>
+</p><p MadCap:conditions="Primary:java" />
+<a name="PagedListSupport"></a><h2>PagedListSupport</h2>
+<p>Configures support for paged collections.  </p>
+<a name="TransparentActivationSupport"></a><h2>TransparentActivationSupport</h2>
+<p>Adds transparent activation support for this session. For more information see <a href="../../object_lifecycle/activation/transparent_activation_framework.html" class="wikiLink">Transparent Activation Framework</a>.  </p>
+<a name="TransparentPersistenceSupport"></a><h2>TransparentPersistenceSupport</h2>
+<p>Adds transparent persistence support for this session. For more
+information see
+<a href="../../object_lifecycle/transparent_persistence.html" class="wikiLink">Transparent Persistence</a>. 
+ </p>
+<a name="UniqueFieldValueConstraint"></a><h2>UniqueFieldValueConstraint </h2>
+<p>Allows to set a class field to be unique in this database. For more information see <a href="../../implementation_strategies/unique_constraints.html" class="wikiLink">Unique Constraints</a>. </p></div>
+    </div>
+    
+  </body></html>

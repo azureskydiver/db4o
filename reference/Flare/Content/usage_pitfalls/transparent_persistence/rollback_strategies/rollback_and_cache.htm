@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Rollback And Cache	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Rollback And Cache</h1><p> </p><p>Suppose we have <a href="car.html" class="wikiLink">Car</a>, <a href="pilot.html" class="wikiLink">Pilot</a> and <a href="id.html" class="wikiLink">Id</a>
+classes stored in the database. Car class is activatable, others are not. We
+will modify the car and rollback the transaction:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Rollback And Cache/TPRollback.java/modifyAndRollback.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Rollback And Cache/TPRollback.cs/ModifyAndRollback.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Rollback And Cache/TPRollback.vb/ModifyAndRollback.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>If the transaction was going on normally (commit), we would
+have had the car modified in the database as it is supported by Transparent
+Persistence. However, as the transaction was rolled back - no modifications
+should be done to the database. The result that is printed to the screen is
+taken from the reference cache, so it will show modified objects. That is
+confusing and should be fixed:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Rollback And Cache/TPRollback.java/modifyRollbackAndCheck.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Rollback And Cache/TPRollback.cs/ModifyRollbackAndCheck.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Rollback And Cache/TPRollback.vb/ModifyRollbackAndCheck.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Here we've added a <code>deactivate</code> call for the car
+object. This call is used to clear the reference cache and its action is
+reversed to <code>activate</code>. </p>
+
+<p>We've used Integer.MAX_VALUE/Int32.MaxValue to deactivate
+car fields to the maximum possible depth. Thus we can be sure that all the car
+fields will be re-read from the database again (no outdated values from the
+reference cache), but the trade-off is that all child objects will be
+deactivated and read from the database too. You can see it on Pilot object.
+This behaviour is preserved for both activatable and non-activatable objects.</p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

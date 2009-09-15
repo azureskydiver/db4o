@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CountedObject.cs
+/**//* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
+/**//*
+ * This class is used to mark classes that need to get an autoincremented ID
+ */
+namespace Db4odoc.Autoincrement
+...{
+    abstract class CountedObject
+    ...{
+        protected int _id;
+
+        public int Id
+        ...{
+            get
+            ...{
+                return _id;
+            }
+            set
+            ...{
+                _id = value;
+            }
+        }
+    }
+}</pre>    </body></html>

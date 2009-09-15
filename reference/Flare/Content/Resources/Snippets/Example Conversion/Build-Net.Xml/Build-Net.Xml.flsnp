@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Build-Net.Xml
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;project name=&quot;Db4objects.Db4odoc&quot; default=&quot;sharpen-docs&quot;&gt;
+  &lt;property file=&quot;sharpen.properties&quot; /&gt;
+  &lt;import file=&quot;sharpen-common.xml&quot; /&gt;
+
+  &lt;taskdef name=&quot;updatecsharpproject&quot; classname=&quot;com.db4o.devtools.ant.UpdateCSharpProjectAntTask&quot;&gt;
+    &lt;classpath&gt;
+      &lt;pathelement location=&quot;lib&quot; /&gt;
+      &lt;path path=&quot;${path.classpath.full}&quot; /&gt;
+    &lt;/classpath&gt;
+  &lt;/taskdef&gt;
+
+  &lt;!-- Main target --&gt;
+  &lt;target name=&quot;sharpen-docs&quot; depends=&quot;install-sharpen-plugin, clean&quot;&gt;
+
+    &lt;property name=&quot;target.dir&quot; location=&quot;sharpen&quot; /&gt;
+
+    &lt;!-- Copy java files to the resource folder --&gt;
+    &lt;copy todir=&quot;${target.dir}/sharpened_examples/src&quot;&gt;
+      &lt;fileset dir=&quot;src&quot;&gt;
+        &lt;include name=&quot;**/*.java&quot; /&gt;
+      &lt;/fileset&gt;
+    &lt;/copy&gt;
+
+        &lt;!-- Sharpen java files --&gt;
+    &lt;sharpen workspace=&quot;${target.dir}&quot; resource=&quot;sharpened_examples/src&quot;&gt;
+      &lt;args&gt;
+        &lt;!-- classpath needed for java sources compilation --&gt;
+        &lt;arg value=&quot;-cp&quot; /&gt;
+        &lt;arg path=&quot;lib/db4o-7.2.37.10417-java5.jar&quot; /&gt;
+        &lt;!-- Sharpen options are defined in a separate file --&gt;
+        &lt;arg value=&quot;@sharpen-all-options&quot; /&gt;
+      &lt;/args&gt;
+    &lt;/sharpen&gt;
+
+    &lt;!-- Define locations for the converted resources --&gt;
+    &lt;property name=&quot;dir.proj&quot; location=&quot;../sharpen-tutorial.net/Db4objects.Db4odoc&quot; /&gt;
+    &lt;property name=&quot;dir.proj.src&quot; location=&quot;../sharpen-tutorial.net/Db4objects.Db4odoc&quot; /&gt;
+    &lt;property name=&quot;dir.sharpen.src&quot; location=&quot;sharpen/sharpened_examples.net&quot; /&gt;
+
+        &lt;!-- Task for copying converted resources --&gt;
+    &lt;macrodef name=&quot;copy-sharpened-sources&quot;&gt;
+      &lt;attribute name=&quot;dir&quot; /&gt;
+      &lt;element name=&quot;files&quot; /&gt;
+      &lt;sequential&gt;
+        &lt;copy todir=&quot;@{dir}&quot;&gt;
+          &lt;files /&gt;
+        &lt;/copy&gt;
+      &lt;/sequential&gt;
+    &lt;/macrodef&gt;
+
+    &lt;!-- Copy sharpened file to the destination folder --&gt;
+    &lt;copy-sharpened-sources dir=&quot;${dir.proj.src}&quot;&gt;
+      &lt;files&gt;
+        &lt;fileset dir=&quot;${dir.sharpen.src}/src&quot;&gt;
+          &lt;include name=&quot;**/*.cs&quot; /&gt;
+        &lt;/fileset&gt;
+      &lt;/files&gt;
+    &lt;/copy-sharpened-sources&gt;
+
+    &lt;!-- Define c# resources --&gt;
+    &lt;fileset id=&quot;core.net.files&quot; dir=&quot;${dir.proj}&quot;&gt;
+      &lt;include name=&quot;**/*.cs&quot; /&gt;
+    &lt;/fileset&gt;
+
+    &lt;!-- If we already have a csproj file, we can just update it to include 
+    all the added c# resources --&gt;
+    &lt;updatecsharpproject projectfile=&quot;${dir.proj}/sharpen-examples.csproj&quot;&gt;
+      &lt;sources refid=&quot;core.net.files&quot; /&gt;
+    &lt;/updatecsharpproject&gt; 
+
+  &lt;/target&gt;
+
+  &lt;!-- Remove resources from the previous convertion run --&gt;
+  &lt;target name=&quot;clean&quot; description=&quot;Delete all generated files&quot;&gt;
+    &lt;delete failonerror=&quot;false&quot; includeemptydirs=&quot;true&quot; description=&quot;Removing all generated files&quot;&gt;
+      &lt;fileset dir=&quot;../reference.cs.net&quot;&gt;
+        &lt;include name=&quot;**/*&quot; /&gt;
+        &lt;exclude name=&quot;**/*.csproj&quot; /&gt;
+        &lt;exclude name=&quot;**/*.sln&quot; /&gt;
+      &lt;/fileset&gt;
+    &lt;/delete&gt;
+    &lt;delete failonerror=&quot;false&quot; includeemptydirs=&quot;true&quot; description=&quot;Removing all generated files&quot;&gt;
+      &lt;fileset dir=&quot;sharpen&quot;&gt;
+        &lt;include name=&quot;**/*&quot; /&gt;
+        &lt;exclude name=&quot;**/lib/*&quot; /&gt;
+      &lt;/fileset&gt;
+    &lt;/delete&gt;
+  &lt;/target&gt;
+&lt;/project&gt;</pre>    </body></html>

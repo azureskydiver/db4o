@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.vb: TestActivation
+Private Shared Sub TestActivation()Sub TestActivation()
+            StoreSensorPanel()
+            Dim configuration As IConfiguration = ConfigureTA()
+            Dim container As IObjectContainer = Database(configuration)
+            If Not (container Is Nothing) Then
+                Try
+                    System.Console.WriteLine(&quot;Zero activation depth&quot;)
+                    Dim result As IObjectSet = container.Get(New SensorPanelTA(1))
+                    ListResult(result)
+                    If result.Size &gt; 0 Then
+                        Dim sensor As SensorPanelTA = CType(result(0), SensorPanelTA)
+                        ' the object is a linked list, so each call to next()
+                        ' will need to activate a new object
+                        Dim nextSensor As SensorPanelTA = sensor.NextSensor
+                        While Not (nextSensor Is Nothing)
+                            System.Console.WriteLine(nextSensor.ToString())
+                            nextSensor = nextSensor.NextSensor
+                        End While
+                    End If
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub</pre>    </body></html>

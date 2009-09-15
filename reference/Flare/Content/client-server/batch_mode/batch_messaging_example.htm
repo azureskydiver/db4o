@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Batch Messaging Example	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Batch Messaging Example</h1><p>Let's create a small example to test batch messaging mode
+behavior. We will use bulk insert with and without batch messaging
+configuration.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Batch Messaging Example/BatchExample.java/fillUpDb.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Batch Messaging Example/BatchExample.cs/FillUpDb.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Batch Messaging Example/BatchExample.vb/FillUpDb.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />You can run this example with the server from <a href="../networked/simple_db4o_server.html" class="wikiLink">Simple db4o Server</a> chapter. In order to see the influence of batch mode configuration try commenting and uncommenting line disabling batch mode. In addition you can try different values of <code>NO_OF_OBJECTS</code>
+constant. 
+
+<p>If the value of <code>NO_OF_OBJECTS</code> is high
+(&gt;1,000,000) you may notice that the memory consumption increases a lot. In
+order to decrease it, uncomment the line setting the maximum batch queue size. </p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p><MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="batch_modebatchcs.zip">c#</a></MadCap:conditionalText> <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="batch_modebatchjava.zip">Java</a></MadCap:conditionalText> <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="batch_modebatchvb.zip">VB.NET</a></MadCap:conditionalText> </p></body></html>

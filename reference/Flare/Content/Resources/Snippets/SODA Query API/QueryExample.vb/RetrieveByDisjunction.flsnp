@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryExample.vb: RetrieveByDisjunction
+1Public Shared Sub RetrieveByDisjunction()Sub RetrieveByDisjunction(ByVal db As IObjectContainer)
+2            Dim query As IQuery = db.Query()
+3            query.Constrain(GetType(Pilot))
+4            Dim constr As IConstraint = query.Descend(&quot;_name&quot;).Constrain(&quot;Michael Schumacher&quot;)
+5            query.Descend(&quot;_points&quot;).Constrain(99).Or(constr)
+6            Dim result As IObjectSet = query.Execute()
+7            ListResult(result)
+8        End Sub</pre>    </body></html>

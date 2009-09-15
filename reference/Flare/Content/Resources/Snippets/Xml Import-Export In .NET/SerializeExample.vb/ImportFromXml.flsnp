@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SerializeExample.vb: ImportFromXml
+Private Shared Sub ImportFromXml()Sub ImportFromXml()
+            File.Delete(Db4oFileName)
+            Dim carSerializer As XmlSerializer = New XmlSerializer(GetType(Car()))
+            Dim xmlFileStream As FileStream = New FileStream(XmlFileName, FileMode.Open)
+            Dim cars() As Car = CType(carSerializer.Deserialize(xmlFileStream), Car())
+            Dim db As IObjectContainer
+            Dim car As Car
+            For Each car In cars
+                db = Db4oFactory.OpenFile(Db4oFileName)
+                Try
+                    Dim newCar As Car = CType(car, Car)
+                    db.Set(newCar)
+                Finally
+                    db.Close()
+                End Try
+            Next
+            db = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                Dim result As IObjectSet = db.Get(GetType(Pilot))
+                ListResult(result)
+                result = db.Get(GetType(Car))
+                ListResult(result)
+            Finally
+                db.Close()
+            End Try
+        End Sub</pre>    </body></html>

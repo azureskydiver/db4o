@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.java: retrieveTranslatedCarsNQUnopt
+private static void retrieveTranslatedCarsNQUnopt() ...{
+      EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+      configuration.common().optimizeNativeQueries(false);
+      configuration.common().diagnostic().addListener(new TranslatorDiagListener());
+      configuration.common().objectClass(Car.class).translate(new CarTranslator());
+      configuration.common().objectClass(Car.class).callConstructor(true);
+      ObjectContainer container = Db4oEmbedded.openFile(configuration, DB4O_FILE_NAME);
+    try ...{
+      List  result = container.query(new NewCarModel());
+      listResult(result);
+    } finally ...{
+      container.close();
+    }
+  }</pre>    </body></html>

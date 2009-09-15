@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>DescendIntoTranslator	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>DescendIntoTranslator</h1>
+
+
+<p>Translator API provides a special way of storing and retrieving objects. In fact the actual class is not stored in the database. Instead the information from that class is stored in a primitive object (object array) and the class is recreated during instantiation or activation.</p>
+
+<p>Let's look how queries handle translated classes. Diagnostics system will help us to see, what is going on.</p>
+
+<p>In our example class Car is configured to be saved and retrieved with CarTranslator class. CarTranslator saves only car model information appending it with the production date.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/CarTranslator.java/CarTranslator.java.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/CarTranslator.cs/CarTranslator.cs.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/CarTranslator.vb/CarTranslator.vb.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Let's clean our database and store 2 cars:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.java/storeTranslatedCars.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.cs/StoreTranslatedCars.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.vb/StoreTranslatedCars.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>We can check the contents of our database with the following method:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.java/retrieveTranslatedCars.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.cs/RetrieveTranslatedCars.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.vb/RetrieveTranslatedCars.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>TranslatorDiagListener is implemented to help us filter only those diagnostic messages, that concern translated classes (filtering diagnostics messages is explained in <a href="diagnostic_messages_filter.html" class="wikiLink">Diagnostic Messages Filter</a> chapter).</p>
+
+<p>We did not get any diagnostic messages here and the result shows the stored cars with extended model values.</p>
+
+<p>To test Native Queries we will use the predicate, which retrieves only cars, produced in year 2002:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/NewCarModel.java/NewCarModel.java.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/NewCarModel.cs/NewCarModel.cs.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/NewCarModel.vb/NewCarModel.vb.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.java/retrieveTranslatedCarsNQ.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.cs/RetrieveTranslatedCarsNQ.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.vb/RetrieveTranslatedCarsNQ.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>A diagnostic message should appear pointing out, that the query is not correct in our case. Let's try  to correct it using unoptimized NQ and evaluations.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.java/retrieveTranslatedCarsNQUnopt.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.cs/RetrieveTranslatedCarsNQUnopt.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.vb/RetrieveTranslatedCarsNQUnopt.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>We will use simple evaluation to check our cars:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/CarEvaluation.java/CarEvaluation.java.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/CarEvaluation.cs/CarEvaluation.cs.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/CarEvaluation.vb/CarEvaluation.vb.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.java/retrieveTranslatedCarsSODAEv.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.cs/RetrieveTranslatedCarsSODAEv.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/DescendIntoTranslator/DiagnosticExample.vb/RetrieveTranslatedCarsSODAEv.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>In both cases we the results are correct. Native Query optimization cannot be used with the translated classes, because the actual values of the translated fields are only known after instantiation and activation. That also means that translated classes can have a considerable impact on database performance and should be used with care.</p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Team.java
+package do4odoc.tacollections;
+
+import java.util.*;
+
+public class Team ...{
+  
+  private String name;
+  
+  private List&lt;Pilot&gt; pilots;
+  
+  public Team(String name)...{
+    this.name = name;
+  }
+  
+  public void addPilot(Pilot pilot)...{
+    if(pilots == null)...{
+      pilots = new ArrayList&lt;Pilot&gt;();
+    }
+    pilots.add(pilot);
+  }
+  
+  @Override
+  public String toString() ...{
+    StringBuilder str = new StringBuilder();
+    str.append(String.format(&quot;Team %s&quot;, name));
+    if(pilots != null)...{
+      str.append(&quot; with pilots: \n&quot;);
+      for (Pilot p : pilots)...{
+        str.append(String.format(&quot;    %s \n&quot;, p));
+      }
+    }
+    return str.toString();
+  }
+  
+  public String getName()...{
+    return name;
+  }
+
+}</pre>    </body></html>

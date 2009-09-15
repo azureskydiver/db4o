@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReplicationExample.vb: ConfigureReplicationPilot
+1Public Shared Function ConfigureReplicationPilot()Function ConfigureReplicationPilot() As IConfiguration
+2            Dim db4oConfig As IConfiguration = Db4oFactory.NewConfiguration()
+3            db4oConfig.ObjectClass(GetType(Pilot)).GenerateUUIDs(True)
+4            db4oConfig.ObjectClass(GetType(Pilot)).GenerateVersionNumbers(True)
+5            Return db4oConfig
+6        End Function</pre>    </body></html>

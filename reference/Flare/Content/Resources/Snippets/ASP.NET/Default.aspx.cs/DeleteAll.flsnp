@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Default.aspx.cs: DeleteAll
+1public static void DeleteAll()
+2        ...{
+3            IList messages = Db4oHttpModule.Client.Get(typeof(Message));
+4            foreach (Message msg in messages)
+5            ...{
+6                Db4oHttpModule.Client.Delete(msg);
+7            }
+8        }</div</pre>    </body></html>

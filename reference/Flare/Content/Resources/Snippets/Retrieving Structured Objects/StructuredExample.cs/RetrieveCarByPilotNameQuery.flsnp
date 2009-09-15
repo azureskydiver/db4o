@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: RetrieveCarByPilotNameQuery
+1private static void RetrieveCarByPilotNameQuery(IObjectContainer db)
+2    ...{
+3      IQuery query = db.Query();
+4      query.Constrain(typeof(Car));
+5      query.Descend(&quot;_pilot&quot;).Descend(&quot;_name&quot;)
+6        .Constrain(&quot;Rubens Barrichello&quot;);
+7      IObjectSet result = query.Execute();
+8      ListResult(result);
+9    }</pre>    </body></html>

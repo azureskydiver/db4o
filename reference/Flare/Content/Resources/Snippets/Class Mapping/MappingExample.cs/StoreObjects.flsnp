@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MappingExample.cs: StoreObjects
+private static void StoreObjects()
+        ...{
+            File.Delete(Db4oFileName);
+            IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
+            try
+            ...{
+                Pilot pilot = new Pilot(&quot;Michael Schumacher&quot;, 100);
+                container.Set(pilot);
+                pilot = new Pilot(&quot;Rubens Barichello&quot;, 99);
+                container.Set(pilot);
+            }
+            finally
+            ...{
+                container.Close();
+            }
+        }</pre>    </body></html>

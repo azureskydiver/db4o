@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BigDecimalExample.java: configure
+1private static Configuration configure() ...{
+2    Configuration configuration = Db4o.newConfiguration();
+3    //configuration.objectClass(BigDecimal.class).callConstructor(true);
+4    configuration.objectClass(BigDecimal.class).storeTransientFields(true);
+5    return configuration;
+6  }</pre>    </body></html>

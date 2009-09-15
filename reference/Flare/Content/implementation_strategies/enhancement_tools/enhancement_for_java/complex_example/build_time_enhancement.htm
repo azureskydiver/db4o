@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Build Time Enhancement	<link href="../../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Build Time Enhancement</h1><p><font color="#990000">This topic applies to Java version only</font> </p><p>For build-time enhancement you will need to put the
+following jars into the lib folder of EnhancementExample project:</p>
+
+<ul><li>bloat-1.0.jar</li><li>db4o-x.x-classedit.jar</li><li>db4o-x.x-java5.jar</li><li>db4o-x.x-nqopt.jar</li><li>db4o-x.x-taj.jar</li><li>db4o-x.x-tools.jar</li><li>pilot.jar</li><li>tacustom.jar</li></ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>pilot.jar supplies Pilot and Id classes presented
+<a href="model_classes.html" class="wikiLink">before</a></p>
+
+<p>tacustom.jar  provides
+an annotation-based class filter. Using this jar we can mark the classes that
+should be enhanced with @Db4oPersistent annotation to filter them from the
+other classes.</p>
+
+<p>You can use the following script to enhance your
+classes:</p>
+
+<MadCap:snippetBlock src="../../../../Resources/Snippets/Build Time Enhancement/build.xml/build.xml.flsnp" />>The core part of this script is inside the <i>db4o-instrument</i> task, which is imported by the first typedef instruction. (The second typedef imports the custom annotation class filter.) The <i>classTargetDir</i> and <i>jarTargetDir</i> attributes specify the target folders where instrumented class files and instrumented jar files should be created, respectively.</p><p>The nested <i>classpath</i> is just a normal Ant path type and should cover the full application classpath. In the example, we are using one single classpath for task definition and application for convenience - in a real project, these are better kept separate, of course. The nested <i>sources</i> FileSet specifies the location of the class files  to be instrumented. Similarly, the <i>jars</i> FileSet specifies the location of jar files to be instrumented. Both are optional (providing neither <i>sources</i> nor <i>jars</i> doesn't make much sense, of course). If one is left out, the corresponding target folder attribute is not required, either.</p><p>The remaining nested arguments specify the instrumentation steps to be processed. For Native Query optimization, there is no further configuration - it will simply try to instrument all Predicate implementations. Transparent Activation instrumentation allows to specify more fine-grained filters to select the classes to be instrumented. This can be Ant regular expression types or arbitrary custom <i>ClassFilters</i>. These are OR-ed together and used to further constrain the implicit filter provided by the <i>sources</i>/<i>jars</i> FileSets. In the example, we are constraining TA instrumentation to classes that are either annotated with the <i>@Db4oPersistent</i> annotation, or whose fully qualified name matches the given regexes. </p>
+
+<p>After running the <i>enhance</i> target, the instrumented model classes should appear in the enhanced-bin folder, and an instrumented version of the pilot.jar should have been created in the enhanced-lib folder.</p><p>For rather straightforward projects you can alternatively use the <i>db4o-enhance</i> task variant that provides a default setting for joint NQ/TA instrumentation (but doesn't allow fine-grained configuration for the single instrumentation steps in return). This is demonstrated by the following build script for the same sample project. </p><MadCap:snippetBlock src="../../../../Resources/Snippets/Build Time Enhancement/build-simple.xml/build-simple.xml.flsnp" />/p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TypehandlerExample.java
+1package com.db4odoc.typehandler;
+2
+3import java.io.File;
+4import java.io.IOException;
+5
+6import com.db4o.Db4o;
+7import com.db4o.ObjectContainer;
+8import com.db4o.ObjectSet;
+9import com.db4o.config.Configuration;
+0import com.db4o.defragment.Defragment;
+1import com.db4o.ext.DatabaseFileLockedException;
+2import com.db4o.query.Query;
+3import com.db4o.reflect.ReflectClass;
+4import com.db4o.reflect.generic.GenericReflector;
+5import com.db4o.reflect.jdk.JdkReflector;
+6import com.db4o.typehandlers.TypeHandlerPredicate;
+7
+8public class TypehandlerExample ...{
+9
+0  private final static String DB4O_FILE_NAME = &quot;reference.db4o&quot;;
+1  private static ObjectContainer _container = null;
+2
+3
+4  public static void main(String[] args) throws IOException ...{
+5    testReadWriteDelete();
+6    //testDefrag();
+7    testCompare();
+8  }
+9  // end main
+0
+1  private static Configuration configure() ...{
+2    Configuration configuration = Db4o.newConfiguration();
+3    // add a custom typehandler support
+4        
+5        TypeHandlerPredicate predicate = new TypeHandlerPredicate() ...{
+6            public boolean match(ReflectClass classReflector, int version) ...{
+7              GenericReflector reflector = new GenericReflector(
+8                  null, new JdkReflector(Thread.currentThread().getContextClassLoader()));
+9          ReflectClass claxx = reflector.forName(StringBuffer.class.getName()); 
+0          boolean res = claxx.equals(classReflector);  
+1                return res;
+2            }
+3        };
+4        
+5        configuration.registerTypeHandler(predicate, new StringBufferHandler());
+6    return configuration;  
+7  }
+8  // end configure
+9  
+0  
+1  private static void testReadWriteDelete()...{
+2    storeCar();
+3    // Does it still work after close? 
+4    retrieveCar();
+5    // Does deletion work?
+6    deleteCar();
+7    retrieveCar();
+8  }
+9  // end testReadWriteDelete
+0
+1  private static void retrieveCar() ...{
+2    ObjectContainer container = database(configure());
+3    if (container != null)...{
+4      try ...{
+5        ObjectSet result = container.query(Car.class);
+6        Car car = null;
+7        if (result.hasNext())...{
+8          car = (Car)result.next();
+9        }
+0        System.out.println(&quot;Retrieved: &quot; + car);
+1      } finally ...{
+2        closeDatabase();
+3      }
+4    }
+5  }
+6  // end retrieveCar
+7
+8  private static void deleteCar() ...{
+9    ObjectContainer container = database(configure());
+0    if (container != null)...{
+1      try ...{
+2        ObjectSet result = container.query(Car.class);
+3        Car car = null;
+4        if (result.hasNext())...{
+5          car = (Car)result.next();
+6        }
+7        container.delete(car);
+8        System.out.println(&quot;Deleted: &quot; + car);
+9      } finally ...{
+0        closeDatabase();
+1      }
+2    }
+3  }
+4  // end deleteCar
+5
+6  private static void storeCar() ...{
+7    new File(DB4O_FILE_NAME).delete();
+8    ObjectContainer container = database(configure());
+9    if (container != null)...{
+0      try ...{
+1        Car car = new Car(&quot;BMW&quot;);
+2        container.store(car);
+3        car = (Car)container.query(Car.class).next();
+4        System.out.println(&quot;Stored: &quot; + car);
+5        
+6      } finally ...{
+7        closeDatabase();
+8      }
+9    }
+0  }
+1  // end storeCar
+2
+3  private static void testCompare() ...{
+4    new File(DB4O_FILE_NAME).delete();
+5    ObjectContainer container = database(configure());
+6    if (container != null)...{
+7      try ...{
+8        Car car = new Car(&quot;BMW&quot;);
+9        container.store(car);
+0        car = new Car(&quot;Ferrari&quot;);
+1        container.store(car);
+2        car = new Car(&quot;Mercedes&quot;);
+3        container.store(car);
+4        Query query = container.query();
+5        query.constrain(Car.class);
+6        query.descend(&quot;model&quot;).orderAscending();
+7        ObjectSet result = query.execute();
+8        listResult(result);
+9        
+0      } finally ...{
+1        closeDatabase();
+2      }
+3    }
+4  }
+5  // end testCompare
+6
+7  public static void testDefrag() throws IOException...{
+8    new File(DB4O_FILE_NAME + &quot;.backup&quot;).delete();
+9    storeCar();
+0    Defragment.defrag(DB4O_FILE_NAME);
+1    retrieveCar();
+2  }
+3  // end testDefrag
+4  
+5  private static ObjectContainer database(Configuration configuration) ...{
+6    if (_container == null) ...{
+7      try ...{
+8        _container = Db4o.openFile(configuration, DB4O_FILE_NAME);
+9      } catch (DatabaseFileLockedException ex) ...{
+0        System.out.println(ex.getMessage());
+1      }
+2    }
+3    return _container;
+4  }
+5  // end database
+6
+7  private static void closeDatabase() ...{
+8    if (_container != null) ...{
+9      _container.close();
+0      _container = null;
+1    }
+2  }
+3  // end closeDatabase
+4
+5
+6  private static void listResult(ObjectSet result) ...{
+7        System.out.println(result.size());
+8        while(result.hasNext()) ...{
+9            System.out.println(result.next());
+0        }
+1    }
+2    // end listResult
+3  
+4}</pre>    </body></html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Car.vb
+' Copyright (C) 2009 Versant Inc. http://www.db4o.com
+Namespace Db4odocNamespace Db4odoc.Blobs
+    Public Class CarClass Car
+        Dim _model As String
+        Dim _img As CarImage
+
+        Public Sub New()Sub New(ByVal model As String)
+            _model = model
+            _img = New CarImage()
+            _img.FileName = _model + &quot;.jpg&quot;
+        End Sub
+
+        Public ReadOnly Property CarImage()Property CarImage() As CarImage
+            Get
+                Return _img
+            End Get
+        End Property
+
+        Public Overrides Function ToString()Function ToString() As String
+            Return String.Format(&quot;{0}({1})&quot;, _model, _img.FileName)
+        End Function
+    End Class
+End Namespace</pre>    </body></html>

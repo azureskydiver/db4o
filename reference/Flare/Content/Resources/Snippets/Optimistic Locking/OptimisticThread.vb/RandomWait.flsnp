@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">OptimisticThread.vb: RandomWait
+1Private Sub RandomWait()Sub RandomWait()
+2            Try
+3                Dim r As Random = New Random
+4                Dim sleepTime As Integer = 5000 * r.Next(1)
+5                Thread.Sleep(sleepTime)
+6            Catch e As Exception
+7                Console.WriteLine(&quot;Interrupted!&quot;)
+8            End Try
+9        End Sub</pre>    </body></html>

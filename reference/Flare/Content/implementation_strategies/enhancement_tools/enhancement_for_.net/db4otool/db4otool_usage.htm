@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Db4oTool Usage	<link href="../../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Db4oTool Usage</h1>
+
+
+<p><font color="#990000">This topic applies to .NET version only.</font></p>
+<p><font color="#990000">This topic is under development.</font> </p>
+
+<p>Db4oTool is a command line utility. The general syntax is the following:</p>
+
+<p><code>Usage: Db4oTool [options] &lt;assembly&gt;</code></p>
+
+<p>[options] parameter allows to specify a list of options.</p>
+
+<p>&lt;assembly&gt; parameter allows to pass an assembly, which should be optimized.</p>
+
+<p>Both parameters are optional.</p>
+
+<p>Running Db4oTool.exe without any parameters will bring you a short usage hint. This is equivalent to running Db4oTool with <code>-?</code> or <code>-help</code> parameter. Additional help information can be retrieved with <code>-help2</code> or <code>-usage</code> parameters.</p>
+
+<p>The table below gives an explanation of all Db4oTool options.</p>
+
+
+
+<table border="1" cellpadding="0" cellspacing="0">
+
+<tr>
+<td valign="top">
+<p>-byattribute:PARAM </p>
+
+
+
+
+
+
+</td>
+
+<td valign="top">
+<p>Filter types to be instrumented by attribute:</p>
+
+<p><code>Db4oTool -ta -byattribute:Activatable MyAssembly.exe</code></p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-byfilter:PARAM         </p>
+
+
+
+
+
+
+</td>
+
+<td valign="top">
+<p>Custom type filter:</p>
+
+<p><code>Db4oTool -ta -byfilter:IActivatable MyAssembly.exe</code></p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-byname:PARAM         </p>
+
+
+
+
+
+
+</td>
+
+<td valign="top">
+<p>Filter types by name (with regular expression syntax):</p>
+
+<p><code>Db4oTool -ta -byname:MyCompany.MyProduct MyAssembly.exe</code></p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-out  </p>
+
+
+
+
+
+
+</td>
+
+<td valign="top">Negate the last filter 
+<p><code>Db4oTool -ta -byname:Db4objects.Db4o -out MyAssembly.exe</code></p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-case-sensitive        </p>
+
+
+
+
+
+
+</td>
+
+<td valign="top">
+<p>Specifies if optimized queries should be case-sensitive. This option should be used in conjunction with query optimization option (nq):</p>
+
+<p><code>Db4oTool -nq -case-sensitive MyAssembly.exe</code></p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-fake                   </p>
+
+
+</td>
+
+<td valign="top">
+<p>Fake operation mode, assembly won't be written. This option can be used for testing before the actual run.</p>
+
+<p><code>Db4oTool -nq -fake MyAssembly.exe</code></p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-? -help                      </p>
+</td>
+
+<td valign="top">
+<p>Show standard help list:</p>
+
+<p><code>Db4oTool -help</code></p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-help2                  </p>
+</td>
+
+<td valign="top">
+<p>Show an additional help list (development use):</p>
+
+<p><code>Db4oTool -help2</code></p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-instrumentation:PARAM  </p>
+
+
+</td>
+
+<td valign="top">
+<p>Use custom instrumentation type.</p>
+
+<p>PARAM is a string with a full class definition, like </p>
+
+<p><code>Db4oTool.AbstractAssemblyInstrumentation, Db4oTool.exe</code>.</p>
+
+<p>This class must implement <code>Db4oTool.IAssemblyInstrumentation</code> interface. To make the creation of a custom instrumentation class easier db4o provides <code>Db4oTool.AbstractAssemblyInstrumentation</code> class, which can be used as a template. For an example implementation see <code>Db4oTool.TAInstrumentation</code> class.</p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-nq </p>
+</td>
+
+<td valign="top">
+<p>Optimize Native Queries </p>
+
+<p><code>Db4oTool -nq MyAssembly.exe</code> </p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-ta</p>
+</td>
+
+<td valign="top">
+<p>Instrument classes to support Transparent Activation:</p>
+
+<p><code>Db4oTool -ta MyAssembly.exe</code></p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-tp</p>
+</td>
+
+<td valign="top">
+<p>Instrument classes to support Transparent Persistence (Transparent Activation support is included implicitly):</p>
+
+<p><code>Db4oTool -tp MyAssembly.exe</code></p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-usage                  </p>
+</td>
+
+<td valign="top">
+<p>Show usage syntax and exit:</p>
+
+<p><code>Db4oTool -usage</code></p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-v -verbose                </p>
+</td>
+
+<td valign="top">
+<p>Verbose operation mode. Should be combined with the other options:</p>
+
+<p><code>Db4oTool -ta -v MyAssembly.exe</code></p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-V -version                </p>
+</td>
+
+<td valign="top">
+<p>Display version and licensing information:</p>
+
+<p><code>Db4oTool -V</code></p>
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+<p>-vv                     </p>
+</td>
+
+<td valign="top">
+<p>Pretty verbose operation mode:</p>
+
+<p><code>Db4oTool -ta -vv MyAssembly.exe</code></p>
+</td>
+</tr>
+</table></div>
+    </div>
+    
+  </body></html>

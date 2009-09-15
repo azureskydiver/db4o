@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.java: retrieveAllCarsQBE
+1private static void retrieveAllCarsQBE(ObjectContainer container) ...{
+2    Car proto = new Car(null);
+3    ObjectSet result = container.get(proto);
+4    listResult(result);
+5  }</pre>    </body></html>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Final Fields Specifics	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Final Fields Specifics</h1>
+
+<p><font color="#990000">This topic applies to java version only</font> </p>
+<p>Db4o uses reflection to store and retrieve objects from the
+database file. In the case of final fields db4o needs a successful call to
+java.lang.Field#setAccessible to allow write access to those fields.
+Unfortunately different Java versions produce different results in this case.
+To be more specific:</p>
+
+<ul>
+<li>In (Sun) JDK 1.1-1.2
+     java.lang.Field#setAccessible call will be successful for the fields with
+     the final modifier. </li>
+<li>This behavior was changed for
+     JDK1.3-1.4 as the API documentation for java.lang.Field#set() made a quite
+     clear distinction between 'Java language access control' (visibility
+     modifiers, affected by setAccessible()) and final fields (not affected by
+     setAccessible()). For more information refer to <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4250960">java bug
+     4250960</a>.</li>
+<li>The
+     behavior of java.lang.Field#setAccessible method was changed again for
+     JDK5 and JDK6. The access to final fields was made manageable by
+     setAccessible() call to accommodate for the extended semantics of the
+     final modifier for the revised Java memory model. The API documentation of
+     java.lang.Field#set() was changed accordingly. See <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5044412">java bug
+     5044412</a>.</li>
+</ul>
+
+
+
+<p>You can use the following example code to check final fields
+behavior with different java versions:</p>
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Final Fields Specifics/TestFinal.java/TestFinal.java.flsnp" />
+<p>If you are using Eclipse it is easy to switch between java
+versions - you can switch to the versions lower than the one installed on your
+computer without having to install them all. For example if you are using JDK6
+you can easily test your project on JDK1.1 - 1.4 and JDK5. Just go to the project
+properties, select "Java Build Path" on the left panel and "Libraries" tab on
+the right panel. Remove the system library currently used. Select "Add
+library-&gt;JRE System Library"; on the next screen check the "Execution
+Environment" radio button and select the desired environment from the list.</p>
+
+Don't forget to use the appropriate db4o version for
+the selected java environment version. See
+<a href="../../../platform_specific_issues/db4o_on_java_platforms.html" class="wikiLink">db4o on Java Platforms</a>
+for more information.</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

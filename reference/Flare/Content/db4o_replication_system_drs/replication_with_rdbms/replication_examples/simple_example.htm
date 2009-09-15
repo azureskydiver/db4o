@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Simple Example	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Simple Example</h1><p><font color="#990000">This topic applies to Java version only</font> </p><p>This is a one-to-one association example. </p>
+<p>The following persistent classes are used:</p>
+<MadCap:snippetBlock src="../../../Resources/Snippets/Simple Example/Helmet.java/Helmet.java.flsnp" />/p>
+<MadCap:snippetBlock src="../../../Resources/Snippets/Simple Example/Pilot.java/Pilot.java.flsnp" />/p>
+<p>
+A one-to-one association to another persistent class is declared using a one-to-one element:</p>
+<MadCap:snippetBlock src="../../../Resources/Snippets/Simple Example/Pilot.hbm.xml/Pilot.hbm.xml.flsnp" />/p>
+<p>
+Remember to add mappings in hibernate.cfg.xml:</p>
+<p><code>&lt;mapping resource="f1/one_to_one/Pilot.hbm.xml"/&gt;</code></p>
+<p><code>&lt;mapping resource="f1/one_to_one/Helmet.hbm.xml"/&gt;</code></p>
+<p>The code to run the replication is provided below: </p>
+<MadCap:snippetBlock src="../../../Resources/Snippets/Simple Example/OneToOneExample.java/main.flsnp" /></p>
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

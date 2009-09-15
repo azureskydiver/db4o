@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Using Equals	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Using Equals</h1><p>In some cases you can't use QBE as a
+retrieval method. In these cases you must override the object's
+<code>equals</code> method to allow you to compare objects data. For
+example:</p>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Equals/Pilot.java/equals.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Equals/Pilot.cs/Equals.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Equals/Pilot.vb/Equals.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+<p>Note, that you must implement
+hashCode/GetHashCode method, when you implement <code>equals</code>:</p>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Equals/Pilot.java/hashCode.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Equals/Pilot.cs/GetHashCode.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Equals/Pilot.vb/GetHashCode.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+<p>Now we can use the <code>equals</code>
+method to compare an object from the database to an object prototype:</p>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Equals/EqualityExample.java/testEquality.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Equals/EqualityExample.cs/testEquality.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../Resources/Snippets/Using Equals/EqualityExample.vb/testEquality.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+
+
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

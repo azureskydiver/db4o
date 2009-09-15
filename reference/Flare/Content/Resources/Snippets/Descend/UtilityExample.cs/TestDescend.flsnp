@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UtilityExample.cs: TestDescend
+public static void TestDescend()
+    ...{
+      StoreSensorPanel();
+            IConfiguration configuration = Db4oFactory.NewConfiguration();
+            configuration.ActivationDepth(1);
+            IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
+      try 
+      ...{
+        System.Console.WriteLine(&quot;Object container activation depth = 1&quot;);
+        IObjectSet result = db.Get(new SensorPanel(1));
+        SensorPanel spParent = (SensorPanel)result[0];
+        SensorPanel spDescend = (SensorPanel)db.Ext().Descend((Object)spParent, new String[]...{&quot;_next&quot;,&quot;_next&quot;,&quot;_next&quot;,&quot;_next&quot;,&quot;_next&quot;});
+        db.Ext().Activate(spDescend, 5);
+        System.Console.WriteLine(spDescend);
+      } 
+      finally 
+      ...{
+        db.Close();
+      }
+    }</pre>    </body></html>

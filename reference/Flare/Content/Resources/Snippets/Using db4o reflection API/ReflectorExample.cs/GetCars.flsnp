@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReflectorExample.cs: GetCars
+private static void GetCars()
+    ...{
+      IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
+      try 
+      ...{
+        IQuery query = db.Query();
+        query.Constrain(typeof(Car));
+        IObjectSet result = query.Execute();
+        ListResult(result);
+        Car car = (Car)result[0];
+        GenericReflector reflector = new GenericReflector(null,db.Ext().Reflector());
+        IReflectClass carClass = reflector.ForObject(car);
+        Console.WriteLine(&quot;Reflected class &quot;+carClass);
+        Console.WriteLine(&quot;Retrieved with reflector:&quot;);
+      } 
+      finally 
+      ...{
+        db.Close();
+      }
+    }</pre>    </body></html>

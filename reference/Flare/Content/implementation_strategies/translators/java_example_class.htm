@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Java Example Class	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Java Example Class</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Bypassing the constuctor">Bypassing the constuctor</a></li><li><a href ="#Using the constuctor">Using the constuctor</a></li></ul></li></ul></div></div></div><p><font color="#990000">This topic applies to Java version only</font>   </p>
+<p MadCap:conditions="Primary.Java">
+<p>Let's use the following class as an example of a class which can not be stored clearly with db4o.</p>
+<MadCap:snippetBlock src="../../Resources/Snippets/Java Example Class/NotStorable.java/NotStorable.java.flsnp" /><p>We'll be using this code to store and retrieve and instance of this class with different configuration settings:</p>
+<MadCap:snippetBlock src="../../Resources/Snippets/Java Example Class/TranslatorExample.java/tryStoreAndRetrieve.flsnp" /><a name="Bypassing the constuctor"></a><h4>Bypassing the constuctor</h4>
+<MadCap:snippetBlock src="../../Resources/Snippets/Java Example Class/TranslatorExample.java/tryStoreWithoutCallConstructors.flsnp" /><p>In
+this case our object seems to be nicely stored and retrieved,
+however, it has forgotten about its length, since db4o doesn't store
+transient members and the constructor code that sets it is not executed.</p>
+<a name="Using the constuctor"></a><h4>Using the constuctor</h4>
+<MadCap:snippetBlock src="../../Resources/Snippets/Java Example Class/TranslatorExample.java/tryStoreWithCallConstructors.flsnp" /><p>At
+storage time, db4o tests the only available constructor with null
+arguments and runs into a NullPointerException, so it refuses to accept
+our object.</p>
+<p>(Note that this test only occurs when configured
+with exceptionsOnNotStorable (default setting is true) - otherwise db4o will silently fail when
+trying to reinstantiate the object.)</p>
+<p>This
+still does not work for our case because the native pointer will
+definetely be invalid. </p><p>In order to solve the problem we will need to use <a href="the_translator_api.html" class="wikiLink">db4o Translators</a>.   </p>
+</p><p MadCap:conditions="Primary:java" /></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

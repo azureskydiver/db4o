@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Db4oModule.java: storeData
+public void storeData() ...{
+    new File(DB_FILE).delete();
+    ObjectContainer container = Db4o.openFile(DB_FILE);
+    try ...{
+      Pilot pilot = new Pilot(&quot;Michael Schumacher&quot;, 100);
+      container.set(pilot);
+      pilot = new Pilot(&quot;Rubens Barrichello&quot;, 99);
+      container.set(pilot);
+      pilot = new Pilot(&quot;Kimi Raikonnen&quot;, 100);
+      container.set(pilot);
+    } finally ...{
+      container.close();
+    }
+  }</pre>    </body></html>

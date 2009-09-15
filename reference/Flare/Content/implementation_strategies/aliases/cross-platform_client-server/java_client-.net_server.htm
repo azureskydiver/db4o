@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Java Client-.NET Server	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Java Client-.NET Server</h1><p>
+ 
+  Normal
+  0
+  
+  
+  
+  
+  false
+  false
+  false
+  
+  EN-ZA
+  X-NONE
+  X-NONE
+  
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+  
+  MicrosoftInternetExplorer4
+  
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+  
+
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+
+
+
+
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-priority:99;
+	mso-style-qformat:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-para-margin-top:0cm;
+	mso-para-margin-right:0cm;
+	mso-para-margin-bottom:10.0pt;
+	mso-para-margin-left:0cm;
+	line-height:115%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";
+	mso-ascii-font-family:Calibri;
+	mso-ascii-theme-font:minor-latin;
+	mso-hansi-font-family:Calibri;
+	mso-hansi-theme-font:minor-latin;
+	mso-fareast-language:EN-US;}
+
+
+
+</p><p>In the <a href="java_server-.net_client.html" class="wikiLink">previous example</a> we
+saw how to access Java server from .NET clients. The opposite is also possible.</p>
+
+<p>Let's start a typical .NET db4o server (c# or VB):</p>
+
+<p>c#: </p>
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/StartServer.cs/StartServer.cs.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/ServerInfo.cs/ServerInfo.cs.flsnp" />.NET:<MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/StartServer.vb/StartServer.vb.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/ServerInfo.vb/ServerInfo.vb.flsnp" />
+
+
+<p>Remember, that persistent class definitions should be
+present both on the client and the server side. For simplicity we will use the
+classes from the <a href="java_server-.net_client.html" class="wikiLink">previous example</a>.</p>
+
+<p>Java client testing code:</p>
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/Client.java/main.flsnp" />
+<p>And the most important part - configuration:</p>
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Java Client-.NET Server/Client.java/getConfig.flsnp" />
+<p>Note, that we use DotnetSupport constructor with a boolean parameter
+set to true. This parameter defines if Client/Server support should be
+included.</p>
+
+<p>Persistent class aliases are required for accessing object
+information on the server (both Wildcard and class-specific aliases can be
+used, as soon as they cover all the classes which you want to access).</p>
+
+
+
+ </div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

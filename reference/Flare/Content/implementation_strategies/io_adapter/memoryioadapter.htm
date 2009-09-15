@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>MemoryIoAdapter	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>MemoryIoAdapter</h1>
+
+<p>One of the built-in db4o IoAdapters is MemoryIoAdapter. This adapter keeps the whole database in RAM instead of a hard-drive. Obviously such in-memory database has both advantages and disadvantages:</p>
+
+<p>Pros:</p>
+
+<ul>
+<li>
+it is a lot faster, as no disc access is necessary.</li>
+</ul>
+
+<p>
+Cons:</p>
+
+<ul>
+<li>
+it only works, if the database fits into RAM;</li>
+</ul>
+
+<ul>
+<li>
+all the data can be lost in case of a system failure.</li>
+</ul>
+
+<p>You can achieve the best results combining the usage of MemoryIoAdapter with the normal file adapter. Let's look, how MemoryIoAdapter should be used in your application.</p>
+
+<p>First of all MemoryIoAdapter should be configured. The API gives you control over memory consumption with</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:<code> MemoryIoAdapter#growBy(length) </code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<p>c#:<code> MemoryIoAdapter#GrowBy(length) </code></p>
+ 
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<p>VB:<code> MemoryIoAdapter#GrowBy(length) </code></p>
+ 
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>method. Length defines the amount of bytes in memory that should be allocated, when no more free slots are found within the allocated file. Large value (100,000) will assure the best performance; small value (100) will keep the memory consumption at the lowest level. The default setting is 10,000.</p>
+
+<p>MemoryIoAdaptor supplies methods to exchange data with the database from the filesystem.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java: <code>MemoryIoAdapter#put(filename, byte[]) </code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<p>c#: <code>MemoryIoAdapter#Put(filename, byte[]) </code></p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<p>VB: <code>MemoryIoAdapter#Put(String, byte()) </code></p>
+
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>This method allows you to put the contents of the stored database file (byte[]) into the memory database. </p>
+
+<p>The opposite method:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java: <code>MemoryIoAdapter#get(filename)</code> </p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<p>c#: <code>  MemoryIoAdapter#Get(filename)</code></p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<p>VB: <code>  MemoryIoAdapter#Get(filename) </code></p>
+
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>returns the updated byte[] array of the database in memory, which can be saved to disc as a normal database file.</p>
+
+<p>The filename can be used for all further access (#openFile, #openServer methods) like normal file name. Make sure that you close the database file on the disc after reading its contents into memory and writing it back.</p>
+
+<p>The configured adapter should be assigned as db4o IO system:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java: <code> Db4o.configure().io(MemoryIoAdapter) </code></p>
+
+<p> [/filter]</p>
+
+<p>[filter=cs]</p>
+
+<p>c#:   <code>Db4o.Configure().Io(MemoryIoAdapter) </code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<p>VB:   <code>Db4o.Configure().Io(MemoryIoAdapter)</code> </p>
+
+</p><p MadCap:conditions="Primary:vb" />
+Let's create sample database on the disc:
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/MemoryIoAdapter/IOExample.java/setObjects.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/MemoryIoAdapter/IOExample.cs/SetObjects.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/MemoryIoAdapter/IOExample.vb/SetObjects.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Now we can read the database into the memory file and work in the memory using MemoryIoAdapter:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/MemoryIoAdapter/IOExample.java/getObjectsInMem.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/MemoryIoAdapter/IOExample.cs/GetObjectsInMem.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/MemoryIoAdapter/IOExample.vb/GetObjectsInMem.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Well, the changes are made and written to the disc. Let's check, if all the data are in place. We will need to switch back to the normal RandomAccessFileAdapter:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/MemoryIoAdapter/IOExample.java/getObjects.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/MemoryIoAdapter/IOExample.cs/GetObjects.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/MemoryIoAdapter/IOExample.vb/GetObjects.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>So, switching between disc and memory database is quite easy. It can be used to increase performance on certain operations. More flexibility can be reached writing your own IoAdapter implementation.</p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

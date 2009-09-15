@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Db4o On Mono	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Db4o On Mono</h1>
+<p><font color="#990000">This topic applies to .NET version only</font>  </p>
+<p>Steps to build Mono distribution.</p>
+
+<p>As a native .NET database db4o can be
+used on <a href="http://www.mono-project.com/Downloads">Mono</a>, open
+source development platform based on the .NET framework. db4o
+Mono support is a community project, hosted at db4o Project Spaces.</p>
+
+<p>db4o  can be built from db4o sources
+which are available at <a href="https://source.db4o.com/db4o/db4o.net">db4o
+svn</a>.</p>
+
+<p>In order to build db4o library you can
+use:</p>
+
+<ol>
+<li>
+<p>gnu make: Makefile is provided in
+	db4o.net/Db4objects.Db4o folder</p>
+	</li>
+<li>
+<p>nant task: an example default.build (using csc) is
+	provided in db4o.net folder.</p>
+</li>
+</ol>
+
+<p>Please, bear in mind that db4o for Mono
+is a community supported project and its correct functionality is not
+guaranteed. If you encounter compile errors during db4o build you can log the problem at <a href="http://bugzilla.novell.com/">Mono bugzilla</a>. You are also welcome to
+participate in db4o on Mono project development and improvement.  </p>
+
+<p>Once you've done the build you can test
+db4o functionality on Mono with a simple example:</p>
+
+<MadCap:snippetBlock src="../Resources/Snippets/Db4o On Mono/MonoTest.cs/MonoTest.cs.flsnp" />
+<p>In order to compile and run the example
+you can use the following command:</p>
+
+<p><code>mcs MonoTest.cs
+/r:Db4objects.Db4o.dll</code></p>
+
+<p><code>mono MonoTest.exe</code></p>
+
+<p>(It is assumed that 
+Db4objects.Db4o.dll is in the same directory as the example file).</p>
+
+<p> 
+</p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

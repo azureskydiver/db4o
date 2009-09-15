@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Car.java
+package enhancement.model;
+
+import tacustom.*;
+
+@Db4oPersistent
+public class Car ...{
+
+  private String _model = null;
+  Pilot _pilot;
+
+  public Car(String content, Pilot pilot) ...{
+    _model = content;
+    _pilot = pilot;
+  }
+  
+  public String content() ...{
+    return _model;
+  }
+
+  public void content(String content) ...{
+    _model = content;
+  }
+  
+  @Override
+  public String toString() ...{
+    return _model + &quot;/&quot; + _pilot;
+  }
+
+  public String getModel() ...{
+    return _model;
+  }
+
+  public Pilot getPilot() ...{
+    return _pilot;
+  }
+}</pre>    </body></html>

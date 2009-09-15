@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Client.vb: GetConfig
+1Private Shared Function GetConfig()Function GetConfig() As IClientConfiguration
+2        Dim config As IClientConfiguration = Db4oClientServer.NewClientConfiguration()
+3        config.Common.AddAlias(New WildcardAlias(&quot;com.db4odoc.JavaDotNetClientServer.*&quot;, &quot;JavaDotnetClientServer.*, JavaDotnetClientServer&quot;))
+4        config.Common.Add(New JavaSupport())
+5        Return config
+6    End Function</pre>    </body></html>

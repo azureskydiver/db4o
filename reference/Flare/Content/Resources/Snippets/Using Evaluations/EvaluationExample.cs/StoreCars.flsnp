@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EvaluationExample.cs: StoreCars
+private static void StoreCars(IObjectContainer db)
+    ...{
+      Pilot pilot1 = new Pilot(&quot;Michael Schumacher&quot;, 100);
+      Car car1 = new Car(&quot;Ferrari&quot;);
+      car1.Pilot = pilot1;
+      car1.Snapshot();
+      db.Set(car1);
+      Pilot pilot2 = new Pilot(&quot;Rubens Barrichello&quot;, 99);
+      Car car2 = new Car(&quot;BMW&quot;);
+      car2.Pilot = pilot2;
+      car2.Snapshot();
+      car2.Snapshot();
+      db.Set(car2);
+    }</pre>    </body></html>

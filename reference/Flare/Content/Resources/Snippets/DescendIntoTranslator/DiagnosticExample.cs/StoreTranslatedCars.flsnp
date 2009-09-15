@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.cs: StoreTranslatedCars
+public static void StoreTranslatedCars()
+        ...{
+            IEmbeddedConfiguration configuration = Db4oEmbedded.NewConfiguration();
+            configuration.Common.Diagnostic.AddListener(new DiagnosticToConsole());
+            configuration.Common.ObjectClass(typeof(Car)).Translate(new CarTranslator());
+            configuration.Common.ObjectClass(typeof(Car)).CallConstructor(true);
+            File.Delete(Db4oFileName);
+            IObjectContainer db = Db4oEmbedded.OpenFile(configuration, Db4oFileName);
+            try
+            ...{
+                Car car1 = new Car(&quot;BMW&quot;);
+                System.Diagnostics.Trace.WriteLine(&quot;ORIGINAL: &quot; + car1);
+                db.Store(car1);
+                Car car2 = new Car(&quot;Ferrari&quot;);
+                System.Diagnostics.Trace.WriteLine(&quot;ORIGINAL: &quot; + car2);
+                db.Store(car2);
+            }
+            catch (Exception exc)
+            ...{
+                System.Diagnostics.Trace.WriteLine(exc.Message);
+                return;
+            }
+            finally
+            ...{
+                db.Close();
+            }
+        }</pre>    </body></html>

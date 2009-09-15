@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">FreespaceFillerExample.vb: Item
+Private Class ItemClass Item
+            Private name As [String]
+            Private description As [String]
+
+            Public Sub New()Sub New(ByVal name As [String], ByVal description As [String])
+                Me.name = name
+                Me.description = description
+            End Sub
+
+            Public Function toString()Function toString() As [String]
+                Return [String].Format(&quot;{0}, {1}&quot;, name, description)
+            End Function
+        End Class</pre>    </body></html>

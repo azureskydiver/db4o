@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UUIDExample.java: testGenerateUUID
+private static void testGenerateUUID() ...{
+    ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
+    try ...{
+      Query query = container.query();
+      query.constrain(Car.class);
+      ObjectSet result = query.execute();
+      Car car = (Car) result.get(0);
+      ObjectInfo carInfo = container.ext().getObjectInfo(car);
+      Db4oUUID carUUID = carInfo.getUUID();
+      System.out
+          .println(&quot;UUID for Car class are not generated:&quot;);
+      System.out.println(&quot;Car UUID: &quot; + carUUID);
+
+      Pilot pilot = car.getPilot();
+      ObjectInfo pilotInfo = container.ext().getObjectInfo(
+          pilot);
+      Db4oUUID pilotUUID = pilotInfo.getUUID();
+      System.out.println(&quot;UUID for Pilot:&quot;);
+      System.out.println(&quot;Pilot UUID: &quot; + pilotUUID);
+      System.out.println(&quot;long part: &quot;
+          + pilotUUID.getLongPart() + &quot;; signature: &quot;
+          + printSignature(pilotUUID.getSignaturePart()));
+      long ms = TimeStampIdGenerator.idToMilliseconds(pilotUUID
+          .getLongPart());
+      System.out.println(&quot;Pilot object was created: &quot;
+          + (new Date(ms)).toString());
+      Pilot pilotReturned = (Pilot) container.ext().getByUUID(
+          pilotUUID);
+      System.out.println(&quot;Pilot from UUID: &quot; + pilotReturned);
+    } finally ...{
+      container.close();
+    }
+  }</pre>    </body></html>

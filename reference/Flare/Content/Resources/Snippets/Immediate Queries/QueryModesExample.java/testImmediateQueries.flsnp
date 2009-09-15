@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryModesExample.java: testImmediateQueries
+private static void testImmediateQueries() ...{
+    System.out
+        .println(&quot;Testing query performance on 10000 pilot objects in Immediate mode&quot;);
+    fillUpDB(10000);
+    Configuration configuration = Db4o.newConfiguration();
+    configuration.queries().evaluationMode(QueryEvaluationMode.IMMEDIATE);
+    ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
+    try ...{
+      QueryStats stats = new QueryStats();
+      stats.connect(container);
+      Query query = container.query();
+      query.constrain(Pilot.class);
+      query.descend(&quot;points&quot;).constrain(99).greater();
+      query.execute();
+      long executionTime = stats.executionTime();
+      System.out.println(&quot;Query execution time: &quot;
+          + executionTime);
+    } finally ...{
+      container.close();
+    }
+  }</pre>    </body></html>

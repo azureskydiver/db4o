@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CultureInfoTranslator.cs
+/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
+using System.Globalization;
+
+using Db4objects.Db4o;
+using Db4objects.Db4o.Config;
+
+namespace Db4objects.Db4odoc.Translators
+...{
+  public class CultureInfoTranslator : IObjectConstructor
+    ...{
+        public object OnStore(IObjectContainer container, object applicationObject)
+        ...{
+            System.Console.WriteLine(&quot;onStore for {0}&quot;, applicationObject);
+            return ((CultureInfo)applicationObject).Name;
+        }
+        
+        public object OnInstantiate(IObjectContainer container, object storedObject)
+        ...{
+            System.Console.WriteLine(&quot;onInstantiate for {0}&quot;, storedObject);
+            string name = (string)storedObject;
+            return CultureInfo.CreateSpecificCulture(name);
+        }
+        
+        public void OnActivate(IObjectContainer container, object applicationObject, object storedObject)
+        ...{
+            System.Console.WriteLine(&quot;onActivate for {0}/{1}&quot;, applicationObject, storedObject);
+        }
+        
+        IObjectTranslator Members#region IObjectTranslator Members
+
+
+        System.Type IObjectTranslator.StoredClass()
+        ...{
+            return typeof(string);
+        }
+
+        #endregion
+    }
+}</pre>    </body></html>

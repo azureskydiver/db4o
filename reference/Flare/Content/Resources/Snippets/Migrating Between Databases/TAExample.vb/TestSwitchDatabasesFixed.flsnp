@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.vb: TestSwitchDatabasesFixed
+Private Shared Sub TestSwitchDatabasesFixed()Sub TestSwitchDatabasesFixed()
+            StoreSensorPanel()
+
+            Dim firstDb As IObjectContainer = Db4oFactory.OpenFile(ConfigureTA(), FirstDbName)
+            Dim secondDb As IObjectContainer = Db4oFactory.OpenFile(ConfigureTA(), SecondDbName)
+            Try
+                Dim result As IObjectSet = firstDb.QueryByExample(New SensorPanelTA(1))
+                If result.Count &gt; 0 Then
+                    Dim sensor As SensorPanelTA = DirectCast(result(0), SensorPanelTA)
+                    ' Unbind the object from the first database
+                    sensor.Bind(Nothing)
+                    ' Migrating the object into the second database
+                    secondDb.Store(sensor)
+
+
+                    System.Console.WriteLine(&quot;Retrieving previous query results from &quot; + FirstDbName + &quot;:&quot;)
+                    Dim [next] As SensorPanelTA = sensor.NextSensor
+                    While [next] IsNot Nothing
+                        System.Console.WriteLine([next])
+                        [next] = [next].NextSensor
+                    End While
+
+                    System.Console.WriteLine(&quot;Retrieving previous query results from &quot; + FirstDbName + &quot; with manual activation:&quot;)
+                    firstDb.Activate(sensor, Int32.MaxValue)
+                    [next] = sensor.NextSensor
+                    While [next] IsNot Nothing
+                        System.Console.WriteLine([next])
+                        [next] = [next].NextSensor
+                    End While
+
+                    System.Console.WriteLine(&quot;Retrieving sensorPanel from &quot; + SecondDbName + &quot;:&quot;)
+                    result = secondDb.QueryByExample(New SensorPanelTA(1))
+                    [next] = sensor.NextSensor
+                    While [next] IsNot Nothing
+                        System.Console.WriteLine([next])
+                        [next] = [next].NextSensor
+                    End While
+                End If
+            Finally
+                firstDb.Close()
+                secondDb.Close()
+            End Try
+        End Sub</pre>    </body></html>

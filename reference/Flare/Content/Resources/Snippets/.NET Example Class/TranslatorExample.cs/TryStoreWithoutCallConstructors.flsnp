@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.cs: TryStoreWithoutCallConstructors
+public static void TryStoreWithoutCallConstructors()
+        ...{
+            IConfiguration configuration = Db4oFactory.NewConfiguration();
+            configuration.ObjectClass(typeof(CultureInfo))
+                .CallConstructor(false);
+            // trying to store objects that hold onto
+            // system resources can be pretty nasty
+            // uncomment the following line to see
+            // how nasty it can be
+            //TryStoreAndRetrieve(configuration);
+        }</pre>    </body></html>

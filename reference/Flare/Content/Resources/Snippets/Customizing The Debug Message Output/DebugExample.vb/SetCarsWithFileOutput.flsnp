@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DebugExample.vb: SetCarsWithFileOutput
+Private Shared Sub SetCarsWithFileOutput()Sub SetCarsWithFileOutput()
+            ' Create StreamWriter for a file
+            Dim f As FileInfo = New FileInfo(&quot;Debug.txt&quot;)
+            Dim debugWriter As StreamWriter = f.CreateText()
+
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+
+            ' Redirect debug output to the specified writer
+            configuration.Common.OutStream = debugWriter
+
+            ' Set the debug message levet to the maximum
+            configuration.Common.MessageLevel = 3
+            ' Do some db4o operations
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oEmbedded.OpenFile(configuration, Db4oFileName)
+            Try
+                Dim car1 As Car = New Car(&quot;BMW&quot;)
+                db.Store(car1)
+                Dim car2 As Car = New Car(&quot;Ferrari&quot;)
+                db.Store(car2)
+                db.Deactivate(car1, 2)
+             
+                Dim results As IList(Of Car) = db.Query(Of Car)()
+                ListResult(results)
+            Finally
+                db.Close()
+                debugWriter.Close()
+            End Try
+
+        End Sub</pre>    </body></html>

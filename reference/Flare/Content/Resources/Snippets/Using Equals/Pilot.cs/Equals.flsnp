@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Pilot.cs: Equals
+1public override bool  Equals(object obj)
+2        ...{
+3            Pilot pilot = (Pilot)obj;
+4            return pilot.Name.Equals(_name) &amp;&amp; pilot.Points == _points;
+5        }</pre>    </body></html>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>.NET Translator Implementation	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>.NET Translator Implementation</h1>
+
+
+<p><font color="#990000">This topic applies to .NET version only.</font></p>
+
+<p>To translate CultureInfo instances, we will store only their name since this is enough to recreate them later. Note that we don't have to do any work in onActivate(), since object reinstantiation is already fully completed in onInstantiate().</p>
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/.NET Translator Implementation/CultureInfoTranslator.cs/CultureInfoTranslator.cs.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/.NET Translator Implementation/CultureInfoTranslator.vb/CultureInfoTranslator.vb.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Let's try it out:</p>
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/.NET Translator Implementation/TranslatorExample.cs/StoreWithTranslator.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/.NET Translator Implementation/TranslatorExample.vb/StoreWithTranslator.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>ObjectTranslators let you reconfigure the state of a 'blank' application object reinstantiated by db4o, ObjectConstructors also take care of instantiating the application object itself. ObjectTranslators and ObjectConstructors can be used for classes that cannot cleanly be stored and retrieved with db4o's standard object instantiation mechanisms. </p>
+ </div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

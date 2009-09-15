@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TestCustomized.vb
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
+
+Namespace Db4objectsNamespace Db4objects.Db4odoc.SelectivePersistence
+    Public Class TestCusomizedClass TestCusomized
+        &lt;Db4objects.Db4odoc.SelectivePersistence.FieldTransient()&gt; Dim _transientField As String
+        Dim _persistentField As String
+
+        Public Sub New()Sub New(ByVal transientField As String, ByVal persistentField As String)
+            _transientField = transientField
+            _persistentField = persistentField
+        End Sub
+
+        Public Overrides Function ToString()Function ToString() As String
+            Return &quot;Customized test: persistent: &quot; + _persistentField + &quot;, transient: &quot; + _transientField
+        End Function
+    End Class
+End Namespace</pre>    </body></html>

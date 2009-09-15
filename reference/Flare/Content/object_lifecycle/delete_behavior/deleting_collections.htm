@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Deleting Collections	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Deleting Collections</h1><p>As it was discussed in
+<a href="../working_with_structured_objects/deleting_structured_objects.html" class="wikiLink">Deleting Structured Objects</a> chapter,
+deleting a top-level object does not mean deleting all of the member objects.
+The same rule applies for collections. The recommendation would be to use
+cascadeOnDelete setting for a collection, which should be deleted with all its
+members.</p><p>For the following example we will use <a href="example_classes.html" class="wikiLink">DataObject and
+ListObject</a> classes. The database will be filled up with the
+<a href="filling_the_database.html" class="wikiLink">FillUpDb</a> method.  </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Collections/ListDeletingExample.java/deleteTest.flsnp" />
+</p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Collections/ListDeletingExample.cs/DeleteTest.flsnp" />
+</p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Deleting Collections/ListDeletingExample.vb/DeleteTest.flsnp" />
+
+</p><p MadCap:conditions="Primary:vb" />
+
+
+Please, remember that there is no referential
+integrity check on delete: deleted objects might be referenced from elsewhere
+in your code.
+
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

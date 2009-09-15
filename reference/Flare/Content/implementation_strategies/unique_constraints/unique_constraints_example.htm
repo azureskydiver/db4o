@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Unique Constraints Example	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Unique Constraints Example</h1>
+
+<p>Let's look at a simple example with 2 clients adding objects
+of the same class to the database. First of all, let's create an appropriate
+configuration:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Unique Constraints Example/UniqueConstraintExample.java/configure.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Unique Constraints Example/UniqueConstraintExample.cs/Configure.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Unique Constraints Example/UniqueConstraintExample.vb/Configure.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Configuration returned by <code>configure</code> method will
+be passed to the server.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Unique Constraints Example/UniqueConstraintExample.java/storeObjects.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Unique Constraints Example/UniqueConstraintExample.cs/StoreObjects.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Unique Constraints Example/UniqueConstraintExample.vb/StoreObjects.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+Running this example you will get an exception trying
+to commit <code>client1</code> as the changes made by client2 containing a <code>Pilot</code>
+object with the same name are already committed to the database.
+
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

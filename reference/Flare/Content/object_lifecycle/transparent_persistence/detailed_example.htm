@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Detailed Example	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Detailed Example</h1><p>Let's look at a primitive example, demonstrating manual implementation
+of Activatable/IActivatable interface for TP. We will use a class similar to
+the <a href="../activation/transparent_activation_framework/detailed_example.html" class="wikiLink">one</a> used in Transparent Activation chapters.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Detailed Example/SensorPanel.java/SensorPanel.java.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Detailed Example/SensorPanel.cs/SensorPanel.cs.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Detailed Example/SensorPanel.vb/SensorPanel.vb.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+
+
+<p>Note, that the only place where we can modify SensorPanel members
+is <code>setSensor</code> method/<code>Sensor</code> property, and that is
+where <code>activate</code> method is added. </p>
+
+<p>Now we will only need to add Transparent Activation support:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Detailed Example/TPExample.java/configureTA.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Detailed Example/TPExample.cs/ConfigureTA.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Detailed Example/TPExample.vb/ConfigureTA.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Initial storing of the objects is done as usual with a
+single <code>store</code> call:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Detailed Example/TPExample.java/storeSensorPanel.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Detailed Example/TPExample.cs/StoreSensorPanel.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Detailed Example/TPExample.vb/StoreSensorPanel.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Now we can test how Transparent Persistence helped us to
+keep the code simple. Let's select all elements from the linked SensorPanel
+list, modify them and store. As you remember default update depth is one, so
+without TP, we would have to store each member of the linked list (SensorPanel)
+separately. With TP enabled there is absolutely nothing to do: commit call will
+find all activatable objects and store those that were modified.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Detailed Example/TPExample.java/testTransparentPersistence.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Detailed Example/TPExample.cs/TestTransparentPersistence.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Detailed Example/TPExample.vb/TestTransparentPersistence.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>That's all. The benefits that we've got:</p>
+
+<ul class="unIndentedList"><li>
+clean and friendly to refactorings code;</li><li>
+performance benefit: only modified objects are
+stored;</li><li>
+hussle-free development.</li></ul>
+
+
+
+
+
+
+
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

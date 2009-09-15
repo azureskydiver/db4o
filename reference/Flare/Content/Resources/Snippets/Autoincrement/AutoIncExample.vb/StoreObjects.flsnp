@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AutoIncExample.vb: StoreObjects
+Public Shared Sub StoreObjects()Sub StoreObjects()
+            Dim db As IObjectContainer = OpenContainer()
+            Dim test As TestObject
+            test = New TestObject(&quot;FirstObject&quot;)
+            db.Set(test)
+            test = New TestObject(&quot;SecondObject&quot;)
+            db.Set(test)
+            test = New TestObject(&quot;ThirdObject&quot;)
+            db.Set(test)
+        End Sub</pre>    </body></html>

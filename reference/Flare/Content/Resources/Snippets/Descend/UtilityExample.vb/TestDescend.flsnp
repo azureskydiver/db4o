@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UtilityExample.vb: TestDescend
+Public Shared Sub TestDescend()Sub TestDescend()
+            StoreSensorPanel()
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ActivationDepth(1)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
+            Try
+                System.Console.WriteLine(&quot;Object container activation depth = 1&quot;)
+                Dim result As IObjectSet = db.Get(New SensorPanel(1))
+                Dim spParent As SensorPanel = CType(result(0), SensorPanel)
+                Dim fields() As String = {&quot;_next&quot;, &quot;_next&quot;, &quot;_next&quot;, &quot;_next&quot;, &quot;_next&quot;}
+                Dim spDescend As SensorPanel = CType(db.Ext().Descend(CType(spParent, Object), fields), Object)
+                db.Ext().Activate(spDescend, 5)
+                System.Console.WriteLine(spDescend)
+            Finally
+                db.Close()
+            End Try
+        End Sub</pre>    </body></html>

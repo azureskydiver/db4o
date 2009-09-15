@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.vb: FillUpDb
+Private Shared Sub FillUpDb()Sub FillUpDb()
+            Dim listCount As Integer = 2
+            Dim dataCount As Integer = 50000
+            Dim sw As Stopwatch = New Stopwatch
+            File.Delete(DbFile)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(DbFile)
+            Try
+                sw.Start()
+                Dim i As Integer = 0
+                While i &lt; listCount
+                    Dim lo As ListObject = New ListObject
+                    lo.Name = &quot;list&quot; + i.ToString(&quot;00&quot;)
+                    Dim j As Integer = 0
+                    While j &lt; dataCount
+                        Dim dataObject As DataObject = New DataObject
+                        dataObject.Name = &quot;data&quot; + j.ToString(&quot;00000&quot;)
+                        dataObject.Data = DateTime.Now.ToString + &quot; ---- Data Object &quot; + j.ToString(&quot;00000&quot;)
+                        lo.Data.Add(dataObject)
+                        System.Math.Min(System.Threading.Interlocked.Increment(j), j - 1)
+                    End While
+                    db.Set(lo)
+                    System.Math.Min(System.Threading.Interlocked.Increment(i), i - 1)
+                End While
+                sw.Stop()
+            Finally
+                db.Close()
+            End Try
+            Console.WriteLine(&quot;Completed {0} lists of {1} objects each.&quot;, listCount, dataCount)
+            Console.WriteLine(&quot;Elapsed time: {0}&quot;, sw.Elapsed.ToString)
+        End Sub</pre>    </body></html>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LoggingReflector.java
+1/**//* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+2
+3package com.db4odoc.reflections;
+4
+5import com.db4o.internal.Platform4;
+6import com.db4o.reflect.ReflectArray;
+7import com.db4o.reflect.ReflectClass;
+8import com.db4o.reflect.Reflector;
+9import com.db4o.reflect.ReflectorConfiguration;
+0import com.db4o.reflect.jdk.ClassLoaderJdkLoader;
+1import com.db4o.reflect.jdk.JavaReflectClass;
+2import com.db4o.reflect.jdk.JdkClass;
+3import com.db4o.reflect.jdk.JdkLoader;
+4import com.db4o.reflect.jdk.JdkReflector;
+5
+6/** *//**
+7 * db4o wrapper for JDK reflector functionality
+8 * 
+9 * @see com.db4o.ext.ExtObjectContainer#reflector()
+0 * @see com.db4o.reflect.generic.GenericReflector
+1 * 
+2 * @sharpen.ignore
+3 */
+4public class LoggingReflector implements Reflector ...{
+5
+6  private final JdkLoader _classLoader;
+7  protected Reflector _parent;
+8  private ReflectArray _array;
+9  private ReflectorConfiguration _config;
+0
+1  /** *//**
+2   * Constructor
+3   * 
+4   * @param classLoader
+5   *            class loader
+6   */
+7  public LoggingReflector(ClassLoader classLoader) ...{
+8    this(new ClassLoaderJdkLoader(classLoader));
+9  }
+0
+1  /** *//**
+2   * Constructor
+3   * 
+4   * @param classLoader
+5   *            class loader
+6   */
+7  public LoggingReflector(JdkLoader classLoader) ...{
+8    this(classLoader, null);
+9  }
+0
+1  private LoggingReflector(JdkLoader classLoader,
+2      ReflectorConfiguration config) ...{
+3    _classLoader = classLoader;
+4    _config = config;
+5  }
+6
+7  /** *//**
+8   * ReflectArray factory
+9   * 
+0   * @return ReflectArray instance
+1   */
+2  public ReflectArray array() ...{
+3    if (_array == null) ...{
+4      _array = new LoggingArray(parent());
+5    }
+6    return _array;
+7  }
+8
+9  /** *//**
+0   * Creates a copy of the object
+1   * 
+2   * @param obj
+3   *            object to copy
+4   * @return object copy
+5   */
+6  public Object deepClone(Object obj) ...{
+7    return new LoggingReflector(_classLoader, _config);
+8  }
+9
+0  /** *//**
+1   * Returns ReflectClass for the specified class
+2   * 
+3   * @param clazz
+4   *            class
+5   * @return ReflectClass for the specified class
+6   */
+7  public ReflectClass forClass(Class clazz) ...{
+8    ReflectClass rc = createClass(clazz);
+9    System.out.println(&quot;forClass: &quot; + clazz + &quot; -&gt; &quot;
+0        + (rc == null ? &quot;&quot; : rc.getName()));
+1
+2    return rc;
+3  }
+4
+5  /** *//**
+6   * Returns ReflectClass for the specified class name
+7   * 
+8   * @param className
+9   *            class name
+0   * @return ReflectClass for the specified class name
+1   */
+2  public ReflectClass forName(String className) ...{
+3    Class clazz = _classLoader.loadClass(className);
+4    ReflectClass rc = createClass(clazz);
+5    System.out.println(&quot;forName: &quot; + className + &quot; -&gt; &quot;
+6        + (rc == null ? &quot;&quot; : rc.getName()));
+7    return rc;
+8
+9  }
+0
+1  /** *//**
+2   * creates a Class reflector when passed a class. This method is protected
+3   * to allow overriding in cusom reflectors that override JdkReflector.
+4   * 
+5   * @param clazz
+6   *            the class
+7   * @return the class reflector
+8   */
+9  protected JdkClass createClass(Class clazz) ...{
+0    if (clazz == null) ...{
+1      return null;
+2    }
+3    JdkReflector jdkReflector = new JdkReflector(this.getClass()
+4        .getClassLoader());
+5    jdkReflector.configuration(_config);
+6
+7    JdkClass rc = new JdkClass(parent(), jdkReflector, clazz);
+8    return rc;
+9  }
+0
+1  /** *//**
+2   * Returns ReflectClass for the specified class object
+3   * 
+4   * @param a_object
+5   *            class object
+6   * @return ReflectClass for the specified class object
+7   */
+8  public ReflectClass forObject(Object a_object) ...{
+9    if (a_object == null) ...{
+0      return null;
+1    }
+2    ReflectClass rc = parent().forClass(a_object.getClass());
+3    System.out.println(&quot;forObject:&quot; + a_object + &quot; -&gt; &quot;
+4        + (rc == null ? &quot;&quot; : rc.getName()));
+5    return rc;
+6  }
+7
+8  /** *//**
+9   * Method stub. Returns false.
+0   */
+1  public boolean isCollection(ReflectClass candidate) ...{
+2    return false;
+3  }
+4
+5  /** *//**
+6   * Method stub. Returns false.
+7   */
+8  public boolean methodCallsSupported() ...{
+9    return true;
+0  }
+1
+2  /** *//**
+3   * Sets parent reflector
+4   * 
+5   * @param reflector
+6   *            parent reflector
+7   */
+8  public void setParent(Reflector reflector) ...{
+9    _parent = reflector;
+0  }
+1
+2  /** *//**
+3   * Creates ReflectClass[] array from the Class[] array using the reflector
+4   * specified
+5   * 
+6   * @param reflector
+7   *            reflector to use
+8   * @param clazz
+9   *            class
+0   * @return ReflectClass[] array
+1   */
+2  public static ReflectClass[] toMeta(Reflector reflector, Class[] clazz) ...{
+3    ReflectClass[] claxx = null;
+4    if (clazz != null) ...{
+5      claxx = new ReflectClass[clazz.length];
+6      for (int i = 0; i &lt; clazz.length; i++) ...{
+7        if (clazz[i] != null) ...{
+8          claxx[i] = reflector.forClass(clazz[i]);
+9        }
+0      }
+1    }
+2    return claxx;
+3  }
+4
+5  /** *//**
+6   * Creates Class[] array from the ReflectClass[] array
+7   * 
+8   * @param claxx
+9   *            ReflectClass array
+0   * @return Class[] array
+1   */
+2  static Class[] toNative(ReflectClass[] claxx) ...{
+3    Class[] clazz = null;
+4    if (claxx != null) ...{
+5      clazz = new Class[claxx.length];
+6      for (int i = 0; i &lt; claxx.length; i++) ...{
+7        clazz[i] = toNative(claxx[i]);
+8      }
+9    }
+0    return clazz;
+1  }
+2
+3  /** *//**
+4   * Translates a ReflectClass into a native Class
+5   * 
+6   * @param claxx
+7   *            ReflectClass to translate
+8   * @return Class
+9   */
+0  public static Class toNative(ReflectClass claxx) ...{
+1    if (claxx == null) ...{
+2      return null;
+3    }
+4    System.out.println(&quot;toNative: &quot; + claxx.getName());
+5    if (claxx instanceof JavaReflectClass) ...{
+6      return ((JavaReflectClass) claxx).getJavaClass();
+7    }
+8    ReflectClass d = claxx.getDelegate();
+9    if (d == claxx) ...{
+0      return null;
+1    }
+2    return toNative(d);
+3  }
+4
+5  public void configuration(ReflectorConfiguration config) ...{
+6    _config = config;
+7  }
+8
+9  public ReflectorConfiguration configuration() ...{
+0    return _config;
+1  }
+2
+3  Object nullValue(ReflectClass clazz) ...{
+4    return Platform4.nullValue(toNative(clazz));
+5  }
+6
+7  private Reflector parent() ...{
+8    if (_parent == null) ...{
+9      return this;
+0    }
+1    return _parent;
+2  }
+3
+4}</pre>    </body></html>

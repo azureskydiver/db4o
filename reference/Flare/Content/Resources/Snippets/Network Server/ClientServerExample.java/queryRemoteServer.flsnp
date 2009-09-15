@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.java: queryRemoteServer
+1private static void queryRemoteServer(int port, String user, String password)
+2      throws IOException ...{
+3    ObjectContainer client = Db4oClientServer.openClient(Db4oClientServer
+4        .newClientConfiguration(), &quot;localhost&quot;, port, user, password);
+5    listResult(client.queryByExample(new Car(null)));
+6    client.close();
+7  }</pre>    </body></html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Empty.vb
+' Copyright (C) 2009 Versant Inc. http://www.db4o.com
+Imports System
+
+Namespace Db4odocNamespace Db4odoc.Diagnostics
+    Public Class EmptyClass Empty
+        Public Sub New()Sub New()
+        End Sub
+
+        Public Function CurrentTime()Function CurrentTime() As String
+            Dim dt As DateTime = DateTime.Now
+            Dim time As String = dt.ToString(&quot;d&quot;)
+            Return time
+        End Function
+
+        Public Overrides Function ToString()Function ToString() As String
+            Return CurrentTime()
+        End Function
+    End Class
+End Namespace</pre>    </body></html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Detailed Example	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Detailed Example</h1>
+
+<p>Let's look at the manual Transparent Activation implementation. This example will help you to understand how TA is implemented under the hood. </p><p>We will take the example class from the <a href="../../activation.html" class="wikiLink">Activation</a> chapter and modify it to enable TA:</p>
+<ul>
+<li>implement <code>Activatable</code> interface (<code>bind</code> method)</li>
+<li>add <code>_activator</code> variable to keep the current activator;</li>
+<li>create <code>activate()</code> method;</li>
+<li>call <code>activate()</code> method each time field objects are required.</li></ul><p MadCap:conditions="Primary.Java"> 
+<MadCap:snippetBlock src="../../../Resources/Snippets/Detailed Example/SensorPanelTA.java/SensorPanelTA.java.flsnp" /><p></p><p MadCap:conditions="Primary:java" /></p>
+<p><p MadCap:conditions="Primary..NET,Primary.c#"> </p>
+<MadCap:snippetBlock src="../../../Resources/Snippets/Detailed Example/SensorPanelTA.cs/SensorPanelTA.cs.flsnp" /><p></p><p MadCap:conditions="Primary:cs" /></p>
+<p><p MadCap:conditions="Primary..NET,Primary.VB.NET"> </p>
+<MadCap:snippetBlock src="../../../Resources/Snippets/Detailed Example/SensorPanelTA.vb/SensorPanelTA.vb.flsnp" /><p></p><p MadCap:conditions="Primary:vb" /></p>
+<p>As you can see from the example class we can call <code>activate()</code> to activate the field objects. However, transparent activation is currently not available directly on field variables, you will have to wrap them into methods.</p>
+<p>Let's create a configuration for transparent activation:</p>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Detailed Example/TAExample.java/configureTA.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Detailed Example/TAExample.cs/ConfigureTA.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Detailed Example/TAExample.vb/ConfigureTA.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+<p>We can test TA using the configuration above:</p>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Detailed Example/TAExample.java/storeSensorPanel.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Detailed Example/TAExample.java/testActivation.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Detailed Example/TAExample.cs/StoreSensorPanel.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Detailed Example/TAExample.cs/TestActivation.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Detailed Example/TAExample.vb/StoreSensorPanel.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Detailed Example/TAExample.vb/TestActivation.flsnp" /></p><p MadCap:conditions="Primary:vb" /></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

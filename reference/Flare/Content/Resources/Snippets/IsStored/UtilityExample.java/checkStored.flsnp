@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UtilityExample.java: checkStored
+private static void checkStored() ...{
+    // create a linked list with length 10
+    SensorPanel list = new SensorPanel().createList(10);
+    new File(DB4O_FILE_NAME).delete();
+    ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
+    try ...{
+      // store all elements with one statement, since all
+      // elements are new
+      container.set(list);
+      Object sensor = (Object) list.sensor;
+      SensorPanel sp5 = list.next.next.next.next;
+      System.out.println(&quot;Root element &quot; + list + &quot; isStored: &quot;
+          + container.ext().isStored(list));
+      System.out.println(&quot;Simple type  &quot; + sensor
+          + &quot; isStored: &quot;
+          + container.ext().isStored(sensor));
+      System.out.println(&quot;Descend element  &quot; + sp5
+          + &quot; isStored: &quot; + container.ext().isStored(sp5));
+      container.delete(list);
+      System.out.println(&quot;Root element &quot; + list + &quot; isStored: &quot;
+          + container.ext().isStored(list));
+    } finally ...{
+      container.close();
+    }
+  }</pre>    </body></html>

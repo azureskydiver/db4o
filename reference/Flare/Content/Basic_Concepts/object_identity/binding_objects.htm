@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Binding objects	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Binding objects</h1>
+
+
+<p>Db4o adds additional flexibility to its reference system allowing the user to re-associate an object with its stored instance or to replace an object in database:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:  </p>
+<p><code>ExtObjectContainer#bind(object,id)</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<p>c#:  </p>
+<p><code>IExtObjectContainer#Bind(object,id)</code></p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<p>VB:</p>
+<p><code>IExtObjectContainer#Bind(object,id)</code></p>
+
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Typical usecases could be:</p>
+
+<ul>
+<li><a href="../../implementation_strategies/type_handling/static_fields_and_enums.html" class="wikiLink">enums and static fields</a></li>
+
+<li>working on objects disconnected from the database</li>
+
+<li>refactoring</li>
+</ul>
+
+<p>
+The following requirements should be met:</p>
+
+<ul>
+<li>The ID needs to be a valid internal object ID, previously retrieved with ExtObjectContainer#getID(object)</li>
+
+<li>The object parameter needs to be of the same class as the stored object.</li>
+</ul>
+
+<p>
+Calling ExtObjectContainer#bind(object,id) does not have any impact on persisted objects. It only attaches the new object to the database identity. ObjectContainer#set(object) should be used to persist the change.</p>
+
+<p>Let's look how it works in practice. </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Binding objects/IdentityExample.java/testBind.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Binding objects/IdentityExample.cs/TestBind.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Binding objects/IdentityExample.vb/TestBind.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>So this method gives you control over internal object storage. But its usage is potentially dangerous and normally should be avoided. Let's look at an example how <code>bind</code> can damage your object consistency:</p><p>Imagine three objects referencing eachother:</p>
+<p>a1 =&gt; b1 =&gt; c1</p>
+<p>Now if you call #bind() to replace b1 with b2 in memory you will get the 
+following:</p>
+<p>a1 =&gt; b1 =&gt; c1 b2 =&gt; c1</p>
+<p>b2 will be the new in-memory copy of the persistent object formerly known as 
+b1. a1 will still point to b1 which is now a transient object. If you now 
+store a1, you will get a duplicate copy of b1 stored.</p><p>Please, remember this scenario and use ExtObjectContainer#bind(object,id) only for short-lived objects and in controlled situations where no other references exist.</p><p>For the scenarios, which merging disconnected transient object, please refer to <a href="http://developer.db4o.com/ProjectSpaces/view.aspx/Incubator">Merge Module</a> project suggested design. </p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.cs: RunDifferentQueriesTest
+private void RunDifferentQueriesTest()
+        ...{
+            Init();
+
+            Clean();
+            System.Console.WriteLine(&quot;Storing objects as a bulk:&quot;);
+            Open(Configure());
+            Store();
+            Close();
+
+            Open(Configure());
+            //
+            System.Console.WriteLine(&quot;Query by example:&quot;);
+            StartTimer();
+            Item item = (Item)objectContainer.QueryByExample(
+                    new Item(&quot;level1/1&quot;, null)).Next();
+            StopTimer(&quot;Select 1 object QBE: &quot; + item._name);
+
+            //
+            System.Console.WriteLine(&quot;SODA:&quot;);
+            StartTimer();
+            IQuery query = objectContainer.Query();
+            query.Constrain(typeof(Item));
+            query.Descend(&quot;_name&quot;).Constrain(&quot;level1/1&quot;);
+            item = (Item)query.Execute().Next();
+            StopTimer(&quot;Select 1 object SODA: &quot; + item._name);
+
+            //
+            System.Console.WriteLine(&quot;LINQ: &quot;);
+            StartTimer();
+            var resultLINQ = from Item it in objectContainer
+                         where it._name.Equals(&quot;level1/1&quot;)
+                         select it;
+            
+            IEnumerator&lt;Item&gt; i = resultLINQ.GetEnumerator();
+            if (i.MoveNext())
+            ...{
+                item = i.Current;
+                StopTimer(&quot;Select 1 object LINQ: &quot; + item._name);
+            }
+            
+            
+            //
+            System.Console.WriteLine(&quot;Native Query:&quot;);
+            StartTimer();
+            IList&lt;Item&gt; result = objectContainer.Query&lt;Item&gt;(delegate(Item it)
+            ...{
+                return it._name.Equals(&quot;level1/1&quot;);
+            });
+            item = result[0];
+            StopTimer(&quot;Select 1 object NQ: &quot; + item._name);
+            Close();
+
+            //
+            Open(ConfigureUnoptimizedNQ());
+            System.Console.WriteLine(&quot;Native Query Unoptimized:&quot;);
+            StartTimer();
+            result = objectContainer.Query&lt;Item&gt;(delegate(Item it)
+            ...{
+                return it._name.Equals(&quot;level1/1&quot;);
+            });
+            item = result[0];
+            StopTimer(&quot;Select 1 object NQ: &quot; + item._name);
+
+            Close();
+        }</pre>    </body></html>

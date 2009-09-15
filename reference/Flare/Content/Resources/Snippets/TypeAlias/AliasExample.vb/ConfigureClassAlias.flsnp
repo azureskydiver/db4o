@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AliasExample.vb: ConfigureClassAlias
+Private Shared Function ConfigureClassAlias()Function ConfigureClassAlias() As IEmbeddedConfiguration
+            ' create a new alias
+            tAlias = New TypeAlias (&quot;Db4odoc.Aliases.Pilot, Db4odoc&quot;, &quot;Db4odoc.Aliases.Driver, Db4odoc&quot;)
+            ' add the alias to the db4o configuration 
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.AddAlias (tAlias)
+            ' check how does the alias resolve
+            Console.WriteLine ( _
+                               &quot;Stored name for Db4odoc.Aliases.Driver: &quot; + _
+                               tAlias.ResolveRuntimeName (&quot;Db4odoc.Aliases.Driver, Db4objects.Db4odoc&quot;))
+            Console.WriteLine ( _
+                               &quot;Runtime name for Db4odoc.Aliases.Pilot: &quot; + _
+                               tAlias.ResolveStoredName (&quot;Db4odoc.Aliases.Pilot, Db4objects.Db4odoc&quot;))
+            Return configuration
+        End Function</pre>    </body></html>

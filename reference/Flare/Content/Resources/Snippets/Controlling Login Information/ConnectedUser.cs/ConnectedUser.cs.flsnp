@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ConnectedUser.cs
+1/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
+2using System;
+3using System.Collections;
+4using Db4objects.Db4o;
+5using Db4objects.Db4o.Config;
+6using Db4objects.Db4o.Ext;
+7using Db4objects.Db4o.Query;
+8
+9
+0namespace Db4objects.Db4odoc.Semaphores
+1...{
+2
+3  /**//**
+4   * This class demonstrates how semaphores can be used 
+5   * to rule out race conditions when providing exact and
+6   * up-to-date information about all connected clients 
+7   * on a server. The class also can be used to make sure
+8   * that only one login is possible with a give user name
+9   * and ipAddress combination.
+0   */
+1  public class ConnectedUser 
+2  ...{
+3    
+4    public const string SemaphoreConnected = &quot;ConnectedUser_&quot;;
+5        public const string SemaphoreLockAccess = &quot;ConnectedUser_Lock_&quot;;
+6    
+7    public const int Timeout = 10000;  // concurrent access timeout 10 seconds
+8    
+9    String userName;
+0    String ipAddress;
+1    
+2    public ConnectedUser(String userName, String ipAddress)
+3    ...{
+4      this.userName = userName;
+5      this.ipAddress = ipAddress;
+6    }
+7    
+8    // make sure to call this on the server before opening the database
+9    // to improve querying speed 
+0    public static void Configure()
+1    ...{
+2      IObjectClass objectClass = Db4oFactory.Configure().ObjectClass(typeof(ConnectedUser)); 
+3      objectClass.ObjectField(&quot;userName&quot;).Indexed(true);
+4      objectClass.ObjectField(&quot;ipAddress&quot;).Indexed(true);
+5    }
+6    
+7    // call this on the client to ensure to have a ConnectedUser record 
+8    // in the database file and the semaphore set
+9    public static void Login(IObjectContainer client, String userName, String ipAddress)
+0    ...{
+1            if (!client.Ext().SetSemaphore(SemaphoreLockAccess, Timeout))
+2      ...{
+3        throw new Exception(&quot;Timeout trying to get access to ConnectedUser lock&quot;);
+4      }
+5      IQuery q = client.Query();
+6      q.Constrain(typeof(ConnectedUser));
+7      q.Descend(&quot;userName&quot;).Constrain(userName);
+8      q.Descend(&quot;ipAddress&quot;).Constrain(ipAddress);
+9      if(q.Execute().Size() == 0)
+0      ...{
+1        client.Set(new ConnectedUser(userName, ipAddress));
+2        client.Commit();
+3      }
+4            String connectedSemaphoreName = SemaphoreConnected + userName + ipAddress;
+5      bool unique = client.Ext().SetSemaphore(connectedSemaphoreName, 0);
+6            client.Ext().ReleaseSemaphore(SemaphoreLockAccess);
+7      if(! unique)
+8      ...{
+9        throw new Exception(&quot;Two clients with same userName and ipAddress&quot;);
+0      }
+1    }
+2    
+3    // here is your list of all connected users, callable on the server
+4    public static IList ConnectedUsers(IObjectServer server)
+5    ...{
+6      IExtObjectContainer serverObjectContainer = server.Ext().ObjectContainer().Ext();
+7            if (serverObjectContainer.SetSemaphore(SemaphoreLockAccess, Timeout))
+8      ...{
+9        throw new Exception(&quot;Timeout trying to get access to ConnectedUser lock&quot;);
+0      }
+1      IList list = new ArrayList();
+2      IQuery q = serverObjectContainer.Query();
+3      q.Constrain(typeof(ConnectedUser));
+4      IObjectSet objectSet = q.Execute();
+5      while(objectSet.HasNext())
+6      ...{
+7        ConnectedUser connectedUser = (ConnectedUser)objectSet.Next();
+8        String connectedSemaphoreName = 
+9          SemaphoreConnected + 
+0          connectedUser.userName + 
+1          connectedUser.ipAddress;
+2        if(serverObjectContainer.SetSemaphore(connectedSemaphoreName, Timeout))
+3        ...{
+4          serverObjectContainer.Delete(connectedUser);
+5        }
+6        else
+7        ...{
+8          list.Add(connectedUser);
+9        }
+0      }
+1      serverObjectContainer.Commit();
+2            serverObjectContainer.ReleaseSemaphore(SemaphoreLockAccess);
+3      return list;
+4    }
+5  }
+6}</pre>    </body></html>
