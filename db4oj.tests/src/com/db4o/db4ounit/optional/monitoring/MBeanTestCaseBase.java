@@ -6,11 +6,11 @@ import java.util.*;
 import javax.management.*;
 
 import com.db4o.config.*;
-import com.db4o.internal.config.Db4oLegacyConfigurationBridge;
-import com.db4o.monitoring.Db4oMBeans;
+import com.db4o.internal.config.*;
+import com.db4o.monitoring.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 @decaf.Remove
 public abstract class MBeanTestCaseBase extends AbstractDb4oTestCase {
@@ -23,9 +23,6 @@ public abstract class MBeanTestCaseBase extends AbstractDb4oTestCase {
 
 		public String _id;
 	}
-
-	protected final transient ClockMock _clock = new ClockMock();
-	protected transient MBeanProxy _bean;
 	
 	@Override
 	protected void configure(Configuration legacy) throws Exception {
@@ -39,7 +36,7 @@ public abstract class MBeanTestCaseBase extends AbstractDb4oTestCase {
 		for (int i=0; i<3; ++i) {
 			counterIncrementTrigger.run();
 			counterIncrementTrigger.run();
-			_clock.advance(1000);
+			advanceClock(1000);
 			Assert.areEqual(2.0, bean().getAttribute(beanAttributeName));
 		}
 	}
@@ -63,11 +60,19 @@ public abstract class MBeanTestCaseBase extends AbstractDb4oTestCase {
 
 	protected abstract Class<?> beanInterface();
 	protected abstract String beanUri();
-
+	
 	protected MBeanProxy bean() {
 		if (_bean == null) {
 			_bean = new MBeanProxy(Db4oMBeans.mBeanNameFor(beanInterface(), beanUri()));
 		}
 		return _bean;
-	}	
+	}
+	
+	protected void advanceClock(int time) {
+		_clock.advance(time);
+	}
+	
+	protected final transient ClockMock _clock = new ClockMock();
+	protected transient MBeanProxy _bean;
+	
 }

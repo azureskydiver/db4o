@@ -3,59 +3,67 @@
 package com.db4o.db4ounit.optional.monitoring.cs;
 
 import com.db4o.*;
-import com.db4o.config.*;
+import com.db4o.cs.*;
 import com.db4o.cs.config.*;
 import com.db4o.cs.internal.*;
 import com.db4o.cs.internal.config.*;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.events.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
 
 @decaf.Remove
 public class MonitoredServerSocket4TestCase extends MonitoredSocket4TestCaseBase {
 
-	public void configureClient(Configuration config) throws Exception {
-		configure(config);
-	}
+	private static final int CLIENT_1 = 0;
+	private static final int CLIENT_2 = 1;
 
-	public void configureServer(Configuration config) throws Exception {
-		configure(config);
-		setupNewSocketFactory(config);		
+	@Override
+	public void setUp() {
+		super.setUp();
+		_commitsReceived = installSystemTransactionCommitCounter();
 	}
 	
 	@Override
-	protected void configure(Configuration legacy) throws Exception {
-		super.configure(legacy);		
+	protected ClientConfiguration clientConfiguration() {
+		ClientConfiguration clientConfig = Db4oClientServer.newClientConfiguration();
 		
-		//legacy.clientServer().batchMessages(false);
-		//legacy.clientServer().prefetchIDCount(1);
-		ensurePingMessagesDontDisturbResults(legacy);
+		clientConfig.networking().batchMessages(false);
+		clientConfig.prefetchIDCount(1);
+		
+		configurePingTimeouts(clientConfig.networking());
+		
+		return clientConfig;
 	}
 
-	private void ensurePingMessagesDontDisturbResults(Configuration config) {
-		config.clientServer().timeoutClientSocket(Integer.MAX_VALUE);
-		config.clientServer().timeoutServerSocket(Integer.MAX_VALUE);
+	@Override
+	protected ServerConfiguration serverConfiguration() {
+		ServerConfiguration serverConfig = Db4oClientServer.newServerConfiguration();		
+		configurePingTimeouts(serverConfig.networking());
+		
+		setupNewSocketFactory(serverConfig.networking());		
+			
+		configureClock(serverConfig.common().environment());
+		return serverConfig;
 	}
-	
-	public void testBytesSentDefaultClient() throws Exception {
+
+	private void configurePingTimeouts(NetworkingConfiguration networkingConfig) {
+		networkingConfig.timeoutClientSocket(Integer.MAX_VALUE);
+		networkingConfig.timeoutServerSocket(Integer.MAX_VALUE);
+	}
+
+	public void testBytesSentSingleClient() throws Exception {
 		exerciseSingleClient(new BytesSentCounterHandler());
 	}
 
-	private void exerciseSingleClient(CounterHandler counterHandler) {
-		//for (int i = 0; i < EXERCISES_COUNT; i++) {
-			assertCounter(counterHandler);
-		//}
-	}
-
-	public void testBytesReceivedDefaultClient() {
-		assertCounter(new BytesReceivedCounterHandler());
+	public void testBytesReceivedSingleClient() {
+		exerciseSingleClient(new BytesReceivedCounterHandler());
 	}
 		
-	public void testMessagesSentDefaultClient() {
-		assertCounter(new MessagesSentCounterHandler());
+	public void testMessagesSentSingleClient() {
+		exerciseSingleClient(new MessagesSentCounterHandler());
 	}
 	
 	public void testBytesSentTwoClients() {
@@ -70,74 +78,44 @@ public class MonitoredServerSocket4TestCase extends MonitoredSocket4TestCaseBase
 		assertTwoClients(new MessagesSentCounterHandler());
 	}
 	
-	private void assertCounter(CounterHandler handler) {
-		NetworkingConfiguration networkConfig = Db4oClientServerLegacyConfigurationBridge.asNetworkingConfiguration(fileSession().config());
-		CountingSocket4Factory factory= (CountingSocket4Factory) networkConfig.socketFactory();
-		
-		CountingSocket4 countingSocket = factory.connectedClients().get(0);
-		//countingSocket.resetCount();
-		//resetAllBeanCountersFor(fileSession());
+	private void assertCounter(ObjectContainer client, CounterHandler handler) {
+		resetSocketCounters();
+		resetAllBeanCountersFor(serverContainer());
 				
-		store(new Item("default client"));
-		_clock.advance(1000);		
+		client.store(new Item("default client"));
+		client.commit();
+		advanceClock(1000);		
 	 	
-		double expected = handler.expectedValue(countingSocket);
-		double actual = handler.actualValue(fileSession());
+		double expected = expectedCount(handler, CLIENT_1);
+		double actual = handler.actualValue(serverContainer());
 		Assert.isGreater(0, (long) expected);
+		
 		Assert.areEqual(
 				expected,				
 				actual);
 	}	
-	
+
+	private ObjectContainer serverContainer() {
+		return server().objectContainer();
+	}
+
 	private void assertTwoClients(final CounterHandler handler) {
-		final IntByRef commitsReceived = new IntByRef(0);
-		
-		ObjectServerImpl server = (ObjectServerImpl) ((Db4oNetworking)fixture()).server().ext();
-		   server.clientConnected().addListener(new EventListener4<ClientConnectionEventArgs>() {
-		    public void onEvent(Event4<ClientConnectionEventArgs> e, ClientConnectionEventArgs args) {
-		    	args.connection().messageReceived().addListener(new EventListener4<MessageEventArgs>() {
-		    	public void onEvent(Event4<MessageEventArgs> e, MessageEventArgs args) {
-		    	  if ( args.message().getClass() == MCommitSystemTransaction.class) {
-		    		synchronized (commitsReceived) {
-		    			commitsReceived.value++;
-		    			commitsReceived.notifyAll();
-					}
-		    	  }
-		      }
-		     });
-		    }
-		   });		
-		
-		
+		resetClientConnectionCounter();
 		withTwoClients(new TwoClientsAction() { public void apply(ObjectContainer client1, ObjectContainer client2) {
-			synchronized (commitsReceived) {					
-				while (2 != commitsReceived.value) {
-					try {
-						commitsReceived.wait(10);
-					} catch (InterruptedException e) {
-					}
-				}
-			}
+			waitForClientConnectionCompleted(2);
 			
-			CountingSocket4Factory factory = serverCountingSocketFactory();
-			
-			CountingSocket4 countingSocket1 = factory.connectedClients().get(1);
-			CountingSocket4 countingSocket2 = factory.connectedClients().get(2);
-			
-			countingSocket1.resetCount();
-			countingSocket2.resetCount();			
-			
-			resetBeanCountersFor(fileSession());
-			
+			resetSocketCounters();
+			resetBeanCountersFor(serverContainer());			
+
 			client1.store(new Item("foo"));
 			client2.store(new Item("bar"));
 			client1.commit();
 			client2.commit();
 			
-			_clock.advance(1000);		
+			advanceClock(1000);		
 			
-			double expected = handler.expectedValue(countingSocket1) + handler.expectedValue(countingSocket2);
-			double actual = handler.actualValue(fileSession());
+			double expected = expectedCount(handler, CLIENT_1, CLIENT_2);
+			double actual = handler.actualValue(serverContainer());
 
 			Assert.areEqual(
 					expected,
@@ -145,8 +123,82 @@ public class MonitoredServerSocket4TestCase extends MonitoredSocket4TestCaseBase
 		}});
 	}
 
-	private CountingSocket4Factory serverCountingSocketFactory() {
-		NetworkingConfiguration networkConfig = Db4oClientServerLegacyConfigurationBridge.asNetworkingConfiguration(fileSession().config());
+	private void resetClientConnectionCounter() {
+		_commitsReceived.value = 0;
+	}
+	
+	private double expectedCount(final CounterHandler handler, int... clientIndexes) {
+		CountingSocket4Factory factory = serverCountingSocketFactory();
+	
+		double total = 0.0;
+		for (int i : clientIndexes) {
+			CountingSocket4 countingSocket = factory.connectedClients().get(i);
+			total += handler.expectedValue(countingSocket);
+		}
+		
+		return total;
+	}		
+	
+	private void exerciseSingleClient(CounterHandler counterHandler) {
+		resetClientConnectionCounter();
+		ExtObjectContainer client = openNewSession();
+		
+		waitForClientConnectionCompleted(1);
+		
+		try {
+			for (int i = 0; i < EXERCISES_COUNT; i++) {
+				assertCounter(client, counterHandler);
+			}
+		}
+		finally {
+			client.close();
+		}
+	}
+	
+	private void resetSocketCounters() {
+		CountingSocket4Factory factory = serverCountingSocketFactory();
+		factory.resetCounters();		
+	}
+	
+	protected void waitForClientConnectionCompleted(int expectedCommitCount) {
+		synchronized (_commitsReceived) {
+			while (expectedCommitCount != _commitsReceived.value) {
+				try {
+					_commitsReceived.wait(10);
+				} catch (InterruptedException e) {
+				}
+			}
+		}
+	}
+
+	private IntByRef installSystemTransactionCommitCounter() {
+		final IntByRef commitsReceived = new IntByRef(0);
+
+		ObjectServerImpl server = (ObjectServerImpl) server();
+		
+		server.clientConnected().addListener(
+				new EventListener4<ClientConnectionEventArgs>() { public void onEvent(Event4<ClientConnectionEventArgs> e, ClientConnectionEventArgs args) {
+					args.connection().messageReceived().addListener(new EventListener4<MessageEventArgs>() { public void onEvent(Event4<MessageEventArgs> e, MessageEventArgs args) {
+						if (args.message().getClass() == MCommitSystemTransaction.class) {
+								synchronized (commitsReceived) {
+									commitsReceived.value++;
+									commitsReceived.notifyAll();
+								}
+							}
+						}
+					});
+				}
+			});
+
+		return commitsReceived;
+	}
+
+	protected CountingSocket4Factory serverCountingSocketFactory() {
+		ObjectContainer serverContainer = serverContainer();		
+		NetworkingConfiguration networkConfig = Db4oClientServerLegacyConfigurationBridge.asNetworkingConfiguration(serverContainer.ext().configure());
+		
 		return (CountingSocket4Factory) networkConfig.socketFactory();
 	}
+	
+	private IntByRef _commitsReceived = null;
 }

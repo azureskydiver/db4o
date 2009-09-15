@@ -17,8 +17,8 @@ public class CountingSocket4Factory implements Socket4Factory {
 	}
 
 	public ServerSocket4 createServerSocket(int port) throws IOException {
-		_acceptedClients = new CountingServerSocket4(_socketFactory.createServerSocket(port));
-		return _acceptedClients;
+		_serverSocket = new CountingServerSocket4(_socketFactory.createServerSocket(port));
+		return _serverSocket;
 	}
 
 	public Socket4 createSocket(String hostName, int port) throws IOException {
@@ -32,10 +32,16 @@ public class CountingSocket4Factory implements Socket4Factory {
 	}
 	
 	public List<CountingSocket4> connectedClients() {
-		return _acceptedClients.connectedClients();
+		return _serverSocket.connectedClients();
 	}
 	
-	private CountingServerSocket4 _acceptedClients;
+	public void resetCounters() {
+		for (CountingSocket4 socket : connectedClients()) {
+			socket.resetCount();
+		}
+	}
+	
+	private CountingServerSocket4 _serverSocket;
 	private Socket4Factory _socketFactory;
 	private List<CountingSocket4> _sockets = new ArrayList<CountingSocket4>();
 }

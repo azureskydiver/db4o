@@ -21,12 +21,10 @@ public class ClientConnectionsTestCase extends TestWithTempFile implements OptOu
 	private static final int PORT = 0xDB40;
 	private static final String USER = "db4o";
 	private static final String PASSWORD = "db4o";
-	private ObjectServerImpl _server;
-	private ClientConnections _bean;
 
-	public void _testConnectedClients() {
-		for(int i=0; i < 3; i++) {
-			Assert.areEqual(0, connectedClientCount());
+	public void testConnectedClients() {
+		for(int i=0; i < 5; i++) {
+			Assert.areEqual(0, connectedClientCount(), "No client yet.");
 			ExtObjectContainer client1 = openNewSession();
 			Assert.areEqual(1, connectedClientCount(), "client1:" + i);
 			ExtObjectContainer client2 = openNewSession();
@@ -39,20 +37,12 @@ public class ClientConnectionsTestCase extends TestWithTempFile implements OptOu
 	}
 
 	private void ensureClose(ExtObjectContainer client) {
-		final BooleanByRef closeEventRaised = new BooleanByRef();
-		
-		_server.clientDisconnected().addListener(new EventListener4<StringEventArgs>() { public void onEvent(Event4<StringEventArgs> e, StringEventArgs args) {
-			synchronized (closeEventRaised) {
-				closeEventRaised.value = true;
-				closeEventRaised.notifyAll();
-			}
-		}});
-		
-		synchronized (closeEventRaised) {
+		synchronized (_closeEventRaised) {
+			_closeEventRaised.value = false;
 			client.close();
-			while (!closeEventRaised.value) {
+			while (!_closeEventRaised.value) {
 				try {
-					closeEventRaised.wait();
+					_closeEventRaised.wait();
 				} catch (InterruptedException ex) {
 				}
 			}
@@ -74,13 +64,34 @@ public class ClientConnectionsTestCase extends TestWithTempFile implements OptOu
 		
 		_server = (ObjectServerImpl) Db4oClientServer.openServer(tempFile(), PORT);
 		_server.grantAccess(USER, PASSWORD);
+		
+		// We depend on the order of client connection/disconnection event firing.
+		// We want the listener in the test to be notified before the one in the bean.
+		_listener = registerCloseEventNotification();
 		_bean = Db4oMBeans.newClientConnectionsStatsMBean(_server);
 	}
 
+	private EventListener4<StringEventArgs> registerCloseEventNotification() {
+		EventListener4<StringEventArgs> listener = new EventListener4<StringEventArgs>() { public void onEvent(Event4<StringEventArgs> e, StringEventArgs args) {
+			synchronized (_closeEventRaised) {
+				_closeEventRaised.value = true;
+				_closeEventRaised.notifyAll();
+			}
+		}};		
+		_server.clientDisconnected().addListener(listener);
+		return listener;
+	}
+	
 	public void tearDown() throws Exception {
+		_server.clientDisconnected().removeListener(_listener);
 		_bean.unregister();
 		_server.close();
 		
 		super.tearDown();
-	}	
+	}
+	
+	final BooleanByRef _closeEventRaised = new BooleanByRef();	
+	private EventListener4<StringEventArgs> _listener;
+	private ObjectServerImpl _server;
+	private ClientConnections _bean;
 }
