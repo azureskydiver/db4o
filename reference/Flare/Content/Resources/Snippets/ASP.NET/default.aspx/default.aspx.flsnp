@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">default.aspx
+&lt;%...@ Page Language=&quot;VB&quot; AutoEventWireup=&quot;true&quot;  CodeFile=&quot;Default.aspx.vb&quot; Inherits=&quot;Db4objects.Db4odoc.Web._Default&quot; %&gt;
+
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;
+
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; &gt;
+&lt;head&gt;&lt;title&gt;Guestbook.aspx&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+
+&lt;form id=&quot;Form1&quot; runat=&quot;Server&quot;&gt;
+&lt;b&gt;Username:&lt;/b&gt;
+&lt;br&gt;&lt;input id=&quot;username&quot; type=&quot;text&quot; size=&quot;30&quot; runat=&quot;Server&quot;&gt;
+
+&lt;p&gt;
+
+&lt;b&gt;Message:&lt;/b&gt;
+&lt;br&gt;&lt;textarea id=&quot;message&quot; cols=60 rows=10 runat=&quot;Server&quot;&gt;&lt;/textarea&gt;
+
+&lt;p&gt;
+
+&lt;input id=&quot;BtnGet&quot; type=&quot;submit&quot; value=&quot;Get messages&quot;
+OnServerClick=&quot;ButtonGet_Click&quot; runat=&quot;Server&quot;&gt;
+
+&lt;input id=&quot;BtnSet&quot; type=&quot;submit&quot; value=&quot;Add message&quot;
+OnServerClick=&quot;ButtonSet_Click&quot; runat=&quot;Server&quot;&gt;
+
+&lt;input id=&quot;BtnClear&quot; type=&quot;submit&quot; value=&quot;Clear messages&quot;
+OnServerClick=&quot;ButtonClear_Click&quot; runat=&quot;Server&quot;&gt;
+
+&lt;span id=&quot;entries&quot; runat=&quot;Server&quot;/&gt;
+
+&lt;/form&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre>    </body></html>

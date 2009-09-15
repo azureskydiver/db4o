@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>ClassHasNoFields	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>ClassHasNoFields</h1>
+
+<p>This diagnostic type provides information about classes in your persistent class hierarchy that have no persistent fields. The diagnostic message appears when the class is saved to the database. It is recommended to remove such classes from the database to avoid the overhead for the maintenance of class indexes.</p>
+<p>Let's look at the following example:</p>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../Resources/Snippets/ClassHasNoFields/Empty.java/Empty.java.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../Resources/Snippets/ClassHasNoFields/Empty.cs/Empty.cs.flsnp" /><p>[/filter] </p>
+<p><span name="cs_wiki_filter" csw_filters="vb"></p>
+<MadCap:snippetBlock src="../../Resources/Snippets/ClassHasNoFields/Empty.vb/Empty.vb.flsnp" /></span>
+<span name="cs_wiki_filter" csw_filters="java">
+<MadCap:snippetBlock src="../../Resources/Snippets/ClassHasNoFields/DiagnosticExample.java/setEmptyObject.flsnp" /></span>
+<span name="cs_wiki_filter" csw_filters="cs">
+<MadCap:snippetBlock src="../../Resources/Snippets/ClassHasNoFields/DiagnosticExample.cs/SetEmptyObject.flsnp" /></span>
+<span name="cs_wiki_filter" csw_filters="vb">
+<MadCap:snippetBlock src="../../Resources/Snippets/ClassHasNoFields/DiagnosticExample.vb/SetEmptyObject.flsnp" /></span>
+<span name="cs_wiki_filter" csw_filters="java">
+<MadCap:snippetBlock src="../../Resources/Snippets/ClassHasNoFields/DiagnosticExample.java/testEmpty.flsnp" /></span>
+<span name="cs_wiki_filter" csw_filters="cs">
+<MadCap:snippetBlock src="../../Resources/Snippets/ClassHasNoFields/DiagnosticExample.cs/TestEmpty.flsnp" /></span>
+<p>[filter=vb]</p>
+<MadCap:snippetBlock src="../../Resources/Snippets/ClassHasNoFields/DiagnosticExample.vb/TestEmpty.flsnp" /><p></p><p MadCap:conditions="Primary:cs" />&gt;</p>
+<p>Diagnostic message is produced when the execution point reaches </p>
+<p><code>db.set(empty)</code></p>
+<p>Empty class does not keep any information and can be left in the application code; there is no need to put it in the database.</p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

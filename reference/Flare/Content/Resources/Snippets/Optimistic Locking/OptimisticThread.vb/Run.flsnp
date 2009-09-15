@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">OptimisticThread.vb: Run
+Public Sub Run()Sub Run()
+            Try
+                Dim result As IList(Of Pilot) = _container.Query(Of Pilot)()
+                For Each pilot As Pilot In result
+                    ' We will need to set a lock to make sure that the 
+                    ' object version corresponds to the object retrieved.
+                    ' (Prevent other client committing changes
+                    ' at the time between object retrieval and version
+                    ' retrieval )
+                    If Not _container.Ext.SetSemaphore(&quot;LOCK_&quot; + _container.Ext.GetID(pilot).ToString(), 3000) Then
+                        Console.WriteLine(&quot;Error. The object is locked&quot;)
+                        Continue For
+                    End If
+                    Dim objVersion As Long = _container.Ext.GetObjectInfo(pilot).GetVersion
+                    _container.Ext.Refresh(pilot, Int32.MaxValue)
+                    _container.Ext.ReleaseSemaphore(&quot;LOCK_&quot; + _container.Ext.GetID(pilot).ToString())
+                    ' save object version into _idVersions collection
+                    ' This will be needed to make sure that the version
+                    ' originally retrieved is the same in the database 
+                    ' at the time of modification
+                    Dim id As Long = _container.Ext.GetID(pilot)
+                    _idVersions.Add(id, objVersion)
+                    Console.WriteLine(Name + &quot;Updating pilot: &quot; + pilot.ToString() + &quot; version: &quot; + objVersion.ToString())
+                    pilot.AddPoints(1)
+                    _updateSuccess = False
+                    RandomWait()
+                    If Not _container.Ext.SetSemaphore(&quot;LOCK_&quot; + _container.Ext.GetID(pilot).ToString(), 3000) Then
+                        Console.WriteLine(&quot;Error. The object is locked&quot;)
+                        Continue For
+                    End If
+                    _container.Store(pilot)
+                    ' The changes should be committed to be 
+                    ' visible to the other clients
+                    _container.Commit()
+                    _container.Ext.ReleaseSemaphore(&quot;LOCK_&quot; + _container.Ext.GetID(pilot).ToString())
+                    If _updateSuccess Then
+                        Console.WriteLine(Name + &quot;Updated pilot: &quot; + pilot.ToString())
+                    End If
+                    Console.WriteLine()
+                    ' The object version is not valid after commit
+                    ' - should be removed
+                    _idVersions.Remove(id)
+                Next
+            Finally
+                _container.Close()
+            End Try
+        End Sub</pre>    </body></html>

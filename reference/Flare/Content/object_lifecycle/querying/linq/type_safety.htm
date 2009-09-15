@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Type Safety	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Type Safety</h1><p> </p><p>In the previous example we used generic types for our query,
+constraining on only one type of objects. However LINQ is flexible enough to
+allow querying across types:</p>
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Type Safety/LinqExample.cs/SelectEverythingByName.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Type Safety/LinqExample.vb/SelectEverythingByName.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>We have both Car and Pilot objects that can correspond the
+selected criteria and - yes, we will get a mixed list of both. This feature is
+potentially dangerous as in the development cycle you may lose control of the
+objects that answer the criteria and get unexpected results. Be aware and use
+untyped LINQ queries with caution.</p>
+
+
+
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

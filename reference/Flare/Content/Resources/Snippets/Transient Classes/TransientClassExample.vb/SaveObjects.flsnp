@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TransientClassExample.vb: SaveObjects
+Public Shared Sub SaveObjects()Sub SaveObjects()
+            File.Delete(Db4oFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                ' Save Test1 object with a NotStorable class field
+                Dim test1 As Test1 = New Test1(&quot;Test1&quot;, New NotStorable)
+                container.Set(test1)
+                ' Save Test2 object with a NotStorable class field
+                Dim test2 As Test2 = New Test2(&quot;Test2&quot;, New NotStorable, test1)
+                container.Set(test2)
+            Finally
+                container.Close()
+            End Try
+        End Sub</pre>    </body></html>

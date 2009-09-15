@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RefactoringExample.vb: ReadData
+Public Shared Sub ReadData()Sub ReadData()
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                Dim result As IObjectSet = container.[Get](New D())
+                System.Console.WriteLine()
+                System.Console.WriteLine(&quot;D class: &quot;)
+                ListResult(result)
+            Finally
+                container.Close()
+            End Try
+        End Sub</pre>    </body></html>

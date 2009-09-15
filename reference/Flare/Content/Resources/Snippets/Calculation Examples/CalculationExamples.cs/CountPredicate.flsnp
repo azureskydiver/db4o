@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CalculationExamples.cs: CountPredicate
+private class CountPredicate : Predicate
+        ...{
+
+            public Hashtable countTable = new Hashtable();
+
+            public bool Match(Pilot pilot)
+            ...{
+                // return all Professional and Test pilots and count in
+                // each category
+                String[] keywords = ...{ &quot;Professional&quot;, &quot;Test&quot; };
+                foreach (string keyword in keywords)
+                ...{
+                    if (pilot.Name.StartsWith(keyword))
+                    ...{
+                        if (countTable.ContainsKey(keyword))
+                        ...{
+                            countTable[keyword] = ((int)countTable[keyword]) + 1;
+                        }
+                        else
+                        ...{
+                            countTable.Add(keyword, 1);
+                        }
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }</pre>    </body></html>

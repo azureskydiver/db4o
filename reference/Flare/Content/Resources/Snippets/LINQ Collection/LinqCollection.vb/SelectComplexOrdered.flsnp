@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqCollection.vb: SelectComplexOrdered
+Private Shared Sub SelectComplexOrdered()Sub SelectComplexOrdered()
+            Dim container As IObjectContainer = Database()
+            If container IsNot Nothing Then
+                Try
+                    Dim result = From p As Pilot In container _
+                                 Order By p.Name Descending Order By p.Points Ascending _
+                                 Select p
+                    ListResult(result)
+                catch ex As Exception
+                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub</pre>    </body></html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">hibernate.cfg.xml
+&lt;hibernate-configuration&gt;     &lt;session-factory&gt;
+        &lt;!-- Database connection settings --&gt;
+        &lt;property name=&quot;hibernate.connection.driver_class&quot;&gt;oracle.jdbc.driver.OracleDriver&lt;/property&gt;
+        &lt;property name=&quot;hibernate.connection.url&quot;&gt;jdbc:oracle:thin:@ws-peterv:1521:websys&lt;/property&gt;
+        &lt;property name=&quot;hibernate.connection.username&quot;&gt;db4o&lt;/property&gt;
+        &lt;property name=&quot;hibernate.connection.password&quot;&gt;db4o&lt;/property&gt;
+        &lt;!-- JDBC connection pool (use the built-in) --&gt;
+        &lt;property name=&quot;hibernate.connection.pool_size&quot;&gt;1&lt;/property&gt;
+        &lt;!-- SQL dialect --&gt;
+        &lt;property name=&quot;hibernate.dialect&quot;&gt;org.hibernate.dialect.OracleDialect&lt;/property&gt;
+        &lt;!-- Echo all executed SQL to stdout --&gt;
+        &lt;property name=&quot;hibernate.show_sql&quot;&gt;false&lt;/property&gt;
+        &lt;!-- Update the database schema if out of date --&gt;
+        &lt;property name=&quot;hibernate.hbm2ddl.auto&quot;&gt;update&lt;/property&gt;
+        
+        &lt;property name=&quot;hibernate.jdbc.batch_size&quot;&gt;0&lt;/property&gt;
+    &lt;/session-factory&gt;
+&lt;/hibernate-configuration&gt;</pre>    </body></html>

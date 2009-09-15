@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQSyntaxExamples.java: querySyntax5
+private static void querySyntax5() ...{
+    ObjectContainer container = database();
+    if (container != null) ...{
+      try ...{
+        List result = container.query(new Predicate() ...{
+          public boolean match(Object obj) ...{
+            // each Pilot is included in the result
+            if (obj instanceof Pilot) ...{
+              return true;
+            }
+            return false;
+          }
+        }, new Comparator() ...{
+          public int compare(Object object1, Object object2) ...{
+            return ((Pilot) object1).getPoints()
+                - ((Pilot) object2).getPoints();
+          }
+        });
+        listResult(result);
+      } catch (Exception ex) ...{
+        System.out.println(&quot;System Exception: &quot; + ex.getMessage());
+      } finally ...{
+        closeDatabase();
+      }
+    }
+  }</pre>    </body></html>

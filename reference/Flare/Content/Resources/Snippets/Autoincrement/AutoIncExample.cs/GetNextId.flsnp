@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AutoIncExample.cs: GetNextId
+1private static int GetNextId(IObjectContainer db)
+2        ...{
+3            // this function retrieves the next available ID from 
+4            // the IncrementedId object
+5            IncrementedId r = IncrementedId.GetIdObject(db);
+6
+7            return r.GetNextID(db);
+8        }</pre>    </body></html>

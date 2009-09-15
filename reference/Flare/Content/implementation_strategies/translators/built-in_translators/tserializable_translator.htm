@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>TSerializable Translator	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>TSerializable Translator</h1><p>TSerializable
+translator allows persistence of classes that do not have a constructor acceptable
+for db4o (For more information see <a href="../../translators.html" class="wikiLink">Translators</a>).
+Under the hood this translator converts an object to a memory stream on store
+and restores it upon instantiation. The limitations of this translator:</p>
+
+<ul><li>if the stored type is refactored, the
+     object value won't be retrievable from the database;</li><li>the translator will be useless if
+     querying for object fields is required (unless each object is fully
+     instantiated before querying).</li></ul>
+
+<p>TSerializable
+translator should be used only with classes implementing java.io.Serializable interface (Java) or using [Serializable] attribute (.NET).</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/TSerializable Translator/Pilot.java/Pilot.java.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/TSerializable Translator/BuiltInTranslatorsExample.java/saveSerializable.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/TSerializable Translator/BuiltInTranslatorsExample.java/testSerializable.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/TSerializable Translator/Pilot.cs/Pilot.cs.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/TSerializable Translator/BuiltInTranslatorsExample.cs/SaveSerializable.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/TSerializable Translator/BuiltInTranslatorsExample.cs/TestSerializable.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p><p MadCap:conditions="Primary..NET,Primary.VB.NET"></p>
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/TSerializable Translator/Pilot.vb/Pilot.vb.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/TSerializable Translator/BuiltInTranslatorsExample.vb/SaveSerializable.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/TSerializable Translator/BuiltInTranslatorsExample.vb/TestSerializable.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

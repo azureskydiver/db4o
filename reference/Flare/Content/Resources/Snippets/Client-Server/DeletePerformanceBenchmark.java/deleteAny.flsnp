@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DeletePerformanceBenchmark.java: deleteAny
+1private void deleteAny(int i) ...{
+2      long time = 0;
+3      int counter = 0;
+4      while (counter++ &lt; i)...{
+5        long id = selectAny();
+6        time += deleteById(id);
+7      }
+8      System.out.println(&quot;Deleted &quot; + i + &quot; objects in: &quot; + time + &quot; ms.&quot;);
+9  }</pre>    </body></html>

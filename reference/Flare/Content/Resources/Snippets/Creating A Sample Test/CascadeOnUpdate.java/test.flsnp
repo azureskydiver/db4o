@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CascadeOnUpdate.java: test
+public void test() throws Exception ...{
+    Query q = newQuery(Atom.class);
+    q.descend(&quot;name&quot;).constrain(&quot;parent&quot;);
+    ObjectSet objectSet = q.execute();
+    Atom atom = null;
+    while (objectSet.hasNext())...{
+      // update child objects
+      atom = (Atom)objectSet.next();
+      ((Atom)atom.child).name = &quot;updated&quot;;
+      ((Atom)atom.child).child.name = &quot;notUpdated&quot;;
+      // store the parent object
+      db().set(atom);
+    }
+    
+    // commit and refresh to make sure that the changes are saved
+    // and reference cash is refreshed
+    db().commit();
+    db().refresh(atom, Integer.MAX_VALUE);
+    
+    
+    q = newQuery(Atom.class);
+    q.descend(&quot;name&quot;).constrain(&quot;parent&quot;);
+    objectSet = q.execute();
+    while(objectSet.hasNext())...{
+      atom = (Atom) objectSet.next();
+      Atom child = (Atom)atom.child;
+      // check if the child objects were updated
+      Assert.areEqual(&quot;updated&quot;, child.name);
+      Assert.areNotEqual(&quot;updated&quot;, child.child.name);
+    }
+  }</pre>    </body></html>

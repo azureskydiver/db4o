@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReplicationExample.java: replicatePilots
+public static void replicatePilots()...{
+    ObjectContainer desktop=Db4o.openFile(configureReplicationPilot(),DTFILENAME);
+    ObjectContainer handheld=Db4o.openFile(configureReplicationPilot(),HHFILENAME);
+    ReplicationSession replication = Replication.begin(handheld, desktop);
+    ObjectSet changed =  replication.providerB().objectsChangedSinceLastReplication();
+    
+    /**//* Iterate through the changed objects,
+     * check if the name starts with &quot;S&quot; and replicate only those items
+     */
+    while (changed.hasNext()) ...{
+      if (changed instanceof Pilot) ...{
+        if (((Pilot)changed).getName().startsWith(&quot;S&quot;))...{
+          replication.replicate(changed.next());
+        }
+      }
+    }
+    
+    replication.commit();
+    handheld.close();
+    desktop.close();
+  }</pre>    </body></html>

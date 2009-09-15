@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Item.vb
+' Copyright (C) 2009 Versant Inc. http://www.db4o.com
+Namespace CommitCallbacksNamespace CommitCallbacks
+
+    Public Class ItemClass Item
+        Private _number As Integer
+        Private _word As String
+
+        Public Sub New()Sub New(ByVal number As Integer, ByVal word As String)
+            _number = number
+            _word = word
+        End Sub
+
+        Public ReadOnly Property Word()Property Word() As String
+            Get
+                Return _word
+            End Get
+        End Property
+
+        Public ReadOnly Property Number()Property Number() As Integer
+            Get
+                Return _number
+            End Get
+        End Property
+
+        Public Overloads Overrides Function ToString()Function ToString() As String
+            Return _number.ToString() + &quot;/&quot; + _word
+        End Function
+    End Class
+End Namespace</pre>    </body></html>

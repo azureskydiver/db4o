@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">OffsetNavigator.Vb
+1Sub SearchOffset()Sub SearchOffset()
+2    Dim pos As Integer
+3    pos = Val(Selection.Text)
+4    If pos = 0 Then
+5        MsgBox (&quot;The selection is not a number&quot;)
+6    Else
+7        ActiveDocument.Content.Characters(pos).Select
+8    End If
+9End Sub</pre>    </body></html>

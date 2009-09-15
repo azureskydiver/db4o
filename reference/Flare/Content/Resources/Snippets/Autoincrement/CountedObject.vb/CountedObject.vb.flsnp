@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CountedObject.vb
+' Copyright (C) 2009 Versant Inc. http://www.db4o.com */
+'This class is used to mark classes that need to get an autoincremented ID
+Namespace Db4odocNamespace Db4odoc.Autoincrement
+
+    MustInherit Class CountedObjectClass CountedObject
+        Protected _id As Integer
+
+        Public Property Id()Property Id() As Integer
+            Get
+                Return _id
+            End Get
+            Set(ByVal value As Integer)
+                _id = value
+            End Set
+        End Property
+    End Class
+End Namespace</pre>    </body></html>

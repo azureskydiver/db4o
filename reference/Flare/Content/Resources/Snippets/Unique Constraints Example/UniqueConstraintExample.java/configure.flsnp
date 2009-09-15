@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UniqueConstraintExample.java: configure
+1private static Configuration configure() ...{
+2    Configuration configuration = Db4o.newConfiguration();
+3    configuration.objectClass(Pilot.class).objectField(&quot;name&quot;)
+4        .indexed(true);
+5    configuration.add(new UniqueFieldValueConstraint(Pilot.class,
+6        &quot;name&quot;));
+7    return configuration;
+8  }</pre>    </body></html>

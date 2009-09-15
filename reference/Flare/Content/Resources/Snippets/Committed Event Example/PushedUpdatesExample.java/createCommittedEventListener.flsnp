@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.java: createCommittedEventListener
+private EventListener4 createCommittedEventListener() ...{
+    return new EventListener4() ...{
+      public void onEvent(Event4 e, EventArgs args) ...{
+        CommitEventArgs cArgs = (CommitEventArgs) args;
+        Transaction trans = (Transaction)cArgs.transaction(); 
+        // get all the updated objects
+        ObjectInfoCollection updated = cArgs.updated();
+        Iterator4 infos = updated.iterator();
+        while (infos.moveNext()) ...{
+          ObjectInfo info = (ObjectInfo) infos.current();
+          Object obj = info.getObject();
+          // refresh object on the client
+          trans.objectContainer().ext().refresh(obj, 2);
+        }
+      }
+    };
+  }</pre>    </body></html>

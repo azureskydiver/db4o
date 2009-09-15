@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.java: selectAllPilotsNonGeneric
+private static void selectAllPilotsNonGeneric() ...{
+    ObjectContainer container = database();
+    if (container != null) ...{
+      try ...{
+        List result = container.query(new Predicate() ...{
+          public boolean match(Object object) ...{
+            // each Pilot is included in the result
+            if (object instanceof Pilot) ...{
+              return true;
+            }
+            return false;
+          }
+        });
+        listResult(result);
+      } catch (Exception ex) ...{
+        System.out.println(&quot;System Exception: &quot; + ex.getMessage());
+      } finally ...{
+        closeDatabase();
+      }
+    }
+  }</pre>    </body></html>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.cs: InitForRamDriveTest
+1private void InitForRamDriveTest()
+2        ...{
+3            _count = 100000;
+4            _depth = 3;
+5            _filePath = &quot;r:\\performance.db4o&quot;;
+6            _isClientServer = false;
+7        }</pre>    </body></html>

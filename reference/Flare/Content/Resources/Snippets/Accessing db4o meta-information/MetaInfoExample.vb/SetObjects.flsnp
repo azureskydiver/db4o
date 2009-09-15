@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MetaInfoExample.vb: SetObjects
+Private Shared Sub SetObjects()Sub SetObjects()
+            File.Delete(Db4oFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                Dim car As Car = New Car(&quot;BMW&quot;, New Pilot(&quot;Rubens Barrichello&quot;))
+                container.Set(car)
+                car = New Car(&quot;Ferrari&quot;, New Pilot(&quot;Michael Schumacher&quot;))
+                container.Set(car)
+            Finally
+                container.Close()
+            End Try
+        End Sub</pre>    </body></html>

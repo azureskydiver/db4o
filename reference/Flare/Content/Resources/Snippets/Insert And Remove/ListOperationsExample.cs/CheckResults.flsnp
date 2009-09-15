@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.cs: CheckResults
+private static void CheckResults()
+        ...{
+            Stopwatch sw = new Stopwatch();
+            IObjectContainer db = Db4oFactory.OpenFile(DbFile);
+            try
+            ...{
+                IList&lt;ListObject&gt; result = db.Query&lt;ListObject&gt;();
+                if (result.Count &gt; 0)
+                ...{
+                    // activation depth should be enough to activate 
+                    // ListObject, DataObject and its list members
+                    int activationDepth = 3;
+                    db.Ext().Configure().ActivationDepth(activationDepth);
+                    Console.WriteLine(&quot;Result count was {0}, looping with activation depth {1}&quot;, result.Count, activationDepth);
+                    sw.Start();
+                    foreach (ListObject lo in result)
+                    ...{
+                        Console.WriteLine(&quot;ListObj {0} has {1} objects&quot;, lo.Name,
+                            ((lo.Data == null) ? &quot;&lt;null&gt;&quot; : lo.Data.Count.ToString()));
+                        Console.WriteLine(&quot; --- {0} at index 0&quot;,
+                            ((lo.Data != null &amp;&amp; lo.Data.Count &gt; 0) ? lo.Data[0].ToString() : &quot;&lt;null&gt;&quot;));
+                    }
+                    sw.Stop();
+                }
+            }
+            finally
+            ...{
+                db.Close();
+            }
+            Console.WriteLine(&quot;Activation took {0}&quot;, sw.Elapsed.ToString());
+        }</pre>    </body></html>

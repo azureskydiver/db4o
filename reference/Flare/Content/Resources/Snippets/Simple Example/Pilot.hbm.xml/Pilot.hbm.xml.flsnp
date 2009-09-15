@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Pilot.hbm.xml
+&lt;?xml version=&quot;1.0&quot;?&gt;
+
+&lt;!DOCTYPE hibernate-mapping PUBLIC
+    &quot;-//Hibernate/Hibernate Mapping DTD 3.0//EN&quot;
+    &quot;http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd&quot;&gt;
+
+&lt;hibernate-mapping default-access=&quot;field&quot; default-lazy=&quot;false&quot;
+                   default-cascade=&quot;save-update&quot;&gt;
+  &lt;class name=&quot;f1.one_to_one.Pilot&quot;&gt;
+    &lt;id column=&quot;typed_id&quot; type=&quot;long&quot;&gt;
+      &lt;generator class=&quot;foreign&quot;&gt;
+        &lt;param name=&quot;property&quot;&gt;helmet&lt;/param&gt;
+      &lt;/generator&gt;
+    &lt;/id&gt;
+    &lt;property name=&quot;name&quot;/&gt;
+    &lt;one-to-one name=&quot;helmet&quot;/&gt;
+  &lt;/class&gt;
+&lt;/hibernate-mapping&gt;</pre>    </body></html>

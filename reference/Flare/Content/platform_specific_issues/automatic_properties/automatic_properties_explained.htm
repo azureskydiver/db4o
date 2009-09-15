@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Automatic Properties Explained	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Automatic Properties Explained</h1>
+<p>What
+happens with automatic fields under the hood? Well, if we look into the
+bytecode produced, we will see that the default private fields are actually
+inserted by the compiler and used to keep the properties data.  In .NET 3.5 Microsoft version of the compiler
+this automatic fields usually get a name like: &lt;Name&gt;k__BackingField,
+where "Name" is the name of the property.</p>
+
+<p>Keeping this information in mind we can still produce a
+valid SODA query and even add indexes:</p><MadCap:snippetBlock src="../../Resources/Snippets/Automatic Properties Explained/PropertiesExample.cs/TestSODA.flsnp" />>You can run
+this code and check that it works correctly. However, it is not recommended to
+stick to this hack, as the compiler generated field names are not guaranteed to
+keep the name as produced in this example. Please, treat this example as an
+illustration only.</p>
+
+
+ </div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

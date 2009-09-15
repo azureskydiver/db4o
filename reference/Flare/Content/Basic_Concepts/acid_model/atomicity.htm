@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Atomicity	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Atomicity</h1>
+
+<p>Atomicity
+states the mode, in which either all or no modifications are written to the
+database. In this mode each transaction is said to be "atomic". If any part of
+the transaction fails, the whole transaction will fail too. For example, in a
+bank transfer transaction there are 2 parts: debit and credit. If the debit
+operation was successful, but the credit failed, the whole transaction should
+fail and the system should remain in the initial state. </p>
+
+<p>Some of
+the atomicity features:</p>
+
+<ul class="unIndentedList"><li>
+A transaction is a unit of operation - either all the
+transaction's actions are completed or none are</li><li>
+atomicity
+is maintained in the presence of deadlocks</li><li>
+atomicity
+is maintained in the presence of database software failures</li><li>
+atomicity
+is maintained in the presence of application software failures</li><li>
+atomicity
+is maintained in the presence of operation system failures</li><li>
+atomicity
+is maintained in the presence of CPU failures</li><li>
+atomicity is
+maintained in the presence of disk failures</li></ul></div>
+    </div>
+    
+  </body></html>

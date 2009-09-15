@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>SODA Query Graph	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>SODA Query Graph</h1><p>  SODA
+allows to create a query graph of any complexity by joining field object
+constraints. SODA
+usage is very generic and can be applied to any objects and conditions. The
+following 5 steps can be used (all steps are optional and can be repeated
+logically):</p>
+
+<ul class="unIndentedList"><li>
+create a root of a query object <p MadCap:conditions="Primary.Java"> Java: <code>Query queryRootNode = db.query();</code> </p><p MadCap:conditions="Primary:java" /> <p MadCap:conditions="Primary..NET,Primary.c#"> 
+c#: <code>
+IQuery queryRootNode = db.Query();</code> 
+</p><p MadCap:conditions="Primary:cs" /> 
+<p MadCap:conditions="Primary..NET,Primary.VB.NET"> 
+
+VB: 
+
+<code>IQuery queryRootNode = db.Query()</code> 
+
+</p><p MadCap:conditions="Primary:vb" /> </li><li>
+add constraints to any node anywhere <p MadCap:conditions="Primary.Java"> Java: <code>queryRootNode.constrain(Foo.class);</code> </p><p MadCap:conditions="Primary:java" /> <p MadCap:conditions="Primary..NET,Primary.c#"> 
+c#: <code>queryRootNode.Constrain(typeof(Foo));</code> 
+</p><p MadCap:conditions="Primary:cs" /> <p MadCap:conditions="Primary..NET,Primary.VB.NET"> 
+
+VB: 
+<code>queryRootNode.Constrain(GetType(Foo))</code> 
+
+</p><p MadCap:conditions="Primary:vb" /> </li><li>
+navigate from any query node to any subordinate
+node <p MadCap:conditions="Primary.Java"> Java: <code>Query barNode = queryRootNode.descend("bar");</code> </p><p MadCap:conditions="Primary:java" /> <p MadCap:conditions="Primary..NET,Primary.c#"> c#: <code>IQuery barNode = queryRootNode.Descend("bar");</code> 
+</p><p MadCap:conditions="Primary:cs" /> <p MadCap:conditions="Primary..NET,Primary.VB.NET"> 
+VB: 
+<code>IQuery barNode = queryRootNode.Descend("bar")</code> 
+
+</p><p MadCap:conditions="Primary:vb" /> </li><li>
+add further constraints to any node <p MadCap:conditions="Primary.Java"> Java: <code>Constraint barConstraint = barNode.constrain(5);</code> </p><p MadCap:conditions="Primary:java" /> <p MadCap:conditions="Primary..NET,Primary.c#"> 
+c#: <code>IConstraint barConstraint = barNode.Constrain(5);</code> 
+</p><p MadCap:conditions="Primary:cs" /> 
+<p MadCap:conditions="Primary..NET,Primary.VB.NET"> 
+
+VB: 
+<code>IConstraint barConstraint = barNode.Constrain(5)</code> 
+
+</p><p MadCap:conditions="Primary:vb" /> </li><li>
+set the evaluation mode of a node <p MadCap:conditions="Primary.Java"> Java: <code>barConstraint().greater();</code> </p><p MadCap:conditions="Primary:java" /> <p MadCap:conditions="Primary..NET,Primary.c#"> 
+c#: <code>barConstraint().Greater();</code> 
+</p><p MadCap:conditions="Primary:cs" /> <p MadCap:conditions="Primary..NET,Primary.VB.NET"> 
+
+VB: 
+<code>barConstraint().Greater()</code> 
+
+</p><p MadCap:conditions="Primary:vb" /> </li></ul>
+
+
+
+
+
+
+
+
+
+<p>The
+API is very powerful with a small number of method calls.</p>
+
+<p>The
+"backward" order to add constraints first and to specify the
+evaluation mode as a second step allows plugging complex objects into a query.</p> </div>
+    </div>
+    
+  </body></html>

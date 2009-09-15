@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Lazy Queries	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Lazy Queries</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Pros and Cons for Lazy Queries">Pros and Cons for Lazy Queries</a></li></ul></li></ul></div></div></div> 
+
+<P>In Lazy Querying mode objects are not evaluated at all, instead of this an iterator is created against the best index found. Further query processing (including all index processing) will happen when the user application iterates through the resulting <CODE>ObjectSet</CODE>. This allows you to get the first query results almost immediately.</P>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Lazy Queries/QueryModesExample.java/testLazyQueries.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Lazy Queries/QueryModesExample.cs/TestLazyQueries.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Lazy Queries/QueryModesExample.vb/TestLazyQueries.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+<P>In addition to the very fast execution this method also ensures very small memory consumption, as lazy queries do not need an intermediate representation as a set of IDs in memory. With this approach a lazy query ObjectSet does not have to cache a single object or ID. The memory consumption for a query is practically zero, no matter how large the resultset is going to be.</P>
+<P>There are some interesting effects appearing due to the fact that the objects are getting evaluated only on a request. It means that all the committed modifications from the other transactions and uncommitted modifications from the same transaction will be taken into account when delivering the result objects:</P>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Lazy Queries/QueryModesExample.java/testLazyConcurrent.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Lazy Queries/QueryModesExample.cs/TestLazyConcurrent.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Lazy Queries/QueryModesExample.vb/TestLazyConcurrent.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+<a name="Pros and Cons for Lazy Queries"></a><H2>Pros and Cons for Lazy Queries</H2>
+<P>Pros:</P>
+<UL>
+<LI>The call to <CODE>Query.execute()</CODE> will return very fast. First results can be made available to the application before the query is fully processed.</LI>
+<LI>A query will consume hardly any memory at all because no intermediate ID representation is ever created.</LI></UL>
+<P>Cons:</P>
+<UL>
+<LI>Lazy queries check candidates when iterating through the resulting <CODE>ObjectSet</CODE>. In doing so the query processor takes changes into account that may have happened since the Query.execute() call: committed changes from other transactions, <B>and uncommitted changes from the calling transaction</B>. There is a wide range of possible side effects:</LI>
+<UL>
+<LI>The underlying index may have changed. </LI>
+<LI>Objects themselves may have changed in the meanwhile. </LI>
+<LI>There even is a chance of creating an endless loop. If the caller iterates through the <CODE>ObjectSet</CODE> and changes each object in a way that it is placed at the end of the index, the same objects can be revisited over and over. </LI></UL><B>In lazy mode it can make sense to work in a way one would work with collections to avoid concurrent modification exceptions.</B> For instance one could iterate through the <CODE>ObjectSet</CODE> first and store all the objects to a temporary collection representation before changing objects and storing them back to db4o. 
+<LI>Some method calls against a lazy <CODE>ObjectSet</CODE> will require the query processor to create a snapshot or to evaluate the query fully. An example of such a call is <CODE>ObjectSet.size()</CODE>.</LI></UL>
+<P>Lazy mode can be an excellent choice for single transaction read use, to keep memory consumption as low as possible.</P></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

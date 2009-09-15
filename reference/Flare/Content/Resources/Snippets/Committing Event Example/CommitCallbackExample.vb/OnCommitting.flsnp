@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CommitCallbackExample.vb: OnCommitting
+1Private Shared Sub OnCommitting()Sub OnCommitting(ByVal sender As Object, ByVal args As CommitEventArgs)
+2            ' uniqueness should be checked for both added and updated objects
+3            CheckUniqueness(args.Added)
+4            CheckUniqueness(args.Updated)
+5        End Sub</pre>    </body></html>

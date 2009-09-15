@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CommitCallbackExample.cs: StoreOtherObjects
+private static void StoreOtherObjects()
+        ...{
+            IObjectContainer container = Container();
+            // creating and storing similar items to the database
+            Item item = new Item(2, &quot;one&quot;);
+            container.Store(item);
+            item = new Item(1, &quot;two&quot;);
+            container.Store(item);
+            try
+            ...{
+                // commit should work as there were no duplicate objects
+                container.Commit();
+            }
+            catch (Db4oException ex)
+            ...{
+                System.Console.WriteLine(ex.Message);
+                container.Rollback();
+            }
+            System.Console.WriteLine(&quot;Commit successful&quot;);
+
+            // trying to save a duplicate object to the database
+            item = new Item(1, &quot;one&quot;);
+            container.Store(item);
+            try
+            ...{
+                // Commit should fail as duplicates are not allowed
+                container.Commit();
+            }
+            catch (Db4oException ex)
+            ...{
+                System.Console.WriteLine(ex.Message);
+                container.Rollback();
+            }
+        }</pre>    </body></html>

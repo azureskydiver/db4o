@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Common Configuration	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Common Configuration</h1>
+
+
+
+<p>Db4o configuration resides in com.db4o.config
+package/Db4object.Db4o.Config namespace. </p>
+
+<p>Below is a short description of all common configuration
+methods residing in CommonConfiguration/ICommonConfiguration interface.
+For embedded configuration specific methods see <a href="embedded_configuration.html" class="wikiLink">Embedded Configuration</a>, for client/server specific settings see <a href="client_configuration.html" class="wikiLink">Client Configuration</a>
+and <a href="server_configuration.html" class="wikiLink">Server Configuration</a> interfaces. For class and field
+specific configuration see <a href="objectclass_configuration.html" class="wikiLink">ObjectClass Configuration</a> and
+<a href="objectfield_configuration.html" class="wikiLink">ObjectField Configuration</a> interface.</p>
+
+<p> </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void activationDepth(int depth);</code></p>
+<p><code>public int activationDepth();</code>  </p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>int ActivationDepth {get; set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>sets global activation depth to the specified value or gets its current value.
+</p>
+<p MadCap:conditions="Primary.Java">
+<p>Java:</p>
+
+<p><code>public void add(ConfigurationItem item);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>public void add(IConfigurationItem item);</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+<p>adds a configuration item to be applied when an
+object container is opened. Examples of configuration items:
+TransparentActivationSupport, BigMathSupport etc.</p>
+<p MadCap:conditions="Primary.Java">
+
+
+<p>Java: </p>
+
+<p><code>public void addAlias(Alias alias);</code></p>
+
+<p><code>public void removeAlias(Alias alias);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>public void AddAlias(IAlias alias);</code></p>
+
+<p><code>public void RemoveAlias(IAlias alias);</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>these methods, as the names suggest, add or remove aliases.
+Aliases should be configured before opening a database file or connecting to a
+server. For more information on aliases please check
+<a href="../../implementation_strategies/aliases.html" class="wikiLink">Aliases</a>.</p>
+
+<p> </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:  </p>
+
+<p><code>public void allowVersionUpdates(boolean flag);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>bool AllowVersionUpdates {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>Turns automatic database file format version updates on. For
+more information see <a href="../../implementation_strategies/maintenance/updating_db4o_file_format.html" class="wikiLink">Updating Db4o File Format</a>.</p>
+
+<p> </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void automaticShutDown(boolean flag);</code></p>
+</p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>bool AutomaticShutDown {set;}</code></p>
+</p><p MadCap:conditions="Primary:net" />
+
+
+<p>turns automatic shutdown of the engine on and off.</p>
+<p MadCap:conditions="Primary.Java">
+
+<p>Depending on the JDK, db4o uses one of the following two
+methods to shut down, if no more references to the ObjectContainer are being
+held or the JVM terminates:</p>
+
+<ul>
+<li>JDK 1.3 and above: </li>
+<p><code>Runtime.addShutdownHook()</code></p>
+<li>JDK 1.2 and below:  </li>
+
+<code>System.runFinalizersOnExit(true)</code>
+and code in the finalizer</ul>
+
+<p>Some JVMs have severe problems with both methods. For these
+rare cases the autoShutDown feature may be turned off.</p>
+
+
+<p>The default and recommended setting is <code>true</code>.</p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p> </p>
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void bTreeNodeSize(int size);</code></p>
+
+<p></p><p MadCap:conditions="Primary:java" /></p>
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>int BTreeNodeSize {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>configures the size of BTree nodes in indexes. </p>
+
+<p> </p>
+ 
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void callbacks(boolean flag);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>bool Callbacks {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>turns <a href="../../implementation_strategies/callbacks.html" class="wikiLink">object
+callbacks</a> on and off. <a href="../performance_hints/no_callbacks.html" class="wikiLink">No callbacks</a> article explains
+how this setting can be useful for tuning.</p>
+
+<p> </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void callConstructors(boolean flag);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>bool CallConstructors {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>advises db4o to try instantiating objects with/without
+calling constructors.</p>
+
+<p>Not all JDKs / .NET-environments support this feature. db4o
+will attempt, to follow the setting as good as the enviroment supports. In
+doing so, it may call implementation-specific features like</p>
+
+<p>sun.reflect.ReflectionFactory#newConstructorForSerialization
+on the Sun Java 1.4.x/5 VM (not available on other VMs) and  FormatterServices.GetUninitializedObject()
+on the .NET framework (not available on CompactFramework).</p>
+
+<p>This setting may also be overridden for individual classes
+in ObjectClass#callConstructor(boolean).</p>
+
+
+<p>The default setting depends on the features supported by
+your current environment.</p>
+
+<p>For more information see
+<a href="../../object_lifecycle/object_construction.html" class="wikiLink">Object Construction</a>.</p>
+
+<p> </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void detectSchemaChanges(boolean flag);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>bool DetectSchemaChanges {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>tuning feature: configures whether db4o checks all
+persistent classes upon system startup for added or removed fields. For more
+information see <a href="../performance_hints/no_schema_changes.html" class="wikiLink">No schema changes</a>.</p>
+
+<p> </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public DiagnosticConfiguration diagnostic();</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>IDiagnosticConfiguration Diagnostic {get;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>returns the configuration interface for diagnostics. See
+<a href="../diagnostics.html" class="wikiLink">Diagnostics</a> for more information.</p>
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void exceptionsOnNotStorable(boolean
+flag);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>bool ExceptionsOnNotStorable {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>configures whether Exceptions are to be thrown, if objects
+can not be stored. For more information see
+<a href="../debugging_db4o/exceptionsonnotstorable.html" class="wikiLink">ExceptionsOnNotStorable</a>. The default
+for this setting is true, which means that an exception will be thrown
+if an object can't be stored fully to the database. In order to prevent
+the exception and make sure that the object is correctly stored to the
+database, a custom
+<a href="../../implementation_strategies/typehandlers.html" class="wikiLink">Typehandler</a> can be
+written, which will make sure that only relevant information is
+persisted. </p>
+
+<p> </p>
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void internStrings(boolean doIntern);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>bool InternStrings {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>Configures db4o to call intern() on strings upon retrieval.
+For more information see Java/.NET documentation for string class.</p>
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>public void MarkTransient(string
+attributeName);</code></p>
+
+<p>allows to mark fields as transient with custom attributes.
+For more information see</p>
+
+<p><a href="../selective_persistence/transient_fields_in_.net.html" class="wikiLink">Transient Fields In .NET</a> </p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+
+<p> </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void messageLevel(int level);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>int MessageLevel {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>Sets the detail level of db4o messages (from1 to 3). For
+more information see <a href="../debugging_db4o.html" class="wikiLink">Debugging db4o</a></p>
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public ObjectClass objectClass(Object clazz);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>public IObjectClass ObjectClass(object clazz);</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>returns an ObjectClass/IObjectClass to
+configure the specified class.</p>
+
+<p>The clazz parameter can be any of the following:</p>
+
+<ul>
+<li>a fully qualified classname as a string.</li>
+<li>a Class/Type object.</li>
+<li>any other object to be used as a template.</li>
+</ul>
+
+
+<p> </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void optimizeNativeQueries(boolean
+optimizeNQ);</code></p>
+<p><code>public boolean optimizeNativeQueries();</code>  </p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>bool OptimizeNativeQueries {get; set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>If set to true, db4o will try to optimize native queries
+dynamically at query execution time, otherwise it will run native queries in
+unoptimized mode as SODA evaluations. For more information see
+<a href="../native_query_optimization.html" class="wikiLink">Native Query Optimization</a>.</p>
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public boolean outStream(PrintStream outStream);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>System.IO.TextWriter OutStream {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+<p>assigns a stream, where db4o is to print its debug messages. For more information see
+<a href="../debugging_db4o/customizing_the_debug_message_output.html" class="wikiLink">Customizing The Debug Message Output</a>    </p>
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public QueryConfiguration queries();</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>IQueryConfiguration Queries {get;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>returns the Query configuration interface. For more
+information see <a href="../../object_lifecycle/querying/query_modes.html" class="wikiLink">Query Modes</a>.</p>
+
+<p> </p>
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void reflectWith(Reflector reflector);</code></p>
+
+<p></p><p MadCap:conditions="Primary:java" /></p>
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>public void ReflectWith(IReflector reflector);</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>Configures the use of a specially designed reflection
+implementation.</p>
+
+<p>On platforms that do not support reflection, customized
+reflection implementations may be written to enable db4o. For more information
+see <a href="../../implementation_strategies/db4o_reflection_api.html" class="wikiLink">Db4o Reflection API</a>.</p>
+
+
+<p> </p>
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void registerTypeHandler(TypeHandlerPredicate predicate, TypeHandler4 typehandler);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>public void RegisterTypeHandler(ITypeHandlerPredicate predicate, ITypeHandler4 typehandler);</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+Registers a special typehandler for custom marshalling
+and comparison. Predicate parameter is used to filter out classes, to
+which the typehandler is applicable.
+<p MadCap:conditions="Primary.Java">
+<p>Java:</p>
+
+
+<p><code>public void stringEncoding(StringEncoding encoding);</code></p>
+
+
+</p><p MadCap:conditions="Primary:java" />
+
+
+<p MadCap:conditions="Primary.Print">
+
+
+<p>.NET:</p>
+
+
+<p><code>IStringEncoding StringEncoding{set;}</code></p>
+
+
+</p><p MadCap:conditions="Primary:net" />
+Registers a special string encoding for this database. The setting
+should be used before the first opening and it should not be changed on
+existing database. Encodings provided by db4o (utf8 and Unicode) will
+be remembered when the database is opened next time. Custom encodings
+(implemented by user) should be supplied into the configuration each
+time the database is opened.  
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void testConstructors(boolean flag);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>bool TestConstructors {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>tuning feature: configures whether db4o should try to
+instantiate one instance of each persistent class on system startup. For more
+information see <a href="../performance_hints/no_test_instances.html" class="wikiLink">No test instances</a>    </p>
+
+
+<p> </p>
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void updateDepth(int depth);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>int UpdateDepth {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>specifies the global updateDepth. For more information see
+<a href="../../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a></p>
+
+<p> </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void weakReferences(boolean flag);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>bool WeakReferences {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>turns weak reference management on or off. For more
+information see <a href="../performance_hints/turning_off_weak_references.html" class="wikiLink">Turning Off Weak References</a>.</p>
+
+<p> </p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>public void weakReferenceCollectionInterval(int
+milliseconds);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>int WeakReferenceCollectionInterval {set;}</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>configures the timer for WeakReference collection.</p>
+
+<p>The default setting is 1000 milliseconds.</p>
+
+<p>Configure this setting to zero to turn WeakReference
+collection off. For more information see <a href="../../basic_concepts/object_identity/weak_references.html" class="wikiLink">Weak References</a>    </p></div>
+    </div>
+    
+  </body></html>

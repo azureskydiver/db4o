@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: RunClientServerTest
+private void RunClientServerTest()
+        ...{
+            System.Console.WriteLine(&quot;Update test: Client/Server environment&quot;);
+            int objectsToUpdate = 30;
+
+
+            Init();
+            Clean();
+            Open(ConfigureClientServer());
+            Store();
+            System.Console.WriteLine(&quot;Update &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects locally:&quot;);
+            UpdateItems(objectsToUpdate);
+            Close();
+
+            InitForClientServer();
+            Clean();
+            Open(ConfigureClientServer());
+            Store();
+            System.Console.WriteLine(&quot;Update &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects remotely:&quot;);
+            UpdateItems(objectsToUpdate);
+            Close();
+        }</pre>    </body></html>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: configureTP
+1private Configuration configureTP()...{
+2      Configuration config = Db4o.newConfiguration();
+3      // With Transparent Persistence enabled only modified
+4      // objects are written to disk. This allows to achieve 
+5      // better performance
+6        config.objectClass(Item.class).cascadeOnUpdate(true);
+7      return config;
+8    }</pre>    </body></html>

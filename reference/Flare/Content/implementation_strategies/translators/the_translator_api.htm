@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>The Translator API	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>The Translator API</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#ObjectTranslator">ObjectTranslator</a></li><li><a href ="#ObjectConstructor">ObjectConstructor</a></li></ul></li></ul></div></div></div>
+
+
+<p>So how do we get our object into the database, now that everything seems to fail? Db4o provides a way to specify a custom way of storing and retrieving objects through the ObjectTranslator and ObjectConstructor interfaces.</p>
+<a name="ObjectTranslator"></a><h2>ObjectTranslator</h2>
+<p>The ObjectTranslator API looks like this:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java: </p>
+<p><code>public Object onStore(ObjectContainer container,Object applicationObject);</code></p>
+<p><code>public void onActivate(ObjectContainer container,Object applicationObject,Object storedObject);</code></p>
+<p><code>public Class storedClass()</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p><code>public Object OnStore(ObjectContainer container,Object applicationObject);</code></p>
+<p><code>public void OnActivate(IObjectContainer container,object applicationObject,object storedObject);</code></p>
+<p><code>public Type StoredClass()</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>The usage is quite simple: When a translator is configured for a class, db4o will call its onStore method with a reference to the database and the instance to be stored as a parameter and will store the object returned. This object's type has to be primitive from a db4o point of view and it has to match the type specification returned by storedClass().</p>
+
+<p>
+On retrieval, db4o will create a blank object of the target class (using the configured instantiation method) and then pass it on to onActivate() along with the stored object to be set up accordingly.
+</p>
+<a name="ObjectConstructor"></a><h2>ObjectConstructor</h2>
+<p>However, this will only work if the application object's class provides sufficient setters to recreate its state from the information contained in the stored object, which is not the case for our example class.</p>
+
+<p>
+For these cases db4o provides an extension to the ObjectTranslator interface, ObjectConstructor, which declares one additional method:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java: </p>
+<p><code>public Object onInstantiate(ObjectContainer container,Object storedObject);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET: </p>
+<p><code>public Object OnInstantiate(IObjectContainer container,object storedObject);</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>If db4o detects a configured translator to be an ObjectConstructor implementation, it will pass the stored class instance to the onInstantiate() method and use the result as a blank application object to be processed by onActivate().</p>
+
+<p>
+Note that, while in general configured translators are applied to subclasses, too, ObjectConstructor application object instantiation will not be used for subclasses (which wouldn't make much sense, anyway), so ObjectConstructors have to be configured for the concrete classes.
+</p>
+<p MadCap:conditions="Primary.Java">
+<p><a href="java_translator_implementation.html" class="wikiLink">Java Translator Implementation</a> provides a Translator usage example for Java platform.</p>
+</p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary.Java">
+<p><a href=".net_translator_implementation.html" class="wikiLink">.NET Translator Implementation</a> provides a Translator usage example for .NET platform.</p>
+</p><p MadCap:conditions="Primary:java" />
+</div>
+    </div>
+    
+  </body></html>

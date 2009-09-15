@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CalculationExamples.java: selectMinPointsPilot
+private static void selectMinPointsPilot() ...{
+    ObjectContainer container = database();
+    if (container != null) ...{
+      try ...{
+        List&lt;Pilot&gt; result = container.query(new Predicate&lt;Pilot&gt;() ...{
+          public boolean match(Pilot pilot) ...{
+            // return all pilots
+            return true;
+          }
+        }, new QueryComparator&lt;Pilot&gt;() ...{
+          // sort by points then by name
+          public int compare(Pilot p1, Pilot p2) ...{
+            return p1.getPoints() - p2.getPoints();
+          }
+        });
+        if (result.size() &gt; 0) ...{
+          System.out.println(&quot;The min points result is: &quot;
+              + result.get(0));
+        }
+      } catch (Exception ex) ...{
+        System.out.println(&quot;System Exception: &quot; + ex.getMessage());
+      } finally ...{
+        closeDatabase();
+      }
+    }
+  }</pre>    </body></html>

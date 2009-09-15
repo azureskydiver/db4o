@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CascadeOnUpdate.java: store
+1protected void store() ...{
+2    Atom atom = new Atom(new Atom(new Atom(&quot;storedGrandChild&quot;), &quot;storedChild&quot;),&quot;parent&quot;);
+3    db().set(atom);
+4    db().commit();
+5  }</pre>    </body></html>

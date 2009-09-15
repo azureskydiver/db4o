@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BatchExample.vb: FillUpDb
+Private Shared Sub FillUpDb()Sub FillUpDb()
+            Dim configuration As IClientConfiguration = Db4oClientServer.NewClientConfiguration()
+            ' Uncomment the following line to test CS mode without batching
+            ' configuration.Networking.BatchMessages = False
+            ' Uncomment the following line to test maximum batch queue size (batch mode should be enabled)
+            ' configuration.Networking.MaxBatchQueueSize = 1024
+            Dim container As IObjectContainer = Db4oClientServer.OpenClient(configuration, Host, Port, User, Password)
+            Try
+                Console.WriteLine(&quot;Testing inserts&quot;)
+                Dim dt1 As DateTime = DateTime.UtcNow
+                Dim i As Integer = 0
+                While i &lt; NoOfObjects
+                    Dim pilot As Pilot = New Pilot(&quot;pilot #&quot; + i.ToString(), i)
+                    container.Store(pilot)
+                    System.Math.Min(System.Threading.Interlocked.Increment(i), i - 1)
+                End While
+                Dim dt2 As DateTime = DateTime.UtcNow
+                Dim diff As TimeSpan = dt2 - dt1
+                Console.WriteLine(&quot;Operation time: &quot; + diff.TotalMilliseconds.ToString() + &quot; ms.&quot;)
+            Finally
+                container.Close()
+            End Try
+        End Sub</pre>    </body></html>

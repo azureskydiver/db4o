@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DiagnosticExample.java: testIndexDiagnostics
+private static void testIndexDiagnostics() ...{
+      new File(DB4O_FILE_NAME).delete();
+      
+      EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+      configuration.common().diagnostic().addListener(new IndexDiagListener());
+      configuration.common().updateDepth(3);
+        
+        ObjectContainer container=Db4oEmbedded.openFile(configuration, DB4O_FILE_NAME);
+        try ...{
+          Pilot pilot1 = new Pilot(&quot;Rubens Barrichello&quot;,99);
+          container.store(pilot1);
+          Pilot pilot2 = new Pilot(&quot;Michael Schumacher&quot;,100);
+          container.store(pilot2);
+          queryPilot(container);
+          setEmptyObject(container);
+          Query query = container.query();
+          query.constrain(Pilot.class);
+      query.descend(&quot;points&quot;).constrain(new Integer(99));
+      List result = query.execute();
+      listResult(result);
+        }
+        finally ...{
+            container.close();
+        }
+    }</pre>    </body></html>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Simple Persistence	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Simple Persistence</h1>
+
+
+<p>db4o makes your work with persistent objects very simple and 
+straightforward. The only #store(object) method is used for both saving and 
+modification of any object that exists in your model.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../Resources/Snippets/Simple Persistence/QueryExample.java/storePilot.flsnp" />
+<MadCap:snippetBlock src="../Resources/Snippets/Simple Persistence/QueryExample.java/updatePilotWrong.flsnp" />/p>
+
+<MadCap:snippetBlock src="../Resources/Snippets/Simple Persistence/QueryExample.java/updatePilot.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../Resources/Snippets/Simple Persistence/QueryExample.cs/StorePilot.flsnp" />
+<MadCap:snippetBlock src="../Resources/Snippets/Simple Persistence/QueryExample.cs/UpdatePilotWrong.flsnp" />/p>
+
+<MadCap:snippetBlock src="../Resources/Snippets/Simple Persistence/QueryExample.cs/UpdatePilot.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../Resources/Snippets/Simple Persistence/QueryExample.vb/StorePilot.flsnp" />
+<MadCap:snippetBlock src="../Resources/Snippets/Simple Persistence/QueryExample.vb/UpdatePilotWrong.flsnp" />/p>
+
+
+<MadCap:snippetBlock src="../Resources/Snippets/Simple Persistence/QueryExample.vb/UpdatePilot.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Deletion is just as easy:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../Resources/Snippets/Simple Persistence/QueryExample.java/deletePilot.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../Resources/Snippets/Simple Persistence/QueryExample.cs/DeletePilot.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../Resources/Snippets/Simple Persistence/QueryExample.vb/DeletePilot.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>The objects are identified by their references in an application cache. You do not need to implement any additional identification systems (like primary keys 
+in RDBMS). See <a href="../basic_concepts/object_identity.html" class="wikiLink">Identity chapter</a> for 
+details. The uniqueness of an object is defined only by its reference, if you 
+will create 2 objects of the same class with exactly the same fields and save 
+them to db4o - you will get 2 objects in your database. As you can see from the 
+examples an object instance should be retrieved from the database 
+before updating or deleting or you can use the newly created object if it was 
+stored in the same session. Creating a new instance identical to the object in the 
+database and saving it, will create a new object in the database.</p>
+
+<p>Db4o does 
+all the "dirty" work of objects transition between your classes and 
+persistent state using <a href="../implementation_strategies/db4o_reflection_api.html" class="wikiLink">Reflection</a> . No 
+mappings or additional coding is needed from your side. If you will need to 
+change your application model for the next version you will also be surprised 
+with the simplicity: all the changes are done in one place - your code, and the 
+most common operations are done completely automatically (see <a href="../implementation_strategies/refactoring_and_schema_evolution.html" class="wikiLink">Refactoring 
+And Schema Evolution</a> chapter for details).</p><p>Please, remember that all db4o work is done within <a href="../basic_concepts/transaction.html" class="wikiLink">Transaction</a>, which can be committed or rolled back depending on the result you want to achieve. </p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

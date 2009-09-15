@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IOExample.java: getObjects
+private static void getObjects()...{
+    Configuration configuration = Db4o.newConfiguration();
+    configuration.io(new RandomAccessFileAdapter());
+    ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
+    try ...{
+       ObjectSet result=container.queryByExample(Pilot.class);
+       System.out.println(&quot;Read stored results through disc file&quot;);
+         listResult(result);
+    } finally ...{
+      container.close();
+    }
+  }</pre>    </body></html>

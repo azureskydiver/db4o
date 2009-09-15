@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CommitCallbackExample.vb: StoreOtherObjects
+Private Shared Sub StoreOtherObjects()Sub StoreOtherObjects()
+            Dim container As IObjectContainer = CommitCallbackExample.Container()
+            Dim item As Item = New Item(2, &quot;one&quot;)
+            container.Store(item)
+            item = New Item(1, &quot;two&quot;)
+            container.Store(item)
+            Try
+                container.Commit()
+            Catch ex As Db4oException
+                System.Console.WriteLine(ex.Message)
+                container.Rollback()
+            End Try
+            System.Console.WriteLine(&quot;Commit successful&quot;)
+            item = New Item(1, &quot;one&quot;)
+            container.Store(item)
+            Try
+                container.Commit()
+            Catch ex As Db4oException
+                System.Console.WriteLine(ex.Message)
+                container.Rollback()
+            End Try
+        End Sub</pre>    </body></html>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.cs: GetPilotsSortWithComparator
+public static void GetPilotsSortWithComparator()
+        ...{
+            IObjectContainer container = Database();
+            try
+            ...{
+                IList &lt;Pilot&gt; result = container.Query&lt;Pilot&gt;(delegate(Pilot pilot)
+                ...{
+                    return true;
+
+                }, new PilotComparator());
+                ListResult(result);
+            }
+            finally
+            ...{
+                CloseDatabase();
+            }
+        }</pre>    </body></html>

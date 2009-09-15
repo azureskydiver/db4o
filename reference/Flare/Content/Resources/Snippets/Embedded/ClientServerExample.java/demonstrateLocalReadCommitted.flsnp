@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.java: demonstrateLocalReadCommitted
+private static void demonstrateLocalReadCommitted(ObjectServer server) ...{
+    ObjectContainer client1 = server.openClient();
+    ObjectContainer client2 = server.openClient();
+    Pilot pilot = new Pilot(&quot;David Coulthard&quot;, 98);
+    List&lt;Car&gt; result = client1.queryByExample(new Car(&quot;BMW&quot;));
+    Car car = result.get(0);
+    car.setPilot(pilot);
+    client1.store(car);
+    listResult(client1.queryByExample(new Car(null)));
+    listResult(client2.queryByExample(new Car(null)));
+    client1.commit();
+    listResult(client1.queryByExample(Car.class));
+    listRefreshedResult(client2, client2.queryByExample(Car.class), 2);
+    client1.close();
+    client2.close();
+  }</pre>    </body></html>

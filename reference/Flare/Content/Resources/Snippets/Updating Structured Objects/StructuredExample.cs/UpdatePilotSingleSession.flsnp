@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.cs: UpdatePilotSingleSession
+1private static void UpdatePilotSingleSession(IObjectContainer db)
+2    ...{
+3      IObjectSet result = db.Get(new Car(&quot;Ferrari&quot;));
+4      Car found = (Car)result.Next();
+5      found.Pilot.AddPoints(1);
+6      db.Set(found);
+7      result = db.Get(new Car(&quot;Ferrari&quot;));
+8      ListResult(result);
+9    }</pre>    </body></html>

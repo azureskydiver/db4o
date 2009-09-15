@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CalculationExamples.vb: SelectMinPointsPilot
+Private Shared Sub SelectMinPointsPilot()Sub SelectMinPointsPilot()
+            Dim container As IObjectContainer = Database()
+            If Not container Is Nothing Then
+                Try
+                    Dim result As IList(Of Pilot) = container.Query(Of Pilot)(AddressOf AllPilotsMatch, New System.Comparison(Of Pilot)(AddressOf PilotPointsCompare))
+                    If result.Count &gt; 0 Then
+                        System.Console.WriteLine(&quot;The min points result is: &quot; + result(0).ToString())
+                    End If
+                Catch ex As Exception
+                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub</pre>    </body></html>

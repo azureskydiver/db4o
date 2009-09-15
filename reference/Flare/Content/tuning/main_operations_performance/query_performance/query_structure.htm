@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Query Structure	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Query Structure</h1>
+
+<p>More complex queries take longer to execute, as they include
+more constrains and can impose some additional operations as sorting,
+aggregate, negation etc.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Query Structure/QueryPerformanceBenchmark.java/runQueryStructureTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Query Structure/QueryPerformanceBenchmark.java/init.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Query Structure/QueryPerformanceBenchmark.java/configure.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Query Structure/QueryPerformanceBenchmark.cs/RunQueryStructureTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Query Structure/QueryPerformanceBenchmark.cs/Init.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Query Structure/QueryPerformanceBenchmark.cs/Configure.flsnp" />
+</p><p MadCap:conditions="Primary:net" />
+
+<p>Results from the test machine:</p>
+
+<p><i>Storing objects as a
+bulk:</i></p>
+
+<p><i>Store 30000 objects:
+3049ms</i></p>
+
+<p><i>Simple SODA query:</i></p>
+
+<p><i>Select 1 object SODA:
+level1/1: 440ms</i></p>
+
+<p><i>Sorted SODA query:</i></p>
+
+<p><i>Select 1 object SODA:
+level9999/2: 1509ms</i></p>
+
+<p><i>SODA query with joins:</i></p>
+
+<p><i>Selected 1 objects
+SODA: 1735ms</i></p>
+
+<p>From the test results you can see that sorting makes the
+query slower, and adding additional constraints slows things down even more.</p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

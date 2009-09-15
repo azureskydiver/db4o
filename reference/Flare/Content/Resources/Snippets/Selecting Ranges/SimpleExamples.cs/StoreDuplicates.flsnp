@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.cs: StoreDuplicates
+private static void StoreDuplicates()
+        ...{
+            File.Delete(Db4oFileName);
+            IObjectContainer container = Database();
+            if (container != null)
+            ...{
+                try
+                ...{
+                    Pilot pilot;
+                    for (int i = 0; i &lt; ObjectCount; i++)
+                    ...{
+                        pilot = new Pilot(&quot;Test Pilot #&quot; + i, i);
+                        container.Set(pilot);
+                    }
+                    for (int i = 0; i &lt; ObjectCount; i++)
+                    ...{
+                        pilot = new Pilot(&quot;Test Pilot #&quot; + i, i);
+                        container.Set(pilot);
+                    }
+                    container.Commit();
+                }
+                catch (Db4oException ex)
+                ...{
+                    System.Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message);
+                }
+                catch (Exception ex)
+                ...{
+                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
+                }
+                finally
+                ...{
+                    CloseDatabase();
+                }
+            }
+        }</pre>    </body></html>

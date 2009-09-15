@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CachedIOExample.cs: ConfigureCache
+1private static IConfiguration ConfigureCache()...{
+2        System.Console.WriteLine(&quot;Setting up cached io adapter&quot;);
+3            // new cached IO adapter with 256 pages 1024 bytes each
+4        CachedIoAdapter adapter = new CachedIoAdapter(new RandomAccessFileAdapter(), 1024, 256);
+5            IConfiguration configuration = Db4oFactory.NewConfiguration();
+6        configuration.Io(adapter);
+7            return configuration;
+8      }</pre>    </body></html>

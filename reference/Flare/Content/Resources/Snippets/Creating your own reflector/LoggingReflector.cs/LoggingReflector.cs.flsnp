@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LoggingReflector.cs
+1/**//* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
+2using System;
+3
+4using Db4objects.Db4o.Internal;
+5using Db4objects.Db4o.Reflect;
+6using Db4objects.Db4o.Reflect.Net;
+7
+8namespace Db4objects.Db4odoc.Reflections
+9...{
+0    public class LoggingReflector : Db4objects.Db4o.Reflect.IReflector
+1    ...{
+2        protected Db4objects.Db4o.Reflect.IReflector _parent;
+3
+4        private Db4objects.Db4o.Reflect.IReflectArray _array;
+5
+6        private Db4objects.Db4o.Reflect.IReflectorConfiguration _config;
+7
+8        public virtual Db4objects.Db4o.Reflect.IReflectArray Array()
+9        ...{
+0            if (_array == null)
+1            ...{
+2                _array = new Db4objects.Db4o.Reflect.Net.NetArray(Parent());
+3            }
+4            return _array;
+5        }
+6
+7        public virtual object DeepClone(object obj)
+8        ...{
+9            return new NetReflector();
+0        }
+1
+2        public virtual Db4objects.Db4o.Reflect.IReflectClass ForClass(System.Type forType)
+3        ...{
+4            Db4objects.Db4o.Reflect.IReflectClass rc = null;
+5            System.Type underlyingType = GetUnderlyingType(forType);
+6            if (underlyingType.IsPrimitive &amp;&amp; !Db4objects.Db4o.Internal.NullableArrayHandling.UseOldNetHandling())
+7            ...{
+8                rc = CreateClass(forType);
+9            }
+0            rc = CreateClass(underlyingType);
+1            Console.WriteLine(&quot;ForClass: &quot; + forType + &quot; -&gt; &quot; + (rc == null ? &quot;&quot; : rc.GetName()));
+2            return rc;
+3        }
+4
+5        protected virtual Db4objects.Db4o.Reflect.IReflectClass CreateClass(Type type)
+6        ...{
+7            if (type == null)
+8            ...{
+9                return null;
+0            }
+1            NetReflector netReflector = new NetReflector();
+2            netReflector.Configuration(_config);
+3            return new Db4objects.Db4o.Reflect.Net.NetClass(Parent(), netReflector, type);
+4        }
+5
+6        private static Type GetUnderlyingType(Type type)
+7        ...{
+8            if (type == null)
+9            ...{
+0                return null;
+1            }
+2            Type underlyingType = Nullable.GetUnderlyingType(type);
+3            if (underlyingType != null)
+4            ...{
+5                return underlyingType;
+6            }
+7            return type;
+8        }
+9
+0        public virtual Db4objects.Db4o.Reflect.IReflectClass ForName(string className)
+1        ...{
+2            Db4objects.Db4o.Reflect.IReflectClass rc = null; 
+3            try
+4            ...{
+5                Type type = ReflectPlatform.ForName(className);
+6                if (type == null) return null;
+7                rc = ForClass(type);
+8                Console.WriteLine(&quot;ForName: &quot; + className + &quot; -&gt; &quot; + (rc == null ? &quot;&quot; : rc.GetName()));
+9            }
+0            catch
+1            ...{
+2            }
+3            return rc;
+4        }
+5
+6        public virtual Db4objects.Db4o.Reflect.IReflectClass ForObject(object a_object)
+7        ...{
+8            if (a_object == null)
+9            ...{
+0                return null;
+1            }
+2            Db4objects.Db4o.Reflect.IReflectClass rc = Parent().ForClass(a_object.GetType());
+3            Console.WriteLine(&quot;ForObject:&quot; + a_object + &quot; -&gt; &quot; + (rc == null ? &quot;&quot; : rc.GetName()));
+4            return rc;
+5        }
+6
+7        public virtual bool IsCollection(Db4objects.Db4o.Reflect.IReflectClass candidate)
+8        ...{
+9            bool result = false;
+0            if (candidate.IsArray())
+1            ...{
+2                result = false;
+3            }
+4            NetClass netClass = candidate as NetClass;
+5            if (null == netClass)
+6            ...{
+7                result = false;
+8            }
+9            result = typeof(System.Collections.ICollection).IsAssignableFrom(netClass.GetNetType());
+0            Console.WriteLine(&quot;Type &quot; + candidate.GetName() + &quot; is Collection &quot; + result);
+1            return result;
+2        }
+3
+4        public virtual bool MethodCallsSupported()
+5        ...{
+6            return true;
+7        }
+8
+9        public static Db4objects.Db4o.Reflect.IReflectClass[] ToMeta(
+0            Db4objects.Db4o.Reflect.IReflector reflector,
+1            System.Type[] clazz)
+2        ...{
+3            Db4objects.Db4o.Reflect.IReflectClass[] claxx = null;
+4            if (clazz != null)
+5            ...{
+6                claxx = new Db4objects.Db4o.Reflect.IReflectClass[clazz.Length];
+7                for (int i = 0; i &lt; clazz.Length; i++)
+8                ...{
+9                    if (clazz[i] != null)
+0                    ...{
+1                        claxx[i] = reflector.ForClass(clazz[i]);
+2                    }
+3                }
+4            }
+5            return claxx;
+6        }
+7
+8        public static System.Type[] ToNative(Db4objects.Db4o.Reflect.IReflectClass[] claxx)
+9        ...{
+0            System.Type[] clazz = null;
+1            if (claxx != null)
+2            ...{
+3                clazz = new System.Type[claxx.Length];
+4                for (int i = 0; i &lt; claxx.Length; i++)
+5                ...{
+6                    if (claxx[i] != null)
+7                    ...{
+8                        IReflectClass reflectClass = claxx[i];
+9                        System.Console.WriteLine(&quot;ToNative: &quot; + reflectClass.ToString());
+0                        clazz[i] = ToNative(reflectClass);
+1                    }
+2                }
+3            }
+4            return clazz;
+5        }
+6
+7        public static Type ToNative(IReflectClass reflectClass)
+8        ...{
+9            System.Console.WriteLine(&quot;ToNative: &quot; + reflectClass.ToString());
+0            return ((Db4objects.Db4o.Reflect.Net.NetClass)reflectClass.GetDelegate()).GetNetType();
+1        }
+2
+3        public virtual void SetParent(IReflector reflector)
+4        ...{
+5            _parent = reflector;
+6        }
+7
+8        public virtual void Configuration(Db4objects.Db4o.Reflect.IReflectorConfiguration config)
+9        ...{
+0            _config = config;
+1        }
+2
+3        public virtual Db4objects.Db4o.Reflect.IReflectorConfiguration Configuration()
+4        ...{
+5            return _config;
+6        }
+7
+8        public virtual object NullValue(IReflectClass clazz)
+9        ...{
+0            return Platform4.NullValue(ToNative(clazz));
+1        }
+2
+3        private IReflector Parent()
+4        ...{
+5            if (_parent == null)
+6            ...{
+7                return this;
+8            }
+9
+0            return _parent;
+1        }
+2
+3    }
+4}</pre>    </body></html>

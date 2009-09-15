@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryModesExample.cs: TestLazyConcurrent
+private static void TestLazyConcurrent()
+        ...{
+            Console.WriteLine(&quot;Testing lazy mode with concurrent modifications&quot;);
+            FillUpDB(10);
+            IConfiguration configuration = Db4oFactory.NewConfiguration();
+            configuration.Queries().EvaluationMode(QueryEvaluationMode.LAZY);
+            IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
+            try
+            ...{
+                IQuery query1 = db.Query();
+                query1.Constrain(typeof(Pilot));
+                query1.Descend(&quot;_points&quot;).Constrain(5).Smaller();
+                IObjectSet result1 = query1.Execute();
+
+                IQuery query2 = db.Query();
+                query2.Constrain(typeof(Pilot));
+                query2.Descend(&quot;_points&quot;).Constrain(1);
+                IObjectSet result2 = query2.Execute();
+                Pilot pilotToDelete = (Pilot)result2[0];
+                Console.WriteLine(&quot;Pilot to be deleted: &quot; + pilotToDelete);
+                db.Delete(pilotToDelete);
+                Pilot pilot = new Pilot(&quot;Tester&quot;, 2);
+                Console.WriteLine(&quot;Pilot to be added: &quot; + pilot);
+                db.Set(pilot);
+
+                Console.WriteLine(&quot;Query result after changing from the same transaction&quot;);
+                ListResult(result1);
+            }
+            finally
+            ...{
+                db.Close();
+            }
+        }</pre>    </body></html>

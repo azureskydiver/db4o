@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReflectorExample.java: getCars
+private static void getCars()
+  ...{
+    ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
+    try ...{
+      GenericReflector reflector = new GenericReflector(null,container.ext().reflector());
+      ReflectClass carClass = reflector.forName(Car.class.getName());
+      System.out.println(&quot;Reflected class &quot;+carClass);
+      System.out.println(&quot;Retrieved with reflector:&quot;);
+      Query query = container.query();
+      query.constrain(carClass);
+      ObjectSet results = query.execute();
+      listResult(results);
+    } finally ...{
+      container.close();
+    }
+  }</pre>    </body></html>

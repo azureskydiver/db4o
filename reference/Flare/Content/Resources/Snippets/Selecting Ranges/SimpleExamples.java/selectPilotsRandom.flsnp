@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.java: selectPilotsRandom
+private static void selectPilotsRandom() ...{
+    ObjectContainer container = database();
+    if (container != null) ...{
+      try ...{
+        List&lt;Pilot&gt; result = container.query(new Predicate&lt;Pilot&gt;() ...{
+          private ArrayList randomArray = null;
+
+          private List getRandomArray() ...{
+            if (randomArray == null) ...{
+              randomArray = new ArrayList();
+              for (int i = 0; i &lt; 10; i++) ...{
+                randomArray.add((int) (Math.random() * 10));
+                System.out.println(randomArray.get(i));
+              }
+            }
+            return randomArray;
+          }
+
+          public boolean match(Pilot pilot) ...{
+            // all Pilots having points in the values of
+            // the randomArray
+            return getRandomArray().contains(pilot.getPoints());
+          }
+        });
+        listResult(result);
+      } catch (Exception ex) ...{
+        System.out.println(&quot;System Exception: &quot; + ex.getMessage());
+      } finally ...{
+        closeDatabase();
+      }
+    }
+  }</pre>    </body></html>

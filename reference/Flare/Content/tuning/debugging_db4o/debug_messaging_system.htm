@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Debug Messaging System	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Debug Messaging System</h1>
+
+<p>Db4o messaging system is a special tool, which makes db4o functionality more transparent to the user. It can be used:</p>
+<ul>
+<li>
+in debugging session - to find out where the problem can reside;</li>
+<li>for learning - to watch, what does db4o actually do with the objects.</li>
+</ul>
+<p>In order to activate messaging before opening a database file use:</p>
+
+<p MadCap:conditions="Primary.Java">
+<p>Java: </p><p><code>configuration.messageLevel(level)</code></p>
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<p>c#: </p><p><code></p><p>configuration.MessageLevel(level)</code></p>
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<p>VB: </p><p><code>configuration.MessageLevel(level)</code></p>
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>where <i>level</i> can be:</p>
+<p>level = 0: no messages;</p>
+<p>level &gt; 0: normal messages;</p>
+<p>level &gt; 1: state messages (new object, object update, delete);</p>
+<p>level &gt; 2: activation messages (object activated, deactivated).</p>
+<p>In order to set up a convenient output stream for the messages, call:</p>
+
+<p MadCap:conditions="Primary.Java">
+<p>Java: </p><p><code>configuration.setOut(outStream) </code></p><p>By default the output is sent to System.out.  </p></p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<p>c#: </p><p><code>configuration.SetOut(outStream) </code></p><p>By default the output is sent to System.Console.Out. </p></p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<p>VB: </p><p><code>configuration.SetOut(outStream) </code></p><p>By default the output is sent to System.Console.Out. </p></p><p MadCap:conditions="Primary:vb" /><p>For more information on #setOut call see <a href="customizing_the_debug_message_output.html" class="wikiLink">Customizing The Debug Message Output</a>. </p>
+
+
+<p>#messageLevel(level) also can be set after a database has been opened:</p>
+
+<p MadCap:conditions="Primary.Java">
+<p>Java: <code>ObjectContainer#ext().configure().messageLevel(level) </code></p>
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<p>c#: <code>IObjectContainer.Ext().Configure().MessageLevel(level) </code></p>
+</p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<p>VB: <code>IObjectContainer.Ext().Configure().MessageLevel(level) </code></p>
+</p><p MadCap:conditions="Primary:vb" />
+<p>The same applies for #setOut().</p>
+<p>Let's use the simplest example to see all types of debug messages:</p>
+
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../Resources/Snippets/Debug Messaging System/DebugExample.java/setCars.flsnp" /></p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../Resources/Snippets/Debug Messaging System/DebugExample.cs/SetCars.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../Resources/Snippets/Debug Messaging System/DebugExample.vb/SetCars.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+
+<p>Output looks quite messy, but allows you to follow the whole process. For debugging purposes messaging system provides a timestamp and internal ID information for each object (first number in state and activate messages).</p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

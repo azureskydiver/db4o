@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqCollection.cs: SelectAggregate
+private static void SelectAggregate()
+        ...{
+            IObjectContainer container = Database();
+            if (container != null)
+            ...{
+                try
+                ...{
+                    /**//*Select pilot names separated by semicolon*/
+                    var result = (from Pilot p in container
+                                  where p.Name.StartsWith(&quot;Test&quot;)
+                                  select p.Name).Aggregate(new StringBuilder(), 
+                                  (acc, value) =&gt; acc.AppendFormat(&quot;{0}; &quot;, value));
+
+                    System.Console.WriteLine(result);
+                }
+                catch (Exception ex)
+                ...{
+                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message);
+                }
+                finally
+                ...{
+                    CloseDatabase();
+                }
+            }
+        }</pre>    </body></html>

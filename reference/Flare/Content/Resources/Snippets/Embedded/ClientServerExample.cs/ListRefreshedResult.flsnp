@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ClientServerExample.cs: ListRefreshedResult
+1private static void ListRefreshedResult(IObjectContainer container, IList&lt;Car&gt; items, int depth)
+2    ...{
+3      System.Console.WriteLine(items.Count);
+4      foreach (Car item in items)
+5      ...{  
+6        container.Ext().Refresh(item, depth);
+7        System.Console.WriteLine(item);
+8      }
+9    }</pre>    </body></html>

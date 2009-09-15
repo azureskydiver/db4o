@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrieveCarsByPilotNameNative
+1Private Shared Sub RetrieveCarsByPilotNameNative()Sub RetrieveCarsByPilotNameNative(ByVal db As IObjectContainer)
+2            Dim pilotName As String = &quot;Rubens Barrichello&quot;
+3            Dim results As IObjectSet = db.Query(New RetrieveCarsByPilotNamePredicate(pilotName))
+4            ListResult(results)
+5        End Sub</pre>    </body></html>

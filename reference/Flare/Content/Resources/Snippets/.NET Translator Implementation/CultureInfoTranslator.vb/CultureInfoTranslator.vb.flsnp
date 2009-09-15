@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CultureInfoTranslator.vb
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
+Imports System.Globalization
+Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
+
+Namespace Db4objectsNamespace Db4objects.Db4odoc.Translators
+    Public Class CultureInfoTranslatorClass CultureInfoTranslator
+        Implements IObjectConstructor
+        Public Function OnStore()Function OnStore(ByVal container As IObjectContainer, ByVal applicationObject As Object) As Object Implements IObjectConstructor.OnStore
+            System.Console.WriteLine(&quot;onStore for {0}&quot;, applicationObject)
+            Return (DirectCast(applicationObject, CultureInfo)).Name
+        End Function
+
+        Public Function OnInstantiate()Function OnInstantiate(ByVal container As IObjectContainer, ByVal storedObject As Object) As Object Implements IObjectConstructor.OnInstantiate
+            System.Console.WriteLine(&quot;onInstantiate for {0}&quot;, storedObject)
+            Dim name As String = DirectCast(storedObject, String)
+            Return CultureInfo.CreateSpecificCulture(name)
+        End Function
+
+        Public Sub OnActivate()Sub OnActivate(ByVal container As IObjectContainer, ByVal applicationObject As Object, ByVal storedObject As Object) Implements IObjectConstructor.OnActivate
+            System.Console.WriteLine(&quot;onActivate for {0}/{1}&quot;, applicationObject, storedObject)
+        End Sub
+
+        Public Function StoredClass()Function StoredClass() As System.Type Implements IObjectConstructor.StoredClass
+            Return GetType(String)
+        End Function
+
+    End Class
+End Namespace</pre>    </body></html>

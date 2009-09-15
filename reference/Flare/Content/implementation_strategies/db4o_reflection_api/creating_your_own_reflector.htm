@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Creating your own reflector	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Creating your own reflector</h1>
+
+
+<p>By default db4o uses JdkReflector(Java) or NetReflector (.NET) as a GenericReflector delegate.</p>
+
+<p>
+However, the programmer can instruct db4o to use a specially designed reflection implementation:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java: <code>Db4o.configure().reflectWith(reflector)</code> </p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<p>c#:   <code>Db4oFactory.Configure().ReflectWith(reflector)</code> </p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<p>VB:   <code>Db4oFactory.Configure().ReflectWith(reflector) </code></p>
+
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>where reflector is one of the available reflectors or your own reflector implementation. </p>
+
+<p>
+At present db4o comes with SelfReflector, which was designed for environments, which do not have built-in support for reflections (J2ME for example). In this implementation all the classes' information is stored in special registry. User classes should implement self_get and self_set methods to be registered individually and become "known" to SelfReflector. </p>
+
+<p>
+Specific reflectors can be written for special usecases. </p>
+
+<p>Let's look how to create a reflector. Remember that db4o relies on reflector to read the database, so errors in reflector may prevent your database from opening.</p>
+
+<p>To keep things simple we will write a LoggingReflector, its only difference from standard reflector is that information about loaded classes is outputted to console. All reflectors used by db4o should implement com.db4o.reflect.Reflector/Db4objects.Db4o.Reflect.IReflector interface.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Creating your own reflector/LoggingReflector.java/LoggingReflector.java.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Creating your own reflector/LoggingReflector.cs/LoggingReflector.cs.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Creating your own reflector/LoggingReflector.vb/LoggingReflector.vb.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>It is easy to see that this reflector provides the same functionality as JdkReflector or NetReflector extended by console output. The following simple test will show how it works:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Creating your own reflector/ReflectorExample.java/testReflector.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Creating your own reflector/ReflectorExample.cs/TestReflector.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Creating your own reflector/ReflectorExample.vb/TestReflector.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>The output can help you to track all the loaded classes. </p>
+
+<p>
+Reflection is a powerful tool, which plays a fundamental role in db4o. Understanding reflection will help you to understand the whole db4o functionality in detail. </p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

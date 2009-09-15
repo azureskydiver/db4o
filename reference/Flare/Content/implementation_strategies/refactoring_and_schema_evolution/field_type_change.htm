@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Field type change	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Field type change</h1> 
+
+<P>The reviewed refactoring types are fairly easy. It gets more difficult when you need to change a field's type.</P>
+<P>If you modify a field's type, db4o internally creates a new field of the same name, but with the new type. The values of the old typed field are still present, but hidden. If you will change the type back to the old type the old values will still be there. </P>
+<P>You can access the values of the previous field data using StoredField API.</P>
+<p MadCap:conditions="Primary.Java">
+<P>Java:</P>
+<P><code> StoredClass#storedField(name, type) </code></P>
+</p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<P>c#: </P>
+<P><code>IStoredClass#StoredField(name, type) </code></P>
+</p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<P>VB: </P>
+<P><code>IStoredClass#StoredField(name, type) </code></P>
+</p><p MadCap:conditions="Primary:vb" />
+<P>gives you access to the field, which type was changed.</P>
+<p MadCap:conditions="Primary.Java">
+<P>Java: </P>
+<P><code>StoredField#get(Object)</code></P>
+</p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<P>c#: </P>
+<P><code>IStoredField#Get(Object)</code></P>
+</p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<P>VB: </P>
+<P><code>IStoredField#Get(Object)</code></P>
+</p><p MadCap:conditions="Primary:vb" />
+<P>allows you to get the old field value for the specified object.</P>
+<P>To see how it works on example, let's change Pilot's field name from type string to type Identity:</P>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../Resources/Snippets/Field type change/Identity.java/Identity.java.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../Resources/Snippets/Field type change/Identity.cs/Identity.cs.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../Resources/Snippets/Field type change/Identity.vb/Identity.vb.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+<P>Now to access old "name" values and transfer them to the new "name" we can use the following procedure:</P>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../Resources/Snippets/Field type change/RefactoringExample.java/transferValues.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../Resources/Snippets/Field type change/RefactoringExample.cs/TransferValues.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<P><p MadCap:conditions="Primary..NET,Primary.VB.NET"></P>
+<MadCap:snippetBlock src="../../Resources/Snippets/Field type change/RefactoringExample.vb/TransferValues.flsnp" /><P></p><p MadCap:conditions="Primary:vb" /> </P>
+<P>These are the basic refactoring types, which can help with any changes you will need to make. </P></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

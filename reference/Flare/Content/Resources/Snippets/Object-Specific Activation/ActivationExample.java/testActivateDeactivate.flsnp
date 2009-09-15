@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ActivationExample.java: testActivateDeactivate
+private static void testActivateDeactivate() ...{
+    storeSensorPanel();
+    EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
+    configuration.common().activationDepth(0);
+    ObjectContainer container = Db4oEmbedded.openFile(configuration,
+        DB4O_FILE_NAME);
+    try ...{
+      System.out.println(&quot;Object container activation depth = 0&quot;);
+      ObjectSet&lt;SensorPanel&gt; result = container
+          .queryByExample(new SensorPanel(1));
+      System.out.println(&quot;Sensor1:&quot;);
+      listResult(result);
+      SensorPanel sensor1 = (SensorPanel) result.get(0);
+      testActivated(sensor1);
+
+      System.out.println(&quot;Sensor1 activated:&quot;);
+      container.activate(sensor1, 4);
+      testActivated(sensor1);
+
+      System.out.println(&quot;Sensor5 activated:&quot;);
+      result = container.queryByExample(new SensorPanel(5));
+      SensorPanel sensor5 = (SensorPanel) result.get(0);
+      container.activate(sensor5, 4);
+      listResult(result);
+      testActivated(sensor5);
+
+      System.out.println(&quot;Sensor1 deactivated:&quot;);
+      container.deactivate(sensor1, 5);
+      testActivated(sensor1);
+
+      // DANGER !!!.
+      // If you use deactivate with a higher value than 1
+      // make sure that you know whereto members might branch
+      // Deactivating list1 also deactivated list5
+      System.out.println(&quot;Sensor 5 AFTER DEACTIVATE OF Sensor1.&quot;);
+      testActivated(sensor5);
+    } finally ...{
+      container.close();
+    }
+  }</pre>    </body></html>

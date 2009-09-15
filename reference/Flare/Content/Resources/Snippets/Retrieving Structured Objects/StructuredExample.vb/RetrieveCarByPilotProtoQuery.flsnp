@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StructuredExample.vb: RetrieveCarByPilotProtoQuery
+1Private Shared Sub RetrieveCarByPilotProtoQuery()Sub RetrieveCarByPilotProtoQuery(ByVal db As IObjectContainer)
+2            Dim query As IQuery = db.Query()
+3            query.Constrain(GetType(Car))
+4            Dim proto As Pilot = New Pilot(&quot;Rubens Barrichello&quot;, 0)
+5            query.Descend(&quot;_pilot&quot;).Constrain(proto)
+6            Dim result As IObjectSet = query.Execute()
+7            ListResult(result)
+8        End Sub</pre>    </body></html>

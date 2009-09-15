@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DataObject.vb
+' Copyright (C) 2007 db4objects Inc. http://www.db4o.com
+Namespace Db4objectsNamespace Db4objects.Db4odoc.ListDeleting
+
+    Class DataObjectClass DataObject
+        Private _name As String
+        Private _data As String
+
+        Public Sub New()Sub New()
+        End Sub
+
+        Public Property Name()Property Name() As String
+            Get
+                Return _name
+            End Get
+            Set(ByVal value As String)
+                _name = value
+            End Set
+        End Property
+
+        Public Property Data()Property Data() As String
+            Get
+                Return _data
+            End Get
+            Set(ByVal value As String)
+                _data = value
+            End Set
+        End Property
+
+        Public Overloads Overrides Function ToString()Function ToString() As String
+            Return String.Format(&quot;{0}/{1}&quot;, _name, _data)
+        End Function
+    End Class
+End Namespace</pre>    </body></html>

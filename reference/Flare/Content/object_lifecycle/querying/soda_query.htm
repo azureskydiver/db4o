@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>SODA Query	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>SODA Query</h1>
+
+
+<p>The SODA query API is db4o's low level querying API, allowing direct access to 
+nodes of query graphs. Since SODA uses strings to identify fields, it is neither 
+perfectly typesafe nor compile-time checked and it also is quite verbose to 
+write.</p>
+
+
+
+<p>For most applications <a href="native_queries.html" class="wikiLink">Native Queries</a> or <a href="linq.html" class="wikiLink">LINQ</a> will be the 
+better querying interface. However there can be applications where 
+dynamic generation of queries is required.</p><p>SODA is also an underlying db4o querying mechanism: all other query syntaxes are translated to SODA under the hood:</p><ul><li><a href="query_by_example.html" class="wikiLink">Query By Example</a> is translated to SODA with a single <code>constrain</code> call</li><li><a href="native_queries.html" class="wikiLink">Native Queries</a> use bytecode and IL analysis to <a href="../../tuning/native_query_optimization.html" class="wikiLink">convert</a> to SODA  </li><li><a href="linq.html" class="wikiLink">LINQ</a> also uses <a href="linq/optimization.html" class="wikiLink">IL analysis</a>  </li></ul><p>Understanding SODA will provide you with a better understanding of db4o in the whole and will help to write more performant queries and applications. </p><p><div class="childTopicList">More Reading:<ul>
+<li><p><a href="soda_query/building_soda_queries.html" class="wikiLink">Building SODA Queries</a></p></li>
+<li><p><a href="soda_query/soda_query_graph.html" class="wikiLink">SODA Query Graph</a></p></li>
+<li><p><a href="soda_query/soda_query_api.html" class="wikiLink">SODA Query API</a></p></li>
+<li><p><a href="soda_query/soda_query_engine.html" class="wikiLink">SODA Query Engine</a></p></li>
+</ul></div>
+ </p></div>
+    </div>
+    
+  </body></html>

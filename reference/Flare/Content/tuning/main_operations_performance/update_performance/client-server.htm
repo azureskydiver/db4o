@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Client-Server	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Client-Server</h1>
+
+<p>Client/server performance is a bit slower than local performance.
+This is illustrated with the following test:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Client-Server/UpdatePerformanceBenchmark.java/runClientServerTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Client-Server/UpdatePerformanceBenchmark.java/initForClientServer.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Client-Server/UpdatePerformanceBenchmark.java/init.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Client-Server/UpdatePerformanceBenchmark.java/configureClientServer.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Client-Server/UpdatePerformanceBenchmark.cs/RunClientServerTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Client-Server/UpdatePerformanceBenchmark.cs/InitForClientServer.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Client-Server/UpdatePerformanceBenchmark.cs/Init.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Client-Server/UpdatePerformanceBenchmark.cs/ConfigureClientServer.flsnp" />
+</p><p MadCap:conditions="Primary:net" />
+
+<p>The results:</p>
+
+<p><i>Update test: Client/Server environment</i></p>
+
+<p><i>Store 90000 objects: 7935ms</i></p>
+
+<p><i>Update 30 of 1000 objects locally:</i></p>
+
+<p><i>Updated 30 items: 404ms</i></p>
+
+<p><i>Store 90000 objects: 11421ms</i></p>
+
+<p><i>Update 30 of 1000 objects remotely:</i></p>
+
+<p><i>Updated 30 items: 436ms</i></p>
+
+<p>You can see that the performance drop is quite insignificant
+in this case, however it can be much worse on slow or unreliable networks.</p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

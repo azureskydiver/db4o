@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.java: openClient
+private ObjectContainer openClient() ...{
+    try ...{
+      ObjectContainer client = Db4oClientServer.openClient(
+          Db4oClientServer.newClientConfiguration(), &quot;localhost&quot;,
+          PORT, USER, PASSWORD);
+      EventListener4 committedEventListener = createCommittedEventListener();
+      EventRegistry eventRegistry = EventRegistryFactory
+          .forObjectContainer(client);
+      eventRegistry.committed().addListener(committedEventListener);
+      // save the client-listener pair in a map, so that we can
+      // remove the listener later
+      clientListeners.put(client, committedEventListener);
+      return client;
+    } catch (Exception ex) ...{
+      ex.printStackTrace();
+    }
+    return null;
+  }</pre>    </body></html>

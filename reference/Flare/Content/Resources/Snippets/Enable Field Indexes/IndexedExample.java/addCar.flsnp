@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IndexedExample.java: addCar
+1private static void AddCar(ObjectContainer container, int points)
+2  ...{
+3    Car car = new Car(&quot;BMW&quot;);
+4    car.setPilot(new Pilot(&quot;Tester&quot;, points));
+5    container.set(car);
+6  }</pre>    </body></html>

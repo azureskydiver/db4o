@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LimitLogins.java
+/**//* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
+
+package com.db4odoc.semaphores;
+
+import com.db4o.*;
+
+/** *//**
+ * This class demonstrates the use of semaphores to limit the number
+ * of logins to a server.
+ */
+public class LimitLogins ...{
+
+  static final String HOST = &quot;localhost&quot;;
+
+  static final int PORT = 4455;
+
+  static final String USER = &quot;db4o&quot;;
+
+  static final String PASSWORD = &quot;db4o&quot;;
+
+  static final int MAXIMUM_USERS = 10;
+
+  public static ObjectContainer login() ...{
+
+    ObjectContainer objectContainer;
+    try ...{
+      objectContainer = Db4o.openClient(HOST, PORT, USER,
+          PASSWORD);
+    } catch (Exception e) ...{
+      return null;
+    }
+
+    boolean allowedToLogin = false;
+
+    for (int i = 0; i &lt; MAXIMUM_USERS; i++) ...{
+      if (objectContainer.ext().setSemaphore(
+          &quot;max_user_check_&quot; + i, 0)) ...{
+        allowedToLogin = true;
+        break;
+      }
+    }
+
+    if (!allowedToLogin) ...{
+      objectContainer.close();
+      return null;
+    }
+
+    return objectContainer;
+  }
+}</pre>    </body></html>

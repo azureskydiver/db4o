@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Indexing	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Indexing</h1>
+
+<p>Using indexes is always a good idea to improve query
+performance. The following test illustrates index performance impact:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexing/QueryPerformanceBenchmark.java/runIndexTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexing/QueryPerformanceBenchmark.java/initForHardDriveTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexing/QueryPerformanceBenchmark.java/configureRamDrive.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexing/QueryPerformanceBenchmark.cs/RunIndexTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexing/QueryPerformanceBenchmark.cs/InitForHardDriveTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Indexing/QueryPerformanceBenchmark.cs/ConfigureRamDrive.flsnp" />
+</p><p MadCap:conditions="Primary:net" />
+
+<p>Results from the test machine:</p>
+
+<p><i>Storing 10000 objects
+with 3 levels of embedded objects:</i></p>
+
+<p><i> - no index</i></p>
+
+<p><i>Store 30000 objects:
+2228ms</i></p>
+
+<p><i>Querying object with
+String field: level1/2: 461ms</i></p>
+
+<p><i> - index on String field</i></p>
+
+<p><i>Querying object with
+String field: level1/2: 460ms</i></p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

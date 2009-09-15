@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StartServer.cs: ProcessMessage
+/**//// &lt;summary&gt;
+        /// messaging callback
+        /// see com.db4o.messaging.MessageRecipient#ProcessMessage()
+        /// &lt;/summary&gt;
+        public void ProcessMessage(IMessageContext context, object message)
+        ...{
+            if (message is StopServer)
+            ...{
+                Close();
+            }
+        }</pre>    </body></html>

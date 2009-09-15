@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPExample.java: configureTA
+1private static Configuration configureTA() ...{
+2    Configuration configuration = Db4o.newConfiguration();
+3    // add TA support
+4    configuration.add(new TransparentActivationSupport());
+5    return configuration;
+6  }</pre>    </body></html>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SortingExample.cs: GetObjectsNQ
+private static void GetObjectsNQ()
+        ...{
+            IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
+            try
+            ...{
+                DateTime dt1 = DateTime.UtcNow;
+                IList&lt;Pilot&gt; result = db.Query&lt;Pilot&gt;(delegate(Pilot pilot) ...{
+                    return true;
+                },
+                new System.Comparison&lt;Pilot&gt;(delegate(Pilot p1, Pilot p2)
+                ...{
+                    Pilot pilot1 = (Pilot)p1;
+                    Pilot pilot2 = (Pilot)p2;
+                    int res = pilot1.Points - pilot2.Points;
+                    if (res == 0)
+                    ...{
+                        return pilot1.Name.CompareTo(pilot2.Name);
+                    }
+                    else
+                    ...{
+                        return -res;
+                    }
+                }));
+                DateTime dt2 = DateTime.UtcNow;
+                TimeSpan diff = dt2 - dt1;
+                Console.WriteLine(&quot;Time to execute with NQ and comparator: &quot; + diff.TotalMilliseconds + &quot; ms.&quot;);
+                ListResult(result);
+            }
+            finally
+            ...{
+                db.Close();
+            }
+        }</pre>    </body></html>

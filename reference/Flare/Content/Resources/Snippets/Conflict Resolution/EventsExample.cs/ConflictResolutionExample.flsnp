@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EventsExample.cs: ConflictResolutionExample
+private static void ConflictResolutionExample()
+        ...{
+            IConfiguration config = Db4oFactory.NewConfiguration();
+            config.GenerateUUIDs(ConfigScope.Globally);
+            config.GenerateVersionNumbers(ConfigScope.Globally);
+
+            //  Open databases
+            IObjectContainer desktop = Db4oFactory.OpenFile(config, &quot;desktop.db4o&quot;);
+            IObjectContainer handheld = Db4oFactory.OpenFile(config, &quot;handheld.db4o&quot;);
+
+            Pilot pilot = new Pilot(&quot;Scott Felton&quot;, 200);
+            handheld.Store(pilot);
+            handheld.Commit();
+            /**//* Clean the reference cache to make sure that objects in memory
+            * won't interfere
+            */
+            handheld.Ext().Refresh(typeof(Pilot), System.Int32.MaxValue);
+
+            /**//* Replicate changes from handheld to desktop
+             * Note, that only objects replicated from one database to another will 
+             * be treated as the same. If you will create an object and save it to both
+             * databases, dRS will count them as 2 different objects with identical 
+             * fields.
+             */
+            IReplicationSession replication = Db4objects.Drs.Replication.Begin(handheld, desktop);
+            IObjectSet changedObjects = replication.ProviderA().ObjectsChangedSinceLastReplication();
+            while (changedObjects.HasNext())
+                replication.Replicate(changedObjects.Next());
+            replication.Commit();
+
+            // change object on the handheld
+            pilot = (Pilot)handheld.Query(typeof(Pilot)).Next();
+            pilot.Name = &quot;S.Felton&quot;;
+            handheld.Store(pilot);
+            handheld.Commit();
+
+            //  change object on the desktop
+            pilot = (Pilot)desktop.Query(typeof(Pilot)).Next();
+            pilot.Name = &quot;Scott&quot;;
+            desktop.Store(pilot);
+            desktop.Commit();
+
+            /**//* The replication will face a conflict: Pilot object was changed on the 
+            * handheld and on the desktop.
+            * To resolve this conflict we will add an event handler, which makes
+            * desktop changes dominating.
+            */
+            IReplicationEventListener listener = new ConflictReplicationEventListener();
+            replication = Db4objects.Drs.Replication.Begin(handheld, desktop, listener);
+
+            //The state of the desktop after the replication should not change, as it dominates
+            changedObjects = replication.ProviderA().ObjectsChangedSinceLastReplication();
+            while (changedObjects.HasNext())
+                replication.Replicate(changedObjects.Next());
+
+            //Commit
+            replication.Commit();
+            replication.Close();
+
+            // Check what we've got on the desktop
+            IObjectSet result = desktop.Query(typeof(Pilot));
+            System.Console.WriteLine(result.Size());
+            while (result.HasNext())
+            ...{
+                System.Console.WriteLine(result.Next());
+            }
+            handheld.Close();
+            desktop.Close();
+
+            File.Delete(&quot;handheld.db4o&quot;);
+            File.Delete(&quot;desktop.db4o&quot;);
+
+        }</pre>    </body></html>

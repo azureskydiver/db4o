@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Object Structure	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Object Structure</h1>
+
+<p>Object Structure naturally has a major influence on insert
+performance: inserting one object, which is a linked list of 1000 members, is
+much slower than inserting an object with a couple of primitive fields.</p>
+
+<p>The following test compares storing time of similar objects
+with one different field:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.java/runDifferentObjectsTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.java/configure.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.java/init.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.java/storeSimplest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.java/store.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.java/storeWithStringBuffer.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.java/storeWithArray.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.java/storeWithArrayList.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.java/SimplestItem.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.java/ItemWithArray.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.java/ItemWithArrayList.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.java/ItemWithStringBuffer.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.cs/RunDifferentObjectsTest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.cs/Configure.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.cs/Init.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.cs/StoreSimplest.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.cs/Store.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.cs/StoreWithStringBuilder.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.cs/StoreWithArray.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.cs/StoreWithArrayList.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.cs/SimplestItem.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.cs/ItemWithArray.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.cs/ItemWithArrayList.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Object Structure/InsertPerformanceBenchmark.cs/ItemWithStringBuilder.flsnp" />
+</p><p MadCap:conditions="Primary:net" />
+
+<p>The following results were achieved for the
+<a href="../insert_performance.html" class="wikiLink">testing configuration</a>:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p>Storing 10000 objects with 3 levels of embedded objects:</p>
+
+<p> - primitive object
+with int field</p>
+
+<p>Store 30000 objects: 820ms</p>
+
+<p> - object with String
+field</p>
+
+<p>Store 30000 objects: 803ms</p>
+
+<p> - object with
+StringBuffer field</p>
+
+<p>Store 30000 objects: 2182ms</p>
+
+<p> - object with int
+array field</p>
+
+<p>Store 30000 objects: 810ms</p>
+
+<p> - object with
+ArrayList field</p>
+
+<p>Store 30000 objects: 2178ms </p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:</p>
+
+<p>Storing 10000 objects with 3 levels of embedded objects:</p>
+
+<p> - primitive object
+with int field</p>
+
+<p>Store 30000 objects: 1123ms</p>
+
+<p> - object with String
+field</p>
+
+<p>Store 30000 objects: 1356ms</p>
+
+<p> - object with
+StringBuilder field</p>
+
+<p>Store 30000 objects: 4982ms</p>
+
+<p> - object with int
+array field</p>
+
+<p>Store 30000 objects: 1810ms</p>
+
+<p> - object with
+ArrayList field</p>
+
+<p>Store 30000 objects: 3479ms</p>
+
+</p><p MadCap:conditions="Primary:net" /></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

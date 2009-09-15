@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Cascaded Behavior	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Cascaded Behavior</h1><p>You
+can use different object events to initiate cascaded behavior on update,
+activate, delete. The following example shows how to ensure that all the
+referenced objects are deleted when the parent object is deleted:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cascaded Behavior/CallbacksExample.java/testCascadedDelete.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cascaded Behavior/CallbacksExample.cs/TestCascadedDelete.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cascaded Behavior/CallbacksExample.cs/OnDeleted.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cascaded Behavior/CallbacksExample.vb/TestCascadedDelete.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cascaded Behavior/CallbacksExample.vb/OnDeleted.flsnp" />
+</p><p MadCap:conditions="Primary:vb" /><p>Note, that in client/server mode deleted event is only raised on the server side, therefore the code above won't work. </p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

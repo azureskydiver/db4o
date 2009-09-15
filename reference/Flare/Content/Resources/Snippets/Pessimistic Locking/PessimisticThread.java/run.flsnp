@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PessimisticThread.java: run
+public void run() ...{
+      try ...{
+        List&lt;Pilot&gt; result = _container.query(Pilot.class);
+        for (Pilot pilot: result)...{
+          /**//* with pessimistic approach the object is locked as soon 
+           * as we get it 
+           */ 
+          if (!_container.ext().setSemaphore(&quot;LOCK_&quot;+_container.ext().getID(pilot), 0))...{
+            System.out.println(&quot;Error. The object is locked&quot;);
+          }
+          
+          System.out.println(getName() + &quot;Updating pilot: &quot; + pilot);
+              pilot.addPoints(1);
+              _container.store(pilot);
+              /**//* The changes should be committed to be 
+               * visible to the other clients
+               */
+              _container.commit();
+              _container.ext().releaseSemaphore(&quot;LOCK_&quot;+_container.ext().getID(pilot));
+              System.out.println(getName() + &quot;Updated pilot: &quot; + pilot);
+              System.out.println();
+        }
+      } finally ...{
+        _container.close();
+      }
+    }</pre>    </body></html>

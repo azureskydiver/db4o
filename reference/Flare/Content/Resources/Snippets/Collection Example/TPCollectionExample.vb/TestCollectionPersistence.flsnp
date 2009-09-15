@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPCollectionExample.vb: TestCollectionPersistence
+Private Shared Sub TestCollectionPersistence()Sub TestCollectionPersistence()
+            StoreCollection()
+            Dim container As IObjectContainer = Database(ConfigureTP())
+            If container IsNot Nothing Then
+                Try
+                    Dim team As Team = DirectCast(container.QueryByExample(New Team()).[Next](), Team)
+                    ' this method will activate all the members in the collection
+                    Dim pilots As IList(Of Pilot) = team.Pilots
+                    For Each p As Pilot In pilots
+                        p.Name = &quot;Modified: &quot; + p.Name
+                    Next
+                    team.AddPilot(New Pilot(&quot;New pilot&quot;))
+                    ' explicitly commit to persist changes
+                    container.Commit()
+                Catch ex As Exception
+                    System.Console.WriteLine(ex.Message)
+                Finally
+                    ' If TP changes were not committed explicitly,
+                    ' they would be persisted with the #close call
+                    CloseDatabase()
+                End Try
+            End If
+            ' reopen the database and check the changes
+            container = Database(ConfigureTP())
+            If container IsNot Nothing Then
+                Try
+                    Dim result As IObjectSet = container.QueryByExample(New Team())
+                    Dim team As Team = DirectCast(result(0), Team)
+                    team.ListAllPilots()
+                Catch ex As Exception
+                    System.Console.WriteLine(ex.Message)
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub</div</pre>    </body></html>

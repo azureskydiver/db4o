@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Car.cs
+/**//* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
+namespace Db4odoc.Blobs
+...{
+  public class Car
+  ...{
+    string _model;
+    CarImage _img;
+    
+    public Car(string model)
+    ...{
+      _model = model;
+      _img=new CarImage();
+      _img.FileName = _model+&quot;.jpg&quot;;
+    }
+        
+    public CarImage CarImage 
+    ...{
+      get 
+      ...{
+        return _img;
+      }
+    }
+    
+    override public string ToString()
+    ...{
+      return string.Format(&quot;{0}({1})&quot;, _model, _img.FileName);
+    }
+  }
+}</pre>    </body></html>

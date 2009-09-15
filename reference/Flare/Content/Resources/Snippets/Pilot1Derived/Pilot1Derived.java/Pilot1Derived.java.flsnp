@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Pilot1Derived.java
+package com.db4odoc.qbe;
+
+public class Pilot1Derived extends Pilot1 ...{
+
+  public Pilot1Derived(String name) ...{
+    super(name);
+    // TODO Auto-generated constructor stub
+  }
+  
+}</pre>    </body></html>

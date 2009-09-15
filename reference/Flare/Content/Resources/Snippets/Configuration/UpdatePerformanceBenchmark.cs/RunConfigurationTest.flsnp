@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: RunConfigurationTest
+private void RunConfigurationTest()
+        ...{
+            System.Console.WriteLine(&quot;Update test with different configurations&quot;);
+
+            //
+            Clean();
+            Init();
+            System.Console.WriteLine(&quot;Update test: default configurations&quot;);
+            Open(Db4oFactory.NewConfiguration());
+            Store();
+            UpdateItems(90);
+            Close();
+            //
+
+            Clean();
+            System.Console.WriteLine(&quot;Update test: memory IO adapter&quot;);
+            Open(Configure());
+            Store();
+            UpdateItems(90);
+            Close();
+            //
+            Clean();
+            System.Console.WriteLine(&quot;Update test: cascade on Update&quot;);
+            Open(ConfigureCascade());
+            Store();
+            UpdateTopLevelItems(90);
+            Close();
+
+            //
+            Clean();
+            System.Console.WriteLine(&quot;Update test: Transparent Persistence&quot;);
+            Open(ConfigureTP());
+            StoreActivatableItems();
+            UpdateActivatableItems(90);
+            Close();
+
+        }</pre>    </body></html>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.java: removeInsert
+private static void removeInsert()
+        ...{
+            ObjectContainer db = Db4o.openFile(DBFILE);
+            long timeElapsed = 0;
+            try
+            ...{
+                // set activation depth to 1 for the quickest execution
+                db.ext().configure().updateDepth(1);
+                List&lt;ListObject&gt; result = db.&lt;ListObject&gt;query(ListObject.class);
+                if (result.size() == 2)
+                ...{
+                  // retrieve 2 ListObjects
+                    ListObject lo1 = result.get(0);
+                    ListObject lo2 = result.get(1);
+                    DataObject dataObject = lo1.getData().get(0);
+                    // move the first object from the first
+                    // ListObject to the second ListObject
+                    lo1.getData().remove(dataObject);
+                    lo2.getData().add(dataObject);
+
+                    System.out.println(&quot;Removed from the first list, count is &quot; + lo1.getData().size());
+                    System.out.println(&quot;Added to the second list, count is &quot; + lo2.getData().size());
+                    long t1 = System.currentTimeMillis();
+                    // save ListObjects. UpdateDepth = 1 will ensure that 
+                    // the DataObject list is saved as well
+                    db.set(lo1);
+                    db.set(lo2);
+                    db.commit();
+                    long t2 = System.currentTimeMillis();
+                    timeElapsed = t2 - t1;
+                }
+            }
+            finally
+            ...{
+                db.close();
+            }
+            System.out.println(&quot;Storing took: &quot; + timeElapsed + &quot; ms.&quot;);
+        }</pre>    </body></html>

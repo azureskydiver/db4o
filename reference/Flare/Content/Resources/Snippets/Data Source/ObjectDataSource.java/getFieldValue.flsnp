@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ObjectDataSource.java: getFieldValue
+public Object getFieldValue(JRField field) throws JRException ...{
+    Object value = null;
+    try ...{
+      // getter method signature is assembled from &quot;get&quot; + field name 
+      // as specified in the report
+      Method fieldAccessor = currentValue.getClass().getMethod(&quot;get&quot; + field.getName(), null);
+      value = fieldAccessor.invoke(currentValue, null);
+    } catch (IllegalAccessException iae) ...{
+      iae.printStackTrace();
+    } catch (InvocationTargetException ite) ...{
+      ite.printStackTrace();
+    } catch (NoSuchMethodException nsme) ...{
+      nsme.printStackTrace();
+    }
+    return value;
+  }</pre>    </body></html>

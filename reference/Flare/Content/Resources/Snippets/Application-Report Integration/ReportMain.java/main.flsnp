@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReportMain.java: main
+public static void main(String[] args) throws BirtException ...{
+    // create engine configuration
+    EngineConfig config = new EngineConfig();
+    // specify the path to the BIRT installation 
+    config.setEngineHome(BIRT_HOME);
+    // set the output directory for the logging and set the logging level
+    config.setLogConfig(OUTPUT_DIR, Level.FINE);
+
+    // start the Platform to load the plugins
+    Platform.startup(config);
+    // create a factory, which will supply ReportEngine instance
+    IReportEngineFactory factory = (IReportEngineFactory) Platform
+        .createFactoryObject(IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY);
+    // there is a significant cost associated with creating a new engine
+    // instance, therefore the application should use only one engine instance 
+    // for its reports
+    engine = factory.createReportEngine(config);
+    engine.changeLogLevel(Level.WARNING);
+
+    IReportRunnable design;
+    // Open the report design
+    design = engine.openReportDesign(REPORT_DESIGN);
+    // Create task to run and render the report
+    IRunAndRenderTask task = engine.createRunAndRenderTask(design);
+    
+    // Set rendering options - such as file or stream output,
+    // output format, whether it is embeddable, etc
+    HTMLRenderOption options = new HTMLRenderOption();
+    options.setOutputFileName(OUTPUT_DIR + &quot;//&quot; + REPORT_OUTPUT);
+    // output format can be either html or pdf
+    options.setOutputFormat(&quot;html&quot;);
+    task.setRenderOption(options);
+
+    // run the report
+    task.run();
+    task.close();
+
+    // shutdown the engine and the platform after use
+    // to clean up and unload the extensions
+    engine.shutdown();
+    Platform.shutdown();
+  }</pre>    </body></html>

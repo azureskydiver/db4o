@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.vb: CloseClient
+1Private Sub CloseClient()Sub CloseClient(ByVal client As IObjectContainer)
+2            ' remove listeners before shutting down
+3            If Not (clientListeners(client) Is Nothing) Then
+4                Dim eventRegistry As IEventRegistry = EventRegistryFactory.ForObjectContainer(client)
+5                RemoveHandler eventRegistry.Committed, AddressOf CType(clientListeners(client), CommittedEventHandler).OnCommitted
+6                clientListeners.Remove(client)
+7            End If
+8            client.Close()
+9        End Sub</pre>    </body></html>

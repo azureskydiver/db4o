@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CalculationExamples.java: countSubGroups
+private static void countSubGroups() ...{
+    ObjectContainer container = database();
+    if (container != null) ...{
+      try ...{
+        CountPredicate predicate = new CountPredicate();
+        List&lt;Pilot&gt; result = container.query(predicate);
+        listResult(result);
+        Iterator keyIterator = predicate.countMap.keySet().iterator();
+        while (keyIterator.hasNext()) ...{
+          String key = keyIterator.next().toString();
+          System.out
+              .println(key + &quot;: &quot; + predicate.countMap.get(key));
+        }
+      } catch (Exception ex) ...{
+        System.out.println(&quot;System Exception: &quot; + ex.getMessage());
+      } finally ...{
+        closeDatabase();
+      }
+    }
+  }</pre>    </body></html>

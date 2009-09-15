@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryExample.vb: StorePilot
+Public Shared Sub StorePilot()Sub StorePilot()
+            File.Delete(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Try
+                Dim pilot As Pilot = New Pilot(&quot;Michael Schumacher&quot;, 0)
+                db.Set(pilot)
+                Console.WriteLine(&quot;Stored {0}&quot;, pilot)
+                ' change pilot and resave updated
+                pilot.AddPoints(10)
+                db.Set(pilot)
+                Console.WriteLine(&quot;Stored {0}&quot;, pilot)
+            Finally
+                db.Close()
+            End Try
+            RetrieveAllPilots()
+        End Sub</pre>    </body></html>

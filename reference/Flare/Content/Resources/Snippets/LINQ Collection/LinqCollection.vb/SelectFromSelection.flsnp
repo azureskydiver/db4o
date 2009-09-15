@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LinqCollection.vb: SelectFromSelection
+Private Shared Sub SelectFromSelection()Sub SelectFromSelection()
+            Dim container As IObjectContainer = Database()
+            If container IsNot Nothing Then
+                Try
+                    Dim allObjects = From o As Object In container Select o
+                    Dim listOfObjects = allObjects.ToList()
+                    Dim pilots = From p As Object In allObjects _
+                    Where (p.GetType().FullName.Equals(&quot;Linq.Db4objects.Db4odoc.Linq.Pilot&quot;)) _
+                    Select pilot1 = CType(p, Pilot) Where pilot1.Points &gt; 25
+                    ListResult(pilots)
+                    Dim cars = From car As Object In allObjects _
+                               Where car.GetType().FullName.Equals(&quot;Linq.Db4objects.Db4odoc.Linq.Car&quot;) _
+                               Select car1 = CType(car, Car) _
+                               Where pilots.Contains(CType(car1, Car).Pilot)
+                    ListResult(cars)
+                Catch ex As Exception
+                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub</pre>    </body></html>

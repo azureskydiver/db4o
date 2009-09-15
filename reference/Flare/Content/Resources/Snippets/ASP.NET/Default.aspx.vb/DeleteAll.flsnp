@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Default.aspx.vb: DeleteAll
+1Public Shared Sub DeleteAll()Sub DeleteAll()
+2
+3            Dim messages As IList = Db4oHttpModule.Client.Get(GetType(Message))
+4            For Each msg As Message In messages
+5                Db4oHttpModule.Client.Delete(msg)
+6            Next
+7
+8        End Sub</div</pre>    </body></html>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Collections	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Collections</h1><p><font color="#990000">This topic applies to Java version only</font> </p><p>This section covers examples on Collection, including array, Set, List and Map. </p><p>As an experienced db4o user, you may know that db4o treats Collection
+as first class object, which means it assigns unique UUID to each
+Collection. Hence a Collection can be shared among many owners. This is
+different to Hibernate's approach, where Collection does not have a
+unique ID and they cannot be shared among objects.</p><p>To bridge this gap, dRS treats Collections as second class objects and
+does not assign UUIDs to them. When a shared Collection is replicated
+from db4o to Hibernate using dRS, it is automatically cloned. Each
+owner of the Collection receives a copy of the Collection. Further
+modifications to the db4o copy will not be replicated to cloned copies.
+Therefore, you cannot share Collections if you want to perform RDBMS
+replications with dRS.</p><p>In the following examples, we will use Car as the element in the following examples. </p><MadCap:snippetBlock src="../../../Resources/Snippets/Collections/Car.java/Car.java.flsnp" />/p><MadCap:snippetBlock src="../../../Resources/Snippets/Collections/Car.hbm.xml/Car.hbm.xml.flsnp" /></p><p><div class="childTopicList">More Reading:<ul>
+<li><p><a href="collections/array.html" class="wikiLink">Array</a></p></li>
+<li><p><a href="collections/list.html" class="wikiLink">List</a></p></li>
+<li><p><a href="collections/set.html" class="wikiLink">Set</a></p></li>
+<li><p><a href="collections/map.html" class="wikiLink">Map</a></p></li>
+</ul></div>
+ </p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

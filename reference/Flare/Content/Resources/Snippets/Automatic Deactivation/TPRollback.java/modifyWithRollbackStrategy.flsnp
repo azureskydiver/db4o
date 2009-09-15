@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPRollback.java: modifyWithRollbackStrategy
+private static void modifyWithRollbackStrategy() ...{
+    ObjectContainer container = database(configureTPForRollback());
+    if (container != null) ...{
+      try ...{
+        // create a car
+        Car car = (Car) container.queryByExample(new Car(null, null))
+            .get(0);
+        Pilot pilot = car.getPilot();
+        System.out.println(&quot;Initial car: &quot; + car + &quot;(&quot;
+            + container.ext().getID(car) + &quot;)&quot;);
+        System.out.println(&quot;Initial pilot: &quot; + pilot + &quot;(&quot;
+            + container.ext().getID(pilot) + &quot;)&quot;);
+        car.setModel(&quot;Ferrari&quot;);
+        car.changePilot(&quot;Michael Schumacher&quot;, 123);
+        container.rollback();
+        System.out.println(&quot;Car after rollback: &quot; + car + &quot;(&quot;
+            + container.ext().getID(car) + &quot;)&quot;);
+        System.out.println(&quot;Pilot after rollback: &quot; + pilot + &quot;(&quot;
+            + container.ext().getID(pilot) + &quot;)&quot;);
+      } finally ...{
+        closeDatabase();
+      }
+    }
+  }</pre>    </body></html>

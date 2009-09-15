@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>TCultureInfo Translator	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>TCultureInfo Translator</h1>
+
+<p><font color="#990000">This topic applies to .NET version only.</font></p>
+<p>CultureInfo class cannot be stored cleanly by db4o because
+it internally holds a native pointer to a system structure. This problem was discussed in detail in
+<a href="../.net_example_class.html" class="wikiLink">.NET Example Class</a> and a solution suggested in
+<a href="../.net_translator_implementation.html" class="wikiLink">.NET Translator Implementation</a>. In fact built-in TCultureInfo
+class implements the same solution and can be used immediately without any
+custom translators:</p>
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<p>c#:</p>
+
+<p><code>configuration.ObjectClass(typeof(CultureInfo)).Translate(new
+CultureInfoTranslator());</code></p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<p>VB:</p>
+
+<p><code>
+configuration.ObjectClass(GetType(CultureInfo)).Translate(New
+CultureInfoTranslator())</code></p>
+
+</p><p MadCap:conditions="Primary:vb" />
+
+
+</div>
+    </div>
+    
+  </body></html>

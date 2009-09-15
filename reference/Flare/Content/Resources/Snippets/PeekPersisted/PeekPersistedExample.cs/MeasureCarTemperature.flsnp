@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PeekPersistedExample.cs: MeasureCarTemperature
+private static void MeasureCarTemperature()
+    ...{
+      SetObjects();
+      IObjectContainer db = Db4oFactory.OpenFile(Db4oFileName);
+      try 
+      ...{
+        IObjectSet result = db.Get(typeof(Car));
+        if (result.Size() &gt; 0)
+        ...{
+          Car car = (Car)result[0];
+          Car car1  = (Car)db.Ext().PeekPersisted(car, 5, true);
+          Change1 ch1 = new Change1();
+          ch1.Init(car1);
+          Car car2  = (Car)db.Ext().PeekPersisted(car, 5, true);
+          Change2 ch2 = new Change2();
+          ch2.Init(car2);
+          Thread.Sleep(300);
+          // We can work on the database object at the same time
+          car.Model = &quot;BMW M3Coupe&quot;;
+          db.Set(car);
+          ch1.Stop();
+          ch2.Stop();
+          System.Console.WriteLine(&quot;car1 saved to the database: &quot; + db.Ext().IsStored(car1));
+          System.Console.WriteLine(&quot;car2 saved to the database: &quot; + db.Ext().IsStored(car1));
+          int temperature = (int)((car1.Temperature + car2.Temperature)/2);
+          car.Temperature = temperature;
+          db.Set(car);
+        }
+      } 
+      finally 
+      ...{
+        db.Close();
+      }
+      �heckCar();
+    }</pre>    </body></html>

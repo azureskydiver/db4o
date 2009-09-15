@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BlobExample.vb: storeImage
+1Private Shared Sub StoreImage()Sub StoreImage(ByVal car As Car)
+2            Dim img As CarImage = car.CarImage
+3            Try
+4                img.ReadFile()
+5            Catch ex As Exception
+6                Console.WriteLine(ex.Message)
+7            End Try
+8        End Sub</pre>    </body></html>

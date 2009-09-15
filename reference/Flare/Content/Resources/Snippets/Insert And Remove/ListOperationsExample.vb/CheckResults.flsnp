@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.vb: CheckResults
+Private Shared Sub CheckResults()Sub CheckResults()
+            Dim sw As Stopwatch = New Stopwatch
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(DbFile)
+            Try
+                Dim result As IList(Of ListObject) = db.Query(Of ListObject)()
+                If result.Count &gt; 0 Then
+                    ' activation depth should be enough to activate 
+                    ' ListObject, DataObject and its list members
+                    Dim activationDepth As Integer = 3
+                    db.Ext.Configure.ActivationDepth(activationDepth)
+                    Console.WriteLine(&quot;Result count was {0}, looping with activation depth {1}&quot;, result.Count, activationDepth)
+                    sw.Start()
+                    For Each lo As ListObject In result
+                        Console.WriteLine(&quot;ListObj {0} has {1} objects&quot;, lo.Name, (Microsoft.VisualBasic.IIf((lo.Data Is Nothing), &quot;&lt;null&gt;&quot;, lo.Data.Count.ToString)))
+                        Console.WriteLine(&quot; --- {0} at index 0&quot;, (Microsoft.VisualBasic.IIf((Not (lo.Data Is Nothing) AndAlso lo.Data.Count &gt; 0), lo.Data(0).ToString, &quot;&lt;null&gt;&quot;)))
+                    Next
+                    sw.Stop()
+                End If
+            Finally
+                db.Close()
+            End Try
+            Console.WriteLine(&quot;Activation took {0}&quot;, sw.Elapsed.ToString)
+        End Sub</pre>    </body></html>

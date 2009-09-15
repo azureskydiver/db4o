@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">refactoringUtil.vb: MoveValues
+Public Shared Sub MoveValues()Sub MoveValues()
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                ' querying for B will bring back B and C values
+                Dim result As IObjectSet = container.[Get](New Initial.B())
+                For i As Integer = 0 To result.Count - 1
+                    Dim b As Initial.B = DirectCast(result(i), Initial.B)
+                    Dim d As New D()
+                    d.name = b.name
+                    d.number = b.number
+                    container.Delete(b)
+                    container.[Set](d)
+
+                Next
+            Finally
+                container.Close()
+                System.Console.WriteLine(&quot;Done&quot;)
+            End Try
+        End Sub</pre>    </body></html>

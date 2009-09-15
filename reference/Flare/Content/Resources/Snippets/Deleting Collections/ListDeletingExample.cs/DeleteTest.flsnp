@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListDeletingExample.cs: DeleteTest
+private static void DeleteTest()...{
+            // set cascadeOnDelete in order to delete member objects
+            IConfiguration configuration = Db4oFactory.NewConfiguration();
+            configuration.ObjectClass(typeof(ListObject)).CascadeOnDelete(true);
+            IObjectContainer db = Db4oFactory.OpenFile(configuration , Db4oFileName);
+            try
+            ...{
+                IList&lt;ListObject&gt; result = db.Query&lt;ListObject&gt;(typeof(ListObject));
+                if (result.Count &gt; 0)
+                ...{
+                  // retrieve a ListObject
+                    ListObject lo1 = result[0];
+                    // delete the ListObject with all the field objects
+                    db.Delete(lo1);
+                }
+            } finally ...{
+              db.Close();
+            }
+            // check ListObjects and DataObjects in the database
+            db = Db4oFactory.OpenFile(Db4oFileName);
+            try ...{
+              IList&lt;ListObject&gt; listObjects = db.Query&lt;ListObject&gt;(typeof(ListObject));
+              Console.WriteLine(&quot;ListObjects in the database:  &quot; + listObjects.Count);
+                IList&lt;DataObject&gt; dataObjects = db.Query&lt;DataObject&gt;(typeof(DataObject));
+                Console.WriteLine(&quot;DataObjects in the database: &quot; + dataObjects.Count);
+          } finally ...{
+                db.Close();
+            }
+        }</pre>    </body></html>

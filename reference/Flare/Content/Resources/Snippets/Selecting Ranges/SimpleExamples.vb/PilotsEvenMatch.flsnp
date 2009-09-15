@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: PilotsEvenMatch
+1Private Shared Function PilotsEvenMatch()Function PilotsEvenMatch(ByVal p As Pilot) As Boolean
+2            ' all Pilots having even points
+3            Return p.Points Mod 2 = 0
+4        End Function</pre>    </body></html>

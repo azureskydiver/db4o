@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">InsertPerformanceBenchmark.cs: RunInheritanceTest
+private void RunInheritanceTest()
+        ...{
+            Configure();
+            Init();
+            Clean();
+            System.Console.WriteLine(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth);
+            Open();
+            Store();
+            Close();
+
+            Clean();
+            System.Console.WriteLine(&quot;Storing &quot; + _count + &quot; inherited objects of depth &quot; + _depth);
+            Open();
+            StoreInherited();
+            Close();
+        }</pre>    </body></html>

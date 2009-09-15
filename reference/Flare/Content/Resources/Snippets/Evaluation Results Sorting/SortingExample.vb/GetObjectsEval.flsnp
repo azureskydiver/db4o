@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SortingExample.vb: GetObjectsEval
+Private Shared Sub GetObjectsEval()Sub GetObjectsEval()
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                Dim dt1 As DateTime = DateTime.UtcNow
+                Dim query As IQuery = db.Query
+                query.Constrain(GetType(Pilot))
+                query.Constrain(New PilotEvaluation)
+                Dim result As ArrayList = New ArrayList(query.Execute)
+                result.Sort(New PilotComparer)
+                Dim dt2 As DateTime = DateTime.UtcNow
+                Dim diff As TimeSpan = dt2 - dt1
+                Console.WriteLine(&quot;Time to execute with Evaluation query and collection sorting: &quot; + diff.TotalMilliseconds.ToString() + &quot; ms.&quot;)
+                ListResult(result)
+            Finally
+                db.Close()
+            End Try
+        End Sub</pre>    </body></html>

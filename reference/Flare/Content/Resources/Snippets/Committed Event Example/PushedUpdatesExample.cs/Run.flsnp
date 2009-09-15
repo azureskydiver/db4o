@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.cs: Run
+public void Run()
+        ...{
+            File.Delete(Db4oFileName);
+            IObjectServer server = Db4oClientServer.OpenServer(Db4oClientServer.NewServerConfiguration(), Db4oFileName, Port);
+            try
+            ...{
+                server.GrantAccess(User, Password);
+
+                IObjectContainer client1 = OpenClient();
+                IObjectContainer client2 = OpenClient();
+
+                if (client1 != null &amp;&amp; client2 != null)
+                ...{
+                    try
+                    ...{
+                        // wait for the operations to finish
+                        WaitForCompletion();
+
+                        // save pilot with client1
+                        Car client1Car = new Car(&quot;Ferrari&quot;, 2006, new Pilot(&quot;Schumacher&quot;));
+                        client1.Store(client1Car);
+                        client1.Commit();
+
+                        WaitForCompletion();
+
+                        // retrieve the same pilot with client2
+                        Car client2Car = (Car)client2.Query(typeof(Car)).Next();
+                        System.Console.WriteLine(client2Car);
+
+                        // modify the pilot with client1
+                        client1Car.Model = 2007;
+                        client1Car.Pilot = new Pilot(&quot;Hakkinnen&quot;);
+                        client1.Store(client1Car);
+                        client1.Commit();
+
+                        WaitForCompletion();
+
+                        // client2Car has been automatically updated in
+                        // the committed event handler because of the
+                        // modification and the commit by client1
+                        System.Console.WriteLine(client2Car);
+
+                        WaitForCompletion();
+                    }
+                    catch (Exception ex)
+                    ...{
+                        System.Console.WriteLine(ex.ToString());
+                    }
+                    finally
+                    ...{
+                        CloseClient(client1);
+                        CloseClient(client2);
+                    }
+                }
+            }
+            catch (Exception ex)
+            ...{
+                System.Console.WriteLine(ex.ToString());
+            }
+            finally
+            ...{
+                server.Close();
+            }
+        }</pre>    </body></html>

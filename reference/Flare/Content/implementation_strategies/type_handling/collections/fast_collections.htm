@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Fast collections	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Fast collections</h1>
+
+<p>Db4o's solution for the best collection performance and lowest memory consumption is to implement them directly on top of BTrees without an intermediate "stored-object-db4o" layer (P1Object, P1Collection, P2LinkedList). </p>
+<p>This task is still under development, but already it makes sense to be ready to switch to the new fast collections seamlessly.</p>
+<p>Current recommendation for collection usage with db4o is:</p>
+<ul>
+<li>Declare members of persistent classes as interface (java.util.List / System.Collections.IList).</li>
+<li>Create central factory method to implement concrete collection (can be switched to fast collection implementation easily).</li>
+</ul>
+<p>Please, avoid the following realizations, which will make the switching more difficult:</p>
+<ul>
+<li>Declaring concrete implementations as fields in persistent classes</li>
+<li>Deriving from JDK collection classes</li>
+<li>Using third-party non-standard collections</li>
+</ul>
+<p>Let's look at application design, which will allow you to upgrade your application to fast collections with the least effort.</p>
+<p>In our example we will save a list of pilots as members of one team. To make it simple let's use the following factory class to get the proper list implementation:</p>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Fast collections/CollectionFactory.java/CollectionFactory.java.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Fast collections/CollectionFactory.cs/CollectionFactory.cs.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Fast collections/CollectionFactory.vb/CollectionFactory.vb.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+<p>The concrete class returned by the CollectionFactory can be changed to any other collection implementation (fast collection) with the minimum coding effort.</p>
+<p>We will use the following class as a team of pilots:</p>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Fast collections/Team.java/Team.java.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Fast collections/Team.cs/Team.cs.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Fast collections/Team.vb/Team.vb.flsnp" /><p>[/filter] </p>
+<p>Let's try to store our team:</p>
+<p><span name="cs_wiki_filter" csw_filters="java"></p>
+<MadCap:snippetBlock src="../../../Resources/Snippets/Fast collections/CollectionExample.java/setTeam.flsnp" /></span>
+<span name="cs_wiki_filter" csw_filters="cs">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Fast collections/CollectionExample.cs/SetTeam.flsnp" /></span>
+<span name="cs_wiki_filter" csw_filters="vb">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Fast collections/CollectionExample.vb/SetTeam.flsnp" /><p></span> </p>
+<p>If we want to update one of the pilots, we will have to retrieve the whole collection:<span name="cs_wiki_filter" csw_filters="java"></p>
+<MadCap:snippetBlock src="../../../Resources/Snippets/Fast collections/CollectionExample.java/updateTeam.flsnp" /></span>
+<span name="cs_wiki_filter" csw_filters="cs">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Fast collections/CollectionExample.cs/UpdateTeam.flsnp" /></span>
+<p>[filter=vb]</p>
+<MadCap:snippetBlock src="../../../Resources/Snippets/Fast collections/CollectionExample.vb/UpdateTeam.flsnp" /><p></p><p MadCap:conditions="Primary:vb" /> </p>
+<p>The idea of the new fast collection implementation is to allow select/update of collection elements without an intermediate "stored-object-db4o" layer. This will allow random activation and fast querying, thus providing a considerable performance improvement especially on big collections holding deep object graphs.</p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

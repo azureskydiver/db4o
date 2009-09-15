@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">DefragmentExample.cs: ConfiguredDefragment
+public static void ConfiguredDefragment()
+        ...{
+            DefragmentConfig config = new DefragmentConfig(DB_FILE, BACKUP_FILE , new TreeIDMapping());
+            config.ObjectCommitFrequency(5000);
+            config.Db4oConfig(Db4oFactory.CloneConfiguration());
+            config.ForceBackupDelete(true);
+            config.UpgradeFile(DB_FILE + &quot;.upg&quot;);
+            try
+            ...{
+                Defragment.Defrag(config);
+            }
+            catch (Exception ex)
+            ...{
+                System.Console.WriteLine(ex.Message);
+            }
+        }</pre>    </body></html>

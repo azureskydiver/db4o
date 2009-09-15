@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IdentityExample.vb: CheckUniqueness
+Private Shared Sub CheckUniqueness()Sub CheckUniqueness()
+            SetObjects()
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                Dim cars As IObjectSet = db.Get(GetType(Car))
+                Dim car As Car = CType(cars(0), Car)
+                Dim pilotName As String = car.Pilot.Name
+                Dim pilots As IObjectSet = db.Get(New Pilot(pilotName))
+                Dim pilot As Pilot = CType(pilots(0), Pilot)
+                System.Console.WriteLine(&quot;Retrieved objects are identical: &quot; + (pilot Is car.Pilot).ToString())
+            Finally
+                db.Close()
+            End Try
+        End Sub</pre>    </body></html>

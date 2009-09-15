@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.cs: WriteToBuffer
+private static void WriteToBuffer(IWriteBuffer buffer, string str)
+        ...{
+            int length = str.Length;
+            char[] chars = new char[length];
+            str.CopyTo(0, chars, 0, length);
+            for (int i = 0; i &lt; length; i++)
+            ...{
+                buffer.WriteByte((byte)(chars[i] &amp; 0xff));
+                buffer.WriteByte((byte)(chars[i] &gt;&gt; 8));
+            }
+        }</pre>    </body></html>

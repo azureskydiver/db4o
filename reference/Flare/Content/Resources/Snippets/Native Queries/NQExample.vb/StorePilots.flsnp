@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQExample.vb: StorePilots
+1Private Shared Sub StorePilots()Sub StorePilots(ByVal db As IObjectContainer)
+2            db.Set(New Pilot(&quot;Michael Schumacher&quot;, 100))
+3            db.Set(New Pilot(&quot;Rubens Barrichello&quot;, 99))
+4        End Sub</pre>    </body></html>

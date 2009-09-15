@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListObject.vb
+' Copyright (C) 2007 db4objects Inc. http://www.db4o.com
+Imports System.Collections.Generic
+Namespace Db4objectsNamespace Db4objects.Db4odoc.ListDeleting
+
+    Class ListObjectClass ListObject
+        Private _name As String
+        Private _data As List(Of DataObject)
+
+        Public Sub New()Sub New()
+            _data = New List(Of DataObject)
+        End Sub
+
+        Public Property Name()Property Name() As String
+            Get
+                Return _name
+            End Get
+            Set(ByVal value As String)
+                _name = value
+            End Set
+        End Property
+
+        Public Property Data()Property Data() As List(Of DataObject)
+            Get
+                Return _data
+            End Get
+            Set(ByVal value As List(Of DataObject))
+                _data = value
+            End Set
+        End Property
+    End Class
+End Namespace</div</pre>    </body></html>

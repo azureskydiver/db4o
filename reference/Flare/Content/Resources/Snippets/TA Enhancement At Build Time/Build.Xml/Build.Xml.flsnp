@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Build.Xml
+&lt;?xml version=&quot;1.0&quot;?&gt;
+
+&lt;!-- 
+  TA build time enhancement sample.
+--&gt;
+
+&lt;project name=&quot;taenhance&quot; default=&quot;buildall&quot;&gt;
+
+&lt;!-- 
+  Set up the required class path for the enhancement task.
+  In a production environment, this will be composed of jars, of course. 
+--&gt;
+&lt;path id=&quot;db4o.enhance.path&quot;&gt;
+  &lt;pathelement path=&quot;${basedir}&quot; /&gt;
+  &lt;fileset dir=&quot;lib&quot;&gt;
+    &lt;include name=&quot;**/*.jar&quot;/&gt;
+  &lt;/fileset&gt;
+&lt;/path&gt;
+  
+&lt;!-- Define enhancement task. --&gt;
+&lt;taskdef
+  name=&quot;db4o-enhance&quot; 
+  classname=&quot;com.db4o.instrumentation.ant.Db4oFileEnhancerAntTask&quot;
+  classpathref=&quot;db4o.enhance.path&quot;
+  loaderref=&quot;db4o.enhance.loader&quot; /&gt;
+
+&lt;typedef
+  name=&quot;transparent-activation&quot; 
+  classname=&quot;com.db4o.ta.instrumentation.ant.TAAntClassEditFactory&quot;
+  classpathref=&quot;db4o.enhance.path&quot;
+  loaderref=&quot;db4o.enhance.loader&quot; /&gt;
+
+
+
+&lt;target name=&quot;buildall&quot;&gt;
+
+        &lt;!-- Create enhanced output directory--&gt;  
+  &lt;mkdir dir=&quot;${basedir}/enhanced-bin&quot; /&gt;
+  &lt;delete dir=&quot;${basedir}/enhanced-bin&quot; quiet = &quot;true&quot;&gt;
+    &lt;include name=&quot;**/*&quot;/&gt;
+  &lt;/delete&gt;
+
+  &lt;db4o-enhance classTargetDir=&quot;${basedir}/enhanced-bin&quot; jarTargetDir=&quot;${basedir}/enhanced-lib&quot;&gt;
+
+    &lt;classpath refid=&quot;db4o.enhance.path&quot; /&gt;    
+                &lt;!-- Use compiled classes as an input --&gt;
+    &lt;sources dir=&quot;${basedir}/bin&quot; /&gt;
+
+                &lt;!-- Call transparent activation enhancement --&gt; 
+    &lt;transparent-activation /&gt;
+    
+  &lt;/db4o-enhance&gt;
+  
+&lt;/target&gt;
+
+  
+  
+&lt;/project&gt;</pre>    </body></html>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Changing Data	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Changing Data</h1><p>For this test we will select and update a car with a new
+pilot, where existing pilot has 15 points:</p>
+
+<p>SQLite:</p>
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Changing Data/SqlExample.java/updateCar.flsnp" />>db4o:</p>
+
+<p>(Select Car using Native Query)</p>
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Changing Data/Db4oExample.java/updateCar.flsnp" />
+
+
+<p> In this example db4o and SQLite actually behave quite differently. For SQLite in order to update a pilot in an existing car in the database the following actions are needed:</p><ol><li>A new pilot should be created and saved to the database.</li><li>New pilot's primary key (101) should be retrieved (not shown in this example, but is necessary for a real database application).</li><li>An update statement should be issued to replace pilot field in the car table.</li></ol><p>For db4o database the sequence will be the following:</p><ol><li>Retrieve the car from the database</li><li>Update the car with a new pilot object</li></ol><p>As you can see the only benefit of SQLite API is that the car can be selected and updated in one statement. But in the same time there are serious disadvantages:</p><ul><li>A new pilot record should be created absolutely separately (in a real database will also include ORM)</li><li>The pilot's ID needs to be retrieved separately (we must must sure that it is a correct id)  </li></ul>In db4o we avoid these disadvantages as creating new pilot and updating the car value are actually combined in one atomic operation. </div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

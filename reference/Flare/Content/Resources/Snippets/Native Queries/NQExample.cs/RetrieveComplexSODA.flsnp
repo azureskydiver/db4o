@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQExample.cs: RetrieveComplexSODA
+public static void RetrieveComplexSODA(IObjectContainer db)
+    ...{
+      IQuery query=db.Query();
+      query.Constrain(typeof(Pilot));
+      IQuery pointQuery=query.Descend(&quot;_points&quot;);
+      query.Descend(&quot;_name&quot;).Constrain(&quot;Rubens Barrichello&quot;)
+        .Or(pointQuery.Constrain(99).Greater()
+        .And(pointQuery.Constrain(199).Smaller()));
+      IObjectSet result=query.Execute();
+      ListResult(result);
+    }</div</pre>    </body></html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NewCarModel.vb
+' Copyright (C) 2009 Versant Inc. http://www.db4o.com
+
+Imports Db4objects.Db4o.Query
+
+Namespace Db4odocNamespace Db4odoc.Diagnostics
+
+    Public Class NewCarModelClass NewCarModel
+        Inherits Predicate
+        Public Function Match()Function Match(ByVal car As Car) As Boolean
+            Return car.Model.EndsWith(&quot;2002&quot;)
+        End Function
+    End Class
+End Namespace</pre>    </body></html>

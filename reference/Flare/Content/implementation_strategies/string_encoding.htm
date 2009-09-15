@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>String Encoding	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>String Encoding</h1>
+<p>When db4o
+stores and loads strings it has to convert them to and from byte arrays. By
+default db4o provides 2 types of string encoding, which do this job: Unicode
+and ISO 8859-1, Unicode being the default one. In general Unicode can represent
+any character set. However, it also imposes a certain overhead, as character values
+are stored in 4 bytes (less generic encoding usually use 2 or even 1 byte per
+character). In order to save on the database file size, it is recommended to
+use ISO 8859-1, which only required 2 bytes per character. However ISO 8859-1
+only supports latin alphabet.</p>
+
+<p>In order
+to make string encoding more flexible and configurable pluggable string
+encoding was introduced in db4o version 7.7. The API looks like this:</p>
+
+<p>Configuration#stringEncoding(stringEncoding)</p>
+
+<p>Where
+stringEncoding can be either one of the default ones:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>Configuration config = Db4o.newConfiguration();</code></p>
+
+<p><code>config.stringEncoding(StringEncodings.utf8());</code></p>
+
+<p><code>Db4o.openFile(config, "myDB.db4o");</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:  </p>
+
+<p><code>IConfiguration config = Db4oFactory.NewConfiguration();</code></p>
+
+<p><code>config.StringEncoding(StringEncodings.Utf8());</code></p>
+
+<p><code>Db4oFactory.OpenFile(config, "myDB.db4o");</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+
+<p>or a newly implemented one:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:  </p>
+
+
+<p><code>Configuration config = Db4o.newConfiguration();</code></p>
+
+<p><code>config.stringEncoding(new StringEncoding() {</code></p>
+
+<p><code>        public
+byte[] encode(String str) {</code></p>
+
+<p><code>               //
+TODO: implement</code></p>
+
+<p><code>               return
+null;</code></p>
+
+<p><code>        }</code></p>
+
+<p><code>        public
+String decode(byte[] bytes, int start, int length) {</code></p>
+
+<p><code>               //
+TODO: implement</code></p>
+
+<p><code>               return
+null;</code></p>
+
+<p><code>        }</code></p>
+
+<p><code>});</code></p>
+
+<p><code>Db4o.openFile(config, "myDB.db4o");</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary.Print">
+
+<p>.NET:  </p>
+
+
+<p><code>IConfiguration config = Db4oFactory.NewConfiguration();</code></p>
+
+<p><code>config.StringEncoding(new StringEncoding() {</code></p>
+
+<p><code>        public
+byte[] Encode(string str) {</code></p>
+
+<p><code>               //
+TODO: implement</code></p>
+
+<p><code>               return
+null;</code></p>
+
+<p><code>        }</code></p>
+
+<p><code>        public string Decode(byte[] bytes, int start, int length) {</code></p>
+
+<p><code>               //
+TODO: implement</code></p>
+
+<p><code>               return
+null;</code></p>
+
+<p><code>        }</code></p>
+
+<p><code>});</code></p>
+
+<p><code>Db4oFactory.OpenFile(config, "myDB.db4o");</code></p>
+
+</p><p MadCap:conditions="Primary:net" />
+
+<p>It is important to remember that the string
+encoding is selected once for the lifetime of a database and cannot be changed
+afterwards. With the default encodings it is enough to supply the encoding
+configuration when the database is created, it will be picked up automatically
+afterwards. With the custom string encodings, you must make sure that the same
+encoding is submitted with every database open call. As db4o uses string
+encoding to store metadata information like field and classnames, opening a
+database with a wrong string encoding will fail with exceptions.</p></div>
+    </div>
+    
+  </body></html>

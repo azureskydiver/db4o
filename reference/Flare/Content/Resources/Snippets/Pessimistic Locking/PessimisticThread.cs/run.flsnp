@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PessimisticThread.cs: run
+public void Run()
+        ...{
+            try
+            ...{
+                IList&lt;Pilot&gt; result = _container.Query&lt;Pilot&gt;();
+                foreach (var pilot in result)
+                ...{
+
+                    /**//* with pessimistic approach the object is locked as soon 
+                     * as we get it 
+                     */
+                    if (!_container.Ext().SetSemaphore(&quot;LOCK_&quot; + _container.Ext().GetID(pilot), 0))
+                    ...{
+                        Console.WriteLine(&quot;Error. The object is locked&quot;);
+                    }
+
+                    Console.WriteLine(Name + &quot;Updating pilot: &quot; + pilot);
+                    pilot.AddPoints(1);
+                    _container.Store(pilot);
+                    /**//* The changes should be committed to be 
+                     * visible to the other clients
+                     */
+                    _container.Commit();
+                    _container.Ext().ReleaseSemaphore(&quot;LOCK_&quot; + _container.Ext().GetID(pilot));
+                    Console.WriteLine(Name + &quot;Updated pilot: &quot; + pilot);
+                    Console.WriteLine();
+                }
+            }
+            finally
+            ...{
+                _container.Close();
+            }
+
+        }</pre>    </body></html>

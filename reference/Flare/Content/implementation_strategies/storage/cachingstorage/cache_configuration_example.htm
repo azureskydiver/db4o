@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Cache Configuration Example	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Cache Configuration Example</h1>
+
+<p>The following example helps to see the effect of cache
+by modifying the cache size. Note, that this example is not a good illustration
+of the LRU cache algorithm, and only shows the effect of simple caching of the
+most recent data.</p>
+
+<p>For the test we will use the following 2 classes:
+Item and ItemStore, holding a collection of items:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.java/Item.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.java/ItemStore.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.cs/Item.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.cs/ItemStore.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.vb/Item.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.vb/ItemStore.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>The following methods will be used to fill in and
+query the database:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.java/createDatabase.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.java/queryDatabase.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.cs/CreateDatabase.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.cs/QueryDatabase.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.vb/CreateDatabase.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.vb/QueryDatabase.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>In general you should see the benefits of using
+cache with the majority of db4o operations. However, the effect is most obvious
+when a large amount of database information should be accessed fast (query) and
+this information is not loaded in the applications hash memory. We are trying
+to reproduce this situation in the second method querying database. If the
+amount of items in the ItemStore collection is 10000, the database size will be
+around 900 KB. With the default cache size, i.e. page count multiplied by page
+size (64 * 1024), this will mean that the whole collection won't fit into the
+cache (It can still fit into your hash memory, so you may want to decrease the
+available hash memory or increase the size of the collection to see the effect.).
+</p>
+
+<p>We will use the following configuration methods to
+compare the default cache allocation and the custom one:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.java/getConfig.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.java/getDefaultConfig.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.cs/GetConfig.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.cs/GetDefaultConfig.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.vb/GetConfig.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Cache Configuration Example/CachingStorageExample.vb/GetDefaultConfig.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Using custom page count = 1024 will make the cache
+size enough to fit the whole collection, and you should see some performance
+improvement browsing the retrieved collection second time (Unless it all fits
+into your hash memory in any case). Please, also try decreasing page size and
+count to see the opposite effect.</p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

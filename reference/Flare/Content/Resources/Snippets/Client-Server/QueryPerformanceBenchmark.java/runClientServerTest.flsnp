@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.java: runClientServerTest
+private void runClientServerTest() ...{
+
+    initForClientServer();
+    clean();
+    System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth
+        + &quot; remotely:&quot;);
+    open(configureClientServer());
+    store();
+    close();
+    open(configureClientServer());
+    startTimer();
+    Query query = objectContainer.query();
+    query.constrain(Item.class);
+    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
+    Item item = (Item) query.execute().next();
+    stopTimer(&quot;Select 1 object: &quot; + item._name);
+    close();
+    
+    init();
+    clean();
+    System.out.println(&quot;Storing &quot; + _count + &quot; objects of depth &quot; + _depth
+        + &quot; locally:&quot;);
+    open(configureClientServer());
+    store();
+    close();
+    open(configureClientServer());
+    startTimer();
+    query = objectContainer.query();
+    query.constrain(Item.class);
+    query.descend(&quot;_name&quot;).constrain(&quot;level1/1&quot;);
+    item = (Item) query.execute().next();
+    stopTimer(&quot;Select 1 object: &quot; + item._name);
+    close();
+  }</pre>    </body></html>

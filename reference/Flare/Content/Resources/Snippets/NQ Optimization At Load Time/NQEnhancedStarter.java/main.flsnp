@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQEnhancedStarter.java: main
+1public static void main(String[] args) throws Exception ...{
+2    // Create class filter to point to the predicates to be optimized
+3    ClassFilter filter = new ByNameClassFilter(&quot;com.db4odoc.nqoptimize.&quot;, true);
+4    // Create NQ optimization class edit
+5    BloatClassEdit[] edits = ...{ new TranslateNQToSODAEdit()};
+6    URL[] urls = ...{ new File(&quot;/work/workspaces/db4o/nqtest/bin&quot;).toURI().toURL() };
+7    // launch the application using the class edit and the filter
+8    Db4oInstrumentationLauncher.launch(edits, urls, NQExample.class.getName(), new String[]...{});
+9  }</pre>    </body></html>

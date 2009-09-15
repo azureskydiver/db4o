@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ActivationExample.vb: TestCascadeActivate
+Private Shared Sub TestCascadeActivate()Sub TestCascadeActivate()
+            StoreSensorPanel()
+            Dim configuration As IEmbeddedConfiguration = Db4oEmbedded.NewConfiguration()
+            configuration.Common.ObjectClass(GetType(SensorPanel)). _
+                CascadeOnActivate(True)
+            Dim db As IObjectContainer = Db4oEmbedded.OpenFile(Db4oEmbedded.NewConfiguration(), Db4oFileName)
+            
+            Try
+                Console.WriteLine (&quot;Cascade activation&quot;)
+                Dim result As IObjectSet = db.QueryByExample(New SensorPanel(1))
+                ListResult (result)
+                If result.Count &gt; 0 Then
+                    Dim sensor As SensorPanel = CType (result (0), SensorPanel)
+                    Dim nextSensor As SensorPanel = sensor.NextSensor
+                    While Not nextSensor Is Nothing
+                        Console.WriteLine (nextSensor)
+                        nextSensor = nextSensor.NextSensor
+                    End While
+                End If
+            Finally
+                db.Close()
+            End Try
+        End Sub</pre>    </body></html>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Empty.java
+/**//* Copyright (C) 2004 - 2009 Versant Inc. http://www.db4o.com */
+package com.db4odoc.diagnostics;
+
+import java.util.Calendar;
+import java.text.DateFormat;
+
+
+public class Empty ...{    
+    
+    public Empty() ...{
+    }
+        
+  public String CurrentTime()
+  ...{
+    Calendar cl = Calendar.getInstance();
+    DateFormat df = DateFormat.getDateTimeInstance();
+    String time = df.format(cl.getTime());
+    return time;
+  }
+
+  public String ToString()
+  ...{
+    return CurrentTime();
+  }
+}</pre>    </body></html>

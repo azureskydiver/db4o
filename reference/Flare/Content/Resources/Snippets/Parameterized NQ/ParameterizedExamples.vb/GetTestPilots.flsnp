@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ParameterizedExamples.vb: GetTestPilots
+Private Shared Sub GetTestPilots()Sub GetTestPilots()
+            Dim container As IObjectContainer = Database()
+            If Not container Is Nothing Then
+                Try
+                    Dim result As IObjectSet = container.Query(New PilotNamePredicate(&quot;Test&quot;))
+                    ListResult(result)
+                Catch ex As Exception
+                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub</pre>    </body></html>

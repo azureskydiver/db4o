@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>TA For Public Fields	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>TA For Public Fields</h1><p>Accessing public fields through TA seems to be natural - if properties and getters are activated transparently, so should be public fields. However, if we look at <a href="ta_implementation.html" class="wikiLink">TA Implementation</a>, we can see that we need to embed Activate call in the method accessing the field. It is easy in the case of getters and Properties as the method is the part of the persistent class. However, in the case of public fields, the access method can exist anywhere in the code. Effectively, TA enhancer has to browse through all the classes and find all references to public fields and instrument them as necessary. Well, this is still feasible.</p><p>However, there is a certain catch: if persistent classes are in a separate library/assembly from the main code, you have to make sure that BOTH persistent classes library/assembly and the accessing library/assembly are both instrumented. This is necessary to make sure that TA code is injected both in the persistent class and in the class accessing persistent class public field. </p></div>
+    </div>
+    
+  </body></html>

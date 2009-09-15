@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BuiltInTranslatorsExample.java: testSerializable
+public static void testSerializable()
+    ...{
+        saveSerializable();
+        Configuration configuration = Db4o.newConfiguration();
+        // configure class as serializable to retrieve correctly
+        configuration.objectClass(Pilot.class).translate(new TSerializable());
+        ObjectContainer container = database(configuration);
+        if (container != null)
+        ...{
+            try
+            ...{
+              System.out.println(&quot;Retrieving pilots by name:&quot;);
+                Query query = container.query();
+                query.constrain(Pilot.class);
+                query.descend(&quot;_name&quot;).constrain(&quot;Test Pilot 1&quot;);
+                ObjectSet resultByName = query.execute();
+                listResult(resultByName);
+                
+                System.out.println(&quot;Retrieve all pilot objects:&quot;);
+                ObjectSet result = container.query(Pilot.class);
+                listResult(result);
+            }
+            catch (Db4oException ex)
+            ...{
+              ex.printStackTrace();
+            }
+            catch (Exception ex)
+            ...{
+              ex.printStackTrace();
+            }
+            finally
+            ...{
+                closeDatabase();
+            }
+        }
+    }</pre>    </body></html>

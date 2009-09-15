@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.java: tryStoreAndRetrieve
+private static void tryStoreAndRetrieve(Configuration configuration) ...{
+    ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
+    try ...{
+      NotStorable notStorable = new NotStorable(42, &quot;Test&quot;);
+      System.out.println(&quot;ORIGINAL: &quot; + notStorable);
+      container.set(notStorable);
+    } catch (Exception exc) ...{
+      System.out.println(exc.toString());
+      return;
+    } finally ...{
+      container.close();
+    }
+    container = Db4o.openFile(DB4O_FILE_NAME);
+    try ...{
+      ObjectSet result = container.get(NotStorable.class);
+      while (result.hasNext()) ...{
+        NotStorable notStorable = (NotStorable) result.next();
+        System.out.println(&quot;RETRIEVED: &quot; + notStorable);
+        container.delete(notStorable);
+      }
+    } finally ...{
+      container.close();
+    }
+  }</pre>    </body></html>

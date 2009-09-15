@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IncrementedId.java
+/**//* Copyright (C) 2009 Versant Inc. http://www.db4o.com */
+/**//*
+ * Singleton class used to keep auotincrement information 
+ * and give the next available ID on request
+ */
+package com.db4odoc.autoincrement;
+
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+
+public class IncrementedId ...{
+  private int no;
+  private static IncrementedId ref;
+
+  private IncrementedId() ...{
+    this.no = 0;
+  }
+
+  // end IncrementedId
+
+  public int getNextID(ObjectContainer db) ...{
+    no++;
+    db.store(this);
+    return no;
+  }
+
+  // end increment
+
+  public static IncrementedId getIdObject(ObjectContainer db) ...{
+    // if ref is not assigned yet:
+    if (ref == null) ...{
+      // check if there is a stored instance from the previous 
+      // session in the database
+      ObjectSet&lt;IncrementedId&gt; os = db.queryByExample(IncrementedId.class);
+      if (os.size() &gt; 0)
+        ref = (IncrementedId) os.next();
+    }
+
+    if (ref == null) ...{
+      // create new instance and store it
+      System.out.println(&quot;Id object is created&quot;);
+      ref = new IncrementedId();
+      db.store(ref);
+    }
+    return ref;
+  }
+  // end getIdObject
+}</pre>    </body></html>

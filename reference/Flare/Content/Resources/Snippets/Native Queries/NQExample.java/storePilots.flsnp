@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQExample.java: storePilots
+1private static void storePilots(ObjectContainer container) ...{
+2    container.store(new Pilot(&quot;Michael Schumacher&quot;, 100));
+3    container.store(new Pilot(&quot;Rubens Barrichello&quot;, 99));
+4  }</pre>    </body></html>

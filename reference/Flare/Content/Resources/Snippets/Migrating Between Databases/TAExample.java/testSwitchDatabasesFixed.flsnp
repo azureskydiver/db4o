@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.java: testSwitchDatabasesFixed
+private static void testSwitchDatabasesFixed() ...{
+    storeSensorPanel();
+
+    ObjectContainer firstDb = Db4o.openFile(configureTA(), FIRST_DB_NAME);
+    ObjectContainer secondDb = Db4o.openFile(configureTA(), SECOND_DB_NAME);
+    try ...{
+      ObjectSet result = firstDb.queryByExample(new SensorPanelTA(1));
+      if (result.size() &gt; 0) ...{
+        SensorPanelTA sensor = (SensorPanelTA) result.get(0);
+        // Unbind the object from the first database
+        sensor.bind(null);
+        // Migrating the object into the second database
+        secondDb.store(sensor);
+        
+        
+        System.out.println(&quot;Retrieving previous query results from &quot; 
+            + FIRST_DB_NAME + &quot;:&quot;);
+        SensorPanelTA next = sensor.getNext();
+        while (next != null) ...{
+          System.out.println(next);
+          next = next.getNext();
+        }
+        
+        System.out.println(&quot;Retrieving previous query results from &quot; 
+            + FIRST_DB_NAME + &quot; with manual activation:&quot;);
+        firstDb.activate(sensor, Integer.MAX_VALUE);
+        next = sensor.getNext();
+        while (next != null) ...{
+          System.out.println(next);
+          next = next.getNext();
+        }
+        
+        System.out.println(&quot;Retrieving sensorPanel from &quot; + SECOND_DB_NAME + &quot;:&quot;);
+        result = secondDb.queryByExample(new SensorPanelTA(1));
+        next = sensor.getNext();
+        while (next != null) ...{
+          System.out.println(next);
+          next = next.getNext();
+        }
+      }
+    } finally ...{
+      firstDb.close();
+      secondDb.close();
+    }
+  }</pre>    </body></html>

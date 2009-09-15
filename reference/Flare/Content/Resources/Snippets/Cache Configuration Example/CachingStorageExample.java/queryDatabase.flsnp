@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CachingStorageExample.java: queryDatabase
+private static void queryDatabase(EmbeddedConfiguration config) ...{
+
+    ObjectContainer container = Db4oEmbedded
+        .openFile(config, DB4O_FILE_NAME);
+    try ...{
+      ArrayList&lt;Item&gt; temp = new ArrayList&lt;Item&gt;();
+      long startTime = System.currentTimeMillis();
+      Query q = container.query();
+      q.constrain(Item.class);
+      q.descend(&quot;id&quot;).constrain(1).greater();
+      ObjectSet &lt;Item&gt; result = q.execute();
+      for (Item i: result)...{
+        temp.add(i);
+      }
+      System.out.println(String.format(&quot;Time to get an objects first time: %d ms&quot;,
+          System.currentTimeMillis() - startTime));
+      //
+      temp = new ArrayList&lt;Item&gt;();
+      startTime = System.currentTimeMillis();
+      for (Item i: result)...{
+        temp.add(i);
+      }
+      System.out.println(String.format(&quot;Time to get an objects second time: %d ms&quot;,
+          System.currentTimeMillis() - startTime));
+    } finally ...{
+      container.close();
+    }
+  }</pre>    </body></html>

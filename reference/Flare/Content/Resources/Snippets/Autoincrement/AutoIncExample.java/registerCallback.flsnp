@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AutoIncExample.java: registerCallback
+public static void registerCallback(final ObjectContainer db)...{
+    EventRegistry registry =  EventRegistryFactory.forObjectContainer(db);
+    // register an event handler, which will assign autoincremented IDs to any
+    // object extending CountedObject, when the object is created
+    registry.creating().addListener(new EventListener4() ...{
+      public void onEvent(Event4 e, EventArgs args) ...{
+        ObjectEventArgs queryArgs = ((ObjectEventArgs) args);
+        Object obj = queryArgs.object();
+        // only for the objects extending the CountedObject
+        if (obj instanceof CountedObject)...{
+          ((CountedObject)obj).setId(getNextId(db));
+        }
+      }
+    });
+  }</pre>    </body></html>

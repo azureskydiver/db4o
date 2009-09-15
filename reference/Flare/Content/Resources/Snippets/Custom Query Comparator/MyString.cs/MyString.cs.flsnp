@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MyString.cs
+/**//* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
+namespace Db4objects.Db4odoc.Comparing
+...{
+    class MyString
+    ...{
+        private string _string;
+      
+      public MyString(string str)...{
+        _string = str;
+      }
+      
+      public override string ToString()...{
+        return _string;
+      }
+    }
+}</pre>    </body></html>

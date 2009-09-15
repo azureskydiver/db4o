@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TransactionExample.vb: CarSnapshotRollbackRefresh
+1Public Shared Sub CarSnapshotRollbackRefresh()Sub CarSnapshotRollbackRefresh(ByVal db As IObjectContainer)
+2            Dim result As IObjectSet = db.Get(New Car(&quot;BMW&quot;))
+3            Dim car As Car = DirectCast(result.Next(), Car)
+4            car.Snapshot()
+5            db.Set(car)
+6            db.Rollback()
+7            db.Ext().Refresh(car, Integer.MaxValue)
+8            Console.WriteLine(car)
+9        End Sub</pre>    </body></html>

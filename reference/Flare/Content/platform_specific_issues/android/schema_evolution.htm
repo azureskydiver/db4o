@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Schema Evolution	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Schema Evolution</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Schema Evolution in db4o">Schema Evolution in db4o</a></li><li><a href ="#Schema Evolution in SQLite">Schema Evolution in SQLite</a></li><li><a href ="#Conclusion">Conclusion</a></li></ul></li></ul></div></div></div><p>When a new application development is considered it is
+important to think about its evolution. What happens if your initial model does
+not suffice and you need changes or additions? Let's look how db4o and SQLite
+applications can handle it.</p>
+
+<p>To keep the example simple, let's add a registration record
+to our car:</p>
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/RegistrationRecord.java/RegistrationRecord.java.flsnp" />
+<p>Now we will need to modify Car class to attach the record:</p>
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/Car.java/Car.java.flsnp" />
+<p>Ok, the application is changed to cater for new class. What
+about our databases?</p>
+
+<a name="Schema Evolution in db4o"></a><h3>Schema Evolution in db4o</h3>
+
+<p>db4o supports such schema change on the fly: we can select
+values and update the new field too: </p>
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/Db4oExample.java/selectCarAndUpdate.flsnp" /> name="Schema Evolution in SQLite"></a><h3>Schema Evolution in SQLite</h3>
+
+<p>For SQLite database model should be synchronized with the
+object model:</p>
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/SqlExample.java/upgradeDatabase.flsnp" />
+<p>Now we can try to retrieve and update records:</p>
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Schema Evolution/SqlExample.java/selectCarAndUpdate.flsnp" /> name="Conclusion"></a><h3>Conclusion</h3>
+
+<p>You can see that schema evolution is much easier with db4o.
+But the main difficulty that is not visible from the example is that schema
+evolution with SQLite database can potentially introduce a lot of bugs that
+will be difficult to spot. For more information see
+<a href="../../implementation_strategies/refactoring_and_schema_evolution.html" class="wikiLink">Refactoring and Schema Evolution</a>.</p>
+
+
+
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

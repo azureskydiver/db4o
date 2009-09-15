@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Collections Update Depth	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Collections Update Depth</h1>
+<p>When you work with collections you should pay a special
+attention to your update depth setting, as the performance impact of this
+setting increases with the number of objects in the collection.</p>
+
+<p>For example let’s consider a class like this:</p>
+
+<p MadCap:conditions="Primary.Java">
+<p>Java: </p>
+
+
+<p><code>class ListObject {</code></p>
+
+<p><code>            List
+&lt;DataObject&gt; data;</code></p>
+
+<p><code>}</code></p>
+</p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<p>c#:</p>
+
+
+
+<p><code>class ListObject {</code></p>
+
+
+<p><code>            List
+&lt;DataObject&gt; data;</code></p>
+
+
+
+<p><code>}</code></p>
+
+
+<p></p><p MadCap:conditions="Primary:cs" /></p>
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<p>VB:</p>
+
+
+
+
+<p><code>Class ListObject </code> </p>
+
+
+<p><code>            data As List(Od DataObject)</code></p>
+
+
+
+
+<p><code>End Class</code></p>
+
+
+</p><p MadCap:conditions="Primary:vb" />
+
+
+
+
+
+<p>Let’s assume that ListObject has a data list of 1000 DataObjects.</p><p><b>Update depth = 1</b></p>
+
+
+
+
+<p>data field object (List) will be updated if ListObject is saved.</p><p><b>Update depth = 2</b></p>
+
+
+
+
+
+<p>data object (List) and all 1000 DataObjects in the list will be updated if
+ListObject is saved.</p><p>It is easy to see that after a certain update depth value
+all the list objects are getting updated, which produces a serious performance
+penalty. The following examples show how to avoid the performance drop
+and still get the expected results.</p>
+
+<p><div class="childTopicList">More Reading:<ul>
+<li><p><a href="collections_update_depth/insert_and_remove.html" class="wikiLink">Insert And Remove</a></p></li>
+<li><p><a href="collections_update_depth/updating_list_objects.html" class="wikiLink">Updating List Objects</a></p></li>
+</ul></div>
+</p></div>
+    </div>
+    
+  </body></html>

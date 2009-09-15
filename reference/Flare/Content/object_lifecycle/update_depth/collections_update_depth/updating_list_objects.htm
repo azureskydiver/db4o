@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Updating List Objects	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Updating List Objects</h1>
+
+<p>As we discussed <a href="../collections_update_depth.html" class="wikiLink">before</a>
+updating list members using update depth is quite inefficient. An alternative
+approach can be retrieving and updating each object from the list separately:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Updating List Objects/ListOperationsExample.java/updateObject.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Updating List Objects/ListOperationsExample.cs/UpdateObject.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Updating List Objects/ListOperationsExample.vb/UpdateObject.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+In this case only the object of interest is updated,
+which takes much less time than updating the whole list.
+
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

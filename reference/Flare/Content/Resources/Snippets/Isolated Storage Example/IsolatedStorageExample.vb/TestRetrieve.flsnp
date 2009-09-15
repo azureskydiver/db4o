@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IsolatedStorageExample.vb: TestRetrieve
+1Private Shared Sub TestRetrieve()Sub TestRetrieve()
+2            Dim db As IObjectContainer = Db4oFactory.OpenFile(Configure(), Db4oFileName)
+3            Try
+4                Dim result As IObjectSet = db.[Get](GetType(Pilot))
+5                ListResult(result)
+6            Finally
+7                db.Close()
+8            End Try
+9        End Sub</pre>    </body></html>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.vb: TryStoreAndRetrieve
+Private Shared Sub TryStoreAndRetrieve()Sub TryStoreAndRetrieve(ByVal configuration As IConfiguration)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                Dim champs As String() = New String() {&quot;Ayrton Senna&quot;, &quot;Nelson Piquet&quot;}
+                Dim LocalizedItemList As LocalizedItemList = New LocalizedItemList(CultureInfo.CreateSpecificCulture(&quot;pt-BR&quot;), champs)
+                System.Console.WriteLine(&quot;ORIGINAL: {0}&quot;, LocalizedItemList)
+                db.Set(LocalizedItemList)
+            Catch x As Exception
+                System.Console.WriteLine(x)
+                Return
+            Finally
+                db.Close()
+            End Try
+            db = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                Dim result As IObjectSet = db.Get(GetType(LocalizedItemList))
+                While result.HasNext()
+                    Dim LocalizedItemList As LocalizedItemList = DirectCast(result.Next(), LocalizedItemList)
+                    System.Console.WriteLine(&quot;RETRIEVED: {0}&quot;, LocalizedItemList)
+                    db.Delete(LocalizedItemList)
+                End While
+            Finally
+                db.Close()
+            End Try
+        End Sub</pre>    </body></html>

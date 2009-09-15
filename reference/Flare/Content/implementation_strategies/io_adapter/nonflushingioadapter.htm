@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>NonFlushingIoAdapter	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>NonFlushingIoAdapter</h1>
+
+<p>NonFlushingIoAdapter is a special IO Adapter, which can be used to improve commit performance. Commit is a complex operation and requires <a href="../../basic_concepts/acid_model/acid_properties_for_db4o.html" class="wikiLink">flushing to the hard drive</a> after each stage of commit. This is necessary as most operating system try to avoid the overhead of disk access by
+caching disk write data and only flushing the resulting changes to the
+disk. In the case of db4o commit it would mean that the physical write of some commit stages will be partially skipped and the data will be irreversibly lost.  </p><p>However, physical access to the hard drive is a time-consuming operation and may considerably affect the performance.  That is where NonFlushingIoAdapter comes in: it allows the operating system to keep commit data in cache and do the physical writes in a most performant order. This may sound very nice, but in fact a system shutdown while the commit data is still in cache will lead to the database corruption.</p>
+<p>The following example shows how to use the NonFlushingIoAdapter. You can run it and see the performance improvement on commit stage:</p>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../Resources/Snippets/NonFlushingIoAdapter/IOExample.java/testNonFlushingAdapter.flsnp" />/p>
+</p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../Resources/Snippets/NonFlushingIoAdapter/IOExample.cs/TestNonFlushingAdapter.flsnp" />/p>
+</p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/NonFlushingIoAdapter/IOExample.vb/TestNonFlushingAdapter.flsnp" />/p>
+
+</p><p MadCap:conditions="Primary:vb" />
+<p>Please, remember, that NonFlushingIoAdapter is potentially dangerous and any unexpected system shutdown may corrupt your database. Use with caution and avoid using in production environments. </p>
+
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

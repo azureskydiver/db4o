@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LocalizedItemList.vb
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
+Imports System.Globalization
+
+Namespace Db4objectsNamespace Db4objects.Db4odoc.Translators
+    /**/''' &lt;summary&gt;
+    ''' A CultureInfo aware list of objects.
+    ''' CultureInfo objects hold a native pointer to 
+    ''' a system structure.
+    ''' &lt;/summary&gt;
+    Public Class LocalizedItemListClass LocalizedItemList
+        Private _culture As CultureInfo
+
+        Private _items As String()
+
+        Public Sub New()Sub New(ByVal culture As CultureInfo, ByVal items As String())
+            _culture = culture
+            _items = items
+        End Sub
+
+        Public Overloads Overrides Function ToString()Function ToString() As String
+            Return String.Join(String.Concat(_culture.TextInfo.ListSeparator, &quot; &quot;), _items)
+        End Function
+
+    End Class
+End Namespace</pre>    </body></html>

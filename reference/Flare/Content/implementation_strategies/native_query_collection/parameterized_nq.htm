@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Parameterized NQ	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Parameterized NQ</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#GetTestPilots">GetTestPilots</a></li><li><a href ="#GetProfessionalPilots">GetProfessionalPilots</a></li><li><a href ="#Querying Class Hierarchy">Querying Class Hierarchy</a></li></ul></li></ul></div></div></div>
+
+<p>The following examples show how to pass parameters to the Native Query predicate. <a href="store_pilots.html" class="wikiLink">Store Pilots</a> function is used to fill in the database. </p>
+<a name="GetTestPilots"></a><h2>GetTestPilots</h2>
+<p>Using predicate constructor to specify the querying parameter. </p>
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ParameterizedExamples.java/getTestPilots.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ParameterizedExamples.java/PilotNamePredicate.flsnp" />
+<p></p><p MadCap:conditions="Primary:java" /></p>
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ParameterizedExamples.cs/GetTestPilots.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ParameterizedExamples.cs/PilotNamePredicate.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ParameterizedExamples.vb/GetTestPilots.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ParameterizedExamples.vb/PilotNamePredicate.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+<a name="GetProfessionalPilots"></a><h2>GetProfessionalPilots</h2>
+<p>Using a function to process the NQ. </p>
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ParameterizedExamples.java/getProfessionalPilots.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ParameterizedExamples.java/byNameBeginning.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ParameterizedExamples.cs/GetProfessionalPilots.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ParameterizedExamples.cs/ByNameBeginning.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<p>No analogue in VB.</p>
+</p><p MadCap:conditions="Primary:vb" />
+
+<p MadCap:conditions="Primary.Java">
+
+<a name="Querying Class Hierarchy"></a><h2>Querying Class Hierarchy</h2>
+<p>The following
+example shows how to correctly implement parameterized NQ predicate for
+querying derived classes. </p>
+
+<p>Let's use
+the class hierarchy as defined in <a href="persistent_classes.html" class="wikiLink">Persistent Classes</a>.</p>
+
+<p>PersonNamePredicate
+will be used for querying classes derived from Person:</p>
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ComplexParameterizedExample.java/PersonNamePredicate.flsnp" />
+<p>Let's
+save some Pilot and Trainee objects:</p>
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ComplexParameterizedExample.java/storePersons.flsnp" />
+<p>Now we
+have both Pilot and Trainee objects starting from "Train". What should we do to
+retrieve only Trainee objects?</p>
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ComplexParameterizedExample.java/getTrainees.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ComplexParameterizedExample.java/testQuery.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ComplexParameterizedExample.java/createPredicateWrong.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Parameterized NQ/ComplexParameterizedExample.java/createPredicateCorrect.flsnp" />
+<p>You can
+see that in order to get the correct results we need to supply our preicate
+class with the queried class, otherwise both Pilot and Trainee objects will be
+included in the result set.</p>
+</p><p MadCap:conditions="Primary:java" /></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

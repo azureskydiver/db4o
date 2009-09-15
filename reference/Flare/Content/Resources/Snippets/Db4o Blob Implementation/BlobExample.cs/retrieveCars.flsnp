@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BlobExample.cs: retrieveCars
+private static void RetrieveCars() 
+    ...{
+            IObjectContainer db = Db4oEmbedded.OpenFile(Db4oEmbedded.NewConfiguration(), Db4oFileName);
+      try 
+      ...{
+        IQuery query = db.Query();
+        query.Constrain(typeof(Car));
+        IList result = query.Execute();
+        GetImages(result);
+      }  
+      finally 
+      ...{
+        db.Close();
+      } 
+    }</pre>    </body></html>

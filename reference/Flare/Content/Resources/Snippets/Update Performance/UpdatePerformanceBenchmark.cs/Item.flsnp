@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.cs: Item
+1private void Update(Object item)
+2        ...{
+3            objectContainer.Store(item);
+4        }
+5        // end Update
+6
+7
+8        private void RunDifferentObjectsTest()
+9        ...{
+0            System.Console.WriteLine(&quot;Update test with different objects&quot;);
+1            int objectsToUpdate = 90;
+2            int updated = objectsToUpdate;
+3
+4            InitDifferentObjectsTest();
+5
+6            Clean();
+7            System.Console.WriteLine(&quot; - primitive object with int field&quot;);
+8            Open(Configure());
+9            StoreSimplest();
+0
+1            IObjectSet result = objectContainer.QueryByExample(null);
+2            StartTimer();
+3            for (int i = 0; i &lt; objectsToUpdate; i++)
+4            ...{
+5                if (result.HasNext())
+6                ...{
+7                    SimplestItem item = (SimplestItem)result.Next();
+8                    item._id = 1;
+9                    Update(item);
+0                }
+1                else
+2                ...{
+3                    updated = i;
+4                    break;
+5                }
+6            }
+7            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+8            Close();
+9
+0            Clean();
+1            Open(Configure());
+2            System.Console.WriteLine(&quot; - object with string field&quot;);
+3            Store();
+4            updated = objectsToUpdate;
+5            result = objectContainer.QueryByExample(null);
+6            StartTimer();
+7            for (int i = 0; i &lt; objectsToUpdate; i++)
+8            ...{
+9                if (result.HasNext())
+0                ...{
+1                    Item item = (Item)result.Next();
+2                    item._name = &quot;Updated&quot;;
+3                    Update(item);
+4                }
+5                else
+6                ...{
+7                    updated = i;
+8                    break;
+9                }
+0            }
+1            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+2            Close();
+3
+4            Clean();
+5            Open(Configure());
+6            System.Console.WriteLine(&quot; - object with StringBuilder field&quot;);
+7            StoreWithStringBuilder();
+8
+9            updated = objectsToUpdate;
+0            result = objectContainer.QueryByExample(null);
+1            StartTimer();
+2            for (int i = 0; i &lt; objectsToUpdate; i++)
+3            ...{
+4                if (result.HasNext())
+5                ...{
+6                    ItemWithStringBuilder item = (ItemWithStringBuilder)result.Next();
+7                    item._name = new StringBuilder(&quot;Updated&quot;);
+8                    Update(item);
+9                }
+0                else
+1                ...{
+2                    updated = i;
+3                    break;
+4                }
+5            }
+6            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+7            Close();
+8
+9            Clean();
+0            Open(Configure());
+1            System.Console.WriteLine(&quot; - object with int array field&quot;);
+2            StoreWithArray();
+3            updated = objectsToUpdate;
+4            result = objectContainer.QueryByExample(null);
+5            StartTimer();
+6            for (int i = 0; i &lt; objectsToUpdate; i++)
+7            ...{
+8                if (result.HasNext())
+9                ...{
+0                    ItemWithArray item = (ItemWithArray)result.Next();
+1                    item._id = new int[] ...{ 1, 2, 3 };
+2                    Update(item);
+3                }
+4                else
+5                ...{
+6                    updated = i;
+7                    break;
+8                }
+9            }
+0            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+1            Close();
+2
+3            Clean();
+4            Open(Configure());
+5            System.Console.WriteLine(&quot; - object with ArrayList field&quot;);
+6            StoreWithArrayList();
+7            updated = objectsToUpdate;
+8            result = objectContainer.QueryByExample(null);
+9            StartTimer();
+0            for (int i = 0; i &lt; objectsToUpdate; i++)
+1            ...{
+2                if (result.HasNext())
+3                ...{
+4                    ItemWithArrayList item = (ItemWithArrayList)result.Next();
+5                    item._ids = new ArrayList();
+6                    Update(item);
+7                }
+8                else
+9                ...{
+0                    updated = i;
+1                    break;
+2                }
+3            }
+4            StopTimer(&quot;Updated &quot; + updated + &quot; items&quot;);
+5            Close();
+6        }
+7        // end RunDifferentObjectsTest
+8
+9
+0        private void RunIndexTest()
+1        ...{
+2            System.Console.WriteLine(&quot;Update test for objects with and without indexed fields&quot;);
+3
+4            int objectsToUpdate = 100;
+5            Init();
+6            System.Console.WriteLine(&quot;Updating &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects&quot;);
+7            Clean();
+8            Open(Configure());
+9            Store();
+0            UpdateItems(objectsToUpdate);
+1            Close();
+2
+3            Clean();
+4            Init();
+5            System.Console.WriteLine(&quot;Updating &quot; + objectsToUpdate + &quot; of &quot; + _count + &quot; objects with indexed field&quot;);
+6            Open(ConfigureIndexTest());
+7            Store();
+8            UpdateItems(objectsToUpdate);
+9            Close();
+0        }
+1        // end RunIndexTest
+2
+3
+4        private void Init()
+5        ...{
+6            _count = 1000;
+7            _depth = 90;
+8            _isClientServer = false;
+9
+0        }
+1        // end Init
+2
+3        private void InitDifferentObjectsTest()
+4        ...{
+5            _count = 1000;
+6            _depth = 1;
+7            _isClientServer = false;
+8
+9        }
+0        // end InitDifferentObjectsTest
+1
+2
+3        private void InitForClientServer()
+4        ...{
+5            _count = 1000;
+6            _depth = 90;
+7            _isClientServer = true;
+8            _host = &quot;localhost&quot;;
+9        }
+0        // end InitForClientServer
+1
+2        private void InitForRamDriveTest()
+3        ...{
+4            _count = 30000;
+5            _depth = 1;
+6            _filePath = &quot;r:\\performance.db4o&quot;;
+7            _isClientServer = false;
+8
+9        }
+0        // end InitForRamDriveTest
+1
+2        private void InitForHardDriveTest()
+3        ...{
+4            _count = 10000;
+5            _depth = 3;
+6            _filePath = &quot;performance.db4o&quot;;
+7            _isClientServer = false;
+8        }
+9        // end InitForHardDriveTest
+0
+1        private void InitForCommitTest()
+2        ...{
+3            _count = 10000;
+4            _commitInterval = 1000;
+5            _depth = 3;
+6            _isClientServer = false;
+7        }
+8        // end InitForCommitTest
+9
+0        private void Clean()
+1        ...{
+2            File.Delete(_filePath);
+3        }
+4        // end Clean
+5
+6        private IConfiguration Configure()
+7        ...{
+8            IConfiguration config = Db4oFactory.NewConfiguration();
+9            // using MemoryIoAdapter improves the performance 
+0            // by replacing the costly disk IO operations with 
+1            // memory access
+2            config.Io(new MemoryIoAdapter());
+3            return config;
+4        }
+5        // end Configure
+6
+7        private IConfiguration ConfigureTP()
+8        ...{
+9            IConfiguration config = Db4oFactory.NewConfiguration();
+0            // With Transparent Persistence enabled only modified
+1            // objects are written to disk. This allows to achieve 
+2            // better performance
+3            config.ObjectClass(typeof(Item)).CascadeOnUpdate(true);
+4            return config;
+5        }
+6        // end ConfigureTP
+7
+8        private IConfiguration ConfigureCascade()
+9        ...{
+0            IConfiguration config = Db4oFactory.NewConfiguration();
+1            // CascadeOnUpdate can be a performance-killer for 
+2            // deep object hierarchies
+3            config.ObjectClass(typeof(Item)).CascadeOnUpdate(true);
+4            return config;
+5        }
+6        // end ConfigureCascade
+7
+8        private IConfiguration ConfigureIndexTest()
+9        ...{
+0            IConfiguration config = Db4oFactory.NewConfiguration();
+1            config.Io(new MemoryIoAdapter());
+2            config.ObjectClass(typeof(Item)).ObjectField(&quot;_name&quot;).Indexed(true);
+3            return config;
+4        }
+5        // end ConfigureIndexTest
+6
+7        private IConfiguration ConfigureForCommitTest()
+8        ...{
+9            IConfiguration config = Db4oFactory.NewConfiguration();
+0            // the Commit information is physically written 
+1            // and in the correct order
+2            config.FlushFileBuffers(true);
+3            return config;
+4        }
+5        // end ConfigureForCommitTest
+6
+7        private IConfiguration ConfigureClientServer()
+8        ...{
+9            IConfiguration config = Db4oFactory.NewConfiguration();
+0            config.ClientServer().SingleThreadedClient(true);
+1            return config;
+2        }
+3        // end ConfigureClientServer
+4
+5        private IConfiguration ConfigureDriveTest()
+6        ...{
+7            IConfiguration config = Db4oFactory.NewConfiguration();
+8            config.FlushFileBuffers(true);
+9            return config;
+0        }
+1        // end ConfigureDriveTest
+2
+3        private void Store()
+4        ...{
+5            StartTimer();
+6            for (int i = 0; i &lt; _count; i++)
+7            ...{
+8                Item item = new Item(&quot;level&quot; + i, null);
+9                for (int j = 1; j &lt; _depth; j++)
+0                ...{
+1                    item = new Item(&quot;level&quot; + i + &quot;/&quot; + j, item);
+2                }
+3                objectContainer.Store(item);
+4            }
+5            objectContainer.Commit();
+6            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+7        }
+8        // end Store
+9
+0        private void StoreActivatableItems()
+1        ...{
+2            StartTimer();
+3            for (int i = 0; i &lt; _count; i++)
+4            ...{
+5                ActivatableItem item = new ActivatableItem(&quot;level&quot; + i, null);
+6                for (int j = 1; j &lt; _depth; j++)
+7                ...{
+8                    item = new ActivatableItem(&quot;level&quot; + i + &quot;/&quot; + j, item);
+9                }
+0                objectContainer.Store(item);
+1            }
+2            objectContainer.Commit();
+3            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+4        }
+5        // end StoreActivatableItems
+6
+7        private void StoreInherited()
+8        ...{
+9            StartTimer();
+0            for (int i = 0; i &lt; _count; i++)
+1            ...{
+2                ItemDerived item = new ItemDerived(&quot;level&quot; + i, null);
+3                for (int j = 1; j &lt; _depth; j++)
+4                ...{
+5                    item = new ItemDerived(&quot;level&quot; + i + &quot;/&quot; + j, item);
+6                }
+7                objectContainer.Store(item);
+8            }
+9            objectContainer.Commit();
+0            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+1        }
+2        // end StoreInherited
+3
+4
+5        private void StoreWithStringBuilder()
+6        ...{
+7            StartTimer();
+8            for (int i = 0; i &lt; _count; i++)
+9            ...{
+0                ItemWithStringBuilder item = new ItemWithStringBuilder(new StringBuilder(&quot;level&quot; + i), null);
+1                for (int j = 1; j &lt; _depth; j++)
+2                ...{
+3                    item = new ItemWithStringBuilder(new StringBuilder(&quot;level&quot; + i + &quot;/&quot; + j), item);
+4                }
+5                objectContainer.Store(item);
+6            }
+7            objectContainer.Commit();
+8            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+9        }
+0        // end StoreWithStringBuilder
+1
+2        private void StoreSimplest()
+3        ...{
+4            StartTimer();
+5            for (int i = 0; i &lt; _count; i++)
+6            ...{
+7                SimplestItem item = new SimplestItem(i, null);
+8                for (int j = 1; j &lt; _depth; j++)
+9                ...{
+0                    item = new SimplestItem(i, item);
+1                }
+2                objectContainer.Store(item);
+3            }
+4            objectContainer.Commit();
+5            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+6        }
+7        // end StoreSimplest
+8
+9        private void StoreWithArray()
+0        ...{
+1            StartTimer();
+2            int[] array = new int[] ...{ 1, 2, 3, 4 };
+3            for (int i = 0; i &lt; _count; i++)
+4            ...{
+5                int[] id = new int[] ...{ 1, 2, 3, 4 };
+6                ItemWithArray item = new ItemWithArray(id, null);
+7                for (int j = 1; j &lt; _depth; j++)
+8                ...{
+9                    int[] id1 = new int[] ...{ 1, 2, 3, 4 };
+0                    item = new ItemWithArray(id1, item);
+1                }
+2                objectContainer.Store(item);
+3            }
+4            objectContainer.Commit();
+5            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+6        }
+7        // end StoreWithArray
+8
+9        private void StoreWithArrayList()
+0        ...{
+1            StartTimer();
+2            ArrayList idList = new ArrayList();
+3            idList.Add(1);
+4            idList.Add(2);
+5            idList.Add(3);
+6            idList.Add(4);
+7            for (int i = 0; i &lt; _count; i++)
+8            ...{
+9                ArrayList ids = new ArrayList();
+0                ids.AddRange(idList);
+1                ItemWithArrayList item = new ItemWithArrayList(ids, null);
+2                for (int j = 1; j &lt; _depth; j++)
+3                ...{
+4                    ArrayList ids1 = new ArrayList();
+5                    ids1.AddRange(idList);
+6                    item = new ItemWithArrayList(ids1, item);
+7                }
+8                objectContainer.Store(item);
+9            }
+0            objectContainer.Commit();
+1            StopTimer(&quot;Store &quot; + TotalObjects() + &quot; objects&quot;);
+2        }
+3        // end StoreWithArrayList
+4
+5        private int TotalObjects()
+6        ...{
+7            return _count * _depth;
+8        }
+9        // end TotalObjects
+0
+1        private void Open(IConfiguration config)
+2        ...{
+3            if (_isClientServer)
+4            ...{
+5                int port = TCP ? PORT : 0;
+6                string user = &quot;db4o&quot;;
+7                string password = user;
+8                objectServer = Db4oFactory.OpenServer(_filePath, port);
+9                objectServer.GrantAccess(user, password);
+0                objectContainer = TCP ? Db4oFactory.OpenClient(_host, port, user,
+1                        password) : objectServer.OpenClient();
+2            }
+3            else
+4            ...{
+5                objectContainer = Db4oFactory.OpenFile(config, _filePath);
+6            }
+7        }
+8        // end Open
+9
+0        private void Close()
+1        ...{
+2            objectContainer.Close();
+3            if (_isClientServer)
+4            ...{
+5                objectServer.Close();
+6            }
+7        }
+8        //end Close
+9
+0        private void StartTimer()
+1        ...{
+2            _startTime = DateTime.Now.Ticks;
+3        }
+4        // end StartTimer
+5
+6        private void StopTimer(string message)
+7        ...{
+8            long stop = DateTime.Now.Ticks;
+9            long duration = stop - _startTime;
+0            System.Console.WriteLine(message + &quot;: &quot; + duration + &quot; ticks&quot;);
+1        }
+2        // end StopTimer
+3
+4        public class Item
+5        ...{
+6
+7            public string _name;
+8            public Item _child;
+9
+0            public Item()
+1            ...{
+2
+3            }
+4
+5            public Item(string name, Item child)
+6            ...{
+7                _name = name;
+8                _child = child;
+9            }
+0        }</pre>    </body></html>

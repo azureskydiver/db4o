@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Using Attributes	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Using Attributes</h1>
+
+<p><font color="#990000">This topic applies to .NET version only</font>   </p>
+<p>.NET Attributes provide the means for a developer to add meta-data that 
+describes, or annotates specific elements of code such as classes, methods, 
+properties, etc. At compile time the resulting metadata is placed into the 
+Portable Executable (PE)file along with the Microsoft Intermediate Language 
+(MSIL). Once metadata is in the PE other .NET programs may access it using the 
+.NET Reflection API.</p>
+
+<p>Attributes can be used to document classes at design 
+time, specify runtime information (such as the name of an XML field to be used 
+when serializing information from the class), and even dictate runtime behavior 
+(such as whether the class should automatically participate in a transaction). 
+</p>
+
+<p>You can use attributes with db4o to configure how db4o will process 
+your classes. At present we provide only one attribute:</p>
+
+<p><code>[Indexed]</code></p>
+
+<p>This attribute 
+can be applied to class fields</p>
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../Resources/Snippets/Using Attributes/Car.cs/Car.cs.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+
+<p><p MadCap:conditions="Primary..NET,Primary.VB.NET"></p>
+<MadCap:snippetBlock src="../Resources/Snippets/Using Attributes/Car.vb/Car.vb.flsnp" /><p></p><p MadCap:conditions="Primary:vb" />  </p>
+
+<p>and its functionality 
+is equivalent to the db4o configuration setting: </p>
+
+<p><code>Db4o.Configure().ObjectClass(clazz).ObjectField("fieldName").Indexed(true)</code></p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: configureDriveTest
+1private Configuration configureDriveTest()...{
+2      Configuration config = Db4o.newConfiguration(); 
+3        config.flushFileBuffers(true);
+4        return config;
+5    }</pre>    </body></html>

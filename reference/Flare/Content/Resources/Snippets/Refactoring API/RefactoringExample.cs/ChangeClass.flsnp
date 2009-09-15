@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RefactoringExample.cs: ChangeClass
+1private static void ChangeClass()
+2    ...{
+3            IConfiguration configuration = Db4oFactory.NewConfiguration();
+4            configuration.ObjectClass(typeof(Pilot)).Rename(&quot;Db4objects.Db4odoc.Refactoring.PilotNew, Db4objects.Db4odoc&quot;);
+5            configuration.ObjectClass(typeof(PilotNew)).ObjectField(&quot;_name&quot;).Rename(&quot;_identity&quot;);
+6            IObjectContainer container = Db4oFactory.OpenFile(configuration, Db4oFileName);
+7            container.Close();
+8    }</pre>    </body></html>

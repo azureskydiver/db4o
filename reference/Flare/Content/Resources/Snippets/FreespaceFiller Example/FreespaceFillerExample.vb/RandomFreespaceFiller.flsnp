@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">FreespaceFillerExample.vb: RandomFreespaceFiller
+Private Class RandomFreespaceFillerClass RandomFreespaceFiller
+            Implements IFreespaceFiller
+
+            Public Sub Fill()Sub Fill(ByVal io As BlockAwareBinWindow) Implements IFreespaceFiller.Fill
+                Dim r As New Random()
+                Dim data As Byte() = New Byte(io.Length() - 1) {}
+                r.NextBytes(data)
+                io.Write(0, data)
+            End Sub
+
+        End Class</div</pre>    </body></html>

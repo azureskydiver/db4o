@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Logging Storage	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Logging Storage</h1><p>In this example we will implement a simple file base
+storage, which will log messages about each IO operation. In the implementation
+you can see that most of the functionality is derived from StorageDecorator and
+BinDecorator classes with additional logging added:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Logging Storage/LoggingStorage.java/LoggingStorage.java.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Logging Storage/LoggingStorage.cs/LoggingStorage.cs.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Logging Storage/LoggingStorage.vb/LoggingStorage.vb.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Use the LoggingStorage implementation with the following
+code (you can find a working example if you download LoggingStorage class).</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>Java:</p>
+
+<p><code>config.file().storage(new LoggingStorage());</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<p>C#:</p>
+
+<p><code>config.File.Storage(new LoggingStorage());</code></p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<p>VB.NET:</p>
+
+<p><code>config.File.Storage(New LoggingStorage())</code></p>
+
+</p><p MadCap:conditions="Primary:vb" /></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LoggingReflector.vb
+1' Copyright (C) 2007   db4objects Inc.   http://www.db4o.com 
+2
+3Imports System
+4
+5Imports Db4objects.Db4o.Internal
+6Imports Db4objects.Db4o.Reflect
+7Imports Db4objects.Db4o.Reflect.Net
+8
+9Namespace Db4objectsNamespace Db4objects.Db4odoc.Reflections
+0    Public Class LoggingReflectorClass LoggingReflector
+1        Implements Db4objects.Db4o.Reflect.IReflector
+2        Protected _parent As Db4objects.Db4o.Reflect.IReflector
+3
+4        Private _array As Db4objects.Db4o.Reflect.IReflectArray
+5
+6        Private _config As Db4objects.Db4o.Reflect.IReflectorConfiguration
+7
+8        Public Overridable Function Array()Function Array() As Db4objects.Db4o.Reflect.IReflectArray Implements IReflector.Array
+9            If _array Is Nothing Then
+0                _array = New Db4objects.Db4o.Reflect.Net.NetArray(Parent())
+1            End If
+2            Return _array
+3        End Function
+4
+5        Public Overridable Function DeepClone()Function DeepClone(ByVal obj As Object) As Object Implements IReflector.DeepClone
+6            Return New NetReflector()
+7        End Function
+8
+9        Public Overridable Function ForClass()Function ForClass(ByVal forType As System.Type) As Db4objects.Db4o.Reflect.IReflectClass Implements IReflector.ForClass
+0            Dim rc As Db4objects.Db4o.Reflect.IReflectClass = Nothing
+1            Dim underlyingType As System.Type = GetUnderlyingType(forType)
+2            If underlyingType.IsPrimitive AndAlso Not Db4objects.Db4o.Internal.NullableArrayHandling.UseOldNetHandling() Then
+3                rc = CreateClass(forType)
+4            End If
+5            rc = CreateClass(underlyingType)
+6            Console.WriteLine(&quot;ForClass: &quot; + forType.ToString() + &quot; -&gt; &quot; + (IIf(rc Is Nothing, &quot;&quot;, rc.GetName())))
+7            Return rc
+8        End Function
+9
+0        Protected Overridable Function CreateClass()Function CreateClass(ByVal type As Type) As Db4objects.Db4o.Reflect.IReflectClass
+1            If type Is Nothing Then
+2                Return Nothing
+3            End If
+4            Dim netReflector As New NetReflector()
+5            netReflector.Configuration(_config)
+6            Return New Db4objects.Db4o.Reflect.Net.NetClass(Parent(), netReflector, type)
+7        End Function
+8
+9        Private Shared Function GetUnderlyingType()Function GetUnderlyingType(ByVal type As Type) As Type
+0            If type Is Nothing Then
+1                Return Nothing
+2            End If
+3            Dim underlyingType As Type = Nullable.GetUnderlyingType(type)
+4            If underlyingType IsNot Nothing Then
+5                Return underlyingType
+6            End If
+7            Return type
+8        End Function
+9
+0        Public Overridable Function ForName()Function ForName(ByVal className As String) As Db4objects.Db4o.Reflect.IReflectClass Implements IReflector.ForName
+1            Dim rc As Db4objects.Db4o.Reflect.IReflectClass = Nothing
+2            Try
+3                Dim type As Type = ReflectPlatform.ForName(className)
+4                If type Is Nothing Then
+5                    Return Nothing
+6                End If
+7                rc = ForClass(type)
+8                Console.WriteLine(&quot;ForName: &quot; + className + &quot; -&gt; &quot; + (IIf(rc Is Nothing, &quot;&quot;, rc.GetName())))
+9            Catch
+0            End Try
+1            Return rc
+2        End Function
+3
+4        Public Overridable Function ForObject()Function ForObject(ByVal a_object As Object) As Db4objects.Db4o.Reflect.IReflectClass Implements IReflector.ForObject
+5            If a_object Is Nothing Then
+6                Return Nothing
+7            End If
+8            Dim rc As Db4objects.Db4o.Reflect.IReflectClass = Parent().ForClass(a_object.[GetType]())
+9            Console.WriteLine(&quot;ForObject:&quot; + a_object.ToString() + &quot; -&gt; &quot; + (IIf(rc Is Nothing, &quot;&quot;, rc.GetName())))
+0            Return rc
+1        End Function
+2
+3        Public Overridable Function IsCollection()Function IsCollection(ByVal candidate As Db4objects.Db4o.Reflect.IReflectClass) As Boolean Implements IReflector.IsCollection
+4            Dim result As Boolean = False
+5            If candidate.IsArray() Then
+6                result = False
+7            End If
+8            Dim netClass As NetClass = TryCast(candidate, NetClass)
+9            If netClass Is Nothing Then
+0                result = False
+1            End If
+2            result = GetType(System.Collections.ICollection).IsAssignableFrom(netClass.GetNetType())
+3            Console.WriteLine(&quot;Type &quot; + candidate.GetName() + &quot; is Collection &quot; + result.ToString())
+4            Return result
+5        End Function
+6
+7        Public Overridable Function MethodCallsSupported()Function MethodCallsSupported() As Boolean
+8            Return True
+9        End Function
+0
+1        Public Shared Function ToMeta()Function ToMeta(ByVal reflector As Db4objects.Db4o.Reflect.IReflector, ByVal clazz As System.Type()) As Db4objects.Db4o.Reflect.IReflectClass()
+2            Dim claxx As Db4objects.Db4o.Reflect.IReflectClass() = Nothing
+3            If clazz IsNot Nothing Then
+4                claxx = New Db4objects.Db4o.Reflect.IReflectClass(clazz.Length - 1) {}
+5                For i As Integer = 0 To clazz.Length - 1
+6                    If clazz(i) IsNot Nothing Then
+7                        claxx(i) = reflector.ForClass(clazz(i))
+8                    End If
+9                Next
+0            End If
+1            Return claxx
+2        End Function
+3
+4        Public Shared Function ToNative()Function ToNative(ByVal claxx As Db4objects.Db4o.Reflect.IReflectClass()) As System.Type()
+5            Dim clazz As System.Type() = Nothing
+6            If claxx IsNot Nothing Then
+7                clazz = New System.Type(claxx.Length - 1) {}
+8                For i As Integer = 0 To claxx.Length - 1
+9                    If claxx(i) IsNot Nothing Then
+0                        Dim reflectClass As IReflectClass = claxx(i)
+1                        System.Console.WriteLine(&quot;ToNative: &quot; + claxx(i).GetName())
+2                        clazz(i) = ToNative(reflectClass)
+3                    End If
+4                Next
+5            End If
+6            Return clazz
+7        End Function
+8
+9        Public Shared Function ToNative()Function ToNative(ByVal reflectClass As IReflectClass) As Type
+0            System.Console.WriteLine(&quot;ToNative: &quot; + reflectClass.GetName())
+1            Return DirectCast(reflectClass.GetDelegate(), Db4objects.Db4o.Reflect.Net.NetClass).GetNetType()
+2        End Function
+3
+4        Public Overridable Sub SetParent()Sub SetParent(ByVal reflector As IReflector) Implements IReflector.SetParent
+5            _parent = reflector
+6        End Sub
+7
+8        Public Overridable Sub Configuration()Sub Configuration(ByVal config As Db4objects.Db4o.Reflect.IReflectorConfiguration) Implements IReflector.Configuration
+9            _config = config
+0        End Sub
+1
+2        Public Overridable Function Configuration()Function Configuration() As Db4objects.Db4o.Reflect.IReflectorConfiguration
+3            Return _config
+4        End Function
+5
+6        Public Overridable Function NullValue()Function NullValue(ByVal clazz As IReflectClass) As Object
+7            Return Platform4.NullValue(ToNative(clazz))
+8        End Function
+9
+0        Private Function Parent()Function Parent() As IReflector
+1            If _parent Is Nothing Then
+2                Return Me
+3            End If
+4
+5            Return _parent
+6        End Function
+7
+8    End Class
+9End Namespace</pre>    </body></html>

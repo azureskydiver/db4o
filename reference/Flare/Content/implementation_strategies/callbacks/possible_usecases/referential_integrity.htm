@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Referential Integrity	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Referential Integrity</h1><p>Db4o does not have a built-in referential integrity checking
+mechanism. Luckily EventRegistry gives you access to all the necessary events
+to implement it. You will just need to trigger validation on create, update or
+delete and cancel the action if the integrity is going to be broken.</p>
+
+<p>For example, if Car object is referencing Pilot and the
+referenced object should exist, this can be ensured with the following handler
+in deleting() event:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Referential Integrity/CallbacksExample.java/testIntegrityCheck.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Referential Integrity/CallbacksExample.cs/TestIntegrityCheck.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Referential Integrity/CallbacksExample.cs/OnDeleting.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Referential Integrity/CallbacksExample.vb/TestIntegrityCheck.flsnp" />
+<MadCap:snippetBlock src="../../../Resources/Snippets/Referential Integrity/CallbacksExample.vb/OnDeleting.flsnp" />
+</p><p MadCap:conditions="Primary:vb" /><p>
+You can also add handlers for creating() and updating()
+events for a Car object to make sure that the pilot field is not null. 
+</p><p>Note, that in client/server mode deleting event is only raised on the server side, therefore the code above can't be used and will throw an exception.  </p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

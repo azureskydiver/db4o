@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">AutoIncExample.vb: RegisterCallback
+1Public Shared Sub RegisterCallback()Sub RegisterCallback()
+2            Dim db As IObjectContainer = OpenContainer()
+3            ' register an event handler, which will assign autoincremented IDs to any
+4            ' object extending CountedObject, when the object is created
+5            Dim registry As IEventRegistry = EventRegistryFactory.ForObjectContainer(db)
+6            AddHandler registry.Creating, AddressOf OnCreating
+7        End Sub</pre>    </body></html>

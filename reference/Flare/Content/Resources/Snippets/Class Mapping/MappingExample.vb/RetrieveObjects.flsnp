@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MappingExample.vb: RetrieveObjects
+Private Shared Sub RetrieveObjects()Sub RetrieveObjects()
+            Dim configuration As IConfiguration
+            configuration.ObjectClass(GetType(Pilot)).ReadAs(GetType(PilotReplacement))
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
+            Try
+                Dim query As IQuery = container.Query
+                query.Constrain(GetType(PilotReplacement))
+                Dim result As IObjectSet = query.Execute
+                ListResult(result)
+            Finally
+                container.Close()
+            End Try
+        End Sub</pre>    </body></html>

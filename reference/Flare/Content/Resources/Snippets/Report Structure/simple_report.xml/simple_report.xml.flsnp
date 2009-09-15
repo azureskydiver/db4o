@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">simple_report.xml
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE jasperReport
+  PUBLIC &quot;-//JasperReports//DTD Report Design//EN&quot;
+  &quot;http://jasperreports.sourceforge.net/dtds/jasperreport.dtd&quot;&gt;
+
+&lt;jasperReport name=&quot;Simple_Report&quot;&gt;
+&lt;field name=&quot;Name&quot; class=&quot;java.lang.String&quot;/&gt;
+  &lt;detail&gt;
+    &lt;band height=&quot;20&quot;&gt;
+      &lt;textField bookmarkLevel=&quot;2&quot;&gt;
+        &lt;reportElement x=&quot;0&quot; y=&quot;0&quot; width=&quot;100&quot; height=&quot;15&quot;/&gt;
+        &lt;textFieldExpression class=&quot;java.lang.String&quot;&gt;$F{Name}&lt;/textFieldExpression&gt;
+      &lt;/textField&gt;
+    &lt;/band&gt;
+  &lt;/detail&gt;
+&lt;/jasperReport&gt;</pre>    </body></html>

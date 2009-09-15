@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">IOExample.vb: SetObjects
+Private Shared Sub SetObjects()Sub SetObjects()
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                Dim pilot As Pilot = New Pilot(&quot;Rubens Barrichello&quot;)
+                db.Set(pilot)
+            Finally
+                db.Close()
+            End Try
+        End Sub</pre>    </body></html>

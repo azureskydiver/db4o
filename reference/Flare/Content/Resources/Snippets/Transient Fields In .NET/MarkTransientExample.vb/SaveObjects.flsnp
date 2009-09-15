@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MarkTransientExample.vb: SaveObjects
+Public Shared Sub SaveObjects()Sub SaveObjects(ByVal configuration As IConfiguration)
+            File.Delete(Db4oFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
+            Try
+                Dim test As Test = New Test(&quot;Transient string&quot;, &quot;Persistent string&quot;)
+                container.Set(test)
+                Dim testc As TestCusomized = New TestCusomized(&quot;Transient string&quot;, &quot;Persistent string&quot;)
+                container.Set(testc)
+            Finally
+                container.Close()
+            End Try
+        End Sub</pre>    </body></html>

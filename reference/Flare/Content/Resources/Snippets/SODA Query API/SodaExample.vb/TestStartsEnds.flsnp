@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SodaExample.vb: TestStartsEnds
+Public Shared Sub TestStartsEnds()Sub TestStartsEnds()
+            File.Delete(Db4oFileName)
+            Dim container As IObjectContainer = Database()
+            If container IsNot Nothing Then
+                Try
+                    Dim pilot As New Pilot(&quot;Test Pilot0&quot;, 100)
+                    container.[Set](pilot)
+                    pilot = New Pilot(&quot;Test Pilot1&quot;, 101)
+                    container.[Set](pilot)
+                    pilot = New Pilot(&quot;Test Pilot2&quot;, 102)
+                    container.[Set](pilot)
+
+                    Dim query As IQuery = container.Query()
+                    query.Constrain(GetType(Pilot))
+                    query.Descend(&quot;_name&quot;).Constrain(&quot;T0&quot;).EndsWith(False).[Not]()
+                    'query.Descend(&quot;_name&quot;).Constrain(&quot;Pil&quot;).StartsWith(true);
+                    Dim result As IObjectSet = query.Execute()
+                    ListResult(result)
+                Catch ex As Db4oException
+                    Console.WriteLine(&quot;Db4o Exception: &quot; + ex.Message)
+                Catch ex As Exception
+                    Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub</pre>    </body></html>

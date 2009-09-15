@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UniqueConstraintExample.java: storeObjects
+private static void storeObjects() ...{
+    new File(FILENAME).delete();
+    ObjectServer server = Db4o.openServer(configure(), FILENAME,
+        0);
+    Pilot pilot1 = null;
+    Pilot pilot2 = null;
+    try ...{
+      ObjectContainer client1 = server.openClient();
+      try ...{
+        // creating and storing pilot1 to the database
+        pilot1 = new Pilot(&quot;Rubens Barichello&quot;, 99);
+        client1.set(pilot1);
+        ObjectContainer client2 = server.openClient();
+        try ...{
+          // creating and storing pilot2 to the database
+          pilot2 = new Pilot(&quot;Rubens Barichello&quot;, 100);
+          client2.set(pilot2);
+          // commit the changes
+          client2.commit();
+        } catch (UniqueFieldValueConstraintViolationException ex) ...{
+          System.out
+              .println(&quot;Unique constraint violation in client2 saving: &quot;
+                  + pilot2);
+          client2.rollback();
+        } finally ...{
+          client2.close();
+        }
+        // Pilot Rubens Barichello is already in the database,
+        // commit will fail
+        client1.commit();
+      } catch (UniqueFieldValueConstraintViolationException ex) ...{
+        System.out
+            .println(&quot;Unique constraint violation in client1 saving: &quot;
+                + pilot1);
+        client1.rollback();
+      } finally ...{
+        client1.close();
+      }
+    } finally ...{
+      server.close();
+    }
+  }</pre>    </body></html>

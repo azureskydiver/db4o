@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ParameterizedExamples.cs: ByNameBeginning
+1private static IList&lt;Pilot&gt; ByNameBeginning(string startsWith)
+2        ...{
+3            return Database().Query&lt;Pilot&gt;(delegate(Pilot pilot)
+4            ...{
+5                return pilot.Name.StartsWith(startsWith);
+6            });
+7        }</pre>    </body></html>

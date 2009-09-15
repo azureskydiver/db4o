@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Car.vb: Clone
+1Public Function Clone()Function Clone() As Object Implements ICloneable.Clone
+2            Dim test As Car = DirectCast(MyBase.MemberwiseClone(), Car)
+3            test._activator = Nothing
+4            Return test
+5        End Function</pre>    </body></html>

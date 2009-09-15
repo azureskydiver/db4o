@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StringBuilderHandler.cs: Read
+public object Read(IReadContext context)
+        ...{
+            IReadBuffer buffer = context;
+            string str = &quot;&quot;;
+            int length = buffer.ReadInt();
+            if (length &gt; 0)
+            ...{
+                str = ReadBuffer(buffer, length);
+            }
+            return new StringBuilder(str);
+        }</pre>    </body></html>

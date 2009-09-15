@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryExample.vb: RetrieveByComparison
+1Public Shared Sub RetrieveByComparison()Sub RetrieveByComparison(ByVal db As IObjectContainer)
+2            Dim query As IQuery = db.Query()
+3            query.Constrain(GetType(Pilot))
+4            query.Descend(&quot;_points&quot;).Constrain(99).Greater()
+5            Dim result As IObjectSet = query.Execute()
+6            ListResult(result)
+7        End Sub</pre>    </body></html>

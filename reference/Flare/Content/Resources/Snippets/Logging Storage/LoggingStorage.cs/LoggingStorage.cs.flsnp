@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">LoggingStorage.cs
+/**//* Copyright (C) 2004 - 2009  Versant Corporation http://www.versant.com */
+using System;
+using Db4objects.Db4o.IO;
+
+namespace Db4odoc.Storage
+...{
+    class LoggingStorage : StorageDecorator
+    ...{
+        // delegate to a normal file storage
+        public LoggingStorage()
+            : base(new FileStorage())
+        ...{
+
+        }
+
+        // use submitted storage as a delegate
+        public LoggingStorage(IStorage storage)
+            : base(storage)
+        ...{
+
+        }
+
+        /**//**
+         * opens a Bin for the given URI.
+         */
+        public override IBin Open(BinConfiguration config)
+        ...{
+            IBin storage = base.Open(config);
+            if (config.ReadOnly())
+            ...{
+                return new ReadOnlyBin(new LoggingBin(storage));
+            }
+            return new LoggingBin(storage);
+        }
+
+        /**//// &lt;summary&gt;
+        /// LoggingBin implementation. Allows to log information
+      /// for each IO operation
+        /// &lt;/summary&gt;
+        class LoggingBin : BinDecorator
+        ...{
+
+            public LoggingBin(IBin bin)
+                : base(bin)
+            ...{
+
+            }
+
+            // delegate to the base class and log a message
+            public override void Close()
+            ...{
+                base.Close();
+                System.Console.WriteLine(string.Format(&quot;{0} LoggingStorage: File closed&quot;, DateTime.Now.ToString()));
+            }
+
+            // log a message, then delegate
+            public override int Read(long pos, byte[] buffer, int length)
+            ...{
+                System.Console.WriteLine(string.Format(&quot;{0} LoggingStorage: Reading {1} bytes and {2} position&quot;, DateTime.Now.ToString(), length, pos));
+                return base.Read(pos, buffer, length);
+
+            }
+
+            // log a message, then delegate
+            public override void Write(long pos, byte[] buffer, int length)
+            ...{
+                System.Console.WriteLine(string.Format(&quot;{0} LoggingStorage: Writing {1} bytes and {2} position&quot;, DateTime.Now.ToString(), length, pos));
+                base.Write(pos, buffer, length);
+            }
+
+            // log a message, then delegate
+            public override void Sync()
+            ...{
+                System.Console.WriteLine(string.Format(&quot;{0} LoggingStorage: Syncing&quot;, DateTime.Now.ToString()));
+                base.Sync();
+            }
+
+        }
+    }
+}</pre>    </body></html>

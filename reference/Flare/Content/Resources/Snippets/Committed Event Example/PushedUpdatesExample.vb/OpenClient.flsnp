@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PushedUpdatesExample.vb: OpenClient
+Private Function OpenClient()Function OpenClient() As IObjectContainer
+            Try
+                Dim client As IObjectContainer = Db4oClientServer.OpenClient(Db4oClientServer.NewClientConfiguration(), &quot;localhost&quot;, Port, User, Password)
+                Dim committedEventHandler As CommittedEventHandler = New CommittedEventHandler(client)
+                Dim eventRegistry As IEventRegistry = EventRegistryFactory.ForObjectContainer(client)
+                AddHandler eventRegistry.Committed, AddressOf committedEventHandler.OnCommitted
+                ' save the client-listener pair in a map, so that we can
+                ' remove the listener later
+                clientListeners.Add(client, committedEventHandler)
+                Return client
+            Catch ex As Exception
+                System.Console.WriteLine(ex.ToString)
+            End Try
+            Return Nothing
+        End Function</pre>    </body></html>

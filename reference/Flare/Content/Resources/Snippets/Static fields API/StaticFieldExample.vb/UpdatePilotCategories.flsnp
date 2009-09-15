@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.vb: UpdatePilotCategories
+Private Shared Sub UpdatePilotCategories()Sub UpdatePilotCategories()
+            Console.WriteLine(&quot;Updating PilotCategories explicitly:&quot;)
+            Dim db As IObjectContainer = Database()
+            If db IsNot Nothing Then
+                Try
+                    Dim result As IObjectSet = db.[Get](GetType(PilotCategories))
+                    Dim obj As Object
+                    For Each obj In result
+                        Dim pc As PilotCategories = DirectCast(obj, PilotCategories)
+                        If pc Is PilotCategories.WINNER Then
+                            pc.TestChange(&quot;WINNER2006&quot;)
+                            db.[Set](pc)
+                        End If
+                    Next
+                    PrintCategories(db)
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub</pre>    </body></html>

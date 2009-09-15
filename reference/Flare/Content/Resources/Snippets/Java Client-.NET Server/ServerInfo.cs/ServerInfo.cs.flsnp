@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ServerInfo.cs
+/**//* Copyright (C) 2004 - 2009  Versant Corporation http://www.versant.com */
+namespace JavaDotnetClientServer
+...{
+    /**//// &lt;summary&gt;
+    /// Configuration used for StartServer and StopServer.
+    /// &lt;/summary&gt;
+    public class ServerInfo
+    ...{
+        /**//// &lt;summary&gt;
+        /// the host to be used.
+        /// If you want to run the client server examples on two computers,
+        /// enter the computer name of the one that you want to use as server. 
+        /// &lt;/summary&gt;
+        public const string Host = &quot;localhost&quot;;  
+
+        /**//// &lt;summary&gt;
+        /// the database file to be used by the server.
+        /// &lt;/summary&gt;
+        public const string FileName = &quot;reference.db4o&quot;;
+
+        /**//// &lt;summary&gt;
+        /// the port to be used by the server.
+        /// &lt;/summary&gt;
+        public const int Port = 0xdb40;
+
+        /**//// &lt;summary&gt;
+        /// the user name for access control.
+        /// &lt;/summary&gt;
+        public const string User = &quot;db4o&quot;;
+    
+        /**//// &lt;summary&gt;
+        /// the pasword for access control.
+        /// &lt;/summary&gt;
+        public const string Password = &quot;db4o&quot;;
+    }
+}</pre>    </body></html>

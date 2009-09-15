@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SensorPanel.vb
+1' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com
+2Imports Db4objects.Db4o
+3Imports Db4objects.Db4o.Activation
+4Imports Db4objects.Db4o.TA
+5
+6Namespace Db4ojectsNamespace Db4ojects.Db4odoc.TPExample
+7
+8    Public Class SensorPanelClass SensorPanel ' must implement Activatable for TA and TP
+9        Implements IActivatable
+0
+1        Private _sensor As Object
+2        Private _next As SensorPanel
+3
+4        ' activator registered for this class
+5        &lt;Transient()&gt; _
+6        Private _activator As IActivator
+7
+8        Public Sub New()Sub New()
+9        End Sub
+0        ' end New
+1
+2        Public Sub New()Sub New(ByVal value As Integer)
+3            _sensor = value
+4        End Sub
+5        ' end New
+6
+7        ' Bind the class to the specified object container, create the activator 
+8        Public Sub Bind()Sub Bind(ByVal activator As IActivator) Implements IActivatable.Bind
+9            If _activator Is activator Then
+0                Return
+1            End If
+2            If Not (activator Is Nothing Or _activator Is Nothing) Then
+3                Throw New System.InvalidOperationException()
+4            End If
+5            _activator = activator
+6        End Sub
+7        ' end Bind
+8
+9        'Call the registered activator to activate the next level,
+0        ' the activator remembers the objects that were already 
+1        ' activated and won't activate them twice. 
+2        Public Sub Activate()Sub Activate(ByVal purpose As ActivationPurpose) Implements IActivatable.Activate
+3            If _activator Is Nothing Then
+4                Return
+5            End If
+6            _activator.Activate(ActivationPurpose.Read)
+7        End Sub
+8        ' end Activate
+9
+0        Public ReadOnly Property NextSensor()Property NextSensor() As SensorPanel
+1            Get
+2                ' activate direct members
+3                Activate(ActivationPurpose.Read)
+4                Return _next
+5            End Get
+6        End Property
+7        ' end NextSensor
+8
+9        Public Property Sensor()Property Sensor() As Object
+0            Get
+1                ' activate direct members
+2                Activate(ActivationPurpose.Read)
+3                Return _sensor
+4            End Get
+5            Set(ByVal value As Object)
+6                ' activate for persistence
+7                Activate(ActivationPurpose.Write)
+8                _sensor = value
+9            End Set
+0        End Property
+1        ' end Sensor
+2
+3        Public Function CreateList()Function CreateList(ByVal length As Integer) As SensorPanel
+4            Return CreateList(length, 1)
+5        End Function
+6        ' end CreateList
+7
+8        Public Function CreateList()Function CreateList(ByVal length As Integer, ByVal first As Integer) As SensorPanel
+9            Dim val As Integer = first
+0            Dim root As SensorPanel = NewElement(first)
+1            Dim list As SensorPanel = root
+2            While System.Threading.Interlocked.Decrement(length) &gt; 0
+3                list._next = NewElement(System.Threading.Interlocked.Increment(val))
+4                list = list.NextSensor
+5            End While
+6            Return root
+7        End Function
+8        ' end CreateList
+9
+0        Protected Function NewElement()Function NewElement(ByVal value As Integer) As SensorPanel
+1            Return New SensorPanel(value)
+2        End Function
+3        ' end NewElement
+4
+5        Public Overloads Overrides Function ToString()Function ToString() As String
+6            Return &quot;Sensor #&quot; + Sensor.ToString()
+7        End Function
+8        ' end ToString
+9    End Class
+0End Namespace</pre>    </body></html>

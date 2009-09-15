@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Using Annotations	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Using Annotations</h1><p><font color="#990000">This topic applies to Java version only</font>   </p>
+<p MadCap:conditions="Primary.Java">
+<p>JDK1.5 platform introduced new metadata feature called<a href="http://java.sun.com/j2se/1.5.0/docs/guide/language/annotations.html" target="_blank"> annotations</a>. Annotations allow programmers to decorate Java code with their attributes, which can be used afterwards for automatic code generation, documentation, security checking etc. Annotations do not directly affect program semantics, but they do affect the way programs are treated by tools and libraries, which can in turn affect the semantics of the running program.</p>
+
+<p>Annotations can make your code cleaner, protecting you from common errors (using deprecated API, typos in overriding methods) and taking part of you work.</p>
+
+<p>You can use annotations to affect db4o behavior. At present we provide only one annotation:</p>
+
+<p><code>@Indexed</code></p>
+
+<p>This annotation can be applied to class fields </p>
+
+<MadCap:snippetBlock src="../Resources/Snippets/Using Annotations/Car.java/Car.java.flsnp" />
+<p>and its functionality is equivalent to the db4o configurations setting: </p>
+<p><code>Db4o.configure().objectClass(clazz).objectField("fieldName").indexed(true)</code>
+</p>
+<p></p><p MadCap:conditions="Primary:java" />
+</p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

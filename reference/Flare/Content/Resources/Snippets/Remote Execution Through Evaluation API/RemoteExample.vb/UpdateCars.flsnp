@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RemoteExample.vb: UpdateCars
+Private Shared Sub UpdateCars()Sub UpdateCars()
+            ' triggering mass updates with a singleton
+            ' complete server-side execution
+            Dim server As IObjectServer = Db4oFactory.OpenServer(Db4oFileName, 0)
+            Try
+                Dim client As IObjectContainer = server.OpenClient()
+                Dim q As IQuery = client.Query()
+                q.Constrain(GetType(RemoteExample))
+                q.Constrain(New UpdateEvaluation())
+                q.Execute()
+                client.Close()
+            Finally
+                server.Close()
+            End Try
+            CheckCars()
+        End Sub</pre>    </body></html>

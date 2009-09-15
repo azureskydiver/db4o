@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TranslatorExample.cs: TryStoreAndRetrieve
+private static void TryStoreAndRetrieve(IConfiguration configuration)
+        ...{
+            File.Delete(Db4oFileName);
+            IObjectContainer container = Db4oFactory.OpenFile(configuration, Db4oFileName);
+            try
+            ...{
+                LocalizedItemList list = new LocalizedItemList(CultureInfo.CurrentCulture, new string[] ...{ &quot;test1&quot;, &quot;test2&quot; });
+                System.Console.WriteLine(&quot;ORIGINAL: &quot; + list);
+                container.Store(list);
+            }
+            catch (Exception exc)
+            ...{
+                System.Console.WriteLine(exc.ToString());
+                return;
+            }
+            finally
+            ...{
+                container.Close();
+            }
+            container = Db4oFactory.OpenFile(configuration, Db4oFileName);
+            try
+            ...{
+                IObjectSet result = container.QueryByExample(typeof(LocalizedItemList));
+                while (result.HasNext())
+                ...{
+                    LocalizedItemList list = (LocalizedItemList)result.Next();
+                    System.Console.WriteLine(&quot;RETRIEVED: &quot; + list);
+                }
+            }
+            finally
+            ...{
+                container.Close();
+            }
+        }</pre>    </body></html>

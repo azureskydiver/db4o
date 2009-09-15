@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PilotHundredPoints.java
+1/**//* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+2import com.db4o.query.Predicate;
+3
+4public class PilotHundredPoints extends Predicate ...{
+5    public boolean match(Pilot pilot) ...{
+6        return pilot.getPoints() == 100;
+7    }
+8}</div</pre>    </body></html>

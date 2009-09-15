@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Code Overview	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Code Overview</h1><p><font color="#990000">This topic applies to Java version only.</font> </p><p>Now the plug-in environment is
+configured and we can look at the code itself.</p>
+
+<p>At this point in time the project
+contains the following classes:</p>
+
+<ul><li>memoplugin.Activator</li><li>memoplugin.actions.SampleAction</li></ul>
+
+<p>Activator class is called to start
+and stop the plug-in. It is responsible for managing its lifecycle. We will use
+it to initialize and clean up db4o resources.</p>
+
+<p>SampleAction is a class that performs the action
+specified in the action set in the manifest file. It can be used to specify the
+behavior on the action. We will use it to call a custom dialog for memo viewing
+and editing.</p>
+
+<p>From the said above we can see
+that we will need 2 more classes:</p>
+
+<ul><li>Db4oProvider:
+     will be used to keep db4o connection, provide it to the users on request,
+     and close it on dispose.</li><li>DataDialog:
+     will provide a simple UI for viewing and editing the data, it will use
+     Db4oProvider to access and store the data.</li></ul>
+
+<p>These 2 classes are very basic and
+are not specific to OSGI environment. Please, review their code below:</p><MadCap:snippetBlock src="../../../Resources/Snippets/Code Overview/Db4oProvider.java/Db4oProvider.java.flsnp" /> </p>
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Code Overview/DataDialog.java/DataDialog.java.flsnp" />
+<p>In order to call the
+above-mentioned DataDialog we will need to modify the generated
+<code>run</code> method in SampleAction class:</p>
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Code Overview/SampleAction.java/run.flsnp" />
+
+
+</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

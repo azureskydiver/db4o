@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BuiltInTranslatorsExample.java: testTNull
+public static void testTNull()
+    ...{
+        saveNotStorable();
+        ObjectContainer container = database();
+        if (container != null)
+        ...{
+            try
+            ...{
+                // Trying to retrieve
+                ObjectSet result = container.query(NotStorable.class);
+                // As the class is configured with TNull, the data should be null
+                listResult(result);
+            }
+            catch (Db4oException ex)
+            ...{
+              ex.printStackTrace();
+            }
+            catch (Exception ex)
+            ...{
+              ex.printStackTrace();
+            }
+            finally
+            ...{
+                closeDatabase();
+            }
+        }
+    }</pre>    </body></html>

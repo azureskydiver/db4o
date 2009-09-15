@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryPerformanceBenchmark.cs: RunDifferentObjectsTest
+1private void RunDifferentObjectsTest()
+2        ...{
+3
+4            Init();
+5            System.Console.WriteLine(&quot;Storing &quot; + _count + &quot; objects with &quot; + _depth
+6                    + &quot; levels of embedded objects:&quot;);
+7
+8            Clean();
+9            System.Console.WriteLine();
+0            System.Console.WriteLine(&quot; - primitive object with int field&quot;);
+1            Open(Configure());
+2            StoreSimplest();
+3            objectContainer.Ext().Purge();
+4            Close();
+5            Open(Configure());
+6            StartTimer();
+7            IQuery query = objectContainer.Query();
+8            query.Constrain(typeof(SimplestItem));
+9            query.Descend(&quot;_id&quot;).Constrain(1);
+0            IList result = query.Execute();
+1            SimplestItem simplestItem = (SimplestItem)result[0];
+2            StopTimer(&quot;Querying SimplestItem: &quot; + simplestItem._id);
+3            Close();
+4
+5            Open(Configure());
+6            System.Console.WriteLine();
+7            System.Console.WriteLine(&quot; - object with string field&quot;);
+8            Store();
+9            objectContainer.Ext().Purge();
+0            Close();
+1            Open(Configure());
+2            StartTimer();
+3            query = objectContainer.Query();
+4            query.Constrain(typeof(Item));
+5            query.Descend(&quot;_name&quot;).Constrain(&quot;level1/2&quot;);
+6            result = query.Execute();
+7            Item item = (Item)result[0];
+8            StopTimer(&quot;Querying object with string field: &quot; + item._name);
+9            Close();
+0
+1            Clean();
+2            Open(Configure());
+3            System.Console.WriteLine();
+4            System.Console.WriteLine(&quot; - object with StringBuilder field&quot;);
+5            StoreWithStringBuffer();
+6            objectContainer.Ext().Purge();
+7            Close();
+8            Open(Configure());
+9            StartTimer();
+0            query = objectContainer.Query();
+1            query.Constrain(typeof(ItemWithStringBuilder));
+2            query.Descend(&quot;_name&quot;).Constrain(new StringBuilder(&quot;level1/2&quot;));
+3            result = query.Execute();
+4            ItemWithStringBuilder itemWithSB = (ItemWithStringBuilder)result[0];
+5            StopTimer(&quot;Querying object with StringBuilder field: &quot;
+6                    + itemWithSB._name);
+7            Close();
+8
+9            Clean();
+0            Open(Configure());
+1            System.Console.WriteLine();
+2            System.Console.WriteLine(&quot; - object with int array field&quot;);
+3            StoreWithArray();
+4            objectContainer.Ext().Purge();
+5            Close();
+6            Open(Configure());
+7            StartTimer();
+8            query = objectContainer.Query();
+9            query.Constrain(typeof(ItemWithArray));
+0            IQuery idQuery = query.Descend(&quot;_id&quot;);
+1            idQuery.Constrain(1);
+2            idQuery.Constrain(2);
+3            idQuery.Constrain(3);
+4            idQuery.Constrain(4);
+5            result = query.Execute();
+6
+7            ItemWithArray itemWithArray = (ItemWithArray)result[0];
+8            StopTimer(&quot;Querying object with Array field: [&quot; + itemWithArray._id[0]
+9                    + &quot;, &quot; + +itemWithArray._id[1] + &quot;, &quot; + +itemWithArray._id[2]
+0                    + &quot;, &quot; + +itemWithArray._id[0] + &quot;]&quot;);
+1            Close();
+2
+3            Clean();
+4            Open(Configure());
+5            System.Console.WriteLine();
+6            System.Console.WriteLine(&quot; - object with ArrayList field&quot;);
+7            StoreWithArrayList();
+8            objectContainer.Ext().Purge();
+9            Close();
+0            Open(Configure());
+1            StartTimer();
+2            query = objectContainer.Query();
+3            query.Constrain(typeof(ItemWithArrayList));
+4            query.Descend(&quot;_ids&quot;).Constrain(1).Contains();
+5            result = query.Execute();
+6            ItemWithArrayList itemWithArrayList = (ItemWithArrayList)result[0];
+7            StopTimer(&quot;Querying object with ArrayList field: &quot;
+8                    + itemWithArrayList._ids.ToString());
+9            Close();
+0
+1        }</pre>    </body></html>

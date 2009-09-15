@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Database Size	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Database Size</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#File Header">File Header</a></li><li><a href ="#Object Overhead">Object Overhead</a></li><li><a href ="#"></a></li><li><a href ="#Block Size">Block Size</a></li><li><a href ="#Freespace">Freespace</a></li></ul></li></ul></div></div></div><p>If you are concerned about the size of your database file, it is importnant to understand what contributes to it and what are the strategies to keep it down.</p><a name="File Header"></a><h2>File Header  </h2><p><span id="ctl00_ctl00_bcr_topicView___TopicBody"><p>Every database file starts with a fixed file header.</p>
+<p>The information stored in the header is:</p><font size="2">
+</font><p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">byte</font></b><font size="2">) </font><font color="#2a00ff" size="2">'d'</font></p><font size="2">
+</font><p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">byte</font></b><font size="2">) </font><font color="#2a00ff" size="2">'b'</font></p><font size="2">
+</font><p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">byte</font></b><font size="2">) </font><font color="#2a00ff" size="2">'4'</font></p><font size="2">
+</font><p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">byte</font></b><font size="2">) </font><font color="#2a00ff" size="2">'o'</font></p><font size="2">
+</font><p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">byte</font></b><font size="2">) headerVersion</font></p>
+<p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">int</font></b><font size="2">) headerLock</font></p>
+<p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">long</font></b><font size="2">) openTime</font></p>
+<p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">long</font></b><font size="2">) accessTime</font></p>
+<p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">int</font></b><font size="2">) Transaction pointer 1</font></p>
+<p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">int</font></b><font size="2">) Transaction pointer 2</font></p>
+<p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">int</font></b><font size="2">) blockSize</font></p>
+<p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">int</font></b><font size="2">) classCollectionID</font></p>
+<p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">int</font></b><font size="2">) freespaceID</font></p>
+<p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">int</font></b><font size="2">) variablePartID</font></p>
+<p><font size="2"> </font></p>
+
+<p>The format and length of the fixed header is constant.</p>
+<p>It points to a second block of data in the database file the "variable part", with the variablePartID.</p>
+
+
+<p>The information stored in the variable part is:</p><font size="2">
+</font><p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">int</font></b><font size="2">) converter version</font></p>
+<p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">byte</font></b><font size="2">) freespace system used</font></p>
+<p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">int</font></b><font size="2">) freespace address</font></p>
+<p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">int</font></b><font size="2">) identity ID</font></p>
+<p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">long</font></b><font size="2">) versionGenerator</font></p>
+<p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">int</font></b><font size="2">) uuid index ID</font></p>
+
+<ul><li>Implementation 
+<ul><li>com.db4o.internal.fileheader.FileHeader1 
+</li><li>com.db4o.internal.fileheader.<font size="2">FileHeaderVariablePart1</font></li></ul></li></ul></span></p><a name="Object Overhead"></a><h2><span id="ctl00_ctl00_bcr_topicView___TopicBody">Object Overhead</span></h2><a name=""></a><h2><span id="ctl00_ctl00_bcr_topicView___TopicBody"></span></h2><p>When you create a new db4o fatabase file - it contains only the header and has a fixed size. As soon as you start storing the information the file will grow. The size overhead per object depends on the typehandler implementation. </p><p>In
+general the object consists of internal ID and value types, i.e.
+integers, arrays, enums etc. Overhead per object type is ID, which is
+integer. The overhead for value type is an integer value showing which
+value type is it, i.e. int or string etc.For variable length
+value types, there is a long value to store the length. If object
+contains another complex object - the id of another object is
+referenced in the top-level object.
+ 
+If you decide to use UUIDs and version number for your objects, you will get an additional overhead:</p><p>UUID = 35 bytes (signature part) + 8 bytes (long part) version number = 8 bytes.
+</p><p>Additional overhead per object will appear from using indexes and will depend on the amount of indexes fields and indexes value types.</p><a name="Block Size"></a><h2>Block Size </h2><p>Block Size is a configurable value, which defines the way information is stored in db4o database. Using bigger block sizes can result in unnecessary growth of the database. For motr information see <a href="increasing_the_maximum_database_file_size.html" class="wikiLink">Increasing The Maximum Database File Size</a></p><a name="Freespace"></a><h2>Freespace</h2><p>  Freespace appears in db4o database after unneeded objects were deleted. The amount of the freespace can be controlled from the <a href="discarding_free_space.html" class="wikiLink">configuration</a>. Another option to get rid of the freespace is <a href="../../implementation_strategies/maintenance/defragment.html" class="wikiLink">Defragment</a>. It is a good practice to run Defragment regularly to maintain the minimum database file size. </p></div>
+    </div>
+    
+  </body></html>

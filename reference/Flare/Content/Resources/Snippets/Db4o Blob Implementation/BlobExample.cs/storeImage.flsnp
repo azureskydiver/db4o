@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">BlobExample.cs: storeImage
+private static void StoreImage(Car car) 
+    ...{
+      CarImage img = car.CarImage;
+      try 
+      ...{
+        img.ReadFile();
+      } 
+      catch (Exception ex)
+      ...{
+        Console.WriteLine(ex.Message);
+      }
+    }</pre>    </body></html>

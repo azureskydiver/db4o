@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UpdatePerformanceBenchmark.java: ActivatableItem
+public static class ActivatableItem implements Activatable ...{
+
+      private String _name;
+        public ActivatableItem _child;
+
+      transient Activator _activator;
+      
+      public void bind(Activator activator) ...{
+          if (_activator == activator) ...{
+            return;
+          }
+          if (activator != null &amp;&amp; _activator != null) ...{
+                throw new IllegalStateException();
+            }
+        _activator = activator;
+      }
+      
+      public void activate(ActivationPurpose purpose) ...{
+        if (_activator == null) return;
+        _activator.activate(purpose);
+      }
+      
+        
+        public ActivatableItem()...{
+            
+        }
+        
+        public ActivatableItem(String name, ActivatableItem child)...{
+            setName(name);
+            _child = child;
+        }
+
+    public void setName(String _name) ...{
+      this._name = _name;
+    }
+
+    public String getName() ...{
+      return _name;
+    }
+        
+    }</div</pre>    </body></html>

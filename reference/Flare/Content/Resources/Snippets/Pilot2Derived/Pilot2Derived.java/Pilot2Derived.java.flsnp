@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Pilot2Derived.java
+1package com.db4odoc.qbe;
+2
+3public class Pilot2Derived extends Pilot2 ...{
+4
+5  public Pilot2Derived(String name) ...{
+6    super(name);
+7  }
+8
+9}</pre>    </body></html>

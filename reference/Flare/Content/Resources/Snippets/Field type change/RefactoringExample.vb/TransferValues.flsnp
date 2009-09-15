@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RefactoringExample.vb: TransferValues
+Private Shared Sub TransferValues()Sub TransferValues()
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                Dim sc As IStoredClass = container.Ext().StoredClass(GetType(Pilot))
+                System.Console.WriteLine(&quot;Stored class:  &quot; + sc.GetName())
+                Dim sfOld As IStoredField = sc.StoredField(&quot;_name&quot;, GetType(String))
+                System.Console.WriteLine(&quot;Old field:  &quot; + sfOld.GetName() + &quot;;&quot; + sfOld.GetStoredType().GetName())
+                Dim q As IQuery = container.Query()
+                q.Constrain(GetType(Pilot))
+                Dim result As IObjectSet = q.Execute()
+                Dim obj As Object
+                For Each obj In result
+                    Dim pilot As Pilot = CType(obj, Pilot)
+                    pilot.Name = New Identity(sfOld.Get(pilot).ToString(), &quot;&quot;)
+                    System.Console.WriteLine(&quot;Pilot=&quot; + pilot.ToString())
+                    container.Set(pilot)
+                Next
+            Finally
+                container.Close()
+            End Try
+        End Sub</pre>    </body></html>

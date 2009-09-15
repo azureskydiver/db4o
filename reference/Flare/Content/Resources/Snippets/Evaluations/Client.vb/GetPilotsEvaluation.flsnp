@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Client.vb: GetPilotsEvaluation
+Private Shared Sub GetPilotsEvaluation()Sub GetPilotsEvaluation()
+            Console.WriteLine(&quot;Retrieving Pilot objects: Evaluation&quot;)
+            Dim oc As IObjectContainer = Db4oFactory.OpenClient(&quot;localhost&quot;, &amp;HDB40, &quot;db4o&quot;, &quot;db4o&quot;)
+            Try
+                Dim query As IQuery = oc.Query
+                query.Constrain(GetType(Pilot))
+                query.Constrain(New EvenPointsEvaluation)
+                Dim result As IObjectSet = query.Execute
+                ListResult(result)
+            Finally
+                oc.Close()
+            End Try
+        End Sub</pre>    </body></html>

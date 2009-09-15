@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ListOperationsExample.vb: RemoveInsert
+Private Shared Sub RemoveInsert()Sub RemoveInsert()
+            Dim sw As Stopwatch = New Stopwatch
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(DbFile)
+            Try
+                ' set activation depth to 1 for the quickest execution
+                db.Ext.Configure.UpdateDepth(1)
+                Dim result As IList(Of ListObject) = db.Query(Of ListObject)()
+                If result.Count = 2 Then
+                    ' retrieve 2 ListObjects
+                    Dim lo1 As ListObject = result(0)
+                    Dim lo2 As ListObject = result(1)
+                    Dim dataObject As DataObject = lo1.Data(0)
+                    ' move the first object from the first
+                    ' ListObject to the second ListObject
+                    lo1.Data.Remove(dataObject)
+                    lo2.Data.Add(dataObject)
+                    Console.WriteLine(&quot;Removed from the first list, count is {0}, setting data...&quot;, lo1.Data.Count)
+                    Console.WriteLine(&quot;Added to the second list, count is {0}, setting data...&quot;, lo2.Data.Count)
+                    sw.Start()
+                    db.Set(lo1)
+                    db.Set(lo2)
+                    db.Commit()
+                    sw.Stop()
+                End If
+            Finally
+                db.Close()
+            End Try
+            Console.WriteLine(&quot;Storing took {0}&quot;, sw.Elapsed.ToString)
+        End Sub</pre>    </body></html>

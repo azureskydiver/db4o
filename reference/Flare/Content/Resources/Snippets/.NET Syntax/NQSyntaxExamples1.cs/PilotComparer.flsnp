@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">NQSyntaxExamples1.cs: PilotComparer
+1private class PilotComparer : IComparer
+2        ...{
+3            public int Compare(Object pilot1, Object pilot2)
+4            ...{
+5                return ((Pilot)pilot1).Points - ((Pilot)pilot2).Points;
+6            }
+7        }</pre>    </body></html>

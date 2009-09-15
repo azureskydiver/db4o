@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">EnumExample.java: updateQualification
+private static void updateQualification()...{
+    System.out.println(&quot;Updating WINNER qualification constant&quot;);
+    ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
+    try ...{
+      Query query = container.query();
+      query.constrain(Qualification.class);
+      query.descend(&quot;qualification&quot;).constrain(&quot;WINNER&quot;);
+          ObjectSet result = query.execute();
+          for(int x = 0; x &lt; result.size(); x++)...{
+            Qualification qualification = (Qualification)result.get(x);
+            qualification.testChange(&quot;WINNER2006&quot;);
+            container.set(qualification);
+          }
+    } finally ...{
+      container.close();
+    }
+    printQualification();
+    }</pre>    </body></html>

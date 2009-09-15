@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TestObject.java
+/**//* Copyright (C) 2004 - 2006 Versant Inc. http://www.db4o.com */
+package com.db4odoc.autoincrement;
+
+public class TestObject extends CountedObject...{
+  String name;  
+  
+  public TestObject(String name) ...{
+    this.name = name;
+  }
+  
+  public String toString() ...{
+    return name+&quot;/&quot;+id;
+  }
+  
+}</pre>    </body></html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryModesExample.cs: TestSnapshotQueries
+private static void TestSnapshotQueries()
+        ...{
+            Console.WriteLine(&quot;Testing query performance on 10000 pilot objects in Snapshot mode&quot;);
+            FillUpDB(10000);
+            IConfiguration configuration = Db4oFactory.NewConfiguration();
+            configuration.Queries().EvaluationMode(QueryEvaluationMode.SNAPSHOT);
+            IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
+            try
+            ...{
+                IQuery query = db.Query();
+                query.Constrain(typeof(Pilot));
+                query.Descend(&quot;_points&quot;).Constrain(99).Greater();
+                DateTime dt1 = DateTime.UtcNow;
+                query.Execute();
+                DateTime dt2 = DateTime.UtcNow;
+                TimeSpan diff = dt2 - dt1;
+                Console.WriteLine(&quot;Query execution time=&quot; + diff.TotalMilliseconds + &quot; ms&quot;);
+            }
+            finally
+            ...{
+                db.Close();
+            }
+        }</pre>    </body></html>

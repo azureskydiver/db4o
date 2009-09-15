@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Autoincrement	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Autoincrement</h1><p>Db4o does not deliver a field autoincrement feature, which
+is common in RDBMS. If your application logic requires this feature you can
+implement it using External Callbacks. One of the possible solutions is
+presented below.</p>
+
+<p>We will need an object to store the last generated ID and to
+return a new ID on request:</p>
+
+<p MadCap:conditions="Primary.Java"><MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/IncrementedId.java/IncrementedId.java.flsnp" />p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#"><MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/IncrementedId.cs/IncrementedId.cs.flsnp" />p><p MadCap:conditions="Primary:cs" /><p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/IncrementedId.vb/IncrementedId.vb.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+<p>This object generates the simplest ID, which is an
+autoincremented integer value. You can add your own algorithm to generate more
+sophisticated ID sequences, like ABC0001DEF.</p>
+
+<p>When you use external callbacks you are not limited to a
+single object: a callback can apply to any group of objects Thus you can create
+a sequence of classes sharing the same autoincrement. To distinguish the
+objects, which will have an autoincremented field, we will use an abstract
+(MustInherit in VB) class:</p><p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/CountedObject.java/CountedObject.java.flsnp" /></p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/CountedObject.cs/CountedObject.cs.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/CountedObject.vb/CountedObject.vb.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+<p>Each object extending CountedObject will get an
+autoincremented ID. For example:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/TestObject.java/TestObject.java.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/TestObject.cs/TestObject.cs.flsnp" />
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/TestObject.vb/TestObject.vb.flsnp" />
+
+</p><p MadCap:conditions="Primary:vb" />
+
+
+<p>It is only left to register the callback with the creating() event:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/AutoIncExample.java/registerCallback.flsnp" />iv class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">AutoIncExample.java: <span class="fscMemberName">getNextId</span></span></div><div class="fscCode"><pre ID=".AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_GetNextId_2108_57"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id=".AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_GetNextId_2108_57_49_252_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('.AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_GetNextId_2108_57_49_252_Open_Text').style.display='none'; document.getElementById('.AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_GetNextId_2108_57_49_252_Closed_Image').style.display='inline'; document.getElementById('.AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_GetNextId_2108_57_49_252_Closed_Text').style.display='inline';"/><img id=".AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_GetNextId_2108_57_49_252_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('.AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_GetNextId_2108_57_49_252_Closed_Text').style.display='none'; document.getElementById('.AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_GetNextId_2108_57_49_252_Open_Image').style.display='inline'; document.getElementById('.AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_GetNextId_2108_57_49_252_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">int</span><span style="color: #000000;"> getNextId(ObjectContainer db) </span><span id=".AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_GetNextId_2108_57_49_252_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id=".AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_GetNextId_2108_57_49_252_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> this function retrieves the next available ID from 
+</span><span style="color: #008080;">3</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #008000;">//</span><span style="color: #008000;"> the IncrementedId object</span><span style="color: #008000;">
+</span><span style="color: #008080;">4</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">    IncrementedId r </span><span style="color: #000000;">=</span><span style="color: #000000;"> IncrementedId.getIdObject(db);   
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">int</span><span style="color: #000000;"> nRoll;
+</span><span style="color: #008080;">6</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    nRoll </span><span style="color: #000000;">=</span><span style="color: #000000;"> r.getNextID(db);
+</span><span style="color: #008080;">7</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    
+</span><span style="color: #008080;">8</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">return</span><span style="color: #000000;"> nRoll;
+</span><span style="color: #008080;">9</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>  </p>
+
+
+
+</p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#">
+
+
+
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/AutoIncExample.cs/RegisterCallback.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/AutoIncExample.cs/OnCreating.flsnp" />iv class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">AutoIncExample.cs: <span class="fscMemberName">GetNextId</span></span></div><div class="fscCode"><pre ID=".AutoIncCS.ZipsAutoIncExample.Cs_AutoIncExample.Cs_GetNextId_2368_53"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">int</span><span style="color: #000000;"> GetNextId(IObjectContainer db)
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img id=".AutoIncCS.ZipsAutoIncExample.Cs_AutoIncExample.Cs_GetNextId_2368_53_58_274_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('.AutoIncCS.ZipsAutoIncExample.Cs_AutoIncExample.Cs_GetNextId_2368_53_58_274_Open_Text').style.display='none'; document.getElementById('.AutoIncCS.ZipsAutoIncExample.Cs_AutoIncExample.Cs_GetNextId_2368_53_58_274_Closed_Image').style.display='inline'; document.getElementById('.AutoIncCS.ZipsAutoIncExample.Cs_AutoIncExample.Cs_GetNextId_2368_53_58_274_Closed_Text').style.display='inline';"/><img id=".AutoIncCS.ZipsAutoIncExample.Cs_AutoIncExample.Cs_GetNextId_2368_53_58_274_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('.AutoIncCS.ZipsAutoIncExample.Cs_AutoIncExample.Cs_GetNextId_2368_53_58_274_Closed_Text').style.display='none'; document.getElementById('.AutoIncCS.ZipsAutoIncExample.Cs_AutoIncExample.Cs_GetNextId_2368_53_58_274_Open_Image').style.display='inline'; document.getElementById('.AutoIncCS.ZipsAutoIncExample.Cs_AutoIncExample.Cs_GetNextId_2368_53_58_274_Open_Text').style.display='inline';"/>        </span><span id=".AutoIncCS.ZipsAutoIncExample.Cs_AutoIncExample.Cs_GetNextId_2368_53_58_274_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id=".AutoIncCS.ZipsAutoIncExample.Cs_AutoIncExample.Cs_GetNextId_2368_53_58_274_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #008000;">//</span><span style="color: #008000;"> this function retrieves the next available ID from 
+</span><span style="color: #008080;">4</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #008000;">//</span><span style="color: #008000;"> the IncrementedId object</span><span style="color: #008000;">
+</span><span style="color: #008080;">5</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">            IncrementedId r </span><span style="color: #000000;">=</span><span style="color: #000000;"> IncrementedId.GetIdObject(db);
+</span><span style="color: #008080;">6</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">7</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">return</span><span style="color: #000000;"> r.GetNextID(db);
+</span><span style="color: #008080;">8</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        }</span></span></div></pre></div></div> </p>
+
+
+
+
+</p><p MadCap:conditions="Primary:cs" />
+
+
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+
+
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/AutoIncExample.vb/RegisterCallback.flsnp" />iv class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">AutoIncExample.vb: <span class="fscMemberName">OnCreating</span></span></div><div class="fscCode"><pre ID=".AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_OnCreating_2573_54"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id=".AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_OnCreating_2573_54_15_403_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('.AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_OnCreating_2573_54_15_403_Open_Text').style.display='none'; document.getElementById('.AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_OnCreating_2573_54_15_403_Closed_Image').style.display='inline'; document.getElementById('.AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_OnCreating_2573_54_15_403_Closed_Text').style.display='inline';"/><img id=".AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_OnCreating_2573_54_15_403_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('.AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_OnCreating_2573_54_15_403_Closed_Text').style.display='none'; document.getElementById('.AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_OnCreating_2573_54_15_403_Open_Image').style.display='inline'; document.getElementById('.AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_OnCreating_2573_54_15_403_Open_Text').style.display='inline';"/><span style="color: #0000FF;">Private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Shared</span><span style="color: #000000;"> </span><span id=".AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_OnCreating_2573_54_15_403_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">Sub OnCreating()</span><span id=".AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_OnCreating_2573_54_15_403_Open_Text"><span style="color: #0000FF;">Sub</span><span style="color: #000000;"> OnCreating(</span><span style="color: #0000FF;">ByVal</span><span style="color: #000000;"> sender </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Object</span><span style="color: #000000;">, </span><span style="color: #0000FF;">ByVal</span><span style="color: #000000;"> args </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> CancellableObjectEventArgs)
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> db </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> IObjectContainer </span><span style="color: #000000;">=</span><span style="color: #000000;"> OpenContainer()
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> obj </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Object</span><span style="color: #000000;"> </span><span style="color: #000000;">=</span><span style="color: #000000;"> args.Object
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #008000;">'</span><span style="color: #008000;"> only for the objects extending the CountedObject</span><span style="color: #008000;">
+</span><span style="color: #008080;">5</span><span style="color: #008000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">            </span><span style="color: #0000FF;">If</span><span style="color: #000000;"> </span><span style="color: #0000FF;">TypeOf</span><span style="color: #000000;"> obj </span><span style="color: #0000FF;">Is</span><span style="color: #000000;"> CountedObject </span><span style="color: #0000FF;">Then</span><span style="color: #000000;">
+</span><span style="color: #008080;">6</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                </span><span style="color: #0000FF;">CType</span><span style="color: #000000;">(obj, CountedObject).Id </span><span style="color: #000000;">=</span><span style="color: #000000;"> GetNextId(db)
+</span><span style="color: #008080;">7</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">End</span><span style="color: #000000;"> </span><span style="color: #0000FF;">If</span><span style="color: #000000;">
+</span><span style="color: #008080;">8</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        </span><span style="color: #0000FF;">End Sub</span></span></div></pre></div></div>  </p>
+<MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/AutoIncExample.vb/GetNextId.flsnp" />
+</p>
+
+
+
+
+</p><p MadCap:conditions="Primary:vb" />
+
+
+
+<p>You can test the results with the following code:</p><p MadCap:conditions="Primary.Java">
+
+
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/AutoIncExample.java/storeObjects.flsnp" />iv class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">AutoIncExample.java: <span class="fscMemberName">retrieveObjects</span></span></div><div class="fscCode"><pre ID=".AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_RetrieveObjects_2902_63"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id=".AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_RetrieveObjects_2902_63_54_154_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('.AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_RetrieveObjects_2902_63_54_154_Open_Text').style.display='none'; document.getElementById('.AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_RetrieveObjects_2902_63_54_154_Closed_Image').style.display='inline'; document.getElementById('.AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_RetrieveObjects_2902_63_54_154_Closed_Text').style.display='inline';"/><img id=".AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_RetrieveObjects_2902_63_54_154_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('.AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_RetrieveObjects_2902_63_54_154_Closed_Text').style.display='none'; document.getElementById('.AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_RetrieveObjects_2902_63_54_154_Open_Image').style.display='inline'; document.getElementById('.AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_RetrieveObjects_2902_63_54_154_Open_Text').style.display='inline';"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> retrieveObjects(ObjectContainer db)</span><span id=".AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_RetrieveObjects_2902_63_54_154_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id=".AutoIncJava.ZipsAutoIncExample.Java_AutoIncExample.Java_RetrieveObjects_2902_63_54_154_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    ObjectSet</span><span style="color: #000000;">&lt;</span><span style="color: #000000;">TestObject</span><span style="color: #000000;">&gt;</span><span style="color: #000000;"> result </span><span style="color: #000000;">=</span><span style="color: #000000;"> db.queryByExample(</span><span style="color: #0000FF;">new</span><span style="color: #000000;"> TestObject(</span><span style="color: #0000FF;">null</span><span style="color: #000000;">));
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    listResult(result);
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>  </p>
+
+
+
+</p><p MadCap:conditions="Primary:java" /><p MadCap:conditions="Primary..NET,Primary.c#">
+
+
+
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/AutoIncExample.cs/StoreObjects.flsnp" /><MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/AutoIncExample.cs/RetrieveObjects.flsnp" />p><p MadCap:conditions="Primary:cs" />
+
+
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+
+
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Autoincrement/AutoIncExample.vb/StoreObjects.flsnp" />iv class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">AutoIncExample.vb: <span class="fscMemberName">RetrieveObjects</span></span></div><div class="fscCode"><pre ID=".AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_RetrieveObjects_3299_59"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id=".AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_RetrieveObjects_3299_59_14_210_Open_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('.AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_RetrieveObjects_3299_59_14_210_Open_Text').style.display='none'; document.getElementById('.AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_RetrieveObjects_3299_59_14_210_Closed_Image').style.display='inline'; document.getElementById('.AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_RetrieveObjects_3299_59_14_210_Closed_Text').style.display='inline';"/><img id=".AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_RetrieveObjects_3299_59_14_210_Closed_Image" src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('.AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_RetrieveObjects_3299_59_14_210_Closed_Text').style.display='none'; document.getElementById('.AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_RetrieveObjects_3299_59_14_210_Open_Image').style.display='inline'; document.getElementById('.AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_RetrieveObjects_3299_59_14_210_Open_Text').style.display='inline';"/><span style="color: #0000FF;">Public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Shared</span><span style="color: #000000;"> </span><span id=".AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_RetrieveObjects_3299_59_14_210_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">Sub RetrieveObjects()</span><span id=".AutoIncVB.ZipsAutoIncExample.Vb_AutoIncExample.Vb_RetrieveObjects_3299_59_14_210_Open_Text"><span style="color: #0000FF;">Sub</span><span style="color: #000000;"> RetrieveObjects()
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> db </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> IObjectContainer </span><span style="color: #000000;">=</span><span style="color: #000000;"> OpenContainer()
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> result </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> IObjectSet </span><span style="color: #000000;">=</span><span style="color: #000000;"> db.Get(</span><span style="color: #0000FF;">New</span><span style="color: #000000;"> TestObject(</span><span style="color: #0000FF;">Nothing</span><span style="color: #000000;">))
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            ListResult(result)
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        </span><span style="color: #0000FF;">End Sub</span></span></div></pre></div></div>  
+</p></p><p MadCap:conditions="Primary:vb" />
+
+Please,
+note that the suggested implementation <b>cannot be used in a multithreaded
+environment</b>. In such environment you will have to make sure that the IncrementedId class can only be
+saved to the database once, and that 2 threads cannot independently and
+simultaneously increment IncrementedId
+counter.</div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

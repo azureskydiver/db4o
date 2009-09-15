@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ActivationExample.cs: TestCollection
+private static void TestCollection()
+        ...{
+            StoreCollection();
+            IObjectContainer db = Database(ConfigureTA());
+            if (db != null)
+            ...{
+                try
+                ...{
+                    IList&lt;SensorPanel&gt; result = db.Query&lt;SensorPanel&gt;(delegate(SensorPanel sensorPanel)
+                    ...{
+                        if (sensorPanel.Sensor.Equals(1))
+                        ...{
+                            return true;
+                        }
+                        return false;
+                    });
+                    Console.WriteLine(result.Count);
+                    if (result.Count &gt; 0)
+                    ...{
+                        SensorPanel sensor = (SensorPanel)result[0];
+                        SensorPanel next = sensor.Next;
+                        while (next != null)
+                        ...{
+                            Console.WriteLine(next);
+                            next = next.Next;
+                        }
+                    }
+                }
+                finally
+                ...{
+                    CloseDatabase();
+                }
+            }
+        }</pre>    </body></html>

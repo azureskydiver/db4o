@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Db4oExample.java: fillUpDB
+public static void fillUpDB() throws Exception ...{
+      close();
+        new File(db4oDBFullPath()).delete();
+        ObjectContainer container=database();
+        if (container != null)...{
+          long startTime = System.currentTimeMillis();
+          for (int i=0; i&lt;100;i++)...{
+          addCar(container,i);
+        }
+          logToConsole(startTime, &quot;Stored 100 objects: &quot;, false);
+          startTime = System.currentTimeMillis();
+          container.commit();
+          logToConsole(startTime, &quot;Committed: &quot;, true);
+    }
+    }</pre>    </body></html>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Insert And Remove	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Insert And Remove</h1>
+<p>When an object is inserted or removed from the list, only
+the list object needs to be updated, the objects in the list are not going to
+be changed. That means that for the object from the <a href="../collections_update_depth.html" class="wikiLink">previous topic</a> we will need to set update depth = 1.</p>
+
+<p>Let's fill up the database with 2 long lists of objects:</p>
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Insert And Remove/ListOperationsExample.java/fillUpDb.flsnp" /></p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Insert And Remove/ListOperationsExample.cs/FillUpDb.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Insert And Remove/ListOperationsExample.vb/FillUpDb.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+<p>We will remove an object from one list and insert it into
+another:</p>
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Insert And Remove/ListOperationsExample.java/removeInsert.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Insert And Remove/ListOperationsExample.cs/RemoveInsert.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Insert And Remove/ListOperationsExample.vb/RemoveInsert.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+
+<p>Remember, if an object is removed from the list and is not
+going to be used any more, it should be deleted manually:</p>
+
+<p><code>db.Delete(dataObject)</code></p>
+
+
+<p>Let's check if the results are correct:</p>
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Insert And Remove/ListOperationsExample.java/checkResults.flsnp" /></p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Insert And Remove/ListOperationsExample.cs/CheckResults.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+
+<MadCap:snippetBlock src="../../../Resources/Snippets/Insert And Remove/ListOperationsExample.vb/CheckResults.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>You will see that insert/remove operation takes much less time with the correct update depth setting. </p></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

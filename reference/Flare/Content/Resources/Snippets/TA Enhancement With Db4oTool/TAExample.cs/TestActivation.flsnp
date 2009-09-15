@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TAExample.cs: TestActivation
+private static void TestActivation()
+        ...{
+            StoreSensorPanel();
+            IConfiguration configuration = ConfigureTA();
+
+            IObjectContainer container = Database(configuration);
+            if (container != null)
+            ...{
+                try
+                ...{
+                    System.Console.WriteLine(&quot;Zero activation depth&quot;);
+                    IObjectSet result = container.Get(new SensorPanelTA(1));
+                    ListResult(result);
+                    if (result.Size() &gt; 0)
+                    ...{
+                        SensorPanelTA sensor = (SensorPanelTA)result[0];
+                        // the object is a linked list, so each call to next()
+                        // will need to activate a new object
+                        SensorPanelTA next = sensor.Next;
+                        while (next != null)
+                        ...{
+                            System.Console.WriteLine(next);
+                            next = next.Next;
+                        }
+                    }
+                }
+                finally
+                ...{
+                    CloseDatabase();
+                }
+            }
+        }</pre>    </body></html>

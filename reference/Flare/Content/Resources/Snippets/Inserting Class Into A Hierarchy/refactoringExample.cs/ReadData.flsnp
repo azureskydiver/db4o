@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">RefactoringExample.cs: ReadData
+public static void ReadData()
+        ...{
+            IObjectContainer container = Db4oFactory.OpenFile(Db4oFileName);
+            try
+            ...{
+                IObjectSet result = container.Get(new D());
+                System.Console.WriteLine(&quot;D class: &quot;);
+                ListResult(result);
+
+                result = container.Get(new E());
+                System.Console.WriteLine();
+                System.Console.WriteLine(&quot;E class: &quot;);
+                ListResult(result);
+            }
+            finally
+            ...{
+                container.Close();
+            }
+        }</pre>    </body></html>

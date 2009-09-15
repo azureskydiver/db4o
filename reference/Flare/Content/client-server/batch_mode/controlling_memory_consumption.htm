@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Controlling Memory Consumption	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Controlling Memory Consumption</h1><p>In order to control the increasing memory usage in batch
+messaging mode the following configuration method is provided:</p>
+
+<p MadCap:conditions="Primary.Java"><p>Java: </p>
+
+<p><code>ClientConfiguration#networking().maxBatchQueueSize(size);</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#"><p>c#: </p>
+
+<p><code>IClientConfiguration.Networking.MaxBatchQueueSize = size;</code></p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET"><p>VB: </p>
+
+<p><code>IClientConfiguration.Networking.MaxBatchQueueSize = size</code></p>
+
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>When this configuration method is used, client messages are
+flushed to the server when the message queue reaches the specified size in
+bytes. </p><p>By default maximum batch queue size is equal to the maximum integer number.  </p>
+
+
+
+</div>
+    </div>
+    
+  </body></html>

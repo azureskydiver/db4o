@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">Client.java: saveMultiArray
+private static void saveMultiArray() throws IOException ...{
+    System.out.println(&quot;Testing saving an object with multidimentional array field&quot;);
+    ObjectContainer oc = Db4o.openClient(&quot;localhost&quot;, 0xdb40, &quot;db4o&quot;,&quot;db4o&quot;);
+    try ...{
+      RecordBook recordBook = new RecordBook();
+      recordBook.addRecord(&quot;September 2006&quot;, &quot;Michael Schumacher&quot;, &quot;last race&quot;);
+      recordBook.addRecord(&quot;September 2006&quot;, &quot;Kimi Raikkonen&quot;, &quot;no notes&quot;);
+      oc.set(recordBook);
+    } finally ...{
+      oc.close();
+    }
+  }</div</pre>    </body></html>

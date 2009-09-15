@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">QueryModesExample.java: testSnapshotConcurrent
+private static void testSnapshotConcurrent() ...{
+    System.out
+        .println(&quot;Testing snapshot mode with concurrent modifications&quot;);
+    fillUpDB(10);
+    Configuration configuration = Db4o.newConfiguration();
+    configuration.queries().evaluationMode(QueryEvaluationMode.SNAPSHOT);
+    ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
+    try ...{
+      Query query1 = container.query();
+      query1.constrain(Pilot.class);
+      query1.descend(&quot;points&quot;).constrain(5).smaller();
+      ObjectSet result1 = query1.execute();
+
+      Query query2 = container.query();
+      query2.constrain(Pilot.class);
+      query2.descend(&quot;points&quot;).constrain(1);
+      ObjectSet result2 = query2.execute();
+      Pilot pilotToDelete = (Pilot) result2.get(0);
+      System.out.println(&quot;Pilot to be deleted: &quot;
+          + pilotToDelete);
+      container.delete(pilotToDelete);
+      Pilot pilot = new Pilot(&quot;Tester&quot;, 2);
+      System.out.println(&quot;Pilot to be added: &quot; + pilot);
+      container.set(pilot);
+
+      System.out
+          .println(&quot;Query result after changing from the same transaction&quot;);
+      listResult(result1);
+    } finally ...{
+      container.close();
+    }
+  }</pre>    </body></html>

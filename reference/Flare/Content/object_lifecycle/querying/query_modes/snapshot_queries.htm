@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Snapshot Queries	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Snapshot Queries</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Pros and Cons for Snapshot Queries">Pros and Cons for Snapshot Queries</a></li></ul></li></ul></div></div></div> 
+
+<P>Snapshot mode allows you to get the advantages of the Lazy queries avoiding their side effects. When query is executed, the query processor chooses the best indexes, does all index processing and creates a snapshot of the index at this point in time. Non-indexed constraints are evaluated lazily when the application iterates through the <CODE>ObjectSet</CODE> resultset of the query.</P>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Snapshot Queries/QueryModesExample.java/testSnapshotQueries.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Snapshot Queries/QueryModesExample.cs/TestSnapshotQueries.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Snapshot Queries/QueryModesExample.vb/TestSnapshotQueries.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+<P>Snapshot queries ensure better performance than Immediate queries, but the performance will depend on the size of the resultset.</P>
+<P>As the snapshot of the results is kept in memory the result set is not affected by the changes from the caller or from another transaction (compare the results of this code snippet to the one from <a href="lazy_queries.html" class="wikiLink">Lazy Queries</a> topic):</P>
+<p MadCap:conditions="Primary.Java">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Snapshot Queries/QueryModesExample.java/testSnapshotConcurrent.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p MadCap:conditions="Primary..NET,Primary.c#">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Snapshot Queries/QueryModesExample.cs/TestSnapshotConcurrent.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+<MadCap:snippetBlock src="../../../Resources/Snippets/Snapshot Queries/QueryModesExample.vb/TestSnapshotConcurrent.flsnp" /></p><p MadCap:conditions="Primary:vb" />
+<a name="Pros and Cons for Snapshot Queries"></a><H2>Pros and Cons for Snapshot Queries</H2>
+<P>Pros:</P>
+<UL>
+<LI>Index processing will happen without possible side effects from changes made by the caller or by other transaction.</LI>
+<LI>Since index processing is fast, a server will not be blocked for a long time.</LI></UL>
+<P>Cons:</P>
+<UL>
+<LI>The entire candidate index will be loaded into memory. It will stay there until the query ObjectSet is garbage collected. In a C/S setup, the memory will be used on the server side</LI></UL>
+<P>Client/Server applications with the risk of concurrent modifications should prefer Snapshot mode to avoid side effects from other transactions.</P></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CompareExample.vb: StoreRecords
+Public Shared Sub StoreRecords()Sub StoreRecords(ByVal configuration As IConfiguration)
+            File.Delete(FileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, FileName)
+            Try
+                Dim record As Record = New Record(&quot;Michael Schumacher, points: 100&quot;)
+                container.Set(record)
+                record = New Record(&quot;Rubens Barrichello, points: 98&quot;)
+                container.Set(record)
+                record = New Record(&quot;Kimi Raikonnen, points: 55&quot;)
+                container.Set(record)
+            Finally
+                container.Close()
+            End Try
+        End Sub</pre>    </body></html>

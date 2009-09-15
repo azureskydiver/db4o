@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MyString.vb
+' Copyright (C) 2007 db4objects Inc. http://www.db4o.com
+Namespace Db4objectsNamespace Db4objects.Db4odoc.Comparing
+
+    Class MyStringClass MyString
+        Private _string As String
+
+        Public Sub New()Sub New(ByVal str As String)
+            _string = str
+        End Sub
+
+        Public Overloads Overrides Function ToString()Function ToString() As String
+            Return _string
+        End Function
+    End Class
+End Namespace</pre>    </body></html>

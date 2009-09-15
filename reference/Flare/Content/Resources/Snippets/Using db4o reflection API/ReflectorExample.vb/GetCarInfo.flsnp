@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">ReflectorExample.vb: GetCarInfo
+Public Shared Sub GetCarInfo()Sub GetCarInfo()
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
+            Try
+                Dim result As IObjectSet = db.Get(New Car(&quot;BMW&quot;))
+                If result.Size() &lt; 1 Then
+                    Return
+                End If
+                Dim car As Car = CType(result(0), Car)
+                Dim reflector As GenericReflector = New GenericReflector(Nothing, db.Ext().Reflector())
+                Dim carClass As IReflectClass = reflector.ForObject(car)
+                Console.WriteLine(&quot;Reflected class &quot; + carClass.GetName())
+                ' public fields
+                Console.WriteLine(&quot;FIELDS:&quot;)
+                Dim fields() As IReflectField = carClass.GetDeclaredFields()
+                Dim field As IReflectField
+                For Each field In fields
+                    Console.WriteLine(field.GetName())
+                Next
+
+                ' public methods
+                Console.WriteLine(&quot;METHODS:&quot;)
+                Dim params As IReflectClass() = {}
+                Dim method As IReflectMethod = carClass.GetMethod(&quot;ToString&quot;, params)
+                Console.WriteLine(&quot;ToString method &quot; + CType(method, Object).ToString())
+            Finally
+                db.Close()
+            End Try
+        End Sub</pre>    </body></html>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Custom Typehandler Example	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Custom Typehandler Example</h1>
+
+<p>For a custom typehandler example we will try to write a very
+simple typehandler for StringBuffer(java) and StringBuilder(.NET). These
+classes are basically just another representation of String, so we can look at
+the StringHandler implementation in db4o source. </p>
+
+<p>To keep it simple we will skip information required for
+indexing - please look at IndexableTypeHandler in db4o sources to get more
+information on how to handle indexes.</p>
+
+<p>The first thing should be #write method, which determines
+how the object is persisted:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBufferHandler.java/write.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBufferHandler.java/writeToBuffer.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.cs/Write.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.cs/WriteToBuffer.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.vb/Write.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.vb/WriteToBuffer.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>As you can see from the code above, there are 3 steps:</p>
+
+<ol><li>Get
+     the buffer from WriteContext/I WriteContext</li><li>Write
+     the length of the StringBuffer/StringBuilder</li><li>Transfer
+     the object to char array and write them in Unicode</li></ol>
+
+
+
+<p>Next step is to read the same from the buffer. It is just
+opposite to the write method:</p><p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBufferHandler.java/read.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBufferHandler.java/readBuffer.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.cs/Read.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.cs/ReadBuffer.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.vb/Read.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.vb/ReadBuffer.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Delete is simple - we just reposition the buffer offset to the end of the
+slot:</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBufferHandler.java/delete.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.cs/Delete.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.vb/Delete.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>Try to experiment with the #delete method by implementing cascade on delete.
+Use FirstClassObjectHandler as an example.</p>
+
+<p>We are done with the read/write operations. But as you remember, in order to
+read an object, we must find it through a query, and that's where we will need
+a #compare method  (well, you do not need
+it if your query does not contain any comparison criteria, but this is normally
+not the case):</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBufferHandler.java/prepareComparison.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBufferHandler.java/compare.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBufferHandler.java/compareChars.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.cs/PrepareComparison.flsnp" />iv class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">StringBuilderHandler.cs: <span class="fscMemberName">PreparedComparison</span></span></div><div class="fscCode"><pre ID="..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">class</span><span style="color: #000000;"> PreparedComparison : IPreparedComparison
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img id="..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_63_381_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_63_381_Open_Text').style.display='none'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_63_381_Closed_Image').style.display='inline'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_63_381_Closed_Text').style.display='inline';"/><img id="..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_63_381_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_63_381_Closed_Text').style.display='none'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_63_381_Open_Image').style.display='inline'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_63_381_Open_Text').style.display='inline';"/>        </span><span id="..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_63_381_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_63_381_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">object</span><span style="color: #000000;"> _source </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">null</span><span style="color: #000000;">;
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">public</span><span style="color: #000000;"> PreparedComparison(</span><span style="color: #0000FF;">object</span><span style="color: #000000;"> source)
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img id="..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_166_215_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_166_215_Open_Text').style.display='none'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_166_215_Closed_Image').style.display='inline'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_166_215_Closed_Text').style.display='inline';"/><img id="..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_166_215_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_166_215_Closed_Text').style.display='none'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_166_215_Open_Image').style.display='inline'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_166_215_Open_Text').style.display='inline';"/>            </span><span id="..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_166_215_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_166_215_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                _source </span><span style="color: #000000;">=</span><span style="color: #000000;"> source;
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>            }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">int</span><span style="color: #000000;"> CompareTo(</span><span style="color: #0000FF;">object</span><span style="color: #000000;"> target)
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img id="..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_277_371_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_277_371_Open_Text').style.display='none'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_277_371_Closed_Image').style.display='inline'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_277_371_Closed_Text').style.display='inline';"/><img id="..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_277_371_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_277_371_Closed_Text').style.display='none'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_277_371_Open_Image').style.display='inline'; document.getElementById('..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_277_371_Open_Text').style.display='inline';"/>            </span><span id="..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_277_371_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="..TypeHandlerCS.ZipsStringBuilderHandler.Cs_StringBuilderHandler.Cs_PreparedComparison_3512_73_277_371_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                </span><span style="color: #0000FF;">return</span><span style="color: #000000;"> Compare((StringBuilder)_source, (StringBuilder)target);
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>            }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        }</span></span></div></pre></div></div>  </p>
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.cs/Compare.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.cs/CompareChars.flsnp" />
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.vb/PrepareComparison.flsnp" />iv class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">StringBuilderHandler.vb: <span class="fscMemberName">PreparedComparison</span></span></div><div class="fscCode"><pre ID="..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_8_488_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_8_488_Open_Text').style.display='none'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_8_488_Closed_Image').style.display='inline'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_8_488_Closed_Text').style.display='inline';"/><img id="..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_8_488_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_8_488_Closed_Text').style.display='none'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_8_488_Open_Image').style.display='inline'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_8_488_Open_Text').style.display='inline';"/><span style="color: #0000FF;">Private</span><span style="color: #000000;"> </span><span id="..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_8_488_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">Class PreparedComparison</span><span id="..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_8_488_Open_Text"><span style="color: #0000FF;">Class</span><span style="color: #000000;"> PreparedComparison
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Implements</span><span style="color: #000000;"> IPreparedComparison
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            </span><span style="color: #0000FF;">Private</span><span style="color: #000000;"> _source </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Object</span><span style="color: #000000;"> </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Nothing</span><span style="color: #000000;">
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img id="..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_144_228_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_144_228_Open_Text').style.display='none'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_144_228_Closed_Image').style.display='inline'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_144_228_Closed_Text').style.display='inline';"/><img id="..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_144_228_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_144_228_Closed_Text').style.display='none'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_144_228_Open_Image').style.display='inline'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_144_228_Open_Text').style.display='inline';"/>            </span><span style="color: #0000FF;">Public</span><span style="color: #000000;"> </span><span id="..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_144_228_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">Sub New()</span><span id="..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_144_228_Open_Text"><span style="color: #0000FF;">Sub</span><span style="color: #000000;"> </span><span style="color: #0000FF;">New</span><span style="color: #000000;">(</span><span style="color: #0000FF;">ByVal</span><span style="color: #000000;"> source </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Object</span><span style="color: #000000;">)
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                _source </span><span style="color: #000000;">=</span><span style="color: #000000;"> source
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>            </span><span style="color: #0000FF;">End Sub</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img id="..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_249_470_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_249_470_Open_Text').style.display='none'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_249_470_Closed_Image').style.display='inline'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_249_470_Closed_Text').style.display='inline';"/><img id="..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_249_470_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_249_470_Closed_Text').style.display='none'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_249_470_Open_Image').style.display='inline'; document.getElementById('..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_249_470_Open_Text').style.display='inline';"/>            </span><span style="color: #0000FF;">Public</span><span style="color: #000000;"> </span><span id="..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_249_470_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">Function CompareTo()</span><span id="..TypeHandlerVB.ZipsStringBuilderHandler.Vb_StringBuilderHandler.Vb_PreparedComparison_3879_73_249_470_Open_Text"><span style="color: #0000FF;">Function</span><span style="color: #000000;"> CompareTo(</span><span style="color: #0000FF;">ByVal</span><span style="color: #000000;"> target </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Object</span><span style="color: #000000;">) </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Integer</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Implements</span><span style="color: #000000;"> IPreparedComparison.CompareTo
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                </span><span style="color: #0000FF;">Return</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Compare</span><span style="color: #000000;">(</span><span style="color: #0000FF;">DirectCast</span><span style="color: #000000;">(_source, StringBuilder), </span><span style="color: #0000FF;">DirectCast</span><span style="color: #000000;">(target, StringBuilder))
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>            </span><span style="color: #0000FF;">End Function</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        </span><span style="color: #0000FF;">End Class</span></span></div></pre></div></div>  </p>
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.vb/Compare.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.vb/CompareChars.flsnp" />
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>The last method left: #defragment. This one only moves the offset to the beginning
+of the object data, i.e. skips Id and size information (to be compatible to
+older versions):</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBufferHandler.java/defragment.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.cs/Defragment.flsnp" />/p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/StringBuilderHandler.vb/Defragment.flsnp" />
+</p><p MadCap:conditions="Primary:vb" /><p>This Typehandler implementation can be tested with a class below. Please, pay special attention to #configure method, which adds StringBufferHandler/StringBuilderHandler to the database configuration: </p><p MadCap:conditions="Primary.Java">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/TypehandlerExample.java/TypehandlerExample.java.flsnp" />
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/TypehandlerExample.cs/TypehandlerExample.cs.flsnp" />
+</p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET">
+
+<MadCap:snippetBlock src="../../Resources/Snippets/Custom Typehandler Example/TypehandlerExample.vb/TypehandlerExample.vb.flsnp" />
+</p><p MadCap:conditions="Primary:vb" /></div>
+    </div>
+    
+  <p>Download example code:</p>        <p></p></body></html>

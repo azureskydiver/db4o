@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.cs: RandomPredicate
+private class RandomPredicate : Db4objects.Db4o.Query.Predicate
+        ...{
+            private IList randomArray = null;
+
+            private IList GetRandomArray()
+            ...{
+                if (randomArray == null)
+                ...{
+                    Random rand = new Random();
+                    randomArray = new ArrayList();
+                    for (int i = 0; i &lt; 10; i++)
+                    ...{
+                        int random = (int)(rand.Next(10));
+                        randomArray.Add(random);
+                    }
+                }
+                return randomArray;
+            }
+
+            public bool Match(Pilot pilot)
+            ...{
+                // all Pilots having points in the values of
+                // the randomArray
+                return GetRandomArray().Contains(pilot.Points);
+            }
+        }</pre>    </body></html>

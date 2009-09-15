@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">UniqueConstraintExample.vb: StoreObjects
+Private Shared Sub StoreObjects()Sub StoreObjects()
+            File.Delete(FILENAME)
+            Dim server As IObjectServer = Db4oFactory.OpenServer(Configure, FILENAME, 0)
+            Dim pilot1 As Pilot = Nothing
+            Dim pilot2 As Pilot = Nothing
+            Try
+                Dim client1 As IObjectContainer = server.OpenClient
+                Try
+                    ' creating and storing pilot1 to the database
+                    pilot1 = New Pilot(&quot;Rubens Barichello&quot;, 99)
+                    client1.Set(pilot1)
+                    Dim client2 As IObjectContainer = server.OpenClient
+                    Try
+                        ' creating and storing pilot2 to the database
+                        pilot2 = New Pilot(&quot;Rubens Barichello&quot;, 100)
+                        client2.Set(pilot2)
+                        ' end commit the changes
+                        client2.Commit()
+                    Catch ex As UniqueFieldValueConstraintViolationException
+                        System.Console.WriteLine(&quot;Unique constraint violation in client2 saving: &quot; + pilot2.ToString())
+                        client2.Rollback()
+                    Finally
+                        client2.Close()
+                    End Try
+                    'Pilot Rubens Barichello is already in the database,
+                    ' commit will fail
+                    client1.Commit()
+                Catch ex As UniqueFieldValueConstraintViolationException
+                    System.Console.WriteLine(&quot;Unique constraint violation in client1 saving: &quot; + pilot1.ToString())
+                    client1.Rollback()
+                Finally
+                    client1.Close()
+                End Try
+            Finally
+                server.Close()
+            End Try
+        End Sub</pre>    </body></html>

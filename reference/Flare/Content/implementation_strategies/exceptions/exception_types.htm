@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Exception Types	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Exception Types</h1><p>Using db4o you will have to deal with db4o-specific
+exceptions and system exceptions thrown
+directly out of db4o (like OutOfMemory error in Java or System.Exception in
+.NET).</p>
+
+<p>Db4o-specific exceptions are Unchecked exceptions, which all
+inherit from a single root class Db4oException.</p>
+
+<p MadCap:conditions="Primary.Java">
+
+<p>In Java Unchecked exceptions are inherited from
+RuntimeExceptions class, while in .NET all exceptions are unchecked.</p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p>Db4o exceptions are chained; you can get the cause of the
+exception using:</p>
+
+<p MadCap:conditions="Primary.Java"><p>Java: </p>
+
+<p><code>db4oException.getCause();</code></p>
+
+</p><p MadCap:conditions="Primary:java" />
+
+<p MadCap:conditions="Primary..NET,Primary.c#"><p>c#: </p>
+
+<p><code>db4oException.Source;</code></p>
+
+</p><p MadCap:conditions="Primary:cs" />
+
+<p MadCap:conditions="Primary..NET,Primary.VB.NET"><p>VB: </p>
+
+<p><code>db4oException.Source;</code></p>
+
+</p><p MadCap:conditions="Primary:vb" />
+
+<p>In order to see all db4o-specific exceptions you can examine
+the hierarchy of Db4oException class. Currently the following exceptions are
+available:</p>
+
+<p><b>Db4oException </b>- db4o
+exception wrapper: exceptions occurring during internal processing will be
+proliferated to the client calling code encapsulated in an exception of this
+type.</p><p><b>BackupInProgressException</b> - an exception to be thrown when another process is already busy with the backup. </p>
+
+<p><b>ConstraintViolationException
+</b>- base class for all
+constraint exceptions.</p>
+
+<p><b>UniqueFieldValueConstraintViolationException</b> - an exception to be used to determine
+constraint violation on commit.</p><p><b>DatabaseClosedException</b> - an exception to be thrown when the database was closed or failed to open. </p><p><b>DatabaseFileLockedException</b> - this exception is thrown during any of db4o open calls if the database file is locked by another process. </p><p><b>DatabaseMaximumSizeReachedException</b> - this exception is thrown if the database size is bigger than possible. </p><p><b>DatabaseReadOnlyException</b> - an exception to be thrown when a write operation was attempted on a database in read-only mode.</p><b>GlobalOnlyConfigException</b> - this exception is thrown when a global-only configuration setting is attempted for the local configuration. <p><b>IncompatibleFileFormatException</b> - an exception to be thrown when an open operation is attempted on a file(database), which format is incompatible with the current version of db4o.</p><p><b>InvalidIDException</b> - an exception to be thrown when an ID format supplied to #bind or #getById methods is incorrect. </p><p><b>InvalidPasswordException</b> - this exception is thrown when the password provided to access an encrypted database is not correct. </p>
+
+<p><b>OldFormatException</b> - an exception to be thrown when an old file
+format was detected and the file could not be open.</p><p><b>ReflectException</b> - an exception to be thrown when a class can not be stored or instantiated by current db4o reflector. </p>
+
+<p><b>ReplicationConflictException</b> - an exception to be thrown when a conflict
+occurs and no ReplicationEventListener is specified.</p></div>
+    </div>
+    
+  </body></html>

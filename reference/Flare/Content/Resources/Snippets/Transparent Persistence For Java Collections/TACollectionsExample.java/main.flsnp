@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TACollectionsExample.java: main
+public static void main(String[] args) ...{
+    new File(TACollectionsExample.DB4O_FILE_NAME).delete();
+    ObjectContainer objectContainer = openObjectContainer();
+    Team team = new Team(&quot;Ferrari&quot;);
+    // Store the team first time to make it persistent
+    objectContainer.store(team);
+    objectContainer.close();
+    
+    objectContainer = openObjectContainer();
+    Team team1 = queryTeamByName(objectContainer, &quot;Ferrari&quot;);
+    team1.addPilot(new Pilot(&quot;Felipe Massa&quot;));
+    team1.addPilot(new Pilot(&quot;Kimi Raikkonen&quot;));
+    // No need to re-store team - it will be stored automatically
+    objectContainer.close();
+    
+    
+    objectContainer = openObjectContainer();
+    // check the results
+    ObjectSet&lt;Team&gt; objectSet = objectContainer.query(Team.class);
+    while (objectSet.hasNext()) ...{
+      System.out.println(objectSet.next());
+    }
+    objectContainer.close();
+  }</pre>    </body></html>

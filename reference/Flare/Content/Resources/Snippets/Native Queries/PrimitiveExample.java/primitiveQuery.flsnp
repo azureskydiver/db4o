@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">PrimitiveExample.java: primitiveQuery
+1public static void primitiveQuery(ObjectContainer db)...{
+2    List pilots = db.query(new Predicate() ...{
+3        public boolean match(Pilot pilot) ...{
+4            return pilot.getPoints() == 100;
+5        }
+6    });
+7  }</pre>    </body></html>

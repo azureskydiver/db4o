@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">TPRollback.vb: ModifyAndRollback
+Private Shared Sub ModifyAndRollback()Sub ModifyAndRollback()
+            Dim container As IObjectContainer = Database(ConfigureTP())
+            If container IsNot Nothing Then
+                Try
+                    ' create a car
+                    Dim car As Car = DirectCast(container.QueryByExample(New Car(Nothing, Nothing))(0), Car)
+                    System.Console.WriteLine(&quot;Initial car: &quot; + car.ToString() + &quot;(&quot; + container.Ext().GetID(car).ToString() + &quot;)&quot;)
+                    car.Model = &quot;Ferrari&quot;
+                    car.Pilot = New Pilot(&quot;Michael Schumacher&quot;, 123)
+                    container.Rollback()
+                    System.Console.WriteLine(&quot;Car after rollback: &quot; + car.ToString() + &quot;(&quot; + container.Ext().GetID(car).ToString() + &quot;)&quot;)
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub</pre>    </body></html>

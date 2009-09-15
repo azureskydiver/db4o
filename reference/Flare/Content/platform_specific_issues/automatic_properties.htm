@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+<head><title>Automatic Properties	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
+<body onload="prettyPrint()">
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Automatic Properties</h1><p>Automatic
+properties were introduced in c# .NET 3.5 version. Effectively automatic
+properties simply allow a user to skip the step of introducing private field
+variables when the property simply sets and gets the field value, i.e:</p>
+
+
+
+
+
+
+
+<p class=""><code>class Car</code> <code>{</code> <code>   public string
+Model {get; set}</code> <code>}</code></p>
+
+<p class="">Is equal
+to:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p class=""><code>class Car</code> <code>{</code> <code>private string
+_model;</code> <code>public string
+Model {</code> <code>    get</code> <code>   {</code> <code>      return _model;</code> <code>   };</code> <code>  set</code> <code>  {</code> <code>    _model = value;</code> <code>   }</code> <code>}</code></p>
+
+<p class="">As you can
+see automatic properties version allows to save quite a bit of code, which can
+be very valuable if your classes contain lots of properties. The benefit over
+using public fields is the same as with normal properties - easy refactoring
+and adding functionality into the property code. </p><p class="">Note, that automatic properties feature is not available in VB.NET.  </p><p class=""><div class="childTopicList">More Reading:<ul>
+<li><p><a href="automatic_properties/using_automatic_properties.html" class="wikiLink">Using Automatic Properties</a></p></li>
+<li><p><a href="automatic_properties/automatic_properties_explained.html" class="wikiLink">Automatic Properties Explained</a></p></li>
+</ul></div>
+  </p></div>
+    </div>
+    
+  </body></html>

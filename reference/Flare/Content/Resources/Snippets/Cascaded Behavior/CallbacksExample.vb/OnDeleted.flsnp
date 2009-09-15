@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CallbacksExample.vb: OnDeleted
+1Private Shared Sub OnDeleted()Sub OnDeleted(ByVal sender As Object, ByVal args As ObjectEventArgs)
+2            Dim obj As Object = args.Object
+3            If TypeOf obj Is Car Then
+4                OpenContainer.Delete(CType(obj, Car).Pilot)
+5            End If
+6        End Sub</pre>    </body></html>

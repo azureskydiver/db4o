@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StartServer.cs
+/**//* Copyright (C) 2004 - 2009  Versant Corporation http://www.versant.com */
+using System;
+using System.Threading;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Config;
+using Db4objects.Db4o.Messaging;
+
+
+namespace JavaDotnetClientServer
+...{
+    class StartServer : ServerInfo, IMessageRecipient
+    ...{
+        private bool stop = false;
+
+        /**//// &lt;summary&gt;
+        /// starts a db4o server using the configuration from
+        /// ServerInfo.
+        /// &lt;/summary&gt;
+        public static void Main(string[] arguments)
+        ...{
+            new StartServer().RunServer();
+        }
+        // end Main
+
+        /**//// &lt;summary&gt;
+        /// opens the IObjectServer, and waits forever until Close() is called
+        /// or a StopServer message is being received.
+        /// &lt;/summary&gt;
+        public void RunServer()
+        ...{
+            lock (this)
+            ...{
+                // Using the messaging functionality to redirect all
+                // messages to this.processMessage
+                IConfiguration configuration = Db4oFactory.NewConfiguration();
+                configuration.ClientServer().SetMessageRecipient(this);
+
+                IObjectServer db4oServer = Db4oFactory.OpenServer(configuration, FileName, Port);
+                db4oServer.GrantAccess(User, Password);
+
+                try
+                ...{
+                    if (!stop)
+                    ...{
+                        // wait forever until Close will change stop variable
+                        Monitor.Wait(this);
+                    }
+                }
+                catch (Exception e)
+                ...{
+                    Console.WriteLine(e.ToString());
+                }
+                db4oServer.Close();
+            }
+        }
+        // end RunServer
+
+        /**//// &lt;summary&gt;
+        /// messaging callback
+        /// see com.db4o.messaging.MessageRecipient#ProcessMessage()
+        /// &lt;/summary&gt;
+        public void ProcessMessage(IMessageContext context, object message)
+        ...{
+            if (message is StopServer)
+            ...{
+                Close();
+            }
+        }
+        // end ProcessMessage
+
+        /**//// &lt;summary&gt;
+        /// closes this server.
+        /// &lt;/summary&gt;
+        public void Close()
+        ...{
+            lock (this)
+            ...{
+                stop = true;
+                Monitor.PulseAll(this);
+            }
+        }
+        // end Close
+
+    }
+}</pre>    </body></html>

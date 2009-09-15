@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StartServer.vb
+' Copyright (C) 2004 - 2009  Versant Corporation http://www.versant.com 
+
+Imports System
+Imports System.Threading
+Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
+Imports Db4objects.Db4o.Messaging
+
+
+Class StartServerClass StartServer
+    Inherits ServerInfo
+    Implements IMessageRecipient
+    Private [stop] As Boolean = False
+
+    /**/''' &lt;summary&gt;
+    ''' starts a db4o server using the configuration from
+    ''' ServerInfo.
+    ''' &lt;/summary&gt;
+    Public Shared Sub Main()Sub Main(ByVal arguments As String())
+        Dim server As StartServer = New StartServer()
+        server.RunServer()
+    End Sub
+    ' end Main
+
+    /**/''' &lt;summary&gt;
+    ''' opens the IObjectServer, and waits forever until Close() is called
+    ''' or a StopServer message is being received.
+    ''' &lt;/summary&gt;
+    Public Sub RunServer()Sub RunServer()
+        SyncLock Me
+            ' Using the messaging functionality to redirect all
+            ' messages to this.processMessage
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ClientServer().SetMessageRecipient(Me)
+
+            Dim db4oServer As IObjectServer = Db4oFactory.OpenServer(configuration, FileName, Port)
+            db4oServer.GrantAccess(User, Password)
+
+            Try
+                If Not [stop] Then
+                    ' wait forever until Close will change stop variable
+                    Monitor.Wait(Me)
+                End If
+            Catch e As Exception
+                Console.WriteLine(e.ToString())
+            End Try
+            db4oServer.Close()
+        End SyncLock
+    End Sub
+    ' end RunServer
+
+    /**/''' &lt;summary&gt;
+    ''' messaging callback
+    ''' see com.db4o.messaging.MessageRecipient#ProcessMessage()
+    ''' &lt;/summary&gt;
+    Public Sub ProcessMessage()Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) Implements IMessageRecipient.ProcessMessage
+        If TypeOf message Is StopServer Then
+            Close()
+        End If
+    End Sub
+    ' end ProcessMessage
+
+    /**/''' &lt;summary&gt;
+    ''' closes this server.
+    ''' &lt;/summary&gt;
+    Public Sub Close()Sub Close()
+        SyncLock Me
+            [stop] = True
+            Monitor.PulseAll(Me)
+        End SyncLock
+    End Sub
+    ' end Close
+
+End Class</pre>    </body></html>

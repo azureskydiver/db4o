@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.java: deleteTest
+private static void deleteTest() ...{
+    // use delete configuration
+    ObjectContainer container = database();
+    if (container != null)...{
+      try ...{
+        System.out.println(&quot;Deleting Pilots :&quot;);
+        ObjectSet result = container.query(Pilot.class);
+        for (int x = 0; x &lt; result.size(); x++) ...{
+          Pilot pilot = (Pilot) result.get(x);
+          container.delete(pilot);
+        }
+        printCategories(container);
+        System.out.println(&quot;Deleting PilotCategories :&quot;);
+        result = container.query(PilotCategories.class);
+        for (int x = 0; x &lt; result.size(); x++) ...{
+          container.delete(result.get(x));
+        }
+        printCategories(container);
+      } finally ...{
+        closeDatabase();
+      }
+    }
+  }</pre>    </body></html>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">CachingStorageExample.vb: Item
+Private Class ItemClass Item
+            Private id As Integer
+            Private name As [String]
+
+            Public Sub New()Sub New(ByVal id As Integer, ByVal name As [String])
+                Me.id = id
+                Me.name = name
+            End Sub
+
+
+            Public Overloads Overrides Function ToString()Function ToString() As String
+                Return [String].Format(&quot;{0} [{1}]&quot;, name, id)
+            End Function
+        End Class</pre>    </body></html>

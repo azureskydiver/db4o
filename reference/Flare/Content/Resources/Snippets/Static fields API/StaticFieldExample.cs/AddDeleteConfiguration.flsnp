@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">StaticFieldExample.cs: AddDeleteConfiguration
+1private static void AddDeleteConfiguration() ...{
+2            if (_configuration != null) ...{
+3                _configuration.ObjectClass(typeof(Pilot)).CascadeOnDelete(true);
+4            }
+5        }</pre>    </body></html>

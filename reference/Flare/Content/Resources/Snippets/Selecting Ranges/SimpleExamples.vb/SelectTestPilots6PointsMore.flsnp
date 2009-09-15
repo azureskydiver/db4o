@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">SimpleExamples.vb: SelectTestPilots6PointsMore
+Private Shared Sub SelectTestPilots6PointsMore()Sub SelectTestPilots6PointsMore()
+            Dim container As IObjectContainer = Database()
+            If Not container Is Nothing Then
+                Try
+                    Dim result As IList(Of Pilot) = container.Query(Of Pilot)(AddressOf TestPilots6PointsMoreMatch)
+                    ListResult(result)
+                Catch ex As Exception
+                    System.Console.WriteLine(&quot;System Exception: &quot; + ex.Message)
+                Finally
+                    CloseDatabase()
+                End Try
+            End If
+        End Sub</pre>    </body></html>

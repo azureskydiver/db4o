@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">MarkTransientExample.java: saveObjects
+private static void saveObjects(Configuration configuration)...{
+    new File(DB4O_FILE_NAME).delete();
+    ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
+    try 
+    ...{
+      Test test = new Test(&quot;Transient string&quot;,&quot;Persistent string&quot;);
+      container.set(test);
+    } 
+    finally 
+    ...{
+      container.close();
+    }
+  }</pre>    </body></html>
