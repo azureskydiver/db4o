@@ -27,7 +27,7 @@ public class RandomAccessFileFactoryTestCase extends TestWithTempFile{
 
 	public void testLockDatabaseFileTrue() throws IOException{
 		ObjectContainer container = openObjectContainer(true);
-		if(Platform4.hasNio()){
+		if(! Platform4.needsLockFileThread()){
 			Assert.expect(DatabaseFileLockedException.class, new CodeBlock() {
 				public void run() throws Throwable {
 					RandomAccessFileFactory.newRandomAccessFile(tempFile(), false, true);

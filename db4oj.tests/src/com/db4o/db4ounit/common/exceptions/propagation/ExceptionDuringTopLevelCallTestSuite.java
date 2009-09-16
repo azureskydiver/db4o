@@ -4,6 +4,7 @@ package com.db4o.db4ounit.common.exceptions.propagation;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.exceptions.*;
+import com.db4o.internal.*;
 
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
@@ -22,6 +23,9 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 		
 		@Override
 		protected void configure(Configuration config) throws Exception {
+			if(Platform4.needsLockFileThread()){
+				config.lockDatabaseFile(false);
+			}
 			final ExceptionPropagationFixture propagationFixture = currentExceptionPropagationFixture();
 			_storage = new ExceptionSimulatingStorage(config.storage(), new ExceptionFactory() {
 				private boolean _alreadyCalled = false;
@@ -46,6 +50,7 @@ public class ExceptionDuringTopLevelCallTestSuite extends FixtureBasedTestSuite 
 			});
 			config.storage(_storage);
 		}
+		
 		
 		@Override
 		protected void db4oSetupAfterStore() throws Exception {
