@@ -294,12 +294,12 @@ public final class Platform4 {
         }
         return collectionCheck.definiteYes();
     }
-
-    public static final boolean hasLockFileThread() {
-        return true;
+    
+    public static boolean needsLockFileThread(){
+    	return ! hasNio();
     }
 
-    public static final boolean hasNio() {
+    private static final boolean hasNio() {
         if (!Debug4.nio) {
             return false;
         }

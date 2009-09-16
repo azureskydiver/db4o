@@ -36,12 +36,6 @@ public class CrashSimulatingTestCase implements TestCase, OptOutMultiSession {
 	
     static final boolean VERBOSE = false;
     
-    private boolean hasLockFileThread(){
-        if (!Platform4.hasLockFileThread()) {
-            return false;
-        }
-        return ! Platform4.hasNio();
-    }
     
     /**
      * @sharpen.remove
@@ -73,7 +67,7 @@ public class CrashSimulatingTestCase implements TestCase, OptOutMultiSession {
 
     
     private void doTest(boolean cached, boolean useLogFile) throws IOException{
-    	if(hasLockFileThread()){
+    	if(Platform4.needsLockFileThread()){
     		System.out.println("CrashSimulatingTestCase is ignored on platforms with lock file thread.");
     		return;
     	}
