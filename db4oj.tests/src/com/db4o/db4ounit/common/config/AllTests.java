@@ -14,6 +14,7 @@ public class AllTests extends ComposibleTestSuite {
         		new Class[] {
         				ClassConfigOverridesGlobalConfigTestSuite.class,
 			        	ConfigurationItemTestCase.class,
+			        	ConfigurationOfObjectClassNotSupportedTestCase.class,
 			        	Config4ImplTestCase.class,
 			        	CustomStringEncodingTestCase.class,
 			        	GlobalVsNonStaticConfigurationTestCase.class,
