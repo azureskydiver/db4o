@@ -8,7 +8,7 @@ import db4ounit.extensions.fixtures.*;
 
 public class UnhandledExceptionInThreadTestCase implements TestCase {
 	
-	public static class TestCase extends AbstractDb4oTestCase {
+	public static class ExceptionThrowingTestCase extends AbstractDb4oTestCase {
 		public void test() {
 			container().threadPool().start(new Runnable() {
 				public void run() {
@@ -20,7 +20,7 @@ public class UnhandledExceptionInThreadTestCase implements TestCase {
 	
 	public void testSolo() {
 		
-		final Db4oTestSuiteBuilder suite = new Db4oTestSuiteBuilder(new Db4oInMemory(), TestCase.class);
+		final Db4oTestSuiteBuilder suite = new Db4oTestSuiteBuilder(new Db4oInMemory(), ExceptionThrowingTestCase.class);
 		final TestResult result = new TestResult();
 		new TestRunner(suite).run(result);
 		Assert.areEqual(1, result.failures().size());
