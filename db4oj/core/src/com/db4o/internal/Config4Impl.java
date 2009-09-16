@@ -500,6 +500,9 @@ public final class Config4Impl implements Configuration, DeepClone,
             }
             className = claxx.getName();
         }
+        if(Object.class.getName().equals(className)){
+        	throw new IllegalArgumentException("Configuration of the Object class is not supported.");
+        }
         
         Hashtable4 xClasses=exceptionalClasses();
         Config4Class c4c = (Config4Class) xClasses.get(className);
