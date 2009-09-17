@@ -36,8 +36,8 @@ public class TestMethod implements Test {
 	public void run() {
 		boolean exceptionInTest = false;
 		try {
-			setUp();
 			try {
+				setUp();
 				invoke();
 			} catch (InvocationTargetException x) {
 				exceptionInTest = true;
