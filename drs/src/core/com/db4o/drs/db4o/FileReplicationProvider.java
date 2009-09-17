@@ -71,7 +71,6 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 
 	public FileReplicationProvider(ObjectContainer objectContainer, String name) {
 		Configuration cfg = objectContainer.ext().configure();
-		cfg.objectClass(Object.class).cascadeOnDelete(false);
 		cfg.callbacks(false);
 
 		_name = name;
