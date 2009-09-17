@@ -158,7 +158,7 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 	private TurnSetup[] createTurnSetups(int count) {
 		TurnSetup[] setups = new TurnSetup[count];
 		for(int idx = 0; idx < count; idx++) {
-			setups[idx] = new TurnSetup(new SetupProperty(TurnSetup.OBJECTCOUNT, idx));
+			setups[idx] = new TurnSetup(new SetupProperty(TurnSetupConfig.OBJECTCOUNT, idx));
 		}
 		return setups;
 	}
