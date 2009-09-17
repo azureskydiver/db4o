@@ -48,6 +48,8 @@ import com.db4o.polepos.continuous.*;
  * Please read the README file in the home directory first.
  */
 public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
+	
+	private static final String SETTINGS_FILE = "settings/PerfCircuits.properties";
 
 	private final Db4oJarCollection _jarCollection;
 	private final PerformanceMonitoringReporter _reporter;
@@ -68,7 +70,7 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
     }
     
     public int runMonitored() {
-    	run();
+    	run(SETTINGS_FILE);
     	PerformanceReport report = _reporter.performanceReport();
     	report.print(new OutputStreamWriter(System.err));
     	return report.performanceOk() ? 0 : -99;
@@ -107,16 +109,17 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 			 new Sepang(),
 			 new Bahrain(),
 			 new Imola(),
-//			 new Barcelona(),
-//			 new Monaco(),
-//			 new Nurburgring(),
-//			 new Montreal(),
-//			 new Indianapolis(),
-//			 new Magnycours(),
-//			 new Silverstone(),
-//			 new Hockenheim(),
-//			 new Hungaroring(),
-//			 new Istanbul(),
+			 new Barcelona(),
+			 new Monaco(),
+			 new Nurburgring(),
+			 new Montreal(),
+			 new Indianapolis(),
+			 new IndianapolisUnoptimized(),
+			 new Magnycours(),
+			 new Silverstone(),
+			 new Hockenheim(),
+			 new Hungaroring(),
+			 new Istanbul(),
 		};
 	}
 
@@ -126,16 +129,16 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 			new SepangDb4o(),
 			new BahrainDb4o(),
 			new ImolaDb4o(),
-//			new BarcelonaDb4o(),
-//			new MonacoDb4o(),
-//			new NurburgringDb4o(),
-//			new MontrealDb4o(),
-//			new MagnycoursDb4o(),
-//			new IndianapolisDb4o(),
-//			new SilverstoneDb4o(),
-//			new HockenheimDb4o(),
-//			new HungaroringDb4o(),
-//			new IstanbulDb4o(),
+			new BarcelonaDb4o(),
+			new MonacoDb4o(),
+			new NurburgringDb4o(),
+			new MontrealDb4o(),
+			new MagnycoursDb4o(),
+			new IndianapolisDb4o(),
+			new SilverstoneDb4o(),
+			new HockenheimDb4o(),
+			new HungaroringDb4o(),
+			new IstanbulDb4o(),
 		};
 	}
     
