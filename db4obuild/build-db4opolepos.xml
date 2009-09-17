@@ -71,7 +71,6 @@
 	</target>
 	
 	<target name="upload-pdf" >
-		<property name="polepos.pdf.labelled" value="Polepos-${label}.pdf"/>
 		<copy file="${dir.results}/PolePosition.pdf" tofile="${dir.results}/${polepos.pdf.labelled}" overwrite="true"/>
 		<echo message="About to upload to FTP: ${dir.results}/${polepos.pdf.labelled}"/>
 		<!-- active mode required for ftp server setup -->
