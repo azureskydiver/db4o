@@ -7,6 +7,7 @@ package com.db4o.monitoring.cs;
  * 
  * @since 7.12
  */
+@decaf.Ignore
 public interface ClientConnectionsMBean {
 	int getConnectedClientCount();
 }
