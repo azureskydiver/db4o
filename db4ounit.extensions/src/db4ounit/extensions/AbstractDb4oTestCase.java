@@ -48,10 +48,14 @@ public class AbstractDb4oTestCase implements Db4oTestCase, TestLifeCycle {
 	
 	public ExtObjectContainer openNewSession() {
 		MultiSessionFixture fixture = (MultiSessionFixture) fixture();
-        return fixture.openNewSession();
+        try {
+			return fixture.openNewSession(this);
+		} catch (Exception e) {
+			throw new RuntimeException("", e);
+		}
 	}
 	
-	protected void reopen() throws Exception{
+	protected void reopen() throws Exception {
     	fixture().reopen(this);
     }
 	

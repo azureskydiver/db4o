@@ -122,7 +122,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 		void runMethod() {
 			ExtObjectContainer oc = null;
 			try {
-				oc = fixture().openNewSession();
+				oc = fixture().openNewSession(toTest);
 				Object[] args;
 				if (showSeq) {
 					args = new Object[2];
