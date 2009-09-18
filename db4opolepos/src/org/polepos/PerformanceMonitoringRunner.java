@@ -36,6 +36,7 @@ import org.polepos.circuits.monaco.*;
 import org.polepos.circuits.montreal.*;
 import org.polepos.circuits.nurburgring.*;
 import org.polepos.circuits.sepang.*;
+import org.polepos.circuits.sepangmulti.*;
 import org.polepos.circuits.silverstone.*;
 import org.polepos.framework.*;
 import org.polepos.reporters.*;
@@ -106,7 +107,7 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 	public Circuit[] circuits() {
 		return new Circuit[] {
 			 new Melbourne(),
-			 new Sepang(),
+			 new SepangMulti(),
 			 new Bahrain(),
 			 new Imola(),
 			 new Barcelona(),
@@ -126,7 +127,7 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 	public Driver[] drivers() {
 		return new Driver [] {
 			new MelbourneDb4o(),
-			new SepangDb4o(),
+			new SepangMultiDb4o(),
 			new BahrainDb4o(),
 			new ImolaDb4o(),
 			new BarcelonaDb4o(),
