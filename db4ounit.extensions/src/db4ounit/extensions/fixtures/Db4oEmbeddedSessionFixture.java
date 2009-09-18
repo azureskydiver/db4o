@@ -49,8 +49,8 @@ public class Db4oEmbeddedSessionFixture extends AbstractFileBasedDb4oFixture
 	}
 	
 	@Override
-	protected void postOpen() {
-		_session = openNewSession();
+	protected void postOpen(Db4oTestCase testInstance) {
+		_session = openNewSession(testInstance);
 	}
 	
 	@Override
@@ -60,8 +60,7 @@ public class Db4oEmbeddedSessionFixture extends AbstractFileBasedDb4oFixture
 		}
 	}
 
-	public ExtObjectContainer openNewSession() {
+	public ExtObjectContainer openNewSession(Db4oTestCase testInstance) {
 		return fileSession().openSession().ext();
 	}
-
 }

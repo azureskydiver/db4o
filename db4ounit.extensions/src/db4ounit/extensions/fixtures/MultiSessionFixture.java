@@ -6,5 +6,5 @@ import com.db4o.ext.*;
 import db4ounit.extensions.*;
 
 public interface MultiSessionFixture extends Db4oFixture {
-	ExtObjectContainer openNewSession();
+	ExtObjectContainer openNewSession(Db4oTestCase testInstance) throws Exception;
 }

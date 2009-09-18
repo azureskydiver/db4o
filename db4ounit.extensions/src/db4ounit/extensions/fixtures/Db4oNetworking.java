@@ -110,8 +110,9 @@ public class Db4oNetworking extends
 	    return _csFactory.openClient(asClientConfiguration(config), HOST, _port, USERNAME, PASSWORD).ext();
     }
 
-	public ExtObjectContainer openNewSession() {
-		return openClientWith(cloneConfiguration());
+	public ExtObjectContainer openNewSession(Db4oTestCase testInstance) throws Exception {
+	    final Configuration config = clientConfigFor(testInstance);		
+		return openClientWith(config);
 	}
 
 	private ExtObjectContainer openClientWith(final Configuration config) {
@@ -207,10 +208,6 @@ public class Db4oNetworking extends
 	
 	public void defragment() throws Exception {
 		defragment(filePath());
-	}
-	
-	private ObjectContainer openEmbeddedClient() {
-		return _server.openClient();
 	}
 	
 	public String label() {

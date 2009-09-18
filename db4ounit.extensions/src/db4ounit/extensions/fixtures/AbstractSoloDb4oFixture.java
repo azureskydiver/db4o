@@ -25,7 +25,7 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 		_db=createDatabase(config).ext();
 		listenToUncaughtExceptions(threadPool());
 		
-		postOpen();
+		postOpen(testInstance);
 	}
 
 	private ThreadPool4 threadPool() {
@@ -65,7 +65,7 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 	protected void preClose() {
 	}
 	
-	protected void postOpen() {
+	protected void postOpen(Db4oTestCase testInstance) {
 	}
 	
 	protected abstract ObjectContainer createDatabase(Configuration config);
