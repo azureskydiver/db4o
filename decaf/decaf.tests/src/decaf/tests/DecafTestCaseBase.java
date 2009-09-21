@@ -67,8 +67,7 @@ public abstract class DecafTestCaseBase extends TestCase {
 		runResourceTestCase(TargetPlatform.NONE, resourceName, supportingClasses);
 	}
 
-	private void runResourceTestCase(final TargetPlatform platform,
-			String resourceName, String... supportingClasses)
+	private void runResourceTestCase(final TargetPlatform platform, String resourceName, String... supportingClasses)
 			throws CoreException, IOException, Exception {
 		createCompilationUnits(platform, supportingClasses);
 		runResourceTestCase(resourceName, platform);

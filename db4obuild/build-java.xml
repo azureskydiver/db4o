@@ -96,6 +96,9 @@
 
 				<arg value="-targetPlatform" />
 				<arg value="jdk12" />
+				
+				<arg value="-targetPlatform" />
+				<arg value="sharpen" />				
 
 				<arg value="-cp" />
 				<arg path="${file.bloat.jar}" />

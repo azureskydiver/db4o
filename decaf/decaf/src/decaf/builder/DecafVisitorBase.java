@@ -23,29 +23,52 @@ public abstract class DecafVisitorBase extends ASTVisitor {
 		if (targetPlatform().isNone())
 			return true; // annotation is considered to be valid for all platforms
 		
-		final String platform = applicablePlatformFor(annotationBinding);
-		if (platform == null)
-			return false; // not a decaf annotation
+		final Set<String> platform = applicablePlatformFor(annotationBinding);
 		
-		return platform.equals("ALL")
-	    	|| platform.equals(targetPlatform().toString());
+		return platform.contains("ALL")
+	    	|| platform.contains(targetPlatform().toString());
 	}
 
 	protected boolean typeHasQualifiedName(final ITypeBinding type, String qualifiedName) {
 	    return BindingUtils.qualifiedName(type).equals(qualifiedName);
 	}
 
-	private String applicablePlatformFor(IAnnotationBinding annotationBinding) {
-		for (IMemberValuePairBinding valuePair : annotationBinding.getAllMemberValuePairs()) {
+	private Set<String> applicablePlatformFor(IAnnotationBinding annotationBinding) {
+		Set<String> declaredPlatforms = applicablePlatformFor(annotationBinding.getDeclaredMemberValuePairs());
+		if (null != declaredPlatforms && declaredPlatforms.size() > 0) 
+			return declaredPlatforms;
+		
+		return applicablePlatformFor(annotationBinding.getAllMemberValuePairs());
+	}
+
+	private Set<String> applicablePlatformFor(IMemberValuePairBinding[] pairs) {
+		Set<String> platforms = new HashSet<String>();
+		for (IMemberValuePairBinding valuePair : pairs) {
 			final Object value = valuePair.getValue();
-	        if (!(value instanceof IVariableBinding))
-	        	continue;
-	        
-	        final IVariableBinding variable = (IVariableBinding)value;
-	        if (isDecafPlatform(variable.getType()))
-	        	return variable.getName();
+			if (value instanceof Object[]) {
+				tryAddToPlatforms(platforms, (Object[]) value);
+			} else {
+				tryAddToPlatform(platforms, value);
+			}
 	    }
-		return null;
+		return platforms;
+	}
+
+	private void tryAddToPlatforms(Set<String> platforms, final Object[] values) {
+		for (Object value : values) {
+			tryAddToPlatform(platforms, value);
+		}
+	}
+	
+	private void tryAddToPlatform(Set<String> platforms, final Object value) {
+		if (!(value instanceof IVariableBinding)) {
+			return;
+		}
+			
+		final IVariableBinding variable = (IVariableBinding)value;
+		if (isDecafPlatform(variable.getType())) {
+			platforms.add(variable.getName());
+		}
 	}
 
 	private boolean isDecafPlatform(ITypeBinding type) {
@@ -97,7 +120,6 @@ public abstract class DecafVisitorBase extends ASTVisitor {
 		final IAnnotationBinding annotationBinding = findAnnotation(binding, annotation);
 		if (annotationBinding == null)
 			return false;
-		
 		return isApplicableToTargetPlatform(annotationBinding);
 	}
 
