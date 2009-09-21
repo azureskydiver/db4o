@@ -89,9 +89,10 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
     @Override
     protected Reporter[] reporters() {
     	Reporter[] defaultReporters = DefaultReporterFactory.defaultReporters();
-    	Reporter[] allReporters = new Reporter[defaultReporters.length + 1];
+    	Reporter[] allReporters = new Reporter[defaultReporters.length + 2];
     	allReporters[0] = _reporter;
-    	System.arraycopy(defaultReporters, 0, allReporters, 1, defaultReporters.length);
+    	allReporters[1] = new StdErrLoggingReporter();
+    	System.arraycopy(defaultReporters, 0, allReporters, 2, defaultReporters.length);
     	return allReporters;
     }
     
@@ -108,19 +109,20 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 		return new Circuit[] {
 			 new Melbourne(),
 			 new SepangMulti(),
-			 new Bahrain(),
-			 new Imola(),
-			 new Barcelona(),
-			 new Monaco(),
-			 new Nurburgring(),
-			 new Montreal(),
-			 new Indianapolis(),
-			 new IndianapolisUnoptimized(),
-			 new Magnycours(),
-			 new Silverstone(),
-			 new Hockenheim(),
-			 new Hungaroring(),
-			 new Istanbul(),
+//			 new Sepang(),
+//			 new Bahrain(),
+//			 new Imola(),
+//			 new Barcelona(),
+//			 new Monaco(),
+//			 new Nurburgring(),
+//			 new Montreal(),
+//			 new Indianapolis(),
+//			 new IndianapolisUnoptimized(),
+//			 new Magnycours(),
+//			 new Silverstone(),
+//			 new Hockenheim(),
+//			 new Hungaroring(),
+//			 new Istanbul(),
 		};
 	}
 
@@ -128,6 +130,7 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 		return new Driver [] {
 			new MelbourneDb4o(),
 			new SepangMultiDb4o(),
+			new SepangDb4o(),
 			new BahrainDb4o(),
 			new ImolaDb4o(),
 			new BarcelonaDb4o(),
