@@ -17,9 +17,10 @@ License along with this program; if not, write to the Free
 Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 MA  02111-1307, USA. */
 
-package org.polepos.circuits.sepangmulti;
+package org.polepos.teams.db4o;
 
 import org.polepos.circuits.sepang.*;
+import org.polepos.circuits.sepangmulti.*;
 import org.polepos.teams.db4o.*;
 
 import com.db4o.config.*;
