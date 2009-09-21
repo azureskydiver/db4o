@@ -24,30 +24,29 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     
 	public void sort(QueryComparator cmp) {
 		_delegate.sort(cmp);
-	}	
-    
-    /**
-     */
-    @decaf.Ignore(decaf.Platform.JDK11)
+	}
+	
+	@decaf.ReplaceFirst(value="return _delegate.iterator();", platform=decaf.Platform.JDK11)
     public Iterator iterator() {
-    	class JDKIterator extends Iterable4Adaptor implements Iterator {
-			public JDKIterator(Iterable4 delegate) {
-				super(delegate);
-			}
-			
-			protected boolean moveNext() {
-				synchronized (_delegate.lock()) {
-					return super.moveNext();
-				}
-			}
-
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-    		
-    	}
-    	return new JDKIterator(_delegate);
+    	return new JDKIterator();
     }
+	
+	@decaf.Ignore(decaf.Platform.JDK11)
+	class JDKIterator extends Iterable4Adaptor implements Iterator {
+		public JDKIterator() {
+			super(_delegate);
+		}
+		
+		protected boolean moveNext() {
+			synchronized (_delegate.lock()) {
+				return super.moveNext();
+			}
+		}
+
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+	}
     
     public long[] getIDs() {
         return _delegate.getIDs();
