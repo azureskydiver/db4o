@@ -171,7 +171,7 @@ public class AnnotationRewritingVisitor extends DecafVisitorBase {
 		
 		for (Object o : node.superInterfaceTypes()) {
 			final Type type = (Type)o;
-			if (ignoredImplements.contains(type.resolveBinding())) {
+			if (ignoredImplements.contains(type.resolveBinding().getTypeDeclaration())) {
 				rewrite().remove(type);
 			}
 		}
@@ -185,7 +185,7 @@ public class AnnotationRewritingVisitor extends DecafVisitorBase {
 		final List superInterfaces = node.superInterfaceTypes();
 		final HashSet<ITypeBinding> set = new HashSet<ITypeBinding>(superInterfaces.size());
 		for (Object o : superInterfaces) {
-			set.add(((Type)o).resolveBinding());
+			set.add(((Type)o).resolveBinding().getTypeDeclaration());
 		}
 		return set;
 	}
@@ -203,7 +203,7 @@ public class AnnotationRewritingVisitor extends DecafVisitorBase {
 				return allSuperInterfaceBindings(node);
 
 			for (Object itf : interfaces)
-				ignored.add((ITypeBinding)itf);
+				ignored.add(((ITypeBinding)itf).getTypeDeclaration());
         }
 		return ignored;
 	}

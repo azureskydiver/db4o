@@ -46,7 +46,7 @@ public class AnnotationsTestCase extends DecafTestCaseBase {
 	}
 	
 	public void testIgnoreImplements() throws Exception {
-		runResourceTestCase("IgnoreImplements");
+		runPlatformTestCase("IgnoreImplements");
 	}
 	
 	public void testIgnoreExtends() throws Exception {
