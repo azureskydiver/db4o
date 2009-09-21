@@ -17,6 +17,7 @@ public class AllTests extends ComposibleTestSuite {
 							 *  When you add a test here, make sure you create a Jira issue. 
 							 */
 							ActivateDepthTestCase.class,
+							DeepPrefetchingCacheConcurrencyTestCase.class, // COR-1762
 							InterfaceQueryTestCase.class, // COR-1131
 							LazyQueryDeleteTestCase.class,
 							SODAClassTypeDescend.class,
