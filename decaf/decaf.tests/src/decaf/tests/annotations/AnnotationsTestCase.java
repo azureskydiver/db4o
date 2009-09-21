@@ -10,7 +10,7 @@ public class AnnotationsTestCase extends DecafTestCaseBase {
 	}
 	
 	public void testRemoveClass() throws Exception {
-		runResourceTestCase("RemoveClass");
+		runPlatformTestCase("RemoveClass");
 	}
 	
 	public void testPlatformDependentIgnoreExtends() throws Exception {

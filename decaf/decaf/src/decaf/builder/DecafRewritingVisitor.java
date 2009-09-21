@@ -16,14 +16,6 @@ public final class DecafRewritingVisitor extends DecafVisitorBase {
 	}
 	
 	@Override
-	public boolean visit(TypeDeclaration node) {
-		if (isIgnored(node.resolveBinding()) || isMarkedForRemoval(node.resolveBinding())) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
 	public boolean visit(EnumDeclaration node) {
 		if (isIgnored(node.resolveBinding())) {
 			rewrite().remove(node);
@@ -211,17 +203,6 @@ public final class DecafRewritingVisitor extends DecafVisitorBase {
 			rewrite().replace(node.getArray(), erasure);
 		}
 	}
-
-	@Override
-	public void endVisit(ArrayInitializer node) {
-		ListRewrite listRewrite = rewrite().getListRewrite(node, ArrayInitializer.EXPRESSIONS_PROPERTY);
-		List rewrittenList = listRewrite.getRewrittenList();
-		if(!rewrittenList.isEmpty()) {
-			return;
-		}
-		ArrayInitializer emptyInitializer = builder().newArrayInitializer();
-		rewrite().replace(node, emptyInitializer);
-	}
 	
 	@Override
 	public void endVisit(Assignment node) {
@@ -306,15 +287,6 @@ public final class DecafRewritingVisitor extends DecafVisitorBase {
 		replaceUnwrappedIterable(rewrittenExpr);
 	}
 	
-	@Override
-	public boolean visit(TypeLiteral node) {
-	    if (isMarkedForRemoval(node.getType().resolveBinding())) {
-			rewrite().remove(node);
-			return false;
-		}
-	    return super.visit(node);
-	}
-
 	private void coerceIterableMethodArguments(MethodInvocation node,
 			final IMethodBinding method) {
 		ListRewrite rewrittenArgs = getListRewrite(node, MethodInvocation.ARGUMENTS_PROPERTY);

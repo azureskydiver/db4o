@@ -60,7 +60,19 @@ public enum TargetPlatform {
 		public IterablePlatformMapping iterablePlatformMapping() {
 			return IterablePlatformMapping.JDK12_ITERABLE_MAPPING;
 		}
+	},	
+	SHARPEN {
+		@Override
+		public DecafConfiguration defaultConfig() {
+			return NONE.defaultConfig();
+		}
+
+		@Override
+		public IterablePlatformMapping iterablePlatformMapping() {
+			throw new IllegalStateException();
+		}
 	};
+	
 	
 	public String appendPlatformId(String orig, String separator) {
 		return orig + separator + platformId();

@@ -41,10 +41,14 @@ public class DecafRewriter {
 		context.run(new Runnable() {
 			public void run() {
 				
-				if (targetPlatform != TargetPlatform.ANDROID) {
+				if (targetPlatform == TargetPlatform.JDK11 
+					|| targetPlatform == TargetPlatform.JDK12
+					|| targetPlatform == TargetPlatform.NONE) {
+					
 					unit.accept(new DecafRewritingVisitor(context));
 				}
 				
+				unit.accept(new RemoveAnnotationRewritingVisitor(context));
 				unit.accept(new AnnotationRewritingVisitor(context));	
 				unit.accept(new AccessibilityRewritingVisitor(context));
 				
