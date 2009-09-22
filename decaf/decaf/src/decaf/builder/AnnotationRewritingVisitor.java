@@ -39,6 +39,17 @@ public class AnnotationRewritingVisitor extends DecafVisitorBase {
 	}
 	
 	@Override
+	public void endVisit(ArrayInitializer node) {
+		ListRewrite listRewrite = rewrite().getListRewrite(node, ArrayInitializer.EXPRESSIONS_PROPERTY);
+		List rewrittenList = listRewrite.getRewrittenList();
+		if(!rewrittenList.isEmpty()) {
+			return;
+		}
+		ArrayInitializer emptyInitializer = builder().newArrayInitializer();
+		rewrite().replace(node, emptyInitializer);
+	}
+	
+	@Override
 	public void endVisit(MethodDeclaration node) {
 		processRewritingAnnotations(node);
 	}
@@ -51,6 +62,16 @@ public class AnnotationRewritingVisitor extends DecafVisitorBase {
 		return true;
 	}
 	
+	@Override
+	public boolean visit(TypeLiteral node) {
+	    if (isMarkedForRemoval(node.getType().resolveBinding())) {
+			rewrite().remove(node);
+			return false;
+		}
+	    return super.visit(node);
+	}
+
+	@Override
 	public boolean visit(TypeDeclaration node) {
 		if (handledAsIgnored(node, node.resolveBinding()) || handledAsRemoved(node)) {
 			return false;
@@ -59,6 +80,7 @@ public class AnnotationRewritingVisitor extends DecafVisitorBase {
 		return true;
 	}
 	
+	@Override
 	public void endVisit(TypeDeclaration node) {
 		processIgnoreExtends(node);
 		processIgnoreImplements(node);
