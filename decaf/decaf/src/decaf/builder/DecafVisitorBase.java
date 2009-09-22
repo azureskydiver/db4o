@@ -23,25 +23,25 @@ public abstract class DecafVisitorBase extends ASTVisitor {
 		if (targetPlatform().isNone())
 			return true; // annotation is considered to be valid for all platforms
 		
-		final Set<String> platform = applicablePlatformFor(annotationBinding);
+		final Set<String> platforms = applicablePlatformsFor(annotationBinding);
 		
-		return platform.contains("ALL")
-	    	|| platform.contains(targetPlatform().toString());
+		return platforms.contains("ALL")
+	    	|| platforms.contains(targetPlatform().toString());
 	}
 
 	protected boolean typeHasQualifiedName(final ITypeBinding type, String qualifiedName) {
 	    return BindingUtils.qualifiedName(type).equals(qualifiedName);
 	}
 
-	private Set<String> applicablePlatformFor(IAnnotationBinding annotationBinding) {
-		Set<String> declaredPlatforms = applicablePlatformFor(annotationBinding.getDeclaredMemberValuePairs());
+	private Set<String> applicablePlatformsFor(IAnnotationBinding annotationBinding) {
+		Set<String> declaredPlatforms = applicablePlatformsFor(annotationBinding.getDeclaredMemberValuePairs());
 		if (null != declaredPlatforms && declaredPlatforms.size() > 0) 
 			return declaredPlatforms;
 		
-		return applicablePlatformFor(annotationBinding.getAllMemberValuePairs());
+		return applicablePlatformsFor(annotationBinding.getAllMemberValuePairs());
 	}
 
-	private Set<String> applicablePlatformFor(IMemberValuePairBinding[] pairs) {
+	private Set<String> applicablePlatformsFor(IMemberValuePairBinding[] pairs) {
 		Set<String> platforms = new HashSet<String>();
 		for (IMemberValuePairBinding valuePair : pairs) {
 			final Object value = valuePair.getValue();
