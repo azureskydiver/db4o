@@ -1,5 +1,6 @@
 package decaf.tests.builder;
 
+import java.io.*;
 import java.util.*;
 
 import org.eclipse.core.resources.*;
@@ -10,6 +11,7 @@ import static org.junit.Assert.*;
 
 import sharpen.core.*;
 import sharpen.core.framework.resources.*;
+import decaf.*;
 import decaf.core.*;
 import decaf.tests.*;
 
@@ -58,12 +60,13 @@ public class DecafProjectBuilderTestCase extends DecafTestCaseBase {
 	@Test
 	public void testDecafProjectCompilerSettings() throws Exception {
 		createCompilationUnit(testResourceFor("CompilerSettingsSubject", TargetPlatform.NONE));
-		runDecafBuild(TargetPlatform.JDK11, TargetPlatform.JDK12);
+		runDecafBuild(TargetPlatform.JDK11, TargetPlatform.JDK12, TargetPlatform.SHARPEN);
 		
 		final IJavaProject decaf11 = decafJavaProjectFor(TargetPlatform.JDK11);
 		final Map options11 = decaf11.getOptions(false);
 		assertEquals("1.3", options11.get(JavaCore.COMPILER_SOURCE));
-		assertEquals("1.1", options11.get(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM));
+		assertEquals("1.1", options11.get(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM));		
+		assertNoDecafAnnotationsJar(decaf11.getRawClasspath());		
 		
 		final IJavaProject decaf12 = decafJavaProjectFor(TargetPlatform.JDK12);
 		assertEquals(
@@ -72,6 +75,25 @@ public class DecafProjectBuilderTestCase extends DecafTestCaseBase {
 		final Map options12 = decaf12.getOptions(false);
 		assertEquals("1.3", options12.get(JavaCore.COMPILER_SOURCE));
 		assertEquals("1.1", options12.get(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM));
+		
+		
+		final IJavaProject sharpen = decafJavaProjectFor(TargetPlatform.SHARPEN);
+		assertEquals(
+				"org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5",
+				containerClasspathEntryFor(sharpen).getPath().toString());
+		
+		final Map optionsSharpen = sharpen.getOptions(false);
+		assertEquals("1.5", optionsSharpen.get(JavaCore.COMPILER_SOURCE));
+		assertEquals("1.5", optionsSharpen.get(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM));
+	}
+
+	private void assertNoDecafAnnotationsJar(IClasspathEntry[] rawClasspath) throws IOException {
+		for (IClasspathEntry entry : rawClasspath) {
+			if (entry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
+				String libraryName = entry.getPath().lastSegment();
+				assertFalse("Unexpected classpath entry: " + libraryName, libraryName.equals(Resources.DECAF_ANNOTATIONS_JAR));
+			}
+		}
 	}
 
 	private IClasspathEntry containerClasspathEntryFor(IJavaProject p) throws CoreException {

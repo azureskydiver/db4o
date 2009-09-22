@@ -26,6 +26,11 @@ public enum TargetPlatform {
 		public IterablePlatformMapping iterablePlatformMapping() {
 			return IterablePlatformMapping.JDK12_ITERABLE_MAPPING;
 		}
+
+		@Override
+		public CompilerSettings compilerSettings() {
+			return new CompilerSettings("1.3", "1.1");
+		}
 	},
 	ANDROID {
 		@Override
@@ -36,6 +41,11 @@ public enum TargetPlatform {
 		@Override
 		public IterablePlatformMapping iterablePlatformMapping() {
 			throw new IllegalStateException();
+		}
+
+		@Override
+		public CompilerSettings compilerSettings() {
+			return new CompilerSettings("1.5", "1.5");
 		}
 		
 	},
@@ -49,6 +59,11 @@ public enum TargetPlatform {
 		public IterablePlatformMapping iterablePlatformMapping() {
 			return IterablePlatformMapping.JDK11_ITERABLE_MAPPING;
 		}
+
+		@Override
+		public CompilerSettings compilerSettings() {
+			return NONE.compilerSettings();
+		}
 	},
 	JDK12 {
 		@Override
@@ -60,6 +75,11 @@ public enum TargetPlatform {
 		public IterablePlatformMapping iterablePlatformMapping() {
 			return IterablePlatformMapping.JDK12_ITERABLE_MAPPING;
 		}
+
+		@Override
+		public CompilerSettings compilerSettings() {
+			return NONE.compilerSettings();
+		}
 	},	
 	SHARPEN {
 		@Override
@@ -70,6 +90,11 @@ public enum TargetPlatform {
 		@Override
 		public IterablePlatformMapping iterablePlatformMapping() {
 			throw new IllegalStateException();
+		}
+		
+		@Override
+		public CompilerSettings compilerSettings() {
+			return new CompilerSettings("1.5", "1.5");
 		}
 	};
 	
@@ -90,4 +115,17 @@ public enum TargetPlatform {
 		return false;
 	}
 
+	public abstract CompilerSettings compilerSettings();
+
+	public static class CompilerSettings {
+
+		public CompilerSettings(String source, String codeGenTargetPlatform) {
+			this.source = source;
+			this.codeGenTargetPlatform = codeGenTargetPlatform;
+		}
+		
+		public final String source;
+		public final String codeGenTargetPlatform;
+	}
+	
 }

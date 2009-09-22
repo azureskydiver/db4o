@@ -129,21 +129,52 @@ public class DecafProject {
 		IJavaProject decafJavaProject = JavaCore.create(decafProject);
 		decafJavaProject.setRawClasspath(mapClasspathEntries(_project, decafJavaProject, platform), null);
 		final Hashtable options = JavaCore.getDefaultOptions();
-		options.put(JavaCore.COMPILER_SOURCE, "1.3");
-		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, "1.1");
+		options.put(JavaCore.COMPILER_SOURCE, platform.compilerSettings().source); //1.3
+		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, platform.compilerSettings().codeGenTargetPlatform); //1,1
 		decafJavaProject.setOptions(options);
 		return decafJavaProject;
 	}
 	
 	private static IClasspathEntry[] mapClasspathEntries(IJavaProject javaProject,
 			IJavaProject decafJavaProject, TargetPlatform platform) throws JavaModelException,
-			CoreException {
+			CoreException {	
+	
+		ArrayList<IClasspathEntry> targetClasspath = new ArrayList<IClasspathEntry>();
+		collectMappedClasspathEntries(targetClasspath, javaProject, decafJavaProject, platform);
+		
+		appendContainerClasspath(targetClasspath, platform);
+
+		return targetClasspath.toArray(new IClasspathEntry[targetClasspath.size()]);
+	}
+
+	private static void appendContainerClasspath(ArrayList<IClasspathEntry> targetClasspath, TargetPlatform platform) {
+		targetClasspath.add(JavaCore.newContainerEntry(containerEntryPathFor(platform)));
+	}
+
+	private static Path containerEntryPathFor(TargetPlatform platform) {
+		return new Path("org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-" + platform.compilerSettings().source);
+	}
+
+	private static void collectMappedClasspathEntries(
+			ArrayList<IClasspathEntry> targetClasspath,
+			IJavaProject javaProject, IJavaProject decafJavaProject,
+			TargetPlatform platform) throws JavaModelException, CoreException {
 		IClasspathEntry[] srcClasspath = javaProject.getRawClasspath();
-		IClasspathEntry[] targetClasspath = new IClasspathEntry[srcClasspath.length];
 		for (int i=0; i<srcClasspath.length; ++i) {
-			targetClasspath[i] = mapClasspathEntryFor(decafJavaProject, srcClasspath[i], platform);
+			IClasspathEntry sourceEntry = srcClasspath[i];
+			if (isDecafAnnotationJar(sourceEntry)) 
+				continue;
+			
+			if (sourceEntry.getEntryKind() == IClasspathEntry.CPE_CONTAINER)
+				continue;
+			
+			targetClasspath.add(mapClasspathEntryFor(decafJavaProject, sourceEntry, platform));
 		}
-		return targetClasspath;
+	}
+
+	private static boolean isDecafAnnotationJar(IClasspathEntry sourceEntry) {
+		return sourceEntry.getEntryKind() == IClasspathEntry.CPE_LIBRARY
+			&& sourceEntry.getPath().lastSegment().equals(Resources.DECAF_ANNOTATIONS_JAR); 
 	}
 
 	private static IClasspathEntry mapClasspathEntryFor(IJavaProject decafJavaProject, final IClasspathEntry entry, TargetPlatform platform)
