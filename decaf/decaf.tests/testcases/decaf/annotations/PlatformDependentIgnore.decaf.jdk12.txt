@@ -5,3 +5,6 @@ class IgnoreJdk11 {
 
 class IgnoreAndroid {
 }
+
+class IgnoreAndroidAndJdk11 {
+}

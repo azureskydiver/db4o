@@ -8,3 +8,6 @@ class IgnoreJdk12 {
 
 class IgnoreAndroid {
 }
+
+class IgnoreAndroidAndJdk11 {
+}

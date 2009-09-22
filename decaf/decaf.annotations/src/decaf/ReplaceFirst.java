@@ -9,4 +9,6 @@ public @interface ReplaceFirst {
 	String value();
 	
 	Platform platform() default Platform.ALL;
+	
+	Platform[] platforms() default { Platform.ALL };
 }

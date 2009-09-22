@@ -26,7 +26,7 @@ public class AnnotationsTestCase extends DecafTestCaseBase {
 	}
 	
 	public void testReplaceFirst() throws Exception {
-		runResourceTestCase("ReplaceFirst");
+		runPlatformTestCase("ReplaceFirst");
 	}
 	
 	public void testRemoveFirst() throws Exception {
