@@ -5,4 +5,8 @@ class ReplaceFirst {
 	public String foo() {
 		return "bar";
 	}
+	
+	public String baz() {
+		return "baz";
+	}
 }
