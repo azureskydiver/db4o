@@ -9,4 +9,6 @@ public @interface Ignore {
 	Platform value() default Platform.ALL;
 
 	Platform[] platforms() default { Platform.ALL };
+
+	Platform[] except() default { };
 }
