@@ -6,6 +6,23 @@ class Foo {
 	}
 	
 	@decaf.Ignore
-	public void baz() {
+	public void ignoredOnAll() {
 	}
+
+	@decaf.Ignore(except = decaf.Platform.SHARPEN)
+	public void ignoredExceptSharpen() {
+	}
+
+	@decaf.Ignore(except = decaf.Platform.ANDROID)
+	public void ignoredExceptAndroid() {
+	}
+
+	@decaf.Ignore(decaf.Platform.JDK11)
+	public void ignoredOnJdk11Only() {
+	}
+
+	@decaf.Ignore(platforms = { decaf.Platform.JDK11, decaf.Platform.JDK12 })
+	public void ignoredOnJdksOnly() {
+	}
+
 }

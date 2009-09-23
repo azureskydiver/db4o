@@ -62,7 +62,7 @@ public class AnnotationsTestCase extends DecafTestCaseBase {
 	}
 
 	public void testIgnoreMethod() throws Exception {
-		runResourceTestCase("IgnoreMethod");
+		runPlatformTestCase("IgnoreMethod");
 	}
 
 	public void testRemoveAllClassesInArray() throws Exception {
