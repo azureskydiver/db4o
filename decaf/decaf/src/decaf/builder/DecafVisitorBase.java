@@ -7,11 +7,13 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.rewrite.*;
 
 import sharpen.core.framework.*;
+import decaf.*;
 import decaf.core.*;
 import decaf.rewrite.*;
 
 public abstract class DecafVisitorBase extends ASTVisitor {
 
+	private static final String EXCEPT_ATTRIBUTE_NAME = "except";
 	protected final DecafRewritingContext _context;
 
 	public DecafVisitorBase(DecafRewritingContext context) {
@@ -25,8 +27,7 @@ public abstract class DecafVisitorBase extends ASTVisitor {
 		
 		final Set<String> platforms = applicablePlatformsFor(annotationBinding);
 		
-		return platforms.contains("ALL")
-	    	|| platforms.contains(targetPlatform().toString());
+		return platforms.contains(targetPlatform().toString());
 	}
 
 	protected boolean typeHasQualifiedName(final ITypeBinding type, String qualifiedName) {
@@ -34,23 +35,27 @@ public abstract class DecafVisitorBase extends ASTVisitor {
 	}
 
 	private Set<String> applicablePlatformsFor(IAnnotationBinding annotationBinding) {
-		Set<String> declaredPlatforms = applicablePlatformsFor(annotationBinding.getDeclaredMemberValuePairs());
+		Set<String> declaredPlatforms = collectApplicablePlatforms(annotationBinding.getDeclaredMemberValuePairs());
 		if (null != declaredPlatforms && declaredPlatforms.size() > 0) 
 			return declaredPlatforms;
 		
-		return applicablePlatformsFor(annotationBinding.getAllMemberValuePairs());
+		return collectApplicablePlatforms(annotationBinding.getAllMemberValuePairs());
 	}
 
-	private Set<String> applicablePlatformsFor(IMemberValuePairBinding[] pairs) {
+	private Set<String> collectApplicablePlatforms(IMemberValuePairBinding[] pairs) {
 		Set<String> platforms = new HashSet<String>();
+		Set<String> except = new HashSet<String>();
 		for (IMemberValuePairBinding valuePair : pairs) {
+			Set<String> collection = valuePair.getName().equals(EXCEPT_ATTRIBUTE_NAME) ? except : platforms;
 			final Object value = valuePair.getValue();
 			if (value instanceof Object[]) {
-				tryAddToPlatforms(platforms, (Object[]) value);
+				tryAddToPlatforms(collection, (Object[]) value);
 			} else {
-				tryAddToPlatform(platforms, value);
+				tryAddToPlatform(collection, value);
 			}
 	    }
+		expandAll(platforms, except);
+		platforms.removeAll(except);
 		return platforms;
 	}
 
@@ -71,6 +76,19 @@ public abstract class DecafVisitorBase extends ASTVisitor {
 		}
 	}
 
+	private void expandAll(Set<String>... platformSets) {
+		for (Set<String> platforms : platformSets) {
+			if(!platforms.remove(Platform.ALL.name())) {
+				return;
+			}
+			for (Platform platform : Platform.values()) {
+				if(platform != Platform.ALL) {
+					platforms.add(platform.name());
+				}
+			}
+		}
+	}
+	
 	private boolean isDecafPlatform(ITypeBinding type) {
 		return typeHasSameQualifiedNameAs(type, decaf.Platform.class);
 	}
