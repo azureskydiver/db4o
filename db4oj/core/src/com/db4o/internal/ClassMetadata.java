@@ -1648,22 +1648,12 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         return bitIsTrue(Const4.DEAD);
     }
 
-    private final boolean stateOK() {
+    final boolean stateOK() {
         return bitIsFalse(Const4.CONTINUE)
             && bitIsFalse(Const4.DEAD)
             && bitIsFalse(Const4.READING);
     }
     
-    final boolean stateOKAndAncestors(){
-        if(! stateOK()  || _aspects == null){
-            return false;
-        }
-        if(_ancestor != null){
-            return _ancestor.stateOKAndAncestors();
-        }
-        return true;
-    }
-
     boolean stateUnread() {
         return bitIsTrue(Const4.CONTINUE)
             && bitIsFalse(Const4.DEAD)
