@@ -738,7 +738,7 @@
 			<fileset dir="${dir.dist.classes.jdk1.2.db4otools}">
 				<include name="**/*.class"/>
 			</fileset>
-			<fileset dir="${dir.dist.classes}/bloat">
+			<fileset dir="${dir.dist.classes.bloat}">
 				<include name="**/*.class"/>
 			</fileset>
 		</jar>
