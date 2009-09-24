@@ -304,10 +304,22 @@
 		</jar>
 
 	</target>
+
+	<target name="prepare.bnd" depends="init">
+		<mkdir dir="${dir.dist.java.temp}/bnd" />
+		<copy todir="${dir.dist.java.temp}/bnd">
+			<fileset dir="${dir.config}/osgi/bnd">
+				<include name="*.bnd"/>
+			</fileset>
+			<filterset>
+				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
+			</filterset>
+		</copy>
+	</target>
 	
-	<target name="build.db4ojdk1.5" depends="init">
+	<target name="build.db4ojdk1.5" depends="prepare.bnd">
 		<mkdir dir="${dir.dist.classes.jdk1.5}" />
-		
+
 		<javac  
             fork="true" 
             destdir="${dir.dist.classes.jdk1.5}" 
@@ -321,9 +333,13 @@
 			</classpath>
 		</javac>
 		
-		<jar destfile="${file.jdk1.5.jar}">
-			<fileset dir="${dir.dist.classes.jdk1.5}" />
-		</jar>
+		<bnd 
+			classpath="${dir.dist.classes.jdk1.5}" 
+			eclipse="false" 
+			failok="false" 
+			exceptions="true" 
+			files="${dir.dist.java.temp}/bnd/com.db4o.core.java5.bnd" 
+			output="${file.jdk1.5.jar}"/>		
 		
 		<mkdir dir="${dir.dist.classes.jdk1.5.cs}" />
 		<javac  
@@ -340,9 +356,13 @@
 			</classpath>
 		</javac>
 		
-		<jar destfile="${file.jdk1.5.cs.jar}">
-			<fileset dir="${dir.dist.classes.jdk1.5.cs}" />
-		</jar>
+		<bnd 
+			classpath="${dir.dist.classes.jdk1.5.cs}" 
+			eclipse="false" 
+			failok="false" 
+			exceptions="true" 
+			files="${dir.dist.java.temp}/bnd/com.db4o.cs.java5.bnd" 
+			output="${file.jdk1.5.cs.jar}"/>
 
 		<mkdir dir="${dir.dist.classes.jdk1.5.optional}" />
 		<javac  
@@ -360,9 +380,13 @@
 			</classpath>
 		</javac>
 		
-		<jar destfile="${file.jdk1.5.optional.jar}">
-			<fileset dir="${dir.dist.classes.jdk1.5.optional}" />
-		</jar>
+		<bnd 
+			classpath="${dir.dist.classes.jdk1.5.optional}" 
+			eclipse="false" 
+			failok="false" 
+			exceptions="true" 
+			files="${dir.dist.java.temp}/bnd/com.db4o.optional.java5.bnd" 
+			output="${file.jdk1.5.optional.jar}"/>
 	</target>
 	
 	<target name="build.instrumentation1.2" depends="build.db4ojdk1.2, decaf.all">
@@ -664,88 +688,70 @@
 
 	</target>
 	
-	<target name="build.nodep" depends="init">
-		<foreach list="1.1,1.2,1.5" target="nodep.jar.generation" param="nodep.platform" inheritall="true" />
+	<target name="unjar.bloat">
+		<mkdir dir="${dir.dist.classes.bloat}" />
+		<unjar src="${file.bloat.jar}" dest="${dir.dist.classes.bloat}" />
+		<delete>
+			<fileset dir="${dir.dist.classes.bloat}" defaultexcludes="false">
+				<include name="**/*"/>
+				<exclude name="**/*.class"/>
+			</fileset>
+		</delete>
 	</target>
+	
+	<target name="build.nodep" depends="init, build.nodep1.1, unjar.bloat, build.nodep1.2, build.nodep1.5" />
 
 	<target name="build.nodep1.1" depends="init">
-		<antcall target="nodep.jar.generation">
-			<param name="nodep.platform" value="1.1" />
-		</antcall>
+		<jar destfile="${file.jdk1.1.nodep.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.1}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes.jdk1.1.cs}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes.jdk1.1.optional}">
+				<include name="**/*.class"/>
+			</fileset>
+		</jar>
 	</target>
 
 	<target name="build.nodep1.2" depends="init">
-		<antcall target="nodep.jar.generation">
-			<param name="nodep.platform" value="1.2" />
-		</antcall>
+		<jar destfile="${file.jdk1.2.nodep.jar}">
+			<fileset dir="${dir.dist.classes.jdk1.2}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes.jdk1.2.cs}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes.jdk1.2.optional}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes.jdk1.2.instrumentation}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes.jdk1.2.nqopt}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes.jdk1.2.taj}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes.jdk1.2.db4otools}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${dir.dist.classes}/bloat">
+				<include name="**/*.class"/>
+			</fileset>
+		</jar>
 	</target>
 
-	<target name="build.nodep1.5" depends="init">
-		<antcall target="nodep.jar.generation">
-			<param name="nodep.platform" value="1.5" />
-		</antcall>
-	</target>
-
-	<target name="nodep.jar.generation">
-		
-		<propertycopy name="nodep.jar" from="file.jdk${nodep.platform}.nodep.jar" />
-		
-		<propertycopy name="nodep.dir.classes" from="dir.dist.classes.jdk${nodep.platform}" />
-		<propertycopy name="nodep.dir.classes.cs" from="dir.dist.classes.jdk${nodep.platform}.cs" />
-		<propertycopy name="nodep.dir.classes.optional" from="dir.dist.classes.jdk${nodep.platform}.optional" />
-		
-		<property name="nodep.dir.classes.bloat" location="${dir.dist.classes}/bloat" />
-		<unjar src="${file.bloat.jar}" dest="${nodep.dir.classes.bloat}" />
-
-		<if>
-			<equals arg1="${nodep.platform}" arg2="1.1" />
-			<then>
-				<jar destfile="${nodep.jar}">
-					<fileset dir="${nodep.dir.classes}">
-						<include name="**/*.class"/>
-					</fileset>
-					<fileset dir="${nodep.dir.classes.cs}">
-						<include name="**/*.class"/>
-					</fileset>
-					<fileset dir="${nodep.dir.classes.optional}">
-						<include name="**/*.class"/>
-					</fileset>
-				</jar>
-			</then>
-			<else>
-				<propertycopy name="nodep.dir.classes.instrumentation" from="dir.dist.classes.jdk${nodep.platform}.instrumentation" />
-				<propertycopy name="nodep.dir.classes.nqopt" from="dir.dist.classes.jdk${nodep.platform}.nqopt" />
-				<propertycopy name="nodep.dir.classes.taj" from="dir.dist.classes.jdk${nodep.platform}.taj" />
-				<propertycopy name="nodep.dir.classes.db4otools" from="dir.dist.classes.jdk${nodep.platform}.db4otools" />
-				<jar destfile="${nodep.jar}">
-					<fileset dir="${nodep.dir.classes}">
-						<include name="**/*.class"/>
-					</fileset>
-					<fileset dir="${nodep.dir.classes.cs}">
-						<include name="**/*.class"/>
-					</fileset>
-					<fileset dir="${nodep.dir.classes.optional}">
-						<include name="**/*.class"/>
-					</fileset>
-					<fileset dir="${nodep.dir.classes.instrumentation}">
-						<include name="**/*.class"/>
-					</fileset>
-					<fileset dir="${nodep.dir.classes.nqopt}">
-						<include name="**/*.class"/>
-					</fileset>
-					<fileset dir="${nodep.dir.classes.taj}">
-						<include name="**/*.class"/>
-					</fileset>
-					<fileset dir="${nodep.dir.classes.db4otools}">
-						<include name="**/*.class"/>
-					</fileset>
-					<fileset dir="${nodep.dir.classes.bloat}">
-						<include name="**/*.class"/>
-					</fileset>
-				</jar>
-			</else>
-		</if>
-			
+	<target name="build.nodep1.5" depends="prepare.bnd">
+		<bnd 
+			classpath="${dir.dist.classes.jdk1.5};${dir.dist.classes.jdk1.5.cs};${dir.dist.classes.jdk1.5.optional};${dir.dist.classes.jdk1.5.instrumentation};${dir.dist.classes.jdk1.5.nqopt};${dir.dist.classes.jdk1.5.taj};${dir.dist.classes.jdk1.5.db4otools};${dir.dist.classes.bloat}" 
+			eclipse="false" 
+			failok="false" 
+			exceptions="true" 
+			files="${dir.dist.java.temp}/bnd/com.db4o.java5.bnd" 
+			output="${file.jdk1.5.nodep.jar}"/>
 	</target>
 	
 	<!-- Compile test -->
