@@ -129,7 +129,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		    return true;
 		}
 		
-	    if(! _class.stateOKAndAncestors()){
+	    if(! _class.stateOK()){
 	        return false;
 	    }
         
