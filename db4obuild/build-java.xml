@@ -688,7 +688,7 @@
 
 	</target>
 	
-	<target name="unjar.bloat">
+	<target name="unjar.bloat" depends="init">
 		<mkdir dir="${dir.dist.classes.bloat}" />
 		<unjar src="${file.bloat.jar}" dest="${dir.dist.classes.bloat}" />
 		<delete>
@@ -699,7 +699,7 @@
 		</delete>
 	</target>
 	
-	<target name="build.nodep" depends="init, build.nodep1.1, unjar.bloat, build.nodep1.2, build.nodep1.5" />
+	<target name="build.nodep" depends="init, build.nodep1.1, build.nodep1.2, build.nodep1.5" />
 
 	<target name="build.nodep1.1" depends="init">
 		<jar destfile="${file.jdk1.1.nodep.jar}">
@@ -715,7 +715,7 @@
 		</jar>
 	</target>
 
-	<target name="build.nodep1.2" depends="init">
+	<target name="build.nodep1.2" depends="unjar.bloat">
 		<jar destfile="${file.jdk1.2.nodep.jar}">
 			<fileset dir="${dir.dist.classes.jdk1.2}">
 				<include name="**/*.class"/>
@@ -744,7 +744,7 @@
 		</jar>
 	</target>
 
-	<target name="build.nodep1.5" depends="prepare.bnd">
+	<target name="build.nodep1.5" depends="unjar.bloat,prepare.bnd">
 		<bnd 
 			classpath="${dir.dist.classes.jdk1.5};${dir.dist.classes.jdk1.5.cs};${dir.dist.classes.jdk1.5.optional};${dir.dist.classes.jdk1.5.instrumentation};${dir.dist.classes.jdk1.5.nqopt};${dir.dist.classes.jdk1.5.taj};${dir.dist.classes.jdk1.5.db4otools};${dir.dist.classes.bloat}" 
 			eclipse="false" 
