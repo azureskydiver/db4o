@@ -36,6 +36,11 @@ public class MagnycoursDb4o extends Db4oDriver implements
 		
 	}
 	
+	@Override
+	public void circuitCompleted() {
+		_list = null;
+	}
+	
 	private List _list;
 
 	public void addFirstElement() {
