@@ -21,7 +21,6 @@ package org.polepos.teams.db4o;
 
 import org.polepos.circuits.sepang.*;
 import org.polepos.circuits.sepangmulti.*;
-import org.polepos.teams.db4o.*;
 
 import com.db4o.config.*;
 
@@ -33,6 +32,11 @@ public class SepangMultiDb4o extends Db4oDriver implements SepangMultiDriver{
 	@Override
 	public void configure(Configuration config) {
 		
+	}
+	
+	@Override
+	public void circuitCompleted() {
+		treeRootIDs = null;
 	}
     
     long[] treeRootIDs;
