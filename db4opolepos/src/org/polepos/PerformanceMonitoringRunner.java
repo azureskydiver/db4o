@@ -50,6 +50,8 @@ import com.db4o.polepos.continuous.*;
  */
 public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 	
+	private static final int PERFORMANCE_PERCENTAGE_THRESHOLD = 10;
+
 	private static final String SETTINGS_FILE = "settings/PerfCircuits.properties";
 
 	private final Db4oJarCollection _jarCollection;
@@ -83,7 +85,7 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 
     public PerformanceMonitoringRunner(File[] libPaths) {
     	_jarCollection = new FolderBasedDb4oJarRegistry(libPaths == null ? libPaths() : libPaths, new RevisionBasedMostRecentJarFileSelectionStrategy(1)).jarCollection();
-    	_reporter = new PerformanceMonitoringReporter(_jarCollection.currentJar().getName(), new SpeedTicketPerformanceStrategy(20));
+    	_reporter = new PerformanceMonitoringReporter(_jarCollection.currentJar().getName(), new SpeedTicketPerformanceStrategy(PERFORMANCE_PERCENTAGE_THRESHOLD));
     }
     
     @Override
