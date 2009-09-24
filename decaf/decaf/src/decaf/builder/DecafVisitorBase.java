@@ -79,7 +79,7 @@ public abstract class DecafVisitorBase extends ASTVisitor {
 	private void expandAll(Set<String>... platformSets) {
 		for (Set<String> platforms : platformSets) {
 			if(!platforms.remove(Platform.ALL.name())) {
-				return;
+				continue;
 			}
 			for (Platform platform : Platform.values()) {
 				if(platform != Platform.ALL) {
