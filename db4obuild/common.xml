@@ -20,8 +20,19 @@
 	</taskdef>
 
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-	<!-- taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" / -->
+	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask">
+		<classpath>
+			<pathelement location="ant-contrib.jar" />
+		</classpath>
+	</taskdef>
 	
+	<taskdef name="cnProperty" classname="com.db4o.devtools.ant.CompositeNamePropertyTask">
+		<classpath>
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+
 	<taskdef name="svnRevision" classname="com.db4o.devtools.ant.SvnRevision">
 		<classpath>
 			<pathelement location="${dir.build.bin}" />
@@ -364,24 +375,15 @@
 		
 		<property name="file.compiler.jdk1.3.args.line" value="${file.compiler.jdk1.3.args} ${file.compiler.jdk1.3.args.optional}" />
 
-		<!--
-				<for list="core,core.optional,core.cs,test,db4ounit,db4ounit.extensions,instrumentation,taj,nqopt,tools" param="project-id">
+		<for list="core,core.optional,core.cs,test,db4ounit,db4ounit.extensions,instrumentation,taj,nqopt,tools" param="project-id">
+			<sequential>
+				<for list="jdk1.1,jdk1.2,sharpen" param="platform-id">
 					<sequential>
-						<for list="jdk1.1,jdk1.2,sharpen" param="platform-id">
-							<sequential>
-								<antfetch target="set-decaf-src-property" return="decaf.@{platform-id}.@{project-id}.src">
-									<param name="project-id" value="@{project-id}"/>
-									<param name="platform-id" value="@{platform-id}"/>
-								</antfetch>
-								<propertycopy name="decaf-project-path" from="dir.dist.decaf.@{platform-id}.project.target" />
-								<propertycopy name="decaf-subproject-path" from="path.decaf.@{project-id}.src" />
-								<property name="dir.dist.decaf.@{platform-id}.@{project-id}.src" value="${decaf-project-path}///${decaf-subproject-path}" />
-								<echo message="dir.dist.decaf.@{platform-id}.@{project-id}.src ::= ${decaf-project-path}///${decaf-subproject-path}" />
-							</sequential>
-						</for>
+						<property name="dir.dist.decaf.@{platform-id}.@{project-id}.src" value="${dir.dist.decaf.@{platform-id}.project.target}/${path.decaf.@{project-id}.src}" />
 					</sequential>
 				</for>
-		-->
+			</sequential>
+		</for>
 
 		<if>
 			<isset property="dir.tests.temp" />
@@ -393,13 +395,5 @@
 			</else>
 		</if>
 	</target>
-	
-	<target name="set-decaf-src-property">
-		<propertycopy name="decaf-project-path" from="dir.dist.decaf.${platform-id}.project.target" />
-		<propertycopy name="decaf-subproject-path" from="path.decaf.${project-id}.src" />
-		<property name="dir.dist.decaf.${platform-id}.${project-id}.src" value="${decaf-project-path}/${decaf-subproject-path}" />
-		<echo message="dir.dist.decaf.${platform-id}.${project-id}.src ::= ${decaf-project-path}///${decaf-subproject-path}" />
-	</target>
-
-	
+		
 </project>
