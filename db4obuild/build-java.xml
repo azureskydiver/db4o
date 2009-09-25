@@ -1783,10 +1783,8 @@
 			build.instrumentation1.5, 
 			build.nqopt1.5,
 			build.taj1.5,
-		    build.db4otools1.5">
-		<antcall target="nodep.jar.generation">
-			<param name="nodep.platform" value="1.5"/>
-		</antcall>
+		    build.db4otools1.5,
+			build.nodep1.5">
 	</target>
 	
 	<target name="cc.step.1" depends="build.db4ojava, build.db4ojava.tests, run.tests.jdk1.5" />
