@@ -378,6 +378,16 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
         }
 		return null;
 	}
+	
+    public boolean aspectsAreInitialized(){
+    	if(_aspects == null){
+    		return false;
+    	}
+    	if(_ancestor != null){
+    		return _ancestor.aspectsAreInitialized();
+    	}
+    	return true;
+    }
 
     private boolean collectReflectFields(Collection4 collectedAspects) {
 		boolean dirty=false;
