@@ -132,6 +132,10 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	    if(! _class.stateOK()){
 	        return false;
 	    }
+	    
+	    if(! _class.aspectsAreInitialized()){
+	    	return false;
+	    }
         
         if(DTrace.enabled){
             DTrace.CONTINUESET.log(getID());

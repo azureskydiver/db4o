@@ -8,10 +8,18 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 public class PersistStaticFieldValuesTestCase extends AbstractDb4oTestCase {
+	
     public static class Data {
         public static final PsfvHelper ONE = new PsfvHelper();
         public static final PsfvHelper TWO = new PsfvHelper();
         public static final PsfvHelper THREE = new PsfvHelper();
+        
+        /**
+         * field put here to simulate a setup order failure during
+         * ClassMetadata initialization.
+         * @sharpen.ignore
+         */
+        public static final Class CLASS = Data.class; 
 
         public PsfvHelper one;
 	    public PsfvHelper two;
