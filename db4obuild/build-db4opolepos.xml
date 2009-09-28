@@ -60,6 +60,7 @@
 				<path refid="poleposition_classpath"/>
 			</classpath>
 			<arg path="${dir.polepos.db4ojars}"/>
+			<jvmarg value="-Xmx512m"/>
 			<!-- jvmarg value="-verbose:class"/ -->
 		</java>
 	</target>
