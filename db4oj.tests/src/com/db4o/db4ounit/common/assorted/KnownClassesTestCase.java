@@ -36,23 +36,29 @@ public class KnownClassesTestCase extends AbstractDb4oTestCase {
     
     public void testNoPrimitives() {
     	for (ReflectClass knownClass : container().knownClasses()) {
-			Assert.isFalse(knownClass.isPrimitive());
+			Assert.isFalse(knownClass.isPrimitive(), knownClass.getName());
     	}
     }
-    
-    public void testNoValueTypes() {
+
+    @decaf.Ignore(platforms = {decaf.Platform.JDK11, decaf.Platform.JDK12})
+    public void testValueTypes() {
+    	container().reflector().forName(typeName());
+    	boolean found = false;
     	for (ReflectClass knownClass : container().knownClasses()) {
-			Assert.isFalse(isValueType(knownClass));
+    		if (knownClass.getName().equals(typeName())){
+    			found = true;
+    		}
     	}
+    	
+    	Assert.isTrue(found);
     }
     
-    private boolean isValueType(ReflectClass knownClass) {
-    	if (container().handlers().isTransient(knownClass))
-			return false;
-		
-        final ClassMetadata classMetadata = container().produceClassMetadata(knownClass);
-        return classMetadata.isValueType();
-    }
+    /**
+     * @sharpen.remove return "System.Guid, mscorlib";
+     */
+	private String typeName() {
+		return java.math.BigDecimal.class.getName();		
+	}
 
 	public void testInternalClassesAreNotVisible() {
     	for (ReflectClass knownClass : container().knownClasses()) {
