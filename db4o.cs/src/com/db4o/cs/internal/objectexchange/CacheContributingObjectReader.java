@@ -2,8 +2,6 @@
 
 package com.db4o.cs.internal.objectexchange;
 
-import static com.db4o.foundation.Environments.*;
-
 import java.util.*;
 
 import com.db4o.cs.caching.*;
@@ -15,11 +13,12 @@ public class CacheContributingObjectReader {
 
 	private final ByteArrayBuffer _reader;
 	private final ClientTransaction _transaction;
-	private final ClientSlotCache _slotCache = my(ClientSlotCache.class);
+	private final ClientSlotCache _slotCache;
 
-	public CacheContributingObjectReader(ClientTransaction transaction, ByteArrayBuffer reader) {
+	public CacheContributingObjectReader(ClientTransaction transaction, ClientSlotCache slotCache, ByteArrayBuffer reader) {
 		_reader = reader;
 		_transaction = transaction;
+		_slotCache = slotCache;
     }
 	
 	public Iterator4<Pair<Integer, ByteArrayBuffer>> buffers() {

@@ -51,5 +51,14 @@ public interface ClientConfiguration extends NetworkingConfigurationProvider, Co
 	 */
 	void prefetchDepth(int prefetchDepth);
 
+	/**
+	 * Sets the slot cache size to the given value.
+	 * 
+	 * @param slotCacheSize
+	 * 
+	 * @sharpen.property
+	 */
+	void prefetchSlotCacheSize(int slotCacheSize);
+
 
 }

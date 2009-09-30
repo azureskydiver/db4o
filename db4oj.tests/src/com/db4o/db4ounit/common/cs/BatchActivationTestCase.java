@@ -37,7 +37,7 @@ public class BatchActivationTestCase extends FixtureTestSuiteDescription impleme
 			new SubjectFixtureProvider(
 				// first - prefetchDepth
 				// second - expected number of messages exchanged
-				Pair.of(0, 1),
+				Pair.of(0, 2),
 				Pair.of(1, 0)));
 	}
 	
@@ -73,7 +73,7 @@ public class BatchActivationTestCase extends FixtureTestSuiteDescription impleme
 			
 			client().config().clientServer().prefetchDepth(0);
 			
-			assertBatchBehaviorFor(query, 1);
+			assertBatchBehaviorFor(query, 2);
 		}
 		
 		public void testQueryPrefetchDepth1() {
@@ -91,7 +91,7 @@ public class BatchActivationTestCase extends FixtureTestSuiteDescription impleme
 			
 			client().config().clientServer().prefetchDepth(0);
 			
-			assertBatchBehaviorFor(query, 1);
+			assertBatchBehaviorFor(query, 2);
 		}
 		
 		public void testQueryPrefetchDepth1ForClassOnlyQuery() {
