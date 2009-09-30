@@ -33,4 +33,8 @@ public class ClientConfigurationImpl extends NetworkingConfigurationProviderImpl
 	public void prefetchDepth(int prefetchDepth) {
 		legacy().prefetchDepth(prefetchDepth);
     }
+
+	public void prefetchSlotCacheSize(int slotCacheSize) {
+		legacy().prefetchSlotCacheSize(slotCacheSize); 
+	}
 }

@@ -35,6 +35,13 @@ public interface ClientServerConfiguration {
 	 * @param prefetchDepth
 	 */
 	void prefetchDepth(int prefetchDepth);    
+	
+	/**
+	 * Sets the slot cache size to the given value.
+	 * 
+	 * @param slotCacheSize
+	 */
+	void prefetchSlotCacheSize(int slotCacheSize);
 
 
 	/**

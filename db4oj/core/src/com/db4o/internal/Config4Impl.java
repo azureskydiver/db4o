@@ -9,12 +9,14 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.config.encoding.*;
 import com.db4o.diagnostic.*;
+import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.config.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.encoding.*;
+import com.db4o.internal.events.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.io.*;
@@ -137,6 +139,12 @@ public final class Config4Impl implements Configuration, DeepClone,
 	
 	private static final KeySpec PREFETCH_DEPTH_KEY = new KeySpec(0);
 	
+	public static final int PREFETCH_SLOT_CACHE_SIZE_FACTOR = 10;
+	
+	private static final int MAXIMUM_PREFETCH_SLOT_CACHE_SIZE = 10000;
+	
+	private static final KeySpec PREFETCH_SLOT_CACHE_SIZE_KEY = new KeySpec(0);
+	
 	private final static KeySpec READ_AS_KEY = new KeySpec(new KeySpec.Deferred() {
 		public Object evaluate() {
 			return new Hashtable4(16);
@@ -178,7 +186,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec TAINTED_KEY = new KeySpec(false);
 
 	//  is null in the global configuration until deepClone is called
-	private ObjectContainerBase        i_stream;
+	private ObjectContainerBase        _container;
 	
 	// The following are very frequently being asked for, so they show up in the profiler. 
 	// Let's keep them out of the Hashtable.
@@ -187,6 +195,10 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private boolean	_readOnly;
 	
 	private Collection4 _registeredTypeHandlers;
+
+	private final Event4Impl<EventArgs> _prefetchSettingsChanged = Event4Impl.newInstance();
+
+	private boolean _prefetchSlotCacheSizeModifiedExternally;
 
     public int activationDepth() {
     	return _config.getAsInt(ACTIVATION_DEPTH_KEY);
@@ -336,8 +348,8 @@ public final class Config4Impl implements Configuration, DeepClone,
         return ret;
     }
     
-    public void stream(ObjectContainerBase stream) {
-    	i_stream=stream;
+    public void container(ObjectContainerBase container) {
+    	_container=container;
     }
     
 	public void databaseGrowthSize(int bytes) {
@@ -449,7 +461,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     private void globalSettingOnly() {
-        if (i_stream != null) {
+        if (_container != null) {
            throw new GlobalOnlyConfigException();
         }
     }
@@ -556,7 +568,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 
 	public void reflectWith(Reflector reflect) {
 		
-        if(i_stream != null){
+        if(_container != null){
         	Exceptions4.throwRuntimeException(46);   // see readable message for code in Messages.java
         }
 		
@@ -586,8 +598,8 @@ public final class Config4Impl implements Configuration, DeepClone,
             reservedStorageSpace = 0;
         }
         _config.put(RESERVED_STORAGE_SPACE_KEY,reservedStorageSpace);
-        if (i_stream != null) {
-            i_stream.reserve(reservedStorageSpace);
+        if (_container != null) {
+            _container.reserve(reservedStorageSpace);
         }
     }
 
@@ -595,8 +607,8 @@ public final class Config4Impl implements Configuration, DeepClone,
      * The ConfigImpl also is our messageSender
      */
     public void send(Object obj) {
-        if (i_stream != null) {
-            i_stream.send(obj);
+        if (_container != null) {
+            _container.send(obj);
         }
     }
 
@@ -621,8 +633,8 @@ public final class Config4Impl implements Configuration, DeepClone,
      */
     public void setOut(PrintStream outStream) {
         _config.put(OUTSTREAM_KEY,outStream);
-        if (i_stream != null) {
-            i_stream.logMsg(19, Db4o.version());
+        if (_container != null) {
+            _container.logMsg(19, Db4o.version());
         } else {
             Messages.logMsg(this, 19, Db4o.version());
         }
@@ -881,6 +893,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 
 	public void prefetchObjectCount(int prefetchObjectCount) {
 		_config.put(PREFETCH_OBJECT_COUNT_KEY,prefetchObjectCount);
+		ensurePrefetchSlotCacheSize();
 	}
 
 	public int prefetchObjectCount() {
@@ -1077,7 +1090,15 @@ public final class Config4Impl implements Configuration, DeepClone,
 
 	public void prefetchDepth(int prefetchDepth) {
 		_config.put(PREFETCH_DEPTH_KEY, prefetchDepth);
+		ensurePrefetchSlotCacheSize();
     }
+
+	private void ensurePrefetchSlotCacheSize() {
+		if(! _prefetchSlotCacheSizeModifiedExternally){
+			prefetchSlotCacheSize(calculatedPrefetchSlotcacheSize());
+			_prefetchSlotCacheSizeModifiedExternally = false;
+		}
+	}
 	
 	public int prefetchDepth() {
 		return _config.getAsInt(PREFETCH_DEPTH_KEY);
@@ -1085,5 +1106,30 @@ public final class Config4Impl implements Configuration, DeepClone,
 
 	public List environmentContributions() {
 		return (List) _config.get(ENVIRONMENT_CONTRIBUTIONS_KEY);
+	}
+
+	public void prefetchSlotCacheSize(int slotCacheSize) {
+		_prefetchSlotCacheSizeModifiedExternally = true;
+		_config.put(PREFETCH_SLOT_CACHE_SIZE_KEY, slotCacheSize );
+		_prefetchSettingsChanged.trigger(EventArgs.EMPTY);
+	}
+	
+	public int prefetchSlotCacheSize() {
+		return _config.getAsInt(PREFETCH_SLOT_CACHE_SIZE_KEY);
+	}
+
+	private int calculatedPrefetchSlotcacheSize() {
+		long calculated = (long)prefetchDepth() * prefetchObjectCount() * PREFETCH_SLOT_CACHE_SIZE_FACTOR;
+		if(calculated > MAXIMUM_PREFETCH_SLOT_CACHE_SIZE){
+			calculated = MAXIMUM_PREFETCH_SLOT_CACHE_SIZE;
+		}
+		return (int) calculated; 
+	}
+
+	/**
+	 * @sharpen.event EventArgs
+	 */
+	public Event4<EventArgs> prefetchSettingsChanged(){
+		return _prefetchSettingsChanged;
 	}
 }

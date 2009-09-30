@@ -1083,7 +1083,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
 	private Config4Impl initializeConfig(Configuration config) {
 		Config4Impl impl=((Config4Impl)config);
-		impl.stream(this);
+		impl.container(this);
 		impl.reflector().setTransaction(systemTransaction());
 		impl.reflector().configuration(new ReflectorConfigurationImpl(impl));
 		impl.taint();

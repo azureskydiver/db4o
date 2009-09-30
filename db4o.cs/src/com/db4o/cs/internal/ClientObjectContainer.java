@@ -2,16 +2,16 @@
 
 package com.db4o.cs.internal;
 
-import static com.db4o.foundation.Environments.my;
-
 import java.io.IOException;
 import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.cs.caching.ClientSlotCache;
+import com.db4o.cs.internal.caching.*;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.cs.internal.objectexchange.*;
+import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -71,6 +71,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	private final ClientHeartbeat _heartbeat;
 	
     private final ClassInfoHelper _classInfoHelper = new ClassInfoHelper();
+    
+    private ClientSlotCache _clientSlotCache;
 
 	private MessageListener _messageListener = new MessageListener() {
 		public void onMessage(Msg msg) {
@@ -102,8 +104,9 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		_socket = socket;
 		_socket.setSoTimeout(_config.timeoutClientSocket());
 	}
-
+	
 	protected final void openImpl() {
+		initalizeClientSlotCache();
 		_singleThreaded = configImpl().singleThreadedClient();
 		// TODO: Experiment with packet size and noDelay
 		// socket.setSendBufferSize(100);
@@ -118,6 +121,19 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		logMsg(36, toString());
 		startHeartBeat();
 		readThis();
+	}
+	
+	private final void initalizeClientSlotCache(){
+		configImpl().prefetchSettingsChanged().addListener(new EventListener4<EventArgs>(){
+			public void onEvent(Event4<EventArgs> e, EventArgs args) {
+				initalizeClientSlotCache();
+			}
+		});
+		if(configImpl().prefetchSlotCacheSize() > 0){
+			_clientSlotCache = new ClientSlotCacheImpl(this);
+			return;
+		}
+		_clientSlotCache = new NullClientSlotCache();
 	}
 	
 	private void startHeartBeat(){
@@ -152,10 +168,6 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	public void reserve(int byteCount) {
 		throw new NotSupportedException();
 	}
-    
-    public void blockSize(int blockSize){
-        _blockSize = blockSize;
-    }
     
     public byte blockSize() {
         return (byte)_blockSize;
@@ -587,40 +599,27 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	private ByteArrayBuffer[] readSlotBuffers(final Transaction transaction, final int[] ids, final int prefetchDepth) {
 	    final Map<Integer, ByteArrayBuffer> buffers = new HashMap(ids.length);
-        
-        withEnvironment(new Runnable() { public void run() {
         	
-        	final ArrayList<Integer> cacheMisses = populateSlotBuffersFromCache(transaction, ids, buffers);
-			fetchMissingSlotBuffers(transaction, cacheMisses, buffers, prefetchDepth);
-        	
-        }});
+    	final ArrayList<Integer> cacheMisses = populateSlotBuffersFromCache(transaction, ids, buffers);
+		fetchMissingSlotBuffers(transaction, cacheMisses, buffers, prefetchDepth);
         
         return packSlotBuffers(ids, buffers);
     }
 
 	public final ByteArrayBuffer readReaderByID(final Transaction transaction, final int id, final boolean lastCommitted) {
 		
-		final ByRef<ByteArrayBuffer> result = ByRef.newInstance();
-		withEnvironment(new Runnable() { public void run() {
-			
-			if (lastCommitted || _bypassSlotCache) {
-				result.value = fetchSlotBuffer(transaction, id, lastCommitted);
-				return;
-			}
-			
-			final ClientSlotCache slotCache = my(ClientSlotCache.class);
-			final ByteArrayBuffer cached = slotCache.get(transaction, id);
-			if (cached != null) {
-				result.value = cached;
-				return;
-			}
-			
-			final ByteArrayBuffer slot = fetchSlotBuffer(transaction, id, lastCommitted);
-			slotCache.add(transaction, id, slot);
-			result.value = slot;
-			
-		}});
-		return result.value;
+		if (lastCommitted || _bypassSlotCache) {
+			return fetchSlotBuffer(transaction, id, lastCommitted);
+		}
+		
+		final ByteArrayBuffer cached = _clientSlotCache.get(transaction, id);
+		if (cached != null) {
+			return cached;
+		}
+		
+		final ByteArrayBuffer slot = fetchSlotBuffer(transaction, id, lastCommitted);
+		_clientSlotCache.add(transaction, id, slot);
+		return slot;
 	}
 
 	public final ByteArrayBuffer readReaderByID(Transaction a_ta, int a_id) {
@@ -651,7 +650,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	private FixedSizeIntIterator4 idIteratorFor(final ObjectExchangeStrategy strategy, Transaction trans,
             ByteArrayBuffer reader) {
-	    return strategy.unmarshall((ClientTransaction)trans, reader);
+	    return strategy.unmarshall((ClientTransaction)trans, _clientSlotCache, reader);
     }
 
 	private ObjectExchangeStrategy objectExchangeStrategy() {
@@ -1073,7 +1072,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     	
     	final MsgD response = (MsgD) expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
     	
-    	Iterator4<Pair<Integer, ByteArrayBuffer>> slots = new CacheContributingObjectReader((ClientTransaction) transaction, response.payLoad()).buffers();
+    	Iterator4<Pair<Integer, ByteArrayBuffer>> slots = new CacheContributingObjectReader((ClientTransaction) transaction, _clientSlotCache, response.payLoad()).buffers();
     	while (slots.moveNext()) {
     		final Pair<Integer, ByteArrayBuffer> pair = slots.current();
 			buffers.put(pair.first, pair.second);
@@ -1093,7 +1092,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	    final ArrayList<Integer> missing = new ArrayList();
 	    
 	    for (int id: ids) {
-	    	final ByteArrayBuffer slot = my(ClientSlotCache.class).get(transaction, id);
+	    	final ByteArrayBuffer slot = _clientSlotCache.get(transaction, id);
 	    	if (null == slot) {
 	    		missing.add(id);
 	    	} else {
@@ -1121,4 +1120,5 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	public String userName() {
 		return _userName;
 	}
+	
 }

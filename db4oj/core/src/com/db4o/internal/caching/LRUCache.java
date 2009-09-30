@@ -49,10 +49,12 @@ class LRUCache<K, V> implements PurgeableCache4<K, V> {
 	}
 
 	public V purge(K key) {
-		if (!_lru.remove(key)) {
+		V removed = _slots.remove(key);
+		if(removed == null){
 			return null;
 		}
-		return _slots.remove(key);
+		_lru.remove(key);
+		return removed;
     }
 }
 
