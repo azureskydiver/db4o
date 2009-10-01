@@ -10,6 +10,10 @@ public class ObjectSetAssert {
 	public static void sameContent(ObjectSet objectSet, Object... expectedItems) {
 		Iterator4Assert.sameContent(Iterators.iterate(expectedItems), iterate(objectSet));
 	}
+	
+	public static void areEqual(ObjectSet objectSet, Object... expectedItems) {
+		Iterator4Assert.areEqual(expectedItems, iterate(objectSet));
+	}
 
 	public static Iterator4 iterate(ObjectSet objectSet) {
 		return new ObjectSetIterator4(objectSet);
