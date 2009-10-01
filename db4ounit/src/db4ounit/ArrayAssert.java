@@ -79,6 +79,15 @@ public class ArrayAssert {
 	    }
 	}
 	
+	public static void areEqual(long[] expected, long[] actual) {
+		if (expected == actual) return;
+		if (expected == null || actual == null) Assert.areSame(expected, actual);
+		Assert.areEqual(expected.length, actual.length);
+	    for (int i = 0; i < expected.length; i++) {
+	        Assert.areEqual(expected[i], actual[i], indexMessage(i));
+	    }
+	}
+	
 	public static void areEqual(float[] expected, float[] actual) {
 		if (expected == actual) return;
 		if (expected == null || actual == null) Assert.areSame(expected, actual);
