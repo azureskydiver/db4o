@@ -40,8 +40,14 @@ public class KnownClassesTestCase extends AbstractDb4oTestCase {
     	}
     }
 
-    @decaf.Ignore(platforms = {decaf.Platform.JDK11, decaf.Platform.JDK12})
+    /**
+     * @sharpen.remove.first
+     */
+    @decaf.Ignore(decaf.Platform.JDK11)
     public void testValueTypes() {
+    	if (Platform4.jdk().ver() == 2)
+    		return;
+    	
     	container().reflector().forName(typeName());
     	boolean found = false;
     	for (ReflectClass knownClass : container().knownClasses()) {
@@ -54,7 +60,7 @@ public class KnownClassesTestCase extends AbstractDb4oTestCase {
     }
     
     /**
-     * @sharpen.remove return "System.Guid, mscorlib";
+     * @sharpen.remove "System.Guid, mscorlib"
      */
 	private String typeName() {
 		return java.math.BigDecimal.class.getName();		
