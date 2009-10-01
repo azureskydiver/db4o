@@ -36,7 +36,7 @@ public class FolderBasedDb4oJarRegistry implements Db4oJarRegistry {
 	}
 	
 	public static void main(String[] args) {
-		FolderBasedDb4oJarRegistry registry = new FolderBasedDb4oJarRegistry(new File(args[0]), new RevisionBasedMostRecentJarFileSelectionStrategy(3));
+		FolderBasedDb4oJarRegistry registry = new FolderBasedDb4oJarRegistry(new File(args[0]), new RevisionBasedMostRecentJarFileSelectionStrategy(1,10));
 		Db4oJarCollection jars = registry.jarCollection();
 		System.out.println("CURRENT:\n" + jars.currentJar().getAbsolutePath() + "\nOTHERS:");
 		for (File otherJar : jars.otherJars()) {

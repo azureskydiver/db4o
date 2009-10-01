@@ -9,12 +9,9 @@ public class Db4oJarCollection {
 	private final File _currentJar;
 	private final Set<File> _otherJars;
 	
-	public Db4oJarCollection(File[] jars) {
-		_currentJar = jars[0];
-		_otherJars = new HashSet<File>();
-		for (int jarIdx = 1; jarIdx < jars.length; jarIdx++) {
-			_otherJars.add(jars[jarIdx]);
-		}
+	public Db4oJarCollection(List<File> jars) {
+		_currentJar = jars.get(0);
+		_otherJars = new HashSet<File>(jars.subList(1, jars.size()));
 	}
 	
 	public Set<File> otherJars() {
