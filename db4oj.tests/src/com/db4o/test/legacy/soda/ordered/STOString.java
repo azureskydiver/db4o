@@ -34,7 +34,7 @@ public class STOString implements STClass {
         q.constrain(STOString.class);
         q.descend("foo").orderAscending();
         Object[] r = store();
-        st.expectOrdered(q, new Object[] { r[5], r[4], r[1], r[2], r[6], r[3], r[0] });
+        st.expectOrdered(q, new Object[] { r[0], r[5], r[4], r[1], r[2], r[6], r[3], });
     }
 
     public void testDescending() {

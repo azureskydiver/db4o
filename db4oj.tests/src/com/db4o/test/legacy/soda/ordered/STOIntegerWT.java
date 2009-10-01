@@ -37,7 +37,7 @@ public class STOIntegerWT implements STClass{
 		q.constrain(STOIntegerWT.class);
 		q.descend("i_int").orderAscending();
 		Object[] r = store();
-		st.expectOrdered(q, new Object[] { r[5], r[2],  r[1], r[3], r[0], r[4], r[6], r[7] });
+		st.expectOrdered(q, new Object[] { r[7], r[5], r[2],  r[1], r[3], r[0], r[4], r[6],  });
 	}
 	
 	public void testDescending() {
