@@ -2,12 +2,15 @@
 
 package com.db4o.internal.query.processor;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.*;
+import com.db4o.internal.query.SodaQueryComparator.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
@@ -26,8 +29,6 @@ import com.db4o.types.*;
  * @exclude
  */
 public abstract class QQueryBase implements InternalQuery, Unversioned {
-
-    private static final transient IDGenerator i_orderingGenerator = new IDGenerator();
 
     transient Transaction _trans;
     
@@ -55,6 +56,9 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
     private QueryComparator _comparator;
     
     private transient final QQuery _this;
+
+    @decaf.Public
+	private List<SodaQueryComparator.Ordering> _orderings;
     
     protected QQueryBase() {
         // C/S only
@@ -464,11 +468,7 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 	    }
 	}
 
-	protected QueryResult executeQuery() {
-		return executeQueryImpl();
-	}
-
-	protected final QueryResult executeQueryImpl() {
+	protected final QueryResult executeQuery() {
 		return stream().executeQuery(_this);
 	}
 
@@ -497,14 +497,13 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 	}
 
 	private ClassMetadata singleClassConstraint() {
-		if(i_constraints.size()!=1||_comparator!=null) {
+		if(requiresSort()) {
 			return null;
 		}
-		Constraint constr=singleConstraint(); 
-		if(constr.getClass()!=QConClass.class) {
+		QConClass clazzconstr = classConstraint();
+		if (clazzconstr == null) {
 			return null;
 		}
-		QConClass clazzconstr=(QConClass)constr;
 		ClassMetadata clazz=clazzconstr.i_classMetadata;
 		if(clazz==null) {
 			return null;
@@ -513,6 +512,17 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 			return null;
 		}
 		return clazz;
+	}
+
+	private QConClass classConstraint() {
+		if (i_constraints.size()!=1) {
+			return null;
+		}
+		Constraint constr=singleConstraint(); 
+		if(constr.getClass()!=QConClass.class) {
+			return null;
+		}
+		return (QConClass)constr;
 	}
 
 	private Constraint singleConstraint() {
@@ -684,26 +694,66 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 
     public Query orderAscending() {
         synchronized (streamLock()) {
-            setOrdering(i_orderingGenerator.next());
+            addOrdering(SodaQueryComparator.Direction.ASCENDING);
             return _this;
         }
     }
 
     public Query orderDescending() {
         synchronized (streamLock()) {
-            setOrdering(-i_orderingGenerator.next());
+        	addOrdering(SodaQueryComparator.Direction.DESCENDING);
             return _this;
         }
     }
-
-    private void setOrdering(final int ordering) {
-        Iterator4 i = iterateConstraints();
-        while (i.moveNext()) {
-            ((QCon)i.current()).setOrdering(ordering);
-        }
-    }
     
-    public void marshall() {
+    private void addOrdering(Direction direction) {
+    	addOrdering(direction, new ArrayList<String>());
+	}
+    
+    protected final void addOrdering(Direction direction, List<String> path) {
+    	
+    	if (i_field != null) {
+    		path.add(i_field);
+    	}
+        
+    	if (i_parent != null) {
+    		i_parent.addOrdering(direction, path);
+    		return;
+    	}
+    		
+    	final String[] fieldPath = reverseFieldPath(path);
+    	removeExistingOrderingFor(fieldPath);
+		orderings().add(new SodaQueryComparator.Ordering(direction, fieldPath));
+    }
+
+	private void removeExistingOrderingFor(String[] fieldPath) {
+		for (Ordering ordering : orderings()) {
+			if (Arrays.equals(ordering.fieldPath, fieldPath)) {
+				orderings().remove(ordering);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Public so it can be used by the LINQ test cases.
+	 */
+	public final List<Ordering> orderings() {
+		if (null == _orderings) {
+    		_orderings = new ArrayList<SodaQueryComparator.Ordering>();
+    	}
+		return _orderings;
+	}
+
+	private String[] reverseFieldPath(List<String> path) {
+		final String[] reversedPath = new String[path.size()];
+		for (int i = 0; i < reversedPath.length; i++) {
+			reversedPath[i] = path.get(path.size() - i - 1);
+		}
+		return reversedPath;
+	}
+
+	public void marshall() {
         checkConstraintsEvaluationMode();
         
     	_evaluationModeAsInt = _evaluationMode.asInt();
@@ -747,26 +797,33 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 	}
 	
 	private void sort(QueryResult result) {
+		if (_orderings != null) {
+			result.sortIds(newSodaQueryComparator());
+		}
         if(_comparator!=null) {
         	result.sort(_comparator);
         }
 	}
 	
-    // cheat emulating '(QQuery)this'
+    private IntComparator newSodaQueryComparator() {
+    	return new SodaQueryComparator(
+    			(LocalObjectContainer)this.transaction().container(),
+    			extentType(),
+    			_orderings.toArray(new SodaQueryComparator.Ordering[_orderings.size()]));
+	}
+
+	private ClassMetadata extentType() {
+		return classConstraint().getYapClass();
+	}
+
+	// cheat emulating '(QQuery)this'
 	private static QQuery cast(QQueryBase obj) {
 		return (QQuery)obj;
 	}
 	
 	public boolean requiresSort() {
-		if (_comparator != null){
+		if (_comparator != null || _orderings != null){
 			return true;
-		}
-		Iterator4 i = iterateConstraints();
-		while(i.moveNext()){
-			QCon qCon = (QCon) i.current();
-			if(qCon.requiresSort()){
-				return true;
-			}
 		}
 		return false;
 	}

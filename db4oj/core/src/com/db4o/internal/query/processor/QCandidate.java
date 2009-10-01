@@ -21,7 +21,7 @@ import com.db4o.typehandlers.*;
  * 
  * @exclude
  */
-public class QCandidate extends TreeInt implements Candidate, Orderable {
+public class QCandidate extends TreeInt implements Candidate {
 
 	// db4o ID is stored in _key;
 
@@ -38,9 +38,6 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	boolean _include = true;
 
 	private Object _member;
-
-	// Comparable
-	Orderable _order;
 
 	// Possible pending joins on children
 	Tree _pendingJoins;
@@ -67,7 +64,6 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			DTrace.CREATE_CANDIDATE.log(id);
 		}
         _candidates = candidates;
-		_order = this;
 		_member = obj;
 		_include = true;
         
@@ -85,7 +81,6 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		qcan._dependants = _dependants;
 		qcan._include = _include;
 		qcan._member = _member;
-		qcan._order = _order;
 		qcan._pendingJoins = _pendingJoins;
 		qcan._root = _root;
 		qcan._classMetadata = _classMetadata;
@@ -111,18 +106,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			}
 		}
 	}
-
-	public int compare(Tree a_to) {
-		return _order.compareTo(((QCandidate) a_to)._order);
-	}
 	
-	public int compareTo(Object a_object) {
-		if(a_object instanceof Order){
-			return - ((Order)a_object).compareTo(this);
-		}
-		return _key - ((TreeInt) a_object)._key;
-	}
-
 	boolean createChild(final QCandidates a_candidates) {
 		if (!_include) {
 			return false;
@@ -378,11 +362,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			}
 		}
 	}
-
-	public boolean duplicates() {
-		return _order.hasDuplicates();
-	}
-
+	
 	boolean evaluate(final QConObject a_constraint, final QE a_evaluator) {
 		if (a_evaluator.identity()) {
 			return a_evaluator.evaluate(a_constraint, this, null);
@@ -457,22 +437,6 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 	final LocalTransaction transaction() {
 		return _candidates.i_trans;
-	}
-	
-	public boolean hasDuplicates() {
-
-		// Subcandidates are evaluated along with their constraints
-		// in one big QCandidates object. The tree can have duplicates
-		// so evaluation can be cascaded up to different roots.
-
-		return _root != null;
-	}
-
-	public void hintOrder(int a_order, boolean a_major) {
-		if(_order == this){
-			_order = new Order();
-		}
-		_order.hintOrder(a_order, a_major);
 	}
 
 	public boolean include() {

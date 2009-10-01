@@ -24,12 +24,12 @@ public class BigIntegerTypeHandlerTestCase extends AbstractDb4oTestCase {
 	private static final BigInteger LARGE = LONG_MAX.multiply(new BigInteger("2"));
 	
 	private static final BigInteger[] VALUES = {
+		null,
 		LONG_MIN,
 		ZERO,
 		ONE,
 		LONG_MAX,
 		LARGE,
-		null,
 	};
 	
 	public static class Item {
@@ -118,7 +118,7 @@ public class BigIntegerTypeHandlerTestCase extends AbstractDb4oTestCase {
 
 	public void testSingleDescendTypedFieldRange() {
 	    Query query = newItemQuery();
-	    query.descend("_typed").constrain(VALUES[0]).greater();
+	    query.descend("_typed").constrain(VALUES[1]).greater();
 	    ObjectSet<Item> result = query.execute();
 	    Assert.areEqual(VALUES.length - 2, result.size());
 	}

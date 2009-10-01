@@ -70,6 +70,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 	    add(a_key);
 	}
 	
+	@Override
 	public void sort(final QueryComparator cmp) {
 		Algorithms4.qsort(new QuickSortable4() {
 			public void swap(int leftIndex, int rightIndex) {
@@ -80,6 +81,21 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 			}
 			public int compare(int leftIndex, int rightIndex) {
 				return cmp.compare(get(leftIndex), get(rightIndex));
+			}
+		});
+	}
+	
+	@Override
+	public void sortIds(final IntComparator cmp) {
+		Algorithms4.qsort(new QuickSortable4() {
+			public void swap(int leftIndex, int rightIndex) {
+				_ids.swap(leftIndex, rightIndex);
+			}
+			public int size() {
+				return IdListQueryResult.this.size();
+			}
+			public int compare(int leftIndex, int rightIndex) {
+				return cmp.compare(_ids.get(leftIndex), _ids.get(rightIndex));
 			}
 		});
 	}

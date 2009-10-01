@@ -75,4 +75,21 @@ public class Arrays4 {
 		return merged;
 	}
 
+	@decaf.Ignore(except=decaf.Platform.JDK11)
+	public static void sort(final Object[] array, final Comparison4 comparator) {
+		Algorithms4.qsort(new QuickSortable4() {
+			public void swap(int leftIndex, int rightIndex) {
+				array[leftIndex] = array[rightIndex];
+			}
+			
+			public int size() {
+				return array.length;
+			}
+			
+			public int compare(int leftIndex, int rightIndex) {
+				return comparator.compare(array[leftIndex], array[rightIndex]);
+			}
+		});
+	}
+
 }

@@ -40,12 +40,6 @@ public final class QCandidates implements Visitor4 {
     // current executing constraint, only set where needed
     QCon i_currentConstraint;
 
-    // QOrder tree
-    Tree i_ordered;
-
-    // 
-    private int _majorOrderingID;
-    
     private IDGenerator _idGenerator;
     
     private boolean _loadedFromClassIndex;
@@ -96,33 +90,6 @@ public final class QCandidates implements Visitor4 {
     void addConstraint(QCon a_constraint) {
         _constraints = new List4(_constraints, a_constraint);
     }
-
-    void addOrder(QOrder a_order) {
-        i_ordered = Tree.add(i_ordered, a_order);
-    }
-    
-    void applyOrdering(Tree orderedCandidates, int orderingID) {
-    	
-    	if (orderedCandidates == null || i_root == null) {
-    		return;
-    	}
-    	
-    	int absoluteOrderingID = Math.abs(orderingID);
-    	
-    	final boolean major = treatOrderingIDAsMajor(absoluteOrderingID); 
-    	
-    	if(major && ! isUnordered()) {
-	    	swapMajorOrderToMinor();
-    	}
-    	
-    	hintNewOrder(orderedCandidates, major);
-    	
-    	i_root = recreateTreeFromCandidates();
-    	
-    	if (major) {
-    		_majorOrderingID = absoluteOrderingID;
-    	}
-    }
     
     public QCandidate readSubCandidate(QueryingReadContext context, TypeHandler4 handler){
         ObjectID objectID = ObjectID.NOT_POSSIBLE;
@@ -149,73 +116,7 @@ public final class QCandidates implements Visitor4 {
         }
         return null;
     }
-
-
-	private Tree recreateTreeFromCandidates() {
-		Collection4 col = collectCandidates();
-		
-    	Tree newTree = null;
-    	Iterator4 i = col.iterator();
-    	while(i.moveNext()){
-    		QCandidate candidate = (QCandidate) i.current();
-    		candidate._preceding = null;
-    		candidate._subsequent = null;
-    		candidate._size = 1;
-    		newTree = Tree.add(newTree, candidate);
-    	}
-		return newTree;
-	}
-
-	private Collection4 collectCandidates() {
-		final Collection4 col = new Collection4();
-		i_root.traverse(new Visitor4() {
-    		public void visit(Object a_object) {
-    			QCandidate candidate = (QCandidate) a_object;
-    			col.add(candidate);
-    		}
-    	});
-		return col;
-	}
-
-	private void hintNewOrder(Tree orderedCandidates, final boolean major) {
-		final int[] currentOrder = { 0 };
-    	final QOrder[] lastOrder = {null}; 
-    	
-    	orderedCandidates.traverse(new Visitor4() {
-    		public void visit(Object a_object) {
-    			QOrder qo = (QOrder) a_object;
-    			if(! qo.isEqual(lastOrder[0])){
-    				currentOrder[0]++;
-    			} 
-    			QCandidate candidate = qo._candidate.getRoot();
-    			candidate.hintOrder(currentOrder[0], major);
-    			lastOrder[0] = qo;
-    		}
-    	});
-	}
-
-	private void swapMajorOrderToMinor() {
-		i_root.traverse(new Visitor4() {
-			public void visit(Object obj) {
-				QCandidate candidate = (QCandidate)obj;
-				Order order = (Order) candidate._order;
-				order.swapMajorToMinor();
-			}
-		});
-	}
-
-	private boolean treatOrderingIDAsMajor(int absoluteOrderingID) {
-		return (isUnordered()) || (isMoreRelevantOrderingID(absoluteOrderingID));
-	}
-
-	private boolean isUnordered() {
-		return _majorOrderingID == 0;
-	}
-
-	private boolean isMoreRelevantOrderingID(int absoluteOrderingID) {
-		return absoluteOrderingID < _majorOrderingID;
-	}
-
+    
 	void collect(final QCandidates a_candidates) {
 		Iterator4 i = iterateConstraints();
 		while(i.moveNext()){
@@ -528,10 +429,6 @@ public final class QCandidates implements Visitor4 {
 		});
     	return sb.toString();
     }
-
-	public void clearOrdering() {
-		i_ordered = null;
-	}
 	
 	public final Transaction transaction(){
 	    return i_trans;

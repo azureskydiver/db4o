@@ -10,6 +10,9 @@ import java.util.*;
 @decaf.Ignore(decaf.Platform.JDK11)
 public class IterableBaseFactory {
 
+	/**
+	 * @sharpen.unwrap
+	 */
 	public static IterableBase coerce(Object obj) {
 		if(obj instanceof Collection) {
 			return new CollectionIterableBase((Collection) obj);

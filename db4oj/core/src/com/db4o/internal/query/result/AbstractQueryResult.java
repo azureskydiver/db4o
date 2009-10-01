@@ -109,6 +109,10 @@ public abstract class AbstractQueryResult implements QueryResult {
 	public void sort(QueryComparator cmp) {
 		throw new NotImplementedException();
 	}
+	
+	public void sortIds(IntComparator cmp) {
+		throw new NotImplementedException();
+	}
 
 	public Object get(int index) {
 		throw new NotImplementedException();

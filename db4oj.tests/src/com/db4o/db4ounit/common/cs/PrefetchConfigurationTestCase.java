@@ -319,6 +319,7 @@ public class PrefetchConfigurationTestCase extends ClientServerTestCaseBase impl
 	    final Query query = client().query();
 	    query.constrain(Item.class);
 	    query.descend("child").descend("child").constrain(null).not();
+	    query.descend("order").orderAscending();
 		Assert.areEqual(0, query.execute().size());
     }
 

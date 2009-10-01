@@ -114,6 +114,10 @@ public class ClusterQueryResult implements QueryResult {
 	public void sort(QueryComparator cmp) {
 		throw new NotSupportedException();
 	}
+	
+	public void sortIds(IntComparator cmp) {
+		throw new NotSupportedException();
+	}
 
     /** @param c */
 	public void loadFromClassIndex(ClassMetadata c) {

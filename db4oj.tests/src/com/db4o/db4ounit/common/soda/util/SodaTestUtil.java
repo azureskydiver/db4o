@@ -56,10 +56,9 @@ public class SodaTestUtil {
                 }
             }
             if (ordered){
-            	Assert.isTrue(found, "Expected '" + results[j-1] + "' but got '" +  obj + "' at index " + (j-1));
-            }
-            else {
-            	Assert.isTrue(found, "Object not expected: " + obj);
+            	Assert.isTrue(found, "Expected '" + safeToString(results[j-1]) + "' but got '" +  safeToString(obj) + "' at index " + (j-1));
+            } else {
+            	Assert.isTrue(found, "Object not expected: " + safeToString(obj));
             }
         }
         for (int i = 0; i < results.length; i++) {
@@ -69,5 +68,9 @@ public class SodaTestUtil {
         }
     }
 	
+	private static String safeToString(Object obj) {
+		return obj != null ? obj.toString() : "";
+	}
+
 	private SodaTestUtil() {}
 }

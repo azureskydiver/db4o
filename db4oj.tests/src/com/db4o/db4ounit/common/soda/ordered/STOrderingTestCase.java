@@ -47,14 +47,6 @@ public class STOrderingTestCase extends SodaBaseTestCase implements OptOutMultiS
         expectOrdered(q, new int[] { 5, 7, 9, 3, 8, 6, 4, 0, 2, 1 });
     }
 
-    public void testOrderByNameAscending() {
-        Query q = newQuery();
-        q.constrain(OrderTestSubject.class);
-        q.descend("_name").orderAscending();
-
-        expectOrdered(q, new int[] { 0, 5, 2, 7, 1, 9, 3, 8, 6, 4 });
-    }
-
     public void testOrderByNameAndAgeAscending() {
         Query q = newQuery();
         q.constrain(OrderTestSubject.class);

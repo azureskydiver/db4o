@@ -14,11 +14,15 @@ public class STOStringTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
     public STOStringTestCase(String str) {
         this.foo = str;
     }
+    
+    @Override
+    public String toString() {
+    	return foo;
+    }
 
     public Object[] createData() {
         return new Object[] {
             new STOStringTestCase(null),
-            new STOStringTestCase("bbb"),
             new STOStringTestCase("bbb"),
             new STOStringTestCase("dod"),
             new STOStringTestCase("aaa"),
@@ -31,7 +35,7 @@ public class STOStringTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
         q.constrain(STOStringTestCase.class);
         q.descend("foo").orderAscending();
         
-        expectOrdered(q, new int[] { 5, 4, 1, 2, 6, 3, 0 });
+        expectOrdered(q, new int[] { 0, 4, 3, 1, 5, 2 });
     }
 
     public void testDescending() {
@@ -39,7 +43,7 @@ public class STOStringTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
         q.constrain(STOStringTestCase.class);
         q.descend("foo").orderDescending();
         
-        expectOrdered(q, new int[] { 3, 6, 2, 1, 4, 5, 0 });
+        expectOrdered(q, new int[] { 2, 5, 1, 3, 4, 0 });
     }
 
     public void testAscendingLike() {
@@ -49,7 +53,7 @@ public class STOStringTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
         qStr.constrain("b").like();
         qStr.orderAscending();
         
-        expectOrdered(q, new int[] { 5, 1, 2, 6 });
+        expectOrdered(q, new int[] { 4, 1, 5 });
     }
 
     public void testDescendingContains() {
@@ -59,6 +63,6 @@ public class STOStringTestCase extends com.db4o.db4ounit.common.soda.util.SodaBa
         qStr.constrain("b").contains();
         qStr.orderDescending();
         
-        expectOrdered(q, new int[] { 6, 2, 1, 5 });
+        expectOrdered(q, new int[] { 5, 1, 4 });
     }
 }
