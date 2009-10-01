@@ -60,8 +60,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         if(! hasBTreeIndex(field)){
             return len;
         }
-        final int BTREE_ID = Const4.ID_LENGTH;
-        return  len + BTREE_ID;
+        return  len + Const4.ID_LENGTH;
     }
 
     public void defrag(ClassMetadata classMetadata, ClassAspect aspect, LatinStringIO sio,
