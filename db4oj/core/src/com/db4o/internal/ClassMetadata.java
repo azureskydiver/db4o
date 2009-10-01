@@ -313,8 +313,7 @@ public class ClassMetadata extends PersistentBase implements StoredClass {
 		}
 	}
 
-	private boolean installTranslator(Collection4 aspects,
-			TypeHandler4 customTypeHandler) {
+	private boolean installTranslator(Collection4 aspects, TypeHandler4 customTypeHandler) {
     	if( _config == null){
     		return false;
     	}

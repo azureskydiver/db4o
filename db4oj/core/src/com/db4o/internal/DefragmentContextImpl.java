@@ -272,7 +272,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 		return services().systemTrans();
 	}
 	
-	private ObjectContainerBase container() {
+	public ObjectContainerBase container() {
 	    return transaction().container();
 	}
 

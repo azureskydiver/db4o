@@ -7,9 +7,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public interface Indexable4 extends Comparable4{
-    
-    int linkLength();
+public interface Indexable4 extends Comparable4, LinkLengthAware{
     
     Object readIndexEntry(Context context, ByteArrayBuffer reader);
     

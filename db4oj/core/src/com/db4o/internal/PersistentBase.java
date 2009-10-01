@@ -11,7 +11,7 @@ import com.db4o.internal.slots.*;
  * @exclude
  * 
  */
-public abstract class PersistentBase implements Persistent {
+public abstract class PersistentBase implements Persistent, LinkLengthAware {
 
     protected int _id; // UID and address of pointer to the object in our file
 

@@ -301,17 +301,28 @@ public class ArrayHandler implements CascadingTypeHandler, Comparable4, ValueTyp
         if(hasNullBitmap(info)){
             BitMap4 bitMap =  readNullBitmap(context, elementCount);
             elementCount -= reducedCountForNullBitMap(elementCount, bitMap);
-        } 
+        }
+        
+        TypeHandler4 correctTypeHandlerVersion = correctHandlerVersion(context, _handler, info);
         for (int i = 0; i < elementCount; i++) {
-            context.defragment(_handler);
+            context.defragment(correctTypeHandlerVersion);
         }
         if (Deploy.debug) {
         	Debug4.readEnd(context);
         }
     }
 
-    private void defragmentWriteMappedClassId(DefragmentContext context, ArrayInfo info,
-        int classIdOffset) {
+    private TypeHandler4 correctHandlerVersion(DefragmentContext context, TypeHandler4 handler, ArrayInfo info) {
+		ClassMetadata classMetadata = classMetadata(context, info);		
+    	return HandlerRegistry.correctHandlerVersion(context, handler, classMetadata);
+	}
+
+	private ClassMetadata classMetadata(DefragmentContext context, ArrayInfo info) {
+		int classMetadataId = classIDFromInfo(container(context), info);
+		return container(context).classMetadataForID(classMetadataId);
+	}
+
+	private void defragmentWriteMappedClassId(DefragmentContext context, ArrayInfo info, int classIdOffset) {
         ByteArrayBuffer targetBuffer = context.targetBuffer();
         int currentOffset = targetBuffer.offset();
         targetBuffer.seek(classIdOffset);
