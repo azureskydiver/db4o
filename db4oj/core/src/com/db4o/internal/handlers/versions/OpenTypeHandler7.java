@@ -44,7 +44,7 @@ public class OpenTypeHandler7 extends OpenTypeHandler {
 		context.seek(payLoadOffSet);
 
 		int classMetadataId = context.copyIDReturnOriginalID();
-		TypeHandler4 typeHandler = context.typeHandlerForId(classMetadataId);
+		TypeHandler4 typeHandler = correctTypeHandlerVersionFor(context, classMetadataId);
 		if (typeHandler != null) {
 			if (isPlainObject(typeHandler)) {
 				context.copySlotlessID();

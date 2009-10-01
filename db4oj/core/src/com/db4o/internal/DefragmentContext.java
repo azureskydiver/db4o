@@ -49,4 +49,6 @@ public interface DefragmentContext extends BufferContext, MarshallingInfo, Handl
 	public void targetWriteBytes(int address, ByteArrayBuffer buffer);
 	
 	public DefragmentServices services();
+	
+	public ObjectContainerBase container();
 }

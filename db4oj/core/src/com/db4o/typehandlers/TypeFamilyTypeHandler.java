@@ -2,12 +2,11 @@
 
 package com.db4o.typehandlers;
 
+import com.db4o.internal.*;
+
 
 /**
  * @exclude
  */
-public interface TypeFamilyTypeHandler extends QueryableTypeHandler {
-
-    public int linkLength();
-
+public interface TypeFamilyTypeHandler extends QueryableTypeHandler, LinkLengthAware {
 }

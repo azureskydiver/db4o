@@ -1031,10 +1031,10 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     	if (!alive()) {
     		throw new IllegalStateException("Field '" + toString() + "' cannot be defragmented at this time.");
     	}
-    	final TypeHandler4 typeHandler = HandlerRegistry.correctHandlerVersion(context, getHandler());
-        context.slotFormat().doWithSlotIndirection(context, typeHandler, new Closure4() {
+    	final TypeHandler4 correctTypeHandlerVersion = HandlerRegistry.correctHandlerVersion(context, getHandler(), _fieldType);
+        context.slotFormat().doWithSlotIndirection(context, correctTypeHandlerVersion, new Closure4() {
             public Object run() {
-                context.defragment(typeHandler);
+                context.defragment(correctTypeHandlerVersion);
                 return null;
             }
         });

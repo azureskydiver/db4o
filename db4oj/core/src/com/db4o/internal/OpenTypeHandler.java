@@ -12,7 +12,7 @@ import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
 
 
-public class OpenTypeHandler implements ReferenceTypeHandler, ValueTypeHandler, BuiltinTypeHandler, CascadingTypeHandler{
+public class OpenTypeHandler implements ReferenceTypeHandler, ValueTypeHandler, BuiltinTypeHandler, CascadingTypeHandler, LinkLengthAware {
     
     private static final int HASHCODE = 1003303143;
 	private ObjectContainerBase _container;
@@ -109,7 +109,7 @@ public class OpenTypeHandler implements ReferenceTypeHandler, ValueTypeHandler, 
         context.seek(payLoadOffSet);
         try{
 	        int classMetadataId = context.copyIDReturnOriginalID();
-			TypeHandler4 typeHandler = context.typeHandlerForId(classMetadataId);
+			TypeHandler4 typeHandler = correctTypeHandlerVersionFor(context, classMetadataId);
 			if(typeHandler == null){
 				return;
 			}
@@ -123,6 +123,20 @@ public class OpenTypeHandler implements ReferenceTypeHandler, ValueTypeHandler, 
         	context.seek(savedOffSet);
         }
     }
+    
+	protected TypeHandler4 correctTypeHandlerVersionFor(DefragmentContext context, int classMetadataId) {
+		TypeHandler4 typeHandler = context.typeHandlerForId(classMetadataId);
+		if (null == typeHandler) {
+			return null;
+		}
+		
+		ClassMetadata classMetadata = container(context).classMetadataForID(classMetadataId);
+		return HandlerRegistry.correctHandlerVersion(context, typeHandler, classMetadata);
+	}
+
+	protected ObjectContainerBase container(DefragmentContext context) {
+		return context.transaction().container();
+	}
 
     protected TypeHandler4 readTypeHandler(InternalReadContext context, int payloadOffset) {
         context.seek(payloadOffset);
@@ -281,6 +295,10 @@ public class OpenTypeHandler implements ReferenceTypeHandler, ValueTypeHandler, 
 
 	public void registerReflector(Reflector reflector) {
 		// nothing to do
+	}
+
+	public int linkLength() {
+		return Const4.ID_LENGTH;
 	}
 	
 }

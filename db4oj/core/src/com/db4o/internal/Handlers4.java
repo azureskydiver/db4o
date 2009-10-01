@@ -99,26 +99,17 @@ public class Handlers4 {
 	    if (handler == null) {
 	        throw new ArgumentNullException();
 	    }
-	    if(handler instanceof TypeFamilyTypeHandler){
-	        return ((TypeFamilyTypeHandler) handler).linkLength();
+	    
+	    if (handler instanceof LinkLengthAware) {
+	    	return ((LinkLengthAware) handler).linkLength();
 	    }
-	    if(handler instanceof PersistentBase){
-	        return ((PersistentBase)handler).linkLength();
+	    
+	    if (handler instanceof ReferenceTypeHandler) {
+	    	return Const4.ID_LENGTH;
 	    }
-	    if(handler instanceof PrimitiveHandler){
-	        return ((PrimitiveHandler)handler).linkLength();
-	    }
+	    
 	    if(handler instanceof VariableLengthTypeHandler){
-	        if(isValueType(handler)){
-	            return Const4.INDIRECTION_LENGTH;    
-	        }
-	        return Const4.ID_LENGTH;
-	    }
-	    if (isUntyped(handler)) {
-	    	return Const4.ID_LENGTH;
-	    }
-	    if (handler instanceof StandardReferenceTypeHandler) {
-	    	return Const4.ID_LENGTH;
+	    	return Const4.INDIRECTION_LENGTH;    
 	    }
 	    
 	    // TODO: For custom handlers there will have to be a way 
@@ -132,7 +123,7 @@ public class Handlers4 {
 	    //        (3) Add a way to test the custom handler when it
 	    //            is installed and remember the length there. 
 	    
-	    throw new NotImplementedException("Unknown type handler type: " + handler);
+	    throw new NotImplementedException("Unexpected typehandler: " + handler);
 	}
 
 	public static boolean holdsValueType(TypeHandler4 handler) {

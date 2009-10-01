@@ -29,7 +29,7 @@ import com.db4o.typehandlers.*;
  */
 public final class HandlerRegistry {
     
-    public static final byte HANDLER_VERSION = (byte)8;
+    public static final byte HANDLER_VERSION = (byte)9;
     
     private final ObjectContainerBase _container;  // this is the master container and not valid
 	                                   // for TransportObjectContainer
@@ -292,7 +292,31 @@ public final class HandlerRegistry {
     public TypeHandler4 correctHandlerVersion(TypeHandler4 handler, int version){
         return _handlerVersions.correctHandlerVersion(handler, version);
     }
+    
+	public static TypeHandler4 correctHandlerVersion(HandlerVersionContext context, TypeHandler4 typeHandler, ClassMetadata classMetadata)
+	{
+		TypeHandler4 correctHandlerVersion = correctHandlerVersion(context, typeHandler);
+		if (typeHandler != correctHandlerVersion)
+		{
+			correctClassMetadataOn(correctHandlerVersion, classMetadata);
 
+			if (correctHandlerVersion instanceof ArrayHandler) {
+				ArrayHandler arrayHandler = (ArrayHandler) correctHandlerVersion;
+				correctClassMetadataOn(arrayHandler.delegateTypeHandler(), classMetadata);
+			}
+		}
+
+		return correctHandlerVersion;
+	}    
+
+	private static void correctClassMetadataOn(TypeHandler4 typeHandler, ClassMetadata classMetadata)
+	{
+		if (typeHandler instanceof StandardReferenceTypeHandler) {
+			StandardReferenceTypeHandler handler = (StandardReferenceTypeHandler) typeHandler;
+			handler.classMetadata(classMetadata);
+		}
+	}
+	
     ArrayType arrayType(Object obj) {
     	ReflectClass claxx = reflector().forObject(obj);
         if (! claxx.isArray()) {
