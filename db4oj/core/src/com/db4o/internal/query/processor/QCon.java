@@ -46,12 +46,6 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     @decaf.Public
     Collection4 i_joins;
 
-    // positive indicates ascending, negative indicates descending
-    // value indicates ID supplied by ID generator.
-    // lower IDs are applied first
-    @decaf.Public
-    private int i_orderID = 0;
-
     // the parent of this constraint or null, if this is a root
     @decaf.Public
     protected QCon i_parent;
@@ -105,13 +99,6 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     public Constraint and(Constraint andWith) {
         synchronized (streamLock()) {
             return join(andWith, true);
-        }
-    }
-
-    void applyOrdering() {
-        if (hasOrdering()) {
-            QCon root = getRoot();
-            root.i_candidates.applyOrdering(i_candidates.i_ordered, i_orderID);
         }
     }
 
@@ -296,8 +283,6 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     		i_candidates.setCurrentConstraint(qcon);
     		qcon.setCandidates(i_candidates);
     		qcon.evaluateSimpleExec(i_candidates);
-    		qcon.applyOrdering();
-    		i_candidates.clearOrdering();
     	}
     	i_candidates.setCurrentConstraint(null);
     }
@@ -619,19 +604,10 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     public void setCandidates(QCandidates a_candidates) {
         i_candidates = a_candidates;
     }
-
-    void setOrdering(int a_ordering) {
-        i_orderID = a_ordering;
-    }
     
-    public int ordering() {
-    	return i_orderID;
-    }
-
     void setParent(QCon a_newParent) {
         i_parent = a_newParent;
     }
-
     
     /**
      * @param obj
@@ -657,10 +633,6 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 
     protected Object streamLock() {
         return i_trans.container().lock();
-    }
-
-    boolean supportsOrdering() {
-        return false;
     }
 
     void unmarshall(final Transaction a_trans) {
@@ -751,24 +723,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         return i_evaluator;
     }
 
-	public boolean requiresSort() {
-		if (hasOrdering()) {
-			return true;
-		}
-		Iterator4 i = iterateChildren();
-		while(i.moveNext()){
-			if(((QCon)i.current()).requiresSort()){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean hasOrdering() {
-		return i_orderID != 0;
-	}	
-	
-	public void setProcessedByIndex() {
+    public void setProcessedByIndex() {
 		internalSetProcessedByIndex();
 	}
 

@@ -17,7 +17,6 @@ public class STOIntegerWTTestCase extends com.db4o.db4ounit.common.soda.util.Sod
 	
 	public Object[] createData() {
 		return new Object[]{
-			new STOIntegerWTTestCase(1001),
 			new STOIntegerWTTestCase(99),
 			new STOIntegerWTTestCase(1),
 			new STOIntegerWTTestCase(909),
@@ -36,7 +35,7 @@ public class STOIntegerWTTestCase extends com.db4o.db4ounit.common.soda.util.Sod
 		q.constrain(STOIntegerWTTestCase.class);
 		q.descend("i_int").orderAscending();
 		
-		expectOrdered(q, new int[] { 5, 2,  1, 3, 0, 4, 6, 7 });
+		expectOrdered(q, new int[] { 6, 4, 1, 0, 2, 3, 5 });
 	}
 	
 	public void testDescending() {
@@ -44,7 +43,7 @@ public class STOIntegerWTTestCase extends com.db4o.db4ounit.common.soda.util.Sod
 		q.constrain(STOIntegerWTTestCase.class);
 		q.descend("i_int").orderDescending();
 		
-		expectOrdered(q, new int[] { 6, 4,  0, 3, 1, 2, 5, 7  });
+		expectOrdered(q, new int[] { 5, 3, 2, 0, 1, 4, 6 });
 	}
 	
 	public void testAscendingGreater(){
@@ -54,7 +53,7 @@ public class STOIntegerWTTestCase extends com.db4o.db4ounit.common.soda.util.Sod
 		qInt.constrain(new Integer(100)).greater();
 		qInt.orderAscending();
 		
-		expectOrdered(q, new int[] {3, 0, 4, 6});
+		expectOrdered(q, new int[] { 2, 3, 5 });
 	}
 }
 

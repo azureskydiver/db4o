@@ -72,7 +72,7 @@ public class QConClass extends QConObject{
 		//
 		if(i_candidates.wasLoadedFromClassIndex()){
 			if(i_evaluator.isDefault()){
-				if(! hasOrdering() && ! hasJoins()){
+				if(! hasJoins()){
 					if(i_classMetadata != null  && i_candidates.i_classMetadata != null){
 						if(i_classMetadata.getHigherHierarchy(i_candidates.i_classMetadata) == i_classMetadata){
 							return;

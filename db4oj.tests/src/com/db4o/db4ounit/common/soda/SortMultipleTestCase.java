@@ -89,6 +89,19 @@ public class SortMultipleTestCase extends AbstractDb4oTestCase {
 			store(TEST_DATA[dataIdx]);
 		}
 	}
+	
+	public void testSortFirstThenSecondAfterOr() {
+		Query query=newQuery(Data.class);
+		
+		query.descend("_first").constrain(2).smaller().or(
+				query.descend("_second").constrain(2).greater());
+		
+		query.descend("_first").orderAscending();
+		query.descend("_second").orderAscending();
+		
+		assertSortOrder(query, new int[]{0,1,2,4});
+	}
+
 
 	public void testSortFirstThenSecond() {
 		Query query=newQuery(Data.class);

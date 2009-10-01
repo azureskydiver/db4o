@@ -167,8 +167,9 @@ public class Statistics {
 		
 		public int compare(Tree a_to) {
 			return StringHandler
-			.compare(Const4.stringIO.write(((TreeString) a_to)._key),
-					Const4.stringIO.write(_key));
+				.compare(
+					Const4.stringIO.write(_key),
+					Const4.stringIO.write(((TreeString) a_to)._key));
 		}
 		
 		public Object key(){

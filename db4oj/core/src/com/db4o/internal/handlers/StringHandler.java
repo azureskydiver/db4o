@@ -141,10 +141,10 @@ public class StringHandler implements ValueTypeHandler, IndexableTypeHandler, Bu
             if (a_with == null) {
                 return 0;
             }
-            return 1;
+            return -1;
         }
         if (a_with == null) {
-            return -1;
+            return 1;
         }
         return compare(a_compare._buffer, a_with._buffer);
     }
@@ -158,10 +158,10 @@ public class StringHandler implements ValueTypeHandler, IndexableTypeHandler, Bu
         }
         for(int i = start;i < min;i++) {
             if (compare[i] != with[i]) {
-                return with[i] - compare[i];
+                return compare[i] - with[i];
             }
         }
-        return with.length - compare.length;
+        return compare.length - with.length;
     }
 
 	public void defragIndexEntry(DefragmentContextImpl context) {
@@ -234,10 +234,7 @@ public class StringHandler implements ValueTypeHandler, IndexableTypeHandler, Bu
     	return new PreparedComparison() {
 			public int compareTo(Object target) {
 				ByteArrayBuffer targetBuffer = val(target, context);
-				
-				// FIXME: Fix the compare method to return the right result  
-				//        after it is no longer referenced elsewhere.
-				return - compare(sourceBuffer, targetBuffer);
+				return compare(sourceBuffer, targetBuffer);
 			}
 		};
 

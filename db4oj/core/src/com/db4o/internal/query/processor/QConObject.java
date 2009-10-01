@@ -354,15 +354,6 @@ public class QConObject extends QCon {
         if (!processed) {
             res = evaluate(qc);
         }
-        if (hasOrdering() && res && qc.fieldIsAvailable()) {
-            Object cmp = qc.value();
-            if (cmp != null && i_field != null) {
-                PreparedComparison preparedComparisonBackup = _preparedComparison;
-                _preparedComparison = i_field.prepareComparison(context(), qc.value());
-                i_candidates.addOrder(new QOrder(this, qc));
-                _preparedComparison = preparedComparisonBackup;
-            }
-        }
         visit1(qc.getRoot(), this, res);
     }
 

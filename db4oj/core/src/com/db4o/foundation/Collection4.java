@@ -26,6 +26,13 @@ public class Collection4 implements Sequence4, Iterable4, DeepClone, Unversioned
 	public Collection4() {
 	}
 	
+	/**
+	 * For jdk11 compatibility only.
+	 */
+	@decaf.Ignore(except=decaf.Platform.JDK11)
+	public Collection4(int initialLength) {
+	}
+	
 	public Collection4(Object[] elements) {
 		addAll(elements);
 	}
