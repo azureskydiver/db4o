@@ -10,27 +10,49 @@ public class RevisionBasedMostRecentJarFileSelectionStrategy implements JarFileS
 	private final static Pattern JAR_NAME_PATTERN = Pattern.compile("db4o.*(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)-.*\\.jar");
 	private final static int REVISION_GROUP_IDX = 4;
 
-	private final int _numOthers;
+	private final int[] _selectedIndices;
 	
-	public RevisionBasedMostRecentJarFileSelectionStrategy(int numOthers) {
-		if(numOthers < 1) {
+	public RevisionBasedMostRecentJarFileSelectionStrategy(int... selectedIndices) {
+		if(selectedIndices.length < 1) {
 			throw new IllegalArgumentException();
 		}
-		_numOthers = numOthers;
+		for (int selIdx : selectedIndices) {
+			if(selIdx <= 0) {
+				throw new IllegalArgumentException();
+			}
+		}
+		Arrays.sort(selectedIndices);
+		_selectedIndices = selectedIndices;
 	}
 
 	public Db4oJarCollection select(File[] files) {
-		File[] jars = filterDb4oJars(files);
-		if(jars.length < (_numOthers + 1)) {
-			throw new IllegalArgumentException("At least " + (_numOthers + 1) + " db4o Jars are required. Found: " + jars.length);
+		return new Db4oJarCollection(selectJars(collectMatchingJars(files)));
+	}
+
+	private List<File> selectJars(File[] matchingJars) {
+		List<File> selectedJars = new ArrayList<File>(_selectedIndices.length);
+		selectedJars.add(matchingJars[0]);
+		for (int selIdxIdx = 0; selIdxIdx < _selectedIndices.length; selIdxIdx++) {
+			int selIdx = _selectedIndices[selIdxIdx];
+			if(selIdx >= matchingJars.length) {
+				File oldestJar = matchingJars[matchingJars.length - 1];
+				if(!selectedJars.contains(oldestJar)) {
+					selectedJars.add(oldestJar);
+				}
+				break;
+			}
+			selectedJars.add(matchingJars[selIdx]);
 		}
-		Arrays.sort(jars, new Db4oJarComparator(JAR_NAME_PATTERN, REVISION_GROUP_IDX));
-		if(jars.length > _numOthers + 1) {
-			File[] selectedJars = new File[_numOthers + 1];
-			System.arraycopy(jars, 0, selectedJars, 0, _numOthers + 1); 
-			jars = selectedJars;
+		return selectedJars;
+	}
+
+	private File[] collectMatchingJars(File[] files) {
+		File[] matchingJars = filterDb4oJars(files);
+		if(matchingJars.length < 2) {
+			throw new IllegalArgumentException("At least 2 db4o Jars are required. Found: " + matchingJars.length);
 		}
-		return new Db4oJarCollection(jars);
+		Arrays.sort(matchingJars, new Db4oJarComparator(JAR_NAME_PATTERN, REVISION_GROUP_IDX));
+		return matchingJars;
 	}
 
 	private File[] filterDb4oJars(File[] files) {

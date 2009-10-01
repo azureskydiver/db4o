@@ -58,10 +58,34 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 	private final PerformanceMonitoringReporter _reporter;
 	
     public static void main(String[] args) {
-        System.exit(new PerformanceMonitoringRunner(toFiles(args)).runMonitored());
+    	int[] selectedIndices = null;
+    	try {
+    		selectedIndices = parseSelectedIndices(args[0]);
+    	}
+    	catch(NumberFormatException exc) {
+    		System.err.println("Usage: PerformanceMonitoringRunner <selected indices, comma separated> <jar folder paths, space separated>");
+    		throw exc;
+    	}
+    	String[] files = extractFileArgs(args);
+        System.exit(new PerformanceMonitoringRunner(selectedIndices, toFiles(files)).runMonitored());
     }
 
-    private static File[] toFiles(String[] paths) {
+	private static String[] extractFileArgs(String[] args) {
+		String[] files = new String[args.length - 1];
+    	System.arraycopy(args, 1, files, 0, files.length);
+		return files;
+	}
+
+    private static int[] parseSelectedIndices(String selectedIdxStr) {
+    	String[] selectedIdxStrArr = selectedIdxStr.split(",");
+    	int[] selectedIndices = new int[selectedIdxStrArr.length];
+    	for (int selIdxIdx = 0; selIdxIdx < selectedIndices.length; selIdxIdx++) {
+			selectedIndices[selIdxIdx] = Integer.parseInt(selectedIdxStrArr[selIdxIdx]);
+		}
+		return selectedIndices;
+	}
+
+	private static File[] toFiles(String[] paths) {
     	File[] files = new File[paths.length];
     	for (int pathIdx = 0; pathIdx < paths.length; pathIdx++) {
 			files[pathIdx] = new File(paths[pathIdx]).getAbsoluteFile();
@@ -79,12 +103,12 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
     	return report.performanceOk() ? 0 : -99;
     }
 
-    public PerformanceMonitoringRunner() {
-    	this(null);
+    public PerformanceMonitoringRunner(int[] selectedIndices) {
+    	this(selectedIndices, null);
     }
 
-    public PerformanceMonitoringRunner(File[] libPaths) {
-    	_jarCollection = new FolderBasedDb4oJarRegistry(libPaths == null ? libPaths() : libPaths, new RevisionBasedMostRecentJarFileSelectionStrategy(1)).jarCollection();
+    public PerformanceMonitoringRunner(int[] selectedIndices, File[] libPaths) {
+    	_jarCollection = new FolderBasedDb4oJarRegistry(libPaths == null ? libPaths() : libPaths, new RevisionBasedMostRecentJarFileSelectionStrategy(selectedIndices)).jarCollection();
     	_reporter = new PerformanceMonitoringReporter(_jarCollection.currentJar().getName(), new SpeedTicketPerformanceStrategy(PERFORMANCE_PERCENTAGE_THRESHOLD));
     }
     
