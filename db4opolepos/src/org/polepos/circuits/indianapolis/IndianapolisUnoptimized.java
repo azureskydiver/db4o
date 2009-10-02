@@ -46,7 +46,6 @@ public class IndianapolisUnoptimized extends Circuit {
         add(new Lap("queryNotRange"));
         add(new Lap("queryOrTwoLevels"));
         add(new Lap("queryBigRangeFound"));
-        add(new Lap("queryByChildIdentity"));
         
         add(new Lap("getOneFromBigRangeQuery"));
         add(new Lap("getOneFromOrTwoLevelsQuery"));
