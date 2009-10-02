@@ -29,7 +29,7 @@ public class Arrays4 {
 	    return -1;
 	}
 
-	public static boolean areEqual(final byte[] x, final byte[] y) {
+	public static boolean equals(final byte[] x, final byte[] y) {
 		if (x == y) {
 			return true;
 		}
@@ -45,6 +45,30 @@ public class Arrays4 {
 			}
 		}
 		return true;
+	}
+	
+	public static boolean equals(final Object[] x, final Object[] y) {
+		if (x == y) {
+			return true;
+		}
+	    if (x == null) {
+	    	return false;
+	    }
+	    if (x.length != y.length) {
+	    	return false;
+	    }
+	    for (int i = 0; i < x.length; i++) {
+			if (!objectsAreEqual(y[i], x[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static boolean objectsAreEqual(Object x, Object y) {
+		if (x == y) return true;
+		if (x == null || y == null) return false;
+		return x.equals(y);
 	}
 
 	public static boolean containsInstanceOf(Object[] array, Class klass) {

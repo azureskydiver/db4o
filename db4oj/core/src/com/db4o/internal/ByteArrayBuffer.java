@@ -46,7 +46,7 @@ public class ByteArrayBuffer implements ReadWriteBuffer {
 	
 	public final boolean containsTheSame(ByteArrayBuffer other) {
 	    if (other != null) {
-	        return Arrays4.areEqual(_buffer, other._buffer);
+	        return Arrays4.equals(_buffer, other._buffer);
 	    }
 	    return false;
 	}
