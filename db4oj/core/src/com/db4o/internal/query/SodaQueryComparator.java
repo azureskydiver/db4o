@@ -12,15 +12,26 @@ public class SodaQueryComparator implements Comparator<Integer>, IntComparator {
 	
 	public static class Ordering {
 		
-		public final Direction direction;
-		public final String[] fieldPath;
+		@decaf.Public
+		private Direction _direction;
+		
+		@decaf.Public
+		private String[] _fieldPath;
 		
 		@decaf.Public
 		transient List<FieldMetadata> _resolvedPath;
 		
 		public Ordering(Direction direction, String... fieldPath) {
-			this.direction = direction;
-			this.fieldPath = fieldPath;
+			_direction = direction;
+			_fieldPath = fieldPath;
+		}
+
+		public Direction direction() {
+			return _direction;
+		}
+		
+		public String[] fieldPath() {
+			return _fieldPath;
 		}
 	}
 	
@@ -78,7 +89,7 @@ public class SodaQueryComparator implements Comparator<Integer>, IntComparator {
 
 	private void resolveFieldPaths(Ordering[] orderings) {
 		for (Ordering fieldPath : orderings) {
-			fieldPath._resolvedPath = resolveFieldPath(fieldPath.fieldPath);
+			fieldPath._resolvedPath = resolveFieldPath(fieldPath.fieldPath());
 		}
 	}
 
@@ -117,7 +128,7 @@ public class SodaQueryComparator implements Comparator<Integer>, IntComparator {
 		for (Ordering ordering : _orderings) {
 			int result = compareByField(x, y, ordering._resolvedPath);
 			if (result != 0) {
-				return ordering.direction.equals(Direction.ASCENDING)
+				return ordering.direction().equals(Direction.ASCENDING)
 					? result
 					: -result;
 			}
