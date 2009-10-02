@@ -43,6 +43,7 @@ public class Indianapolis extends Circuit {
 
         add(new Lap("queryRange"));
         add(new Lap("query5Links"));
+        add(new Lap("queryByChildIdentity"));
         add(new Lap("queryPreferShortPath"));
         add(new Lap("queryOr"));
         add(new Lap("queryOrRange"));
