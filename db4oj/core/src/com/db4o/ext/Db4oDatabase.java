@@ -95,7 +95,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
         if (null == other.i_signature || null == this.i_signature) {
         	return false;
         }
-		return Arrays4.areEqual(other.i_signature, this.i_signature);
+		return Arrays4.equals(other.i_signature, this.i_signature);
     }
 
     public int hashCode() {
