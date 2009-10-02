@@ -728,7 +728,7 @@ public abstract class QQueryBase implements InternalQuery, Unversioned {
 
 	private void removeExistingOrderingFor(String[] fieldPath) {
 		for (Ordering ordering : orderings()) {
-			if (Arrays.equals(ordering.fieldPath, fieldPath)) {
+			if (Arrays.equals(ordering.fieldPath(), fieldPath)) {
 				orderings().remove(ordering);
 				break;
 			}
