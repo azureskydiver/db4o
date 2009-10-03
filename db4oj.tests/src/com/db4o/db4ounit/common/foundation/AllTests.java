@@ -23,6 +23,7 @@ public class AllTests extends ReflectionTestSuite {
 			BufferTestCase.class,
 			CircularBufferTestCase.class,
 			Collection4TestCase.class,
+			Collections4TestCase.class,
 			CompositeIterator4TestCase.class,
 			CoolTestCase.class,
 			DynamicVariableTestCase.class,
