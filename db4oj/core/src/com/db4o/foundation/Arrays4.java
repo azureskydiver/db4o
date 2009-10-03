@@ -103,7 +103,9 @@ public class Arrays4 {
 	public static void sort(final Object[] array, final Comparison4 comparator) {
 		Algorithms4.qsort(new QuickSortable4() {
 			public void swap(int leftIndex, int rightIndex) {
+				final Object leftValue = array[leftIndex];
 				array[leftIndex] = array[rightIndex];
+				array[rightIndex] = leftValue;
 			}
 			
 			public int size() {

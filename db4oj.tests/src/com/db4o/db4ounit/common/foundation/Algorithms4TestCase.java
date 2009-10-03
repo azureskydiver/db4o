@@ -2,10 +2,13 @@
 
 package com.db4o.db4ounit.common.foundation;
 
+import java.util.*;
+
 import com.db4o.foundation.*;
 
 import db4ounit.*;
 
+@decaf.Remove
 public class Algorithms4TestCase implements TestCase {
 	
 	public static class QuickSortableIntArray implements QuickSortable4{
@@ -29,17 +32,27 @@ public class Algorithms4TestCase implements TestCase {
 			ints[leftIndex] = ints[rightIndex];
 			ints[rightIndex] = temp;
 		}
-		
-		public void assertSorted(){
-			for (int i = 0; i < ints.length; i++) {
-				Assert.areEqual( i + 1, ints[i]);
-			}
-		}
 	}
 	
-	public void testUnsorted(){
-		int[] ints = new int[]{ 3 , 5, 2 , 1, 4 };
-		assertQSort(ints);
+	public void testUnsortedSmall(){
+		assertQSort(3 , 5, 2 , 1, 4);
+	}
+	
+	public void testUnsortedBig() {
+		assertQSort(3, 5, 7, 1, 2, 4, 6, 9, 11, 8, 10, 12);
+	}
+	
+	public void testSingleElement(){
+		assertQSort(42);
+	}
+	
+	public void testTwoElements() {
+		assertQSort(1, 42);
+		assertQSort(42, 1);
+	}
+	
+	public void testDuplicates() {
+		assertQSort(2, 2, 1, 1, 5, 5, 5, 5, 5, 3, 3, 3);
 	}
 
 	public void testStackUsage(){
@@ -50,10 +63,12 @@ public class Algorithms4TestCase implements TestCase {
 		assertQSort(ints);
 	}
 
-	private void assertQSort(int[] ints) {
-		QuickSortableIntArray sample = new QuickSortableIntArray(ints);
+	private void assertQSort(int... ints) {
+		final int[] copy = Arrays.copyOf(ints, ints.length);
+		QuickSortableIntArray sample = new QuickSortableIntArray(copy);
 		Algorithms4.qsort(sample);
-		sample.assertSorted();
+		Arrays.sort(ints);
+		ArrayAssert.areEqual(ints, copy);
 	}
 
 
