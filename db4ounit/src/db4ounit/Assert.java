@@ -134,9 +134,9 @@ public final class Assert {
 		fail(failureMessage(expected, actual));
 	}
 	
-	public static void areNotSame(Object expected, Object actual) {
-		if (expected != actual) return;
-		fail("Expecting not '" + expected + "'.");
+	public static void areNotSame(Object unexpected, Object actual) {
+		if (unexpected != actual) return;
+		fail("Expecting not '" + unexpected + "'.");
 	}
 	
 	private static String failureMessage(Object expected, Object actual) {
@@ -187,18 +187,18 @@ public final class Assert {
 		fail(failureMessage(new Long(expected), new Long(actual), operator, null));
 	}
 
-	public static void areNotEqual(long expected, long actual) {
-		areNotEqual(expected, actual, null);
+	public static void areNotEqual(long unexpected, long actual) {
+		areNotEqual(unexpected, actual, null);
 	}
 
-	public static void areNotEqual(long expected, long actual, String customMessage) {
-		if (actual != expected) return;
-		fail(expected, actual, "not equal to ", customMessage);
+	public static void areNotEqual(long unexpected, long actual, String customMessage) {
+		if (actual != unexpected) return;
+		fail(unexpected, actual, "not equal to ", customMessage);
 	}
 
-	public static void areNotEqual(Object notExpected, Object actual) {
-		if (!Check.objectsAreEqual(notExpected, actual)) return;
-		fail("Expecting not '" + notExpected + "'");
+	public static void areNotEqual(Object unexpected, Object actual) {
+		if (!Check.objectsAreEqual(unexpected, actual)) return;
+		fail("Expecting not '" + unexpected + "'");
 	}
 
     public static void equalsAndHashcode(Object obj, Object same, Object other) {

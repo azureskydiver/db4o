@@ -10,6 +10,12 @@ import java.lang.reflect.*;
  * @exclude
  */
 public class Arrays4 {
+	
+	public static int[] copyOf(int[] src, int newLength) {
+		final int[] copy = new int[newLength];
+		System.arraycopy(src, 0, copy, 0, Math.min(src.length, newLength));
+		return copy;
+	}
 
 	public static int indexOfIdentity(Object[] array, Object element) {
 		for (int i = 0; i < array.length; i++) {
