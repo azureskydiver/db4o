@@ -64,7 +64,7 @@ public class Algorithms4TestCase implements TestCase {
 	}
 
 	private void assertQSort(int... ints) {
-		final int[] copy = Arrays.copyOf(ints, ints.length);
+		final int[] copy = Arrays4.copyOf(ints, ints.length);
 		QuickSortableIntArray sample = new QuickSortableIntArray(copy);
 		Algorithms4.qsort(sample);
 		Arrays.sort(ints);
