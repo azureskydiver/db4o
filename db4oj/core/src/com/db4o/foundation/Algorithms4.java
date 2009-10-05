@@ -7,16 +7,23 @@ package com.db4o.foundation;
  */
 public class Algorithms4 {
 
-	public static void qsort(QuickSortable4 sortable) {
-		qsort(sortable, 0, sortable.size());
+	private static final int QSORT_LENGTH_THRESHOLD = 7;
+
+	public static void sort(Sortable4 sortable) {
+		sort(sortable, 0, sortable.size());
 	}
 
-	public static void qsort(QuickSortable4 sortable, int start, int end) {
+	public static void sort(Sortable4 sortable, int start, int end) {
 		int length = end - start;
-		if (length < 7) {
+		if (length < QSORT_LENGTH_THRESHOLD) {
 			insertionSort(sortable, start, end);
 			return;
 		}
+		qsort(sortable, start, end);
+	}
+
+	public static void qsort(Sortable4 sortable, int start, int end) {
+		int length = end - start;
 		int middle = start + length / 2;
 		if (length > 7) {
 			int bottom = start;
@@ -63,16 +70,15 @@ public class Algorithms4 {
 		swap(sortable, b, end - length, length);
 		length = b - a;
 		if (length > 0) {
-			qsort(sortable, start, start + length);
+			sort(sortable, start, start + length);
 		}
 		length = d - c;
 		if (length > 0) {
-			qsort(sortable, end - length, end);
+			sort(sortable, end - length, end);
 		}
-
 	}
 
-	private static void insertionSort(QuickSortable4 sortable, int start,
+	public static void insertionSort(Sortable4 sortable, int start,
 			int end) {
 		for (int i = start + 1; i < end; i++) {
 			for (int j = i; j > start && sortable.compare(j - 1, j) > 0; j--) {
@@ -90,7 +96,7 @@ public class Algorithms4 {
 		return oldPartionIndex;
 	}
 
-	private static int middleValueIndex(QuickSortable4 sortable, int a, int b, int c) {
+	private static int middleValueIndex(Sortable4 sortable, int a, int b, int c) {
 		if (sortable.compare(a, b) < 0) {
 			if (sortable.compare(b, c) < 0) {
 				return b;
@@ -114,14 +120,14 @@ public class Algorithms4 {
 		}
 	}
 
-	private static void swap(QuickSortable4 sortable, int left, int right) {
+	private static void swap(Sortable4 sortable, int left, int right) {
 		if (left == right) {
 			return;
 		}
 		sortable.swap(left, right);
 	}
 	
-	private static void swap(QuickSortable4 sortable, int from, int to, int length) {
+	private static void swap(Sortable4 sortable, int from, int to, int length) {
 		while (length-- > 0) {
 			swap(sortable, from++, to++);
 		}
