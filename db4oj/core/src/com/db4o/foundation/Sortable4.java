@@ -6,7 +6,7 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public interface QuickSortable4 {
+public interface Sortable4 {
 	
 	public int size();
 	

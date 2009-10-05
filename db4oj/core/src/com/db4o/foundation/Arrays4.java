@@ -107,7 +107,7 @@ public class Arrays4 {
 
 	@decaf.Ignore(except=decaf.Platform.JDK11)
 	public static void sort(final Object[] array, final Comparison4 comparator) {
-		Algorithms4.qsort(new QuickSortable4() {
+		Algorithms4.sort(new Sortable4() {
 			public void swap(int leftIndex, int rightIndex) {
 				final Object leftValue = array[leftIndex];
 				array[leftIndex] = array[rightIndex];

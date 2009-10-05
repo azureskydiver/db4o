@@ -72,7 +72,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 	
 	@Override
 	public void sort(final QueryComparator cmp) {
-		Algorithms4.qsort(new QuickSortable4() {
+		Algorithms4.sort(new Sortable4() {
 			public void swap(int leftIndex, int rightIndex) {
 				_ids.swap(leftIndex, rightIndex);
 			}
@@ -87,7 +87,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 	
 	@Override
 	public void sortIds(final IntComparator cmp) {
-		Algorithms4.qsort(new QuickSortable4() {
+		Algorithms4.sort(new Sortable4() {
 			public void swap(int leftIndex, int rightIndex) {
 				_ids.swap(leftIndex, rightIndex);
 			}
