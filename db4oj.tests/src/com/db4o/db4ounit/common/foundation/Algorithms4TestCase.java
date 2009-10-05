@@ -11,7 +11,7 @@ import db4ounit.*;
 @decaf.Remove
 public class Algorithms4TestCase implements TestCase {
 	
-	public static class QuickSortableIntArray implements QuickSortable4{
+	public static class QuickSortableIntArray implements Sortable4{
 		
 		private int[] ints;
 		
@@ -66,7 +66,7 @@ public class Algorithms4TestCase implements TestCase {
 	private void assertQSort(int... ints) {
 		final int[] copy = Arrays4.copyOf(ints, ints.length);
 		QuickSortableIntArray sample = new QuickSortableIntArray(copy);
-		Algorithms4.qsort(sample);
+		Algorithms4.sort(sample);
 		Arrays.sort(ints);
 		ArrayAssert.areEqual(ints, copy);
 	}
