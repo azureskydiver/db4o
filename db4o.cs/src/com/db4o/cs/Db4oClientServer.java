@@ -14,6 +14,8 @@ import com.db4o.internal.*;
  * @since 7.5
  */
 public class Db4oClientServer {
+
+	public final static int ARBITRARY_PORT = -1;
 	
 	/**
 	 * creates a new {@link ServerConfiguration}

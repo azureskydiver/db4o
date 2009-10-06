@@ -28,13 +28,12 @@ public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile {
 	}
 	
 	protected static final int EXERCISES_COUNT = 3;
-	private static final int PORT = 0xDB40;
 	private static final String PASSWORD = "db4o";
 	private static final String USER = "db4o";
 	
 	public void setUp() {
 		_clock = new ClockMock();
-		_server = (ObjectServerImpl) Db4oClientServer.openServer(serverConfiguration(), tempFile(), PORT);
+		_server = (ObjectServerImpl) Db4oClientServer.openServer(serverConfiguration(), tempFile(), Db4oClientServer.ARBITRARY_PORT);
 		_server.grantAccess(USER, PASSWORD);		
 	}
 
@@ -79,7 +78,7 @@ public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile {
 	}
 
 	protected ExtObjectContainer openNewSession() {
-		return (ExtObjectContainer) Db4oClientServer.openClient(clientConfiguration(), "localhost", PORT, USER, PASSWORD);
+		return (ExtObjectContainer) Db4oClientServer.openClient(clientConfiguration(), "localhost", _server.ext().port(), USER, PASSWORD);
 	}
 
 	protected interface TwoClientsAction {
