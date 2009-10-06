@@ -162,6 +162,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         _index.remove(trans, createFieldIndexKey(parentID,  indexEntry));
     }
 
+    //TODO: Split into command query separation.
     public boolean alive() {
         if (_state == FieldMetadataState.AVAILABLE) {
             return true;
@@ -608,9 +609,11 @@ public class FieldMetadata extends ClassAspect implements StoredField {
 		    return;
 		}
         _config = containingClassConfig.configField(name);
-        if (Debug4.configureAllFields  && _config == null) {
-            _config = (Config4Field) containingClassConfig.objectField(_name);
-        }
+        if (Debug4.configureAllFields) {
+			if (_config == null) {
+			    _config = (Config4Field) containingClassConfig.objectField(_name);
+			}
+		}
 	}
     
     public void init(String name, int fieldTypeID, boolean isPrimitive, boolean isArray, boolean isNArray) {
@@ -1028,7 +1031,7 @@ public class FieldMetadata extends ClassAspect implements StoredField {
     }    
     
     public void defragAspect(final DefragmentContext context) {
-    	if (!alive()) {
+    	if (!alive() && !updating()) {
     		throw new IllegalStateException("Field '" + toString() + "' cannot be defragmented at this time.");
     	}
     	final TypeHandler4 correctTypeHandlerVersion = HandlerRegistry.correctHandlerVersion(context, getHandler(), _fieldType);
