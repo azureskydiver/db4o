@@ -14,8 +14,7 @@ public class MonitoredClientSocket4TestCase extends MonitoredSocket4TestCaseBase
 	
 	@Override
 	protected ServerConfiguration serverConfiguration() {
-		ServerConfiguration serverConfig = Db4oClientServer.newServerConfiguration();	
-		return serverConfig;
+		return Db4oClientServer.newServerConfiguration();
 	}
 
 	@Override

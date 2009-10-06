@@ -18,7 +18,6 @@ import db4ounit.extensions.fixtures.*;
 @decaf.Ignore
 public class ClientConnectionsTestCase extends TestWithTempFile implements OptOutAllButNetworkingCS {
 
-	private static final int PORT = 0xDB40;
 	private static final String USER = "db4o";
 	private static final String PASSWORD = "db4o";
 
@@ -50,7 +49,7 @@ public class ClientConnectionsTestCase extends TestWithTempFile implements OptOu
 	}
 
 	private ExtObjectContainer openNewSession() {
-		return (ExtObjectContainer) Db4oClientServer.openClient("localhost", PORT, USER, PASSWORD);
+		return (ExtObjectContainer) Db4oClientServer.openClient("localhost", _server.ext().port(), USER, PASSWORD);
 	}
 
 	private long connectedClientCount() {
@@ -62,7 +61,7 @@ public class ClientConnectionsTestCase extends TestWithTempFile implements OptOu
 	public void setUp() throws Exception {
 		super.setUp();
 		
-		_server = (ObjectServerImpl) Db4oClientServer.openServer(tempFile(), PORT);
+		_server = (ObjectServerImpl) Db4oClientServer.openServer(tempFile(), Db4oClientServer.ARBITRARY_PORT);
 		_server.grantAccess(USER, PASSWORD);
 		
 		// We depend on the order of client connection/disconnection event firing.
