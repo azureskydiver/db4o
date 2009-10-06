@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.references;
 
 import com.db4o.internal.*;
+import com.db4o.internal.references.*;
 
 import db4ounit.extensions.*;
 
@@ -18,7 +19,7 @@ public class ReferenceSystemIntegrationTestCase extends AbstractDb4oTestCase{
 	}
 	
 	public void testTransactionalReferenceSystem(){
-		TransactionalReferenceSystem transactionalReferenceSystem = new TransactionalReferenceSystem();
+		ReferenceSystem transactionalReferenceSystem = new TransactionalReferenceSystem();
 		assertAllRerefencesAvailableOnNew(transactionalReferenceSystem);
 		transactionalReferenceSystem.rollback();
 		assertEmpty(transactionalReferenceSystem);

@@ -8,6 +8,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.caching.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.freespace.*;
+import com.db4o.internal.references.*;
 import com.db4o.internal.slots.*;
 import com.db4o.internal.transactionlog.*;
 
@@ -34,7 +35,7 @@ public class LocalTransaction extends Transaction {
 	
 	private TransactionLogHandler _transactionLogHandler = new EmbeddedTransactionLogHandler();
 
-	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
+	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, ReferenceSystem referenceSystem) {
 		super(container, parentTransaction, referenceSystem);
 		_file = (LocalObjectContainer) container;
         i_pointerIo = new StatefulBuffer(this, Const4.POINTER_LENGTH);
@@ -763,6 +764,7 @@ public class LocalTransaction extends Transaction {
 
 	public void close() {
 		_transactionLogHandler.close();
+		discardReferenceSystem();
 	}
 	
 }

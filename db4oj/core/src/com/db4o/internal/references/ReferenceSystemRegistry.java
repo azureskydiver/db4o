@@ -1,8 +1,9 @@
 /* Copyright (C) 2007  Versant Inc.  http://www.db4o.com */
 
-package com.db4o.internal;
+package com.db4o.internal.references;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 
 
 /**
@@ -53,6 +54,7 @@ public class ReferenceSystemRegistry {
 
     public void removeReferenceSystem(ReferenceSystem referenceSystem) {
         _referenceSystems.remove(referenceSystem);
+        referenceSystem.discarded();
     }
 
     private static interface ReferenceSource {

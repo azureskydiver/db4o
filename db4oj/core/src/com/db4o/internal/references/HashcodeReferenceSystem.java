@@ -1,9 +1,10 @@
 /* Copyright (C) 2007  Versant Inc.  http://www.db4o.com */
 
-package com.db4o.internal;
+package com.db4o.internal.references;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 
 
 /**
@@ -126,6 +127,10 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
 		});
 		str.append("}");
 		return str.toString();
+	}
+
+	public void discarded() {
+		// do nothing
 	}
 	
 }

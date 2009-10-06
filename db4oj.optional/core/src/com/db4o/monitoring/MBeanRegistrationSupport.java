@@ -5,6 +5,9 @@ import java.lang.management.*;
 
 import javax.management.*;
 
+/**
+ * @exclude
+ */
 @decaf.Ignore
 public class MBeanRegistrationSupport {
 

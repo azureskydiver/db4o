@@ -6,6 +6,9 @@ import javax.management.*;
 import com.db4o.diagnostic.*;
 import com.db4o.monitoring.internal.*;
 
+/**
+ * @exclude
+ */
 @decaf.Ignore
 class Queries extends NotificationEmitterMBean implements QueriesMBean {
 

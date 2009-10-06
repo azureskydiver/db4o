@@ -6,6 +6,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.convert.*;
+import com.db4o.internal.references.*;
 import com.db4o.internal.slots.*;
 import com.db4o.internal.weakref.*;
 import com.db4o.io.*;
@@ -85,7 +86,7 @@ public class TransportObjectContainer extends LocalObjectContainer {
     	// do nothing here
     }
 
-	final public Transaction newTransaction(Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
+	public final Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem) {
 		if (null != parentTransaction) {
 			return parentTransaction;
 		}
@@ -222,6 +223,11 @@ public class TransportObjectContainer extends LocalObjectContainer {
 
 	public void blockSize(int size) {
 	    // do nothing, blocksize is always 1
+	}
+	
+	@Override
+	protected void closeTransaction() {
+		// do nothing
 	}
 
 	@Override

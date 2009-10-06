@@ -2,6 +2,9 @@ package com.db4o.monitoring.cs;
 
 import javax.management.*;
 
+/**
+ * @exclude
+ */
 @decaf.Ignore
 public class SynchronizedNetworking extends Networking {
 

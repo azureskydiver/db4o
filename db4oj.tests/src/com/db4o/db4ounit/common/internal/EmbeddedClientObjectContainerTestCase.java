@@ -8,6 +8,7 @@ import com.db4o.db4ounit.common.api.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.references.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -105,7 +106,7 @@ public class EmbeddedClientObjectContainerTestCase extends Db4oTestWithTempFile 
         // FIXME: Sharpen doesn't understand the null parameter (the third one), we had to add a cast
         //        to get sharpen to run through.
         
-        Transaction trans = new LocalTransaction(_server, _server.systemTransaction(), (TransactionalReferenceSystem)null) {
+        Transaction trans = new LocalTransaction(_server, _server.systemTransaction(), (ReferenceSystem)null) {
             public void close(boolean rollbackOnClose) {
                 super.close(rollbackOnClose);
                 closed.value = true;

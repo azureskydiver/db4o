@@ -3,6 +3,9 @@ package com.db4o.monitoring;
 
 import javax.management.*;
 
+/**
+ * @exclude
+ */
 @decaf.Ignore
 public abstract class NotificationEmitterMBean extends MBeanRegistrationSupport implements NotificationEmitter{
 

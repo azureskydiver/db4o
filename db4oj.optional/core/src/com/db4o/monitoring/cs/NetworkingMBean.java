@@ -5,6 +5,7 @@ package com.db4o.monitoring.cs;
 import com.db4o.monitoring.ResettableMBean;
 
 /**
+ * @exclude
  * JMX MBean for networking IO statistics.
  * 
  * @see MonitoredSocket4Factory

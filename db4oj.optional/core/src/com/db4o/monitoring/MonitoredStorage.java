@@ -3,7 +3,7 @@ package com.db4o.monitoring;
 import com.db4o.io.*;
 
 /**
- * Publishes JMX statistics through IOStatsMBean.
+ * Publishes storage statistics to JMX.
  */
 @decaf.Ignore
 public class MonitoredStorage extends StorageDecorator {

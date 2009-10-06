@@ -10,6 +10,9 @@ import com.db4o.ObjectContainer;
 import com.db4o.foundation.network.*;
 import com.db4o.monitoring.Db4oMBeans;
 
+/**
+ * @exclude
+ */
 @decaf.Ignore
 public class ClientMonitoredSocket4 extends MonitoredSocket4 {
 

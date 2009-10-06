@@ -10,6 +10,9 @@ import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.config.*;
 
+/**
+ * @publishes statistics about Queries to JMX.
+ */
 @decaf.Ignore
 public class QueryMonitoringSupport implements ConfigurationItem {
 

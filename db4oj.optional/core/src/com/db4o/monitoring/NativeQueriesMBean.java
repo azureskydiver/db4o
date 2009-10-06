@@ -2,9 +2,7 @@
 package com.db4o.monitoring;
 
 /**
- * Native queries statistics. 
- * 
- * In C/S mode only applicable to clients.
+ * @exclude
  */
 @decaf.Ignore
 public interface NativeQueriesMBean {

@@ -19,6 +19,7 @@ import com.db4o.internal.metadata.*;
 import com.db4o.internal.query.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
+import com.db4o.internal.references.*;
 import com.db4o.internal.replication.*;
 import com.db4o.internal.slots.*;
 import com.db4o.internal.threading.*;
@@ -98,6 +99,8 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 
 	private final Environment _environment;
 	
+	private ReferenceSystemFactory _referenceSystemFactory;
+	
 	protected ObjectContainerBase(Configuration config) {
     	_lock = new Object();
     	_config = (Config4Impl)config;
@@ -122,8 +125,9 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 			boolean ok = false;
 			synchronized (_lock) {
 				try {
+					initializeReferenceSystemFactory(_config);
 		        	initializeTransactions();
-		            initialize1(_config);
+		        	initialize1(_config);
 		        	openImpl();
 					initializePostOpen();
 					ok = true;
@@ -137,6 +141,10 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 			}
 			
 		}});
+	}
+	
+	private void initializeReferenceSystemFactory(Config4Impl config){
+		_referenceSystemFactory = config.referenceSystemFactory();
 	}
 	
 	public void withEnvironment(Runnable runnable) {
@@ -365,11 +373,14 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 		}
 		logMsg(3, toString());
 		synchronized (_lock) {
+			closeTransaction();
 			closeSystemTransaction();
 			stopSession();
 			shutdownDataStorage();
 		}
 	}
+	
+	protected abstract void closeTransaction();
 
 	protected abstract void closeSystemTransaction();
 
@@ -458,7 +469,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         _transaction = newUserTransaction();
     }
 
-	public abstract Transaction newTransaction(Transaction parentTransaction, TransactionalReferenceSystem referenceSystem);
+	public abstract Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem);
 	
 	public Transaction newUserTransaction(){
 	    return newTransaction(systemTransaction(), createReferenceSystem());
@@ -1072,7 +1083,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         }
 
         _references = WeakReferenceSupportFactory.forObjectContainer(this);
-
+        
         if (hasShutDownHook()) {
             Platform4.addShutDownHook(this);
         }
@@ -1097,8 +1108,8 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         initialize2NObjectCarrier();
     }
 
-    public final TransactionalReferenceSystem createReferenceSystem() {
-        TransactionalReferenceSystem referenceSystem = new TransactionalReferenceSystem();
+    public final ReferenceSystem createReferenceSystem() {
+        ReferenceSystem referenceSystem = _referenceSystemFactory.newReferenceSystem(this);
         _referenceSystemRegistry.addReferenceSystem(referenceSystem);
         return referenceSystem;
     }

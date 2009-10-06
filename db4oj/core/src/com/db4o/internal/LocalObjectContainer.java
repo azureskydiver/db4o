@@ -12,6 +12,7 @@ import com.db4o.internal.fileheader.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
+import com.db4o.internal.references.*;
 import com.db4o.internal.slots.*;
 
 
@@ -44,7 +45,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         super(config);
     }
     
-    public Transaction newTransaction(Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
+    public Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem) {
 		return new LocalTransaction(this, parentTransaction, referenceSystem);
 	}
 
