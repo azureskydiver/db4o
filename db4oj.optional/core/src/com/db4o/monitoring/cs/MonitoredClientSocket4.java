@@ -10,13 +10,10 @@ import com.db4o.ObjectContainer;
 import com.db4o.foundation.network.*;
 import com.db4o.monitoring.Db4oMBeans;
 
-/**
- * @exclude
- */
 @decaf.Ignore
-public class ClientMonitoredSocket4 extends MonitoredSocket4 {
+public class MonitoredClientSocket4 extends MonitoredSocket4Base {
 
-	protected ClientMonitoredSocket4(Socket4 socket) {
+	protected MonitoredClientSocket4(Socket4 socket) {
 		super(socket);		
 	}
 	
@@ -27,7 +24,14 @@ public class ClientMonitoredSocket4 extends MonitoredSocket4 {
 	}
 	
 	@Override
-	protected Networking produceMBean() {
-		return Db4oMBeans.newClientNetworkingStatsMBean(my(ObjectContainer.class));
+	protected Networking bean() {
+		if (null == _bean)
+		{
+			_bean = Db4oMBeans.newClientNetworkingStatsMBean(my(ObjectContainer.class)); 
+		}
+		
+		return _bean; 
 	}	
+	
+	private Networking _bean;
 }

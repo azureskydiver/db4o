@@ -21,7 +21,7 @@ class MonitoredServerSocket4 extends ServerSocket4Decorator {
 	}
 
 	public Socket4 accept() throws IOException {
-		return new MonitoredSocket4(_serverSocket.accept(), bean());
+		return new MonitoredServerSideClientSocket4(_serverSocket.accept(), bean());
 	}
 	
 	Networking bean() {
