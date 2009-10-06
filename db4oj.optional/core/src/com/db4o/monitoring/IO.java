@@ -5,6 +5,9 @@ import javax.management.*;
 
 import com.db4o.monitoring.internal.*;
 
+/**
+ * @exclude
+ */
 @decaf.Ignore
 class IO extends MBeanRegistrationSupport implements IOMBean {
 

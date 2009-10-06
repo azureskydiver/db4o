@@ -5,6 +5,7 @@ package com.db4o.internal.classindex;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
+import com.db4o.internal.references.*;
 
 /**
  * @exclude

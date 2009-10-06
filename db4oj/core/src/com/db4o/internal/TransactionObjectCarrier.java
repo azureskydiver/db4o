@@ -2,6 +2,7 @@
 
 package com.db4o.internal;
 
+import com.db4o.internal.references.*;
 import com.db4o.internal.slots.*;
 
 
@@ -10,7 +11,7 @@ import com.db4o.internal.slots.*;
  */
 class TransactionObjectCarrier extends LocalTransaction{
 	
-	TransactionObjectCarrier(ObjectContainerBase container, Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
+	TransactionObjectCarrier(ObjectContainerBase container, Transaction parentTransaction, ReferenceSystem referenceSystem) {
 		super(container, parentTransaction, referenceSystem);
 	}
 	

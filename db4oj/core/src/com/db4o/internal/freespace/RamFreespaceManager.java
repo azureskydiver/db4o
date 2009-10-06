@@ -16,6 +16,8 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
     
     private Tree _freeBySize;
     
+	private FreespaceListener _listener = NullFreespaceListener.INSTANCE;
+    
     public RamFreespaceManager(LocalObjectContainer file){
         super(file);
     }
@@ -24,8 +26,13 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         FreeSlotNode addressNode = new FreeSlotNode(address);
         addressNode.createPeer(length);
         _freeByAddress = Tree.add(_freeByAddress, addressNode);
-        _freeBySize = Tree.add(_freeBySize, addressNode._peer);
+        addToFreeBySize(addressNode._peer);
     }
+
+	private void addToFreeBySize(FreeSlotNode node) {
+		_freeBySize = Tree.add(_freeBySize, node);
+		_listener.slotAdded(node._key);
+	}
     
 	public Slot allocateTransactionLogSlot(int length) {
 		FreeSlotNode sizeNode = (FreeSlotNode) Tree.last(_freeBySize);
@@ -78,7 +85,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         if ((addressnode != null)
             && ((addressnode._key + addressnode._peer._key) == address)) {
             sizeNode = addressnode._peer;
-            _freeBySize = _freeBySize.removeNode(sizeNode);
+            removeFromFreeBySize(sizeNode);
             sizeNode._key += length;
             FreeSlotNode secondAddressNode = (FreeSlotNode) Tree
                 .findGreaterOrEqual(_freeByAddress, _finder);
@@ -88,7 +95,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
                 removeFromBothTrees(secondAddressNode._peer);
             }
             sizeNode.removeChildren();
-            _freeBySize = Tree.add(_freeBySize, sizeNode);
+            addToFreeBySize(sizeNode);
         } else {
             addressnode = (FreeSlotNode) Tree.findGreaterOrEqual(
                 _freeByAddress, _finder);
@@ -101,7 +108,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
                 addressnode.removeChildren();
                 sizeNode.removeChildren();
                 _freeByAddress = Tree.add(_freeByAddress, addressnode);
-                _freeBySize = Tree.add(_freeBySize, sizeNode);
+                addToFreeBySize(sizeNode);
             } else {
                 if (canDiscard(length)) {
                     return;
@@ -134,6 +141,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         }
             
         FreeSlotNode node = (FreeSlotNode) _finder._object;
+        _listener.slotRemoved(node._key);
         int blocksFound = node._key;
         int address = node._peer._key;
         _freeByAddress = _freeByAddress.removeNode(node._peer);
@@ -207,9 +215,14 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
     }
 
     private void removeFromBothTrees(FreeSlotNode sizeNode){
-        _freeBySize = _freeBySize.removeNode(sizeNode);
+        removeFromFreeBySize(sizeNode);
         _freeByAddress = _freeByAddress.removeNode(sizeNode._peer);
     }
+
+	private void removeFromFreeBySize(FreeSlotNode node) {
+		_freeBySize = _freeBySize.removeNode(node);
+		_listener.slotRemoved(node._key);
+	}
     
     public int slotCount() {
         return Tree.size(_freeByAddress);
@@ -273,5 +286,10 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
 		    _sb.append("\n");
 		}
 	}
+    
+	public void listener(FreespaceListener listener) {
+		_listener = listener;
+	}
+
 
 }

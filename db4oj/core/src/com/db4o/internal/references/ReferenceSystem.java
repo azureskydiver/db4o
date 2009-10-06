@@ -1,8 +1,9 @@
 /* Copyright (C) 2007  Versant Inc.  http://www.db4o.com */
 
-package com.db4o.internal;
+package com.db4o.internal.references;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 
 /**
  * @exclude
@@ -24,5 +25,7 @@ public interface ReferenceSystem {
 	public void rollback();
 	
 	public void traverseReferences(Visitor4 visitor);
+
+	public void discarded();
 
 }

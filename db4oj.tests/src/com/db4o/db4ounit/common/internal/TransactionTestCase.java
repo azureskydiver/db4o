@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.internal;
 
 import com.db4o.internal.*;
+import com.db4o.internal.references.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -15,7 +16,7 @@ public class TransactionTestCase extends AbstractDb4oTestCase implements OptOutM
 
     public void testRemoveReferenceSystemOnClose(){
         LocalObjectContainer container = (LocalObjectContainer) db();
-        TransactionalReferenceSystem referenceSystem = container.createReferenceSystem();
+        ReferenceSystem referenceSystem = container.createReferenceSystem();
         Transaction transaction = container.newTransaction(container.systemTransaction(), referenceSystem);
         
         referenceSystem.addNewReference(new ObjectReference(TEST_ID));

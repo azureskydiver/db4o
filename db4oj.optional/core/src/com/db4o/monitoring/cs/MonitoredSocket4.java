@@ -7,6 +7,9 @@ import java.nio.channels.*;
 
 import com.db4o.foundation.network.*;
 
+/**
+ * @exclude
+ */
 @decaf.Ignore
 class MonitoredSocket4 extends Socket4Decorator {
 	public MonitoredSocket4(Socket4 socket) {

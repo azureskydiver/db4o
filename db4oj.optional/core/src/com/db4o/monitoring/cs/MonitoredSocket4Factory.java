@@ -5,6 +5,9 @@ package com.db4o.monitoring.cs;
 import java.io.IOException;
 import com.db4o.foundation.network.*;
 
+/**
+ * @exclude
+ */
 @decaf.Ignore
 public class MonitoredSocket4Factory implements Socket4Factory {
 	public MonitoredSocket4Factory(Socket4Factory socketFactory) {

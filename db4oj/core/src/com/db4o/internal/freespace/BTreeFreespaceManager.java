@@ -23,6 +23,8 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
     private int _delegateIndirectionID;
 	
 	private int _delegationRequests;
+
+	private FreespaceListener _listener = NullFreespaceListener.INSTANCE;
 	
 	public BTreeFreespaceManager(LocalObjectContainer file) {
 		super(file);
@@ -32,6 +34,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	private void addSlot(Slot slot) {
 		_slotsByLength.add(transaction(), slot);
 		_slotsByAddress.add(transaction(), slot);
+		_listener.slotAdded(slot.length());
 	}
 	
 	public Slot allocateTransactionLogSlot(int length) {
@@ -185,6 +188,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	private void removeSlot(Slot slot) {
 		_slotsByLength.remove(transaction(), slot);
 		_slotsByAddress.remove(transaction(), slot);
+		_listener.slotRemoved(slot.length());
 	}
 
 	private BTreePointer searchBTree(BTree bTree, Slot slot, SearchTarget target) {
@@ -239,6 +243,10 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
         }finally{
             endDelegation();
         }
+	}
+
+	public void listener(FreespaceListener listener) {
+		_listener = listener;
 	}
 
 }

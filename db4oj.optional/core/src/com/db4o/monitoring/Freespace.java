@@ -1,0 +1,69 @@
+/* Copyright (C) 2009  Versant Corp.  http://www.db4o.com */
+
+package com.db4o.monitoring;
+
+import javax.management.*;
+
+import com.db4o.internal.freespace.*;
+import com.db4o.monitoring.internal.*;
+
+/**
+ * @exclude
+ */
+@decaf.Ignore
+public class Freespace extends NotificationEmitterMBean implements FreespaceMBean, FreespaceListener{
+	
+	private final TimedReading _reusedSlots = TimedReading.newPerSecond();
+	
+	private int _slotCount;
+	
+	private int _totalFreespace;
+	
+	public Freespace(ObjectName objectName) throws JMException {
+		super(objectName);
+	}
+
+	public double getAverageSlotSize() {
+		
+		// Preventing division by zero concurrency by using local var
+		double slotCount = _slotCount;  
+		if(slotCount == 0){
+			return 0;
+		}
+		
+		return _totalFreespace / slotCount;
+	}
+
+	public double getReusedSlotsPerSecond() {
+		return _reusedSlots.read();
+	}
+
+	public int getSlotCount() {
+		return _slotCount;
+	}
+
+	public int getTotalFreespace() {
+		return _totalFreespace;
+	}
+
+	public MBeanNotificationInfo[] getNotificationInfo() {
+		return new MBeanNotificationInfo[] {
+				new MBeanNotificationInfo(
+						new String[] { "Freespace" },
+						Notification.class.getName(),
+						"Notification about freespace manager"),
+			};
+	}
+
+	public void slotAdded(int size) {
+		_slotCount++;
+		_totalFreespace+=size;
+	}
+
+	public void slotRemoved(int size) {
+		_reusedSlots.increment();
+		_slotCount--;
+		_totalFreespace-=size;
+	}
+
+}

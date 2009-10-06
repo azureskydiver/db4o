@@ -6,6 +6,9 @@ import javax.management.*;
 
 import com.db4o.monitoring.*;
 
+/**
+ * @exclude
+ */
 @decaf.Ignore
 public class ClientConnections extends MBeanRegistrationSupport implements ClientConnectionsMBean {
 

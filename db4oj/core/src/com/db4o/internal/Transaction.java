@@ -7,6 +7,7 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
+import com.db4o.internal.references.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -40,11 +41,11 @@ public abstract class Transaction {
     
     private List4 _transactionListeners;
     
-    private final TransactionalReferenceSystem _referenceSystem;
+    private final ReferenceSystem _referenceSystem;
     
     private final Map<TransactionLocal<?>, Object> _locals = new HashMap<TransactionLocal<?>, Object>();
     
-    public Transaction(ObjectContainerBase container, Transaction systemTransaction, TransactionalReferenceSystem referenceSystem) {
+    public Transaction(ObjectContainerBase container, Transaction systemTransaction, ReferenceSystem referenceSystem) {
         _container = container;
         _systemTransaction = systemTransaction;
         _referenceSystem = referenceSystem;
@@ -87,12 +88,16 @@ public abstract class Transaction {
 		if (container() != null) {
 			checkSynchronization();
 			container().releaseSemaphores(this);
-			if(_referenceSystem != null){
-			    container().referenceSystemRegistry().removeReferenceSystem(_referenceSystem);
-			}
+			discardReferenceSystem();
 		}
 		if (rollbackOnClose) {
 			rollback();
+		}
+	}
+
+	protected void discardReferenceSystem() {
+		if(_referenceSystem != null){
+		    container().referenceSystemRegistry().removeReferenceSystem(_referenceSystem);
 		}
 	}
     

@@ -9,6 +9,9 @@ import com.db4o.ext.Db4oIllegalStateException;
 import com.db4o.internal.InternalObjectContainer;
 import com.db4o.internal.query.*;
 
+/**
+ * Publishes native query statistics to JMX.  
+ */
 @decaf.Ignore
 public class NativeQueryMonitoringSupport implements ConfigurationItem {
 

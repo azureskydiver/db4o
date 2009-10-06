@@ -610,7 +610,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return this;
 	}
 
-	ObjectReference hc_remove(ObjectReference findRef) {
+	public ObjectReference hc_remove(ObjectReference findRef) {
 		if (this == findRef) {
 			return hc_remove();
 		}
@@ -658,7 +658,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 
 	/***** IDTREE *****/
 
-	ObjectReference id_add(ObjectReference newRef) {
+	public ObjectReference id_add(ObjectReference newRef) {
 		newRef.id_init();
 		return id_add1(newRef);
 	}
@@ -725,7 +725,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		}
 	}
 
-	ObjectReference id_find(int id) {
+	public ObjectReference id_find(int id) {
 		int cmp = id - _id;
 		if (cmp > 0) {
 			if (_idSubsequent != null) {
@@ -775,7 +775,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return this;
 	}
 
-	ObjectReference id_remove(int id) {
+	public ObjectReference id_remove(int id) {
 		int cmp = id - _id;
 		if (cmp < 0) {
 			if (_idPreceding != null) {

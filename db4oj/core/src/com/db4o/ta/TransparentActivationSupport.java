@@ -9,6 +9,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.diagnostic.*;
+import com.db4o.internal.references.*;
 import com.db4o.reflect.*;
 
 // TODO: unbindOnClose should be configurable

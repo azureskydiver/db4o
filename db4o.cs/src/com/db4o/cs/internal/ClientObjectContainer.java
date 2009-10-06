@@ -20,6 +20,7 @@ import com.db4o.internal.convert.Converter;
 import com.db4o.internal.encoding.UnicodeStringIO;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
+import com.db4o.internal.references.*;
 import com.db4o.internal.slots.Pointer4;
 import com.db4o.io.Storage;
 import com.db4o.reflect.ReflectClass;
@@ -159,6 +160,11 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	public void backup(Storage targetStorage, String path) throws NotSupportedException {
 		throw new NotSupportedException();
 	}
+	
+	@Override
+	protected void closeTransaction() {
+		_transaction.close(false);
+	}
 
 	@Override
 	protected void closeSystemTransaction() {
@@ -255,7 +261,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		throw new IllegalStateException();
 	}
 
-	final public Transaction newTransaction(Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
+	final public Transaction newTransaction(Transaction parentTransaction, ReferenceSystem referenceSystem) {
 		return new ClientTransaction(this, parentTransaction, referenceSystem);
 	}
 

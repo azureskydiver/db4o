@@ -8,6 +8,9 @@ import com.db4o.internal.query.*;
 import com.db4o.monitoring.internal.*;
 import com.db4o.query.*;
 
+/**
+ * @exclude
+ */
 @decaf.Ignore
 public class NativeQueries extends NotificationEmitterMBean implements NativeQueriesMBean {
 	

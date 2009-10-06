@@ -159,6 +159,11 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer implements Em
 	}
 	
 	@Override
+	protected void closeTransaction() {
+		_transaction.close(false);
+	}
+	
+	@Override
 	protected void closeSystemTransaction() {
     	((LocalTransaction)systemTransaction()).close();
 	}

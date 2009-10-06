@@ -3,6 +3,7 @@
 package com.db4o.monitoring.cs;
 
 /**
+ * @exclude
  * JMX MBean for tracking client connections.
  * 
  * @since 7.12

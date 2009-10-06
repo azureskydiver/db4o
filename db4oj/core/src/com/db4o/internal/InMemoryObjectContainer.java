@@ -62,6 +62,11 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
     }
     
     @Override
+    protected void closeTransaction() {
+    	// do nothing
+    }
+    
+    @Override
     protected void closeSystemTransaction() {
     	// do nothing
     }

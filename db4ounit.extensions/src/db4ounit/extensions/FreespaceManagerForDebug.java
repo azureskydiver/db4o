@@ -73,5 +73,9 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
         return 0;
     }
 
+	public void listener(FreespaceListener listener) {
+		
+	}
+
 
 }

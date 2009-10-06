@@ -78,5 +78,10 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
 	public void commit() {
 		
 	}
+	
+	public void listener(FreespaceListener listener) {
+		
+	}
+
 
 }

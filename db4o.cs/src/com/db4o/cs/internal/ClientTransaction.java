@@ -5,6 +5,7 @@ package com.db4o.cs.internal;
 import com.db4o.cs.internal.messages.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.references.*;
 
 public final class ClientTransaction extends Transaction {
 
@@ -12,7 +13,7 @@ public final class ClientTransaction extends Transaction {
     
     protected Tree _objectRefrencesToGC;
     
-    ClientTransaction(ClientObjectContainer container, Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
+    ClientTransaction(ClientObjectContainer container, Transaction parentTransaction, ReferenceSystem referenceSystem) {
         super(container, parentTransaction, referenceSystem);
         _client = container;
     }

@@ -11,6 +11,9 @@ import com.db4o.events.*;
 import com.db4o.foundation.network.*;
 import com.db4o.monitoring.*;
 
+/**
+ * @exclude
+ */
 @decaf.Ignore
 class MonitoredServerSocket4 extends ServerSocket4Decorator {
 	public MonitoredServerSocket4(ServerSocket4 serverSocket) {

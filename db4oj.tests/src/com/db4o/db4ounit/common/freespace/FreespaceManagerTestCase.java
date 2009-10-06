@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.freespace;
 
+import java.util.*;
+
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
 
@@ -126,5 +128,46 @@ public class FreespaceManagerTestCase extends FreespaceManagerTestCaseBase{
 			}
 		}
 	}
+	
+	public void testListener(){
+		for (int i = 0; i < fm.length; i++) {
+			final ArrayList<Freespace> removed = new ArrayList<Freespace>();
+			final ArrayList<Freespace> added = new ArrayList<Freespace>();
+			fm[i].listener(new FreespaceListener() {
+			
+				public void slotRemoved(int size) {
+					removed.add(new Freespace(size));
+				}
+			
+				public void slotAdded(int size) {
+					added.add(new Freespace(size));
+				}
+			});
+			fm[i].free(new Slot(5, 10));
+			Assert.isTrue(added.contains(new Freespace(10)));
+			fm[i].getSlot(2);
+			Assert.isTrue(removed.contains(new Freespace(10)));
+			Assert.isTrue(added.contains(new Freespace(8)));
+		}
+		
+	}
+	
+	public static class Freespace{
+		
+		private final int _size;
+		
+		public Freespace(int size){
+			_size = size;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			Freespace other = (Freespace) obj;
+			return _size == other._size;
+		}
+		
+	}
+	
+	
 
 }

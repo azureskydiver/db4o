@@ -7,6 +7,9 @@ import javax.management.*;
 import com.db4o.monitoring.*;
 import com.db4o.monitoring.internal.*;
 
+/**
+ * @exclude
+ */
 @decaf.Ignore
 public class Networking extends MBeanRegistrationSupport implements NetworkingMBean {
 

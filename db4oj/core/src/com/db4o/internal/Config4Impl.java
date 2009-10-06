@@ -19,6 +19,7 @@ import com.db4o.internal.encoding.*;
 import com.db4o.internal.events.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.internal.references.*;
 import com.db4o.io.*;
 import com.db4o.messaging.*;
 import com.db4o.reflect.*;
@@ -184,6 +185,12 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private static final KeySpec SLOT_CACHE_SIZE_KEY = new KeySpec(30);
 	
 	private final static KeySpec TAINTED_KEY = new KeySpec(false);
+	
+	private final static KeySpec REFERENCE_SYSTEM_FACTORY_KEY = new KeySpec(new ReferenceSystemFactory() {
+		public ReferenceSystem newReferenceSystem(InternalObjectContainer container) {
+			return new TransactionalReferenceSystem();
+		}
+	});
 
 	//  is null in the global configuration until deepClone is called
 	private ObjectContainerBase        _container;
@@ -1132,4 +1139,14 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public Event4<EventArgs> prefetchSettingsChanged(){
 		return _prefetchSettingsChanged;
 	}
+
+	public void referenceSystemFactory(
+			ReferenceSystemFactory referenceSystemFactory) {
+		_config.put(REFERENCE_SYSTEM_FACTORY_KEY, referenceSystemFactory);
+	}
+	
+	public ReferenceSystemFactory referenceSystemFactory() {
+		return (ReferenceSystemFactory) _config.get(REFERENCE_SYSTEM_FACTORY_KEY);
+	}
+
 }

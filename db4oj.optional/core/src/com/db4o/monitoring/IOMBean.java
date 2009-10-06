@@ -5,6 +5,8 @@ package com.db4o.monitoring;
 /**
  * JMX MBean for IO statistics.
  * 
+ * @exclude
+ * 
  * @see MonitoredStorage
  */
 @decaf.Ignore
