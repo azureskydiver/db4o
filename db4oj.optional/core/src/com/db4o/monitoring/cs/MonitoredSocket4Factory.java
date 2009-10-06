@@ -19,7 +19,7 @@ public class MonitoredSocket4Factory implements Socket4Factory {
 	}
 	
 	public Socket4 createSocket(String hostName, int port) throws IOException {
-		return new ClientMonitoredSocket4(_socketFactory.createSocket(hostName, port));
+		return new MonitoredClientSocket4(_socketFactory.createSocket(hostName, port));
 	}
 
 	private Socket4Factory _socketFactory;
