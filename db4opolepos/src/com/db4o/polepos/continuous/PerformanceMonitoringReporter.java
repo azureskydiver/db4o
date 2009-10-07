@@ -11,10 +11,12 @@ public class PerformanceMonitoringReporter implements Reporter {
 	private final PerformanceComparisonStrategy _strategy;
 	private Map<CircuitLapKey, LapResults> _results;
 	private PerformanceReport _report;
+	private MeasurementType _measurementType;
 	
-	public PerformanceMonitoringReporter(String currentTeamName, PerformanceComparisonStrategy strategy) {
+	public PerformanceMonitoringReporter(String currentTeamName, MeasurementType measurementType, PerformanceComparisonStrategy strategy) {
 		_currentTeamName = currentTeamName;
 		_strategy = strategy;
+		_measurementType = measurementType;
 	}
 
 	public void startSeason() {
@@ -33,8 +35,7 @@ public class PerformanceMonitoringReporter implements Reporter {
 	private void checkLapResults(LapResults lapResults) {
 		Result currentTeamResult = lapResults.currentTeamResult();
 		for (Result otherTeamResult : lapResults) {
-			checkMeasurement(lapResults.setupIndex(), currentTeamResult, otherTeamResult, MeasurementType.TIME, currentTeamResult.getTime(), otherTeamResult.getTime());
-			checkMeasurement(lapResults.setupIndex(), currentTeamResult, otherTeamResult, MeasurementType.MEMORY, currentTeamResult.getMemory(), otherTeamResult.getMemory());
+			checkMeasurement(lapResults.setupIndex(), currentTeamResult, otherTeamResult, _measurementType.value(currentTeamResult), _measurementType.value(otherTeamResult));
 		}
 	}
 
@@ -42,7 +43,6 @@ public class PerformanceMonitoringReporter implements Reporter {
 			int setupIdx,
 			Result currentTeamResult,
 			Result otherTeamResult, 
-			MeasurementType measurementType,
 			long currentValue, 
 			long otherValue) {
 		if(!_strategy.acceptableDiff(currentValue, otherValue)) {
@@ -52,7 +52,7 @@ public class PerformanceMonitoringReporter implements Reporter {
 					currentTeamResult.getLap().name(),
 					_currentTeamName,
 					otherTeamResult.getTeam().name(),
-					measurementType,
+					_measurementType,
 					currentValue,
 					otherValue
 			);

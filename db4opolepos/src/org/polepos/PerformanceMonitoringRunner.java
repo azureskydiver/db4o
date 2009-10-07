@@ -55,7 +55,7 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 	private static final String SETTINGS_FILE = "settings/PerfCircuits.properties";
 
 	private final Db4oJarCollection _jarCollection;
-	private final PerformanceMonitoringReporter _reporter;
+	private final PerformanceMonitoringReporter[] _reporters;
 	
     public static void main(String[] args) {
     	int[] selectedIndices = null;
@@ -98,9 +98,13 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
     
     public int runMonitored() {
     	run(SETTINGS_FILE);
-    	PerformanceReport report = _reporter.performanceReport();
-    	report.print(new OutputStreamWriter(System.err));
-    	return report.performanceOk() ? 0 : -99;
+    	boolean performanceOk = true;
+    	for (PerformanceMonitoringReporter reporter : _reporters) {
+    		PerformanceReport report = reporter.performanceReport();
+    		report.print(new OutputStreamWriter(System.err));
+    		performanceOk &= report.performanceOk();
+		}
+    	return performanceOk ? 0 : -99;
     }
 
     public PerformanceMonitoringRunner(int[] selectedIndices) {
@@ -109,16 +113,19 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 
     public PerformanceMonitoringRunner(int[] selectedIndices, File[] libPaths) {
     	_jarCollection = new FolderBasedDb4oJarRegistry(libPaths == null ? libPaths() : libPaths, new RevisionBasedMostRecentJarFileSelectionStrategy(selectedIndices)).jarCollection();
-    	_reporter = new PerformanceMonitoringReporter(_jarCollection.currentJar().getName(), new SpeedTicketPerformanceStrategy(PERFORMANCE_PERCENTAGE_THRESHOLD));
+    	_reporters = new PerformanceMonitoringReporter[] {
+    			new PerformanceMonitoringReporter(_jarCollection.currentJar().getName(), MeasurementType.TIME, new SpeedTicketPerformanceStrategy(PERFORMANCE_PERCENTAGE_THRESHOLD)),
+    			//new PerformanceMonitoringReporter(_jarCollection.currentJar().getName(), MeasurementType.MEMORY, new SpeedTicketPerformanceStrategy(PERFORMANCE_PERCENTAGE_THRESHOLD)),
+    	};
     }
     
     @Override
     protected Reporter[] reporters() {
     	Reporter[] defaultReporters = DefaultReporterFactory.defaultReporters();
-    	Reporter[] allReporters = new Reporter[defaultReporters.length + 2];
-    	allReporters[0] = _reporter;
-    	allReporters[1] = new StdErrLoggingReporter();
-    	System.arraycopy(defaultReporters, 0, allReporters, 2, defaultReporters.length);
+    	Reporter[] allReporters = new Reporter[defaultReporters.length + _reporters.length + 1];
+    	System.arraycopy(_reporters, 0, allReporters, 0, _reporters.length);
+    	System.arraycopy(defaultReporters, 0, allReporters, _reporters.length, defaultReporters.length);
+    	allReporters[allReporters.length - 1] = new StdErrLoggingReporter();
     	return allReporters;
     }
     
@@ -135,20 +142,20 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 		return new Circuit[] {
 			 new Melbourne(),
 			 new SepangMulti(),
-			 new Sepang(),
-			 new Bahrain(),
-			 new Imola(),
-			 new Barcelona(),
-			 new Monaco(),
-			 new Nurburgring(),
-			 new Montreal(),
-			 new Indianapolis(),
-			 new IndianapolisUnoptimized(),
-			 new Magnycours(),
-			 new Silverstone(),
-			 new Hockenheim(),
-			 new Hungaroring(),
-			 new Istanbul(),
+//			 new Sepang(),
+//			 new Bahrain(),
+//			 new Imola(),
+//			 new Barcelona(),
+//			 new Monaco(),
+//			 new Nurburgring(),
+//			 new Montreal(),
+//			 new Indianapolis(),
+//			 new IndianapolisUnoptimized(),
+//			 new Magnycours(),
+//			 new Silverstone(),
+//			 new Hockenheim(),
+//			 new Hungaroring(),
+//			 new Istanbul(),
 		};
 	}
 

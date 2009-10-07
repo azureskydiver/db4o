@@ -81,19 +81,21 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 		Assert.areEqual(current.length, expectations.length);
 		final int numTurns = current.length;
 		final int numLaps = current[0].length;
-		PerformanceComparisonStrategy strategy = initializeStrategyMock(current, other, expectations);
-		PerformanceMonitoringReporter reporter = new PerformanceMonitoringReporter(CURRENT_TEAM_NAME, strategy);
-		reporter.startSeason();
-		Circuit circuit = new Uberlandia();
-		TurnSetup[] setups = createTurnSetups(numTurns);
-		Lap[] laps = createLaps(numLaps);
-		reporter.sendToCircuit(circuit);
-		reportResults(reporter, circuit, setups, laps, CURRENT_TEAM_NAME, current);
-		reportResults(reporter, circuit, setups, laps, OTHER_TEAM_NAME, other);
-		reporter.endSeason();
-		PerformanceReport report = reporter.performanceReport();
-		verify(strategy);
-		assertPerformanceReport(current, other, expectations, report);
+		for (MeasurementType measurementType : MeasurementType.values()) {
+			PerformanceComparisonStrategy strategy = initializeStrategyMock(current, other, expectations, measurementType);
+			PerformanceMonitoringReporter reporter = new PerformanceMonitoringReporter(CURRENT_TEAM_NAME, measurementType, strategy);
+			reporter.startSeason();
+			Circuit circuit = new Uberlandia();
+			TurnSetup[] setups = createTurnSetups(numTurns);
+			Lap[] laps = createLaps(numLaps);
+			reporter.sendToCircuit(circuit);
+			reportResults(reporter, circuit, setups, laps, CURRENT_TEAM_NAME, current);
+			reportResults(reporter, circuit, setups, laps, OTHER_TEAM_NAME, other);
+			reporter.endSeason();
+			PerformanceReport report = reporter.performanceReport();
+			verify(strategy);
+			assertPerformanceReport(current, other, expectations, report, measurementType);
+		}
 	}
 
 	private void reportResults(Reporter reporter, Circuit circuit, TurnSetup[] setups, Lap[] laps, String teamName, Reading[][] readings) {
@@ -109,26 +111,22 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 		reporter.report(team, car, setups, turnResults);
 	}
 
-	private void assertPerformanceReport(Reading[][] current, Reading[][] other, ReadingExpectation[][] expectations, PerformanceReport report) {
+	private void assertPerformanceReport(Reading[][] current, Reading[][] other, ReadingExpectation[][] expectations, PerformanceReport report, MeasurementType measurementType) {
 		List<PerformanceFailure> failures = report.failures();
-		int expectedFailureCount = countFailures(expectations);
+		int expectedFailureCount = countFailures(expectations, measurementType);
 		Assert.areEqual(expectedFailureCount == 0, report.performanceOk());
 		Assert.areEqual(expectedFailureCount, failures.size());
+		MeasurementTypeExtractor extractor = EXTRACTORS.get(measurementType);
 		for (PerformanceFailure failure : failures) {
 			int lapIdx = lapIdx(failure.lapName);
 			int turnIdx = failure.setupIdx;
 			ReadingExpectation curExp = expectations[turnIdx][lapIdx];
 			Reading currentReading = current[turnIdx][lapIdx];
 			Reading otherReading = other[turnIdx][lapIdx];
-			switch(failure.measurementType) {
-				case TIME:
-					Assert.isFalse(curExp.timeOk);
-					assertFailureValues(failure, currentReading.time, otherReading.time);
-					break;
-				case MEMORY:
-					Assert.isFalse(curExp.memoryOk);
-					assertFailureValues(failure, currentReading.memory, otherReading.memory);
-					break;
+			if(failure.measurementType == measurementType) {
+				Assert.isFalse(extractor.expectedValue(curExp));
+				assertFailureValues(failure, extractor.actualValue(currentReading), extractor.actualValue(otherReading));
+				break;
 			}
 		}
 	}
@@ -163,14 +161,18 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 		return setups;
 	}
 
-	private PerformanceComparisonStrategy initializeStrategyMock(Reading[][] current, Reading[][] other, ReadingExpectation[][] expectations) {
+	private PerformanceComparisonStrategy initializeStrategyMock(Reading[][] current, Reading[][] other, ReadingExpectation[][] expectations, MeasurementType measurementType) {
 		PerformanceComparisonStrategy strategy = createMock(PerformanceComparisonStrategy.class);
-		for(int turnIdx = 0; turnIdx < current.length; turnIdx++) {
+		MeasurementTypeExtractor extractor = EXTRACTORS.get(measurementType);
+		//for(int turnIdx = 0; turnIdx < current.length; turnIdx++) {
+			int turnIdx = current.length - 1;
 			for(int lapIdx = 0; lapIdx < current[0].length; lapIdx++) {
-				expect(strategy.acceptableDiff(current[turnIdx][lapIdx].time, other[turnIdx][lapIdx].time)).andReturn(expectations[turnIdx][lapIdx].timeOk);
-				expect(strategy.acceptableDiff(current[turnIdx][lapIdx].memory, other[turnIdx][lapIdx].memory)).andReturn(expectations[turnIdx][lapIdx].memoryOk);
+				long actualCurrent = extractor.actualValue(current[turnIdx][lapIdx]);
+				long actualOther = extractor.actualValue(other[turnIdx][lapIdx]);
+				boolean expReturn = extractor.expectedValue(expectations[turnIdx][lapIdx]);
+				expect(strategy.acceptableDiff(actualCurrent, actualOther)).andReturn(expReturn);
 			}
-		}
+		//}
 		replay(strategy);
 		return strategy;
 	}
@@ -213,19 +215,18 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 		return expectations;
 	}
 	
-	private static int countFailures(ReadingExpectation[][] expectations) {
+	private static int countFailures(ReadingExpectation[][] expectations, MeasurementType measurementType) {
 		int numFailures = 0;
-		for (int turnIdx = 0; turnIdx < expectations.length; turnIdx++) {
+		MeasurementTypeExtractor extractor = EXTRACTORS.get(measurementType);
+		//for (int turnIdx = 0; turnIdx < expectations.length; turnIdx++) {
+		int turnIdx = expectations.length - 1;
 			for (int lapIdx = 0; lapIdx < expectations[0].length; lapIdx++) {
 				ReadingExpectation curExp = expectations[turnIdx][lapIdx];
-				if(!curExp.timeOk) {
-					numFailures++;
-				}
-				if(!curExp.memoryOk) {
+				if(!extractor.expectedValue(curExp)) {
 					numFailures++;
 				}
 			}
-		}
+		//}
 		return numFailures;
 	}
 
@@ -320,5 +321,34 @@ public class PerformanceMonitoringReporterTestCase implements TestCase {
 		public String name() {
 			return _name;
 		}
+	}
+	
+	private static interface MeasurementTypeExtractor {
+		boolean expectedValue(ReadingExpectation exp);
+		long actualValue(Reading reading);
+	}
+	
+	private static Map<MeasurementType, MeasurementTypeExtractor> EXTRACTORS;
+	
+	static {
+		EXTRACTORS = new HashMap<MeasurementType, MeasurementTypeExtractor>();
+		EXTRACTORS.put(MeasurementType.TIME, new MeasurementTypeExtractor()  {
+			public boolean expectedValue(ReadingExpectation exp) {
+				return exp.timeOk;
+			}
+			
+			public long actualValue(Reading reading) {
+				return reading.time;
+			}
+		});
+		EXTRACTORS.put(MeasurementType.MEMORY, new MeasurementTypeExtractor()  {
+			public boolean expectedValue(ReadingExpectation exp) {
+				return exp.memoryOk;
+			}
+			
+			public long actualValue(Reading reading) {
+				return reading.memory;
+			}
+		});
 	}
 }
