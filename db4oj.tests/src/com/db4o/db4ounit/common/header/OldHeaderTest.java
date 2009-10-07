@@ -11,7 +11,7 @@ import com.db4o.foundation.io.*;
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
-public class OldHeaderTest implements TestCase, OptOutNoFileSystemData {
+public class OldHeaderTest implements TestLifeCycle, OptOutNoFileSystemData {
     
     public void test() throws IOException {
     	final String originalFilePath = originalFilePath();
@@ -42,4 +42,15 @@ public class OldHeaderTest implements TestCase, OptOutNoFileSystemData {
     private static String dbFilePath() {
     	return WorkspaceServices.workspaceTestFilePath("db4oVersions/db4o_5.5.2.db4o");
     }
+
+	public void setUp() throws Exception {
+		
+	}
+
+	public void tearDown() throws Exception {
+		String tempTestFilePath = dbFilePath();
+		if (File4.exists(tempTestFilePath)) {
+			File4.delete(tempTestFilePath);
+		}
+	}
 }
