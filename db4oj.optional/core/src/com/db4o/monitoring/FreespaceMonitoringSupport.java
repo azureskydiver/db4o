@@ -19,7 +19,7 @@ import com.db4o.internal.slots.*;
 public class FreespaceMonitoringSupport implements ConfigurationItem {
 
 	public void apply(InternalObjectContainer container) {
-		if(! (container instanceof LocalObjectContainer)){
+		if(! (container instanceof LocalObjectContainer) || container.configImpl().isReadOnly()){
 			return;
 		}
 		LocalObjectContainer localObjectContainer = (LocalObjectContainer) container;
