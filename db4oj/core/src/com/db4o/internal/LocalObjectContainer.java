@@ -517,19 +517,17 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
         readHeaderVariablePart();
         
-        if (!_config.isReadOnly()) {
-			_freespaceManager = AbstractFreespaceManager.createNew(this,
-					_systemData.freespaceSystem());
-			_freespaceManager.read(_systemData.freespaceID());
-			_freespaceManager.start(_systemData.freespaceAddress());
-		}
+        if(_config.isReadOnly()) {
+        	return;
+        }
+        
+		_freespaceManager = AbstractFreespaceManager.createNew(this,
+				_systemData.freespaceSystem());
+		_freespaceManager.read(_systemData.freespaceID());
+		_freespaceManager.start(_systemData.freespaceAddress());
         
         if(freespaceMigrationRequired()){
         	migrateFreespace();
-        }
-        
-        if(_config.isReadOnly()) {
-        	return;
         }
         
         writeHeader(true, false);
