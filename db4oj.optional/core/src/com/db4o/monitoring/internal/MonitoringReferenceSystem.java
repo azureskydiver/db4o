@@ -75,6 +75,9 @@ public class MonitoringReferenceSystem extends TransactionalReferenceSystemBase 
 	}
 	
 	private void referenceCountChanged(int changedBy) {
+		if(changedBy == 0){
+			return;
+		}
 		_referenceCount += changedBy;
 		_referenceSystemListener.notifyReferenceCountChanged(changedBy);
 	}

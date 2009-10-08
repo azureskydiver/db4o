@@ -4,11 +4,8 @@ package com.db4o.monitoring;
 
 import java.util.*;
 
-import javax.management.*;
-
 import com.db4o.config.*;
 import com.db4o.events.*;
-import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.references.*;
 import com.db4o.internal.references.ReferenceSystem;
@@ -32,7 +29,7 @@ public class ReferenceSystemMonitoringSupport implements ConfigurationItem {
 		private ReferenceSystemListener mBeanFor(InternalObjectContainer container) {
 			com.db4o.monitoring.ReferenceSystem mBean = _mBeans.get(container.toString());
 			if(mBean == null){
-				mBean = newReferenceSystemMBean(container);
+				mBean = Db4oMBeans.newReferenceSystemMBean(container);
 				addClosingListener(container, mBean);
 				_mBeans.put(container.toString(), mBean);
 			}
@@ -53,14 +50,6 @@ public class ReferenceSystemMonitoringSupport implements ConfigurationItem {
 
 	public void apply(InternalObjectContainer container) {
 		
-	}
-
-	private static com.db4o.monitoring.ReferenceSystem newReferenceSystemMBean(InternalObjectContainer container) {
-		try {
-			return new com.db4o.monitoring.ReferenceSystem(Db4oMBeans.mBeanNameFor(ReferenceSystemMBean.class, container.toString()));
-		} catch (JMException e) {
-			throw new Db4oIllegalStateException(e);
-		}
 	}
 
 	public void prepare(Configuration configuration) {

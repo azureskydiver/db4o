@@ -11,6 +11,7 @@ import com.db4o.cs.internal.messages.*;
 import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.monitoring.cs.*;
 
 import db4ounit.*;
 
@@ -40,10 +41,11 @@ public class MonitoredServerSocket4TestCase extends MonitoredSocket4TestCaseBase
 
 	@Override
 	protected ServerConfiguration serverConfiguration() {
-		ServerConfiguration serverConfig = Db4oClientServer.newServerConfiguration();		
+		ServerConfiguration serverConfig = Db4oClientServer.newServerConfiguration();
+		serverConfig.common().add(new NetworkingMonitoringSupport());
 		configurePingTimeouts(serverConfig.networking());
 		
-		setupNewSocketFactory(serverConfig.networking());		
+		setupCountingSocketFactory(serverConfig.networking());		
 			
 		configureClock(serverConfig.common().environment());
 		return serverConfig;

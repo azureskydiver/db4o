@@ -2,11 +2,8 @@
 
 package com.db4o.monitoring;
 
-import javax.management.*;
-
 import com.db4o.config.*;
 import com.db4o.events.*;
-import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
@@ -24,7 +21,7 @@ public class FreespaceMonitoringSupport implements ConfigurationItem {
 		}
 		LocalObjectContainer localObjectContainer = (LocalObjectContainer) container;
 		FreespaceManager freespaceManager = localObjectContainer.freespaceManager();
-		final Freespace freespace = newFreespaceMBean(container);
+		final Freespace freespace = Db4oMBeans.newFreespaceMBean(container);
 		freespaceManager.listener(freespace);
 		addClosingListener(container, freespace);
 		freespaceManager.traverse(new Visitor4<Slot>() {
@@ -47,14 +44,6 @@ public class FreespaceMonitoringSupport implements ConfigurationItem {
 
 	public void prepare(Configuration configuration) {
 		// do nothing
-	}
-	
-	private static Freespace newFreespaceMBean(InternalObjectContainer container) {
-		try {
-			return new Freespace(Db4oMBeans.mBeanNameFor(FreespaceMBean.class, container.toString()));
-		} catch (JMException e) {
-			throw new Db4oIllegalStateException(e);
-		}
 	}
 
 

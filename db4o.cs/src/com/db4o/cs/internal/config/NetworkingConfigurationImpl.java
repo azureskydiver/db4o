@@ -2,6 +2,8 @@
 
 package com.db4o.cs.internal.config;
 
+import java.util.*;
+
 import com.db4o.cs.config.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
@@ -68,7 +70,9 @@ public class NetworkingConfigurationImpl implements NetworkingConfiguration {
 	}
 
 	private <T> T my(Class<T> type) {
-		for (Object o : _config.environmentContributions()) {
+		List environmentContributions = _config.environmentContributions();
+		for (int i = environmentContributions.size() - 1; i >= 0 ; i--) {
+			Object o = environmentContributions.get(i);
 			if (type.isInstance(o)) {
 				return type.cast(o);
 			}
