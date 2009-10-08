@@ -305,19 +305,7 @@
 
 	</target>
 
-	<target name="prepare.bnd" depends="init">
-		<mkdir dir="${dir.dist.java.temp}/bnd" />
-		<copy todir="${dir.dist.java.temp}/bnd">
-			<fileset dir="${dir.config}/osgi/bnd">
-				<include name="*.bnd"/>
-			</fileset>
-			<filterset>
-				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
-			</filterset>
-		</copy>
-	</target>
-	
-	<target name="build.db4ojdk1.5" depends="prepare.bnd">
+	<target name="build.db4ojdk1.5" depends="init">
 		<mkdir dir="${dir.dist.classes.jdk1.5}" />
 
 		<javac  
@@ -338,7 +326,7 @@
 			eclipse="false" 
 			failok="false" 
 			exceptions="true" 
-			files="${dir.dist.java.temp}/bnd/com.db4o.core.java5.bnd" 
+			files="${dir.config}/osgi/bnd/com.db4o.core.java5.bnd" 
 			output="${file.jdk1.5.jar}"/>		
 		
 		<mkdir dir="${dir.dist.classes.jdk1.5.cs}" />
@@ -361,7 +349,7 @@
 			eclipse="false" 
 			failok="false" 
 			exceptions="true" 
-			files="${dir.dist.java.temp}/bnd/com.db4o.cs.java5.bnd" 
+			files="${dir.config}/osgi/bnd/com.db4o.cs.java5.bnd" 
 			output="${file.jdk1.5.cs.jar}"/>
 
 		<mkdir dir="${dir.dist.classes.jdk1.5.optional}" />
@@ -385,7 +373,7 @@
 			eclipse="false" 
 			failok="false" 
 			exceptions="true" 
-			files="${dir.dist.java.temp}/bnd/com.db4o.optional.java5.bnd" 
+			files="${dir.config}/osgi/bnd/com.db4o.optional.java5.bnd" 
 			output="${file.jdk1.5.optional.jar}"/>
 	</target>
 	
@@ -744,13 +732,13 @@
 		</jar>
 	</target>
 
-	<target name="build.nodep1.5" depends="unjar.bloat,prepare.bnd">
+	<target name="build.nodep1.5" depends="unjar.bloat">
 		<bnd 
 			classpath="${dir.dist.classes.jdk1.5};${dir.dist.classes.jdk1.5.cs};${dir.dist.classes.jdk1.5.optional};${dir.dist.classes.jdk1.5.instrumentation};${dir.dist.classes.jdk1.5.nqopt};${dir.dist.classes.jdk1.5.taj};${dir.dist.classes.jdk1.5.db4otools};${dir.dist.classes.bloat}" 
 			eclipse="false" 
 			failok="false" 
 			exceptions="true" 
-			files="${dir.dist.java.temp}/bnd/com.db4o.java5.bnd" 
+			files="${dir.config}/osgi/bnd/com.db4o.java5.bnd" 
 			output="${file.jdk1.5.nodep.jar}"/>
 	</target>
 	
