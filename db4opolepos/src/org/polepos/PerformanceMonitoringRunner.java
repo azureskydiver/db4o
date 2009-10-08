@@ -125,7 +125,7 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
     	Reporter[] allReporters = new Reporter[defaultReporters.length + _reporters.length + 1];
     	System.arraycopy(_reporters, 0, allReporters, 0, _reporters.length);
     	System.arraycopy(defaultReporters, 0, allReporters, _reporters.length, defaultReporters.length);
-    	allReporters[allReporters.length - 1] = new StdErrLoggingReporter();
+    	allReporters[allReporters.length - 1] = new TimeThresholdLoggingReporter(_jarCollection.currentJar().getName()); // new StdErrLoggingReporter();
     	return allReporters;
     }
     
