@@ -49,11 +49,9 @@ public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile {
 		super.tearDown();
 	}
 	
-	protected CountingSocket4Factory setupNewSocketFactory(NetworkingConfiguration networkConfig) {
-		CountingSocket4Factory socketFactory = new CountingSocket4Factory(new MonitoredSocket4Factory(networkConfig.socketFactory()));
+	protected void setupCountingSocketFactory(NetworkingConfiguration networkConfig) {
+		CountingSocket4Factory socketFactory = new CountingSocket4Factory(networkConfig.socketFactory());
 		networkConfig.socketFactory(socketFactory);
-		
-		return socketFactory;
 	}
 
 	protected CountingSocket4Factory configuredSocketFactoryFor(ObjectContainer container) {
@@ -172,6 +170,6 @@ public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile {
 	}
 
 	private ObjectServerImpl _server;
+	
 	private ClockMock _clock;
-	protected CountingSocket4Factory _socket4Factory;
 }

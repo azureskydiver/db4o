@@ -1,11 +1,9 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.monitoring;
 
-import javax.management.JMException;
 
 import com.db4o.config.*;
 import com.db4o.events.*;
-import com.db4o.ext.Db4oIllegalStateException;
 import com.db4o.internal.InternalObjectContainer;
 import com.db4o.internal.query.*;
 
@@ -16,7 +14,7 @@ import com.db4o.internal.query.*;
 public class NativeQueryMonitoringSupport implements ConfigurationItem {
 
 	public void apply(InternalObjectContainer container) {	
-		final NativeQueries queries = newNativeQueriesMBean(container);
+		final NativeQueries queries = Db4oMBeans.newNativeQueriesMBean(container);
 		final EventRegistry events = EventRegistryFactory.forObjectContainer(container);
 		events.closing().addListener(new EventListener4<ObjectContainerEventArgs>() {
 			public void onEvent(Event4<ObjectContainerEventArgs> e, ObjectContainerEventArgs args) {
@@ -28,14 +26,6 @@ public class NativeQueryMonitoringSupport implements ConfigurationItem {
 				queries.notifyNativeQuery(info);
 			}
 		});
-	}
-
-	private NativeQueries newNativeQueriesMBean(InternalObjectContainer container) {
-		try {
-			return new NativeQueries(Db4oMBeans.mBeanNameFor(NativeQueriesMBean.class, container.toString()));
-		} catch (JMException e) {
-			throw new Db4oIllegalStateException(e);
-		}
 	}
 
 	public void prepare(Configuration configuration) {

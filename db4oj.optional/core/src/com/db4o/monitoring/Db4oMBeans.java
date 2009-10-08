@@ -1,16 +1,13 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.monitoring;
 
-import java.io.File;
+import java.io.*;
 
-import javax.management.JMException;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
+import javax.management.*;
 
 import com.db4o.*;
-import com.db4o.cs.internal.*;
-import com.db4o.events.*;
-import com.db4o.ext.Db4oException;
+import com.db4o.ext.*;
+import com.db4o.internal.*;
 import com.db4o.monitoring.cs.*;
 
 /**
@@ -78,24 +75,43 @@ public class Db4oMBeans {
 		}
 	}
 	
-	
-	public static ClientConnections newClientConnectionsStatsMBean(ObjectServer server) {
+	public static Queries newQueriesMBean(String uri) {
 		try {
-			ObjectServerImpl serverImpl = (ObjectServerImpl) server;
-			final ObjectName objectName = mBeanNameFor(ClientConnectionsMBean.class, serverImpl.objectContainer().toString());
-			final ClientConnections bean = new ClientConnections(objectName);
-			
-			serverImpl.clientConnected().addListener(new EventListener4<ClientConnectionEventArgs>() { public void onEvent(Event4<ClientConnectionEventArgs> e, ClientConnectionEventArgs args) {
-				bean.notifyClientConnected();
-			}});
-			
-			serverImpl.clientDisconnected().addListener(new EventListener4<StringEventArgs>() { public void onEvent(Event4<StringEventArgs> e, StringEventArgs args) {
-				bean.notifyClientDisconnected();
-			}});
-			
-			return bean;
+			return new Queries(mBeanNameFor(QueriesMBean.class, uri));
 		} catch (JMException e) {
-			throw new Db4oException(e);
+			throw new Db4oIllegalStateException(e);
+		}
+	}
+
+	public static com.db4o.monitoring.ReferenceSystem newReferenceSystemMBean(InternalObjectContainer container) {
+		try {
+			return new com.db4o.monitoring.ReferenceSystem(mBeanNameFor(ReferenceSystemMBean.class, container.toString()));
+		} catch (JMException e) {
+			throw new Db4oIllegalStateException(e);
+		}
+	}
+
+	public static NativeQueries newNativeQueriesMBean(InternalObjectContainer container) {
+		try {
+			return new NativeQueries(mBeanNameFor(NativeQueriesMBean.class, container.toString()));
+		} catch (JMException e) {
+			throw new Db4oIllegalStateException(e);
+		}
+	}
+
+	public static Freespace newFreespaceMBean(InternalObjectContainer container) {
+		try {
+			return new Freespace(mBeanNameFor(FreespaceMBean.class, container.toString()));
+		} catch (JMException e) {
+			throw new Db4oIllegalStateException(e);
+		}
+	}
+
+	public static ClientConnections newClientConnectionsMBean(ObjectContainer container) {
+		try {
+			return new ClientConnections(mBeanNameFor(ClientConnectionsMBean.class, container.toString()));
+		} catch (JMException e) {
+			throw new Db4oIllegalStateException(e);
 		}
 	}	
 }
