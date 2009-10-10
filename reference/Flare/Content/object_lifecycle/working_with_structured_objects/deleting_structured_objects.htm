@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Deleting Structured Objects	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
     <div class="CommonContent">
@@ -46,7 +46,7 @@ disposed of in real life, too. But what if we want an object's children to be
 thrown away on deletion, too?</p>
 <a name="Recursive Deletion "></a><h2>Recursive Deletion </h2>
 <p>The problem of recursive deletion (and its 
-solution, too) is quite similar to the <a href="updating_structured_objects.html" class="wikiLink">update</a> problem. Let's configure db4o to delete a car's pilot, too, when the car is deleted.</p>
+solution, too) is quite similar to the <a href="updating_structured_objects.htm" class="wikiLink">update</a> problem. Let's configure db4o to delete a car's pilot, too, when the car is deleted.</p>
 
 <p MadCap:conditions="Primary.Java">
 
@@ -81,7 +81,7 @@ solution, too) is quite similar to the <a href="updating_structured_objects.html
 
 <p>Again: Note that all configuration must take place before the ObjectContainer is 
 opened.</p>
-<p>Another way to organize cascaded deletion is using <a href="../../implementation_strategies/callbacks/possible_usecases/cascaded_behavior.html" class="wikiLink">callbacks</a>. The callbacks allow you to specify explicitly, which objects are to be deleted. </p>
+<p>Another way to organize cascaded deletion is using <a href="../../implementation_strategies/callbacks/possible_usecases/cascaded_behavior.htm" class="wikiLink">callbacks</a>. The callbacks allow you to specify explicitly, which objects are to be deleted. </p>
 <a name="Recursive Deletion Revisited"></a><h2>Recursive Deletion Revisited</h2>
 <p>But wait - what happens if the children of a removed object are still referenced 
 by other objects?</p>
@@ -119,7 +119,7 @@ by other objects?</p>
 <p>Currently db4o does <b>not</b> check whether objects to be deleted are 
 referenced anywhere else, so please be very careful when using this 
 feature.However it is fairly easy to implement referential checking on 
-deletion using deleting() callback. See <a href="../../implementation_strategies/callbacks.html" class="wikiLink">Callbacks chapter</a> for more 
+deletion using deleting() callback. See <a href="../../implementation_strategies/callbacks.htm" class="wikiLink">Callbacks chapter</a> for more 
 information.</p></div>
     </div>
     

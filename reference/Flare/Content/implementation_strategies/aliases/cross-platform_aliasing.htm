@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Cross-Platform Aliasing	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
     <div class="CommonContent">
@@ -6,14 +6,14 @@
         <h1>Cross-Platform Aliasing</h1>
 <p>One of the most valuable aliases usecases is working with persistent
 Java classes from a .NET application and vice versa. You can use both TypeAlias
-and WildcardAlias depending on how many classes you need to access.</p><p>Below you will get an example of a system where classes were saved to the database from a Java application and read and modified later from a .NET application. A vice versa example is reviewed in <a href="cross-platform_aliasing_from_.net_to_java.html" class="wikiLink">Cross-Platform Aliasing From .NET To Java</a>. </p>
+and WildcardAlias depending on how many classes you need to access.</p><p>Below you will get an example of a system where classes were saved to the database from a Java application and read and modified later from a .NET application. A vice versa example is reviewed in <a href="cross-platform_aliasing_from_.net_to_java.htm" class="wikiLink">Cross-Platform Aliasing From .NET To Java</a>. </p>
 
 <p>For example, Pilot objects are saved to a database from a Java
 application:</p>
 
 <MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing/InterLanguageExample.java/saveObjects.flsnp" />
 <p>In order to read the saved objects successfully from a .NET application
-we will need to define an alias for persistent classes and add JavaSupport to configuration. JavaSupport is a special configuration item, which defines aliases for all necessary internal db4o classes that might be referenced in the database file. We will use a <a href="wildcardalias.html" class="wikiLink">WildcardAlias</a> for all the persistent classes. This alias must reference the corresponding persistent class definitions on Java and .NET (remember that only matching field names will be accessible in aliased objects):</p><MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing/InterLanguageExample.cs/ConfigureAlias.flsnp" />iv class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">InterLanguageExample.vb: <span class="fscMemberName">ConfigureAlias</span></span></div><div class="fscCode"><pre ID="ResourcesReferenceImplementation_StrategiesAliasesAliasesVB.ZipsInterLanguageExample.Vb_InterLanguageExample.Vb_ConfigureAlias_1275_66"><div><!--
+we will need to define an alias for persistent classes and add JavaSupport to configuration. JavaSupport is a special configuration item, which defines aliases for all necessary internal db4o classes that might be referenced in the database file. We will use a <a href="wildcardalias.htm" class="wikiLink">WildcardAlias</a> for all the persistent classes. This alias must reference the corresponding persistent class definitions on Java and .NET (remember that only matching field names will be accessible in aliased objects):</p><MadCap:snippetBlock src="../../Resources/Snippets/Cross-Platform Aliasing/InterLanguageExample.cs/ConfigureAlias.flsnp" />iv class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">InterLanguageExample.vb: <span class="fscMemberName">ConfigureAlias</span></span></div><div class="fscCode"><pre ID="ResourcesReferenceImplementation_StrategiesAliasesAliasesVB.ZipsInterLanguageExample.Vb_InterLanguageExample.Vb_ConfigureAlias_1275_66"><div><!--
 
 Code highlighting produced by Actipro CodeHighlighter (freeware)
 http://www.CodeHighlighter.com/

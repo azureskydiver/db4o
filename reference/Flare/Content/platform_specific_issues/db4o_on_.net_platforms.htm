@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>db4o on .NET Platforms	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
     <div class="CommonContent">
@@ -15,7 +15,7 @@
 <li>.NET Reflection mechanism adds assembly name to class definition. If you use db4o database with 2 applications (client and server) you'll have to move all persistent class definitions into a shared .dll. Identical classes compiled into different executables/libraries will be treated as different.</li>
 <li>.NET attributes can be used for db4o configuration</li>
 <li>Enumerations are treated as integer types</li></ul>
-<p>Please, refer to <a href="security_requirements_on_.net_platform.html" class="wikiLink">Security Requirements On .NET Platform</a> for further information.</p>
+<p>Please, refer to <a href="security_requirements_on_.net_platform.htm" class="wikiLink">Security Requirements On .NET Platform</a> for further information.</p>
 <a name=".NET 2.0"></a><h2>.NET 2.0</h2>
 <ul>
 <li>You can enjoy simplified syntax for Native Queries with Generics support introduced in .NET2.0.</li><code>IList &lt;Pilot&gt; pilots = db.Query &lt;Pilot&gt;(delegate(Pilot pilot) { return pilot.Points == 100; });</code> 
