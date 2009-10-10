@@ -5,4 +5,8 @@
   Type="WebHelp"
   Destinations=""
   GlossaryTermConversion="marked"
-  ConditionTagExpression="include[Primary.Java or Primary.Online or Primary.Print] "></CatapultTarget>
+  ConditionTagExpression="include[Primary.Java or Primary.Online or Primary.Print] "
+  MasterPageLayout="/Content/Resources/PageLayouts/Default.flpgl"
+  MasterStylesheet="/Content/Resources/Stylesheets/prettify.css"
+  MasterPage="/Content/Resources/MasterPages/Prettifier.flmsp"
+  UseCustomTopicFileExtension="false"></CatapultTarget>

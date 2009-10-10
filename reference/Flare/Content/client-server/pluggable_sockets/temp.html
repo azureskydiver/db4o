@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Using SSL For Client-Server Communication	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
     <div class="CommonContent">
       <div class="CommonContentArea">
         <h1>Using SSL For Client-Server Communication</h1>
 <P><FONT color=#990000>This topic applies to Java version only</FONT></P>
-<P>With the default settings db4o client-server communication is not encrypted and thus can potentially be a dangerous security hole. This can be fixed with a <a href="../pluggable_sockets.html" class="wikiLink">new pluggable socket</a> client/server implementation. Let's look at a simple example - we will use SSL protocol to protect our communication channel.</P>
+<P>With the default settings db4o client-server communication is not encrypted and thus can potentially be a dangerous security hole. This can be fixed with a <a href="../pluggable_sockets.htm" class="wikiLink">new pluggable socket</a> client/server implementation. Let's look at a simple example - we will use SSL protocol to protect our communication channel.</P>
 <P>Basically the task is to create a NativeSocketFactory implementation that will create sockets able to communicate through an encrypted channel. In Java these would be SSLServerSocket and SSLSocket.</P>
 <div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">SecureSocketFactory.java</span></div><div class="fscCode"><pre ID="..SslJava.ZipsSecureSocketFactory.Java_SecureSocketFactory.Java_622_53"><div><!--
 
