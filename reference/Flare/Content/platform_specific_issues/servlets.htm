@@ -5,7 +5,7 @@
       <div class="CommonContentArea">
         <h1>Servlets</h1><p><font color="#990000">This topic applies to Java version only</font>   </p>
 <p MadCap:conditions="Primary.Java">
-<p>Running db4o as the persistence layer of a Java web application is easy. There is no installation procedure - db4o is just another library in your application. There are only two issues that make web applications distinct from standalone programs from a db4o point of view. One is the more complex classloader environment - db4o needs to know itself (of course) and the classes to be persisted. Please refer to the <a href="classloader_issues.html" class="wikiLink">classloader</a> chapter for more information.</p>
+<p>Running db4o as the persistence layer of a Java web application is easy. There is no installation procedure - db4o is just another library in your application. There are only two issues that make web applications distinct from standalone programs from a db4o point of view. One is the more complex classloader environment - db4o needs to know itself (of course) and the classes to be persisted. Please refer to the <a href="classloader_issues.htm" class="wikiLink">classloader</a> chapter for more information.</p>
 <p>The other issue is configuring, starting and shutting down the db4o server correctly. This can be done at the servlet API layer or within the web application framework you are using.</p>
 <p>On the servlet API layer, you could bind db4o server handling to the servlet context via an appropriate listener. A very basic sketch might look like this:</p>
 <MadCap:snippetBlock src="../Resources/Snippets/Servlets/Db4oServletContextListener.java/Db4oServletContextListener.java.flsnp" /><p>This listener just has to be registered in the web.xml.</p>
