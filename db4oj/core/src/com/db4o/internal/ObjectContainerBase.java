@@ -1108,7 +1108,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
         initialize2NObjectCarrier();
     }
 
-    public final ReferenceSystem createReferenceSystem() {
+    public ReferenceSystem createReferenceSystem() {
         ReferenceSystem referenceSystem = _referenceSystemFactory.newReferenceSystem(this);
         _referenceSystemRegistry.addReferenceSystem(referenceSystem);
         return referenceSystem;

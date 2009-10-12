@@ -13,7 +13,7 @@ import db4ounit.*;
 @decaf.Remove
 public class MonitoredStorageTestCase implements TestLifeCycle {
 	
-	private CountingStorage _storage = new CountingStorage(new MonitoredStorage(new MemoryStorage()));
+	private CountingStorage _storage = new CountingStorage(new MemoryStorage());
 	
 	private EmbeddedObjectContainer _container;
 
@@ -44,6 +44,7 @@ public class MonitoredStorageTestCase implements TestLifeCycle {
 		
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.file().storage(_storage);
+		config.common().add(new IOMonitoringSupport());
 		config.common().environment().add(clock);
 		
 		_container = Db4oEmbedded.openFile(config, "");

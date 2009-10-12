@@ -16,28 +16,26 @@ import com.db4o.monitoring.cs.*;
 @decaf.Ignore
 public class Db4oMBeans {
 	
-	public static ObjectName mBeanNameFor(Class<?> mbeanInterface, String uri) {
-		final String name = packageNameFor(mbeanInterface) + ":name=" + new File(uri).getName() + ",mbean=" + displayName(mbeanInterface);
+	private static final String MONITORING_DOMAIN_NAME = "com.db4o.monitoring";
+
+	public static ObjectName mBeanNameFor(Class<?> mbeanInterface, InternalObjectContainer container) {
+		if(container instanceof LocalObjectContainer){
+			return mBeanNameFor(mbeanInterface, new File(((LocalObjectContainer) container).fileName()));
+		}
+		return mBeanNameFor(mbeanInterface, container.toString());
+	}
+	
+	public static ObjectName mBeanNameFor(Class<?> mbeanInterface, File file) {
+		return mBeanNameFor(mbeanInterface, file.getName());
+	}
+	
+	public static ObjectName mBeanNameFor(Class<?> mbeanInterface, String name) {
+		final String nameSpec = MONITORING_DOMAIN_NAME + ":name=\"" + name + "\",mbean=" + displayName(mbeanInterface);
 		try {
-			return new ObjectName(name);
+			return new ObjectName(nameSpec);
 		} catch (MalformedObjectNameException e) {
-			throw new IllegalStateException("'" + name + "' is not a valid name.", e);
+			throw new IllegalStateException("'" + nameSpec + "' is not a valid name.", e);
 		}
-	}
-
-	private static String packageNameFor(Class<?> mbeanInterface) {
-		String packageName = mbeanInterface.getPackage().getName();
-		
-		if (!isValidMonitoringPackage(packageName)) {
-			throw new IllegalArgumentException("Package name for type '" +  mbeanInterface.getName() + "' is invalid");
-		}
-		
-		return packageName;
-	}
-
-	private static boolean isValidMonitoringPackage(String packageName) {
-		final String monitoringPackageName = "com.db4o.monitoring";
-		return packageName.startsWith(monitoringPackageName + ".") || packageName.equals(monitoringPackageName);
 	}
 
 	private static String displayName(Class<?> mbeanInterface) {
@@ -75,9 +73,9 @@ public class Db4oMBeans {
 		}
 	}
 	
-	public static Queries newQueriesMBean(String uri) {
+	public static Queries newQueriesMBean(InternalObjectContainer container) {
 		try {
-			return new Queries(mBeanNameFor(QueriesMBean.class, uri));
+			return new Queries(mBeanNameFor(QueriesMBean.class, container));
 		} catch (JMException e) {
 			throw new Db4oIllegalStateException(e);
 		}

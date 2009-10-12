@@ -3,7 +3,6 @@ package com.db4o.db4ounit.optional.monitoring;
 
 import com.db4o.io.*;
 
-@decaf.Remove
 class CountingStorage extends StorageDecorator {
 	
 	private int _numberOfSyncCalls;

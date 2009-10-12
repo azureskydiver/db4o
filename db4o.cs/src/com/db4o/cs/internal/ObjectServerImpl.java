@@ -14,8 +14,9 @@ import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 import com.db4o.internal.events.*;
 import com.db4o.internal.threading.*;
+import com.db4o.types.*;
 
-public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtObjectServer, Runnable {
+public class ObjectServerImpl implements ObjectServerEvents, ObjectServer, ExtObjectServer, Runnable, TransientClass {
 	
 	private static final int START_THREAD_WAIT_TIMEOUT = 5000;
 
