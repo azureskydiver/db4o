@@ -77,7 +77,7 @@ namespace OManager.DataLayer.Reflection
         {
             get
             {
-            	return IsPrimitive || IsNullable || IsEnum;
+                return (IsPrimitive || IsNullable || IsEnum) && !IsArray && !IsCollection;
             }
         }
 
@@ -163,7 +163,7 @@ namespace OManager.DataLayer.Reflection
 
         private static string RemoveAssemblyName(string typeName)
         {
-            int index = typeName.IndexOf(',');
+            int index = typeName.LastIndexOf(',');
             return index >= 0 ? typeName.Remove(index) : typeName;
         }
     }

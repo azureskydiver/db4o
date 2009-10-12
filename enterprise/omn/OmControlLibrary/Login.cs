@@ -266,18 +266,20 @@ namespace OMControlLibrary
 			{
 				if (m_recentConnections == null)
 					m_recentConnections = GetAllRecentConnections();
-
-				if (m_recentConnections.Count > 0)
-				{
-					comboBoxFilePath.Items.Clear();
-					comboBoxFilePath.Items.Add(Helper.GetResourceString(Common.Constants.COMBOBOX_DEFAULT_TEXT));
-					foreach (RecentQueries recentQuery in m_recentConnections)
-					{
-						if (recentQuery.ConnParam.Host != null)
-							comboBoxFilePath.Items.Add(recentQuery.ConnParam.Connection);
-					}
-					comboBoxFilePath.SelectedIndex = 0;
-				}
+                if (m_recentConnections != null)
+                {
+                    if (m_recentConnections.Count > 0)
+                    {
+                        comboBoxFilePath.Items.Clear();
+                        comboBoxFilePath.Items.Add(Helper.GetResourceString(Common.Constants.COMBOBOX_DEFAULT_TEXT));
+                        foreach (RecentQueries recentQuery in m_recentConnections)
+                        {
+                            if (recentQuery.ConnParam.Host != null)
+                                comboBoxFilePath.Items.Add(recentQuery.ConnParam.Connection);
+                        }
+                        comboBoxFilePath.SelectedIndex = 0;
+                    }
+                }
 			}
 			catch (Exception oEx)
 			{

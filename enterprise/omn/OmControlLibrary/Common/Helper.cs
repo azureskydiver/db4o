@@ -157,7 +157,11 @@ namespace OMControlLibrary.Common
 				}
 				return m_baseClass;
 			}
-			set { m_baseClass = value; }
+			set
+			{
+			   
+                m_baseClass = value;
+			}
 		}
 
 		public static List<OMQuery> ListOMQueries
@@ -200,7 +204,7 @@ namespace OMControlLibrary.Common
 			{
 				using (Stream imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(key))
 				{
-					return (StdPicture)MyHost.IPictureDisp(Image.FromStream(imageStream));
+					return (StdPicture)PictureHost .IPictureDisp(Image.FromStream(imageStream));
 				}
 			}
 			catch
@@ -365,7 +369,8 @@ namespace OMControlLibrary.Common
 			if (tempTreeNode.Parent == null || tempTreeNode.Parent.Tag.ToString() == "Fav Folder")
 			{
 				parentName = tempTreeNode.Text.Split(',')[0];
-				parentName = parentName.Split('.')[1] + '.' + eNum.Key;
+			    string[] str = parentName.Split('.');
+				parentName = str[str.Length -1] + '.' + eNum.Key;
 			}
 			else
 			{
@@ -390,7 +395,8 @@ namespace OMControlLibrary.Common
 					treeNode = treeNode.Parent;
 
 				}
-				stringParent.Add((treeNode.Text.Split(',')[0]).Split('.')[1]);
+			    string[] breakName = (treeNode.Text.Split(',')[0]).Split('.');
+                stringParent.Add(breakName[breakName.Length-1]);
 
 				for (int i = stringParent.Count; i > 0; i--)
 				{
@@ -592,7 +598,7 @@ namespace OMControlLibrary.Common
 			StringBuilder fullpath = new StringBuilder(string.Empty);
 			TreeNode treenodeParent;
 			List<string> stringParent = new List<string>();
-			string parentName;
+            string parentName = string.Empty; 
 
 			try
 			{
@@ -616,12 +622,16 @@ namespace OMControlLibrary.Common
 						//get the parent name of selected node
 						parentName = parentName.Substring(classIndex + 1, parentName.Length - classIndex - 1);
 					}
-					else if (treenodeParent.Tag != null) //get name of patent in class view
-						parentName = treenodeParent.Name != "" ? treenodeParent.Name : treenodeParent.Text;
-					else
-						parentName = string.Empty;
+                   else
+                    {
+                        BaseClass = treenodeParent.Name;
+                        int classIndex = treenodeParent.Name.LastIndexOf('.');
 
-					if (!string.IsNullOrEmpty(parentName))
+                        //get the parent name of selected node
+                        parentName = treenodeParent.Name.Substring(classIndex + 1, treenodeParent.Name.Length - classIndex - 1);
+                    }
+
+				    if (!string.IsNullOrEmpty(parentName))
 						stringParent.Add(parentName);
 
 					if (treenodeParent.Parent != null)
@@ -647,5 +657,85 @@ namespace OMControlLibrary.Common
 			}
 			return fullpath.Append(treenode.Name).ToString();
 		}
+
+        public static string GetCaption(string evaluateString)
+        {
+            string caption=string.Empty ;
+
+
+            int index = evaluateString.LastIndexOf(Constants.CONST_COMMA_CHAR);
+            if (index > -1)
+            {
+                string strClassName = evaluateString.Remove(0, index);
+
+                string str = evaluateString.Remove(index);
+
+                index = str.LastIndexOf(Constants.CONST_DOT_CHAR);
+                caption = str.Remove(0, index + 1) + strClassName;
+            }
+            else
+            {
+                caption = evaluateString;
+            }
+            return caption;
+        }
+        public delegate void delPassData(long[] objectid);
+        public static void CreateQueryResultToolwindow(long[] objectid)
+        {
+
+            string caption = GetCaption(BaseClass);
+            QueryResult queryResult;
+            QueryResultToolWindow = ViewBase.CreateToolWindow(Constants.QUERYRESULT, caption, GetClassGUID(BaseClass), out queryResult);
+            delPassData del = queryResult.Setobjectid;
+            del(objectid);
+
+            QueryResultToolWindow.IsFloating = false;
+            QueryResultToolWindow.Linkable = false;
+            if (QueryResultToolWindow.AutoHides)
+            {
+                QueryResultToolWindow.AutoHides = false;
+            }
+            QueryResultToolWindow.Visible = true;
+        }
+
+        public static void AddElementToAttributeGrid(dbDataGridView dbDataGridAttributes, string className, string fullpath)
+        {
+            dbDataGridAttributes.Rows.Add(1);
+            int index = dbDataGridAttributes.Rows.Count - 1;
+            dbDataGridAttributes.Rows[index].Cells[0].Value = fullpath;
+            dbDataGridAttributes.Rows[index].Cells[0].Tag = className;
+            dbDataGridAttributes.ClearSelection();
+            dbDataGridAttributes.Rows[index].Cells[0].Selected = true;
+        }
+
+        public static void SaveData()
+        {
+           
+            try
+            {
+                if (HashClassGUID != null)
+                {
+                    foreach (DictionaryEntry entry in HashClassGUID)
+                    {
+                        string winCaption = entry.Key.ToString();
+
+
+                        string caption = GetCaption(winCaption);
+
+                        dbDataGridView dataGridView = ListofModifiedObjects.Instance[winCaption] as dbDataGridView;
+                        if (dataGridView != null)
+                        {
+                            ListofModifiedObjects.SaveBeforeWindowHiding(caption, dataGridView);
+                            ListofModifiedObjects.Instance.Remove(winCaption);
+                        }
+                    }
+                }
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.HandleException(oEx);
+            }
+        }
 	}
+   
 }

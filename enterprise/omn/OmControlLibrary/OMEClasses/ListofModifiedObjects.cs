@@ -37,9 +37,11 @@ namespace OMControlLibrary
 			}
 		}
 		
-		public static DialogResult SaveBeforeWindowHiding(ref bool check, ref bool checkforValueChanged, string Caption, dbDataGridView db, int hierarchyLevel)
+		public static DialogResult SaveBeforeWindowHiding(string Caption, dbDataGridView db)
 		{
 			DialogResult result = DialogResult.Cancel;
+
+		    bool checkforValueChanged = false;
 			try
 			{
 				foreach (DataGridViewRow row in db.Rows)
@@ -62,13 +64,13 @@ namespace OMControlLibrary
 				{
 					foreach (DataGridViewRow row in db.Rows)
 					{
-						if (Convert.ToBoolean(row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value))
-						{
-							if (hierarchyLevel == -1)
-								hierarchyLevel = dbInteraction.GetDepth(row.Tag);
+                        if (Convert.ToBoolean(row.Cells[Constants.QUERY_GRID_ISEDITED_HIDDEN].Value))
+                        {
 
-							Helper.DbInteraction.SaveCollection(row.Tag, hierarchyLevel);
-						}
+                            int hierarchyLevel = dbInteraction.GetDepth(row.Tag);
+
+                            Helper.DbInteraction.SaveCollection(row.Tag, hierarchyLevel);
+                        }
 					}
 				}
 				else
@@ -90,9 +92,9 @@ namespace OMControlLibrary
 			return result;
 		}
 
-		public static int CalculateLevel(object obj)
-		{
-			return dbInteraction.GetDepth(obj);
-		}
+        //public static int CalculateLevel(object obj)
+        //{
+        //    return dbInteraction.GetDepth(obj);
+        //}
 	}
 }

@@ -163,15 +163,15 @@ namespace OManager.DataLayer.ObjectsModification
                         {
 
                             object getObject = field.Get(obj);
-                            string fieldType = field.GetFieldType().GetName();
-                            fieldType = DataLayerCommon.PrimitiveType(fieldType);
+                            IType fieldType = Db4oClient.TypeResolver.Resolve(field.GetFieldType().GetName());
+                            
                             if (getObject != null)
                             {
-                                if (!CommonValues.IsPrimitive(fieldType))
+                                if (!fieldType.IsPrimitive)
                                 {
-                                    if (field.GetFieldType().IsCollection())
+                                    if (fieldType.IsCollection || getObject is ICollection )
                                     {
-                                        ICollection coll = (ICollection)field.Get(obj);
+                                        ICollection coll = (ICollection) field.Get(obj);
                                         ArrayList arrList = new ArrayList(coll);
 
                                         for (int i = 0; i < arrList.Count; i++)
@@ -191,12 +191,13 @@ namespace OManager.DataLayer.ObjectsModification
                                             }
                                         }
                                     }
-                                    else if (field.GetFieldType().IsArray())
+                                    else if (fieldType.IsArray || getObject is GenericArray )
                                     {
                                         int length = objectContainer.Ext().Reflector().Array().GetLength(field.Get(obj));
                                         for (int i = 0; i < length; i++)
                                         {
-                                            object arrObject = objectContainer.Ext().Reflector().Array().Get(field.Get(obj), i);
+                                            object arrObject =
+                                                objectContainer.Ext().Reflector().Array().Get(field.Get(obj), i);
                                             if (arrObject != null)
                                             {
                                                 if (arrObject is GenericObject)
@@ -211,13 +212,16 @@ namespace OManager.DataLayer.ObjectsModification
                                             }
                                         }
                                     }
+                                   
                                     else
                                     {
                                         if (!m_listforCascadeDelete.Contains(getObject))
                                         {
                                             m_listforCascadeDelete.Add(getObject);
                                             CheckForHierarchy(getObject);
+                                           
                                             objectContainer.Delete(getObject);
+
                                         }
                                     }
                                 }

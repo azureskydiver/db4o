@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Config;
@@ -39,7 +40,7 @@ namespace OManager.DataLayer.Connection
 				currentRecentConnection = value;
 			}
 		}
-
+       
 		/// <summary>
 		/// Static property which either returns a new object container for a specific logon identity or returns the object container already 
 		/// allocated to the logon identity.
@@ -53,7 +54,8 @@ namespace OManager.DataLayer.Connection
 				Db4oFactory.Configure().ActivationDepth(1);
 				Db4oFactory.Configure().AllowVersionUpdates(true);
 				Db4oFactory.Configure().BlockSize(8);
-
+			    Db4oFactory.Configure().Add(new JavaSupport());
+               
 				try
 				{
 					if (objContainer == null)
@@ -70,15 +72,16 @@ namespace OManager.DataLayer.Connection
 							}
 							else
 							{
-								if (File.Exists(conn.Connection))
-								{
-									objContainer = Db4oFactory.OpenFile(conn.Connection);
-									typeResolver = new TypeResolver(objContainer.Ext().Reflector());
-								}
-								else
-								{
-									exceptionConnection = "File does not exist!";
-								}
+                                if (File.Exists(conn.Connection))
+                                {
+
+                                    objContainer = Db4oFactory.OpenFile(conn.Connection);
+                                    typeResolver = new TypeResolver(objContainer.Ext().Reflector());
+                                }
+                                else
+                                {
+                                    exceptionConnection = "File does not exist!";
+                                }
 							}
 						}
 					}
@@ -112,7 +115,10 @@ namespace OManager.DataLayer.Connection
 			}
 
 		}
-
+        private static string GetTypeName(Type type)
+        {
+            return type.FullName + ", " + type.Assembly.GetName().Name;
+        }
 		public static IObjectContainer RecentConn
 		{
 			get

@@ -16,6 +16,8 @@ using OManager.DataLayer.Reflection;
 using OManager.Properties;
 using OME.AdvancedDataGridView;
 using OME.Logging.Common;
+using Db4objects.Db4o.Reflect.Generic;
+using Sharpen.Lang;
 
 namespace OManager.DataLayer.QueryParser
 {
@@ -130,30 +132,33 @@ namespace OManager.DataLayer.QueryParser
 			if (fields == null)
 				return parentNode;
 
-			foreach (IReflectField field in fields)
-			{
-				IType fieldType = ResolveFieldType(field);
-				if (fieldType == null)
-					continue;
+            foreach (IReflectField field in fields)
+            {
+                if (field.GetName() != "com.db4o.config.TNull")
+                {
+                    IType fieldType = ResolveFieldType(field);
+                    if (fieldType == null)
+                        continue;
 
-				if (fieldType.IsEditable) 
-				{
-					CreatePrimitiveNode(field.GetName(), field.Get(parentObject), ref parentNode, fieldType);
-				}
-				else if (fieldType.IsCollection)
-				{
-					RenderCollection(parentNode, parentObject, field);
-				}
-				else if (fieldType.IsArray)
-				{
-					RenderArray(parentNode, parentObject, field);
-				}
-				else
-				{
-					RenderSubObject(parentNode, parentObject, field);
-				}
-			}
-			return parentNode;
+                    if (fieldType.IsEditable)
+                    {
+                        CreatePrimitiveNode(field.GetName(), field.Get(parentObject), ref parentNode, fieldType);
+                    }
+                    else if (fieldType.IsCollection)
+                    {
+                        RenderCollection(parentNode, parentObject, field);
+                    }
+                    else if (DataLayerCommon.IsArray(parentObject))
+                    {
+                        RenderArray(parentNode, parentObject, field);
+                    }
+                    else
+                    {
+                        RenderSubObject(parentNode, parentObject, field);
+                    }
+                }
+            }
+		    return parentNode;
 		}
 
 		private void RenderArray(TreeGridNode rootNode, object currObj, IReflectField field)
@@ -161,10 +166,11 @@ namespace OManager.DataLayer.QueryParser
 			container = Db4oClient.Client;
 			object obj = field.Get(currObj);
 			
-			container.Ext().Activate(obj, 2);
+			
 
 			if (obj != null)
 			{
+                container.Ext().Activate(obj, 2);
 				int length = container.Ext().Reflector().Array().GetLength(obj);
 				CreateCollectionNode(field, obj, ref rootNode, length.ToString());
 			}
@@ -178,12 +184,14 @@ namespace OManager.DataLayer.QueryParser
 		{
 			container = Db4oClient.Client;
 			object value = field.Get(currObj);
-			container.Ext().Activate(value, 2);
-
+		
+       
 			if (value != null)
-			{
+			{	
+                container.Ext().Activate(value, 2);
 				ICollection coll = (ICollection) value;
-				CreateCollectionNode(field, value, ref rootNode, coll.Count.ToString());
+
+                CreateCollectionNode(field, value, ref rootNode, coll.Count.ToString() );
 			}
 			else
 			{
@@ -198,34 +206,37 @@ namespace OManager.DataLayer.QueryParser
 				TreeGridNode objectNode = new TreeGridNode();
 				parentNode.Nodes.Add(objectNode);
 				object value = field.Get(parentObj);
-				objectNode.Tag = value;
+               
+                    objectNode.Tag = value;
 
-				IType fieldType = ResolveFieldType(field);
-				objectNode.Cells[0].Value = AppendIDTo(field.GetName(), GetLocalID(value), fieldType);
+                    IType fieldType = ResolveFieldType(field);
+                    objectNode.Cells[0].Value = AppendIDTo(field.GetName(), GetLocalID(value), fieldType);
 
-				objectNode.Cells[1].Value = value != null ? value.ToString() : BusinessConstants.DB4OBJECTS_NULL;
+                    objectNode.Cells[1].Value = value != null ? value.ToString() : BusinessConstants.DB4OBJECTS_NULL;
 
-				SetFieldType(objectNode, fieldType);
+                    SetFieldType(objectNode, fieldType);
 
-				container = Db4oClient.Client;
-				container.Ext().Activate(value, 2);
+                   
+                    if (parentNode.Tag is DictionaryEntry && field.GetName() == BusinessConstants.DB4OBJECTS_KEY)
+                        objectNode.Cells[1].ReadOnly = true;
+                    else if (parentNode.Tag is DictionaryEntry && field.GetName() == BusinessConstants.DB4OBJECTS_VALUE)
+                        objectNode.Cells[1].ReadOnly = false;
+                    else if (field.Get(parentObj) == null)
+                        objectNode.Cells[1].ReadOnly = true;
+                    else
+                        objectNode.Cells[1].ReadOnly = true;
 
-				if (parentNode.Tag is DictionaryEntry && field.GetName() == BusinessConstants.DB4OBJECTS_KEY)
-					objectNode.Cells[1].ReadOnly = true;
-				else if (parentNode.Tag is DictionaryEntry && field.GetName() == BusinessConstants.DB4OBJECTS_VALUE)
-					objectNode.Cells[1].ReadOnly = false;
-				else if (field.Get(parentObj) == null)
-					objectNode.Cells[1].ReadOnly = true;
-				else
-					objectNode.Cells[1].ReadOnly = true;
+                    objectNode.ImageIndex = 0; //class
+                    if (value != null)
+                    {
+                        container = Db4oClient.Client;
+                        container.Ext().Activate(value, 2);
 
-				objectNode.ImageIndex = 0; //class
-				if (value != null)
-				{
-					TreeGridNode treenodeDummyChildNode = new TreeGridNode();
-					objectNode.Nodes.Add(treenodeDummyChildNode);
-					treenodeDummyChildNode.Cells[0].Value = BusinessConstants.DB4OBJECTS_DUMMY;
-				}
+                        TreeGridNode treenodeDummyChildNode = new TreeGridNode();
+                        objectNode.Nodes.Add(treenodeDummyChildNode);
+                        treenodeDummyChildNode.Cells[0].Value = BusinessConstants.DB4OBJECTS_DUMMY;
+                    }
+                
 			}
 			catch (Exception oEx)
 			{
@@ -235,7 +246,17 @@ namespace OManager.DataLayer.QueryParser
 
 		private static void SetFieldType(TreeGridNode node, IType type)
 		{
-			node.Cells[2].Value = type.DisplayName;
+            if(type.IsNullable )
+            {
+                GenericTypeReference typeRef = (GenericTypeReference)TypeReference.FromString(type.FullName );
+                TypeReference wrappedType = typeRef.GenericArguments[0];
+                node.Cells[2].Value = wrappedType.SimpleName;
+            }
+            else
+            {
+                node.Cells[2].Value = type.DisplayName;    
+            }
+		    
 			node.Cells[2].Tag= type;
 		}
 
@@ -300,7 +321,7 @@ namespace OManager.DataLayer.QueryParser
 			try
 			{
 				container = Db4oClient.Client;
-				ExpandCollectionNode(node, (ICollection) node.Tag);
+				ExpandCollectionNode(node, (ICollection  ) node.Tag);
 			}
 			catch (Exception oEx)
 			{
@@ -311,32 +332,49 @@ namespace OManager.DataLayer.QueryParser
 		private void ExpandCollectionNode(TreeGridNode parentNode, ICollection collection)
 		{
 			container = Db4oClient.Client;
-			foreach (object item in collection)
+
+            foreach (object item in collection)
 			{
-				if (item == null)
-					continue;
-
-				IType itemType = ResolveType(DataLayerCommon.ReflectClassFor(item));
-				if (itemType.IsPrimitive)
-					TraverseObjTree(ref parentNode, item, container.Ext().Reflector().ForObject(item).GetName());
-				else
-				{
-					container.Ext().Activate(item, 1);
-					TreeGridNode collNode = new TreeGridNode();
-					parentNode.Nodes.Add(collNode);
-					collNode.Cells[0].Value = AppendIDTo(item.ToString(), GetLocalID(item), itemType);
-
-					SetFieldType(collNode, itemType);
-					collNode.Cells[1].Value = ClassNameFor(item.ToString());
-					collNode.Tag = item;
-					collNode.ImageIndex = 0;
-					collNode.Cells[1].ReadOnly = true;
-					TraverseObjTree(ref collNode, item, itemType.FullName);
-				}
+                PopulateTreeGrid(item, parentNode);
 			}
 		}
 
-		public void ExpandObjectNode(TreeGridNode node, bool activate)
+        private void ExpandGenericArrayNode(TreeGridNode parentNode, GenericArray collection)
+        {
+            container = Db4oClient.Client;
+            IEnumerator enumerable = collection.Iterator();
+            while (enumerable.MoveNext())
+            {
+                object item = enumerable.Current;
+                PopulateTreeGrid(item, parentNode);
+            }
+        }
+
+	    private void PopulateTreeGrid(object item, TreeGridNode parentNode)
+	    {
+	        if (item == null)
+	            return;
+
+	        IType itemType = ResolveType(DataLayerCommon.ReflectClassFor(item));
+	        if (itemType.IsPrimitive)
+	            TraverseObjTree(ref parentNode, item, container.Ext().Reflector().ForObject(item).GetName());
+	        else
+	        {
+	            container.Ext().Activate(item, 1);
+	            TreeGridNode collNode = new TreeGridNode();
+	            parentNode.Nodes.Add(collNode);
+	            collNode.Cells[0].Value = AppendIDTo(item.ToString(), GetLocalID(item), itemType);
+
+	            SetFieldType(collNode, itemType);
+	            collNode.Cells[1].Value = ClassNameFor(item.ToString());
+	            collNode.Tag = item;
+	            collNode.ImageIndex = 0;
+	            collNode.Cells[1].ReadOnly = true;
+	            TraverseObjTree(ref collNode, item, itemType.FullName);
+	        }
+	    }
+
+	    public void ExpandObjectNode(TreeGridNode node, bool activate)
 		{
 			try
 			{
@@ -364,7 +402,15 @@ namespace OManager.DataLayer.QueryParser
 		{
 			try
 			{
-				ExpandCollectionNode(node, (ICollection) node.Tag);
+                if (node.Tag is GenericArray)
+                {
+                    ExpandGenericArrayNode(node, (GenericArray) node.Tag);
+                }
+                else
+                {
+
+                    ExpandCollectionNode(node, (ICollection)node.Tag);
+                }
 			}
 			catch (Exception oEx)
 			{

@@ -96,8 +96,8 @@ namespace OMControlLibrary
 		//FIXME: Find a way to get rid of the dependency on Caption being equal to "Close"
 		private static void _windowsEvents_WindowActivated(Window GotFocus, Window LostFocus)
 		{
-			if (LostFocus.Caption == "Closed")
-				return;
+            //if (LostFocus.Caption == "Closed")
+            //    return;
 
 			if (GotFocus.Caption != "Query Builder" && GotFocus.Caption != "db4o Browser" &&
 			    GotFocus.Caption != "DataBase Properties" && GotFocus.Caption != "")
@@ -113,14 +113,7 @@ namespace OMControlLibrary
 			string winCaption = winCaptionArg;
 			foreach (DictionaryEntry entry in Helper.HashClassGUID)
 			{
-				string enumwinCaption = entry.Key.ToString();
-				int index = enumwinCaption.LastIndexOf(',');
-				string strClassName = enumwinCaption.Remove(0, index);
-
-				string str = enumwinCaption.Remove(index);
-
-				index = str.IndexOf('.');
-				string caption = str.Remove(0, index + 1) + strClassName;
+				string caption = Helper.GetCaption(entry.Key.ToString());
 
 				if (winCaption != caption)
 					continue;
@@ -139,36 +132,13 @@ namespace OMControlLibrary
 
 		public void windowsVisEvents_WindowHiding(Window Window)
 		{
-			string winCaption = Window.Caption;
-			foreach (DictionaryEntry entry in Helper.HashClassGUID)
-			{
-				string enumwinCaption = entry.Key.ToString();
-				int index = enumwinCaption.LastIndexOf(',');
-				string strClassName = enumwinCaption.Remove(0, index);
-
-				string str = enumwinCaption.Remove(index);
-
-				index = str.IndexOf('.');
-				string caption = str.Remove(0, index + 1) + strClassName;
-
-				if (winCaption == caption)
-				{
-					if (ListofModifiedObjects.Instance.ContainsKey(enumwinCaption))
-					{
-						dbDataGridView db = ListofModifiedObjects.Instance[enumwinCaption] as dbDataGridView;
-
-						bool checkforValueChanged = false;
-
-						bool check = false;
-						ListofModifiedObjects.SaveBeforeWindowHiding(ref check, ref checkforValueChanged, caption, db, 10);
-						//TODO: Remove the hardcoded value of 10. istead there shud be alogic for counting level
-						ListofModifiedObjects.Instance.Remove(enumwinCaption);
-					}
-				}
-			}
+		    Helper.SaveData();
+           
 		}
 
-		#endregion
+	   
+
+	    #endregion
 
 		#region Query Result Events
 
@@ -307,7 +277,13 @@ namespace OMControlLibrary
 			{
 				DataGridViewCell cell = ((DataGridView) sender).CurrentCell;
 
-				IType fieldType = dbInteraction.GetFieldType(cell.OwningColumn.Tag.ToString(), cell.OwningColumn.HeaderText);
+			    string fieldName = cell.OwningColumn.HeaderText;
+                if(fieldName.Contains( "."))
+                {
+                    string[] splitString = fieldName.Split('.');
+                    fieldName = splitString[splitString.Length - 1];
+                }
+                IType fieldType = dbInteraction.GetFieldType(cell.OwningColumn.Tag.ToString(), fieldName);
                 if (!fieldType.IsEditable)
 				{
 					e.Cancel = true;
@@ -429,40 +405,42 @@ namespace OMControlLibrary
 
 		private void treeview_OnContextMenuItemClicked(object sender, ContextItemClickedEventArg e)
 		{
-			try
-			{
-				TreeGridView treeview = (TreeGridView) e.Data;
-				if (treeview.SelectedRows.Count <= 0)
-					return;
+		    try
+		    {
+		        TreeGridView treeview = (TreeGridView) e.Data;
+		        if (treeview.SelectedRows.Count <= 0)
+		            return;
 
-				treeview.ContextMenuStrip.Dispose();
-				DialogResult dialogRes =
-					MessageBox.Show("This will set the value to null in the database. Do you want to continue?",
-					                Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.YesNo,
-					                MessageBoxIcon.Question);
+		        treeview.ContextMenuStrip.Dispose();
+		        DialogResult dialogRes =
+		            MessageBox.Show("This will set the value to null in the database. Do you want to continue?",
+		                            Helper.GetResourceString(Constants.PRODUCT_CAPTION), MessageBoxButtons.YesNo,
+		                            MessageBoxIcon.Question);
 
-				if (dialogRes != DialogResult.Yes)
-					return;
-				
-				TreeGridNode node = (TreeGridNode) treeview.SelectedCells[0].OwningRow;
+		        if (dialogRes != DialogResult.Yes)
+		            return;
 
-				long id = dbInteraction.GetLocalID(treeview.Nodes[0].Tag);
+		        TreeGridNode node = (TreeGridNode) treeview.SelectedCells[0].OwningRow;
 
-				dbInteraction.SetFieldToNull(
-					ParentObjectFor(node),
-					CommonValues.UndecorateFieldName(node.Cells[0].Value.ToString()));
+		        long id = dbInteraction.GetLocalID(treeview.Nodes[0].Tag);
 
-				object obj = null;
+		       
+		            dbInteraction.SetFieldToNull(
+		                ParentObjectFor(node),
+		                CommonValues.UndecorateFieldName(node.Cells[0].Value.ToString()));
+
+	           object obj = null;
 				if (id != 0)
 				{
 					obj = dbInteraction.GetObjById(id);
 				}
 				else
 				{
-					MessageBox.Show("This object is already deleted.", Helper.GetResourceString(Constants.PRODUCT_CAPTION),
+					MessageBox.Show("This object is already Null.", Helper.GetResourceString(Constants.PRODUCT_CAPTION),
 					                MessageBoxButtons.OK, MessageBoxIcon.Information);
+				    return;
 				}
-
+                
 				if (obj != null)
 				{
 					dbInteraction.RefreshObject(obj, DepthFor(node));
@@ -483,7 +461,8 @@ namespace OMControlLibrary
 					detailsTabs.RemoveTab(detailsTabs.SelectedItem);
 					masterView.Rows.RemoveAt(index - 1);
 
-					detailsTabs.SelectedItem.Controls.Clear();
+					if( detailsTabs.SelectedItem !=null )
+                        detailsTabs.SelectedItem .Controls.Clear();
 					lstObjIdLong.Remove(id);
 
 					int m_pageCount = CurrentPageNumber();
@@ -508,8 +487,8 @@ namespace OMControlLibrary
 
 					treeview = dbInteraction.GetObjectHierarchy(ReferencedObjectFor(detailsTabs.SelectedItem), ClassName);
 
-					detailsTabs.SelectedItem.Controls.Add(treeview);
-					RegisterTreeviewEvents(treeview);
+				    if (detailsTabs.SelectedItem != null) detailsTabs.SelectedItem.Controls.Add(treeview);
+				    RegisterTreeviewEvents(treeview);
 
 					int delIndex = ObjectIndexInMasterViewFor(detailsTabs.SelectedItem);
 					UpdateObjectDetailTablCaptions(delIndex);
@@ -577,20 +556,20 @@ namespace OMControlLibrary
 
 		private static bool IsSetToNullOperationValidFor(IType targetFieldType, object containingObject)
 		{
-			return (targetFieldType.HasIdentity || targetFieldType.IsNullable) && (containingObject != null);
+          return (targetFieldType.HasIdentity || targetFieldType.IsNullable) && (containingObject != null);
 		}
 
-		private static string FieldTypeNameFor(DataGridViewRow fieldRow)
+	    private static string FieldTypeNameFor(DataGridViewRow fieldRow)
 		{
 			return FieldTypeForObjectInRow(fieldRow).FullName;
 		}
 
 		private static IType FieldTypeForObjectInRow(DataGridViewRow fieldRow)
 		{
-			return (IType) fieldRow.Cells[2].Tag;
+		   return (IType) fieldRow.Cells[2].Tag;
 		}
 
-		#endregion
+	    #endregion
 
 		#region TreeView Events
 
@@ -769,7 +748,7 @@ namespace OMControlLibrary
 
 				foreach (DataGridViewColumn col in masterView.Columns)
 				{
-					if (col.HeaderText == columnName)
+					if (col.HeaderText.Equals(columnName))
 					{
 						masterView.Rows[pageIndex - 1].Cells[columnName].Value = editValue.ToString();
 						break;
@@ -796,11 +775,18 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				buttonSaveResult.Enabled = true;
+			    DataGridViewCell cell = ((TreeGridView) sender).CurrentCell;
+                if (cell.Value == null || cell.Value.ToString()  == "null")
+                {
+                    e.Cancel = true;
+                    return;
+                }
+
+			    buttonSaveResult.Enabled = true;
 				if (masterView.SelectedRows.Count > 0)
 					masterView.SelectedRows[0].Selected = false;
 
-				DataGridViewCell cell = ((TreeGridView) sender).CurrentCell;
+				//DataGridViewCell cell = ((TreeGridView) sender).CurrentCell;
 				strstoreTreeValue = cell.Value != null ? cell.Value.ToString() : string.Empty;
 			}
 			catch (Exception oEx)
@@ -859,52 +845,70 @@ namespace OMControlLibrary
 				if (masterView.SelectedRows.Count > 0)
 				{
 					DataGridViewRow row = masterView.SelectedRows[0];
+                    long deletedId = dbInteraction.GetLocalID(row.Tag);
+                    int objectIndex = ObjectIndexInMasterViewFor(detailsTabs.SelectedItem);
+                    if (deletedId > 0)
+                    {
+                        const string strShowMessage = "Do You want to CascadeonDelete?";
+                        DialogResult dialogRes = MessageBox.Show(strShowMessage,
+                                                                 Helper.GetResourceString(Constants.PRODUCT_CAPTION),
+                                                                 MessageBoxButtons.YesNoCancel,
+                                                                 MessageBoxIcon.Question);
 
-					const string strShowMessage = "Do You want to CascadeonDelete?";
-					DialogResult dialogRes = MessageBox.Show(strShowMessage, Helper.GetResourceString(Constants.PRODUCT_CAPTION),
-					                                         MessageBoxButtons.YesNoCancel,
-					                                         MessageBoxIcon.Question);
-					long deletedId = dbInteraction.GetLocalID(row.Tag);
 
-					if (DialogResult.Cancel == dialogRes)
-						return;
+                        if (DialogResult.Cancel == dialogRes)
+                            return;
 
-					if (dialogRes == DialogResult.Yes)
-					{
-						CascadeOndeleteobjects(row.Tag);
-					}
-					else if (dialogRes == DialogResult.No)
-					{
-						dbInteraction.DeleteObject(row.Tag, false);
-					}
+                        if (dialogRes == DialogResult.Yes)
+                        {
+                            CascadeOndeleteobjects(row.Tag);
+                        }
+                        else if (dialogRes == DialogResult.No)
+                        {
+                            dbInteraction.DeleteObject(row.Tag, false);
+                        }
 
-					int objectIndex = ObjectIndexInMasterViewFor(detailsTabs.SelectedItem);
-					RemoveObjectFromDetailsView(row.Tag);
+                        
+                        RemoveObjectFromDetailsView(row.Tag);
 
-					UpdateObjectDetailTablCaptions(objectIndex);
+                        UpdateObjectDetailTablCaptions(objectIndex);
 
-					lstObjIdLong.Remove(deletedId);
+                        lstObjIdLong.Remove(deletedId);
 
-					const int pageNumber = m_pagingStartIndex + 1;
+                        const int pageNumber = m_pagingStartIndex + 1;
 
-					PagingData pagData = PagingData.StartingAtPage(pageNumber);
-					pagData.ObjectId = lstObjIdLong;
+                        PagingData pagData = PagingData.StartingAtPage(pageNumber);
+                        pagData.ObjectId = lstObjIdLong;
 
-					lblPageCount.Text = pagData.GetPageCount().ToString();
-					txtCurrentPage.Text = pageNumber.ToString();
-					labelNoOfObjects.Text = pagData.ObjectId.Count.ToString();
+                        lblPageCount.Text = pagData.GetPageCount().ToString();
+                        txtCurrentPage.Text = pageNumber.ToString();
+                        labelNoOfObjects.Text = pagData.ObjectId.Count.ToString();
 
-					masterView.Rows.Clear();
-					if (lstObjIdLong.Count > 0)
-					{
-						List<Hashtable> hashListResult = dbInteraction.ReturnQueryResults(pagData, true, omQuery.BaseClass, omQuery.AttributeList);
-						Hashtable hAttributes = (omQuery != null) ? omQuery.AttributeList : null;
-						masterView.SetDatagridRows(hashListResult, ClassName, hAttributes, pagData.StartIndex + 1);
+                        masterView.Rows.Clear();
+                        if (lstObjIdLong.Count > 0)
+                        {
+                            List<Hashtable> hashListResult = dbInteraction.ReturnQueryResults(pagData, true,
+                                                                                              omQuery.BaseClass,
+                                                                                              omQuery.AttributeList);
+                            Hashtable hAttributes = (omQuery != null) ? omQuery.AttributeList : null;
+                            masterView.SetDatagridRows(hashListResult, ClassName, hAttributes, pagData.StartIndex + 1);
 
-						SetSelectedObjectInMasterView(Math.Min(objectIndex, lstObjIdLong.Count));
-					}
+                            SetSelectedObjectInMasterView(Math.Min(objectIndex, lstObjIdLong.Count));
+                        }
+                    }
 
-					buttonSaveResult.Enabled = false;
+                    else
+
+                    {
+                        MessageBox.Show(
+                            "Object is already deleted. This window will get closed now. Please fire the query again for refreshed results.",
+                            Helper.GetResourceString(Constants.PRODUCT_CAPTION),MessageBoxButtons.OK ,
+				                         MessageBoxIcon.Information);
+                        Helper.QueryResultToolWindow.Close(vsSaveChanges.vsSaveChangesYes);
+                    }
+                   
+                       
+				    buttonSaveResult.Enabled = false;
 				}
 				OMETrace.WriteFunctionEnd();
 			}
@@ -1628,7 +1632,8 @@ namespace OMControlLibrary
 			StringBuilder fullpath = new StringBuilder(string.Empty);
 			TreeGridNode treenodeParent;
 			List<string> stringParent = new List<string>();
-			string parentName;
+			string parentName=string.Empty ;
+		    string fieldName=string.Empty ;
 			string fillpathString = string.Empty;
 
 			try
@@ -1636,31 +1641,34 @@ namespace OMControlLibrary
 				OMETrace.WriteFunctionStart();
 
 				treenodeParent = treenode.Parent;
-				while (treenodeParent != null)
-				{
-					if (treenodeParent.Cells[0].Value.ToString().IndexOf(CONST_COMMA) != -1)
-					{
-						//Set the base class name for selected field
-						Helper.BaseClass = treenodeParent.Cells[0].Value.ToString();
+                while (treenodeParent != null)
+                {
+                    parentName = treenodeParent.Cells[0].Value.ToString();
+                    if (parentName.Contains("Object ID"))
+                    {
+                        int index = parentName.IndexOf("Object ID");
+                        fieldName = parentName.Remove(index - 1).Trim();
+                    }
 
-						parentName = treenodeParent.Cells[0].Value.ToString().Split(CONST_COMMA.ToCharArray())[0];
-						int classIndex = parentName.LastIndexOf(CONST_DOT);
-						parentName = parentName.Substring(classIndex + 1, parentName.Length - classIndex - 1);
-					}
-					else
-						parentName = treenodeParent.Cells[0].Value.ToString();
+                    //reaches the root
+                    if (treenodeParent.Cells[0].Value.ToString().IndexOf(CONST_COMMA) != -1)
+                    {
+                        //Set the base class name for selected field
+                        Helper.BaseClass = parentName;
+                        fieldName = treenodeParent.Cells[0].Value.ToString().Split(CONST_COMMA.ToCharArray())[0];
+                    }
+                    string[] completename = fieldName.Split('.');
+                    fieldName = completename[completename.Length - 1];
+                    stringParent.Add(fieldName);
+                    if (treenodeParent.Parent.RowIndex != -1)
+                    {
+                        treenodeParent = treenodeParent.Parent;
+                    }
+                    else
+                        break;
+                }
 
-					stringParent.Add(parentName);
-
-					if (treenodeParent.Parent.RowIndex != -1)
-					{
-						treenodeParent = treenodeParent.Parent;
-					}
-					else
-						break;
-				}
-
-				for (int i = stringParent.Count; i > 0; i--)
+			    for (int i = stringParent.Count; i > 0; i--)
 				{
 					string parent = stringParent[i - 1] + ".";
 					fullpath.Append(parent);

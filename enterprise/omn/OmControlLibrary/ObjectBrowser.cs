@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using EnvDTE;
 using OManager.BusinessLayer.UIHelper;
+using OManager.DataLayer.Connection;
+using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.QueryManager;
@@ -117,6 +119,17 @@ namespace OMControlLibrary
 
                 if (storedclasses != null)
                     classCount = storedclasses.Count;
+
+                //Assembly view disabled for java db. I don't know any other way
+                ICollection keysCollection= storedclasses.Keys;
+                foreach (string str in keysCollection )
+                {
+                    if(!str.Contains( ","))
+                    {
+                        toolStripButtonAssemblyView.Enabled = false;
+                        break;
+                    }
+                }
 
                 InitializeAssemblyTreeView();
 
@@ -627,14 +640,13 @@ namespace OMControlLibrary
                 }
 
                 //Get the full path of the selected item
-                //ObjectBrowser obj = new ObjectBrowser();
                 string fullpath = Helper.GetFullPath(tempTreeNode);
-
+               
                 if (tempTreeNode.Parent != null)
                 {
-                    className = tempTreeNode.Parent.Tag.ToString().Contains(CONST_COMMA_STRING)
-                                                ? tempTreeNode.Parent.Tag.ToString()
-                                                : tempTreeNode.Parent.Name;
+                    IType type = Db4oClient.TypeResolver.Resolve(tempTreeNode.Parent.Tag.ToString());
+                    className = type != null ? type.FullName : tempTreeNode.Parent.Name;
+                    
                 }
 
                 //Check if dragged item is from same class or not, if not then dont allow to drag item
@@ -647,13 +659,7 @@ namespace OMControlLibrary
                     return;
 
                 //Add a new row and assing required values.
-                datagridAttributeList.Rows.Add(1);
-                int index = datagridAttributeList.Rows.Count - 1;
-                datagridAttributeList.Rows[index].Cells[0].Value = fullpath;
-                datagridAttributeList.Rows[index].Cells[0].Tag = className;
-
-                datagridAttributeList.ClearSelection();
-                datagridAttributeList.Rows[index].Cells[0].Selected = true;
+                Helper.AddElementToAttributeGrid(datagridAttributeList, className, fullpath);
 
                 if (!Helper.HashTableBaseClass.Contains(Helper.BaseClass))
                     Helper.HashTableBaseClass.Add(Helper.BaseClass, string.Empty);
@@ -850,7 +856,7 @@ namespace OMControlLibrary
         {
             try
             {
-                CreateQueryResultToolWindow();
+                Helper.CreateQueryResultToolwindow(objectid);
                 //Refresh Object Browser window after runnig the query each time.
                 queryBuilder.ClearAllQueries();
                 Instance.Enabled = true;
@@ -966,42 +972,7 @@ namespace OMControlLibrary
             }
         }
 
-        private void CreateQueryResultToolWindow()
-        {
-            try
-            {
-                OMETrace.WriteFunctionStart();
-
-                string guidpos = Helper.GetClassGUID(Helper.BaseClass);
-
-                int index = Helper.BaseClass.LastIndexOf(CONST_COMMA_CHAR);
-                string strClassName = Helper.BaseClass.Remove(0, index);
-
-                string str = Helper.BaseClass.Remove(index);
-
-                index = str.LastIndexOf(CONST_DOT_CHAR);
-                string caption = str.Remove(0, index + 1) + strClassName;
-
-                QueryResult queryResult;
-                Helper.QueryResultToolWindow = CreateToolWindow("OMControlLibrary.QueryResult", caption, guidpos, out queryResult);
-
-                queryResult.Setobjectid(objectid);
-
-                Helper.QueryResultToolWindow.IsFloating = false;
-                Helper.QueryResultToolWindow.Linkable = false;
-                if (Helper.QueryResultToolWindow.AutoHides)
-                {
-                    Helper.QueryResultToolWindow.AutoHides = false;
-                }
-                Helper.QueryResultToolWindow.Visible = true;
-
-                OMETrace.WriteFunctionEnd();
-            }
-            catch (Exception oEx)
-            {
-                LoggingHelper.ShowMessage(oEx);
-            }
-        }
+      
         /// <summary>
         /// Set ClassName when the treenode selected
         /// </summary>
@@ -1233,16 +1204,5 @@ namespace OMControlLibrary
         }
 
     }
-    public class MyHost : AxHost
-    {
-        public MyHost()
-            : base("59EE46BA-677D-4d20-BF10-8D8067CB8B33")
-        {
-        }
-
-        public static stdole.IPictureDisp IPictureDisp(System.Drawing.Image Image)
-        {
-            return (stdole.IPictureDisp)GetIPictureDispFromPicture(Image);
-        }
-    }
+    
 }

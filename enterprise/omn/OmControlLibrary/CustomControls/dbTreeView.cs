@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.UIHelper;
+using OManager.DataLayer.Connection;
+using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 
 namespace OMControlLibrary.Common
@@ -80,7 +82,6 @@ namespace OMControlLibrary.Common
 		/// <summary>
 		/// DragEnter event.
 		/// </summary>
-		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		protected override void OnDragEnter(DragEventArgs e)
 		{
@@ -102,7 +103,7 @@ namespace OMControlLibrary.Common
 		/// <summary>
 		/// DrageOver event
 		/// </summary>
-		/// <param name="drgevent"></param>
+		
 		protected override void OnDragOver(DragEventArgs e)
 		{
 			try
@@ -175,16 +176,7 @@ namespace OMControlLibrary.Common
 				LoggingHelper.ShowMessage(oEx);
 			}
 		}
-
-		//private string  FindRootNode(TreeNode node)
-		//{
-		//    while (node.Parent != null && node.Parent.Tag != null && node.Parent.Tag.ToString() != "Fav Folder")
-		//    {
-		//        node = node.Parent; 
-		//    }
-
-		//    return node.Text; 
-		//}
+		
 		protected override void OnAfterExpand(TreeViewEventArgs e)
 		{
 			base.OnAfterExpand(e);
@@ -213,103 +205,89 @@ namespace OMControlLibrary.Common
 		/// <param name="e"></param>
 		protected override void OnItemDrag(ItemDragEventArgs e)
 		{
-			try
-			{
-				string nodeName = null;
-				TreeNode tNode = ((TreeNode) e.Item);
-				tNode.TreeView.SelectedNode = tNode;
-				((TreeNode) e.Item).TreeView.SelectedNode = tNode;
-				if (tNode.Tag != null && tNode.Tag.ToString() == "Fav Folder" || tNode.Tag.ToString() == "Assembly View")
-				{
-					DoDragDrop(e.Item, DragDropEffects.None);
-					return;
-				}
+            try
+            {
+                string nodeName = null;
+                TreeNode tNode = ((TreeNode) e.Item);
+                tNode.TreeView.SelectedNode = tNode;
+                ((TreeNode) e.Item).TreeView.SelectedNode = tNode;
+                if (tNode.Tag != null && tNode.Tag.ToString() == "Fav Folder" || tNode.Tag.ToString() == "Assembly View")
+                {
+                    DoDragDrop(e.Item, DragDropEffects.None);
+                    return;
+                }
 
-				string typeOfObject = Helper.GetTypeOfObject(tNode.Tag.ToString());
+                IType type = Db4oClient.TypeResolver.Resolve(tNode.Tag.ToString());
+                if (tNode.Nodes.Count == 0)
+                {
+                    if (!type.IsEditable) 
+                        
+                    {
+                        DoDragDrop(e.Item, DragDropEffects.None);
+                        return;
+                    }
+                }
 
-				//check for arrays inside classes
-				//this check helps in dragging classes
-				if (tNode.Name.LastIndexOf(',') == -1 && tNode.Tag != null)
-				{
-					if (tNode.Parent.Tag.ToString().LastIndexOf(',') == -1)
-						nodeName = tNode.Parent.Text;
-					else
-						nodeName = tNode.Parent.Tag.ToString();
-				}
-				else
-				{
-					nodeName = tNode.Name;
-				}
-				if (tNode.Nodes.Count == 0)
-				{
-					if (Helper.IsArrayOrCollection(typeOfObject)
-					    || dbInteraction.CheckForArray(nodeName, tNode.Text)
-						|| dbInteraction.CheckForCollection(nodeName, tNode.Text))
-					{
-						DoDragDrop(e.Item, DragDropEffects.None);
-						return;
-					}
-				}
+               
+                    //// Get drag node and select it
+                    dragNode = (TreeNode) e.Item;
+                    SelectedNode = dragNode;
 
+                    // Reset image list used for drag image
+                    imageListDrag.Images.Clear();
 
-				//// Get drag node and select it
-				dragNode = (TreeNode) e.Item;
-				SelectedNode = dragNode;
+                    //Check for the max image width 
+                    int imageWidth = dragNode.Bounds.Width + Indent;
+                    if (imageWidth > Constants.MAX_IMAGE_WIDTH)
+                        imageWidth = Constants.MAX_IMAGE_WIDTH;
 
-				// Reset image list used for drag image
-				imageListDrag.Images.Clear();
+                    imageListDrag.ImageSize = new Size(imageWidth, dragNode.Bounds.Height);
 
-				//Check for the max image width 
-				int imageWidth = dragNode.Bounds.Width + Indent;
-				if (imageWidth > Constants.MAX_IMAGE_WIDTH)
-					imageWidth = Constants.MAX_IMAGE_WIDTH;
-
-				imageListDrag.ImageSize = new Size(imageWidth, dragNode.Bounds.Height);
-
-				// Create new bitmap
-				// This bitmap will contain the tree node image to be dragged
+                    // Create new bitmap
+                    // This bitmap will contain the tree node image to be dragged
 
 
-				Bitmap bmp = new Bitmap(imageWidth, dragNode.Bounds.Height);
+                    Bitmap bmp = new Bitmap(imageWidth, dragNode.Bounds.Height);
 
-				//// Get graphics from bitmap
-				Graphics gfx = Graphics.FromImage(bmp);
+                    //// Get graphics from bitmap
+                    Graphics gfx = Graphics.FromImage(bmp);
 
-				//// Draw node icon into the bitmap
-				gfx.DrawImage(ImageList.Images[dragNode.ImageIndex], 0, 0);
+                    //// Draw node icon into the bitmap
+                    gfx.DrawImage(ImageList.Images[dragNode.ImageIndex], 0, 0);
 
-				//// Draw node label into bitmap
-				gfx.DrawString(dragNode.Text,
-				               Font,
-				               new SolidBrush(ForeColor),
-				               Indent, 1.0f);
+                    //// Draw node label into bitmap
+                    gfx.DrawString(dragNode.Text,
+                                   Font,
+                                   new SolidBrush(ForeColor),
+                                   Indent, 1.0f);
 
-				//// Add bitmap to imagelist
-				imageListDrag.Images.Add(bmp);
+                    //// Add bitmap to imagelist
+                    imageListDrag.Images.Add(bmp);
 
-				//// Get mouse position in client coordinates
-				Point p = PointToClient(MousePosition);
+                    //// Get mouse position in client coordinates
+                    Point p = PointToClient(MousePosition);
 
-				//// Compute delta between mouse position and node bounds
-				int dx = p.X + Indent - dragNode.Bounds.Left;
-				int dy = p.Y - dragNode.Bounds.Top;
+                    //// Compute delta between mouse position and node bounds
+                    int dx = p.X + Indent - dragNode.Bounds.Left;
+                    int dy = p.Y - dragNode.Bounds.Top;
 
-				//// Begin dragging image
-				if (DragHelper.ImageList_BeginDrag(imageListDrag.Handle, 0, dx, dy))
-				{
-					// Begin dragging
-					DoDragDrop(bmp, DragDropEffects.Move);
-					// End dragging image
-					DragHelper.ImageList_EndDrag();
-				}
+                    //// Begin dragging image
+                    if (DragHelper.ImageList_BeginDrag(imageListDrag.Handle, 0, dx, dy))
+                    {
+                        // Begin dragging
+                        DoDragDrop(bmp, DragDropEffects.Move);
+                        // End dragging image
+                        DragHelper.ImageList_EndDrag();
+                    }
 
-				DoDragDrop(e.Item, DragDropEffects.Copy);
-				base.OnItemDrag(e);
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
+                    DoDragDrop(e.Item, DragDropEffects.Copy);
+                    base.OnItemDrag(e);
+                
+            }
+            catch (Exception oEx)
+            {
+                LoggingHelper.ShowMessage(oEx);
+            }
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)
@@ -327,29 +305,33 @@ namespace OMControlLibrary.Common
 							SelectedNode = treenode;
 							ContextMenuStrip = null;
 							List<string> list = null;
-							QueryBuilder queryBuilder = QueryBuilder.Instance;
+							//QueryBuilder queryBuilder = QueryBuilder.Instance;
 
-							if (m_hashtableClassNodes.Contains(treenode.Name) ||
-							    m_hashtableAssemblyNodes.Contains(treenode.Name))
+                            if (treenode.Tag != null && treenode.Tag.ToString() != "Fav Folder")
+                            {
+                                if (m_hashtableClassNodes.Contains(treenode.Name) ||
+                                    m_hashtableAssemblyNodes.Contains(treenode.Name) )
+                                {
+                                    ContextMenuStrip = m_tvViewObjectsContextMenuStrip;
+                                }
+                                else
+                                {
+                                    string typeOfObject = string.Empty;
+                                    if (treenode.Tag != null)
+                                    {
+                                        
+                                        IType fieldType = Db4oClient.TypeResolver.Resolve(treenode.Tag.ToString());
+                                        if (fieldType.IsEditable)
+                                        {
+                                           
+                                            ContextMenuStrip = m_tvAddtoQueryContextMenuStrip;
+                                        }
+                                    }
+                                }
+                            }
+						    if (treenode.Tag != null && treenode.Tag.ToString() == "Fav Folder")
 							{
-								ContextMenuStrip = m_tvViewObjectsContextMenuStrip;
-							}
-							else
-							{
-								string typeOfObject = string.Empty;
-								if (treenode.Tag != null)
-								{
-									typeOfObject = Helper.GetTypeOfObject(treenode.Tag.ToString());
-									if (Helper.IsPrimitive(typeOfObject))
-									{
-										if (!Helper.IsArrayOrCollection(typeOfObject))
-											ContextMenuStrip = m_tvAddtoQueryContextMenuStrip;
-									}
-								}
-							}
-							if (treenode.Tag != null && treenode.Tag.ToString() == "Fav Folder")
-							{
-								queryBuilder.GetAllQueryGroups();
+								//queryBuilder.GetAllQueryGroups();
 								BuildContextMenu(null, false, false);
 								ContextMenuStrip = m_tvFavFolderContexMenu;
 							}
@@ -568,20 +550,16 @@ namespace OMControlLibrary.Common
 						continue;
 					}
 
-					string typeofObject = Helper.GetTypeOfObject(nodetype);
-					treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = SetImageIndex(typeofObject);
+					IType fieldType = Db4oClient.TypeResolver.Resolve(nodetype);
+                    treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = SetImageIndex(fieldType);
 
 					treenodeparent.Nodes.Add(treeNodeNew);
 
-					if (!Helper.IsPrimitive(typeofObject))
+                    if (!fieldType.IsEditable )
 					{
-						string parentClassName = ClassNameFor(treenodeparent);
-
-						bool collection = dbInteraction.CheckForCollection(parentClassName, nodevalue);
-						bool isarray = dbInteraction.CheckForArray(parentClassName, nodevalue);
 						if (dbInteraction.GetFieldCount(ClassNameFor(treeNodeNew)) > 0)
 						{
-							if (!collection || !isarray)
+                            if (!fieldType.IsCollection  || !fieldType.IsArray )
 							{
 								AddDummyChildNode(treeNodeNew);
 								treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 1; //Classes;
@@ -589,7 +567,7 @@ namespace OMControlLibrary.Common
 						}
 						else
 						{
-							if (collection || isarray)
+                            if (fieldType.IsCollection || fieldType.IsArray)
 							{
 								treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 3; //Classes;
 							}
@@ -618,17 +596,17 @@ namespace OMControlLibrary.Common
 			return node.Name.LastIndexOf(',') > 0;
 		}
 
-		private static int SetImageIndex(string type)
+		private static int SetImageIndex(IType  type)
 		{
 			int imageIndex = 0;
 
 			try
 			{
-				if (Helper.IsPrimitive(type))
+                if (type.IsEditable )
 				{
 					imageIndex = 2;
 				}
-				else if (Helper.IsArrayOrCollection(type))
+                else if (type.IsArray || type.IsCollection )
 				{
 					imageIndex = 3;
 				}
@@ -911,13 +889,13 @@ namespace OMControlLibrary.Common
 							continue;
 						}
 						
-						string typeofObject = Helper.GetTypeOfObject(nodetype);
-						treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = SetImageIndex(typeofObject);
+						
+                        IType fieldType = Db4oClient.TypeResolver.Resolve(nodetype);
+                        treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = SetImageIndex(fieldType);
 
-						bool isPrimitiveType = Helper.IsPrimitive(typeofObject);
-						treenodeparent.Nodes.Add(treeNodeNew);
+					    treenodeparent.Nodes.Add(treeNodeNew);
 
-						if (!isPrimitiveType)
+                        if (!fieldType.IsEditable )
 						{
 							string param = string.Empty;
 
@@ -1028,7 +1006,7 @@ namespace OMControlLibrary.Common
 						}
 					}
 
-				    if (treeNodeNew != null)
+				    if (treeNodeNew != null && CheckEntries ==true)
 				    {
 				        treeNodeNew.ImageIndex = treeNodeNew.SelectedImageIndex = 0; //Assembly
 				        Nodes.Add(treeNodeNew);
@@ -1057,10 +1035,19 @@ namespace OMControlLibrary.Common
 		{
 			try
 			{
-				string classNameWithoutAssembly = className;
-				int index = classNameWithoutAssembly.LastIndexOf(',');
-				string strClassName = classNameWithoutAssembly.Remove(index);
-				//bool foundNode = false;
+			    string strClassName = string.Empty;
+				//string classNameWithoutAssembly = className;
+                int index = className.LastIndexOf(',');
+                if (index > -1)
+                {
+                    strClassName = className.Remove(index);
+                }
+                else
+                {
+
+                    strClassName = className;
+                }
+			    //bool foundNode = false;
 				if (Node != null && Node.Tag != null)
 				{
 					if (Node.Tag.Equals(className) || Node.Tag.Equals(strClassName))
@@ -1113,7 +1100,6 @@ namespace OMControlLibrary.Common
 		/// <summary>
 		/// Heightlights the selected node.
 		/// </summary>
-		/// <param name="tagName">Tag assigned to a treenode</param>
 		public void UpdateTreeNodeSelection(TreeNode selectedNode, bool isAssemblyView)
 		{
 			TreeNode parentNode;
@@ -1261,8 +1247,6 @@ namespace OMControlLibrary.Common
 					m_tvFavFolderContexMenu.Items.Add(objMainMenu1);
 					m_tvFavFolderContexMenu.ItemClicked += MainMenu_ItemClicked;
 					m_tvFavFolderContexMenu.Opening += ContextMenuStrip_Opening;
-
-					//TreeView_OnContextMenuItemClicked
 				}
 				else
 				{
@@ -1338,7 +1322,7 @@ namespace OMControlLibrary.Common
 
 					if (SelectedNode != null)
 					{
-						if (SelectedNode.Name.LastIndexOf(",") == -1)
+                        if (SelectedNode.Name.LastIndexOf(",") == -1 && SelectedNode.Name.LastIndexOf(".") == -1)
 						{
 							TreeNode parentNode = new TreeNode();
 

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{73E41A2F-EDD6-4547-BB46-0D33965994EC}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -291,6 +291,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SearchPathDialog.resx">
       <DependentUpon>SearchPathDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Images\hide_querybuilder.gif" />
     <None Include="Images\show_querybuilder.gif" />

@@ -76,12 +76,13 @@ namespace OManager.BusinessLayer.UIHelper
 				IReflectClass klass = DataLayerCommon.ReflectClassFor(obj);
 				if (klass != null)
 				{
-					IReflectField field = DataLayerCommon.GetDeclaredField(klass, fieldName);
+                    IReflectField field = DataLayerCommon.GetDeclaredFieldInHeirarchy(klass, fieldName);
 					if (field == null)
 						return;
 					
 					field.Set(obj, null);
 					Db4oClient.Client.Store(obj);
+                    
 					Db4oClient.Client.Commit();
 				}
 			}
@@ -247,7 +248,7 @@ namespace OManager.BusinessLayer.UIHelper
 			return DataLayerCommon.IsCollection(expandedObject);
 		}
 
-		public static bool IsPrimitive(object expandedObject)
+		public bool IsPrimitive(object expandedObject)
 		{
 			return DataLayerCommon.IsPrimitive(expandedObject);
 		}

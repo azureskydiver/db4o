@@ -26,15 +26,21 @@ namespace OManager.DataLayer.Reflection
 			return Resolve(_reflector.ForName(typeFQN));
 		}
 
-		public IType Resolve(IReflectClass klass)
-		{
-			string className = klass.GetName();
-			if (!_resolved.ContainsKey(className))
-			{
-				_resolved[className] = new TypeImpl(klass, this);
-			}
+        public IType Resolve(IReflectClass klass)
+        {
+            if (klass == null)
+            {
+                return null;
+            }
 
-			return _resolved[className];
-		}
-	}
+            string className = klass.GetName();
+            if (!_resolved.ContainsKey(className))
+            {
+                _resolved[className] = new TypeImpl(klass, this);
+            }
+
+            return _resolved[className];
+
+        }
+    }
 }

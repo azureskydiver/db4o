@@ -4,6 +4,7 @@ namespace OManager.BusinessLayer.Common
     {
         #region All Primitive Types
 
+        
         public const string STRING = "System.String";
         public const string SINGLE = "System.Single";
         public const string DATETIME = "System.DateTime";
