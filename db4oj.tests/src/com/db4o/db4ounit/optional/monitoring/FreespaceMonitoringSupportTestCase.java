@@ -34,6 +34,8 @@ public class FreespaceMonitoringSupportTestCase extends MBeanTestCaseBase implem
 	}
 	
 	public void test(){
+		// ensure client is fully connected to the server already
+		db().commit();
 		assertMonitoredFreespaceIsCorrect();
 		Item item = new Item();
 		store(item);
@@ -77,5 +79,9 @@ public class FreespaceMonitoringSupportTestCase extends MBeanTestCaseBase implem
 		return fileSession().toString();
 	}
 
-
+	public static void main(String[] args) {
+		for (int i = 0; i < 100; i++) {
+			new FreespaceMonitoringSupportTestCase().runNetworking();
+		}
+	}
 }
