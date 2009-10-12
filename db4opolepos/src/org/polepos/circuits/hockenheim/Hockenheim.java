@@ -32,7 +32,7 @@ public class Hockenheim extends Circuit
 
     @Override
     protected void addLaps() {
-        add(new Lap("store"));
+        add(new Lap("store", false, false));
         add(new Lap("query_ascending"));
         add(new Lap("query_descending"));
     }

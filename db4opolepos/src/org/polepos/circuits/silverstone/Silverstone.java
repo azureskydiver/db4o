@@ -26,7 +26,7 @@ public class Silverstone extends Circuit {
 
     @Override
     protected void addLaps() {
-        add(new Lap("store"));
+        add(new Lap("store", false, false));
         add(new Lap("deleteAndStore"));
     }
 
