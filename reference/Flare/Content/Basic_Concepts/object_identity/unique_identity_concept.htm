@@ -42,7 +42,7 @@
 
 <p>In the example <i>pilot</i> object is retrieved from the database (placed into cache) and changed, but not saved. The following retrieval uses pilot's name to retrieve the object from the database, but that object was already instantiated, so its cached (and modified) instance is actually returned.</p>
 
-<p>Such behavior can be sometimes undesirable - you may expect to get object as it saved in the database instead of its modified instance in cache. One of the ways to do that is to use <a href="../../tuning/utility_methods/peekpersisted.html" class="wikiLink">ExtObjectContainer#peekPersisted(object)</a> method, which will give you a disconnected copy of a database object.</p>
+<p>Such behavior can be sometimes undesirable - you may expect to get object as it saved in the database instead of its modified instance in cache. One of the ways to do that is to use <a href="../../tuning/utility_methods/peekpersisted.htm" class="wikiLink">ExtObjectContainer#peekPersisted(object)</a> method, which will give you a disconnected copy of a database object.</p>
 
 <p>Another way is to purge objects from the cache before re-retrieving them.</p>
 
