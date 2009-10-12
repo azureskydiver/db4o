@@ -3,74 +3,77 @@
 <body onload="prettyPrint()">
     <div class="CommonContent">
       <div class="CommonContentArea">
-        <h1>Native Queries</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Concept">Concept</a></li><li><a href ="#Principle">Principle</a></li><li><a href ="#Simple Example">Simple Example</a></li><li><a href ="#Advanced Example">Advanced Example</a></li><li><a href ="#Arbitrary Code">Arbitrary Code</a></li><li><a href ="#Native Query Performance">Native Query Performance</a></li></ul></li></ul></div></div></div> 
+        <h1>Native Queries</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Concept">Concept</a></li><li><a href ="#Principle">Principle</a></li><li><a href ="#Simple Example">Simple Example</a></li><li><a href ="#Advanced Example">Advanced Example</a></li><li><a href ="#Arbitrary Code">Arbitrary Code</a></li><li><a href ="#Native Query Performance">Native Query Performance</a></li></ul></div></div></div> 
 
-<P>Wouldn't it be nice to pose queries in the programming language that you are using? Wouldn't it be nice if all your query code was 100% typesafe, 100% compile-time checked and 100% refactorable? Wouldn't it be nice if the full power of object-orientation could be used by calling methods from within queries? All mentioned above is achievable by using Native Queries or <a href="linq.htm" class="wikiLink">LINQ</a>(if you are developing in .NET3.5)<BR></P>
-<P>Native queries are the main db4o query interface and they are the recommended way to query databases from your application for all platforms except .NET3.5 where LINQ is preferrable. Because native queries simply use the semantics of your programming language, they are perfectly standardized and a safe choice for the future.</P>
-<P>Native Queries are available for all platforms supported by db4o.</P>
+<p>Wouldn't it be nice to pose queries in the programming language that you are using? Wouldn't it be nice if all your query code was 100% typesafe, 100% compile-time checked and 100% refactorable? Wouldn't it be nice if the full power of object-orientation could be used by calling methods from within queries? All mentioned above is achievable by using Native Queries or <a href="linq.htm" class="wikiLink">LINQ</a>(if you are developing in .NET3.5)</p>
+<p>Native queries are the main db4o query interface and they are the recommended way to query databases from your application for all platforms except .NET3.5 where LINQ is preferrable. Because native queries simply use the semantics of your programming language, they are perfectly standardized and a safe choice for the future.</p>
+<p>Native Queries are available for all platforms supported by db4o.</p>
 <a name="Concept"></a><H2>Concept</H2>
-<P>The concept of native queries is taken from the following two papers:<BR><BR></P>
+<p>The concept of native queries is taken from the following two papers:</p>
 <UL>
-<LI><A href="http://www.cs.utexas.edu/users/wcook/papers/NativeQueries/NativeQueries8-23-05.pdf" target=_blank>Cook/Rosenberger, Native Queries for Persistent Objects, A Design White Paper</A></LI>
-<LI><A href="http://www.cs.utexas.edu/~wcook/papers/SafeQuery05/SafeQueryFinal.pdf" target=_blank>Cook/Rai, Safe Query Objects: Statically Typed Objects as Remotely Executable Queries</A></LI></UL>
+<LI><A href="http://www.cs.utexas.edu/users/wcook/papers/NativeQueries/NativeQueries8-23-05.pdf">Cook/Rosenberger, Native Queries for Persistent Objects, A Design White Paper</A></LI>
+<LI><A href="http://www.cs.utexas.edu/~wcook/papers/SafeQuery05/SafeQueryFinal.pdf">Cook/Rai, Safe Query Objects: Statically Typed Objects as Remotely Executable Queries</A></LI></UL>
 <a name="Principle"></a><H2>Principle</H2>
-<P>Native Queries provide the ability to run one or more lines of code against all instances of a class. Native query expressions should return true to mark specific instances as part of the result set. db4o will attempt to <a href="../../tuning/native_query_optimization.htm" class="wikiLink">optimize native query</a> expressions and use <a href="soda_query/soda_query_engine.htm" class="wikiLink">internal query processor</a> to run them against indexes and without instantiating actual objects, where this is possible. <BR></P>
+<p>Native Queries provide the ability to run one or more lines of code against all instances of a class. Native query expressions should return true to mark specific instances as part of the result set. db4o will attempt to <a href="../../tuning/native_query_optimization.htm" class="wikiLink">optimize native query</a> expressions and use <a href="soda_query/soda_query_engine.htm" class="wikiLink">internal query processor</a> to run them against indexes and without instantiating actual objects, where this is possible. </p>
 <a name="Simple Example"></a><H2>Simple Example</H2>
-<P>Let's look at how a simple native query will look like in some of the programming languages and dialects that db4o supports:</P>
+<p>Let's look at how a simple native query will look like in some of the programming languages and dialects that db4o supports:</p>
 <p MadCap:conditions="Primary..NET,Primary.c#">
-<P>.NET2.0: </P>
-<MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.cs/PrimitiveQuery.flsnp" /><P>.NET1.0</P>
-<MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.cs/PrimitiveQuery.flsnp" /></p><p MadCap:conditions="Primary:cs" />
+<p>.NET2.0: </p>
+<MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.cs/PrimitiveQuery.flsnp" />
+					<p>.NET1.0</p>
+<MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.cs/PrimitiveQuery.flsnp" />
+				</p><p MadCap:conditions="Primary:cs" />
 <p MadCap:conditions="Primary.Java">
-<P>Java5:</P>
-<MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.java/primitiveQuery.flsnp" />BR></P>
-<P>Java1.2-1.4:</P>
-<MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/PrimitiveExample.java/primitiveQuery.flsnp" />/P>
-<P>Java1.1:</P>
-<MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/PrimitiveExample.java/primitiveQuery1.flsnp" /><MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/PilotHundredPoints.java/PilotHundredPoints.java.flsnp" /></p><p MadCap:conditions="Primary:java" />
+<p>Java5:</p>
+<MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.java/primitiveQuery.flsnp" />
+<p>Java1.2-1.4:</p>
+<MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/PrimitiveExample.java/primitiveQuery.flsnp" />
+<p>Java1.1:</p>
+<MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/PrimitiveExample.java/primitiveQuery1.flsnp" />
+<MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/PilotHundredPoints.java/PilotHundredPoints.java.flsnp" /></p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<P>VB.NET:</P>
+<p>VB.NET:</p>
 <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.vb/primitiveQuery.flsnp" /><MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/PilotHundredPoints.vb/PilotHundredPoints.vb.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<P>A side note on the above syntax:</P>
-<P>For all dialects without support for generics, Native Queries work by convention. A class that extends the Predicate class is expected to have a boolean #match() or #Match() method with one parameter to describe the class extent:</P>
+<p>A side note on the above syntax:</p>
+<p>For all dialects without support for generics, Native Queries work by convention. A class that extends the Predicate class is expected to have a boolean #match() or #Match() method with one parameter to describe the class extent:</p>
 <p MadCap:conditions="Primary.Java">
-<P>Java: </P>
-<P><code>boolean match(Pilot candidate);</code></P>
+<p>Java: </p>
+<p><code>boolean match(Pilot candidate);</code></p>
 </p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.c#">
-<P>c#: </P>
-<P><code>bool Match(Pilot candidate);</code></P>
+<p>c#: </p>
+<p><code>bool Match(Pilot candidate);</code></p>
 </p><p MadCap:conditions="Primary:cs" />
 <p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<P>VB: </P>
-<P><code>Function Match(ByVal candidate As Pilot) As Boolean;</code></P>
+<p>VB: </p>
+<p><code>Function Match(ByVal candidate As Pilot) As Boolean;</code></p>
 </p><p MadCap:conditions="Primary:vb" />
-<P>When using native queries, don't forget that modern integrated development environments (IDEs) can do all the typing work around the native query expression for you, if you use templates and autocompletion.</P>
+<p>When using native queries, don't forget that modern integrated development environments (IDEs) can do all the typing work around the native query expression for you, if you use templates and autocompletion.</p>
 <p MadCap:conditions="Primary.Java">
-<P>Here is how to configure a Native Query template with Eclipse 3.1:</P>
-<P>From the menu, choose Window + Preferences + Java + Editor + Templates + New</P>
-<P>As the name type "nq". Make sure that "java" is selected as the context on the right. Paste the following into the pattern field:</P>
-<P><code>List &lt;${extent}&gt; list = db.query(new Predicate &lt;${extent}&gt; () {</code><BR><code>    public boolean match(${extent} candidate){</code><BR><code>        return true; </code><BR><code>    }</code><BR><code>}); </code></P>
-<P>Now you can create a native query with three keys: n + q + Control-Space.</P>
-<P>Similar features are available in most modern IDEs.</P>
+<p>Here is how to configure a Native Query template with Eclipse 3.1:</p>
+<p>From the menu, choose Window + Preferences + Java + Editor + Templates + New</p>
+<p>As the name type "nq". Make sure that "java" is selected as the context on the right. Paste the following into the pattern field:</p>
+<p><code>List &lt;${extent}&gt; list = db.query(new Predicate &lt;${extent}&gt; () {</code><code>    public boolean match(${extent} candidate){</code><code>        return true; </code><code>    }</code><code>}); </code></p>
+<p>Now you can create a native query with three keys: n + q + Control-Space.</p>
+<p>Similar features are available in most modern IDEs.</p>
 </p><p MadCap:conditions="Primary:java" />
-<P>For more information see <a href="native_queries/native_query_syntax.htm" class="wikiLink">Native Query Syntax</a>.</P>
+<p>For more information see <a href="native_queries/native_query_syntax.htm" class="wikiLink">Native Query Syntax</a>.</p>
 <a name="Advanced Example"></a><H2>Advanced Example</H2>
-<P>For complex queries, the native syntax is very precise and quick to write. Let's compare to a SODA query that finds all pilots with a given name or a score within a given range:</P>
+<p>For complex queries, the native syntax is very precise and quick to write. Let's compare to a SODA query that finds all pilots with a given name or a score within a given range:</p>
 <p MadCap:conditions="Primary.Java">
 <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.java/storePilots.flsnp" /><MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.java/retrieveComplexSODA.flsnp" /></p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.c#">
 <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.cs/StorePilots.flsnp" /><MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.cs/RetrieveComplexSODA.flsnp" /></p><p MadCap:conditions="Primary:cs" />
 <p MadCap:conditions="Primary..NET,Primary.VB.NET">
 <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.vb/StorePilots.flsnp" /><MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.vb/RetrieveComplexSODA.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<P>Here is how the same query will look like with native query syntax, fully accessible to autocompletion, refactoring and other IDE features, fully checked at compile time:</P>
+<p>Here is how the same query will look like with native query syntax, fully accessible to autocompletion, refactoring and other IDE features, fully checked at compile time:</p>
 <p MadCap:conditions="Primary.Java">
 <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.java/advancedQuery.flsnp" /></p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.c#">
 <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.cs/AdvancedQuery.flsnp" /></p><p MadCap:conditions="Primary:cs" />
 <a name="Arbitrary Code"></a><H2>Arbitrary Code</H2>
-<P>Basically that's all there is to know about native queries to be able to use them efficiently. In principle you can run arbitrary code as native queries, you just have to be very careful with side effects - especially those that might affect persistent objects.</P>
-<P>Let's run an example that involves some more of the language features available.</P>
+<p>Basically that's all there is to know about native queries to be able to use them efficiently. In principle you can run arbitrary code as native queries, you just have to be very careful with side effects - especially those that might affect persistent objects.</p>
+<p>Let's run an example that involves some more of the language features available.</p>
 <p MadCap:conditions="Primary.Java">
 <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.java/retrieveArbitraryCodeNQ.flsnp" /></p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.c#">
@@ -78,14 +81,14 @@
 <p MadCap:conditions="Primary..NET,Primary.VB.NET">
 <MadCap:snippetBlock src="../../Resources/Snippets/Native Queries/NQExample.vb/RetrieveArbitraryCodeNQ.flsnp" /></p><p MadCap:conditions="Primary:vb" />
 <a name="Native Query Performance"></a><H2>Native Query Performance</H2>
-<P>One drawback of native queries has to be pointed out: under the hood db4o tries to analyze native queries to convert them to SODA. This is not possible for all queries. For some queries it is very difficult to analyze the flowgraph. In this case db4o will have to instantiate some of the persistent objects to actually run the native query code. db4o will try to analyze parts of native query expressions to keep object instantiation to the minimum.</P>
-<P>The development of the native query optimization processor will be an ongoing process in a close dialog with the db4o community. Feel free to contribute your results and your needs by providing feedback to our <A href="http://developer.db4o.com/forums" target=_blank>db4o forums</A>.</P>
-<P>The current state of the query optimization process is detailed in the chapter on <a href="../../tuning/native_query_optimization.htm" class="wikiLink">Native Query Optimization</a></P>
-<P>With the current implementation, all above examples will run optimized, except for the "Arbitrary Code" example - we are working on it. <BR></P>
-<P>Note:</P>
+<p>One drawback of native queries has to be pointed out: under the hood db4o tries to analyze native queries to convert them to SODA. This is not possible for all queries. For some queries it is very difficult to analyze the flowgraph. In this case db4o will have to instantiate some of the persistent objects to actually run the native query code. db4o will try to analyze parts of native query expressions to keep object instantiation to the minimum.</p>
+<p>The development of the native query optimization processor will be an ongoing process in a close dialog with the db4o community. Feel free to contribute your results and your needs by providing feedback to our <A href="http://developer.db4o.com/forums">db4o forums</A>.</p>
+<p>The current state of the query optimization process is detailed in the chapter on <a href="../../tuning/native_query_optimization.htm" class="wikiLink">Native Query Optimization</a></p>
+<p>With the current implementation, all above examples will run optimized, except for the "Arbitrary Code" example - we are working on it. </p>
+<p>Note:</p>
 <UL>
 <LI>on Java Native Query optimization requires bloat.jar, db4o-nqopt.jar and db4o-instrumentation.jar to be present in the classpath;</LI>
-<LI>on .NET Native Query optimization requires a reference to <SPAN id=ctl00_ctl00_bcr_topicView___TopicBody><SPAN class=net><SPAN id=ctl00_ctl00_bcr_topicView___TopicBody><SPAN class=net>Db4obects.Db4o.Instrumentation.dll and Db4objects.Db4o.NativeQueries.dll in your project.</SPAN></SPAN></SPAN></SPAN> <BR></LI></UL></div>
+<LI>on .NET Native Query optimization requires a reference to Db4obects.Db4o.Instrumentation.dll and Db4objects.Db4o.NativeQueries.dll in your project. </LI></UL></div>
     </div>
     
-  <p>Download example code:</p>        <p></p></body></html>
+  </body></html>

@@ -3,13 +3,13 @@
 <body onload="prettyPrint()">
     <div class="CommonContent">
       <div class="CommonContentArea">
-        <h1>TA Enhancement At Build Time</h1><p><font color="#990000">This topic applies to Java version only. </font></p><p>In the <a href="ta_enhancement_at_load_time.html" class="wikiLink">previous topic</a> we discussed
+        <h1>TA Enhancement At Build Time</h1><p><font color="#990000">This topic applies to Java version only. </font></p><p>In the <a href="ta_enhancement_at_load_time.htm" class="wikiLink">previous topic</a> we discussed
 how TA can be enabled on classes while they are loaded. In this topic we will
 look at even more convenient and performant way of enhancing classes to support
 TA: during application build time. </p>
 
 <p>For our example we will take the same classes as in the
-<a href="ta_enhancement_at_load_time.html" class="wikiLink">previous example</a>, with the exception
+<a href="ta_enhancement_at_load_time.htm" class="wikiLink">previous example</a>, with the exception
 of TAInstrumentationRunner class, which won't be needed for build-time
 enhancement. Basically, we will move all the enhancing functionality of
 TAInstrumentationRunner into the build script. For this example we will create
@@ -34,7 +34,7 @@ order to test this script:</p>
 
 <ul><li>Create a new project,
      consisting of TAInstrumentationExample and SensorPanel classes from the
-     <a href="ta_enhancement_at_load_time.html" class="wikiLink">previous example</a></li><li>Add lib folder to the
+     <a href="ta_enhancement_at_load_time.htm" class="wikiLink">previous example</a></li><li>Add lib folder to the
      project root and copy the following jars from db4o distribution:</li><ul><li>ant.jar </li><li>bloat-1.0.jar</li><li>db4o-x.x-instrumentation.jar</li><li>db4o-x.x-java5.jar</li><li>db4o-x.x-taj.jar</li><li>db4o-x.x-tools.jar 
       (Note, that the described functionality is only valid for db4o releases
       after 7.0)</li></ul><li>Build the project with your
