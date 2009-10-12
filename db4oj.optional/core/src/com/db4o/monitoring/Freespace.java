@@ -11,7 +11,7 @@ import com.db4o.monitoring.internal.*;
  * @exclude
  */
 @decaf.Ignore
-public class Freespace extends NotificationEmitterMBean implements FreespaceMBean, FreespaceListener{
+public class Freespace extends MBeanRegistrationSupport implements FreespaceMBean, FreespaceListener{
 	
 	private final TimedReading _reusedSlots = TimedReading.newPerSecond();
 	
@@ -44,15 +44,6 @@ public class Freespace extends NotificationEmitterMBean implements FreespaceMBea
 
 	public int getTotalFreespace() {
 		return _totalFreespace;
-	}
-
-	public MBeanNotificationInfo[] getNotificationInfo() {
-		return new MBeanNotificationInfo[] {
-				new MBeanNotificationInfo(
-						new String[] { "Freespace" },
-						Notification.class.getName(),
-						"Notification about freespace manager"),
-			};
 	}
 
 	public void slotAdded(int size) {

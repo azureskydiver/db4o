@@ -8,7 +8,7 @@ import javax.management.*;
  * @exclude
  */
 @decaf.Ignore
-public class ReferenceSystem extends NotificationEmitterMBean implements ReferenceSystemMBean, ReferenceSystemListener {
+public class ReferenceSystem extends MBeanRegistrationSupport implements ReferenceSystemMBean, ReferenceSystemListener {
 	
 	private int _objectReferenceCount;
 
@@ -22,16 +22,6 @@ public class ReferenceSystem extends NotificationEmitterMBean implements Referen
 	
 	public void notifyReferenceCountChanged(int changedBy) {
 		_objectReferenceCount += changedBy;
-	}
-
-	public MBeanNotificationInfo[] getNotificationInfo() {
-		return new MBeanNotificationInfo[] {
-				new MBeanNotificationInfo(
-						new String[] { "ReferenceSystem" },
-						Notification.class.getName(),
-						"Notification about reference system object count"),
-				
-			};
 	}
 
 }

@@ -16,11 +16,11 @@ public class MonitoringDemo {
 	
 	private static final String DATABASE_FILE_NAME = "mydb.db4o";
 
-	private static final int PERMANENT_OBJECT_COUNT = 100000;
+	private static final int PERMANENT_OBJECT_COUNT = 10000;
 	
 	private static final int TEMPORARY_OBJECT_COUNT = 1000;
 	
-	private static final int QUERY_COUNT = 100;
+	private static final int QUERY_COUNT = 10;
 
 	private ObjectServer _server;
 
@@ -82,7 +82,8 @@ public class MonitoringDemo {
 	private void executeQueries(ObjectContainer objectContainer) {
 		for (int i = 0; i < QUERY_COUNT; i++) {
 			executeSodaQuery(objectContainer);
-			executeNativeQuery(objectContainer);
+			executeOptimizedNativeQuery(objectContainer);
+			executeUnOptimizedNativeQuery(objectContainer);
 		}
 	}
 
@@ -93,11 +94,20 @@ public class MonitoringDemo {
 		query.execute();
 	}
 	
-	private void executeNativeQuery(ObjectContainer objectContainer) {
+	private void executeOptimizedNativeQuery(ObjectContainer objectContainer) {
 		objectContainer.query(new Predicate<Item>() {
 			@Override
 			public boolean match(Item candidate) {
 				return candidate.name.equals("name1");
+			}
+		});
+	}
+	
+	private void executeUnOptimizedNativeQuery(ObjectContainer objectContainer) {
+		objectContainer.query(new Predicate<Item>() {
+			@Override
+			public boolean match(Item candidate) {
+				return candidate.name.charAt(0) == 'q';
 			}
 		});
 	}

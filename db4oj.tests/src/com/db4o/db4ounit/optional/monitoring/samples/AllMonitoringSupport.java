@@ -6,7 +6,6 @@ package com.db4o.db4ounit.optional.monitoring.samples;
 
 import com.db4o.config.*;
 import com.db4o.monitoring.*;
-// import com.db4o.monitoring.cs.*;
 
 public class AllMonitoringSupport {
 	
@@ -22,7 +21,7 @@ public class AllMonitoringSupport {
 		commonConfig.add(new NativeQueryMonitoringSupport());
 		commonConfig.add(new ReferenceSystemMonitoringSupport());
 		commonConfig.add(new FreespaceMonitoringSupport());
-		// commonConfig.add(new NetworkingMonitoringSupport());
+		commonConfig.add(new com.db4o.monitoring.cs.NetworkingMonitoringSupport());
 	}
 	
 }

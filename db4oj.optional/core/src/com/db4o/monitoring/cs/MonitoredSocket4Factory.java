@@ -10,6 +10,9 @@ import com.db4o.foundation.network.*;
  */
 @decaf.Ignore
 public class MonitoredSocket4Factory implements Socket4Factory {
+	
+	private final Socket4Factory _socketFactory;
+	
 	public MonitoredSocket4Factory(Socket4Factory socketFactory) {
 		_socketFactory = socketFactory;
 	}
@@ -22,5 +25,4 @@ public class MonitoredSocket4Factory implements Socket4Factory {
 		return new MonitoredClientSocket4(_socketFactory.createSocket(hostName, port));
 	}
 
-	private Socket4Factory _socketFactory;
 }

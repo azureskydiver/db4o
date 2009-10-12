@@ -767,15 +767,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		}
 	}
 
-	public String name() {
-		return toString();
-	}
-
 	public String toString() {
-		// if(i_classCollection != null){
-		// return i_classCollection.toString();
-		// }
-		return "Client Connection " + _userName + "(" +  _socket + ")";
+		return "Client connection " + _userName + "(" +  _socket + ")";
 	}
 
 	public void shutdown() {

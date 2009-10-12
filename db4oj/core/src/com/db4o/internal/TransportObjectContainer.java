@@ -293,5 +293,10 @@ public class TransportObjectContainer extends LocalObjectContainer {
 	protected void fatalStorageShutdown() {
 		shutdownDataStorage();
 	}
+	
+	@Override
+	public ReferenceSystem createReferenceSystem() {
+		return new HashcodeReferenceSystem();
+	}
 
 }

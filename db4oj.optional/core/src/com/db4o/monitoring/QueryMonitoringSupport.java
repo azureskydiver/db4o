@@ -14,8 +14,7 @@ import com.db4o.internal.config.*;
 public class QueryMonitoringSupport implements ConfigurationItem {
 
 	public void apply(InternalObjectContainer container) {
-		
-		final Queries queries = Db4oMBeans.newQueriesMBean(container.toString());
+		final Queries queries = Db4oMBeans.newQueriesMBean(container);
 		final CommonConfiguration config = Db4oLegacyConfigurationBridge.asCommonConfiguration(container.configure());
 		config.diagnostic().addListener(new DiagnosticListener() {
 			public void onDiagnostic(Diagnostic d) {
