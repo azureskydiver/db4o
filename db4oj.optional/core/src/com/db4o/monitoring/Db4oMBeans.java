@@ -18,15 +18,19 @@ public class Db4oMBeans {
 	
 	private static final String MONITORING_DOMAIN_NAME = "com.db4o.monitoring";
 
-	public static ObjectName mBeanNameFor(Class<?> mbeanInterface, InternalObjectContainer container) {
+	public static String mBeanIDForContainer(ObjectContainer container) {
 		if(container instanceof LocalObjectContainer){
-			return mBeanNameFor(mbeanInterface, new File(((LocalObjectContainer) container).fileName()));
+			return mBeanIDForPath(((LocalObjectContainer) container).fileName());
 		}
-		return mBeanNameFor(mbeanInterface, container.toString());
+		return container.toString();
 	}
-	
-	public static ObjectName mBeanNameFor(Class<?> mbeanInterface, File file) {
-		return mBeanNameFor(mbeanInterface, file.getName());
+
+	public static String mBeanIDForPath(String path) {
+		return mBeanIDForFile(new File(path));
+	}
+
+	public static String mBeanIDForFile(File file) {
+		return file.getName();
 	}
 	
 	public static ObjectName mBeanNameFor(Class<?> mbeanInterface, String name) {
@@ -48,7 +52,7 @@ public class Db4oMBeans {
 	
 	static IO newIOStatsMBean(String uri) {
 		try {
-			final ObjectName objectName = mBeanNameFor(IOMBean.class, uri);
+			final ObjectName objectName = mBeanNameFor(IOMBean.class, mBeanIDForPath(uri));
 			return new IO(objectName);
 		} catch (JMException e) {
 			throw new Db4oException(e);
@@ -57,7 +61,7 @@ public class Db4oMBeans {
 
 	public static Networking newClientNetworkingStatsMBean(ObjectContainer container) {
 		try {
-			final ObjectName objectName = mBeanNameFor(NetworkingMBean.class, container.toString());
+			final ObjectName objectName = mBeanNameFor(NetworkingMBean.class, mBeanIDForContainer(container));
 			return new Networking(objectName);
 		} catch (JMException e) {
 			throw new Db4oException(e);
@@ -66,7 +70,7 @@ public class Db4oMBeans {
 	
 	public static Networking newServerNetworkingStatsMBean(ObjectContainer container) {
 		try {
-			final ObjectName objectName = mBeanNameFor(NetworkingMBean.class, container.toString());
+			final ObjectName objectName = mBeanNameFor(NetworkingMBean.class, mBeanIDForContainer(container));
 			return new SynchronizedNetworking(objectName);
 		} catch (JMException e) {
 			throw new Db4oException(e);
@@ -75,7 +79,7 @@ public class Db4oMBeans {
 	
 	public static Queries newQueriesMBean(InternalObjectContainer container) {
 		try {
-			return new Queries(mBeanNameFor(QueriesMBean.class, container));
+			return new Queries(mBeanNameFor(QueriesMBean.class, mBeanIDForContainer(container)));
 		} catch (JMException e) {
 			throw new Db4oIllegalStateException(e);
 		}
@@ -83,7 +87,7 @@ public class Db4oMBeans {
 
 	public static com.db4o.monitoring.ReferenceSystem newReferenceSystemMBean(InternalObjectContainer container) {
 		try {
-			return new com.db4o.monitoring.ReferenceSystem(mBeanNameFor(ReferenceSystemMBean.class, container.toString()));
+			return new com.db4o.monitoring.ReferenceSystem(mBeanNameFor(ReferenceSystemMBean.class, mBeanIDForContainer(container)));
 		} catch (JMException e) {
 			throw new Db4oIllegalStateException(e);
 		}
@@ -91,7 +95,7 @@ public class Db4oMBeans {
 
 	public static NativeQueries newNativeQueriesMBean(InternalObjectContainer container) {
 		try {
-			return new NativeQueries(mBeanNameFor(NativeQueriesMBean.class, container.toString()));
+			return new NativeQueries(mBeanNameFor(NativeQueriesMBean.class, mBeanIDForContainer(container)));
 		} catch (JMException e) {
 			throw new Db4oIllegalStateException(e);
 		}
@@ -99,7 +103,7 @@ public class Db4oMBeans {
 
 	public static Freespace newFreespaceMBean(InternalObjectContainer container) {
 		try {
-			return new Freespace(mBeanNameFor(FreespaceMBean.class, container.toString()));
+			return new Freespace(mBeanNameFor(FreespaceMBean.class, mBeanIDForContainer(container)));
 		} catch (JMException e) {
 			throw new Db4oIllegalStateException(e);
 		}
@@ -107,7 +111,7 @@ public class Db4oMBeans {
 
 	public static ClientConnections newClientConnectionsMBean(ObjectContainer container) {
 		try {
-			return new ClientConnections(mBeanNameFor(ClientConnectionsMBean.class, container.toString()));
+			return new ClientConnections(mBeanNameFor(ClientConnectionsMBean.class, Db4oMBeans.mBeanIDForContainer(container)));
 		} catch (JMException e) {
 			throw new Db4oIllegalStateException(e);
 		}
