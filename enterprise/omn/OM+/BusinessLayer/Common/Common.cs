@@ -140,8 +140,15 @@ namespace OManager.BusinessLayer.Common
 
     	public static string UndecorateFieldName(string fieldName)
     	{
-    		int index = fieldName.IndexOf('(');
+    		int index = fieldName.LastIndexOf('(');
     		return index >= 0 ? fieldName.Remove(index - 1, fieldName.Length - index + 1) : fieldName;
     	}
+        public static string GetSimpleNameForNullable(string nullableTypeName)
+        {
+            GenericTypeReference typeRef = (GenericTypeReference)TypeReference.FromString(nullableTypeName);
+            TypeReference wrappedType = typeRef.GenericArguments[0];
+
+            return wrappedType.SimpleName;
+        }
     }
 }

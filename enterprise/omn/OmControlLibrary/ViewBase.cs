@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using EnvDTE;
 using EnvDTE80;
 using System.Runtime.InteropServices;
+using OMControlLibrary.Common;
+using Constants=EnvDTE.Constants;
 
 namespace OMControlLibrary
 {
@@ -90,6 +92,7 @@ namespace OMControlLibrary
 			return window;
 		}
 
+       
 		private static void AttachEventHandlerIfNecessary()
 		{
 			if (null == events)

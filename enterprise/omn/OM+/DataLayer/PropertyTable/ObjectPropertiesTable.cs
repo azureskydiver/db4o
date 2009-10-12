@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Db4objects.Db4o;
 using OManager.DataLayer.Modal;
 using OManager.DataLayer.Connection;
 using OME.Logging.Common;
-using OME.Logging.Tracing;
 
 namespace OManager.DataLayer.PropertyTable
 {
@@ -25,7 +22,7 @@ namespace OManager.DataLayer.PropertyTable
 
         public ObjectPropertiesTable(object obj)
         {
-            this.m_detailsforObject = obj;  
+            m_detailsforObject = obj;  
         }
         public long Version
         {
@@ -56,11 +53,10 @@ namespace OManager.DataLayer.PropertyTable
                 IObjectContainer objContainer = Db4oClient.Client;
 
                 ObjectDetails objDetails = new ObjectDetails(m_detailsforObject);
-                this.UUID = objDetails.GetUUID();
+                UUID = objDetails.GetUUID();
 
-                this.LocalID = objDetails.GetLocalID();
-                this.Version = objDetails.GetVersion();
-                this.Depth = objDetails.GetDepth(m_detailsforObject); 
+                LocalID = objDetails.GetLocalID();
+                Version = objDetails.GetVersion();
                 return this;
             }
             catch (Exception oEx)

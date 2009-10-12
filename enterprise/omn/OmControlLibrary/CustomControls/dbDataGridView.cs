@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
+using Db4objects.Db4o.Reflect.Net;
 using OManager.BusinessLayer.Common;
 using OManager.BusinessLayer.ObjectExplorer;
 using OManager.BusinessLayer.UIHelper;
@@ -11,6 +12,7 @@ using OManager.DataLayer.Connection;
 using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
+using Sharpen.Lang;
 using Type=System.Type;
 
 namespace OMControlLibrary.Common
@@ -548,8 +550,8 @@ namespace OMControlLibrary.Common
 				{
 					if (entry.Key.ToString().Equals(BusinessConstants.DB4OBJECTS_REF)) 
 						continue;
-
-					dbDataGridViewDateTimePickerColumn valueTextBoxColumn = CreateDateTimeAndComboBoxColumn(entry.Key.ToString(), entry.Key.ToString(), DataGridViewColumnSortMode.Automatic);
+					
+                    dbDataGridViewDateTimePickerColumn valueTextBoxColumn = CreateDateTimeAndComboBoxColumn(entry.Key.ToString(), entry.Key.ToString(), DataGridViewColumnSortMode.Automatic);
 					Columns.Add(valueTextBoxColumn);
 
 					if (hashAttributes.Count != 0)
@@ -629,8 +631,8 @@ namespace OMControlLibrary.Common
 	                DataGridViewCell cell = row.Cells[fieldName];
 	                cell.Tag = fieldType;
 
-	                cell.ReadOnly = !fieldType.IsEditable;
-	                if (fieldType.IsEditable)
+	                cell.ReadOnly = !(fieldType.IsEditable);
+                    if (fieldType.IsEditable  )
 	                {
 	                    cell.Value = CastedValueOrNullConstant(entry.Value, fieldType);
 	                }
@@ -658,9 +660,9 @@ namespace OMControlLibrary.Common
 	            int intIndex = fieldName.LastIndexOf('.');
 	            string strAttribName = fieldName.Substring(intIndex + 1);
 	            string clsName = Columns[fieldName].Tag.ToString();
-	            if (clsName != null && strAttribName != null)
+                if (clsName != null && strAttribName != null)
 	            {
-	                fieldType = dbInteraction.GetFieldType(clsName, strAttribName);
+                    fieldType = dbInteraction.GetFieldType(clsName, strAttribName);
 	            }
 	        }
 	        return fieldType;
@@ -684,7 +686,8 @@ namespace OMControlLibrary.Common
 	    private static object CastedValueOrNullConstant(object value, IType fieldType)
 	    {
 	        //return value != null  && VALUE_NULL != (string) value
-            return value != null ? fieldType.Cast(value) : VALUE_NULL;
+           
+            return value != null && value.ToString() !="null"? fieldType.Cast(value) : VALUE_NULL;
 	    }
 
 	    #endregion
@@ -706,6 +709,7 @@ namespace OMControlLibrary.Common
 		private string m_DataTypeHeaderText;
 		private string m_IsIndexedHeaderText;
 		private string m_IsPublicHeaderText;
+	    private string m_TypeNameHeaderText;
 
 		//Class Property Table for Objects
 		private string m_UUIDHeaderText;
@@ -763,8 +767,13 @@ namespace OMControlLibrary.Common
 																			m_IsPublicHeaderText, 
 																			DataGridViewColumnSortMode.NotSortable);
 				isPublicCheckBoxColumn.ReadOnly = true;
-
-				Columns.AddRange( new DataGridViewColumn[] { fieldNameTextBoxColumn, dataTypeTextBoxColumn, isIndexedCheckBoxColumn, isPublicCheckBoxColumn });
+                DataGridViewColumn typeTextBoxColumn = New<DataGridViewTextBoxColumn>(
+                                                                    m_TypeNameHeaderText,
+                                                                    m_TypeNameHeaderText,
+                                                                    DataGridViewColumnSortMode.NotSortable,
+                                                                    DataGridViewAutoSizeColumnMode.Fill);
+                typeTextBoxColumn.Visible = false;
+                Columns.AddRange(new DataGridViewColumn[] { fieldNameTextBoxColumn, dataTypeTextBoxColumn, isIndexedCheckBoxColumn, isPublicCheckBoxColumn, typeTextBoxColumn });
 
 			}
 			catch (Exception oEx)
@@ -806,7 +815,7 @@ namespace OMControlLibrary.Common
 
                 DataGridViewTextBoxColumn DisplayclassNameTextBoxColumn =
                     CreateTextBoxColumn(string.Empty, Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN, DataGridViewColumnSortMode.NotSortable);
-                classNameTextBoxColumn.Visible = false;
+                DisplayclassNameTextBoxColumn.Visible = false;
 
 				DataGridViewTextBoxColumn fieldTypeTextBoxColumn =
 								   CreateTextBoxColumn(string.Empty, Constants.QUERY_GRID_FIELDTYPE_HIDDEN,
@@ -959,6 +968,7 @@ namespace OMControlLibrary.Common
 				m_DataTypeHeaderText = Helper.GetResourceString(Constants.CLASS_PROPERTY_DATA_TYPE);
 				m_IsIndexedHeaderText = Helper.GetResourceString(Constants.CLASS_PROPERTY_ISINDEXED);
 				m_IsPublicHeaderText = Helper.GetResourceString(Constants.CLASS_PROPERTY_ISPUBLIC);
+                m_TypeNameHeaderText = "Type";
 			}
 			catch (Exception oEx)
 			{
@@ -1033,17 +1043,29 @@ namespace OMControlLibrary.Common
 			return New<DataGridViewTextBoxColumn>(headertext, name, sortMode, DataGridViewAutoSizeColumnMode.None);
 		}
 
-		internal static T New<T>(string headertext, string name, DataGridViewColumnSortMode sortMode, DataGridViewAutoSizeColumnMode autoSizeMode) where T : DataGridViewColumn, new()
-		{
-			T newColumn = new T();
-			newColumn.HeaderText = headertext;
-			newColumn.AutoSizeMode = autoSizeMode;
-			newColumn.SortMode = sortMode;
-			newColumn.Name = name;
-			
-			return newColumn;
-		}
+        internal static T New<T>(string headertext, string name, DataGridViewColumnSortMode sortMode, DataGridViewAutoSizeColumnMode autoSizeMode) where T : DataGridViewColumn, new()
+        {
+            T newColumn = new T();
+            newColumn.HeaderText = headertext;
+            newColumn.AutoSizeMode = autoSizeMode;
+            newColumn.SortMode = sortMode;
+            newColumn.Name = name;
 
+            return newColumn;
+        }
+
+        internal static dbDataGridViewDateTimePickerColumn CreateDateTimeAndComboBoxColumn(string headertext, string name, DataGridViewColumnSortMode sortMode)
+        {
+            return New<dbDataGridViewDateTimePickerColumn>(headertext, name, sortMode, DataGridViewAutoSizeColumnMode.None);
+        //    //dbDataGridViewDateTimePickerColumn newDataGridViewTextBoxColumn;
+        //    //newDataGridViewTextBoxColumn = new dbDataGridViewDateTimePickerColumn();
+        //    //newDataGridViewTextBoxColumn.HeaderText = headertext;
+        //    //newDataGridViewTextBoxColumn.AutoSizeMode =
+        //    //    DataGridViewAutoSizeColumnMode.None;
+        //    //newDataGridViewTextBoxColumn.SortMode = sortMode;
+        //    //newDataGridViewTextBoxColumn.Name = name;
+        //    //return newDataGridViewTextBoxColumn;
+        }
 		internal static DataGridViewComboBoxColumn CreateComboBoxColumn(string headertext, string name, DataGridViewColumnSortMode sortMode)
 		{
 			DataGridViewComboBoxColumn newColumn = New<DataGridViewComboBoxColumn>(headertext, name, sortMode, DataGridViewAutoSizeColumnMode.None);
@@ -1076,10 +1098,10 @@ namespace OMControlLibrary.Common
 		/// <param name="name"></param>
 		/// <param name="sortMode"></param>
 		/// <returns></returns>
-		internal static dbDataGridViewDateTimePickerColumn CreateDateTimeAndComboBoxColumn(string headertext, string name, DataGridViewColumnSortMode sortMode)
-		{
-			return New<dbDataGridViewDateTimePickerColumn>(headertext, name, sortMode, DataGridViewAutoSizeColumnMode.None);
-		}
+        //internal static dbDataGridViewDateTimePickerColumn CreateDateTimeAndComboBoxColumn(string headertext, string name, DataGridViewColumnSortMode sortMode)
+        //{
+        //    return New<dbDataGridViewDateTimePickerColumn>(headertext, name, sortMode, DataGridViewAutoSizeColumnMode.None);
+        //}
 		#endregion
 
 		#region Public Method
@@ -1200,8 +1222,14 @@ namespace OMControlLibrary.Common
 							Rows[dataIndex].Cells[colname].Style.WrapMode = DataGridViewTriState.True;
 							
 							AutoResizeRow(dataIndex);
-							Rows[dataIndex].Cells[colname].Value = dataObjectValue.ToString();
-							#endregion Text without image
+                            if (dataObjectValue is IType )
+							Rows[dataIndex].Cells[colname].Value = dataObjectValue;
+                            else
+                            {
+                               Rows[dataIndex].Cells[colname].Value = dataObjectValue.ToString();
+                            }
+
+					        #endregion Text without image
 							break;
 					}
 				}
@@ -1304,12 +1332,13 @@ namespace OMControlLibrary.Common
 			return Rows.Count > 0;
 		}
 
-		private static string FullyQualifiedClassNameFor(TreeNode node)
-		{
-			return node.Tag.ToString().Contains(",") ? node.Tag.ToString() : node.Name;
-		}
+        private static string FullyQualifiedClassNameFor(TreeNode node)
+        {
+            IType type = Db4oClient.TypeResolver.Resolve(node.Tag.ToString());
+            return type == null ? (node.Parent != null ? node.Parent.Name : node.Text) : type.FullName;
+        }
 
-		internal bool AddAllItemsOfClassToQueryBuilder(TreeNode tempTreeNode, QueryBuilder queryBuilder)
+	    internal bool AddAllItemsOfClassToQueryBuilder(TreeNode tempTreeNode, QueryBuilder queryBuilder)
 		{
 			try
 			{
@@ -1328,7 +1357,7 @@ namespace OMControlLibrary.Common
 					while (eNum.MoveNext())
 					{
 					    IType itemType = Db4oClient.TypeResolver.Resolve(eNum.Value.ToString());
-						if (!itemType.IsPrimitive)
+						if (!itemType.IsEditable )
 							continue;
 							
 						if (queryBuilder.QueryGroupCount == 0 && Rows.Count == 0 && queryBuilder.AttributeCount == 0)
@@ -1356,6 +1385,7 @@ namespace OMControlLibrary.Common
 		{
 			try
 			{
+			 
 				Rows.Add(1);
 				int index = Rows.Count - 1;
 				Rows[index].Cells[0].Value = parentName;
@@ -1363,7 +1393,14 @@ namespace OMControlLibrary.Common
 				Rows[index].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value = type.DisplayName  ;
 
 			    Rows[index].Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value = type;
-				if (type.IsSameAs(typeof(Boolean)))
+			   // Rows[index].Tag = type;
+			    string nullableStringType = string.Empty;
+			   if(type.IsNullable )
+			   {
+			       nullableStringType = CommonValues.GetSimpleNameForNullable(type.FullName );
+			   }
+
+               if (type.IsSameAs(typeof(Boolean)) || nullableStringType == "System.Boolean")
 				{
 					Rows[index].Cells[2].Value = "True";
 				}

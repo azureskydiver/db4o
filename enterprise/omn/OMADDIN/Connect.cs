@@ -1146,7 +1146,7 @@ namespace OMAddin
 				}
 				else
 				{
-					SaveData();
+					Helper.SaveData();
 					try
 					{
                         SetPicture(assembly, (CommandBarButton) connectDatabaseMenu.Control, IMAGE_CONNECT, IMAGE_CONNECT_MASKED);
@@ -1182,46 +1182,13 @@ namespace OMAddin
 			{
 				using (Stream imageStreamMask = assembly.GetManifestResourceStream(masked))
 				{
-					button.Picture = (StdPicture)MyHost.IPictureDisp(Image.FromStream(imageStream));
-					button.Mask = (StdPicture)MyHost.IPictureDisp(Image.FromStream(imageStreamMask));
+					button.Picture = (StdPicture)PictureHost .IPictureDisp(Image.FromStream(imageStream));
+                    button.Mask = (StdPicture)PictureHost.IPictureDisp(Image.FromStream(imageStreamMask));
 				}
 			}
 		}
 
-		private static void SaveData()
-		{
-			try
-			{
-				if (Helper.HashClassGUID != null)
-				{
-					foreach (DictionaryEntry entry in Helper.HashClassGUID)
-					{
-						string enumwinCaption = entry.Key.ToString();
-						int index = enumwinCaption.LastIndexOf(',');
-						string strClassName = enumwinCaption.Remove(0, index);
-
-						string str = enumwinCaption.Remove(index);
-
-						index = str.IndexOf('.');
-						string caption = str.Remove(0, index + 1) + strClassName;
-
-
-						dbDataGridView db = ListofModifiedObjects.Instance[enumwinCaption] as dbDataGridView;
-						if (db != null)
-						{
-							bool check = false;
-							bool checkforValueChanged = false;
-							ListofModifiedObjects.SaveBeforeWindowHiding(ref check, ref checkforValueChanged, caption, db, -1);
-							ListofModifiedObjects.Instance.Remove(enumwinCaption);
-						}
-					}
-				}
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.HandleException(oEx);
-			}
-		}
+		
 		#endregion
 
 		#region CloseAllToolWindows

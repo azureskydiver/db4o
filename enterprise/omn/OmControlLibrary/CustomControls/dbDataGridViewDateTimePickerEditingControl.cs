@@ -47,27 +47,25 @@ namespace OMControlLibrary.Common
 		{
 			get
 			{
-				if (this.Checked)
-				{
-					return this.Value;
-				}
-				else
-				{
-					string cellValue = string.Empty;
-					if (m_DataGridView.CurrentCell.Value != null)
-					{
-						//string val = this.Value.ToString();
-						cellValue = m_DataGridView.CurrentCell.Value.ToString();
-					}
+			    if (this.Checked)
+			        return this.Value;
+			    else
+			    {
+			        string cellValue = string.Empty;
+			        if (m_DataGridView.CurrentCell.Value != null)
+			        {
+			            //string val = this.Value.ToString();
+			            cellValue = m_DataGridView.CurrentCell.Value.ToString();
+			        }
 
-					return cellValue;
-				}
+			        return cellValue;
+			    }
 			}
 			set
 			{
 				//TODO: need to be change as per the control
 				DateTimeConverter dtConverter = new DateTimeConverter();
-				this.Value = (DateTime)dtConverter.ConvertFrom(value);
+				Value = (DateTime)dtConverter.ConvertFrom(value);
 			}
 		}
 

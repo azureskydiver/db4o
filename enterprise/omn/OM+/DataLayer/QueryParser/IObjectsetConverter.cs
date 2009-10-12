@@ -51,20 +51,24 @@ namespace OManager.DataLayer.QueryParser
 
                     	for (int i = pgdata.StartIndex; i < pgdata.EndIndex ; i++)
                     	{
-                    		if (pgdata.ObjectId[i] == 0) 
-								continue;
+                    	    if (pgdata.ObjectId[i] == 0)
+                    	        continue;
 
-                    		rowObj = objectContainer.Ext().GetByID(pgdata.ObjectId[i]);
-                    		if (m_refresh)
-                    		{
-                    			objectContainer.Ext().Refresh(rowObj, 1);
-                    		}
-                    		else
-                    		{
-                    			objectContainer.Ext().Activate(rowObj, 1);
-                    		}
+                    	    rowObj = objectContainer.Ext().GetByID(pgdata.ObjectId[i]);
+                            if (rowObj != null)
+                            {
 
-                    		if (rowObj != null)
+                                if (m_refresh)
+                                {
+                                    objectContainer.Ext().Refresh(rowObj, 1);
+                                }
+                                else
+                                {
+                                    objectContainer.Ext().Activate(rowObj, 1);
+                                }
+                            }
+
+                    	    if (rowObj != null)
                     		{
                     			hashFieldValue = checkforprimitives(reff, rowObj);
                     			m_lstRowContent.Add(hashFieldValue);
@@ -94,16 +98,19 @@ namespace OManager.DataLayer.QueryParser
                             if (pgdata.ObjectId[i] != 0)
                             {
                                 rowObj = objectContainer.Ext().GetByID(pgdata.ObjectId[i]);
-                                if (m_refresh)
+                                if (rowObj != null)
                                 {
-                                    objectContainer.Ext().Refresh(rowObj, length);
-                                }
-                                else
-                                {
-                                    objectContainer.Ext().Activate(rowObj, length);
-                                }
+                                    if (m_refresh)
+                                    {
+                                        objectContainer.Ext().Refresh(rowObj, length);
+                                    }
+                                    else
+                                    {
+                                        objectContainer.Ext().Activate(rowObj, length);
+                                    }
 
-                                hashFieldValue = UpdateResults(rowObj, attribute);
+                                    hashFieldValue = UpdateResults(rowObj, attribute);
+                                }
                             }
                         }
                         if (hashFieldValue.Count != 0)
@@ -181,13 +188,12 @@ namespace OManager.DataLayer.QueryParser
                     {
 
                         string fieldType = rfield.GetFieldType().GetName();
-                        int index = fieldType.IndexOf(',');
-                        fieldType = fieldType.Substring(0, index);
+                        IType type = Db4oClient.TypeResolver.Resolve(fieldType);
                         if (m_hashRowContent == null)
                         {
                             m_hashRowContent = new Hashtable();
                         }
-                        if (!CommonValues.IsPrimitive(fieldType))
+                        if (!type.IsEditable )
                         {
                             if (!rfield.GetFieldType().IsCollection() && !rfield.GetFieldType().IsArray())
                             {                                
@@ -267,26 +273,30 @@ namespace OManager.DataLayer.QueryParser
                     string name = reflectField.GetName();
                     object value = reflectField.Get(obj);
 
-                	IType type = Db4oClient.TypeResolver.Resolve(reflectField.GetFieldType());
-                    if (value != null)
+                    IReflectClass fieldType = reflectField.GetFieldType();
+                    if(fieldType!=null)
                     {
-                        if (!type.IsEditable)
+                        IType type = Db4oClient.TypeResolver.Resolve(reflectField.GetFieldType());
+                        if (value != null)
                         {
-                            value = reflectField.GetFieldType();
+                            if (type.IsArray || type.IsCollection || !type.IsEditable )
+                            {
+                                value = reflectField.GetFieldType();
+                            }
+
+                            if (!hash.ContainsKey(name))
+                            {
+                                string gridValue = value.ToString();
+                                if (gridValue.StartsWith(BusinessConstants.DB4OBJECTS_GCLASS))
+                                    gridValue = gridValue.Remove(0, BusinessConstants.DB4OBJECTS_GCLASS.Length);
+                                hash.Add(name, gridValue);
+                            }
                         }
-                        
-						if (!hash.ContainsKey(name))
+                        else
                         {
-                            string gridValue = value.ToString();
-                            if (gridValue.StartsWith(BusinessConstants.DB4OBJECTS_GCLASS))
-                                gridValue = gridValue.Remove(0, BusinessConstants.DB4OBJECTS_GCLASS.Length);  
-                            hash.Add(name, gridValue);
+                            if (!hash.ContainsKey(name))
+                                hash.Add(name, BusinessConstants.DB4OBJECTS_NULL);
                         }
-                    }
-                    else
-                    {
-                        if (!hash.ContainsKey(name))
-                            hash.Add(name, BusinessConstants.DB4OBJECTS_NULL);
                     }
                 }
                 return hash;

@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 
+
 namespace OME.AdvancedDataGridView
 {
     /// <summary>
@@ -38,8 +39,7 @@ namespace OME.AdvancedDataGridView
                     initialFormattedValue,
                     dataGridViewCellStyle);
 
-                string typeOfValue = DataGridView.Rows[rowIndex].Cells[2].Value.ToString();
-
+                string typeOfValue = DataGridView.Rows[rowIndex].Cells[2].Value.ToString() ;
                 if (typeOfValue == typeof(DateTime).ToString())
                 {
                     TreeGridViewDateTimePickerEditingControl ctl = DataGridView.EditingControl as TreeGridViewDateTimePickerEditingControl;
@@ -92,18 +92,21 @@ namespace OME.AdvancedDataGridView
         {
             get
             {
+                string typeOfValue = string.Empty;
             	Type controlType = typeof (DataGridViewTextBoxEditingControl);
-            	string typeOfValue = DataGridView.Rows[RowIndex].Cells[2].Value.ToString();
-
-            	if (typeOfValue == typeof (DateTime).ToString())
-            	{
-            		controlType = typeof (TreeGridViewDateTimePickerEditingControl);
-            	}
-            	else if (typeOfValue == typeof (Boolean).ToString())
-            	{
-            		controlType = typeof (DataGridViewComboBoxEditingControl);
-            	}
-				return controlType;
+                if (DataGridView.Rows[RowIndex].Cells[2].Value != null)
+                {
+                    typeOfValue = DataGridView.Rows[RowIndex].Cells[2].Value.ToString();
+                    if (typeOfValue == typeof (DateTime).ToString())
+                    {
+                        controlType = typeof (TreeGridViewDateTimePickerEditingControl);
+                    }
+                    else if (typeOfValue == typeof (Boolean).ToString())
+                    {
+                        controlType = typeof (DataGridViewComboBoxEditingControl);
+                    }
+                }
+                return controlType;
             }
         }
 

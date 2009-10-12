@@ -1,8 +1,6 @@
-#region Namespaces
 using System;
 using System.Collections.Generic;
 using System.Text;
-#endregion
 
 namespace OMControlLibrary.Common
 {
@@ -261,7 +259,12 @@ namespace OMControlLibrary.Common
 		internal const string CONTEXT_MENU_SHOW_ALL_OBJECTS = "CONTEXT_MENU_SHOW_ALL_OBJECTS";
 		internal const string CONTEXT_MENU_EXPRESSION_GROUP = "EXPRESSION_GROUP_";
 
+        //
+        public const char CONST_DOT_CHAR = '.';
 
+        public const string CONST_COMMA_STRING = ",";
+        public const char CONST_COMMA_CHAR = ',';
+	    public const string QUERYRESULT = "OMControlLibrary.QueryResult";
 	}
 	#endregion
 }

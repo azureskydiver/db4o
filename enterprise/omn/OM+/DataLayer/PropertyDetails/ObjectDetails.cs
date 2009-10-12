@@ -6,6 +6,7 @@ using Db4objects.Db4o.Reflect;
 using Db4objects.Db4o.Reflect.Generic;
 using OManager.DataLayer.CommonDatalayer;
 using OManager.DataLayer.Connection;
+using OManager.DataLayer.Reflection;
 using OME.Logging.Common;
 using System.Collections;
 using OManager.BusinessLayer.Common;
@@ -73,13 +74,13 @@ namespace OManager.DataLayer.Modal
                         {
 
                             object getObject = field.Get(obj);
-                            string fieldType = field.GetFieldType().GetName();
-                            fieldType = DataLayerCommon.PrimitiveType(fieldType);
+                            string getFieldType = field.GetFieldType().GetName();
+                            IType fieldType = Db4oClient.TypeResolver.Resolve(getFieldType);
                             if (getObject != null)
                             {
-                                if (!CommonValues.IsPrimitive(fieldType))
+                                if (!fieldType.IsEditable )
                                 {
-                                    if (field.GetFieldType().IsCollection())
+                                    if (fieldType.IsCollection)
                                     {
                                         ICollection coll = (ICollection)field.Get(obj);
                                         ArrayList arrList = new ArrayList(coll);
@@ -103,7 +104,7 @@ namespace OManager.DataLayer.Modal
                                        
                                        
                                     }
-                                    else if (field.GetFieldType().IsArray())
+                                    else if (fieldType.IsArray)
                                     {
 
                                         int length = objectContainer.Ext().Reflector().Array().GetLength(field.Get(obj));

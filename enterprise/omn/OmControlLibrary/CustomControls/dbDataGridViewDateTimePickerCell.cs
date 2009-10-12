@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
+using OManager.BusinessLayer.Common;
 using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
 
@@ -15,12 +16,6 @@ namespace OMControlLibrary.Common
 	/// </summary>
 	public class dbDataGridViewDateTimePickerCell : DataGridViewTextBoxCell
 	{
-		#region Member Variables
-
-		//string m_CellData = string.Empty;
-
-		#endregion Member Variables
-
 		#region Constructor
 
 		public dbDataGridViewDateTimePickerCell()
@@ -49,11 +44,22 @@ namespace OMControlLibrary.Common
 					dataGridViewCellStyle);
 
 				string typeOfValue = string.Empty;
-			    IType type = this.Tag as IType ;
-				if (this.Tag == null)
-					typeOfValue = this.DataGridView.Rows[rowIndex].Cells[Constants.QUERY_GRID_FIELDTYPE_HIDDEN].Value.ToString();
+                IType type = this.Tag as IType;
+                if (type == null || type.IsNullable)
+                 type =
+                        this.DataGridView.Rows[rowIndex].Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value as
+                        IType;
+                    if(type.IsNullable )
+                    {
+                        typeOfValue = CommonValues.GetSimpleNameForNullable(type.FullName);
+                    }
+                    else
+                    {
+                        typeOfValue = type.DisplayName;
+                    }
+               // }
 
-				if (typeOfValue == typeof(System.DateTime).ToString() ||
+			    if (typeOfValue == typeof(System.DateTime).ToString() ||
 					(type != null && type.IsSameAs(typeof(DateTime))))
 				{
 					dbDataGridViewDateTimePickerEditingControl ctl =
@@ -63,7 +69,7 @@ namespace OMControlLibrary.Common
 					{
 						try
 						{
-							//ctl.Value = Convert.ToDateTime(this.Value.ToString());
+							
                             DateTimeFormatInfo dateTimeFormatterProvider = DateTimeFormatInfo.CurrentInfo.Clone() as DateTimeFormatInfo;
                             dateTimeFormatterProvider.ShortDatePattern = "MM/dd/yyyy hh:mm:ss tt";
                             DateTime dateTime = DateTime.Parse(Value.ToString(), dateTimeFormatterProvider);
@@ -86,7 +92,6 @@ namespace OMControlLibrary.Common
 					//setting combox style
 					ctl.DropDownStyle = ComboBoxStyle.DropDownList;
 					ctl.FlatStyle = FlatStyle.Popup;
-					//ctl.DropDownWidth = this.Value.ToString().Length;
 					FillBoolColumnValue(ctl);
 
 					if (this.Value != null && this.Value != this.OwningColumn.DefaultCellStyle)

@@ -7,7 +7,7 @@ using OManager.DataLayer.Connection;
 using OManager.BusinessLayer.Common;
 using OManager.DataLayer.CommonDatalayer;
 using OME.Logging.Common;
-
+using OManager.DataLayer.Reflection;
 
 namespace OManager.DataLayer.QueryParser
 {
@@ -188,50 +188,7 @@ namespace OManager.DataLayer.QueryParser
         }
 
 
-        //public IConstraint ApplyOperatorForDate(IConstraint cons, string db4oOperator)
-        //{
-        //    try
-        //    {
-                 
-        //        switch (db4oOperator)
-        //        {
-                       
-        //            //case BusinessConstants.CONDITION_STARTSWITH:
-        //            //    cons.StartsWith(false);
-        //            //    break;
-        //            //case BusinessConstants.CONDITION_ENDSWITH:
-        //            //    cons.EndsWith(false);
-        //            //    break;
-        //            case BusinessConstants.CONDITION_EQUALS:
-        //                cons.Equal();
-        //                break;
-        //            case BusinessConstants.CONDITION_NOTEQUALS:
-        //                cons.Like().Not();
-        //                break;
-        //            case BusinessConstants.CONDITION_GREATERTHAN:
-        //                cons.Greater();
-        //                break;
-        //            case BusinessConstants.CONDITION_GREATERTHANEQUAL:
-        //                cons.Greater().Equal();
-        //                break;
-        //            case BusinessConstants.CONDITION_LESSTHAN:
-        //                cons.Smaller();
-        //                break;
-        //            case BusinessConstants.CONDITION_LESSTHANEQUAL:
-        //                cons.Smaller().Equal();
-        //                break;
-        //            //case BusinessConstants.CONDITION_CONTAINS:
-        //            //    cons.Like();
-        //            //    break;
-        //        }
-        //        return cons;
-        //    }
-        //    catch (Exception oEx)
-        //    {
-        //        LoggingHelper.HandleException(oEx);
-        //        return null;
-        //    }
-        //}
+      
 
         public void FormulateRootConstraints(IQuery query, string classname)
         {
@@ -248,7 +205,7 @@ namespace OManager.DataLayer.QueryParser
             }
         }
 
-//        public IConstraint FormulateFieldConstraints(IQuery query, string classname, string fieldname, string value)
+
         public IConstraint FormulateFieldConstraints(IQuery query, OMQueryClause clause)
         {            
             try
@@ -256,35 +213,11 @@ namespace OManager.DataLayer.QueryParser
                 IConstraint cons = null;
                 string[] str = clause.Fieldname.Split('.');
                 IQuery q = AddAsDescends(query, str);
-                //classname = DataLayerCommon.RemoveGFromClassName(classname);
-                //string valueType = ConvertToValue(classname, str[str.Length - 1]);              
+                IType type= Db4oClient.TypeResolver.Resolve(clause.FieldType);
 
-                switch (clause.FieldType)
+
+                switch (type.DisplayName )
                 {
-                    case BusinessConstants.INT16:
-                        cons = q.Constrain(Convert.ToInt32(clause.Value));
-                        break;
-                    case BusinessConstants.INT32:
-                        cons = q.Constrain(Convert.ToInt32(clause.Value));
-                        break;
-                    case BusinessConstants.INT64:
-                        cons = q.Constrain(Convert.ToInt64(clause.Value));
-                        break;
-                    case BusinessConstants.SINGLE:
-                        cons = q.Constrain(Convert.ToSingle(clause.Value));
-                        break;
-                    case BusinessConstants.DOUBLE:
-                        cons = q.Constrain(Convert.ToDouble(clause.Value));
-                        break;
-                    case BusinessConstants.DECIMAL:
-                        cons = q.Constrain(Convert.ToDecimal(clause.Value));
-                        break;
-                    case BusinessConstants.CHAR:
-                        cons = q.Constrain(Convert.ToChar(clause.Value));
-                        break;
-                    case BusinessConstants.BYTE:
-                        cons = q.Constrain(Convert.ToByte(clause.Value));
-                        break;
                     case BusinessConstants.DATETIME:
                         {
                             IConstraint c1=null, c2=null;
@@ -313,23 +246,9 @@ namespace OManager.DataLayer.QueryParser
                             }
                                 break;
                         }
-                    case BusinessConstants.BOOLEAN:
-                        cons = q.Constrain(Convert.ToBoolean(clause.Value));
-                        break;
-                    case BusinessConstants.SBYTE:
-                        cons = q.Constrain(Convert.ToSByte(clause.Value));
-                        break;
-                    case BusinessConstants.UINT16:
-                        cons = q.Constrain(Convert.ToUInt32(clause.Value));
-                        break;
-                    case BusinessConstants.UINT32:
-                        cons = q.Constrain(Convert.ToUInt32(clause.Value));
-                        break;
-                    case BusinessConstants.UINT64:
-                        cons = q.Constrain(Convert.ToUInt64(clause.Value));
-                        break;
+                    
                     default:
-                        cons = q.Constrain(clause.Value);
+                        cons = q.Constrain(type.Cast(clause.Value));
                         break;
                 }
 

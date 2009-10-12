@@ -17,13 +17,13 @@ namespace OManager.DataLayer.PropertyTable
 		private bool m_isIndexed;
 		private bool m_isPublic;
 		private readonly string m_dataType;
-
+        private readonly IType m_type;
 		public FieldProperties(string fieldName, string fieldType)
 		{
 			m_fieldName = fieldName;
-			
-			IType type = Db4oClient.TypeResolver.Resolve(fieldType);
-			m_dataType = type.DisplayName;
+
+            m_type = Db4oClient.TypeResolver.Resolve(fieldType);
+            m_dataType = m_type.DisplayName;
 		}
 
         public bool Indexed
@@ -49,7 +49,12 @@ namespace OManager.DataLayer.PropertyTable
             get { return m_dataType; }
         }
 
-		public static ArrayList FieldsFrom(string className)
+        public IType Type
+        {
+            get { return m_type; }
+        }
+
+        public static ArrayList FieldsFrom(string className)
         {
             try
             {

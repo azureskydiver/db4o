@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Db4objects.Db4o.Ext;
 using  OManager.BusinessLayer.Login;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
@@ -35,8 +36,8 @@ namespace OManager.DataLayer.Maintanence
             }
             catch (Exception oEx)
             {
-                LoggingHelper.HandleException(oEx);              
-
+                LoggingHelper.HandleException(oEx );
+                throw;
             }
         }
         
@@ -45,11 +46,13 @@ namespace OManager.DataLayer.Maintanence
         {
             Db4oFactory.Configure().ReadOnly(false);
             IConfiguration config = Db4oFactory.NewConfiguration();
+            config.Add(new JavaSupport());
             config.ActivationDepth(int.MaxValue);
             config.UpdateDepth(int.MaxValue) ;
             return config;
 
         }
+       
 
     }
 

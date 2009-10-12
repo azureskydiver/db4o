@@ -7,6 +7,7 @@ using EnvDTE;
 using OManager.BusinessLayer.Login;
 using OManager.BusinessLayer.UIHelper;
 using OManager.DataLayer.PropertyTable;
+using OManager.DataLayer.Reflection;
 using OMControlLibrary.Common;
 using OME.Logging.Common;
 using OME.Logging.Tracing;
@@ -153,16 +154,12 @@ namespace OMControlLibrary
 							//Enable Disable IsIndexed Checkboxes
 							foreach (DataGridViewRow row in dbGridViewProperties.Rows)
 							{
-								if (Helper.IsPrimitive(row.Cells[1].Value.ToString()))
+                                IType type = row.Cells["Type"].Value as IType;
+                                if (type.IsEditable)
 								{
 									row.Cells[2].ReadOnly = false;
 								}
-								//index should be disabled for arrays and collections
-								else if (Helper.IsArrayOrCollection(row.Cells[1].Value.ToString()))
-								{
-									row.Cells[2].ReadOnly = true;
-								}
-								else //if a sub object field , index should be disabled
+								else 
 									row.Cells[2].ReadOnly = true;
 							}
 

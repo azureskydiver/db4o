@@ -38,7 +38,7 @@ namespace OMControlLibrary
 
 		#region Member Variable
 
-		private string typeOfNode = string.Empty;
+		
 		private int m_attributeCount;
 		private int m_queryGroupCount;
 
@@ -58,10 +58,7 @@ namespace OMControlLibrary
 		private ToolTip recentQueriesToolTip;
 
 		//Constants 
-		private const char CONST_DOT_CHAR = '.';
-
-		private const string CONST_COMMA_STRING = ",";
-		private const char CONST_COMMA_CHAR = ',';
+		
 		private WindowEvents _windowsEvents;
 
 		#endregion
@@ -396,7 +393,7 @@ namespace OMControlLibrary
 		{
 			try
 			{
-				CreateQueryResultToolWindow();
+                Helper.CreateQueryResultToolwindow(objectid);
 				ObjectBrowser.Instance.Enabled = true;
 				PropertiesTab.Instance.Enabled = true;
 				Instance.Enabled = true;
@@ -477,47 +474,8 @@ namespace OMControlLibrary
 			}
 		}
 
-		public delegate void delPassData(long[] objectid);
-
-		private void CreateQueryResultToolWindow()
-		{
-			try
-			{
-				OMETrace.WriteFunctionStart();
-
-				string guidpos = Helper.GetClassGUID(Helper.BaseClass);
-
-				int index = Helper.BaseClass.LastIndexOf(CONST_COMMA_CHAR);
-				string strClassName = Helper.BaseClass.Remove(0, index);
-
-				string str = Helper.BaseClass.Remove(index);
-
-				index = str.LastIndexOf(CONST_DOT_CHAR);
-				string caption = str.Remove(0, index + 1) + strClassName;
-
-				QueryResult queryResult;
-				Helper.QueryResultToolWindow = CreateToolWindow("OMControlLibrary.QueryResult", caption, guidpos, out queryResult);
-
-				delPassData del = queryResult.Setobjectid;
-				del(objectid);
-
-				Helper.QueryResultToolWindow.IsFloating = false;
-				Helper.QueryResultToolWindow.Linkable = false;
-				if (Helper.QueryResultToolWindow.AutoHides)
-				{
-					Helper.QueryResultToolWindow.AutoHides = false;
-				}
-				Helper.QueryResultToolWindow.Visible = true;
-
-				OMETrace.WriteFunctionEnd();
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-		}
-
-		/// <summary>
+	
+	    /// <summary>
 		/// Raise an event OnQueryBuilderDragEnter
 		/// </summary>
 		/// <param name="sender"></param>
@@ -689,10 +647,10 @@ namespace OMControlLibrary
 						}
 						else
 						{
-							string typeOfNode = Helper.GetTypeOfObject(tempTreeNode.Tag.ToString());
+                            IType fieldType = Db4oClient.TypeResolver.Resolve(tempTreeNode.Tag.ToString());
 
 							//If selected item is not a primitive type than dont allow to drage item
-							if (!Helper.IsPrimitive(typeOfNode))
+							if (!fieldType.IsEditable)
 								return;
 
 							//If field is not selected and Query Group has no clauses then reset the base class.
@@ -711,10 +669,13 @@ namespace OMControlLibrary
 								return;
 							if (tempTreeNode.Parent != null)
 							{
-								className = tempTreeNode.Parent.Tag.ToString().Contains(CONST_COMMA_STRING) ? tempTreeNode.Parent.Tag.ToString() : tempTreeNode.Parent.Name;
+							    IType type = Db4oClient.TypeResolver.Resolve(tempTreeNode.Parent.Tag.ToString());
+							    className = type != null ? type.FullName : tempTreeNode.Parent.Name;
+							  
 							}
-							//Add a new row and assing required values.
-							AddElementToAttributeGrid(className, fullpath);
+						    //Add a new row and assing required values.
+                            Helper.AddElementToAttributeGrid(dbDataGridAttributes, className, fullpath);
+							
 							if (!Helper.HashTableBaseClass.Contains(Helper.BaseClass))
 								Helper.HashTableBaseClass.Add(Helper.BaseClass, string.Empty);
 						}
@@ -737,9 +698,15 @@ namespace OMControlLibrary
 
 			if (!Helper.HashTableBaseClass.Contains(Helper.BaseClass))
 				Helper.HashTableBaseClass.Add(Helper.BaseClass, string.Empty);
+            
+		    string tempClassName = string.Empty;
+            IType type = Db4oClient.TypeResolver.Resolve(tempTreeNode.Tag.ToString());
+		    tempClassName = type != null
+		                        ? type.FullName
+		                        : (tempTreeNode.Parent != null ? tempTreeNode.Parent.Name : tempTreeNode.Text);
 
-			string tempClassName = tempTreeNode.Tag.ToString().Contains(CONST_COMMA_STRING) ? tempTreeNode.Tag.ToString() : tempTreeNode.Name;
-			Hashtable storedfields = dbInteraction.FetchStoredFields(tempClassName);
+
+		    Hashtable storedfields = dbInteraction.FetchStoredFields(tempClassName);
 			if (storedfields == null) 
 				return;
 
@@ -749,8 +716,8 @@ namespace OMControlLibrary
 			{
 				while (eNum.MoveNext())
 				{
-					typeOfNode = Helper.GetTypeOfObject(eNum.Value.ToString());
-					if (!Helper.IsPrimitive(typeOfNode))
+					IType fieldType = Db4oClient.TypeResolver.Resolve(eNum.Value.ToString());
+					if (!fieldType.IsEditable)
 						continue;
 						
 					//Check whether attributes is allready added in list, if yes dont allow to added again. 
@@ -759,62 +726,12 @@ namespace OMControlLibrary
 					if (!Helper.CheckUniqueNessAttributes(parentName, dbDataGridAttributes))
 						continue;
 
-					AddElementToAttributeGrid(typeOfNode, parentName);
+                    Helper.AddElementToAttributeGrid(dbDataGridAttributes,tempClassName, parentName);
 				}
 			}
 		}
 
-		private void AddElementToAttributeGrid(string className, string fullpath)
-		{
-			dbDataGridAttributes.Rows.Add(1);
-			int index = dbDataGridAttributes.Rows.Count - 1;
-			dbDataGridAttributes.Rows[index].Cells[0].Value = fullpath;
-			dbDataGridAttributes.Rows[index].Cells[0].Tag = className;
-			dbDataGridAttributes.ClearSelection();
-			dbDataGridAttributes.Rows[index].Cells[0].Selected = true;
-		}
-
-
-		internal void AddToAttributeList(ref dbDataGridView dataGridAttributes, TreeNode tempTreeNode)
-		{
-			try
-			{
-				string tempClassName = string.Empty;
-
-				//If field is not selected and Query Group has no clauses then reset the base class.
-				if (dataGridAttributes.Rows.Count == 0)
-				{
-					CheckForDataGridViewQueryRows();
-				}
-
-				//Get the full path of the selected item
-				string fullpath = Helper.GetFullPath(tempTreeNode);
-				if (tempTreeNode.Parent != null)
-				{
-					tempClassName = tempTreeNode.Parent.Tag.ToString().Contains(CONST_COMMA_STRING) ? tempTreeNode.Parent.Tag.ToString() : tempTreeNode.Parent.Name;
-				}
-
-				//Check if dragged item is from same class or not, if not then dont allow to drag item
-				if (Helper.HashTableBaseClass.Count > 0)
-					if (!Helper.HashTableBaseClass.Contains(Helper.BaseClass))
-						return;
-
-				//Check whether attributes is allready added in list, if yes dont allow to added again. 
-				if (!Helper.CheckUniqueNessAttributes(fullpath, dataGridAttributes))
-					return;
-
-				//Add a new row and assing required values.
-				AddElementToAttributeGrid(tempClassName, fullpath);
-
-				if (!Helper.HashTableBaseClass.Contains(Helper.BaseClass))
-					Helper.HashTableBaseClass.Add(Helper.BaseClass, string.Empty);
-			}
-			catch (Exception oEx)
-			{
-				LoggingHelper.ShowMessage(oEx);
-			}
-		}
-
+       
 		/// <summary>
 		/// Build context menu if its null
 		/// </summary>
@@ -1031,23 +948,7 @@ namespace OMControlLibrary
             try
             {
                 comboboxRecentQueries.Items.Add(Helper.GetResourceString(Constants.COMBOBOX_DEFAULT_TEXT));
-
                 comboboxRecentQueries.SelectedIndex = 0;
-
-                //if (Helper.ClassName == null)
-                //{
-                //    //Set the recent queries forom cache
-                //    Helper.PopulateRecentQueryComboBox(Helper.ListOMQueries, comboboxRecentQueries);
-                //}
-                //else
-                //{
-                //    //Get the recent queries from the repositary
-                //    List<OMQuery> qrylist =
-                //        dbInteraction.GetCurrentRecentConnection().FetchQueriesForAClass(Helper.ClassName);
-                //    Helper.PopulateRecentQueryComboBox(qrylist, comboboxRecentQueries);
-                //    dbInteraction.CloseRecentConn();
-                //}
-
                 comboboxRecentQueries.DropdownItemSelected += comboboxRecentQueries_DropdownItemSelected;
 
             }
@@ -1105,31 +1006,17 @@ namespace OMControlLibrary
 					CommonValues.LogicalOperators clauseOperator = (CommonValues.LogicalOperators)Enum.Parse(typeof(CommonValues.LogicalOperators), stringOperator);
 					for (int i = 0; i < rowCount; i++)
 					{
-                       // IType type = datagridview.Rows[i].Cells[5].Value as IType;
-						string fieldName = datagridview.Rows[i].Cells[fieldColumnName].Value.ToString();
+                        string fieldName = datagridview.Rows[i].Cells[fieldColumnName].Value.ToString();
 						string stringCondition = datagridview.Rows[i].Cells[conditionColumnName].Value.ToString();
 						string className = datagridview.Rows[i].Cells[Constants.QUERY_GRID_CALSSNAME_HIDDEN].Value.ToString();
-						string fieldType = FieldNameFor(datagridview.Rows[i]);
-
+					    string fieldType = FieldTypeFor(datagridview.Rows[i]);
 						//get the value for each expression if value not specified then return null
 						string stringValue;
 						if (datagridview.Rows[i].Cells[valueColumnName].Value != null)
 						{
-                            //if (type.IsSameAs(typeof(DateTime)))
-                            //{
-                            //    DateTimeFormatInfo dateTimeFormatterProvider = DateTimeFormatInfo.CurrentInfo.Clone() as DateTimeFormatInfo;
-                            //    dateTimeFormatterProvider.ShortDatePattern = "MM/dd/yyyy hh:mm:ss tt";
-                            //    DateTime dateTime = DateTime.Parse(datagridview.Rows[i].Cells[valueColumnName].Value.ToString(), dateTimeFormatterProvider);
-                            //    //DateTime dt = Convert.ToDateTime(datagridview.Rows[i].Cells[valueColumnName].Value.ToString() );
-                            //    //DateTime dt = DateTime.Parse(Convert.ToDateTime(stringValue).ToString("MM/dd/yyyy hh:mm:ss tt"));
-
-                            //    stringValue = dateTime.ToString("MM/dd/yyyy hh:mm:ss tt");
-                            //}
-                            //else
-                            //{
+                            
                                 stringValue = datagridview.Rows[i].Cells[valueColumnName].Value.ToString();
-                           // }
-
+                           
                            
 						}
 						else
@@ -1155,6 +1042,11 @@ namespace OMControlLibrary
 	        IType fieldType = (IType) row.Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value;
 	        return fieldType.DisplayName;
 	    }
+        private static string FieldTypeFor(DataGridViewRow row)
+        {
+            IType fieldType = (IType)row.Cells[Constants.QUERY_GRID_FIELDTYPE_DISPLAY_HIDDEN].Value;
+            return fieldType.FullName ;
+        }
 
 	    /// <summary>
 		/// Initialise the Attribute DataGrid
@@ -1434,7 +1326,6 @@ namespace OMControlLibrary
 					Helper.BaseClass = Helper.ClassName = omQuery.BaseClass;
 
 					//Only Add when recent query is populated 
-					//if (queryResult == null && omQuery.ListQueryGroup.Count > 0)
 					if (omQuery.ListQueryGroup.Count > 0)
 					{
 						Helper.HashTableBaseClass.Add(omQuery.BaseClass, string.Empty);
