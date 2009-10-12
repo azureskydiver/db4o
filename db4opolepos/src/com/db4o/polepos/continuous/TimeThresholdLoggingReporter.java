@@ -20,9 +20,9 @@ public class TimeThresholdLoggingReporter implements Reporter {
 		}
 		for(Result result : results[results.length - 1]) {
 			long time = result.getTime();
-			if(time < MIN_TIME || time > MAX_TIME) {
-				System.err.println(result.getCircuit().name() + "/" + result.getLap().name() + ": " +time + " ms");
-			}
+//			if(time < MIN_TIME || time > MAX_TIME) {
+				System.err.println(result.getCircuit().name() + "/" + result.getLap().name() + ";" +time);
+//			}
 		}
 	}
 
