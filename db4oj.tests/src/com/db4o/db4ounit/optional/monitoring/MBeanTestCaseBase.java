@@ -59,11 +59,11 @@ public abstract class MBeanTestCaseBase extends AbstractDb4oTestCase {
 	}
 
 	protected abstract Class<?> beanInterface();
-	protected abstract String beanUri();
+	protected abstract String beanID();
 	
 	protected MBeanProxy bean() {
 		if (_bean == null) {
-			_bean = new MBeanProxy(Db4oMBeans.mBeanNameFor(beanInterface(), beanUri()));
+			_bean = new MBeanProxy(Db4oMBeans.mBeanNameFor(beanInterface(), beanID()));
 		}
 		return _bean;
 	}

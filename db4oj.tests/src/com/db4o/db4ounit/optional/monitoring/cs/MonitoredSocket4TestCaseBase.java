@@ -90,7 +90,7 @@ public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile {
 	}
 
 	protected void resetBeanCountersFor(ObjectContainer container) {
-		ObjectName objectName = Db4oMBeans.mBeanNameFor(NetworkingMBean.class, container.toString());
+		ObjectName objectName = Db4oMBeans.mBeanNameFor(NetworkingMBean.class, Db4oMBeans.mBeanIDForContainer(container));
 		MBeanProxy bean = new MBeanProxy(objectName);
 		
 		bean.resetCounters();
@@ -106,7 +106,7 @@ public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile {
 	
 	protected class BytesSentCounterHandler extends CounterHandlerBase {
 		public double actualValue(ObjectContainer container) {
-			return getAttribute(container.toString(), "BytesSentPerSecond") ;
+			return getAttribute(container, "BytesSentPerSecond") ;
 		}
 
 		public double expectedValue(CountingSocket4 countingSocket) {
@@ -116,7 +116,7 @@ public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile {
 	
 	protected class BytesReceivedCounterHandler extends CounterHandlerBase {
 		public double actualValue(ObjectContainer container) {
-			return getAttribute(container.toString(), "BytesReceivedPerSecond") ;
+			return getAttribute(container, "BytesReceivedPerSecond") ;
 		}
 
 		public double expectedValue(CountingSocket4 countingSocket) {
@@ -126,7 +126,7 @@ public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile {
 	
 	protected class MessagesSentCounterHandler extends CounterHandlerBase {
 		public double actualValue(ObjectContainer container) {
-			return getAttribute(container.toString(), "MessagesSentPerSecond") ;
+			return getAttribute(container, "MessagesSentPerSecond") ;
 		}
 
 		public double expectedValue(CountingSocket4 countingSocket) {
@@ -140,8 +140,8 @@ public abstract class MonitoredSocket4TestCaseBase extends TestWithTempFile {
 			return observedCounter(container);
 		}
 		
-		protected double getAttribute(String beanUri, String attribute) {
-			ObjectName objectName = Db4oMBeans.mBeanNameFor(NetworkingMBean.class, beanUri);
+		protected double getAttribute(ObjectContainer container, String attribute) {
+			ObjectName objectName = Db4oMBeans.mBeanNameFor(NetworkingMBean.class, Db4oMBeans.mBeanIDForContainer(container));
 			MBeanProxy bean = new MBeanProxy(objectName);
 			return bean.<Double>getAttribute(attribute);		
 		}

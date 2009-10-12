@@ -73,10 +73,7 @@ public class NativeQueryMonitoringSupportTestCase extends QueryMonitoringTestCas
 	}
 
 	@Override
-	protected String beanUri() {
-		if (isEmbedded()) {
-			return fileSession().toString();
-		}
-		return db().toString();
+	protected String beanID() {
+		return Db4oMBeans.mBeanIDForContainer(isEmbedded() ? fileSession() : db());
 	}
 }
