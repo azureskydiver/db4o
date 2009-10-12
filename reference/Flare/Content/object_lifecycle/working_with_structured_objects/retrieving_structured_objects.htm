@@ -1,33 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Retrieving Structured Objects	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
     <div class="CommonContent">
       <div class="CommonContentArea">
-        <h1>Retrieving Structured Objects</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#QBE">QBE</a></li><li><a href ="#Native Queries">Native Queries</a></li><li><a href ="#SODA Query API">SODA Query API</a></li></ul></li></ul></div></div></div> 
+        <h1>Retrieving Structured Objects</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#QBE">QBE</a></li><li><a href ="#Native Queries">Native Queries</a></li><li><a href ="#SODA Query API">SODA Query API</a></li></ul></div></div></div> 
 
 <a name="QBE"></a><H2>QBE</H2>
-<P>To retrieve all cars a simple 'blank' prototype can be used.</P>
+<p>To retrieve all cars a simple 'blank' prototype can be used.</p>
 <p MadCap:conditions="Primary.Java">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.java/retrieveAllCarsQBE.flsnp" /></p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.c#">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.cs/RetrieveAllCarsQBE.flsnp" /></p><p MadCap:conditions="Primary:cs" />
 <p MadCap:conditions="Primary..NET,Primary.VB.NET">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.vb/RetrieveAllCarsQBE.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<P>You can also query for all pilots, of course.</P>
+<p>You can also query for all pilots, of course.</p>
 <p MadCap:conditions="Primary.Java">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.java/retrieveAllPilotsQBE.flsnp" /></p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.c#">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.cs/RetrieveAllPilotsQBE.flsnp" /></p><p MadCap:conditions="Primary:cs" />
 <p MadCap:conditions="Primary..NET,Primary.VB.NET">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.vb/RetrieveAllPilotsQBE.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<P>Now let's initialize the prototype to specify all cars driven by Rubens Barrichello.</P>
+<p>Now let's initialize the prototype to specify all cars driven by Rubens Barrichello.</p>
 <p MadCap:conditions="Primary.Java">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.java/retrieveCarByPilotQBE.flsnp" /></p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.c#">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.cs/RetrieveCarByPilotQBE.flsnp" /></p><p MadCap:conditions="Primary:cs" />
 <p MadCap:conditions="Primary..NET,Primary.VB.NET">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.vb/RetrieveCarByPilotQBE.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<P>What about retrieving a pilot by car? You simply don't need that -if you already know the car, you can simply access the pilot field directly.</P>
+<p>What about retrieving a pilot by car? You simply don't need that -if you already know the car, you can simply access the pilot field directly.</p>
 <p MadCap:conditions="Primary.Java">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.java/retrieveCarByPilotQBE.flsnp" /></p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.c#">
@@ -35,37 +35,37 @@
 <p MadCap:conditions="Primary..NET,Primary.VB.NET">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.vb/RetrieveCarByPilotQBE.flsnp" /></p><p MadCap:conditions="Primary:vb" />
 <a name="Native Queries"></a><H2>Native Queries</H2>
-<P>Using native queries with constraints on deep structured objects is straightforward, you can do it just like you would in plain other code. <BR><BR>Let's constrain our query to only those cars driven by a Pilot with a specific name:</P>
+<p>Using native queries with constraints on deep structured objects is straightforward, you can do it just like you would in plain other code. Let's constrain our query to only those cars driven by a Pilot with a specific name:</p>
 <p MadCap:conditions="Primary.Java">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.java/retrieveCarsByPilotNameNative.flsnp" /></p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.c#">
-<MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.cs/RetrieveCarsByPilotNameNative.flsnp" /><MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.cs/RetrieveCarsByPilotNamePredicate.flsnp" />BR></P>
+<MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.cs/RetrieveCarsByPilotNameNative.flsnp" /><MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.cs/RetrieveCarsByPilotNamePredicate.flsnp" />
 </p><p MadCap:conditions="Primary:cs" />
 <p MadCap:conditions="Primary..NET,Primary.VB.NET">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.vb/RetrieveCarsByPilotNameNative.flsnp" /></p><p MadCap:conditions="Primary:vb" />
 <a name="SODA Query API"></a><H2>SODA Query API </H2>
-<P>In order to use SODA for querying for a car given its pilot's name you have to descend two levels into our query.</P>
+<p>In order to use SODA for querying for a car given its pilot's name you have to descend two levels into our query.</p>
 <p MadCap:conditions="Primary.Java">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.java/retrieveCarByPilotNameQuery.flsnp" /></p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.c#">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.cs/RetrieveCarByPilotNameQuery.flsnp" /></p><p MadCap:conditions="Primary:cs" />
 <p MadCap:conditions="Primary..NET,Primary.VB.NET">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.vb/RetrieveCarByPilotNameQuery.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<P>You can also constrain the pilot field with a prototype to achieve the same result.</P>
+<p>You can also constrain the pilot field with a prototype to achieve the same result.</p>
 <p MadCap:conditions="Primary.Java">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.java/retrieveCarByPilotProtoQuery.flsnp" /></p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.c#">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.cs/RetrieveCarByPilotProtoQuery.flsnp" /></p><p MadCap:conditions="Primary:cs" />
 <p MadCap:conditions="Primary..NET,Primary.VB.NET">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.vb/RetrieveCarByPilotProtoQuery.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<P>Descending into a query provides you with another query. Starting out from a query root you can descend in multiple directions. In practice this is the same as ascending from one child to a parent and descending to another child. The queries turn one-directional references in objects into true relations. Here is an example that queries for "a Pilot that is being referenced by a Car, where the Car model is 'Ferrari'":</P>
+<p>Descending into a query provides you with another query. Starting out from a query root you can descend in multiple directions. In practice this is the same as ascending from one child to a parent and descending to another child. The queries turn one-directional references in objects into true relations. Here is an example that queries for "a Pilot that is being referenced by a Car, where the Car model is 'Ferrari'":</p>
 <p MadCap:conditions="Primary.Java">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.java/retrievePilotByCarModelQuery.flsnp" /></p><p MadCap:conditions="Primary:java" />
 <p MadCap:conditions="Primary..NET,Primary.c#">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.cs/RetrievePilotByCarModelQuery.flsnp" /></p><p MadCap:conditions="Primary:cs" />
 <p MadCap:conditions="Primary..NET,Primary.VB.NET">
 <MadCap:snippetBlock src="../../Resources/Snippets/Retrieving Structured Objects/StructuredExample.vb/RetrievePilotByCarModelQuery.flsnp" /></p><p MadCap:conditions="Primary:vb" />
-<P><img src="graph3.gif"/></P></div>
+<p><img src="graph3.gif"/></p></div>
     </div>
     
-  <p>Download example code:</p>        <p></p></body></html>
+  </body></html>
