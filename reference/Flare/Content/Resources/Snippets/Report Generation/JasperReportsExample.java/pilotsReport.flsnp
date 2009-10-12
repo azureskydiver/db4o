@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?> <html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="309" MadCap:lastWidth="1029">    <head>    </head>    <body>        <pre class="prettyprint" xml:space="preserve">JasperReportsExample.java: pilotsReport
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="2" MadCap:lastHeight="822" MadCap:lastWidth="1134">
+    <head>
+    </head>
+    <body>
+        <pre class="prettyprint" xml:space="preserve">JasperReportsExample.java: pilotsReport
 public static void pilotsReport() ...{
 
     // obtain a list of objects for the report
@@ -11,12 +16,12 @@ public static void pilotsReport() ...{
 
     // pass parameters to the report
     Map parameters = new HashMap();
-    parameters.put(&quot;Title&quot;, &quot;The Pilot Report&quot;);
+    parameters.put("Title", "The Pilot Report");
 
     try ...{
       // compile report design
       JasperReport jasperReport = JasperCompileManager
-          .compileReport(&quot;reports/the-pilot-report.jrxml&quot;);
+          .compileReport("reports/the-pilot-report.jrxml");
       
       // create an object datasourse from the pilots list
       ObjectDataSource dataSource = new ObjectDataSource(pilots);
@@ -27,15 +32,17 @@ public static void pilotsReport() ...{
       
       // export result to the *.pdf
       JasperExportManager.exportReportToPdfFile(jasperPrint,
-          &quot;reports/the-pilot-report.pdf&quot;);
+          "reports/the-pilot-report.pdf");
       
       // or export to *.html
       JasperExportManager.exportReportToHtmlFile(jasperPrint,
-      &quot;reports/the-pilot-report.html&quot;);
+      "reports/the-pilot-report.htm");
 
       // or view it immediately in the Jasper Viewer
       JasperViewer.viewReport(jasperPrint);
     } catch (JRException e) ...{
       e.printStackTrace();
     }
-  }</pre>    </body></html>
+  }</pre>
+    </body>
+</html>
