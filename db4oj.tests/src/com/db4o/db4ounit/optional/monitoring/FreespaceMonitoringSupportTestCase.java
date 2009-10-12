@@ -75,8 +75,8 @@ public class FreespaceMonitoringSupportTestCase extends MBeanTestCaseBase implem
 	}
 
 	@Override
-	protected String beanUri() {
-		return fileSession().toString();
+	protected String beanID() {
+		return Db4oMBeans.mBeanIDForContainer(fileSession());
 	}
 
 

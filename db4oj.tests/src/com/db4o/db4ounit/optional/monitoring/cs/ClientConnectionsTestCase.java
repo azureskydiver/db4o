@@ -54,7 +54,7 @@ public class ClientConnectionsTestCase extends TestWithTempFile implements OptOu
 	}
 
 	private long connectedClientCount() {
-		MBeanProxy bean = new MBeanProxy(Db4oMBeans.mBeanNameFor(ClientConnectionsMBean.class, tempFile()));
+		MBeanProxy bean = new MBeanProxy(Db4oMBeans.mBeanNameFor(ClientConnectionsMBean.class, Db4oMBeans.mBeanIDForPath(tempFile())));
 		return bean.<Integer>getAttribute("ConnectedClientCount").longValue();
 	}
 

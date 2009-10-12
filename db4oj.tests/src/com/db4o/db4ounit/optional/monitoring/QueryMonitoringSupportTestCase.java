@@ -111,8 +111,8 @@ public class QueryMonitoringSupportTestCase extends QueryMonitoringTestCaseBase 
 	}
 
 	@Override
-	protected String beanUri() {
-		return fileSession().toString();
+	protected String beanID() {
+		return Db4oMBeans.mBeanIDForContainer(fileSession());
 	}
 
 
