@@ -43,38 +43,46 @@ public class BenchmarkExample {
 	}
 
 	public static void runNormal() throws IOException{
-		printDoubleLine();
-    	RandomAccessFileAdapter rafAdapter = new RandomAccessFileAdapter();
-		IoAdapter ioAdapter = new LoggingIoAdapter(rafAdapter, "test.log");
-        		
-		System.out.println("Running db4o IoBenchmark");
-		printDoubleLine();
-		// Run a target application and log its I/O access pattern
-		runTargetApplication(_objectCount);
-		// Replay the recorded I/O operations once to prepare a database file.
-		prepareDbFile(_objectCount);
-		// Replay the recorded I/O operations a second time. 
-		// Operations are grouped by command type (read, write, seek, sync), 
-		// and the total time executing all operations of a specific command type is measured. 
-		runBenchmark(_objectCount);
+		try{
+			printDoubleLine();
+	    	RandomAccessFileAdapter rafAdapter = new RandomAccessFileAdapter();
+			IoAdapter ioAdapter = new LoggingIoAdapter(rafAdapter, "test.log");
+	        		
+			System.out.println("Running db4o IoBenchmark");
+			printDoubleLine();
+			// Run a target application and log its I/O access pattern
+			runTargetApplication(_objectCount);
+			// Replay the recorded I/O operations once to prepare a database file.
+			prepareDbFile(_objectCount);
+			// Replay the recorded I/O operations a second time. 
+			// Operations are grouped by command type (read, write, seek, sync), 
+			// and the total time executing all operations of a specific command type is measured. 
+			runBenchmark(_objectCount);
+		} catch(BenchMarkFailureException exc){
+			System.out.println(exc.getMessage());
+		}
 	}
 
 	public static void runDelayed() throws IOException {
-		printDoubleLine();
-		System.out.println("Running db4o IoBenchmark");
-		printDoubleLine();
-		// Write sample slow data to the test file
-		prepareDelayedFile(_resultsFile2);
-		// calculate the delays to match the slower device
-		processResultsFiles(_resultsFile1, _resultsFile2);
-		// Run a target application and log its I/O access pattern
-		runTargetApplication(_objectCount);
-		// Replay the recorded I/O operations once to prepare a database file.
-		prepareDbFile(_objectCount);
-		// Replay the recorded I/O operations a second time. 
-		// Operations are grouped by command type (read, write, seek, sync), 
-		// and the total time executing all operations of a specific command type is measured. 
-		runBenchmark(_objectCount);
+		try{
+			printDoubleLine();
+			System.out.println("Running db4o IoBenchmark");
+			printDoubleLine();
+			// Write sample slow data to the test file
+			prepareDelayedFile(_resultsFile2);
+			// calculate the delays to match the slower device
+			processResultsFiles(_resultsFile1, _resultsFile2);
+			// Run a target application and log its I/O access pattern
+			runTargetApplication(_objectCount);
+			// Replay the recorded I/O operations once to prepare a database file.
+			prepareDbFile(_objectCount);
+			// Replay the recorded I/O operations a second time. 
+			// Operations are grouped by command type (read, write, seek, sync), 
+			// and the total time executing all operations of a specific command type is measured. 
+			runBenchmark(_objectCount);
+		} catch(BenchMarkFailureException exc){
+			System.out.println(exc.getMessage());
+		}
 	}
 		
 	public static void prepareDelayedFile(String fileName) {
@@ -218,8 +226,7 @@ public class BenchmarkExample {
 
 
 	public static void exitWithError(String error) {
-		System.err.println(error + "\n Aborting execution!");
-		throw new RuntimeException(error + "\n Aborting execution!");
+		throw new BenchMarkFailureException(error + "\n Aborting execution!");
 	}
 	
 	public static String resultsFileName(int itemCount){
@@ -288,5 +295,12 @@ public class BenchmarkExample {
 		System.out.println(_doubleLine);
 	}
 	
+	public static class BenchMarkFailureException extends RuntimeException{
+
+		public BenchMarkFailureException(String message) {
+			super(message);
+		}
+		
+	}
 
 }
