@@ -13,7 +13,8 @@ namespace Db4oTestRunner
 
 		public void LogMessage(string message, params object[] args)
 		{
-			AppendText(message, args);
+			Action action = () => AppendText(message, args);
+			_target.Invoke(action);
 		}
 
 		public void LogMessageFormated(Color foreground, Font font, string message, params object[] args)
@@ -54,21 +55,26 @@ namespace Db4oTestRunner
 
 		private void AppendSelected(Action<RichTextBox> action, string message, params object[] args)
 		{
-			try
+			Action crossThreadAction = delegate 
 			{
-				int startIndex = _target.Text.Length;
-				AppendText(message, args);
+				try
+			    {
+					int startIndex = _target.Text.Length;
+			        AppendText(message, args);
 
-				_target.SelectionStart = startIndex;
-				_target.SelectionLength = _target.Text.Length - startIndex;
+			        _target.SelectionStart = startIndex;
+			        _target.SelectionLength = _target.Text.Length - startIndex;
+					
+					action(_target);
+				}
+			    finally
+				{
+					_target.SelectionStart = _target.Text.Length - 1;
+					_target.SelectionLength = 1;
+				}
+			};
 
-				action(_target);
-			}
-			finally
-			{
-				_target.SelectionStart = _target.Text.Length-1;
-				_target.SelectionLength = 1;
-			}
+			_target.Invoke(crossThreadAction);
 		}
 
 		private void AppendText(string message, object[] args)

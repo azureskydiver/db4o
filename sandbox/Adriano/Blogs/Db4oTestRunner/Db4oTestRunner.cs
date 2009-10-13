@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace Db4oTestRunner
 
 		private void InitializeDb4oVersions()
 		{
-			string[] directories = Directory.GetDirectories(".", "db4o-?.?").Select(dir => Path.GetFileName(dir)).ToArray();
+			string[] directories = Directory.GetDirectories(".", "db4o-?.??").Select(dir => Path.GetFileName(dir)).OrderBy(dirName => dirName, new DirectoryNameComparer()).ToArray();
 			db4oVersion1.DataSource = directories;
 			db4oVersion2.DataSource = directories.Clone();
 			db4oVersion2.SelectedIndex = directories.Length - 1;
@@ -67,35 +68,40 @@ namespace Db4oTestRunner
 
 		private void RunTestWith(string versionFolder, bool enabled, ILogger logger)
 		{
-			logger.LogMessageFormated(Color.Blue, Verdata10Bold(), "======= Db4o Version {0} ======", Db4oVersionFor(versionFolder));
-			if (!enabled)
-			{
-				logger.LogMessage("Test disable by the user.");
-				return;
-			}
+			ThreadPool.QueueUserWorkItem(
+				state =>
+					{
+						logger.LogMessageFormated(Color.Blue, Verdata10Bold(), "======= Db4o Version {0} ======",
+						                          Db4oVersionFor(versionFolder));
+						if (!enabled)
+						{
+							logger.LogMessage("Test disable by the user.");
+							return;
+						}
 
-			AppDomain domain = null;
-			try
-			{
-				domain = AppDomainFor(versionFolder, txtTestAssembly.Text);
-				foreach (var testClass in EnabledTest())
-				{
-					var runner = NewTestRunnerFor(domain, txtTestAssembly.Text, testClass);
-					logger.LogMessageFormated(Color.DarkGreen, Verdata10Bold(),  "Running test {0}", testClass);
-					runner.Run(logger);
-				}
-			}
-			catch(SerializationException se)
-			{
-				logger.LogException(se);
-			}
-			finally
-			{
-				if (domain != null)
-				{
-					AppDomain.Unload(domain);
-				}
-			}
+						AppDomain domain = null;
+						try
+						{
+							domain = AppDomainFor(versionFolder, txtTestAssembly.Text);
+							foreach (var testClass in EnabledTest())
+							{
+								var runner = NewTestRunnerFor(domain, txtTestAssembly.Text, testClass);
+								logger.LogMessageFormated(Color.DarkGreen, Verdata10Bold(), "Running test {0}", testClass);
+								runner.Run(logger);
+							}
+						}
+						catch (SerializationException se)
+						{
+							logger.LogException(se);
+						}
+						finally
+						{
+							if (domain != null)
+							{
+								AppDomain.Unload(domain);
+							}
+						}
+					});
 		}
 
 		private Font Verdata10Bold()
@@ -282,5 +288,22 @@ namespace Db4oTestRunner
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		private static readonly string IS_OK_TO_RUN_PROPERTY_NAME = NameOf(f => f.IsOkToRun);
+	}
+
+	internal class DirectoryNameComparer : IComparer<string>
+	{
+		public int Compare(string lhs, string rhs)
+		{
+			Version lhsVersion = new Version(VersionStringFrom(lhs));
+			Version rhsVersion = new Version(VersionStringFrom(rhs));
+
+			return lhsVersion.CompareTo(rhsVersion);
+		}
+
+		private string VersionStringFrom(string namedVersion)
+		{
+			int dashIndex = namedVersion.IndexOf('-');
+			return dashIndex >= 0 ? namedVersion.Substring(dashIndex + 1) : namedVersion;
+		}
 	}
 }
