@@ -8,12 +8,12 @@
 <p>Note: Instrumented optimized classes will work with JDK1.1, but the
 optimization process itself requires at least JDK 1.3.</p>
 
-<p>In the <a href="nq_optimization_at_load_time.html" class="wikiLink">previous topic</a> we discussed
+<p>In the <a href="nq_optimization_at_load_time.htm" class="wikiLink">previous topic</a> we discussed
 how NQ optimization can be enabled on classes while they are loaded. In this
 topic we will look at even more convenient and performant way of enhancing
 classes to optimize NQ: during application build time. </p>
 
-<p>For our example we will take the same classes as in the <a href="nq_optimization_at_load_time.html" class="wikiLink">previous
+<p>For our example we will take the same classes as in the <a href="nq_optimization_at_load_time.htm" class="wikiLink">previous
 example</a>, with the exception of NQEnhancedStarter class, which won't be needed
 for build-time enhancement. Its functionality will be fulfilled be the build
 script. For this example we will create an ant script, which should be run
@@ -37,7 +37,7 @@ can be done with the following script:</p>
 order to test this script:</p>
 
 <ul><li>Create a new project, consisting
-     of NQExample and Pilot classes from the <a href="nq_optimization_at_load_time.html" class="wikiLink">previous
+     of NQExample and Pilot classes from the <a href="nq_optimization_at_load_time.htm" class="wikiLink">previous
      example</a></li><li>Add lib folder to the
      project root and copy the following jars from db4o distribution:</li><ul><li>bloat-1.0.jar</li><li>db4o-x.x-classedit.jar</li><li>db4o-x.x-java5.jar</li><li>db4o-x.x-nqopt.jar</li><li>db4o-x.x-tools.jar 
       (Note, that the described functionality is only valid for db4o releases

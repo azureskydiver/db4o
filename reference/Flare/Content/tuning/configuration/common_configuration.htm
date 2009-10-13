@@ -12,10 +12,10 @@ package/Db4object.Db4o.Config namespace. </p>
 
 <p>Below is a short description of all common configuration
 methods residing in CommonConfiguration/ICommonConfiguration interface.
-For embedded configuration specific methods see <a href="embedded_configuration.html" class="wikiLink">Embedded Configuration</a>, for client/server specific settings see <a href="client_configuration.html" class="wikiLink">Client Configuration</a>
-and <a href="server_configuration.html" class="wikiLink">Server Configuration</a> interfaces. For class and field
-specific configuration see <a href="objectclass_configuration.html" class="wikiLink">ObjectClass Configuration</a> and
-<a href="objectfield_configuration.html" class="wikiLink">ObjectField Configuration</a> interface.</p>
+For embedded configuration specific methods see <a href="embedded_configuration.htm" class="wikiLink">Embedded Configuration</a>, for client/server specific settings see <a href="client_configuration.htm" class="wikiLink">Client Configuration</a>
+and <a href="server_configuration.htm" class="wikiLink">Server Configuration</a> interfaces. For class and field
+specific configuration see <a href="objectclass_configuration.htm" class="wikiLink">ObjectClass Configuration</a> and
+<a href="objectfield_configuration.htm" class="wikiLink">ObjectField Configuration</a> interface.</p>
 
 <p> </p>
 
@@ -79,7 +79,7 @@ TransparentActivationSupport, BigMathSupport etc.</p>
 <p>these methods, as the names suggest, add or remove aliases.
 Aliases should be configured before opening a database file or connecting to a
 server. For more information on aliases please check
-<a href="../../implementation_strategies/aliases.html" class="wikiLink">Aliases</a>.</p>
+<a href="../../implementation_strategies/aliases.htm" class="wikiLink">Aliases</a>.</p>
 
 <p> </p>
 
@@ -100,7 +100,7 @@ server. For more information on aliases please check
 </p><p MadCap:conditions="Primary:net" />
 
 <p>Turns automatic database file format version updates on. For
-more information see <a href="../../implementation_strategies/maintenance/updating_db4o_file_format.html" class="wikiLink">Updating Db4o File Format</a>.</p>
+more information see <a href="../../implementation_strategies/maintenance/updating_db4o_file_format.htm" class="wikiLink">Updating Db4o File Format</a>.</p>
 
 <p> </p>
 
@@ -178,8 +178,8 @@ rare cases the autoShutDown feature may be turned off.</p>
 
 </p><p MadCap:conditions="Primary:net" />
 
-<p>turns <a href="../../implementation_strategies/callbacks.html" class="wikiLink">object
-callbacks</a> on and off. <a href="../performance_hints/no_callbacks.html" class="wikiLink">No callbacks</a> article explains
+<p>turns <a href="../../implementation_strategies/callbacks.htm" class="wikiLink">object
+callbacks</a> on and off. <a href="../performance_hints/no_callbacks.htm" class="wikiLink">No callbacks</a> article explains
 how this setting can be useful for tuning.</p>
 
 <p> </p>
@@ -219,7 +219,7 @@ in ObjectClass#callConstructor(boolean).</p>
 your current environment.</p>
 
 <p>For more information see
-<a href="../../object_lifecycle/object_construction.html" class="wikiLink">Object Construction</a>.</p>
+<a href="../../object_lifecycle/object_construction.htm" class="wikiLink">Object Construction</a>.</p>
 
 <p> </p>
 
@@ -241,7 +241,7 @@ your current environment.</p>
 
 <p>tuning feature: configures whether db4o checks all
 persistent classes upon system startup for added or removed fields. For more
-information see <a href="../performance_hints/no_schema_changes.html" class="wikiLink">No schema changes</a>.</p>
+information see <a href="../performance_hints/no_schema_changes.htm" class="wikiLink">No schema changes</a>.</p>
 
 <p> </p>
 
@@ -262,7 +262,7 @@ information see <a href="../performance_hints/no_schema_changes.html" class="wik
 </p><p MadCap:conditions="Primary:net" />
 
 <p>returns the configuration interface for diagnostics. See
-<a href="../diagnostics.html" class="wikiLink">Diagnostics</a> for more information.</p>
+<a href="../diagnostics.htm" class="wikiLink">Diagnostics</a> for more information.</p>
 <p MadCap:conditions="Primary.Java">
 
 <p>Java:</p>
@@ -282,12 +282,12 @@ flag);</code></p>
 
 <p>configures whether Exceptions are to be thrown, if objects
 can not be stored. For more information see
-<a href="../debugging_db4o/exceptionsonnotstorable.html" class="wikiLink">ExceptionsOnNotStorable</a>. The default
+<a href="../debugging_db4o/exceptionsonnotstorable.htm" class="wikiLink">ExceptionsOnNotStorable</a>. The default
 for this setting is true, which means that an exception will be thrown
 if an object can't be stored fully to the database. In order to prevent
 the exception and make sure that the object is correctly stored to the
 database, a custom
-<a href="../../implementation_strategies/typehandlers.html" class="wikiLink">Typehandler</a> can be
+<a href="../../implementation_strategies/typehandlers.htm" class="wikiLink">Typehandler</a> can be
 written, which will make sure that only relevant information is
 persisted. </p>
 
@@ -320,7 +320,7 @@ attributeName);</code></p>
 <p>allows to mark fields as transient with custom attributes.
 For more information see</p>
 
-<p><a href="../selective_persistence/transient_fields_in_.net.html" class="wikiLink">Transient Fields In .NET</a> </p>
+<p><a href="../selective_persistence/transient_fields_in_.net.htm" class="wikiLink">Transient Fields In .NET</a> </p>
 
 </p><p MadCap:conditions="Primary:net" />
 
@@ -344,7 +344,7 @@ For more information see</p>
 </p><p MadCap:conditions="Primary:net" />
 
 <p>Sets the detail level of db4o messages (from1 to 3). For
-more information see <a href="../debugging_db4o.html" class="wikiLink">Debugging db4o</a></p>
+more information see <a href="../debugging_db4o.htm" class="wikiLink">Debugging db4o</a></p>
 <p MadCap:conditions="Primary.Java">
 
 <p>Java:</p>
@@ -396,7 +396,7 @@ optimizeNQ);</code></p>
 <p>If set to true, db4o will try to optimize native queries
 dynamically at query execution time, otherwise it will run native queries in
 unoptimized mode as SODA evaluations. For more information see
-<a href="../native_query_optimization.html" class="wikiLink">Native Query Optimization</a>.</p>
+<a href="../native_query_optimization.htm" class="wikiLink">Native Query Optimization</a>.</p>
 <p MadCap:conditions="Primary.Java">
 
 <p>Java:</p>
@@ -413,7 +413,7 @@ unoptimized mode as SODA evaluations. For more information see
 
 </p><p MadCap:conditions="Primary:net" />
 <p>assigns a stream, where db4o is to print its debug messages. For more information see
-<a href="../debugging_db4o/customizing_the_debug_message_output.html" class="wikiLink">Customizing The Debug Message Output</a>    </p>
+<a href="../debugging_db4o/customizing_the_debug_message_output.htm" class="wikiLink">Customizing The Debug Message Output</a>    </p>
 <p MadCap:conditions="Primary.Java">
 
 <p>Java:</p>
@@ -431,7 +431,7 @@ unoptimized mode as SODA evaluations. For more information see
 </p><p MadCap:conditions="Primary:net" />
 
 <p>returns the Query configuration interface. For more
-information see <a href="../../object_lifecycle/querying/query_modes.html" class="wikiLink">Query Modes</a>.</p>
+information see <a href="../../object_lifecycle/querying/query_modes.htm" class="wikiLink">Query Modes</a>.</p>
 
 <p> </p>
 <p MadCap:conditions="Primary.Java">
@@ -455,7 +455,7 @@ implementation.</p>
 
 <p>On platforms that do not support reflection, customized
 reflection implementations may be written to enable db4o. For more information
-see <a href="../../implementation_strategies/db4o_reflection_api.html" class="wikiLink">Db4o Reflection API</a>.</p>
+see <a href="../../implementation_strategies/db4o_reflection_api.htm" class="wikiLink">Db4o Reflection API</a>.</p>
 
 
 <p> </p>
@@ -521,7 +521,7 @@ time the database is opened.
 
 <p>tuning feature: configures whether db4o should try to
 instantiate one instance of each persistent class on system startup. For more
-information see <a href="../performance_hints/no_test_instances.html" class="wikiLink">No test instances</a>    </p>
+information see <a href="../performance_hints/no_test_instances.htm" class="wikiLink">No test instances</a>    </p>
 
 
 <p> </p>
@@ -542,7 +542,7 @@ information see <a href="../performance_hints/no_test_instances.html" class="wik
 </p><p MadCap:conditions="Primary:net" />
 
 <p>specifies the global updateDepth. For more information see
-<a href="../../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a></p>
+<a href="../../object_lifecycle/update_depth.htm" class="wikiLink">Update Depth</a></p>
 
 <p> </p>
 
@@ -563,7 +563,7 @@ information see <a href="../performance_hints/no_test_instances.html" class="wik
 </p><p MadCap:conditions="Primary:net" />
 
 <p>turns weak reference management on or off. For more
-information see <a href="../performance_hints/turning_off_weak_references.html" class="wikiLink">Turning Off Weak References</a>.</p>
+information see <a href="../performance_hints/turning_off_weak_references.htm" class="wikiLink">Turning Off Weak References</a>.</p>
 
 <p> </p>
 
@@ -589,7 +589,7 @@ milliseconds);</code></p>
 <p>The default setting is 1000 milliseconds.</p>
 
 <p>Configure this setting to zero to turn WeakReference
-collection off. For more information see <a href="../../basic_concepts/object_identity/weak_references.html" class="wikiLink">Weak References</a>    </p></div>
+collection off. For more information see <a href="../../basic_concepts/object_identity/weak_references.htm" class="wikiLink">Weak References</a>    </p></div>
     </div>
     
   </body></html>

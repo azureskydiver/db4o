@@ -14,7 +14,7 @@ You'll also find this code in <code>com.db4o.bench.crud.CrudApplication#prepare(
 Change IoBenchmark to call your application by modifying the <code>runTargetApplication()</code> method. You also have to exchange the calls to <code>CrudApplication.logFileName(itemCount)</code> in <code>prepareDbFile()</code> and <code>runBenchmark</code> with the file name of the log containing the I/O access pattern of your application. Using the code from above, this log file will be called "filename.log".
 </li></ul>
 
-If you want to generate your log by interacting with your application, rather than having IoBenchmark calling it, do as follows: <ul><li>Use a LoggingIoAdapter in your application</li><li>Interact with your application to create the log</li><li>Remove the stage 1 from IoBenchmark and make it start in stage 2 with your log.</li></ul>If you are using your own application to generate the I/O log file, check out the <a href="io_log_file_statistics.html" class="wikiLink">IO Log File Statistics</a> section further down.
+If you want to generate your log by interacting with your application, rather than having IoBenchmark calling it, do as follows: <ul><li>Use a LoggingIoAdapter in your application</li><li>Interact with your application to create the log</li><li>Remove the stage 1 from IoBenchmark and make it start in stage 2 with your log.</li></ul>If you are using your own application to generate the I/O log file, check out the <a href="io_log_file_statistics.htm" class="wikiLink">IO Log File Statistics</a> section further down.
 </div>
     </div>
     
