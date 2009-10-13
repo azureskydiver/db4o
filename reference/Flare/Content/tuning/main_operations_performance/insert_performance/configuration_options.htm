@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
+﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
 <head><title>Configuration Options	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
 <body onload="prettyPrint()">
     <div class="CommonContent">
@@ -8,7 +8,7 @@
 <p>Configuration options can also affect the insert
 performance. Some of them we've already came across in the previous topics:</p>
 
-<p><i><a href="../../../implementation_strategies/io_adapter/memoryioadapter.html" class="wikiLink">MemoryIoAdapter</a></i>
+<p><i><a href="../../../implementation_strategies/io_adapter/memoryioadapter.htm" class="wikiLink">MemoryIoAdapter</a></i>
 - improves the insert performance, by replacing disk access with memory access:</p>
 
 <p MadCap:conditions="Primary.Java">
@@ -27,7 +27,7 @@ performance. Some of them we've already came across in the previous topics:</p>
 
 </p><p MadCap:conditions="Primary:net" />
 
-<p><i><a href="../../performance_hints/no_lock_file_thread.html" class="wikiLink">lockDatabaseFile</a></i>
+<p><i><a href="../../performance_hints/no_lock_file_thread.htm" class="wikiLink">lockDatabaseFile</a></i>
 - reduces the resources consumption by removing database lock thread. Should
 only be used for JVM versions &lt; 1.4</p>
 
@@ -47,7 +47,7 @@ only be used for JVM versions &lt; 1.4</p>
 
 </p><p MadCap:conditions="Primary:net" />
 
-<p><i><a href="../../performance_hints/turning_off_weak_references.html" class="wikiLink">weakReferences</a></i>
+<p><i><a href="../../performance_hints/turning_off_weak_references.htm" class="wikiLink">weakReferences</a></i>
 - switching weak references off during insert operation releases extra resources
 and removed the cleanup thread.</p>
 
@@ -67,7 +67,7 @@ and removed the cleanup thread.</p>
 
 </p><p MadCap:conditions="Primary:net" />
 
-<p><i><a href="../../performance_hints/flushfilebuffers.html" class="wikiLink">FlushFileBuffers</a></i>
+<p><i><a href="../../../implementation_strategies/io_adapter/nonflushingioadapter.htm" class="wikiLink">NonFlushingIoAdapter</a></i>
 - switching off flushFileBuffers can improve commit performance as the commit
 information will be cached by the operating system. However this setting is
 potentially dangerous and can lead to database corruption.</p>

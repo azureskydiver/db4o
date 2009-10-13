@@ -41,7 +41,7 @@ lists in RAM </li>
 </p>
 </p><p MadCap:conditions="Primary:net" />
 
-<p>This method allows to specify a way to overwrite the freed space in the database. This may be desirable when the information needs to be reliably erased. A <a href="freespace_configuration/freespacefiller_example.html" class="wikiLink">custom FreespaceFiller</a> implementation can be created. For an example of db4o implementation of FreespaceFiller you can have a look at XByteFreespaceFiller in the db4o source code (IoAdaptedObjectContainer class). XByteFreespaceFiller overwrites the free space with "XXXX" symbols and is switched on by rebuilding db4o core with debug = true in Deploy class.  </p>
+<p>This method allows to specify a way to overwrite the freed space in the database. This may be desirable when the information needs to be reliably erased. A <a href="freespace_configuration/freespacefiller_example.htm" class="wikiLink">custom FreespaceFiller</a> implementation can be created. For an example of db4o implementation of FreespaceFiller you can have a look at XByteFreespaceFiller in the db4o source code (IoAdaptedObjectContainer class). XByteFreespaceFiller overwrites the free space with "XXXX" symbols and is switched on by rebuilding db4o core with debug = true in Deploy class.  </p>
 <p>Note, that using freespace filler will slow down IO operations on the database.</p>
      
 <p>The following settings allow to select how the freespace information will be kept: </p>

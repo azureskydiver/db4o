@@ -3,7 +3,7 @@
 <body onload="prettyPrint()">
     <div class="CommonContent">
       <div class="CommonContentArea">
-        <h1>Database Size</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#File Header">File Header</a></li><li><a href ="#Object Overhead">Object Overhead</a></li><li><a href ="#"></a></li><li><a href ="#Block Size">Block Size</a></li><li><a href ="#Freespace">Freespace</a></li></ul></li></ul></div></div></div><p>If you are concerned about the size of your database file, it is importnant to understand what contributes to it and what are the strategies to keep it down.</p><a name="File Header"></a><h2>File Header  </h2><p><span id="ctl00_ctl00_bcr_topicView___TopicBody"><p>Every database file starts with a fixed file header.</p>
+        <h1>Database Size</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#File Header">File Header</a></li><li><a href ="#Object Overhead">Object Overhead</a></li><li><a href ="#"></a></li><li><a href ="#Block Size">Block Size</a></li><li><a href ="#Freespace">Freespace</a></li></ul></div></div></div><p>If you are concerned about the size of your database file, it is importnant to understand what contributes to it and what are the strategies to keep it down.</p><a name="File Header"></a><h2>File Header  </h2><p><span><p>Every database file starts with a fixed file header.</p>
 <p>The information stored in the header is:</p><font size="2">
 </font><p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">byte</font></b><font size="2">) </font><font color="#2a00ff" size="2">'d'</font></p><font size="2">
 </font><p align="left"><font size="2">(</font><b><font color="#7f0055" size="2">byte</font></b><font size="2">) </font><font color="#2a00ff" size="2">'b'</font></p><font size="2">
@@ -35,7 +35,7 @@
 
 <ul><li>Implementation 
 <ul><li>com.db4o.internal.fileheader.FileHeader1 
-</li><li>com.db4o.internal.fileheader.<font size="2">FileHeaderVariablePart1</font></li></ul></li></ul></span></p><a name="Object Overhead"></a><h2><span id="ctl00_ctl00_bcr_topicView___TopicBody">Object Overhead</span></h2><a name=""></a><h2><span id="ctl00_ctl00_bcr_topicView___TopicBody"></span></h2><p>When you create a new db4o fatabase file - it contains only the header and has a fixed size. As soon as you start storing the information the file will grow. The size overhead per object depends on the typehandler implementation. </p><p>In
+</li><li>com.db4o.internal.fileheader.<font size="2">FileHeaderVariablePart1</font></li></ul></li></ul></span></p><a name="Object Overhead"></a><h2><span>Object Overhead</span></h2><a name=""></a><h2><span></span></h2><p>When you create a new db4o fatabase file - it contains only the header and has a fixed size. As soon as you start storing the information the file will grow. The size overhead per object depends on the typehandler implementation. </p><p>In
 general the object consists of internal ID and value types, i.e.
 integers, arrays, enums etc. Overhead per object type is ID, which is
 integer. The overhead for value type is an integer value showing which
