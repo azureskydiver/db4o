@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
 using System.Windows;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
 using Db4objects.Db4o.IO;
-using Sharpen.Lang;
-using SimpleCRUD.Model;
 
 namespace SimpleCRUD
 {
@@ -14,21 +10,6 @@ namespace SimpleCRUD
 	{
 
 		#region Db4o specific code
-
-		#region Assembly.Load() issue workaround
-
-		private static readonly IDictionary<string, Assembly> _assemblyCache = new Dictionary<string, Assembly>();
-		static App()
-		{
-			//_assemblyCache[AssemblyNameFor(typeof(Queue<>))] = typeof(Queue<>).Assembly;
-			//_assemblyCache[AssemblyNameFor(typeof(List<>))] = typeof(List<>).Assembly;
-			_assemblyCache[AssemblyNameFor(typeof(Person))] = typeof(Person).Assembly;
-			_assemblyCache[AssemblyNameFor(typeof(Db4oFactory))] = typeof(Db4oFactory).Assembly;
-			
-			TypeReference.AssemblyResolve += (sender, args) => args.Assembly = _assemblyCache[args.Name];
-		}
-
-		#endregion
 
 		private void InitializeDatabase()
 		{
@@ -46,11 +27,6 @@ namespace SimpleCRUD
 		private const string DatabaseFileName = "SimpleCRUD.odb";
 
 		#endregion
-
-		private static string AssemblyNameFor(Type t)
-		{
-			return new AssemblyName(t.Assembly.FullName).Name;
-		}
 
 		public App()
 		{
