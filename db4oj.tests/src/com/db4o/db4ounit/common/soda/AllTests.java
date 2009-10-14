@@ -22,6 +22,7 @@ public class AllTests extends Db4oTestSuite {
 				CollectionIndexedJoinTestCase.class,
 				InterfaceFieldConstraintTestCase.class,
 				NullIdentityConstraintTestCase.class,
+				OrderedOrConstraintTestCase.class,
 				OrderFollowedByConstraintTestCase.class,
 				QueryUnknownClassTestCase.class,
 				SortMultipleTestCase.class,
