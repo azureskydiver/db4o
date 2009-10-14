@@ -54,15 +54,19 @@
 	</taskdef>
 
 	<target name="check-links-java">
+		<!--
 		<checklinks
 			 startURI="file:/${dir.reference.java}/html/_contents.html"
 		     ProtocolFilename="${dir.build}/link-check-java.xml"/>
+		-->
     </target>
 
 	<target name="check-links-net">
+		<!--
 			<checklinks
 				 startURI="file:/${dir.reference.net}/html/_contents.html"
 			     ProtocolFilename="${dir.build}/link-check-net.xml"/>
+		-->
 	</target>
 	
     <target name="generate.pdf.java" depends="init, check-links-java">
