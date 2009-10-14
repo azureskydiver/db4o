@@ -21,7 +21,8 @@ public class AllTests extends ComposibleTestSuite {
 							LazyQueryDeleteTestCase.class,
 							SODAClassTypeDescend.class,
 							StoredClassUnknownClassQueryTestCase.class, // COR-1542
-							UnavailableEnumTestCase.class
+							UnavailableEnumTestCase.class,
+							UntypedFieldSortingTestCase.class,
 					});
 	}
 	
