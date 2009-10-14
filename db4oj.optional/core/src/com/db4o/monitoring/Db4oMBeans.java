@@ -34,7 +34,8 @@ public class Db4oMBeans {
 	}
 	
 	public static ObjectName mBeanNameFor(Class<?> mbeanInterface, String name) {
-		final String nameSpec = MONITORING_DOMAIN_NAME + ":name=\"" + name + "\",mbean=" + displayName(mbeanInterface);
+		name = name.replaceAll("[:\\?\\*=,\"]", " ");
+		final String nameSpec = MONITORING_DOMAIN_NAME + ":name=" + name + ",mbean=" + displayName(mbeanInterface);
 		try {
 			return new ObjectName(nameSpec);
 		} catch (MalformedObjectNameException e) {
