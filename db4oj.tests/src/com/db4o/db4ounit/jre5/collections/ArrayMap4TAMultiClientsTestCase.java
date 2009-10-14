@@ -65,15 +65,12 @@ public class ArrayMap4TAMultiClientsTestCase extends TransparentActivationTestCa
 
     private ArrayMap4<String, Integer> retrieveOnlyInstance(
             ExtObjectContainer db) {
-        ArrayMap4<String, Integer> map = CollectionsUtil.retrieveMapFromDB(db,
-                reflector());
+        ArrayMap4<String, Integer> map = CollectionsUtil.retrieveMapFromDB(db);
         return map;
     }
 
     private ArrayMap4<String, Integer> retrieveOnlyInstance() {
-        ArrayMap4<String, Integer> map = CollectionsUtil.retrieveMapFromDB(
-                db(), reflector());
-        return map;
+        return CollectionsUtil.retrieveMapFromDB(db());
     }
 
     public void testClearClear() {

@@ -41,9 +41,7 @@ public class ArrayMap4TestCase extends Db4oConcurrencyTestCase {
     @SuppressWarnings("unchecked")
     private ArrayMap4<String, Integer> retrieveOnlyInstance(
             ExtObjectContainer db) {
-        ArrayMap4<String, Integer> map = CollectionsUtil.retrieveMapFromDB(db,
-                reflector());
-        return map;
+        return CollectionsUtil.retrieveMapFromDB(db);
     }
 
     @SuppressWarnings("unchecked")

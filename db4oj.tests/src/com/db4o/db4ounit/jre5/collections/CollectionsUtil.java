@@ -4,6 +4,7 @@ package com.db4o.db4ounit.jre5.collections;
 
 import com.db4o.collections.*;
 import com.db4o.ext.*;
+import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
 import db4ounit.*;
@@ -41,10 +42,11 @@ public class CollectionsUtil {
 
     @SuppressWarnings("unchecked")
     public static ArrayMap4<String, Integer> retrieveMapFromDB(
-            ExtObjectContainer oc, Reflector reflector) {
+            ExtObjectContainer oc) {
+    	InternalObjectContainer internalObjectContainer = (InternalObjectContainer) oc;
         ArrayMap4<String, Integer> map = (ArrayMap4<String, Integer>) AbstractDb4oTestCase
                 .retrieveOnlyInstance(oc, ArrayMap4.class);
-        assertRetrieveStatus(reflector, map);
+        assertRetrieveStatus(internalObjectContainer.reflector(), map);
         return map;
     }
 }
