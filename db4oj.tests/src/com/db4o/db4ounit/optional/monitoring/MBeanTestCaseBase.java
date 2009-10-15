@@ -68,11 +68,21 @@ public abstract class MBeanTestCaseBase extends AbstractDb4oTestCase {
 		return _bean;
 	}
 	
+	protected MBeanProxy fileSessionBean() {
+		if (_fileSessionBean == null) {
+			_fileSessionBean = new MBeanProxy(Db4oMBeans.mBeanNameFor(beanInterface(), Db4oMBeans.mBeanIDForContainer(fileSession())));
+		}
+		return _fileSessionBean;
+	}
+	
 	protected void advanceClock(int time) {
 		_clock.advance(time);
 	}
 	
 	protected final transient ClockMock _clock = new ClockMock();
+	
 	protected transient MBeanProxy _bean;
+	
+	protected transient MBeanProxy _fileSessionBean;
 	
 }

@@ -13,6 +13,7 @@ public class AllTests extends Db4oTestSuite {
 			FreespaceMonitoringSupportTestCase.class,
 			MonitoredStorageTestCase.class,
 			NativeQueryMonitoringSupportTestCase.class,
+			ObjectLifecycleMonitoringSupportTestCase.class,
 			QueryMonitoringSupportTestCase.class,
 			ReferenceSystemMonitoringSupportTestCase.class,
 		};

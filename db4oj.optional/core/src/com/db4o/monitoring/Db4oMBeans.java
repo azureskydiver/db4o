@@ -116,5 +116,14 @@ public class Db4oMBeans {
 		} catch (JMException e) {
 			throw new Db4oIllegalStateException(e);
 		}
-	}	
+	}
+
+	public static ObjectLifecycle newObjectLifecycleMBean(ObjectContainer container) {
+		try {
+			return new ObjectLifecycle(mBeanNameFor(ObjectLifecycleMBean.class, Db4oMBeans.mBeanIDForContainer(container)));
+		} catch (JMException e) {
+			throw new Db4oIllegalStateException(e);
+		}
+	}
+	
 }
