@@ -45,34 +45,34 @@ public class ObjectServerTestCase extends TestWithTempFile {
     	
     	final BooleanByRef eventRaised = new BooleanByRef();
     	final ObjectServerEvents events = (ObjectServerEvents)server;
+    	
+    	final Lock4 lock = new Lock4();
 		
     	events.clientDisconnected().addListener(new EventListener4<StringEventArgs>() { public void onEvent(Event4 e, StringEventArgs args) {
-			synchronized (eventRaised) {
-				Assert.areEqual(clientName, args.message());					
-				eventRaised.value = true;					
-				eventRaised.notifyAll();
-			}
+			Assert.areEqual(clientName, args.message());					
+			eventRaised.value = true;					
+			lock.awake();
          }});
     	
-		synchronized (eventRaised) {
+		
+    	lock.run(new Closure4() { public Object run() {
 			client.close();
-				
+			
 			long startTime = System.currentTimeMillis();
 			long currentTime = startTime;
 			int timeOut = 1000;
 				
 			long timePassed = currentTime - startTime;
 			while (timePassed < timeOut && !eventRaised.value) {
-				try {
-					eventRaised.wait(timeOut - timePassed);
-				} catch (InterruptedException e1) {
-				}
-					
+				lock.snooze(timeOut - timePassed);
+				
 				currentTime = System.currentTimeMillis();
 				timePassed = currentTime - startTime;
 			}			
 			Assert.isTrue(eventRaised.value);
-		}
+			
+			return null;
+		}});
     }
     
     public void testClientConnectedEvent() {
