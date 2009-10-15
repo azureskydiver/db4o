@@ -9,18 +9,18 @@ public final class MWriteNew extends MsgObject implements ServerSideMessage {
 	
 	public final void processAtServer() {
         int classMetadataId = _payLoad.readInt();
-        LocalObjectContainer stream = (LocalObjectContainer)stream();
+        LocalObjectContainer container = (LocalObjectContainer)stream();
         unmarshall(_payLoad._offset);
         synchronized (streamLock()) {
             ClassMetadata classMetadata = classMetadataId == 0
             					? null
-            					: stream.classMetadataForID(classMetadataId);
+            					: container.classMetadataForID(classMetadataId);
             
             int id = _payLoad.getID();
-            stream.prefetchedIDConsumed(id);
+            container.prefetchedIDConsumed(id);
             transaction().slotFreePointerOnRollback(id);
             
-            Slot slot = stream.getSlot(_payLoad.length());
+            Slot slot = container.getSlot(_payLoad.length());
             _payLoad.address(slot.address());
             
             transaction().slotFreeOnRollback(id, slot);
@@ -28,7 +28,7 @@ public final class MWriteNew extends MsgObject implements ServerSideMessage {
             if(classMetadata != null){
                 classMetadata.addFieldIndices(_payLoad,null);
             }
-            stream.writeNew(transaction(), _payLoad.pointer(), classMetadata, _payLoad);
+            container.writeNew(transaction(), _payLoad.pointer(), classMetadata, _payLoad);
             serverTransaction().writePointer( id, slot);
         }
     }
