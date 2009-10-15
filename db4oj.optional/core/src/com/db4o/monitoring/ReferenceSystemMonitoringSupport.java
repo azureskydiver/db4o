@@ -15,7 +15,7 @@ import com.db4o.monitoring.internal.*;
  * Publishes statistics about the ReferenceSystem to JMX.
  */
 @decaf.Ignore
-public class ReferenceSystemMonitoringSupport implements ConfigurationItem {
+public class ReferenceSystemMonitoringSupport extends MonitoringSupportBase {
 
 	private final static class MonitoringSupportReferenceSystemFactory implements
 			ReferenceSystemFactory {
@@ -36,16 +36,6 @@ public class ReferenceSystemMonitoringSupport implements ConfigurationItem {
 			return mBean;
 		}
 
-		private void addClosingListener(final InternalObjectContainer container,
-				final com.db4o.monitoring.ReferenceSystem referenceSystem) {
-			final EventRegistry events = EventRegistryFactory.forObjectContainer(container);
-			events.closing().addListener(new EventListener4<ObjectContainerEventArgs>() {
-				public void onEvent(Event4<ObjectContainerEventArgs> e, ObjectContainerEventArgs args) {
-					referenceSystem.unregister();
-					_mBeans.remove(container.toString());
-				}
-			});
-		}
 	}
 
 	public void apply(InternalObjectContainer container) {
