@@ -45,7 +45,7 @@ public class PerformanceCompetition extends AbstractDb4oVersionsRaceRunner{
 				 new Monaco(),
 				 new Nurburgring(),
 				 new Montreal(),
-				 new Indianapolis(),
+				 new IndianapolisFast(),
 				 new Magnycours(),
                  new Silverstone(),
 		};
