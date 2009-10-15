@@ -22,7 +22,7 @@ package org.polepos.circuits.indianapolis;
 import org.polepos.framework.*;
 
 
-public class IndianapolisUnoptimized extends Circuit {
+public class IndianapolisMedium extends Circuit {
 
     @Override
     public String description() {
@@ -35,21 +35,10 @@ public class IndianapolisUnoptimized extends Circuit {
     }
 
     @Override
-    protected void addLaps() {
-    	
-        add(new Lap("write", false, false));
-        
-        add(new Lap("queryAndBigResult"));
-        add(new Lap("queryNestedAnd"));
-        add(new Lap("queryTwoFieldAndNot"));
-
-        add(new Lap("queryNotRange"));
-        add(new Lap("queryOrTwoLevels"));
-        add(new Lap("queryBigRangeFound"));
-        
-        add(new Lap("getOneFromBigRangeQuery"));
-        add(new Lap("getOneFromOrTwoLevelsQuery"));
-        
+    protected void addLaps() {    	
+        add(new Lap("write"));
+        add(new Lap("queryOr"));
+        add(new Lap("queryOrRange"));
         add(new Lap("addSingleObjectAndCommit"));
     }
 

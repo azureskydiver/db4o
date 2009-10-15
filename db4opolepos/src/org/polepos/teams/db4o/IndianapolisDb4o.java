@@ -201,7 +201,11 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
     }
     
     public void getSingleRandomObject(){
-    	getOne(newIndianapolisListQuery());
+        int count = setup().getSelectCount();
+        for (int i = 1; i <= count; i++) {
+        	IndianapolisList il = getOne(newIndianapolisListQuery());
+        	db().purge(il);
+        }
     }
     
     public void getOneFromBigRangeQuery(){
@@ -234,8 +238,8 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
         return q;
     }
     
-    private void getOne(Query q){
-    	IndianapolisList il = (IndianapolisList) q.execute().next();
+    private IndianapolisList getOne(Query q){
+    	return (IndianapolisList) q.execute().next();
     }
     
     public void addSingleObjectAndCommit(){
