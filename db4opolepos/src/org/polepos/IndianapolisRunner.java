@@ -33,7 +33,7 @@ public class IndianapolisRunner extends AbstractDb4oVersionsRaceRunner {
 	
 	public Circuit[] circuits() {
 		return new Circuit[] { 
-				new Indianapolis(),  
+				new IndianapolisFast(),  
 		};
 	}
 	
