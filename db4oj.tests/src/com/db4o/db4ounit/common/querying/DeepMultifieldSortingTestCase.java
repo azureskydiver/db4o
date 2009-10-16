@@ -10,7 +10,7 @@ import db4ounit.extensions.*;
 
 public class DeepMultifieldSortingTestCase extends AbstractDb4oTestCase {
 	
-	public class Item {
+	public static class Item {
 		
 		public int _id;
 		
@@ -25,7 +25,7 @@ public class DeepMultifieldSortingTestCase extends AbstractDb4oTestCase {
 		}
 	} 
 
-	public class ItemChild {
+	public static class ItemChild {
 		
 		public int _id;
 		
