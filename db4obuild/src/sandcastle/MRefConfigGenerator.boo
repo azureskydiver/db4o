@@ -103,7 +103,7 @@ try:
 	documentedNamespaces = namespacesFromXmlSummary(namespaceSummaryPath)
 	filters = resetApiFilters(configPath)	
 	
-	for assemblyName in ["Db4Objects.Db4o.dll", "Db4Objects.Db4o.CS.dll"]:
+	for assemblyName in ["Db4Objects.Db4o.dll", "Db4Objects.Db4o.CS.dll", "Db4objects.Db4o.Optional.dll"]:
 		processAssembly(buildDistPath("dll/${assemblyName}"), filters, documentedNamespaces)
 	
 	filters.OwnerDocument.Save(configPath)
