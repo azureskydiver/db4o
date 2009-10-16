@@ -9,7 +9,7 @@ import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
 @decaf.Remove
-public class ReferenceSystemMonitoringSupportTestCase extends MBeanTestCaseBase implements CustomClientServerConfiguration {
+public class ReferenceSystemMonitoringSupportTestCase extends MBeanTestCaseBase implements CustomClientServerConfiguration, OptOutDefragSolo {
 	
 	public static void main(String[] args) {
 		new ReferenceSystemMonitoringSupportTestCase().runNetworking();
