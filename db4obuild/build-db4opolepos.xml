@@ -61,7 +61,7 @@
 			</classpath>
 			<arg value="1,9"/>
 			<arg path="${dir.polepos.db4ojars}"/>
-			<jvmarg value="-Xmx512m"/>
+			<jvmarg value="-Xmx1024m"/>
 			<!-- jvmarg value="-verbose:class"/ -->
 		</java>
 	</target>
