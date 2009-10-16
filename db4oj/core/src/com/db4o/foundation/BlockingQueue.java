@@ -13,6 +13,9 @@ public class BlockingQueue implements Queue4 {
 	protected boolean _stopped;
 
 	public void add(final Object obj) {
+		if(obj == null){
+			throw new IllegalArgumentException();
+		}
 		_lock.run(new Closure4() {
 			public Object run() {
 				_queue.add(obj);
@@ -42,18 +45,15 @@ public class BlockingQueue implements Queue4 {
 	public Object next() throws BlockingQueueStoppedException {
 		return _lock.run(new Closure4() {
 			public Object run() {
-				if (_queue.hasNext()) {
-					return _queue.next();
+				while(true){
+					if (_queue.hasNext()) {
+						return _queue.next();
+					}
+					if(_stopped) {
+						throw new BlockingQueueStoppedException();
+					}
+					_lock.snooze(Integer.MAX_VALUE);
 				}
-				if(_stopped) {
-					throw new BlockingQueueStoppedException();
-				}
-				_lock.snooze(Integer.MAX_VALUE);
-				Object obj = _queue.next();
-				if(obj == null){
-					throw new BlockingQueueStoppedException();
-				}
-				return obj;
 			}
 		});
 	}
