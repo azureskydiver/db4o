@@ -68,7 +68,7 @@ public class BlockingQueueTestCase extends Queue4TestCaseBase {
 
 		public void run() {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			} catch (Exception e) {
 			
 			}
@@ -85,7 +85,7 @@ public class BlockingQueueTestCase extends Queue4TestCaseBase {
 
 		public void run() {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			} catch (Exception e) {
 			
 			}
