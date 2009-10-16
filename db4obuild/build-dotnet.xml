@@ -978,6 +978,7 @@
 			<env key="DXROOT" file="${dir.lib.sandcastle}" />
 			<arg value="/config:${dir.dist.ndoc}/Output/MRefBuilder.config" />
 			<arg file="${dir.dist.dll}/Db4objects.Db4o.dll" />
+			<arg file="${dir.dist.dll}/Db4objects.Db4o.Optional.dll" />
 			<arg file="${dir.dist.dll}/Db4objects.Db4o.CS.dll" />
 			<arg value="/out:${dir.dist.ndoc}/sandcastle" />
 			<arg value="/internal-" />
@@ -1000,7 +1001,7 @@
 			<arg value="/config:${dir.build}/config/sandcastle/sandcastle.config" />
 			<arg file="${dir.dist.ndoc}/manifest.xml" />
 	
-			<env key="XMLDOC" value="${dir.dist.dll}/Db4objects.Db4o.xml" />
+			<env key="XMLDOC" value="${dir.dist.dll}/Db4objects.Db4o.*xml" />
 			<env key="DXROOT" value="${dir.lib.sandcastle}" />			
 		</exec>
 	
