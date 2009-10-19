@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd">
+	<head><title>Report Integration<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
+	<body onload="prettyPrint()">
+
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Report Integration</h1>
+                <p><span style="color: #990000;">This topic applies to .NET version only</span>&#160;</p>
+                <p>Now the existing report should be integrated into the
+application.</p>
+                <p>Select the application form (Form1) in design view and drag
+ReportViewer icon from the toolbox onto the form.</p>
+                <p>Select the ReportViewer control, and open the smart tags
+panel by clicking the triangle on the top right corner. Click the "Choose
+Report" drop-down list and select the PilotReport. A BindingSource
+(PilotBindingSource) is automatically created corresponding to the Pilot data
+source used in the report.</p>
+                <p>Open the code view for the Form1. Find Form1_Load function
+and add the following code:</p>
+                <p>Db4oManager takes care of opening db4o connection on the
+first request. However the connection should be closed manually on the
+application termination:</p>
+            </div>
+        </div>
+   
+    </body>
+</html>
