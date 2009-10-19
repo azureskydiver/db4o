@@ -22,18 +22,9 @@ public class Db4oMBeans {
 		return container.toString();
 	}
 
-	public static String mBeanIDForPath(String path) {
-		return mBeanIDForFile(new File(path));
-	}
-
-	public static String mBeanIDForFile(File file) {
-		return file.getName();
-	}
-	
 	public static ObjectName mBeanNameFor(Class<?> mbeanInterface, String name) {
 		name = name.replaceAll("[:\\?\\*=,\"]", " ");
 		final String nameSpec = MONITORING_DOMAIN_NAME + ":name=" + name + ",mbean=" + displayName(mbeanInterface);
-//		System.err.println("NAME SPEC: " + nameSpec);
 		try {
 			return new ObjectName(nameSpec);
 		} catch (MalformedObjectNameException e) {
@@ -105,9 +96,9 @@ public class Db4oMBeans {
 		}
 	}
 
-	public static ClientConnections newClientConnectionsMBean(ObjectContainer container) {
+	public static ClientConnections newClientConnectionsMBean(ObjectServer server) {
 		try {
-			return new ClientConnections(container, ClientConnectionsMBean.class);
+			return new ClientConnections(mBeanNameFor(ClientConnectionsMBean.class, mBeanIDForContainer(server.ext().objectContainer())));
 		} catch (JMException e) {
 			throw new Db4oIllegalStateException(e);
 		}
