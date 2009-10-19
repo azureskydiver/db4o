@@ -20,6 +20,7 @@ public class AllTests extends Db4oTestSuite {
 			EventArgsTransactionTestCase.class,			
 			InstantiationEventsTestCase.class,
 			ObjectContainerEventsTestCase.class,
+			ObjectContainerOpenEventTestCase.class,
 			EventCountTestCase.class,
 			DeleteEventOnClientTestCase.class,
 			ExceptionPropagationInEventsTestSuite.class,
