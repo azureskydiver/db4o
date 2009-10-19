@@ -19,6 +19,7 @@ public class AllTests extends ComposibleTestSuite {
 			        	CustomStringEncodingTestCase.class,
 			        	GlobalVsNonStaticConfigurationTestCase.class,
 			        	LatinStringEncodingTestCase.class,
+			        	ObjectContainerCustomNameTestCase.class,
 			        	ObjectTranslatorTestCase.class,
 			        	TransientConfigurationTestSuite.class,
 			        	UnicodeStringEncodingTestCase.class,
