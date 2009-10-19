@@ -14,12 +14,12 @@ configurations can make your database file vulnerable.
 the same database file from different JVM sessions will corrupt the
 database file immediately. Do not use this setting unless your
 application logic guarantees that only one VM session can access your
-database file at a time. For more information see <a href="../tuning/performance_hints/no_lock_file_thread.html" class="wikiLink">No lock file thread</a>.</p>
+database file at a time. For more information see <a href="../tuning/performance_hints/no_lock_file_thread.htm" class="wikiLink">No lock file thread</a>.</p>
 </li>
-<li> <code><a href="../implementation_strategies/io_adapter/nonflushingioadapter.html" class="wikiLink">NonFlushingIoAdapter</a></code>
+<li> <code><a href="../implementation_strategies/io_adapter/nonflushingioadapter.htm" class="wikiLink">NonFlushingIoAdapter</a></code>
 
 
-<p>In order to ensure ACID transaction db4o uses a <a href="../basic_concepts/acid_model/acid_properties_for_db4o.html" class="wikiLink">special strategy</a>, which relies on the order of writes to the storage medium.
+<p>In order to ensure ACID transaction db4o uses a <a href="../basic_concepts/acid_model/acid_properties_for_db4o.htm" class="wikiLink">special strategy</a>, which relies on the order of writes to the storage medium.
 On operating systems that use in-memory file caching, the OS cache may
 revert the order of writes to optimize file performance. db4o can
 enforce the correct order by flushing file buffers after every step of
@@ -81,7 +81,7 @@ commit.
 
 </ol>
  If you apply such a refactoring, you will not be able to read existing objects correctly.
-<p>More information on refactorings see <a href="../implementation_strategies/refactoring_and_schema_evolution.html" class="wikiLink">Refactoring and Schema Evolution</a> 
+<p>More information on refactorings see <a href="../implementation_strategies/refactoring_and_schema_evolution.htm" class="wikiLink">Refactoring and Schema Evolution</a> 
  
   </p></div>
     </div>

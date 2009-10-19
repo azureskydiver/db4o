@@ -12,14 +12,14 @@ fields are duplicated, all the referenced(children) objects are only
 copied as references to the same object in the parent clone. But how it
 affects Transparent Persistence?</p>
 <p>If you remember
-<a href="../../object_lifecycle/transparent_persistence/transparent_persistence_implementation.html" class="wikiLink">Transparent Persistence Implementation</a>
+<a href="../../object_lifecycle/transparent_persistence/transparent_persistence_implementation.htm" class="wikiLink">Transparent Persistence Implementation</a>
 you must know that a special <code>Activator</code> field is used to
 bind an object to the object container. Consequently, the default clone
 will copy this <code>Activatable</code> field to the object's
 duplicate, which will produce ambiguity as the object container won't
 know which object should be activated for write.</p>
 <p>Let's look how it will affect db4o in practice. We will use a usual
-<a href="car.html" class="wikiLink">Car</a> class and make it cloneable. Use the following code to store a
+<a href="car.htm" class="wikiLink">Car</a> class and make it cloneable. Use the following code to store a
 car object and it's clone: </p>
 <p MadCap:conditions="Primary.Java">
 <MadCap:snippetBlock src="../../Resources/Snippets/Object Clone/TPCloneExample.java/storeCar.flsnp" />/p>
