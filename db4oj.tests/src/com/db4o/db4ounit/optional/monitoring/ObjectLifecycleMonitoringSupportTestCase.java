@@ -67,8 +67,7 @@ public class ObjectLifecycleMonitoringSupportTestCase extends MBeanTestCaseBase 
 		store(item);
 		reopen();
 		Query query = newQuery(Item.class);
-		ObjectSet<Item> objectSet = query.execute();
-		return objectSet;
+		return query.<Item>execute();
 	}
 
 	@Override
