@@ -767,7 +767,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		}
 	}
 
-	public String toString() {
+	protected String defaultToString() {
 		return "Client connection " + _userName + "(" +  _socket + ")";
 	}
 
