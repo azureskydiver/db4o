@@ -247,6 +247,9 @@
 				<include name="**/*.build" />
 				<include name="**/*.inc" />
 				
+				<!-- Silverlight / WPF files -->
+				<include name="**/*.xaml" />
+				
 				<exclude name="**/obj/**" />	
 			</fileset>
 		</copy>
