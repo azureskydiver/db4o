@@ -1,6 +1,6 @@
 /* Copyright (C) 2009  Versant Corp.  http://www.db4o.com */
 /**
- * @sharpen.if !SILVERLIGHT
+ * @sharpen.if !CF && !SILVERLIGHT
  */
 package com.db4o.db4ounit.optional.monitoring.samples;
 
