@@ -71,12 +71,12 @@ public class MonitoringDemo {
 		if(CLIENT_SERVER){
 			String user = "db4o";
 			String password = "db4o";
-			_server = Db4oClientServer.openServer(configure(Db4oClientServer.newServerConfiguration()), DATABASE_FILE_NAME, Db4oClientServer.ARBITRARY_PORT);
+			_server = Db4oClientServer.openServer(configure(Db4oClientServer.newServerConfiguration(), "db4o server(" + DATABASE_FILE_NAME + ")"), DATABASE_FILE_NAME, Db4oClientServer.ARBITRARY_PORT);
 			_server.grantAccess(user, password);
-			return Db4oClientServer.openClient(configure(Db4oClientServer.newClientConfiguration()), "localhost", _server.ext().port(), user, password);
+			return Db4oClientServer.openClient(configure(Db4oClientServer.newClientConfiguration(), "db4o client(localhost:" + _server.ext().port() + ")"), "localhost", _server.ext().port(), user, password);
 		}
 		
-		return Db4oEmbedded.openFile(configure(Db4oEmbedded.newConfiguration()), DATABASE_FILE_NAME);
+		return Db4oEmbedded.openFile(configure(Db4oEmbedded.newConfiguration(), "db4o(" + DATABASE_FILE_NAME + ")"), DATABASE_FILE_NAME);
 	}
 
 	private void executeQueries(ObjectContainer objectContainer) {
@@ -137,8 +137,9 @@ public class MonitoringDemo {
 		objectContainer.commit();
 	}
 
-	private <T extends CommonConfigurationProvider> T configure (T config) {
+	private <T extends CommonConfigurationProvider> T configure (T config, String name) {
 		config.common().objectClass(Item.class).objectField("name").indexed(true);
+		config.common().nameProvider(new SimpleNameProvider(name));
 		new AllMonitoringSupport().apply(config);
 		return config;
 	}
