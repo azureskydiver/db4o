@@ -20,14 +20,13 @@ public class MBeanRegistrationSupport implements Db4oMBean {
 	private Class<?> _type;
 
 	public MBeanRegistrationSupport(ObjectContainer db, Class<?> type) {
-		this(null);
 		_db = db;
 		_type = type;
+		beanRegistry().add(this);
 	}
 
-	public MBeanRegistrationSupport(ObjectName objectName) {
+	public MBeanRegistrationSupport(ObjectName objectName) throws JMException {
 		_objectName = objectName;
-		beanRegistry().add(this);
 	}
 
 	public void unregister() {

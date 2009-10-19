@@ -13,10 +13,6 @@ public abstract class NotificationEmitterMBean extends MBeanRegistrationSupport 
 
 	private final NotificationBroadcasterSupport _notificationSupport = new NotificationBroadcasterSupport();
 	
-	public NotificationEmitterMBean(ObjectName objectName) throws JMException {
-		super(objectName);
-	}
-
 	public NotificationEmitterMBean(ObjectContainer db, Class<?> type) throws JMException {
 		super(db, type);
 	}
