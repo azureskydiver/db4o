@@ -33,6 +33,7 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	protected final Event4Impl _instantiated = new Event4Impl();
 	protected final Event4Impl _classRegistered = new Event4Impl();	
 	protected final Event4Impl _closing = new Event4Impl();
+	protected final Event4Impl _opened = new Event4Impl();
 	
 	/**
 	 * @sharpen.ignore
@@ -152,6 +153,18 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
         });
 	}
 
+	public void openOnFinished(final ObjectContainer container) {
+		if (!_opened.hasListeners())
+			return;
+		
+		withExceptionHandlingInCallback(new Runnable() {
+        	public void run() {
+        		_opened.trigger(new ObjectContainerEventArgs(container));
+        	}
+        });
+	}
+
+	
 	public Event4 queryFinished() {
 		return _queryFinished;
 	}
@@ -288,4 +301,8 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
         	throw new EventException(x);
         }
     }
+
+	public Event4<ObjectContainerEventArgs> opened() {
+		return _opened;
+	}
 }

@@ -233,4 +233,13 @@ public interface EventRegistry {
 	 * @return event
 	 */
 	public Event4<ObjectContainerEventArgs> closing();
+
+	/**
+	 * This event is fired when the {@link com.db4o.ObjectContainer} has
+	 * finished its startup procedure.
+	 * 
+	 * @sharpen.event com.db4o.events.ObjectContainerEventArgs
+	 * @return event
+	 */
+	public Event4<ObjectContainerEventArgs> opened();
 }

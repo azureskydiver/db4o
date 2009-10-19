@@ -101,6 +101,8 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	
 	private ReferenceSystemFactory _referenceSystemFactory;
 	
+	private String _name;
+	
 	protected ObjectContainerBase(Configuration config) {
     	_lock = new Object();
     	_config = (Config4Impl)config;
@@ -125,11 +127,13 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 			boolean ok = false;
 			synchronized (_lock) {
 				try {
+			        _name = configImpl().nameProvider().name(ObjectContainerBase.this);
 					initializeReferenceSystemFactory(_config);
 		        	initializeTransactions();
 		        	initialize1(_config);
 		        	openImpl();
 					initializePostOpen();
+					callbacks().openOnFinished(ObjectContainerBase.this);
 					ok = true;
 				} finally {
 					if(!ok) {
@@ -2082,4 +2086,14 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
 	public Object newWeakReference(ObjectReference referent, Object obj) {
 		return _references.newWeakReference(referent, obj);
 	}
+	
+	@Override
+	public final String toString() {
+		if(_name != null) {
+			return _name;
+		}
+		return defaultToString();
+	}
+
+	protected abstract String defaultToString();
 }
