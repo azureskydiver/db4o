@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CatapultConditionTagSet>
+  <ConditionTag
+    Name="Pdf"
+    BackgroundColor="#ff0000" />
+  <ConditionTag
+    Name="Online"
+    BackgroundColor="#00ff00" />
+  <ConditionTag
+    BackgroundColor="LightBlue"
+    Name="Java"
+    Comment="java related" />
+  <ConditionTag
+    BackgroundColor="LightCoral"
+    Name="c#"
+    Comment="" />
+  <ConditionTag
+    BackgroundColor="LightCyan"
+    Name="VB.NET"
+    Comment="" />
+  <ConditionTag
+    BackgroundColor="LightGreen"
+    Name=".NET"
+    Comment="" />
+  <ConditionTag
+    BackgroundColor="LightPink"
+    Name="All languages"
+    Comment="java + .NET" />
+</CatapultConditionTagSet>
