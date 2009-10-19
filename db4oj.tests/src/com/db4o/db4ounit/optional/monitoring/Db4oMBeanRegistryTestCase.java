@@ -5,13 +5,13 @@ import javax.management.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.io.*;
 import com.db4o.monitoring.*;
 
 import db4ounit.*;
 
+@decaf.Remove
 public class Db4oMBeanRegistryTestCase implements TestCase {
 
 	private static interface Mock1MBean {
