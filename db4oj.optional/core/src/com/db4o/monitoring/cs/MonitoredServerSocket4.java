@@ -6,6 +6,8 @@ import static com.db4o.foundation.Environments.my;
 
 import java.io.*;
 
+import javax.management.*;
+
 import com.db4o.*;
 import com.db4o.events.*;
 import com.db4o.foundation.network.*;
@@ -25,8 +27,14 @@ class MonitoredServerSocket4 extends ServerSocket4Decorator {
 	}
 	
 	Networking bean() {
+		// FIXME
 		if (_bean == null) {
-			_bean = Db4oMBeans.newServerNetworkingStatsMBean(my(ObjectContainer.class));			
+			_bean = Db4oMBeans.newServerNetworkingStatsMBean(my(ObjectContainer.class));		
+			try {
+				_bean.register();
+			} catch (JMException exc) {
+				exc.printStackTrace();
+			}
 			unregisterBeanOnServerClose();			
 		}
 		return _bean;

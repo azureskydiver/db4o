@@ -25,11 +25,6 @@ public class QueryMonitoringSupport implements ConfigurationItem {
 		});
 		
 		final EventRegistry events = EventRegistryFactory.forObjectContainer(container);
-		events.closing().addListener(new EventListener4<ObjectContainerEventArgs>() {
-			public void onEvent(Event4<ObjectContainerEventArgs> e, ObjectContainerEventArgs args) {
-				queries.unregister();
-			}
-		});
 		events.queryStarted().addListener(new EventListener4<QueryEventArgs>() {
 			public void onEvent(Event4<QueryEventArgs> e, QueryEventArgs args) {
 				queries.notifyQueryStarted();

@@ -4,6 +4,7 @@ package com.db4o.monitoring.cs;
 
 import javax.management.*;
 
+import com.db4o.*;
 import com.db4o.monitoring.*;
 import com.db4o.monitoring.internal.*;
 
@@ -13,8 +14,8 @@ import com.db4o.monitoring.internal.*;
 @decaf.Ignore
 public class Networking extends MBeanRegistrationSupport implements NetworkingMBean {
 
-	public Networking(ObjectName objectName) throws JMException {
-		super(objectName);
+	public Networking(ObjectContainer db, Class<?> type) throws JMException {
+		super(db, type);
 	}
 
 	public double getBytesSentPerSecond() {
@@ -64,7 +65,7 @@ public class Networking extends MBeanRegistrationSupport implements NetworkingMB
 	
 	@Override
 	public String toString() {
-		return _objectName.toString();
+		return objectName().toString();
 	}
 	
 	public void resetCounters() {

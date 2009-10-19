@@ -18,12 +18,6 @@ public class MonitoredClientSocket4 extends MonitoredSocket4Base {
 	}
 	
 	@Override
-	public void close() throws IOException {
-		super.close();
-		_bean.unregister();
-	}
-	
-	@Override
 	protected Networking bean() {
 		if (null == _bean)
 		{

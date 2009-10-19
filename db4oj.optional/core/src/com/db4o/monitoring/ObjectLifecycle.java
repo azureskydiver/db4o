@@ -4,6 +4,7 @@ package com.db4o.monitoring;
 
 import javax.management.*;
 
+import com.db4o.*;
 import com.db4o.monitoring.internal.*;
 
 /**
@@ -20,8 +21,8 @@ public class ObjectLifecycle extends MBeanRegistrationSupport implements ObjectL
 	
 	private final TimedReading _deleted = TimedReading.newPerSecond();
 
-	public ObjectLifecycle(ObjectName objectName) throws JMException {
-		super(objectName);
+	public ObjectLifecycle(ObjectContainer db, Class<?> type) throws JMException {
+		super(db, type);
 	}
 
 	public double getObjectsActivatedPerSec() {

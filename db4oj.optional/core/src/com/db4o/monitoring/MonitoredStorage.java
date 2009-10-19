@@ -1,6 +1,9 @@
 package com.db4o.monitoring;
 
+import com.db4o.*;
 import com.db4o.io.*;
+
+import static com.db4o.foundation.Environments.*;
 
 /**
  * Publishes storage statistics to JMX.
@@ -23,16 +26,7 @@ public class MonitoredStorage extends StorageDecorator {
 
 		public MonitoredBin(String uri, Bin bin) {
 			super(bin);
-			_ioMBean = Db4oMBeans.newIOStatsMBean(uri);
-		}
-		
-		@Override
-		public void close() {
-			try {
-				super.close();
-			} finally {
-				_ioMBean.unregister();
-			}
+			_ioMBean = Db4oMBeans.newIOStatsMBean(my(ObjectContainer.class));
 		}
 		
 		@Override

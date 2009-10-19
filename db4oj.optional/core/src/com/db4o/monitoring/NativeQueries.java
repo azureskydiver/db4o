@@ -3,6 +3,7 @@ package com.db4o.monitoring;
 
 import javax.management.*;
 
+import com.db4o.*;
 import com.db4o.diagnostic.*;
 import com.db4o.internal.query.*;
 import com.db4o.monitoring.internal.*;
@@ -17,10 +18,10 @@ public class NativeQueries extends NotificationEmitterMBean implements NativeQue
 	private final TimedReading _nativeQueries = TimedReading.newPerSecond();
 	private final TimedReading _unoptimizedNativeQueries = TimedReading.newPerSecond();
 
-	public NativeQueries(ObjectName objectName) throws JMException {
-		super(objectName);
+	public NativeQueries(ObjectContainer db, Class<?> type) throws JMException {
+		super(db, type);
 	}
-	
+
 	public double getUnoptimizedNativeQueriesPerSecond() {
 		return _unoptimizedNativeQueries.read();
 	}

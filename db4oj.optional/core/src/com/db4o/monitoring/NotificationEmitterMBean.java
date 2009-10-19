@@ -3,6 +3,8 @@ package com.db4o.monitoring;
 
 import javax.management.*;
 
+import com.db4o.*;
+
 /**
  * @exclude
  */
@@ -14,7 +16,11 @@ public abstract class NotificationEmitterMBean extends MBeanRegistrationSupport 
 	public NotificationEmitterMBean(ObjectName objectName) throws JMException {
 		super(objectName);
 	}
-	
+
+	public NotificationEmitterMBean(ObjectContainer db, Class<?> type) throws JMException {
+		super(db, type);
+	}
+
 	public void removeNotificationListener(NotificationListener listener,
 			NotificationFilter filter, Object handback)
 			throws ListenerNotFoundException {

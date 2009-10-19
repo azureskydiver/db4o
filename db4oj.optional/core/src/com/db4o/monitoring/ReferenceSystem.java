@@ -4,6 +4,8 @@ package com.db4o.monitoring;
 
 import javax.management.*;
 
+import com.db4o.*;
+
 /**
  * @exclude
  */
@@ -12,8 +14,8 @@ public class ReferenceSystem extends MBeanRegistrationSupport implements Referen
 	
 	private int _objectReferenceCount;
 
-	public ReferenceSystem(ObjectName objectName) throws JMException {
-		super(objectName);
+	public ReferenceSystem(ObjectContainer db, Class<?> type) throws JMException {
+		super(db, type);
 	}
 
 	public int getObjectReferenceCount() {

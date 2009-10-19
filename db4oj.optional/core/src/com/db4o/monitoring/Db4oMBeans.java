@@ -19,9 +19,6 @@ public class Db4oMBeans {
 	private static final String MONITORING_DOMAIN_NAME = "com.db4o.monitoring";
 
 	public static String mBeanIDForContainer(ObjectContainer container) {
-		if(container instanceof LocalObjectContainer){
-			return mBeanIDForPath(((LocalObjectContainer) container).fileName());
-		}
 		return container.toString();
 	}
 
@@ -36,6 +33,7 @@ public class Db4oMBeans {
 	public static ObjectName mBeanNameFor(Class<?> mbeanInterface, String name) {
 		name = name.replaceAll("[:\\?\\*=,\"]", " ");
 		final String nameSpec = MONITORING_DOMAIN_NAME + ":name=" + name + ",mbean=" + displayName(mbeanInterface);
+//		System.err.println("NAME SPEC: " + nameSpec);
 		try {
 			return new ObjectName(nameSpec);
 		} catch (MalformedObjectNameException e) {
@@ -51,10 +49,9 @@ public class Db4oMBeans {
 		return className.substring(0, className.length() - "MBean".length());
 	}
 	
-	static IO newIOStatsMBean(String uri) {
+	static IO newIOStatsMBean(ObjectContainer container) {
 		try {
-			final ObjectName objectName = mBeanNameFor(IOMBean.class, mBeanIDForPath(uri));
-			return new IO(objectName);
+			return new IO(container, IOMBean.class);
 		} catch (JMException e) {
 			throw new Db4oException(e);
 		}
@@ -62,8 +59,7 @@ public class Db4oMBeans {
 
 	public static Networking newClientNetworkingStatsMBean(ObjectContainer container) {
 		try {
-			final ObjectName objectName = mBeanNameFor(NetworkingMBean.class, mBeanIDForContainer(container));
-			return new Networking(objectName);
+			return new Networking(container, NetworkingMBean.class);
 		} catch (JMException e) {
 			throw new Db4oException(e);
 		}
@@ -71,8 +67,7 @@ public class Db4oMBeans {
 	
 	public static Networking newServerNetworkingStatsMBean(ObjectContainer container) {
 		try {
-			final ObjectName objectName = mBeanNameFor(NetworkingMBean.class, mBeanIDForContainer(container));
-			return new SynchronizedNetworking(objectName);
+			return new SynchronizedNetworking(container, NetworkingMBean.class);
 		} catch (JMException e) {
 			throw new Db4oException(e);
 		}
@@ -80,7 +75,7 @@ public class Db4oMBeans {
 	
 	public static Queries newQueriesMBean(InternalObjectContainer container) {
 		try {
-			return new Queries(mBeanNameFor(QueriesMBean.class, mBeanIDForContainer(container)));
+			return new Queries(container, QueriesMBean.class);
 		} catch (JMException e) {
 			throw new Db4oIllegalStateException(e);
 		}
@@ -88,7 +83,7 @@ public class Db4oMBeans {
 
 	public static com.db4o.monitoring.ReferenceSystem newReferenceSystemMBean(InternalObjectContainer container) {
 		try {
-			return new com.db4o.monitoring.ReferenceSystem(mBeanNameFor(ReferenceSystemMBean.class, mBeanIDForContainer(container)));
+			return new com.db4o.monitoring.ReferenceSystem(container, ReferenceSystemMBean.class);
 		} catch (JMException e) {
 			throw new Db4oIllegalStateException(e);
 		}
@@ -96,7 +91,7 @@ public class Db4oMBeans {
 
 	public static NativeQueries newNativeQueriesMBean(InternalObjectContainer container) {
 		try {
-			return new NativeQueries(mBeanNameFor(NativeQueriesMBean.class, mBeanIDForContainer(container)));
+			return new NativeQueries(container, NativeQueriesMBean.class);
 		} catch (JMException e) {
 			throw new Db4oIllegalStateException(e);
 		}
@@ -104,7 +99,7 @@ public class Db4oMBeans {
 
 	public static Freespace newFreespaceMBean(InternalObjectContainer container) {
 		try {
-			return new Freespace(mBeanNameFor(FreespaceMBean.class, mBeanIDForContainer(container)));
+			return new Freespace(container, FreespaceMBean.class);
 		} catch (JMException e) {
 			throw new Db4oIllegalStateException(e);
 		}
@@ -112,7 +107,7 @@ public class Db4oMBeans {
 
 	public static ClientConnections newClientConnectionsMBean(ObjectContainer container) {
 		try {
-			return new ClientConnections(mBeanNameFor(ClientConnectionsMBean.class, Db4oMBeans.mBeanIDForContainer(container)));
+			return new ClientConnections(container, ClientConnectionsMBean.class);
 		} catch (JMException e) {
 			throw new Db4oIllegalStateException(e);
 		}
@@ -120,7 +115,7 @@ public class Db4oMBeans {
 
 	public static ObjectLifecycle newObjectLifecycleMBean(ObjectContainer container) {
 		try {
-			return new ObjectLifecycle(mBeanNameFor(ObjectLifecycleMBean.class, Db4oMBeans.mBeanIDForContainer(container)));
+			return new ObjectLifecycle(container, ObjectLifecycleMBean.class);
 		} catch (JMException e) {
 			throw new Db4oIllegalStateException(e);
 		}

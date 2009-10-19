@@ -1,48 +1,74 @@
 /* Copyright (C) 2009  Versant Inc.   http://www.db4o.com */
 package com.db4o.monitoring;
 
+import static com.db4o.foundation.Environments.my;
+
 import java.lang.management.*;
 
 import javax.management.*;
+
+import com.db4o.*;
 
 /**
  * @exclude
  */
 @decaf.Ignore
-public class MBeanRegistrationSupport {
+public class MBeanRegistrationSupport implements Db4oMBean {
 
-	protected ObjectName _objectName;
+	private ObjectContainer _db;
+	private ObjectName _objectName;
+	private Class<?> _type;
 
-	public MBeanRegistrationSupport(ObjectName objectName) throws JMException {
+	public MBeanRegistrationSupport(ObjectContainer db, Class<?> type) {
+		this(null);
+		_db = db;
+		_type = type;
+	}
+
+	public MBeanRegistrationSupport(ObjectName objectName) {
 		_objectName = objectName;
-		register(this);
+		beanRegistry().add(this);
 	}
 
 	public void unregister() {
-		if (_objectName == null) {
+		if (objectName() == null) {
 			return;
 		}
 		
 		try {
-			platformMBeanServer().unregisterMBean(_objectName);
+			platformMBeanServer().unregisterMBean(objectName());
 		} catch (JMException e) {
 			e.printStackTrace();
 		} finally {
+			_db = null;
 			_objectName = null;
 		}
 	}
 
-	private void register(Object mbeanInstance) throws InstanceAlreadyExistsException,
-			MBeanRegistrationException, NotCompliantMBeanException {
-			platformMBeanServer().registerMBean(mbeanInstance, _objectName);
+	// FIXME
+	public void register() throws JMException {
+		if(platformMBeanServer().isRegistered(objectName())) {
+			return;
+		}
+		platformMBeanServer().registerMBean(this, objectName());
 	}
 
 	private MBeanServer platformMBeanServer() {
 		return ManagementFactory.getPlatformMBeanServer();
 	}
 
-	protected Object objectName() {
+	protected ObjectName objectName() {
+		if(_objectName != null) {
+			return _objectName;
+		}
+		if(_db == null) {
+			return null;
+		}
+		_objectName = Db4oMBeans.mBeanNameFor(_type, Db4oMBeans.mBeanIDForContainer(_db));
 		return _objectName;
 	}
 
+	private Db4oMBeanRegistry beanRegistry() {
+		return my(Db4oMBeanRegistry.class);
+	}
 }
