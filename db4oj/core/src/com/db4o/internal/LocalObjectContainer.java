@@ -697,7 +697,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
     public abstract void syncFiles();
 
-    public String toString() {
+    protected String defaultToString() {
         return fileName();
     }
 

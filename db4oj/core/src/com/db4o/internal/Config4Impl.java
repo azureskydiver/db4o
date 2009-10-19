@@ -192,6 +192,12 @@ public final class Config4Impl implements Configuration, DeepClone,
 		}
 	});
 
+	private static final KeySpec NAME_PROVIDER_KEY = new KeySpec(new NameProvider() {
+		public String name(ObjectContainer db) {
+			return null;
+		}
+	});
+
 	//  is null in the global configuration until deepClone is called
 	private ObjectContainerBase        _container;
 	
@@ -1147,6 +1153,14 @@ public final class Config4Impl implements Configuration, DeepClone,
 	
 	public ReferenceSystemFactory referenceSystemFactory() {
 		return (ReferenceSystemFactory) _config.get(REFERENCE_SYSTEM_FACTORY_KEY);
+	}
+
+	public void nameProvider(NameProvider provider) {
+		_config.put(NAME_PROVIDER_KEY, provider);
+	}
+
+	public NameProvider nameProvider() {
+		return (NameProvider) _config.get(NAME_PROVIDER_KEY);
 	}
 
 }

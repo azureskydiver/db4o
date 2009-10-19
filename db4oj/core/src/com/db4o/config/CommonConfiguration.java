@@ -503,4 +503,11 @@ public interface CommonConfiguration {
      * @sharpen.property
      */
 	public EnvironmentConfiguration environment();
+
+	/**
+	 * Registers a {@link NameProvider} that assigns a custom name to the database to be used in
+	 * {@link Object#toString()}.
+	 */
+	public void nameProvider(NameProvider provider);
+
 }

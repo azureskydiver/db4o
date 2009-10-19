@@ -140,5 +140,8 @@ class CommonConfigurationImpl implements CommonConfiguration {
 		};
 	}
 
+	public void nameProvider(NameProvider provider) {
+		_config.nameProvider(provider);
+	}
 
 }

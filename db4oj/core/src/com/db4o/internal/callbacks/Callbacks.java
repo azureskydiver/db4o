@@ -36,5 +36,6 @@ public interface Callbacks {
     boolean caresAboutDeleting();
     boolean caresAboutDeleted();
     
+    void openOnFinished(ObjectContainer container);
     void closeOnStarted(ObjectContainer container);
 }

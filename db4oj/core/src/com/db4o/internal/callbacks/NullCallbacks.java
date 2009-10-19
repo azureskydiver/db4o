@@ -80,4 +80,7 @@ public class NullCallbacks implements Callbacks {
 
 	public void closeOnStarted(ObjectContainer container) {
 	}
+
+	public void openOnFinished(ObjectContainer container) {
+	}
 }
