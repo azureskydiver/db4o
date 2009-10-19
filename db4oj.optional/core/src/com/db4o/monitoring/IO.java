@@ -3,6 +3,7 @@ package com.db4o.monitoring;
 
 import javax.management.*;
 
+import com.db4o.*;
 import com.db4o.monitoring.internal.*;
 
 /**
@@ -21,10 +22,10 @@ class IO extends MBeanRegistrationSupport implements IOMBean {
 	
 	private TimedReading _numSyncsPerSec = TimedReading.newPerSecond();
 	
-	public IO(ObjectName objectName) throws JMException {
-		super(objectName);
+	public IO(ObjectContainer db, Class<?> type) throws JMException {
+		super(db, type);
 	}
-	
+
 	public double getBytesReadPerSecond() {
 		return _numBytesReadPerSec.read();
 	}

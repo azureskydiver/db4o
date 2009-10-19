@@ -21,7 +21,7 @@ import com.db4o.monitoring.*;
 public class NetworkingMonitoringSupport implements ConfigurationItem {
 
 	public void apply(InternalObjectContainer container) {
-		// registerClientConnectionsStatsMBean(my(ObjectServer.class));
+		//registerClientConnectionsStatsMBean(my(ObjectServer.class));
 	}
 
 	public void prepare(Configuration configuration) {

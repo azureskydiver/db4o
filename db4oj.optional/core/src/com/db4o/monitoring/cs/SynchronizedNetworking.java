@@ -2,16 +2,18 @@ package com.db4o.monitoring.cs;
 
 import javax.management.*;
 
+import com.db4o.*;
+
 /**
  * @exclude
  */
 @decaf.Ignore
 public class SynchronizedNetworking extends Networking {
 
-	public SynchronizedNetworking(ObjectName objectName) throws JMException {
-		super(objectName);
+	public SynchronizedNetworking(ObjectContainer db, Class<?> type) throws JMException {
+		super(db, type);
 	}
-	
+
 	@Override
 	public synchronized double getBytesReceivedPerSecond() {
 		return super.getBytesReceivedPerSecond();

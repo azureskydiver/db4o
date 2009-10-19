@@ -4,6 +4,7 @@ package com.db4o.monitoring;
 
 import javax.management.*;
 
+import com.db4o.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.monitoring.internal.*;
 
@@ -19,8 +20,8 @@ public class Freespace extends MBeanRegistrationSupport implements FreespaceMBea
 	
 	private int _totalFreespace;
 	
-	public Freespace(ObjectName objectName) throws JMException {
-		super(objectName);
+	public Freespace(ObjectContainer db, Class<?> type) throws JMException {
+		super(db, type);
 	}
 
 	public double getAverageSlotSize() {

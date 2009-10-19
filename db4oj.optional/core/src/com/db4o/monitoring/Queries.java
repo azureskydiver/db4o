@@ -3,6 +3,7 @@ package com.db4o.monitoring;
 
 import javax.management.*;
 
+import com.db4o.*;
 import com.db4o.diagnostic.*;
 import com.db4o.monitoring.internal.*;
 
@@ -16,8 +17,8 @@ class Queries extends NotificationEmitterMBean implements QueriesMBean {
 	private final TimedReading _queries = TimedReading.newPerSecond();
 	private final AveragingTimedReading _queryExecutionTime = new AveragingTimedReading();
 
-	public Queries(ObjectName objectName) throws JMException {
-		super(objectName);
+	public Queries(ObjectContainer db, Class<?> type) throws JMException {
+		super(db, type);
 	}
 
 	private static String classIndexScanNotificationType() {

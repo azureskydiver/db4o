@@ -15,12 +15,11 @@ import com.db4o.internal.*;
  * ObjectsDeletedPerSec is only tracked on the server side.
  */
 @decaf.Ignore
-public class ObjectLifecycleMonitoringSupport extends MonitoringSupportBase {
+public class ObjectLifecycleMonitoringSupport implements ConfigurationItem {
 
 	public void apply(InternalObjectContainer container) {
 		
 		final ObjectLifecycle objectLifecycle = Db4oMBeans.newObjectLifecycleMBean(container);
-		addClosingListener(container, objectLifecycle);
 		
 		EventRegistry eventRegistry = EventRegistryFactory.forObjectContainer(container);
 		

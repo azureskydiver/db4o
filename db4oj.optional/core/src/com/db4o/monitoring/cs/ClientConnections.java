@@ -4,6 +4,7 @@ package com.db4o.monitoring.cs;
 
 import javax.management.*;
 
+import com.db4o.*;
 import com.db4o.monitoring.*;
 
 /**
@@ -12,8 +13,8 @@ import com.db4o.monitoring.*;
 @decaf.Ignore
 public class ClientConnections extends MBeanRegistrationSupport implements ClientConnectionsMBean {
 
-	public ClientConnections(ObjectName objectName) throws JMException {
-		super(objectName);
+	public ClientConnections(ObjectContainer db, Class<?> type) throws JMException {
+		super(db, type);
 	}
 
 	public int getConnectedClientCount() {
