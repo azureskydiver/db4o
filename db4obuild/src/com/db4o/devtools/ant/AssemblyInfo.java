@@ -6,9 +6,9 @@ public class AssemblyInfo {
     
 	public static final String PRODUCT = "db4o - database for objects";
     
-    public static final String COPYRIGHT = "db4o 2005 - " + currentYear();
+    public static final String COPYRIGHT = "Versant Inc. 2000 - " + currentYear();
 
-    public static final String COMPANY = "Versant Inc., San Mateo, CA, USA";
+    public static final String COMPANY = "Versant Inc., Redwood City, CA, USA";
 
     private static int currentYear() {
     	return Calendar.getInstance(Locale.US).get(Calendar.YEAR);
