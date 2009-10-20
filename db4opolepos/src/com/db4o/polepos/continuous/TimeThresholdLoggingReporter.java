@@ -9,12 +9,14 @@ public class TimeThresholdLoggingReporter implements Reporter {
 	private static final long MIN_TIME = 10000;
 	private static final long MAX_TIME = 30000;
 	private final String _currentTeamName;
-	
+	private String _circuitName;
+
 	public TimeThresholdLoggingReporter(String currentTeamName) {
 		_currentTeamName = currentTeamName;
 	}
 	
 	public void report(Team team, Car car, TurnSetup[] setups, TurnResult[] results) {
+		System.err.println("Finished - Circuit: " + _circuitName + ", Team: " + team.name());
 		if(!_currentTeamName.equals(team.name())) {
 			return;
 		}
@@ -27,6 +29,7 @@ public class TimeThresholdLoggingReporter implements Reporter {
 	}
 
 	public void sendToCircuit(Circuit circuit) {
+		_circuitName = circuit.name();
 	}
 
 	public void startSeason() {

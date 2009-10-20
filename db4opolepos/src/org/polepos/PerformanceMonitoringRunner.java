@@ -23,7 +23,21 @@ package org.polepos;
 import java.io.*;
 import java.util.*;
 
+import org.polepos.circuits.bahrain.*;
+import org.polepos.circuits.barcelona.*;
+import org.polepos.circuits.hockenheim.*;
+import org.polepos.circuits.hungaroring.*;
+import org.polepos.circuits.imola.*;
 import org.polepos.circuits.indianapolis.*;
+import org.polepos.circuits.istanbul.*;
+import org.polepos.circuits.magnycours.*;
+import org.polepos.circuits.melbourne.*;
+import org.polepos.circuits.monaco.*;
+import org.polepos.circuits.montreal.*;
+import org.polepos.circuits.nurburgring.*;
+import org.polepos.circuits.sepang.*;
+import org.polepos.circuits.sepangmulti.*;
+import org.polepos.circuits.silverstone.*;
 import org.polepos.framework.*;
 import org.polepos.reporters.*;
 import org.polepos.runner.db4o.*;
@@ -135,23 +149,23 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 
 	public Circuit[] circuits() {
 		return new Circuit[] {
-//			 new Melbourne(),
-//			 new SepangMulti(),
-//			 new Sepang(),
-//			 new Bahrain(),
-//			 new Imola(),
-//			 new Barcelona(),
-//			 new Monaco(),
-//			 new Nurburgring(),
-//			 new Montreal(),
+			 new Melbourne(),
+			 new SepangMulti(),
+			 new Sepang(),
+			 new Bahrain(),
+			 new Imola(),
+			 new Barcelona(),
+			 new Monaco(),
+			 new Nurburgring(),
+			 new Montreal(),
 			 new IndianapolisFast(),
-//			 new IndianapolisMedium(),
-//			 new IndianapolisSlow(),
-//			 new Magnycours(),
-//			 new Silverstone(),
-//			 new Hockenheim(),
-//			 new Hungaroring(),
-//			 new Istanbul(),
+			 new IndianapolisMedium(),
+			 new IndianapolisSlow(),
+			 new Magnycours(),
+			 new Silverstone(),
+			 new Hockenheim(),
+			 new Hungaroring(),
+			 new Istanbul(),
 		};
 	}
 
