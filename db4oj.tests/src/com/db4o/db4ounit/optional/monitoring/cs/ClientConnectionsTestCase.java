@@ -68,12 +68,13 @@ public class ClientConnectionsTestCase extends TestWithTempFile implements OptOu
 		
 		_server = (ObjectServerImpl) Db4oClientServer.openServer(serverConfiguration, tempFile(), Db4oClientServer.ARBITRARY_PORT);
 		_server.grantAccess(USER, PASSWORD);
-		
-		registerBean();
+
 		
 		// We depend on the order of client connection/disconnection event firing.
-		// We want the listener in the test to be notified before the one in the bean.
+		// We want the bean to be notified before the _listener in the test.
 		_listener = registerCloseEventNotification();
+		
+		registerBean();
 	}
 
 	// TODO: Where does this setup code go? COR-1779
