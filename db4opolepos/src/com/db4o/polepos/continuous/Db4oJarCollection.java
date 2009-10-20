@@ -9,13 +9,13 @@ public class Db4oJarCollection {
 	private final File _currentJar;
 	private final Set<File> _otherJars;
 	
-	public Db4oJarCollection(List<File> jars) {
-		_currentJar = jars.get(0);
-		_otherJars = new HashSet<File>(jars.subList(1, jars.size()));
+	public Db4oJarCollection(File currentJar, List<File> otherJars) {
+		_currentJar = currentJar;
+		_otherJars = Collections.unmodifiableSet(new HashSet<File>(otherJars));
 	}
 	
 	public Set<File> otherJars() {
-		return Collections.unmodifiableSet(_otherJars);
+		return _otherJars;
 	}
 	
 	public File currentJar() {
