@@ -339,7 +339,8 @@
 			<exec executable="${XslTransform}">
 				<arg value="/xsl:${dir.transforms}/ReflectionToChmProject.xsl" />
 				<arg value="${drs.net.dir}/ndoc/reflection.xml" />
-				<arg value="/out:${drs.net.dir}/ndoc/Output/test.hhp" />
+				<arg value="/out:${drs.net.dir}/ndoc/Output/dRS.hhp" />
+				<arg value="/arg:project=dRS" />
 			</exec>	 
 		
 			<!--  Generate table of contents for HTML help project -->
@@ -352,22 +353,22 @@
 			<exec executable="${XslTransform}" dir="${drs.net.dir}/ndoc">
 				<arg value="/xsl:${dir.transforms}/TocToChmContents.xsl" />
 				<arg value="${drs.net.dir}/ndoc/toc.xml" />
-				<arg value="/out:${drs.net.dir}/ndoc/Output/test.hhc" />
+				<arg value="/out:${drs.net.dir}/ndoc/Output/dRS.hhc" />
 			</exec>
 		
 			<!-- Generate Index information -->
 			<exec executable="${XslTransform}">
 				<arg value="/xsl:${dir.transforms}/ReflectionToChmIndex.xsl" />
 				<arg value="${drs.net.dir}/ndoc/reflection.xml" />
-				<arg value="/out:${drs.net.dir}/ndoc/Output/test.hhk" />
+				<arg value="/out:${drs.net.dir}/ndoc/Output/dRS.hhk" />
 			</exec>
 		
 			<property name="hhc.home" location="${env.ProgramFiles}/HTML Help Workshop" />
 			<exec executable="${hhc.home}/hhc.exe" dir="${drs.net.dir}/ndoc/Output">
-				<arg value="test.hhp" />
+				<arg value="dRS.hhp" />
 			</exec>
 		
-			<copy file="${drs.net.dir}/ndoc/Output/test.chm" tofile="${drs.net.dir}/ndoc/dRS.chm" />
+			<copy file="${drs.net.dir}/ndoc/Output/dRS.chm" tofile="${drs.net.dir}/ndoc/dRS.chm" />
 		</target>	
 			
 		<target name="ndoc-net" unless="mono">
