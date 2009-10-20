@@ -36,6 +36,7 @@ public class AllTests extends Db4oTestSuite {
             ObjectSetTestCase.class,
             OrderedQueryTestCase.class,
             QueryByExampleTestCase.class,
+            QueryingForAllObjectsTestCase.class,
             QueryingVersionFieldTestCase.class,
 		};
 	}
