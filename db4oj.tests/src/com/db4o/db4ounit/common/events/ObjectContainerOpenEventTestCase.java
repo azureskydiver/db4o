@@ -12,37 +12,28 @@ import db4ounit.*;
 
 public class ObjectContainerOpenEventTestCase implements TestCase {
 
+	private BooleanByRef eventReceived = new BooleanByRef(false);
 
-	private final class OpenListenerConfigurationItem implements
-			ConfigurationItem {
-		private final BooleanByRef eventReceived;
-
-		private OpenListenerConfigurationItem(BooleanByRef eventReceived) {
-			this.eventReceived = eventReceived;
+	final class OpenListenerConfigurationItem implements ConfigurationItem {
+		private BooleanByRef _eventReceived;
+		
+		OpenListenerConfigurationItem(BooleanByRef eventReceived) {
+			_eventReceived = eventReceived;
 		}
-
+		
 		public void prepare(Configuration configuration) {
 		}
-
+		
 		public void apply(InternalObjectContainer container) {
-			EventRegistryFactory.forObjectContainer(container).opened().addListener(new OpenEventListener(eventReceived));
+			EventRegistryFactory.forObjectContainer(container).opened().addListener(new EventListener4<ObjectContainerEventArgs>() {
+				public void onEvent(Event4<ObjectContainerEventArgs> event, ObjectContainerEventArgs args) {
+					_eventReceived.value = true;
+				}
+			});
 		}
 	}
-
-	private final class OpenEventListener implements EventListener4<ObjectContainerEventArgs> {
-		private final BooleanByRef eventReceived;
-
-		private OpenEventListener(BooleanByRef eventReceived) {
-			this.eventReceived = eventReceived;
-		}
-
-		public void onEvent(Event4<ObjectContainerEventArgs> event, ObjectContainerEventArgs args) {
-			eventReceived.value = true;
-		}
-	}
-
+	
 	public void test() {
-		final BooleanByRef eventReceived = new BooleanByRef(false);
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.file().storage(new MemoryStorage());
 		config.common().add(new OpenListenerConfigurationItem(eventReceived));
