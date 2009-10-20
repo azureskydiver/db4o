@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.*;
 
 import com.db4o.polepos.continuous.*;
+import com.db4o.polepos.continuous.filealgebra.*;
 
 import db4ounit.*;
 
@@ -15,45 +16,22 @@ public class RevisionBasedMostRecentJarFileSelectionStrategyTestCase implements 
 	public void testIllegalConstructorArgs() {
 		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				strategy(new int[]{});
+				strategy(null, new int[]{});
 			}
 		});
 		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				strategy(0, 1);
-			}
-		});
-		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				strategy(1, -1);
-			}
-		});
-	}
-
-	public void testTooFewFiles() {
-		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				strategy(1).select(files(db4oJarName(INITIAL_REVISION)));
-			}
-		});
-	}
-
-	public void testTooFewDb4oCompliantFiles() {
-		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				strategy(1).select(files("foo", db4oJarName(INITIAL_REVISION)));
+				strategy(null, 1, -1);
 			}
 		});
 	}
 
 	public void testSelectsAll() {
 		for(int numInputFiles = 2; numInputFiles < 10; numInputFiles++) {
-			File[] db4oJars = db4oJarSequence(INITIAL_REVISION, INITIAL_REVISION + numInputFiles);
+			FileSource db4oJars = db4oJarSequence(INITIAL_REVISION, INITIAL_REVISION + numInputFiles);
 			for(int numSelected = 2; numSelected <= numInputFiles; numSelected++) {
-				Db4oJarCollection jarCollection = strategy(createAllIndices(numSelected - 1)).select(db4oJars);
-				Assert.areEqual(db4oJarName(INITIAL_REVISION + numInputFiles - 1), jarCollection.currentJar().getName());
-				List<File> expectedOthers = Arrays.asList(db4oJarSequence(INITIAL_REVISION + numInputFiles - numSelected, INITIAL_REVISION + numInputFiles - 1));
-				Set<File> actualOthers = jarCollection.otherJars();
+				List<File> actualOthers = strategy(db4oJars, createAllIndices(numSelected - 1)).files();
+				List<File> expectedOthers = db4oJarSequence(INITIAL_REVISION + numInputFiles - numSelected, INITIAL_REVISION + numInputFiles - 1).files();
 				IteratorAssert.sameContent(expectedOthers, actualOthers);
 			}
 		}
@@ -61,36 +39,31 @@ public class RevisionBasedMostRecentJarFileSelectionStrategyTestCase implements 
 
 	public void testSelectsFirstAndLast() {
 		for(int numInputFiles = 2; numInputFiles < 10; numInputFiles++) {
-			File[] db4oJars = db4oJarSequence(INITIAL_REVISION, INITIAL_REVISION + numInputFiles);
+			FileSource db4oJars = db4oJarSequence(INITIAL_REVISION, INITIAL_REVISION + numInputFiles);
 			for(int numSelected = 2; numSelected <= numInputFiles; numSelected++) {
-				Db4oJarCollection jarCollection = strategy(numSelected - 1).select(db4oJars);
-				Assert.areEqual(db4oJarName(INITIAL_REVISION + numInputFiles - 1), jarCollection.currentJar().getName());
-				List<File> expectedOthers = Arrays.asList(db4oJar(INITIAL_REVISION + numInputFiles - numSelected));
-				Set<File> actualOthers = jarCollection.otherJars();
+				List<File> actualOthers = strategy(db4oJars, numSelected - 1).files();
+				List<File> expectedOthers = db4oJar(INITIAL_REVISION + numInputFiles - numSelected).files();
 				IteratorAssert.sameContent(expectedOthers, actualOthers);
 			}
 		}
 	}
 
 	public void testSelectsSingleIntermediateJar() {
-		File[] inputFiles = files("foo", db4oJarName(42), "bar", db4oJarName(43), "baz", db4oJarName(44));
-		Db4oJarCollection jarCollection = strategy(1).select(inputFiles);
-		Assert.areEqual(db4oJarName(44), jarCollection.currentJar().getName());
-		IteratorAssert.sameContent(Arrays.asList(db4oJar(43)), jarCollection.otherJars());
+		FileSource inputFiles = files("foo", db4oJarName(42), "bar", db4oJarName(43), "baz", db4oJarName(44));
+		List<File> otherJars = strategy(inputFiles, 1).files();
+		IteratorAssert.sameContent(db4oJar(43).files(), otherJars);
 	}
 	
 	public void testSelectsAvailableSubsetAndOldestForOneMissing() {
-		File[] inputFiles = files("foo", db4oJarName(42), "bar", db4oJarName(43), "baz", db4oJarName(44), db4oJarName(45));
-		Db4oJarCollection jarCollection = strategy(2, 5).select(inputFiles);
-		Assert.areEqual(db4oJarName(45), jarCollection.currentJar().getName());
-		IteratorAssert.sameContent(Arrays.asList(db4oJars(43, 42)), jarCollection.otherJars());
+		FileSource inputFiles = files("foo", db4oJarName(42), "bar", db4oJarName(43), "baz", db4oJarName(44), db4oJarName(45));
+		List<File> otherJars = strategy(inputFiles, 2, 5).files();
+		IteratorAssert.sameContent(db4oJars(43, 42).files(), otherJars);
 	}
 
 	public void testSelectsAvailableSubsetAndOldestForTwoMissing() {
-		File[] inputFiles = files("foo", db4oJarName(42), "bar", db4oJarName(43), "baz", db4oJarName(44), db4oJarName(45));
-		Db4oJarCollection jarCollection = strategy(2, 5, 10).select(inputFiles);
-		Assert.areEqual(db4oJarName(45), jarCollection.currentJar().getName());
-		IteratorAssert.sameContent(Arrays.asList(db4oJars(43, 42)), jarCollection.otherJars());
+		FileSource inputFiles = files("foo", db4oJarName(42), "bar", db4oJarName(43), "baz", db4oJarName(44), db4oJarName(45));
+		List<File> otherJars = strategy(inputFiles, 2, 5, 10).files();
+		IteratorAssert.sameContent(db4oJars(43, 42).files(), otherJars);
 	}
 
 	private int[] createAllIndices(int length) {
@@ -101,15 +74,15 @@ public class RevisionBasedMostRecentJarFileSelectionStrategyTestCase implements 
 		return indices;
 	}
 	
-	private JarFileSelectionStrategy strategy(int... selectedIndices) {
-		return new RevisionBasedMostRecentJarFileSelectionStrategy(selectedIndices);
+	private FileSource strategy(FileSource source, int... selectedIndices) {
+		return new LenientIndexSelectingFileSource(new Db4oJarSortedFileSource(source), selectedIndices);
 	}
 	
 	private String db4oJarName(int revision) {
 		return "db4o-7.10.103." + revision + "-all-java5.jar";
 	}
 
-	private File[] db4oJar(int rev) {
+	private FileSource db4oJar(int rev) {
 		return files(db4oJarNameSequence(rev, rev + 1));
 	}
 
@@ -121,11 +94,11 @@ public class RevisionBasedMostRecentJarFileSelectionStrategyTestCase implements 
 		return names;
 	}
 
-	private File[] db4oJars(int... revisions) {
+	private FileSource db4oJars(int... revisions) {
 		return files(db4oJarNames(revisions));
 	}
 
-	private File[] db4oJarSequence(int from, int to) {
+	private FileSource db4oJarSequence(int from, int to) {
 		return files(db4oJarNameSequence(from, to));
 	}
 
@@ -137,12 +110,16 @@ public class RevisionBasedMostRecentJarFileSelectionStrategyTestCase implements 
 		return names;
 	}
 	
-	private File[] files(String...  paths) {
-		File[] files = new File[paths.length];
+	private FileSource files(String... paths) {
+		final List<File> files = new ArrayList<File>(paths.length);
 		for (int fileIdx = 0; fileIdx < paths.length; fileIdx++) {
-			files[fileIdx] = new File(paths[fileIdx]);
+			files.add(new File(paths[fileIdx]));
 		}
-		return files;
+		return new FileSource() {
+			public List<File> files() {
+				return files;
+			}
+		};
 	}
 
 }

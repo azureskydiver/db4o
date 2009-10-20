@@ -23,27 +23,14 @@ package org.polepos;
 import java.io.*;
 import java.util.*;
 
-import org.polepos.circuits.bahrain.*;
-import org.polepos.circuits.barcelona.*;
-import org.polepos.circuits.hockenheim.*;
-import org.polepos.circuits.hungaroring.*;
-import org.polepos.circuits.imola.*;
 import org.polepos.circuits.indianapolis.*;
-import org.polepos.circuits.istanbul.*;
-import org.polepos.circuits.magnycours.*;
-import org.polepos.circuits.melbourne.*;
-import org.polepos.circuits.monaco.*;
-import org.polepos.circuits.montreal.*;
-import org.polepos.circuits.nurburgring.*;
-import org.polepos.circuits.sepang.*;
-import org.polepos.circuits.sepangmulti.*;
-import org.polepos.circuits.silverstone.*;
 import org.polepos.framework.*;
 import org.polepos.reporters.*;
 import org.polepos.runner.db4o.*;
 import org.polepos.teams.db4o.*;
 
 import com.db4o.polepos.continuous.*;
+import com.db4o.polepos.continuous.filealgebra.*;
 
 /**
  * Please read the README file in the home directory first.
@@ -63,11 +50,13 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
     		selectedIndices = parseSelectedIndices(args[0]);
     	}
     	catch(NumberFormatException exc) {
-    		System.err.println("Usage: PerformanceMonitoringRunner <selected indices, comma separated> <jar folder paths, space separated>");
+    		System.err.println("Usage: PerformanceMonitoringRunner <selected indices, comma separated> <fixed unconditional jar folder> <jar folder paths, space separated>");
     		throw exc;
     	}
-    	String[] files = extractFileArgs(args);
-        System.exit(new PerformanceMonitoringRunner(selectedIndices, toFiles(files)).runMonitored());
+    	File[] folders = toFiles(extractFileArgs(args));
+    	File[] libPaths = new File[folders.length - 1];
+    	System.arraycopy(folders, 1, libPaths, 0, libPaths.length);
+		System.exit(new PerformanceMonitoringRunner(selectedIndices, folders[0], libPaths).runMonitored());
     }
 
 	private static String[] extractFileArgs(String[] args) {
@@ -107,12 +96,18 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
     	return performanceOk ? 0 : -99;
     }
 
-    public PerformanceMonitoringRunner(int[] selectedIndices) {
-    	this(selectedIndices, null);
-    }
-
-    public PerformanceMonitoringRunner(int[] selectedIndices, File[] libPaths) {
-    	_jarCollection = new FolderBasedDb4oJarRegistry(libPaths == null ? libPaths() : libPaths, new RevisionBasedMostRecentJarFileSelectionStrategy(selectedIndices)).jarCollection();
+    public PerformanceMonitoringRunner(int[] selectedIndices, File fixedFolder, File[] libPaths) {
+    	List<FileSource> sources = new ArrayList<FileSource>();
+    	
+    	for (File libPath : libPaths) {
+			sources.add(new FolderFileSource(libPath));
+		}
+    	FileSource compositeSource = new CompositeFileSource(sources);
+    	FileSource filteredSource = new Db4oJarSortedFileSource(compositeSource);
+    	File recentJar = new TakeFirstSingleFileSource(filteredSource).file();
+    	FileSource flexibleJarSource = new LenientIndexSelectingFileSource(filteredSource, selectedIndices);
+		List<File> otherJars = new CompositeFileSource(flexibleJarSource, new Db4oJarSortedFileSource(new FolderFileSource(fixedFolder))).files();
+    	_jarCollection = new Db4oJarCollection(recentJar, otherJars);
     	_reporters = new PerformanceMonitoringReporter[] {
     			new PerformanceMonitoringReporter(_jarCollection.currentJar().getName(), MeasurementType.TIME, new SpeedTicketPerformanceStrategy(PERFORMANCE_PERCENTAGE_THRESHOLD)),
     			//new PerformanceMonitoringReporter(_jarCollection.currentJar().getName(), MeasurementType.MEMORY, new SpeedTicketPerformanceStrategy(PERFORMANCE_PERCENTAGE_THRESHOLD)),
@@ -140,23 +135,23 @@ public class PerformanceMonitoringRunner extends AbstractDb4oVersionsRaceRunner{
 
 	public Circuit[] circuits() {
 		return new Circuit[] {
-			 new Melbourne(),
-			 new SepangMulti(),
-			 new Sepang(),
-			 new Bahrain(),
-			 new Imola(),
-			 new Barcelona(),
-			 new Monaco(),
-			 new Nurburgring(),
-			 new Montreal(),
+//			 new Melbourne(),
+//			 new SepangMulti(),
+//			 new Sepang(),
+//			 new Bahrain(),
+//			 new Imola(),
+//			 new Barcelona(),
+//			 new Monaco(),
+//			 new Nurburgring(),
+//			 new Montreal(),
 			 new IndianapolisFast(),
-			 new IndianapolisMedium(),
-			 new IndianapolisSlow(),
-			 new Magnycours(),
-			 new Silverstone(),
-			 new Hockenheim(),
-			 new Hungaroring(),
-			 new Istanbul(),
+//			 new IndianapolisMedium(),
+//			 new IndianapolisSlow(),
+//			 new Magnycours(),
+//			 new Silverstone(),
+//			 new Hockenheim(),
+//			 new Hungaroring(),
+//			 new Istanbul(),
 		};
 	}
 
