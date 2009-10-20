@@ -13,7 +13,7 @@ import db4ounit.extensions.fixtures.*;
 
 public class ClientTimeOutTestCase extends Db4oClientServerTestCase implements OptOutAllButNetworkingCS{
     
-    private static final int TIMEOUT = 1000;
+    private static final int TIMEOUT = 4000;
     
     static boolean _clientWasBlocked;
     
