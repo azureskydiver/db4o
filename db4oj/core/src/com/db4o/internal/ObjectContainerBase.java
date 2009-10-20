@@ -814,7 +814,7 @@ public abstract class ObjectContainerBase  implements TransientClass, Internal4,
     }
 
     private final QueryResult queryByExampleInternal(Transaction trans, Object template) {
-        if (template == null || template.getClass() == Const4.CLASS_OBJECT) {
+        if (template == null || template.getClass() == Const4.CLASS_OBJECT || template == Const4.CLASS_OBJECT) {
             return queryAllObjects(trans);
         } 
         Query q = query(trans);
