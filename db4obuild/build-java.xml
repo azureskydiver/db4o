@@ -1454,8 +1454,7 @@
 			encoding="UTF-8"> 
             <classpath>
 				<pathelement path="${file.jdk1.5.jar}"/>
-				<pathelement path="${file.bench.jar}"/>
-            	<pathelement path="${file.jdk1.5.cs.jar}"/>
+				<pathelement path="${file.jdk1.5.cs.jar}"/>
 			</classpath>
         </javac>
 	</target>
