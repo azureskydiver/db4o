@@ -12,8 +12,9 @@ import db4ounit.*;
 
 public class ObjectContainerOpenEventTestCase implements TestCase {
 
+	private final BooleanByRef eventReceived = new BooleanByRef(false);
+
 	public void test() {
-		final BooleanByRef eventReceived = new BooleanByRef(false);
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.file().storage(new MemoryStorage());
 		config.common().add(new ConfigurationItem() {
