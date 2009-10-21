@@ -246,7 +246,10 @@
 				<include name="**/ChangeLog" />
 				<include name="**/*.build" />
 				<include name="**/*.inc" />
-				
+			
+				<!-- Make sure application configuration files are copied -->
+				<include name="**/AppManifest.xml" />
+	
 				<!-- Silverlight / WPF files -->
 				<include name="**/*.xaml" />
 				
