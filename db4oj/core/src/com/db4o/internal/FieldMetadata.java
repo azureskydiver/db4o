@@ -716,7 +716,11 @@ public class FieldMetadata extends ClassAspect implements StoredField {
         if (_reflectField == null) {
             return null;
         }
-        return Handlers4.erasedFieldType(container(), _reflectField.getFieldType());
+        ReflectClass fieldType = _reflectField.getFieldType();
+        if(fieldType == null){
+        	return null;
+        }
+		return Handlers4.erasedFieldType(container(), fieldType);
     }
 
 	protected TypeHandler4 typeHandlerForClass(ObjectContainerBase container, ReflectClass fieldType) {
