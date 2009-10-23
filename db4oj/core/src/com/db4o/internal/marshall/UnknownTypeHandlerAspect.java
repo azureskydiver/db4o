@@ -15,5 +15,10 @@ public class UnknownTypeHandlerAspect extends FieldMetadata {
 				" Please ensure all required types are available and try again.");
 
 	}
+	
+	@Override
+	public boolean alive() {
+		return false;
+	}
 
 }
