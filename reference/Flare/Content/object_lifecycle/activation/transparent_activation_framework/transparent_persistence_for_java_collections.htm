@@ -1,20 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Transparent Persistence For Java Collections	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Transparent Persistence For Java Collections</h1><p>One of the
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029" MadCap:conditions="Primary.Java">
+    <head><title>Transparent Persistence For Java Collections	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Transparent Persistence For Java Collections</h1>
+                <p>One of the
 most valuable usages of TA/TP is in collections:</p>
-
-<ul>
-<li>Using
+                <ul>
+                    <li>Using
 TA you don't have to worry about activating the next level of objects</li>
-<li>Using
+                    <li>Using
 TP you can add new members to the collection or update existing ones without
 worrying about storing the changes to the object container.</li>
-</ul>
-
-<p>If you remember the TA basics, in order to make
+                </ul>
+                <p>If you remember the TA basics, in order to make
 an object activatable its class must implement Activatable interface. This can
 be done easily with the new classes, however in collections case you will
 probably want to use standard Java collection, which can't be modified. Db4o
@@ -22,49 +23,42 @@ solves this problem by deriving special activatable classes from the standard
 Java collections and overriding all the public methods adding activate() call before
 calling the base method. At present db4o supports all Java5 standard
 collections:</p>
-
-<p><i>ActivatableArrayList 
+                <p><i>ActivatableArrayList 
 ActivatableHashMap 
 ActivatableHashSet 
 ActivatableHashtable 
 ActivatableLinkedList 
 ActivatableStack 
-ActivatableTreeSet</i></p>
-
-<p>In order to make use of these
+ActivatableTreeSet</i>
+                </p>
+                <p>In order to make use of these
 classes you will only need to add TransparentPersistenceSupport to your
 configuration before opening the object container:</p>
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Transparent Persistence For Java Collections/TACollectionsExample.java/openObjectContainer.flsnp" />
-<p>And in the end enhance the project adding TP
+                <MadCap:snippetBlock src="../../../Resources/Snippets/Transparent Persistence For Java Collections/TACollectionsExample.java/openObjectContainer.flsnp" />
+                <p>And in the end enhance the project adding TP
 support (example will be shown below).</p>
-
-<p>In your code you will simply use Java
+                <p>In your code you will simply use Java
 collections as usual, i.e.:</p>
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Transparent Persistence For Java Collections/Pilot.java/Pilot.java.flsnp" />
-<MadCap:snippetBlock src="../../../Resources/Snippets/Transparent Persistence For Java Collections/Team.java/Team.java.flsnp" />
-<p>The following example code shows how Team class
+                <MadCap:snippetBlock src="../../../Resources/Snippets/Transparent Persistence For Java Collections/Pilot.java/Pilot.java.flsnp" />
+                <MadCap:snippetBlock src="../../../Resources/Snippets/Transparent Persistence For Java Collections/Team.java/Team.java.flsnp" />
+                <p>The following example code shows how Team class
 can be used:</p>
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Transparent Persistence For Java Collections/TACollectionsExample.java/main.flsnp" />
-<p>Conversion to Activatable db4o collections and
+                <MadCap:snippetBlock src="../../../Resources/Snippets/Transparent Persistence For Java Collections/TACollectionsExample.java/main.flsnp" />
+                <p>Conversion to Activatable db4o collections and
 TA enhancement will be done by an ant script using Db4oEnhancerAntTask.
 This task can be integrated in compile and run script as follows:</p>
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Transparent Persistence For Java Collections/build.xml/build.xml.flsnp" />
-<p>If you will run this script you will see that
+                <MadCap:snippetBlock src="../../../Resources/Snippets/Transparent Persistence For Java Collections/build.xml/build.xml.flsnp" />
+                <p>If you will run this script you will see that
 the new team members were saved automatically when the object container was
 closed. To see the effect of the enhancer, please try to run
 TACollectionExample from IDE (without enhancement), in this case standard Java
-collections will be used and TA/TP will have no effect.</p></div>
-    </div>
-    
+collections will be used and TA/TP will have no effect.</p>
+            </div>
+        </div>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="tacollectionsjava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-</body></html>
+    </body>
+</html>

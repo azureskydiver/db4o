@@ -1,31 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Java Translator Implementation	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Java Translator Implementation</h1>
-<p><font color="#990000">This topic applies to Java version only</font>   </p>
-<p MadCap:conditions="Primary.Java">
-
-<p>To
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="7" MadCap:lastHeight="1188" MadCap:lastWidth="1017" MadCap:conditions="Primary.Java">
+    <head><title>Java Translator Implementation	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Java Translator Implementation</h1>
+                <p><font color="#990000">&#160;</font>
+                </p>
+                <p MadCap:conditions="Primary.Java">
+                    <p>To
 translate NotStorable instances, we will pack their id and name values
 into an Object array to be stored and retrieve it from there again.
 Note that we don't have to do any work in onActivate(), since object
 reinstantiation is already fully completed in onInstantiate().</p>
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Java Translator Implementation/NotStorableTranslator.java/NotStorableTranslator.java.flsnp" />
-<p>Let's try it out:</p>
-
-<MadCap:snippetBlock src="../../Resources/Snippets/Java Translator Implementation/TranslatorExample.java/storeWithTranslator.flsnp" />
-</p><p MadCap:conditions="Primary:java" /><p>ObjectTranslators let you reconfigure the state of a 'blank' application object reinstantiated by 
+                    <MadCap:snippetBlock src="../../Resources/Snippets/Java Translator Implementation/NotStorableTranslator.java/NotStorableTranslator.java.flsnp" />
+                    <p>Let's try it out:</p>
+                    <MadCap:snippetBlock src="../../Resources/Snippets/Java Translator Implementation/TranslatorExample.java/storeWithTranslator.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:java" />
+                <p>ObjectTranslators let you reconfigure the state of a 'blank' application object reinstantiated by 
 db4o, ObjectConstructors also take care of instantiating the
 application object itself. ObjectTranslators and ObjectConstructors can
 be used for classes that cannot cleanly be stored and retrieved with
 db4o's standard object instantiation mechanisms. 
-</p></div>
-    </div>
-
-
+</p>
+            </div>
+        </div>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="translatorsvb.zip">VB.NET </a>
@@ -35,7 +36,5 @@ db4o's standard object instantiation mechanisms.
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="translatorsjava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-    
-</body></html>
+    </body>
+</html>

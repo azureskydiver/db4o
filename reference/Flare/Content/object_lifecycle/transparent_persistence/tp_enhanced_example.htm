@@ -1,9 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>TP Enhanced Example	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>TP Enhanced Example</h1><p>As it was mentioned <a href="transparent_persistence_implementation.htm" class="wikiLink">before</a> TP uses the same technology as TA. Due to that enhancement strategies and tools are the same for Transparent Persistence. Actually TP enhancement automatically includes TA enhancement, as TP relies on object activation before modification.</p><p>On Java side enhancement can be done at build-time by using a customized ant build script. For more information see <a href="tp_enhanced_example/tp_enhancement_on_java.htm" class="wikiLink">TP Enhancement On Java</a>.</p><p>On .NET side TP enhancement can be done by using command-line Db4oTool or by customizing MSBuild script:</p><ul><li><a href="../../implementation_strategies/enhancement_tools/enhancement_for_.net/db4otool.htm" class="wikiLink">Db4oTool enhancement</a></li><li><a href="../../implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement.htm" class="wikiLink">MSBuild enhancement</a></li></ul></div>
-    </div>
-    
-  </body></html>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="243" MadCap:lastWidth="1017">
+    <head><title>TP Enhanced Example	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>TP Enhanced Example</h1>
+                <p>As it was mentioned <a href="transparent_persistence_implementation.htm" class="wikiLink">before</a> TP uses the same technology as TA. Due to that enhancement strategies and tools are the same for Transparent Persistence. Actually TP enhancement automatically includes TA enhancement, as TP relies on object activation before modification.</p>
+                <p>
+                    <MadCap:conditionalText MadCap:conditions="Primary.Java">On Java side enhancement can be done at build-time by using a customized ant build script. For more information see <a href="tp_enhanced_example/tp_enhancement_on_java.htm" class="wikiLink">TP Enhancement On Java</a>.</MadCap:conditionalText>
+                </p>
+                <p MadCap:conditions="Primary..NET">On .NET side TP enhancement can be done by using command-line Db4oTool or by customizing MSBuild script:</p>
+                <ul>
+                    <li MadCap:conditions="Primary..NET"><a href="../../implementation_strategies/enhancement_tools/enhancement_for_.net/db4otool.htm" class="wikiLink">Db4oTool enhancement</a>
+                    </li>
+                    <li MadCap:conditions="Primary..NET"><a href="../../implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement.htm" class="wikiLink">MSBuild enhancement</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>

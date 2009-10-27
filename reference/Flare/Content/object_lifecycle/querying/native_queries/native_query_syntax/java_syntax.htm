@@ -1,51 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Java Syntax	<link href="../../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Java Syntax</h1>
-
-<p><font color="#990000">This topic applies to Java version only.</font>  </p>
-<p MadCap:conditions="Primary.Java">
-<ol>
-<li>The following example shows how to use Native Query to
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="3269" MadCap:lastWidth="1017" MadCap:conditions="Primary.Java">
+    <head><title>Java Syntax	<link href="../../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Java Syntax</h1>
+                <p><font color="#990000">.</font>
+                </p>
+                <p MadCap:conditions="Primary.Java">
+                    <ol>
+                        <li>The following example shows how to use Native Query to
 retrieve all the objects of the specified type. This syntax can be used with or
 without generics.
 
-<MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/querySyntax1.flsnp" />li>
-
-<li>In this example an anonymous predicate class is used to
+<MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/querySyntax1.flsnp" /></li>
+                        <li>In this example an anonymous predicate class is used to
 specify the query parameter:
 
-<MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/querySyntax2.flsnp" />li>
-
-<li>This example shows how to use NQ to sort the query
+<MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/querySyntax2.flsnp" /></li>
+                        <li>This example shows how to use NQ to sort the query
 results; anonymous predicate and anonymous comparator are used:
 
-<MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/querySyntax3.flsnp" />li>
-
-<li>The following example shows a Native Query using external
+<MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/querySyntax3.flsnp" /></li>
+                        <li>The following example shows a Native Query using external
 comparator and predicate. This can be useful when comparator and predicate are
 widely used and logically do not belong to the querying class:
 
-<MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/PilotPredicate.flsnp" />
-<MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/PilotComparator.flsnp" />
-<MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/querySyntax4.flsnp" />li><li>
+<MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/PilotPredicate.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/PilotComparator.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/querySyntax4.flsnp" /></li>
+                        <li>
+                        </li>
+                        <li>In java versions without generics syntax is similar:
 
-</li><li>In java versions without generics syntax is similar:
-
-<MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/querySyntax5.flsnp" />li>
-
-<li>For java versions that do not provide Comparator
+<MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/querySyntax5.flsnp" /></li>
+                        <li>For java versions that do not provide Comparator
 interface (&lt;JDK1.2) db4o provides QueryComparator interface with the same
 functionality:
 
-<MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/querySyntax6.flsnp" />li></ol>
-
-</p><p MadCap:conditions="Primary:java" /></div>
-    </div>
-
-
+<MadCap:snippetBlock src="../../../../Resources/Snippets/Java Syntax/NQSyntaxExamples.java/querySyntax6.flsnp" /></li>
+                    </ol>
+                </p>
+                <p MadCap:conditions="Primary:java" />
+            </div>
+        </div>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="nqsyntaxvb.zip">VB.NET </a>
@@ -55,7 +52,5 @@ functionality:
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="nqsyntaxjava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-    
-</body></html>
+    </body>
+</html>

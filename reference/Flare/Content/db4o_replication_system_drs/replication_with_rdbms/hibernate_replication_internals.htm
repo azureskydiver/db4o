@@ -1,38 +1,63 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Hibernate Replication Internals	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Hibernate Replication Internals</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#ProviderSignature, MySignature and PeerSignature">ProviderSignature, MySignature and PeerSignature</a></li><li><a href ="#Record">Record</a></li><li><a href ="#UUID">UUID</a></li><li><a href ="#ObjectReference">ObjectReference</a></li><li><a href ="#List of dRS tables">List of dRS tables</a></li><li><a href ="#drs_providers">drs_providers</a></li><li><a href ="#drs_history">drs_history</a></li><li><a href ="#drs_objects">drs_objects</a></li></ul></div></div></div><p><font color="#990000">This topic applies to Java version only</font> </p>
-
-<p>So far we have seen that dRS allows you to replicate objects between
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="1540" MadCap:lastWidth="1017">
+    <head><title>Hibernate Replication Internals	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Hibernate Replication Internals</h1>
+                <div id="TOC">
+                    <div id="TOCinner"><span class="TOCtitle">Contents</span>
+                        <div class="TOCcontents">
+                            <ul>
+                                <li><a href="#ProviderSignature, MySignature and PeerSignature">ProviderSignature, MySignature and PeerSignature</a>
+                                </li>
+                                <li><a href="#Record">Record</a>
+                                </li>
+                                <li><a href="#UUID">UUID</a>
+                                </li>
+                                <li><a href="#ObjectReference">ObjectReference</a>
+                                </li>
+                                <li><a href="#List of dRS tables">List of dRS tables</a>
+                                </li>
+                                <li><a href="#drs_providers">drs_providers</a>
+                                </li>
+                                <li><a href="#drs_history">drs_history</a>
+                                </li>
+                                <li><a href="#drs_objects">drs_objects</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <p><font color="#990000">&#160;</font>
+                </p>
+                <p>So far we have seen that dRS allows you to replicate objects between
 db4o and relational database. You maybe curious about how dRS keeps
 track of the identity of objects in relational database and how dRS
 knows which objects are changed since the last round of replication. Read
 on and you will see how dRS does that.</p>
-
-<p>dRS internal objects keep information used by replication. Each internal object
+                <p>dRS internal objects keep information used by replication. Each internal object
 is associated with a Hibernate mapping file (.hbm.xml). Hibernate reads
 these files and understands  how to store / retrieve these internal
 objects to / from the RDBMS. Each type of internal object maps to one
 table in RDBMS. If such table does not exist, Hibernate creates it
-automatically. </p>
-<a name="ProviderSignature, MySignature and PeerSignature"></a><h2>ProviderSignature, MySignature and PeerSignature</h2>
-<p>ProviderSignature uniquely identifies a ReplicationProvider.
+automatically. </p><a name="ProviderSignature, MySignature and PeerSignature"></a>
+                <h2>ProviderSignature, MySignature and PeerSignature</h2>
+                <p>ProviderSignature uniquely identifies a ReplicationProvider.
 MySignature and PeerSignature are the subclasses of ProviderSignature.
 A HibernateReplicationProvider has a MySignature to serve as its own
 identity. PeerSignature identifies the peer ReplicationProvider during
-a ReplicationSession.</p>
-<a name="Record"></a><h2>Record</h2>
-<p>Record contains the version of the RDBMS during a ReplicationSession.
+a ReplicationSession.</p><a name="Record"></a>
+                <h2>Record</h2>
+                <p>Record contains the version of the RDBMS during a ReplicationSession.
 Near the end of a ReplicationSession, two ReplicationProviders
 synchronize their versions.</p>
-
-<p>Record allows dRS to detect changed objects. dRS detects changed
+                <p>Record allows dRS to detect changed objects. dRS detects changed
 objects by comparing the version of an object (v) with the maximum
-version of all Records (m). An object is updated if v &gt; m.</p>
-<a name="UUID"></a><h2>UUID</h2>
-<p>UUID uniquely identifies a persisted object in dRS. 
+version of all Records (m). An object is updated if v &gt; m.</p><a name="UUID"></a>
+                <h2>UUID</h2>
+                <p>UUID uniquely identifies a persisted object in dRS. 
 Each persisted object is
 identified by a "typed_id" in Hibernate. This "typed_id" is unique only with its
 type of that object (i.e. A car has an "typed_id" of 1534, a Pilot can
@@ -40,39 +65,117 @@ also has an "typed_id" of 1534) and within the current RDBMS.
 How do we identify "a Pilot that is originated from Oracle instance pi2763" ? To do so, we need two parameters: 
    1. an id that is unique across types 
    2. association between this id and the ProviderSignature of the RDBMS (The RDBMS that owns this object) </p>
-
-<p><code>class UUID {</code> <code>
-    long longPart;</code> 
-<code>
-    ProviderSignature provider;</code> 
-<code>}</code></p>
-
-<p>
-Collectively, 1 and 2 forms the "UUID".</p>
-<a name="ObjectReference"></a><h2>ObjectReference</h2>
-<p>ObjectReference contains the UUID and the version of a persisted
+                <p><code>class UUID {</code><code>long longPart;</code><code>ProviderSignature provider;</code><code>}</code>
+                </p>
+                <p>Collectively, 1 and 2 forms the "UUID".</p><a name="ObjectReference"></a>
+                <h2>ObjectReference</h2>
+                <p>ObjectReference contains the UUID and the version of a persisted
 object. It also contains the className and the typed_id of that
 persisted object. 
 UUID forms an 1 to 1 relationship with {className, typedId}.</p>
-<p><code>class ObjectReference {</code> 
-<code>
-    String className;</code> 
-<code>
-    long typedId;</code> 
-<code>
-    Uuid uuid;</code> 
-<code>
-    long version;</code> 
-<code>}</code> </p>
-<a name="List of dRS tables"></a><h2>List of dRS tables</h2><a name="drs_providers"></a><h2>drs_providers</h2><table border="1"><tr><td> <b>Column</b></td><td> <b>Type</b></td><td><b>Function</b>  </td></tr><tr><td> 
-id </td><td> long </td><td> synthetic, auto-increment primary key</td></tr><tr><td> 
-is_my_sig</td><td> char(1) </td><td> 't' if MySignature, 'f' if PeerSignature</td></tr><tr><td> 
-signature</td><td> binary </td><td> holds the unique identifier - byte array</td></tr><tr><td> 
-created </td><td> long </td><td> legacy field used by pre-dRS db4o replication code</td></tr></table><a name="drs_history"></a><h2>drs_history</h2><table style="border-width:1px;" border="1"><tr><td><b> Column </b> </td><td><b>Type</b>  </td><td><b>Function</b>  </td></tr><tr><td> 
-provider_id </td><td> long</td><td> primary key, same as the PK of a PeerSignature</td></tr><tr><td> 
-time</td><td> long</td><td> the version of the RDBMS during a ReplicationSession</td></tr></table><a name="drs_objects"></a><h2>drs_objects</h2> <table style="border-width:1px;" border="1"><tr><td><b>Column </b></td><td><b>Type</b>  </td><td><b>Function</b>  </td></tr><tr><td>id</td><td> long</td><td> synthetic, auto-increment primary key</td></tr><tr><td>created</td><td> long</td><td> the UUID long part of this ObjectReference</td></tr><tr><td>provider_id</td><td> long</td><td> specifies the originating ReplicationProvider of this ObjectReference</td></tr><tr><td>class_name</td><td> varchar</td><td> the type of the referenced object</td></tr><tr><td>
-typed_id</td><td> long</td><td> the id used by Hibernate, which is only unique within its type</td></tr><tr><td>
-modified  </td><td> long</td><td> the version of the referenced object</td></tr></table></div>
-    </div>
-    
-  </body></html>
+                <p><code>class ObjectReference {</code><code>String className;</code><code>long typedId;</code><code>Uuid uuid;</code><code>long version;</code><code>}</code>
+                </p><a name="List of dRS tables"></a>
+                <h2>List of dRS tables</h2><a name="drs_providers"></a>
+                <h2>drs_providers</h2>
+                <table border="1">
+                    <tr>
+                        <td><b>Column</b>
+                        </td>
+                        <td><b>Type</b>
+                        </td>
+                        <td><b>Function</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> 
+id </td>
+                        <td> long </td>
+                        <td> synthetic, auto-increment primary key</td>
+                    </tr>
+                    <tr>
+                        <td> 
+is_my_sig</td>
+                        <td> char(1) </td>
+                        <td> 't' if MySignature, 'f' if PeerSignature</td>
+                    </tr>
+                    <tr>
+                        <td> 
+signature</td>
+                        <td> binary </td>
+                        <td> holds the unique identifier - byte array</td>
+                    </tr>
+                    <tr>
+                        <td> 
+created </td>
+                        <td> long </td>
+                        <td> legacy field used by pre-dRS db4o replication code</td>
+                    </tr>
+                </table><a name="drs_history"></a>
+                <h2>drs_history</h2>
+                <table style="border-width:1px;" border="1">
+                    <tr>
+                        <td><b> Column </b>
+                        </td>
+                        <td><b>Type</b>
+                        </td>
+                        <td><b>Function</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> 
+provider_id </td>
+                        <td> long</td>
+                        <td> primary key, same as the PK of a PeerSignature</td>
+                    </tr>
+                    <tr>
+                        <td> 
+time</td>
+                        <td> long</td>
+                        <td> the version of the RDBMS during a ReplicationSession</td>
+                    </tr>
+                </table><a name="drs_objects"></a>
+                <h2>drs_objects</h2>
+                <table style="border-width:1px;" border="1">
+                    <tr>
+                        <td><b>Column </b>
+                        </td>
+                        <td><b>Type</b>
+                        </td>
+                        <td><b>Function</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>id</td>
+                        <td> long</td>
+                        <td> synthetic, auto-increment primary key</td>
+                    </tr>
+                    <tr>
+                        <td>created</td>
+                        <td> long</td>
+                        <td> the UUID long part of this ObjectReference</td>
+                    </tr>
+                    <tr>
+                        <td>provider_id</td>
+                        <td> long</td>
+                        <td> specifies the originating ReplicationProvider of this ObjectReference</td>
+                    </tr>
+                    <tr>
+                        <td>class_name</td>
+                        <td> varchar</td>
+                        <td> the type of the referenced object</td>
+                    </tr>
+                    <tr>
+                        <td>typed_id</td>
+                        <td> long</td>
+                        <td> the id used by Hibernate, which is only unique within its type</td>
+                    </tr>
+                    <tr>
+                        <td>modified  </td>
+                        <td> long</td>
+                        <td> the version of the referenced object</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

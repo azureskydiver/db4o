@@ -1,10 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Simulating Slow IO On A Fast Machine	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Simulating Slow IO On A Fast Machine</h1><p><font color="#990000">This topic applies to Java version only</font> </p><p>
-The code for this section is located in the com.db4o.bench.delaying package. To run delaying, the <code>System.nanoTime()</code> is needed. This method was introduced with Java 5. If you only have older versions installed, get the latest here: <a href="http://java.sun.com/javase/downloads/">http://java.sun.com/javase/downloads/</a> You
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="782" MadCap:lastWidth="6120">
+    <head><title>Simulating Slow IO On A Fast Machine	<link href="../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Simulating Slow IO On A Fast Machine</h1>
+                <p>The code for this section is located in the com.db4o.bench.delaying package. To run delaying, the <code>System.nanoTime()</code> is needed. This method was introduced with Java 5. If you only have older versions installed, get the latest here: <a href="http://java.sun.com/javase/downloads/">http://java.sun.com/javase/downloads/</a> You
 also need a java5 db4o JAR file, otherwise you'll see a
 NotImplementedException when the benchmark tries to access <code>nanoTime()</code>.  Think
 of the following scenario: You develop software with db4o for a target
@@ -17,15 +19,13 @@ arena. If you run IoBenchmark on both the embedded device and your
 developer machine you get two results files. Copy the file from the
 slower device to the db4otools folder on the faster machine and set
 both filenames in IoBenchmark.properties:
-</p><pre>    results.file.1=db4o-IoBenchmark-results-30000_faster.log     results.file.2=db4o-IoBenchmark-results-30000_slower.log </pre>
-It's not necessary that results.file.1 holds the faster log, any order will work.  You
+</p>
+                <pre>    results.file.1=db4o-IoBenchmark-results-30000_faster.log     results.file.2=db4o-IoBenchmark-results-30000_slower.log </pre>It's not necessary that results.file.1 holds the faster log, any order will work.  You
 are now set to run the benchmark in delayed mode. The expected result
 of such a run is, that the results of a delayed run on the faster
 machine should be close to those on the slow device. To do a delayed run execute one of the run.delayed.benchmark.* targets of the Ant script. At the beginning of the output - prior to the benchmark results - you'll notice additional information about the delaying:
 
-<pre>    =============================================================     Running db4o IoBenchmark     =============================================================     Delaying:     &gt; machine1 (db4o-IoBenchmark-results-30000_faster.log) is faster!     &gt; Required delays:     &gt; [delays in nanoseconds] read: 8195 | write: 10669 | seek: 10098 | sync: 215121     &gt; Adjusting delay timer to match required delays...     &gt; Adjusted delays:     &gt; [delays in nanoseconds] read: 4934 | write: 7387 | seek: 6849 | sync: 202203     Running target application ...     Preparing DB file ...     Running benchmark ...     [...] </pre>
-
-Let's have a look at what exactly is going on when setting up delaying. First
+<pre>    =============================================================     Running db4o IoBenchmark     =============================================================     Delaying:     &gt; machine1 (db4o-IoBenchmark-results-30000_faster.log) is faster!     &gt; Required delays:     &gt; [delays in nanoseconds] read: 8195 | write: 10669 | seek: 10098 | sync: 215121     &gt; Adjusting delay timer to match required delays...     &gt; Adjusted delays:     &gt; [delays in nanoseconds] read: 4934 | write: 7387 | seek: 6849 | sync: 202203     Running target application ...     Preparing DB file ...     Running benchmark ...     [...] </pre>Let's have a look at what exactly is going on when setting up delaying. First
 there is a check for the validity of the two result files for delaying.
 To pass this check, one of the two supplied benchmark results file must
 contain the better values for all the 4 operations. This constraint
@@ -45,17 +45,15 @@ minimum delay that can be achieved with waiting, and this delay is not
 equal to zero (e.g. 400ns)! If the performance of the two machines is
 too close together, it is possible that when trying to adjust a delay,
 the outcome is below the minimum delay achievable. In this case you'll see output like this:
-<pre>    &gt;&gt; Smallest achievable delay: 400     &gt;&gt; Required delay setting: 260     &gt;&gt; Using delay(0) to wait as short as possible.     &gt;&gt; Results will not be accurate. </pre>
-To find out which delay actually was too small, and hence which results won't be accurate, take a look at the adjusted delays:
+<pre>    &gt;&gt; Smallest achievable delay: 400     &gt;&gt; Required delay setting: 260     &gt;&gt; Using delay(0) to wait as short as possible.     &gt;&gt; Results will not be accurate. </pre>To find out which delay actually was too small, and hence which results won't be accurate, take a look at the adjusted delays:
 
-<pre>    &gt; Adjusted delays:     &gt; [delays in nanoseconds] read: 0 | write: 7387 | seek: 6849 | sync: 202203 </pre>
-Here the read delay was too small and therefore the results for read are expected to be slower than targeted.      Once the delays are adjusted, they can be fed to the DelayingIoAdapter (as done in IoBenchmark#delayingIoAdapter):  <code>IoAdapter rafFactory = new RandomAccessFileAdapter();</code> <code>IoAdapter delFactory = new DelayingIoAdapter(rafFactory, _delays);</code> <code>IoAdapter io =  delFactory.open(dbFileName, false, 0, false);</code>  If
+<pre>    &gt; Adjusted delays:     &gt; [delays in nanoseconds] read: 0 | write: 7387 | seek: 6849 | sync: 202203 </pre>Here the read delay was too small and therefore the results for read are expected to be slower than targeted.      Once the delays are adjusted, they can be fed to the DelayingIoAdapter (as done in IoBenchmark#delayingIoAdapter):  <code>IoAdapter rafFactory = new RandomAccessFileAdapter();</code><code>IoAdapter delFactory = new DelayingIoAdapter(rafFactory, _delays);</code><code>IoAdapter io =  delFactory.open(dbFileName, false, 0, false);</code>  If
 you now configure db4o with the IoAdapter io from above, each I/O
 operation will be delayed by the respective delay stored in _delays!  The
 above IoAdapter setup is also exactly what you need in your own
 application to simulate the slower I/O of your target device on your
 faster machine.
  </div>
-    </div>
-    
-  </body></html>
+        </div>
+    </body>
+</html>

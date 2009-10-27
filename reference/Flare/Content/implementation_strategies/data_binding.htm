@@ -1,35 +1,49 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Data Binding	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Data Binding</h1><p><font color="#990000">This topic applies to .NET version only</font>   </p><p>One common question we get from our users is:</p>
-<p><b>Can I still take advantage of data aware control mechanisms with my objects?</b></p>
-<p>The answer is quite simply yes. .NET data binding also works with plain 
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029" MadCap:conditions="Primary..NET">
+    <head><title>Data Binding	<link href="../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Data Binding</h1>
+                <p>One common question we get from our users is:</p>
+                <p><b>Can I still take advantage of data aware control mechanisms with my objects?</b>
+                </p>
+                <p>The answer is quite simply yes. .NET data binding also works with plain 
 objects.</p>
-<p>This is also to say that using db4o is completely orthogonal to the 
+                <p>This is also to say that using db4o is completely orthogonal to the 
 use of data binding.</p>
-<p>The usual pattern would be something like the 
-following:</p><ul><li>
+                <p>The usual pattern would be something like the 
+following:</p>
+                <ul>
+                    <li>
 the code asks db4o to retrieve the objects that must be 
-presented to the user</li><li>the UI controls are bound to the objects (no 
-interaction with db4o here)</li><li>the user interacts with the objects through 
-the controls (no interaction with db4o here)</li><li>when the user is done 
+presented to the user</li>
+                    <li>the UI controls are bound to the objects (no 
+interaction with db4o here)</li>
+                    <li>the user interacts with the objects through 
+the controls (no interaction with db4o here)</li>
+                    <li>when the user is done 
 interacting with the objects or by his request, the application will ask db4o to 
 persist his changes
-</li></ul><p>Let's take a very simple example that illustrates 
+</li>
+                </ul>
+                <p>Let's take a very simple example that illustrates 
 the points above.</p>
-<p>Our business class:</p>
-<p MadCap:conditions="Primary..NET,Primary.c#">
-<MadCap:snippetBlock src="../Resources/Snippets/Data Binding/Customer.cs/Customer.cs.flsnp" /></p><p MadCap:conditions="Primary:cs" />
-<p MadCap:conditions="Primary..NET,Primary.VB.NET">
-<MadCap:snippetBlock src="../Resources/Snippets/Data Binding/Customer.vb/Customer.vb.flsnp" /><p>[/filter] </p>
-<p>The Form class: </p>
-<p><span name="cs_wiki_filter" csw_filters="cs"></p><MadCap:snippetBlock src="../Resources/Snippets/Data Binding/CustomerForm.cs/CustomerForm.cs.flsnp" />span>
-<p>[filter=vb]</p><MadCap:snippetBlock src="../Resources/Snippets/Data Binding/CustomerForm.vb/CustomerForm.vb.flsnp" />></p><p MadCap:conditions="Primary:vb" /> </p></div>
-    </div>
-
-
+                <p>Our business class:</p>
+                <p MadCap:conditions="Primary..NET,Primary.c#">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Data Binding/Customer.cs/Customer.cs.flsnp" />
+                </p>
+                <p MadCap:conditions="Primary:cs" />
+                <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    <MadCap:snippetBlock src="../Resources/Snippets/Data Binding/Customer.vb/Customer.vb.flsnp" />
+                    <p>The Form class: </p>
+                    <MadCap:snippetBlock src="../Resources/Snippets/Data Binding/CustomerForm.cs/CustomerForm.cs.flsnp" />
+                    <MadCap:snippetBlock src="../Resources/Snippets/Data Binding/CustomerForm.vb/CustomerForm.vb.flsnp" />
+                    <p MadCap:conditions="Primary:vb" />
+                </p>
+            </div>
+        </div>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.VB.NET"><a href="bindingvb.zip">VB.NET </a>
@@ -37,7 +51,5 @@ the points above.</p>
             <MadCap:conditionalText MadCap:conditions="Primary..NET,Primary.c#"><a href="bindingcs.zip">c# </a>
             </MadCap:conditionalText>
         </p>
-
-
-    
-</body></html>
+    </body>
+</html>

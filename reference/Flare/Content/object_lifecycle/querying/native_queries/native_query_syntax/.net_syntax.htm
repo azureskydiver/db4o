@@ -1,97 +1,79 @@
-﻿<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>.NET Syntax	<link href="../../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>.NET Syntax</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#c# Syntax (.NET1)">c# Syntax (.NET1)</a></li><li><a href ="#c# Syntax (.NET2)">c# Syntax (.NET2)</a></li><li><a href ="#VB.NET Syntax">VB.NET Syntax</a></li></ul></div></div></div>
-
-<p><font color="#990000">This topic applies to .NET version only.</font></p>
-
-<p>In .NET version of db4o we need to distinguish NQ syntax for
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="9" MadCap:lastHeight="8356" MadCap:lastWidth="1280" MadCap:conditions="Primary..NET">
+    <head><title>.NET Syntax	<link href="../../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>.NET Syntax</h1>
+                <div id="TOC">&#160;</div>
+                <p>In .NET version of db4o we need to distinguish NQ syntax for
 c# (.NET1 and .NET2) and Visual Basic.</p>
-<p><p MadCap:conditions="Primary..NET,Primary.c#"> </p>
-<a name="c# Syntax (.NET1)"></a><h2>c# Syntax (.NET1)</h2>
-
-<ol>
-<li>This examples shows how to use NQ to select all the
+                <p>
+                    <p MadCap:conditions="Primary..NET,Primary.c#">
+                    </p><a name="c# Syntax (.NET1)"></a>
+                    <h2>c# Syntax (.NET1)</h2>
+                    <ol>
+                        <li>This examples shows how to use NQ to select all the
 objects of the specified type:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples1.cs/QuerySyntax1.flsnp" /></li>
-
-<li>The following example represents the most generic use of
+                        <li>The following example represents the most generic use of
 NQ in .NET1. You can modify the code to match any selection criteria:
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples1.cs/QuerySyntax2.flsnp" />
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples1.cs/PilotPredicate.flsnp" /><p>In .NET1 NQ predicate must be expressed in a separate class ( NQ <code>delegate</code> methods are  only available since .NET2). </p>
-</li>
-<li>This example can be used when the query results should be
+<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples1.cs/QuerySyntax2.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples1.cs/PilotPredicate.flsnp" /><p>In .NET1 NQ predicate must be expressed in a separate class ( NQ <code>delegate</code> methods are  only available since .NET2). </p></li>
+                        <li>This example can be used when the query results should be
 sorted:
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples1.cs/QuerySyntax3.flsnp" />
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples1.cs/PilotPredicate.flsnp" />
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples1.cs/PilotComparer.flsnp" /></li>
-</ol>
-
-
-<a name="c# Syntax (.NET2)"></a><h2>c# Syntax (.NET2)</h2>
-
-<ol>
-<li>This example shows how to use NQ to select all the
+<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples1.cs/QuerySyntax3.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples1.cs/PilotPredicate.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples1.cs/PilotComparer.flsnp" /></li>
+                    </ol><a name="c# Syntax (.NET2)"></a>
+                    <h2>c# Syntax (.NET2)</h2>
+                    <ol>
+                        <li>This example shows how to use NQ to select all the
 objects of the specified type:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax1.flsnp" /></li>
-
-<li>The same functionality as in the previous example:
+                        <li>The same functionality as in the previous example:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax2.flsnp" /></li>
-
-<li>Selecting all the objects of the specified type in a
+                        <li>Selecting all the objects of the specified type in a
 sorted order:
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax3.flsnp" />
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/PilotComparer.flsnp" /></li>
-
-<li>General selection - the selection criteria should be
+<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax3.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/PilotComparer.flsnp" /></li>
+                        <li>General selection - the selection criteria should be
 specified in the delegate function:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax4.flsnp" /></li>
-
-<li>Both selection and sorting is used. Delegate functions
+                        <li>Both selection and sorting is used. Delegate functions
 are used to define the criterias:
 <MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax5.flsnp" /></li>
-
-<li>Similar to the previous example, but the comparator functionality
+                        <li>Similar to the previous example, but the comparator functionality
 is moved to a separate class:
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax6.flsnp" />
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples1.cs/PilotComparer.flsnp" /></li>
-
-<li>The following example uses predicate and comparator in
+<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax6.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples1.cs/PilotComparer.flsnp" /></li>
+                        <li>The following example uses predicate and comparator in
 separate classes, which can be helpful for <a href="../../../../implementation_strategies/native_query_collection/parameterized_nq.htm" class="wikiLink">parameterized
 queries</a>:
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax7.flsnp" />
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/PilotPointsComparer.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/PilotPredicate.flsnp" /></li>
-</ol>
-<p></p><p MadCap:conditions="Primary:cs" /></p>
-<p><p MadCap:conditions="Primary..NET,Primary.VB.NET"> </p>
-<a name="VB.NET Syntax"></a><h2>VB.NET Syntax</h2>
-
-<ol>
-<li>This example shows how to select all the objects of the
+<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/QuerySyntax7.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/PilotPointsComparer.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.cs/PilotPredicate.flsnp" /></li>
+                    </ol>
+                    <p>
+                    </p>
+                    <p MadCap:conditions="Primary:cs" />
+                </p>
+                <p>
+                    <p MadCap:conditions="Primary..NET,Primary.VB.NET">
+                    </p><a name="VB.NET Syntax"></a>
+                    <h2>VB.NET Syntax</h2>
+                    <ol>
+                        <li>This example shows how to select all the objects of the
 specified type. Can be used with and without generics:
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/QuerySyntax1.flsnp" />
-</li>
-<li>This is the most commonly used syntax, which allows to
+<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/QuerySyntax1.flsnp" /></li>
+                        <li>This is the most commonly used syntax, which allows to
 specify any criteria in the function passed to the query:
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/QuerySyntax2.flsnp" />
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/PilotTestMatch.flsnp" /></li>
-
-<li>Similar to the previous example, but without generics.
+<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/QuerySyntax2.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/PilotTestMatch.flsnp" /></li>
+                        <li>Similar to the previous example, but without generics.
 Separate class is used to specify the query criteria, which can be useful when
 a parameter should be passed to the query condition. For more information see
 <a href="../../../../implementation_strategies/native_query_collection/parameterized_nq.htm" class="wikiLink">Parameterized_NQ</a>.
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/QuerySyntax3.flsnp" />
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/PilotPredicate.flsnp" /></li>
-
-<li>NQ example with sorted results:
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/QuerySyntax4.flsnp" />
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/ComparePilots.flsnp" />
-<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/PilotTestMatch.flsnp" /></li>
-</ol>
-
-</p><p MadCap:conditions="Primary:vb" /></div>
-    </div>
-    
-  </body></html>
+<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/QuerySyntax3.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/PilotPredicate.flsnp" /></li>
+                        <li>NQ example with sorted results:
+<MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/QuerySyntax4.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/ComparePilots.flsnp" /><MadCap:snippetBlock src="../../../../Resources/Snippets/.NET Syntax/NQSyntaxExamples.vb/PilotTestMatch.flsnp" /></li>
+                    </ol>
+                </p>
+                <p MadCap:conditions="Primary:vb" />
+            </div>
+        </div>
+    </body>
+</html>

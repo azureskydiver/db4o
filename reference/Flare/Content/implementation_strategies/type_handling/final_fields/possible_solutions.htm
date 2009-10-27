@@ -1,39 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?><html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="2958" MadCap:lastWidth="1029">
-<head><title>Possible Solutions	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" />		<script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title></head>
-<body onload="prettyPrint()">
-    <div class="CommonContent">
-      <div class="CommonContentArea">
-        <h1>Possible Solutions</h1><p><font color="#990000">This topic applies to java version only</font></p><p>Of course, if you only use JDK5 or 6 there are no worries
+﻿<?xml version="1.0" encoding="utf-8"?>
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="6" MadCap:lastHeight="1095" MadCap:lastWidth="1017">
+    <head><title>Possible Solutions	<link href="../../../Resources/Stylesheets/prettify.css" type="text/css" rel="stylesheet" /><script type="text/javascript" src="../../../Resources/Code/prettify.js"></script></title>
+    </head>
+    <body onload="prettyPrint()">
+        <div class="CommonContent">
+            <div class="CommonContentArea">
+                <h1>Possible Solutions</h1>
+                <p>Of course, if you only use JDK5 or 6 there are no worries
 about the final fields at all. But if you do not want to stick to the definite
 java version and need to have the flexibility of switching to different java
 versions you currently have 2 solutions:</p>
-
-<ul><li>avoid using the final modifier in the persistent objects;</li><li>use translator.</li></ul>
-
-
-
-<p>An example of the final fields translator can look like
+                <ul>
+                    <li>avoid using the final modifier in the persistent objects;</li>
+                    <li>use translator.</li>
+                </ul>
+                <p>An example of the final fields translator can look like
 this:</p>
-
-<MadCap:snippetBlock src="../../../Resources/Snippets/Possible Solutions/FinalFieldTranslator.java/FinalFieldTranslator.java.flsnp" />
-<p>The
+                <MadCap:snippetBlock src="../../../Resources/Snippets/Possible Solutions/FinalFieldTranslator.java/FinalFieldTranslator.java.flsnp" />
+                <p>The
 following call should be issued before opening the ObjectContainer to connect
 the translator to the TestFinal class:</p>
-
-<p><code>Db4o.configure().objectClass(TestFinal.class).translate(new
-FinalFieldTranslator());</code></p>
-
-
-
-</div>
-    </div>
-    
-
+                <p><code>Db4o.configure().objectClass(TestFinal.class).translate(new
+FinalFieldTranslator());</code>
+                </p>
+            </div>
+        </div>
         <p MadCap:conditions="Primary.Online">Download example code:</p>
         <p MadCap:conditions="Primary.Online">
             <MadCap:conditionalText MadCap:conditions="Primary.Java"><a href="finalfieldsjava.zip">Java </a>
             </MadCap:conditionalText>
         </p>
-
-
-</body></html>
+    </body>
+</html>
