@@ -101,11 +101,11 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 		assertAddedDeletedUpdated(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1, info2 }, NONE);
 	}
 	
-	public void _testCommittedForItemAddedAndImmediatelyDeleted() {
+	public void testCommittedForItemAddedAndImmediatelyDeleted() {
 		
 		Item item4 = new Item(4);
 		_anotherClient.store(item4);
-		ObjectInfo info4 = getInfo(_anotherClient, 4);
+		// ObjectInfo info4 = getInfo(_anotherClient, 4);
 		_anotherClient.delete(item4);
 		
 		assertNoEvents();
